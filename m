@@ -1,69 +1,49 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 6/8 v2] arm: orion5x: Add DT-based support for Netgear WNR854T
-Date: Tue, 13 Sep 2016 21:16:28 +0200
-Message-ID: <87r38nehkj.fsf@free-electrons.com>
-References: <1472203264-21089-7-git-send-email-jm@lentin.co.uk>
-        <1473109646-23366-1-git-send-email-jm@lentin.co.uk>
-        <20160912170625.GA7420@rob-hp-laptop> <2920481.EgEQnLmOkM@wuerfel>
-        <20160912220344.GM11400@lunn.ch>
-        <88e40f0c6cafec244dc16af5a03cfb44@jamie.lentin.co.uk>
-        <20160913123639.GB15332@lunn.ch>
-        <b7d442f9d26249976d7698b6a32db2a3@jamie.lentin.co.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/4] drm/msm/hdmi: Clean up HDMI gpio DT bindings
+Date: Tue, 13 Sep 2016 14:31:07 -0500
+Message-ID: <CAL_JsqK_36EpJhV1COrNdb_h7dgWxLMbecKsJR4YCaVEm0XWuQ@mail.gmail.com>
+References: <1472737015-29382-1-git-send-email-architt@codeaurora.org>
+ <1473780097-11388-1-git-send-email-architt@codeaurora.org>
+ <1473780097-11388-3-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b7d442f9d26249976d7698b6a32db2a3-SBYVURHw+sBNwP/n92qj9LVCufUGDwFn@public.gmane.org> (Jamie
-        Lentin's message of "Tue, 13 Sep 2016 15:15:23 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1473780097-11388-3-git-send-email-architt@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Andy Gross <andy.gross@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jamie,
- 
- On mar., sept. 13 2016, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org> wrote:
-
-> On 2016-09-13 13:36, Andrew Lunn wrote:
->> On Tue, Sep 13, 2016 at 10:10:41AM +0100, Jamie Lentin wrote:
->>> On 2016-09-12 23:03, Andrew Lunn wrote:
->>> >>Maybe we can instead leave out the PCI support from the new
->>> >>file for now and not delete the legacy board file?
->>>
->>> This seems a reasonable compromise. The PCI card the router comes
->>> with isn't supported by mwl8k mainline anyway (There's STA-only
->>> firmware that can be extracted from a windows driver and PCI IDs
->>> added, but stats reporting uses a different format), so it's not a
->>> huge loss, although many did replace the card with something
->>> Atheros-based.
->>
->> O.K. So dropping the PCI code gets us going forward.
->
-> Is an arch/arm/mach-mvebu/orion5x.c also required? Or is continuing to
-> use arch/arm/mach-orion5x/board-dt.c until everything has been
-> converted the favoured approach?
->
->> Have we missed the merge window?
->
-> I got the impression Gregory Clement had merged them? If not a good
-> portion of this patchset is uncontroversial generic orion5x stuff,
-> it'd be nice to get those in even if none of the router-specific stuff
-> doesn't make it.
-
-I applied on mvebu/for-next in order to find any merge conflict. It
-seems ok on this side. However, I didn't make the pull request to
-arm-soc with these patches so I fear it is too late.
-
-Arnd would you agree to accept a new pull request?
-
-Gregory
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBTZXAgMTMsIDIwMTYgYXQgMTA6MjEgQU0sIEFyY2hpdCBUYW5lamEgPGFyY2hpdHRA
+Y29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+IE1ha2UgdGhlIGZvbGxvd2luZyBjaGFuZ2VzIGluIHRo
+ZSBIRE1JIGdwaW8gYmluZGluZ3M6Cj4KPiAtIFVzZSAiLWdwaW9zIiBhcyB0aGUgc3VmZml4IGZv
+ciBhbGwgdGhlIGdwaW8gbmFtZXMKPiAtIE1vdmUgYWxsIHRoZSBncGlvcyB0byBvcHRpb25hbCwg
+c2luY2UgdGhlcmUgYXJlIHBsYXRmb3JtcyB0aGF0IHVzZSBub25lCj4gICBvZiB0aGVtLgo+IC0g
+VGhlIEhQRCBncGlvIGlzIGEgc3RhbmRhcmQgb25lLCByZW1vdmUgdGhlICJxY29tLGhkbWktdHgt
+IiBwcmVmaXggZnJvbQo+ICAgaXQuCj4gLSBSZW1vdmUgdGhlIEhETUkgRERDIGNsay9kYXRhIGdw
+aW9zLiBUaGV5IGFyZSBqdXN0IGxlZnRvdmVycyBvZiBhbiBvbGQKPiAgIHdheSB0byBjb25maWd1
+cmUgcGluY3RybCBwcm9wZXJ0aWVzLgo+IC0gQWRkIGEgbWlzc2luZyBscG0gZ3BpbyB1c2VkIG9u
+IHNvbWUgcGxhdGZvcm1zLgo+Cj4gTWFrZSB0aGUgbmVjZXNzYXJ5IGNoYW5nZXMgaW4gdGhlIGRy
+aXZlciB0byBpbmNvcnBvcmF0ZSB0aGVzZSBjaGFuZ2VzLgo+Cj4gVGhlcmUgaGFzbid0IGJlZW4g
+YW55IHVwc3RyZWFtIERUIHRoYXQgdXNlcyB0aGUgSERNSSBiaW5kaW5ncywgc28gaXQncwo+IG9r
+YXkgdG8gY2hhbmdlIGFuZCBtb3ZlIGFyb3VuZCB0aGVzZSBwcm9wZXJ0aWVzLgo+Cj4gQ2M6IFJv
+YiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnCj4gU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9y
+Zz4KPiAtLS0KPiB2MzoKPiAtIFJlbW92ZWQgSERNSSBEREMgY2xrL2RhdGEgZ3Bpb3MuCj4KPiAg
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vaGRtaS50eHQgICAgICAgIHwgIDkg
+KysrKy0tLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vaGRtaS9oZG1pLmMgICAgICAgICAgICAg
+ICAgICAgICB8IDIxICsrKysrKysrKysrKysrKysrKystLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDIz
+IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJv
+YmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
