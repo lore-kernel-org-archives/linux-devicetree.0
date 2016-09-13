@@ -1,102 +1,57 @@
-From: Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 02/16] dt/bindings: Update binding for PM domain idle states
-Date: Tue, 13 Sep 2016 18:50:17 +0100
-Message-ID: <87intz665i.fsf@arm.com>
-References: <1472242678-33700-1-git-send-email-lina.iyer@linaro.org> <1472242678-33700-3-git-send-email-lina.iyer@linaro.org> <0b233802-f459-c6bb-ff42-70745a225cfb@arm.com> <20160902201605.GA1705@linaro.org> <87sht59mcw.fsf@arm.com> <20160912161600.GA21885@linaro.org> <a4fc71ae-6fa5-4142-6dd4-7bc96eb20186@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH 0/4] ARM: boot: mxs: Add On-Chip RAM
+Date: Tue, 13 Sep 2016 17:51:02 +0000
+Message-ID: <1473789066-8955-1-git-send-email-stefan.wahren@i2se.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <a4fc71ae-6fa5-4142-6dd4-7bc96eb20186-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, Juri.Lelli-5wv7dgnIgG8@public.gmane.org, Axel Haslam <ahaslam+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <lw-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?q?J=C3=B6rg=20Krause?= <joerg.krause-L1vi/lXTdtsfGbAt6QbQcg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The i.MX23 / i.MX28 have a small amount of On-Chip RAM which is also necessary
+for suspend to RAM and standby mode. But before we need to remove the fake reg
+properties of all internal bus nodes as discussed in this thread [1].
 
-On Mon, Sep 12 2016 at 18:09, Sudeep Holla wrote:
-> On 12/09/16 17:16, Lina Iyer wrote:
->> On Mon, Sep 12 2016 at 09:19 -0600, Brendan Jackman wrote:
->>>
->>> Hi Lina,
->>>
->>> Sorry for the delay here, Sudeep and I were both been on holiday last
->>> week.
->>>
->>> On Fri, Sep 02 2016 at 21:16, Lina Iyer wrote:
->>>> On Fri, Sep 02 2016 at 07:21 -0700, Sudeep Holla wrote:
->>> [...]
->>>>> This version is *not very descriptive*. Also the discussion we had
->>>>> on v3
->>>>> version has not yet concluded IMO. So can I take that we agreed on what
->>>>> was proposed there or not ?
->>>>>
->>>> Sorry, this example is not very descriptive. Pls. check the 8916 dtsi
->>>> for the new changes in the following patches. Let me know if that makes
->>>> sense.
->
-> Please add all possible use-cases in the bindings. Though one can refer
-> the usage examples, it might not cover all usage descriptions. It helps
-> preventing people from defining their own when they don't see examples.
-> Again DT bindings are like specifications, it should be descriptive
-> especially this kind of generic ones.
->
->>>
->>> The not-yet-concluded discussion Sudeep is referring to is at [1].
->>>
->>> In that thread we initially proposed the idea of, instead of splitting
->>> state phandles between cpu-idle-states and domain-idle-states, putting
->>> CPUs in their own domains and using domain-idle-states for _all_
->>> phandles, deprecating cpu-idle-states. I've brought this up in other
->>> threads [2] but discussion keeps petering out, and neither this example
->>> nor the 8916 dtsi in this patch series reflect the idea.
->>>
->> Brendan, while your idea is good and will work for CPUs, I do not expect
->> other domains and possibly CPU domains on some architectures to follow
->> this model. There is nothing that prevents you from doing this today,
+This patch series requires Fabio Estevam's recent series "ARM: dts: imx23:
+Remove skeleton.dtsi inclusion" [2].
 
-As I understand it your opposition to this approach is this:
+[1] - https://marc.info/?l=devicetree&m=146139948426520&w=2
+[2] - http://www.spinics.net/lists/arm-kernel/msg528974.html
 
-There may be devices/CPUs which have idle states which do not constitute
-"power off". If we put those  devices in their own power domain for the
-purpose of putting their (non-power-off) idle state phandles in
-domain-idle-states, we are "lying" because no true power domain exists
-there.
+Stefan Wahren (4):
+  ARM: dts: imx23: Remove fake "reg" properties from bus nodes
+  ARM: dts: imx28: Remove fake "reg" properties from bus nodes
+  ARM: dts: imx23: add On-Chip RAM
+  ARM: dts: imx28: add On-Chip RAM
 
-Am I correct that that's your opposition?
+ arch/arm/boot/dts/imx23-evk.dts           |    8 ++++----
+ arch/arm/boot/dts/imx23-olinuxino.dts     |    8 ++++----
+ arch/arm/boot/dts/imx23-sansa.dts         |    8 ++++----
+ arch/arm/boot/dts/imx23-stmp378x_devb.dts |    6 +++---
+ arch/arm/boot/dts/imx23-xfi3.dts          |    8 ++++----
+ arch/arm/boot/dts/imx23.dtsi              |   15 +++++++++------
+ arch/arm/boot/dts/imx28-apf28.dts         |    8 ++++----
+ arch/arm/boot/dts/imx28-apf28dev.dts      |    8 ++++----
+ arch/arm/boot/dts/imx28-apx4devkit.dts    |    8 ++++----
+ arch/arm/boot/dts/imx28-cfa10036.dts      |    8 ++++----
+ arch/arm/boot/dts/imx28-cfa10037.dts      |    8 ++++----
+ arch/arm/boot/dts/imx28-cfa10049.dts      |   10 +++++-----
+ arch/arm/boot/dts/imx28-cfa10055.dts      |    6 +++---
+ arch/arm/boot/dts/imx28-cfa10056.dts      |    4 ++--
+ arch/arm/boot/dts/imx28-cfa10057.dts      |   10 +++++-----
+ arch/arm/boot/dts/imx28-cfa10058.dts      |   10 +++++-----
+ arch/arm/boot/dts/imx28-duckbill.dts      |    8 ++++----
+ arch/arm/boot/dts/imx28-evk.dts           |    8 ++++----
+ arch/arm/boot/dts/imx28-m28.dtsi          |    6 +++---
+ arch/arm/boot/dts/imx28-m28cu3.dts        |    8 ++++----
+ arch/arm/boot/dts/imx28-m28evk.dts        |    8 ++++----
+ arch/arm/boot/dts/imx28-sps1.dts          |    8 ++++----
+ arch/arm/boot/dts/imx28.dtsi              |   17 +++++++++--------
+ 23 files changed, 100 insertions(+), 96 deletions(-)
 
-If so, it seems we essentially disagree on the definition of a power
-domain, i.e. you define it as a set of devices that are powered on/off
-together while I define it as a set of devices whose power states
-(including idle states, not just on/off) are tied together. I said
-something similar on another thread [1] which died out.
+-- 
+1.7.9.5
 
-Do you agree that this is basically where we disagree, or am I missing
-something else?
-
-[2] http://www.spinics.net/lists/devicetree/msg141050.html
-
->> you can specify domains around CPUs in your devicetree and CPU PM will
->> handle the hierarchy. I don't think its fair to force it on all SoCs
->> using CPU domains.
->
-> I disagree. We are defining DT bindings here and it *should* be same for
-> all the SoC unless there is a compelling reason not to. I am fine if
-> those reasons are stated and agreed.
->
->> This patchset does not restrict you from organizing
->> the idle states the way you want it. This revision of the series, clubs
->> CPU and domain idle states under idle-states umbrella. So part of your
->> requirement is also satisfied.
->>
->
-> I will look at the DTS changes in the series. But we *must* have more
-> description with more examples in the binding document.
->
->> You can follow up the series with your new additions, I don't see a
->> conflict with this change.
->>
->
-> If we just need additions, then it should be fine.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
