@@ -1,176 +1,116 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: ARM, SoC: About the use DT-defined properties by 3rd-party
- drivers
-Date: Tue, 13 Sep 2016 14:12:08 +0100
-Message-ID: <20160913131208.GA23336@leverpostej>
-References: <57BDAF2E.10502@laposte.net>
- <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
- <57D69FB1.2020801@laposte.net>
- <20160912123809.GB13741@leverpostej>
- <57D6AA54.6000208@laposte.net>
- <20160912135549.GA14165@leverpostej>
- <57D6D2A9.3010006@laposte.net>
- <20160912165637.GF14165@leverpostej>
- <57D7CF17.2050905@laposte.net>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 2/4] drm/msm/hdmi: Clean up HDMI gpio DT bindings
+Date: Tue, 13 Sep 2016 18:45:58 +0530
+Message-ID: <57D7FC0E.6030209@codeaurora.org>
+References: <1467957354-7620-1-git-send-email-architt@codeaurora.org>
+ <1472737015-29382-1-git-send-email-architt@codeaurora.org>
+ <1472737015-29382-3-git-send-email-architt@codeaurora.org>
+ <20160912131914.GA15499@rob-hp-laptop> <57D7A6CD.60803@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <57D7CF17.2050905-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <57D7A6CD.60803@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, robdclark@gmail.com
+Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, john.stultz@linaro.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 13, 2016 at 12:04:07PM +0200, Sebastian Frias wrote:
-> Hi Mark,
-> 
-> On 09/12/2016 06:56 PM, Mark Rutland wrote:
-> > The latter is extremely difficult to judge when you just
-> > get a binding document with little or no additional context.
-> 
-> Exactly, that is why I was thinking it would take less "review" time.
-> Indeed, if there is no driver, why would it matter what those bindings
-> are?
-
-If you believe that the bindings don't matter, then there is absolutely
-no reason for them to exist in the first place.
-
-If those binding matter to *anyone*, then those collating the bindings
-have some responsibility of stewardship, and that includes
-review/maintenance/etc.
-
-Hence, the Linux community cares as stewards of those bindings, and
-don't accept bindings they don't understand, for which there is no
-obvious user, nor for which the authors claim stability does not matter.
-Those go against the aims of DT, and against out responsiblities as
-stewards.
-
-I cannot put that any clearer. 
-
-> >> Could you be more precise on those two issues? Namely:
-> >> "the effort" and the "lack of benefit for the community"?
-> > 
-> > As above, reviewing is tricky. One has to spend the time gaining an
-> > understanding of a particular piece of hardware, the class of hardware
-> > it falls in, and also the bigger picture that it fits in. Once you have
-> > that, you have to review the binding in that context, and that takes
-> > time and effort.
-> 
-> Yes, but this is based on a binding for which there's a driver.
-> If there's no driver it should not take that much time, right?
-> 
-> > As things evolve, perhaps mistakes or inconsistencies are found, or new
-> > ways to generalise things. As that occurs, there is a maintenance burden
-> > for existing bindings.
-> > 
-> > All of that takes time and effort.
-> 
-> Only for bindings for which there is a driver.
-
-This is not true for all but the most trivial of hardware, as I stated
-previously.
-
-Go and take a look at all the effort that went into sorting out generic
-IOMMU bindings, when driver support was written after a large amount of
-review to sort out fundamental concepts. We had to sort out fundamentals
-before prototype driver code could be written, and while we knew drivers
-were coming, an awful lot of review effort came first.
 
 
-> Think about this:
-> - a binding with no driver is submitted and ends up in the tree
-> (it could be on a staging area if necessary)
-> 
-> - if at a later point somebody attempts to upstream a driver using those
-> 'staging' bindings, the reviewers could say "you are using 'staging' bindings,
-> please add compatibility with 'staging' and 'standard' bindings", even if that
-> includes the discussion and review of newly created 'standard' bindings
-> corresponding to the 'staging' bindings.
-> 
-> - the submitter may even say "there's no need for compatibility for 'staging'
-> bindings, because they were never used (or other valid reasons)".
-> 
-> What would you think of something like that?
+On 9/13/2016 12:42 PM, Archit Taneja wrote:
+>
+>
+> On 9/12/2016 6:49 PM, Rob Herring wrote:
+>> On Thu, Sep 01, 2016 at 07:06:52PM +0530, Archit Taneja wrote:
+>>> Make the following changes in the HDMI gpio bindings:
+>>>
+>>> - Use "-gpios" as the suffix for all the gpio names
+>>> - Move all the gpios to optional, since there are platforms that use
+>>> none
+>>>    of them.
+>>> - The HPD gpio is a standard one, remove the "qcom,hdmi-tx-" prefix from
+>>>    it.
+>>> - Add a missing lpm gpio used on some platforms.
+>>>
+>>> Make the necessary changes in the driver to incorporate these changes.
+>>>
+>>> There hasn't been any upstream DT that uses the HDMI bindings, so it's
+>>> okay to change and move around these properties.
+>>>
+>>> Cc: Rob Herring <robh@kernel.org>
+>>> Cc: devicetree@vger.kernel.org
+>>> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+>>> ---
+>>> v2:
+>>> - Keep "qcom,hdmi-tx-" suffix for all gpios except for hpd.
+>>> - Use "-gpios" suffix instead of "-gpio".
+>>> - Move all the gpios to optional properties.
+>>>
+>>>   .../devicetree/bindings/display/msm/hdmi.txt        | 11 ++++++-----
+>>>   drivers/gpu/drm/msm/hdmi/hdmi.c                     | 21
+>>> +++++++++++++++++++--
+>>>   2 files changed, 25 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/display/msm/hdmi.txt
+>>> b/Documentation/devicetree/bindings/display/msm/hdmi.txt
+>>> index ce84459..f1a83ab 100644
+>>> --- a/Documentation/devicetree/bindings/display/msm/hdmi.txt
+>>> +++ b/Documentation/devicetree/bindings/display/msm/hdmi.txt
+>>> @@ -13,17 +13,18 @@ Required properties:
+>>>   - interrupts: The interrupt signal from the hdmi block.
+>>>   - clocks: device clocks
+>>>     See ../clocks/clock-bindings.txt for details.
+>>> -- qcom,hdmi-tx-ddc-clk-gpio: ddc clk pin
+>>> -- qcom,hdmi-tx-ddc-data-gpio: ddc data pin
+>>> -- qcom,hdmi-tx-hpd-gpio: hpd pin
+>>>   - core-vdda-supply: phandle to supply regulator
+>>>   - hdmi-mux-supply: phandle to mux regulator
+>>>   - phys: the phandle for the HDMI PHY device
+>>>   - phy-names: the name of the corresponding PHY device
+>>>
+>>>   Optional properties:
+>>> -- qcom,hdmi-tx-mux-en-gpio: hdmi mux enable pin
+>>> -- qcom,hdmi-tx-mux-sel-gpio: hdmi mux select pin
+>>> +- qcom,hdmi-tx-ddc-clk-gpios: ddc clk pin
+>>> +- qcom,hdmi-tx-ddc-data-gpios: ddc data pin
+>>
+>> Sorry, for raising another point, but couldn't you use the i2c-gpio
+>> binding for these instead?
+>
+> I'm not entirely sure what these are used for either, they predate the
+> APQ8064 SoC. They are certainly not bit-banged to implement i2c, since
+> the driver just sets them to a high during driver initialization, and
+> we have our dedicated i2c controller anyway.
+>
 
-As above, if they were never used, and potentially wrong, why did they
-exist?
+I just checked some old qualcomm kernels. It looks like they were
+passed as gpios just so that the pins could be configured(function,
+pull up/down, strength etc) using gpiolib api. I guess these
+kernels predated pinctrl drivers.
 
-Trying to upstream a binding with no user comees with no immediate
-benefit, and potentially creates longer-term pain, whereas you can defer
-upstreaming a binding until the driver is ready.
-
-Note that I've repeatedly pointed out that the user of the binding
-doesn't necessarily have to be linux. However, there does need to be
-some demonstration, and commitment to maintaining the principles DT aims
-towards (e.g. stability).
-
-> Let's make an abstraction of the word 'binding', 'create a binding', etc. and
-> just focus on this:
-> - Somebody submits a DT file that contains properties and nodes that are
-> *not used* by any Linux driver.
-> - Said properties and nodes serve as HW description for HW blocks for which
-> *there is no* Linux driver.
-> 
-> The goal of the above is to use the DT as the authoritative (and single)
-> source of HW definition.
-
-I understand that goal, and I've asked for a specific example, as this
-is not clear-cut. e.g. there has been work on describing secure devices
-for QEMU, but this isn't necessarily something we want to expose Linux
-to in general.
-
-> > As with all things, it depends on context. If someone's using a DT to
-> > describe details of the secure world of a platform with trustzone to a
-> > secure OS, then not all of that information is relevant to Linux.
-> > Likewise if configuration details specific to FW are embedded.
-> 
-> Ok, so if the information is not relevant to Linux do you agree that it
-> should not affect it, and then we could imagine such details being present on
-> the DT anyway?
-
-Perhaps, or perhaps not. It depends on a number of details, and as I've
-said previously I cannot give you a general answer, because there is
-none. You must provide a specific case.
-
-> You mention the case of another OS.
-> What is the definition of OS in this case?
-
-Generally, I am considering a general purpose OS (e.g. Linux, FreeBSD),
-and not a secure-world trusted OS nor firmware (as typically these are
-very strongly tied to the platform, and have very different strtuctures
-and requirements when compared to a general purpose OS).
-
-That's the conext in which bindings are developed.
-
-> Because one could say that "FW" or "secure world" could fit that definition,
-> right?
-
-There's been work on describing things about the secure world in DT for
-QEMU. Firmware is typically so device-specific that an upstream/common
-DT doesn't really make sense.
-
-Perhaps you have an example of the specific use-case you care about?
-
-> Indeed, to me it is clear that what we conceive "differently", is that
-> "the effort", "lack of benefit for the community", "Old bindings should
-> remain supported regardless" and "backward compatibility" are considered
-> with respect to DT *plus* driver, yet the idea is to have DT describe
-> HW for which there's no upstream driver yet.
-> Hence most of those considerations should not apply, right?
-
-No.
-
-Bindings themselves should remain stable over time in that they must be
-evolved so as to allow software to handle them in a stable fashion,
-supporting old and new DTBs.
-
-While a lot of that effort is taken by code, care must also be taken wit
-the bindings themselves, and those considerations apply.
+I will post a new revision of the patch with these removed.
 
 Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Archit
+
+> Rob,
+>
+> Are you aware why we have these for older SoCs?
+>
+> Thanks,
+> Archit
+>
+>>
+>>> +- hpd-gpios: hpd pin
+>>> +- qcom,hdmi-tx-mux-en-gpios: hdmi mux enable pin
+>>> +- qcom,hdmi-tx-mux-sel-gpios: hdmi mux select pin
+>>> +- qcom,hdmi-tx-mux-lpm-gpios: hdmi mux lpm pin
+>>>   - power-domains: reference to the power domain(s), if available.
+>>>   - pinctrl-names: the pin control state names; should contain "default"
+>>>   - pinctrl-0: the default pinctrl state (active)
+>
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
