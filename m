@@ -1,39 +1,36 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v3 4/7] palmetto: Request relevant mux functions in devicetree
-Date: Tue, 13 Sep 2016 22:11:29 +0930
-Message-ID: <CACPK8Xe-dowcwXkO8rDH2reMzGadUMSq5ZtV=23FP4virt+DUQ@mail.gmail.com>
-References: <20160830075600.11559-1-andrew@aj.id.au> <20160830075600.11559-5-andrew@aj.id.au>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v3 2/7] mach-aspeed: Select GPIO driver
+Date: Tue, 13 Sep 2016 22:13:38 +0930
+Message-ID: <CACPK8XdM2Q_DdO7vat+QASxFJht7dYZQautZROE8D3zuT3qXWA@mail.gmail.com>
+References: <20160830075600.11559-1-andrew@aj.id.au> <20160830075600.11559-3-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160830075600.11559-5-andrew-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160830075600.11559-3-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 30, 2016 at 5:25 PM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
-> +&pinctrl {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_flbusy_default &pinctrl_flwp_default
-> +                       &pinctrl_vgahs_default &pinctrl_vgavs_default
-> +                       &pinctrl_ddcclk_default &pinctrl_ddcdat_default
-> +
-> +                       &pinctrl_pwm1_default &pinctrl_pwm2_default
-> +                       &pinctrl_pwm3_default &pinctrl_pwm4_default
-> +                       &pinctrl_pwm5_default &pinctrl_pwm6_default
-> +                       &pinctrl_pwm7_default
-> +
-> +                       &pinctrl_bmcint_default &pinctrl_flack_default>;
-> +};
+On Tue, Aug 30, 2016 at 5:25 PM, Andrew Jeffery <andrew@aj.id.au> wrote:
+> diff --git a/arch/arm/mach-aspeed/Kconfig b/arch/arm/mach-aspeed/Kconfig
+> index f3f8c5c658db..5aba9598f821 100644
+> --- a/arch/arm/mach-aspeed/Kconfig
+> +++ b/arch/arm/mach-aspeed/Kconfig
+> @@ -7,6 +7,8 @@ menuconfig ARCH_ASPEED
+>         select MOXART_TIMER
+>         select MFD_SYSCON
+>         select PINCTRL
+> +       select GPIOLIB
+> +       select GPIO_ASPEED
 
-It's not clear that all systems use these pins in that way. I will not
-include this one for now.
+GPIO_ASPEED is a tristate, so if we select it in ARCH_ASPEED all users
+of the driver will have it selected.
+
+I think I will drop this patch so we still have the option of building
+the gpio driver as a module. Otherwise, we should change the GPIO
+driver to be built in.
 
 Cheers,
 
 Joel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
