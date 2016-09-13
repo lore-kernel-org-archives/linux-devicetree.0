@@ -1,46 +1,65 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM64: dts: amlogic: Add basic support for Amlogic S905X
-Date: Tue, 13 Sep 2016 08:14:36 +0200
-Message-ID: <CAOQ7t2ZjDjZbUfCKwUf4PHywOZx-UiQmy37TEQhWDNYRg0BOag@mail.gmail.com>
-References: <20160903082227.30559-1-narmstrong@baylibre.com>
- <20160903082227.30559-3-narmstrong@baylibre.com> <7e27e8c0-bb18-40d8-10d6-3928e66815c7@suse.de>
- <CAOQ7t2bWLq2XP2rKx3msf=1tUfXkQuBWagun46TaKk73qXr=FQ@mail.gmail.com>
- <7ha8fcq26c.fsf@baylibre.com> <28d9160a-ce40-cbbb-b4e9-3ec34be52368@suse.de>
+From: Gerd Hoffmann <kraxel@redhat.com>
+Subject: Re: [PATCH v2 2/6] ARM: dts: bcm283x: Define standard pinctrl
+ groups in the gpio node.
+Date: Tue, 13 Sep 2016 08:22:40 +0200
+Message-ID: <1473747760.11547.7.camel@redhat.com>
+References: <1473668576-22256-1-git-send-email-kraxel@redhat.com>
+         <1473668576-22256-3-git-send-email-kraxel@redhat.com>
+         <1273800480.83718.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <28d9160a-ce40-cbbb-b4e9-3ec34be52368-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-amlogic <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1273800480.83718.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange@email.1und1.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 12, 2016 at 11:43 PM, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org> wr=
-ote:
+On Mo, 2016-09-12 at 20:19 +0200, Stefan Wahren wrote:
+> Hi Gerd,
+> 
+> > Gerd Hoffmann <kraxel@redhat.com> hat am 12. September 2016 um 10:22
+> > geschrieben:
+> > 
+> > 
+> > From: Eric Anholt <eric@anholt.net>
+> > 
+> > The BCM2835-ARM-Peripherals.pdf documentation specifies what the
+> > function selects do for the pins, and there are a bunch of obvious
+> > groupings to be made.  With these created, we'll be able to replace
+> > bcm2835-rpi.dtsi's main "set all of these pins to alt0" with
+> > references to specific groups we want enabled.
+> > 
+> > Signed-off-by: Eric Anholt <eric@anholt.net>
+> > 
+> > squashed in:
+> >   ARM: dts: bcm283x: Add the emmc pin group to bcm283x.dtsi.
+> >   ARM: dts: bcm283x: Add a group for mapping pins 48-53 to sdhost.
+> >   ARM: dts: bcm283x: Add a new EMMC pin group from the downstream tree.
+> > 
+> > fixups by kraxel:
+> >   * fix spi0 name
+> >   * sort & group entries
+> >   * use pull defines
+> >   * add dpi group
+> 
+> this looks like a changelog.
 
-[cut]
-> I'm not arguing over the file name, where it perfectly makes sense to
-> have a meson-gxl- prefix (already discussed), just about the compatible
-> string where we don't have "amlogic,meson-gxl-s905x-p231" either because
-> it is completely unnecessary and does _not_ add any value.
->
-> Not that we're checking this string anywhere anyway... If you want to
-> check for the GXL family you have to use "amlogic,meson-gxl"; if you
-> want to check for the specific SoC you use "amlogic,s905x". Simple. We
-> never match partial strings, so there is no sense in a hardcoded prefix
-> that is duplicating information already available.
+It actually is, trying to keep track of what comes from Eric and what
+comes from me.  But I guess I can also simply summarize that as "based
+on a patch from Eric".
 
-Ok, then. Fine with me.
+> > +			dpi_gpio4: dpi_gpio4 {
+> > +				brcm,pins = <0 1 2 3 4 5 6 7 8 9 10 11
+> > +					     12 13 14 15 16 17 18 19
+> > +					     20 21 22 23 24 25 26 27>;
+> > +				brcm,function = <BCM2835_FSEL_ALT2>;
+> > +			};
+> 
+> s/dpi_gpio4/dpi_gpio0
 
-Neil, do you want to resend my patch or you can take care of the fixes
-for the whole patchset?
+Yea, right, will fix.
 
-Thanks,
-
---=20
-Carlo Caione
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+  Gerd
