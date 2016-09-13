@@ -1,471 +1,262 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v4 22/22] phy: Add support for Qualcomm's USB HS phy
-Date: Tue, 13 Sep 2016 15:03:58 +0800
-Message-ID: <20160913070358.GB30425@b29397-desktop>
-References: <20160907213519.27340-1-stephen.boyd@linaro.org>
- <20160907213519.27340-23-stephen.boyd@linaro.org>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH V8] clk: bcm: Add driver for BCM53573 ILP clock
+Date: Tue, 13 Sep 2016 09:06:04 +0200
+Message-ID: <20160913070722.5867-1-zajec5@gmail.com>
+References: <20160905142935.4550-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160907213519.27340-23-stephen.boyd@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Peter Chen <peter.chen@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160905142935.4550-1-zajec5@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, Eric Anholt <eric@anholt.net>, Stephen Warren <swarren@wwwdotorg.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 07, 2016 at 02:35:19PM -0700, Stephen Boyd wrote:
-> The high-speed phy on qcom SoCs is controlled via the ULPI
-> viewport.
-> 
+From: Rafał Miłecki <rafal@milecki.pl>
 
-Hi Stephen, I am a little puzzled how this driver co-work with chipidea
-driver. According to nxp IC guys, the ULPI PHY's clock needs to be enabled
-before access portsc.pts (calling hw_phymode_configure), otherwise,
-the system will hang. But I find you call hw_phymode_configure before
-phy->power_on, doesn't your design have this requirement?
-       
-Besides, you read ulpi id before phy->power_on, how can read work before
-phy power on?
+This clock is present on BCM53573 devices (including BCM47189) that use
+Cortex-A7. ILP is a part of PMU (Power Management Unit) multi-function
+device so we use syscon (and regmap) for it.
 
-Peter
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+---
+V2: Rebase on top of clk-next
+    Use ALP as parent clock
+    Improve comments
+    Switch from ioremap_nocache to ioremap
+    Check of_clk_add_provide result for error
+V3: Drop #include <linux/moduleh>
+    Make ILP DT entry part of PMU
+    Describe ILP as subdevice of PMU in Documentation
+V4: Use BCM53573 name as suggested by Jon and Ray. It seems "Northstar"
+    (even if used in some resources) should be used in relation to
+    Cortex-A9 devices only.
+V5: Rename remaining "ns" references to "bcm53573", sorry, I sent V4 too
+    early.
+V6: Drop #include <linux/clk.h>
+    Use "int" as type where it matches usage
+    Add cpu_relax() in the loop
+    Add disable callback
+    Use _hw_ functions for registering struct clk_hw (new API)
 
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> ---
->  .../devicetree/bindings/phy/qcom,usb-hs-phy.txt    |  83 ++++++
->  drivers/phy/Kconfig                                |   8 +
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/phy-qcom-usb-hs.c                      | 289 +++++++++++++++++++++
->  4 files changed, 381 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
->  create mode 100644 drivers/phy/phy-qcom-usb-hs.c
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt b/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
-> new file mode 100644
-> index 000000000000..d7eacd63d06b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
-> @@ -0,0 +1,83 @@
-> +Qualcomm's USB HS PHY
-> +
-> +PROPERTIES
-> +
-> +- compatible:
-> +    Usage: required
-> +    Value type: <string>
-> +    Definition: Should contain "qcom,usb-hs-phy" and more specifically one of the
-> +                following:
-> +
-> +                        "qcom,usb-hs-phy-apq8064"
-> +                        "qcom,usb-hs-phy-msm8916"
-> +                        "qcom,usb-hs-phy-msm8974"
-> +
-> +- #phy-cells:
-> +    Usage: required
-> +    Value type: <u32>
-> +    Definition: Should contain 0
-> +
-> +- clocks:
-> +    Usage: required
-> +    Value type: <prop-encoded-array>
-> +    Definition: Should contain clock specifier for the reference and sleep
-> +                clocks
-> +
-> +- clock-names:
-> +    Usage: required
-> +    Value type: <stringlist>
-> +    Definition: Should contain "ref" and "sleep" for the reference and sleep
-> +                clocks respectively
-> +
-> +- resets:
-> +    Usage: required
-> +    Value type: <prop-encoded-array>
-> +    Definition: Should contain the phy and POR resets
-> +
-> +- reset-names:
-> +    Usage: required
-> +    Value type: <stringlist>
-> +    Definition: Should contain "phy" and "por" for the phy and POR resets
-> +                respectively
-> +
-> +- v3p3-supply:
-> +    Usage: required
-> +    Value type: <phandle>
-> +    Definition: Should contain a reference to the 3.3V supply
-> +
-> +- v1p8-supply:
-> +    Usage: required
-> +    Value type: <phandle>
-> +    Definition: Should contain a reference to the 1.8V supply
-> +
-> +- extcon:
-> +    Usage: optional
-> +    Value type: <prop-encoded-array>
-> +    Definition: Should contain the vbus and ID extcons in the first and second
-> +                cells respectively
-> +
-> +- qcom,init-seq:
-> +    Usage: optional
-> +    Value type: <u8 array>
-> +    Definition: Should contain a sequence of ULPI register and address pairs to
-> +                program into the ULPI_EXT_VENDOR_SPECIFIC area. This is related
-> +                to Device Mode Eye Diagram test.
-> +
-> +EXAMPLE
-> +
-> +otg: usb-controller {
-> +	ulpi {
-> +		phy {
-> +			compatible = "qcom,usb-hs-phy-msm8974", "qcom,usb-hs-phy";
-> +			#phy-cells = <0>;
-> +			clocks = <&xo_board>, <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
-> +			clock-names = "ref", "sleep";
-> +			resets = <&gcc GCC_USB2A_PHY_BCR>, <&otg 0>;
-> +			reset-names = "phy", "por";
-> +			v3p3-supply = <&pm8941_l24>;
-> +			v1p8-supply = <&pm8941_l6>;
-> +			extcon = <&smbb>, <&usb_id>;
-> +			qcom,init-seq = /bits/ 8 <0x81 0x63>;
-> +		};
-> +	};
-> +};
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 830c443eeabf..ee0ec021a98c 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -417,6 +417,14 @@ config PHY_QCOM_UFS
->  	help
->  	  Support for UFS PHY on QCOM chipsets.
->  
-> +config PHY_QCOM_USB_HS
-> +	tristate "Qualcomm USB HS PHY module"
-> +	depends on USB_ULPI_BUS
-> +	select GENERIC_PHY
-> +	help
-> +	  Support for the USB high-speed ULPI compliant phy on Qualcomm
-> +	  chipsets.
-> +
->  config PHY_QCOM_USB_HSIC
->  	tristate "Qualcomm USB HSIC ULPI PHY module"
->  	depends on USB_ULPI_BUS
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 5422f543d17d..31c84faa07fa 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -50,6 +50,7 @@ obj-$(CONFIG_PHY_STIH41X_USB)		+= phy-stih41x-usb.o
->  obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs.o
->  obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-20nm.o
->  obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-14nm.o
-> +obj-$(CONFIG_PHY_QCOM_USB_HS) 		+= phy-qcom-usb-hs.o
->  obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
->  obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
->  obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
-> diff --git a/drivers/phy/phy-qcom-usb-hs.c b/drivers/phy/phy-qcom-usb-hs.c
-> new file mode 100644
-> index 000000000000..73fb4b49a8e1
-> --- /dev/null
-> +++ b/drivers/phy/phy-qcom-usb-hs.c
-> @@ -0,0 +1,289 @@
-> +/**
-> + * Copyright (C) 2016 Linaro Ltd
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +#include <linux/module.h>
-> +#include <linux/ulpi/driver.h>
-> +#include <linux/ulpi/regs.h>
-> +#include <linux/clk.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/of_device.h>
-> +#include <linux/reset.h>
-> +#include <linux/extcon.h>
-> +#include <linux/notifier.h>
-> +#include <linux/usb/of.h>
-> +
-> +#include "ulpi_phy.h"
-> +
-> +#define ULPI_PWR_CLK_MNG_REG		0x88
-> +# define ULPI_PWR_OTG_COMP_DISABLE	BIT(0)
-> +
-> +#define ULPI_MISC_A			0x96
-> +# define ULPI_MISC_A_VBUSVLDEXTSEL	BIT(1)
-> +# define ULPI_MISC_A_VBUSVLDEXT		BIT(0)
-> +
-> +
-> +struct ulpi_seq {
-> +	u8 addr;
-> +	u8 val;
-> +};
-> +
-> +struct qcom_usb_hs_phy {
-> +	struct ulpi *ulpi;
-> +	struct phy *phy;
-> +	struct clk *ref_clk;
-> +	struct clk *sleep_clk;
-> +	struct regulator *v1p8;
-> +	struct regulator *v3p3;
-> +	struct reset_control *reset;
-> +	struct ulpi_seq *init_seq;
-> +	struct notifier_block vbus_notify;
-> +	struct extcon_dev *vbus_edev;
-> +	struct extcon_dev *id_edev;
-> +	enum usb_dr_mode dr_mode;
-> +};
-> +
-> +static int
-> +qcom_usb_hs_phy_vbus_notifier(struct notifier_block *nb, unsigned long event,
-> +			      void *ptr)
-> +{
-> +	struct qcom_usb_hs_phy *uphy;
-> +	int is_host;
-> +	u8 addr;
-> +
-> +	uphy = container_of(nb, struct qcom_usb_hs_phy, vbus_notify);
-> +	is_host = extcon_get_cable_state_(uphy->id_edev, EXTCON_USB_HOST);
-> +	if (is_host < 0)
-> +		is_host = 0; /* No id event means always a peripheral */
-> +
-> +	if (event && !is_host)
-> +		addr = ULPI_SET(ULPI_MISC_A);
-> +	else
-> +		addr = ULPI_CLR(ULPI_MISC_A);
-> +
-> +	return ulpi_write(uphy->ulpi, addr,
-> +			  ULPI_MISC_A_VBUSVLDEXTSEL | ULPI_MISC_A_VBUSVLDEXT);
-> +}
-> +
-> +static int qcom_usb_hs_phy_power_on(struct phy *phy)
-> +{
-> +	struct qcom_usb_hs_phy *uphy = phy_get_drvdata(phy);
-> +	struct ulpi *ulpi = uphy->ulpi;
-> +	const struct ulpi_seq *seq;
-> +	int ret, state;
-> +
-> +	ret = clk_prepare_enable(uphy->ref_clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_prepare_enable(uphy->sleep_clk);
-> +	if (ret)
-> +		goto err_sleep;
-> +
-> +	ret = regulator_set_voltage(uphy->v1p8, 1800000, 1800000);
-> +	if (ret)
-> +		goto err_1p8;
-> +
-> +	ret = regulator_set_load(uphy->v1p8, 50000);
-> +	if (ret < 0)
-> +		goto err_1p8;
-> +
-> +	ret = regulator_enable(uphy->v1p8);
-> +	if (ret)
-> +		goto err_1p8;
-> +
-> +	ret = regulator_set_voltage_triplet(uphy->v3p3, 3050000, 3300000,
-> +					    3300000);
-> +	if (ret)
-> +		goto err_3p3;
-> +
-> +	ret = regulator_set_load(uphy->v3p3, 50000);
-> +	if (ret < 0)
-> +		goto err_3p3;
-> +
-> +	ret = regulator_enable(uphy->v3p3);
-> +	if (ret)
-> +		goto err_3p3;
-> +
-> +	for (seq = uphy->init_seq; seq->addr; seq++) {
-> +		ret = ulpi_write(ulpi, seq->addr, seq->val);
-> +		if (ret)
-> +			goto err_ulpi;
-> +	}
-> +
-> +	if (uphy->reset) {
-> +		ret = reset_control_reset(uphy->reset);
-> +		if (ret)
-> +			goto err_ulpi;
-> +	}
-> +
-> +	if (uphy->vbus_edev) {
-> +		ulpi_write(ulpi, ULPI_SET(ULPI_PWR_CLK_MNG_REG),
-> +			   ULPI_PWR_OTG_COMP_DISABLE);
-> +		state = extcon_get_cable_state_(uphy->vbus_edev, EXTCON_USB);
-> +		/* setup initial state */
-> +		qcom_usb_hs_phy_vbus_notifier(&uphy->vbus_notify, state,
-> +					      uphy->vbus_edev);
-> +		ret = extcon_register_notifier(uphy->vbus_edev, EXTCON_USB,
-> +						&uphy->vbus_notify);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		u8 val;
-> +
-> +		switch (uphy->dr_mode) {
-> +		case USB_DR_MODE_OTG:
-> +			val = ULPI_INT_IDGRD;
-> +		case USB_DR_MODE_PERIPHERAL:
-> +			val |= ULPI_INT_SESS_VALID;
-> +			break;
-> +		default:
-> +			val = 0;
-> +		}
-> +
-> +		ret = ulpi_write(ulpi, ULPI_USB_INT_EN_RISE, val);
-> +		if (ret)
-> +			goto err_ulpi;
-> +		ret = ulpi_write(ulpi, ULPI_USB_INT_EN_FALL, val);
-> +		if (ret)
-> +			goto err_ulpi;
-> +	}
-> +
-> +	return 0;
-> +err_ulpi:
-> +	regulator_disable(uphy->v3p3);
-> +err_3p3:
-> +	regulator_disable(uphy->v1p8);
-> +err_1p8:
-> +	clk_disable_unprepare(uphy->sleep_clk);
-> +err_sleep:
-> +	clk_disable_unprepare(uphy->ref_clk);
-> +	return ret;
-> +}
-> +
-> +static int qcom_usb_hs_phy_power_off(struct phy *phy)
-> +{
-> +	int ret;
-> +	struct qcom_usb_hs_phy *uphy = phy_get_drvdata(phy);
-> +
-> +	if (uphy->vbus_edev) {
-> +		ret = extcon_unregister_notifier(uphy->vbus_edev, EXTCON_USB,
-> +						 &uphy->vbus_notify);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	regulator_disable(uphy->v3p3);
-> +	regulator_disable(uphy->v1p8);
-> +	clk_disable_unprepare(uphy->sleep_clk);
-> +	clk_disable_unprepare(uphy->ref_clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct phy_ops qcom_usb_hs_phy_ops = {
-> +	.power_on = qcom_usb_hs_phy_power_on,
-> +	.power_off = qcom_usb_hs_phy_power_off,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static int qcom_usb_hs_phy_probe(struct ulpi *ulpi)
-> +{
-> +	struct qcom_usb_hs_phy *uphy;
-> +	struct phy_provider *p;
-> +	struct clk *clk;
-> +	struct regulator *reg;
-> +	struct reset_control *reset;
-> +	int size;
-> +	int ret;
-> +
-> +	uphy = devm_kzalloc(&ulpi->dev, sizeof(*uphy), GFP_KERNEL);
-> +	if (!uphy)
-> +		return -ENOMEM;
-> +	ulpi_set_drvdata(ulpi, uphy);
-> +	uphy->ulpi = ulpi;
-> +	uphy->dr_mode = of_usb_get_dr_mode_by_phy(ulpi->dev.of_node, -1);
-> +
-> +	size = of_property_count_u8_elems(ulpi->dev.of_node, "qcom,init-seq");
-> +	if (size < 0)
-> +		size = 0;
-> +	uphy->init_seq = devm_kmalloc_array(&ulpi->dev, (size / 2) + 1,
-> +					   sizeof(*uphy->init_seq), GFP_KERNEL);
-> +	if (!uphy->init_seq)
-> +		return -ENOMEM;
-> +	ret = of_property_read_u8_array(ulpi->dev.of_node, "qcom,init-seq",
-> +					(u8 *)uphy->init_seq, size);
-> +	if (ret && size)
-> +		return ret;
-> +	/* NUL terminate */
-> +	uphy->init_seq[size / 2].addr = uphy->init_seq[size / 2].val = 0;
-> +
-> +	uphy->ref_clk = clk = devm_clk_get(&ulpi->dev, "ref");
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	uphy->sleep_clk = clk = devm_clk_get(&ulpi->dev, "sleep");
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	uphy->v1p8 = reg = devm_regulator_get(&ulpi->dev, "v1p8");
-> +	if (IS_ERR(reg))
-> +		return PTR_ERR(reg);
-> +
-> +	uphy->v3p3 = reg = devm_regulator_get(&ulpi->dev, "v3p3");
-> +	if (IS_ERR(reg))
-> +		return PTR_ERR(reg);
-> +
-> +	uphy->reset = reset = devm_reset_control_get(&ulpi->dev, "por");
-> +	if (IS_ERR(reset)) {
-> +		if (PTR_ERR(reset) == -EPROBE_DEFER)
-> +			return PTR_ERR(reset);
-> +		uphy->reset = NULL;
-> +	}
-> +
-> +	uphy->phy = devm_phy_create(&ulpi->dev, ulpi->dev.of_node,
-> +				    &qcom_usb_hs_phy_ops);
-> +	if (IS_ERR(uphy->phy))
-> +		return PTR_ERR(uphy->phy);
-> +
-> +	uphy->vbus_edev = extcon_get_edev_by_phandle(&ulpi->dev, 0);
-> +	if (IS_ERR(uphy->vbus_edev)) {
-> +		if (PTR_ERR(uphy->vbus_edev) != -ENODEV)
-> +			return PTR_ERR(uphy->vbus_edev);
-> +		uphy->vbus_edev = NULL;
-> +	}
-> +
-> +	uphy->id_edev = extcon_get_edev_by_phandle(&ulpi->dev, 1);
-> +	if (IS_ERR(uphy->id_edev)) {
-> +		if (PTR_ERR(uphy->id_edev) != -ENODEV)
-> +			return PTR_ERR(uphy->id_edev);
-> +		uphy->id_edev = NULL;
-> +	}
-> +
-> +	uphy->vbus_notify.notifier_call = qcom_usb_hs_phy_vbus_notifier;
-> +	phy_set_drvdata(uphy->phy, uphy);
-> +
-> +	p = devm_of_phy_provider_register(&ulpi->dev, of_phy_simple_xlate);
-> +	return PTR_ERR_OR_ZERO(p);
-> +}
-> +
-> +static const struct of_device_id qcom_usb_hs_phy_match[] = {
-> +	{ .compatible = "qcom,usb-hs-phy", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, qcom_usb_hs_phy_match);
-> +
-> +static struct ulpi_driver qcom_usb_hs_phy_driver = {
-> +	.probe = qcom_usb_hs_phy_probe,
-> +	.driver = {
-> +		.name = "qcom_usb_hs_phy",
-> +		.of_match_table = qcom_usb_hs_phy_match,
-> +	},
-> +};
-> +module_ulpi_driver(qcom_usb_hs_phy_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm USB HS phy");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.9.0.rc2.8.ga28705d
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    Thanks a lot Stephen!
+V7: Use syscon and regmap (thanks Rob!)
+V8: Update Documentation (drop unused "reg", unit address)
+---
+ .../bindings/clock/brcm,bcm53573-ilp.txt           |  36 +++++
+ drivers/clk/bcm/Makefile                           |   1 +
+ drivers/clk/bcm/clk-bcm53573-ilp.c                 | 148 +++++++++++++++++++++
+ 3 files changed, 185 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
+ create mode 100644 drivers/clk/bcm/clk-bcm53573-ilp.c
 
+diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt b/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
+new file mode 100644
+index 0000000..2ebb107
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
+@@ -0,0 +1,36 @@
++Broadcom BCM53573 ILP clock
++===========================
++
++This binding uses the common clock binding:
++    Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++This binding is used for ILP clock (sometimes referred as "slow clock")
++on Broadcom BCM53573 devices using Cortex-A7 CPU.
++
++ILP's rate has to be calculated on runtime and it depends on ALP clock
++which has to be referenced.
++
++This clock is part of PMU (Power Management Unit), a Broadcom's device
++handing power-related aspects. Its node must be sub-node of the PMU
++device.
++
++Required properties:
++- compatible: "brcm,bcm53573-ilp"
++- clocks: has to reference an ALP clock
++- #clock-cells: should be <0>
++- clock-output-names: from common clock bindings, should contain clock
++		      name
++
++Example:
++
++pmu@18012000 {
++	compatible = "simple-mfd", "syscon";
++	reg = <0x18012000 0x00001000>;
++
++	ilp {
++		compatible = "brcm,bcm53573-ilp";
++		clocks = <&alp>;
++		#clock-cells = <0>;
++		clock-output-names = "ilp";
++	};
++};
+diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
+index 1d79bd2..4b8c56d 100644
+--- a/drivers/clk/bcm/Makefile
++++ b/drivers/clk/bcm/Makefile
+@@ -10,3 +10,4 @@ obj-$(CONFIG_COMMON_CLK_IPROC)	+= clk-ns2.o
+ obj-$(CONFIG_ARCH_BCM_CYGNUS)	+= clk-cygnus.o
+ obj-$(CONFIG_ARCH_BCM_NSP)	+= clk-nsp.o
+ obj-$(CONFIG_ARCH_BCM_5301X)	+= clk-nsp.o
++obj-$(CONFIG_ARCH_BCM_53573)	+= clk-bcm53573-ilp.o
+diff --git a/drivers/clk/bcm/clk-bcm53573-ilp.c b/drivers/clk/bcm/clk-bcm53573-ilp.c
+new file mode 100644
+index 0000000..1f4e30d
+--- /dev/null
++++ b/drivers/clk/bcm/clk-bcm53573-ilp.c
+@@ -0,0 +1,148 @@
++/*
++ * Copyright (C) 2016 Rafał Miłecki <rafal@milecki.pl>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++
++#define PMU_XTAL_FREQ_RATIO			0x66c
++#define  XTAL_ALP_PER_4ILP			0x00001fff
++#define  XTAL_CTL_EN				0x80000000
++#define PMU_SLOW_CLK_PERIOD			0x6dc
++
++struct bcm53573_ilp {
++	struct clk_hw hw;
++	struct regmap *regmap;
++};
++
++static int bcm53573_ilp_enable(struct clk_hw *hw)
++{
++	struct bcm53573_ilp *ilp = container_of(hw, struct bcm53573_ilp, hw);
++
++	regmap_write(ilp->regmap, PMU_SLOW_CLK_PERIOD, 0x10199);
++	regmap_write(ilp->regmap, 0x674, 0x10000);
++
++	return 0;
++}
++
++static void bcm53573_ilp_disable(struct clk_hw *hw)
++{
++	struct bcm53573_ilp *ilp = container_of(hw, struct bcm53573_ilp, hw);
++
++	regmap_write(ilp->regmap, PMU_SLOW_CLK_PERIOD, 0);
++	regmap_write(ilp->regmap, 0x674, 0);
++}
++
++static unsigned long bcm53573_ilp_recalc_rate(struct clk_hw *hw,
++					      unsigned long parent_rate)
++{
++	struct bcm53573_ilp *ilp = container_of(hw, struct bcm53573_ilp, hw);
++	struct regmap *regmap = ilp->regmap;
++	u32 last_val, cur_val;
++	int sum = 0, num = 0, loop_num = 0;
++	int avg;
++
++	/* Enable measurement */
++	regmap_write(regmap, PMU_XTAL_FREQ_RATIO, XTAL_CTL_EN);
++
++	/* Read initial value */
++	regmap_read(regmap, PMU_XTAL_FREQ_RATIO, &last_val);
++	last_val &= XTAL_ALP_PER_4ILP;
++
++	/*
++	 * At minimum we should loop for a bit to let hardware do the
++	 * measurement. This isn't very accurate however, so for a better
++	 * precision lets try getting 20 different values for and use average.
++	 */
++	while (num < 20) {
++		regmap_read(regmap, PMU_XTAL_FREQ_RATIO, &cur_val);
++		cur_val &= XTAL_ALP_PER_4ILP;
++
++		if (cur_val != last_val) {
++			/* Got different value, use it */
++			sum += cur_val;
++			num++;
++			loop_num = 0;
++			last_val = cur_val;
++		} else if (++loop_num > 5000) {
++			/* Same value over and over, give up */
++			sum += cur_val;
++			num++;
++			break;
++		}
++
++		cpu_relax();
++	}
++
++	/* Disable measurement to save power */
++	regmap_write(regmap, PMU_XTAL_FREQ_RATIO, 0x0);
++
++	avg = sum / num;
++
++	return parent_rate * 4 / avg;
++}
++
++static const struct clk_ops bcm53573_ilp_clk_ops = {
++	.enable = bcm53573_ilp_enable,
++	.disable = bcm53573_ilp_disable,
++	.recalc_rate = bcm53573_ilp_recalc_rate,
++};
++
++static void bcm53573_ilp_init(struct device_node *np)
++{
++	struct bcm53573_ilp *ilp;
++	struct clk_init_data init = { 0 };
++	const char *parent_name;
++	int err;
++
++	ilp = kzalloc(sizeof(*ilp), GFP_KERNEL);
++	if (!ilp)
++		return;
++
++	parent_name = of_clk_get_parent_name(np, 0);
++	if (!parent_name) {
++		err = -ENOENT;
++		goto err_free_ilp;
++	}
++
++	ilp->regmap = syscon_node_to_regmap(of_get_parent(np));
++	if (IS_ERR(ilp->regmap)) {
++		err = PTR_ERR(ilp->regmap);
++		goto err_free_ilp;
++	}
++
++	init.name = np->name;
++	init.ops = &bcm53573_ilp_clk_ops;
++	init.parent_names = &parent_name;
++	init.num_parents = 1;
++
++	ilp->hw.init = &init;
++	err = clk_hw_register(NULL, &ilp->hw);
++	if (err)
++		goto err_free_ilp;
++
++	err = of_clk_add_hw_provider(np, of_clk_hw_simple_get, &ilp->hw);
++	if (err)
++		goto err_clk_hw_unregister;
++
++	return;
++
++err_clk_hw_unregister:
++	clk_hw_unregister(&ilp->hw);
++err_free_ilp:
++	kfree(ilp);
++	pr_err("Failed to init ILP clock: %d\n", err);
++}
++
++/* We need it very early for arch code, before device model gets ready */
++CLK_OF_DECLARE(bcm53573_ilp_clk, "brcm,bcm53573-ilp", bcm53573_ilp_init);
 -- 
+2.9.3
 
-Best Regards,
-Peter Chen
