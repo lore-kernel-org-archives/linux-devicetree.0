@@ -1,128 +1,55 @@
-From: Po Liu <po.liu@nxp.com>
-Subject: [PATCH v5 3/3] pci:aer: add support aer interrupt with none
- MSI/MSI-X/INTx mode
-Date: Tue, 13 Sep 2016 12:40:59 +0800
-Message-ID: <1473741659-17618-3-git-send-email-po.liu@nxp.com>
-References: <1472625442-23309-2-git-send-email-po.liu@nxp.com>
- <1473741659-17618-1-git-send-email-po.liu@nxp.com>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: Re: [PATCH 2/2] usb: dwc3: Added a property to set GFLADJ register
+Date: Tue, 13 Sep 2016 08:46:49 +0300
+Message-ID: <878tuwl5bq.fsf@linux.intel.com>
+References: <ae2c9b5683820c6456f91a2ef631efa2de0bec28.1472764828.git.johnyoun@synopsys.com> <649b249e86e901b5bd2cf4cbe9db96d04a45f30d.1472764828.git.johnyoun@synopsys.com> <20160912153018.GA14561@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1473741659-17618-1-git-send-email-po.liu@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Roy Zang <roy.zang@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, Po Liu <po.liu@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160912153018.GA14561@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, John Youn <johnyoun@synopsys.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Thinh Nguyen <thinhn@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On some platforms, root port doesn't support MSI/MSI-X/INTx in RC mode.
-When chip support the aer interrupt with none MSI/MSI-X/INTx mode,
-maybe there is interrupt line for aer pme etc. Search the interrupt
-number in the fdt file. Then fixup the dev->irq with it.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Po Liu <po.liu@nxp.com>
----
-changes for v5:
-	- Add clear 'aer' interrup-names description
 
- .../devicetree/bindings/pci/layerscape-pci.txt     | 11 +++++---
- drivers/pci/pcie/portdrv_core.c                    | 31 +++++++++++++++++++---
- 2 files changed, 35 insertions(+), 7 deletions(-)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-index 41e9f55..101d0a7 100644
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-@@ -18,8 +18,10 @@ Required properties:
- - reg: base addresses and lengths of the PCIe controller
- - interrupts: A list of interrupt outputs of the controller. Must contain an
-   entry for each entry in the interrupt-names property.
--- interrupt-names: Must include the following entries:
--  "intr": The interrupt that is asserted for controller interrupts
-+- interrupt-names: It may be include the following entries:
-+  "aer": The interrupt that is asserted for aer interrupt
-+  "pme": The interrupt that is asserted for pme interrupt
-+  ......
- - fsl,pcie-scfg: Must include two entries.
-   The first entry must be a link to the SCFG device node
-   The second entry must be '0' or '1' based on physical PCIe controller index.
-@@ -35,8 +37,9 @@ Example:
- 		reg = <0x00 0x03400000 0x0 0x00010000   /* controller registers */
- 		       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
- 		reg-names = "regs", "config";
--		interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
--		interrupt-names = "intr";
-+		interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>, /* aer interrupt */
-+			<GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>; /* pme interrupt */
-+		interrupt-names = "aer", "pme";
- 		fsl,pcie-scfg = <&scfg 0>;
- 		#address-cells = <3>;
- 		#size-cells = <2>;
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index e9270b4..7c4943d 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -16,6 +16,7 @@
- #include <linux/slab.h>
- #include <linux/pcieport_if.h>
- #include <linux/aer.h>
-+#include <linux/of_irq.h>
- 
- #include "../pci.h"
- #include "portdrv.h"
-@@ -200,6 +201,28 @@ static int pcie_port_enable_msix(struct pci_dev *dev, int *vectors, int mask)
- static int init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
- {
- 	int i, irq = -1;
-+	int ret;
-+	struct device_node *np = NULL;
-+
-+	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++)
-+		irqs[i] = 0;
-+
-+	if (dev->bus->dev.of_node)
-+		np = dev->bus->dev.of_node;
-+
-+	/* If root port doesn't support MSI/MSI-X/INTx in RC mode,
-+	 * request irq for aer
-+	 */
-+	if (IS_ENABLED(CONFIG_OF_IRQ) && np &&
-+			(mask & PCIE_PORT_SERVICE_PME)) {
-+		ret = of_irq_get_byname(np, "aer");
-+		if (ret > 0) {
-+			irqs[PCIE_PORT_SERVICE_AER_SHIFT] = ret;
-+			if (dev->irq)
-+				irq = dev->irq;
-+			goto no_msi;
-+		}
-+	}
- 
- 	/*
- 	 * If MSI cannot be used for PCIe PME or hotplug, we have to use
-@@ -225,11 +248,13 @@ static int init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
- 		irq = dev->irq;
- 
-  no_msi:
--	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++)
--		irqs[i] = irq;
-+	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++) {
-+		if (!irqs[i])
-+			irqs[i] = irq;
-+	}
- 	irqs[PCIE_PORT_SERVICE_VC_SHIFT] = -1;
- 
--	if (irq < 0)
-+	if (irq < 0 && irqs[PCIE_PORT_SERVICE_AER_SHIFT] < 0)
- 		return -ENODEV;
- 	return 0;
- }
--- 
-2.1.0.27.g96db324
+Rob Herring <robh@kernel.org> writes:
+>> Synopsys HW setup (HAPS DX and phy board) requires a preset to this
+>> register to improve interoperablitity. For example, the value for
+>> GFLADJ_REFCLK_LPM_SEL should be set to 0 with ref_clk period of 50.
+>
+> This sounds like it should be handled in the driver. Is it a simple,=20
+> constant correlation of ref_clk period to this value?
+
+you mean that this could be calculated based off of clk_get_rate() ?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJX15LJAAoJEMy+uJnhGpkGWZYQAIUR8vppHFXujFJGHNsH0FhX
+9W9EPIJOXf/7qfklzeX6perUqD4/5JRwKWeQde78X6ZxYNh5pTsLNOPYi92FXGhd
+pitlSxfWj0tPmRDxPjsEQhPrueHIXnapa5nawVhnRYdCnkm8AspeOsL05q06frzR
+Z5kvLV8u72/i6a9AbS4LfxvEBwQBNcsOMRqBZvh6kV+9T0nV7ntAuPhdsC6kPoRr
+1OI1y9IbhLZhznuaJRODtUdHVXl132QbvVnNFtonB8pnKiZZblWRbPGQ3hcjFAa9
+oyJbd87vLr8IlYimLqsZlrTIR87hmQESDLok13jcEqrIIPVdV6mJD4EqsrM3yORv
+23GhYxPIJOY0W/7ooTAy2y37bVQNW1h+vqItwFP3kRs9HF3TZMfOGRULaTfXy9kp
+vbvqEVRdUgerARM6fQ21vBOscH+Kj3J2NS9JLS4A4/KZObnZYj1YET5RpwC3mo4j
+tHptFYVgeqMat/RYwIsX/0j0/JPZ5cl8p0/Alee7ny6waRK36A708sBpVJasU3jt
+zjUi/+Ia0Dm7fOtDac5anss8xAaCcIg2s4qAsQzhBKl2BGEEox0ef8ZnRldxhQ4x
+oKxN0ZKabht8Uegl6OcxHuQRU6b2DcvA5OhmzXjel+a/qKmhKM5f5m0+iwYjnuGe
+cHZ6nmM5bKFpFYf//hcy
+=uo/o
+-----END PGP SIGNATURE-----
+--=-=-=--
