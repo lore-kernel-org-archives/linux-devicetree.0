@@ -1,36 +1,83 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [RESEND PATCH v7 0/4] the fix for the USB HOST1 at rk3288 platform
-Date: Tue, 13 Sep 2016 16:30:32 +0200
-Message-ID: <10185436.tRUJHEj2GK@phil>
-References: <1473447580-10369-1-git-send-email-ayaka@soulik.info> <2037551.pvMcfteTuT@phil> <29f7cb2a-139e-ee70-a9f0-0573111207d8@soulik.info>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [GIT PULL] Immutable branch between MFD and
+ Regulator due for the v4.9 merge window
+Date: Tue, 13 Sep 2016 22:45:49 +0800
+Message-ID: <CAGb2v66C0SMJU+wudMYv0FRnc1nEHkmyA2VDzXCo0pf6W96MxA@mail.gmail.com>
+References: <20160827075544.26316-1-wens@csie.org> <20160827075544.26316-4-wens@csie.org>
+ <20160913120244.GA28894@dell> <20160913133127.GC31719@dell>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <29f7cb2a-139e-ee70-a9f0-0573111207d8@soulik.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ayaka <ayaka@soulik.info>
-Cc: linux-usb@vger.kernel.org, John.Youn@synopsys.com, kishon@ti.com, felipe.balbi@linux.intel.com, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, randy.li@rock-chips.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBNVC4C7AKGQEBKGQXZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160913133127.GC31719@dell>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 13. September 2016, 19:26:03 CEST schrieb ayaka:
-> On 09/13/2016 07:06 PM, Heiko Stuebner wrote:
-> > Hi Randy,
-> > 
-> > could you check if the other host-only dwc2 are also affected by this
-> > (rk3188, rk3036) please? Because they also seem to act up in some strange
-> > way
-> But I don't have those board currently. I would arrange them anyway.
-> Btw, I would send a new version to correct the fault reported by the
-> auto build machine.
+Hi Lee,
 
-What I meant was, if you could check with some hardware-people first, if the
-other host-only dwc2 are supposedly also affected. Right now I'm trying to
-determine if this effect is somehow related with the usb debounce issue
-I'm seeing with some recent dwc2 patches [0].
+On Tue, Sep 13, 2016 at 9:31 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Mark,
+>
+> Try this instead.
+>
+> The following changes since commit 29b4817d4018df78086157ea3a55c1d9424a7c=
+fc:
+>
+>   Linux 4.8-rc1 (2016-08-07 18:18:00 -0700)
+>
+> are available in the git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-regula=
+tor-v4.9
+>
+> for you to fetch changes up to 8824ee8573483e1c91691b5be3d3730e75551dce:
+>
+>   mfd: axp20x: Add support for AXP806 PMIC (2016-09-13 14:10:04 +0100)
+>
+> ----------------------------------------------------------------
+> Immutable branch between MFD and Regualtor due for the v4.9 merge window
+>
+> ----------------------------------------------------------------
+> Chen-Yu Tsai (3):
+>       regulator: axp20x: Support AXP806 variant
+>       mfd: axp20x: Add bindings for AXP806 PMIC
+>       mfd: axp20x: Add support for AXP806 PMIC
 
+The mfd driver patch should come before the regulator patch for bisectabili=
+ty.
+I'm guessing Mark is fine with you taking it through your tree though.
 
-Heiko
+Thanks!
 
-[0] http://lists.infradead.org/pipermail/linux-rockchip/2016-September/012141.html
-https://git.kernel.org/cgit/linux/kernel/git/balbi/usb.git/commit/?h=testing/next&id=2938fc63e0c26bf694436ac81bc776c8b7eced0c
+ChenYu
+
+>
+>  Documentation/devicetree/bindings/mfd/axp20x.txt |  28 +++++-
+>  drivers/mfd/axp20x-rsb.c                         |   1 +
+>  drivers/mfd/axp20x.c                             |  72 ++++++++++++++
+>  drivers/regulator/axp20x-regulator.c             | 118 +++++++++++++++++=
+++++--
+>  include/linux/mfd/axp20x.h                       |  60 ++++++++++++
+>  5 files changed, 270 insertions(+), 9 deletions(-)
+>
+> --
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
