@@ -1,211 +1,36 @@
-From: <shh.xie@gmail.com>
-Subject: [PATCH 08/10] [v3] arm64: dts: add LS1046A-RDB board support
-Date: Tue, 13 Sep 2016 16:10:01 +0800
-Message-ID: <1473754203-22970-9-git-send-email-shh.xie@gmail.com>
-References: <1473754203-22970-1-git-send-email-shh.xie@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [GIT PULL] Immutable branch between MFD, GPIO and Regulator due
+ for the v4.9 merge window
+Date: Tue, 13 Sep 2016 10:32:49 +0200
+Message-ID: <CACRpkdYLO3ih7vDfUk3rGq-59J2OWz2ZON8qHGQLFNbicGZYYA@mail.gmail.com>
+References: <1472633892-8261-1-git-send-email-j-keerthy@ti.com>
+ <20160831122435.GD9415@dell> <CACRpkdbfOdaouKEooLsGRYXhbwkjfNoTXTqunumF4bOPjOUD4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1473754203-22970-1-git-send-email-shh.xie@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, shawnguo@kernel.org, linux-kernel@vger.kernel.org
-Cc: Shaohui Xie <Shaohui.Xie@nxp.com>, Mingkai Hu <Mingkai.Hu@nxp.com>, arnd@arndb.de
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbfOdaouKEooLsGRYXhbwkjfNoTXTqunumF4bOPjOUD4w@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Keerthy <j-keerthy@ti.com>, Mark Brown <broonie@kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Mingkai Hu <Mingkai.Hu@nxp.com>
+On Wed, Sep 7, 2016 at 10:03 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Wed, Aug 31, 2016 at 2:24 PM, Lee Jones <lee.jones@linaro.org> wrote:
+>
+>> The following changes since commit 694d0d0bb2030d2e36df73e2d23d5770511dbc8d:
+>>
+>>   Linux 4.8-rc2 (2016-08-14 19:11:36 -0700)
+>>
+>> are available in the git repository at:
+>>
+>>   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-gpio-regulator-v4.9
+>
+> Hm it is based on a later release candidate than my tree so I'll wait
+> and see if I
+> have to pull it (like if there are clashes in linux-next...)
 
-The LS1046A reference design board (RDB) is a high-performance computing,
-evaluation, and development platform that supports the LS1046A SoC.
+Bah I'm getting patches for the GPIO driver so I caved in and
+merged v4.8-rc1 and then pulled in this, all looks good.
 
-Signed-off-by: Mingkai Hu <Mingkai.Hu@nxp.com>
-Signed-off-by: Shaohui Xie <Shaohui.Xie@nxp.com>
----
-changs in V3:
-1. move 'status' of ifc node at the end of property list.
-
-changes in V2:
-1. updated aliases of serial nodes.
-
- arch/arm64/boot/dts/freescale/Makefile            |   1 +
- arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 150 ++++++++++++++++++++++
- 2 files changed, 151 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 1b7783d..9c81b9e 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -1,5 +1,6 @@
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
-+dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-rdb.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-new file mode 100644
-index 0000000..d1ccc00
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-@@ -0,0 +1,150 @@
-+/*
-+ * Device Tree Include file for Freescale Layerscape-1046A family SoC.
-+ *
-+ * Copyright 2016, Freescale Semiconductor, Inc.
-+ *
-+ * Mingkai Hu <mingkai.hu@nxp.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPLv2 or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "fsl-ls1046a.dtsi"
-+
-+/ {
-+	model = "LS1046A RDB Board";
-+	compatible = "fsl,ls1046a-rdb", "fsl,ls1046a";
-+
-+	aliases {
-+		serial0 = &duart0;
-+		serial1 = &duart1;
-+		serial2 = &duart2;
-+		serial3 = &duart3;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&duart0 {
-+	status = "okay";
-+};
-+
-+&duart1 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	ina220@40 {
-+		compatible = "ti,ina220";
-+		reg = <0x40>;
-+		shunt-resistor = <1000>;
-+	};
-+
-+	temp-sensor@4c {
-+		compatible = "adi,adt7461";
-+		reg = <0x4c>;
-+	};
-+
-+	eeprom@56 {
-+		compatible = "atmel,24c512";
-+		reg = <0x52>;
-+	};
-+
-+	eeprom@57 {
-+		compatible = "atmel,24c512";
-+		reg = <0x53>;
-+	};
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+
-+	rtc@51 {
-+		compatible = "nxp,pcf2129";
-+		reg = <0x51>;
-+	};
-+};
-+
-+&ifc {
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+	/* NAND Flashe and CPLD on board */
-+	ranges = <0x0 0x0 0x0 0x7e800000 0x00010000
-+		  0x2 0x0 0x0 0x7fb00000 0x00000100>;
-+	status = "okay";
-+
-+	nand@0,0 {
-+		compatible = "fsl,ifc-nand";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x0 0x0 0x10000>;
-+	};
-+
-+	cpld: board-control@2,0 {
-+		compatible = "fsl,ls1046ardb-cpld";
-+		reg = <0x2 0x0 0x0000100>;
-+	};
-+};
-+
-+&qspi {
-+	num-cs = <2>;
-+	bus-num = <0>;
-+	status = "okay";
-+
-+	qflash0: s25fs512s@0 {
-+		compatible = "spansion,m25p80";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+	};
-+
-+	qflash1: s25fs512s@1 {
-+		compatible = "spansion,m25p80";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <20000000>;
-+		reg = <1>;
-+	};
-+};
--- 
-2.1.0.27.g96db324
+Yours,
+Linus Walleij
