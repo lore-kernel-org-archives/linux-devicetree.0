@@ -1,58 +1,43 @@
 Return-Path: <mchehab@osg.samsung.com>
 From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Subject: [PATCH v4 29/29] docs-rst: move HOWTO and mentioned documents to development-process/
-Date: Mon, 19 Sep 2016 08:08:03 -0300
-Message-Id: <e05d7a0ad23f6ec723b572f217e2ecc1f6123d1d.1474280152.git.mchehab@s-opensource.com>
-In-Reply-To: <cover.1474280152.git.mchehab@s-opensource.com>
-References: <cover.1474280152.git.mchehab@s-opensource.com>
+Subject: [PATCH v2 19/20] doc: adjust references to development-process
+Date: Mon, 12 Sep 2016 23:18:10 -0300
+Message-Id: <373cd9feb5678b7375d1e054b2783706636fc325.1473732263.git.mchehab@s-opensource.com>
+In-Reply-To: <cover.1473732263.git.mchehab@s-opensource.com>
+References: <cover.1473732263.git.mchehab@s-opensource.com>
 MIME-Version: 1.0
-In-Reply-To: <cover.1474280152.git.mchehab@s-opensource.com>
-References: <cover.1474280152.git.mchehab@s-opensource.com>
+In-Reply-To: <cover.1473732263.git.mchehab@s-opensource.com>
+References: <cover.1473732263.git.mchehab@s-opensource.com>
 Content-Type: text/plain; charset=true
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Mauro Carvalho Chehab <mchehab@infradead.org>, Markus Heiser <markus.heiser@darmarit.de>, Jonathan Corbet <corbet@lwn.net>, Jani Nikula <jani.nikula@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, Greg KH <greg@kroah.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Karsten Keil <isdn@linux-pingi.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Paolo Bonzini <pbonzini@redhat.com>, =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>, Wim Van Sebroeck <wim@iguana.be>, Harry Wei <harryxiyou@gmail.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Miklos Szeredi <miklos@szeredi.hu>, "David S. Miller" <davem@davemloft.net>, Shuah Khan <shuah@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Philippe Loctaux <phil@philippeloctaux.com>, Peter Loeffler <peter.loeffler@guruz.at>, Doug Smythies <doug.smythies@gmail.com>, Alex Henrie <alexhenrie24@gmail.com>, Chris Metcalf <cmetcalf@ezchip.com>, Jakub Wilk <jwilk@jwilk.net>, Darren Hart <dvhart@infradead.org>, Eddie Kovsky <ewk@edkovsky.org>, Luis de Bethencourt <luisbg@osg.samsung.com>, Richard Weinberger <richard@nod.at>, SeongJae Park <sj38.park@gmail.com>, Masanari Iida <standby24x7@gmail.com>, Minchan Kim <minchan@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Andrew Morton <akpm@linux-foundation.org>, Kalle Valo <kvalo@codeaurora.org>, Diego Viola <diego.viola@gmail.com>, =?UTF-8?q?=C3=98yvind=20A=2E=20Holm?= <sunny@sunbase.org>, =?UTF-8?q?Manuel=20P=C3=A9gouri=C3=A9-Gonnard?= <mpg@elzevir.fr>, Jiri Kosina <jikos@kernel.org>, Alexander Kapshuk <alexander.kapshuk@gmail.com>, Wei Jiangang <weijg.fnst@cn.fujitsu.com>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, netdev@vger.kernel.org, stable@vger.kernel.org, kvm@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@zh-kernel.org, linux-pcmcia@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Mauro Carvalho Chehab <mchehab@infradead.org>, Markus Heiser <markus.heiser@darmarit.de>, Jonathan Corbet <corbet@lwn.net>, Jani Nikula <jani.nikula@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Karsten Keil <isdn@linux-pingi.de>, Paolo Bonzini <pbonzini@redhat.com>, =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>, Wim Van Sebroeck <wim@iguana.be>, Harry Wei <harryxiyou@gmail.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Miklos Szeredi <miklos@szeredi.hu>, "David S. Miller" <davem@davemloft.net>, Shuah Khan <shuah@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Philippe Loctaux <phil@philippeloctaux.com>, Doug Smythies <doug.smythies@gmail.com>, Peter Loeffler <peter.loeffler@guruz.at>, Alex Henrie <alexhenrie24@gmail.com>, Chris Metcalf <cmetcalf@ezchip.com>, Jakub Wilk <jwilk@jwilk.net>, Richard Weinberger <richard@nod.at>, SeongJae Park <sj38.park@gmail.com>, Masanari Iida <standby24x7@gmail.com>, Minchan Kim <minchan@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Diego Viola <diego.viola@gmail.com>, =?UTF-8?q?=C3=98yvind=20A=2E=20Holm?= <sunny@sunbase.org>, Vineet Gupta <vgupta@synopsys.com>, Jiri Kosina <jikos@kernel.org>, =?UTF-8?q?Manuel=20P=C3=A9gouri=C3=A9-Gonnard?= <mpg@elzevir.fr>, Alexander Kapshuk <alexander.kapshuk@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Wei Jiangang <weijg.fnst@cn.fujitsu.com>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, netdev@vger.kernel.org, kvm@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@zh-kernel.org, linux-pcmcia@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-In preparation to add those files to the Sphinx build logic,
-move them to development-process/ dir and rename their extension
-to RST.
-
-Please notice that the main README file was not moved. It
-probably makes sense to move it too as well, in order to be
-able to parse it via Sphinx, but this could be counter-intuitive.
+Several files got moved into development-process, and had
+a .rst appended. Fix references where it occurs.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 ---
  Documentation/ABI/README                           |  2 +-
  Documentation/BUG-HUNTING                          |  2 +-
  Documentation/DocBook/kernel-hacking.tmpl          |  4 ++--
+ Documentation/SubmitChecklist                      |  4 ++--
  Documentation/adding-syscalls.txt                  |  2 +-
  Documentation/development-process/4.Coding.rst     |  2 +-
  Documentation/development-process/5.Posting.rst    |  4 ++--
- .../{Changes => development-process/Changes.rst}   |  0
- .../CodingStyle.rst}                               |  0
- .../{HOWTO => development-process/HOWTO.rst}       | 22 ++++++++---------
- .../ManagementStyle.rst}                           |  0
- .../SecurityBugs.rst}                              |  0
- .../SubmitChecklist.rst}                           | 10 ++++----
- .../SubmittingDrivers.rst}                         |  9 +++----
- .../SubmittingPatches.rst}                         | 26 ++++++++++++--------
- .../applying-patches.rst}                          |  0
- .../development-process/development-process.rst    |  2 ++
- .../email-clients.rst}                             |  2 ++
- Documentation/development-process/index.rst        | 20 ++++++++++++++++
- .../kernel-docs.rst}                               |  0
- .../stable_api_nonsense.rst}                       |  0
- .../stable_kernel_rules.rst}                       |  7 ++++--
+ Documentation/development-process/HOWTO.rst        | 22 ++++++++---------
+ .../development-process/SubmittingDrivers.rst      |  4 ++--
+ .../development-process/SubmittingPatches.rst      | 10 ++++----
+ .../development-process/stable_kernel_rules.rst    |  4 ++--
  .../devicetree/bindings/submitting-patches.txt     |  2 +-
  Documentation/filesystems/locks.txt                |  2 +-
- Documentation/hwmon/submitting-patches             |  8 +++----
+ Documentation/hwmon/submitting-patches             |  6 ++---
  Documentation/isdn/README                          |  2 +-
  Documentation/ja_JP/HOWTO                          | 28 +++++++++++-----------
- Documentation/ja_JP/SubmitChecklist                |  6 ++---
- Documentation/ja_JP/SubmittingPatches              | 16 ++++++-------
+ Documentation/ja_JP/SubmitChecklist                |  2 +-
+ Documentation/ja_JP/SubmittingPatches              | 14 +++++------
  Documentation/ja_JP/stable_api_nonsense.txt        |  4 ++--
  Documentation/ja_JP/stable_kernel_rules.txt        |  6 ++---
  Documentation/ko_KR/HOWTO                          | 28 +++++++++++-----------
@@ -66,7 +51,7 @@ Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
  Documentation/zh_CN/HOWTO                          | 28 +++++++++++-----------
  Documentation/zh_CN/SecurityBugs                   |  4 ++--
  Documentation/zh_CN/SubmittingDrivers              |  8 +++----
- Documentation/zh_CN/SubmittingPatches              | 12 +++++-----
+ Documentation/zh_CN/SubmittingPatches              | 10 ++++----
  Documentation/zh_CN/stable_api_nonsense.txt        |  4 ++--
  Documentation/zh_CN/stable_kernel_rules.txt        |  6 ++---
  MAINTAINERS                                        |  2 +-
@@ -79,20 +64,7 @@ Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
  net/Kconfig                                        |  4 ++--
  scripts/ver_linux                                  |  2 +-
  tools/testing/selftests/futex/README               |  2 +-
- 54 files changed, 182 insertions(+), 146 deletions(-)
- rename Documentation/{Changes => development-process/Changes.rst} (100%)
- rename Documentation/{CodingStyle => development-process/CodingStyle.rst} (100%)
- rename Documentation/{HOWTO => development-process/HOWTO.rst} (96%)
- rename Documentation/{ManagementStyle => development-process/ManagementStyle.rst} (100%)
- rename Documentation/{SecurityBugs => development-process/SecurityBugs.rst} (100%)
- rename Documentation/{SubmitChecklist => development-process/SubmitChecklist.rst} (93%)
- rename Documentation/{SubmittingDrivers => development-process/SubmittingDrivers.rst} (96%)
- rename Documentation/{SubmittingPatches => development-process/SubmittingPatches.rst} (97%)
- rename Documentation/{applying-patches.txt => development-process/applying-patches.rst} (100%)
- rename Documentation/{email-clients.txt => development-process/email-clients.rst} (99%)
- rename Documentation/{kernel-docs.txt => development-process/kernel-docs.rst} (100%)
- rename Documentation/{stable_api_nonsense.txt => development-process/stable_api_nonsense.rst} (100%)
- rename Documentation/{stable_kernel_rules.txt => development-process/stable_kernel_rules.rst} (96%)
+ 44 files changed, 132 insertions(+), 132 deletions(-)
 
 diff --git a/Documentation/ABI/README b/Documentation/ABI/README
 index 1fafc4b0753b..232cade3a59c 100644
@@ -130,6 +102,28 @@ index 589b40cc5eb5..562c0648738e 100644
      </para>
     </listitem>
    </itemizedlist>
+diff --git a/Documentation/SubmitChecklist b/Documentation/SubmitChecklist
+index 2b7e32dfe00d..d646b1d47db1 100644
+--- a/Documentation/SubmitChecklist
++++ b/Documentation/SubmitChecklist
+@@ -5,7 +5,7 @@ Here are some basic things that developers should do if they want to see their
+ kernel patch submissions accepted more quickly.
+ 
+ These are all above and beyond the documentation that is provided in
+-Documentation/SubmittingPatches and elsewhere regarding submitting Linux
++Documentation/development-process/SubmittingPatches.rst and elsewhere regarding submitting Linux
+ kernel patches.
+ 
+ 
+@@ -27,7 +27,7 @@ kernel patches.
+    tends to use `unsigned long' for 64-bit quantities.
+ 
+ 5: Check your patch for general style as detailed in
+-   Documentation/CodingStyle.  Check for trivial violations with the
++   Documentation/development-process/CodingStyle.rst.  Check for trivial violations with the
+    patch style checker prior to submission (scripts/checkpatch.pl).
+    You should be able to justify all violations that remain in
+    your patch.
 diff --git a/Documentation/adding-syscalls.txt b/Documentation/adding-syscalls.txt
 index bbb31e091b28..7dd00b344844 100644
 --- a/Documentation/adding-syscalls.txt
@@ -157,7 +151,7 @@ index 9d5cef996f7f..a52465835c7b 100644
  a substantial amount of code in the kernel which does not meet the coding
  style guidelines.  The presence of that code leads to two independent
 diff --git a/Documentation/development-process/5.Posting.rst b/Documentation/development-process/5.Posting.rst
-index 945d40200538..7b0d07d2a1f9 100644
+index b511ddf7e82a..d75260f4fc1d 100644
 --- a/Documentation/development-process/5.Posting.rst
 +++ b/Documentation/development-process/5.Posting.rst
 @@ -210,7 +210,7 @@ The tags in common use are:
@@ -178,20 +172,9 @@ index 945d40200538..7b0d07d2a1f9 100644
     detail.
  
   - Reported-by: names a user who reported a problem which is fixed by this
-diff --git a/Documentation/Changes b/Documentation/development-process/Changes.rst
-similarity index 100%
-rename from Documentation/Changes
-rename to Documentation/development-process/Changes.rst
-diff --git a/Documentation/CodingStyle b/Documentation/development-process/CodingStyle.rst
-similarity index 100%
-rename from Documentation/CodingStyle
-rename to Documentation/development-process/CodingStyle.rst
-diff --git a/Documentation/HOWTO b/Documentation/development-process/HOWTO.rst
-similarity index 96%
-rename from Documentation/HOWTO
-rename to Documentation/development-process/HOWTO.rst
-index adde88a6d9c4..9898ef930223 100644
---- a/Documentation/HOWTO
+diff --git a/Documentation/development-process/HOWTO.rst b/Documentation/development-process/HOWTO.rst
+index 31c8df5d20c7..9a06de24b755 100644
+--- a/Documentation/development-process/HOWTO.rst
 +++ b/Documentation/development-process/HOWTO.rst
 @@ -90,19 +90,19 @@ required reading:
      what is necessary to do to configure and build the kernel.  People
@@ -216,8 +199,8 @@ index adde88a6d9c4..9898ef930223 100644
      These files describe in explicit detail how to successfully create
      and send a patch, including (but not limited to):
  
-@@ -122,7 +122,7 @@ required reading:
- 	"Linux kernel patch submission format"
+@@ -124,7 +124,7 @@ required reading:
+ 
  		http://linux.yyz.us/patch-format.html
  
 -  :ref:`Documentation/stable_api_nonsense.txt <stable_api_nonsense>`
@@ -225,7 +208,7 @@ index adde88a6d9c4..9898ef930223 100644
      This file describes the rationale behind the conscious decision to
      not have a stable API within the kernel, including things like:
  
-@@ -135,29 +135,29 @@ required reading:
+@@ -137,29 +137,29 @@ required reading:
      philosophy and is very important for people moving to Linux from
      development on other Operating Systems.
  
@@ -260,7 +243,7 @@ index adde88a6d9c4..9898ef930223 100644
      A good introduction describing exactly what a patch is and how to
      apply it to the different development branches of the kernel.
  
-@@ -313,7 +313,7 @@ two weeks, but it can be longer if there are no pressing problems.  A
+@@ -301,7 +301,7 @@ two weeks, but it can be longer if there are no pressing problems.  A
  security-related problem, instead, can cause a release to happen almost
  instantly.
  
@@ -269,71 +252,18 @@ index adde88a6d9c4..9898ef930223 100644
  documents what kinds of changes are acceptable for the -stable tree, and
  how the release process works.
  
-@@ -446,7 +446,7 @@ add your statements between the individual quoted sections instead of
+@@ -433,7 +433,7 @@ add your statements between the individual quoted sections instead of
  writing at the top of the mail.
  
  If you add patches to your mail, make sure they are plain readable text
--as stated in Documentation/SubmittingPatches.
-+as stated in Documentation/development-process/SubmittingPatches.rst.
- Kernel developers don't want to deal with
- attachments or compressed patches; they may want to comment on
- individual lines of your patch, which works only that way. Make sure you
-diff --git a/Documentation/ManagementStyle b/Documentation/development-process/ManagementStyle.rst
-similarity index 100%
-rename from Documentation/ManagementStyle
-rename to Documentation/development-process/ManagementStyle.rst
-diff --git a/Documentation/SecurityBugs b/Documentation/development-process/SecurityBugs.rst
-similarity index 100%
-rename from Documentation/SecurityBugs
-rename to Documentation/development-process/SecurityBugs.rst
-diff --git a/Documentation/SubmitChecklist b/Documentation/development-process/SubmitChecklist.rst
-similarity index 93%
-rename from Documentation/SubmitChecklist
-rename to Documentation/development-process/SubmitChecklist.rst
-index 22a370ff34e5..6845a4e4d96e 100644
---- a/Documentation/SubmitChecklist
-+++ b/Documentation/development-process/SubmitChecklist.rst
-@@ -1,3 +1,5 @@
-+.. _submitchecklist:
-+
- Linux Kernel patch submission checklist
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
-@@ -5,7 +7,7 @@ Here are some basic things that developers should do if they want to see their
- kernel patch submissions accepted more quickly.
- 
- These are all above and beyond the documentation that is provided in
--Documentation/SubmittingPatches
-+:ref:`Documentation/development-process/SubmittingPatches.rst <submittingpatches>`
- and elsewhere regarding submitting Linux kernel patches.
- 
- 
-@@ -28,8 +30,8 @@ and elsewhere regarding submitting Linux kernel patches.
- 4) ppc64 is a good architecture for cross-compilation checking because it
-    tends to use ``unsigned long`` for 64-bit quantities.
- 
--5: Check your patch for general style as detailed in
--   Documentation/CodingStyle.
-+5) Check your patch for general style as detailed in
-+   :ref:`Documentation/development-process/CodingStyle.rst <codingstyle>`.
-    Check for trivial violations with the patch style checker prior to
-    submission (``scripts/checkpatch.pl``).
-    You should be able to justify all violations that remain in
-@@ -54,7 +56,7 @@ and elsewhere regarding submitting Linux kernel patches.
-        but any one function that uses more than 512 bytes on the stack is a
-        candidate for change.
- 
--11: Include :ref:`kernel-doc <kernel_doc>` to document global  kernel APIs.
-+11) Include :ref:`kernel-doc <kernel_doc>` to document global  kernel APIs.
-     (Not required for static functions, but OK there also.) Use
-     ``make htmldocs`` or ``make pdfdocs`` to check the
-     :ref:`kernel-doc <kernel_doc>` and fix any issues.
-diff --git a/Documentation/SubmittingDrivers b/Documentation/development-process/SubmittingDrivers.rst
-similarity index 96%
-rename from Documentation/SubmittingDrivers
-rename to Documentation/development-process/SubmittingDrivers.rst
-index 2ac931645e53..e4810fb8f4e2 100644
---- a/Documentation/SubmittingDrivers
+-as stated in Documentation/SubmittingPatches. Kernel developers don't
++as stated in Documentation/development-process/SubmittingPatches.rst. Kernel developers don't
+ want to deal with attachments or compressed patches; they may want
+ to comment on individual lines of your patch, which works only that way.
+ Make sure you use a mail program that does not mangle spaces and tab
+diff --git a/Documentation/development-process/SubmittingDrivers.rst b/Documentation/development-process/SubmittingDrivers.rst
+index 2ac931645e53..621d17af20fd 100644
+--- a/Documentation/development-process/SubmittingDrivers.rst
 +++ b/Documentation/development-process/SubmittingDrivers.rst
 @@ -8,7 +8,7 @@ various kernel trees. Note that if you are interested in video card drivers
  you should probably talk to XFree86 (http://www.xfree86.org/) and/or X.Org
@@ -344,190 +274,76 @@ index 2ac931645e53..e4810fb8f4e2 100644
  
  
  Allocating Device Numbers
-@@ -40,9 +40,9 @@ Linux 2.4:
- 	maintainer does not respond or you cannot find the appropriate
- 	maintainer then please contact Willy Tarreau <w@1wt.eu>.
- 
--Linux 2.6:
-+Linux 2.6 and upper:
- 	The same rules apply as 2.4 except that you should follow linux-kernel
--	to track changes in API's. The final contact point for Linux 2.6
-+	to track changes in API's. The final contact point for Linux 2.6+
- 	submissions is Andrew Morton.
- 
- What Criteria Determine Acceptance
-@@ -73,7 +73,8 @@ Interfaces:
+@@ -73,7 +73,7 @@ Interfaces:
  
  Code:
  		Please use the Linux style of code formatting as documented
 -		in Documentation/CodingStyle. If you have sections of code
-+		in :ref:`Documentation/development-process/CodingStyle.rst <codingStyle>`.
-+		If you have sections of code
++		in Documentation/development-process/CodingStyle.rst. If you have sections of code
  		that need to be in other formats, for example because they
  		are shared with a windows driver kit and you want to
  		maintain them just once separate them out nicely and note
-diff --git a/Documentation/SubmittingPatches b/Documentation/development-process/SubmittingPatches.rst
-similarity index 97%
-rename from Documentation/SubmittingPatches
-rename to Documentation/development-process/SubmittingPatches.rst
-index 801f5cd5103b..8e8c857d24d1 100644
---- a/Documentation/SubmittingPatches
+diff --git a/Documentation/development-process/SubmittingPatches.rst b/Documentation/development-process/SubmittingPatches.rst
+index d856af3de9f5..b0bf22510c3d 100644
+--- a/Documentation/development-process/SubmittingPatches.rst
 +++ b/Documentation/development-process/SubmittingPatches.rst
-@@ -10,10 +10,12 @@ can greatly increase the chances of your change being accepted.
- 
- This document contains a large number of suggestions in a relatively terse
- format.  For detailed information on how the kernel development process
--works, see Documentation/development-process.  Also, read
--Documentation/SubmitChecklist for a list of items to check before
-+works, see :ref:`Documentation/development-process <development_process_main>`.
-+Also, read :ref:`Documentation/development-process/SubmitChecklist.rst <submitchecklist>`
-+for a list of items to check before
+@@ -13,7 +13,7 @@ format.  For detailed information on how the kernel development process
+ works, see Documentation/development-process.  Also, read
+ Documentation/SubmitChecklist for a list of items to check before
  submitting code.  If you are submitting a driver, also read
 -Documentation/SubmittingDrivers; for device tree binding patches, read
-+:ref:`Documentation/development-process/SubmittingDrivers.rst <submittingdrivers>`;
-+for device tree binding patches, read
++Documentation/development-process/SubmittingDrivers.rst; for device tree binding patches, read
  Documentation/devicetree/bindings/submitting-patches.txt.
  
- Many of these steps describe the default behavior of the ``git`` version
-@@ -235,7 +237,9 @@ then only post say 15 or so at a time and wait for review and integration.
- ---------------------------
+ Many of these steps describe the default behavior of the git version
+@@ -246,7 +246,7 @@ Style-check your changes
+ ------------------------
  
  Check your patch for basic style violations, details of which can be
 -found in Documentation/CodingStyle.  Failure to do so simply wastes
-+found in
-+:ref:`Documentation/development-process/CodingStyle.rst <codingstyle>`.
-+Failure to do so simply wastes
++found in Documentation/development-process/CodingStyle.rst.  Failure to do so simply wastes
  the reviewers time and will get your patch rejected, probably
  without even being read.
  
-@@ -300,8 +304,9 @@ toward the stable maintainers by putting a line like this::
+@@ -313,7 +313,7 @@ toward the stable maintainers by putting a line like this:
    Cc: stable@vger.kernel.org
  
  into the sign-off area of your patch (note, NOT an email recipient).  You
 -should also read Documentation/stable_kernel_rules.txt in addition to this
--file.
-+should also read
-+:ref:`Documentation/development-process/stable_kernel_rules.rst <stable_kernel_rules>`
-+in addition to this file.
++should also read Documentation/development-process/stable_kernel_rules.rst in addition to this
+ file.
  
  Note, however, that some subsystem maintainers want to come to their own
- conclusions on which patches should go to the stable trees.  The networking
-@@ -358,8 +363,9 @@ decreasing the likelihood of your MIME-attached change being accepted.
- Exception:  If your mailer is mangling patches then someone may ask
- you to re-send them using MIME.
- 
--See Documentation/development-process/email-clients.rst for hints about configuring
--your e-mail client so that it sends your patches untouched.
-+See :ref:`Documentation/development-process/email-clients.rst <email_clients>`
-+for hints about configuring your e-mail client so that it sends your patches
-+untouched.
- 
- 7) E-mail size
- --------------
-@@ -822,8 +828,8 @@ Greg Kroah-Hartman, "How to piss off a kernel subsystem maintainer".
+@@ -843,8 +843,8 @@ Greg Kroah-Hartman, "How to piss off a kernel subsystem maintainer".
  NO!!!! No more huge patch bombs to linux-kernel@vger.kernel.org people!
    <https://lkml.org/lkml/2005/7/11/336>
  
 -Kernel Documentation/CodingStyle:
 -  <Documentation/CodingStyle>
 +Kernel Documentation/development-process/CodingStyle.rst:
-+  :ref:`Documentation/development-process/CodingStyle.rst <codingstyle>`
++  <Documentation/development-process/CodingStyle.rst>
  
  Linus Torvalds's mail on the canonical patch format:
    <http://lkml.org/lkml/2005/4/7/183>
-diff --git a/Documentation/applying-patches.txt b/Documentation/development-process/applying-patches.rst
-similarity index 100%
-rename from Documentation/applying-patches.txt
-rename to Documentation/development-process/applying-patches.rst
-diff --git a/Documentation/development-process/development-process.rst b/Documentation/development-process/development-process.rst
-index d431a1098875..bd1399f7202a 100644
---- a/Documentation/development-process/development-process.rst
-+++ b/Documentation/development-process/development-process.rst
-@@ -1,3 +1,5 @@
-+.. _development_process_main:
-+
- A guide to the Kernel Development Process
- =========================================
- 
-diff --git a/Documentation/email-clients.txt b/Documentation/development-process/email-clients.rst
-similarity index 99%
-rename from Documentation/email-clients.txt
-rename to Documentation/development-process/email-clients.rst
-index 0deb240bee56..d35f5fd05f29 100644
---- a/Documentation/email-clients.txt
-+++ b/Documentation/development-process/email-clients.rst
-@@ -1,3 +1,5 @@
-+.. _email_clients:
-+
- Email clients info for Linux
- ============================
- 
-diff --git a/Documentation/development-process/index.rst b/Documentation/development-process/index.rst
-index c37475d91090..f54c15fe0ac1 100644
---- a/Documentation/development-process/index.rst
-+++ b/Documentation/development-process/index.rst
-@@ -1,3 +1,9 @@
-+.. raw:: latex
-+
-+	\renewcommand\thesection*
-+	\renewcommand\thesubsection*
-+
-+
- Linux Kernel Development Documentation
- ======================================
- 
-@@ -6,4 +12,18 @@ Contents:
- .. toctree::
-    :maxdepth: 2
- 
-+   HOWTO
-+   Changes
-+   CodingStyle
-+   SubmittingPatches
-+   SubmittingDrivers
-+   stable_api_nonsense
-+   SecurityBugs
-+   ManagementStyle
-+   stable_kernel_rules
-+   kernel-docs
-+   applying-patches
-+   email-clients
-+   SubmitChecklist
-+
-    development-process
-diff --git a/Documentation/kernel-docs.txt b/Documentation/development-process/kernel-docs.rst
-similarity index 100%
-rename from Documentation/kernel-docs.txt
-rename to Documentation/development-process/kernel-docs.rst
-diff --git a/Documentation/stable_api_nonsense.txt b/Documentation/development-process/stable_api_nonsense.rst
-similarity index 100%
-rename from Documentation/stable_api_nonsense.txt
-rename to Documentation/development-process/stable_api_nonsense.rst
-diff --git a/Documentation/stable_kernel_rules.txt b/Documentation/development-process/stable_kernel_rules.rst
-similarity index 96%
-rename from Documentation/stable_kernel_rules.txt
-rename to Documentation/development-process/stable_kernel_rules.rst
-index 1eba72708c7f..daa1073b65df 100644
---- a/Documentation/stable_kernel_rules.txt
+diff --git a/Documentation/development-process/stable_kernel_rules.rst b/Documentation/development-process/stable_kernel_rules.rst
+index 1eba72708c7f..533be00260e6 100644
+--- a/Documentation/development-process/stable_kernel_rules.rst
 +++ b/Documentation/development-process/stable_kernel_rules.rst
-@@ -26,7 +26,9 @@ Rules on what kind of patches are accepted, and which ones are not, into the
+@@ -26,7 +26,7 @@ Rules on what kind of patches are accepted, and which ones are not, into the
     race can be exploited is also provided.
   - It cannot contain any "trivial" fixes in it (spelling changes,
     whitespace cleanups, etc).
 - - It must follow the Documentation/SubmittingPatches rules.
-+ - It must follow the
-+   :ref:`Documentation/development-process/SubmittingPatches.rst <submittingpatches>`
-+   rules.
++ - It must follow the Documentation/development-process/SubmittingPatches.rst rules.
   - It or an equivalent fix must already exist in Linus' tree (upstream).
  
  
-@@ -37,7 +39,8 @@ Procedure for submitting patches to the -stable tree
+@@ -37,7 +37,7 @@ Procedure for submitting patches to the -stable tree
     submission guidelines as described in
     Documentation/networking/netdev-FAQ.txt
   - Security patches should not be handled (solely) by the -stable review
 -   process but should follow the procedures in Documentation/SecurityBugs.
-+   process but should follow the procedures in
-+   :ref:`Documentation/development-process/SecurityBugs.rst <securitybugs>`.
++   process but should follow the procedures in Documentation/development-process/SecurityBugs.rst.
  
  For all other submissions, choose one of the following procedures
  -----------------------------------------------------------------
@@ -558,18 +374,16 @@ index 2cf81082581d..8af1ee4a6399 100644
  1.2 Allow Mixed Locks Again
  ---------------------------
 diff --git a/Documentation/hwmon/submitting-patches b/Documentation/hwmon/submitting-patches
-index 57f60307accc..04b1036f07c4 100644
+index 57f60307accc..371baf7a43e2 100644
 --- a/Documentation/hwmon/submitting-patches
 +++ b/Documentation/hwmon/submitting-patches
-@@ -10,10 +10,10 @@ increase the chances of your change being accepted.
- ----------
+@@ -11,9 +11,9 @@ increase the chances of your change being accepted.
  
  * It should be unnecessary to mention, but please read and follow
--    Documentation/SubmitChecklist
+     Documentation/SubmitChecklist
 -    Documentation/SubmittingDrivers
 -    Documentation/SubmittingPatches
 -    Documentation/CodingStyle
-+    Documentation/development-process/SubmitChecklist.rst
 +    Documentation/development-process/SubmittingDrivers.rst
 +    Documentation/development-process/SubmittingPatches.rst
 +    Documentation/development-process/CodingStyle.rst
@@ -697,25 +511,9 @@ index 581c14bdd7be..465b238e7d1d 100644
  ようにしましょう。カーネル開発者は 添付や圧縮したパッチを扱いたがりま
  せん-
 diff --git a/Documentation/ja_JP/SubmitChecklist b/Documentation/ja_JP/SubmitChecklist
-index cb5507b1ac81..a8e88eebc346 100644
+index cb5507b1ac81..c0020797d6b9 100644
 --- a/Documentation/ja_JP/SubmitChecklist
 +++ b/Documentation/ja_JP/SubmitChecklist
-@@ -1,5 +1,5 @@
- NOTE:
--This is a version of Documentation/SubmitChecklist into Japanese.
-+This is a version of Documentation/development-process/SubmitChecklist.rst into Japanese.
- This document is maintained by Takenori Nagano <t-nagano@ah.jp.nec.com>
- and the JF Project team <http://www.linux.or.jp/JF/>.
- If you find any difference between this document and the original file
-@@ -14,7 +14,7 @@ to update the original English file first.
- Last Updated: 2008/07/14
- ==================================
- これは、
--linux-2.6.26/Documentation/SubmitChecklist の和訳です。
-+linux-2.6.26/Documentation/development-process/SubmitChecklist.rst の和訳です。
- 
- 翻訳団体： JF プロジェクト < http://www.linux.or.jp/JF/ >
- 翻訳日： 2008/07/14
 @@ -27,7 +27,7 @@ Linux カーネルパッチ投稿者向けチェックリスト
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
@@ -726,7 +524,7 @@ index cb5507b1ac81..a8e88eebc346 100644
  
   1: 妥当なCONFIGオプションや変更されたCONFIGオプション、つまり =y, =m, =n
 diff --git a/Documentation/ja_JP/SubmittingPatches b/Documentation/ja_JP/SubmittingPatches
-index fffa3106edd2..9384a78f0e22 100644
+index 5d6ae639bfa0..aed86762a6d3 100644
 --- a/Documentation/ja_JP/SubmittingPatches
 +++ b/Documentation/ja_JP/SubmittingPatches
 @@ -1,5 +1,5 @@
@@ -745,12 +543,9 @@ index fffa3106edd2..9384a78f0e22 100644
  です。
  翻訳団体： JF プロジェクト < http://www.linux.or.jp/JF/ >
  翻訳日： 2011/06/09
-@@ -34,9 +34,9 @@ Linux カーネルに変更を加えたいと思っている個人又は会社
- おじけづかせることもあります。この文章はあなたの変更を大いに受け入れ
- てもらえやすくする提案を集めたものです。
+@@ -36,7 +36,7 @@ Linux カーネルに変更を加えたいと思っている個人又は会社
  
--コードを投稿する前に、Documentation/SubmitChecklist の項目リストに目
-+コードを投稿する前に、Documentation/development-process/SubmitChecklist.rst の項目リストに目
+ コードを投稿する前に、Documentation/SubmitChecklist の項目リストに目
  を通してチェックしてください。もしあなたがドライバーを投稿しようとし
 -ているなら、Documentation/SubmittingDrivers にも目を通してください。
 +ているなら、Documentation/development-process/SubmittingDrivers.rst にも目を通してください。
@@ -1223,7 +1018,7 @@ index d313f5d8448d..b59caa9e8ac8 100644
  		享的代码段）需要使用其他格式，而你却只希望维护一份代码，
  		那么请将它们很好地区分出来，并且注明原因。
 diff --git a/Documentation/zh_CN/SubmittingPatches b/Documentation/zh_CN/SubmittingPatches
-index 1d3a10f8746b..97bc8639cbfc 100644
+index 1d3a10f8746b..8b93acb3a75e 100644
 --- a/Documentation/zh_CN/SubmittingPatches
 +++ b/Documentation/zh_CN/SubmittingPatches
 @@ -1,4 +1,4 @@
@@ -1241,12 +1036,9 @@ index 1d3a10f8746b..97bc8639cbfc 100644
  
  如果想评论或更新本文的内容，请直接联系原文档的维护者。如果你使用英文
  交流有困难的话，也可以向中文版维护者求助。如果本翻译更新不及时或者翻
-@@ -30,9 +30,9 @@ Documentation/SubmittingPatches 的中文翻译
- 对于想要将改动提交到 Linux 内核的个人或者公司来说，如果不熟悉“规矩”，
- 提交的流程会让人畏惧。本文档收集了一系列建议，这些建议可以大大的提高你
+@@ -32,7 +32,7 @@ Documentation/SubmittingPatches 的中文翻译
  的改动被接受的机会。
--阅读 Documentation/SubmitChecklist 来获得在提交代码前需要检查的项目的列
-+阅读 Documentation/development-process/SubmitChecklist.rst 来获得在提交代码前需要检查的项目的列
+ 阅读 Documentation/SubmitChecklist 来获得在提交代码前需要检查的项目的列
  表。如果你在提交一个驱动程序，那么同时阅读一下
 -Documentation/SubmittingDrivers 。
 +Documentation/development-process/SubmittingDrivers.rst 。
