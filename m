@@ -1,87 +1,50 @@
-From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Subject: Re: [PATCH 6/8 v2] arm: orion5x: Add DT-based support for Netgear
- WNR854T
-Date: Tue, 13 Sep 2016 10:10:41 +0100
-Message-ID: <88e40f0c6cafec244dc16af5a03cfb44@jamie.lentin.co.uk>
-References: <1472203264-21089-7-git-send-email-jm@lentin.co.uk>
- <1473109646-23366-1-git-send-email-jm@lentin.co.uk>
- <20160912170625.GA7420@rob-hp-laptop> <2920481.EgEQnLmOkM@wuerfel>
- <20160912220344.GM11400@lunn.ch>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH V4 3/4] ARM: bcm2835: add thermal node to device-tree of
+ bcm283x
+Date: Tue, 13 Sep 2016 11:17:23 +0200
+Message-ID: <e0bff5b1-533c-fdc0-3e61-54974571e385@i2se.com>
+References: <1473407397-29395-1-git-send-email-kernel@martin.sperl.org>
+ <1473407397-29395-4-git-send-email-kernel@martin.sperl.org>
+ <19cc8fbf-6ceb-995e-850d-9d82bdaff8d0@i2se.com>
+ <8876586A-98F8-4AAF-AD90-86EB12C22FDC@martin.sperl.org>
+ <2117811305.32861.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange@email.1und1.de>
+ <185DA6B2-AFC0-4199-A361-0164381AD317@martin.sperl.org>
+ <677965855.33392.597ccfbe-225b-403b-8ffa-3f42292996d4.open-xchange@email.1und1.de>
+ <704dd583-5bd8-fa77-a4ab-18f0845b9c4e@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160912220344.GM11400-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <704dd583-5bd8-fa77-a4ab-18f0845b9c4e-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-09-12 23:03, Andrew Lunn wrote:
->> Maybe we can instead leave out the PCI support from the new
->> file for now and not delete the legacy board file?
+Am 13.09.2016 um 11:06 schrieb Martin Sperl:
+>
+>
+> On 09.09.2016 21:02, Stefan Wahren wrote:
+>> bcm2837.dtsi
+>>
+>> &thermal {
+>>             compatible = "brcm,bcm2837-thermal";
+>>             status = "okay";
+>> };
+>
+> Note that there is only a bcm2837.dtsi in arm64/boot/dts/broadcom/
+> but not in arm/boot/dts - at least with the current upstream kernel.
+>
+> So I will just patch those dtsi that exist right now.
 
-This seems a reasonable compromise. The PCI card the router comes with 
-isn't supported by mwl8k mainline anyway (There's STA-only firmware that 
-can be extracted from a windows driver and PCI IDs added, but stats 
-reporting uses a different format), so it's not a huge loss, although 
-many did replace the card with something Atheros-based.
+That's correct as long as the bcm2837.dtsi change is a separate patch
+for ARM64 and this was the reason for my "warning" in my first reply.
 
-Unfortunately the power regulator on my spare router has stopped 
-regulating, which will make more development tricky. But will have a 
-look at the PCI conversion if I can get hold of another.
+Stefan
 
-> Jamie, which interrupt do you see the WiFi card using?  If it is
-> IRQ_ORION5X_PCIE0_INT, (1 + 11), that is probably easier to deal with
-> than if it uses GPIO 4.
+>
+> Martin
 
-Definitely uses GPIO 4.
-
-# cat /proc/interrupts
-            CPU0
-  17:     165966  bridge-interrupt-ctrl   2 Edge      orion_event
-  22:       5119  interrupt-controller   3 Edge      serial
-  24:          0  bridge-interrupt-ctrl   3 Edge      orion_wdt
-  25:      89504  interrupt-controller  22 Edge      f1072004.mdio-bus
-  28:          1  f1010100.gpio   1 Edge      Reset Button
-  31:        598  f1010100.gpio   4 Level     mwl8k
-  59:        985  interrupt-controller  21 Edge      eth0
-Err:          0
-# iw dev wlan0 scan > /dev/null ; cat /proc/interrupts
-            CPU0
-  17:     166424  bridge-interrupt-ctrl   2 Edge      orion_event
-  22:       5250  interrupt-controller   3 Edge      serial
-  24:          0  bridge-interrupt-ctrl   3 Edge      orion_wdt
-  25:      89748  interrupt-controller  22 Edge      f1072004.mdio-bus
-  28:          1  f1010100.gpio   1 Edge      Reset Button
-  31:        708  f1010100.gpio   4 Level     mwl8k
-  59:        985  interrupt-controller  21 Edge      eth0
-Err:          0
-# sleep 10 ; cat /proc/interrupts
-            CPU0
-  17:     167985  bridge-interrupt-ctrl   2 Edge      orion_event
-  22:       5349  interrupt-controller   3 Edge      serial
-  24:          0  bridge-interrupt-ctrl   3 Edge      orion_wdt
-  25:      90603  interrupt-controller  22 Edge      f1072004.mdio-bus
-  28:          1  f1010100.gpio   1 Edge      Reset Button
-  31:        708  f1010100.gpio   4 Level     mwl8k
-  59:        995  interrupt-controller  21 Edge      eth0
-Err:          0
-# iw dev wlan0 scan > /dev/null ; cat /proc/interrupts
-            CPU0
-  17:     168270  bridge-interrupt-ctrl   2 Edge      orion_event
-  22:       5480  interrupt-controller   3 Edge      serial
-  24:          0  bridge-interrupt-ctrl   3 Edge      orion_wdt
-  25:      90727  interrupt-controller  22 Edge      f1072004.mdio-bus
-  28:          1  f1010100.gpio   1 Edge      Reset Button
-  31:        818  f1010100.gpio   4 Level     mwl8k
-  59:        996  interrupt-controller  21 Edge      eth0
-Err:          0
-
-> 
-> Thanks
->      Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
