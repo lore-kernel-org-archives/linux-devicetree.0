@@ -1,64 +1,52 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [GIT PULL] Immutable branch between MFD and Regulator
- due for the v4.9 merge window
-Date: Tue, 13 Sep 2016 13:02:44 +0100
-Message-ID: <20160913120244.GA28894@dell>
-References: <20160827075544.26316-1-wens@csie.org>
- <20160827075544.26316-4-wens@csie.org>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Subject: Re: [PATCH] mfd: Add HiSilicon Flash Memory Controller(FMC) driver
+Date: Tue, 13 Sep 2016 13:08:50 +0100
+Message-ID: <20160913120850.GB28894@dell>
+References: <1473130643-12310-1-git-send-email-linshunquan1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBB36U367AKGQEFD4NIGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160827075544.26316-4-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1473130643-12310-1-git-send-email-linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linshunquan 00354166 <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, jalen.hsu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lvkuanliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kevin.lixu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Mark,
+On Tue, 06 Sep 2016, linshunquan 00354166 wrote:
 
-The following changes since commit 29b4817d4018df78086157ea3a55c1d9424a7cfc=
-:
+> From: Shunquan Lin <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> 
+> This patch adds driver support for HiSilicon Flash Memory
+> Controller(FMC). HiSilicon FMC is a multi-functions device which
+> supports SPI Nor flash controller, SPI nand Flash controller and
+> parallel nand flash controller.
 
-  Linux 4.8-rc1 (2016-08-07 18:18:00 -0700)
+MFDs are for devices which span multiple subsystems.
 
-are available in the git repository at:
+Please submit this to MTD.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-reg=
-ulator-v4.9
+> Signed-off-by: Shunquan Lin <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mfd/hisilicon,hisi-fmc.txt |  54 ++++++++++
+>  drivers/mfd/Kconfig                                |  10 ++
+>  drivers/mfd/Makefile                               |   1 +
+>  drivers/mfd/hisi_fmc.c                             | 109 +++++++++++++++++++++
+>  include/linux/mfd/hisi_fmc.h                       |  92 +++++++++++++++++
+>  5 files changed, 266 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hisi-fmc.txt
+>  create mode 100644 drivers/mfd/hisi_fmc.c
+>  create mode 100644 include/linux/mfd/hisi_fmc.h
 
-for you to fetch changes up to 2ca342d391e3d8b56ed64626db8cfba8101b7c1d:
+[...]
 
-  regulator: axp20x: Support AXP806 variant (2016-09-13 12:49:45 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD and Regulator due for the v4.9 merge window
-
-----------------------------------------------------------------
-Chen-Yu Tsai (1):
-      regulator: axp20x: Support AXP806 variant
-
- drivers/regulator/axp20x-regulator.c | 118 +++++++++++++++++++++++++++++++=
-+---
- 1 file changed, 111 insertions(+), 7 deletions(-)
-
---=20
+-- 
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
+Linaro.org │ Open source software for ARM SoCs
 Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
