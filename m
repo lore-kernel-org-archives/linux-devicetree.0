@@ -1,116 +1,63 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v2 2/4] drm/msm/hdmi: Clean up HDMI gpio DT bindings
-Date: Tue, 13 Sep 2016 18:45:58 +0530
-Message-ID: <57D7FC0E.6030209@codeaurora.org>
-References: <1467957354-7620-1-git-send-email-architt@codeaurora.org>
- <1472737015-29382-1-git-send-email-architt@codeaurora.org>
- <1472737015-29382-3-git-send-email-architt@codeaurora.org>
- <20160912131914.GA15499@rob-hp-laptop> <57D7A6CD.60803@codeaurora.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: ARM, SoC: About the use DT-defined properties by 3rd-party
+ drivers
+Date: Tue, 13 Sep 2016 14:23:57 +0100
+Message-ID: <20160913132357.GB23336@leverpostej>
+References: <57BDAF2E.10502@laposte.net>
+ <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
+ <57D69FB1.2020801@laposte.net>
+ <20160912123809.GB13741@leverpostej>
+ <57D6AA54.6000208@laposte.net>
+ <20160912135549.GA14165@leverpostej>
+ <57D6D2A9.3010006@laposte.net>
+ <20160912165637.GF14165@leverpostej>
+ <57D7CF17.2050905@laposte.net>
+ <57D7E4EC.6050509@tabi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <57D7A6CD.60803@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, robdclark@gmail.com
-Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, john.stultz@linaro.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57D7E4EC.6050509-N01EOCouUvQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
+Cc: Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Timur,
 
+On Tue, Sep 13, 2016 at 06:37:16AM -0500, Timur Tabi wrote:
+> Sebastian Frias wrote:
+> >Let's make an abstraction of the word 'binding', 'create a binding', etc. and
+> >just focus on this:
+> >- Somebody submits a DT file that contains properties and nodes that are
+> >*not used*  by any Linux driver.
+> >- Said properties and nodes serve as HW description for HW blocks for which
+> >*there is no*  Linux driver.
+> >
+> >The goal of the above is to use the DT as the authoritative (and single)
+> >source of HW definition.
+> 
+> No.
+> 
+> I've grown weary of this discussion.  We have explained multiple
+> times why this is impractical.  Using the DT to document hardware
+> makes no sense.  No one is going to do that, and anyone who attempts
+> to submit a DT binding without an actual driver will get rejected.
 
-On 9/13/2016 12:42 PM, Archit Taneja wrote:
->
->
-> On 9/12/2016 6:49 PM, Rob Herring wrote:
->> On Thu, Sep 01, 2016 at 07:06:52PM +0530, Archit Taneja wrote:
->>> Make the following changes in the HDMI gpio bindings:
->>>
->>> - Use "-gpios" as the suffix for all the gpio names
->>> - Move all the gpios to optional, since there are platforms that use
->>> none
->>>    of them.
->>> - The HPD gpio is a standard one, remove the "qcom,hdmi-tx-" prefix from
->>>    it.
->>> - Add a missing lpm gpio used on some platforms.
->>>
->>> Make the necessary changes in the driver to incorporate these changes.
->>>
->>> There hasn't been any upstream DT that uses the HDMI bindings, so it's
->>> okay to change and move around these properties.
->>>
->>> Cc: Rob Herring <robh@kernel.org>
->>> Cc: devicetree@vger.kernel.org
->>> Signed-off-by: Archit Taneja <architt@codeaurora.org>
->>> ---
->>> v2:
->>> - Keep "qcom,hdmi-tx-" suffix for all gpios except for hpd.
->>> - Use "-gpios" suffix instead of "-gpio".
->>> - Move all the gpios to optional properties.
->>>
->>>   .../devicetree/bindings/display/msm/hdmi.txt        | 11 ++++++-----
->>>   drivers/gpu/drm/msm/hdmi/hdmi.c                     | 21
->>> +++++++++++++++++++--
->>>   2 files changed, 25 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/display/msm/hdmi.txt
->>> b/Documentation/devicetree/bindings/display/msm/hdmi.txt
->>> index ce84459..f1a83ab 100644
->>> --- a/Documentation/devicetree/bindings/display/msm/hdmi.txt
->>> +++ b/Documentation/devicetree/bindings/display/msm/hdmi.txt
->>> @@ -13,17 +13,18 @@ Required properties:
->>>   - interrupts: The interrupt signal from the hdmi block.
->>>   - clocks: device clocks
->>>     See ../clocks/clock-bindings.txt for details.
->>> -- qcom,hdmi-tx-ddc-clk-gpio: ddc clk pin
->>> -- qcom,hdmi-tx-ddc-data-gpio: ddc data pin
->>> -- qcom,hdmi-tx-hpd-gpio: hpd pin
->>>   - core-vdda-supply: phandle to supply regulator
->>>   - hdmi-mux-supply: phandle to mux regulator
->>>   - phys: the phandle for the HDMI PHY device
->>>   - phy-names: the name of the corresponding PHY device
->>>
->>>   Optional properties:
->>> -- qcom,hdmi-tx-mux-en-gpio: hdmi mux enable pin
->>> -- qcom,hdmi-tx-mux-sel-gpio: hdmi mux select pin
->>> +- qcom,hdmi-tx-ddc-clk-gpios: ddc clk pin
->>> +- qcom,hdmi-tx-ddc-data-gpios: ddc data pin
->>
->> Sorry, for raising another point, but couldn't you use the i2c-gpio
->> binding for these instead?
->
-> I'm not entirely sure what these are used for either, they predate the
-> APQ8064 SoC. They are certainly not bit-banged to implement i2c, since
-> the driver just sets them to a high during driver initialization, and
-> we have our dedicated i2c controller anyway.
->
+Please don't make the same mistake of trivialising this in either
+direction.
 
-I just checked some old qualcomm kernels. It looks like they were
-passed as gpios just so that the pins could be configured(function,
-pull up/down, strength etc) using gpiolib api. I guess these
-kernels predated pinctrl drivers.
+While we appear to be going in circles, in general there are potentially
+valid cases to consider -- there may be system properties/devices that
+don't happen to matter to Linux, but are generic, well-defined, and
+matter to others. Bindings for those should be considered.
 
-I will post a new revision of the patch with these removed.
+In the absence of any example, as with this thread, there is nothing to
+consider, however.
 
 Thanks,
-Archit
-
-> Rob,
->
-> Are you aware why we have these for older SoCs?
->
-> Thanks,
-> Archit
->
->>
->>> +- hpd-gpios: hpd pin
->>> +- qcom,hdmi-tx-mux-en-gpios: hdmi mux enable pin
->>> +- qcom,hdmi-tx-mux-sel-gpios: hdmi mux select pin
->>> +- qcom,hdmi-tx-mux-lpm-gpios: hdmi mux lpm pin
->>>   - power-domains: reference to the power domain(s), if available.
->>>   - pinctrl-names: the pin control state names; should contain "default"
->>>   - pinctrl-0: the default pinctrl state (active)
->
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
