@@ -1,110 +1,40 @@
-From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v3 2/4] drm/msm/hdmi: Clean up HDMI gpio DT bindings
-Date: Tue, 13 Sep 2016 20:51:35 +0530
-Message-ID: <1473780097-11388-3-git-send-email-architt@codeaurora.org>
-References: <1472737015-29382-1-git-send-email-architt@codeaurora.org>
- <1473780097-11388-1-git-send-email-architt@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473780097-11388-1-git-send-email-architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 2/9] drivers: irqchip: Add STM32 external interrupts
+ support
+Date: Tue, 13 Sep 2016 17:21:26 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1609131713490.6233@nanos>
+References: <1473432124-6784-1-git-send-email-alexandre.torgue@st.com> <1473432124-6784-3-git-send-email-alexandre.torgue@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1473432124-6784-3-git-send-email-alexandre.torgue@st.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre TORGUE <alexandre.torgue@st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Make the following changes in the HDMI gpio bindings:
+On Fri, 9 Sep 2016, Alexandre TORGUE wrote:
+> +static void stm32_exti_free(struct irq_domain *d, unsigned int virq,
+> +			    unsigned int nr_irqs)
+> +{
+> +	struct irq_data *data = irq_get_irq_data(virq);
+> +
+> +	irq_gc_mask_clr_bit(data->parent_data);
 
-- Use "-gpios" as the suffix for all the gpio names
-- Move all the gpios to optional, since there are platforms that use none
-  of them.
-- The HPD gpio is a standard one, remove the "qcom,hdmi-tx-" prefix from
-  it.
-- Remove the HDMI DDC clk/data gpios. They are just leftovers of an old
-  way to configure pinctrl properties.
-- Add a missing lpm gpio used on some platforms.
+I have a hard time to understand this. The irq domain is not hierarchical.
 
-Make the necessary changes in the driver to incorporate these changes.
+> +	irq_domain_reset_irq_data(data);
 
-There hasn't been any upstream DT that uses the HDMI bindings, so it's
-okay to change and move around these properties.
+> +	domain = irq_domain_add_linear(node, nr_exti,
+> +				       &irq_exti_domain_ops, NULL);
 
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
-v3:
-- Removed HDMI DDC clk/data gpios.
+It's a simple linear domain. So how can data->parent_data be a valid
+irq_data pointer? Answer: It can't!
 
- .../devicetree/bindings/display/msm/hdmi.txt        |  9 ++++-----
- drivers/gpu/drm/msm/hdmi/hdmi.c                     | 21 +++++++++++++++++++--
- 2 files changed, 23 insertions(+), 7 deletions(-)
+But it doesn't blow up in your face simply because the alloc/free callbacks
+are never invoked for simple non hierarchical domains. So you should have
+removed that stuff after copying some other irqchip driver.
 
-diff --git a/Documentation/devicetree/bindings/display/msm/hdmi.txt b/Documentation/devicetree/bindings/display/msm/hdmi.txt
-index ce84459..bfa7259 100644
---- a/Documentation/devicetree/bindings/display/msm/hdmi.txt
-+++ b/Documentation/devicetree/bindings/display/msm/hdmi.txt
-@@ -13,17 +13,16 @@ Required properties:
- - interrupts: The interrupt signal from the hdmi block.
- - clocks: device clocks
-   See ../clocks/clock-bindings.txt for details.
--- qcom,hdmi-tx-ddc-clk-gpio: ddc clk pin
--- qcom,hdmi-tx-ddc-data-gpio: ddc data pin
--- qcom,hdmi-tx-hpd-gpio: hpd pin
- - core-vdda-supply: phandle to supply regulator
- - hdmi-mux-supply: phandle to mux regulator
- - phys: the phandle for the HDMI PHY device
- - phy-names: the name of the corresponding PHY device
- 
- Optional properties:
--- qcom,hdmi-tx-mux-en-gpio: hdmi mux enable pin
--- qcom,hdmi-tx-mux-sel-gpio: hdmi mux select pin
-+- hpd-gpios: hpd pin
-+- qcom,hdmi-tx-mux-en-gpios: hdmi mux enable pin
-+- qcom,hdmi-tx-mux-sel-gpios: hdmi mux select pin
-+- qcom,hdmi-tx-mux-lpm-gpios: hdmi mux lpm pin
- - power-domains: reference to the power domain(s), if available.
- - pinctrl-names: the pin control state names; should contain "default"
- - pinctrl-0: the default pinctrl state (active)
-diff --git a/drivers/gpu/drm/msm/hdmi/hdmi.c b/drivers/gpu/drm/msm/hdmi/hdmi.c
-index 9737207..a968cad 100644
---- a/drivers/gpu/drm/msm/hdmi/hdmi.c
-+++ b/drivers/gpu/drm/msm/hdmi/hdmi.c
-@@ -422,12 +422,29 @@ static const struct {
- 
- static int msm_hdmi_get_gpio(struct device_node *of_node, const char *name)
- {
--	int gpio = of_get_named_gpio(of_node, name, 0);
-+	int gpio;
-+
-+	/* try with the gpio names as in the table (downstream bindings) */
-+	gpio = of_get_named_gpio(of_node, name, 0);
- 	if (gpio < 0) {
- 		char name2[32];
--		snprintf(name2, sizeof(name2), "%s-gpio", name);
-+
-+		/* try with the gpio names as in the upstream bindings */
-+		snprintf(name2, sizeof(name2), "%s-gpios", name);
- 		gpio = of_get_named_gpio(of_node, name2, 0);
- 		if (gpio < 0) {
-+			char name3[32];
-+
-+			/*
-+			 * try again after stripping out the "qcom,hdmi-tx"
-+			 * prefix. This is mainly to match "hpd-gpios" used
-+			 * in the upstream bindings
-+			 */
-+			if (sscanf(name2, "qcom,hdmi-tx-%s", name3))
-+				gpio = of_get_named_gpio(of_node, name3, 0);
-+		}
-+
-+		if (gpio < 0) {
- 			DBG("failed to get gpio: %s (%d)", name, gpio);
- 			gpio = -1;
- 		}
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Thanks,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	tglx
