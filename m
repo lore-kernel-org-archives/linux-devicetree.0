@@ -1,63 +1,53 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 6/8 v2] arm: orion5x: Add DT-based support for Netgear WNR854T
-Date: Tue, 13 Sep 2016 22:39:32 +0200
-Message-ID: <3803766.V7H6nM1HIx@wuerfel>
-References: <1472203264-21089-7-git-send-email-jm@lentin.co.uk> <b7d442f9d26249976d7698b6a32db2a3@jamie.lentin.co.uk> <87r38nehkj.fsf@free-electrons.com>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH v4 22/22] phy: Add support for Qualcomm's USB HS phy
+Date: Tue, 13 Sep 2016 13:41:44 -0700
+Message-ID: <147379930484.27460.3849356366746983941@sboyd-linaro>
+References: <20160907213519.27340-1-stephen.boyd@linaro.org>
+ <20160907213519.27340-23-stephen.boyd@linaro.org>
+ <20160913070358.GB30425@b29397-desktop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87r38nehkj.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160913070358.GB30425@b29397-desktop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, September 13, 2016 9:16:28 PM CEST Gregory CLEMENT wrote:
-> Hi Jamie,
->  
->  On mar., sept. 13 2016, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org> wrote:
+Quoting Peter Chen (2016-09-13 00:03:58)
+> On Wed, Sep 07, 2016 at 02:35:19PM -0700, Stephen Boyd wrote:
+> > The high-speed phy on qcom SoCs is controlled via the ULPI
+> > viewport.
+> > 
 > 
-> > On 2016-09-13 13:36, Andrew Lunn wrote:
-> >> On Tue, Sep 13, 2016 at 10:10:41AM +0100, Jamie Lentin wrote:
-> >>> On 2016-09-12 23:03, Andrew Lunn wrote:
-> >>> >>Maybe we can instead leave out the PCI support from the new
-> >>> >>file for now and not delete the legacy board file?
-> >>>
-> >>> This seems a reasonable compromise. The PCI card the router comes
-> >>> with isn't supported by mwl8k mainline anyway (There's STA-only
-> >>> firmware that can be extracted from a windows driver and PCI IDs
-> >>> added, but stats reporting uses a different format), so it's not a
-> >>> huge loss, although many did replace the card with something
-> >>> Atheros-based.
-> >>
-> >> O.K. So dropping the PCI code gets us going forward.
-> >
-> > Is an arch/arm/mach-mvebu/orion5x.c also required? Or is continuing to
-> > use arch/arm/mach-orion5x/board-dt.c until everything has been
-> > converted the favoured approach?
-> >
-> >> Have we missed the merge window?
-> >
-> > I got the impression Gregory Clement had merged them? If not a good
-> > portion of this patchset is uncontroversial generic orion5x stuff,
-> > it'd be nice to get those in even if none of the router-specific stuff
-> > doesn't make it.
+> Hi Stephen, I am a little puzzled how this driver co-work with chipidea
+> driver. According to nxp IC guys, the ULPI PHY's clock needs to be enabled
+> before access portsc.pts (calling hw_phymode_configure), otherwise,
+> the system will hang. But I find you call hw_phymode_configure before
+> phy->power_on, doesn't your design have this requirement?
+
+Which clk needs to be enabled? The xcvr_clk? I believe that clk
+corresponds to the "core" clk that we enable in the msm glue driver
+layer. When that clk is enabled, the ULPI phy is able to respond to
+register read/writes via the ULPI viewport.
+
+>        
+> Besides, you read ulpi id before phy->power_on, how can read work before
+> phy power on?
 > 
-> I applied on mvebu/for-next in order to find any merge conflict. It
-> seems ok on this side. However, I didn't make the pull request to
-> arm-soc with these patches so I fear it is too late.
-> 
-> Arnd would you agree to accept a new pull request?
 
-Yes, please just send it. We are a bit backlogged on pull requests,
-but because you got all the other pull requests to us early, you can
-always have a couple of late changes on top that we would normally
-pull.
+I've found that even having the link clk enabled before phy->power_on
+doesn't mean it's possible to read the id registers though. That's
+because there can be other power supplies, like regulators, which need
+to be on for the phy to operate properly.
 
-	Arnd
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Either way, the system does not hang.
