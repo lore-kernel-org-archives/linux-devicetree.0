@@ -1,79 +1,261 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v5 2/9] drivers: irqchip: Add STM32 external interrupts
- support
-Date: Tue, 13 Sep 2016 18:29:36 +0200
-Message-ID: <6941f61d-0b33-4108-0135-b11887cd0488@st.com>
-References: <1473432124-6784-1-git-send-email-alexandre.torgue@st.com>
- <1473432124-6784-3-git-send-email-alexandre.torgue@st.com>
- <alpine.DEB.2.20.1609131713490.6233@nanos>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [RFC PATCH] pci: support for configurable PCI endpoint
+Date: Tue, 13 Sep 2016 22:40:42 +0530
+Message-ID: <1473786653-12759-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.20.1609131713490.6233@nanos>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, lee.jones@linaro.org
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, hch@infradead.org, Joao.Pinto@synopsys.com, mingkai.hu@nxp.com, m-karicheri2@ti.com, Pratyush Anand <pratyush.anand@gmail.com>
+Cc: linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joao Pinto <jpinto@synopsys.com>, Rob Herring <robh+dt@kernel.org>, kishon@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+This patch series
+	*) adds PCI endpoint core layer
+	*) modifies designware/dra7xx driver to be configured in EP mode
+	*) adds a PCI endpoint *test* function driver
 
-On 09/13/2016 05:21 PM, Thomas Gleixner wrote:
-> On Fri, 9 Sep 2016, Alexandre TORGUE wrote:
->> +static void stm32_exti_free(struct irq_domain *d, unsigned int virq,
->> +			    unsigned int nr_irqs)
->> +{
->> +	struct irq_data *data = irq_get_irq_data(virq);
->> +
->> +	irq_gc_mask_clr_bit(data->parent_data);
->
-> I have a hard time to understand this. The irq domain is not hierarchical.
+Known Limitation:
+	*) Does not support multi-function devices
 
-Actually, I wanted to test ".free" callback function of gpio_irq_domain 
-in STM32 pinctrl driver. To do that I modified gpio driver: just after 
-getting virq through gpio_to_irq, I called "irq_dispose_mapping(virq)".
-I know it is dirty but I thought it was the only way to test.
+TODO:
+	*) access buffers in RC
+	*) MSI interrupts
+	*) Enable user space control for the RC side PCI driver
+	*) Adapt all other users of designware to use the new design
 
-Doing that, I see that ".free" callback of gpio domain is called but as 
-it is hirerchical ".free" callback for parent domain (exti one) is also 
-called. I observed that virq was well unmapped, but not masked at exti 
-level. It is for this reason than I added 
-"irq_gc_mask_clr_bit(data->parent_data);" which mask interrupt at exti 
-level.
+HOW TO:
 
-Maybe this use case can never happen ? (and in this case all this stuff 
-is not needed)
+ON THE EP SIDE:
+***************
 
->
->> +	irq_domain_reset_irq_data(data);
->
->> +	domain = irq_domain_add_linear(node, nr_exti,
->> +				       &irq_exti_domain_ops, NULL);
->
-> It's a simple linear domain. So how can data->parent_data be a valid
-> irq_data pointer? Answer: It can't!
+/* EP function is configured using configfs */
+# mount -t configfs none /sys/kernel/config
 
-This Exti domain is parent of stm32 gpio domain. When ".free" callback 
-of stm32 gpio domain is called then ".free" callback of Exti domain will 
-be automatically called. Those both ".free" callbacks are called with 
-"virq". This virq is created through stm32 gpio domain (in stm32 pinctrl 
-driver), data and parent->data are then associated to it.
+/* PCI EP core layer creates "pci_ep" entry in configfs */
+# cd /sys/kernel/config/pci_ep/
 
-Sorry if it is not clear.
+/*
+ * This is the 1st step in creating an endpoint function. This
+ * creates the endpoint function device *instance*. The string
+ * before the .<num> suffix will identify the driver this
+ * EP function will bind to.
+ * Just pci_epf_test is also valid. The .<num> suffix is used
+ * if there are multiple PCI controllers and all of them wants
+ * to use the same function.
+ */
+# mkdir pci_epf_test.0
 
-Regards
+/*
+ * When the above command is given, the function device will
+ * also be bound to a function driver. To find the list of
+ * function drivers available in the system, use the following
+ * command. To create a new driver, the following can be referred
+ * drivers/pci/endpoint/functions/pci-epf-test.c
+ */
+# ls /sys/bus/pci-epf/drivers
+pci_epf_test
 
-Alex
+/* Now configure the endpoint function */
+# cd pci_epf_test.0
 
->
-> But it doesn't blow up in your face simply because the alloc/free callbacks
-> are never invoked for simple non hierarchical domains. So you should have
-> removed that stuff after copying some other irqchip driver.
+/* These are the fields that can be configured */
+# ls
+baseclass_code    function          revid             vendorid
+cache_line_size   interrupt_pin     subclass_code
+deviceid          peripheral        subsys_id
+epc               progif_code       subsys_vendor_id
+
+/* The function driver will populate these fields with default values */
+# cat vendorid 
+0xffff
+
+# cat interrupt_pin 
+0x0001
+
+/* The user can configure any of these fields */
+# echo 0x104c > vendorid
+
+/*
+ * Next is binding this function driver to the controller driver. In
+ * order to find the possible controller drivers that this function
+ * driver can be bound to, the following sysfs entry can be used
+ */
+# ls /sys/class/pci_epc/
+51000000.pci
+
+/* Now bind the function driver to the controller driver */
+# echo "51000000.pcie" > epc
+[  494.743487] dra7-pcie 51000000.pcie: no free inbound window
+[  494.749367] pci_epf_test pci_epf_test.0: failed to set BAR4
+[  494.755238] dra7-pcie 51000000.pcie: no free inbound window
+[  494.761451] pci_epf_test pci_epf_test.0: failed to set BAR5
+
+/*
+ * the above error messages are due to non availability of free
+ * inbound windows. So the function drivers in dra7xx can use
+ * only 4 (BAR0..BAR3) BARs
+ */
+
+/****** PCI endpoint is configured ******/
+
+ON THE HOST SIDE:
+*****************
+# modprobe pci_endpoint_test
+[    8.197560] ****** Testing pci-endpoint-test Device ******
+[    9.056990] Reset: OKAY
+[    9.059753] BAR1 OKAY
+[    9.062419] BAR2 OKAY
+[    9.069506] BAR3 OKAY
+[    9.071880] BAR4 NOT OKAY
+[    9.074618] BAR5 NOT OKAY
+[    9.379257] Legacy IRQ: OKAY
+[    9.382281] ****** End Test ******
+
+/*
+ * Rightnow these tests gets executed as soon as the pci_endpoint_test
+ * module gets inserted. These will be modified so that user/user script
+ * can control this. Once the functionality for EP to access RC buffer
+ * is added, more tests can be added including throughput measurement tests.
+ */ 
 
 
+Kishon Vijay Abraham I (11):
+  pci: endpoint: add EP core layer to enable EP controller and EP
+    functions
+  pci: endpoint: introduce configfs entry for configuring EP functions
+  Documentation: PCI: guide to use PCI Endpoint Core Layer
+  pci: endpoint: functions: add an EP function to test PCI
+  pci: rename *host* directory to *controller*
+  pci: controller: split designware into *core* and *host*
+  pci: controller: designware: Add EP mode support
+  pci: controller: dra7xx: Add EP mode support
+  misc: add a new host side PCI endpoint test driver
+  ARM: dts: DRA7: Modify pcie1 dt node for EP mode
+  HACK: pci: controller: dra7xx: disable smart idle
 
->
-> Thanks,
->
-> 	tglx
->
+ Documentation/PCI/00-INDEX                         |    5 +
+ Documentation/PCI/pci-endpoint.txt                 |  199 ++++++++++
+ Documentation/PCI/pci-test.txt                     |   79 ++++
+ .../devicetree/bindings/pci/designware-pcie.txt    |   26 +-
+ Documentation/devicetree/bindings/pci/ti-pci.txt   |   30 +-
+ MAINTAINERS                                        |   50 +--
+ arch/arm/boot/dts/dra7.dtsi                        |   43 +--
+ drivers/Makefile                                   |    4 +
+ drivers/misc/Kconfig                               |    7 +
+ drivers/misc/Makefile                              |    1 +
+ drivers/misc/pci_endpoint_test.c                   |  291 +++++++++++++++
+ drivers/pci/Kconfig                                |    3 +-
+ drivers/pci/Makefile                               |    3 -
+ drivers/pci/{host => controller}/Kconfig           |  109 +++++-
+ drivers/pci/{host => controller}/Makefile          |    2 +
+ drivers/pci/{host => controller}/pci-aardvark.c    |    0
+ drivers/pci/{host => controller}/pci-dra7xx.c      |  340 +++++++++++++----
+ drivers/pci/{host => controller}/pci-exynos.c      |    0
+ drivers/pci/{host => controller}/pci-host-common.c |    0
+ .../pci/{host => controller}/pci-host-generic.c    |    0
+ drivers/pci/{host => controller}/pci-hyperv.c      |    0
+ drivers/pci/{host => controller}/pci-imx6.c        |    0
+ drivers/pci/{host => controller}/pci-keystone-dw.c |    0
+ drivers/pci/{host => controller}/pci-keystone.c    |    0
+ drivers/pci/{host => controller}/pci-keystone.h    |    0
+ drivers/pci/{host => controller}/pci-layerscape.c  |    0
+ drivers/pci/{host => controller}/pci-mvebu.c       |    0
+ drivers/pci/{host => controller}/pci-rcar-gen2.c   |    0
+ drivers/pci/{host => controller}/pci-tegra.c       |    0
+ .../pci/{host => controller}/pci-thunder-ecam.c    |    0
+ drivers/pci/{host => controller}/pci-thunder-pem.c |    0
+ drivers/pci/{host => controller}/pci-versatile.c   |    0
+ drivers/pci/{host => controller}/pci-xgene-msi.c   |    0
+ drivers/pci/{host => controller}/pci-xgene.c       |    0
+ drivers/pci/{host => controller}/pcie-altera-msi.c |    0
+ drivers/pci/{host => controller}/pcie-altera.c     |    0
+ drivers/pci/{host => controller}/pcie-armada8k.c   |    0
+ drivers/pci/{host => controller}/pcie-artpec6.c    |    0
+ drivers/pci/controller/pcie-designware-ep.c        |  228 ++++++++++++
+ .../pcie-designware-host.c}                        |  294 +++------------
+ .../{host => controller}/pcie-designware-plat.c    |    0
+ drivers/pci/controller/pcie-designware.c           |  233 ++++++++++++
+ drivers/pci/controller/pcie-designware.h           |  238 ++++++++++++
+ drivers/pci/{host => controller}/pcie-hisi.c       |    0
+ drivers/pci/{host => controller}/pcie-iproc-bcma.c |    0
+ drivers/pci/{host => controller}/pcie-iproc-msi.c  |    0
+ .../pci/{host => controller}/pcie-iproc-platform.c |    0
+ drivers/pci/{host => controller}/pcie-iproc.c      |    0
+ drivers/pci/{host => controller}/pcie-iproc.h      |    0
+ drivers/pci/{host => controller}/pcie-qcom.c       |    0
+ drivers/pci/{host => controller}/pcie-rcar.c       |    0
+ drivers/pci/{host => controller}/pcie-spear13xx.c  |    0
+ drivers/pci/{host => controller}/pcie-xilinx-nwl.c |    0
+ drivers/pci/{host => controller}/pcie-xilinx.c     |    0
+ drivers/pci/endpoint/Kconfig                       |   25 ++
+ drivers/pci/endpoint/Makefile                      |    6 +
+ drivers/pci/endpoint/functions/Kconfig             |   12 +
+ drivers/pci/endpoint/functions/Makefile            |    5 +
+ drivers/pci/endpoint/functions/pci-epf-test.c      |  272 ++++++++++++++
+ drivers/pci/endpoint/pci-ep-cfs.c                  |  275 ++++++++++++++
+ drivers/pci/endpoint/pci-epc-core.c                |  389 ++++++++++++++++++++
+ drivers/pci/endpoint/pci-epf-core.c                |  338 +++++++++++++++++
+ drivers/pci/host/pcie-designware.h                 |   89 -----
+ include/linux/mod_devicetable.h                    |   10 +
+ include/linux/pci-epc.h                            |  100 +++++
+ include/linux/pci-epf.h                            |  159 ++++++++
+ 66 files changed, 3373 insertions(+), 492 deletions(-)
+ create mode 100644 Documentation/PCI/pci-endpoint.txt
+ create mode 100644 Documentation/PCI/pci-test.txt
+ create mode 100644 drivers/misc/pci_endpoint_test.c
+ rename drivers/pci/{host => controller}/Kconfig (79%)
+ rename drivers/pci/{host => controller}/Makefile (93%)
+ rename drivers/pci/{host => controller}/pci-aardvark.c (100%)
+ rename drivers/pci/{host => controller}/pci-dra7xx.c (62%)
+ rename drivers/pci/{host => controller}/pci-exynos.c (100%)
+ rename drivers/pci/{host => controller}/pci-host-common.c (100%)
+ rename drivers/pci/{host => controller}/pci-host-generic.c (100%)
+ rename drivers/pci/{host => controller}/pci-hyperv.c (100%)
+ rename drivers/pci/{host => controller}/pci-imx6.c (100%)
+ rename drivers/pci/{host => controller}/pci-keystone-dw.c (100%)
+ rename drivers/pci/{host => controller}/pci-keystone.c (100%)
+ rename drivers/pci/{host => controller}/pci-keystone.h (100%)
+ rename drivers/pci/{host => controller}/pci-layerscape.c (100%)
+ rename drivers/pci/{host => controller}/pci-mvebu.c (100%)
+ rename drivers/pci/{host => controller}/pci-rcar-gen2.c (100%)
+ rename drivers/pci/{host => controller}/pci-tegra.c (100%)
+ rename drivers/pci/{host => controller}/pci-thunder-ecam.c (100%)
+ rename drivers/pci/{host => controller}/pci-thunder-pem.c (100%)
+ rename drivers/pci/{host => controller}/pci-versatile.c (100%)
+ rename drivers/pci/{host => controller}/pci-xgene-msi.c (100%)
+ rename drivers/pci/{host => controller}/pci-xgene.c (100%)
+ rename drivers/pci/{host => controller}/pcie-altera-msi.c (100%)
+ rename drivers/pci/{host => controller}/pcie-altera.c (100%)
+ rename drivers/pci/{host => controller}/pcie-armada8k.c (100%)
+ rename drivers/pci/{host => controller}/pcie-artpec6.c (100%)
+ create mode 100644 drivers/pci/controller/pcie-designware-ep.c
+ rename drivers/pci/{host/pcie-designware.c => controller/pcie-designware-host.c} (64%)
+ rename drivers/pci/{host => controller}/pcie-designware-plat.c (100%)
+ create mode 100644 drivers/pci/controller/pcie-designware.c
+ create mode 100644 drivers/pci/controller/pcie-designware.h
+ rename drivers/pci/{host => controller}/pcie-hisi.c (100%)
+ rename drivers/pci/{host => controller}/pcie-iproc-bcma.c (100%)
+ rename drivers/pci/{host => controller}/pcie-iproc-msi.c (100%)
+ rename drivers/pci/{host => controller}/pcie-iproc-platform.c (100%)
+ rename drivers/pci/{host => controller}/pcie-iproc.c (100%)
+ rename drivers/pci/{host => controller}/pcie-iproc.h (100%)
+ rename drivers/pci/{host => controller}/pcie-qcom.c (100%)
+ rename drivers/pci/{host => controller}/pcie-rcar.c (100%)
+ rename drivers/pci/{host => controller}/pcie-spear13xx.c (100%)
+ rename drivers/pci/{host => controller}/pcie-xilinx-nwl.c (100%)
+ rename drivers/pci/{host => controller}/pcie-xilinx.c (100%)
+ create mode 100644 drivers/pci/endpoint/Kconfig
+ create mode 100644 drivers/pci/endpoint/Makefile
+ create mode 100644 drivers/pci/endpoint/functions/Kconfig
+ create mode 100644 drivers/pci/endpoint/functions/Makefile
+ create mode 100644 drivers/pci/endpoint/functions/pci-epf-test.c
+ create mode 100644 drivers/pci/endpoint/pci-ep-cfs.c
+ create mode 100644 drivers/pci/endpoint/pci-epc-core.c
+ create mode 100644 drivers/pci/endpoint/pci-epf-core.c
+ delete mode 100644 drivers/pci/host/pcie-designware.h
+ create mode 100644 include/linux/pci-epc.h
+ create mode 100644 include/linux/pci-epf.h
+
+-- 
+1.7.9.5
