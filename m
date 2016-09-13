@@ -1,88 +1,127 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 2/3] ARM64: dts: amlogic: Add basic support for Amlogic S905X
-Date: Mon, 12 Sep 2016 21:43:04 -0700
-Message-ID: <CAOi56cV+T0zCFuQfnZXUoDi3EvbyQvwBxpp==1Qu0H_S4r5Vsg@mail.gmail.com>
-References: <20160903082227.30559-1-narmstrong@baylibre.com>
- <20160903082227.30559-3-narmstrong@baylibre.com> <7e27e8c0-bb18-40d8-10d6-3928e66815c7@suse.de>
- <CAOQ7t2bWLq2XP2rKx3msf=1tUfXkQuBWagun46TaKk73qXr=FQ@mail.gmail.com>
- <7ha8fcq26c.fsf@baylibre.com> <28d9160a-ce40-cbbb-b4e9-3ec34be52368@suse.de>
+From: Po Liu <po.liu@nxp.com>
+Subject: [PATCH v5 2/3] arm64/dts: add pcie aer interrupt-name property in the dts
+Date: Tue, 13 Sep 2016 12:40:58 +0800
+Message-ID: <1473741659-17618-2-git-send-email-po.liu@nxp.com>
+References: <1472625442-23309-2-git-send-email-po.liu@nxp.com>
+ <1473741659-17618-1-git-send-email-po.liu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <28d9160a-ce40-cbbb-b4e9-3ec34be52368@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Carlo Caione <carlo@endlessm.com>, linux-amlogic <linux-amlogic@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1473741659-17618-1-git-send-email-po.liu@nxp.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh@kernel.org>, Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Po Liu <po.liu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 12, 2016 at 2:43 PM, Andreas F=C3=A4rber <afaerber@suse.de> wro=
-te:
-> Am 12.09.2016 um 22:43 schrieb Kevin Hilman:
->> Carlo Caione <carlo@caione.org> writes:
->>> On Mon, Sep 12, 2016 at 6:28 PM, Andreas F=C3=A4rber <afaerber@suse.de>=
- wrote:
->>>
->>>>> +Boards with the Amlogic Meson GXL SoC shall have the following prope=
-rties:
->>>>> +  Required root node property:
->>>>> +    compatible: "amlogic,meson-gxl-s905x", "amlogic,meson-gxl";
->>>>
->>>> Can we please use "amlogic,s905x", "amlogic,meson-gxl"? No need to
->>>> complicate the name. Also affects .dtsi and .dts below.
->>>
->>> gxl !=3D s905x.
->
-> Huh? You're seemingly completely missing my point...
->
-> But you are right that _Neil's_ heading needs to be fixed, too:
-> Clearly not all GXL SoCs need to have an S905X compatible string!
-> So it should be "Boards with the Amlogic S905X SoC shall ..." or so.
->
->>> AFAWK to the GXL family belong several different SoCs, like S905X,
->>> S905D, etc... (see patch 3/3)
->
-> Thanks, I already know that, that's why you have two compatible strings
-> instead of just one like for GXBB. We can certainly prepend one for
-> symmetry there, too, if it makes you happier.
->
->>> This is why we use meson-gxl-s905x, meson-gxl-s905d, etc...
->>
->> Correct.
->>
->>> We could s/meson-gxl-s905x/meson-s905x/ and
->>> s/meson-gxl-s905d/meson-s905d/ but I honestly prefer this way because
->>> we can clearly see which family the SoC belongs to (the Amlogic naming
->>> convention is already messy enough).
->>> I mean, yes it's longer, but it's for the sake of documentation IMO.
->>
->> +1
->
-> I still don't follow that conclusion. The board is called "amlogic,p231"
-> because P231 is a unique identifier within the Amlogic namespace, so why
-> not call the SoC "amlogic,s905x" for the same reason? The documentation
-> is already there in having both "amlogic,s905x" _and_
-> "amlogic,meson-gxl" - please re-read my post. There is no S905X in GXL
-> family and another S905X in some other Amlogic SoC family, so it's
-> unique and there is no reason to encode any hierarchies into its name
-> other than vendor,name.
->
-> I'm not arguing over the file name, where it perfectly makes sense to
-> have a meson-gxl- prefix (already discussed), just about the compatible
-> string where we don't have "amlogic,meson-gxl-s905x-p231" either because
-> it is completely unnecessary and does _not_ add any value.
+Some platforms(NXP Layerscape for example) aer interrupt was not
+MSI/MSI-X/INTx but using interrupt line independently. This patch
+add a "aer" interrupt-names for aer interrupt.
 
-Sorry, I'm guilty of not fully reading the original post.  I was
-thinking only of the filenames, which it seems were already agreed on
-to be long.
+With the interrupt-names "aer", code could probe aer interrupt line
+for pcie root port, replace the aer interrupt service irq.
 
-> Not that we're checking this string anywhere anyway... If you want to
-> check for the GXL family you have to use "amlogic,meson-gxl"; if you
-> want to check for the specific SoC you use "amlogic,s905x". Simple. We
-> never match partial strings, so there is no sense in a hardcoded prefix
-> that is duplicating information already available.
+This is intend to fixup the Layerscape platforms which aer interrupt
+was not MSI/MSI-X/INTx, but using interrupt line independently.
 
-For the compatible strings, I think your proposed shorter (but still
-unique) forms are fine with me.
+Signed-off-by: Po Liu <po.liu@nxp.com>
+---
+changes for v5:
+	- Seperate arm and arm64 dts modification into two patches
 
-Kevin
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 18 +++++++++---------
+ arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 16 ++++++++--------
+ 2 files changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index e669fbd..654071d 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -527,9 +527,9 @@
+ 			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
+ 			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
+ 			reg-names = "regs", "config";
+-			interrupts = <0 118 0x4>, /* controller interrupt */
+-				     <0 117 0x4>; /* PME interrupt */
+-			interrupt-names = "intr", "pme";
++			interrupts = <0 117 0x4>, /* PME interrupt */
++					 <0 118 0x4>; /* aer interrupt */
++			interrupt-names = "pme", "aer";
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+@@ -552,9 +552,9 @@
+ 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
+ 			       0x48 0x00000000 0x0 0x00002000>; /* configuration space */
+ 			reg-names = "regs", "config";
+-			interrupts = <0 128 0x4>,
+-				     <0 127 0x4>;
+-			interrupt-names = "intr", "pme";
++			interrupts = <0 127 0x4>,
++					 <0 128 0x4>;
++			interrupt-names = "pme", "aer";
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+@@ -577,9 +577,9 @@
+ 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
+ 			       0x50 0x00000000 0x0 0x00002000>; /* configuration space */
+ 			reg-names = "regs", "config";
+-			interrupts = <0 162 0x4>,
+-				     <0 161 0x4>;
+-			interrupt-names = "intr", "pme";
++			interrupts = <0 161 0x4>,
++					 <0 162 0x4>;
++			interrupt-names = "pme", "aer";
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+index 21023a3..58844e8 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+@@ -583,8 +583,8 @@
+ 			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
+ 			       0x10 0x00000000 0x0 0x00002000>; /* configuration space */
+ 			reg-names = "regs", "config";
+-			interrupts = <0 108 0x4>; /* Level high type */
+-			interrupt-names = "intr";
++			interrupts = <0 108 0x4>; /* aer interrupt */
++			interrupt-names = "aer";
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+@@ -607,8 +607,8 @@
+ 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
+ 			       0x12 0x00000000 0x0 0x00002000>; /* configuration space */
+ 			reg-names = "regs", "config";
+-			interrupts = <0 113 0x4>; /* Level high type */
+-			interrupt-names = "intr";
++			interrupts = <0 113 0x4>; /* aer interrupt */
++			interrupt-names = "aer";
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+@@ -631,8 +631,8 @@
+ 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
+ 			       0x14 0x00000000 0x0 0x00002000>; /* configuration space */
+ 			reg-names = "regs", "config";
+-			interrupts = <0 118 0x4>; /* Level high type */
+-			interrupt-names = "intr";
++			interrupts = <0 118 0x4>; /* aer interrupt */
++			interrupt-names = "aer";
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+@@ -655,8 +655,8 @@
+ 			reg = <0x00 0x03700000 0x0 0x00100000   /* controller registers */
+ 			       0x16 0x00000000 0x0 0x00002000>; /* configuration space */
+ 			reg-names = "regs", "config";
+-			interrupts = <0 123 0x4>; /* Level high type */
+-			interrupt-names = "intr";
++			interrupts = <0 123 0x4>; /* aer interrupt */
++			interrupt-names = "aer";
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+-- 
+2.1.0.27.g96db324
