@@ -1,269 +1,55 @@
-From: <shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 10/10] [v3] arm64: dts: add LS1046A-QDS board support
-Date: Tue, 13 Sep 2016 16:10:03 +0800
-Message-ID: <1473754203-22970-11-git-send-email-shh.xie@gmail.com>
+From: <shh.xie@gmail.com>
+Subject: [PATCH 03/10][v3] dt-bindings: i2c: adds two more nxp devices
+Date: Tue, 13 Sep 2016 16:09:56 +0800
+Message-ID: <1473754203-22970-4-git-send-email-shh.xie@gmail.com>
 References: <1473754203-22970-1-git-send-email-shh.xie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473754203-22970-1-git-send-email-shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1473754203-22970-1-git-send-email-shh.xie@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, shawnguo@kernel.org, linux-kernel@vger.kernel.org
+Cc: Shaohui Xie <Shaohui.Xie@nxp.com>, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-From: Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
+From: Shaohui Xie <Shaohui.Xie@nxp.com>
 
-The LS1046A QorIQ development system (QDS) board is a high-performance
-computing, evaluation, development, and test platform supporting the
-LS1046A SoC.
+"nxp,pcf2127" and "nxp,pcf2129" are I2c devices, adds them to the list
+of trivial i2c devices.
 
-Signed-off-by: Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Shaohui Xie <Shaohui.Xie@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
 changes in V3:
 1. none.
 
 changes in V2:
-1. updated aliases of serial nodes.
+1. new patch.
 
- arch/arm64/boot/dts/freescale/Makefile            |   1 +
- arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts | 212 ++++++++++++++++++++++
- 2 files changed, 213 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+ Documentation/devicetree/bindings/i2c/trivial-devices.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 9c81b9e..6602718 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -1,5 +1,6 @@
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
-+dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-rdb.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-new file mode 100644
-index 0000000..290e5b0
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-@@ -0,0 +1,212 @@
-+/*
-+ * Device Tree Include file for Freescale Layerscape-1046A family SoC.
-+ *
-+ * Copyright 2016, Freescale Semiconductor, Inc.
-+ *
-+ * Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPLv2 or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "fsl-ls1046a.dtsi"
-+
-+/ {
-+	model = "LS1046A QDS Board";
-+	compatible = "fsl,ls1046a-qds", "fsl,ls1046a";
-+
-+	aliases {
-+		gpio0 = &gpio0;
-+		gpio1 = &gpio1;
-+		gpio2 = &gpio2;
-+		gpio3 = &gpio3;
-+		serial0 = &duart0;
-+		serial1 = &duart1;
-+		serial2 = &duart2;
-+		serial3 = &duart3;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&dspi {
-+	bus-num = <0>;
-+	status = "okay";
-+
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "n25q128a11", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <10000000>;
-+	};
-+
-+	flash@1 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "sst25wf040b", "jedec,spi-nor";
-+		spi-cpol;
-+		spi-cpha;
-+		reg = <1>;
-+		spi-max-frequency = <10000000>;
-+	};
-+
-+	flash@2 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "en25s64", "jedec,spi-nor";
-+		spi-cpol;
-+		spi-cpha;
-+		reg = <2>;
-+		spi-max-frequency = <10000000>;
-+	};
-+};
-+
-+&duart0 {
-+	status = "okay";
-+};
-+
-+&duart1 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	pca9547@77 {
-+		compatible = "nxp,pca9547";
-+		reg = <0x77>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x2>;
-+
-+			ina220@40 {
-+				compatible = "ti,ina220";
-+				reg = <0x40>;
-+				shunt-resistor = <1000>;
-+			};
-+
-+			ina220@41 {
-+				compatible = "ti,ina220";
-+				reg = <0x41>;
-+				shunt-resistor = <1000>;
-+			};
-+		};
-+
-+		i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x3>;
-+
-+			rtc@51 {
-+				compatible = "nxp,pcf2129";
-+				reg = <0x51>;
-+				/* IRQ10_B */
-+				interrupts = <0 150 0x4>;
-+			};
-+
-+			eeprom@56 {
-+				compatible = "atmel,24c512";
-+				reg = <0x56>;
-+			};
-+
-+			eeprom@57 {
-+				compatible = "atmel,24c512";
-+				reg = <0x57>;
-+			};
-+
-+			temp-sensor@4c {
-+				compatible = "adi,adt7461a";
-+				reg = <0x4c>;
-+			};
-+		};
-+	};
-+};
-+
-+&ifc {
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+	/* NOR, NAND Flashes and FPGA on board */
-+	ranges = <0x0 0x0 0x0 0x60000000 0x08000000
-+		  0x1 0x0 0x0 0x7e800000 0x00010000
-+		  0x2 0x0 0x0 0x7fb00000 0x00000100>;
-+	status = "okay";
-+
-+	nor@0,0 {
-+		compatible = "cfi-flash";
-+		reg = <0x0 0x0 0x8000000>;
-+		bank-width = <2>;
-+		device-width = <1>;
-+	};
-+
-+	nand@1,0 {
-+		compatible = "fsl,ifc-nand";
-+		reg = <0x1 0x0 0x10000>;
-+	};
-+
-+	fpga: board-control@2,0 {
-+		compatible = "fsl,ls1046aqds-fpga", "fsl,fpga-qixis";
-+		reg = <0x2 0x0 0x0000100>;
-+	};
-+};
-+
-+&lpuart0 {
-+	status = "okay";
-+};
-+
-+&qspi {
-+	num-cs = <2>;
-+	bus-num = <0>;
-+	status = "okay";
-+
-+	qflash0: s25fl128s@0 {
-+		compatible = "spansion,m25p80";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+	};
-+};
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index 5c70ce9..677b168 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -129,6 +129,8 @@ nuvoton,npct501		i2c trusted platform module (TPM)
+ nuvoton,npct601		i2c trusted platform module (TPM2)
+ nxp,pca9556		Octal SMBus and I2C registered interface
+ nxp,pca9557		8-bit I2C-bus and SMBus I/O port with reset
++nxp,pcf2127		Real-time clock
++nxp,pcf2129		Real-time clock
+ nxp,pcf8563		Real-time clock/calendar
+ nxp,pcf85063		Tiny Real-Time Clock
+ oki,ml86v7667		OKI ML86V7667 video decoder
 -- 
 2.1.0.27.g96db324
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
