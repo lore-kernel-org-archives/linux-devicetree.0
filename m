@@ -1,590 +1,586 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 2/2] MMC: meson: initial support for GXBB platforms
-Date: Tue, 13 Sep 2016 08:53:46 -0700
-Message-ID: <7hsht3okxh.fsf@baylibre.com>
-References: <20160803231843.23012-1-khilman@baylibre.com>
-        <20160803231843.23012-2-khilman@baylibre.com>
-        <CAPDyKFpPCkCRB436zdZ664st9xwA6wTWkFtT=U4HTwwAn-_emg@mail.gmail.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH 2/2] phy: msm8996-pcie-phy: Add support to msm8996 pcie
+ phy
+Date: Tue, 13 Sep 2016 21:36:27 +0530
+Message-ID: <57D82403.9080004@codeaurora.org>
+References: <1473245733-17260-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1473245733-17260-3-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFpPCkCRB436zdZ664st9xwA6wTWkFtT=U4HTwwAn-_emg@mail.gmail.com>
-        (Ulf Hansson's message of "Wed, 24 Aug 2016 13:53:08 +0200")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-amlogic@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Victor Wan <victor.wan@amlogic.com>, Jerry Cao <jerry.cao@amlogic.com>, Xing Wu <xing.xu@amlogic.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473245733-17260-3-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Ulf Hansson <ulf.hansson@linaro.org> writes:
 
-> On 4 August 2016 at 01:18, Kevin Hilman <khilman@baylibre.com> wrote:
->> Initial support for the SD/eMMC controller in the Amlogic S905/GXBB
->> family of SoCs.
->>
->> Currently working for the SD and eMMC interfaces, but not yet tested
->> for SDIO.
->>
->> Tested external SD card and internal eMMC on meson-gxbb-p200 and
->> meson-gxbb-odroidc2.
->>
->> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
->> ---
->>  MAINTAINERS                   |   1 +
->>  drivers/mmc/host/Kconfig      |  10 +
->>  drivers/mmc/host/Makefile     |   1 +
->>  drivers/mmc/host/meson-gxbb.c | 918 ++++++++++++++++++++++++++++++++++++++++++
->>  4 files changed, 930 insertions(+)
->>  create mode 100644 drivers/mmc/host/meson-gxbb.c
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 7304d2e37a98..3762e46811f3 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -972,6 +972,7 @@ F:  arch/arm/mach-meson/
->>  F:     arch/arm/boot/dts/meson*
->>  F:     arch/arm64/boot/dts/amlogic/
->>  F:     drivers/pinctrl/meson/
->> +F:      drivers/mmc/host/meson*
->>  N:     meson
->>
->>  ARM/Annapurna Labs ALPINE ARCHITECTURE
->> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
->> index 0aa484c10c0a..4c3d091f7548 100644
->> --- a/drivers/mmc/host/Kconfig
->> +++ b/drivers/mmc/host/Kconfig
->> @@ -332,6 +332,16 @@ config MMC_SDHCI_IPROC
->>
->>           If unsure, say N.
->>
->> +config MMC_MESON_GXBB
->> +       tristate "Amlogic S905/GXBB SD/MMC Host Controller support"
->> +       depends on ARCH_MESON && MMC
->> +       help
->> +         This selects support for the Amlogic SD/MMC Host Controller
->> +         found on the S905/GXBB family of SoCs.  This controller is
->> +         MMC 5.1 compliant and support SD, eMMC and SDIO interfaces.
->> +
->> +         If you have a controller with this interface, say Y here.
->> +
->>  config MMC_MOXART
->>         tristate "MOXART SD/MMC Host Controller support"
->>         depends on ARCH_MOXART && MMC
->> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
->> index af918d261ff9..3e0de57f55b9 100644
->> --- a/drivers/mmc/host/Makefile
->> +++ b/drivers/mmc/host/Makefile
->> @@ -53,6 +53,7 @@ obj-$(CONFIG_MMC_JZ4740)      += jz4740_mmc.o
->>  obj-$(CONFIG_MMC_VUB300)       += vub300.o
->>  obj-$(CONFIG_MMC_USHC)         += ushc.o
->>  obj-$(CONFIG_MMC_WMT)          += wmt-sdmmc.o
->> +obj-$(CONFIG_MMC_MESON_GXBB)   += meson-gxbb.o
->>  obj-$(CONFIG_MMC_MOXART)       += moxart-mmc.o
->>  obj-$(CONFIG_MMC_SUNXI)                += sunxi-mmc.o
->>  obj-$(CONFIG_MMC_USDHI6ROL0)   += usdhi6rol0.o
->> diff --git a/drivers/mmc/host/meson-gxbb.c b/drivers/mmc/host/meson-gxbb.c
->> new file mode 100644
->> index 000000000000..10eac41cf31a
->> --- /dev/null
->> +++ b/drivers/mmc/host/meson-gxbb.c
->> @@ -0,0 +1,918 @@
->> +/*
->> + * This file is provided under a dual BSD/GPLv2 license.  When using or
->> + * redistributing this file, you may do so under either license.
->> + *
->> + * GPL LICENSE SUMMARY
->> + *
->> + * Copyright (c) 2016 BayLibre, SAS.
->> + * Author: Kevin Hilman <khilman@baylibre.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of version 2 of the GNU General Public License as
->> + * published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful, but
->> + * WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
->> + * General Public License for more details.
->> + *
->> + * You should have received a copy of the GNU General Public License
->> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
->> + * The full GNU General Public License is included in this distribution
->> + * in the file called COPYING.
->> + *
->> + * BSD LICENSE
->> + *
->> + * Copyright (c) 2016 BayLibre, SAS.
->> + * Author: Kevin Hilman <khilman@baylibre.com>
->> + *
->> + * Redistribution and use in source and binary forms, with or without
->> + * modification, are permitted provided that the following conditions
->> + * are met:
->> + *
->> + *   * Redistributions of source code must retain the above copyright
->> + *     notice, this list of conditions and the following disclaimer.
->> + *   * Redistributions in binary form must reproduce the above copyright
->> + *     notice, this list of conditions and the following disclaimer in
->> + *     the documentation and/or other materials provided with the
->> + *     distribution.
->> + *   * Neither the name of Intel Corporation nor the names of its
->> + *     contributors may be used to endorse or promote products derived
->> + *     from this software without specific prior written permission.
->> + *
->> + * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
->> + * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
->> + * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
->> + * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
->> + * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
->> + * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
->> + * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
->> + * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
->> + * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
->> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
->> + * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->> + */
+
+On 9/7/2016 4:25 PM, Srinivas Kandagatla wrote:
+> This patch adds support to msm8996 pcie phy which supports 3 ports,
+> Port A, Port B and Port C.
 >
-> Lots of licence text. Isn't it enough to state dual BSD/GPLv2?
+> Each port is independent and connected to a pcie host controller, there is
+> also a common block which is shared across all the 3 ports.
 >
-> [...]
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>   drivers/phy/Kconfig                 |   7 +
+>   drivers/phy/Makefile                |   1 +
+>   drivers/phy/phy-qcom-msm8996-pcie.c | 492 ++++++++++++++++++++++++++++++++++++
+>   3 files changed, 500 insertions(+)
+>   create mode 100644 drivers/phy/phy-qcom-msm8996-pcie.c
 >
->> +
->> +struct meson_host {
->> +       struct  device          *dev;
->> +       struct  mmc_host        *mmc;
->> +       struct  mmc_request     *mrq;
->> +       struct  mmc_command     *cmd;
->> +
->> +       spinlock_t lock;
->> +       void __iomem *regs;
->> +#ifdef USE_REGMAP
->> +       struct regmap *regmap;
->> +#endif
->> +       int irq;
->> +       u32 ocr_mask;
->> +       struct clk *core_clk;
->> +       struct clk_mux mux;
->> +       struct clk *mux_clk;
->> +       struct clk *mux_parent[MUX_CLK_NUM_PARENTS];
->> +       unsigned long mux_parent_rate[MUX_CLK_NUM_PARENTS];
->> +
->> +       struct clk_divider cfg_div;
->> +       struct clk *cfg_div_clk;
->> +
->> +       unsigned int bounce_buf_size;
->> +       void *bounce_buf;
->> +       dma_addr_t bounce_dma_addr;
->> +
->> +       unsigned long clk_rate;
->> +       unsigned long clk_src_rate;
->> +       unsigned short clk_src_div;
->> +};
->> +
->> +#define reg_read(host, offset) readl(host->regs + offset)
->> +#define reg_write(host, offset, val) writel(val, host->regs + offset)
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 19bff3a..8ad621c 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -344,6 +344,13 @@ config PHY_QCOM_APQ8064_SATA
+>   	depends on OF
+>   	select GENERIC_PHY
 >
-> I am not a fan of macros, especially when I don't think they improves the code.
->
-> Could we just stick to use readl/writel() directly instead!?
+> +config PHY_QCOM_MSM8996_PCIE
+> +	tristate "Qualcomm MSM8996 PCIE SerDes/PHY driver"
+> +	depends on ARCH_QCOM
+> +	depends on HAS_IOMEM
+> +	depends on OF
+> +	select GENERIC_PHY
+> +
+>   config PHY_QCOM_IPQ806X_SATA
+>   	tristate "Qualcomm IPQ806x SATA SerDes/PHY driver"
+>   	depends on ARCH_QCOM
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 90ae198..273b9c5 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -38,6 +38,7 @@ phy-exynos-usb2-$(CONFIG_PHY_EXYNOS5250_USB2)	+= phy-exynos5250-usb2.o
+>   phy-exynos-usb2-$(CONFIG_PHY_S5PV210_USB2)	+= phy-s5pv210-usb2.o
+>   obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
+>   obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
+> +obj-$(CONFIG_PHY_QCOM_MSM8996_PCIE)	+= phy-qcom-msm8996-pcie.o
+>   obj-$(CONFIG_PHY_ROCKCHIP_USB) += phy-rockchip-usb.o
+>   obj-$(CONFIG_PHY_ROCKCHIP_EMMC) += phy-rockchip-emmc.o
+>   obj-$(CONFIG_PHY_ROCKCHIP_DP)		+= phy-rockchip-dp.o
+> diff --git a/drivers/phy/phy-qcom-msm8996-pcie.c b/drivers/phy/phy-qcom-msm8996-pcie.c
+> new file mode 100644
+> index 0000000..f7d0c73
+> --- /dev/null
+> +++ b/drivers/phy/phy-qcom-msm8996-pcie.c
+> @@ -0,0 +1,492 @@
+> +/*
+> + * Copyright (c) 2014, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/time.h>
+> +#include <linux/delay.h>
+> +#include <linux/clk.h>
+> +#include <linux/slab.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset.h>
+> +#include <linux/phy/phy.h>
+> +
+> +#define QSERDES_COM_BG_TIMER			0x00c
+> +#define QSERDES_COM_SSC_EN_CENTER		0x010
+> +#define QSERDES_COM_SSC_ADJ_PER1		0x014
+> +#define QSERDES_COM_SSC_ADJ_PER2		0x018
+> +#define QSERDES_COM_SSC_PER1			0x01c
+> +#define QSERDES_COM_SSC_PER2			0x020
+> +#define QSERDES_COM_SSC_STEP_SIZE1		0x024
+> +#define QSERDES_COM_SSC_STEP_SIZE2		0x028
+> +#define QSERDES_COM_BIAS_EN_CLKBUFLR_EN		0x034
+> +#define QSERDES_COM_CLK_ENABLE1			0x038
+> +#define QSERDES_COM_SYS_CLK_CTRL		0x03c
+> +#define QSERDES_COM_SYSCLK_BUF_ENABLE		0x040
+> +#define QSERDES_COM_PLL_IVCO			0x048
+> +#define QSERDES_COM_LOCK_CMP1_MODE0		0x04c
+> +#define QSERDES_COM_LOCK_CMP2_MODE0		0x050
+> +#define QSERDES_COM_LOCK_CMP3_MODE0		0x054
+> +#define QSERDES_COM_BG_TRIM			0x070
+> +#define QSERDES_COM_CLK_EP_DIV			0x074
+> +#define QSERDES_COM_CP_CTRL_MODE0		0x078
+> +#define QSERDES_COM_PLL_RCTRL_MODE0		0x084
+> +#define QSERDES_COM_PLL_CCTRL_MODE0		0x090
+> +#define QSERDES_COM_SYSCLK_EN_SEL		0x0ac
+> +#define QSERDES_COM_RESETSM_CNTRL		0x0b4
+> +#define QSERDES_COM_RESTRIM_CTRL		0x0bc
+> +#define QSERDES_COM_RESCODE_DIV_NUM		0x0c4
+> +#define QSERDES_COM_LOCK_CMP_EN			0x0c8
+> +#define QSERDES_COM_DEC_START_MODE0		0x0d0
+> +#define QSERDES_COM_DIV_FRAC_START1_MODE0	0x0dc
+> +#define QSERDES_COM_DIV_FRAC_START2_MODE0	0x0e0
+> +#define QSERDES_COM_DIV_FRAC_START3_MODE0	0x0e4
+> +#define QSERDES_COM_INTEGLOOP_GAIN0_MODE0	0x108
+> +#define QSERDES_COM_INTEGLOOP_GAIN1_MODE0	0x10c
+> +#define QSERDES_COM_VCO_TUNE_CTRL		0x124
+> +#define QSERDES_COM_VCO_TUNE_MAP		0x128
+> +#define QSERDES_COM_VCO_TUNE1_MODE0		0x12c
+> +#define QSERDES_COM_VCO_TUNE2_MODE0		0x130
+> +#define QSERDES_COM_VCO_TUNE_TIMER1		0x144
+> +#define QSERDES_COM_VCO_TUNE_TIMER2		0x148
+> +#define QSERDES_COM_BG_CTRL			0x170
+> +#define QSERDES_COM_CLK_SELECT			0x174
+> +#define QSERDES_COM_HSCLK_SEL			0x178
+> +#define QSERDES_COM_CORECLK_DIV			0x184
+> +#define QSERDES_COM_CORE_CLK_EN			0x18c
+> +#define QSERDES_COM_C_READY_STATUS		0x190
+> +#define QSERDES_COM_CMN_CONFIG			0x194
+> +#define QSERDES_COM_SVS_MODE_CLK_SEL		0x19c
+> +
+> +#define PCIE_N_SW_RESET(n)			(PCS_PORT(n) + 0x00)
+> +#define PCIE_N_POWER_DOWN_CONTROL(n)		(PCS_PORT(n) + 0x04)
+> +#define PCIE_N_START_CONTROL(n)			(PCS_PORT(n) + 0x08)
+> +#define PCIE_N_TXDEEMPH_M6DB_V0(n)		(PCS_PORT(n) + 0x24)
+> +#define PCIE_N_TXDEEMPH_M3P5DB_V0(n)		(PCS_PORT(n) + 0x28)
+> +#define PCIE_N_ENDPOINT_REFCLK_DRIVE(n)		(PCS_PORT(n) + 0x54)
+> +#define PCIE_N_RX_IDLE_DTCT_CNTRL(n)		(PCS_PORT(n) + 0x58)
+> +#define PCIE_N_POWER_STATE_CONFIG1(n)		(PCS_PORT(n) + 0x60)
+> +#define PCIE_N_POWER_STATE_CONFIG4(n)		(PCS_PORT(n) + 0x6c)
+> +#define PCIE_N_PWRUP_RESET_DLY_TIME_AUXCLK(n)	(PCS_PORT(n) + 0xa0)
+> +#define PCIE_N_LP_WAKEUP_DLY_TIME_AUXCLK(n)	(PCS_PORT(n) + 0xa4)
+> +#define PCIE_N_PLL_LOCK_CHK_DLY_TIME(n)		(PCS_PORT(n) + 0xa8)
+> +#define PCIE_N_PCS_STATUS(n)			(PCS_PORT(n) + 0x174)
+> +#define PCIE_N_LP_WAKEUP_DLY_TIME_AUXCLK_MSB(n)	(PCS_PORT(n) + 0x1a8)
+> +#define PCIE_N_OSC_DTCT_ACTIONS(n)		(PCS_PORT(n) + 0x1ac)
+> +#define PCIE_N_SIGDET_CNTRL(n)			(PCS_PORT(n) + 0x1b0)
+> +#define PCIE_N_L1SS_WAKEUP_DLY_TIME_AUXCLK_LSB(n)	(PCS_PORT(n) + 0x1dc)
+> +#define PCIE_N_L1SS_WAKEUP_DLY_TIME_AUXCLK_MSB(n)	(PCS_PORT(n) + 0x1e0)
+> +
+> +#define PCIE_COM_SW_RESET		0x400
+> +#define PCIE_COM_POWER_DOWN_CONTROL	0x404
+> +#define PCIE_COM_START_CONTROL		0x408
+> +#define PCIE_COM_PCS_READY_STATUS	0x448
+> +
+> +#define PCIE_LANE_TX_BASE 0x1000
+> +#define PCIE_LANE_RX_BASE 0x1200
+> +#define PCIE_LANE_PCS_BASE 0x1400
+
+I've seen the reg offsets of another SoC using the same
+IP, but the above offsets aren't the same relative to the
+phy base. We might want to create more reg properties in
+DT to accommodate register maps on other SoCs.
+
+> +
+> +#define TX(n) (PCIE_LANE_TX_BASE + n * 0x1000)
+> +#define RX(n) (PCIE_LANE_RX_BASE + n * 0x1000)
+> +#define PCS_PORT(n) (PCIE_LANE_PCS_BASE + n * 0x1000)
+> +
+> +#define QSERDES_TX_N_RES_CODE_LANE_OFFSET(n)	(TX(n) + 0x4c)
+> +#define QSERDES_TX_N_HIGHZ_TRANSCEIVEREN_BIAS_DRVR_EN(n) (TX(n) + 0x68)
+> +#define QSERDES_TX_N_LANE_MODE(n)		(TX(n) + 0x94)
+> +#define QSERDES_TX_N_RCV_DETECT_LVL_2(n)	(TX(n) + 0xac)
+> +
+> +#define QSERDES_RX_N_UCDR_SO_GAIN_HALF(n)	(RX(n) + 0x010)
+> +#define QSERDES_RX_N_UCDR_SO_GAIN(n)		(RX(n) + 0x01c)
+> +#define QSERDES_RX_N_UCDR_SO_SATURATION_AND_ENABLE(n) (RX(n) + 0x048)
+> +#define QSERDES_RX_N_RX_EQU_ADAPTOR_CNTRL2(n)	(RX(n) + 0x0d8)
+> +#define QSERDES_RX_N_RX_EQU_ADAPTOR_CNTRL3(n)	(RX(n) + 0x0dc)
+> +#define QSERDES_RX_N_RX_EQU_ADAPTOR_CNTRL4(n)	(RX(n) + 0x0e0)
+> +#define QSERDES_RX_N_SIGDET_ENABLES(n)		(RX(n) + 0x110)
+> +#define QSERDES_RX_N_SIGDET_DEGLITCH_CNTRL(n)	(RX(n) + 0x11c)
+> +#define QSERDES_RX_N_SIGDET_LVL(n)		(RX(n) + 0x118)
+> +#define QSERDES_RX_N_RX_BAND(n)			(RX(n) + 0x120)
+> +
+> +#define REFCLK_STABILIZATION_DELAY_US_MIN	1000
+> +#define REFCLK_STABILIZATION_DELAY_US_MAX	1005
+> +#define PHY_READY_TIMEOUT_COUNT			10
+> +#define POWER_DOWN_DELAY_US_MIN			10
+> +#define POWER_DOWN_DELAY_US_MAX			11
+> +
+> +struct phy_msm8996_priv;
+> +
+> +struct phy_msm8996_desc {
+> +	struct phy	*phy;
+> +	unsigned int	index;
+> +	struct	reset_control *phy_rstc;
+> +	struct phy_msm8996_priv *priv;
+> +};
+> +
+> +struct phy_msm8996_priv {
+> +	void __iomem *base;
+> +	struct clk *cfg_clk;
+> +	struct clk *aux_clk;
+> +	struct clk *ref_clk;
+> +	struct clk *ref_clk_src;
+> +	struct	reset_control *phy_rstc, *phycom_rstc;
+> +	struct device *dev;
+> +	unsigned int	nphys;
+> +	int		init_count;
+> +	struct mutex	phy_mutex;
+> +	struct phy_msm8996_desc	**phys;
+> +};
+> +
+> +static struct phy *phy_msm8996_pcie_phy_xlate(struct device *dev,
+> +					     struct of_phandle_args *args)
+> +{
+> +	struct phy_msm8996_priv *priv = dev_get_drvdata(dev);
+> +	int i;
+> +
+> +	if (WARN_ON(args->args[0] >= priv->nphys))
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	for (i = 0; i < priv->nphys; i++) {
+> +		if (priv->phys[i]->index == args->args[0])
+> +			break;
+> +	}
+> +
+> +	if (i == priv->nphys)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	return priv->phys[i]->phy;
+> +}
+> +
+> +static int pcie_phy_is_ready(struct phy *phy)
+> +{
+> +	struct phy_msm8996_desc *phydesc = phy_get_drvdata(phy);
+> +	struct phy_msm8996_priv *priv = phydesc->priv;
+> +	void __iomem *base = priv->base;
+> +	int retries = 0;
+> +
+> +	do {
+> +		if ((readl_relaxed(base + PCIE_COM_PCS_READY_STATUS) & 0x1))
+> +			return 0;
+> +		retries++;
+> +		usleep_range(REFCLK_STABILIZATION_DELAY_US_MIN,
+> +					 REFCLK_STABILIZATION_DELAY_US_MAX);
+> +	} while (retries < PHY_READY_TIMEOUT_COUNT);
+> +
+> +	dev_err(priv->dev, "PHY Failed to come up\n");
+> +
+> +	return -EBUSY;
+> +}
+> +
+> +static int qcom_msm8996_phy_common_power_off(struct phy *phy)
+> +{
+> +	struct phy_msm8996_desc *phydesc = phy_get_drvdata(phy);
+> +	struct phy_msm8996_priv *priv = phydesc->priv;
+> +	void __iomem *base = priv->base;
+> +
+> +	mutex_lock(&priv->phy_mutex);
+> +	if (--priv->init_count) {
+> +		mutex_unlock(&priv->phy_mutex);
+> +		return 0;
+> +	}
+> +
+> +	writel_relaxed(0x01, base + PCIE_COM_SW_RESET);
+> +	writel_relaxed(0x0, base + PCIE_COM_POWER_DOWN_CONTROL);
+> +
+> +	reset_control_assert(priv->phy_rstc);
+> +	reset_control_assert(priv->phycom_rstc);
+> +	clk_disable_unprepare(priv->cfg_clk);
+> +	clk_disable_unprepare(priv->aux_clk);
+> +	clk_disable_unprepare(priv->ref_clk);
+> +	clk_disable_unprepare(priv->ref_clk_src);
+> +
+> +	mutex_unlock(&priv->phy_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_msm8996_phy_common_power_on(struct phy *phy)
+> +{
+> +	struct phy_msm8996_desc *phydesc = phy_get_drvdata(phy);
+> +	struct phy_msm8996_priv *priv = phydesc->priv;
+> +	void __iomem *base = priv->base;
+> +	int ret;
+> +
+> +	mutex_lock(&priv->phy_mutex);
+> +	if (priv->init_count++) {
+> +		mutex_unlock(&priv->phy_mutex);
+> +		return 0;
+> +	}
+> +
+> +	clk_prepare_enable(priv->cfg_clk);
+> +	clk_prepare_enable(priv->aux_clk);
+> +	clk_prepare_enable(priv->ref_clk);
+> +	clk_prepare_enable(priv->ref_clk_src);
+> +
+> +	reset_control_deassert(priv->phy_rstc);
+> +	reset_control_deassert(priv->phycom_rstc);
+> +
+> +	writel_relaxed(0x01, base + PCIE_COM_POWER_DOWN_CONTROL);
+> +	writel_relaxed(0x1c, base + QSERDES_COM_BIAS_EN_CLKBUFLR_EN);
+> +	writel_relaxed(0x10, base + QSERDES_COM_CLK_ENABLE1);
+> +	writel_relaxed(0x33, base + QSERDES_COM_CLK_SELECT);
+> +	writel_relaxed(0x06, base + QSERDES_COM_CMN_CONFIG);
+> +	writel_relaxed(0x42, base + QSERDES_COM_LOCK_CMP_EN);
+> +	writel_relaxed(0x00, base + QSERDES_COM_VCO_TUNE_MAP);
+> +	writel_relaxed(0xff, base + QSERDES_COM_VCO_TUNE_TIMER1);
+> +	writel_relaxed(0x1f, base + QSERDES_COM_VCO_TUNE_TIMER2);
+> +	writel_relaxed(0x01, base + QSERDES_COM_HSCLK_SEL);
+> +	writel_relaxed(0x01, base + QSERDES_COM_SVS_MODE_CLK_SEL);
+> +	writel_relaxed(0x00, base + QSERDES_COM_CORE_CLK_EN);
+> +	writel_relaxed(0x0a, base + QSERDES_COM_CORECLK_DIV);
+> +	writel_relaxed(0x09, base + QSERDES_COM_BG_TIMER);
+> +	writel_relaxed(0x82, base + QSERDES_COM_DEC_START_MODE0);
+> +	writel_relaxed(0x03, base + QSERDES_COM_DIV_FRAC_START3_MODE0);
+> +	writel_relaxed(0x55, base + QSERDES_COM_DIV_FRAC_START2_MODE0);
+> +	writel_relaxed(0x55, base + QSERDES_COM_DIV_FRAC_START1_MODE0);
+> +	writel_relaxed(0x00, base + QSERDES_COM_LOCK_CMP3_MODE0);
+> +	writel_relaxed(0x1a, base + QSERDES_COM_LOCK_CMP2_MODE0);
+> +	writel_relaxed(0x0a, base + QSERDES_COM_LOCK_CMP1_MODE0);
+> +	writel_relaxed(0x33, base + QSERDES_COM_CLK_SELECT);
+> +	writel_relaxed(0x02, base + QSERDES_COM_SYS_CLK_CTRL);
+> +	writel_relaxed(0x1f, base + QSERDES_COM_SYSCLK_BUF_ENABLE);
+> +	writel_relaxed(0x04, base + QSERDES_COM_SYSCLK_EN_SEL);
+> +	writel_relaxed(0x0b, base + QSERDES_COM_CP_CTRL_MODE0);
+> +	writel_relaxed(0x16, base + QSERDES_COM_PLL_RCTRL_MODE0);
+> +	writel_relaxed(0x28, base + QSERDES_COM_PLL_CCTRL_MODE0);
+> +	writel_relaxed(0x00, base + QSERDES_COM_INTEGLOOP_GAIN1_MODE0);
+> +	writel_relaxed(0x80, base + QSERDES_COM_INTEGLOOP_GAIN0_MODE0);
+> +	writel_relaxed(0x01, base + QSERDES_COM_SSC_EN_CENTER);
+> +	writel_relaxed(0x31, base + QSERDES_COM_SSC_PER1);
+> +	writel_relaxed(0x01, base + QSERDES_COM_SSC_PER2);
+> +	writel_relaxed(0x02, base + QSERDES_COM_SSC_ADJ_PER1);
+> +	writel_relaxed(0x00, base + QSERDES_COM_SSC_ADJ_PER2);
+> +	writel_relaxed(0x2f, base + QSERDES_COM_SSC_STEP_SIZE1);
+> +	writel_relaxed(0x19, base + QSERDES_COM_SSC_STEP_SIZE2);
+> +	writel_relaxed(0x15, base + QSERDES_COM_RESCODE_DIV_NUM);
+> +	writel_relaxed(0x0f, base + QSERDES_COM_BG_TRIM);
+> +	writel_relaxed(0x0f, base + QSERDES_COM_PLL_IVCO);
+> +	writel_relaxed(0x19, base + QSERDES_COM_CLK_EP_DIV);
+> +	writel_relaxed(0x10, base + QSERDES_COM_CLK_ENABLE1);
+> +	writel_relaxed(0x00, base + QSERDES_COM_HSCLK_SEL);
+> +	writel_relaxed(0x40, base + QSERDES_COM_RESCODE_DIV_NUM);
+> +	writel_relaxed(0x00, base + PCIE_COM_SW_RESET);
+> +	writel_relaxed(0x03, base + PCIE_COM_START_CONTROL);
+> +
+> +	ret = pcie_phy_is_ready(phy);
+> +
+> +	mutex_unlock(&priv->phy_mutex);
+> +
+> +	return ret;
+> +}
+> +
+> +static int qcom_msm8996_pcie_phy_power_on(struct phy *phy)
+> +{
+> +	struct phy_msm8996_desc *phydesc = phy_get_drvdata(phy);
+> +	struct phy_msm8996_priv *priv = phydesc->priv;
+> +	void __iomem *base = priv->base;
+> +	int id = phydesc->index;
+> +	int err;
+> +
+> +	err = qcom_msm8996_phy_common_power_on(phy);
+> +	if (err) {
+> +		dev_err(priv->dev, "PCIE phy power on failed\n");
+> +		return err;
+> +	}
+> +
+> +	reset_control_deassert(phydesc->phy_rstc);
+> +
+> +	writel_relaxed(0x45, base +
+> +		       QSERDES_TX_N_HIGHZ_TRANSCEIVEREN_BIAS_DRVR_EN(id));
+> +	writel_relaxed(0x06, base + QSERDES_TX_N_LANE_MODE(id));
+> +	writel_relaxed(0x1c, base + QSERDES_RX_N_SIGDET_ENABLES(id));
+> +	writel_relaxed(0x17, base + QSERDES_RX_N_SIGDET_LVL(id));
+> +	writel_relaxed(0x01, base + QSERDES_RX_N_RX_EQU_ADAPTOR_CNTRL2(id));
+> +	writel_relaxed(0x00, base + QSERDES_RX_N_RX_EQU_ADAPTOR_CNTRL3(id));
+> +	writel_relaxed(0xdb, base + QSERDES_RX_N_RX_EQU_ADAPTOR_CNTRL4(id));
+> +	writel_relaxed(0x18, base + QSERDES_RX_N_RX_BAND(id));
+> +	writel_relaxed(0x04, base + QSERDES_RX_N_UCDR_SO_GAIN(id));
+> +	writel_relaxed(0x04, base + QSERDES_RX_N_UCDR_SO_GAIN_HALF(id));
+> +	writel_relaxed(0x4c, base + PCIE_N_RX_IDLE_DTCT_CNTRL(id));
+> +	writel_relaxed(0x00, base + PCIE_N_PWRUP_RESET_DLY_TIME_AUXCLK(id));
+> +	writel_relaxed(0x01, base + PCIE_N_LP_WAKEUP_DLY_TIME_AUXCLK(id));
+> +	writel_relaxed(0x05, base + PCIE_N_PLL_LOCK_CHK_DLY_TIME(id));
+> +	writel_relaxed(0x4b, base +
+> +		       QSERDES_RX_N_UCDR_SO_SATURATION_AND_ENABLE(id));
+> +	writel_relaxed(0x14, base + QSERDES_RX_N_SIGDET_DEGLITCH_CNTRL(id));
+> +	writel_relaxed(0x05, base + PCIE_N_ENDPOINT_REFCLK_DRIVE(id));
+> +	writel_relaxed(0x02, base + PCIE_N_POWER_DOWN_CONTROL(id));
+> +	writel_relaxed(0x00, base + PCIE_N_POWER_STATE_CONFIG4(id));
+> +	writel_relaxed(0xa3, base + PCIE_N_POWER_STATE_CONFIG1(id));
+> +	writel_relaxed(0x19, base + QSERDES_RX_N_SIGDET_LVL(id));
+> +	writel_relaxed(0x0e, base + PCIE_N_TXDEEMPH_M3P5DB_V0(id));
+> +	writel_relaxed(0x03, base + PCIE_N_POWER_DOWN_CONTROL(id));
+> +
+> +	usleep_range(POWER_DOWN_DELAY_US_MIN, POWER_DOWN_DELAY_US_MAX);
+> +
+> +	writel_relaxed(0x00, base + PCIE_N_SW_RESET(id));
+> +	writel_relaxed(0x0a, base + PCIE_N_START_CONTROL(id));
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_msm8996_pcie_phy_power_off(struct phy *phy)
+> +{
+> +	struct phy_msm8996_desc *phydesc = phy_get_drvdata(phy);
+> +	struct phy_msm8996_priv *priv = phydesc->priv;
+> +	void __iomem *base = priv->base;
+> +	int id = phydesc->index;
+> +	int err;
+> +
+> +	writel_relaxed(0x01, base + PCIE_N_SW_RESET(id));
+> +	writel_relaxed(0x0, base + PCIE_N_POWER_DOWN_CONTROL(id));
+> +
+> +	err = qcom_msm8996_phy_common_power_off(phy);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	reset_control_assert(phydesc->phy_rstc);
+> +
+> +	return err;
+> +}
+> +
+> +static const struct phy_ops qcom_msm8996_pcie_phy_ops = {
+> +	.power_on	= qcom_msm8996_pcie_phy_power_on,
+> +	.power_off	= qcom_msm8996_pcie_phy_power_off,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +
+> +static int qcom_msm8996_pcie_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *child;
+> +	struct phy *phy;
+> +	struct phy_provider *phy_provider;
+> +	struct phy_msm8996_priv *priv;
+> +	struct resource *res;
+> +	int ret;
+> +	u32 phy_id;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	priv->base = devm_ioremap(dev, res->start, resource_size(res));
+> +	if (!priv->base)
+> +		return -ENOMEM;
+> +
+> +	priv->cfg_clk = devm_clk_get(dev, "cfg");
+> +	if (IS_ERR(priv->cfg_clk))
+> +		return PTR_ERR(priv->cfg_clk);
+> +
+> +	priv->aux_clk = devm_clk_get(dev, "aux");
+> +	if (IS_ERR(priv->aux_clk))
+> +		return PTR_ERR(priv->aux_clk);
+> +
+> +	priv->ref_clk = devm_clk_get(dev, "ref_clk");
+> +	if (IS_ERR(priv->ref_clk))
+> +		return PTR_ERR(priv->ref_clk);
+> +
+> +	priv->ref_clk_src = devm_clk_get(dev, "ref_clk_src");
+> +	if (IS_ERR(priv->ref_clk_src))
+> +		return PTR_ERR(priv->ref_clk_src);
+> +
+> +	priv->nphys = of_get_child_count(dev->of_node);
+> +	if (priv->nphys == 0)
+> +		return -ENODEV;
+> +
+> +	priv->phys = devm_kcalloc(dev, priv->nphys, sizeof(*priv->phys),
+> +				  GFP_KERNEL);
+> +	if (!priv->phys)
+> +		return -ENOMEM;
+> +
+> +	priv->phy_rstc = reset_control_get(dev, "phy");
+> +	if (IS_ERR(priv->phy_rstc))
+> +		return PTR_ERR(priv->phy_rstc);
+> +
+> +	priv->phycom_rstc = reset_control_get(dev, "common");
+> +	if (IS_ERR(priv->phycom_rstc))
+> +		return PTR_ERR(priv->phycom_rstc);
+> +
+> +	mutex_init(&priv->phy_mutex);
+> +
+> +	dev_set_drvdata(dev, priv);
+> +
+> +	for_each_available_child_of_node(dev->of_node, child) {
+> +		struct phy_msm8996_desc *phy_desc;
+> +
+> +		if (of_property_read_u32(child, "reg", &phy_id)) {
+> +			dev_err(dev, "missing reg property in node %s\n",
+> +				child->name);
+> +			ret = -EINVAL;
+> +			goto put_child;
+> +		}
+> +
+
+It would be good to validate that the phy_id is within 0 to
+priv->nphys - 1, just to make sure bad DT props don't crash the
+driver.
+
+> +		phy_desc = devm_kzalloc(dev, sizeof(*phy_desc), GFP_KERNEL);
+> +		if (!phy_desc) {
+> +			ret = -ENOMEM;
+> +			goto put_child;
+> +		}
+> +
+> +		phy = devm_phy_create(dev, NULL, &qcom_msm8996_pcie_phy_ops);
+> +		if (IS_ERR(phy)) {
+> +			dev_err(dev, "failed to create PHY %d\n", phy_id);
+> +			ret = PTR_ERR(phy);
+> +			goto put_child;
+> +		}
+> +
+> +		phy_desc->phy_rstc = of_reset_control_get(child, "phy");
+> +		if (IS_ERR(phy_desc->phy_rstc)) {
+> +			ret = PTR_ERR(phy_desc->phy_rstc);
+> +			goto put_child;
+> +		}
+> +
+> +		phy_desc->phy = phy;
+> +		phy_desc->priv = priv;
+> +		phy_desc->index = phy_id;
+> +		phy_set_drvdata(phy, phy_desc);
+> +		priv->phys[phy_id] = phy_desc;
+> +	}
+> +
+> +	phy_provider =
+> +		devm_of_phy_provider_register(dev, phy_msm8996_pcie_phy_xlate);
+> +
+> +	return PTR_ERR_OR_ZERO(phy_provider);
+> +
+> +put_child:
+> +	of_node_put(child);
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id qcom_msm8996_pcie_phy_of_match[] = {
+> +	{ .compatible = "qcom,msm8996-pcie-phy" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, qcom_msm8996_pcie_phy_of_match);
+> +
+> +static struct platform_driver qcom_msm8996_pcie_phy_driver = {
+> +	.probe	= qcom_msm8996_pcie_phy_probe,
+> +	.driver = {
+> +		.name	= "qcom-msm8996-pcie-phy",
+> +		.of_match_table	= qcom_msm8996_pcie_phy_of_match,
+> +	}
+> +};
+> +module_platform_driver(qcom_msm8996_pcie_phy_driver);
+> +
+> +MODULE_AUTHOR("Srinivas Kandagatla <srinivas.kandagatla@st.com>");
+> +MODULE_DESCRIPTION("QCOM MSM899 PCIE PHY driver");
+
+6 got missed.
+
+Looks good to me otherwise.
+
+Thanks,
+Archit
+
+> +MODULE_LICENSE("GPL v2");
 >
 
-Yes, I'll remove these.  They are leftover from when I was using macros
-to switch between readl/writel and regmap accessors.
-
->
->> +static int meson_mmc_clk_set(struct meson_host *host, unsigned long clk_rate)
->> +{
->> +       struct mmc_host *mmc = host->mmc;
->> +       int ret = 0;
->> +       u32 cfg;
->> +
->> +       if (clk_rate) {
->> +               if (WARN_ON(clk_rate > mmc->f_max))
->> +                       clk_rate = mmc->f_max;
->> +               else if (WARN_ON(clk_rate < mmc->f_min))
->> +                       clk_rate = mmc->f_min;
->> +       }
->> +
->> +       if (clk_rate == host->clk_rate)
->> +               return 0;
->> +
->> +       /* stop clock */
->> +       cfg = reg_read(host, SD_EMMC_CFG);
->> +       if (!(cfg & CFG_STOP_CLOCK)) {
->> +               cfg |= CFG_STOP_CLOCK;
->> +               reg_write(host, SD_EMMC_CFG, cfg);
->> +       }
->> +
->> +       dev_dbg(host->dev, "change clock rate %lu -> %lu\n",
->> +               host->clk_rate, clk_rate);
->> +       ret = clk_set_rate(host->cfg_div_clk, clk_rate);
->> +       if (clk_rate && clk_rate != clk_get_rate(host->cfg_div_clk))
->> +               dev_warn(host->dev, "divider requested rate %lu != actual rate %lu: ret=%d\n",
->> +                        clk_rate, clk_get_rate(host->cfg_div_clk), ret);
->> +       else
->> +               host->clk_rate = clk_rate;
->> +
->> +       /* (re)start clock, if non-zero */
->> +       if (clk_rate) {
->> +               cfg = reg_read(host, SD_EMMC_CFG);
->> +               cfg &= ~CFG_STOP_CLOCK;
->> +               reg_write(host, SD_EMMC_CFG, cfg);
->> +       }
->
-> You probably want to update mmc->actual_clock, which is useful for
-> debugging purpose.
-
-OK, I hadn't noticed that field.  I'll just drop my own host->clk_rate
-and use that.
-
->> +
->> +       return ret;
->> +}
->> +
->> +static int meson_mmc_clk_init(struct meson_host *host)
->> +{
->> +       struct clk_init_data init;
->> +       char clk_name[32];
->> +       int i, ret = 0;
->> +       const char *mux_parent_names[MUX_CLK_NUM_PARENTS];
->> +       unsigned int mux_parent_count = 0;
->> +       const char *clk_div_parents[1];
->> +       unsigned int f_min = UINT_MAX;
->> +       u32 clk_reg, cfg;
->> +
->> +       /* get the mux parents from DT */
->> +       for (i = 0; i < MUX_CLK_NUM_PARENTS; i++) {
->> +               char name[16];
->> +
->> +               snprintf(name, sizeof(name), "clkin%d", i);
->> +               host->mux_parent[i] = devm_clk_get(host->dev, name);
->> +               if (IS_ERR(host->mux_parent[i])) {
->> +                       ret = PTR_ERR(host->mux_parent[i]);
->> +                       if (PTR_ERR(host->mux_parent[i]) != -EPROBE_DEFER)
->> +                               dev_err(host->dev, "Missing clock %s\n", name);
->> +                       host->mux_parent[i] = NULL;
->> +                       return ret;
->> +               }
->> +
->> +               host->mux_parent_rate[i] = clk_get_rate(host->mux_parent[i]);
->> +               mux_parent_names[i] = __clk_get_name(host->mux_parent[i]);
->> +               mux_parent_count++;
->> +               if (host->mux_parent_rate[i] < f_min)
->> +                       f_min = host->mux_parent_rate[i];
->> +       }
->> +
->> +       /* cacluate f_min based on input clocks, and max divider value */
->> +       if (f_min != UINT_MAX)
->> +               f_min = DIV_ROUND_UP(CLK_SRC_XTAL_RATE, CLK_DIV_MAX);
->> +       else
->> +               f_min = 4000000;  /* default min: 400 MHz */
->> +       host->mmc->f_min = f_min;
->> +
->> +       /* create the mux */
->> +       snprintf(clk_name, sizeof(clk_name), "%s#mux", dev_name(host->dev));
->> +       init.name = clk_name;
->> +       init.ops = &clk_mux_ops;
->> +       init.flags = CLK_IS_BASIC;
->> +       init.parent_names = mux_parent_names;
->> +       init.num_parents = mux_parent_count;
->> +
->> +       host->mux.reg = host->regs + SD_EMMC_CLOCK;
->> +       host->mux.shift = CLK_SRC_SHIFT;
->> +       host->mux.mask = CLK_SRC_MASK;
->> +       host->mux.flags = 0;
->> +       host->mux.table = NULL;
->> +       host->mux.hw.init = &init;
->> +
->> +       host->mux_clk = devm_clk_register(host->dev, &host->mux.hw);
->
-> I think it would make sense to add a comment here to clarify why you
-> register a clock like this.
->
-> I assume it's beacuse you benefit from the clock framwork about
-> acheiving the best/closest reqeust clockrate, as it take into account
-> muxes/parent clocks as well!?
-
-Correct.  This IP block has an internal mux and divider, so I want to
-take advanate of the clock framework features to model those clocks.
-
->> +       if (WARN_ON(PTR_ERR_OR_ZERO(host->mux_clk)))
->> +               return PTR_ERR(host->mux_clk);
->> +
->> +       /* create the divider */
->> +       snprintf(clk_name, sizeof(clk_name), "%s#div", dev_name(host->dev));
->> +       init.name = devm_kstrdup(host->dev, clk_name, GFP_KERNEL);
->> +       init.ops = &clk_divider_ops;
->> +       init.flags = CLK_IS_BASIC | CLK_SET_RATE_PARENT;
->> +       clk_div_parents[0] = __clk_get_name(host->mux_clk);
->> +       init.parent_names = clk_div_parents;
->> +       init.num_parents = ARRAY_SIZE(clk_div_parents);
->> +
->> +       host->cfg_div.reg = host->regs + SD_EMMC_CLOCK;
->> +       host->cfg_div.shift = CLK_DIV_SHIFT;
->> +       host->cfg_div.width = CLK_DIV_WIDTH;
->> +       host->cfg_div.hw.init = &init;
->> +       host->cfg_div.flags = CLK_DIVIDER_ONE_BASED |
->> +               CLK_DIVIDER_ROUND_CLOSEST | CLK_DIVIDER_ALLOW_ZERO;
->> +
->> +       host->cfg_div_clk = devm_clk_register(host->dev, &host->cfg_div.hw);
->
-> Ditto.
->
->> +       if (WARN_ON(PTR_ERR_OR_ZERO(host->cfg_div_clk)))
->> +               return PTR_ERR(host->cfg_div_clk);
->> +
->> +       /* init SD_EMMC_CLOCK to sane defaults w/min clock rate */
->> +       clk_reg = 0;
->> +       clk_reg |= CLK_PHASE_180 << CLK_PHASE_SHIFT;
->> +       clk_reg |= CLK_SRC_XTAL << CLK_SRC_SHIFT;
->> +       clk_reg |= CLK_DIV_MAX << CLK_DIV_SHIFT;
->> +       clk_reg &= ~CLK_ALWAYS_ON;
->> +       reg_write(host, SD_EMMC_CLOCK, clk_reg);
->> +
->> +       clk_prepare_enable(host->cfg_div_clk);
->> +
->> +       /* Ensure clock starts in "auto" mode, not "always on" */
->> +       cfg = reg_read(host, SD_EMMC_CFG);
->> +       cfg &= ~CFG_CLK_ALWAYS_ON;
->> +       cfg |= CFG_AUTO_CLK;
->> +       reg_write(host, SD_EMMC_CFG, cfg);
->> +
->> +       meson_mmc_clk_set(host, f_min);
->> +
->> +       return ret;
->> +}
->> +
->> +static void meson_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->> +{
->> +       struct meson_host *host = mmc_priv(mmc);
->> +       u32 bus_width;
->> +       u32 val, orig;
->> +
->> +       /*
->> +        * GPIO regulator, only controls switching between 1v8 and
->> +        * 3v3, doesn't support MMC_POWER_OFF, MMC_POWER_ON.
->> +        */
->
-> I don't follow. Shouldn't you call regulator_enable|disable() for the
-> above regulator? Why not?
->
->> +       switch (ios->power_mode) {
->> +       case MMC_POWER_UP:
->> +               if (!IS_ERR(mmc->supply.vmmc))
->> +                       mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, ios->vdd);
->
-> The above comment talks about 1v8 and 3v3, which seems to me that you
-> are changing the I/O voltage, but that's not what *vmmc* should be
-> used for.
->
-> If this is about I/O voltage, you shall instead use *vqmmc* and the
-> corresponding mmc_regulator_set_vqmmc() to change the voltage level.
->
-> This also leaves me to ask, then how do you control the power to the
-> card? This is actually what the *vmmc* should be used for.
-
-I'll respin this whole section based on your clarifications.  I was
-confused about how the various regulators are meant to be used.  Thanks
-for clarifying.
-
->
->> +       }
->> +
->> +       meson_mmc_clk_set(host, ios->clock);
->> +
->> +       /* Bus width */
->> +       val = reg_read(host, SD_EMMC_CFG);
->> +       switch (ios->bus_width) {
->> +       case MMC_BUS_WIDTH_1:
->> +               bus_width = CFG_BUS_WIDTH_1;
->> +               break;
->> +       case MMC_BUS_WIDTH_4:
->> +               bus_width = CFG_BUS_WIDTH_4;
->> +               break;
->> +       case MMC_BUS_WIDTH_8:
->> +               bus_width = CFG_BUS_WIDTH_8;
->> +               break;
->> +       default:
->> +               dev_err(host->dev, "Invalid ios->bus_width: %u.  Setting to 4.\n",
->> +                       ios->bus_width);
->> +               bus_width = CFG_BUS_WIDTH_4;
->> +               return;
->> +       }
->> +
->> +       val = reg_read(host, SD_EMMC_CFG);
->> +       orig = val;
->> +
->> +       val &= ~(CFG_BUS_WIDTH_MASK << CFG_BUS_WIDTH_SHIFT);
->> +       val |= bus_width << CFG_BUS_WIDTH_SHIFT;
->> +
->> +       val &= ~(CFG_BLK_LEN_MASK << CFG_BLK_LEN_SHIFT);
->> +       val |= ilog2(SD_EMMC_CFG_BLK_SIZE) << CFG_BLK_LEN_SHIFT;
->> +
->> +       val &= ~(CFG_RESP_TIMEOUT_MASK << CFG_RESP_TIMEOUT_SHIFT);
->> +       val |= ilog2(SD_EMMC_CFG_RESP_TIMEOUT) << CFG_RESP_TIMEOUT_SHIFT;
->> +
->> +       val &= ~(CFG_RC_CC_MASK << CFG_RC_CC_SHIFT);
->> +       val |= ilog2(SD_EMMC_CFG_CMD_GAP) << CFG_RC_CC_SHIFT;
->> +
->> +       reg_write(host, SD_EMMC_CFG, val);
->> +
->> +       if (val != orig)
->> +               dev_dbg(host->dev, "%s: SD_EMMC_CFG: 0x%08x -> 0x%08x\n",
->> +                       __func__, orig, val);
->> +}
->> +
->
-> [...]
->
->> +
->> +static int meson_mmc_probe(struct platform_device *pdev)
->> +{
->> +       struct device_node *np = pdev->dev.of_node;
->> +       struct resource *res;
->> +       struct meson_host *host;
->> +       struct mmc_host *mmc;
->> +       int ret;
->> +
->> +       mmc = mmc_alloc_host(sizeof(struct meson_host), &pdev->dev);
->> +       if (!mmc)
->> +               return -ENOMEM;
->> +       host = mmc_priv(mmc);
->> +       host->mmc = mmc;
->> +       host->dev = &pdev->dev;
->> +       dev_set_drvdata(&pdev->dev, host);
->> +
->> +       spin_lock_init(&host->lock);
->> +
->> +       host->core_clk = devm_clk_get(&pdev->dev, "core");
->> +       if (IS_ERR(host->core_clk)) {
->> +               ret = PTR_ERR(host->core_clk);
->> +               if (ret == -EPROBE_DEFER)
->> +                       dev_dbg(&pdev->dev,
->> +                               "Missing core clock.  EPROBE_DEFER\n");
->> +               else
->> +                       dev_err(&pdev->dev,
->> +                               "Unable to get core clk (ret=%d).\n", ret);
->
-> I think these prints are unessarry, they should be printed by other
-> frameworks already, right!?
-
-OK, I'll drop these.
-
->> +               goto free_host;
->> +       }
->> +
->> +       /* Voltage supply */
->> +       mmc_of_parse_voltage(np, &host->ocr_mask);
->
-> This looks odd.
->
-> Usally we get "ocr_avail" when asking the vmmc regulator about its
-> supported voltage range, via calling the below
-> mmc_regulator_get_supply() API. Can you explain why thay isn't work
-> for you?
-
-You're right, that's working fine.  I'll drop this.
-
->> +       ret = mmc_regulator_get_supply(mmc);
->> +       if (ret == -EPROBE_DEFER) {
->> +               dev_dbg(&pdev->dev, "Missing regulator: EPROBE_DEFER");
->
-> The print shouldn't be needed, please remove.
-
-OK.
-
->> +               goto free_host;
->> +       }
->> +
->> +       if (!mmc->ocr_avail)
->> +               mmc->ocr_avail = host->ocr_mask;
->
-> mmc->ocr_avail needs to be assigned to a valid value. This fallback
-> doesn't cover that as host->ocr_mask may very well be zero.
-
-Dropped this as it's now handled elsewhere.
-
->> +
->> +       ret = mmc_of_parse(mmc);
->> +       if (ret) {
->> +               dev_warn(&pdev->dev, "error parsing DT: %d\n", ret);
->> +               goto free_host;
->> +       }
->> +
->> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +       if (!res) {
->> +               ret = -ENODEV;
->> +               goto free_host;
->> +       }
->> +       host->regs = devm_ioremap_resource(&pdev->dev, res);
->> +       if (IS_ERR(host->regs)) {
->> +               ret = PTR_ERR(host->regs);
->> +               goto free_host;
->> +       }
->> +
->> +       host->irq = platform_get_irq(pdev, 0);
->> +       if (host->irq == 0) {
->> +               dev_err(&pdev->dev, "failed to get interrupt resource.\n");
->> +               ret = -EINVAL;
->> +               goto free_host;
->> +       }
->> +
->> +       ret = devm_request_threaded_irq(&pdev->dev, host->irq,
->> +                                       meson_mmc_irq, meson_mmc_irq_thread,
->> +                                       IRQF_SHARED, DRIVER_NAME, host);
->> +       if (ret)
->> +               goto free_host;
->> +
->> +       /* data bounce buffer */
->> +       host->bounce_buf_size = SZ_512K;
->> +       host->bounce_buf =
->> +               dma_alloc_coherent(host->dev, host->bounce_buf_size,
->> +                                  &host->bounce_dma_addr, GFP_KERNEL);
->> +       if (host->bounce_buf == NULL) {
->> +               dev_err(host->dev, "Unable to map allocate DMA bounce buffer.\n");
->> +               ret = -ENOMEM;
->> +               goto free_host;
->> +       }
->> +
->> +       clk_prepare_enable(host->core_clk);
->> +
->> +       ret = meson_mmc_clk_init(host);
->> +       if (ret)
->> +               goto free_host;
->> +
->> +       /* Stop execution */
->> +       reg_write(host, SD_EMMC_START, 0);
->> +
->> +       /* clear, ack, enable all interrupts */
->> +       reg_write(host, SD_EMMC_IRQ_EN, 0);
->> +       reg_write(host, SD_EMMC_STATUS, IRQ_EN_MASK);
->> +
->> +       mmc->ops = &meson_mmc_ops;
->> +       mmc_add_host(mmc);
->> +
->> +       return 0;
->> +
->> +free_host:
->> +       dev_dbg(host->dev, "Failed to probe: ret=%d\n", ret);
->> +       if (host->core_clk)
->> +               clk_disable_unprepare(host->core_clk);
->> +       mmc_free_host(mmc);
->> +       return ret;
->> +}
->> +
->
-> [...]
->
->> +
->> +static const struct of_device_id meson_mmc_of_match[] = {
->> +       {
->> +               .compatible = "amlogic,meson-gxbb-mmc",
->
-> You need to fold in a DT documentation patch, in this series as to
-> describe all the required/optional resourses for the device. That of
-> course also includes the compatible string.
-
-That was all part of PATCH 1/2 of this series, or was there something
-else missing from that patch?
-
-Thanks for the review,
-
-Kevin
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
