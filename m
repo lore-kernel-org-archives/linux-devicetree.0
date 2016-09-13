@@ -1,42 +1,40 @@
-From: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
-Subject: Re: ARM, SoC: About the use DT-defined properties by 3rd-party
- drivers
-Date: Tue, 13 Sep 2016 06:37:16 -0500
-Message-ID: <57D7E4EC.6050509@tabi.org>
-References: <57BDAF2E.10502@laposte.net>
- <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
- <57D69FB1.2020801@laposte.net> <20160912123809.GB13741@leverpostej>
- <57D6AA54.6000208@laposte.net> <20160912135549.GA14165@leverpostej>
- <57D6D2A9.3010006@laposte.net> <20160912165637.GF14165@leverpostej>
- <57D7CF17.2050905@laposte.net>
+From: =?UTF-8?Q?S=c3=a9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+Subject: Re: [PATCH v2 1/2] ARM: dts: imx6ul: Add DTS for liteSOM module
+Date: Tue, 13 Sep 2016 13:52:48 +0200
+Message-ID: <5c6db9d0-e7b2-e3fd-11e6-be1bde6e65e7@armadeus.com>
+References: <20160913094951.26394-1-m.niestroj@grinn-global.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57D7CF17.2050905-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160913094951.26394-1-m.niestroj@grinn-global.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marcin Niestroj <m.niestroj@grinn-global.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Sebastian Frias wrote:
-> Let's make an abstraction of the word 'binding', 'create a binding', etc. and
-> just focus on this:
-> - Somebody submits a DT file that contains properties and nodes that are
-> *not used*  by any Linux driver.
-> - Said properties and nodes serve as HW description for HW blocks for which
-> *there is no*  Linux driver.
->
-> The goal of the above is to use the DT as the authoritative (and single)
-> source of HW definition.
+Hello,
 
-No.
+On 09/13/2016 11:49 AM, Marcin Niestroj wrote:
 
-I've grown weary of this discussion.  We have explained multiple times 
-why this is impractical.  Using the DT to document hardware makes no 
-sense.  No one is going to do that, and anyone who attempts to submit a 
-DT binding without an actual driver will get rejected.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +&cpu0 {
+> +	arm-supply =3D <&reg_arm>;
+> +	soc-supply =3D <&reg_soc>;
+> +};
+
+These supplies are already set in the imx6ul.dtsi file.
+
+Regards,
+
+-- =
+
+S=E9bastien Szymanski
