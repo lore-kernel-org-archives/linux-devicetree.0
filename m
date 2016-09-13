@@ -1,49 +1,120 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/4] drm/msm/hdmi: Clean up HDMI gpio DT bindings
-Date: Tue, 13 Sep 2016 14:31:07 -0500
-Message-ID: <CAL_JsqK_36EpJhV1COrNdb_h7dgWxLMbecKsJR4YCaVEm0XWuQ@mail.gmail.com>
-References: <1472737015-29382-1-git-send-email-architt@codeaurora.org>
- <1473780097-11388-1-git-send-email-architt@codeaurora.org>
- <1473780097-11388-3-git-send-email-architt@codeaurora.org>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v5 02/16] dt/bindings: Update binding for PM domain idle
+ states
+Date: Tue, 13 Sep 2016 13:38:44 -0600
+Message-ID: <20160913193844.GB28944@linaro.org>
+References: <1472242678-33700-1-git-send-email-lina.iyer@linaro.org>
+ <1472242678-33700-3-git-send-email-lina.iyer@linaro.org>
+ <0b233802-f459-c6bb-ff42-70745a225cfb@arm.com>
+ <20160902201605.GA1705@linaro.org>
+ <87sht59mcw.fsf@arm.com>
+ <20160912161600.GA21885@linaro.org>
+ <a4fc71ae-6fa5-4142-6dd4-7bc96eb20186@arm.com>
+ <87intz665i.fsf@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1473780097-11388-3-git-send-email-architt@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Andy Gross <andy.gross@linaro.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87intz665i.fsf@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Brendan Jackman <brendan.jackman@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ulf.hansson@linaro.org, khilman@kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, lorenzo.pieralisi@arm.com, Juri.Lelli@arm.com, Axel Haslam <ahaslam+renesas@baylibre.com>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBTZXAgMTMsIDIwMTYgYXQgMTA6MjEgQU0sIEFyY2hpdCBUYW5lamEgPGFyY2hpdHRA
-Y29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+IE1ha2UgdGhlIGZvbGxvd2luZyBjaGFuZ2VzIGluIHRo
-ZSBIRE1JIGdwaW8gYmluZGluZ3M6Cj4KPiAtIFVzZSAiLWdwaW9zIiBhcyB0aGUgc3VmZml4IGZv
-ciBhbGwgdGhlIGdwaW8gbmFtZXMKPiAtIE1vdmUgYWxsIHRoZSBncGlvcyB0byBvcHRpb25hbCwg
-c2luY2UgdGhlcmUgYXJlIHBsYXRmb3JtcyB0aGF0IHVzZSBub25lCj4gICBvZiB0aGVtLgo+IC0g
-VGhlIEhQRCBncGlvIGlzIGEgc3RhbmRhcmQgb25lLCByZW1vdmUgdGhlICJxY29tLGhkbWktdHgt
-IiBwcmVmaXggZnJvbQo+ICAgaXQuCj4gLSBSZW1vdmUgdGhlIEhETUkgRERDIGNsay9kYXRhIGdw
-aW9zLiBUaGV5IGFyZSBqdXN0IGxlZnRvdmVycyBvZiBhbiBvbGQKPiAgIHdheSB0byBjb25maWd1
-cmUgcGluY3RybCBwcm9wZXJ0aWVzLgo+IC0gQWRkIGEgbWlzc2luZyBscG0gZ3BpbyB1c2VkIG9u
-IHNvbWUgcGxhdGZvcm1zLgo+Cj4gTWFrZSB0aGUgbmVjZXNzYXJ5IGNoYW5nZXMgaW4gdGhlIGRy
-aXZlciB0byBpbmNvcnBvcmF0ZSB0aGVzZSBjaGFuZ2VzLgo+Cj4gVGhlcmUgaGFzbid0IGJlZW4g
-YW55IHVwc3RyZWFtIERUIHRoYXQgdXNlcyB0aGUgSERNSSBiaW5kaW5ncywgc28gaXQncwo+IG9r
-YXkgdG8gY2hhbmdlIGFuZCBtb3ZlIGFyb3VuZCB0aGVzZSBwcm9wZXJ0aWVzLgo+Cj4gQ2M6IFJv
-YiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnCj4gU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9y
-Zz4KPiAtLS0KPiB2MzoKPiAtIFJlbW92ZWQgSERNSSBEREMgY2xrL2RhdGEgZ3Bpb3MuCj4KPiAg
-Li4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vaGRtaS50eHQgICAgICAgIHwgIDkg
-KysrKy0tLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vaGRtaS9oZG1pLmMgICAgICAgICAgICAg
-ICAgICAgICB8IDIxICsrKysrKysrKysrKysrKysrKystLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDIz
-IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJv
-YmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+On Tue, Sep 13 2016 at 11:50 -0600, Brendan Jackman wrote:
+>
+>On Mon, Sep 12 2016 at 18:09, Sudeep Holla wrote:
+>> On 12/09/16 17:16, Lina Iyer wrote:
+>>> On Mon, Sep 12 2016 at 09:19 -0600, Brendan Jackman wrote:
+>>>>
+>>>> Hi Lina,
+>>>>
+>>>> Sorry for the delay here, Sudeep and I were both been on holiday last
+>>>> week.
+>>>>
+>>>> On Fri, Sep 02 2016 at 21:16, Lina Iyer wrote:
+>>>>> On Fri, Sep 02 2016 at 07:21 -0700, Sudeep Holla wrote:
+>>>> [...]
+>>>>>> This version is *not very descriptive*. Also the discussion we had
+>>>>>> on v3
+>>>>>> version has not yet concluded IMO. So can I take that we agreed on what
+>>>>>> was proposed there or not ?
+>>>>>>
+>>>>> Sorry, this example is not very descriptive. Pls. check the 8916 dtsi
+>>>>> for the new changes in the following patches. Let me know if that makes
+>>>>> sense.
+>>
+>> Please add all possible use-cases in the bindings. Though one can refer
+>> the usage examples, it might not cover all usage descriptions. It helps
+>> preventing people from defining their own when they don't see examples.
+>> Again DT bindings are like specifications, it should be descriptive
+>> especially this kind of generic ones.
+>>
+>>>>
+>>>> The not-yet-concluded discussion Sudeep is referring to is at [1].
+>>>>
+>>>> In that thread we initially proposed the idea of, instead of splitting
+>>>> state phandles between cpu-idle-states and domain-idle-states, putting
+>>>> CPUs in their own domains and using domain-idle-states for _all_
+>>>> phandles, deprecating cpu-idle-states. I've brought this up in other
+>>>> threads [2] but discussion keeps petering out, and neither this example
+>>>> nor the 8916 dtsi in this patch series reflect the idea.
+>>>>
+>>> Brendan, while your idea is good and will work for CPUs, I do not expect
+>>> other domains and possibly CPU domains on some architectures to follow
+>>> this model. There is nothing that prevents you from doing this today,
+>
+>As I understand it your opposition to this approach is this:
+>
+>There may be devices/CPUs which have idle states which do not constitute
+>"power off". If we put those  devices in their own power domain for the
+>purpose of putting their (non-power-off) idle state phandles in
+>domain-idle-states, we are "lying" because no true power domain exists
+>there.
+>
+>Am I correct that that's your opposition?
+>
+>If so, it seems we essentially disagree on the definition of a power
+>domain, i.e. you define it as a set of devices that are powered on/off
+>together while I define it as a set of devices whose power states
+>(including idle states, not just on/off) are tied together. I said
+>something similar on another thread [1] which died out.
+>
+>Do you agree that this is basically where we disagree, or am I missing
+>something else?
+>
+>[2] http://www.spinics.net/lists/devicetree/msg141050.html
+>
+Yes, you are right, I disagree with the definition of a domain around a
+device. However, as long as you don't force SoC's to define devices in
+the CPU PM domain to have their own virtual domains, I have no problem.
+You are welcome to define it the way you want for Juno or any other
+platform. I don't want that to be the forced and expected out of all
+SoCs. All I am saying here is that the current implementation would
+handle your case as well.
+
+Thanks,
+Lina
+
+>>> you can specify domains around CPUs in your devicetree and CPU PM will
+>>> handle the hierarchy. I don't think its fair to force it on all SoCs
+>>> using CPU domains.
+>>
+>> I disagree. We are defining DT bindings here and it *should* be same for
+>> all the SoC unless there is a compelling reason not to. I am fine if
+>> those reasons are stated and agreed.
+>>
+>>> This patchset does not restrict you from organizing
+>>> the idle states the way you want it. This revision of the series, clubs
+>>> CPU and domain idle states under idle-states umbrella. So part of your
+>>> requirement is also satisfied.
+>>>
+>>
+>> I will look at the DTS changes in the series. But we *must* have more
+>> description with more examples in the binding document.
+>>
+>>> You can follow up the series with your new additions, I don't see a
+>>> conflict with this change.
+>>>
+>>
+>> If we just need additions, then it should be fine.
