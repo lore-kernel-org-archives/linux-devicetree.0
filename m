@@ -1,37 +1,59 @@
-From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH] Documentation: dt-bindings: Fix "st,syscfg" definition for STM32 pinctrl
-Date: Tue, 13 Sep 2016 15:28:12 +0200
-Message-ID: <1473773292-10225-1-git-send-email-alexandre.torgue@st.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [GIT PULL] Immutable branch between MFD and Regulator due for
+ the v4.9 merge window
+Date: Tue, 13 Sep 2016 14:31:27 +0100
+Message-ID: <20160913133127.GC31719@dell>
+References: <20160827075544.26316-1-wens@csie.org>
+ <20160827075544.26316-4-wens@csie.org>
+ <20160913120244.GA28894@dell>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160913120244.GA28894@dell>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-"st,syscfg" entry was bad described.
+Mark,
 
-Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Try this instead.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-index a0eed99..f9753c4 100644
---- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-@@ -16,7 +16,9 @@ Required properies:
-    gpio-bank node (children).
-  - interrupt-parent: phandle of the interrupt parent to which the external
-    GPIO interrupts are forwarded to.
-- - st,syscfg: phandle of the syscfg node used for IRQ mux selection.
-+ - st,syscfg: Should be phandle/offset pair. The phandle to the syscon node
-+   which includes IRQ mux selection register, and the offset of the IRQ mux
-+   selection register.
-  - pins-are-numbered: Specify the subnodes are using numbered pinmux to
-    specify pins.
- 
+The following changes since commit 29b4817d4018df78086157ea3a55c1d9424a7cfc:
+
+  Linux 4.8-rc1 (2016-08-07 18:18:00 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-regulator-v4.9
+
+for you to fetch changes up to 8824ee8573483e1c91691b5be3d3730e75551dce:
+
+  mfd: axp20x: Add support for AXP806 PMIC (2016-09-13 14:10:04 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD and Regualtor due for the v4.9 merge window
+
+----------------------------------------------------------------
+Chen-Yu Tsai (3):
+      regulator: axp20x: Support AXP806 variant
+      mfd: axp20x: Add bindings for AXP806 PMIC
+      mfd: axp20x: Add support for AXP806 PMIC
+
+ Documentation/devicetree/bindings/mfd/axp20x.txt |  28 +++++-
+ drivers/mfd/axp20x-rsb.c                         |   1 +
+ drivers/mfd/axp20x.c                             |  72 ++++++++++++++
+ drivers/regulator/axp20x-regulator.c             | 118 +++++++++++++++++++++--
+ include/linux/mfd/axp20x.h                       |  60 ++++++++++++
+ 5 files changed, 270 insertions(+), 9 deletions(-)
+
 -- 
-1.9.1
-
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
