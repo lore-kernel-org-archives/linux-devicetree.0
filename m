@@ -1,160 +1,102 @@
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] regulator: Prevent falling too fast
-Date: Tue, 13 Sep 2016 10:21:40 -0700
-Message-ID: <20160913172140.GC62872@google.com>
-References: <20160906190524.GB79728@google.com>
- <20160912185633.GH27946@sirena.org.uk>
+From: Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 02/16] dt/bindings: Update binding for PM domain idle states
+Date: Tue, 13 Sep 2016 18:50:17 +0100
+Message-ID: <87intz665i.fsf@arm.com>
+References: <1472242678-33700-1-git-send-email-lina.iyer@linaro.org> <1472242678-33700-3-git-send-email-lina.iyer@linaro.org> <0b233802-f459-c6bb-ff42-70745a225cfb@arm.com> <20160902201605.GA1705@linaro.org> <87sht59mcw.fsf@arm.com> <20160912161600.GA21885@linaro.org> <a4fc71ae-6fa5-4142-6dd4-7bc96eb20186@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160912185633.GH27946-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-reply-to: <a4fc71ae-6fa5-4142-6dd4-7bc96eb20186-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, Juri.Lelli-5wv7dgnIgG8@public.gmane.org, Axel Haslam <ahaslam+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
 
-thanks for your review, please find my comments (including info from
-our EE) below.
+On Mon, Sep 12 2016 at 18:09, Sudeep Holla wrote:
+> On 12/09/16 17:16, Lina Iyer wrote:
+>> On Mon, Sep 12 2016 at 09:19 -0600, Brendan Jackman wrote:
+>>>
+>>> Hi Lina,
+>>>
+>>> Sorry for the delay here, Sudeep and I were both been on holiday last
+>>> week.
+>>>
+>>> On Fri, Sep 02 2016 at 21:16, Lina Iyer wrote:
+>>>> On Fri, Sep 02 2016 at 07:21 -0700, Sudeep Holla wrote:
+>>> [...]
+>>>>> This version is *not very descriptive*. Also the discussion we had
+>>>>> on v3
+>>>>> version has not yet concluded IMO. So can I take that we agreed on what
+>>>>> was proposed there or not ?
+>>>>>
+>>>> Sorry, this example is not very descriptive. Pls. check the 8916 dtsi
+>>>> for the new changes in the following patches. Let me know if that makes
+>>>> sense.
+>
+> Please add all possible use-cases in the bindings. Though one can refer
+> the usage examples, it might not cover all usage descriptions. It helps
+> preventing people from defining their own when they don't see examples.
+> Again DT bindings are like specifications, it should be descriptive
+> especially this kind of generic ones.
+>
+>>>
+>>> The not-yet-concluded discussion Sudeep is referring to is at [1].
+>>>
+>>> In that thread we initially proposed the idea of, instead of splitting
+>>> state phandles between cpu-idle-states and domain-idle-states, putting
+>>> CPUs in their own domains and using domain-idle-states for _all_
+>>> phandles, deprecating cpu-idle-states. I've brought this up in other
+>>> threads [2] but discussion keeps petering out, and neither this example
+>>> nor the 8916 dtsi in this patch series reflect the idea.
+>>>
+>> Brendan, while your idea is good and will work for CPUs, I do not expect
+>> other domains and possibly CPU domains on some architectures to follow
+>> this model. There is nothing that prevents you from doing this today,
 
-El Mon, Sep 12, 2016 at 07:56:33PM +0100 Mark Brown ha dit:
+As I understand it your opposition to this approach is this:
 
-> On Tue, Sep 06, 2016 at 12:05:24PM -0700, Matthias Kaehlcke wrote:
-> 
-> > On some boards it's possible that transitioning the PWM regulator
-> > downwards too fast will trigger the over voltage protection (OVP) on the
-> > regulator.  This is because until the voltage actually falls there is a
-> > time when the requested voltage is much lower than the actual voltage.
-> 
-> So your PWM regulators are not very good and overshooting?  Do you have
-> any numbers on this - what values do you end up setting for both the
-> delay and safe fall percentages?
+There may be devices/CPUs which have idle states which do not constitute
+"power off". If we put those  devices in their own power domain for the
+purpose of putting their (non-power-off) idle state phandles in
+domain-idle-states, we are "lying" because no true power domain exists
+there.
 
-No, they just don't actively discharge the rail. Instead, they depend
-on the rail self-discharging via the load (the SoC). If the load is
-small, it takes longer to transition.
+Am I correct that that's your opposition?
 
-Optimizing the delay time depends on the SoC; we have not measured
-this across a wide variety of devices and thus have very conservative
-numbers. The percentage is based on the trigger for OVP on the
-regulator. In this case, OVP kicks in when the FB node is 20% over
-regulation, which is equivalent to a 16% drop in voltage (1/1.2). For
-our device safe-fall-percent is set to 16 and slowest-decay-rate is
-225.
+If so, it seems we essentially disagree on the definition of a power
+domain, i.e. you define it as a set of devices that are powered on/off
+together while I define it as a set of devices whose power states
+(including idle states, not just on/off) are tied together. I said
+something similar on another thread [1] which died out.
 
-> > We'll fix this OVP problem by allowing users to specify the maximum
-> > voltage that we can safely fall.  Apparently this maximum safe voltage
-> > should be specified as a percentage of the current voltage.  The
-> > regulator will then break things into separate steps with a delay in
-> > between.
-> 
-> I'd like to see some more thorough analysis than just an "apparently"
-> here.  It's making the code more fiddly for something very handwavy.
+Do you agree that this is basically where we disagree, or am I missing
+something else?
 
-It's well-understood why it's a percentage. DVS is controlled by
-offsetting the FB current, and as above, OVP is based on how far you
-are from the FB target.
+[2] http://www.spinics.net/lists/devicetree/msg141050.html
 
-> > @@ -2753,8 +2753,6 @@ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
-> >  	int old_selector = -1;
-> >  	int old_uV = _regulator_get_voltage(rdev);
-> >  
-> > -	trace_regulator_set_voltage(rdev_get_name(rdev), min_uV, max_uV);
-> > -
-> >  	min_uV += rdev->constraints->uV_offset;
-> >  	max_uV += rdev->constraints->uV_offset;
-> >  
-> > @@ -2842,11 +2840,53 @@ no_delay:
-> >  				     (void *)data);
-> >  	}
-> >  
-> > -	trace_regulator_set_voltage_complete(rdev_get_name(rdev), best_val);
-> > -
-> >  	return ret;
-> 
-> Let's remove some trace points too because...?  These *are* the actual
-> voltage changes in the device, we're just splitting things up into a
-> series of transitions.
-
-I wasn't sure whether to keep reporting a single voltage change or
-the individual steps. Will leave the trace points at their original
-location.
-
-> > +static int _regulator_set_voltage(struct regulator_dev *rdev,
-> > +				     int min_uV, int max_uV)
-> > +{
-> > +	int safe_fall_percent = rdev->constraints->safe_fall_percent;
-> > +	int slowest_decay_rate = rdev->constraints->slowest_decay_rate;
-> > +	int orig_uV = _regulator_get_voltage(rdev);
-> > +	int uV = orig_uV;
-> > +	int ret;
-> > +
-> > +	trace_regulator_set_voltage(rdev_get_name(rdev), min_uV, max_uV);
-> > +
-> > +	 /* If we're rising or we're falling but don't need to slow; easy */
-> > +	if (min_uV >= uV || !safe_fall_percent)
-> 
-> Indentation is broken, the two lines above don't agree with each other.
-
-Will fix
-
-> > +	ret = of_property_read_u32(np, "regulator-slowest-decay-rate", &pval);
-> > +	if (!ret)
-> > +		constraints->slowest_decay_rate = pval;
-> > +	else
-> > +		constraints->slowest_decay_rate = INT_MAX;
-> 
-> The documentation said this is mandatory if we have a safe fall rate
-> specified but the code says it's optional and we'll silently default to
-> an absurdly high rate instead (it's odd that a large number in a field
-> marked slowest is fast BTW).  Complaining loudly seems better than
-> ignoring the error.
-
-Agreed about complaining. Since there isn't really a reasonable
-default value it's probably best to change the interface of the
-function and return an error in this case.
-
-> > +	/* We use the value as int and as divider; sanity check */
-> > +	if (constraints->slowest_decay_rate == 0) {
-> > +		pr_err("%s: regulator-slowest-decay-rate must not be 0\n",
-> > +			np->name);
-> > +		constraints->slowest_decay_rate = INT_MAX;
-> > +	} else if (constraints->slowest_decay_rate > INT_MAX) {
-> > +		pr_err("%s: regulator-slowest-decay-rate (%u) too big\n",
-> > +			np->name, constraints->slowest_decay_rate);
-> > +		constraints->slowest_decay_rate = INT_MAX;
-> > +	}
-> 
-> This should be with the parsing of slowest-decay-rate and checked only
-> if we have a safe-fall-percent, there's no error if the value is omitted.
-
-Will change
-
-> > +	if (constraints->safe_fall_percent > 100) {
-> > +		pr_err("%s: regulator-safe-fall-percent (%u) > 100\n",
-> > +			np->name, constraints->safe_fall_percent);
-> > +		constraints->safe_fall_percent = 0;
-> > +       }
-> 
-> Again indentation is borked here, I think you have tab/space issues.
-
-Ok, I will keep an eye on it
-
-> > +	if (constraints->safe_fall_percent &&
-> > +		!constraints->slowest_decay_rate) {
-> > +		pr_err("%s: regulator-slowest-decay-rate requires "
-> > +			"regulator-safe-fall-percent\n", np->name);
-> 
-> Don't align the second line of the condition with the body of the if,
-> that just makes things hard to read - do what the rest of the code does
-> and align with the (.
-> 
-> Don't split text messages over multiple lines, it makes it impossible to
-> grep for the error as printed.
-
-ok
+>> you can specify domains around CPUs in your devicetree and CPU PM will
+>> handle the hierarchy. I don't think its fair to force it on all SoCs
+>> using CPU domains.
+>
+> I disagree. We are defining DT bindings here and it *should* be same for
+> all the SoC unless there is a compelling reason not to. I am fine if
+> those reasons are stated and agreed.
+>
+>> This patchset does not restrict you from organizing
+>> the idle states the way you want it. This revision of the series, clubs
+>> CPU and domain idle states under idle-states umbrella. So part of your
+>> requirement is also satisfied.
+>>
+>
+> I will look at the DTS changes in the series. But we *must* have more
+> description with more examples in the binding document.
+>
+>> You can follow up the series with your new additions, I don't see a
+>> conflict with this change.
+>>
+>
+> If we just need additions, then it should be fine.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
