@@ -1,191 +1,413 @@
-From: Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
-Subject: Re: ARM, SoC: About the use DT-defined properties by 3rd-party
- drivers
-Date: Tue, 13 Sep 2016 12:04:07 +0200
-Message-ID: <57D7CF17.2050905@laposte.net>
-References: <57BDAF2E.10502@laposte.net>
- <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
- <57D69FB1.2020801@laposte.net> <20160912123809.GB13741@leverpostej>
- <57D6AA54.6000208@laposte.net> <20160912135549.GA14165@leverpostej>
- <57D6D2A9.3010006@laposte.net> <20160912165637.GF14165@leverpostej>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v1 1/2] ARM: dts: add rockchip PX3 Evaluation board
+Date: Tue, 13 Sep 2016 18:06:12 +0800
+Message-ID: <94379f31-00bb-4873-5a93-f6eeead55180@rock-chips.com>
+References: <1473529249-6151-1-git-send-email-andy.yan@rock-chips.com>
+ <1473529440-6202-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160912165637.GF14165@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473529440-6202-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: devicetree@vger.kernel.org, briannorris@chromium.org, afaerber@suse.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Hi Heiko:
 
-On 09/12/2016 06:56 PM, Mark Rutland wrote:
->> Exactly, that's why to I'm having trouble to understand why there is so much
->> insistence on "getting the DT 100% right", since a HW change could imply
->> that what made 100% sense yesterday, does not today.
->> Since that is a possibility we have to live with, then the "100% right" goal
->> is most likely unachievable.
->> That's different from "backwards compatibility" for which some technique,
->> like alternate descriptions, can be put in place.
-> 
-> I'm not on about "100% right", but more "a reasonable chance of being
-> good enough". 
+     Is there any further suggestion about this series?
 
-Ok.
 
-> The latter is extremely difficult to judge when you just
-> get a binding document with little or no additional context.
-
-Exactly, that is why I was thinking it would take less "review" time.
-Indeed, if there is no driver, why would it matter what those bindings
-are?
-
-> Backwards compatibility is with regards to new software supporting old
-> bindings. If new HW comes out, we can create new bindings. Old bindings
-> should remain supported regardless.
-
-Indeed. So you agree that without a driver, there is no backward compatibility
-to maintain (because nothing could break).
-Could we then say that in that case, it should not matter that much (if at all)
-if the bindings have "a reasonable chance of being good enough"?
-
-Because I'm trying to understand why/how would the "open-source community" be
-affected by some DT properties/nodes that are not used by upstream Linux drivers.
-
-Warner proposed 'overlays' to deal with the "open-source community" reticence to
-accept such bindings.
-Whereas it may be simpler to just find a way to accommodate the integration of
-such bindings in a way that everybody wins.
-That could take the form of a "staging" DT area, so that the 'overlay' is public.
-Just for the sake and benefit of everybody, 3rd parties and open-source community.
-
->> Could you be more precise on those two issues? Namely:
->> "the effort" and the "lack of benefit for the community"?
-> 
-> As above, reviewing is tricky. One has to spend the time gaining an
-> understanding of a particular piece of hardware, the class of hardware
-> it falls in, and also the bigger picture that it fits in. Once you have
-> that, you have to review the binding in that context, and that takes
-> time and effort.
-
-Yes, but this is based on a binding for which there's a driver.
-If there's no driver it should not take that much time, right?
-
-> As things evolve, perhaps mistakes or inconsistencies are found, or new
-> ways to generalise things. As that occurs, there is a maintenance burden
-> for existing bindings.
-> 
-> All of that takes time and effort.
-
-Only for bindings for which there is a driver.
-
-Think about this:
-- a binding with no driver is submitted and ends up in the tree
-(it could be on a staging area if necessary)
-
-- if at a later point somebody attempts to upstream a driver using those
-'staging' bindings, the reviewers could say "you are using 'staging' bindings,
-please add compatibility with 'staging' and 'standard' bindings", even if that
-includes the discussion and review of newly created 'standard' bindings
-corresponding to the 'staging' bindings.
-
-- the submitter may even say "there's no need for compatibility for 'staging'
-bindings, because they were never used (or other valid reasons)".
-
-What would you think of something like that?
-
-> If, at the end of that, a proprietary vendor driver is using a different
-> version of the binding anyway, because "there's no backward
-> compatibility to guarantee", then there is no benefit to the document.
-
-No, it would not use a "different version of the binding", because the
-binding would be public, i.e.: everything would be on the public DT.
-
-> Even if that proprietary driver does remain stable, the Linux community
-> will have done work that only benefits the authors of that driver. We
-> would prefer that the results of our efforts are open, and benefit all.
-
-Do you have an example of a binding *not used by Linux* that created enormous
-amount of work for the Linux community?
-
->> I can understand the effort it takes to review a binding and some
->> driver, but if there's no driver, why would it matter if the DT binding is
->> 100% right? Hence, why would it take more effort?
->> Furthermore, if there's no driver, there's no backward compatibility to
->> guarantee. Shouldn't it require less effort?
-> 
-> I don't follow. If there's no compatibility to guarantee, why do you
-> want a binding?
-
-Let's make an abstraction of the word 'binding', 'create a binding', etc. and
-just focus on this:
-- Somebody submits a DT file that contains properties and nodes that are
-*not used* by any Linux driver.
-- Said properties and nodes serve as HW description for HW blocks for which
-*there is no* Linux driver.
-
-The goal of the above is to use the DT as the authoritative (and single)
-source of HW definition.
-
-An alternate solution, as proposed by Warner, is to use 'binary overlays' for
-the DT.
-
-> A binding is a form of contract -- if you describe the HW this way, then
-> some software will understand it. You can extend a binding over time,
-> certainly, but if the baseline of that binding is a moving target, that
-> benefits nobody.
-> 
-
-The benefit is that in one case (the case where the whole SoC is described
-in the DT, regardless of the existence of a Linux driver or not) there is more
-information available publicly.
-
->> I see, although I don't understand how accepting such solution (i.e.: having the
->> information in a different DT) benefits the open-source community, since it
->> basically means that the open-source community settles for less information.
-> 
-> As with all things, it depends on context. If someone's using a DT to
-> describe details of the secure world of a platform with trustzone to a
-> secure OS, then not all of that information is relevant to Linux.
-> Likewise if configuration details specific to FW are embedded.
-
-Ok, so if the information is not relevant to Linux do you agree that it
-should not affect it, and then we could imagine such details being present on
-the DT anyway?
-
-> If there's information relevant to a general purpose OS, then I would
-> expect it to be described. By the same token, I would expect a general
-> purpose OS to actually be making use of the information. In practice,
-> we've used Linux as the benchmark for that. That needn't necessarily be
-> the case if another OS can demonstrate that the binding is worthwhile --
-> ideally we'd have multiple OSs using bindings so as to "keep us honest"
-> and free from implementation details.
-
-You mention the case of another OS.
-What is the definition of OS in this case?
-Because one could say that "FW" or "secure world" could fit that definition,
-right?
-Or when you talk about "another OS" you think only about other open-source
-mainstream OSs, like FreeBSD?
-
-> As I mentioned before, an example would help. The theoretical envelope
-> is very large and likely far beyond what you envisage. We need something
-> to focus on, or we're arguing about what we conceive differently.
-> 
-
-I think we've made progress :-)
-Indeed, to me it is clear that what we conceive "differently", is that
-"the effort", "lack of benefit for the community", "Old bindings should
-remain supported regardless" and "backward compatibility" are considered
-with respect to DT *plus* driver, yet the idea is to have DT describe
-HW for which there's no upstream driver yet.
-Hence most of those considerations should not apply, right?
-
-Best regards,
-
-Sebastian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 2016年09月11日 01:44, Andy Yan wrote:
+> PX3 EVB is designed by Rockchip for automotive field,
+> which intergrated with CVBS(TP2825)/MIPI DSI/LVDS/HDMI
+> video input/output interface, WIFI/BT/GPS(on a module
+> named S500 which based on MT6620), Gsensor BMA250E and
+> light&proximity sensor STK3410.
+>
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+>
+> ---
+>
+> Changes in v1:
+> - board rename
+> - add vendor prefix for i2c interfaced sensors
+> - use stdout-path to set the default console
+>
+>   Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+>   arch/arm/boot/dts/Makefile                         |   1 +
+>   arch/arm/boot/dts/rk3188-px3-evb.dts               | 337 +++++++++++++++++++++
+>   3 files changed, 342 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/rk3188-px3-evb.dts
+>
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+> index 6668645..6da3881 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+> @@ -21,6 +21,10 @@ Rockchip platforms device tree bindings
+>       Required root node properties:
+>         - compatible = "radxa,rock", "rockchip,rk3188";
+>   
+> +- Rockchip PX3 Evaluation board:
+> +    Required root node properties:
+> +      - compatible = "rockchip,px3-evb", "rockchip,px3", "rockchip,rk3188";
+> +
+>   - Radxa Rock2 Square board:
+>       Required root node properties:
+>         - compatible = "radxa,rock2-square", "rockchip,rk3288";
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index faacd52..88d27a2 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -620,6 +620,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+>   	rk3066a-marsboard.dtb \
+>   	rk3066a-rayeager.dtb \
+>   	rk3188-radxarock.dtb \
+> +	rk3188-px3-evb.dtb \
+>   	rk3228-evb.dtb \
+>   	rk3229-evb.dtb \
+>   	rk3288-evb-act8846.dtb \
+> diff --git a/arch/arm/boot/dts/rk3188-px3-evb.dts b/arch/arm/boot/dts/rk3188-px3-evb.dts
+> new file mode 100644
+> index 0000000..f6bc738
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/rk3188-px3-evb.dts
+> @@ -0,0 +1,337 @@
+> +/*
+> + * Copyright (c) 2016 Andy Yan <andy.yan@rock-chips.com>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/input/input.h>
+> +#include "rk3188.dtsi"
+> +
+> +/ {
+> +	model = "Rockchip PX3-EVB";
+> +	compatible = "rockchip,px3-evb", "rockchip,px3", "rockchip,rk3188";
+> +
+> +	chosen {
+> +		stdout-path = "serial2:115200n8";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x60000000 0x80000000>;
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		autorepeat;
+> +
+> +		power {
+> +			gpios = <&gpio0 4 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_POWER>;
+> +			label = "GPIO Key Power";
+> +			linux,input-type = <1>;
+> +			wakeup-source;
+> +			debounce-interval = <100>;
+> +		};
+> +	};
+> +
+> +	vcc_sys: vsys-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vsys";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-boot-on;
+> +	};
+> +};
+> +
+> +&cpu0 {
+> +	cpu0-supply = <&vdd_cpu>;
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +
+> +	 /* Accelerometer */
+> +	bma250@18 {
+> +		compatible = "bosch,bma250";
+> +		reg = <0x18>;
+> +		interrupt-parent = <&gpio0>;
+> +		interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	stk3410@48 {
+> +		compatible = "sensortek,STK3310";
+> +		reg = <0x48>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +	clock-frequency = <400000>;
+> +	rk808: pmic@1c {
+> +		compatible = "rockchip,rk818";
+> +		reg = <0x1c>;
+> +		interrupt-parent = <&gpio0>;
+> +		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
+> +		rockchip,system-power-controller;
+> +		wakeup-source;
+> +		#clock-cells = <1>;
+> +		clock-output-names = "xin32k", "rk808-clkout2";
+> +
+> +		vcc1-supply = <&vcc_sys>;
+> +		vcc2-supply = <&vcc_sys>;
+> +		vcc3-supply = <&vcc_sys>;
+> +		vcc4-supply = <&vcc_sys>;
+> +		vcc6-supply = <&vcc_sys>;
+> +		vcc7-supply = <&vcc_sys>;
+> +		vcc8-supply = <&vcc_io>;
+> +		vcc9-supply = <&vcc_io>;
+> +
+> +		regulators {
+> +			vdd_cpu: DCDC_REG1 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <750000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-name = "vdd_arm";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vdd_gpu: DCDC_REG2 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <850000>;
+> +				regulator-max-microvolt = <1250000>;
+> +				regulator-name = "vdd_gpu";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1000000>;
+> +				};
+> +			};
+> +
+> +			vcc_ddr: DCDC_REG3 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-name = "vcc_ddr";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_io: DCDC_REG4 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-name = "vcc_io";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			vcc_cif: LDO_REG1 {
+> +				 regulator-min-microvolt = <3300000>;
+> +				 regulator-max-microvolt = <3300000>;
+> +				 regulator-name = "vcc_cif";
+> +			};
+> +
+> +			vcc_jetta33: LDO_REG2 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-name = "vcc_jetta33";
+> +			};
+> +
+> +			vdd_10: LDO_REG3 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <1000000>;
+> +				regulator-name = "vdd_10";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1000000>;
+> +				};
+> +			};
+> +
+> +			lvds_12: LDO_REG4 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-name = "lvds_12";
+> +			};
+> +
+> +			lvds_25: LDO_REG5 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-name = "lvds_25";
+> +			};
+> +
+> +			cif_18: LDO_REG6 {
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <1000000>;
+> +				regulator-name = "cif_18";
+> +			};
+> +
+> +			vcc_sd: LDO_REG7 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-name = "vcc_sd";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			wl_18: LDO_REG8 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-name = "wl_18";
+> +			};
+> +
+> +			lcd_33: SWITCH_REG1 {
+> +				regulator-name = "lcd_33";
+> +			};
+> +		};
+> +	};
+> +
+> +};
+> +
+> +&i2c2 {
+> +	gsl1680: touchscreen@40 {
+> +		compatible = "silead,gsl1680";
+> +		reg = <0x40>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
+> +		power-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+> +		touchscreen-size-x = <800>;
+> +		touchscreen-size-y = <1280>;
+> +		silead,max-fingers = <5>;
+> +	};
+> +};
+> +
+> +&emmc {
+> +	bus-width = <8>;
+> +	cap-mmc-highspeed;
+> +	disable-wp;
+> +	non-removable;
+> +	num-slots = <1>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&emmc_clk>, <&emmc_cmd>, <&emmc_rst>;
+> +	status = "okay";
+> +};
+> +
+> +&mmc0 {
+> +	num-slots = <1>;
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
+> +	vmmc-supply = <&vcc_sd>;
+> +
+> +	bus-width = <4>;
+> +	cap-mmc-highspeed;
+> +	cap-sd-highspeed;
+> +	disable-wp;
+> +};
+> +
+> +&pwm1 {
+> +	status = "okay";
+> +};
+> +
+> +&pwm2 {
+> +	status = "okay";
+> +};
+> +
+> +&pwm3 {
+> +	status = "okay";
+> +};
+> +
+> +&pinctrl {
+> +	pcfg_output_low: pcfg-output-low {
+> +		output-low;
+> +	};
+> +
+> +	usb {
+> +		host_vbus_drv: host-vbus-drv {
+> +			rockchip,pins = <0 3 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +		otg_vbus_drv: otg-vbus-drv {
+> +			rockchip,pins = <2 31 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> +
+> +&uart3 {
+> +	status = "okay";
+> +};
+> +
+> +&usbphy {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host {
+> +	status = "okay";
+> +};
+> +
+> +&usb_otg {
+> +	status = "okay";
+> +};
+> +
+> +&wdt {
+> +	status = "okay";
+> +};
