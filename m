@@ -1,248 +1,191 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v7.1 04/22] iommu: Introduce iommu_fwspec
-Date: Tue, 13 Sep 2016 10:54:14 +0100
-Message-ID: <0050305e05655fd34eb7134dd7fb800f48e4d1ac.1473760250.git.robin.murphy@arm.com>
-References: <cover.1473695704.git.robin.murphy@arm.com>
-	<742a71630de502ac5a7a8641c6ed368d8409324d.1473695704.git.robin.murphy@arm.com>
+From: Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
+Subject: Re: ARM, SoC: About the use DT-defined properties by 3rd-party
+ drivers
+Date: Tue, 13 Sep 2016 12:04:07 +0200
+Message-ID: <57D7CF17.2050905@laposte.net>
+References: <57BDAF2E.10502@laposte.net>
+ <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
+ <57D69FB1.2020801@laposte.net> <20160912123809.GB13741@leverpostej>
+ <57D6AA54.6000208@laposte.net> <20160912135549.GA14165@leverpostej>
+ <57D6D2A9.3010006@laposte.net> <20160912165637.GF14165@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <742a71630de502ac5a7a8641c6ed368d8409324d.1473695704.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160912165637.GF14165@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Introduce a common structure to hold the per-device firmware data that
-most IOMMU drivers need to keep track of. This enables us to configure
-much of that data from common firmware code, and consolidate a lot of
-the equivalent implementations, device look-up tables, etc. which are
-currently strewn across IOMMU drivers.
+Hi Mark,
 
-This will also be enable us to address the outstanding "multiple IOMMUs
-on the platform bus" problem by tweaking IOMMU API calls to prefer
-dev->fwspec->ops before falling back to dev->bus->iommu_ops, and thus
-gracefully handle those troublesome systems which we currently cannot.
+On 09/12/2016 06:56 PM, Mark Rutland wrote:
+>> Exactly, that's why to I'm having trouble to understand why there is so much
+>> insistence on "getting the DT 100% right", since a HW change could imply
+>> that what made 100% sense yesterday, does not today.
+>> Since that is a possibility we have to live with, then the "100% right" goal
+>> is most likely unachievable.
+>> That's different from "backwards compatibility" for which some technique,
+>> like alternate descriptions, can be put in place.
+> 
+> I'm not on about "100% right", but more "a reasonable chance of being
+> good enough". 
 
-As the first user, hook up the OF IOMMU configuration mechanism. The
-driver-defined nature of DT cells means that we still need the drivers
-to translate and add the IDs themselves, but future users such as the
-much less free-form ACPI IORT will be much simpler and self-contained.
+Ok.
 
-CC: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Suggested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> The latter is extremely difficult to judge when you just
+> get a binding document with little or no additional context.
 
----
+Exactly, that is why I was thinking it would take less "review" time.
+Indeed, if there is no driver, why would it matter what those bindings
+are?
 
-- Drop the 'gradual introduction' fiddling and go straight to struct
-  device and common code, as it prevents all the silly build issues
-  and ultimately makes life simpler for everyone
-- This time without missing "static inline"s on the stubs...
+> Backwards compatibility is with regards to new software supporting old
+> bindings. If new HW comes out, we can create new bindings. Old bindings
+> should remain supported regardless.
 
----
- drivers/iommu/iommu.c    | 58 ++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/iommu/of_iommu.c |  8 +++++--
- include/linux/device.h   |  3 +++
- include/linux/iommu.h    | 39 ++++++++++++++++++++++++++++++++
- 4 files changed, 106 insertions(+), 2 deletions(-)
+Indeed. So you agree that without a driver, there is no backward compatibility
+to maintain (because nothing could break).
+Could we then say that in that case, it should not matter that much (if at all)
+if the bindings have "a reasonable chance of being good enough"?
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index b06d93594436..9a2f1960873b 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -31,6 +31,7 @@
- #include <linux/err.h>
- #include <linux/pci.h>
- #include <linux/bitops.h>
-+#include <linux/property.h>
- #include <trace/events/iommu.h>
- 
- static struct kset *iommu_group_kset;
-@@ -1613,3 +1614,60 @@ out:
- 
- 	return ret;
- }
-+
-+int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
-+		      const struct iommu_ops *ops)
-+{
-+	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
-+
-+	if (fwspec)
-+		return ops == fwspec->ops ? 0 : -EINVAL;
-+
-+	fwspec = kzalloc(sizeof(*fwspec), GFP_KERNEL);
-+	if (!fwspec)
-+		return -ENOMEM;
-+
-+	of_node_get(to_of_node(iommu_fwnode));
-+	fwspec->iommu_fwnode = iommu_fwnode;
-+	fwspec->ops = ops;
-+	dev->iommu_fwspec = fwspec;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(iommu_fwspec_init);
-+
-+void iommu_fwspec_free(struct device *dev)
-+{
-+	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
-+
-+	if (fwspec) {
-+		fwnode_handle_put(fwspec->iommu_fwnode);
-+		kfree(fwspec);
-+		dev->iommu_fwspec = NULL;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(iommu_fwspec_free);
-+
-+int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids)
-+{
-+	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
-+	size_t size;
-+	int i;
-+
-+	if (!fwspec)
-+		return -EINVAL;
-+
-+	size = offsetof(struct iommu_fwspec, ids[fwspec->num_ids + num_ids]);
-+	if (size > sizeof(*fwspec)) {
-+		fwspec = krealloc(dev->iommu_fwspec, size, GFP_KERNEL);
-+		if (!fwspec)
-+			return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < num_ids; i++)
-+		fwspec->ids[fwspec->num_ids + i] = ids[i];
-+
-+	fwspec->num_ids += num_ids;
-+	dev->iommu_fwspec = fwspec;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(iommu_fwspec_add_ids);
-diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-index 19e1e8f2f871..5b82862f571f 100644
---- a/drivers/iommu/of_iommu.c
-+++ b/drivers/iommu/of_iommu.c
-@@ -167,7 +167,9 @@ static const struct iommu_ops
- 		return NULL;
- 
- 	ops = of_iommu_get_ops(iommu_spec.np);
--	if (!ops || !ops->of_xlate || ops->of_xlate(&pdev->dev, &iommu_spec))
-+	if (!ops || !ops->of_xlate ||
-+	    iommu_fwspec_init(&pdev->dev, &iommu_spec.np->fwnode, ops) ||
-+	    ops->of_xlate(&pdev->dev, &iommu_spec))
- 		ops = NULL;
- 
- 	of_node_put(iommu_spec.np);
-@@ -196,7 +198,9 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
- 		np = iommu_spec.np;
- 		ops = of_iommu_get_ops(np);
- 
--		if (!ops || !ops->of_xlate || ops->of_xlate(dev, &iommu_spec))
-+		if (!ops || !ops->of_xlate ||
-+		    iommu_fwspec_init(dev, &np->fwnode, ops) ||
-+		    ops->of_xlate(dev, &iommu_spec))
- 			goto err_put_node;
- 
- 		of_node_put(np);
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 38f02814d53a..bc41e87a969b 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -41,6 +41,7 @@ struct device_node;
- struct fwnode_handle;
- struct iommu_ops;
- struct iommu_group;
-+struct iommu_fwspec;
- 
- struct bus_attribute {
- 	struct attribute	attr;
-@@ -765,6 +766,7 @@ struct device_dma_parameters {
-  * 		gone away. This should be set by the allocator of the
-  * 		device (i.e. the bus driver that discovered the device).
-  * @iommu_group: IOMMU group the device belongs to.
-+ * @iommu_fwspec: IOMMU-specific properties supplied by firmware.
-  *
-  * @offline_disabled: If set, the device is permanently online.
-  * @offline:	Set after successful invocation of bus type's .offline().
-@@ -849,6 +851,7 @@ struct device {
- 
- 	void	(*release)(struct device *dev);
- 	struct iommu_group	*iommu_group;
-+	struct iommu_fwspec	*iommu_fwspec;
- 
- 	bool			offline_disabled:1;
- 	bool			offline:1;
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index a35fb8b42e1a..436dc21318af 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -331,10 +331,32 @@ extern struct iommu_group *pci_device_group(struct device *dev);
- /* Generic device grouping function */
- extern struct iommu_group *generic_device_group(struct device *dev);
- 
-+/**
-+ * struct iommu_fwspec - per-device IOMMU instance data
-+ * @ops: ops for this device's IOMMU
-+ * @iommu_fwnode: firmware handle for this device's IOMMU
-+ * @iommu_priv: IOMMU driver private data for this device
-+ * @num_ids: number of associated device IDs
-+ * @ids: IDs which this device may present to the IOMMU
-+ */
-+struct iommu_fwspec {
-+	const struct iommu_ops	*ops;
-+	struct fwnode_handle	*iommu_fwnode;
-+	void			*iommu_priv;
-+	unsigned int		num_ids;
-+	u32			ids[1];
-+};
-+
-+int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
-+		      const struct iommu_ops *ops);
-+void iommu_fwspec_free(struct device *dev);
-+int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids);
-+
- #else /* CONFIG_IOMMU_API */
- 
- struct iommu_ops {};
- struct iommu_group {};
-+struct iommu_fwspec {};
- 
- static inline bool iommu_present(struct bus_type *bus)
- {
-@@ -541,6 +563,23 @@ static inline void iommu_device_unlink(struct device *dev, struct device *link)
- {
- }
- 
-+static inline int iommu_fwspec_init(struct device *dev,
-+				    struct fwnode_handle *iommu_fwnode,
-+				    const struct iommu_ops *ops)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline void iommu_fwspec_free(struct device *dev)
-+{
-+}
-+
-+static inline int iommu_fwspec_add_ids(struct device *dev, u32 *ids,
-+				       int num_ids)
-+{
-+	return -ENODEV;
-+}
-+
- #endif /* CONFIG_IOMMU_API */
- 
- #endif /* __LINUX_IOMMU_H */
--- 
-2.8.1.dirty
+Because I'm trying to understand why/how would the "open-source community" be
+affected by some DT properties/nodes that are not used by upstream Linux drivers.
+
+Warner proposed 'overlays' to deal with the "open-source community" reticence to
+accept such bindings.
+Whereas it may be simpler to just find a way to accommodate the integration of
+such bindings in a way that everybody wins.
+That could take the form of a "staging" DT area, so that the 'overlay' is public.
+Just for the sake and benefit of everybody, 3rd parties and open-source community.
+
+>> Could you be more precise on those two issues? Namely:
+>> "the effort" and the "lack of benefit for the community"?
+> 
+> As above, reviewing is tricky. One has to spend the time gaining an
+> understanding of a particular piece of hardware, the class of hardware
+> it falls in, and also the bigger picture that it fits in. Once you have
+> that, you have to review the binding in that context, and that takes
+> time and effort.
+
+Yes, but this is based on a binding for which there's a driver.
+If there's no driver it should not take that much time, right?
+
+> As things evolve, perhaps mistakes or inconsistencies are found, or new
+> ways to generalise things. As that occurs, there is a maintenance burden
+> for existing bindings.
+> 
+> All of that takes time and effort.
+
+Only for bindings for which there is a driver.
+
+Think about this:
+- a binding with no driver is submitted and ends up in the tree
+(it could be on a staging area if necessary)
+
+- if at a later point somebody attempts to upstream a driver using those
+'staging' bindings, the reviewers could say "you are using 'staging' bindings,
+please add compatibility with 'staging' and 'standard' bindings", even if that
+includes the discussion and review of newly created 'standard' bindings
+corresponding to the 'staging' bindings.
+
+- the submitter may even say "there's no need for compatibility for 'staging'
+bindings, because they were never used (or other valid reasons)".
+
+What would you think of something like that?
+
+> If, at the end of that, a proprietary vendor driver is using a different
+> version of the binding anyway, because "there's no backward
+> compatibility to guarantee", then there is no benefit to the document.
+
+No, it would not use a "different version of the binding", because the
+binding would be public, i.e.: everything would be on the public DT.
+
+> Even if that proprietary driver does remain stable, the Linux community
+> will have done work that only benefits the authors of that driver. We
+> would prefer that the results of our efforts are open, and benefit all.
+
+Do you have an example of a binding *not used by Linux* that created enormous
+amount of work for the Linux community?
+
+>> I can understand the effort it takes to review a binding and some
+>> driver, but if there's no driver, why would it matter if the DT binding is
+>> 100% right? Hence, why would it take more effort?
+>> Furthermore, if there's no driver, there's no backward compatibility to
+>> guarantee. Shouldn't it require less effort?
+> 
+> I don't follow. If there's no compatibility to guarantee, why do you
+> want a binding?
+
+Let's make an abstraction of the word 'binding', 'create a binding', etc. and
+just focus on this:
+- Somebody submits a DT file that contains properties and nodes that are
+*not used* by any Linux driver.
+- Said properties and nodes serve as HW description for HW blocks for which
+*there is no* Linux driver.
+
+The goal of the above is to use the DT as the authoritative (and single)
+source of HW definition.
+
+An alternate solution, as proposed by Warner, is to use 'binary overlays' for
+the DT.
+
+> A binding is a form of contract -- if you describe the HW this way, then
+> some software will understand it. You can extend a binding over time,
+> certainly, but if the baseline of that binding is a moving target, that
+> benefits nobody.
+> 
+
+The benefit is that in one case (the case where the whole SoC is described
+in the DT, regardless of the existence of a Linux driver or not) there is more
+information available publicly.
+
+>> I see, although I don't understand how accepting such solution (i.e.: having the
+>> information in a different DT) benefits the open-source community, since it
+>> basically means that the open-source community settles for less information.
+> 
+> As with all things, it depends on context. If someone's using a DT to
+> describe details of the secure world of a platform with trustzone to a
+> secure OS, then not all of that information is relevant to Linux.
+> Likewise if configuration details specific to FW are embedded.
+
+Ok, so if the information is not relevant to Linux do you agree that it
+should not affect it, and then we could imagine such details being present on
+the DT anyway?
+
+> If there's information relevant to a general purpose OS, then I would
+> expect it to be described. By the same token, I would expect a general
+> purpose OS to actually be making use of the information. In practice,
+> we've used Linux as the benchmark for that. That needn't necessarily be
+> the case if another OS can demonstrate that the binding is worthwhile --
+> ideally we'd have multiple OSs using bindings so as to "keep us honest"
+> and free from implementation details.
+
+You mention the case of another OS.
+What is the definition of OS in this case?
+Because one could say that "FW" or "secure world" could fit that definition,
+right?
+Or when you talk about "another OS" you think only about other open-source
+mainstream OSs, like FreeBSD?
+
+> As I mentioned before, an example would help. The theoretical envelope
+> is very large and likely far beyond what you envisage. We need something
+> to focus on, or we're arguing about what we conceive differently.
+> 
+
+I think we've made progress :-)
+Indeed, to me it is clear that what we conceive "differently", is that
+"the effort", "lack of benefit for the community", "Old bindings should
+remain supported regardless" and "backward compatibility" are considered
+with respect to DT *plus* driver, yet the idea is to have DT describe
+HW for which there's no upstream driver yet.
+Hence most of those considerations should not apply, right?
+
+Best regards,
+
+Sebastian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
