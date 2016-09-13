@@ -1,100 +1,88 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: [PATCH v4] mfd: arizona: Add DT options for max_channels_clocked and PDM speaker config
-Date: Tue, 13 Sep 2016 10:05:44 +0100
-Message-ID: <1473757544-6490-1-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Subject: Re: [PATCH 6/8 v2] arm: orion5x: Add DT-based support for Netgear
+ WNR854T
+Date: Tue, 13 Sep 2016 10:10:41 +0100
+Message-ID: <88e40f0c6cafec244dc16af5a03cfb44@jamie.lentin.co.uk>
+References: <1472203264-21089-7-git-send-email-jm@lentin.co.uk>
+ <1473109646-23366-1-git-send-email-jm@lentin.co.uk>
+ <20160912170625.GA7420@rob-hp-laptop> <2920481.EgEQnLmOkM@wuerfel>
+ <20160912220344.GM11400@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org
-Cc: patches@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160912220344.GM11400-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT settings for the max_channels_clocked, spk_fmt and
-spk_mute pdata.
+On 2016-09-12 23:03, Andrew Lunn wrote:
+>> Maybe we can instead leave out the PCI support from the new
+>> file for now and not delete the legacy board file?
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
----
- Documentation/devicetree/bindings/mfd/arizona.txt | 18 ++++++++++++++
- drivers/mfd/arizona-core.c                        | 30 +++++++++++++++++++++++
- 2 files changed, 48 insertions(+)
+This seems a reasonable compromise. The PCI card the router comes with 
+isn't supported by mwl8k mainline anyway (There's STA-only firmware that 
+can be extracted from a windows driver and PCI IDs added, but stats 
+reporting uses a different format), so it's not a huge loss, although 
+many did replace the card with something Atheros-based.
 
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index a6e2ea41..8f2e282 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -85,6 +85,24 @@ Optional properties:
-     present, the number of values should be less than or equal to the
-     number of inputs, unspecified inputs will use the chip default.
- 
-+  - wlf,max-channels-clocked : The maximum number of channels to be clocked on
-+    each AIF, useful for I2S systems with multiple data lines being mastered.
-+    Specify one cell for each AIF to be configured, specify zero for AIFs that
-+    should be handled normally.
-+    If present, number of cells must be less than or equal to the number of
-+    AIFs. If less than the number of AIFs, for cells that have not been
-+    specified the corresponding AIFs will be treated as default setting.
-+
-+  - wlf,spk-fmt : PDM speaker data format, must contain 2 cells (OUT5 and OUT6).
-+    See the datasheet for values.
-+    The second cell is ignored for codecs that do not have OUT6 (wm5102, wm8997,
-+      wm8998, wm1814)
-+
-+  - wlf,spk-mute : PDM speaker mute setting, must contain 2 cells (OUT5 and OUT6).
-+    See the datasheet for values.
-+    The second cell is ignored for codecs that do not have OUT6 (wm5102, wm8997,
-+    wm8998, wm1814)
-+
-   - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
-     they are being externally supplied. As covered in
-     Documentation/devicetree/bindings/regulator/regulator.txt
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index b95ff2d..3687e5f 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -760,6 +760,7 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
- 	struct property *prop;
- 	const __be32 *cur;
- 	u32 val;
-+	u32 pdm_val[ARIZONA_MAX_PDM_SPK];
- 	int ret, i;
- 	int count = 0;
- 
-@@ -816,6 +817,35 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
- 		count++;
- 	}
- 
-+	count = 0;
-+	of_property_for_each_u32(arizona->dev->of_node,
-+				 "wlf,max-channels-clocked",
-+				 prop, cur, val) {
-+		if (count == ARRAY_SIZE(pdata->max_channels_clocked))
-+			break;
-+
-+		pdata->max_channels_clocked[count] = val;
-+		count++;
-+	}
-+
-+	ret = of_property_read_u32_array(arizona->dev->of_node,
-+					 "wlf,spk-fmt",
-+					 pdm_val,
-+					 ARRAY_SIZE(pdm_val));
-+
-+	if (ret >= 0)
-+		for (count = 0; count < ARRAY_SIZE(pdata->spk_fmt); ++count)
-+			pdata->spk_fmt[count] = pdm_val[count];
-+
-+	ret = of_property_read_u32_array(arizona->dev->of_node,
-+					 "wlf,spk-mute",
-+					 pdm_val,
-+					 ARRAY_SIZE(pdm_val));
-+
-+	if (ret >= 0)
-+		for (count = 0; count < ARRAY_SIZE(pdata->spk_mute); ++count)
-+			pdata->spk_mute[count] = pdm_val[count];
-+
- 	return 0;
- }
- 
--- 
-1.9.1
+Unfortunately the power regulator on my spare router has stopped 
+regulating, which will make more development tricky. But will have a 
+look at the PCI conversion if I can get hold of another.
+
+> Jamie, which interrupt do you see the WiFi card using?  If it is
+> IRQ_ORION5X_PCIE0_INT, (1 + 11), that is probably easier to deal with
+> than if it uses GPIO 4.
+
+Definitely uses GPIO 4.
+
+# cat /proc/interrupts
+            CPU0
+  17:     165966  bridge-interrupt-ctrl   2 Edge      orion_event
+  22:       5119  interrupt-controller   3 Edge      serial
+  24:          0  bridge-interrupt-ctrl   3 Edge      orion_wdt
+  25:      89504  interrupt-controller  22 Edge      f1072004.mdio-bus
+  28:          1  f1010100.gpio   1 Edge      Reset Button
+  31:        598  f1010100.gpio   4 Level     mwl8k
+  59:        985  interrupt-controller  21 Edge      eth0
+Err:          0
+# iw dev wlan0 scan > /dev/null ; cat /proc/interrupts
+            CPU0
+  17:     166424  bridge-interrupt-ctrl   2 Edge      orion_event
+  22:       5250  interrupt-controller   3 Edge      serial
+  24:          0  bridge-interrupt-ctrl   3 Edge      orion_wdt
+  25:      89748  interrupt-controller  22 Edge      f1072004.mdio-bus
+  28:          1  f1010100.gpio   1 Edge      Reset Button
+  31:        708  f1010100.gpio   4 Level     mwl8k
+  59:        985  interrupt-controller  21 Edge      eth0
+Err:          0
+# sleep 10 ; cat /proc/interrupts
+            CPU0
+  17:     167985  bridge-interrupt-ctrl   2 Edge      orion_event
+  22:       5349  interrupt-controller   3 Edge      serial
+  24:          0  bridge-interrupt-ctrl   3 Edge      orion_wdt
+  25:      90603  interrupt-controller  22 Edge      f1072004.mdio-bus
+  28:          1  f1010100.gpio   1 Edge      Reset Button
+  31:        708  f1010100.gpio   4 Level     mwl8k
+  59:        995  interrupt-controller  21 Edge      eth0
+Err:          0
+# iw dev wlan0 scan > /dev/null ; cat /proc/interrupts
+            CPU0
+  17:     168270  bridge-interrupt-ctrl   2 Edge      orion_event
+  22:       5480  interrupt-controller   3 Edge      serial
+  24:          0  bridge-interrupt-ctrl   3 Edge      orion_wdt
+  25:      90727  interrupt-controller  22 Edge      f1072004.mdio-bus
+  28:          1  f1010100.gpio   1 Edge      Reset Button
+  31:        818  f1010100.gpio   4 Level     mwl8k
+  59:        996  interrupt-controller  21 Edge      eth0
+Err:          0
+
+> 
+> Thanks
+>      Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
