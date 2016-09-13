@@ -1,72 +1,68 @@
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] regulator: Add set_voltage_time op
-Date: Tue, 13 Sep 2016 12:12:41 -0700
-Message-ID: <20160913191241.GD62872@google.com>
-References: <20160906190315.GC92391@google.com>
- <20160912183230.GF27946@sirena.org.uk>
- <20160912231851.GA62872@google.com>
- <20160912235758.GO27946@sirena.org.uk>
- <20160913011831.GB62872@google.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 6/8 v2] arm: orion5x: Add DT-based support for Netgear WNR854T
+Date: Tue, 13 Sep 2016 21:16:28 +0200
+Message-ID: <87r38nehkj.fsf@free-electrons.com>
+References: <1472203264-21089-7-git-send-email-jm@lentin.co.uk>
+        <1473109646-23366-1-git-send-email-jm@lentin.co.uk>
+        <20160912170625.GA7420@rob-hp-laptop> <2920481.EgEQnLmOkM@wuerfel>
+        <20160912220344.GM11400@lunn.ch>
+        <88e40f0c6cafec244dc16af5a03cfb44@jamie.lentin.co.uk>
+        <20160913123639.GB15332@lunn.ch>
+        <b7d442f9d26249976d7698b6a32db2a3@jamie.lentin.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160913011831.GB62872-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <b7d442f9d26249976d7698b6a32db2a3-SBYVURHw+sBNwP/n92qj9LVCufUGDwFn@public.gmane.org> (Jamie
+        Lentin's message of "Tue, 13 Sep 2016 15:15:23 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-El Mon, Sep 12, 2016 at 06:18:31PM -0700 Matthias Kaehlcke ha dit:
+Hi Jamie,
+ 
+ On mar., sept. 13 2016, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org> wrote:
 
-> El Tue, Sep 13, 2016 at 12:57:58AM +0100 Mark Brown ha dit:
-> 
-> > On Mon, Sep 12, 2016 at 04:18:51PM -0700, Matthias Kaehlcke wrote:
-> > > El Mon, Sep 12, 2016 at 07:32:30PM +0100 Mark Brown ha dit:
-> > > > On Tue, Sep 06, 2016 at 12:03:15PM -0700, Matthias Kaehlcke wrote:
-...
-> > > > Why were the gotos there?
-> > 
-> > > Not sure how to interpret your question. Would you prefer no to use
-> > > gotos, should the notification be skipped in case the voltage is not
-> > > changed, do you expect a comment, ...?
-> > 
-> > I mean I couldn't tell why a goto was a good idea for what seemed like
-> > perfectly normal conditional logic.  Either I couldn't tell because it's
-> > not a good idea or it is a good idea but should be clearer in some way
-> > but since I didn't really understand what the purpose of doing the gotos
-> > was I can't say for sure either way.
-> 
-> The main purpose is to avoid deeply nested code branches.
-> 
-> Without gotos I think we'd end up with something like this:
-> 
-> static int _regulator_do_set_voltage(struct regulator_dev *rdev,
->                                      int min_uV, int max_uV)
-> {
-> 	...
-> 	if (ret == 0 && !rdev->constraints->ramp_disable) {
-> 		if (rdev->desc->ops->set_voltage_time_sel) {
-> 			if (old_selector >= 0 && old_selector != selector)
-> 				  rdev->desc->ops->set_voltage_time_sel(rdev, old_selector, selector);
-> 		} else {
-> 		       if (old_uV != new_uV) {
-> 				if (rdev->desc->ops->set_voltage_time)
-> 					delay = rdev->desc->ops->set_voltage_time(rdev, old_uV, new_uV);
-> 				else
-> 					delay = _regulator_set_voltage_time(rdev, old_uV, new_uV);
-> 		       }
-> 		}
-> 
-> 		// delay
-> 	}
-> }
-> 
-> I can change the patch accordingly if this is preferred.
+> On 2016-09-13 13:36, Andrew Lunn wrote:
+>> On Tue, Sep 13, 2016 at 10:10:41AM +0100, Jamie Lentin wrote:
+>>> On 2016-09-12 23:03, Andrew Lunn wrote:
+>>> >>Maybe we can instead leave out the PCI support from the new
+>>> >>file for now and not delete the legacy board file?
+>>>
+>>> This seems a reasonable compromise. The PCI card the router comes
+>>> with isn't supported by mwl8k mainline anyway (There's STA-only
+>>> firmware that can be extracted from a windows driver and PCI IDs
+>>> added, but stats reporting uses a different format), so it's not a
+>>> huge loss, although many did replace the card with something
+>>> Atheros-based.
+>>
+>> O.K. So dropping the PCI code gets us going forward.
+>
+> Is an arch/arm/mach-mvebu/orion5x.c also required? Or is continuing to
+> use arch/arm/mach-orion5x/board-dt.c until everything has been
+> converted the favoured approach?
+>
+>> Have we missed the merge window?
+>
+> I got the impression Gregory Clement had merged them? If not a good
+> portion of this patchset is uncontroversial generic orion5x stuff,
+> it'd be nice to get those in even if none of the router-specific stuff
+> doesn't make it.
 
-The above improves a bit when a local ops variable is used instead of
-rdev->desc->ops. With that it looks bearable and probably better than
-the goto version.
+I applied on mvebu/for-next in order to find any merge conflict. It
+seems ok on this side. However, I didn't make the pull request to
+arm-soc with these patches so I fear it is too late.
+
+Arnd would you agree to accept a new pull request?
+
+Gregory
+
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
