@@ -1,33 +1,36 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 0/3] ARM: dts: artpec6.dtsi updates
-Date: Tue, 13 Sep 2016 16:05:44 +0200
-Message-ID: <2398929.KttRDJeEu5@wuerfel>
-References: <cover.1471959733.git.larper@axis.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 3/9] ARM: sun8i: dt: Add DT bindings documentation for
+ Allwinner sun8i-emac
+Date: Tue, 13 Sep 2016 16:12:02 +0200
+Message-ID: <20160913141202.GO11400@lunn.ch>
+References: <1473425117-18645-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1473425117-18645-4-git-send-email-clabbe.montjoie@gmail.com>
+ <20160909141710.GF30871@lunn.ch>
+ <20160913133417.GC31990@Red>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1471959733.git.larper@axis.com>
+Content-Disposition: inline
+In-Reply-To: <20160913133417.GC31990@Red>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Lars Persson <lars.persson@axis.com>, arm@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, Lars Persson <larper@axis.com>
+To: LABBE Corentin <clabbe.montjoie@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, August 23, 2016 4:00:49 PM CEST Lars Persson wrote:
-> This brings the dtsi up to date with with tested and optimized settings from the
-> Axis tree.
+On Tue, Sep 13, 2016 at 03:34:17PM +0200, LABBE Corentin wrote:
+> On Fri, Sep 09, 2016 at 04:17:10PM +0200, Andrew Lunn wrote:
+> > > +Optional properties:
+> > > +- allwinner,tx-delay: TX clock delay chain value. Range value is 0-0x07. Default is 0)
+> > > +- allwinner,rx-delay: RX clock delay chain value. Range value is 0-0x1F. Default is 0)
+> > 
+> > What are the units? pS? nS?
+> > 
+> >      Andrew
 > 
-> Lars Persson (3):
->   ARM: dts: artpec: use clock binding header
->   ARM: dts: artpec: use optimized pl310 settings
->   ARM: dts: artpec: set irq affinity on pmu interrupts
-> 
->  arch/arm/boot/dts/artpec6.dtsi | 31 ++++++++++++++++++++-----------
->  1 file changed, 20 insertions(+), 11 deletions(-)
-> 
-> 
+> No units, only raw number.
+> I will add a comment for this.
 
-Applied all three to next/dt, thanks for your patience and sorry
-for the delay on my side.
+And it is likely it will get NACKed by the device tree
+maintainers. You should use real unit here.
 
-	Arnd
+       Andrew
