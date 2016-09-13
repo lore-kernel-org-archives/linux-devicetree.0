@@ -1,52 +1,463 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mfd: Add HiSilicon Flash Memory Controller(FMC) driver
-Date: Tue, 13 Sep 2016 13:08:50 +0100
-Message-ID: <20160913120850.GB28894@dell>
-References: <1473130643-12310-1-git-send-email-linshunquan1@hisilicon.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v1 1/2] ARM: dts: add rockchip PX3 Evaluation board
+Date: Tue, 13 Sep 2016 14:14:01 +0200
+Message-ID: <64f4be31-1b19-60e3-da7c-f2fec186fab9@suse.de>
+References: <1473529249-6151-1-git-send-email-andy.yan@rock-chips.com>
+ <1473529440-6202-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-15
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1473130643-12310-1-git-send-email-linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linshunquan 00354166 <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, jalen.hsu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lvkuanliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kevin.lixu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473529440-6202-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: heiko@sntech.de, devicetree@vger.kernel.org, briannorris@chromium.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip <linux-rockchip@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 06 Sep 2016, linshunquan 00354166 wrote:
+Hi Andy,
 
-> From: Shunquan Lin <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+This patch didn't make it to linux-rockchip list somehow...
+Not sure why I'm CC'ed, I don't have access to such a board to check, so
+just a couple formal nitpicks:
+
+Am 10.09.2016 um 19:44 schrieb Andy Yan:
+> PX3 EVB is designed by Rockchip for automotive field,
+> which intergrated with CVBS(TP2825)/MIPI DSI/LVDS/HDMI
+
+"integrated"
+but the grammar is somewhat incorrect with "which" referring to field -
+I assume you meant "with integrated CVBS..."?
+
+> video input/output interface, WIFI/BT/GPS(on a module
+
+Also please always leave a space before an opening parenthesis in
+English text. Similarly above, spaces around "/" would help recognize
+that MIPI DSI belongs together rather than being two lists.
+
+If nothing else applies below then maybe Heiko can edit it for you?
+
+> named S500 which based on MT6620), Gsensor BMA250E and
+> light&proximity sensor STK3410.
 > 
-> This patch adds driver support for HiSilicon Flash Memory
-> Controller(FMC). HiSilicon FMC is a multi-functions device which
-> supports SPI Nor flash controller, SPI nand Flash controller and
-> parallel nand flash controller.
-
-MFDs are for devices which span multiple subsystems.
-
-Please submit this to MTD.
-
-> Signed-off-by: Shunquan Lin <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> 
 > ---
->  .../devicetree/bindings/mfd/hisilicon,hisi-fmc.txt |  54 ++++++++++
->  drivers/mfd/Kconfig                                |  10 ++
->  drivers/mfd/Makefile                               |   1 +
->  drivers/mfd/hisi_fmc.c                             | 109 +++++++++++++++++++++
->  include/linux/mfd/hisi_fmc.h                       |  92 +++++++++++++++++
->  5 files changed, 266 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hisi-fmc.txt
->  create mode 100644 drivers/mfd/hisi_fmc.c
->  create mode 100644 include/linux/mfd/hisi_fmc.h
+> 
+> Changes in v1:
+> - board rename
+> - add vendor prefix for i2c interfaced sensors
+> - use stdout-path to set the default console
+> 
+>  Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/rk3188-px3-evb.dts               | 337 +++++++++++++++++++++
+>  3 files changed, 342 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/rk3188-px3-evb.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+> index 6668645..6da3881 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+> @@ -21,6 +21,10 @@ Rockchip platforms device tree bindings
+>      Required root node properties:
+>        - compatible = "radxa,rock", "rockchip,rk3188";
+>  
+> +- Rockchip PX3 Evaluation board:
+> +    Required root node properties:
+> +      - compatible = "rockchip,px3-evb", "rockchip,px3", "rockchip,rk3188";
 
-[...]
+How compatible is PX3 with RK3188? It is a separate SoC product:
+
+http://www.rock-chips.com/a/en/products/rkpower/2015/1125/730.html
+
+Wondering whether or not to drop the third compatible string.
+
+> +
+>  - Radxa Rock2 Square board:
+>      Required root node properties:
+>        - compatible = "radxa,rock2-square", "rockchip,rk3288";
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index faacd52..88d27a2 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -620,6 +620,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+>  	rk3066a-marsboard.dtb \
+>  	rk3066a-rayeager.dtb \
+>  	rk3188-radxarock.dtb \
+> +	rk3188-px3-evb.dtb \
+
+Affects file naming as well: px3-evb.dtb?
+
+>  	rk3228-evb.dtb \
+>  	rk3229-evb.dtb \
+>  	rk3288-evb-act8846.dtb \
+> diff --git a/arch/arm/boot/dts/rk3188-px3-evb.dts b/arch/arm/boot/dts/rk3188-px3-evb.dts
+> new file mode 100644
+> index 0000000..f6bc738
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/rk3188-px3-evb.dts
+> @@ -0,0 +1,337 @@
+> +/*
+> + * Copyright (c) 2016 Andy Yan <andy.yan@rock-chips.com>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/input/input.h>
+> +#include "rk3188.dtsi"
+
+I'm surprised there is no [rk3188-]px3.dtsi here! Surely some automotive
+vendor may design their own board with it and should have at least the
+two trailing compatible strings pre-set.
+
+> +
+> +/ {
+> +	model = "Rockchip PX3-EVB";
+> +	compatible = "rockchip,px3-evb", "rockchip,px3", "rockchip,rk3188";
+> +
+> +	chosen {
+> +		stdout-path = "serial2:115200n8";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x60000000 0x80000000>;
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		autorepeat;
+> +
+> +		power {
+> +			gpios = <&gpio0 4 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_POWER>;
+> +			label = "GPIO Key Power";
+> +			linux,input-type = <1>;
+> +			wakeup-source;
+> +			debounce-interval = <100>;
+> +		};
+> +	};
+> +
+> +	vcc_sys: vsys-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vsys";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-boot-on;
+> +	};
+> +};
+> +
+> +&cpu0 {
+> +	cpu0-supply = <&vdd_cpu>;
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +
+> +	 /* Accelerometer */
+
+Space after tab intentional?
+
+> +	bma250@18 {
+> +		compatible = "bosch,bma250";
+> +		reg = <0x18>;
+> +		interrupt-parent = <&gpio0>;
+> +		interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	stk3410@48 {
+> +		compatible = "sensortek,STK3310";
+> +		reg = <0x48>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+
+Generally it is undesired to repeat the compatible name as node name -
+did you compare other .dts files? (e.g., accelerometer@18 would be
+self-documenting) If this is a copy from an existing .dts then please
+ignore this comment.
+
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +	clock-frequency = <400000>;
+
+Insert white line?
+
+> +	rk808: pmic@1c {
+> +		compatible = "rockchip,rk818";
+> +		reg = <0x1c>;
+> +		interrupt-parent = <&gpio0>;
+> +		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
+> +		rockchip,system-power-controller;
+> +		wakeup-source;
+> +		#clock-cells = <1>;
+> +		clock-output-names = "xin32k", "rk808-clkout2";
+> +
+> +		vcc1-supply = <&vcc_sys>;
+> +		vcc2-supply = <&vcc_sys>;
+> +		vcc3-supply = <&vcc_sys>;
+> +		vcc4-supply = <&vcc_sys>;
+> +		vcc6-supply = <&vcc_sys>;
+> +		vcc7-supply = <&vcc_sys>;
+> +		vcc8-supply = <&vcc_io>;
+> +		vcc9-supply = <&vcc_io>;
+> +
+> +		regulators {
+> +			vdd_cpu: DCDC_REG1 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <750000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-name = "vdd_arm";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vdd_gpu: DCDC_REG2 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <850000>;
+> +				regulator-max-microvolt = <1250000>;
+> +				regulator-name = "vdd_gpu";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1000000>;
+> +				};
+> +			};
+> +
+> +			vcc_ddr: DCDC_REG3 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-name = "vcc_ddr";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_io: DCDC_REG4 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-name = "vcc_io";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			vcc_cif: LDO_REG1 {
+> +				 regulator-min-microvolt = <3300000>;
+> +				 regulator-max-microvolt = <3300000>;
+> +				 regulator-name = "vcc_cif";
+> +			};
+> +
+> +			vcc_jetta33: LDO_REG2 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-name = "vcc_jetta33";
+> +			};
+> +
+> +			vdd_10: LDO_REG3 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <1000000>;
+> +				regulator-name = "vdd_10";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1000000>;
+> +				};
+> +			};
+> +
+> +			lvds_12: LDO_REG4 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-name = "lvds_12";
+> +			};
+> +
+> +			lvds_25: LDO_REG5 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-name = "lvds_25";
+> +			};
+> +
+> +			cif_18: LDO_REG6 {
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <1000000>;
+> +				regulator-name = "cif_18";
+> +			};
+> +
+> +			vcc_sd: LDO_REG7 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-name = "vcc_sd";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			wl_18: LDO_REG8 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-name = "wl_18";
+> +			};
+> +
+> +			lcd_33: SWITCH_REG1 {
+> +				regulator-name = "lcd_33";
+> +			};
+> +		};
+> +	};
+> +
+> +};
+> +
+> +&i2c2 {
+> +	gsl1680: touchscreen@40 {
+> +		compatible = "silead,gsl1680";
+> +		reg = <0x40>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
+> +		power-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+> +		touchscreen-size-x = <800>;
+> +		touchscreen-size-y = <1280>;
+> +		silead,max-fingers = <5>;
+> +	};
+> +};
+> +
+> +&emmc {
+> +	bus-width = <8>;
+> +	cap-mmc-highspeed;
+> +	disable-wp;
+> +	non-removable;
+> +	num-slots = <1>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&emmc_clk>, <&emmc_cmd>, <&emmc_rst>;
+> +	status = "okay";
+> +};
+> +
+> +&mmc0 {
+> +	num-slots = <1>;
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
+> +	vmmc-supply = <&vcc_sd>;
+> +
+> +	bus-width = <4>;
+> +	cap-mmc-highspeed;
+> +	cap-sd-highspeed;
+> +	disable-wp;
+> +};
+> +
+> +&pwm1 {
+> +	status = "okay";
+> +};
+> +
+> +&pwm2 {
+> +	status = "okay";
+> +};
+> +
+> +&pwm3 {
+> +	status = "okay";
+> +};
+> +
+> +&pinctrl {
+> +	pcfg_output_low: pcfg-output-low {
+> +		output-low;
+> +	};
+> +
+> +	usb {
+> +		host_vbus_drv: host-vbus-drv {
+> +			rockchip,pins = <0 3 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +		otg_vbus_drv: otg-vbus-drv {
+> +			rockchip,pins = <2 31 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> +
+> +&uart3 {
+> +	status = "okay";
+> +};
+> +
+> +&usbphy {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host {
+> +	status = "okay";
+> +};
+> +
+> +&usb_otg {
+> +	status = "okay";
+> +};
+> +
+> +&wdt {
+> +	status = "okay";
+> +};
+
+Otherwise formally looks fine.
+
+Cheers,
+Andreas
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org â”‚ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
