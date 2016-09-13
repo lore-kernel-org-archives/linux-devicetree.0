@@ -1,81 +1,248 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] iio: dt-bindings: add documentation for Light&Proximity sensor STK331x
-Date: Tue, 13 Sep 2016 11:53:20 +0200
-Message-ID: <2244323.LAARBqky8d@phil>
-References: <1473758822-17955-1-git-send-email-andy.yan@rock-chips.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v7.1 04/22] iommu: Introduce iommu_fwspec
+Date: Tue, 13 Sep 2016 10:54:14 +0100
+Message-ID: <0050305e05655fd34eb7134dd7fb800f48e4d1ac.1473760250.git.robin.murphy@arm.com>
+References: <cover.1473695704.git.robin.murphy@arm.com>
+	<742a71630de502ac5a7a8641c6ed368d8409324d.1473695704.git.robin.murphy@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473758822-17955-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: jic23@kernel.org, knaack.h@gmx.de, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, lars@metafoo.de, mark.rutland@arm.com, pmeerw@pmeerw.net
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <742a71630de502ac5a7a8641c6ed368d8409324d.1473695704.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Introduce a common structure to hold the per-device firmware data that
+most IOMMU drivers need to keep track of. This enables us to configure
+much of that data from common firmware code, and consolidate a lot of
+the equivalent implementations, device look-up tables, etc. which are
+currently strewn across IOMMU drivers.
 
-Am Dienstag, 13. September 2016, 17:27:02 CEST schrieb Andy Yan:
-> Add the device tree binding documentation for Light & Proximity sensor
-> STK331X from Sensortek
-> 
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> ---
-> 
->  .../devicetree/bindings/iio/light/stk3310.txt       | 21
-> +++++++++++++++++++++ 1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/stk3310.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/stk3310.txt
-> b/Documentation/devicetree/bindings/iio/light/stk3310.txt new file mode
-> 100644
-> index 0000000..d697118
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/stk3310.txt
-> @@ -0,0 +1,21 @@
-> +* Sensortek STK331X I2C Light&Proximity sensor
-> +
-> +Required properties:
-> +- compatible: should be "sensortek,STK3310" or "sensortek,STK3311"
+This will also be enable us to address the outstanding "multiple IOMMUs
+on the platform bus" problem by tweaking IOMMU API calls to prefer
+dev->fwspec->ops before falling back to dev->bus->iommu_ops, and thus
+gracefully handle those troublesome systems which we currently cannot.
 
-I guess that is more a question for Rob / Jonathan regarding the casing.
+As the first user, hook up the OF IOMMU configuration mechanism. The
+driver-defined nature of DT cells means that we still need the drivers
+to translate and add the IDs themselves, but future users such as the
+much less free-form ACPI IORT will be much simpler and self-contained.
 
-The stk3310 drivers currently provides both an acpi as well as an i2c module 
-table and in both the naming is in upper-case ... probably the i2c table being 
-simply a copy of the acpi table.
+CC: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Suggested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 
-By using the i2c-quirk of extracting the i2c-id from the compatible, the 
-binding here would codify this upper case, while normally i2c tables as well 
-as dt-bindings are all lower case. 
+---
 
-Looking at kernel c-code and current mainline devicetree files, it doesn't look 
-like the i2c-ids gets used anywhere yet, so I guess we could do:
+- Drop the 'gradual introduction' fiddling and go straight to struct
+  device and common code, as it prevents all the silly build issues
+  and ultimately makes life simpler for everyone
+- This time without missing "static inline"s on the stubs...
 
-- keep acpi-ids as they are
-- make i2c-ids lower-case
-- make dt-binding lower-case (and it can still use the i2c quirk to not need a 
-separate of id-table)
+---
+ drivers/iommu/iommu.c    | 58 ++++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/iommu/of_iommu.c |  8 +++++--
+ include/linux/device.h   |  3 +++
+ include/linux/iommu.h    | 39 ++++++++++++++++++++++++++++++++
+ 4 files changed, 106 insertions(+), 2 deletions(-)
 
-alternatively we could also just add a separate of-id table with the lower-
-case compatible elements.
-
-
-Heiko
-
-> +- reg: the I2C address of the device
-> +- interrupt-parent: phandle to the parent interrupt controller
-> +- interrupts: interrupt mapping for GPIO IRQ
-> +
-> +Example:
-> +	&i2c1 {
-> +		/* ... */
-> +
-> +		stk3310@48 {
-> +			compatible = "sensortek,STK3310";
-> +			reg = <0x48>;
-> +			interrupt-parent = <&gpio1>;
-> +			interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
-> +		};
-> +
-> +		/* ... */
-> +	};
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index b06d93594436..9a2f1960873b 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -31,6 +31,7 @@
+ #include <linux/err.h>
+ #include <linux/pci.h>
+ #include <linux/bitops.h>
++#include <linux/property.h>
+ #include <trace/events/iommu.h>
+ 
+ static struct kset *iommu_group_kset;
+@@ -1613,3 +1614,60 @@ out:
+ 
+ 	return ret;
+ }
++
++int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
++		      const struct iommu_ops *ops)
++{
++	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
++
++	if (fwspec)
++		return ops == fwspec->ops ? 0 : -EINVAL;
++
++	fwspec = kzalloc(sizeof(*fwspec), GFP_KERNEL);
++	if (!fwspec)
++		return -ENOMEM;
++
++	of_node_get(to_of_node(iommu_fwnode));
++	fwspec->iommu_fwnode = iommu_fwnode;
++	fwspec->ops = ops;
++	dev->iommu_fwspec = fwspec;
++	return 0;
++}
++EXPORT_SYMBOL_GPL(iommu_fwspec_init);
++
++void iommu_fwspec_free(struct device *dev)
++{
++	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
++
++	if (fwspec) {
++		fwnode_handle_put(fwspec->iommu_fwnode);
++		kfree(fwspec);
++		dev->iommu_fwspec = NULL;
++	}
++}
++EXPORT_SYMBOL_GPL(iommu_fwspec_free);
++
++int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids)
++{
++	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
++	size_t size;
++	int i;
++
++	if (!fwspec)
++		return -EINVAL;
++
++	size = offsetof(struct iommu_fwspec, ids[fwspec->num_ids + num_ids]);
++	if (size > sizeof(*fwspec)) {
++		fwspec = krealloc(dev->iommu_fwspec, size, GFP_KERNEL);
++		if (!fwspec)
++			return -ENOMEM;
++	}
++
++	for (i = 0; i < num_ids; i++)
++		fwspec->ids[fwspec->num_ids + i] = ids[i];
++
++	fwspec->num_ids += num_ids;
++	dev->iommu_fwspec = fwspec;
++	return 0;
++}
++EXPORT_SYMBOL_GPL(iommu_fwspec_add_ids);
+diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+index 19e1e8f2f871..5b82862f571f 100644
+--- a/drivers/iommu/of_iommu.c
++++ b/drivers/iommu/of_iommu.c
+@@ -167,7 +167,9 @@ static const struct iommu_ops
+ 		return NULL;
+ 
+ 	ops = of_iommu_get_ops(iommu_spec.np);
+-	if (!ops || !ops->of_xlate || ops->of_xlate(&pdev->dev, &iommu_spec))
++	if (!ops || !ops->of_xlate ||
++	    iommu_fwspec_init(&pdev->dev, &iommu_spec.np->fwnode, ops) ||
++	    ops->of_xlate(&pdev->dev, &iommu_spec))
+ 		ops = NULL;
+ 
+ 	of_node_put(iommu_spec.np);
+@@ -196,7 +198,9 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
+ 		np = iommu_spec.np;
+ 		ops = of_iommu_get_ops(np);
+ 
+-		if (!ops || !ops->of_xlate || ops->of_xlate(dev, &iommu_spec))
++		if (!ops || !ops->of_xlate ||
++		    iommu_fwspec_init(dev, &np->fwnode, ops) ||
++		    ops->of_xlate(dev, &iommu_spec))
+ 			goto err_put_node;
+ 
+ 		of_node_put(np);
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 38f02814d53a..bc41e87a969b 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -41,6 +41,7 @@ struct device_node;
+ struct fwnode_handle;
+ struct iommu_ops;
+ struct iommu_group;
++struct iommu_fwspec;
+ 
+ struct bus_attribute {
+ 	struct attribute	attr;
+@@ -765,6 +766,7 @@ struct device_dma_parameters {
+  * 		gone away. This should be set by the allocator of the
+  * 		device (i.e. the bus driver that discovered the device).
+  * @iommu_group: IOMMU group the device belongs to.
++ * @iommu_fwspec: IOMMU-specific properties supplied by firmware.
+  *
+  * @offline_disabled: If set, the device is permanently online.
+  * @offline:	Set after successful invocation of bus type's .offline().
+@@ -849,6 +851,7 @@ struct device {
+ 
+ 	void	(*release)(struct device *dev);
+ 	struct iommu_group	*iommu_group;
++	struct iommu_fwspec	*iommu_fwspec;
+ 
+ 	bool			offline_disabled:1;
+ 	bool			offline:1;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index a35fb8b42e1a..436dc21318af 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -331,10 +331,32 @@ extern struct iommu_group *pci_device_group(struct device *dev);
+ /* Generic device grouping function */
+ extern struct iommu_group *generic_device_group(struct device *dev);
+ 
++/**
++ * struct iommu_fwspec - per-device IOMMU instance data
++ * @ops: ops for this device's IOMMU
++ * @iommu_fwnode: firmware handle for this device's IOMMU
++ * @iommu_priv: IOMMU driver private data for this device
++ * @num_ids: number of associated device IDs
++ * @ids: IDs which this device may present to the IOMMU
++ */
++struct iommu_fwspec {
++	const struct iommu_ops	*ops;
++	struct fwnode_handle	*iommu_fwnode;
++	void			*iommu_priv;
++	unsigned int		num_ids;
++	u32			ids[1];
++};
++
++int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
++		      const struct iommu_ops *ops);
++void iommu_fwspec_free(struct device *dev);
++int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids);
++
+ #else /* CONFIG_IOMMU_API */
+ 
+ struct iommu_ops {};
+ struct iommu_group {};
++struct iommu_fwspec {};
+ 
+ static inline bool iommu_present(struct bus_type *bus)
+ {
+@@ -541,6 +563,23 @@ static inline void iommu_device_unlink(struct device *dev, struct device *link)
+ {
+ }
+ 
++static inline int iommu_fwspec_init(struct device *dev,
++				    struct fwnode_handle *iommu_fwnode,
++				    const struct iommu_ops *ops)
++{
++	return -ENODEV;
++}
++
++static inline void iommu_fwspec_free(struct device *dev)
++{
++}
++
++static inline int iommu_fwspec_add_ids(struct device *dev, u32 *ids,
++				       int num_ids)
++{
++	return -ENODEV;
++}
++
+ #endif /* CONFIG_IOMMU_API */
+ 
+ #endif /* __LINUX_IOMMU_H */
+-- 
+2.8.1.dirty
