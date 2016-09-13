@@ -1,55 +1,46 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: Re: [PATCH 2/2] usb: dwc3: Added a property to set GFLADJ register
-Date: Tue, 13 Sep 2016 08:46:49 +0300
-Message-ID: <878tuwl5bq.fsf@linux.intel.com>
-References: <ae2c9b5683820c6456f91a2ef631efa2de0bec28.1472764828.git.johnyoun@synopsys.com> <649b249e86e901b5bd2cf4cbe9db96d04a45f30d.1472764828.git.johnyoun@synopsys.com> <20160912153018.GA14561@rob-hp-laptop>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM64: dts: amlogic: Add basic support for Amlogic S905X
+Date: Tue, 13 Sep 2016 08:14:36 +0200
+Message-ID: <CAOQ7t2ZjDjZbUfCKwUf4PHywOZx-UiQmy37TEQhWDNYRg0BOag@mail.gmail.com>
+References: <20160903082227.30559-1-narmstrong@baylibre.com>
+ <20160903082227.30559-3-narmstrong@baylibre.com> <7e27e8c0-bb18-40d8-10d6-3928e66815c7@suse.de>
+ <CAOQ7t2bWLq2XP2rKx3msf=1tUfXkQuBWagun46TaKk73qXr=FQ@mail.gmail.com>
+ <7ha8fcq26c.fsf@baylibre.com> <28d9160a-ce40-cbbb-b4e9-3ec34be52368@suse.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160912153018.GA14561@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, John Youn <johnyoun@synopsys.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Thinh Nguyen <thinhn@synopsys.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <28d9160a-ce40-cbbb-b4e9-3ec34be52368-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-amlogic <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 12, 2016 at 11:43 PM, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org> wr=
+ote:
 
-
-Hi,
-
-Rob Herring <robh@kernel.org> writes:
->> Synopsys HW setup (HAPS DX and phy board) requires a preset to this
->> register to improve interoperablitity. For example, the value for
->> GFLADJ_REFCLK_LPM_SEL should be set to 0 with ref_clk period of 50.
+[cut]
+> I'm not arguing over the file name, where it perfectly makes sense to
+> have a meson-gxl- prefix (already discussed), just about the compatible
+> string where we don't have "amlogic,meson-gxl-s905x-p231" either because
+> it is completely unnecessary and does _not_ add any value.
 >
-> This sounds like it should be handled in the driver. Is it a simple,=20
-> constant correlation of ref_clk period to this value?
+> Not that we're checking this string anywhere anyway... If you want to
+> check for the GXL family you have to use "amlogic,meson-gxl"; if you
+> want to check for the specific SoC you use "amlogic,s905x". Simple. We
+> never match partial strings, so there is no sense in a hardcoded prefix
+> that is duplicating information already available.
 
-you mean that this could be calculated based off of clk_get_rate() ?
+Ok, then. Fine with me.
 
-=2D-=20
-balbi
+Neil, do you want to resend my patch or you can take care of the fixes
+for the whole patchset?
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJX15LJAAoJEMy+uJnhGpkGWZYQAIUR8vppHFXujFJGHNsH0FhX
-9W9EPIJOXf/7qfklzeX6perUqD4/5JRwKWeQde78X6ZxYNh5pTsLNOPYi92FXGhd
-pitlSxfWj0tPmRDxPjsEQhPrueHIXnapa5nawVhnRYdCnkm8AspeOsL05q06frzR
-Z5kvLV8u72/i6a9AbS4LfxvEBwQBNcsOMRqBZvh6kV+9T0nV7ntAuPhdsC6kPoRr
-1OI1y9IbhLZhznuaJRODtUdHVXl132QbvVnNFtonB8pnKiZZblWRbPGQ3hcjFAa9
-oyJbd87vLr8IlYimLqsZlrTIR87hmQESDLok13jcEqrIIPVdV6mJD4EqsrM3yORv
-23GhYxPIJOY0W/7ooTAy2y37bVQNW1h+vqItwFP3kRs9HF3TZMfOGRULaTfXy9kp
-vbvqEVRdUgerARM6fQ21vBOscH+Kj3J2NS9JLS4A4/KZObnZYj1YET5RpwC3mo4j
-tHptFYVgeqMat/RYwIsX/0j0/JPZ5cl8p0/Alee7ny6waRK36A708sBpVJasU3jt
-zjUi/+Ia0Dm7fOtDac5anss8xAaCcIg2s4qAsQzhBKl2BGEEox0ef8ZnRldxhQ4x
-oKxN0ZKabht8Uegl6OcxHuQRU6b2DcvA5OhmzXjel+a/qKmhKM5f5m0+iwYjnuGe
-cHZ6nmM5bKFpFYf//hcy
-=uo/o
------END PGP SIGNATURE-----
---=-=-=--
+--=20
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
