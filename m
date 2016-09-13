@@ -1,50 +1,79 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: lpc18xx: add otp node
-Date: Tue, 13 Sep 2016 18:12:41 +0200
-Message-ID: <20160913161241.22492-4-manabian@gmail.com>
-References: <20160913161241.22492-1-manabian@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160913161241.22492-1-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v5 2/9] drivers: irqchip: Add STM32 external interrupts
+ support
+Date: Tue, 13 Sep 2016 18:29:36 +0200
+Message-ID: <6941f61d-0b33-4108-0135-b11887cd0488@st.com>
+References: <1473432124-6784-1-git-send-email-alexandre.torgue@st.com>
+ <1473432124-6784-3-git-send-email-alexandre.torgue@st.com>
+ <alpine.DEB.2.20.1609131713490.6233@nanos>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.20.1609131713490.6233@nanos>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add node for the internal OTP (One Time Programmable) memory found
-on all LPC18xx/43xx SoCs.
+Hi Thomas,
 
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/lpc18xx.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+On 09/13/2016 05:21 PM, Thomas Gleixner wrote:
+> On Fri, 9 Sep 2016, Alexandre TORGUE wrote:
+>> +static void stm32_exti_free(struct irq_domain *d, unsigned int virq,
+>> +			    unsigned int nr_irqs)
+>> +{
+>> +	struct irq_data *data = irq_get_irq_data(virq);
+>> +
+>> +	irq_gc_mask_clr_bit(data->parent_data);
+>
+> I have a hard time to understand this. The irq domain is not hierarchical.
 
-diff --git a/arch/arm/boot/dts/lpc18xx.dtsi b/arch/arm/boot/dts/lpc18xx.dtsi
-index c6508ed..7ef0bc8 100644
---- a/arch/arm/boot/dts/lpc18xx.dtsi
-+++ b/arch/arm/boot/dts/lpc18xx.dtsi
-@@ -250,6 +250,18 @@
- 			};
- 		};
- 
-+		otp@40045000 {
-+			compatible = "nxp,lpc1850-otp";
-+			reg = <0x40045000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			/* Flashless devices has part ID in OTP bank 0 */
-+			part_id: identification@0 {
-+				reg = <0x0 0x10>;
-+			};
-+		};
-+
- 		rtc: rtc@40046000 {
- 			compatible = "nxp,lpc1850-rtc", "nxp,lpc1788-rtc";
- 			reg = <0x40046000 0x1000>;
--- 
-2.9.3
+Actually, I wanted to test ".free" callback function of gpio_irq_domain 
+in STM32 pinctrl driver. To do that I modified gpio driver: just after 
+getting virq through gpio_to_irq, I called "irq_dispose_mapping(virq)".
+I know it is dirty but I thought it was the only way to test.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Doing that, I see that ".free" callback of gpio domain is called but as 
+it is hirerchical ".free" callback for parent domain (exti one) is also 
+called. I observed that virq was well unmapped, but not masked at exti 
+level. It is for this reason than I added 
+"irq_gc_mask_clr_bit(data->parent_data);" which mask interrupt at exti 
+level.
+
+Maybe this use case can never happen ? (and in this case all this stuff 
+is not needed)
+
+>
+>> +	irq_domain_reset_irq_data(data);
+>
+>> +	domain = irq_domain_add_linear(node, nr_exti,
+>> +				       &irq_exti_domain_ops, NULL);
+>
+> It's a simple linear domain. So how can data->parent_data be a valid
+> irq_data pointer? Answer: It can't!
+
+This Exti domain is parent of stm32 gpio domain. When ".free" callback 
+of stm32 gpio domain is called then ".free" callback of Exti domain will 
+be automatically called. Those both ".free" callbacks are called with 
+"virq". This virq is created through stm32 gpio domain (in stm32 pinctrl 
+driver), data and parent->data are then associated to it.
+
+Sorry if it is not clear.
+
+Regards
+
+Alex
+
+>
+> But it doesn't blow up in your face simply because the alloc/free callbacks
+> are never invoked for simple non hierarchical domains. So you should have
+> removed that stuff after copying some other irqchip driver.
+
+
+
+>
+> Thanks,
+>
+> 	tglx
+>
