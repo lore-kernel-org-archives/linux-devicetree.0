@@ -1,39 +1,32 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH] devicetree: Add vendor-prefix for Silead Inc.
-Date: Tue, 13 Sep 2016 12:30:22 +0200
-Message-ID: <20160913103022.30954-1-heiko@sntech.de>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: robh+dt@kernel.org, dmitry.torokhov@gmail.com
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: imx6ul: Add DTS for liteSOM module
+Date: Tue, 13 Sep 2016 07:47:32 -0300
+Message-ID: <CAOMZO5CTx_YjGOZ7dHFJQq0mFPF7XGWYY2HZJd=uJK7DE7=T7Q@mail.gmail.com>
+References: <20160913094951.26394-1-m.niestroj@grinn-global.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160913094951.26394-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Silead Inc.specializes in touchscreen technology and got recently
-introduced in a binding for the gsl1680 i2c touchscreen.
+On Tue, Sep 13, 2016 at 6:49 AM, Marcin Niestroj
+<m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org> wrote:
+> This is a SOM (System on Module), so it will be part of another boards.
+> Hence, this is a "dtsi" file that will be included from another device
+> tree files.
+>
+> Hardware specification:
+>  * Freescale i.MX6UL SoC
+>  * up to 512 MB RAM
+>  * eMMC on uSDHC2
+>
+> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 
-Therefore add the needed vendor-prefix as well.
-
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
-I checked linux-next 20160913 and the devicetree list, but the vendor-
-prefix was still missing there, so hopefully I'm not duplicating some
-other patch.
-
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 47e3adf..90761df 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -238,6 +238,7 @@ sigma	Sigma Designs, Inc.
- sii	Seiko Instruments, Inc.
- sil	Silicon Image
- silabs	Silicon Laboratories
-+silead	Silead Inc.
- silergy	Silergy Corp.
- siliconmitus	Silicon Mitus, Inc.
- simtek
--- 
-2.9.3
-
+Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
