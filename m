@@ -1,40 +1,150 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 2/9] drivers: irqchip: Add STM32 external interrupts
- support
-Date: Tue, 13 Sep 2016 17:21:26 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1609131713490.6233@nanos>
-References: <1473432124-6784-1-git-send-email-alexandre.torgue@st.com> <1473432124-6784-3-git-send-email-alexandre.torgue@st.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and
+ GXBB
+Date: Tue, 13 Sep 2016 17:28:28 +0200
+Message-ID: <1473780508.10237.22.camel@pengutronix.de>
+References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
+         <20160904213152.25837-5-martin.blumenstingl@googlemail.com>
+         <m260q6jibf.fsf@baylibre.com>
+         <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg@mail.gmail.com>
+         <e3b1f611-d6f6-c98b-a53b-98e94ef5bd96@codethink.co.uk>
+         <m2eg4ui0nl.fsf@baylibre.com>
+         <ffdd0188-72bc-4575-f997-e8547f4c31d2@codethink.co.uk>
+         <CAFBinCC4gkMrJtertYevg_hXDLJEZ0PqfKKLL5UKXo8B=SXsPw@mail.gmail.com>
+         <m2sht9gkau.fsf@baylibre.com>
+         <CAFBinCDohOoFP_3GC+=tt6S7sPS308ao-yf+oGhdfwo-N-JnAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1473432124-6784-3-git-send-email-alexandre.torgue@st.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre TORGUE <alexandre.torgue@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, lee.jones@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFBinCDohOoFP_3GC+=tt6S7sPS308ao-yf+oGhdfwo-N-JnAA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 9 Sep 2016, Alexandre TORGUE wrote:
-> +static void stm32_exti_free(struct irq_domain *d, unsigned int virq,
-> +			    unsigned int nr_irqs)
-> +{
-> +	struct irq_data *data = irq_get_irq_data(virq);
-> +
-> +	irq_gc_mask_clr_bit(data->parent_data);
+Hi Martin,
 
-I have a hard time to understand this. The irq domain is not hierarchical.
+Am Freitag, den 09.09.2016, 22:36 +0200 schrieb Martin Blumenstingl:
+> On Fri, Sep 9, 2016 at 5:33 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> > Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+> >
+> >> On Thu, Sep 8, 2016 at 10:53 PM, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
+> >>> On 08/09/16 21:42, Kevin Hilman wrote:
+> >>>>
+> >>>> Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> writes:
+> >>>>
+> >>>>> On 08/09/16 20:52, Martin Blumenstingl wrote:
+> >>>>>>
+> >>>>>> On Thu, Sep 8, 2016 at 9:35 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> >>>>>> wrote:
+> >>>>>>>>
+> >>>>>>>> +     phy = devm_phy_create(&pdev->dev, NULL, &phy_meson_usb2_ops);
+> >>>>>>>> +     if (IS_ERR(phy)) {
+> >>>>>>>> +             dev_err(&pdev->dev, "failed to create PHY\n");
+> >>>>>>>> +             return PTR_ERR(phy);
+> >>>>>>>> +     }
+> >>>>>>>> +
+> >>>>>>>> +     if (usb_reset_refcnt++ == 0) {
+> >>>>>>>> +             ret = device_reset(&pdev->dev);
+> >>>>>>>> +             if (ret) {
+> >>>>>>>> +                     dev_err(&phy->dev, "Failed to reset USB PHY\n");
+> >>>>>>>> +                     return ret;
+> >>>>>>>> +             }
+> >>>>>>>> +     }
+> >>>>>>>
+> >>>>>>>
+> >>>>>>> The ref count + reset here looks like something that could/should be
+> >>>>>>> handled in a runtime PM callback.
+> >>>>>>
+> >>>>>> Unfortunately that doesn't work (as Jerome found out) because both
+> >>>>>> PHYs are sharing the same reset line.
+> >>>>>> So if the second PHY would call device_reset then it would also reset
+> >>>>>> the first PHY!
+> >>>>>>
+> >>>>>> There's a comment above the declaration of usb_reset_refcnt which
+> >>>>>> tries to explain this:
+> >>>>>> "The PHYs are sharing a common reset line -> we are only allowed to
+> >>>>>> reset once for all PHYs."
+> >>>>>> Maybe I should move this comment to the "if (usb_reset_refcnt++ == 0)
+> >>>>>> {" line to make it easier to see?
+> >>>>>>
+> >>>>>
+> >>>>> pm-runtime has refcounting in it. When one of the nodes turns on,
+> >>>>> the pm-runtime will call your driver to say there is a user when
+> >>>>> this first use turns up.
+> >>>>>
+> >>>>> If all the sub-phys turn off and drop their refcount then the driver
+> >>>>> is called to say there are no more users and you can go to sleep.
+> >>>>
+> >>>>
+> >>>> After a chat w/Martin on IRC, It turns out runtime PM wont help here.
+> >>>>
+> >>>> The reason is because there are physically two PHY devices[1].  Those 2
+> >>>> devices will be treated independely by runtime PM, and have separate
+> >>>> use-counting, which means doing what I proposed would cause a reset to
+> >>>> happen when either device was probed.
+> >>>>
+> >>>> So, I think it's OK as it is.
+> >>>
+> >>>
+> >>> Surely you can do pm_runtime_get/put on the phy's parent platform
+> >>> device and do it that way?
+> >> could you please be more specific with that (do you mean pdev->dev.parent)?
+> >> so we would use pm_runtime_{get_sync,put} with the parent, while we
+> >> would still define the runtime_resume in our driver.
+> >
+> > You'd also need to do get/put on the children, but yes, that's what Ben
+> > is suggesting.
+> >
+> > However, the problem with all of the solutions proposed (runtime PM ones
+> > included) is that we're forcing a board-specific design issue (2 devices
+> > sharing a reset line) into a driver that should not have any
+> > board-specific assumptions in it.
+> >
+> > For example, if this driver is used on another platform where different
+> > PHYs have different reset lines, then one of them (the unlucky one who
+> > is not probed first) will never get reset.  So any form of per-device
+> > ref-counting is not a portable solution.
+> indeed, so in simple words we would need something like
+> reset_control_do_once(rstc, RESET/ASSERT/DEASSERT) which would
+> remember internally if any action has already been executed: if not it
+> does a _reset, _assert or _deassert and otherwise it does nothing.
+> 
+> > I'm not sure yet how the reset framework is supposed to handle shared
+> > reset lines, but that needs some investigation.  I quick glance and it
+> > seems that reset controllers can have shared lines, so that should be
+> > investigated.
+> I added Philipp and Hans to this thread - maybe they can comment on this.
+> To sum it up, our problem is:
+> - there are two separate USB PHYs on Meson GXBB
+> - both are sharing the same reset line (provided by the reset-meson driver)
+> - during initialization of the PHYs we must only call
+> reset_control_reset(rstc) once (if we do it for the first *and* second
+> PHY then the first PHY gets confused once the second PHY uses the
+> reset because the first PHY's state is reset as well)
 
-> +	irq_domain_reset_irq_data(data);
+If you have an initially asserted reset line and you can enable the
+first module by deasserting the reset via reset_control_deassert (and
+reset_control_assert to signal when the module may be disabled again
+after use), shared resets are for you.
 
-> +	domain = irq_domain_add_linear(node, nr_exti,
-> +				       &irq_exti_domain_ops, NULL);
+If you need a reset pulse or have no direct control over the reset line,
+(device_reset), the reset framework currently has no solution for this.
+The ugly thing about reset_control_once would be that it can't re-reset
+modules when unloading and reloading driver modules.
 
-It's a simple linear domain. So how can data->parent_data be a valid
-irq_data pointer? Answer: It can't!
+A real solution for shared reset lines with reset pulses would have to
+be some kind of reset request framework where if one module requests a
+reset, the other module sharing the reset could be notified, and then
+either veto the reset or, if possible, cease operations, store its
+state, and prepare to be reset, too, and afterwards restore state. I'd
+prefer not to think about this too much unless absolutely necessary.
 
-But it doesn't blow up in your face simply because the alloc/free callbacks
-are never invoked for simple non hierarchical domains. So you should have
-removed that stuff after copying some other irqchip driver.
+regards
+Philipp
 
-Thanks,
-
-	tglx
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
