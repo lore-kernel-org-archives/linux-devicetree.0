@@ -1,63 +1,85 @@
-From: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] ARM: dts: bcm283x: Define standard pinctrl
- groups in the gpio node.
-Date: Tue, 13 Sep 2016 08:34:38 +0200
-Message-ID: <1473748478.11547.19.camel@redhat.com>
-References: <1473668576-22256-1-git-send-email-kraxel@redhat.com>
-         <1473668576-22256-3-git-send-email-kraxel@redhat.com>
-         <1273800480.83718.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange@email.1und1.de>
-         <103847685.101383.df740dd1-92f3-4978-9442-1f1b3a81e9da.open-xchange@email.1und1.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC v3 00/22] soc: renesas: Add R-Car RST driver for
+ obtaining mode pin state
+Date: Tue, 13 Sep 2016 08:48:32 +0200
+Message-ID: <CAMuHMdVkmDkMmZ+v9eC_Htxz2J+KpxfAYUHcpSPkMFwjc1bu0Q@mail.gmail.com>
+References: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
+ <20160630201407.GA27880@codeaurora.org> <CAMuHMdWu34OQSS6J3bf=0-1TYULc=coiVomBjtBatwGta5F3HQ@mail.gmail.com>
+ <20160912221640.GG7243@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <103847685.101383.df740dd1-92f3-4978-9442-1f1b3a81e9da.open-xchange-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160912221640.GG7243@codeaurora.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Dirk Behme <dirk.behme@de.bosch.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-  Hi,
+Hi Stephen,
 
-> > > +			emmc_gpio48: emmc_gpio48 {
-> > > +				brcm,pins = <48 49 50 51 52 53>;
-> > > +				brcm,function = <BCM2835_FSEL_ALT3>;
-> > > +			};
-> > 
-> > Sorry, i didn't notice this before. The naming of these groups suggest 3 muxes
-> > for the same eMMC interface. I thought there is a eMMC interface and a SD host
-> > interface with different DMA channels.
-> > 
-> > > +
-> > > ...
-> > > +
-> > > +			sdhost_gpio48: sdhost_gpio48 {
-> > > +				brcm,pins = <48 49 50 51 52 53>;
-> > > +				brcm,function = <BCM2835_FSEL_ALT0>;
-> > > +			};
-> > 
-> > I think this incorrect. There is no function ALT0 for these pins, only ALT3.
-> 
-> please forget my last 2 comments. According to this page [1] eMMC is selected by
-> ALT3 and sdhost is selected by ALT0.
-> 
-> Do you know a reliable source where all muxes for both interface are documented?
-> The datasheet isn't very helpful here.
+On Tue, Sep 13, 2016 at 12:16 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 09/01, Geert Uytterhoeven wrote:
+>> On Thu, Jun 30, 2016 at 10:14 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>> > On 06/01, Geert Uytterhoeven wrote:
+>> >> Currently the R-Car Clock Pulse Generator (CPG) drivers obtains the
+>> >> state of the mode pins either by a call from the board code, or directly
+>> >> by using a hardcoded register access. This is a bit messy, and creates a
+>> >> dependency between driver and platform code.
+>> >>
+>> >> This RFC patch series converts the various Renesas R-Car clock drivers
+>> >> and support code from reading the mode pin states using a hardcoded
+>> >> register access to using a new R-Car RST driver.
+>> >
+>> > Dumb question, can we use the nvmem reading APIs instead of an
+>> > SoC specific function to read the modes?
+>>
+>> Thanks for your suggestion, the nvmem API indeed looks like a suitable API,
+>> as it does support read-only nvmems.
+>>
+>> Unfortunately I also see a few disadvantages:
+>>   1. nvmem_init() is a subsys_initcall(), while most of our users (except for
+>>      the recent renesas-cpg-mssr driver) are clock drivers using
+>>      CLK_OF_DECLARE(), and are thus initialized from of_clk_init() at much
+>>      earlier time_init() time.
+>>      Of course the mvmem subsystem and/or the clock drivers can be changed, if
+>>      deemed useful.
+>
+> Sounds like this is solvable.
 
-No, I don't know any source better than the datasheet @ github.
-Yes, I tried to double-check things with the sheet too.
+Sure.
 
-IIRC Eric mentioned a while back in some mail or patch that he checked
-something for the rpi device tree with non-public docs, not fully sure
-though whenever it was emmc/sdhost or something else.  But I'm basically
-trusting Eric here ...
+>>   2. Using the nvmem DT bindings means we have to add more DT glue from the
+>>      nvmem consumer(s) to the nvmem provider. As we need to provide backwards
+>>      compatibility with old DTSes, this means we need more C code or DT fixup
+>>      code to handle that.
+>
+> Ah I wasn't aware we were keeping backwards compatibility around.
+>
+>>   3. The nvmem subsystem may be overkill to provide access to a simple 32-bit
+>>      read-only register that never changes value after boot.
+>
+> The nvmem subsystem is designed to read values from things that
+> mostly never change. Overkill may be true, but the nice thing
+> about using nvmem APIs is that the driver doesn't have to use
+> some platform specific function that duplicates similar
+> functionality. It's unfortunate that backwards incompatibility
+> limits our ability to move to common linux frameworks when they
+> are created after the binding is used.
 
-cheers,
-  Gerd
+This is continuing work to support old, current, and new SoCs properly.
+When the first support for R-Car Gen2 SoCs was added, many frameworks
+didn't have DT support, or didn't even exist.
 
-PS: This is exactly why I think it us useful to have all those entries
-    in the dt file even if unused:  To serve as documentation.
+Unlike in the mobile market, development and life span is much larger than
+6 months here...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
