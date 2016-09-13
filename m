@@ -1,37 +1,59 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 2/9] drivers: irqchip: Add STM32 external interrupts
- support
-Date: Tue, 13 Sep 2016 09:19:01 +0100
-Message-ID: <57D7B675.1060904@arm.com>
-References: <1473432124-6784-1-git-send-email-alexandre.torgue@st.com>
- <1473432124-6784-3-git-send-email-alexandre.torgue@st.com>
+From: <shh.xie@gmail.com>
+Subject: [PATCH 01/10] [v3] dt-bindings: fsl: update for more SoCs
+Date: Tue, 13 Sep 2016 16:09:54 +0800
+Message-ID: <1473754203-22970-2-git-send-email-shh.xie@gmail.com>
+References: <1473754203-22970-1-git-send-email-shh.xie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473432124-6784-3-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473754203-22970-1-git-send-email-shh.xie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, shawnguo@kernel.org, linux-kernel@vger.kernel.org
+Cc: arnd@arndb.de, Shaohui Xie <Shaohui.Xie@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/16 15:41, Alexandre TORGUE wrote:
-> The STM32 external interrupt controller consists of edge detectors that
-> generate interrupts requests or wake-up events.
-> 
-> Each line can be independently configured as interrupt or wake-up source,
-> and triggers either on rising, falling or both edges. Each line can also
-> be masked independently.
-> 
-> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+From: Shaohui Xie <Shaohui.Xie@nxp.com>
 
-Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Adds SoC compatible for LS1043A and LS2080A which are supported, and
+for LS1046A which is going to be supported.
 
-	M.
+Signed-off-by: Shaohui Xie <Shaohui.Xie@nxp.com>
+---
+changes in V3:
+1. new patch.
+
+ Documentation/devicetree/bindings/arm/fsl.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index dbbc095..2efbc09 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -131,6 +131,10 @@ Example:
+ Freescale ARMv8 based Layerscape SoC family Device Tree Bindings
+ ----------------------------------------------------------------
+ 
++LS1043A SoC
++Required root node properties:
++    - compatible = "fsl,ls1043a";
++
+ LS1043A ARMv8 based RDB Board
+ Required root node properties:
+     - compatible = "fsl,ls1043a-rdb", "fsl,ls1043a";
+@@ -139,6 +143,14 @@ LS1043A ARMv8 based QDS Board
+ Required root node properties:
+     - compatible = "fsl,ls1043a-qds", "fsl,ls1043a";
+ 
++LS1046A SoC
++Required root node properties:
++    - compatible = "fsl,ls1046a";
++
++LS2080A SoC
++Required root node properties:
++    - compatible = "fsl,ls2080a";
++
+ LS2080A ARMv8 based Simulator model
+ Required root node properties:
+     - compatible = "fsl,ls2080a-simu", "fsl,ls2080a";
 -- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.0.27.g96db324
