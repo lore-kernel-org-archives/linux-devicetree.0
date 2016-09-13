@@ -1,81 +1,42 @@
-From: ayaka <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Subject: Re: [RESEND PATCH v7 0/4] the fix for the USB HOST1 at rk3288
- platform
-Date: Tue, 13 Sep 2016 19:26:03 +0800
-Message-ID: <29f7cb2a-139e-ee70-a9f0-0573111207d8@soulik.info>
-References: <1473447580-10369-1-git-send-email-ayaka@soulik.info>
- <2037551.pvMcfteTuT@phil>
+From: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
+Subject: Re: ARM, SoC: About the use DT-defined properties by 3rd-party
+ drivers
+Date: Tue, 13 Sep 2016 06:37:16 -0500
+Message-ID: <57D7E4EC.6050509@tabi.org>
+References: <57BDAF2E.10502@laposte.net>
+ <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
+ <57D69FB1.2020801@laposte.net> <20160912123809.GB13741@leverpostej>
+ <57D6AA54.6000208@laposte.net> <20160912135549.GA14165@leverpostej>
+ <57D6D2A9.3010006@laposte.net> <20160912165637.GF14165@leverpostej>
+ <57D7CF17.2050905@laposte.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2037551.pvMcfteTuT@phil>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57D7CF17.2050905-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 09/13/2016 07:06 PM, Heiko Stuebner wrote:
-> Hi Randy,
+Sebastian Frias wrote:
+> Let's make an abstraction of the word 'binding', 'create a binding', etc. and
+> just focus on this:
+> - Somebody submits a DT file that contains properties and nodes that are
+> *not used*  by any Linux driver.
+> - Said properties and nodes serve as HW description for HW blocks for which
+> *there is no*  Linux driver.
 >
-> could you check if the other host-only dwc2 are also affected by this (rk3188,
-> rk3036) please? Because they also seem to act up in some strange way
-But I don't have those board currently. I would arrange them anyway.
-Btw, I would send a new version to correct the fault reported by the 
-auto build machine.
-> sometimes.
->
-> Thanks
-> Heiko
->
-> Am Samstag, 10. September 2016, 02:59:36 CEST schrieb Randy Li:
->>    At this stage it is the only "full features" and well verified
->> USB EHCI controller in this platform. More review is always necessary.
->>
->> Changelog:
->>   - v7:
->>      adding a wrapper for the reset operation for phy
->>      using that wrapper
->>   - v6:
->>      move pwms pinctrl to pwms node
->>      fix the order of the dtb file in Makefile
->>   - v5:
->>     - correct the mail format
->>   - v4:
->>     - re-order some nodes in alphabetical order
->>     - fix some minor bugs
->>     - add a entry in vendor list
->>   - v3:
->>     - fixing the rtc clock, using clock source from PMIC
->>     - enable the tmu
->>     - enable the fimc for elite board
->>     - suuport the audio codec at elite board
->>     - fixing minor bugs in the last commit
->>   - v2:
->>     - removing rtc node
->>       the clock source driver is not done yet.
->>     - adding exynos-bus
->>     - fixing the MFC
->>
->> Randy Li (4):
->>    phy: Add reset callback
->>    phy: rockchip-usb: use rockchip_usb_phy_reset to reset phy during
->>      wakeup
->>    usb: dwc2: assert phy reset when waking up in rk3288 platform
->>    ARM: dts: rockchip: Point rk3288 dwc2 usb at the full PHY reset
->>
->>   .../devicetree/bindings/phy/rockchip-usb-phy.txt     |  3 +++
->>   arch/arm/boot/dts/rk3288.dtsi                        |  4 ++++
->>   drivers/phy/phy-core.c                               | 14 ++++++++++++++
->>   drivers/phy/phy-rockchip-usb.c                       | 20
->> ++++++++++++++++++++ drivers/usb/dwc2/core_intr.c                         |
->> 11 +++++++++++ include/linux/phy/phy.h                              |  3
->> +++
->>   6 files changed, 55 insertions(+)
+> The goal of the above is to use the DT as the authoritative (and single)
+> source of HW definition.
 
+No.
+
+I've grown weary of this discussion.  We have explained multiple times 
+why this is impractical.  Using the DT to document hardware makes no 
+sense.  No one is going to do that, and anyone who attempts to submit a 
+DT binding without an actual driver will get rejected.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
