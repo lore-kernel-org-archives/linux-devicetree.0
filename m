@@ -1,262 +1,85 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH V8] clk: bcm: Add driver for BCM53573 ILP clock
-Date: Tue, 13 Sep 2016 09:06:04 +0200
-Message-ID: <20160913070722.5867-1-zajec5@gmail.com>
-References: <20160905142935.4550-1-zajec5@gmail.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 2/4] drm/msm/hdmi: Clean up HDMI gpio DT bindings
+Date: Tue, 13 Sep 2016 12:42:13 +0530
+Message-ID: <57D7A6CD.60803@codeaurora.org>
+References: <1467957354-7620-1-git-send-email-architt@codeaurora.org>
+ <1472737015-29382-1-git-send-email-architt@codeaurora.org>
+ <1472737015-29382-3-git-send-email-architt@codeaurora.org>
+ <20160912131914.GA15499@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160905142935.4550-1-zajec5@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, Eric Anholt <eric@anholt.net>, Stephen Warren <swarren@wwwdotorg.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160912131914.GA15499@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>, robdclark@gmail.com
+Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
-
-This clock is present on BCM53573 devices (including BCM47189) that use
-Cortex-A7. ILP is a part of PMU (Power Management Unit) multi-function
-device so we use syscon (and regmap) for it.
-
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
-V2: Rebase on top of clk-next
-    Use ALP as parent clock
-    Improve comments
-    Switch from ioremap_nocache to ioremap
-    Check of_clk_add_provide result for error
-V3: Drop #include <linux/moduleh>
-    Make ILP DT entry part of PMU
-    Describe ILP as subdevice of PMU in Documentation
-V4: Use BCM53573 name as suggested by Jon and Ray. It seems "Northstar"
-    (even if used in some resources) should be used in relation to
-    Cortex-A9 devices only.
-V5: Rename remaining "ns" references to "bcm53573", sorry, I sent V4 too
-    early.
-V6: Drop #include <linux/clk.h>
-    Use "int" as type where it matches usage
-    Add cpu_relax() in the loop
-    Add disable callback
-    Use _hw_ functions for registering struct clk_hw (new API)
-
-    Thanks a lot Stephen!
-V7: Use syscon and regmap (thanks Rob!)
-V8: Update Documentation (drop unused "reg", unit address)
----
- .../bindings/clock/brcm,bcm53573-ilp.txt           |  36 +++++
- drivers/clk/bcm/Makefile                           |   1 +
- drivers/clk/bcm/clk-bcm53573-ilp.c                 | 148 +++++++++++++++++++++
- 3 files changed, 185 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
- create mode 100644 drivers/clk/bcm/clk-bcm53573-ilp.c
-
-diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt b/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
-new file mode 100644
-index 0000000..2ebb107
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
-@@ -0,0 +1,36 @@
-+Broadcom BCM53573 ILP clock
-+===========================
-+
-+This binding uses the common clock binding:
-+    Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+This binding is used for ILP clock (sometimes referred as "slow clock")
-+on Broadcom BCM53573 devices using Cortex-A7 CPU.
-+
-+ILP's rate has to be calculated on runtime and it depends on ALP clock
-+which has to be referenced.
-+
-+This clock is part of PMU (Power Management Unit), a Broadcom's device
-+handing power-related aspects. Its node must be sub-node of the PMU
-+device.
-+
-+Required properties:
-+- compatible: "brcm,bcm53573-ilp"
-+- clocks: has to reference an ALP clock
-+- #clock-cells: should be <0>
-+- clock-output-names: from common clock bindings, should contain clock
-+		      name
-+
-+Example:
-+
-+pmu@18012000 {
-+	compatible = "simple-mfd", "syscon";
-+	reg = <0x18012000 0x00001000>;
-+
-+	ilp {
-+		compatible = "brcm,bcm53573-ilp";
-+		clocks = <&alp>;
-+		#clock-cells = <0>;
-+		clock-output-names = "ilp";
-+	};
-+};
-diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-index 1d79bd2..4b8c56d 100644
---- a/drivers/clk/bcm/Makefile
-+++ b/drivers/clk/bcm/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_COMMON_CLK_IPROC)	+= clk-ns2.o
- obj-$(CONFIG_ARCH_BCM_CYGNUS)	+= clk-cygnus.o
- obj-$(CONFIG_ARCH_BCM_NSP)	+= clk-nsp.o
- obj-$(CONFIG_ARCH_BCM_5301X)	+= clk-nsp.o
-+obj-$(CONFIG_ARCH_BCM_53573)	+= clk-bcm53573-ilp.o
-diff --git a/drivers/clk/bcm/clk-bcm53573-ilp.c b/drivers/clk/bcm/clk-bcm53573-ilp.c
-new file mode 100644
-index 0000000..1f4e30d
---- /dev/null
-+++ b/drivers/clk/bcm/clk-bcm53573-ilp.c
-@@ -0,0 +1,148 @@
-+/*
-+ * Copyright (C) 2016 Rafał Miłecki <rafal@milecki.pl>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+#define PMU_XTAL_FREQ_RATIO			0x66c
-+#define  XTAL_ALP_PER_4ILP			0x00001fff
-+#define  XTAL_CTL_EN				0x80000000
-+#define PMU_SLOW_CLK_PERIOD			0x6dc
-+
-+struct bcm53573_ilp {
-+	struct clk_hw hw;
-+	struct regmap *regmap;
-+};
-+
-+static int bcm53573_ilp_enable(struct clk_hw *hw)
-+{
-+	struct bcm53573_ilp *ilp = container_of(hw, struct bcm53573_ilp, hw);
-+
-+	regmap_write(ilp->regmap, PMU_SLOW_CLK_PERIOD, 0x10199);
-+	regmap_write(ilp->regmap, 0x674, 0x10000);
-+
-+	return 0;
-+}
-+
-+static void bcm53573_ilp_disable(struct clk_hw *hw)
-+{
-+	struct bcm53573_ilp *ilp = container_of(hw, struct bcm53573_ilp, hw);
-+
-+	regmap_write(ilp->regmap, PMU_SLOW_CLK_PERIOD, 0);
-+	regmap_write(ilp->regmap, 0x674, 0);
-+}
-+
-+static unsigned long bcm53573_ilp_recalc_rate(struct clk_hw *hw,
-+					      unsigned long parent_rate)
-+{
-+	struct bcm53573_ilp *ilp = container_of(hw, struct bcm53573_ilp, hw);
-+	struct regmap *regmap = ilp->regmap;
-+	u32 last_val, cur_val;
-+	int sum = 0, num = 0, loop_num = 0;
-+	int avg;
-+
-+	/* Enable measurement */
-+	regmap_write(regmap, PMU_XTAL_FREQ_RATIO, XTAL_CTL_EN);
-+
-+	/* Read initial value */
-+	regmap_read(regmap, PMU_XTAL_FREQ_RATIO, &last_val);
-+	last_val &= XTAL_ALP_PER_4ILP;
-+
-+	/*
-+	 * At minimum we should loop for a bit to let hardware do the
-+	 * measurement. This isn't very accurate however, so for a better
-+	 * precision lets try getting 20 different values for and use average.
-+	 */
-+	while (num < 20) {
-+		regmap_read(regmap, PMU_XTAL_FREQ_RATIO, &cur_val);
-+		cur_val &= XTAL_ALP_PER_4ILP;
-+
-+		if (cur_val != last_val) {
-+			/* Got different value, use it */
-+			sum += cur_val;
-+			num++;
-+			loop_num = 0;
-+			last_val = cur_val;
-+		} else if (++loop_num > 5000) {
-+			/* Same value over and over, give up */
-+			sum += cur_val;
-+			num++;
-+			break;
-+		}
-+
-+		cpu_relax();
-+	}
-+
-+	/* Disable measurement to save power */
-+	regmap_write(regmap, PMU_XTAL_FREQ_RATIO, 0x0);
-+
-+	avg = sum / num;
-+
-+	return parent_rate * 4 / avg;
-+}
-+
-+static const struct clk_ops bcm53573_ilp_clk_ops = {
-+	.enable = bcm53573_ilp_enable,
-+	.disable = bcm53573_ilp_disable,
-+	.recalc_rate = bcm53573_ilp_recalc_rate,
-+};
-+
-+static void bcm53573_ilp_init(struct device_node *np)
-+{
-+	struct bcm53573_ilp *ilp;
-+	struct clk_init_data init = { 0 };
-+	const char *parent_name;
-+	int err;
-+
-+	ilp = kzalloc(sizeof(*ilp), GFP_KERNEL);
-+	if (!ilp)
-+		return;
-+
-+	parent_name = of_clk_get_parent_name(np, 0);
-+	if (!parent_name) {
-+		err = -ENOENT;
-+		goto err_free_ilp;
-+	}
-+
-+	ilp->regmap = syscon_node_to_regmap(of_get_parent(np));
-+	if (IS_ERR(ilp->regmap)) {
-+		err = PTR_ERR(ilp->regmap);
-+		goto err_free_ilp;
-+	}
-+
-+	init.name = np->name;
-+	init.ops = &bcm53573_ilp_clk_ops;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+
-+	ilp->hw.init = &init;
-+	err = clk_hw_register(NULL, &ilp->hw);
-+	if (err)
-+		goto err_free_ilp;
-+
-+	err = of_clk_add_hw_provider(np, of_clk_hw_simple_get, &ilp->hw);
-+	if (err)
-+		goto err_clk_hw_unregister;
-+
-+	return;
-+
-+err_clk_hw_unregister:
-+	clk_hw_unregister(&ilp->hw);
-+err_free_ilp:
-+	kfree(ilp);
-+	pr_err("Failed to init ILP clock: %d\n", err);
-+}
-+
-+/* We need it very early for arch code, before device model gets ready */
-+CLK_OF_DECLARE(bcm53573_ilp_clk, "brcm,bcm53573-ilp", bcm53573_ilp_init);
--- 
-2.9.3
-
+CgpPbiA5LzEyLzIwMTYgNjo0OSBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVGh1LCBTZXAg
+MDEsIDIwMTYgYXQgMDc6MDY6NTJQTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3cm90ZToKPj4gTWFr
+ZSB0aGUgZm9sbG93aW5nIGNoYW5nZXMgaW4gdGhlIEhETUkgZ3BpbyBiaW5kaW5nczoKPj4KPj4g
+LSBVc2UgIi1ncGlvcyIgYXMgdGhlIHN1ZmZpeCBmb3IgYWxsIHRoZSBncGlvIG5hbWVzCj4+IC0g
+TW92ZSBhbGwgdGhlIGdwaW9zIHRvIG9wdGlvbmFsLCBzaW5jZSB0aGVyZSBhcmUgcGxhdGZvcm1z
+IHRoYXQgdXNlIG5vbmUKPj4gICAgb2YgdGhlbS4KPj4gLSBUaGUgSFBEIGdwaW8gaXMgYSBzdGFu
+ZGFyZCBvbmUsIHJlbW92ZSB0aGUgInFjb20saGRtaS10eC0iIHByZWZpeCBmcm9tCj4+ICAgIGl0
+Lgo+PiAtIEFkZCBhIG1pc3NpbmcgbHBtIGdwaW8gdXNlZCBvbiBzb21lIHBsYXRmb3Jtcy4KPj4K
+Pj4gTWFrZSB0aGUgbmVjZXNzYXJ5IGNoYW5nZXMgaW4gdGhlIGRyaXZlciB0byBpbmNvcnBvcmF0
+ZSB0aGVzZSBjaGFuZ2VzLgo+Pgo+PiBUaGVyZSBoYXNuJ3QgYmVlbiBhbnkgdXBzdHJlYW0gRFQg
+dGhhdCB1c2VzIHRoZSBIRE1JIGJpbmRpbmdzLCBzbyBpdCdzCj4+IG9rYXkgdG8gY2hhbmdlIGFu
+ZCBtb3ZlIGFyb3VuZCB0aGVzZSBwcm9wZXJ0aWVzLgo+Pgo+PiBDYzogUm9iIEhlcnJpbmcgPHJv
+YmhAa2VybmVsLm9yZz4KPj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4+IFNpZ25l
+ZC1vZmYtYnk6IEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+Cj4+IC0tLQo+
+PiB2MjoKPj4gLSBLZWVwICJxY29tLGhkbWktdHgtIiBzdWZmaXggZm9yIGFsbCBncGlvcyBleGNl
+cHQgZm9yIGhwZC4KPj4gLSBVc2UgIi1ncGlvcyIgc3VmZml4IGluc3RlYWQgb2YgIi1ncGlvIi4K
+Pj4gLSBNb3ZlIGFsbCB0aGUgZ3Bpb3MgdG8gb3B0aW9uYWwgcHJvcGVydGllcy4KPj4KPj4gICAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9oZG1pLnR4dCAgICAgICAgfCAxMSAr
+KysrKystLS0tLQo+PiAgIGRyaXZlcnMvZ3B1L2RybS9tc20vaGRtaS9oZG1pLmMgICAgICAgICAg
+ICAgICAgICAgICB8IDIxICsrKysrKysrKysrKysrKysrKystLQo+PiAgIDIgZmlsZXMgY2hhbmdl
+ZCwgMjUgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9oZG1pLnR4dCBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9oZG1pLnR4dAo+PiBp
+bmRleCBjZTg0NDU5Li5mMWE4M2FiIDEwMDY0NAo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vaGRtaS50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2hkbWkudHh0Cj4+IEBAIC0xMywxNyAr
+MTMsMTggQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPj4gICAtIGludGVycnVwdHM6IFRoZSBpbnRl
+cnJ1cHQgc2lnbmFsIGZyb20gdGhlIGhkbWkgYmxvY2suCj4+ICAgLSBjbG9ja3M6IGRldmljZSBj
+bG9ja3MKPj4gICAgIFNlZSAuLi9jbG9ja3MvY2xvY2stYmluZGluZ3MudHh0IGZvciBkZXRhaWxz
+Lgo+PiAtLSBxY29tLGhkbWktdHgtZGRjLWNsay1ncGlvOiBkZGMgY2xrIHBpbgo+PiAtLSBxY29t
+LGhkbWktdHgtZGRjLWRhdGEtZ3BpbzogZGRjIGRhdGEgcGluCj4+IC0tIHFjb20saGRtaS10eC1o
+cGQtZ3BpbzogaHBkIHBpbgo+PiAgIC0gY29yZS12ZGRhLXN1cHBseTogcGhhbmRsZSB0byBzdXBw
+bHkgcmVndWxhdG9yCj4+ICAgLSBoZG1pLW11eC1zdXBwbHk6IHBoYW5kbGUgdG8gbXV4IHJlZ3Vs
+YXRvcgo+PiAgIC0gcGh5czogdGhlIHBoYW5kbGUgZm9yIHRoZSBIRE1JIFBIWSBkZXZpY2UKPj4g
+ICAtIHBoeS1uYW1lczogdGhlIG5hbWUgb2YgdGhlIGNvcnJlc3BvbmRpbmcgUEhZIGRldmljZQo+
+Pgo+PiAgIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4+IC0tIHFjb20saGRtaS10eC1tdXgtZW4tZ3Bp
+bzogaGRtaSBtdXggZW5hYmxlIHBpbgo+PiAtLSBxY29tLGhkbWktdHgtbXV4LXNlbC1ncGlvOiBo
+ZG1pIG11eCBzZWxlY3QgcGluCj4+ICstIHFjb20saGRtaS10eC1kZGMtY2xrLWdwaW9zOiBkZGMg
+Y2xrIHBpbgo+PiArLSBxY29tLGhkbWktdHgtZGRjLWRhdGEtZ3Bpb3M6IGRkYyBkYXRhIHBpbgo+
+Cj4gU29ycnksIGZvciByYWlzaW5nIGFub3RoZXIgcG9pbnQsIGJ1dCBjb3VsZG4ndCB5b3UgdXNl
+IHRoZSBpMmMtZ3Bpbwo+IGJpbmRpbmcgZm9yIHRoZXNlIGluc3RlYWQ/CgpJJ20gbm90IGVudGly
+ZWx5IHN1cmUgd2hhdCB0aGVzZSBhcmUgdXNlZCBmb3IgZWl0aGVyLCB0aGV5IHByZWRhdGUgdGhl
+CkFQUTgwNjQgU29DLiBUaGV5IGFyZSBjZXJ0YWlubHkgbm90IGJpdC1iYW5nZWQgdG8gaW1wbGVt
+ZW50IGkyYywgc2luY2UKdGhlIGRyaXZlciBqdXN0IHNldHMgdGhlbSB0byBhIGhpZ2ggZHVyaW5n
+IGRyaXZlciBpbml0aWFsaXphdGlvbiwgYW5kCndlIGhhdmUgb3VyIGRlZGljYXRlZCBpMmMgY29u
+dHJvbGxlciBhbnl3YXkuCgpSb2IsCgpBcmUgeW91IGF3YXJlIHdoeSB3ZSBoYXZlIHRoZXNlIGZv
+ciBvbGRlciBTb0NzPwoKVGhhbmtzLApBcmNoaXQKCj4KPj4gKy0gaHBkLWdwaW9zOiBocGQgcGlu
+Cj4+ICstIHFjb20saGRtaS10eC1tdXgtZW4tZ3Bpb3M6IGhkbWkgbXV4IGVuYWJsZSBwaW4KPj4g
+Ky0gcWNvbSxoZG1pLXR4LW11eC1zZWwtZ3Bpb3M6IGhkbWkgbXV4IHNlbGVjdCBwaW4KPj4gKy0g
+cWNvbSxoZG1pLXR4LW11eC1scG0tZ3Bpb3M6IGhkbWkgbXV4IGxwbSBwaW4KPj4gICAtIHBvd2Vy
+LWRvbWFpbnM6IHJlZmVyZW5jZSB0byB0aGUgcG93ZXIgZG9tYWluKHMpLCBpZiBhdmFpbGFibGUu
+Cj4+ICAgLSBwaW5jdHJsLW5hbWVzOiB0aGUgcGluIGNvbnRyb2wgc3RhdGUgbmFtZXM7IHNob3Vs
+ZCBjb250YWluICJkZWZhdWx0Igo+PiAgIC0gcGluY3RybC0wOiB0aGUgZGVmYXVsdCBwaW5jdHJs
+IHN0YXRlIChhY3RpdmUpCgotLSAKUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMg
+YSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJv
+cmF0aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
