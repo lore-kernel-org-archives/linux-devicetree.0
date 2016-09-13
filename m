@@ -1,127 +1,38 @@
-From: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH v3] mfd: arizona: Add DT options for
- max_channels_clocked and PDM speaker config
-Date: Tue, 13 Sep 2016 09:54:32 +0100
-Message-ID: <1473756872.4359.28.camel@rf-debian.wolfsonmicro.main>
-References: <1473076585-9823-1-git-send-email-rf@opensource.wolfsonmicro.com>
-         <20160912165342.GA25141@rob-hp-laptop>
+From: Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH V4 3/4] ARM: bcm2835: add thermal node to device-tree of
+ bcm283x
+Date: Tue, 13 Sep 2016 11:06:02 +0200
+Message-ID: <704dd583-5bd8-fa77-a4ab-18f0845b9c4e@martin.sperl.org>
+References: <1473407397-29395-1-git-send-email-kernel@martin.sperl.org>
+ <1473407397-29395-4-git-send-email-kernel@martin.sperl.org>
+ <19cc8fbf-6ceb-995e-850d-9d82bdaff8d0@i2se.com>
+ <8876586A-98F8-4AAF-AD90-86EB12C22FDC@martin.sperl.org>
+ <2117811305.32861.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange@email.1und1.de>
+ <185DA6B2-AFC0-4199-A361-0164381AD317@martin.sperl.org>
+ <677965855.33392.597ccfbe-225b-403b-8ffa-3f42292996d4.open-xchange@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160912165342.GA25141@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <677965855.33392.597ccfbe-225b-403b-8ffa-3f42292996d4.open-xchange@email.1und1.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Pawel Moll <pawel.moll@arm.com>, Russell King <linux@arm.linux.org.uk>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, linux-rpi-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-09-12 at 11:53 -0500, Rob Herring wrote:
-> On Mon, Sep 05, 2016 at 12:56:25PM +0100, Richard Fitzgerald wrote:
-> > This patch adds DT settings for the max_channels_clocked, spk_fmt and
-> > spk_mute pdata.
-> > 
-> > Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/arizona.txt | 18 ++++++++++++++
-> >  drivers/mfd/arizona-core.c                        | 30 +++++++++++++++++++++++
-> >  2 files changed, 48 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-> > index a6e2ea41..8f2e282 100644
-> > --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> > @@ -85,6 +85,24 @@ Optional properties:
-> >      present, the number of values should be less than or equal to the
-> >      number of inputs, unspecified inputs will use the chip default.
-> >  
-> > +  - wlf,max-channels-clocked : The maximum number of channels to be clocked on
-> > +    each AIF, useful for I2S systems with multiple data lines being mastered.
-> > +    Specify one cell for each AIF to be configured, specify zero for AIFs that
-> > +    should be handled normally.
-> > +    If present, number of cells must be less than or equal to the number of
-> > +    AIFs. If less than the number of AIFs, for cells that have not been
-> > +    specified the corresponding AIFs will be treated as default setting.
-> > +
-> > +  - wlf,spk-fmt : PDM speaker data format, must contain 2 cells (OUT5 and OUT6).
-> > +    See the datasheet for values.
-> > +    The second cell is ignored for codecs that do not have OUT6 (wm5102, wm8997,
-> > +      wm8998, wm1814)
-> > +
-> > +  - wlf,spk-mute : PDM speaker mute setting, must contain 2 cells (OUT5 and OUT6).
-> > +    See the datasheet for values.
-> > +    The second cell is ignored for codecs that do not have OUT6 (wm5102, wm8997,
-> > +    wm8998, wm1814)
-> > +
-> >    - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
-> >      they are being externally supplied. As covered in
-> >      Documentation/devicetree/bindings/regulator/regulator.txt
-> > diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-> > index fa267fa..c621c46 100644
-> > --- a/drivers/mfd/arizona-core.c
-> > +++ b/drivers/mfd/arizona-core.c
-> > @@ -813,6 +813,7 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
-> >  	struct property *prop;
-> >  	const __be32 *cur;
-> >  	u32 val;
-> > +	u32 pdm_val[ARIZONA_MAX_PDM_SPK];
-> >  	int ret, i;
-> >  	int count = 0;
-> >  
-> > @@ -869,6 +870,35 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
-> >  		count++;
-> >  	}
-> >  
-> > +	count = 0;
-> > +	of_property_for_each_u32(arizona->dev->of_node,
-> > +				 "wlf,max-channels-clocked",
-> > +				 prop, cur, val) {
-> > +		if (count == ARRAY_SIZE(pdata->max_channels_clocked))
-> > +			break;
-> > +
-> > +		pdata->max_channels_clocked[count] = val;
-> > +		count++;
-> > +	}
-> > +
-> > +	ret = of_property_read_u32_array(arizona->dev->of_node,
-> > +					 "wlf,spk-fmt",
-> > +					 pdm_val,
-> > +					 ARRAY_SIZE(pdm_val));
-> 
-> Why are you using this intermediate buffer?
-> 
-
-Because targets are not u32
-
-> > +
-> > +	if (ret >= 0)
-> > +		for (count = 0; count < ARRAY_SIZE(pdata->spk_fmt); ++count)
-> > +			pdata->spk_fmt[count] = pdm_val[count];
-> > +
-> > +	ret = of_property_read_u32_array(arizona->dev->of_node,
-> > +					 "wlf,spk-mute",
-> > +					 pdm_val,
-> > +					 ARRAY_SIZE(pdm_val));
-> > +
-> > +	if (ret >= 0)
-> > +		for (count = 0; count < ARRAY_SIZE(pdata->spk_fmt); ++count)
-> 
-> s/spk_fmt/spk_mute/
-> 
-
-Damn!, I read and re-read and re-re-read that code so many times to make
-sure I had the right names
-
-> > +			pdata->spk_mute[count] = pdm_val[count];
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > -- 
-> > 1.9.1
-> > 
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 09.09.2016 21:02, Stefan Wahren wrote:
+> bcm2837.dtsi
+>
+> &thermal {
+>             compatible = "brcm,bcm2837-thermal";
+>             status = "okay";
+> };
+
+Note that there is only a bcm2837.dtsi in arm64/boot/dts/broadcom/
+but not in arm/boot/dts - at least with the current upstream kernel.
+
+So I will just patch those dtsi that exist right now.
+
+Martin
