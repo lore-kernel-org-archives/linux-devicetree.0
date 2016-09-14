@@ -1,14 +1,17 @@
 From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [RFC/PATCH] usb: misc: Add a driver for TC7USB40MU
-Date: Tue, 13 Sep 2016 22:58:26 -0700
-Message-ID: <147383270635.1464.10706917860873291816@sboyd-linaro>
-References: <20160914014246.31847-1-stephen.boyd@linaro.org>
- <20160914033200.GE30760@b29397-desktop>
+Subject: Re: [PATCH v4 22/22] phy: Add support for Qualcomm's USB HS phy
+Date: Tue, 13 Sep 2016 23:29:12 -0700
+Message-ID: <147383455256.1541.16582625295760921275@sboyd-linaro>
+References: <20160907213519.27340-1-stephen.boyd@linaro.org>
+ <20160907213519.27340-23-stephen.boyd@linaro.org>
+ <20160913070358.GB30425@b29397-desktop>
+ <147379930484.27460.3849356366746983941@sboyd-linaro>
+ <20160914021133.GB30760@b29397-desktop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160914033200.GE30760@b29397-desktop>
+In-Reply-To: <20160914021133.GB30760@b29397-desktop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,33 +22,86 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Peter Chen <hzpeterchen@gmail.com>
-Cc: devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Peter Chen (2016-09-13 20:32:00)
-> On Tue, Sep 13, 2016 at 06:42:46PM -0700, Stephen Boyd wrote:
-> > On the db410c 96boards platform we have a TC7USB40MU[1] on the
-> > board to mux the D+/D- lines from the SoC between a micro usb
-> > "device" port and a USB hub for "host" roles. Upon a role switch,
-> > we need to change this mux to forward the D+/D- lines to either
-> > the port or the hub. Therefore, introduce a driver for this
-> > device that intercepts extcon USB_HOST events and logically
-> > asserts a gpio to mux the "host" D+/D- lines when a host cable is
-> > attached. When the cable goes away, it will logically deassert
-> > the gpio and mux the "device" lines.
+Quoting Peter Chen (2016-09-13 19:11:33)
+> On Tue, Sep 13, 2016 at 01:41:44PM -0700, Stephen Boyd wrote:
+> > Quoting Peter Chen (2016-09-13 00:03:58)
+> > > On Wed, Sep 07, 2016 at 02:35:19PM -0700, Stephen Boyd wrote:
+> > > > The high-speed phy on qcom SoCs is controlled via the ULPI
+> > > > viewport.
+> > > > 
+> > > 
+> > > Hi Stephen, I am a little puzzled how this driver co-work with chipidea
+> > > driver. According to nxp IC guys, the ULPI PHY's clock needs to be enabled
+> > > before access portsc.pts (calling hw_phymode_configure), otherwise,
+> > > the system will hang. But I find you call hw_phymode_configure before
+> > > phy->power_on, doesn't your design have this requirement?
+> > 
+> > Which clk needs to be enabled? The xcvr_clk? I believe that clk
+> > corresponds to the "core" clk that we enable in the msm glue driver
+> > layer. When that clk is enabled, the ULPI phy is able to respond to
+> > register read/writes via the ULPI viewport.
+> > 
 > 
-> Would you please draw the design? It can also help me review your
-> chipidea patch well.
+> The input clock for ULPI PHY, maybe it is ref_clk at this PHY driver, 
+> so in your platform, even PHY clock is gated, you can still access
+> portsc.pts to configure PHY mode at controller register?
+
+There are a couple input clocks for this phy. I'm not sure which one the
+nxp IC guys think needs to be enabled. Typically, the ref_clk is always
+on so it's hard for me to test a scenario where it isn't enabled. But
+I'm not sure that the ref_clk is what we're talking about anyway. Would
+you know the frequency perhaps? The ref_clk is usually 19.2MHz on these
+SoCs. That would match up with the "crystal input" pin in the ULPI
+spec[1].
+
+Do you know if this is documented anywhere in the chipidea manual?
+I'll have to look again and see if there's something in there, but I
+didn't see anything like this.
+
+I would guess that we're talking about the xcvr clock though, because
+from what I see in the manual, this is used to clock the interface
+between the ULPI phy and the controller. In the ULPI spec, this matches
+up with the "clock" signal for the ULPI phy and that usually runs at
+something >= 60MHz. 
+
 > 
-> 1. How many ports on the board?
-> 2. How the lines are connected on the board?
+> > >        
+> > > Besides, you read ulpi id before phy->power_on, how can read work before
+> > > phy power on?
+> > > 
+> > 
+> > I've found that even having the link clk enabled before phy->power_on
+> > doesn't mean it's possible to read the id registers though. That's
+> > because there can be other power supplies, like regulators, which need
+> > to be on for the phy to operate properly.
+> > 
+> 
+> Then I am puzzled the current initialization for your case, in my mind,
+> it should like below:
+> 
+> qcom_usb_hs_phy_probe->qcom_usb_hs_phy_power_on->ci_ulpi_init
+> 
+> Like other PHYs, it should get PHY first, then power on it, after that,
+> you can access its register.
 > 
 
-The schematic for the db410c is publically available here[2][3].
+Hmm.. maybe the confusion is in which registers we should be able to
+access? Are we talking about the ULPI viewport MMIO register space or
+the ULPI registers that we access through the viewport? I have a
+hw_phymode_configure() inside of of ci_ulpi_init() so that the
+identification registers through the ULPI viewport read properly
+(assuming there aren't other power requirements like regulators). If we
+don't set the portsc.pts before using the viewport, the viewport doesn't
+work and reads timeout. So we really don't touch the ULPI registers
+except for the scratch space and the id registers until after the phy is
+properly powered on with clks and regulators, because the only place we
+touch them after doing the id checking is in this phy driver in
+qcom_usb_hs_phy_power_on(). We've "solved" the chicken-egg problem where
+we don't know which device driver to probe because the phy needs to be
+powered on to read the id registers to know which device driver to use
+by using DT to match up device drivers instead.
 
-There's also the 96boards spec[4] which talks about this switch based
-design a little bit. See the section titled "Single USB port Example".
-
-[2] https://github.com/96boards/documentation/blob/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
-[3] https://github.com/96boards/documentation/raw/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
-[4] https://www.96boards.org/wp-content/uploads/2015/02/96BoardsCESpecificationv1.0-EA1.pdf
+[1] https://www.sparkfun.com/datasheets/Components/SMD/ULPI_v1_1.pdf
