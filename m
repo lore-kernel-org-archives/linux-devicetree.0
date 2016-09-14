@@ -1,53 +1,80 @@
-From: Sanchayan Maity <maitysanchayan@gmail.com>
-Subject: [PATCH v1 3/3] ARM: dts: imx6qdl-apalis: Use enable-gpios property for backlight
-Date: Wed, 14 Sep 2016 12:05:05 +0530
-Message-ID: <dff8d58c4021719184af2c83773e86f175ad910e.1473833908.git.maitysanchayan@gmail.com>
-References: <9d2c17aa2e00e6ff4349a53de8247860d2382607.1473833908.git.maitysanchayan@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9d2c17aa2e00e6ff4349a53de8247860d2382607.1473833908.git.maitysanchayan@gmail.com>
-In-Reply-To: <9d2c17aa2e00e6ff4349a53de8247860d2382607.1473833908.git.maitysanchayan@gmail.com>
-References: <9d2c17aa2e00e6ff4349a53de8247860d2382607.1473833908.git.maitysanchayan@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: marcel.ziswiler@toradex.com, stefan@agner.ch, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sanchayan Maity <maitysanchayan@gmail.com>
+From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v9 00/19] Add support for FDMA DMA controller and slim
+ core rproc found on STi chipsets
+Date: Wed, 14 Sep 2016 08:59:32 +0200
+Message-ID: <01669e54-8410-76cd-11f8-fce5cbeefbdc@st.com>
+References: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
+ <20160913093107.GA10953@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20160913180616.GD21438@tuxbot>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160913180616.GD21438@tuxbot>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use enable-gpios property of PWM backlight driver for backlight
-control. While at it also fix the use of brightness levels required
-by EDT displays which require inverted PWM's.
+Hi Bjorn
 
-Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
----
- arch/arm/boot/dts/imx6qdl-apalis.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 09/13/2016 08:06 PM, Bjorn Andersson wrote:
+> On Tue 13 Sep 02:31 PDT 2016, Peter Griffin wrote:
+> 
+>> Hi Vinod & Bjorn,
+>>
+>> [..]
+>>
+>> On Mon, 05 Sep 2016, Peter Griffin wrote:
+>>
+>>> v8 actions some review feedback from Bjorn to the slim rproc driver, and also includes
+>>> a patch which fixes a recursive Kconfig error which is triggered when st_fdma selects
+>>> slim_rproc driver. The series has also been rebased on v4.8-rc3.
+>>>
+>>> v9 actions some review feedback from Bjorn, Lee and Vinod. See below. Importantly a bug
+>>> was found during testing now that the platform boots without clk_ignore_unused parameter
+>>> whereby the clocks would not be enabled properly before firmware loading was attempted.
+>>>
+>>> regards,
+>>>
+>>> Peter.
+>>>
+>>> Changes since v8:
+>>>  - Add MODULE_ALIAS (Vinod)
+>>>  - devm_kzalloc to devm_kcalloc (Vinod)
+>>>  - quisce tasklet initialised by vchan_init() (Vinod)
+>>>  - Don't make SLIM rproc user selectable (Bjorn)
+>>>  - slim_rproc: Ensure clocks enabled before firmware load (Peter)
+>>>  - Various code style nits / commit message change (Lee)
+>>>  - Separate patch for '\n' kconfig removal (Vinod)
+>>
+>> I hate to send a ping,
+> 
+> Sorry about that.
+> 
+>> but do you think we can merge this fdma series? It has gone
+>> through quite a few review rounds now.
+>>
+> 
+> I think the remoteproc part looks good.
+> 
+> Vinod, I don't have any changes queued in remoteproc that should cause
+> merge issues. If you want to you could take the remoteproc patch
+> through your tree.
+> 
+> 
+> I do however think that the dts patches should go through arm-soc.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-index 8c67dd8..9100bde 100644
---- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-@@ -49,7 +49,10 @@
- 
- 	backlight: backlight {
- 		compatible = "pwm-backlight";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_bl_on>;
- 		pwms = <&pwm4 0 5000000>;
-+		enable-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
- 		status = "disabled";
- 	};
- 
-@@ -614,6 +617,12 @@
- 		>;
- 	};
- 
-+	pinctrl_gpio_bl_on: gpioblon {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_DA13__GPIO3_IO13 0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_gpio_keys: gpio1io04grp {
- 		fsl,pins = <
- 			/* Power button */
--- 
-2.9.3
+I will take care about dts patches by adding them in the next STi DT pull request
+
+Thanks
+Patrice
+
+> 
+> Regards,
+> Bjorn
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
