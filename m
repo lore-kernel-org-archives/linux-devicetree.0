@@ -1,211 +1,52 @@
-From: Zhichang Yuan <yuanzhichang@hisilicon.com>
-Subject: [PATCH V3 4/4] ARM64 LPC: support earlycon for UART connected to LPC
-Date: Wed, 14 Sep 2016 20:15:54 +0800
-Message-ID: <1473855354-150093-5-git-send-email-yuanzhichang@hisilicon.com>
-References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
+From: Patrice Chotard <patrice.chotard@st.com>
+Subject: Re: [PATCH v9 13/19] ARM: STi: DT: STiH407: Add sti-sasg-codec dt
+ node
+Date: Wed, 14 Sep 2016 14:01:00 +0200
+Message-ID: <142f56d1-4353-a57c-2dce-59abc3ba4cea@st.com>
+References: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
+ <1473081421-16555-14-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com
-Cc: devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, benh@kernel.crashing.org, minyard@acm.org, arnd@arndb.de, linux-pci@vger.kernel.org, gabriele.paoloni@huawei.com, john.garry@huawei.com, will.deacon@arm.com, xuwei5@hisilicon.com, "zhichang.yuan" <yuanzhichang@hisilicon.com>, linux-serial@vger.kernel.org, gregkh@linuxfoundation.org, zourongrong@gmail.com, liviu.dudau@arm.com, kantyzc@163.com, zhichang.yuan02@gmail.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473081421-16555-14-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, dan.j.williams@intel.com, airlied@linux.ie, kraxel@redhat.com, ohad@wizery.com, bjorn.andersson@linaro.org
+Cc: lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-remoteproc@vger.kernel.org, virtualization@lists.linux-foundation.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>
 List-Id: devicetree@vger.kernel.org
 
-From: "zhichang.yuan" <yuanzhichang@hisilicon.com>
+Hi Peter
 
-This patch support the earlycon for UART connected to LPC on Hip06.
-This patch is depended on the LPC driver.
+On 09/05/2016 03:16 PM, Peter Griffin wrote:
+> This patch adds the dt node for the internal audio
+> codec IP.
+> 
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  arch/arm/boot/dts/stih407-family.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+> index 45cab30..d1258d5 100644
+> --- a/arch/arm/boot/dts/stih407-family.dtsi
+> +++ b/arch/arm/boot/dts/stih407-family.dtsi
+> @@ -873,5 +873,12 @@
+>  				<&clk_s_c0_flexgen CLK_TX_ICN_DISP_0>,
+>  				<&clk_s_c0_flexgen CLK_EXT2F_A9>;
+>  		};
+> +
+> +		sti_sasg_codec: sti-sasg-codec {
+> +			compatible = "st,stih407-sas-codec";
+> +			#sound-dai-cells = <1>;
+> +			status = "disabled";
+> +			st,syscfg = <&syscfg_core>;
+> +		};
+>  	};
+>  };
+> 
 
-Signed-off-by: zhichang.yuan <yuanzhichang@hisilicon.com>
----
- drivers/bus/hisi_lpc.c               | 113 +++++++++++++++++++++++++++++++++++
- drivers/tty/serial/8250/8250_early.c |  26 +++++++-
- 2 files changed, 137 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/bus/hisi_lpc.c b/drivers/bus/hisi_lpc.c
-index 9b364d0..2269828 100644
---- a/drivers/bus/hisi_lpc.c
-+++ b/drivers/bus/hisi_lpc.c
-@@ -360,6 +360,119 @@ void hisilpc_comm_outb(void *devobj, unsigned long ptaddr,
- 
- 
- /**
-+ * hisilpc_early_in - read/input operation specific for hisi LPC earlycon.
-+ * @devobj: pointer to device relevant information of the caller.
-+ * @inbuf: the buffer where the read back data is populated.
-+ *
-+ * for earlycon, dlen and count should be one.
-+ *
-+ * Return the data read from earlycon on success, error ID on fail.
-+ *
-+ */
-+static unsigned int __init hisilpc_early_in(struct uart_port *port, int offset)
-+{
-+	unsigned int backval = 0;
-+	unsigned int ret = 0;
-+	struct lpc_cycle_para para;
-+	struct hisilpc_dev lpcdev;
-+
-+	if (!port->mapbase || !port->iobase || !port->membase)
-+		return -EINVAL;
-+
-+	para.opflags = FG_EARLYCON_LPC;
-+	para.csize = 1;
-+	lpcdev.membase = port->membase;
-+
-+	ret = hisilpc_target_in(&lpcdev, &para,
-+				port->iobase + (offset << port->regshift),
-+				(unsigned char *)&backval, 1);
-+	return (ret) ? : backval;
-+}
-+
-+/**
-+ * hisilpc_early_out - write/output operation specific for hisi LPC earlycon.
-+ * @port: pointer to uart_port of eralycon
-+ *
-+ * for earlycon, dlen and count should be one.
-+ *
-+ */
-+static void __init hisilpc_early_out(struct uart_port *port, int offset,
-+					int value)
-+{
-+	struct lpc_cycle_para para;
-+	struct hisilpc_dev lpcdev;
-+
-+	if (!port->mapbase || !port->iobase || !port->membase)
-+		return;
-+
-+	para.opflags = FG_EARLYCON_LPC;
-+	para.csize = 1;
-+	lpcdev.membase = port->membase;
-+
-+	(void)hisilpc_target_out(&lpcdev, &para,
-+				port->iobase + (offset << port->regshift),
-+				(unsigned char *)&value, 1);
-+}
-+
-+
-+/**
-+ * early_hisilpc8250_setup - initilize the lpc earlycon
-+ * @device: pointer to the elarycon device
-+ * @options: a option string from earlycon kernel-parameter
-+ *
-+ * Returns 0 on success, non-zero on fail.
-+ *
-+ */
-+static int __init early_hisilpc8250_setup(struct earlycon_device *device,
-+						const char *options)
-+{
-+	char *p;
-+	int ret;
-+
-+	if (!device->port.membase)
-+		return -ENODEV;
-+
-+	if (device->port.iotype != UPIO_MEM)
-+		return -EINVAL;
-+
-+	if (device->options) {
-+		p = strchr(device->options, ',');
-+		if (p && (p + 1) != '\0') {
-+			ret = kstrtoul(++p, 0,
-+				(unsigned long *)&device->port.iobase);
-+			if (ret || device->port.iobase == 0)
-+				return ret ?: -EFAULT;
-+		} else
-+			device->port.iobase = 0x2f8;
-+	} else {
-+		device->port.iobase = 0x2f8;
-+		device->baud = 0;
-+	}
-+
-+	device->port.serial_in = hisilpc_early_in;
-+	device->port.serial_out = hisilpc_early_out;
-+	/* must convert iotype to UPIO_PORT for Hip06 indirect-io */
-+	device->port.iotype = UPIO_PORT;
-+
-+	/* disable interrupts from LPC */
-+	writel(LPC_IRQ_CLEAR, device->port.membase + LPC_REG_IRQ_ST);
-+	/* ensure the LPC is available */
-+	while (!(readl(device->port.membase + LPC_REG_OP_STATUS) &
-+			LPC_STATUS_IDLE))
-+		cpu_relax();
-+
-+	return early_serial8250_setup(device, options);
-+}
-+
-+
-+
-+EARLYCON_DECLARE(hisilpcuart, early_hisilpc8250_setup);
-+OF_EARLYCON_DECLARE(hisilpcuart, "hisilicon,lpc-uart",
-+					early_hisilpc8250_setup);
-+
-+
-+
-+/**
-  * hisilpc_ischild_ipmi - check whether the designated device is ipmi
-  * @dev: the device to be checked.
-  * @data: the value used to match the acpi device in checking.
-diff --git a/drivers/tty/serial/8250/8250_early.c b/drivers/tty/serial/8250/8250_early.c
-index 85a12f0..3b5d0a8 100644
---- a/drivers/tty/serial/8250/8250_early.c
-+++ b/drivers/tty/serial/8250/8250_early.c
-@@ -37,7 +37,7 @@
- #include <asm/io.h>
- #include <asm/serial.h>
- 
--static unsigned int __init serial8250_early_in(struct uart_port *port, int offset)
-+static unsigned int __init serial8250_early_in_raw(struct uart_port *port, int offset)
- {
- 	offset <<= port->regshift;
- 
-@@ -57,7 +57,7 @@ static unsigned int __init serial8250_early_in(struct uart_port *port, int offse
- 	}
- }
- 
--static void __init serial8250_early_out(struct uart_port *port, int offset, int value)
-+static void __init serial8250_early_out_raw(struct uart_port *port, int offset, int value)
- {
- 	offset <<= port->regshift;
- 
-@@ -80,6 +80,28 @@ static void __init serial8250_early_out(struct uart_port *port, int offset, int
- 	}
- }
- 
-+static inline void __init serial8250_early_out(struct uart_port *port,
-+					int offset, int value)
-+{
-+	if (port->serial_out)
-+		port->serial_out(port, offset, value);
-+	else {
-+		port->serial_out = serial8250_early_out_raw;
-+		serial8250_early_out_raw(port, offset, value);
-+	}
-+}
-+
-+static inline unsigned int __init serial8250_early_in(struct uart_port *port,
-+					int offset)
-+{
-+	if (port->serial_in)
-+		return port->serial_in(port, offset);
-+
-+	port->serial_in = serial8250_early_in_raw;
-+	return serial8250_early_in_raw(port, offset);
-+}
-+
-+
- #define BOTH_EMPTY (UART_LSR_TEMT | UART_LSR_THRE)
- 
- static void __init serial_putc(struct uart_port *port, int c)
--- 
-1.9.1
+Applied for STi next
+
+Thanks
