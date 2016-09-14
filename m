@@ -1,126 +1,119 @@
-From: Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 00/22] Generic DT bindings for PCI IOMMUs and ARM SMMU
-Date: Wed, 14 Sep 2016 10:41:57 +0200
-Message-ID: <11ebd81e-2ea5-5ff3-35b3-be95f03e05bd@redhat.com>
-References: <cover.1473695704.git.robin.murphy@arm.com>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [RFC/PATCH] usb: misc: Add a driver for TC7USB40MU
+Date: Wed, 14 Sep 2016 01:45:04 -0700
+Message-ID: <147384270449.13546.495288874027868435@sboyd-linaro>
+References: <20160914014246.31847-1-stephen.boyd@linaro.org>
+ <20160914033200.GE30760@b29397-desktop>
+ <147383270635.1464.10706917860873291816@sboyd-linaro>
+ <20160914080321.GA21674@b29397-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1473695704.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160914080321.GA21674@b29397-desktop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 12/09/2016 18:13, Robin Murphy wrote:
-> Hi all,
+Quoting Peter Chen (2016-09-14 01:03:21)
+> On Tue, Sep 13, 2016 at 10:58:26PM -0700, Stephen Boyd wrote:
+> > Quoting Peter Chen (2016-09-13 20:32:00)
+> > > On Tue, Sep 13, 2016 at 06:42:46PM -0700, Stephen Boyd wrote:
+> > > > On the db410c 96boards platform we have a TC7USB40MU[1] on the
+> > > > board to mux the D+/D- lines from the SoC between a micro usb
+> > > > "device" port and a USB hub for "host" roles. Upon a role switch,
+> > > > we need to change this mux to forward the D+/D- lines to either
+> > > > the port or the hub. Therefore, introduce a driver for this
+> > > > device that intercepts extcon USB_HOST events and logically
+> > > > asserts a gpio to mux the "host" D+/D- lines when a host cable is
+> > > > attached. When the cable goes away, it will logically deassert
+> > > > the gpio and mux the "device" lines.
+> > > 
+> > > Would you please draw the design? It can also help me review your
+> > > chipidea patch well.
+> > > 
+> > > 1. How many ports on the board?
+> > > 2. How the lines are connected on the board?
+> > > 
+> > 
+> > The schematic for the db410c is publically available here[2][3].
+> > 
+> > There's also the 96boards spec[4] which talks about this switch based
+> > design a little bit. See the section titled "Single USB port Example".
+> > 
+> > [2] https://github.com/96boards/documentation/blob/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
+> > [3] https://github.com/96boards/documentation/raw/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
+> > [4] https://www.96boards.org/wp-content/uploads/2015/02/96BoardsCESpecificationv1.0-EA1.pdf
 > 
-> To any more confusing fixups and crazily numbered extra patches, here's
-> a quick v7 with everything rebased into the right order. The significant
-> change this time is to implement iommu_fwspec properly from the start,
-> which ends up being far simpler and more robust than faffing about
-> introducing it somewhere 'less intrusive' to move toward core code later.
+> Ok, I see several use cases for this role switch
 > 
-> New branch in the logical place:
+> 1. Using the hardware switch (218-4LPST)
+> In this case, you can set USB_SW_SEL as input gpio, and use
+> extcon-usb-gpio.c like before, just set this gpio as active
+> low at dts.
+
+Nice! I didn't think of this case but it's good that we can support
+that with some work.
+
 > 
-> git://linux-arm.org/linux-rm iommu/generic-v7
+> 2. Using USB_HS_ID as vbus-gpio (input), and USB_SW_SEL as id-gpio (output)
 
-For information, as discussed privately with Robin I experience some
-regressions with the former and now deprecated dt description.
+This is pretty much what has been implemented. USB_HS_ID is an
+extcon-usb-gpio.c device.
 
-on my AMD Overdrive board and my old dt description I now only see a
-single group:
+> I can't find hardware relationship between each other, maybe I miss
+> something.
 
-/sys/kernel/iommu_groups/
-/sys/kernel/iommu_groups/0
-/sys/kernel/iommu_groups/0/devices
-/sys/kernel/iommu_groups/0/devices/e0700000.xgmac
+I believe USB_SW_SEL is the physical switch (218-4LPST) while
+USB_SW_SEL_PM is the software controllable part using a GPIO. USB_HS_ID
+is just the vbus line from the uB connector and that line goes straight
+into the SoC via a GPIO.
 
-whereas I formerly see
+> This use case (design) seems strange, usually, we use ID pin controls
+> vbus, but seldom use vbus pin control ID.
+> How you would like to implement it? When the USB cable is connected
+> (between PC), it receives vbus-gpio interrupt, then you set USB_SW_SEL
+> as low? If disconnected, you set USB_SW_SEL as high?
 
-/sys/kernel/iommu_groups/
-/sys/kernel/iommu_groups/3
-/sys/kernel/iommu_groups/3/devices
-/sys/kernel/iommu_groups/3/devices/0000:00:00.0
-/sys/kernel/iommu_groups/1
-/sys/kernel/iommu_groups/1/devices
-/sys/kernel/iommu_groups/1/devices/e0700000.xgmac
-/sys/kernel/iommu_groups/4
-/sys/kernel/iommu_groups/4/devices
-/sys/kernel/iommu_groups/4/devices/0000:00:02.2
-/sys/kernel/iommu_groups/4/devices/0000:01:00.1
-/sys/kernel/iommu_groups/4/devices/0000:00:02.0
-/sys/kernel/iommu_groups/4/devices/0000:01:00.0
-/sys/kernel/iommu_groups/2
-/sys/kernel/iommu_groups/2/devices
-/sys/kernel/iommu_groups/2/devices/e0900000.xgmac
-/sys/kernel/iommu_groups/0
-/sys/kernel/iommu_groups/0/devices
-/sys/kernel/iommu_groups/0/devices/f0000000.pcie
+Right. The documented behavior is to detect the micro-usb cable and
+drive USB_SW_SEL low. When the cable is unplugged we drive USB_SW_SEL
+high. Maybe that should be changed though? If we always sampled
+USB_SW_SEL as a USB_HOST extcon and the vbus line as a USB extcon then
+we could allow the user to decide either with the physical switch or
+with some sort of software control to toggle that gpio.
 
-This is the group topology without ACS override. Applying the non
-upstreamed "pci: Enable overrides for missing ACS capabilities" I used
-to see separate groups for each PCIe components. Now I don't see any
-difference with and without ACS override.
+> When the USB controller works at Host mode, what will happen if the user
+> connects USB cable at device port?
 
-Thanks
+The devices on the two type-A connectors will be disconnected and we'll
+switch from host mode to device mode.
 
-Eric
 > 
-> Robin.
+> 3. Using sysfs to switch the role
+> Set USB_SW_SEL according to "role" at debugfs
+
+sysfs isn't debugfs, but yes I wonder if we need to worry about the
+debugfs role switching support here and toggle the gpio manually without
+involving extcon. That would mean we need to have a way for the chipidea
+controller to toggle this gpio/mux itself.
+
 > 
-> Mark Rutland (1):
->   Docs: dt: add PCI IOMMU map bindings
+> Which one you would like to implement? Or anything else I miss?
 > 
-> Robin Murphy (21):
->   of/irq: Break out msi-map lookup (again)
->   iommu/of: Handle iommu-map property for PCI
->   iommu: Introduce iommu_fwspec
->   Docs: dt: document ARM SMMUv3 generic binding usage
->   iommu/arm-smmu: Fall back to global bypass
->   iommu/arm-smmu: Implement of_xlate() for SMMUv3
->   iommu/arm-smmu: Support non-PCI devices with SMMUv3
->   iommu/arm-smmu: Set PRIVCFG in stage 1 STEs
->   iommu/arm-smmu: Handle stream IDs more dynamically
->   iommu/arm-smmu: Consolidate stream map entry state
->   iommu/arm-smmu: Keep track of S2CR state
->   iommu/arm-smmu: Refactor mmu-masters handling
->   iommu/arm-smmu: Streamline SMMU data lookups
->   iommu/arm-smmu: Add a stream map entry iterator
->   iommu/arm-smmu: Intelligent SMR allocation
->   iommu/arm-smmu: Convert to iommu_fwspec
->   Docs: dt: document ARM SMMU generic binding usage
->   iommu/arm-smmu: Wire up generic configuration support
->   iommu/arm-smmu: Set domain geometry
->   iommu/dma: Add support for mapping MSIs
->   iommu/dma: Avoid PCI host bridge windows
-> 
->  .../devicetree/bindings/iommu/arm,smmu-v3.txt      |   8 +-
->  .../devicetree/bindings/iommu/arm,smmu.txt         |  63 +-
->  .../devicetree/bindings/pci/pci-iommu.txt          | 171 ++++
->  arch/arm64/mm/dma-mapping.c                        |   2 +-
->  drivers/gpu/drm/exynos/exynos_drm_iommu.h          |   2 +-
->  drivers/iommu/Kconfig                              |   2 +-
->  drivers/iommu/arm-smmu-v3.c                        | 386 +++++----
->  drivers/iommu/arm-smmu.c                           | 962 ++++++++++-----------
->  drivers/iommu/dma-iommu.c                          | 161 +++-
->  drivers/iommu/iommu.c                              |  56 ++
->  drivers/iommu/of_iommu.c                           |  52 +-
->  drivers/irqchip/irq-gic-v2m.c                      |   3 +
->  drivers/irqchip/irq-gic-v3-its.c                   |   3 +
->  drivers/of/irq.c                                   |  78 +-
->  drivers/of/of_pci.c                                | 102 +++
->  include/linux/device.h                             |   3 +
->  include/linux/dma-iommu.h                          |  12 +-
->  include/linux/iommu.h                              |  38 +
->  include/linux/of_pci.h                             |  10 +
->  19 files changed, 1323 insertions(+), 791 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.txt
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Mostly #2, but I'm concerned that the DT binding is going to force that
+decision on others who may have the same switch and want to do #1 or #3.
+So how to design it in a way that makes it work in all cases? Also, what
+to do if the USB_SW_SEL switch is driven high by the physical switch?
+That will "override" any software control we might be able to use, so
+hopefully we can detect this somehow and prevent the role switch from
+happening.
