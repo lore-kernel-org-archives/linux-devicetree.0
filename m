@@ -1,87 +1,120 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 08/19] thermal: sti: Remove obsolete platforms from the DT doc.
-Date: Wed, 14 Sep 2016 14:27:46 +0100
-Message-ID: <1473859677-9231-9-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 09/19] thermal: sti: Remove obsolete STiH416 platform support.
+Date: Wed, 14 Sep 2016 14:27:47 +0100
+Message-ID: <1473859677-9231-10-git-send-email-peter.griffin@linaro.org>
 References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, patrice.chotard@st.com, devicetree@vger.kernel.org
-Cc: peter.griffin@linaro.org, edubezval@gmail.com, rui.zhang@intel.com, robh+dt@kernel.org, lee.jones@linaro.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473859677-9231-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-STiH415/6 SoC's are being removed from the kernel. This
-patch removes the compatibles from the dt doc and also
-updates the example to a supported platform.
+STiH415/6 SoC support is being removed from the kernel.
+This patch removes support from the thermal driver.
+Also it updates the register defines and removes
+the SoC and die prefix as neither of these are relevant
+in the context of STiH407 based silicon (STiH415/6 were
+dual die SoCs with an MPE die and SAS die).
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Cc: <rui.zhang@intel.com>
-Cc: <edubezval@gmail.com>
-Cc: <robh+dt@kernel.org>
+Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/thermal/st-thermal.txt     | 28 +++++++---------------
- 1 file changed, 9 insertions(+), 19 deletions(-)
+ drivers/thermal/st/st_thermal_memmap.c | 34 ++++++++++++----------------------
+ 1 file changed, 12 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/thermal/st-thermal.txt b/Documentation/devicetree/bindings/thermal/st-thermal.txt
-index 3b9251b..a2f9391 100644
---- a/Documentation/devicetree/bindings/thermal/st-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/st-thermal.txt
-@@ -3,17 +3,8 @@ Binding for Thermal Sensor driver for STMicroelectronics STi series of SoCs.
- Required parameters:
- -------------------
+diff --git a/drivers/thermal/st/st_thermal_memmap.c b/drivers/thermal/st/st_thermal_memmap.c
+index fc0c9e1..d53965d 100644
+--- a/drivers/thermal/st/st_thermal_memmap.c
++++ b/drivers/thermal/st/st_thermal_memmap.c
+@@ -15,10 +15,10 @@
  
--compatible : 	st,<SoC>-<module>-thermal; should be one of:
--		  "st,stih415-sas-thermal",
--		  "st,stih415-mpe-thermal",
--		  "st,stih416-sas-thermal"
--		  "st,stih416-mpe-thermal"
--		  "st,stid127-thermal" or
--		  "st,stih407-thermal"
--		according to the SoC type (stih415, stih416, stid127, stih407)
--		and module type (sas or mpe). On stid127 & stih407 there is only
--		one die/module, so there is no module type in the compatible
--		string.
-+compatible : 	Should be "st,stih407-thermal"
-+
- clock-names : 	Should be "thermal".
- 		  See: Documentation/devicetree/bindings/resource-names.txt
- clocks : 	Phandle of the clock used by the thermal sensor.
-@@ -25,18 +16,17 @@ Optional parameters:
- reg : 		For non-sysconf based sensors, this should be the physical base
- 		address and length of the sensor's registers.
- interrupts :	Standard way to define interrupt number.
--		Interrupt is mandatory to be defined when compatible is
--		"stih416-mpe-thermal".
- 		  NB: For thermal sensor's for which no interrupt has been
- 		  defined, a polling delay of 1000ms will be used to read the
- 		  temperature from device.
+ #include "st_thermal.h"
  
- Example:
+-#define STIH416_MPE_CONF			0x0
+-#define STIH416_MPE_STATUS			0x4
+-#define STIH416_MPE_INT_THRESH			0x8
+-#define STIH416_MPE_INT_EN			0xC
++#define CONF                       0x0
++#define STATUS                     0x4
++#define INT_THRESH                 0x8
++#define INT_EN                     0xC
  
--	temp1@fdfe8000 {
--		compatible	= "st,stih416-mpe-thermal";
--		reg		= <0xfdfe8000 0x10>;
--		clock-names	= "thermal";
--		clocks		= <&clk_m_mpethsens>;
--		interrupts	= <GIC_SPI 23 IRQ_TYPE_NONE>;
-+	temp0@91a0000 {
-+		compatible = "st,stih407-thermal";
-+		reg = <0x91a0000 0x28>;
-+		clock-names = "thermal";
-+		clocks = <&CLK_SYSIN>;
-+		interrupts = <GIC_SPI 205 IRQ_TYPE_EDGE_RISING>;
-+		st,passive_cooling_temp = <110>;
- 	};
+ /* Power control bits for the memory mapped thermal sensor */
+ #define THERMAL_PDN				BIT(4)
+@@ -31,11 +31,11 @@ static const struct reg_field st_mmap_thermal_regfields[MAX_REGFIELDS] = {
+ 	 * written simultaneously for powering on and off the temperature
+ 	 * sensor. regmap_update_bits() will be used to update the register.
+ 	 */
+-	[INT_THRESH_HI]	= REG_FIELD(STIH416_MPE_INT_THRESH, 	0,  7),
+-	[DCORRECT]	= REG_FIELD(STIH416_MPE_CONF,		5,  9),
+-	[OVERFLOW]	= REG_FIELD(STIH416_MPE_STATUS,		9,  9),
+-	[DATA]		= REG_FIELD(STIH416_MPE_STATUS,		11, 18),
+-	[INT_ENABLE]	= REG_FIELD(STIH416_MPE_INT_EN,		0,  0),
++	[INT_THRESH_HI]	= REG_FIELD(INT_THRESH,		0,  7),
++	[DCORRECT]	= REG_FIELD(CONF,		5,  9),
++	[OVERFLOW]	= REG_FIELD(STATUS,		9,  9),
++	[DATA]		= REG_FIELD(STATUS,		11, 18),
++	[INT_ENABLE]	= REG_FIELD(INT_EN,		0,  0),
+ };
+ 
+ static irqreturn_t st_mmap_thermal_trip_handler(int irq, void *sdata)
+@@ -54,7 +54,7 @@ static int st_mmap_power_ctrl(struct st_thermal_sensor *sensor,
+ 	const unsigned int mask = (THERMAL_PDN | THERMAL_SRSTN);
+ 	const unsigned int val = power_state ? mask : 0;
+ 
+-	return regmap_update_bits(sensor->regmap, STIH416_MPE_CONF, mask, val);
++	return regmap_update_bits(sensor->regmap, CONF, mask, val);
+ }
+ 
+ static int st_mmap_alloc_regfields(struct st_thermal_sensor *sensor)
+@@ -114,7 +114,7 @@ static int st_mmap_register_enable_irq(struct st_thermal_sensor *sensor)
+ 	return st_mmap_enable_irq(sensor);
+ }
+ 
+-static const struct regmap_config st_416mpe_regmap_config = {
++static const struct regmap_config st_thermal_regmap_config = {
+ 	.reg_bits = 32,
+ 	.val_bits = 32,
+ 	.reg_stride = 4,
+@@ -139,7 +139,7 @@ static int st_mmap_regmap_init(struct st_thermal_sensor *sensor)
+ 	}
+ 
+ 	sensor->regmap = devm_regmap_init_mmio(dev, sensor->mmio_base,
+-				&st_416mpe_regmap_config);
++				&st_thermal_regmap_config);
+ 	if (IS_ERR(sensor->regmap)) {
+ 		dev_err(dev, "failed to initialise regmap\n");
+ 		return PTR_ERR(sensor->regmap);
+@@ -156,15 +156,6 @@ static const struct st_thermal_sensor_ops st_mmap_sensor_ops = {
+ 	.enable_irq		= st_mmap_enable_irq,
+ };
+ 
+-/* Compatible device data stih416 mpe thermal sensor */
+-static const struct st_thermal_compat_data st_416mpe_cdata = {
+-	.reg_fields		= st_mmap_thermal_regfields,
+-	.ops			= &st_mmap_sensor_ops,
+-	.calibration_val	= 14,
+-	.temp_adjust_val	= -95,
+-	.crit_temp		= 120,
+-};
+-
+ /* Compatible device data stih407 thermal sensor */
+ static const struct st_thermal_compat_data st_407_cdata = {
+ 	.reg_fields		= st_mmap_thermal_regfields,
+@@ -175,7 +166,6 @@ static const struct st_thermal_compat_data st_407_cdata = {
+ };
+ 
+ static const struct of_device_id st_mmap_thermal_of_match[] = {
+-	{ .compatible = "st,stih416-mpe-thermal", .data = &st_416mpe_cdata },
+ 	{ .compatible = "st,stih407-thermal",     .data = &st_407_cdata },
+ 	{ /* sentinel */ }
+ };
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
