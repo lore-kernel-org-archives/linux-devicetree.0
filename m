@@ -1,55 +1,62 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 2/9] drivers: irqchip: Add STM32 external interrupts
- support
-Date: Wed, 14 Sep 2016 11:19:02 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1609141103420.6233@nanos>
-References: <1473432124-6784-1-git-send-email-alexandre.torgue@st.com> <1473432124-6784-3-git-send-email-alexandre.torgue@st.com> <alpine.DEB.2.20.1609131713490.6233@nanos> <6941f61d-0b33-4108-0135-b11887cd0488@st.com>
+From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Subject: Re: [PATCH v5] rtc: omap: Support ext_wakeup configuration
+Date: Wed, 14 Sep 2016 11:21:48 +0200
+Message-ID: <eb67e85b-4651-33e0-abb7-339d83f36463@grinn-global.com>
+References: <201609082240.a4dMqCnB%fengguang.wu@intel.com>
+ <4512fa0b-890b-0f10-00dd-188fcc98fb5c@grinn-global.com>
+ <20160913215837.xstx4c6d4pr42hgh@piout.net>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <6941f61d-0b33-4108-0135-b11887cd0488@st.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, lee.jones@linaro.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <rtc-linux+bncBD7N3SEV2QCRBNNN4S7AKGQEKB2G3HY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160913215837.xstx4c6d4pr42hgh-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Sep 2016, Alexandre Torgue wrote:
-> On 09/13/2016 05:21 PM, Thomas Gleixner wrote:
-> > On Fri, 9 Sep 2016, Alexandre TORGUE wrote:
-> > > +static void stm32_exti_free(struct irq_domain *d, unsigned int virq,
-> > > +			    unsigned int nr_irqs)
-> > > +{
-> > > +	struct irq_data *data = irq_get_irq_data(virq);
-> > > +
-> > > +	irq_gc_mask_clr_bit(data->parent_data);
-> > 
-> > I have a hard time to understand this. The irq domain is not hierarchical.
-> 
-> Actually, I wanted to test ".free" callback function of gpio_irq_domain in
-> STM32 pinctrl driver. To do that I modified gpio driver: just after getting
-> virq through gpio_to_irq, I called "irq_dispose_mapping(virq)".
-> I know it is dirty but I thought it was the only way to test.
-> 
-> Doing that, I see that ".free" callback of gpio domain is called but as it is
-> hirerchical ".free" callback for parent domain (exti one) is also called. I
-> observed that virq was well unmapped, but not masked at exti level. It is for
-> this reason than I added "irq_gc_mask_clr_bit(data->parent_data);" which mask
-> interrupt at exti level.
+On 13.09.2016 23:58, Alexandre Belloni wrote:
+> Hi,
+>
+> On 12/09/2016 at 11:01:05 +0200, Marcin Niestroj wrote :
+>> I guess we are missing PINCTRL in Kconfig. I didn't add that before,
+>> because I thought that there is a dependency chain GENERIC_PINCONF ->
+>> PINCONF -> PINCTRL.
+>>
+>> So to resolve this issue:
+>> 1) Should we add "select" or "depends on" for PINCTRL?
+>> 2) Should this option be somehow related to COMPILE_TEST?
+>>
+>
+> Adding a "depends on PINCTRL" line should be enough to solve that issue.
+>
 
-Aargh. I really misread the patch, but this is entirely non obvious and you
-should do:
+Ok, will add that together with "depends on OF", as I noticed it is
+also needed.
 
-       struct irq_data *data = irq_domain_get_irq_data(d, virq);
 
-       irq_gc_mask_clr_bit(d);
+But right now we will not be able to compile this driver with
+COMPILE_TEST, unless we select some architecture that selects PINCTRL.
 
-Then it is entirely clear that you mask the interrupt of _this_ (the exti)
-domain.
+So maybe it is a good idea to change "config PINCTRL" option from
+'bool' to 'bool "Support PINCTRL" if COMPILE_TEST', so we can enable it
+manually?
 
-Now what really bugs me is that you do that at all. An interrupt which is
-freed must be masked already. Why is it unmasked in the first place?
+-- 
+Marcin Niestroj
 
-Thanks,
-
-	tglx
-
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
