@@ -1,87 +1,60 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 11/19] watchdog: st_wdt: Remove support for obsolete
- platforms
-Date: Wed, 14 Sep 2016 15:16:58 -0700
-Message-ID: <20160914221658.GF14003@roeck-us.net>
-References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
- <1473859677-9231-12-git-send-email-peter.griffin@linaro.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V8] clk: bcm: Add driver for BCM53573 ILP clock
+Date: Wed, 14 Sep 2016 18:44:40 -0500
+Message-ID: <CAL_Jsq+KF0gVx7=HvyBhXP2p+5+-Q-pKOmNFM4MXpR6bJ_BDFA@mail.gmail.com>
+References: <20160905142935.4550-1-zajec5@gmail.com> <20160913070722.5867-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1473859677-9231-12-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, patrice.chotard@st.com, devicetree@vger.kernel.org, lee.jones@linaro.org, wim@iguana.be, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160913070722.5867-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2016 at 02:27:49PM +0100, Peter Griffin wrote:
-> STiH415/6 SoC support is being removed from the kernel.
-> This patch updates the watchdog driver to remove references
-> to these obsolete platforms.
-> 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> Cc: <wim@iguana.be>
-> Cc: <linux@roeck-us.net>
-> Cc: <linux-watchdog@vger.kernel.org>
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
+On Tue, Sep 13, 2016 at 2:06 AM, Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>
+> This clock is present on BCM53573 devices (including BCM47189) that use
+> Cortex-A7. ILP is a part of PMU (Power Management Unit) multi-function
+> device so we use syscon (and regmap) for it.
+>
+> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 > ---
->  drivers/watchdog/st_lpc_wdt.c | 33 ---------------------------------
->  1 file changed, 33 deletions(-)
-> 
-> diff --git a/drivers/watchdog/st_lpc_wdt.c b/drivers/watchdog/st_lpc_wdt.c
-> index 14e9bad..e6100e4 100644
-> --- a/drivers/watchdog/st_lpc_wdt.c
-> +++ b/drivers/watchdog/st_lpc_wdt.c
-> @@ -52,27 +52,6 @@ struct st_wdog {
->  	bool warm_reset;
->  };
->  
-> -static struct st_wdog_syscfg stid127_syscfg = {
-> -	.reset_type_reg		= 0x004,
-> -	.reset_type_mask	= BIT(2),
-> -	.enable_reg		= 0x000,
-> -	.enable_mask		= BIT(2),
-> -};
-> -
-> -static struct st_wdog_syscfg stih415_syscfg = {
-> -	.reset_type_reg		= 0x0B8,
-> -	.reset_type_mask	= BIT(6),
-> -	.enable_reg		= 0x0B4,
-> -	.enable_mask		= BIT(7),
-> -};
-> -
-> -static struct st_wdog_syscfg stih416_syscfg = {
-> -	.reset_type_reg		= 0x88C,
-> -	.reset_type_mask	= BIT(6),
-> -	.enable_reg		= 0x888,
-> -	.enable_mask		= BIT(7),
-> -};
-> -
->  static struct st_wdog_syscfg stih407_syscfg = {
->  	.enable_reg		= 0x204,
->  	.enable_mask		= BIT(19),
-> @@ -83,18 +62,6 @@ static const struct of_device_id st_wdog_match[] = {
->  		.compatible = "st,stih407-lpc",
->  		.data = &stih407_syscfg,
->  	},
-> -	{
-> -		.compatible = "st,stih416-lpc",
-> -		.data = &stih416_syscfg,
-> -	},
-> -	{
-> -		.compatible = "st,stih415-lpc",
-> -		.data = &stih415_syscfg,
-> -	},
-> -	{
-> -		.compatible = "st,stid127-lpc",
-> -		.data = &stid127_syscfg,
-> -	},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, st_wdog_match);
-> -- 
-> 1.9.1
-> 
+> V2: Rebase on top of clk-next
+>     Use ALP as parent clock
+>     Improve comments
+>     Switch from ioremap_nocache to ioremap
+>     Check of_clk_add_provide result for error
+> V3: Drop #include <linux/moduleh>
+>     Make ILP DT entry part of PMU
+>     Describe ILP as subdevice of PMU in Documentation
+> V4: Use BCM53573 name as suggested by Jon and Ray. It seems "Northstar"
+>     (even if used in some resources) should be used in relation to
+>     Cortex-A9 devices only.
+> V5: Rename remaining "ns" references to "bcm53573", sorry, I sent V4 too
+>     early.
+> V6: Drop #include <linux/clk.h>
+>     Use "int" as type where it matches usage
+>     Add cpu_relax() in the loop
+>     Add disable callback
+>     Use _hw_ functions for registering struct clk_hw (new API)
+>
+>     Thanks a lot Stephen!
+> V7: Use syscon and regmap (thanks Rob!)
+> V8: Update Documentation (drop unused "reg", unit address)
+> ---
+>  .../bindings/clock/brcm,bcm53573-ilp.txt           |  36 +++++
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  drivers/clk/bcm/Makefile                           |   1 +
+>  drivers/clk/bcm/clk-bcm53573-ilp.c                 | 148 +++++++++++++++++++++
+>  3 files changed, 185 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
+>  create mode 100644 drivers/clk/bcm/clk-bcm53573-ilp.c
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
