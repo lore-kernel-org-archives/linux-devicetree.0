@@ -1,63 +1,47 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 5/6] ARM64: meson-gxbb-p20x: Enable USB Nodes
-Date: Wed, 14 Sep 2016 11:05:17 -0700
-Message-ID: <7h37l2mk6a.fsf@baylibre.com>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
-        <20160911134111.31141-1-martin.blumenstingl@googlemail.com>
-        <20160911134111.31141-6-martin.blumenstingl@googlemail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: omap3-gta04: reduce panel backlight PWM
+ frequency to 83Hz
+Date: Wed, 14 Sep 2016 11:12:38 -0700
+Message-ID: <20160914181236.ecuf5o6vvoiao7ek@atomide.com>
+References: <954d43b570092fe92b8b49cf8f475c027d3d8342.1473066997.git.hns@goldelico.com>
+ <20160910031736.xwnepaoifpedqfbr@squirrel.local>
+ <3188F52F-1372-4D59-B790-C15E584A44F2@goldelico.com>
+ <CAALWOA8ZZBbgCG-5TRbd6=k27PQV2EHcCj6zwk31sKTHY1A7Bg@mail.gmail.com>
+ <7C9DF12E-32C6-4D7C-BAAD-5CE9F8BA305A@goldelico.com>
+ <20160913220710.wo7jjyql362pttbs@atomide.com>
+ <82853D52-0D6B-42EC-8900-5575A92123E6@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160911134111.31141-6-martin.blumenstingl@googlemail.com>
-        (Martin Blumenstingl's message of "Sun, 11 Sep 2016 15:41:10 +0200")
-Sender: linux-clk-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-clk@vger.kernel.org, linux-usb@vger.kernel.org, linux-amlogic@lists.infradead.org, jbrunet@baylibre.com, johnyoun@synopsys.com, kishon@ti.com, carlo@caione.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, sboyd@codeaurora.org, mturquette@baylibre.com, will.deacon@arm.com, catalin.marinas@arm.com, gregkh@linuxfoundation.org, mark.rutland@arm.com, robh+dt@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <82853D52-0D6B-42EC-8900-5575A92123E6-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Rivshin <drivshin-5fOYsn7Fw8lBDgjK7y7TUQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+* H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [160913 21:29]:
+> Hi,
+> 
+> > Am 14.09.2016 um 00:07 schrieb Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>:
+> > 
+> > * H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [160910 02:10]:
+> >>> Am 10.09.2016 um 10:20 schrieb Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> >> 
+> >> But with the patch submitted, I just want to give the dts of a single
+> >> device I have even designed a more reasonable value than in current
+> >> linux/master and don't really want to make it a fundamental discussion...
+> > 
+> > So what's the verdict here on this patch? Should we wait for the driver
+> > to get fixed?
+> 
+> No, because it are indeed two issues which can (and should) be fixed independently.
+> This one just makes the urgency of the other bug smaller.
 
-> From: Jerome Brunet <jbrunet@baylibre.com>
->
-> Enable both gxbb USB controller and add a 5V regulator for the OTG port
-> VBUS
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+OK applying into omap-for-v4.9/dt thanks.
 
-nit: subject should have "ARM64: dts:" prefix.
-
-> ---
->  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi | 29 ++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> index ce105fe..4493bce 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> @@ -93,6 +93,18 @@
->  		compatible = "mmc-pwrseq-emmc";
->  		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
->  	};
-> +
-> +	usb_vbus: regulator-usb0-vbus {
-
-nit: I like to use the signal name from the schematics for the node name
-(and for regulator-name below).  In the schematics, that signal is named
-USB_PWR.
-
-
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "USB0_VBUS";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +
-> +		gpio = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
-
-Please add a comment above this line with the schematic signal name: USB_PWR_EN.
-
-> +		enable-active-high;
-> +	};
->  };
-
-Kevin
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
