@@ -1,71 +1,68 @@
-From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: [PATCH v2 1/3] drivers/of: recognize status property of dt memory nodes
-Date: Wed, 14 Sep 2016 15:06:56 -0500
-Message-ID: <1473883618-14998-2-git-send-email-arbab@linux.vnet.ibm.com>
-References: <1473883618-14998-1-git-send-email-arbab@linux.vnet.ibm.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1473883618-14998-1-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 0/3] ARM64: amlogic: Add support for GXL SoC Family
+Date: Wed, 14 Sep 2016 22:08:55 +0200
+Message-ID: <20160914200858.7799-1-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: afaerber@suse.de, khilman@baylibre.com, carlo@caione.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Respect the standard dt "status" property when scanning memory nodes in
-early_init_dt_scan_memory(), so that if the property is present and not
-"okay", no memory will be added.
+The new Amlogic GXL SoCs (S905X and S905D) are part of the Meson GX family and
+share some common features that can be described in a common GX dtsi file used
+by the Meson GXBB and Meson GXL Family dtsi.
 
-The use case at hand is accelerator or device memory, which may be
-unusable until post-boot initialization of the memory link. Such a node
-can be described in the dt as any other, given its status is "disabled".
-Per the device tree specification,
+This patchset introduces the common GX dtsi and switches the GXBB to use
+the common GX dtsi.
+Then it introduces the GXL S905X SoC with the GXL common dtsi, then the S905D
+dtsi and the p212 board dts.
+Finally the GXL S905D SoC is introduced with a S905D dtsi using the GXL common
+and the p23x Board dtsi for the p231 and p230 development boards.
 
-"disabled"
-	Indicates that the device is not presently operational, but it
-	might become operational in the future (for example, something
-	is not plugged in, or switched off).
+Changes since v1 at http://lkml.kernel.org/r/20160903082227.30559-1-narmstrong@baylibre.com :
+ - Add missing copyrigh in gx dtsi
+ - Rename gxl SoCs compatibles to amlogic,s905x and amlogic,s905d
 
-Once such memory is made operational, it can then be hotplugged.
+Changes since RFC v1:
+ - Merge GX common and GXBB changes in a single patch
+ - Integrate GXL S905X patch
+ - Add support for S905D and the p23x boards
 
-Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
----
- drivers/of/fdt.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Note: This patchset integrates the patch "ARM64: dts: amlogic: Add basic support for Amlogic S905X" [1]
+from Carlo Caione.
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 085c638..fc19590 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -1022,8 +1022,10 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
- 				     int depth, void *data)
- {
- 	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
-+	const char *status;
- 	const __be32 *reg, *endp;
- 	int l;
-+	bool add_memory;
- 
- 	/* We are scanning "memory" nodes only */
- 	if (type == NULL) {
-@@ -1044,6 +1046,9 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
- 
- 	endp = reg + (l / sizeof(__be32));
- 
-+	status = of_get_flat_dt_prop(node, "status", NULL);
-+	add_memory = !status || !strcmp(status, "okay");
-+
- 	pr_debug("memory scan node %s, reg size %d,\n", uname, l);
- 
- 	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
-@@ -1057,6 +1062,9 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
- 		pr_debug(" - %llx ,  %llx\n", (unsigned long long)base,
- 		    (unsigned long long)size);
- 
-+		if (!add_memory)
-+			continue;
-+
- 		early_init_dt_add_memory_arch(base, size);
- 	}
- 
+[1] http://lkml.kernel.org/r/1472382113-10754-1-git-send-email-carlo@caione.org
+
+Carlo Caione (1):
+  ARM64: dts: amlogic: Add basic support for Amlogic S905X
+
+Neil Armstrong (2):
+  ARM64: dts: amlogic: Add Meson GX dtsi from GXBB
+  ARM64: dts: amlogic: Add basic support for Amlogic S905D
+
+ Documentation/devicetree/bindings/arm/amlogic.txt  |  11 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   3 +
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi          | 200 +++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 895 +++++++++------------
+ .../boot/dts/amlogic/meson-gxl-s905d-p230.dts      |  51 ++
+ .../boot/dts/amlogic/meson-gxl-s905d-p231.dts      |  51 ++
+ .../boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi     |  64 ++
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi   |  48 ++
+ .../boot/dts/amlogic/meson-gxl-s905x-p212.dts      |  69 ++
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi   |  48 ++
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  48 ++
+ 11 files changed, 972 insertions(+), 516 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+
 -- 
-1.8.3.1
-
+2.7.0
