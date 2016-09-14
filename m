@@ -1,72 +1,26 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v3 3/4] arm: dts: qcom: apq8064: Add display DT nodes
-Date: Wed, 14 Sep 2016 23:27:44 +0530
-Message-ID: <57D98F98.2060601@codeaurora.org>
-References: <1472737015-29382-1-git-send-email-architt@codeaurora.org>
- <1473780097-11388-1-git-send-email-architt@codeaurora.org>
- <1473780097-11388-4-git-send-email-architt@codeaurora.org>
- <cfb9dbc8-40bd-e790-d3d3-5b2c40d58f88@codeaurora.org>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/5] ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual
+ initial support
+Date: Wed, 14 Sep 2016 15:00:00 -0300
+Message-ID: <CAOMZO5B_ahBJr_Tgz_HShmG9heUwCj4K0N3FHhxja1yg0gCUGA@mail.gmail.com>
+References: <1473618641-10159-1-git-send-email-jagan@amarulasolutions.com>
+ <1473618641-10159-3-git-send-email-jagan@amarulasolutions.com>
+ <CAOMZO5CsrrqqUPaVbU-ya79VSXgxyspa_fbr8HY1voJgpy2LLg@mail.gmail.com> <CAMty3ZDKrXxmwDFxSBvL_anJQPdXEfnJ40uNv5B6KssQyJJKhA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cfb9dbc8-40bd-e790-d3d3-5b2c40d58f88@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stephen Boyd <sboyd@codeaurora.org>, andy.gross@linaro.org, robdclark@gmail.com
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMty3ZDKrXxmwDFxSBvL_anJQPdXEfnJ40uNv5B6KssQyJJKhA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiA5LzE0LzIwMTYgMzoxNCBBTSwgU3RlcGhlbiBCb3lkIHdyb3RlOgo+IE9uIDA5LzEzLzIw
-MTYgMDg6MjEgQU0sIEFyY2hpdCBUYW5lamEgd3JvdGU6Cj4+IEFQUTgwNjQgY29udGFpbnMgYSBN
-RFA0IGJhc2VkIGRpc3BsYXkgY29udHJvbGxlci4gSXQgY29udGFpbnMgYSBIRE1JLCBMVkRTCj4+
-IGFuZCAyIERTSSBvdXRwdXRzLgo+Pgo+PiBBZGQgZGlzcGxheSBEVCBub2RlcyBmb3IgTURQNCwg
-SERNSSBUWCBhbmQgSERNSSBQSFkuIE1EUDQgYmFzZWQgZGlzcGxheQo+PiBibG9ja3MgaGF2ZSBh
-IGZsYXQgZGV2aWNlIGhpZXJhcmNoeS4KPj4KPj4gTm9kZXMgZm9yIG90aGVyIG91dHB1dHMgd2ls
-bCBiZSBhZGRlZCBsYXRlci4KPj4KPj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+
-Cj4+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+Pgo+PiBUZXN0ZWQtYnk6IEpvaG4g
-U3R1bHR6IDxqb2huLnN0dWx0ekBsaW5hcm8ub3JnPgo+PiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQg
-VGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgo+PiAtLS0KPj4gICBhcmNoL2FybS9ib290
-L2R0cy9xY29tLWFwcTgwNjQuZHRzaSB8IDkxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysKPj4gICAxIGZpbGUgY2hhbmdlZCwgOTEgaW5zZXJ0aW9ucygrKQo+Pgo+PiBkaWZm
-IC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvcWNvbS1hcHE4MDY0LmR0c2kgYi9hcmNoL2FybS9i
-b290L2R0cy9xY29tLWFwcTgwNjQuZHRzaQo+PiBpbmRleCA3NGE5YjZjLi5iNjg4ZmI2IDEwMDY0
-NAo+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9xY29tLWFwcTgwNjQuZHRzaQo+PiArKysgYi9h
-cmNoL2FybS9ib290L2R0cy9xY29tLWFwcTgwNjQuZHRzaQo+PiBAQCAtOTU1LDYgKzk1NSw5NyBA
-QAo+PiAgIAkJCXJlc2V0LW5hbWVzID0gImF4aSIsICJhaGIiLCAicG9yIiwgInBjaSIsICJwaHki
-Owo+PiAgIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4+ICAgCQl9Owo+PiArCj4+ICsJCWhkbWk6
-IGhkbWktdHhANGEwMDAwMCB7Cj4+ICsJCQljb21wYXRpYmxlID0gInFjb20saGRtaS10eC04OTYw
-IjsKPj4gKwkJCXJlZyA9IDwweDA0YTAwMDAwIDB4MmYwPjsKPj4gKwkJCXJlZy1uYW1lcyA9ICJj
-b3JlX3BoeXNpY2FsIjsKPj4gKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA3OSBJUlFfVFlQRV9O
-T05FPjsKPgo+IFBsZWFzZSBzcGVjaWZ5IHRoZSBJUlFfVFlQRSB0aGF0IGlzbid0IE5PTkUgaGVy
-ZS4KPgo+PiArCQkJY2xvY2tzID0gPCZtbWNjIEhETUlfQVBQX0NMSz4sCj4+ICsJCQkJIDwmbW1j
-YyBIRE1JX01fQUhCX0NMSz4sCj4+ICsJCQkJIDwmbW1jYyBIRE1JX1NfQUhCX0NMSz47Cj4+ICsJ
-CQljbG9jay1uYW1lcyA9ICJjb3JlX2NsayIsCj4+ICsJCQkJICAgICAgIm1hc3Rlcl9pZmFjZV9j
-bGsiLAo+PiArCQkJCSAgICAgICJzbGF2ZV9pZmFjZV9jbGsiOwo+PiArCj4+ICsJCQlwaHlzID0g
-PCZoZG1pX3BoeT47Cj4+ICsJCQlwaHktbmFtZXMgPSAiaGRtaS1waHkiOwo+PiArCj4+ICsJCQlw
-b3J0cyB7Cj4+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4+ICsJCQkJI3NpemUtY2VsbHMg
-PSA8MD47Cj4+ICsKPj4gKwkJCQlwb3J0QDAgewo+PiArCQkJCQlyZWcgPSA8MD47Cj4+ICsJCQkJ
-CWhkbWlfaW46IGVuZHBvaW50IHsKPj4gKwkJCQkJfTsKPj4gKwkJCQl9Owo+PiArCj4+ICsJCQkJ
-cG9ydEAxIHsKPj4gKwkJCQkJcmVnID0gPDE+Owo+PiArCQkJCQloZG1pX291dDogZW5kcG9pbnQg
-ewo+PiArCQkJCQl9Owo+PiArCQkJCX07Cj4+ICsJCQl9Owo+PiArCQl9Owo+PiArCj4+ICsJCWhk
-bWlfcGh5OiBoZG1pLXBoeUA0YTAwNDAwIHsKPj4gKwkJCWNvbXBhdGlibGUgPSAicWNvbSxoZG1p
-LXBoeS04OTYwIjsKPj4gKwkJCXJlZyA9IDwweDRhMDA0MDAgMHg2MD4sCj4+ICsJCQkgICAgICA8
-MHg0YTAwNTAwIDB4MTAwPjsKPj4gKwkJCXJlZy1uYW1lcyA9ICJoZG1pX3BoeSIsCj4+ICsJCQkJ
-ICAgICJoZG1pX3BsbCI7Cj4+ICsKPj4gKwkJCWNsb2NrcyA9IDwmbW1jYyBIRE1JX1NfQUhCX0NM
-Sz47Cj4+ICsJCQljbG9jay1uYW1lcyA9ICJzbGF2ZV9pZmFjZV9jbGsiOwo+PiArCQl9Owo+PiAr
-Cj4+ICsJCW1kcDogbWRwQDUxMDAwMDAgewo+PiArCQkJY29tcGF0aWJsZSA9ICJxY29tLG1kcDQi
-Owo+PiArCQkJcmVnID0gPDB4MDUxMDAwMDAgMHhmMDAwMD47Cj4+ICsJCQlpbnRlcnJ1cHRzID0g
-PEdJQ19TUEkgNzUgSVJRX1RZUEVfTk9ORT47Cj4KPiBTYW1lIGNvbW1lbnQgaGVyZS4KCldpbGwg
-Zml4IHRoaXMuCgpUaGFua3MsCkFyY2hpdAoKCi0tIApRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRl
-ciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0
-aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+On Wed, Sep 14, 2016 at 2:43 PM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+
+> OK, but where it showed on the processor manual? I only find LDO_2P5
+
+It is not a SoC regulator. It is the regulator that powers the CAN transceiver.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
