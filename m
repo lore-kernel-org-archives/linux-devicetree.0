@@ -1,30 +1,53 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual
- initial support
-Date: Tue, 13 Sep 2016 19:36:46 -0300
-Message-ID: <CAOMZO5CsrrqqUPaVbU-ya79VSXgxyspa_fbr8HY1voJgpy2LLg@mail.gmail.com>
-References: <1473618641-10159-1-git-send-email-jagan@amarulasolutions.com> <1473618641-10159-3-git-send-email-jagan@amarulasolutions.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 0/2] MMC: add driver for Amlogic GXBB SoCs
+Date: Tue, 13 Sep 2016 17:42:50 -0700
+Message-ID: <20160914004252.512-1-khilman@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473618641-10159-3-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Xing Wu <xing.xu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, yonghui.yu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 11, 2016 at 3:30 PM, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Here's an updated series for the Amlogic MMC driver.
 
-> +       reg_3p3v: regulator-3p3v {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "3P3V";
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +               regulator-boot-on;
-> +               regulator-always-on;
+Changes since v2:
+- rework voltage regulator support
+- drop read/write accessor macros
+- drop descriptor struct (had endian issues)
+- fix big-endian support, and tested big-endian build
 
-You should remove " regulator-boot-on" and "regulator-always-on" as
-the reg_3p3v regulator is controlled by the can nodes.
+This version is included in the v4.8/integ branch of my git tree
+https://git.kernel.org/cgit/linux/kernel/git/khilman/linux-amlogic.git/
+
+Also some RFC quetsions:
+
+I think this is the exact same IP on the GXL family of SoC, so I'm
+thinking about renaming all occurances of GXBB to just GX.  We can
+have compatibles to match meson-gxbb and meson-gxl etc. though.
+
+Thoughts?
+
+Kevin Hilman (2):
+  MMC: meson: initial support for GXBB platforms
+  ARM64: dts: meson-gxbb: add MMC support
+
+ .../devicetree/bindings/mmc/amlogic,meson-gxbb.txt |  29 +
+ MAINTAINERS                                        |   1 +
+ .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  87 +++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  78 ++
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |  37 +-
+ drivers/mmc/host/Kconfig                           |  10 +
+ drivers/mmc/host/Makefile                          |   1 +
+ drivers/mmc/host/meson-gxbb.c                      | 838 +++++++++++++++++++++
+ 8 files changed, 1080 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-gxbb.txt
+ create mode 100644 drivers/mmc/host/meson-gxbb.c
+
+-- 
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
