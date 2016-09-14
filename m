@@ -1,124 +1,166 @@
-From: "zhichang.yuan" <yuanzhichang@hisilicon.com>
-Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on Hip06
-Date: Wed, 14 Sep 2016 22:50:44 +0800
-Message-ID: <57D963C4.4010406@hisilicon.com>
-References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
- <1473855354-150093-3-git-send-email-yuanzhichang@hisilicon.com>
- <5140357.dcW9ibtZJ6@wuerfel>
+From: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 02/16] dt/bindings: Update binding for PM domain idle
+ states
+Date: Wed, 14 Sep 2016 08:55:52 -0600
+Message-ID: <20160914145552.GC28944@linaro.org>
+References: <1472242678-33700-1-git-send-email-lina.iyer@linaro.org>
+ <1472242678-33700-3-git-send-email-lina.iyer@linaro.org>
+ <0b233802-f459-c6bb-ff42-70745a225cfb@arm.com>
+ <20160902201605.GA1705@linaro.org>
+ <87sht59mcw.fsf@arm.com>
+ <20160912161600.GA21885@linaro.org>
+ <a4fc71ae-6fa5-4142-6dd4-7bc96eb20186@arm.com>
+ <87intz665i.fsf@arm.com>
+ <20160913193844.GB28944@linaro.org>
+ <87h99i6b5d.fsf@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5140357.dcW9ibtZJ6@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, benh@kernel.crashing.org, minyard@acm.org, linux-pci@vger.kernel.org, gabriele.paoloni@huawei.com, john.garry@huawei.com, will.deacon@arm.com, xuwei5@hisilicon.com, linux-serial@vger.kernel.org, gregkh@linuxfoundation.org, zourongrong@gmail.com, liviu.dudau@arm.com, kantyzc@163.com, zhichang.yuan02@gmail.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87h99i6b5d.fsf-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, Juri.Lelli-5wv7dgnIgG8@public.gmane.org, Axel Haslam <ahaslam+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Sep 14 2016 at 04:18 -0600, Brendan Jackman wrote:
+>
+>On Tue, Sep 13 2016 at 20:38, Lina Iyer wrote:
+>> On Tue, Sep 13 2016 at 11:50 -0600, Brendan Jackman wrote:
+>>>
+>>>On Mon, Sep 12 2016 at 18:09, Sudeep Holla wrote:
+>>>> On 12/09/16 17:16, Lina Iyer wrote:
+>>>>> On Mon, Sep 12 2016 at 09:19 -0600, Brendan Jackman wrote:
+>>>>>>
+>>>>>> Hi Lina,
+>>>>>>
+>>>>>> Sorry for the delay here, Sudeep and I were both been on holiday last
+>>>>>> week.
+>>>>>>
+>>>>>> On Fri, Sep 02 2016 at 21:16, Lina Iyer wrote:
+>>>>>>> On Fri, Sep 02 2016 at 07:21 -0700, Sudeep Holla wrote:
+>>>>>> [...]
+>>>>>>>> This version is *not very descriptive*. Also the discussion we had
+>>>>>>>> on v3
+>>>>>>>> version has not yet concluded IMO. So can I take that we agreed on what
+>>>>>>>> was proposed there or not ?
+>>>>>>>>
+>>>>>>> Sorry, this example is not very descriptive. Pls. check the 8916 dtsi
+>>>>>>> for the new changes in the following patches. Let me know if that makes
+>>>>>>> sense.
+>>>>
+>>>> Please add all possible use-cases in the bindings. Though one can refer
+>>>> the usage examples, it might not cover all usage descriptions. It helps
+>>>> preventing people from defining their own when they don't see examples.
+>>>> Again DT bindings are like specifications, it should be descriptive
+>>>> especially this kind of generic ones.
+>>>>
+>>>>>>
+>>>>>> The not-yet-concluded discussion Sudeep is referring to is at [1].
+>>>>>>
+>>>>>> In that thread we initially proposed the idea of, instead of splitting
+>>>>>> state phandles between cpu-idle-states and domain-idle-states, putting
+>>>>>> CPUs in their own domains and using domain-idle-states for _all_
+>>>>>> phandles, deprecating cpu-idle-states. I've brought this up in other
+>>>>>> threads [2] but discussion keeps petering out, and neither this example
+>>>>>> nor the 8916 dtsi in this patch series reflect the idea.
+>>>>>>
+>>>>> Brendan, while your idea is good and will work for CPUs, I do not expect
+>>>>> other domains and possibly CPU domains on some architectures to follow
+>>>>> this model. There is nothing that prevents you from doing this today,
+>>>
+>>>As I understand it your opposition to this approach is this:
+>>>
+>>>There may be devices/CPUs which have idle states which do not constitute
+>>>"power off". If we put those  devices in their own power domain for the
+>>>purpose of putting their (non-power-off) idle state phandles in
+>>>domain-idle-states, we are "lying" because no true power domain exists
+>>>there.
+>>>
+>>>Am I correct that that's your opposition?
+>>>
+>>>If so, it seems we essentially disagree on the definition of a power
+>>>domain, i.e. you define it as a set of devices that are powered on/off
+>>>together while I define it as a set of devices whose power states
+>>>(including idle states, not just on/off) are tied together. I said
+>>>something similar on another thread [1] which died out.
+>>>
+>>>Do you agree that this is basically where we disagree, or am I missing
+>>>something else?
+>>>
+>>>[2] http://www.spinics.net/lists/devicetree/msg141050.html
+>>>
+>> Yes, you are right, I disagree with the definition of a domain around a
+>> device.
+>OK, great.
+>> However, as long as you don't force SoC's to define devices in
+>> the CPU PM domain to have their own virtual domains, I have no problem.
+>> You are welcome to define it the way you want for Juno or any other
+>> platform.
+>I don't think that's true; the bindings have to work the same way for
+>all platforms. If for Juno we put CPU idle state phandles in a
+>domain-idle-states property for per-CPU domains then, with the current
+>implementation, the CPU-level idle states would be duplicated between
+>cpuidle and the CPU PM domains.
 
+We don't have the code today. Your patches would add the functionality
+of parsing domain idle states and attaching them to cpu-idle-states if
+the firmware support and the mode is Platform-coordinated. And that
+functionality is an easy addition. Nobody is making this change to
+platforms with PC to use the CPU PM domains yet. 
 
-On 2016/9/14 20:33, Arnd Bergmann wrote:
-> On Wednesday, September 14, 2016 8:15:52 PM CEST Zhichang Yuan wrote:
-> 
->> +Required properties:
->> +- compatible: should be "hisilicon,low-pin-count"
->> +- #address-cells: must be 2 which stick to the ISA/EISA binding doc.
->> +- #size-cells: must be 1 which stick to the ISA/EISA binding doc.
->> +- reg: base address and length of the register set for the device.
->> +- ranges: define a 1:1 mapping between the I/O space of the child device and
->> +	  the parent.
-> 
-> Do we still need the "ranges" here? The property in your example seems
-> wrong.
+What you are referring to is just a convergence PC and OSI to use
+the same domain hierarchy. This definition is not impacted by your 
+desire. I have my own doubts of defining PC domains this way, but I
+would leave that to you to submit the relevant RFC and bring forth the
+discussion. (Per DT, the definition of PC domain states is already
+immutable from how it is defined today in DT. You have to be careful in
+breaking it up.)
 
-I think "ranges" is needed.
-without this, of_translate_address --> __of_translate_address --> of_translate_one will fail when translating the child's IO resource.
+>> I don't want that to be the forced and expected out of all
+>> SoCs. All I am saying here is that the current implementation would
+>> handle your case as well.
+>
+>The current implementation certainly does cover the work I want to
+>do. The suggestion of per-device power domains for devices/CPUs with
+>their own idle states is simply intended to minimise the binding design,
+>since we'd no longer need cpu-idle-states or device-idle-states
+>(the latter was proposed elsewhere).
+>
+>I am fine with the bindings as they are implemented currently so long
+>as:
+>
+>- The binding doc makes clear how idle state phandles should be split
+>  between cpu-idle-states and domain-idle-states. It should make it
+>  obvious that no phandle should ever appear in both properties. It
+>  would even be worth briefly going over the backward-compatibility
+>  implications (e.g. what happens with old-kernel/new-DT and
+>  new-kernel/old-DT combos if a platform has OSI and PC support and we
+>  move cluster-level idle state phandles out of cpu-idle-states and into
+>  domai-idle-states).
+>
+Since, I have been only defining OSI initiated PM domains, this is not a
+problem. I have clearly distinguished the explanation to be OSI
+specific, for now.
 
-> 
->> +	ranges = <0x01 0xe4 0x0 0xe4 0x1000>;
-> 
-> You translate I/O port 0x00e4 through 0x10e4 to CPU address 0x0e4?
-The hip06 LPC is defined as isa type.
-So, 0x01 0xe4 is the local IO address of 0xe4. With this ranges, 0xe4 of child will be 1:1 mapped as 0xe4.
-It means no translation.
+>- We have a reason against the definition of power domains as "a set of
+>  devices bound by a common power (including idle) state", since that
+>  definition would simplify the bindings. In my view, "nobody thinks
+>  that's what a power domain is" _is_ a compelling reason, so if others
+>  on the list get involved I'm convinced. I think I speak for Sudeep
+>  here too.
+>
 
-> 
->> +/**
->> + * hisilpc_children_map_sysio - setup the mapping between system Io and
->> + *			physical IO
->> + *
->> + * @child: the device whose IO is handling
->> + * @data: some device specific data. For ACPI device, should be NULL.
->> + *
->> + * Returns >=0 means the mapping is successfully created;
->> + * others mean some failures.
->> + */
->> +static int hisilpc_children_map_sysio(struct device * child, void * data)
->> +{
->> +	struct resource *iores;
->> +	unsigned long cpuio;
->> +	struct extio_ops *opsnode;
->> +	int ret;
->> +	struct hisilpc_dev *lpcdev;
->> +
->> +	if (!child || !child->parent)
->> +		return -EINVAL;
->> +
->> +	iores = platform_get_resource_byname(to_platform_device(child),
->> +					IORESOURCE_IO, "dev_io");
->> +	if (!iores)
->> +		return -ENODEV;
->> +
->> +	/*
->> +	 * can not use devm_kzalloc to allocate slab for child before its driver
->> +	 * start probing. Here allocate the slab with the name of parent.
->> +	 */
->> +	opsnode = devm_kzalloc(child->parent, sizeof(*opsnode), GFP_KERNEL);
->> +	if (!opsnode)
->> +		return -ENOMEM;
->> +
->> +	cpuio = data ? *((unsigned long *)data) : 0;
->> +
->> +	opsnode->start = iores->start;
->> +	opsnode->end = iores->end;
->> +	opsnode->ptoffset = cpuio ? (cpuio - iores->start) : 0;
->> +
->> +	dev_info(child, "map sys port[%lx - %lx] offset=0x%lx",
->> +				(unsigned long)iores->start,
->> +				(unsigned long)iores->end,
->> +				opsnode->ptoffset);
->> +
->> +	opsnode->pfin = hisilpc_comm_inb;
->> +	opsnode->pfout = hisilpc_comm_outb;
->> +
->> +	lpcdev = platform_get_drvdata(to_platform_device(child->parent));
->> +	opsnode->devpara = lpcdev;
->> +
->> +	/* only apply indirect-IO to ipmi child device */
-> 
-> I don't get this part. The bus driver should not care what its
-> children are, just register and PIO ranges that the bus can handle
-> in theory, i.e. from 0x000 to 0xfff.
+Look outside the context of the CPU - a generic PM domain is collective
+of generic devices that share the same power island. A PM Domain may
+also have other domains as sub-domains as well. So it is exactly that.
+A CPU is just a specialized device.
 
-Just as we discussed in V2, the legacy PIO range is specific to some device, such as for ipmi bt, 0xe4 - 0xe7 will be populated.
-I don't want to occupy a larger PIO range in which only small part PIOs are used by our LPC. At this moment, two PIO ranges are using
-through the device property configuration, 0xe4-0xe7, 0x2f8-0x2ff.
-If we configure 0-0x1000 for the LPC to cover those two ranges, most PIO are wasted and other PIO device on other buses lose the chance to use the PIO below 0x1000.
-Otherwise, PIO conflict will happen. So, My idea is only occupied the PIO ranges which are really needed for the children.
+Hope this helps.
 
-And there are probably multiple child devices under LPC, the global arm64_extio_ops only can cover one PIO range. It is fortunate only ipmi driver can not support I/O
-operation registering, serial driver has serial_in/serial_out to be registered. So, only the PIO range for ipmi device is stored in arm64_extio_ops and the indirect-IO
-works well for ipmi device.
-
-If we think it is nearly no chance that LPC PIO range conflict with other buses, we can allocate 0xe4 - 0x2ff to LPC and store it to arm64_extio_ops. In this case,
-the special processing for ipmi device is not needed.
-
-Best,
-Zhichang
-
-> 
-> 	Arnd
-> 
-> 
-> .
-> 
+Thanks,
+Lina
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
