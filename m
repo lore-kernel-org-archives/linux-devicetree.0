@@ -1,40 +1,51 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 10/19] watchdog: bindings: Remove obsolete platforms from dt doc.
-Date: Wed, 14 Sep 2016 14:27:48 +0100
-Message-ID: <1473859677-9231-11-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH 07/19] ahci: st: Remove STiH416 dt example
+Date: Wed, 14 Sep 2016 14:27:45 +0100
+Message-ID: <1473859677-9231-8-git-send-email-peter.griffin@linaro.org>
 References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, patrice.chotard@st.com, devicetree@vger.kernel.org
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, wim@iguana.be, linux@roeck-us.net, robh+dt@kernel.org, linux-watchdog@vger.kernel.org
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, tj@kernel.org, robh+dt@kernel.org, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-STiH415/6 SoC support is being removed from the kernel
-so update the dt bding document to reflect this.
+This platform is being removed from the kernel so remove
+the dt example.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Cc: <wim@iguana.be>
-Cc: <linux@roeck-us.net>
+Cc: <tj@kernel.org>
 Cc: <robh+dt@kernel.org>
-Cc: <linux-watchdog@vger.kernel.org>
+Cc: <linux-ide@vger.kernel.org>
 ---
- Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ Documentation/devicetree/bindings/ata/ahci-st.txt | 15 ---------------
+ 1 file changed, 15 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt b/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
-index 039c5ca..b949039 100644
---- a/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
-@@ -9,8 +9,7 @@ functionality.
+diff --git a/Documentation/devicetree/bindings/ata/ahci-st.txt b/Documentation/devicetree/bindings/ata/ahci-st.txt
+index e1d01df..909c993 100644
+--- a/Documentation/devicetree/bindings/ata/ahci-st.txt
++++ b/Documentation/devicetree/bindings/ata/ahci-st.txt
+@@ -18,21 +18,6 @@ Optional properties:
  
- Required properties
+ Example:
  
--- compatible 	: Must be one of: "st,stih407-lpc" "st,stih416-lpc"
--				  "st,stih415-lpc" "st,stid127-lpc"
-+- compatible 	: Should be: "st,stih407-lpc"
- - reg		: LPC registers base address + size
- - interrupts    : LPC interrupt line number and associated flags
- - clocks	: Clock used by LPC device (See: ../clock/clock-bindings.txt)
+-	/* Example for stih416 */
+-	sata0: sata@fe380000 {
+-		compatible	= "st,ahci";
+-		reg		= <0xfe380000 0x1000>;
+-		interrupts	= <GIC_SPI 157 IRQ_TYPE_NONE>;
+-		interrupt-names	= "hostc";
+-		phys		= <&phy_port0 PHY_TYPE_SATA>;
+-		phy-names	= "ahci_phy";
+-		resets		= <&powerdown STIH416_SATA0_POWERDOWN>,
+-				  <&softreset STIH416_SATA0_SOFTRESET>;
+-		reset-names	= "pwr-dwn", "sw-rst";
+-		clocks		= <&clk_s_a0_ls CLK_ICN_REG>;
+-		clock-names	= "ahci_clk";
+-	};
+-
+ 	/* Example for stih407 family silicon */
+ 	sata0: sata@9b20000 {
+ 		compatible	= "st,ahci";
 -- 
 1.9.1
