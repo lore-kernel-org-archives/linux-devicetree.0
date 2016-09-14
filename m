@@ -1,63 +1,65 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 00/14] Clock improvement for video playback
-Date: Wed, 14 Sep 2016 11:36:20 -0700
-Message-ID: <20160914183620.GV7243@codeaurora.org>
-References: <1472473626-15398-1-git-send-email-gabriel.fernandez@st.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 1/6] usb: dwc2: add support for Meson8b and GXBB SoCs
+Date: Wed, 14 Sep 2016 11:36:38 -0700
+Message-ID: <CAOi56cWOwRJWJMhKDmnY0KdaOBMM3Cz2ZS2gTzGd-Hi1wig3jg@mail.gmail.com>
+References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
+ <20160911134111.31141-1-martin.blumenstingl@googlemail.com>
+ <20160911134111.31141-2-martin.blumenstingl@googlemail.com>
+ <m24m5ixxyu.fsf@baylibre.com> <0d587b46-4c6e-c2ec-a62e-5d0c5a5bd902@synopsys.com>
+ <CAOi56cW+zJ8_Gf6xKMyKNk7YB1+MpWHrtmv=+Xxs0PZy9rAXqQ@mail.gmail.com> <40e49082-3635-5b99-863b-f51f97258864@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1472473626-15398-1-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gabriel.fernandez-qxv4g6HH51o@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Olivier Bideau <olivier.bideau-qxv4g6HH51o@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel@s
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <40e49082-3635-5b99-863b-f51f97258864@synopsys.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: John Youn <John.Youn@synopsys.com>
+Cc: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>, "jbrunet@baylibre.com" <jbrunet@baylibre.com>, "kishon@ti.com" <kishon@ti.com>, "carlo@caione.org" <carlo@caione.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, robh+dt@kernel.or
 List-Id: devicetree@vger.kernel.org
 
-On 08/29, gabriel.fernandez-qxv4g6HH51o@public.gmane.org wrote:
-> From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-> 
-> v3:
->   - Rebase to v4.8-rc1
->   - Tipo fix in st,clkgen-pll.txt
->   - Add Ack of Peter for the series
->   - Add missed patch: "ARM: DT: STiH4xx: Simplify clock binding of STiH4xx platforms"
-> 
-> v2:
->   - Simpliflication of clock binding
->     remark from Rob https://lkml.org/lkml/2016/5/25/492
->   - Suppression of stih415-416 support for the clocks (in order
-> 	to help simplification of clock binding)
->     (others patchs for the machine and drivers will come)
-> 
-> This serie allows to increase video resolutions and make audio
-> adjustment during a video playback.
-> 
-> Gabriel Fernandez (14):
->   drivers: clk: st: Remove stih415-416 clock support
->   drivers: clk: st: Simplify clock binding of STiH4xx platforms
->   ARM: DT: STiH4xx: Simplify clock binding of STiH4xx platforms
->   drivers: clk: st: Add fs660c32 synthesizer algorithm
->   drivers: clk: st: Add clock propagation for audio clocks
->   drivers: clk: st: Handle clk synchronous mode for video clocks
->   ARM: DT: STiH407: Enable clock propagation for audio clocks
->   ARM: DT: STiH410: Enable clock propagation for audio clocks
->   ARM: DT: STiH418: Enable clock propagation for audio clocks
->   ARM: DT: STiH407: Enable synchronous clock mode for video clocks
->   ARM: DT: STiH410: Enable synchronous clock mode for video clocks
->   ARM: DT: STiH418: Enable synchronous clock mode for video clocks
->   ARM: DT: STi: STiH407: clock configuration to address 720p and 1080p
->   ARM: DT: STi: STiH410: clock configuration to address 720p and 1080p
+On Wed, Sep 14, 2016 at 11:26 AM, John Youn <John.Youn@synopsys.com> wrote:
+> On 9/14/2016 11:17 AM, Kevin Hilman wrote:
+>> On Wed, Sep 14, 2016 at 11:12 AM, John Youn <John.Youn@synopsys.com> wrote:
+>>> On 9/14/2016 9:11 AM, Kevin Hilman wrote:
+>>>> Hi John,
+>>>>
+>>>> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+>>>>
+>>>>> From: Jerome Brunet <jbrunet@baylibre.com>
+>>>>>
+>>>>> Add compatible strings for amlogic Meson8b and GXBB SoCs with the
+>>>>> corresponding configuration parameters.
+>>>>>
+>>>>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>>>>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>>>>
+>>>> Are you OK with adding this platform for v4.9?  I know you mentioned
+>>>> you're working on new bindings to replace the current way, but since
+>>>> that hasn't been posted AFAICT, it would be nice to get this merged now
+>>>> and we can help test the new bindings when you're ready.
+>>>>
+>>>> If you're OK with that, and with your Ack, I can take merge the driver
+>>>> changes through the arm-soc tree along with the rest of the DT patches.
+>>>>
+>>>
+>>> Sure. Unfortunately, I wasn't able to complete it for 4.9.
+>>>
+>>> You can add my acked-by on this:
+>>>
+>>> Acked-by: John Youn <johnyoun@synopsys.com>
+>>
+>> Great, thanks!  I assume you're OK with PATCH 2/2 for the bindings as
+>> well (at least for now until you rework them?)
+>>
+>> Kevin
+>>
+>
+> Do you mean PATCH 2/6 from this series?
 
-The order of patches intermingles clk changes and dts changes.
-I'd prefer to not take any patches for dts through the clk tree,
-so can those be deferred to an arm-soc PR? Assuming that works,
-I'd just pick 1-2, and 4-6 into the clk tree and the rest can go
-on top through arm-soc.
+Yes.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> It doesn't seem to add or remove any bindings in dwc2 so I'm fine with
+> it.
+
+Thanks.
+
+Kevin
