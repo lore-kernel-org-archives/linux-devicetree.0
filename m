@@ -1,8 +1,8 @@
 From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and
  GXBB
-Date: Wed, 14 Sep 2016 10:36:44 +0200
-Message-ID: <1473842204.2954.13.camel@pengutronix.de>
+Date: Wed, 14 Sep 2016 10:37:20 +0200
+Message-ID: <1473842240.6816.1.camel@pengutronix.de>
 References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
          <20160904213152.25837-5-martin.blumenstingl@googlemail.com>
          <m260q6jibf.fsf@baylibre.com>
@@ -63,10 +63,11 @@ Am Dienstag, den 13.09.2016, 17:59 -0700 schrieb Kevin Hilman:
 > pulse.
 
 Would it be possible to bring down both PHYs drivers, pull the reset
-line once, and then bring the drivers back up again on this hardware?
+line once, and then bring the drivers back up again?
 
 regards
 Philipp
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
