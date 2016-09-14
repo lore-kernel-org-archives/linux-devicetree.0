@@ -1,75 +1,55 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and
- GXBB
-Date: Wed, 14 Sep 2016 10:37:20 +0200
-Message-ID: <1473842240.6816.1.camel@pengutronix.de>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
-         <20160904213152.25837-5-martin.blumenstingl@googlemail.com>
-         <m260q6jibf.fsf@baylibre.com>
-         <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg@mail.gmail.com>
-         <e3b1f611-d6f6-c98b-a53b-98e94ef5bd96@codethink.co.uk>
-         <m2eg4ui0nl.fsf@baylibre.com>
-         <ffdd0188-72bc-4575-f997-e8547f4c31d2@codethink.co.uk>
-         <CAFBinCC4gkMrJtertYevg_hXDLJEZ0PqfKKLL5UKXo8B=SXsPw@mail.gmail.com>
-         <m2sht9gkau.fsf@baylibre.com>
-         <CAFBinCDohOoFP_3GC+=tt6S7sPS308ao-yf+oGhdfwo-N-JnAA@mail.gmail.com>
-         <1473780508.10237.22.camel@pengutronix.de>
-         <CAFBinCC+izGS72TZuiiBu=DjtSmoZXRZ6r76M6rC8W7UTpSD6g@mail.gmail.com>
-         <7hzinbmh40.fsf@baylibre.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v6 0/3] mfd: tps65217: Add power-button and IRQ support
+Date: Wed, 14 Sep 2016 10:37:37 +0200
+Message-ID: <CAMuHMdV+bVCQ0_YUp1v3yVgjp3EpNgVGnHYpnESszexGnby8Ug@mail.gmail.com>
+References: <20160909084204.26226-1-m.niestroj@grinn-global.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7hzinbmh40.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160909084204.26226-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 13.09.2016, 17:59 -0700 schrieb Kevin Hilman:
-> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
-> 
-> > On Tue, Sep 13, 2016 at 5:28 PM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> 
-> [...]
-> 
-> >>> I added Philipp and Hans to this thread - maybe they can comment on this.
-> >>> To sum it up, our problem is:
-> >>> - there are two separate USB PHYs on Meson GXBB
-> >>> - both are sharing the same reset line (provided by the reset-meson driver)
-> >>> - during initialization of the PHYs we must only call
-> >>> reset_control_reset(rstc) once (if we do it for the first *and* second
-> >>> PHY then the first PHY gets confused once the second PHY uses the
-> >>> reset because the first PHY's state is reset as well)
-> >>
-> >> If you have an initially asserted reset line and you can enable the
-> >> first module by deasserting the reset via reset_control_deassert (and
-> >> reset_control_assert to signal when the module may be disabled again
-> >> after use), shared resets are for you.
-> >>
-> >> If you need a reset pulse or have no direct control over the reset line,
-> >> (device_reset), the reset framework currently has no solution for this.
-> >> The ugly thing about reset_control_once would be that it can't re-reset
-> >> modules when unloading and reloading driver modules.
-> >
-> > The corresponding reset driver in question is reset-meson, which only
-> > implements reset (assert/deassert are not implemented). However, I
-> > don't know if this is due to hardware design.
-> > I think the hardware implements the latter, but maybe Neil can give
-> > more information here (I currently don't have access to my board so I
-> > cannot test how the hardware actually behaves).
-> 
-> It's implemented that way because the hardware only supports a reset
-> pulse.
+On Fri, Sep 9, 2016 at 10:42 AM, Marcin Niestroj
+<m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org> wrote:
+> The following patches add tps65217 power button support and make it usable
+> with am335x boards. It was developed and rebased on v4.8-rc5.
+>
+> Changes v5 -> v6 (suggested by Dmitry):
+>  * Use dev_get_regmap() instead of fragile pointer calculations
+>  * Keep old formatting for flags as single function argument
+>
+> Changes v4 -> v5:
+>  * Dropped two patches (they were already dropped in v4 resend):
+>    * "power_supply: tps65217-charger: Fix NULL deref during property export"
+>      (already in mainline)
+>    * "power_supply: tps65217-charger: Add support for IRQs" (queued into
+>      power-supply's -next branch)
+>  * Combine tps65217 and tps65218 power button drivers (as suggested by Dmitry)
+>  * Combine device-tree documentation for tps65217 and tps65218 power buttons
+>
+> Changes v3 -> v4:
+>  * Add irq_set_parent() during irq init (suggested by Grygorii)
 
-Would it be possible to bring down both PHYs drivers, pull the reset
-line once, and then bring the drivers back up again?
+irq_set_parent() is not exported to modules
 
-regards
-Philipp
+ERROR: "irq_set_parent" [drivers/mfd/tps65217.ko] undefined!
 
+See e.g. http://kisskb.ellerman.id.au/kisskb/buildresult/12801307/
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
