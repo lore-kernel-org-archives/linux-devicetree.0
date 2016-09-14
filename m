@@ -1,41 +1,33 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 03/19] MAINTAINERS: Remove phy-miphy365x.c entry from STi arch
-Date: Wed, 14 Sep 2016 14:27:41 +0100
-Message-ID: <1473859677-9231-4-git-send-email-peter.griffin@linaro.org>
-References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473859677-9231-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 2/9] drivers: irqchip: Add STM32 external interrupts
+ support
+Date: Wed, 14 Sep 2016 15:34:18 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1609141532510.6233@nanos>
+References: <1473432124-6784-1-git-send-email-alexandre.torgue@st.com> <1473432124-6784-3-git-send-email-alexandre.torgue@st.com> <alpine.DEB.2.20.1609131713490.6233@nanos> <6941f61d-0b33-4108-0135-b11887cd0488@st.com> <alpine.DEB.2.20.1609141103420.6233@nanos>
+ <facd1c7c-d696-eae1-02e4-5a0c9285add0@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <facd1c7c-d696-eae1-02e4-5a0c9285add0@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Remove this driver as the IP is only found on STiH415/6
-silicon, and support for these SoC's is being removed
-from the kernel.
+On Wed, 14 Sep 2016, Alexandre Torgue wrote:
+> On 09/14/2016 11:19 AM, Thomas Gleixner wrote:
+> > 
+> > Now what really bugs me is that you do that at all. An interrupt which is
+> > freed must be masked already. Why is it unmasked in the first place?
+> 
+> Honestly I don't know. When "devm_free_irq" is called to release virq, there
+> is no issue and interrupt is well masked. But, when I tried to use
+> "irq_dispose_mapping(virq)" I observed that .free is called (child and parent
+> domain) but interrupt is not masked.
 
-Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: <kishon-l0cyMroinI0@public.gmane.org>
----
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+Well, you just used some function in some context which is not relevant to
+the normal operation. So adding that mask() is just paranoia for no value.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index db814a8..12c271c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1754,7 +1754,6 @@ F:	drivers/media/rc/st_rc.c
- F:	drivers/media/platform/sti/c8sectpfe/
- F:	drivers/mmc/host/sdhci-st.c
- F:	drivers/phy/phy-miphy28lp.c
--F:	drivers/phy/phy-miphy365x.c
- F:	drivers/phy/phy-stih407-usb.c
- F:	drivers/phy/phy-stih41x-usb.c
- F:	drivers/pinctrl/pinctrl-st.c
--- 
-1.9.1
+Thanks,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	tglx
