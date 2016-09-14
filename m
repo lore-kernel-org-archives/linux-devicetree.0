@@ -1,313 +1,214 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v9 01/19] remoteproc: st_slim_rproc: add a slimcore rproc
- driver
-Date: Wed, 14 Sep 2016 09:30:52 +0100
-Message-ID: <20160914083052.GA638@dell>
-References: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
- <1473081421-16555-2-git-send-email-peter.griffin@linaro.org>
- <20160913175656.GC21438@tuxbot>
+From: Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
+Subject: Re: ARM, SoC: About the use DT-defined properties by 3rd-party
+ drivers
+Date: Wed, 14 Sep 2016 10:32:19 +0200
+Message-ID: <57D90B13.2020200@laposte.net>
+References: <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
+ <57D69FB1.2020801@laposte.net> <20160912123809.GB13741@leverpostej>
+ <57D6AA54.6000208@laposte.net> <20160912135549.GA14165@leverpostej>
+ <57D6D2A9.3010006@laposte.net> <20160912165637.GF14165@leverpostej>
+ <57D7CF17.2050905@laposte.net> <20160913131208.GA23336@leverpostej>
+ <57D80B91.4020306@laposte.net> <20160913145126.GC23336@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20160913175656.GC21438@tuxbot>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: ohad@wizery.com, devicetree@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Peter Griffin <peter.griffin@linaro.org>, kraxel@redhat.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, virtualization@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160913145126.GC23336@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAxMyBTZXAgMjAxNiwgQmpvcm4gQW5kZXJzc29uIHdyb3RlOgoKPiBPbiBNb24gMDUg
-U2VwIDA2OjE2IFBEVCAyMDE2LCBQZXRlciBHcmlmZmluIHdyb3RlOgo+IAo+ID4gc2xpbSBjb3Jl
-IGlzIHVzZWQgYXMgYSBiYXNpcyBmb3IgbWFueSBJUHMgaW4gdGhlIFNUaQo+ID4gY2hpcHNldHMg
-c3VjaCBhcyBmZG1hIGFuZCBkZW11eC4gVG8gYXZvaWQgZHVwbGljYXRpbmcKPiA+IHRoZSBlbGYg
-bG9hZGluZyBjb2RlIGluIGVhY2ggZGV2aWNlIGRyaXZlciBhIHNsaW0KPiA+IHJwcm9jIGRyaXZl
-ciBoYXMgYmVlbiBjcmVhdGVkLgo+ID4gCj4gPiBUaGlzIGRyaXZlciBpcyBkZXNpZ25lZCB0byBi
-ZSB1c2VkIGJ5IG90aGVyIGRldmljZSBkcml2ZXJzCj4gPiBzdWNoIGFzIGZkbWEsIG9yIGRlbXV4
-IHdob3NlIElQIGlzIGJhc2VkIGFyb3VuZCBhIHNsaW0gY29yZS4KPiA+IFRoZSBkZXZpY2UgZHJp
-dmVyIGNhbiBjYWxsIHNsaW1fcnByb2NfYWxsb2MoKSB0byBhbGxvY2F0ZQo+ID4gYSBzbGltIHJw
-cm9jIGFuZCBzbGltX3Jwcm9jX3B1dCgpIHdoZW4gZmluaXNoZWQuCj4gPiAKPiA+IFRoaXMgZHJp
-dmVyIHRha2VzIGNhcmUgb2YgaW9yZW1hcHBpbmcgdGhlIHNsaW0KPiA+IHJlZ2lzdGVycyAoZG1l
-bSwgaW1lbSwgc2xpbWNvcmUsIHBlcmlwaGVyYWxzKSwgd2hvc2Ugb2Zmc2V0cwo+ID4gYW5kIHNp
-emVzIGNhbiBjaGFuZ2UgYmV0d2VlbiBJUCdzLiBJdCBhbHNvIG9idGFpbnMgYW5kIGVuYWJsZXMK
-PiA+IGFueSBjbG9ja3MgdXNlZCBieSB0aGUgZGV2aWNlLiBUaGlzIGFwcHJvYWNoIGF2b2lkcyBo
-YXZpbmcKPiA+IGEgZG91YmxlIG1hcHBpbmcgb2YgdGhlIHJlZ2lzdGVycyBhcyBzbGltX3Jwcm9j
-IGRvZXMgbm90IHJlZ2lzdGVyCj4gPiBpdHMgb3duIHBsYXRmb3JtIGRldmljZS4gSXQgYWxzbyBt
-YXBzIHdlbGwgdG8gZGV2aWNlIHRyZWUKPiA+IGFic3RyYWN0aW9uIGFzIGl0IGFsbG93cyB1cyB0
-byBoYXZlIG9uZSBkdCBub2RlIGZvciB0aGUgd2hvbGUKPiA+IGRldmljZS4KPiA+IAo+ID4gQWxs
-IG9mIHRoZSBnZW5lcmljIHJwcm9jIGVsZiBsb2FkaW5nIGNvZGUgY2FuIGJlIHJldXNlZCwgYW5k
-Cj4gPiB3ZSBwcm92aWRlIHN0YXJ0KCkgc3RvcCgpIGhvb2tzIHRvIHN0YXJ0IGFuZCBzdG9wIHRo
-ZSBzbGltCj4gPiBjb3JlIG9uY2UgdGhlIGZpcm13YXJlIGhhcyBiZWVuIGxvYWRlZC4gVGhpcyBo
-YXMgYmVlbiB0ZXN0ZWQKPiA+IHN1Y2Nlc3NmdWxseSB3aXRoIGZkbWEgZHJpdmVyLgo+ID4gCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBHcmlmZmluIDxwZXRlci5ncmlmZmluQGxpbmFyby5vcmc+
-Cj4gCj4gQWNrZWQtYnk6IEJqb3JuIEFuZGVyc3NvbiA8Ympvcm4uYW5kZXJzc29uQGxpbmFyby5v
-cmc+CgpXaGF0J3MgcHJldmVudGluZyB0aGlzIGZyb20gYmVpbmcgYXBwbGllZCByaWdodCBhd2F5
-PwoKPiA+IC0tLQo+ID4gIGRyaXZlcnMvcmVtb3RlcHJvYy9LY29uZmlnICAgICAgICAgICAgICAg
-fCAgIDQgKwo+ID4gIGRyaXZlcnMvcmVtb3RlcHJvYy9NYWtlZmlsZSAgICAgICAgICAgICAgfCAg
-IDEgKwo+ID4gIGRyaXZlcnMvcmVtb3RlcHJvYy9zdF9zbGltX3Jwcm9jLmMgICAgICAgfCAzNjQg
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gIGluY2x1ZGUvbGludXgvcmVtb3Rl
-cHJvYy9zdF9zbGltX3Jwcm9jLmggfCAgNTggKysrKysKPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDQy
-NyBpbnNlcnRpb25zKCspCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcmVtb3RlcHJv
-Yy9zdF9zbGltX3Jwcm9jLmMKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9saW51eC9y
-ZW1vdGVwcm9jL3N0X3NsaW1fcnByb2MuaAo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9y
-ZW1vdGVwcm9jL0tjb25maWcgYi9kcml2ZXJzL3JlbW90ZXByb2MvS2NvbmZpZwo+ID4gaW5kZXgg
-MWE4YmY3NmEuLmE3YmVkYzYgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL3JlbW90ZXByb2MvS2Nv
-bmZpZwo+ID4gKysrIGIvZHJpdmVycy9yZW1vdGVwcm9jL0tjb25maWcKPiA+IEBAIC0xMDAsNCAr
-MTAwLDggQEAgY29uZmlnIFNUX1JFTU9URVBST0MKPiA+ICAJICBwcm9jZXNzb3IgZnJhbWV3b3Jr
-Lgo+ID4gIAkgIFRoaXMgY2FuIGJlIGVpdGhlciBidWlsdC1pbiBvciBhIGxvYWRhYmxlIG1vZHVs
-ZS4KPiA+ICAKPiA+ICtjb25maWcgU1RfU0xJTV9SRU1PVEVQUk9DCj4gPiArCXRyaXN0YXRlCj4g
-PiArCXNlbGVjdCBSRU1PVEVQUk9DCj4gPiArCj4gPiAgZW5kbWVudQo+ID4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvcmVtb3RlcHJvYy9NYWtlZmlsZSBiL2RyaXZlcnMvcmVtb3RlcHJvYy9NYWtlZmls
-ZQo+ID4gaW5kZXggOTJkMzc1OC4uZGIxZGFlNyAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvcmVt
-b3RlcHJvYy9NYWtlZmlsZQo+ID4gKysrIGIvZHJpdmVycy9yZW1vdGVwcm9jL01ha2VmaWxlCj4g
-PiBAQCAtMTQsMyArMTQsNCBAQCBvYmotJChDT05GSUdfREE4WFhfUkVNT1RFUFJPQykJCSs9IGRh
-OHh4X3JlbW90ZXByb2Mubwo+ID4gIG9iai0kKENPTkZJR19RQ09NX01EVF9MT0FERVIpCQkrPSBx
-Y29tX21kdF9sb2FkZXIubwo+ID4gIG9iai0kKENPTkZJR19RQ09NX1E2VjVfUElMKQkJKz0gcWNv
-bV9xNnY1X3BpbC5vCj4gPiAgb2JqLSQoQ09ORklHX1NUX1JFTU9URVBST0MpCQkrPSBzdF9yZW1v
-dGVwcm9jLm8KPiA+ICtvYmotJChDT05GSUdfU1RfU0xJTV9SRU1PVEVQUk9DKQkrPSBzdF9zbGlt
-X3Jwcm9jLm8KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3JlbW90ZXByb2Mvc3Rfc2xpbV9ycHJv
-Yy5jIGIvZHJpdmVycy9yZW1vdGVwcm9jL3N0X3NsaW1fcnByb2MuYwo+ID4gbmV3IGZpbGUgbW9k
-ZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAuLjE0ODRlOTcKPiA+IC0tLSAvZGV2L251bGwKPiA+
-ICsrKyBiL2RyaXZlcnMvcmVtb3RlcHJvYy9zdF9zbGltX3Jwcm9jLmMKPiA+IEBAIC0wLDAgKzEs
-MzY0IEBACj4gPiArLyoKPiA+ICsgKiBTTElNIGNvcmUgcnByb2MgZHJpdmVyCj4gPiArICoKPiA+
-ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTYgU1RNaWNyb2VsZWN0cm9uaWNzCj4gPiArICoKPiA+ICsg
-KiBBdXRob3I6IFBldGVyIEdyaWZmaW4gPHBldGVyLmdyaWZmaW5AbGluYXJvLm9yZz4KPiA+ICsg
-Kgo+ID4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJp
-YnV0ZSBpdCBhbmQvb3IgbW9kaWZ5Cj4gPiArICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBH
-TlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBhcyBwdWJsaXNoZWQgYnkKPiA+ICsgKiB0aGUgRnJl
-ZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZSBMaWNlbnNlLCBv
-cgo+ID4gKyAqIChhdCB5b3VyIG9wdGlvbikgYW55IGxhdGVyIHZlcnNpb24uCj4gPiArICovCj4g
-PiArCj4gPiArI2luY2x1ZGUgPGxpbnV4L2Nsay5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9lcnIu
-aD4KPiA+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L21v
-ZHVsZS5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9v
-Zl9kZXZpY2UuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+Cj4gPiAr
-I2luY2x1ZGUgPGxpbnV4L3JlbW90ZXByb2MuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvcmVtb3Rl
-cHJvYy9zdF9zbGltX3Jwcm9jLmg+Cj4gPiArI2luY2x1ZGUgInJlbW90ZXByb2NfaW50ZXJuYWwu
-aCIKPiA+ICsKPiA+ICsvKiBTTElNIGNvcmUgcmVnaXN0ZXJzICovCj4gPiArI2RlZmluZSBTTElN
-X0lEX09GU1QJCTB4MAo+ID4gKyNkZWZpbmUgU0xJTV9WRVJfT0ZTVAkJMHg0Cj4gPiArCj4gPiAr
-I2RlZmluZSBTTElNX0VOX09GU1QJCTB4OAo+ID4gKyNkZWZpbmUgU0xJTV9FTl9SVU4JCQlCSVQo
-MCkKPiA+ICsKPiA+ICsjZGVmaW5lIFNMSU1fQ0xLX0dBVEVfT0ZTVAkweEMKPiA+ICsjZGVmaW5l
-IFNMSU1fQ0xLX0dBVEVfRElTCQlCSVQoMCkKPiA+ICsjZGVmaW5lIFNMSU1fQ0xLX0dBVEVfUkVT
-RVQJCUJJVCgyKQo+ID4gKwo+ID4gKyNkZWZpbmUgU0xJTV9TTElNX1BDX09GU1QJMHgyMAo+ID4g
-Kwo+ID4gKy8qIERNRU0gcmVnaXN0ZXJzICovCj4gPiArI2RlZmluZSBTTElNX1JFVl9JRF9PRlNU
-CTB4MAo+ID4gKyNkZWZpbmUgU0xJTV9SRVZfSURfTUlOX01BU0sJCUdFTk1BU0soMTUsIDgpCj4g
-PiArI2RlZmluZSBTTElNX1JFVl9JRF9NSU4oaWQpCQkoKGlkICYgU0xJTV9SRVZfSURfTUlOX01B
-U0spID4+IDgpCj4gPiArI2RlZmluZSBTTElNX1JFVl9JRF9NQUpfTUFTSwkJR0VOTUFTSygyMywg
-MTYpCj4gPiArI2RlZmluZSBTTElNX1JFVl9JRF9NQUooaWQpCQkoKGlkICYgU0xJTV9SRVZfSURf
-TUFKX01BU0spID4+IDE2KQo+ID4gKwo+ID4gKwo+ID4gKy8qIHBlcmlwaGVyYWxzIHJlZ2lzdGVy
-cyAqLwo+ID4gKyNkZWZpbmUgU0xJTV9TVEJVU19TWU5DX09GU1QJMHhGODgKPiA+ICsjZGVmaW5l
-IFNMSU1fU1RCVVNfU1lOQ19ESVMJCUJJVCgwKQo+ID4gKwo+ID4gKyNkZWZpbmUgU0xJTV9JTlRf
-U0VUX09GU1QJMHhGRDQKPiA+ICsjZGVmaW5lIFNMSU1fSU5UX0NMUl9PRlNUCTB4RkQ4Cj4gPiAr
-I2RlZmluZSBTTElNX0lOVF9NQVNLX09GU1QJMHhGREMKPiA+ICsKPiA+ICsjZGVmaW5lIFNMSU1f
-Q01EX0NMUl9PRlNUCTB4RkM4Cj4gPiArI2RlZmluZSBTTElNX0NNRF9NQVNLX09GU1QJMHhGQ0MK
-PiA+ICsKPiA+ICtzdGF0aWMgY29uc3QgY2hhciAqbWVtX25hbWVzW1NUX1NMSU1fTUVNX01BWF0g
-PSB7Cj4gPiArCVtTVF9TTElNX0RNRU1dCT0gImRtZW0iLAo+ID4gKwlbU1RfU0xJTV9JTUVNXQk9
-ICJpbWVtIiwKPiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBpbnQgc2xpbV9jbGtfZ2V0KHN0cnVj
-dCBzdF9zbGltX3Jwcm9jICpzbGltX3Jwcm9jLCBzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiArewo+
-ID4gKwlpbnQgY2xrLCBlcnI7Cj4gPiArCj4gPiArCWZvciAoY2xrID0gMDsgY2xrIDwgU1RfU0xJ
-TV9NQVhfQ0xLOyBjbGsrKykgewo+ID4gKwkJc2xpbV9ycHJvYy0+Y2xrc1tjbGtdID0gb2ZfY2xr
-X2dldChkZXYtPm9mX25vZGUsIGNsayk7Cj4gPiArCQlpZiAoSVNfRVJSKHNsaW1fcnByb2MtPmNs
-a3NbY2xrXSkpIHsKPiA+ICsJCQllcnIgPSBQVFJfRVJSKHNsaW1fcnByb2MtPmNsa3NbY2xrXSk7
-Cj4gPiArCQkJaWYgKGVyciA9PSAtRVBST0JFX0RFRkVSKQo+ID4gKwkJCQlnb3RvIGVycl9wdXRf
-Y2xrczsKPiA+ICsJCQlzbGltX3Jwcm9jLT5jbGtzW2Nsa10gPSBOVUxMOwo+ID4gKwkJCWJyZWFr
-Owo+ID4gKwkJfQo+ID4gKwl9Cj4gPiArCj4gPiArCXJldHVybiAwOwo+ID4gKwo+ID4gK2Vycl9w
-dXRfY2xrczoKPiA+ICsJd2hpbGUgKC0tY2xrID49IDApCj4gPiArCQljbGtfcHV0KHNsaW1fcnBy
-b2MtPmNsa3NbY2xrXSk7Cj4gPiArCj4gPiArCXJldHVybiBlcnI7Cj4gPiArfQo+ID4gKwo+ID4g
-K3N0YXRpYyB2b2lkIHNsaW1fY2xrX2Rpc2FibGUoc3RydWN0IHN0X3NsaW1fcnByb2MgKnNsaW1f
-cnByb2MpCj4gPiArewo+ID4gKwlpbnQgY2xrOwo+ID4gKwo+ID4gKwlmb3IgKGNsayA9IDA7IGNs
-ayA8IFNUX1NMSU1fTUFYX0NMSyAmJiBzbGltX3Jwcm9jLT5jbGtzW2Nsa107IGNsaysrKQo+ID4g
-KwkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHNsaW1fcnByb2MtPmNsa3NbY2xrXSk7Cj4gPiArfQo+
-ID4gKwo+ID4gK3N0YXRpYyBpbnQgc2xpbV9jbGtfZW5hYmxlKHN0cnVjdCBzdF9zbGltX3Jwcm9j
-ICpzbGltX3Jwcm9jKQo+ID4gK3sKPiA+ICsJaW50IGNsaywgcmV0Owo+ID4gKwo+ID4gKwlmb3Ig
-KGNsayA9IDA7IGNsayA8IFNUX1NMSU1fTUFYX0NMSyAmJiBzbGltX3Jwcm9jLT5jbGtzW2Nsa107
-IGNsaysrKSB7Cj4gPiArCQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoc2xpbV9ycHJvYy0+Y2xr
-c1tjbGtdKTsKPiA+ICsJCWlmIChyZXQpCj4gPiArCQkJZ290byBlcnJfZGlzYWJsZV9jbGtzOwo+
-ID4gKwl9Cj4gPiArCj4gPiArCXJldHVybiAwOwo+ID4gKwo+ID4gK2Vycl9kaXNhYmxlX2Nsa3M6
-Cj4gPiArCXdoaWxlICgtLWNsayA+PSAwKQo+ID4gKwkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHNs
-aW1fcnByb2MtPmNsa3NbY2xrXSk7Cj4gPiArCj4gPiArCXJldHVybiByZXQ7Cj4gPiArfQo+ID4g
-Kwo+ID4gKy8qCj4gPiArICogUmVtb3RlcHJvYyBzbGltIHNwZWNpZmljIGRldmljZSBoYW5kbGVy
-cwo+ID4gKyAqLwo+ID4gK3N0YXRpYyBpbnQgc2xpbV9ycHJvY19zdGFydChzdHJ1Y3QgcnByb2Mg
-KnJwcm9jKQo+ID4gK3sKPiA+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gJnJwcm9jLT5kZXY7Cj4g
-PiArCXN0cnVjdCBzdF9zbGltX3Jwcm9jICpzbGltX3Jwcm9jID0gcnByb2MtPnByaXY7Cj4gPiAr
-CXVuc2lnbmVkIGxvbmcgaHdfaWQsIGh3X3ZlciwgZndfcmV2Owo+ID4gKwl1MzIgdmFsOwo+ID4g
-Kwo+ID4gKwkvKiBkaXNhYmxlIENQVSBwaXBlbGluZSBjbG9jayAmIHJlc2V0IENQVSBwaXBlbGlu
-ZSAqLwo+ID4gKwl2YWwgPSBTTElNX0NMS19HQVRFX0RJUyB8IFNMSU1fQ0xLX0dBVEVfUkVTRVQ7
-Cj4gPiArCXdyaXRlbCh2YWwsIHNsaW1fcnByb2MtPnNsaW1jb3JlICsgU0xJTV9DTEtfR0FURV9P
-RlNUKTsKPiA+ICsKPiA+ICsJLyogZGlzYWJsZSBTTElNIGNvcmUgU1RCdXMgc3luYyAqLwo+ID4g
-Kwl3cml0ZWwoU0xJTV9TVEJVU19TWU5DX0RJUywgc2xpbV9ycHJvYy0+cGVyaSArIFNMSU1fU1RC
-VVNfU1lOQ19PRlNUKTsKPiA+ICsKPiA+ICsJLyogZW5hYmxlIGNwdSBwaXBlbGluZSBjbG9jayAq
-Lwo+ID4gKwl3cml0ZWwoIVNMSU1fQ0xLX0dBVEVfRElTLAo+ID4gKwkJc2xpbV9ycHJvYy0+c2xp
-bWNvcmUgKyBTTElNX0NMS19HQVRFX09GU1QpOwo+ID4gKwo+ID4gKwkvKiBjbGVhciBpbnQgJiBj
-bWQgbWFpbGJveCAqLwo+ID4gKwl3cml0ZWwofjBVLCBzbGltX3Jwcm9jLT5wZXJpICsgU0xJTV9J
-TlRfQ0xSX09GU1QpOwo+ID4gKwl3cml0ZWwofjBVLCBzbGltX3Jwcm9jLT5wZXJpICsgU0xJTV9D
-TURfQ0xSX09GU1QpOwo+ID4gKwo+ID4gKwkvKiBlbmFibGUgYWxsIGNoYW5uZWxzIGNtZCAmIGlu
-dCAqLwo+ID4gKwl3cml0ZWwofjBVLCBzbGltX3Jwcm9jLT5wZXJpICsgU0xJTV9JTlRfTUFTS19P
-RlNUKTsKPiA+ICsJd3JpdGVsKH4wVSwgc2xpbV9ycHJvYy0+cGVyaSArIFNMSU1fQ01EX01BU0tf
-T0ZTVCk7Cj4gPiArCj4gPiArCS8qIGVuYWJsZSBjcHUgKi8KPiA+ICsJd3JpdGVsKFNMSU1fRU5f
-UlVOLCBzbGltX3Jwcm9jLT5zbGltY29yZSArIFNMSU1fRU5fT0ZTVCk7Cj4gPiArCj4gPiArCWh3
-X2lkID0gcmVhZGxfcmVsYXhlZChzbGltX3Jwcm9jLT5zbGltY29yZSArIFNMSU1fSURfT0ZTVCk7
-Cj4gPiArCWh3X3ZlciA9IHJlYWRsX3JlbGF4ZWQoc2xpbV9ycHJvYy0+c2xpbWNvcmUgKyBTTElN
-X1ZFUl9PRlNUKTsKPiA+ICsKPiA+ICsJZndfcmV2ID0gcmVhZGwoc2xpbV9ycHJvYy0+bWVtW1NU
-X1NMSU1fRE1FTV0uY3B1X2FkZHIgKwo+ID4gKwkJCVNMSU1fUkVWX0lEX09GU1QpOwo+ID4gKwo+
-ID4gKwlkZXZfaW5mbyhkZXYsICJmdyByZXY6JWxkLiVsZCBvbiBTTElNICVsZC4lbGRcbiIsCj4g
-PiArCQkgU0xJTV9SRVZfSURfTUFKKGZ3X3JldiksIFNMSU1fUkVWX0lEX01JTihmd19yZXYpLAo+
-ID4gKwkJIGh3X2lkLCBod192ZXIpOwo+ID4gKwo+ID4gKwlyZXR1cm4gMDsKPiA+ICt9Cj4gPiAr
-Cj4gPiArc3RhdGljIGludCBzbGltX3Jwcm9jX3N0b3Aoc3RydWN0IHJwcm9jICpycHJvYykKPiA+
-ICt7Cj4gPiArCXN0cnVjdCBzdF9zbGltX3Jwcm9jICpzbGltX3Jwcm9jID0gcnByb2MtPnByaXY7
-Cj4gPiArCXUzMiB2YWw7Cj4gPiArCj4gPiArCS8qIG1hc2sgYWxsIChjbWQgJiBpbnQpIGNoYW5u
-ZWxzICovCj4gPiArCXdyaXRlbCgwVUwsIHNsaW1fcnByb2MtPnBlcmkgKyBTTElNX0lOVF9NQVNL
-X09GU1QpOwo+ID4gKwl3cml0ZWwoMFVMLCBzbGltX3Jwcm9jLT5wZXJpICsgU0xJTV9DTURfTUFT
-S19PRlNUKTsKPiA+ICsKPiA+ICsJLyogZGlzYWJsZSBjcHUgcGlwZWxpbmUgY2xvY2sgKi8KPiA+
-ICsJd3JpdGVsKFNMSU1fQ0xLX0dBVEVfRElTLCBzbGltX3Jwcm9jLT5zbGltY29yZSArIFNMSU1f
-Q0xLX0dBVEVfT0ZTVCk7Cj4gPiArCj4gPiArCXdyaXRlbCghU0xJTV9FTl9SVU4sIHNsaW1fcnBy
-b2MtPnNsaW1jb3JlICsgU0xJTV9FTl9PRlNUKTsKPiA+ICsKPiA+ICsJdmFsID0gcmVhZGwoc2xp
-bV9ycHJvYy0+c2xpbWNvcmUgKyBTTElNX0VOX09GU1QpOwo+ID4gKwlpZiAodmFsICYgU0xJTV9F
-Tl9SVU4pCj4gPiArCQlkZXZfd2FybigmcnByb2MtPmRldiwgIkZhaWxlZCB0byBkaXNhYmxlIFNM
-SU0iKTsKPiA+ICsKPiA+ICsJZGV2X2RiZygmcnByb2MtPmRldiwgInNsaW0gc3RvcHBlZFxuIik7
-Cj4gPiArCj4gPiArCXJldHVybiAwOwo+ID4gK30KPiA+ICsKPiA+ICtzdGF0aWMgdm9pZCAqc2xp
-bV9ycHJvY19kYV90b192YShzdHJ1Y3QgcnByb2MgKnJwcm9jLCB1NjQgZGEsIGludCBsZW4pCj4g
-PiArewo+ID4gKwlzdHJ1Y3Qgc3Rfc2xpbV9ycHJvYyAqc2xpbV9ycHJvYyA9IHJwcm9jLT5wcml2
-Owo+ID4gKwl2b2lkICp2YSA9IE5VTEw7Cj4gPiArCWludCBpOwo+ID4gKwo+ID4gKwlmb3IgKGkg
-PSAwOyBpIDwgU1RfU0xJTV9NRU1fTUFYOyBpKyspIHsKPiA+ICsJCWlmIChkYSAhPSBzbGltX3Jw
-cm9jLT5tZW1baV0uYnVzX2FkZHIpCj4gPiArCQkJY29udGludWU7Cj4gPiArCj4gPiArCQlpZiAo
-bGVuIDw9IHNsaW1fcnByb2MtPm1lbVtpXS5zaXplKSB7Cj4gPiArCQkJLyogX19mb3JjZSB0byBt
-YWtlIHNwYXJzZSBoYXBweSB3aXRoIHR5cGUgY29udmVyc2lvbiAqLwo+ID4gKwkJCXZhID0gKF9f
-Zm9yY2Ugdm9pZCAqKXNsaW1fcnByb2MtPm1lbVtpXS5jcHVfYWRkcjsKPiA+ICsJCQlicmVhazsK
-PiA+ICsJCX0KPiA+ICsJfQo+ID4gKwo+ID4gKwlkZXZfZGJnKCZycHJvYy0+ZGV2LCAiZGEgPSAw
-eCVsbHggbGVuID0gMHgleCB2YSA9IDB4JXBcbiIsIGRhLCBsZW4sIHZhKTsKPiA+ICsKPiA+ICsJ
-cmV0dXJuIHZhOwo+ID4gK30KPiA+ICsKPiA+ICtzdGF0aWMgc3RydWN0IHJwcm9jX29wcyBzbGlt
-X3Jwcm9jX29wcyA9IHsKPiA+ICsJLnN0YXJ0CQk9IHNsaW1fcnByb2Nfc3RhcnQsCj4gPiArCS5z
-dG9wCQk9IHNsaW1fcnByb2Nfc3RvcCwKPiA+ICsJLmRhX3RvX3ZhICAgICAgID0gc2xpbV9ycHJv
-Y19kYV90b192YSwKPiA+ICt9Owo+ID4gKwo+ID4gKy8qCj4gPiArICogRmlybXdhcmUgaGFuZGxl
-ciBvcGVyYXRpb25zOiBzYW5pdHksIGJvb3QgYWRkcmVzcywgbG9hZCAuLi4KPiA+ICsgKi8KPiA+
-ICsKPiA+ICtzdGF0aWMgc3RydWN0IHJlc291cmNlX3RhYmxlIGVtcHR5X3JzY190YmwgPSB7Cj4g
-PiArCS52ZXIgPSAxLAo+ID4gKwkubnVtID0gMCwKPiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBz
-dHJ1Y3QgcmVzb3VyY2VfdGFibGUgKnNsaW1fcnByb2NfZmluZF9yc2NfdGFibGUoc3RydWN0IHJw
-cm9jICpycHJvYywKPiA+ICsJCQkJCSAgICAgICBjb25zdCBzdHJ1Y3QgZmlybXdhcmUgKmZ3LAo+
-ID4gKwkJCQkJICAgICAgIGludCAqdGFibGVzeikKPiA+ICt7Cj4gPiArCSp0YWJsZXN6ID0gc2l6
-ZW9mKGVtcHR5X3JzY190YmwpOwo+ID4gKwlyZXR1cm4gJmVtcHR5X3JzY190Ymw7Cj4gPiArfQo+
-ID4gKwo+ID4gK3N0YXRpYyBzdHJ1Y3QgcnByb2NfZndfb3BzIHNsaW1fcnByb2NfZndfb3BzID0g
-ewo+ID4gKwkuZmluZF9yc2NfdGFibGUgPSBzbGltX3Jwcm9jX2ZpbmRfcnNjX3RhYmxlLAo+ID4g
-K307Cj4gPiArCj4gPiArLyoqCj4gPiArICogc3Rfc2xpbV9ycHJvY19hbGxvYygpIC0gYWxsb2Nh
-dGUgYW5kIGluaXRpYWxpc2Ugc2xpbSBycHJvYwo+ID4gKyAqIEBwZGV2OiBQb2ludGVyIHRvIHRo
-ZSBwbGF0Zm9ybV9kZXZpY2Ugc3RydWN0Cj4gPiArICogQGZ3X25hbWU6IE5hbWUgb2YgZmlybXdh
-cmUgZm9yIHJwcm9jIHRvIHVzZQo+ID4gKyAqCj4gPiArICogRnVuY3Rpb24gZm9yIGFsbG9jYXRp
-bmcgYW5kIGluaXRpYWxpc2luZyBhIHNsaW0gcnByb2MgZm9yIHVzZSBieQo+ID4gKyAqIGRldmlj
-ZSBkcml2ZXJzIHdob3NlIElQIGlzIGJhc2VkIGFyb3VuZCB0aGUgU0xJTSBjb3JlLiBJdAo+ID4g
-KyAqIG9idGFpbnMgYW5kIGVuYWJsZXMgYW55IGNsb2NrcyByZXF1aXJlZCBieSB0aGUgU0xJTSBj
-b3JlIGFuZCBhbHNvCj4gPiArICogaW9yZW1hcHMgdGhlIHZhcmlvdXMgSU8uCj4gPiArICoKPiA+
-ICsgKiBSZXR1cm5zIHN0X3NsaW1fcnByb2MgcG9pbnRlciBvciBQVFJfRVJSKCkgb24gZXJyb3Iu
-Cj4gPiArICovCj4gPiArCj4gPiArc3RydWN0IHN0X3NsaW1fcnByb2MgKnN0X3NsaW1fcnByb2Nf
-YWxsb2Moc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwKPiA+ICsJCQkJY2hhciAqZndfbmFt
-ZSkKPiA+ICt7Cj4gPiArCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7Cj4gPiArCXN0
-cnVjdCBzdF9zbGltX3Jwcm9jICpzbGltX3Jwcm9jOwo+ID4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUg
-Km5wID0gZGV2LT5vZl9ub2RlOwo+ID4gKwlzdHJ1Y3QgcnByb2MgKnJwcm9jOwo+ID4gKwlzdHJ1
-Y3QgcmVzb3VyY2UgKnJlczsKPiA+ICsJaW50IGVyciwgaTsKPiA+ICsJY29uc3Qgc3RydWN0IHJw
-cm9jX2Z3X29wcyAqZWxmX29wczsKPiA+ICsKPiA+ICsJaWYgKCFmd19uYW1lKQo+ID4gKwkJcmV0
-dXJuIEVSUl9QVFIoLUVJTlZBTCk7Cj4gPiArCj4gPiArCWlmICghb2ZfZGV2aWNlX2lzX2NvbXBh
-dGlibGUobnAsICJzdCxzbGltLXJwcm9jIikpCj4gPiArCQlyZXR1cm4gRVJSX1BUUigtRUlOVkFM
-KTsKPiA+ICsKPiA+ICsJcnByb2MgPSBycHJvY19hbGxvYyhkZXYsIG5wLT5uYW1lLCAmc2xpbV9y
-cHJvY19vcHMsCj4gPiArCQkJZndfbmFtZSwgc2l6ZW9mKCpzbGltX3Jwcm9jKSk7Cj4gPiArCWlm
-ICghcnByb2MpCj4gPiArCQlyZXR1cm4gRVJSX1BUUigtRU5PTUVNKTsKPiA+ICsKPiA+ICsJcnBy
-b2MtPmhhc19pb21tdSA9IGZhbHNlOwo+ID4gKwo+ID4gKwlzbGltX3Jwcm9jID0gcnByb2MtPnBy
-aXY7Cj4gPiArCXNsaW1fcnByb2MtPnJwcm9jID0gcnByb2M7Cj4gPiArCj4gPiArCWVsZl9vcHMg
-PSBycHJvYy0+Zndfb3BzOwo+ID4gKwkvKiBVc2Ugc29tZSBnZW5lcmljIGVsZiBvcHMgKi8KPiA+
-ICsJc2xpbV9ycHJvY19md19vcHMubG9hZCA9IGVsZl9vcHMtPmxvYWQ7Cj4gPiArCXNsaW1fcnBy
-b2NfZndfb3BzLnNhbml0eV9jaGVjayA9IGVsZl9vcHMtPnNhbml0eV9jaGVjazsKPiA+ICsKPiA+
-ICsJcnByb2MtPmZ3X29wcyA9ICZzbGltX3Jwcm9jX2Z3X29wczsKPiA+ICsKPiA+ICsJLyogZ2V0
-IGltZW0gYW5kIGRtZW0gKi8KPiA+ICsJZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUobWVtX25h
-bWVzKTsgaSsrKSB7Cj4gPiArCQlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2VfYnluYW1lKHBk
-ZXYsIElPUkVTT1VSQ0VfTUVNLAo+ID4gKwkJCQkJCW1lbV9uYW1lc1tpXSk7Cj4gPiArCj4gPiAr
-CQlzbGltX3Jwcm9jLT5tZW1baV0uY3B1X2FkZHIgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2
-LCByZXMpOwo+ID4gKwkJaWYgKElTX0VSUihzbGltX3Jwcm9jLT5tZW1baV0uY3B1X2FkZHIpKSB7
-Cj4gPiArCQkJZGV2X2VycigmcGRldi0+ZGV2LCAiZGV2bV9pb3JlbWFwX3Jlc291cmNlIGZhaWxl
-ZFxuIik7Cj4gPiArCQkJZXJyID0gUFRSX0VSUihzbGltX3Jwcm9jLT5tZW1baV0uY3B1X2FkZHIp
-Owo+ID4gKwkJCWdvdG8gZXJyOwo+ID4gKwkJfQo+ID4gKwkJc2xpbV9ycHJvYy0+bWVtW2ldLmJ1
-c19hZGRyID0gcmVzLT5zdGFydDsKPiA+ICsJCXNsaW1fcnByb2MtPm1lbVtpXS5zaXplID0gcmVz
-b3VyY2Vfc2l6ZShyZXMpOwo+ID4gKwl9Cj4gPiArCj4gPiArCXJlcyA9IHBsYXRmb3JtX2dldF9y
-ZXNvdXJjZV9ieW5hbWUocGRldiwgSU9SRVNPVVJDRV9NRU0sICJzbGltY29yZSIpOwo+ID4gKwlz
-bGltX3Jwcm9jLT5zbGltY29yZSA9IGRldm1faW9yZW1hcF9yZXNvdXJjZShkZXYsIHJlcyk7Cj4g
-PiArCWlmIChJU19FUlIoc2xpbV9ycHJvYy0+c2xpbWNvcmUpKSB7Cj4gPiArCQlkZXZfZXJyKCZw
-ZGV2LT5kZXYsICJmYWlsZWQgdG8gaW9yZW1hcCBzbGltY29yZSBJT1xuIik7Cj4gPiArCQllcnIg
-PSBQVFJfRVJSKHNsaW1fcnByb2MtPnNsaW1jb3JlKTsKPiA+ICsJCWdvdG8gZXJyOwo+ID4gKwl9
-Cj4gPiArCj4gPiArCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZV9ieW5hbWUocGRldiwgSU9S
-RVNPVVJDRV9NRU0sICJwZXJpcGhlcmFscyIpOwo+ID4gKwlzbGltX3Jwcm9jLT5wZXJpID0gZGV2
-bV9pb3JlbWFwX3Jlc291cmNlKGRldiwgcmVzKTsKPiA+ICsJaWYgKElTX0VSUihzbGltX3Jwcm9j
-LT5wZXJpKSkgewo+ID4gKwkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGlvcmVtYXAg
-cGVyaXBoZXJhbHMgSU9cbiIpOwo+ID4gKwkJZXJyID0gUFRSX0VSUihzbGltX3Jwcm9jLT5wZXJp
-KTsKPiA+ICsJCWdvdG8gZXJyOwo+ID4gKwl9Cj4gPiArCj4gPiArCWVyciA9IHNsaW1fY2xrX2dl
-dChzbGltX3Jwcm9jLCBkZXYpOwo+ID4gKwlpZiAoZXJyKQo+ID4gKwkJZ290byBlcnI7Cj4gPiAr
-Cj4gPiArCWVyciA9IHNsaW1fY2xrX2VuYWJsZShzbGltX3Jwcm9jKTsKPiA+ICsJaWYgKGVycikg
-ewo+ID4gKwkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZW5hYmxlIGNsb2Nrc1xuIik7Cj4gPiAr
-CQlnb3RvIGVycl9jbGtfcHV0Owo+ID4gKwl9Cj4gPiArCj4gPiArCS8qIFJlZ2lzdGVyIGFzIGEg
-cmVtb3RlcHJvYyBkZXZpY2UgKi8KPiA+ICsJZXJyID0gcnByb2NfYWRkKHJwcm9jKTsKPiA+ICsJ
-aWYgKGVycikgewo+ID4gKwkJZGV2X2VycihkZXYsICJyZWdpc3RyYXRpb24gb2Ygc2xpbSByZW1v
-dGVwcm9jIGZhaWxlZFxuIik7Cj4gPiArCQlnb3RvIGVycl9jbGtfZGlzOwo+ID4gKwl9Cj4gPiAr
-Cj4gPiArCXJldHVybiBzbGltX3Jwcm9jOwo+ID4gKwo+ID4gK2Vycl9jbGtfZGlzOgo+ID4gKwlz
-bGltX2Nsa19kaXNhYmxlKHNsaW1fcnByb2MpOwo+ID4gK2Vycl9jbGtfcHV0Ogo+ID4gKwlmb3Ig
-KGkgPSAwOyBpIDwgU1RfU0xJTV9NQVhfQ0xLICYmIHNsaW1fcnByb2MtPmNsa3NbaV07IGkrKykK
-PiA+ICsJCWNsa19wdXQoc2xpbV9ycHJvYy0+Y2xrc1tpXSk7Cj4gPiArZXJyOgo+ID4gKwlycHJv
-Y19wdXQocnByb2MpOwo+ID4gKwlyZXR1cm4gRVJSX1BUUihlcnIpOwo+ID4gK30KPiA+ICtFWFBP
-UlRfU1lNQk9MKHN0X3NsaW1fcnByb2NfYWxsb2MpOwo+ID4gKwo+ID4gKy8qKgo+ID4gKyAgKiBz
-dF9zbGltX3Jwcm9jX3B1dCgpIC0gcHV0IHNsaW0gcnByb2MgcmVzb3VyY2VzCj4gPiArICAqIEBz
-bGltX3Jwcm9jOiBQb2ludGVyIHRvIHRoZSBzdF9zbGltX3Jwcm9jIHN0cnVjdAo+ID4gKyAgKgo+
-ID4gKyAgKiBGdW5jdGlvbiBmb3IgY2FsbGluZyByZXNwZWN0aXZlIF9wdXQoKSBmdW5jdGlvbnMg
-b24gc2xpbV9ycHJvYyByZXNvdXJjZXMuCj4gPiArICAqCj4gPiArICAqLwo+ID4gK3ZvaWQgc3Rf
-c2xpbV9ycHJvY19wdXQoc3RydWN0IHN0X3NsaW1fcnByb2MgKnNsaW1fcnByb2MpCj4gPiArewo+
-ID4gKwlpbnQgY2xrOwo+ID4gKwo+ID4gKwlpZiAoIXNsaW1fcnByb2MpCj4gPiArCQlyZXR1cm47
-Cj4gPiArCj4gPiArCXNsaW1fY2xrX2Rpc2FibGUoc2xpbV9ycHJvYyk7Cj4gPiArCj4gPiArCWZv
-ciAoY2xrID0gMDsgY2xrIDwgU1RfU0xJTV9NQVhfQ0xLICYmIHNsaW1fcnByb2MtPmNsa3NbY2xr
-XTsgY2xrKyspCj4gPiArCQljbGtfcHV0KHNsaW1fcnByb2MtPmNsa3NbY2xrXSk7Cj4gPiArCj4g
-PiArCXJwcm9jX2RlbChzbGltX3Jwcm9jLT5ycHJvYyk7Cj4gPiArCXJwcm9jX3B1dChzbGltX3Jw
-cm9jLT5ycHJvYyk7Cj4gPiArfQo+ID4gK0VYUE9SVF9TWU1CT0woc3Rfc2xpbV9ycHJvY19wdXQp
-Owo+ID4gKwo+ID4gK01PRFVMRV9BVVRIT1IoIlBldGVyIEdyaWZmaW4gPHBldGVyLmdyaWZmaW5A
-bGluYXJvLm9yZz4iKTsKPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIlNUTWljcm9lbGVjdHJvbmlj
-cyBTTElNIGNvcmUgcnByb2MgZHJpdmVyIik7Cj4gPiArTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIp
-Owo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvcmVtb3RlcHJvYy9zdF9zbGltX3Jwcm9j
-LmggYi9pbmNsdWRlL2xpbnV4L3JlbW90ZXByb2Mvc3Rfc2xpbV9ycHJvYy5oCj4gPiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMC4uNDE1NTU1Ngo+ID4gLS0tIC9kZXYvbnVs
-bAo+ID4gKysrIGIvaW5jbHVkZS9saW51eC9yZW1vdGVwcm9jL3N0X3NsaW1fcnByb2MuaAo+ID4g
-QEAgLTAsMCArMSw1OCBAQAo+ID4gKy8qCj4gPiArICogU0xJTSBjb3JlIHJwcm9jIGRyaXZlciBo
-ZWFkZXIKPiA+ICsgKgo+ID4gKyAqIENvcHlyaWdodCAoQykgMjAxNiBTVE1pY3JvZWxlY3Ryb25p
-Y3MKPiA+ICsgKgo+ID4gKyAqIEF1dGhvcjogUGV0ZXIgR3JpZmZpbiA8cGV0ZXIuZ3JpZmZpbkBs
-aW5hcm8ub3JnPgo+ID4gKyAqCj4gPiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7
-IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkKPiA+ICsgKiBpdCB1bmRlciB0
-aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFzIHB1Ymxpc2hlZCBi
-eQo+ID4gKyAqIHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb247IGVpdGhlciB2ZXJzaW9uIDIg
-b2YgdGhlIExpY2Vuc2UsIG9yCj4gPiArICogKGF0IHlvdXIgb3B0aW9uKSBhbnkgbGF0ZXIgdmVy
-c2lvbi4KPiA+ICsgKi8KPiA+ICsjaWZuZGVmIF9TVF9SRU1PVEVQUk9DX1NMSU1fSAo+ID4gKyNk
-ZWZpbmUgX1NUX1JFTU9URVBST0NfU0xJTV9ICj4gPiArCj4gPiArI2RlZmluZSBTVF9TTElNX01F
-TV9NQVggMgo+ID4gKyNkZWZpbmUgU1RfU0xJTV9NQVhfQ0xLIDQKPiA+ICsKPiA+ICtlbnVtIHsK
-PiA+ICsJU1RfU0xJTV9ETUVNLAo+ID4gKwlTVF9TTElNX0lNRU0sCj4gPiArfTsKPiA+ICsKPiA+
-ICsvKioKPiA+ICsgKiBzdHJ1Y3Qgc3Rfc2xpbV9tZW0gLSBzbGltIGludGVybmFsIG1lbW9yeSBz
-dHJ1Y3R1cmUKPiA+ICsgKiBAY3B1X2FkZHI6IE1QVSB2aXJ0dWFsIGFkZHJlc3Mgb2YgdGhlIG1l
-bW9yeSByZWdpb24KPiA+ICsgKiBAYnVzX2FkZHI6IEJ1cyBhZGRyZXNzIHVzZWQgdG8gYWNjZXNz
-IHRoZSBtZW1vcnkgcmVnaW9uCj4gPiArICogQHNpemU6IFNpemUgb2YgdGhlIG1lbW9yeSByZWdp
-b24KPiA+ICsgKi8KPiA+ICtzdHJ1Y3Qgc3Rfc2xpbV9tZW0gewo+ID4gKwl2b2lkIF9faW9tZW0g
-KmNwdV9hZGRyOwo+ID4gKwlwaHlzX2FkZHJfdCBidXNfYWRkcjsKPiA+ICsJc2l6ZV90IHNpemU7
-Cj4gPiArfTsKPiA+ICsKPiA+ICsvKioKPiA+ICsgKiBzdHJ1Y3Qgc3Rfc2xpbV9ycHJvYyAtIFNM
-SU0gc2xpbSBjb3JlCj4gPiArICogQHJwcm9jOiBycHJvYyBoYW5kbGUKPiA+ICsgKiBAbWVtOiBz
-bGltIG1lbW9yeSBpbmZvcm1hdGlvbgo+ID4gKyAqIEBzbGltY29yZTogc2xpbSBzbGltY29yZSBy
-ZWdzCj4gPiArICogQHBlcmk6IHNsaW0gcGVyaXBoZXJhbCByZWdzCj4gPiArICogQGNsa3M6IHNs
-aW0gY2xvY2tzCj4gPiArICovCj4gPiArc3RydWN0IHN0X3NsaW1fcnByb2Mgewo+ID4gKwlzdHJ1
-Y3QgcnByb2MgKnJwcm9jOwo+ID4gKwlzdHJ1Y3Qgc3Rfc2xpbV9tZW0gbWVtW1NUX1NMSU1fTUVN
-X01BWF07Cj4gPiArCXZvaWQgX19pb21lbSAqc2xpbWNvcmU7Cj4gPiArCXZvaWQgX19pb21lbSAq
-cGVyaTsKPiA+ICsKPiA+ICsJLyogc3Rfc2xpbV9ycHJvYyBwcml2YXRlICovCj4gPiArCXN0cnVj
-dCBjbGsgKmNsa3NbU1RfU0xJTV9NQVhfQ0xLXTsKPiA+ICt9Owo+ID4gKwo+ID4gK3N0cnVjdCBz
-dF9zbGltX3Jwcm9jICpzdF9zbGltX3Jwcm9jX2FsbG9jKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
-KnBkZXYsCj4gPiArCQkJCQljaGFyICpmd19uYW1lKTsKPiA+ICt2b2lkIHN0X3NsaW1fcnByb2Nf
-cHV0KHN0cnVjdCBzdF9zbGltX3Jwcm9jICpzbGltX3Jwcm9jKTsKPiA+ICsKPiA+ICsjZW5kaWYK
-Ci0tIApMZWUgSm9uZXMKTGluYXJvIFNUTWljcm9lbGVjdHJvbmljcyBMYW5kaW5nIFRlYW0gTGVh
-ZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9sbG93
-IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Mark,
+
+On 09/13/2016 04:51 PM, Mark Rutland wrote:
+> Hi,
+> 
+> On Tue, Sep 13, 2016 at 04:22:09PM +0200, Sebastian Frias wrote:
+>> On 09/13/2016 03:12 PM, Mark Rutland wrote:
+> 
+> [context was deleted, TL;DR: binding review is necessary, and takes
+> effort, regardless of presence/absence of a driver]
+
+Ok, I see you deleted the part where I was asking about the 'staging' folders.
+
+$ find . -name 'stag*'
+./Documentation/devicetree/bindings/staging
+./drivers/staging
+...
+
+I don't know if that was intended (since you said you did not read it) but
+I think it would be interesting for the discussion to give a little overview
+on that.
+My understanding is that there's a 'staging' area for bindings, couldn't the
+nodes/properties from my example be put in there?
+
+>>> Go and take a look at all the effort that went into sorting out generic
+>>> IOMMU bindings, when driver support was written after a large amount of
+>>> review to sort out fundamental concepts. We had to sort out fundamentals
+>>> before prototype driver code could be written, and while we knew drivers
+>>> were coming, an awful lot of review effort came first.
+>>
+>> Again, you are talking about drivers, but it is not the case at hand.
+> 
+> No, I am not. Please do not presume to put words in my mouth.
+
+I'm sorry, that was not my intention.
+I just assumed that because your paragraph mentioned the word "driver" and
+appears to have been Linux-only effort geared towards writing drivers:
+   "...We had to sort out fundamentals before prototype driver code could be
+written, and while we knew drivers were coming..."
+
+Maybe I miss some more context on that example.
+
+> 
+> I explicitly described a case where binding review took effort, and the
+> presence or absence of drivers was irrelevant. We later had drivers,
+> yes, but we had to understand the hardware to get the binding right
+> first.
+
+I see.
+So if I understood correctly, it was a cleanup, or a way to unify some
+bindings, so that drivers could be written easier?
+
+I can see that taking time, but the underlying idea of this discussion is
+that the DT could be divided in different sections.
+
+I think this would allow and encourage SoC manufacturers to publish more
+details, since they could use them internally as well.
+
+Obviously, this is not strictly necessary, and I'm sure SoC manufacturers
+could choose to just avoid having to deal with the open-source community
+entirely by using forks.
+
+However, that does not benefit the community and allows a "one-way" street,
+with companies "profiting" from open-source software (in this example,
+they would profit unwillingly, yet out of the necessity to avoid dealing
+with outside 'restrictions' perceived as unnecessary).
+
+It seems it is a similar case to that of allowing or not binary
+drivers/blobs.
+If they were not allowed, less companies would choose Linux.
+I don't want to go into that discussion, but it seems similar enough to
+this one for it to be worth mentioning.
+
+> If there's data which has no consumer, it has no value being in the DT.
+> Placing data with no consumer in the DT comes with a number of issues,
+> e.g.
+> 
+> a) Some DTS authors will ignore it, and not place data according to it
+>    in DTs. Hence there's no gain in consistency.
+
+Ok, but in this case the DT author (SoC manufacturer) would have interest
+in using it.
+
+> 
+> b) Though some accident (perhaps a typo, perhaps a misunderstanding of
+>    the binding), a DT will come to have erroneous data, yet this will go
+>    unnoticed, as there is no consumer. When later a consumer appears, it
+>    can't trust existing DTs, and has to either ignore the binding
+>    entirely, or bodge around each and every broken DT.
+> 
+
+I think it is likely this has already happened, even with the current
+constraints on review.
+
+> c) When a consumer eventually appears, it turned out we didn't capture
+>    details of the hardware sufficiently, and the binding turns out to be
+>    useless. At worst, this boils down to (b), at best, we require
+>    additional properties. In this case absolutely nothing is gained.
+
+Case c) could happen even when a driver is provided, for example if the
+driver writer got incomplete documentation.
+
+At any rate, since there was no user, even if the bindings need amending,
+it should be easy to do, since there's no backwards compatibility to keep.
+
+> In all cases, all we end up doing is enlarging DTBs, and risk causing
+> even more work.
+> 
+> If there *is* going to be a consumer, and if information regarding that
+> will be provided, then matters are different, and we can consider a
+> binding on its own merit. We need a specific example for that.
+> 
+>> If the "user of the binding" is not Linux, under what circumstances
+>> could "Linux" have the legitimacy of guaranteeing or enforcing any Linux-
+>> specific commitment?
+> 
+> To at least the extent that if someone says they're not going to bother,
+> we clearly have no reason to bother supporting them.
+
+I have the impression that this basically means that DT is Linux only.
+Did I misunderstood?
+
+What legitimacy does Linux expects to have when dealing with bindings whose
+users are not Linux? For example, FreeBSD, U-Boot or others.
+In other words, why would Linux usage and policies regarding DT have to affect
+other users of DT?
+
+That essentially limits DT usage;
+Of course, it can be forked, etc. like you state below, but that is not the
+best outcome for everybody, because this basically forces the use of
+undocumented binary DT overlays.
+
+> Note that *nothing* stops you from using the DT container format for
+> your own purposes, in violation of every binding and rule we have.
+> However, for those cases we clearly won't document them as the standard
+> mechanism.
+
+Yes, I'm aware of that possibility, but in that case we would not be having
+this conversation :-)
+
+Basically, IMHO there is no reason for this thing to be black or white when
+it could be gray and have a win-win situation, that's all.
+
+> There are other things build atop of the DTB format, e.g. FIT, which
+> aren't quite devicetree in the usual sense.
+> 
+>>> I understand that goal, and I've asked for a specific example, as this
+>>> is not clear-cut. e.g. there has been work on describing secure devices
+>>> for QEMU, but this isn't necessarily something we want to expose Linux
+>>> to in general.
+>>
+>> Interesting, do you know where in QEMU's code should I look for that?
+> 
+> Documentation/devicetree/bindings/arm/secure.txt for the basics.
+> 
+> Generally, I'd expect that even if the secure OS were using DT in this
+> fashion, the non-secure general purpose OS would be handed a DT
+> containing only the non-secure world portions.
+> 
+
+I see that you did not comment on my example, was that intended?
+
+>> IMHO, they apply only when there's a Linux driver, or any other public
+>> user of such bindings. But if there's no user, it seems like an unnecessary
+>> constraint.
+> 
+> If there's no user, there's no need for the binding.
+
+But you said earlier that bindings for users different from Linux are considered.
+Did I miss something?
+
+> If there's some user somewhere, and that user wants the binding
+> rubber-stamped as an "official" binding, they need to follow the usual
+> rules for bindings.
+> 
+> If there is a user, and they don't want to follow the usual rules,
+> there's no point trying to get the binding rubber-stamped.
+
+I understand, but nothing prevents the creation of DT 'sections':
+- a section using rubber-stamped "official" bindings
+- a section using 'staging' bindings
+right?
+What technical issues would this have?
+
+Best regards,
+
+Sebastian
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
