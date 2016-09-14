@@ -1,107 +1,116 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH v4 22/22] phy: Add support for Qualcomm's USB HS phy
-Date: Tue, 13 Sep 2016 23:29:12 -0700
-Message-ID: <147383455256.1541.16582625295760921275@sboyd-linaro>
-References: <20160907213519.27340-1-stephen.boyd@linaro.org>
- <20160907213519.27340-23-stephen.boyd@linaro.org>
- <20160913070358.GB30425@b29397-desktop>
- <147379930484.27460.3849356366746983941@sboyd-linaro>
- <20160914021133.GB30760@b29397-desktop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160914021133.GB30760@b29397-desktop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Chen <hzpeterchen@gmail.com>
-Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
+From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v1 1/3] ARM: dts: imx6qdl-apalis: Do not rely on DDC I2C bus bitbang for HDMI
+Date: Wed, 14 Sep 2016 12:05:03 +0530
+Message-ID: <9d2c17aa2e00e6ff4349a53de8247860d2382607.1473833908.git.maitysanchayan@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Peter Chen (2016-09-13 19:11:33)
-> On Tue, Sep 13, 2016 at 01:41:44PM -0700, Stephen Boyd wrote:
-> > Quoting Peter Chen (2016-09-13 00:03:58)
-> > > On Wed, Sep 07, 2016 at 02:35:19PM -0700, Stephen Boyd wrote:
-> > > > The high-speed phy on qcom SoCs is controlled via the ULPI
-> > > > viewport.
-> > > > 
-> > > 
-> > > Hi Stephen, I am a little puzzled how this driver co-work with chipidea
-> > > driver. According to nxp IC guys, the ULPI PHY's clock needs to be enabled
-> > > before access portsc.pts (calling hw_phymode_configure), otherwise,
-> > > the system will hang. But I find you call hw_phymode_configure before
-> > > phy->power_on, doesn't your design have this requirement?
-> > 
-> > Which clk needs to be enabled? The xcvr_clk? I believe that clk
-> > corresponds to the "core" clk that we enable in the msm glue driver
-> > layer. When that clk is enabled, the ULPI phy is able to respond to
-> > register read/writes via the ULPI viewport.
-> > 
-> 
-> The input clock for ULPI PHY, maybe it is ref_clk at this PHY driver, 
-> so in your platform, even PHY clock is gated, you can still access
-> portsc.pts to configure PHY mode at controller register?
+Remove the use of DDC I2C bus bitbang to support reading of EDID
+and rely on support from internal HDMI I2C master controller instead.
+As a result remove the device tree property ddc-i2c-bus.
 
-There are a couple input clocks for this phy. I'm not sure which one the
-nxp IC guys think needs to be enabled. Typically, the ref_clk is always
-on so it's hard for me to test a scenario where it isn't enabled. But
-I'm not sure that the ref_clk is what we're talking about anyway. Would
-you know the frequency perhaps? The ref_clk is usually 19.2MHz on these
-SoCs. That would match up with the "crystal input" pin in the ULPI
-spec[1].
+Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Hello,
 
-Do you know if this is documented anywhere in the chipidea manual?
-I'll have to look again and see if there's something in there, but I
-didn't see anything like this.
+This patch is tested with the following patch applied
+https://patchwork.kernel.org/patch/9296883/
 
-I would guess that we're talking about the xcvr clock though, because
-from what I see in the manual, this is used to clock the interface
-between the ULPI phy and the controller. In the ULPI spec, this matches
-up with the "clock" signal for the ULPI phy and that usually runs at
-something >= 60MHz. 
+and is based on the suggestions from Vladimir
+https://lkml.org/lkml/2016/8/29/322
 
-> 
-> > >        
-> > > Besides, you read ulpi id before phy->power_on, how can read work before
-> > > phy power on?
-> > > 
-> > 
-> > I've found that even having the link clk enabled before phy->power_on
-> > doesn't mean it's possible to read the id registers though. That's
-> > because there can be other power supplies, like regulators, which need
-> > to be on for the phy to operate properly.
-> > 
-> 
-> Then I am puzzled the current initialization for your case, in my mind,
-> it should like below:
-> 
-> qcom_usb_hs_phy_probe->qcom_usb_hs_phy_power_on->ci_ulpi_init
-> 
-> Like other PHYs, it should get PHY first, then power on it, after that,
-> you can access its register.
-> 
+This and following two patches are based on top of shawn's
+for-next branch.
 
-Hmm.. maybe the confusion is in which registers we should be able to
-access? Are we talking about the ULPI viewport MMIO register space or
-the ULPI registers that we access through the viewport? I have a
-hw_phymode_configure() inside of of ci_ulpi_init() so that the
-identification registers through the ULPI viewport read properly
-(assuming there aren't other power requirements like regulators). If we
-don't set the portsc.pts before using the viewport, the viewport doesn't
-work and reads timeout. So we really don't touch the ULPI registers
-except for the scratch space and the id registers until after the phy is
-properly powered on with clks and regulators, because the only place we
-touch them after doing the id checking is in this phy driver in
-qcom_usb_hs_phy_power_on(). We've "solved" the chicken-egg problem where
-we don't know which device driver to probe because the phy needs to be
-powered on to read the id registers to know which device driver to use
-by using DT to match up device drivers instead.
+Regards,
+Sanchayan.
+---
+ arch/arm/boot/dts/imx6q-apalis-ixora.dts |  6 ------
+ arch/arm/boot/dts/imx6qdl-apalis.dtsi    | 25 +++++++++----------------
+ 2 files changed, 9 insertions(+), 22 deletions(-)
 
-[1] https://www.sparkfun.com/datasheets/Components/SMD/ULPI_v1_1.pdf
+diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora.dts b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+index 207b85b..d99979e 100644
+--- a/arch/arm/boot/dts/imx6q-apalis-ixora.dts
++++ b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+@@ -55,7 +55,6 @@
+ 		     "fsl,imx6q";
+ 
+ 	aliases {
+-		i2c0 = &i2cddc;
+ 		i2c1 = &i2c1;
+ 		i2c2 = &i2c2;
+ 		i2c3 = &i2c3;
+@@ -186,11 +185,6 @@
+ };
+ 
+ &hdmi {
+-	ddc-i2c-bus = <&i2cddc>;
+-	status = "okay";
+-};
+-
+-&i2cddc {
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+index 99e323b..8c67dd8 100644
+--- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+@@ -53,18 +53,6 @@
+ 		status = "disabled";
+ 	};
+ 
+-	/* DDC_I2C: I2C2_SDA/SCL on MXM3 205/207 */
+-	i2cddc: i2c@0 {
+-		compatible = "i2c-gpio";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_i2c_ddc>;
+-		gpios = <&gpio3 16 GPIO_ACTIVE_HIGH /* sda */
+-			 &gpio2 30 GPIO_ACTIVE_HIGH /* scl */
+-			>;
+-		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
+-		status = "disabled";
+-	};
+-
+ 	reg_1p8v: regulator-1p8v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "1P8V";
+@@ -209,6 +197,12 @@
+ 	};
+ };
+ 
++&hdmi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hdmi_ddc>;
++	status = "disabled";
++};
++
+ /*
+  * GEN1_I2C: I2C1_SDA/SCL on MXM3 209/211 (e.g. RTC on carrier
+  * board)
+@@ -633,11 +627,10 @@
+ 		>;
+ 	};
+ 
+-	pinctrl_i2c_ddc: gpioi2cddcgrp {
++	pinctrl_hdmi_ddc: hdmiddcgrp {
+ 		fsl,pins = <
+-			/* DDC bitbang */
+-			MX6QDL_PAD_EIM_EB2__GPIO2_IO30 0x1b0b0
+-			MX6QDL_PAD_EIM_D16__GPIO3_IO16 0x1b0b0
++			MX6QDL_PAD_EIM_EB2__HDMI_TX_DDC_SCL 0x4001b8b1
++			MX6QDL_PAD_EIM_D16__HDMI_TX_DDC_SDA 0x4001b8b1
+ 		>;
+ 	};
+ 
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
