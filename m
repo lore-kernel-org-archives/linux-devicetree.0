@@ -1,51 +1,41 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 07/19] ahci: st: Remove STiH416 dt example
-Date: Wed, 14 Sep 2016 14:27:45 +0100
-Message-ID: <1473859677-9231-8-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 03/19] MAINTAINERS: Remove phy-miphy365x.c entry from STi arch
+Date: Wed, 14 Sep 2016 14:27:41 +0100
+Message-ID: <1473859677-9231-4-git-send-email-peter.griffin@linaro.org>
 References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, patrice.chotard@st.com, devicetree@vger.kernel.org
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, tj@kernel.org, robh+dt@kernel.org, linux-ide@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473859677-9231-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This platform is being removed from the kernel so remove
-the dt example.
+Remove this driver as the IP is only found on STiH415/6
+silicon, and support for these SoC's is being removed
+from the kernel.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Cc: <tj@kernel.org>
-Cc: <robh+dt@kernel.org>
-Cc: <linux-ide@vger.kernel.org>
+Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: <kishon-l0cyMroinI0@public.gmane.org>
 ---
- Documentation/devicetree/bindings/ata/ahci-st.txt | 15 ---------------
- 1 file changed, 15 deletions(-)
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/ata/ahci-st.txt b/Documentation/devicetree/bindings/ata/ahci-st.txt
-index e1d01df..909c993 100644
---- a/Documentation/devicetree/bindings/ata/ahci-st.txt
-+++ b/Documentation/devicetree/bindings/ata/ahci-st.txt
-@@ -18,21 +18,6 @@ Optional properties:
- 
- Example:
- 
--	/* Example for stih416 */
--	sata0: sata@fe380000 {
--		compatible	= "st,ahci";
--		reg		= <0xfe380000 0x1000>;
--		interrupts	= <GIC_SPI 157 IRQ_TYPE_NONE>;
--		interrupt-names	= "hostc";
--		phys		= <&phy_port0 PHY_TYPE_SATA>;
--		phy-names	= "ahci_phy";
--		resets		= <&powerdown STIH416_SATA0_POWERDOWN>,
--				  <&softreset STIH416_SATA0_SOFTRESET>;
--		reset-names	= "pwr-dwn", "sw-rst";
--		clocks		= <&clk_s_a0_ls CLK_ICN_REG>;
--		clock-names	= "ahci_clk";
--	};
--
- 	/* Example for stih407 family silicon */
- 	sata0: sata@9b20000 {
- 		compatible	= "st,ahci";
+diff --git a/MAINTAINERS b/MAINTAINERS
+index db814a8..12c271c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1754,7 +1754,6 @@ F:	drivers/media/rc/st_rc.c
+ F:	drivers/media/platform/sti/c8sectpfe/
+ F:	drivers/mmc/host/sdhci-st.c
+ F:	drivers/phy/phy-miphy28lp.c
+-F:	drivers/phy/phy-miphy365x.c
+ F:	drivers/phy/phy-stih407-usb.c
+ F:	drivers/phy/phy-stih41x-usb.c
+ F:	drivers/pinctrl/pinctrl-st.c
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
