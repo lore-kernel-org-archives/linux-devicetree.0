@@ -1,39 +1,58 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 0/4] ARM: amlogic: add i2c support to Amlogic's gxbb family
-Date: Wed, 14 Sep 2016 12:06:04 +0200
-Message-ID: <1473847568-20163-1-git-send-email-jbrunet@baylibre.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 4/4] ARM64: dts: gxbb: add i2c bus
+Date: Wed, 14 Sep 2016 12:06:08 +0200
+Message-ID: <1473847568-20163-5-git-send-email-jbrunet@baylibre.com>
+References: <1473847568-20163-1-git-send-email-jbrunet@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473847568-20163-1-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the meson i2c controller found on the gxbb SoC family
-This patchset adds 1 i2c in the AO domain and 3 in the EE domain (A,B,C).
-There is 1 last i2c in the EE domain (D) but it is actually not connected
-to the pad of the SoC, so there is no point in adding it here.
+Add nodes for i2c bus on gxbb based platforms.
+On the OdroidC2 (I2C A) and P200 (I2C B), the pull-up resistor are
+present directly on the board. This indicates that these pins are
+dedicated to i2c.
 
-Patches for the i2c [0] driver and pinctrl [1] have been sent in
-dedicated series
+Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 6 ++++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts     | 6 ++++++
+ 2 files changed, 12 insertions(+)
 
-[0]: http://lkml.kernel.org/r/1473846557-18123-1-git-send-email-jbrunet@baylibre.com
-[1]: http://lkml.kernel.org/r/1473846328-17339-1-git-send-email-jbrunet@baylibre.com
-
-Jerome Brunet (3):
-  clk: gxbb: expose i2c clocks
-  ARM64: dts: meson-gxbb: add pins for I2C
-  ARM64: dts: gxbb: add i2c bus
-
-Neil Armstrong (1):
-  ARM64: dts: meson-gxbb: add I2C nodes
-
- .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  6 ++
- arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts    |  6 ++
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 72 ++++++++++++++++++++++
- drivers/clk/meson/gxbb.h                           |  4 +-
- include/dt-bindings/clock/gxbb-clkc.h              |  2 +
- 5 files changed, 88 insertions(+), 2 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index 4f1554a27422..c6d78d3a018f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -180,3 +180,9 @@
+ 	vmmc-supply = <&vcc3v3>;
+ 	vqmmc-supply = <&vcc1v8>;
+ };
++
++&i2c_A {
++	status = "okay";
++	pinctrl-0 = <&i2c_a_pins>;
++	pinctrl-names = "default";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+index 62979076e250..03e3d76626dd 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+@@ -50,3 +50,9 @@
+ 	compatible = "amlogic,p200", "amlogic,meson-gxbb";
+ 	model = "Amlogic Meson GXBB P200 Development Board";
+ };
++
++&i2c_B {
++	status = "okay";
++	pinctrl-0 = <&i2c_b_pins>;
++	pinctrl-names = "default";
++};
 -- 
 2.7.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
