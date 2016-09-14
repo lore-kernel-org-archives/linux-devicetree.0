@@ -1,116 +1,43 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "regulator: core: Use local ops variable in _regulator_do_set_voltage()" to the regulator tree
-Date: Wed, 14 Sep 2016 18:16:08 +0100
-Message-ID: <E1bkDn6-0001pQ-CO@debutante>
-References: <1473871930-99603-1-git-send-email-mka@chromium.org>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v4 2/5] ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual
+ initial support
+Date: Wed, 14 Sep 2016 23:13:37 +0530
+Message-ID: <CAMty3ZDKrXxmwDFxSBvL_anJQPdXEfnJ40uNv5B6KssQyJJKhA@mail.gmail.com>
+References: <1473618641-10159-1-git-send-email-jagan@amarulasolutions.com>
+ <1473618641-10159-3-git-send-email-jagan@amarulasolutions.com> <CAOMZO5CsrrqqUPaVbU-ya79VSXgxyspa_fbr8HY1voJgpy2LLg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473871930-99603-1-git-send-email-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <CAOMZO5CsrrqqUPaVbU-ya79VSXgxyspa_fbr8HY1voJgpy2LLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Wed, Sep 14, 2016 at 4:06 AM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Sun, Sep 11, 2016 at 3:30 PM, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> +       reg_3p3v: regulator-3p3v {
+>> +               compatible = "regulator-fixed";
+>> +               regulator-name = "3P3V";
+>> +               regulator-min-microvolt = <3300000>;
+>> +               regulator-max-microvolt = <3300000>;
+>> +               regulator-boot-on;
+>> +               regulator-always-on;
+>
+> You should remove " regulator-boot-on" and "regulator-always-on" as
+> the reg_3p3v regulator is controlled by the can nodes.
 
-   regulator: core: Use local ops variable in _regulator_do_set_voltage()
+OK, but where it showed on the processor manual? I only find LDO_2P5
+regulator which is connected to high speed devices, HDMI, SATA etc on
+Figure 50-1: Power system overview
 
-has been applied to the regulator tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 57995a4860542ea2089558c84f739e12d5ca1059 Mon Sep 17 00:00:00 2001
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Date: Wed, 14 Sep 2016 09:52:05 -0700
-Subject: [PATCH] regulator: core: Use local ops variable in
- _regulator_do_set_voltage()
-
-Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- drivers/regulator/core.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index db320e8fa865..b059e8334567 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -2751,6 +2751,7 @@ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
- 	int best_val = 0;
- 	unsigned int selector;
- 	int old_selector = -1;
-+	const struct regulator_ops *ops = rdev->desc->ops;
- 
- 	trace_regulator_set_voltage(rdev_get_name(rdev), min_uV, max_uV);
- 
-@@ -2762,29 +2763,28 @@ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
- 	 * info to call set_voltage_time_sel().
- 	 */
- 	if (_regulator_is_enabled(rdev) &&
--	    rdev->desc->ops->set_voltage_time_sel &&
--	    rdev->desc->ops->get_voltage_sel) {
--		old_selector = rdev->desc->ops->get_voltage_sel(rdev);
-+	    ops->set_voltage_time_sel && ops->get_voltage_sel) {
-+		old_selector = ops->get_voltage_sel(rdev);
- 		if (old_selector < 0)
- 			return old_selector;
- 	}
- 
--	if (rdev->desc->ops->set_voltage) {
-+	if (ops->set_voltage) {
- 		ret = _regulator_call_set_voltage(rdev, min_uV, max_uV,
- 						  &selector);
- 
- 		if (ret >= 0) {
--			if (rdev->desc->ops->list_voltage)
--				best_val = rdev->desc->ops->list_voltage(rdev,
--									 selector);
-+			if (ops->list_voltage)
-+				best_val = ops->list_voltage(rdev,
-+							     selector);
- 			else
- 				best_val = _regulator_get_voltage(rdev);
- 		}
- 
--	} else if (rdev->desc->ops->set_voltage_sel) {
-+	} else if (ops->set_voltage_sel) {
- 		ret = regulator_map_voltage(rdev, min_uV, max_uV);
- 		if (ret >= 0) {
--			best_val = rdev->desc->ops->list_voltage(rdev, ret);
-+			best_val = ops->list_voltage(rdev, ret);
- 			if (min_uV <= best_val && max_uV >= best_val) {
- 				selector = ret;
- 				if (old_selector == selector)
-@@ -2804,7 +2804,7 @@ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
- 	if (ret == 0 && !rdev->constraints->ramp_disable && old_selector >= 0
- 		&& old_selector != selector) {
- 
--		delay = rdev->desc->ops->set_voltage_time_sel(rdev,
-+		delay = ops->set_voltage_time_sel(rdev,
- 						old_selector, selector);
- 		if (delay < 0) {
- 			rdev_warn(rdev, "set_voltage_time_sel() failed: %d\n",
+thanks!
 -- 
-2.8.1
-
+Jagan Teki
+Free Software Engineer | Amarula Solutions
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
