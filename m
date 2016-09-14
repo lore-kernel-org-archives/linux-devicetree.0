@@ -1,145 +1,72 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH v4 22/22] phy: Add support for Qualcomm's USB HS phy
-Date: Wed, 14 Sep 2016 10:42:50 -0700
-Message-ID: <147387497029.16543.5921198225528254345@sboyd-linaro>
-References: <20160907213519.27340-1-stephen.boyd@linaro.org>
- <20160907213519.27340-23-stephen.boyd@linaro.org>
- <20160913070358.GB30425@b29397-desktop>
- <147379930484.27460.3849356366746983941@sboyd-linaro>
- <20160914021133.GB30760@b29397-desktop>
- <147383455256.1541.16582625295760921275@sboyd-linaro>
- <20160914093307.GC21674@b29397-desktop>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v3 3/4] arm: dts: qcom: apq8064: Add display DT nodes
+Date: Wed, 14 Sep 2016 23:27:44 +0530
+Message-ID: <57D98F98.2060601@codeaurora.org>
+References: <1472737015-29382-1-git-send-email-architt@codeaurora.org>
+ <1473780097-11388-1-git-send-email-architt@codeaurora.org>
+ <1473780097-11388-4-git-send-email-architt@codeaurora.org>
+ <cfb9dbc8-40bd-e790-d3d3-5b2c40d58f88@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160914093307.GC21674@b29397-desktop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Chen <hzpeterchen@gmail.com>
-Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cfb9dbc8-40bd-e790-d3d3-5b2c40d58f88@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stephen Boyd <sboyd@codeaurora.org>, andy.gross@linaro.org, robdclark@gmail.com
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Peter Chen (2016-09-14 02:33:07)
-> On Tue, Sep 13, 2016 at 11:29:12PM -0700, Stephen Boyd wrote:
-> > Quoting Peter Chen (2016-09-13 19:11:33)
-> > > On Tue, Sep 13, 2016 at 01:41:44PM -0700, Stephen Boyd wrote:
-> > > > Quoting Peter Chen (2016-09-13 00:03:58)
-> > > > > On Wed, Sep 07, 2016 at 02:35:19PM -0700, Stephen Boyd wrote:
-> > > > > > The high-speed phy on qcom SoCs is controlled via the ULPI
-> > > > > > viewport.
-> > > > > > 
-> > > > > 
-> > > > > Hi Stephen, I am a little puzzled how this driver co-work with chipidea
-> > > > > driver. According to nxp IC guys, the ULPI PHY's clock needs to be enabled
-> > > > > before access portsc.pts (calling hw_phymode_configure), otherwise,
-> > > > > the system will hang. But I find you call hw_phymode_configure before
-> > > > > phy->power_on, doesn't your design have this requirement?
-> > > > 
-> > > > Which clk needs to be enabled? The xcvr_clk? I believe that clk
-> > > > corresponds to the "core" clk that we enable in the msm glue driver
-> > > > layer. When that clk is enabled, the ULPI phy is able to respond to
-> > > > register read/writes via the ULPI viewport.
-> > > > 
-> > > 
-> > > The input clock for ULPI PHY, maybe it is ref_clk at this PHY driver, 
-> > > so in your platform, even PHY clock is gated, you can still access
-> > > portsc.pts to configure PHY mode at controller register?
-> > 
-> > There are a couple input clocks for this phy. I'm not sure which one the
-> > nxp IC guys think needs to be enabled. Typically, the ref_clk is always
-> > on so it's hard for me to test a scenario where it isn't enabled. But
-> > I'm not sure that the ref_clk is what we're talking about anyway. Would
-> > you know the frequency perhaps?
-> 
-> I think this ref_clk is ULPI PHY vendor specific, at USB3317, it is
-> 26Mhz.
-
-Ok. Makes sense.
-
-> 
-> > The ref_clk is usually 19.2MHz on these
-> > SoCs. That would match up with the "crystal input" pin in the ULPI
-> > spec[1].
-> > 
-> > Do you know if this is documented anywhere in the chipidea manual?
-> > I'll have to look again and see if there's something in there, but I
-> > didn't see anything like this.
-> > 
-> > I would guess that we're talking about the xcvr clock though, because
-> > from what I see in the manual, this is used to clock the interface
-> > between the ULPI phy and the controller. In the ULPI spec, this matches
-> > up with the "clock" signal for the ULPI phy and that usually runs at
-> > something >= 60MHz. 
-> 
-> I think you are right, since controller only concerns the output clock.
-> So, if you have not enabled xcvr, you may meet hang when set portsc.pts too?
-
-Yes. In the qcom designs the xcvr clk is necessary to read/write any of
-the registers in the controller. So we wouldn't be able to touch
-portsc.pts or any other controller registers without a hang.
-
-> 
-> At some designs, ULPI input clock (ref_clk) may from Soc internal,
-> without enabling it, the controller will not get PHY clock (60Mhz).
-> When visiting portsc.pts, may meet hang.
-> 
-> > 
-> > > 
-> > > > >        
-> > > > > Besides, you read ulpi id before phy->power_on, how can read work before
-> > > > > phy power on?
-> > > > > 
-> > > > 
-> > > > I've found that even having the link clk enabled before phy->power_on
-> > > > doesn't mean it's possible to read the id registers though. That's
-> > > > because there can be other power supplies, like regulators, which need
-> > > > to be on for the phy to operate properly.
-> > > > 
-> > > 
-> > > Then I am puzzled the current initialization for your case, in my mind,
-> > > it should like below:
-> > > 
-> > > qcom_usb_hs_phy_probe->qcom_usb_hs_phy_power_on->ci_ulpi_init
-> > > 
-> > > Like other PHYs, it should get PHY first, then power on it, after that,
-> > > you can access its register.
-> > > 
-> > 
-> > Hmm.. maybe the confusion is in which registers we should be able to
-> > access? Are we talking about the ULPI viewport MMIO register space or
-> > the ULPI registers that we access through the viewport? I have a
-> > hw_phymode_configure() inside of of ci_ulpi_init() so that the
-> > identification registers through the ULPI viewport read properly
-> > (assuming there aren't other power requirements like regulators). If we
-> > don't set the portsc.pts before using the viewport, the viewport doesn't
-> > work and reads timeout. So we really don't touch the ULPI registers
-> > except for the scratch space and the id registers until after the phy is
-> > properly powered on with clks and regulators, because the only place we
-> > touch them after doing the id checking is in this phy driver in
-> > qcom_usb_hs_phy_power_on(). We've "solved" the chicken-egg problem where
-> > we don't know which device driver to probe because the phy needs to be
-> > powered on to read the id registers to know which device driver to use
-> > by using DT to match up device drivers instead.
-> > 
-> > [1] https://www.sparkfun.com/datasheets/Components/SMD/ULPI_v1_1.pdf
-> 
-> Ok, ulpi phy works like USB device on USB bus which create device at
-> runtime. So, like some hard-wired USB devices, it may needs power
-> sequence too, otherwise, how it knows which driver can loads.
-> 
-
-Yes. We use the DT compatible string to ignore any issues with reading
-the device ids when the device is powered off. Unlike USB though, we
-have device drivers for the ULPI PHYs that do the power sequencing along
-with other initializations, so using a common pwrseq layer seems like
-overkill just so we can read the id registers.
-
-Are there any concerns with this patch? Or can they be reapplied?
+CgpPbiA5LzE0LzIwMTYgMzoxNCBBTSwgU3RlcGhlbiBCb3lkIHdyb3RlOgo+IE9uIDA5LzEzLzIw
+MTYgMDg6MjEgQU0sIEFyY2hpdCBUYW5lamEgd3JvdGU6Cj4+IEFQUTgwNjQgY29udGFpbnMgYSBN
+RFA0IGJhc2VkIGRpc3BsYXkgY29udHJvbGxlci4gSXQgY29udGFpbnMgYSBIRE1JLCBMVkRTCj4+
+IGFuZCAyIERTSSBvdXRwdXRzLgo+Pgo+PiBBZGQgZGlzcGxheSBEVCBub2RlcyBmb3IgTURQNCwg
+SERNSSBUWCBhbmQgSERNSSBQSFkuIE1EUDQgYmFzZWQgZGlzcGxheQo+PiBibG9ja3MgaGF2ZSBh
+IGZsYXQgZGV2aWNlIGhpZXJhcmNoeS4KPj4KPj4gTm9kZXMgZm9yIG90aGVyIG91dHB1dHMgd2ls
+bCBiZSBhZGRlZCBsYXRlci4KPj4KPj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+
+Cj4+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+Pgo+PiBUZXN0ZWQtYnk6IEpvaG4g
+U3R1bHR6IDxqb2huLnN0dWx0ekBsaW5hcm8ub3JnPgo+PiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQg
+VGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgo+PiAtLS0KPj4gICBhcmNoL2FybS9ib290
+L2R0cy9xY29tLWFwcTgwNjQuZHRzaSB8IDkxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysKPj4gICAxIGZpbGUgY2hhbmdlZCwgOTEgaW5zZXJ0aW9ucygrKQo+Pgo+PiBkaWZm
+IC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvcWNvbS1hcHE4MDY0LmR0c2kgYi9hcmNoL2FybS9i
+b290L2R0cy9xY29tLWFwcTgwNjQuZHRzaQo+PiBpbmRleCA3NGE5YjZjLi5iNjg4ZmI2IDEwMDY0
+NAo+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9xY29tLWFwcTgwNjQuZHRzaQo+PiArKysgYi9h
+cmNoL2FybS9ib290L2R0cy9xY29tLWFwcTgwNjQuZHRzaQo+PiBAQCAtOTU1LDYgKzk1NSw5NyBA
+QAo+PiAgIAkJCXJlc2V0LW5hbWVzID0gImF4aSIsICJhaGIiLCAicG9yIiwgInBjaSIsICJwaHki
+Owo+PiAgIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4+ICAgCQl9Owo+PiArCj4+ICsJCWhkbWk6
+IGhkbWktdHhANGEwMDAwMCB7Cj4+ICsJCQljb21wYXRpYmxlID0gInFjb20saGRtaS10eC04OTYw
+IjsKPj4gKwkJCXJlZyA9IDwweDA0YTAwMDAwIDB4MmYwPjsKPj4gKwkJCXJlZy1uYW1lcyA9ICJj
+b3JlX3BoeXNpY2FsIjsKPj4gKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA3OSBJUlFfVFlQRV9O
+T05FPjsKPgo+IFBsZWFzZSBzcGVjaWZ5IHRoZSBJUlFfVFlQRSB0aGF0IGlzbid0IE5PTkUgaGVy
+ZS4KPgo+PiArCQkJY2xvY2tzID0gPCZtbWNjIEhETUlfQVBQX0NMSz4sCj4+ICsJCQkJIDwmbW1j
+YyBIRE1JX01fQUhCX0NMSz4sCj4+ICsJCQkJIDwmbW1jYyBIRE1JX1NfQUhCX0NMSz47Cj4+ICsJ
+CQljbG9jay1uYW1lcyA9ICJjb3JlX2NsayIsCj4+ICsJCQkJICAgICAgIm1hc3Rlcl9pZmFjZV9j
+bGsiLAo+PiArCQkJCSAgICAgICJzbGF2ZV9pZmFjZV9jbGsiOwo+PiArCj4+ICsJCQlwaHlzID0g
+PCZoZG1pX3BoeT47Cj4+ICsJCQlwaHktbmFtZXMgPSAiaGRtaS1waHkiOwo+PiArCj4+ICsJCQlw
+b3J0cyB7Cj4+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4+ICsJCQkJI3NpemUtY2VsbHMg
+PSA8MD47Cj4+ICsKPj4gKwkJCQlwb3J0QDAgewo+PiArCQkJCQlyZWcgPSA8MD47Cj4+ICsJCQkJ
+CWhkbWlfaW46IGVuZHBvaW50IHsKPj4gKwkJCQkJfTsKPj4gKwkJCQl9Owo+PiArCj4+ICsJCQkJ
+cG9ydEAxIHsKPj4gKwkJCQkJcmVnID0gPDE+Owo+PiArCQkJCQloZG1pX291dDogZW5kcG9pbnQg
+ewo+PiArCQkJCQl9Owo+PiArCQkJCX07Cj4+ICsJCQl9Owo+PiArCQl9Owo+PiArCj4+ICsJCWhk
+bWlfcGh5OiBoZG1pLXBoeUA0YTAwNDAwIHsKPj4gKwkJCWNvbXBhdGlibGUgPSAicWNvbSxoZG1p
+LXBoeS04OTYwIjsKPj4gKwkJCXJlZyA9IDwweDRhMDA0MDAgMHg2MD4sCj4+ICsJCQkgICAgICA8
+MHg0YTAwNTAwIDB4MTAwPjsKPj4gKwkJCXJlZy1uYW1lcyA9ICJoZG1pX3BoeSIsCj4+ICsJCQkJ
+ICAgICJoZG1pX3BsbCI7Cj4+ICsKPj4gKwkJCWNsb2NrcyA9IDwmbW1jYyBIRE1JX1NfQUhCX0NM
+Sz47Cj4+ICsJCQljbG9jay1uYW1lcyA9ICJzbGF2ZV9pZmFjZV9jbGsiOwo+PiArCQl9Owo+PiAr
+Cj4+ICsJCW1kcDogbWRwQDUxMDAwMDAgewo+PiArCQkJY29tcGF0aWJsZSA9ICJxY29tLG1kcDQi
+Owo+PiArCQkJcmVnID0gPDB4MDUxMDAwMDAgMHhmMDAwMD47Cj4+ICsJCQlpbnRlcnJ1cHRzID0g
+PEdJQ19TUEkgNzUgSVJRX1RZUEVfTk9ORT47Cj4KPiBTYW1lIGNvbW1lbnQgaGVyZS4KCldpbGwg
+Zml4IHRoaXMuCgpUaGFua3MsCkFyY2hpdAoKCi0tIApRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRl
+ciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0
+aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
