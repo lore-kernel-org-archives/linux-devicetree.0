@@ -1,47 +1,125 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: omap3-gta04: reduce panel backlight PWM
- frequency to 83Hz
-Date: Wed, 14 Sep 2016 11:12:38 -0700
-Message-ID: <20160914181236.ecuf5o6vvoiao7ek@atomide.com>
-References: <954d43b570092fe92b8b49cf8f475c027d3d8342.1473066997.git.hns@goldelico.com>
- <20160910031736.xwnepaoifpedqfbr@squirrel.local>
- <3188F52F-1372-4D59-B790-C15E584A44F2@goldelico.com>
- <CAALWOA8ZZBbgCG-5TRbd6=k27PQV2EHcCj6zwk31sKTHY1A7Bg@mail.gmail.com>
- <7C9DF12E-32C6-4D7C-BAAD-5CE9F8BA305A@goldelico.com>
- <20160913220710.wo7jjyql362pttbs@atomide.com>
- <82853D52-0D6B-42EC-8900-5575A92123E6@goldelico.com>
+From: John Youn <John.Youn@synopsys.com>
+Subject: Re: [PATCH v2 1/6] usb: dwc2: add support for Meson8b and GXBB SoCs
+Date: Wed, 14 Sep 2016 11:12:20 -0700
+Message-ID: <0d587b46-4c6e-c2ec-a62e-5d0c5a5bd902@synopsys.com>
+References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
+ <20160911134111.31141-1-martin.blumenstingl@googlemail.com>
+ <20160911134111.31141-2-martin.blumenstingl@googlemail.com>
+ <m24m5ixxyu.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <82853D52-0D6B-42EC-8900-5575A92123E6-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Rivshin <drivshin-5fOYsn7Fw8lBDgjK7y7TUQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <m24m5ixxyu.fsf@baylibre.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, John Youn <John.Youn@synopsys.com>
+Cc: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>, "jbrunet@baylibre.com" <jbrunet@baylibre.com>, "kishon@ti.com" <kishon@ti.com>, "carlo@caione.org" <carlo@caione.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, robh+dt@kernel.or
 List-Id: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [160913 21:29]:
-> Hi,
+On 9/14/2016 9:11 AM, Kevin Hilman wrote:
+> Hi John,
 > 
-> > Am 14.09.2016 um 00:07 schrieb Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>:
-> > 
-> > * H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [160910 02:10]:
-> >>> Am 10.09.2016 um 10:20 schrieb Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> >> 
-> >> But with the patch submitted, I just want to give the dts of a single
-> >> device I have even designed a more reasonable value than in current
-> >> linux/master and don't really want to make it a fundamental discussion...
-> > 
-> > So what's the verdict here on this patch? Should we wait for the driver
-> > to get fixed?
+> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 > 
-> No, because it are indeed two issues which can (and should) be fixed independently.
-> This one just makes the urgency of the other bug smaller.
+>> From: Jerome Brunet <jbrunet@baylibre.com>
+>>
+>> Add compatible strings for amlogic Meson8b and GXBB SoCs with the
+>> corresponding configuration parameters.
+>>
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> 
+> Are you OK with adding this platform for v4.9?  I know you mentioned
+> you're working on new bindings to replace the current way, but since
+> that hasn't been posted AFAICT, it would be nice to get this merged now
+> and we can help test the new bindings when you're ready.
+> 
+> If you're OK with that, and with your Ack, I can take merge the driver
+> changes through the arm-soc tree along with the rest of the DT patches.
+> 
 
-OK applying into omap-for-v4.9/dt thanks.
+Sure. Unfortunately, I wasn't able to complete it for 4.9.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You can add my acked-by on this:
+
+Acked-by: John Youn <johnyoun@synopsys.com>
+
+Regards,
+John
+
+
+
+> Kevin
+> 
+>> ---
+>>  Documentation/devicetree/bindings/usb/dwc2.txt |  2 ++
+>>  drivers/usb/dwc2/platform.c                    | 34 ++++++++++++++++++++++++++
+>>  2 files changed, 36 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+>> index 20a68bf..2c30a54 100644
+>> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+>> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+>> @@ -10,6 +10,8 @@ Required properties:
+>>    - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
+>>    - "lantiq,arx100-usb": The DWC2 USB controller instance in Lantiq ARX SoCs;
+>>    - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
+>> +  - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlogic Meson8b SoCs;
+>> +  - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
+>>    - snps,dwc2: A generic DWC2 USB controller with default parameters.
+>>  - reg : Should contain 1 register range (address and length)
+>>  - interrupts : Should contain 1 interrupt
+>> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+>> index fc6f525..8f7b34c 100644
+>> --- a/drivers/usb/dwc2/platform.c
+>> +++ b/drivers/usb/dwc2/platform.c
+>> @@ -181,6 +181,38 @@ static const struct dwc2_core_params params_ltq = {
+>>  	.hibernation			= -1,
+>>  };
+>>  
+>> +static const struct dwc2_core_params params_amlogic = {
+>> +	.otg_cap			= DWC2_CAP_PARAM_NO_HNP_SRP_CAPABLE,
+>> +	.otg_ver			= -1,
+>> +	.dma_enable			= 1,
+>> +	.dma_desc_enable		= 0,
+>> +	.dma_desc_fs_enable		= 0,
+>> +	.speed				= DWC2_SPEED_PARAM_HIGH,
+>> +	.enable_dynamic_fifo		= 1,
+>> +	.en_multiple_tx_fifo		= -1,
+>> +	.host_rx_fifo_size		= 512,
+>> +	.host_nperio_tx_fifo_size	= 500,
+>> +	.host_perio_tx_fifo_size	= 500,
+>> +	.max_transfer_size		= -1,
+>> +	.max_packet_count		= -1,
+>> +	.host_channels			= 16,
+>> +	.phy_type			= DWC2_PHY_TYPE_PARAM_UTMI,
+>> +	.phy_utmi_width			= -1,
+>> +	.phy_ulpi_ddr			= -1,
+>> +	.phy_ulpi_ext_vbus		= -1,
+>> +	.i2c_enable			= -1,
+>> +	.ulpi_fs_ls			= -1,
+>> +	.host_support_fs_ls_low_power	= -1,
+>> +	.host_ls_low_power_phy_clk	= -1,
+>> +	.ts_dline			= -1,
+>> +	.reload_ctl			= 1,
+>> +	.ahbcfg				= GAHBCFG_HBSTLEN_INCR8 <<
+>> +					  GAHBCFG_HBSTLEN_SHIFT,
+>> +	.uframe_sched			= 0,
+>> +	.external_id_pin_ctl		= -1,
+>> +	.hibernation			= -1,
+>> +};
+>> +
+>>  /*
+>>   * Check the dr_mode against the module configuration and hardware
+>>   * capabilities.
+>> @@ -464,6 +496,8 @@ static const struct of_device_id dwc2_of_match_table[] = {
+>>  	{ .compatible = "lantiq,xrx200-usb", .data = &params_ltq },
+>>  	{ .compatible = "snps,dwc2", .data = NULL },
+>>  	{ .compatible = "samsung,s3c6400-hsotg", .data = NULL},
+>> +	{ .compatible = "amlogic,meson8b-usb", .data = &params_amlogic },
+>> +	{ .compatible = "amlogic,meson-gxbb-usb", .data = &params_amlogic },
+>>  	{},
+>>  };
+>>  MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
+> 
+
