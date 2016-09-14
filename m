@@ -1,41 +1,62 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 04/19] MAINTAINERS: Remove phy-stih41x-usb.c entry from STi arch
-Date: Wed, 14 Sep 2016 14:27:42 +0100
-Message-ID: <1473859677-9231-5-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH 12/19] reset: sti: Remove obsolete platforms from dt binding doc.
+Date: Wed, 14 Sep 2016 14:27:50 +0100
+Message-ID: <1473859677-9231-13-git-send-email-peter.griffin@linaro.org>
 References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473859677-9231-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, patrice.chotard@st.com, devicetree@vger.kernel.org
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Remove this driver as the IP is only found on STiH415/6
-silicon, and support for these SoC's is being removed
-from the kernel.
+STiH415/6 SoC support is being removed from the kernel.
+This patch updates the sti dt powerdown bindings and
+removes references to these obsolete platforms.
 
-Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: <kishon-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Cc: <p.zabel@pengutronix.de>
+Cc: <robh+dt@kernel.org>
 ---
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+ Documentation/devicetree/bindings/reset/st,sti-powerdown.txt | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 12c271c..6a278b9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1755,7 +1755,6 @@ F:	drivers/media/platform/sti/c8sectpfe/
- F:	drivers/mmc/host/sdhci-st.c
- F:	drivers/phy/phy-miphy28lp.c
- F:	drivers/phy/phy-stih407-usb.c
--F:	drivers/phy/phy-stih41x-usb.c
- F:	drivers/pinctrl/pinctrl-st.c
- F:	drivers/remoteproc/st_remoteproc.c
- F:	drivers/reset/sti/
+diff --git a/Documentation/devicetree/bindings/reset/st,sti-powerdown.txt b/Documentation/devicetree/bindings/reset/st,sti-powerdown.txt
+index 1cfd21d..9252713 100644
+--- a/Documentation/devicetree/bindings/reset/st,sti-powerdown.txt
++++ b/Documentation/devicetree/bindings/reset/st,sti-powerdown.txt
+@@ -16,15 +16,14 @@ Please refer to reset.txt in this directory for common reset
+ controller binding usage.
+ 
+ Required properties:
+-- compatible: Should be "st,<chip>-powerdown"
+-	ex: "st,stih415-powerdown", "st,stih416-powerdown"
++- compatible: Should be "st,stih407-powerdown"
+ - #reset-cells: 1, see below
+ 
+ example:
+ 
+ 	powerdown: powerdown-controller {
++		compatible = "st,stih407-powerdown";
+ 		#reset-cells = <1>;
+-		compatible = "st,stih415-powerdown";
+ 	};
+ 
+ 
+@@ -37,11 +36,10 @@ index specifying which channel to use, as described in reset.txt
+ 
+ example:
+ 
+-	usb1: usb@fe200000 {
+-		resets	= <&powerdown STIH41X_USB1_POWERDOWN>;
++	st_dwc3: dwc3@8f94000 {
++		resets          = <&powerdown STIH407_USB3_POWERDOWN>,
+ 	};
+ 
+ Macro definitions for the supported reset channels can be found in:
+ 
+-include/dt-bindings/reset/stih415-resets.h
+-include/dt-bindings/reset/stih416-resets.h
++include/dt-bindings/reset/stih407-resets.h
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
