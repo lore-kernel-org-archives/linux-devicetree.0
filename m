@@ -1,60 +1,61 @@
-From: Patrice Chotard <patrice.chotard@st.com>
-Subject: Re: [PATCH v9 10/19] ARM: DT: STiH407: Add i2s_out pinctrl
+From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v9 11/19] ARM: DT: STiH407: Add i2s_in pinctrl
  configuration
-Date: Wed, 14 Sep 2016 14:00:11 +0200
-Message-ID: <2784abd2-59ed-33d1-60d8-e7b9e4e777a6@st.com>
+Date: Wed, 14 Sep 2016 14:00:27 +0200
+Message-ID: <7a9dd279-5c70-01d4-b002-5ebff06a316c@st.com>
 References: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
- <1473081421-16555-11-git-send-email-peter.griffin@linaro.org>
+ <1473081421-16555-12-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473081421-16555-11-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, dan.j.williams@intel.com, airlied@linux.ie, kraxel@redhat.com, ohad@wizery.com, bjorn.andersson@linaro.org
-Cc: lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-remoteproc@vger.kernel.org, virtualization@lists.linux-foundation.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473081421-16555-12-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Peter
 
 On 09/05/2016 03:16 PM, Peter Griffin wrote:
-> This patch adds the pinctrl config for the i2s_out pins
-> used by the uniperif player IP.
+> This patch adds the pinctrl config for the i2s_in pins
+> used by the uniperif reader IP.
 > 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  arch/arm/boot/dts/stih407-pinctrl.dtsi | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+>  arch/arm/boot/dts/stih407-pinctrl.dtsi | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
 > diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-> index a538ae5..0fb5c8a 100644
+> index 0fb5c8a..537db7e 100644
 > --- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
 > +++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-> @@ -1067,6 +1067,29 @@
+> @@ -1090,6 +1090,30 @@
 >  				};
 >  			};
 >  
-> +			i2s_out {
-> +				pinctrl_i2s_8ch_out: i2s_8ch_out{
+> +			i2s_in {
+> +				pinctrl_i2s_8ch_in: i2s_8ch_in{
 > +					st,pins {
-> +						mclk = <&pio33 5 ALT1 OUT>;
-> +						lrclk = <&pio33 7 ALT1 OUT>;
-> +						sclk = <&pio33 6 ALT1 OUT>;
-> +						data0 = <&pio33 4 ALT1 OUT>;
-> +						data1 = <&pio34 0 ALT1 OUT>;
-> +						data2 = <&pio34 1 ALT1 OUT>;
-> +						data3 = <&pio34 2 ALT1 OUT>;
+> +						mclk = <&pio32 5 ALT1 IN>;
+> +						lrclk = <&pio32 7 ALT1 IN>;
+> +						sclk = <&pio32 6 ALT1 IN>;
+> +						data0 = <&pio32 4 ALT1 IN>;
+> +						data1 = <&pio33 0 ALT1 IN>;
+> +						data2 = <&pio33 1 ALT1 IN>;
+> +						data3 = <&pio33 2 ALT1 IN>;
+> +						data4 = <&pio33 3 ALT1 IN>;
 > +					};
 > +				};
 > +
-> +				pinctrl_i2s_2ch_out: i2s_2ch_out{
+> +				pinctrl_i2s_2ch_in: i2s_2ch_in{
 > +					st,pins {
-> +						mclk = <&pio33 5 ALT1 OUT>;
-> +						lrclk = <&pio33 7 ALT1 OUT>;
-> +						sclk = <&pio33 6 ALT1 OUT>;
-> +						data0 = <&pio33 4 ALT1 OUT>;
+> +						mclk = <&pio32 5 ALT1 IN>;
+> +						lrclk = <&pio32 7 ALT1 IN>;
+> +						sclk = <&pio32 6 ALT1 IN>;
+> +						data0 = <&pio32 4 ALT1 IN>;
 > +					};
 > +				};
 > +			};
@@ -65,6 +66,11 @@ On 09/05/2016 03:16 PM, Peter Griffin wrote:
 > 
 
 
+
 Applied for STi next
 
 Thanks
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
