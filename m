@@ -1,62 +1,40 @@
-From: Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 00/22] Generic DT bindings for PCI IOMMUs and ARM SMMU
-Date: Wed, 14 Sep 2016 11:35:19 +0200
-Message-ID: <1bc1845d-bb21-76fd-a039-639271bd86d1@redhat.com>
-References: <cover.1473695704.git.robin.murphy@arm.com>
-	<11ebd81e-2ea5-5ff3-35b3-be95f03e05bd@redhat.com>
-	<20160914092051.GB19622@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20160914092051.GB19622-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/2] dt-bindings: i2c-meson: add gxbb compatible string
+Date: Wed, 14 Sep 2016 11:49:17 +0200
+Message-ID: <1473846557-18123-3-git-send-email-jbrunet@baylibre.com>
+References: <1473846557-18123-1-git-send-email-jbrunet@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473846557-18123-1-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Will
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-On 14/09/2016 11:20, Will Deacon wrote:
-> On Wed, Sep 14, 2016 at 10:41:57AM +0200, Auger Eric wrote:
->> Hi,
-> 
-> Hi Eric,
-> 
->> On 12/09/2016 18:13, Robin Murphy wrote:
->>> To any more confusing fixups and crazily numbered extra patches, here's
->>> a quick v7 with everything rebased into the right order. The significant
->>> change this time is to implement iommu_fwspec properly from the start,
->>> which ends up being far simpler and more robust than faffing about
->>> introducing it somewhere 'less intrusive' to move toward core code later.
->>>
->>> New branch in the logical place:
->>>
->>> git://linux-arm.org/linux-rm iommu/generic-v7
->>
->> For information, as discussed privately with Robin I experience some
->> regressions with the former and now deprecated dt description.
-> 
-> Please can you share the DT you're using so we can reproduce this locally?
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/i2c/i2c-meson.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Done already
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-meson.txt b/Documentation/devicetree/bindings/i2c/i2c-meson.txt
+index 682f9a6f766e..386357d1aab0 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-meson.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-meson.txt
+@@ -1,7 +1,7 @@
+ Amlogic Meson I2C controller
+ 
+ Required properties:
+- - compatible: must be "amlogic,meson6-i2c"
++ - compatible: must be "amlogic,meson6-i2c" or "amlogic,meson-gxbb-i2c"
+  - reg: physical address and length of the device registers
+  - interrupts: a single interrupt specifier
+  - clocks: clock for the device
+-- 
+2.7.4
 
-Thanks
-
-Eric
-> 
-> Will
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
