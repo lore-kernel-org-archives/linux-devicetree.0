@@ -1,99 +1,96 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 18/19] stmmac: dwmac-sti: Remove obsolete STi platforms
-Date: Wed, 14 Sep 2016 14:27:56 +0100
-Message-ID: <1473859677-9231-19-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH 16/19] power: reset: st-poweroff: Remove obsolete platforms.
+Date: Wed, 14 Sep 2016 14:27:54 +0100
+Message-ID: <1473859677-9231-17-git-send-email-peter.griffin@linaro.org>
 References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 In-Reply-To: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-pm-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, patrice.chotard@st.com, devicetree@vger.kernel.org
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, peppe.cavallaro@st.com, alexandre.torgue@st.com, netdev@vger.kernel.org
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, dwmw2@infradead.org, dbaryshkov@gmail.com, sre@kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 This patch removes support for STiH415/6 SoC's from the
-dwmac-sti driver and dt binding doc, as support for these
-platforms is being removed from the kernel. It also removes
-STiD127 related code, which has never actually been supported
-upstream.
+st-poweroff driver, as support for these platforms is
+being removed from the kernel.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Cc: <peppe.cavallaro@st.com>
-Cc: <alexandre.torgue@st.com>
-Cc: <netdev@vger.kernel.org>
+Cc: <dwmw2@infradead.org>
+Cc: <dbaryshkov@gmail.com>
+Cc: <sre@kernel.org>
+Cc: <linux-pm@vger.kernel.org>
 ---
- .../devicetree/bindings/net/sti-dwmac.txt          |  3 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c    | 37 ----------------------
- 2 files changed, 1 insertion(+), 39 deletions(-)
+ drivers/power/reset/st-poweroff.c | 41 ---------------------------------------
+ 1 file changed, 41 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/sti-dwmac.txt b/Documentation/devicetree/bindings/net/sti-dwmac.txt
-index d05c1e1..2031786 100644
---- a/Documentation/devicetree/bindings/net/sti-dwmac.txt
-+++ b/Documentation/devicetree/bindings/net/sti-dwmac.txt
-@@ -7,8 +7,7 @@ and what is needed on STi platforms to program the stmmac glue logic.
- The device node has following properties.
- 
- Required properties:
-- - compatible	: Can be "st,stih415-dwmac", "st,stih416-dwmac",
--   "st,stih407-dwmac", "st,stid127-dwmac".
-+ - compatible	: Should be "st,stih407-dwmac".
-  - st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
-    encompases the glue register, and the offset of the control register.
-  - st,gmac_en: this is to enable the gmac into a dedicated sysctl control
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c
-index 58c05ac..fcbe374 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c
-@@ -198,36 +198,6 @@ static void stih4xx_fix_retime_src(void *priv, u32 spd)
- 			   stih4xx_tx_retime_val[src]);
- }
- 
--static void stid127_fix_retime_src(void *priv, u32 spd)
--{
--	struct sti_dwmac *dwmac = priv;
--	u32 reg = dwmac->ctrl_reg;
--	u32 freq = 0;
--	u32 val = 0;
--
--	if (dwmac->interface == PHY_INTERFACE_MODE_MII) {
--		val = STID127_ETH_SEL_INTERNAL_NOTEXT_TXCLK;
--	} else if (dwmac->interface == PHY_INTERFACE_MODE_RMII) {
--		if (!dwmac->ext_phyclk) {
--			val = STID127_ETH_SEL_INTERNAL_NOTEXT_PHYCLK;
--			freq = DWMAC_50MHZ;
--		}
--	} else if (IS_PHY_IF_MODE_RGMII(dwmac->interface)) {
--		val = STID127_ETH_SEL_INTERNAL_NOTEXT_TXCLK;
--		if (spd == SPEED_1000)
--			freq = DWMAC_125MHZ;
--		else if (spd == SPEED_100)
--			freq = DWMAC_25MHZ;
--		else if (spd == SPEED_10)
--			freq = DWMAC_2_5MHZ;
--	}
--
--	if (dwmac->clk && freq)
--		clk_set_rate(dwmac->clk, freq);
--
--	regmap_update_bits(dwmac->regmap, reg, STID127_RETIME_SRC_MASK, val);
--}
--
- static int sti_dwmac_init(struct platform_device *pdev, void *priv)
- {
- 	struct sti_dwmac *dwmac = priv;
-@@ -372,14 +342,7 @@ static const struct sti_dwmac_of_data stih4xx_dwmac_data = {
- 	.fix_retime_src = stih4xx_fix_retime_src,
+diff --git a/drivers/power/reset/st-poweroff.c b/drivers/power/reset/st-poweroff.c
+index a488877..2046b31 100644
+--- a/drivers/power/reset/st-poweroff.c
++++ b/drivers/power/reset/st-poweroff.c
+@@ -28,28 +28,6 @@ struct reset_syscfg {
+ 	unsigned int mask_rst_msk;
  };
  
--static const struct sti_dwmac_of_data stid127_dwmac_data = {
--	.fix_retime_src = stid127_fix_retime_src,
+-/* STiH415 */
+-#define STIH415_SYSCFG_11	0x2c
+-#define STIH415_SYSCFG_15	0x3c
+-
+-static struct reset_syscfg stih415_reset = {
+-	.offset_rst = STIH415_SYSCFG_11,
+-	.mask_rst = BIT(0),
+-	.offset_rst_msk = STIH415_SYSCFG_15,
+-	.mask_rst_msk = BIT(0)
 -};
 -
- static const struct of_device_id sti_dwmac_match[] = {
--	{ .compatible = "st,stih415-dwmac", .data = &stih4xx_dwmac_data},
--	{ .compatible = "st,stih416-dwmac", .data = &stih4xx_dwmac_data},
--	{ .compatible = "st,stid127-dwmac", .data = &stid127_dwmac_data},
- 	{ .compatible = "st,stih407-dwmac", .data = &stih4xx_dwmac_data},
- 	{ }
+-/* STiH416 */
+-#define STIH416_SYSCFG_500	0x7d0
+-#define STIH416_SYSCFG_504	0x7e0
+-
+-static struct reset_syscfg stih416_reset = {
+-	.offset_rst = STIH416_SYSCFG_500,
+-	.mask_rst = BIT(0),
+-	.offset_rst_msk = STIH416_SYSCFG_504,
+-	.mask_rst_msk = BIT(0)
+-};
+-
+ /* STiH407 */
+ #define STIH407_SYSCFG_4000	0x0
+ #define STIH407_SYSCFG_4008	0x20
+@@ -61,16 +39,6 @@ static struct reset_syscfg stih407_reset = {
+ 	.mask_rst_msk = BIT(0)
+ };
+ 
+-/* STiD127 */
+-#define STID127_SYSCFG_700	0x0
+-#define STID127_SYSCFG_773	0x124
+-
+-static struct reset_syscfg stid127_reset = {
+-	.offset_rst = STID127_SYSCFG_773,
+-	.mask_rst = BIT(0),
+-	.offset_rst_msk = STID127_SYSCFG_700,
+-	.mask_rst_msk = BIT(8)
+-};
+ 
+ static struct reset_syscfg *st_restart_syscfg;
+ 
+@@ -99,17 +67,8 @@ static struct notifier_block st_restart_nb = {
+ 
+ static const struct of_device_id st_reset_of_match[] = {
+ 	{
+-		.compatible = "st,stih415-restart",
+-		.data = (void *)&stih415_reset,
+-	}, {
+-		.compatible = "st,stih416-restart",
+-		.data = (void *)&stih416_reset,
+-	}, {
+ 		.compatible = "st,stih407-restart",
+ 		.data = (void *)&stih407_reset,
+-	}, {
+-		.compatible = "st,stid127-restart",
+-		.data = (void *)&stid127_reset,
+ 	},
+ 	{}
  };
 -- 
 1.9.1
+
