@@ -1,238 +1,192 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 0/6] Add MT8173 MDP Driver
-Date: Wed, 14 Sep 2016 14:43:22 +0200
-Message-ID: <703024ec-f6d4-60e8-ed09-6a2e935857d7@xs4all.nl>
-References: <1473340146-6598-1-git-send-email-minghsiu.tsai@mediatek.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 00/22] Generic DT bindings for PCI IOMMUs and ARM SMMU
+Date: Wed, 14 Sep 2016 13:53:42 +0100
+Message-ID: <c2645c5e-edd3-2b31-4311-0ca621a915e2@arm.com>
+References: <cover.1473695704.git.robin.murphy@arm.com>
+ <11ebd81e-2ea5-5ff3-35b3-be95f03e05bd@redhat.com>
+ <d03ea5e7-59f1-8b49-4ba2-d05fc2030ebc@arm.com>
+ <04a0a682-4fdc-8d62-57cd-efdf730582c6@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473340146-6598-1-git-send-email-minghsiu.tsai@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
-Cc: srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <04a0a682-4fdc-8d62-57cd-efdf730582c6-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Minghsiu,
+On 14/09/16 13:32, Auger Eric wrote:
+> Hi,
+> On 14/09/2016 12:35, Robin Murphy wrote:
+>> On 14/09/16 09:41, Auger Eric wrote:
+>>> Hi,
+>>>
+>>> On 12/09/2016 18:13, Robin Murphy wrote:
+>>>> Hi all,
+>>>>
+>>>> To any more confusing fixups and crazily numbered extra patches, here's
+>>>> a quick v7 with everything rebased into the right order. The significant
+>>>> change this time is to implement iommu_fwspec properly from the start,
+>>>> which ends up being far simpler and more robust than faffing about
+>>>> introducing it somewhere 'less intrusive' to move toward core code later.
+>>>>
+>>>> New branch in the logical place:
+>>>>
+>>>> git://linux-arm.org/linux-rm iommu/generic-v7
+>>>
+>>> For information, as discussed privately with Robin I experience some
+>>> regressions with the former and now deprecated dt description.
+>>>
+>>> on my AMD Overdrive board and my old dt description I now only see a
+>>> single group:
+>>>
+>>> /sys/kernel/iommu_groups/
+>>> /sys/kernel/iommu_groups/0
+>>> /sys/kernel/iommu_groups/0/devices
+>>> /sys/kernel/iommu_groups/0/devices/e0700000.xgmac
+>>>
+>>> whereas I formerly see
+>>>
+>>> /sys/kernel/iommu_groups/
+>>> /sys/kernel/iommu_groups/3
+>>> /sys/kernel/iommu_groups/3/devices
+>>> /sys/kernel/iommu_groups/3/devices/0000:00:00.0
+>>> /sys/kernel/iommu_groups/1
+>>> /sys/kernel/iommu_groups/1/devices
+>>> /sys/kernel/iommu_groups/1/devices/e0700000.xgmac
+>>> /sys/kernel/iommu_groups/4
+>>> /sys/kernel/iommu_groups/4/devices
+>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.2
+>>> /sys/kernel/iommu_groups/4/devices/0000:01:00.1
+>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.0
+>>> /sys/kernel/iommu_groups/4/devices/0000:01:00.0
+>>> /sys/kernel/iommu_groups/2
+>>> /sys/kernel/iommu_groups/2/devices
+>>> /sys/kernel/iommu_groups/2/devices/e0900000.xgmac
+>>> /sys/kernel/iommu_groups/0
+>>> /sys/kernel/iommu_groups/0/devices
+>>> /sys/kernel/iommu_groups/0/devices/f0000000.pcie
+>>>
+>>> This is the group topology without ACS override. Applying the non
+>>> upstreamed "pci: Enable overrides for missing ACS capabilities" I used
+>>> to see separate groups for each PCIe components. Now I don't see any
+>>> difference with and without ACS override.
+>>
+>> OK, having reproduced on my Juno, the problem looks to be that
+>> of_for_each_phandle() leaves err set to -ENOENT after successfully
+>> walking a phandle list, which makes __find_legacy_master_phandle()
+>> always bail out after the first SMMU.
+>>
+>> Can you confirm that the following diff fixes things for you?
+> 
+> Well it improves but there are still differences in the group topology.
+> The PFs now are in group 0.
+> 
+> root@trusty:~# lspci -nk
+> 00:00.0 0600: 1022:1a00
+>         Subsystem: 1022:1a00
+> 00:02.0 0600: 1022:1a01
+> 00:02.2 0604: 1022:1a02
+>         Kernel driver in use: pcieport
+> 01:00.0 0200: 8086:1521 (rev 01)
+>         Subsystem: 8086:0002
+>         Kernel driver in use: igb
+> 01:00.1 0200: 8086:1521 (rev 01)
+>         Subsystem: 8086:0002
+>         Kernel driver in use: igb
+> 
+> 
+> with your series + fix:
+> /sys/kernel/iommu_groups/
+> /sys/kernel/iommu_groups/3
+> /sys/kernel/iommu_groups/3/devices
+> /sys/kernel/iommu_groups/3/devices/0000:00:00.0
+> /sys/kernel/iommu_groups/1
+> /sys/kernel/iommu_groups/1/devices
+> /sys/kernel/iommu_groups/1/devices/e0700000.xgmac
+> /sys/kernel/iommu_groups/4
+> /sys/kernel/iommu_groups/4/devices
+> /sys/kernel/iommu_groups/4/devices/0000:00:02.2
+> /sys/kernel/iommu_groups/4/devices/0000:00:02.0
+> /sys/kernel/iommu_groups/2
+> /sys/kernel/iommu_groups/2/devices
+> /sys/kernel/iommu_groups/2/devices/e0900000.xgmac
+> /sys/kernel/iommu_groups/0
+> /sys/kernel/iommu_groups/0/devices
+> /sys/kernel/iommu_groups/0/devices/0000:01:00.1
+> /sys/kernel/iommu_groups/0/devices/f0000000.pcie
+> /sys/kernel/iommu_groups/0/devices/0000:01:00.0
+> 
+> Before (4.8-rc5):
+> 
+> /sys/kernel/iommu_groups/
+> /sys/kernel/iommu_groups/3
+> /sys/kernel/iommu_groups/3/devices
+> /sys/kernel/iommu_groups/3/devices/0000:00:00.0
+> /sys/kernel/iommu_groups/1
+> /sys/kernel/iommu_groups/1/devices
+> /sys/kernel/iommu_groups/1/devices/e0700000.xgmac
+> /sys/kernel/iommu_groups/4
+> /sys/kernel/iommu_groups/4/devices
+> /sys/kernel/iommu_groups/4/devices/0000:00:02.2
+> /sys/kernel/iommu_groups/4/devices/0000:01:00.1
+> /sys/kernel/iommu_groups/4/devices/0000:00:02.0
+> /sys/kernel/iommu_groups/4/devices/0000:01:00.0
+> /sys/kernel/iommu_groups/2
+> /sys/kernel/iommu_groups/2/devices
+> /sys/kernel/iommu_groups/2/devices/e0900000.xgmac
+> /sys/kernel/iommu_groups/0
+> /sys/kernel/iommu_groups/0/devices
+> /sys/kernel/iommu_groups/0/devices/f0000000.pcie
 
-v6 looks good, but I get these warnings when compiling it for i686:
+Your DT claims that f0000000.pcie (i.e. the "platform device" side of
+the host controller) owns the IDs 0x100 0x101 0x102 0x103 0x200 0x201
+0x202 0x203 0x300 0x301 0x302 0x303 0x400 0x401 0x402 0x403. Thus when
+new devices (the PCI PFs) come along *also* claiming those IDs (via the
+RID-to-SID assumption), we now detect the aliasing and assign them to
+the existing group.
 
-linux-git-i686: WARNINGS
+The only way that DT worked without SMR conflicts before is that
+f0000000.pcie wasn't actually getting attached to a domain, thus wasn't
+getting SMRs allocated (ISTR you _did_ get conflicts back when we first
+tried to switch on default domains; that was probably the reason).
 
-/home/hans/work/build/media-git/drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c: In function 'mtk_mdp_vpu_handle_init_ack':
-/home/hans/work/build/media-git/drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c:28:28: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-  struct mtk_mdp_vpu *vpu = (struct mtk_mdp_vpu *)msg->ap_inst;
-                            ^
-/home/hans/work/build/media-git/drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c: In function 'mtk_mdp_vpu_ipi_handler':
-/home/hans/work/build/media-git/drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c:40:28: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-  struct mtk_mdp_vpu *vpu = (struct mtk_mdp_vpu *)msg->ap_inst;
-                            ^
-/home/hans/work/build/media-git/drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c: In function 'mtk_mdp_vpu_send_ap_ipi':
-/home/hans/work/build/media-git/drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c:111:16: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-  msg.ap_inst = (uint64_t)vpu;
-                ^
-/home/hans/work/build/media-git/drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c: In function 'mtk_mdp_vpu_init':
-/home/hans/work/build/media-git/drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c:129:16: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-  msg.ap_inst = (uint64_t)vpu;
-                ^
+Robin.
 
-This is not blocking, but if you can post a follow-up patch for this, then that
-would be helpful.
+> 
+> Thanks
+> 
+> Eric
+> 
+>>
+>> Robin
+>>
+>> --->8---
+>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>> index fa892d25004d..ac4aab97c93a 100644
+>> --- a/drivers/iommu/arm-smmu.c
+>> +++ b/drivers/iommu/arm-smmu.c
+>> @@ -477,7 +477,7 @@ static int __find_legacy_master_phandle(struct
+>> device *dev, void *data)
+>>  			return 1;
+>>  		}
+>>  	it->node = np;
+>> -	return err;
+>> +	return err == -ENOENT ? 0 : err;
+>>  }
+>>
+>>  static struct platform_driver arm_smmu_driver;
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+> 
 
-Regards,
-
-	Hans
-
-
-On 09/08/2016 03:09 PM, Minghsiu Tsai wrote:
-> Changes in v6:
-> - s_selection() can't set the _DEFAULT and _BOUNDS targets
-> - Add Maintainers entry
-> 
-> Changes in v5:
-> - Add ack in the comment of dts patch
-> - Fix s/g_selection()
-> - Separate format V4L2_PIX_FMT_MT21C into new patch  
-> 
-> Changes in v4:
-> - Add "depends on HAS_DMA" in Kconfig.
-> - Fix s/g_selection()
-> - Replace struct v4l2_crop with u32 and struct v4l2_rect
-> - Remove VB2_USERPTR
-> - Move mutex lock after ctx allocation in mtk_mdp_m2m_open()
-> - Add new format V4L2_PIX_FMT_YVU420 to support software on Android platform.
-> - Only width/height of image in format V4L2_PIX_FMT_MT21 is aligned to 16/16,
->   other ones are aligned to 2/2 by default
-> 
-> Changes in v3:
-> - Modify device ndoe as structured one.
-> - Fix conflict in dts on Linux 4.8-rc1
-> 
-> Changes in v2:
-> - Add section to describe blocks function in dts-bindings
-> - Remove the assignment of device_caps in querycap()
-> - Remove format's name assignment
-> - Copy colorspace-related parameters from OUTPUT to CAPTURE
-> - Use m2m helper functions
-> - Fix DMA allocation failure
-> - Initialize lazily vpu instance in streamon()
-> 
-> ==============
->  Introduction
-> ==============
-> 
-> The purpose of this series is to add the driver for Media Data Path HW embedded in the Mediatek's MT8173 SoC.
-> MDP is used for scaling and color space conversion.
-> 
-> It could convert V4L2_PIX_FMT_MT21 to V4L2_PIX_FMT_NV12M or V4L2_PIX_FMT_YUV420M.
-> 
-> NV12M/YUV420M/MT21 -> MDP -> NV12M/YUV420M
-> 
-> This patch series rely on MTK VPU driver in patch series "Add MT8173 Video Encoder Driver and VPU Driver"[1] and "Add MT8173 Video Decoder Driver"[2].
-> MDP driver rely on VPU driver to load, communicate with VPU.
-> 
-> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
-> 
-> [1]https://patchwork.kernel.org/patch/9002171/
-> [2]https://patchwork.kernel.org/patch/9141245/
-> 
-> ==================
->  Device interface
-> ==================
-> 
-> In principle the driver bases on v4l2 memory-to-memory framework:
-> it provides a single video node and each opened file handle gets its own private context with separate buffer queues. Each context consist of 2 buffer queues: OUTPUT (for source buffers) and CAPTURE (for destination buffers).
-> OUTPUT and CAPTURE buffer could be MMAP or DMABUF memory type.
-> 
-> v4l2-compliance test output:
-> v4l2-compliance SHA   : abc1453dfe89f244dccd3460d8e1a2e3091cbadb
-> 
-> Driver Info:
->         Driver name   : mtk-mdp
->         Card type     : soc:mdp
->         Bus info      : platform:mt8173
->         Driver version: 4.8.0
->         Capabilities  : 0x84204000
->                 Video Memory-to-Memory Multiplanar
->                 Streaming
->                 Extended Pix Format
->                 Device Capabilities
->         Device Caps   : 0x04204000
->                 Video Memory-to-Memory Multiplanar
->                 Streaming
->                 Extended Pix Format
-> 
-> Compliance test for device /dev/image-proc0 (not using libv4l2):
-> 
-> Required ioctls:
->         test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
->         test second video open: OK
->         test VIDIOC_QUERYCAP: OK
->         test VIDIOC_G/S_PRIORITY: OK
->         test for unlimited opens: OK
-> 
-> Debug ioctls:
->         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->         test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
->         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->         test VIDIOC_ENUMAUDIO: OK (Not Supported)
->         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDIO: OK (Not Supported)
->         Inputs: 0 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
->         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->         Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
->         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->         test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
->         Control ioctls:
->                 test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
->                 test VIDIOC_QUERYCTRL: OK
->                 test VIDIOC_G/S_CTRL: OK
->                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK
->                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
->                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->                 Standard Controls: 5 Private Controls: 0
-> 
->         Format ioctls:
->                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->                 test VIDIOC_G/S_PARM: OK (Not Supported)
->                 test VIDIOC_G_FBUF: OK (Not Supported)
->                 test VIDIOC_G_FMT: OK
->                 test VIDIOC_TRY_FMT: OK
->                 test VIDIOC_S_FMT: OK
->                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->                 test Cropping: OK
->                 test Composing: OK
->                 test Scaling: OK
-> 
->         Codec ioctls:
->                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
->         Buffer ioctls:
->                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->                 test VIDIOC_EXPBUF: OK
-> 
-> Test input 0:
-> 
-> 
-> Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
-> 
-> Minghsiu Tsai (6):
->   VPU: mediatek: Add mdp support
->   dt-bindings: Add a binding for Mediatek MDP
->   media: Add Mediatek MDP Driver
->   arm64: dts: mediatek: Add MDP for MT8173
->   media: mtk-mdp: support pixelformat V4L2_PIX_FMT_MT21C
->   media: mtk-mdp: add Maintainers entry for Mediatek MDP driver
-> 
->  .../devicetree/bindings/media/mediatek-mdp.txt     |  109 ++
->  MAINTAINERS                                        |    9 +
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   84 ++
->  drivers/media/platform/Kconfig                     |   17 +
->  drivers/media/platform/Makefile                    |    2 +
->  drivers/media/platform/mtk-mdp/Makefile            |    9 +
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c      |  159 +++
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.h      |   72 ++
->  drivers/media/platform/mtk-mdp/mtk_mdp_core.c      |  294 +++++
->  drivers/media/platform/mtk-mdp/mtk_mdp_core.h      |  260 ++++
->  drivers/media/platform/mtk-mdp/mtk_mdp_ipi.h       |  126 ++
->  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c       | 1278 ++++++++++++++++++++
->  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.h       |   22 +
->  drivers/media/platform/mtk-mdp/mtk_mdp_regs.c      |  156 +++
->  drivers/media/platform/mtk-mdp/mtk_mdp_regs.h      |   31 +
->  drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c       |  145 +++
->  drivers/media/platform/mtk-mdp/mtk_mdp_vpu.h       |   41 +
->  drivers/media/platform/mtk-vpu/mtk_vpu.h           |    5 +
->  18 files changed, 2819 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek-mdp.txt
->  create mode 100644 drivers/media/platform/mtk-mdp/Makefile
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_core.c
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_core.h
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_ipi.h
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_m2m.h
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_regs.c
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_regs.h
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_vpu.h
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
