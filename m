@@ -1,117 +1,78 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 1/6] usb: dwc2: add support for Meson8b and GXBB SoCs
-Date: Wed, 14 Sep 2016 09:11:53 -0700
-Message-ID: <m24m5ixxyu.fsf@baylibre.com>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
- <20160911134111.31141-1-martin.blumenstingl@googlemail.com>
- <20160911134111.31141-2-martin.blumenstingl@googlemail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/5] ARM: dts: sun8i: Add touchscreen node to various
+ tablets
+Date: Wed, 14 Sep 2016 18:14:09 +0200
+Message-ID: <20160914161409.GH4668@lukather>
+References: <20160911182327.824-1-hdegoede@redhat.com>
+ <20160913075953.GA9805@lukather>
+ <fee7e6fe-d22b-9233-121e-b403d6ee20f1@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160911134111.31141-2-martin.blumenstingl@googlemail.com>
- (Martin Blumenstingl's message of "Sun, 11 Sep 2016 15:41:06 +0200")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, johnyoun@synopsys.com, will.deacon@arm.com, mturquette@baylibre.com, linux-usb@vger.kernel.org, sboyd@codeaurora.org, kishon@ti.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, robh+dt@kernel.org, catalin.marinas@arm.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="U3BNvdZEnlJXqmh+"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <fee7e6fe-d22b-9233-121e-b403d6ee20f1-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi John,
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+--U3BNvdZEnlJXqmh+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> From: Jerome Brunet <jbrunet@baylibre.com>
->
-> Add compatible strings for amlogic Meson8b and GXBB SoCs with the
-> corresponding configuration parameters.
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Hi Hans,
 
-Are you OK with adding this platform for v4.9?  I know you mentioned
-you're working on new bindings to replace the current way, but since
-that hasn't been posted AFAICT, it would be nice to get this merged now
-and we can help test the new bindings when you're ready.
+On Tue, Sep 13, 2016 at 10:06:56AM +0200, Hans de Goede wrote:
+> On 13-09-16 09:59, Maxime Ripard wrote:
+> >On Sun, Sep 11, 2016 at 08:23:22PM +0200, Hans de Goede wrote:
+> >>Hi Maxime,
+> >>
+> >>Now that Dmitry has queued up the firmware-name property changes
+> >>in his for-linus branch, these dt patches are ready for merging.
+> >
+> >I queued this for 4.10.
+>=20
+> 4.10 ? Is next already frozen ? Note either way is fine
+> just wondering.
 
-If you're OK with that, and with your Ack, I can take merge the driver
-changes through the arm-soc tree along with the rest of the DT patches.
+Yes, the arm-soc maintainers usually stop merging PR after -rc6. It's
+still a bit flexible is something major and not really huge comes up,
+but for that kind of patches, I usually start queuing patches for the
+next release when -rc6 is out.
 
-Kevin
+Maxime
 
-> ---
->  Documentation/devicetree/bindings/usb/dwc2.txt |  2 ++
->  drivers/usb/dwc2/platform.c                    | 34 ++++++++++++++++++++++++++
->  2 files changed, 36 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> index 20a68bf..2c30a54 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> @@ -10,6 +10,8 @@ Required properties:
->    - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
->    - "lantiq,arx100-usb": The DWC2 USB controller instance in Lantiq ARX SoCs;
->    - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
-> +  - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlogic Meson8b SoCs;
-> +  - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
->    - snps,dwc2: A generic DWC2 USB controller with default parameters.
->  - reg : Should contain 1 register range (address and length)
->  - interrupts : Should contain 1 interrupt
-> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-> index fc6f525..8f7b34c 100644
-> --- a/drivers/usb/dwc2/platform.c
-> +++ b/drivers/usb/dwc2/platform.c
-> @@ -181,6 +181,38 @@ static const struct dwc2_core_params params_ltq = {
->  	.hibernation			= -1,
->  };
->  
-> +static const struct dwc2_core_params params_amlogic = {
-> +	.otg_cap			= DWC2_CAP_PARAM_NO_HNP_SRP_CAPABLE,
-> +	.otg_ver			= -1,
-> +	.dma_enable			= 1,
-> +	.dma_desc_enable		= 0,
-> +	.dma_desc_fs_enable		= 0,
-> +	.speed				= DWC2_SPEED_PARAM_HIGH,
-> +	.enable_dynamic_fifo		= 1,
-> +	.en_multiple_tx_fifo		= -1,
-> +	.host_rx_fifo_size		= 512,
-> +	.host_nperio_tx_fifo_size	= 500,
-> +	.host_perio_tx_fifo_size	= 500,
-> +	.max_transfer_size		= -1,
-> +	.max_packet_count		= -1,
-> +	.host_channels			= 16,
-> +	.phy_type			= DWC2_PHY_TYPE_PARAM_UTMI,
-> +	.phy_utmi_width			= -1,
-> +	.phy_ulpi_ddr			= -1,
-> +	.phy_ulpi_ext_vbus		= -1,
-> +	.i2c_enable			= -1,
-> +	.ulpi_fs_ls			= -1,
-> +	.host_support_fs_ls_low_power	= -1,
-> +	.host_ls_low_power_phy_clk	= -1,
-> +	.ts_dline			= -1,
-> +	.reload_ctl			= 1,
-> +	.ahbcfg				= GAHBCFG_HBSTLEN_INCR8 <<
-> +					  GAHBCFG_HBSTLEN_SHIFT,
-> +	.uframe_sched			= 0,
-> +	.external_id_pin_ctl		= -1,
-> +	.hibernation			= -1,
-> +};
-> +
->  /*
->   * Check the dr_mode against the module configuration and hardware
->   * capabilities.
-> @@ -464,6 +496,8 @@ static const struct of_device_id dwc2_of_match_table[] = {
->  	{ .compatible = "lantiq,xrx200-usb", .data = &params_ltq },
->  	{ .compatible = "snps,dwc2", .data = NULL },
->  	{ .compatible = "samsung,s3c6400-hsotg", .data = NULL},
-> +	{ .compatible = "amlogic,meson8b-usb", .data = &params_amlogic },
-> +	{ .compatible = "amlogic,meson-gxbb-usb", .data = &params_amlogic },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--U3BNvdZEnlJXqmh+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJX2XdRAAoJEBx+YmzsjxAgsREP/3s8/DM+0a2xpFbPuFugYxMl
+qyiJzAgE2FJz03C5iC9t8kSsvEjK3VtmaBX0tiFODFO3ZaLzKftTV4K5vxPQ2F0Z
+jChCxHp9ktv+FaQMn+rQvweMifx4XBndvysdHEo7pzNCiGRA1sx7BjVWjtJx4QmH
+AGBFR2OcCr00x/jiSaodAPe35qjGfQBddfHMOYv8D6d3LoXEfXtB5WyXZxLt7Gx8
+ICxyE5E+iEDDs456utrFvKoArVRMCkwxwgBtGNtp6uYZglgL8g0wiQOvzDYdVuxM
+3spLOD91YEtjrfWPkzqnKfbBmDGA02KYpiNrUUneqBeslVhHKVMbj53r2gWwAgj3
+DrmlW0PcUh0w01lIuZopT97Rmxm5GG+QDdUtrcj6Px09AuHuxeLlU6hpF0rddbCE
+czVkHQSSUuPpWoluIVKNRKS+8Bmq/98gIuMBkyNxMdhaBa3HvLyuFbzqW2u7vGX7
+aOC9NtvF+aXIid1QpVERj5H/7M45TPiW1SY443+svIdiUupHHkovdkzl+eCzPLZa
+RV2DfzK5sA8x0Vhtwg2VvenwAgvN9j9rf3jKB4PRPcAzsBo/RYwcuI6T4pNjL8hx
+qq4DlrfnNGlauY9xMl+zOZkPS7gkT2ptdxeRdnssquajy27Y2x0ckt0/QJVAaTP2
+j2lXbDybtP356lMc6YP5
+=zFJK
+-----END PGP SIGNATURE-----
+
+--U3BNvdZEnlJXqmh+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
