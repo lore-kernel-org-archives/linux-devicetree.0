@@ -1,85 +1,65 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 3/4] ARM64: dts: meson-gxbb: add I2C nodes
-Date: Wed, 14 Sep 2016 12:06:07 +0200
-Message-ID: <1473847568-20163-4-git-send-email-jbrunet@baylibre.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 1/4] clk: gxbb: expose i2c clocks
+Date: Wed, 14 Sep 2016 12:06:05 +0200
+Message-ID: <1473847568-20163-2-git-send-email-jbrunet@baylibre.com>
 References: <1473847568-20163-1-git-send-email-jbrunet@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473847568-20163-1-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1473847568-20163-1-git-send-email-jbrunet@baylibre.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+I2C and AO_I2C clocks are needed for the i2c driver, expose to DT
+(and comment out in clk driver)
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 40 +++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ drivers/clk/meson/gxbb.h              | 4 ++--
+ include/dt-bindings/clock/gxbb-clkc.h | 2 ++
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 75aca5013e61..4aa59dc2beb9 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -242,6 +242,36 @@
- 				clocks = <&clkc CLKID_SPI>;
- 				status = "disabled";
- 			};
-+
-+			i2c_A: i2c@8500 {
-+				compatible = "amlogic,meson-gxbb-i2c";
-+				reg = <0x0 0x08500 0x0 0x20>;
-+				interrupts = <GIC_SPI 21 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc CLKID_I2C>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			i2c_B: i2c@87c0 {
-+				compatible = "amlogic,meson-gxbb-i2c";
-+				reg = <0x0 0x087c0 0x0 0x20>;
-+				interrupts = <GIC_SPI 214 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc CLKID_I2C>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			i2c_C: i2c@87e0 {
-+				compatible = "amlogic,meson-gxbb-i2c";
-+				reg = <0x0 0x087e0 0x0 0x20>;
-+				interrupts = <GIC_SPI 215 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc CLKID_I2C>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		gic: interrupt-controller@c4301000 {
-@@ -358,6 +388,16 @@
- 				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
-+
-+			i2c_AO: i2c@500 {
-+				compatible = "amlogic,meson-gxbb-i2c";
-+				reg = <0x0 0x500 0x0 0x20>;
-+				interrupts = <GIC_SPI 195 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc CLKID_AO_I2C>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		periphs: periphs@c8834000 {
+diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
+index 044fc44e9144..0252939ba58f 100644
+--- a/drivers/clk/meson/gxbb.h
++++ b/drivers/clk/meson/gxbb.h
+@@ -190,7 +190,7 @@
+ #define CLKID_PL301		  19
+ #define CLKID_PERIPHS		  20
+ #define CLKID_SPICC		  21
+-#define CLKID_I2C		  22
++/* CLKID_I2C */
+ #define CLKID_SAR_ADC		  23
+ #define CLKID_SMART_CARD	  24
+ #define CLKID_RNG0		  25
+@@ -261,7 +261,7 @@
+ #define CLKID_AO_AHB_SRAM	  90
+ #define CLKID_AO_AHB_BUS	  91
+ #define CLKID_AO_IFACE		  92
+-#define CLKID_AO_I2C		  93
++/* CLKID_AO_I2C */
+ /* CLKID_SD_EMMC_A */
+ /* CLKID_SD_EMMC_B */
+ /* CLKID_SD_EMMC_C */
+diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-bindings/clock/gxbb-clkc.h
+index 743c45b40361..baade6f429d0 100644
+--- a/include/dt-bindings/clock/gxbb-clkc.h
++++ b/include/dt-bindings/clock/gxbb-clkc.h
+@@ -13,12 +13,14 @@
+ #define CLKID_CLK81		12
+ #define CLKID_MPLL2		15
+ #define CLKID_SPI		34
++#define CLKID_I2C		22
+ #define CLKID_ETH		36
+ #define CLKID_USB0		50
+ #define CLKID_USB1		51
+ #define CLKID_USB		55
+ #define CLKID_USB1_DDR_BRIDGE	64
+ #define CLKID_USB0_DDR_BRIDGE	65
++#define CLKID_AO_I2C		93
+ #define CLKID_SD_EMMC_A		94
+ #define CLKID_SD_EMMC_B		95
+ #define CLKID_SD_EMMC_C		96
 -- 
 2.7.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
