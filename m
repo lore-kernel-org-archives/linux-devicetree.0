@@ -1,40 +1,41 @@
-From: Hoan Tran <hotran-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] arm64: dts: xgene: Add DT node for APM X-Gene 2
- CPU clocks
-Date: Wed, 14 Sep 2016 14:05:31 -0700
-Message-ID: <CAFHUOYyMHfTSGRBL7LVFJvwOKT7mgbg_N1hG6xkmjduzFCdfkg@mail.gmail.com>
+From: Hoan Tran <hotran@apm.com>
+Subject: Re: [PATCH v3 2/3] clk: xgene: Add PMD clock
+Date: Wed, 14 Sep 2016 14:06:09 -0700
+Message-ID: <CAFHUOYxc0PBx675j6ZtMWw_nFawT7UMXHa9EE+L=sGyfm=8UmQ@mail.gmail.com>
 References: <1473704605-28126-1-git-send-email-hotran@apm.com>
- <1473704605-28126-4-git-send-email-hotran@apm.com> <20160914205556.GC7243@codeaurora.org>
+ <1473704605-28126-3-git-send-email-hotran@apm.com> <20160914205541.GB7243@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160914205556.GC7243-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160914205541.GB7243@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Loc Ho <lho@apm.com>, Duc Dang <dhdang@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-On Wed, Sep 14, 2016 at 1:55 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+On Wed, Sep 14, 2016 at 1:55 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
 > On 09/12, Hoan Tran wrote:
->> Add DT nodes to enable APM X-Gene 2 CPU clocks.
+>> Add X-Gene PMD clock support.
 >>
->> Signed-off-by: Hoan Tran <hotran-qTEPVZfXA3Y@public.gmane.org>
+>> PMD clock is implemented for a single register field.
+>>   Output rate = parent_rate * (denominator - scale) / denominator
+>> with
+>>   - denominator = bitmask of register field + 1
+>>   - scale = values of register field
+>>
+>> For example, for bitmask is 0x7, denominator will be 8 and scale
+>> will be computed and programmed accordingly.
+>>
+>> Signed-off-by: Hoan Tran <hotran@apm.com>
 >> ---
 >
-> This can go through arm-soc? I'm not applying this.
+> Applied to clk-next
 
-Yes, I can go through arm-soc.
+Thanks, Stephen !
 
-Thanks
 Hoan
 
 >
 > --
 > Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 > a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
