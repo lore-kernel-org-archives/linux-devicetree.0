@@ -1,87 +1,88 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 02/16] dt/bindings: Update binding for PM domain idle states
-Date: Wed, 14 Sep 2016 13:37:10 +0200
-Message-ID: <CAPDyKFrrOjNv1a7VzT9_KWEBDmbE7dnC3RUtg6r+QEbCsbXh9A@mail.gmail.com>
-References: <1472242678-33700-1-git-send-email-lina.iyer@linaro.org>
- <1472242678-33700-3-git-send-email-lina.iyer@linaro.org> <0b233802-f459-c6bb-ff42-70745a225cfb@arm.com>
- <20160902201605.GA1705@linaro.org> <87sht59mcw.fsf@arm.com>
- <20160912161600.GA21885@linaro.org> <a4fc71ae-6fa5-4142-6dd4-7bc96eb20186@arm.com>
- <87intz665i.fsf@arm.com> <20160913193844.GB28944@linaro.org> <87h99i6b5d.fsf@arm.com>
+From: Zhichang Yuan <yuanzhichang@hisilicon.com>
+Subject: [PATCH V3 0/4] ARM64 LPC: legacy ISA I/O support
+Date: Wed, 14 Sep 2016 20:15:50 +0800
+Message-ID: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87h99i6b5d.fsf-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>
-Cc: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Juri Lelli <Juri.Lelli-5wv7dgnIgG8@public.gmane.org>, Axel Haslam <ahaslam+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com
+Cc: arnd@arndb.de, gregkh@linuxfoundation.org, will.deacon@arm.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, minyard@acm.org, benh@kernel.crashing.org, lorenzo.pieralisi@arm.com, liviu.dudau@arm.com, zourongrong@gmail.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, zhichang.yuan02@gmail.com, kantyzc@163.com, xuwei5@hisilicon.com, "zhichang.yuan" <yuanzhichang@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
->>>
->> Yes, you are right, I disagree with the definition of a domain around a
->> device.
+From: "zhichang.yuan" <yuanzhichang@hisilicon.com>
 
-To fill in, I agree with Lina (and Kevin).
+This patch supports the 16550 compatible UART attached to the Low-Pin-Count
+interface mplemented on Hisilicon Hip06 SoC. The periperals attached this LPC
+include UART, BT, KCS, and so on.
+	                -----------
+			| LPC host|
+	                |         |
+	                -----------
+	                     |
+ 	        _____________V_______________LPC
+                  |			  |
+                  V	                  V
+             -----------             ------------
+             |  UART   |             |  BT(ipmi)|
+             -----------             ------------
 
->From my point of view, a domain is per definition containing resources
-which are shared among devices. Having one device per domain, does in
-general not make sense.
+When master accesses those periperals beneath the Hip06 LPC, a specific LPC
+driver is needed to make LPC host generate the standard LPC I/O cycles with
+the target periperals'I/O port addresses. But on curent arm64 world, there is
+no real I/O accesses. All the I/O operations through in/out pair are based on
+MMIO which is not satisfied the I/O mechanism on Hip06 LPC.
+To solve this issue and keep the relevant existing peripherals' driver
+unchanged, this patch set redefines the in/out pair to support both the IO
+operations for Hip06 LPC and the original MMIO. The way specific to Hip06 is
+named as indirect-IO in this patchset.
 
-> OK, great.
->> However, as long as you don't force SoC's to define devices in
->> the CPU PM domain to have their own virtual domains, I have no problem.
->> You are welcome to define it the way you want for Juno or any other
->> platform.
-> I don't think that's true; the bindings have to work the same way for
-> all platforms. If for Juno we put CPU idle state phandles in a
-> domain-idle-states property for per-CPU domains then, with the current
-> implementation, the CPU-level idle states would be duplicated between
-> cpuidle and the CPU PM domains.
->> I don't want that to be the forced and expected out of all
->> SoCs. All I am saying here is that the current implementation would
->> handle your case as well.
->
-> The current implementation certainly does cover the work I want to
-> do. The suggestion of per-device power domains for devices/CPUs with
-> their own idle states is simply intended to minimise the binding design,
-> since we'd no longer need cpu-idle-states or device-idle-states
-> (the latter was proposed elsewhere).
+This patch set is built based on mainline v4.8-rc6;
 
-I see your point, but IMHO that would be to simplify the description
-of the hardware. And I don't think it's sufficient to cover all
-existing cases.
+Changes from V2:
+  - Support the PIO retrieval from the linux PIO generated by
+  pci_address_to_pio. This method replace the 4K PIO reservation in V2;
+  - Support the flat-tree earlycon;
+  - Some revises based on Arnd's remarks;
+  - Make sure the linux PIO range allocated to Hip06 LPC peripherals starts
+  from non-ZERO;
 
->
-> I am fine with the bindings as they are implemented currently so long
-> as:
->
-> - The binding doc makes clear how idle state phandles should be split
->   between cpu-idle-states and domain-idle-states. It should make it
->   obvious that no phandle should ever appear in both properties. It
->   would even be worth briefly going over the backward-compatibility
->   implications (e.g. what happens with old-kernel/new-DT and
->   new-kernel/old-DT combos if a platform has OSI and PC support and we
->   move cluster-level idle state phandles out of cpu-idle-states and into
->   domai-idle-states).
->
-> - We have a reason against the definition of power domains as "a set of
->   devices bound by a common power (including idle) state", since that
->   definition would simplify the bindings. In my view, "nobody thinks
->   that's what a power domain is" _is_ a compelling reason, so if others
->   on the list get involved I'm convinced. I think I speak for Sudeep
->   here too.
->
+Changes from V1:
+  - Support the ACPI LPC device;
+  - Optimize the dts LPC driver in ISA compatible mode;
+  - Reserve the IO range below 4K in avoid the possible conflict with PCI host
+  IO ranges;
+  - Support the LPC uart and relevant earlycon;
 
->From a CPU point of view, I think it may very well be considered as
-any other device. Yes, we have treated them in a specific manner
-regarding the idle state definitions we currently have - and we can
-continue to do that.
+Signed-off-by: Zhichang Yuan <yuanzhichang@hisilicon.com>
 
-Although, in the long run, I think we needs something more flexible
-that can be used for domains and devices.
+zhichang.yuan (4):
+  ARM64 LPC: Indirect ISA port IO introduced
+  ARM64 LPC: LPC driver implementation on Hip06
+  ARM64 LPC: support serial based on low-pin-count
+  ARM64 LPC: support earlycon for UART connected to LPC
 
-Kind regards
-Uffe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../arm/hisilicon/hisilicon-low-pin-count.txt      |  35 +
+ .../devicetree/bindings/serial/hisi-lpc-uart.txt   |  60 ++
+ arch/arm64/Kconfig                                 |   6 +
+ arch/arm64/include/asm/io.h                        |  90 +++
+ drivers/bus/Kconfig                                |   8 +
+ drivers/bus/Makefile                               |   2 +
+ drivers/bus/extio.c                                |  66 ++
+ drivers/bus/hisi_lpc.c                             | 766 +++++++++++++++++++++
+ drivers/of/address.c                               |   9 +
+ drivers/tty/serial/8250/8250_early.c               |  26 +-
+ drivers/tty/serial/8250/8250_hisi_lpc.c            | 171 +++++
+ drivers/tty/serial/8250/Kconfig                    |   9 +
+ drivers/tty/serial/8250/Makefile                   |   1 +
+ include/linux/extio.h                              |  49 ++
+ 14 files changed, 1296 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/hisilicon-low-pin-count.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/hisi-lpc-uart.txt
+ create mode 100644 drivers/bus/extio.c
+ create mode 100644 drivers/bus/hisi_lpc.c
+ create mode 100644 drivers/tty/serial/8250/8250_hisi_lpc.c
+ create mode 100644 include/linux/extio.h
+
+-- 
+1.9.1
