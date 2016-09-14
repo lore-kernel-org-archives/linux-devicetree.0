@@ -1,62 +1,123 @@
-From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Subject: Re: [PATCH v5] rtc: omap: Support ext_wakeup configuration
-Date: Wed, 14 Sep 2016 11:21:48 +0200
-Message-ID: <eb67e85b-4651-33e0-abb7-339d83f36463@grinn-global.com>
-References: <201609082240.a4dMqCnB%fengguang.wu@intel.com>
- <4512fa0b-890b-0f10-00dd-188fcc98fb5c@grinn-global.com>
- <20160913215837.xstx4c6d4pr42hgh@piout.net>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v4 22/22] phy: Add support for Qualcomm's USB HS phy
+Date: Wed, 14 Sep 2016 17:33:07 +0800
+Message-ID: <20160914093307.GC21674@b29397-desktop>
+References: <20160907213519.27340-1-stephen.boyd@linaro.org>
+ <20160907213519.27340-23-stephen.boyd@linaro.org>
+ <20160913070358.GB30425@b29397-desktop>
+ <147379930484.27460.3849356366746983941@sboyd-linaro>
+ <20160914021133.GB30760@b29397-desktop>
+ <147383455256.1541.16582625295760921275@sboyd-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <rtc-linux+bncBD7N3SEV2QCRBNNN4S7AKGQEKB2G3HY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160913215837.xstx4c6d4pr42hgh-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <147383455256.1541.16582625295760921275@sboyd-linaro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Peter Chen <peter.chen@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 13.09.2016 23:58, Alexandre Belloni wrote:
-> Hi,
->
-> On 12/09/2016 at 11:01:05 +0200, Marcin Niestroj wrote :
->> I guess we are missing PINCTRL in Kconfig. I didn't add that before,
->> because I thought that there is a dependency chain GENERIC_PINCONF ->
->> PINCONF -> PINCTRL.
->>
->> So to resolve this issue:
->> 1) Should we add "select" or "depends on" for PINCTRL?
->> 2) Should this option be somehow related to COMPILE_TEST?
->>
->
-> Adding a "depends on PINCTRL" line should be enough to solve that issue.
->
+On Tue, Sep 13, 2016 at 11:29:12PM -0700, Stephen Boyd wrote:
+> Quoting Peter Chen (2016-09-13 19:11:33)
+> > On Tue, Sep 13, 2016 at 01:41:44PM -0700, Stephen Boyd wrote:
+> > > Quoting Peter Chen (2016-09-13 00:03:58)
+> > > > On Wed, Sep 07, 2016 at 02:35:19PM -0700, Stephen Boyd wrote:
+> > > > > The high-speed phy on qcom SoCs is controlled via the ULPI
+> > > > > viewport.
+> > > > > 
+> > > > 
+> > > > Hi Stephen, I am a little puzzled how this driver co-work with chipidea
+> > > > driver. According to nxp IC guys, the ULPI PHY's clock needs to be enabled
+> > > > before access portsc.pts (calling hw_phymode_configure), otherwise,
+> > > > the system will hang. But I find you call hw_phymode_configure before
+> > > > phy->power_on, doesn't your design have this requirement?
+> > > 
+> > > Which clk needs to be enabled? The xcvr_clk? I believe that clk
+> > > corresponds to the "core" clk that we enable in the msm glue driver
+> > > layer. When that clk is enabled, the ULPI phy is able to respond to
+> > > register read/writes via the ULPI viewport.
+> > > 
+> > 
+> > The input clock for ULPI PHY, maybe it is ref_clk at this PHY driver, 
+> > so in your platform, even PHY clock is gated, you can still access
+> > portsc.pts to configure PHY mode at controller register?
+> 
+> There are a couple input clocks for this phy. I'm not sure which one the
+> nxp IC guys think needs to be enabled. Typically, the ref_clk is always
+> on so it's hard for me to test a scenario where it isn't enabled. But
+> I'm not sure that the ref_clk is what we're talking about anyway. Would
+> you know the frequency perhaps?
 
-Ok, will add that together with "depends on OF", as I noticed it is
-also needed.
+I think this ref_clk is ULPI PHY vendor specific, at USB3317, it is
+26Mhz.
 
+> The ref_clk is usually 19.2MHz on these
+> SoCs. That would match up with the "crystal input" pin in the ULPI
+> spec[1].
+> 
+> Do you know if this is documented anywhere in the chipidea manual?
+> I'll have to look again and see if there's something in there, but I
+> didn't see anything like this.
+> 
+> I would guess that we're talking about the xcvr clock though, because
+> from what I see in the manual, this is used to clock the interface
+> between the ULPI phy and the controller. In the ULPI spec, this matches
+> up with the "clock" signal for the ULPI phy and that usually runs at
+> something >= 60MHz. 
 
-But right now we will not be able to compile this driver with
-COMPILE_TEST, unless we select some architecture that selects PINCTRL.
+I think you are right, since controller only concerns the output clock.
+So, if you have not enabled xcvr, you may meet hang when set portsc.pts too?
 
-So maybe it is a good idea to change "config PINCTRL" option from
-'bool' to 'bool "Support PINCTRL" if COMPILE_TEST', so we can enable it
-manually?
+At some designs, ULPI input clock (ref_clk) may from Soc internal,
+without enabling it, the controller will not get PHY clock (60Mhz).
+When visiting portsc.pts, may meet hang.
+
+> 
+> > 
+> > > >        
+> > > > Besides, you read ulpi id before phy->power_on, how can read work before
+> > > > phy power on?
+> > > > 
+> > > 
+> > > I've found that even having the link clk enabled before phy->power_on
+> > > doesn't mean it's possible to read the id registers though. That's
+> > > because there can be other power supplies, like regulators, which need
+> > > to be on for the phy to operate properly.
+> > > 
+> > 
+> > Then I am puzzled the current initialization for your case, in my mind,
+> > it should like below:
+> > 
+> > qcom_usb_hs_phy_probe->qcom_usb_hs_phy_power_on->ci_ulpi_init
+> > 
+> > Like other PHYs, it should get PHY first, then power on it, after that,
+> > you can access its register.
+> > 
+> 
+> Hmm.. maybe the confusion is in which registers we should be able to
+> access? Are we talking about the ULPI viewport MMIO register space or
+> the ULPI registers that we access through the viewport? I have a
+> hw_phymode_configure() inside of of ci_ulpi_init() so that the
+> identification registers through the ULPI viewport read properly
+> (assuming there aren't other power requirements like regulators). If we
+> don't set the portsc.pts before using the viewport, the viewport doesn't
+> work and reads timeout. So we really don't touch the ULPI registers
+> except for the scratch space and the id registers until after the phy is
+> properly powered on with clks and regulators, because the only place we
+> touch them after doing the id checking is in this phy driver in
+> qcom_usb_hs_phy_power_on(). We've "solved" the chicken-egg problem where
+> we don't know which device driver to probe because the phy needs to be
+> powered on to read the id registers to know which device driver to use
+> by using DT to match up device drivers instead.
+> 
+> [1] https://www.sparkfun.com/datasheets/Components/SMD/ULPI_v1_1.pdf
+
+Ok, ulpi phy works like USB device on USB bus which create device at
+runtime. So, like some hard-wired USB devices, it may needs power
+sequence too, otherwise, how it knows which driver can loads.
 
 -- 
-Marcin Niestroj
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Best Regards,
+Peter Chen
