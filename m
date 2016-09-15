@@ -1,52 +1,72 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] drm/tilcdc: Remove "default" from blue-and-red-wiring property binding
-Date: Thu, 15 Sep 2016 12:34:51 +0300
-Message-ID: <1473932091-32084-1-git-send-email-jsarha@ti.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v4 5/8] ARM: dts: am335x-boneblack: Add
+ blue-and-red-wiring -property to LCDC node
+Date: Thu, 15 Sep 2016 12:44:25 +0300
+Message-ID: <d9dcc43b-6884-aab1-ff82-c66ecf6e96b6@ti.com>
+References: <cover.1472719892.git.jsarha@ti.com>
+ <fad833a6a4368196f4fc131a54d90f5b90169393.1472719892.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: airlied-cv59FeDIM0c@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <fad833a6a4368196f4fc131a54d90f5b90169393.1472719892.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, linux-arm-kernel@lists.infradead.org
+Cc: peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, kbeldan@baylibre.com, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-Remove "default" keyword from blue-and-red-wiring devicetree property
-binding document. The code does not support and there is no intention
-to support it.
-
-Reported-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
----
-I sent the pull request for the color errata changes before I received
-the review mail[1] from Rob Herring. This fixes the issue reported in
-the mail.
-
-[1] https://lists.freedesktop.org/archives/dri-devel/2016-September/118115.html
-
- Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
-index a5007aa..a83abd7 100644
---- a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
-+++ b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
-@@ -17,9 +17,9 @@ Optional properties:
-    the lcd controller.
-  - max-pixelclock: The maximum pixel clock that can be supported
-    by the lcd controller in KHz.
-- - blue-and-red-wiring: Recognized values "default", "straight" or
--   "crossed". This property deals with the LCDC revision 2 (found on
--   AM335x) color errata [1].
-+ - blue-and-red-wiring: Recognized values "straight" or "crossed".
-+   This property deals with the LCDC revision 2 (found on AM335x)
-+   color errata [1].
-     - "straight" indicates normal wiring that supports RGB565,
-       BGR888, and XBGR8888 color formats.
-     - "crossed" indicates wiring that has blue and red wires
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VG9ueSwKVGhlIGZ1bmN0aW9uYWwgY2hhbmdlcyBhcmUgbm93IG1lcmdlZC4gQnV0IGxldCdzIG5v
+dCBtZXJnZSB0aGlzIGJiYiBkdHMKcGF0Y2gganVzdCB5ZXQsIHNvIHdlIGRvIG5vdCBjYXVzZSBh
+IGNvbmZsaWN0IHdpdGggdGhlIG90aGVyIGJiYiBoZG1pCmF1ZGlvIGR0cyBjaGFuZ2VbMV0gdGhh
+dCBzbGlwcGVkIGludG8gdGRhOTk4eCBwdWxsIHJlcXVlc3QuIFRoZSBwYXRjaApjYW4gdmVyeSB3
+ZWxsIHdhaXQgdW50aWwgdjQuMTAgaWYgbmVlZGVkLgoKSG93ZXZlciwgdGhlIG90aGVyIHRocmVl
+IGR0cyBwYXRjaGVzWzJdIGNhbiBiZSBtZXJnZWQuIFNob3VsZCBJIHJlYmFzZQp0aG9zZSBvbiB0
+b3Agb2Ygc29tZSBicmFuY2ggYW5kIHJlc2VuZCB0aGVtPwoKQmVzdCByZWdhcmRzLApKeXJpCgpb
+MV0gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTYt
+QXVndXN0LzExNTI2OS5odG1sCgpbMl0KaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJj
+aGl2ZXMvZHJpLWRldmVsLzIwMTYtU2VwdGVtYmVyLzExNzI4Mi5odG1sCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE2LVNlcHRlbWJlci8xMTcyODMu
+aHRtbApodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAx
+Ni1TZXB0ZW1iZXIvMTE3Mjg0Lmh0bWwKCk9uIDA5LzAxLzE2IDEyOjA5LCBKeXJpIFNhcmhhIHdy
+b3RlOgo+IEFkZCBibHVlLWFuZC1yZWQtd2lyaW5nIC1wcm9wZXJ0eSB0byBMQ0RDIG5vZGUuIEFs
+c28gYWRkcyBjb21tZW50cyBvbgo+IGhvdyB0byBnZXQgc3VwcG9ydCAyNCBiaXQgUkdCIG1vZGUu
+IEFmdGVyIHRoaXMgcGF0Y2ggYW0zMzV4LWJvbmVibGFjawo+IHN1cHBvcnQgUkdCNTY1LCBCR1I4
+ODgsIGFuZCBYQkdSODg4OCBjb2xvciBmb3JtYXRzLiBTZWUgZGV0YWlscyBpbgo+IERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpbGNkYy90aWxjZGMudHh0Lgo+IAo+
+IFRoZSBCQkIgaGFzIHN0cmFpZ2h0IGNvbG9yIHdpcmluZyBmcm9tIGFtMzM1eCB0byB0ZGExOTk4
+OCwgaG93ZXZlciB0aGUKPiB0ZGExOTk4OCBjYW4gYmUgY29uZmlndXJlZCB0byBjcm9zcyB0aGUg
+Ymx1ZSBhbmQgcmVkIHdpcmVzLiBUaGUKPiBjb21tZW50cyBzaG93IGhvdyB0byBkbyB0aGF0IHdp
+dGggdmlkZW8tcG9ydHMgcHJvcGVydHkgb2YgdGRhMTk5ODgKPiBub2RlIGFuZCBob3cgdG8gdGVs
+bCBMQ0RDIHRoYXQgYmx1ZSBhbmQgcmVkIHdpcmVzIGFyZSBjcm9zc2VkLCB3aXRoCj4gYmx1ZS1h
+bmQtcmVkLXdpcmluZyBMQ0RDIG5vZGUgcHJvcGVydHkuIFRoaXMgY2hhbmdlcyBzdXBwb3J0ZWQg
+Y29sb3IKPiBmb3JtYXRzIGZyb20gMTYgYml0IFJHQiBhbmQgMjQgYml0IEJHUiB0byAxNiBiaXQg
+QkdSIGFuZCAyNCBiaXQgUkdCLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEp5cmkgU2FyaGEgPGpzYXJo
+YUB0aS5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1ib25lYmxhY2suZHRz
+IHwgMTEgKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKykKPiAK
+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYW0zMzV4LWJvbmVibGFjay5kdHMgYi9h
+cmNoL2FybS9ib290L2R0cy9hbTMzNXgtYm9uZWJsYWNrLmR0cwo+IGluZGV4IDUyODU1OWIuLmEz
+MmQ3M2EgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYW0zMzV4LWJvbmVibGFjay5k
+dHMKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9hbTMzNXgtYm9uZWJsYWNrLmR0cwo+IEBAIC05
+MCw2ICs5MCwxNCBAQAo+ICAKPiAgJmxjZGMgewo+ICAJc3RhdHVzID0gIm9rYXkiOwo+ICsKPiAr
+CS8qIElmIHlvdSB3YW50IHRvIGdldCAyNCBiaXQgUkdCIGFuZCAxNiBCR1IgbW9kZSBpbnN0ZWFk
+IG9mCj4gKwkgKiBjdXJyZW50IDE2IGJpdCBSR0IgYW5kIDI0IEJHUiBtb2Rlcywgc2V0IHRoZSBw
+cm9wZXR5Cj4gKwkgKiBiZWxvdyB0byAiY3Jvc3NlZCIgYW5kIHVuY29tbWVudCB0aGUgdmlkZW8t
+cG9ydHMgLXByb3BlcnR5Cj4gKwkgKiBpbiB0ZGExOTk4OCBub2RlLgo+ICsJICovCj4gKwlibHVl
+LWFuZC1yZWQtd2lyaW5nID0gInN0cmFpZ2h0IjsKPiArCj4gIAlwb3J0IHsKPiAgCQlsY2RjXzA6
+IGVuZHBvaW50QDAgewo+ICAJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfMD47Cj4gQEAgLTEw
+Niw2ICsxMTQsOSBAQAo+ICAJCXBpbmN0cmwtMCA9IDwmbnhwX2hkbWlfYm9uZWx0X3BpbnM+Owo+
+ICAJCXBpbmN0cmwtMSA9IDwmbnhwX2hkbWlfYm9uZWx0X29mZl9waW5zPjsKPiAgCj4gKwkJLyog
+Q29udmVydCAyNGJpdCBCR1IgdG8gUkdCLCBlLmcuIGNyb3NzIHJlZCBhbmQgYmx1ZSB3aXJpbmcg
+Ki8KPiArCQkvKiB2aWRlby1wb3J0cyA9IDwweDIzNDUwMT47ICovCj4gKwo+ICAJCSNzb3VuZC1k
+YWktY2VsbHMgPSA8MD47Cj4gIAkJYXVkaW8tcG9ydHMgPSA8CVREQTk5OHhfSTJTCTB4MDM+Owo+
+ICAKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
