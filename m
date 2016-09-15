@@ -1,63 +1,98 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] Documentation: devicetree: add qca8k binding
-Date: Thu, 15 Sep 2016 02:22:08 +0200
-Message-ID: <20160915002208.GA29110@lunn.ch>
-References: <1473849542-3298-1-git-send-email-john@phrozen.org>
- <1473849542-3298-2-git-send-email-john@phrozen.org>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: [PATCH] ARM: dts: sun8i: enable UART1 for iNet D978 Rev2 board
+Date: Thu, 15 Sep 2016 10:15:04 +0800
+Message-ID: <20160915021504.65483-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1473849542-3298-2-git-send-email-john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qsdk-review-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.xyz>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2016 at 12:39:00PM +0200, John Crispin wrote:
-> Add device-tree binding for ar8xxx switch families.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-> ---
-> Changes in V2
-> * fixup ecample to include phy nodes and corresponding phandles
-> * add a note explaining why we need to phy nodes
-> 
->  .../devicetree/bindings/net/dsa/qca8k.txt          |   88 ++++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> new file mode 100644
-> index 0000000..2c1582a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> @@ -0,0 +1,88 @@
-> +* Qualcomm Atheros QCA8xxx switch family
-> +
-> +Required properties:
-> +
-> +- compatible: should be "qca,qca8337"
-> +- #size-cells: must be 0
-> +- #address-cells: must be 1
-> +
-> +Subnodes:
-> +
-> +The integrated switch subnode should be specified according to the binding
-> +described in dsa/dsa.txt. As the QCA8K switches do not have a N:N mapping of
-> +port and PHY id, each subnode describing a port needs to have a valid phandle
-> +referencing the internal PHY connected to it.
+UART1 is connected to the bluetooth part of RTL8723BS WiFi/BT combo card
+on iNet D978 Rev2 board.
 
-Hi John
+Enable the UART1 to make it possible to use the modified hciattach by
+Realtek to drive the BT part of RTL8723BS.
 
-I've not looked at the driver yet, but you said yesterday the CPU port
-has to be port 0. I think it would be good to document that here.
+On the board no r_uart pins are found now (the onboard RX/TX pins are
+wired to PF2/PF4, which is muxed with mmc0), so also disabled it.
 
-Otherwise, this is looking good.
+Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+---
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi           | 14 ++++++++++++++
+ arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts | 20 ++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
 
-	   Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+index 7e05e09..c340885 100644
+--- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+@@ -361,6 +361,20 @@
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
++			uart1_pins_a: uart1@0 {
++				allwinner,pins = "PG6", "PG7";
++				allwinner,function = "uart1";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart1_pins_cts_rts_a: uart1-cts-rts@0 {
++				allwinner,pins = "PG8", "PG9";
++				allwinner,function = "uart1";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
+ 			mmc0_pins_a: mmc0@0 {
+ 				allwinner,pins = "PF0", "PF1", "PF2",
+ 						 "PF3", "PF4", "PF5";
+diff --git a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
+index 0f52cd9..fb46655 100644
+--- a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
++++ b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
+@@ -49,6 +49,15 @@
+ 	model = "INet-D978 Rev 02";
+ 	compatible = "primux,inet-d978-rev2", "allwinner,sun8i-a33";
+ 
++	aliases {
++		serial0 = &uart1;
++	};
++
++	chosen {
++		/* Delete debug UART as serial0 is the UART for bluetooth */
++		/delete-property/stdout-path;
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -86,3 +95,14 @@
+ 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 	};
+ };
++
++&r_uart {
++	status = "disabled";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins_a>,
++		    <&uart1_pins_cts_rts_a>;
++	status = "okay";
++};
+-- 
+2.9.3
