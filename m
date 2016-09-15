@@ -1,79 +1,71 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH] ARM: dts: sun8i: enable UART1 for iNet D978 Rev2 board
-Date: Thu, 15 Sep 2016 10:22:18 +0800
-Message-ID: <1262161473906138@web14h.yandex.ru>
-References: <20160915021504.65483-1-icenowy@aosc.xyz>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v4 22/22] phy: Add support for Qualcomm's USB HS phy
+Date: Thu, 15 Sep 2016 13:29:06 +0800
+Message-ID: <20160915052905.GA23958@b29397-desktop>
+References: <20160907213519.27340-1-stephen.boyd@linaro.org>
+ <20160907213519.27340-23-stephen.boyd@linaro.org>
+ <20160913070358.GB30425@b29397-desktop>
+ <147379930484.27460.3849356366746983941@sboyd-linaro>
+ <20160914021133.GB30760@b29397-desktop>
+ <147383455256.1541.16582625295760921275@sboyd-linaro>
+ <20160914093307.GC21674@b29397-desktop>
+ <147387497029.16543.5921198225528254345@sboyd-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160915021504.65483-1-icenowy@aosc.xyz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <147387497029.16543.5921198225528254345@sboyd-linaro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Peter Chen <peter.chen@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-CgoxNS4wOS4yMDE2LCAxMDoxNSwgIkljZW5vd3kgWmhlbmciIDxpY2Vub3d5QGFvc2MueHl6PjoK
-PiBVQVJUMSBpcyBjb25uZWN0ZWQgdG8gdGhlIGJsdWV0b290aCBwYXJ0IG9mIFJUTDg3MjNCUyBX
-aUZpL0JUIGNvbWJvIGNhcmQKPiBvbiBpTmV0IEQ5NzggUmV2MiBib2FyZC4KPgo+IEVuYWJsZSB0
-aGUgVUFSVDEgdG8gbWFrZSBpdCBwb3NzaWJsZSB0byB1c2UgdGhlIG1vZGlmaWVkIGhjaWF0dGFj
-aCBieQo+IFJlYWx0ZWsgdG8gZHJpdmUgdGhlIEJUIHBhcnQgb2YgUlRMODcyM0JTLgo+Cj4gT24g
-dGhlIGJvYXJkIG5vIHJfdWFydCBwaW5zIGFyZSBmb3VuZCBub3cgKHRoZSBvbmJvYXJkIFJYL1RY
-IHBpbnMgYXJlCj4gd2lyZWQgdG8gUEYyL1BGNCwgd2hpY2ggaXMgbXV4ZWQgd2l0aCBtbWMwKSwg
-c28gYWxzbyBkaXNhYmxlZCBpdC4KPgo+IFNpZ25lZC1vZmYtYnk6IEljZW5vd3kgWmhlbmcgPGlj
-ZW5vd3lAYW9zYy54eXo+CgpPaCBJIGZvcmdvdCB0byBhZGQgYSBwYXRjaCB2ZXJzaW9uIG51bWJl
-ci4uLgpJdCdzIFBBVENIIHYzLgoKKEJ1dCBpdCBzZWVtcyB0aGF0IEkgc2hvdWxkIHNlbmQgYSB2
-NCB0byBzcGxpdCB0aGUgZHRzaSBjaGFuZ2UgYW5kIGR0cyBjaGFuZ2UuKQoKPiAtLS0KPiDCoGFy
-Y2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEyMy1hMzMuZHRzaSB8IDE0ICsrKysrKysrKysrKysrCj4g
-wqBhcmNoL2FybS9ib290L2R0cy9zdW44aS1hMzMtaW5ldC1kOTc4LXJldjIuZHRzIHwgMjAgKysr
-KysrKysrKysrKysrKysrKysKPiDCoDIgZmlsZXMgY2hhbmdlZCwgMzQgaW5zZXJ0aW9ucygrKQo+
-Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEyMy1hMzMuZHRzaSBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEyMy1hMzMuZHRzaQo+IGluZGV4IDdlMDVlMDkuLmMzNDA4
-ODUgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTIzLWEzMy5kdHNpCj4g
-KysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTIzLWEzMy5kdHNpCj4gQEAgLTM2MSw2ICsz
-NjEsMjAgQEAKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqBhbGx3aW5uZXIscHVsbCA9IDxTVU40SV9QSU5DVFJMX05PX1BV
-TEw+Owo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-fTsKPgo+ICsgdWFydDFfcGluc19hOiB1YXJ0MUAwIHsKPiArIGFsbHdpbm5lcixwaW5zID0gIlBH
-NiIsICJQRzciOwo+ICsgYWxsd2lubmVyLGZ1bmN0aW9uID0gInVhcnQxIjsKPiArIGFsbHdpbm5l
-cixkcml2ZSA9IDxTVU40SV9QSU5DVFJMXzEwX01BPjsKPiArIGFsbHdpbm5lcixwdWxsID0gPFNV
-TjRJX1BJTkNUUkxfTk9fUFVMTD47Cj4gKyB9Owo+ICsKPiArIHVhcnQxX3BpbnNfY3RzX3J0c19h
-OiB1YXJ0MS1jdHMtcnRzQDAgewo+ICsgYWxsd2lubmVyLHBpbnMgPSAiUEc4IiwgIlBHOSI7Cj4g
-KyBhbGx3aW5uZXIsZnVuY3Rpb24gPSAidWFydDEiOwo+ICsgYWxsd2lubmVyLGRyaXZlID0gPFNV
-TjRJX1BJTkNUUkxfMTBfTUE+Owo+ICsgYWxsd2lubmVyLHB1bGwgPSA8U1VONElfUElOQ1RSTF9O
-T19QVUxMPjsKPiArIH07Cj4gKwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgbW1jMF9waW5zX2E6IG1tYzBAMCB7Cj4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYWxsd2lubmVy
-LHBpbnMgPSAiUEYwIiwgIlBGMSIsICJQRjIiLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAiUEYzIiwgIlBGNCIsICJQRjUiOwo+IGRpZmYgLS1naXQgYS9hcmNo
-L2FybS9ib290L2R0cy9zdW44aS1hMzMtaW5ldC1kOTc4LXJldjIuZHRzIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvc3VuOGktYTMzLWluZXQtZDk3OC1yZXYyLmR0cwo+IGluZGV4IDBmNTJjZDkuLmZiNDY2
-NTUgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTMzLWluZXQtZDk3OC1y
-ZXYyLmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy1pbmV0LWQ5NzgtcmV2
-Mi5kdHMKPiBAQCAtNDksNiArNDksMTUgQEAKPiDCoMKgwqDCoMKgwqDCoMKgwqBtb2RlbCA9ICJJ
-TmV0LUQ5NzggUmV2IDAyIjsKPiDCoMKgwqDCoMKgwqDCoMKgwqBjb21wYXRpYmxlID0gInByaW11
-eCxpbmV0LWQ5NzgtcmV2MiIsICJhbGx3aW5uZXIsc3VuOGktYTMzIjsKPgo+ICsgYWxpYXNlcyB7
-Cj4gKyBzZXJpYWwwID0gJnVhcnQxOwo+ICsgfTsKPiArCj4gKyBjaG9zZW4gewo+ICsgLyogRGVs
-ZXRlIGRlYnVnIFVBUlQgYXMgc2VyaWFsMCBpcyB0aGUgVUFSVCBmb3IgYmx1ZXRvb3RoICovCj4g
-KyAvZGVsZXRlLXByb3BlcnR5L3N0ZG91dC1wYXRoOwo+ICsgfTsKPiArCj4gwqDCoMKgwqDCoMKg
-wqDCoMKgbGVkcyB7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvbXBhdGli
-bGUgPSAiZ3Bpby1sZWRzIjsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcGlu
-Y3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiBAQCAtODYsMyArOTUsMTQgQEAKPiDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYWxsd2lubmVyLHB1bGwgPSA8U1VONElfUElOQ1RSTF9O
-T19QVUxMPjsKPiDCoMKgwqDCoMKgwqDCoMKgwqB9Owo+IMKgfTsKPiArCj4gKyZyX3VhcnQgewo+
-ICsgc3RhdHVzID0gImRpc2FibGVkIjsKPiArfTsKPiArCj4gKyZ1YXJ0MSB7Cj4gKyBwaW5jdHJs
-LW5hbWVzID0gImRlZmF1bHQiOwo+ICsgcGluY3RybC0wID0gPCZ1YXJ0MV9waW5zX2E+LAo+ICsg
-PCZ1YXJ0MV9waW5zX2N0c19ydHNfYT47Cj4gKyBzdGF0dXMgPSAib2theSI7Cj4gK307Cj4gLS0K
-PiAyLjkuMwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+On Wed, Sep 14, 2016 at 10:42:50AM -0700, Stephen Boyd wrote:
+> > > 
+> > > Hmm.. maybe the confusion is in which registers we should be able to
+> > > access? Are we talking about the ULPI viewport MMIO register space or
+> > > the ULPI registers that we access through the viewport? I have a
+> > > hw_phymode_configure() inside of of ci_ulpi_init() so that the
+> > > identification registers through the ULPI viewport read properly
+> > > (assuming there aren't other power requirements like regulators). If we
+> > > don't set the portsc.pts before using the viewport, the viewport doesn't
+> > > work and reads timeout. So we really don't touch the ULPI registers
+> > > except for the scratch space and the id registers until after the phy is
+> > > properly powered on with clks and regulators, because the only place we
+> > > touch them after doing the id checking is in this phy driver in
+> > > qcom_usb_hs_phy_power_on(). We've "solved" the chicken-egg problem where
+> > > we don't know which device driver to probe because the phy needs to be
+> > > powered on to read the id registers to know which device driver to use
+> > > by using DT to match up device drivers instead.
+> > > 
+> > > [1] https://www.sparkfun.com/datasheets/Components/SMD/ULPI_v1_1.pdf
+> > 
+> > Ok, ulpi phy works like USB device on USB bus which create device at
+> > runtime. So, like some hard-wired USB devices, it may needs power
+> > sequence too, otherwise, how it knows which driver can loads.
+> > 
+> 
+> Yes. We use the DT compatible string to ignore any issues with reading
+> the device ids when the device is powered off. Unlike USB though, we
+> have device drivers for the ULPI PHYs that do the power sequencing along
+> with other initializations, so using a common pwrseq layer seems like
+> overkill just so we can read the id registers.
+
+If the attempt to read id registers will not hang the system, it can
+work. Like the case [1], without PHY ref_clk, it will hang when
+configure PHY mode (visit portsc.pts), it has no chance to read id
+registers. So, I still think the ULPI bus driver needs to do power
+sequence for its children, unless you have some place to open the
+ref_clk.
+
+> 
+> Are there any concerns with this patch? Or can they be reapplied?
+
+For this patch, it is ok for me.
+
+
+[1] http://www.spinics.net/lists/linux-usb/msg146336.html
+-- 
+
+Best Regards,
+Peter Chen
