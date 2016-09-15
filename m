@@ -1,87 +1,58 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v7 22/22] iommu/dma: Avoid PCI host bridge windows
-Date: Thu, 15 Sep 2016 09:08:10 +0200
-Message-ID: <a7082074-0492-7522-6ddc-f7f95c6e0db6@samsung.com>
-References: <cover.1473695704.git.robin.murphy@arm.com>
- <CGME20160912161514eucas1p10818019bf2302609421ad9c35d1af4b8@eucas1p1.samsung.com>
- <5f7bfee298f98d29a35933d3e0252d32b83d62b8.1473695704.git.robin.murphy@arm.com>
- <ab8693f6-20d6-2a95-9f1f-0607e72bc012@samsung.com>
- <49c51c4f-cb00-445d-b8f8-b632babf2b3e@arm.com>
- <dc9f945f-2756-ab70-d061-9fdc7c5afdee@samsung.com>
- <bbdc42fa-ea35-945f-3e2a-e0ab03fc997d@arm.com>
+From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3 03/14] ARM: DT: STiH4xx: Simplify clock binding of
+ STiH4xx platforms
+Date: Thu, 15 Sep 2016 09:44:35 +0200
+Message-ID: <c2ccce91-4748-fe87-8864-b1c3a4138cb2@st.com>
+References: <1472473626-15398-1-git-send-email-gabriel.fernandez@st.com>
+ <1472473626-15398-4-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <bbdc42fa-ea35-945f-3e2a-e0ab03fc997d-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1472473626-15398-4-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: gabriel.fernandez-qxv4g6HH51o@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olivier Bideau <olivier.bideau-qxv4g6HH51o@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, vincent.abriou-qxv4g6HH51o@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin,
 
 
-On 2016-09-14 15:25, Robin Murphy wrote:
-> On 14/09/16 13:35, Marek Szyprowski wrote:
->> On 2016-09-14 13:10, Robin Murphy wrote:
->>> On 14/09/16 11:55, Marek Szyprowski wrote:
->>>> On 2016-09-12 18:14, Robin Murphy wrote:
->>>>> With our DMA ops enabled for PCI devices, we should avoid allocating
->>>>> IOVAs which a host bridge might misinterpret as peer-to-peer DMA and
->>>>> lead to faults, corruption or other badness. To be safe, punch out
->>>>> holes
->>>>> for all of the relevant host bridge's windows when initialising a DMA
->>>>> domain for a PCI device.
->>>>>
->>>>> CC: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>> CC: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>> Reported-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
->>>>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
->>>> I don't know much about PCI and their IOMMU integration, but can't we
->>>> use
->>>> the direct mapping region feature of iommu core for it? There are
->>>> already
->>>> iommu_get_dm_regions(), iommu_put_dm_regions() and
->>>> iommu_request_dm_for_dev()
->>>> functions for handling them...
->>> It's rather the opposite problem - in the direct-mapping case, we're
->>> making sure the iommu_domain has translations installed for the given
->>> IOVAs (which are also the corresponding physical address) before it goes
->>> live, whereas what we need to do here is make sure the these addresses
->>> never get used as IOVAs at all, because any attempt to do so them will
->>> likely go wrong. Thus we carve them out of the iova_domain such that
->>> they will never get near an actual IOMMU API call.
->>>
->>> This is a slightly generalised equivalent of e.g. amd_iommu.c's
->>> init_reserved_iova_ranges().
->> Hmmm. Each dm_region have protection parameter. Can't we reuse them to
->> create prohibited/reserved regions by setting it to 0 (no read / no write)
->> and mapping to physical 0 address? That's just a quick idea, because
->> dm_regions and the proposed code for pci looks a bit similar for me...
-> It might look similar, but at different levels (iommu_domain vs.
-> iova_domain) and with the opposite intent. The dm_region prot flag is
-> just the standard flag as passed to iommu_map() - trying to map a region
-> with no access in an empty pagetable isn't going to achieve anything
-> anyway (it's effectively unmapping addresses that are already unmapped).
->
-> But for this case, even if you _did_ map something in the pagetable
-> (i.e. the iommu_domain), it wouldn't make any difference, because the
-> thing we're mitigating against is handing out addresses which are going
-> to cause a device's accesses to blow up inside the PCI root complex
-> without ever even reaching the IOMMU. In short, dm_regions are about
-> "these addresses are already being used for DMA, so make sure the IOMMU
-> API doesn't block them", whereas reserved ranges are about "these
-> addresses are unusable for DMA, so make sure the DMA API can't allocate
-> them".
+On 08/29/2016 02:26 PM, gabriel.fernandez-qxv4g6HH51o@public.gmane.org wrote:
+> From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+> 
+> This patch simplifies the clock binding because we had too much detail.
+> 
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/stih407-clock.dtsi | 18 +++++++++---------
+>  arch/arm/boot/dts/stih410-clock.dtsi | 16 ++++++++--------
+>  arch/arm/boot/dts/stih418-clock.dtsi | 16 ++++++++--------
+>  3 files changed, 25 insertions(+), 25 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/stih407-clock.dtsi b/arch/arm/boot/dts/stih407-clock.dtsi
+> index ad45f5e..38a56d7 100644
+> --- a/arch/arm/boot/dts/stih407-clock.dtsi
+> +++ b/arch/arm/boot/dts/stih407-clock.dtsi
+> @@ -42,7 +42,7 @@
 
-Okay, thanks for the explanation.
+[...]
+> @@ -309,7 +309,7 @@
+>  
+>  		clk_s_d3_quadfs: clk-s-d3-quadfs@9107000 {
+>  			#clock-cells = <1>;
+> -			compatible = "st,stih407-quadfs660-D", "st,quadfs";
+> +			compatible = "st,quadfs";
+>  			reg = <0x9107000 0x1000>;
+>  
+>  			clocks = <&clk_sysin>;
+> 
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
 
+Hi Gabriel
+
+Applied on STi tree for v4.9
+
+Thanks
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
