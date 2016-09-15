@@ -1,59 +1,62 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V8] clk: bcm: Add driver for BCM53573 ILP clock
-Date: Wed, 14 Sep 2016 18:44:40 -0500
-Message-ID: <CAL_Jsq+KF0gVx7=HvyBhXP2p+5+-Q-pKOmNFM4MXpR6bJ_BDFA@mail.gmail.com>
-References: <20160905142935.4550-1-zajec5@gmail.com> <20160913070722.5867-1-zajec5@gmail.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH V2 1/3] Documentation: devicetree: add qca8k binding
+Date: Thu, 15 Sep 2016 02:22:08 +0200
+Message-ID: <20160915002208.GA29110@lunn.ch>
+References: <1473849542-3298-1-git-send-email-john@phrozen.org>
+ <1473849542-3298-2-git-send-email-john@phrozen.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160913070722.5867-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1473849542-3298-2-git-send-email-john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qsdk-review-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 13, 2016 at 2:06 AM, Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->
-> This clock is present on BCM53573 devices (including BCM47189) that use
-> Cortex-A7. ILP is a part of PMU (Power Management Unit) multi-function
-> device so we use syscon (and regmap) for it.
->
-> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+On Wed, Sep 14, 2016 at 12:39:00PM +0200, John Crispin wrote:
+> Add device-tree binding for ar8xxx switch families.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 > ---
-> V2: Rebase on top of clk-next
->     Use ALP as parent clock
->     Improve comments
->     Switch from ioremap_nocache to ioremap
->     Check of_clk_add_provide result for error
-> V3: Drop #include <linux/moduleh>
->     Make ILP DT entry part of PMU
->     Describe ILP as subdevice of PMU in Documentation
-> V4: Use BCM53573 name as suggested by Jon and Ray. It seems "Northstar"
->     (even if used in some resources) should be used in relation to
->     Cortex-A9 devices only.
-> V5: Rename remaining "ns" references to "bcm53573", sorry, I sent V4 too
->     early.
-> V6: Drop #include <linux/clk.h>
->     Use "int" as type where it matches usage
->     Add cpu_relax() in the loop
->     Add disable callback
->     Use _hw_ functions for registering struct clk_hw (new API)
->
->     Thanks a lot Stephen!
-> V7: Use syscon and regmap (thanks Rob!)
-> V8: Update Documentation (drop unused "reg", unit address)
-> ---
->  .../bindings/clock/brcm,bcm53573-ilp.txt           |  36 +++++
+> Changes in V2
+> * fixup ecample to include phy nodes and corresponding phandles
+> * add a note explaining why we need to phy nodes
+> 
+>  .../devicetree/bindings/net/dsa/qca8k.txt          |   88 ++++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> new file mode 100644
+> index 0000000..2c1582a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> @@ -0,0 +1,88 @@
+> +* Qualcomm Atheros QCA8xxx switch family
+> +
+> +Required properties:
+> +
+> +- compatible: should be "qca,qca8337"
+> +- #size-cells: must be 0
+> +- #address-cells: must be 1
+> +
+> +Subnodes:
+> +
+> +The integrated switch subnode should be specified according to the binding
+> +described in dsa/dsa.txt. As the QCA8K switches do not have a N:N mapping of
+> +port and PHY id, each subnode describing a port needs to have a valid phandle
+> +referencing the internal PHY connected to it.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Hi John
 
->  drivers/clk/bcm/Makefile                           |   1 +
->  drivers/clk/bcm/clk-bcm53573-ilp.c                 | 148 +++++++++++++++++++++
->  3 files changed, 185 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
->  create mode 100644 drivers/clk/bcm/clk-bcm53573-ilp.c
+I've not looked at the driver yet, but you said yesterday the CPU port
+has to be port 0. I think it would be good to document that here.
+
+Otherwise, this is looking good.
+
+	   Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
