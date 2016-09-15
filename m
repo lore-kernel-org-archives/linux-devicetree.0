@@ -1,54 +1,45 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 1/4] ARM: dts: r7s72100: add mmcif clock to device tree
-Date: Thu, 15 Sep 2016 15:34:02 -0400
-Message-ID: <20160915193405.26943-2-chris.brandt@renesas.com>
+From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 2/4] ARM: dts: r7s72100: add mmcif to device tree
+Date: Thu, 15 Sep 2016 15:34:03 -0400
+Message-ID: <20160915193405.26943-3-chris.brandt@renesas.com>
 References: <20160915193405.26943-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160915193405.26943-1-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160915193405.26943-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r7s72100.dtsi            | 9 +++++++++
- include/dt-bindings/clock/r7s72100-clock.h | 3 +++
- 2 files changed, 12 insertions(+)
+ arch/arm/boot/dts/r7s72100.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-index fb9ef9c..e18d4e6 100644
+index e18d4e6..4054db3 100644
 --- a/arch/arm/boot/dts/r7s72100.dtsi
 +++ b/arch/arm/boot/dts/r7s72100.dtsi
-@@ -117,6 +117,15 @@
- 			clock-output-names = "ether";
- 		};
- 
-+		mstp8_clks: mstp8_clks@fcfe0434 {
-+			#clock-cells = <1>;
-+			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
-+			reg = <0xfcfe0434 4>;
-+			clocks = <&p1_clk>;
-+			clock-indices = <R7S72100_CLK_MMCIF>;
-+			clock-output-names = "mmcif";
-+		};
+@@ -450,4 +450,15 @@
+ 		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
 +
- 		mstp9_clks: mstp9_clks@fcfe0438 {
- 			#clock-cells = <1>;
- 			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
-diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
-index 3cd8138..5eaf0fb 100644
---- a/include/dt-bindings/clock/r7s72100-clock.h
-+++ b/include/dt-bindings/clock/r7s72100-clock.h
-@@ -28,6 +28,9 @@
- /* MSTP7 */
- #define R7S72100_CLK_ETHER	4
- 
-+/* MSTP8 */
-+#define R7S72100_CLK_MMCIF	4
-+
- /* MSTP9 */
- #define R7S72100_CLK_I2C0	7
- #define R7S72100_CLK_I2C1	6
++	mmcif: mmc@e804c800 {
++		compatible = "renesas,mmcif-r7s72100", "renesas,sh-mmcif";
++		reg = <0xe804c800 0x80>;
++		interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH
++			      GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp8_clks R7S72100_CLK_MMCIF>;
++		reg-io-width = <4>;
++		bus-width = <8>;
++		status = "disabled";
++	};
+ };
 -- 
 2.9.2
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
