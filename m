@@ -1,53 +1,46 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v9 00/19] Add support for FDMA DMA controller and slim
- core rproc found on STi chipsets
-Date: Thu, 15 Sep 2016 21:50:30 +0530
-Message-ID: <20160915162030.GX13920@localhost>
-References: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
- <20160913093107.GA10953@griffinp-ThinkPad-X1-Carbon-2nd>
- <20160913180616.GD21438@tuxbot>
- <20160914130739.GE13920@localhost>
+From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 00/11] STM32 USART: fixes and new MCU support
+Date: Thu, 15 Sep 2016 18:42:32 +0200
+Message-ID: <1473957763-30629-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160914130739.GE13920@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, gerald.baeza-qxv4g6HH51o@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2016 at 06:37:40PM +0530, Vinod Koul wrote:
-> On Tue, Sep 13, 2016 at 11:06:16AM -0700, Bjorn Andersson wrote:
-> > > I hate to send a ping,
-> > 
-> > Sorry about that.
-> > 
-> > > but do you think we can merge this fdma series? It has gone
-> > > through quite a few review rounds now.
-> > > 
-> > 
-> > I think the remoteproc part looks good.
-> 
-> yeah I was waiting for ack on other patches. But looks like at least
-> remoteproc ones have it
-> 
-> 
-> > Vinod, I don't have any changes queued in remoteproc that should cause
-> > merge issues. If you want to you could take the remoteproc patch
-> > through your tree.
-> 
-> I rechecked the dma part, they look good to me, so I should be able to apply
-> these. I will wait a day for ack/nacks. It is the time to speak up :)
+This series adds some fixes for stm32 uart, add DMA support for improve IP
+behaviour, and add usart support of STM32F7 MCU.
 
-And I have applied thru 9th patch. Others are applied by Patrice.
+Regards
 
-Btw you should send drm ones to drm folks separately and not in this
-series..
+Alex
 
-Thanks
+Alexandre TORGUE (11):
+  serial: stm32: adding support for stm32f7
+  DOCUMENTATION: dt-bindings: Document the STM32 USART bindings
+  serial: stm32: header file creation
+  serial: stm32: disable tx and rx during shutdown
+  serial: stm32: correct flow control property spelling
+  serial: stm32: clock disabling management
+  dt-bindings: Add DMA bindings for STM32 USART
+  serial: stm32: adding dma support
+  serial: stm32: fix spin_lock management
+  serial: stm32: fix uart enable management
+  ARM: DT: STM32: add dma for usart1 on F429
+
+ .../devicetree/bindings/serial/st,stm32-usart.txt  |  46 ++
+ arch/arm/boot/dts/stm32f429.dtsi                   |   3 +
+ drivers/tty/serial/stm32-usart.c                   | 612 ++++++++++++++++-----
+ drivers/tty/serial/stm32-usart.h                   | 229 ++++++++
+ 4 files changed, 739 insertions(+), 151 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+ create mode 100644 drivers/tty/serial/stm32-usart.h
+
 -- 
-~Vinod
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
