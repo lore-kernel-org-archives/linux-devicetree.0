@@ -1,63 +1,87 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and
- GXBB
-Date: Thu, 15 Sep 2016 12:30:50 +0200
-Message-ID: <1473935450.5624.12.camel@pengutronix.de>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
-         <20160904213152.25837-5-martin.blumenstingl@googlemail.com>
-         <m260q6jibf.fsf@baylibre.com>
-         <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg@mail.gmail.com>
-         <e3b1f611-d6f6-c98b-a53b-98e94ef5bd96@codethink.co.uk>
-         <m2eg4ui0nl.fsf@baylibre.com>
-         <ffdd0188-72bc-4575-f997-e8547f4c31d2@codethink.co.uk>
-         <CAFBinCC4gkMrJtertYevg_hXDLJEZ0PqfKKLL5UKXo8B=SXsPw@mail.gmail.com>
-         <m2sht9gkau.fsf@baylibre.com>
-         <CAFBinCDohOoFP_3GC+=tt6S7sPS308ao-yf+oGhdfwo-N-JnAA@mail.gmail.com>
-         <1473780508.10237.22.camel@pengutronix.de>
-         <CAFBinCC+izGS72TZuiiBu=DjtSmoZXRZ6r76M6rC8W7UTpSD6g@mail.gmail.com>
-         <1473842236.6816.0.camel@pengutronix.de>
-         <CAFBinCDuj_nHtQ9xs0LMmqZT7Yr9SUw24_H2nAwULT7e9kRXag@mail.gmail.com>
+From: Patrice Chotard <patrice.chotard@st.com>
+Subject: Re: [PATCH v3 00/14] Clock improvement for video playback
+Date: Thu, 15 Sep 2016 13:42:20 +0200
+Message-ID: <8257df40-272d-af63-d9b7-13d6aaea39a2@st.com>
+References: <1472473626-15398-1-git-send-email-gabriel.fernandez@st.com>
+ <20160914183620.GV7243@codeaurora.org>
+ <af43c05e-4485-d756-3362-19a76aa40307@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCDuj_nHtQ9xs0LMmqZT7Yr9SUw24_H2nAwULT7e9kRXag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <af43c05e-4485-d756-3362-19a76aa40307@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, gabriel.fernandez@st.com
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Pankaj Dev <pankaj.dev@st.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
 
-Am Mittwoch, den 14.09.2016, 23:23 +0200 schrieb Martin Blumenstingl:
-[...]
-> > We could add a triggered flag or a counter to struct reset_control, and
-> > have reset_control_reset_once do nothing if it is already set /
-> > incremented. Since the reset_control goes away with the last consumer,
-> > the shared reset line would get triggered again after unbinding both PHY
-> > devices.
-> I guess that'd do the trick for us:
-> - we could use devm_reset_control_get_optional_shared() during probe
-> - power_on would then call reset_control_reset()
-> - the code in reset_control_reset would be changed: the if
-> (WARN_ON(rstc->shared)) would be removed. then we return 0 if
-> (rstc->shared && atomic_read(&rstc->shared_triggered)). otherwise we
-> proceed with the old logic, except that we use
-> atomic_set(&rstc->shared_triggerred, 1) in case of success (if an
-> error was returned we leave it as "not triggered").
+
+On 09/15/2016 08:57 AM, Patrice Chotard wrote:
 > 
-> Let me know if you want me to (at least try to) implement that and send an RFC.
+> 
+> On 09/14/2016 08:36 PM, Stephen Boyd wrote:
+>> On 08/29, gabriel.fernandez@st.com wrote:
+>>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>>
+>>> v3:
+>>>   - Rebase to v4.8-rc1
+>>>   - Tipo fix in st,clkgen-pll.txt
+>>>   - Add Ack of Peter for the series
+>>>   - Add missed patch: "ARM: DT: STiH4xx: Simplify clock binding of STiH4xx platforms"
+>>>
+>>> v2:
+>>>   - Simpliflication of clock binding
+>>>     remark from Rob https://lkml.org/lkml/2016/5/25/492
+>>>   - Suppression of stih415-416 support for the clocks (in order
+>>> 	to help simplification of clock binding)
+>>>     (others patchs for the machine and drivers will come)
+>>>
+>>> This serie allows to increase video resolutions and make audio
+>>> adjustment during a video playback.
+>>>
+>>> Gabriel Fernandez (14):
+>>>   drivers: clk: st: Remove stih415-416 clock support
+>>>   drivers: clk: st: Simplify clock binding of STiH4xx platforms
+>>>   ARM: DT: STiH4xx: Simplify clock binding of STiH4xx platforms
+>>>   drivers: clk: st: Add fs660c32 synthesizer algorithm
+>>>   drivers: clk: st: Add clock propagation for audio clocks
+>>>   drivers: clk: st: Handle clk synchronous mode for video clocks
+>>>   ARM: DT: STiH407: Enable clock propagation for audio clocks
+>>>   ARM: DT: STiH410: Enable clock propagation for audio clocks
+>>>   ARM: DT: STiH418: Enable clock propagation for audio clocks
+>>>   ARM: DT: STiH407: Enable synchronous clock mode for video clocks
+>>>   ARM: DT: STiH410: Enable synchronous clock mode for video clocks
+>>>   ARM: DT: STiH418: Enable synchronous clock mode for video clocks
+>>>   ARM: DT: STi: STiH407: clock configuration to address 720p and 1080p
+>>>   ARM: DT: STi: STiH410: clock configuration to address 720p and 1080p
+>>
+> 
+> Hi Stephen
+> 
+>> The order of patches intermingles clk changes and dts changes.
+>> I'd prefer to not take any patches for dts through the clk tree,
+>> so can those be deferred to an arm-soc PR? 
+> 
+> No problem, i will take all DTS patches and submit a pull request to arm-soc.
+> 
+> Assuming that works,
+>> I'd just pick 1-2, and 4-6 into the clk tree and the rest can go
+>> on top through arm-soc.
 
-Yes, please give it a try. reset_control_reset should still WARN if the
-deassert count is set, and reset_(de)assert should do so if triggered is
-set. Mixing the two won't work. And it should be documented that shared
-reset_control_reset may do nothing if the reset was already triggered by
-another consumer.
+Stephen
 
-regards
-Philipp
+Just to confirm, these patches will be merged into clk-next tree ? so dedicated for v4.9 ?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+
+Patrice
+
+>>
+> 
+> Perfect 
+> 
+> Thanks
+> 
+> 
+> 
