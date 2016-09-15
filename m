@@ -1,53 +1,64 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCAxLzFdIEFSTTogaW14NTogQWRkIGNsb2NrcyBjb25maWd1?=
- =?UTF-8?B?cmF0aW9u?=
-Date: Thu, 15 Sep 2016 20:42:33 +0300
-Message-ID: <1473961353.68713919@f429.i.mail.ru>
-References: <1473934403-2726-1-git-send-email-fabien.lahoudere@collabora.co.uk>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] regulator: Prevent falling too fast
+Date: Thu, 15 Sep 2016 11:02:23 -0700
+Message-ID: <20160915180223.GE62872@google.com>
+References: <20160906190524.GB79728@google.com>
+ <20160912185633.GH27946@sirena.org.uk>
+ <20160913172140.GC62872@google.com>
+ <20160915143945.GJ27974@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1473934403-2726-1-git-send-email-fabien.lahoudere@collabora.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?RmFiaWVuIExhaG91ZGVyZQ==?= <fabien.lahoudere@collabora.co.uk>
-Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, =?UTF-8?B?b3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EIEZMQVRURU5FRCBERVZJQ0Ug?= =?UTF-8?B?VFJFRSBCSU5ESU5HUw==?= <devicetree@vger.kernel.org>, =?UTF-8?B?S2FsbGUgS2Fua2FyZQ==?= <kalle.kankare@vincit.fi>, =?UTF-8?B?TWljaGFlbCBUdXJxdWV0dGU=?= <mturquette@baylibre.com>, =?UTF-8?B?U3RlcGhlbiBCb3lk?= <sboyd@codeaurora.org>, =?UTF-8?B?b3BlbiBsaXN0?= <linux-kernel@vger.kernel.org>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel@pengutronix.de>, =?UTF-8?B?RmFiaW8gRXN0ZXZhbQ==?= <fabio.estevam@nxp.com>, =?UTF-8?B?U2hhd24gR3Vv?= <shawnguo@kernel.org>, =?UTF-8?B?b3BlbiBsaXN0OkNPTU1PTiBDTEsgRlJBTUVXT1JL?= <linux-clk@vger.kernel.org>, =?UTF-8?B?bW9kZXJhdGVkIGxpc3Q6QVJNL0ZSRUVTQ0FMRSBJTVggLyBNWEMgQVJNIEFS?= =?UTF-8?B?Q0hJVEVDVFVSRQ==?= <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160915143945.GJ27974-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PtCn0LXRgtCy0LXRgNCzLCAxNSDRgdC10L3RgtGP0LHRgNGPIDIwMTYsIDEzOjEzICswMzowMCDQ
-vtGCIEZhYmllbiBMYWhvdWRlcmUgPGZhYmllbi5sYWhvdWRlcmVAY29sbGFib3JhLmNvLnVrPjoK
-Pgo+RnJvbTogS2FsbGUgS2Fua2FyZSA8IGthbGxlLmthbmthcmVAdmluY2l0LmZpID4KPgo+QWRk
-IGNsb2NrcyBjb25maWd1cmF0aW9uIGZvciBDU0ksIEZJUkkgYW5kIElFRUUxNTg4Lgo+Cj5TaWdu
-ZWQtb2ZmLWJ5OiBGYWJpZW4gTGFob3VkZXJlIDwgZmFiaWVuLmxhaG91ZGVyZUBjb2xsYWJvcmEu
-Y28udWsgPgo+LS0tCj7CoGRyaXZlcnMvY2xrL2lteC9jbGstaW14NTEtaW14NTMuYyAgICAgIHwg
-MjAgKysrKysrKysrKysrKysrKysrKysKPsKgaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9pbXg1
-LWNsb2NrLmggfCAxNSArKysrKysrKysrKysrKy0KPsKgMiBmaWxlcyBjaGFuZ2VkLCAzNCBpbnNl
-cnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4KPmRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9pbXgv
-Y2xrLWlteDUxLWlteDUzLmMgYi9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDUxLWlteDUzLmMKPmlu
-ZGV4IDI5ZDRjNDQuLjFlM2M5ZWEgMTAwNjQ0Cj4tLS0gYS9kcml2ZXJzL2Nsay9pbXgvY2xrLWlt
-eDUxLWlteDUzLmMKPisrKyBiL2RyaXZlcnMvY2xrL2lteC9jbGstaW14NTEtaW14NTMuYwo+QEAg
-LTEyNiw2ICsxMjYsNyBAQCBzdGF0aWMgY29uc3QgY2hhciAqc3BkaWYwX2NvbV9zZWxbXSA9IHsg
-InNwZGlmMF9wb2RmIiwgInNzaTFfcm9vdF9nYXRlIiwgfTsKPsKgc3RhdGljIGNvbnN0IGNoYXIg
-Km14NTFfc3BkaWYxX2NvbV9zZWxbXSA9IHsgInNwZGlmMV9wb2RmIiwgInNzaTJfcm9vdF9nYXRl
-IiwgfTsKPsKgc3RhdGljIGNvbnN0IGNoYXIgKnN0ZXBfc2Vsc1tdID0geyAibHBfYXBtIiwgfTsK
-PsKgc3RhdGljIGNvbnN0IGNoYXIgKmNwdV9wb2RmX3NlbHNbXSA9IHsgInBsbDFfc3ciLCAic3Rl
-cF9zZWwiIH07Cj4rc3RhdGljIGNvbnN0IGNoYXIgKmllZWUxNTg4X3NlbHNbXSA9IHsgInBsbDNf
-c3ciLCAicGxsNF9zdyIsICJkdW1teSIgLyogdXNicGh5Ml9jbGsgKi8sICJkdW1teSIgLyogZmVj
-X3BoeV9jbGsgKi8gfTsKPsKgCj7CoHN0YXRpYyBzdHJ1Y3QgY2xrICpjbGtbSU1YNV9DTEtfRU5E
-XTsKPsKgc3RhdGljIHN0cnVjdCBjbGtfb25lY2VsbF9kYXRhIGNsa19kYXRhOwo+QEAgLTU0Myw2
-ICs1NDQsMjUgQEAgc3RhdGljIHZvaWQgX19pbml0IG14NTNfY2xvY2tzX2luaXQoc3RydWN0IGRl
-dmljZV9ub2RlICpucCkKLi4uCgoyIFNoYXduIEd1bzogU2luY2UgdGhlIGNoYW5nZSBhZmZlY3Rz
-IG9ubHkgb24gaS5NWDUzIGFyY2hpdGVjdHVyZSwKSSB3b3VsZCBhc2sgdG8gY2hhbmdlIHRoZSBz
-dWJqZWN0IHRvIGkuTVg1MyBpZiBpdCBwb3NzaWJsZS4KCi0tLQoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Mark,
+
+El Thu, Sep 15, 2016 at 03:39:45PM +0100 Mark Brown ha dit:
+
+> On Tue, Sep 13, 2016 at 10:21:40AM -0700, Matthias Kaehlcke wrote:
+> 
+> > Optimizing the delay time depends on the SoC; we have not measured
+> > this across a wide variety of devices and thus have very conservative
+> > numbers. The percentage is based on the trigger for OVP on the
+> > regulator. In this case, OVP kicks in when the FB node is 20% over
+> > regulation, which is equivalent to a 16% drop in voltage (1/1.2). For
+> > our device safe-fall-percent is set to 16 and slowest-decay-rate is
+> > 225.
+> 
+> The obvious question here is how the OVP hardware knows about the new
+> voltage and why we're bodging this in the regulator core rather than in
+> the OVP hardware.
+
+The OVP hardware is part of the regulator and the regulator is not
+notified directly about voltage changes. The regulator transforms the
+PWM input into DC output and does the OVP internally with the limits
+described above.
+
+> > > I'd like to see some more thorough analysis than just an "apparently"
+> > > here.  It's making the code more fiddly for something very handwavy.
+> 
+> > It's well-understood why it's a percentage. DVS is controlled by
+> > offsetting the FB current, and as above, OVP is based on how far you
+> > are from the FB target.
+> 
+> You might think you understand this clearly but nobody reading the
+> commit message or looking at the code later on is going to be able
+> do so when your commit message only contains vague handwaving.
+
+In case there is a next revision of this patch (i.e. if it is deemed
+useful beyond our specific use case) I can include the details in the
+commit message of the next revision. Sorry for omitting them
+initially, to me it seemed to be very device specific information, but
+I understand that these details can be helpful to understand the
+context.
+
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
