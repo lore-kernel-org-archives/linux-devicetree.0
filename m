@@ -1,71 +1,78 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH 1/3] misc: Add Aspeed BT IPMI host driver
-Date: Thu, 15 Sep 2016 08:51:41 +0200
-Message-ID: <3e2658cc-7089-abd2-23b3-ffd468edbd11@kaod.org>
-References: <1472664259-23933-1-git-send-email-clg@kaod.org>
- <c06a8afb-9143-6aef-3425-ad1e50cae35d@kaod.org>
- <1ce6c4b4-5938-22fc-7467-d1efc220b772@gmail.com> <4727554.yt7pF8chOH@wuerfel>
- <7db5ada0-49ea-55eb-089e-d979941ceff5@gmail.com>
+From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3 00/14] Clock improvement for video playback
+Date: Thu, 15 Sep 2016 08:57:50 +0200
+Message-ID: <af43c05e-4485-d756-3362-19a76aa40307@st.com>
+References: <1472473626-15398-1-git-send-email-gabriel.fernandez@st.com>
+ <20160914183620.GV7243@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <7db5ada0-49ea-55eb-089e-d979941ceff5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: minyard@acm.org, Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Alistair Popple <alistair@popple.id.au>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Jeremy Kerr <jk@ozlabs.org>, linux-arm-kernel@lists.infradead.org, Joel Stanley <joel@jms.id.au>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160914183620.GV7243-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, gabriel.fernandez-qxv4g6HH51o@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Olivier Bideau <olivier.bideau-qxv4g6HH51o@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-clk-u79uwXL29TZUIDd8j+nm9g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/2016 10:33 PM, Corey Minyard wrote:
-> On 09/12/2016 02:15 PM, Arnd Bergmann wrote:
->> On Monday, September 12, 2016 1:55:40 PM CEST Corey Minyard wrote:
->>> On 09/02/2016 08:22 AM, C=E9dric Le Goater wrote:
->>>> Hello,
->>>>
->>>> Adding Corey in cc: . I guess I should have done that in the first pla=
-ce.
->>> Yes, probably so.  I've been travelling and didn't see it on the mailing
->>> lists until now.
->>>
->>> There is already a BT driver in the kernel, in drivers/char/ipmi, why
->>> won't that work?
->> The new driver is the host side (running on the BMC), the existing one
->> is the client (running on the PC).
+
+
+On 09/14/2016 08:36 PM, Stephen Boyd wrote:
+> On 08/29, gabriel.fernandez-qxv4g6HH51o@public.gmane.org wrote:
+>> From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 >>
->>     Arnd
-> =
+>> v3:
+>>   - Rebase to v4.8-rc1
+>>   - Tipo fix in st,clkgen-pll.txt
+>>   - Add Ack of Peter for the series
+>>   - Add missed patch: "ARM: DT: STiH4xx: Simplify clock binding of STiH4xx platforms"
+>>
+>> v2:
+>>   - Simpliflication of clock binding
+>>     remark from Rob https://lkml.org/lkml/2016/5/25/492
+>>   - Suppression of stih415-416 support for the clocks (in order
+>> 	to help simplification of clock binding)
+>>     (others patchs for the machine and drivers will come)
+>>
+>> This serie allows to increase video resolutions and make audio
+>> adjustment during a video playback.
+>>
+>> Gabriel Fernandez (14):
+>>   drivers: clk: st: Remove stih415-416 clock support
+>>   drivers: clk: st: Simplify clock binding of STiH4xx platforms
+>>   ARM: DT: STiH4xx: Simplify clock binding of STiH4xx platforms
+>>   drivers: clk: st: Add fs660c32 synthesizer algorithm
+>>   drivers: clk: st: Add clock propagation for audio clocks
+>>   drivers: clk: st: Handle clk synchronous mode for video clocks
+>>   ARM: DT: STiH407: Enable clock propagation for audio clocks
+>>   ARM: DT: STiH410: Enable clock propagation for audio clocks
+>>   ARM: DT: STiH418: Enable clock propagation for audio clocks
+>>   ARM: DT: STiH407: Enable synchronous clock mode for video clocks
+>>   ARM: DT: STiH410: Enable synchronous clock mode for video clocks
+>>   ARM: DT: STiH418: Enable synchronous clock mode for video clocks
+>>   ARM: DT: STi: STiH407: clock configuration to address 720p and 1080p
+>>   ARM: DT: STi: STiH410: clock configuration to address 720p and 1080p
+> 
 
-> Ok, that's not really clear from the documentation or the Kconfig.
-> In the IPMI spec the "host" side is the computer side, not the BMC
-> side.  Like:
-> =
+Hi Stephen
 
->    11.6.1 BT Host Interface Registers
->    The Host BT interface provides an independent set of registers and
->    interrupts to allow the Host driver to
->    communicate with the baseboard management controller without
->    conflicting with the O/S ACPI driver.
-> =
+> The order of patches intermingles clk changes and dts changes.
+> I'd prefer to not take any patches for dts through the clk tree,
+> so can those be deferred to an arm-soc PR? 
 
-> In light of that, this should probably be named the bt-bmc driver.
-> =
+No problem, i will take all DTS patches and submit a pull request to arm-soc.
 
-> I haven't reviewed this in detail, but I'm ok with putting it in
-> drivers/char/ipmi.  The state machine part looks reasonably
-> generic.  The configuration part isn't, but that could be split
-> out later if necessary.
+Assuming that works,
+> I'd just pick 1-2, and 4-6 into the clk tree and the rest can go
+> on top through arm-soc.
+> 
 
-what do you mean by configuration ? I am ready to send a v2. May be
-I can add a few other things.
+Perfect 
 
-Thanks,
+Thanks
 
-C. =
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
