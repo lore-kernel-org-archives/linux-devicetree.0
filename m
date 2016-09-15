@@ -1,7 +1,7 @@
 From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 5/6] ARM: dts: imx6qdl-icore: Add usbotg support
-Date: Fri, 16 Sep 2016 00:46:54 +0530
-Message-ID: <1473967015-8523-6-git-send-email-jagan@amarulasolutions.com>
+Subject: [PATCH v5 4/6] ARM: dts: imx6qdl-icore: Add usbhost support
+Date: Fri, 16 Sep 2016 00:46:53 +0530
+Message-ID: <1473967015-8523-5-git-send-email-jagan@amarulasolutions.com>
 References: <1473967015-8523-1-git-send-email-jagan@amarulasolutions.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1473967015-8523-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
@@ -10,7 +10,7 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add usbotg support for Engicam i.CoreM6 dql modules.
+Add usbhost support for Engicam i.CoreM6 dql modules.
 
 Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
@@ -24,21 +24,21 @@ Changes for v5:
 Changes for v4:
 	- new patch
 
- arch/arm/boot/dts/imx6qdl-icore.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/arm/boot/dts/imx6qdl-icore.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index fb77a47..a0ca442 100644
+index b7f7102..fb77a47 100644
 --- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -63,6 +63,15 @@
- 		regulator-boot-on;
- 		regulator-always-on;
+@@ -54,6 +54,15 @@
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
  	};
 +
-+	reg_usb_otg_vbus: usb_otg_vbus {
++	reg_usb_h1_vbus: usb_h1_vbus {
 +		compatible = "regulator-fixed";
-+		regulator-name = "usb_otg_vbus";
++		regulator-name = "usb_h1_vbus";
 +		regulator-min-microvolt = <5000000>;
 +		regulator-max-microvolt = <5000000>;
 +		regulator-boot-on;
@@ -47,14 +47,12 @@ index fb77a47..a0ca442 100644
  };
  
  &can1 {
-@@ -122,6 +131,14 @@
+@@ -107,6 +116,12 @@
  	status = "okay";
  };
  
-+&usbotg {
-+	vbus-supply = <&reg_usb_otg_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg>;
++&usbh1 {
++	vbus-supply = <&reg_usb_h1_vbus>;
 +	disable-over-current;
 +	status = "okay";
 +};
@@ -62,19 +60,6 @@ index fb77a47..a0ca442 100644
  &usdhc1 {
  	pinctrl-names = "default";
  	pinctrl-0 = <&pinctrl_usdhc1>;
-@@ -196,6 +213,12 @@
- 		>;
- 	};
- 
-+	pinctrl_usbotg: usbotggrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
-+		>;
-+	};
-+
- 	pinctrl_usdhc1: usdhc1grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_SD1_CMD__SD1_CMD    0x17070
 -- 
 2.7.4
 
