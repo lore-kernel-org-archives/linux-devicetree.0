@@ -1,71 +1,71 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v4 22/22] phy: Add support for Qualcomm's USB HS phy
-Date: Thu, 15 Sep 2016 13:29:06 +0800
-Message-ID: <20160915052905.GA23958@b29397-desktop>
-References: <20160907213519.27340-1-stephen.boyd@linaro.org>
- <20160907213519.27340-23-stephen.boyd@linaro.org>
- <20160913070358.GB30425@b29397-desktop>
- <147379930484.27460.3849356366746983941@sboyd-linaro>
- <20160914021133.GB30760@b29397-desktop>
- <147383455256.1541.16582625295760921275@sboyd-linaro>
- <20160914093307.GC21674@b29397-desktop>
- <147387497029.16543.5921198225528254345@sboyd-linaro>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH 1/3] misc: Add Aspeed BT IPMI host driver
+Date: Thu, 15 Sep 2016 08:51:41 +0200
+Message-ID: <3e2658cc-7089-abd2-23b3-ffd468edbd11@kaod.org>
+References: <1472664259-23933-1-git-send-email-clg@kaod.org>
+ <c06a8afb-9143-6aef-3425-ad1e50cae35d@kaod.org>
+ <1ce6c4b4-5938-22fc-7467-d1efc220b772@gmail.com> <4727554.yt7pF8chOH@wuerfel>
+ <7db5ada0-49ea-55eb-089e-d979941ceff5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <147387497029.16543.5921198225528254345@sboyd-linaro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Peter Chen <peter.chen@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <7db5ada0-49ea-55eb-089e-d979941ceff5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: minyard@acm.org, Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Alistair Popple <alistair@popple.id.au>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Jeremy Kerr <jk@ozlabs.org>, linux-arm-kernel@lists.infradead.org, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2016 at 10:42:50AM -0700, Stephen Boyd wrote:
-> > > 
-> > > Hmm.. maybe the confusion is in which registers we should be able to
-> > > access? Are we talking about the ULPI viewport MMIO register space or
-> > > the ULPI registers that we access through the viewport? I have a
-> > > hw_phymode_configure() inside of of ci_ulpi_init() so that the
-> > > identification registers through the ULPI viewport read properly
-> > > (assuming there aren't other power requirements like regulators). If we
-> > > don't set the portsc.pts before using the viewport, the viewport doesn't
-> > > work and reads timeout. So we really don't touch the ULPI registers
-> > > except for the scratch space and the id registers until after the phy is
-> > > properly powered on with clks and regulators, because the only place we
-> > > touch them after doing the id checking is in this phy driver in
-> > > qcom_usb_hs_phy_power_on(). We've "solved" the chicken-egg problem where
-> > > we don't know which device driver to probe because the phy needs to be
-> > > powered on to read the id registers to know which device driver to use
-> > > by using DT to match up device drivers instead.
-> > > 
-> > > [1] https://www.sparkfun.com/datasheets/Components/SMD/ULPI_v1_1.pdf
-> > 
-> > Ok, ulpi phy works like USB device on USB bus which create device at
-> > runtime. So, like some hard-wired USB devices, it may needs power
-> > sequence too, otherwise, how it knows which driver can loads.
-> > 
-> 
-> Yes. We use the DT compatible string to ignore any issues with reading
-> the device ids when the device is powered off. Unlike USB though, we
-> have device drivers for the ULPI PHYs that do the power sequencing along
-> with other initializations, so using a common pwrseq layer seems like
-> overkill just so we can read the id registers.
+On 09/12/2016 10:33 PM, Corey Minyard wrote:
+> On 09/12/2016 02:15 PM, Arnd Bergmann wrote:
+>> On Monday, September 12, 2016 1:55:40 PM CEST Corey Minyard wrote:
+>>> On 09/02/2016 08:22 AM, C=E9dric Le Goater wrote:
+>>>> Hello,
+>>>>
+>>>> Adding Corey in cc: . I guess I should have done that in the first pla=
+ce.
+>>> Yes, probably so.  I've been travelling and didn't see it on the mailing
+>>> lists until now.
+>>>
+>>> There is already a BT driver in the kernel, in drivers/char/ipmi, why
+>>> won't that work?
+>> The new driver is the host side (running on the BMC), the existing one
+>> is the client (running on the PC).
+>>
+>>     Arnd
+> =
 
-If the attempt to read id registers will not hang the system, it can
-work. Like the case [1], without PHY ref_clk, it will hang when
-configure PHY mode (visit portsc.pts), it has no chance to read id
-registers. So, I still think the ULPI bus driver needs to do power
-sequence for its children, unless you have some place to open the
-ref_clk.
+> Ok, that's not really clear from the documentation or the Kconfig.
+> In the IPMI spec the "host" side is the computer side, not the BMC
+> side.  Like:
+> =
 
-> 
-> Are there any concerns with this patch? Or can they be reapplied?
+>    11.6.1 BT Host Interface Registers
+>    The Host BT interface provides an independent set of registers and
+>    interrupts to allow the Host driver to
+>    communicate with the baseboard management controller without
+>    conflicting with the O/S ACPI driver.
+> =
 
-For this patch, it is ok for me.
+> In light of that, this should probably be named the bt-bmc driver.
+> =
 
+> I haven't reviewed this in detail, but I'm ok with putting it in
+> drivers/char/ipmi.  The state machine part looks reasonably
+> generic.  The configuration part isn't, but that could be split
+> out later if necessary.
 
-[1] http://www.spinics.net/lists/linux-usb/msg146336.html
--- 
+what do you mean by configuration ? I am ready to send a v2. May be
+I can add a few other things.
 
-Best Regards,
-Peter Chen
+Thanks,
+
+C. =
