@@ -1,77 +1,181 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/3] drivers/of: recognize status property of dt memory nodes
-Date: Thu, 15 Sep 2016 08:43:08 -0500
-Message-ID: <CAL_JsqK5ngY-eJggPSo5AGcv4CC2b8Y1X_aYzr06_Zf6Kv-u=w@mail.gmail.com>
-References: <1473883618-14998-1-git-send-email-arbab@linux.vnet.ibm.com> <1473883618-14998-2-git-send-email-arbab@linux.vnet.ibm.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [REGRESSION] BISECTED : ethernet gadget not working anymore on
+ several atmel platforms
+Date: Thu, 15 Sep 2016 15:50:55 +0200
+Message-ID: <20160915135055.tycoar3bvoqturcq@piout.net>
+References: <CACQ1gAhUDq4G5Prjp0Fp2yY7++c3TNHuHZj=_st4JTVCLO1wRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1473883618-14998-2-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACQ1gAhUDq4G5Prjp0Fp2yY7++c3TNHuHZj=_st4JTVCLO1wRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2016 at 3:06 PM, Reza Arbab <arbab@linux.vnet.ibm.com> wrote:
-> Respect the standard dt "status" property when scanning memory nodes in
-> early_init_dt_scan_memory(), so that if the property is present and not
-> "okay", no memory will be added.
->
-> The use case at hand is accelerator or device memory, which may be
-> unusable until post-boot initialization of the memory link. Such a node
-> can be described in the dt as any other, given its status is "disabled".
-> Per the device tree specification,
->
-> "disabled"
->         Indicates that the device is not presently operational, but it
->         might become operational in the future (for example, something
->         is not plugged in, or switched off).
->
-> Once such memory is made operational, it can then be hotplugged.
->
-> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
-> ---
->  drivers/of/fdt.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 085c638..fc19590 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -1022,8 +1022,10 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
->                                      int depth, void *data)
->  {
->         const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
-> +       const char *status;
->         const __be32 *reg, *endp;
->         int l;
-> +       bool add_memory;
->
->         /* We are scanning "memory" nodes only */
->         if (type == NULL) {
-> @@ -1044,6 +1046,9 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
->
->         endp = reg + (l / sizeof(__be32));
->
-> +       status = of_get_flat_dt_prop(node, "status", NULL);
-> +       add_memory = !status || !strcmp(status, "okay");
+Hi,
 
-Move this into it's own function to mirror the unflattened version
-(of_device_is_available). Also, make sure the logic is the same. IIRC,
-"ok" is also allowed.
+On 15/09/2016 at 14:29:24 +0200, Richard Genoud wrote :
+> Since:
+> commit c32b5bcfa3c43a3c9bb59f65b5e76adb7384c4c8
+> Author: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Date:   Tue Jul 12 22:45:59 2016 +0200
+> 
+>     ARM: dts: at91: Fix USB endpoint nodes
+> 
+>     Endpoint nodes have a reg property. Add their mandatory unit-address.
+> 
+> Booting with an USB gadget configured as Ethernet gadget + RNDIS
 
-> +
->         pr_debug("memory scan node %s, reg size %d,\n", uname, l);
->
->         while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
-> @@ -1057,6 +1062,9 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
->                 pr_debug(" - %llx ,  %llx\n", (unsigned long long)base,
->                     (unsigned long long)size);
->
-> +               if (!add_memory)
-> +                       continue;
+Good catch, I seem to have forgotten a patch in that series. I4ll send
+that shortly.
 
-There's no point in checking this in the loop. status applies to the
-whole node. Just return up above.
+> Gives a warning:
+> 
+> On AT91SAM9x5 platform (g35) :
+> g_ether gadget: high-speed config #1: CDC Ethernet (ECM)
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 1 at drivers/usb/gadget/udc/core.c:264
+> usb_ep_queue+0x4c/0xec
+> CPU: 0 PID: 1 Comm: swapper Not tainted 4.8.0-rc6-00071-gcc183ac148d0 #134
+> Hardware name: Atmel AT91SAM9
+> [<c000f164>] (unwind_backtrace) from [<c000d158>] (show_stack+0x20/0x24)
+> [<c000d158>] (show_stack) from [<c01ba940>] (dump_stack+0x20/0x28)
+> [<c01ba940>] (dump_stack) from [<c0017f30>] (__warn+0xe0/0x10c)
+> [<c0017f30>] (__warn) from [<c001802c>] (warn_slowpath_null+0x30/0x38)
+> [<c001802c>] (warn_slowpath_null) from [<c02cd78c>] (usb_ep_queue+0x4c/0xec)
+> [<c02cd78c>] (usb_ep_queue) from [<c02d55b8>] (ecm_do_notify+0x134/0x150)
+> [<c02d55b8>] (ecm_do_notify) from [<c02d5840>] (ecm_set_alt+0x14c/0x154)
+> [<c02d5840>] (ecm_set_alt) from [<c02c9144>] (composite_setup+0xa2c/0x13c0)
+> [<c02c9144>] (composite_setup) from [<c02d3a90>] (usba_udc_irq+0x888/0xb4c)
+> [<c02d3a90>] (usba_udc_irq) from [<c00458a0>]
+> (__handle_irq_event_percpu+0x74/0x1dc)
+> [<c00458a0>] (__handle_irq_event_percpu) from [<c0045a34>]
+> (handle_irq_event_percpu+0x2c/0x68)
+> [<c0045a34>] (handle_irq_event_percpu) from [<c0045aa8>]
+> (handle_irq_event+0x38/0x4c)
+> [<c0045aa8>] (handle_irq_event) from [<c0048a94>]
+> (handle_fasteoi_irq+0xa0/0x114)
+> [<c0048a94>] (handle_fasteoi_irq) from [<c004512c>]
+> (generic_handle_irq+0x28/0x38)
+> [<c004512c>] (generic_handle_irq) from [<c00451cc>]
+> (__handle_domain_irq+0x90/0xb8)
+> [<c00451cc>] (__handle_domain_irq) from [<c0009450>] (aic_handle+0xb0/0xb8)
+> [<c0009450>] (aic_handle) from [<c000dca8>] (__irq_svc+0x68/0x84)
+> Exception stack(0xc788dc68 to 0xc788dcb0)
+> dc60:                   00000151 000004f6 00000151 c7075b70 c89693b0 c8964000
+> dc80: c79c7400 000060e8 c79aa000 c7bd55c0 00000023 c788dd3c c788dd00 c788dcb8
+> dca0: c0319cc0 c0319cd4 80000013 ffffffff
+> [<c000dca8>] (__irq_svc) from [<c0319cd4>] (ubi_attach_fastmap+0x858/0xcc8)
+> [<c0319cd4>] (ubi_attach_fastmap) from [<c0278744>]
+> (ubi_scan_fastmap+0x644/0x854)
+> [<c0278744>] (ubi_scan_fastmap) from [<c027542c>] (scan_fast+0x10c/0x17c)
+> [<c027542c>] (scan_fast) from [<c02757c0>] (ubi_attach+0xb0/0x21c)
+> [<c02757c0>] (ubi_attach) from [<c0269520>] (ubi_attach_mtd_dev+0x320/0x820)
+> [<c0269520>] (ubi_attach_mtd_dev) from [<c06b42d4>] (ubi_init+0x1a8/0x248)
+> [<c06b42d4>] (ubi_init) from [<c0697df0>] (do_one_initcall+0xb4/0x16c)
+> [<c0697df0>] (do_one_initcall) from [<c0697fb0>]
+> (kernel_init_freeable+0x108/0x1d4)
+> [<c0697fb0>] (kernel_init_freeable) from [<c04e3c84>] (kernel_init+0x18/0x100)
+> [<c04e3c84>] (kernel_init) from [<c000a470>] (ret_from_fork+0x14/0x24)
+> ---[ end trace 8150ab0dc38dec93 ]---
+> 
+> Same on SAMA5D3:
+> g_ether gadget: high-speed config #1: CDC Ethernet (ECM)
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 0 at drivers/usb/gadget/udc/core.c:264
+> usb_ep_queue+0x5c/0x64
+> Modules linked in:
+> CPU: 0 PID: 0 Comm: swapper Not tainted 4.8.0-rc6+ #135
+> Hardware name: Atmel SAMA5
+> [<c010ce70>] (unwind_backtrace) from [<c010a88c>] (show_stack+0x10/0x14)
+> [<c010a88c>] (show_stack) from [<c0115bb0>] (__warn+0xe4/0xfc)
+> [<c0115bb0>] (__warn) from [<c0115c78>] (warn_slowpath_null+0x20/0x28)
+> [<c0115c78>] (warn_slowpath_null) from [<c03cc608>] (usb_ep_queue+0x5c/0x64)
+> [<c03cc608>] (usb_ep_queue) from [<c03d1124>] (ecm_do_notify+0xec/0x14c)
+> [<c03d1124>] (ecm_do_notify) from [<c03d130c>] (ecm_set_alt+0x74/0x150)
+> [<c03d130c>] (ecm_set_alt) from [<c03c9364>] (composite_setup+0xb84/0x1570)
+> [<c03c9364>] (composite_setup) from [<c03cf364>] (usba_udc_irq+0x878/0xd4c)
+> [<c03cf364>] (usba_udc_irq) from [<c013f12c>]
+> (__handle_irq_event_percpu+0x88/0x124)
+> [<c013f12c>] (__handle_irq_event_percpu) from [<c013f1e4>]
+> (handle_irq_event_percpu+0x1c/0x58)
+> [<c013f1e4>] (handle_irq_event_percpu) from [<c013f248>]
+> (handle_irq_event+0x28/0x3c)
+> [<c013f248>] (handle_irq_event) from [<c0141c8c>]
+> (handle_fasteoi_irq+0xa0/0x168)
+> [<c0141c8c>] (handle_fasteoi_irq) from [<c013e87c>]
+> (generic_handle_irq+0x24/0x34)
+> [<c013e87c>] (generic_handle_irq) from [<c013ead8>]
+> (__handle_domain_irq+0x54/0xa8)
+> [<c013ead8>] (__handle_domain_irq) from [<c010b34c>] (__irq_svc+0x6c/0x90)
+> [<c010b34c>] (__irq_svc) from [<c0130be4>] (finish_task_switch+0x4c/0x144)
+> [<c0130be4>] (finish_task_switch) from [<c054b9d0>] (schedule+0x44/0x9c)
+> [<c054b9d0>] (schedule) from [<c054bbd4>] (schedule_preempt_disabled+0xc/0x10)
+> [<c054bbd4>] (schedule_preempt_disabled) from [<c01374b8>]
+> (cpu_startup_entry+0x98/0xf4)
+> [<c01374b8>] (cpu_startup_entry) from [<c0800c38>] (start_kernel+0x35c/0x368)
+> [<c0800c38>] (start_kernel) from [<20008078>] (0x20008078)
+> ---[ end trace 27b3e952067e1be6 ]---
+> 
+> And I guess it's the same on g45, 9rl, sama5d[2-4].
+> 
+> Bisect done with a 4.8-rc6 kernel.
+> Here's the bisect log:
+> git bisect start 'arch/arm/boot/dts/'
+> # good: [882bd9fc46321c9d4721b376039a142cbfe8a17a] usb: gadget: udc:
+> atmel: Also get regmap for at91sam9x5-pmc
+> git bisect good 882bd9fc46321c9d4721b376039a142cbfe8a17a
+> # bad: [694d0d0bb2030d2e36df73e2d23d5770511dbc8d] Linux 4.8-rc2
+> git bisect bad 694d0d0bb2030d2e36df73e2d23d5770511dbc8d
+> # good: [ab4b4340c7d74310a132cb457665bf3d98fdff79] Merge tag
+> 'imx-dt-4.8' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into
+> next/dt
+> git bisect good ab4b4340c7d74310a132cb457665bf3d98fdff79
+> # good: [349f9d5239c3dae3b984679fc9ee00b8deec542b] Merge tag
+> 'sunxi-dt-for-4.8' of
+> https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux into
+> next/dt
+> git bisect good 349f9d5239c3dae3b984679fc9ee00b8deec542b
+> # bad: [262a5d84b2aea8deb67eca813dc3008836330596] Merge tag
+> 'sunxi-dt-for-4.8-2-bis' of
+> https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux into
+> next/dt
+> git bisect bad 262a5d84b2aea8deb67eca813dc3008836330596
+> # good: [cda1c2bdf6df90c12363877fda594a0a1b7ac74a] Merge tag
+> 'sti-late-v4.8' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/pchotard/sti into
+> next/late
+> git bisect good cda1c2bdf6df90c12363877fda594a0a1b7ac74a
+> # good: [a0e4eb4b81b44663f21b289d8126ca6f6dc8a863] ARM: dts: sun8i:
+> Use sun8i-reference-design-tablet for polaroid mid2809pxe04
+> git bisect good a0e4eb4b81b44663f21b289d8126ca6f6dc8a863
+> # bad: [d3c1c7181f55f3464529decad189f2317a2932da] ARM: dts: at91:
+> vinco: fix regulator name
+> git bisect bad d3c1c7181f55f3464529decad189f2317a2932da
+> # bad: [a63f6a64cc1e78366382657cab70772240b6dcc2] ARM: dts: at91:
+> sama5d3_xplained: fix regulator name
+> git bisect bad a63f6a64cc1e78366382657cab70772240b6dcc2
+> # bad: [c32b5bcfa3c43a3c9bb59f65b5e76adb7384c4c8] ARM: dts: at91: Fix
+> USB endpoint nodes
+> git bisect bad c32b5bcfa3c43a3c9bb59f65b5e76adb7384c4c8
+> # good: [c94afa132b6d7f8e412a12da44da6203d2cd23d4] ARM: dts: at91: Fix
+> ADC trigger nodes
+> git bisect good c94afa132b6d7f8e412a12da44da6203d2cd23d4
+> # first bad commit: [c32b5bcfa3c43a3c9bb59f65b5e76adb7384c4c8] ARM:
+> dts: at91: Fix USB endpoint nodes
+> 
+> on xplained board, I used at91-sama5d3_xplained.dtb and sama5_defconfig plus :
+> CONFIG_USB_ETH=y
+> CONFIG_USB_ETH_RNDIS=y
 
-Rob
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
