@@ -1,33 +1,35 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] of: Make of_find_property_value_of_size take a
- length range
-Date: Thu, 15 Sep 2016 08:34:59 -0500
-Message-ID: <20160915133459.GA14424@rob-hp-laptop>
-References: <1473685289-21830-1-git-send-email-rf@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH] of/platform: Initialise dev->fwnode appropriately
+Date: Thu, 15 Sep 2016 08:36:57 -0500
+Message-ID: <20160915133657.GB14424@rob-hp-laptop>
+References: <38259ab3716da072fab37f06d034329244491c13.1473865096.git.robin.murphy@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1473685289-21830-1-git-send-email-rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <38259ab3716da072fab37f06d034329244491c13.1473865096.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 12, 2016 at 02:01:28PM +0100, Richard Fitzgerald wrote:
-> In preparation for adding variable-length array reads, change
-> of_find_property_value_of_size so that it takes an optional
-> maximum length. If the maximum is passed as 0, the behaviour is
-> unchanged and it will return a property if it's >= the requested
-> minimum length. If maximum is non-zero it will only return a
-> property whose length is min <= l <= max.
+On Wed, Sep 14, 2016 at 04:01:24PM +0100, Robin Murphy wrote:
+> Whilst we're some of the way towards a universal firmware property
+> interface, drivers which deal with both OF and ACPI probing end up
+> having to do things like this:
 > 
-> Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+>     dev->of_node ? &dev->of_node->fwnode : dev->fwnode
+> 
+> This seems unnecessary, when the OF code could instead simply fill in
+> the device's fwnode when binding the of_node, and let the drivers use
+> dev->fwnode either way. Let's give it a go and see what falls out.
+> 
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 > ---
->  drivers/of/base.c | 39 +++++++++++++++++++++++++++++----------
->  1 file changed, 29 insertions(+), 10 deletions(-)
+>  drivers/of/platform.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Applied both patches, thanks.
+I've applied this, but what about non-platform devices such as i2c?
 
 Rob
 --
