@@ -1,7 +1,7 @@
 From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 6/6] ARM: dts: imx6qdl-icore: Add FEC support
-Date: Fri, 16 Sep 2016 00:46:55 +0530
-Message-ID: <1473967015-8523-7-git-send-email-jagan@amarulasolutions.com>
+Subject: [PATCH v5 2/6] ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual initial support
+Date: Fri, 16 Sep 2016 00:46:51 +0530
+Message-ID: <1473967015-8523-3-git-send-email-jagan@amarulasolutions.com>
 References: <1473967015-8523-1-git-send-email-jagan@amarulasolutions.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1473967015-8523-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
@@ -10,21 +10,16 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add FEC support for Engicam i.CoreM6 dql modules.
+i.CoreM6 Quad/Dual modules are system on module solutions manufactured
+by Engicam with following characteristics:
+CPU           NXP i.MX6 DQ, 800MHz
+RAM           1GB, 32, 64 bit, DDR3-800/1066
+NAND          SLC,512MB
+Power supply  Single 5V
+MAX LCD RES   FULLHD
 
-Observed similar 'eth0: link is not ready' issue which was
-discussed in [1] due rmii mode with external ref_clk, so added
-clock node along with the properties mentioned by Shawn in [2]
-
-FEC link log:
-------------
-$ ifconfig eth0 up
-[   27.905187] SMSC LAN8710/LAN8720 2188000.ethernet:00: attached PHY driver
-               [SMSC LAN8710/LAN8720] (mii_bus:phy_addr=2188000.ethernet:00, irq=-1)
-[   27.918982] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
-
-[1] https://patchwork.kernel.org/patch/3491061/
-[2] https://patchwork.kernel.org/patch/3490511/
+and more info at
+http://www.engicam.com/en/products/embedded/som/sodimm/i-core-m6s-dl-d-q
 
 Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
@@ -33,74 +28,304 @@ Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
 Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
+Note: Fabio, Look like engicam uses some fixed regulators so regulator-boot-on
+and regulator-always-on are needed for reg_3p3v. Matteo or me will comment on this.
+
 Changes for v5:
+	- removed fsl,legacy-bch-geometry property from gpmi node
+Changes for v4:
 	- new patch
+Changes for v3:
+        - Use compatible as engicam,imx6-icore instead of fsl,imx6-icore
+        - Update IOMUX value for can1 and can2 nodes
+        - Added reg_3p3v for can1 and can2 nodes
+Changes for v2:
+        - s/oaky/okay/g
 
- arch/arm/boot/dts/imx6qdl-icore.dtsi | 37 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ arch/arm/boot/dts/Makefile           |   1 +
+ arch/arm/boot/dts/imx6q-icore.dts    |  59 +++++++++++
+ arch/arm/boot/dts/imx6qdl-icore.dtsi | 194 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 254 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-icore.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-icore.dtsi
 
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index a0ca442..77df730 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -48,6 +48,18 @@
- 		reg = <0x10000000 0x80000000>;
- 	};
- 
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index f79cac2..511510d 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -374,6 +374,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-gw553x.dtb \
+ 	imx6q-h100.dtb \
+ 	imx6q-hummingboard.dtb \
++	imx6q-icore.dtb \
+ 	imx6q-icore-rqs.dtb \
+ 	imx6q-marsboard.dtb \
+ 	imx6q-nitrogen6x.dtb \
+diff --git a/arch/arm/boot/dts/imx6q-icore.dts b/arch/arm/boot/dts/imx6q-icore.dts
+new file mode 100644
+index 0000000..025f543
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-icore.dts
+@@ -0,0 +1,59 @@
++/*
++ * Copyright (C) 2016 Amarula Solutions B.V.
++ * Copyright (C) 2016 Engicam S.r.l.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
 +
-+		rmii_clk: clock@0 {
-+			compatible = "fixed-clock";
-+			reg = <0>;
-+			#clock-cells = <0>;
-+			clock-frequency = <25000000>;  /* 25MHz for example */
-+		};
-+	};
++/dts-v1/;
 +
- 	reg_3p3v: regulator-3p3v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "3P3V";
-@@ -91,6 +103,15 @@
- 	assigned-clock-parents = <&clks IMX6QDL_CLK_OSC>;
- };
- 
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet>;
-+	phy-reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
-+	clocks = <&clks 117>, <&clks 117>, <&rmii_clk>;
-+	phy-mode = "rmii";
++#include "imx6q.dtsi"
++#include "imx6qdl-icore.dtsi"
++
++/ {
++	model = "Engicam i.CoreM6 Quad/Dual Starter Kit";
++	compatible = "engicam,imx6-icore", "fsl,imx6q";
++};
++
++&can1 {
 +	status = "okay";
 +};
 +
- &gpmi {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_gpmi_nand>;
-@@ -148,6 +169,22 @@
- };
- 
- &iomuxc {
-+	pinctrl_enet: enetgrp {
++&can2 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+new file mode 100644
+index 0000000..b7f7102
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+@@ -0,0 +1,194 @@
++/*
++ * Copyright (C) 2016 Amarula Solutions B.V.
++ * Copyright (C) 2016 Engicam S.r.l.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	memory {
++		reg = <0x10000000 0x80000000>;
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++};
++
++&can1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan1>;
++	xceiver-supply = <&reg_3p3v>;
++};
++
++&can2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan2>;
++	xceiver-supply = <&reg_3p3v>;
++};
++
++&clks {
++	assigned-clocks = <&clks IMX6QDL_CLK_LVDS2_SEL>;
++	assigned-clock-parents = <&clks IMX6QDL_CLK_OSC>;
++};
++
++&gpmi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_gpmi_nand>;
++	nand-on-flash-bbt;
++	status = "okay";
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++};
++
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++};
++
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart4>;
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
++	no-1-8-v;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl_flexcan1: flexcan1grp {
 +		fsl,pins = <
-+			MX6QDL_PAD_ENET_CRS_DV__ENET_RX_EN	0x1b0b0
-+			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x1b0b1
-+			MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN	0x1b0b0
-+			MX6QDL_PAD_ENET_RXD1__ENET_RX_DATA1	0x1b0b0
-+			MX6QDL_PAD_ENET_RXD0__ENET_RX_DATA0	0x1b0b0
-+			MX6QDL_PAD_ENET_TXD1__ENET_TX_DATA1	0x1b0b0
-+			MX6QDL_PAD_ENET_TXD0__ENET_TX_DATA0	0x1b0b0
-+			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
-+			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
-+			MX6QDL_PAD_ENET_REF_CLK__GPIO1_IO23	0x1b0b0
-+			MX6QDL_PAD_GPIO_17__GPIO7_IO12		0x1b0b0
++			MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX 0x1b020
++			MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX 0x1b020
 +		>;
 +	};
 +
- 	pinctrl_flexcan1: flexcan1grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX 0x1b020
++	pinctrl_flexcan2: flexcan2grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX 0x1b020
++			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX 0x1b020
++		>;
++	};
++
++	pinctrl_gpmi_nand: gpmi-nand {
++		fsl,pins = <
++			MX6QDL_PAD_NANDF_CLE__NAND_CLE     0xb0b1
++			MX6QDL_PAD_NANDF_ALE__NAND_ALE     0xb0b1
++			MX6QDL_PAD_NANDF_WP_B__NAND_WP_B   0xb0b1
++			MX6QDL_PAD_NANDF_RB0__NAND_READY_B 0xb000
++			MX6QDL_PAD_NANDF_CS0__NAND_CE0_B   0xb0b1
++			MX6QDL_PAD_NANDF_CS1__NAND_CE1_B   0xb0b1
++			MX6QDL_PAD_SD4_CMD__NAND_RE_B      0xb0b1
++			MX6QDL_PAD_SD4_CLK__NAND_WE_B      0xb0b1
++			MX6QDL_PAD_NANDF_D0__NAND_DATA00   0xb0b1
++			MX6QDL_PAD_NANDF_D1__NAND_DATA01   0xb0b1
++			MX6QDL_PAD_NANDF_D2__NAND_DATA02   0xb0b1
++			MX6QDL_PAD_NANDF_D3__NAND_DATA03   0xb0b1
++			MX6QDL_PAD_NANDF_D4__NAND_DATA04   0xb0b1
++			MX6QDL_PAD_NANDF_D5__NAND_DATA05   0xb0b1
++			MX6QDL_PAD_NANDF_D6__NAND_DATA06   0xb0b1
++			MX6QDL_PAD_NANDF_D7__NAND_DATA07   0xb0b1
++			MX6QDL_PAD_SD4_DAT0__NAND_DQS      0x00b1
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D21__I2C1_SCL 0x4001b8b1
++			MX6QDL_PAD_EIM_D28__I2C1_SDA 0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_EB2__I2C2_SCL  0x4001b8b1
++			MX6QDL_PAD_KEY_ROW3__I2C2_SDA 0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_5__I2C3_SCL  0x4001b8b1
++			MX6QDL_PAD_EIM_D18__I2C3_SDA 0x4001b8b1
++			MX6QDL_PAD_GPIO_0__CCM_CLKO1	0x130b0
++		>;
++	};
++
++	pinctrl_uart4: uart4grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL0__UART4_TX_DATA 0x1b0b1
++			MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA 0x1b0b1
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_CMD__SD1_CMD    0x17070
++			MX6QDL_PAD_SD1_CLK__SD1_CLK    0x10070
++			MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x17070
++			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17070
++			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17070
++			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17070
++		>;
++	};
++};
 -- 
 2.7.4
 
