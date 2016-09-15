@@ -1,158 +1,115 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 4/5] ARM: dts: exynos: add support for ISP power domain to
- exynos4x12 clocks device
-Date: Thu, 15 Sep 2016 14:06:18 +0200
-Message-ID: <6e52af56-8b0e-d8c4-62c2-6efeee0e912d@samsung.com>
-References: <1472737551-15272-1-git-send-email-m.szyprowski@samsung.com>
- <1472737551-15272-5-git-send-email-m.szyprowski@samsung.com>
- <20160908002254.GD13062@codeaurora.org>
- <CGME20160912102332eucas1p145e79669788329b44343da62dcbe50ca@eucas1p1.samsung.com>
- <f340cca5-6cd6-6bd1-3b9a-ccd58cbc0091@samsung.com>
- <20160912222852.GH7243@codeaurora.org>
+From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Subject: RE: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on Hip06
+Date: Thu, 15 Sep 2016 12:05:51 +0000
+Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E1F871F72@lhreml507-mbx>
+References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
+ <5869118.UilSPY9Sai@wuerfel>
+ <EE11001F9E5DDD47B7634E2F8A612F2E1F871B01@lhreml507-mbx>
+ <8360154.kzsE8V8pTW@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20160912222852.GH7243-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8360154.kzsE8V8pTW@wuerfel>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "minyard@acm.org" <minyard@acm.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "zourongrong@gmail.com" <zourongrong@gmail.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, "kantyzc@163.com" <kantyzc@163.com>, "zhichang.yuan02@gmail.com" <zhichang.yuan02@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-ar>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Hi Arnd
 
-On 2016-09-13 00:28, Stephen Boyd wrote:
-> On 09/12, Marek Szyprowski wrote:
->> On 2016-09-08 02:22, Stephen Boyd wrote:
->>> On 09/01, Marek Szyprowski wrote:
->>>> Exynos4412 clock controller contains some additional clocks for FIMC-ISP
->>>> (Camera ISP) subsystem. Registers for those clocks are partially located
->>>> in the SOC area, which belongs to ISP power domain.
->>>>
->>>> This patch extends clock controller node with ISP clock sub-node and link
->>>> (phandle) to ISP power domain.
->>>>
->>>> Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>> ---
->>>>   arch/arm/boot/dts/exynos4x12.dtsi | 5 +++++
->>>>   1 file changed, 5 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
->>>> index 3394bdcf10ae..4daea67546b9 100644
->>>> --- a/arch/arm/boot/dts/exynos4x12.dtsi
->>>> +++ b/arch/arm/boot/dts/exynos4x12.dtsi
->>>> @@ -74,6 +74,11 @@
->>>>   		compatible = "samsung,exynos4412-clock";
->>>>   		reg = <0x10030000 0x20000>;
->>>>   		#clock-cells = <1>;
->>>> +
->>>> +		isp-clock-controller {
->>>> +			compatible = "samsung,exynos4412-isp-clock";
->>>> +			power-domains = <&pd_isp>;
->>>> +		};
->>> Why can't we extend support in power domains code to have
->>> multiple domains for a single device node? i.e. power-domains =
->>> <&pd_isp>, <&pd_foo>, <&pd_bar>, and then pick the right one with
->>> power-domain-names or something like that? Making a subnode
->>> (which seems to turn into a child platform device?) seems like a
->>> quick solution for larger problems.
->> The larger problem here is the fact that clock controller is
->> partially located
->> in different power areas of SoC. Majority of the clock controllers
->> is located
->> in the area which is typically always powered (besides system sleep case),
->> while a few Camera ISP registers are located in the ISP block, which have
->> separate power domain. Having a separate nodes for sub-parts of the
->> device is
->> rather common approach, already practices by some more complex devices.
->>
->> I see some serious design problems with multiple entries in power domains
->> property. First how to show that some part of the device IS NOT in
->> any domain?
-> Is that even possible? Every device should be in some power
-> domain, even if it's just an "always on" power domain that we
-> don't really control from software.
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: 15 September 2016 09:22
+> To: Gabriele Paoloni
+> Cc: linux-arm-kernel@lists.infradead.org; Yuanzhichang;
+> devicetree@vger.kernel.org; lorenzo.pieralisi@arm.com; minyard@acm.org;
+> gregkh@linuxfoundation.org; benh@kernel.crashing.org; John Garry;
+> will.deacon@arm.com; linux-kernel@vger.kernel.org; xuwei (O); Linuxarm;
+> linux-serial@vger.kernel.org; linux-pci@vger.kernel.org;
+> zourongrong@gmail.com; liviu.dudau@arm.com; kantyzc@163.com;
+> zhichang.yuan02@gmail.com
+> Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on
+> Hip06
+> 
+> On Thursday, September 15, 2016 8:02:27 AM CEST Gabriele Paoloni wrote:
+> >
+> > From <<3.1.1. Open Firmware Properties for Bus Nodes>> in
+> > http://www.firmware.org/1275/bindings/isa/isa0_4d.ps
+> >
+> > I quote:
+> > "There shall be an entry in the "ranges" property for each
+> > of the Memory and/or I/O spaces if that address space is
+> > mapped through the bridge."
+> >
+> > It seems to me that it is ok to have 1:1 address mapping and that
+> > therefore of_translate_address() should fail if "ranges" is not
+> > present.
+> 
+> The key here is the definition of "mapped through the bridge".
+> I can only understand this as "directly mapped", i.e. an I/O
+> port of the child bus corresponds directly to a memory address
+> on the parent bus, but this is not the case here.
+> 
+> The problem with adding the mapping here is that it looks
+> like it should be valid to create a page table entry for
+> the address returned from the translation and access it through
+> a pointer dereference, but that is clearly not possible.
 
-Right now none dts of which I'm aware of doesn't define the power domain for
-the parts of the SoC, which are always on and doesn't need any additional
-management.
+I understand that somehow we are abusing of the ranges property
+here however the point is that with the current implementation ranges
+is needed because otherwise the ipmi driver probe will fail here:
 
->
->> The question is how the automated assignment to domains would be handled for
->> such case?
-> I don't get this part. Do you mean how we indicate to the driver
-> which power domain to use at the right time?
+of_ipmi_probe -> of_address_to_resource -> __of_address_to_resource
+-> of_translate_address -> __of_translate_address
 
-This was about Linux device core, which assigns device to its power domain
-and ensures that the power domain is in right state during device probe and
-then during device operation. Currently core supports only one domain per
-device, so the question was which domain to chose if there are more than
-one listed.
+Now we had a bit of discussion internally and to avoid
+having ranges we came up with two possible solutions:
 
->
->> The second is related to Linux kernel internals. Right now device
->> drivers are
->> not aware of the power domains - there are no direct calls to power domains
->> code, everything is hidden behind runtime pm which does all the hard work.
-> Right. Runtime PM will need to be improved to allow this case.
->
->> Similar situation is on Exynos 542x/5800, which will look more or less like
->> this:
->>
->>          clock: clock-controller@10010000 {
->>               compatible = "samsung,exynos5420-clock";
->>               reg = <0x10010000 0x30000>;
->>               #clock-cells = <1>;
->> +
->> +            gsc-clock-controller {
->> +                 compatible = "samsung,exynos5420-gsc-clock";
->> +                 power-domains = <&gsc_pd>;
->> +            };
->> +
->> +            isp-clock-controller {
->> +                 compatible = "samsung,exynos5420-isp-clock";
->> +                 power-domains = <&isp_pd>;
->> +            };
->> +
->> +            mfc-clock-controller {
->> +                 compatible = "samsung,exynos5420-mfc-clock";
->> +                 power-domains = <&mfc_pd>;
->> +            };
->> +
->> +            msc-clock-controller {
->> +                 compatible = "samsung,exynos5420-msc-clock";
->> +                 power-domains = <&msc_pd>;
->> +            };
->> +
->> +            disp-clock-controller {
->> +                 compatible = "samsung,exynos5420-disp-clock";
->> +                 power-domains = <&disp_pd>;
->> +            };
->>           };
->>
->> The patch is not yet ready, so I didn't include it in this patchset.
-> Ok. From a DT perspective the sub-nodes seem to be a workaround
-> for how the linux device model is mapped to power domains. I'm
-> not sure we want to make subnodes in the clk controller just to
-> make sub devices that we can target from the clk registration
-> path. Those sub nodes aren't devices at all. I understand why
-> it's being done this way, I just don't see how it fits into DT
-> design methodologies.
+1) Using bit 3 of phys.hi cell in 2.2.1 of
+http://www.firmware.org/1275/bindings/isa/isa0_4d.ps
+This would mean reworking of_bus_isa_get_flags in 
+http://lxr.free-electrons.com/source/drivers/of/address.c#L398
+and setting a new flag to be checked in __of_address_to_resource
 
-I don't think that using sub-nodes for describing details of the given
-hardware block is something uncommon in DT. Please check pin control
-or PMICs (especially regulator providers). Same for various "port"
-sub-nodes often used by various video/display devices and bridges.
+2) Adding a property in the bindings of each device that is
+a child of our LPC bus and modify __of_address_to_resource
+to check if the property is in the DT and eventually bypass
+of_translate_address
 
-The above presented method describes well which sub-part of clock
-controller is placed in which power domain.
+However in both 1) and 2) there are some issues:
+in 1) we are not complying with the isa binding doc (we use
+a bit that should be zero); in 2) we need to modify the
+bindings documentation of the devices that are connected
+to our LPC controller (therefore modifying other devices
+bindings to fit our special case).
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+I think that maybe having the 1:1 range mapping doesn't
+reflect well the reality but it is the less painful
+solution...
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What's your view?
+ 
+Many Thanks
+
+Gab
+
+> 
+> > This is also explained quite well in
+> > http://lxr.free-electrons.com/source/drivers/of/address.c#L490
+> >
+> > what do you think?
+> 
+> This is a separate issue, and only relevant for Apple Macintosh
+> machines as well as the PA-Semi sdc.
+> 
+> 	Arnd
