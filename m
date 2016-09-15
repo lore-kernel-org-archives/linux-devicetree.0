@@ -1,72 +1,86 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v4 5/8] ARM: dts: am335x-boneblack: Add
- blue-and-red-wiring -property to LCDC node
-Date: Thu, 15 Sep 2016 12:44:25 +0300
-Message-ID: <d9dcc43b-6884-aab1-ff82-c66ecf6e96b6@ti.com>
-References: <cover.1472719892.git.jsarha@ti.com>
- <fad833a6a4368196f4fc131a54d90f5b90169393.1472719892.git.jsarha@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <fad833a6a4368196f4fc131a54d90f5b90169393.1472719892.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, linux-arm-kernel@lists.infradead.org
-Cc: peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, kbeldan@baylibre.com, laurent.pinchart@ideasonboard.com
+From: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
+Subject: [PATCH 1/1] ARM: imx5: Add clocks configuration
+Date: Thu, 15 Sep 2016 12:13:22 +0200
+Message-ID: <1473934403-2726-1-git-send-email-fabien.lahoudere@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Kalle Kankare <kalle.kankare@vincit.fi>, Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX
+        / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VG9ueSwKVGhlIGZ1bmN0aW9uYWwgY2hhbmdlcyBhcmUgbm93IG1lcmdlZC4gQnV0IGxldCdzIG5v
-dCBtZXJnZSB0aGlzIGJiYiBkdHMKcGF0Y2gganVzdCB5ZXQsIHNvIHdlIGRvIG5vdCBjYXVzZSBh
-IGNvbmZsaWN0IHdpdGggdGhlIG90aGVyIGJiYiBoZG1pCmF1ZGlvIGR0cyBjaGFuZ2VbMV0gdGhh
-dCBzbGlwcGVkIGludG8gdGRhOTk4eCBwdWxsIHJlcXVlc3QuIFRoZSBwYXRjaApjYW4gdmVyeSB3
-ZWxsIHdhaXQgdW50aWwgdjQuMTAgaWYgbmVlZGVkLgoKSG93ZXZlciwgdGhlIG90aGVyIHRocmVl
-IGR0cyBwYXRjaGVzWzJdIGNhbiBiZSBtZXJnZWQuIFNob3VsZCBJIHJlYmFzZQp0aG9zZSBvbiB0
-b3Agb2Ygc29tZSBicmFuY2ggYW5kIHJlc2VuZCB0aGVtPwoKQmVzdCByZWdhcmRzLApKeXJpCgpb
-MV0gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTYt
-QXVndXN0LzExNTI2OS5odG1sCgpbMl0KaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJj
-aGl2ZXMvZHJpLWRldmVsLzIwMTYtU2VwdGVtYmVyLzExNzI4Mi5odG1sCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE2LVNlcHRlbWJlci8xMTcyODMu
-aHRtbApodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAx
-Ni1TZXB0ZW1iZXIvMTE3Mjg0Lmh0bWwKCk9uIDA5LzAxLzE2IDEyOjA5LCBKeXJpIFNhcmhhIHdy
-b3RlOgo+IEFkZCBibHVlLWFuZC1yZWQtd2lyaW5nIC1wcm9wZXJ0eSB0byBMQ0RDIG5vZGUuIEFs
-c28gYWRkcyBjb21tZW50cyBvbgo+IGhvdyB0byBnZXQgc3VwcG9ydCAyNCBiaXQgUkdCIG1vZGUu
-IEFmdGVyIHRoaXMgcGF0Y2ggYW0zMzV4LWJvbmVibGFjawo+IHN1cHBvcnQgUkdCNTY1LCBCR1I4
-ODgsIGFuZCBYQkdSODg4OCBjb2xvciBmb3JtYXRzLiBTZWUgZGV0YWlscyBpbgo+IERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpbGNkYy90aWxjZGMudHh0Lgo+IAo+
-IFRoZSBCQkIgaGFzIHN0cmFpZ2h0IGNvbG9yIHdpcmluZyBmcm9tIGFtMzM1eCB0byB0ZGExOTk4
-OCwgaG93ZXZlciB0aGUKPiB0ZGExOTk4OCBjYW4gYmUgY29uZmlndXJlZCB0byBjcm9zcyB0aGUg
-Ymx1ZSBhbmQgcmVkIHdpcmVzLiBUaGUKPiBjb21tZW50cyBzaG93IGhvdyB0byBkbyB0aGF0IHdp
-dGggdmlkZW8tcG9ydHMgcHJvcGVydHkgb2YgdGRhMTk5ODgKPiBub2RlIGFuZCBob3cgdG8gdGVs
-bCBMQ0RDIHRoYXQgYmx1ZSBhbmQgcmVkIHdpcmVzIGFyZSBjcm9zc2VkLCB3aXRoCj4gYmx1ZS1h
-bmQtcmVkLXdpcmluZyBMQ0RDIG5vZGUgcHJvcGVydHkuIFRoaXMgY2hhbmdlcyBzdXBwb3J0ZWQg
-Y29sb3IKPiBmb3JtYXRzIGZyb20gMTYgYml0IFJHQiBhbmQgMjQgYml0IEJHUiB0byAxNiBiaXQg
-QkdSIGFuZCAyNCBiaXQgUkdCLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEp5cmkgU2FyaGEgPGpzYXJo
-YUB0aS5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1ib25lYmxhY2suZHRz
-IHwgMTEgKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKykKPiAK
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYW0zMzV4LWJvbmVibGFjay5kdHMgYi9h
-cmNoL2FybS9ib290L2R0cy9hbTMzNXgtYm9uZWJsYWNrLmR0cwo+IGluZGV4IDUyODU1OWIuLmEz
-MmQ3M2EgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYW0zMzV4LWJvbmVibGFjay5k
-dHMKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9hbTMzNXgtYm9uZWJsYWNrLmR0cwo+IEBAIC05
-MCw2ICs5MCwxNCBAQAo+ICAKPiAgJmxjZGMgewo+ICAJc3RhdHVzID0gIm9rYXkiOwo+ICsKPiAr
-CS8qIElmIHlvdSB3YW50IHRvIGdldCAyNCBiaXQgUkdCIGFuZCAxNiBCR1IgbW9kZSBpbnN0ZWFk
-IG9mCj4gKwkgKiBjdXJyZW50IDE2IGJpdCBSR0IgYW5kIDI0IEJHUiBtb2Rlcywgc2V0IHRoZSBw
-cm9wZXR5Cj4gKwkgKiBiZWxvdyB0byAiY3Jvc3NlZCIgYW5kIHVuY29tbWVudCB0aGUgdmlkZW8t
-cG9ydHMgLXByb3BlcnR5Cj4gKwkgKiBpbiB0ZGExOTk4OCBub2RlLgo+ICsJICovCj4gKwlibHVl
-LWFuZC1yZWQtd2lyaW5nID0gInN0cmFpZ2h0IjsKPiArCj4gIAlwb3J0IHsKPiAgCQlsY2RjXzA6
-IGVuZHBvaW50QDAgewo+ICAJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfMD47Cj4gQEAgLTEw
-Niw2ICsxMTQsOSBAQAo+ICAJCXBpbmN0cmwtMCA9IDwmbnhwX2hkbWlfYm9uZWx0X3BpbnM+Owo+
-ICAJCXBpbmN0cmwtMSA9IDwmbnhwX2hkbWlfYm9uZWx0X29mZl9waW5zPjsKPiAgCj4gKwkJLyog
-Q29udmVydCAyNGJpdCBCR1IgdG8gUkdCLCBlLmcuIGNyb3NzIHJlZCBhbmQgYmx1ZSB3aXJpbmcg
-Ki8KPiArCQkvKiB2aWRlby1wb3J0cyA9IDwweDIzNDUwMT47ICovCj4gKwo+ICAJCSNzb3VuZC1k
-YWktY2VsbHMgPSA8MD47Cj4gIAkJYXVkaW8tcG9ydHMgPSA8CVREQTk5OHhfSTJTCTB4MDM+Owo+
-ICAKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+From: Kalle Kankare <kalle.kankare@vincit.fi>
+
+Add clocks configuration for CSI, FIRI and IEEE1588.
+
+Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
+---
+ drivers/clk/imx/clk-imx51-imx53.c      | 20 ++++++++++++++++++++
+ include/dt-bindings/clock/imx5-clock.h | 15 ++++++++++++++-
+ 2 files changed, 34 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/clk/imx/clk-imx51-imx53.c b/drivers/clk/imx/clk-imx51-imx53.c
+index 29d4c44..1e3c9ea 100644
+--- a/drivers/clk/imx/clk-imx51-imx53.c
++++ b/drivers/clk/imx/clk-imx51-imx53.c
+@@ -126,6 +126,7 @@ static const char *spdif0_com_sel[] = { "spdif0_podf", "ssi1_root_gate", };
+ static const char *mx51_spdif1_com_sel[] = { "spdif1_podf", "ssi2_root_gate", };
+ static const char *step_sels[] = { "lp_apm", };
+ static const char *cpu_podf_sels[] = { "pll1_sw", "step_sel" };
++static const char *ieee1588_sels[] = { "pll3_sw", "pll4_sw", "dummy" /* usbphy2_clk */, "dummy" /* fec_phy_clk */ };
+ 
+ static struct clk *clk[IMX5_CLK_END];
+ static struct clk_onecell_data clk_data;
+@@ -543,6 +544,25 @@ static void __init mx53_clocks_init(struct device_node *np)
+ 	clk[IMX5_CLK_I2C3_GATE]		= imx_clk_gate2("i2c3_gate", "per_root", MXC_CCM_CCGR1, 22);
+ 	clk[IMX5_CLK_SATA_GATE]		= imx_clk_gate2("sata_gate", "ipg", MXC_CCM_CCGR4, 2);
+ 
++	clk[IMX5_CLK_FIRI_SEL]		= imx_clk_mux("firi_sel", MXC_CCM_CSCMR2, 12, 2,
++						standard_pll_sel, ARRAY_SIZE(standard_pll_sel));
++	clk[IMX5_CLK_FIRI_PRED]		= imx_clk_divider("firi_pred", "firi_sel", MXC_CCM_CSCDR3, 6, 3);
++	clk[IMX5_CLK_FIRI_PODF]		= imx_clk_divider("firi_podf", "firi_pred", MXC_CCM_CSCDR3, 0, 6);
++	clk[IMX5_CLK_FIRI_SERIAL_GATE]	= imx_clk_gate2("firi_serial_gate", "firi_podf", MXC_CCM_CCGR1, 28);
++	clk[IMX5_CLK_FIRI_IPG_GATE]	= imx_clk_gate2("firi_ipg_gate", "ipg", MXC_CCM_CCGR1, 26);
++
++	clk[IMX5_CLK_CSI0_MCLK1_SEL]	= imx_clk_mux("csi0_mclk1_sel", MXC_CCM_CSCMR2, 22, 2,
++						standard_pll_sel, ARRAY_SIZE(standard_pll_sel));
++	clk[IMX5_CLK_CSI0_MCLK1_PRED]	= imx_clk_divider("csi0_mclk1_pred", "csi0_mclk1_sel", MXC_CCM_CSCDR4, 6, 3);
++	clk[IMX5_CLK_CSI0_MCLK1_PODF]	= imx_clk_divider("csi0_mclk1_podf", "csi0_mclk1_pred", MXC_CCM_CSCDR4, 0, 6);
++	clk[IMX5_CLK_CSI0_MCLK1_GATE]	= imx_clk_gate2("csi0_mclk1_serial_gate", "csi0_mclk1_podf", MXC_CCM_CCGR6, 4);
++
++	clk[IMX5_CLK_IEEE1588_SEL]	= imx_clk_mux("ieee1588_sel", MXC_CCM_CSCMR2, 14, 2,
++						ieee1588_sels, ARRAY_SIZE(ieee1588_sels));
++	clk[IMX5_CLK_IEEE1588_PRED]	= imx_clk_divider("ieee1588_pred", "ieee1588_sel", MXC_CCM_CSCDR2, 6, 3);
++	clk[IMX5_CLK_IEEE1588_PODF]	= imx_clk_divider("ieee1588_podf", "ieee1588_pred", MXC_CCM_CSCDR2, 0, 6);
++	clk[IMX5_CLK_IEEE1588_GATE]	= imx_clk_gate2("ieee1588_serial_gate", "ieee1588_podf", MXC_CCM_CCGR7, 6);
++
+ 	clk[IMX5_CLK_CKO1_SEL]		= imx_clk_mux("cko1_sel", MXC_CCM_CCOSR, 0, 4,
+ 						mx53_cko1_sel, ARRAY_SIZE(mx53_cko1_sel));
+ 	clk[IMX5_CLK_CKO1_PODF]		= imx_clk_divider("cko1_podf", "cko1_sel", MXC_CCM_CCOSR, 4, 3);
+diff --git a/include/dt-bindings/clock/imx5-clock.h b/include/dt-bindings/clock/imx5-clock.h
+index f4b7478..d382fc7 100644
+--- a/include/dt-bindings/clock/imx5-clock.h
++++ b/include/dt-bindings/clock/imx5-clock.h
+@@ -201,6 +201,19 @@
+ #define IMX5_CLK_STEP_SEL		189
+ #define IMX5_CLK_CPU_PODF_SEL		190
+ #define IMX5_CLK_ARM			191
+-#define IMX5_CLK_END			192
++#define IMX5_CLK_FIRI_PRED		192
++#define IMX5_CLK_FIRI_SEL		193
++#define IMX5_CLK_FIRI_PODF		194
++#define IMX5_CLK_FIRI_SERIAL_GATE	195
++#define IMX5_CLK_FIRI_IPG_GATE		196
++#define IMX5_CLK_CSI0_MCLK1_PRED	197
++#define IMX5_CLK_CSI0_MCLK1_SEL		198
++#define IMX5_CLK_CSI0_MCLK1_PODF	199
++#define IMX5_CLK_CSI0_MCLK1_GATE	200
++#define IMX5_CLK_IEEE1588_PRED		201
++#define IMX5_CLK_IEEE1588_SEL		202
++#define IMX5_CLK_IEEE1588_PODF		203
++#define IMX5_CLK_IEEE1588_GATE		204
++#define IMX5_CLK_END			205
+ 
+ #endif /* __DT_BINDINGS_CLOCK_IMX5_H */
+-- 
+2.1.4
