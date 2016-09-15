@@ -1,464 +1,231 @@
-From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 03/11] serial: stm32: header file creation
-Date: Thu, 15 Sep 2016 18:42:35 +0200
-Message-ID: <1473957763-30629-4-git-send-email-alexandre.torgue@st.com>
-References: <1473957763-30629-1-git-send-email-alexandre.torgue@st.com>
+From: Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 00/22] Generic DT bindings for PCI IOMMUs and ARM SMMU
+Date: Thu, 15 Sep 2016 18:46:47 +0200
+Message-ID: <1838c65d-5944-8946-781c-b420bea1acab@redhat.com>
+References: <cover.1473695704.git.robin.murphy@arm.com>
+ <11ebd81e-2ea5-5ff3-35b3-be95f03e05bd@redhat.com>
+ <d03ea5e7-59f1-8b49-4ba2-d05fc2030ebc@arm.com>
+ <04a0a682-4fdc-8d62-57cd-efdf730582c6@redhat.com>
+ <c2645c5e-edd3-2b31-4311-0ca621a915e2@arm.com>
+ <4d87d5f2-0350-b5f8-ffc3-4e9377cf1f87@redhat.com>
+ <fc4ce398-4eeb-f2ca-b964-e9f466be79c4@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473957763-30629-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <fc4ce398-4eeb-f2ca-b964-e9f466be79c4-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, gerald.baeza-qxv4g6HH51o@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Hi Robin,
+On 15/09/2016 12:15, Robin Murphy wrote:
+> On 15/09/16 10:29, Auger Eric wrote:
+>> Hi Robin,
+>>
+>> On 14/09/2016 14:53, Robin Murphy wrote:
+>>> On 14/09/16 13:32, Auger Eric wrote:
+>>>> Hi,
+>>>> On 14/09/2016 12:35, Robin Murphy wrote:
+>>>>> On 14/09/16 09:41, Auger Eric wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 12/09/2016 18:13, Robin Murphy wrote:
+>>>>>>> Hi all,
+>>>>>>>
+>>>>>>> To any more confusing fixups and crazily numbered extra patches, here's
+>>>>>>> a quick v7 with everything rebased into the right order. The significant
+>>>>>>> change this time is to implement iommu_fwspec properly from the start,
+>>>>>>> which ends up being far simpler and more robust than faffing about
+>>>>>>> introducing it somewhere 'less intrusive' to move toward core code later.
+>>>>>>>
+>>>>>>> New branch in the logical place:
+>>>>>>>
+>>>>>>> git://linux-arm.org/linux-rm iommu/generic-v7
+>>>>>>
+>>>>>> For information, as discussed privately with Robin I experience some
+>>>>>> regressions with the former and now deprecated dt description.
+>>>>>>
+>>>>>> on my AMD Overdrive board and my old dt description I now only see a
+>>>>>> single group:
+>>>>>>
+>>>>>> /sys/kernel/iommu_groups/
+>>>>>> /sys/kernel/iommu_groups/0
+>>>>>> /sys/kernel/iommu_groups/0/devices
+>>>>>> /sys/kernel/iommu_groups/0/devices/e0700000.xgmac
+>>>>>>
+>>>>>> whereas I formerly see
+>>>>>>
+>>>>>> /sys/kernel/iommu_groups/
+>>>>>> /sys/kernel/iommu_groups/3
+>>>>>> /sys/kernel/iommu_groups/3/devices
+>>>>>> /sys/kernel/iommu_groups/3/devices/0000:00:00.0
+>>>>>> /sys/kernel/iommu_groups/1
+>>>>>> /sys/kernel/iommu_groups/1/devices
+>>>>>> /sys/kernel/iommu_groups/1/devices/e0700000.xgmac
+>>>>>> /sys/kernel/iommu_groups/4
+>>>>>> /sys/kernel/iommu_groups/4/devices
+>>>>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.2
+>>>>>> /sys/kernel/iommu_groups/4/devices/0000:01:00.1
+>>>>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.0
+>>>>>> /sys/kernel/iommu_groups/4/devices/0000:01:00.0
+>>>>>> /sys/kernel/iommu_groups/2
+>>>>>> /sys/kernel/iommu_groups/2/devices
+>>>>>> /sys/kernel/iommu_groups/2/devices/e0900000.xgmac
+>>>>>> /sys/kernel/iommu_groups/0
+>>>>>> /sys/kernel/iommu_groups/0/devices
+>>>>>> /sys/kernel/iommu_groups/0/devices/f0000000.pcie
+>>>>>>
+>>>>>> This is the group topology without ACS override. Applying the non
+>>>>>> upstreamed "pci: Enable overrides for missing ACS capabilities" I used
+>>>>>> to see separate groups for each PCIe components. Now I don't see any
+>>>>>> difference with and without ACS override.
+>>>>>
+>>>>> OK, having reproduced on my Juno, the problem looks to be that
+>>>>> of_for_each_phandle() leaves err set to -ENOENT after successfully
+>>>>> walking a phandle list, which makes __find_legacy_master_phandle()
+>>>>> always bail out after the first SMMU.
+>>>>>
+>>>>> Can you confirm that the following diff fixes things for you?
+>>>>
+>>>> Well it improves but there are still differences in the group topology.
+>>>> The PFs now are in group 0.
+>>>>
+>>>> root@trusty:~# lspci -nk
+>>>> 00:00.0 0600: 1022:1a00
+>>>>         Subsystem: 1022:1a00
+>>>> 00:02.0 0600: 1022:1a01
+>>>> 00:02.2 0604: 1022:1a02
+>>>>         Kernel driver in use: pcieport
+>>>> 01:00.0 0200: 8086:1521 (rev 01)
+>>>>         Subsystem: 8086:0002
+>>>>         Kernel driver in use: igb
+>>>> 01:00.1 0200: 8086:1521 (rev 01)
+>>>>         Subsystem: 8086:0002
+>>>>         Kernel driver in use: igb
+>>>>
+>>>>
+>>>> with your series + fix:
+>>>> /sys/kernel/iommu_groups/
+>>>> /sys/kernel/iommu_groups/3
+>>>> /sys/kernel/iommu_groups/3/devices
+>>>> /sys/kernel/iommu_groups/3/devices/0000:00:00.0
+>>>> /sys/kernel/iommu_groups/1
+>>>> /sys/kernel/iommu_groups/1/devices
+>>>> /sys/kernel/iommu_groups/1/devices/e0700000.xgmac
+>>>> /sys/kernel/iommu_groups/4
+>>>> /sys/kernel/iommu_groups/4/devices
+>>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.2
+>>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.0
+>>>> /sys/kernel/iommu_groups/2
+>>>> /sys/kernel/iommu_groups/2/devices
+>>>> /sys/kernel/iommu_groups/2/devices/e0900000.xgmac
+>>>> /sys/kernel/iommu_groups/0
+>>>> /sys/kernel/iommu_groups/0/devices
+>>>> /sys/kernel/iommu_groups/0/devices/0000:01:00.1
+>>>> /sys/kernel/iommu_groups/0/devices/f0000000.pcie
+>>>> /sys/kernel/iommu_groups/0/devices/0000:01:00.0
+>>>>
+>>>> Before (4.8-rc5):
+>>>>
+>>>> /sys/kernel/iommu_groups/
+>>>> /sys/kernel/iommu_groups/3
+>>>> /sys/kernel/iommu_groups/3/devices
+>>>> /sys/kernel/iommu_groups/3/devices/0000:00:00.0
+>>>> /sys/kernel/iommu_groups/1
+>>>> /sys/kernel/iommu_groups/1/devices
+>>>> /sys/kernel/iommu_groups/1/devices/e0700000.xgmac
+>>>> /sys/kernel/iommu_groups/4
+>>>> /sys/kernel/iommu_groups/4/devices
+>>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.2
+>>>> /sys/kernel/iommu_groups/4/devices/0000:01:00.1
+>>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.0
+>>>> /sys/kernel/iommu_groups/4/devices/0000:01:00.0
+>>>> /sys/kernel/iommu_groups/2
+>>>> /sys/kernel/iommu_groups/2/devices
+>>>> /sys/kernel/iommu_groups/2/devices/e0900000.xgmac
+>>>> /sys/kernel/iommu_groups/0
+>>>> /sys/kernel/iommu_groups/0/devices
+>>>> /sys/kernel/iommu_groups/0/devices/f0000000.pcie
+>>>
+>>> Your DT claims that f0000000.pcie (i.e. the "platform device" side of
+>>> the host controller) owns the IDs 0x100 0x101 0x102 0x103 0x200 0x201
+>>> 0x202 0x203 0x300 0x301 0x302 0x303 0x400 0x401 0x402 0x403. Thus when
+>>> new devices (the PCI PFs) come along *also* claiming those IDs (via the
+>>> RID-to-SID assumption), we now detect the aliasing and assign them to
+>>> the existing group.
+>>>
+>>> The only way that DT worked without SMR conflicts before is that
+>>> f0000000.pcie wasn't actually getting attached to a domain, thus wasn't
+>>> getting SMRs allocated (ISTR you _did_ get conflicts back when we first
+>>> tried to switch on default domains; that was probably the reason).
+>>
+>> Thanks for your explanations. meanwhile I converted the overdrive dt to
+>> the new syntax and it works properly.
+> 
+> Yay!
+> 
+>> However I noticed there are MSI frame iommu mapping although the
+>> device's domain is the default one. There is no check currently in
+>> 21/22. I guess this isn't needed?
+> 
+> Au contraire ;)
+;-)
 
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index e7ffd01..6236deb 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -28,214 +28,7 @@
- #include <linux/serial_core.h>
- #include <linux/clk.h>
- 
--#define DRIVER_NAME "stm32-usart"
--
--struct stm32_usart_offsets {
--	u8 cr1;
--	u8 cr2;
--	u8 cr3;
--	u8 brr;
--	u8 gtpr;
--	u8 rtor;
--	u8 rqr;
--	u8 isr;
--	u8 icr;
--	u8 rdr;
--	u8 tdr;
--};
--
--struct stm32_usart_config {
--	u8 uart_enable_bit; /* USART_CR1_UE */
--	bool has_7bits_data;
--};
--
--struct stm32_usart_info {
--	struct stm32_usart_offsets ofs;
--	struct stm32_usart_config cfg;
--};
--
--#define UNDEF_REG ~0
--
--/* Register offsets */
--struct stm32_usart_info stm32f4_info = {
--	.ofs = {
--		.isr	= 0x00,
--		.rdr	= 0x04,
--		.tdr	= 0x04,
--		.brr	= 0x08,
--		.cr1	= 0x0c,
--		.cr2	= 0x10,
--		.cr3	= 0x14,
--		.gtpr	= 0x18,
--		.rtor	= UNDEF_REG,
--		.rqr	= UNDEF_REG,
--		.icr	= UNDEF_REG,
--	},
--	.cfg = {
--		.uart_enable_bit = 13,
--		.has_7bits_data = false,
--	}
--};
--
--struct stm32_usart_info stm32f7_info = {
--	.ofs = {
--		.cr1	= 0x00,
--		.cr2	= 0x04,
--		.cr3	= 0x08,
--		.brr	= 0x0c,
--		.gtpr	= 0x10,
--		.rtor	= 0x14,
--		.rqr	= 0x18,
--		.isr	= 0x1c,
--		.icr	= 0x20,
--		.rdr	= 0x24,
--		.tdr	= 0x28,
--	},
--	.cfg = {
--		.uart_enable_bit = 0,
--		.has_7bits_data = true,
--	}
--};
--
--/* USART_SR (F4) / USART_ISR (F7) */
--#define USART_SR_PE		BIT(0)
--#define USART_SR_FE		BIT(1)
--#define USART_SR_NF		BIT(2)
--#define USART_SR_ORE		BIT(3)
--#define USART_SR_IDLE		BIT(4)
--#define USART_SR_RXNE		BIT(5)
--#define USART_SR_TC		BIT(6)
--#define USART_SR_TXE		BIT(7)
--#define USART_SR_LBD		BIT(8)
--#define USART_SR_CTSIF		BIT(9)
--#define USART_SR_CTS		BIT(10)		/* F7 */
--#define USART_SR_RTOF		BIT(11)		/* F7 */
--#define USART_SR_EOBF		BIT(12)		/* F7 */
--#define USART_SR_ABRE		BIT(14)		/* F7 */
--#define USART_SR_ABRF		BIT(15)		/* F7 */
--#define USART_SR_BUSY		BIT(16)		/* F7 */
--#define USART_SR_CMF		BIT(17)		/* F7 */
--#define USART_SR_SBKF		BIT(18)		/* F7 */
--#define USART_SR_TEACK		BIT(21)		/* F7 */
--#define USART_SR_ERR_MASK	(USART_SR_LBD | USART_SR_ORE | \
--				 USART_SR_FE | USART_SR_PE)
--/* Dummy bits */
--#define USART_SR_DUMMY_RX	BIT(16)
--
--/* USART_DR */
--#define USART_DR_MASK		GENMASK(8, 0)
--
--/* USART_BRR */
--#define USART_BRR_DIV_F_MASK	GENMASK(3, 0)
--#define USART_BRR_DIV_M_MASK	GENMASK(15, 4)
--#define USART_BRR_DIV_M_SHIFT	4
--
--/* USART_CR1 */
--#define USART_CR1_SBK		BIT(0)
--#define USART_CR1_RWU		BIT(1)		/* F4 */
--#define USART_CR1_RE		BIT(2)
--#define USART_CR1_TE		BIT(3)
--#define USART_CR1_IDLEIE	BIT(4)
--#define USART_CR1_RXNEIE	BIT(5)
--#define USART_CR1_TCIE		BIT(6)
--#define USART_CR1_TXEIE		BIT(7)
--#define USART_CR1_PEIE		BIT(8)
--#define USART_CR1_PS		BIT(9)
--#define USART_CR1_PCE		BIT(10)
--#define USART_CR1_WAKE		BIT(11)
--#define USART_CR1_M		BIT(12)
--#define USART_CR1_M0		BIT(12)		/* F7 */
--#define USART_CR1_MME		BIT(13)		/* F7 */
--#define USART_CR1_CMIE		BIT(14)		/* F7 */
--#define USART_CR1_OVER8		BIT(15)
--#define USART_CR1_DEDT_MASK	GENMASK(20, 16)	/* F7 */
--#define USART_CR1_DEAT_MASK	GENMASK(25, 21)	/* F7 */
--#define USART_CR1_RTOIE		BIT(26)		/* F7 */
--#define USART_CR1_EOBIE		BIT(27)		/* F7 */
--#define USART_CR1_M1		BIT(28)		/* F7 */
--#define USART_CR1_IE_MASK	(GENMASK(8, 4) | BIT(14) | BIT(26) | BIT(27))
--
--/* USART_CR2 */
--#define USART_CR2_ADD_MASK	GENMASK(3, 0)	/* F4 */
--#define USART_CR2_ADDM7		BIT(4)		/* F7 */
--#define USART_CR2_LBDL		BIT(5)
--#define USART_CR2_LBDIE		BIT(6)
--#define USART_CR2_LBCL		BIT(8)
--#define USART_CR2_CPHA		BIT(9)
--#define USART_CR2_CPOL		BIT(10)
--#define USART_CR2_CLKEN		BIT(11)
--#define USART_CR2_STOP_2B	BIT(13)
--#define USART_CR2_STOP_MASK	GENMASK(13, 12)
--#define USART_CR2_LINEN		BIT(14)
--#define USART_CR2_SWAP		BIT(15)		/* F7 */
--#define USART_CR2_RXINV		BIT(16)		/* F7 */
--#define USART_CR2_TXINV		BIT(17)		/* F7 */
--#define USART_CR2_DATAINV	BIT(18)		/* F7 */
--#define USART_CR2_MSBFIRST	BIT(19)		/* F7 */
--#define USART_CR2_ABREN		BIT(20)		/* F7 */
--#define USART_CR2_ABRMOD_MASK	GENMASK(22, 21)	/* F7 */
--#define USART_CR2_RTOEN		BIT(23)		/* F7 */
--#define USART_CR2_ADD_F7_MASK	GENMASK(31, 24)	/* F7 */
--
--/* USART_CR3 */
--#define USART_CR3_EIE		BIT(0)
--#define USART_CR3_IREN		BIT(1)
--#define USART_CR3_IRLP		BIT(2)
--#define USART_CR3_HDSEL		BIT(3)
--#define USART_CR3_NACK		BIT(4)
--#define USART_CR3_SCEN		BIT(5)
--#define USART_CR3_DMAR		BIT(6)
--#define USART_CR3_DMAT		BIT(7)
--#define USART_CR3_RTSE		BIT(8)
--#define USART_CR3_CTSE		BIT(9)
--#define USART_CR3_CTSIE		BIT(10)
--#define USART_CR3_ONEBIT	BIT(11)
--#define USART_CR3_OVRDIS	BIT(12)		/* F7 */
--#define USART_CR3_DDRE		BIT(13)		/* F7 */
--#define USART_CR3_DEM		BIT(14)		/* F7 */
--#define USART_CR3_DEP		BIT(15)		/* F7 */
--#define USART_CR3_SCARCNT_MASK	GENMASK(19, 17)	/* F7 */
--
--/* USART_GTPR */
--#define USART_GTPR_PSC_MASK	GENMASK(7, 0)
--#define USART_GTPR_GT_MASK	GENMASK(15, 8)
--
--/* USART_RTOR */
--#define USART_RTOR_RTO_MASK	GENMASK(23, 0)	/* F7 */
--#define USART_RTOR_BLEN_MASK	GENMASK(31, 24)	/* F7 */
--
--/* USART_RQR */
--#define USART_RQR_ABRRQ		BIT(0)		/* F7 */
--#define USART_RQR_SBKRQ		BIT(1)		/* F7 */
--#define USART_RQR_MMRQ		BIT(2)		/* F7 */
--#define USART_RQR_RXFRQ		BIT(3)		/* F7 */
--#define USART_RQR_TXFRQ		BIT(4)		/* F7 */
--
--/* USART_ICR */
--#define USART_ICR_PECF		BIT(0)		/* F7 */
--#define USART_ICR_FFECF		BIT(1)		/* F7 */
--#define USART_ICR_NCF		BIT(2)		/* F7 */
--#define USART_ICR_ORECF		BIT(3)		/* F7 */
--#define USART_ICR_IDLECF	BIT(4)		/* F7 */
--#define USART_ICR_TCCF		BIT(6)		/* F7 */
--#define USART_ICR_LBDCF		BIT(8)		/* F7 */
--#define USART_ICR_CTSCF		BIT(9)		/* F7 */
--#define USART_ICR_RTOCF		BIT(11)		/* F7 */
--#define USART_ICR_EOBCF		BIT(12)		/* F7 */
--#define USART_ICR_CMCF		BIT(17)		/* F7 */
--
--#define STM32_SERIAL_NAME "ttyS"
--#define STM32_MAX_PORTS 6
--
--struct stm32_port {
--	struct uart_port port;
--	struct clk *clk;
--	struct stm32_usart_info *info;
--	bool hw_flow_control;
--};
--
--static struct stm32_port stm32_ports[STM32_MAX_PORTS];
--static struct uart_driver stm32_usart_driver;
-+#include "stm32-usart.h"
- 
- static void stm32_stop_tx(struct uart_port *port);
- 
-diff --git a/drivers/tty/serial/stm32-usart.h b/drivers/tty/serial/stm32-usart.h
-new file mode 100644
-index 0000000..75f8388
---- /dev/null
-+++ b/drivers/tty/serial/stm32-usart.h
-@@ -0,0 +1,215 @@
-+/*
-+ * Copyright (C) Maxime Coquelin 2015
-+ * Authors:  Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *	     Gerald Baeza <gerald_baeza-Qt13gs6zZMY@public.gmane.org>
-+ * License terms:  GNU General Public License (GPL), version 2
-+ */
-+
-+#define DRIVER_NAME "stm32-usart"
-+
-+struct stm32_usart_offsets {
-+	u8 cr1;
-+	u8 cr2;
-+	u8 cr3;
-+	u8 brr;
-+	u8 gtpr;
-+	u8 rtor;
-+	u8 rqr;
-+	u8 isr;
-+	u8 icr;
-+	u8 rdr;
-+	u8 tdr;
-+};
-+
-+struct stm32_usart_config {
-+	u8 uart_enable_bit; /* USART_CR1_UE */
-+	bool has_7bits_data;
-+};
-+
-+struct stm32_usart_info {
-+	struct stm32_usart_offsets ofs;
-+	struct stm32_usart_config cfg;
-+};
-+
-+#define UNDEF_REG ~0
-+
-+/* Register offsets */
-+struct stm32_usart_info stm32f4_info = {
-+	.ofs = {
-+		.isr	= 0x00,
-+		.rdr	= 0x04,
-+		.tdr	= 0x04,
-+		.brr	= 0x08,
-+		.cr1	= 0x0c,
-+		.cr2	= 0x10,
-+		.cr3	= 0x14,
-+		.gtpr	= 0x18,
-+		.rtor	= UNDEF_REG,
-+		.rqr	= UNDEF_REG,
-+		.icr	= UNDEF_REG,
-+	},
-+	.cfg = {
-+		.uart_enable_bit = 13,
-+		.has_7bits_data = false,
-+	}
-+};
-+
-+struct stm32_usart_info stm32f7_info = {
-+	.ofs = {
-+		.cr1	= 0x00,
-+		.cr2	= 0x04,
-+		.cr3	= 0x08,
-+		.brr	= 0x0c,
-+		.gtpr	= 0x10,
-+		.rtor	= 0x14,
-+		.rqr	= 0x18,
-+		.isr	= 0x1c,
-+		.icr	= 0x20,
-+		.rdr	= 0x24,
-+		.tdr	= 0x28,
-+	},
-+	.cfg = {
-+		.uart_enable_bit = 0,
-+		.has_7bits_data = true,
-+	}
-+};
-+
-+/* USART_SR (F4) / USART_ISR (F7) */
-+#define USART_SR_PE		BIT(0)
-+#define USART_SR_FE		BIT(1)
-+#define USART_SR_NF		BIT(2)
-+#define USART_SR_ORE		BIT(3)
-+#define USART_SR_IDLE		BIT(4)
-+#define USART_SR_RXNE		BIT(5)
-+#define USART_SR_TC		BIT(6)
-+#define USART_SR_TXE		BIT(7)
-+#define USART_SR_LBD		BIT(8)
-+#define USART_SR_CTSIF		BIT(9)
-+#define USART_SR_CTS		BIT(10)		/* F7 */
-+#define USART_SR_RTOF		BIT(11)		/* F7 */
-+#define USART_SR_EOBF		BIT(12)		/* F7 */
-+#define USART_SR_ABRE		BIT(14)		/* F7 */
-+#define USART_SR_ABRF		BIT(15)		/* F7 */
-+#define USART_SR_BUSY		BIT(16)		/* F7 */
-+#define USART_SR_CMF		BIT(17)		/* F7 */
-+#define USART_SR_SBKF		BIT(18)		/* F7 */
-+#define USART_SR_TEACK		BIT(21)		/* F7 */
-+#define USART_SR_ERR_MASK	(USART_SR_LBD | USART_SR_ORE | \
-+				 USART_SR_FE | USART_SR_PE)
-+/* Dummy bits */
-+#define USART_SR_DUMMY_RX	BIT(16)
-+
-+/* USART_DR */
-+#define USART_DR_MASK		GENMASK(8, 0)
-+
-+/* USART_BRR */
-+#define USART_BRR_DIV_F_MASK	GENMASK(3, 0)
-+#define USART_BRR_DIV_M_MASK	GENMASK(15, 4)
-+#define USART_BRR_DIV_M_SHIFT	4
-+
-+/* USART_CR1 */
-+#define USART_CR1_SBK		BIT(0)
-+#define USART_CR1_RWU		BIT(1)		/* F4 */
-+#define USART_CR1_RE		BIT(2)
-+#define USART_CR1_TE		BIT(3)
-+#define USART_CR1_IDLEIE	BIT(4)
-+#define USART_CR1_RXNEIE	BIT(5)
-+#define USART_CR1_TCIE		BIT(6)
-+#define USART_CR1_TXEIE		BIT(7)
-+#define USART_CR1_PEIE		BIT(8)
-+#define USART_CR1_PS		BIT(9)
-+#define USART_CR1_PCE		BIT(10)
-+#define USART_CR1_WAKE		BIT(11)
-+#define USART_CR1_M		BIT(12)
-+#define USART_CR1_M0		BIT(12)		/* F7 */
-+#define USART_CR1_MME		BIT(13)		/* F7 */
-+#define USART_CR1_CMIE		BIT(14)		/* F7 */
-+#define USART_CR1_OVER8		BIT(15)
-+#define USART_CR1_DEDT_MASK	GENMASK(20, 16)	/* F7 */
-+#define USART_CR1_DEAT_MASK	GENMASK(25, 21)	/* F7 */
-+#define USART_CR1_RTOIE		BIT(26)		/* F7 */
-+#define USART_CR1_EOBIE		BIT(27)		/* F7 */
-+#define USART_CR1_M1		BIT(28)		/* F7 */
-+#define USART_CR1_IE_MASK	(GENMASK(8, 4) | BIT(14) | BIT(26) | BIT(27))
-+
-+/* USART_CR2 */
-+#define USART_CR2_ADD_MASK	GENMASK(3, 0)	/* F4 */
-+#define USART_CR2_ADDM7		BIT(4)		/* F7 */
-+#define USART_CR2_LBDL		BIT(5)
-+#define USART_CR2_LBDIE		BIT(6)
-+#define USART_CR2_LBCL		BIT(8)
-+#define USART_CR2_CPHA		BIT(9)
-+#define USART_CR2_CPOL		BIT(10)
-+#define USART_CR2_CLKEN		BIT(11)
-+#define USART_CR2_STOP_2B	BIT(13)
-+#define USART_CR2_STOP_MASK	GENMASK(13, 12)
-+#define USART_CR2_LINEN		BIT(14)
-+#define USART_CR2_SWAP		BIT(15)		/* F7 */
-+#define USART_CR2_RXINV		BIT(16)		/* F7 */
-+#define USART_CR2_TXINV		BIT(17)		/* F7 */
-+#define USART_CR2_DATAINV	BIT(18)		/* F7 */
-+#define USART_CR2_MSBFIRST	BIT(19)		/* F7 */
-+#define USART_CR2_ABREN		BIT(20)		/* F7 */
-+#define USART_CR2_ABRMOD_MASK	GENMASK(22, 21)	/* F7 */
-+#define USART_CR2_RTOEN		BIT(23)		/* F7 */
-+#define USART_CR2_ADD_F7_MASK	GENMASK(31, 24)	/* F7 */
-+
-+/* USART_CR3 */
-+#define USART_CR3_EIE		BIT(0)
-+#define USART_CR3_IREN		BIT(1)
-+#define USART_CR3_IRLP		BIT(2)
-+#define USART_CR3_HDSEL		BIT(3)
-+#define USART_CR3_NACK		BIT(4)
-+#define USART_CR3_SCEN		BIT(5)
-+#define USART_CR3_DMAR		BIT(6)
-+#define USART_CR3_DMAT		BIT(7)
-+#define USART_CR3_RTSE		BIT(8)
-+#define USART_CR3_CTSE		BIT(9)
-+#define USART_CR3_CTSIE		BIT(10)
-+#define USART_CR3_ONEBIT	BIT(11)
-+#define USART_CR3_OVRDIS	BIT(12)		/* F7 */
-+#define USART_CR3_DDRE		BIT(13)		/* F7 */
-+#define USART_CR3_DEM		BIT(14)		/* F7 */
-+#define USART_CR3_DEP		BIT(15)		/* F7 */
-+#define USART_CR3_SCARCNT_MASK	GENMASK(19, 17)	/* F7 */
-+
-+/* USART_GTPR */
-+#define USART_GTPR_PSC_MASK	GENMASK(7, 0)
-+#define USART_GTPR_GT_MASK	GENMASK(15, 8)
-+
-+/* USART_RTOR */
-+#define USART_RTOR_RTO_MASK	GENMASK(23, 0)	/* F7 */
-+#define USART_RTOR_BLEN_MASK	GENMASK(31, 24)	/* F7 */
-+
-+/* USART_RQR */
-+#define USART_RQR_ABRRQ		BIT(0)		/* F7 */
-+#define USART_RQR_SBKRQ		BIT(1)		/* F7 */
-+#define USART_RQR_MMRQ		BIT(2)		/* F7 */
-+#define USART_RQR_RXFRQ		BIT(3)		/* F7 */
-+#define USART_RQR_TXFRQ		BIT(4)		/* F7 */
-+
-+/* USART_ICR */
-+#define USART_ICR_PECF		BIT(0)		/* F7 */
-+#define USART_ICR_FFECF		BIT(1)		/* F7 */
-+#define USART_ICR_NCF		BIT(2)		/* F7 */
-+#define USART_ICR_ORECF		BIT(3)		/* F7 */
-+#define USART_ICR_IDLECF	BIT(4)		/* F7 */
-+#define USART_ICR_TCCF		BIT(6)		/* F7 */
-+#define USART_ICR_LBDCF		BIT(8)		/* F7 */
-+#define USART_ICR_CTSCF		BIT(9)		/* F7 */
-+#define USART_ICR_RTOCF		BIT(11)		/* F7 */
-+#define USART_ICR_EOBCF		BIT(12)		/* F7 */
-+#define USART_ICR_CMCF		BIT(17)		/* F7 */
-+
-+#define STM32_SERIAL_NAME "ttyS"
-+#define STM32_MAX_PORTS 6
-+
-+struct stm32_port {
-+	struct uart_port port;
-+	struct clk *clk;
-+	struct stm32_usart_info *info;
-+	bool hw_flow_control;
-+};
-+
-+static struct stm32_port stm32_ports[STM32_MAX_PORTS];
-+static struct uart_driver stm32_usart_driver;
--- 
-1.9.1
+ With the generic binding, default domains are properly
+> implemented, i.e. they have translation, so anything not mapped will
+> fault. I *had* to write patch 21 as part of this series, since having
+> DMA ops for PCI devices at the cost of breaking all MSIs was clearly not
+> a viable solution. If you see mappings, then it's because someone is
+> using MSIs - so if you fancy, you can try rewinding back to patch 19 or
+> 20 to watch them get stuck.
+Hum OK; thanks for the explanation. With that implementation however,
+don't we face back the issue we encountered in early stage of default
+domain implementation:
 
+With this sample config (AMD overdrive + I350-T2 + 2VFs per PF) I fill
+the 8 context banks. Whereas practically we didn't need them before?
+
+00:00.0 0600: 1022:1a00
+	Subsystem: 1022:1a00
+00:02.0 0600: 1022:1a01
+00:02.2 0604: 1022:1a02
+	Kernel driver in use: pcieport
+01:00.0 0200: 8086:1521 (rev 01)
+	Subsystem: 8086:0002
+	Kernel driver in use: igb
+01:00.1 0200: 8086:1521 (rev 01)
+	Subsystem: 8086:0002
+	Kernel driver in use: igb
+01:10.0 0200: 8086:1520 (rev 01) -> context 5
+	Subsystem: 8086:0002
+	Kernel driver in use: vfio-pci
+01:10.1 0200: 8086:1520 (rev 01) -> context 7
+	Subsystem: 8086:0002
+	Kernel driver in use: igbvf
+01:10.4 0200: 8086:1520 (rev 01) -> context 6
+	Subsystem: 8086:0002
+	Kernel driver in use: igbvf
+01:10.5 0200: 8086:1520 (rev 01) -> shortage
+	Subsystem: 8086:0002
+	Kernel driver in use: igbvf
+
+So I can't even do passthrough anymore with that config. Is there
+anything wrong in my setup/understanding?
+
+Thanks
+
+Eric
+
+> 
+> Robin.
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
