@@ -1,42 +1,38 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V3 02/10] Documentation: DT: qcom_hidma: correct spelling mistakes
-Date: Thu, 15 Sep 2016 13:22:38 -0400
-Message-ID: <1473960166-30155-3-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V3 04/10] dmaengine: qcom_hidma: configure DMA and MSI for OF
+Date: Thu, 15 Sep 2016 13:22:40 -0400
+Message-ID: <1473960166-30155-5-git-send-email-okaya@codeaurora.org>
 References: <1473960166-30155-1-git-send-email-okaya@codeaurora.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1473960166-30155-1-git-send-email-okaya@codeaurora.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Fix the spelling mistakes and extra and statements in the sentences.
+Configure the DMA bindings for the device tree based firmware.
 
-Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 ---
- Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/qcom/hidma_mgmt.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-index 47bfb5a..f99f642 100644
---- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-+++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-@@ -5,13 +5,13 @@ memcpy and memset capabilities. It has been designed for virtualized
- environments.
- 
- Each HIDMA HW instance consists of multiple DMA channels. These channels
--share the same bandwidth. The bandwidth utilization can be parititioned
-+share the same bandwidth. The bandwidth utilization can be partitioned
- among channels based on the priority and weight assignments.
- 
- There are only two priority levels and 15 weigh assignments possible.
- 
- Other parameters here determine how much of the system bus this HIDMA
--instance can use like maximum read/write request and and number of bytes to
-+instance can use like maximum read/write request and number of bytes to
- read/write in a single burst.
- 
- Main node required properties:
+diff --git a/drivers/dma/qcom/hidma_mgmt.c b/drivers/dma/qcom/hidma_mgmt.c
+index 82f36e4..e8f6b84 100644
+--- a/drivers/dma/qcom/hidma_mgmt.c
++++ b/drivers/dma/qcom/hidma_mgmt.c
+@@ -375,8 +375,11 @@ static int __init hidma_mgmt_of_populate_channels(struct device_node *np)
+ 			ret = PTR_ERR(new_pdev);
+ 			goto out;
+ 		}
++		of_node_get(child);
++		new_pdev->dev.of_node = child;
+ 		of_dma_configure(&new_pdev->dev, child);
+-
++		of_msi_configure(&new_pdev->dev, child);
++		of_node_put(child);
+ 		kfree(res);
+ 		res = NULL;
+ 	}
 -- 
 1.9.1
