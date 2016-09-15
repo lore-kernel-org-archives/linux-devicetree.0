@@ -1,86 +1,186 @@
-From: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
-Subject: [PATCH 1/1] ARM: imx5: Add clocks configuration
-Date: Thu, 15 Sep 2016 12:13:22 +0200
-Message-ID: <1473934403-2726-1-git-send-email-fabien.lahoudere@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Kalle Kankare <kalle.kankare@vincit.fi>, Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX
-        / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 00/22] Generic DT bindings for PCI IOMMUs and ARM SMMU
+Date: Thu, 15 Sep 2016 11:15:37 +0100
+Message-ID: <fc4ce398-4eeb-f2ca-b964-e9f466be79c4@arm.com>
+References: <cover.1473695704.git.robin.murphy@arm.com>
+	<11ebd81e-2ea5-5ff3-35b3-be95f03e05bd@redhat.com>
+	<d03ea5e7-59f1-8b49-4ba2-d05fc2030ebc@arm.com>
+	<04a0a682-4fdc-8d62-57cd-efdf730582c6@redhat.com>
+	<c2645c5e-edd3-2b31-4311-0ca621a915e2@arm.com>
+	<4d87d5f2-0350-b5f8-ffc3-4e9377cf1f87@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <4d87d5f2-0350-b5f8-ffc3-4e9377cf1f87-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kalle Kankare <kalle.kankare@vincit.fi>
+On 15/09/16 10:29, Auger Eric wrote:
+> Hi Robin,
+> 
+> On 14/09/2016 14:53, Robin Murphy wrote:
+>> On 14/09/16 13:32, Auger Eric wrote:
+>>> Hi,
+>>> On 14/09/2016 12:35, Robin Murphy wrote:
+>>>> On 14/09/16 09:41, Auger Eric wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On 12/09/2016 18:13, Robin Murphy wrote:
+>>>>>> Hi all,
+>>>>>>
+>>>>>> To any more confusing fixups and crazily numbered extra patches, here's
+>>>>>> a quick v7 with everything rebased into the right order. The significant
+>>>>>> change this time is to implement iommu_fwspec properly from the start,
+>>>>>> which ends up being far simpler and more robust than faffing about
+>>>>>> introducing it somewhere 'less intrusive' to move toward core code later.
+>>>>>>
+>>>>>> New branch in the logical place:
+>>>>>>
+>>>>>> git://linux-arm.org/linux-rm iommu/generic-v7
+>>>>>
+>>>>> For information, as discussed privately with Robin I experience some
+>>>>> regressions with the former and now deprecated dt description.
+>>>>>
+>>>>> on my AMD Overdrive board and my old dt description I now only see a
+>>>>> single group:
+>>>>>
+>>>>> /sys/kernel/iommu_groups/
+>>>>> /sys/kernel/iommu_groups/0
+>>>>> /sys/kernel/iommu_groups/0/devices
+>>>>> /sys/kernel/iommu_groups/0/devices/e0700000.xgmac
+>>>>>
+>>>>> whereas I formerly see
+>>>>>
+>>>>> /sys/kernel/iommu_groups/
+>>>>> /sys/kernel/iommu_groups/3
+>>>>> /sys/kernel/iommu_groups/3/devices
+>>>>> /sys/kernel/iommu_groups/3/devices/0000:00:00.0
+>>>>> /sys/kernel/iommu_groups/1
+>>>>> /sys/kernel/iommu_groups/1/devices
+>>>>> /sys/kernel/iommu_groups/1/devices/e0700000.xgmac
+>>>>> /sys/kernel/iommu_groups/4
+>>>>> /sys/kernel/iommu_groups/4/devices
+>>>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.2
+>>>>> /sys/kernel/iommu_groups/4/devices/0000:01:00.1
+>>>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.0
+>>>>> /sys/kernel/iommu_groups/4/devices/0000:01:00.0
+>>>>> /sys/kernel/iommu_groups/2
+>>>>> /sys/kernel/iommu_groups/2/devices
+>>>>> /sys/kernel/iommu_groups/2/devices/e0900000.xgmac
+>>>>> /sys/kernel/iommu_groups/0
+>>>>> /sys/kernel/iommu_groups/0/devices
+>>>>> /sys/kernel/iommu_groups/0/devices/f0000000.pcie
+>>>>>
+>>>>> This is the group topology without ACS override. Applying the non
+>>>>> upstreamed "pci: Enable overrides for missing ACS capabilities" I used
+>>>>> to see separate groups for each PCIe components. Now I don't see any
+>>>>> difference with and without ACS override.
+>>>>
+>>>> OK, having reproduced on my Juno, the problem looks to be that
+>>>> of_for_each_phandle() leaves err set to -ENOENT after successfully
+>>>> walking a phandle list, which makes __find_legacy_master_phandle()
+>>>> always bail out after the first SMMU.
+>>>>
+>>>> Can you confirm that the following diff fixes things for you?
+>>>
+>>> Well it improves but there are still differences in the group topology.
+>>> The PFs now are in group 0.
+>>>
+>>> root@trusty:~# lspci -nk
+>>> 00:00.0 0600: 1022:1a00
+>>>         Subsystem: 1022:1a00
+>>> 00:02.0 0600: 1022:1a01
+>>> 00:02.2 0604: 1022:1a02
+>>>         Kernel driver in use: pcieport
+>>> 01:00.0 0200: 8086:1521 (rev 01)
+>>>         Subsystem: 8086:0002
+>>>         Kernel driver in use: igb
+>>> 01:00.1 0200: 8086:1521 (rev 01)
+>>>         Subsystem: 8086:0002
+>>>         Kernel driver in use: igb
+>>>
+>>>
+>>> with your series + fix:
+>>> /sys/kernel/iommu_groups/
+>>> /sys/kernel/iommu_groups/3
+>>> /sys/kernel/iommu_groups/3/devices
+>>> /sys/kernel/iommu_groups/3/devices/0000:00:00.0
+>>> /sys/kernel/iommu_groups/1
+>>> /sys/kernel/iommu_groups/1/devices
+>>> /sys/kernel/iommu_groups/1/devices/e0700000.xgmac
+>>> /sys/kernel/iommu_groups/4
+>>> /sys/kernel/iommu_groups/4/devices
+>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.2
+>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.0
+>>> /sys/kernel/iommu_groups/2
+>>> /sys/kernel/iommu_groups/2/devices
+>>> /sys/kernel/iommu_groups/2/devices/e0900000.xgmac
+>>> /sys/kernel/iommu_groups/0
+>>> /sys/kernel/iommu_groups/0/devices
+>>> /sys/kernel/iommu_groups/0/devices/0000:01:00.1
+>>> /sys/kernel/iommu_groups/0/devices/f0000000.pcie
+>>> /sys/kernel/iommu_groups/0/devices/0000:01:00.0
+>>>
+>>> Before (4.8-rc5):
+>>>
+>>> /sys/kernel/iommu_groups/
+>>> /sys/kernel/iommu_groups/3
+>>> /sys/kernel/iommu_groups/3/devices
+>>> /sys/kernel/iommu_groups/3/devices/0000:00:00.0
+>>> /sys/kernel/iommu_groups/1
+>>> /sys/kernel/iommu_groups/1/devices
+>>> /sys/kernel/iommu_groups/1/devices/e0700000.xgmac
+>>> /sys/kernel/iommu_groups/4
+>>> /sys/kernel/iommu_groups/4/devices
+>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.2
+>>> /sys/kernel/iommu_groups/4/devices/0000:01:00.1
+>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.0
+>>> /sys/kernel/iommu_groups/4/devices/0000:01:00.0
+>>> /sys/kernel/iommu_groups/2
+>>> /sys/kernel/iommu_groups/2/devices
+>>> /sys/kernel/iommu_groups/2/devices/e0900000.xgmac
+>>> /sys/kernel/iommu_groups/0
+>>> /sys/kernel/iommu_groups/0/devices
+>>> /sys/kernel/iommu_groups/0/devices/f0000000.pcie
+>>
+>> Your DT claims that f0000000.pcie (i.e. the "platform device" side of
+>> the host controller) owns the IDs 0x100 0x101 0x102 0x103 0x200 0x201
+>> 0x202 0x203 0x300 0x301 0x302 0x303 0x400 0x401 0x402 0x403. Thus when
+>> new devices (the PCI PFs) come along *also* claiming those IDs (via the
+>> RID-to-SID assumption), we now detect the aliasing and assign them to
+>> the existing group.
+>>
+>> The only way that DT worked without SMR conflicts before is that
+>> f0000000.pcie wasn't actually getting attached to a domain, thus wasn't
+>> getting SMRs allocated (ISTR you _did_ get conflicts back when we first
+>> tried to switch on default domains; that was probably the reason).
+> 
+> Thanks for your explanations. meanwhile I converted the overdrive dt to
+> the new syntax and it works properly.
 
-Add clocks configuration for CSI, FIRI and IEEE1588.
+Yay!
 
-Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
----
- drivers/clk/imx/clk-imx51-imx53.c      | 20 ++++++++++++++++++++
- include/dt-bindings/clock/imx5-clock.h | 15 ++++++++++++++-
- 2 files changed, 34 insertions(+), 1 deletion(-)
+> However I noticed there are MSI frame iommu mapping although the
+> device's domain is the default one. There is no check currently in
+> 21/22. I guess this isn't needed?
 
-diff --git a/drivers/clk/imx/clk-imx51-imx53.c b/drivers/clk/imx/clk-imx51-imx53.c
-index 29d4c44..1e3c9ea 100644
---- a/drivers/clk/imx/clk-imx51-imx53.c
-+++ b/drivers/clk/imx/clk-imx51-imx53.c
-@@ -126,6 +126,7 @@ static const char *spdif0_com_sel[] = { "spdif0_podf", "ssi1_root_gate", };
- static const char *mx51_spdif1_com_sel[] = { "spdif1_podf", "ssi2_root_gate", };
- static const char *step_sels[] = { "lp_apm", };
- static const char *cpu_podf_sels[] = { "pll1_sw", "step_sel" };
-+static const char *ieee1588_sels[] = { "pll3_sw", "pll4_sw", "dummy" /* usbphy2_clk */, "dummy" /* fec_phy_clk */ };
- 
- static struct clk *clk[IMX5_CLK_END];
- static struct clk_onecell_data clk_data;
-@@ -543,6 +544,25 @@ static void __init mx53_clocks_init(struct device_node *np)
- 	clk[IMX5_CLK_I2C3_GATE]		= imx_clk_gate2("i2c3_gate", "per_root", MXC_CCM_CCGR1, 22);
- 	clk[IMX5_CLK_SATA_GATE]		= imx_clk_gate2("sata_gate", "ipg", MXC_CCM_CCGR4, 2);
- 
-+	clk[IMX5_CLK_FIRI_SEL]		= imx_clk_mux("firi_sel", MXC_CCM_CSCMR2, 12, 2,
-+						standard_pll_sel, ARRAY_SIZE(standard_pll_sel));
-+	clk[IMX5_CLK_FIRI_PRED]		= imx_clk_divider("firi_pred", "firi_sel", MXC_CCM_CSCDR3, 6, 3);
-+	clk[IMX5_CLK_FIRI_PODF]		= imx_clk_divider("firi_podf", "firi_pred", MXC_CCM_CSCDR3, 0, 6);
-+	clk[IMX5_CLK_FIRI_SERIAL_GATE]	= imx_clk_gate2("firi_serial_gate", "firi_podf", MXC_CCM_CCGR1, 28);
-+	clk[IMX5_CLK_FIRI_IPG_GATE]	= imx_clk_gate2("firi_ipg_gate", "ipg", MXC_CCM_CCGR1, 26);
-+
-+	clk[IMX5_CLK_CSI0_MCLK1_SEL]	= imx_clk_mux("csi0_mclk1_sel", MXC_CCM_CSCMR2, 22, 2,
-+						standard_pll_sel, ARRAY_SIZE(standard_pll_sel));
-+	clk[IMX5_CLK_CSI0_MCLK1_PRED]	= imx_clk_divider("csi0_mclk1_pred", "csi0_mclk1_sel", MXC_CCM_CSCDR4, 6, 3);
-+	clk[IMX5_CLK_CSI0_MCLK1_PODF]	= imx_clk_divider("csi0_mclk1_podf", "csi0_mclk1_pred", MXC_CCM_CSCDR4, 0, 6);
-+	clk[IMX5_CLK_CSI0_MCLK1_GATE]	= imx_clk_gate2("csi0_mclk1_serial_gate", "csi0_mclk1_podf", MXC_CCM_CCGR6, 4);
-+
-+	clk[IMX5_CLK_IEEE1588_SEL]	= imx_clk_mux("ieee1588_sel", MXC_CCM_CSCMR2, 14, 2,
-+						ieee1588_sels, ARRAY_SIZE(ieee1588_sels));
-+	clk[IMX5_CLK_IEEE1588_PRED]	= imx_clk_divider("ieee1588_pred", "ieee1588_sel", MXC_CCM_CSCDR2, 6, 3);
-+	clk[IMX5_CLK_IEEE1588_PODF]	= imx_clk_divider("ieee1588_podf", "ieee1588_pred", MXC_CCM_CSCDR2, 0, 6);
-+	clk[IMX5_CLK_IEEE1588_GATE]	= imx_clk_gate2("ieee1588_serial_gate", "ieee1588_podf", MXC_CCM_CCGR7, 6);
-+
- 	clk[IMX5_CLK_CKO1_SEL]		= imx_clk_mux("cko1_sel", MXC_CCM_CCOSR, 0, 4,
- 						mx53_cko1_sel, ARRAY_SIZE(mx53_cko1_sel));
- 	clk[IMX5_CLK_CKO1_PODF]		= imx_clk_divider("cko1_podf", "cko1_sel", MXC_CCM_CCOSR, 4, 3);
-diff --git a/include/dt-bindings/clock/imx5-clock.h b/include/dt-bindings/clock/imx5-clock.h
-index f4b7478..d382fc7 100644
---- a/include/dt-bindings/clock/imx5-clock.h
-+++ b/include/dt-bindings/clock/imx5-clock.h
-@@ -201,6 +201,19 @@
- #define IMX5_CLK_STEP_SEL		189
- #define IMX5_CLK_CPU_PODF_SEL		190
- #define IMX5_CLK_ARM			191
--#define IMX5_CLK_END			192
-+#define IMX5_CLK_FIRI_PRED		192
-+#define IMX5_CLK_FIRI_SEL		193
-+#define IMX5_CLK_FIRI_PODF		194
-+#define IMX5_CLK_FIRI_SERIAL_GATE	195
-+#define IMX5_CLK_FIRI_IPG_GATE		196
-+#define IMX5_CLK_CSI0_MCLK1_PRED	197
-+#define IMX5_CLK_CSI0_MCLK1_SEL		198
-+#define IMX5_CLK_CSI0_MCLK1_PODF	199
-+#define IMX5_CLK_CSI0_MCLK1_GATE	200
-+#define IMX5_CLK_IEEE1588_PRED		201
-+#define IMX5_CLK_IEEE1588_SEL		202
-+#define IMX5_CLK_IEEE1588_PODF		203
-+#define IMX5_CLK_IEEE1588_GATE		204
-+#define IMX5_CLK_END			205
- 
- #endif /* __DT_BINDINGS_CLOCK_IMX5_H */
--- 
-2.1.4
+Au contraire ;) With the generic binding, default domains are properly
+implemented, i.e. they have translation, so anything not mapped will
+fault. I *had* to write patch 21 as part of this series, since having
+DMA ops for PCI devices at the cost of breaking all MSIs was clearly not
+a viable solution. If you see mappings, then it's because someone is
+using MSIs - so if you fancy, you can try rewinding back to patch 19 or
+20 to watch them get stuck.
+
+Robin.
