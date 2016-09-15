@@ -1,115 +1,76 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: RE: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on Hip06
-Date: Thu, 15 Sep 2016 12:05:51 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E1F871F72@lhreml507-mbx>
-References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
- <5869118.UilSPY9Sai@wuerfel>
- <EE11001F9E5DDD47B7634E2F8A612F2E1F871B01@lhreml507-mbx>
- <8360154.kzsE8V8pTW@wuerfel>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5] rtc: omap: Support ext_wakeup configuration
+Date: Thu, 15 Sep 2016 14:08:19 +0200
+Message-ID: <20160915120819.3733dhvy5r7n3n4j@piout.net>
+References: <201609082240.a4dMqCnB%fengguang.wu@intel.com>
+ <4512fa0b-890b-0f10-00dd-188fcc98fb5c@grinn-global.com>
+ <20160913215837.xstx4c6d4pr42hgh@piout.net>
+ <eb67e85b-4651-33e0-abb7-339d83f36463@grinn-global.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8360154.kzsE8V8pTW@wuerfel>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "minyard@acm.org" <minyard@acm.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "zourongrong@gmail.com" <zourongrong@gmail.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, "kantyzc@163.com" <kantyzc@163.com>, "zhichang.yuan02@gmail.com" <zhichang.yuan02@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-ar>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBM465K7AKGQE7ETHZVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <eb67e85b-4651-33e0-abb7-339d83f36463-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd
-
-> -----Original Message-----
-> From: Arnd Bergmann [mailto:arnd@arndb.de]
-> Sent: 15 September 2016 09:22
-> To: Gabriele Paoloni
-> Cc: linux-arm-kernel@lists.infradead.org; Yuanzhichang;
-> devicetree@vger.kernel.org; lorenzo.pieralisi@arm.com; minyard@acm.org;
-> gregkh@linuxfoundation.org; benh@kernel.crashing.org; John Garry;
-> will.deacon@arm.com; linux-kernel@vger.kernel.org; xuwei (O); Linuxarm;
-> linux-serial@vger.kernel.org; linux-pci@vger.kernel.org;
-> zourongrong@gmail.com; liviu.dudau@arm.com; kantyzc@163.com;
-> zhichang.yuan02@gmail.com
-> Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on
-> Hip06
+On 14/09/2016 at 11:21:48 +0200, Marcin Niestroj wrote :
+> On 13.09.2016 23:58, Alexandre Belloni wrote:
+> > Hi,
+> > 
+> > On 12/09/2016 at 11:01:05 +0200, Marcin Niestroj wrote :
+> > > I guess we are missing PINCTRL in Kconfig. I didn't add that before,
+> > > because I thought that there is a dependency chain GENERIC_PINCONF ->
+> > > PINCONF -> PINCTRL.
+> > > 
+> > > So to resolve this issue:
+> > > 1) Should we add "select" or "depends on" for PINCTRL?
+> > > 2) Should this option be somehow related to COMPILE_TEST?
+> > > 
+> > 
+> > Adding a "depends on PINCTRL" line should be enough to solve that issue.
+> > 
 > 
-> On Thursday, September 15, 2016 8:02:27 AM CEST Gabriele Paoloni wrote:
-> >
-> > From <<3.1.1. Open Firmware Properties for Bus Nodes>> in
-> > http://www.firmware.org/1275/bindings/isa/isa0_4d.ps
-> >
-> > I quote:
-> > "There shall be an entry in the "ranges" property for each
-> > of the Memory and/or I/O spaces if that address space is
-> > mapped through the bridge."
-> >
-> > It seems to me that it is ok to have 1:1 address mapping and that
-> > therefore of_translate_address() should fail if "ranges" is not
-> > present.
+> Ok, will add that together with "depends on OF", as I noticed it is
+> also needed.
 > 
-> The key here is the definition of "mapped through the bridge".
-> I can only understand this as "directly mapped", i.e. an I/O
-> port of the child bus corresponds directly to a memory address
-> on the parent bus, but this is not the case here.
 > 
-> The problem with adding the mapping here is that it looks
-> like it should be valid to create a page table entry for
-> the address returned from the translation and access it through
-> a pointer dereference, but that is clearly not possible.
-
-I understand that somehow we are abusing of the ranges property
-here however the point is that with the current implementation ranges
-is needed because otherwise the ipmi driver probe will fail here:
-
-of_ipmi_probe -> of_address_to_resource -> __of_address_to_resource
--> of_translate_address -> __of_translate_address
-
-Now we had a bit of discussion internally and to avoid
-having ranges we came up with two possible solutions:
-
-1) Using bit 3 of phys.hi cell in 2.2.1 of
-http://www.firmware.org/1275/bindings/isa/isa0_4d.ps
-This would mean reworking of_bus_isa_get_flags in 
-http://lxr.free-electrons.com/source/drivers/of/address.c#L398
-and setting a new flag to be checked in __of_address_to_resource
-
-2) Adding a property in the bindings of each device that is
-a child of our LPC bus and modify __of_address_to_resource
-to check if the property is in the DT and eventually bypass
-of_translate_address
-
-However in both 1) and 2) there are some issues:
-in 1) we are not complying with the isa binding doc (we use
-a bit that should be zero); in 2) we need to modify the
-bindings documentation of the devices that are connected
-to our LPC controller (therefore modifying other devices
-bindings to fit our special case).
-
-I think that maybe having the 1:1 range mapping doesn't
-reflect well the reality but it is the less painful
-solution...
-
-What's your view?
- 
-Many Thanks
-
-Gab
-
+> But right now we will not be able to compile this driver with
+> COMPILE_TEST, unless we select some architecture that selects PINCTRL.
 > 
-> > This is also explained quite well in
-> > http://lxr.free-electrons.com/source/drivers/of/address.c#L490
-> >
-> > what do you think?
+
+That is find, Arnd was pointing out that the main use case is x86
+allmodconfig and that enables PINCTRL.
+
+> So maybe it is a good idea to change "config PINCTRL" option from
+> 'bool' to 'bool "Support PINCTRL" if COMPILE_TEST', so we can enable it
+> manually?
 > 
-> This is a separate issue, and only relevant for Apple Macintosh
-> machines as well as the PA-Semi sdc.
-> 
-> 	Arnd
+
+This can be done too Mark Brown was suggesting it is a good idea. This
+can be submitted as a separate, unrelated patch.
+
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
