@@ -1,76 +1,74 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5] rtc: omap: Support ext_wakeup configuration
-Date: Thu, 15 Sep 2016 14:08:19 +0200
-Message-ID: <20160915120819.3733dhvy5r7n3n4j@piout.net>
-References: <201609082240.a4dMqCnB%fengguang.wu@intel.com>
- <4512fa0b-890b-0f10-00dd-188fcc98fb5c@grinn-global.com>
- <20160913215837.xstx4c6d4pr42hgh@piout.net>
- <eb67e85b-4651-33e0-abb7-339d83f36463@grinn-global.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>
+Subject: Re: [PATCH 1/3] misc: Add Aspeed BT IPMI host driver
+Date: Thu, 15 Sep 2016 07:23:08 -0500
+Message-ID: <c16a0c73-310b-9534-d269-4f02bd00161d@acm.org>
+References: <1472664259-23933-1-git-send-email-clg@kaod.org>
+ <c06a8afb-9143-6aef-3425-ad1e50cae35d@kaod.org>
+ <1ce6c4b4-5938-22fc-7467-d1efc220b772@gmail.com> <4727554.yt7pF8chOH@wuerfel>
+ <7db5ada0-49ea-55eb-089e-d979941ceff5@gmail.com>
+ <3e2658cc-7089-abd2-23b3-ffd468edbd11@kaod.org>
+Reply-To: minyard-HInyCGIudOg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBM465K7AKGQE7ETHZVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <eb67e85b-4651-33e0-abb7-339d83f36463-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Cc: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3e2658cc-7089-abd2-23b3-ffd468edbd11-Bxea+6Xhats@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/09/2016 at 11:21:48 +0200, Marcin Niestroj wrote :
-> On 13.09.2016 23:58, Alexandre Belloni wrote:
-> > Hi,
-> > 
-> > On 12/09/2016 at 11:01:05 +0200, Marcin Niestroj wrote :
-> > > I guess we are missing PINCTRL in Kconfig. I didn't add that before,
-> > > because I thought that there is a dependency chain GENERIC_PINCONF ->
-> > > PINCONF -> PINCTRL.
-> > > 
-> > > So to resolve this issue:
-> > > 1) Should we add "select" or "depends on" for PINCTRL?
-> > > 2) Should this option be somehow related to COMPILE_TEST?
-> > > 
-> > 
-> > Adding a "depends on PINCTRL" line should be enough to solve that issue.
-> > 
-> 
-> Ok, will add that together with "depends on OF", as I noticed it is
-> also needed.
-> 
-> 
-> But right now we will not be able to compile this driver with
-> COMPILE_TEST, unless we select some architecture that selects PINCTRL.
-> 
+On 09/15/2016 01:51 AM, Cédric Le Goater wrote:
+> On 09/12/2016 10:33 PM, Corey Minyard wrote:
+>> On 09/12/2016 02:15 PM, Arnd Bergmann wrote:
+>>> On Monday, September 12, 2016 1:55:40 PM CEST Corey Minyard wrote:
+>>>> On 09/02/2016 08:22 AM, Cédric Le Goater wrote:
+>>>>> Hello,
+>>>>>
+>>>>> Adding Corey in cc: . I guess I should have done that in the first place.
+>>>> Yes, probably so.  I've been travelling and didn't see it on the mailing
+>>>> lists until now.
+>>>>
+>>>> There is already a BT driver in the kernel, in drivers/char/ipmi, why
+>>>> won't that work?
+>>> The new driver is the host side (running on the BMC), the existing one
+>>> is the client (running on the PC).
+>>>
+>>>      Arnd
+>> Ok, that's not really clear from the documentation or the Kconfig.
+>> In the IPMI spec the "host" side is the computer side, not the BMC
+>> side.  Like:
+>>
+>>     11.6.1 BT Host Interface Registers
+>>     The Host BT interface provides an independent set of registers and
+>>     interrupts to allow the Host driver to
+>>     communicate with the baseboard management controller without
+>>     conflicting with the O/S ACPI driver.
+>>
+>> In light of that, this should probably be named the bt-bmc driver.
+>>
+>> I haven't reviewed this in detail, but I'm ok with putting it in
+>> drivers/char/ipmi.  The state machine part looks reasonably
+>> generic.  The configuration part isn't, but that could be split
+>> out later if necessary.
+> what do you mean by configuration ? I am ready to send a v2. May be
+> I can add a few other things.
 
-That is find, Arnd was pointing out that the main use case is x86
-allmodconfig and that enables PINCTRL.
+The part that sets everything up, basically everything from
+bt_host_fops down.
 
-> So maybe it is a good idea to change "config PINCTRL" option from
-> 'bool' to 'bool "Support PINCTRL" if COMPILE_TEST', so we can enable it
-> manually?
-> 
+If you were to use this on another system, that code would have to be
+made more generic and the machine-specific part split into different
+files, but that's not necessary now, I don't think.
 
-This can be done too Mark Brown was suggesting it is a good idea. This
-can be submitted as a separate, unrelated patch.
+-corey
+
+> Thanks,
+>
+> C.
 
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
