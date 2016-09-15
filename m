@@ -1,80 +1,81 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: enable UART1 for iNet D978 Rev2 board
-Date: Thu, 15 Sep 2016 10:35:30 +0200
-Message-ID: <20160915083530.GD10128@lukather>
-References: <20160915021504.65483-1-icenowy@aosc.xyz>
- <1262161473906138@web14h.yandex.ru>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 3/4] dt-binding: remoteproc: venus rproc dt binding document
+Date: Thu, 15 Sep 2016 10:46:42 +0200
+Message-ID: <cba4a4b9-a4e9-f314-d907-d39ae3861f5b@samsung.com>
+References: <1471622000-1906-4-git-send-email-stanimir.varbanov@linaro.org>
+ <20160823173259.GA13327@rob-hp-laptop>
+ <fbf25a9e-348b-9047-37ef-1b96808dea31@mm-sol.com>
+ <20160825000521.GH15161@tuxbot>
+ <3429173a-d55a-51e1-0973-7e5bd31be297@linaro.org>
+ <20160826222345.GK15161@tuxbot>
+ <5afd7f2f-ec1b-d2ce-b833-81df010e24de@linaro.org>
+ <20160830171742.GN15161@tuxbot>
+ <b7314a89-2215-4961-6e8a-be5ef536624a@linaro.org>
+ <e312d810-3096-d32c-d546-c07e0265808e@samsung.com>
+ <20160902201255.GZ15161@tuxbot>
+ <CGME20160915084644eucas1p1bd3f2078d4e1cb3acfa0ea87557bff4f@eucas1p1.samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="rMWmSaSbD7nr+du9"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1262161473906138-MWZxdpSzzcxxpj1cXAZ9Bg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20160902201255.GZ15161@tuxbot>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Rob Herring <robh@kernel.org>, Andy Gross <andy.gross@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Clark <robdclark@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Bjorn,
 
---rMWmSaSbD7nr+du9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 15, 2016 at 10:22:18AM +0800, Icenowy Zheng wrote:
->=20
->=20
-> 15.09.2016, 10:15, "Icenowy Zheng" <icenowy-ymACFijhrKM@public.gmane.org>:
-> > UART1 is connected to the bluetooth part of RTL8723BS WiFi/BT combo card
-> > on iNet D978 Rev2 board.
-> >
-> > Enable the UART1 to make it possible to use the modified hciattach by
-> > Realtek to drive the BT part of RTL8723BS.
-> >
-> > On the board no r_uart pins are found now (the onboard RX/TX pins are
-> > wired to PF2/PF4, which is muxed with mmc0), so also disabled it.
-> >
-> > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->=20
-> Oh I forgot to add a patch version number...
-> It's PATCH v3.
->=20
-> (But it seems that I should send a v4 to split the dtsi change and dts ch=
-ange.)
+On 2016-09-02 22:12, Bjorn Andersson wrote:
+> On Fri 02 Sep 04:52 PDT 2016, Marek Szyprowski wrote:
+>
+>> On 2016-09-01 16:58, Stanimir Varbanov wrote:
+>> ...
+>>>>>> But I presume we have the implementation issue of dma_alloc_coherent()
+>>>>>> failing in either case with the 5MB size. I think we need to look into
+>>>>> I'd be good to include Marek Szyprowski? At least he will know what
+>>>>> design restrictions there are.
+>>>>>
+>>>> Please do. The more I look at this the more I think we must use the
+>>>> existing infrastructure for allocating "dma memory". Getting
+>>>> dma_alloc_coherent() supporting non-power-of-2 memory regions would
+>>> Just to be precise it should be dma_alloc_from_coherent().
+>>>
+>>> Marek, what is your opinion on that, can we make dma_alloc_from_coherent
+>>> able to allocate memory for sizes with bigger granularity.
+>>>
+>>> For your convenience here [1] is the mail thread.
+>> There should be no technical restrictions to add support for bigger
+>> granularity than power-of-2. dma_alloc_from_coherent uses standard
+>> bitmap based allocator, so it already support tracking allocations of
+>> arbitrary size.
+> I believe we should be able to change the parameter of
+> bitmap_{find_free,release,allocate}_region() to take a size rather than
+> an order.
+>
+> The mask used in __reg_op() is an unsigned long, that is stamped over
+> the region to be masked or cleared, so there are some clear restrictions
+> in what parameters we can pass there - without having to break this
+> operation up in steps.
+>
+> But if drive the offset by taking the next power-of-two of the size and
+> then align the number of bits to min(count, BITS_PER_LONG) we should
+> retain the performance characteristics and requirements of __reg_op().
+>
+>> However for the small allocations (smaller than 64KiB?, 512KiB?) it
+>> would make sense to keep nearest-power-of-2 round up to prevent memory
+>> fragmentation.
+> But in our case each bit matches a single page, so by making sure the
+> mask always fills the unsigned long in the larger cases we would end up
+> with having to align things to 128kb (or 256kb if unsigned long is 64
+> bit).
 
-Indeed :)
+By preventing memory fragmentation I wanted to align small allocations (less
+than the mentioned 64KiB or 512KiB) to nearest-power-of-2 of their size just
+like it is done now.
 
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---rMWmSaSbD7nr+du9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJX2l1SAAoJEBx+YmzsjxAguZAQAIG2KCUc1s6Z3v65C3HAVime
-55Q4RA6P2gdtOmZgceIJ4vBeilLV8T4FFLgqSEFZSSvXZnO0fvTWJkOcxwcgGkFe
-9NU5Wh6Abgle0FOvV3sVGZRwSR5bvkquk3FHr+AuBDA7i6IYxCDjx4w+6wtUWR9W
-T22XZtQIwpeaWIWGjFiW7e4nSwrFlls0PxqSCIJHVG1SuX8DhvY9S6BjGKdn7mgp
-bZarW/OnIQgzpMa7qalV/7yG+GDBVZSttBQLaf4351Yz7D1Y8WH12Gy1ZCY30olO
-msUqAEqwbO8JGvZoz4EdJKT1Qsk9aVFjAgLS6wQChp2FQ6vqs+ElIK7j6wtCO1/8
-7kL+SLOlYnZNOoWRoDbEPEAKPiGHJLG58uyxwnGvu/NUrDuTCClSsARiRzXfEKHR
-uXhtFn483omaAmvQc8hr9Err5o6SWEHLtTgZ/e2QzYaeIXx8LHvHqB85qAOJ92K6
-WpA0HgJ0q2mJ3osDMZwUeWtkyjy6mgCVr2GsrBBSLNqPgeCDtom/ZCd7kEmJnmR1
-aFwrKRQbj1XRxyrYTn8SBLNJ75gWlr0LOug4p5upccVodwkE25LilmwXkoF7T/I+
-ptIwOmQZcEQncVP/gW3NptnxnwVoAqxN58IhDmSo93KD5OOSa3taSX6iCCgRfGlc
-IAb7Xj69sWNiCHCmLROR
-=/EqM
------END PGP SIGNATURE-----
-
---rMWmSaSbD7nr+du9--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
