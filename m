@@ -1,36 +1,88 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V3 03/10] of: irq: make of_msi_configure accessible from modules
-Date: Thu, 15 Sep 2016 13:22:39 -0400
-Message-ID: <1473960166-30155-4-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V3 08/10] dmaengine: qcom_hidma: add a common API to setup the interrupt
+Date: Thu, 15 Sep 2016 13:22:44 -0400
+Message-ID: <1473960166-30155-9-git-send-email-okaya@codeaurora.org>
 References: <1473960166-30155-1-git-send-email-okaya@codeaurora.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1473960166-30155-1-git-send-email-okaya@codeaurora.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org
+Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The of_msi_configure routine is only accessible by the built-in
-kernel drivers. Export this function so that modules can use it
-too.
+Introducing the hidma_ll_setup_irq function to set up the interrupt
+type externally from the OS interface.
 
-This function is useful for configuring MSI on child device tree
-nodes on hierarchical objects.
-
-Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 ---
- drivers/of/irq.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/qcom/hidma.h    |  2 ++
+ drivers/dma/qcom/hidma_ll.c | 27 +++++++++++++++++++++++----
+ 2 files changed, 25 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index a2e68f7..20c09e0 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -767,3 +767,4 @@ void of_msi_configure(struct device *dev, struct device_node *np)
- 	dev_set_msi_domain(dev,
- 			   of_msi_get_domain(dev, np, DOMAIN_BUS_PLATFORM_MSI));
+diff --git a/drivers/dma/qcom/hidma.h b/drivers/dma/qcom/hidma.h
+index 3f2ddd4..181f7e0 100644
+--- a/drivers/dma/qcom/hidma.h
++++ b/drivers/dma/qcom/hidma.h
+@@ -46,6 +46,7 @@ struct hidma_tre {
+ };
+ 
+ struct hidma_lldev {
++	bool msi_support;		/* flag indicating MSI support    */
+ 	bool initialized;		/* initialized flag               */
+ 	u8 trch_state;			/* trch_state of the device	  */
+ 	u8 evch_state;			/* evch_state of the device	  */
+@@ -145,6 +146,7 @@ int hidma_ll_disable(struct hidma_lldev *lldev);
+ int hidma_ll_enable(struct hidma_lldev *llhndl);
+ void hidma_ll_set_transfer_params(struct hidma_lldev *llhndl, u32 tre_ch,
+ 	dma_addr_t src, dma_addr_t dest, u32 len, u32 flags);
++void hidma_ll_setup_irq(struct hidma_lldev *lldev, bool msi);
+ int hidma_ll_setup(struct hidma_lldev *lldev);
+ struct hidma_lldev *hidma_ll_init(struct device *dev, u32 max_channels,
+ 			void __iomem *trca, void __iomem *evca,
+diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
+index 088935f..f0630e0 100644
+--- a/drivers/dma/qcom/hidma_ll.c
++++ b/drivers/dma/qcom/hidma_ll.c
+@@ -672,17 +672,36 @@ int hidma_ll_setup(struct hidma_lldev *lldev)
+ 	writel(HIDMA_EVRE_SIZE * nr_tres,
+ 			lldev->evca + HIDMA_EVCA_RING_LEN_REG);
+ 
+-	/* support IRQ only for now */
++	/* configure interrupts */
++	hidma_ll_setup_irq(lldev, lldev->msi_support);
++
++	rc = hidma_ll_enable(lldev);
++	if (rc)
++		return rc;
++
++	return rc;
++}
++
++void hidma_ll_setup_irq(struct hidma_lldev *lldev, bool msi)
++{
++	u32 val;
++
++	lldev->msi_support = msi;
++
++	/* disable interrupts again after reset */
++	writel(0, lldev->evca + HIDMA_EVCA_IRQ_CLR_REG);
++	writel(0, lldev->evca + HIDMA_EVCA_IRQ_EN_REG);
++
++	/* support IRQ by default */
+ 	val = readl(lldev->evca + HIDMA_EVCA_INTCTRL_REG);
+ 	val &= ~0xF;
+-	val |= 0x1;
++	if (!lldev->msi_support)
++		val = val | 0x1;
+ 	writel(val, lldev->evca + HIDMA_EVCA_INTCTRL_REG);
+ 
+ 	/* clear all pending interrupts and enable them */
+ 	writel(ENABLE_IRQS, lldev->evca + HIDMA_EVCA_IRQ_CLR_REG);
+ 	writel(ENABLE_IRQS, lldev->evca + HIDMA_EVCA_IRQ_EN_REG);
+-
+-	return hidma_ll_enable(lldev);
  }
-+EXPORT_SYMBOL_GPL(of_msi_configure);
+ 
+ struct hidma_lldev *hidma_ll_init(struct device *dev, u32 nr_tres,
 -- 
 1.9.1
