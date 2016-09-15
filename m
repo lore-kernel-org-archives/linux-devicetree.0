@@ -1,32 +1,56 @@
-From: Jagan Teki <jagannadh.teki@gmail.com>
-Subject: [PATCH v5 0/6] ARM: dts: imx6q: Add Engicam i.CoreM6 dts
-Date: Fri, 16 Sep 2016 00:46:49 +0530
-Message-ID: <1473967015-8523-1-git-send-email-jagan@amarulasolutions.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 1/6] of: Add vendor prefix for Engicam s.r.l company
+Date: Fri, 16 Sep 2016 00:46:50 +0530
+Message-ID: <1473967015-8523-2-git-send-email-jagan@amarulasolutions.com>
+References: <1473967015-8523-1-git-send-email-jagan@amarulasolutions.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473967015-8523-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is series add dts support for Engicam I.Core M6 qdl modules.
+Engicam providing design services of electronic systems with
+high content of technology, relying on a long experience in
+electronic design.
 
-Jagan Teki (6):
-  of: Add vendor prefix for Engicam s.r.l company
-  ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual initial support
-  ARM: dts: imx6q: Add Engicam i.CoreM6 DualLite/Solo initial support
-  ARM: dts: imx6qdl-icore: Add usbhost support
-  ARM: dts: imx6qdl-icore: Add usbotg support
-  ARM: dts: imx6qdl-icore: Add FEC support
+For more info visit
+http://www.engicam.com/en/
 
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- arch/arm/boot/dts/Makefile                         |   2 +
- arch/arm/boot/dts/imx6dl-icore.dts                 |  59 +++++
- arch/arm/boot/dts/imx6q-icore.dts                  |  59 +++++
- arch/arm/boot/dts/imx6qdl-icore.dtsi               | 269 +++++++++++++++++++++
- 5 files changed, 390 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-icore.dts
- create mode 100644 arch/arm/boot/dts/imx6q-icore.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-icore.dtsi
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+Changes for v5:
+	- none
+Changes for v4:
+	- new patch
 
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 3003f33..327e4c7 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -85,6 +85,7 @@ elan	Elan Microelectronic Corp.
+ embest	Shenzhen Embest Technology Co., Ltd.
+ emmicro	EM Microelectronic
+ energymicro	Silicon Laboratories (formerly Energy Micro AS)
++engicam	Engicam S.r.l.
+ epcos	EPCOS AG
+ epfl	Ecole Polytechnique Fédérale de Lausanne
+ epson	Seiko Epson Corp.
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
