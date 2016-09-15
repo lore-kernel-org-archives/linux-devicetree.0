@@ -1,261 +1,213 @@
-From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: [PATCH v2 1/3] serial: xuartps: Adds RXBS register support for zynqmp
-Date: Thu, 15 Sep 2016 14:45:29 +0530
-Message-ID: <1473930931-1034-1-git-send-email-navam@xilinx.com>
+From: Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 00/22] Generic DT bindings for PCI IOMMUs and ARM SMMU
+Date: Thu, 15 Sep 2016 11:29:43 +0200
+Message-ID: <4d87d5f2-0350-b5f8-ffc3-4e9377cf1f87@redhat.com>
+References: <cover.1473695704.git.robin.murphy@arm.com>
+ <11ebd81e-2ea5-5ff3-35b3-be95f03e05bd@redhat.com>
+ <d03ea5e7-59f1-8b49-4ba2-d05fc2030ebc@arm.com>
+ <04a0a682-4fdc-8d62-57cd-efdf730582c6@redhat.com>
+ <c2645c5e-edd3-2b31-4311-0ca621a915e2@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, jslaby@suse.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, punnaia@xilinx.com
-Cc: Nava kishore Manne <navam@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c2645c5e-edd3-2b31-4311-0ca621a915e2-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds RXBS register access support for zynqmp.
-To avoid the corner error conditions it will consider only
-RXBS[2:0] bits while checking the error conditions
-(Parity,Framing and BRAK).
+Hi Robin,
 
-Signed-off-by: Nava kishore Manne <navam@xilinx.com>
----
-Changes for v2:
-		-Initialize 'rxbs_status = 0'
+On 14/09/2016 14:53, Robin Murphy wrote:
+> On 14/09/16 13:32, Auger Eric wrote:
+>> Hi,
+>> On 14/09/2016 12:35, Robin Murphy wrote:
+>>> On 14/09/16 09:41, Auger Eric wrote:
+>>>> Hi,
+>>>>
+>>>> On 12/09/2016 18:13, Robin Murphy wrote:
+>>>>> Hi all,
+>>>>>
+>>>>> To any more confusing fixups and crazily numbered extra patches, here's
+>>>>> a quick v7 with everything rebased into the right order. The significant
+>>>>> change this time is to implement iommu_fwspec properly from the start,
+>>>>> which ends up being far simpler and more robust than faffing about
+>>>>> introducing it somewhere 'less intrusive' to move toward core code later.
+>>>>>
+>>>>> New branch in the logical place:
+>>>>>
+>>>>> git://linux-arm.org/linux-rm iommu/generic-v7
+>>>>
+>>>> For information, as discussed privately with Robin I experience some
+>>>> regressions with the former and now deprecated dt description.
+>>>>
+>>>> on my AMD Overdrive board and my old dt description I now only see a
+>>>> single group:
+>>>>
+>>>> /sys/kernel/iommu_groups/
+>>>> /sys/kernel/iommu_groups/0
+>>>> /sys/kernel/iommu_groups/0/devices
+>>>> /sys/kernel/iommu_groups/0/devices/e0700000.xgmac
+>>>>
+>>>> whereas I formerly see
+>>>>
+>>>> /sys/kernel/iommu_groups/
+>>>> /sys/kernel/iommu_groups/3
+>>>> /sys/kernel/iommu_groups/3/devices
+>>>> /sys/kernel/iommu_groups/3/devices/0000:00:00.0
+>>>> /sys/kernel/iommu_groups/1
+>>>> /sys/kernel/iommu_groups/1/devices
+>>>> /sys/kernel/iommu_groups/1/devices/e0700000.xgmac
+>>>> /sys/kernel/iommu_groups/4
+>>>> /sys/kernel/iommu_groups/4/devices
+>>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.2
+>>>> /sys/kernel/iommu_groups/4/devices/0000:01:00.1
+>>>> /sys/kernel/iommu_groups/4/devices/0000:00:02.0
+>>>> /sys/kernel/iommu_groups/4/devices/0000:01:00.0
+>>>> /sys/kernel/iommu_groups/2
+>>>> /sys/kernel/iommu_groups/2/devices
+>>>> /sys/kernel/iommu_groups/2/devices/e0900000.xgmac
+>>>> /sys/kernel/iommu_groups/0
+>>>> /sys/kernel/iommu_groups/0/devices
+>>>> /sys/kernel/iommu_groups/0/devices/f0000000.pcie
+>>>>
+>>>> This is the group topology without ACS override. Applying the non
+>>>> upstreamed "pci: Enable overrides for missing ACS capabilities" I used
+>>>> to see separate groups for each PCIe components. Now I don't see any
+>>>> difference with and without ACS override.
+>>>
+>>> OK, having reproduced on my Juno, the problem looks to be that
+>>> of_for_each_phandle() leaves err set to -ENOENT after successfully
+>>> walking a phandle list, which makes __find_legacy_master_phandle()
+>>> always bail out after the first SMMU.
+>>>
+>>> Can you confirm that the following diff fixes things for you?
+>>
+>> Well it improves but there are still differences in the group topology.
+>> The PFs now are in group 0.
+>>
+>> root@trusty:~# lspci -nk
+>> 00:00.0 0600: 1022:1a00
+>>         Subsystem: 1022:1a00
+>> 00:02.0 0600: 1022:1a01
+>> 00:02.2 0604: 1022:1a02
+>>         Kernel driver in use: pcieport
+>> 01:00.0 0200: 8086:1521 (rev 01)
+>>         Subsystem: 8086:0002
+>>         Kernel driver in use: igb
+>> 01:00.1 0200: 8086:1521 (rev 01)
+>>         Subsystem: 8086:0002
+>>         Kernel driver in use: igb
+>>
+>>
+>> with your series + fix:
+>> /sys/kernel/iommu_groups/
+>> /sys/kernel/iommu_groups/3
+>> /sys/kernel/iommu_groups/3/devices
+>> /sys/kernel/iommu_groups/3/devices/0000:00:00.0
+>> /sys/kernel/iommu_groups/1
+>> /sys/kernel/iommu_groups/1/devices
+>> /sys/kernel/iommu_groups/1/devices/e0700000.xgmac
+>> /sys/kernel/iommu_groups/4
+>> /sys/kernel/iommu_groups/4/devices
+>> /sys/kernel/iommu_groups/4/devices/0000:00:02.2
+>> /sys/kernel/iommu_groups/4/devices/0000:00:02.0
+>> /sys/kernel/iommu_groups/2
+>> /sys/kernel/iommu_groups/2/devices
+>> /sys/kernel/iommu_groups/2/devices/e0900000.xgmac
+>> /sys/kernel/iommu_groups/0
+>> /sys/kernel/iommu_groups/0/devices
+>> /sys/kernel/iommu_groups/0/devices/0000:01:00.1
+>> /sys/kernel/iommu_groups/0/devices/f0000000.pcie
+>> /sys/kernel/iommu_groups/0/devices/0000:01:00.0
+>>
+>> Before (4.8-rc5):
+>>
+>> /sys/kernel/iommu_groups/
+>> /sys/kernel/iommu_groups/3
+>> /sys/kernel/iommu_groups/3/devices
+>> /sys/kernel/iommu_groups/3/devices/0000:00:00.0
+>> /sys/kernel/iommu_groups/1
+>> /sys/kernel/iommu_groups/1/devices
+>> /sys/kernel/iommu_groups/1/devices/e0700000.xgmac
+>> /sys/kernel/iommu_groups/4
+>> /sys/kernel/iommu_groups/4/devices
+>> /sys/kernel/iommu_groups/4/devices/0000:00:02.2
+>> /sys/kernel/iommu_groups/4/devices/0000:01:00.1
+>> /sys/kernel/iommu_groups/4/devices/0000:00:02.0
+>> /sys/kernel/iommu_groups/4/devices/0000:01:00.0
+>> /sys/kernel/iommu_groups/2
+>> /sys/kernel/iommu_groups/2/devices
+>> /sys/kernel/iommu_groups/2/devices/e0900000.xgmac
+>> /sys/kernel/iommu_groups/0
+>> /sys/kernel/iommu_groups/0/devices
+>> /sys/kernel/iommu_groups/0/devices/f0000000.pcie
+> 
+> Your DT claims that f0000000.pcie (i.e. the "platform device" side of
+> the host controller) owns the IDs 0x100 0x101 0x102 0x103 0x200 0x201
+> 0x202 0x203 0x300 0x301 0x302 0x303 0x400 0x401 0x402 0x403. Thus when
+> new devices (the PCI PFs) come along *also* claiming those IDs (via the
+> RID-to-SID assumption), we now detect the aliasing and assign them to
+> the existing group.
+> 
+> The only way that DT worked without SMR conflicts before is that
+> f0000000.pcie wasn't actually getting attached to a domain, thus wasn't
+> getting SMRs allocated (ISTR you _did_ get conflicts back when we first
+> tried to switch on default domains; that was probably the reason).
 
- drivers/tty/serial/xilinx_uartps.c | 101 +++++++++++++++++++++++++++++--------
- 1 file changed, 81 insertions(+), 20 deletions(-)
+Thanks for your explanations. meanwhile I converted the overdrive dt to
+the new syntax and it works properly.
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index 9ca1a4d..527526e 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -57,7 +57,7 @@ MODULE_PARM_DESC(rx_timeout, "Rx timeout, 1-255");
- #define CDNS_UART_IMR		0x10  /* Interrupt Mask */
- #define CDNS_UART_ISR		0x14  /* Interrupt Status */
- #define CDNS_UART_BAUDGEN	0x18  /* Baud Rate Generator */
--#define CDNS_UART_RXTOUT		0x1C  /* RX Timeout */
-+#define CDNS_UART_RXTOUT	0x1C  /* RX Timeout */
- #define CDNS_UART_RXWM		0x20  /* RX FIFO Trigger Level */
- #define CDNS_UART_MODEMCR	0x24  /* Modem Control */
- #define CDNS_UART_MODEMSR	0x28  /* Modem Status */
-@@ -68,6 +68,7 @@ MODULE_PARM_DESC(rx_timeout, "Rx timeout, 1-255");
- #define CDNS_UART_IRRX_PWIDTH	0x3C  /* IR Min Received Pulse Width */
- #define CDNS_UART_IRTX_PWIDTH	0x40  /* IR Transmitted pulse Width */
- #define CDNS_UART_TXWM		0x44  /* TX FIFO Trigger Level */
-+#define CDNS_UART_RXBS		0x48  /* RX FIFO byte status register */
- 
- /* Control Register Bit Definitions */
- #define CDNS_UART_CR_STOPBRK	0x00000100  /* Stop TX break */
-@@ -79,6 +80,9 @@ MODULE_PARM_DESC(rx_timeout, "Rx timeout, 1-255");
- #define CDNS_UART_CR_TXRST	0x00000002  /* TX logic reset */
- #define CDNS_UART_CR_RXRST	0x00000001  /* RX logic reset */
- #define CDNS_UART_CR_RST_TO	0x00000040  /* Restart Timeout Counter */
-+#define CDNS_UART_RXBS_PARITY    0x00000001 /* Parity error status */
-+#define CDNS_UART_RXBS_FRAMING   0x00000002 /* Framing error status */
-+#define CDNS_UART_RXBS_BRK       0x00000004 /* Overrun error status */
- 
- /*
-  * Mode Register:
-@@ -131,8 +135,9 @@ MODULE_PARM_DESC(rx_timeout, "Rx timeout, 1-255");
- 				 CDNS_UART_IXR_TOUT)
- 
- /* Goes in read_status_mask for break detection as the HW doesn't do it*/
--#define CDNS_UART_IXR_BRK	0x80000000
-+#define CDNS_UART_IXR_BRK	0x00002000
- 
-+#define CDNS_UART_RXBS_SUPPORT BIT(1)
- /*
-  * Modem Control register:
-  * The read/write Modem Control register controls the interface with the modem
-@@ -172,18 +177,29 @@ struct cdns_uart {
- 	struct clk		*pclk;
- 	unsigned int		baud;
- 	struct notifier_block	clk_rate_change_nb;
-+	u32			quirks;
-+};
-+struct cdns_platform_data {
-+	u32 quirks;
- };
- #define to_cdns_uart(_nb) container_of(_nb, struct cdns_uart, \
- 		clk_rate_change_nb);
- 
- static void cdns_uart_handle_rx(struct uart_port *port, unsigned int isrstatus)
- {
-+	struct cdns_uart *cdns_uart = port->private_data;
-+	bool is_rxbs_support;
-+	unsigned int rxbs_status = 0;
-+	unsigned int status_mask;
-+
-+	is_rxbs_support = cdns_uart->quirks & CDNS_UART_RXBS_SUPPORT;
-+
- 	/*
- 	 * There is no hardware break detection, so we interpret framing
- 	 * error with all-zeros data as a break sequence. Most of the time,
- 	 * there's another non-zero byte at the end of the sequence.
- 	 */
--	if (isrstatus & CDNS_UART_IXR_FRAMING) {
-+	if (!is_rxbs_support && (isrstatus & CDNS_UART_IXR_FRAMING)) {
- 		while (!(readl(port->membase + CDNS_UART_SR) &
- 					CDNS_UART_SR_RXEMPTY)) {
- 			if (!readl(port->membase + CDNS_UART_FIFO)) {
-@@ -200,6 +216,8 @@ static void cdns_uart_handle_rx(struct uart_port *port, unsigned int isrstatus)
- 
- 	isrstatus &= port->read_status_mask;
- 	isrstatus &= ~port->ignore_status_mask;
-+	status_mask = port->read_status_mask;
-+	status_mask &= ~port->ignore_status_mask;
- 
- 	if (!(isrstatus & (CDNS_UART_IXR_TOUT | CDNS_UART_IXR_RXTRIG)))
- 		return;
-@@ -208,6 +226,9 @@ static void cdns_uart_handle_rx(struct uart_port *port, unsigned int isrstatus)
- 		u32 data;
- 		char status = TTY_NORMAL;
- 
-+		if (is_rxbs_support)
-+			rxbs_status = readl(port->membase + CDNS_UART_RXBS);
-+
- 		data = readl(port->membase + CDNS_UART_FIFO);
- 
- 		/* Non-NULL byte after BREAK is garbage (99%) */
-@@ -217,21 +238,41 @@ static void cdns_uart_handle_rx(struct uart_port *port, unsigned int isrstatus)
- 			if (uart_handle_break(port))
- 				continue;
- 		}
-+		if (is_rxbs_support && (rxbs_status & CDNS_UART_RXBS_BRK)) {
-+			port->icount.brk++;
-+			status = TTY_BREAK;
-+			if (uart_handle_break(port))
-+				continue;
-+		}
- 
- 		if (uart_handle_sysrq_char(port, data))
- 			continue;
- 
- 		port->icount.rx++;
- 
--		if (isrstatus & CDNS_UART_IXR_PARITY) {
--			port->icount.parity++;
--			status = TTY_PARITY;
--		} else if (isrstatus & CDNS_UART_IXR_FRAMING) {
--			port->icount.frame++;
--			status = TTY_FRAME;
--		} else if (isrstatus & CDNS_UART_IXR_OVERRUN) {
--			port->icount.overrun++;
-+		if (is_rxbs_support) {
-+			if ((rxbs_status & CDNS_UART_RXBS_PARITY)
-+				&& (status_mask & CDNS_UART_IXR_PARITY)) {
-+				port->icount.parity++;
-+				status = TTY_PARITY;
-+			}
-+			if ((rxbs_status & CDNS_UART_RXBS_FRAMING)
-+				&& (status_mask & CDNS_UART_IXR_PARITY)) {
-+				port->icount.frame++;
-+				status = TTY_FRAME;
-+			}
-+		} else {
-+			if (isrstatus & CDNS_UART_IXR_PARITY) {
-+				port->icount.parity++;
-+				status = TTY_PARITY;
-+			}
-+			if (isrstatus & CDNS_UART_IXR_FRAMING) {
-+				port->icount.frame++;
-+				status = TTY_FRAME;
-+			}
- 		}
-+		if (isrstatus & CDNS_UART_IXR_OVERRUN)
-+			port->icount.overrun++;
- 
- 		uart_insert_char(port, isrstatus, CDNS_UART_IXR_OVERRUN,
- 				 data, status);
-@@ -736,10 +777,14 @@ static void cdns_uart_set_termios(struct uart_port *port,
-  */
- static int cdns_uart_startup(struct uart_port *port)
- {
-+	struct cdns_uart *cdns_uart = port->private_data;
-+	bool is_brk_support;
- 	int ret;
- 	unsigned long flags;
- 	unsigned int status = 0;
- 
-+	is_brk_support = cdns_uart->quirks & CDNS_UART_RXBS_SUPPORT;
-+
- 	spin_lock_irqsave(&port->lock, flags);
- 
- 	/* Disable the TX and RX */
-@@ -794,7 +839,11 @@ static int cdns_uart_startup(struct uart_port *port)
- 	}
- 
- 	/* Set the Interrupt Registers with desired interrupts */
--	writel(CDNS_UART_RX_IRQS, port->membase + CDNS_UART_IER);
-+	if (is_brk_support)
-+		writel(CDNS_UART_RX_IRQS | CDNS_UART_IXR_BRK,
-+					port->membase + CDNS_UART_IER);
-+	else
-+		writel(CDNS_UART_RX_IRQS, port->membase + CDNS_UART_IER);
- 
- 	return 0;
- }
-@@ -1328,6 +1377,18 @@ static int cdns_uart_resume(struct device *device)
- static SIMPLE_DEV_PM_OPS(cdns_uart_dev_pm_ops, cdns_uart_suspend,
- 		cdns_uart_resume);
- 
-+static const struct cdns_platform_data zynqmp_uart_def = {
-+				.quirks = CDNS_UART_RXBS_SUPPORT, };
-+
-+/* Match table for of_platform binding */
-+static const struct of_device_id cdns_uart_of_match[] = {
-+	{ .compatible = "xlnx,xuartps", },
-+	{ .compatible = "cdns,uart-r1p8", },
-+	{ .compatible = "cdns,uart-r1p12", .data = &zynqmp_uart_def },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, cdns_uart_of_match);
-+
- /**
-  * cdns_uart_probe - Platform driver probe
-  * @pdev: Pointer to the platform device structure
-@@ -1340,12 +1401,20 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 	struct uart_port *port;
- 	struct resource *res;
- 	struct cdns_uart *cdns_uart_data;
-+	const struct of_device_id *match;
- 
- 	cdns_uart_data = devm_kzalloc(&pdev->dev, sizeof(*cdns_uart_data),
- 			GFP_KERNEL);
- 	if (!cdns_uart_data)
- 		return -ENOMEM;
- 
-+	match = of_match_node(cdns_uart_of_match, pdev->dev.of_node);
-+	if (match && match->data) {
-+		const struct cdns_platform_data *data = match->data;
-+
-+		cdns_uart_data->quirks = data->quirks;
-+	}
-+
- 	cdns_uart_data->pclk = devm_clk_get(&pdev->dev, "pclk");
- 	if (IS_ERR(cdns_uart_data->pclk)) {
- 		cdns_uart_data->pclk = devm_clk_get(&pdev->dev, "aper_clk");
-@@ -1471,14 +1540,6 @@ static int cdns_uart_remove(struct platform_device *pdev)
- 	return rc;
- }
- 
--/* Match table for of_platform binding */
--static const struct of_device_id cdns_uart_of_match[] = {
--	{ .compatible = "xlnx,xuartps", },
--	{ .compatible = "cdns,uart-r1p8", },
--	{}
--};
--MODULE_DEVICE_TABLE(of, cdns_uart_of_match);
--
- static struct platform_driver cdns_uart_platform_driver = {
- 	.probe   = cdns_uart_probe,
- 	.remove  = cdns_uart_remove,
--- 
-2.1.2
+However I noticed there are MSI frame iommu mapping although the
+device's domain is the default one. There is no check currently in
+21/22. I guess this isn't needed?
+
+Thanks
+
+Eric
+> 
+> Robin.
+> 
+>>
+>> Thanks
+>>
+>> Eric
+>>
+>>>
+>>> Robin
+>>>
+>>> --->8---
+>>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>>> index fa892d25004d..ac4aab97c93a 100644
+>>> --- a/drivers/iommu/arm-smmu.c
+>>> +++ b/drivers/iommu/arm-smmu.c
+>>> @@ -477,7 +477,7 @@ static int __find_legacy_master_phandle(struct
+>>> device *dev, void *data)
+>>>  			return 1;
+>>>  		}
+>>>  	it->node = np;
+>>> -	return err;
+>>> +	return err == -ENOENT ? 0 : err;
+>>>  }
+>>>
+>>>  static struct platform_driver arm_smmu_driver;
+>>>
+>>>
+>>> _______________________________________________
+>>> linux-arm-kernel mailing list
+>>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>>
+>>
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
