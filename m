@@ -1,81 +1,140 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 3/4] dt-binding: remoteproc: venus rproc dt binding document
-Date: Thu, 15 Sep 2016 10:46:42 +0200
-Message-ID: <cba4a4b9-a4e9-f314-d907-d39ae3861f5b@samsung.com>
-References: <1471622000-1906-4-git-send-email-stanimir.varbanov@linaro.org>
- <20160823173259.GA13327@rob-hp-laptop>
- <fbf25a9e-348b-9047-37ef-1b96808dea31@mm-sol.com>
- <20160825000521.GH15161@tuxbot>
- <3429173a-d55a-51e1-0973-7e5bd31be297@linaro.org>
- <20160826222345.GK15161@tuxbot>
- <5afd7f2f-ec1b-d2ce-b833-81df010e24de@linaro.org>
- <20160830171742.GN15161@tuxbot>
- <b7314a89-2215-4961-6e8a-be5ef536624a@linaro.org>
- <e312d810-3096-d32c-d546-c07e0265808e@samsung.com>
- <20160902201255.GZ15161@tuxbot>
- <CGME20160915084644eucas1p1bd3f2078d4e1cb3acfa0ea87557bff4f@eucas1p1.samsung.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [RFC/PATCH] usb: misc: Add a driver for TC7USB40MU
+Date: Thu, 15 Sep 2016 17:01:58 +0800
+Message-ID: <20160915090158.GB6919@b29397-desktop>
+References: <20160914014246.31847-1-stephen.boyd@linaro.org>
+ <20160914033200.GE30760@b29397-desktop>
+ <147383270635.1464.10706917860873291816@sboyd-linaro>
+ <20160914080321.GA21674@b29397-desktop>
+ <147384270449.13546.495288874027868435@sboyd-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20160902201255.GZ15161@tuxbot>
+Content-Disposition: inline
+In-Reply-To: <147384270449.13546.495288874027868435@sboyd-linaro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Rob Herring <robh@kernel.org>, Andy Gross <andy.gross@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Clark <robdclark@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, robh+dt@kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Wed, Sep 14, 2016 at 01:45:04AM -0700, Stephen Boyd wrote:
+> Quoting Peter Chen (2016-09-14 01:03:21)
+> > On Tue, Sep 13, 2016 at 10:58:26PM -0700, Stephen Boyd wrote:
+> > > Quoting Peter Chen (2016-09-13 20:32:00)
+> > > > On Tue, Sep 13, 2016 at 06:42:46PM -0700, Stephen Boyd wrote:
+> > > > > On the db410c 96boards platform we have a TC7USB40MU[1] on the
+> > > > > board to mux the D+/D- lines from the SoC between a micro usb
+> > > > > "device" port and a USB hub for "host" roles. Upon a role switch,
+> > > > > we need to change this mux to forward the D+/D- lines to either
+> > > > > the port or the hub. Therefore, introduce a driver for this
+> > > > > device that intercepts extcon USB_HOST events and logically
+> > > > > asserts a gpio to mux the "host" D+/D- lines when a host cable is
+> > > > > attached. When the cable goes away, it will logically deassert
+> > > > > the gpio and mux the "device" lines.
+> > > > 
+> > > > Would you please draw the design? It can also help me review your
+> > > > chipidea patch well.
+> > > > 
+> > > > 1. How many ports on the board?
+> > > > 2. How the lines are connected on the board?
+> > > > 
+> > > 
+> > > The schematic for the db410c is publically available here[2][3].
+> > > 
+> > > There's also the 96boards spec[4] which talks about this switch based
+> > > design a little bit. See the section titled "Single USB port Example".
+> > > 
+> > > [2] https://github.com/96boards/documentation/blob/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
+> > > [3] https://github.com/96boards/documentation/raw/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
+> > > [4] https://www.96boards.org/wp-content/uploads/2015/02/96BoardsCESpecificationv1.0-EA1.pdf
+> > 
+> > Ok, I see several use cases for this role switch
+> > 
+> > 1. Using the hardware switch (218-4LPST)
+> > In this case, you can set USB_SW_SEL as input gpio, and use
+> > extcon-usb-gpio.c like before, just set this gpio as active
+> > low at dts.
+> 
+> Nice! I didn't think of this case but it's good that we can support
+> that with some work.
+> 
 
+After looking more, I find the main purpose of this switch is
+what it writes, FORCE DSI SELECTION TO USB HOST MODE
 
-On 2016-09-02 22:12, Bjorn Andersson wrote:
-> On Fri 02 Sep 04:52 PDT 2016, Marek Szyprowski wrote:
->
->> On 2016-09-01 16:58, Stanimir Varbanov wrote:
->> ...
->>>>>> But I presume we have the implementation issue of dma_alloc_coherent()
->>>>>> failing in either case with the 5MB size. I think we need to look into
->>>>> I'd be good to include Marek Szyprowski? At least he will know what
->>>>> design restrictions there are.
->>>>>
->>>> Please do. The more I look at this the more I think we must use the
->>>> existing infrastructure for allocating "dma memory". Getting
->>>> dma_alloc_coherent() supporting non-power-of-2 memory regions would
->>> Just to be precise it should be dma_alloc_from_coherent().
->>>
->>> Marek, what is your opinion on that, can we make dma_alloc_from_coherent
->>> able to allocate memory for sizes with bigger granularity.
->>>
->>> For your convenience here [1] is the mail thread.
->> There should be no technical restrictions to add support for bigger
->> granularity than power-of-2. dma_alloc_from_coherent uses standard
->> bitmap based allocator, so it already support tracking allocations of
->> arbitrary size.
-> I believe we should be able to change the parameter of
-> bitmap_{find_free,release,allocate}_region() to take a size rather than
-> an order.
->
-> The mask used in __reg_op() is an unsigned long, that is stamped over
-> the region to be masked or cleared, so there are some clear restrictions
-> in what parameters we can pass there - without having to break this
-> operation up in steps.
->
-> But if drive the offset by taking the next power-of-two of the size and
-> then align the number of bits to min(count, BITS_PER_LONG) we should
-> retain the performance characteristics and requirements of __reg_op().
->
->> However for the small allocations (smaller than 64KiB?, 512KiB?) it
->> would make sense to keep nearest-power-of-2 round up to prevent memory
->> fragmentation.
-> But in our case each bit matches a single page, so by making sure the
-> mask always fills the unsigned long in the larger cases we would end up
-> with having to align things to 128kb (or 256kb if unsigned long is 64
-> bit).
+When the switch is on, the system is host-only.
+When the switch is off, the default role is device mode, and
+switch the role through gpio USB_SW_SEL_PM by software.
 
-By preventing memory fragmentation I wanted to align small allocations (less
-than the mentioned 64KiB or 512KiB) to nearest-power-of-2 of their size just
-like it is done now.
+> > 
+> > 2. Using USB_HS_ID as vbus-gpio (input), and USB_SW_SEL as id-gpio (output)
+> 
+> This is pretty much what has been implemented. USB_HS_ID is an
+> extcon-usb-gpio.c device.
 
-Best regards
+At some designs, this gpio is tied to ID pin at MicroB connector, and
+using a Mirco-AB cable to switch the role.
+
+> 
+> > I can't find hardware relationship between each other, maybe I miss
+> > something.
+> 
+> I believe USB_SW_SEL is the physical switch (218-4LPST) while
+> USB_SW_SEL_PM is the software controllable part using a GPIO. USB_HS_ID
+> is just the vbus line from the uB connector and that line goes straight
+> into the SoC via a GPIO.
+> 
+> > This use case (design) seems strange, usually, we use ID pin controls
+> > vbus, but seldom use vbus pin control ID.
+> > How you would like to implement it? When the USB cable is connected
+> > (between PC), it receives vbus-gpio interrupt, then you set USB_SW_SEL
+> > as low? If disconnected, you set USB_SW_SEL as high?
+> 
+> Right. The documented behavior is to detect the micro-usb cable and
+> drive USB_SW_SEL low. When the cable is unplugged we drive USB_SW_SEL
+> high. Maybe that should be changed though? If we always sampled
+> USB_SW_SEL as a USB_HOST extcon and the vbus line as a USB extcon then
+> we could allow the user to decide either with the physical switch or
+> with some sort of software control to toggle that gpio.
+> 
+> > When the USB controller works at Host mode, what will happen if the user
+> > connects USB cable at device port?
+> 
+> The devices on the two type-A connectors will be disconnected and we'll
+> switch from host mode to device mode.
+> 
+> > 
+> > 3. Using sysfs to switch the role
+> > Set USB_SW_SEL according to "role" at debugfs
+> 
+> sysfs isn't debugfs, but yes I wonder if we need to worry about the
+> debugfs role switching support here and toggle the gpio manually without
+> involving extcon. That would mean we need to have a way for the chipidea
+> controller to toggle this gpio/mux itself.
+> 
+> > 
+> > Which one you would like to implement? Or anything else I miss?
+> > 
+> 
+> Mostly #2, but I'm concerned that the DT binding is going to force that
+> decision on others who may have the same switch and want to do #1 or #3.
+> So how to design it in a way that makes it work in all cases? Also, what
+> to do if the USB_SW_SEL switch is driven high by the physical switch?
+> That will "override" any software control we might be able to use, so
+> hopefully we can detect this somehow and prevent the role switch from
+> happening.
+
+>From my point, the physical switch is only used to force host mode. The
+#1 and #2 can't be supported at the same time. For #3, it is not the
+use case for this design. #3 is usually used for the single port which
+needs to support switching role on the fly without disconnection.
+So, you may only need to consider #2, you can't use extcon-usb-gpio.c
+directly since you need to set one gpio to mux the dp/dm, Baolu Lu had
+USB MUX patch set before which may satisfy your requirement. [1]
+
+[1] https://lkml.org/lkml/2016/5/30/36
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+
+Best Regards,
+Peter Chen
