@@ -1,68 +1,38 @@
-From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 4/6] ARM: dts: imx6qdl-icore: Add usbhost support
-Date: Fri, 16 Sep 2016 00:46:53 +0530
-Message-ID: <1473967015-8523-5-git-send-email-jagan@amarulasolutions.com>
-References: <1473967015-8523-1-git-send-email-jagan@amarulasolutions.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 5/8] ARM: dts: am335x-boneblack: Add
+ blue-and-red-wiring -property to LCDC node
+Date: Thu, 15 Sep 2016 12:22:59 -0700
+Message-ID: <20160915192257.hbz4vqxgd5thesfq@atomide.com>
+References: <cover.1472719892.git.jsarha@ti.com>
+ <fad833a6a4368196f4fc131a54d90f5b90169393.1472719892.git.jsarha@ti.com>
+ <d9dcc43b-6884-aab1-ff82-c66ecf6e96b6@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473967015-8523-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <d9dcc43b-6884-aab1-ff82-c66ecf6e96b6-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add usbhost support for Engicam i.CoreM6 dql modules.
+* Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> [160915 02:44]:
+> Tony,
+> The functional changes are now merged. But let's not merge this bbb dts
+> patch just yet, so we do not cause a conflict with the other bbb hdmi
+> audio dts change[1] that slipped into tda998x pull request. The patch
+> can very well wait until v4.10 if needed.
+> 
+> However, the other three dts patches[2] can be merged. Should I rebase
+> those on top of some branch and resend them?
 
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
-Changes for v5:
-	- none
-Changes for v4:
-	- new patch
+Sorry I've lost count of all the patches and about tag all my emails
+as read for v4.9 merge window. So yeah it's best to resend the dts
+changes separately :)
 
- arch/arm/boot/dts/imx6qdl-icore.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Regards,
 
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index b7f7102..fb77a47 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -54,6 +54,15 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
- 	};
-+
-+	reg_usb_h1_vbus: usb_h1_vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_h1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
- };
- 
- &can1 {
-@@ -107,6 +116,12 @@
- 	status = "okay";
- };
- 
-+&usbh1 {
-+	vbus-supply = <&reg_usb_h1_vbus>;
-+	disable-over-current;
-+	status = "okay";
-+};
-+
- &usdhc1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc1>;
--- 
-2.7.4
-
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
