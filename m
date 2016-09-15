@@ -1,7 +1,7 @@
 From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 3/4] mmc: sh_mmcif: Document r7s72100 DT bindings
-Date: Thu, 15 Sep 2016 15:34:04 -0400
-Message-ID: <20160915193405.26943-4-chris.brandt@renesas.com>
+Subject: [PATCH 4/4] ARM: dts: rskrza1: add mmc DT support
+Date: Thu, 15 Sep 2016 15:34:05 -0400
+Message-ID: <20160915193405.26943-5-chris.brandt@renesas.com>
 References: <20160915193405.26943-1-chris.brandt@renesas.com>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <20160915193405.26943-1-chris.brandt@renesas.com>
@@ -10,22 +10,55 @@ To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
+Since the MMC and SDHI1 on the RSK share the same socket connector (CN1),
+you cannot enabled MMC and SDHI1 at the same time. Therefore the status
+has been set to disabled because SDHI is more popular with this board.
+However, keeping this code in here serves as a good way to document how
+the MMC on the RZ/A1 has been known to work for someone that does want
+to use MMC instead of SDHI1.
+
+A fixed 3.3 regulator is included because it is required by the mmc
+driver.
+
 Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 ---
- Documentation/devicetree/bindings/mmc/renesas,mmcif.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/r7s72100-rskrza1.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-index ff611fa..bf50a00 100644
---- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-+++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-@@ -8,6 +8,7 @@ Required properties:
+diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+index e5dea5b..9228b04 100644
+--- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
++++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+@@ -33,6 +33,15 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 	};
++
++	d3_3v: regulator-d3-3v {
++		compatible = "regulator-fixed";
++		regulator-name = "D3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
+ };
  
- - compatible: should be "renesas,mmcif-<soctype>", "renesas,sh-mmcif" as a
-   fallback. Examples with <soctype> are:
-+	- "renesas,mmcif-r7s72100" for the MMCIF found in r7s72100 SoCs
- 	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
- 	- "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
- 	- "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
+ &extal_clk {
+@@ -56,6 +65,14 @@
+ 	};
+ };
+ 
++&mmcif {
++	vmmc-supply = <&d3_3v>;
++	vqmmc-supply = <&d3_3v>;
++	bus-width = <8>;
++	non-removable;
++	status = "disabled"; /* shares CN1 with sdhi1 */
++};
++
+ &scif2 {
+ 	status = "okay";
+ };
 -- 
 2.9.2
