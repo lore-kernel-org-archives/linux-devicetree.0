@@ -1,87 +1,41 @@
-From: Patrice Chotard <patrice.chotard@st.com>
-Subject: Re: [PATCH v3 00/14] Clock improvement for video playback
-Date: Thu, 15 Sep 2016 13:42:20 +0200
-Message-ID: <8257df40-272d-af63-d9b7-13d6aaea39a2@st.com>
-References: <1472473626-15398-1-git-send-email-gabriel.fernandez@st.com>
- <20160914183620.GV7243@codeaurora.org>
- <af43c05e-4485-d756-3362-19a76aa40307@st.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 00/19] [RESEND] Remove STiH415 and STiH416 SoC platform support
+Date: Thu, 15 Sep 2016 14:00:36 +0200
+Message-ID: <10792443.jxCOopyCy4@wuerfel>
+References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org> <7524458.uFhxDUCqEo@wuerfel> <20160915070139.GA14319@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <af43c05e-4485-d756-3362-19a76aa40307@st.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, gabriel.fernandez@st.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Pankaj Dev <pankaj.dev@st.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160915070139.GA14319@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, patrice.chotard@st.com, devicetree@vger.kernel.org, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+On Thursday, September 15, 2016 8:01:39 AM CEST Peter Griffin wrote:
+> 
+> STiH415 I'm sure never shipped. I'm reasonably sure STiH416 didn't
+> either. These SoCs were considered legacy even when I was at ST
+> ~3 years ago.
+> 
+> Also remember these are STB SoC's, so JTAG fuses are blown in
+> production boxes, and also full security is enabled. This means the
+> primary bootloader will only boot a signed kernel. So if a end user
+> did happen to have a box they would be unable to upgrade their kernel.
+> 
+> From the landing team perspective they were interesting in that they
+> shared many IPs with the STiH407 family on which future chipsets were
+> based, and were available to us when that silicon was harder to get
+> hold of. So we used it as a vehicle for upstreaming so that upstream
+> support was already quite good when STiH407 silicon did land on our
+> desk.
 
+Ok, makes sense. I did stumble over one machine basedon STiH412
+the other day [1], but there probably isn't much shared with that
+one. Since this a NAS server rather than an STB box, it's probably
+less locked-down and potentially a target for OpenWRT or similar.
 
-On 09/15/2016 08:57 AM, Patrice Chotard wrote:
-> 
-> 
-> On 09/14/2016 08:36 PM, Stephen Boyd wrote:
->> On 08/29, gabriel.fernandez@st.com wrote:
->>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
->>>
->>> v3:
->>>   - Rebase to v4.8-rc1
->>>   - Tipo fix in st,clkgen-pll.txt
->>>   - Add Ack of Peter for the series
->>>   - Add missed patch: "ARM: DT: STiH4xx: Simplify clock binding of STiH4xx platforms"
->>>
->>> v2:
->>>   - Simpliflication of clock binding
->>>     remark from Rob https://lkml.org/lkml/2016/5/25/492
->>>   - Suppression of stih415-416 support for the clocks (in order
->>> 	to help simplification of clock binding)
->>>     (others patchs for the machine and drivers will come)
->>>
->>> This serie allows to increase video resolutions and make audio
->>> adjustment during a video playback.
->>>
->>> Gabriel Fernandez (14):
->>>   drivers: clk: st: Remove stih415-416 clock support
->>>   drivers: clk: st: Simplify clock binding of STiH4xx platforms
->>>   ARM: DT: STiH4xx: Simplify clock binding of STiH4xx platforms
->>>   drivers: clk: st: Add fs660c32 synthesizer algorithm
->>>   drivers: clk: st: Add clock propagation for audio clocks
->>>   drivers: clk: st: Handle clk synchronous mode for video clocks
->>>   ARM: DT: STiH407: Enable clock propagation for audio clocks
->>>   ARM: DT: STiH410: Enable clock propagation for audio clocks
->>>   ARM: DT: STiH418: Enable clock propagation for audio clocks
->>>   ARM: DT: STiH407: Enable synchronous clock mode for video clocks
->>>   ARM: DT: STiH410: Enable synchronous clock mode for video clocks
->>>   ARM: DT: STiH418: Enable synchronous clock mode for video clocks
->>>   ARM: DT: STi: STiH407: clock configuration to address 720p and 1080p
->>>   ARM: DT: STi: STiH410: clock configuration to address 720p and 1080p
->>
-> 
-> Hi Stephen
-> 
->> The order of patches intermingles clk changes and dts changes.
->> I'd prefer to not take any patches for dts through the clk tree,
->> so can those be deferred to an arm-soc PR? 
-> 
-> No problem, i will take all DTS patches and submit a pull request to arm-soc.
-> 
-> Assuming that works,
->> I'd just pick 1-2, and 4-6 into the clk tree and the rest can go
->> on top through arm-soc.
+	Arnd
 
-Stephen
-
-Just to confirm, these patches will be merged into clk-next tree ? so dedicated for v4.9 ?
-
-Thanks
-
-Patrice
-
->>
-> 
-> Perfect 
-> 
-> Thanks
-> 
-> 
-> 
+[1] http://www.heise.de/preisvergleich/synology-diskstation-ds216play-16tb-a1400885.html
