@@ -1,11 +1,13 @@
 From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: [PATCH] ARM: dts: sun8i: enable UART1 for iNet D978 Rev2 board
-Date: Thu, 15 Sep 2016 10:15:04 +0800
-Message-ID: <20160915021504.65483-1-icenowy@aosc.xyz>
+Subject: Re: [PATCH] ARM: dts: sun8i: enable UART1 for iNet D978 Rev2 board
+Date: Thu, 15 Sep 2016 10:22:18 +0800
+Message-ID: <1262161473906138@web14h.yandex.ru>
+References: <20160915021504.65483-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160915021504.65483-1-icenowy@aosc.xyz>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,83 +18,62 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.xyz>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-UART1 is connected to the bluetooth part of RTL8723BS WiFi/BT combo card
-on iNet D978 Rev2 board.
-
-Enable the UART1 to make it possible to use the modified hciattach by
-Realtek to drive the BT part of RTL8723BS.
-
-On the board no r_uart pins are found now (the onboard RX/TX pins are
-wired to PF2/PF4, which is muxed with mmc0), so also disabled it.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
----
- arch/arm/boot/dts/sun8i-a23-a33.dtsi           | 14 ++++++++++++++
- arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts | 20 ++++++++++++++++++++
- 2 files changed, 34 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index 7e05e09..c340885 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -361,6 +361,20 @@
- 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 			};
- 
-+			uart1_pins_a: uart1@0 {
-+				allwinner,pins = "PG6", "PG7";
-+				allwinner,function = "uart1";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			uart1_pins_cts_rts_a: uart1-cts-rts@0 {
-+				allwinner,pins = "PG8", "PG9";
-+				allwinner,function = "uart1";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
- 			mmc0_pins_a: mmc0@0 {
- 				allwinner,pins = "PF0", "PF1", "PF2",
- 						 "PF3", "PF4", "PF5";
-diff --git a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
-index 0f52cd9..fb46655 100644
---- a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
-+++ b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
-@@ -49,6 +49,15 @@
- 	model = "INet-D978 Rev 02";
- 	compatible = "primux,inet-d978-rev2", "allwinner,sun8i-a33";
- 
-+	aliases {
-+		serial0 = &uart1;
-+	};
-+
-+	chosen {
-+		/* Delete debug UART as serial0 is the UART for bluetooth */
-+		/delete-property/stdout-path;
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -86,3 +95,14 @@
- 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 	};
- };
-+
-+&r_uart {
-+	status = "disabled";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins_a>,
-+		    <&uart1_pins_cts_rts_a>;
-+	status = "okay";
-+};
--- 
-2.9.3
+CgoxNS4wOS4yMDE2LCAxMDoxNSwgIkljZW5vd3kgWmhlbmciIDxpY2Vub3d5QGFvc2MueHl6PjoK
+PiBVQVJUMSBpcyBjb25uZWN0ZWQgdG8gdGhlIGJsdWV0b290aCBwYXJ0IG9mIFJUTDg3MjNCUyBX
+aUZpL0JUIGNvbWJvIGNhcmQKPiBvbiBpTmV0IEQ5NzggUmV2MiBib2FyZC4KPgo+IEVuYWJsZSB0
+aGUgVUFSVDEgdG8gbWFrZSBpdCBwb3NzaWJsZSB0byB1c2UgdGhlIG1vZGlmaWVkIGhjaWF0dGFj
+aCBieQo+IFJlYWx0ZWsgdG8gZHJpdmUgdGhlIEJUIHBhcnQgb2YgUlRMODcyM0JTLgo+Cj4gT24g
+dGhlIGJvYXJkIG5vIHJfdWFydCBwaW5zIGFyZSBmb3VuZCBub3cgKHRoZSBvbmJvYXJkIFJYL1RY
+IHBpbnMgYXJlCj4gd2lyZWQgdG8gUEYyL1BGNCwgd2hpY2ggaXMgbXV4ZWQgd2l0aCBtbWMwKSwg
+c28gYWxzbyBkaXNhYmxlZCBpdC4KPgo+IFNpZ25lZC1vZmYtYnk6IEljZW5vd3kgWmhlbmcgPGlj
+ZW5vd3lAYW9zYy54eXo+CgpPaCBJIGZvcmdvdCB0byBhZGQgYSBwYXRjaCB2ZXJzaW9uIG51bWJl
+ci4uLgpJdCdzIFBBVENIIHYzLgoKKEJ1dCBpdCBzZWVtcyB0aGF0IEkgc2hvdWxkIHNlbmQgYSB2
+NCB0byBzcGxpdCB0aGUgZHRzaSBjaGFuZ2UgYW5kIGR0cyBjaGFuZ2UuKQoKPiAtLS0KPiDCoGFy
+Y2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEyMy1hMzMuZHRzaSB8IDE0ICsrKysrKysrKysrKysrCj4g
+wqBhcmNoL2FybS9ib290L2R0cy9zdW44aS1hMzMtaW5ldC1kOTc4LXJldjIuZHRzIHwgMjAgKysr
+KysrKysrKysrKysrKysrKysKPiDCoDIgZmlsZXMgY2hhbmdlZCwgMzQgaW5zZXJ0aW9ucygrKQo+
+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEyMy1hMzMuZHRzaSBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEyMy1hMzMuZHRzaQo+IGluZGV4IDdlMDVlMDkuLmMzNDA4
+ODUgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTIzLWEzMy5kdHNpCj4g
+KysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTIzLWEzMy5kdHNpCj4gQEAgLTM2MSw2ICsz
+NjEsMjAgQEAKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqBhbGx3aW5uZXIscHVsbCA9IDxTVU40SV9QSU5DVFJMX05PX1BV
+TEw+Owo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+fTsKPgo+ICsgdWFydDFfcGluc19hOiB1YXJ0MUAwIHsKPiArIGFsbHdpbm5lcixwaW5zID0gIlBH
+NiIsICJQRzciOwo+ICsgYWxsd2lubmVyLGZ1bmN0aW9uID0gInVhcnQxIjsKPiArIGFsbHdpbm5l
+cixkcml2ZSA9IDxTVU40SV9QSU5DVFJMXzEwX01BPjsKPiArIGFsbHdpbm5lcixwdWxsID0gPFNV
+TjRJX1BJTkNUUkxfTk9fUFVMTD47Cj4gKyB9Owo+ICsKPiArIHVhcnQxX3BpbnNfY3RzX3J0c19h
+OiB1YXJ0MS1jdHMtcnRzQDAgewo+ICsgYWxsd2lubmVyLHBpbnMgPSAiUEc4IiwgIlBHOSI7Cj4g
+KyBhbGx3aW5uZXIsZnVuY3Rpb24gPSAidWFydDEiOwo+ICsgYWxsd2lubmVyLGRyaXZlID0gPFNV
+TjRJX1BJTkNUUkxfMTBfTUE+Owo+ICsgYWxsd2lubmVyLHB1bGwgPSA8U1VONElfUElOQ1RSTF9O
+T19QVUxMPjsKPiArIH07Cj4gKwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgbW1jMF9waW5zX2E6IG1tYzBAMCB7Cj4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYWxsd2lubmVy
+LHBpbnMgPSAiUEYwIiwgIlBGMSIsICJQRjIiLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAiUEYzIiwgIlBGNCIsICJQRjUiOwo+IGRpZmYgLS1naXQgYS9hcmNo
+L2FybS9ib290L2R0cy9zdW44aS1hMzMtaW5ldC1kOTc4LXJldjIuZHRzIGIvYXJjaC9hcm0vYm9v
+dC9kdHMvc3VuOGktYTMzLWluZXQtZDk3OC1yZXYyLmR0cwo+IGluZGV4IDBmNTJjZDkuLmZiNDY2
+NTUgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTMzLWluZXQtZDk3OC1y
+ZXYyLmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy1pbmV0LWQ5NzgtcmV2
+Mi5kdHMKPiBAQCAtNDksNiArNDksMTUgQEAKPiDCoMKgwqDCoMKgwqDCoMKgwqBtb2RlbCA9ICJJ
+TmV0LUQ5NzggUmV2IDAyIjsKPiDCoMKgwqDCoMKgwqDCoMKgwqBjb21wYXRpYmxlID0gInByaW11
+eCxpbmV0LWQ5NzgtcmV2MiIsICJhbGx3aW5uZXIsc3VuOGktYTMzIjsKPgo+ICsgYWxpYXNlcyB7
+Cj4gKyBzZXJpYWwwID0gJnVhcnQxOwo+ICsgfTsKPiArCj4gKyBjaG9zZW4gewo+ICsgLyogRGVs
+ZXRlIGRlYnVnIFVBUlQgYXMgc2VyaWFsMCBpcyB0aGUgVUFSVCBmb3IgYmx1ZXRvb3RoICovCj4g
+KyAvZGVsZXRlLXByb3BlcnR5L3N0ZG91dC1wYXRoOwo+ICsgfTsKPiArCj4gwqDCoMKgwqDCoMKg
+wqDCoMKgbGVkcyB7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvbXBhdGli
+bGUgPSAiZ3Bpby1sZWRzIjsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcGlu
+Y3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiBAQCAtODYsMyArOTUsMTQgQEAKPiDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYWxsd2lubmVyLHB1bGwgPSA8U1VONElfUElOQ1RSTF9O
+T19QVUxMPjsKPiDCoMKgwqDCoMKgwqDCoMKgwqB9Owo+IMKgfTsKPiArCj4gKyZyX3VhcnQgewo+
+ICsgc3RhdHVzID0gImRpc2FibGVkIjsKPiArfTsKPiArCj4gKyZ1YXJ0MSB7Cj4gKyBwaW5jdHJs
+LW5hbWVzID0gImRlZmF1bHQiOwo+ICsgcGluY3RybC0wID0gPCZ1YXJ0MV9waW5zX2E+LAo+ICsg
+PCZ1YXJ0MV9waW5zX2N0c19ydHNfYT47Cj4gKyBzdGF0dXMgPSAib2theSI7Cj4gK307Cj4gLS0K
+PiAyLjkuMwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
