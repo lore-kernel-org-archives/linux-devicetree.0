@@ -1,55 +1,38 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Subject: Re: [PATCH 2/2] phy: msm8996-pcie-phy: Add support to msm8996 pcie
  phy
-Date: Fri, 16 Sep 2016 17:48:08 +0100
-Message-ID: <2296a3a9-164a-c46c-ef98-2bd2d97039c8@linaro.org>
+Date: Fri, 16 Sep 2016 17:49:18 +0100
+Message-ID: <e43b7441-6183-e15c-c944-620d3f376320@linaro.org>
 References: <1473245733-17260-1-git-send-email-srinivas.kandagatla@linaro.org>
  <1473245733-17260-3-git-send-email-srinivas.kandagatla@linaro.org>
- <57D82403.9080004@codeaurora.org>
+ <2afe8523-925f-b538-f217-23ea7a267e11@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57D82403.9080004-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <2afe8523-925f-b538-f217-23ea7a267e11@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 13/09/16 17:06, Archit Taneja wrote:
+On 16/09/16 15:14, Stanimir Varbanov wrote:
+>> > +	writel_relaxed(0x0f, base + QSERDES_COM_BG_TRIM);
+>> > +	writel_relaxed(0x0f, base + QSERDES_COM_PLL_IVCO);
+>> > +	writel_relaxed(0x19, base + QSERDES_COM_CLK_EP_DIV);
+>> > +	writel_relaxed(0x10, base + QSERDES_COM_CLK_ENABLE1);
+>> > +	writel_relaxed(0x00, base + QSERDES_COM_HSCLK_SEL);
+>> > +	writel_relaxed(0x40, base + QSERDES_COM_RESCODE_DIV_NUM);
+>> > +	writel_relaxed(0x00, base + PCIE_COM_SW_RESET);
+>> > +	writel_relaxed(0x03, base + PCIE_COM_START_CONTROL);
+> I'd make an array with register/value pair and write the registers with
+> a for () loop. IMO it will be more readable.
 >
->
-> On 9/7/2016 4:25 PM, Srinivas Kandagatla wrote:
->> This patch adds support to msm8996 pcie phy which supports 3 ports,
->> Port A, Port B and Port C.
->>
->> Each port is independent and connected to a pcie host controller,
->> there is
->> also a common block which is shared across all the 3 ports.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>   drivers/phy/Kconfig                 |   7 +
->>   drivers/phy/Makefile                |   1 +
->>   drivers/phy/phy-qcom-msm8996-pcie.c | 492
->> ++++++++++++++++++++++++++++++++++++
+> Probably 3 arrays - power_on, power_on_common and power_off.
+Thats good idea, I will keep that in mind before sending next version 
+with common phy driver for USB/PCIE/UFS.
 
->> +#define PCIE_LANE_PCS_BASE 0x1400
->
-> I've seen the reg offsets of another SoC using the same
-> IP, but the above offsets aren't the same relative to the
-> phy base. We might want to create more reg properties in
-> DT to accommodate register maps on other SoCs.
-
-Yep, I got some more info on this from Vivek and It looks like this IP 
-has been reused on other Host controllers and SOCs.
-So plan is to write a common driver for all of them.
-
-Thanks,
+thanks
 srini
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
