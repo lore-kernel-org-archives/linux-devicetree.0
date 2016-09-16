@@ -1,60 +1,62 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2] pinctrl: pm8994: add pad voltage regulator defines
-Date: Fri, 16 Sep 2016 18:41:20 +0100
-Message-ID: <1474047681-6821-2-git-send-email-srinivas.kandagatla@linaro.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 2/2] dts: arm64: db820c: add pmic pins specific dts file
+Date: Fri, 16 Sep 2016 18:41:21 +0100
+Message-ID: <1474047681-6821-3-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1474047681-6821-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474047681-6821-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1474047681-6821-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds defines for internal voltage regulators used
-to switch voltage levels on gpio/mpp pads.
+This patch adds pmic specific dts which are configured specially
+for db820c. One of such pin is GPIO_F on the Low Speed expansion
+which has default output voltage of 2.7v. This patch fixes setup
+for that pin to have an output voltage of 1.8v to comply with
+96boards LS expansion specs.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- include/dt-bindings/pinctrl/qcom,pmic-gpio.h | 4 ++++
- include/dt-bindings/pinctrl/qcom,pmic-mpp.h  | 6 ++++++
- 2 files changed, 10 insertions(+)
+ arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi | 15 +++++++++++++++
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi           |  2 ++
+ 2 files changed, 17 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
 
-diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-index aafa76c..d33f17c 100644
---- a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-+++ b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-@@ -89,6 +89,10 @@
- #define PMA8084_GPIO_S4			2
- #define PMA8084_GPIO_L6			3
- 
-+#define PM8994_GPIO_VPH			0
-+#define PM8994_GPIO_S4			2
-+#define PM8994_GPIO_L12			3
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
+new file mode 100644
+index 0000000..0938191
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
+@@ -0,0 +1,15 @@
 +
- /* To be used with "function" */
- #define PMIC_GPIO_FUNC_NORMAL		"normal"
- #define PMIC_GPIO_FUNC_PAIRED		"paired"
-diff --git a/include/dt-bindings/pinctrl/qcom,pmic-mpp.h b/include/dt-bindings/pinctrl/qcom,pmic-mpp.h
-index a15c170..2e360d8f 100644
---- a/include/dt-bindings/pinctrl/qcom,pmic-mpp.h
-+++ b/include/dt-bindings/pinctrl/qcom,pmic-mpp.h
-@@ -65,6 +65,12 @@
- #define PMA8084_MPP_S4			2
- #define PMA8084_MPP_L6			3
- 
-+#define PM8994_MPP_VPH			0
-+/* Only supported for MPP_05-MPP_08 */
-+#define PM8994_MPP_L19			1
-+#define PM8994_MPP_S4			2
-+#define PM8994_MPP_L12			3
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++&pm8994_gpios {
 +
- /*
-  * Analog Input - Set the source for analog input.
-  * To be used with "qcom,amux-route" property
++	pinctrl-names = "default";
++	pinctrl-0 = <&ls_exp_gpio_f>;
++
++	ls_exp_gpio_f: pm8916_mpp4 {
++		pinconf {
++			pins = "gpio5";
++			output-low;
++			power-source = <PM8994_GPIO_S4>; // 1.8V
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index afb218c..422959b 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -12,7 +12,9 @@
+  */
+ 
+ #include "msm8996.dtsi"
++#include "pm8994.dtsi"
+ #include "apq8096-db820c-pins.dtsi"
++#include "apq8096-db820c-pmic-pins.dtsi"
+ 
+ / {
+ 	aliases {
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
