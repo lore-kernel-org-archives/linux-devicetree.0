@@ -1,38 +1,59 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 0/3] ARM: aspeed: add support
-	for the BT IPMI interface
-Date: Fri, 16 Sep 2016 13:58:05 +0200
-Message-ID: <2566577.tsq2Sf5xZr@wuerfel>
-References: <1474022367-21029-1-git-send-email-clg@kaod.org>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] of/platform: Initialise dev->fwnode appropriately
+Date: Fri, 16 Sep 2016 13:07:14 +0100
+Message-ID: <a3974505-7b0e-e1a8-bf84-ee5f62047662@arm.com>
+References: <38259ab3716da072fab37f06d034329244491c13.1473865096.git.robin.murphy@arm.com>
+ <20160915133657.GB14424@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <openipmi-developer-bounces@lists.sourceforge.net>
-In-Reply-To: <1474022367-21029-1-git-send-email-clg@kaod.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
-	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=openipmi-developer>
-List-Post: <mailto:openipmi-developer@lists.sourceforge.net>
-List-Help: <mailto:openipmi-developer-request@lists.sourceforge.net?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
-	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=subscribe>
-Errors-To: openipmi-developer-bounces@lists.sourceforge.net
-To: =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Corey Minyard <minyard@acm.org>, Alistair Popple <alistair@popple.id.au>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, openipmi-developer@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jk@ozlabs.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160915133657.GB14424@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, September 16, 2016 12:39:24 PM CEST C=E9dric Le Goater wrote:
-> =
+On 15/09/16 14:36, Rob Herring wrote:
+> On Wed, Sep 14, 2016 at 04:01:24PM +0100, Robin Murphy wrote:
+>> Whilst we're some of the way towards a universal firmware property
+>> interface, drivers which deal with both OF and ACPI probing end up
+>> having to do things like this:
+>>
+>>     dev->of_node ? &dev->of_node->fwnode : dev->fwnode
+>>
+>> This seems unnecessary, when the OF code could instead simply fill in
+>> the device's fwnode when binding the of_node, and let the drivers use
+>> dev->fwnode either way. Let's give it a go and see what falls out.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  drivers/of/platform.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+> 
+> I've applied this, but what about non-platform devices such as i2c?
 
-> C=E9dric Le Goater (2):
->   ARM: aspeed: Add defconfigs for CONFIG_ASPEED_BT_IPMI_BMC
->   ARM: dts: aspeed: Enable BT IPMI BMC device
+I was indeed wondering that, coming from the perspective of DMA/IOMMU
+configuration which doesn't really apply beyond the PCI and platform
+buses. More generally, at this point it's largely for the benefit of
+subsystems which need to chuck around firmware data for other devices
+that don't exist yet (or at all), which maybe is just the DMA and IRQ
+layers.
 
-These two should go through the arm-soc tree, I assume Joel
-will forward them to arm@kernel.org once the driver gets
-picked up into the ipmi tree.
+I guess beyond that it comes down to auditing the intersection between
+callers of the property API and OF-probed buses, then killing the
+dev_fwnode() helper in property.c and making sure nothing else breaks.
+The possible alternative would be pushing this right down into
+device_initialize(), but that seems a bit wrong.
 
-	Arnd
+Thanks,
+Robin.
 
----------------------------------------------------------------------------=
----
+> 
+> Rob
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
