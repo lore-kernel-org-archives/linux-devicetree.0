@@ -1,36 +1,53 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt-bindings: Add summit vendor id
-Date: Fri, 16 Sep 2016 08:06:29 -0500
-Message-ID: <20160916130629.GA27047@rob-hp-laptop>
-References: <1473243615-29746-1-git-send-email-simhavcs@gmail.com>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH 2/4] ARM: dts: r7s72100: add mmcif to device tree
+Date: Fri, 16 Sep 2016 13:08:13 +0000
+Message-ID: <SG2PR06MB11655B678F23E16AB93C9B008AF30@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20160915193405.26943-1-chris.brandt@renesas.com>
+ <20160915193405.26943-3-chris.brandt@renesas.com>
+ <CAMuHMdU6DKuxYUKNV_-FyczV-pPFpTLso=5HruWgNiXNOenVRQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1473243615-29746-1-git-send-email-simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAMuHMdU6DKuxYUKNV_-FyczV-pPFpTLso=5HruWgNiXNOenVRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Myungjoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rask Ingemann Lambertsen <ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 07, 2016 at 03:50:10PM +0530, Vinay Simha BN wrote:
-> Add vendor id for Summit microelectronics
-> for SMB347 charger.
-> 
-> Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Myungjoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
-
-I've applied this 1 patch to my tree. There are alphabetizing fixes in 
-vendor-prefixes.txt that will cause merge conflicts.
-
-Rob
+SGkgR2VlcnQsDQoNCk9uIDkvMTUvMjAxNiwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KPiA+
+ICsgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjY4IElSUV9UWVBFX0xFVkVM
+X0hJR0gNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBHSUNfU1BJIDI2OSBJUlFf
+VFlQRV9MRVZFTF9ISUdIPjsNCj4gDQo+IFRoZSBiaW5kaW5ncyBkbyBub3Qgc2F5IGFueXRoaW5n
+IGFib3V0IGludGVycnVwdHMgKGhlbmNlIHRoYXQgc2hvdWxkIGJlDQo+IGFkZGVkKS4NCg0KSSdt
+IHNvcnJ5LCBJJ20gY29uZnVzZWQuLi4NCkFyZSB5b3Ugc2F5aW5nOg0KIEEpIEkgZm9yZ290IHRv
+IGFkZCBzb21ldGhpbmc/DQogQikgQXMgYSBnZW5lcmFsIHN0YXRlbWVudCwgdGhlIHJlbmVzYXMs
+bW1jaWYudHh0IGZpbGUgZG9lc24ndCBzYXkgYW55dGhpbmcgYWJvdXQgaW50ZXJydXB0cz8NCg0K
+DQo+IFRoZSBkcml2ZXIgaGFuZGxlcyBlaXRoZXIgMSBjb21iaW5lZCBvciAyIHNlcGFyYXRlIGlu
+dGVycnVwdHMuDQo+IFRoZSBkYXRhc2hlZXQgc2F5cyBNTUMgaGFzIDMgaW50ZXJydXB0IHJlcXVl
+c3RzLCB0aG91Z2g/DQoNClRoZSBJUCBpdHNlbGYgaGFzIDMgaW50ZXJydXB0czoNCiAjMS4gTU1D
+MCwyOTk6IENhcmQgZGV0ZWN0DQogIzIuIE1NQzEsMzAwOiBTdGF0dXMgQ2hhbmdlDQogIzMuIE1N
+QzIsMzAxOiBFcnJvcg0KDQpNYW55IG9mIHRoZSAnTGludXgnIFNvQyBkZXZpY2VzIHRoYXQgdXNl
+IHRoaXMgTU1DIChTSDQsIFItQ2FyKSBhcmUgb25seSBldmVyIGdvaW5nIHRvIHVzZSBlTU1DLCBz
+byB0aGUgY2FyZCBkZXRlY3Rpb24gcG9ydGlvbiBvZiB0aGUgSVAgd2FzIGlycmVsZXZhbnQuIEkg
+YWdyZWUgdGhpcyBpcyB0aGUgc2FtZSBjYXNlIGZvciB0aGUgUlovQSAod2hvIHdvdWxkIGV2ZXIg
+dXNlIGFuIE1NQyBjYXJkIG5vdyBhIGRheXM/Pz8/PykNClRoZSAnc21hbGxlcicgU29DcyBrZXB0
+IGl0IGluIChTSDJBLCBSWi9BMSkgYnV0IHRoZSAnYmlnZ2VyJyBTb0NzIGxlZnQgaXQgb3V0IChT
+SDRBLCBSLUNhcikuDQoNClRoZSBvbmx5IHdheSB0byBlbmFibGUgdGhhdCBpbnRlcnJ1cHQgaXMg
+dG8gd3JpdGUgdG8gdGhlIENFX0RFVEVDVCByZWdpc3RlciAob2Zmc2V0IDB4NzApIHdoaWNoIHRo
+ZSBkcml2ZXIgZG9lc24ndCBkby4NCg0KSG93ZXZlci4uLi5pZiB5b3UgbG9vayBpbiBzaF9tbWNp
+Zi5oLCB5b3UnbGwgc2VlIHRoYXQgc2FtZSBvZmZzZXQgKDB4NzApIGlzIGNhbGxlZCBDRV9DTEtf
+Q1RSTDINCg0KI2RlZmluZSBNTUNJRl9DRV9DTEtfQ1RSTDIgICAgICAweDAwMDAwMDcwDQoNCldo
+aWNoIGl0IG9ubHkgd3JpdGVzIHRvIGlmICdjbGtfY3RybDJfZW5hYmxlJyBpcyBkZXNpZ25hdGVk
+Lg0KDQoJaWYgKGhvc3QtPmNsa19jdHJsMl9lbmFibGUpDQoJCXNoX21tY2lmX3dyaXRlbChob3N0
+LT5hZGRyLCBNTUNJRl9DRV9DTEtfQ1RSTDIsIDB4MEYwRjAwMDApOw0KDQpBbmQsIEkgc2VlIG5v
+IFJlbmVzYXMgU29DIHRoYXQgZXZlciBzZXRzIHRoYXQgb3Igd291bGQgZXZlciB1c2UgaXQgc28g
+SSBjYW4ndCBldmVuIHRlbGwgeW91IHdoYXQgU29DIHRoYXQgd2FzIGZvciAoU0g0LCBTSC1Nb2Jp
+bGUsIEFSTSkNCg0KDQpTbyBhZnRlciBhbGwgdGhhdCByYW50aW5nLi4uSSBzZWUgbm8gbmVlZCB0
+byBzdXBwb3J0IGNhcmQgZGV0ZWN0IGZvciBNTUMgZm9yIHRoZSBSWi9BIChvciBhbnkgZnV0dXJl
+IFJaKSBzbyBJJ2QgbGlrZSB0byBqdXN0IGxlYXZlIGl0IGFzIGlzLg0KDQpEbyB5b3UgYWdyZWU/
+DQoNCkNocmlzDQoNCg0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
