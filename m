@@ -1,74 +1,56 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH] pcie: qcom: add support to msm8996 PCIE controller
-Date: Fri, 16 Sep 2016 16:34:03 +0100
-Message-ID: <73a5a49c-3adb-ffca-52b0-1de22aabe088@linaro.org>
-References: <1473246412-24616-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20160916141708.GA21504@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5] rtc: omap: Support ext_wakeup configuration
+Date: Fri, 16 Sep 2016 10:37:59 -0500
+Message-ID: <20160916153759.GA12050@rob-hp-laptop>
+References: <20160908105203.8641-1-m.niestroj@grinn-global.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160916141708.GA21504@rob-hp-laptop>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, linux-pci@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160908105203.8641-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the Review,
+On Thu, Sep 08, 2016 at 12:52:03PM +0200, Marcin Niestroj wrote:
+> Support configuration of ext_wakeup sources. This patch makes it
+> possible to enable ext_wakeup and set it's polarity, depending on board
+> configuration. AM335x's dedicated PMIC (tps65217) uses ext_wakeup to
+> notify about power-button presses. Handling power-button presses enables
+> to recover from RTC-only power states correctly.
+> 
+> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+> ---
+> Hi,
+> 
+> This patch adds support for ext_wakeup using generic pinconf device-tree
+> bindings, with one added custom property.
+> 
+> Changes v4 -> v5 (suggested by Rob):
+>  * Don't use GPIO defines in ti,input-polarity, use optional ti,active-high
+>    boolean instead.
+>  * Use '-' instead of '_' in node name.
+> 
+> Changes v1 -> v4:
+>  * This is a total reimplementation, so it is not based on any of the previous
+>    patch versions. This approach has been suggested by Tony and Grygorii
+>    in [1].
+> 
+> Patch was developed on 4.7, rebased on 4.8-rc5, tested using chiliBoard.
+> 
+> [1] http://www.spinics.net/lists/devicetree/msg131516.html
+> 
+>  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  21 +++
 
-On 16/09/16 15:17, Rob Herring wrote:
-> On Wed, Sep 07, 2016 at 12:06:52PM +0100, Srinivas Kandagatla wrote:
->
+For the binding:
 
-...
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
->>
->> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->> index 4059a6f..1ddfcb4 100644
->> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->> @@ -92,6 +92,18 @@
-...
->>  	Definition: A phandle and power domain specifier pair to the
->>  		    power domain which is responsible for collapsing
->> @@ -137,6 +156,11 @@
->>  	Definition: A phandle to the analog power supply for IC which generates
->>  		    reference clock
->>
->> +- vdda_1p8-supply:
->
-> Don't use '_' in property names.
-
-Will fix it and example to match these properties in next version.
-
->
->> +	Usage: required for msm8996/apq8096
->> +	Value type: <phandle>
->> +	Definition: A phandle to the analog power supply for PCIE_1P8
->> +
->>  - phys:
->>  	Usage: required for apq8084
->>  	Value type: <phandle>
->> @@ -231,3 +255,65 @@
->>  		pinctrl-0 = <&pcie0_pins_default>;
->>  		pinctrl-names = "default";
->>  	};
->> +
->> +* Example for apq8096:
->> +	pcie1: qcom,pcie@00608000 {
->
-> pcie@...
-Yep, will fix it in next version.
->
->> +		compatible = "qcom,pcie-msm8996", "snps,dw-pcie";
->> +		power-domains = <&gcc PCIE1_GDSC>;
->> +		bus-range = <0x00 0xff>;
->> +		num-lanes = <1>;
->> +
->> +		status  = "disabled";
->> +
->> +		reg = <0x00608000 0x2000>,
->> +		      <0x0d000000 0xf1d>,
->> +		      <0x0d000f20 0xa8>,
->> +		      <0x0d100000 0x100000>;
->> +
+>  drivers/rtc/Kconfig                                |   1 +
+>  drivers/rtc/rtc-omap.c                             | 168 ++++++++++++++++++++-
+>  3 files changed, 182 insertions(+), 8 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
