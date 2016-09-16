@@ -1,37 +1,32 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 0/3] ARM: dts: am335x-* Add blue-and-red-wiring propery to lcdc nodes
-Date: Fri, 16 Sep 2016 14:50:10 +0300
-Message-ID: <cover.1474025756.git.jsarha@ti.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos: Remove "simple-bus" compatible from
+ fimc-is node
+Date: Fri, 16 Sep 2016 13:58:06 +0200
+Message-ID: <6ea5a94f-fc21-d5d4-faf3-bbee9cc8160c@samsung.com>
+References: <CGME20160916083407eucas1p103af8b14d09de02ea25715c495b9f8fc@eucas1p1.samsung.com>
+ <1474014825-28969-1-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1474014825-28969-1-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: kgene@kernel.org, b.zolnierkie@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-These patches complete the am335x LCDC color errata fix[1]. The
-functional patches are now queued for v4.9.
+On 09/16/2016 10:33 AM, Sylwester Nawrocki wrote:
+> The "simple-bus" compatible was originally added for fimc-is only
+> to ensure the child devices instantiation.  The child devices are
+> now being created by the parent device driver so remove the
+> "simple-bus" compatible.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4x12.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-The patch for am335x-boneblack.dts is delayed until v4.10 or v4.9-rc
-phase to avoid conflickt with BBB HDMI audio DTS patch that slipped
-into tda998x pull request.
+Thanks, applied.
 
-[1] http://www.spinics.net/lists/devicetree/msg141246.html
-
-Jyri Sarha (3):
-  ARM: dts: am335x-evm: Add blue-and-red-wiring -property to lcdc node
-  ARM: dts: am335x-evmsk: Whitespace cleanup of lcdc related nodes
-  ARM: dts: am335x-evmsk: Add blue-and-red-wiring -property to lcdc node
-
- arch/arm/boot/dts/am335x-evm.dts   |  2 ++
- arch/arm/boot/dts/am335x-evmsk.dts | 42 ++++++++++++++++++++------------------
- 2 files changed, 24 insertions(+), 20 deletions(-)
-
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
