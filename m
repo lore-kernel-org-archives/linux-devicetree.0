@@ -1,90 +1,82 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH RFC 8/8] ARM: dts: sk-rzg1m: initial device tree
-Date: Fri, 16 Sep 2016 16:38:38 +0300
-Message-ID: <2097453.1xPZsJcFmC@wasted.cogentembedded.com>
-References: <3533019.Wim1Kuh1ic@wasted.cogentembedded.com>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH v1 1/3] ARM: dts: imx6qdl-apalis: Do not rely on DDC I2C
+ bus bitbang for HDMI
+Date: Fri, 16 Sep 2016 13:38:35 +0000
+Message-ID: <1474033114.3103.25.camel@toradex.com>
+References: <9d2c17aa2e00e6ff4349a53de8247860d2382607.1473833908.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <3533019.Wim1Kuh1ic@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <9d2c17aa2e00e6ff4349a53de8247860d2382607.1473833908.git.maitysanchayan@gmail.com>
+Content-Language: en-US
+Content-ID: <C26AC469E1370B428A0ECE64767E5D7E@eurprd05.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "maitysanchayan@gmail.com" <maitysanchayan@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "stefan@agner.ch" <stefan@agner.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the initial device  tree for the R8A7743 SoC based SK-RZG1M board.
-The board has one debug serial port (SCIF0); include support for it, so
-that  the serial  console  can work.
-
-Based on the original (and large) patch by Dmitry Shifrin
-<dmitry.shifrin@cogentembedded.com>.
-
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
- arch/arm/boot/dts/Makefile             |    1 
- arch/arm/boot/dts/r8a7743-sk-rzg1m.dts |   44 +++++++++++++++++++++++++++++++++
- 2 files changed, 45 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/Makefile
-===================================================================
---- renesas.orig/arch/arm/boot/dts/Makefile
-+++ renesas/arch/arm/boot/dts/Makefile
-@@ -654,6 +654,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
- 	r7s72100-rskrza1.dtb \
- 	r8a73a4-ape6evm.dtb \
- 	r8a7740-armadillo800eva.dtb \
-+	r8a7743-sk-rzg1m.dtb \
- 	r8a7778-bockw.dtb \
- 	r8a7779-marzen.dtb \
- 	r8a7790-lager.dtb \
-Index: renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
-===================================================================
---- /dev/null
-+++ renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
-@@ -0,0 +1,44 @@
-+/*
-+ * Device Tree Source for the SK-RZG1M board
-+ *
-+ * Copyright (C) 2016 Cogent Embedded, Inc.
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2. This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/dts-v1/;
-+#include "r8a7743.dtsi"
-+
-+/ {
-+	model = "SK-RZG1M";
-+	compatible = "renesas,sk-rzg1m", "renesas,r8a7743";
-+
-+	aliases {
-+		serial0 = &scif0;
-+	};
-+
-+	chosen {
-+		bootargs = "ignore_loglevel";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0x40000000>;
-+	};
-+
-+	memory@200000000 {
-+		device_type = "memory";
-+		reg = <2 0x00000000 0 0x40000000>;
-+	};
-+};
-+
-+&extal_clk {
-+	clock-frequency = <20000000>;
-+};
-+
-+&scif0 {
-+	status = "okay";
-+};
+T24gV2VkLCAyMDE2LTA5LTE0IGF0IDEyOjA1ICswNTMwLCBTYW5jaGF5YW4gTWFpdHkgd3JvdGU6
+DQo+IFJlbW92ZSB0aGUgdXNlIG9mIEREQyBJMkMgYnVzIGJpdGJhbmcgdG8gc3VwcG9ydCByZWFk
+aW5nIG9mIEVESUQNCj4gYW5kIHJlbHkgb24gc3VwcG9ydCBmcm9tIGludGVybmFsIEhETUkgSTJD
+IG1hc3RlciBjb250cm9sbGVyIGluc3RlYWQuDQo+IEFzIGEgcmVzdWx0IHJlbW92ZSB0aGUgZGV2
+aWNlIHRyZWUgcHJvcGVydHkgZGRjLWkyYy1idXMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBTYW5j
+aGF5YW4gTWFpdHkgPG1haXR5c2FuY2hheWFuQGdtYWlsLmNvbT4NCj4gLS0tDQo+IEhlbGxvLA0K
+PiANCj4gVGhpcyBwYXRjaCBpcyB0ZXN0ZWQgd2l0aCB0aGUgZm9sbG93aW5nIHBhdGNoIGFwcGxp
+ZWQNCj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85Mjk2ODgzLw0KPiANCj4g
+YW5kIGlzIGJhc2VkIG9uIHRoZSBzdWdnZXN0aW9ucyBmcm9tIFZsYWRpbWlyDQo+IGh0dHBzOi8v
+bGttbC5vcmcvbGttbC8yMDE2LzgvMjkvMzIyDQo+IA0KPiBUaGlzIGFuZCBmb2xsb3dpbmcgdHdv
+IHBhdGNoZXMgYXJlIGJhc2VkIG9uIHRvcCBvZiBzaGF3bidzDQo+IGZvci1uZXh0IGJyYW5jaC4N
+Cj4gDQo+IFJlZ2FyZHMsDQo+IFNhbmNoYXlhbi4NCj4gLS0tDQo+IMKgYXJjaC9hcm0vYm9vdC9k
+dHMvaW14NnEtYXBhbGlzLWl4b3JhLmR0cyB8wqDCoDYgLS0tLS0tDQo+IMKgYXJjaC9hcm0vYm9v
+dC9kdHMvaW14NnFkbC1hcGFsaXMuZHRzacKgwqDCoMKgfCAyNSArKysrKysrKystLS0tLS0tLS0t
+LS0tDQo+IC0tLQ0KPiDCoDIgZmlsZXMgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCAyMiBkZWxl
+dGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cS1hcGFs
+aXMtaXhvcmEuZHRzDQo+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEtYXBhbGlzLWl4b3JhLmR0
+cw0KPiBpbmRleCAyMDdiODViLi5kOTk5NzllIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290
+L2R0cy9pbXg2cS1hcGFsaXMtaXhvcmEuZHRzDQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
+eDZxLWFwYWxpcy1peG9yYS5kdHMNCj4gQEAgLTU1LDcgKzU1LDYgQEANCj4gwqAJCcKgwqDCoMKg
+wqAiZnNsLGlteDZxIjsNCj4gwqANCj4gwqAJYWxpYXNlcyB7DQo+IC0JCWkyYzAgPSAmaTJjZGRj
+Ow0KPiDCoAkJaTJjMSA9ICZpMmMxOw0KPiDCoAkJaTJjMiA9ICZpMmMyOw0KPiDCoAkJaTJjMyA9
+ICZpMmMzOw0KDQpJIHdvdWxkIHN1Z2dlc3QgcmlzaW5nIHRoZW0gdXAgaW4gcmFuay4NCg0KPiBA
+QCAtMTg2LDExICsxODUsNiBAQA0KPiDCoH07DQo+IMKgDQo+IMKgJmhkbWkgew0KPiAtCWRkYy1p
+MmMtYnVzID0gPCZpMmNkZGM+Ow0KPiAtCXN0YXR1cyA9ICJva2F5IjsNCj4gLX07DQo+IC0NCj4g
+LSZpMmNkZGMgew0KPiDCoAlzdGF0dXMgPSAib2theSI7DQo+IMKgfTsNCj4gwqANCj4gZGlmZiAt
+LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtYXBhbGlzLmR0c2kNCj4gYi9hcmNoL2Fy
+bS9ib290L2R0cy9pbXg2cWRsLWFwYWxpcy5kdHNpDQo+IGluZGV4IDk5ZTMyM2IuLjhjNjdkZDgg
+MTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtYXBhbGlzLmR0c2kNCj4g
+KysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1hcGFsaXMuZHRzaQ0KPiBAQCAtNTMsMTgg
+KzUzLDYgQEANCj4gwqAJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+IMKgCX07DQo+IMKgDQo+IC0J
+LyogRERDX0kyQzogSTJDMl9TREEvU0NMIG9uIE1YTTMgMjA1LzIwNyAqLw0KPiAtCWkyY2RkYzog
+aTJjQDAgew0KPiAtCQljb21wYXRpYmxlID0gImkyYy1ncGlvIjsNCj4gLQkJcGluY3RybC1uYW1l
+cyA9ICJkZWZhdWx0IjsNCj4gLQkJcGluY3RybC0wID0gPCZwaW5jdHJsX2kyY19kZGM+Ow0KPiAt
+CQlncGlvcyA9IDwmZ3BpbzMgMTYgR1BJT19BQ1RJVkVfSElHSCAvKiBzZGEgKi8NCj4gLQkJCcKg
+JmdwaW8yIDMwIEdQSU9fQUNUSVZFX0hJR0ggLyogc2NsICovDQo+IC0JCQk+Ow0KPiAtCQlpMmMt
+Z3BpbyxkZWxheS11cyA9IDwyPjsJLyogfjEwMCBrSHogKi8NCj4gLQkJc3RhdHVzID0gImRpc2Fi
+bGVkIjsNCj4gLQl9Ow0KPiAtDQo+IMKgCXJlZ18xcDh2OiByZWd1bGF0b3ItMXA4diB7DQo+IMKg
+CQljb21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7DQo+IMKgCQlyZWd1bGF0b3ItbmFtZSA9
+ICIxUDhWIjsNCj4gQEAgLTIwOSw2ICsxOTcsMTIgQEANCj4gwqAJfTsNCj4gwqB9Ow0KPiDCoA0K
+PiArJmhkbWkgew0KPiArCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ICsJcGluY3RybC0w
+ID0gPCZwaW5jdHJsX2hkbWlfZGRjPjsNCj4gKwlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiArfTsN
+Cj4gKw0KPiDCoC8qDQo+IMKgICogR0VOMV9JMkM6IEkyQzFfU0RBL1NDTCBvbiBNWE0zIDIwOS8y
+MTEgKGUuZy4gUlRDIG9uIGNhcnJpZXINCj4gwqAgKiBib2FyZCkNCj4gQEAgLTYzMywxMSArNjI3
+LDEwIEBADQo+IMKgCQk+Ow0KPiDCoAl9Ow0KPiDCoA0KPiAtCXBpbmN0cmxfaTJjX2RkYzogZ3Bp
+b2kyY2RkY2dycCB7DQo+ICsJcGluY3RybF9oZG1pX2RkYzogaGRtaWRkY2dycCB7DQo+IMKgCQlm
+c2wscGlucyA9IDwNCj4gLQkJCS8qIEREQyBiaXRiYW5nICovDQo+IC0JCQlNWDZRRExfUEFEX0VJ
+TV9FQjJfX0dQSU8yX0lPMzAgMHgxYjBiMA0KPiAtCQkJTVg2UURMX1BBRF9FSU1fRDE2X19HUElP
+M19JTzE2IDB4MWIwYjANCj4gKwkJCU1YNlFETF9QQURfRUlNX0VCMl9fSERNSV9UWF9ERENfU0NM
+DQo+IDB4NDAwMWI4YjENCj4gKwkJCU1YNlFETF9QQURfRUlNX0QxNl9fSERNSV9UWF9ERENfU0RB
+DQo+IDB4NDAwMWI4YjENCj4gwqAJCT47DQo+IMKgCX07DQrCoA0KUmVzdCBsb29rcyBmaW5lIGFu
+ZCB0ZXN0ZWQgd29ya2luZyBmaW5lIG9uIHRvcCBvZiA0LjguMC1yYzYtbmV4dC0yMDE2MDkxNi4N
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
+bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
+ZXJuZWwK
