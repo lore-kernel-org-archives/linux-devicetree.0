@@ -1,69 +1,37 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCHv2 3/3] clk: keystone: Add sci-clk driver support
-Date: Fri, 16 Sep 2016 16:01:01 -0700
-Message-ID: <20160916230101.GM7243@codeaurora.org>
-References: <1472733635-22661-1-git-send-email-t-kristo@ti.com>
- <1472733635-22661-4-git-send-email-t-kristo@ti.com>
- <20160902233235.GM12510@codeaurora.org>
- <827e0a46-3771-67a8-1414-0cbaf0e2548e@ti.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 01/14] drivers: clk: st: Remove stih415-416 clock
+ support
+Date: Fri, 16 Sep 2016 16:02:54 -0700
+Message-ID: <20160916230254.GN7243@codeaurora.org>
+References: <1472473626-15398-1-git-send-email-gabriel.fernandez@st.com>
+ <1472473626-15398-2-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <827e0a46-3771-67a8-1414-0cbaf0e2548e@ti.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: mturquette@baylibre.com, linux-clk@vger.kernel.org, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nm@ti.com
+In-Reply-To: <1472473626-15398-2-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gabriel.fernandez-qxv4g6HH51o@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Olivier Bideau <olivier.bideau-qxv4g6HH51o@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel@s
 List-Id: devicetree@vger.kernel.org
 
-On 09/05, Tero Kristo wrote:
-> On 03/09/16 02:32, Stephen Boyd wrote:
-> >I still don't get it. We should be registering hw pointers in
-> >probe and handing them out in the xlate function. Not register
-> >hws in the xlate function and then handing them out as well. I
-> >haven't reviewed anything else in this patch.
+On 08/29, gabriel.fernandez-qxv4g6HH51o@public.gmane.org wrote:
+> From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 > 
-> Ok, let me try to explain the functionality.
+> STiH415 and STiH416 platforms are no longer used.
+> these platforms will be deprecated for the next kernel.
 > 
-> Probe time hw pointer registration is only needed for special clocks
-> that require extra flags, like adding the spread spectrum flag.
-> There is ever going to be only handful of these.
-> 
-> Xlate checks out the sci_clk list, and picks up an existing hw clock
-> if it is there. If not, it will create a new one. The reason this is
-> done like this, the device IDs / clock IDs don't mean anything to
-> the driver itself, the driver just passes these forward to the
-> underlying SCI fwk. And, we don't have inherent knowledge of valid
-> device / clock IDs either, the SCI fwk returns a failure if a
-> specific clock ID is bad. The device / clock IDs are going to be
-> different between different generations of SoC also, and in addition
-> there can be holes in the ID ranges.
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Acked-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
 
-Ok. Thanks for the explanation.
-
-I understand the desire to make this SoC agnostic and consumer/dt
-driven. Constructor pattern and all. Unfortunately the OF clk
-provider is a getter pattern; not a constructor pattern. I'm
-seriously concerned about the locking here because we're in the
-framework creating a clk and tying it into a consumer list which
-could cause all sorts of problems if we want to reenter the
-framework and register more clks. Recursion abounds and my head
-explodes! The recursive clk prepare mutex is not something anyone
-should be thrilled about keeping around.
-
-So, just don't do this. Instead, register the clks during probe
-that exist for the firmware. That list could be discoverable with
-firmware calls, or known based on different compatible strings
-from DT that have the soc name in it, or something else. Even
-scanning the entire DT tree for
-
-	clocks = <&my_clk_node x y>
-	
-would be better, but probably hugely inefficient and outright
-buggy with DT overlays so don't do it. If the firmware can't tell
-us what clks are there, just have a table based on compatible
-string and be done.
+Applied to clk-next
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
