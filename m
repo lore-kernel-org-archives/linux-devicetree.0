@@ -1,53 +1,50 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and GXBB
-Date: Fri, 16 Sep 2016 15:47:43 +0200
-Message-ID: <2190413.jSIVEWUDcp@wuerfel>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com> <CAFBinCCDDwydB+RP0CZKoAW5Suxotn224ZFVWvt2OGW3gNJR1g@mail.gmail.com> <57DBAB2F.3040905@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: msm8996-pcie-phy: add support for
+ msm8996 pcie phy
+Date: Fri, 16 Sep 2016 08:52:20 -0500
+Message-ID: <20160916135220.GA10405@rob-hp-laptop>
+References: <1473245733-17260-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1473245733-17260-2-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <57DBAB2F.3040905@ti.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Ben Dooks <ben.dooks@codethink.co.uk>, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, johnyoun@synopsys.com, will.deacon@arm.com, mturquette@baylibre.com, linux-usb@vger.kernel.org, sboyd@codeaurora.org, robh+dt@kernel.org, catalin.marinas@arm.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1473245733-17260-2-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, September 16, 2016 1:49:59 PM CEST Kishon Vijay Abraham I wrote:
+On Wed, Sep 07, 2016 at 11:55:32AM +0100, Srinivas Kandagatla wrote:
+> This patch adds bindings for pcie phy on MSM8996.
 > 
-> I think the offset information can come from the devicetree too. The phy can be
-> modeled something like below.
+> This PHY has 3 Ports, including a common block. Each port is connected
+> to one root complex. Each port has dedicated reset control lines apart
+> from common reset and clocks for common block.
 > 
->                 usb-phys@c0000000 {
->                         compatible = "amlogic,meson-gxbb-usb2-phy";
->                         reg = <0x0 0xc0000000 0x0 0x40>;
->                         #address-cells = <2>;
->                         #size-cells = <2>;
->                         ranges = <0x0 0x0 0x0 0xc0000000 0x0 0x40>;
->                         resets = <&reset 34>;
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/phy/qcom-msm8996-pcie-phy.txt         | 62 ++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
 > 
->                         usb0_phy: usb_phy@0 {
->                                 #phy-cells = <0>;
->                                 reg = <0x0 0x0 0x0 0x20>;
->                                 clocks = <&clkc CLKID_USB &clkc CLKID_USB0>;
->                                 clock-names = "usb_general", "usb";
->                                 status = "disabled";
->                         };
-> 
->                         usb1_phy: usb_phy@20 {
->                                 #phy-cells = <0>;
->                                 reg = <0x0 0x20 0x0 0x20>;
->                                 clocks = <&clkc CLKID_USB &clkc CLKID_USB1>;
->                                 clock-names = "usb_general", "usb";
->                                 status = "disabled";
->                         };
->                 };
-> 
-> This way the driver will be probed only once (the reset can be done during
-> probe). The phy driver should scan the dt node and for every sub-node it
-> invokes phy_create?
+> diff --git a/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt b/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
+> new file mode 100644
+> index 0000000..51930ed
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
+> @@ -0,0 +1,62 @@
+> +Qualcomm msm8996 pcie PHY
+> +------------------------
+> +
+> +Required properties:
+> +- compatible: compatible list, contains "qcom,msm8996-pcie-phy".
 
-Why not just use #phy-cells=<1> and pass the phy number as an argument
-in the reference?
+8994 has PCIe, this phy is completely different? And Archit mentioned 
+another SoC, too.
 
-	Arnd
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
