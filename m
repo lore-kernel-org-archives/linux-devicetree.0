@@ -1,69 +1,38 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/2] media: adv7604: automatic "default-input" selection
-Date: Fri, 16 Sep 2016 12:57:21 +0300
-Message-ID: <3410700.SJlxHzK90c@avalon>
-References: <20160916093942.17213-1-ulrich.hecht+renesas@gmail.com> <20160916093942.17213-3-ulrich.hecht+renesas@gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: dts: wheat: add DU support
+Date: Fri, 16 Sep 2016 12:11:39 +0200
+Message-ID: <20160916101139.GI14562@verge.net.au>
+References: <34968644.DhifNderY8@wasted.cogentembedded.com>
+ <15676050.WJW1jK1n2R@wasted.cogentembedded.com>
+ <ba5b2f8e-13f8-6c7d-17c1-44988d30a947@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20160916093942.17213-3-ulrich.hecht+renesas@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: hans.verkuil@cisco.com, niklas.soderlund@ragnatech.se, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, magnus.damm@gmail.com, william.towle@codethink.co.uk, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <ba5b2f8e-13f8-6c7d-17c1-44988d30a947@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulrich,
-
-Thank you for the patch.
-
-On Friday 16 Sep 2016 11:39:42 Ulrich Hecht wrote:
-> Fall back to input 0 if "default-input" property is not present.
+On Mon, Sep 12, 2016 at 08:52:40PM +0300, Sergei Shtylyov wrote:
+> On 09/02/2016 12:29 AM, Sergei Shtylyov wrote:
 > 
-> Documentation states that the "default-input" property should reside
-> directly in the node for adv7612.
-
-Not just fo adv7612.
-
-> Hence, also adjust the parsing to make the implementation consistent with
-> this.
+> >Define  the  Wheat board dependent  part of the DU device node.
+> >Add the device nodes for the Analog Devices ADV7513 HDMI transmitters
+> >connected to DU0/1.  Add the necessary subnodes to interconnect DU with
+> >HDMI transmitters/connectors.
+> >
+> >Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> >
+> >---
+> >This patch is against the 'renesas-devel-20160901-v4.8-rc4' of Simon Horman's
+> >'renesas.git' repo plus the Wheat CAN and SDHI patches posted earlier...
+> >The path depends on the 2 DRM patches just posted in order to work correctly!
 > 
-> Based on patch by William Towle <william.towle@codethink.co.uk>.
-> 
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-> ---
->  drivers/media/i2c/adv7604.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
-> index 4003831..055c9df 100644
-> --- a/drivers/media/i2c/adv7604.c
-> +++ b/drivers/media/i2c/adv7604.c
-> @@ -3077,10 +3077,13 @@ static int adv76xx_parse_dt(struct adv76xx_state
-> *state)
-> 	if (!of_property_read_u32(endpoint, "default-input", &v))
+>    In principle, both these patches have been queued by the maintainers...
+> Simon, are you going to wait till they hit media_tree.git? Linus' tree?
 
-Should this be removed if the property has to be in the device node and not in 
-the endpoint ?
-
->  		state->pdata.default_input = v;
->  	else
-> -		state->pdata.default_input = -1;
-> +		state->pdata.default_input = 0;
-
-What was the use case for setting it to -1 ? Is it safe to change that ?
-
->  	of_node_put(endpoint);
-> 
-> +	if (!of_property_read_u32(np, "default-input", &v))
-> +		state->pdata.default_input = v;
-> +
->  	flags = bus_cfg.bus.parallel.flags;
-> 
->  	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-
--- 
-Regards,
-
-Laurent Pinchart
+I don't think that is necessary. I was waiting for some review.
+But in any case it looks like this patch no longer applies cleanly.
+Could you rebase?
