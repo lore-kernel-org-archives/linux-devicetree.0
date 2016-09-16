@@ -1,237 +1,154 @@
-From: Vinay Simha <simhavcs@gmail.com>
-Subject: Re: [PATCH v4] dt-bindings: Add jdi lt070me05000 panel bindings
-Date: Thu, 15 Sep 2016 20:15:16 +0530
-Message-ID: <CAGWqDJ6YmxK+QR1E=733wzBxe_nvP_1iudCf5CMHi=1G+Mv4ig@mail.gmail.com>
-References: <1473311672-20782-1-git-send-email-simhavcs@gmail.com>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [RFC/PATCH] usb: misc: Add a driver for TC7USB40MU
+Date: Thu, 15 Sep 2016 18:16:38 -0700
+Message-ID: <147398859894.4997.6486248242638696855@sboyd-linaro>
+References: <20160914014246.31847-1-stephen.boyd@linaro.org>
+ <20160914033200.GE30760@b29397-desktop>
+ <147383270635.1464.10706917860873291816@sboyd-linaro>
+ <20160914080321.GA21674@b29397-desktop>
+ <147384270449.13546.495288874027868435@sboyd-linaro>
+ <20160915090158.GB6919@b29397-desktop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0252641205=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1473311672-20782-1-git-send-email-simhavcs@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Vinay Simha BN <simhavcs@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Archit Taneja <archit.taneja@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160915090158.GB6919@b29397-desktop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============0252641205==
-Content-Type: multipart/alternative; boundary=001a11394e2ce78166053c8ce4df
+Quoting Peter Chen (2016-09-15 02:01:58)
+> On Wed, Sep 14, 2016 at 01:45:04AM -0700, Stephen Boyd wrote:
+> > Quoting Peter Chen (2016-09-14 01:03:21)
+> > > On Tue, Sep 13, 2016 at 10:58:26PM -0700, Stephen Boyd wrote:
+> > > > Quoting Peter Chen (2016-09-13 20:32:00)
+> > > > > On Tue, Sep 13, 2016 at 06:42:46PM -0700, Stephen Boyd wrote:
+> > > > > > On the db410c 96boards platform we have a TC7USB40MU[1] on the
+> > > > > > board to mux the D+/D- lines from the SoC between a micro usb
+> > > > > > "device" port and a USB hub for "host" roles. Upon a role switch,
+> > > > > > we need to change this mux to forward the D+/D- lines to either
+> > > > > > the port or the hub. Therefore, introduce a driver for this
+> > > > > > device that intercepts extcon USB_HOST events and logically
+> > > > > > asserts a gpio to mux the "host" D+/D- lines when a host cable is
+> > > > > > attached. When the cable goes away, it will logically deassert
+> > > > > > the gpio and mux the "device" lines.
+> > > > > 
+> > > > > Would you please draw the design? It can also help me review your
+> > > > > chipidea patch well.
+> > > > > 
+> > > > > 1. How many ports on the board?
+> > > > > 2. How the lines are connected on the board?
+> > > > > 
+> > > > 
+> > > > The schematic for the db410c is publically available here[2][3].
+> > > > 
+> > > > There's also the 96boards spec[4] which talks about this switch based
+> > > > design a little bit. See the section titled "Single USB port Example".
+> > > > 
+> > > > [2] https://github.com/96boards/documentation/blob/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
+> > > > [3] https://github.com/96boards/documentation/raw/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
+> > > > [4] https://www.96boards.org/wp-content/uploads/2015/02/96BoardsCESpecificationv1.0-EA1.pdf
+> > > 
+> > > Ok, I see several use cases for this role switch
+> > > 
+> > > 1. Using the hardware switch (218-4LPST)
+> > > In this case, you can set USB_SW_SEL as input gpio, and use
+> > > extcon-usb-gpio.c like before, just set this gpio as active
+> > > low at dts.
+> > 
+> > Nice! I didn't think of this case but it's good that we can support
+> > that with some work.
+> > 
+> 
+> After looking more, I find the main purpose of this switch is
+> what it writes, FORCE DSI SELECTION TO USB HOST MODE
+> 
+> When the switch is on, the system is host-only.
+> When the switch is off, the default role is device mode, and
+> switch the role through gpio USB_SW_SEL_PM by software.
 
---001a11394e2ce78166053c8ce4df
-Content-Type: text/plain; charset=UTF-8
+Correct.
 
-Hi Tierry,
+> 
+> > > 
+> > > 2. Using USB_HS_ID as vbus-gpio (input), and USB_SW_SEL as id-gpio (output)
+> > 
+> > This is pretty much what has been implemented. USB_HS_ID is an
+> > extcon-usb-gpio.c device.
+> 
+> At some designs, this gpio is tied to ID pin at MicroB connector, and
+> using a Mirco-AB cable to switch the role.
+> 
+> > 
+> > > I can't find hardware relationship between each other, maybe I miss
+> > > something.
+> > 
+> > I believe USB_SW_SEL is the physical switch (218-4LPST) while
+> > USB_SW_SEL_PM is the software controllable part using a GPIO. USB_HS_ID
+> > is just the vbus line from the uB connector and that line goes straight
+> > into the SoC via a GPIO.
+> > 
+> > > This use case (design) seems strange, usually, we use ID pin controls
+> > > vbus, but seldom use vbus pin control ID.
+> > > How you would like to implement it? When the USB cable is connected
+> > > (between PC), it receives vbus-gpio interrupt, then you set USB_SW_SEL
+> > > as low? If disconnected, you set USB_SW_SEL as high?
+> > 
+> > Right. The documented behavior is to detect the micro-usb cable and
+> > drive USB_SW_SEL low. When the cable is unplugged we drive USB_SW_SEL
+> > high. Maybe that should be changed though? If we always sampled
+> > USB_SW_SEL as a USB_HOST extcon and the vbus line as a USB extcon then
+> > we could allow the user to decide either with the physical switch or
+> > with some sort of software control to toggle that gpio.
+> > 
+> > > When the USB controller works at Host mode, what will happen if the user
+> > > connects USB cable at device port?
+> > 
+> > The devices on the two type-A connectors will be disconnected and we'll
+> > switch from host mode to device mode.
+> > 
+> > > 
+> > > 3. Using sysfs to switch the role
+> > > Set USB_SW_SEL according to "role" at debugfs
+> > 
+> > sysfs isn't debugfs, but yes I wonder if we need to worry about the
+> > debugfs role switching support here and toggle the gpio manually without
+> > involving extcon. That would mean we need to have a way for the chipidea
+> > controller to toggle this gpio/mux itself.
+> > 
+> > > 
+> > > Which one you would like to implement? Or anything else I miss?
+> > > 
+> > 
+> > Mostly #2, but I'm concerned that the DT binding is going to force that
+> > decision on others who may have the same switch and want to do #1 or #3.
+> > So how to design it in a way that makes it work in all cases? Also, what
+> > to do if the USB_SW_SEL switch is driven high by the physical switch?
+> > That will "override" any software control we might be able to use, so
+> > hopefully we can detect this somehow and prevent the role switch from
+> > happening.
+> 
+> From my point, the physical switch is only used to force host mode. The
+> #1 and #2 can't be supported at the same time.
 
-Could you please review the patch and integrate?
+Sure. I mean to say support all use cases with the same DT binding.
 
-On Thu, Sep 8, 2016 at 10:44 AM, Vinay Simha BN <simhavcs@gmail.com> wrote:
+> For #3, it is not the
+> use case for this design. #3 is usually used for the single port which
+> needs to support switching role on the fly without disconnection.
+> So, you may only need to consider #2, you can't use extcon-usb-gpio.c
+> directly since you need to set one gpio to mux the dp/dm, Baolu Lu had
+> USB MUX patch set before which may satisfy your requirement. [1]
 
-> Add documentation for lt070me05000 panel
->
-> Cc: Archit Taneja <archit.taneja@gmail.com>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
-> Acked-by: Rob Herring <robh@kernel.org>
->
-> ---
-> v2:
->  * incorporated rob herring and thierry reviews
->    gpio to gpios, gpio to regulator using fixed regulators
->    and pwm backlight is removed, since it is controlled by
->    dcs commands
->
-> v3:
->  * incorporated thierry reviews
->    - Added gpio polarity details for reset-gpios
->    - proper naming conventions and sequence wrt panel datasheet
->      (vddp-supply, iovcc-supply,
->       enable-gpios, reset-gpios, dcdc-en-gpios)
-> v4:
->  * pinctrl-names, pinctrl-0 removed, not required for
->    reset-gpios
-> ---
->  .../bindings/display/panel/jdi,lt070me05000.txt    | 31
-> ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/jdi,
-> lt070me05000.txt
->
-> diff --git a/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
-> b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
-> new file mode 100644
-> index 0000000..4989c91d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
-> @@ -0,0 +1,31 @@
-> +JDI model LT070ME05000 1200x1920 7" DSI Panel
-> +
-> +Required properties:
-> +- compatible: should be "jdi,lt070me05000"
-> +- vddp-supply: phandle of the regulator that provides the supply voltage
-> +  Power IC supply (3-5V)
-> +- iovcc-supply: phandle of the regulator that provides the supply voltage
-> +  IOVCC , power supply for LCM (1.8V)
-> +- enable-gpios: phandle of gpio for enable line
-> +  LED_EN, LED backlight enable, High active
-> +- reset-gpios: phandle of gpio for reset line
-> +  This should be 8mA, gpio can be configured using mux, pinctrl,
-> pinctrl-names
-> +  XRES, Reset, Low active
-> +- dcdc-en-gpios: phandle of the gpio for power ic line
-> +  Power IC supply enable, High active
-> +
-> +Example:
-> +
-> +       dsi0: qcom,mdss_dsi@4700000 {
-> +               panel@0 {
-> +                       compatible = "jdi,lt070me05000";
-> +                       reg = <0>;
-> +
-> +                       vddp-supply = <&pm8921_l17>;
-> +                       iovcc-supply = <&pm8921_lvs7>;
-> +
-> +                       enable-gpios = <&pm8921_gpio 36 GPIO_ACTIVE_HIGH>;
-> +                       reset-gpios = <&tlmm_pinmux 54 GPIO_ACTIVE_LOW>;
-> +                       dcdc-en-gpios = <&pm8921_gpio 23 GPIO_ACTIVE_HIGH>;
-> +               };
-> +       };
-> --
-> 2.1.2
->
->
-
-
--- 
-regards,
-vinaysimha
-
---001a11394e2ce78166053c8ce4df
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi Tierry,<div><br class=3D"gmail-Apple-interchange-newlin=
-e">Could you please review the patch and integrate?<br></div></div><div cla=
-ss=3D"gmail_extra"><br><div class=3D"gmail_quote">On Thu, Sep 8, 2016 at 10=
-:44 AM, Vinay Simha BN <span dir=3D"ltr">&lt;<a href=3D"mailto:simhavcs@gma=
-il.com" target=3D"_blank">simhavcs@gmail.com</a>&gt;</span> wrote:<br><bloc=
-kquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #cc=
-c solid;padding-left:1ex">Add documentation for lt070me05000 panel<br>
-<br>
-Cc: Archit Taneja &lt;<a href=3D"mailto:archit.taneja@gmail.com">archit.tan=
-eja@gmail.com</a>&gt;<br>
-Cc: John Stultz &lt;<a href=3D"mailto:john.stultz@linaro.org">john.stultz@l=
-inaro.org</a>&gt;<br>
-Cc: Thierry Reding &lt;<a href=3D"mailto:thierry.reding@gmail.com">thierry.=
-reding@gmail.com</a>&gt;<br>
-Cc: Sumit Semwal &lt;<a href=3D"mailto:sumit.semwal@linaro.org">sumit.semwa=
-l@linaro.org</a>&gt;<br>
-Signed-off-by: Vinay Simha BN &lt;<a href=3D"mailto:simhavcs@gmail.com">sim=
-havcs@gmail.com</a>&gt;<br>
-Acked-by: Rob Herring &lt;<a href=3D"mailto:robh@kernel.org">robh@kernel.or=
-g</a>&gt;<br>
-<br>
----<br>
-v2:<br>
-=C2=A0* incorporated rob herring and thierry reviews<br>
-=C2=A0 =C2=A0gpio to gpios, gpio to regulator using fixed regulators<br>
-=C2=A0 =C2=A0and pwm backlight is removed, since it is controlled by<br>
-=C2=A0 =C2=A0dcs commands<br>
-<br>
-v3:<br>
-=C2=A0* incorporated thierry reviews<br>
-=C2=A0 =C2=A0- Added gpio polarity details for reset-gpios<br>
-=C2=A0 =C2=A0- proper naming conventions and sequence wrt panel datasheet<b=
-r>
-=C2=A0 =C2=A0 =C2=A0(vddp-supply, iovcc-supply,<br>
-=C2=A0 =C2=A0 =C2=A0 enable-gpios, reset-gpios, dcdc-en-gpios)<br>
-v4:<br>
-=C2=A0* pinctrl-names, pinctrl-0 removed, not required for<br>
-=C2=A0 =C2=A0reset-gpios<br>
----<br>
-=C2=A0.../bindings/display/panel/<wbr>jdi,lt070me05000.txt=C2=A0 =C2=A0 | 3=
-1 ++++++++++++++++++++++<br>
-=C2=A01 file changed, 31 insertions(+)<br>
-=C2=A0create mode 100644 Documentation/devicetree/<wbr>bindings/display/pan=
-el/jdi,<wbr>lt070me05000.txt<br>
-<br>
-diff --git a/Documentation/devicetree/<wbr>bindings/display/panel/jdi,<wbr>=
-lt070me05000.txt b/Documentation/devicetree/<wbr>bindings/display/panel/jdi=
-,<wbr>lt070me05000.txt<br>
-new file mode 100644<br>
-index 0000000..4989c91d<br>
---- /dev/null<br>
-+++ b/Documentation/devicetree/<wbr>bindings/display/panel/jdi,<wbr>lt070me=
-05000.txt<br>
-@@ -0,0 +1,31 @@<br>
-+JDI model LT070ME05000 1200x1920 7&quot; DSI Panel<br>
-+<br>
-+Required properties:<br>
-+- compatible: should be &quot;jdi,lt070me05000&quot;<br>
-+- vddp-supply: phandle of the regulator that provides the supply voltage<b=
-r>
-+=C2=A0 Power IC supply (3-5V)<br>
-+- iovcc-supply: phandle of the regulator that provides the supply voltage<=
-br>
-+=C2=A0 IOVCC , power supply for LCM (1.8V)<br>
-+- enable-gpios: phandle of gpio for enable line<br>
-+=C2=A0 LED_EN, LED backlight enable, High active<br>
-+- reset-gpios: phandle of gpio for reset line<br>
-+=C2=A0 This should be 8mA, gpio can be configured using mux, pinctrl, pinc=
-trl-names<br>
-+=C2=A0 XRES, Reset, Low active<br>
-+- dcdc-en-gpios: phandle of the gpio for power ic line<br>
-+=C2=A0 Power IC supply enable, High active<br>
-+<br>
-+Example:<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0dsi0: qcom,mdss_dsi@4700000 {<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0panel@0 {<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0compatible =3D &quot;jdi,lt070me05000&quot;;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0reg =3D &lt;0&gt;;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0vddp-supply =3D &lt;&amp;pm8921_l17&gt;;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0iovcc-supply =3D &lt;&amp;pm8921_lvs7&gt;;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0enable-gpios =3D &lt;&amp;pm8921_gpio 36 GPIO_ACTIVE_HIGH&gt;;<br=
->
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0reset-gpios =3D &lt;&amp;tlmm_pinmux 54 GPIO_ACTIVE_LOW&gt;;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0dcdc-en-gpios =3D &lt;&amp;pm8921_gpio 23 GPIO_ACTIVE_HIGH&gt;;<b=
-r>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
-<span class=3D"HOEnZb"><font color=3D"#888888">--<br>
-2.1.2<br>
-<br>
-</font></span></blockquote></div><br><br clear=3D"all"><div><br></div>-- <b=
-r><div class=3D"gmail_signature" data-smartmail=3D"gmail_signature">regards=
-,<br>vinaysimha</div>
-</div>
-
---001a11394e2ce78166053c8ce4df--
-
---===============0252641205==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0252641205==--
+Ok. Did the usb mux patches go anywhere? It seemed to get tangled up in
+DRD framework and I haven't been following along. I'll look into these
+patches more.
