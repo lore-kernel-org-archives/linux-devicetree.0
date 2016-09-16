@@ -1,62 +1,66 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 2/2] dts: arm64: db820c: add pmic pins specific dts file
-Date: Fri, 16 Sep 2016 18:41:21 +0100
-Message-ID: <1474047681-6821-3-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1474047681-6821-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v6 2/3] ARM: dts: add TOPEET itop elite based board
+Date: Fri, 16 Sep 2016 14:09:15 -0400
+Message-ID: <1e4335db-9004-bb7c-6dc1-e435e66b8126@osg.samsung.com>
+References: <1473285535-21996-1-git-send-email-ayaka@soulik.info>
+ <1473285535-21996-3-git-send-email-ayaka@soulik.info>
+ <CGME20160916072303eucas1p2941ba2907605055f5ea5abb2e6891d77@eucas1p2.samsung.com>
+ <6bd9905d-0818-a917-8b8e-6abce134a3d3@kernel.org>
+ <865b9f84-385f-fea8-2e3d-2b31e3bfe84c@soulik.info>
+ <20160916172110.GA7511@kozik-lap>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1474047681-6821-1-git-send-email-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20160916172110.GA7511@kozik-lap>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, ayaka <ayaka@soulik.info>
+Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds pmic specific dts which are configured specially
-for db820c. One of such pin is GPIO_F on the Low Speed expansion
-which has default output voltage of 2.7v. This patch fixes setup
-for that pin to have an output voltage of 1.8v to comply with
-96boards LS expansion specs.
+Hello Randy,
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi           |  2 ++
- 2 files changed, 17 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
+On 09/16/2016 01:21 PM, Krzysztof Kozlowski wrote:
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
-new file mode 100644
-index 0000000..0938191
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
-@@ -0,0 +1,15 @@
-+
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+&pm8994_gpios {
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ls_exp_gpio_f>;
-+
-+	ls_exp_gpio_f: pm8916_mpp4 {
-+		pinconf {
-+			pins = "gpio5";
-+			output-low;
-+			power-source = <PM8994_GPIO_S4>; // 1.8V
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index afb218c..422959b 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -12,7 +12,9 @@
-  */
+[snip]
+
+>>>> +	
+>>>> +	beep {
+>>>> +		compatible = "pwm-beeper";
+>>>> +		pwms = <&pwm 0 4000000 PWM_POLARITY_INVERTED>;
+>>> I have serious doubts that you run this code... if it does not even
+>>> compile. Sorry, I cannot accept code that does not compile and was not
+>>> tested.
+>>>
+>>> Please, test your DTS on top of current Linux tree, which would be one of:
+>>> 1. Linus' master branch: v4.8-rc6,
+>>> 2. one of my branches (for-next, next/dt etc),
+>> When I sent those patches, I tested in "Add linux-next specific files for
+>> 20160907"
+>
+> OK, good, but please tell me why kbuild reported that build error?
+>
+
+I agree with Krzysztof, it doesn't seem that you tested the exact version
+that was posted. You will need the following change to make the DTS build
+in latest linux-next:
+
+diff --git a/arch/arm/boot/dts/exynos4412-itop-elite.dts b/arch/arm/boot/dts/exynos4412-itop-elite.dts
+index dd83689892ff..8559f891a740 100644
+--- a/arch/arm/boot/dts/exynos4412-itop-elite.dts
++++ b/arch/arm/boot/dts/exynos4412-itop-elite.dts
+@@ -14,6 +14,7 @@
+ */
  
- #include "msm8996.dtsi"
-+#include "pm8994.dtsi"
- #include "apq8096-db820c-pins.dtsi"
-+#include "apq8096-db820c-pmic-pins.dtsi"
- 
- / {
- 	aliases {
+ /dts-v1/;
++#include <dt-bindings/pwm/pwm.h>
+ #include <dt-bindings/sound/samsung-i2s.h>
+ #include "exynos4412-itop-scp-core.dtsi"
+
+So please squash that change and resend.
+
+Best regards,
 -- 
-2.7.4
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
