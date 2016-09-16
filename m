@@ -1,28 +1,35 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/4] ARM: dts: r7s72100: add mmcif clock to device tree
-Date: Fri, 16 Sep 2016 11:36:01 +0200
-Message-ID: <20160916093601.GA14562@verge.net.au>
-References: <20160915193405.26943-1-chris.brandt@renesas.com>
- <20160915193405.26943-2-chris.brandt@renesas.com>
- <CAMuHMdXjhEHz6Viv3yZmTLwTdGT7aobdgWRDb_7ewdBkf1wEtg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXjhEHz6Viv3yZmTLwTdGT7aobdgWRDb_7ewdBkf1wEtg@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Chris Brandt <chris.brandt@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+From: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] media: adv7604: fix default-input property inconsistencies
+Date: Fri, 16 Sep 2016 11:39:40 +0200
+Message-ID: <20160916093942.17213-1-ulrich.hecht+renesas@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, william.towle-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 16, 2016 at 09:00:12AM +0200, Geert Uytterhoeven wrote:
-> On Thu, Sep 15, 2016 at 9:34 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
-> > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hi!
 
-Thanks, I have queued this up for v4.10.
+This is a fix for the inconsistency in the adv7604 bindings regarding the
+default-input property, clarifying that it should be a property of the
+device, not the endpoint, and a patch to implement it.
 
-I am not planning to queue up the other patches in this series
-until discussion of patch 2/4 is resolved. Most likely the
-remaining 3 patches should be reposted once that has happened.
+CU
+Uli
+
+
+Ulrich Hecht (2):
+  media: adv7604: fix bindings inconsistency for default-input
+  media: adv7604: automatic "default-input" selection
+
+ Documentation/devicetree/bindings/media/i2c/adv7604.txt | 3 +--
+ drivers/media/i2c/adv7604.c                             | 5 ++++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
