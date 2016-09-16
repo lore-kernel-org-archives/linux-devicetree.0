@@ -1,98 +1,63 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] dt-bindings: Add summit SMB347 charger bindings
-Date: Fri, 16 Sep 2016 08:29:35 -0500
-Message-ID: <20160916132935.GA28919@rob-hp-laptop>
-References: <1473243615-29746-1-git-send-email-simhavcs@gmail.com>
- <1473243615-29746-2-git-send-email-simhavcs@gmail.com>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH v5 1/2] ARM: dts: imx6: Add support for Toradex Apalis
+ iMX6Q/D SoM
+Date: Fri, 16 Sep 2016 13:28:42 +0000
+Message-ID: <1474032521.3103.17.camel@toradex.com>
+References: <1454688741-4238-1-git-send-email-marcel.ziswiler@toradex.com>
+ <1454688741-4238-2-git-send-email-marcel.ziswiler@toradex.com>
+ <97a3d506-35a0-2a15-18ef-2719c0596cc1@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1473243615-29746-2-git-send-email-simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Myungjoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:POWER SUPPLY CLASS/SUBSYSTEM and DRIVERS" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <97a3d506-35a0-2a15-18ef-2719c0596cc1@mentor.com>
+Content-Language: en-US
+Content-ID: <5B821910886712449054B0EAE428CBF5@eurprd05.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "vladimir_zapolskiy@mentor.com" <vladimir_zapolskiy@mentor.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "stillcompiling@gmail.com" <stillcompiling@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "galak@codeaurora.org" <galak@codeaurora.org>, "ynezz@true.cz" <ynezz@true.cz>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 07, 2016 at 03:50:11PM +0530, Vinay Simha BN wrote:
-> Add documentation for summit SMB347 charger
-> 
-> Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Myungjoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../bindings/power/supply/smb347_charger.txt       | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/smb347_charger.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/smb347_charger.txt b/Documentation/devicetree/bindings/power/supply/smb347_charger.txt
-> new file mode 100644
-> index 0000000..91570a5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/smb347_charger.txt
-> @@ -0,0 +1,57 @@
-> +smb347_charger bindings
-> +~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +[Required porperties]
-> +- compatible : "summit,smb347"
-> +- reg : Slave address for i2c interface
-> +# At least one of followings should be set
-> +  - enable-usb-charging
-> +  - enable-otg-charging
-> +  - enable-mains-charging
-
-These sound like user configuration which should be controlled with 
-sysfs rather than DT?
-
-> +
-> +[Optional properties]
-> +- interrupt-parent : The phandle for the interrupt controller
-> +- interrupts : Interrupt line index for mapping
-> +- enable-chg-ctrl : Enable charging control
-> +		<0> : SW (i2c interface)
-> +		<1> : Pin control (Active Low)
-> +		<2> : Pin control (Active High)
-
-Don't you need a gpio line defined to control this?
-
-> +# Charging constraints
-> +- max-chg-curr : Maximum current for charging (in uA)
-> +- max-chg-volt : Maximum voltage for charging (in uV)
-> +- pre-chg-curr : Pre-charging current (in uA)
-> +- term-curr : Charging cycle termination current (in uA)
-> +- fast-volt-thershold : Voltage threshold to transit to fast charge mode (in uV)
-> +- mains-curr-limit : Maximum input current from AC/DC input (in uA)
-> +- usb-curr-limit : Maximum input current from USB input (in uA)
-> +
-> +# Related thermometer monitoring (in degree C)
-> +- chip-temp-threshold : Chip temperature for thermal regulaton.   <100, 130>
-> +- soft-cold-temp-limit : Cold battery temperature for soft alarm. <0, 15>*
-> +- soft-hot-temp-limit : Hot battery temperature for soft alarm.   <40, 55>
-> +- hard-cold-temp-limit : Cold battery temperature for hard alarm. <0, 15>*
-> +- hard-hot-temp-limit : Hot battery temperature for hard alarm.   <55, 65>
-> +(* The written temperature has +5'C offset. 0'C -> -5'C, 15'C -> 10'C)
-
-Minimally, all these need vendor prefixes and unit suffixes. See 
-property-units.txt. However, ...
-
-These also seem like common properties. Frankly, all the charger 
-bindings are a mess. They are all done differently. There's common 
-things like max charge current that are all described in different ways. 
-I think minimally a couple of things need to be defined for a common 
-structure.
-
-A separate node for batteries with properties of the battery like charge 
-current/voltage parameters, temperature params, type of battery, etc.
-
-A sub node of the charger for each supply source like USB, wall, etc. 
-and any parameters for those sources like current limits.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgVmxhZGltaXINCg0KT24gTW9uLCAyMDE2LTA4LTI5IGF0IDE2OjI4ICswMzAwLCBWbGFkaW1p
+ciBaYXBvbHNraXkgd3JvdGU6DQo+IEhpIE1hcmNlbCwNCj4gDQo+IE9uIDAyLzA1LzIwMTYgMDY6
+MTIgUE0sIE1hcmNlbCBaaXN3aWxlciB3cm90ZToNCj4gPiANCj4gPiBGcm9tOiBQZXRyIMWgdGV0
+aWFyIDx5bmV6ekB0cnVlLmN6Pg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hcmNlbCBaaXN3
+aWxlciA8bWFyY2VsLnppc3dpbGVyQHRvcmFkZXguY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBl
+dHIgxaB0ZXRpYXIgPHluZXp6QHRydWUuY3o+DQo+ID4gUmV2aWV3ZWQtYnk6IFN0ZWZhbiBBZ25l
+ciA8c3RlZmFuQGFnbmVyLmNoPg0KPiA+IC0tLQ0KPiA+IA0KPiBiZWNhdXNlIHRoZSBjaGFuZ2Ug
+aXMgaW4gbWFpbmxpbmUgbm93IGJlbG93IGlzIGtpbmQgb2Ygb3V0IG9mIGRhdGUNCj4gaW5mb3Jt
+YXRpb24sIGJ1dCB5b3UgbWF5IGZpbmQgaXQgaGVscGZ1bC4NCj4gDQo+IFtzbmlwXQ0KPiANCj4g
+PiANCj4gPiAtIGZpeGVkIEhETUkgRERDIChyZXF1aXJlcyBHUElPLWJhc2VkIGJpdGJhbmdpbmcg
+STJDIHRvIGJlIGVuYWJsZWQpDQo+IFRoaXMgaXMgbm90IG5lZWRlZC4NCj4gDQo+IFtzbmlwXQ0K
+PiANCj4gPiANCj4gPiArCS8qIEREQ19JMkM6IEkyQzJfU0RBL1NDTCBvbiBNWE0zIDIwNS8yMDcg
+Ki8NCj4gPiArCWkyY2RkYzogaTJjQDAgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAiaTJjLWdwaW8i
+Ow0KPiA+ICsJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ID4gKwkJcGluY3RybC0wID0g
+PCZwaW5jdHJsX2kyY19kZGM+Ow0KPiA+ICsJCWdwaW9zID0gPCZncGlvMyAxNiBHUElPX0FDVElW
+RV9ISUdIIC8qIHNkYSAqLw0KPiA+ICsJCQnCoCZncGlvMiAzMCBHUElPX0FDVElWRV9ISUdIIC8q
+IHNjbCAqLw0KPiA+ICsJCQk+Ow0KPiA+ICsJCWkyYy1ncGlvLGRlbGF5LXVzID0gPDI+OwkvKiB+
+MTAwIGtIeiAqLw0KPiA+ICsJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gKwl9Ow0KPiA+ICsN
+Cj4gVGhpcyBpcyBub3QgbmVlZGVkLg0KPiANCj4gW3NuaXBdDQo+IA0KPiA+IA0KPiA+ICsJcGlu
+Y3RybF9pMmNfZGRjOiBncGlvaTJjZGRjZ3JwIHsNCj4gPiArCQlmc2wscGlucyA9IDwNCj4gPiAr
+CQkJLyogRERDIGJpdGJhbmcgKi8NCj4gPiArCQkJTVg2UURMX1BBRF9FSU1fRUIyX19HUElPMl9J
+TzMwIDB4MWIwYjANCj4gPiArCQkJTVg2UURMX1BBRF9FSU1fRDE2X19HUElPM19JTzE2IDB4MWIw
+YjANCj4gPiArCQk+Ow0KPiA+ICsJfTsNCj4gPiArDQo+IFByYWN0aWNhbGx5IHlvdSBkb24ndCBu
+ZWVkIHRoaXMgb3ZlcmNvbXBsaWNhdGVkIEdQSU8tYmFzZWQgYml0YmFuZ2luZw0KPiB0byBlbXVs
+YXRlIEkyQywgYmVjYXVzZSB0aGUgRFcgSERNSSBjb250cm9sbGVyIGhhcyBhIHJlZHVjZWQgSTJD
+DQo+IGNvbnRyb2xsZXIgb24gYm9hcmQsIHlvdSBtYXkgdGFrZSBhIGxvb2sgYXQgaXRzIHN1cHBv
+cnQgcHVibGlzaGVkDQo+IGhlcmU6DQo+IA0KPiDCoMKgwqDCoGh0dHA6Ly93d3cuc3Bpbmljcy5u
+ZXQvbGlzdHMvZHJpLWRldmVsL21zZzExNjMwOC5odG1sDQo+IA0KPiBUbyB1dGlsaXplIGl0IHRo
+ZSBwYWRzIHNob3VsZCBiZSBzZXQgdG8gSERNSSBmdW5jdGlvbiBpbnN0ZWFkIG9mDQo+IEkyQyBv
+ciBHUElPLg0KDQpXb3JrcyBuaWNlbHkgaW5kZWVkLCB0aGFua3MgZm9yIGxldHRpbmcgdXMga25v
+dy4NCg0KPiAtLQ0KPiBXaXRoIGJlc3Qgd2lzaGVzLA0KPiBWbGFkaW1pcg0KDQpCZXN0IHdpc2hl
+cyB0byB5b3UgdG9vIQ0KDQpDaGVlcnMNCg0KTWFyY2VsDQpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
