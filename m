@@ -1,99 +1,37 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] dt-binding: remoteproc: Document generic properties
-Date: Fri, 16 Sep 2016 17:12:27 -0500
-Message-ID: <e5aef4d7-b810-e451-784a-2b0086ccd212@ti.com>
-References: <1470850622-29816-1-git-send-email-bjorn.andersson@linaro.org>
- <20160812183448.GA32059@rob-hp-laptop> <20160812224223.GJ26240@tuxbot>
- <46d4d351-336c-6d4f-b1b0-243cf3c5d68b@ti.com>
- <20160908165032.GA9526@rob-hp-laptop>
- <dfa838cf-15f6-c178-f69a-1b5488f74a7a@ti.com>
- <CAL_JsqKF5pqWY2fSoReUrAZ6yqfMTkWLLYrJqCz4ciA8J0a2-g@mail.gmail.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: am335x-evm: Add blue-and-red-wiring
+ -property to lcdc node
+Date: Fri, 16 Sep 2016 17:17:21 -0500
+Message-ID: <a0e00898-80fb-8242-aafb-6e4d3f650345@ti.com>
+References: <cover.1474025756.git.jsarha@ti.com>
+ <34893e286d16c281098063d2a4fec985acbf8818.1474025756.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKF5pqWY2fSoReUrAZ6yqfMTkWLLYrJqCz4ciA8J0a2-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <34893e286d16c281098063d2a4fec985acbf8818.1474025756.git.jsarha-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 09/16/2016 06:50 AM, Jyri Sarha wrote:
+[..]
+> +	blue-and-red-wiring = "crossed";
 
-On 09/08/2016 09:33 PM, Rob Herring wrote:
-> On Thu, Sep 8, 2016 at 1:32 PM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
->> Hi Rob,
->>
->> On 09/08/2016 11:50 AM, Rob Herring wrote:
->>> On Fri, Sep 02, 2016 at 04:45:45PM -0500, Suman Anna wrote:
->>>> On 08/12/2016 05:42 PM, Bjorn Andersson wrote:
->>>>> On Fri 12 Aug 11:34 PDT 2016, Rob Herring wrote:
->>>>>
->>>>>> On Wed, Aug 10, 2016 at 10:37:02AM -0700, Bjorn Andersson wrote:
->>>>>>> This documents the generic properties "rprocs" and "rproc-names", used
->>>>>>> for consumer drivers to reference a remoteproc node.
->>>>>>
->>>>>> How do you intend to use this? I wonder if it would not be better to
->>>>>> expose a remote proc with existing bindings for a particular purpose
->>>>>> (e.g. clocks, resets, etc.) rather than a generic connection. The client
->>>>>> side would have to have specific knowledge as to what functions the
->>>>>> remote proc provides.
->>>>>>
->>>>>
->>>>> The remoteproc node represents the mechanism and resources needed to
->>>>> control the life cycle a co-processor, e.g. loading, booting, shutting
->>>>> gown a video encoder/decoder.
->>>>>
->>>>> The proposed reference allows a separate thingie to assert control of
->>>>> the life cycle of that co-processor.
->>>>>
->>>>>
->>>>> I acknowledge that in some cases there is a fine line between what is
->>>>> the life cycle management and what is the actual functionality
->>>>> implemented by that remote processor. But as the remoteproc mechanism is
->>>>> reusable between various use cases I think it makes sense to not describe
->>>>> them as one unit.
->>>>
->>>> What's the current state of this patch, not officially acked yet right?
->>>
->>> Bjorn and I have discussed some, but probably needs more discussion.
->>> This binding alone is simple enough, but I want to understand better how
->>> it will be used and digesting all the QCom h/w is not simple.
->>
->> OK, thanks. The binding has no bearing on Qcom h/w though.
-> 
-> Doesn't have to be QCom, I just want to see some user and understand the use.
-> 
->>>> While we are at this, can we agree upon an alias stem name as well, we
->>>> can stick to "rproc". Otherwise, I can submit an incremental patch on
->>>> top of this along with the code that adds an API to retrieve it for
->>>> client users.
->>>
->>> Any alias for this will be NAKed. My position on aliases is well
->>> documented.
->>
->> Hmm, I don't have the complete background/history on your stance. I do
->> have a need for identifying an exact remoteproc instance. How do you
->> propose I do that without aliases, and without adding a non-hw related
->> property to the DTS node? Like for example, we have 8 identical DSPs on
->> Keystone 2 Hawking SoCs, and I need to construct a firmware name based
->> on the instance id, and I cannot do this based on probe order.
-> 
-> If they are identical, then why do you care which firmware goes to
-> which DSP? Linux can decide the numbering. There must be some feature
-> that is different, and you should describe that.
+Dumb question: Why is this a Linux generic property - does it make 
+sense to have "blue-and-red-wiring" as a Linux generic property? I 
+mean, it reminds me little of those movies "cut the blue or red wire 
+to diffuse the bomb" ;)
 
-The IPs are identical, but that doesn't imply that firmwares can be
-dynamically allocated to any of those DSPs. The IPs integration on the
-SoC will obviously be at different addresses, and can have different
-I/Os. There will also be other system integration usage aspects
-depending on what type of functionality is being provided by a DSP.  We
-can have different peripherals being managed by different DSPs, and
-different applications needing to communicate to a specific DSP based on
-the functionality implemented within a firmware image etc.
+"The am335x-evm has blue and red wires crossed to get 24-bit RGB (and 
+16-bit BGR". I mean, there has to be some sort of better description 
+specific to lcdc if some product used yellow and green wires for the 
+same signals crossed?
 
-regards
-Suman
+-- 
+Regards,
+Nishanth Menon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
