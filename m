@@ -1,32 +1,42 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] devicetree: bindings: Add vendor prefix for
- Topeet.
-Date: Fri, 16 Sep 2016 10:24:11 -0500
-Message-ID: <20160916152411.GA4515@rob-hp-laptop>
-References: <1473285535-21996-1-git-send-email-ayaka@soulik.info>
- <1473285535-21996-4-git-send-email-ayaka@soulik.info>
+Subject: Re: [PATCH v2 1/2] Documentation: mmc: sdhci-of-arasan: add
+ description of power domain
+Date: Fri, 16 Sep 2016 10:25:35 -0500
+Message-ID: <20160916152535.GA6020@rob-hp-laptop>
+References: <20160908064905.18080-1-xzy.xu@rock-chips.com>
+ <20160908064905.18080-2-xzy.xu@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1473285535-21996-4-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+In-Reply-To: <20160908064905.18080-2-xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 08, 2016 at 05:58:55AM +0800, Randy Li wrote:
-> Add TOPEET, a ARM devlopment board vendor in China mainland.
+On Thu, Sep 08, 2016 at 02:49:04PM +0800, Ziyuan Xu wrote:
+> Add power domain as a optional property for sdhci-of-arasan, which can
+> be truned off in the so-called unused condition, such as suspend and
+
+s/truned/turned/
+
+> remove. Aim to lower power requirements.
 > 
-> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+> Signed-off-by: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+> 
+> Changes in v2:
+> - fix a typo
+> - add an example code for power-domain
+> 
+>  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 
-I applied this one to avoid any merge conflicts with fixing 
-alphabetizing of this file this cycle.
+With that,
 
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
