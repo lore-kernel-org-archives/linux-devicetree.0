@@ -1,66 +1,59 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v6 2/3] ARM: dts: add TOPEET itop elite based board
-Date: Fri, 16 Sep 2016 14:09:15 -0400
-Message-ID: <1e4335db-9004-bb7c-6dc1-e435e66b8126@osg.samsung.com>
-References: <1473285535-21996-1-git-send-email-ayaka@soulik.info>
- <1473285535-21996-3-git-send-email-ayaka@soulik.info>
- <CGME20160916072303eucas1p2941ba2907605055f5ea5abb2e6891d77@eucas1p2.samsung.com>
- <6bd9905d-0818-a917-8b8e-6abce134a3d3@kernel.org>
- <865b9f84-385f-fea8-2e3d-2b31e3bfe84c@soulik.info>
- <20160916172110.GA7511@kozik-lap>
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] regulator: Prevent falling too fast
+Date: Fri, 16 Sep 2016 11:31:45 -0700
+Message-ID: <20160916183145.GF62872@google.com>
+References: <20160906190524.GB79728@google.com>
+ <20160912185633.GH27946@sirena.org.uk>
+ <20160913172140.GC62872@google.com>
+ <20160915143945.GJ27974@sirena.org.uk>
+ <20160915180223.GE62872@google.com>
+ <20160916163253.GA10189@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160916172110.GA7511@kozik-lap>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, ayaka <ayaka@soulik.info>
-Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160916163253.GA10189-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Randy,
+El Fri, Sep 16, 2016 at 05:32:53PM +0100 Mark Brown ha dit:
 
-On 09/16/2016 01:21 PM, Krzysztof Kozlowski wrote:
+> On Thu, Sep 15, 2016 at 11:02:23AM -0700, Matthias Kaehlcke wrote:
+> > El Thu, Sep 15, 2016 at 03:39:45PM +0100 Mark Brown ha dit:
+> 
+> > > The obvious question here is how the OVP hardware knows about the new
+> > > voltage and why we're bodging this in the regulator core rather than in
+> > > the OVP hardware.
+> 
+> > The OVP hardware is part of the regulator and the regulator is not
+> > notified directly about voltage changes. The regulator transforms the
+> > PWM input into DC output and does the OVP internally with the limits
+> > described above.
+> 
+> So the PWM is just configuring this external regulator chip (which
+> doesn't seem to be described in DT...)
 
-[snip]
+Exactly
 
->>>> +	
->>>> +	beep {
->>>> +		compatible = "pwm-beeper";
->>>> +		pwms = <&pwm 0 4000000 PWM_POLARITY_INVERTED>;
->>> I have serious doubts that you run this code... if it does not even
->>> compile. Sorry, I cannot accept code that does not compile and was not
->>> tested.
->>>
->>> Please, test your DTS on top of current Linux tree, which would be one of:
->>> 1. Linus' master branch: v4.8-rc6,
->>> 2. one of my branches (for-next, next/dt etc),
->> When I sent those patches, I tested in "Add linux-next specific files for
->> 20160907"
->
-> OK, good, but please tell me why kbuild reported that build error?
->
+> and that's just incredibly bad at coping with voltage changes?
 
-I agree with Krzysztof, it doesn't seem that you tested the exact version
-that was posted. You will need the following change to make the DTS build
-in latest linux-next:
+Supposedly OVP is a feature of the chip, but it gets in our way on
+"larger" voltage changes.
 
-diff --git a/arch/arm/boot/dts/exynos4412-itop-elite.dts b/arch/arm/boot/dts/exynos4412-itop-elite.dts
-index dd83689892ff..8559f891a740 100644
---- a/arch/arm/boot/dts/exynos4412-itop-elite.dts
-+++ b/arch/arm/boot/dts/exynos4412-itop-elite.dts
-@@ -14,6 +14,7 @@
- */
- 
- /dts-v1/;
-+#include <dt-bindings/pwm/pwm.h>
- #include <dt-bindings/sound/samsung-i2s.h>
- #include "exynos4412-itop-scp-core.dtsi"
+> It does sound rather like we ought to be representing this chip
+> directly in case it needs other workarounds.
 
-So please squash that change and resend.
+Ok, we'll consider this. It seems we can drop this patch since the
+regulator core is not the best place to address this problem.
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Thanks for your reviews!
+
+Matthias
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
