@@ -1,58 +1,55 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: msm8996-pcie-phy: add support for
- msm8996 pcie phy
-Date: Fri, 16 Sep 2016 17:45:43 +0100
-Message-ID: <636dcd07-82a9-ddf4-9cd1-0b70dac88d8c@linaro.org>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] phy: msm8996-pcie-phy: Add support to msm8996 pcie
+ phy
+Date: Fri, 16 Sep 2016 17:48:08 +0100
+Message-ID: <2296a3a9-164a-c46c-ef98-2bd2d97039c8@linaro.org>
 References: <1473245733-17260-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1473245733-17260-2-git-send-email-srinivas.kandagatla@linaro.org>
- <20160916135220.GA10405@rob-hp-laptop>
+ <1473245733-17260-3-git-send-email-srinivas.kandagatla@linaro.org>
+ <57D82403.9080004@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160916135220.GA10405@rob-hp-laptop>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57D82403.9080004-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 16/09/16 14:52, Rob Herring wrote:
-> On Wed, Sep 07, 2016 at 11:55:32AM +0100, Srinivas Kandagatla wrote:
->> This patch adds bindings for pcie phy on MSM8996.
->>
->> This PHY has 3 Ports, including a common block. Each port is connected
->> to one root complex. Each port has dedicated reset control lines apart
->> from common reset and clocks for common block.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>  .../bindings/phy/qcom-msm8996-pcie-phy.txt         | 62 ++++++++++++++++++++++
->>  1 file changed, 62 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
->>
->> diff --git a/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt b/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
->> new file mode 100644
->> index 0000000..51930ed
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
->> @@ -0,0 +1,62 @@
->> +Qualcomm msm8996 pcie PHY
->> +------------------------
->> +
->> +Required properties:
->> +- compatible: compatible list, contains "qcom,msm8996-pcie-phy".
+On 13/09/16 17:06, Archit Taneja wrote:
 >
-> 8994 has PCIe, this phy is completely different? And Archit mentioned
-> another SoC, too.
+>
+> On 9/7/2016 4:25 PM, Srinivas Kandagatla wrote:
+>> This patch adds support to msm8996 pcie phy which supports 3 ports,
+>> Port A, Port B and Port C.
+>>
+>> Each port is independent and connected to a pcie host controller,
+>> there is
+>> also a common block which is shared across all the 3 ports.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>   drivers/phy/Kconfig                 |   7 +
+>>   drivers/phy/Makefile                |   1 +
+>>   drivers/phy/phy-qcom-msm8996-pcie.c | 492
+>> ++++++++++++++++++++++++++++++++++++
 
-Recently I too learned that this phy IP is used across USB, UFS and 
-other SOCs, so Am planning to dump this patchset and write one common 
-driver.
+>> +#define PCIE_LANE_PCS_BASE 0x1400
+>
+> I've seen the reg offsets of another SoC using the same
+> IP, but the above offsets aren't the same relative to the
+> phy base. We might want to create more reg properties in
+> DT to accommodate register maps on other SoCs.
+
+Yep, I got some more info on this from Vivek and It looks like this IP 
+has been reused on other Host controllers and SOCs.
+So plan is to write a common driver for all of them.
 
 Thanks,
 srini
->
-> Rob
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
