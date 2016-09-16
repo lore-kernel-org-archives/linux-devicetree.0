@@ -1,38 +1,44 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 2/2] phy: msm8996-pcie-phy: Add support to msm8996 pcie
- phy
-Date: Fri, 16 Sep 2016 17:49:18 +0100
-Message-ID: <e43b7441-6183-e15c-c944-620d3f376320@linaro.org>
-References: <1473245733-17260-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1473245733-17260-3-git-send-email-srinivas.kandagatla@linaro.org>
- <2afe8523-925f-b538-f217-23ea7a267e11@linaro.org>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] ARM: dts: bcm283x: add pinctrl group to &sdhci,
+ drop pins from &gpio
+Date: Fri, 16 Sep 2016 18:48:50 +0200 (CEST)
+Message-ID: <43420281.199608.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange@email.1und1.de>
+References: <1473841415-937-1-git-send-email-kraxel@redhat.com>
+ <1473841415-937-7-git-send-email-kraxel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <2afe8523-925f-b538-f217-23ea7a267e11@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473841415-937-7-git-send-email-kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Gerd,
 
+> Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> hat am 14. September 2016 um 10:23
+> geschrieben:
+> 
+> 
+> As the alt3 group has no pins left after this
+> update drop the whole alt3 group from &gpio.
 
-On 16/09/16 15:14, Stanimir Varbanov wrote:
->> > +	writel_relaxed(0x0f, base + QSERDES_COM_BG_TRIM);
->> > +	writel_relaxed(0x0f, base + QSERDES_COM_PLL_IVCO);
->> > +	writel_relaxed(0x19, base + QSERDES_COM_CLK_EP_DIV);
->> > +	writel_relaxed(0x10, base + QSERDES_COM_CLK_ENABLE1);
->> > +	writel_relaxed(0x00, base + QSERDES_COM_HSCLK_SEL);
->> > +	writel_relaxed(0x40, base + QSERDES_COM_RESCODE_DIV_NUM);
->> > +	writel_relaxed(0x00, base + PCIE_COM_SW_RESET);
->> > +	writel_relaxed(0x03, base + PCIE_COM_START_CONTROL);
-> I'd make an array with register/value pair and write the registers with
-> a for () loop. IMO it will be more readable.
->
-> Probably 3 arrays - power_on, power_on_common and power_off.
-Thats good idea, I will keep that in mind before sending next version 
-with common phy driver for USB/PCIE/UFS.
+sorry it won't be that simple. The references needs to removed too :-(
 
-thanks
-srini
+> grep alt3 *.dts*
+bcm2835-rpi-a.dts:	pinctrl-0 = <&gpioout &alt0 &i2s_alt2 &alt3>;
+bcm2835-rpi-a-plus.dts:	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
+bcm2835-rpi-b.dts:	pinctrl-0 = <&gpioout &alt0 &alt3>;
+bcm2835-rpi-b-plus.dts:	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
+bcm2835-rpi-b-rev2.dts:	pinctrl-0 = <&gpioout &alt0 &i2s_alt2 &alt3>;
+bcm2835-rpi.dtsi:	alt3: alt3 {
+bcm2835-rpi-zero.dts:	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
+bcm2836-rpi-2-b.dts:	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
+
+Regards
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
