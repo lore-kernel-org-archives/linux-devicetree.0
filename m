@@ -1,111 +1,360 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] Documentation: dt: net: add ath9k wireless device
- binding
-Date: Fri, 16 Sep 2016 07:45:41 -0500
-Message-ID: <20160916124541.GB9689@rob-hp-laptop>
-References: <20160821143105.27487-1-martin.blumenstingl@googlemail.com>
- <20160906214623.20424-1-martin.blumenstingl@googlemail.com>
- <20160906214623.20424-2-martin.blumenstingl@googlemail.com>
- <3b93ec95-ec7c-863a-06b7-fab4f2688855@rempel-privat.de>
- <CAFBinCAOQmk3KY1b+D1iKAOEBfasYyei681cae4PbD+201mzbQ@mail.gmail.com>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH v2 1/3] ipmi: add an Aspeed BT IPMI BMC driver
+Date: Fri, 16 Sep 2016 15:00:26 +0200
+Message-ID: <fb5eceb0-a546-6d8b-949e-7191f2d0073d@kaod.org>
+References: <1474022367-21029-1-git-send-email-clg@kaod.org>
+ <1474022367-21029-2-git-send-email-clg@kaod.org> <20160916122949.GA23381@Red>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAFBinCAOQmk3KY1b+D1iKAOEBfasYyei681cae4PbD+201mzbQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn-yOkvZcmFvRU@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160916122949.GA23381@Red>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: LABBE Corentin <clabbe.montjoie@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>, Alistair Popple <alistair@popple.id.au>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, openipmi-developer@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jk@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 09, 2016 at 10:57:06PM +0200, Martin Blumenstingl wrote:
-> On Fri, Sep 9, 2016 at 9:48 AM, Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org> wrote:
-> >> +Optional properties:
-> >> +- reg: Address and length of the register set for the device.
-> >> +- qca,clk-25mhz: Defines that a 25MHz clock is used
-> >
-> > Some SoCs even Atheros WiSoCs use WiFi clock for System Clock. In this
-> > case we need to use clock framework any way, so why not in this case too?
-> > Provide dummy static clock in DT and connect it with this node?
-> >
-> >         osc25m: oscillator {
-> >                 compatible = "fixed-clock";
-> >                 #clock-cells = <0>;
-> >                 clock-frequency = <25000000>;
-> >                 clock-accuracy = <30000>;
-> >         };
-> >
-> >         acc: clock-controller@80040000 {
-> >                 compatible = "some-clock-controller";
-> >                 #clock-cells = <1>;
-> >                 clocks = <&osc25m>;
-> >                 reg = <0x80040000 0x204>;
-> >         };
-> >
-> >
-> > &pci0 {
-> >         ath9k@168c,002d {
-> >                 compatible = "pci168c,002d";
-> >                 reg = <0x7000 0 0 0 0x1000>;
-> >                 clocks = <&osc25m>;
-> >                 qca,disable-5ghz;
-> >         };
-> > };
-> >
-> >
-> > driver will need to use clk_get and compare frequency instead of
-> > of_property_read_bool(np, "qca,clk-25mhz"). In this case you will need
-> > to define source clock only one time and reuse it by all affected DT
-> > nodes. If we have 40MHz clock you will only need to change it in
-> > fixed-clock.
-> that does sound like a good idea, thanks for that input!
-> However, I will remove the property for the first version because I am
-> trying to get PCI(e) devices supported. OF support for AHB (WiSoC)
-> needs more work (in other places, like ahb.c) anyways.
-> But this suggestion should be remembered!
-> 
-> >> +- qca,no-eeprom: Indicates that there is no physical EEPROM connected to the
-> >> +                     ath9k wireless chip (in this case the calibration /
-> >> +                     EEPROM data will be loaded from userspace using the
-> >> +                     kernel firmware loader).
-> >> +- qca,disable-2ghz: Overrides the settings from the EEPROM and disables the
-> >> +                     2.4GHz band. Setting this property is only needed
-> >> +                     when the RF circuit does not support the 2.4GHz band
-> >> +                     while it is enabled nevertheless in the EEPROM.
-> >> +- qca,disable-5ghz: Overrides the settings from the EEPROM and disables the
-> >> +                     5GHz band. Setting this property is only needed when
-> >> +                     the RF circuit does not support the 5GHz band while
-> >> +                     it is enabled nevertheless in the EEPROM.
-> >
-> > This option can be reused for every WiFi controller. Not only for qca.
-> > So may be instead of adding vendor specific name, make it reusable for
-> > all vendors. Instead of qca,disable-5ghz and qca,disable-2ghz make
-> > disable-5ghz and disable-2ghz?
+On 09/16/2016 02:29 PM, LABBE Corentin wrote:
+> Hello
+> =
 
-Fine, but if you do this then document in a common location.
+> I have some minor comment below:
+> =
 
-> I am personally fine with anything that fits best into the grand
-> scheme of things.
-> There are three scenarios I can think of which may be influenced by
-> devicetree configuration:
-> a) let the driver decide automatically whether the 2.4GHz and/or 5GHz
-> band is/are enabled
-> b) explicitly disable either bands (because the driver thinks due to
-> whatever reason that a band is supported while in reality it isn't)
-> c) explicitly enable a band (for example because the driver cannot
-> automagically detect which band should be enabled)
-> 
-> for ath9k we default to a) but also allow b): the EEPROM (device
-> specific calibration data) contains information about which bands are
-> enabled (or not). But some manufacturers are shipping devices for
-> example with the 5G band enabled, while the actual hardware doesn't
-> support it.
+> On Fri, Sep 16, 2016 at 12:39:25PM +0200, C=E9dric Le Goater wrote:
+>> From: Alistair Popple <alistair@popple.id.au>
+>>
+>> This patch adds a simple device driver to expose the iBT interface on
+>> Aspeed SOCs (AST2400 and AST2500) as a character device. Such SOCs are
+>> commonly used as BMCs (BaseBoard Management Controllers) and this
+>> driver implements the BMC side of the BT interface.
+>>
+>> The BT (Block Transfer) interface is used to perform in-band IPMI
+>> communication between a host and its BMC. Entire messages are buffered
+>> before sending a notification to the other end, host or BMC, that
+>> there is data to be read. Usually, the host emits requests and the BMC
+>> responses but the specification provides a mean for the BMC to send
+>> SMS Attention (BMC-to-Host attention or System Management Software
+>> attention) messages.
+>>
+>> For this purpose, the driver introduces a specific ioctl on the
+>> device: 'BT_BMC_IOCTL_SMS_ATN' that can be used by the system running
+>> on the BMC to signal the host of such an event.
+>>
+>> The device name defaults to '/dev/ipmi-bt-host'
+>>
+>> Signed-off-by: Alistair Popple <alistair@popple.id.au>
+>> Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+>> Signed-off-by: Joel Stanley <joel@jms.id.au>
+>> [clg: - checkpatch fixes
+>>       - added a devicetree binding documentation
+>>       - replace 'bt_host' by 'bt_bmc' to reflect that the driver is
+>>         the BMC side of the IPMI BT interface
+>>       - renamed the device to 'ipmi-bt-host'
+>>       - introduced a temporary buffer to copy_{to,from}_user
+>>       - used platform_get_irq()
+>>       - moved the driver under drivers/char/ipmi/ but kept it as a misc
+>>         device
+>>       - changed the compatible cell to "aspeed,ast2400-bt-bmc"
+>> ]
+>> Signed-off-by: C=E9dric Le Goater <clg@kaod.org>
+>> ---
+>>
+>>  Changes since v1:
+>>
+>>  - replace 'bt_host' by 'bt_bmc' to reflect that the driver is
+>>    the BMC side of the IPMI BT interface
+>>  - renamed the device to 'ipmi-bt-host'
+>>  - introduced a temporary buffer to copy_{to,from}_user
+>>  - used platform_get_irq()
+>>  - moved the driver under drivers/char/ipmi/ but kept it as a misc
+>>    device
+>>  - changed the compatible cell to "aspeed,ast2400-bt-bmc"
+>>
+>>  .../bindings/char/ipmi/aspeed,ast2400-bt-bmc.txt   |  23 +
+>>  drivers/Makefile                                   |   2 +-
+>>  drivers/char/ipmi/Kconfig                          |   7 +
+>>  drivers/char/ipmi/Makefile                         |   1 +
+>>  drivers/char/ipmi/bt-bmc.c                         | 486 ++++++++++++++=
++++++++
+>>  include/uapi/linux/Kbuild                          |   1 +
+>>  include/uapi/linux/bt-bmc.h                        |  18 +
+>>  7 files changed, 537 insertions(+), 1 deletion(-)
+>>  create mode 100644 Documentation/devicetree/bindings/char/ipmi/aspeed,a=
+st2400-bt-bmc.txt
+>>  create mode 100644 drivers/char/ipmi/bt-bmc.c
+>>  create mode 100644 include/uapi/linux/bt-bmc.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/char/ipmi/aspeed,ast2400-=
+bt-bmc.txt b/Documentation/devicetree/bindings/char/ipmi/aspeed,ast2400-bt-=
+bmc.txt
+>> new file mode 100644
+>> index 000000000000..fbbacd958240
+>> --- /dev/null
+> =
 
-And you can't determine that based on different device IDs? If you can 
-use vendor/device ID, then you should. If not, then this is fine.
+> [..]
+> =
 
-Is it possible to have no EEPROM at all? If so, you might want to just 
-put the raw EEPROM data into DT rather than a property for every field 
-(I'm assuming there's more than just what you have properties for now).
+>> +#include <linux/module.h>
+>> +#include <linux/moduleparam.h>
+>> +#include <linux/errno.h>
+>> +#include <linux/poll.h>
+>> +#include <linux/sched.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/init.h>
+>> +#include <linux/device.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/io.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/miscdevice.h>
+>> +#include <linux/timer.h>
+>> +#include <linux/jiffies.h>
+>> +#include <linux/bt-bmc.h>
+> =
 
-Rob
+> Please sort them in alphabetical order, some of them seems not needed als=
+o (like spinlock.h)
+
+sure. I will clean them up.
+
+>> +
+>> +/*
+>> + * This is a BMC device used to communicate to the host
+>> + */
+>> +#define DEVICE_NAME	"ipmi-bt-host"
+>> +
+>> +#define BT_IO_BASE	0xe4
+>> +#define BT_IRQ		10
+>> +
+>> +#define BT_CR0		0x0
+>> +#define   BT_CR0_IO_BASE		16
+>> +#define   BT_CR0_IRQ			12
+>> +#define   BT_CR0_EN_CLR_SLV_RDP		0x8
+>> +#define   BT_CR0_EN_CLR_SLV_WRP		0x4
+>> +#define   BT_CR0_ENABLE_IBT		0x1
+>> +#define BT_CR1		0x4
+>> +#define   BT_CR1_IRQ_H2B	0x01
+>> +#define   BT_CR1_IRQ_HBUSY	0x40
+>> +#define BT_CR2		0x8
+>> +#define   BT_CR2_IRQ_H2B	0x01
+>> +#define   BT_CR2_IRQ_HBUSY	0x40
+>> +#define BT_CR3		0xc
+>> +#define BT_CTRL		0x10
+>> +#define   BT_CTRL_B_BUSY		0x80
+>> +#define   BT_CTRL_H_BUSY		0x40
+>> +#define   BT_CTRL_OEM0			0x20
+>> +#define   BT_CTRL_SMS_ATN		0x10
+>> +#define   BT_CTRL_B2H_ATN		0x08
+>> +#define   BT_CTRL_H2B_ATN		0x04
+>> +#define   BT_CTRL_CLR_RD_PTR		0x02
+>> +#define   BT_CTRL_CLR_WR_PTR		0x01
+>> +#define BT_BMC2HOST	0x14
+>> +#define BT_INTMASK	0x18
+>> +#define   BT_INTMASK_B2H_IRQEN		0x01
+>> +#define   BT_INTMASK_B2H_IRQ		0x02
+>> +#define   BT_INTMASK_BMC_HWRST		0x80
+> =
+
+> Why to use 3 space after some define ?
+
+The difference in alignment is to distinguish the register number from =
+
+the bits signification. Is that OK ? =
+
+
+> [..]
+> =
+
+>> +
+>> +#define BT_BMC_BUFFER_SIZE 256
+> =
+
+> Put this define with others
+> =
+
+> [..]
+
+ok
+
+>> +
+>> +static irqreturn_t bt_bmc_irq(int irq, void *arg)
+>> +{
+>> +	struct bt_bmc *bt_bmc =3D arg;
+>> +	uint32_t reg;
+> =
+
+> u32 is prefered other uint32_t, do you have run checkpatch --strict ?
+
+no. I just did and I see it is catching quite a few new issues. I will =
+
+send a v3 with fixes.
+
+>> +
+>> +	reg =3D ioread32(bt_bmc->base + BT_CR2);
+>> +	reg &=3D BT_CR2_IRQ_H2B | BT_CR2_IRQ_HBUSY;
+>> +	if (!reg)
+>> +		return IRQ_NONE;
+>> +
+>> +	/* ack pending IRQs */
+>> +	iowrite32(reg, bt_bmc->base + BT_CR2);
+>> +
+>> +	wake_up(&bt_bmc->queue);
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static int bt_bmc_config_irq(struct bt_bmc *bt_bmc,
+>> +		struct platform_device *pdev)
+>> +{
+>> +	struct device *dev =3D &pdev->dev;
+>> +	uint32_t reg;
+>> +	int rc;
+>> +
+>> +	bt_bmc->irq =3D platform_get_irq(pdev, 0);
+>> +	if (!bt_bmc->irq)
+>> +		return -ENODEV;
+>> +
+>> +	rc =3D devm_request_irq(dev, bt_bmc->irq, bt_bmc_irq, IRQF_SHARED,
+>> +			DEVICE_NAME, bt_bmc);
+>> +	if (rc < 0) {
+>> +		dev_warn(dev, "Unable to request IRQ %d\n", bt_bmc->irq);
+>> +		bt_bmc->irq =3D 0;
+>> +		return rc;
+>> +	}
+>> +
+>> +	/* Configure IRQs on the bmc clearing the H2B and HBUSY bits;
+>> +	 * H2B will be asserted when the bmc has data for us; HBUSY
+>> +	 * will be cleared (along with B2H) when we can write the next
+>> +	 * message to the BT buffer
+>> +	 */
+> =
+
+> This comment doesnt have the style recommended for new driver.
+
+ah yes. I missed that one. =
+
+
+>> +	reg =3D ioread32(bt_bmc->base + BT_CR1);
+>> +	reg |=3D BT_CR1_IRQ_H2B | BT_CR1_IRQ_HBUSY;
+>> +	iowrite32(reg, bt_bmc->base + BT_CR1);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int bt_bmc_probe(struct platform_device *pdev)
+>> +{
+>> +	struct bt_bmc *bt_bmc;
+>> +	struct device *dev;
+>> +	struct resource *res;
+>> +	int rc;
+>> +
+>> +	if (!pdev || !pdev->dev.of_node)
+>> +		return -ENODEV;
+>> +
+>> +	dev =3D &pdev->dev;
+>> +	dev_info(dev, "Found bt bmc device\n");
+>> +
+>> +	bt_bmc =3D devm_kzalloc(dev, sizeof(*bt_bmc), GFP_KERNEL);
+>> +	if (!bt_bmc)
+>> +		return -ENOMEM;
+>> +
+>> +	dev_set_drvdata(&pdev->dev, bt_bmc);
+>> +
+>> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	if (!res) {
+>> +		dev_err(dev, "Unable to find resources\n");
+>> +		rc =3D -ENXIO;
+>> +		goto out_free;
+>> +	}
+>> +
+>> +	bt_bmc->base =3D devm_ioremap_resource(&pdev->dev, res);
+>> +	if (!bt_bmc->base) {
+>> +		rc =3D -ENOMEM;
+>> +		goto out_free;
+>> +	}
+>> +
+>> +	init_waitqueue_head(&bt_bmc->queue);
+>> +
+>> +	bt_bmc->miscdev.minor	=3D MISC_DYNAMIC_MINOR,
+>> +	bt_bmc->miscdev.name	=3D DEVICE_NAME,
+>> +	bt_bmc->miscdev.fops	=3D &bt_bmc_fops,
+>> +	bt_bmc->miscdev.parent =3D dev;
+>> +	rc =3D misc_register(&bt_bmc->miscdev);
+>> +	if (rc) {
+>> +		dev_err(dev, "Unable to register device\n");
+> =
+
+> Be more precise by saying misc device
+
+ok
+
+> =
+
+>> +		goto out_unmap;
+>> +	}
+>> +
+>> +	bt_bmc_config_irq(bt_bmc, pdev);
+>> +
+>> +	if (bt_bmc->irq) {
+>> +		dev_info(dev, "Using IRQ %d\n", bt_bmc->irq);
+>> +	} else {
+>> +		dev_info(dev, "No IRQ; using timer\n");
+>> +		setup_timer(&bt_bmc->poll_timer, poll_timer,
+>> +				(unsigned long)bt_bmc);
+>> +		bt_bmc->poll_timer.expires =3D jiffies + msecs_to_jiffies(10);
+>> +		add_timer(&bt_bmc->poll_timer);
+>> +	}
+>> +
+>> +	iowrite32((BT_IO_BASE << BT_CR0_IO_BASE) |
+>> +		  (BT_IRQ << BT_CR0_IRQ) |
+>> +		  BT_CR0_EN_CLR_SLV_RDP |
+>> +		  BT_CR0_EN_CLR_SLV_WRP |
+>> +		  BT_CR0_ENABLE_IBT,
+>> +		  bt_bmc->base + BT_CR0);
+>> +
+>> +	clr_b_busy(bt_bmc);
+>> +
+>> +	return 0;
+>> +
+>> +out_unmap:
+>> +	devm_iounmap(&pdev->dev, bt_bmc->base);
+> =
+
+> Why do you use devm_iounmap/devm_kfree since the interest with devm_ func=
+tions =
+
+> is that all cleanup is done when driver is removed.
+
+Indeed. So I can cleanup bt_bmc_remove() also.
+
+>> +
+>> +out_free:
+>> +	devm_kfree(dev, bt_bmc);
+>> +	return rc;
+> =
+
+> I think you should remove the space after this return
+
+
+Thanks,
+
+C.
+
+
+> Regards
+> =
+
+> Corentin Labbe
+> =
