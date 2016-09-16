@@ -1,112 +1,107 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v6] drm: bridge/dw_hdmi: add dw hdmi i2c bus adapter
- support
-Date: Fri, 16 Sep 2016 20:38:08 +0300
-Message-ID: <f3ca3e02-43b8-e6fa-d4cd-023f9d50fabb@mentor.com>
-References: <1472017597-11221-1-git-send-email-vladimir_zapolskiy@mentor.com>
- <20160829155006.GA27342@rob-hp-laptop>
- <749c8858-9fd2-dcbc-d980-1652c4682e31@mentor.com>
- <1474039310.2491.77.camel@pengutronix.de>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 02/16] dt/bindings: Update binding for PM domain idle
+ states
+Date: Fri, 16 Sep 2016 18:39:37 +0100
+Message-ID: <7af4c2d7-70a3-1881-2980-8ea49e594e5b@arm.com>
+References: <1472242678-33700-1-git-send-email-lina.iyer@linaro.org>
+ <1472242678-33700-3-git-send-email-lina.iyer@linaro.org>
+ <0b233802-f459-c6bb-ff42-70745a225cfb@arm.com>
+ <20160902201605.GA1705@linaro.org> <87sht59mcw.fsf@arm.com>
+ <20160912161600.GA21885@linaro.org>
+ <a4fc71ae-6fa5-4142-6dd4-7bc96eb20186@arm.com> <87intz665i.fsf@arm.com>
+ <20160913193844.GB28944@linaro.org> <87h99i6b5d.fsf@arm.com>
+ <7hpoo3ix80.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1474039310.2491.77.camel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Daniel Vetter <daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7hpoo3ix80.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, Juri.Lelli-5wv7dgnIgG8@public.gmane.org, Axel Haslam <ahaslam+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcCwKCk9uIDA5LzE2LzIwMTYgMDY6MjEgUE0sIFBoaWxpcHAgWmFiZWwgd3JvdGU6
-Cj4gSGkgVmxhZGltaXIsCj4KPiBBbSBNaXR0d29jaCwgZGVuIDE0LjA5LjIwMTYsIDIxOjQ2ICsw
-MzAwIHNjaHJpZWIgVmxhZGltaXIgWmFwb2xza2l5Ogo+PiBIaSBQaGlsaXBwLAo+Pgo+PiBPbiAw
-OC8yOS8yMDE2IDA2OjUwIFBNLCBSb2IgSGVycmluZyB3cm90ZToKPj4+IE9uIFdlZCwgQXVnIDI0
-LCAyMDE2IGF0IDA4OjQ2OjM3QU0gKzAzMDAsIFZsYWRpbWlyIFphcG9sc2tpeSB3cm90ZToKPj4+
-PiBUaGUgY2hhbmdlIGFkZHMgc3VwcG9ydCBvZiBpbnRlcm5hbCBIRE1JIEkyQyBtYXN0ZXIgY29u
-dHJvbGxlciwgdGhpcwo+Pj4+IHN1YmRldmljZSBpcyB1c2VkIGJ5IGRlZmF1bHQsIGlmICJkZGMt
-aTJjLWJ1cyIgRFQgcHJvcGVydHkgaXMgb21pdHRlZC4KPj4+Pgo+Pj4+IFRoZSBtYWluIHB1cnBv
-c2Ugb2YgdGhpcyBmdW5jdGlvbmFsaXR5IGlzIHRvIHN1cHBvcnQgcmVhZGluZyBFRElEIGZyb20K
-Pj4+PiBhbiBIRE1JIG1vbml0b3Igb24gYm9hcmRzLCB3aGljaCBkb24ndCBoYXZlIGFuIEkyQyBi
-dXMgY29ubmVjdGVkIHRvCj4+Pj4gRERDIHBpbnMuCj4+Pj4KPj4+PiBUaGUgY3VycmVudCBpbXBs
-ZW1lbnRhdGlvbiBkb2VzIG5vdCBzdXBwb3J0ICJJMkMgTWFzdGVyIEludGVyZmFjZQo+Pj4+IEV4
-dGVuZGVkIFJlYWQgTW9kZSIgdG8gcmVhZCBkYXRhIGFkZHJlc3NlZCBieSBub24temVybyBzZWdt
-ZW50Cj4+Pj4gcG9pbnRlciwgdGhpcyBtZWFucyB0aGF0IGlmIEVESUQgaGFzIG1vcmUgdGhhbiAx
-IGV4dGVuc2lvbiBibG9ja3MsCj4+Pj4gRURJRCByZWFkaW5nIG9wZXJhdGlvbiB3b24ndCBzdWNj
-ZWVkLCBpbiBteSBwcmFjdGljZSBhbGwgdGVzdGVkIEhETUkKPj4+PiBtb25pdG9ycyBoYXZlIGF0
-IG1heGltdW0gb25lIGV4dGVuc2lvbiBibG9jay4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IFZs
-YWRpbWlyIFphcG9sc2tpeSA8dmxhZGltaXJfemFwb2xza2l5QG1lbnRvci5jb20+Cj4+Pj4gLS0t
-Cj4+Pj4gVGhlIGNoYW5nZSBpcyBiYXNlZCBvbiB0b3Agb2YgdjQuOC4wLXJjMSBhbmQgYSBmaXgg
-aW4gRFcgSERNSSBkcml2ZXIKPj4+PiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNo
-LzkyODQ3MTcvCj4+Pj4KPj4+PiBDaGFuZ2VzIGZyb20gdjUgdG8gdjY6Cj4+Pj4gKiByZWJhc2Vk
-IG9uIHRvcCBvZiB2NC44LjAtcmMxCj4+Pj4gKiBmaXhlZCBvbmUgaW1wcm9wZXIgcmVzb3VyY2Ug
-ZGVhbGxvY2F0aW9uIG9uIGVycm9yIHBhdGggb2YgZHdfaGRtaV9iaW5kKCkKPj4+PiAqIGFkZGVk
-IGEgY29tbWVudCBkZXNjcmliaW5nIGEgbXV0ZXggYXNrZWQgYnkgY2hlY2twYXRjaC5wbCAtLXN0
-cmljdAo+Pj4+Cj4+Pj4gTGluayB0byB2ZXJzaW9uIHY1OiBodHRwczovL3BhdGNod29yay5rZXJu
-ZWwub3JnL3BhdGNoLzcyNzk4MzEvCj4+Pj4KPj4+PiBDaGFuZ2VzIGZyb20gdjQgdG8gdjU6Cj4+
-Pj4gKiBkbyBJMkMgYnVzIGNvbnRyb2xsZXIgaW5pdGlhbGl6YXRpb24gb25seSBvbmNlIGluIGJp
-bmQoKSBhcyBpdCB3YXMgZG9uZQo+Pj4+ICAgaW4gdjEtdjMgb2YgdGhlIGNoYW5nZS4KPj4+Pgo+
-Pj4+IENoYW5nZXMgZnJvbSB2MyB0byB2NCwgdGhhbmtzIHRvIERvdWcgYW5kIFBoaWxpcHAgZm9y
-IHJldmlldzoKPj4+PiAqIHNldCBzcGVlZCBtb2RlIGFmdGVyIHNvZnR3YXJlIHJlc2V0IGluIGR3
-X2hkbWlfaTJjX2luaXQoKQo+Pj4+ICogYnkgZGVmYXVsdCBzZXQgc3RhbmRhcmQgc3BlZWQgbW9k
-ZSBpbnN0ZWFkIG9mIGZhc3Qgc3BlZWQgbW9kZSwgb24gaU1YNlEKPj4+PiAgIHRoaXMgY29uZmln
-dXJlcyBTQ0wgdG8gMTAwIEtIeiwgd2hpY2ggaXMgY29tcGxpYW50IHdpdGggSERNSSAxLjNhIHNw
-ZWMKPj4+PiAqIGRvIEkyQyBidXMgY29udHJvbGxlciByZWluaXRpYWxpemF0aW9uIG9uIGV2ZXJ5
-IGRhdGEgdHJhbnNmZXIsCj4+Pj4gICB0aGlzIGNoYW5nZSBob3BlZnVsbHkgc29sdmVzIHNvbWUg
-b2JzZXJ2ZWQgcHJvYmxlbXMgb24gUkszMjg4IHBsYXRmb3JtCj4+Pj4gKiBhZGRlZCBzaG9ydCBm
-dW5jdGlvbmFsIGNoYW5nZSBkZXNjcmlwdGlvbiB0byBkd19oZG1pLnR4dAo+Pj4+Cj4+Pj4gdjMg
-b2YgdGhlIGNoYW5nZSB3YXMKPj4+Pgo+Pj4+ICAgVGVzdGVkLWJ5OiBQaGlsaXBwIFphYmVsIDxw
-LnphYmVsQHBlbmd1dHJvbml4LmRlPgo+Pj4+Cj4+Pj4gQ2hhbmdlcyBmcm9tIHYyIHRvIHYzLCB0
-aGFua3MgdG8gUnVzc2VsbDoKPj4+PiAqIG1vdmVkIHJlZ2lzdGVyIGZpZWxkIHZhbHVlIGRlZmlu
-aXRpb25zIHRvIGR3X2hkbWkuaAo+Pj4+ICogbWFkZSBjb21wbGV0aW9ucyB1bmludGVycnVwdGli
-bGUgdG8gYXZvaWQgdHJhbnNmZXIgcmV0cmllcyBpZiBpbnRlcnJ1cHRlZAo+Pj4+ICogdXNlIG9u
-ZSBjb21wbGV0aW9uIGZvciBib3RoIHJlYWQgYW5kIHdyaXRlIHRyYW5zZmVycyBhcyBpbiB2MSwK
-Pj4+PiAgIG9wZXJhdGlvbl9yZWcgaXMgcmVtb3ZlZAo+Pj4+ICogcmVkdW5kYW50IGkyYy0+c3Rh
-dCA9IDAgaXMgcmVtb3ZlZCBmcm9tIGR3X2hkbWlfaTJjX3JlYWQvd3JpdGUoKQo+Pj4+ICogc3Ry
-dWN0IGkyY19hbGdvcml0aG0gZHdfaGRtaV9hbGdvcml0aG0gaXMgcXVhbGlmaWVkIGFzIGNvbnN0
-Cj4+Pj4gKiBkd19oZG1pX2kyY19hZGFwdGVyKCkgZG9lcyBub3QgbW9kaWZ5IHN0cnVjdCBkd19o
-ZG1pIG9uIGVycm9yIHBhdGgKPj4+PiAqIGR3X2hkbWlfaTJjX2lycSgpIGRvZXMgbm90IG1vZGlm
-eSBoZG1pLT5pMmMtPnN0YXQsIGlmIGludGVycnVwdCBpcwo+Pj4+ICAgbm90IGZvciBJMkNNCj4+
-Pj4gKiBzcGluIGxvY2sgaXMgcmVtb3ZlZCBmcm9tIGR3X2hkbWlfaTJjX2lycSgpCj4+Pj4gKiBy
-ZW1vdmVkIHNwaW4gbG9jayBmcm9tIGR3X2hkbWlfaTJjX3hmZXIoKSBhcm91bmQgd3JpdGUgdG8K
-Pj4+PiAgIEhETUlfSUhfTVVURV9JMkNNX1NUQVQwIHJlZ2lzdGVyCj4+Pj4gKiBzcGxpdCBsb29w
-IG92ZXIgbWVzc2FnZSBhcnJheSBpbiBkd19oZG1pX2kyY194ZmVyKCkgdG8gdmFsaWRhdGlvbgo+
-Pj4+ICAgYW5kIHRyYW5zZmVyIHBhcnRzCj4+Pj4gKiBhZGRlZCBhIG11dGV4IHRvIHNlcmlhbGl6
-ZSBJMkMgdHJhbnNmZXIgcmVxdWVzdHMsIGkyYy0+bG9jayBpcwo+Pj4+ICAgY29tcGxldGVseSBy
-ZW1vdmVkCj4+Pj4gKiByZW1vdmVkIGlmKGxlbikgY2hlY2sgZnJvbSBkd19oZG1pX2kyY193cml0
-ZSgpLCBoYXJkd2FyZSBzdXBwb3J0cwo+Pj4+ICAgb25seSBsZW4+MCB0cmFuc2ZlcnMKPj4+PiAq
-IGRlc2NyaWJlZCBleHRlbnNpb24gYmxvY2tzIDw9IDEgbGltaXRhdGlvbiBpbiB0aGUgY29tbWl0
-IG1lc3NhZ2UKPj4+PiAqIGEgbnVtYmVyIG9mIG1pbm9yIGNsZWFuIHVwcwo+Pj4+Cj4+Pj4gQ2hh
-bmdlcyBmcm9tIHYxIHRvIHYyOgo+Pj4+ICogZml4ZWQgYSBkZXZtX2tmcmVlKCkgc2lnbmF0dXJl
-Cj4+Pj4gKiBzcGxpdCBjb21wbGV0aW9ucyBmb3IgcmVhZCBhbmQgd3JpdGUgb3BlcmF0aW9ucwo+
-Pj4+Cj4+Pj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R3X2hkbWku
-dHh0IHwgICA0ICstCj4+Pgo+Pj4gQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5v
-cmc+Cj4+Pgo+Pj4+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3LWhkbWkuYyAgICAgICAgICAg
-ICAgICAgICB8IDI2NSArKysrKysrKysrKysrKysrKysrKy0KPj4+PiAgZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS9kdy1oZG1pLmggICAgICAgICAgICAgICAgICAgfCAgMTkgKysKPj4+PiAgMyBmaWxl
-cyBjaGFuZ2VkLCAyODEgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKPj4KPj4gYXMgZmFy
-IGFzIEkga25vdyBEYXZpZCBhY2NlcHRzIHB1bGwgcmVxdWVzdHMgZnJvbSB5b3UsIGNhbiB5b3Ug
-cGxlYXNlCj4+IGNyZWF0ZSBhbmQgc2VuZCBhIHB1bGwgcmVxdWVzdCBmb3IgdjQuOSBjb250YWlu
-aW5nIHRoZXNlIGNoYW5nZXM/Cj4+Cj4+ICAgICBodHRwczovL3BhdGNod29yay5rZXJuZWwub3Jn
-L3BhdGNoLzkyODQ3MTcvIC0tIHdpdGggUnVzc2VsbCdzIGFjawo+Cj4gSXMgdGhhdCBhIGZvcndh
-cmQgbG9va2luZyBzdGF0ZW1lbnQ/IEkgZG9uJ3Qgc2VlIFJ1c3NlbGwncyBhY2suCgpIZXJlIGl0
-IGlzOiBodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2RyaS1kZXZlbC9tc2cxMTU4ODAuaHRt
-bAoKUGxlYXNlIGRvbid0IGJvdGhlciBhYm91dCB0d28gb3RoZXIgY29tbWl0cyBmcm9tIHRoYXQg
-c2VyaWVzLCBhdCBsZWFzdAp0aGVyZSBhcmUgb2ZmaWNpYWwgbWFpbnRhaW5lcnMgZm9yIHRoZSBj
-aGFuZ2VzLiBBbmQgYnkgdGhlIHdheSBwbGVhc2UKY29uc2lkZXIgdG8gYWRkIHlvdXNlbGYgYXMg
-YSBtYWludGFpbmVyIG9mIERXIEhETUkuCgo+PiAgICAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
-Lm9yZy9wYXRjaC85Mjk2ODgzLyAtLSB3aXRoIFJvYidzIGFjayBhbmQgeW91cnMgdGVzdGVkLWJ5
-Cj4+Cj4+IFNvbWUgdXNlcnMgYW50aWNpcGF0ZSB0aGlzIGNoYW5nZSwgZm9yIGV4YW1wbGUgc2Vl
-IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE2LzkvMTQvNTUKPgo+IFRob3NlIEkgc2VlLiBJIGNh
-biByZS10ZXN0IGFuZCBwcmVwYXJlIGEgcHVsbCByZXF1ZXN0Lgo+CgpUaGFuayB5b3UgaW4gYWR2
-YW5jZSEKCi0tCldpdGggYmVzdCB3aXNoZXMsClZsYWRpbWlyCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Kevin,
+
+Thanks for looking at this and simplifying various discussions we had so
+far. I was thinking of summarizing something very similar. I couldn't
+due to lack of time.
+
+On 16/09/16 18:13, Kevin Hilman wrote:
+
+[...]
+
+> I think we're having some terminology issues...
+>
+> FWIW, the kernel terminolgy is actually "PM domain", not power domain.
+> This was intentional because the goal of the PM domain was to group
+> devices that some PM features.  To be very specific to the kernel, they
+> us the same set of PM callbacks.  Today, this is most commonly used to
+> model power domains, where a group of devices share a power rail, but it
+> does not need to be limited to that.
+>
+
+Agreed/Understood.
+
+> That being said, I'm having a hard time understanding the root of the
+> disagreement.
+>
+
+Yes. I tried to convey the same earlier, but have failed. The only
+disagreement is about a small part of this DT bindings. We would like to
+make it completely hierarchical up to CPU nodes. More comments on that
+below.
+
+> It seems that you and Sudeep would like to use domain-idle-states to
+> replace/superceed cpu-idle-states with the primary goal (and benefit)
+> being that it simplifies the DT bindings.  Is that correct?
+>
+
+Correct, we want to deprecate cpu-idle-states with the introduction of
+this hierarchical PM bindings. Yes IMO, it simplifies things and avoids
+any ABI break we might trigger if we miss to consider some use-case now.
+
+> The objections have come in because that means that implies that CPUs
+> become their own domains, which may not be the case in hardware in the
+> sense that they share a power rail.
+>
+
+Agreed.
+
+> However, IMO, thinking of a CPU as it's own "PM domain" may make some
+> sense based on the terminology above.
+>
+
+Thanks for that, we do understand that it may not be 100% correct when
+we strictly considers hardware terminologies instead of above ones.
+As along as we see no issues with the above terminologies it should be fine.
+
+> I think the other objection may be that using a genpd to model domain
+> with only a single device in it may be overkill, and I agree with that.
+
+I too agree with that. Just because we represent that in DT in that way
+doesn't mean we need to create a genpd to model domain. We can always
+skip that if not required. That's pure implementation specifics and I
+have tried to convey the same in my previous emails. I must say you have
+summarized it very clearly in this email. Thanks again for that.
+
+> But, I'm not sure if making CPUs use domain-idle-states implies that
+> they necessarily have to use genpd is what you are proposing.  Maybe
+> someone could clarify that?
+>
+
+No, I have not proposing anything around implementation in the whole
+discussion so far. I have constrained myself just to DT bindings so far.
+That's the main reason why I was opposed to mentions of OS vs platform
+co-ordinated modes of CPU suspend in this discussion. IMO that's
+completely out of scope of this DT binding we are defining here.
+
+Hope that helps/clarifies the misunderstanding/disagreement.
+
+-- 
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
