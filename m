@@ -1,135 +1,104 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 22/22] phy: Add support for Qualcomm's USB HS phy
-Date: Fri, 16 Sep 2016 10:19:51 -0500
-Message-ID: <20160916151950.GA31804@rob-hp-laptop>
-References: <20160907213519.27340-1-stephen.boyd@linaro.org>
- <20160907213519.27340-23-stephen.boyd@linaro.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v6] drm: bridge/dw_hdmi: add dw hdmi i2c bus adapter
+ support
+Date: Fri, 16 Sep 2016 17:21:50 +0200
+Message-ID: <1474039310.2491.77.camel@pengutronix.de>
+References: <1472017597-11221-1-git-send-email-vladimir_zapolskiy@mentor.com>
+ <20160829155006.GA27342@rob-hp-laptop>
+ <749c8858-9fd2-dcbc-d980-1652c4682e31@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160907213519.27340-23-stephen.boyd@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Peter Chen <peter.chen@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <749c8858-9fd2-dcbc-d980-1652c4682e31@mentor.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Daniel Vetter <daniel.vetter@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 07, 2016 at 02:35:19PM -0700, Stephen Boyd wrote:
-> The high-speed phy on qcom SoCs is controlled via the ULPI
-> viewport.
-> 
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> ---
->  .../devicetree/bindings/phy/qcom,usb-hs-phy.txt    |  83 ++++++
->  drivers/phy/Kconfig                                |   8 +
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/phy-qcom-usb-hs.c                      | 289 +++++++++++++++++++++
->  4 files changed, 381 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
->  create mode 100644 drivers/phy/phy-qcom-usb-hs.c
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt b/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
-> new file mode 100644
-> index 000000000000..d7eacd63d06b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
-> @@ -0,0 +1,83 @@
-> +Qualcomm's USB HS PHY
-> +
-> +PROPERTIES
-> +
-> +- compatible:
-> +    Usage: required
-> +    Value type: <string>
-> +    Definition: Should contain "qcom,usb-hs-phy" and more specifically one of the
-> +                following:
-> +
-> +                        "qcom,usb-hs-phy-apq8064"
-> +                        "qcom,usb-hs-phy-msm8916"
-> +                        "qcom,usb-hs-phy-msm8974"
-
-This is fine, but things are usually named <soc>-<ipblock>.
-
-> +
-> +- #phy-cells:
-> +    Usage: required
-> +    Value type: <u32>
-> +    Definition: Should contain 0
-> +
-> +- clocks:
-> +    Usage: required
-> +    Value type: <prop-encoded-array>
-> +    Definition: Should contain clock specifier for the reference and sleep
-> +                clocks
-> +
-> +- clock-names:
-> +    Usage: required
-> +    Value type: <stringlist>
-> +    Definition: Should contain "ref" and "sleep" for the reference and sleep
-> +                clocks respectively
-> +
-> +- resets:
-> +    Usage: required
-> +    Value type: <prop-encoded-array>
-> +    Definition: Should contain the phy and POR resets
-> +
-> +- reset-names:
-> +    Usage: required
-> +    Value type: <stringlist>
-> +    Definition: Should contain "phy" and "por" for the phy and POR resets
-> +                respectively
-> +
-> +- v3p3-supply:
-> +    Usage: required
-> +    Value type: <phandle>
-> +    Definition: Should contain a reference to the 3.3V supply
-> +
-> +- v1p8-supply:
-> +    Usage: required
-> +    Value type: <phandle>
-> +    Definition: Should contain a reference to the 1.8V supply
-> +
-> +- extcon:
-
-I don't recommend using extcon binding. It needs some work to put it 
-nicely.
-
-> +    Usage: optional
-> +    Value type: <prop-encoded-array>
-> +    Definition: Should contain the vbus and ID extcons in the first and second
-> +                cells respectively
-> +
-> +- qcom,init-seq:
-> +    Usage: optional
-> +    Value type: <u8 array>
-> +    Definition: Should contain a sequence of ULPI register and address pairs to
-> +                program into the ULPI_EXT_VENDOR_SPECIFIC area. This is related
-> +                to Device Mode Eye Diagram test.
-
-We generally nak this type of property. For 1 register I don't care so 
-much. For 100, that would be another story.
-
-Is this value per unit, per board, per SoC? Can you limit it to certain 
-registers?
-
-> +
-> +EXAMPLE
-> +
-> +otg: usb-controller {
-> +	ulpi {
-> +		phy {
-> +			compatible = "qcom,usb-hs-phy-msm8974", "qcom,usb-hs-phy";
-> +			#phy-cells = <0>;
-> +			clocks = <&xo_board>, <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
-> +			clock-names = "ref", "sleep";
-> +			resets = <&gcc GCC_USB2A_PHY_BCR>, <&otg 0>;
-> +			reset-names = "phy", "por";
-> +			v3p3-supply = <&pm8941_l24>;
-> +			v1p8-supply = <&pm8941_l6>;
-> +			extcon = <&smbb>, <&usb_id>;
-> +			qcom,init-seq = /bits/ 8 <0x81 0x63>;
-> +		};
-> +	};
-> +};
+SGkgVmxhZGltaXIsCgpBbSBNaXR0d29jaCwgZGVuIDE0LjA5LjIwMTYsIDIxOjQ2ICswMzAwIHNj
+aHJpZWIgVmxhZGltaXIgWmFwb2xza2l5Ogo+IEhpIFBoaWxpcHAsCj4gCj4gT24gMDgvMjkvMjAx
+NiAwNjo1MCBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPiBPbiBXZWQsIEF1ZyAyNCwgMjAxNiBh
+dCAwODo0NjozN0FNICswMzAwLCBWbGFkaW1pciBaYXBvbHNraXkgd3JvdGU6Cj4gPj4gVGhlIGNo
+YW5nZSBhZGRzIHN1cHBvcnQgb2YgaW50ZXJuYWwgSERNSSBJMkMgbWFzdGVyIGNvbnRyb2xsZXIs
+IHRoaXMKPiA+PiBzdWJkZXZpY2UgaXMgdXNlZCBieSBkZWZhdWx0LCBpZiAiZGRjLWkyYy1idXMi
+IERUIHByb3BlcnR5IGlzIG9taXR0ZWQuCj4gPj4KPiA+PiBUaGUgbWFpbiBwdXJwb3NlIG9mIHRo
+aXMgZnVuY3Rpb25hbGl0eSBpcyB0byBzdXBwb3J0IHJlYWRpbmcgRURJRCBmcm9tCj4gPj4gYW4g
+SERNSSBtb25pdG9yIG9uIGJvYXJkcywgd2hpY2ggZG9uJ3QgaGF2ZSBhbiBJMkMgYnVzIGNvbm5l
+Y3RlZCB0bwo+ID4+IEREQyBwaW5zLgo+ID4+Cj4gPj4gVGhlIGN1cnJlbnQgaW1wbGVtZW50YXRp
+b24gZG9lcyBub3Qgc3VwcG9ydCAiSTJDIE1hc3RlciBJbnRlcmZhY2UKPiA+PiBFeHRlbmRlZCBS
+ZWFkIE1vZGUiIHRvIHJlYWQgZGF0YSBhZGRyZXNzZWQgYnkgbm9uLXplcm8gc2VnbWVudAo+ID4+
+IHBvaW50ZXIsIHRoaXMgbWVhbnMgdGhhdCBpZiBFRElEIGhhcyBtb3JlIHRoYW4gMSBleHRlbnNp
+b24gYmxvY2tzLAo+ID4+IEVESUQgcmVhZGluZyBvcGVyYXRpb24gd29uJ3Qgc3VjY2VlZCwgaW4g
+bXkgcHJhY3RpY2UgYWxsIHRlc3RlZCBIRE1JCj4gPj4gbW9uaXRvcnMgaGF2ZSBhdCBtYXhpbXVt
+IG9uZSBleHRlbnNpb24gYmxvY2suCj4gPj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBWbGFkaW1pciBa
+YXBvbHNraXkgPHZsYWRpbWlyX3phcG9sc2tpeUBtZW50b3IuY29tPgo+ID4+IC0tLQo+ID4+IFRo
+ZSBjaGFuZ2UgaXMgYmFzZWQgb24gdG9wIG9mIHY0LjguMC1yYzEgYW5kIGEgZml4IGluIERXIEhE
+TUkgZHJpdmVyCj4gPj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85Mjg0NzE3
+Lwo+ID4+Cj4gPj4gQ2hhbmdlcyBmcm9tIHY1IHRvIHY2Ogo+ID4+ICogcmViYXNlZCBvbiB0b3Ag
+b2YgdjQuOC4wLXJjMQo+ID4+ICogZml4ZWQgb25lIGltcHJvcGVyIHJlc291cmNlIGRlYWxsb2Nh
+dGlvbiBvbiBlcnJvciBwYXRoIG9mIGR3X2hkbWlfYmluZCgpCj4gPj4gKiBhZGRlZCBhIGNvbW1l
+bnQgZGVzY3JpYmluZyBhIG11dGV4IGFza2VkIGJ5IGNoZWNrcGF0Y2gucGwgLS1zdHJpY3QKPiA+
+Pgo+ID4+IExpbmsgdG8gdmVyc2lvbiB2NTogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
+YXRjaC83Mjc5ODMxLwo+ID4+Cj4gPj4gQ2hhbmdlcyBmcm9tIHY0IHRvIHY1Ogo+ID4+ICogZG8g
+STJDIGJ1cyBjb250cm9sbGVyIGluaXRpYWxpemF0aW9uIG9ubHkgb25jZSBpbiBiaW5kKCkgYXMg
+aXQgd2FzIGRvbmUKPiA+PiAgIGluIHYxLXYzIG9mIHRoZSBjaGFuZ2UuCj4gPj4KPiA+PiBDaGFu
+Z2VzIGZyb20gdjMgdG8gdjQsIHRoYW5rcyB0byBEb3VnIGFuZCBQaGlsaXBwIGZvciByZXZpZXc6
+Cj4gPj4gKiBzZXQgc3BlZWQgbW9kZSBhZnRlciBzb2Z0d2FyZSByZXNldCBpbiBkd19oZG1pX2ky
+Y19pbml0KCkKPiA+PiAqIGJ5IGRlZmF1bHQgc2V0IHN0YW5kYXJkIHNwZWVkIG1vZGUgaW5zdGVh
+ZCBvZiBmYXN0IHNwZWVkIG1vZGUsIG9uIGlNWDZRCj4gPj4gICB0aGlzIGNvbmZpZ3VyZXMgU0NM
+IHRvIDEwMCBLSHosIHdoaWNoIGlzIGNvbXBsaWFudCB3aXRoIEhETUkgMS4zYSBzcGVjCj4gPj4g
+KiBkbyBJMkMgYnVzIGNvbnRyb2xsZXIgcmVpbml0aWFsaXphdGlvbiBvbiBldmVyeSBkYXRhIHRy
+YW5zZmVyLAo+ID4+ICAgdGhpcyBjaGFuZ2UgaG9wZWZ1bGx5IHNvbHZlcyBzb21lIG9ic2VydmVk
+IHByb2JsZW1zIG9uIFJLMzI4OCBwbGF0Zm9ybQo+ID4+ICogYWRkZWQgc2hvcnQgZnVuY3Rpb25h
+bCBjaGFuZ2UgZGVzY3JpcHRpb24gdG8gZHdfaGRtaS50eHQKPiA+Pgo+ID4+IHYzIG9mIHRoZSBj
+aGFuZ2Ugd2FzCj4gPj4KPiA+PiAgIFRlc3RlZC1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBw
+ZW5ndXRyb25peC5kZT4KPiA+Pgo+ID4+IENoYW5nZXMgZnJvbSB2MiB0byB2MywgdGhhbmtzIHRv
+IFJ1c3NlbGw6Cj4gPj4gKiBtb3ZlZCByZWdpc3RlciBmaWVsZCB2YWx1ZSBkZWZpbml0aW9ucyB0
+byBkd19oZG1pLmgKPiA+PiAqIG1hZGUgY29tcGxldGlvbnMgdW5pbnRlcnJ1cHRpYmxlIHRvIGF2
+b2lkIHRyYW5zZmVyIHJldHJpZXMgaWYgaW50ZXJydXB0ZWQKPiA+PiAqIHVzZSBvbmUgY29tcGxl
+dGlvbiBmb3IgYm90aCByZWFkIGFuZCB3cml0ZSB0cmFuc2ZlcnMgYXMgaW4gdjEsCj4gPj4gICBv
+cGVyYXRpb25fcmVnIGlzIHJlbW92ZWQKPiA+PiAqIHJlZHVuZGFudCBpMmMtPnN0YXQgPSAwIGlz
+IHJlbW92ZWQgZnJvbSBkd19oZG1pX2kyY19yZWFkL3dyaXRlKCkKPiA+PiAqIHN0cnVjdCBpMmNf
+YWxnb3JpdGhtIGR3X2hkbWlfYWxnb3JpdGhtIGlzIHF1YWxpZmllZCBhcyBjb25zdAo+ID4+ICog
+ZHdfaGRtaV9pMmNfYWRhcHRlcigpIGRvZXMgbm90IG1vZGlmeSBzdHJ1Y3QgZHdfaGRtaSBvbiBl
+cnJvciBwYXRoCj4gPj4gKiBkd19oZG1pX2kyY19pcnEoKSBkb2VzIG5vdCBtb2RpZnkgaGRtaS0+
+aTJjLT5zdGF0LCBpZiBpbnRlcnJ1cHQgaXMKPiA+PiAgIG5vdCBmb3IgSTJDTQo+ID4+ICogc3Bp
+biBsb2NrIGlzIHJlbW92ZWQgZnJvbSBkd19oZG1pX2kyY19pcnEoKQo+ID4+ICogcmVtb3ZlZCBz
+cGluIGxvY2sgZnJvbSBkd19oZG1pX2kyY194ZmVyKCkgYXJvdW5kIHdyaXRlIHRvCj4gPj4gICBI
+RE1JX0lIX01VVEVfSTJDTV9TVEFUMCByZWdpc3Rlcgo+ID4+ICogc3BsaXQgbG9vcCBvdmVyIG1l
+c3NhZ2UgYXJyYXkgaW4gZHdfaGRtaV9pMmNfeGZlcigpIHRvIHZhbGlkYXRpb24KPiA+PiAgIGFu
+ZCB0cmFuc2ZlciBwYXJ0cwo+ID4+ICogYWRkZWQgYSBtdXRleCB0byBzZXJpYWxpemUgSTJDIHRy
+YW5zZmVyIHJlcXVlc3RzLCBpMmMtPmxvY2sgaXMKPiA+PiAgIGNvbXBsZXRlbHkgcmVtb3ZlZAo+
+ID4+ICogcmVtb3ZlZCBpZihsZW4pIGNoZWNrIGZyb20gZHdfaGRtaV9pMmNfd3JpdGUoKSwgaGFy
+ZHdhcmUgc3VwcG9ydHMKPiA+PiAgIG9ubHkgbGVuPjAgdHJhbnNmZXJzCj4gPj4gKiBkZXNjcmli
+ZWQgZXh0ZW5zaW9uIGJsb2NrcyA8PSAxIGxpbWl0YXRpb24gaW4gdGhlIGNvbW1pdCBtZXNzYWdl
+Cj4gPj4gKiBhIG51bWJlciBvZiBtaW5vciBjbGVhbiB1cHMKPiA+Pgo+ID4+IENoYW5nZXMgZnJv
+bSB2MSB0byB2MjoKPiA+PiAqIGZpeGVkIGEgZGV2bV9rZnJlZSgpIHNpZ25hdHVyZQo+ID4+ICog
+c3BsaXQgY29tcGxldGlvbnMgZm9yIHJlYWQgYW5kIHdyaXRlIG9wZXJhdGlvbnMKPiA+Pgo+ID4+
+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9kd19oZG1pLnR4dCB8ICAg
+NCArLQo+ID4KPiA+IEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+ID4K
+PiA+PiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdy1oZG1pLmMgICAgICAgICAgICAgICAgICAg
+fCAyNjUgKysrKysrKysrKysrKysrKysrKystCj4gPj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
+ZHctaGRtaS5oICAgICAgICAgICAgICAgICAgIHwgIDE5ICsrCj4gPj4gIDMgZmlsZXMgY2hhbmdl
+ZCwgMjgxIGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCj4gCj4gYXMgZmFyIGFzIEkga25v
+dyBEYXZpZCBhY2NlcHRzIHB1bGwgcmVxdWVzdHMgZnJvbSB5b3UsIGNhbiB5b3UgcGxlYXNlCj4g
+Y3JlYXRlIGFuZCBzZW5kIGEgcHVsbCByZXF1ZXN0IGZvciB2NC45IGNvbnRhaW5pbmcgdGhlc2Ug
+Y2hhbmdlcz8KPiAKPiAgICAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85Mjg0
+NzE3LyAtLSB3aXRoIFJ1c3NlbGwncyBhY2sKCklzIHRoYXQgYSBmb3J3YXJkIGxvb2tpbmcgc3Rh
+dGVtZW50PyBJIGRvbid0IHNlZSBSdXNzZWxsJ3MgYWNrLgoKPiAgICAgaHR0cHM6Ly9wYXRjaHdv
+cmsua2VybmVsLm9yZy9wYXRjaC85Mjk2ODgzLyAtLSB3aXRoIFJvYidzIGFjayBhbmQgeW91cnMg
+dGVzdGVkLWJ5Cj4gCj4gU29tZSB1c2VycyBhbnRpY2lwYXRlIHRoaXMgY2hhbmdlLCBmb3IgZXhh
+bXBsZSBzZWUgaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTYvOS8xNC81NQoKVGhvc2UgSSBzZWUu
+IEkgY2FuIHJlLXRlc3QgYW5kIHByZXBhcmUgYSBwdWxsIHJlcXVlc3QuCgpyZWdhcmRzClBoaWxp
+cHAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
