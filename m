@@ -1,169 +1,111 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] pcie: qcom: add support to msm8996 PCIE controller
-Date: Fri, 16 Sep 2016 09:17:08 -0500
-Message-ID: <20160916141708.GA21504@rob-hp-laptop>
-References: <1473246412-24616-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/8] doc: DT: vidc: binding document for Qualcomm
+ video driver
+Date: Fri, 16 Sep 2016 09:19:39 -0500
+Message-ID: <20160916141939.GA2320@rob-hp-laptop>
+References: <1473248229-5540-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1473248229-5540-2-git-send-email-stanimir.varbanov@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1473246412-24616-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1473248229-5540-2-git-send-email-stanimir.varbanov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 07, 2016 at 12:06:52PM +0100, Srinivas Kandagatla wrote:
-> This patch adds support to msm8996/apq8096 pcie, MSM8996 supports
-> Gen 1/2, One lane, 3 pcie root-complex with support to MSI and
-> legacy interrupts and it conforms to PCI Express Base 2.1 specification.
+On Wed, Sep 07, 2016 at 02:37:02PM +0300, Stanimir Varbanov wrote:
+> Adds binding document for vidc video encoder/decoder driver
 > 
-> This patch adds post_init callback to qcom_pcie_ops, as this is pcie
-> pipe clocks and smmu configuration are only setup after the phy is
-> powered on. It also adds ltssm_enable callback as it is very much
-> different to other supported SOCs in the driver.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 > ---
+>  .../devicetree/bindings/media/qcom,vidc.txt        | 61 ++++++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/qcom,vidc.txt
 > 
-> I tested this patch along with phy driver patch on DB820c based on
-> APQ8096 on port A and port B using sata and ethernet controllers.
-> 
-> Thanks
-> srini
-> 
->  .../devicetree/bindings/pci/qcom,pcie.txt          |  88 +++++++-
->  drivers/pci/host/pcie-qcom.c                       | 237 ++++++++++++++++++++-
->  2 files changed, 318 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> index 4059a6f..1ddfcb4 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> @@ -92,6 +92,18 @@
->  			- "aux"		Auxiliary (AUX) clock
->  			- "bus_master"	Master AXI clock
->  			- "bus_slave"	Slave AXI clock
+> diff --git a/Documentation/devicetree/bindings/media/qcom,vidc.txt b/Documentation/devicetree/bindings/media/qcom,vidc.txt
+> new file mode 100644
+> index 000000000000..0d50a7b2e3ed
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/qcom,vidc.txt
+> @@ -0,0 +1,61 @@
+> +* Qualcomm video encoder/decoder accelerator
 > +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Value should contain
+
+... one of:
+
+> +			- "qcom,vidc-msm8916"
+> +			- "qcom,vidc-msm8996"
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: Register ranges as listed in the reg-names property
+> +
+> +- interrupts:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition:
+
+How many interrupts?
+
+> +
+> +- power-domains:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: A phandle and power domain specifier pairs to the
+> +		    power domain which is responsible for collapsing
+> +		    and restoring power to the peripheral
+
+How many power domains?
+
+> +
+> +- clocks:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: List of phandle and clock specifier pairs as listed
+> +		    in clock-names property
 > +- clock-names:
-> +	Usage: required for msm8996/apq8096
+> +	Usage: required
 > +	Value type: <stringlist>
 > +	Definition: Should contain the following entries
-> +			- "aux"		Auxiliary (AUX) clock
-> +			- "bus_master"	Master AXI clock
-> +			- "bus_slave"	Slave AXI clock
-> +			- "pipe"	Pipe Clock driving internal logic.
-> +			- "cfg"		Configuration clk.
-> +			- "snoc_axi"	SNOC AXI clk
-> +			- "cnoc_ahb"	CNOC AHB clk
->  - resets:
->  	Usage: required
->  	Value type: <prop-encoded-array>
-> @@ -114,8 +126,15 @@
->  	Definition: Should contain the following entries
->  			- "core" Core reset
->  
-> +- iommus:
-> +	Usage: required for msm8996/apq8096
+> +			- "core"  Core video accelerator clock
+> +			- "iface" Video accelerator AHB clock
+> +			- "bus"	  Video accelerator AXI clock
+> +- rproc:
+> +	Usage: required
 > +	Value type: <prop-encoded-array>
-> +	Definition: Should point to the respective IOMMU block with master port
-> +		    as argument, see Documentation/devicetree/bindings/iommu/
-> +		    mediatek,iommu.txt for details.
+> +	Definition: A phandle to remote processor responsible for
+> +		    firmware loading
 > +
->  - power-domains:
-> -	Usage: required for apq8084
-> +	Usage: required for apq8084 and msm8996/apq8096
->  	Value type: <prop-encoded-array>
->  	Definition: A phandle and power domain specifier pair to the
->  		    power domain which is responsible for collapsing
-> @@ -137,6 +156,11 @@
->  	Definition: A phandle to the analog power supply for IC which generates
->  		    reference clock
->  
-> +- vdda_1p8-supply:
+> +- iommus:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: A list of phandle and IOMMU specifier pairs
+> +
+> +* An Example
+> +	qcom,vidc@1d00000 {
 
-Don't use '_' in property names.
+node names should be generic: video-codec@
 
-> +	Usage: required for msm8996/apq8096
-> +	Value type: <phandle>
-> +	Definition: A phandle to the analog power supply for PCIE_1P8
-> +
->  - phys:
->  	Usage: required for apq8084
->  	Value type: <phandle>
-> @@ -231,3 +255,65 @@
->  		pinctrl-0 = <&pcie0_pins_default>;
->  		pinctrl-names = "default";
->  	};
-> +
-> +* Example for apq8096:
-> +	pcie1: qcom,pcie@00608000 {
-
-pcie@...
-
-> +		compatible = "qcom,pcie-msm8996", "snps,dw-pcie";
-> +		power-domains = <&gcc PCIE1_GDSC>;
-> +		bus-range = <0x00 0xff>;
-> +		num-lanes = <1>;
-> +
-> +		status  = "disabled";
-> +
-> +		reg = <0x00608000 0x2000>,
-> +		      <0x0d000000 0xf1d>,
-> +		      <0x0d000f20 0xa8>,
-> +		      <0x0d100000 0x100000>;
-> +
-> +		reg-names = "parf", "dbi", "elbi","config";
-> +
-> +		phys = <&pcie_phy 1>;
-> +		phy-names = "pciephy";
-> +
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		ranges = <0x01000000 0x0 0x0d200000 0x0d200000 0x0 0x100000>,
-> +			<0x02000000 0x0 0x0d300000 0x0d300000 0x0 0xd00000>;
-> +
-> +		interrupts = <GIC_SPI 413 IRQ_TYPE_NONE>;
-> +		interrupt-names = "msi";
-> +		#interrupt-cells = <1>;
-> +		interrupt-map-mask = <0 0 0 0x7>;
-> +		interrupt-map = <0 0 0 1 &intc 0 272 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-> +				<0 0 0 2 &intc 0 273 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-> +				<0 0 0 3 &intc 0 274 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-> +				<0 0 0 4 &intc 0 275 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-> +
-> +		pinctrl-names = "default", "sleep";
-> +		pinctrl-0 = <&pcie1_clkreq_default &pcie1_perst_default &pcie1_wake_default>;
-> +		pinctrl-1 = <&pcie1_clkreq_sleep &pcie1_perst_default &pcie1_wake_sleep>;
-> +
-> +
-> +		vreg-1.8-supply = <&pm8994_l12>;
-> +		vreg-0.9-supply = <&pm8994_l28>;
-
-Doesn't match binding?
-
-> +		iommus = <&anoc0_smmu>;
-> +
-> +		linux,pci-domain = <1>;
-> +
-> +		clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
-> +			<&gcc GCC_PCIE_1_AUX_CLK>,
-> +			<&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-> +			<&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
-> +			<&gcc GCC_PCIE_1_SLV_AXI_CLK>,
-> +			<&gcc GCC_AGGRE0_SNOC_AXI_CLK>,
-> +			<&gcc GCC_AGGRE0_CNOC_AHB_CLK>;
-> +
-> +		clock-names =  "pipe",
-> +				"aux",
-> +				"cfg",
-> +				"bus_master",
-> +				"bus_slave",
-> +				"snoc_axi",
-> +				"cnoc_ahb";
-> +
+> +		compatible = "qcom,vidc-msm8916";
+> +		reg = <0x01d00000 0xff000>;
+> +		clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
+> +			 <&gcc GCC_VENUS0_AHB_CLK>,
+> +			 <&gcc GCC_VENUS0_AXI_CLK>;
+> +		clock-names = "core", "iface", "bus";
+> +		interrupts = <GIC_SPI 44 0>;
+> +		power-domains = <&gcc VENUS_GDSC>;
+> +		rproc = <&vidc_rproc>;
+> +		iommus = <&apps_iommu 5>;
 > +	};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -- 
+> 2.7.4
+> 
