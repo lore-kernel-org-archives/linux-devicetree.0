@@ -1,52 +1,61 @@
-From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 0/5] mfd: tps65218: Clean ups
-Date: Fri, 16 Sep 2016 21:51:38 +0530
-Message-ID: <0a30f210-0a23-0899-51b0-28f200ddd0a4@ti.com>
-References: <1470833641-29546-1-git-send-email-j-keerthy@ti.com>
- <ab94aff0-8470-57e5-2039-12f09bb0ca33@ti.com>
- <20160916133153.GB27974@sirena.org.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] regulator: Prevent falling too fast
+Date: Fri, 16 Sep 2016 17:32:53 +0100
+Message-ID: <20160916163253.GA10189@sirena.org.uk>
+References: <20160906190524.GB79728@google.com>
+ <20160912185633.GH27946@sirena.org.uk>
+ <20160913172140.GC62872@google.com>
+ <20160915143945.GJ27974@sirena.org.uk>
+ <20160915180223.GE62872@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160916133153.GB27974-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160915180223.GE62872-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, russ.dill-l0cyMroinI0@public.gmane.org, d-gerlach-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--Nq2Wo0NMKNjxTN9z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Friday 16 September 2016 07:01 PM, Mark Brown wrote:
-> On Fri, Sep 16, 2016 at 05:12:38PM +0530, Keerthy wrote:
->
->> Should i repost this series? I do not see this series in linux-next yet.
->
-> Please don't send content free pings and please allow a reasonable time
-> for review.  People get busy, go on holiday, attend conferences and so
-> on so unless there is some reason for urgency (like critical bug fixes)
-> please allow at least a couple of weeks for review.  If there have been
-> review comments then people may be waiting for those to be addressed.
+On Thu, Sep 15, 2016 at 11:02:23AM -0700, Matthias Kaehlcke wrote:
+> El Thu, Sep 15, 2016 at 03:39:45PM +0100 Mark Brown ha dit:
 
-I should have been clearer.
-The last Lee Jones conveyed that:
+> > The obvious question here is how the OVP hardware knows about the new
+> > voltage and why we're bodging this in the regulator core rather than in
+> > the OVP hardware.
 
-"I can't take this series yet, since it relies on a change which was
-taken into Mark's Regulator tree"
+> The OVP hardware is part of the regulator and the regulator is not
+> notified directly about voltage changes. The regulator transforms the
+> PWM input into DC output and does the OVP internally with the limits
+> described above.
 
-https://lkml.org/lkml/2016/8/31/312
+So the PWM is just configuring this external regulator chip (which
+doesn't seem to be described in DT...) and that's just incredibly bad at
+coping with voltage changes?  It does sound rather like we ought to be
+representing this chip directly in case it needs other workarounds.
 
-So wanted to check if i needed to re-base/repost this series again.
-Sorry about the confusion i think that is because of $Subject goof up in 
-the 0th patch of the series.
+--Nq2Wo0NMKNjxTN9z
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
-> Sending content free pings adds to the mail volume (if they are seen at
-> all) which is often the problem and since they can't be reviewed
-> directly if something has gone wrong you'll have to resend the patches
-> anyway, though there are some other maintainers who like them - if in
-> doubt look at how patches for the subsystem are normally handled.
->
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJX3B60AAoJECTWi3JdVIfQxBMH/R6+6Z1rl+sTvBDbGQzSbSwv
+WAD55Ra3AJx/zmjLbbFlCrNKAUhEQUJfLE6SnsQ9y5bIet8vCH7cBQyviH/L0mtt
+rVEfQZucJS3j8IDPsmaW2qLwLGGre+/J8bNRleI1GIfz2W+2/1rOKDtMP1uY44lA
+l0Pc0JewmKJ5H2kucOyURl87HruXXW9foPaMTdr6dYgBvmmpwClFjOaP+FZUF0fy
+zVXEU1li9jBzsxX7Sd1KUIFsL8iZVd4062F4QV3gE2oloNVAIyT2znpj4vDrjoBE
+fm6mI3C7bK8YddHlryV0BpEaWOpfA5cpcWtEjkN3oe6u9OntrzcryaZtbAnkbLc=
+=PAfU
+-----END PGP SIGNATURE-----
+
+--Nq2Wo0NMKNjxTN9z--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
