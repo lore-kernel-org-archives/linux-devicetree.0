@@ -1,62 +1,58 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] regulator: Prevent falling too fast
-Date: Fri, 16 Sep 2016 17:32:53 +0100
-Message-ID: <20160916163253.GA10189@sirena.org.uk>
-References: <20160906190524.GB79728@google.com>
- <20160912185633.GH27946@sirena.org.uk>
- <20160913172140.GC62872@google.com>
- <20160915143945.GJ27974@sirena.org.uk>
- <20160915180223.GE62872@google.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: msm8996-pcie-phy: add support for
+ msm8996 pcie phy
+Date: Fri, 16 Sep 2016 17:45:43 +0100
+Message-ID: <636dcd07-82a9-ddf4-9cd1-0b70dac88d8c@linaro.org>
+References: <1473245733-17260-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1473245733-17260-2-git-send-email-srinivas.kandagatla@linaro.org>
+ <20160916135220.GA10405@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160915180223.GE62872-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160916135220.GA10405@rob-hp-laptop>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---Nq2Wo0NMKNjxTN9z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Thu, Sep 15, 2016 at 11:02:23AM -0700, Matthias Kaehlcke wrote:
-> El Thu, Sep 15, 2016 at 03:39:45PM +0100 Mark Brown ha dit:
+On 16/09/16 14:52, Rob Herring wrote:
+> On Wed, Sep 07, 2016 at 11:55:32AM +0100, Srinivas Kandagatla wrote:
+>> This patch adds bindings for pcie phy on MSM8996.
+>>
+>> This PHY has 3 Ports, including a common block. Each port is connected
+>> to one root complex. Each port has dedicated reset control lines apart
+>> from common reset and clocks for common block.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>  .../bindings/phy/qcom-msm8996-pcie-phy.txt         | 62 ++++++++++++++++++++++
+>>  1 file changed, 62 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt b/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
+>> new file mode 100644
+>> index 0000000..51930ed
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
+>> @@ -0,0 +1,62 @@
+>> +Qualcomm msm8996 pcie PHY
+>> +------------------------
+>> +
+>> +Required properties:
+>> +- compatible: compatible list, contains "qcom,msm8996-pcie-phy".
+>
+> 8994 has PCIe, this phy is completely different? And Archit mentioned
+> another SoC, too.
 
-> > The obvious question here is how the OVP hardware knows about the new
-> > voltage and why we're bodging this in the regulator core rather than in
-> > the OVP hardware.
+Recently I too learned that this phy IP is used across USB, UFS and 
+other SOCs, so Am planning to dump this patchset and write one common 
+driver.
 
-> The OVP hardware is part of the regulator and the regulator is not
-> notified directly about voltage changes. The regulator transforms the
-> PWM input into DC output and does the OVP internally with the limits
-> described above.
-
-So the PWM is just configuring this external regulator chip (which
-doesn't seem to be described in DT...) and that's just incredibly bad at
-coping with voltage changes?  It does sound rather like we ought to be
-representing this chip directly in case it needs other workarounds.
-
---Nq2Wo0NMKNjxTN9z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJX3B60AAoJECTWi3JdVIfQxBMH/R6+6Z1rl+sTvBDbGQzSbSwv
-WAD55Ra3AJx/zmjLbbFlCrNKAUhEQUJfLE6SnsQ9y5bIet8vCH7cBQyviH/L0mtt
-rVEfQZucJS3j8IDPsmaW2qLwLGGre+/J8bNRleI1GIfz2W+2/1rOKDtMP1uY44lA
-l0Pc0JewmKJ5H2kucOyURl87HruXXW9foPaMTdr6dYgBvmmpwClFjOaP+FZUF0fy
-zVXEU1li9jBzsxX7Sd1KUIFsL8iZVd4062F4QV3gE2oloNVAIyT2znpj4vDrjoBE
-fm6mI3C7bK8YddHlryV0BpEaWOpfA5cpcWtEjkN3oe6u9OntrzcryaZtbAnkbLc=
-=PAfU
------END PGP SIGNATURE-----
-
---Nq2Wo0NMKNjxTN9z--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+srini
+>
+> Rob
+>
