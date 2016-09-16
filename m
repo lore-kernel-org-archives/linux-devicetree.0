@@ -1,81 +1,135 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: [PATCH v4 2/2] ARM: dts: sun8i: enable UART1 for iNet D978 Rev2 board
-Date: Fri, 16 Sep 2016 23:16:42 +0800
-Message-ID: <20160916151642.27907-2-icenowy@aosc.xyz>
-References: <20160916151642.27907-1-icenowy@aosc.xyz>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 22/22] phy: Add support for Qualcomm's USB HS phy
+Date: Fri, 16 Sep 2016 10:19:51 -0500
+Message-ID: <20160916151950.GA31804@rob-hp-laptop>
+References: <20160907213519.27340-1-stephen.boyd@linaro.org>
+ <20160907213519.27340-23-stephen.boyd@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160916151642.27907-1-icenowy@aosc.xyz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.xyz>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160907213519.27340-23-stephen.boyd@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Peter Chen <peter.chen@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-UART1 is connected to the bluetooth part of RTL8723BS WiFi/BT combo card
-on iNet D978 Rev2 board.
+On Wed, Sep 07, 2016 at 02:35:19PM -0700, Stephen Boyd wrote:
+> The high-speed phy on qcom SoCs is controlled via the ULPI
+> viewport.
+> 
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+> ---
+>  .../devicetree/bindings/phy/qcom,usb-hs-phy.txt    |  83 ++++++
+>  drivers/phy/Kconfig                                |   8 +
+>  drivers/phy/Makefile                               |   1 +
+>  drivers/phy/phy-qcom-usb-hs.c                      | 289 +++++++++++++++++++++
+>  4 files changed, 381 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
+>  create mode 100644 drivers/phy/phy-qcom-usb-hs.c
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt b/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
+> new file mode 100644
+> index 000000000000..d7eacd63d06b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
+> @@ -0,0 +1,83 @@
+> +Qualcomm's USB HS PHY
+> +
+> +PROPERTIES
+> +
+> +- compatible:
+> +    Usage: required
+> +    Value type: <string>
+> +    Definition: Should contain "qcom,usb-hs-phy" and more specifically one of the
+> +                following:
+> +
+> +                        "qcom,usb-hs-phy-apq8064"
+> +                        "qcom,usb-hs-phy-msm8916"
+> +                        "qcom,usb-hs-phy-msm8974"
 
-Enable the UART1 to make it possible to use the modified hciattach by
-Realtek to drive the BT part of RTL8723BS.
+This is fine, but things are usually named <soc>-<ipblock>.
 
-On the board no r_uart pins are found now (the onboard RX/TX pins are
-wired to PF2/PF4, which is muxed with mmc0), so also disabled it.
+> +
+> +- #phy-cells:
+> +    Usage: required
+> +    Value type: <u32>
+> +    Definition: Should contain 0
+> +
+> +- clocks:
+> +    Usage: required
+> +    Value type: <prop-encoded-array>
+> +    Definition: Should contain clock specifier for the reference and sleep
+> +                clocks
+> +
+> +- clock-names:
+> +    Usage: required
+> +    Value type: <stringlist>
+> +    Definition: Should contain "ref" and "sleep" for the reference and sleep
+> +                clocks respectively
+> +
+> +- resets:
+> +    Usage: required
+> +    Value type: <prop-encoded-array>
+> +    Definition: Should contain the phy and POR resets
+> +
+> +- reset-names:
+> +    Usage: required
+> +    Value type: <stringlist>
+> +    Definition: Should contain "phy" and "por" for the phy and POR resets
+> +                respectively
+> +
+> +- v3p3-supply:
+> +    Usage: required
+> +    Value type: <phandle>
+> +    Definition: Should contain a reference to the 3.3V supply
+> +
+> +- v1p8-supply:
+> +    Usage: required
+> +    Value type: <phandle>
+> +    Definition: Should contain a reference to the 1.8V supply
+> +
+> +- extcon:
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
----
-Changes since v4:
-- Split the pinmux part into another patch.
-Changes since v3:
-- Change bluetooth to serial0.
-Changes since v2:
-- Remove stdout-path.
+I don't recommend using extcon binding. It needs some work to put it 
+nicely.
 
- arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+> +    Usage: optional
+> +    Value type: <prop-encoded-array>
+> +    Definition: Should contain the vbus and ID extcons in the first and second
+> +                cells respectively
+> +
+> +- qcom,init-seq:
+> +    Usage: optional
+> +    Value type: <u8 array>
+> +    Definition: Should contain a sequence of ULPI register and address pairs to
+> +                program into the ULPI_EXT_VENDOR_SPECIFIC area. This is related
+> +                to Device Mode Eye Diagram test.
 
-diff --git a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
-index 0f52cd9..fb46655 100644
---- a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
-+++ b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
-@@ -49,6 +49,15 @@
- 	model = "INet-D978 Rev 02";
- 	compatible = "primux,inet-d978-rev2", "allwinner,sun8i-a33";
- 
-+	aliases {
-+		serial0 = &uart1;
-+	};
-+
-+	chosen {
-+		/* Delete debug UART as serial0 is the UART for bluetooth */
-+		/delete-property/stdout-path;
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -86,3 +95,14 @@
- 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 	};
- };
-+
-+&r_uart {
-+	status = "disabled";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins_a>,
-+		    <&uart1_pins_cts_rts_a>;
-+	status = "okay";
-+};
--- 
-2.9.3
+We generally nak this type of property. For 1 register I don't care so 
+much. For 100, that would be another story.
+
+Is this value per unit, per board, per SoC? Can you limit it to certain 
+registers?
+
+> +
+> +EXAMPLE
+> +
+> +otg: usb-controller {
+> +	ulpi {
+> +		phy {
+> +			compatible = "qcom,usb-hs-phy-msm8974", "qcom,usb-hs-phy";
+> +			#phy-cells = <0>;
+> +			clocks = <&xo_board>, <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
+> +			clock-names = "ref", "sleep";
+> +			resets = <&gcc GCC_USB2A_PHY_BCR>, <&otg 0>;
+> +			reset-names = "phy", "por";
+> +			v3p3-supply = <&pm8941_l24>;
+> +			v1p8-supply = <&pm8941_l6>;
+> +			extcon = <&smbb>, <&usb_id>;
+> +			qcom,init-seq = /bits/ 8 <0x81 0x63>;
+> +		};
+> +	};
+> +};
