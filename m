@@ -1,53 +1,53 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH v1 3/3] ARM: dts: imx6qdl-apalis: Use enable-gpios
- property for backlight
-Date: Fri, 16 Sep 2016 13:38:54 +0000
-Message-ID: <1474033134.3103.27.camel@toradex.com>
-References: <9d2c17aa2e00e6ff4349a53de8247860d2382607.1473833908.git.maitysanchayan@gmail.com>
- <dff8d58c4021719184af2c83773e86f175ad910e.1473833908.git.maitysanchayan@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and GXBB
+Date: Fri, 16 Sep 2016 15:47:43 +0200
+Message-ID: <2190413.jSIVEWUDcp@wuerfel>
+References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com> <CAFBinCCDDwydB+RP0CZKoAW5Suxotn224ZFVWvt2OGW3gNJR1g@mail.gmail.com> <57DBAB2F.3040905@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <dff8d58c4021719184af2c83773e86f175ad910e.1473833908.git.maitysanchayan@gmail.com>
-Content-Language: en-US
-Content-ID: <B802137E4A1435409CF9860D5E5503A8@eurprd05.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "maitysanchayan@gmail.com" <maitysanchayan@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "stefan@agner.ch" <stefan@agner.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <57DBAB2F.3040905@ti.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Ben Dooks <ben.dooks@codethink.co.uk>, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, johnyoun@synopsys.com, will.deacon@arm.com, mturquette@baylibre.com, linux-usb@vger.kernel.org, sboyd@codeaurora.org, robh+dt@kernel.org, catalin.marinas@arm.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE2LTA5LTE0IGF0IDEyOjA1ICswNTMwLCBTYW5jaGF5YW4gTWFpdHkgd3JvdGU6
-DQo+IFVzZSBlbmFibGUtZ3Bpb3MgcHJvcGVydHkgb2YgUFdNIGJhY2tsaWdodCBkcml2ZXIgZm9y
-IGJhY2tsaWdodA0KPiBjb250cm9sLiBXaGlsZSBhdCBpdCBhbHNvIGZpeCB0aGUgdXNlIG9mIGJy
-aWdodG5lc3MgbGV2ZWxzIHJlcXVpcmVkDQo+IGJ5IEVEVCBkaXNwbGF5cyB3aGljaCByZXF1aXJl
-IGludmVydGVkIFBXTSdzLg0KDQpUaGF0IHBhcnQgSSBhbSBtaXNzaW5nIGJlbG93LiBEaWQgeW91
-IGZvcmdldCB0byBpbmNsdWRlIGl0Pw0KDQo+IFNpZ25lZC1vZmYtYnk6IFNhbmNoYXlhbiBNYWl0
-eSA8bWFpdHlzYW5jaGF5YW5AZ21haWwuY29tPg0KPiAtLS0NCj4gwqBhcmNoL2FybS9ib290L2R0
-cy9pbXg2cWRsLWFwYWxpcy5kdHNpIHwgOSArKysrKysrKysNCj4gwqAxIGZpbGUgY2hhbmdlZCwg
-OSBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14
-NnFkbC1hcGFsaXMuZHRzaQ0KPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtYXBhbGlzLmR0
-c2kNCj4gaW5kZXggOGM2N2RkOC4uOTEwMGJkZSAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9v
-dC9kdHMvaW14NnFkbC1hcGFsaXMuZHRzaQ0KPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2
-cWRsLWFwYWxpcy5kdHNpDQo+IEBAIC00OSw3ICs0OSwxMCBAQA0KPiDCoA0KPiDCoAliYWNrbGln
-aHQ6IGJhY2tsaWdodCB7DQo+IMKgCQljb21wYXRpYmxlID0gInB3bS1iYWNrbGlnaHQiOw0KPiAr
-CQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiArCQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxf
-Z3Bpb19ibF9vbj47DQo+IMKgCQlwd21zID0gPCZwd200IDAgNTAwMDAwMD47DQo+ICsJCWVuYWJs
-ZS1ncGlvcyA9IDwmZ3BpbzMgMTMgR1BJT19BQ1RJVkVfSElHSD47DQo+IMKgCQlzdGF0dXMgPSAi
-ZGlzYWJsZWQiOw0KPiDCoAl9Ow0KPiDCoA0KPiBAQCAtNjE0LDYgKzYxNywxMiBAQA0KPiDCoAkJ
-PjsNCj4gwqAJfTsNCj4gwqANCj4gKwlwaW5jdHJsX2dwaW9fYmxfb246IGdwaW9ibG9uIHsNCj4g
-KwkJZnNsLHBpbnMgPSA8DQo+ICsJCQlNWDZRRExfUEFEX0VJTV9EQTEzX19HUElPM19JTzEzIDB4
-MWIwYjANCj4gKwkJPjsNCj4gKwl9Ow0KPiArDQo+IMKgCXBpbmN0cmxfZ3Bpb19rZXlzOiBncGlv
-MWlvMDRncnAgew0KPiDCoAkJZnNsLHBpbnMgPSA8DQo+IMKgCQkJLyogUG93ZXIgYnV0dG9uICov
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
-ZXJuZWwK
+On Friday, September 16, 2016 1:49:59 PM CEST Kishon Vijay Abraham I wrote:
+> 
+> I think the offset information can come from the devicetree too. The phy can be
+> modeled something like below.
+> 
+>                 usb-phys@c0000000 {
+>                         compatible = "amlogic,meson-gxbb-usb2-phy";
+>                         reg = <0x0 0xc0000000 0x0 0x40>;
+>                         #address-cells = <2>;
+>                         #size-cells = <2>;
+>                         ranges = <0x0 0x0 0x0 0xc0000000 0x0 0x40>;
+>                         resets = <&reset 34>;
+> 
+>                         usb0_phy: usb_phy@0 {
+>                                 #phy-cells = <0>;
+>                                 reg = <0x0 0x0 0x0 0x20>;
+>                                 clocks = <&clkc CLKID_USB &clkc CLKID_USB0>;
+>                                 clock-names = "usb_general", "usb";
+>                                 status = "disabled";
+>                         };
+> 
+>                         usb1_phy: usb_phy@20 {
+>                                 #phy-cells = <0>;
+>                                 reg = <0x0 0x20 0x0 0x20>;
+>                                 clocks = <&clkc CLKID_USB &clkc CLKID_USB1>;
+>                                 clock-names = "usb_general", "usb";
+>                                 status = "disabled";
+>                         };
+>                 };
+> 
+> This way the driver will be probed only once (the reset can be done during
+> probe). The phy driver should scan the dt node and for every sub-node it
+> invokes phy_create?
+
+Why not just use #phy-cells=<1> and pass the phy number as an argument
+in the reference?
+
+	Arnd
