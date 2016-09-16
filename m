@@ -1,44 +1,102 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v3 6/6] ARM: dts: bcm283x: add pinctrl group to &sdhci,
- drop pins from &gpio
-Date: Fri, 16 Sep 2016 18:48:50 +0200 (CEST)
-Message-ID: <43420281.199608.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange@email.1und1.de>
-References: <1473841415-937-1-git-send-email-kraxel@redhat.com>
- <1473841415-937-7-git-send-email-kraxel@redhat.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: msm8996-pcie-phy: add support for
+ msm8996 pcie phy
+Date: Fri, 16 Sep 2016 17:51:00 +0100
+Message-ID: <c1c7b4a0-009b-fcd7-22bc-98e914e7cbc2@linaro.org>
+References: <1473245733-17260-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1473245733-17260-2-git-send-email-srinivas.kandagatla@linaro.org>
+ <f27f7641-d7ec-25cb-4b7e-42b343b32db0@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473841415-937-7-git-send-email-kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f27f7641-d7ec-25cb-4b7e-42b343b32db0@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gerd,
 
-> Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> hat am 14. September 2016 um 10:23
-> geschrieben:
-> 
-> 
-> As the alt3 group has no pins left after this
-> update drop the whole alt3 group from &gpio.
 
-sorry it won't be that simple. The references needs to removed too :-(
+On 12/09/16 23:51, Stephen Boyd wrote:
+> On 09/07/2016 03:55 AM, Srinivas Kandagatla wrote:
+>> This patch adds bindings for pcie phy on MSM8996.
+>>
+>> This PHY has 3 Ports, including a common block. Each port is connected
+>> to one root complex. Each port has dedicated reset control lines apart
+>> from common reset and clocks for common block.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>  .../bindings/phy/qcom-msm8996-pcie-phy.txt         | 62 ++++++++++++++++++++++
+>>  1 file changed, 62 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt b/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
+>> new file mode 100644
+>> index 0000000..51930ed
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
+>> @@ -0,0 +1,62 @@
+>> +Qualcomm msm8996 pcie PHY
+>> +------------------------
+>> +
+>> +Required properties:
+>> +- compatible: compatible list, contains "qcom,msm8996-pcie-phy".
+>> +- reg: offset and length of the pcie PHY register set;
+>> +- #phy-cells: must be one
+>> +- clocks: a list of phandles and clock-specifier pairs, one for each entry in
+>> +  clock-names.
+>> +- clock-names: must be "cfg" for phy config clock,
+>> +	"aux" for phy aux clock,
+>> +	"ref_clk" for 19.2 MHz ref clk and
+>> +	"ref_clk_src" reference clock source.
+>> +
+>> +
+>> +- resets: a list of phandles and reset controller specifier pairs, one for
+>> +  each entry in reset-names.
+>> +- reset-names: must be "phy" for reset of pcie phy block and "common" for
+>> +  phy common reset.
+>> +
+>> +Required properties: (Child node)
+>> +- reg: lane numer of the pcie phy.
+>> +- resets: a list of phandles and reset controller specifier pairs, one for
+>> +  each entry in reset-names.
+>> +- reset-names: must be "phy" for reset of pcie phy lane.
+>> +
+>> +Example:
+>> +
+>> +	pcie_phy: qcom,pciephy@34000 {
+>
+> phy for node name? Or pcie-phy?
+Yep, Will fix it.
+>
+>> +		compatible = "qcom,msm8996-pcie-phy";
+>> +		reg = <0x00034000 0x4000>;
+>> +		#phy-cells = <1>;
+>> +		clocks = <&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
+>> +			<&gcc GCC_PCIE_PHY_AUX_CLK>,
+>> +			<&gcc GCC_PCIE_CLKREF_CLK>,
+>> +			<&rpmcc MSM8996_RPM_SMD_LN_BB_CLK>;
+>> +		clock-names = "cfg", "aux", "ref_clk", "ref_clk_src";
+>> +
+>> +		resets = <&gcc GCC_PCIE_PHY_BCR>,
+>> +			<&gcc GCC_PCIE_PHY_COM_BCR>;
+>> +		reset-names = "phy",  "common";
+>> +
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		pcie_phy@0{
+>> +			reg = <0>;
+>> +			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
+>> +			reset-names = "phy";
+>> +		};
+>
+> Why not just have reset-names with strings like "lane0", "lane1",
+> "lane2" in the toplevel node?
+Thats good idea, Will take this into account in the next version which 
+would be common driver for USB/PCIE/UFS phy.
 
-> grep alt3 *.dts*
-bcm2835-rpi-a.dts:	pinctrl-0 = <&gpioout &alt0 &i2s_alt2 &alt3>;
-bcm2835-rpi-a-plus.dts:	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
-bcm2835-rpi-b.dts:	pinctrl-0 = <&gpioout &alt0 &alt3>;
-bcm2835-rpi-b-plus.dts:	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
-bcm2835-rpi-b-rev2.dts:	pinctrl-0 = <&gpioout &alt0 &i2s_alt2 &alt3>;
-bcm2835-rpi.dtsi:	alt3: alt3 {
-bcm2835-rpi-zero.dts:	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
-bcm2836-rpi-2-b.dts:	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
-
-Regards
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+srini
+>
