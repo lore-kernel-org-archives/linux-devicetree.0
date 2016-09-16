@@ -1,59 +1,242 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 0/5] mfd: tps65218: Clean ups
-Date: Fri, 16 Sep 2016 14:31:53 +0100
-Message-ID: <20160916133153.GB27974@sirena.org.uk>
-References: <1470833641-29546-1-git-send-email-j-keerthy@ti.com>
- <ab94aff0-8470-57e5-2039-12f09bb0ca33@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH RFC 5/8] ARM: dts: r8a7743: initial SoC device tree
+Date: Fri, 16 Sep 2016 16:35:08 +0300
+Message-ID: <1679762.ECpvSkQAyM@wasted.cogentembedded.com>
+References: <3533019.Wim1Kuh1ic@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="x0PBmTWHB3bjoOVh"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ab94aff0-8470-57e5-2039-12f09bb0ca33-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
-Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, russ.dill-l0cyMroinI0@public.gmane.org, d-gerlach-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <3533019.Wim1Kuh1ic@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+The initial R8A7743 SoC device tree including CPU cores, GIC, timer, SYSC,
+and the required  clock descriptions.
 
---x0PBmTWHB3bjoOVh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Based on the original (and large) patch by Dmitry Shifrin
+<dmitry.shifrin@cogentembedded.com>.
 
-On Fri, Sep 16, 2016 at 05:12:38PM +0530, Keerthy wrote:
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-> Should i repost this series? I do not see this series in linux-next yet.
+---
+ arch/arm/boot/dts/r8a7743.dtsi |  210 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 210 insertions(+)
 
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
-
-Sending content free pings adds to the mail volume (if they are seen at
-all) which is often the problem and since they can't be reviewed
-directly if something has gone wrong you'll have to resend the patches
-anyway, though there are some other maintainers who like them - if in
-doubt look at how patches for the subsystem are normally handled.
-
---x0PBmTWHB3bjoOVh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJX2/RIAAoJECTWi3JdVIfQPPkH/jSgAYL6LPWH9DVs7MlSV08n
-WbmJLJLXXYLjnVNJLvxp6tGNNs9ZpoEwoVrXJgAtcUv7ItcP7jbDA62AJilcHGGU
-ziEXEAcSAhqsVgUxMVA6BiCjiTgN92xm4fvjveQQZzNX9tBpxBsUaE2fmFk0DvgV
-JI/lkrN0+KrnJZhktyLAlX5nB5u1oKXnw9vnAIuQ2bYcV5+Muy0m121zkTwdTabp
-TQUVSeA+M4WzNpoL8vtjL/dBoZlGvOIjkUhUKFzfmTbspYGRztem/dS3bzUhXZCL
-DGY1lVarhBijvZ6BCAtzNFPJOTLdZ1swZO3wzl7er4a1UvDVU8WQGJr0PQym6uE=
-=4Yre
------END PGP SIGNATURE-----
-
---x0PBmTWHB3bjoOVh--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Index: renesas/arch/arm/boot/dts/r8a7743.dtsi
+===================================================================
+--- /dev/null
++++ renesas/arch/arm/boot/dts/r8a7743.dtsi
+@@ -0,0 +1,210 @@
++/*
++ * Device Tree Source for the r8a7743 SoC
++ *
++ * Copyright (C) 2016 Cogent Embedded Inc.
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2. This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/r8a7743-clock.h>
++#include <dt-bindings/power/r8a7743-sysc.h>
++
++/ {
++	compatible = "renesas,r8a7743";
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a15";
++			reg = <0>;
++			clock-frequency = <1500000000>;
++			clocks = <&cpg_clocks R8A7743_CLK_Z>;
++			power-domains = <&sysc R8A7743_PD_CA15_CPU0>;
++			next-level-cache = <&L2_CA15>;
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a15";
++			reg = <1>;
++			clock-frequency = <1500000000>;
++			power-domains = <&sysc R8A7743_PD_CA15_CPU1>;
++			next-level-cache = <&L2_CA15>;
++		};
++
++		L2_CA15: cache-controller@0 {
++			compatible = "cache";
++			reg = <0>;
++			cache-unified;
++			cache-level = <2>;
++			power-domains = <&sysc R8A7743_PD_CA15_SCU>;
++		};
++	};
++
++	soc {
++		compatible = "simple-bus";
++		interrupt-parent = <&gic>;
++
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		gic: interrupt-controller@f1001000 {
++			compatible = "arm,gic-400";
++			#interrupt-cells = <3>;
++			#address-cells = <0>;
++			interrupt-controller;
++			reg = <0 0xf1001000 0 0x1000>,
++			      <0 0xf1002000 0 0x1000>,
++			      <0 0xf1004000 0 0x2000>,
++			      <0 0xf1006000 0 0x2000>;
++			interrupts = <GIC_PPI 9
++				     (GIC_CPU_MASK_SIMPLE(2) |
++				      IRQ_TYPE_LEVEL_HIGH)>;
++		};
++
++		timer {
++			compatible = "arm,armv7-timer";
++			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
++				      IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
++				      IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
++				      IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
++				      IRQ_TYPE_LEVEL_LOW)>;
++		};
++
++		sysc: system-controller@e6180000 {
++			compatible = "renesas,r8a7743-sysc";
++			reg = <0 0xe6180000 0 0x0200>;
++			#power-domain-cells = <1>;
++		};
++
++		/* Special CPG clocks */
++		cpg_clocks: cpg_clocks@e6150000 {
++			compatible = "renesas,r8a7743-cpg-clocks",
++				     "renesas,rcar-gen2-cpg-clocks";
++			reg = <0 0xe6150000 0 0x1000>;
++			clocks = <&extal_clk &usb_extal_clk>;
++			#clock-cells = <1>;
++			clock-output-names = "main", "pll0", "pll1", "pll3",
++					     "lb", "qspi", "sdh", "sd0", "z",
++					     "rcan";
++			#power-domain-cells = <0>;
++		};
++
++		/* Fixed factor clocks */
++		pll1_div2_clk: pll1_div2 {
++			compatible = "fixed-factor-clock";
++			clocks = <&cpg_clocks R8A7743_CLK_PLL1>;
++			#clock-cells = <0>;
++			clock-div = <2>;
++			clock-mult = <1>;
++		};
++		zs_clk: zs {
++			compatible = "fixed-factor-clock";
++			clocks = <&cpg_clocks R8A7743_CLK_PLL1>;
++			#clock-cells = <0>;
++			clock-div = <6>;
++			clock-mult = <1>;
++		};
++		p_clk: p {
++			compatible = "fixed-factor-clock";
++			clocks = <&cpg_clocks R8A7743_CLK_PLL1>;
++			#clock-cells = <0>;
++			clock-div = <24>;
++			clock-mult = <1>;
++		};
++		mp_clk: mp {
++			compatible = "fixed-factor-clock";
++			clocks = <&pll1_div2_clk>;
++			#clock-cells = <0>;
++			clock-div = <15>;
++			clock-mult = <1>;
++		};
++
++		/* Gate clocks */
++		mstp2_clks: mstp2_clks@e6150138 {
++			compatible = "renesas,r8a7743-mstp-clocks",
++				     "renesas,cpg-mstp-clocks";
++			reg = <0 0xe6150138 0 4>, <0 0xe6150040 0 4>;
++			clocks = <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>,
++				 <&mp_clk>, <&mp_clk>, <&zs_clk>, <&zs_clk>;
++			#clock-cells = <1>;
++			clock-indices = <
++				R8A7743_CLK_SCIFA2 R8A7743_CLK_SCIFA1
++				R8A7743_CLK_SCIFA0 R8A7743_CLK_SCIFB0
++				R8A7743_CLK_SCIFB1 R8A7743_CLK_SCIFB2
++				R8A7743_CLK_SYS_DMAC1 R8A7743_CLK_SYS_DMAC0
++			>;
++			clock-output-names =
++				"scifa2", "scifa1", "scifa0",
++				"scifb0", "scifb1", "scifb2",
++				"sys-dmac1", "sys-dmac0";
++		};
++		mstp7_clks: mstp7_clks@e615014c {
++			compatible = "renesas,r8a7743-mstp-clocks",
++				     "renesas,cpg-mstp-clocks";
++			reg = <0 0xe615014c 0 4>, <0 0xe61501c4 0 4>;
++			clocks = <&zs_clk>, <&p_clk>, <&p_clk>, <&zs_clk>,
++				 <&zs_clk>, <&p_clk>, <&p_clk>, <&p_clk>,
++				 <&p_clk>;
++			#clock-cells = <1>;
++			clock-indices = <
++				R8A7743_CLK_HSCIF2 R8A7743_CLK_SCIF5
++				R8A7743_CLK_SCIF4 R8A7743_CLK_HSCIF1
++				R8A7743_CLK_HSCIF0 R8A7743_CLK_SCIF3
++				R8A7743_CLK_SCIF2 R8A7743_CLK_SCIF1
++				R8A7743_CLK_SCIF0
++			>;
++			clock-output-names =
++				"hscif2", "scif5", "scif4", "hscif1", "hscif0",
++				"scif3", "scif2", "scif1", "scif0";
++		};
++		mstp11_clks: mstp11_clks@e615099c {
++			compatible = "renesas,r8a7743-mstp-clocks",
++				     "renesas,cpg-mstp-clocks";
++			reg = <0 0xe615099c 0 4>, <0 0xe61509ac 0 4>;
++			clocks = <&mp_clk>, <&mp_clk>, <&mp_clk>;
++			#clock-cells = <1>;
++			clock-indices = <
++				R8A7743_CLK_SCIFA3 R8A7743_CLK_SCIFA4
++				R8A7743_CLK_SCIFA5
++			>;
++			clock-output-names = "scifa3", "scifa4", "scifa5";
++		};
++	};
++
++	/* External root clock */
++	extal_clk: extal {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overriden by the board. */
++		clock-frequency = <0>;
++	};
++
++	/* External USB clock - can be overridden by the board */
++	usb_extal_clk: usb_extal {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <48000000>;
++	};
++
++	/* External SCIF clock */
++	scif_clk: scif {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++};
