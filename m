@@ -1,53 +1,58 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 2/4] ARM: dts: r7s72100: add mmcif to device tree
-Date: Fri, 16 Sep 2016 13:08:13 +0000
-Message-ID: <SG2PR06MB11655B678F23E16AB93C9B008AF30@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20160915193405.26943-1-chris.brandt@renesas.com>
- <20160915193405.26943-3-chris.brandt@renesas.com>
- <CAMuHMdU6DKuxYUKNV_-FyczV-pPFpTLso=5HruWgNiXNOenVRQ@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RESEND PATCH 0/3] mtd: nand: standardize ECC maximization
+Date: Fri, 16 Sep 2016 15:08:49 +0200
+Message-ID: <20160916150849.4a3ca0bb@bbrezillon>
+References: <1465398264-8202-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdU6DKuxYUKNV_-FyczV-pPFpTLso=5HruWgNiXNOenVRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1465398264-8202-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIDkvMTUvMjAxNiwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KPiA+
-ICsgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjY4IElSUV9UWVBFX0xFVkVM
-X0hJR0gNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBHSUNfU1BJIDI2OSBJUlFf
-VFlQRV9MRVZFTF9ISUdIPjsNCj4gDQo+IFRoZSBiaW5kaW5ncyBkbyBub3Qgc2F5IGFueXRoaW5n
-IGFib3V0IGludGVycnVwdHMgKGhlbmNlIHRoYXQgc2hvdWxkIGJlDQo+IGFkZGVkKS4NCg0KSSdt
-IHNvcnJ5LCBJJ20gY29uZnVzZWQuLi4NCkFyZSB5b3Ugc2F5aW5nOg0KIEEpIEkgZm9yZ290IHRv
-IGFkZCBzb21ldGhpbmc/DQogQikgQXMgYSBnZW5lcmFsIHN0YXRlbWVudCwgdGhlIHJlbmVzYXMs
-bW1jaWYudHh0IGZpbGUgZG9lc24ndCBzYXkgYW55dGhpbmcgYWJvdXQgaW50ZXJydXB0cz8NCg0K
-DQo+IFRoZSBkcml2ZXIgaGFuZGxlcyBlaXRoZXIgMSBjb21iaW5lZCBvciAyIHNlcGFyYXRlIGlu
-dGVycnVwdHMuDQo+IFRoZSBkYXRhc2hlZXQgc2F5cyBNTUMgaGFzIDMgaW50ZXJydXB0IHJlcXVl
-c3RzLCB0aG91Z2g/DQoNClRoZSBJUCBpdHNlbGYgaGFzIDMgaW50ZXJydXB0czoNCiAjMS4gTU1D
-MCwyOTk6IENhcmQgZGV0ZWN0DQogIzIuIE1NQzEsMzAwOiBTdGF0dXMgQ2hhbmdlDQogIzMuIE1N
-QzIsMzAxOiBFcnJvcg0KDQpNYW55IG9mIHRoZSAnTGludXgnIFNvQyBkZXZpY2VzIHRoYXQgdXNl
-IHRoaXMgTU1DIChTSDQsIFItQ2FyKSBhcmUgb25seSBldmVyIGdvaW5nIHRvIHVzZSBlTU1DLCBz
-byB0aGUgY2FyZCBkZXRlY3Rpb24gcG9ydGlvbiBvZiB0aGUgSVAgd2FzIGlycmVsZXZhbnQuIEkg
-YWdyZWUgdGhpcyBpcyB0aGUgc2FtZSBjYXNlIGZvciB0aGUgUlovQSAod2hvIHdvdWxkIGV2ZXIg
-dXNlIGFuIE1NQyBjYXJkIG5vdyBhIGRheXM/Pz8/PykNClRoZSAnc21hbGxlcicgU29DcyBrZXB0
-IGl0IGluIChTSDJBLCBSWi9BMSkgYnV0IHRoZSAnYmlnZ2VyJyBTb0NzIGxlZnQgaXQgb3V0IChT
-SDRBLCBSLUNhcikuDQoNClRoZSBvbmx5IHdheSB0byBlbmFibGUgdGhhdCBpbnRlcnJ1cHQgaXMg
-dG8gd3JpdGUgdG8gdGhlIENFX0RFVEVDVCByZWdpc3RlciAob2Zmc2V0IDB4NzApIHdoaWNoIHRo
-ZSBkcml2ZXIgZG9lc24ndCBkby4NCg0KSG93ZXZlci4uLi5pZiB5b3UgbG9vayBpbiBzaF9tbWNp
-Zi5oLCB5b3UnbGwgc2VlIHRoYXQgc2FtZSBvZmZzZXQgKDB4NzApIGlzIGNhbGxlZCBDRV9DTEtf
-Q1RSTDINCg0KI2RlZmluZSBNTUNJRl9DRV9DTEtfQ1RSTDIgICAgICAweDAwMDAwMDcwDQoNCldo
-aWNoIGl0IG9ubHkgd3JpdGVzIHRvIGlmICdjbGtfY3RybDJfZW5hYmxlJyBpcyBkZXNpZ25hdGVk
-Lg0KDQoJaWYgKGhvc3QtPmNsa19jdHJsMl9lbmFibGUpDQoJCXNoX21tY2lmX3dyaXRlbChob3N0
-LT5hZGRyLCBNTUNJRl9DRV9DTEtfQ1RSTDIsIDB4MEYwRjAwMDApOw0KDQpBbmQsIEkgc2VlIG5v
-IFJlbmVzYXMgU29DIHRoYXQgZXZlciBzZXRzIHRoYXQgb3Igd291bGQgZXZlciB1c2UgaXQgc28g
-SSBjYW4ndCBldmVuIHRlbGwgeW91IHdoYXQgU29DIHRoYXQgd2FzIGZvciAoU0g0LCBTSC1Nb2Jp
-bGUsIEFSTSkNCg0KDQpTbyBhZnRlciBhbGwgdGhhdCByYW50aW5nLi4uSSBzZWUgbm8gbmVlZCB0
-byBzdXBwb3J0IGNhcmQgZGV0ZWN0IGZvciBNTUMgZm9yIHRoZSBSWi9BIChvciBhbnkgZnV0dXJl
-IFJaKSBzbyBJJ2QgbGlrZSB0byBqdXN0IGxlYXZlIGl0IGFzIGlzLg0KDQpEbyB5b3UgYWdyZWU/
-DQoNCkNocmlzDQoNCg0K
+On Wed,  8 Jun 2016 17:04:21 +0200
+Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+
+> Hello,
+> 
+> Sorry for the noise, but I forgot to add DT maintainers in Cc.
+> 
+> This series aims at standardizing a feature already supported by
+> some NAND controller drivers: setting the maximum ECC strength
+> based on the OOB area size instead of using the ECC strength/step_size
+> information retrieved from the DT or NAND detection code.
+> 
+> This is particularly useful when the NAND device is used in by a
+> FS/wear-leveling layer that is not using the OOB area at all (this is
+> the case of UBI).
+> 
+> Note that drivers already implementing this kind of logic are not
+> converted to the new approach (because of backward compatibility
+> concern), but new drivers or drivers that do not already implement
+> this 'ECC maximization' logic are encouraged to do it.
+
+Applied.
+
+> 
+> Regards,
+> 
+> Boris
+> 
+> Boris Brezillon (3):
+>   mtd: nand: Add an option to maximize the ECC strength
+>   mtd: nand: Support maximizing ECC when using software BCH
+>   mtd: nand: sunxi: Support ECC maximization
+> 
+>  Documentation/devicetree/bindings/mtd/nand.txt |  9 ++++++++
+>  drivers/mtd/nand/nand_base.c                   | 23 ++++++++++++++++++++
+>  drivers/mtd/nand/sunxi_nand.c                  | 29 ++++++++++++++++++++++++++
+>  include/linux/mtd/nand.h                       |  1 +
+>  4 files changed, 62 insertions(+)
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
