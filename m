@@ -1,189 +1,98 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH RFC 1/8] ARM: shmobile: r8a7743: add clock index macros
-Date: Fri, 16 Sep 2016 16:28:48 +0300
-Message-ID: <17982632.cAVaBDUq2Q@wasted.cogentembedded.com>
-References: <3533019.Wim1Kuh1ic@wasted.cogentembedded.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] dt-bindings: Add summit SMB347 charger bindings
+Date: Fri, 16 Sep 2016 08:29:35 -0500
+Message-ID: <20160916132935.GA28919@rob-hp-laptop>
+References: <1473243615-29746-1-git-send-email-simhavcs@gmail.com>
+ <1473243615-29746-2-git-send-email-simhavcs@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <3533019.Wim1Kuh1ic@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1473243615-29746-2-git-send-email-simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Myungjoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:POWER SUPPLY CLASS/SUBSYSTEM and DRIVERS" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add macros usable by the device tree sources to reference the R8A7743
-clocks  by index.
+On Wed, Sep 07, 2016 at 03:50:11PM +0530, Vinay Simha BN wrote:
+> Add documentation for summit SMB347 charger
+> 
+> Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Myungjoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../bindings/power/supply/smb347_charger.txt       | 57 ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/smb347_charger.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/smb347_charger.txt b/Documentation/devicetree/bindings/power/supply/smb347_charger.txt
+> new file mode 100644
+> index 0000000..91570a5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/smb347_charger.txt
+> @@ -0,0 +1,57 @@
+> +smb347_charger bindings
+> +~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +[Required porperties]
+> +- compatible : "summit,smb347"
+> +- reg : Slave address for i2c interface
+> +# At least one of followings should be set
+> +  - enable-usb-charging
+> +  - enable-otg-charging
+> +  - enable-mains-charging
 
-Based on the original (and large) patch by Dmitry Shifrin
-<dmitry.shifrin@cogentembedded.com>.
+These sound like user configuration which should be controlled with 
+sysfs rather than DT?
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> +
+> +[Optional properties]
+> +- interrupt-parent : The phandle for the interrupt controller
+> +- interrupts : Interrupt line index for mapping
+> +- enable-chg-ctrl : Enable charging control
+> +		<0> : SW (i2c interface)
+> +		<1> : Pin control (Active Low)
+> +		<2> : Pin control (Active High)
 
----
- include/dt-bindings/clock/r8a7743-clock.h |  157 ++++++++++++++++++++++++++++++
- 1 file changed, 157 insertions(+)
+Don't you need a gpio line defined to control this?
 
-Index: renesas/include/dt-bindings/clock/r8a7743-clock.h
-===================================================================
---- /dev/null
-+++ renesas/include/dt-bindings/clock/r8a7743-clock.h
-@@ -0,0 +1,157 @@
-+/*
-+ * Copyright 2013 Ideas On Board SPRL
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_R8A7743_H__
-+#define __DT_BINDINGS_CLOCK_R8A7743_H__
-+
-+/* CPG */
-+#define R8A7743_CLK_MAIN		0
-+#define R8A7743_CLK_PLL0		1
-+#define R8A7743_CLK_PLL1		2
-+#define R8A7743_CLK_PLL3		3
-+#define R8A7743_CLK_LB			4
-+#define R8A7743_CLK_QSPI		5
-+#define R8A7743_CLK_SDH			6
-+#define R8A7743_CLK_SD0			7
-+#define R8A7743_CLK_Z			8
-+#define R8A7743_CLK_RCAN		9
-+
-+/* MSTP0 */
-+#define R8A7743_CLK_MSIOF0		0
-+
-+/* MSTP1 */
-+#define R8A7743_CLK_VCP0		1
-+#define R8A7743_CLK_VPC0		3
-+#define R8A7743_CLK_TMU1		11
-+#define R8A7743_CLK_3DG			12
-+#define R8A7743_CLK_2DDMAC		15
-+#define R8A7743_CLK_FDP1_1		18
-+#define R8A7743_CLK_FDP1_0		19
-+#define R8A7743_CLK_TMU3		21
-+#define R8A7743_CLK_TMU2		22
-+#define R8A7743_CLK_CMT0		24
-+#define R8A7743_CLK_TMU0		25
-+#define R8A7743_CLK_VSP1_DU1		27
-+#define R8A7743_CLK_VSP1_DU0		28
-+#define R8A7743_CLK_VSP1_S		31
-+
-+/* MSTP2 */
-+#define R8A7743_CLK_SCIFA2		2
-+#define R8A7743_CLK_SCIFA1		3
-+#define R8A7743_CLK_SCIFA0		4
-+#define R8A7743_CLK_MSIOF2		5
-+#define R8A7743_CLK_SCIFB0		6
-+#define R8A7743_CLK_SCIFB1		7
-+#define R8A7743_CLK_MSIOF1		8
-+#define R8A7743_CLK_SCIFB2		16
-+#define R8A7743_CLK_SYS_DMAC1		18
-+#define R8A7743_CLK_SYS_DMAC0		19
-+
-+/* MSTP3 */
-+#define R8A7743_CLK_TPU0		4
-+#define R8A7743_CLK_SDHI2		11
-+#define R8A7743_CLK_SDHI1		12
-+#define R8A7743_CLK_SDHI0		14
-+#define R8A7743_CLK_MMCIF0		15
-+#define R8A7743_CLK_IIC0		18
-+#define R8A7743_CLK_PCIEC		19
-+#define R8A7743_CLK_IIC1		23
-+#define R8A7743_CLK_SSUSB		28
-+#define R8A7743_CLK_CMT1		29
-+#define R8A7743_CLK_USBDMAC0		30
-+#define R8A7743_CLK_USBDMAC1		31
-+
-+/* MSTP4 */
-+#define R8A7743_CLK_IRQC		7
-+
-+/* MSTP5 */
-+#define R8A7743_CLK_AUDIO_DMAC1		1
-+#define R8A7743_CLK_AUDIO_DMAC0		2
-+#define R8A7743_CLK_THERMAL		22
-+#define R8A7743_CLK_PWM			23
-+
-+/* MSTP7 */
-+#define R8A7743_CLK_EHCI		3
-+#define R8A7743_CLK_HSUSB		4
-+#define R8A7743_CLK_HSCIF2		13
-+#define R8A7743_CLK_SCIF5		14
-+#define R8A7743_CLK_SCIF4		15
-+#define R8A7743_CLK_HSCIF1		16
-+#define R8A7743_CLK_HSCIF0		17
-+#define R8A7743_CLK_SCIF3		18
-+#define R8A7743_CLK_SCIF2		19
-+#define R8A7743_CLK_SCIF1		20
-+#define R8A7743_CLK_SCIF0		21
-+#define R8A7743_CLK_DU1			23
-+#define R8A7743_CLK_DU0			24
-+#define R8A7743_CLK_LVDS0		26
-+
-+/* MSTP8 */
-+#define R8A7743_CLK_IPMMU_SGX		0
-+#define R8A7743_CLK_VIN2		9
-+#define R8A7743_CLK_VIN1		10
-+#define R8A7743_CLK_VIN0		11
-+#define R8A7743_CLK_ETHER		13
-+#define R8A7743_CLK_SATA1		14
-+#define R8A7743_CLK_SATA0		15
-+
-+/* MSTP9 */
-+#define R8A7743_CLK_GPIO7		4
-+#define R8A7743_CLK_GPIO6		5
-+#define R8A7743_CLK_GPIO5		7
-+#define R8A7743_CLK_GPIO4		8
-+#define R8A7743_CLK_GPIO3		9
-+#define R8A7743_CLK_GPIO2		10
-+#define R8A7743_CLK_GPIO1		11
-+#define R8A7743_CLK_GPIO0		12
-+#define R8A7743_CLK_RCAN1		15
-+#define R8A7743_CLK_RCAN0		16
-+#define R8A7743_CLK_QSPI_MOD		17
-+#define R8A7743_CLK_I2C5		25
-+#define R8A7743_CLK_IICDVFS		26
-+#define R8A7743_CLK_I2C4		27
-+#define R8A7743_CLK_I2C3		28
-+#define R8A7743_CLK_I2C2		29
-+#define R8A7743_CLK_I2C1		30
-+#define R8A7743_CLK_I2C0		31
-+
-+/* MSTP10 */
-+#define R8A7743_CLK_SSI_ALL		5
-+#define R8A7743_CLK_SSI9		6
-+#define R8A7743_CLK_SSI8		7
-+#define R8A7743_CLK_SSI7		8
-+#define R8A7743_CLK_SSI6		9
-+#define R8A7743_CLK_SSI5		10
-+#define R8A7743_CLK_SSI4		11
-+#define R8A7743_CLK_SSI3		12
-+#define R8A7743_CLK_SSI2		13
-+#define R8A7743_CLK_SSI1		14
-+#define R8A7743_CLK_SSI0		15
-+#define R8A7743_CLK_SCU_ALL		17
-+#define R8A7743_CLK_SCU_DVC1		18
-+#define R8A7743_CLK_SCU_DVC0		19
-+#define R8A7743_CLK_SCU_CTU1_MIX1	20
-+#define R8A7743_CLK_SCU_CTU0_MIX0	21
-+#define R8A7743_CLK_SCU_SRC9		22
-+#define R8A7743_CLK_SCU_SRC8		23
-+#define R8A7743_CLK_SCU_SRC7		24
-+#define R8A7743_CLK_SCU_SRC6		25
-+#define R8A7743_CLK_SCU_SRC5		26
-+#define R8A7743_CLK_SCU_SRC4		27
-+#define R8A7743_CLK_SCU_SRC3		28
-+#define R8A7743_CLK_SCU_SRC2		29
-+#define R8A7743_CLK_SCU_SRC1		30
-+#define R8A7743_CLK_SCU_SRC0		31
-+
-+/* MSTP11 */
-+#define R8A7743_CLK_SCIFA3		6
-+#define R8A7743_CLK_SCIFA4		7
-+#define R8A7743_CLK_SCIFA5		8
-+
-+#endif /* __DT_BINDINGS_CLOCK_R8A7743_H__ */
+> +# Charging constraints
+> +- max-chg-curr : Maximum current for charging (in uA)
+> +- max-chg-volt : Maximum voltage for charging (in uV)
+> +- pre-chg-curr : Pre-charging current (in uA)
+> +- term-curr : Charging cycle termination current (in uA)
+> +- fast-volt-thershold : Voltage threshold to transit to fast charge mode (in uV)
+> +- mains-curr-limit : Maximum input current from AC/DC input (in uA)
+> +- usb-curr-limit : Maximum input current from USB input (in uA)
+> +
+> +# Related thermometer monitoring (in degree C)
+> +- chip-temp-threshold : Chip temperature for thermal regulaton.   <100, 130>
+> +- soft-cold-temp-limit : Cold battery temperature for soft alarm. <0, 15>*
+> +- soft-hot-temp-limit : Hot battery temperature for soft alarm.   <40, 55>
+> +- hard-cold-temp-limit : Cold battery temperature for hard alarm. <0, 15>*
+> +- hard-hot-temp-limit : Hot battery temperature for hard alarm.   <55, 65>
+> +(* The written temperature has +5'C offset. 0'C -> -5'C, 15'C -> 10'C)
+
+Minimally, all these need vendor prefixes and unit suffixes. See 
+property-units.txt. However, ...
+
+These also seem like common properties. Frankly, all the charger 
+bindings are a mess. They are all done differently. There's common 
+things like max charge current that are all described in different ways. 
+I think minimally a couple of things need to be defined for a common 
+structure.
+
+A separate node for batteries with properties of the battery like charge 
+current/voltage parameters, temperature params, type of battery, etc.
+
+A sub node of the charger for each supply source like USB, wall, etc. 
+and any parameters for those sources like current limits.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
