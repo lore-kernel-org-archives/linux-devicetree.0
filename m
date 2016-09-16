@@ -1,64 +1,38 @@
-From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: aspeed: Enable BT IPMI BMC device
-Date: Fri, 16 Sep 2016 12:39:27 +0200
-Message-ID: <1474022367-21029-4-git-send-email-clg@kaod.org>
-References: <1474022367-21029-1-git-send-email-clg@kaod.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: dts: rskrza1: add mmc DT support
+Date: Fri, 16 Sep 2016 13:54:23 +0300
+Message-ID: <f719fb03-fa82-62a9-ca81-7dab050ee503@cogentembedded.com>
+References: <20160915193405.26943-1-chris.brandt@renesas.com>
+ <20160915193405.26943-5-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474022367-21029-1-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
+In-Reply-To: <20160915193405.26943-5-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
+To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
----
- Changes since v1:
+On 9/15/2016 10:34 PM, Chris Brandt wrote:
 
- - added the soc name ast2400 in the compatible cell 
+> Since the MMC and SDHI1 on the RSK share the same socket connector (CN1),
+> you cannot enabled MMC and SDHI1 at the same time. Therefore the status
 
- arch/arm/boot/dts/aspeed-g4.dtsi | 6 ++++++
- arch/arm/boot/dts/aspeed-g5.dtsi | 6 ++++++
- 2 files changed, 12 insertions(+)
+    Enable.
 
-diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-index 22dee5937d5c..7bb00b6f13d8 100644
---- a/arch/arm/boot/dts/aspeed-g4.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-@@ -82,6 +82,12 @@
- 				clocks = <&clk_apb>;
- 			};
- 
-+			ibt: ibt@1e789140 {
-+				compatible = "aspeed,ast2400-bt-bmc";
-+				reg = <0x1e789140 0x18>;
-+				interrupts = <8>;
-+			};
-+
- 			wdt1: wdt@1e785000 {
- 				compatible = "aspeed,wdt";
- 				reg = <0x1e785000 0x1c>;
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index dd94d9361fda..1d8f81b548b3 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -86,6 +86,12 @@
- 				clocks = <&clk_apb>;
- 			};
- 
-+			ibt: ibt@1e789140 {
-+				compatible = "aspeed,ast2400-bt-bmc";
-+				reg = <0x1e789140 0x18>;
-+				interrupts = <8>;
-+			};
-+
- 			wdt1: wdt@1e785000 {
- 				compatible = "aspeed,wdt";
- 				reg = <0x1e785000 0x1c>;
--- 
-2.7.4
+> has been set to disabled because SDHI is more popular with this board.
+> However, keeping this code in here serves as a good way to document how
+> the MMC on the RZ/A1 has been known to work for someone that does want
+> to use MMC instead of SDHI1.
+>
+> A fixed 3.3 regulator is included because it is required by the mmc
+> driver.
+>
+> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+[...]
+
+MBR, Sergei
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
