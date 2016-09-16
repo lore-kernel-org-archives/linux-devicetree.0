@@ -1,14 +1,14 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/2] media: adv7604: fix bindings inconsistency for default-input
-Date: Fri, 16 Sep 2016 12:54:35 +0300
-Message-ID: <1755939.A2nWVFYccr@avalon>
-References: <20160916093942.17213-1-ulrich.hecht+renesas@gmail.com> <20160916093942.17213-2-ulrich.hecht+renesas@gmail.com>
+Subject: Re: [PATCH 2/2] media: adv7604: automatic "default-input" selection
+Date: Fri, 16 Sep 2016 12:57:21 +0300
+Message-ID: <3410700.SJlxHzK90c@avalon>
+References: <20160916093942.17213-1-ulrich.hecht+renesas@gmail.com> <20160916093942.17213-3-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160916093942.17213-2-ulrich.hecht+renesas@gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20160916093942.17213-3-ulrich.hecht+renesas@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
 To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 Cc: hans.verkuil@cisco.com, niklas.soderlund@ragnatech.se, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, magnus.damm@gmail.com, william.towle@codethink.co.uk, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
@@ -17,46 +17,51 @@ Hi Ulrich,
 
 Thank you for the patch.
 
-On Friday 16 Sep 2016 11:39:41 Ulrich Hecht wrote:
-> The text states that default-input is an endpoint property, but in the
-> example it is a device property.  The example makes more sense.
+On Friday 16 Sep 2016 11:39:42 Ulrich Hecht wrote:
+> Fall back to input 0 if "default-input" property is not present.
+> 
+> Documentation states that the "default-input" property should reside
+> directly in the node for adv7612.
 
-You should explain why it makes more sense. Something along the lines of
+Not just fo adv7612.
 
-"The example makes more sense as the default input is a property of the chip, 
-not of a particular port."
-
-With that changed,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
+> Hence, also adjust the parsing to make the implementation consistent with
+> this.
+> 
+> Based on patch by William Towle <william.towle@codethink.co.uk>.
+> 
 > Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
 > ---
->  Documentation/devicetree/bindings/media/i2c/adv7604.txt | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/media/i2c/adv7604.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> b/Documentation/devicetree/bindings/media/i2c/adv7604.txt index
-> 8337f75..9cbd92e 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> @@ -34,6 +34,7 @@ The digital output port node must contain at least one
-> endpoint. Optional Properties:
+> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+> index 4003831..055c9df 100644
+> --- a/drivers/media/i2c/adv7604.c
+> +++ b/drivers/media/i2c/adv7604.c
+> @@ -3077,10 +3077,13 @@ static int adv76xx_parse_dt(struct adv76xx_state
+> *state)
+> 	if (!of_property_read_u32(endpoint, "default-input", &v))
+
+Should this be removed if the property has to be in the device node and not in 
+the endpoint ?
+
+>  		state->pdata.default_input = v;
+>  	else
+> -		state->pdata.default_input = -1;
+> +		state->pdata.default_input = 0;
+
+What was the use case for setting it to -1 ? Is it safe to change that ?
+
+>  	of_node_put(endpoint);
 > 
->    - reset-gpios: Reference to the GPIO connected to the device's reset pin.
-> +  - default-input: Select which input is selected after reset.
+> +	if (!of_property_read_u32(np, "default-input", &v))
+> +		state->pdata.default_input = v;
+> +
+>  	flags = bus_cfg.bus.parallel.flags;
 > 
->  Optional Endpoint Properties:
-> 
-> @@ -47,8 +48,6 @@ Optional Endpoint Properties:
->    If none of hsync-active, vsync-active and pclk-sample is specified the
->    endpoint will use embedded BT.656 synchronization.
-> 
-> -  - default-input: Select which input is selected after reset.
-> -
->  Example:
-> 
->  	hdmi_receiver@4c {
+>  	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
 
 -- 
 Regards,
