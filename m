@@ -1,40 +1,70 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 1/7] clocksource: exynos_mct: Add the support for ARM64
-Date: Fri, 16 Sep 2016 13:10:48 +0200
-Message-ID: <18cb09bb-7a03-df7f-706d-5309b34e222b@kernel.org>
-References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com>
- <1472046551-703-2-git-send-email-cw00.choi@samsung.com>
- <562e232f-7e69-6d54-e49d-36042d166800@linaro.org>
- <CGME20160916111052eucas1p1fb19531ab7b3e53f6fdeb4fa0e8a5449@eucas1p1.samsung.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] of/platform: Initialise dev->fwnode appropriately
+Date: Fri, 16 Sep 2016 12:12:07 +0100
+Message-ID: <20160916111207.GA32342@red-moon>
+References: <38259ab3716da072fab37f06d034329244491c13.1473865096.git.robin.murphy@arm.com>
+ <20160915133657.GB14424@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <562e232f-7e69-6d54-e49d-36042d166800@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: krzk@kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160915133657.GB14424@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/08/2016 01:04 PM, Daniel Lezcano wrote:
-> On 24/08/2016 15:49, Chanwoo Choi wrote:
->> This patch adds the support for ARM 64bit. The delay_timer is only supported
->> on ARM 32bit.
->>
->> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Kukjin Kim <kgene@kernel.org>
->> Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
+On Thu, Sep 15, 2016 at 08:36:57AM -0500, Rob Herring wrote:
+> On Wed, Sep 14, 2016 at 04:01:24PM +0100, Robin Murphy wrote:
+> > Whilst we're some of the way towards a universal firmware property
+> > interface, drivers which deal with both OF and ACPI probing end up
+> > having to do things like this:
+> > 
+> >     dev->of_node ? &dev->of_node->fwnode : dev->fwnode
+> > 
+> > This seems unnecessary, when the OF code could instead simply fill in
+> > the device's fwnode when binding the of_node, and let the drivers use
+> > dev->fwnode either way. Let's give it a go and see what falls out.
+> > 
+> > Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >  drivers/of/platform.c | 2 ++
+> >  1 file changed, 2 insertions(+)
 > 
-> I don't really like #ifdef in the code itself but I suppose there is no
-> much choice.
-> 
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> I've applied this, but what about non-platform devices such as i2c?
 
-Thanks, applied.
-If needed, I can provide a stable tag to base on top of it.
+Thanks ! Patch below should do for mfd and i2c (to be confirmed) but
+I am pretty certain it is still missing some devices, are we going
+to convert them on a case-by-case policy (ie when/if needed) ?
 
-Best regards,
-Krzysztof
+Lorenzo
+
+-- >8 --
+diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+index da3a02e..667a393 100644
+--- a/drivers/i2c/i2c-core.c
++++ b/drivers/i2c/i2c-core.c
+@@ -1574,6 +1574,7 @@ static struct i2c_client *of_i2c_register_device(struct i2c_adapter *adap,
+ 
+ 	info.addr = addr;
+ 	info.of_node = of_node_get(node);
++	info.fwnode = &node->fwnode;
+ 	info.archdata = &dev_ad;
+ 
+ 	if (of_get_property(node, "wakeup-source", NULL))
+diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+index 3ac486a..c264bf5 100644
+--- a/drivers/mfd/mfd-core.c
++++ b/drivers/mfd/mfd-core.c
+@@ -179,6 +179,7 @@ static int mfd_add_device(struct device *parent, int id,
+ 		for_each_child_of_node(parent->of_node, np) {
+ 			if (of_device_is_compatible(np, cell->of_compatible)) {
+ 				pdev->dev.of_node = np;
++				pdev->dev.fwnode = &np->fwnode;
+ 				break;
+ 			}
+ 		}
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
