@@ -1,72 +1,63 @@
-From: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 2/2] arm64: dts: rockchip: add eMMC's power domain support for rk3399
-Date: Sat, 17 Sep 2016 10:32:50 +0800
-Message-ID: <20160917023250.1159-3-xzy.xu@rock-chips.com>
-References: <20160917023250.1159-1-xzy.xu@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160917023250.1159-1-xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH v7 0/5] mfd: tps65218: Clean ups
+Date: Sat, 17 Sep 2016 09:23:51 +0530
+Message-ID: <4c5b4ca3-4594-455e-8c0b-2f6cc4e6b8e2@ti.com>
+References: <1470833641-29546-1-git-send-email-j-keerthy@ti.com>
+ <ab94aff0-8470-57e5-2039-12f09bb0ca33@ti.com>
+ <20160916133153.GB27974@sirena.org.uk>
+ <0a30f210-0a23-0899-51b0-28f200ddd0a4@ti.com>
+ <20160916173620.GB10189@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160916173620.GB10189@sirena.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Keerthy <j-keerthy@ti.com>, lee.jones@linaro.org, tony@atomide.com, dmitry.torokhov@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-input@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, t-kristo@ti.com, russ.dill@ti.com, d-gerlach@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Control power domain for eMMC via genpd to reduce power consumption.
-
-Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Reviewed-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-
----
-
-Changes in v3: None
-Changes in v2:
-- add Shawn's review-tag and Doug's review-tag
-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 76b2864..13905ce 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -269,6 +269,7 @@
- 		#clock-cells = <0>;
- 		phys = <&emmc_phy>;
- 		phy-names = "phy_arasan";
-+		power-domains = <&power RK3399_PD_EMMC>;
- 		status = "disabled";
- 	};
- 
-@@ -690,6 +691,11 @@
- 		status = "disabled";
- 	};
- 
-+	qos_emmc: qos@ffa58000 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffa58000 0x0 0x20>;
-+	};
-+
- 	qos_gmac: qos@ffa5c000 {
- 		compatible = "syscon";
- 		reg = <0x0 0xffa5c000 0x0 0x20>;
-@@ -823,6 +829,11 @@
- 			};
- 
- 			/* These power domains are grouped by VD_LOGIC */
-+			pd_emmc@RK3399_PD_EMMC {
-+				reg = <RK3399_PD_EMMC>;
-+				clocks = <&cru ACLK_EMMC>;
-+				pm_qos = <&qos_emmc>;
-+			};
- 			pd_gmac@RK3399_PD_GMAC {
- 				reg = <RK3399_PD_GMAC>;
- 				clocks = <&cru ACLK_GMAC>;
--- 
-2.9.2
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Friday 16 September 2016 11:06 PM, Mark Brown wrote:
+> On Fri, Sep 16, 2016 at 09:51:38PM +0530, Keerthy wrote:
+>> On Friday 16 September 2016 07:01 PM, Mark Brown wrote:
+>>> On Fri, Sep 16, 2016 at 05:12:38PM +0530, Keerthy wrote:
+>
+>>>> Should i repost this series? I do not see this series in linux-next yet.
+>
+>>> Please don't send content free pings and please allow a reasonable time
+>>> for review.  People get busy, go on holiday, attend conferences and so
+>
+>> I should have been clearer.
+>> The last Lee Jones conveyed that:
+>
+>> "I can't take this series yet, since it relies on a change which was
+>> taken into Mark's Regulator tree"
+>
+>> https://lkml.org/lkml/2016/8/31/312
+>
+>> So wanted to check if i needed to re-base/repost this series again.
+>> Sorry about the confusion i think that is because of $Subject goof up in the
+>> 0th patch of the series.
+>
+> I'm afraid I've no real idea what this series is about or what patches
+> it might depend on, sorry.  If you're waiting for me to do something
+> you'll need to tell me what it is but if it's a dependency that needs
+> cross merging then reposting this series isn't going to be needed.
+
+The series cleans up mainly the regulator driver and implements
+the device tree parsing using the regulator framework. Removes
+all the redundant compatibles for the individual regulators.
+Adds platform_device_id table for the gpio and power button modules.
+
+This has been reviewed extensively.
+
+Looks like v7 no longer applies directly on the linux-next branch as it 
+conflicts with:
+
+https://kernel.googlesource.com/pub/scm/linux/kernel/git/dtor/input/+/722dc54628ca5cffd3b4581b523775aa422b55df
+
+I will rebase and repost on the current linux-next and post v8.
+
+>
