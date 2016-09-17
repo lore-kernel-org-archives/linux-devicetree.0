@@ -1,98 +1,88 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 1/2] Documentation: mmc: sdhci-of-arasan: add
- description of power domain
-Date: Sat, 17 Sep 2016 11:09:15 +0200
-Message-ID: <CAPDyKFo6332LYwLk8xBz8aNQiLC+FEc5-1yY-jHPMm2ReXC=bQ@mail.gmail.com>
-References: <20160917023250.1159-1-xzy.xu@rock-chips.com> <20160917023250.1159-2-xzy.xu@rock-chips.com>
- <1516490.mHlkLq5CeM@phil>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: [PATCH] drm/panel: simple: add support for Sharp LQ150X1LG11 panels
+Date: Sat, 17 Sep 2016 11:28:37 +0200
+Message-ID: <1474104517-16874-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1516490.mHlkLq5CeM@phil>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Ziyuan Xu <xzy.xu@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-mmc <linux-mmc@vger.kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, Doug Anderson <dianders@chromium.org>, zhangqing <zhangqing@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Gustaf=20Lindstr=C3=B6m?= <gl-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17 September 2016 at 11:01, Heiko Stuebner <heiko@sntech.de> wrote:
-> Hi,
->
-> Am Samstag, 17. September 2016, 10:32:49 CEST schrieb Ziyuan Xu:
->> Add power domain as a optional property for sdhci-of-arasan, which can
->> be turned off in the so-called unused condition, such as suspend and
->> remove. Aim to lower power requirements.
->>
->> Signed-off-by: Ziyuan Xu <xzy.xu@rock-chips.com>
->>
->> Acked-by: Rob Herring <robh@kernel.org>
->
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
->
-> @Ulf: I guess you'll take this binding change through the mmc tree and I'll
-> pick up the devicetree change.
+The Sharp 15" LQ150X1LG11 panel is an XGA TFT LCD panel.
 
-Ideally the documentation and DT change should go together, so I think
-it's better for you to pick up both.
+Signed-off-by: Gustaf Lindström <gl-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+---
+ .../bindings/display/panel/sharp,lq150x1lg11.txt   |  7 ++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
 
-I intend to ack it, although it would be nice with some more
-information as I requested, in the change-log first.
+diff --git a/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt b/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
+new file mode 100644
+index 000000000000..014428c984c8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
+@@ -0,0 +1,7 @@
++Sharp 15" LQ150X1LG11 XGA TFT LCD panel
++
++Required properties:
++- compatible: should be "sharp,lq150x1lg11"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 85143d1b9b31..58cfe0a7a9d6 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1386,6 +1386,30 @@ static const struct panel_desc sharp_lq123p1jx31 = {
+ 	},
+ };
+ 
++static const struct drm_display_mode sharp_lq150x1lg11_mode = {
++	.clock = 71100,
++	.hdisplay = 1024,
++	.hsync_start = 1024 + 168,
++	.hsync_end = 1024 + 168 + 64,
++	.htotal = 1024 + 168 + 64 + 88,
++	.vdisplay = 768,
++	.vsync_start = 768 + 37,
++	.vsync_end = 768 + 37 + 2,
++	.vtotal = 768 + 37 + 2 + 8,
++	.vrefresh = 60,
++};
++
++static const struct panel_desc sharp_lq150x1lg11 = {
++	.modes = &sharp_lq150x1lg11_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 304,
++		.height = 228,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB565_1X16,
++};
++
+ static const struct drm_display_mode shelly_sca07010_bfn_lnn_mode = {
+ 	.clock = 33300,
+ 	.hdisplay = 800,
+@@ -1641,6 +1665,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "sharp,lq123p1jx31",
+ 		.data = &sharp_lq123p1jx31,
+ 	}, {
++		.compatible = "sharp,lq150x1lg11",
++		.data = &sharp_lq150x1lg11,
++	}, {
+ 		.compatible = "shelly,sca07010-bfn-lnn",
+ 		.data = &shelly_sca07010_bfn_lnn,
+ 	}, {
+-- 
+2.1.4
 
-Kind regards
-Uffe
-
->
->
-> Heiko
->
->> ---
->>
->> Changes in v3:
->> - fix a typo
->> - add Rob's ack-tag
->>
->> Changes in v2:
->> - fix a typo
->> - add an example code for power-domain
->>
->>  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 7 ++++++-
->>  1 file changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->> b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt index
->> 3404afa..eb84d29 100644
->> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->> @@ -1,12 +1,14 @@
->>  Device Tree Bindings for the Arasan SDHCI Controller
->>
->> -  The bindings follow the mmc[1], clock[2], interrupt[3] and phy[4]
->> bindings. +  The bindings follow the mmc[1], clock[2], interrupt[3], phy[4]
->> and power +  domain[5] bindings.
->>    Only deviations are documented here.
->>
->>    [1] Documentation/devicetree/bindings/mmc/mmc.txt
->>    [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
->>    [3] Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->> [4] Documentation/devicetree/bindings/phy/phy-bindings.txt
->> +  [5] Documentation/devicetree/bindings/power/power_domain.txt
->>
->>  Required Properties:
->>    - compatible: Compatibility string.  One of:
->> @@ -36,6 +38,8 @@ Optional Properties:
->>    - #clock-cells: If specified this should be the value <0>.  With this
->> property in place we will export a clock representing the Card Clock.  This
->> clock is expected to be consumed by our PHY.  You must also specify +  -
->> power-domains: A phandle and PM domain as specifier defined by bindings +
->>  of the power controller specified by phandle.
->>
->>  Example:
->>       sdhci@e0100000 {
->> @@ -71,5 +75,6 @@ Example:
->>               phys = <&emmc_phy>;
->>               phy-names = "phy_arasan";
->>               #clock-cells = <0>;
->> +             power-domains = <&power RK3399_PD_EMMC>;
->>               status = "disabled";
->>       };
->
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
