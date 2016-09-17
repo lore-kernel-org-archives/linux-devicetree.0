@@ -1,42 +1,32 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH RFC 1/8] ARM: shmobile: r8a7743: add clock index macros
-Date: Sat, 17 Sep 2016 13:15:45 +0300
-Message-ID: <a3658cea-b31e-0c29-4c4d-2b9cd4644f18@cogentembedded.com>
-References: <3533019.Wim1Kuh1ic@wasted.cogentembedded.com>
- <17982632.cAVaBDUq2Q@wasted.cogentembedded.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH] drm/panel: simple: add support for Sharp LQ150X1LG11
+ panels
+Date: Sat, 17 Sep 2016 11:33:28 +0200
+Message-ID: <0fd027ea-2445-eaad-bb9f-c53e4fe487bb@axentia.se>
+References: <1474104517-16874-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <17982632.cAVaBDUq2Q@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1474104517-16874-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Gustaf_Lindstr=c3=b6m?= <gl-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/16/2016 4:28 PM, Sergei Shtylyov wrote:
+On 2016-09-17 11:28, Peter Rosin wrote:
+> The Sharp 15" LQ150X1LG11 panel is an XGA TFT LCD panel.
+> 
+> Signed-off-by: Gustaf Lindström <gl-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 
-> Add macros usable by the device tree sources to reference the R8A7743
-> clocks  by index.
->
-> Based on the original (and large) patch by Dmitry Shifrin
-> <dmitry.shifrin@cogentembedded.com>.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
-> ---
->  include/dt-bindings/clock/r8a7743-clock.h |  157 ++++++++++++++++++++++++++++++
->  1 file changed, 157 insertions(+)
->
-> Index: renesas/include/dt-bindings/clock/r8a7743-clock.h
-> ===================================================================
-> --- /dev/null
-> +++ renesas/include/dt-bindings/clock/r8a7743-clock.h
-> @@ -0,0 +1,157 @@
-> +/*
-> + * Copyright 2013 Ideas On Board SPRL
+Oh, crap, I'm not the author of this, I just touched up
+some trivial things. I'll resend shortly...
 
-    Sorry, stupid copy/paste mistake, should have Cogent's copyright. Will 
-re-spin soon...
+Cheers,
+Peter
 
-MBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
