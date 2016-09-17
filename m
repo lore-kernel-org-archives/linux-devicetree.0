@@ -1,42 +1,91 @@
-From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] arm: dts: imx6qdl-wandboard-revb: Fix "ERROR: trailing whitespace"
-Date: Sat, 17 Sep 2016 13:25:26 +0530
-Message-ID: <1474098926-5236-3-git-send-email-jagan@amarulasolutions.com>
-References: <1474098926-5236-1-git-send-email-jagan@amarulasolutions.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474098926-5236-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 1/2] Documentation: mmc: sdhci-of-arasan: add
+ description of power domain
+Date: Sat, 17 Sep 2016 10:49:56 +0200
+Message-ID: <CAPDyKFrgdsppLg9RkCsSh4nhjUiJR6D4u+E8qnzfbtNxhwLOmw@mail.gmail.com>
+References: <20160917023250.1159-1-xzy.xu@rock-chips.com> <20160917023250.1159-2-xzy.xu@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20160917023250.1159-2-xzy.xu@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ziyuan Xu <xzy.xu@rock-chips.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-mmc <linux-mmc@vger.kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, Doug Anderson <dianders@chromium.org>, zhangqing <zhangqing@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+On 17 September 2016 at 04:32, Ziyuan Xu <xzy.xu@rock-chips.com> wrote:
+> Add power domain as a optional property for sdhci-of-arasan, which can
+> be turned off in the so-called unused condition, such as suspend and
+> remove. Aim to lower power requirements.
 
-Fixed error in trailing whitespace in wandboard-rev1 dtsi.
+I assume runtime suspend make sense as well?
 
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-wandboard-revb1.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Moreover, perhaps you could share a little information here about what
+needs to be done at the driver level which controls the mmc IP. More
+precisely, what do you need to do at runtime_suspend, suspend,
+runtime_resume, and resume?
 
-diff --git a/arch/arm/boot/dts/imx6qdl-wandboard-revb1.dtsi b/arch/arm/boot/dts/imx6qdl-wandboard-revb1.dtsi
-index ef7fa62..a320891 100644
---- a/arch/arm/boot/dts/imx6qdl-wandboard-revb1.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-wandboard-revb1.dtsi
-@@ -28,7 +28,7 @@
- 				MX6QDL_PAD_EIM_D29__GPIO3_IO29		0x80000000	/* RGMII_nRST */
- 				MX6QDL_PAD_EIM_DA13__GPIO3_IO13		0x80000000	/* BT_ON */
- 				MX6QDL_PAD_EIM_DA14__GPIO3_IO14		0x80000000	/* BT_WAKE */
--				MX6QDL_PAD_EIM_DA15__GPIO3_IO15		0x80000000	/* BT_HOST_WAKE */				
-+				MX6QDL_PAD_EIM_DA15__GPIO3_IO15		0x80000000	/* BT_HOST_WAKE */
- 			>;
- 		};
- 	};
--- 
-2.7.4
+Kind regards
+Uffe
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Signed-off-by: Ziyuan Xu <xzy.xu@rock-chips.com>
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>
+> Changes in v3:
+> - fix a typo
+> - add Rob's ack-tag
+>
+> Changes in v2:
+> - fix a typo
+> - add an example code for power-domain
+>
+>  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> index 3404afa..eb84d29 100644
+> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> @@ -1,12 +1,14 @@
+>  Device Tree Bindings for the Arasan SDHCI Controller
+>
+> -  The bindings follow the mmc[1], clock[2], interrupt[3] and phy[4] bindings.
+> +  The bindings follow the mmc[1], clock[2], interrupt[3], phy[4] and power
+> +  domain[5] bindings.
+>    Only deviations are documented here.
+>
+>    [1] Documentation/devicetree/bindings/mmc/mmc.txt
+>    [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
+>    [3] Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>    [4] Documentation/devicetree/bindings/phy/phy-bindings.txt
+> +  [5] Documentation/devicetree/bindings/power/power_domain.txt
+>
+>  Required Properties:
+>    - compatible: Compatibility string.  One of:
+> @@ -36,6 +38,8 @@ Optional Properties:
+>    - #clock-cells: If specified this should be the value <0>.  With this property
+>      in place we will export a clock representing the Card Clock.  This clock
+>      is expected to be consumed by our PHY.  You must also specify
+> +  - power-domains: A phandle and PM domain as specifier defined by bindings
+> +    of the power controller specified by phandle.
+>
+>  Example:
+>         sdhci@e0100000 {
+> @@ -71,5 +75,6 @@ Example:
+>                 phys = <&emmc_phy>;
+>                 phy-names = "phy_arasan";
+>                 #clock-cells = <0>;
+> +               power-domains = <&power RK3399_PD_EMMC>;
+>                 status = "disabled";
+>         };
+> --
+> 2.9.2
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
