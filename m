@@ -1,121 +1,162 @@
-From: Po Liu <po.liu-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v5 3/3] pci:aer: add support aer interrupt with none
- MSI/MSI-X/INTx mode
-Date: Sun, 18 Sep 2016 03:37:27 +0000
-Message-ID: <VI1PR0401MB1709F91B0C1EB6C80D741E4492F50@VI1PR0401MB1709.eurprd04.prod.outlook.com>
-References: <1472625442-23309-2-git-send-email-po.liu@nxp.com>
- <1473741659-17618-1-git-send-email-po.liu@nxp.com>
- <1473741659-17618-3-git-send-email-po.liu@nxp.com>
- <20160918005212.GF15478@tiger>
+From: zhichang <zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3 1/4] ARM64 LPC: Indirect ISA port IO introduced
+Date: Sun, 18 Sep 2016 11:38:45 +0800
+Message-ID: <9ffcda2a-9a2b-7151-dfd9-e2bf6594c842@gmail.com>
+References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
+ <8337589.pzGt0MZ9xn@wuerfel> <57D95BBC.9030405@hisilicon.com>
+ <5264074.nuyDhEuOR4@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160918005212.GF15478@tiger>
-Content-Language: en-US
+In-Reply-To: <5264074.nuyDhEuOR4@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Zang <roy.zang-3arQi8VN3Tc@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "M.H. Lian" <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "zhichang.yuan" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, minyard-HInyCGIudOg@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, kantyzc-9Onoh4P/yGk@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2hhd24sDQoNCg0KPiAgLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gIEZyb206IFNo
-YXduIEd1byBbbWFpbHRvOnNoYXduZ3VvQGtlcm5lbC5vcmddDQo+ICBTZW50OiBTdW5kYXksIFNl
-cHRlbWJlciAxOCwgMjAxNiA4OjUyIEFNDQo+ICBUbzogUG8gTGl1DQo+ICBDYzogbGludXgtcGNp
-QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0K
-PiAgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7IFJveSBaYW5nOyBBcm5kDQo+ICBCZXJnbWFubjsgTWFyYyBaeW5naWVyOyBTdHVhcnQgWW9k
-ZXI7IExlbyBMaTsgTS5ILiBMaWFuOyBNdXJhbGkNCj4gIEthcmljaGVyaTsgQmpvcm4gSGVsZ2Fh
-czsgTWluZ2thaSBIdQ0KPiAgU3ViamVjdDogUmU6IFtQQVRDSCB2NSAzLzNdIHBjaTphZXI6IGFk
-ZCBzdXBwb3J0IGFlciBpbnRlcnJ1cHQgd2l0aCBub25lDQo+ICBNU0kvTVNJLVgvSU5UeCBtb2Rl
-DQo+ICANCj4gIE9uIFR1ZSwgU2VwIDEzLCAyMDE2IGF0IDEyOjQwOjU5UE0gKzA4MDAsIFBvIExp
-dSB3cm90ZToNCj4gID4gT24gc29tZSBwbGF0Zm9ybXMsIHJvb3QgcG9ydCBkb2Vzbid0IHN1cHBv
-cnQgTVNJL01TSS1YL0lOVHggaW4gUkMgbW9kZS4NCj4gID4gV2hlbiBjaGlwIHN1cHBvcnQgdGhl
-IGFlciBpbnRlcnJ1cHQgd2l0aCBub25lIE1TSS9NU0ktWC9JTlR4IG1vZGUsDQo+ICA+IG1heWJl
-IHRoZXJlIGlzIGludGVycnVwdCBsaW5lIGZvciBhZXIgcG1lIGV0Yy4gU2VhcmNoIHRoZSBpbnRl
-cnJ1cHQNCj4gID4gbnVtYmVyIGluIHRoZSBmZHQgZmlsZS4gVGhlbiBmaXh1cCB0aGUgZGV2LT5p
-cnEgd2l0aCBpdC4NCj4gID4NCj4gID4gU2lnbmVkLW9mZi1ieTogUG8gTGl1IDxwby5saXVAbnhw
-LmNvbT4NCj4gIA0KPiAgV2lsbCB0aGUgbmV3IGtlcm5lbCB3b3JrIHdpdGggZXhpc3Rpbmcvb2xk
-IERUQj8gIEknbSB0cnlpbmcgdG8NCj4gIHVuZGVyc3RhbmQgdGhlIGRlcGVuZGVuY3kgYmV0d2Vl
-biBkcml2ZXIgYW5kIERUUyBjaGFuZ2VzLg0KDQpZZXMsIFdlJ3ZlIG5ldmVyIHVzZSBuYW1lICdp
-bnRyJyBiZWZvcmUuIFNvIHdlIHJlbW92ZSBpdCBpcyBvay4gDQonYWVyJyBpcyBhIGR0cyBuYW1l
-IGZvciByZXNlYXJjaGluZyBpdCdzIHRydWUgaW50ZXJydXB0IG51bWJlciBieSBrZXJuZWwuIFRo
-aXMgcGF0Y2ggaXMgZmlyc3QgdGltZSB0byB1c2UgbmFtZSAnYWVyJy4gU28gaXQgbXVzdCBiZSBj
-b21wYXRpYmxlIHdpdGggZXhpc3Rpbmcvb2xkIERUQi4NCg0KPiAgDQo+ICBTaGF3bg0KPiAgDQo+
-ICA+IC0tLQ0KPiAgPiBjaGFuZ2VzIGZvciB2NToNCj4gID4gCS0gQWRkIGNsZWFyICdhZXInIGlu
-dGVycnVwLW5hbWVzIGRlc2NyaXB0aW9uDQo+ICA+DQo+ICA+ICAuLi4vZGV2aWNldHJlZS9iaW5k
-aW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0ICAgICB8IDExICsrKysrLS0tDQo+ICA+ICBkcml2
-ZXJzL3BjaS9wY2llL3BvcnRkcnZfY29yZS5jICAgICAgICAgICAgICAgICAgICB8IDMxDQo+ICAr
-KysrKysrKysrKysrKysrKysrLS0tDQo+ICA+ICAyIGZpbGVzIGNoYW5nZWQsIDM1IGluc2VydGlv
-bnMoKyksIDcgZGVsZXRpb25zKC0pDQo+ICA+DQo+ICA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLnR4dA0KPiAgPiBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+
-ICA+IGluZGV4IDQxZTlmNTUuLjEwMWQwYTcgMTAwNjQ0DQo+ICA+IC0tLSBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+ICA+ICsrKyBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0
-DQo+ICA+IEBAIC0xOCw4ICsxOCwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAgPiAgLSBy
-ZWc6IGJhc2UgYWRkcmVzc2VzIGFuZCBsZW5ndGhzIG9mIHRoZSBQQ0llIGNvbnRyb2xsZXINCj4g
-ID4gIC0gaW50ZXJydXB0czogQSBsaXN0IG9mIGludGVycnVwdCBvdXRwdXRzIG9mIHRoZSBjb250
-cm9sbGVyLiBNdXN0DQo+ICBjb250YWluIGFuDQo+ICA+ICAgIGVudHJ5IGZvciBlYWNoIGVudHJ5
-IGluIHRoZSBpbnRlcnJ1cHQtbmFtZXMgcHJvcGVydHkuDQo+ICA+IC0tIGludGVycnVwdC1uYW1l
-czogTXVzdCBpbmNsdWRlIHRoZSBmb2xsb3dpbmcgZW50cmllczoNCj4gID4gLSAgImludHIiOiBU
-aGUgaW50ZXJydXB0IHRoYXQgaXMgYXNzZXJ0ZWQgZm9yIGNvbnRyb2xsZXIgaW50ZXJydXB0cw0K
-PiAgPiArLSBpbnRlcnJ1cHQtbmFtZXM6IEl0IG1heSBiZSBpbmNsdWRlIHRoZSBmb2xsb3dpbmcg
-ZW50cmllczoNCj4gID4gKyAgImFlciI6IFRoZSBpbnRlcnJ1cHQgdGhhdCBpcyBhc3NlcnRlZCBm
-b3IgYWVyIGludGVycnVwdA0KPiAgPiArICAicG1lIjogVGhlIGludGVycnVwdCB0aGF0IGlzIGFz
-c2VydGVkIGZvciBwbWUgaW50ZXJydXB0DQo+ICA+ICsgIC4uLi4uLg0KPiAgPiAgLSBmc2wscGNp
-ZS1zY2ZnOiBNdXN0IGluY2x1ZGUgdHdvIGVudHJpZXMuDQo+ICA+ICAgIFRoZSBmaXJzdCBlbnRy
-eSBtdXN0IGJlIGEgbGluayB0byB0aGUgU0NGRyBkZXZpY2Ugbm9kZQ0KPiAgPiAgICBUaGUgc2Vj
-b25kIGVudHJ5IG11c3QgYmUgJzAnIG9yICcxJyBiYXNlZCBvbiBwaHlzaWNhbCBQQ0llDQo+ICBj
-b250cm9sbGVyIGluZGV4Lg0KPiAgPiBAQCAtMzUsOCArMzcsOSBAQCBFeGFtcGxlOg0KPiAgPiAg
-CQlyZWcgPSA8MHgwMCAweDAzNDAwMDAwIDB4MCAweDAwMDEwMDAwICAgLyogY29udHJvbGxlcg0K
-PiAgcmVnaXN0ZXJzICovDQo+ICA+ICAJCSAgICAgICAweDQwIDB4MDAwMDAwMDAgMHgwIDB4MDAw
-MDIwMDA+OyAvKiBjb25maWd1cmF0aW9uDQo+ICBzcGFjZSAqLw0KPiAgPiAgCQlyZWctbmFtZXMg
-PSAicmVncyIsICJjb25maWciOw0KPiAgPiAtCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTc3IElS
-UV9UWVBFX0xFVkVMX0hJR0g+OyAvKg0KPiAgY29udHJvbGxlciBpbnRlcnJ1cHQgKi8NCj4gID4g
-LQkJaW50ZXJydXB0LW5hbWVzID0gImludHIiOw0KPiAgPiArCQlpbnRlcnJ1cHRzID0gPEdJQ19T
-UEkgMTc2IElSUV9UWVBFX0xFVkVMX0hJR0g+LCAvKiBhZXINCj4gIGludGVycnVwdCAqLw0KPiAg
-PiArCQkJPEdJQ19TUEkgMTc3IElSUV9UWVBFX0xFVkVMX0hJR0g+OyAvKiBwbWUgaW50ZXJydXB0
-ICovDQo+ICA+ICsJCWludGVycnVwdC1uYW1lcyA9ICJhZXIiLCAicG1lIjsNCj4gID4gIAkJZnNs
-LHBjaWUtc2NmZyA9IDwmc2NmZyAwPjsNCj4gID4gIAkJI2FkZHJlc3MtY2VsbHMgPSA8Mz47DQo+
-ICA+ICAJCSNzaXplLWNlbGxzID0gPDI+Ow0KPiAgPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kv
-cGNpZS9wb3J0ZHJ2X2NvcmUuYw0KPiAgPiBiL2RyaXZlcnMvcGNpL3BjaWUvcG9ydGRydl9jb3Jl
-LmMgaW5kZXggZTkyNzBiNC4uN2M0OTQzZCAxMDA2NDQNCj4gID4gLS0tIGEvZHJpdmVycy9wY2kv
-cGNpZS9wb3J0ZHJ2X2NvcmUuYw0KPiAgPiArKysgYi9kcml2ZXJzL3BjaS9wY2llL3BvcnRkcnZf
-Y29yZS5jDQo+ICA+IEBAIC0xNiw2ICsxNiw3IEBADQo+ICA+ICAjaW5jbHVkZSA8bGludXgvc2xh
-Yi5oPg0KPiAgPiAgI2luY2x1ZGUgPGxpbnV4L3BjaWVwb3J0X2lmLmg+DQo+ICA+ICAjaW5jbHVk
-ZSA8bGludXgvYWVyLmg+DQo+ICA+ICsjaW5jbHVkZSA8bGludXgvb2ZfaXJxLmg+DQo+ICA+DQo+
-ICA+ICAjaW5jbHVkZSAiLi4vcGNpLmgiDQo+ICA+ICAjaW5jbHVkZSAicG9ydGRydi5oIg0KPiAg
-PiBAQCAtMjAwLDYgKzIwMSwyOCBAQCBzdGF0aWMgaW50IHBjaWVfcG9ydF9lbmFibGVfbXNpeChz
-dHJ1Y3QgcGNpX2Rldg0KPiAgPiAqZGV2LCBpbnQgKnZlY3RvcnMsIGludCBtYXNrKSAgc3RhdGlj
-IGludCBpbml0X3NlcnZpY2VfaXJxcyhzdHJ1Y3QNCj4gID4gcGNpX2RldiAqZGV2LCBpbnQgKmly
-cXMsIGludCBtYXNrKSAgew0KPiAgPiAgCWludCBpLCBpcnEgPSAtMTsNCj4gID4gKwlpbnQgcmV0
-Ow0KPiAgPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBOVUxMOw0KPiAgPiArDQo+ICA+ICsJ
-Zm9yIChpID0gMDsgaSA8IFBDSUVfUE9SVF9ERVZJQ0VfTUFYU0VSVklDRVM7IGkrKykNCj4gID4g
-KwkJaXJxc1tpXSA9IDA7DQo+ICA+ICsNCj4gID4gKwlpZiAoZGV2LT5idXMtPmRldi5vZl9ub2Rl
-KQ0KPiAgPiArCQlucCA9IGRldi0+YnVzLT5kZXYub2Zfbm9kZTsNCj4gID4gKw0KPiAgPiArCS8q
-IElmIHJvb3QgcG9ydCBkb2Vzbid0IHN1cHBvcnQgTVNJL01TSS1YL0lOVHggaW4gUkMgbW9kZSwN
-Cj4gID4gKwkgKiByZXF1ZXN0IGlycSBmb3IgYWVyDQo+ICA+ICsJICovDQo+ICA+ICsJaWYgKElT
-X0VOQUJMRUQoQ09ORklHX09GX0lSUSkgJiYgbnAgJiYNCj4gID4gKwkJCShtYXNrICYgUENJRV9Q
-T1JUX1NFUlZJQ0VfUE1FKSkgew0KPiAgPiArCQlyZXQgPSBvZl9pcnFfZ2V0X2J5bmFtZShucCwg
-ImFlciIpOw0KPiAgPiArCQlpZiAocmV0ID4gMCkgew0KPiAgPiArCQkJaXJxc1tQQ0lFX1BPUlRf
-U0VSVklDRV9BRVJfU0hJRlRdID0gcmV0Ow0KPiAgPiArCQkJaWYgKGRldi0+aXJxKQ0KPiAgPiAr
-CQkJCWlycSA9IGRldi0+aXJxOw0KPiAgPiArCQkJZ290byBub19tc2k7DQo+ICA+ICsJCX0NCj4g
-ID4gKwl9DQo+ICA+DQo+ICA+ICAJLyoNCj4gID4gIAkgKiBJZiBNU0kgY2Fubm90IGJlIHVzZWQg
-Zm9yIFBDSWUgUE1FIG9yIGhvdHBsdWcsIHdlIGhhdmUgdG8gdXNlDQo+ICBAQA0KPiAgPiAtMjI1
-LDExICsyNDgsMTMgQEAgc3RhdGljIGludCBpbml0X3NlcnZpY2VfaXJxcyhzdHJ1Y3QgcGNpX2Rl
-diAqZGV2LA0KPiAgaW50ICppcnFzLCBpbnQgbWFzaykNCj4gID4gIAkJaXJxID0gZGV2LT5pcnE7
-DQo+ICA+DQo+ICA+ICAgbm9fbXNpOg0KPiAgPiAtCWZvciAoaSA9IDA7IGkgPCBQQ0lFX1BPUlRf
-REVWSUNFX01BWFNFUlZJQ0VTOyBpKyspDQo+ICA+IC0JCWlycXNbaV0gPSBpcnE7DQo+ICA+ICsJ
-Zm9yIChpID0gMDsgaSA8IFBDSUVfUE9SVF9ERVZJQ0VfTUFYU0VSVklDRVM7IGkrKykgew0KPiAg
-PiArCQlpZiAoIWlycXNbaV0pDQo+ICA+ICsJCQlpcnFzW2ldID0gaXJxOw0KPiAgPiArCX0NCj4g
-ID4gIAlpcnFzW1BDSUVfUE9SVF9TRVJWSUNFX1ZDX1NISUZUXSA9IC0xOw0KPiAgPg0KPiAgPiAt
-CWlmIChpcnEgPCAwKQ0KPiAgPiArCWlmIChpcnEgPCAwICYmIGlycXNbUENJRV9QT1JUX1NFUlZJ
-Q0VfQUVSX1NISUZUXSA8IDApDQo+ICA+ICAJCXJldHVybiAtRU5PREVWOw0KPiAgPiAgCXJldHVy
-biAwOw0KPiAgPiAgfQ0KPiAgPiAtLQ0KPiAgPiAyLjEuMC4yNy5nOTZkYjMyNA0KPiAgPg0KPiAg
-Pg0KPiAgPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0K
-PiAgPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdA0KPiAgPiBsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gID4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsDQo=
+Hi, Arnd,
+
+
+On 2016年09月14日 22:23, Arnd Bergmann wrote:
+> On Wednesday, September 14, 2016 10:16:28 PM CEST zhichang.yuan wrote:
+>>>
+>>> No need to guard includes with an #ifdef.
+>> If remove #ifdef here, extio.h should not contain any function external declarations whose definitions are in
+>> extio.c compiled only when CONFIG_ARM64_INDIRECT_PIO is yes.
+>  
+> There is no problem with making declarations visible for functions that
+> are not part of the kernel, we do that all the time.
+> 
+>>>> +#define BUILDS_RW(bwl, type)                                                \
+>>>> +static inline void reads##bwl(const volatile void __iomem *addr,    \
+>>>> +                            void *buffer, unsigned int count)       \
+>>>> +{                                                                   \
+>>>> +    if (count) {                                                    \
+>>>> +            type *buf = buffer;                                     \
+>>>> +                                                                    \
+>>>> +            do {                                                    \
+>>>> +                    type x = __raw_read##bwl(addr);                 \
+>>>> +                    *buf++ = x;                                     \
+>>>> +            } while (--count);                                      \
+>>>> +    }                                                               \
+>>>> +}                                                                   \
+>>>> +                                                                    \
+>>>> +static inline void writes##bwl(volatile void __iomem *addr,         \
+>>>> +                            const void *buffer, unsigned int count) \
+>>>> +{                                                                   \
+>>>> +    if (count) {                                                    \
+>>>> +            const type *buf = buffer;                               \
+>>>> +                                                                    \
+>>>> +            do {                                                    \
+>>>> +                    __raw_write##bwl(*buf++, addr);                 \
+>>>> +            } while (--count);                                      \
+>>>> +    }                                                               \
+>>>> +}
+>>>> +
+>>>> +BUILDS_RW(b, u8)
+>>>
+>>> Why is this in here?
+>> the readsb/writesb are defined in asm-generic/io.h which is included later, but the redefined insb/outsb need
+>> to call them. Without these readsb/writesb definition before insb/outsb redefined, compile error occur.
+>>
+>> It seems that copy all the definitions of "asm-generic/io.h" is not a good idea, so I move the definitions of
+>> those function needed here....
+>>
+>> Ok. I think your idea below defining in(s)/out(s) in a c file can solve this issue.
+>>
+>> #ifdef CONFIG_ARM64_INDIRECT_PIO
+>> #define inb inb
+>> extern u8 inb(unsigned long addr);
+>>
+>> #define outb outb
+>> extern void outb(u8 value, unsigned long addr);
+>>
+>> #define insb insb
+>> extern void insb(unsigned long addr, void *buffer, unsigned int count);
+>>
+>> #define outsb outsb
+>> extern void outsb(unsigned long addr, const void *buffer, unsigned int count);
+>> #endif
+>>
+>> and definitions of all these functions are in extio.c :
+>>
+>> u8 inb(unsigned long addr)
+>> {
+>>         if (!arm64_extio_ops || arm64_extio_ops->start > addr ||
+>>                         arm64_extio_ops->end < addr)
+>>                 return readb(PCI_IOBASE + addr);
+>>         else
+>>                 return arm64_extio_ops->pfin ?
+>>                         arm64_extio_ops->pfin(arm64_extio_ops->devpara,
+>>                                 addr + arm64_extio_ops->ptoffset, NULL,
+>>                                 sizeof(u8), 1) : -1;
+>> }
+>> .....
+> 
+> Yes, sounds good.
+> 
+>>>> @@ -149,6 +185,60 @@ static inline u64 __raw_readq(const volatile void __iomem *addr)
+>>>>  #define IO_SPACE_LIMIT              (PCI_IO_SIZE - 1)
+>>>>  #define PCI_IOBASE          ((void __iomem *)PCI_IO_START)
+>>>>  
+>>>> +
+>>>> +/*
+>>>> + * redefine the in(s)b/out(s)b for indirect-IO.
+>>>> + */
+>>>> +#define inb inb
+>>>> +static inline u8 inb(unsigned long addr)
+>>>> +{
+>>>> +#ifdef CONFIG_ARM64_INDIRECT_PIO
+>>>> +    if (arm64_extio_ops && arm64_extio_ops->start <= addr &&
+>>>> +                    addr <= arm64_extio_ops->end)
+>>>> +            return extio_inb(addr);
+>>>> +#endif
+>>>> +    return readb(PCI_IOBASE + addr);
+>>>> +}
+>>>> +
+>>>
+>>> Looks ok, but you only seem to do this for the 8-bit
+>>> accessors, when it should be done for 16-bit and 32-bit
+>>> ones as well for consistency.
+>> Hip06 LPC only support 8-bit I/O operations on the designated port.
+> 
+> That is an interesting limitation. Maybe still call the extio operations
+> and have them do WARN_ON_ONCE() instead?
+> 
+> If you get a driver that calls inw/outw on the range that is owned
+> by the LPC bus, you otherwise get an unhandled page fault in kernel
+> space, which is not as nice.
+> 
+Yes. It probably cause kernel panic.
+Will define the extio operations for other IO length and add the corresponding WARNINGS.
+
+Best,
+Zhichang
+
+
+>>>> diff --git a/drivers/bus/extio.c b/drivers/bus/extio.c
+>>>> new file mode 100644
+>>>> index 0000000..1e7a9c5
+>>>> --- /dev/null
+>>>> +++ b/drivers/bus/extio.c
+>>>> @@ -0,0 +1,66 @@
+>>>
+>>> This is in a globally visible directory
+>>>
+>>>> +
+>>>> +struct extio_ops *arm64_extio_ops;
+>>>
+>>> But the identifier uses an architecture specific prefix. Either
+>>> move the whole file into arch/arm64, or make the naming so that
+>>> it can be used for everything.
+>>
+>> I perfer to move the whole file into arch/arm64, extio.h will be moved to arch/arm64/include/asm;
+> 
+> Ok, that simplifies it a lot, you can just do everything in asm/io.h then.
+> 
+> 	Arnd
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
