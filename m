@@ -1,51 +1,82 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: [PATCH] ARM: tegra: nyan: Enable GPU node and related supply
-Date: Sun, 18 Sep 2016 16:13:11 +0200
-Message-ID: <20160918141311.17140-1-contact@paulk.fr>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+From: Randy Li <ayaka@soulik.info>
+Subject: [RFC PATCH v2 2/2] drm/panel: Add support for Chunghwa CLAA070WP03XG panel
+Date: Sun, 18 Sep 2016 22:27:39 +0800
+Message-ID: <1474208859-10045-3-git-send-email-ayaka@soulik.info>
+References: <1474208859-10045-1-git-send-email-ayaka@soulik.info>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1474208859-10045-1-git-send-email-ayaka@soulik.info>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org
+Cc: linux@armlinux.org.uk, kgene@kernel.org, krzk@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, airlied@linux.ie, a.hajda@samsung.com, devicetree@vger.kernel.org, Randy Li <ayaka@soulik.info>
 List-Id: devicetree@vger.kernel.org
 
-This enables the GPU node for tegra124 nyan boards, which is required to
-get graphics acceleration with nouveau on these devices.
+The Chunghwa CLAA070WP03XG is a 7" 1280x800 panel, which can be
+supported by the simple panel driver.
 
-Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Signed-off-by: Randy Li <ayaka@soulik.info>
 ---
- arch/arm/boot/dts/tegra124-nyan.dtsi | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ .../display/panel/chunghwa,claa070wp03xg.txt       |  7 ++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/chunghwa,claa070wp03xg.txt
 
-diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi b/arch/arm/boot/dts/tegra124-nyan.dtsi
-index dab9509..225ca77 100644
---- a/arch/arm/boot/dts/tegra124-nyan.dtsi
-+++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
-@@ -42,6 +42,12 @@
- 		};
- 	};
- 
-+	gpu@0,57000000 {
-+		status = "okay";
+diff --git a/Documentation/devicetree/bindings/display/panel/chunghwa,claa070wp03xg.txt b/Documentation/devicetree/bindings/display/panel/chunghwa,claa070wp03xg.txt
+new file mode 100644
+index 0000000..dd22685
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/chunghwa,claa070wp03xg.txt
+@@ -0,0 +1,7 @@
++Chunghwa Picture Tubes Ltd. 7" WXGA TFT LCD panel
 +
-+		vdd-supply = <&vdd_gpu>;
-+	};
++Required properties:
++- compatible: should be "chunghwa,claa070wp03xg"
 +
- 	serial@70006000 {
- 		/* Debug connector on the bottom of the board near SD card. */
- 		status = "okay";
-@@ -214,7 +220,7 @@
- 					regulator-always-on;
- 				};
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index f178998..3204e6b 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -583,6 +583,30 @@ static const struct panel_desc avic_tm070ddh03 = {
+ 	},
+ };
  
--				sd6 {
-+				vdd_gpu: sd6 {
- 					regulator-name = "+VDD_GPU_AP";
- 					regulator-min-microvolt = <650000>;
- 					regulator-max-microvolt = <1200000>;
++static const struct drm_display_mode chunghwa_claa070wp03xg_mode = {
++	.clock = 66770,
++	.hdisplay = 800,
++	.hsync_start = 800 + 49,
++	.hsync_end = 800 + 49 + 33,
++	.htotal = 800 + 49 + 33 + 17,
++	.vdisplay = 1280,
++	.vsync_start = 1280 + 1,
++	.vsync_end = 1280 + 1 + 7,
++	.vtotal = 1280 + 1 + 7 + 15,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
++};
++
++static const struct panel_desc chunghwa_claa070wp03xg = {
++	.modes = &chunghwa_claa070wp03xg_mode,
++	.num_modes = 1,
++	.bpc = 6,
++	.size = {
++		.width = 94,
++		.height = 150,
++	},
++};
++
+ static const struct drm_display_mode chunghwa_claa101wa01a_mode = {
+ 	.clock = 72070,
+ 	.hdisplay = 1366,
+@@ -1544,6 +1568,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "avic,tm070ddh03",
+ 		.data = &avic_tm070ddh03,
+ 	}, {
++		.compatible = "chunghwa,claa070wp03xg",
++		.data = &chunghwa_claa070wp03xg,
++	}, {
+ 		.compatible = "chunghwa,claa101wa01a",
+ 		.data = &chunghwa_claa101wa01a
+ 	}, {
 -- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
