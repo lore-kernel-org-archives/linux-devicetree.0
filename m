@@ -1,31 +1,86 @@
-From: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: Kill the OF_MTD Kconfig option
-Date: Sun, 18 Sep 2016 11:20:40 +0200
-Message-ID: <1bdb0d00-c28c-81dc-e458-07919cd73d96@nod.at>
-References: <1474135031-29443-1-git-send-email-boris.brezillon@free-electrons.com>
- <1474135031-29443-2-git-send-email-boris.brezillon@free-electrons.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [RFC PATCH 00/10] ARM: dts: exynos: Fix invalid GIC interrupt
+ flags
+Date: Sun, 18 Sep 2016 10:34:36 +0100
+Message-ID: <20160918103436.6af07ee9@arm.com>
+References: <1474054971-16831-1-git-send-email-krzk@kernel.org>
+        <CAGOxZ50WiEVGNKf_1_8DQiKruxY=0813dko18fPfuRqxeyud0A@mail.gmail.com>
+        <20160917175553.GA9499@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474135031-29443-2-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20160917175553.GA9499@kozik-lap>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Alim Akhtar <alim.akhtar@gmail.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Alban Browaeys <alban.browaeys@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 17.09.2016 19:57, Boris Brezillon wrote:
-> Commit d48f62b9a0a0 ("mtd: nand: move of_get_nand_xxx() helpers into
-> nand_base.c") removed the drivers/of/of_mtd.c file but did not remove
-> the associated OF_MTD Kconfig option.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Sat, 17 Sep 2016 19:55:53 +0200
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-Reviewed-by: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
+> On Sat, Sep 17, 2016 at 11:05:39PM +0530, Alim Akhtar wrote:
+> > Hi Krzysztof,
+> > 
+> > On Sat, Sep 17, 2016 at 1:12 AM, Krzysztof Kozlowski <krzk@kernel.org> wrote:  
+> > > Hi,
+> > >
+> > > Marek (internally), Geert and Alban reported errors like:
+> > >         genirq: Setting trigger mode 0 for irq 16 failed (gic_set_type+0x0/0x68)
+> > > The patchset fixes this issue.
+> > >
+> > > Tested on:
+> > > 1. Exynos4412: Odroid U3,
+> > > 2. Exynos5410: Odroid XU,
+> > > 3. Exynos5422: Odroid XU3.
+> > >  
+> > 
+> > Tested on Exynos5800 based peach-pi board, so fpr patch 06/10
+> > 
+> > Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
+> > 
+> >   
+> > > Other platforms not tested so testing would be highly appreciated.
+> > >
+> > > Best regards,
+> > > Krzysztof
+> > >
+> > > Krzysztof Kozlowski (10):
+> > >   ARM: dts: exynos: Fix invalid GIC interrupt flags in exynos4
+> > >   ARM: dts: exynos: Fix invalid GIC interrupt flags in exynos4210
+> > >   ARM: dts: exynos: Fix invalid GIC interrupt flags in exynos4x12
+> > >   ARM: dts: exynos: Fix invalid GIC interrupt flags in exynos4415
+> > >   ARM: dts: exynos: Fix invalid GIC interrupt flags in exynos3250
+> > >   ARM: dts: exynos: Fix invalid GIC interrupt flags in exynos5
+> > >   ARM: dts: exynos: Fix invalid GIC interrupt flags in exynos5250
+> > >   ARM: dts: exynos: Fix invalid GIC interrupt flags in
+> > >     exynos5410/exynos542x
+> > >   ARM: dts: exynos: Fix invalid GIC interrupt flags in exynos5260
+> > >   ARM: dts: exynos: Fix invalid GIC interrupt flags in exynos5440
+> > >  
+> > 
+> > In general these patches looks good, feel free to add my review-by tag
+> > for this series.
+> > 
+> > Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+> >   
+> 
+> Thanks, I'll add your reviewed-by to all patches.
+
+There is a couple of things that I don't like about these patches:
+
+- Are you sure that all your interrupts are level? I appreciate that's
+  a very common setting, but you seem to have simply decided that there
+  wasn't any edge interrupt. Is that a "Let's see what breaks"
+  situation? If so, It'd be good to state it.
+
+- You've used the IRQ_TYPE_LEVEL_HIGH macro everywhere, but didn't use
+  the GIC_SPI macro as the first argument of each interrupt specifier.
+  I'm by no mean a fan of these macros, but you should at least have
+  some consistency inside an interrupt specifier.
 
 Thanks,
-//richard
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+	M.
+-- 
+Jazz is not dead. It just smells funny.
