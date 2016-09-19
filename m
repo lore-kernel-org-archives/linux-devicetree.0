@@ -1,107 +1,109 @@
-From: Brendan Jackman <brendan.jackman@arm.com>
-Subject: Re: [PATCH v5 02/16] dt/bindings: Update binding for PM domain idle states
-Date: Mon, 19 Sep 2016 16:09:03 +0100
-Message-ID: <874m5cx6y8.fsf@arm.com>
-References: <1472242678-33700-1-git-send-email-lina.iyer@linaro.org> <1472242678-33700-3-git-send-email-lina.iyer@linaro.org> <0b233802-f459-c6bb-ff42-70745a225cfb@arm.com> <20160902201605.GA1705@linaro.org> <87sht59mcw.fsf@arm.com> <20160912161600.GA21885@linaro.org> <a4fc71ae-6fa5-4142-6dd4-7bc96eb20186@arm.com> <87intz665i.fsf@arm.com> <20160913193844.GB28944@linaro.org> <87h99i6b5d.fsf@arm.com> <7hpoo3ix80.fsf@baylibre.com> <7af4c2d7-70a3-1881-2980-8ea49e594e5b@arm.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/4] ARM: dts: r7s72100: add mmcif to device tree
+Date: Mon, 19 Sep 2016 17:26:47 +0200
+Message-ID: <CAMuHMdUqd4DCQsTLkZTQrxyabUH-Yj4Uroh=nKjPkccpd=B5BA@mail.gmail.com>
+References: <20160915193405.26943-1-chris.brandt@renesas.com>
+ <20160915193405.26943-3-chris.brandt@renesas.com> <CAMuHMdU6DKuxYUKNV_-FyczV-pPFpTLso=5HruWgNiXNOenVRQ@mail.gmail.com>
+ <SG2PR06MB11655B678F23E16AB93C9B008AF30@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <7af4c2d7-70a3-1881-2980-8ea49e594e5b@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Brendan Jackman <brendan.jackman@arm.com>, Lina Iyer <lina.iyer@linaro.org>, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ulf.hansson@linaro.org, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, lorenzo.pieralisi@arm.com, Juri.Lelli@arm.com, Axel Haslam <ahaslam+renesas@baylibre.com>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB11655B678F23E16AB93C9B008AF30@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Chris,
 
-On Fri, Sep 16 2016 at 18:39, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> Hi Kevin,
->
-> Thanks for looking at this and simplifying various discussions we had so
-> far. I was thinking of summarizing something very similar. I couldn't
-> due to lack of time.
->
-> On 16/09/16 18:13, Kevin Hilman wrote:
->
-> [...]
->
->> I think we're having some terminology issues...
+On Fri, Sep 16, 2016 at 3:08 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On 9/15/2016, Geert Uytterhoeven wrote:
+>> > +               interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH
+>> > +                             GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>;
 >>
->> FWIW, the kernel terminolgy is actually "PM domain", not power domain.
->> This was intentional because the goal of the PM domain was to group
->> devices that some PM features.  To be very specific to the kernel, they
->> us the same set of PM callbacks.  Today, this is most commonly used to
->> model power domains, where a group of devices share a power rail, but it
->> does not need to be limited to that.
->>
+>> The bindings do not say anything about interrupts (hence that should be
+>> added).
 >
-> Agreed/Understood.
->
->> That being said, I'm having a hard time understanding the root of the
->> disagreement.
->>
->
-> Yes. I tried to convey the same earlier, but have failed. The only
-> disagreement is about a small part of this DT bindings. We would like to
-> make it completely hierarchical up to CPU nodes. More comments on that
-> below.
->
->> It seems that you and Sudeep would like to use domain-idle-states to
->> replace/superceed cpu-idle-states with the primary goal (and benefit)
->> being that it simplifies the DT bindings.  Is that correct?
->>
->
-> Correct, we want to deprecate cpu-idle-states with the introduction of
-> this hierarchical PM bindings. Yes IMO, it simplifies things and avoids
-> any ABI break we might trigger if we miss to consider some use-case now.
->
->> The objections have come in because that means that implies that CPUs
->> become their own domains, which may not be the case in hardware in the
->> sense that they share a power rail.
->>
->
-> Agreed.
->
->> However, IMO, thinking of a CPU as it's own "PM domain" may make some
->> sense based on the terminology above.
->>
->
-> Thanks for that, we do understand that it may not be 100% correct when
-> we strictly considers hardware terminologies instead of above ones.
-> As along as we see no issues with the above terminologies it should be fine.
->
->> I think the other objection may be that using a genpd to model domain
->> with only a single device in it may be overkill, and I agree with that.
->
-> I too agree with that. Just because we represent that in DT in that way
-> doesn't mean we need to create a genpd to model domain. We can always
-> skip that if not required. That's pure implementation specifics and I
-> have tried to convey the same in my previous emails. I must say you have
-> summarized it very clearly in this email. Thanks again for that.
->
->> But, I'm not sure if making CPUs use domain-idle-states implies that
->> they necessarily have to use genpd is what you are proposing.  Maybe
->> someone could clarify that?
->>
->
-> No, I have not proposing anything around implementation in the whole
-> discussion so far. I have constrained myself just to DT bindings so far.
-> That's the main reason why I was opposed to mentions of OS vs platform
-> co-ordinated modes of CPU suspend in this discussion. IMO that's
-> completely out of scope of this DT binding we are defining here.
->
-> Hope that helps/clarifies the misunderstanding/disagreement.
+> I'm sorry, I'm confused...
+> Are you saying:
+>  A) I forgot to add something?
+>  B) As a general statement, the renesas,mmcif.txt file doesn't say anything about interrupts?
 
-Indeed. My intention was that the proposal would result in the exact
-same kernel behaviour as Lina's current patchset, i.e. there is one
-genpd per cluster, and CPU-level idle states are still handled by
-cpuidle.
+Both ;-)
 
-The only change from the current patchset would be in initialisation
-code: some coordination would need to be done to determine which idle
-states go into cpuidle and which go into the genpds (whereas with the
-current bindings, states from cpu-idle-states go into cpuidle and states
-from domain-idle-states go into genpd). So you could say that this would
-be a trade-off between binding simplicity and implementation simplicity.
+>> The driver handles either 1 combined or 2 separate interrupts.
+>> The datasheet says MMC has 3 interrupt requests, though?
+>
+> The IP itself has 3 interrupts:
+>  #1. MMC0,299: Card detect
+>  #2. MMC1,300: Status Change
+>  #3. MMC2,301: Error
+>
+> Many of the 'Linux' SoC devices that use this MMC (SH4, R-Car) are only ever going to use eMMC, so the card detection portion of the IP was irrelevant. I agree this is the same case for the RZ/A (who would ever use an MMC card now a days?????)
+> The 'smaller' SoCs kept it in (SH2A, RZ/A1) but the 'bigger' SoCs left it out (SH4A, R-Car).
+>
+> The only way to enable that interrupt is to write to the CE_DETECT register (offset 0x70) which the driver doesn't do.
+>
+> However....if you look in sh_mmcif.h, you'll see that same offset (0x70) is called CE_CLK_CTRL2
+>
+> #define MMCIF_CE_CLK_CTRL2      0x00000070
+>
+> Which it only writes to if 'clk_ctrl2_enable' is designated.
+>
+>         if (host->clk_ctrl2_enable)
+>                 sh_mmcif_writel(host->addr, MMCIF_CE_CLK_CTRL2, 0x0F0F0000);
+>
+> And, I see no Renesas SoC that ever sets that or would ever use it so I can't even tell you what SoC that was for (SH4, SH-Mobile, ARM)
 
-Cheers,
-Brendan
+Google and Patchwork told me this was enabled in the old board code for Lager:
+
+  commit b77c6bcef2082a7cd96124daf15df8da5b670ebe
+  Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+  Date:   Wed Jul 10 21:21:17 2013 +0200
+
+    ARM: shmobile: lager: disable MMCIF Command Completion Signal, add CLK_CTRL2
+
+    MMCIF on r8a7790 doesn't support Command Completion Signal, but it does
+    implement a CE_CLK_CTRL2 register. Platform parameters have to be added to
+    account for these features on lager.
+
+    Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+    Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+
+But it was lost during the transition to DT. No idea if someone tried MMC
+(not SDHI) on Lager, or any other R-Car Gen2 board, recently...
+
+> So after all that ranting...I see no need to support card detect for MMC for the RZ/A (or any future RZ) so I'd like to just leave it as is.
+>
+> Do you agree?
+
+Let's summarize...
+
+  1) Documentation/devicetree/bindings/mmc/renesas,mmcif.txt should document
+     the "interrupts" property, for both single and multiple values.
+  2) If you specify 2 interrupts in DT, the driver names the first one
+     "sh_mmc:error", and the second one "sh_mmc:int", while you specified them
+     in reverse order (status first, error second).
+     I couldn't find which of the three interrupts on R-Mobile A1 is used for
+     what purpose in the datasheet, but the datasheet for SH-Mobile AG5 states
+     the first (140) is MMC_ERR, and the second (141) is MMC_NOR.
+     However, it still worked for you, as the driver uses the same interrupt
+     handler for all interrupts.
+  3) You may want to add the card detect interrupt to DT anyway, as DT
+     describes the hardware, not limitations of the driver. If you do so,
+     renesas,mmcif.txt should document the third interrupt value.
+
+Wolfram, do you have any comments?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
