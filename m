@@ -1,104 +1,75 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: Re: [PATCH v6 0/8] power: add power sequence library
-Date: Mon, 19 Sep 2016 13:09:10 +0530
-Message-ID: <ecbc3c0d-4ce7-758d-7f7d-4b3f3003c1ac@linaro.org>
-References: <1471252398-957-1-git-send-email-peter.chen@nxp.com>
- <b1848eb2-9298-9089-ee4d-5356998c6c08@linaro.org>
- <20160824085335.GB27233@shlinux2> <20160829111045.GB3736@b29397-desktop>
- <3a45793f-18d9-0688-d2ab-ef79432c473c@linaro.org>
- <20160831095220.GA11938@b29397-desktop>
- <fd94340b-1c1d-2307-7e57-5b05f1655d2c@linaro.org>
- <20160902011046.GB11262@shlinux2>
- <eb032ff2-dac4-5efe-dda0-96404f290aa8@linaro.org>
- <CAPDyKFp0w0mBGNgu6uk7UevUka_ha6MvaVyOzXjCg3S8kdF7tg@mail.gmail.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH v8 0/5] mfd: tps65218: Clean ups
+Date: Mon, 19 Sep 2016 13:09:01 +0530
+Message-ID: <1474270746-11568-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFp0w0mBGNgu6uk7UevUka_ha6MvaVyOzXjCg3S8kdF7tg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Peter Chen <hzpeterchen@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, dwmw3@infradead.org, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Krzysztof_Koz=c5=82owski?= <k.kozlowski@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, oscar@naiandei.net, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: lee.jones@linaro.org
+Cc: j-keerthy@ti.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, tony@atomide.com, dmitry.torokhov@gmail.com, linus.walleij@linaro.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The series cleans up mainly the regulator driver and implements
+the device tree parsing using the regulator framework. Removes
+all the redundant compatibles for the individual regulators.
+Adds platform_device_id table for the gpio and power button modules.
 
+One of the patch removes redundant read wrapper and makes
+use of regmap_read wherever necessary.
 
-On Friday 09 September 2016 02:17 PM, Ulf Hansson wrote:
-> [...]
->
->>>>> We had an agreement that keep mmc's pwrseq framework unchanging.
->>>>> Unless Ulf and rob both agree to change.
->>>> Why 2 separate approach for same problem ?
->>>> And I see this as possible duplication of code/functionality :)
->>> How the new kernel compatibles old dts? If we do not need to
->>> consider this problem, the mmc can try to use power sequence library
->>> too in future.
->>
->> I think we should attempt to get both MMC and USB power seq
->> come on one agreement, so that it can be reused.
-> That would be nice. Although, to do that you would have to allow some
-> DT bindings to be deprecated in the new generic power seq bindings, as
-> otherwise you would break existing DTBs.
->
-> I guess that is what Rob was objecting to!?
+The series is checked for all the regulator registrations on
+am437x-sk-evm.
 
-yeah, thats right.
+Changes in v8:
 
-So lets adopt similar implementation for USB as well instead of
-library, but keeping MMC untouched as of now.
+Rebased to latest next branch.
 
-What I am trying to propose here is,
+Changes in v7:
 
-Lets have power-sequence framework (similar to V1 of this series),
-with,
+Rebasing to latest next branch. GPIO patch of this series
+pushed to linux-next by Linus. Hence posting the remaining
+patches with respective Acks from the domain Maintainers.
 
-pwrseq: Core framework for power sequence.
-pwrseq_generic/simple: for all generic control, like reset and clock
-pwrseq_emmc: probably duplication of existing code - the idea
-                           here is, all future code should be using this new
-                           binding, so that we can deprecate the 
-drivers/mmc/core/pwrseq
-pwrseq_arche: The usecase which I am dealing with today, which is more
-                          complex in nature.
+Changes in v6:
 
-Then the respective drivers can add their drivers (if needed) based on
-complexity.
+Rebased regulator/mfd clean up patches against linux-next +
+https://lkml.org/lkml/2016/6/24/122 series.
 
-comments ??
+Changes in v5:
 
->> MMC Power Seq :
->>   It is based on platform_device/platform_driver approach,
-> We recently converted MMC to this. It's has a clear benefit as you can
-> rely on the behaviour from the driver core and PM core. So, it simply
-> avoids duplication of code.
+Rebased regulator clean up patch against linux-next.
 
-Agreed.
+Changes in v4:
 
->> USB Power seq :
->>   We are trying to propose library approach, with compatible string match.
->>
->> We should try to have one approach.
->>>
->>>>>>    - Lets also add suspend/resume callback to struct pwrseq
->>>>>>
->>>>> Why suspend/resume can't do at related driver's suspend/resume API?
->>>> Nope...
->>>> The pwrseq library would have taken ownership of resources, so
->>>> related driver cannot suspend the device. Again it is architecture
->>>> specific, but we should have provision to handle this.
->>>>
->>>> The system I am dealing with today, does need suspend/resume
->>>> callback. To be precise, suspend is close to off state for some devices
->>>> or
->>>> they could enter standby or different low power state, but to do that,
->>>> we need same resource as used for ON/OFF functionality.
->>>>
->>> Ok, I will have API for suspend/resume. You can implement it at your own
->>> library or generic one.
-> As stated, using a platform device + driver would simplify this, as
-> you wouldn't need an API but only a driver. I guess.
+For gpio-tps65218 reatined the compatible table.
+Fixed missing ';' in the power button patch.
+Fixed comments on the Documentation patch.
+Split the Device Tree patches to a separate series.
 
-Exactly.
+Changes in v3:
 
-Thanks,
-Vaibhav
+Missed making corresponding changes in the power button and gpio
+drivers. Added couple of patches to fix them to use mfd_cell way
+of parsing.
+
+ 
+
+Keerthy (5):
+  mfd: tps65218: Remove redundant read wrapper
+  Documentation: regulator: tps65218: Update examples
+  input: tps65218-pwrbutton: Add platform_device_id table
+  mfd: tps65218: Use mfd_add_devices instead of of_platform_populate
+  regulator: tps65218: Remove all the compatibles
+
+ .../devicetree/bindings/regulator/tps65218.txt     |  87 +++++++++---
+ drivers/gpio/gpio-tps65218.c                       |   3 +-
+ drivers/input/misc/tps65218-pwrbutton.c            |   8 ++
+ drivers/mfd/tps65218.c                             |  34 ++---
+ drivers/regulator/tps65218-regulator.c             | 153 ++++++++-------------
+ include/linux/mfd/tps65218.h                       |   3 +-
+ 6 files changed, 157 insertions(+), 131 deletions(-)
+
+-- 
+1.9.1
+
