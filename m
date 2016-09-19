@@ -1,63 +1,47 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: Add accelerometer to
- polaroid-mid2407pxe03
-Date: Mon, 19 Sep 2016 13:42:42 +0200
-Message-ID: <20160919114242.GN8719@lukather>
-References: <20160919103925.25149-1-hdegoede@redhat.com>
+From: Balbir Singh <bsingharora@gmail.com>
+Subject: Re: [PATCH v2 2/3] powerpc/mm: allow memory hotplug into a memoryless
+ node
+Date: Mon, 19 Sep 2016 21:53:49 +1000
+Message-ID: <15d62e9c-38e6-dfd3-0ee2-6885cbfbe315@gmail.com>
+References: <1473883618-14998-1-git-send-email-arbab@linux.vnet.ibm.com>
+ <1473883618-14998-3-git-send-email-arbab@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="yEbVe0JFHWhrOjGA"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160919103925.25149-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <1473883618-14998-3-git-send-email-arbab@linux.vnet.ibm.com>
+Sender: owner-linux-mm@kvack.org
+To: Reza Arbab <arbab@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
 List-Id: devicetree@vger.kernel.org
 
 
---yEbVe0JFHWhrOjGA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 19, 2016 at 12:39:25PM +0200, Hans de Goede wrote:
-> Add a dt node describing the mma7660 accelerometer on the
-> polaroid-mid2407pxe03 tablet.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+On 15/09/16 06:06, Reza Arbab wrote:
+> Remove the check which prevents us from hotplugging into an empty node.
+> 
+> This limitation has been questioned before [1], and judging by the
+> response, there doesn't seem to be a reason we can't remove it. No issues
+> have been found in light testing.
+> 
+> [1] http://lkml.kernel.org/r/CAGZKiBrmkSa1yyhbf5hwGxubcjsE5SmkSMY4tpANERMe2UG4bg@mail.gmail.com
+>     http://lkml.kernel.org/r/20160511215051.GF22115@arbab-laptop.austin.ibm.com
+> 
+> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
+> Acked-by: Balbir Singh <bsingharora@gmail.com>
+> Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+> Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>
+> ---
+>  arch/powerpc/mm/numa.c | 13 +------------
+>  1 file changed, 1 insertion(+), 12 deletions(-)
+> 
 
-Applied, thanks!
-Maxime
+I presume you've tested with CONFIG_NODES_SHIFT of 8 (255 nodes?)
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Balbir Singh.
 
---yEbVe0JFHWhrOjGA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJX388yAAoJEBx+YmzsjxAgBjIP/RFKDeXtqLonuB/swD7sm6xT
-AsrPEZoMTl1e2eCBFcV46gFAQvgdR3V3xs/lUuC3bP36h6gSgfKrj3fHmqH/G80W
-gqzeZAxqHFzPyDAhUiUKT4jOPdM1In48qMRvlECf8aQJTLG3BSJ5TEMBH5hCYhgI
-Xn4B++eAAhZGJbj3uJMoTDnqtQHByEq1jr61QjfLkmHD0qQZzBV18jWZ70No+F9k
-ZSNH5wZbiJfZoAE8W7t1+YniTkXDCXD7Ru58HH3HqMEX/ywH+NrfnE+uGSAJjWgR
-VOyaQBifbbZw8BXlE8nE2Ts3YS5rDfwM7lziEDqUyPjNfcPW4LSfunMrty0Prgez
-xlBmQvAcsHplJYX7wB5/ShfJEz1Lq4t4QmSJtXbzkphCcF3AhaZ7eAfCw+9EURXs
-Mp+9ba4uMlL5+OhjTNoLcYjgL1SLKRr3zZRZj/kJEsY/XMlm+qqBchpjcqTTShNK
-J2Ld7nBqzAz2IudmwfUi4sJbv/m1RSeedHk1itrWmxFUwXdQt8LTbqrl0P6bqmA8
-QPXoAHLc+XhdoYCJ4qDYSruSoQxa8X436XKYcyuNj3LCxoNbe2TBU5A+g7T5GElg
-7vCrTuepONZ8qr+VvAahg7q2m8H74RT/IFInam2Zw8W913p8VS/N2yroqxcu2yN3
-EEuEDu3aQItfT+y20Mom
-=Ofoz
------END PGP SIGNATURE-----
-
---yEbVe0JFHWhrOjGA--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
