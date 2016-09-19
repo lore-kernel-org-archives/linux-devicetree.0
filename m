@@ -1,38 +1,71 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/3] ARM: dts: am335x-* Add blue-and-red-wiring propery to
- lcdc nodes
-Date: Mon, 19 Sep 2016 10:30:41 +0300
-Message-ID: <f8124caf-9752-c970-fd41-404ea4d983a9@ti.com>
-References: <cover.1474025756.git.jsarha@ti.com>
- <20160916150242.vbvpuokftychkdfz@atomide.com>
+From: Fabien Lahoudere <fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: imx5: Add clocks configuration
+Date: Mon, 19 Sep 2016 09:33:16 +0200
+Message-ID: <1b8d9b99-ef47-734e-a232-88fa8860304c@collabora.co.uk>
+References: <1473934403-2726-1-git-send-email-fabien.lahoudere@collabora.co.uk>
+ <1473961353.68713919@f429.i.mail.ru> <20160918002159.GD15478@tiger>
+ <20160918002451.GE15478@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160916150242.vbvpuokftychkdfz-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20160918002451.GE15478@tiger>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kalle Kankare <kalle.kankare-qk6XLmcB7GT1KXRcyAk9cg@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/16/16 18:02, Tony Lindgren wrote:
-> * Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> [160916 04:50]:
->> > These patches complete the am335x LCDC color errata fix[1]. The
->> > functional patches are now queued for v4.9.
->> > 
->> > The patch for am335x-boneblack.dts is delayed until v4.10 or v4.9-rc
->> > phase to avoid conflickt with BBB HDMI audio DTS patch that slipped
->> > into tda998x pull request.
->> > 
->> > [1] http://www.spinics.net/lists/devicetree/msg141246.html
-> OK. Are these safe to merge even if the dts changes get merged before
-> the driver changes? Or does it break something if merged out of order?
+Hi,
 
-Yes, they are safe. The new property just simply is not interpreted and
-everything works as before.
+On 18/09/16 02:24, Shawn Guo wrote:
+> On Sun, Sep 18, 2016 at 08:21:59AM +0800, Shawn Guo wrote:
+>> On Thu, Sep 15, 2016 at 08:42:33PM +0300, Alexander Shiyan wrote:
+>>>> Четверг, 15 сентября 2016, 13:13 +03:00 от Fabien Lahoudere <fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>:
+>>>>
+>>>> From: Kalle Kankare < kalle.kankare-qk6XLmcB7GT1KXRcyAk9cg@public.gmane.org >
+>>>>
+>>>> Add clocks configuration for CSI, FIRI and IEEE1588.
+>>>>
+>>>> Signed-off-by: Fabien Lahoudere < fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org >
+>>>> ---
+>>>>  drivers/clk/imx/clk-imx51-imx53.c      | 20 ++++++++++++++++++++
+>>>>  include/dt-bindings/clock/imx5-clock.h | 15 ++++++++++++++-
+>>>>  2 files changed, 34 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/clk/imx/clk-imx51-imx53.c b/drivers/clk/imx/clk-imx51-imx53.c
+>>>> index 29d4c44..1e3c9ea 100644
+>>>> --- a/drivers/clk/imx/clk-imx51-imx53.c
+>>>> +++ b/drivers/clk/imx/clk-imx51-imx53.c
+>>>> @@ -126,6 +126,7 @@ static const char *spdif0_com_sel[] = { "spdif0_podf", "ssi1_root_gate", };
+>>>>  static const char *mx51_spdif1_com_sel[] = { "spdif1_podf", "ssi2_root_gate", };
+>>>>  static const char *step_sels[] = { "lp_apm", };
+>>>>  static const char *cpu_podf_sels[] = { "pll1_sw", "step_sel" };
+>>>> +static const char *ieee1588_sels[] = { "pll3_sw", "pll4_sw", "dummy" /* usbphy2_clk */, "dummy" /* fec_phy_clk */ };
+>>>>
+>>>>  static struct clk *clk[IMX5_CLK_END];
+>>>>  static struct clk_onecell_data clk_data;
+>>>> @@ -543,6 +544,25 @@ static void __init mx53_clocks_init(struct device_node *np)
+>>> ...
+>>>
+>>> 2 Shawn Guo: Since the change affects only on i.MX53 architecture,
+>>> I would ask to change the subject to i.MX53 if it possible.
+>>
+>> Yes.  Actually, since clock driver is not moved to drivers/clk, we
+>
+> s/not/now
+>
+>> shouldn't prefix it with "ARM: " any longer.
 
-BR,
-Jyri
+
+Ok is "clk: imx53: Add clocks configuration" ok?
+
+>
+> Shawn
+>
+
+Thanks
+
+Fabien
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
