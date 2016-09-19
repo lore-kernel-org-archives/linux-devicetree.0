@@ -1,42 +1,41 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] ARM: dts: am335x-* Add blue-and-red-wiring propery
- to lcdc nodes
-Date: Mon, 19 Sep 2016 16:14:58 -0700
-Message-ID: <20160919231458.5t5a547kynqcooch@atomide.com>
-References: <cover.1474025756.git.jsarha@ti.com>
- <20160916150242.vbvpuokftychkdfz@atomide.com>
- <f8124caf-9752-c970-fd41-404ea4d983a9@ti.com>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH v9 17/19] drm/virtio: kconfig: Fix recursive dependency
+	issue.
+Date: Tue, 20 Sep 2016 00:18:48 +0100
+Message-ID: <CACvgo52_g7anGBd9HTUyYsbp5QmQEk9LR3nNHgSTgjQ29G3ViA@mail.gmail.com>
+References: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
+	<1473081421-16555-18-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <f8124caf-9752-c970-fd41-404ea4d983a9-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <virtualization-bounces@lists.linux-foundation.org>
+In-Reply-To: <1473081421-16555-18-git-send-email-peter.griffin@linaro.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
+	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
+List-Post: <mailto:virtualization@lists.linux-foundation.org>
+List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
+	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
+Sender: virtualization-bounces@lists.linux-foundation.org
+Errors-To: virtualization-bounces@lists.linux-foundation.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: devicetree <devicetree@vger.kernel.org>, kernel@stlinux.com, vinod.koul@intel.com, lee.jones@linaro.org, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, ML dri-devel <dri-devel@lists.freedesktop.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, David Airlie <airlied@linux.ie>, dmaengine@vger.kernel.org, dan.j.williams@intel.com, bjorn.andersson@linaro.org, "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> [160919 00:31]:
-> On 09/16/16 18:02, Tony Lindgren wrote:
-> > * Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> [160916 04:50]:
-> >> > These patches complete the am335x LCDC color errata fix[1]. The
-> >> > functional patches are now queued for v4.9.
-> >> > 
-> >> > The patch for am335x-boneblack.dts is delayed until v4.10 or v4.9-rc
-> >> > phase to avoid conflickt with BBB HDMI audio DTS patch that slipped
-> >> > into tda998x pull request.
-> >> > 
-> >> > [1] http://www.spinics.net/lists/devicetree/msg141246.html
-> > OK. Are these safe to merge even if the dts changes get merged before
-> > the driver changes? Or does it break something if merged out of order?
-> 
-> Yes, they are safe. The new property just simply is not interpreted and
-> everything works as before.
+On 5 September 2016 at 14:16, Peter Griffin <peter.griffin@linaro.org> wrote:
+> ST_SLIM_REMOTEPROC must select REMOTEPROC, which exposes the following
+> recursive dependency.
+>
+>From a humble skim through remoteproc, drm and a few other subsystems
+I think the above is wrong. All the drivers (outside of remoteproc),
+that I've seen, depend on the core component, they don't select it.
 
-OK applying into omap-for-v4.9/dt-v2 thanks.
+Furthermore most places explicitly hide the drivers from the menu if
+the core component isn't enabled.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Is there something that requires such a different/unusual behaviour in
+remoteproc ?
+
+Regards,
+Emil
