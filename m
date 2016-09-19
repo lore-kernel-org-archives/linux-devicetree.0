@@ -1,42 +1,57 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 2/4] ARM: dts: r7s72100: add mmcif to device tree
-Date: Mon, 19 Sep 2016 18:11:32 +0000
-Message-ID: <SG2PR06MB116588A3EAB9680F0A45BFAC8AF40@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20160915193405.26943-1-chris.brandt@renesas.com>
- <20160915193405.26943-3-chris.brandt@renesas.com>
- <CAMuHMdU6DKuxYUKNV_-FyczV-pPFpTLso=5HruWgNiXNOenVRQ@mail.gmail.com>
- <SG2PR06MB11655B678F23E16AB93C9B008AF30@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdUqd4DCQsTLkZTQrxyabUH-Yj4Uroh=nKjPkccpd=B5BA@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v4 4/4] regulator: Prevent falling too fast
+Date: Mon, 19 Sep 2016 11:39:24 -0700
+Message-ID: <CAD=FV=U2bi7GEA3Tq4vpzqF8J2hpgN-Vq4Jv=PnaGYhA3Z6vGg@mail.gmail.com>
+References: <20160906190524.GB79728@google.com> <20160912185633.GH27946@sirena.org.uk>
+ <20160913172140.GC62872@google.com> <20160915143945.GJ27974@sirena.org.uk>
+ <20160915180223.GE62872@google.com> <20160916163253.GA10189@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUqd4DCQsTLkZTQrxyabUH-Yj4Uroh=nKjPkccpd=B5BA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160916163253.GA10189@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Matthias Kaehlcke <mka@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Brian Norris <briannorris@chromium.org>, Javier Martinez Canillas <javier@dowhile0.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIDkvMTkvMjAxNiwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KPiA+
-PiBUaGUgYmluZGluZ3MgZG8gbm90IHNheSBhbnl0aGluZyBhYm91dCBpbnRlcnJ1cHRzIChoZW5j
-ZSB0aGF0IHNob3VsZA0KPiA+PiBiZSBhZGRlZCkuDQo+ID4NCj4gPiBJJ20gc29ycnksIEknbSBj
-b25mdXNlZC4uLg0KPiA+IEFyZSB5b3Ugc2F5aW5nOg0KPiA+ICBBKSBJIGZvcmdvdCB0byBhZGQg
-c29tZXRoaW5nPw0KPiA+ICBCKSBBcyBhIGdlbmVyYWwgc3RhdGVtZW50LCB0aGUgcmVuZXNhcyxt
-bWNpZi50eHQgZmlsZSBkb2Vzbid0IHNheQ0KPiBhbnl0aGluZyBhYm91dCBpbnRlcnJ1cHRzPw0K
-PiANCj4gQm90aCA7LSkNCg0KT0suDQoNCj4gPiBUaGUgSVAgaXRzZWxmIGhhcyAzIGludGVycnVw
-dHM6DQo+ID4gICMxLiBNTUMwLDI5OTogQ2FyZCBkZXRlY3QNCj4gPiAgIzIuIE1NQzEsMzAwOiBT
-dGF0dXMgQ2hhbmdlDQo+ID4gICMzLiBNTUMyLDMwMTogRXJyb3INCg0KQ29ycmVjdGlvbiEgSSBo
-YWQgdGhlIG9yZGVyIHdyb25nLg0KDQpGcm9tIHRoZSBSWi9BSDEgSGFyZHdhcmUgbWFudWFsICg1
-MS40IEludGVycnVwdCBSZXF1ZXN0cykNCg0KIzEuIE1NQzAsMjk5OiBDYXJkIGRldGVjdGlvbiBp
-bnRlcnJ1cHQNCiMyLiBNTUMxLDMwMDogRXJyb3IvdGltZW91dCBpbnRlcnJ1cHQNCiMzLiBNTUMy
-LDMwMTogTm9ybWFsIG9wZXJhdGlvbiBpbnRlcnJ1cHQNCg0KU28gaXQncyB0aGUgc2FtZSBhcyBh
-bGwgdGhlIG90aGVyIFNvQ3MuIFNvcnJ5IGZvciB0aGUgY29uZnVzaW9uLg0KDQoNCj4gICAzKSBZ
-b3UgbWF5IHdhbnQgdG8gYWRkIHRoZSBjYXJkIGRldGVjdCBpbnRlcnJ1cHQgdG8gRFQgYW55d2F5
-LCBhcyBEVA0KPiAgICAgIGRlc2NyaWJlcyB0aGUgaGFyZHdhcmUsIG5vdCBsaW1pdGF0aW9ucyBv
-ZiB0aGUgZHJpdmVyLiBJZiB5b3UgZG8gc28sDQo+ICAgICAgcmVuZXNhcyxtbWNpZi50eHQgc2hv
-dWxkIGRvY3VtZW50IHRoZSB0aGlyZCBpbnRlcnJ1cHQgdmFsdWUuDQoNCk9LLiBJIGhhdmUgbm8g
-b2JqZWN0aW9ucyB0byBhZGRpbmcgaXQgdG8gRFQgYW5kIHJlbmVzYXMsbW1jaWYudHh0IGFuZCBu
-b3QgdG91Y2hpbmcgc2hfbW1jaWYuYyAoanVzdCBsZXR0aW5nIGl0IGlnbm9yZSB0aGUgM3JkIHZh
-bHVlKS4NCklmIHNvbWVvbmUgaW4gdGhlIGZ1dHVyZSB3YW50cyB0byBjb2RlIHVwIGNhcmQgZGV0
-ZWN0Li4uLnRoZXkgYXJlIHdlbGNvbWUgdG8gaXQgOykNCg0KDQpDaHJpcw0K
+Hi,
+
+On Fri, Sep 16, 2016 at 9:32 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Thu, Sep 15, 2016 at 11:02:23AM -0700, Matthias Kaehlcke wrote:
+>> El Thu, Sep 15, 2016 at 03:39:45PM +0100 Mark Brown ha dit:
+>
+>> > The obvious question here is how the OVP hardware knows about the new
+>> > voltage and why we're bodging this in the regulator core rather than in
+>> > the OVP hardware.
+>
+>> The OVP hardware is part of the regulator and the regulator is not
+>> notified directly about voltage changes. The regulator transforms the
+>> PWM input into DC output and does the OVP internally with the limits
+>> described above.
+>
+> So the PWM is just configuring this external regulator chip (which
+> doesn't seem to be described in DT...) and that's just incredibly bad at
+> coping with voltage changes?  It does sound rather like we ought to be
+> representing this chip directly in case it needs other workarounds.
+
+I'm not 100% sure you can blame the regulator chip.  What we describe
+in the device tree as a "PWM Regulator" is actually:
+
+1. Some discreet buck regulator whose output voltage is configured by
+adjusting an input voltage.  AKA: the buck regulator has "3" inputs:
+vin, vout, config.  You put a certain voltage on the "config" pin and
+that controls the value that comes out of "vout".
+
+2. A network of resistors, capacitors, and inductors that take the
+output of a PWM and filter / smooth it enough that it can be a good
+config input to the discreet buck.
+
+
+The actual behavior of the PWM regulator depends as much (or more) on
+what values you have for the resistors, capacitors, and inductors than
+it does on the actual buck.  ...so two people using the same discreet
+buck might have very different behaviors in terms of rise time and how
+much they are impacted by the over voltage protection.
+
+
+-Doug
