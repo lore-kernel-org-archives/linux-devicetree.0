@@ -1,50 +1,50 @@
-From: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 11/11] ARM: DT: STM32: add dma for usart1 on F429
-Date: Sun, 18 Sep 2016 22:28:26 -0300
-Message-ID: <CAF3+TqcYuXnzokoR=vAsOofBkyA1WhuXvCc6HrekAovW2VejMQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alexandre.torgue-qxv4g6HH51o@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: [PATCH] ARM: dts: imx31: fix clock control module interrupts description
+Date: Mon, 19 Sep 2016 04:54:34 +0300
+Message-ID: <1474250074-11430-1-git-send-email-vz@mleia.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> Signed-off-by: Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+The type of AVIC interrupt controller found on i.MX31 is one-cell,
+namely 31 for CCM DVFS and 53 for CCM, however for clock control
+module its interrupts are specified as 3-cells, fix it.
 
-I just tested your patch with success in two scenarios:
+Fixes: ef0e4a606fb6 ("ARM: mx31: Replace clk_register_clkdev with clock DT lookup")
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+---
+ Documentation/devicetree/bindings/clock/imx31-clock.txt | 2 +-
+ arch/arm/boot/dts/imx31.dtsi                            | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-1) STM32F469IDISCO board
-2) Custom board running STM32F439NI
+diff --git a/Documentation/devicetree/bindings/clock/imx31-clock.txt b/Documentation/devicetree/bindings/clock/imx31-clock.txt
+index 19df842..8163d56 100644
+--- a/Documentation/devicetree/bindings/clock/imx31-clock.txt
++++ b/Documentation/devicetree/bindings/clock/imx31-clock.txt
+@@ -77,7 +77,7 @@ Examples:
+ clks: ccm@53f80000{
+ 	compatible = "fsl,imx31-ccm";
+ 	reg = <0x53f80000 0x4000>;
+-	interrupts = <0 31 0x04 0 53 0x04>;
++	interrupts = <31>, <53>;
+ 	#clock-cells = <1>;
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx31.dtsi b/arch/arm/boot/dts/imx31.dtsi
+index 1ce7ae9..3e0893e 100644
+--- a/arch/arm/boot/dts/imx31.dtsi
++++ b/arch/arm/boot/dts/imx31.dtsi
+@@ -122,7 +122,7 @@
+ 			clks: ccm@53f80000{
+ 				compatible = "fsl,imx31-ccm";
+ 				reg = <0x53f80000 0x4000>;
+-				interrupts = <0 31 0x04 0 53 0x04>;
++				interrupts = <31>, <53>;
+ 				#clock-cells = <1>;
+ 			};
+ 		};
+-- 
+2.8.1
 
-Tested-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-One last comment I have bellow:
-
->
-> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-> index 35df462..227376b 100644
-> --- a/arch/arm/boot/dts/stm32f429.dtsi
-> +++ b/arch/arm/boot/dts/stm32f429.dtsi
-> @@ -161,6 +161,9 @@
->                         interrupts = <37>;
->                         clocks = <&rcc 0 164>;
->                         status = "disabled";
-> +                       dmas = <&dma2 2 4 0x414 0x0>,
-> +                              <&dma2 7 4 0x414 0x0>;
-
-According to stm32-dma.txt documentation in the third parameter (32bit
-mask) only the following bits can be set : 9,10,15,16,17 and 0x414 is
-setting bits 2 and 4. It make sense if you look in the register itself
-(DMA_SxCR) but as far I could see from the DMA driver code this bits
-are set internally. The correct value should be 0x400.
-
-> +                       dma-names = "rx", "tx";
->                 };
->
->                 usart6: serial@40011400 {
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
