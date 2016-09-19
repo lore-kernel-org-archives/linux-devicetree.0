@@ -1,43 +1,37 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun8i: Add accelerometer to polaroid-mid2407pxe03
-Date: Mon, 19 Sep 2016 12:39:25 +0200
-Message-ID: <20160919103925.25149-1-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH] mtd: s3c2410: add device tree support
+Date: Mon, 19 Sep 2016 12:44:07 +0200
+Message-ID: <f8907616-0d6b-37ef-1419-f6aedf3ddbdc@samsung.com>
+References: <CGME20160917152404eucas1p2ca0ebfe59dd762f5cdd611a9dd3cd1a5@eucas1p2.samsung.com>
+ <1474125760-28168-1-git-send-email-sergio.prado@e-labworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1474125760-28168-1-git-send-email-sergio.prado@e-labworks.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sergio Prado <sergio.prado@e-labworks.com>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, k.kozlowski@samsung.com, boris.brezillon@free-electrons.com, richard@nod.at, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a dt node describing the mma7660 accelerometer on the
-polaroid-mid2407pxe03 tablet.
+On 09/17/2016 05:22 PM, Sergio Prado wrote:
+> +static int s3c24xx_nand_probe_dt(struct platform_device *pdev)
+> +{
+> +	const struct s3c24XX_nand_devtype_data *devtype_data;
+> +	struct s3c2410_platform_nand *pdata;
+> +	struct s3c2410_nand_info *info = platform_get_drvdata(pdev);
+> +	struct device_node *np = pdev->dev.of_node, *child;
+> +	const struct of_device_id *of_id;
+> +	struct s3c2410_nand_set *sets;
+> +
+> +	of_id = of_match_device(s3c24xx_nand_dt_ids, &pdev->dev);
+> +	if (!of_id)
+> +		return 1;
+> +
+> +	devtype_data = of_id->data;
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts b/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts
-index 6662127..a86cbed 100644
---- a/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts
-+++ b/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts
-@@ -62,6 +62,13 @@
- 	};
- };
- 
-+&i2c1 {
-+	mma7660: accelerometer@4c {
-+		reg = <0x4c>;
-+		compatible = "fsl,mma7660";
-+	};
-+};
-+
- &mmc1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins_a>;
--- 
-2.9.3
+You could make it a bit simpler with of_device_get_match_data().
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sylwester
