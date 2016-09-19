@@ -1,46 +1,52 @@
-From: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] drivers/of: recognize status property of dt memory
- nodes
-Date: Mon, 19 Sep 2016 20:11:39 +1000
-Message-ID: <bdbcc833-1a56-69aa-b433-ec4ce685d3cd@gmail.com>
-References: <1473883618-14998-1-git-send-email-arbab@linux.vnet.ibm.com>
- <1473883618-14998-2-git-send-email-arbab@linux.vnet.ibm.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v4 7/7] ARM: dts: bcm283x: drop alt3 from &gpio
+Date: Mon, 19 Sep 2016 11:12:37 +0100
+Message-ID: <87wpi89p0q.fsf@eliezer.anholt.net>
+References: <1474274603-24215-1-git-send-email-kraxel@redhat.com> <1474274603-24215-8-git-send-email-kraxel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473883618-14998-2-git-send-email-arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1474274603-24215-8-git-send-email-kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: Bharata B Rao <bharata-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Alistair Popple <apopple-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org
+To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
 
+Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> writes:
 
-On 15/09/16 06:06, Reza Arbab wrote:
-> Respect the standard dt "status" property when scanning memory nodes in
-> early_init_dt_scan_memory(), so that if the property is present and not
-> "okay", no memory will be added.
-> 
-> The use case at hand is accelerator or device memory, which may be
-> unusable until post-boot initialization of the memory link. Such a node
-> can be described in the dt as any other, given its status is "disabled".
-> Per the device tree specification,
-> 
-> "disabled"
-> 	Indicates that the device is not presently operational, but it
-> 	might become operational in the future (for example, something
-> 	is not plugged in, or switched off).
-> 
-> Once such memory is made operational, it can then be hotplugged.
-> 
-> Signed-off-by: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> As the alt3 group has no pins left drop it from &gpio.
+>
+> Signed-off-by: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Makes sense, so basically a /memory@  with missing status or status = "okay"
-are added, others are skipped. No memblocks corresponding to those nodes
-are created either.
+If you end up spinning another version for some reason, I'd squash this
+patch with the previous one.  But regardless, 3-7 are:
 
-Balbir Singh
+Acked-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCgAGBQJX37oVAAoJELXWKTbR/J7o3jkP/RiPReyWnS2rHHRVCNw3eBKu
+DeXgh/GvN6ofz+Al03WgY8MlvfdhXPJh3T5XC7bQSAQQEi1F+naUQOykf9pP1g12
+JnWWr9QM88FwNvn9+ayFmTH83k9JzuSzHr3vkS+y2JV4AqSnGRPSvYL2CxesCizn
+91Fb+8ifmyxpOtOJzjnVh2O3sI/5W4td+QOgZx0lLJO/OKMsguwgj7+uTPnDgQ8J
+g4D1KF76Ys6cplenHj6ww3b1ELDhWPWx3dFVjugWh6492KrkLGLViwHsLOIVjncR
+GayxJB6uQNKjgnIU09Gf56FrcChQgPp4uKzGPIepa7rUcUpM2m6YRu0y5kG+Oemp
+3BChWzoUjJfhahRqJtijfsECet6OhwWqprKNsnxO3U/hA9Y1CWNh9LckupyF6tLS
+vUDorSRFQiZVbybjKAmzceM17yT9MDoI0jTKpUNCSxmCbT3Y6WPGlmUu034N7GdI
+EwYkmxxnnZRQeXhFnRtfKxyDmBLuxYKThgeJ8Mz3zmGht16MyOpbb8FmN2jKRJrK
+j4N1ysDQX68wNwBma3OKNOMp5Wi5AnMc3jUYyiDwsoEFD1fi4WTnW5+DvEm4tZLH
+oq0ypuVyNoU6Th95kUxatNHSvTwvuVULB5j/KW/5SNfSa0Y4788jDirDmGEod3cd
+EwBqSbl0pF1YoLxCp6fm
+=a0yC
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
