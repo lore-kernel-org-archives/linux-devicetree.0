@@ -1,83 +1,120 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 0/8] power: add power sequence library
-Date: Mon, 19 Sep 2016 13:47:43 +0530
-Message-ID: <364c3aa6-024a-1df5-3ae0-cab0535aae73@linaro.org>
-References: <b1848eb2-9298-9089-ee4d-5356998c6c08@linaro.org>
- <20160824085335.GB27233@shlinux2> <20160829111045.GB3736@b29397-desktop>
- <3a45793f-18d9-0688-d2ab-ef79432c473c@linaro.org>
- <20160831095220.GA11938@b29397-desktop>
- <fd94340b-1c1d-2307-7e57-5b05f1655d2c@linaro.org>
- <20160902011046.GB11262@shlinux2>
- <eb032ff2-dac4-5efe-dda0-96404f290aa8@linaro.org>
- <CAPDyKFp0w0mBGNgu6uk7UevUka_ha6MvaVyOzXjCg3S8kdF7tg@mail.gmail.com>
- <ecbc3c0d-4ce7-758d-7f7d-4b3f3003c1ac@linaro.org>
- <20160919074637.GA10289@b29397-desktop>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v4 1/2] ARM: dts: sun8i: add pinmux for UART1 at PG
+Date: Mon, 19 Sep 2016 10:18:24 +0200
+Message-ID: <20160919081824.GB8719@lukather>
+References: <20160916151642.27907-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160919074637.GA10289@b29397-desktop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dwmw3-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Krzysztof_Koz=c5=82owski?= <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1211704761350109433=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160916151642.27907-1-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
+--===============1211704761350109433==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3lcZGd9BuhuYXNfi"
+Content-Disposition: inline
 
-On Monday 19 September 2016 01:16 PM, Peter Chen wrote:
-> On Mon, Sep 19, 2016 at 01:09:10PM +0530, Vaibhav Hiremath wrote:
->>
->> On Friday 09 September 2016 02:17 PM, Ulf Hansson wrote:
->>> [...]
->>>
->>>>>>> We had an agreement that keep mmc's pwrseq framework unchanging.
->>>>>>> Unless Ulf and rob both agree to change.
->>>>>> Why 2 separate approach for same problem ?
->>>>>> And I see this as possible duplication of code/functionality :)
->>>>> How the new kernel compatibles old dts? If we do not need to
->>>>> consider this problem, the mmc can try to use power sequence library
->>>>> too in future.
->>>> I think we should attempt to get both MMC and USB power seq
->>>> come on one agreement, so that it can be reused.
->>> That would be nice. Although, to do that you would have to allow some
->>> DT bindings to be deprecated in the new generic power seq bindings, as
->>> otherwise you would break existing DTBs.
->>>
->>> I guess that is what Rob was objecting to!?
->> yeah, thats right.
->>
->> So lets adopt similar implementation for USB as well instead of
->> library, but keeping MMC untouched as of now.
->>
->> What I am trying to propose here is,
->>
->> Lets have power-sequence framework (similar to V1 of this series),
->> with,
->>
->> pwrseq: Core framework for power sequence.
->> pwrseq_generic/simple: for all generic control, like reset and clock
->> pwrseq_emmc: probably duplication of existing code - the idea
->>                            here is, all future code should be using this new
->>                            binding, so that we can deprecate the
->> drivers/mmc/core/pwrseq
->> pwrseq_arche: The usecase which I am dealing with today, which is more
->>                           complex in nature.
->>
->> Then the respective drivers can add their drivers (if needed) based on
->> complexity.
->>
->> comments ??
-> The key point here is DT maintainer (Rob) doesn't agree with adding new node
-> for power sequence at dts.
->
 
-Hmmm.
-We haven't heard from Rob lately especially after introduction of complex
-usecases. I hope he would revisit on above proposal.
+--3lcZGd9BuhuYXNfi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Vaibhav
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+On Fri, Sep 16, 2016 at 11:16:41PM +0800, Icenowy Zheng wrote:
+> The UART1 at PG (PG6, PG7, PG8, PG9) is, in the Allwinner's reference
+> tablet design of A23/33, used to connect to UART Bluetooth cards.
+>=20
+> Add the pinmux for it.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> ---
+> This patch is splited in v4.
+>=20
+>  arch/arm/boot/dts/sun8i-a23-a33.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun=
+8i-a23-a33.dtsi
+> index 7e05e09..c340885 100644
+> --- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+> @@ -361,6 +361,20 @@
+>  				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+>  			};
+> =20
+> +			uart1_pins_a: uart1@0 {
+> +				allwinner,pins =3D "PG6", "PG7";
+> +				allwinner,function =3D "uart1";
+> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+> +			};
+> +
+> +			uart1_pins_cts_rts_a: uart1-cts-rts@0 {
+> +				allwinner,pins =3D "PG8", "PG9";
+> +				allwinner,function =3D "uart1";
+> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+> +			};
+> +
+
+It turns out the allwinner,drive and allwinner,pull properties are
+optionnal. I removed them, and applied that patch.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--3lcZGd9BuhuYXNfi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJX359QAAoJEBx+YmzsjxAg3vsP/0HEB+Ac2RZhrwDua5YoI+7V
+rTcEgUpqI+IzHxGOYgz8WMwE6stmZTp2j9+nW5+LQbxSMIVkD9lT9MfTFzfKCbHN
+mJb7xipkEM8W9LLyPrYULclKO+GNwkLn8Hdwh402BhlppDID37Sa1SIuj3LnX077
+6ko0YCXKN77E9I99TP1uVChapPw8Kr4NJEo31rXs2U9khT6u88RuBkQur159A9o2
+46gBaPl722BFBQbemEBX9VEVm2TZSI78OuVjcNuS+Isehp4+sNTQae49tfuvvjg/
+7noLk75wGvyOr+irv1K+NiEZ8NbzuOyRc1AkWlQ96NzcGRwlWbbgErtLZDCVo+lF
+E6qbAEoR+fFF6xUfFsgCvGaR2Kh7MSnQ7VRLpM9SVjeoa4Z9WWdi+8RiaOK4Scnw
+ykiuFYGMkneePVa9uEL/LProTErygSjvUkG2zScFy6hXC9HoXofkulWI8N7BU9Qv
+glbg9M2q/8MBBP+DZydZKp7SWEq8yrmZQUnSMQDYcj+lT6U0YoIslSocJpKsUOgT
+xFvQ4QkNemwhq3xutjEoF38VYlZijGgcfGGiAAVPAMb4YMY0Ocw13DYBH+OQg2EA
+e/rulEsj+XB96ewm4BRG6J7vyYDFoy6OXOuyh7OMV0hCYj55EyM9VcIuKkNw28JF
+RekuSlQjOTXP1freatHZ
+=c9LJ
+-----END PGP SIGNATURE-----
+
+--3lcZGd9BuhuYXNfi--
+
+
+--===============1211704761350109433==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1211704761350109433==--
