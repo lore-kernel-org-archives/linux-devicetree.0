@@ -1,49 +1,39 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v5 3/5] arm64: arch_timer: Work around QorIQ Erratum A-008585
-Date: Mon, 19 Sep 2016 09:44:45 +0200
-Message-ID: <2134283.D1RaSsN7zL@wuerfel>
-References: <1473469413-11019-1-git-send-email-oss@buserror.net> <20160912123027.GA13741@leverpostej> <1474259324.15220.5.camel@buserror.net>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH RFC 2/8] ARM: shmobile: r8a7743: add power domain index macros
+Date: Mon, 19 Sep 2016 09:46:36 +0200
+Message-ID: <CAMuHMdUU5xKCZ6Jpo5grXbOWyTSgik1fUFjh_Q-XUbhLAOhQ=A@mail.gmail.com>
+References: <3533019.Wim1Kuh1ic@wasted.cogentembedded.com> <2361310.TQ5AHhpEmD@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474259324.15220.5.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <2361310.TQ5AHhpEmD-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, mike.caraman-3arQi8VN3Tc@public.gmane.org, Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday, September 18, 2016 11:28:44 PM CEST Scott Wood wrote:
-> On Mon, 2016-09-12 at 13:30 +0100, Mark Rutland wrote:
-> > On Mon, Sep 12, 2016 at 12:44:07PM +0100, Will Deacon wrote:
-> > > 
-> > > On Mon, Sep 12, 2016 at 12:36:15PM +0100, Mark Rutland wrote:
-> > > > 
-> > > > The changes in arm64's <asm/arch_timer.h> are going to conflict with
-> > > > some cleanup [1,2] that just landed in the arm64 for-next/core branch.
-> > > > 
-> > > > Could you please rebase atop of that?
-> > > Well, we should figure out what tree this is going through first. There
-> > > are a mixture of arm, arm64, driver and dts changes here and not all
-> > > of it is carrying the appropriate acks for me to queue it.
-> > Given that mix, I had assumed that this would all go through the arm64
-> > tree -- I see that Rob has already acked the binding, and I'm happy to
-> > give my ack for the driver once that's in shape.
-> > 
-> > The dts change could go through arm-soc in parallel, I guess. It doesn't
-> > look like arm-soc have been Cc'd for that, though.
-> 
-> The arm-soc section of MAINTAINERS says to e-mail linux-arm-kernel, which I
-> did.  There doesn't appear to be a separate arm-soc mailing list, nor is there
-> a request to CC Olof/Arnd.  I did CC Shawn Guo who has been handling the
-> device tree patches for these chips.
+On Fri, Sep 16, 2016 at 3:29 PM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Add macros usable by the device tree sources to reference R8A7743 SYSC power
+> domains by index.
+>
+> Based on the original (and large) patch by Dmitry Shifrin
+> <dmitry.shifrin-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-That is the right way to do it. If the DT change is a bugfix that should
-get merged along with the rest, Shawn can also provide an Ack to have it
-merged through the arm64 tree, ideally warning us if there might be any
-conflicts with stuff that gets sent for arm-soc.
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-	Arnd
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
