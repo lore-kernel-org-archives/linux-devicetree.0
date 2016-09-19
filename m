@@ -1,55 +1,55 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH RFC 8/8] ARM: dts: sk-rzg1m: initial device tree
-Date: Mon, 19 Sep 2016 10:42:53 +0200
-Message-ID: <CAMuHMdU8qb8P9p3dHRwSJY4ZUgnEjcdfGfte2naQ+WA3XyEiAA@mail.gmail.com>
-References: <3533019.Wim1Kuh1ic@wasted.cogentembedded.com>
- <2097453.1xPZsJcFmC@wasted.cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2097453.1xPZsJcFmC@wasted.cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Gerd Hoffmann <kraxel@redhat.com>
+Subject: [PATCH v4 1/7] pinctrl: bcm2835: add pull defines to dt bindings
+Date: Mon, 19 Sep 2016 10:43:17 +0200
+Message-ID: <1474274603-24215-2-git-send-email-kraxel@redhat.com>
+References: <1474274603-24215-1-git-send-email-kraxel@redhat.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1474274603-24215-1-git-send-email-kraxel@redhat.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: eric@anholt.net, swarren@wwwdotorg.org, bcm-kernel-feedback-list@broadcom.com, Gerd Hoffmann <kraxel@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 16, 2016 at 3:38 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Add the initial device  tree for the R8A7743 SoC based SK-RZG1M board.
-> The board has one debug serial port (SCIF0); include support for it, so
-> that  the serial  console  can work.
->
-> Based on the original (and large) patch by Dmitry Shifrin
-> <dmitry.shifrin@cogentembedded.com>.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Also delete (unused) private enum from driver.
+The pull defines can be used instead if needed.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 6 ------
+ include/dt-bindings/pinctrl/bcm2835.h | 5 +++++
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-> --- /dev/null
-> +++ renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
-> @@ -0,0 +1,44 @@
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+index fa77165..4cf612b 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+@@ -76,12 +76,6 @@ enum bcm2835_pinconf_param {
+ 	BCM2835_PINCONF_PARAM_PULL,
+ };
+ 
+-enum bcm2835_pinconf_pull {
+-	BCM2835_PINCONFIG_PULL_NONE,
+-	BCM2835_PINCONFIG_PULL_DOWN,
+-	BCM2835_PINCONFIG_PULL_UP,
+-};
+-
+ #define BCM2835_PINCONF_PACK(_param_, _arg_) ((_param_) << 16 | (_arg_))
+ #define BCM2835_PINCONF_UNPACK_PARAM(_conf_) ((_conf_) >> 16)
+ #define BCM2835_PINCONF_UNPACK_ARG(_conf_) ((_conf_) & 0xffff)
+diff --git a/include/dt-bindings/pinctrl/bcm2835.h b/include/dt-bindings/pinctrl/bcm2835.h
+index 6f0bc37..e4e4fdf 100644
+--- a/include/dt-bindings/pinctrl/bcm2835.h
++++ b/include/dt-bindings/pinctrl/bcm2835.h
+@@ -24,4 +24,9 @@
+ #define BCM2835_FSEL_ALT2	6
+ #define BCM2835_FSEL_ALT3	7
+ 
++/* brcm,pull property */
++#define BCM2835_PUD_OFF		0
++#define BCM2835_PUD_DOWN	1
++#define BCM2835_PUD_UP		2
++
+ #endif /* __DT_BINDINGS_PINCTRL_BCM2835_H__ */
+-- 
+1.8.3.1
 
-> +       compatible = "renesas,sk-rzg1m", "renesas,r8a7743";
-
-To be documented in Documentation/devicetree/bindings/arm/shmobile.txt
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
