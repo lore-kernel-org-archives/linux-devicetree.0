@@ -1,70 +1,90 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 00/22] Generic DT bindings for PCI IOMMUs and ARM SMMU
-Date: Mon, 19 Sep 2016 13:41:47 +0100
-Message-ID: <99ee0946-c7ff-e6e4-08c1-ff686ea1a8a5@arm.com>
-References: <cover.1473695704.git.robin.murphy@arm.com>
-	<11ebd81e-2ea5-5ff3-35b3-be95f03e05bd@redhat.com>
-	<d03ea5e7-59f1-8b49-4ba2-d05fc2030ebc@arm.com>
-	<04a0a682-4fdc-8d62-57cd-efdf730582c6@redhat.com>
-	<c2645c5e-edd3-2b31-4311-0ca621a915e2@arm.com>
-	<4d87d5f2-0350-b5f8-ffc3-4e9377cf1f87@redhat.com>
-	<fc4ce398-4eeb-f2ca-b964-e9f466be79c4@arm.com>
-	<1838c65d-5944-8946-781c-b420bea1acab@redhat.com>
-	<f16db032-1905-9804-0607-fe007af72b0e@arm.com>
-	<48f3bc10-3966-7d50-d070-7ec7f0946c92@redhat.com>
-	<20160919122435.GD9005@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20160919122435.GD9005-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2 v5] iio: gyro: Add MPU-3050 device tree bindings
+Date: Mon, 19 Sep 2016 15:28:23 +0200
+Message-ID: <1474291704-19201-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/09/16 13:24, Will Deacon wrote:
-> On Mon, Sep 19, 2016 at 02:13:45PM +0200, Auger Eric wrote:
->> On 16/09/2016 18:18, Robin Murphy wrote:
->>> What I probably will do, though, since we have the functionality in
->>> place for the sake of the old binding, and I think there are other folks
->>> who want PCI iommu-map support but would prefer not to bother with DMA
->>> ops on the host, is add a command-line option to disable DMA domains
->>> even for the generic bindings.
->>
->> Yes this would be a good thing I think. This series has an important
->> impact on platforms which do not have smmu v3, where contexts are scarce
->> HW resources.
-> 
-> Rather than disabling DMA domains entirely, we could specify a number
-> of contexts to reserve for other use (e.g. VFIO). It's a pity that these
-> options are global for the system, as opposed to per SMMU instance,
-> but I can't see a good way around that.
+This adds device tree bindings for the MPU-3050 gyroscope. Since it
+is the first set of bindings for a gyroscope, the folder for it
+is also created.
 
-The problem with that approach is that due to bus traversal order you'd
-typically end up with the even-more-limited number of non-reserved
-contexts getting consumed by bridges that are unlikely to ever actually
-use their DMA ops, so you end up barely any better off than just not
-doing DMA ops at all, which we already have the code for.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v4->v5:
+- No changes, just reposting.
+ChangeLog v3->v4:
+- No changes, just reposting. If we agree on these bindings and since
+  the dependent I2C bindings are merged, this patch should be merge
+  material now I guess.
+ChangeLog v2->v3:
+- Augmented device tree bindings to reflect Peter Rosins now merged
+  I2C gate bindings.
+ChangeLog v1->v2:
+- Not yet convered to use i2c-gate as I'm waiting for that
+  patch set to stabilize.
+---
+ .../bindings/iio/gyroscope/invensense,mpu3050.txt  | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
 
-And yeah, if you had, say, "arm-smmu.reserved_s2_contexts=4", for the
-benefit of your PCI SMMU, what do the SMMUs in front of your other
-platform devices with only 2 contexts (and which only want DMA ops) do?
-
-Robin.
-
-> 
-> Will
-> _______________________________________________
-> iommu mailing list
-> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-> 
+diff --git a/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
+new file mode 100644
+index 000000000000..b0d3b59966bc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
+@@ -0,0 +1,46 @@
++Invensense MPU-3050 Gyroscope device tree bindings
++
++Required properties:
++  - compatible : should be "invensense,mpu3050"
++  - reg : the I2C address of the sensor
++
++Optional properties:
++  - interrupt-parent : should be the phandle for the interrupt controller
++  - interrupts : interrupt mapping for the trigger interrupt from the
++    internal oscillator. The following IRQ modes are supported:
++    IRQ_TYPE_EDGE_RISING, IRQ_TYPE_EDGE_FALLING, IRQ_TYPE_LEVEL_HIGH and
++    IRQ_TYPE_LEVEL_LOW. The driver should detect and configure the hardware
++    for the desired interrupt type.
++  - vdd-supply : supply regulator for the main power voltage.
++  - vlogic-supply : supply regulator for the signal voltage.
++  - mount-matrix : see iio/mount-matrix.txt
++
++Optional subnodes:
++  - The MPU-3050 will pass through and forward the I2C signals from the
++    incoming I2C bus, alternatively drive traffic to a slave device (usually
++    an accelerometer) on its own initiative. Therefore is supports a subnode
++    i2c gate node. For details see: i2c/i2c-gate.txt
++
++Example:
++
++mpu3050@68 {
++	compatible = "invensense,mpu3050";
++	reg = <0x68>;
++	interrupt-parent = <&foo>;
++	interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
++	vdd-supply = <&bar>;
++	vlogic-supply = <&baz>;
++
++	/* External I2C interface */
++	i2c-gate {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		fnord@18 {
++			compatible = "fnord";
++			reg = <0x18>;
++			interrupt-parent = <&foo>;
++			interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
++		};
++	};
++};
+-- 
+2.7.4
