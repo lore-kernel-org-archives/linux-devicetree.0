@@ -1,41 +1,58 @@
-From: ayaka <ayaka@soulik.info>
-Subject: Re: [RFC PATCH v3 1/2] ARM: dts: samsung: add rga-lvds panel in itop
- elite
-Date: Tue, 20 Sep 2016 03:17:02 +0800
-Message-ID: <1c993577-cb51-16a7-2eba-344156959fb8@soulik.info>
-References: <1474311771-23321-1-git-send-email-ayaka@soulik.info>
- <1474311771-23321-2-git-send-email-ayaka@soulik.info>
- <CAOMZO5Agngx7b24bo3w7S84xtwZV81c-wAszs0B96FZhMeMW8A@mail.gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 16/19] power: reset: st-poweroff: Remove obsolete
+ platforms.
+Date: Mon, 19 Sep 2016 21:34:25 +0200
+Message-ID: <20160919193423.dhhzk33eu66fbtt6@earth>
+References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
+ <1473859677-9231-17-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOMZO5Agngx7b24bo3w7S84xtwZV81c-wAszs0B96FZhMeMW8A@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, David Airlie <airlied@linux.ie>, Russell King - ARM Linux <linux@armlinux.org.uk>, krzk@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dk4gmzmd7ndllvze"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1473859677-9231-17-git-send-email-peter.griffin@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, patrice.chotard@st.com, devicetree@vger.kernel.org, lee.jones@linaro.org, dwmw2@infradead.org, dbaryshkov@gmail.com, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--dk4gmzmd7ndllvze
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 09/20/2016 03:12 AM, Fabio Estevam wrote:
-> On Mon, Sep 19, 2016 at 4:02 PM, Randy Li <ayaka@soulik.info> wrote:
->
->> +       vcc_sys_lcd: sys-lcd {
->> +               compatible = "regulator-fixed";
->> +               regulator-name = "vcc_5v";
->> +               regulator-min-microvolt = <5000000>;
->> +               regulator-max-microvolt = <5000000>;
->> +               gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
-> Is this really active high? If so, you should add the
-> 'enable-active-high' property.
-I see, thank you. Btw, let me make it clearly, it is really an 
-independentTransistor, not be controlled by PMIC.
+Hi,
+
+On Wed, Sep 14, 2016 at 02:27:54PM +0100, Peter Griffin wrote:
+> This patch removes support for STiH415/6 SoC's from the
+> st-poweroff driver, as support for these platforms is
+> being removed from the kernel.
+
+I queued this to power-supply's for-next branch. Please
+cc me to full thread next time, so that I can see what
+is goin on.
+
+-- Sebastian
+
+--dk4gmzmd7ndllvze
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJX4D2/AAoJENju1/PIO/qaze0P/RpvjBG4mmyl3h/8+lOt25dz
+taZhTsl/M2/F0Q+kCJD85nUVgM5YJssRtchPixIm6I/OMg1okvkThvYWrYkY2ZFi
+cEY/ny8uI7wSTr5vs4UMxpJ1GysLqM9vDV1eJHesr2VS/1601nSIGjsv+NXIPxci
+DQ7xjspHQHN111nTcmiaXrxjn7bS4XB/MfPpIwRttgwxWfJtZMP9HVvH6TFvNt5J
+vrNnBAckFCX8QsnGi8SGcV/MJ3KlXr8NILMwD3wZzMCchnSuzexqmpLdh1SYNx2Z
+J1JhraHuyDnuP3fAVE7LgFiyO/nX36i8RHzQ9Lio6IUk1aPr+6B6X/UYSGUihT9w
+qE2cqAQsp8199ronydxy0T4SkyX8ph/OgAV22NnE0GBAmmsxcjd+i7+bNfMkXc64
+wSWhWdprxSAf4LBxbeJQ5othafZkbP6F59LLT7+FV6EVpYWtgWKCqf+OvSTUC8Tv
++vOUnOiffj+2T0aYdEFTw9eCYHcPTeeyW7Me19B37Hctgx8wwxDw/BHQlbLAO+dd
+2ilsS0arDhsaXPkKJ8poUsDWehQzTHui/Bft6vvNwojNMOhnKQGryoWboEZanKQW
+oBplP4VElmkuWgjuVrFrZZKOPOCOSmzHHoxlRouClF9TXMGdkqECsh/9vz9QYEBW
+NIijanioo10HyhWEpxpw
+=FHE/
+-----END PGP SIGNATURE-----
+
+--dk4gmzmd7ndllvze--
