@@ -1,30 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v12 5/5] Input: goodix - add support for gt9157
-Date: Mon, 19 Sep 2016 16:41:58 -0500
-Message-ID: <20160919214158.GA25433@rob-hp-laptop>
-References: <1473530257-7495-1-git-send-email-irina.tirdea@intel.com>
- <1473530257-7495-6-git-send-email-irina.tirdea@intel.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: dts: am335x-* Add blue-and-red-wiring propery
+ to lcdc nodes
+Date: Mon, 19 Sep 2016 16:14:58 -0700
+Message-ID: <20160919231458.5t5a547kynqcooch@atomide.com>
+References: <cover.1474025756.git.jsarha@ti.com>
+ <20160916150242.vbvpuokftychkdfz@atomide.com>
+ <f8124caf-9752-c970-fd41-404ea4d983a9@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1473530257-7495-6-git-send-email-irina.tirdea@intel.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Irina Tirdea <irina.tirdea@intel.com>
-Cc: linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, Karsten Merker <merker@debian.org>, Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <f8124caf-9752-c970-fd41-404ea4d983a9-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 10, 2016 at 08:57:37PM +0300, Irina Tirdea wrote:
-> Goodix touchscreen GT9157 has the same basic functionality
-> as GT911 touchscreen. This is based on Goodix datasheets
-> for GT911 and GT9157 and on Goodix driver gt9xx.c for
-> Android (publicly available in Android kernel trees for
-> various devices).
+* Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> [160919 00:31]:
+> On 09/16/16 18:02, Tony Lindgren wrote:
+> > * Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> [160916 04:50]:
+> >> > These patches complete the am335x LCDC color errata fix[1]. The
+> >> > functional patches are now queued for v4.9.
+> >> > 
+> >> > The patch for am335x-boneblack.dts is delayed until v4.10 or v4.9-rc
+> >> > phase to avoid conflickt with BBB HDMI audio DTS patch that slipped
+> >> > into tda998x pull request.
+> >> > 
+> >> > [1] http://www.spinics.net/lists/devicetree/msg141246.html
+> > OK. Are these safe to merge even if the dts changes get merged before
+> > the driver changes? Or does it break something if merged out of order?
 > 
-> Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> ---
->  Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
->  drivers/input/touchscreen/goodix.c                             | 2 ++
->  2 files changed, 3 insertions(+)
+> Yes, they are safe. The new property just simply is not interpreted and
+> everything works as before.
 
-Acked-by: Rob Herring <robh@kernel.org>
+OK applying into omap-for-v4.9/dt-v2 thanks.
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
