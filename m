@@ -1,41 +1,60 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] dt-bindings: reset: oxnas: Update for OX820
-Date: Mon, 19 Sep 2016 16:18:50 -0500
-Message-ID: <20160919211850.GA11839@rob-hp-laptop>
-References: <20160909131955.27334-1-narmstrong@baylibre.com>
- <20160909131955.27334-4-narmstrong@baylibre.com>
- <1473428153.3023.34.camel@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] clocksource: oxnas: add OX820 compatible
+Date: Mon, 19 Sep 2016 16:20:07 -0500
+Message-ID: <20160919212007.GA13791@rob-hp-laptop>
+References: <20160909132608.12605-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1473428153.3023.34.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20160909132608.12605-1-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 09, 2016 at 03:35:53PM +0200, Philipp Zabel wrote:
-> Hi Neil,
+On Fri, Sep 09, 2016 at 03:26:08PM +0200, Neil Armstrong wrote:
+> In order to support the Oxford Semiconductor OX820 SoC, add new
+> compatible string to rps timer driver.
+> Also add new string in the dt-bindings.
 > 
-> Am Freitag, den 09.09.2016, 15:19 +0200 schrieb Neil Armstrong:
-> > Add new compatible string for reset and sys-ctrl for the Oxford
-> > Semiconductor OX820 Support.
-> > Drop the OX810SE indices since they moved in a dedicated include file.
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/timer/oxsemi,rps-timer.txt | 2 +-
+>  drivers/clocksource/timer-oxnas-rps.c                        | 2 ++
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 > 
-> Not sure if the OX820 reset controller should be considered "compatible"
-> to OX810SE. The register layout and usage is the same, but the reset
-> indices are different. Does this warrant a new compatible string, or
-> should this be
-> 	compatible = "oxsemi,ox820-reset", "oxsemi,ox810se-reset"?
+> diff --git a/Documentation/devicetree/bindings/timer/oxsemi,rps-timer.txt b/Documentation/devicetree/bindings/timer/oxsemi,rps-timer.txt
+> index 3ca89cd..d191612 100644
+> --- a/Documentation/devicetree/bindings/timer/oxsemi,rps-timer.txt
+> +++ b/Documentation/devicetree/bindings/timer/oxsemi,rps-timer.txt
+> @@ -2,7 +2,7 @@ Oxford Semiconductor OXNAS SoCs Family RPS Timer
+>  ================================================
+>  
+>  Required properties:
+> -- compatible: Should be "oxsemi,ox810se-rps-timer"
+> +- compatible: Should be "oxsemi,ox810se-rps-timer" or "oxsemi,ox820-rps-timer"
 
-Correct. Different connections are fine since the connections are 
-described in the DT. However you could have some connections not 
-described, so a new compatible may still be needed for that purpose (in 
-addition to other reasons you do a new compatible for new SoCs).
+Seems like this should be ox820 followed by ox810se and no kernel 
+change.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  - reg : Specifies base physical address and size of the registers.
+>  - interrupts : The interrupts of the two timers
+>  - clocks : The phandle of the timer clock source
+> diff --git a/drivers/clocksource/timer-oxnas-rps.c b/drivers/clocksource/timer-oxnas-rps.c
+> index bd887e2..d630bf4 100644
+> --- a/drivers/clocksource/timer-oxnas-rps.c
+> +++ b/drivers/clocksource/timer-oxnas-rps.c
+> @@ -295,3 +295,5 @@ err_alloc:
+>  
+>  CLOCKSOURCE_OF_DECLARE(ox810se_rps,
+>  		       "oxsemi,ox810se-rps-timer", oxnas_rps_timer_init);
+> +CLOCKSOURCE_OF_DECLARE(ox820_rps,
+> +		       "oxsemi,ox820se-rps-timer", oxnas_rps_timer_init);
+> -- 
+> 2.7.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
