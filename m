@@ -1,68 +1,59 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 11/11] ARM: DT: STM32: add dma for usart1 on F429
-Date: Mon, 19 Sep 2016 09:47:55 +0200
-Message-ID: <1f39f1b6-aca8-fca1-2618-2305cf72f94c@st.com>
-References: <CAF3+TqcYuXnzokoR=vAsOofBkyA1WhuXvCc6HrekAovW2VejMQ@mail.gmail.com>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: am335x-evm: Add blue-and-red-wiring
+ -property to lcdc node
+Date: Mon, 19 Sep 2016 10:55:12 +0300
+Message-ID: <3052854a-de30-0e6d-3084-6788733c7118@ti.com>
+References: <cover.1474025756.git.jsarha@ti.com>
+ <34893e286d16c281098063d2a4fec985acbf8818.1474025756.git.jsarha@ti.com>
+ <a0e00898-80fb-8242-aafb-6e4d3f650345@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAF3+TqcYuXnzokoR=vAsOofBkyA1WhuXvCc6HrekAovW2VejMQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <a0e00898-80fb-8242-aafb-6e4d3f650345-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bruno,
+On 09/17/16 01:17, Nishanth Menon wrote:
+> On 09/16/2016 06:50 AM, Jyri Sarha wrote:
+> [..]
+>> +    blue-and-red-wiring = "crossed";
+> 
+> Dumb question: Why is this a Linux generic property - does it make sense
+> to have "blue-and-red-wiring" as a Linux generic property? I mean, it
+> reminds me little of those movies "cut the blue or red wire to diffuse
+> the bomb" ;)
 
-On 09/19/2016 03:28 AM, Bruno Herrera wrote:
->> Signed-off-by: Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>
->> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
->
-> I just tested your patch with success in two scenarios:
->
-> 1) STM32F469IDISCO board
-> 2) Custom board running STM32F439NI
->
-> Tested-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> One last comment I have bellow:
->
->>
->> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
->> index 35df462..227376b 100644
->> --- a/arch/arm/boot/dts/stm32f429.dtsi
->> +++ b/arch/arm/boot/dts/stm32f429.dtsi
->> @@ -161,6 +161,9 @@
->>                         interrupts = <37>;
->>                         clocks = <&rcc 0 164>;
->>                         status = "disabled";
->> +                       dmas = <&dma2 2 4 0x414 0x0>,
->> +                              <&dma2 7 4 0x414 0x0>;
->
-> According to stm32-dma.txt documentation in the third parameter (32bit
-> mask) only the following bits can be set : 9,10,15,16,17 and 0x414 is
-> setting bits 2 and 4. It make sense if you look in the register itself
-> (DMA_SxCR) but as far I could see from the DMA driver code this bits
-> are set internally. The correct value should be 0x400.
+It is a property of "ti,tilcdc" node. I did not think I should add a ti
+specific prefix for it. And after all if some other SoC or display chip
+has the same bug (eg. blue and red colour components swapped between two
+different colour modes), they could use the same property.
 
-Thanks for you careful review: the dma issue you noticed is due to the 
-fact that this bit field binding changed between kernel 4.2 and 4.8. 
-Front of kernel 4.2, 0x414 was fine... but now it is no more, you are 
-right.
-I will fix it in my next pull request.
+Of course in theory, if such bugs were common, a generic property that
+would describe how connections between different display data wires are
+drawn could make sense, but AFAIK am335x is the only one out there with
+such a bug [1].
 
-Thanks
-Alex
+> 
+> "The am335x-evm has blue and red wires crossed to get 24-bit RGB (and
+> 16-bit BGR". I mean, there has to be some sort of better description
+> specific to lcdc if some product used yellow and green wires for the
+> same signals crossed?
+> 
 
->
->> +                       dma-names = "rx", "tx";
->>                 };
->>
->>                 usart6: serial@40011400 {
-.
+The property and why it is there is described in detail in the binding
+document referred to in the commit description.
 
+The functional patches, with the binding document can be found here:
+http://www.spinics.net/lists/devicetree/msg141246.html
 
+[1] For more details see section 3.1.1 in AM335x Silicon Errata:
+http://www.ti.com/general/docs/lit/getliterature.tsp?baseLiteratureNumber=sprz360
+
+Best regards,
+Jyri
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
