@@ -1,81 +1,69 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 0/8] power: add power sequence library
-Date: Mon, 19 Sep 2016 15:46:37 +0800
-Message-ID: <20160919074637.GA10289@b29397-desktop>
-References: <b1848eb2-9298-9089-ee4d-5356998c6c08@linaro.org>
- <20160824085335.GB27233@shlinux2>
- <20160829111045.GB3736@b29397-desktop>
- <3a45793f-18d9-0688-d2ab-ef79432c473c@linaro.org>
- <20160831095220.GA11938@b29397-desktop>
- <fd94340b-1c1d-2307-7e57-5b05f1655d2c@linaro.org>
- <20160902011046.GB11262@shlinux2>
- <eb032ff2-dac4-5efe-dda0-96404f290aa8@linaro.org>
- <CAPDyKFp0w0mBGNgu6uk7UevUka_ha6MvaVyOzXjCg3S8kdF7tg@mail.gmail.com>
- <ecbc3c0d-4ce7-758d-7f7d-4b3f3003c1ac@linaro.org>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 11/11] ARM: DT: STM32: add dma for usart1 on F429
+Date: Mon, 19 Sep 2016 09:47:55 +0200
+Message-ID: <1f39f1b6-aca8-fca1-2618-2305cf72f94c@st.com>
+References: <CAF3+TqcYuXnzokoR=vAsOofBkyA1WhuXvCc6HrekAovW2VejMQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ecbc3c0d-4ce7-758d-7f7d-4b3f3003c1ac-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dwmw3-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Krzysztof =?utf-8?Q?Koz=C5=82owski?= <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>S
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAF3+TqcYuXnzokoR=vAsOofBkyA1WhuXvCc6HrekAovW2VejMQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 19, 2016 at 01:09:10PM +0530, Vaibhav Hiremath wrote:
-> 
-> 
-> On Friday 09 September 2016 02:17 PM, Ulf Hansson wrote:
-> >[...]
-> >
-> >>>>>We had an agreement that keep mmc's pwrseq framework unchanging.
-> >>>>>Unless Ulf and rob both agree to change.
-> >>>>Why 2 separate approach for same problem ?
-> >>>>And I see this as possible duplication of code/functionality :)
-> >>>How the new kernel compatibles old dts? If we do not need to
-> >>>consider this problem, the mmc can try to use power sequence library
-> >>>too in future.
-> >>
-> >>I think we should attempt to get both MMC and USB power seq
-> >>come on one agreement, so that it can be reused.
-> >That would be nice. Although, to do that you would have to allow some
-> >DT bindings to be deprecated in the new generic power seq bindings, as
-> >otherwise you would break existing DTBs.
-> >
-> >I guess that is what Rob was objecting to!?
-> 
-> yeah, thats right.
-> 
-> So lets adopt similar implementation for USB as well instead of
-> library, but keeping MMC untouched as of now.
-> 
-> What I am trying to propose here is,
-> 
-> Lets have power-sequence framework (similar to V1 of this series),
-> with,
-> 
-> pwrseq: Core framework for power sequence.
-> pwrseq_generic/simple: for all generic control, like reset and clock
-> pwrseq_emmc: probably duplication of existing code - the idea
->                           here is, all future code should be using this new
->                           binding, so that we can deprecate the
-> drivers/mmc/core/pwrseq
-> pwrseq_arche: The usecase which I am dealing with today, which is more
->                          complex in nature.
-> 
-> Then the respective drivers can add their drivers (if needed) based on
-> complexity.
-> 
-> comments ??
+Hi Bruno,
 
-The key point here is DT maintainer (Rob) doesn't agree with adding new node
-for power sequence at dts.
+On 09/19/2016 03:28 AM, Bruno Herrera wrote:
+>> Signed-off-by: Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>
+>> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+>
+> I just tested your patch with success in two scenarios:
+>
+> 1) STM32F469IDISCO board
+> 2) Custom board running STM32F439NI
+>
+> Tested-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> One last comment I have bellow:
+>
+>>
+>> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+>> index 35df462..227376b 100644
+>> --- a/arch/arm/boot/dts/stm32f429.dtsi
+>> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+>> @@ -161,6 +161,9 @@
+>>                         interrupts = <37>;
+>>                         clocks = <&rcc 0 164>;
+>>                         status = "disabled";
+>> +                       dmas = <&dma2 2 4 0x414 0x0>,
+>> +                              <&dma2 7 4 0x414 0x0>;
+>
+> According to stm32-dma.txt documentation in the third parameter (32bit
+> mask) only the following bits can be set : 9,10,15,16,17 and 0x414 is
+> setting bits 2 and 4. It make sense if you look in the register itself
+> (DMA_SxCR) but as far I could see from the DMA driver code this bits
+> are set internally. The correct value should be 0x400.
 
--- 
+Thanks for you careful review: the dma issue you noticed is due to the 
+fact that this bit field binding changed between kernel 4.2 and 4.8. 
+Front of kernel 4.2, 0x414 was fine... but now it is no more, you are 
+right.
+I will fix it in my next pull request.
 
-Best Regards,
-Peter Chen
+Thanks
+Alex
+
+>
+>> +                       dma-names = "rx", "tx";
+>>                 };
+>>
+>>                 usart6: serial@40011400 {
+.
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
