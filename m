@@ -1,69 +1,43 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 00/22] Generic DT bindings for PCI IOMMUs and ARM SMMU
-Date: Mon, 19 Sep 2016 15:17:18 +0100
-Message-ID: <20160919141717.GH9005@arm.com>
-References: <d03ea5e7-59f1-8b49-4ba2-d05fc2030ebc@arm.com>
- <04a0a682-4fdc-8d62-57cd-efdf730582c6@redhat.com>
- <c2645c5e-edd3-2b31-4311-0ca621a915e2@arm.com>
- <4d87d5f2-0350-b5f8-ffc3-4e9377cf1f87@redhat.com>
- <fc4ce398-4eeb-f2ca-b964-e9f466be79c4@arm.com>
- <1838c65d-5944-8946-781c-b420bea1acab@redhat.com>
- <f16db032-1905-9804-0607-fe007af72b0e@arm.com>
- <48f3bc10-3966-7d50-d070-7ec7f0946c92@redhat.com>
- <20160919122435.GD9005@arm.com>
- <99ee0946-c7ff-e6e4-08c1-ff686ea1a8a5@arm.com>
+From: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+Subject: [PATCH 0/3] iMX7 PWM polarity control
+Date: Mon, 19 Sep 2016 19:53:44 +0530
+Message-ID: <20160919142347.11342-1-bhuvanchandra.dv@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <99ee0946-c7ff-e6e4-08c1-ff686ea1a8a5-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan@agner.ch, robh+dt@kernel.org, thierry.reding@gmail.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 19, 2016 at 01:41:47PM +0100, Robin Murphy wrote:
-> On 19/09/16 13:24, Will Deacon wrote:
-> > On Mon, Sep 19, 2016 at 02:13:45PM +0200, Auger Eric wrote:
-> >> On 16/09/2016 18:18, Robin Murphy wrote:
-> >>> What I probably will do, though, since we have the functionality in
-> >>> place for the sake of the old binding, and I think there are other folks
-> >>> who want PCI iommu-map support but would prefer not to bother with DMA
-> >>> ops on the host, is add a command-line option to disable DMA domains
-> >>> even for the generic bindings.
-> >>
-> >> Yes this would be a good thing I think. This series has an important
-> >> impact on platforms which do not have smmu v3, where contexts are scarce
-> >> HW resources.
-> > 
-> > Rather than disabling DMA domains entirely, we could specify a number
-> > of contexts to reserve for other use (e.g. VFIO). It's a pity that these
-> > options are global for the system, as opposed to per SMMU instance,
-> > but I can't see a good way around that.
-> 
-> The problem with that approach is that due to bus traversal order you'd
-> typically end up with the even-more-limited number of non-reserved
-> contexts getting consumed by bridges that are unlikely to ever actually
-> use their DMA ops, so you end up barely any better off than just not
-> doing DMA ops at all, which we already have the code for.
+This patchset depends on this patchset[1] and this patch[2] which adds support
+for polarity control in imx-pwm driver.
 
-For Seattle, perhaps, but that's quite a big generalisation. If we're
-going to add an option, I'd much rather add something with some flexibility,
-rather than end up supporting both "disable_dma_domains" and
-"reserved_s2_contexts" in the long run.
+- Use pwm polarity control on iMX7 based modules.
+- Enable polarity control on Toradex Colibri iMX7D/S module.
+- Add BL_ON GPIO control for Toradex Colibri iMX7D/S module.
 
-> And yeah, if you had, say, "arm-smmu.reserved_s2_contexts=4", for the
-> benefit of your PCI SMMU, what do the SMMUs in front of your other
-> platform devices with only 2 contexts (and which only want DMA ops) do?
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/294027.html
+[2] https://www.spinics.net/lists/arm-kernel/msg530818.html
 
-There's two things in this example:
+Bhuvanchandra DV (3):
+  arm: dts: imx7: Update #pwm-cells for PWM polarity control
+  arm: dts: imx7-colibri: Use pwm polarity control
+  arm: dts: imx7-colibri: Use enable-gpios for BL_ON
 
-  (1) If other SMMUs only have 2 contexts, then they reserve both and warn
-  (2) If some SMMUs want DMA ops and others don't, then you have an issue
-      with *any* sort of cmdline option to control this
+ Documentation/devicetree/bindings/pwm/imx-pwm.txt |  6 +++---
+ arch/arm/boot/dts/imx7-colibri.dtsi               | 12 ++++++++++--
+ arch/arm/boot/dts/imx7s.dtsi                      |  8 ++++----
+ 3 files changed, 17 insertions(+), 9 deletions(-)
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.9.2
