@@ -1,60 +1,123 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: am335x-evm: Add blue-and-red-wiring
- -property to lcdc node
-Date: Mon, 19 Sep 2016 10:55:12 +0300
-Message-ID: <3052854a-de30-0e6d-3084-6788733c7118@ti.com>
-References: <cover.1474025756.git.jsarha@ti.com>
- <34893e286d16c281098063d2a4fec985acbf8818.1474025756.git.jsarha@ti.com>
- <a0e00898-80fb-8242-aafb-6e4d3f650345@ti.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [RESEND PATCH v7 2/2] sdhci-of-arasan: Set controller to test
+ mode when xlnx,fails-without-test-cd is present
+Date: Mon, 19 Sep 2016 10:51:08 +0300
+Message-ID: <992df66b-043e-ea1b-d291-a544b0d861d0@intel.com>
+References: <1474038102-20937-1-git-send-email-zach.brown@ni.com>
+ <1474038102-20937-2-git-send-email-zach.brown@ni.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a0e00898-80fb-8242-aafb-6e4d3f650345-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1474038102-20937-2-git-send-email-zach.brown@ni.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Zach Brown <zach.brown@ni.com>
+Cc: robh+dt@kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/16 01:17, Nishanth Menon wrote:
-> On 09/16/2016 06:50 AM, Jyri Sarha wrote:
-> [..]
->> +    blue-and-red-wiring = "crossed";
+On 16/09/16 18:01, Zach Brown wrote:
+> The sdhci controller on xilinx zynq devices will not function unless
+> the CD bit is provided. http://www.xilinx.com/support/answers/61064.html
+> In cases where it is impossible to provide the CD bit in hardware,
+> setting the controller to test mode and then setting inserted to true
+> will get the controller to function without the CD bit.
 > 
-> Dumb question: Why is this a Linux generic property - does it make sense
-> to have "blue-and-red-wiring" as a Linux generic property? I mean, it
-> reminds me little of those movies "cut the blue or red wire to diffuse
-> the bomb" ;)
-
-It is a property of "ti,tilcdc" node. I did not think I should add a ti
-specific prefix for it. And after all if some other SoC or display chip
-has the same bug (eg. blue and red colour components swapped between two
-different colour modes), they could use the same property.
-
-Of course in theory, if such bugs were common, a generic property that
-would describe how connections between different display data wires are
-drawn could make sense, but AFAIK am335x is the only one out there with
-such a bug [1].
-
+> When the device has the property xlnx,fails-without-test-cd the driver
+> changes the controller to test mode and sets test inserted to true to
+> make the controller function.
 > 
-> "The am335x-evm has blue and red wires crossed to get 24-bit RGB (and
-> 16-bit BGR". I mean, there has to be some sort of better description
-> specific to lcdc if some product used yellow and green wires for the
-> same signals crossed?
+> Signed-off-by: Zach Brown <zach.brown@ni.com>
+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
+> ---
+>  drivers/mmc/host/sdhci-of-arasan.c | 27 ++++++++++++++++++++++++++-
+>  drivers/mmc/host/sdhci.h           |  2 ++
+>  2 files changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index 33601a8..da8e40a 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/phy/phy.h>
+>  #include <linux/regmap.h>
+>  #include "sdhci-pltfm.h"
+> +#include <linux/of.h>
+>  
+>  #define SDHCI_ARASAN_CLK_CTRL_OFFSET	0x2c
+>  #define SDHCI_ARASAN_VENDOR_REGISTER	0x78
+> @@ -98,6 +99,10 @@ struct sdhci_arasan_data {
+>  
+>  	struct regmap	*soc_ctl_base;
+>  	const struct sdhci_arasan_soc_ctl_map *soc_ctl_map;
+> +	unsigned int	quirks; /* Arasan deviations from spec */
+> +
+> +/* Controller does not have CD wired and will not function normally without */
+> +#define SDHCI_ARASAN_QUIRK_FORCE_CDTEST	BIT(0)
+>  };
+>  
+>  static const struct sdhci_arasan_soc_ctl_map rk3399_soc_ctl_map = {
+> @@ -245,12 +250,27 @@ static void sdhci_arasan_hs400_enhanced_strobe(struct mmc_host *mmc,
+>  	writel(vendor, host->ioaddr + SDHCI_ARASAN_VENDOR_REGISTER);
+>  }
+>  
+> +void sdhci_arasan_reset(struct sdhci_host *host, u8 mask)
+> +{
+> +	u8 ctrl;
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_arasan_data *sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
+> +
+> +	sdhci_reset(host, mask);
+> +
+> +	if (sdhci_arasan->quirks & SDHCI_ARASAN_QUIRK_FORCE_CDTEST) {
+> +		ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
+> +		ctrl |= SDHCI_CTRL_CDTEST_INS | SDHCI_CTRL_CDTEST_EN;
+> +		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
+> +	}
+> +}
+> +
+>  static struct sdhci_ops sdhci_arasan_ops = {
+>  	.set_clock = sdhci_arasan_set_clock,
+>  	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
+>  	.get_timeout_clock = sdhci_arasan_get_timeout_clock,
+>  	.set_bus_width = sdhci_set_bus_width,
+> -	.reset = sdhci_reset,
+> +	.reset = sdhci_arasan_reset,
+>  	.set_uhs_signaling = sdhci_set_uhs_signaling,
+>  };
+>  
+> @@ -545,6 +565,7 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+>  	struct sdhci_host *host;
+>  	struct sdhci_pltfm_host *pltfm_host;
+>  	struct sdhci_arasan_data *sdhci_arasan;
+> +	struct device_node *np = pdev->dev.of_node;
+>  
+>  	host = sdhci_pltfm_init(pdev, &sdhci_arasan_pdata,
+>  				sizeof(*sdhci_arasan));
+> @@ -599,6 +620,10 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	sdhci_get_of_property(pdev);
+> +
+> +	if (of_property_read_bool(np, "xlnx,fails-without-test-cd"))
+> +		sdhci_arasan->quirks |= SDHCI_ARASAN_QUIRK_FORCE_CDTEST;
+> +
+>  	pltfm_host->clk = clk_xin;
+>  
+>  	if (of_device_is_compatible(pdev->dev.of_node,
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index a2bc9e1..c722cd2 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -84,6 +84,8 @@
+>  #define   SDHCI_CTRL_ADMA32	0x10
+>  #define   SDHCI_CTRL_ADMA64	0x18
+>  #define   SDHCI_CTRL_8BITBUS	0x20
+> +#define  SDHCI_CTRL_CDTEST_INS	0x40
+> +#define  SDHCI_CTRL_CDTEST_EN	0x80
+>  
+>  #define SDHCI_POWER_CONTROL	0x29
+>  #define  SDHCI_POWER_ON		0x01
 > 
 
-The property and why it is there is described in detail in the binding
-document referred to in the commit description.
-
-The functional patches, with the binding document can be found here:
-http://www.spinics.net/lists/devicetree/msg141246.html
-
-[1] For more details see section 3.1.1 in AM335x Silicon Errata:
-http://www.ti.com/general/docs/lit/getliterature.tsp?baseLiteratureNumber=sprz360
-
-Best regards,
-Jyri
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
