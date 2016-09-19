@@ -1,118 +1,50 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] Documentation: dt: net: add ath9k wireless device binding
-Date: Sun, 18 Sep 2016 23:51:39 +0200
-Message-ID: <CAFBinCCU5zu3u4r8_PR2nnueXBoSpK5yZZkxmuXnugiP95fr=g@mail.gmail.com>
-References: <20160821143105.27487-1-martin.blumenstingl@googlemail.com>
- <20160906214623.20424-1-martin.blumenstingl@googlemail.com>
- <20160906214623.20424-2-martin.blumenstingl@googlemail.com>
- <3b93ec95-ec7c-863a-06b7-fab4f2688855@rempel-privat.de> <CAFBinCAOQmk3KY1b+D1iKAOEBfasYyei681cae4PbD+201mzbQ@mail.gmail.com>
- <20160916124541.GB9689@rob-hp-laptop>
+From: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 11/11] ARM: DT: STM32: add dma for usart1 on F429
+Date: Sun, 18 Sep 2016 22:28:26 -0300
+Message-ID: <CAF3+TqcYuXnzokoR=vAsOofBkyA1WhuXvCc6HrekAovW2VejMQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160916124541.GB9689@rob-hp-laptop>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn-yOkvZcmFvRU@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alexandre.torgue-qxv4g6HH51o@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 16, 2016 at 2:45 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Sep 09, 2016 at 10:57:06PM +0200, Martin Blumenstingl wrote:
->> On Fri, Sep 9, 2016 at 9:48 AM, Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org> wrote:
->> >> +Optional properties:
->> >> +- reg: Address and length of the register set for the device.
->> >> +- qca,clk-25mhz: Defines that a 25MHz clock is used
->> >
->> > Some SoCs even Atheros WiSoCs use WiFi clock for System Clock. In this
->> > case we need to use clock framework any way, so why not in this case too?
->> > Provide dummy static clock in DT and connect it with this node?
->> >
->> >         osc25m: oscillator {
->> >                 compatible = "fixed-clock";
->> >                 #clock-cells = <0>;
->> >                 clock-frequency = <25000000>;
->> >                 clock-accuracy = <30000>;
->> >         };
->> >
->> >         acc: clock-controller@80040000 {
->> >                 compatible = "some-clock-controller";
->> >                 #clock-cells = <1>;
->> >                 clocks = <&osc25m>;
->> >                 reg = <0x80040000 0x204>;
->> >         };
->> >
->> >
->> > &pci0 {
->> >         ath9k@168c,002d {
->> >                 compatible = "pci168c,002d";
->> >                 reg = <0x7000 0 0 0 0x1000>;
->> >                 clocks = <&osc25m>;
->> >                 qca,disable-5ghz;
->> >         };
->> > };
->> >
->> >
->> > driver will need to use clk_get and compare frequency instead of
->> > of_property_read_bool(np, "qca,clk-25mhz"). In this case you will need
->> > to define source clock only one time and reuse it by all affected DT
->> > nodes. If we have 40MHz clock you will only need to change it in
->> > fixed-clock.
->> that does sound like a good idea, thanks for that input!
->> However, I will remove the property for the first version because I am
->> trying to get PCI(e) devices supported. OF support for AHB (WiSoC)
->> needs more work (in other places, like ahb.c) anyways.
->> But this suggestion should be remembered!
->>
->> >> +- qca,no-eeprom: Indicates that there is no physical EEPROM connected to the
->> >> +                     ath9k wireless chip (in this case the calibration /
->> >> +                     EEPROM data will be loaded from userspace using the
->> >> +                     kernel firmware loader).
->> >> +- qca,disable-2ghz: Overrides the settings from the EEPROM and disables the
->> >> +                     2.4GHz band. Setting this property is only needed
->> >> +                     when the RF circuit does not support the 2.4GHz band
->> >> +                     while it is enabled nevertheless in the EEPROM.
->> >> +- qca,disable-5ghz: Overrides the settings from the EEPROM and disables the
->> >> +                     5GHz band. Setting this property is only needed when
->> >> +                     the RF circuit does not support the 5GHz band while
->> >> +                     it is enabled nevertheless in the EEPROM.
->> >
->> > This option can be reused for every WiFi controller. Not only for qca.
->> > So may be instead of adding vendor specific name, make it reusable for
->> > all vendors. Instead of qca,disable-5ghz and qca,disable-2ghz make
->> > disable-5ghz and disable-2ghz?
->
-> Fine, but if you do this then document in a common location.
-what about Documentation/devicetree/bindings/net/wireless/ieee80211-common.txt?
+> Signed-off-by: Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
 
->> I am personally fine with anything that fits best into the grand
->> scheme of things.
->> There are three scenarios I can think of which may be influenced by
->> devicetree configuration:
->> a) let the driver decide automatically whether the 2.4GHz and/or 5GHz
->> band is/are enabled
->> b) explicitly disable either bands (because the driver thinks due to
->> whatever reason that a band is supported while in reality it isn't)
->> c) explicitly enable a band (for example because the driver cannot
->> automagically detect which band should be enabled)
->>
->> for ath9k we default to a) but also allow b): the EEPROM (device
->> specific calibration data) contains information about which bands are
->> enabled (or not). But some manufacturers are shipping devices for
->> example with the 5G band enabled, while the actual hardware doesn't
->> support it.
->
-> And you can't determine that based on different device IDs? If you can
-> use vendor/device ID, then you should. If not, then this is fine.
-one example is the TP-Link TW-8970 which uses a AR9381. ath9k
-identifies this chip as AR9380 (probably because both are *very*
-similar). The former does not support the 5G band, the latter does
-(but unfortunately - even though it's not supported - the EEPROM data
-on the TW-8970 indicates that 5G is supported)
+I just tested your patch with success in two scenarios:
 
-> Is it possible to have no EEPROM at all? If so, you might want to just
-> put the raw EEPROM data into DT rather than a property for every field
-> (I'm assuming there's more than just what you have properties for now).
-In theory: yes
-However, most devices we are talking about are legacy ones without
-devicetree support in the bootloader (in other words: hand-written
-.dts files).
+1) STM32F469IDISCO board
+2) Custom board running STM32F439NI
+
+Tested-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+One last comment I have bellow:
+
+>
+> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+> index 35df462..227376b 100644
+> --- a/arch/arm/boot/dts/stm32f429.dtsi
+> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+> @@ -161,6 +161,9 @@
+>                         interrupts = <37>;
+>                         clocks = <&rcc 0 164>;
+>                         status = "disabled";
+> +                       dmas = <&dma2 2 4 0x414 0x0>,
+> +                              <&dma2 7 4 0x414 0x0>;
+
+According to stm32-dma.txt documentation in the third parameter (32bit
+mask) only the following bits can be set : 9,10,15,16,17 and 0x414 is
+setting bits 2 and 4. It make sense if you look in the register itself
+(DMA_SxCR) but as far I could see from the DMA driver code this bits
+are set internally. The correct value should be 0x400.
+
+> +                       dma-names = "rx", "tx";
+>                 };
+>
+>                 usart6: serial@40011400 {
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
