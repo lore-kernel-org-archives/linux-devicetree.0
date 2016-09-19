@@ -1,109 +1,109 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and GXBB
-Date: Mon, 19 Sep 2016 10:29:27 +0530
-Message-ID: <57DF70AF.4050002@ti.com>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
- <20160904213152.25837-5-martin.blumenstingl@googlemail.com>
- <m260q6jibf.fsf@baylibre.com>
- <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg@mail.gmail.com>
- <e3b1f611-d6f6-c98b-a53b-98e94ef5bd96@codethink.co.uk>
- <m2eg4ui0nl.fsf@baylibre.com>
- <ffdd0188-72bc-4575-f997-e8547f4c31d2@codethink.co.uk>
- <CAFBinCC4gkMrJtertYevg_hXDLJEZ0PqfKKLL5UKXo8B=SXsPw@mail.gmail.com>
- <m2sht9gkau.fsf@baylibre.com>
- <CAFBinCCDDwydB+RP0CZKoAW5Suxotn224ZFVWvt2OGW3gNJR1g@mail.gmail.com>
- <57DBAB2F.3040905@ti.com>
- <CAFBinCC5fhbtkNdc6MJs7veD+xVGC6Qb-jgX_pwvraP1x2JrhQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCC5fhbtkNdc6MJs7veD+xVGC6Qb-jgX_pwvraP1x2JrhQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+From: Sanchayan Maity <maitysanchayan@gmail.com>
+Subject: [PATCH v2 1/3] ARM: dts: imx6qdl-apalis: Do not rely on DDC I2C bus bitbang for HDMI
+Date: Mon, 19 Sep 2016 10:41:51 +0530
+Message-ID: <2263d508999ada9476268138b2922702eb50131f.1474260360.git.maitysanchayan@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org
+Cc: marcel.ziswiler@toradex.com, stefan@agner.ch, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sanchayan Maity <maitysanchayan@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Remove the use of DDC I2C bus bitbang to support reading of EDID
+and rely on support from internal HDMI I2C master controller instead.
+As a result remove the device tree property ddc-i2c-bus.
 
-On Monday 19 September 2016 01:26 AM, Martin Blumenstingl wrote:
-> Hi Kishon,
-> 
-> On Fri, Sep 16, 2016 at 10:19 AM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
->> Hi,
->>
->> On Friday 09 September 2016 09:44 PM, Martin Blumenstingl wrote:
->>> On Fri, Sep 9, 2016 at 5:33 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->>>> However, the problem with all of the solutions proposed (runtime PM ones
->>>> included) is that we're forcing a board-specific design issue (2 devices
->>>> sharing a reset line) into a driver that should not have any
->>>> board-specific assumptions in it.
->>>>
->>>> For example, if this driver is used on another platform where different
->>>> PHYs have different reset lines, then one of them (the unlucky one who
->>>> is not probed first) will never get reset.  So any form of per-device
->>>> ref-counting is not a portable solution.
->>> maybe we should also consider Ben's solution: he played with the USB
->>> PHY on his Meson8b board. His approach was to have only one USB PHY
->>> driver instance which exposes two PHYs.
->>> The downside of this: the driver would have to know the offset of the
->>> PHYs (0x0 for the first PHY, 0x20 for the second), but we could handle
->>> the reset using runtime PM without any hacks.
->>
->> I think the offset information can come from the devicetree too. The phy can be
->> modeled something like below.
->>
->>                 usb-phys@c0000000 {
->>                         compatible = "amlogic,meson-gxbb-usb2-phy";
->>                         reg = <0x0 0xc0000000 0x0 0x40>;
->>                         #address-cells = <2>;
->>                         #size-cells = <2>;
->>                         ranges = <0x0 0x0 0x0 0xc0000000 0x0 0x40>;
->>                         resets = <&reset 34>;
->>
->>                         usb0_phy: usb_phy@0 {
->>                                 #phy-cells = <0>;
->>                                 reg = <0x0 0x0 0x0 0x20>;
->>                                 clocks = <&clkc CLKID_USB &clkc CLKID_USB0>;
->>                                 clock-names = "usb_general", "usb";
->>                                 status = "disabled";
->>                         };
->>
->>                         usb1_phy: usb_phy@20 {
->>                                 #phy-cells = <0>;
->>                                 reg = <0x0 0x20 0x0 0x20>;
->>                                 clocks = <&clkc CLKID_USB &clkc CLKID_USB1>;
->>                                 clock-names = "usb_general", "usb";
->>                                 status = "disabled";
->>                         };
->>                 };
->>
->> This way the driver will be probed only once (the reset can be done during
->> probe). The phy driver should scan the dt node and for every sub-node it
->> invokes phy_create?
-> I'll recap what we have discussed so far (so you don't have to re-read
-> the whole thread):
-> The reference driver treats both USB PHYs as separate devices (the
-> datasheet has no information about the PHYs though). The only
-> "special" thing is the shared reset line -> together with Philipp
-> Zabel (the reset framework maintainer) we decided to make
-> reset_control_reset work for shared reset lines.
-> 
-> That means we can keep the two PHYs as separate devices inside the
-> .dts, while keeping everything else separate (just like the reference
-> driver)
-> Is this fine for you and Arnd?
+Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+---
+Changes since v1:
 
-yeah.. I'm fine with that.
+Change the ranking in i2c aliases
 
-Thanks
-Kishon
-> 
-> 
-> Regards,
-> Martin
-> 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+v1: https://lkml.org/lkml/2016/9/14/55
+---
+ arch/arm/boot/dts/imx6q-apalis-ixora.dts | 12 +++---------
+ arch/arm/boot/dts/imx6qdl-apalis.dtsi    | 25 +++++++++----------------
+ 2 files changed, 12 insertions(+), 25 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora.dts b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+index 207b85b..82b81e0 100644
+--- a/arch/arm/boot/dts/imx6q-apalis-ixora.dts
++++ b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+@@ -55,10 +55,9 @@
+ 		     "fsl,imx6q";
+ 
+ 	aliases {
+-		i2c0 = &i2cddc;
+-		i2c1 = &i2c1;
+-		i2c2 = &i2c2;
+-		i2c3 = &i2c3;
++		i2c0 = &i2c1;
++		i2c1 = &i2c2;
++		i2c2 = &i2c3;
+ 	};
+ 
+ 	aliases {
+@@ -186,11 +185,6 @@
+ };
+ 
+ &hdmi {
+-	ddc-i2c-bus = <&i2cddc>;
+-	status = "okay";
+-};
+-
+-&i2cddc {
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+index 99e323b..8c67dd8 100644
+--- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+@@ -53,18 +53,6 @@
+ 		status = "disabled";
+ 	};
+ 
+-	/* DDC_I2C: I2C2_SDA/SCL on MXM3 205/207 */
+-	i2cddc: i2c@0 {
+-		compatible = "i2c-gpio";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_i2c_ddc>;
+-		gpios = <&gpio3 16 GPIO_ACTIVE_HIGH /* sda */
+-			 &gpio2 30 GPIO_ACTIVE_HIGH /* scl */
+-			>;
+-		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
+-		status = "disabled";
+-	};
+-
+ 	reg_1p8v: regulator-1p8v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "1P8V";
+@@ -209,6 +197,12 @@
+ 	};
+ };
+ 
++&hdmi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hdmi_ddc>;
++	status = "disabled";
++};
++
+ /*
+  * GEN1_I2C: I2C1_SDA/SCL on MXM3 209/211 (e.g. RTC on carrier
+  * board)
+@@ -633,11 +627,10 @@
+ 		>;
+ 	};
+ 
+-	pinctrl_i2c_ddc: gpioi2cddcgrp {
++	pinctrl_hdmi_ddc: hdmiddcgrp {
+ 		fsl,pins = <
+-			/* DDC bitbang */
+-			MX6QDL_PAD_EIM_EB2__GPIO2_IO30 0x1b0b0
+-			MX6QDL_PAD_EIM_D16__GPIO3_IO16 0x1b0b0
++			MX6QDL_PAD_EIM_EB2__HDMI_TX_DDC_SCL 0x4001b8b1
++			MX6QDL_PAD_EIM_D16__HDMI_TX_DDC_SDA 0x4001b8b1
+ 		>;
+ 	};
+ 
+-- 
+2.9.3
