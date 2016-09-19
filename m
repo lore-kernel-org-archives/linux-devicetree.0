@@ -1,43 +1,101 @@
-From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: [PATCH V6 5/6] ARM: bcm2835: add thermal driver to default_config
-Date: Mon, 19 Sep 2016 08:59:59 +0000
-Message-ID: <1474275600-19378-6-git-send-email-kernel@martin.sperl.org>
-References: <1474275600-19378-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474275600-19378-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] mtd: s3c2410: add device tree support
+Date: Mon, 19 Sep 2016 10:11:55 +0100
+Message-ID: <20160919091155.GB11118@leverpostej>
+References: <1474125760-28168-1-git-send-email-sergio.prado@e-labworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1474125760-28168-1-git-send-email-sergio.prado@e-labworks.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sergio Prado <sergio.prado@e-labworks.com>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, robh+dt@kernel.org, kgene@kernel.org, k.kozlowski@samsung.com, boris.brezillon@free-electrons.com, richard@nod.at, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+On Sat, Sep 17, 2016 at 12:22:40PM -0300, Sergio Prado wrote:
+> Tested on FriendlyARM Mini2440
+> 
+> Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
+> ---
+>  .../devicetree/bindings/mtd/samsung-s3c2410.txt    |  70 +++++++++++
+>  drivers/mtd/nand/s3c2410.c                         | 129 ++++++++++++++++++++-
+>  include/linux/platform_data/mtd-nand-s3c2410.h     |   1 +
+>  3 files changed, 195 insertions(+), 5 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt b/Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt
+> new file mode 100644
+> index 000000000000..1c39f6cf483b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt
+> @@ -0,0 +1,70 @@
+> +* Samsung S3C2410 and compatible NAND flash controller
+> +
+> +Required properties:
+> +- compatible : The possible values are:
+> +	"samsung,s3c2410-nand"
+> +	"samsung,s3c2412-nand"
+> +	"samsung,s3c2440-nand"
+> +	"samsung,s3c6400-nand"
+> +- reg : register's location and length.
+> +- #address-cells, #size-cells : see nand.txt
+> +- clocks : phandle to the nand controller clock
+> +- clock-names : must contain "nand"
 
-Add the thermal driver to list of compiled modules
-in the default config for bcm2835.
+Is there only one clock feeding into the NAND block? Is it actually
+called "nand", or does the datasheet not give the input a nme?
 
-Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Reviewed-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
----
- arch/arm/configs/bcm2835_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+> +
+> +Optional properties:
+> +- samsung,tacls : time for active CLE/ALE to nWE/nOE
+> +- samsung,twrph0 : active time for nWE/nOE
+> +- samsung,twrph1 : time for release CLE/ALE from nWE/nOE inactive
 
-diff --git a/arch/arm/configs/bcm2835_defconfig b/arch/arm/configs/bcm2835_defconfig
-index 79de828..4b89f4e 100644
---- a/arch/arm/configs/bcm2835_defconfig
-+++ b/arch/arm/configs/bcm2835_defconfig
-@@ -73,6 +73,8 @@ CONFIG_SPI_BCM2835=y
- CONFIG_SPI_BCM2835AUX=y
- CONFIG_GPIO_SYSFS=y
- # CONFIG_HWMON is not set
-+CONFIG_THERMAL=y
-+CONFIG_BCM2835_THERMAL=y
- CONFIG_WATCHDOG=y
- CONFIG_BCM2835_WDT=y
- CONFIG_DRM=y
--- 
-2.1.4
+If these are necessary, what units are these in?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- samsung,ignore_unset_ecc : boolean to ignore error when we have
+> +                             0xff,0xff,0xff read ECC, on the
+> +                             assumption that it is an un-eccd page
+
+s/_/-/ in property names, please.
+
+That said, this name reads like policy rather than a HW description.
+Why/when is this necessary to set?
+
+[...]
+
+> +	of_property_read_u32(np, "samsung,tacls",  &pdata->tacls);
+> +	of_property_read_u32(np, "samsung,twrph0", &pdata->twrph0);
+> +	of_property_read_u32(np, "samsung,twrph1", &pdata->twrph1);
+
+Are all values in the range [0, 0xffffffff] valid for these? If not, it
+would be a good idea to sanity-check the values.
+
+> +	if (of_get_property(np, "samsung,ignore_unset_ecc", NULL))
+> +		pdata->ignore_unset_ecc = 1;
+
+Use of_property_read_bool();
+
+[...]
+
+> +	for_each_available_child_of_node(np, child) {
+> +
+> +		sets->name = (char *)child->name;
+> +		sets->of_node = child;
+
+Strictly speaking, you should increment the child node refcount here, as
+you maintain a reference to it and its name field.
+
+> +		sets->nr_chips = 1;
+> +
+> +		if (!of_property_match_string(child, "nand-ecc-mode", "none"))
+> +			sets->disable_ecc = 1;
+> +
+> +		if (of_get_property(child, "nand-on-flash-bbt", NULL))
+> +			sets->flash_bbt = 1;
+
+Use of_property_read_bool().
+
+Thanks,
+Mark.
