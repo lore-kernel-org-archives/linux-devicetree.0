@@ -1,50 +1,59 @@
-From: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 0/7] ARM: dts: bcm283x: add and use pinctrl groups
-Date: Mon, 19 Sep 2016 10:43:16 +0200
-Message-ID: <1474274603-24215-1-git-send-email-kraxel@redhat.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 00/19] [RESEND] Remove STiH415 and STiH416 SoC platform
+ support
+Date: Mon, 19 Sep 2016 09:56:50 +0100
+Message-ID: <20160919085650.GA4948@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
+ <7524458.uFhxDUCqEo@wuerfel>
+ <20160915070139.GA14319@griffinp-ThinkPad-X1-Carbon-2nd>
+ <10792443.jxCOopyCy4@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <10792443.jxCOopyCy4@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-  Hi,
+Hi Arnd,
 
-New in v4:  Patch #6 has been splitted into two:  Patch 6 just moves
-pinctrl from &gpio to &sdhci.  Removing the empty now alt3 group
--- including all references as pointed out by Stefan Wahren in review --
-is done by the new patch 7.  Patches 1-5 are unchanged.
+On Thu, 15 Sep 2016, Arnd Bergmann wrote:
 
-cheers,
-  Gerd
+> On Thursday, September 15, 2016 8:01:39 AM CEST Peter Griffin wrote:
+> > 
+> > STiH415 I'm sure never shipped. I'm reasonably sure STiH416 didn't
+> > either. These SoCs were considered legacy even when I was at ST
+> > ~3 years ago.
+> > 
+> > Also remember these are STB SoC's, so JTAG fuses are blown in
+> > production boxes, and also full security is enabled. This means the
+> > primary bootloader will only boot a signed kernel. So if a end user
+> > did happen to have a box they would be unable to upgrade their kernel.
+> > 
+> > From the landing team perspective they were interesting in that they
+> > shared many IPs with the STiH407 family on which future chipsets were
+> > based, and were available to us when that silicon was harder to get
+> > hold of. So we used it as a vehicle for upstreaming so that upstream
+> > support was already quite good when STiH407 silicon did land on our
+> > desk.
+> 
+> Ok, makes sense. I did stumble over one machine basedon STiH412
+> the other day [1], but there probably isn't much shared with that
+> one. Since this a NAS server rather than an STB box, it's probably
+> less locked-down and potentially a target for OpenWRT or similar.
 
-Eric Anholt (1):
-  ARM: dts: bcm283x: Define standard pinctrl groups in the gpio node.
+I just double checked with ST and STiH412 is a STiH407 family based SoC
+so support still exists for this upstream. No idea what if any security is
+enabled on this product though.
 
-Gerd Hoffmann (6):
-  pinctrl: bcm2835: add pull defines to dt bindings
-  ARM: dts: bcm283x: add pinctrl group to &pwm, drop pins from &gpio
-  ARM: dts: bcm283x: add pinctrl group to &i2c0, drop pins from &gpio
-  ARM: dts: bcm283x: add pinctrl group to &i2c1, drop pins from &gpio
-  ARM: dts: bcm283x: add pinctrl group to &sdhci, drop pins from &gpio
-  ARM: dts: bcm283x: drop alt3 from &gpio
+Most probably the A/V stack on it will be SDK2, although native upstream
+multimedia drivers for this chipset are looking pretty good now.
 
- arch/arm/boot/dts/bcm2835-rpi-a-plus.dts |   2 +-
- arch/arm/boot/dts/bcm2835-rpi-a.dts      |   2 +-
- arch/arm/boot/dts/bcm2835-rpi-b-plus.dts |   2 +-
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts |   2 +-
- arch/arm/boot/dts/bcm2835-rpi-b.dts      |   2 +-
- arch/arm/boot/dts/bcm2835-rpi-zero.dts   |   2 +-
- arch/arm/boot/dts/bcm2835-rpi.dtsi       |  15 ++-
- arch/arm/boot/dts/bcm2836-rpi-2-b.dts    |   2 +-
- arch/arm/boot/dts/bcm283x.dtsi           | 203 +++++++++++++++++++++++++++++++
- drivers/pinctrl/bcm/pinctrl-bcm2835.c    |   6 -
- include/dt-bindings/pinctrl/bcm2835.h    |   5 +
- 11 files changed, 224 insertions(+), 19 deletions(-)
+Peter.
 
--- 
-1.8.3.1
-
+> [1] http://www.heise.de/preisvergleich/synology-diskstation-ds216play-16tb-a1400885.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
