@@ -1,50 +1,47 @@
-From: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 1/7] dt-bindings: Update QorIQ TMU thermal bindings
-Date: Mon, 19 Sep 2016 10:44:28 +0800
-Message-ID: <1474253068.23153.2.camel@intel.com>
-References: <1465270054-31512-1-git-send-email-hongtao.jia@nxp.com>
-         <20160608195241.GA6805@rob-hp-laptop>
-         <CADRPPNQ+hikr1qNK1wPbLnhudUrU1bN_2iuYyRQnqCN4Zwh83Q@mail.gmail.com>
+From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v5 3/5] arm64: arch_timer: Work around QorIQ Erratum
+ A-008585
+Date: Sun, 18 Sep 2016 23:28:44 -0500
+Message-ID: <1474259324.15220.5.camel@buserror.net>
+References: <1473469413-11019-1-git-send-email-oss@buserror.net>
+         <1473469413-11019-3-git-send-email-oss@buserror.net>
+         <20160912113615.GA20804@leverpostej> <20160912114406.GG23211@arm.com>
+         <20160912123027.GA13741@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CADRPPNQ+hikr1qNK1wPbLnhudUrU1bN_2iuYyRQnqCN4Zwh83Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20160912123027.GA13741@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Li <pku.leo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jia Hongtao <hongtao.jia-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, mike.caraman-3arQi8VN3Tc@public.gmane.org, Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 三, 2016-09-14 at 11:40 -0500, Leo Li wrote:
-> On Wed, Jun 8, 2016 at 2:52 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+On Mon, 2016-09-12 at 13:30 +0100, Mark Rutland wrote:
+> On Mon, Sep 12, 2016 at 12:44:07PM +0100, Will Deacon wrote:
 > > 
-> > On Tue, Jun 07, 2016 at 11:27:34AM +0800, Jia Hongtao wrote:
+> > On Mon, Sep 12, 2016 at 12:36:15PM +0100, Mark Rutland wrote:
 > > > 
-> > > For different types of SoC the sensor id and endianness may vary.
-> > > "#thermal-sensor-cells" is used to provide sensor id information.
-> > > "little-endian" property is to tell the endianness of TMU.
+> > > The changes in arm64's <asm/arch_timer.h> are going to conflict with
+> > > some cleanup [1,2] that just landed in the arm64 for-next/core branch.
 > > > 
-> > > Signed-off-by: Jia Hongtao <hongtao.jia-3arQi8VN3Tc@public.gmane.org>
-> > > ---
-> > > Changes for V2:
-> > > * Remove formatting chnages.
-> > > 
-> > >  Documentation/devicetree/bindings/thermal/qoriq-thermal.txt | 7
-> > > +++++++
-> > >  1 file changed, 7 insertions(+)
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Hi Zhang Rui,
+> > > Could you please rebase atop of that?
+> > Well, we should figure out what tree this is going through first. There
+> > are a mixture of arm, arm64, driver and dts changes here and not all
+> > of it is carrying the appropriate acks for me to queue it.
+> Given that mix, I had assumed that this would all go through the arm64
+> tree -- I see that Rob has already acked the binding, and I'm happy to
+> give my ack for the driver once that's in shape.
 > 
-> Since you have applied the driver patch, can you also apply the
-> binding patch?  The binding is supposed to go with the driver.
-> 
+> The dts change could go through arm-soc in parallel, I guess. It doesn't
+> look like arm-soc have been Cc'd for that, though.
 
-Do you mean I should take both patch 1/7 and 7/7? I can not see the
-other patches in this patch set.
+The arm-soc section of MAINTAINERS says to e-mail linux-arm-kernel, which I
+did.  There doesn't appear to be a separate arm-soc mailing list, nor is there
+a request to CC Olof/Arnd.  I did CC Shawn Guo who has been handling the
+device tree patches for these chips.
 
-thanks,
-rui
-
+-Scott
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
