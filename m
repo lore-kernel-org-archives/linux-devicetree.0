@@ -1,7 +1,7 @@
 From: Paul Burton <paul.burton@imgtec.com>
-Subject: [PATCH v2 07/14] of/platform: Probe "isa" busses by default
-Date: Mon, 19 Sep 2016 22:21:24 +0100
-Message-ID: <20160919212132.28893-8-paul.burton@imgtec.com>
+Subject: [PATCH v2 09/14] MIPS: Malta: Probe RTC via DT
+Date: Mon, 19 Sep 2016 22:21:26 +0100
+Message-ID: <20160919212132.28893-10-paul.burton@imgtec.com>
 References: <20160919212132.28893-1-paul.burton@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,41 +9,92 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160919212132.28893-1-paul.burton@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Since commit 44a7185c2ae6 ("of/platform: Add common method to populate
-default bus") platforms calling of_platform_bus_probe from an initcall
-is either a rather unsafe race with of_platform_default_populate_init or
-a no-op. The MIPS Malta board needs to probe devices under an ISA bus,
-which we do support in the of_busses array but until now haven't
-included in of_default_bus_match_table.
-
-Add an "isa" entry to of_default_bus_match_table such that we can just
-accept use of of_platform_default_populate_init & remove the
-Malta-specific match table in a later patch.
+Add the DT node required to probe the RTC, and remove the platform code
+that was previously doing it.
 
 Signed-off-by: Paul Burton <paul.burton@imgtec.com>
 
 ---
 
 Changes in v2:
-- New patch to deal with 44a7185c2ae6
+- Remove rtc DT node label
 
- drivers/of/platform.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/boot/dts/mti/malta.dts     | 15 +++++++++++++++
+ arch/mips/mti-malta/malta-platform.c | 21 ---------------------
+ 2 files changed, 15 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index f39ccd5..d85e431 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -29,6 +29,7 @@
- const struct of_device_id of_default_bus_match_table[] = {
- 	{ .compatible = "simple-bus", },
- 	{ .compatible = "simple-mfd", },
-+	{ .compatible = "isa", },
- #ifdef CONFIG_ARM_AMBA
- 	{ .compatible = "arm,amba-bus", },
- #endif /* CONFIG_ARM_AMBA */
+diff --git a/arch/mips/boot/dts/mti/malta.dts b/arch/mips/boot/dts/mti/malta.dts
+index af765af..fecbca8 100644
+--- a/arch/mips/boot/dts/mti/malta.dts
++++ b/arch/mips/boot/dts/mti/malta.dts
+@@ -49,4 +49,19 @@
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <GIC_SHARED 3 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
++
++	isa {
++		compatible = "isa";
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges = <1 0 0 0x1000>;
++
++		rtc@70 {
++			compatible = "motorola,mc146818";
++			reg = <1 0x70 0x8>;
++
++			interrupt-parent = <&i8259>;
++			interrupts = <8>;
++		};
++	};
+ };
+diff --git a/arch/mips/mti-malta/malta-platform.c b/arch/mips/mti-malta/malta-platform.c
+index e1dd1c1..6433a39 100644
+--- a/arch/mips/mti-malta/malta-platform.c
++++ b/arch/mips/mti-malta/malta-platform.c
+@@ -23,7 +23,6 @@
+  */
+ #include <linux/init.h>
+ #include <linux/serial_8250.h>
+-#include <linux/mc146818rtc.h>
+ #include <linux/module.h>
+ #include <linux/irq.h>
+ #include <linux/mtd/partitions.h>
+@@ -68,25 +67,6 @@ static struct platform_device malta_uart8250_device = {
+ 	},
+ };
+ 
+-struct resource malta_rtc_resources[] = {
+-	{
+-		.start	= RTC_PORT(0),
+-		.end	= RTC_PORT(7),
+-		.flags	= IORESOURCE_IO,
+-	}, {
+-		.start	= RTC_IRQ,
+-		.end	= RTC_IRQ,
+-		.flags	= IORESOURCE_IRQ,
+-	}
+-};
+-
+-static struct platform_device malta_rtc_device = {
+-	.name		= "rtc_cmos",
+-	.id		= -1,
+-	.resource	= malta_rtc_resources,
+-	.num_resources	= ARRAY_SIZE(malta_rtc_resources),
+-};
+-
+ static struct mtd_partition malta_mtd_partitions[] = {
+ 	{
+ 		.name =		"YAMON",
+@@ -129,7 +109,6 @@ static struct platform_device malta_flash_device = {
+ 
+ static struct platform_device *malta_devices[] __initdata = {
+ 	&malta_uart8250_device,
+-	&malta_rtc_device,
+ 	&malta_flash_device,
+ };
+ 
 -- 
 2.9.3
