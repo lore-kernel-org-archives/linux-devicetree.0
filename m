@@ -1,51 +1,47 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v4 1/7] pinctrl: bcm2835: add pull defines to dt bindings
-Date: Mon, 19 Sep 2016 11:07:17 +0100
-Message-ID: <87zin49p9m.fsf@eliezer.anholt.net>
-References: <1474274603-24215-1-git-send-email-kraxel@redhat.com> <1474274603-24215-2-git-send-email-kraxel@redhat.com>
+From: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] drivers/of: recognize status property of dt memory
+ nodes
+Date: Mon, 19 Sep 2016 20:11:39 +1000
+Message-ID: <bdbcc833-1a56-69aa-b433-ec4ce685d3cd@gmail.com>
+References: <1473883618-14998-1-git-send-email-arbab@linux.vnet.ibm.com>
+ <1473883618-14998-2-git-send-email-arbab@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1474274603-24215-2-git-send-email-kraxel@redhat.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: swarren@wwwdotorg.org, bcm-kernel-feedback-list@broadcom.com, Gerd Hoffmann <kraxel@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473883618-14998-2-git-send-email-arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Bharata B Rao <bharata-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Alistair Popple <apopple-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-
-Gerd Hoffmann <kraxel@redhat.com> writes:
-
-> Also delete (unused) private enum from driver.
-> The pull defines can be used instead if needed.
->
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-
-Acked-by: Eric Anholt <eric@anholt.net>
-
-gpio maintainers, could I pull this through my dt tree?  Or does this
-need to be split in two?
 
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+On 15/09/16 06:06, Reza Arbab wrote:
+> Respect the standard dt "status" property when scanning memory nodes in
+> early_init_dt_scan_memory(), so that if the property is present and not
+> "okay", no memory will be added.
+> 
+> The use case at hand is accelerator or device memory, which may be
+> unusable until post-boot initialization of the memory link. Such a node
+> can be described in the dt as any other, given its status is "disabled".
+> Per the device tree specification,
+> 
+> "disabled"
+> 	Indicates that the device is not presently operational, but it
+> 	might become operational in the future (for example, something
+> 	is not plugged in, or switched off).
+> 
+> Once such memory is made operational, it can then be hotplugged.
+> 
+> Signed-off-by: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 
------BEGIN PGP SIGNATURE-----
+Makes sense, so basically a /memory@  with missing status or status = "okay"
+are added, others are skipped. No memblocks corresponding to those nodes
+are created either.
 
-iQIcBAEBCgAGBQJX37jWAAoJELXWKTbR/J7oMFoP/RRjqf5C3FaEUez87TjcJhdy
-HBtSa9Or6AyhBVqNnecg0n7sj/TCFlPIO501c9CyfGBZMfuNKL5NFB0L/8L+EW5/
-jjwZEY7QmSUdnuyaayV50PTRwMamaIRICpGnLWg5mMO8y8K5QLOlxN/0uu4dtd93
-hxtdInYag6OnLpngBnTqcyutjEf1QvHrsAWYNlql5rUk0QgWqpHiI175MszK1k5N
-j1HdG5l3tmng2VFsghKmUeJ6RgvD9tDPWUkdZN9okcHhJp6ghE2NRH4yo0xx15a/
-m4hB2hmNy9HiOTs8oxWOiqMYU6xvMmDiZYMdoBiwa8fz/AAZwnzrN2ynzQp5/cK1
-bo8QQ3HKUBB2pMzTkkEUXGEOteQYZEj9qq6JEgV2I0V0kIFAdKUW7wAhkoXtwW0F
-Wv72/SFLAbcTpWB30cdxvuS+XwvUdETSf60HeQj32ufi8KBvqpGpQB6StjnzdZct
-Y9SK0/mK/mR1IL8RbjrxSxWgzNGLsb3uOVAnmyEm4Qy0Y9WUpiHQa1VxA+ejnJ0T
-t4X1nQBSHNtOaHmtHqjWHLNs5+2lJncAwzVPyw/9j10iwz7MATqD7aXrIiR/A3Z0
-tf2Te55tpkTstMBTAaXwBDbAOi0eMEMqHyNaH/hRfvLT1asW8cO4MJx3XxAqhsFs
-DGW0h8OTifB5yfkmH58Q
-=YwHe
------END PGP SIGNATURE-----
---=-=-=--
+Balbir Singh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
