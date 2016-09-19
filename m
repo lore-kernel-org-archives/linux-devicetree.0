@@ -1,48 +1,87 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] phy: meson: add USB2 PHY support for Meson8b and GXBB
-Date: Mon, 19 Sep 2016 09:42:22 -0700
-Message-ID: <m2wpi7hmdt.fsf@baylibre.com>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
-        <20160911134111.31141-1-martin.blumenstingl@googlemail.com>
-        <20160911134111.31141-4-martin.blumenstingl@googlemail.com>
-        <m2a8faxy72.fsf@baylibre.com> <57DCC3CF.9090409@ti.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 3/5] arm64: arch_timer: Work around QorIQ Erratum
+ A-008585
+Date: Mon, 19 Sep 2016 17:52:58 +0100
+Message-ID: <20160919165258.GA30584@leverpostej>
+References: <1473469413-11019-1-git-send-email-oss@buserror.net>
+ <1473469413-11019-3-git-send-email-oss@buserror.net>
+ <20160912113615.GA20804@leverpostej>
+ <1474260085.15220.17.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57DCC3CF.9090409-l0cyMroinI0@public.gmane.org> (Kishon Vijay Abraham, I's message of
-        "Sat, 17 Sep 2016 09:47:19 +0530")
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1474260085.15220.17.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, mike.caraman-3arQi8VN3Tc@public.gmane.org, Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> writes:
+On Sun, Sep 18, 2016 at 11:41:25PM -0500, Scott Wood wrote:
+> On Mon, 2016-09-12 at 12:36 +0100, Mark Rutland wrote:
+> > On Fri, Sep 09, 2016 at 08:03:31PM -0500, Scott Wood wrote:
+> > > +static __always_inline void arch_timer_cval_write_cp15(int access, u64
+> > > val)
+> > > +{
+> > > +	if (access == ARCH_TIMER_PHYS_ACCESS)
+> > > +		asm volatile("msr cntp_cval_el0, %0" : : "r" (val));
+> > > +	else if (access == ARCH_TIMER_VIRT_ACCESS)
+> > > +		asm volatile("msr cntv_cval_el0, %0" : : "r" (val));
+> > > +
+> > > +	isb();
+> > > +}
+> > Please add ARCH_TIMER_REG_CVAL to enum arch_timer_reg, and move these
+> > accesses into arch_timer_reg_write_cp15().
+> 
+> Adding ARCH_TIMER_REG_CVAL to the enum means we get warnings from bunch of
+> switch statements that don't actually need a CVAL implementation -- or else we
+> have to add untested CVAL accessors for arm32 and mmio.  The arm32 part would
+> add another dependency on getting an ack from RMK, that can't be postponed as
+> easily as the archdata/vdso patch.
 
-> Hi Kevin,
->
-> On Wednesday 14 September 2016 09:36 PM, Kevin Hilman wrote:
->> Kishon,
->> 
->> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
->> 
->>> This is a new driver for the USB PHY found in Meson8b and GXBB SoCs.
->>>
->>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->>> Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>> Tested-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> 
->> Will you be picking this up for v4.9?
->
-> It's already late for 4.9. Generally send pull request to Greg around -rc6.
-> This can go only in 4.10.
+That's annoying. Never mind, then.
 
-That's fine.
+> Since this is specific to an erratum rather than general cval support, I can
+> move the accesses into fsl_a008585_set_next_event (and convert to
+> write_sysreg).
 
-Does that mean you have it queued someplace?  I don't see it in any of
-your branches.
+Ok. I think that's preferable given we have no other users.
 
-Kevin
+> > > +static void fsl_a008585_set_sne(struct clock_event_device *clk)
+> > > +{
+> > > +#ifdef CONFIG_FSL_ERRATUM_A008585
+> > > +	if (!static_branch_unlikely(&arch_timer_read_ool_enabled))
+> > > +		return;
+> > > +
+> > > +	if (arch_timer_uses_ppi == VIRT_PPI)
+> > > +		clk->set_next_event = fsl_a008585_set_next_event_virt;
+> > > +	else
+> > > +		clk->set_next_event = fsl_a008585_set_next_event_phys;
+> > > +#endif
+> > > +}
+> > > +
+> > I'm not keen on the magic hook to reset the function pointers, and the
+> > additional phys/virt stubs seem pointless. Instead, can we fold this
+> > into the existing set_next_event? e.g. have that do:
+> > 
+> > 	if (needs_fsl_a008585_workaround() {
+> > 		fsl_a008585_set_next_event(access, evt, clk);
+> > 		return;
+> > 	}
+> 
+> OK.  I had been trying to avoid messing with the standard set_next_event, but
+> it doesn't matter as much now that static branches are being used.  In that
+> case we can avoid duplicating the ctrl code, and only replace the tval write.
+
+Reconsidering my suggestion, I realise this will also affect the MMIO
+timers, so that doesn't work.
+
+So for the moment, I guess we have to keep fsl_a008585_set_next_event().
+
+Thanks,
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
