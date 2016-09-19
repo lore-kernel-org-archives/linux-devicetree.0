@@ -1,107 +1,39 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] ASoC: rk3399_gru_sound: fix recording pop at first
- attempt
-Date: Mon, 19 Sep 2016 15:44:30 +0100
-Message-ID: <20160919144404.GA18734@leverpostej>
-References: <1474295379-16936-1-git-send-email-zhengxing@rock-chips.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: am335x-evm: Add blue-and-red-wiring
+ -property to lcdc node
+Date: Mon, 19 Sep 2016 09:47:40 -0500
+Message-ID: <f82ff3b5-afc6-8ba0-14e1-28b4b3ae8e69@ti.com>
+References: <cover.1474025756.git.jsarha@ti.com>
+ <34893e286d16c281098063d2a4fec985acbf8818.1474025756.git.jsarha@ti.com>
+ <a0e00898-80fb-8242-aafb-6e4d3f650345@ti.com>
+ <3052854a-de30-0e6d-3084-6788733c7118@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1474295379-16936-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <3052854a-de30-0e6d-3084-6788733c7118-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, woojoo.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, smbarber-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, hychao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, cychiang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 19, 2016 at 10:29:39PM +0800, Xing Zheng wrote:
-> From: Wonjoon Lee <woojoo.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> 
-> Pop happens when mclk applied but dmic's own boot-time
-> Specify dmic delay times in dt to make sure
-> clocks are ready earlier than dmic working
-> 
-> Signed-off-by: Wonjoon Lee <woojoo.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> 
->  .../bindings/sound/rockchip,rk3399-gru-sound.txt   |    6 ++++++
->  sound/soc/rockchip/rk3399_gru_sound.c              |   14 ++++++++++++++
->  2 files changed, 20 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-> index f19b6c8..b7dd3ab 100644
-> --- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-> +++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-> @@ -6,6 +6,12 @@ Required properties:
->    connected to the codecs
->  - rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
->  
-> +Optional properties:
-> +- dmic-delay : specify delay time for DMIC ready.
-> +  If this option is specified, which means it's required dmic need
-> +  delay for DMIC to ready so that rt5514 can avoid recording before
-> +  DMIC send valid data
+On 09/19/2016 02:55 AM, Jyri Sarha wrote:
+[...]
+> The functional patches, with the binding document can be found here:
+> http://www.spinics.net/lists/devicetree/msg141246.html
+>
+> [1] For more details see section 3.1.1 in AM335x Silicon Errata:
+> http://www.ti.com/general/docs/lit/getliterature.tsp?baseLiteratureNumber=sprz360
+>
 
-What units is this in? Per the code it looks like ms, so if we follow
-Documentation/devicetree/bindings/property-units.txt, thous should be
-named something like dmic-enable-delay-ms.
+Thanks for the detailed explanation. 
+http://www.spinics.net/lists/devicetree/msg141248.html helped explain 
+the same.
 
-That said, do we even need a property for this? Does this vary much in
-practice?
 
-If it does, can we not derive this delay from other information (e.g.
-the rates of input clocks and so on)? What exactly determines the
-necessary delay?
-
-Thanks,
-Mark.
-
->  
->  sound {
-> diff --git a/sound/soc/rockchip/rk3399_gru_sound.c b/sound/soc/rockchip/rk3399_gru_sound.c
-> index 164b6da..6ab838b 100644
-> --- a/sound/soc/rockchip/rk3399_gru_sound.c
-> +++ b/sound/soc/rockchip/rk3399_gru_sound.c
-> @@ -37,6 +37,8 @@
->  
->  #define SOUND_FS	256
->  
-> +unsigned int rt5514_dmic_delay;
-> +
->  static struct snd_soc_jack rockchip_sound_jack;
->  
->  static const struct snd_soc_dapm_widget rockchip_dapm_widgets[] = {
-> @@ -122,6 +124,9 @@ static int rockchip_sound_rt5514_hw_params(struct snd_pcm_substream *substream,
->  		return ret;
->  	}
->  
-> +	/* Wait for DMIC stable */
-> +	msleep(rt5514_dmic_delay);
-> +
->  	return 0;
->  }
->  
-> @@ -334,6 +339,15 @@ static int rockchip_sound_probe(struct platform_device *pdev)
->  		return -ENODEV;
->  	}
->  
-> +	/* Set DMIC delay */
-> +	ret = device_property_read_u32(&pdev->dev, "dmic-delay",
-> +					&rt5514_dmic_delay);
-> +	if (ret) {
-> +		rt5514_dmic_delay = 0;
-> +		dev_dbg(&pdev->dev,
-> +			"no optional property 'dmic-delay' found, default: no delay\n");
-> +	}
-> +
->  	rockchip_dailinks[DAILINK_RT5514_DSP].cpu_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
->  	rockchip_dailinks[DAILINK_RT5514_DSP].cpu_dai_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
->  	rockchip_dailinks[DAILINK_RT5514_DSP].platform_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
-> -- 
-> 1.7.9.5
-> 
-> 
+-- 
+Regards,
+Nishanth Menon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
