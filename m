@@ -1,116 +1,39 @@
-From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] dt/bindings: Add bindings for Tegra GMI controller
-Date: Mon, 19 Sep 2016 09:21:21 +0200
-Message-ID: <CALw8SCUK0_kvNR_juAc7N_DMQbV=voizqXE6PApc_B_CQHzzOA@mail.gmail.com>
-References: <1472045838-22628-1-git-send-email-mirza.krak@gmail.com>
- <1472045838-22628-4-git-send-email-mirza.krak@gmail.com> <de2fb909-829e-6c04-4f6a-442cbb9171c9@nvidia.com>
- <CALw8SCVcPymDZ8NyUbeanRF0TCT1TZzL6iRDticYA42FWrEWqw@mail.gmail.com>
- <20160830170636.GA8741@rob-hp-laptop> <CALw8SCUYQGWXn7=Jpn=uvFvvPRVFQGrtSNot+-tVgP73yAEEOQ@mail.gmail.com>
- <a3a2371b-5d98-db2d-b7e4-be6d08cb7271@nvidia.com>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: dts: am335x-* Add blue-and-red-wiring propery to
+ lcdc nodes
+Date: Mon, 19 Sep 2016 10:30:41 +0300
+Message-ID: <f8124caf-9752-c970-fd41-404ea4d983a9@ti.com>
+References: <cover.1474025756.git.jsarha@ti.com>
+ <20160916150242.vbvpuokftychkdfz@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a3a2371b-5d98-db2d-b7e4-be6d08cb7271-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160916150242.vbvpuokftychkdfz-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2016-09-06 12:32 GMT+02:00 Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>:
->
-> On 31/08/16 12:22, Mirza Krak wrote:
->> 2016-08-30 19:06 GMT+02:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
->
-> ...
->
->>>>                  nvidia,snor-cs = <4>;
->>>
->>> NAK, no custom CS properties.
->
-> Ok, so ...
->
->> gmi@70090000 {
->>         compatible = "nvidia,tegra20-gmi";
->>         reg = <0x70009000 0x1000>;
->>         #address-cells = <2>;
->>         #size-cells = <1>;
->>         clocks = <&tegra_car TEGRA20_CLK_NOR>;
->>         clock-names = "gmi";
->>         resets = <&tegra_car 42>;
->>         reset-names = "gmi";
->>         ranges = <4 0 0xd0000000 0xfffffff>;
->>
->>         status = "okay";
->>
->>         bus@4,0 {
->>                 compatible = "simple-bus";
->>                 #address-cells = <1>;
->>                 #size-cells = <1>;
->>                 ranges = <0 4 0 0x40000>;
->>
->>                 nvidia,snor-mux-mode;
->>                 nvidia,snor-adv-inv;
->>
->>                 can@0 {
->>                         reg = <0 0x100>;
->>                         ...
->>                 };
->>
->>                 can@40000 {
->>                         reg = <0x40000 0x100>;
->>                         ...
->>                 };
->>         };
->> };
->>
->> Have I understood you correct?
->>
->> Also wanted to verify the example case where you only have on device
->> connected to one CS#, from what I see in other implementations it
->> seems OK to put the CS# in the reg property in that case. Is this
->> correct?
->>
->> Example with one SJA1000 CAN controller connected to the GMI bus
->> on CS4:
->>
->> gmi@70090000 {
->>         compatible = "nvidia,tegra20-gmi";
->>         reg = <0x70009000 0x1000>;
->>         #address-cells = <2>;
->>         #size-cells = <1>;
->>         clocks = <&tegra_car TEGRA20_CLK_NOR>;
->>         clock-names = "gmi";
->>         resets = <&tegra_car 42>;
->>         reset-names = "gmi";
->>         ranges = <4 0 0xd0000000 0xfffffff>;
->>
->>         status = "okay";
->>
->>         can@4,0 {
->>                 reg = <4 0 0x100>;
->>                 nvidia,snor-mux-mode;
->>                 nvidia,snor-adv-inv;
->>                 ...
->>         };
->> };
->>
->> Jon, to be able to handle both cases in the driver we would first
->> attempt to decode the CS# from the ranges property, and fallback to
->> reg property if no ranges are defined. Does that sound reasonable?
->
-> Given the above examples that may be supported, is there a
-> better/simpler way to extract the CS# than what Mirza is proposing? For
-> example, from the node-name unit-address?
->
+On 09/16/16 18:02, Tony Lindgren wrote:
+> * Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> [160916 04:50]:
+>> > These patches complete the am335x LCDC color errata fix[1]. The
+>> > functional patches are now queued for v4.9.
+>> > 
+>> > The patch for am335x-boneblack.dts is delayed until v4.10 or v4.9-rc
+>> > phase to avoid conflickt with BBB HDMI audio DTS patch that slipped
+>> > into tda998x pull request.
+>> > 
+>> > [1] http://www.spinics.net/lists/devicetree/msg141246.html
+> OK. Are these safe to merge even if the dts changes get merged before
+> the driver changes? Or does it break something if merged out of order?
 
-Hi.
+Yes, they are safe. The new property just simply is not interpreted and
+everything works as before.
 
-I have been on vacation and now I am back and wanted to finalize these
-patch series.
-
-So pinging this thread to see I we can agree on a solution.
-
-Rob any comments to my proposal and Jon`s comment?
-
-Best Regards
-Mirza Krak
+BR,
+Jyri
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
