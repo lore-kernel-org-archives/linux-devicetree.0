@@ -1,72 +1,46 @@
-From: Fabien Lahoudere <fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: imx5: Add clocks configuration
-Date: Mon, 19 Sep 2016 09:33:16 +0200
-Message-ID: <1b8d9b99-ef47-734e-a232-88fa8860304c@collabora.co.uk>
-References: <1473934403-2726-1-git-send-email-fabien.lahoudere@collabora.co.uk>
- <1473961353.68713919@f429.i.mail.ru> <20160918002159.GD15478@tiger>
- <20160918002451.GE15478@tiger>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and GXBB
+Date: Mon, 19 Sep 2016 09:37:06 +0200
+Message-ID: <19026966.I9xoTaRrZa@wuerfel>
+References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com> <CAFBinCC5fhbtkNdc6MJs7veD+xVGC6Qb-jgX_pwvraP1x2JrhQ@mail.gmail.com> <57DF70AF.4050002@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160918002451.GE15478@tiger>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kalle Kankare <kalle.kankare-qk6XLmcB7GT1KXRcyAk9cg@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57DF70AF.4050002-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Monday, September 19, 2016 10:29:27 AM CEST Kishon Vijay Abraham I wrote:
+> On Monday 19 September 2016 01:26 AM, Martin Blumenstingl wrote:
+> > On Fri, Sep 16, 2016 at 10:19 AM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
 
-On 18/09/16 02:24, Shawn Guo wrote:
-> On Sun, Sep 18, 2016 at 08:21:59AM +0800, Shawn Guo wrote:
->> On Thu, Sep 15, 2016 at 08:42:33PM +0300, Alexander Shiyan wrote:
->>>> Четверг, 15 сентября 2016, 13:13 +03:00 от Fabien Lahoudere <fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>:
->>>>
->>>> From: Kalle Kankare < kalle.kankare-qk6XLmcB7GT1KXRcyAk9cg@public.gmane.org >
->>>>
->>>> Add clocks configuration for CSI, FIRI and IEEE1588.
->>>>
->>>> Signed-off-by: Fabien Lahoudere < fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org >
->>>> ---
->>>>  drivers/clk/imx/clk-imx51-imx53.c      | 20 ++++++++++++++++++++
->>>>  include/dt-bindings/clock/imx5-clock.h | 15 ++++++++++++++-
->>>>  2 files changed, 34 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/clk/imx/clk-imx51-imx53.c b/drivers/clk/imx/clk-imx51-imx53.c
->>>> index 29d4c44..1e3c9ea 100644
->>>> --- a/drivers/clk/imx/clk-imx51-imx53.c
->>>> +++ b/drivers/clk/imx/clk-imx51-imx53.c
->>>> @@ -126,6 +126,7 @@ static const char *spdif0_com_sel[] = { "spdif0_podf", "ssi1_root_gate", };
->>>>  static const char *mx51_spdif1_com_sel[] = { "spdif1_podf", "ssi2_root_gate", };
->>>>  static const char *step_sels[] = { "lp_apm", };
->>>>  static const char *cpu_podf_sels[] = { "pll1_sw", "step_sel" };
->>>> +static const char *ieee1588_sels[] = { "pll3_sw", "pll4_sw", "dummy" /* usbphy2_clk */, "dummy" /* fec_phy_clk */ };
->>>>
->>>>  static struct clk *clk[IMX5_CLK_END];
->>>>  static struct clk_onecell_data clk_data;
->>>> @@ -543,6 +544,25 @@ static void __init mx53_clocks_init(struct device_node *np)
->>> ...
->>>
->>> 2 Shawn Guo: Since the change affects only on i.MX53 architecture,
->>> I would ask to change the subject to i.MX53 if it possible.
->>
->> Yes.  Actually, since clock driver is not moved to drivers/clk, we
->
-> s/not/now
->
->> shouldn't prefix it with "ARM: " any longer.
+> >> This way the driver will be probed only once (the reset can be done during
+> >> probe). The phy driver should scan the dt node and for every sub-node it
+> >> invokes phy_create?
+> > I'll recap what we have discussed so far (so you don't have to re-read
+> > the whole thread):
+> > The reference driver treats both USB PHYs as separate devices (the
+> > datasheet has no information about the PHYs though). The only
+> > "special" thing is the shared reset line -> together with Philipp
+> > Zabel (the reset framework maintainer) we decided to make
+> > reset_control_reset work for shared reset lines.
+> > 
+> > That means we can keep the two PHYs as separate devices inside the
+> > .dts, while keeping everything else separate (just like the reference
+> > driver)
+> > Is this fine for you and Arnd?
+> 
+> yeah.. I'm fine with that.
+> 
 
+Agreed, if we don't need to have a device modeled around both
+instance, that's ideal.
 
-Ok is "clk: imx53: Add clocks configuration" ok?
-
->
-> Shawn
->
-
-Thanks
-
-Fabien
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
