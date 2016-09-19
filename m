@@ -1,51 +1,50 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH v8 3/5] input: tps65218-pwrbutton: Add platform_device_id table
-Date: Mon, 19 Sep 2016 13:09:04 +0530
-Message-ID: <1474270746-11568-4-git-send-email-j-keerthy@ti.com>
-References: <1474270746-11568-1-git-send-email-j-keerthy@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v5 3/5] arm64: arch_timer: Work around QorIQ Erratum A-008585
+Date: Mon, 19 Sep 2016 09:44:45 +0200
+Message-ID: <2134283.D1RaSsN7zL@wuerfel>
+References: <1473469413-11019-1-git-send-email-oss@buserror.net> <20160912123027.GA13741@leverpostej> <1474259324.15220.5.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1474270746-11568-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: j-keerthy@ti.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, tony@atomide.com, dmitry.torokhov@gmail.com, linus.walleij@linaro.org, broonie@kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1474259324.15220.5.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, mike.caraman-3arQi8VN3Tc@public.gmane.org, Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-platform_device_id table is needed for adding the tps65218-pwrbutton
-module to the mfd_cell array.
+On Sunday, September 18, 2016 11:28:44 PM CEST Scott Wood wrote:
+> On Mon, 2016-09-12 at 13:30 +0100, Mark Rutland wrote:
+> > On Mon, Sep 12, 2016 at 12:44:07PM +0100, Will Deacon wrote:
+> > > 
+> > > On Mon, Sep 12, 2016 at 12:36:15PM +0100, Mark Rutland wrote:
+> > > > 
+> > > > The changes in arm64's <asm/arch_timer.h> are going to conflict with
+> > > > some cleanup [1,2] that just landed in the arm64 for-next/core branch.
+> > > > 
+> > > > Could you please rebase atop of that?
+> > > Well, we should figure out what tree this is going through first. There
+> > > are a mixture of arm, arm64, driver and dts changes here and not all
+> > > of it is carrying the appropriate acks for me to queue it.
+> > Given that mix, I had assumed that this would all go through the arm64
+> > tree -- I see that Rob has already acked the binding, and I'm happy to
+> > give my ack for the driver once that's in shape.
+> > 
+> > The dts change could go through arm-soc in parallel, I guess. It doesn't
+> > look like arm-soc have been Cc'd for that, though.
+> 
+> The arm-soc section of MAINTAINERS says to e-mail linux-arm-kernel, which I
+> did.  There doesn't appear to be a separate arm-soc mailing list, nor is there
+> a request to CC Olof/Arnd.  I did CC Shawn Guo who has been handling the
+> device tree patches for these chips.
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/input/misc/tps65218-pwrbutton.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+That is the right way to do it. If the DT change is a bugfix that should
+get merged along with the rest, Shawn can also provide an Ack to have it
+merged through the arm64 tree, ideally warning us if there might be any
+conflicts with stuff that gets sent for arm-soc.
 
-diff --git a/drivers/input/misc/tps65218-pwrbutton.c b/drivers/input/misc/tps65218-pwrbutton.c
-index 3273217..cc74a41 100644
---- a/drivers/input/misc/tps65218-pwrbutton.c
-+++ b/drivers/input/misc/tps65218-pwrbutton.c
-@@ -150,12 +150,20 @@ static int tps6521x_pb_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct platform_device_id tps6521x_pwrbtn_id_table[] = {
-+	{ "tps65218-pwrbutton", },
-+	{ "tps65217-pwrbutton", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(platform, tps6521x_pwrbtn_id_table);
-+
- static struct platform_driver tps6521x_pb_driver = {
- 	.probe	= tps6521x_pb_probe,
- 	.driver	= {
- 		.name	= "tps6521x_pwrbutton",
- 		.of_match_table = of_tps6521x_pb_match,
- 	},
-+	.id_table = tps6521x_pwrbtn_id_table,
- };
- module_platform_driver(tps6521x_pb_driver);
- 
--- 
-1.9.1
-
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
