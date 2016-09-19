@@ -1,57 +1,113 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 4/4] regulator: Prevent falling too fast
-Date: Mon, 19 Sep 2016 11:39:24 -0700
-Message-ID: <CAD=FV=U2bi7GEA3Tq4vpzqF8J2hpgN-Vq4Jv=PnaGYhA3Z6vGg@mail.gmail.com>
-References: <20160906190524.GB79728@google.com> <20160912185633.GH27946@sirena.org.uk>
- <20160913172140.GC62872@google.com> <20160915143945.GJ27974@sirena.org.uk>
- <20160915180223.GE62872@google.com> <20160916163253.GA10189@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160916163253.GA10189@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Matthias Kaehlcke <mka@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Brian Norris <briannorris@chromium.org>, Javier Martinez Canillas <javier@dowhile0.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Subject: [RFC PATCH v3 1/2] ARM: dts: samsung: add rga-lvds panel in itop elite
+Date: Tue, 20 Sep 2016 03:02:50 +0800
+Message-ID: <1474311771-23321-2-git-send-email-ayaka@soulik.info>
+References: <1474311771-23321-1-git-send-email-ayaka@soulik.info>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1474311771-23321-1-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+It is actually a lvds panel connected through a rga-lvds bridge.
+The touchscreen is communicated with i2c bus but the driver is not
+support now.
 
-On Fri, Sep 16, 2016 at 9:32 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Thu, Sep 15, 2016 at 11:02:23AM -0700, Matthias Kaehlcke wrote:
->> El Thu, Sep 15, 2016 at 03:39:45PM +0100 Mark Brown ha dit:
->
->> > The obvious question here is how the OVP hardware knows about the new
->> > voltage and why we're bodging this in the regulator core rather than in
->> > the OVP hardware.
->
->> The OVP hardware is part of the regulator and the regulator is not
->> notified directly about voltage changes. The regulator transforms the
->> PWM input into DC output and does the OVP internally with the limits
->> described above.
->
-> So the PWM is just configuring this external regulator chip (which
-> doesn't seem to be described in DT...) and that's just incredibly bad at
-> coping with voltage changes?  It does sound rather like we ought to be
-> representing this chip directly in case it needs other workarounds.
+Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+---
+ arch/arm/boot/dts/exynos4412-itop-elite.dts | 54 +++++++++++++++++++++++++++--
+ 1 file changed, 52 insertions(+), 2 deletions(-)
 
-I'm not 100% sure you can blame the regulator chip.  What we describe
-in the device tree as a "PWM Regulator" is actually:
+diff --git a/arch/arm/boot/dts/exynos4412-itop-elite.dts b/arch/arm/boot/dts/exynos4412-itop-elite.dts
+index b08705e..5153522 100644
+--- a/arch/arm/boot/dts/exynos4412-itop-elite.dts
++++ b/arch/arm/boot/dts/exynos4412-itop-elite.dts
+@@ -138,6 +138,36 @@
+ 		assigned-clocks = <&clock CLK_MOUT_CAM0>;
+ 		assigned-clock-parents = <&clock CLK_XUSBXTI>;
+ 	};
++
++	vcc_sys_lcd: sys-lcd {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
++	};
++
++	panel: panel@0 {
++		compatible = "chunghwa,claa070wp03xg";
++
++		power-supply = <&vcc_sys_lcd>;
++		enable-gpios = <&gpl0 2 GPIO_ACTIVE_HIGH>;
++		backlight = <&bl>;
++
++		port {
++			lcd_ep: endpoint {
++				remote-endpoint = <&rga_lvds>;
++			};
++		};
++	};
++
++	bl: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm 1 5000000 PWM_POLARITY_INVERTED>;
++		brightness-levels = <0 5 12 16 32 64 128 255>;
++		default-brightness-level = <5>;
++		power-supply = <&vcc_sys_lcd>;
++	};
+ };
+ 
+ &adc {
+@@ -171,11 +201,31 @@
+ 	assigned-clock-rates = <0>, <176000000>;
+ };
+ 
++&fimd {
++	pinctrl-0 = <&lcd_clk &lcd_data24>;
++	pinctrl-names = "default";
++	status = "okay";
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		port@3 {
++			reg = <3>;
++			rga_lvds: endpoint {
++				remote-endpoint = <&lcd_ep>;
++			};
++		};
++	};
++};
++
+ &hsotg {
+ 	dr_mode = "peripheral";
+ 	status = "okay";
+ };
+ 
++&i2c_3 {
++	status = "okay";
++};
++
+ &i2c_4 {
+ 	samsung,i2c-sda-delay = <100>;
+ 	samsung,i2c-slave-addr = <0x10>;
+@@ -215,9 +265,9 @@
+ 
+ &pwm {
+ 	status = "okay";
+-	pinctrl-0 = <&pwm0_out>;
++	pinctrl-0 = <&pwm0_out &pwm1_out>;
+ 	pinctrl-names = "default";
+-	samsung,pwm-outputs = <0>;
++	samsung,pwm-outputs = <0>, <1>;
+ };
+ 
+ &sdhci_2 {
+-- 
+2.7.4
 
-1. Some discreet buck regulator whose output voltage is configured by
-adjusting an input voltage.  AKA: the buck regulator has "3" inputs:
-vin, vout, config.  You put a certain voltage on the "config" pin and
-that controls the value that comes out of "vout".
-
-2. A network of resistors, capacitors, and inductors that take the
-output of a PWM and filter / smooth it enough that it can be a good
-config input to the discreet buck.
-
-
-The actual behavior of the PWM regulator depends as much (or more) on
-what values you have for the resistors, capacitors, and inductors than
-it does on the actual buck.  ...so two people using the same discreet
-buck might have very different behaviors in terms of rise time and how
-much they are impacted by the over voltage protection.
-
-
--Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
