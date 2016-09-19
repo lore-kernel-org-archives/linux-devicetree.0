@@ -1,199 +1,31 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: [PATCH v2 10/14] MIPS: Malta: Probe pflash via DT
-Date: Mon, 19 Sep 2016 22:21:27 +0100
-Message-ID: <20160919212132.28893-11-paul.burton@imgtec.com>
-References: <20160919212132.28893-1-paul.burton@imgtec.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/9] Documentation: dt-bindings: Document STM32 EXTI
+ controller bindings
+Date: Mon, 19 Sep 2016 16:24:09 -0500
+Message-ID: <20160919212409.GA15692@rob-hp-laptop>
+References: <1473432124-6784-1-git-send-email-alexandre.torgue@st.com>
+ <1473432124-6784-2-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160919212132.28893-1-paul.burton@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1473432124-6784-2-git-send-email-alexandre.torgue@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexandre TORGUE <alexandre.torgue@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Jason Cooper <jason@lakedaemon.net>, arnd@arndb.de, Marc Zyngier <marc.zyngier@arm.com>, bruherrera@gmail.com, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the DT nodes required to probe the CFI compatible parallel monitor
-flash found on the Malta development board, and remove the platform
-code that was previously doing it. Delete the now-empty malta-platform.c
-file. Adjust the Malta defconfigs that enable MTD & the pflash/CFI
-driver to enable CONFIG_MTD_PHYSMAP_OF rather than CONFIG_MTD_PHYSMAP in
-order to preserve their behaviour.
+On Fri, Sep 09, 2016 at 04:41:56PM +0200, Alexandre TORGUE wrote:
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-
----
-
-Changes in v2:
-- Leave malta-platform.o in Makefile
-- Move partitions under a partitions node
-
- arch/mips/boot/dts/mti/malta.dts            | 31 ++++++++++++++++++++
- arch/mips/configs/malta_defconfig           |  2 +-
- arch/mips/configs/malta_kvm_defconfig       |  2 +-
- arch/mips/configs/malta_kvm_guest_defconfig |  2 +-
- arch/mips/configs/maltaup_xpa_defconfig     |  2 +-
- arch/mips/mti-malta/malta-platform.c        | 44 -----------------------------
- 6 files changed, 35 insertions(+), 48 deletions(-)
-
-diff --git a/arch/mips/boot/dts/mti/malta.dts b/arch/mips/boot/dts/mti/malta.dts
-index fecbca8..48783b1 100644
---- a/arch/mips/boot/dts/mti/malta.dts
-+++ b/arch/mips/boot/dts/mti/malta.dts
-@@ -50,6 +50,37 @@
- 		interrupts = <GIC_SHARED 3 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- 
-+	flash@1e000000 {
-+		compatible = "intel,dt28f160", "cfi-flash";
-+		reg = <0x1e000000 0x400000>;
-+		bank-width = <4>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			yamon@0 {
-+				label = "YAMON";
-+				reg = <0x0 0x100000>;
-+				read-only;
-+			};
-+
-+			user-fs@100000 {
-+				label = "User FS";
-+				reg = <0x100000 0x2e0000>;
-+			};
-+
-+			board-config@3e0000 {
-+				label = "Board Config";
-+				reg = <0x3e0000 0x20000>;
-+				read-only;
-+			};
-+		};
-+	};
-+
- 	isa {
- 		compatible = "isa";
- 		#address-cells = <2>;
-diff --git a/arch/mips/configs/malta_defconfig b/arch/mips/configs/malta_defconfig
-index 5afb484..d5d4816 100644
---- a/arch/mips/configs/malta_defconfig
-+++ b/arch/mips/configs/malta_defconfig
-@@ -230,7 +230,7 @@ CONFIG_MTD_CFI=y
- CONFIG_MTD_CFI_INTELEXT=y
- CONFIG_MTD_CFI_AMDSTD=y
- CONFIG_MTD_CFI_STAA=y
--CONFIG_MTD_PHYSMAP=y
-+CONFIG_MTD_PHYSMAP_OF=y
- CONFIG_MTD_UBI=m
- CONFIG_MTD_UBI_GLUEBI=m
- CONFIG_BLK_DEV_FD=m
-diff --git a/arch/mips/configs/malta_kvm_defconfig b/arch/mips/configs/malta_kvm_defconfig
-index 98f1387..ef6ef24 100644
---- a/arch/mips/configs/malta_kvm_defconfig
-+++ b/arch/mips/configs/malta_kvm_defconfig
-@@ -235,7 +235,7 @@ CONFIG_MTD_CFI=y
- CONFIG_MTD_CFI_INTELEXT=y
- CONFIG_MTD_CFI_AMDSTD=y
- CONFIG_MTD_CFI_STAA=y
--CONFIG_MTD_PHYSMAP=y
-+CONFIG_MTD_PHYSMAP_OF=y
- CONFIG_MTD_UBI=m
- CONFIG_MTD_UBI_GLUEBI=m
- CONFIG_BLK_DEV_FD=m
-diff --git a/arch/mips/configs/malta_kvm_guest_defconfig b/arch/mips/configs/malta_kvm_guest_defconfig
-index 3b5d591..3a49a77 100644
---- a/arch/mips/configs/malta_kvm_guest_defconfig
-+++ b/arch/mips/configs/malta_kvm_guest_defconfig
-@@ -234,7 +234,7 @@ CONFIG_MTD_CFI=y
- CONFIG_MTD_CFI_INTELEXT=y
- CONFIG_MTD_CFI_AMDSTD=y
- CONFIG_MTD_CFI_STAA=y
--CONFIG_MTD_PHYSMAP=y
-+CONFIG_MTD_PHYSMAP_OF=y
- CONFIG_MTD_UBI=m
- CONFIG_MTD_UBI_GLUEBI=m
- CONFIG_BLK_DEV_FD=m
-diff --git a/arch/mips/configs/maltaup_xpa_defconfig b/arch/mips/configs/maltaup_xpa_defconfig
-index 7322157..62e05eb 100644
---- a/arch/mips/configs/maltaup_xpa_defconfig
-+++ b/arch/mips/configs/maltaup_xpa_defconfig
-@@ -231,7 +231,7 @@ CONFIG_MTD_CFI=y
- CONFIG_MTD_CFI_INTELEXT=y
- CONFIG_MTD_CFI_AMDSTD=y
- CONFIG_MTD_CFI_STAA=y
--CONFIG_MTD_PHYSMAP=y
-+CONFIG_MTD_PHYSMAP_OF=y
- CONFIG_MTD_UBI=m
- CONFIG_MTD_UBI_GLUEBI=m
- CONFIG_BLK_DEV_FD=m
-diff --git a/arch/mips/mti-malta/malta-platform.c b/arch/mips/mti-malta/malta-platform.c
-index 6433a39..cc67dbf 100644
---- a/arch/mips/mti-malta/malta-platform.c
-+++ b/arch/mips/mti-malta/malta-platform.c
-@@ -25,11 +25,8 @@
- #include <linux/serial_8250.h>
- #include <linux/module.h>
- #include <linux/irq.h>
--#include <linux/mtd/partitions.h>
--#include <linux/mtd/physmap.h>
- #include <linux/platform_device.h>
- #include <asm/mips-boards/maltaint.h>
--#include <mtd/mtd-abi.h>
- 
- #define SMC_PORT(base, int)						\
- {									\
-@@ -67,49 +64,8 @@ static struct platform_device malta_uart8250_device = {
- 	},
- };
- 
--static struct mtd_partition malta_mtd_partitions[] = {
--	{
--		.name =		"YAMON",
--		.offset =	0x0,
--		.size =		0x100000,
--		.mask_flags =	MTD_WRITEABLE
--	}, {
--		.name =		"User FS",
--		.offset =	0x100000,
--		.size =		0x2e0000
--	}, {
--		.name =		"Board Config",
--		.offset =	0x3e0000,
--		.size =		0x020000,
--		.mask_flags =	MTD_WRITEABLE
--	}
--};
--
--static struct physmap_flash_data malta_flash_data = {
--	.width		= 4,
--	.nr_parts	= ARRAY_SIZE(malta_mtd_partitions),
--	.parts		= malta_mtd_partitions
--};
--
--static struct resource malta_flash_resource = {
--	.start		= 0x1e000000,
--	.end		= 0x1e3fffff,
--	.flags		= IORESOURCE_MEM
--};
--
--static struct platform_device malta_flash_device = {
--	.name		= "physmap-flash",
--	.id		= 0,
--	.dev		= {
--		.platform_data	= &malta_flash_data,
--	},
--	.num_resources	= 1,
--	.resource	= &malta_flash_resource,
--};
--
- static struct platform_device *malta_devices[] __initdata = {
- 	&malta_uart8250_device,
--	&malta_flash_device,
- };
- 
- static int __init malta_add_devices(void)
--- 
-2.9.3
+Acked-by: Rob Herring <robh@kernel.org>
