@@ -1,245 +1,51 @@
-From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH v4 2/7] ARM: dts: bcm283x: Define standard pinctrl groups in the gpio node.
-Date: Mon, 19 Sep 2016 10:43:18 +0200
-Message-ID: <1474274603-24215-3-git-send-email-kraxel@redhat.com>
-References: <1474274603-24215-1-git-send-email-kraxel@redhat.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1474274603-24215-1-git-send-email-kraxel@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: eric@anholt.net, swarren@wwwdotorg.org, bcm-kernel-feedback-list@broadcom.com, Gerd Hoffmann <kraxel@redhat.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, open list <linux-kernel@vger.kernel.org>
+From: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4 0/7] ARM: dts: bcm283x: add and use pinctrl groups
+Date: Mon, 19 Sep 2016 10:43:16 +0200
+Message-ID: <1474274603-24215-1-git-send-email-kraxel@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Eric Anholt <eric@anholt.net>
+  Hi,
 
-The BCM2835-ARM-Peripherals.pdf documentation specifies what the
-function selects do for the pins, and there are a bunch of obvious
-groupings to be made.  With these created, we'll be able to replace
-bcm2835-rpi.dtsi's main "set all of these pins to alt0" with
-references to specific groups we want enabled.
+New in v4:  Patch #6 has been splitted into two:  Patch 6 just moves
+pinctrl from &gpio to &sdhci.  Removing the empty now alt3 group
+-- including all references as pointed out by Stefan Wahren in review --
+is done by the new patch 7.  Patches 1-5 are unchanged.
 
-Also add pinctrl groups for emmc and sdhost.
+cheers,
+  Gerd
 
-Based on patches by Eric Anholt <eric@anholt.net>
+Eric Anholt (1):
+  ARM: dts: bcm283x: Define standard pinctrl groups in the gpio node.
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- arch/arm/boot/dts/bcm283x.dtsi | 203 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 203 insertions(+)
+Gerd Hoffmann (6):
+  pinctrl: bcm2835: add pull defines to dt bindings
+  ARM: dts: bcm283x: add pinctrl group to &pwm, drop pins from &gpio
+  ARM: dts: bcm283x: add pinctrl group to &i2c0, drop pins from &gpio
+  ARM: dts: bcm283x: add pinctrl group to &i2c1, drop pins from &gpio
+  ARM: dts: bcm283x: add pinctrl group to &sdhci, drop pins from &gpio
+  ARM: dts: bcm283x: drop alt3 from &gpio
 
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 4d9f3ab..68d559e 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -131,6 +131,209 @@
- 
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-+
-+			/* Defines pin muxing groups according to
-+			 * BCM2835-ARM-Peripherals.pdf page 102.
-+			 *
-+			 * While each pin can have its mux selected
-+			 * for various functions individually, some
-+			 * groups only make sense to switch to a
-+			 * particular function together.
-+			 */
-+			dpi_gpio0: dpi_gpio0 {
-+				brcm,pins = <0 1 2 3 4 5 6 7 8 9 10 11
-+					     12 13 14 15 16 17 18 19
-+					     20 21 22 23 24 25 26 27>;
-+				brcm,function = <BCM2835_FSEL_ALT2>;
-+			};
-+			emmc_gpio22: emmc_gpio22 {
-+				brcm,pins = <22 23 24 25 26 27>;
-+				brcm,function = <BCM2835_FSEL_ALT3>;
-+			};
-+			emmc_gpio34: emmc_gpio34 {
-+				brcm,pins = <34 35 36 37 38 39>;
-+				brcm,function = <BCM2835_FSEL_ALT3>;
-+				brcm,pull = <BCM2835_PUD_OFF
-+					     BCM2835_PUD_UP
-+					     BCM2835_PUD_UP
-+					     BCM2835_PUD_UP
-+					     BCM2835_PUD_UP
-+					     BCM2835_PUD_UP>;
-+			};
-+			emmc_gpio48: emmc_gpio48 {
-+				brcm,pins = <48 49 50 51 52 53>;
-+				brcm,function = <BCM2835_FSEL_ALT3>;
-+			};
-+
-+			gpclk0_gpio4: gpclk0_gpio4 {
-+				brcm,pins = <4>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			gpclk1_gpio5: gpclk1_gpio5 {
-+				brcm,pins = <5>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			gpclk1_gpio42: gpclk1_gpio42 {
-+				brcm,pins = <42>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			gpclk1_gpio44: gpclk1_gpio44 {
-+				brcm,pins = <44>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			gpclk2_gpio6: gpclk2_gpio6 {
-+				brcm,pins = <6>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			gpclk2_gpio43: gpclk2_gpio43 {
-+				brcm,pins = <43>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+
-+			i2c0_gpio0: i2c0_gpio0 {
-+				brcm,pins = <0 1>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			i2c0_gpio32: i2c0_gpio32 {
-+				brcm,pins = <32 34>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			i2c0_gpio44: i2c0_gpio44 {
-+				brcm,pins = <44 45>;
-+				brcm,function = <BCM2835_FSEL_ALT1>;
-+			};
-+			i2c1_gpio2: i2c1_gpio2 {
-+				brcm,pins = <2 3>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			i2c1_gpio44: i2c1_gpio44 {
-+				brcm,pins = <44 45>;
-+				brcm,function = <BCM2835_FSEL_ALT2>;
-+			};
-+			i2c_slave_gpio18: i2c_slave_gpio18 {
-+				brcm,pins = <18 19 20 21>;
-+				brcm,function = <BCM2835_FSEL_ALT3>;
-+			};
-+
-+			jtag_gpio4: jtag_gpio4 {
-+				brcm,pins = <4 5 6 12 13>;
-+				brcm,function = <BCM2835_FSEL_ALT4>;
-+			};
-+			jtag_gpio22: jtag_gpio22 {
-+				brcm,pins = <22 23 24 25 26 27>;
-+				brcm,function = <BCM2835_FSEL_ALT4>;
-+			};
-+
-+			pcm_gpio18: pcm_gpio18 {
-+				brcm,pins = <18 19 20 21>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			pcm_gpio28: pcm_gpio28 {
-+				brcm,pins = <28 29 30 31>;
-+				brcm,function = <BCM2835_FSEL_ALT2>;
-+			};
-+
-+			pwm0_gpio12: pwm0_gpio12 {
-+				brcm,pins = <12>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			pwm0_gpio18: pwm0_gpio18 {
-+				brcm,pins = <18>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
-+			pwm0_gpio40: pwm0_gpio40 {
-+				brcm,pins = <40>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			pwm1_gpio13: pwm1_gpio13 {
-+				brcm,pins = <13>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			pwm1_gpio19: pwm1_gpio19 {
-+				brcm,pins = <19>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
-+			pwm1_gpio41: pwm1_gpio41 {
-+				brcm,pins = <41>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			pwm1_gpio45: pwm1_gpio45 {
-+				brcm,pins = <45>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+
-+			sdhost_gpio48: sdhost_gpio48 {
-+				brcm,pins = <48 49 50 51 52 53>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+
-+			spi0_gpio7: spi0_gpio7 {
-+				brcm,pins = <7 8 9 10 11>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			spi0_gpio35: spi0_gpio35 {
-+				brcm,pins = <35 36 37 38 39>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			spi1_gpio16: spi1_gpio16 {
-+				brcm,pins = <16 17 18 19 20 21>;
-+				brcm,function = <BCM2835_FSEL_ALT4>;
-+			};
-+			spi2_gpio40: spi2_gpio40 {
-+				brcm,pins = <40 41 42 43 44 45>;
-+				brcm,function = <BCM2835_FSEL_ALT4>;
-+			};
-+
-+			uart0_gpio14: uart0_gpio14 {
-+				brcm,pins = <14 15>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			/* Separate from the uart0_gpio14 group
-+			 * because it conflicts with spi1_gpio16, and
-+			 * people often run uart0 on the two pins
-+			 * without flow contrl.
-+			 */
-+			uart0_ctsrts_gpio16: uart0_ctsrts_gpio16 {
-+				brcm,pins = <16 17>;
-+				brcm,function = <BCM2835_FSEL_ALT3>;
-+			};
-+			uart0_gpio30: uart0_gpio30 {
-+				brcm,pins = <30 31>;
-+				brcm,function = <BCM2835_FSEL_ALT3>;
-+			};
-+			uart0_ctsrts_gpio32: uart0_ctsrts_gpio32 {
-+				brcm,pins = <32 33>;
-+				brcm,function = <BCM2835_FSEL_ALT3>;
-+			};
-+
-+			uart1_gpio14: uart1_gpio14 {
-+				brcm,pins = <14 15>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
-+			uart1_ctsrts_gpio16: uart1_ctsrts_gpio16 {
-+				brcm,pins = <16 17>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
-+			uart1_gpio32: uart1_gpio32 {
-+				brcm,pins = <32 33>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
-+			uart1_ctsrts_gpio30: uart1_ctsrts_gpio30 {
-+				brcm,pins = <30 31>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
-+			uart1_gpio36: uart1_gpio36 {
-+				brcm,pins = <36 37 38 39>;
-+				brcm,function = <BCM2835_FSEL_ALT2>;
-+			};
-+			uart1_gpio40: uart1_gpio40 {
-+				brcm,pins = <40 41>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
-+			uart1_ctsrts_gpio42: uart1_ctsrts_gpio42 {
-+				brcm,pins = <42 43>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
- 		};
- 
- 		uart0: serial@7e201000 {
+ arch/arm/boot/dts/bcm2835-rpi-a-plus.dts |   2 +-
+ arch/arm/boot/dts/bcm2835-rpi-a.dts      |   2 +-
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts |   2 +-
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts |   2 +-
+ arch/arm/boot/dts/bcm2835-rpi-b.dts      |   2 +-
+ arch/arm/boot/dts/bcm2835-rpi-zero.dts   |   2 +-
+ arch/arm/boot/dts/bcm2835-rpi.dtsi       |  15 ++-
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts    |   2 +-
+ arch/arm/boot/dts/bcm283x.dtsi           | 203 +++++++++++++++++++++++++++++++
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c    |   6 -
+ include/dt-bindings/pinctrl/bcm2835.h    |   5 +
+ 11 files changed, 224 insertions(+), 19 deletions(-)
+
 -- 
 1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
