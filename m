@@ -1,63 +1,52 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 17/19] power: reset: st: Remove obsolete platforms from
- dt doc
-Date: Mon, 19 Sep 2016 21:34:58 +0200
-Message-ID: <20160919193458.vujdt5ewd4q2ln2o@earth>
-References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
- <1473859677-9231-18-git-send-email-peter.griffin@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 22/22] phy: Add support for Qualcomm's USB HS phy
+Date: Mon, 19 Sep 2016 16:01:09 -0500
+Message-ID: <CAL_JsqKhmm7k-hA+c9K61AfaRCG332dBdGvdxvTTfBYskZoewQ@mail.gmail.com>
+References: <20160907213519.27340-1-stephen.boyd@linaro.org>
+ <20160907213519.27340-23-stephen.boyd@linaro.org> <20160916151950.GA31804@rob-hp-laptop>
+ <147407072439.8245.12292695359399379462@sboyd-linaro>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6ioiqkvxsjb46orr"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1473859677-9231-18-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <147407072439.8245.12292695359399379462@sboyd-linaro>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: Linux USB List <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Peter Chen <peter.chen@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Sep 16, 2016 at 7:05 PM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
+> Quoting Rob Herring (2016-09-16 08:19:51)
+>> On Wed, Sep 07, 2016 at 02:35:19PM -0700, Stephen Boyd wrote:
+>> > The high-speed phy on qcom SoCs is controlled via the ULPI
+>> > viewport.
+>> >
 
---6ioiqkvxsjb46orr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[...]
 
-Hi,
-
-On Wed, Sep 14, 2016 at 02:27:55PM +0100, Peter Griffin wrote:
-> This patch removes support for STiH415/6 SoC's from the
-> st-restart dt binding documentation, as support for these
-> platforms is being removed from the kernel. It also updates
-> the dt example to a currently supported platform.
+>> > +- qcom,init-seq:
+>> > +    Usage: optional
+>> > +    Value type: <u8 array>
+>> > +    Definition: Should contain a sequence of ULPI register and address pairs to
+>> > +                program into the ULPI_EXT_VENDOR_SPECIFIC area. This is related
+>> > +                to Device Mode Eye Diagram test.
+>>
+>> We generally nak this type of property. For 1 register I don't care so
+>> much. For 100, that would be another story.
+>>
+>> Is this value per unit, per board, per SoC? Can you limit it to certain
+>> registers?
 >
-> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> I'm told that this can be per board, depending on how it's wired from
+> the phy pins to the usb port. Typically it's the same though for the
+> boards I have, mostly because those boards are similar designs with
+> respect to how USB is wired. The set of registers is not that many, 4 or
+> 5 at most. My understanding is these are tuning registers. Right now the
+> register part in the binding is the full register offset, and not an
+> offset from ULPI_EXT_VENDOR_SPECIFIC (0x80). I could change this to be
+> an offset from that area if you like so that this can't be abused to
+> write into standard ULPI registers (there really isn't any way to
+> enforce this in software though).
 
-Also queued to power-supply's for-next branch.
+Okay, that sounds fine to me.
 
--- Sebastian
-
---6ioiqkvxsjb46orr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJX4D3hAAoJENju1/PIO/qaj1IP/RcMvPEEz6xj8nGG2fvLLQVl
-YnC7oQ/+l3x9pqt6n46dvWCtRgBluBbmNV+DjRcjnD/OgnBKjdupieMqNdxK8OHr
-WqkJHz+JGipcn1iKLd9HzR7Yxo1lgYdgBCIwSqdzhv7NX3PlS3x564RYUqWPINDe
-J+BkIvQ1zvPBuUrKOO/l1VchFdikYrvESLYLYIULhT7kV/My66V7pUXVyCoeaI0G
-kc9NOL2IVY0soOyWlhMphfHxRszY6/3K66Od0cp0CT47GZWcd4AAmun028SLaBoL
-LYYFWhQ21xfocG2xIoj8ycfFwSv2RgRKUfvYjWKq5mVEO65iwfuumw4xq/Eq20LO
-Prkb2QPlGhoAg1zKb9rvy/275AHCj1b+Nuq03y47pJEHNRxIH+fQ6gJsqSKkNiyH
-cSo2S5JSvOCxO4wCMPvAlQ4eV+p8zKNiLWtK3NFB6FzWh/zVQQ4VrMLQ0Q9A1ZkX
-cSkViTu4NyjGdaybpodHt/9WrO0Q92uIrVAVHuyOIKP7aahQNICxvg2ZXL6EwPEU
-xZK4nIOiEb4PmjuB069JFouMeXzyqKg0iRArxb83omMs5XKO4XzBYicXaldlTx1C
-x9zyDD1CS6kS3xnJbuloHZ45T9hPbOqR2vhV/OGj+dAlx5B3e4KtCdfSsYAT/4UP
-9J5+2bEaWwxBTio0119A
-=O8gs
------END PGP SIGNATURE-----
-
---6ioiqkvxsjb46orr--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
