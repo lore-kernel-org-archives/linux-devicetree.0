@@ -1,54 +1,81 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 3/5] arm64: arch_timer: Work around QorIQ Erratum
- A-008585
-Date: Tue, 20 Sep 2016 10:35:03 +0100
-Message-ID: <20160920093503.GA1045@leverpostej>
-References: <1473469413-11019-1-git-send-email-oss@buserror.net>
- <1473469413-11019-3-git-send-email-oss@buserror.net>
- <20160912113615.GA20804@leverpostej>
- <1474260085.15220.17.camel@buserror.net>
- <20160919165258.GA30584@leverpostej>
- <1474304489.4283.6.camel@buserror.net>
- <20160919170707.GC30584@leverpostej>
- <1474312560.4283.10.camel@buserror.net>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v5 2/9] drivers: irqchip: Add STM32 external interrupts
+ support
+Date: Tue, 20 Sep 2016 11:48:20 +0200
+Message-ID: <39c4ceee-7e05-ebfd-2ea0-3c4e1c4ea619@st.com>
+References: <1473432124-6784-1-git-send-email-alexandre.torgue@st.com>
+ <1473432124-6784-3-git-send-email-alexandre.torgue@st.com>
+ <alpine.DEB.2.20.1609131713490.6233@nanos>
+ <6941f61d-0b33-4108-0135-b11887cd0488@st.com>
+ <alpine.DEB.2.20.1609141103420.6233@nanos>
+ <facd1c7c-d696-eae1-02e4-5a0c9285add0@st.com>
+ <alpine.DEB.2.20.1609141532510.6233@nanos>
+ <f64e4f9d-d811-2c6e-7c5a-d4ab06716e2c@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1474312560.4283.10.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, mike.caraman-3arQi8VN3Tc@public.gmane.org, Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <f64e4f9d-d811-2c6e-7c5a-d4ab06716e2c@st.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Jason Cooper <jason@lakedaemon.net>, arnd@arndb.de, Marc Zyngier <marc.zyngier@arm.com>, bruherrera@gmail.com, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 19, 2016 at 02:16:00PM -0500, Scott Wood wrote:
-> On Mon, 2016-09-19 at 18:07 +0100, Mark Rutland wrote:
-> > > > Reconsidering my suggestion, I realise this will also affect the MMIO
-> > > > timers, so that doesn't work.
-> > > > 
-> > > > So for the moment, I guess we have to keep fsl_a008585_set_next_event().
-> > > What is the problem with MMIO timers?  needs_fsl_a008585_workaround()
-> > > should
-> > > always be false for them.
-> > As suggested, needs_fsl_a008585_workaround() takes no parameter, and
-> > set_next_event is called for both cp15/sysreg and MMIO timers. So it
-> > would either be true for all, or false for all.
-> > 
-> > If it's true for all, we'd end up calling fsl_a008585_set_next_event()
-> > for the MMIO timers too.
-> 
-> There should not be any MMIO timers on a system where
-> fsl_a008585_set_next_event() returns true.
+Hi Thomas,
 
-I'm generally not keen on relying on that.
+On 09/14/2016 03:44 PM, Alexandre Torgue wrote:
+>
+>
+> On 09/14/2016 03:34 PM, Thomas Gleixner wrote:
+>> On Wed, 14 Sep 2016, Alexandre Torgue wrote:
+>>> On 09/14/2016 11:19 AM, Thomas Gleixner wrote:
+>>>>
+>>>> Now what really bugs me is that you do that at all. An interrupt
+>>>> which is
+>>>> freed must be masked already. Why is it unmasked in the first place?
+>>>
+>>> Honestly I don't know. When "devm_free_irq" is called to release
+>>> virq, there
+>>> is no issue and interrupt is well masked. But, when I tried to use
+>>> "irq_dispose_mapping(virq)" I observed that .free is called (child
+>>> and parent
+>>> domain) but interrupt is not masked.
+>>
+>> Well, you just used some function in some context which is not
+>> relevant to
+>> the normal operation. So adding that mask() is just paranoia for no
+>> value.
+>
+A gentle reminder ping...
+If ".free" callback is not relevant then I 'll remove it from exti domain.
 
-For reference, are no MMIO timers implemented at all, or are they simply
-not listed in the DT today?
+> I agree. I just wanted to "force" a test for .free callback. If it not
+> relevant I'll remove ".free" callback of exti domain.
+> As a part of this series has already been taken by Linus (pinctrl part),
+> I will send a new series only for irqchip part (patches [1] and [2]). Do
+> you agree ?
+>
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks in advance
+Alex
+
+> Thanks
+> Alex
+>
+>
+>>
+>> Thanks,
+>>
+>>     tglx
+>>
+>
+>
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+
