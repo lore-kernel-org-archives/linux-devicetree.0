@@ -1,42 +1,79 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 05/22] Docs: dt: document ARM SMMUv3 generic binding
-	usage
-Date: Tue, 20 Sep 2016 09:46:45 -0500
-Message-ID: <20160920144645.GA27580@rob-hp-laptop>
-References: <cover.1473695704.git.robin.murphy@arm.com>
-	<2273645f1fa5c76b6b98b5fd03804ab8b55a7691.1473695704.git.robin.murphy@arm.com>
+From: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] ARM: aspeed: add support for the BT IPMI interface
+Date: Tue, 20 Sep 2016 09:58:40 -0500
+Message-ID: <40bb95a8-b5a6-563b-11c6-73de2f67130d@acm.org>
+References: <1474354900-5618-1-git-send-email-clg@kaod.org>
+Reply-To: minyard-HInyCGIudOg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2273645f1fa5c76b6b98b5fd03804ab8b55a7691.1473695704.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1474354900-5618-1-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 12, 2016 at 05:13:43PM +0100, Robin Murphy wrote:
-> We're about to ratify our use of the generic binding, so document it.
-> 
-> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> 
-> ---
-> 
-> - Reference PCI "iommu-map" binding instead, as that's our main concern
-> - Fix "IDs" typo
-> ---
->  Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+On 09/20/2016 02:01 AM, Cédric Le Goater wrote:
+> Hello,
+>
+> This serie adds support for the iBT interface on Aspeed SOCs (AST2400
+> and AST2500). The BT (Block Transfer) interface is used to perform
+> in-band IPMI communication between a host and its BMC. This driver
+> implements the BMC side.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+This looks good.  I pulled these into my tree, it's ok for 4.9 or
+whatever is next, since it's a new driver.
+
+Do patches 2 and 3 go through Joel?
+
+-corey
+
+> Changes since v2:
+>
+>   - limit to one opener
+>   - protect write/read operations with a mutex.
+>
+> Changes since v1:
+>
+>   - the driver is now called 'bt-bmc' and the device node '/dev/ipmi-bt-host'
+>     
+>   - the code is now under drivers/char/ipmi/. This required a change of
+>     the top Makefile in drivers/ to compile the bt-bmc driver with the
+>     ipmi handlers not being selected. That might be an issue.
+>     
+>   - changed the read/write operations to use a temporary buffer and get
+>     rid of the {get,put}_user calls
+>
+> Thanks,
+>
+> C.
+>
+> Alistair Popple (1):
+>    ipmi: add an Aspeed BT IPMI BMC driver
+>
+> Cédric Le Goater (2):
+>    ARM: aspeed: Add defconfigs for CONFIG_ASPEED_BT_IPMI_BMC
+>    ARM: dts: aspeed: Enable BT IPMI BMC device
+>
+>   .../bindings/char/ipmi/aspeed,ast2400-bt-bmc.txt   |  23 +
+>   arch/arm/boot/dts/aspeed-g4.dtsi                   |   6 +
+>   arch/arm/boot/dts/aspeed-g5.dtsi                   |   6 +
+>   arch/arm/configs/aspeed_g4_defconfig               |   1 +
+>   arch/arm/configs/aspeed_g5_defconfig               |   1 +
+>   drivers/Makefile                                   |   2 +-
+>   drivers/char/ipmi/Kconfig                          |   7 +
+>   drivers/char/ipmi/Makefile                         |   1 +
+>   drivers/char/ipmi/bt-bmc.c                         | 510 +++++++++++++++++++++
+>   include/uapi/linux/Kbuild                          |   1 +
+>   include/uapi/linux/bt-bmc.h                        |  18 +
+>   11 files changed, 575 insertions(+), 1 deletion(-)
+>   create mode 100644 Documentation/devicetree/bindings/char/ipmi/aspeed,ast2400-bt-bmc.txt
+>   create mode 100644 drivers/char/ipmi/bt-bmc.c
+>   create mode 100644 include/uapi/linux/bt-bmc.h
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
