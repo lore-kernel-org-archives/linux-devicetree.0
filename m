@@ -1,70 +1,37 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: rskrza1: add mmc DT support
-Date: Tue, 20 Sep 2016 11:46:20 -0400
-Message-ID: <20160920154620.18653-4-chris.brandt@renesas.com>
-References: <20160920154620.18653-1-chris.brandt@renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160920154620.18653-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v2 0/3] r7s72100: dts: enable mmcif
+Date: Tue, 20 Sep 2016 11:46:17 -0400
+Message-ID: <20160920154620.18653-1-chris.brandt@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Since the MMC and SDHI1 on the RSK share the same socket connector (CN1),
-you cannot enable MMC and SDHI1 at the same time. Therefore the status
-has been set to disabled because SDHI is more popular with this board.
-However, keeping this code in here serves as a good way to document how
-the MMC on the RZ/A1 has been known to work for someone that does want
-to use MMC instead of SDHI1.
+This series enables the mmc driver for the RZ/A1.
+Nothing needed to be changed with the actual sh_mmcif driver.
+It worked fine as-is.
 
-A fixed 3.3 regulator is included because it is required by the mmc
-driver.
+As you can see, the status in the rskrza1 dst was left
+as disabled because I wanted to leave that code in there
+for refernce for someone later that actually has a board with
+an actaul eMMC chip. I tested with an MMC Plus card.
 
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/r7s72100-rskrza1.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+For version 2:
+* First first patch that adds the clock has already been accepted
+* Add in the 3rd "card detect" interrupt that no one uses, but it
+  is documented in the hardware manual so it is reflected in the
+  DT.
 
-diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-index e5dea5b..9228b04 100644
---- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
-+++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-@@ -33,6 +33,15 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 	};
-+
-+	d3_3v: regulator-d3-3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "D3.3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
- };
- 
- &extal_clk {
-@@ -56,6 +65,14 @@
- 	};
- };
- 
-+&mmcif {
-+	vmmc-supply = <&d3_3v>;
-+	vqmmc-supply = <&d3_3v>;
-+	bus-width = <8>;
-+	non-removable;
-+	status = "disabled"; /* shares CN1 with sdhi1 */
-+};
-+
- &scif2 {
- 	status = "okay";
- };
+Chris Brandt (3):
+  ARM: dts: r7s72100: add mmcif to device tree
+  mmc: sh_mmcif: Document r7s72100 DT bindings
+  ARM: dts: rskrza1: add mmc DT support
+
+ Documentation/devicetree/bindings/mmc/renesas,mmcif.txt |  4 ++++
+ arch/arm/boot/dts/r7s72100-rskrza1.dts                  | 17 +++++++++++++++++
+ arch/arm/boot/dts/r7s72100.dtsi                         | 12 ++++++++++++
+ 3 files changed, 33 insertions(+)
+
 -- 
 2.9.2
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
