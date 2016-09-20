@@ -1,102 +1,66 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2] lm87: Allow channel data to be set from dts file.
-Date: Tue, 20 Sep 2016 02:55:42 -0700
-Message-ID: <d3258440-db4e-a4c2-cca1-9683d0da63a8@roeck-us.net>
-References: <20160920052240.10242-1-mahoda.ratnayaka@alliedtelesis.co.nz>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 09/14] MIPS: Malta: Probe RTC via DT
+Date: Tue, 20 Sep 2016 13:21:16 +0300
+Message-ID: <55c977d1-21dd-4cf8-d0f9-10d96b452573@cogentembedded.com>
+References: <20160919212132.28893-1-paul.burton@imgtec.com>
+ <20160919212132.28893-10-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160920052240.10242-1-mahoda.ratnayaka-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+In-Reply-To: <20160919212132.28893-10-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mahoda Ratnayaka <mahoda.ratnayaka-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/19/2016 10:22 PM, Mahoda Ratnayaka wrote:
-> Currently there is no method for setting the channel
-> value from the DTS file. When, the driver uses a dts
-> file to initialize the driver platform_data is not set.
-> As a the result channel variable may not be set correctly.
+Hello.
+
+On 9/20/2016 12:21 AM, Paul Burton wrote:
+
+> Add the DT node required to probe the RTC, and remove the platform code
+> that was previously doing it.
 >
-> Without the channel variable set correctly, some of the
-> sensors will not be initialized correctly. For example
-> temp3 sensor sysfs entries.
+> Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 >
-> This adds the required functionality to set the channel
-> variable from the DTS file. This is done via reading the
-> reading a property named "channel" from the lm87 driver.
->
-> Signed-off-by: Mahoda Ratnayaka <mahoda.ratnayaka-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 > ---
 >
-> Notes:
->      changes since v1:
->      Removed unncessary variables channel and np.
->      Update the code as per review comments.
->
->  Documentation/devicetree/bindings/hwmon/lm87.txt | 9 +++++++++
->  drivers/hwmon/lm87.c                             | 7 ++++++-
->  2 files changed, 15 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/hwmon/lm87.txt b/Documentation/devicetree/bindings/hwmon/lm87.txt
-> index fefcb48..1906e08 100644
-> --- a/Documentation/devicetree/bindings/hwmon/lm87.txt
-> +++ b/Documentation/devicetree/bindings/hwmon/lm87.txt
-> @@ -6,9 +6,18 @@ Required properties:
->
->  - reg: I2C address
->
-> +optional properties:
-> +- channels: Value for the channel mode register.
-> +            This allows configuration of pins with
-> +            selectable uses on the LM87 device (e.g.
-> +            choosing between voltage and temperature
-> +            inputs).
-> +            See hwmon/lm87 for further information
+> Changes in v2:
+> - Remove rtc DT node label
 
-Rob is the ultimate person to comment here, but I think the property description
-by itself should be complete and technically independent of the implementation.
-Documentation/hwmon/lm87 describes the implementation, so an (incomplete)
-reference to it seems inappropriate.
+    Haven't you also renamed the node?
 
+>  arch/mips/boot/dts/mti/malta.dts     | 15 +++++++++++++++
+>  arch/mips/mti-malta/malta-platform.c | 21 ---------------------
+>  2 files changed, 15 insertions(+), 21 deletions(-)
+>
+> diff --git a/arch/mips/boot/dts/mti/malta.dts b/arch/mips/boot/dts/mti/malta.dts
+> index af765af..fecbca8 100644
+> --- a/arch/mips/boot/dts/mti/malta.dts
+> +++ b/arch/mips/boot/dts/mti/malta.dts
+> @@ -49,4 +49,19 @@
+>  		interrupt-parent = <&gic>;
+>  		interrupts = <GIC_SHARED 3 IRQ_TYPE_LEVEL_HIGH>;
+>  	};
 > +
->  Example:
->
->  lm87@2e {
->  	compatible = "ti,lm87";
->  	reg = <0x2e>;
-> +	channels=<0x4>;
+> +	isa {
+> +		compatible = "isa";
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges = <1 0 0 0x1000>;
+> +
+> +		rtc@70 {
+> +			compatible = "motorola,mc146818";
+> +			reg = <1 0x70 0x8>;
+> +
+> +			interrupt-parent = <&i8259>;
+> +			interrupts = <8>;
+> +		};
+> +	};
 >  };
+[...]
 
-Please move those property descriptions into the first patch. It is confusing
-to have two patches touching the properties, and the first patch as it is right now
-is really useless.
-
-> diff --git a/drivers/hwmon/lm87.c b/drivers/hwmon/lm87.c
-> index a5e2958..358c1d4 100644
-> --- a/drivers/hwmon/lm87.c
-> +++ b/drivers/hwmon/lm87.c
-> @@ -858,8 +858,13 @@ static void lm87_remove_files(struct i2c_client *client)
->  static void lm87_init_client(struct i2c_client *client)
->  {
->  	struct lm87_data *data = i2c_get_clientdata(client);
-> +	u8 val = 0;
->
-> -	if (dev_get_platdata(&client->dev)) {
-> +	if (!of_property_read_u8(client->dev.of_node, "channels", &val)) {
-
-This ignores property value errors (-ENODATA, -EOVERFLOW).
-Is this what you want ?
-
-> +		data->channel = val;
-> +		lm87_write_value(client,
-> +				 LM87_REG_CHANNEL_MODE, data->channel);
-> +	} else if (dev_get_platdata(&client->dev)) {
->  		data->channel = *(u8 *)dev_get_platdata(&client->dev);
->  		lm87_write_value(client,
->  				 LM87_REG_CHANNEL_MODE, data->channel);
->
+MBR, Sergei
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
