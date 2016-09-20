@@ -1,66 +1,44 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 09/14] MIPS: Malta: Probe RTC via DT
-Date: Tue, 20 Sep 2016 13:21:16 +0300
-Message-ID: <55c977d1-21dd-4cf8-d0f9-10d96b452573@cogentembedded.com>
-References: <20160919212132.28893-1-paul.burton@imgtec.com>
- <20160919212132.28893-10-paul.burton@imgtec.com>
+From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/3] hisi_sas add hip07 support
+Date: Tue, 20 Sep 2016 18:48:57 +0800
+Message-ID: <1474368540-186535-1-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160919212132.28893-10-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hare-IBi9RG/b67k@public.gmane.org, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+This patchset introduces support for hip07 SoC.
 
-On 9/20/2016 12:21 AM, Paul Burton wrote:
+The hip07 SoC has the same v2 hw as in hip06.
 
-> Add the DT node required to probe the RTC, and remove the platform code
-> that was previously doing it.
->
-> Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->
-> ---
->
-> Changes in v2:
-> - Remove rtc DT node label
+Support for different reference clock is required
+as some SAS registers need be programmed
+differently, depending on the refclock rate.
 
-    Haven't you also renamed the node?
+Related patchset:
+- https://patchwork.ozlabs.org/patch/665172/
+  Once 4.9-rc1 is released, the D03 dts can be
+  updated for the refclock.
+  Note: there will be only 1 D03 dts, UEFI will update
+  	the refclock rate for that board in the fdt at
+  	boot time.
 
->  arch/mips/boot/dts/mti/malta.dts     | 15 +++++++++++++++
->  arch/mips/mti-malta/malta-platform.c | 21 ---------------------
->  2 files changed, 15 insertions(+), 21 deletions(-)
->
-> diff --git a/arch/mips/boot/dts/mti/malta.dts b/arch/mips/boot/dts/mti/malta.dts
-> index af765af..fecbca8 100644
-> --- a/arch/mips/boot/dts/mti/malta.dts
-> +++ b/arch/mips/boot/dts/mti/malta.dts
-> @@ -49,4 +49,19 @@
->  		interrupt-parent = <&gic>;
->  		interrupts = <GIC_SHARED 3 IRQ_TYPE_LEVEL_HIGH>;
->  	};
-> +
-> +	isa {
-> +		compatible = "isa";
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges = <1 0 0 0x1000>;
-> +
-> +		rtc@70 {
-> +			compatible = "motorola,mc146818";
-> +			reg = <1 0x70 0x8>;
-> +
-> +			interrupt-parent = <&i8259>;
-> +			interrupts = <8>;
-> +		};
-> +	};
->  };
-[...]
+John Garry (3):
+  devicetree: bindings: scsi: hisi_sas add hip07 support
+  hisi_sas: add device tree support for hip07
+  hisi_sas: add v2 hw support for different refclk
 
-MBR, Sergei
+ Documentation/devicetree/bindings/scsi/hisilicon-sas.txt | 3 ++-
+ drivers/scsi/hisi_sas/hisi_sas.h                         | 2 ++
+ drivers/scsi/hisi_sas/hisi_sas_main.c                    | 7 +++++++
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c                   | 8 ++++++--
+ 4 files changed, 17 insertions(+), 3 deletions(-)
+
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
