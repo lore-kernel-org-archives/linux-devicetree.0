@@ -1,80 +1,83 @@
-From: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>
-Subject: [PATCH v2] lm87: Allow channel data to be set from dts file.
-Date: Tue, 20 Sep 2016 17:22:40 +1200
-Message-ID: <20160920052240.10242-1-mahoda.ratnayaka@alliedtelesis.co.nz>
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>, Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH v2 1/3] ipmi: add an Aspeed BT IPMI BMC driver
+Date: Tue, 20 Sep 2016 08:57:51 +0200
+Message-ID: <40c37244-b404-45cb-f5ba-758715734227@kaod.org>
+References: <1474022367-21029-1-git-send-email-clg@kaod.org>
+ <1474022367-21029-2-git-send-email-clg@kaod.org>
+ <08e9b30f-6c35-8418-a8b0-0b63639dd36d@acm.org>
+ <9ce54c4c-e8ae-7ac2-de9c-71402dfa4c39@kaod.org>
+ <299986a2-498e-fbff-d52b-f9c0d5c10aec@acm.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <299986a2-498e-fbff-d52b-f9c0d5c10aec@acm.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: minyard@acm.org, openipmi-developer@lists.sourceforge.net, Joel Stanley <joel@jms.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Alistair Popple <alistair@popple.id.au>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Jeremy Kerr <jk@ozlabs.org>, Rocky Craig <rocky.craig@hp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Currently there is no method for setting the channel
-value from the DTS file. When, the driver uses a dts
-file to initialize the driver platform_data is not set.
-As a the result channel variable may not be set correctly.
+>>> The spec says:
+>>>
+>>>     The BMC must not return a given response once the corresponding
+>>>     Request-to-Response interval has passed. The BMC can ensure this
+>>>     by maintaining its own internal list of outstanding requests through
+>>>     the interface. The BMC could age and expire the entries in the list
+>>>     by expiring the entries at an interval that is somewhat shorter than
+>>>     the specified Request-to-Response interval....
+>> This is clearly not handled in the driver.
+>>
+>> For this purpose, we could maintain a request expiry list using the seq
+>> field of the BT message. Update the list in the read and write operations
+>> and arm a timer to garbage collect any left overs. As for the errno in
+>> the write when a response had timeout'ed, may be ETIMEDOUT ?
+> 
+> I think that would work, though I don't think you really need an
+> error response in this case.
+> 
+> I was thinking more just a timeout in the write function.  Ideally
+> the timeout would be calculated at receive time and then be
+> passed in on every write, to preserve the request-to-response
+> time for slow messages.  I like the simplicity of the driver the
+> way it is.
+> 
+> The trouble is that there is no easy way to pass in a timeout
+> in a write operation.  You could pass in a structure where the
+> first part is a 32-bit timeout, or something like that.  Or
+> maybe just a fixed timeout and assume every message is
+> handled in a short enough time that it meets the spec
+> requirement.  But that doesn't handle slowness on the
+> host side.  You can send the message via an ioctl,  which
+> again isn't terribly ideal.
+> 
+> It would be nice if there was a write function which was
+> able to pass metadata, but AFAIK that's only available on
+> sockets.
+> 
+>> For configuration of the maximum response time, a sysfs file would do
+>> I think.
+>>
+>> Do you want that in v3 also ? I have some experimental patches for it,
+>> that I can send as follow ups.
+> 
+> I'm fine either way.
 
-Without the channel variable set correctly, some of the
-sensors will not be initialized correctly. For example
-temp3 sensor sysfs entries.
+OK. So I will send a v3 with minimal changes, as openbmc has been using 
+this driver for a while now. We will discuss the response expiration on 
+the next patchset.
 
-This adds the required functionality to set the channel
-variable from the DTS file. This is done via reading the
-reading a property named "channel" from the lm87 driver.
+I have pushed the patches here :
 
-Signed-off-by: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>
----
+	https://github.com/legoater/linux/commits/aspeed
 
-Notes:
-     changes since v1:
-     Removed unncessary variables channel and np.
-     Update the code as per review comments.
+Thanks,
 
- Documentation/devicetree/bindings/hwmon/lm87.txt | 9 +++++++++
- drivers/hwmon/lm87.c                             | 7 ++++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/hwmon/lm87.txt b/Documentation/devicetree/bindings/hwmon/lm87.txt
-index fefcb48..1906e08 100644
---- a/Documentation/devicetree/bindings/hwmon/lm87.txt
-+++ b/Documentation/devicetree/bindings/hwmon/lm87.txt
-@@ -6,9 +6,18 @@ Required properties:
- 
- - reg: I2C address
- 
-+optional properties:
-+- channels: Value for the channel mode register.
-+            This allows configuration of pins with
-+            selectable uses on the LM87 device (e.g.
-+            choosing between voltage and temperature
-+            inputs).
-+            See hwmon/lm87 for further information
-+
- Example:
- 
- lm87@2e {
- 	compatible = "ti,lm87";
- 	reg = <0x2e>;
-+	channels=<0x4>;
- };
-diff --git a/drivers/hwmon/lm87.c b/drivers/hwmon/lm87.c
-index a5e2958..358c1d4 100644
---- a/drivers/hwmon/lm87.c
-+++ b/drivers/hwmon/lm87.c
-@@ -858,8 +858,13 @@ static void lm87_remove_files(struct i2c_client *client)
- static void lm87_init_client(struct i2c_client *client)
- {
- 	struct lm87_data *data = i2c_get_clientdata(client);
-+	u8 val = 0;
- 
--	if (dev_get_platdata(&client->dev)) {
-+	if (!of_property_read_u8(client->dev.of_node, "channels", &val)) {
-+		data->channel = val;
-+		lm87_write_value(client,
-+				 LM87_REG_CHANNEL_MODE, data->channel);
-+	} else if (dev_get_platdata(&client->dev)) {
- 		data->channel = *(u8 *)dev_get_platdata(&client->dev);
- 		lm87_write_value(client,
- 				 LM87_REG_CHANNEL_MODE, data->channel);
--- 
-2.9.3
-
+C.
