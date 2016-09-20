@@ -1,71 +1,71 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/6] Documentation: dt-bindings: Add documentation for
- the Meson USB2 PHYs
-Date: Tue, 20 Sep 2016 09:29:45 -0500
-Message-ID: <20160920142944.GA16016@rob-hp-laptop>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
- <20160911134111.31141-1-martin.blumenstingl@googlemail.com>
- <20160911134111.31141-3-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH resend 1/5] input: touchscreen: Add generic touchscreen
+ softbutton handling code
+Date: Tue, 20 Sep 2016 09:34:00 -0500
+Message-ID: <20160920143400.GA20446@rob-hp-laptop>
+References: <20160911184408.11657-1-hdegoede@redhat.com>
+ <20160911184408.11657-2-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160911134111.31141-3-martin.blumenstingl@googlemail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-clk@vger.kernel.org, linux-usb@vger.kernel.org, linux-amlogic@lists.infradead.org, jbrunet@baylibre.com, johnyoun@synopsys.com, kishon@ti.com, khilman@baylibre.com, carlo@caione.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, sboyd@codeaurora.org, mturquette@baylibre.com, will.deacon@arm.com, catalin.marinas@arm.com, gregkh@linuxfoundation.org, mark.rutland@arm.com
+In-Reply-To: <20160911184408.11657-2-hdegoede@redhat.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 11, 2016 at 03:41:07PM +0200, Martin Blumenstingl wrote:
-> Add the documentation for the bindings for the Meson8b and GXBB USB2
-> PHYs.
+On Sun, Sep 11, 2016 at 08:44:04PM +0200, Hans de Goede wrote:
+> Some touchscreens extend over the display they cover and have a number
+> of capacative softbuttons outside of the display the cover.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> With some hardware these softbuttons simply report touches with
+> coordinates outside of the normal coordinate space for touches on the
+> display.
+> 
+> This commit adds a devicetree binding for describing such buttons in
+> devicetree and a bunch of helper functions to easily add support for
+> these to existing touchscreen drivers.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  .../devicetree/bindings/phy/meson-usb2-phy.txt     | 27 ++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/meson-usb2-phy.txt
+>  .../bindings/input/touchscreen/softbuttons.txt     |  58 +++++++++
+>  drivers/input/touchscreen/Makefile                 |   2 +-
+>  drivers/input/touchscreen/softbuttons.c            | 145 +++++++++++++++++++++
+>  include/linux/input/touchscreen.h                  |   9 ++
+>  4 files changed, 213 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/softbuttons.txt
+>  create mode 100644 drivers/input/touchscreen/softbuttons.c
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/meson-usb2-phy.txt b/Documentation/devicetree/bindings/phy/meson-usb2-phy.txt
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/softbuttons.txt b/Documentation/devicetree/bindings/input/touchscreen/softbuttons.txt
 > new file mode 100644
-> index 0000000..9da5ea2
+> index 0000000..3eb6f4c
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/meson-usb2-phy.txt
-> @@ -0,0 +1,27 @@
-> +* Amlogic USB2 PHY
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/softbuttons.txt
+> @@ -0,0 +1,58 @@
+> +General Touchscreen Softbutton Properties:
 > +
-> +Required properties:
-> +- compatible:	Depending on the platform this should be one of:
-> +	"amlogic,meson8b-usb2-phy"
-> +	"amlogic,meson-gxbb-usb2-phy"
-> +- reg:		The base address and length of the registers
-> +- #phys-cells:	should be 0 (see phy-bindings.txt in this directory)
-> +- clocks:	phandle and clock identifier for the phy clocks
-> +- clock-names:	"usb_general" and "usb"
+> +Some touchscreens extend over the display they cover and have a number
+> +of capacative softbuttons outside of the display the cover.
 > +
-> +Optional properties:
-> +- resets:	reference to the reset controller
-> +- phy-supply:	see phy-bindings.txt in this directory
+> +Some of these softbuttons simply report touches with coordinates outside of
+> +the normal coordinate space for touches on the display. This binding is for
+> +describing such buttons in devicetree.
 > +
+> +Each softkey is represented as a sub-node of the touchscreen node.
 > +
-> +Example:
-> +
-> +usb0_phy: usb_phy@0 {
+> +Required subnode-properties:
+> + - label			: Descriptive name of the key.
+> + - linux,code			: Keycode to emit.
+> + - softbutton-min-x		: X start of the area the softbutton area covers
+> + - softbutton-max-x		: X end of the area the softbutton area covers
+> + - softbutton-min-y		: Y start of the area the softbutton area covers
+> + - softbutton-max-y		: Y end of the area the softbutton area covers
 
-usb-phy@0
+Please add the note about these values are signed.
 
 With that,
 
 Acked-by: Rob Herring <robh@kernel.org>
 
-> +	compatible = "amlogic,meson-gxbb-usb2-phy";
-> +	#phy-cells = <0>;
-> +	reg = <0x0 0x0 0x0 0x20>;
-> +	resets = <&reset RESET_USB_OTG>;
-> +	clocks = <&clkc CLKID_USB>, <&clkc CLKID_USB0>;
-> +	clock-names = "usb_general", "usb";
-> +	phy-supply = <&usb_vbus>;
-> +};
-> -- 
-> 2.9.3
-> 
+Rob
