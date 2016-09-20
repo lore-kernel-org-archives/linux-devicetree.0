@@ -1,194 +1,111 @@
 From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: [PATCH 3/3] regulator: axp20x: simplify device access
-Date: Wed, 21 Sep 2016 20:20:43 +0200
-Message-ID: <d3078ed4eefd4de48e4b5666a64f6123f8d72483.1474616699.git.moinejf@free.fr>
+Subject: [PATCH 1/3] regulator: axp20x: simplify poly-phase handling
+Date: Tue, 20 Sep 2016 18:09:40 +0200
+Message-ID: <098a013d31924dfd6dff81927a70e91381b1f8d3.1474616699.git.moinejf@free.fr>
 References: <cover.1474616699.git.moinejf@free.fr>
-Reply-To: moinejf-GANU6spQydw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCV6DL6LYMNBB3F4SO7QKGQEC5UQGLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <cover.1474616699.git.moinejf-GANU6spQydw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use the pointer to the main regulator device instead of the pointer
-to the child platform device.
+Building a list (bitmap) of the slaves included in poly-phase groups
+at probe startup time simplifies the treatment in the regulator
+creation loop.
 
 Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
 ---
- drivers/regulator/axp20x-regulator.c | 45 ++++++++++++++++++------------------
- 1 file changed, 23 insertions(+), 22 deletions(-)
+ drivers/regulator/axp20x-regulator.c | 45 +++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 7405f5b..244ddc3 100644
+index 54382ef..4e5e7c8 100644
 --- a/drivers/regulator/axp20x-regulator.c
 +++ b/drivers/regulator/axp20x-regulator.c
-@@ -347,9 +347,9 @@ static const struct regulator_desc axp809_regulators[] = {
- 	AXP_DESC_SW(AXP809, SW, "sw", "swin", AXP22X_PWR_OUT_CTRL2, BIT(6)),
- };
- 
--static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
-+static int axp20x_set_dcdc_freq(struct device *dev, u32 dcdcfreq)
- {
--	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
-+	struct axp20x_dev *axp20x = dev_get_drvdata(dev);
- 	unsigned int reg = AXP20X_DCDC_FREQ;
- 	u32 min, max, def, step;
- 
-@@ -378,7 +378,7 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
- 		step = 150;
- 		break;
- 	default:
--		dev_err(&pdev->dev,
-+		dev_err(dev,
- 			"Setting DCDC frequency for unsupported AXP variant\n");
- 		return -EINVAL;
- 	}
-@@ -388,13 +388,13 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
- 
- 	if (dcdcfreq < min) {
- 		dcdcfreq = min;
--		dev_warn(&pdev->dev, "DCDC frequency too low. Set to %ukHz\n",
-+		dev_warn(dev, "DCDC frequency too low. Set to %ukHz\n",
- 			 min);
- 	}
- 
- 	if (dcdcfreq > max) {
- 		dcdcfreq = max;
--		dev_warn(&pdev->dev, "DCDC frequency too high. Set to %ukHz\n",
-+		dev_warn(dev, "DCDC frequency too high. Set to %ukHz\n",
- 			 max);
- 	}
- 
-@@ -404,24 +404,24 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
- 				  AXP20X_FREQ_DCDC_MASK, dcdcfreq);
+@@ -477,30 +477,24 @@ static int axp20x_set_dcdc_workmode(struct regulator_dev *rdev, int id, u32 work
  }
  
--static int axp20x_regulator_parse_dt(struct platform_device *pdev)
-+static int axp20x_regulator_parse_dt(struct device *dev)
+ /*
+- * This function checks whether a regulator is part of a poly-phase
+- * output setup based on the registers settings. Returns true if it is.
++ * This function checks which regulators are part of poly-phase
++ * output setups based on the registers settings.
++ * Returns a bitmap of these regulators.
+  */
+-static bool axp20x_is_polyphase_slave(struct axp20x_dev *axp20x, int id)
++static u32 axp20x_polyphase_slave(struct axp20x_dev *axp20x)
  {
- 	struct device_node *np, *regulators;
- 	int ret;
- 	u32 dcdcfreq = 0;
+-	u32 reg = 0;
+-
+-	/* Only AXP806 has poly-phase outputs */
+-	if (axp20x->variant != AXP806_ID)
+-		return false;
++	u32 reg = 0, bitmap = 0;
  
--	np = of_node_get(pdev->dev.parent->of_node);
-+	np = of_node_get(dev->of_node);
- 	if (!np)
- 		return 0;
+ 	regmap_read(axp20x->regmap, AXP806_DCDC_MODE_CTRL2, &reg);
  
- 	regulators = of_get_child_by_name(np, "regulators");
- 	if (!regulators) {
--		dev_warn(&pdev->dev, "regulators node not found\n");
-+		dev_warn(dev, "regulators node not found\n");
- 	} else {
- 		of_property_read_u32(regulators, "x-powers,dcdc-freq", &dcdcfreq);
--		ret = axp20x_set_dcdc_freq(pdev, dcdcfreq);
-+		ret = axp20x_set_dcdc_freq(dev, dcdcfreq);
- 		if (ret < 0) {
--			dev_err(&pdev->dev, "Error setting dcdc frequency: %d\n", ret);
-+			dev_err(dev, "Error setting dcdc frequency: %d\n", ret);
- 			return ret;
- 		}
+-	switch (id) {
+-	case AXP806_DCDCB:
+-		return (((reg & GENMASK(7, 6)) == BIT(6)) ||
+-			((reg & GENMASK(7, 6)) == BIT(7)));
+-	case AXP806_DCDCC:
+-		return ((reg & GENMASK(7, 6)) == BIT(7));
+-	case AXP806_DCDCE:
+-		return !!(reg & BIT(5));
+-	}
++	if ((reg & GENMASK(7, 6)) == BIT(5))
++		bitmap |= 1 << AXP806_DCDCE;
++	if ((reg & GENMASK(7, 6)) == BIT(6))
++		bitmap |= 1 << AXP806_DCDCB;
++	if ((reg & GENMASK(7, 6)) == BIT(7))
++		bitmap |= (1 << AXP806_DCDCB) | (1 << AXP806_DCDCC);
  
-@@ -499,11 +499,12 @@ static u32 axp20x_polyphase_slave(struct axp20x_dev *axp20x)
+-	return false;
++	return bitmap;
+ }
  
  static int axp20x_regulator_probe(struct platform_device *pdev)
- {
-+	struct device *dev = pdev->dev.parent;
- 	struct regulator_dev *rdev;
--	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
-+	struct axp20x_dev *axp20x = dev_get_drvdata(dev);
- 	const struct regulator_desc *regulators;
- 	struct regulator_config config = {
--		.dev = pdev->dev.parent,
-+		.dev = dev,
- 		.regmap = axp20x->regmap,
- 		.driver_data = axp20x,
- 	};
-@@ -532,7 +533,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 		dcdc5_ix = AXP22X_DCDC5;
- 		dc1sw_ix = AXP22X_DC1SW;
- 		dc5ldo_ix = AXP22X_DC5LDO;
--		drivevbus = of_property_read_bool(pdev->dev.parent->of_node,
-+		drivevbus = of_property_read_bool(dev->of_node,
- 						  "x-powers,drive-vbus-en");
- 		break;
+@@ -518,6 +512,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+ 	const char *dcdc1_name = axp22x_regulators[AXP22X_DCDC1].name;
+ 	const char *dcdc5_name = axp22x_regulators[AXP22X_DCDC5].name;
+ 	bool drivevbus = false;
++	u32 skip_bitmap = 0;
+ 
+ 	switch (axp20x->variant) {
+ 	case AXP202_ID:
+@@ -535,6 +530,13 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
  	case AXP806_ID:
-@@ -555,13 +556,13 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 		dc5ldo_ix = AXP809_DC5LDO;
+ 		regulators = axp806_regulators;
+ 		nregulators = AXP806_REG_ID_MAX;
++
++		/*
++		 * The regulators which are slave in a poly-phase setup
++		 * are skipped, as their controls are bound to the master
++		 * regulator and won't work.
++		 */
++		skip_bitmap |= axp20x_polyphase_slave(axp20x);
  		break;
- 	default:
--		dev_err(&pdev->dev, "Unsupported AXP variant: %ld\n",
-+		dev_err(dev, "Unsupported AXP variant: %ld\n",
- 			axp20x->variant);
- 		return -EINVAL;
- 	}
- 
- 	/* This only sets the dcdc freq. Ignore any errors */
--	axp20x_regulator_parse_dt(pdev);
-+	axp20x_regulator_parse_dt(dev);
- 
- 	for (i = 0; i < nregulators; i++) {
+ 	case AXP809_ID:
+ 		regulators = axp809_regulators;
+@@ -553,12 +555,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
  		const struct regulator_desc *desc = &regulators[i];
-@@ -580,7 +581,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 		 * name.
- 		 */
- 		if (i == dc1sw_ix && dcdc1_name) {
--			new_desc = devm_kzalloc(&pdev->dev, sizeof(*desc),
-+			new_desc = devm_kzalloc(dev, sizeof(*desc),
- 						GFP_KERNEL);
- 			*new_desc = regulators[i];
- 			new_desc->supply_name = dcdc1_name;
-@@ -588,16 +589,16 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 		}
+ 		struct regulator_desc *new_desc;
  
- 		if (i == dc5ldo_ix && dcdc5_name) {
--			new_desc = devm_kzalloc(&pdev->dev, sizeof(*desc),
-+			new_desc = devm_kzalloc(dev, sizeof(*desc),
- 						GFP_KERNEL);
- 			*new_desc = regulators[i];
- 			new_desc->supply_name = dcdc5_name;
- 			desc = new_desc;
- 		}
+-		/*
+-		 * If this regulator is a slave in a poly-phase setup,
+-		 * skip it, as its controls are bound to the master
+-		 * regulator and won't work.
+-		 */
+-		if (axp20x_is_polyphase_slave(axp20x, i))
++		if (skip_bitmap & (1 << i))
+ 			continue;
  
--		rdev = devm_regulator_register(&pdev->dev, desc, &config);
-+		rdev = devm_regulator_register(dev, desc, &config);
- 		if (IS_ERR(rdev)) {
--			dev_err(&pdev->dev, "Failed to register %s\n",
-+			dev_err(dev, "Failed to register %s\n",
- 				regulators[i].name);
- 
- 			return PTR_ERR(rdev);
-@@ -608,7 +609,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 					   &workmode);
- 		if (!ret) {
- 			if (axp20x_set_dcdc_workmode(rdev, i, workmode))
--				dev_err(&pdev->dev, "Failed to set workmode on %s\n",
-+				dev_err(dev, "Failed to set workmode on %s\n",
- 					rdev->desc->name);
- 		}
- 
-@@ -630,11 +631,11 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 		/* Change N_VBUSEN sense pin to DRIVEVBUS output pin */
- 		regmap_update_bits(axp20x->regmap, AXP20X_OVER_TMP,
- 				   AXP22X_MISC_N_VBUSEN_FUNC, 0);
--		rdev = devm_regulator_register(&pdev->dev,
-+		rdev = devm_regulator_register(dev,
- 					       &axp22x_drivevbus_regulator,
- 					       &config);
- 		if (IS_ERR(rdev)) {
--			dev_err(&pdev->dev, "Failed to register drivevbus\n");
-+			dev_err(dev, "Failed to register drivevbus\n");
- 			return PTR_ERR(rdev);
- 		}
- 	}
+ 		/*
 -- 
 2.10.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
