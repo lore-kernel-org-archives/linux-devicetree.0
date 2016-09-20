@@ -1,37 +1,49 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 0/3] r7s72100: dts: enable mmcif
-Date: Tue, 20 Sep 2016 11:46:17 -0400
-Message-ID: <20160920154620.18653-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 1/3] ARM: dts: r7s72100: add mmcif to device tree
+Date: Tue, 20 Sep 2016 11:46:18 -0400
+Message-ID: <20160920154620.18653-2-chris.brandt@renesas.com>
+References: <20160920154620.18653-1-chris.brandt@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160920154620.18653-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series enables the mmc driver for the RZ/A1.
-Nothing needed to be changed with the actual sh_mmcif driver.
-It worked fine as-is.
+Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+---
+v2:
+* added card detect as 3rd interupt source
+---
+ arch/arm/boot/dts/r7s72100.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-As you can see, the status in the rskrza1 dst was left
-as disabled because I wanted to leave that code in there
-for refernce for someone later that actually has a board with
-an actaul eMMC chip. I tested with an MMC Plus card.
-
-For version 2:
-* First first patch that adds the clock has already been accepted
-* Add in the 3rd "card detect" interrupt that no one uses, but it
-  is documented in the hardware manual so it is reflected in the
-  DT.
-
-Chris Brandt (3):
-  ARM: dts: r7s72100: add mmcif to device tree
-  mmc: sh_mmcif: Document r7s72100 DT bindings
-  ARM: dts: rskrza1: add mmc DT support
-
- Documentation/devicetree/bindings/mmc/renesas,mmcif.txt |  4 ++++
- arch/arm/boot/dts/r7s72100-rskrza1.dts                  | 17 +++++++++++++++++
- arch/arm/boot/dts/r7s72100.dtsi                         | 12 ++++++++++++
- 3 files changed, 33 insertions(+)
-
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index e18d4e6..50f9f3b 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -450,4 +450,16 @@
+ 		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
++
++	mmcif: mmc@e804c800 {
++		compatible = "renesas,mmcif-r7s72100", "renesas,sh-mmcif";
++		reg = <0xe804c800 0x80>;
++		interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH
++			      GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH
++			      GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp8_clks R7S72100_CLK_MMCIF>;
++		reg-io-width = <4>;
++		bus-width = <8>;
++		status = "disabled";
++	};
+ };
 -- 
 2.9.2
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
