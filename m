@@ -1,85 +1,117 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v2 2/2] i2c: aspeed: added documentation for Aspeed I2C driver
-Date: Tue, 20 Sep 2016 11:08:29 -0700
-Message-ID: <CAFd5g46F1reb-d47YBtxOywPObsLWy+L4KEGuXVJPGvL29O+ng@mail.gmail.com>
-References: <201609100847.j1qUadzy%fengguang.wu@intel.com> <1473472551-11149-1-git-send-email-brendanhiggins@google.com>
- <1473472551-11149-2-git-send-email-brendanhiggins@google.com>
- <20160919213536.GA19274@rob-hp-laptop> <CAFd5g46WR34A1FLNvuRck84EX1F3gbPDnDuBo2j-SVUEJPvXfg@mail.gmail.com>
+From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: tegra: nyan: Use proper IRQ type definitions
+Date: Tue, 20 Sep 2016 20:14:49 +0200
+Message-ID: <1474395289.1215.20.camel@paulk.fr>
+References: <20160828173246.32621-1-contact@paulk.fr>
+         <ef69b6d2-ce6b-ff76-5c04-ab2176eb6ecc@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <CAFd5g46WR34A1FLNvuRck84EX1F3gbPDnDuBo2j-SVUEJPvXfg@mail.gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Joel Stanley <joel@jms.id.au>, Jeremy Kerr <jk@ozlabs.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-8otpdRp68sDOyBOorK7e"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ef69b6d2-ce6b-ff76-5c04-ab2176eb6ecc-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-(sorry if you get a duplicate, I forgot to send plain text)
 
-First off, someone pointed out to me that the mapping that I used
-between addresses and bus numbers is not actually valid for busses
-8-14.
+--=-8otpdRp68sDOyBOorK7e
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This could be fixed by checking the offset, but I am wondering if that
-is the right way to do it. It seems like this is not completely
-trivial so maybe this should be specified in the device tree? If that
-is the case, should I do this as another reg entry or go back to the
-way I was doing it before?
+Le mardi 20 septembre 2016 =C3=A0 18:15 +0100, Jon Hunter a =C3=A9crit=C2=
+=A0:
+> On 28/08/16 18:32, Paul Kocialkowski wrote:
+> >=20
+> > This switches a few interrupt definitions that were using
+> > GPIO_ACTIVE_HIGH as IRQ type, which is invalid.
+>=20
+> May be you are right, but this does not describe why this is invalid.
+> Can you elaborate?
 
-On Mon, Sep 19, 2016 at 4:26 PM, Brendan Higgins
-<brendanhiggins@google.com> wrote:
-> Addressed in v3.
->
-> Thanks!
->
-> On Mon, Sep 19, 2016 at 2:35 PM, Rob Herring <robh@kernel.org> wrote:
->> On Fri, Sep 09, 2016 at 06:55:51PM -0700, Brendan Higgins wrote:
->>> Added device tree binding documentation for Aspeed I2C controller and
->>> busses.
->>>
->>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->>> ---
->>> Changes for v2:
->>>   - None
->>> ---
->>>  .../devicetree/bindings/i2c/i2c-aspeed.txt         | 63 ++++++++++++++++++++++
->>>  1 file changed, 63 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
->>> new file mode 100644
->>> index 0000000..df68f2a
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
->>> @@ -0,0 +1,63 @@
->>> +Device tree configuration for the I2C controller and busses on the AST24XX
->>> +and AST25XX SoCs.
->>> +
->>> +Controller:
->>> +
->>> +     Required Properties:
->>> +     - #address-cells        : should be 1
->>> +     - #size-cells           : should be 1
->>> +     - #interrupt-cells      : should be 1
->>> +     - compatible            : should be "aspeed,ast2400-i2c-controller"
->>> +                               or "aspeed,ast2500-i2c-controller"
->>> +     - reg                   : address start and range of controller
->>> +     - ranges                : defines address offset and range for busses
->>> +     - interrupts            : interrupt number
->>> +     - clocks                : root clock of bus, should reference the APB
->>> +                               clock
->>> +     - clock-ranges          : specifies that child busses can inherit clocks
->>> +     - interrupt-controller  : denotes that the controller receives and fires
->>> +                               new interrupts for child busses
->>> +
->>> +Bus:
->>> +
->>> +     Required Properties:
->>> +     - #address-cells        : should be 1
->>> +     - #size-cells           : should be 0
->>> +     - reg                   : address offset and range of bus
->>> +     - compatible            : should be "aspeed,ast2400-i2c-bus"
->>> +                               or "aspeed,ast2500-i2c-bus"
->>> +     - bus                   : the bus's number
->>
->> Don't use indexes. The reg property is enough to id which bus is which.
+GPIO_ACTIVE_HIGH is simply not the right kind of define to use in the
+"interrupts" devicetree property. Values provided there are understood as
+IRQ_TYPE_ defines.
+
+Also, a similar commit[0] was pushed to the cros kernel tree.
+
+Cheers,
+
+[0]:=C2=A0https://chromium.googlesource.com/chromiumos/third_party/kernel/+=
+/f77288938d571b48c9736ac3703cea370c002434
+
+> > Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+> > ---
+> > =C2=A0arch/arm/boot/dts/tegra124-nyan.dtsi | 4 ++--
+> > =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi
+> > b/arch/arm/boot/dts/tegra124-nyan.dtsi
+> > index 271505e..30a77ec 100644
+> > --- a/arch/arm/boot/dts/tegra124-nyan.dtsi
+> > +++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
+> > @@ -59,7 +59,7 @@
+> > =C2=A0			compatible =3D "maxim,max98090";
+> > =C2=A0			reg =3D <0x10>;
+> > =C2=A0			interrupt-parent =3D <&gpio>;
+> > -			interrupts =3D <TEGRA_GPIO(H, 4) GPIO_ACTIVE_HIGH>;
+> > +			interrupts =3D <TEGRA_GPIO(H, 4)
+> > IRQ_TYPE_EDGE_FALLING>;
+>=20
+> If this in invalid then the DT binding doc for the max98090 should be
+> updated as well.
+>=20
+> >=20
+> > =C2=A0		};
+> > =C2=A0
+> > =C2=A0		temperature-sensor@4c {
+> > @@ -325,7 +325,7 @@
+> > =C2=A0					reg =3D <0x9>;
+> > =C2=A0					interrupt-parent =3D <&gpio>;
+> > =C2=A0					interrupts =3D <TEGRA_GPIO(J, 0)
+> > -							GPIO_ACTIVE_HIGH>;
+> > +							IRQ_TYPE_EDGE_BOTH>
+> > ;
+> > =C2=A0					ti,ac-detect-gpios =3D <&gpio
+> > =C2=A0							TEGRA_GPIO(J, 0)
+> > =C2=A0							GPIO_ACTIVE_HIGH>;
+> >=20
+>=20
+> Cheers
+> Jon
+>=20
+--=20
+Paul Kocialkowski, developer of low-level free software for embedded device=
+s
+
+Website: https://www.paulk.fr/
+Coding blog: https://code.paulk.fr/
+Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+--=-8otpdRp68sDOyBOorK7e
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCAAGBQJX4XyZAAoJEIT9weqP7pUMm54P/Ay1A8mbFDgrLhrHe0fRjOic
+o6zwwbYpvhB3nNad41GLzRQIvZsb8ZJoO72I7lcmckPTrYWOlyGGsBzhnxhZEv2b
+80fUCcttpBmWmIZbND8jgkyMoONA32CFeedSkGoR8y6Xdl5dklMrlBJQiB6tWi55
+xa6cYOxV75uTVrBcW4mz7J+TuoyiDx+53Y26kBPIV4X1OFGY77vsFNhZIbqDNQpH
+hwE2nb5u3UagKgGrqkCNOxOaXvl/ml3h0y0BYjk4vD6ROhGGKpEfbhfDR2qbTSMM
+7hYrr8FlTXL7fuwRzyRcVLXLRKHhS1sUVy9SfIUnaXvgHklHjR94ZH7eZPC5qdEH
+RjAn+XUFiwTEff49VZSj5yEcwz2EIX6NXgukD3qm02V+M5IFpTRLCVFHkSW/ZN2W
+oEltK7gKMYggYeWhk8t4FYEZ4WZd0BavY+gXK5LXCfrM5U29qMMZSK1rNgXZptRx
+qroGvyg6B8/zxUVc+lYWqiXVJg93Xl6toUCQjnCgPDwNM54jhsFOWTxyj7jqUBe9
++rjYYAUATHKBsk1EWdaPjkVrunxn/HVwq7IA8/vV0unysef8alLnn3B9NVCwZbWy
+z9nS4LDn65N2odRNH46Wf6Uelq76pGMvGF31SUNh6b+daF94DJPCzTxJdcG/Lzwk
+3QJ7NNxiFS9LVjsxW6Kr
+=+SCZ
+-----END PGP SIGNATURE-----
+
+--=-8otpdRp68sDOyBOorK7e--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
