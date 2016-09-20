@@ -1,108 +1,85 @@
-From: Paul Kocialkowski <contact@paulk.fr>
-Subject: Re: [PATCH 2/4] ARM: tegra: nyan: Use external control for bq24735
- charger
-Date: Tue, 20 Sep 2016 20:02:47 +0200
-Message-ID: <1474394567.1215.14.camel@paulk.fr>
-References: <20160828173246.32621-1-contact@paulk.fr>
-         <20160828173246.32621-2-contact@paulk.fr>
-         <00697eef-0b36-1ff5-9c7a-43c1b53b52bc@nvidia.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v2 2/2] i2c: aspeed: added documentation for Aspeed I2C driver
+Date: Tue, 20 Sep 2016 11:08:29 -0700
+Message-ID: <CAFd5g46F1reb-d47YBtxOywPObsLWy+L4KEGuXVJPGvL29O+ng@mail.gmail.com>
+References: <201609100847.j1qUadzy%fengguang.wu@intel.com> <1473472551-11149-1-git-send-email-brendanhiggins@google.com>
+ <1473472551-11149-2-git-send-email-brendanhiggins@google.com>
+ <20160919213536.GA19274@rob-hp-laptop> <CAFd5g46WR34A1FLNvuRck84EX1F3gbPDnDuBo2j-SVUEJPvXfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-6cH71l0qMPGEyletmZBe"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <00697eef-0b36-1ff5-9c7a-43c1b53b52bc@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <CAFd5g46WR34A1FLNvuRck84EX1F3gbPDnDuBo2j-SVUEJPvXfg@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Joel Stanley <joel@jms.id.au>, Jeremy Kerr <jk@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
+(sorry if you get a duplicate, I forgot to send plain text)
 
---=-6cH71l0qMPGEyletmZBe
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+First off, someone pointed out to me that the mapping that I used
+between addresses and bus numbers is not actually valid for busses
+8-14.
 
-Le mardi 20 septembre 2016 =C3=A0 18:40 +0100, Jon Hunter a =C3=A9crit :
-> On 28/08/16 18:32, Paul Kocialkowski wrote:
-> >=C2=A0
-> > Nyan boards come with an embedded controller that controls when to
-> > enable and disable the charge. Thus, it should not be left up to the
-> > kernel to handle that.
-> >=C2=A0
-> > Using the ti,external-control property allows specifying this use-case.
->=C2=A0
-> So the bq24735 is populated under the EC's 'i2c-tunnel' property which
-> is there to specifically interface it's child devices to the host. So I
-> am a bit confused why this is expose to the host if it should not be used=
-?
+This could be fixed by checking the offset, but I am wondering if that
+is the right way to do it. It seems like this is not completely
+trivial so maybe this should be specified in the device tree? If that
+is the case, should I do this as another reg entry or go back to the
+way I was doing it before?
 
-Well, it needs to access the information in the read-only registers provide=
-d by
-the chip, which is allowed by the setup in place that you described.
-
-However, the EC has its internal state machine that decides when to start
-charging, etc and so should be the only one to write registers, to avoid
-conflicts.
-
-> Again you may right and I did find the original series [0] for this
-> which specifically references the Acer Chromebook that needs this.
-> However, I am not sure why this was never populated? Is there any other
-> history here?
-
-I am also confused about why it wasn't applied earlier. However, the cros k=
-ernel
-is using the very same scheme.
-
-> What is the actual problem you see without making this change?
-
-There is a risk of conflict (even though it's probably not that significant=
-),
-given the low variety of possible cases here. The idea is simply to say tha=
-t the
-EC is in charge and to let it do its job without interfering.
-
-> The original series states ...
->=C2=A0
-> "On Acer Chromebook 13 (CB5-311) this module fails to load if the
-> charger is not inserted, and will error when it is removed."
-
-I'm confused about that comment. At this point (and with this patch), it wo=
-rks
-normally.
-
-> Cheers
-> Jon
->=C2=A0
-> [0] http://marc.info/?l=3Dlinux-pm&m=3D145447948705686&w=3D2
-
-Cheers,
-
---=C2=A0
-Paul Kocialkowski, developer of low-level free software for embedded device=
-s
-
-Website: https://www.paulk.fr/
-Coding blog: https://code.paulk.fr/
-Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
---=-6cH71l0qMPGEyletmZBe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJX4XnHAAoJEIT9weqP7pUMr2MP/2g674+sQU25p5MVGeU+5Sa1
-eMDSHmqUDhTajZjJYt3MrGQB9wm9Ib8eRNQ9IbjtGw2/pVYEpeRMonONMOypql3U
-GOkopl46Ea2wKrmwakqxIGQ12gf5qra0+04xgt0qY27bRiTM2xg1/87Thsp5FA9B
-uAgqdhEWzG6WCodbreYPINeTMN8LjduUPLg24PIJO7w6HCcsaUK2ejb5cBrNVTIa
-F0ObJJV8YxjLh6WeinNN5KgtGBGzILgvA3VJa6aYvfsW8ISd0Vw3MmQFv9EisorS
-if9v1Rd7Tv7+5xSK3u/51HU8yz8G0fXRlun8ULUdea1ucYonvhezEdmTlJxTx+2u
-fmZA+vtkiOc2sDi8uocVJ/230R+clx+B3E+CVKGOT6/9Sv/DWmp45pcMqBeveNLd
-an3DzTVKdNspv+XZlSVWeKeIyd19fVq+/u7jZ42mKBuxdfS9xAHZZJjFr7Mi28gf
-E13Dv5acylrs7kC11YQjLK7sRNWBQrGDCpbRXu5qUtWMCCK6Obf1sy+iWuS4LqI/
-+NA3uK523LUUJMSu5SmEvf+hwllNNa4hbX0mPYhVVi9jzTpzAWGh4+CbIkWnRoLZ
-AUmHB+FPwYKQKWPluS446/IBAa7Q1eEXFM2BeKyi51tzS1pUa2/szhE6TdSzRYFM
-ratAgq6tP1jJoSU9sAfw
-=V+Xx
------END PGP SIGNATURE-----
-
---=-6cH71l0qMPGEyletmZBe--
+On Mon, Sep 19, 2016 at 4:26 PM, Brendan Higgins
+<brendanhiggins@google.com> wrote:
+> Addressed in v3.
+>
+> Thanks!
+>
+> On Mon, Sep 19, 2016 at 2:35 PM, Rob Herring <robh@kernel.org> wrote:
+>> On Fri, Sep 09, 2016 at 06:55:51PM -0700, Brendan Higgins wrote:
+>>> Added device tree binding documentation for Aspeed I2C controller and
+>>> busses.
+>>>
+>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>>> ---
+>>> Changes for v2:
+>>>   - None
+>>> ---
+>>>  .../devicetree/bindings/i2c/i2c-aspeed.txt         | 63 ++++++++++++++++++++++
+>>>  1 file changed, 63 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+>>> new file mode 100644
+>>> index 0000000..df68f2a
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+>>> @@ -0,0 +1,63 @@
+>>> +Device tree configuration for the I2C controller and busses on the AST24XX
+>>> +and AST25XX SoCs.
+>>> +
+>>> +Controller:
+>>> +
+>>> +     Required Properties:
+>>> +     - #address-cells        : should be 1
+>>> +     - #size-cells           : should be 1
+>>> +     - #interrupt-cells      : should be 1
+>>> +     - compatible            : should be "aspeed,ast2400-i2c-controller"
+>>> +                               or "aspeed,ast2500-i2c-controller"
+>>> +     - reg                   : address start and range of controller
+>>> +     - ranges                : defines address offset and range for busses
+>>> +     - interrupts            : interrupt number
+>>> +     - clocks                : root clock of bus, should reference the APB
+>>> +                               clock
+>>> +     - clock-ranges          : specifies that child busses can inherit clocks
+>>> +     - interrupt-controller  : denotes that the controller receives and fires
+>>> +                               new interrupts for child busses
+>>> +
+>>> +Bus:
+>>> +
+>>> +     Required Properties:
+>>> +     - #address-cells        : should be 1
+>>> +     - #size-cells           : should be 0
+>>> +     - reg                   : address offset and range of bus
+>>> +     - compatible            : should be "aspeed,ast2400-i2c-bus"
+>>> +                               or "aspeed,ast2500-i2c-bus"
+>>> +     - bus                   : the bus's number
+>>
+>> Don't use indexes. The reg property is enough to id which bus is which.
