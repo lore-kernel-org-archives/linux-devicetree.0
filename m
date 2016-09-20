@@ -1,104 +1,47 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] lm87: Allow channel data to be set from dts file.
-Date: Tue, 20 Sep 2016 10:24:42 -0700
-Message-ID: <57E170DA.3020006@gmail.com>
-References: <20160920052240.10242-1-mahoda.ratnayaka@alliedtelesis.co.nz>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: tegra: nyan: Use external control for bq24735
+ charger
+Date: Tue, 20 Sep 2016 18:40:06 +0100
+Message-ID: <00697eef-0b36-1ff5-9c7a-43c1b53b52bc@nvidia.com>
+References: <20160828173246.32621-1-contact@paulk.fr>
+ <20160828173246.32621-2-contact@paulk.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160920052240.10242-1-mahoda.ratnayaka-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mahoda Ratnayaka <mahoda.ratnayaka-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160828173246.32621-2-contact-W9ppeneeCTY@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/19/16 22:22, Mahoda Ratnayaka wrote:
-> Currently there is no method for setting the channel
-> value from the DTS file. When, the driver uses a dts
-> file to initialize the driver platform_data is not set.
-> As a the result channel variable may not be set correctly.
-> 
-> Without the channel variable set correctly, some of the
-> sensors will not be initialized correctly. For example
-> temp3 sensor sysfs entries.
-> 
-> This adds the required functionality to set the channel
-> variable from the DTS file. This is done via reading the
-> reading a property named "channel" from the lm87 driver.
-> 
-> Signed-off-by: Mahoda Ratnayaka <mahoda.ratnayaka-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-> ---
-> 
-> Notes:
->      changes since v1:
->      Removed unncessary variables channel and np.
->      Update the code as per review comments.
-> 
->  Documentation/devicetree/bindings/hwmon/lm87.txt | 9 +++++++++
->  drivers/hwmon/lm87.c                             | 7 ++++++-
->  2 files changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/lm87.txt b/Documentation/devicetree/bindings/hwmon/lm87.txt
-> index fefcb48..1906e08 100644
-> --- a/Documentation/devicetree/bindings/hwmon/lm87.txt
-> +++ b/Documentation/devicetree/bindings/hwmon/lm87.txt
 
-I do not see the file Documentation/devicetree/bindings/hwmon/lm87.txt in
-Linux 4.8-rc7.  I am guessing that it might already be in a tree headed
-upstream.  Can you point me to it?
-
-
-> @@ -6,9 +6,18 @@ Required properties:
->  
->  - reg: I2C address
->  
-> +optional properties:
-> +- channels: Value for the channel mode register.
-> +            This allows configuration of pins with
-> +            selectable uses on the LM87 device (e.g.
-> +            choosing between voltage and temperature
-> +            inputs).
-> +            See hwmon/lm87 for further information
-> +
-
-That is configuration information, not hardware description.
-Devicetree contains hardware description.
-
-Hardware description would instead be a property that said what
-is hooked up to the shared pins, eg temp3, fan1, fan2, VID, or
-IRQ.  The driver should know what value to place in channel for
-each of the different cases.
-
->  Example:
->  
->  lm87@2e {
->  	compatible = "ti,lm87";
->  	reg = <0x2e>;
-> +	channels=<0x4>;
->  };
-> diff --git a/drivers/hwmon/lm87.c b/drivers/hwmon/lm87.c
-> index a5e2958..358c1d4 100644
-> --- a/drivers/hwmon/lm87.c
-> +++ b/drivers/hwmon/lm87.c
-> @@ -858,8 +858,13 @@ static void lm87_remove_files(struct i2c_client *client)
->  static void lm87_init_client(struct i2c_client *client)
->  {
->  	struct lm87_data *data = i2c_get_clientdata(client);
-> +	u8 val = 0;
->  
-> -	if (dev_get_platdata(&client->dev)) {
-> +	if (!of_property_read_u8(client->dev.of_node, "channels", &val)) {
-> +		data->channel = val;
-> +		lm87_write_value(client,
-> +				 LM87_REG_CHANNEL_MODE, data->channel);
-> +	} else if (dev_get_platdata(&client->dev)) {
->  		data->channel = *(u8 *)dev_get_platdata(&client->dev);
->  		lm87_write_value(client,
->  				 LM87_REG_CHANNEL_MODE, data->channel);
+On 28/08/16 18:32, Paul Kocialkowski wrote:
+> Nyan boards come with an embedded controller that controls when to
+> enable and disable the charge. Thus, it should not be left up to the
+> kernel to handle that.
 > 
+> Using the ti,external-control property allows specifying this use-case.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So the bq24735 is populated under the EC's 'i2c-tunnel' property which
+is there to specifically interface it's child devices to the host. So I
+am a bit confused why this is expose to the host if it should not be used?
+
+Again you may right and I did find the original series [0] for this
+which specifically references the Acer Chromebook that needs this.
+However, I am not sure why this was never populated? Is there any other
+history here?
+
+What is the actual problem you see without making this change? The
+original series states ...
+
+"On Acer Chromebook 13 (CB5-311) this module fails to load if the
+charger is not inserted, and will error when it is removed."
+
+Cheers
+Jon
+
+[0] http://marc.info/?l=linux-pm&m=145447948705686&w=2
+
+-- 
+nvpublic
