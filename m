@@ -1,56 +1,40 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: Re: [PATCH v2 4/6] net: ethernet: bgmac: convert to feature flags
-Date: Tue, 20 Sep 2016 09:59:24 -0400
-Message-ID: <CAC3K-4rZGOeH8nw5jBFaJXKh3SDfv7qPicS7fby0u-f=Q7DigQ@mail.gmail.com>
-References: <1467932938-21819-1-git-send-email-jon.mason@broadcom.com>
- <1467932938-21819-5-git-send-email-jon.mason@broadcom.com>
- <CACna6rw1j3myPEkbn+YR71W7CF7Of_yahn9eDT7t3hKWGmWUmg@mail.gmail.com> <CACna6rymVcKV1h_PEvRuCQrtOd4rsqV34bMWzVOof15fdc8KEA@mail.gmail.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 2/9] drivers: irqchip: Add STM32 external interrupts
+ support
+Date: Tue, 20 Sep 2016 16:02:03 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1609201600490.6905@nanos>
+References: <1473432124-6784-1-git-send-email-alexandre.torgue@st.com> <1473432124-6784-3-git-send-email-alexandre.torgue@st.com> <alpine.DEB.2.20.1609131713490.6233@nanos> <6941f61d-0b33-4108-0135-b11887cd0488@st.com> <alpine.DEB.2.20.1609141103420.6233@nanos>
+ <facd1c7c-d696-eae1-02e4-5a0c9285add0@st.com> <alpine.DEB.2.20.1609141532510.6233@nanos> <f64e4f9d-d811-2c6e-7c5a-d4ab06716e2c@st.com> <39c4ceee-7e05-ebfd-2ea0-3c4e1c4ea619@st.com> <alpine.DEB.2.20.1609201150160.6905@nanos> <053a37f4-aa10-46ea-f477-8ae55bb5773f@st.com>
+ <alpine.DEB.2.20.1609201439440.6905@nanos> <c2c8ad5f-e679-8522-808f-e940b8c6954d@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACna6rymVcKV1h_PEvRuCQrtOd4rsqV34bMWzVOof15fdc8KEA@mail.gmail.com>
+In-Reply-To: <c2c8ad5f-e679-8522-808f-e940b8c6954d@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Network Development <netdev@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Jason Cooper <jason@lakedaemon.net>, arnd@arndb.de, Marc Zyngier <marc.zyngier@arm.com>, bruherrera@gmail.com, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 20, 2016 at 1:19 AM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com>=
- wrote:
-> On 17 August 2016 at 13:34, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> wr=
-ote:
->> On 8 July 2016 at 01:08, Jon Mason <jon.mason@broadcom.com> wrote:
->>>         mode =3D (bgmac_read(bgmac, BGMAC_DEV_STATUS) & BGMAC_DS_MM_MAS=
-K) >>
->>>                 BGMAC_DS_MM_SHIFT;
->>> -       if (ci->id !=3D BCMA_CHIP_ID_BCM47162 || mode !=3D 0)
->>> +       if (bgmac->feature_flags & BGMAC_FEAT_CLKCTLST || mode !=3D 0)
->>>                 bgmac_set(bgmac, BCMA_CLKCTLST, BCMA_CLKCTLST_FORCEHT);
->>> -       if (ci->id =3D=3D BCMA_CHIP_ID_BCM47162 && mode =3D=3D 2)
->>> +       if (bgmac->feature_flags & BGMAC_FEAT_CLKCTLST && mode =3D=3D 2=
-)
->>>                 bcma_chipco_chipctl_maskset(&bgmac->core->bus->drv_cc, =
-1, ~0,
->>>                                             BGMAC_CHIPCTL_1_RXC_DLL_BYP=
-ASS);
->>
->> Jon, it looks to me you translated two following conditions:
->> ci->id !=3D BCMA_CHIP_ID_BCM47162
->> and
->> ci->id =3D=3D BCMA_CHIP_ID_BCM47162
->> into the same flag check:
->> bgmac->feature_flags & BGMAC_FEAT_CLKCTLST
->>
->> I don't think it's intentional, is it? Do you have a moment to fix this?
->
-> Ping
+On Tue, 20 Sep 2016, Alexandre Torgue wrote:
+> On 09/20/2016 02:44 PM, Thomas Gleixner wrote:
+> > Free will be called when a interrupt in the child domain is torn down,
+> > i.e. when irq_domain_free_irqs() is called. And it will be called for both
+> > domains like the alloc callback is invoked on both domains via
+> > irq_domain_alloc_irqs().
+> 
+> Thanks Thomas for this clarification (I'm sure now that we need .free
+> callbacks).
+> irq_domain_free_irqs() is called in 2 scenario:
+> 1- when issue occurs in irq_create_fwspec_mapping()
+> 2- when irq_dispose_mapping() is called
+> 
+> Case 2 is the one I tested some times ago. In this case, I need to mask
+> interrupts in .free callback of EXTI (parent) domain to avoid spurious
+> interrupts.
 
-Sorry, just seeing this now.  I'll double check the original code and
-verify it (or fix it).
+And why would irq_dispose_mapping() be called on an unmasked, i.e. active,
+interrupt? The masking is just papering over that.
 
 Thanks,
-Jon
 
->
-> --
-> Rafa=C5=82
+	tglx
