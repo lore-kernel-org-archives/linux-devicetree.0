@@ -1,49 +1,70 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 2/9] drivers: irqchip: Add STM32 external interrupts
- support
-Date: Tue, 20 Sep 2016 17:36:02 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1609201735370.6905@nanos>
-References: <1473432124-6784-1-git-send-email-alexandre.torgue@st.com>
- <1473432124-6784-3-git-send-email-alexandre.torgue@st.com>
- <alpine.DEB.2.20.1609131713490.6233@nanos>
- <6941f61d-0b33-4108-0135-b11887cd0488@st.com>
- <alpine.DEB.2.20.1609141103420.6233@nanos>
- <facd1c7c-d696-eae1-02e4-5a0c9285add0@st.com>
- <alpine.DEB.2.20.1609141532510.6233@nanos>
- <f64e4f9d-d811-2c6e-7c5a-d4ab06716e2c@st.com>
- <39c4ceee-7e05-ebfd-2ea0-3c4e1c4ea619@st.com>
- <alpine.DEB.2.20.1609201150160.6905@nanos>
- <053a37f4-aa10-46ea-f477-8ae55bb5773f@st.com>
- <alpine.DEB.2.20.1609201439440.6905@nanos>
- <c2c8ad5f-e679-8522-808f-e940b8c6954d@st.com>
- <alpine.DEB.2.20.1609201600490.6905@nanos>
- <2095bf33-2940-3294-afd6-a28a48762569@st.com>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH v3 0/3] ARM: aspeed: add support
+	for the BT IPMI interface
+Date: Tue, 20 Sep 2016 17:45:13 +0200
+Message-ID: <e0114015-647a-8567-ac10-6dfe76b4069c@kaod.org>
+References: <1474354900-5618-1-git-send-email-clg@kaod.org>
+	<40bb95a8-b5a6-563b-11c6-73de2f67130d@acm.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2095bf33-2940-3294-afd6-a28a48762569@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Jason Cooper <jason@lakedaemon.net>, arnd@arndb.de, Marc Zyngier <marc.zyngier@arm.com>, bruherrera@gmail.com, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <openipmi-developer-bounces@lists.sourceforge.net>
+In-Reply-To: <40bb95a8-b5a6-563b-11c6-73de2f67130d@acm.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
+	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=openipmi-developer>
+List-Post: <mailto:openipmi-developer@lists.sourceforge.net>
+List-Help: <mailto:openipmi-developer-request@lists.sourceforge.net?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
+	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=subscribe>
+Errors-To: openipmi-developer-bounces@lists.sourceforge.net
+To: minyard@acm.org, openipmi-developer@lists.sourceforge.net, Joel Stanley <joel@jms.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Alistair Popple <alistair@popple.id.au>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Jeremy Kerr <jk@ozlabs.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Sep 2016, Alexandre Torgue wrote:
-> so if you agree I will resend only patches concerning stm32 exti driver
-> [1],[2],[3],[4]
-
-Ok.
- 
-> Thanks for your time.
-
-Welcome,
-
-	tglx
+T24gMDkvMjAvMjAxNiAwNDo1OCBQTSwgQ29yZXkgTWlueWFyZCB3cm90ZToKPiBPbiAwOS8yMC8y
+MDE2IDAyOjAxIEFNLCBDw6lkcmljIExlIEdvYXRlciB3cm90ZToKPj4gSGVsbG8sCj4+Cj4+IFRo
+aXMgc2VyaWUgYWRkcyBzdXBwb3J0IGZvciB0aGUgaUJUIGludGVyZmFjZSBvbiBBc3BlZWQgU09D
+cyAoQVNUMjQwMAo+PiBhbmQgQVNUMjUwMCkuIFRoZSBCVCAoQmxvY2sgVHJhbnNmZXIpIGludGVy
+ZmFjZSBpcyB1c2VkIHRvIHBlcmZvcm0KPj4gaW4tYmFuZCBJUE1JIGNvbW11bmljYXRpb24gYmV0
+d2VlbiBhIGhvc3QgYW5kIGl0cyBCTUMuIFRoaXMgZHJpdmVyCj4+IGltcGxlbWVudHMgdGhlIEJN
+QyBzaWRlLgo+IAo+IFRoaXMgbG9va3MgZ29vZC4gIEkgcHVsbGVkIHRoZXNlIGludG8gbXkgdHJl
+ZSwgaXQncyBvayBmb3IgNC45IG9yCj4gd2hhdGV2ZXIgaXMgbmV4dCwgc2luY2UgaXQncyBhIG5l
+dyBkcml2ZXIuCj4gCj4gRG8gcGF0Y2hlcyAyIGFuZCAzIGdvIHRocm91Z2ggSm9lbD8KClllcy4g
+SGUgc2FpZCBoZSB3b3VsZC4KClRoYW5rcywKCkMuIAoKPiAKPiAtY29yZXkKPiAKPj4gQ2hhbmdl
+cyBzaW5jZSB2MjoKPj4KPj4gICAtIGxpbWl0IHRvIG9uZSBvcGVuZXIKPj4gICAtIHByb3RlY3Qg
+d3JpdGUvcmVhZCBvcGVyYXRpb25zIHdpdGggYSBtdXRleC4KPj4KPj4gQ2hhbmdlcyBzaW5jZSB2
+MToKPj4KPj4gICAtIHRoZSBkcml2ZXIgaXMgbm93IGNhbGxlZCAnYnQtYm1jJyBhbmQgdGhlIGRl
+dmljZSBub2RlICcvZGV2L2lwbWktYnQtaG9zdCcKPj4gICAgICAgLSB0aGUgY29kZSBpcyBub3cg
+dW5kZXIgZHJpdmVycy9jaGFyL2lwbWkvLiBUaGlzIHJlcXVpcmVkIGEgY2hhbmdlIG9mCj4+ICAg
+ICB0aGUgdG9wIE1ha2VmaWxlIGluIGRyaXZlcnMvIHRvIGNvbXBpbGUgdGhlIGJ0LWJtYyBkcml2
+ZXIgd2l0aCB0aGUKPj4gICAgIGlwbWkgaGFuZGxlcnMgbm90IGJlaW5nIHNlbGVjdGVkLiBUaGF0
+IG1pZ2h0IGJlIGFuIGlzc3VlLgo+PiAgICAgICAtIGNoYW5nZWQgdGhlIHJlYWQvd3JpdGUgb3Bl
+cmF0aW9ucyB0byB1c2UgYSB0ZW1wb3JhcnkgYnVmZmVyIGFuZCBnZXQKPj4gICAgIHJpZCBvZiB0
+aGUge2dldCxwdXR9X3VzZXIgY2FsbHMKPj4KPj4gVGhhbmtzLAo+Pgo+PiBDLgo+Pgo+PiBBbGlz
+dGFpciBQb3BwbGUgKDEpOgo+PiAgICBpcG1pOiBhZGQgYW4gQXNwZWVkIEJUIElQTUkgQk1DIGRy
+aXZlcgo+Pgo+PiBDw6lkcmljIExlIEdvYXRlciAoMik6Cj4+ICAgIEFSTTogYXNwZWVkOiBBZGQg
+ZGVmY29uZmlncyBmb3IgQ09ORklHX0FTUEVFRF9CVF9JUE1JX0JNQwo+PiAgICBBUk06IGR0czog
+YXNwZWVkOiBFbmFibGUgQlQgSVBNSSBCTUMgZGV2aWNlCj4+Cj4+ICAgLi4uL2JpbmRpbmdzL2No
+YXIvaXBtaS9hc3BlZWQsYXN0MjQwMC1idC1ibWMudHh0ICAgfCAgMjMgKwo+PiAgIGFyY2gvYXJt
+L2Jvb3QvZHRzL2FzcGVlZC1nNC5kdHNpICAgICAgICAgICAgICAgICAgIHwgICA2ICsKPj4gICBh
+cmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzUuZHRzaSAgICAgICAgICAgICAgICAgICB8ICAgNiAr
+Cj4+ICAgYXJjaC9hcm0vY29uZmlncy9hc3BlZWRfZzRfZGVmY29uZmlnICAgICAgICAgICAgICAg
+fCAgIDEgKwo+PiAgIGFyY2gvYXJtL2NvbmZpZ3MvYXNwZWVkX2c1X2RlZmNvbmZpZyAgICAgICAg
+ICAgICAgIHwgICAxICsKPj4gICBkcml2ZXJzL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgMiArLQo+PiAgIGRyaXZlcnMvY2hhci9pcG1pL0tjb25maWcgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgICA3ICsKPj4gICBkcml2ZXJzL2NoYXIvaXBtaS9NYWtl
+ZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4+ICAgZHJpdmVycy9jaGFyL2lw
+bWkvYnQtYm1jLmMgICAgICAgICAgICAgICAgICAgICAgICAgfCA1MTAgKysrKysrKysrKysrKysr
+KysrKysrCj4+ICAgaW5jbHVkZS91YXBpL2xpbnV4L0tidWlsZCAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfCAgIDEgKwo+PiAgIGluY2x1ZGUvdWFwaS9saW51eC9idC1ibWMuaCAgICAgICAgICAg
+ICAgICAgICAgICAgIHwgIDE4ICsKPj4gICAxMSBmaWxlcyBjaGFuZ2VkLCA1NzUgaW5zZXJ0aW9u
+cygrKSwgMSBkZWxldGlvbigtKQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvY2hhci9pcG1pL2FzcGVlZCxhc3QyNDAwLWJ0LWJtYy50eHQK
+Pj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jaGFyL2lwbWkvYnQtYm1jLmMKPj4gICBj
+cmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS91YXBpL2xpbnV4L2J0LWJtYy5oCj4+Cj4gCgoKLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCk9wZW5pcG1pLWRldmVsb3BlciBtYWlsaW5nIGxpc3QKT3BlbmlwbWktZGV2ZWxv
+cGVyQGxpc3RzLnNvdXJjZWZvcmdlLm5ldApodHRwczovL2xpc3RzLnNvdXJjZWZvcmdlLm5ldC9s
+aXN0cy9saXN0aW5mby9vcGVuaXBtaS1kZXZlbG9wZXIK
