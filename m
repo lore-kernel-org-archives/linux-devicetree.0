@@ -1,70 +1,70 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH v3 0/3] ARM: aspeed: add support
-	for the BT IPMI interface
-Date: Tue, 20 Sep 2016 17:45:13 +0200
-Message-ID: <e0114015-647a-8567-ac10-6dfe76b4069c@kaod.org>
-References: <1474354900-5618-1-git-send-email-clg@kaod.org>
-	<40bb95a8-b5a6-563b-11c6-73de2f67130d@acm.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <openipmi-developer-bounces@lists.sourceforge.net>
-In-Reply-To: <40bb95a8-b5a6-563b-11c6-73de2f67130d@acm.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
-	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=openipmi-developer>
-List-Post: <mailto:openipmi-developer@lists.sourceforge.net>
-List-Help: <mailto:openipmi-developer-request@lists.sourceforge.net?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
-	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=subscribe>
-Errors-To: openipmi-developer-bounces@lists.sourceforge.net
-To: minyard@acm.org, openipmi-developer@lists.sourceforge.net, Joel Stanley <joel@jms.id.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Alistair Popple <alistair@popple.id.au>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Jeremy Kerr <jk@ozlabs.org>, linux-arm-kernel@lists.infradead.org
+From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 3/3] ARM: dts: rskrza1: add mmc DT support
+Date: Tue, 20 Sep 2016 11:46:20 -0400
+Message-ID: <20160920154620.18653-4-chris.brandt@renesas.com>
+References: <20160920154620.18653-1-chris.brandt@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160920154620.18653-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDkvMjAvMjAxNiAwNDo1OCBQTSwgQ29yZXkgTWlueWFyZCB3cm90ZToKPiBPbiAwOS8yMC8y
-MDE2IDAyOjAxIEFNLCBDw6lkcmljIExlIEdvYXRlciB3cm90ZToKPj4gSGVsbG8sCj4+Cj4+IFRo
-aXMgc2VyaWUgYWRkcyBzdXBwb3J0IGZvciB0aGUgaUJUIGludGVyZmFjZSBvbiBBc3BlZWQgU09D
-cyAoQVNUMjQwMAo+PiBhbmQgQVNUMjUwMCkuIFRoZSBCVCAoQmxvY2sgVHJhbnNmZXIpIGludGVy
-ZmFjZSBpcyB1c2VkIHRvIHBlcmZvcm0KPj4gaW4tYmFuZCBJUE1JIGNvbW11bmljYXRpb24gYmV0
-d2VlbiBhIGhvc3QgYW5kIGl0cyBCTUMuIFRoaXMgZHJpdmVyCj4+IGltcGxlbWVudHMgdGhlIEJN
-QyBzaWRlLgo+IAo+IFRoaXMgbG9va3MgZ29vZC4gIEkgcHVsbGVkIHRoZXNlIGludG8gbXkgdHJl
-ZSwgaXQncyBvayBmb3IgNC45IG9yCj4gd2hhdGV2ZXIgaXMgbmV4dCwgc2luY2UgaXQncyBhIG5l
-dyBkcml2ZXIuCj4gCj4gRG8gcGF0Y2hlcyAyIGFuZCAzIGdvIHRocm91Z2ggSm9lbD8KClllcy4g
-SGUgc2FpZCBoZSB3b3VsZC4KClRoYW5rcywKCkMuIAoKPiAKPiAtY29yZXkKPiAKPj4gQ2hhbmdl
-cyBzaW5jZSB2MjoKPj4KPj4gICAtIGxpbWl0IHRvIG9uZSBvcGVuZXIKPj4gICAtIHByb3RlY3Qg
-d3JpdGUvcmVhZCBvcGVyYXRpb25zIHdpdGggYSBtdXRleC4KPj4KPj4gQ2hhbmdlcyBzaW5jZSB2
-MToKPj4KPj4gICAtIHRoZSBkcml2ZXIgaXMgbm93IGNhbGxlZCAnYnQtYm1jJyBhbmQgdGhlIGRl
-dmljZSBub2RlICcvZGV2L2lwbWktYnQtaG9zdCcKPj4gICAgICAgLSB0aGUgY29kZSBpcyBub3cg
-dW5kZXIgZHJpdmVycy9jaGFyL2lwbWkvLiBUaGlzIHJlcXVpcmVkIGEgY2hhbmdlIG9mCj4+ICAg
-ICB0aGUgdG9wIE1ha2VmaWxlIGluIGRyaXZlcnMvIHRvIGNvbXBpbGUgdGhlIGJ0LWJtYyBkcml2
-ZXIgd2l0aCB0aGUKPj4gICAgIGlwbWkgaGFuZGxlcnMgbm90IGJlaW5nIHNlbGVjdGVkLiBUaGF0
-IG1pZ2h0IGJlIGFuIGlzc3VlLgo+PiAgICAgICAtIGNoYW5nZWQgdGhlIHJlYWQvd3JpdGUgb3Bl
-cmF0aW9ucyB0byB1c2UgYSB0ZW1wb3JhcnkgYnVmZmVyIGFuZCBnZXQKPj4gICAgIHJpZCBvZiB0
-aGUge2dldCxwdXR9X3VzZXIgY2FsbHMKPj4KPj4gVGhhbmtzLAo+Pgo+PiBDLgo+Pgo+PiBBbGlz
-dGFpciBQb3BwbGUgKDEpOgo+PiAgICBpcG1pOiBhZGQgYW4gQXNwZWVkIEJUIElQTUkgQk1DIGRy
-aXZlcgo+Pgo+PiBDw6lkcmljIExlIEdvYXRlciAoMik6Cj4+ICAgIEFSTTogYXNwZWVkOiBBZGQg
-ZGVmY29uZmlncyBmb3IgQ09ORklHX0FTUEVFRF9CVF9JUE1JX0JNQwo+PiAgICBBUk06IGR0czog
-YXNwZWVkOiBFbmFibGUgQlQgSVBNSSBCTUMgZGV2aWNlCj4+Cj4+ICAgLi4uL2JpbmRpbmdzL2No
-YXIvaXBtaS9hc3BlZWQsYXN0MjQwMC1idC1ibWMudHh0ICAgfCAgMjMgKwo+PiAgIGFyY2gvYXJt
-L2Jvb3QvZHRzL2FzcGVlZC1nNC5kdHNpICAgICAgICAgICAgICAgICAgIHwgICA2ICsKPj4gICBh
-cmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzUuZHRzaSAgICAgICAgICAgICAgICAgICB8ICAgNiAr
-Cj4+ICAgYXJjaC9hcm0vY29uZmlncy9hc3BlZWRfZzRfZGVmY29uZmlnICAgICAgICAgICAgICAg
-fCAgIDEgKwo+PiAgIGFyY2gvYXJtL2NvbmZpZ3MvYXNwZWVkX2c1X2RlZmNvbmZpZyAgICAgICAg
-ICAgICAgIHwgICAxICsKPj4gICBkcml2ZXJzL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB8ICAgMiArLQo+PiAgIGRyaXZlcnMvY2hhci9pcG1pL0tjb25maWcgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHwgICA3ICsKPj4gICBkcml2ZXJzL2NoYXIvaXBtaS9NYWtl
-ZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4+ICAgZHJpdmVycy9jaGFyL2lw
-bWkvYnQtYm1jLmMgICAgICAgICAgICAgICAgICAgICAgICAgfCA1MTAgKysrKysrKysrKysrKysr
-KysrKysrCj4+ICAgaW5jbHVkZS91YXBpL2xpbnV4L0tidWlsZCAgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCAgIDEgKwo+PiAgIGluY2x1ZGUvdWFwaS9saW51eC9idC1ibWMuaCAgICAgICAgICAg
-ICAgICAgICAgICAgIHwgIDE4ICsKPj4gICAxMSBmaWxlcyBjaGFuZ2VkLCA1NzUgaW5zZXJ0aW9u
-cygrKSwgMSBkZWxldGlvbigtKQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvY2hhci9pcG1pL2FzcGVlZCxhc3QyNDAwLWJ0LWJtYy50eHQK
-Pj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jaGFyL2lwbWkvYnQtYm1jLmMKPj4gICBj
-cmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS91YXBpL2xpbnV4L2J0LWJtYy5oCj4+Cj4gCgoKLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCk9wZW5pcG1pLWRldmVsb3BlciBtYWlsaW5nIGxpc3QKT3BlbmlwbWktZGV2ZWxv
-cGVyQGxpc3RzLnNvdXJjZWZvcmdlLm5ldApodHRwczovL2xpc3RzLnNvdXJjZWZvcmdlLm5ldC9s
-aXN0cy9saXN0aW5mby9vcGVuaXBtaS1kZXZlbG9wZXIK
+Since the MMC and SDHI1 on the RSK share the same socket connector (CN1),
+you cannot enable MMC and SDHI1 at the same time. Therefore the status
+has been set to disabled because SDHI is more popular with this board.
+However, keeping this code in here serves as a good way to document how
+the MMC on the RZ/A1 has been known to work for someone that does want
+to use MMC instead of SDHI1.
+
+A fixed 3.3 regulator is included because it is required by the mmc
+driver.
+
+Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/r7s72100-rskrza1.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+index e5dea5b..9228b04 100644
+--- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
++++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+@@ -33,6 +33,15 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 	};
++
++	d3_3v: regulator-d3-3v {
++		compatible = "regulator-fixed";
++		regulator-name = "D3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
+ };
+ 
+ &extal_clk {
+@@ -56,6 +65,14 @@
+ 	};
+ };
+ 
++&mmcif {
++	vmmc-supply = <&d3_3v>;
++	vqmmc-supply = <&d3_3v>;
++	bus-width = <8>;
++	non-removable;
++	status = "disabled"; /* shares CN1 with sdhi1 */
++};
++
+ &scif2 {
+ 	status = "okay";
+ };
+-- 
+2.9.2
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
