@@ -1,43 +1,32 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 2/3] mmc: sh_mmcif: Document r7s72100 DT bindings
-Date: Tue, 20 Sep 2016 11:46:19 -0400
-Message-ID: <20160920154620.18653-3-chris.brandt@renesas.com>
-References: <20160920154620.18653-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160920154620.18653-1-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: [PATCH v6 3/4] ARM: STM32: Select external interrupts controller
+Date: Tue, 20 Sep 2016 18:00:58 +0200
+Message-ID: <1474387259-18926-4-git-send-email-alexandre.torgue@st.com>
+References: <1474387259-18926-1-git-send-email-alexandre.torgue@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1474387259-18926-1-git-send-email-alexandre.torgue@st.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-v2:
-* added interrupt description
----
- Documentation/devicetree/bindings/mmc/renesas,mmcif.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-index ff611fa..1443edb 100644
---- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-+++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-@@ -8,12 +8,16 @@ Required properties:
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 2d601d7..157cea9 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -877,6 +877,7 @@ config ARCH_STM32
+ 	select CLKSRC_STM32
+ 	select PINCTRL
+ 	select RESET_CONTROLLER
++	select STM32_EXTI
+ 	help
+ 	  Support for STMicroelectronics STM32 processors.
  
- - compatible: should be "renesas,mmcif-<soctype>", "renesas,sh-mmcif" as a
-   fallback. Examples with <soctype> are:
-+	- "renesas,mmcif-r7s72100" for the MMCIF found in r7s72100 SoCs
- 	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
- 	- "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
- 	- "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
- 	- "renesas,mmcif-r8a7793" for the MMCIF found in r8a7793 SoCs
- 	- "renesas,mmcif-r8a7794" for the MMCIF found in r8a7794 SoCs
- 
-+- interrupts: either 1 shared interrupt, 2 separate interrupts (error and int),
-+  or 3 separate interrupts (error, int, card detect)
-+
- - clocks: reference to the functional clock
- 
- - dmas: reference to the DMA channels, one per channel name listed in the
 -- 
-2.9.2
+1.9.1
+
