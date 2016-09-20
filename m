@@ -1,40 +1,107 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 2/9] drivers: irqchip: Add STM32 external interrupts
- support
-Date: Tue, 20 Sep 2016 16:02:03 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1609201600490.6905@nanos>
-References: <1473432124-6784-1-git-send-email-alexandre.torgue@st.com> <1473432124-6784-3-git-send-email-alexandre.torgue@st.com> <alpine.DEB.2.20.1609131713490.6233@nanos> <6941f61d-0b33-4108-0135-b11887cd0488@st.com> <alpine.DEB.2.20.1609141103420.6233@nanos>
- <facd1c7c-d696-eae1-02e4-5a0c9285add0@st.com> <alpine.DEB.2.20.1609141532510.6233@nanos> <f64e4f9d-d811-2c6e-7c5a-d4ab06716e2c@st.com> <39c4ceee-7e05-ebfd-2ea0-3c4e1c4ea619@st.com> <alpine.DEB.2.20.1609201150160.6905@nanos> <053a37f4-aa10-46ea-f477-8ae55bb5773f@st.com>
- <alpine.DEB.2.20.1609201439440.6905@nanos> <c2c8ad5f-e679-8522-808f-e940b8c6954d@st.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH v2 1/2] Documentation: dt: add bindings for ti-cpufreq
+Date: Tue, 20 Sep 2016 09:19:32 -0500
+Message-ID: <57E14574.9060602@ti.com>
+References: <20160901025328.376-1-d-gerlach@ti.com>
+ <20160901025328.376-2-d-gerlach@ti.com> <20160919211400.GA4276@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c2c8ad5f-e679-8522-808f-e940b8c6954d@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Jason Cooper <jason@lakedaemon.net>, arnd@arndb.de, Marc Zyngier <marc.zyngier@arm.com>, bruherrera@gmail.com, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160919211400.GA4276@rob-hp-laptop>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Sep 2016, Alexandre Torgue wrote:
-> On 09/20/2016 02:44 PM, Thomas Gleixner wrote:
-> > Free will be called when a interrupt in the child domain is torn down,
-> > i.e. when irq_domain_free_irqs() is called. And it will be called for both
-> > domains like the alloc callback is invoked on both domains via
-> > irq_domain_alloc_irqs().
-> 
-> Thanks Thomas for this clarification (I'm sure now that we need .free
-> callbacks).
-> irq_domain_free_irqs() is called in 2 scenario:
-> 1- when issue occurs in irq_create_fwspec_mapping()
-> 2- when irq_dispose_mapping() is called
-> 
-> Case 2 is the one I tested some times ago. In this case, I need to mask
-> interrupts in .free callback of EXTI (parent) domain to avoid spurious
-> interrupts.
+Rob,
+On 09/19/2016 04:14 PM, Rob Herring wrote:
+> On Wed, Aug 31, 2016 at 09:53:27PM -0500, Dave Gerlach wrote:
+>> Add the device tree bindings document for the TI CPUFreq/OPP driver
+>> on AM33xx, AM43xx, DRA7, and AM57 SoCs. The operating-points-v2 binding
+>> allows us to provide an opp-supported-hw property for each OPP to define
+>> when it is available. This driver is responsible for reading and parsing
+>> registers to determine which OPPs can be selectively enabled based
+>> on the specific SoC in use by matching against the opp-supported-hw
+>> data.
+>
+> Sorry, for the delay. Missed this somehow.
+>
+>>
+>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+>> ---
+>> v1->v2:
+>> 	- Dropped all driver/linux specific documentation
+>> 	- Fixed some typos
+>> 	- Add new compatibles for each SoC family to match against
+>> 	- Switched to use am335x example to better demonstrate field one of
+>> 	  opp-supported-hw.
+>>
+>>   .../devicetree/bindings/cpufreq/ti-cpufreq.txt     | 130 +++++++++++++++++++++
+>>   1 file changed, 130 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
+>> new file mode 100644
+>> index 000000000000..6276ae494121
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
+>> @@ -0,0 +1,130 @@
+>> +TI CPUFreq and OPP bindings
+>> +================================
+>> +
+>> +Certain TI SoCs, like those in the am335x, am437x, am57xx, and dra7xx
+>> +families support different OPPs depending on the silicon variant in use.
+>> +The ti_cpufreq driver can use revision and an efuse value from the SoC to
+>> +provide the OPP framework with supported hardware information. This is
+>> +used to determine which OPPs from the operating-points-v2 table get enabled
+>> +when it is parsed by the OPP framework.
+>> +
+>> +Required properties:
+>> +--------------------
+>> +In 'cpus' nodes:
+>> +- operating-points-v2: Phandle to the operating-points-v2 table to use.
+>> +- ti,syscon-efuse: Syscon phandle, offset to efuse register, efuse register
+>> +		   mask, and efuse register shift to get the relevant bits
+>> +		   that describe OPP availability.
+>> +- ti,syscon-rev: Syscon and offset used to look up revision value on SoC.
+>
+> These have nothing to do with a cpu, so they don't belong here. Maybe
+> the first is a property of an OPP table, but the second certainly is
+> not.
 
-And why would irq_dispose_mapping() be called on an unmasked, i.e. active,
-interrupt? The masking is just papering over that.
+Yes, I have no issue with this and will move the ti properties into the 
+operating points table for v3 of the series.
 
-Thanks,
+>
+>> +
+>> +In 'operating-points-v2' table:
+>> +- compatible: Should be
+>> +	- 'operating-points-v2-ti-am3352-cpu' for am335x SoCs
+>> +	- 'operating-points-v2-ti-am4372-cpu' for am43xx SoCs
+>> +	- 'operating-points-v2-ti-dra7-cpu' for dra7xx/am57xx SoCs
+>> +
+>> +- opp-supported-hw: Two bitfields indicating:
+>> +	1. Which revision of the SoC the OPP is supported by
+>> +	2. Which eFuse bits indicate this OPP is available
+>
+> I tend to think you should handle this with kernel code (bootloader
+> really) fixing up the OPP table as necessary rather than putting in DT.
+>
 
-	tglx
+The operating-points-v2 binding here [1] was designed with doing this in 
+mind, and others are using it and the corresponding functionality 
+offered by the OPP core to selectively enable OPPs. Why hide this in 
+u-boot when we already have kernel framework support to do it?
+
+Thanks for your comments, will send v3 moving the appropriate properties 
+into the OPP table.
+
+Regards,
+Dave
+
+[1] Documentation/devicetree/bindings/opp/opp.txt
+
+> Rob
+>
+
