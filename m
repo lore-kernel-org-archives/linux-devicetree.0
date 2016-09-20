@@ -1,68 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] pwm: add pwm driver for HiSilicon BVT SOCs
-Date: Tue, 20 Sep 2016 09:43:48 -0500
-Message-ID: <20160920144348.GA22856@rob-hp-laptop>
-References: <1473645106-42266-1-git-send-email-yuanjian12@hisilicon.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 05/22] Docs: dt: document ARM SMMUv3 generic binding
+	usage
+Date: Tue, 20 Sep 2016 09:46:45 -0500
+Message-ID: <20160920144645.GA27580@rob-hp-laptop>
+References: <cover.1473695704.git.robin.murphy@arm.com>
+	<2273645f1fa5c76b6b98b5fd03804ab8b55a7691.1473695704.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1473645106-42266-1-git-send-email-yuanjian12@hisilicon.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Jian Yuan <yuanjian12@hisilicon.com>
-Cc: thierry.reding@gmail.com, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xuejiancheng@hisilicon.com, kevin.lixu@hisilicon.com, jalen.hsu@hisilicon.com
+In-Reply-To: <2273645f1fa5c76b6b98b5fd03804ab8b55a7691.1473695704.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 12, 2016 at 09:51:46AM +0800, Jian Yuan wrote:
-> From: yuanjian <yuanjian12@hisilicon.com>
+On Mon, Sep 12, 2016 at 05:13:43PM +0100, Robin Murphy wrote:
+> We're about to ratify our use of the generic binding, so document it.
 > 
-> Add PWM driver for the PWM controller found on HiSilicon BVT SOCs, like Hi3519V100, Hi3516CV300, etc.
-> The PWM controller is primarily in charge of controlling P-Iris lens.
+> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 > 
-> Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-> Signed-off-by: Jian Yuan <yuanjian12@hisilicon.com>
 > ---
-> Change Log:
-> v3:
-> Add PWM compatible string for Hi3519V100.
-> Implement .apply() function which support atomic, instead of .enable()/.disable()/.config().
-> v2:
-> The number of PWMs is change to be probeable based on the compatible string.
 > 
->  .../devicetree/bindings/pwm/pwm-hibvt.txt          |  20 ++
->  drivers/pwm/Kconfig                                |   9 +
->  drivers/pwm/Makefile                               |   1 +
->  drivers/pwm/pwm-hibvt.c                            | 270 +++++++++++++++++++++
->  4 files changed, 300 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
->  create mode 100644 drivers/pwm/pwm-hibvt.c
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
-> new file mode 100644
-> index 0000000..2ecf4e4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
-> @@ -0,0 +1,20 @@
-> +Hisilicon PWM controller
-> +
-> +Required properties:
-> +-compatible: should contain one SoC specific compatible string and one generic compatible
-> +string "hisilicon, hibvt-pwm". The SoC specific strings supported including:
-> +	"hisilicon,hi3516cv300-pwm"
-> +	"hisilicon,hi3519v100-pwm"
-> +- reg: physical base address and length of the controller's registers.
-> +- clocks: phandle and clock specifier of the PWM reference clock.
-> +- resets: phandle and reset specifier for the PWM controller reset.
+> - Reference PCI "iommu-map" binding instead, as that's our main concern
+> - Fix "IDs" typo
+> ---
+>  Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 
-You are missing #pwm-cells.
-
-> +
-> +Example:
-> +	pwm: pwm@12130000 {
-> +
-> +		compatible = "hisilicon,hi3516cv300-pwm", "hisilicon,hibvt-pwm";
-> +		compatible = "hisilicon,hi3519v100-pwm", "hisilicon,hibvt-pwm";
-> +		reg = <0x12130000 0x10000>;
-> +		clocks = <&crg_ctrl HI3516CV300_PWM_CLK>;
-> +		resets = <&crg_ctrl 0x38 0>;
-> +	};
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
