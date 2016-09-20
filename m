@@ -1,78 +1,111 @@
-From: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] ARM: aspeed: add support for the BT IPMI interface
-Date: Tue, 20 Sep 2016 09:58:40 -0500
-Message-ID: <40bb95a8-b5a6-563b-11c6-73de2f67130d@acm.org>
-References: <1474354900-5618-1-git-send-email-clg@kaod.org>
-Reply-To: minyard-HInyCGIudOg@public.gmane.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH/RFC v2 1/7] spi: Document DT bindings for SPI controllers
+ in slave mode
+Date: Tue, 20 Sep 2016 10:00:58 -0500
+Message-ID: <20160920150058.GA29078@rob-hp-laptop>
+References: <1473713446-30366-1-git-send-email-geert+renesas@glider.be>
+ <1473713446-30366-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474354900-5618-1-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1473713446-30366-2-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Hisashi Nakamura <hisashi.nakamura.ak-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/20/2016 02:01 AM, Cédric Le Goater wrote:
-> Hello,
->
-> This serie adds support for the iBT interface on Aspeed SOCs (AST2400
-> and AST2500). The BT (Block Transfer) interface is used to perform
-> in-band IPMI communication between a host and its BMC. This driver
-> implements the BMC side.
+On Mon, Sep 12, 2016 at 10:50:40PM +0200, Geert Uytterhoeven wrote:
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> ---
+> v2:
+>   - Do not create a child node in SPI slave mode. Instead, add an
+>     "spi-slave" property, and put the mode properties in the controller
+>     node.
+> ---
+>  Documentation/devicetree/bindings/spi/spi-bus.txt | 34 ++++++++++++++---------
+>  1 file changed, 21 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> index 17822860cb98c34d..1ae28d7cafb68dc5 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> @@ -1,17 +1,23 @@
+>  SPI (Serial Peripheral Interface) busses
+>  
+> -SPI busses can be described with a node for the SPI master device
+> -and a set of child nodes for each SPI slave on the bus.  For this
+> -discussion, it is assumed that the system's SPI controller is in
+> -SPI master mode.  This binding does not describe SPI controllers
+> -in slave mode.
+> +SPI busses can be described with a node for the SPI controller device
+> +and a set of child nodes for each SPI slave on the bus.  The system's SPI
+> +controller may be described for use in SPI master mode or in SPI slave mode,
+> +but not for both at the same time.
+>  
+> -The SPI master node requires the following properties:
+> +The SPI controller node requires the following properties:
+> +- compatible      - name of SPI bus controller following generic names
+> +		recommended practice.
 
-This looks good.  I pulled these into my tree, it's ok for 4.9 or
-whatever is next, since it's a new driver.
+We'll probably need some way to define what interface/protocol 
+the slave has. Perhaps the most specific compatible should be the 
+protocol the slave uses? Maybe that is how you use a child node?
 
-Do patches 2 and 3 go through Joel?
+> +
+> +In master mode, the SPI controller node requires the following additional
+> +properties:
+>  - #address-cells  - number of cells required to define a chip select
+>  		address on the SPI bus.
+>  - #size-cells     - should be zero.
+> -- compatible      - name of SPI bus controller following generic names
+> -		recommended practice.
+> +
+> +In slave mode, the SPI controller node requires one additional property:
+> +- spi-slave       - Empty property.
+> +
+>  No other properties are required in the SPI bus node.  It is assumed
+>  that a driver for an SPI bus device will understand that it is an SPI bus.
+>  However, the binding does not attempt to define the specific method for
+> @@ -21,7 +27,7 @@ assumption that board specific platform code will be used to manage
+>  chip selects.  Individual drivers can define additional properties to
+>  support describing the chip select layout.
+>  
+> -Optional properties:
+> +Optional properties (master mode only):
+>  - cs-gpios	  - gpios chip select.
+>  - num-cs	  - total number of chipselects.
+>  
+> @@ -41,12 +47,14 @@ cs1 : native
+>  cs2 : &gpio1 1 0
+>  cs3 : &gpio1 2 0
+>  
+> -SPI slave nodes must be children of the SPI master node and can
+> -contain the following properties.
+> -- reg             - (required) chip select address of device.
+> +In master mode, SPI slave nodes must be children of the SPI controller node.
+> +In slave mode, the (single) slave device is represented by the controller node
+> +itself. SPI slave nodes can contain the following properties.
 
--corey
+I find this a bit confusing as you talk about master mode, then slave 
+mode, then slave nodes (master mode again).
 
-> Changes since v2:
->
->   - limit to one opener
->   - protect write/read operations with a mutex.
->
-> Changes since v1:
->
->   - the driver is now called 'bt-bmc' and the device node '/dev/ipmi-bt-host'
->     
->   - the code is now under drivers/char/ipmi/. This required a change of
->     the top Makefile in drivers/ to compile the bt-bmc driver with the
->     ipmi handlers not being selected. That might be an issue.
->     
->   - changed the read/write operations to use a temporary buffer and get
->     rid of the {get,put}_user calls
->
-> Thanks,
->
-> C.
->
-> Alistair Popple (1):
->    ipmi: add an Aspeed BT IPMI BMC driver
->
-> Cédric Le Goater (2):
->    ARM: aspeed: Add defconfigs for CONFIG_ASPEED_BT_IPMI_BMC
->    ARM: dts: aspeed: Enable BT IPMI BMC device
->
->   .../bindings/char/ipmi/aspeed,ast2400-bt-bmc.txt   |  23 +
->   arch/arm/boot/dts/aspeed-g4.dtsi                   |   6 +
->   arch/arm/boot/dts/aspeed-g5.dtsi                   |   6 +
->   arch/arm/configs/aspeed_g4_defconfig               |   1 +
->   arch/arm/configs/aspeed_g5_defconfig               |   1 +
->   drivers/Makefile                                   |   2 +-
->   drivers/char/ipmi/Kconfig                          |   7 +
->   drivers/char/ipmi/Makefile                         |   1 +
->   drivers/char/ipmi/bt-bmc.c                         | 510 +++++++++++++++++++++
->   include/uapi/linux/Kbuild                          |   1 +
->   include/uapi/linux/bt-bmc.h                        |  18 +
->   11 files changed, 575 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/devicetree/bindings/char/ipmi/aspeed,ast2400-bt-bmc.txt
->   create mode 100644 drivers/char/ipmi/bt-bmc.c
->   create mode 100644 include/uapi/linux/bt-bmc.h
->
-
+> +- reg             - (required, master mode only) chip select address of device.
+>  - compatible      - (required) name of SPI device following generic names
+>  		recommended practice.
+> -- spi-max-frequency - (required) Maximum SPI clocking speed of device in Hz.
+> +- spi-max-frequency - (required, master mode only) Maximum SPI clocking speed
+> +		of device in Hz.
+>  - spi-cpol        - (optional) Empty property indicating device requires
+>  		inverse clock polarity (CPOL) mode.
+>  - spi-cpha        - (optional) Empty property indicating device requires
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
