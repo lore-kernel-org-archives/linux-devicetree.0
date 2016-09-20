@@ -1,36 +1,71 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/6] usb: dwc2: add support for Meson8b and GXBB SoCs
-Date: Tue, 20 Sep 2016 09:27:44 -0500
-Message-ID: <20160920142744.GA7675@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/6] Documentation: dt-bindings: Add documentation for
+ the Meson USB2 PHYs
+Date: Tue, 20 Sep 2016 09:29:45 -0500
+Message-ID: <20160920142944.GA16016@rob-hp-laptop>
 References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
  <20160911134111.31141-1-martin.blumenstingl@googlemail.com>
- <20160911134111.31141-2-martin.blumenstingl@googlemail.com>
+ <20160911134111.31141-3-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160911134111.31141-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+In-Reply-To: <20160911134111.31141-3-martin.blumenstingl@googlemail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-clk@vger.kernel.org, linux-usb@vger.kernel.org, linux-amlogic@lists.infradead.org, jbrunet@baylibre.com, johnyoun@synopsys.com, kishon@ti.com, khilman@baylibre.com, carlo@caione.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, sboyd@codeaurora.org, mturquette@baylibre.com, will.deacon@arm.com, catalin.marinas@arm.com, gregkh@linuxfoundation.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 11, 2016 at 03:41:06PM +0200, Martin Blumenstingl wrote:
-> From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+On Sun, Sep 11, 2016 at 03:41:07PM +0200, Martin Blumenstingl wrote:
+> Add the documentation for the bindings for the Meson8b and GXBB USB2
+> PHYs.
 > 
-> Add compatible strings for amlogic Meson8b and GXBB SoCs with the
-> corresponding configuration parameters.
-> 
-> Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  Documentation/devicetree/bindings/usb/dwc2.txt |  2 ++
+>  .../devicetree/bindings/phy/meson-usb2-phy.txt     | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/meson-usb2-phy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/meson-usb2-phy.txt b/Documentation/devicetree/bindings/phy/meson-usb2-phy.txt
+> new file mode 100644
+> index 0000000..9da5ea2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/meson-usb2-phy.txt
+> @@ -0,0 +1,27 @@
+> +* Amlogic USB2 PHY
+> +
+> +Required properties:
+> +- compatible:	Depending on the platform this should be one of:
+> +	"amlogic,meson8b-usb2-phy"
+> +	"amlogic,meson-gxbb-usb2-phy"
+> +- reg:		The base address and length of the registers
+> +- #phys-cells:	should be 0 (see phy-bindings.txt in this directory)
+> +- clocks:	phandle and clock identifier for the phy clocks
+> +- clock-names:	"usb_general" and "usb"
+> +
+> +Optional properties:
+> +- resets:	reference to the reset controller
+> +- phy-supply:	see phy-bindings.txt in this directory
+> +
+> +
+> +Example:
+> +
+> +usb0_phy: usb_phy@0 {
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+usb-phy@0
 
->  drivers/usb/dwc2/platform.c                    | 34 ++++++++++++++++++++++++++
->  2 files changed, 36 insertions(+)
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With that,
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> +	compatible = "amlogic,meson-gxbb-usb2-phy";
+> +	#phy-cells = <0>;
+> +	reg = <0x0 0x0 0x0 0x20>;
+> +	resets = <&reset RESET_USB_OTG>;
+> +	clocks = <&clkc CLKID_USB>, <&clkc CLKID_USB0>;
+> +	clock-names = "usb_general", "usb";
+> +	phy-supply = <&usb_vbus>;
+> +};
+> -- 
+> 2.9.3
+> 
