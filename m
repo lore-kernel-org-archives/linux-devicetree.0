@@ -1,49 +1,43 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 1/3] ARM: dts: r7s72100: add mmcif to device tree
-Date: Tue, 20 Sep 2016 11:46:18 -0400
-Message-ID: <20160920154620.18653-2-chris.brandt@renesas.com>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v2 2/3] mmc: sh_mmcif: Document r7s72100 DT bindings
+Date: Tue, 20 Sep 2016 11:46:19 -0400
+Message-ID: <20160920154620.18653-3-chris.brandt@renesas.com>
 References: <20160920154620.18653-1-chris.brandt@renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160920154620.18653-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160920154620.18653-1-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 ---
 v2:
-* added card detect as 3rd interupt source
+* added interrupt description
 ---
- arch/arm/boot/dts/r7s72100.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ Documentation/devicetree/bindings/mmc/renesas,mmcif.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-index e18d4e6..50f9f3b 100644
---- a/arch/arm/boot/dts/r7s72100.dtsi
-+++ b/arch/arm/boot/dts/r7s72100.dtsi
-@@ -450,4 +450,16 @@
- 		#size-cells = <0>;
- 		status = "disabled";
- 	};
+diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+index ff611fa..1443edb 100644
+--- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
++++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+@@ -8,12 +8,16 @@ Required properties:
+ 
+ - compatible: should be "renesas,mmcif-<soctype>", "renesas,sh-mmcif" as a
+   fallback. Examples with <soctype> are:
++	- "renesas,mmcif-r7s72100" for the MMCIF found in r7s72100 SoCs
+ 	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
+ 	- "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
+ 	- "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
+ 	- "renesas,mmcif-r8a7793" for the MMCIF found in r8a7793 SoCs
+ 	- "renesas,mmcif-r8a7794" for the MMCIF found in r8a7794 SoCs
+ 
++- interrupts: either 1 shared interrupt, 2 separate interrupts (error and int),
++  or 3 separate interrupts (error, int, card detect)
 +
-+	mmcif: mmc@e804c800 {
-+		compatible = "renesas,mmcif-r7s72100", "renesas,sh-mmcif";
-+		reg = <0xe804c800 0x80>;
-+		interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH
-+			      GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH
-+			      GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp8_clks R7S72100_CLK_MMCIF>;
-+		reg-io-width = <4>;
-+		bus-width = <8>;
-+		status = "disabled";
-+	};
- };
+ - clocks: reference to the functional clock
+ 
+ - dmas: reference to the DMA channels, one per channel name listed in the
 -- 
 2.9.2
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
