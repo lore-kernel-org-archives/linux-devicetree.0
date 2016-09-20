@@ -1,49 +1,80 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] net: ethernet: bgmac: convert to feature flags
-Date: Tue, 20 Sep 2016 07:19:19 +0200
-Message-ID: <CACna6rymVcKV1h_PEvRuCQrtOd4rsqV34bMWzVOof15fdc8KEA@mail.gmail.com>
-References: <1467932938-21819-1-git-send-email-jon.mason@broadcom.com>
- <1467932938-21819-5-git-send-email-jon.mason@broadcom.com> <CACna6rw1j3myPEkbn+YR71W7CF7Of_yahn9eDT7t3hKWGmWUmg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACna6rw1j3myPEkbn+YR71W7CF7Of_yahn9eDT7t3hKWGmWUmg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Network Development <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>
+Subject: [PATCH v2] lm87: Allow channel data to be set from dts file.
+Date: Tue, 20 Sep 2016 17:22:40 +1200
+Message-ID: <20160920052240.10242-1-mahoda.ratnayaka@alliedtelesis.co.nz>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-On 17 August 2016 at 13:34, Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
-e:
-> On 8 July 2016 at 01:08, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->>         mode =3D (bgmac_read(bgmac, BGMAC_DEV_STATUS) & BGMAC_DS_MM_MASK=
-) >>
->>                 BGMAC_DS_MM_SHIFT;
->> -       if (ci->id !=3D BCMA_CHIP_ID_BCM47162 || mode !=3D 0)
->> +       if (bgmac->feature_flags & BGMAC_FEAT_CLKCTLST || mode !=3D 0)
->>                 bgmac_set(bgmac, BCMA_CLKCTLST, BCMA_CLKCTLST_FORCEHT);
->> -       if (ci->id =3D=3D BCMA_CHIP_ID_BCM47162 && mode =3D=3D 2)
->> +       if (bgmac->feature_flags & BGMAC_FEAT_CLKCTLST && mode =3D=3D 2)
->>                 bcma_chipco_chipctl_maskset(&bgmac->core->bus->drv_cc, 1=
-, ~0,
->>                                             BGMAC_CHIPCTL_1_RXC_DLL_BYPA=
-SS);
->
-> Jon, it looks to me you translated two following conditions:
-> ci->id !=3D BCMA_CHIP_ID_BCM47162
-> and
-> ci->id =3D=3D BCMA_CHIP_ID_BCM47162
-> into the same flag check:
-> bgmac->feature_flags & BGMAC_FEAT_CLKCTLST
->
-> I don't think it's intentional, is it? Do you have a moment to fix this?
+Currently there is no method for setting the channel
+value from the DTS file. When, the driver uses a dts
+file to initialize the driver platform_data is not set.
+As a the result channel variable may not be set correctly.
 
-Ping
+Without the channel variable set correctly, some of the
+sensors will not be initialized correctly. For example
+temp3 sensor sysfs entries.
 
---=20
-Rafa=C5=82
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This adds the required functionality to set the channel
+variable from the DTS file. This is done via reading the
+reading a property named "channel" from the lm87 driver.
+
+Signed-off-by: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>
+---
+
+Notes:
+     changes since v1:
+     Removed unncessary variables channel and np.
+     Update the code as per review comments.
+
+ Documentation/devicetree/bindings/hwmon/lm87.txt | 9 +++++++++
+ drivers/hwmon/lm87.c                             | 7 ++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/hwmon/lm87.txt b/Documentation/devicetree/bindings/hwmon/lm87.txt
+index fefcb48..1906e08 100644
+--- a/Documentation/devicetree/bindings/hwmon/lm87.txt
++++ b/Documentation/devicetree/bindings/hwmon/lm87.txt
+@@ -6,9 +6,18 @@ Required properties:
+ 
+ - reg: I2C address
+ 
++optional properties:
++- channels: Value for the channel mode register.
++            This allows configuration of pins with
++            selectable uses on the LM87 device (e.g.
++            choosing between voltage and temperature
++            inputs).
++            See hwmon/lm87 for further information
++
+ Example:
+ 
+ lm87@2e {
+ 	compatible = "ti,lm87";
+ 	reg = <0x2e>;
++	channels=<0x4>;
+ };
+diff --git a/drivers/hwmon/lm87.c b/drivers/hwmon/lm87.c
+index a5e2958..358c1d4 100644
+--- a/drivers/hwmon/lm87.c
++++ b/drivers/hwmon/lm87.c
+@@ -858,8 +858,13 @@ static void lm87_remove_files(struct i2c_client *client)
+ static void lm87_init_client(struct i2c_client *client)
+ {
+ 	struct lm87_data *data = i2c_get_clientdata(client);
++	u8 val = 0;
+ 
+-	if (dev_get_platdata(&client->dev)) {
++	if (!of_property_read_u8(client->dev.of_node, "channels", &val)) {
++		data->channel = val;
++		lm87_write_value(client,
++				 LM87_REG_CHANNEL_MODE, data->channel);
++	} else if (dev_get_platdata(&client->dev)) {
+ 		data->channel = *(u8 *)dev_get_platdata(&client->dev);
+ 		lm87_write_value(client,
+ 				 LM87_REG_CHANNEL_MODE, data->channel);
+-- 
+2.9.3
+
