@@ -1,49 +1,82 @@
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH 1/3] devicetree: bindings: scsi: hisi_sas hip07 support
-Date: Tue, 20 Sep 2016 18:48:58 +0800
-Message-ID: <1474368540-186535-2-git-send-email-john.garry@huawei.com>
-References: <1474368540-186535-1-git-send-email-john.garry@huawei.com>
+From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 09/14] MIPS: Malta: Probe RTC via DT
+Date: Tue, 20 Sep 2016 11:34:39 +0100
+Message-ID: <762c9f70-911c-0e48-ef8e-8f8b9e006592@imgtec.com>
+References: <20160919212132.28893-1-paul.burton@imgtec.com>
+ <20160919212132.28893-10-paul.burton@imgtec.com>
+ <55c977d1-21dd-4cf8-d0f9-10d96b452573@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1474368540-186535-1-git-send-email-john.garry@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linuxarm@huawei.com, zhangfei.gao@linaro.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, hare@suse.com, John Garry <john.garry@huawei.com>, Xiang Chen <chenxiang66@hisilicon.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55c977d1-21dd-4cf8-d0f9-10d96b452573-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for hip07 chipset to bindings.
+On 20/09/16 11:21, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 9/20/2016 12:21 AM, Paul Burton wrote:
+> 
+>> Add the DT node required to probe the RTC, and remove the platform code
+>> that was previously doing it.
+>>
+>> Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>>
+>> ---
+>>
+>> Changes in v2:
+>> - Remove rtc DT node label
+> 
+>    Haven't you also renamed the node?
 
-Chipset hip07 has v2 hw.
+Hi Sergei,
 
-The sas-v2 quirk amt is expanded to cover hip07.
+Yes, strictly speaking I could have been more verbose & elaborated in
+the changelog on every aspect of the simple change from "rtc:
+mc146818@70" to "rtc@70". I didn't, but as it's obviously clear to you
+what changed and it has no effect on either the code or the commit that
+would end up in git I don't really see the point of your bringing it up.
 
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
----
- Documentation/devicetree/bindings/scsi/hisilicon-sas.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thanks,
+    Paul
 
-diff --git a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
-index bf2411f..e604527 100644
---- a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
-+++ b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
-@@ -6,6 +6,7 @@ Main node required properties:
-   - compatible : value should be as follows:
- 	(a) "hisilicon,hip05-sas-v1" for v1 hw in hip05 chipset
- 	(b) "hisilicon,hip06-sas-v2" for v2 hw in hip06 chipset
-+	(c) "hisilicon,hip07-sas-v2" for v2 hw in hip07 chipset
-   - sas-addr : array of 8 bytes for host SAS address
-   - reg : Address and length of the SAS register
-   - hisilicon,sas-syscon: phandle of syscon used for sas control
-@@ -47,7 +48,7 @@ Main node required properties:
- 			increasing order.
- 
- Optional main node properties:
-- - hip06-sas-v2-quirk-amt : when set, indicates that the v2 controller has the
-+ - hip06/7-sas-v2-quirk-amt : when set, indicates that the v2 controller has the
- 			    "am-max-transmissions" limitation.
- 
- Example:
--- 
-1.9.1
+>>  arch/mips/boot/dts/mti/malta.dts     | 15 +++++++++++++++
+>>  arch/mips/mti-malta/malta-platform.c | 21 ---------------------
+>>  2 files changed, 15 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/arch/mips/boot/dts/mti/malta.dts
+>> b/arch/mips/boot/dts/mti/malta.dts
+>> index af765af..fecbca8 100644
+>> --- a/arch/mips/boot/dts/mti/malta.dts
+>> +++ b/arch/mips/boot/dts/mti/malta.dts
+>> @@ -49,4 +49,19 @@
+>>          interrupt-parent = <&gic>;
+>>          interrupts = <GIC_SHARED 3 IRQ_TYPE_LEVEL_HIGH>;
+>>      };
+>> +
+>> +    isa {
+>> +        compatible = "isa";
+>> +        #address-cells = <2>;
+>> +        #size-cells = <1>;
+>> +        ranges = <1 0 0 0x1000>;
+>> +
+>> +        rtc@70 {
+>> +            compatible = "motorola,mc146818";
+>> +            reg = <1 0x70 0x8>;
+>> +
+>> +            interrupt-parent = <&i8259>;
+>> +            interrupts = <8>;
+>> +        };
+>> +    };
+>>  };
+> [...]
+> 
+> MBR, Sergei
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
