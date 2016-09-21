@@ -1,165 +1,123 @@
 From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [RESEND PATCH v6, 5/5] arm64: dts: mediatek: add USB3 DRD driver
-Date: Wed, 21 Sep 2016 13:54:37 +0800
-Message-ID: <1474437277-27201-6-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [RESEND PATCH v6, 3/5] usb: xhci-mtk: make IPPC register optional
+Date: Wed, 21 Sep 2016 13:54:35 +0800
+Message-ID: <1474437277-27201-4-git-send-email-chunfeng.yun@mediatek.com>
 References: <1474437277-27201-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1474437277-27201-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Oliver Neukum <oneukum-IBi9RG/b67k@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Oliver Neukum <oneukum-IBi9RG/b67k@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-USB3 DRD driver is added for MT8173-EVB, and xHCI driver
-becomes its subnode
+Make IPPC register optional to support host side of dual-role mode,
+due to it is moved into common glue layer for simplification.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8173-evb.dts |   46 +++++++++++++++++++++++++--
- arch/arm64/boot/dts/mediatek/mt8173.dtsi    |   29 +++++++++++++----
- 2 files changed, 66 insertions(+), 9 deletions(-)
+ drivers/usb/host/xhci-mtk.c |   36 +++++++++++++++++++++++++++++-------
+ 1 file changed, 29 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-index 7453a47..682dfd7 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-@@ -34,6 +34,11 @@
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index 79959f1..4bf99b9 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -94,6 +94,9 @@ static int xhci_mtk_host_enable(struct xhci_hcd_mtk *mtk)
+ 	int ret;
+ 	int i;
  
- 	chosen { };
- 
-+	extcon_usb: extcon_iddig {
-+		compatible = "linux,extcon-usb-gpio";
-+		id-gpio = <&pio 16 GPIO_ACTIVE_HIGH>;
-+	};
++	if (ippc == NULL)
++		return 0;
 +
- 	usb_p1_vbus: regulator@0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "usb_vbus";
-@@ -42,6 +47,16 @@
- 		gpio = <&pio 130 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
-+
-+	usb_p0_vbus: regulator@1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&pio 9 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
- };
+ 	/* power on host ip */
+ 	value = readl(&ippc->ip_pw_ctr1);
+ 	value &= ~CTRL1_IP_HOST_PDN;
+@@ -139,6 +142,9 @@ static int xhci_mtk_host_disable(struct xhci_hcd_mtk *mtk)
+ 	int ret;
+ 	int i;
  
- &i2c1 {
-@@ -205,6 +220,20 @@
- 			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
- 		};
- 	};
++	if (ippc == NULL)
++		return 0;
 +
-+	usb_id_pins_float: usb_iddig_pull_up {
-+		pins_iddig {
-+			pinmux = <MT8173_PIN_16_IDDIG__FUNC_IDDIG>;
-+			bias-pull-up;
-+		};
-+	};
+ 	/* power down all u3 ports */
+ 	for (i = 0; i < mtk->num_u3_ports; i++) {
+ 		value = readl(&ippc->u3_ctrl_p[i]);
+@@ -173,6 +179,9 @@ static int xhci_mtk_ssusb_config(struct xhci_hcd_mtk *mtk)
+ 	struct mu3c_ippc_regs __iomem *ippc = mtk->ippc_regs;
+ 	u32 value;
+ 
++	if (ippc == NULL)
++		return 0;
 +
-+	usb_id_pins_ground: usb_iddig_pull_down {
-+		pins_iddig {
-+			pinmux = <MT8173_PIN_16_IDDIG__FUNC_IDDIG>;
-+			bias-pull-down;
-+		};
-+	};
- };
+ 	/* reset whole ip */
+ 	value = readl(&ippc->ip_pw_ctr0);
+ 	value |= CTRL0_IP_SW_RST;
+@@ -475,6 +484,7 @@ static void xhci_mtk_quirks(struct device *dev, struct xhci_hcd *xhci)
+ /* called during probe() after chip reset completes */
+ static int xhci_mtk_setup(struct usb_hcd *hcd)
+ {
++	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
+ 	struct xhci_hcd_mtk *mtk = hcd_to_mtk(hcd);
+ 	int ret;
  
- &pwm0 {
-@@ -431,12 +460,25 @@
- 	status = "okay";
- };
- 
-+&ssusb {
-+	vusb33-supply = <&mt6397_vusb_reg>;
-+	vbus-supply = <&usb_p0_vbus>;
-+	extcon = <&extcon_usb>;
-+	dr_mode = "otg";
-+	mediatek,enable-wakeup;
-+	pinctrl-names = "default", "id_float", "id_ground";
-+	pinctrl-0 = <&usb_id_pins_float>;
-+	pinctrl-1 = <&usb_id_pins_float>;
-+	pinctrl-2 = <&usb_id_pins_ground>;
-+	status = "okay";
-+};
+@@ -482,12 +492,21 @@ static int xhci_mtk_setup(struct usb_hcd *hcd)
+ 		ret = xhci_mtk_ssusb_config(mtk);
+ 		if (ret)
+ 			return ret;
++	}
 +
- &uart0 {
- 	status = "okay";
- };
- 
--&usb30 {
-+&usb_host {
- 	vusb33-supply = <&mt6397_vusb_reg>;
- 	vbus-supply = <&usb_p1_vbus>;
--	mediatek,wakeup-src = <1>;
-+	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 10f638f..925948a 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -668,11 +668,14 @@
- 			status = "disabled";
- 		};
- 
--		usb30: usb@11270000 {
--			compatible = "mediatek,mt8173-xhci";
--			reg = <0 0x11270000 0 0x1000>,
-+		ssusb: usb@11271000 {
-+			compatible = "mediatek,mt8173-mtu3";
-+			reg = <0 0x11271000 0 0x3000>,
- 			      <0 0x11280700 0 0x0100>;
--			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-+			reg-names = "mac", "ippc";
-+			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_LOW>;
-+			phys = <&phy_port0 PHY_TYPE_USB3>,
-+			       <&phy_port1 PHY_TYPE_USB2>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
- 			clocks = <&topckgen CLK_TOP_USB30_SEL>,
- 				 <&pericfg CLK_PERI_USB0>,
-@@ -680,10 +683,22 @@
- 			clock-names = "sys_ck",
- 				      "wakeup_deb_p0",
- 				      "wakeup_deb_p1";
--			phys = <&phy_port0 PHY_TYPE_USB3>,
--			       <&phy_port1 PHY_TYPE_USB2>;
- 			mediatek,syscon-wakeup = <&pericfg>;
--			status = "okay";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			status = "disabled";
++	ret = xhci_gen_setup(hcd, xhci_mtk_quirks);
++	if (ret)
++		return ret;
 +
-+			usb_host: xhci@11270000 {
-+				compatible = "mediatek,mt8173-xhci";
-+				reg = <0 0x11270000 0 0x1000>;
-+				reg-names = "mac";
-+				interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-+				power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-+				clocks = <&topckgen CLK_TOP_USB30_SEL>;
-+				clock-names = "sys_ck";
-+				status = "disabled";
-+			};
- 		};
++	if (usb_hcd_is_primary_hcd(hcd)) {
++		mtk->num_u3_ports = xhci->num_usb3_ports;
++		mtk->num_u2_ports = xhci->num_usb2_ports;
+ 		ret = xhci_mtk_sch_init(mtk);
+ 		if (ret)
+ 			return ret;
+ 	}
  
- 		u3phy: usb-phy@11290000 {
+-	return xhci_gen_setup(hcd, xhci_mtk_quirks);
++	return ret;
+ }
+ 
+ static int xhci_mtk_probe(struct platform_device *pdev)
+@@ -586,7 +605,7 @@ static int xhci_mtk_probe(struct platform_device *pdev)
+ 	mtk->hcd = platform_get_drvdata(pdev);
+ 	platform_set_drvdata(pdev, mtk);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mac");
+ 	hcd->regs = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(hcd->regs)) {
+ 		ret = PTR_ERR(hcd->regs);
+@@ -595,11 +614,14 @@ static int xhci_mtk_probe(struct platform_device *pdev)
+ 	hcd->rsrc_start = res->start;
+ 	hcd->rsrc_len = resource_size(res);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	mtk->ippc_regs = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(mtk->ippc_regs)) {
+-		ret = PTR_ERR(mtk->ippc_regs);
+-		goto put_usb2_hcd;
++	mtk->ippc_regs = NULL;
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ippc");
++	if (res) {	/* ippc register is optional */
++		mtk->ippc_regs = devm_ioremap_resource(dev, res);
++		if (IS_ERR(mtk->ippc_regs)) {
++			ret = PTR_ERR(mtk->ippc_regs);
++			goto put_usb2_hcd;
++		}
+ 	}
+ 
+ 	for (phy_num = 0; phy_num < mtk->num_phys; phy_num++) {
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
