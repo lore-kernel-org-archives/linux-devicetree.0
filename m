@@ -1,67 +1,35 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: tegra: nyan: Use proper IRQ type definitions
-Date: Wed, 21 Sep 2016 10:06:19 +0100
-Message-ID: <eb7540c0-4abd-86c0-7777-78fe1f12bc59@nvidia.com>
-References: <20160828173246.32621-1-contact@paulk.fr>
- <ef69b6d2-ce6b-ff76-5c04-ab2176eb6ecc@nvidia.com>
- <1474395289.1215.20.camel@paulk.fr>
- <0ca614bf-4d27-9948-03e3-472d059f2153@nvidia.com>
- <1474446366.1239.17.camel@paulk.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474446366.1239.17.camel-W9ppeneeCTY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
+Subject: [PATCH v5 0/2] usb: chipidea: imx: Add USB configuration for imx53
+Date: Wed, 21 Sep 2016 11:07:05 +0200
+Message-ID: <1474448827-8354-1-git-send-email-fabien.lahoudere@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter.Chen@nxp.com
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
+Changes in V2:
+	- Patches sent to early with bad contents
+Changes in V3:
+	- Change subject
+	- Split "configure imx for ULPI phy" for disable-oc code
+Changes in V4:
+	- Fix "Change switch order" commit message
+	- Indent switch/case (set case on the same column as switch)
+	- Remove useless test in "Change switch order"
+Changes in V5:
+	- Squash "Change switch order" and "configure imx for ULPI phy"
+	- Add device tree binding documentation
 
-On 21/09/16 09:26, Paul Kocialkowski wrote:
-> * PGP Signed by an unknown key
-> 
-> Le mercredi 21 septembre 2016 à 08:52 +0100, Jon Hunter a écrit :
->> On 20/09/16 19:14, Paul Kocialkowski wrote:
->>>
->>>> Old Signed by an unknown key
->>>
->>> Le mardi 20 septembre 2016 à 18:15 +0100, Jon Hunter a écrit :
->>>>
->>>> On 28/08/16 18:32, Paul Kocialkowski wrote:
->>>>>
->>>>>
->>>>> This switches a few interrupt definitions that were using
->>>>> GPIO_ACTIVE_HIGH as IRQ type, which is invalid.
->>>>
->>>> May be you are right, but this does not describe why this is invalid.
->>>> Can you elaborate?
->>>
->>> GPIO_ACTIVE_HIGH is simply not the right kind of define to use in the
->>> "interrupts" devicetree property. Values provided there are understood as
->>> IRQ_TYPE_ defines.
->>
->> Right, but you are changing the type as GPIO_ACTIVE_HIGH = 0 and
->> IRQ_TYPE_EDGE_FALLING = 2 and there is no comment about why this has
->> been changed. It might be correct, but you need to explain it.
-> 
-> This actually makes the IRQ trigger values consistent with the drivers, that
-> define them regardless of devicetree anyway. The max98090 driver
-> has IRQF_TRIGGER_FALLING and bq24735 has IRQF_TRIGGER_RISING |
-> IRQF_TRIGGER_FALLING.
-> 
-> This is really more of a cosmetic change, it doesn't impact actual use.
+Fabien Lahoudere (2):
+  usb: chipidea: imx: configure imx for ULPI phy
+  usb: chipidea: imx: Add binding to disable USB 60Mhz clock
 
-So you are saying that the drivers don't actually use the DT types? May
-be that is ok, and yes this is cosmetic, but this should be stated in
-the changelog as it is not clear what is going on here.
-
-Cheers
-Jon
+ .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  1 +
+ drivers/usb/chipidea/ci_hdrc_imx.c                 |  7 ++
+ drivers/usb/chipidea/ci_hdrc_imx.h                 |  2 +
+ drivers/usb/chipidea/usbmisc_imx.c                 | 88 ++++++++++++++++++----
+ 4 files changed, 84 insertions(+), 14 deletions(-)
 
 -- 
-nvpublic
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
