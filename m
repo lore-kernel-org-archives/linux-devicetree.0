@@ -1,16 +1,17 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 1/2] dt: bindings: add allwinner,otg-routed property for
- phy-sun4i-usb
-Date: Wed, 21 Sep 2016 10:30:24 +0300
-Message-ID: <43caf5c6-0198-9178-de93-90dc25e8b72b@redhat.com>
-References: <20160921070406.27445-1-icenowy@aosc.xyz>
- <4a1ab62a-4091-fd75-d753-fb30585dffa5@redhat.com>
- <6718551474442396@web16h.yandex.ru>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 2/4] ARM: tegra: nyan: Use external control for bq24735
+ charger
+Date: Wed, 21 Sep 2016 08:30:53 +0100
+Message-ID: <90828c8d-e46d-0956-d6b3-e88fc90f3049@nvidia.com>
+References: <20160828173246.32621-1-contact@paulk.fr>
+ <20160828173246.32621-2-contact@paulk.fr>
+ <00697eef-0b36-1ff5-9c7a-43c1b53b52bc@nvidia.com>
+ <1474394567.1215.14.camel@paulk.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6718551474442396@web16h.yandex.ru>
+In-Reply-To: <1474394567.1215.14.camel@paulk.fr>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,55 +21,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Andre Przywara <andre.przywara@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Reinder de Haan <patchesrdh@mveas.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Paul Kocialkowski <contact@paulk.fr>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 09/21/2016 10:19 AM, Icenowy Zheng wrote:
->
->
-> 21.09.2016, 15:10, "Hans de Goede" <hdegoede@redhat.com>:
->> Hi,
->>
->> On 09/21/2016 10:04 AM, Icenowy Zheng wrote:
->>>  On some newer Allwinner SoCs (H3 or A64), the PHY0 can be either routed to
->>>  the MUSB controller (which is an OTG controller) or the OHCI/EHCI pair
->>>  (which is a Host-only controller, but more stable and easy to implement).
->>>
->>>  This property marks whether on a certain board which controller should be
->>>  attached to the PHY.
->>>
->>>  Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
->>
->> Erm, I think that the idea here is to dynamically switch the routing
->> based on the id-pin of the otg connector. IOW use the musb controller
->> for device mode, and the ehci/ohci proper for proper host support
->> when in host mode.
->
-> At least on some boards this implementation works...
->
-> (I mean Pine64, which has two USB-A connectors)
-
-Right and I think it is great that you're working on this.
-
-But even with an A connector on the board, we can still use the device
-mode (e.g. the SoC's native FEL mode will be used this way).
-
-Notice that you can fake id-pin changes by echoing a mode to:
-
-/sys/devices/platform/soc@01c00000/1c13000.usb/musb-hdrc.1.auto/mode
-
-Valid values to echo are: host, peripheral and otg.
-
-If you combine this with using either an USB A<->A cable, or using
-the port normally as a host you should be able to develop and test
-full otg support.
-
-Eventually we will need a full otg support rather then your current solution
-and I'm afraid that your solution may get in the way of full otg support.
-
-Regards,
-
-Hans
+Ck9uIDIwLzA5LzE2IDE5OjAyLCBQYXVsIEtvY2lhbGtvd3NraSB3cm90ZToKPiAqIFBHUCBTaWdu
+ZWQgYnkgYW4gdW5rbm93biBrZXkKPiAKPiBMZSBtYXJkaSAyMCBzZXB0ZW1icmUgMjAxNiDDoCAx
+ODo0MCArMDEwMCwgSm9uIEh1bnRlciBhIMOpY3JpdCA6Cj4+IE9uIDI4LzA4LzE2IDE4OjMyLCBQ
+YXVsIEtvY2lhbGtvd3NraSB3cm90ZToKPj4+ICAKPj4+IE55YW4gYm9hcmRzIGNvbWUgd2l0aCBh
+biBlbWJlZGRlZCBjb250cm9sbGVyIHRoYXQgY29udHJvbHMgd2hlbiB0bwo+Pj4gZW5hYmxlIGFu
+ZCBkaXNhYmxlIHRoZSBjaGFyZ2UuIFRodXMsIGl0IHNob3VsZCBub3QgYmUgbGVmdCB1cCB0byB0
+aGUKPj4+IGtlcm5lbCB0byBoYW5kbGUgdGhhdC4KPj4+ICAKPj4+IFVzaW5nIHRoZSB0aSxleHRl
+cm5hbC1jb250cm9sIHByb3BlcnR5IGFsbG93cyBzcGVjaWZ5aW5nIHRoaXMgdXNlLWNhc2UuCj4+
+ICAKPj4gU28gdGhlIGJxMjQ3MzUgaXMgcG9wdWxhdGVkIHVuZGVyIHRoZSBFQydzICdpMmMtdHVu
+bmVsJyBwcm9wZXJ0eSB3aGljaAo+PiBpcyB0aGVyZSB0byBzcGVjaWZpY2FsbHkgaW50ZXJmYWNl
+IGl0J3MgY2hpbGQgZGV2aWNlcyB0byB0aGUgaG9zdC4gU28gSQo+PiBhbSBhIGJpdCBjb25mdXNl
+ZCB3aHkgdGhpcyBpcyBleHBvc2UgdG8gdGhlIGhvc3QgaWYgaXQgc2hvdWxkIG5vdCBiZSB1c2Vk
+Pwo+IAo+IFdlbGwsIGl0IG5lZWRzIHRvIGFjY2VzcyB0aGUgaW5mb3JtYXRpb24gaW4gdGhlIHJl
+YWQtb25seSByZWdpc3RlcnMgcHJvdmlkZWQgYnkKPiB0aGUgY2hpcCwgd2hpY2ggaXMgYWxsb3dl
+ZCBieSB0aGUgc2V0dXAgaW4gcGxhY2UgdGhhdCB5b3UgZGVzY3JpYmVkLgoKSXMgdGhpcyB0byBl
+eHBvc2UgdGhlIGN1cnJlbnQgc3RhdGUgdG8gdGhlIGtlcm5lbCBzbyB3ZSBjYW4gbW9uaXRvciB0
+aGUKYmF0dGVyeSBzdGF0ZT8KCj4gSG93ZXZlciwgdGhlIEVDIGhhcyBpdHMgaW50ZXJuYWwgc3Rh
+dGUgbWFjaGluZSB0aGF0IGRlY2lkZXMgd2hlbiB0byBzdGFydAo+IGNoYXJnaW5nLCBldGMgYW5k
+IHNvIHNob3VsZCBiZSB0aGUgb25seSBvbmUgdG8gd3JpdGUgcmVnaXN0ZXJzLCB0byBhdm9pZAo+
+IGNvbmZsaWN0cy4KPiAKPj4gQWdhaW4geW91IG1heSByaWdodCBhbmQgSSBkaWQgZmluZCB0aGUg
+b3JpZ2luYWwgc2VyaWVzIFswXSBmb3IgdGhpcwo+PiB3aGljaCBzcGVjaWZpY2FsbHkgcmVmZXJl
+bmNlcyB0aGUgQWNlciBDaHJvbWVib29rIHRoYXQgbmVlZHMgdGhpcy4KPj4gSG93ZXZlciwgSSBh
+bSBub3Qgc3VyZSB3aHkgdGhpcyB3YXMgbmV2ZXIgcG9wdWxhdGVkPyBJcyB0aGVyZSBhbnkgb3Ro
+ZXIKPj4gaGlzdG9yeSBoZXJlPwo+IAo+IEkgYW0gYWxzbyBjb25mdXNlZCBhYm91dCB3aHkgaXQg
+d2Fzbid0IGFwcGxpZWQgZWFybGllci4gSG93ZXZlciwgdGhlIGNyb3Mga2VybmVsCj4gaXMgdXNp
+bmcgdGhlIHZlcnkgc2FtZSBzY2hlbWUuCgpEbyB5b3UgaGF2ZSBhIHJlZmVyZW5jZT8KCj4+IFdo
+YXQgaXMgdGhlIGFjdHVhbCBwcm9ibGVtIHlvdSBzZWUgd2l0aG91dCBtYWtpbmcgdGhpcyBjaGFu
+Z2U/Cj4gCj4gVGhlcmUgaXMgYSByaXNrIG9mIGNvbmZsaWN0IChldmVuIHRob3VnaCBpdCdzIHBy
+b2JhYmx5IG5vdCB0aGF0IHNpZ25pZmljYW50KSwKPiBnaXZlbiB0aGUgbG93IHZhcmlldHkgb2Yg
+cG9zc2libGUgY2FzZXMgaGVyZS4gVGhlIGlkZWEgaXMgc2ltcGx5IHRvIHNheSB0aGF0IHRoZQo+
+IEVDIGlzIGluIGNoYXJnZSBhbmQgdG8gbGV0IGl0IGRvIGl0cyBqb2Igd2l0aG91dCBpbnRlcmZl
+cmluZy4KPiAKPj4gVGhlIG9yaWdpbmFsIHNlcmllcyBzdGF0ZXMgLi4uCj4+ICAKPj4gIk9uIEFj
+ZXIgQ2hyb21lYm9vayAxMyAoQ0I1LTMxMSkgdGhpcyBtb2R1bGUgZmFpbHMgdG8gbG9hZCBpZiB0
+aGUKPj4gY2hhcmdlciBpcyBub3QgaW5zZXJ0ZWQsIGFuZCB3aWxsIGVycm9yIHdoZW4gaXQgaXMg
+cmVtb3ZlZC4iCj4gCj4gSSdtIGNvbmZ1c2VkIGFib3V0IHRoYXQgY29tbWVudC4gQXQgdGhpcyBw
+b2ludCAoYW5kIHdpdGggdGhpcyBwYXRjaCksIGl0IHdvcmtzCj4gbm9ybWFsbHkuCgpPaywgSSB0
+aGluayBUaGllcnJ5IHByZWZlcnMgdG8gb25seSBhcHBseSBmaXhlcyBmb3IgcHJvYmxlbXMgdGhh
+dCBjYW4gYmUKcmVwcm9kdWNlZC4gSXMgdGhlcmUgYSBzaW1wbGUgd2F5IHRvIGNoZWNrIHRoZSBi
+YXR0ZXJ5IHN0YXR1cyBhbmQKY2hhcmdpbmcgc3RhdHVzIHZpYSBzYXkgdGhlIHN5c2ZzPyBJZiBJ
+IGNhbiB0ZXN0IHRoYXQgdGhpcyBoYXMgbm8KbmVnYXRpdmUgaW1wYWN0IG1heSBiZSBpdCBpcyBv
+ay4KCkNoZWVycwpKb24KCi0tIApudnB1YmxpYwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
