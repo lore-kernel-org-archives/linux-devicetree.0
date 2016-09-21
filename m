@@ -1,61 +1,73 @@
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2 3/3] mm: enable CONFIG_MOVABLE_NODE on powerpc
-Date: Wed, 21 Sep 2016 12:39:51 +0530
-Message-ID: <87oa3hwwxs.fsf@linux.vnet.ibm.com>
-References: <1473883618-14998-1-git-send-email-arbab@linux.vnet.ibm.com> <1473883618-14998-4-git-send-email-arbab@linux.vnet.ibm.com> <87h99cxv00.fsf@linux.vnet.ibm.com> <20160921054500.lrqktzjqjhuzewqg@arbab-laptop>
+From: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+Subject: [v12, 6/8] MAINTAINERS: add entry for Freescale SoC drivers
+Date: Wed, 21 Sep 2016 14:57:18 +0800
+Message-ID: <1474441040-11946-7-git-send-email-yangbo.lu@nxp.com>
+References: <1474441040-11946-1-git-send-email-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <20160921054500.lrqktzjqjhuzewqg@arbab-laptop>
-Sender: owner-linux-mm@kvack.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1474441040-11946-1-git-send-email-yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Reza Arbab <arbab@linux.vnet.ibm.com> writes:
+Add maintainer entry for Freescale SoC drivers including
+the QE library and the GUTS driver now. Also add maintainer
+for QE library.
 
-> On Mon, Sep 19, 2016 at 11:59:35AM +0530, Aneesh Kumar K.V wrote:
->>Movable node also does.
->>	memblock_set_bottom_up(true);
->>What is the impact of that. Do we need changes equivalent to that ? Also
->>where are we marking the nodes which can be hotplugged, ie where do we
->>do memblock_mark_hotplug() ?
->
-> These are related to the mechanism x86 uses to create movable nodes at 
-> boot. The SRAT is parsed to mark any hotplug memory. That marking is 
-> used later when initializing ZONE_MOVABLE for each node. [1]
->
-> The bottom-up allocation is due to a timing issue [2]. There is a window 
-> where kernel memory may be allocated before the SRAT is parsed. Any 
-> bottom-up allocations done during that time will likely be in the same 
-> (nonmovable) node as the kernel image.
->
-> On power, I don't think we have a heuristic equivalent to that SRAT 
-> memory hotplug info. So, we'll be limited to dynamically adding movable 
-> nodes after boot.
->
-> 1. http://events.linuxfoundation.org/sites/events/files/lcjp13_chen.pdf
-> 2. commit 79442ed189ac ("mm/memblock.c: introduce bottom-up allocation 
-> mode")
->
+Signed-off-by: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+Acked-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Acked-by: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+---
+Changes for v8:
+	- Added this patch
+Changes for v9:
+	- Added linux-arm mail list
+	- Removed GUTS driver entry
+Changes for v10:
+	- Changed 'DRIVER' to 'DRIVERS'
+	- Added 'Acked-by' of Scott and Qiang
+Changes for v11:
+	- None
+Changes for v12:
+	- None
+---
+ MAINTAINERS | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-What I was checking was how will one mark a node movable in ppc64 ? I
-don't see ppc64 code doing the equivalent of memblock_mark_hotplug().
-
-So when you say "Onlining memory into ZONE_MOVABLE requires
-CONFIG_MOVABLE_NODE" where is that restriction ?. IIUC,
-should_add_memory_movable() will only return ZONE_MOVABLE only if it is
-non empty and MOVABLE_NODE will create a ZONE_MOVABLE zone by default
-only if it finds a memblock marked hotpluggable. So wondering if we
-are not calling memblock_mark_hotplug() how is it working. Or am I
-missing something ?
-
--aneesh
-
-    
-
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 644ff65..33d3683 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4971,9 +4971,18 @@ F:	drivers/net/ethernet/freescale/fec_ptp.c
+ F:	drivers/net/ethernet/freescale/fec.h
+ F:	Documentation/devicetree/bindings/net/fsl-fec.txt
+ 
++FREESCALE SOC DRIVERS
++M:	Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
++L:	linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
++L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
++S:	Maintained
++F:	drivers/soc/fsl/
++F:	include/linux/fsl/
++
+ FREESCALE QUICC ENGINE LIBRARY
++M:	Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+ L:	linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+-S:	Orphan
++S:	Maintained
+ F:	drivers/soc/fsl/qe/
+ F:	include/soc/fsl/*qe*.h
+ F:	include/soc/fsl/*ucc*.h
+-- 
+2.1.0.27.g96db324
