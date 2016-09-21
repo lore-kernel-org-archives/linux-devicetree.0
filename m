@@ -1,58 +1,74 @@
-From: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] media: Add a driver for the ov5645 camera sensor.
-Date: Wed, 21 Sep 2016 17:01:15 +0300
-Message-ID: <57E292AB.9060808@linaro.org>
-References: <1467989679-29774-1-git-send-email-todor.tomov@linaro.org>
- <1467989679-29774-3-git-send-email-todor.tomov@linaro.org>
- <20160824101708.GI12130@valkosipuli.retiisi.org.uk>
- <57BDBC2F.7020902@linaro.org>
- <20160825071800.GK12130@valkosipuli.retiisi.org.uk>
+From: Reza Arbab <arbab@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2 3/3] mm: enable CONFIG_MOVABLE_NODE on powerpc
+Date: Wed, 21 Sep 2016 09:08:47 -0500
+Message-ID: <20160921140846.m6wp2ij5f2fx4cps@arbab-laptop>
+References: <1473883618-14998-1-git-send-email-arbab@linux.vnet.ibm.com>
+ <1473883618-14998-4-git-send-email-arbab@linux.vnet.ibm.com>
+ <87h99cxv00.fsf@linux.vnet.ibm.com>
+ <20160921054500.lrqktzjqjhuzewqg@arbab-laptop>
+ <87oa3hwwxs.fsf@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160825071800.GK12130-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, matrandg-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87oa3hwwxs.fsf@linux.vnet.ibm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On Wed, Sep 21, 2016 at 12:39:51PM +0530, Aneesh Kumar K.V wrote:
+>What I was checking was how will one mark a node movable in ppc64 ? I
+>don't see ppc64 code doing the equivalent of memblock_mark_hotplug().
 
-One more question below:
+Post boot, the marking mechanism is not necessary. You can create a 
+movable node by putting all of the node's memory into ZONE_MOVABLE 
+during the hotplug.
 
-On 08/25/2016 10:18 AM, Sakari Ailus wrote:
->>>> +
->>>> +static struct v4l2_subdev_core_ops ov5645_core_ops = {
->>>> +	.s_power = ov5645_s_power,
->>>> +};
->>>> +
->>>> +static struct v4l2_subdev_video_ops ov5645_video_ops = {
->>>> +	.s_stream = ov5645_s_stream,
->>>> +};
->>>> +
->>>> +static struct v4l2_subdev_pad_ops ov5645_subdev_pad_ops = {
->>>> +	.enum_mbus_code = ov5645_enum_mbus_code,
->>>> +	.enum_frame_size = ov5645_enum_frame_size,
->>>> +	.get_fmt = ov5645_get_format,
->>>> +	.set_fmt = ov5645_set_format,
->>>> +	.get_selection = ov5645_get_selection,
->>>
->>> Could you add init_cfg() pad op to initialise the try format and selections?
->>
->> Yes, I'll do that.
+>So when you say "Onlining memory into ZONE_MOVABLE requires
+>CONFIG_MOVABLE_NODE" where is that restriction ?. IIUC,
+>should_add_memory_movable() will only return ZONE_MOVABLE only if it is
+>non empty and MOVABLE_NODE will create a ZONE_MOVABLE zone by default
+>only if it finds a memblock marked hotpluggable. So wondering if we
+>are not calling memblock_mark_hotplug() how is it working. Or am I
+>missing something ?
 
-If I follow the code correctly this init_cfg() is called whenever the device is opened, right?
-This means that the format will be reset to default values every time the userspace opens the device.
-So I wonder if this is what we really want, or do we want to keep the last set format instead. For
-example if we use media-ctl only to get the current format, this is already enough - it opens the
-subdev node and resets the format to default.
+You are looking at the addition step of hotplug. You're correct there, 
+the memory is added to the default zone, not ZONE_MOVABLE. The 
+transition to ZONE_MOVABLE takes place during the onlining step. In 
+online_pages():
 
+	zone = move_pfn_range(zone_shift, pfn, pfn + nr_pages);
+
+The reason we need CONFIG_MOVABLE_NODE is right before that:
+
+	if ((zone_idx(zone) > ZONE_NORMAL ||
+	    online_type == MMOP_ONLINE_MOVABLE) &&
+	    !can_online_high_movable(zone))
+		return -EINVAL;
+
+where can_online_high_movable() is defined like this:
+
+	#ifdef CONFIG_MOVABLE_NODE
+	/*
+	 * When CONFIG_MOVABLE_NODE, we permit onlining of a node which doesn't have
+	 * normal memory.
+	 */
+	static bool can_online_high_movable(struct zone *zone)
+	{
+		return true;
+	}
+	#else /* CONFIG_MOVABLE_NODE */
+	/* ensure every online node has NORMAL memory */
+	static bool can_online_high_movable(struct zone *zone)
+	{
+		return node_state(zone_to_nid(zone), N_NORMAL_MEMORY);
+	}
+	#endif /* CONFIG_MOVABLE_NODE */
+
+To be more clear, I can change the commit log to say "Onlining all of a 
+node's memory into ZONE_MOVABLE requires CONFIG_MOVABLE_NODE".
 
 -- 
-Best regards,
-Todor Tomov
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reza Arbab
+
