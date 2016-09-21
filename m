@@ -1,7 +1,7 @@
 From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: [PATCH v3 5/7] clk: qcom: ipq4019: corrected sdcc frequency and parent name
-Date: Wed, 21 Sep 2016 17:51:50 +0530
-Message-ID: <1474460512-31994-6-git-send-email-absahu@codeaurora.org>
+Subject: [PATCH v3 7/7] clk: qcom: ipq4019: changed i2c freq table
+Date: Wed, 21 Sep 2016 17:51:52 +0530
+Message-ID: <1474460512-31994-8-git-send-email-absahu@codeaurora.org>
 References: <1474460512-31994-1-git-send-email-absahu@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1474460512-31994-1-git-send-email-absahu@codeaurora.org>
@@ -10,47 +10,27 @@ To: andy.gross@linaro.org, david.brown@linaro.org, sboyd@codeaurora.org, robh+dt
 Cc: mturquette@baylibre.com, galak@codeaurora.org, pradeepb@codeaurora.org, mmcclint@codeaurora.org, varada@codeaurora.org, sricharan@codeaurora.org, architt@codeaurora.org, ntelkar@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Abhishek Sahu <absahu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-1. The parent for sdcc clock is sdccpll so corrected the same
-   in its parent map.
-2. The frequency value was wrong so changed to correct
-   frequency.
+The current I2C freq table uses MND values which is not
+applicable for I2C since its RCG does not have MND
+counter. This patch updates the freq table for 19.05
+MHz clk frequency with FEPLL_200 parent.
 
 Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 ---
- drivers/clk/qcom/gcc-ipq4019.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/clk/qcom/gcc-ipq4019.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/clk/qcom/gcc-ipq4019.c b/drivers/clk/qcom/gcc-ipq4019.c
-index 160e0cf..b2decd5 100644
+index a2809db..314aa35 100644
 --- a/drivers/clk/qcom/gcc-ipq4019.c
 +++ b/drivers/clk/qcom/gcc-ipq4019.c
-@@ -120,7 +120,7 @@ static struct parent_map gcc_xo_sdcc1_500_map[] = {
- 
- static const char * const gcc_xo_sdcc1_500[] = {
- 	"xo",
--	"ddrpll",
-+	"ddrpllsdcc",
- 	"fepll500",
+@@ -225,8 +225,7 @@ static struct clk_branch gcc_audio_pwm_clk = {
  };
  
-@@ -540,13 +540,13 @@ static struct clk_branch gcc_gp3_clk = {
- };
- 
- static const struct freq_tbl ftbl_gcc_sdcc1_apps_clk[] = {
--	F(144000,    P_XO,			1,  3, 240),
--	F(400000,    P_XO,			1,  1, 0),
--	F(20000000,  P_FEPLL500,		1,  1, 25),
--	F(25000000,  P_FEPLL500,		1,  1, 20),
--	F(50000000,  P_FEPLL500,		1,  1, 10),
--	F(100000000, P_FEPLL500,		1,  1, 5),
--	F(193000000, P_DDRPLL,		1,  0, 0),
-+	F(144000,    P_XO,       1,  3, 240),
-+	F(400000,    P_XO,       1,  1, 0),
-+	F(20000000,  P_FEPLL500, 1,  1, 25),
-+	F(25000000,  P_FEPLL500, 1,  1, 20),
-+	F(50000000,  P_FEPLL500, 1,  1, 10),
-+	F(100000000, P_FEPLL500, 1,  1, 5),
-+	F(190000000, P_DDRPLL,   1,  0, 0),
+ static const struct freq_tbl ftbl_gcc_blsp1_qup1_2_i2c_apps_clk[] = {
+-	F(19200000, P_XO, 1, 2, 5),
+-	F(24000000, P_XO, 1, 1, 2),
++	F(19050000, P_FEPLL200, 10.5, 1, 1),
  	{ }
  };
  
