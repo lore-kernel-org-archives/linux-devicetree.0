@@ -1,738 +1,217 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] rtc: pcf85263: Basic driver
-Date: Wed, 21 Sep 2016 23:35:41 +0200
-Message-ID: <20160921213541.5lhnhzw6qlgc2udy@piout.net>
-References: <20160801155029.32232.56063.stgit@localhost>
- <20160801155034.32232.68458.stgit@localhost>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v3 2/2] pci/aer: interrupt fixup in the quirk
+Date: Wed, 21 Sep 2016 16:53:34 -0500
+Message-ID: <20160921215334.GF20006@localhost>
+References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
+ <1465892645-32381-1-git-send-email-po.liu@nxp.com>
+ <1465892645-32381-2-git-send-email-po.liu@nxp.com>
+ <20160729224154.GC13632@localhost>
+ <VI1PR0401MB170958461E597D1BC7D280FF92E80@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+ <20160920204725.GA10804@localhost>
+ <VI1PR0401MB170983489310BF383C8C7E5B92F60@VI1PR0401MB1709.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20160801155034.32232.68458.stgit@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <VI1PR0401MB170983489310BF383C8C7E5B92F60@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Po Liu <po.liu@nxp.com>
+Cc: Roy Zang <roy.zang@nxp.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stuart Yoder <stuart.yoder@nxp.com>, "M.H. Lian" <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Mingkai Hu <mingkai.hu@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>, Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Sorry for the very late review.
-
-The driver seems good to me but I'd like a review from the DT
-maintainers before taking it.
-
-On 01/08/2016 at 17:50:34 +0200, Martin Fuzzey wrote :
-> Add basic support for NXP PCF85263 I2C RTC chip.
+On Wed, Sep 21, 2016 at 06:51:55AM +0000, Po Liu wrote:
+> Hi Bjorn,
 > 
-> Only RTC and Alarm functions are supported.
+> >  -----Original Message-----
+> >  From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+> >  Sent: Wednesday, September 21, 2016 4:47 AM
+> >  To: Po Liu
+> >  Cc: Roy Zang; Arnd Bergmann; devicetree@vger.kernel.org; Marc Zyngier;
+> >  linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; Stuart Yoder;
+> >  M.H. Lian; Murali Karicheri; Mingkai Hu; Bjorn Helgaas; Leo Li; Shawn
+> >  Guo; linux-arm-kernel@lists.infradead.org
+> >  Subject: Re: [PATCH v3 2/2] pci/aer: interrupt fixup in the quirk
+> >  
+> >  On Mon, Aug 22, 2016 at 10:09:18AM +0000, Po Liu wrote:
+> >  > Hi Bjorn,
+> >  >
+> >  > Sorry for late reply.
+> >  >
+> >  > I checked the updated kernel with Dongdong mentioned ACPI patch which
+> >  was truly affected my quirk patch uploaded. So I suppose the quirk patch
+> >  is not qualify to fix the bug.
+> >  
+> >  I don't understand what you're saying here.
+> >  
+> >  The quirk worked on your machine.  It apparently didn't work on
+> >  Dongdong's machine because of_irq_parse_and_map_pci() is run after the
+> >  quirk in this path:
+> >  
+> >    pci_device_probe
+> >      pcibios_alloc_irq                 # arm64
+> >        dev->irq = of_irq_parse_and_map_pci
+> >  
+> >  and of_irq_parse_and_map_pci() returned zero, probably because
+> >  of_irq_parse_pci() failed.  My guess is that the reason it works on your
+> >  machine but not Dongdong's is that your DTs are different such that
+> >  of_irq_parse_pci() works for you but not for Dongdong.
+> >  
+> >  I think the idea of of_irq_parse_and_map_pci() is to set up a device's
+> >  INTx line.  But that doesn't quite apply here because your device
+> >  doesn't actually *use* INTx.  So I don't know why of_irq_parse_pci()
+> >  works for you.  Maybe that's a symptom of a problem in your DT.
+> >  
+> >  Or maybe you're saying that the quirk *didn't* work on your machine when
+> >  you tested it in a kernel that included d8ed75d59332 ("ARM64:
+> >  PCI: ACPI support for legacy IRQs parsing and consolidation with DT
+> >  code"). 
 > 
-> Signed-off-by: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/rtc/Kconfig        |    8 +
->  drivers/rtc/Makefile       |    1 
->  drivers/rtc/rtc-pcf85263.c |  655 ++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 664 insertions(+)
->  create mode 100644 drivers/rtc/rtc-pcf85263.c
+> Yes, this point is what I mean. After this patch my quirk patch would not work. 
+> Since I discussed with Dongdong, the patches d8ed75d59332 ACPI related were not be merged yet.
 > 
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index 18639e0..63ec0fc 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -396,6 +396,14 @@ config RTC_DRV_PCF85063
->  	  This driver can also be built as a module. If so, the module
->  	  will be called rtc-pcf85063.
->  
-> +config RTC_DRV_PCF85263
-> +	tristate "NXP PCF85263"
-> +	help
-> +	  If you say yes here you get support for the PCF85263 RTC chip
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called rtc-pcf85263.
-> +
->  config RTC_DRV_PCF8563
->  	tristate "Philips PCF8563/Epson RTC8564"
->  	help
-> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> index ea28337..04f48fd 100644
-> --- a/drivers/rtc/Makefile
-> +++ b/drivers/rtc/Makefile
-> @@ -108,6 +108,7 @@ obj-$(CONFIG_RTC_DRV_PCF2123)	+= rtc-pcf2123.o
->  obj-$(CONFIG_RTC_DRV_PCF2127)	+= rtc-pcf2127.o
->  obj-$(CONFIG_RTC_DRV_PCF50633)	+= rtc-pcf50633.o
->  obj-$(CONFIG_RTC_DRV_PCF85063)	+= rtc-pcf85063.o
-> +obj-$(CONFIG_RTC_DRV_PCF85263)	+= rtc-pcf85263.o
->  obj-$(CONFIG_RTC_DRV_PCF8523)	+= rtc-pcf8523.o
->  obj-$(CONFIG_RTC_DRV_PCF8563)	+= rtc-pcf8563.o
->  obj-$(CONFIG_RTC_DRV_PCF8583)	+= rtc-pcf8583.o
-> diff --git a/drivers/rtc/rtc-pcf85263.c b/drivers/rtc/rtc-pcf85263.c
-> new file mode 100644
-> index 0000000..997742d
-> --- /dev/null
-> +++ b/drivers/rtc/rtc-pcf85263.c
-> @@ -0,0 +1,655 @@
-> +/*
-> + * rtc-pcf85263 Driver for the NXP PCF85263 RTC
-> + *
-> + * Copyright 2016 Parkeon
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/rtc.h>
-> +#include <linux/i2c.h>
-> +#include <linux/bcd.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <dt-bindings/rtc/nxp,pcf85263.h>
-> +
-> +#define DRV_NAME "rtc-pcf85263"
-> +
-> +#define PCF85263_REG_RTC_SC	0x01	/* Seconds */
-> +#define PCF85263_REG_RTC_SC_OS		BIT(7)	/* Oscilator stopped flag */
-> +
-> +#define PCF85263_REG_RTC_MN	0x02	/* Minutes */
-> +#define PCF85263_REG_RTC_HR	0x03	/* Hours */
-> +#define PCF85263_REG_RTC_DT	0x04	/* Day of month 1-31 */
-> +#define PCF85263_REG_RTC_DW	0x05	/* Day of week 0-6 */
-> +#define PCF85263_REG_RTC_MO	0x06	/* Month 1-12 */
-> +#define PCF85263_REG_RTC_YR	0x07	/* Year 0-99 */
-> +
-> +#define PCF85263_REG_ALM1_SC	0x08	/* Seconds */
-> +#define PCF85263_REG_ALM1_MN	0x09	/* Minutes */
-> +#define PCF85263_REG_ALM1_HR	0x0a	/* Hours */
-> +#define PCF85263_REG_ALM1_DT	0x0b	/* Day of month 1-31 */
-> +#define PCF85263_REG_ALM1_MO	0x0c	/* Month 1-12 */
-> +
-> +#define PCF85263_REG_ALM_CTL	0x10
-> +#define PCF85263_REG_ALM_CTL_ALL_A1E	0x1f /* sec,min,hr,day,mon alarm 1 */
-> +
-> +#define PCF85263_REG_OSC	0x25
-> +#define PCF85263_REG_OSC_CL_MASK	(BIT(0) | BIT(1))
-> +#define PCF85263_REG_OSC_CL_SHIFT	0
-> +#define PCF85263_REG_OSC_OSCD_MASK	(BIT(2) | BIT(3))
-> +#define PCF85263_REG_OSC_OSCD_SHIFT	2
-> +#define PCF85263_REG_OSC_LOWJ		BIT(4)
-> +#define PCF85263_REG_OSC_12H		BIT(5)
-> +
-> +#define PCF85263_REG_PINIO	0x27
-> +#define PCF85263_REG_PINIO_INTAPM_MASK	(BIT(0) | BIT(1))
-> +#define PCF85263_REG_PINIO_INTAPM_SHIFT	0
-> +#define PCF85263_INTAPM_INTA	(0x2 << PCF85263_REG_PINIO_INTAPM_SHIFT)
-> +#define PCF85263_INTAPM_HIGHZ	(0x3 << PCF85263_REG_PINIO_INTAPM_SHIFT)
-> +#define PCF85263_REG_PINIO_TSPM_MASK	(BIT(2) | BIT(3))
-> +#define PCF85263_REG_PINIO_TSPM_SHIFT	2
-> +#define PCF85263_TSPM_DISABLED		(0x0 << PCF85263_REG_PINIO_TSPM_SHIFT)
-> +#define PCF85263_TSPM_INTB		(0x1 << PCF85263_REG_PINIO_TSPM_SHIFT)
-> +#define PCF85263_REG_PINIO_CLKDISABLE	BIT(7)
-> +
-> +#define PCF85263_REG_FUNCTION	0x28
-> +#define PCF85263_REG_FUNCTION_COF_MASK	0x7
-> +#define PCF85263_REG_FUNCTION_COF_OFF	0x7	/* No clock output */
-> +
-> +#define PCF85263_REG_INTA_CTL	0x29
-> +#define PCF85263_REG_INTB_CTL	0x2A
-> +#define PCF85263_REG_INTx_CTL_A1E	BIT(4)	/* Alarm 1 */
-> +#define PCF85263_REG_INTx_CTL_ILP	BIT(7)	/* 0=pulse, 1=level */
-> +
-> +#define PCF85263_REG_FLAGS	0x2B
-> +#define PCF85263_REG_FLAGS_A1F		BIT(5)
-> +
-> +#define PCF85263_REG_RAM_BYTE	0x2c
-> +
-> +#define PCF85263_REG_STOPENABLE 0x2e
-> +#define PCF85263_REG_STOPENABLE_STOP	BIT(0)
-> +
-> +#define PCF85263_REG_RESET	0x2f	/* Reset command */
-> +#define PCF85263_REG_RESET_CMD_CPR	0xa4	/* Clear prescaler */
-> +
-> +#define PCF85263_MAX_REG 0x2f
-> +
-> +#define PCF85263_HR_PM		BIT(5)
-> +
-> +enum pcf85263_irqpin {
-> +	PCF85263_IRQPIN_NONE,
-> +	PCF85263_IRQPIN_INTA,
-> +	PCF85263_IRQPIN_INTB
-> +};
-> +
-> +static const char *const pcf85263_irqpin_names[] = {
-> +	[PCF85263_IRQPIN_NONE] = "None",
-> +	[PCF85263_IRQPIN_INTA] = "INTA",
-> +	[PCF85263_IRQPIN_INTB] = "INTB"
-> +};
-> +
-> +struct pcf85263 {
-> +	struct device *dev;
-> +	struct rtc_device *rtc;
-> +	struct regmap *regmap;
-> +	enum pcf85263_irqpin irq_pin;
-> +	int irq;
-> +	bool mode_12h;
-> +};
-> +
-> +/*
-> + * Helpers to convert 12h to 24h and vice versa.
-> + * Values in register are stored in BCD with a PM flag in bit 5
-> + *
-> + * 23:00 <=> 11PM <=> 0x31
-> + * 00:00 <=> 12AM <=> 0x12
-> + * 01:00 <=> 1AM <=> 0x01
-> + * 12:00 <=> 12PM <=> 0x32
-> + * 13:00 <=> 1PM <=> 0x21
-> + */
-> +static int pcf85263_bcd12h_to_bin24h(int regval)
-> +{
-> +	int hr = bcd2bin(regval & 0x1f);
-> +	bool pm = regval & PCF85263_HR_PM;
-> +
-> +	if (hr == 12)
-> +		return pm ? 12 : 0;
-> +
-> +	return pm ? hr + 12 : hr;
-> +}
-> +
-> +static int pcf85263_bin24h_to_bcd12h(int hr24)
-> +{
-> +	bool pm = hr24 >= 12;
-> +	int hr12 = hr24 % 12;
-> +
-> +	if (!hr12)
-> +		hr12++;
-> +
-> +	return bin2bcd(hr12) | pm ? 0 : PCF85263_HR_PM;
-> +}
-> +
-> +static int pcf85263_read_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct pcf85263 *pcf85263 = dev_get_drvdata(dev);
-> +	const int first = PCF85263_REG_RTC_SC;
-> +	const int last = PCF85263_REG_RTC_YR;
-> +	const int len = last - first + 1;
-> +	u8 regs[len];
-> +	u8 hr_reg;
-> +	int ret;
-> +
-> +	ret = regmap_bulk_read(pcf85263->regmap, first, regs, len);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (regs[PCF85263_REG_RTC_SC - first] & PCF85263_REG_RTC_SC_OS) {
-> +		dev_warn(dev, "Oscillator stop detected, date/time is not reliable.\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	tm->tm_sec = bcd2bin(regs[PCF85263_REG_RTC_SC - first] & 0x7f);
-> +	tm->tm_min = bcd2bin(regs[PCF85263_REG_RTC_MN - first] & 0x7f);
-> +
-> +	hr_reg = regs[PCF85263_REG_RTC_HR - first];
-> +	if (pcf85263->mode_12h)
-> +		tm->tm_hour = pcf85263_bcd12h_to_bin24h(hr_reg);
-> +	else
-> +		tm->tm_hour = bcd2bin(hr_reg & 0x3f);
-> +
-> +	tm->tm_mday = bcd2bin(regs[PCF85263_REG_RTC_DT - first]);
-> +	tm->tm_wday = bcd2bin(regs[PCF85263_REG_RTC_DW - first]);
-> +	tm->tm_mon  = bcd2bin(regs[PCF85263_REG_RTC_MO - first]) - 1;
-> +	tm->tm_year = bcd2bin(regs[PCF85263_REG_RTC_YR - first]);
-> +
-> +	tm->tm_year += 100;  /* Assume 21st century */
-> +
-> +	return 0;
-> +}
-> +
-> +static int pcf85263_set_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct pcf85263 *pcf85263 = dev_get_drvdata(dev);
-> +
-> +	/*
-> +	 * Before setting time need to stop RTC and disable prescaler
-> +	 * Do this all in a single I2C transaction exploiting wraparound
-> +	 * as described in data sheet.
-> +	 * This means that the array below must be in register order
-> +	 */
-> +	u8 regs[] = {
-> +		PCF85263_REG_STOPENABLE_STOP,	/* STOP */
-> +		PCF85263_REG_RESET_CMD_CPR,	/* Disable prescaler */
-> +		/* Wrap around to register 0 (1/100s) */
-> +		0,				/* 1/100s always zero. */
-> +		bin2bcd(tm->tm_sec),
-> +		bin2bcd(tm->tm_min),
-> +		bin2bcd(tm->tm_hour),		/* 24-hour */
-> +		bin2bcd(tm->tm_mday),
-> +		bin2bcd(tm->tm_wday + 1),
-> +		bin2bcd(tm->tm_mon + 1),
-> +		bin2bcd(tm->tm_year % 100)
-> +	};
-> +	int ret;
-> +
-> +	ret = regmap_bulk_write(pcf85263->regmap, PCF85263_REG_STOPENABLE,
-> +				regs, sizeof(regs));
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* As we have set the time in 24H update the hardware for that */
-> +	if (pcf85263->mode_12h) {
-> +		pcf85263->mode_12h = false;
-> +		ret = regmap_update_bits(pcf85263->regmap, PCF85263_REG_OSC,
-> +					 PCF85263_REG_OSC_12H, 0);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	/* Start it again */
-> +	return regmap_write(pcf85263->regmap, PCF85263_REG_STOPENABLE, 0);
-> +}
-> +
-> +static int pcf85263_enable_alarm(struct pcf85263 *pcf85263, bool enable)
-> +{
-> +	int reg;
-> +	int ret;
-> +
-> +	ret = regmap_update_bits(pcf85263->regmap, PCF85263_REG_ALM_CTL,
-> +				 PCF85263_REG_ALM_CTL_ALL_A1E,
-> +				 enable ? PCF85263_REG_ALM_CTL_ALL_A1E : 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	switch (pcf85263->irq_pin) {
-> +	case PCF85263_IRQPIN_NONE:
-> +		return 0;
-> +
-> +	case PCF85263_IRQPIN_INTA:
-> +		reg = PCF85263_REG_INTA_CTL;
-> +		break;
-> +
-> +	case PCF85263_IRQPIN_INTB:
-> +		reg = PCF85263_REG_INTB_CTL;
-> +		break;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return regmap_update_bits(pcf85263->regmap, reg,
-> +				  PCF85263_REG_INTx_CTL_A1E,
-> +				  enable ? PCF85263_REG_INTx_CTL_A1E : 0);
-> +}
-> +
-> +static int pcf85263_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
-> +{
-> +	struct pcf85263 *pcf85263 = dev_get_drvdata(dev);
-> +	struct rtc_time *tm = &alarm->time;
-> +	const int first = PCF85263_REG_ALM1_SC;
-> +	const int last = PCF85263_REG_ALM1_MO;
-> +	const int len = last - first + 1;
-> +	u8 regs[len];
-> +	u8 hr_reg;
-> +	unsigned int regval;
-> +	int ret;
-> +
-> +	ret = regmap_bulk_read(pcf85263->regmap, first, regs, len);
-> +	if (ret)
-> +		return ret;
-> +
-> +	tm->tm_sec = bcd2bin(regs[PCF85263_REG_ALM1_SC - first] & 0x7f);
-> +	tm->tm_min = bcd2bin(regs[PCF85263_REG_ALM1_MN - first] & 0x7f);
-> +
-> +	hr_reg = regs[PCF85263_REG_ALM1_HR - first];
-> +	if (pcf85263->mode_12h)
-> +		tm->tm_hour = pcf85263_bcd12h_to_bin24h(hr_reg);
-> +	else
-> +		tm->tm_hour = bcd2bin(hr_reg & 0x3f);
-> +
-> +	tm->tm_mday = bcd2bin(regs[PCF85263_REG_ALM1_DT - first]);
-> +	tm->tm_mon  = bcd2bin(regs[PCF85263_REG_ALM1_MO - first]) - 1;
-> +	tm->tm_year = -1;
-> +	tm->tm_wday = -1;
-> +
-> +	ret = regmap_read(pcf85263->regmap, PCF85263_REG_ALM_CTL, &regval);
-> +	if (ret)
-> +		return ret;
-> +	alarm->enabled = !!(regval & PCF85263_REG_ALM_CTL_ALL_A1E);
-> +
-> +	ret = regmap_read(pcf85263->regmap, PCF85263_REG_FLAGS, &regval);
-> +	if (ret)
-> +		return ret;
-> +	alarm->pending = !!(regval & PCF85263_REG_FLAGS_A1F);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pcf85263_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
-> +{
-> +	struct pcf85263 *pcf85263 = dev_get_drvdata(dev);
-> +	struct rtc_time *tm = &alarm->time;
-> +	const int first = PCF85263_REG_ALM1_SC;
-> +	const int last = PCF85263_REG_ALM1_MO;
-> +	const int len = last - first + 1;
-> +	u8 regs[len];
-> +	int ret;
-> +
-> +	/* Disable alarm comparison during update */
-> +	ret = pcf85263_enable_alarm(pcf85263, false);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Clear any pending alarm (write 0=>clr, 1=>no change) */
-> +	ret = regmap_write(pcf85263->regmap, PCF85263_REG_FLAGS,
-> +			   ~PCF85263_REG_FLAGS_A1F);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Set the alarm time registers */
-> +	regs[PCF85263_REG_ALM1_SC - first] = bin2bcd(tm->tm_sec);
-> +	regs[PCF85263_REG_ALM1_MN - first] = bin2bcd(tm->tm_min);
-> +	regs[PCF85263_REG_ALM1_HR - first] = pcf85263->mode_12h ?
-> +			pcf85263_bin24h_to_bcd12h(tm->tm_hour) :
-> +			bin2bcd(tm->tm_hour);
-> +	regs[PCF85263_REG_ALM1_DT - first] = bin2bcd(tm->tm_mday);
-> +	regs[PCF85263_REG_ALM1_MO - first] = bin2bcd(tm->tm_mon + 1);
-> +
-> +	ret = regmap_bulk_write(pcf85263->regmap, first, regs, sizeof(regs));
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (alarm->enabled)
-> +		ret = pcf85263_enable_alarm(pcf85263, true);
-> +
-> +	return ret;
-> +}
-> +
-> +static int pcf85263_alarm_irq_enable(struct device *dev, unsigned int enable)
-> +{
-> +	struct pcf85263 *pcf85263 = dev_get_drvdata(dev);
-> +
-> +	return pcf85263_enable_alarm(pcf85263, !!enable);
-> +}
-> +
-> +static irqreturn_t pcf85263_irq(int irq, void *data)
-> +{
-> +	struct pcf85263 *pcf85263 = data;
-> +	unsigned int regval;
-> +	int ret;
-> +
-> +	ret = regmap_read(pcf85263->regmap, PCF85263_REG_FLAGS, &regval);
-> +	if (ret)
-> +		return IRQ_NONE;
-> +
-> +	if (regval & PCF85263_REG_FLAGS_A1F) {
-> +		regmap_write(pcf85263->regmap, PCF85263_REG_FLAGS,
-> +			     ~PCF85263_REG_FLAGS_A1F);
-> +
-> +		rtc_update_irq(pcf85263->rtc, 1, RTC_IRQF | RTC_AF);
-> +
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	return IRQ_NONE;
-> +}
-> +
-> +static int pcf85263_check_osc_stopped(struct pcf85263 *pcf85263)
-> +{
-> +	unsigned int regval;
-> +	int ret;
-> +
-> +	ret = regmap_read(pcf85263->regmap, PCF85263_REG_RTC_SC, &regval);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regval & PCF85263_REG_RTC_SC_OS ? 1 : 0;
-> +	if (ret)
-> +		dev_warn(pcf85263->dev, "Oscillator stop detected, date/time is not reliable.\n");
-> +
-> +	return ret;
-> +}
-> +
-> +#ifdef CONFIG_RTC_INTF_DEV
-> +static int pcf85263_ioctl(struct device *dev,
-> +			  unsigned int cmd, unsigned long arg)
-> +{
-> +	struct pcf85263 *pcf85263 = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	switch (cmd) {
-> +	case RTC_VL_READ:
-> +		ret = pcf85263_check_osc_stopped(pcf85263);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (copy_to_user((void __user *)arg, &ret, sizeof(int)))
-> +			return -EFAULT;
-> +		return 0;
-> +
-> +	case RTC_VL_CLR:
-> +		return regmap_update_bits(pcf85263->regmap,
-> +					  PCF85263_REG_RTC_SC,
-> +					  PCF85263_REG_RTC_SC_OS, 0);
-> +	default:
-> +		return -ENOIOCTLCMD;
-> +	}
-> +}
-> +#else
-> +#define pcf85263_ioctl NULL
-> +#endif
-> +
-> +static int pcf85263_init_hw(struct pcf85263 *pcf85263)
-> +{
-> +	struct device_node *np = pcf85263->dev->of_node;
-> +	unsigned int regval;
-> +	u32 propval;
-> +	int ret;
-> +
-> +	/* Determine if oscilator has been stopped (probably low power) */
-> +	ret = pcf85263_check_osc_stopped(pcf85263);
-> +	if (ret < 0) {
-> +		/* Log here since this is the first hw access on probe */
-> +		dev_err(pcf85263->dev, "Unable to read register\n");
-> +
-> +		return ret;
-> +	}
-> +
-> +	/* Determine 12/24H mode */
-> +	ret = regmap_read(pcf85263->regmap, PCF85263_REG_OSC, &regval);
-> +	if (ret)
-> +		return ret;
-> +	pcf85263->mode_12h = !!(regval & PCF85263_REG_OSC_12H);
-> +
-> +	/* Set oscilator register */
-> +	regval &= ~PCF85263_REG_OSC_12H; /* keep current 12/24 h setting */
-> +
-> +	propval = PCF85263_QUARTZCAP_12p5pF;
-> +	of_property_read_u32(np, "quartz-load-capacitance", &propval);
-> +	regval |= ((propval << PCF85263_REG_OSC_CL_SHIFT)
-> +		    & PCF85263_REG_OSC_CL_MASK);
-> +
-> +	propval = PCF85263_QUARTZDRIVE_NORMAL;
-> +	of_property_read_u32(np, "quartz-drive-strength", &propval);
-> +	regval |= ((propval << PCF85263_REG_OSC_OSCD_SHIFT)
-> +		    & PCF85263_REG_OSC_OSCD_MASK);
-> +
-> +	if (of_property_read_bool(np, "quartz-low-jitter"))
-> +		regval |= PCF85263_REG_OSC_LOWJ;
-> +
-> +	ret = regmap_write(pcf85263->regmap, PCF85263_REG_OSC, regval);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Set function register (RTC mode, 1s tick, clock output static) */
-> +	ret = regmap_write(pcf85263->regmap, PCF85263_REG_FUNCTION,
-> +			   PCF85263_REG_FUNCTION_COF_OFF);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Set all interrupts to disabled, level mode */
-> +	ret = regmap_write(pcf85263->regmap, PCF85263_REG_INTA_CTL,
-> +			   PCF85263_REG_INTx_CTL_ILP);
-> +	if (ret)
-> +		return ret;
-> +	ret = regmap_write(pcf85263->regmap, PCF85263_REG_INTB_CTL,
-> +			   PCF85263_REG_INTx_CTL_ILP);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Setup IO pin config register */
-> +	regval = PCF85263_REG_PINIO_CLKDISABLE;
-> +	switch (pcf85263->irq_pin) {
-> +	case PCF85263_IRQPIN_INTA:
-> +		regval |= (PCF85263_INTAPM_INTA | PCF85263_TSPM_DISABLED);
-> +		break;
-> +	case PCF85263_IRQPIN_INTB:
-> +		regval |= (PCF85263_INTAPM_HIGHZ | PCF85263_TSPM_INTB);
-> +		break;
-> +	case PCF85263_IRQPIN_NONE:
-> +		regval |= (PCF85263_INTAPM_HIGHZ | PCF85263_TSPM_DISABLED);
-> +		break;
-> +	}
-> +	ret = regmap_write(pcf85263->regmap, PCF85263_REG_PINIO, regval);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct rtc_class_ops rtc_ops = {
-> +	.ioctl = pcf85263_ioctl,
-> +	.read_time = pcf85263_read_time,
-> +	.set_time = pcf85263_set_time,
-> +	.read_alarm = pcf85263_read_alarm,
-> +	.set_alarm = pcf85263_set_alarm,
-> +	.alarm_irq_enable = pcf85263_alarm_irq_enable,
-> +};
-> +
-> +static const struct regmap_config pcf85263_regmap_cfg = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.max_register = PCF85263_MAX_REG,
-> +};
-> +
-> +/*
-> + * On some boards the interrupt line may not be wired to the CPU but only to
-> + * a power supply circuit.
-> + * In that case no interrupt will be specified in the device tree but the
-> + * wakeup-source DT property may be used to enable wakeup programming in
-> + * sysfs
-> + */
-> +static bool pcf85263_can_wakeup_machine(struct pcf85263 *pcf85263)
-> +{
-> +	return pcf85263->irq ||
-> +		of_property_read_bool(pcf85263->dev->of_node, "wakeup-source");
-> +}
-> +
-> +static int pcf85263_probe(struct i2c_client *client,
-> +				const struct i2c_device_id *id)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct pcf85263 *pcf85263;
-> +	int ret;
-> +
-> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C |
-> +				     I2C_FUNC_SMBUS_BYTE_DATA |
-> +				     I2C_FUNC_SMBUS_I2C_BLOCK))
-> +		return -ENODEV;
-> +
-> +	pcf85263 = devm_kzalloc(dev, sizeof(*pcf85263), GFP_KERNEL);
-> +	if (!pcf85263)
-> +		return -ENOMEM;
-> +
-> +	pcf85263->dev = dev;
-> +	pcf85263->irq = client->irq;
-> +	dev_set_drvdata(dev, pcf85263);
-> +
-> +	pcf85263->regmap = devm_regmap_init_i2c(client, &pcf85263_regmap_cfg);
-> +	if (IS_ERR(pcf85263->regmap)) {
-> +		ret = PTR_ERR(pcf85263->regmap);
-> +		dev_err(dev, "regmap allocation failed (%d)\n", ret);
-> +
-> +		return ret;
-> +	}
-> +
-> +	/* Determine which interrupt pin the board uses */
-> +	if (pcf85263_can_wakeup_machine(pcf85263)) {
-> +		if (of_property_match_string(dev->of_node,
-> +					     "interrupt-names", "INTB") >= 0)
-> +			pcf85263->irq_pin = PCF85263_IRQPIN_INTB;
-> +		else
-> +			pcf85263->irq_pin = PCF85263_IRQPIN_INTA;
-> +	} else {
-> +		pcf85263->irq_pin = PCF85263_IRQPIN_NONE;
-> +	}
-> +
-> +	ret = pcf85263_init_hw(pcf85263);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (pcf85263->irq) {
-> +		ret = devm_request_threaded_irq(dev, pcf85263->irq, NULL,
-> +						pcf85263_irq,
-> +						IRQF_ONESHOT,
-> +						dev->driver->name, pcf85263);
-> +		if (ret) {
-> +			dev_err(dev, "irq %d unavailable (%d)\n",
-> +				pcf85263->irq, ret);
-> +			pcf85263->irq = 0;
-> +		}
-> +	}
-> +
-> +	if (pcf85263_can_wakeup_machine(pcf85263))
-> +		device_init_wakeup(dev, true);
-> +
-> +	pcf85263->rtc = devm_rtc_device_register(dev, dev->driver->name,
-> +						 &rtc_ops, THIS_MODULE);
-> +	ret = PTR_ERR_OR_ZERO(pcf85263->rtc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* We cannot support UIE mode if we do not have an IRQ line */
-> +	if (!pcf85263->irq)
-> +		pcf85263->rtc->uie_unsupported = 1;
-> +
-> +	dev_info(pcf85263->dev,
-> +		 "PCF85263 RTC (irqpin=%s irq=%d)\n",
-> +		 pcf85263_irqpin_names[pcf85263->irq_pin],
-> +		 pcf85263->irq);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pcf85263_remove(struct i2c_client *client)
-> +{
-> +	struct pcf85263 *pcf85263 = i2c_get_clientdata(client);
-> +
-> +	if (pcf85263_can_wakeup_machine(pcf85263))
-> +		device_init_wakeup(pcf85263->dev, false);
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int pcf85263_suspend(struct device *dev)
-> +{
-> +	struct pcf85263 *pcf85263 = dev_get_drvdata(dev);
-> +	int ret = 0;
-> +
-> +	if (device_may_wakeup(dev))
-> +		ret = enable_irq_wake(pcf85263->irq);
-> +
-> +	return ret;
-> +}
-> +
-> +static int pcf85263_resume(struct device *dev)
-> +{
-> +	struct pcf85263 *pcf85263 = dev_get_drvdata(dev);
-> +	int ret = 0;
-> +
-> +	if (device_may_wakeup(dev))
-> +		ret = disable_irq_wake(pcf85263->irq);
-> +
-> +	return ret;
-> +}
-> +
-> +#endif
-> +
-> +static const struct i2c_device_id pcf85263_id[] = {
-> +	{ "pcf85263", 0 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, pcf85263_id);
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id pcf85263_of_match[] = {
-> +	{ .compatible = "nxp,pcf85263" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, pcf85263_of_match);
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(pcf85263_pm_ops, pcf85263_suspend,  pcf85263_resume);
-> +
-> +static struct i2c_driver pcf85263_driver = {
-> +	.driver		= {
-> +		.name	= "rtc-pcf85263",
-> +		.of_match_table = of_match_ptr(pcf85263_of_match),
-> +		.pm = &pcf85263_pm_ops,
-> +	},
-> +	.probe		= pcf85263_probe,
-> +	.remove		= pcf85263_remove,
-> +	.id_table	= pcf85263_id,
-> +};
-> +
-> +module_i2c_driver(pcf85263_driver);
-> +
-> +MODULE_AUTHOR("Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>");
-> +MODULE_DESCRIPTION("PCF85263 RTC Driver");
-> +MODULE_LICENSE("GPL");
 > 
+> >  But that doesn't make sense either, because prior to
+> >  d8ed75d59332, we *always* set
+> >  
+> >    dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
+> >  
+> >  and after the patch we only do it if "acpi_disabled".  I guess I just
+> >  don't understand what you're saying.
+> 
+> Before the patch merged. pcibios_add_device()(which run the ->irq =
+> of_irq_parse_and_map_pci(dev, 0, 0);) was loaded before the
+> pci_fixup_device(pci_fixup_final).  But after the patch
+> d8ed75d59332("ARM64: PCI: ACPI support for legacy IRQs parsing and
+> consolidation with DT code") merged, the
+> pci_fixup_device(pci_fixup_final) run BEFORE the
+> pcibios_alloc_irq()(which run the ->irq =
+> of_irq_parse_and_map_pci(dev, 0, 0);). So the dev->irq were
+> overwhelm by the pcibios_alloc_irq().
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK.  Prior to d8ed75d59332, arm64 overrode the default empty
+pcibios_add_device() implementation, and called
+of_irq_parse_and_map_pci() there.  d8ed75d59332 changed that function
+to pcibios_alloc_irq(), which is called later, in the driver probe
+path.
+
+> When I test, the acpi_disabled is '1' although my kernel config
+> default is CONFIG_ACPI=y. And no setting in the uboot with apci=xxx.
+> But this is another issue, I didn't deep to check it. 
+
+Likely your platform just doesn't have ACPI or something's wrong in
+the initial ACPI setup.
+
+> >  > I were keep thinking what your "explicitly checking for a root port
+> >  device" meaning. Do you mean I should upload again the first version
+> >  patch which fix it in the portdrv_core.c ? I would upload again if yes.
+> >  
+> >  No, I did not mean you should go back to the first version of the patch.
+> >  If we *can* do this in a quirk, I think that would be much better than
+> >  doing it in the PCIe port driver.  I meant that Dongdong's suggestion of
+> >  adding this:
+> >  
+> >    if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
+> >      return;
+> >  
+> >  to your quirk made sense to me.
+> 
+> If the quirk patch could make workaround. It should be the better way.
+
+It doesn't sound like a quirk is going to work because all the quirks
+run too early.  I'll respond to the patch itself with more ideas.
+
+> >  > >  -----Original Message-----
+> >  > >  From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+> >  > >  Sent: Saturday, July 30, 2016 6:42 AM
+> >  > >  To: Po Liu
+> >  > >  Cc: linux-pci@vger.kernel.org;
+> >  > > linux-arm-kernel@lists.infradead.org;
+> >  > >  linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Roy Zang;
+> >  > > Arnd  Bergmann; Marc Zyngier; Stuart Yoder; Yang-Leo Li; Minghuan
+> >  > > Lian; Murali  Karicheri; Bjorn Helgaas; Shawn Guo; Mingkai Hu
+> >  > >  Subject: Re: [PATCH v3 2/2] pci/aer: interrupt fixup in the quirk
+> >  > >
+> >  > >  On Tue, Jun 14, 2016 at 04:24:05PM +0800, Po Liu wrote:
+> >  > >  > On some platforms, root port doesn't support MSI/MSI-X/INTx in RC
+> >  mode.
+> >  > >  > When chip support the aer interrupt with none MSI/MSI-X/INTx
+> >  > > mode,  > maybe there is interrupt line for aer pme etc. Search the
+> >  > > interrupt  > number in the fdt file. Then fixup the dev->irq with it.
+> >  > >  >
+> >  > >  > Signed-off-by: Po Liu <po.liu@nxp.com>
+> >  > >
+> >  > >  I'm not sure where we're at with this.  Dongdong had some issue
+> >  > > (possibly with a version of the quirk on a different platform?), and
+> >  > > I  think the suggestion of explicitly checking for a root port
+> >  > > device was a  good one.
+> >  > >
+> >  > >  So please update and repost this for next cycle.
+> >  > >
+> >  > >  > ---
+> >  > >  > changes for V3:
+> >  > >  > 	- Move to quirk;
+> >  > >  > 	- Only correct the irq in RC mode;
+> >  > >  >
+> >  > >  >  drivers/pci/quirks.c | 29 +++++++++++++++++++++++++++++  >  1
+> >  > > file changed, 29 insertions(+)  >  > diff --git
+> >  > > a/drivers/pci/quirks.c b/drivers/pci/quirks.c index  >
+> >  > > ee72ebe..8b39cce 100644  > --- a/drivers/pci/quirks.c  > +++
+> >  > > b/drivers/pci/quirks.c  > @@ -25,6 +25,7 @@  >  #include
+> >  > > <linux/sched.h>  >  #include <linux/ktime.h>  >  #include
+> >  > > <linux/mm.h>  > +#include <linux/of_irq.h>
+> >  > >  >  #include <asm/dma.h>	/* isa_dma_bridge_buggy */
+> >  > >  >  #include "pci.h"
+> >  > >  >
+> >  > >  > @@ -4419,3 +4420,31 @@ static void quirk_intel_qat_vf_cap(struct
+> >  > > pci_dev *pdev)
+> >  > >  >  	}
+> >  > >  >  }
+> >  > >  >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443,  >
+> >  > > quirk_intel_qat_vf_cap);  > +  > +/* If root port doesn't support
+> >  > > MSI/MSI-X/INTx in RC mode,  > + * but use standalone irq. Read the
+> >  > > device tree for the aer  > + * interrupt number.
+> >  > >  > + */
+> >  > >  > +static void quirk_aer_interrupt(struct pci_dev *dev) {
+> >  > >  > +	int ret;
+> >  > >  > +	u8 header_type;
+> >  > >  > +	struct device_node *np = NULL;
+> >  > >  > +
+> >  > >  > +	/* Only for the RC mode device */
+> >  > >  > +	pci_read_config_byte(dev, PCI_HEADER_TYPE, &header_type);
+> >  > >  > +	if ((header_type & 0x7F) != PCI_HEADER_TYPE_BRIDGE)
+> >  > >  > +		return;
+> >  > >  > +
+> >  > >  > +	if (dev->bus->dev.of_node)
+> >  > >  > +		np = dev->bus->dev.of_node;
+> >  > >  > +
+> >  > >  > +	if (IS_ENABLED(CONFIG_OF_IRQ) && np) {
+> >  > >  > +		ret = of_irq_get_byname(np, "aer");
+> >  > >  > +		if (ret > 0) {
+> >  > >  > +			dev->no_msi = 1;
+> >  > >  > +			dev->irq = ret;
+> >  > >  > +		}
+> >  > >  > +	}
+> >  > >  > +}
+> >  > >  > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID,  >
+> >  > > +quirk_aer_interrupt);  > --  > 2.1.0.27.g96db324  >  >  >
+> >  > > _______________________________________________
+> >  > >  > linux-arm-kernel mailing list
+> >  > >  > linux-arm-kernel@lists.infradead.org
+> >  > >  > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> >  > _______________________________________________
+> >  > linux-arm-kernel mailing list
+> >  > linux-arm-kernel@lists.infradead.org
+> >  > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
