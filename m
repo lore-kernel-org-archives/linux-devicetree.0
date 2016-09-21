@@ -1,164 +1,124 @@
-From: zhichang <zhichang.yuan02@gmail.com>
-Subject: Re: [PATCH V3 1/4] ARM64 LPC: Indirect ISA port IO introduced
-Date: Wed, 21 Sep 2016 17:26:06 +0800
-Message-ID: <c6fe6d43-5e8b-ee88-a328-83d998b51c5a@gmail.com>
-References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
- <8337589.pzGt0MZ9xn@wuerfel> <57D95BBC.9030405@hisilicon.com>
- <5264074.nuyDhEuOR4@wuerfel>
+From: Paul Kocialkowski <contact@paulk.fr>
+Subject: Re: [PATCH 1/4] ARM: tegra: nyan: Use proper IRQ type definitions
+Date: Wed, 21 Sep 2016 11:31:22 +0200
+Message-ID: <1474450282.1239.21.camel@paulk.fr>
+References: <20160828173246.32621-1-contact@paulk.fr>
+         <ef69b6d2-ce6b-ff76-5c04-ab2176eb6ecc@nvidia.com>
+         <1474395289.1215.20.camel@paulk.fr>
+         <0ca614bf-4d27-9948-03e3-472d059f2153@nvidia.com>
+         <1474446366.1239.17.camel@paulk.fr>
+         <eb7540c0-4abd-86c0-7777-78fe1f12bc59@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-i6G+j71m1l5yNPoDaK6G"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5264074.nuyDhEuOR4@wuerfel>
+In-Reply-To: <eb7540c0-4abd-86c0-7777-78fe1f12bc59@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, "zhichang.yuan" <yuanzhichang@hisilicon.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, benh@kernel.crashing.org, minyard@acm.org, linux-pci@vger.kernel.org, gabriele.paoloni@huawei.com, john.garry@huawei.com, will.deacon@arm.com, xuwei5@hisilicon.com, linux-serial@vger.kernel.org, gregkh@linuxfoundation.org, zourongrong@gmail.com, liviu.dudau@arm.com, kantyzc@163.com
+To: Jon Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Arnd,
 
+--=-i6G+j71m1l5yNPoDaK6G
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2016年09月14日 22:23, Arnd Bergmann wrote:
-> On Wednesday, September 14, 2016 10:16:28 PM CEST zhichang.yuan wrote:
->>>
->>> No need to guard includes with an #ifdef.
->> If remove #ifdef here, extio.h should not contain any function external declarations whose definitions are in
->> extio.c compiled only when CONFIG_ARM64_INDIRECT_PIO is yes.
->  
-> There is no problem with making declarations visible for functions that
-> are not part of the kernel, we do that all the time.
-> 
->>>> +#define BUILDS_RW(bwl, type)                                                \
->>>> +static inline void reads##bwl(const volatile void __iomem *addr,    \
->>>> +                            void *buffer, unsigned int count)       \
->>>> +{                                                                   \
->>>> +    if (count) {                                                    \
->>>> +            type *buf = buffer;                                     \
->>>> +                                                                    \
->>>> +            do {                                                    \
->>>> +                    type x = __raw_read##bwl(addr);                 \
->>>> +                    *buf++ = x;                                     \
->>>> +            } while (--count);                                      \
->>>> +    }                                                               \
->>>> +}                                                                   \
->>>> +                                                                    \
->>>> +static inline void writes##bwl(volatile void __iomem *addr,         \
->>>> +                            const void *buffer, unsigned int count) \
->>>> +{                                                                   \
->>>> +    if (count) {                                                    \
->>>> +            const type *buf = buffer;                               \
->>>> +                                                                    \
->>>> +            do {                                                    \
->>>> +                    __raw_write##bwl(*buf++, addr);                 \
->>>> +            } while (--count);                                      \
->>>> +    }                                                               \
->>>> +}
->>>> +
->>>> +BUILDS_RW(b, u8)
->>>
->>> Why is this in here?
->> the readsb/writesb are defined in asm-generic/io.h which is included later, but the redefined insb/outsb need
->> to call them. Without these readsb/writesb definition before insb/outsb redefined, compile error occur.
->>
->> It seems that copy all the definitions of "asm-generic/io.h" is not a good idea, so I move the definitions of
->> those function needed here....
->>
->> Ok. I think your idea below defining in(s)/out(s) in a c file can solve this issue.
->>
->> #ifdef CONFIG_ARM64_INDIRECT_PIO
->> #define inb inb
->> extern u8 inb(unsigned long addr);
->>
->> #define outb outb
->> extern void outb(u8 value, unsigned long addr);
->>
->> #define insb insb
->> extern void insb(unsigned long addr, void *buffer, unsigned int count);
->>
->> #define outsb outsb
->> extern void outsb(unsigned long addr, const void *buffer, unsigned int count);
->> #endif
->>
->> and definitions of all these functions are in extio.c :
->>
->> u8 inb(unsigned long addr)
->> {
->>         if (!arm64_extio_ops || arm64_extio_ops->start > addr ||
->>                         arm64_extio_ops->end < addr)
->>                 return readb(PCI_IOBASE + addr);
->>         else
->>                 return arm64_extio_ops->pfin ?
->>                         arm64_extio_ops->pfin(arm64_extio_ops->devpara,
->>                                 addr + arm64_extio_ops->ptoffset, NULL,
->>                                 sizeof(u8), 1) : -1;
->> }
->> .....
-> 
-> Yes, sounds good.
-> 
->>>> @@ -149,6 +185,60 @@ static inline u64 __raw_readq(const volatile void __iomem *addr)
->>>>  #define IO_SPACE_LIMIT              (PCI_IO_SIZE - 1)
->>>>  #define PCI_IOBASE          ((void __iomem *)PCI_IO_START)
->>>>  
->>>> +
->>>> +/*
->>>> + * redefine the in(s)b/out(s)b for indirect-IO.
->>>> + */
->>>> +#define inb inb
->>>> +static inline u8 inb(unsigned long addr)
->>>> +{
->>>> +#ifdef CONFIG_ARM64_INDIRECT_PIO
->>>> +    if (arm64_extio_ops && arm64_extio_ops->start <= addr &&
->>>> +                    addr <= arm64_extio_ops->end)
->>>> +            return extio_inb(addr);
->>>> +#endif
->>>> +    return readb(PCI_IOBASE + addr);
->>>> +}
->>>> +
->>>
->>> Looks ok, but you only seem to do this for the 8-bit
->>> accessors, when it should be done for 16-bit and 32-bit
->>> ones as well for consistency.
->> Hip06 LPC only support 8-bit I/O operations on the designated port.
-> 
-> That is an interesting limitation. Maybe still call the extio operations
-> and have them do WARN_ON_ONCE() instead?
-> 
-> If you get a driver that calls inw/outw on the range that is owned
-> by the LPC bus, you otherwise get an unhandled page fault in kernel
-> space, which is not as nice.
+Resending with the right CC chain.
 
-As for this issue, I provided a wrong reply in the last email.
-After double-checking with SoC guys, the inw(l)/outw(l) are OK with multiple 8-bit transfers to consecutive
-I/O addresses.
+Le mercredi 21 septembre 2016 =C3=A0 10:06 +0100, Jon Hunter a =C3=A9crit=
+=C2=A0:
+> On 21/09/16 09:26, Paul Kocialkowski wrote:
+> >=20
+> >=20
+> > * PGP Signed by an unknown key
+> >=20
+> > Le mercredi 21 septembre 2016 =C3=A0 08:52 +0100, Jon Hunter a =C3=A9cr=
+it :
+> > >=20
+> > >=20
+> > > On 20/09/16 19:14, Paul Kocialkowski wrote:
+> > > >=20
+> > > >=20
+> > > >=20
+> > > > >=20
+> > > > >=20
+> > > > > Old Signed by an unknown key
+> > > >=20
+> > > > Le mardi 20 septembre 2016 =C3=A0 18:15 +0100, Jon Hunter a =C3=A9c=
+rit :
+> > > > >=20
+> > > > >=20
+> > > > >=20
+> > > > > On 28/08/16 18:32, Paul Kocialkowski wrote:
+> > > > > >=20
+> > > > > >=20
+> > > > > >=20
+> > > > > >=20
+> > > > > > This switches a few interrupt definitions that were using
+> > > > > > GPIO_ACTIVE_HIGH as IRQ type, which is invalid.
+> > > > >=20
+> > > > > May be you are right, but this does not describe why this is inva=
+lid.
+> > > > > Can you elaborate?
+> > > >=20
+> > > > GPIO_ACTIVE_HIGH is simply not the right kind of define to use in t=
+he
+> > > > "interrupts" devicetree property. Values provided there are underst=
+ood
+> > > > as
+> > > > IRQ_TYPE_ defines.
+> > >=20
+> > > Right, but you are changing the type as GPIO_ACTIVE_HIGH =3D 0 and
+> > > IRQ_TYPE_EDGE_FALLING =3D 2 and there is no comment about why this ha=
+s
+> > > been changed. It might be correct, but you need to explain it.
+> >=20
+> > This actually makes the IRQ trigger values consistent with the drivers,=
+ that
+> > define them regardless of devicetree anyway. The max98090 driver
+> > has IRQF_TRIGGER_FALLING and bq24735 has IRQF_TRIGGER_RISING |
+> > IRQF_TRIGGER_FALLING.
+> >=20
+> > This is really more of a cosmetic change, it doesn't impact actual use.
+>=20
+> So you are saying that the drivers don't actually use the DT types?
 
-Sorry for the wrong information!
-Will support inw(l)/outw(l) in V4.
+It appears so. At least they are hardcoded in the kernel driver.
 
-Best,
-Zhichang
+>=20
+> =C2=A0May be that is ok, and yes this is cosmetic, but this should be sta=
+ted in
+> the changelog as it is not clear what is going on here.
 
+Fair enough, will do in v2.
 
-> 
->>>> diff --git a/drivers/bus/extio.c b/drivers/bus/extio.c
->>>> new file mode 100644
->>>> index 0000000..1e7a9c5
->>>> --- /dev/null
->>>> +++ b/drivers/bus/extio.c
->>>> @@ -0,0 +1,66 @@
->>>
->>> This is in a globally visible directory
->>>
->>>> +
->>>> +struct extio_ops *arm64_extio_ops;
->>>
->>> But the identifier uses an architecture specific prefix. Either
->>> move the whole file into arch/arm64, or make the naming so that
->>> it can be used for everything.
->>
->> I perfer to move the whole file into arch/arm64, extio.h will be moved to arch/arm64/include/asm;
-> 
-> Ok, that simplifies it a lot, you can just do everything in asm/io.h then.
-> 
-> 	Arnd
-> 
+--=20
+Paul Kocialkowski, developer of low-level free software for embedded device=
+s
+
+Website: https://www.paulk.fr/
+Coding blog: https://code.paulk.fr/
+Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+--=-i6G+j71m1l5yNPoDaK6G
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCAAGBQJX4lNqAAoJEIT9weqP7pUMvV8P/RXy74MdU2gqNItD/oSEXb7b
+i52U81fv4cQUImlDAmIJa09ZhzoVf08CnpL/0wFkuVgbGWbIThKaafJwyagyodZ1
+mu8V+ZgSVI6tzr824abL/csm8s1NCjFY6cJr+HEfhBtMmowEiQYdHkAOLiBSOqvQ
+1l6OkUQxdAzQkvtcz/7/72TDVPNZ7wB0fFz876UtKzq7Sq38eMGI8xMu9DEfSLqr
+CzayiogfSmll6o6XjYNpL4LL0VPF9yZKC+UYRq+aC0Yx0P16+X4PQURYGxbiYD9t
+gABrcUgI7yp4iE2n5MPezcycqUQWQbr8MnK/FcRt0E5Qaoe8mRcRzPXgU2qvQ5lW
+5XpAyt/ptE9JR0OYgPsUJ+1NMBkHOhoiypPMAY5cyW6+4zOKabUstBRkAhhAzQ+v
+2u1F0ifdB6gyQXOPMgzJ6/IlVCYKKy03yOCpJ+3To5WlHW74nWpY7RfkbU7cHoY0
+FPyAQ/GEkduGoQCLS0vRjPiXlQ5GyQMnHHMHA2qwP4weLZrYhiX+k8jLHi3C5+SZ
+/5dYxPZEgp2RGlLas55FryXqKuITcThmmOSuGHpLpxf6KLloFnwkwYyinaEQlAqU
+oWT2BtVwJpoEbQqO83a32YYMX7XuOu7z7HMy0WRAEgWRUtgDkGhCJ5wlFvkGK3ZG
+YZFW8mMX7S3WGpMny/JQ
+=8dJ+
+-----END PGP SIGNATURE-----
+
+--=-i6G+j71m1l5yNPoDaK6G--
