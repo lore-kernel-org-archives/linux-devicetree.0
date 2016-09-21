@@ -1,361 +1,1190 @@
-From: Paul Kocialkowski <contact@paulk.fr>
-Subject: Re: [PATCH 2/4] ARM: tegra: nyan: Use external control for bq24735
- charger
-Date: Wed, 21 Sep 2016 13:03:40 +0200
-Message-ID: <1474455820.1239.25.camel@paulk.fr>
-References: <20160828173246.32621-1-contact@paulk.fr>
-         <20160828173246.32621-2-contact@paulk.fr>
-         <00697eef-0b36-1ff5-9c7a-43c1b53b52bc@nvidia.com>
-         <1474394567.1215.14.camel@paulk.fr>
-         <90828c8d-e46d-0956-d6b3-e88fc90f3049@nvidia.com>
-         <1474444619.1239.13.camel@paulk.fr>
-         <baca958f-1db6-b9f2-ce94-c523f21d6769@nvidia.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-AXrLxD+4oIy57TzJkrYi"
+From: Sanchayan Maity <maitysanchayan@gmail.com>
+Subject: [PATCH] ARM: dts: imx6: Add support for Toradex Colibri iMX6 module
+Date: Wed, 21 Sep 2016 16:54:38 +0530
+Message-ID: <20160921112438.8661-1-maitysanchayan@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <baca958f-1db6-b9f2-ce94-c523f21d6769@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stefan@agner.ch, marcel.ziswiler@toradex.com, robh+dt@kernel.org, Sanchayan Maity <maitysanchayan@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Add support for Toradex Colibri iMX6 module.
 
---=-AXrLxD+4oIy57TzJkrYi
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+---
+ arch/arm/boot/dts/Makefile                   |   1 +
+ arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts | 253 ++++++++
+ arch/arm/boot/dts/imx6qdl-colibri.dtsi       | 890 +++++++++++++++++++++++++++
+ 3 files changed, 1144 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-colibri.dtsi
 
-Le mercredi 21 septembre 2016 =C3=A0 11:10 +0100, Jon Hunter a =C3=A9crit=
-=C2=A0:
-> On 21/09/16 08:56, Paul Kocialkowski wrote:
->=20
-> ...
->=20
-> > Sure, this is exported at: /sys/class/power_supply/bq24735@5-0009
-> > Also, note that the power-supply next branch[2] has some more fixes for=
- the
-> > bq24735 driver.
->=20
-> I tested the bq24735 on next-20160919 without any of your changes and=C2=
-=A0
-> when connecting or disconnecting the charger I see the following panic.
-> Do you see this?
-
-I have not encountered that, but have been basing my work off the latest rc=
-, not
-linux-next.
-
-> / # [=C2=A0=C2=A0=C2=A030.120384] Unable to handle kernel NULL pointer de=
-reference at virtual
-> address 00000004
-> [=C2=A0=C2=A0=C2=A030.128489] pgd =3D c0004000
-> [=C2=A0=C2=A0=C2=A030.131187] [00000004] *pgd=3D00000000
-> [=C2=A0=C2=A0=C2=A030.134759] Internal error: Oops: 17 [#1] PREEMPT SMP A=
-RM
-> [=C2=A0=C2=A0=C2=A030.140141] Modules linked in:
-> [=C2=A0=C2=A0=C2=A030.143192] CPU: 1 PID: 71 Comm: kworker/1:1 Not tainte=
-d 4.8.0-rc6-next-
-> 20160919-00002-gbc9771827865-dirty #574
-> [=C2=A0=C2=A0=C2=A030.153254] Hardware name: NVIDIA Tegra SoC (Flattened =
-Device Tree)
-> [=C2=A0=C2=A0=C2=A030.159509] Workqueue: events power_supply_changed_work
-> [=C2=A0=C2=A0=C2=A030.164723] task: ee19f880 task.stack: ee1a0000
-> [=C2=A0=C2=A0=C2=A030.169239] PC is at sbs_external_power_changed+0x50/0x=
-5c
-> [=C2=A0=C2=A0=C2=A030.174624] LR is at mod_timer+0x194/0x270
-> [=C2=A0=C2=A0=C2=A030.178705] pc : [<c05b0c58>]=C2=A0=C2=A0=C2=A0=C2=A0lr=
- : [<c017cda0>]=C2=A0=C2=A0=C2=A0=C2=A0psr: 60000113
-> [=C2=A0=C2=A0=C2=A030.178705] sp : ee1a1eb8=C2=A0=C2=A0ip : 80000000=C2=
-=A0=C2=A0fp : ee8e3680
-> [=C2=A0=C2=A0=C2=A030.190155] r10: eef98580=C2=A0=C2=A0r9 : 00000000=C2=
-=A0=C2=A0r8 : 00000000
-> [=C2=A0=C2=A0=C2=A030.195363] r7 : ee303000=C2=A0=C2=A0r6 : c05afef8=C2=
-=A0=C2=A0r5 : ee3e03f8=C2=A0=C2=A0r4 : ee3e03d0
-> [=C2=A0=C2=A0=C2=A030.201872] r3 : 00000000=C2=A0=C2=A0r2 : 00000000=C2=
-=A0=C2=A0r1 : 40000193=C2=A0=C2=A0r0 : 00000001
-> [=C2=A0=C2=A0=C2=A030.208382] Flags: nZCv=C2=A0=C2=A0IRQs on=C2=A0=C2=A0F=
-IQs on=C2=A0=C2=A0Mode SVC_32=C2=A0=C2=A0ISA ARM=C2=A0=C2=A0Segment
-> none
-> [=C2=A0=C2=A0=C2=A030.215497] Control: 10c5387d=C2=A0=C2=A0Table: adcf006=
-a=C2=A0=C2=A0DAC: 00000051
-> [=C2=A0=C2=A0=C2=A030.221226] Process kworker/1:1 (pid: 71, stack limit =
-=3D 0xee1a0210)
-> [=C2=A0=C2=A0=C2=A030.227474] Stack: (0xee1a1eb8 to 0xee1a2000)
-> [=C2=A0=C2=A0=C2=A030.231816]
-> 1ea0:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0edc0bc00 ee303000
-> [=C2=A0=C2=A0=C2=A030.239973] 1ec0: c05afef8 c05aff2c edc0bc20 c045ec1c e=
-ef95c80 eef95c80
-> 00000001 eea82d5c
-> [=C2=A0=C2=A0=C2=A030.248136] 1ee0: edc0bd98 00000000 ee3031c0 ee303218 c=
-0eab740 c05afcc4
-> ee8e3680 ee3031c0
-> [=C2=A0=C2=A0=C2=A030.256296] 1f00: eef9b800 00000000 eef98580 c0135824 e=
-ef98598 c0e02100
-> eef98580 ee8e3698
-> [=C2=A0=C2=A0=C2=A030.264453] 1f20: 00000008 eef98598 c0e02100 ee1a0000 e=
-ef98580 c0135a74
-> ee840f80 ee8e3680
-> [=C2=A0=C2=A0=C2=A030.272610] 1f40: c0135a3c 00000000 ee840f80 ee8e3680 c=
-0135a3c 00000000
-> 00000000 00000000
-> [=C2=A0=C2=A0=C2=A030.280766] 1f60: 00000000 c013af18 00000000 00000000 0=
-0000000 ee8e3680
-> 00000000 00000000
-> [=C2=A0=C2=A0=C2=A030.288922] 1f80: ee1a1f80 ee1a1f80 00000000 00000000 e=
-e1a1f90 ee1a1f90
-> ee1a1fac ee840f80
-> [=C2=A0=C2=A0=C2=A030.297078] 1fa0: c013ae3c 00000000 00000000 c01078b8 0=
-0000000 00000000
-> 00000000 00000000
-> [=C2=A0=C2=A0=C2=A030.305234] 1fc0: 00000000 00000000 00000000 00000000 0=
-0000000 00000000
-> 00000000 00000000
-> [=C2=A0=C2=A0=C2=A030.313389] 1fe0: 00000000 00000000 00000000 00000000 0=
-0000013 00000000
-> 00000000 00000000
-> [=C2=A0=C2=A0=C2=A030.321555] [<c05b0c58>] (sbs_external_power_changed) f=
-rom [<c05aff2c>]
-> (__power_supply_changed_work+0x34/0x3c)
-> [=C2=A0=C2=A0=C2=A030.331623] [<c05aff2c>] (__power_supply_changed_work) =
-from [<c045ec1c>]
-> (class_for_each_device+0x4c/0xb4)
-> [=C2=A0=C2=A0=C2=A030.341254] [<c045ec1c>] (class_for_each_device) from [=
-<c05afcc4>]
-> (power_supply_changed_work+0x5c/0xb0)
-> [=C2=A0=C2=A0=C2=A030.350713] [<c05afcc4>] (power_supply_changed_work) fr=
-om [<c0135824>]
-> (process_one_work+0x124/0x33c)
-> [=C2=A0=C2=A0=C2=A030.359912] [<c0135824>] (process_one_work) from [<c013=
-5a74>]
-> (worker_thread+0x38/0x4d4)
-> [=C2=A0=C2=A0=C2=A030.367983] [<c0135a74>] (worker_thread) from [<c013af1=
-8>]
-> (kthread+0xdc/0xf4)
-> [=C2=A0=C2=A0=C2=A030.375187] [<c013af18>] (kthread) from [<c01078b8>]
-> (ret_from_fork+0x14/0x3c)
-> [=C2=A0=C2=A0=C2=A030.382391] Code: e5911000 e3a00004 ebee0b88 e5943008 (=
-e5933004)=C2=A0
-> [=C2=A0=C2=A0=C2=A030.388504] ---[ end trace 083d55597e9a2254 ]---
-> [=C2=A0=C2=A0=C2=A030.393140] Unable to handle kernel paging request at v=
-irtual address
-> ffffffec
-> [=C2=A0=C2=A0=C2=A030.400342] pgd =3D c0004000
-> [=C2=A0=C2=A0=C2=A030.403038] [ffffffec] *pgd=3Dafffd861, *pte=3D00000000=
-, *ppte=3D00000000
-> [=C2=A0=C2=A0=C2=A030.409309] Internal error: Oops: 37 [#2] PREEMPT SMP A=
-RM
-> [=C2=A0=C2=A0=C2=A030.414690] Modules linked in:
-> [=C2=A0=C2=A0=C2=A030.417738] CPU: 1 PID: 71 Comm: kworker/1:1 Tainted:
-> G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0D=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A04.8.0-rc6-next-20160919-00002-gbc9771827865-dirty #574
-> [=C2=A0=C2=A0=C2=A030.429013] Hardware name: NVIDIA Tegra SoC (Flattened =
-Device Tree)
-> [=C2=A0=C2=A0=C2=A030.435265] task: ee19f880 task.stack: ee1a0000
-> [=C2=A0=C2=A0=C2=A030.439782] PC is at kthread_data+0x4/0xc
-> [=C2=A0=C2=A0=C2=A030.443779] LR is at wq_worker_sleeping+0x8/0xc8
-> [=C2=A0=C2=A0=C2=A030.448381] pc : [<c013b8a8>]=C2=A0=C2=A0=C2=A0=C2=A0lr=
- : [<c01366e0>]=C2=A0=C2=A0=C2=A0=C2=A0psr: 20000193
-> [=C2=A0=C2=A0=C2=A030.448381] sp : ee1a1c58=C2=A0=C2=A0ip : eef98f28=C2=
-=A0=C2=A0fp : ee1a1cb4
-> [=C2=A0=C2=A0=C2=A030.459836] r10: eef98a00=C2=A0=C2=A0r9 : c0e5f000=C2=
-=A0=C2=A0r8 : c0d9ea00
-> [=C2=A0=C2=A0=C2=A030.465048] r7 : ee19fcc8=C2=A0=C2=A0r6 : c0e02e08=C2=
-=A0=C2=A0r5 : ee19f880=C2=A0=C2=A0r4 : eef98a00
-> [=C2=A0=C2=A0=C2=A030.471556] r3 : 00000000=C2=A0=C2=A0r2 : 00000020=C2=
-=A0=C2=A0r1 : 00000000=C2=A0=C2=A0r0 : ee19f880
-> [=C2=A0=C2=A0=C2=A030.478066] Flags: nzCv=C2=A0=C2=A0IRQs off=C2=A0=C2=A0=
-FIQs on=C2=A0=C2=A0Mode SVC_32=C2=A0=C2=A0ISA ARM=C2=A0=C2=A0Segment
-> none
-> [=C2=A0=C2=A0=C2=A030.485268] Control: 10c5387d=C2=A0=C2=A0Table: adcf006=
-a=C2=A0=C2=A0DAC: 00000051
-> [=C2=A0=C2=A0=C2=A030.490998] Process kworker/1:1 (pid: 71, stack limit =
-=3D 0xee1a0210)
-> [=C2=A0=C2=A0=C2=A030.497247] Stack: (0xee1a1c58 to 0xee1a2000)
-> [=C2=A0=C2=A0=C2=A030.501590]
-> 1c40:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0eef98a00 c0833a68
-> [=C2=A0=C2=A0=C2=A030.509747] 1c60: 00000001 ee117a44 c0d99280 a0000193 0=
-0000000 c0833d4c
-> 00000001 ee117a44
-> [=C2=A0=C2=A0=C2=A030.517904] 1c80: 00000000 ee117540 ee19f880 c01faf3c 0=
-0000000 ee1a0000
-> ee1a18ec 00000001
-> [=C2=A0=C2=A0=C2=A030.526060] 1ca0: ee1a1cc8 ee19fc40 c05b0c5c 00000001 e=
-e1a1cc4 c0833d4c
-> ee19f880 ee1a18ec
-> [=C2=A0=C2=A0=C2=A030.534217] 1cc0: ee85d3c0 c012277c ee1a1cc8 ee1a1cc8 0=
-0000000 c0e5e2c4
-> c0e07638 ee1a1e68
-> [=C2=A0=C2=A0=C2=A030.542374] 1ce0: 60000113 0000000b c05b0c5c 00000001 c=
-05b0c5a c010b6f8
-> ee1a0210 0000000b
-> [=C2=A0=C2=A0=C2=A030.550530] 1d00: c0e07638 ee1a0000 bf000000 00000008 6=
-5000000 31313935
-> 20303030 30613365
-> [=C2=A0=C2=A0=C2=A030.558687] 1d20: 34303030 65626520 38623065 35652038 3=
-0333439 28203830
-> 33393565 34303033
-> [=C2=A0=C2=A0=C2=A030.566843] 1d40: 00002029 c01b63c4 c0004000 00000004 e=
-e1a1e68 00000017
-> 00000000 00000017
-> [=C2=A0=C2=A0=C2=A030.575000] 1d60: 00000004 eef98580 ee8e3680 c011a424 0=
-0000004 c0115c20
-> ee19f880 00000000
-> [=C2=A0=C2=A0=C2=A030.583156] 1d80: ee19f900 ee2ecd80 ee19f880 c014a55c c=
-014a460 ee19f880
-> eef98a00 00000000
-> [=C2=A0=C2=A0=C2=A030.591312] 1da0: a0000193 c0e07efc 00000017 c0115888 0=
-0000004 ee1a1e68
-> ee1a0000 eef98580
-> [=C2=A0=C2=A0=C2=A030.599469] 1dc0: ee8e3680 c01012ac 1514622a 00000000 e=
-e19f900 c0149578
-> eef98a00 ee19f900
-> [=C2=A0=C2=A0=C2=A030.607626] 1de0: 00000001 00000000 eef98a38 00000000 0=
-00043e1 c014e11c
-> ee2ecd00 ee19f900
-> [=C2=A0=C2=A0=C2=A030.615781] 1e00: 00000010 00000000 00000006 00000000 0=
-0000000 edc45440
-> c0d992c4 00000000
-> [=C2=A0=C2=A0=C2=A030.623938] 1e20: 00000001 00000000 00000000 00000001 0=
-0004b4e 00000000
-> 00000001 c0e5f000
-> [=C2=A0=C2=A0=C2=A030.632095] 1e40: 00000000 00000000 ee19f900 ee19f900 c=
-05b0c58 60000113
-> ffffffff ee1a1e9c
-> [=C2=A0=C2=A0=C2=A030.640251] 1e60: 00000000 c010bd78 00000001 40000193 0=
-0000000 00000000
-> ee3e03d0 ee3e03f8
-> [=C2=A0=C2=A0=C2=A030.648408] 1e80: c05afef8 ee303000 00000000 00000000 e=
-ef98580 ee8e3680
-> 80000000 ee1a1eb8
-> [=C2=A0=C2=A0=C2=A030.656566] 1ea0: c017cda0 c05b0c58 60000113 ffffffff 0=
-0000051 00000000
-> edc0bc00 ee303000
-> [=C2=A0=C2=A0=C2=A030.664722] 1ec0: c05afef8 c05aff2c edc0bc20 c045ec1c e=
-ef95c80 eef95c80
-> 00000001 eea82d5c
-> [=C2=A0=C2=A0=C2=A030.672886] 1ee0: edc0bd98 00000000 ee3031c0 ee303218 c=
-0eab740 c05afcc4
-> ee8e3680 ee3031c0
-> [=C2=A0=C2=A0=C2=A030.681045] 1f00: eef9b800 00000000 eef98580 c0135824 e=
-ef98598 c0e02100
-> eef98580 ee8e3698
-> [=C2=A0=C2=A0=C2=A030.689202] 1f20: 00000008 eef98598 c0e02100 ee1a0000 e=
-ef98580 c0135a74
-> ee840f80 ee8e3680
-> [=C2=A0=C2=A0=C2=A030.697358] 1f40: c0135a3c 00000000 ee840f80 ee8e3680 c=
-0135a3c 00000000
-> 00000000 00000000
-> [=C2=A0=C2=A0=C2=A030.705515] 1f60: 00000000 c013af18 00000000 00000000 0=
-0000000 ee8e3680
-> 00000000 00000000
-> [=C2=A0=C2=A0=C2=A030.713672] 1f80: ee1a1f80 ee1a1f80 00000001 00010001 e=
-e1a1f90 ee1a1f90
-> ee1a1fac ee840f80
-> [=C2=A0=C2=A0=C2=A030.721827] 1fa0: c013ae3c 00000000 00000000 c01078b8 0=
-0000000 00000000
-> 00000000 00000000
-> [=C2=A0=C2=A0=C2=A030.729983] 1fc0: 00000000 00000000 00000000 00000000 0=
-0000000 00000000
-> 00000000 00000000
-> [=C2=A0=C2=A0=C2=A030.738140] 1fe0: 00000000 00000000 00000000 00000000 0=
-0000013 00000000
-> 00000000 00000000
-> [=C2=A0=C2=A0=C2=A030.746304] [<c013b8a8>] (kthread_data) from [<c01366e0=
->]
-> (wq_worker_sleeping+0x8/0xc8)
-> [=C2=A0=C2=A0=C2=A030.754292] [<c01366e0>] (wq_worker_sleeping) from [<c0=
-833a68>]
-> (__schedule+0x45c/0x6f0)
-> [=C2=A0=C2=A0=C2=A030.762364] [<c0833a68>] (__schedule) from [<c0833d4c>]
-> (schedule+0x50/0xb4)
-> [=C2=A0=C2=A0=C2=A030.769394] [<c0833d4c>] (schedule) from [<c012277c>] (=
-do_exit+0x6e8/0xa90)
-> [=C2=A0=C2=A0=C2=A030.776340] [<c012277c>] (do_exit) from [<c010b6f8>] (d=
-ie+0x470/0x488)
-> [=C2=A0=C2=A0=C2=A030.782853] [<c010b6f8>] (die) from [<c011a424>]
-> (__do_kernel_fault.part.0+0x64/0x1e4)
-> [=C2=A0=C2=A0=C2=A030.790751] [<c011a424>] (__do_kernel_fault.part.0) fro=
-m [<c0115c20>]
-> (do_page_fault+0x398/0x3a4)
-> [=C2=A0=C2=A0=C2=A030.799601] [<c0115c20>] (do_page_fault) from [<c01012a=
-c>]
-> (do_DataAbort+0x38/0xb8)
-> [=C2=A0=C2=A0=C2=A030.807238] [<c01012ac>] (do_DataAbort) from [<c010bd78=
->]
-> (__dabt_svc+0x58/0x80)
-> [=C2=A0=C2=A0=C2=A030.814613] Exception stack(0xee1a1e68 to 0xee1a1eb0)
-> [=C2=A0=C2=A0=C2=A030.819650] 1e60:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A000000001 40000193 00000000 00000000
-> ee3e03d0 ee3e03f8
-> [=C2=A0=C2=A0=C2=A030.827807] 1e80: c05afef8 ee303000 00000000 00000000 e=
-ef98580 ee8e3680
-> 80000000 ee1a1eb8
-> [=C2=A0=C2=A0=C2=A030.835962] 1ea0: c017cda0 c05b0c58 60000113 ffffffff
-> [=C2=A0=C2=A0=C2=A030.841002] [<c010bd78>] (__dabt_svc) from [<c05b0c58>]
-> (sbs_external_power_changed+0x50/0x5c)
-> [=C2=A0=C2=A0=C2=A030.849593] [<c05b0c58>] (sbs_external_power_changed) f=
-rom [<c05aff2c>]
-> (__power_supply_changed_work+0x34/0x3c)
-> [=C2=A0=C2=A0=C2=A030.859660] [<c05aff2c>] (__power_supply_changed_work) =
-from [<c045ec1c>]
-> (class_for_each_device+0x4c/0xb4)
-> [=C2=A0=C2=A0=C2=A030.869291] [<c045ec1c>] (class_for_each_device) from [=
-<c05afcc4>]
-> (power_supply_changed_work+0x5c/0xb0)
-> [=C2=A0=C2=A0=C2=A030.878762] [<c05afcc4>] (power_supply_changed_work) fr=
-om [<c0135824>]
-> (process_one_work+0x124/0x33c)
-> [=C2=A0=C2=A0=C2=A030.887963] [<c0135824>] (process_one_work) from [<c013=
-5a74>]
-> (worker_thread+0x38/0x4d4)
-> [=C2=A0=C2=A0=C2=A030.896034] [<c0135a74>] (worker_thread) from [<c013af1=
-8>]
-> (kthread+0xdc/0xf4)
-> [=C2=A0=C2=A0=C2=A030.903240] [<c013af18>] (kthread) from [<c01078b8>]
-> (ret_from_fork+0x14/0x3c)
-> [=C2=A0=C2=A0=C2=A030.910443] Code: e34c00a4 ebff90d2 eafffff2 e5903418 (=
-e5130014)=C2=A0
-> [=C2=A0=C2=A0=C2=A030.916520] ---[ end trace 083d55597e9a2255 ]---
-> [=C2=A0=C2=A0=C2=A030.921122] Fixing recursive fault but reboot is needed=
-!
->=20
->=20
---=20
-Paul Kocialkowski, developer of low-level free software for embedded device=
-s
-
-Website: https://www.paulk.fr/
-Coding blog: https://code.paulk.fr/
-Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
---=-AXrLxD+4oIy57TzJkrYi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJX4mkMAAoJEIT9weqP7pUMKrAP/iBWzsn7Cp2gd8/EvXpkVhmO
-0H0jpbCzCha5iDbNMyxNv7mNZWzimfDbtjboHXrgxthdXZiIUKscAK40PR7SM6M7
-RgFS5ttDSlFJ7gLL8gCc/N6W3Yt2dO2vrKzItUAt70lntcVM2iIgjpNPWwK3qZQ7
-KVKMhBhMxQ7KBN4/+ev3hqUJN+AScW7AHsiF2t5Fpd0o/ry9KBufZISqhWl1RsD+
-SiMVEh7eI/8ynGr9EKNp7DwCyD3iDEfVi2TOwiZ0iWGbGdS5k3C1Lg0RtxVzwP3Y
-NVegdSpSOyIQMYm8nvJzTC//kwA04DQdADOIM8d8YJlmc7lOCDSOC/M4x2cvolKI
-dUF3dFrmx7oBeWJ1guFz3rKAoEYeFNLXfd2Oy0rcgzDoM+nmskchjN8RIQS5MhG3
-/IapPIENj/BqfsRYdJE5QgUphisXDoL6t/+2KylPaGZHyKW09MfQbX9Kn05AxD7G
-rS9SqEPkIMoWRv9HzHMHZPfUFuH6EEh1InZWG/r4L3jodr+Ey1cbuNzDxzkRGFfR
-+A4/vc+tjv11mkSANue5hWHu3MDCDMUtYgbc3RuCfVg2DdkS+JTIjZaUOWcUS/c2
-F4eZEfZ2B3Iy5lble1WQ/YX+nek8dP75i7rreYm4GK9TlAxHfsxf6by+uEHndNQ7
-xv77j33y5ZNhGNvTIQ3E
-=M0ik
------END PGP SIGNATURE-----
-
---=-AXrLxD+4oIy57TzJkrYi--
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index f79cac2..44ff380 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -323,6 +323,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-aristainetos_7.dtb \
+ 	imx6dl-aristainetos2_4.dtb \
+ 	imx6dl-aristainetos2_7.dtb \
++	imx6dl-colibri-eval-v3.dtb \
+ 	imx6dl-cubox-i.dtb \
+ 	imx6dl-dfi-fs700-m60.dtb \
+ 	imx6dl-gw51xx.dtb \
+diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+new file mode 100644
+index 0000000..e0c2172
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+@@ -0,0 +1,253 @@
++/*
++ * Copyright 2014-2016 Toradex AG
++ * Copyright 2012 Freescale Semiconductor, Inc.
++ * Copyright 2011 Linaro Ltd.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include "imx6dl.dtsi"
++#include "imx6qdl-colibri.dtsi"
++
++/ {
++	model = "Toradex Colibri iMX6DL/S on Colibri Evaluation Board V3";
++	compatible = "toradex,colibri_imx6dl-eval-v3", "toradex,colibri_imx6dl",
++		     "fsl,imx6dl";
++
++	aliases {
++		i2c0 = &i2c2;
++		i2c1 = &i2c3;
++	};
++
++	aliases {
++		rtc0 = &rtc_i2c;
++		rtc1 = &snvs_rtc;
++	};
++
++	clocks {
++		/* Fixed crystal dedicated to mcp251x */
++		clk16m: clk@1 {
++			compatible = "fixed-clock";
++			reg = <1>;
++			#clock-cells = <0>;
++			clock-frequency = <16000000>;
++			clock-output-names = "clk16m";
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_keys>;
++
++		wakeup {
++			label = "Wake-Up";
++			gpios = <&gpio2 22 GPIO_ACTIVE_HIGH>; /* SODIMM 45 */
++			linux,code = <KEY_WAKEUP>;
++			debounce-interval = <10>;
++			wakeup-source;
++		};
++	};
++
++	lcd_display: display@di0 {
++		compatible = "fsl,imx-parallel-display";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		interface-pix-fmt = "bgr666";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ipu1_lcdif>;
++		status = "okay";
++
++		port@0 {
++			reg = <0>;
++
++			lcd_display_in: endpoint {
++				remote-endpoint = <&ipu1_di0_disp0>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			lcd_display_out: endpoint {
++				remote-endpoint = <&lcd_panel_in>;
++			};
++		};
++	};
++
++	panel: panel {
++		/*
++		 * edt,et057090dhu: EDT 5.7" LCD TFT
++		 * edt,et070080dh6: EDT 7.0" LCD TFT
++		 */
++		compatible = "edt,et057090dhu";
++		backlight = <&backlight>;
++
++		port {
++			lcd_panel_in: endpoint {
++				remote-endpoint = <&lcd_display_out>;
++			};
++		};
++	};
++};
++
++&backlight {
++	brightness-levels = <0 127 191 223 239 247 251 255>;
++	default-brightness-level = <1>;
++	status = "okay";
++};
++
++/* Colibri SSP */
++&ecspi4 {
++	status = "okay";
++
++	mcp251x0: mcp251x@1 {
++		compatible = "microchip,mcp2515";
++		reg = <0>;
++		clocks = <&clk16m>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <27 0x2>;
++		spi-max-frequency = <10000000>;
++		status = "okay";
++	};
++};
++
++&hdmi {
++	status = "okay";
++};
++
++/*
++ * Colibri I2C: I2C3_SDA/SCL on SODIMM 194/196 (e.g. RTC on carrier board)
++ */
++&i2c3 {
++	status = "okay";
++
++	/* M41T0M6 real time clock on carrier board */
++	rtc_i2c: rtc@68 {
++		compatible = "st,m41t00";
++		reg = <0x68>;
++	};
++};
++
++&ipu1_di0_disp0 {
++	remote-endpoint = <&lcd_display_in>;
++};
++
++&pwm1 {
++	status = "okay";
++};
++
++&pwm2 {
++	status = "okay";
++};
++
++&pwm3 {
++	status = "okay";
++};
++
++&pwm4 {
++	status = "okay";
++};
++
++&reg_usb_host_vbus {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&uart3 {
++	status = "okay";
++};
++
++&usbh1 {
++	vbus-supply = <&reg_usb_host_vbus>;
++	status = "okay";
++};
++
++&usbotg {
++	status = "okay";
++};
++
++/* Colibri MMC */
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_mmc_cd>;
++	cd-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>; /* MMCD */
++	status = "okay";
++};
++
++&weim {
++	status = "okay";
++
++	/* weim memory map: 32MB on CS0, 32MB on CS1, 32MB on CS2 */
++	ranges = <0 0 0x08000000 0x02000000
++		  1 0 0x0a000000 0x02000000
++		  2 0 0x0c000000 0x02000000>;
++
++	/* SRAM on Colibri nEXT_CS0 */
++	sram@0,0 {
++		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
++		reg = <0 0 0x00010000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		bank-width = <2>;
++		fsl,weim-cs-timing = <0x00010081 0x00000000 0x04000000
++				      0x00000000 0x04000040 0x00000000>;
++	};
++
++	/* SRAM on Colibri nEXT_CS1 */
++	sram@1,0 {
++		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
++		reg = <1 0 0x00010000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		bank-width = <2>;
++		fsl,weim-cs-timing = <0x00010081 0x00000000 0x04000000
++				      0x00000000 0x04000040 0x00000000>;
++	};
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+new file mode 100644
+index 0000000..e6faa65
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+@@ -0,0 +1,890 @@
++/*
++ * Copyright 2014-2016 Toradex AG
++ * Copyright 2012 Freescale Semiconductor, Inc.
++ * Copyright 2011 Linaro Ltd.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "Toradex Colibri iMX6DL/S Module";
++	compatible = "toradex,colibri_imx6dl", "fsl,imx6dl";
++
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_bl_on>;
++		pwms = <&pwm3 0 5000000>;
++		enable-gpios = <&gpio3 26 GPIO_ACTIVE_HIGH>; /* Colibri BL_ON */
++		status = "disabled";
++	};
++
++	reg_1p8v: regulator-1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "1P8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
++	reg_2p5v: regulator-2p5v {
++		compatible = "regulator-fixed";
++		regulator-name = "2P5V";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		regulator-always-on;
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	reg_usb_host_vbus: regulator-usb-host-vbus {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_regulator_usbh_pwr>;
++		regulator-name = "usb_host_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio3 31 GPIO_ACTIVE_HIGH>; /* USBH_PEN */
++		status = "disabled";
++	};
++
++	sound {
++		compatible = "fsl,imx-audio-sgtl5000";
++		model = "imx6dl-colibri-sgtl5000";
++		ssi-controller = <&ssi1>;
++		audio-codec = <&codec>;
++		audio-routing =
++			"Headphone Jack", "HP_OUT",
++			"LINE_IN", "Line In Jack",
++			"MIC_IN", "Mic Jack",
++			"Mic Jack", "Mic Bias";
++		mux-int-port = <1>;
++		mux-ext-port = <5>;
++	};
++
++	/* Optional S/PDIF in on SODIMM 88 and out on SODIMM 90, 137 or 168 */
++	sound_spdif: sound-spdif {
++		compatible = "fsl,imx-audio-spdif";
++		model = "imx-spdif";
++		spdif-controller = <&spdif>;
++		spdif-in;
++		spdif-out;
++		status = "disabled";
++	};
++};
++
++&audmux {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_audmux &pinctrl_mic_gnd>;
++	status = "okay";
++};
++
++/* Optional on SODIMM 55/63 */
++&can1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan1>;
++	status = "disabled";
++};
++
++/* Optional on SODIMM 178/188 */
++&can2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan2>;
++	status = "disabled";
++};
++
++/* Colibri SSP */
++&ecspi4 {
++	fsl,spi-num-chipselects = <1>;
++	cs-gpios = <&gpio5 2 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi4>;
++	status = "disabled";
++};
++
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet>;
++	phy-mode = "rmii";
++	status = "okay";
++};
++
++&hdmi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hdmi_ddc>;
++	status = "disabled";
++};
++
++/*
++ * PWR_I2C: power I2C to audio codec, PMIC, temperature sensor and
++ * touch screen controller
++ */
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++
++	pmic: pfuze100@08 {
++		compatible = "fsl,pfuze100";
++		reg = <0x08>;
++
++		regulators {
++			sw1a_reg: sw1ab {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			sw1c_reg: sw1c {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			sw3a_reg: sw3a {
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			swbst_reg: swbst {
++				regulator-min-microvolt = <5000000>;
++				regulator-max-microvolt = <5150000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			snvs_reg: vsnvs {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vref_reg: vrefddr {
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			/* vgen1: unused */
++
++			vgen2_reg: vgen2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			/* vgen3: unused */
++
++			vgen4_reg: vgen4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vgen5_reg: vgen5 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vgen6_reg: vgen6 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++	};
++
++	codec: sgtl5000@0a {
++		compatible = "fsl,sgtl5000";
++		reg = <0x0a>;
++		clocks = <&clks IMX6QDL_CLK_CKO>;
++		VDDA-supply = <&reg_2p5v>;
++		VDDIO-supply = <&reg_3p3v>;
++	};
++
++	/* STMPE811 touch screen controller */
++	stmpe811@41 {
++		compatible = "st,stmpe811";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_touch_int>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x41>;
++		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-parent = <&gpio6>;
++		interrupt-controller;
++		id = <0>;
++		blocks = <0x5>;
++		irq-trigger = <0x1>;
++
++		stmpe_touchscreen {
++			compatible = "st,stmpe-ts";
++			reg = <0>;
++			/* 3.25 MHz ADC clock speed */
++			st,adc-freq = <1>;
++			/* 8 sample average control */
++			st,ave-ctrl = <3>;
++			/* 7 length fractional part in z */
++			st,fraction-z = <7>;
++			/*
++			 * 50 mA typical 80 mA max touchscreen drivers
++			 * current limit value
++			 */
++			st,i-drive = <1>;
++			/* 12-bit ADC */
++			st,mod-12b = <1>;
++			/* internal ADC reference */
++			st,ref-sel = <0>;
++			/* ADC converstion time: 80 clocks */
++			st,sample-time = <4>;
++			/* 1 ms panel driver settling time */
++			st,settling = <3>;
++			/* 5 ms touch detect interrupt delay */
++			st,touch-det-delay = <5>;
++		};
++	};
++};
++
++/*
++ * I2C3_SDA/SCL on SODIMM 194/196 (e.g. RTC on carrier board)
++ */
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default", "recovery";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	pinctrl-1 = <&pinctrl_i2c3_recovery>;
++	scl-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
++	sda-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++	status = "disabled";
++};
++
++/* Colibri PWM<B> */
++&pwm1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm1>;
++	status = "disabled";
++};
++
++/* Colibri PWM<D> */
++&pwm2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm2>;
++	status = "disabled";
++};
++
++/* Colibri PWM<A> */
++&pwm3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm3>;
++	status = "disabled";
++};
++
++/* Colibri PWM<C> */
++&pwm4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm4>;
++	status = "disabled";
++};
++
++/* Optional S/PDIF out on SODIMM 137 */
++&spdif {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spdif>;
++	status = "disabled";
++};
++
++&ssi1 {
++	status = "okay";
++};
++
++/* Colibri UART_A */
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1_dte &pinctrl_uart1_ctrl>;
++	fsl,dte-mode;
++	uart-has-rtscts;
++	status = "disabled";
++};
++
++/* Colibri UART_B */
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2_dte>;
++	fsl,dte-mode;
++	uart-has-rtscts;
++	status = "disabled";
++};
++
++/* Colibri UART_C */
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3_dte>;
++	fsl,dte-mode;
++	status = "disabled";
++};
++
++&usbotg {
++	pinctrl-names = "default";
++	disable-over-current;
++	dr_mode = "peripheral";
++	status = "disabled";
++};
++
++/* Colibri MMC */
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	vqmmc-supply = <&reg_3p3v>;
++	bus-width = <4>;
++	voltage-ranges = <3300 3300>;
++	status = "disabled";
++};
++
++/* eMMC */
++&usdhc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	vqmmc-supply = <&reg_3p3v>;
++	bus-width = <8>;
++	voltage-ranges = <3300 3300>;
++	non-removable;
++	status = "okay";
++};
++
++&weim {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_weim_sram  &pinctrl_weim_cs0
++		     &pinctrl_weim_cs1   &pinctrl_weim_cs2
++		     &pinctrl_weim_rdnwr &pinctrl_weim_npwe>;
++	#address-cells = <2>;
++	#size-cells = <1>;
++	status = "disabled";
++};
++
++&iomuxc {
++	pinctrl_audmux: audmuxgrp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL0__AUD5_TXC	0x130b0
++			MX6QDL_PAD_KEY_ROW0__AUD5_TXD	0x130b0
++			MX6QDL_PAD_KEY_COL1__AUD5_TXFS	0x130b0
++			MX6QDL_PAD_KEY_ROW1__AUD5_RXD	0x130b0
++			/* SGTL5000 sys_mclk */
++			MX6QDL_PAD_GPIO_0__CCM_CLKO1	0x000b0
++		>;
++	};
++
++	pinctrl_cam_mclk: cammclkgrp {
++		fsl,pins = <
++			/* Parallel Camera CAM sys_mclk */
++			MX6QDL_PAD_NANDF_CS2__CCM_CLKO2	0x00b0
++		>;
++	};
++
++	pinctrl_ecspi4: ecspi4grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D22__ECSPI4_MISO	0x100b1
++			MX6QDL_PAD_EIM_D28__ECSPI4_MOSI	0x100b1
++			MX6QDL_PAD_EIM_D21__ECSPI4_SCLK 0x100b1
++			/* SPI CS */
++			MX6QDL_PAD_EIM_A25__GPIO5_IO02	0x000b1
++		>;
++	};
++
++	pinctrl_enet: enetgrp {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
++			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
++			MX6QDL_PAD_ENET_RXD0__ENET_RX_DATA0	0x1b0b0
++			MX6QDL_PAD_ENET_RXD1__ENET_RX_DATA1	0x1b0b0
++			MX6QDL_PAD_ENET_RX_ER__ENET_RX_ER	0x1b0b0
++			MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN	0x1b0b0
++			MX6QDL_PAD_ENET_TXD0__ENET_TX_DATA0	0x1b0b0
++			MX6QDL_PAD_ENET_TXD1__ENET_TX_DATA1	0x1b0b0
++			MX6QDL_PAD_ENET_CRS_DV__ENET_RX_EN	0x1b0b0
++			MX6QDL_PAD_GPIO_16__ENET_REF_CLK     ((1<<30) | 0x1b0b0)
++		>;
++	};
++
++	pinctrl_flexcan1: flexcan1grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_7__FLEXCAN1_TX		0x1b0b0
++			MX6QDL_PAD_GPIO_8__FLEXCAN1_RX		0x1b0b0
++		>;
++	};
++
++	pinctrl_flexcan2: flexcan2grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX	0x1b0b0
++			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX	0x1b0b0
++		>;
++	};
++
++	pinctrl_gpio_bl_on: gpioblon {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D26__GPIO3_IO26		0x1b0b0
++		>;
++	};
++
++	pinctrl_gpio_keys: gpiokeys {
++		fsl,pins = <
++			/* Power button */
++			MX6QDL_PAD_EIM_A16__GPIO2_IO22		0x1b0b0
++		>;
++	};
++
++	pinctrl_hdmi_ddc: hdmiddcgrp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL3__HDMI_TX_DDC_SCL 0x4001b8b1
++			MX6QDL_PAD_KEY_ROW3__HDMI_TX_DDC_SDA 0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_EB2__I2C2_SCL 0x4001b8b1
++			MX6QDL_PAD_EIM_D16__I2C2_SDA 0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_3__I2C3_SCL 0x4001b8b1
++			MX6QDL_PAD_GPIO_6__I2C3_SDA 0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c3_recovery: i2c3recoverygrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_3__GPIO1_IO03 0x4001b8b1
++			MX6QDL_PAD_GPIO_6__GPIO1_IO06 0x4001b8b1
++		>;
++	};
++
++	pinctrl_ipu1_csi0: ipu1csi0grp { /* Parallel Camera */
++		fsl,pins = <
++			MX6QDL_PAD_EIM_A17__IPU1_CSI1_DATA12	0xb0b1
++			MX6QDL_PAD_EIM_A18__IPU1_CSI1_DATA13	0xb0b1
++			MX6QDL_PAD_EIM_A19__IPU1_CSI1_DATA14	0xb0b1
++			MX6QDL_PAD_EIM_A20__IPU1_CSI1_DATA15	0xb0b1
++			MX6QDL_PAD_EIM_A21__IPU1_CSI1_DATA16	0xb0b1
++			MX6QDL_PAD_EIM_A22__IPU1_CSI1_DATA17	0xb0b1
++			MX6QDL_PAD_EIM_A23__IPU1_CSI1_DATA18	0xb0b1
++			MX6QDL_PAD_EIM_A24__IPU1_CSI1_DATA19	0xb0b1
++			MX6QDL_PAD_EIM_D17__IPU1_CSI1_PIXCLK	0xb0b1
++			MX6QDL_PAD_EIM_EB3__IPU1_CSI1_HSYNC	0xb0b1
++			MX6QDL_PAD_EIM_D29__IPU1_CSI1_VSYNC	0xb0b1
++			/* Disable PWM pins on camera interface */
++			MX6QDL_PAD_SD4_DAT1__GPIO2_IO09		0x40
++			MX6QDL_PAD_GPIO_1__GPIO1_IO01		0x40
++		>;
++	};
++
++	pinctrl_ipu1_lcdif: ipu1lcdifgrp {
++		fsl,pins = <
++			MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK	0xa1
++			MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15		0xa1
++			MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02		0xa1
++			MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03		0xa1
++			MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00	0xa1
++			MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01	0xa1
++			MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02	0xa1
++			MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03	0xa1
++			MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04	0xa1
++			MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05	0xa1
++			MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06	0xa1
++			MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07	0xa1
++			MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08	0xa1
++			MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09	0xa1
++			MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10	0xa1
++			MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11	0xa1
++			MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12	0xa1
++			MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13	0xa1
++			MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14	0xa1
++			MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15	0xa1
++			MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16	0xa1
++			MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17	0xa1
++		>;
++	};
++
++	pinctrl_mic_gnd: gpiomicgnd {
++		fsl,pins = <
++			/* Controls Mic GND, PU or '1' pull Mic GND to GND */
++			MX6QDL_PAD_RGMII_TD1__GPIO6_IO21 0x1b0b0
++		>;
++	};
++
++	pinctrl_mmc_cd: gpiommccd {
++		fsl,pins = <
++			MX6QDL_PAD_NANDF_D5__GPIO2_IO05	0x80000000
++		>;
++	};
++
++	pinctrl_pwm1: pwm1grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_9__PWM1_OUT	0x1b0b1
++		>;
++	};
++
++	pinctrl_pwm2: pwm2grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_1__PWM2_OUT	0x1b0b1
++			MX6QDL_PAD_EIM_A21__GPIO2_IO17	0x00040
++		>;
++	};
++
++	pinctrl_pwm3: pwm3grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD4_DAT1__PWM3_OUT	0x1b0b1
++			MX6QDL_PAD_EIM_A22__GPIO2_IO16	0x00040
++		>;
++	};
++
++	pinctrl_pwm4: pwm4grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD4_DAT2__PWM4_OUT	0x1b0b1
++		>;
++	};
++
++	pinctrl_regulator_usbh_pwr: gpioregusbhpwrgrp {
++		fsl,pins = <
++			/* USBH_EN */
++			MX6QDL_PAD_EIM_D31__GPIO3_IO31	0x0f058
++		>;
++	};
++
++	pinctrl_spdif: spdifgrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_17__SPDIF_OUT 0x1b0b0
++		>;
++	};
++
++	pinctrl_touch_int: gpiotouchintgrp {
++		fsl,pins = <
++			/* STMPE811 interrupt */
++			MX6QDL_PAD_RGMII_TD0__GPIO6_IO20 0x1b0b0
++		>;
++	};
++
++	pinctrl_uart1_dce: uart1dcegrp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA 0x1b0b1
++			MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA 0x1b0b1
++		>;
++	};
++
++	/* DTE mode */
++	pinctrl_uart1_dte: uart1dtegrp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_DAT10__UART1_RX_DATA 0x1b0b1
++			MX6QDL_PAD_CSI0_DAT11__UART1_TX_DATA 0x1b0b1
++			MX6QDL_PAD_EIM_D19__UART1_RTS_B	0x1b0b1
++			MX6QDL_PAD_EIM_D20__UART1_CTS_B 0x1b0b1
++		>;
++	};
++
++	/* Additional DTR, DSR, DCD */
++	pinctrl_uart1_ctrl: uart1ctrlgrp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D23__UART1_DCD_B 0x1b0b0
++			MX6QDL_PAD_EIM_D24__UART1_DTR_B 0x1b0b0
++			MX6QDL_PAD_EIM_D25__UART1_DSR_B 0x1b0b0
++		>;
++	};
++
++	pinctrl_uart2_dte: uart2dtegrp {
++		fsl,pins = <
++			MX6QDL_PAD_SD4_DAT4__UART2_TX_DATA	0x1b0b1
++			MX6QDL_PAD_SD4_DAT7__UART2_RX_DATA	0x1b0b1
++			MX6QDL_PAD_SD4_DAT6__UART2_RTS_B	0x1b0b1
++			MX6QDL_PAD_SD4_DAT5__UART2_CTS_B	0x1b0b1
++		>;
++	};
++
++	pinctrl_uart3_dte: uart3dtegrp {
++		fsl,pins = <
++			MX6QDL_PAD_SD4_CLK__UART3_TX_DATA	0x1b0b1
++			MX6QDL_PAD_SD4_CMD__UART3_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_usbc_det: usbcdetgrp {
++		fsl,pins = <
++			/* USBC_DET */
++			MX6QDL_PAD_GPIO_17__GPIO7_IO12		0x1b0b0
++			/* USBC_DET_EN */
++			MX6QDL_PAD_RGMII_TX_CTL__GPIO6_IO26	0x0f058
++			/* USBC_DET_OVERWRITE */
++			MX6QDL_PAD_RGMII_RXC__GPIO6_IO30	0x0f058
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_CMD__SD1_CMD	0x17071
++			MX6QDL_PAD_SD1_CLK__SD1_CLK	0x10071
++			MX6QDL_PAD_SD1_DAT0__SD1_DATA0	0x17071
++			MX6QDL_PAD_SD1_DAT1__SD1_DATA1	0x17071
++			MX6QDL_PAD_SD1_DAT2__SD1_DATA2	0x17071
++			MX6QDL_PAD_SD1_DAT3__SD1_DATA3	0x17071
++		>;
++	};
++
++	pinctrl_usdhc3: usdhc3grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_CMD__SD3_CMD	0x17059
++			MX6QDL_PAD_SD3_CLK__SD3_CLK	0x10059
++			MX6QDL_PAD_SD3_DAT0__SD3_DATA0	0x17059
++			MX6QDL_PAD_SD3_DAT1__SD3_DATA1	0x17059
++			MX6QDL_PAD_SD3_DAT2__SD3_DATA2	0x17059
++			MX6QDL_PAD_SD3_DAT3__SD3_DATA3	0x17059
++			MX6QDL_PAD_SD3_DAT4__SD3_DATA4	0x17059
++			MX6QDL_PAD_SD3_DAT5__SD3_DATA5	0x17059
++			MX6QDL_PAD_SD3_DAT6__SD3_DATA6	0x17059
++			MX6QDL_PAD_SD3_DAT7__SD3_DATA7	0x17059
++			/* eMMC reset */
++			MX6QDL_PAD_SD3_RST__SD3_RESET	0x17059
++		>;
++	};
++
++	pinctrl_usdhc3_100mhz: usdhc3100mhzgrp {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_CMD__SD3_CMD	0x170b9
++			MX6QDL_PAD_SD3_CLK__SD3_CLK	0x100b9
++			MX6QDL_PAD_SD3_DAT0__SD3_DATA0	0x170b9
++			MX6QDL_PAD_SD3_DAT1__SD3_DATA1	0x170b9
++			MX6QDL_PAD_SD3_DAT2__SD3_DATA2	0x170b9
++			MX6QDL_PAD_SD3_DAT3__SD3_DATA3	0x170b9
++			MX6QDL_PAD_SD3_DAT4__SD3_DATA4	0x170b9
++			MX6QDL_PAD_SD3_DAT5__SD3_DATA5	0x170b9
++			MX6QDL_PAD_SD3_DAT6__SD3_DATA6	0x170b9
++			MX6QDL_PAD_SD3_DAT7__SD3_DATA7	0x170b9
++			/* eMMC reset */
++			MX6QDL_PAD_SD3_RST__SD3_RESET	0x170b9
++		>;
++	};
++
++	pinctrl_usdhc3_200mhz: usdhc3200mhzgrp {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_CMD__SD3_CMD	0x170f9
++			MX6QDL_PAD_SD3_CLK__SD3_CLK	0x100f9
++			MX6QDL_PAD_SD3_DAT0__SD3_DATA0	0x170f9
++			MX6QDL_PAD_SD3_DAT1__SD3_DATA1	0x170f9
++			MX6QDL_PAD_SD3_DAT2__SD3_DATA2	0x170f9
++			MX6QDL_PAD_SD3_DAT3__SD3_DATA3	0x170f9
++			MX6QDL_PAD_SD3_DAT4__SD3_DATA4	0x170f9
++			MX6QDL_PAD_SD3_DAT5__SD3_DATA5	0x170f9
++			MX6QDL_PAD_SD3_DAT6__SD3_DATA6	0x170f9
++			MX6QDL_PAD_SD3_DAT7__SD3_DATA7	0x170f9
++			/* eMMC reset */
++			MX6QDL_PAD_SD3_RST__SD3_RESET	0x170f9
++		>;
++	};
++
++	pinctrl_weim_cs0: weimcs0grp {
++		fsl,pins = <
++			/* nEXT_CS0 */
++			MX6QDL_PAD_EIM_CS0__EIM_CS0_B	0xb0b1
++		>;
++	};
++
++	pinctrl_weim_cs1: weimcs1grp {
++		fsl,pins = <
++			/* nEXT_CS1 */
++			MX6QDL_PAD_EIM_CS1__EIM_CS1_B	0xb0b1
++		>;
++	};
++
++	pinctrl_weim_cs2: weimcs2grp {
++		fsl,pins = <
++			/* nEXT_CS2 */
++			MX6QDL_PAD_SD2_DAT1__EIM_CS2_B	0xb0b1
++		>;
++	};
++
++	pinctrl_weim_sram: weimsramgrp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_OE__EIM_OE_B		0xb0b1
++			MX6QDL_PAD_EIM_RW__EIM_RW		0xb0b1
++			/* Data */
++			MX6QDL_PAD_CSI0_DATA_EN__EIM_DATA00	0x1b0b0
++			MX6QDL_PAD_CSI0_VSYNC__EIM_DATA01	0x1b0b0
++			MX6QDL_PAD_CSI0_DAT4__EIM_DATA02	0x1b0b0
++			MX6QDL_PAD_CSI0_DAT5__EIM_DATA03	0x1b0b0
++			MX6QDL_PAD_CSI0_DAT6__EIM_DATA04	0x1b0b0
++			MX6QDL_PAD_CSI0_DAT7__EIM_DATA05	0x1b0b0
++			MX6QDL_PAD_CSI0_DAT8__EIM_DATA06	0x1b0b0
++			MX6QDL_PAD_CSI0_DAT9__EIM_DATA07	0x1b0b0
++			MX6QDL_PAD_CSI0_DAT12__EIM_DATA08	0x1b0b0
++			MX6QDL_PAD_CSI0_DAT13__EIM_DATA09	0x1b0b0
++			MX6QDL_PAD_CSI0_DAT14__EIM_DATA10	0x1b0b0
++			MX6QDL_PAD_CSI0_DAT15__EIM_DATA11	0x1b0b0
++			MX6QDL_PAD_CSI0_DAT16__EIM_DATA12	0x1b0b0
++			MX6QDL_PAD_CSI0_DAT17__EIM_DATA13	0x1b0b0
++			MX6QDL_PAD_CSI0_DAT18__EIM_DATA14	0x1b0b0
++			MX6QDL_PAD_CSI0_DAT19__EIM_DATA15	0x1b0b0
++			/* Address */
++			MX6QDL_PAD_EIM_DA15__EIM_AD15		0xb0b1
++			MX6QDL_PAD_EIM_DA14__EIM_AD14		0xb0b1
++			MX6QDL_PAD_EIM_DA13__EIM_AD13		0xb0b1
++			MX6QDL_PAD_EIM_DA12__EIM_AD12		0xb0b1
++			MX6QDL_PAD_EIM_DA11__EIM_AD11		0xb0b1
++			MX6QDL_PAD_EIM_DA10__EIM_AD10		0xb0b1
++			MX6QDL_PAD_EIM_DA9__EIM_AD09		0xb0b1
++			MX6QDL_PAD_EIM_DA8__EIM_AD08		0xb0b1
++			MX6QDL_PAD_EIM_DA7__EIM_AD07		0xb0b1
++			MX6QDL_PAD_EIM_DA6__EIM_AD06		0xb0b1
++			MX6QDL_PAD_EIM_DA5__EIM_AD05		0xb0b1
++			MX6QDL_PAD_EIM_DA4__EIM_AD04		0xb0b1
++			MX6QDL_PAD_EIM_DA3__EIM_AD03		0xb0b1
++			MX6QDL_PAD_EIM_DA2__EIM_AD02		0xb0b1
++			MX6QDL_PAD_EIM_DA1__EIM_AD01		0xb0b1
++			MX6QDL_PAD_EIM_DA0__EIM_AD00		0xb0b1
++		>;
++	};
++
++	pinctrl_weim_rdnwr: weimrdnwr {
++		fsl,pins = <
++			MX6QDL_PAD_SD2_CLK__GPIO1_IO10		0x0040
++			MX6QDL_PAD_RGMII_TD3__GPIO6_IO23	0x130b0
++		>;
++	};
++
++	pinctrl_weim_npwe: weimnpwe {
++		fsl,pins = <
++			MX6QDL_PAD_SD2_DAT3__GPIO1_IO12		0x0040
++			MX6QDL_PAD_RGMII_TD2__GPIO6_IO22	0x130b0
++		>;
++	};
++
++	/* ADDRESS[16:18] [25] used as GPIO */
++	pinctrl_weim_gpio_1: weimgpio-1 {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x1b0b0
++			MX6QDL_PAD_KEY_ROW2__GPIO4_IO11		0x1b0b0
++			MX6QDL_PAD_KEY_COL2__GPIO4_IO10		0x1b0b0
++			MX6QDL_PAD_DISP0_DAT23__GPIO5_IO17	0x1b0b0
++			MX6QDL_PAD_DISP0_DAT22__GPIO5_IO16	0x1b0b0
++			MX6QDL_PAD_DISP0_DAT21__GPIO5_IO15	0x1b0b0
++			MX6QDL_PAD_DISP0_DAT20__GPIO5_IO14	0x1b0b0
++			MX6QDL_PAD_DISP0_DAT19__GPIO5_IO13	0x1b0b0
++			MX6QDL_PAD_DISP0_DAT18__GPIO5_IO12	0x1b0b0
++			MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x1b0b0
++		>;
++	};
++
++	/* ADDRESS[19:24] used as GPIO */
++	pinctrl_weim_gpio_2: weimgpio-2 {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_ROW2__GPIO4_IO11		0x1b0b0
++			MX6QDL_PAD_KEY_COL2__GPIO4_IO10		0x1b0b0
++			MX6QDL_PAD_DISP0_DAT23__GPIO5_IO17	0x1b0b0
++			MX6QDL_PAD_DISP0_DAT22__GPIO5_IO16	0x1b0b0
++			MX6QDL_PAD_DISP0_DAT21__GPIO5_IO15	0x1b0b0
++			MX6QDL_PAD_DISP0_DAT20__GPIO5_IO14	0x1b0b0
++			MX6QDL_PAD_DISP0_DAT19__GPIO5_IO13	0x1b0b0
++			MX6QDL_PAD_DISP0_DAT18__GPIO5_IO12	0x1b0b0
++			MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x1b0b0
++		>;
++	};
++
++	/* DATA[16:31] used as GPIO */
++	pinctrl_weim_gpio_3: weimgpio-3 {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_LBA__GPIO2_IO27		0x1b0b0
++			MX6QDL_PAD_EIM_BCLK__GPIO6_IO31		0x1b0b0
++			MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x1b0b0
++			MX6QDL_PAD_NANDF_CS1__GPIO6_IO14	0x1b0b0
++			MX6QDL_PAD_NANDF_RB0__GPIO6_IO10	0x1b0b0
++			MX6QDL_PAD_NANDF_ALE__GPIO6_IO08	0x1b0b0
++			MX6QDL_PAD_NANDF_WP_B__GPIO6_IO09	0x1b0b0
++			MX6QDL_PAD_NANDF_CS0__GPIO6_IO11	0x1b0b0
++			MX6QDL_PAD_NANDF_CLE__GPIO6_IO07	0x1b0b0
++			MX6QDL_PAD_GPIO_19__GPIO4_IO05		0x1b0b0
++			MX6QDL_PAD_CSI0_MCLK__GPIO5_IO19	0x1b0b0
++			MX6QDL_PAD_CSI0_PIXCLK__GPIO5_IO18	0x1b0b0
++			MX6QDL_PAD_GPIO_4__GPIO1_IO04		0x1b0b0
++			MX6QDL_PAD_GPIO_5__GPIO1_IO05		0x1b0b0
++			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1b0b0
++		>;
++	};
++
++	/* DQM[0:3] used as GPIO */
++	pinctrl_weim_gpio_4: weimgpio-4 {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_EB0__GPIO2_IO28		0x1b0b0
++			MX6QDL_PAD_EIM_EB1__GPIO2_IO29		0x1b0b0
++			MX6QDL_PAD_SD2_DAT2__GPIO1_IO13		0x1b0b0
++			MX6QDL_PAD_NANDF_D0__GPIO2_IO00		0x1b0b0
++		>;
++	};
++
++	/* RDY used as GPIO */
++	pinctrl_weim_gpio_5: weimgpio-5 {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_WAIT__GPIO5_IO00		0x1b0b0
++		>;
++	};
++
++	/* ADDRESS[16] DATA[30] used as GPIO */
++	pinctrl_weim_gpio_6: weimgpio-6 {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x1b0b0
++			MX6QDL_PAD_KEY_COL4__GPIO4_IO14		0x1b0b0
++		>;
++	};
++};
+-- 
+2.10.0
