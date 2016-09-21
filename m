@@ -1,15 +1,16 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH 1/2] dt: bindings: add allwinner,
- otg-routed property for phy-sun4i-usb
-Date: Wed, 21 Sep 2016 15:19:56 +0800
-Message-ID: <6718551474442396@web16h.yandex.ru>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 1/2] dt: bindings: add allwinner,otg-routed property for
+ phy-sun4i-usb
+Date: Wed, 21 Sep 2016 10:30:24 +0300
+Message-ID: <43caf5c6-0198-9178-de93-90dc25e8b72b@redhat.com>
 References: <20160921070406.27445-1-icenowy@aosc.xyz>
  <4a1ab62a-4091-fd75-d753-fb30585dffa5@redhat.com>
+ <6718551474442396@web16h.yandex.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4a1ab62a-4091-fd75-d753-fb30585dffa5@redhat.com>
+In-Reply-To: <6718551474442396@web16h.yandex.ru>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,45 +20,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Andre Przywara <andre.przywara@arm.com>
+To: Icenowy Zheng <icenowy@aosc.xyz>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Andre Przywara <andre.przywara@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Reinder de Haan <patchesrdh@mveas.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-CgoyMS4wOS4yMDE2LCAxNToxMCwgIkhhbnMgZGUgR29lZGUiIDxoZGVnb2VkZUByZWRoYXQuY29t
-PjoKPiBIaSwKPgo+IE9uIDA5LzIxLzIwMTYgMTA6MDQgQU0sIEljZW5vd3kgWmhlbmcgd3JvdGU6
-Cj4+IMKgT24gc29tZSBuZXdlciBBbGx3aW5uZXIgU29DcyAoSDMgb3IgQTY0KSwgdGhlIFBIWTAg
-Y2FuIGJlIGVpdGhlciByb3V0ZWQgdG8KPj4gwqB0aGUgTVVTQiBjb250cm9sbGVyICh3aGljaCBp
-cyBhbiBPVEcgY29udHJvbGxlcikgb3IgdGhlIE9IQ0kvRUhDSSBwYWlyCj4+IMKgKHdoaWNoIGlz
-IGEgSG9zdC1vbmx5IGNvbnRyb2xsZXIsIGJ1dCBtb3JlIHN0YWJsZSBhbmQgZWFzeSB0byBpbXBs
-ZW1lbnQpLgo+Pgo+PiDCoFRoaXMgcHJvcGVydHkgbWFya3Mgd2hldGhlciBvbiBhIGNlcnRhaW4g
-Ym9hcmQgd2hpY2ggY29udHJvbGxlciBzaG91bGQgYmUKPj4gwqBhdHRhY2hlZCB0byB0aGUgUEhZ
-Lgo+Pgo+PiDCoFNpZ25lZC1vZmYtYnk6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy54eXo+
-Cj4KPiBFcm0sIEkgdGhpbmsgdGhhdCB0aGUgaWRlYSBoZXJlIGlzIHRvIGR5bmFtaWNhbGx5IHN3
-aXRjaCB0aGUgcm91dGluZwo+IGJhc2VkIG9uIHRoZSBpZC1waW4gb2YgdGhlIG90ZyBjb25uZWN0
-b3IuIElPVyB1c2UgdGhlIG11c2IgY29udHJvbGxlcgo+IGZvciBkZXZpY2UgbW9kZSwgYW5kIHRo
-ZSBlaGNpL29oY2kgcHJvcGVyIGZvciBwcm9wZXIgaG9zdCBzdXBwb3J0Cj4gd2hlbiBpbiBob3N0
-IG1vZGUuCgpBdCBsZWFzdCBvbiBzb21lIGJvYXJkcyB0aGlzIGltcGxlbWVudGF0aW9uIHdvcmtz
-Li4uCgooSSBtZWFuIFBpbmU2NCwgd2hpY2ggaGFzIHR3byBVU0ItQSBjb25uZWN0b3JzKQoKPgo+
-IFJlZ2FyZHMsCj4KPiBIYW5zCj4KPj4gwqAtLS0KPj4gwqDCoERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9waHkvc3VuNGktdXNiLXBoeS50eHQgfCA3ICsrKysrKysKPj4gwqDCoDEg
-ZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykKPj4KPj4gwqBkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9zdW40aS11c2ItcGh5LnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvc3VuNGktdXNiLXBoeS50eHQKPj4gwqBp
-bmRleCAyODcxNTBkLi41YzExZDU3IDEwMDY0NAo+PiDCoC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9waHkvc3VuNGktdXNiLXBoeS50eHQKPj4gwqArKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3N1bjRpLXVzYi1waHkudHh0Cj4+IMKgQEAg
-LTM2LDYgKzM2LDEzIEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4+IMKgwqAtIHVzYjFfdmJ1cy1z
-dXBwbHkgOiByZWd1bGF0b3IgcGhhbmRsZSBmb3IgY29udHJvbGxlciB1c2IxIHZidXMKPj4gwqDC
-oC0gdXNiMl92YnVzLXN1cHBseSA6IHJlZ3VsYXRvciBwaGFuZGxlIGZvciBjb250cm9sbGVyIHVz
-YjIgdmJ1cwo+Pgo+PiDCoCtPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciBIMyBvciBBNjQgU29DczoK
-Pj4gwqArLSBhbGx3aW5uZXIsb3RnLXJvdXRlZCA6IFVTQjAgKE9URykgUEhZIGlzIHJvdXRlZCB0
-byBPSENJL0VIQ0kgcGFpciByYXRoZXIgdGhhbgo+PiDCoCsgTVVTQi4gKGJvb2xlYW4sIGlmIHRo
-aXMgcHJvcGVydHkgaXMgc2V0LCB0aGUgT0hDSS9FSENJCj4+IMKgKyBjb250cm9sbGVycyBhdCBQ
-SFkwIHNob3VsZCBiZSBlbmFibGVkIGFuZCB0aGUgTVVTQgo+PiDCoCsgY29udHJvbGxlciBtdXN0
-ICpOT1QqIGJlIGVuYWJsZWQsIGFuZCB0aHVzIHRoZSBQSFkgY2FuCj4+IMKgKyBvbmx5IHdvcmsg
-aW4gaG9zdCBtb2RlKQo+PiDCoCsKPj4gwqDCoEV4YW1wbGU6Cj4+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgdXNicGh5OiBwaHlAMHgwMWMxMzQwMCB7Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCNwaHktY2VsbHMgPSA8MT47CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi,
+
+On 09/21/2016 10:19 AM, Icenowy Zheng wrote:
+>
+>
+> 21.09.2016, 15:10, "Hans de Goede" <hdegoede@redhat.com>:
+>> Hi,
+>>
+>> On 09/21/2016 10:04 AM, Icenowy Zheng wrote:
+>>>  On some newer Allwinner SoCs (H3 or A64), the PHY0 can be either routed to
+>>>  the MUSB controller (which is an OTG controller) or the OHCI/EHCI pair
+>>>  (which is a Host-only controller, but more stable and easy to implement).
+>>>
+>>>  This property marks whether on a certain board which controller should be
+>>>  attached to the PHY.
+>>>
+>>>  Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+>>
+>> Erm, I think that the idea here is to dynamically switch the routing
+>> based on the id-pin of the otg connector. IOW use the musb controller
+>> for device mode, and the ehci/ohci proper for proper host support
+>> when in host mode.
+>
+> At least on some boards this implementation works...
+>
+> (I mean Pine64, which has two USB-A connectors)
+
+Right and I think it is great that you're working on this.
+
+But even with an A connector on the board, we can still use the device
+mode (e.g. the SoC's native FEL mode will be used this way).
+
+Notice that you can fake id-pin changes by echoing a mode to:
+
+/sys/devices/platform/soc@01c00000/1c13000.usb/musb-hdrc.1.auto/mode
+
+Valid values to echo are: host, peripheral and otg.
+
+If you combine this with using either an USB A<->A cable, or using
+the port normally as a host you should be able to develop and test
+full otg support.
+
+Eventually we will need a full otg support rather then your current solution
+and I'm afraid that your solution may get in the way of full otg support.
+
+Regards,
+
+Hans
