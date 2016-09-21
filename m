@@ -1,82 +1,84 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v5 1/6] I2C: i2c-smbus: add device tree support
-Date: Wed, 21 Sep 2016 12:34:05 +0100
-Message-ID: <20160921113405.GE18176@leverpostej>
-References: <1474447274-90821-1-git-send-email-preid@electromag.com.au>
- <1474447274-90821-2-git-send-email-preid@electromag.com.au>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH v9 17/19] drm/virtio: kconfig: Fix recursive dependency issue.
+Date: Wed, 21 Sep 2016 13:09:33 +0100
+Message-ID: <CACvgo53fuoPVjBAkZbWFPVxosObjvxoDgFdR_BkSTgevqyGg9g@mail.gmail.com>
+References: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
+ <1473081421-16555-18-git-send-email-peter.griffin@linaro.org>
+ <CACvgo52_g7anGBd9HTUyYsbp5QmQEk9LR3nNHgSTgjQ29G3ViA@mail.gmail.com> <20160920083251.GB26093@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1474447274-90821-2-git-send-email-preid@electromag.com.au>
-Sender: linux-pm-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: wsa@the-dreams.de, robh+dt@kernel.org, sre@kernel.org, andrea.merello@gmail.com, karl-heinz@schneider-inet.de, arnd@arndb.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160920083251.GB26093@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, LAKML <linux-arm-kernel@lists.infradead.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, kernel@stlinux.com, vinod.koul@intel.com, patrice.chotard@st.com, dan.j.williams@intel.com, David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>, ohad@wizery.com, bjorn.andersson@linaro.org, devicetree <devicetree@vger.kernel.org>, linux-remoteproc@vger.kernel.org, ML dri-devel <dri-devel@lists.freedesktop.org>, "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>, dmaengine@vger.kernel.org, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 21, 2016 at 04:41:09PM +0800, Phil Reid wrote:
-> From: Andrea Merello <andrea.merello@gmail.com>
-> 
-> According to Documentation/i2c/smbus-protocol, a smbus controller driver
-> that wants to hook-in smbus extensions support, can call
-> i2c_setup_smbus_alert(). There are very few drivers that are currently
-> doing this.
-> 
-> However the i2c-smbus module can also work with any
-> smbus-extensions-unaware I2C controller, as long as we provide an extra
-> IRQ line connected to the I2C bus ALARM signal.
-> 
-> This patch makes it possible to go this way via DT. Note that the DT node
-> will indeed describe a (little) piece of HW, that is the routing of the
-> ALARM signal to an IRQ line (so it seems a fair DT use to me, but RFC).
+On 20 September 2016 at 09:32, Peter Griffin <peter.griffin@linaro.org> wrote:
+> Hi Emil,
+>
+> On Tue, 20 Sep 2016, Emil Velikov wrote:
+>
+>> On 5 September 2016 at 14:16, Peter Griffin <peter.griffin@linaro.org> wrote:
+>> > ST_SLIM_REMOTEPROC must select REMOTEPROC, which exposes the following
+>> > recursive dependency.
+>
+>
+>> >
+>> From a humble skim through remoteproc, drm and a few other subsystems
+>> I think the above is wrong. All the drivers (outside of remoteproc),
+>> that I've seen, depend on the core component, they don't select it.
+>
+> I will let Bjorn comment on the remoteproc subsystem Kconfig design, and
+> why it is like it is.
+>
+> For this particular SLIM_RPROC I have added it to Kconfig in keeping with all
+> the other drivers in the remoteproc subsystem which has exposed this recursive
+> dependency issue.
+>
+> For this particular kconfig symbol a quick grep reveals more drivers in
+> the kernel using 'select', than 'depend on'
+>
+> git grep "select VIRTIO" | wc -l
+> 14
+>
+> git grep "depends on VIRTIO" | wc -l
+> 10
+>
+Might be worth taking a closer look into these at some point.
 
-Which piece of hardware actually generates this IRQ? The I2C controller?
-A slave SMBus device? Or something else?
+>
+>> Furthermore most places explicitly hide the drivers from the menu if
+>> the core component isn't enabled.
+>
+> Remoteproc subsystem takes a different approach, the core code is only enabled
+> if a driver which relies on it is enabled. This IMHO makes sense, as
+> remoteproc is not widely used (only a few particular ARM SoC's).
+>
+> It is true that for subsystems which rely on the core component being
+> explicitly enabled, they often tend to hide drivers which depend on it
+> from the menu unless it is. This also makes sense.
+>
+>>
+>> Is there something that requires such a different/unusual behaviour in
+>> remoteproc ?
+>>
+>
+> I'm not sure it is that unusual...looking at config USB, it selects USB_COMMON in
+> mfd subsystem, client drivers select MFD_CORE.
+>
+On the USB case I'm not sure what the reasoning behind the USB vs
+USB_COMMON split. In seems that one could just fold them, but that's
+another topic. On the MFD side... it follows the select {,mis,ab}use.
+With one (the only one?) MFD driver not using/selecting MFD_CORE doing
+it's own version of mfd_add_devices... which could be reworked,
+possibly.
 
-I'm not at all familiar with I2C or SMBus, and a quick scan of
-Documentation/i2c/smbus-protocol, has left me none-the-wiser on that
-front.
+> I've added Arnd to this thread, as I've seen lots of Kconfig patches from him
+> recently, maybe he has some thoughts on whether this is the correct fix or not?
+>
+Ack. Fwiw, I believe that the reasoning put by Jani is perfeclty
+reasonable, but it'll be great to hear others as well.
 
-> Note that AFAICT, by design, i2c-smbus module pretends to be an I2C slave
-> with address 0x0C (that is the alarm response address), and IMHO this is
-> quite consistent with usage in the DT as a I2C child node.
-> 
-> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-smbus.txt | 20 ++++++++++++++++++++
->  drivers/i2c/i2c-smbus.c                             | 20 +++++++++++++++-----
->  2 files changed, 35 insertions(+), 5 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-smbus.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-smbus.txt b/Documentation/devicetree/bindings/i2c/i2c-smbus.txt
-> new file mode 100644
-> index 0000000..da83127
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-smbus.txt
-> @@ -0,0 +1,20 @@
-> +* i2c-smbus extensions
-> +
-> +Required Properties:
-> +  - compatible: Must contain "smbus_alert"
-
-Nit: s/_/-/ in compatible strings please.
-
-> +  - interrupts: The irq line for smbus ALERT signal
-> +  - reg: I2C slave address. Set to 0x0C (alert response address).
-> +
-> +Note: The i2c-smbus module registers itself as a slave I2C device. Whenever
-> +a smbus controller directly support smbus extensions (and its driver supports
-> +this), there is no need to add anything special to the DT. Otherwise, for using
-> +i2c-smbus with any smbus-extensions-unaware I2C controllers, you need to
-> +route the smbus ALARM signal to an extra IRQ line, thus you need to describe
-> +this in the DT.
-
-Bindings shouldn't mention driver details (e.g. the i2c-smbus module
-behaviour). It feels like we're creating a virtual device for the sake
-of a driver, rather than accurately capturing the hardware.
-
-So as-is, I don't think this is the right way to describe this.
-
-Thanks,
-Mark.
+Thanks
+Emil
