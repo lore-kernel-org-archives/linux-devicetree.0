@@ -1,126 +1,71 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-binding: rtc Add DT binding for NXP
- 85263 RTC
-Date: Wed, 21 Sep 2016 22:43:20 +0200
-Message-ID: <20160921204320.zueirn3cs42yhifd@piout.net>
-References: <20160801155029.32232.56063.stgit@localhost>
- <20160801155032.32232.68432.stgit@localhost>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] media: Add a driver for the ov5645 camera sensor.
+Date: Wed, 21 Sep 2016 23:54:43 +0300
+Message-ID: <57E2F393.6000706@iki.fi>
+References: <1467989679-29774-1-git-send-email-todor.tomov@linaro.org>
+ <1467989679-29774-3-git-send-email-todor.tomov@linaro.org>
+ <20160824101708.GI12130@valkosipuli.retiisi.org.uk>
+ <57BDBC2F.7020902@linaro.org>
+ <20160825071800.GK12130@valkosipuli.retiisi.org.uk>
+ <57E292AB.9060808@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBB2PBRO7QKGQEHEYJK4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20160801155032.32232.68432.stgit@localhost>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57E292AB.9060808-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, matrandg-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rob, can you review those bindings?
+Hi Todor,
 
-
-On 01/08/2016 at 17:50:32 +0200, Martin Fuzzey wrote :
-
-Please always include a commit message.
-
-> Signed-off-by: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/rtc/nxp,pcf85263.txt       |   41 ++++++++++++++++++++
->  include/dt-bindings/rtc/nxp,pcf85263.h             |   14 +++++++
->  2 files changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/nxp,pcf85263.txt
->  create mode 100644 include/dt-bindings/rtc/nxp,pcf85263.h
+Todor Tomov wrote:
+> Hi Sakari,
 > 
-> diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85263.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf85263.txt
-> new file mode 100644
-> index 0000000..03b9505
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85263.txt
-> @@ -0,0 +1,41 @@
-> +NXP PCF85263 I2C Real Time Clock
-> +
-> +Required properties:
-> +- compatible: must be: "nxp,rtc-pcf85263"
-> +- reg: must be the I2C address
-> +
-> +Optional properties:
-> +- interrupt-names: Which interrupt signal is used must be "INTA" or "INTB"
-> +    Defaults to "INTA"
-> +
-> +- quartz-load-capacitance: The internal capacitor to select for the quartz:
-> +	PCF85263_QUARTZCAP_7pF		[0]
-> +	PCF85263_QUARTZCAP_6pF		[1]
-> +	PCF85263_QUARTZCAP_12p5pF	[2] DEFAULT
-> +
-> +- quartz-drive-strength: Drive strength for the quartz:
-> +	PCF85263_QUARTZDRIVE_NORMAL	[0] DEFAULT
-> +	PCF85263_QUARTZDRIVE_LOW	[1]
-> +	PCF85263_QUARTZDRIVE_HIGH	[2]
-> +
-> +- quartz-low-jitter: Boolean property, if present enables low jitter mode which
-> +    reduces jitter at the cost of increased power consumption.
-> +
-
-Maybe that one should be handled using sysfs instead of DT as it is more
-policy than HW related.
-
-> +- wakeup-source: mark the chip as a wakeup source, independently of
-> +    the availability of an IRQ line connected to the SoC.
-> +    This is useful if the IRQ line is connected to a PMIC or other circuit
-> +    that can power up the device rather than to a normal SOC interrupt.
-> +
-> +Example:
-> +
-> +rtc@51 {
-> +	compatible = "nxp,pcf85263";
-> +	reg = <0x51>;
-> +
-> +	interrupt-parent = <&gpio4>;
-> +	interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
-> +	interrupt-names = "INTB";
-> +
-> +	quartz-load-capacitance = <PCF85263_QUARTZCAP_12p5pF>;
-> +	quartz-drive-strength = <PCF85263_QUARTZDRIVE_LOW>;
-> +};
-> diff --git a/include/dt-bindings/rtc/nxp,pcf85263.h b/include/dt-bindings/rtc/nxp,pcf85263.h
-> new file mode 100644
-> index 0000000..ea87ae4
-> --- /dev/null
-> +++ b/include/dt-bindings/rtc/nxp,pcf85263.h
-> @@ -0,0 +1,14 @@
-> +#ifndef _DT_BINDINGS_RTC_NXP_PCF85263_H
-> +#define _DT_BINDINGS_RTC_NXP_PCF85263_H
-> +
-> +/* Quartz capacitance */
-> +#define PCF85263_QUARTZCAP_7pF		0
-> +#define PCF85263_QUARTZCAP_6pF		1
-> +#define PCF85263_QUARTZCAP_12p5pF	2
-> +
-> +/* Quartz drive strength */
-> +#define PCF85263_QUARTZDRIVE_NORMAL	0
-> +#define PCF85263_QUARTZDRIVE_LOW	1
-> +#define PCF85263_QUARTZDRIVE_HIGH	2
-> +
-> +#endif /* _DT_BINDINGS_RTC_NXP_PCF85263_H */
+> One more question below:
 > 
+> On 08/25/2016 10:18 AM, Sakari Ailus wrote:
+>>>>> +
+>>>>> +static struct v4l2_subdev_core_ops ov5645_core_ops = {
+>>>>> +	.s_power = ov5645_s_power,
+>>>>> +};
+>>>>> +
+>>>>> +static struct v4l2_subdev_video_ops ov5645_video_ops = {
+>>>>> +	.s_stream = ov5645_s_stream,
+>>>>> +};
+>>>>> +
+>>>>> +static struct v4l2_subdev_pad_ops ov5645_subdev_pad_ops = {
+>>>>> +	.enum_mbus_code = ov5645_enum_mbus_code,
+>>>>> +	.enum_frame_size = ov5645_enum_frame_size,
+>>>>> +	.get_fmt = ov5645_get_format,
+>>>>> +	.set_fmt = ov5645_set_format,
+>>>>> +	.get_selection = ov5645_get_selection,
+>>>>
+>>>> Could you add init_cfg() pad op to initialise the try format and selections?
+>>>
+>>> Yes, I'll do that.
+> 
+> If I follow the code correctly this init_cfg() is called whenever the device is opened, right?
+> This means that the format will be reset to default values every time the userspace opens the device.
+> So I wonder if this is what we really want, or do we want to keep the last set format instead. For
+> example if we use media-ctl only to get the current format, this is already enough - it opens the
+> subdev node and resets the format to default.
+
+What's getting set in init_cfg() called through open system call is the
+try format, not the active format.
+
+Whether to choose the default or current format for the try format for a
+file handle was discussed some years ago and we indeed settled to use
+the default one, since that's independent of whatever configuration
+happened to be set --- quite possibly by a different application. AFAIR.
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Kind regards,
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Sakari Ailus
+sakari.ailus-X3B1VOXEql0@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
