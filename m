@@ -1,38 +1,150 @@
-From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2 3/3] mm: enable CONFIG_MOVABLE_NODE on powerpc
-Date: Wed, 21 Sep 2016 17:29:46 -0500
-Message-ID: <20160921222946.on4jcxgk7nerrbh4@arbab-laptop>
-References: <1473883618-14998-1-git-send-email-arbab@linux.vnet.ibm.com>
- <1473883618-14998-4-git-send-email-arbab@linux.vnet.ibm.com>
- <87h99cxv00.fsf@linux.vnet.ibm.com>
- <20160921054500.lrqktzjqjhuzewqg@arbab-laptop>
- <87oa3hwwxs.fsf@linux.vnet.ibm.com>
- <20160921140846.m6wp2ij5f2fx4cps@arbab-laptop>
- <87h999wbxi.fsf@linux.vnet.ibm.com>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 3/3] pci:aer: add support aer interrupt with none
+ MSI/MSI-X/INTx mode
+Date: Wed, 21 Sep 2016 17:37:41 -0500
+Message-ID: <20160921223741.GG20006@localhost>
+References: <1472625442-23309-2-git-send-email-po.liu@nxp.com>
+ <1473741659-17618-1-git-send-email-po.liu@nxp.com>
+ <1473741659-17618-3-git-send-email-po.liu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <owner-linux-mm@kvack.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <87h999wbxi.fsf@linux.vnet.ibm.com>
-Sender: owner-linux-mm@kvack.org
-To: "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
+In-Reply-To: <1473741659-17618-3-git-send-email-po.liu-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Po Liu <po.liu-3arQi8VN3Tc@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roy Zang <roy.zang-3arQi8VN3Tc@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 21, 2016 at 08:13:37PM +0530, Aneesh Kumar K.V wrote:
->So we are looking at two step online process here. The above explained
->the details nicely. Can you capture these details in the commit message. ie,
->to say that when using 'echo online-movable > state' we allow the move from
->normal to movable only if movable node is set. Also you may want to
->mention that we still don't support the auto-online to movable.
+On Tue, Sep 13, 2016 at 12:40:59PM +0800, Po Liu wrote:
+> On some platforms, root port doesn't support MSI/MSI-X/INTx in RC mode.
+> When chip support the aer interrupt with none MSI/MSI-X/INTx mode,
+> maybe there is interrupt line for aer pme etc. Search the interrupt
+> number in the fdt file. Then fixup the dev->irq with it.
+> 
+> Signed-off-by: Po Liu <po.liu-3arQi8VN3Tc@public.gmane.org>
+> ---
+> changes for v5:
+> 	- Add clear 'aer' interrup-names description
+> 
+>  .../devicetree/bindings/pci/layerscape-pci.txt     | 11 +++++---
+>  drivers/pci/pcie/portdrv_core.c                    | 31 +++++++++++++++++++---
+>  2 files changed, 35 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> index 41e9f55..101d0a7 100644
+> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> @@ -18,8 +18,10 @@ Required properties:
+>  - reg: base addresses and lengths of the PCIe controller
+>  - interrupts: A list of interrupt outputs of the controller. Must contain an
+>    entry for each entry in the interrupt-names property.
+> -- interrupt-names: Must include the following entries:
+> -  "intr": The interrupt that is asserted for controller interrupts
+> +- interrupt-names: It may be include the following entries:
+> +  "aer": The interrupt that is asserted for aer interrupt
+> +  "pme": The interrupt that is asserted for pme interrupt
+> +  ......
+>  - fsl,pcie-scfg: Must include two entries.
+>    The first entry must be a link to the SCFG device node
+>    The second entry must be '0' or '1' based on physical PCIe controller index.
+> @@ -35,8 +37,9 @@ Example:
+>  		reg = <0x00 0x03400000 0x0 0x00010000   /* controller registers */
+>  		       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
+>  		reg-names = "regs", "config";
+> -		interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
+> -		interrupt-names = "intr";
+> +		interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>, /* aer interrupt */
+> +			<GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>; /* pme interrupt */
+> +		interrupt-names = "aer", "pme";
+>  		fsl,pcie-scfg = <&scfg 0>;
+>  		#address-cells = <3>;
+>  		#size-cells = <2>;
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index e9270b4..7c4943d 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/pcieport_if.h>
+>  #include <linux/aer.h>
+> +#include <linux/of_irq.h>
+>  
+>  #include "../pci.h"
+>  #include "portdrv.h"
+> @@ -200,6 +201,28 @@ static int pcie_port_enable_msix(struct pci_dev *dev, int *vectors, int mask)
+>  static int init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+>  {
+>  	int i, irq = -1;
+> +	int ret;
+> +	struct device_node *np = NULL;
+> +
+> +	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++)
+> +		irqs[i] = 0;
+> +
+> +	if (dev->bus->dev.of_node)
+> +		np = dev->bus->dev.of_node;
+> +
+> +	/* If root port doesn't support MSI/MSI-X/INTx in RC mode,
+> +	 * request irq for aer
+> +	 */
+> +	if (IS_ENABLED(CONFIG_OF_IRQ) && np &&
+> +			(mask & PCIE_PORT_SERVICE_PME)) {
+> +		ret = of_irq_get_byname(np, "aer");
+> +		if (ret > 0) {
+> +			irqs[PCIE_PORT_SERVICE_AER_SHIFT] = ret;
+> +			if (dev->irq)
+> +				irq = dev->irq;
+> +			goto no_msi;
+> +		}
+> +	}
 
-Sure, no problem. I'll use a more verbose commit message in v3.
+We definitely need to solve this somehow.  But this approach doesn't
+feel quite right because it's hard to map this code back to anything
+in the spec, and it uses a completely platform-dependent name
+("interrupt-names aer") in code that is supposedly generic.
 
--- 
-Reza Arbab
+What if we added some sort of hook that would return the IRQ?  Maybe a
+pcibios_*() hook right now, with the idea of making it a
+pci_host_bridge function pointer someday?
 
+I know the body of the hook would look a lot like what you have here,
+but at least it would be more obvious that it's platform-specific
+code.
+
+I think your platform supports PME interrupts as well as AER, and
+they're different IRQs.  So you'd probably have to do something
+similar to the pcie_port_enable_msix() interface, so you can fill in
+both IRQs.
+
+>  	/*
+>  	 * If MSI cannot be used for PCIe PME or hotplug, we have to use
+> @@ -225,11 +248,13 @@ static int init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+>  		irq = dev->irq;
+>  
+>   no_msi:
+> -	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++)
+> -		irqs[i] = irq;
+> +	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++) {
+> +		if (!irqs[i])
+> +			irqs[i] = irq;
+> +	}
+>  	irqs[PCIE_PORT_SERVICE_VC_SHIFT] = -1;
+>  
+> -	if (irq < 0)
+> +	if (irq < 0 && irqs[PCIE_PORT_SERVICE_AER_SHIFT] < 0)
+>  		return -ENODEV;
+>  	return 0;
+>  }
+> -- 
+> 2.1.0.27.g96db324
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
