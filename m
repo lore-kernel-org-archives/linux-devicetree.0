@@ -1,164 +1,138 @@
-From: Brendan Jackman <brendan.jackman@arm.com>
-Subject: Re: [PATCH v5 02/16] dt/bindings: Update binding for PM domain idle states
-Date: Wed, 21 Sep 2016 10:48:47 +0100
-Message-ID: <8737kt37nk.fsf@arm.com>
-References: <20160902201605.GA1705@linaro.org> <87sht59mcw.fsf@arm.com> <20160912161600.GA21885@linaro.org> <a4fc71ae-6fa5-4142-6dd4-7bc96eb20186@arm.com> <87intz665i.fsf@arm.com> <20160913193844.GB28944@linaro.org> <87h99i6b5d.fsf@arm.com> <7hpoo3ix80.fsf@baylibre.com> <7af4c2d7-70a3-1881-2980-8ea49e594e5b@arm.com> <874m5cx6y8.fsf@arm.com> <20160920161748.GB46914@linaro.org>
+From: zhichang <zhichang.yuan02@gmail.com>
+Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on Hip06
+Date: Wed, 21 Sep 2016 18:09:11 +0800
+Message-ID: <e246c886-e0eb-b635-01ae-f00bbfcfb56b@gmail.com>
+References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
+ <8360154.kzsE8V8pTW@wuerfel>
+ <EE11001F9E5DDD47B7634E2F8A612F2E1F871F72@lhreml507-mbx>
+ <26171742.fWcrANu6EP@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <20160920161748.GB46914@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: Brendan Jackman <brendan.jackman@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Kevin Hilman <khilman@baylibre.com>, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ulf.hansson@linaro.org, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, lorenzo.pieralisi@arm.com, Juri.Lelli@arm.com, Axel Haslam <ahaslam+renesas@baylibre.com>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <26171742.fWcrANu6EP@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: Gabriele Paoloni <gabriele.paoloni@huawei.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "minyard@acm.org" <minyard@acm.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "zourongrong@gmail.com" <zourongrong@gmail.com>, "liviu.dudau@arm.com" <liviu.dudau@ar>
 List-Id: devicetree@vger.kernel.org
 
+Hi, Arnd,
 
-On Tue, Sep 20 2016 at 17:17, Lina Iyer <lina.iyer@linaro.org> wrote:
-> On Mon, Sep 19 2016 at 09:09 -0600, Brendan Jackman wrote:
+
+
+On 2016年09月15日 20:24, Arnd Bergmann wrote:
+> On Thursday, September 15, 2016 12:05:51 PM CEST Gabriele Paoloni wrote:
+>>> -----Original Message-----
+>>> On Thursday, September 15, 2016 8:02:27 AM CEST Gabriele Paoloni wrote:
+>>>>
+>>>> From <<3.1.1. Open Firmware Properties for Bus Nodes>> in
+>>>> http://www.firmware.org/1275/bindings/isa/isa0_4d.ps
+>>>>
+>>>> I quote:
+>>>> "There shall be an entry in the "ranges" property for each
+>>>> of the Memory and/or I/O spaces if that address space is
+>>>> mapped through the bridge."
+>>>>
+>>>> It seems to me that it is ok to have 1:1 address mapping and that
+>>>> therefore of_translate_address() should fail if "ranges" is not
+>>>> present.
+>>>
+>>> The key here is the definition of "mapped through the bridge".
+>>> I can only understand this as "directly mapped", i.e. an I/O
+>>> port of the child bus corresponds directly to a memory address
+>>> on the parent bus, but this is not the case here.
+>>>
+>>> The problem with adding the mapping here is that it looks
+>>> like it should be valid to create a page table entry for
+>>> the address returned from the translation and access it through
+>>> a pointer dereference, but that is clearly not possible.
 >>
->>On Fri, Sep 16 2016 at 18:39, Sudeep Holla <sudeep.holla@arm.com> wrote:
->>> Hi Kevin,
->>>
->>> Thanks for looking at this and simplifying various discussions we had so
->>> far. I was thinking of summarizing something very similar. I couldn't
->>> due to lack of time.
->>>
->>> On 16/09/16 18:13, Kevin Hilman wrote:
->>>
->>> [...]
->>>
->>>> I think we're having some terminology issues...
->>>>
->>>> FWIW, the kernel terminolgy is actually "PM domain", not power domain.
->>>> This was intentional because the goal of the PM domain was to group
->>>> devices that some PM features.  To be very specific to the kernel, they
->>>> us the same set of PM callbacks.  Today, this is most commonly used to
->>>> model power domains, where a group of devices share a power rail, but it
->>>> does not need to be limited to that.
->>>>
->>>
->>> Agreed/Understood.
->>>
->>>> That being said, I'm having a hard time understanding the root of the
->>>> disagreement.
->>>>
->>>
->>> Yes. I tried to convey the same earlier, but have failed. The only
->>> disagreement is about a small part of this DT bindings. We would like to
->>> make it completely hierarchical up to CPU nodes. More comments on that
->>> below.
->>>
->>>> It seems that you and Sudeep would like to use domain-idle-states to
->>>> replace/superceed cpu-idle-states with the primary goal (and benefit)
->>>> being that it simplifies the DT bindings.  Is that correct?
->>>>
->>>
->>> Correct, we want to deprecate cpu-idle-states with the introduction of
->>> this hierarchical PM bindings. Yes IMO, it simplifies things and avoids
->>> any ABI break we might trigger if we miss to consider some use-case now.
->>>
->>>> The objections have come in because that means that implies that CPUs
->>>> become their own domains, which may not be the case in hardware in the
->>>> sense that they share a power rail.
->>>>
->>>
->>> Agreed.
->>>
->>>> However, IMO, thinking of a CPU as it's own "PM domain" may make some
->>>> sense based on the terminology above.
->>>>
->>>
->>> Thanks for that, we do understand that it may not be 100% correct when
->>> we strictly considers hardware terminologies instead of above ones.
->>> As along as we see no issues with the above terminologies it should be fine.
->>>
->>>> I think the other objection may be that using a genpd to model domain
->>>> with only a single device in it may be overkill, and I agree with that.
->>>
->>> I too agree with that. Just because we represent that in DT in that way
->>> doesn't mean we need to create a genpd to model domain. We can always
->>> skip that if not required. That's pure implementation specifics and I
->>> have tried to convey the same in my previous emails. I must say you have
->>> summarized it very clearly in this email. Thanks again for that.
->>>
->>>> But, I'm not sure if making CPUs use domain-idle-states implies that
->>>> they necessarily have to use genpd is what you are proposing.  Maybe
->>>> someone could clarify that?
->>>>
->>>
->>> No, I have not proposing anything around implementation in the whole
->>> discussion so far. I have constrained myself just to DT bindings so far.
->>> That's the main reason why I was opposed to mentions of OS vs platform
->>> co-ordinated modes of CPU suspend in this discussion. IMO that's
->>> completely out of scope of this DT binding we are defining here.
->>>
-> Fair. But understand the PM Domain bindings do not impose any
-> requirements of hierarchy. Domain idle states are defined by the
-> property domain-idle-states in the domain node. How the DT bindings are
-> organized is immaterial to the PM Domain core.
->
-> It is a different exercise all together to look at CPU PSCI modes and
-> have a unified way of representing them in DT. The current set of
-> patches does not dictate where the domain idle states be located (pardon
-> my example in the patch, which was not updated to reflect that). That
-> said, I do require that domains that are controlled by the PSCI f/w be
-> defined under the 'psci' node in DT, which is fair. All the domain needs
-> are phandles to the idle state definitions; how the nodes are arranged
-> in DT is not of consequence to the driver.
->
-> In my mind providing a structure to CPU PM domains that can be used for
-> both OSI and PC is a separate effort.
-
-Do you mean a structure in the kernel or in DT? If the former, I agree,
-if the latter I strongly disagree. I think DT bindings should be totally
-unaware of PSCI suspend modes.
-
-> It may also club what Brendan
-> mentions below as part of the effort. The hierarchy that is presented in
-> [1] is inherent in the PM domain hierarchy and idle states don't have to
-> duplicate that information.
->
->>> Hope that helps/clarifies the misunderstanding/disagreement.
+>> I understand that somehow we are abusing of the ranges property
+>> here however the point is that with the current implementation ranges
+>> is needed because otherwise the ipmi driver probe will fail here:
 >>
->>Indeed. My intention was that the proposal would result in the exact
->>same kernel behaviour as Lina's current patchset, i.e. there is one
->>genpd per cluster, and CPU-level idle states are still handled by
->>cpuidle.
+>> of_ipmi_probe -> of_address_to_resource -> __of_address_to_resource
+>> -> of_translate_address -> __of_translate_address
 >>
->>The only change from the current patchset would be in initialisation
->>code: some coordination would need to be done to determine which idle
->>states go into cpuidle and which go into the genpds (whereas with the
->>current bindings, states from cpu-idle-states go into cpuidle and states
->>from domain-idle-states go into genpd). So you could say that this would
->>be a trade-off between binding simplicity and implementation simplicity.
+>> Now we had a bit of discussion internally and to avoid
+>> having ranges we came up with two possible solutions:
 >>
-> I would not oppose the idea of virtual domains around CPUs (I admit I am
-> not comfortable with the idea though), if that is the right thing to do.
-> But the scope of that work is extensive and should not be clubbed as
-> part of this proposal. It is an extensive code rework spanning cpuidle
-> drivers and PSCI and there are hooks in this code to help you achieve
-> that.
+>> 1) Using bit 3 of phys.hi cell in 2.2.1 of
+>> http://www.firmware.org/1275/bindings/isa/isa0_4d.ps
+>> This would mean reworking of_bus_isa_get_flags in 
+>> http://lxr.free-electrons.com/source/drivers/of/address.c#L398
+>> and setting a new flag to be checked in __of_address_to_resource
+>>
+>> 2) Adding a property in the bindings of each device that is
+>> a child of our LPC bus and modify __of_address_to_resource
+>> to check if the property is in the DT and eventually bypass
+>> of_translate_address
+>>
+>> However in both 1) and 2) there are some issues:
+>> in 1) we are not complying with the isa binding doc (we use
+>> a bit that should be zero); in 2) we need to modify the
+>> bindings documentation of the devices that are connected
+>> to our LPC controller (therefore modifying other devices
+>> bindings to fit our special case).
+>>
+>> I think that maybe having the 1:1 range mapping doesn't
+>> reflect well the reality but it is the less painful
+>> solution...
+>>
+>> What's your view?
+> 
+> We can check the 'i' bit for I/O space in of_bus_isa_get_flags,
+> and that should be enough to translate the I/O port number.
+> 
+> The only part we need to change here is to not go through
+> the crazy conversion all the way from PCI I/O space to a
+> physical address and back to a (logical) port number
+> that we do today with of_translate_address/pci_address_to_pio.
+> 
+Sorry for the late response! Several days' leave....
+Do you want to bypass of_translate_address and pci_address_to_pio for the registered specific PIO?
+I think the bypass for of_translate_address is ok, but worry some new issues will emerge without the
+conversion between physical address and logical/linux port number.
 
-If we want to take the per-CPU domains approach, we _have_ to do it as
-part of this proposal; it's a different set of semantics for the
-cpu-idle-states/domain-idle-states properties. It would mean
-cpu-idle-states is _superseded_ by domain idle states - implementing one
-solution (where cpu-idle-states and domain idle states are both taken
-into consideration by the implementation) then later switching to the
-alternative (where cpu-idle-states is ignored when a CPU PM domain tree
-is present) wouldn't make sense from a backward-compatibility
-perspective.
+When PCI host bridge which support IO operations is configured and enabled, the pci_address_to_pio will
+populate the logical IO range from ZERO for the first host bridge. Our LPC will also use part of the IO range
+started from ZERO. It will make in/out enter the wrong branch possibly.
 
-You're right that implementing the alternative proposal in the Linux
-kernel would mean quite a big rework. But, idealistically speaking,
-Linux-specific implementation realities shouldn't be a factor in Device
-Tree binding designs, right?
+In V2, the 0 - 0x1000 logical IO range is reserved for LPC use only. But it seems not so good. In this way,
+PCI has no chance to use low 4K IO range(logical).
 
-If people think that using both cpu-idle-states and domain-idle-states
-is the pragmatic choice (or object fundamentally to the idea of devices
-with idle states as being in their own PM domain) then that's fine IMO,
-but it's a one-time decision and I think we should be clear about why
-we're making it.
+So, in V3, applying the conversion from physical/cpu address to logical/linux IO port for any IO ranges,
+including the LPC, but recorded the logical IO range for LPC. When calling in/out with a logical port address,
+we can check this port fall into LPC logical IO range and get back the real IO.
 
-Cheers,
-Brendan
+Do you have further comments about this??
+
+
+> I can think of a several of ways to fix __of_address_to_resource
+> to just do the right thing according to the ISA binding to
+> make the normal drivers work.
+> 
+> The easiest solution is probably to hook into the
+> "taddr == OF_BAD_ADDR" case in __of_address_to_resource
+> and add a lookup for ISA buses there, and instead check
+> if some special I/O port operations were registered
+> for the port number, using an architecture specific
+> function that arm64 implements. Other architectures
+> like x86 that don't have a direct mapping between I/O
+> ports and MMIO addresses would implement that same
+> function differently.
+
+What about add the specific quirk for Hip06 LPC in of_empty_ranges_quirk()??
+
+you know, there are several cases in which of_translate_address return OF_BAD_ADDR.
+And if we only check the special port range, it seems a bit risky. If some device want to use this port range
+when no hip06 LPC is configured, the checking does not work. I think we should also check the relevant device.
+
+
+Best,
+Zhichang
+
+
+> 
+> 	Arnd
+> 
