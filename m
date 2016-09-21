@@ -1,69 +1,67 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: [PATCH v5 5/6] power: supply: sbs-battery: Add alert callback.
-Date: Wed, 21 Sep 2016 16:41:13 +0800
-Message-ID: <1474447274-90821-6-git-send-email-preid@electromag.com.au>
-References: <1474447274-90821-1-git-send-email-preid@electromag.com.au>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1474447274-90821-1-git-send-email-preid@electromag.com.au>
-Sender: linux-pm-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, andrea.merello@gmail.com, preid@electromag.com.au, karl-heinz@schneider-inet.de, arnd@arndb.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: tegra: nyan: Use proper IRQ type definitions
+Date: Wed, 21 Sep 2016 10:06:19 +0100
+Message-ID: <eb7540c0-4abd-86c0-7777-78fe1f12bc59@nvidia.com>
+References: <20160828173246.32621-1-contact@paulk.fr>
+ <ef69b6d2-ce6b-ff76-5c04-ab2176eb6ecc@nvidia.com>
+ <1474395289.1215.20.camel@paulk.fr>
+ <0ca614bf-4d27-9948-03e3-472d059f2153@nvidia.com>
+ <1474446366.1239.17.camel@paulk.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1474446366.1239.17.camel-W9ppeneeCTY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-To simplify the sbs-manager code and notification of battery removal
-use the i2c alert callback to notify the sbs-battery driver that an
-event has occurred.
 
-Signed-off-by: Phil Reid <preid@electromag.com.au>
----
- drivers/power/supply/sbs-battery.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+On 21/09/16 09:26, Paul Kocialkowski wrote:
+> * PGP Signed by an unknown key
+> 
+> Le mercredi 21 septembre 2016 à 08:52 +0100, Jon Hunter a écrit :
+>> On 20/09/16 19:14, Paul Kocialkowski wrote:
+>>>
+>>>> Old Signed by an unknown key
+>>>
+>>> Le mardi 20 septembre 2016 à 18:15 +0100, Jon Hunter a écrit :
+>>>>
+>>>> On 28/08/16 18:32, Paul Kocialkowski wrote:
+>>>>>
+>>>>>
+>>>>> This switches a few interrupt definitions that were using
+>>>>> GPIO_ACTIVE_HIGH as IRQ type, which is invalid.
+>>>>
+>>>> May be you are right, but this does not describe why this is invalid.
+>>>> Can you elaborate?
+>>>
+>>> GPIO_ACTIVE_HIGH is simply not the right kind of define to use in the
+>>> "interrupts" devicetree property. Values provided there are understood as
+>>> IRQ_TYPE_ defines.
+>>
+>> Right, but you are changing the type as GPIO_ACTIVE_HIGH = 0 and
+>> IRQ_TYPE_EDGE_FALLING = 2 and there is no comment about why this has
+>> been changed. It might be correct, but you need to explain it.
+> 
+> This actually makes the IRQ trigger values consistent with the drivers, that
+> define them regardless of devicetree anyway. The max98090 driver
+> has IRQF_TRIGGER_FALLING and bq24735 has IRQF_TRIGGER_RISING |
+> IRQF_TRIGGER_FALLING.
+> 
+> This is really more of a cosmetic change, it doesn't impact actual use.
 
-diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
-index d15ce9e..b1284e6 100644
---- a/drivers/power/supply/sbs-battery.c
-+++ b/drivers/power/supply/sbs-battery.c
-@@ -674,21 +674,30 @@ done:
- 	return 0;
- }
- 
--static irqreturn_t sbs_irq(int irq, void *devid)
-+static void sbs_supply_changed(struct sbs_info *chip)
- {
--	struct sbs_info *chip = devid;
- 	struct power_supply *battery = chip->power_supply;
- 	int ret;
- 
- 	ret = gpiod_get_value_cansleep(chip->gpio_detect);
- 	if (ret < 0)
--		return ret;
-+		return;
- 	chip->is_present = ret;
- 	power_supply_changed(battery);
-+}
- 
-+static irqreturn_t sbs_irq(int irq, void *devid)
-+{
-+	sbs_supply_changed(devid);
- 	return IRQ_HANDLED;
- }
- 
-+void sbs_alert(struct i2c_client *client, enum i2c_alert_protocol prot,
-+	unsigned int data)
-+{
-+	sbs_supply_changed(i2c_get_clientdata(client));
-+}
-+
- static void sbs_external_power_changed(struct power_supply *psy)
- {
- 	struct sbs_info *chip = power_supply_get_drvdata(psy);
-@@ -916,6 +925,7 @@ MODULE_DEVICE_TABLE(of, sbs_dt_ids);
- static struct i2c_driver sbs_battery_driver = {
- 	.probe		= sbs_probe,
- 	.remove		= sbs_remove,
-+	.alert		= sbs_alert,
- 	.id_table	= sbs_id,
- 	.driver = {
- 		.name	= "sbs-battery",
+So you are saying that the drivers don't actually use the DT types? May
+be that is ok, and yes this is cosmetic, but this should be stated in
+the changelog as it is not clear what is going on here.
+
+Cheers
+Jon
+
 -- 
-1.8.3.1
-
+nvpublic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
