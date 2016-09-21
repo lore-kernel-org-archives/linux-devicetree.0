@@ -1,217 +1,130 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v3 2/2] pci/aer: interrupt fixup in the quirk
-Date: Wed, 21 Sep 2016 16:53:34 -0500
-Message-ID: <20160921215334.GF20006@localhost>
-References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
- <1465892645-32381-1-git-send-email-po.liu@nxp.com>
- <1465892645-32381-2-git-send-email-po.liu@nxp.com>
- <20160729224154.GC13632@localhost>
- <VI1PR0401MB170958461E597D1BC7D280FF92E80@VI1PR0401MB1709.eurprd04.prod.outlook.com>
- <20160920204725.GA10804@localhost>
- <VI1PR0401MB170983489310BF383C8C7E5B92F60@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+From: Mahoda Ratnayaka <Mahoda.Ratnayaka@alliedtelesis.co.nz>
+Subject: Re: [PATCH v2] lm87: Allow channel data to be set from dts file.
+Date: Wed, 21 Sep 2016 21:58:36 +0000
+Message-ID: <1474495115890.10563@alliedtelesis.co.nz>
+References: <20160920052240.10242-1-mahoda.ratnayaka@alliedtelesis.co.nz>,<d3258440-db4e-a4c2-cca1-9683d0da63a8@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <VI1PR0401MB170983489310BF383C8C7E5B92F60@VI1PR0401MB1709.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Po Liu <po.liu@nxp.com>
-Cc: Roy Zang <roy.zang@nxp.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stuart Yoder <stuart.yoder@nxp.com>, "M.H. Lian" <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Mingkai Hu <mingkai.hu@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>, Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <d3258440-db4e-a4c2-cca1-9683d0da63a8@roeck-us.net>
+Content-Language: en-NZ
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 21, 2016 at 06:51:55AM +0000, Po Liu wrote:
-> Hi Bjorn,
-> 
-> >  -----Original Message-----
-> >  From: Bjorn Helgaas [mailto:helgaas@kernel.org]
-> >  Sent: Wednesday, September 21, 2016 4:47 AM
-> >  To: Po Liu
-> >  Cc: Roy Zang; Arnd Bergmann; devicetree@vger.kernel.org; Marc Zyngier;
-> >  linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; Stuart Yoder;
-> >  M.H. Lian; Murali Karicheri; Mingkai Hu; Bjorn Helgaas; Leo Li; Shawn
-> >  Guo; linux-arm-kernel@lists.infradead.org
-> >  Subject: Re: [PATCH v3 2/2] pci/aer: interrupt fixup in the quirk
-> >  
-> >  On Mon, Aug 22, 2016 at 10:09:18AM +0000, Po Liu wrote:
-> >  > Hi Bjorn,
-> >  >
-> >  > Sorry for late reply.
-> >  >
-> >  > I checked the updated kernel with Dongdong mentioned ACPI patch which
-> >  was truly affected my quirk patch uploaded. So I suppose the quirk patch
-> >  is not qualify to fix the bug.
-> >  
-> >  I don't understand what you're saying here.
-> >  
-> >  The quirk worked on your machine.  It apparently didn't work on
-> >  Dongdong's machine because of_irq_parse_and_map_pci() is run after the
-> >  quirk in this path:
-> >  
-> >    pci_device_probe
-> >      pcibios_alloc_irq                 # arm64
-> >        dev->irq = of_irq_parse_and_map_pci
-> >  
-> >  and of_irq_parse_and_map_pci() returned zero, probably because
-> >  of_irq_parse_pci() failed.  My guess is that the reason it works on your
-> >  machine but not Dongdong's is that your DTs are different such that
-> >  of_irq_parse_pci() works for you but not for Dongdong.
-> >  
-> >  I think the idea of of_irq_parse_and_map_pci() is to set up a device's
-> >  INTx line.  But that doesn't quite apply here because your device
-> >  doesn't actually *use* INTx.  So I don't know why of_irq_parse_pci()
-> >  works for you.  Maybe that's a symptom of a problem in your DT.
-> >  
-> >  Or maybe you're saying that the quirk *didn't* work on your machine when
-> >  you tested it in a kernel that included d8ed75d59332 ("ARM64:
-> >  PCI: ACPI support for legacy IRQs parsing and consolidation with DT
-> >  code"). 
-> 
-> Yes, this point is what I mean. After this patch my quirk patch would not work. 
-> Since I discussed with Dongdong, the patches d8ed75d59332 ACPI related were not be merged yet.
-> 
-> 
-> >  But that doesn't make sense either, because prior to
-> >  d8ed75d59332, we *always* set
-> >  
-> >    dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
-> >  
-> >  and after the patch we only do it if "acpi_disabled".  I guess I just
-> >  don't understand what you're saying.
-> 
-> Before the patch merged. pcibios_add_device()(which run the ->irq =
-> of_irq_parse_and_map_pci(dev, 0, 0);) was loaded before the
-> pci_fixup_device(pci_fixup_final).  But after the patch
-> d8ed75d59332("ARM64: PCI: ACPI support for legacy IRQs parsing and
-> consolidation with DT code") merged, the
-> pci_fixup_device(pci_fixup_final) run BEFORE the
-> pcibios_alloc_irq()(which run the ->irq =
-> of_irq_parse_and_map_pci(dev, 0, 0);). So the dev->irq were
-> overwhelm by the pcibios_alloc_irq().
-
-OK.  Prior to d8ed75d59332, arm64 overrode the default empty
-pcibios_add_device() implementation, and called
-of_irq_parse_and_map_pci() there.  d8ed75d59332 changed that function
-to pcibios_alloc_irq(), which is called later, in the driver probe
-path.
-
-> When I test, the acpi_disabled is '1' although my kernel config
-> default is CONFIG_ACPI=y. And no setting in the uboot with apci=xxx.
-> But this is another issue, I didn't deep to check it. 
-
-Likely your platform just doesn't have ACPI or something's wrong in
-the initial ACPI setup.
-
-> >  > I were keep thinking what your "explicitly checking for a root port
-> >  device" meaning. Do you mean I should upload again the first version
-> >  patch which fix it in the portdrv_core.c ? I would upload again if yes.
-> >  
-> >  No, I did not mean you should go back to the first version of the patch.
-> >  If we *can* do this in a quirk, I think that would be much better than
-> >  doing it in the PCIe port driver.  I meant that Dongdong's suggestion of
-> >  adding this:
-> >  
-> >    if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-> >      return;
-> >  
-> >  to your quirk made sense to me.
-> 
-> If the quirk patch could make workaround. It should be the better way.
-
-It doesn't sound like a quirk is going to work because all the quirks
-run too early.  I'll respond to the patch itself with more ideas.
-
-> >  > >  -----Original Message-----
-> >  > >  From: Bjorn Helgaas [mailto:helgaas@kernel.org]
-> >  > >  Sent: Saturday, July 30, 2016 6:42 AM
-> >  > >  To: Po Liu
-> >  > >  Cc: linux-pci@vger.kernel.org;
-> >  > > linux-arm-kernel@lists.infradead.org;
-> >  > >  linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Roy Zang;
-> >  > > Arnd  Bergmann; Marc Zyngier; Stuart Yoder; Yang-Leo Li; Minghuan
-> >  > > Lian; Murali  Karicheri; Bjorn Helgaas; Shawn Guo; Mingkai Hu
-> >  > >  Subject: Re: [PATCH v3 2/2] pci/aer: interrupt fixup in the quirk
-> >  > >
-> >  > >  On Tue, Jun 14, 2016 at 04:24:05PM +0800, Po Liu wrote:
-> >  > >  > On some platforms, root port doesn't support MSI/MSI-X/INTx in RC
-> >  mode.
-> >  > >  > When chip support the aer interrupt with none MSI/MSI-X/INTx
-> >  > > mode,  > maybe there is interrupt line for aer pme etc. Search the
-> >  > > interrupt  > number in the fdt file. Then fixup the dev->irq with it.
-> >  > >  >
-> >  > >  > Signed-off-by: Po Liu <po.liu@nxp.com>
-> >  > >
-> >  > >  I'm not sure where we're at with this.  Dongdong had some issue
-> >  > > (possibly with a version of the quirk on a different platform?), and
-> >  > > I  think the suggestion of explicitly checking for a root port
-> >  > > device was a  good one.
-> >  > >
-> >  > >  So please update and repost this for next cycle.
-> >  > >
-> >  > >  > ---
-> >  > >  > changes for V3:
-> >  > >  > 	- Move to quirk;
-> >  > >  > 	- Only correct the irq in RC mode;
-> >  > >  >
-> >  > >  >  drivers/pci/quirks.c | 29 +++++++++++++++++++++++++++++  >  1
-> >  > > file changed, 29 insertions(+)  >  > diff --git
-> >  > > a/drivers/pci/quirks.c b/drivers/pci/quirks.c index  >
-> >  > > ee72ebe..8b39cce 100644  > --- a/drivers/pci/quirks.c  > +++
-> >  > > b/drivers/pci/quirks.c  > @@ -25,6 +25,7 @@  >  #include
-> >  > > <linux/sched.h>  >  #include <linux/ktime.h>  >  #include
-> >  > > <linux/mm.h>  > +#include <linux/of_irq.h>
-> >  > >  >  #include <asm/dma.h>	/* isa_dma_bridge_buggy */
-> >  > >  >  #include "pci.h"
-> >  > >  >
-> >  > >  > @@ -4419,3 +4420,31 @@ static void quirk_intel_qat_vf_cap(struct
-> >  > > pci_dev *pdev)
-> >  > >  >  	}
-> >  > >  >  }
-> >  > >  >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443,  >
-> >  > > quirk_intel_qat_vf_cap);  > +  > +/* If root port doesn't support
-> >  > > MSI/MSI-X/INTx in RC mode,  > + * but use standalone irq. Read the
-> >  > > device tree for the aer  > + * interrupt number.
-> >  > >  > + */
-> >  > >  > +static void quirk_aer_interrupt(struct pci_dev *dev) {
-> >  > >  > +	int ret;
-> >  > >  > +	u8 header_type;
-> >  > >  > +	struct device_node *np = NULL;
-> >  > >  > +
-> >  > >  > +	/* Only for the RC mode device */
-> >  > >  > +	pci_read_config_byte(dev, PCI_HEADER_TYPE, &header_type);
-> >  > >  > +	if ((header_type & 0x7F) != PCI_HEADER_TYPE_BRIDGE)
-> >  > >  > +		return;
-> >  > >  > +
-> >  > >  > +	if (dev->bus->dev.of_node)
-> >  > >  > +		np = dev->bus->dev.of_node;
-> >  > >  > +
-> >  > >  > +	if (IS_ENABLED(CONFIG_OF_IRQ) && np) {
-> >  > >  > +		ret = of_irq_get_byname(np, "aer");
-> >  > >  > +		if (ret > 0) {
-> >  > >  > +			dev->no_msi = 1;
-> >  > >  > +			dev->irq = ret;
-> >  > >  > +		}
-> >  > >  > +	}
-> >  > >  > +}
-> >  > >  > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID,  >
-> >  > > +quirk_aer_interrupt);  > --  > 2.1.0.27.g96db324  >  >  >
-> >  > > _______________________________________________
-> >  > >  > linux-arm-kernel mailing list
-> >  > >  > linux-arm-kernel@lists.infradead.org
-> >  > >  > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> >  > _______________________________________________
-> >  > linux-arm-kernel mailing list
-> >  > linux-arm-kernel@lists.infradead.org
-> >  > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Thanks Guenter for the reply, I'll update things as you suggested and send =
+the patches back again. I'll try to get the documentation approved first an=
+d then send back the lm87 driver update patch.=0A=
+=0A=
+Thanks,=0A=
+Mahoda=0A=
+________________________________________=0A=
+From: linux-hwmon-owner@vger.kernel.org <linux-hwmon-owner@vger.kernel.org>=
+ on behalf of Guenter Roeck <linux@roeck-us.net>=0A=
+Sent: Tuesday, 20 September 2016 9:55 p.m.=0A=
+To: Mahoda Ratnayaka; Jean Delvare; linux-hwmon@vger.kernel.org; devicetree=
+@vger.kernel.org; Rob Herring=0A=
+Cc: Chris Packham=0A=
+Subject: Re: [PATCH v2] lm87: Allow channel data to be set from dts file.=
+=0A=
+=0A=
+On 09/19/2016 10:22 PM, Mahoda Ratnayaka wrote:=0A=
+> Currently there is no method for setting the channel=0A=
+> value from the DTS file. When, the driver uses a dts=0A=
+> file to initialize the driver platform_data is not set.=0A=
+> As a the result channel variable may not be set correctly.=0A=
+>=0A=
+> Without the channel variable set correctly, some of the=0A=
+> sensors will not be initialized correctly. For example=0A=
+> temp3 sensor sysfs entries.=0A=
+>=0A=
+> This adds the required functionality to set the channel=0A=
+> variable from the DTS file. This is done via reading the=0A=
+> reading a property named "channel" from the lm87 driver.=0A=
+>=0A=
+> Signed-off-by: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>=0A=
+> ---=0A=
+>=0A=
+> Notes:=0A=
+>      changes since v1:=0A=
+>      Removed unncessary variables channel and np.=0A=
+>      Update the code as per review comments.=0A=
+>=0A=
+>  Documentation/devicetree/bindings/hwmon/lm87.txt | 9 +++++++++=0A=
+>  drivers/hwmon/lm87.c                             | 7 ++++++-=0A=
+>  2 files changed, 15 insertions(+), 1 deletion(-)=0A=
+>=0A=
+> diff --git a/Documentation/devicetree/bindings/hwmon/lm87.txt b/Documenta=
+tion/devicetree/bindings/hwmon/lm87.txt=0A=
+> index fefcb48..1906e08 100644=0A=
+> --- a/Documentation/devicetree/bindings/hwmon/lm87.txt=0A=
+> +++ b/Documentation/devicetree/bindings/hwmon/lm87.txt=0A=
+> @@ -6,9 +6,18 @@ Required properties:=0A=
+>=0A=
+>  - reg: I2C address=0A=
+>=0A=
+> +optional properties:=0A=
+> +- channels: Value for the channel mode register.=0A=
+> +            This allows configuration of pins with=0A=
+> +            selectable uses on the LM87 device (e.g.=0A=
+> +            choosing between voltage and temperature=0A=
+> +            inputs).=0A=
+> +            See hwmon/lm87 for further information=0A=
+=0A=
+Rob is the ultimate person to comment here, but I think the property descri=
+ption=0A=
+by itself should be complete and technically independent of the implementat=
+ion.=0A=
+Documentation/hwmon/lm87 describes the implementation, so an (incomplete)=
+=0A=
+reference to it seems inappropriate.=0A=
+=0A=
+> +=0A=
+>  Example:=0A=
+>=0A=
+>  lm87@2e {=0A=
+>       compatible =3D "ti,lm87";=0A=
+>       reg =3D <0x2e>;=0A=
+> +     channels=3D<0x4>;=0A=
+>  };=0A=
+=0A=
+Please move those property descriptions into the first patch. It is confusi=
+ng=0A=
+to have two patches touching the properties, and the first patch as it is r=
+ight now=0A=
+is really useless.=0A=
+=0A=
+> diff --git a/drivers/hwmon/lm87.c b/drivers/hwmon/lm87.c=0A=
+> index a5e2958..358c1d4 100644=0A=
+> --- a/drivers/hwmon/lm87.c=0A=
+> +++ b/drivers/hwmon/lm87.c=0A=
+> @@ -858,8 +858,13 @@ static void lm87_remove_files(struct i2c_client *cli=
+ent)=0A=
+>  static void lm87_init_client(struct i2c_client *client)=0A=
+>  {=0A=
+>       struct lm87_data *data =3D i2c_get_clientdata(client);=0A=
+> +     u8 val =3D 0;=0A=
+>=0A=
+> -     if (dev_get_platdata(&client->dev)) {=0A=
+> +     if (!of_property_read_u8(client->dev.of_node, "channels", &val)) {=
+=0A=
+=0A=
+This ignores property value errors (-ENODATA, -EOVERFLOW).=0A=
+Is this what you want ?=0A=
+=0A=
+> +             data->channel =3D val;=0A=
+> +             lm87_write_value(client,=0A=
+> +                              LM87_REG_CHANNEL_MODE, data->channel);=0A=
+> +     } else if (dev_get_platdata(&client->dev)) {=0A=
+>               data->channel =3D *(u8 *)dev_get_platdata(&client->dev);=0A=
+>               lm87_write_value(client,=0A=
+>                                LM87_REG_CHANNEL_MODE, data->channel);=0A=
+>=0A=
+=0A=
+--=0A=
+To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in=
+=0A=
+the body of a message to majordomo@vger.kernel.org=0A=
+More majordomo info at  http://vger.kernel.org/majordomo-info.html=0A=
