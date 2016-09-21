@@ -1,568 +1,207 @@
-Return-Path: <muhammadabdul.wahab@supelec.fr>
-From: Muhammad Abdul WAHAB <muhammadabdul.wahab@supelec.fr>
-Subject: [PATCH] Adding Support for Coresight Components on Zynq 7000.
-Message-ID: <7ab0d935-1525-30a8-24f1-fa4c5bbeb872@supelec.fr>
-Date: Thu, 29 Sep 2016 12:10:15 +0200
+Return-Path: <mchehab@s-opensource.com>
+Date: Wed, 21 Sep 2016 08:56:07 -0300
+From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Subject: Re: [PATCH v4 29/29] docs-rst: move HOWTO and mentioned documents
+ to development-process/
+Message-ID: <20160921085607.764f22b6@vento.lan>
+In-Reply-To: <e05d7a0ad23f6ec723b572f217e2ecc1f6123d1d.1474280152.git.mchehab@s-opensource.com>
+References: <cover.1474280152.git.mchehab@s-opensource.com>
+	<e05d7a0ad23f6ec723b572f217e2ecc1f6123d1d.1474280152.git.mchehab@s-opensource.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
- boundary="------------C23A167FEE54F5563FF2420A"
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, Markus Heiser <markus.heiser@darmarit.de>, Jani Nikula <jani.nikula@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, Greg KH <greg@kroah.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Karsten Keil <isdn@linux-pingi.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Paolo Bonzini <pbonzini@redhat.com>, Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Wim Van Sebroeck <wim@iguana.be>, Harry Wei <harryxiyou@gmail.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Miklos Szeredi <miklos@szeredi.hu>, "David S. Miller" <davem@davemloft.net>, Shuah Khan <shuah@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Philippe Loctaux <phil@philippeloctaux.com>, Peter Loeffler <peter.loeffler@guruz.at>, Doug Smythies <doug.smythies@gmail.com>, Alex Henrie <alexhenrie24@gmail.com>, Chris Metcalf <cmetcalf@ezchip.com>, Jakub Wilk <jwilk@jwilk.net>, Darren Hart <dvhart@infradead.org>, Eddie Kovsky <ewk@edkovsky.org>, Luis de Bethencourt <luisbg@osg.samsung.com>, Richard Weinberger <richard@nod.at>, SeongJae Park <sj38.park@gmail.com>, Masanari Iida <standby24x7@gmail.com>, Minchan Kim <minchan@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Andrew Morton <akpm@linux-foundation.org>, Kalle Valo <kvalo@codeaurora.org>, Diego Viola <diego.viola@gmail.com>, "=?UTF-8?B?w5h5dmluZA==?= A. Holm" <sunny@sunbase.org>, Manuel =?UTF-8?B?UMOpZ291cmnDqS1Hb25uYXJk?= <mpg@elzevir.fr>, Jiri Kosina <jikos@kernel.org>, Alexander Kapshuk <alexander.kapshuk@gmail.com>, Wei Jiangang <weijg.fnst@cn.fujitsu.com>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, netdev@vger.kernel.org, stable@vger.kernel.org, kvm@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@zh-kernel.org, linux-pcmcia@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multi-part message in MIME format.
---------------C23A167FEE54F5563FF2420A
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Em Mon, 19 Sep 2016 08:08:03 -0300
+Mauro Carvalho Chehab <mchehab@s-opensource.com> escreveu:
 
-The Coresight components are present on the Zynq SoC but the corresponding
-device tree entries are missing. This patch adds device tree entries for
-coresight components while explaining how it was done in order to allow
-porting towards other boards easily.
+> In preparation to add those files to the Sphinx build logic,
+> move them to development-process/ dir and rename their extension
+> to RST.
+> 
+> Please notice that the main README file was not moved. It
+> probably makes sense to move it too as well, in order to be
+> able to parse it via Sphinx, but this could be counter-intuitive.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 
-By adding the entries for Coresight components in the device tree: if no
-files are created in sysfs file system, you need to contact the board 
-designer
-to sort out the problem. On some boards, Coresight components are not
-powered on boot.
+Jon,
 
-Signed-off-by: Muhammad Abdul Wahab <muhammadabdul.wahab@centralesupelec.fr>
+Just tested some alternative approaches for this patch:
+
+1) I tried to use:
+	../HOWTO
+
+at the development-process/index.rst.
+
+This didn't work, because of the file extension, as one might
+expect. 
+
+2) Use soft symlinks.
+
+This approach worked.
+
+See the enclosed patch.
+
+If you prefer such approach, please apply this patch as well:
+	[PATCH] docs-rst: add inter-document cross references
+
+In order to do the cross-references between those documents.
+
+PS.: It is still including SecurityBugs on the development
+process book (and the directory was not renamed to a shorter
+name).
+
+I intend to work on a patchset adding an "user" book, where
+SecurityBugs would fit better.
+
 ---
-The documentation file was very helpful
-(Documentation/devicetree/bindings/arm/coresight.txt). However, few details
-can be added to make it more clear for beginners.
 
-Things to modify in device tree when changing the board are mainly:
+docs-rst: add documents to development-process
+    
+Add several documents to the development-process ReST book.
+    
+As we don't want renames, use symlinks instead, keeping those
+documents on their original place.
+    
+Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 
-- address
-- `clocks` field
-- some references in other entries may be missing (e.g. for `CPU` field in
-   ETM/PTM component, references may need to be created)
-
-Furthermore, the `reg` field should be adapted according to
-`#address-cells` and `#size-cells`. It may appear obvious, not for
-beginners.
-
-## Testing
-
-The trace sink components need to be enabled by accessing through sysfile
-system.
-
-     echo 1 > /sys/bus/coresight/devices/@addr.etb/enable\_sink
-
-Then enable the CS source component:
-
-     echo 1 > /sys/bus/coresight/devices/@addr.ptm/enable\_source
-
-By default, CS Source components are configured to trace the kernel.
-
-Then the trace can be read by dumping ETB.
-
-     dd if=/dev/@addr.etb of=trace_kernel.bin
-
-The trace can be visualized by:
-
-     hexdump -C trace_kernel.bin
-
-Or stored using:
-
-     hexdump -C trace_kernel.bin > trace_kernel.txt
-
-The trace need to be decoded to be readable. All these above steps can now
-be performed with Perf Library which was not available at the time I was
-playing with DT entries.
-
---- linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi.orig     2016-07-24 
-21:23:50.000000000 +0200
-+++ linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi    2016-09-28 
-19:13:52.651881000 +0200
-@@ -363,5 +363,159 @@
-              reg = <0xf8005000 0x1000>;
-              timeout-sec = <10>;
-          };
+diff --git a/Documentation/development-process/Changes.rst b/Documentation/development-process/Changes.rst
+new file mode 120000
+index 000000000000..91698e7753f1
+--- /dev/null
++++ b/Documentation/development-process/Changes.rst
+@@ -0,0 +1 @@
++../Changes
+\ No newline at end of file
+diff --git a/Documentation/development-process/CodingStyle.rst b/Documentation/development-process/CodingStyle.rst
+new file mode 120000
+index 000000000000..0377b2fe8778
+--- /dev/null
++++ b/Documentation/development-process/CodingStyle.rst
+@@ -0,0 +1 @@
++../CodingStyle
+\ No newline at end of file
+diff --git a/Documentation/development-process/HOWTO.rst b/Documentation/development-process/HOWTO.rst
+new file mode 120000
+index 000000000000..10734efe8eab
+--- /dev/null
++++ b/Documentation/development-process/HOWTO.rst
+@@ -0,0 +1 @@
++../HOWTO
+\ No newline at end of file
+diff --git a/Documentation/development-process/ManagementStyle.rst b/Documentation/development-process/ManagementStyle.rst
+new file mode 120000
+index 000000000000..a7d15159c108
+--- /dev/null
++++ b/Documentation/development-process/ManagementStyle.rst
+@@ -0,0 +1 @@
++../ManagementStyle
+\ No newline at end of file
+diff --git a/Documentation/development-process/SecurityBugs.rst b/Documentation/development-process/SecurityBugs.rst
+new file mode 120000
+index 000000000000..fa5504256c04
+--- /dev/null
++++ b/Documentation/development-process/SecurityBugs.rst
+@@ -0,0 +1 @@
++../SecurityBugs
+\ No newline at end of file
+diff --git a/Documentation/development-process/SubmitChecklist.rst b/Documentation/development-process/SubmitChecklist.rst
+new file mode 120000
+index 000000000000..7b75ef138e89
+--- /dev/null
++++ b/Documentation/development-process/SubmitChecklist.rst
+@@ -0,0 +1 @@
++../SubmitChecklist
+\ No newline at end of file
+diff --git a/Documentation/development-process/SubmittingDrivers.rst b/Documentation/development-process/SubmittingDrivers.rst
+new file mode 120000
+index 000000000000..955fc75e6759
+--- /dev/null
++++ b/Documentation/development-process/SubmittingDrivers.rst
+@@ -0,0 +1 @@
++../SubmittingDrivers
+\ No newline at end of file
+diff --git a/Documentation/development-process/SubmittingPatches.rst b/Documentation/development-process/SubmittingPatches.rst
+new file mode 120000
+index 000000000000..bd9bb84255d4
+--- /dev/null
++++ b/Documentation/development-process/SubmittingPatches.rst
+@@ -0,0 +1 @@
++../SubmittingPatches
+\ No newline at end of file
+diff --git a/Documentation/development-process/applying-patches.rst b/Documentation/development-process/applying-patches.rst
+new file mode 120000
+index 000000000000..c124a067a16b
+--- /dev/null
++++ b/Documentation/development-process/applying-patches.rst
+@@ -0,0 +1 @@
++../applying-patches.txt
+\ No newline at end of file
+diff --git a/Documentation/development-process/email-clients.rst b/Documentation/development-process/email-clients.rst
+new file mode 120000
+index 000000000000..b4bbad729cca
+--- /dev/null
++++ b/Documentation/development-process/email-clients.rst
+@@ -0,0 +1 @@
++../email-clients.txt
+\ No newline at end of file
+diff --git a/Documentation/development-process/index.rst b/Documentation/development-process/index.rst
+index c37475d91090..f54c15fe0ac1 100644
+--- a/Documentation/development-process/index.rst
++++ b/Documentation/development-process/index.rst
+@@ -1,3 +1,9 @@
++.. raw:: latex
 +
-+ etb@F8801000 {
-+ compatible = "arm,coresight-etb10", "arm,primecell";
-+ reg = <0xf8801000 0x1000>;
-+ coresight-default-sink;
-+ clocks = <&clkc 47>;
-+ clock-names = "apb_pclk";
++	\renewcommand\thesection*
++	\renewcommand\thesubsection*
 +
-+ port {
 +
-+ endpoint@0 {
-+ slave-mode;
-+ remote-endpoint = <0x8>;
-+ linux,phandle = <0xd>;
-+ phandle = <0xd>;
-+ };
-+ };
-+ };
+ Linux Kernel Development Documentation
+ ======================================
+ 
+@@ -6,4 +12,18 @@ Contents:
+ .. toctree::
+    :maxdepth: 2
+ 
++   HOWTO
++   Changes
++   CodingStyle
++   SubmittingPatches
++   SubmittingDrivers
++   stable_api_nonsense
++   SecurityBugs
++   ManagementStyle
++   stable_kernel_rules
++   kernel-docs
++   applying-patches
++   email-clients
++   SubmitChecklist
 +
-+ tpiu@F8803000 {
-+ compatible = "arm,coresight-tpiu", "arm,primecell";
-+ reg = <0xf8803000 0x1000>;
-+ clocks = <&clkc 47>, <&clkc 16>;
-+ clock-names = "apb_pclk", "fclk1";
-+ clock-frequency=<0xee6b280>;
-+
-+ port {
-+
-+ endpoint@0 {
-+ slave-mode;
-+ remote-endpoint = <0x9>;
-+ linux,phandle = <0xe>;
-+ phandle = <0xe>;
-+ };
-+ };
-+ };
-+
-+ funnel@F8804000 {
-+ compatible = "arm,coresight-funnel", "arm,primecell";
-+ reg = <0xf8804000 0x1000>;
-+ clocks = <&clkc 47>;
-+ clock-names = "apb_pclk";
-+
-+ ports {
-+ #address-cells = <0x1>;
-+ #size-cells = <0x0>;
-+
-+ port@0 {
-+ reg = <0x0>;
-+
-+ endpoint {
-+ remote-endpoint = <0xa>;
-+ linux,phandle = <0xf>;
-+ phandle = <0xf>;
-+ };
-+ };
-+
-+ port@1 {
-+ reg = <0x0>;
-+
-+ endpoint {
-+ slave-mode;
-+ remote-endpoint = <0xb>;
-+ linux,phandle = <0x11>;
-+ phandle = <0x11>;
-+ };
-+ };
-+
-+ port@2 {
-+ reg = <0x1>;
-+
-+ endpoint {
-+ slave-mode;
-+ remote-endpoint = <0xc>;
-+ linux,phandle = <0x13>;
-+ phandle = <0x13>;
-+ };
-+ };
-+ };
-+ };
-+
-+ replicator {
-+ compatible = "arm,coresight-replicator";
-+
-+ ports {
-+ #address-cells = <0x1>;
-+ #size-cells = <0x0>;
-+
-+ port@0 {
-+ reg = <0x0>;
-+
-+ endpoint {
-+ remote-endpoint = <0xd>;
-+ linux,phandle = <0x8>;
-+ phandle = <0x8>;
-+ };
-+ };
-+
-+ port@1 {
-+ reg = <0x1>;
-+
-+ endpoint {
-+ remote-endpoint = <0xe>;
-+ linux,phandle = <0x9>;
-+ phandle = <0x9>;
-+ };
-+ };
-+
-+ port@2 {
-+ reg = <0x0>;
-+
-+ endpoint {
-+ slave-mode;
-+ remote-endpoint = <0xf>;
-+ linux,phandle = <0xa>;
-+ phandle = <0xa>;
-+ };
-+ };
-+ };
-+ };
-+
-+ ptm0@F889C000 {
-+ compatible = "arm,coresight-etm3x", "arm,primecell";
-+ reg = <0xf889c000 0x1000>;
-+ cpu = <0x10>;
-+ clocks = <&clkc 47>;
-+ clock-names = "apb_pclk";
-+
-+ port {
-+
-+ endpoint {
-+ remote-endpoint = <0x11>;
-+ linux,phandle = <0xb>;
-+ phandle = <0xb>;
-+ };
-+ };
-+ };
-+
-+ ptm1@F889D000 {
-+ compatible = "arm,coresight-etm3x", "arm,primecell";
-+ reg = <0xf889d000 0x1000>;
-+ cpu = <0x12>;
-+ clocks = <&clkc 47>;
-+ clock-names = "apb_pclk";
-+
-+ port {
-+
-+ endpoint {
-+ remote-endpoint = <0x13>;
-+ linux,phandle = <0xc>;
-+ phandle = <0xc>;
-+ };
-+ };
-+ };
-      };
-  };
-
-
---------------C23A167FEE54F5563FF2420A
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 8bit
-
-<html>
-  <head>
-
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    <p>The Coresight components are present on the Zynq SoC but the
-      corresponding <br>
-      device tree entries are missing. This patch adds device tree
-      entries for <br>
-      coresight components while explaining how it was done in order to
-      allow <br>
-      porting towards other boards easily. <br>
-       <br>
-      By adding the entries for Coresight components in the device tree:
-      if no <br>
-      files are created in sysfs file system, you need to contact the
-      board designer<br>
-      to sort out the problem. On some boards, Coresight components are
-      not <br>
-      powered on boot.<br>
-      <br>
-      Signed-off-by: Muhammad Abdul Wahab
-      <a class="moz-txt-link-rfc2396E" href="mailto:muhammadabdul.wahab@centralesupelec.fr">&lt;muhammadabdul.wahab@centralesupelec.fr&gt;</a><br>
-      ---<br>
-      The documentation file was very helpful <br>
-      (Documentation/devicetree/bindings/arm/coresight.txt). However,
-      few details<br>
-      can be added to make it more clear for beginners.<br>
-      <br>
-      Things to modify in device tree when changing the board are
-      mainly: <br>
-      <br>
-      <span style="color: #808080; ">- </span>address<br>
-      <span style="color: #808080; ">- </span><span style="color:
-        #008000; ">`clocks`</span> field<br>
-      <span style="color: #808080; ">- </span>some references in other
-      entries may be missing (e.g. for <span style="color: #008000; ">`CPU`</span> field
-      in<br>
-        ETM/PTM component, references may need to be created)<br>
-      <br>
-      Furthermore, the <span style="color: #008000; ">`reg`</span> field
-      should be adapted according to <br>
-      <span style="color: #008000; ">`#address-cells`</span> and <span
-        style="color: #008000; ">`#size-cells`</span>. It may appear
-      obvious, not for <br>
-      beginners. <br>
-      <br>
-      <span style="color: #b22222; ">## Testing</span><br>
-      <br>
-      The trace sink components need to be enabled by accessing through
-      sysfile <br>
-      system. <br>
-      <br>
-      <span style="color: #008000; ">    echo 1 &gt;
-        /sys/bus/coresight/devices/@addr.etb/enable\_sink</span><br>
-      <br>
-      Then enable the CS source component: <br>
-      <br>
-      <span style="color: #008000; ">    echo 1 &gt;
-        /sys/bus/coresight/devices/@addr.ptm/enable\_source</span><br>
-      <br>
-      By default, CS Source components are configured to trace the
-      kernel.<br>
-      <br>
-      Then the trace can be read by dumping ETB. <br>
-      <br>
-      <span style="color: #008000; ">    dd <a class="moz-txt-link-abbreviated" href="mailto:if=/dev/@addr.etb">if=/dev/@addr.etb</a>
-        of=trace_kernel.bin</span><br>
-      <br>
-      The trace can be visualized by: <br>
-      <br>
-      <span style="color: #008000; ">    hexdump -C trace_kernel.bin </span><br>
-      <br>
-      Or stored using:<br>
-      <br>
-      <span style="color: #008000; ">    hexdump -C trace_kernel.bin
-        &gt; trace_kernel.txt</span><br>
-      <br>
-      The trace need to be decoded to be readable. All these above steps
-      can now <br>
-      be performed with Perf Library which was not available at the time
-      I was <br>
-      playing with DT entries. <br>
-      <br>
-      --- linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi.orig     2016-07-24
-      21:23:50.000000000 +0200<br>
-      +++ linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi    2016-09-28
-      19:13:52.651881000 +0200<br>
-      @@ -363,5 +363,159 @@<br>
-                   reg = &lt;0xf8005000 0x1000&gt;;<br>
-                   timeout-sec = &lt;10&gt;;<br>
-               };<br>
-      +<br>
-      <span style="color: #808080; ">+        </span>etb@F8801000 {<br>
-      <span style="color: #808080; ">+            </span>compatible =
-      "arm,coresight-etb10", "arm,primecell";<br>
-      <span style="color: #808080; ">+            </span>reg =
-      &lt;0xf8801000 0x1000&gt;;<br>
-      <span style="color: #808080; ">+            </span>coresight-default-sink;<br>
-      <span style="color: #808080; ">+            </span>clocks =
-      &lt;&amp;clkc 47&gt;;<br>
-      <span style="color: #808080; ">+            </span>clock-names =
-      "apb_pclk";<br>
-      +<br>
-      <span style="color: #808080; ">+            </span>port {<br>
-      +<br>
-      <span style="color: #808080; ">+                </span>endpoint@0
-      {<br>
-      <span style="color: #808080; ">+                    </span>slave-mode;<br>
-      <span style="color: #808080; ">+                    </span>remote-endpoint
-      = &lt;0x8&gt;;<br>
-      <span style="color: #808080; ">+                    </span>linux,phandle
-      = &lt;0xd&gt;;<br>
-      <span style="color: #808080; ">+                    </span>phandle
-      = &lt;0xd&gt;;<br>
-      <span style="color: #808080; ">+                </span>};<br>
-      <span style="color: #808080; ">+            </span>};<br>
-      <span style="color: #808080; ">+        </span>};<br>
-      +<br>
-      <span style="color: #808080; ">+        </span>tpiu@F8803000 {<br>
-      <span style="color: #808080; ">+            </span>compatible =
-      "arm,coresight-tpiu", "arm,primecell";<br>
-      <span style="color: #808080; ">+            </span>reg =
-      &lt;0xf8803000 0x1000&gt;;<br>
-      <span style="color: #808080; ">+            </span>clocks =
-      &lt;&amp;clkc 47&gt;, &lt;&amp;clkc 16&gt;;<br>
-      <span style="color: #808080; ">+            </span>clock-names =
-      "apb_pclk", "fclk1";<br>
-      <span style="color: #808080; ">+            </span>clock-frequency=&lt;0xee6b280&gt;;<br>
-      +<br>
-      <span style="color: #808080; ">+            </span>port {<br>
-      +<br>
-      <span style="color: #808080; ">+                </span>endpoint@0
-      {<br>
-      <span style="color: #808080; ">+                    </span>slave-mode;<br>
-      <span style="color: #808080; ">+                    </span>remote-endpoint
-      = &lt;0x9&gt;;<br>
-      <span style="color: #808080; ">+                    </span>linux,phandle
-      = &lt;0xe&gt;;<br>
-      <span style="color: #808080; ">+                    </span>phandle
-      = &lt;0xe&gt;;<br>
-      <span style="color: #808080; ">+                </span>};<br>
-      <span style="color: #808080; ">+            </span>};<br>
-      <span style="color: #808080; ">+        </span>};<br>
-      +<br>
-      <span style="color: #808080; ">+        </span>funnel@F8804000 {<br>
-      <span style="color: #808080; ">+            </span>compatible =
-      "arm,coresight-funnel", "arm,primecell";<br>
-      <span style="color: #808080; ">+            </span>reg =
-      &lt;0xf8804000 0x1000&gt;;<br>
-      <span style="color: #808080; ">+            </span>clocks =
-      &lt;&amp;clkc 47&gt;;<br>
-      <span style="color: #808080; ">+            </span>clock-names =
-      "apb_pclk";<br>
-      +<br>
-      <span style="color: #808080; ">+            </span>ports {<br>
-      <span style="color: #808080; ">+                </span>#address-cells
-      = &lt;0x1&gt;;<br>
-      <span style="color: #808080; ">+                </span>#size-cells
-      = &lt;0x0&gt;;<br>
-      +<br>
-      <span style="color: #808080; ">+                </span>port@0 {<br>
-      <span style="color: #808080; ">+                    </span>reg =
-      &lt;0x0&gt;;<br>
-      +<br>
-      <span style="color: #808080; ">+                    </span>endpoint
-      {<br>
-      <span style="color: #808080; ">+                        </span>remote-endpoint
-      = &lt;0xa&gt;;<br>
-      <span style="color: #808080; ">+                        </span>linux,phandle
-      = &lt;0xf&gt;;<br>
-      <span style="color: #808080; ">+                        </span>phandle
-      = &lt;0xf&gt;;<br>
-      <span style="color: #808080; ">+                    </span>};<br>
-      <span style="color: #808080; ">+                </span>};<br>
-      +<br>
-      <span style="color: #808080; ">+                </span>port@1 {<br>
-      <span style="color: #808080; ">+                    </span>reg =
-      &lt;0x0&gt;;<br>
-      +<br>
-      <span style="color: #808080; ">+                    </span>endpoint
-      {<br>
-      <span style="color: #808080; ">+                        </span>slave-mode;<br>
-      <span style="color: #808080; ">+                        </span>remote-endpoint
-      = &lt;0xb&gt;;<br>
-      <span style="color: #808080; ">+                        </span>linux,phandle
-      = &lt;0x11&gt;;<br>
-      <span style="color: #808080; ">+                        </span>phandle
-      = &lt;0x11&gt;;<br>
-      <span style="color: #808080; ">+                    </span>};<br>
-      <span style="color: #808080; ">+                </span>};<br>
-      +<br>
-      <span style="color: #808080; ">+                </span>port@2 {<br>
-      <span style="color: #808080; ">+                    </span>reg =
-      &lt;0x1&gt;;<br>
-      +<br>
-      <span style="color: #808080; ">+                    </span>endpoint
-      {<br>
-      <span style="color: #808080; ">+                        </span>slave-mode;<br>
-      <span style="color: #808080; ">+                        </span>remote-endpoint
-      = &lt;0xc&gt;;<br>
-      <span style="color: #808080; ">+                        </span>linux,phandle
-      = &lt;0x13&gt;;<br>
-      <span style="color: #808080; ">+                        </span>phandle
-      = &lt;0x13&gt;;<br>
-      <span style="color: #808080; ">+                    </span>};<br>
-      <span style="color: #808080; ">+                </span>};<br>
-      <span style="color: #808080; ">+            </span>};<br>
-      <span style="color: #808080; ">+        </span>};<br>
-      +<br>
-      <span style="color: #808080; ">+        </span>replicator {<br>
-      <span style="color: #808080; ">+            </span>compatible =
-      "arm,coresight-replicator";<br>
-      +<br>
-      <span style="color: #808080; ">+            </span>ports {<br>
-      <span style="color: #808080; ">+                </span>#address-cells
-      = &lt;0x1&gt;;<br>
-      <span style="color: #808080; ">+                </span>#size-cells
-      = &lt;0x0&gt;;<br>
-      +<br>
-      <span style="color: #808080; ">+                </span>port@0 {<br>
-      <span style="color: #808080; ">+                    </span>reg =
-      &lt;0x0&gt;;<br>
-      +<br>
-      <span style="color: #808080; ">+                    </span>endpoint
-      {<br>
-      <span style="color: #808080; ">+                        </span>remote-endpoint
-      = &lt;0xd&gt;;<br>
-      <span style="color: #808080; ">+                        </span>linux,phandle
-      = &lt;0x8&gt;;<br>
-      <span style="color: #808080; ">+                        </span>phandle
-      = &lt;0x8&gt;;<br>
-      <span style="color: #808080; ">+                    </span>};<br>
-      <span style="color: #808080; ">+                </span>};<br>
-      +<br>
-      <span style="color: #808080; ">+                </span>port@1 {<br>
-      <span style="color: #808080; ">+                    </span>reg =
-      &lt;0x1&gt;;<br>
-      +<br>
-      <span style="color: #808080; ">+                    </span>endpoint
-      {<br>
-      <span style="color: #808080; ">+                        </span>remote-endpoint
-      = &lt;0xe&gt;;<br>
-      <span style="color: #808080; ">+                        </span>linux,phandle
-      = &lt;0x9&gt;;<br>
-      <span style="color: #808080; ">+                        </span>phandle
-      = &lt;0x9&gt;;<br>
-      <span style="color: #808080; ">+                    </span>};<br>
-      <span style="color: #808080; ">+                </span>};<br>
-      +<br>
-      <span style="color: #808080; ">+                </span>port@2 {<br>
-      <span style="color: #808080; ">+                    </span>reg =
-      &lt;0x0&gt;;<br>
-      +<br>
-      <span style="color: #808080; ">+                    </span>endpoint
-      {<br>
-      <span style="color: #808080; ">+                        </span>slave-mode;<br>
-      <span style="color: #808080; ">+                        </span>remote-endpoint
-      = &lt;0xf&gt;;<br>
-      <span style="color: #808080; ">+                        </span>linux,phandle
-      = &lt;0xa&gt;;<br>
-      <span style="color: #808080; ">+                        </span>phandle
-      = &lt;0xa&gt;;<br>
-      <span style="color: #808080; ">+                    </span>};<br>
-      <span style="color: #808080; ">+                </span>};<br>
-      <span style="color: #808080; ">+            </span>};<br>
-      <span style="color: #808080; ">+        </span>};<br>
-      +<br>
-      <span style="color: #808080; ">+        </span>ptm0@F889C000 {<br>
-      <span style="color: #808080; ">+            </span>compatible =
-      "arm,coresight-etm3x", "arm,primecell";<br>
-      <span style="color: #808080; ">+            </span>reg =
-      &lt;0xf889c000 0x1000&gt;;<br>
-      <span style="color: #808080; ">+            </span>cpu =
-      &lt;0x10&gt;;<br>
-      <span style="color: #808080; ">+            </span>clocks =
-      &lt;&amp;clkc 47&gt;;<br>
-      <span style="color: #808080; ">+            </span>clock-names =
-      "apb_pclk";<br>
-      +<br>
-      <span style="color: #808080; ">+            </span>port {<br>
-      +<br>
-      <span style="color: #808080; ">+                </span>endpoint {<br>
-      <span style="color: #808080; ">+                    </span>remote-endpoint
-      = &lt;0x11&gt;;<br>
-      <span style="color: #808080; ">+                    </span>linux,phandle
-      = &lt;0xb&gt;;<br>
-      <span style="color: #808080; ">+                    </span>phandle
-      = &lt;0xb&gt;;<br>
-      <span style="color: #808080; ">+                </span>};<br>
-      <span style="color: #808080; ">+            </span>};<br>
-      <span style="color: #808080; ">+        </span>};<br>
-      +<br>
-      <span style="color: #808080; ">+        </span>ptm1@F889D000 {<br>
-      <span style="color: #808080; ">+            </span>compatible =
-      "arm,coresight-etm3x", "arm,primecell";<br>
-      <span style="color: #808080; ">+            </span>reg =
-      &lt;0xf889d000 0x1000&gt;;<br>
-      <span style="color: #808080; ">+            </span>cpu =
-      &lt;0x12&gt;;<br>
-      <span style="color: #808080; ">+            </span>clocks =
-      &lt;&amp;clkc 47&gt;;<br>
-      <span style="color: #808080; ">+            </span>clock-names =
-      "apb_pclk";<br>
-      +<br>
-      <span style="color: #808080; ">+            </span>port {<br>
-      +<br>
-      <span style="color: #808080; ">+                </span>endpoint {<br>
-      <span style="color: #808080; ">+                    </span>remote-endpoint
-      = &lt;0x13&gt;;<br>
-      <span style="color: #808080; ">+                    </span>linux,phandle
-      = &lt;0xc&gt;;<br>
-      <span style="color: #808080; ">+                    </span>phandle
-      = &lt;0xc&gt;;<br>
-      <span style="color: #808080; ">+                </span>};<br>
-      <span style="color: #808080; ">+            </span>};<br>
-      <span style="color: #808080; ">+        </span>};<br>
-           };<br>
-       };</p>
-  </body>
-</html>
-
---------------C23A167FEE54F5563FF2420A--
+    development-process
+diff --git a/Documentation/development-process/kernel-docs.rst b/Documentation/development-process/kernel-docs.rst
+new file mode 120000
+index 000000000000..1075b84514ff
+--- /dev/null
++++ b/Documentation/development-process/kernel-docs.rst
+@@ -0,0 +1 @@
++../kernel-docs.txt
+\ No newline at end of file
+diff --git a/Documentation/development-process/stable_api_nonsense.rst b/Documentation/development-process/stable_api_nonsense.rst
+new file mode 120000
+index 000000000000..2c44a79fdeef
+--- /dev/null
++++ b/Documentation/development-process/stable_api_nonsense.rst
+@@ -0,0 +1 @@
++../stable_api_nonsense.txt
+\ No newline at end of file
+diff --git a/Documentation/development-process/stable_kernel_rules.rst b/Documentation/development-process/stable_kernel_rules.rst
+new file mode 120000
+index 000000000000..320a01411304
+--- /dev/null
++++ b/Documentation/development-process/stable_kernel_rules.rst
+@@ -0,0 +1 @@
++../stable_kernel_rules.txt
+\ No newline at end of file
