@@ -1,74 +1,109 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6] rtc: omap: Support ext_wakeup configuration
-Date: Wed, 21 Sep 2016 21:48:37 +0200
-Message-ID: <20160921194837.loiekrtdxpuzqtzq@piout.net>
-References: <20160916092628.1049-1-m.niestroj@grinn-global.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on Hip06
+Date: Wed, 21 Sep 2016 22:18:16 +0200
+Message-ID: <3538381.vOsx75UXVU@wuerfel>
+References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
+ <e246c886-e0eb-b635-01ae-f00bbfcfb56b@gmail.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E1F87D223@lhreml507-mbx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBFWIRO7QKGQEGIIQBGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20160916092628.1049-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E1F87D223@lhreml507-mbx>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "minyard@acm.org" <minyard@acm.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, John Garry <john.garry@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, zhichang <zhichang.yuan02@gmail.com>, "zourongrong@gmail.com" <zourongrong@gmail.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, "kantyzc@163.com" <kantyzc@163.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infr>
 List-Id: devicetree@vger.kernel.org
 
-On 16/09/2016 at 11:26:28 +0200, Marcin Niestroj wrote :
-> Support configuration of ext_wakeup sources. This patch makes it
-> possible to enable ext_wakeup and set it's polarity, depending on board
-> configuration. AM335x's dedicated PMIC (tps65217) uses ext_wakeup to
-> notify about power-button presses. Handling power-button presses enables
-> to recover from RTC-only power states correctly.
-> 
-> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-> ---
-> Hi,
-> 
-> This patch adds support for ext_wakeup using generic pinconf device-tree
-> bindings, with one added custom property.
-> 
-> Changes v5 -> v6:
->  * Add depends on OF and PINCTRL in Kconfig (found by kbuild test robot)
-> 
-> Changes v4 -> v5 (suggested by Rob):
->  * Don't use GPIO defines in ti,input-polarity, use optional ti,active-high
->    boolean instead.
->  * Use '-' instead of '_' in node name.
-> 
-> Changes v1 -> v4:
->  * This is a total reimplementation, so it is not based on any of the previous
->    patch versions. This approach has been suggested by Tony and Grygorii
->    in [1].
-> 
-> Patch was developed on 4.7, rebased on 4.8-rc6, tested using chiliBoard.
-> 
-> [1] http://www.spinics.net/lists/devicetree/msg131516.html
-> 
->  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  21 +++
->  drivers/rtc/Kconfig                                |   3 +
->  drivers/rtc/rtc-omap.c                             | 168 ++++++++++++++++++++-
->  3 files changed, 184 insertions(+), 8 deletions(-)
-> 
-Applied, thanks.
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+T24gV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMjEsIDIwMTYgNDoyMDo1NSBQTSBDRVNUIEdhYnJpZWxl
+IFBhb2xvbmkgd3JvdGU6Cj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+ID4gRnJvbTog
+emhpY2hhbmcgW21haWx0bzp6aGljaGFuZy55dWFuMDJAZ21haWwuY29tXQo+ID4gT24gMjAxNuW5
+tDA55pyIMTXml6UgMjA6MjQsIEFybmQgQmVyZ21hbm4gd3JvdGU6Cj4gPiA+IE9uIFRodXJzZGF5
+LCBTZXB0ZW1iZXIgMTUsIDIwMTYgMTI6MDU6NTEgUE0gQ0VTVCBHYWJyaWVsZSBQYW9sb25pCj4g
+PiB3cm90ZToKPiA+ID4+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+ID4gPj4+IE9uIFRo
+dXJzZGF5LCBTZXB0ZW1iZXIgMTUsIDIwMTYgODowMjoyNyBBTSBDRVNUIEdhYnJpZWxlIFBhb2xv
+bmkKPiA+IHdyb3RlOgo+ID4gPj4gSSB0aGluayB0aGF0IG1heWJlIGhhdmluZyB0aGUgMToxIHJh
+bmdlIG1hcHBpbmcgZG9lc24ndAo+ID4gPj4gcmVmbGVjdCB3ZWxsIHRoZSByZWFsaXR5IGJ1dCBp
+dCBpcyB0aGUgbGVzcyBwYWluZnVsCj4gPiA+PiBzb2x1dGlvbi4uLgo+ID4gPj4KPiA+ID4+IFdo
+YXQncyB5b3VyIHZpZXc/Cj4gPiA+Cj4gPiA+IFdlIGNhbiBjaGVjayB0aGUgJ2knIGJpdCBmb3Ig
+SS9PIHNwYWNlIGluIG9mX2J1c19pc2FfZ2V0X2ZsYWdzLAo+ID4gPiBhbmQgdGhhdCBzaG91bGQg
+YmUgZW5vdWdoIHRvIHRyYW5zbGF0ZSB0aGUgSS9PIHBvcnQgbnVtYmVyLgo+ID4gPgo+ID4gPiBU
+aGUgb25seSBwYXJ0IHdlIG5lZWQgdG8gY2hhbmdlIGhlcmUgaXMgdG8gbm90IGdvIHRocm91Z2gK
+PiA+ID4gdGhlIGNyYXp5IGNvbnZlcnNpb24gYWxsIHRoZSB3YXkgZnJvbSBQQ0kgSS9PIHNwYWNl
+IHRvIGEKPiA+ID4gcGh5c2ljYWwgYWRkcmVzcyBhbmQgYmFjayB0byBhIChsb2dpY2FsKSBwb3J0
+IG51bWJlcgo+ID4gPiB0aGF0IHdlIGRvIHRvZGF5IHdpdGggb2ZfdHJhbnNsYXRlX2FkZHJlc3Mv
+cGNpX2FkZHJlc3NfdG9fcGlvLgo+ID4gPgo+ID4gU29ycnkgZm9yIHRoZSBsYXRlIHJlc3BvbnNl
+ISBTZXZlcmFsIGRheXMnIGxlYXZlLi4uLgo+ID4gRG8geW91IHdhbnQgdG8gYnlwYXNzIG9mX3Ry
+YW5zbGF0ZV9hZGRyZXNzIGFuZCBwY2lfYWRkcmVzc190b19waW8gZm9yCj4gPiB0aGUgcmVnaXN0
+ZXJlZCBzcGVjaWZpYyBQSU8/Cj4gPiBJIHRoaW5rIHRoZSBieXBhc3MgZm9yIG9mX3RyYW5zbGF0
+ZV9hZGRyZXNzIGlzIG9rLCBidXQgd29ycnkgc29tZSBuZXcKPiA+IGlzc3VlcyB3aWxsIGVtZXJn
+ZSB3aXRob3V0IHRoZQo+ID4gY29udmVyc2lvbiBiZXR3ZWVuIHBoeXNpY2FsIGFkZHJlc3MgYW5k
+IGxvZ2ljYWwvbGludXggcG9ydCBudW1iZXIuCgpUaGUgc2FtZSBmdW5jdGlvbiB0aGF0IGhhbmRs
+ZXMgdGhlIG5vbi10cmFuc2xhdGVkIHJlZ2lvbiB3b3VsZApkbyB0aGF0IGNvbnZlcnNpb24uCgo+
+ID4gV2hlbiBQQ0kgaG9zdCBicmlkZ2Ugd2hpY2ggc3VwcG9ydCBJTyBvcGVyYXRpb25zIGlzIGNv
+bmZpZ3VyZWQgYW5kCj4gPiBlbmFibGVkLCB0aGUgcGNpX2FkZHJlc3NfdG9fcGlvIHdpbGwKPiA+
+IHBvcHVsYXRlIHRoZSBsb2dpY2FsIElPIHJhbmdlIGZyb20gWkVSTyBmb3IgdGhlIGZpcnN0IGhv
+c3QgYnJpZGdlLiBPdXIKPiA+IExQQyB3aWxsIGFsc28gdXNlIHBhcnQgb2YgdGhlIElPIHJhbmdl
+Cj4gPiBzdGFydGVkIGZyb20gWkVSTy4gSXQgd2lsbCBtYWtlIGluL291dCBlbnRlciB0aGUgd3Jv
+bmcgYnJhbmNoIHBvc3NpYmx5Lgo+ID4gCj4gPiBJbiBWMiwgdGhlIDAgLSAweDEwMDAgbG9naWNh
+bCBJTyByYW5nZSBpcyByZXNlcnZlZCBmb3IgTFBDIHVzZSBvbmx5Lgo+ID4gQnV0IGl0IHNlZW1z
+IG5vdCBzbyBnb29kLiBJbiB0aGlzIHdheSwKPiA+IFBDSSBoYXMgbm8gY2hhbmNlIHRvIHVzZSBs
+b3cgNEsgSU8gcmFuZ2UobG9naWNhbCkuCj4gPiAKPiA+IFNvLCBpbiBWMywgYXBwbHlpbmcgdGhl
+IGNvbnZlcnNpb24gZnJvbSBwaHlzaWNhbC9jcHUgYWRkcmVzcyB0bwo+ID4gbG9naWNhbC9saW51
+eCBJTyBwb3J0IGZvciBhbnkgSU8gcmFuZ2VzLAo+ID4gaW5jbHVkaW5nIHRoZSBMUEMsIGJ1dCBy
+ZWNvcmRlZCB0aGUgbG9naWNhbCBJTyByYW5nZSBmb3IgTFBDLiBXaGVuCj4gPiBjYWxsaW5nIGlu
+L291dCB3aXRoIGEgbG9naWNhbCBwb3J0IGFkZHJlc3MsCj4gPiB3ZSBjYW4gY2hlY2sgdGhpcyBw
+b3J0IGZhbGwgaW50byBMUEMgbG9naWNhbCBJTyByYW5nZSBhbmQgZ2V0IGJhY2sgdGhlCj4gPiBy
+ZWFsIElPLgoKUmlnaHQsIGFuZCB0aGUgc2FtZSB0cmFuc2xhdGlvbiBjYW4gYmUgdXNlZCBpbiBf
+X29mX2FkZHJlc3NfdG9fcmVzb3VyY2UoKQpnb2luZyB0aGUgb3Bwb3NpdGUgd2F5LgoKPiA+IERv
+IHlvdSBoYXZlIGZ1cnRoZXIgY29tbWVudHMgYWJvdXQgdGhpcz8/Cj4gCj4gSSB0aGluayB0aGVy
+ZSBhcmUgdHdvIHNlcGFyYXRlIGlzc3VlcyB0byBiZSBkaXNjdXNzZWQ6Cj4gCj4gVGhlIGZpcnN0
+IGlzc3VlIGlzIGFib3V0IGhhdmluZyBvZl90cmFuc2xhdGVfYWRkcmVzcyBmYWlsaW5nIGR1ZSB0
+bwo+ICJyYW5nZSIgbWlzc2luZy4gQWJvdXQgdGhpcyBBcm5kIHN1Z2dlc3RlZCB0aGF0IGl0IGlz
+IG5vdCBhcHByb3ByaWF0ZQo+IHRvIGhhdmUgYSByYW5nZSBkZXNjcmliaW5nIGEgYnJpZGdlIDE6
+MSBtYXBwaW5nIGFuZCB0aGlzIHdhcyBkaXNjdXNzZWQKPiBiZWZvcmUgaW4gdGhpcyB0aHJlYWQu
+IEFybmQgaGFkIGEgc3VnZ2VzdGlvbiBhYm91dCB0aGlzIChzZWUgYmVsb3cpIAo+IGhvd2V2ZXIg
+KGxvb2tpbmcgdHdpY2UgYXQgdGhlIGNvZGUpIGl0IHNlZW1zIHRvIG1lIHRoYXQgc3VjaCBzb2x1
+dGlvbiAKPiB3b3VsZCBsZWFkIHRvIHF1aXRlIHNvbWUgZHVwbGljYXRpb24gZnJvbSBfX29mX3Ry
+YW5zbGF0ZV9hZGRyZXNzKCkKPiBpbiBvcmRlciB0byByZXRyaWV2ZSB0aGUgYWN0dWFsIGFkZHIg
+ZnJvbSBkdC4uLgoKSSBkb24ndCB0aGluayB3ZSBuZWVkIHRvIGR1cGxpY2F0ZSBtdWNoLCB3ZSBj
+YW4gcHJvYmFibHkgc2FmZWx5CmFzc3VtZSB0aGF0IHRoZXJlIGFyZSBubyBub250cml2aWFsIHJh
+bmdlcyBpbiBkZXZpY2VzIGJlbG93IHRoZSBMUEMKbm9kZSwgc28gd2UganVzdCB3YWxrIHVwIHRo
+ZSBidXMgdG8gc2VlIGlmIHRoZSBub2RlIGlzIGEgY2hpbGQKKG9yIHBvc3NpYmx5IGdyYW5kY2hp
+bGQgZXRjKSBvZiB0aGUgTFBDIGJ1cywgYW5kIHRyZWF0IGFueSBJTyBwb3J0Cm51bWJlciB1bmRl
+ciB0aGVyZSBhcyBhIHBoeXNpY2FsIHBvcnQgbnVtYmVyLCB3aGljaCBoYXMgYSBrbm93bgpvZmZz
+ZXQgZnJvbSB0aGUgTGludXggSS9PIHBvcnQgbnVtYmVyLgoKPiBJIHRoaW5rIGV4dGVuZGluZyBv
+Zl9lbXB0eV9yYW5nZXNfcXVpcmsoKSBtYXkgYmUgYSByZWFzb25hYmxlIHNvbHV0aW9uLgo+IFdo
+YXQgZG8geW91IHRoaW5rIEFybmQ/CgpJIGRvbid0IHJlYWxseSBsaWtlIHRoYXQgaWRlYSwgdGhh
+dCBxdWlyayBpcyBtZWFudCB0byB3b3JrIGFyb3VuZApicm9rZW4gRFRzLCBidXQgd2UgY2FuIGp1
+c3QgbWFrZSB0aGUgRFQgdmFsaWQgYW5kIGltcGxlbWVudCB0aGUKY29kZSBwcm9wZXJseS4KCj4g
+VGhlIHNlY29uZCBpc3N1ZSBpcyBhIGNvbmZsaWN0IGJldHdlZW4gY3B1IGFkZHJlc3NlcyB1c2Vk
+IGJ5IHRoZSBMUEMKPiBjb250cm9sbGVyIGFuZCBpL28gdG9rZW5zIGZyb20gcGNpIGVuZHBvaW50
+cy4KPiAKPiBBYm91dCB0aGlzIHdoYXQgaWYgd2UgbW9kaWZ5IGFybW42NF9leHRpb19vcHMgdG8g
+aGF2ZSBhIGxpc3Qgb2YgcmFuZ2VzCj4gcmF0aGVyIHRoYW4gb25seSBvbmUgcmFuZ2UgKG5vdyB3
+ZSBoYXZlIGp1c3Qgc3RhcnQvZW5kKTsgdGhlbiBpbiB0aGUKPiBMUEMgZHJpdmVyIHdlIGNhbiBz
+Y2FuIHRoZSBMUEMgY2hpbGQgZGV2aWNlcyBhbmQgCj4gMSkgcG9wdWxhdGUgc3VjaCBsaXN0IG9m
+IHJhbmdlcwo+IDIpIGNhbGwgcGNpX3JlZ2lzdGVyX2lvX3JhbmdlIGZvciBzdWNoIHJhbmdlcwoK
+U2Nhbm5pbmcgdGhlIGNoaWxkIGRldmljZXMgc291bmRzIHJlYWxseSB3cm9uZywgcGxlYXNlIHJl
+Z2lzdGVyIGp1c3QKb25lIHJhbmdlIHRoYXQgY292ZXJzIHRoZSBidXMgdG8ga2VlcCB0aGUgd29y
+a2Fyb3VuZCBhcyBzaW1wbGUKYXMgcG9zc2libGUuCgo+IFRoZW4gd2hlbiBjYWxsaW5nIF9fb2Zf
+YWRkcmVzc190b19yZXNvdXJjZSB3ZSByZXRyaWV2ZSBJL08gdG9rZW5zIAo+IGZvciB0aGUgZGV2
+aWNlcyBvbiB0b3Agb2YgdGhlIExQQyBkcml2ZXIgYW5kIGluIHRoZSBJL08gYWNjZXNzb3JzCj4g
+d2UgY2FsbCBwY2lfcGlvX3RvX2FkZHJlc3MgdG8gZmlndXJlIG91dCB0aGUgY3B1IGFkZHJlc3Mg
+YW5kIGNvbXBhcmUKPiBpdCB0byB0aGUgbGlzdCBvZiByYW5nZXMgaW4gYXJtbjY0X2V4dGlvX29w
+cy4KPiAgIAo+IFdoYXQgYWJvdXQgdGhpcz8KClRoYXQgc2VlbXMgcmVhbGx5IGNvbXBsZXggZm9y
+IHNvbWV0aGluZyB0aGF0IGNhbiBiZSBxdWl0ZSBzaW1wbGUuClRoZSBvbmx5IHRoaW5nIHdlIG5l
+ZWQgdG8gd29ycnkgYWJvdXQgaXMgdGhhdCB0aGUgaW9fcmFuZ2VfbGlzdApjb250YWlucyBhbiBl
+bnRyeSBmb3IgdGhlIExQQyBidXMgc28gd2UgZG9uJ3QgY29uZmxpY3Qgd2l0aCB0aGUKUENJIGJ1
+c2VzLgoKCUFybmQKCglBcm5kCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
