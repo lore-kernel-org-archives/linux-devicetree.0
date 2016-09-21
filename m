@@ -1,58 +1,48 @@
-From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 2/4] drivers: irqchip: Add STM32 external interrupts support
-Date: Wed, 21 Sep 2016 09:54:52 +0200
-Message-ID: <CALszF6Bp2p=fJ+qQE5q_MJC3R5td_YQzrUFH+wgsNjZMuxdrpw@mail.gmail.com>
-References: <1474387259-18926-1-git-send-email-alexandre.torgue@st.com>
- <1474387259-18926-3-git-send-email-alexandre.torgue@st.com>
- <alpine.DEB.2.20.1609202214460.5476@nanos> <f7875786-9b5e-075a-59c8-cd32fb1c4583@st.com>
- <alpine.DEB.2.20.1609210949150.5573@nanos>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFt2MTIsIDcvOF0gYmFzZTogc29jOiBpbnRyb2R1Y2Ugc29jX2Rldmlj?=
+ =?UTF-8?B?ZV9tYXRjaCgpIGludGVyZmFjZQ==?=
+Date: Wed, 21 Sep 2016 10:56:14 +0300
+Message-ID: <1474444574.270880035@f136.i.mail.ru>
+References: <1474441040-11946-1-git-send-email-yangbo.lu@nxp.com>
+ <1474441040-11946-8-git-send-email-yangbo.lu@nxp.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.20.1609210949150.5573@nanos>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1474441040-11946-8-git-send-email-yangbo.lu@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?WWFuZ2JvIEx1?= <yangbo.lu@nxp.com>
+Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, ulf.hansson@linaro.org, =?UTF-8?B?WGlhb2JvIFhpZQ==?= <xiaobo.xie@nxp.com>, =?UTF-8?B?TWluZ2h1YW4gTGlhbg==?= <minghuan.lian@nxp.com>, linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org, =?UTF-8?B?UWlhbmcgWmhhbw==?= <qiang.zhao@nxp.com>, =?UTF-8?B?UnVzc2VsbCBLaW5n?= <linux@arm.linux.org.uk>, =?UTF-8?B?Qmh1cGVzaCBTaGFybWE=?= <bhupesh.sharma@freescale.com>, =?UTF-8?B?Sm9lcmcgUm9lZGVs?= <joro@8bytes.org>, =?UTF-8?B?Sm9jaGVuIEZyaWVkcmljaA==?= <jochen@scram.de>, =?UTF-8?B?Q2xhdWRpdSBNYW5vaWw=?= <claudiu.manoil@freescale.com>, devicetree@vger.kernel.org, =?UTF-8?B?QXJuZCBCZXJnbWFubg==?= <arnd@arndb.de>, =?UTF-8?B?U2NvdHQgV29vZA==?= <oss@buserror.net>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?U2FudG9zaCBTaGlsaW1rYXI=?= <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.orgl
 List-Id: devicetree@vger.kernel.org
 
-2016-09-21 9:50 GMT+02:00 Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>:
-> On Wed, 21 Sep 2016, Alexandre Torgue wrote:
->
->> Hi Thomas,
->>
->> On 09/20/2016 10:16 PM, Thomas Gleixner wrote:
->> > Alexandre,
->> >
->> > On Tue, 20 Sep 2016, Alexandre TORGUE wrote:
->> >
->> > > The STM32 external interrupt controller consists of edge detectors that
->> > > generate interrupts requests or wake-up events.
->> > >
->> > > Each line can be independently configured as interrupt or wake-up source,
->> > > and triggers either on rising, falling or both edges. Each line can also
->> > > be masked independently.
->> > >
->> > > Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> > > Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
->> >
->> > That all looks very reasonable now. The only remaining question is your SOB
->> > chain. Who is the author of these patches? You or Maxime? If it's Maxime,
->> > then the changelog misses a From: tag. If it's you then Maximes SOB is
->> > bogus.
->>
->> Actually Maxime wrote the main part of this driver and sent version 1 and 2 of
->> the series. After Linus W. reviews, rework was required to use hierarchical
->> domain. According to Maxime, I coded the rework (adaptation to hierarchical
->> domain) and sent other version of the series.
->
-> So I replace Maximes SOB with Originally-by: Does that apply to all four
-> patches?
-Yes, that's fine.
-Alex did a lot of rework on this series, he deserves the SoB.
-
-Thanks,
-Maxime
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+PtCh0YDQtdC00LAsIDIxINGB0LXQvdGC0Y/QsdGA0Y8gMjAxNiwgOTo1NyArMDM6MDAg0L7RgiBZ
+YW5nYm8gTHUgPHlhbmdiby5sdUBueHAuY29tPjoKPgo+RnJvbTogQXJuZCBCZXJnbWFubiA8IGFy
+bmRAYXJuZGIuZGUgPgo+Cj5XZSBrZWVwIHJ1bm5pbmcgaW50byBjYXNlcyB3aGVyZSBkZXZpY2Ug
+ZHJpdmVycyB3YW50IHRvIGtub3cgdGhlIGV4YWN0Cj52ZXJzaW9uIG9mIHRoZSBhIFNvQyB0aGV5
+IGFyZSBjdXJyZW50bHkgcnVubmluZyBvbi4gSW4gdGhlIHBhc3QsIHRoaXMgaGFzCj51c3VhbGx5
+IGJlZW4gZG9uZSB0aHJvdWdoIGEgdmVuZG9yIHNwZWNpZmljIEFQSSB0aGF0IGNhbiBiZSBjYWxs
+ZWQgYnkgYQo+ZHJpdmVyLCBvciBieSBkaXJlY3RseSBhY2Nlc3Npbmcgc29tZSBraW5kIG9mIHZl
+cnNpb24gcmVnaXN0ZXIgdGhhdCBpcwo+bm90IHBhcnQgb2YgdGhlIGRldmljZSBpdHNlbGYgYnV0
+IHRoYXQgYmVsb25ncyB0byBhIGdsb2JhbCByZWdpc3RlciBhcmVhCj5vZiB0aGUgY2hpcC4KLi4u
+Cj4rY29uc3Qgc3RydWN0IHNvY19kZXZpY2VfYXR0cmlidXRlICpzb2NfZGV2aWNlX21hdGNoKAo+
+K2NvbnN0IHN0cnVjdCBzb2NfZGV2aWNlX2F0dHJpYnV0ZSAqbWF0Y2hlcykKPit7Cj4raW50IHJl
+dCA9IDA7Cj4rCj4raWYgKCFtYXRjaGVzKQo+K3JldHVybiBOVUxMOwo+Kwo+K3doaWxlICghcmV0
+KSB7Cj4raWYgKCEobWF0Y2hlcy0+bWFjaGluZSB8fCBtYXRjaGVzLT5mYW1pbHkgfHwKPisgICAg
+ICBtYXRjaGVzLT5yZXZpc2lvbiB8fCBtYXRjaGVzLT5zb2NfaWQpKQo+K2JyZWFrOwo+K3JldCA9
+IGJ1c19mb3JfZWFjaF9kZXYoJnNvY19idXNfdHlwZSwgTlVMTCwgKHZvaWQgKiltYXRjaGVzLAo+
+KyAgICAgICBzb2NfZGV2aWNlX21hdGNoX29uZSk7Cj4raWYgKCFyZXQpCj4rbWF0Y2hlcysrOwoK
+U28sIHdoYXQgaGFwcGVuIGlmIG5leHQgIm1hdGNoZXMiIChhZnRlciBpbmNyZW1lbnQpIHdpbGwg
+YmUgTlVMTD8KCkkgdGhpbmsgeW91IHNob3VsZCB1c2Ugd2hpbGUobWF0Y2hlcykgYXQgdGhlIHN0
+YXJ0IG9mIHRoaXMgcHJvY2VkdXJlLgoKLS0tCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
