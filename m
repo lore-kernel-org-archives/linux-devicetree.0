@@ -1,84 +1,47 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH v9 17/19] drm/virtio: kconfig: Fix recursive dependency issue.
-Date: Wed, 21 Sep 2016 13:09:33 +0100
-Message-ID: <CACvgo53fuoPVjBAkZbWFPVxosObjvxoDgFdR_BkSTgevqyGg9g@mail.gmail.com>
-References: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
- <1473081421-16555-18-git-send-email-peter.griffin@linaro.org>
- <CACvgo52_g7anGBd9HTUyYsbp5QmQEk9LR3nNHgSTgjQ29G3ViA@mail.gmail.com> <20160920083251.GB26093@griffinp-ThinkPad-X1-Carbon-2nd>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160920083251.GB26093@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, LAKML <linux-arm-kernel@lists.infradead.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, kernel@stlinux.com, vinod.koul@intel.com, patrice.chotard@st.com, dan.j.williams@intel.com, David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>, ohad@wizery.com, bjorn.andersson@linaro.org, devicetree <devicetree@vger.kernel.org>, linux-remoteproc@vger.kernel.org, ML dri-devel <dri-devel@lists.freedesktop.org>, "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>, dmaengine@vger.kernel.org, lee.jones@linaro.org
+From: Abhishek Sahu <absahu@codeaurora.org>
+Subject: [PATCH v3 0/7] Patches for QCOM IPQ4019 clock driver
+Date: Wed, 21 Sep 2016 17:51:45 +0530
+Message-ID: <1474460512-31994-1-git-send-email-absahu@codeaurora.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk
+Cc: mturquette@baylibre.com, galak@codeaurora.org, pradeepb@codeaurora.org, mmcclint@codeaurora.org, varada@codeaurora.org, sricharan@codeaurora.org, architt@codeaurora.org, ntelkar@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Abhishek Sahu <absahu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20 September 2016 at 09:32, Peter Griffin <peter.griffin@linaro.org> wrote:
-> Hi Emil,
->
-> On Tue, 20 Sep 2016, Emil Velikov wrote:
->
->> On 5 September 2016 at 14:16, Peter Griffin <peter.griffin@linaro.org> wrote:
->> > ST_SLIM_REMOTEPROC must select REMOTEPROC, which exposes the following
->> > recursive dependency.
->
->
->> >
->> From a humble skim through remoteproc, drm and a few other subsystems
->> I think the above is wrong. All the drivers (outside of remoteproc),
->> that I've seen, depend on the core component, they don't select it.
->
-> I will let Bjorn comment on the remoteproc subsystem Kconfig design, and
-> why it is like it is.
->
-> For this particular SLIM_RPROC I have added it to Kconfig in keeping with all
-> the other drivers in the remoteproc subsystem which has exposed this recursive
-> dependency issue.
->
-> For this particular kconfig symbol a quick grep reveals more drivers in
-> the kernel using 'select', than 'depend on'
->
-> git grep "select VIRTIO" | wc -l
-> 14
->
-> git grep "depends on VIRTIO" | wc -l
-> 10
->
-Might be worth taking a closer look into these at some point.
+These patches are related to Qualcomm IPQ4019 GCC (Global Clock
+Controller) driver code mainly adding the nodes for clock marked
+as fixed in current IPQ4019 clock driver and support for multiple
+CPU frequencies.
 
->
->> Furthermore most places explicitly hide the drivers from the menu if
->> the core component isn't enabled.
->
-> Remoteproc subsystem takes a different approach, the core code is only enabled
-> if a driver which relies on it is enabled. This IMHO makes sense, as
-> remoteproc is not widely used (only a few particular ARM SoC's).
->
-> It is true that for subsystems which rely on the core component being
-> explicitly enabled, they often tend to hide drivers which depend on it
-> from the menu unless it is. This also makes sense.
->
->>
->> Is there something that requires such a different/unusual behaviour in
->> remoteproc ?
->>
->
-> I'm not sure it is that unusual...looking at config USB, it selects USB_COMMON in
-> mfd subsystem, client drivers select MFD_CORE.
->
-On the USB case I'm not sure what the reasoning behind the USB vs
-USB_COMMON split. In seems that one could just fold them, but that's
-another topic. On the MFD side... it follows the select {,mis,ab}use.
-With one (the only one?) MFD driver not using/selecting MFD_CORE doing
-it's own version of mfd_add_devices... which could be reworked,
-possibly.
+[V3]
 
-> I've added Arnd to this thread, as I've seen lots of Kconfig patches from him
-> recently, maybe he has some thoughts on whether this is the correct fix or not?
->
-Ack. Fwiw, I believe that the reasoning put by Jani is perfeclty
-reasonable, but it'll be great to hear others as well.
+   1. Addressed the review comments given in v2 patches.
+   2. Replaced the do_div with normal division.
+   3. Marked the PCNOC node as critical.
+   4. Modified the frequency values for the recent change done
+      in IPQ4019 bootloader.
+   5. Changed the i2c node frequency table for 19.05 MHz clock.
 
-Thanks
-Emil
+[V2]
+
+   1. Removed the fixed clock references and add the same as clock nodes
+   with recalc_rate operation.
+   2. Added all the supported cpu frequencies in frequency table.
+
+Abhishek Sahu (7):
+  clk: qcom: ipq4019: Added the clock nodes and operations for pll
+  clk: qcom: ipq4019: Added the apss cpu pll divider clock node
+  clk: qcom: ipq4019: Added the nodes for pcnoc
+  clk: qcom: ipq4019: Added all the frequencies for apps cpu
+  clk: qcom: ipq4019: corrected sdcc frequency and parent name
+  clk: qcom: ipq4019: changed the frequency value for ddr pll
+  clk: qcom: ipq4019: changed i2c freq table
+
+ drivers/clk/qcom/gcc-ipq4019.c               | 489 +++++++++++++++++++++++++--
+ include/dt-bindings/clock/qcom,gcc-ipq4019.h |  11 +
+ 2 files changed, 477 insertions(+), 23 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
