@@ -1,20 +1,14 @@
-From: Po Liu <po.liu@nxp.com>
-Subject: RE: [PATCH v5 3/3] pci:aer: add support aer interrupt with none
- MSI/MSI-X/INTx mode
-Date: Wed, 21 Sep 2016 06:54:59 +0000
-Message-ID: <VI1PR0401MB17090ED60A826FDCBFB8B33D92F60@VI1PR0401MB1709.eurprd04.prod.outlook.com>
-References: <1472625442-23309-2-git-send-email-po.liu@nxp.com>
- <1473741659-17618-1-git-send-email-po.liu@nxp.com>
- <1473741659-17618-3-git-send-email-po.liu@nxp.com>
- <20160918005212.GF15478@tiger>
- <VI1PR0401MB1709F91B0C1EB6C80D741E4492F50@VI1PR0401MB1709.eurprd04.prod.outlook.com>
- <20160920123926.GA3744@tiger>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: [PATCH 2/2] phy-sun4i-usb: add support for host mode of phy0 on A64
+ SoC
+Date: Wed, 21 Sep 2016 15:04:06 +0800
+Message-ID: <20160921070406.27445-2-icenowy@aosc.xyz>
+References: <20160921070406.27445-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160920123926.GA3744@tiger>
-Content-Language: en-US
+In-Reply-To: <20160921070406.27445-1-icenowy@aosc.xyz>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,65 +18,206 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Roy Zang <roy.zang@nxp.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stuart Yoder <stuart.yoder@nxp.com>, "M.H. Lian" <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Mingkai Hu <mingkai.hu@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>, Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Andre Przywara <andre.przywara@arm.com>, Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Reinder de Haan <patchesrdh@mveas.com>, linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+The OTG phy of A64 can be put into the host mode with an OHCI/EHCI pair,
+just like the H3 SoC.
 
+Some A64 boards (such as Pine64 series) use the USB OTG port as a generic
+USB-A port, and thus can be fully support by the driver now.
 
->  -----Original Message-----
->  From: Shawn Guo [mailto:shawnguo@kernel.org]
->  Sent: Tuesday, September 20, 2016 8:39 PM
->  To: Po Liu
->  Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
->  linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Roy Zang; Arnd
->  Bergmann; Marc Zyngier; Stuart Yoder; Leo Li; M.H. Lian; Murali
->  Karicheri; Bjorn Helgaas; Mingkai Hu
->  Subject: Re: [PATCH v5 3/3] pci:aer: add support aer interrupt with none
->  MSI/MSI-X/INTx mode
->  
->  On Sun, Sep 18, 2016 at 03:37:27AM +0000, Po Liu wrote:
->  > Hi Shawn,
->  >
->  >
->  > >  -----Original Message-----
->  > >  From: Shawn Guo [mailto:shawnguo@kernel.org]
->  > >  Sent: Sunday, September 18, 2016 8:52 AM
->  > >  To: Po Liu
->  > >  Cc: linux-pci@vger.kernel.org;
->  > > linux-arm-kernel@lists.infradead.org;
->  > >  linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Roy Zang;
->  > > Arnd  Bergmann; Marc Zyngier; Stuart Yoder; Leo Li; M.H. Lian;
->  > > Murali  Karicheri; Bjorn Helgaas; Mingkai Hu
->  > >  Subject: Re: [PATCH v5 3/3] pci:aer: add support aer interrupt with
->  > > none  MSI/MSI-X/INTx mode
->  > >
->  > >  On Tue, Sep 13, 2016 at 12:40:59PM +0800, Po Liu wrote:
->  > >  > On some platforms, root port doesn't support MSI/MSI-X/INTx in RC
->  mode.
->  > >  > When chip support the aer interrupt with none MSI/MSI-X/INTx
->  > > mode,  > maybe there is interrupt line for aer pme etc. Search the
->  > > interrupt  > number in the fdt file. Then fixup the dev->irq with it.
->  > >  >
->  > >  > Signed-off-by: Po Liu <po.liu@nxp.com>
->  > >
->  > >  Will the new kernel work with existing/old DTB?  I'm trying to
->  > > understand the dependency between driver and DTS changes.
->  >
->  > Yes, We've never use name 'intr' before. So we remove it is ok.
->  > 'aer' is a dts name for researching it's true interrupt number by
->  kernel. This patch is first time to use name 'aer'. So it must be
->  compatible with existing/old DTB.
->  
->  Does that mean driver and DTS changes can go through separate trees, i.e.
->  PCI and arm-soc, without introducing regressions on either tree?
->  Or does the patch series needs to go in as a whole?
+The register's name is changed to PHY_OTG_CFG, as it's described in the
+A64 downstream BSP kernel source, at drivers/usb/host/sunxi_hci.h .
 
-Should be as a whole. The driver base on the dts. Or else, the driver would not found the 'aer' point.
-Thanks!
+Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+---
+ drivers/phy/phy-sun4i-usb.c | 46 +++++++++++++++++++++++++++++++++------------
+ 1 file changed, 34 insertions(+), 12 deletions(-)
 
-Po
-
->  
->  Shawn
+diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+index a4db658..9287247 100644
+--- a/drivers/phy/phy-sun4i-usb.c
++++ b/drivers/phy/phy-sun4i-usb.c
+@@ -47,7 +47,7 @@
+ #define REG_PHYBIST			0x08
+ #define REG_PHYTUNE			0x0c
+ #define REG_PHYCTL_A33			0x10
+-#define REG_PHY_UNK_H3			0x20
++#define REG_PHY_OTG_CFG			0x20
+ 
+ #define REG_PMU_UNK1			0x10
+ 
+@@ -107,6 +107,7 @@ struct sun4i_usb_phy_cfg {
+ 	u8 phyctl_offset;
+ 	bool dedicated_clocks;
+ 	bool enable_pmu_unk1;
++	bool route_otg;
+ };
+ 
+ struct sun4i_usb_phy_data {
+@@ -135,6 +136,7 @@ struct sun4i_usb_phy_data {
+ 	int id_det;
+ 	int vbus_det;
+ 	struct delayed_work detect;
++	bool otg_routed;
+ };
+ 
+ #define to_sun4i_usb_phy_data(phy) \
+@@ -263,10 +265,11 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+ 		writel(val & ~2, phy->pmu + REG_PMU_UNK1);
+ 	}
+ 
+-	if (data->cfg->type == sun8i_h3_phy) {
+-		if (phy->index == 0) {
+-			val = readl(data->base + REG_PHY_UNK_H3);
+-			writel(val & ~1, data->base + REG_PHY_UNK_H3);
++	if (data->cfg->route_otg) {
++		if (phy->index == 0 && data->otg_routed) {
++			/* Route the OTG PHY to HCI */
++			val = readl(data->base + REG_PHY_OTG_CFG);
++			writel(val & ~1, data->base + REG_PHY_OTG_CFG);
+ 		}
+ 	} else {
+ 		/* Enable USB 45 Ohm resistor calibration */
+@@ -283,7 +286,7 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+ 
+ 	sun4i_usb_phy_passby(phy, 1);
+ 
+-	if (phy->index == 0) {
++	if (phy->index == 0 && !data->otg_routed) {
+ 		data->phy0_init = true;
+ 
+ 		/* Enable pull-ups */
+@@ -310,7 +313,7 @@ static int sun4i_usb_phy_exit(struct phy *_phy)
+ 	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+ 	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+ 
+-	if (phy->index == 0) {
++	if (phy->index == 0 && !data->otg_routed) {
+ 		/* Disable pull-ups */
+ 		sun4i_usb_phy0_update_iscr(_phy, ISCR_DPDM_PULLUP_EN, 0);
+ 		sun4i_usb_phy0_update_iscr(_phy, ISCR_ID_PULLUP_EN, 0);
+@@ -377,7 +380,7 @@ static int sun4i_usb_phy_power_on(struct phy *_phy)
+ 
+ 	/* For phy0 only turn on Vbus if we don't have an ext. Vbus */
+ 	if (phy->index == 0 && sun4i_usb_phy0_have_vbus_det(data) &&
+-				data->vbus_det)
++				data->vbus_det && !data->otg_routed)
+ 		return 0;
+ 
+ 	ret = regulator_enable(phy->vbus);
+@@ -387,7 +390,7 @@ static int sun4i_usb_phy_power_on(struct phy *_phy)
+ 	phy->regulator_on = true;
+ 
+ 	/* We must report Vbus high within OTG_TIME_A_WAIT_VRISE msec. */
+-	if (phy->index == 0 && sun4i_usb_phy0_poll(data))
++	if (phy->index == 0 && sun4i_usb_phy0_poll(data) && !data->otg_routed)
+ 		mod_delayed_work(system_wq, &data->detect, DEBOUNCE_TIME);
+ 
+ 	return 0;
+@@ -408,7 +411,7 @@ static int sun4i_usb_phy_power_off(struct phy *_phy)
+ 	 * phy0 vbus typically slowly discharges, sometimes this causes the
+ 	 * Vbus gpio to not trigger an edge irq on Vbus off, so force a rescan.
+ 	 */
+-	if (phy->index == 0 && !sun4i_usb_phy0_poll(data))
++	if (phy->index == 0 && !sun4i_usb_phy0_poll(data) && !data->otg_routed)
+ 		mod_delayed_work(system_wq, &data->detect, POLL_TIME);
+ 
+ 	return 0;
+@@ -567,7 +570,17 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	mutex_init(&data->mutex);
+-	INIT_DELAYED_WORK(&data->detect, sun4i_usb_phy0_id_vbus_det_scan);
++	if (device_property_read_bool(dev, "allwinner,otg-routed")) {
++		/*
++		 * PHY0 is routed to HCI rather than OTG Controller.
++		 * In this situation, the port can only be used as a host port.
++		 */
++		data->otg_routed = true;
++	} else {
++		/* ID/Vbus detection is only meaningful when it's really OTG */
++		INIT_DELAYED_WORK(&data->detect,
++				  sun4i_usb_phy0_id_vbus_det_scan);
++	}
+ 	dev_set_drvdata(dev, data);
+ 	data->cfg = of_device_get_match_data(dev);
+ 	if (!data->cfg)
+@@ -647,7 +660,8 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+ 			return PTR_ERR(phy->reset);
+ 		}
+ 
+-		if (i) { /* No pmu for usbc0 */
++		/* PMU is only valid on PHYs in HCI mode */
++		if (i || data->otg_routed) {
+ 			snprintf(name, sizeof(name), "pmu%d", i);
+ 			res = platform_get_resource_byname(pdev,
+ 							IORESOURCE_MEM, name);
+@@ -719,6 +733,7 @@ static const struct sun4i_usb_phy_cfg sun4i_a10_cfg = {
+ 	.phyctl_offset = REG_PHYCTL_A10,
+ 	.dedicated_clocks = false,
+ 	.enable_pmu_unk1 = false,
++	.route_otg = false,
+ };
+ 
+ static const struct sun4i_usb_phy_cfg sun5i_a13_cfg = {
+@@ -728,6 +743,7 @@ static const struct sun4i_usb_phy_cfg sun5i_a13_cfg = {
+ 	.phyctl_offset = REG_PHYCTL_A10,
+ 	.dedicated_clocks = false,
+ 	.enable_pmu_unk1 = false,
++	.route_otg = false,
+ };
+ 
+ static const struct sun4i_usb_phy_cfg sun6i_a31_cfg = {
+@@ -737,6 +753,7 @@ static const struct sun4i_usb_phy_cfg sun6i_a31_cfg = {
+ 	.phyctl_offset = REG_PHYCTL_A10,
+ 	.dedicated_clocks = true,
+ 	.enable_pmu_unk1 = false,
++	.route_otg = false,
+ };
+ 
+ static const struct sun4i_usb_phy_cfg sun7i_a20_cfg = {
+@@ -746,6 +763,7 @@ static const struct sun4i_usb_phy_cfg sun7i_a20_cfg = {
+ 	.phyctl_offset = REG_PHYCTL_A10,
+ 	.dedicated_clocks = false,
+ 	.enable_pmu_unk1 = false,
++	.route_otg = false,
+ };
+ 
+ static const struct sun4i_usb_phy_cfg sun8i_a23_cfg = {
+@@ -755,6 +773,7 @@ static const struct sun4i_usb_phy_cfg sun8i_a23_cfg = {
+ 	.phyctl_offset = REG_PHYCTL_A10,
+ 	.dedicated_clocks = true,
+ 	.enable_pmu_unk1 = false,
++	.route_otg = false,
+ };
+ 
+ static const struct sun4i_usb_phy_cfg sun8i_a33_cfg = {
+@@ -764,6 +783,7 @@ static const struct sun4i_usb_phy_cfg sun8i_a33_cfg = {
+ 	.phyctl_offset = REG_PHYCTL_A33,
+ 	.dedicated_clocks = true,
+ 	.enable_pmu_unk1 = false,
++	.route_otg = false,
+ };
+ 
+ static const struct sun4i_usb_phy_cfg sun8i_h3_cfg = {
+@@ -772,6 +792,7 @@ static const struct sun4i_usb_phy_cfg sun8i_h3_cfg = {
+ 	.disc_thresh = 3,
+ 	.dedicated_clocks = true,
+ 	.enable_pmu_unk1 = true,
++	.route_otg = true,
+ };
+ 
+ static const struct sun4i_usb_phy_cfg sun50i_a64_cfg = {
+@@ -781,6 +802,7 @@ static const struct sun4i_usb_phy_cfg sun50i_a64_cfg = {
+ 	.phyctl_offset = REG_PHYCTL_A33,
+ 	.dedicated_clocks = true,
+ 	.enable_pmu_unk1 = true,
++	.route_otg = true,
+ };
+ 
+ static const struct of_device_id sun4i_usb_phy_of_match[] = {
+-- 
+2.10.0
