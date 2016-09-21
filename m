@@ -1,88 +1,54 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: tegra: nyan: Use proper IRQ type definitions
-Date: Wed, 21 Sep 2016 10:26:06 +0200
-Message-ID: <1474446366.1239.17.camel@paulk.fr>
-References: <20160828173246.32621-1-contact@paulk.fr>
-         <ef69b6d2-ce6b-ff76-5c04-ab2176eb6ecc@nvidia.com>
-         <1474395289.1215.20.camel@paulk.fr>
-         <0ca614bf-4d27-9948-03e3-472d059f2153@nvidia.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [v12, 7/8] base: soc: introduce soc_device_match() interface
+Date: Wed, 21 Sep 2016 10:25:08 +0200
+Message-ID: <aa53da4f-205d-cfa1-c85c-00e82e928bbc@axentia.se>
+References: <1474441040-11946-1-git-send-email-yangbo.lu@nxp.com>
+ <1474441040-11946-8-git-send-email-yangbo.lu@nxp.com>
+ <1474444574.270880035@f136.i.mail.ru>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-NH6xfKpqKgS2U3dwsddV"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0ca614bf-4d27-9948-03e3-472d059f2153-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1474444574.270880035@f136.i.mail.ru>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexander Shiyan <shc_work@mail.ru>, Yangbo Lu <yangbo.lu@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, ulf.hansson@linaro.org, Xiaobo Xie <xiaobo.xie@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org, Qiang Zhao <qiang.zhao@nxp.com>, Russell King <linux@arm.linux.org.uk>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Joerg Roedel <joro@8bytes.org>, Jochen Friedrich <jochen@scram.de>, Claudiu Manoil <claudiu.manoil@freescale.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Scott Wood <oss@buserror.net>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Leo Li <leoyang.li@nxp.com>, iommu@lists.linux-foundation.org, Kumar Gala <galak@codeaurora.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-
---=-NH6xfKpqKgS2U3dwsddV
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Le mercredi 21 septembre 2016 =C3=A0 08:52 +0100, Jon Hunter a =C3=A9crit=
-=C2=A0:
-> On 20/09/16 19:14, Paul Kocialkowski wrote:
-> >=20
-> > * PGP Signed by an unknown key
-> >=20
-> > Le mardi 20 septembre 2016 =C3=A0 18:15 +0100, Jon Hunter a =C3=A9crit =
-:
-> > >=20
-> > > On 28/08/16 18:32, Paul Kocialkowski wrote:
-> > > >=20
-> > > >=20
-> > > > This switches a few interrupt definitions that were using
-> > > > GPIO_ACTIVE_HIGH as IRQ type, which is invalid.
-> > >=20
-> > > May be you are right, but this does not describe why this is invalid.
-> > > Can you elaborate?
-> >=20
-> > GPIO_ACTIVE_HIGH is simply not the right kind of define to use in the
-> > "interrupts" devicetree property. Values provided there are understood =
-as
-> > IRQ_TYPE_ defines.
->=20
-> Right, but you are changing the type as GPIO_ACTIVE_HIGH =3D 0 and
-> IRQ_TYPE_EDGE_FALLING =3D 2 and there is no comment about why this has
-> been changed. It might be correct, but you need to explain it.
-
-This actually makes the IRQ trigger values consistent with the drivers, tha=
-t
-define them regardless of devicetree anyway. The max98090 driver
-has=C2=A0IRQF_TRIGGER_FALLING and bq24735 has IRQF_TRIGGER_RISING |
-IRQF_TRIGGER_FALLING.
-
-This is really more of a cosmetic change, it doesn't impact actual use.
-
---=20
-Paul Kocialkowski, developer of low-level free software for embedded device=
-s
-
-Website: https://www.paulk.fr/
-Coding blog: https://code.paulk.fr/
-Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
---=-NH6xfKpqKgS2U3dwsddV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJX4kQeAAoJEIT9weqP7pUMEoEP/jzk7mIPfaUalIRNc44GxK9N
-LCy5ft98G+x9vl8GpVHchmGVS9J1mr+sy3aeYtx3Edz3IF878nV4ew6MPporAIDg
-BnQdnhxRX/8+eFtQ70h0PaTtRyFhxQF4+wwdExrEr+eh+/aIcB1xpSH/YiC1hPXF
-EpnfYgJ9Rkl3BLu68ByooAA8/DRVe/Bk/993IVdH8g1v1PlXZK7pEQQV4l5JKKFc
-uUnr5VMHh8I/J2JJkRdT5aWzWyxLsCgbsVND4J6hf9IdmN+ez6Rmol0tNGQLAeDH
-7z4Md8WsdHsFnLtfIYbwsd2hkw2I1+tYojmAtmscqfeYTV5HXi6zxZHQz7IOVj4J
-BRJxRrZAnWniO+dlCRrswtogU9hlGbSKIRWKU3jJsMDoPqx2ruq7Cy2i1sRAbWHj
-pXn37mbfLwi/twwCy6uk2CVGWVNn2LVSY2fOQMKlzphkaCxsnw6hU8qMFotuw988
-sG1qc59OfFUmf5P4jJ5einY8ki7LDVXcrhB22QP2FYgvT/EJiuH1MS7JNkUN/Ea0
-6uNyp6KNT13LlvVTPLNfb2epaaIZpKyXaRWEvg3wlMejBkB4V9OzyXgkw7/VkhKa
-6exGtsIlvvXuM7nLW2HG91IWzI/Bpj/co54t0mgYI+r0KC1Vdt4nJO6xDvOBEsFe
-KxzNe09LEsUjh6POr09y
-=rDC3
------END PGP SIGNATURE-----
-
---=-NH6xfKpqKgS2U3dwsddV--
+T24gMjAxNi0wOS0yMSAwOTo1NiwgQWxleGFuZGVyIFNoaXlhbiB3cm90ZToKPj4g0KHRgNC10LTQ
+sCwgMjEg0YHQtdC90YLRj9Cx0YDRjyAyMDE2LCA5OjU3ICswMzowMCDQvtGCIFlhbmdibyBMdSA8
+eWFuZ2JvLmx1QG54cC5jb20+Ogo+Pgo+PiBGcm9tOiBBcm5kIEJlcmdtYW5uIDwgYXJuZEBhcm5k
+Yi5kZSA+Cj4+Cj4+IFdlIGtlZXAgcnVubmluZyBpbnRvIGNhc2VzIHdoZXJlIGRldmljZSBkcml2
+ZXJzIHdhbnQgdG8ga25vdyB0aGUgZXhhY3QKPj4gdmVyc2lvbiBvZiB0aGUgYSBTb0MgdGhleSBh
+cmUgY3VycmVudGx5IHJ1bm5pbmcgb24uIEluIHRoZSBwYXN0LCB0aGlzIGhhcwo+PiB1c3VhbGx5
+IGJlZW4gZG9uZSB0aHJvdWdoIGEgdmVuZG9yIHNwZWNpZmljIEFQSSB0aGF0IGNhbiBiZSBjYWxs
+ZWQgYnkgYQo+PiBkcml2ZXIsIG9yIGJ5IGRpcmVjdGx5IGFjY2Vzc2luZyBzb21lIGtpbmQgb2Yg
+dmVyc2lvbiByZWdpc3RlciB0aGF0IGlzCj4+IG5vdCBwYXJ0IG9mIHRoZSBkZXZpY2UgaXRzZWxm
+IGJ1dCB0aGF0IGJlbG9uZ3MgdG8gYSBnbG9iYWwgcmVnaXN0ZXIgYXJlYQo+PiBvZiB0aGUgY2hp
+cC4KPiAuLi4KPj4gK2NvbnN0IHN0cnVjdCBzb2NfZGV2aWNlX2F0dHJpYnV0ZSAqc29jX2Rldmlj
+ZV9tYXRjaCgKPj4gK2NvbnN0IHN0cnVjdCBzb2NfZGV2aWNlX2F0dHJpYnV0ZSAqbWF0Y2hlcykK
+Pj4gK3sKPj4gK2ludCByZXQgPSAwOwo+PiArCj4+ICtpZiAoIW1hdGNoZXMpCj4+ICtyZXR1cm4g
+TlVMTDsKPj4gKwo+PiArd2hpbGUgKCFyZXQpIHsKPj4gK2lmICghKG1hdGNoZXMtPm1hY2hpbmUg
+fHwgbWF0Y2hlcy0+ZmFtaWx5IHx8Cj4+ICsgICAgICBtYXRjaGVzLT5yZXZpc2lvbiB8fCBtYXRj
+aGVzLT5zb2NfaWQpKQo+PiArYnJlYWs7Cj4+ICtyZXQgPSBidXNfZm9yX2VhY2hfZGV2KCZzb2Nf
+YnVzX3R5cGUsIE5VTEwsICh2b2lkICopbWF0Y2hlcywKPj4gKyAgICAgICBzb2NfZGV2aWNlX21h
+dGNoX29uZSk7Cj4+ICtpZiAoIXJldCkKPj4gK21hdGNoZXMrKzsKPiAKPiBTbywgd2hhdCBoYXBw
+ZW4gaWYgbmV4dCAibWF0Y2hlcyIgKGFmdGVyIGluY3JlbWVudCkgd2lsbCBiZSBOVUxMPwoKQSBj
+cmFzaD8KCj4gSSB0aGluayB5b3Ugc2hvdWxkIHVzZSB3aGlsZShtYXRjaGVzKSBhdCB0aGUgc3Rh
+cnQgb2YgdGhpcyBwcm9jZWR1cmUuCgoqYXJyZ2gqCgoqSWYqIG1hdGNoZXMgd3JhcCwgeW91IGlu
+ZGVlZCBoYXZlICpiaWcqIHByb2JsZW1zLiAqRWxzZXdoZXJlKgoKSGludDogUGxlYXNlIHJlYWQg
+dGhlIHJldmlldyBjb21tZW50cyBvbiB0aGUgcHJldmlvdXMgdmVyc2lvbiBvZiB0aGlzCnNlcmll
+cyBbMV0gYmVmb3JlIGNvbW1lbnRpbmcgZnVydGhlci4KCkNoZWVycywKUGV0ZXIKClsxXSBodHRw
+czovL3d3dy5tYWlsLWFyY2hpdmUuY29tL25ldGRldkB2Z2VyLmtlcm5lbC5vcmcvbXNnMTI2NjE3
+Lmh0bWwKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
