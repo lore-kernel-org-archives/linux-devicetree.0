@@ -1,42 +1,54 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: tegra: nyan: Use proper IRQ type definitions
-Date: Wed, 21 Sep 2016 08:52:20 +0100
-Message-ID: <0ca614bf-4d27-9948-03e3-472d059f2153@nvidia.com>
-References: <20160828173246.32621-1-contact@paulk.fr>
- <ef69b6d2-ce6b-ff76-5c04-ab2176eb6ecc@nvidia.com>
- <1474395289.1215.20.camel@paulk.fr>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH v6 2/4] drivers: irqchip: Add STM32 external interrupts
+ support
+Date: Wed, 21 Sep 2016 09:50:11 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1609210949150.5573@nanos>
+References: <1474387259-18926-1-git-send-email-alexandre.torgue@st.com> <1474387259-18926-3-git-send-email-alexandre.torgue@st.com> <alpine.DEB.2.20.1609202214460.5476@nanos> <f7875786-9b5e-075a-59c8-cd32fb1c4583@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474395289.1215.20.camel-W9ppeneeCTY@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f7875786-9b5e-075a-59c8-cd32fb1c4583-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 21 Sep 2016, Alexandre Torgue wrote:
 
-On 20/09/16 19:14, Paul Kocialkowski wrote:
-> * PGP Signed by an unknown key
+> Hi Thomas,
 > 
-> Le mardi 20 septembre 2016 à 18:15 +0100, Jon Hunter a écrit :
->> On 28/08/16 18:32, Paul Kocialkowski wrote:
->>>
->>> This switches a few interrupt definitions that were using
->>> GPIO_ACTIVE_HIGH as IRQ type, which is invalid.
->>
->> May be you are right, but this does not describe why this is invalid.
->> Can you elaborate?
+> On 09/20/2016 10:16 PM, Thomas Gleixner wrote:
+> > Alexandre,
+> > 
+> > On Tue, 20 Sep 2016, Alexandre TORGUE wrote:
+> > 
+> > > The STM32 external interrupt controller consists of edge detectors that
+> > > generate interrupts requests or wake-up events.
+> > > 
+> > > Each line can be independently configured as interrupt or wake-up source,
+> > > and triggers either on rising, falling or both edges. Each line can also
+> > > be masked independently.
+> > > 
+> > > Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+> > 
+> > That all looks very reasonable now. The only remaining question is your SOB
+> > chain. Who is the author of these patches? You or Maxime? If it's Maxime,
+> > then the changelog misses a From: tag. If it's you then Maximes SOB is
+> > bogus.
 > 
-> GPIO_ACTIVE_HIGH is simply not the right kind of define to use in the
-> "interrupts" devicetree property. Values provided there are understood as
-> IRQ_TYPE_ defines.
+> Actually Maxime wrote the main part of this driver and sent version 1 and 2 of
+> the series. After Linus W. reviews, rework was required to use hierarchical
+> domain. According to Maxime, I coded the rework (adaptation to hierarchical
+> domain) and sent other version of the series.
 
-Right, but you are changing the type as GPIO_ACTIVE_HIGH = 0 and
-IRQ_TYPE_EDGE_FALLING = 2 and there is no comment about why this has
-been changed. It might be correct, but you need to explain it.
+So I replace Maximes SOB with Originally-by: Does that apply to all four
+patches?
 
-Jon
+Thanks,
 
--- 
-nvpublic
+	tglx
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
