@@ -1,109 +1,126 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on Hip06
-Date: Wed, 21 Sep 2016 22:18:16 +0200
-Message-ID: <3538381.vOsx75UXVU@wuerfel>
-References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
- <e246c886-e0eb-b635-01ae-f00bbfcfb56b@gmail.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E1F87D223@lhreml507-mbx>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-binding: rtc Add DT binding for NXP
+ 85263 RTC
+Date: Wed, 21 Sep 2016 22:43:20 +0200
+Message-ID: <20160921204320.zueirn3cs42yhifd@piout.net>
+References: <20160801155029.32232.56063.stgit@localhost>
+ <20160801155032.32232.68432.stgit@localhost>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E1F87D223@lhreml507-mbx>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "minyard@acm.org" <minyard@acm.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, John Garry <john.garry@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, zhichang <zhichang.yuan02@gmail.com>, "zourongrong@gmail.com" <zourongrong@gmail.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, "kantyzc@163.com" <kantyzc@163.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infr>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBB2PBRO7QKGQEHEYJK4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20160801155032.32232.68432.stgit@localhost>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMjEsIDIwMTYgNDoyMDo1NSBQTSBDRVNUIEdhYnJpZWxl
-IFBhb2xvbmkgd3JvdGU6Cj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+ID4gRnJvbTog
-emhpY2hhbmcgW21haWx0bzp6aGljaGFuZy55dWFuMDJAZ21haWwuY29tXQo+ID4gT24gMjAxNuW5
-tDA55pyIMTXml6UgMjA6MjQsIEFybmQgQmVyZ21hbm4gd3JvdGU6Cj4gPiA+IE9uIFRodXJzZGF5
-LCBTZXB0ZW1iZXIgMTUsIDIwMTYgMTI6MDU6NTEgUE0gQ0VTVCBHYWJyaWVsZSBQYW9sb25pCj4g
-PiB3cm90ZToKPiA+ID4+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+ID4gPj4+IE9uIFRo
-dXJzZGF5LCBTZXB0ZW1iZXIgMTUsIDIwMTYgODowMjoyNyBBTSBDRVNUIEdhYnJpZWxlIFBhb2xv
-bmkKPiA+IHdyb3RlOgo+ID4gPj4gSSB0aGluayB0aGF0IG1heWJlIGhhdmluZyB0aGUgMToxIHJh
-bmdlIG1hcHBpbmcgZG9lc24ndAo+ID4gPj4gcmVmbGVjdCB3ZWxsIHRoZSByZWFsaXR5IGJ1dCBp
-dCBpcyB0aGUgbGVzcyBwYWluZnVsCj4gPiA+PiBzb2x1dGlvbi4uLgo+ID4gPj4KPiA+ID4+IFdo
-YXQncyB5b3VyIHZpZXc/Cj4gPiA+Cj4gPiA+IFdlIGNhbiBjaGVjayB0aGUgJ2knIGJpdCBmb3Ig
-SS9PIHNwYWNlIGluIG9mX2J1c19pc2FfZ2V0X2ZsYWdzLAo+ID4gPiBhbmQgdGhhdCBzaG91bGQg
-YmUgZW5vdWdoIHRvIHRyYW5zbGF0ZSB0aGUgSS9PIHBvcnQgbnVtYmVyLgo+ID4gPgo+ID4gPiBU
-aGUgb25seSBwYXJ0IHdlIG5lZWQgdG8gY2hhbmdlIGhlcmUgaXMgdG8gbm90IGdvIHRocm91Z2gK
-PiA+ID4gdGhlIGNyYXp5IGNvbnZlcnNpb24gYWxsIHRoZSB3YXkgZnJvbSBQQ0kgSS9PIHNwYWNl
-IHRvIGEKPiA+ID4gcGh5c2ljYWwgYWRkcmVzcyBhbmQgYmFjayB0byBhIChsb2dpY2FsKSBwb3J0
-IG51bWJlcgo+ID4gPiB0aGF0IHdlIGRvIHRvZGF5IHdpdGggb2ZfdHJhbnNsYXRlX2FkZHJlc3Mv
-cGNpX2FkZHJlc3NfdG9fcGlvLgo+ID4gPgo+ID4gU29ycnkgZm9yIHRoZSBsYXRlIHJlc3BvbnNl
-ISBTZXZlcmFsIGRheXMnIGxlYXZlLi4uLgo+ID4gRG8geW91IHdhbnQgdG8gYnlwYXNzIG9mX3Ry
-YW5zbGF0ZV9hZGRyZXNzIGFuZCBwY2lfYWRkcmVzc190b19waW8gZm9yCj4gPiB0aGUgcmVnaXN0
-ZXJlZCBzcGVjaWZpYyBQSU8/Cj4gPiBJIHRoaW5rIHRoZSBieXBhc3MgZm9yIG9mX3RyYW5zbGF0
-ZV9hZGRyZXNzIGlzIG9rLCBidXQgd29ycnkgc29tZSBuZXcKPiA+IGlzc3VlcyB3aWxsIGVtZXJn
-ZSB3aXRob3V0IHRoZQo+ID4gY29udmVyc2lvbiBiZXR3ZWVuIHBoeXNpY2FsIGFkZHJlc3MgYW5k
-IGxvZ2ljYWwvbGludXggcG9ydCBudW1iZXIuCgpUaGUgc2FtZSBmdW5jdGlvbiB0aGF0IGhhbmRs
-ZXMgdGhlIG5vbi10cmFuc2xhdGVkIHJlZ2lvbiB3b3VsZApkbyB0aGF0IGNvbnZlcnNpb24uCgo+
-ID4gV2hlbiBQQ0kgaG9zdCBicmlkZ2Ugd2hpY2ggc3VwcG9ydCBJTyBvcGVyYXRpb25zIGlzIGNv
-bmZpZ3VyZWQgYW5kCj4gPiBlbmFibGVkLCB0aGUgcGNpX2FkZHJlc3NfdG9fcGlvIHdpbGwKPiA+
-IHBvcHVsYXRlIHRoZSBsb2dpY2FsIElPIHJhbmdlIGZyb20gWkVSTyBmb3IgdGhlIGZpcnN0IGhv
-c3QgYnJpZGdlLiBPdXIKPiA+IExQQyB3aWxsIGFsc28gdXNlIHBhcnQgb2YgdGhlIElPIHJhbmdl
-Cj4gPiBzdGFydGVkIGZyb20gWkVSTy4gSXQgd2lsbCBtYWtlIGluL291dCBlbnRlciB0aGUgd3Jv
-bmcgYnJhbmNoIHBvc3NpYmx5Lgo+ID4gCj4gPiBJbiBWMiwgdGhlIDAgLSAweDEwMDAgbG9naWNh
-bCBJTyByYW5nZSBpcyByZXNlcnZlZCBmb3IgTFBDIHVzZSBvbmx5Lgo+ID4gQnV0IGl0IHNlZW1z
-IG5vdCBzbyBnb29kLiBJbiB0aGlzIHdheSwKPiA+IFBDSSBoYXMgbm8gY2hhbmNlIHRvIHVzZSBs
-b3cgNEsgSU8gcmFuZ2UobG9naWNhbCkuCj4gPiAKPiA+IFNvLCBpbiBWMywgYXBwbHlpbmcgdGhl
-IGNvbnZlcnNpb24gZnJvbSBwaHlzaWNhbC9jcHUgYWRkcmVzcyB0bwo+ID4gbG9naWNhbC9saW51
-eCBJTyBwb3J0IGZvciBhbnkgSU8gcmFuZ2VzLAo+ID4gaW5jbHVkaW5nIHRoZSBMUEMsIGJ1dCBy
-ZWNvcmRlZCB0aGUgbG9naWNhbCBJTyByYW5nZSBmb3IgTFBDLiBXaGVuCj4gPiBjYWxsaW5nIGlu
-L291dCB3aXRoIGEgbG9naWNhbCBwb3J0IGFkZHJlc3MsCj4gPiB3ZSBjYW4gY2hlY2sgdGhpcyBw
-b3J0IGZhbGwgaW50byBMUEMgbG9naWNhbCBJTyByYW5nZSBhbmQgZ2V0IGJhY2sgdGhlCj4gPiBy
-ZWFsIElPLgoKUmlnaHQsIGFuZCB0aGUgc2FtZSB0cmFuc2xhdGlvbiBjYW4gYmUgdXNlZCBpbiBf
-X29mX2FkZHJlc3NfdG9fcmVzb3VyY2UoKQpnb2luZyB0aGUgb3Bwb3NpdGUgd2F5LgoKPiA+IERv
-IHlvdSBoYXZlIGZ1cnRoZXIgY29tbWVudHMgYWJvdXQgdGhpcz8/Cj4gCj4gSSB0aGluayB0aGVy
-ZSBhcmUgdHdvIHNlcGFyYXRlIGlzc3VlcyB0byBiZSBkaXNjdXNzZWQ6Cj4gCj4gVGhlIGZpcnN0
-IGlzc3VlIGlzIGFib3V0IGhhdmluZyBvZl90cmFuc2xhdGVfYWRkcmVzcyBmYWlsaW5nIGR1ZSB0
-bwo+ICJyYW5nZSIgbWlzc2luZy4gQWJvdXQgdGhpcyBBcm5kIHN1Z2dlc3RlZCB0aGF0IGl0IGlz
-IG5vdCBhcHByb3ByaWF0ZQo+IHRvIGhhdmUgYSByYW5nZSBkZXNjcmliaW5nIGEgYnJpZGdlIDE6
-MSBtYXBwaW5nIGFuZCB0aGlzIHdhcyBkaXNjdXNzZWQKPiBiZWZvcmUgaW4gdGhpcyB0aHJlYWQu
-IEFybmQgaGFkIGEgc3VnZ2VzdGlvbiBhYm91dCB0aGlzIChzZWUgYmVsb3cpIAo+IGhvd2V2ZXIg
-KGxvb2tpbmcgdHdpY2UgYXQgdGhlIGNvZGUpIGl0IHNlZW1zIHRvIG1lIHRoYXQgc3VjaCBzb2x1
-dGlvbiAKPiB3b3VsZCBsZWFkIHRvIHF1aXRlIHNvbWUgZHVwbGljYXRpb24gZnJvbSBfX29mX3Ry
-YW5zbGF0ZV9hZGRyZXNzKCkKPiBpbiBvcmRlciB0byByZXRyaWV2ZSB0aGUgYWN0dWFsIGFkZHIg
-ZnJvbSBkdC4uLgoKSSBkb24ndCB0aGluayB3ZSBuZWVkIHRvIGR1cGxpY2F0ZSBtdWNoLCB3ZSBj
-YW4gcHJvYmFibHkgc2FmZWx5CmFzc3VtZSB0aGF0IHRoZXJlIGFyZSBubyBub250cml2aWFsIHJh
-bmdlcyBpbiBkZXZpY2VzIGJlbG93IHRoZSBMUEMKbm9kZSwgc28gd2UganVzdCB3YWxrIHVwIHRo
-ZSBidXMgdG8gc2VlIGlmIHRoZSBub2RlIGlzIGEgY2hpbGQKKG9yIHBvc3NpYmx5IGdyYW5kY2hp
-bGQgZXRjKSBvZiB0aGUgTFBDIGJ1cywgYW5kIHRyZWF0IGFueSBJTyBwb3J0Cm51bWJlciB1bmRl
-ciB0aGVyZSBhcyBhIHBoeXNpY2FsIHBvcnQgbnVtYmVyLCB3aGljaCBoYXMgYSBrbm93bgpvZmZz
-ZXQgZnJvbSB0aGUgTGludXggSS9PIHBvcnQgbnVtYmVyLgoKPiBJIHRoaW5rIGV4dGVuZGluZyBv
-Zl9lbXB0eV9yYW5nZXNfcXVpcmsoKSBtYXkgYmUgYSByZWFzb25hYmxlIHNvbHV0aW9uLgo+IFdo
-YXQgZG8geW91IHRoaW5rIEFybmQ/CgpJIGRvbid0IHJlYWxseSBsaWtlIHRoYXQgaWRlYSwgdGhh
-dCBxdWlyayBpcyBtZWFudCB0byB3b3JrIGFyb3VuZApicm9rZW4gRFRzLCBidXQgd2UgY2FuIGp1
-c3QgbWFrZSB0aGUgRFQgdmFsaWQgYW5kIGltcGxlbWVudCB0aGUKY29kZSBwcm9wZXJseS4KCj4g
-VGhlIHNlY29uZCBpc3N1ZSBpcyBhIGNvbmZsaWN0IGJldHdlZW4gY3B1IGFkZHJlc3NlcyB1c2Vk
-IGJ5IHRoZSBMUEMKPiBjb250cm9sbGVyIGFuZCBpL28gdG9rZW5zIGZyb20gcGNpIGVuZHBvaW50
-cy4KPiAKPiBBYm91dCB0aGlzIHdoYXQgaWYgd2UgbW9kaWZ5IGFybW42NF9leHRpb19vcHMgdG8g
-aGF2ZSBhIGxpc3Qgb2YgcmFuZ2VzCj4gcmF0aGVyIHRoYW4gb25seSBvbmUgcmFuZ2UgKG5vdyB3
-ZSBoYXZlIGp1c3Qgc3RhcnQvZW5kKTsgdGhlbiBpbiB0aGUKPiBMUEMgZHJpdmVyIHdlIGNhbiBz
-Y2FuIHRoZSBMUEMgY2hpbGQgZGV2aWNlcyBhbmQgCj4gMSkgcG9wdWxhdGUgc3VjaCBsaXN0IG9m
-IHJhbmdlcwo+IDIpIGNhbGwgcGNpX3JlZ2lzdGVyX2lvX3JhbmdlIGZvciBzdWNoIHJhbmdlcwoK
-U2Nhbm5pbmcgdGhlIGNoaWxkIGRldmljZXMgc291bmRzIHJlYWxseSB3cm9uZywgcGxlYXNlIHJl
-Z2lzdGVyIGp1c3QKb25lIHJhbmdlIHRoYXQgY292ZXJzIHRoZSBidXMgdG8ga2VlcCB0aGUgd29y
-a2Fyb3VuZCBhcyBzaW1wbGUKYXMgcG9zc2libGUuCgo+IFRoZW4gd2hlbiBjYWxsaW5nIF9fb2Zf
-YWRkcmVzc190b19yZXNvdXJjZSB3ZSByZXRyaWV2ZSBJL08gdG9rZW5zIAo+IGZvciB0aGUgZGV2
-aWNlcyBvbiB0b3Agb2YgdGhlIExQQyBkcml2ZXIgYW5kIGluIHRoZSBJL08gYWNjZXNzb3JzCj4g
-d2UgY2FsbCBwY2lfcGlvX3RvX2FkZHJlc3MgdG8gZmlndXJlIG91dCB0aGUgY3B1IGFkZHJlc3Mg
-YW5kIGNvbXBhcmUKPiBpdCB0byB0aGUgbGlzdCBvZiByYW5nZXMgaW4gYXJtbjY0X2V4dGlvX29w
-cy4KPiAgIAo+IFdoYXQgYWJvdXQgdGhpcz8KClRoYXQgc2VlbXMgcmVhbGx5IGNvbXBsZXggZm9y
-IHNvbWV0aGluZyB0aGF0IGNhbiBiZSBxdWl0ZSBzaW1wbGUuClRoZSBvbmx5IHRoaW5nIHdlIG5l
-ZWQgdG8gd29ycnkgYWJvdXQgaXMgdGhhdCB0aGUgaW9fcmFuZ2VfbGlzdApjb250YWlucyBhbiBl
-bnRyeSBmb3IgdGhlIExQQyBidXMgc28gd2UgZG9uJ3QgY29uZmxpY3Qgd2l0aCB0aGUKUENJIGJ1
-c2VzLgoKCUFybmQKCglBcm5kCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Rob, can you review those bindings?
+
+
+On 01/08/2016 at 17:50:32 +0200, Martin Fuzzey wrote :
+
+Please always include a commit message.
+
+> Signed-off-by: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/rtc/nxp,pcf85263.txt       |   41 ++++++++++++++++++++
+>  include/dt-bindings/rtc/nxp,pcf85263.h             |   14 +++++++
+>  2 files changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/nxp,pcf85263.txt
+>  create mode 100644 include/dt-bindings/rtc/nxp,pcf85263.h
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85263.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf85263.txt
+> new file mode 100644
+> index 0000000..03b9505
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85263.txt
+> @@ -0,0 +1,41 @@
+> +NXP PCF85263 I2C Real Time Clock
+> +
+> +Required properties:
+> +- compatible: must be: "nxp,rtc-pcf85263"
+> +- reg: must be the I2C address
+> +
+> +Optional properties:
+> +- interrupt-names: Which interrupt signal is used must be "INTA" or "INTB"
+> +    Defaults to "INTA"
+> +
+> +- quartz-load-capacitance: The internal capacitor to select for the quartz:
+> +	PCF85263_QUARTZCAP_7pF		[0]
+> +	PCF85263_QUARTZCAP_6pF		[1]
+> +	PCF85263_QUARTZCAP_12p5pF	[2] DEFAULT
+> +
+> +- quartz-drive-strength: Drive strength for the quartz:
+> +	PCF85263_QUARTZDRIVE_NORMAL	[0] DEFAULT
+> +	PCF85263_QUARTZDRIVE_LOW	[1]
+> +	PCF85263_QUARTZDRIVE_HIGH	[2]
+> +
+> +- quartz-low-jitter: Boolean property, if present enables low jitter mode which
+> +    reduces jitter at the cost of increased power consumption.
+> +
+
+Maybe that one should be handled using sysfs instead of DT as it is more
+policy than HW related.
+
+> +- wakeup-source: mark the chip as a wakeup source, independently of
+> +    the availability of an IRQ line connected to the SoC.
+> +    This is useful if the IRQ line is connected to a PMIC or other circuit
+> +    that can power up the device rather than to a normal SOC interrupt.
+> +
+> +Example:
+> +
+> +rtc@51 {
+> +	compatible = "nxp,pcf85263";
+> +	reg = <0x51>;
+> +
+> +	interrupt-parent = <&gpio4>;
+> +	interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
+> +	interrupt-names = "INTB";
+> +
+> +	quartz-load-capacitance = <PCF85263_QUARTZCAP_12p5pF>;
+> +	quartz-drive-strength = <PCF85263_QUARTZDRIVE_LOW>;
+> +};
+> diff --git a/include/dt-bindings/rtc/nxp,pcf85263.h b/include/dt-bindings/rtc/nxp,pcf85263.h
+> new file mode 100644
+> index 0000000..ea87ae4
+> --- /dev/null
+> +++ b/include/dt-bindings/rtc/nxp,pcf85263.h
+> @@ -0,0 +1,14 @@
+> +#ifndef _DT_BINDINGS_RTC_NXP_PCF85263_H
+> +#define _DT_BINDINGS_RTC_NXP_PCF85263_H
+> +
+> +/* Quartz capacitance */
+> +#define PCF85263_QUARTZCAP_7pF		0
+> +#define PCF85263_QUARTZCAP_6pF		1
+> +#define PCF85263_QUARTZCAP_12p5pF	2
+> +
+> +/* Quartz drive strength */
+> +#define PCF85263_QUARTZDRIVE_NORMAL	0
+> +#define PCF85263_QUARTZDRIVE_LOW	1
+> +#define PCF85263_QUARTZDRIVE_HIGH	2
+> +
+> +#endif /* _DT_BINDINGS_RTC_NXP_PCF85263_H */
+> 
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
