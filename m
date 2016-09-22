@@ -1,36 +1,26 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
+From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
 Subject: Re: [PATCH 2/4] drivers: iio: ti_am335x_adc: add dma support
-Date: Thu, 22 Sep 2016 16:15:32 +0530
-Message-ID: <0cd3dfcc-2525-c2fb-35ab-1b260c5973a8@ti.com>
+Date: Thu, 22 Sep 2016 16:26:15 +0530
+Message-ID: <e763c4a5-2cc3-eb1d-d0ce-b90747f5011a@ti.com>
 References: <20160921161134.6951-1-mugunthanvnm@ti.com>
  <20160921161134.6951-3-mugunthanvnm@ti.com>
- <1dbd7bbd-36ac-4433-79bf-8975a06dd07e@ti.com>
+ <94b46406-577e-9cec-8e79-1134581932c5@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1dbd7bbd-36ac-4433-79bf-8975a06dd07e@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vignesh R <vigneshr@ti.com>, linux-iio@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, "Andrew F . Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Jonathan Cameron <jic23@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <94b46406-577e-9cec-8e79-1134581932c5-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 22 September 2016 11:48 AM, Vignesh R wrote:
-> 
-> 
-> On Wednesday 21 September 2016 09:41 PM, Mugunthan V N wrote:
+On Thursday 22 September 2016 12:50 PM, Peter Ujfalusi wrote:
+> On 09/21/16 19:11, Mugunthan V N wrote:
 >> This patch adds the required pieces to ti_am335x_adc driver for
 >> DMA support
 >>
->> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+>> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
 >> ---
 >>  drivers/iio/adc/ti_am335x_adc.c      | 160 ++++++++++++++++++++++++++++++++++-
 >>  include/linux/mfd/ti_am335x_tscadc.h |   7 ++
@@ -54,9 +44,6 @@ On Thursday 22 September 2016 11:48 AM, Vignesh R wrote:
 >> +	dma_filter_fn		fn;
 >> +	/* Parameter to the filter function */
 >> +	void			*param;
-> 
-> These will not be needed with newer APIs (see below)
-> 
 >> +	struct dma_slave_config	conf;
 >> +	struct dma_chan		*chan;
 >> +	dma_addr_t		addr;
@@ -97,7 +84,37 @@ On Thursday 22 September 2016 11:48 AM, Vignesh R wrote:
 >> +	int i;
 >> +
 >> +	data = dma->valid_buf_seg ? dma->buf + dma->buf_offset : dma->buf;
+> 
+> bool valid_buf_seg ? The buffer segment is valid or not valid? Which buffer
+> segment is valid when valid_buf_seg is true?
+> 
+> I know what this is doing, but it is logically not correct.
+> 
+> Instead you could have:
+> 
+> int current_period; /* The period the DMA is working on */
+> 
+> When you start the DMA:
+> dma->current_period = 0; /* We start to fill period 0 */
+> 
+> In here:
+> 
+> u8 *data = dma->buf + (dma->current_period * dma_period_size);
+> 
 >> +	dma->valid_buf_seg = !dma->valid_buf_seg;
+> 
+> /* Currently we have only two periods, so we can just */
+> dma->current_period = !dma->current_period;
+> /* or */
+> dma->current_period = 1 - dma->current_period; /* swap the buffer ID */
+> 
+> I think this would make it better to follow and if later you figure that you
+> want three or more periods instead of the two, it is going to be easier to add
+> that.
+
+Okay, will change this in next version patch.
+
+> 
 >> +
 >> +	for (i = 0; i < dma->buf_offset; i += indio_dev->scan_bytes) {
 >> +		iio_push_to_buffers(indio_dev, data);
@@ -113,6 +130,23 @@ On Thursday 22 September 2016 11:48 AM, Vignesh R wrote:
 >> +
 >> +	dma->valid_buf_seg = false;
 >> +	dma->fifo_thresh = FIFO1_THRESHOLD;
+> 
+> FIFO1_THRESHOLD is defined as 19 in the global header file, so
+> if you have 2 channels enabled the trigger comes when the FIFO have 10
+> samples/ch, in case of all 8 channels enabled you will round it down the
+> trigger comes when you have 2 samples/ch.
+> 
+> Would not be better to try to use high threshold for the FIFO to reduce the
+> number of DMA requests needed runtime?
+> 
+> It is OK as it is at the moment, but I think it would make sense to try to
+> maximize the FIFO usage.
+
+I had already tried with higher values, It works fine. Just don't want
+to change the non-DMA implementation as I am not aware of any
+limitations why at the first place they have used fifo threshold as 19.
+
+> 
 >> +	/*
 >> +	 * Make the fifo thresh as the multiple of total number of
 >> +	 * channels enabled, so make sure that that cyclic DMA period
@@ -121,26 +155,24 @@ On Thursday 22 September 2016 11:48 AM, Vignesh R wrote:
 >> +	 * to the stack via iio_push_to_buffers().
 >> +	 */
 >> +	dma->fifo_thresh -= (dma->fifo_thresh + 1) % adc_dev->total_ch_enabled;
-> 
-> Can we use rounddown(FIFO1_THRESHOLD + 1, adc_dev->total_ch_enabled)?
-> 
 >> +	dma->buf_offset = DMA_BUFFER_SIZE / 2;
 >> +	/* Make sure that period length is multiple of fifo thresh level */
 >> +	dma->buf_offset -= dma->buf_offset % ((dma->fifo_thresh + 1) *
 >> +					      sizeof(u16));
 >> +
-> 
-> Can we use rounddown()?
-
-Will change this in next version.
-
-> 
 >> +	dma->conf.src_maxburst = dma->fifo_thresh + 1;
 >> +	dmaengine_slave_config(dma->chan, &dma->conf);
 >> +
 >> +	desc = dmaengine_prep_dma_cyclic(dma->chan, dma->addr,
 >> +					 dma->buf_offset * 2,
 >> +					 dma->buf_offset, DMA_DEV_TO_MEM,
+> 
+> I find the buf_offset name and it's use really confusing. It should be called
+> period_size, really.
+
+Yes, will fix this.
+
+> 
 >> +					 DMA_PREP_INTERRUPT);
 >> +	if (!desc)
 >> +		return -EBUSY;
@@ -246,10 +278,9 @@ Will change this in next version.
 >> +						     adc_dev->mfd_tscadc->dev,
 >> +						     "fifo1");
 > 
-> Please use dma_request_chan() API instead, this does not need
-> dma_filter_fn and probe defer can be handled.
+> dma_request_chan()
 
-Okay
+Will fix this.
 
 > 
 >> +	if (!dma->chan)
@@ -262,12 +293,6 @@ Okay
 >> +		goto err;
 >> +
 >> +	dev_dbg_ratelimited(adc_dev->mfd_tscadc->dev, "got dma channel\n");
-> 
-> Do we need _ratelimited? AFAICS, this print is called only once.
-
-True, will change to dev_dbg.
-
-> 
 >> +
 >> +	return 0;
 >> +err:
@@ -303,15 +328,6 @@ True, will change to dev_dbg.
 >>  
 >> +	if (dma->chan)
 >> +		dma_release_channel(dma->chan);
-> 
-> dma_free_coherent() for dma->buf?
-
-Oops missed, will fix in next version.
-
-Regards
-Mugunthan V N
-
-> 
 >>  	iio_device_unregister(indio_dev);
 >>  	tiadc_iio_buffered_hardware_remove(indio_dev);
 >>  	tiadc_channels_remove(indio_dev);
@@ -349,3 +365,12 @@ Mugunthan V N
 >>  #define CHARGE_STEP		0x11
 >>
 > 
+> 
+
+--
+Regards
+Mugunthan V N
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
