@@ -1,52 +1,66 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 1/3] watchdog: bindings: dw_wdt: add reset lines
-Date: Thu, 22 Sep 2016 09:02:30 +0200
-Message-ID: <1474527753-22194-2-git-send-email-s.trumtrar@pengutronix.de>
-References: <1474527753-22194-1-git-send-email-s.trumtrar@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474527753-22194-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 1/2] Documentation: mmc: sdhci-of-arasan: add
+ description of power domain
+Date: Thu, 22 Sep 2016 09:14:03 +0200
+Message-ID: <CAPDyKFo+DZkd4v06DOOHLBdAD-7UgYcBspbZkzFSnjA-a3pOkg@mail.gmail.com>
+References: <20160917023250.1159-1-xzy.xu@rock-chips.com> <20160917023250.1159-2-xzy.xu@rock-chips.com>
+ <CAPDyKFrgdsppLg9RkCsSh4nhjUiJR6D4u+E8qnzfbtNxhwLOmw@mail.gmail.com> <1ec66aea-10b4-4208-369e-9ef5feb800df@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1ec66aea-10b4-4208-369e-9ef5feb800df@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ziyuan Xu <xzy.xu@rock-chips.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-mmc <linux-mmc@vger.kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, Doug Anderson <dianders@chromium.org>, zhangqing <zhangqing@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the reset lines holding the watchdog core in reset.
+On 20 September 2016 at 04:29, Ziyuan Xu <xzy.xu@rock-chips.com> wrote:
+> hi Ulf,
+>
+>
+> On 2016=E5=B9=B409=E6=9C=8817=E6=97=A5 16:49, Ulf Hansson wrote:
+>>
+>> On 17 September 2016 at 04:32, Ziyuan Xu <xzy.xu@rock-chips.com> wrote:
+>>>
+>>> Add power domain as a optional property for sdhci-of-arasan, which can
+>>> be turned off in the so-called unused condition, such as suspend and
+>>> remove. Aim to lower power requirements.
+>>
+>> I assume runtime suspend make sense as well?
+>
+>
+> Sorry to reply this mail after a long time.
+>
+> On rk3399 platform, there is a eMMC-phy which is in charge of eMMC's logi=
+c
+> interface. We should guarantee that phy is ready before cmd/data transfer=
+.
+> I mean that I need to consider about the resume latency, so that I can la=
+nd
+> RPM for arasan-of-sdhci.
+> I intend to use auto-suspend for arasan-of-sdhci.
+>
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- Documentation/devicetree/bindings/watchdog/dw_wdt.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+Okay!
 
-diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-index 08e16f684f2d..3bf386c72241 100644
---- a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-@@ -10,6 +10,9 @@ Required Properties:
- Optional Properties:
- 
- - interrupts	: The interrupt used for the watchdog timeout warning.
-+- resets	: phandle pointing to the system reset controller with
-+		line index for the watchdog.
-+- reset-names	: must be set to "dw-wdt".
- 
- Example:
- 
-@@ -18,4 +21,6 @@ Example:
- 		reg = <0xffd02000 0x1000>;
- 		interrupts = <0 171 4>;
- 		clocks = <&per_base_clk>;
-+		resets = <&rst WDT0_RESET>;
-+		reset-names = "dw-wdt";
- 	};
--- 
-2.8.1
+>>
+>> Moreover, perhaps you could share a little information here about what
+>> needs to be done at the driver level which controls the mmc IP. More
+>> precisely, what do you need to do at runtime_suspend, suspend,
+>> runtime_resume, and resume?
+>
+>
+> Invoke sdhci_runtime_suspend_host, disable relevant clock in
+> rumtime_suspend, deprocessing in runtime_resume.
+> Is that ok?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Okay!
+
+[...]
+
+Thanks for sharing some more information, could you please re-spin
+with an updated change log?
+
+Kind regards
+Uffe
