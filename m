@@ -1,41 +1,120 @@
-From: <tthayer@opensource.altera.com>
-Subject: [PATCHv2 1/4] Documentation: dt: serial: Add TX FIFO threshold parameter
-Date: Thu, 22 Sep 2016 14:56:14 -0500
-Message-ID: <1474574177-4984-2-git-send-email-tthayer@opensource.altera.com>
-References: <1474574177-4984-1-git-send-email-tthayer@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Subject: [PATCH] ASoC: simple-card: add support for aux devices
+Date: Thu, 22 Sep 2016 23:50:44 +0300
+Message-ID: <1474577444-7598-1-git-send-email-nikita.yoush@cogentembedded.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1474574177-4984-1-git-send-email-tthayer@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, lftan@altera.com, jslaby@suse.com, arnd@arndb.de, peter@hurleysoftware.com, andriy.shevchenko@linux.intel.com, anton.wuerfel@fau.de, phillip.raffeck@fau.de, yegorslists@googlemail.com, matwey@sai.msu.ru, mail@maciej.szmigiero.name
-Cc: peter.ujfalusi@ti.com, jonathanh@nvidia.com, dongsheng.wang@nxp.com, luis@debethencourt.com, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, nios2-dev@lists.rocketboards.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, =?UTF-8?q?Otto=20Kek=C3=A4l=C3=A4inen?= <otto@seravo.fi>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mengdong Lin <mengdong.lin@linux.intel.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andrew Lunn <andrew@lunn.ch>, Peter Ujfalusi <peter.ujfalusi@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Chris Healy <cphealy@gmail.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer@opensource.altera.com>
+This patch makes it possible to use simple-card in setups where separate
+amplifier chip is connected to codec's output.
 
-Add the device tree binding needed to support the TX FIFO threshold
-parameter.
+Example usage:
 
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+	codec: tlv320dac3100@18 {
+		compatible = "ti,tlv320dac3100";
+		...
+	}
+
+	amp: tpa6130a2@60 {
+		compatible = "ti,tpa6130a2";
+		...
+	}
+
+	sound {
+		compatible = "simple-audio-card";
+		...
+		simple-audio-card,widgets =
+			"Headphone", "Headphone Jack";
+		simple-audio-card,routing =
+			"Headphone Jack", "HPLEFT",
+			"Headphone Jack", "HPRIGHT",
+			"LEFTIN", "HPL",
+			"RIGHTIN", "HPR";
+		simple-audio-card,aux-devs = <&amp>;
+		simple-audio-card,cpu {
+			sound-dai = <&ssi2>;
+		};
+		simple-audio-card,codec {
+			sound-dai = <&codec1>;
+			clocks = ...
+		};
+
+This describes audio path from IMX6 SSI2 through TLV320DAC3100 codec
+through TPA6130A2 amplifier to headphones.
+
+Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
 ---
-v2  Change parameter name from tx-loadsz to tx-threshold
----
- Documentation/devicetree/bindings/serial/8250.txt |    2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/sound/simple-card.txt      |  2 ++
+ sound/soc/generic/simple-card.c                    | 34 ++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
-index 936ab5b..f86bb06 100644
---- a/Documentation/devicetree/bindings/serial/8250.txt
-+++ b/Documentation/devicetree/bindings/serial/8250.txt
-@@ -42,6 +42,8 @@ Optional properties:
- - auto-flow-control: one way to enable automatic flow control support. The
-   driver is allowed to detect support for the capability even without this
-   property.
-+- tx-threshold: Specify the TX FIFO low water indication for parts with
-+  programmable TX FIFO thresholds.
+diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
+index 59d8628..5579f40 100644
+--- a/Documentation/devicetree/bindings/sound/simple-card.txt
++++ b/Documentation/devicetree/bindings/sound/simple-card.txt
+@@ -22,6 +22,8 @@ Optional properties:
+ 					  headphones are attached.
+ - simple-audio-card,mic-det-gpio	: Reference to GPIO that signals when
+ 					  a microphone is attached.
++- simple-audio-card,aux-devs		: List of phandles pointing to auxiliary devices, such
++					  as amplifiers, to be added to the sound card.
  
- Note:
- * fsl,ns16550:
+ Optional subnodes:
+ 
+diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
+index 43295f0..f989f34 100644
+--- a/sound/soc/generic/simple-card.c
++++ b/sound/soc/generic/simple-card.c
+@@ -417,6 +417,36 @@ dai_link_of_err:
+ 	return ret;
+ }
+ 
++static int asoc_simple_card_parse_aux_devs(struct device_node *node,
++					   struct simple_card_data *priv)
++{
++	struct device *dev = simple_priv_to_dev(priv);
++	struct device_node *aux_node;
++	int i, n, len;
++
++	if (!of_find_property(node, PREFIX "aux-devs", &len))
++		return 0;		/* Ok to have no aux-devs */
++
++	n = len / sizeof(__be32);
++	if (n <= 0)
++		return -EINVAL;
++
++	priv->snd_card.aux_dev = devm_kzalloc(dev,
++			n * sizeof(*priv->snd_card.aux_dev), GFP_KERNEL);
++	if (!priv->snd_card.aux_dev)
++		return -ENOMEM;
++
++	for (i = 0; i < n; i++) {
++		aux_node = of_parse_phandle(node, PREFIX "aux-devs", i);
++		if (!aux_node)
++			return -EINVAL;
++		priv->snd_card.aux_dev[i].codec_of_node = aux_node;
++	}
++
++	priv->snd_card.num_aux_devs = n;
++	return 0;
++}
++
+ static int asoc_simple_card_parse_of(struct device_node *node,
+ 				     struct simple_card_data *priv)
+ {
+@@ -474,6 +504,10 @@ static int asoc_simple_card_parse_of(struct device_node *node,
+ 	if (ret)
+ 		return ret;
+ 
++	ret = asoc_simple_card_parse_aux_devs(node, priv);
++	if (ret)
++		return ret;
++
+ 	return 0;
+ }
+ 
 -- 
-1.7.9.5
+2.1.4
