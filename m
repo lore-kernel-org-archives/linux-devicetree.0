@@ -1,53 +1,77 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 0/2] Fix warnings for i2c-rk3x.c
-Date: Thu, 22 Sep 2016 19:52:25 +0200
-Message-ID: <20160922175224.GD1861@katana>
-References: <1474543764-51135-1-git-send-email-david.wu@rock-chips.com>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [RFC/PATCH] usb: misc: Add a driver for TC7USB40MU
+Date: Thu, 22 Sep 2016 11:51:02 -0700
+Message-ID: <147457026249.9057.8712383708019243942@sboyd-linaro>
+References: <20160914014246.31847-1-stephen.boyd@linaro.org>
+ <147384330268.13546.17843140335600627152@sboyd-linaro>
+ <20160917011605.GB10392@b29397-desktop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="48TaNjbzBVislYPb"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1474543764-51135-1-git-send-email-david.wu@rock-chips.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: David Wu <david.wu@rock-chips.com>
-Cc: heiko@sntech.de, dianders@chromium.org, huangtao@rock-chips.com, wxt@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160917011605.GB10392@b29397-desktop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Peter Chen (2016-09-16 18:16:05)
+> On Wed, Sep 14, 2016 at 01:55:02AM -0700, Stephen Boyd wrote:
+> > Quoting Stephen Boyd (2016-09-13 18:42:46)
+> > > On the db410c 96boards platform we have a TC7USB40MU[1] on the
+> > > board to mux the D+/D- lines from the SoC between a micro usb
+> > > "device" port and a USB hub for "host" roles. Upon a role switch,
+> > > we need to change this mux to forward the D+/D- lines to either
+> > > the port or the hub. Therefore, introduce a driver for this
+> > > device that intercepts extcon USB_HOST events and logically
+> > > asserts a gpio to mux the "host" D+/D- lines when a host cable is
+> > > attached. When the cable goes away, it will logically deassert
+> > > the gpio and mux the "device" lines.
+> > > 
+> > > [1] https://toshiba.semicon-storage.com/ap-en/product/logic/bus-switch/detail.TC7USB40MU.html
+> > > 
+> > > Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+> > > Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> > > Cc: <devicetree@vger.kernel.org>
+> > > Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+> > > ---
+> > > 
+> > > Should I make the extcon part optional? I could see a case where there are two
+> > > "OTG" ports connected to the mux (or two hubs), and for some reason the
+> > > software may want to mux between them at runtime. If we mandate an extcon,
+> > > that won't be possible to support. Perhaps it would be better to have
+> > > the node, but connect it to the usb controller with a phandle (maybe of_graph
+> > > endpoints would be useful too) so that when the controller wants to mux over
+> > > a port it can do so.
+> > 
+> > Here's some dts mock-up on top of the db410c for the of_graph stuff. I
+> > haven't written any code around it, but the idea is to allow the binding
+> > to specify how the mux is connected to upstream and downstream D+/D-
+> > lines. This way, we can do some dt parsing of the endpoints and their
+> > parent nodes to figure out if the mux needs to be set high or low to use
+> > a device connector or a usb hub based on if the id cable is present.
+> > Maybe I'm over thinking things though and we could just have a DT
+> > property for that.
+> > 
+> >       soc {
+> >               usb@78d9000 {
+> >                       extcon = <&usb_id>, <&usb_id>;
+> 
+> Why you have two same extcon phandler? From my mind, one should id,
+> another should is vbus. Besides, I find extcon-usb-gpio.c is lack of
+> vbus support, how you support vbus detection for
+> connection/disconnection with PC for your chipidea msm patch set?
 
---48TaNjbzBVislYPb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Sep 22, 2016 at 07:29:22PM +0800, David Wu wrote:
-> David Wu (2):
->   i2c: rk3x: Fix sparse warning
->   i2c: rk3x: fix variable 'min_total_ns' unused warning
->=20
-
-Applied to for-next, thanks!
-
-
---48TaNjbzBVislYPb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJX5BpYAAoJEBQN5MwUoCm2vMoP/AsVxS31e91s05zivRt4VShE
-4qDOyW4BHw7D+D8+KJHrdnMPwt7RgUyZskjSn2H+asTfq4R7XIBwYVLfnc0j1zJe
-5BOWQd+n5w6XO6ZN3Rw2eyOowvBiQ4Xdfe7IqmUHPhpe+QmsYb+U90YAb0pL24wI
-f4A47EaaP3HSmzKr/u/2r5NTZmdo6OJxmrNPsQqPfERnjQ32Pw8+ibdUfR1ayhOC
-fi91btgtjoCUcEFSOAZQbPiTFt/0Lq1FAMnu13PcZBJfFYjOpOtdN5nYFBJzKVVl
-vVPWt9gLhxN0TgZbScLhhKv3KSR1s5+wCnbbbWpv4hQHiFCSL9CQn4aSzSwTAOvQ
-aVQ1WNwvU5BcjJVk94LbD2dOQK0+Zr3ItqcxOC7ESp8WmMzFCcAMy7YZ5zop9EVU
-pgR0/mrJFPYtqeKnIyuMjdDHDxjiarBsDYZIz4w66z9l6gzI+5aJ9zKEJIMf91ic
-jRUrmCl4Z77LQWg+IYrdDXeECwWFBEdPf2i5rqLv4OpveNqoYi5MmoaC8vZIqQVW
-r6Cw3kH5BS99V5LESyqph3z1qADOQUi8rv6ZGsWwtuNa7ydpJOrtSZzp951+fWg6
-JalL1lPN5GhwN7DgZTAw9PGe078bUBVhZWh5OGNXGzEQmzagyHXpEYOX9LUA+R5z
-pJIEQYjz05Ee1dB0xv0E
-=Pg1D
------END PGP SIGNATURE-----
-
---48TaNjbzBVislYPb--
+This was already in the dts files for db410c. In the chipidea binding
+one is for EXTCON_USB (vbus) and one is for EXTCON_USB_HOST (id). My
+understanding is that extcon-usb-gpio.c sends events for both EXTCON_USB
+and EXTCON_USB_HOST when the gpio changes state. vbus detection is not
+that great on this board because we only have on gpio for this.
