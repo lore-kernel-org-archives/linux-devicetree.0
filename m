@@ -1,86 +1,188 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v2] arm: dts: zynq: Add MicroZed board support
-Date: Thu, 22 Sep 2016 13:59:17 -0700
-Message-ID: <20160922205917.GS16583@xsjsorenbubuntu>
-References: <1474550489-7005-1-git-send-email-jagan@amarulasolutions.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: wheat: add DU support
+Date: Fri, 23 Sep 2016 00:06:43 +0300
+Message-ID: <3066182.ZErLCrPBIM@wasted.cogentembedded.com>
+References: <34968644.DhifNderY8@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1474550489-7005-1-git-send-email-jagan@amarulasolutions.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jagan Teki <jagannadh.teki@gmail.com>
-Cc: Jagan Teki <jteki@openedev.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michal Simek <michal.simek@xilinx.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <34968644.DhifNderY8-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE2LTA5LTIyIGF0IDE4OjUxOjI5ICswNTMwLCBKYWdhbiBUZWtpIHdyb3RlOgo+
-IEZyb206IEphZ2FuIFRla2kgPGp0ZWtpQG9wZW5lZGV2LmNvbT4KPiAKPiBBZGRlZCBiYXNpYyBk
-dHMgc3VwcG9ydCBmb3IgTWljcm9aZWQgYm9hcmQuCj4gCj4gLSBVQVJUCj4gLSBTREhDSQo+IC0g
-RXRoZXJuZXQKPiAKPiBDYzogU29yZW4gQnJpbmttYW5uIDxzb3Jlbi5icmlua21hbm5AeGlsaW54
-LmNvbT4KPiBDYzogTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT4KPiBTaWdu
-ZWQtb2ZmLWJ5OiBKYWdhbiBUZWtpIDxqdGVraUBvcGVuZWRldi5jb20+Cj4gLS0tCj4gQ2hhbmdl
-cyBmb3IgdjI6Cj4gCS0gQWRkIFNESENJCj4gCS0gQWRkIEV0aGVybmV0Cj4gCj4gIGFyY2gvYXJt
-L2Jvb3QvZHRzL01ha2VmaWxlICAgICAgICAgIHwgIDEgKwo+ICBhcmNoL2FybS9ib290L2R0cy96
-eW5xLW1pY3JvemVkLmR0cyB8IDk1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysKPiAgMiBmaWxlcyBjaGFuZ2VkLCA5NiBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBhcmNoL2FybS9ib290L2R0cy96eW5xLW1pY3JvemVkLmR0cwo+IAo+IGRpZmYgLS1naXQg
-YS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxl
-Cj4gaW5kZXggZmFhY2Q1Mi4uNGQ3Yjg1OCAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0
-cy9NYWtlZmlsZQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlCj4gQEAgLTg2Miw2
-ICs4NjIsNyBAQCBkdGItJChDT05GSUdfQVJDSF9WVDg1MDApICs9IFwKPiAgCXdtODc1MC1hcGM4
-NzUwLmR0YiBcCj4gIAl3bTg4NTAtdzcwdjIuZHRiCj4gIGR0Yi0kKENPTkZJR19BUkNIX1pZTlEp
-ICs9IFwKPiArCXp5bnEtbWljcm96ZWQuZHRiIFwKPiAgCXp5bnEtcGFyYWxsZWxsYS5kdGIgXAo+
-ICAJenlucS16YzcwMi5kdGIgXAo+ICAJenlucS16YzcwNi5kdGIgXAo+IGRpZmYgLS1naXQgYS9h
-cmNoL2FybS9ib290L2R0cy96eW5xLW1pY3JvemVkLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5
-bnEtbWljcm96ZWQuZHRzCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi45
-ZTY0NDk2Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtbWlj
-cm96ZWQuZHRzCj4gQEAgLTAsMCArMSw5NSBAQAo+ICsvKgo+ICsgKiBDb3B5cmlnaHQgKEMpIDIw
-MTUgSmFnYW4gVGVraSA8anRla2lAb3BlbmVkZXYuY29tPgo+ICsgKgo+ICsgKiBUaGlzIHNvZnR3
-YXJlIGlzIGxpY2Vuc2VkIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGlj
-Cj4gKyAqIExpY2Vuc2UgdmVyc2lvbiAyLCBhcyBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdh
-cmUgRm91bmRhdGlvbiwgYW5kCj4gKyAqIG1heSBiZSBjb3BpZWQsIGRpc3RyaWJ1dGVkLCBhbmQg
-bW9kaWZpZWQgdW5kZXIgdGhvc2UgdGVybXMuCj4gKyAqCj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBk
-aXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVsLAo+ICsgKiBidXQg
-V0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBv
-Zgo+ICsgKiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBP
-U0UuICBTZWUgdGhlCj4gKyAqIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRl
-dGFpbHMuCj4gKyAqLwo+ICsvZHRzLXYxLzsKPiArL2luY2x1ZGUvICJ6eW5xLTcwMDAuZHRzaSIK
-PiArCj4gKy8gewo+ICsJbW9kZWwgPSAiWnlucSBNaWNyb1pFRCBEZXZlbG9wbWVudCBCb2FyZCI7
-Cj4gKwljb21wYXRpYmxlID0gInhsbngsenlucS1taWNyb3plZCIsICJ4bG54LHp5bnEtNzAwMCI7
-Cj4gKwo+ICsJYWxpYXNlcyB7Cj4gKwkJZXRoZXJuZXQwID0gJmdlbTA7Cj4gKwkJc2VyaWFsMCA9
-ICZ1YXJ0MTsKPiArCX07Cj4gKwo+ICsJbWVtb3J5IHsKPiArCQlkZXZpY2VfdHlwZSA9ICJtZW1v
-cnkiOwo+ICsJCXJlZyA9IDwweDAgMHg0MDAwMDAwMD47Cj4gKwl9Owo+ICsKPiArCWNob3NlbiB7
-Cj4gKwkJYm9vdGFyZ3MgPSAiZWFybHljb24iOwo+ICsJCXN0ZG91dC1wYXRoID0gInNlcmlhbDA6
-MTE1MjAwbjgiOwo+ICsJfTsKPiArCj4gKwl1c2JfcGh5MDogcGh5MCB7Cj4gKwkJY29tcGF0aWJs
-ZSA9ICJ1c2Itbm9wLXhjZWl2IjsKPiArCQkjcGh5LWNlbGxzID0gPDA+Owo+ICsJfTsKPiArfTsK
-PiArCj4gKyZjbGtjIHsKPiArCXBzLWNsay1mcmVxdWVuY3kgPSA8MzMzMzMzMzM+Owo+ICt9Owo+
-ICsKPiArJmdlbTAgewo+ICsJc3RhdHVzID0gIm9rYXkiOwo+ICsJcGh5LW1vZGUgPSAicmdtaWkt
-aWQiOwo+ICsJcGh5LWhhbmRsZSA9IDwmZXRoZXJuZXRfcGh5PjsKPiArCj4gKwlldGhlcm5ldF9w
-aHk6IGV0aGVybmV0LXBoeUAwIHsKPiArCQlyZWcgPSA8MD47Cj4gKwl9Owo+ICt9Owo+ICsKPiAr
-JnNkaGNpMCB7Cj4gKwlzdGF0dXMgPSAib2theSI7Cj4gK307Cj4gKwo+ICsmdWFydDEgewo+ICsJ
-c3RhdHVzID0gIm9rYXkiOwo+ICt9Owo+ICsKPiArJnVzYjAgewo+ICsJc3RhdHVzID0gIm9rYXki
-Owo+ICsJZHJfbW9kZSA9ICJob3N0IjsKPiArCXVzYi1waHkgPSA8JnVzYl9waHkwPjsKPiArCXBp
-bmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4gKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdXNiMF9k
-ZWZhdWx0PjsKPiArfTsKPiArCj4gKyZwaW5jdHJsMCB7Cj4gKwlwaW5jdHJsX3VzYjBfZGVmYXVs
-dDogdXNiMC1kZWZhdWx0IHsKPiArCQltdXggewo+ICsJCQlncm91cHMgPSAidXNiMF8wX2dycCI7
-Cj4gKwkJCWZ1bmN0aW9uID0gInVzYjAiOwo+ICsJCX07Cj4gKwo+ICsJCWNvbmYgewo+ICsJCQln
-cm91cHMgPSAidXNiMF8wX2dycCI7Cj4gKwkJCXNsZXctcmF0ZSA9IDwwPjsKPiArCQkJaW8tc3Rh
-bmRhcmQgPSA8MT47Cj4gKwkJfTsKPiArCj4gKwkJY29uZi1yeCB7Cj4gKwkJCXBpbnMgPSAiTUlP
-MjkiLCAiTUlPMzEiLCAiTUlPMzYiOwo+ICsJCQliaWFzLWhpZ2gtaW1wZWRhbmNlOwo+ICsJCX07
-Cj4gKwo+ICsJCWNvbmYtdHggewo+ICsJCQlwaW5zID0gIk1JTzI4IiwgIk1JTzMwIiwgIk1JTzMy
-IiwgIk1JTzMzIiwgIk1JTzM0IiwKPiArCQkJICAgICAgICJNSU8zNSIsICJNSU8zNyIsICJNSU8z
-OCIsICJNSU8zOSI7Cj4gKwkJCWJpYXMtZGlzYWJsZTsKPiArCQl9Owo+ICsJfTsKPiArfTsKCkkg
-Z3Vlc3MgaXQncyBub3Qgc3RyaWN0bHkgcmVxdWlyZWQsIGJ1dCBzaG91bGRuJ3QgdGhlcmUgYmUg
-cGluY3RybApkZXNjcmlwdGlvbnMgZm9yIGFsbCBkZXZpY2VzPwoKCVPDtnJlbgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Define  the  Wheat board dependent  part of the DU device node.
+Add the device nodes for the Analog Devices ADV7513 HDMI transmitters
+connected to DU0/1.  Add the necessary subnodes to interconnect DU with
+HDMI transmitters/connectors.
+
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+
+---
+The patch is against the 'renesas-devel-20160919-v4.8-rc7' of Simon Horman's
+'renesas.git' repo...
+The patch depends on the 2 DRM patches (already merged by the maintainers) in
+order to work correctly.
+
+Changes in version 2:
+- refreshed the patch.
+
+ arch/arm/boot/dts/r8a7792-wheat.dts |  126 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 126 insertions(+)
+
+Index: renesas/arch/arm/boot/dts/r8a7792-wheat.dts
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7792-wheat.dts
++++ renesas/arch/arm/boot/dts/r8a7792-wheat.dts
+@@ -86,6 +86,34 @@
+ 		gpio = <&gpio11 12 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 	};
++
++	hdmi-out0 {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con0: endpoint {
++				remote-endpoint = <&adv7513_0_out>;
++			};
++		};
++	};
++
++	hdmi-out1 {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con1: endpoint {
++				remote-endpoint = <&adv7513_1_out>;
++			};
++		};
++	};
++
++	osc2_clk: osc2 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <74250000>;
++	};
+ };
+ 
+ &extal_clk {
+@@ -128,6 +156,16 @@
+ 		groups = "qspi_ctrl", "qspi_data4";
+ 		function = "qspi";
+ 	};
++
++	du0_pins: du0 {
++		groups = "du0_rgb888", "du0_sync", "du0_disp";
++		function = "du0";
++	};
++
++	du1_pins: du1 {
++		groups = "du1_rgb666", "du1_sync", "du1_disp";
++		function = "du1";
++	};
+ };
+ 
+ &scif0 {
+@@ -196,4 +234,92 @@
+ 			};
+ 		};
+ 	};
++};
++
++&i2c4 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	hdmi@3d {
++		compatible = "adi,adv7513";
++		reg = <0x3d>;
++
++		adi,input-depth = <8>;
++		adi,input-colorspace = "rgb";
++		adi,input-clock = "1x";
++		adi,input-style = <1>;
++		adi,input-justification = "evenly";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				adv7513_0_in: endpoint {
++					remote-endpoint = <&du_out_rgb0>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				adv7513_0_out: endpoint {
++					remote-endpoint = <&hdmi_con0>;
++				};
++			};
++		};
++	};
++
++	hdmi@39 {
++		compatible = "adi,adv7513";
++		reg = <0x39>;
++
++		adi,input-depth = <8>;
++		adi,input-colorspace = "rgb";
++		adi,input-clock = "1x";
++		adi,input-style = <1>;
++		adi,input-justification = "evenly";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				adv7513_1_in: endpoint {
++					remote-endpoint = <&du_out_rgb1>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				adv7513_1_out: endpoint {
++					remote-endpoint = <&hdmi_con1>;
++				};
++			};
++		};
++	};
++};
++
++&du {
++	pinctrl-0 = <&du0_pins &du1_pins>;
++	pinctrl-names = "default";
++
++	clocks = <&mstp7_clks R8A7792_CLK_DU0>, <&mstp7_clks R8A7792_CLK_DU1>,
++		 <&osc2_clk>;
++	clock-names = "du.0", "du.1", "dclkin.0";
++	status = "okay";
++
++	ports {
++		port@0 {
++			endpoint {
++				remote-endpoint = <&adv7513_0_in>;
++			};
++		};
++		port@1 {
++			endpoint {
++				remote-endpoint = <&adv7513_1_in>;
++			};
++		};
++	};
+ };
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
