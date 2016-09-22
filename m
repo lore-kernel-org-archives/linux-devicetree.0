@@ -1,150 +1,124 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 3/3] pci:aer: add support aer interrupt with none
- MSI/MSI-X/INTx mode
-Date: Wed, 21 Sep 2016 17:37:41 -0500
-Message-ID: <20160921223741.GG20006@localhost>
-References: <1472625442-23309-2-git-send-email-po.liu@nxp.com>
- <1473741659-17618-1-git-send-email-po.liu@nxp.com>
- <1473741659-17618-3-git-send-email-po.liu@nxp.com>
+From: Phil Reid <preid@electromag.com.au>
+Subject: Re: [PATCH v5 1/6] I2C: i2c-smbus: add device tree support
+Date: Thu, 22 Sep 2016 10:24:05 +0800
+Message-ID: <4d12ecab-850b-8704-c370-d80cd1e4ab36@electromag.com.au>
+References: <1474447274-90821-1-git-send-email-preid@electromag.com.au>
+ <1474447274-90821-2-git-send-email-preid@electromag.com.au>
+ <20160921113405.GE18176@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1473741659-17618-3-git-send-email-po.liu-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Po Liu <po.liu-3arQi8VN3Tc@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roy Zang <roy.zang-3arQi8VN3Tc@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160921113405.GE18176@leverpostej>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: wsa@the-dreams.de, robh+dt@kernel.org, sre@kernel.org, andrea.merello@gmail.com, karl-heinz@schneider-inet.de, arnd@arndb.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 13, 2016 at 12:40:59PM +0800, Po Liu wrote:
-> On some platforms, root port doesn't support MSI/MSI-X/INTx in RC mode.
-> When chip support the aer interrupt with none MSI/MSI-X/INTx mode,
-> maybe there is interrupt line for aer pme etc. Search the interrupt
-> number in the fdt file. Then fixup the dev->irq with it.
-> 
-> Signed-off-by: Po Liu <po.liu-3arQi8VN3Tc@public.gmane.org>
-> ---
-> changes for v5:
-> 	- Add clear 'aer' interrup-names description
-> 
->  .../devicetree/bindings/pci/layerscape-pci.txt     | 11 +++++---
->  drivers/pci/pcie/portdrv_core.c                    | 31 +++++++++++++++++++---
->  2 files changed, 35 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> index 41e9f55..101d0a7 100644
-> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> @@ -18,8 +18,10 @@ Required properties:
->  - reg: base addresses and lengths of the PCIe controller
->  - interrupts: A list of interrupt outputs of the controller. Must contain an
->    entry for each entry in the interrupt-names property.
-> -- interrupt-names: Must include the following entries:
-> -  "intr": The interrupt that is asserted for controller interrupts
-> +- interrupt-names: It may be include the following entries:
-> +  "aer": The interrupt that is asserted for aer interrupt
-> +  "pme": The interrupt that is asserted for pme interrupt
-> +  ......
->  - fsl,pcie-scfg: Must include two entries.
->    The first entry must be a link to the SCFG device node
->    The second entry must be '0' or '1' based on physical PCIe controller index.
-> @@ -35,8 +37,9 @@ Example:
->  		reg = <0x00 0x03400000 0x0 0x00010000   /* controller registers */
->  		       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
->  		reg-names = "regs", "config";
-> -		interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-> -		interrupt-names = "intr";
-> +		interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>, /* aer interrupt */
-> +			<GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>; /* pme interrupt */
-> +		interrupt-names = "aer", "pme";
->  		fsl,pcie-scfg = <&scfg 0>;
->  		#address-cells = <3>;
->  		#size-cells = <2>;
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index e9270b4..7c4943d 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -16,6 +16,7 @@
->  #include <linux/slab.h>
->  #include <linux/pcieport_if.h>
->  #include <linux/aer.h>
-> +#include <linux/of_irq.h>
->  
->  #include "../pci.h"
->  #include "portdrv.h"
-> @@ -200,6 +201,28 @@ static int pcie_port_enable_msix(struct pci_dev *dev, int *vectors, int mask)
->  static int init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
->  {
->  	int i, irq = -1;
-> +	int ret;
-> +	struct device_node *np = NULL;
-> +
-> +	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++)
-> +		irqs[i] = 0;
-> +
-> +	if (dev->bus->dev.of_node)
-> +		np = dev->bus->dev.of_node;
-> +
-> +	/* If root port doesn't support MSI/MSI-X/INTx in RC mode,
-> +	 * request irq for aer
-> +	 */
-> +	if (IS_ENABLED(CONFIG_OF_IRQ) && np &&
-> +			(mask & PCIE_PORT_SERVICE_PME)) {
-> +		ret = of_irq_get_byname(np, "aer");
-> +		if (ret > 0) {
-> +			irqs[PCIE_PORT_SERVICE_AER_SHIFT] = ret;
-> +			if (dev->irq)
-> +				irq = dev->irq;
-> +			goto no_msi;
-> +		}
-> +	}
+G'day Mark
 
-We definitely need to solve this somehow.  But this approach doesn't
-feel quite right because it's hard to map this code back to anything
-in the spec, and it uses a completely platform-dependent name
-("interrupt-names aer") in code that is supposedly generic.
+On 21/09/2016 19:34, Mark Rutland wrote:
+> On Wed, Sep 21, 2016 at 04:41:09PM +0800, Phil Reid wrote:
+>> From: Andrea Merello <andrea.merello@gmail.com>
+>>
+>> According to Documentation/i2c/smbus-protocol, a smbus controller driver
+>> that wants to hook-in smbus extensions support, can call
+>> i2c_setup_smbus_alert(). There are very few drivers that are currently
+>> doing this.
+>>
+>> However the i2c-smbus module can also work with any
+>> smbus-extensions-unaware I2C controller, as long as we provide an extra
+>> IRQ line connected to the I2C bus ALARM signal.
+>>
+>> This patch makes it possible to go this way via DT. Note that the DT node
+>> will indeed describe a (little) piece of HW, that is the routing of the
+>> ALARM signal to an IRQ line (so it seems a fair DT use to me, but RFC).
+>
+> Which piece of hardware actually generates this IRQ? The I2C controller?
+> A slave SMBus device? Or something else?
+>
+> I'm not at all familiar with I2C or SMBus, and a quick scan of
+> Documentation/i2c/smbus-protocol, has left me none-the-wiser on that
+> front.
 
-What if we added some sort of hook that would return the IRQ?  Maybe a
-pcibios_*() hook right now, with the idea of making it a
-pci_host_bridge function pointer someday?
+The originating source is the smbus device. SMBALERT is an active low interrupt
+with the addition that the SMBUS device can be polled by the controller to determine
+which device is asserting by performing a read of i2c address 0xc.
+Asserting devices will return their address.
+See the datahsheet of the LTC1760: http://www.linear.com/docs/1958   Page 22
 
-I know the body of the hook would look a lot like what you have here,
-but at least it would be more obvious that it's platform-specific
-code.
+The i2c parport driver looks to be only controller setup for this at the moment.
+However that has limitations to only poll the primary i2c segment.
+If muxes are involved then each muxed bus needs to be queried.
 
-I think your platform supports PME interrupts as well as AER, and
-they're different IRQs.  So you'd probably have to do something
-similar to the pcie_port_enable_msix() interface, so you can fill in
-both IRQs.
+My hardware has:
 
->  	/*
->  	 * If MSI cannot be used for PCIe PME or hotplug, we have to use
-> @@ -225,11 +248,13 @@ static int init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
->  		irq = dev->irq;
->  
->   no_msi:
-> -	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++)
-> -		irqs[i] = irq;
-> +	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++) {
-> +		if (!irqs[i])
-> +			irqs[i] = irq;
-> +	}
->  	irqs[PCIE_PORT_SERVICE_VC_SHIFT] = -1;
->  
-> -	if (irq < 0)
-> +	if (irq < 0 && irqs[PCIE_PORT_SERVICE_AER_SHIFT] < 0)
->  		return -ENODEV;
->  	return 0;
->  }
-> -- 
-> 2.1.0.27.g96db324
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+                 /- ltc1760
+i2c_cntlr - mux +
+                 \- ltc1760
+
+The alert signal are routed to the mux (pca9543) irq inputs and then muxes combined
+irq output to an fpga pin on an ALTERA SOC which I can route to a GPIO / IRQ
+
+I've modified the pca954x driver to generate separate interrupts for each segment.
+Submitted an RFC PATCH on this a while ago, but it needs a lot of cleaning up before
+submission.
+
+So I can create an virtual SMB_ALERT device per segment and it knows to just poll that segment.
+
+>
+>> Note that AFAICT, by design, i2c-smbus module pretends to be an I2C slave
+>> with address 0x0C (that is the alarm response address), and IMHO this is
+>> quite consistent with usage in the DT as a I2C child node.
+>>
+>> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+>> Signed-off-by: Phil Reid <preid@electromag.com.au>
+>> ---
+>>  Documentation/devicetree/bindings/i2c/i2c-smbus.txt | 20 ++++++++++++++++++++
+>>  drivers/i2c/i2c-smbus.c                             | 20 +++++++++++++++-----
+>>  2 files changed, 35 insertions(+), 5 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-smbus.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-smbus.txt b/Documentation/devicetree/bindings/i2c/i2c-smbus.txt
+>> new file mode 100644
+>> index 0000000..da83127
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/i2c/i2c-smbus.txt
+>> @@ -0,0 +1,20 @@
+>> +* i2c-smbus extensions
+>> +
+>> +Required Properties:
+>> +  - compatible: Must contain "smbus_alert"
+>
+> Nit: s/_/-/ in compatible strings please.
+>
+>> +  - interrupts: The irq line for smbus ALERT signal
+>> +  - reg: I2C slave address. Set to 0x0C (alert response address).
+>> +
+>> +Note: The i2c-smbus module registers itself as a slave I2C device. Whenever
+>> +a smbus controller directly support smbus extensions (and its driver supports
+>> +this), there is no need to add anything special to the DT. Otherwise, for using
+>> +i2c-smbus with any smbus-extensions-unaware I2C controllers, you need to
+>> +route the smbus ALARM signal to an extra IRQ line, thus you need to describe
+>> +this in the DT.
+>
+> Bindings shouldn't mention driver details (e.g. the i2c-smbus module
+> behaviour). It feels like we're creating a virtual device for the sake
+> of a driver, rather than accurately capturing the hardware.
+>
+> So as-is, I don't think this is the right way to describe this.
+>
+
+Yes that seemed to be the discussion last time.
+
+It's like a shared IRQ but has the extra feature of the polling to determine what device is active.
+For my use case the polling is not necessary as there's only one smbalert device per segment.
+So an irq would work, however that didn't seem to have much support either.
+
+I don't know what direction to go, to get this functionality into the upstream source.
+
+
+-- 
+Regards
+Phil Reid
+
