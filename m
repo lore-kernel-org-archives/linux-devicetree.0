@@ -1,36 +1,47 @@
 From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: [PATCH v2 0/2] media: adv7604: fix default-input property inconsistencies
-Date: Thu, 22 Sep 2016 15:18:58 +0200
-Message-ID: <1474550340-31455-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Subject: [PATCH v2 2/2] media: adv7604: automatic "default-input" selection
+Date: Thu, 22 Sep 2016 15:19:00 +0200
+Message-ID: <1474550340-31455-3-git-send-email-ulrich.hecht+renesas@gmail.com>
+References: <1474550340-31455-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1474550340-31455-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
 To: hans.verkuil@cisco.com
 Cc: niklas.soderlund@ragnatech.se, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, magnus.damm@gmail.com, ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com, william.towle@codethink.co.uk, devicetree@vger.kernel.org, radhey.shyam.pandey@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Documentation states that the "default-input" property should reside
+directly in the node of the device.  This adjusts the parsing to make the
+implementation consistent with the documentation.
 
-This is a fix for the inconsistency in the adv7604 bindings regarding the
-default-input property, clarifying that it should be a property of the
-device, not the endpoint, and a patch to implement it.
+Based on patch by William Towle <william.towle@codethink.co.uk>.
 
-This revision implements Laurent's suggestions:
+Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+---
+ drivers/media/i2c/adv7604.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-- The default input should not be set if the default-input property is missing.
-- The old code for parsing the property in the endpoint node can be removed.
-- The rationale for the change should go in the commit message.
-
-CU
-Uli
-
-
-Ulrich Hecht (2):
-  media: adv7604: fix bindings inconsistency for default-input
-  media: adv7604: automatic "default-input" selection
-
- Documentation/devicetree/bindings/media/i2c/adv7604.txt | 3 +--
- drivers/media/i2c/adv7604.c                             | 6 +++---
- 2 files changed, 4 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+index 4003831..fa7046e 100644
+--- a/drivers/media/i2c/adv7604.c
++++ b/drivers/media/i2c/adv7604.c
+@@ -3074,13 +3074,13 @@ static int adv76xx_parse_dt(struct adv76xx_state *state)
+ 		return ret;
+ 	}
+ 
+-	if (!of_property_read_u32(endpoint, "default-input", &v))
++	of_node_put(endpoint);
++
++	if (!of_property_read_u32(np, "default-input", &v))
+ 		state->pdata.default_input = v;
+ 	else
+ 		state->pdata.default_input = -1;
+ 
+-	of_node_put(endpoint);
+-
+ 	flags = bus_cfg.bus.parallel.flags;
+ 
+ 	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
 -- 
 2.7.4
