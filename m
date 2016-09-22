@@ -1,140 +1,96 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: [PATCH] PCI: rockchip: Support quirk to disable 5 GT/s (PCIe 2.x) link rate
-Date: Thu, 22 Sep 2016 10:31:18 -0700
-Message-ID: <1474565478-27242-1-git-send-email-briannorris@chromium.org>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>, devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Wenrui Li <wenrui.li@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Brian Norris <briannorris@chromium.org>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: exynos: Add reboot reason support for Trats2
+Date: Thu, 22 Sep 2016 19:46:06 +0200
+Message-ID: <20160922174606.GA4988@kozik-lap>
+References: <1474562915-4319-1-git-send-email-wolfgit@wiedmeyer.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1474562915-4319-1-git-send-email-wolfgit-CMKNnOTVkIZM7kwft8N7nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfgang Wiedmeyer <wolfgit-CMKNnOTVkIZM7kwft8N7nw@public.gmane.org>
+Cc: krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-rk3399 supports PCIe 2.x link speeds marginally at best, and on some
-boards, the link won't train at 5 GT/s at all. Rather than sacrifice 500
-ms waiting for training that will never happen, let's support a device
-tree quirk flag to disable generation 2 speeds entirely.
+Hi,
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
- .../devicetree/bindings/pci/rockchip-pcie.txt      |  2 +
- drivers/pci/host/pcie-rockchip.c                   | 57 +++++++++++++---------
- 2 files changed, 37 insertions(+), 22 deletions(-)
+Thanks for the patch, it is nice that someone did this! When I saw the
+syscon reboot mode driver, I though about such feature but never had
+time or will to implement it. Great job!
 
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-index ba67b39939c1..e769726fd093 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-@@ -42,6 +42,8 @@ Required properties:
- Optional Property:
- - ep-gpios: contain the entry for pre-reset gpio
- - num-lanes: number of lanes to use
-+- rockchip,disable-gen2: present if PCIe generation 2.x (i.e., 5 GT/s link
-+	speeds) is not supported.
- - vpcie3v3-supply: The phandle to the 3.3v regulator to use for PCIe.
- - vpcie1v8-supply: The phandle to the 1.8v regulator to use for PCIe.
- - vpcie0v9-supply: The phandle to the 0.9v regulator to use for PCIe.
-diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
-index c3593e633ccd..f047c4a73f69 100644
---- a/drivers/pci/host/pcie-rockchip.c
-+++ b/drivers/pci/host/pcie-rockchip.c
-@@ -53,6 +53,7 @@
- #define   PCIE_CLIENT_ARI_ENABLE	  HIWORD_UPDATE_BIT(0x0008)
- #define   PCIE_CLIENT_CONF_LANE_NUM(x)	  HIWORD_UPDATE(0x0030, ENCODE_LANES(x))
- #define   PCIE_CLIENT_MODE_RC		  HIWORD_UPDATE_BIT(0x0040)
-+#define   PCIE_CLIENT_GEN_SEL_1		  HIWORD_UPDATE(0x0080, 0)
- #define   PCIE_CLIENT_GEN_SEL_2		  HIWORD_UPDATE_BIT(0x0080)
- #define PCIE_CLIENT_BASIC_STATUS1	(PCIE_CLIENT_BASE + 0x48)
- #define   PCIE_CLIENT_LINK_STATUS_UP		0x00300000
-@@ -191,6 +192,7 @@ struct rockchip_pcie {
- 	struct	gpio_desc *ep_gpio;
- 	u32	lanes;
- 	u8	root_bus_nr;
-+	bool	enable_gen2;
- 	struct	device *dev;
- 	struct	irq_domain *irq_domain;
- };
-@@ -418,13 +420,19 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 		return err;
- 	}
- 
-+	if (rockchip->enable_gen2)
-+		rockchip_pcie_write(rockchip, PCIE_CLIENT_GEN_SEL_2,
-+				    PCIE_CLIENT_CONFIG);
-+	else
-+		rockchip_pcie_write(rockchip, PCIE_CLIENT_GEN_SEL_1,
-+				    PCIE_CLIENT_CONFIG);
-+
- 	rockchip_pcie_write(rockchip,
- 			    PCIE_CLIENT_CONF_ENABLE |
- 			    PCIE_CLIENT_LINK_TRAIN_ENABLE |
- 			    PCIE_CLIENT_ARI_ENABLE |
- 			    PCIE_CLIENT_CONF_LANE_NUM(rockchip->lanes) |
--			    PCIE_CLIENT_MODE_RC |
--			    PCIE_CLIENT_GEN_SEL_2,
-+			    PCIE_CLIENT_MODE_RC,
- 				PCIE_CLIENT_CONFIG);
- 
- 	err = phy_power_on(rockchip->phy);
-@@ -492,29 +500,31 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 		msleep(20);
- 	}
- 
--	/*
--	 * Enable retrain for gen2. This should be configured only after
--	 * gen1 finished.
--	 */
--	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
--	status |= PCIE_RC_CONFIG_LCS_RETRAIN_LINK;
--	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
-+	if (rockchip->enable_gen2) {
-+		/*
-+		 * Enable retrain for gen2. This should be configured only after
-+		 * gen1 finished.
-+		 */
-+		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-+		status |= PCIE_RC_CONFIG_LCS_RETRAIN_LINK;
-+		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
-+
-+		timeout = jiffies + msecs_to_jiffies(500);
-+		for (;;) {
-+			status = rockchip_pcie_read(rockchip, PCIE_CORE_CTRL);
-+			if ((status & PCIE_CORE_PL_CONF_SPEED_MASK) ==
-+					PCIE_CORE_PL_CONF_SPEED_5G) {
-+				dev_dbg(dev, "PCIe link training gen2 pass!\n");
-+				break;
-+			}
- 
--	timeout = jiffies + msecs_to_jiffies(500);
--	for (;;) {
--		status = rockchip_pcie_read(rockchip, PCIE_CORE_CTRL);
--		if ((status & PCIE_CORE_PL_CONF_SPEED_MASK) ==
--		    PCIE_CORE_PL_CONF_SPEED_5G) {
--			dev_dbg(dev, "PCIe link training gen2 pass!\n");
--			break;
--		}
-+			if (time_after(jiffies, timeout)) {
-+				dev_dbg(dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
-+				break;
-+			}
- 
--		if (time_after(jiffies, timeout)) {
--			dev_dbg(dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
--			break;
-+			msleep(20);
- 		}
--
--		msleep(20);
- 	}
- 
- 	/* Check the final link width from negotiated lane counter from MGMT */
-@@ -722,6 +732,9 @@ static int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
- 		rockchip->lanes = 1;
- 	}
- 
-+	rockchip->enable_gen2 = !of_property_read_bool(node,
-+						       "rockchip,disable-gen2");
-+
- 	rockchip->core_rst = devm_reset_control_get(dev, "core");
- 	if (IS_ERR(rockchip->core_rst)) {
- 		if (PTR_ERR(rockchip->core_rst) != -EPROBE_DEFER)
--- 
-2.8.0.rc3.226.g39d4020
+Few comments below.
+
+On Thu, Sep 22, 2016 at 06:48:35PM +0200, Wolfgang Wiedmeyer wrote:
+> This allows to reboot the device into recovery mode and into the download
+> mode of the bootloader.
+
+Which bootloader? Probably UBoot... or Samsung stock one? Could you put
+that information here?
+
+> 
+> Signed-off-by: Wolfgang Wiedmeyer <wolfgit-CMKNnOTVkIZM7kwft8N7nw@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/exynos4412-trats2.dts | 14 ++++++++++++++
+>  arch/arm/boot/dts/exynos4x12.dtsi       |  2 +-
+>  2 files changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+> index 129e973..a38d1e3 100644
+> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
+> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+> @@ -1294,3 +1294,17 @@
+>  	vtmu-supply = <&ldo10_reg>;
+>  	status = "okay";
+>  };
+> +
+> +&pmu {
+> +	compatible = "syscon", "simple-mfd";
+> +
+> +	reboot-mode {
+> +		compatible = "syscon-reboot-mode";
+> +		offset = <0x80c>;
+> +
+> +		mode-normal	= <0x12345670>;
+> +		mode-bootloader	= <0x12345671>;
+> +		mode-download	= <0x12345671>;
+> +		mode-recovery	= <0x12345674>;
+
+Hmmm, how did you get these values? Are they already supported?
+
+It would be nice to document them:
+1. In Documentation/arm/Samsung/Bootloader-interface.txt
+2. In header. I hate such magic numbers... you could add new header next
+   to existing rockchip one:
+   include/dt-bindings/soc/samsung,boot-mode.h
+   (and update maintainers entry :) )
+
+
+Best regards,
+Krzysztof
+
+
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
+> index c452499..b58c14e 100644
+> --- a/arch/arm/boot/dts/exynos4x12.dtsi
+> +++ b/arch/arm/boot/dts/exynos4x12.dtsi
+> @@ -179,7 +179,7 @@
+>  			ranges;
+>  			status = "disabled";
+>  
+> -			pmu@10020000 {
+> +			pmu: pmu@10020000 {
+>  				reg = <0x10020000 0x3000>;
+>  			};
+>  
+> -- 
+> Website: https://fossencdi.org
+> OpenPGP: 0F30 D1A0 2F73 F70A 6FEE  048E 5816 A24C 1075 7FC4
+> Key download: https://wiedmeyer.de/keys/ww.asc
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
