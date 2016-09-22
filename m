@@ -1,54 +1,42 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 0/3] video: of: Drive edge selection for sync
-Date: Thu, 22 Sep 2016 13:35:23 +0300
-Message-ID: <20160922103526.24925-1-peter.ujfalusi@ti.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v2 2/3] video: display_timing: Add flags to select the edge when the sync is driven
+Date: Thu, 22 Sep 2016 13:35:25 +0300
+Message-ID: <20160922103526.24925-3-peter.ujfalusi@ti.com>
+References: <20160922103526.24925-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160922103526.24925-1-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, airlied@linux.ie, thierry.reding@gmail.com
+Cc: linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, daniel.vetter@ffwll.ch, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The sync can be - and for some panels it must be - driven on different edge
+then the data.
 
-Changes since v1:
-- separated the code changes from the omap/drm videomode conversion patches
-- the DT bindings document is now explicitly states that the drive edge is
-  referring to the pixel clock
-
-Since we have several panels under omapdrm/displays/ where the data drive edge
-is set to be different then the sync drive edge, the first three patch will add
-support to select the sync drive edge via DT.
-I was not able to locate the datasheet for all the panels and because the
-different edge was used in omapdrm and omapfb for a long time without complains
-from users - and they were written this way - I think it is a valid that we can
-have panels requiring different edge for data and sync to be driven.
-
-This series will add support for the sync drive edge setting and the omapdrm's
-videmode conversion series depends on this change. It is also planned that the
-omapdrm is going to move to use the drm/panel in the future and to be able to
-convert the panel drivers we will need this feature.
-
-Regards,
-Peter
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: devicetree@vger.kernel.org
 ---
-Peter Ujfalusi (3):
-  dt-bindings: display: display-timing: Add property to configure sync
-    drive edge
-  video: display_timing: Add flags to select the edge when the sync is
-    driven
-  video: of: display_timing: Add support for syncclk-active property
+ include/video/display_timing.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
- .../devicetree/bindings/display/panel/display-timing.txt         | 8 ++++++++
- drivers/video/of_display_timing.c                                | 9 +++++++++
- include/video/display_timing.h                                   | 4 ++++
- 3 files changed, 21 insertions(+)
-
---
+diff --git a/include/video/display_timing.h b/include/video/display_timing.h
+index 28d9d0d566ca..3d289e990aca 100644
+--- a/include/video/display_timing.h
++++ b/include/video/display_timing.h
+@@ -28,6 +28,10 @@ enum display_flags {
+ 	DISPLAY_FLAGS_INTERLACED	= BIT(8),
+ 	DISPLAY_FLAGS_DOUBLESCAN	= BIT(9),
+ 	DISPLAY_FLAGS_DOUBLECLK		= BIT(10),
++	/* drive sync on pos. edge */
++	DISPLAY_FLAGS_SYNC_POSEDGE	= BIT(11),
++	/* drive sync on neg. edge */
++	DISPLAY_FLAGS_SYNC_NEGEDGE	= BIT(12),
+ };
+ 
+ /*
+-- 
 2.10.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
