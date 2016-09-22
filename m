@@ -1,146 +1,236 @@
-From: Jagan Teki <jagannadh.teki@gmail.com>
-Subject: [PATCH v2] arm: dts: zynq: Add MicroZed board support
-Date: Thu, 22 Sep 2016 18:51:29 +0530
-Message-ID: <1474550489-7005-1-git-send-email-jagan@amarulasolutions.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jagan Teki <jteki@openedev.com>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 00/11] pci: support for configurable PCI endpoint
+Date: Thu, 22 Sep 2016 15:34:00 +0200
+Message-ID: <6722152.QTF992tLpW@wuerfel>
+References: <1473829927-20466-1-git-send-email-kishon@ti.com>
+ <2837059.ka7z3gzjF2@wuerfel> <57DA5CC1.6030502@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <57DA5CC1.6030502@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, Joao.Pinto@synopsys.com, Dave Jiang <dave.jiang@intel.com>, linux-doc@vger.kernel.org, Joao Pinto <jpinto@synopsys.com>, Jingoo Han <jingoohan1@gmail.com>, Jon Mason <jdmason@kudzu.us>, Pratyush Anand <pratyush.anand@gmail.com>, nsekhar@ti.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, hch@infradead.org, m-karicheri2@ti.com, linux-arm-kernel@lists.infradead.org, Allen Hubbe <Allen.Hubbe@emc.com>, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-ntb@googlegroups.com, linux-omap@vger.kernel.org, mingkai.hu@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jteki@openedev.com>
+On Thursday, September 15, 2016 2:03:05 PM CEST Kishon Vijay Abraham I wrote:
+> On Wednesday 14 September 2016 06:55 PM, Arnd Bergmann wrote:
+> > On Wednesday, September 14, 2016 10:41:56 AM CEST Kishon Vijay Abraham I wrote:
+> > I've added the drivers/ntb maintainers to Cc, given that there is
+> > a certain degree of overlap between your work and the existing
+> > code, I think they should be part of the discussion.
+> >  
+> >> Known Limitation:
+> >> 	*) Does not support multi-function devices
+> > 
+> > If I understand it right, this was a problem for USB and adding
+> > it later made it somewhat inconsistent. Maybe we can at least
+> > try to come up with an idea of how multi-function devices
+> > could be handled even if we don't implement it until someone
+> > actually needs it.
+> 
+> Actually IMO multi-function device in PCI should be much simpler than it is for
+> USB. In the case of USB, all the functions in a multi-function device will
+> share the same *usb configuration* . (USB device can have multiple
+> configuration but only one can be enabled at a time). A multi-function USB
+> device will still have a single vendor-id/product-id/class... So I think a
+> separate library (composite.c) in USB makes sense.
 
-Added basic dts support for MicroZed board.
+Ok, makes sense.
 
-- UART
-- SDHCI
-- Ethernet
+> But in the case of PCI, every function can be treated independently since all
+> the functions have it's own 4KB configuration space. Each function can be
+> configured independently. Each can have it's own vendor-id/product-id/class..
+> I'm not sure if we'll need a separate library for PCI like we have for USB.
 
-Cc: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Jagan Teki <jteki@openedev.com>
----
-Changes for v2:
-	- Add SDHCI
-	- Add Ethernet
+I think it depends on whether we want to add the software multi-function
+support you mention.
 
- arch/arm/boot/dts/Makefile          |  1 +
- arch/arm/boot/dts/zynq-microzed.dts | 95 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 96 insertions(+)
- create mode 100644 arch/arm/boot/dts/zynq-microzed.dts
+> Now the restriction for not allowing multi-function device is because of the
+> following structure definition.
+> 
+> struct pci_epc {
+> 	..
+>         struct pci_epf *epf;
+> 	..
+> };
+> 
+> EPC has a single reference to EPF and it is used *only* to notify the function
+> driver when the link is up. (If this can be changed to use notification
+> mechanism, multi-function devices can be supported here)
+> 
+> One more place where this restriction arises is in designware driver
+> 
+> struct dw_pcie_ep {
+> 	..
+>         u8 bar_to_atu[6];
+> 	..
+> };
+> 
+> We use single ATU window to configure a BAR (in BAR). If there are multiple
+> functions, then this should also be modified since each function has 6 BARs.
+> 
+> This can be fixed without much effort unless some other issue props up.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index faacd52..4d7b858 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -862,6 +862,7 @@ dtb-$(CONFIG_ARCH_VT8500) += \
- 	wm8750-apc8750.dtb \
- 	wm8850-w70v2.dtb
- dtb-$(CONFIG_ARCH_ZYNQ) += \
-+	zynq-microzed.dtb \
- 	zynq-parallella.dtb \
- 	zynq-zc702.dtb \
- 	zynq-zc706.dtb \
-diff --git a/arch/arm/boot/dts/zynq-microzed.dts b/arch/arm/boot/dts/zynq-microzed.dts
-new file mode 100644
-index 0000000..9e64496
---- /dev/null
-+++ b/arch/arm/boot/dts/zynq-microzed.dts
-@@ -0,0 +1,95 @@
-+/*
-+ * Copyright (C) 2015 Jagan Teki <jteki@openedev.com>
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+/dts-v1/;
-+/include/ "zynq-7000.dtsi"
-+
-+/ {
-+	model = "Zynq MicroZED Development Board";
-+	compatible = "xlnx,zynq-microzed", "xlnx,zynq-7000";
-+
-+	aliases {
-+		ethernet0 = &gem0;
-+		serial0 = &uart1;
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x40000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "earlycon";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	usb_phy0: phy0 {
-+		compatible = "usb-nop-xceiv";
-+		#phy-cells = <0>;
-+	};
-+};
-+
-+&clkc {
-+	ps-clk-frequency = <33333333>;
-+};
-+
-+&gem0 {
-+	status = "okay";
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ethernet_phy>;
-+
-+	ethernet_phy: ethernet-phy@0 {
-+		reg = <0>;
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+	dr_mode = "host";
-+	usb-phy = <&usb_phy0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usb0_default>;
-+};
-+
-+&pinctrl0 {
-+	pinctrl_usb0_default: usb0-default {
-+		mux {
-+			groups = "usb0_0_grp";
-+			function = "usb0";
-+		};
-+
-+		conf {
-+			groups = "usb0_0_grp";
-+			slew-rate = <0>;
-+			io-standard = <1>;
-+		};
-+
-+		conf-rx {
-+			pins = "MIO29", "MIO31", "MIO36";
-+			bias-high-impedance;
-+		};
-+
-+		conf-tx {
-+			pins = "MIO28", "MIO30", "MIO32", "MIO33", "MIO34",
-+			       "MIO35", "MIO37", "MIO38", "MIO39";
-+			bias-disable;
-+		};
-+	};
-+};
--- 
-2.7.4
+Ok.
+
+> > 
+> > Is your hardware able to make the PCIe endpoint look like
+> > a device with multiple PCI functions, or would one have to
+> > do this in software inside of a single PCI function if we
+> > ever need it?
+> 
+> The hardware I have doesn't support multiple PCI functions (like having a
+> separate configuration space for each function). It has a dedicated space for
+> configuration space supporting only one function. [Section 24.9.7.3.2
+> PCIe_SS_EP_CFG_DBICS Register Description in  [1]].
+> 
+> yeah, it has to be done in software (but that won't be multi-function device in
+> PCI terms).
+> 
+> [1] -> http://www.ti.com/lit/ug/spruhz6g/spruhz6g.pdf
+
+Ok, so in theory there can be other hardware (and quite likely is)
+that supports multiple functions, and we can extend the framework
+to support them without major obstacles, but your hardware doesn't,
+so you kept it simple with one hardcoded function, right?
+
+Seems completely reasonable to me.
+
+> >> TODO:
+> >> 	*) access buffers in RC
+> >> 	*) raise MSI interrupts
+> >> 	*) Enable user space control for the RC side PCI driver
+> > 
+> > The user space control would end up just being one of several
+> > gadget drivers, right? E.g. gadget drivers for standard hardware
+> > (8250 uart, ATA, NVMe, some ethernet) could be done as kernel
+> > drivers while a user space driver can be used for things that
+> > are more unusual and that don't need to interface to another
+> > part of the kernel?
+> 
+> Actually I didn't mean that. It was more with respect to the host side PCI test
+> driver (drivers/misc/pci_endpoint_test.c). Right now it validates BAR, irq
+> itself. I wanted to change this so that the user controls which tests to run.
+> (Like for USB gadget zero tests, testusb.c invokes ioctls to perform various
+> tests). Similarly I want to have a userspace program invoke pci_endpoint_test
+> to perform various PCI tests.
+
+Ok, I see. So what I described above would be yet another function
+driver that can be implemented, but so far, you have not planned
+to do that because there was not need, right?
+
+> > 
+> >> 	*) Adapt all other users of designware to use the new design (only
+> >> 	   dra7xx has been adapted)
+> > 
+> > I don't fully understand this part. Does every designware based
+> > driver need modifications, or are the changes to the
+> > generic parts of the designware driver enough to make it
+> > work for the simpler platforms?
+> 
+> I have changed the core designware driver structures (like previously the
+> platform drivers will only use pcie_port, but now I introduced struct dw_pcie
+> to support both host and endpoint). This will break (compilation failure) all
+> the designware based drivers (except dra7xx). All these drivers should be
+> adapted to the new change (even if they work only in host mode these has to be
+> adapted).
+
+Ah, so we have to do two separate modifications to each designware driver:
+
+a) make it work with your patch (mandatory)
+b) make it support endpoint mode (optional)
+
+> >> HOW TO:
+> >>
+> >> ON THE EP SIDE:
+> >> ***************
+> >>
+> >> /* EP function is configured using configfs */
+> >> # mount -t configfs none /sys/kernel/config
+> >>
+> >> /* PCI EP core layer creates "pci_ep" entry in configfs */
+> >> # cd /sys/kernel/config/pci_ep/
+> >>
+> >> /*
+> >>  * This is the 1st step in creating an endpoint function. This
+> >>  * creates the endpoint function device *instance*. The string
+> >>  * before the .<num> suffix will identify the driver this
+> >>  * EP function will bind to.
+> >>  * Just pci_epf_test is also valid. The .<num> suffix is used
+> >>  * if there are multiple PCI controllers and all of them wants
+> >>  * to use the same function.
+> >>  */
+> >> # mkdir pci_epf_test.0
+> > 
+> > I haven't used USB gadgets, but I assume this is modeled around
+> > the same interface. If there are notable differences, please mention
+> > what they are. Otherwise the general concept seems rather nice to me.
+> 
+> Yeah, both USB gadget and PCI endpoint use configfs interface but the semantics
+> are quite different.
+> 
+> Every directory in *usb_gadget* corresponds to a gadget device, and the gadget
+> device has a functions sub-directory which has the USB functions. And these
+> directories have fields or attributes specific to USB.
+> 
+> But in the case of PCI, every directory in *pci_ep* corresponds to a PCI
+> function and it has fields or attributes specific to PCI function.
+
+Ok, I see.
+
+> The main reason for using configfs for PCI endpoint is to give the users to
+> control "which function has to be bound to which controller". The same concept
+> is used for USB gadget as well but there it is "which gadget device has to be
+> bound to which controller".
+
+We should still find out whether it's important that you can have
+a single PCI function with a software multi-function support of some
+sort. We'd still be limited to six BARs in total, and would also need
+something to identify those sub-functions, so implementing that might
+get quite hairy.
+
+Possibly this could be done at a higher level, e.g. by implementing
+a PCI-virtio multiplexer that can host multiple virtio based devices
+inside of a single PCI function. If we think that would be a good idea,
+we should make sure the configfs interface is extensible enough to
+handle that.
+
+One use case I have in mind for this is to have a PCI function that
+can use virtio to provide rootfs (virtio-blk or 9pfs), network
+and console to the system that implements the PCI function (note
+that this is the opposite direction of what almost everyone else
+uses PCI devices for).
+
+> > Let's talk (high-level) about the DT binding. I see that the way
+> > you have done it here, one will need to have a different .dtb file
+> > for a machine depending on whether the PCIe is used in host or
+> > endpoint mode. The advantage of this way is that it's a much
+> > cleaner binding (PCIe host bindings are a mess, and adding more
+> > options to it will only make it worse), the downside is that
+> > you can't decide at runtime what you want to use it for. E.g.
+> > connecting two identical machines over PCIe requires deciding
+> > in the bootloader which one is the endpoint, or using DT
+> > overlays, which may be awkward for some users. Is this a realistic
+> > use case, or do you expect that all machines will only ever be
+> > used in one of the two ways?
+> 
+> It would definitely be nice to select the mode at runtime. Even for this patch
+> series, I added a temporary dtsi patch to configure the pci controller in EP
+> mode (which can't be merged since the same controller is also used to test RC).
+
+I think it should be possible to have two bindings that define a
+distinct set of properties, and have one node that is marked
+as "compatible" with both of them in order to let the OS choose
+one or the other mode.
+
+	Arnd
