@@ -1,22 +1,22 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: <sean.wang@mediatek.com>
 Subject: [PATCH net-next] Documentation: devicetree: revise ethernet device-tree binding about TRGMII
-Date: Fri, 23 Sep 2016 00:11:00 +0800
-Message-ID: <1474560660-20768-1-git-send-email-sean.wang@mediatek.com>
+Date: Fri, 23 Sep 2016 00:16:36 +0800
+Message-ID: <1474560996-20863-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: objelf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, sergei.shtylyov@cogentembedded.com, john@phrozen.org
+Cc: nbd@openwrt.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, keyhaede@gmail.com, objelf@gmail.com, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
 
 fix typo in mediatek-net.txt and add phy-mode "trgmii" to ethernet.txt
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Reported-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: devicetree@vger.kernel.org
+Reported-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
  Documentation/devicetree/bindings/net/ethernet.txt     | 4 ++--
  Documentation/devicetree/bindings/net/mediatek-net.txt | 2 +-
@@ -52,8 +52,3 @@ index bae848e..da05f8b 100644
  
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
