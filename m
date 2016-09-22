@@ -1,101 +1,68 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: [PATCH v2] ASoC: rk3399_gru_sound: fix recording pop at first attempt
-Date: Thu, 22 Sep 2016 21:50:06 +0800
-Message-ID: <1474552206-31742-1-git-send-email-zhengxing@rock-chips.com>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH] clocksource: timer-digicolor: Unmap region obtained by
+ of_iomap
+Date: Thu, 22 Sep 2016 17:39:53 +0300
+Message-ID: <20160922143953.3pd7yicmwosuk3xk@tarshish>
+References: <1474554073-8658-1-git-send-email-arvind.yadav.cs@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-rockchip@lists.infradead.org, woojoo.lee@samsung.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, heiko@sntech.de, Xing Zheng <zhengxing@rock-chips.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, dianders@google.com, Mark Brown <broonie@kernel.org>, smbarber@google.com, hychao@google.com, Jaroslav Kysela <perex@perex.cz>, linux-arm-kernel@lists.infradead.org, cychiang@google.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1474554073-8658-1-git-send-email-arvind.yadav.cs@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arvind Yadav <arvind.yadav.cs@gmail.com>
+Cc: daniel.lezcano@linaro.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Wonjoon Lee <woojoo.lee@samsung.com>
+Hi Arvind Yadav,
 
-Pop happens when mclk applied but dmic's own boot-time
-Specify dmic delay times in dt to make sure
-clocks are ready earlier than dmic working
+On Thu, Sep 22, 2016 at 07:51:13PM +0530, Arvind Yadav wrote:
+> Free memory mapping, if digicolor_timer_init is not successful.
 
-Signed-off-by: Wonjoon Lee <woojoo.lee@samsung.com>
-Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
----
+Thanks for looking into that.
 
-Changes in v2:
-- rename dmic-delay to dmic-wakeup-delay-ms
+Why not add a devm_of_iomap() variant of of_iomap() that calls devm_ioremap() 
+instead of ioremap()?
 
- .../bindings/sound/rockchip,rk3399-gru-sound.txt           |  7 +++++++
- sound/soc/rockchip/rk3399_gru_sound.c                      | 14 ++++++++++++++
- 2 files changed, 21 insertions(+)
+I'm not sure that cleaning up after a clocksource driver init failure makes 
+much sense. Something is clearly fundamentally wrong in your device tree, and 
+your system will most likely not boot anyway.
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-index f19b6c8..eac91db 100644
---- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-@@ -6,10 +6,17 @@ Required properties:
-   connected to the codecs
- - rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
- 
-+Optional properties:
-+- dmic-wakeup-delay-ms : specify delay time (ms) for DMIC ready.
-+  If this option is specified, which means it's required dmic need
-+  delay for DMIC to ready so that rt5514 can avoid recording before
-+  DMIC send valid data
-+
- Example:
- 
- sound {
- 	compatible = "rockchip,rk3399-gru-sound";
- 	rockchip,cpu = <&i2s0>;
- 	rockchip,codec = <&max98357a &rt5514 &da7219>;
-+	dmic-wakeup-delay-ms = <20>;
- };
-diff --git a/sound/soc/rockchip/rk3399_gru_sound.c b/sound/soc/rockchip/rk3399_gru_sound.c
-index ee06489..9ed735a 100644
---- a/sound/soc/rockchip/rk3399_gru_sound.c
-+++ b/sound/soc/rockchip/rk3399_gru_sound.c
-@@ -38,6 +38,8 @@
- 
- #define SOUND_FS	256
- 
-+unsigned int rt5514_dmic_delay;
-+
- static struct snd_soc_jack rockchip_sound_jack;
- 
- static const struct snd_soc_dapm_widget rockchip_dapm_widgets[] = {
-@@ -123,6 +125,9 @@ static int rockchip_sound_rt5514_hw_params(struct snd_pcm_substream *substream,
- 		return ret;
- 	}
- 
-+	/* Wait for DMIC stable */
-+	msleep(rt5514_dmic_delay);
-+
- 	return 0;
- }
- 
-@@ -343,6 +348,15 @@ static int rockchip_sound_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	/* Set DMIC delay */
-+	ret = device_property_read_u32(&pdev->dev, "dmic-delay",
-+					&rt5514_dmic_delay);
-+	if (ret) {
-+		rt5514_dmic_delay = 0;
-+		dev_dbg(&pdev->dev,
-+			"no optional property 'dmic-delay' found, default: no delay\n");
-+	}
-+
- 	rockchip_dailinks[DAILINK_RT5514_DSP].cpu_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
- 	rockchip_dailinks[DAILINK_RT5514_DSP].cpu_dai_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
- 	rockchip_dailinks[DAILINK_RT5514_DSP].platform_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
+baruch
+
+> Signed-off-by: Arvind Yadav <arvind.yadav.cs@gmail.com>
+> ---
+>  drivers/clocksource/timer-digicolor.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/clocksource/timer-digicolor.c b/drivers/clocksource/timer-digicolor.c
+> index 10318cc..e6e5e6a 100644
+> --- a/drivers/clocksource/timer-digicolor.c
+> +++ b/drivers/clocksource/timer-digicolor.c
+> @@ -167,12 +167,14 @@ static int __init digicolor_timer_init(struct device_node *node)
+>  	irq = irq_of_parse_and_map(node, dc_timer_dev.timer_id);
+>  	if (irq <= 0) {
+>  		pr_err("Can't parse IRQ");
+> +		iounmap(dc_timer_dev.base);
+>  		return -EINVAL;
+>  	}
+>  
+>  	clk = of_clk_get(node, 0);
+>  	if (IS_ERR(clk)) {
+>  		pr_err("Can't get timer clock");
+> +		iounmap(dc_timer_dev.base);
+>  		return PTR_ERR(clk);
+>  	}
+>  	clk_prepare_enable(clk);
+> @@ -192,6 +194,7 @@ static int __init digicolor_timer_init(struct device_node *node)
+>  			  &dc_timer_dev.ce);
+>  	if (ret) {
+>  		pr_warn("request of timer irq %d failed (%d)\n", irq, ret);
+> +		iounmap(dc_timer_dev.base);
+>  		return ret;
+>  	}
+
 -- 
-1.9.1
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
