@@ -1,40 +1,52 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: rskrza1: add sdhi1 DT support
-Date: Thu, 22 Sep 2016 17:32:11 -0400
-Message-ID: <20160922213211.7988-4-chris.brandt@renesas.com>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH 1/3] ARM: dts: r7s72100: add sdhi clock to device tree
+Date: Thu, 22 Sep 2016 17:32:09 -0400
+Message-ID: <20160922213211.7988-2-chris.brandt@renesas.com>
 References: <20160922213211.7988-1-chris.brandt@renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160922213211.7988-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160922213211.7988-1-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 ---
- arch/arm/boot/dts/r7s72100-rskrza1.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/r7s72100.dtsi            | 8 ++++++++
+ include/dt-bindings/clock/r7s72100-clock.h | 4 ++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-index e5dea5b..548b51f 100644
---- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
-+++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-@@ -56,6 +56,10 @@
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index e18d4e6..e97d6d1 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -149,6 +149,14 @@
+ 			>;
+ 			clock-output-names = "spi0", "spi1", "spi2", "spi3", "spi4";
+ 		};
++		mstp12_clks: mstp12_clks@fcfe0444 {
++			#clock-cells = <1>;
++			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
++			reg = <0xfcfe0444 4>;
++			clocks = <&p1_clk>, <&p1_clk>;
++			clock-indices = <R7S72100_CLK_SDHI1 R7S72100_CLK_SDHI0>;
++			clock-output-names = "sdhi1", "sdhi0";
++		};
  	};
- };
  
-+&sdhi1 {
-+	status = "okay";
-+};
+ 	cpus {
+diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
+index 5eaf0fb..29e01ed 100644
+--- a/include/dt-bindings/clock/r7s72100-clock.h
++++ b/include/dt-bindings/clock/r7s72100-clock.h
+@@ -44,4 +44,8 @@
+ #define R7S72100_CLK_SPI3	4
+ #define R7S72100_CLK_SPI4	3
+ 
++/* MSTP12 */
++#define R7S72100_CLK_SDHI0	3
++#define R7S72100_CLK_SDHI1	2
 +
- &scif2 {
- 	status = "okay";
- };
+ #endif /* __DT_BINDINGS_CLOCK_R7S72100_H__ */
 -- 
 2.9.2
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
