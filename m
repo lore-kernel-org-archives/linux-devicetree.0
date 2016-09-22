@@ -1,45 +1,89 @@
-From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv2 4/4] nios2: dts: 10m50: Add tx-threshold parameter
-Date: Thu, 22 Sep 2016 14:56:17 -0500
-Message-ID: <1474574177-4984-5-git-send-email-tthayer@opensource.altera.com>
-References: <1474574177-4984-1-git-send-email-tthayer@opensource.altera.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v18 6/6] ARM: socfpga: fpga bridge driver support
+Date: Thu, 22 Sep 2016 14:53:34 -0500
+Message-ID: <alpine.DEB.2.02.1609221451140.4126@linuxheads99>
+References: <20160712193645.9098-1-atull@opensource.altera.com>
+ <20160712193645.9098-7-atull@opensource.altera.com>
+ <CAP=VYLo2jtp57kQe5671xM=4o_ZAU6XG_W1MXU8aPv4Ws7kkDA@mail.gmail.com>
+ <alpine.DEB.2.02.1608081416110.11063@linuxheads99>
+ <CAAtXAHev2Dytadp-_Hs0agcSXUTyrFhJQxHcsFd7faOReHzr9Q@mail.gmail.com>
+ <20160809160039.GX29630@windriver.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474574177-4984-1-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, anton.wuerfel-d40JDW7QUjc@public.gmane.org, phillip.raffeck-d40JDW7QUjc@public.gmane.org, yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, matwey-TTlVxmypnbovJsYlp49lxw@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org
-Cc: peter.ujfalusi-l0cyMroinI0@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, dongsheng.wang-3arQi8VN3Tc@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, nios2-dev-g9ZBwUv/Ih/yUk5EbOjzuce+I+R0W71w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160809160039.GX29630@windriver.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matthew Gerlach <mgerlach@altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, LKML <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, Alan Tull <delicious.quinoa@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Tue, 9 Aug 2016, Paul Gortmaker wrote:
 
-The tx-threshold parameter sets the TX FIFO low water threshold
-trigger for the Altera 16550-FIFO32 soft IP.
+> [Re: [PATCH v18 6/6] ARM: socfpga: fpga bridge driver support] On 08/08/2016 (Mon 13:44) Moritz Fischer wrote:
+> 
+> > Hi Alan,
+> > 
+> > On Mon, Aug 8, 2016 at 12:18 PM, atull <atull@opensource.altera.com> wrote:
+> > 
+> > >> Please don't use module.h in drivers controlled by a bool
+> > >> Kconfig setting.
+> > >>
+> > >> THanks,
+> > >> Paul.
+> > >>
+> > >
+> > > Thanks for the feedback.  Can you provide an example of what you
+> > > would consider to be proper usage in the kernel?
+> > 
+> > 
+> > I think Paul is suggesting to use
+> > 
+> > static int __init alt_fpga_bridge_init(void)
+> > {
+> >         platform_driver_register(&alt_fpga_bridge_driver);
+> > }
+> > 
+> > device_initcall(alt_fpga_bridge_init);
+> > 
+> > or better:
+> > 
+> > builtin_platform_driver(&alt_fpga_bridge_driver);
+> > 
+> > Like for example in: drivers/cpuidle/cpuidle-mvebu-v7.c
+> 
+> Yes, pretty much that -- if you have a bool Kconfig, you should be using
+> builtin registration functions, and have no need for module.h or
+> anything MODULE_<xyz> or any module_init/module_exit calls.
+> 
+> An empty file containing nothing but #include <linux/module.h> will
+> cause cpp to emit about 750k of goop, so we really should only be using
+> it for drivers that are genuinely modular; i.e. tristate Kconfig.
+> 
+> Thanks,
+> Paul.
+> --
+> 
+> > 
+> > Cheers,
+> > 
+> > Moritz
+> 
 
-Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
-v2   Change from tx-loadsz to tx-threshold
----
- arch/nios2/boot/dts/10m50_devboard.dts |    1 +
- 1 file changed, 1 insertion(+)
+Thanks for the feedback and explanations!
 
-diff --git a/arch/nios2/boot/dts/10m50_devboard.dts b/arch/nios2/boot/dts/10m50_devboard.dts
-index 3e411c6..f362b22 100755
---- a/arch/nios2/boot/dts/10m50_devboard.dts
-+++ b/arch/nios2/boot/dts/10m50_devboard.dts
-@@ -83,6 +83,7 @@
- 			fifo-size = <32>;
- 			reg-io-width = <4>;
- 			reg-shift = <2>;
-+			tx-threshold = <16>;
- 		};
- 
- 		sysid: sysid@18001528 {
--- 
-1.7.9.5
+I've retested my stuff with it all built as modules (mgr, bridged,
+and fpga-region) and it all works that way as well as built in.
+So I'll fix up the Kconfig as tristates for everybody.  Also
+I'll add some dependencies as FPGA_REGION should be dependent
+on FPGA_BRIDGE.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alan
