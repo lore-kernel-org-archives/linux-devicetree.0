@@ -1,61 +1,44 @@
 From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v5 3/5] arm64: arch_timer: Work around QorIQ Erratum
- A-008585
-Date: Thu, 22 Sep 2016 03:34:39 -0500
-Message-ID: <1474533279.4283.32.camel@buserror.net>
-References: <1473469413-11019-1-git-send-email-oss@buserror.net>
-         <1473469413-11019-3-git-send-email-oss@buserror.net>
-         <20160912113615.GA20804@leverpostej>
-         <1474260085.15220.17.camel@buserror.net>
-         <20160919165258.GA30584@leverpostej> <1474304489.4283.6.camel@buserror.net>
-         <20160919170707.GC30584@leverpostej>
-         <1474312560.4283.10.camel@buserror.net> <20160920093503.GA1045@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH v6 1/4] arm64: arch_timer: Add device tree binding for A-008585 erratum
+Date: Thu, 22 Sep 2016 03:35:15 -0500
+Message-ID: <1474533318-7796-1-git-send-email-oss@buserror.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160920093503.GA1045@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, mike.caraman-3arQi8VN3Tc@public.gmane.org, Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-09-20 at 10:35 +0100, Mark Rutland wrote:
-> On Mon, Sep 19, 2016 at 02:16:00PM -0500, Scott Wood wrote:
-> > 
-> > On Mon, 2016-09-19 at 18:07 +0100, Mark Rutland wrote:
-> > > 
-> > > > 
-> > > > > 
-> > > > > Reconsidering my suggestion, I realise this will also affect the
-> > > > > MMIO
-> > > > > timers, so that doesn't work.
-> > > > > 
-> > > > > So for the moment, I guess we have to keep
-> > > > > fsl_a008585_set_next_event().
-> > > > What is the problem with MMIO timers?  needs_fsl_a008585_workaround()
-> > > > should
-> > > > always be false for them.
-> > > As suggested, needs_fsl_a008585_workaround() takes no parameter, and
-> > > set_next_event is called for both cp15/sysreg and MMIO timers. So it
-> > > would either be true for all, or false for all.
-> > > 
-> > > If it's true for all, we'd end up calling fsl_a008585_set_next_event()
-> > > for the MMIO timers too.
-> > There should not be any MMIO timers on a system where
-> > fsl_a008585_set_next_event() returns true.
-> I'm generally not keen on relying on that.
-> 
-> For reference, are no MMIO timers implemented at all, or are they simply
-> not listed in the DT today?
+This erratum describes a bug in logic outside the core, so MIDR can't be
+used to identify its presence, and reading an SoC-specific revision
+register from common arch timer code would be awkward.  So, describe it
+in the device tree.
 
-As far as I can tell they're not implemented, but it's possible I'm just not
-looking at the right documentation.  
+Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/arch_timer.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I agree though that depending on that isn't particularly pretty.  I'll stick
-with the current approach for set_next_event().
+diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+index e774128..ef5fbe9 100644
+--- a/Documentation/devicetree/bindings/arm/arch_timer.txt
++++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+@@ -25,6 +25,12 @@ to deliver its interrupts via SPIs.
+ - always-on : a boolean property. If present, the timer is powered through an
+   always-on power domain, therefore it never loses context.
+ 
++- fsl,erratum-a008585 : A boolean property. Indicates the presence of
++  QorIQ erratum A-008585, which says that reading the counter is
++  unreliable unless the same value is returned by back-to-back reads.
++  This also affects writes to the tval register, due to the implicit
++  counter read.
++
+ ** Optional properties:
+ 
+ - arm,cpu-registers-not-fw-configured : Firmware does not initialize
+-- 
+2.7.4
 
--Scott
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
