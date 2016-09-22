@@ -1,106 +1,68 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on Hip06
-Date: Thu, 22 Sep 2016 14:14:31 +0200
-Message-ID: <9178320.n4yHmfyPA3@wuerfel>
-References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com> <3538381.vOsx75UXVU@wuerfel> <EE11001F9E5DDD47B7634E2F8A612F2E1F881744@lhreml507-mbx>
+From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Subject: Re: [PATCH 2/2] media: adv7604: automatic "default-input" selection
+Date: Thu, 22 Sep 2016 15:17:58 +0200
+Message-ID: <CAO3366wMc9s6vH4rm=SAus46AUdPKQuKucv2=_ktMBLKONr4kQ@mail.gmail.com>
+References: <20160916093942.17213-1-ulrich.hecht+renesas@gmail.com>
+ <20160916093942.17213-3-ulrich.hecht+renesas@gmail.com> <3410700.SJlxHzK90c@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E1F881744@lhreml507-mbx>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Cc: zhichang <zhichang.yuan02@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "minyard@acm.org" <minyard@acm.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, zourong
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <3410700.SJlxHzK90c@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: hans.verkuil@cisco.com, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, William Towle <william.towle@codethink.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, September 22, 2016 11:55:45 AM CEST Gabriele Paoloni wrote:
-> > > I think extending of_empty_ranges_quirk() may be a reasonable
-> > solution.
-> > > What do you think Arnd?
-> > 
-> > I don't really like that idea, that quirk is meant to work around
-> > broken DTs, but we can just make the DT valid and implement the
-> > code properly.
-> 
-> Ok  I understand your point where it is not right to use of_empty_ranges_quirk()
-> As a quirk is used to work around broken HW or broken FW (as in this case)
-> rather than to fix code
-> 
-> What about the following? I think adding the check you suggested next to
-> of_empty_ranges_quirk() is adding the case we need in the right point (thus
-> avoiding any duplication)
->  
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -457,6 +457,15 @@ static struct of_bus *of_match_bus(struct device_node *np)
->         return NULL;
->  }
->  
-> +static inline int of_isa_indirect_io(struct device_node *np)
-> +{
-> +       /*
-> +        * check if the current node is an isa bus and if indirectio operation
-> +        * are registered
-> +        */
-> +       return (of_bus_isa_match(np) && arm64_extio_ops);
-> +}
-> +
->  static int of_empty_ranges_quirk(struct device_node *np)
->  {
->         if (IS_ENABLED(CONFIG_PPC)) {
-> @@ -503,7 +512,7 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
->          * This code is only enabled on powerpc. --gcl
->          */
->         ranges = of_get_property(parent, rprop, &rlen);
-> -       if (ranges == NULL && !of_empty_ranges_quirk(parent)) {
-> +       if (ranges == NULL && !of_empty_ranges_quirk(parent) && !of_isa_indirect_io(parent)) {
->                 pr_debug("OF: no ranges; cannot translate\n");
->                 return 1;
->         }
+On Fri, Sep 16, 2016 at 11:57 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> Hi Ulrich,
+>
+> Thank you for the patch.
 
-I don't see what effect that would have. What do you want to
-achieve with this?
+Thanks for your review.
 
-I think all we need from this function is to return '1' if
-we hit an ISA I/O window, and that should happen for the two
-interesting cases, either no 'ranges' at all, or no translation
-for the range in question, so that __of_translate_address can
-return OF_BAD_ADDR, and we can enter the special case
-handling in the caller, that handles it like
+>
+> On Friday 16 Sep 2016 11:39:42 Ulrich Hecht wrote:
+>> Fall back to input 0 if "default-input" property is not present.
+>>
+>> Documentation states that the "default-input" property should reside
+>> directly in the node for adv7612.
+>
+> Not just fo adv7612.
+>
+>> Hence, also adjust the parsing to make the implementation consistent with
+>> this.
+>>
+>> Based on patch by William Towle <william.towle@codethink.co.uk>.
+>>
+>> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+>> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+>> ---
+>>  drivers/media/i2c/adv7604.c | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+>> index 4003831..055c9df 100644
+>> --- a/drivers/media/i2c/adv7604.c
+>> +++ b/drivers/media/i2c/adv7604.c
+>> @@ -3077,10 +3077,13 @@ static int adv76xx_parse_dt(struct adv76xx_state
+>> *state)
+>>       if (!of_property_read_u32(endpoint, "default-input", &v))
+>
+> Should this be removed if the property has to be in the device node and not in
+> the endpoint ?
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 02b2903fe9d2..a18d96843fae 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -685,17 +685,24 @@ static int __of_address_to_resource(struct device_node *dev,
- 	if ((flags & (IORESOURCE_IO | IORESOURCE_MEM)) == 0)
- 		return -EINVAL;
- 	taddr = of_translate_address(dev, addrp);
--	if (taddr == OF_BAD_ADDR)
--		return -EINVAL;
- 	memset(r, 0, sizeof(struct resource));
-+
- 	if (flags & IORESOURCE_IO) {
- 		unsigned long port;
--		port = pci_address_to_pio(taddr);
-+
-+		if (taddr == OF_BAD_ADDR)
-+			port = arch_of_address_to_pio(dev, addrp)
-+		else
-+			port = pci_address_to_pio(taddr);
-+
- 		if (port == (unsigned long)-1)
- 			return -EINVAL;
- 		r->start = port;
- 		r->end = port + size - 1;
- 	} else {
-+		if (taddr == OF_BAD_ADDR)
-+			return -EINVAL;
-+
- 		r->start = taddr;
- 		r->end = taddr + size - 1;
- 	}
+Probably, considering it's not used anywhere yet.
 
+>
+>>               state->pdata.default_input = v;
+>>       else
+>> -             state->pdata.default_input = -1;
+>> +             state->pdata.default_input = 0;
+>
+> What was the use case for setting it to -1 ? Is it safe to change that ?
 
+Not sure. Might as well leave it at -1, we define the default in the DT anyway.
 
-	Arnd
+CU
+Uli
