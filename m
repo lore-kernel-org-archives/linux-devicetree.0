@@ -1,54 +1,20 @@
-From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: [PATCH v4] devicetree: bindings: uart: Add new compatible string for
- ZynqMP
-Date: Thu, 22 Sep 2016 16:56:19 +0530
-Message-ID: <1474543579-40312-1-git-send-email-navam@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, jslaby@suse.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, punnaia@xilinx.com
-Cc: Nava kishore Manne <nava.manne@xilinx.com>, Nava kishore Manne <navam@xilinx.com>
+From: David Wu <david.wu@rock-chips.com>
+Subject: [PATCH 0/2] Fix warnings for i2c-rk3x.c
+Date: Thu, 22 Sep 2016 19:29:22 +0800
+Message-ID: <1474543764-51135-1-git-send-email-david.wu@rock-chips.com>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: heiko@sntech.de, wsa@the-dreams.de
+Cc: dianders@chromium.org, huangtao@rock-chips.com, wxt@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Wu <david.wu@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Nava kishore Manne <nava.manne@xilinx.com>
+David Wu (2):
+  i2c: rk3x: Fix sparse warning
+  i2c: rk3x: fix variable 'min_total_ns' unused warning
 
-This patch Adds the new compatible string for ZynqMP.
+ drivers/i2c/busses/i2c-rk3x.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Signed-off-by: Nava kishore Manne <navam@xilinx.com>
----
-Changes for v4:
-		-Modified the ChangeLog comment.
-Changes for v3:
-		-Added changeLog comment.
-Changes for v2:
-                -None
-
- Documentation/devicetree/bindings/serial/cdns,uart.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/serial/cdns,uart.txt b/Documentation/devicetree/bindings/serial/cdns,uart.txt
-index a3eb154..4fe7aae 100644
---- a/Documentation/devicetree/bindings/serial/cdns,uart.txt
-+++ b/Documentation/devicetree/bindings/serial/cdns,uart.txt
-@@ -1,7 +1,8 @@
- Binding for Cadence UART Controller
- 
- Required properties:
--- compatible : should be "cdns,uart-r1p8", or "xlnx,xuartps"
-+- compatible : should be "cdns,uart-r1p8", or "xlnx,xuartps" for Zynq and
-+               "cdns,uart-r1p12" for Zynq Ultrascale+ MPSoC uart controller.
- - reg: Should contain UART controller registers location and length.
- - interrupts: Should contain UART controller interrupts.
- - clocks: Must contain phandles to the UART clocks
 -- 
-2.1.2
+1.9.1
