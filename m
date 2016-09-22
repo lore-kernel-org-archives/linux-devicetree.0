@@ -1,12 +1,15 @@
 From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v3 0/4] regulator: axp20x: support AXP803/AXP813 variants
-Date: Fri, 23 Sep 2016 10:58:27 +0200
-Message-ID: <cover.1474621107.git.moinejf@free.fr>
+Subject: [PATCH v3 2/4] regulator: axp20x: duplicate the MFD
+ axp20x-rsb code
+Date: Thu, 22 Sep 2016 19:25:23 +0200
+Message-ID: <db01bc189cca1f6a5b90cbeebc8d4dc1119cb91c.1474621107.git.moinejf@free.fr>
+References: <cover.1474621107.git.moinejf@free.fr>
 Reply-To: moinejf-GANU6spQydw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCV6DL6LYMNBBO7DSO7QKGQERT2XWKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBBQPDSO7QKGQE44WY6UA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <cover.1474621107.git.moinejf-GANU6spQydw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,39 +20,80 @@ To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds support for the X-Powers AXP803 and AXP813 PMICs.
-It is based on the previous patch series
-	regulator: axp20x: Simplify various code
+The axp20x rsb driver handles many different devices.
+Duplicating its code in a generic regulator driver permits
+to probe/remove individual devices.
 
-v3:
-- put the code of the new devices in new files instead of in the common
-  axp20x file.
-- fix errors about the regulators and interrupts
-v2:
-- fix lack of support of dcdc frequency
-- notice that the AXP803 is also handled
-- send the patch to the DT maintainers
+Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+---
+ drivers/regulator/axp-regulator.c | 39 +++++++++++++++++++++++++++++++++++++++
+ drivers/regulator/axp-regulator.h |  6 ++++++
+ 2 files changed, 45 insertions(+)
 
-Jean-Francois Moine (4):
-  regulator: axp20x: move device independant parts to new files
-  regulator: axp20x: duplicate the MFD axp20x-rsb code
-  regulator: axp20x: add the AXP803
-  regulator: axp20x: add the AXP813
-
- Documentation/devicetree/bindings/mfd/axp20x.txt |  29 ++-
- drivers/mfd/axp20x.c                             |  15 +
- drivers/regulator/Makefile                       |   3 +-
- drivers/regulator/axp-regulator.c                | 347 +++++++++++++++++++
- drivers/regulator/axp-regulator.h                | 133 ++++++++
- drivers/regulator/axp20x-regulator.c             | 415 ++---------------------
- drivers/regulator/axp803.c                       | 225 ++++++++++++
- drivers/regulator/axp813.c                       | 229 +++++++++++++
- include/linux/mfd/axp20x.h                       |   2 +
- 9 files changed, 1012 insertions(+), 388 deletions(-)
- create mode 100644 drivers/regulator/axp-regulator.c
- create mode 100644 drivers/regulator/axp-regulator.h
- create mode 100644 drivers/regulator/axp803.c
- create mode 100644 drivers/regulator/axp813.c
-
+diff --git a/drivers/regulator/axp-regulator.c b/drivers/regulator/axp-regulator.c
+index 0d7adb6..17943fb 100644
+--- a/drivers/regulator/axp-regulator.c
++++ b/drivers/regulator/axp-regulator.c
+@@ -303,6 +303,45 @@ int axp_regulator_create(struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(axp_regulator_create);
+ 
++/* probe/remove RSB devices */
++int axp_rsb_probe(struct sunxi_rsb_device *rdev,
++		  struct axp20x_dev *axp20x,
++		  const struct axp_cfg *axp_cfg)
++{
++	int ret;
++
++	axp20x->dev = &rdev->dev;
++	axp20x->irq = rdev->irq;
++	dev_set_drvdata(&rdev->dev, axp20x);
++
++	ret = axp20x_match_device(axp20x);
++	if (ret)
++		return ret;
++
++	axp20x->regmap = devm_regmap_init_sunxi_rsb(rdev,
++						    axp20x->regmap_cfg);
++	if (IS_ERR(axp20x->regmap)) {
++		ret = PTR_ERR(axp20x->regmap);
++		dev_err(&rdev->dev, "regmap init failed: %d\n", ret);
++		return ret;
++	}
++
++	ret = axp20x_device_probe(axp20x);
++	if (ret < 0)
++		return ret;
++
++	return axp_regulator_create(&rdev->dev, axp_cfg);
++}
++EXPORT_SYMBOL_GPL(axp_rsb_probe);
++
++int axp_rsb_remove(struct sunxi_rsb_device *rdev)
++{
++	struct axp20x_dev *axp20x = sunxi_rsb_device_get_drvdata(rdev);
++
++	return axp20x_device_remove(axp20x);
++}
++EXPORT_SYMBOL_GPL(axp_rsb_remove);
++
+ MODULE_AUTHOR("Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>");
+ MODULE_DESCRIPTION("Regulator Module for AXP PMIC");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/regulator/axp-regulator.h b/drivers/regulator/axp-regulator.h
+index 0adf1b0..085eaa0 100644
+--- a/drivers/regulator/axp-regulator.h
++++ b/drivers/regulator/axp-regulator.h
+@@ -124,4 +124,10 @@ struct axp_cfg {
+ int axp_regulator_create(struct device *dev,
+ 			 const struct axp_cfg *axp_cfg);
+ 
++struct sunxi_rsb_device;
++int axp_rsb_probe(struct sunxi_rsb_device *rdev,
++		  struct axp20x_dev *axp20x,
++		  const struct axp_cfg *axp_cfg);
++int axp_rsb_remove(struct sunxi_rsb_device *rdev);
++
+ #endif /* __AXP_REGULATOR_H__ */
 -- 
 2.10.0
