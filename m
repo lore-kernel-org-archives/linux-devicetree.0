@@ -1,120 +1,107 @@
-From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Subject: [PATCH] ASoC: simple-card: add support for aux devices
-Date: Thu, 22 Sep 2016 23:50:44 +0300
-Message-ID: <1474577444-7598-1-git-send-email-nikita.yoush@cogentembedded.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, =?UTF-8?q?Otto=20Kek=C3=A4l=C3=A4inen?= <otto@seravo.fi>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mengdong Lin <mengdong.lin@linux.intel.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andrew Lunn <andrew@lunn.ch>, Peter Ujfalusi <peter.ujfalusi@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Chris Healy <cphealy@gmail.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ARM: dts: exynos: Add reboot reason support for Trats2
+Date: Thu, 22 Sep 2016 22:55:22 +0200
+Message-ID: <20160922205522.GA15917@kozik-lap>
+References: <20160922174606.GA4988@kozik-lap>
+ <87shsrlq1f.fsf@monsta.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87shsrlq1f.fsf@monsta.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Wolfgang Wiedmeyer <wolfgit@wiedmeyer.de>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, javier@osg.samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch makes it possible to use simple-card in setups where separate
-amplifier chip is connected to codec's output.
+On Thu, Sep 22, 2016 at 08:59:03PM +0200, Wolfgang Wiedmeyer wrote:
+> 
+> Krzysztof Kozlowski writes:
+> 
+> > On Thu, Sep 22, 2016 at 06:48:35PM +0200, Wolfgang Wiedmeyer wrote:
+> >> This allows to reboot the device into recovery mode and into the download
+> >> mode of the bootloader.
+> >
+> > Which bootloader? Probably UBoot... or Samsung stock one? Could you put
+> > that information here?
+> 
+> I'm only working with the stock one. I was under the impression that the
+> stock bootloader cannot be replaced on a i9300 because there's a
+> signature check. Is UBoot loaded after the stock one on Trats2 or how
+> does this work? I didn't find information on that.
 
-Example usage:
++CC Marek,
 
-	codec: tlv320dac3100@18 {
-		compatible = "ti,tlv320dac3100";
-		...
-	}
+Trats2 is working with U-Boot. Just U-Boot. However I never converted S3
+into Trats2 on my own. I always used targets prepared to be "Trats2"
+type. 
 
-	amp: tpa6130a2@60 {
-		compatible = "ti,tpa6130a2";
-		...
-	}
+Of course kernel is independent to bootloader but in that case you want
+to use a specific interface between kernel and specific bootloader
+type/version. In that case - this should be U-Boot, I think.
 
-	sound {
-		compatible = "simple-audio-card";
-		...
-		simple-audio-card,widgets =
-			"Headphone", "Headphone Jack";
-		simple-audio-card,routing =
-			"Headphone Jack", "HPLEFT",
-			"Headphone Jack", "HPRIGHT",
-			"LEFTIN", "HPL",
-			"RIGHTIN", "HPR";
-		simple-audio-card,aux-devs = <&amp>;
-		simple-audio-card,cpu {
-			sound-dai = <&ssi2>;
-		};
-		simple-audio-card,codec {
-			sound-dai = <&codec1>;
-			clocks = ...
-		};
+> 
+> >> 
+> >> Signed-off-by: Wolfgang Wiedmeyer <wolfgit@wiedmeyer.de>
+> >> ---
+> >>  arch/arm/boot/dts/exynos4412-trats2.dts | 14 ++++++++++++++
+> >>  arch/arm/boot/dts/exynos4x12.dtsi       |  2 +-
+> >>  2 files changed, 15 insertions(+), 1 deletion(-)
+> >> 
+> >> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+> >> index 129e973..a38d1e3 100644
+> >> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
+> >> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+> >> @@ -1294,3 +1294,17 @@
+> >>  	vtmu-supply = <&ldo10_reg>;
+> >>  	status = "okay";
+> >>  };
+> >> +
+> >> +&pmu {
+> >> +	compatible = "syscon", "simple-mfd";
+> >> +
+> >> +	reboot-mode {
+> >> +		compatible = "syscon-reboot-mode";
+> >> +		offset = <0x80c>;
+> >> +
+> >> +		mode-normal	= <0x12345670>;
+> >> +		mode-bootloader	= <0x12345671>;
+> >> +		mode-download	= <0x12345671>;
+> >> +		mode-recovery	= <0x12345674>;
+> >
+> > Hmmm, how did you get these values? Are they already supported?
+> 
+> I only have the vendor source drop as documentation. The magic mode
+> values [1] and the offset [2] can be found there.
 
-This describes audio path from IMX6 SSI2 through TLV320DAC3100 codec
-through TPA6130A2 amplifier to headphones.
+It would be useful to mention that in commit msg (just the source)...
+however as I wrote above, these values should be for U-Boot, not the
+stock one.
 
-Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
----
- .../devicetree/bindings/sound/simple-card.txt      |  2 ++
- sound/soc/generic/simple-card.c                    | 34 ++++++++++++++++++++++
- 2 files changed, 36 insertions(+)
+Best regards,
+Krzysztof
 
-diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-index 59d8628..5579f40 100644
---- a/Documentation/devicetree/bindings/sound/simple-card.txt
-+++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-@@ -22,6 +22,8 @@ Optional properties:
- 					  headphones are attached.
- - simple-audio-card,mic-det-gpio	: Reference to GPIO that signals when
- 					  a microphone is attached.
-+- simple-audio-card,aux-devs		: List of phandles pointing to auxiliary devices, such
-+					  as amplifiers, to be added to the sound card.
- 
- Optional subnodes:
- 
-diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-index 43295f0..f989f34 100644
---- a/sound/soc/generic/simple-card.c
-+++ b/sound/soc/generic/simple-card.c
-@@ -417,6 +417,36 @@ dai_link_of_err:
- 	return ret;
- }
- 
-+static int asoc_simple_card_parse_aux_devs(struct device_node *node,
-+					   struct simple_card_data *priv)
-+{
-+	struct device *dev = simple_priv_to_dev(priv);
-+	struct device_node *aux_node;
-+	int i, n, len;
-+
-+	if (!of_find_property(node, PREFIX "aux-devs", &len))
-+		return 0;		/* Ok to have no aux-devs */
-+
-+	n = len / sizeof(__be32);
-+	if (n <= 0)
-+		return -EINVAL;
-+
-+	priv->snd_card.aux_dev = devm_kzalloc(dev,
-+			n * sizeof(*priv->snd_card.aux_dev), GFP_KERNEL);
-+	if (!priv->snd_card.aux_dev)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < n; i++) {
-+		aux_node = of_parse_phandle(node, PREFIX "aux-devs", i);
-+		if (!aux_node)
-+			return -EINVAL;
-+		priv->snd_card.aux_dev[i].codec_of_node = aux_node;
-+	}
-+
-+	priv->snd_card.num_aux_devs = n;
-+	return 0;
-+}
-+
- static int asoc_simple_card_parse_of(struct device_node *node,
- 				     struct simple_card_data *priv)
- {
-@@ -474,6 +504,10 @@ static int asoc_simple_card_parse_of(struct device_node *node,
- 	if (ret)
- 		return ret;
- 
-+	ret = asoc_simple_card_parse_aux_devs(node, priv);
-+	if (ret)
-+		return ret;
-+
- 	return 0;
- }
- 
--- 
-2.1.4
+> 
+> > It would be nice to document them:
+> > 1. In Documentation/arm/Samsung/Bootloader-interface.txt
+> > 2. In header. I hate such magic numbers... you could add new header next
+> >    to existing rockchip one:
+> >    include/dt-bindings/soc/samsung,boot-mode.h
+> >    (and update maintainers entry :) )
+> 
+> Thanks for the review! I will do the documentation and update the commit
+> message.
+> 
+> Best regards,
+> Wolfgang
+> 
+> [1] https://code.fossencdi.org/kernel_samsung_smdk4412.git/tree/arch/arm/mach-exynos/sec-reboot.c#n65
+> 
+> [2] https://code.fossencdi.org/kernel_samsung_smdk4412.git/tree/arch/arm/mach-exynos/include/mach/regs-pmu.h#n79
+> 
+> 
+> -- 
+> Website: https://fossencdi.org
+> Jabber: wolfgang@wiedmeyer.de
+> OpenPGP: 0F30 D1A0 2F73 F70A 6FEE  048E 5816 A24C 1075 7FC4
+> Key download: https://wiedmeyer.de/keys/ww.asc
