@@ -1,40 +1,40 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 0/3] ARM: dts: r7s72100: add sdhi DT
-Date: Thu, 22 Sep 2016 17:32:08 -0400
-Message-ID: <20160922213211.7988-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 3/3] ARM: dts: rskrza1: add sdhi1 DT support
+Date: Thu, 22 Sep 2016 17:32:11 -0400
+Message-ID: <20160922213211.7988-4-chris.brandt@renesas.com>
+References: <20160922213211.7988-1-chris.brandt@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160922213211.7988-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SUMMARY:
-This series adds sdhi to the r7s72100 (RZ/A1) Device Tree.
+Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/r7s72100-rskrza1.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-DEPENDECIES:
-This series is dependent on the tmio/sh_sdhi patches being
-applied to add r7s72100 support.
-  mmc: sh_mobile_sdhi: add ocr_mask option
-  mmc: tmio-mmc: add support for 32bit data port
-  mmc: sh_mobile_sdhi: Add r7s72100 support
-
-MERGE CONFLICTS:
-There are also patches being reviewed for adding mmc so depending on how
-they get applied, there might be a line conflict.
-To resolve the merge conflict, simply put the MMC nodes before
-the SDHI nodes (just because that seems to be the order in other
-Renesas SoCs DTs)
-
-
-Chris Brandt (3):
-  ARM: dts: r7s72100: add sdhi clock to device tree
-  ARM: dts: r7s72100: add sdhi to device tree
-  ARM: dts: rskrza1: add sdhi1 DT support
-
- arch/arm/boot/dts/r7s72100-rskrza1.dts     |  4 ++++
- arch/arm/boot/dts/r7s72100.dtsi            | 36 ++++++++++++++++++++++++++++++
- include/dt-bindings/clock/r7s72100-clock.h |  4 ++++
- 3 files changed, 44 insertions(+)
-
+diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+index e5dea5b..548b51f 100644
+--- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
++++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+@@ -56,6 +56,10 @@
+ 	};
+ };
+ 
++&sdhi1 {
++	status = "okay";
++};
++
+ &scif2 {
+ 	status = "okay";
+ };
 -- 
 2.9.2
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
