@@ -1,107 +1,86 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: exynos: Add reboot reason support for Trats2
-Date: Thu, 22 Sep 2016 22:55:22 +0200
-Message-ID: <20160922205522.GA15917@kozik-lap>
-References: <20160922174606.GA4988@kozik-lap>
- <87shsrlq1f.fsf@monsta.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v2] arm: dts: zynq: Add MicroZed board support
+Date: Thu, 22 Sep 2016 13:59:17 -0700
+Message-ID: <20160922205917.GS16583@xsjsorenbubuntu>
+References: <1474550489-7005-1-git-send-email-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <87shsrlq1f.fsf@monsta.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Wolfgang Wiedmeyer <wolfgit@wiedmeyer.de>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, javier@osg.samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <1474550489-7005-1-git-send-email-jagan@amarulasolutions.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jagan Teki <jagannadh.teki@gmail.com>
+Cc: Jagan Teki <jteki@openedev.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michal Simek <michal.simek@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 22, 2016 at 08:59:03PM +0200, Wolfgang Wiedmeyer wrote:
-> 
-> Krzysztof Kozlowski writes:
-> 
-> > On Thu, Sep 22, 2016 at 06:48:35PM +0200, Wolfgang Wiedmeyer wrote:
-> >> This allows to reboot the device into recovery mode and into the download
-> >> mode of the bootloader.
-> >
-> > Which bootloader? Probably UBoot... or Samsung stock one? Could you put
-> > that information here?
-> 
-> I'm only working with the stock one. I was under the impression that the
-> stock bootloader cannot be replaced on a i9300 because there's a
-> signature check. Is UBoot loaded after the stock one on Trats2 or how
-> does this work? I didn't find information on that.
-
-+CC Marek,
-
-Trats2 is working with U-Boot. Just U-Boot. However I never converted S3
-into Trats2 on my own. I always used targets prepared to be "Trats2"
-type. 
-
-Of course kernel is independent to bootloader but in that case you want
-to use a specific interface between kernel and specific bootloader
-type/version. In that case - this should be U-Boot, I think.
-
-> 
-> >> 
-> >> Signed-off-by: Wolfgang Wiedmeyer <wolfgit@wiedmeyer.de>
-> >> ---
-> >>  arch/arm/boot/dts/exynos4412-trats2.dts | 14 ++++++++++++++
-> >>  arch/arm/boot/dts/exynos4x12.dtsi       |  2 +-
-> >>  2 files changed, 15 insertions(+), 1 deletion(-)
-> >> 
-> >> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-> >> index 129e973..a38d1e3 100644
-> >> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
-> >> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-> >> @@ -1294,3 +1294,17 @@
-> >>  	vtmu-supply = <&ldo10_reg>;
-> >>  	status = "okay";
-> >>  };
-> >> +
-> >> +&pmu {
-> >> +	compatible = "syscon", "simple-mfd";
-> >> +
-> >> +	reboot-mode {
-> >> +		compatible = "syscon-reboot-mode";
-> >> +		offset = <0x80c>;
-> >> +
-> >> +		mode-normal	= <0x12345670>;
-> >> +		mode-bootloader	= <0x12345671>;
-> >> +		mode-download	= <0x12345671>;
-> >> +		mode-recovery	= <0x12345674>;
-> >
-> > Hmmm, how did you get these values? Are they already supported?
-> 
-> I only have the vendor source drop as documentation. The magic mode
-> values [1] and the offset [2] can be found there.
-
-It would be useful to mention that in commit msg (just the source)...
-however as I wrote above, these values should be for U-Boot, not the
-stock one.
-
-Best regards,
-Krzysztof
-
-> 
-> > It would be nice to document them:
-> > 1. In Documentation/arm/Samsung/Bootloader-interface.txt
-> > 2. In header. I hate such magic numbers... you could add new header next
-> >    to existing rockchip one:
-> >    include/dt-bindings/soc/samsung,boot-mode.h
-> >    (and update maintainers entry :) )
-> 
-> Thanks for the review! I will do the documentation and update the commit
-> message.
-> 
-> Best regards,
-> Wolfgang
-> 
-> [1] https://code.fossencdi.org/kernel_samsung_smdk4412.git/tree/arch/arm/mach-exynos/sec-reboot.c#n65
-> 
-> [2] https://code.fossencdi.org/kernel_samsung_smdk4412.git/tree/arch/arm/mach-exynos/include/mach/regs-pmu.h#n79
-> 
-> 
-> -- 
-> Website: https://fossencdi.org
-> Jabber: wolfgang@wiedmeyer.de
-> OpenPGP: 0F30 D1A0 2F73 F70A 6FEE  048E 5816 A24C 1075 7FC4
-> Key download: https://wiedmeyer.de/keys/ww.asc
+T24gVGh1LCAyMDE2LTA5LTIyIGF0IDE4OjUxOjI5ICswNTMwLCBKYWdhbiBUZWtpIHdyb3RlOgo+
+IEZyb206IEphZ2FuIFRla2kgPGp0ZWtpQG9wZW5lZGV2LmNvbT4KPiAKPiBBZGRlZCBiYXNpYyBk
+dHMgc3VwcG9ydCBmb3IgTWljcm9aZWQgYm9hcmQuCj4gCj4gLSBVQVJUCj4gLSBTREhDSQo+IC0g
+RXRoZXJuZXQKPiAKPiBDYzogU29yZW4gQnJpbmttYW5uIDxzb3Jlbi5icmlua21hbm5AeGlsaW54
+LmNvbT4KPiBDYzogTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT4KPiBTaWdu
+ZWQtb2ZmLWJ5OiBKYWdhbiBUZWtpIDxqdGVraUBvcGVuZWRldi5jb20+Cj4gLS0tCj4gQ2hhbmdl
+cyBmb3IgdjI6Cj4gCS0gQWRkIFNESENJCj4gCS0gQWRkIEV0aGVybmV0Cj4gCj4gIGFyY2gvYXJt
+L2Jvb3QvZHRzL01ha2VmaWxlICAgICAgICAgIHwgIDEgKwo+ICBhcmNoL2FybS9ib290L2R0cy96
+eW5xLW1pY3JvemVkLmR0cyB8IDk1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysKPiAgMiBmaWxlcyBjaGFuZ2VkLCA5NiBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBhcmNoL2FybS9ib290L2R0cy96eW5xLW1pY3JvemVkLmR0cwo+IAo+IGRpZmYgLS1naXQg
+YS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxl
+Cj4gaW5kZXggZmFhY2Q1Mi4uNGQ3Yjg1OCAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0
+cy9NYWtlZmlsZQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlCj4gQEAgLTg2Miw2
+ICs4NjIsNyBAQCBkdGItJChDT05GSUdfQVJDSF9WVDg1MDApICs9IFwKPiAgCXdtODc1MC1hcGM4
+NzUwLmR0YiBcCj4gIAl3bTg4NTAtdzcwdjIuZHRiCj4gIGR0Yi0kKENPTkZJR19BUkNIX1pZTlEp
+ICs9IFwKPiArCXp5bnEtbWljcm96ZWQuZHRiIFwKPiAgCXp5bnEtcGFyYWxsZWxsYS5kdGIgXAo+
+ICAJenlucS16YzcwMi5kdGIgXAo+ICAJenlucS16YzcwNi5kdGIgXAo+IGRpZmYgLS1naXQgYS9h
+cmNoL2FybS9ib290L2R0cy96eW5xLW1pY3JvemVkLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5
+bnEtbWljcm96ZWQuZHRzCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi45
+ZTY0NDk2Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtbWlj
+cm96ZWQuZHRzCj4gQEAgLTAsMCArMSw5NSBAQAo+ICsvKgo+ICsgKiBDb3B5cmlnaHQgKEMpIDIw
+MTUgSmFnYW4gVGVraSA8anRla2lAb3BlbmVkZXYuY29tPgo+ICsgKgo+ICsgKiBUaGlzIHNvZnR3
+YXJlIGlzIGxpY2Vuc2VkIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGlj
+Cj4gKyAqIExpY2Vuc2UgdmVyc2lvbiAyLCBhcyBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdh
+cmUgRm91bmRhdGlvbiwgYW5kCj4gKyAqIG1heSBiZSBjb3BpZWQsIGRpc3RyaWJ1dGVkLCBhbmQg
+bW9kaWZpZWQgdW5kZXIgdGhvc2UgdGVybXMuCj4gKyAqCj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBk
+aXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVsLAo+ICsgKiBidXQg
+V0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBv
+Zgo+ICsgKiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBP
+U0UuICBTZWUgdGhlCj4gKyAqIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRl
+dGFpbHMuCj4gKyAqLwo+ICsvZHRzLXYxLzsKPiArL2luY2x1ZGUvICJ6eW5xLTcwMDAuZHRzaSIK
+PiArCj4gKy8gewo+ICsJbW9kZWwgPSAiWnlucSBNaWNyb1pFRCBEZXZlbG9wbWVudCBCb2FyZCI7
+Cj4gKwljb21wYXRpYmxlID0gInhsbngsenlucS1taWNyb3plZCIsICJ4bG54LHp5bnEtNzAwMCI7
+Cj4gKwo+ICsJYWxpYXNlcyB7Cj4gKwkJZXRoZXJuZXQwID0gJmdlbTA7Cj4gKwkJc2VyaWFsMCA9
+ICZ1YXJ0MTsKPiArCX07Cj4gKwo+ICsJbWVtb3J5IHsKPiArCQlkZXZpY2VfdHlwZSA9ICJtZW1v
+cnkiOwo+ICsJCXJlZyA9IDwweDAgMHg0MDAwMDAwMD47Cj4gKwl9Owo+ICsKPiArCWNob3NlbiB7
+Cj4gKwkJYm9vdGFyZ3MgPSAiZWFybHljb24iOwo+ICsJCXN0ZG91dC1wYXRoID0gInNlcmlhbDA6
+MTE1MjAwbjgiOwo+ICsJfTsKPiArCj4gKwl1c2JfcGh5MDogcGh5MCB7Cj4gKwkJY29tcGF0aWJs
+ZSA9ICJ1c2Itbm9wLXhjZWl2IjsKPiArCQkjcGh5LWNlbGxzID0gPDA+Owo+ICsJfTsKPiArfTsK
+PiArCj4gKyZjbGtjIHsKPiArCXBzLWNsay1mcmVxdWVuY3kgPSA8MzMzMzMzMzM+Owo+ICt9Owo+
+ICsKPiArJmdlbTAgewo+ICsJc3RhdHVzID0gIm9rYXkiOwo+ICsJcGh5LW1vZGUgPSAicmdtaWkt
+aWQiOwo+ICsJcGh5LWhhbmRsZSA9IDwmZXRoZXJuZXRfcGh5PjsKPiArCj4gKwlldGhlcm5ldF9w
+aHk6IGV0aGVybmV0LXBoeUAwIHsKPiArCQlyZWcgPSA8MD47Cj4gKwl9Owo+ICt9Owo+ICsKPiAr
+JnNkaGNpMCB7Cj4gKwlzdGF0dXMgPSAib2theSI7Cj4gK307Cj4gKwo+ICsmdWFydDEgewo+ICsJ
+c3RhdHVzID0gIm9rYXkiOwo+ICt9Owo+ICsKPiArJnVzYjAgewo+ICsJc3RhdHVzID0gIm9rYXki
+Owo+ICsJZHJfbW9kZSA9ICJob3N0IjsKPiArCXVzYi1waHkgPSA8JnVzYl9waHkwPjsKPiArCXBp
+bmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4gKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdXNiMF9k
+ZWZhdWx0PjsKPiArfTsKPiArCj4gKyZwaW5jdHJsMCB7Cj4gKwlwaW5jdHJsX3VzYjBfZGVmYXVs
+dDogdXNiMC1kZWZhdWx0IHsKPiArCQltdXggewo+ICsJCQlncm91cHMgPSAidXNiMF8wX2dycCI7
+Cj4gKwkJCWZ1bmN0aW9uID0gInVzYjAiOwo+ICsJCX07Cj4gKwo+ICsJCWNvbmYgewo+ICsJCQln
+cm91cHMgPSAidXNiMF8wX2dycCI7Cj4gKwkJCXNsZXctcmF0ZSA9IDwwPjsKPiArCQkJaW8tc3Rh
+bmRhcmQgPSA8MT47Cj4gKwkJfTsKPiArCj4gKwkJY29uZi1yeCB7Cj4gKwkJCXBpbnMgPSAiTUlP
+MjkiLCAiTUlPMzEiLCAiTUlPMzYiOwo+ICsJCQliaWFzLWhpZ2gtaW1wZWRhbmNlOwo+ICsJCX07
+Cj4gKwo+ICsJCWNvbmYtdHggewo+ICsJCQlwaW5zID0gIk1JTzI4IiwgIk1JTzMwIiwgIk1JTzMy
+IiwgIk1JTzMzIiwgIk1JTzM0IiwKPiArCQkJICAgICAgICJNSU8zNSIsICJNSU8zNyIsICJNSU8z
+OCIsICJNSU8zOSI7Cj4gKwkJCWJpYXMtZGlzYWJsZTsKPiArCQl9Owo+ICsJfTsKPiArfTsKCkkg
+Z3Vlc3MgaXQncyBub3Qgc3RyaWN0bHkgcmVxdWlyZWQsIGJ1dCBzaG91bGRuJ3QgdGhlcmUgYmUg
+cGluY3RybApkZXNjcmlwdGlvbnMgZm9yIGFsbCBkZXZpY2VzPwoKCVPDtnJlbgoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
+YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
