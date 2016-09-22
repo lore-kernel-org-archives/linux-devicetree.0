@@ -1,132 +1,329 @@
-From: Po Liu <po.liu-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v5 3/3] pci:aer: add support aer interrupt with none
- MSI/MSI-X/INTx mode
-Date: Thu, 22 Sep 2016 02:53:37 +0000
-Message-ID: <VI1PR0401MB1709C4C29C35E8991052364992C90@VI1PR0401MB1709.eurprd04.prod.outlook.com>
-References: <1472625442-23309-2-git-send-email-po.liu@nxp.com>
- <1473741659-17618-1-git-send-email-po.liu@nxp.com>
- <1473741659-17618-3-git-send-email-po.liu@nxp.com>
- <20160921223741.GG20006@localhost>
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/4] drivers: iio: ti_am335x_adc: add dma support
+Date: Thu, 22 Sep 2016 11:48:40 +0530
+Message-ID: <1dbd7bbd-36ac-4433-79bf-8975a06dd07e@ti.com>
+References: <20160921161134.6951-1-mugunthanvnm@ti.com>
+ <20160921161134.6951-3-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160921223741.GG20006@localhost>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Zang <roy.zang-3arQi8VN3Tc@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "M.H. Lian" <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160921161134.6951-3-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmpvcm4sDQoNCj4gIC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ICBGcm9tOiBCam9y
-biBIZWxnYWFzIFttYWlsdG86aGVsZ2Fhc0BrZXJuZWwub3JnXQ0KPiAgU2VudDogVGh1cnNkYXks
-IFNlcHRlbWJlciAyMiwgMjAxNiA2OjM4IEFNDQo+ICBUbzogUG8gTGl1DQo+ICBDYzogbGludXgt
-cGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-Ow0KPiAgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc7IFJveSBaYW5nOyBBcm5kDQo+ICBCZXJnbWFubjsgTWFyYyBaeW5naWVyOyBTdHVhcnQg
-WW9kZXI7IExlbyBMaTsgTS5ILiBMaWFuOyBNdXJhbGkNCj4gIEthcmljaGVyaTsgQmpvcm4gSGVs
-Z2FhczsgU2hhd24gR3VvOyBNaW5na2FpIEh1DQo+ICBTdWJqZWN0OiBSZTogW1BBVENIIHY1IDMv
-M10gcGNpOmFlcjogYWRkIHN1cHBvcnQgYWVyIGludGVycnVwdCB3aXRoIG5vbmUNCj4gIE1TSS9N
-U0ktWC9JTlR4IG1vZGUNCj4gIA0KPiAgT24gVHVlLCBTZXAgMTMsIDIwMTYgYXQgMTI6NDA6NTlQ
-TSArMDgwMCwgUG8gTGl1IHdyb3RlOg0KPiAgPiBPbiBzb21lIHBsYXRmb3Jtcywgcm9vdCBwb3J0
-IGRvZXNuJ3Qgc3VwcG9ydCBNU0kvTVNJLVgvSU5UeCBpbiBSQyBtb2RlLg0KPiAgPiBXaGVuIGNo
-aXAgc3VwcG9ydCB0aGUgYWVyIGludGVycnVwdCB3aXRoIG5vbmUgTVNJL01TSS1YL0lOVHggbW9k
-ZSwNCj4gID4gbWF5YmUgdGhlcmUgaXMgaW50ZXJydXB0IGxpbmUgZm9yIGFlciBwbWUgZXRjLiBT
-ZWFyY2ggdGhlIGludGVycnVwdA0KPiAgPiBudW1iZXIgaW4gdGhlIGZkdCBmaWxlLiBUaGVuIGZp
-eHVwIHRoZSBkZXYtPmlycSB3aXRoIGl0Lg0KPiAgPg0KPiAgPiBTaWduZWQtb2ZmLWJ5OiBQbyBM
-aXUgPHBvLmxpdUBueHAuY29tPg0KPiAgPiAtLS0NCj4gID4gY2hhbmdlcyBmb3IgdjU6DQo+ICA+
-IAktIEFkZCBjbGVhciAnYWVyJyBpbnRlcnJ1cC1uYW1lcyBkZXNjcmlwdGlvbg0KPiAgPg0KPiAg
-PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLnR4dCAgICAgfCAx
-MSArKysrKy0tLQ0KPiAgPiAgZHJpdmVycy9wY2kvcGNpZS9wb3J0ZHJ2X2NvcmUuYyAgICAgICAg
-ICAgICAgICAgICAgfCAzMQ0KPiAgKysrKysrKysrKysrKysrKysrKy0tLQ0KPiAgPiAgMiBmaWxl
-cyBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPiAgPg0KPiAgPiBk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNj
-YXBlLXBjaS50eHQNCj4gID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNp
-L2xheWVyc2NhcGUtcGNpLnR4dA0KPiAgPiBpbmRleCA0MWU5ZjU1Li4xMDFkMGE3IDEwMDY0NA0K
-PiAgPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2Nh
-cGUtcGNpLnR4dA0KPiAgPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cGNpL2xheWVyc2NhcGUtcGNpLnR4dA0KPiAgPiBAQCAtMTgsOCArMTgsMTAgQEAgUmVxdWlyZWQg
-cHJvcGVydGllczoNCj4gID4gIC0gcmVnOiBiYXNlIGFkZHJlc3NlcyBhbmQgbGVuZ3RocyBvZiB0
-aGUgUENJZSBjb250cm9sbGVyDQo+ICA+ICAtIGludGVycnVwdHM6IEEgbGlzdCBvZiBpbnRlcnJ1
-cHQgb3V0cHV0cyBvZiB0aGUgY29udHJvbGxlci4gTXVzdA0KPiAgY29udGFpbiBhbg0KPiAgPiAg
-ICBlbnRyeSBmb3IgZWFjaCBlbnRyeSBpbiB0aGUgaW50ZXJydXB0LW5hbWVzIHByb3BlcnR5Lg0K
-PiAgPiAtLSBpbnRlcnJ1cHQtbmFtZXM6IE11c3QgaW5jbHVkZSB0aGUgZm9sbG93aW5nIGVudHJp
-ZXM6DQo+ICA+IC0gICJpbnRyIjogVGhlIGludGVycnVwdCB0aGF0IGlzIGFzc2VydGVkIGZvciBj
-b250cm9sbGVyIGludGVycnVwdHMNCj4gID4gKy0gaW50ZXJydXB0LW5hbWVzOiBJdCBtYXkgYmUg
-aW5jbHVkZSB0aGUgZm9sbG93aW5nIGVudHJpZXM6DQo+ICA+ICsgICJhZXIiOiBUaGUgaW50ZXJy
-dXB0IHRoYXQgaXMgYXNzZXJ0ZWQgZm9yIGFlciBpbnRlcnJ1cHQNCj4gID4gKyAgInBtZSI6IFRo
-ZSBpbnRlcnJ1cHQgdGhhdCBpcyBhc3NlcnRlZCBmb3IgcG1lIGludGVycnVwdA0KPiAgPiArICAu
-Li4uLi4NCj4gID4gIC0gZnNsLHBjaWUtc2NmZzogTXVzdCBpbmNsdWRlIHR3byBlbnRyaWVzLg0K
-PiAgPiAgICBUaGUgZmlyc3QgZW50cnkgbXVzdCBiZSBhIGxpbmsgdG8gdGhlIFNDRkcgZGV2aWNl
-IG5vZGUNCj4gID4gICAgVGhlIHNlY29uZCBlbnRyeSBtdXN0IGJlICcwJyBvciAnMScgYmFzZWQg
-b24gcGh5c2ljYWwgUENJZQ0KPiAgY29udHJvbGxlciBpbmRleC4NCj4gID4gQEAgLTM1LDggKzM3
-LDkgQEAgRXhhbXBsZToNCj4gID4gIAkJcmVnID0gPDB4MDAgMHgwMzQwMDAwMCAweDAgMHgwMDAx
-MDAwMCAgIC8qIGNvbnRyb2xsZXINCj4gIHJlZ2lzdGVycyAqLw0KPiAgPiAgCQkgICAgICAgMHg0
-MCAweDAwMDAwMDAwIDB4MCAweDAwMDAyMDAwPjsgLyogY29uZmlndXJhdGlvbg0KPiAgc3BhY2Ug
-Ki8NCj4gID4gIAkJcmVnLW5hbWVzID0gInJlZ3MiLCAiY29uZmlnIjsNCj4gID4gLQkJaW50ZXJy
-dXB0cyA9IDxHSUNfU1BJIDE3NyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsgLyoNCj4gIGNvbnRyb2xs
-ZXIgaW50ZXJydXB0ICovDQo+ICA+IC0JCWludGVycnVwdC1uYW1lcyA9ICJpbnRyIjsNCj4gID4g
-KwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE3NiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyogYWVy
-DQo+ICBpbnRlcnJ1cHQgKi8NCj4gID4gKwkJCTxHSUNfU1BJIDE3NyBJUlFfVFlQRV9MRVZFTF9I
-SUdIPjsgLyogcG1lIGludGVycnVwdCAqLw0KPiAgPiArCQlpbnRlcnJ1cHQtbmFtZXMgPSAiYWVy
-IiwgInBtZSI7DQo+ICA+ICAJCWZzbCxwY2llLXNjZmcgPSA8JnNjZmcgMD47DQo+ICA+ICAJCSNh
-ZGRyZXNzLWNlbGxzID0gPDM+Ow0KPiAgPiAgCQkjc2l6ZS1jZWxscyA9IDwyPjsNCj4gID4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3BjaWUvcG9ydGRydl9jb3JlLmMNCj4gID4gYi9kcml2ZXJz
-L3BjaS9wY2llL3BvcnRkcnZfY29yZS5jIGluZGV4IGU5MjcwYjQuLjdjNDk0M2QgMTAwNjQ0DQo+
-ICA+IC0tLSBhL2RyaXZlcnMvcGNpL3BjaWUvcG9ydGRydl9jb3JlLmMNCj4gID4gKysrIGIvZHJp
-dmVycy9wY2kvcGNpZS9wb3J0ZHJ2X2NvcmUuYw0KPiAgPiBAQCAtMTYsNiArMTYsNyBAQA0KPiAg
-PiAgI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4gID4gICNpbmNsdWRlIDxsaW51eC9wY2llcG9y
-dF9pZi5oPg0KPiAgPiAgI2luY2x1ZGUgPGxpbnV4L2Flci5oPg0KPiAgPiArI2luY2x1ZGUgPGxp
-bnV4L29mX2lycS5oPg0KPiAgPg0KPiAgPiAgI2luY2x1ZGUgIi4uL3BjaS5oIg0KPiAgPiAgI2lu
-Y2x1ZGUgInBvcnRkcnYuaCINCj4gID4gQEAgLTIwMCw2ICsyMDEsMjggQEAgc3RhdGljIGludCBw
-Y2llX3BvcnRfZW5hYmxlX21zaXgoc3RydWN0IHBjaV9kZXYNCj4gID4gKmRldiwgaW50ICp2ZWN0
-b3JzLCBpbnQgbWFzaykgIHN0YXRpYyBpbnQgaW5pdF9zZXJ2aWNlX2lycXMoc3RydWN0DQo+ICA+
-IHBjaV9kZXYgKmRldiwgaW50ICppcnFzLCBpbnQgbWFzaykgIHsNCj4gID4gIAlpbnQgaSwgaXJx
-ID0gLTE7DQo+ICA+ICsJaW50IHJldDsNCj4gID4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0g
-TlVMTDsNCj4gID4gKw0KPiAgPiArCWZvciAoaSA9IDA7IGkgPCBQQ0lFX1BPUlRfREVWSUNFX01B
-WFNFUlZJQ0VTOyBpKyspDQo+ICA+ICsJCWlycXNbaV0gPSAwOw0KPiAgPiArDQo+ICA+ICsJaWYg
-KGRldi0+YnVzLT5kZXYub2Zfbm9kZSkNCj4gID4gKwkJbnAgPSBkZXYtPmJ1cy0+ZGV2Lm9mX25v
-ZGU7DQo+ICA+ICsNCj4gID4gKwkvKiBJZiByb290IHBvcnQgZG9lc24ndCBzdXBwb3J0IE1TSS9N
-U0ktWC9JTlR4IGluIFJDIG1vZGUsDQo+ICA+ICsJICogcmVxdWVzdCBpcnEgZm9yIGFlcg0KPiAg
-PiArCSAqLw0KPiAgPiArCWlmIChJU19FTkFCTEVEKENPTkZJR19PRl9JUlEpICYmIG5wICYmDQo+
-ICA+ICsJCQkobWFzayAmIFBDSUVfUE9SVF9TRVJWSUNFX1BNRSkpIHsNCj4gID4gKwkJcmV0ID0g
-b2ZfaXJxX2dldF9ieW5hbWUobnAsICJhZXIiKTsNCj4gID4gKwkJaWYgKHJldCA+IDApIHsNCj4g
-ID4gKwkJCWlycXNbUENJRV9QT1JUX1NFUlZJQ0VfQUVSX1NISUZUXSA9IHJldDsNCj4gID4gKwkJ
-CWlmIChkZXYtPmlycSkNCj4gID4gKwkJCQlpcnEgPSBkZXYtPmlycTsNCj4gID4gKwkJCWdvdG8g
-bm9fbXNpOw0KPiAgPiArCQl9DQo+ICA+ICsJfQ0KPiAgDQo+ICBXZSBkZWZpbml0ZWx5IG5lZWQg
-dG8gc29sdmUgdGhpcyBzb21laG93LiAgQnV0IHRoaXMgYXBwcm9hY2ggZG9lc24ndA0KPiAgZmVl
-bCBxdWl0ZSByaWdodCBiZWNhdXNlIGl0J3MgaGFyZCB0byBtYXAgdGhpcyBjb2RlIGJhY2sgdG8g
-YW55dGhpbmcgaW4NCj4gIHRoZSBzcGVjLCBhbmQgaXQgdXNlcyBhIGNvbXBsZXRlbHkgcGxhdGZv
-cm0tZGVwZW5kZW50IG5hbWUgKCJpbnRlcnJ1cHQtDQo+ICBuYW1lcyBhZXIiKSBpbiBjb2RlIHRo
-YXQgaXMgc3VwcG9zZWRseSBnZW5lcmljLg0KDQpWZXJ5IGFncmVlLg0KDQo+ICANCj4gIFdoYXQg
-aWYgd2UgYWRkZWQgc29tZSBzb3J0IG9mIGhvb2sgdGhhdCB3b3VsZCByZXR1cm4gdGhlIElSUT8g
-IE1heWJlIGENCj4gIHBjaWJpb3NfKigpIGhvb2sgcmlnaHQgbm93LCB3aXRoIHRoZSBpZGVhIG9m
-IG1ha2luZyBpdCBhIHBjaV9ob3N0X2JyaWRnZQ0KPiAgZnVuY3Rpb24gcG9pbnRlciBzb21lZGF5
-Pw0KDQpHb29kIGlkZWEuIEknbGwgdHJ5IG9uZSB2ZXJzaW9uIHBhdGNoIHNvb24uDQoNCj4gIA0K
-PiAgSSBrbm93IHRoZSBib2R5IG9mIHRoZSBob29rIHdvdWxkIGxvb2sgYSBsb3QgbGlrZSB3aGF0
-IHlvdSBoYXZlIGhlcmUsDQo+ICBidXQgYXQgbGVhc3QgaXQgd291bGQgYmUgbW9yZSBvYnZpb3Vz
-IHRoYXQgaXQncyBwbGF0Zm9ybS1zcGVjaWZpYyBjb2RlLg0KPiAgDQpOb3QgYWdyZWUgbW9yZS4N
-Cg0KPiAgSSB0aGluayB5b3VyIHBsYXRmb3JtIHN1cHBvcnRzIFBNRSBpbnRlcnJ1cHRzIGFzIHdl
-bGwgYXMgQUVSLCBhbmQNCj4gIHRoZXkncmUgZGlmZmVyZW50IElSUXMuICBTbyB5b3UnZCBwcm9i
-YWJseSBoYXZlIHRvIGRvIHNvbWV0aGluZyBzaW1pbGFyDQo+ICB0byB0aGUgcGNpZV9wb3J0X2Vu
-YWJsZV9tc2l4KCkgaW50ZXJmYWNlLCBzbyB5b3UgY2FuIGZpbGwgaW4gYm90aCBJUlFzLg0KPiAN
-Cg0KT2ssIHVuZGVyc3RhbmQuDQoNClBvDQogDQo+ICA+ICAJLyoNCj4gID4gIAkgKiBJZiBNU0kg
-Y2Fubm90IGJlIHVzZWQgZm9yIFBDSWUgUE1FIG9yIGhvdHBsdWcsIHdlIGhhdmUgdG8gdXNlDQo+
-ICBAQA0KPiAgPiAtMjI1LDExICsyNDgsMTMgQEAgc3RhdGljIGludCBpbml0X3NlcnZpY2VfaXJx
-cyhzdHJ1Y3QgcGNpX2RldiAqZGV2LA0KPiAgaW50ICppcnFzLCBpbnQgbWFzaykNCj4gID4gIAkJ
-aXJxID0gZGV2LT5pcnE7DQo+ICA+DQo+ICA+ICAgbm9fbXNpOg0KPiAgPiAtCWZvciAoaSA9IDA7
-IGkgPCBQQ0lFX1BPUlRfREVWSUNFX01BWFNFUlZJQ0VTOyBpKyspDQo+ICA+IC0JCWlycXNbaV0g
-PSBpcnE7DQo+ICA+ICsJZm9yIChpID0gMDsgaSA8IFBDSUVfUE9SVF9ERVZJQ0VfTUFYU0VSVklD
-RVM7IGkrKykgew0KPiAgPiArCQlpZiAoIWlycXNbaV0pDQo+ICA+ICsJCQlpcnFzW2ldID0gaXJx
-Ow0KPiAgPiArCX0NCj4gID4gIAlpcnFzW1BDSUVfUE9SVF9TRVJWSUNFX1ZDX1NISUZUXSA9IC0x
-Ow0KPiAgPg0KPiAgPiAtCWlmIChpcnEgPCAwKQ0KPiAgPiArCWlmIChpcnEgPCAwICYmIGlycXNb
-UENJRV9QT1JUX1NFUlZJQ0VfQUVSX1NISUZUXSA8IDApDQo+ICA+ICAJCXJldHVybiAtRU5PREVW
-Ow0KPiAgPiAgCXJldHVybiAwOw0KPiAgPiAgfQ0KPiAgPiAtLQ0KPiAgPiAyLjEuMC4yNy5nOTZk
-YjMyNA0KPiAgPg0KPiAgPg0KPiAgPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXw0KPiAgPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdA0KPiAgPiBs
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gID4gaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+On Wednesday 21 September 2016 09:41 PM, Mugunthan V N wrote:
+> This patch adds the required pieces to ti_am335x_adc driver for
+> DMA support
+> 
+> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/iio/adc/ti_am335x_adc.c      | 160 ++++++++++++++++++++++++++++++++++-
+>  include/linux/mfd/ti_am335x_tscadc.h |   7 ++
+>  2 files changed, 164 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ti_am335x_adc.c b/drivers/iio/adc/ti_am335x_adc.c
+> index c3cfacca..89d0b07 100644
+> --- a/drivers/iio/adc/ti_am335x_adc.c
+> +++ b/drivers/iio/adc/ti_am335x_adc.c
+> @@ -30,10 +30,32 @@
+>  #include <linux/iio/buffer.h>
+>  #include <linux/iio/kfifo_buf.h>
+>  
+> +#include <linux/dmaengine.h>
+> +#include <linux/dma-mapping.h>
+> +
+> +#define DMA_BUFFER_SIZE		SZ_2K
+> +
+> +struct tiadc_dma {
+> +	/* Filter function */
+> +	dma_filter_fn		fn;
+> +	/* Parameter to the filter function */
+> +	void			*param;
+
+These will not be needed with newer APIs (see below)
+
+> +	struct dma_slave_config	conf;
+> +	struct dma_chan		*chan;
+> +	dma_addr_t		addr;
+> +	dma_cookie_t		cookie;
+> +	u8			*buf;
+> +	bool			valid_buf_seg;
+> +	int			buf_offset;
+> +	u8			fifo_thresh;
+> +};
+> +
+>  struct tiadc_device {
+>  	struct ti_tscadc_dev *mfd_tscadc;
+> +	struct tiadc_dma dma;
+>  	struct mutex fifo1_lock; /* to protect fifo access */
+>  	int channels;
+> +	int total_ch_enabled;
+>  	u8 channel_line[8];
+>  	u8 channel_step[8];
+>  	int buffer_en_ch_steps;
+> @@ -184,6 +206,7 @@ static irqreturn_t tiadc_worker_h(int irq, void *private)
+>  	u16 *data = adc_dev->data;
+>  
+>  	fifo1count = tiadc_readl(adc_dev, REG_FIFO1CNT);
+> +
+>  	for (k = 0; k < fifo1count; k = k + i) {
+>  		for (i = 0; i < (indio_dev->scan_bytes)/2; i++) {
+>  			read = tiadc_readl(adc_dev, REG_FIFO1);
+> @@ -198,6 +221,68 @@ static irqreturn_t tiadc_worker_h(int irq, void *private)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static void tiadc_dma_rx_complete(void *param)
+> +{
+> +	struct iio_dev *indio_dev = param;
+> +	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+> +	struct tiadc_dma *dma = &adc_dev->dma;
+> +	u8 *data;
+> +	int i;
+> +
+> +	data = dma->valid_buf_seg ? dma->buf + dma->buf_offset : dma->buf;
+> +	dma->valid_buf_seg = !dma->valid_buf_seg;
+> +
+> +	for (i = 0; i < dma->buf_offset; i += indio_dev->scan_bytes) {
+> +		iio_push_to_buffers(indio_dev, data);
+> +		data += indio_dev->scan_bytes;
+> +	}
+> +}
+> +
+> +static int tiadc_start_dma(struct iio_dev *indio_dev)
+> +{
+> +	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+> +	struct tiadc_dma *dma = &adc_dev->dma;
+> +	struct dma_async_tx_descriptor *desc;
+> +
+> +	dma->valid_buf_seg = false;
+> +	dma->fifo_thresh = FIFO1_THRESHOLD;
+> +	/*
+> +	 * Make the fifo thresh as the multiple of total number of
+> +	 * channels enabled, so make sure that that cyclic DMA period
+> +	 * length is also a multiple of total number of channels
+> +	 * enabled. This ensures that no invalid data is reported
+> +	 * to the stack via iio_push_to_buffers().
+> +	 */
+> +	dma->fifo_thresh -= (dma->fifo_thresh + 1) % adc_dev->total_ch_enabled;
+
+Can we use rounddown(FIFO1_THRESHOLD + 1, adc_dev->total_ch_enabled)?
+
+> +	dma->buf_offset = DMA_BUFFER_SIZE / 2;
+> +	/* Make sure that period length is multiple of fifo thresh level */
+> +	dma->buf_offset -= dma->buf_offset % ((dma->fifo_thresh + 1) *
+> +					      sizeof(u16));
+> +
+
+Can we use rounddown()?
+
+> +	dma->conf.src_maxburst = dma->fifo_thresh + 1;
+> +	dmaengine_slave_config(dma->chan, &dma->conf);
+> +
+> +	desc = dmaengine_prep_dma_cyclic(dma->chan, dma->addr,
+> +					 dma->buf_offset * 2,
+> +					 dma->buf_offset, DMA_DEV_TO_MEM,
+> +					 DMA_PREP_INTERRUPT);
+> +	if (!desc)
+> +		return -EBUSY;
+> +
+> +	desc->callback = tiadc_dma_rx_complete;
+> +	desc->callback_param = indio_dev;
+> +
+> +	dma->cookie = dmaengine_submit(desc);
+> +
+> +	dma_async_issue_pending(dma->chan);
+> +
+> +	tiadc_writel(adc_dev, REG_FIFO1THR, dma->fifo_thresh);
+> +	tiadc_writel(adc_dev, REG_DMA1REQ, dma->fifo_thresh);
+> +	tiadc_writel(adc_dev, REG_DMAENABLE_SET, DMA_FIFO1);
+> +
+> +	return 0;
+> +}
+> +
+>  static int tiadc_buffer_preenable(struct iio_dev *indio_dev)
+>  {
+>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+> @@ -218,20 +303,30 @@ static int tiadc_buffer_preenable(struct iio_dev *indio_dev)
+>  static int tiadc_buffer_postenable(struct iio_dev *indio_dev)
+>  {
+>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+> +	struct tiadc_dma *dma = &adc_dev->dma;
+>  	unsigned int enb = 0;
+>  	u8 bit;
+> +	u32 irq_enable;
+>  
+>  	tiadc_step_config(indio_dev);
+> -	for_each_set_bit(bit, indio_dev->active_scan_mask, adc_dev->channels)
+> +	for_each_set_bit(bit, indio_dev->active_scan_mask, adc_dev->channels) {
+>  		enb |= (get_adc_step_bit(adc_dev, bit) << 1);
+> +		adc_dev->total_ch_enabled++;
+> +	}
+>  	adc_dev->buffer_en_ch_steps = enb;
+>  
+> +	if (dma->chan)
+> +		tiadc_start_dma(indio_dev);
+> +
+>  	am335x_tsc_se_set_cache(adc_dev->mfd_tscadc, enb);
+>  
+>  	tiadc_writel(adc_dev,  REG_IRQSTATUS, IRQENB_FIFO1THRES
+>  				| IRQENB_FIFO1OVRRUN | IRQENB_FIFO1UNDRFLW);
+> -	tiadc_writel(adc_dev,  REG_IRQENABLE, IRQENB_FIFO1THRES
+> -				| IRQENB_FIFO1OVRRUN);
+> +
+> +	irq_enable = IRQENB_FIFO1OVRRUN;
+> +	if (!dma->chan)
+> +		irq_enable |= IRQENB_FIFO1THRES;
+> +	tiadc_writel(adc_dev,  REG_IRQENABLE, irq_enable);
+>  
+>  	return 0;
+>  }
+> @@ -239,12 +334,18 @@ static int tiadc_buffer_postenable(struct iio_dev *indio_dev)
+>  static int tiadc_buffer_predisable(struct iio_dev *indio_dev)
+>  {
+>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+> +	struct tiadc_dma *dma = &adc_dev->dma;
+>  	int fifo1count, i, read;
+>  
+>  	tiadc_writel(adc_dev, REG_IRQCLR, (IRQENB_FIFO1THRES |
+>  				IRQENB_FIFO1OVRRUN | IRQENB_FIFO1UNDRFLW));
+>  	am335x_tsc_se_clr(adc_dev->mfd_tscadc, adc_dev->buffer_en_ch_steps);
+>  	adc_dev->buffer_en_ch_steps = 0;
+> +	adc_dev->total_ch_enabled = 0;
+> +	if (dma->chan) {
+> +		tiadc_writel(adc_dev, REG_DMAENABLE_CLEAR, 0x2);
+> +		dmaengine_terminate_async(dma->chan);
+> +	}
+>  
+>  	/* Flush FIFO of leftover data in the time it takes to disable adc */
+>  	fifo1count = tiadc_readl(adc_dev, REG_FIFO1CNT);
+> @@ -430,6 +531,50 @@ static const struct iio_info tiadc_info = {
+>  	.driver_module = THIS_MODULE,
+>  };
+>  
+> +static bool the_no_dma_filter_fn(struct dma_chan *chan, void *param)
+> +{
+> +	return false;
+> +}
+> +
+> +static int tiadc_request_dma(struct platform_device *pdev,
+> +			     struct tiadc_device *adc_dev)
+> +{
+> +	struct tiadc_dma	*dma = &adc_dev->dma;
+> +	dma_cap_mask_t		mask;
+> +
+> +	dma->fn = the_no_dma_filter_fn;
+> +
+> +	/* Default slave configuration parameters */
+> +	dma->conf.direction = DMA_DEV_TO_MEM;
+> +	dma->conf.src_addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
+> +	dma->conf.src_addr = adc_dev->mfd_tscadc->tscadc_phys_base + REG_FIFO1;
+> +
+> +	dma_cap_zero(mask);
+> +	dma_cap_set(DMA_CYCLIC, mask);
+> +
+> +	/* Get a channel for RX */
+> +	dma->chan = dma_request_slave_channel_compat(mask,
+> +						     dma->fn, dma->param,
+> +						     adc_dev->mfd_tscadc->dev,
+> +						     "fifo1");
+
+Please use dma_request_chan() API instead, this does not need
+dma_filter_fn and probe defer can be handled.
+
+> +	if (!dma->chan)
+> +		return -ENODEV;
+> +
+> +	/* RX buffer */
+> +	dma->buf = dma_alloc_coherent(dma->chan->device->dev, DMA_BUFFER_SIZE,
+> +				      &dma->addr, GFP_KERNEL);
+> +	if (!dma->buf)
+> +		goto err;
+> +
+> +	dev_dbg_ratelimited(adc_dev->mfd_tscadc->dev, "got dma channel\n");
+
+Do we need _ratelimited? AFAICS, this print is called only once.
+
+> +
+> +	return 0;
+> +err:
+> +	dma_release_channel(dma->chan);
+> +
+> +	return -ENOMEM;
+> +}
+> +
+>  static int tiadc_parse_dt(struct platform_device *pdev,
+>  			  struct tiadc_device *adc_dev)
+>  {
+> @@ -512,8 +657,14 @@ static int tiadc_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, indio_dev);
+>  
+> +	err = tiadc_request_dma(pdev, adc_dev);
+> +	if (err && err != -ENODEV)
+> +		goto err_dma;
+> +
+>  	return 0;
+>  
+> +err_dma:
+> +	iio_device_unregister(indio_dev);
+>  err_buffer_unregister:
+>  	tiadc_iio_buffered_hardware_remove(indio_dev);
+>  err_free_channels:
+> @@ -525,8 +676,11 @@ static int tiadc_remove(struct platform_device *pdev)
+>  {
+>  	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+> +	struct tiadc_dma *dma = &adc_dev->dma;
+>  	u32 step_en;
+>  
+> +	if (dma->chan)
+> +		dma_release_channel(dma->chan);
+
+dma_free_coherent() for dma->buf?
+
+>  	iio_device_unregister(indio_dev);
+>  	tiadc_iio_buffered_hardware_remove(indio_dev);
+>  	tiadc_channels_remove(indio_dev);
+> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd/ti_am335x_tscadc.h
+> index e45a208..fb9dc99 100644
+> --- a/include/linux/mfd/ti_am335x_tscadc.h
+> +++ b/include/linux/mfd/ti_am335x_tscadc.h
+> @@ -23,6 +23,8 @@
+>  #define REG_IRQENABLE		0x02C
+>  #define REG_IRQCLR		0x030
+>  #define REG_IRQWAKEUP		0x034
+> +#define REG_DMAENABLE_SET	0x038
+> +#define REG_DMAENABLE_CLEAR	0x038
+>  #define REG_CTRL		0x040
+>  #define REG_ADCFSM		0x044
+>  #define REG_CLKDIV		0x04C
+> @@ -36,6 +38,7 @@
+>  #define REG_FIFO0THR		0xE8
+>  #define REG_FIFO1CNT		0xF0
+>  #define REG_FIFO1THR		0xF4
+> +#define REG_DMA1REQ		0xF8
+>  #define REG_FIFO0		0x100
+>  #define REG_FIFO1		0x200
+>  
+> @@ -126,6 +129,10 @@
+>  #define FIFOREAD_DATA_MASK (0xfff << 0)
+>  #define FIFOREAD_CHNLID_MASK (0xf << 16)
+>  
+> +/* DMA ENABLE/CLEAR Register */
+> +#define DMA_FIFO0		BIT(0)
+> +#define DMA_FIFO1		BIT(1)
+> +
+>  /* Sequencer Status */
+>  #define SEQ_STATUS BIT(5)
+>  #define CHARGE_STEP		0x11
+> 
+
+-- 
+Regards
+Vignesh
