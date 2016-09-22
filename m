@@ -1,124 +1,132 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH v5 1/6] I2C: i2c-smbus: add device tree support
-Date: Thu, 22 Sep 2016 10:24:05 +0800
-Message-ID: <4d12ecab-850b-8704-c370-d80cd1e4ab36@electromag.com.au>
-References: <1474447274-90821-1-git-send-email-preid@electromag.com.au>
- <1474447274-90821-2-git-send-email-preid@electromag.com.au>
- <20160921113405.GE18176@leverpostej>
+From: Po Liu <po.liu-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v5 3/3] pci:aer: add support aer interrupt with none
+ MSI/MSI-X/INTx mode
+Date: Thu, 22 Sep 2016 02:53:37 +0000
+Message-ID: <VI1PR0401MB1709C4C29C35E8991052364992C90@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+References: <1472625442-23309-2-git-send-email-po.liu@nxp.com>
+ <1473741659-17618-1-git-send-email-po.liu@nxp.com>
+ <1473741659-17618-3-git-send-email-po.liu@nxp.com>
+ <20160921223741.GG20006@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20160921113405.GE18176@leverpostej>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: wsa@the-dreams.de, robh+dt@kernel.org, sre@kernel.org, andrea.merello@gmail.com, karl-heinz@schneider-inet.de, arnd@arndb.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160921223741.GG20006@localhost>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Zang <roy.zang-3arQi8VN3Tc@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "M.H. Lian" <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-G'day Mark
-
-On 21/09/2016 19:34, Mark Rutland wrote:
-> On Wed, Sep 21, 2016 at 04:41:09PM +0800, Phil Reid wrote:
->> From: Andrea Merello <andrea.merello@gmail.com>
->>
->> According to Documentation/i2c/smbus-protocol, a smbus controller driver
->> that wants to hook-in smbus extensions support, can call
->> i2c_setup_smbus_alert(). There are very few drivers that are currently
->> doing this.
->>
->> However the i2c-smbus module can also work with any
->> smbus-extensions-unaware I2C controller, as long as we provide an extra
->> IRQ line connected to the I2C bus ALARM signal.
->>
->> This patch makes it possible to go this way via DT. Note that the DT node
->> will indeed describe a (little) piece of HW, that is the routing of the
->> ALARM signal to an IRQ line (so it seems a fair DT use to me, but RFC).
->
-> Which piece of hardware actually generates this IRQ? The I2C controller?
-> A slave SMBus device? Or something else?
->
-> I'm not at all familiar with I2C or SMBus, and a quick scan of
-> Documentation/i2c/smbus-protocol, has left me none-the-wiser on that
-> front.
-
-The originating source is the smbus device. SMBALERT is an active low interrupt
-with the addition that the SMBUS device can be polled by the controller to determine
-which device is asserting by performing a read of i2c address 0xc.
-Asserting devices will return their address.
-See the datahsheet of the LTC1760: http://www.linear.com/docs/1958   Page 22
-
-The i2c parport driver looks to be only controller setup for this at the moment.
-However that has limitations to only poll the primary i2c segment.
-If muxes are involved then each muxed bus needs to be queried.
-
-My hardware has:
-
-                 /- ltc1760
-i2c_cntlr - mux +
-                 \- ltc1760
-
-The alert signal are routed to the mux (pca9543) irq inputs and then muxes combined
-irq output to an fpga pin on an ALTERA SOC which I can route to a GPIO / IRQ
-
-I've modified the pca954x driver to generate separate interrupts for each segment.
-Submitted an RFC PATCH on this a while ago, but it needs a lot of cleaning up before
-submission.
-
-So I can create an virtual SMB_ALERT device per segment and it knows to just poll that segment.
-
->
->> Note that AFAICT, by design, i2c-smbus module pretends to be an I2C slave
->> with address 0x0C (that is the alarm response address), and IMHO this is
->> quite consistent with usage in the DT as a I2C child node.
->>
->> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
->> Signed-off-by: Phil Reid <preid@electromag.com.au>
->> ---
->>  Documentation/devicetree/bindings/i2c/i2c-smbus.txt | 20 ++++++++++++++++++++
->>  drivers/i2c/i2c-smbus.c                             | 20 +++++++++++++++-----
->>  2 files changed, 35 insertions(+), 5 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-smbus.txt
->>
->> diff --git a/Documentation/devicetree/bindings/i2c/i2c-smbus.txt b/Documentation/devicetree/bindings/i2c/i2c-smbus.txt
->> new file mode 100644
->> index 0000000..da83127
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/i2c/i2c-smbus.txt
->> @@ -0,0 +1,20 @@
->> +* i2c-smbus extensions
->> +
->> +Required Properties:
->> +  - compatible: Must contain "smbus_alert"
->
-> Nit: s/_/-/ in compatible strings please.
->
->> +  - interrupts: The irq line for smbus ALERT signal
->> +  - reg: I2C slave address. Set to 0x0C (alert response address).
->> +
->> +Note: The i2c-smbus module registers itself as a slave I2C device. Whenever
->> +a smbus controller directly support smbus extensions (and its driver supports
->> +this), there is no need to add anything special to the DT. Otherwise, for using
->> +i2c-smbus with any smbus-extensions-unaware I2C controllers, you need to
->> +route the smbus ALARM signal to an extra IRQ line, thus you need to describe
->> +this in the DT.
->
-> Bindings shouldn't mention driver details (e.g. the i2c-smbus module
-> behaviour). It feels like we're creating a virtual device for the sake
-> of a driver, rather than accurately capturing the hardware.
->
-> So as-is, I don't think this is the right way to describe this.
->
-
-Yes that seemed to be the discussion last time.
-
-It's like a shared IRQ but has the extra feature of the polling to determine what device is active.
-For my use case the polling is not necessary as there's only one smbalert device per segment.
-So an irq would work, however that didn't seem to have much support either.
-
-I don't know what direction to go, to get this functionality into the upstream source.
-
-
--- 
-Regards
-Phil Reid
-
+SGkgQmpvcm4sDQoNCj4gIC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ICBGcm9tOiBCam9y
+biBIZWxnYWFzIFttYWlsdG86aGVsZ2Fhc0BrZXJuZWwub3JnXQ0KPiAgU2VudDogVGh1cnNkYXks
+IFNlcHRlbWJlciAyMiwgMjAxNiA2OjM4IEFNDQo+ICBUbzogUG8gTGl1DQo+ICBDYzogbGludXgt
+cGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Ow0KPiAgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7IFJveSBaYW5nOyBBcm5kDQo+ICBCZXJnbWFubjsgTWFyYyBaeW5naWVyOyBTdHVhcnQg
+WW9kZXI7IExlbyBMaTsgTS5ILiBMaWFuOyBNdXJhbGkNCj4gIEthcmljaGVyaTsgQmpvcm4gSGVs
+Z2FhczsgU2hhd24gR3VvOyBNaW5na2FpIEh1DQo+ICBTdWJqZWN0OiBSZTogW1BBVENIIHY1IDMv
+M10gcGNpOmFlcjogYWRkIHN1cHBvcnQgYWVyIGludGVycnVwdCB3aXRoIG5vbmUNCj4gIE1TSS9N
+U0ktWC9JTlR4IG1vZGUNCj4gIA0KPiAgT24gVHVlLCBTZXAgMTMsIDIwMTYgYXQgMTI6NDA6NTlQ
+TSArMDgwMCwgUG8gTGl1IHdyb3RlOg0KPiAgPiBPbiBzb21lIHBsYXRmb3Jtcywgcm9vdCBwb3J0
+IGRvZXNuJ3Qgc3VwcG9ydCBNU0kvTVNJLVgvSU5UeCBpbiBSQyBtb2RlLg0KPiAgPiBXaGVuIGNo
+aXAgc3VwcG9ydCB0aGUgYWVyIGludGVycnVwdCB3aXRoIG5vbmUgTVNJL01TSS1YL0lOVHggbW9k
+ZSwNCj4gID4gbWF5YmUgdGhlcmUgaXMgaW50ZXJydXB0IGxpbmUgZm9yIGFlciBwbWUgZXRjLiBT
+ZWFyY2ggdGhlIGludGVycnVwdA0KPiAgPiBudW1iZXIgaW4gdGhlIGZkdCBmaWxlLiBUaGVuIGZp
+eHVwIHRoZSBkZXYtPmlycSB3aXRoIGl0Lg0KPiAgPg0KPiAgPiBTaWduZWQtb2ZmLWJ5OiBQbyBM
+aXUgPHBvLmxpdUBueHAuY29tPg0KPiAgPiAtLS0NCj4gID4gY2hhbmdlcyBmb3IgdjU6DQo+ICA+
+IAktIEFkZCBjbGVhciAnYWVyJyBpbnRlcnJ1cC1uYW1lcyBkZXNjcmlwdGlvbg0KPiAgPg0KPiAg
+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLnR4dCAgICAgfCAx
+MSArKysrKy0tLQ0KPiAgPiAgZHJpdmVycy9wY2kvcGNpZS9wb3J0ZHJ2X2NvcmUuYyAgICAgICAg
+ICAgICAgICAgICAgfCAzMQ0KPiAgKysrKysrKysrKysrKysrKysrKy0tLQ0KPiAgPiAgMiBmaWxl
+cyBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPiAgPg0KPiAgPiBk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNj
+YXBlLXBjaS50eHQNCj4gID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNp
+L2xheWVyc2NhcGUtcGNpLnR4dA0KPiAgPiBpbmRleCA0MWU5ZjU1Li4xMDFkMGE3IDEwMDY0NA0K
+PiAgPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2Nh
+cGUtcGNpLnR4dA0KPiAgPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cGNpL2xheWVyc2NhcGUtcGNpLnR4dA0KPiAgPiBAQCAtMTgsOCArMTgsMTAgQEAgUmVxdWlyZWQg
+cHJvcGVydGllczoNCj4gID4gIC0gcmVnOiBiYXNlIGFkZHJlc3NlcyBhbmQgbGVuZ3RocyBvZiB0
+aGUgUENJZSBjb250cm9sbGVyDQo+ICA+ICAtIGludGVycnVwdHM6IEEgbGlzdCBvZiBpbnRlcnJ1
+cHQgb3V0cHV0cyBvZiB0aGUgY29udHJvbGxlci4gTXVzdA0KPiAgY29udGFpbiBhbg0KPiAgPiAg
+ICBlbnRyeSBmb3IgZWFjaCBlbnRyeSBpbiB0aGUgaW50ZXJydXB0LW5hbWVzIHByb3BlcnR5Lg0K
+PiAgPiAtLSBpbnRlcnJ1cHQtbmFtZXM6IE11c3QgaW5jbHVkZSB0aGUgZm9sbG93aW5nIGVudHJp
+ZXM6DQo+ICA+IC0gICJpbnRyIjogVGhlIGludGVycnVwdCB0aGF0IGlzIGFzc2VydGVkIGZvciBj
+b250cm9sbGVyIGludGVycnVwdHMNCj4gID4gKy0gaW50ZXJydXB0LW5hbWVzOiBJdCBtYXkgYmUg
+aW5jbHVkZSB0aGUgZm9sbG93aW5nIGVudHJpZXM6DQo+ICA+ICsgICJhZXIiOiBUaGUgaW50ZXJy
+dXB0IHRoYXQgaXMgYXNzZXJ0ZWQgZm9yIGFlciBpbnRlcnJ1cHQNCj4gID4gKyAgInBtZSI6IFRo
+ZSBpbnRlcnJ1cHQgdGhhdCBpcyBhc3NlcnRlZCBmb3IgcG1lIGludGVycnVwdA0KPiAgPiArICAu
+Li4uLi4NCj4gID4gIC0gZnNsLHBjaWUtc2NmZzogTXVzdCBpbmNsdWRlIHR3byBlbnRyaWVzLg0K
+PiAgPiAgICBUaGUgZmlyc3QgZW50cnkgbXVzdCBiZSBhIGxpbmsgdG8gdGhlIFNDRkcgZGV2aWNl
+IG5vZGUNCj4gID4gICAgVGhlIHNlY29uZCBlbnRyeSBtdXN0IGJlICcwJyBvciAnMScgYmFzZWQg
+b24gcGh5c2ljYWwgUENJZQ0KPiAgY29udHJvbGxlciBpbmRleC4NCj4gID4gQEAgLTM1LDggKzM3
+LDkgQEAgRXhhbXBsZToNCj4gID4gIAkJcmVnID0gPDB4MDAgMHgwMzQwMDAwMCAweDAgMHgwMDAx
+MDAwMCAgIC8qIGNvbnRyb2xsZXINCj4gIHJlZ2lzdGVycyAqLw0KPiAgPiAgCQkgICAgICAgMHg0
+MCAweDAwMDAwMDAwIDB4MCAweDAwMDAyMDAwPjsgLyogY29uZmlndXJhdGlvbg0KPiAgc3BhY2Ug
+Ki8NCj4gID4gIAkJcmVnLW5hbWVzID0gInJlZ3MiLCAiY29uZmlnIjsNCj4gID4gLQkJaW50ZXJy
+dXB0cyA9IDxHSUNfU1BJIDE3NyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsgLyoNCj4gIGNvbnRyb2xs
+ZXIgaW50ZXJydXB0ICovDQo+ICA+IC0JCWludGVycnVwdC1uYW1lcyA9ICJpbnRyIjsNCj4gID4g
+KwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE3NiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyogYWVy
+DQo+ICBpbnRlcnJ1cHQgKi8NCj4gID4gKwkJCTxHSUNfU1BJIDE3NyBJUlFfVFlQRV9MRVZFTF9I
+SUdIPjsgLyogcG1lIGludGVycnVwdCAqLw0KPiAgPiArCQlpbnRlcnJ1cHQtbmFtZXMgPSAiYWVy
+IiwgInBtZSI7DQo+ICA+ICAJCWZzbCxwY2llLXNjZmcgPSA8JnNjZmcgMD47DQo+ICA+ICAJCSNh
+ZGRyZXNzLWNlbGxzID0gPDM+Ow0KPiAgPiAgCQkjc2l6ZS1jZWxscyA9IDwyPjsNCj4gID4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3BjaWUvcG9ydGRydl9jb3JlLmMNCj4gID4gYi9kcml2ZXJz
+L3BjaS9wY2llL3BvcnRkcnZfY29yZS5jIGluZGV4IGU5MjcwYjQuLjdjNDk0M2QgMTAwNjQ0DQo+
+ICA+IC0tLSBhL2RyaXZlcnMvcGNpL3BjaWUvcG9ydGRydl9jb3JlLmMNCj4gID4gKysrIGIvZHJp
+dmVycy9wY2kvcGNpZS9wb3J0ZHJ2X2NvcmUuYw0KPiAgPiBAQCAtMTYsNiArMTYsNyBAQA0KPiAg
+PiAgI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4gID4gICNpbmNsdWRlIDxsaW51eC9wY2llcG9y
+dF9pZi5oPg0KPiAgPiAgI2luY2x1ZGUgPGxpbnV4L2Flci5oPg0KPiAgPiArI2luY2x1ZGUgPGxp
+bnV4L29mX2lycS5oPg0KPiAgPg0KPiAgPiAgI2luY2x1ZGUgIi4uL3BjaS5oIg0KPiAgPiAgI2lu
+Y2x1ZGUgInBvcnRkcnYuaCINCj4gID4gQEAgLTIwMCw2ICsyMDEsMjggQEAgc3RhdGljIGludCBw
+Y2llX3BvcnRfZW5hYmxlX21zaXgoc3RydWN0IHBjaV9kZXYNCj4gID4gKmRldiwgaW50ICp2ZWN0
+b3JzLCBpbnQgbWFzaykgIHN0YXRpYyBpbnQgaW5pdF9zZXJ2aWNlX2lycXMoc3RydWN0DQo+ICA+
+IHBjaV9kZXYgKmRldiwgaW50ICppcnFzLCBpbnQgbWFzaykgIHsNCj4gID4gIAlpbnQgaSwgaXJx
+ID0gLTE7DQo+ICA+ICsJaW50IHJldDsNCj4gID4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0g
+TlVMTDsNCj4gID4gKw0KPiAgPiArCWZvciAoaSA9IDA7IGkgPCBQQ0lFX1BPUlRfREVWSUNFX01B
+WFNFUlZJQ0VTOyBpKyspDQo+ICA+ICsJCWlycXNbaV0gPSAwOw0KPiAgPiArDQo+ICA+ICsJaWYg
+KGRldi0+YnVzLT5kZXYub2Zfbm9kZSkNCj4gID4gKwkJbnAgPSBkZXYtPmJ1cy0+ZGV2Lm9mX25v
+ZGU7DQo+ICA+ICsNCj4gID4gKwkvKiBJZiByb290IHBvcnQgZG9lc24ndCBzdXBwb3J0IE1TSS9N
+U0ktWC9JTlR4IGluIFJDIG1vZGUsDQo+ICA+ICsJICogcmVxdWVzdCBpcnEgZm9yIGFlcg0KPiAg
+PiArCSAqLw0KPiAgPiArCWlmIChJU19FTkFCTEVEKENPTkZJR19PRl9JUlEpICYmIG5wICYmDQo+
+ICA+ICsJCQkobWFzayAmIFBDSUVfUE9SVF9TRVJWSUNFX1BNRSkpIHsNCj4gID4gKwkJcmV0ID0g
+b2ZfaXJxX2dldF9ieW5hbWUobnAsICJhZXIiKTsNCj4gID4gKwkJaWYgKHJldCA+IDApIHsNCj4g
+ID4gKwkJCWlycXNbUENJRV9QT1JUX1NFUlZJQ0VfQUVSX1NISUZUXSA9IHJldDsNCj4gID4gKwkJ
+CWlmIChkZXYtPmlycSkNCj4gID4gKwkJCQlpcnEgPSBkZXYtPmlycTsNCj4gID4gKwkJCWdvdG8g
+bm9fbXNpOw0KPiAgPiArCQl9DQo+ICA+ICsJfQ0KPiAgDQo+ICBXZSBkZWZpbml0ZWx5IG5lZWQg
+dG8gc29sdmUgdGhpcyBzb21laG93LiAgQnV0IHRoaXMgYXBwcm9hY2ggZG9lc24ndA0KPiAgZmVl
+bCBxdWl0ZSByaWdodCBiZWNhdXNlIGl0J3MgaGFyZCB0byBtYXAgdGhpcyBjb2RlIGJhY2sgdG8g
+YW55dGhpbmcgaW4NCj4gIHRoZSBzcGVjLCBhbmQgaXQgdXNlcyBhIGNvbXBsZXRlbHkgcGxhdGZv
+cm0tZGVwZW5kZW50IG5hbWUgKCJpbnRlcnJ1cHQtDQo+ICBuYW1lcyBhZXIiKSBpbiBjb2RlIHRo
+YXQgaXMgc3VwcG9zZWRseSBnZW5lcmljLg0KDQpWZXJ5IGFncmVlLg0KDQo+ICANCj4gIFdoYXQg
+aWYgd2UgYWRkZWQgc29tZSBzb3J0IG9mIGhvb2sgdGhhdCB3b3VsZCByZXR1cm4gdGhlIElSUT8g
+IE1heWJlIGENCj4gIHBjaWJpb3NfKigpIGhvb2sgcmlnaHQgbm93LCB3aXRoIHRoZSBpZGVhIG9m
+IG1ha2luZyBpdCBhIHBjaV9ob3N0X2JyaWRnZQ0KPiAgZnVuY3Rpb24gcG9pbnRlciBzb21lZGF5
+Pw0KDQpHb29kIGlkZWEuIEknbGwgdHJ5IG9uZSB2ZXJzaW9uIHBhdGNoIHNvb24uDQoNCj4gIA0K
+PiAgSSBrbm93IHRoZSBib2R5IG9mIHRoZSBob29rIHdvdWxkIGxvb2sgYSBsb3QgbGlrZSB3aGF0
+IHlvdSBoYXZlIGhlcmUsDQo+ICBidXQgYXQgbGVhc3QgaXQgd291bGQgYmUgbW9yZSBvYnZpb3Vz
+IHRoYXQgaXQncyBwbGF0Zm9ybS1zcGVjaWZpYyBjb2RlLg0KPiAgDQpOb3QgYWdyZWUgbW9yZS4N
+Cg0KPiAgSSB0aGluayB5b3VyIHBsYXRmb3JtIHN1cHBvcnRzIFBNRSBpbnRlcnJ1cHRzIGFzIHdl
+bGwgYXMgQUVSLCBhbmQNCj4gIHRoZXkncmUgZGlmZmVyZW50IElSUXMuICBTbyB5b3UnZCBwcm9i
+YWJseSBoYXZlIHRvIGRvIHNvbWV0aGluZyBzaW1pbGFyDQo+ICB0byB0aGUgcGNpZV9wb3J0X2Vu
+YWJsZV9tc2l4KCkgaW50ZXJmYWNlLCBzbyB5b3UgY2FuIGZpbGwgaW4gYm90aCBJUlFzLg0KPiAN
+Cg0KT2ssIHVuZGVyc3RhbmQuDQoNClBvDQogDQo+ICA+ICAJLyoNCj4gID4gIAkgKiBJZiBNU0kg
+Y2Fubm90IGJlIHVzZWQgZm9yIFBDSWUgUE1FIG9yIGhvdHBsdWcsIHdlIGhhdmUgdG8gdXNlDQo+
+ICBAQA0KPiAgPiAtMjI1LDExICsyNDgsMTMgQEAgc3RhdGljIGludCBpbml0X3NlcnZpY2VfaXJx
+cyhzdHJ1Y3QgcGNpX2RldiAqZGV2LA0KPiAgaW50ICppcnFzLCBpbnQgbWFzaykNCj4gID4gIAkJ
+aXJxID0gZGV2LT5pcnE7DQo+ICA+DQo+ICA+ICAgbm9fbXNpOg0KPiAgPiAtCWZvciAoaSA9IDA7
+IGkgPCBQQ0lFX1BPUlRfREVWSUNFX01BWFNFUlZJQ0VTOyBpKyspDQo+ICA+IC0JCWlycXNbaV0g
+PSBpcnE7DQo+ICA+ICsJZm9yIChpID0gMDsgaSA8IFBDSUVfUE9SVF9ERVZJQ0VfTUFYU0VSVklD
+RVM7IGkrKykgew0KPiAgPiArCQlpZiAoIWlycXNbaV0pDQo+ICA+ICsJCQlpcnFzW2ldID0gaXJx
+Ow0KPiAgPiArCX0NCj4gID4gIAlpcnFzW1BDSUVfUE9SVF9TRVJWSUNFX1ZDX1NISUZUXSA9IC0x
+Ow0KPiAgPg0KPiAgPiAtCWlmIChpcnEgPCAwKQ0KPiAgPiArCWlmIChpcnEgPCAwICYmIGlycXNb
+UENJRV9QT1JUX1NFUlZJQ0VfQUVSX1NISUZUXSA8IDApDQo+ICA+ICAJCXJldHVybiAtRU5PREVW
+Ow0KPiAgPiAgCXJldHVybiAwOw0KPiAgPiAgfQ0KPiAgPiAtLQ0KPiAgPiAyLjEuMC4yNy5nOTZk
+YjMyNA0KPiAgPg0KPiAgPg0KPiAgPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXw0KPiAgPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdA0KPiAgPiBs
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gID4gaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
