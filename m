@@ -1,63 +1,34 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] firmware: dt: document lpc1850 boot ROM bindings
-Date: Fri, 23 Sep 2016 08:39:49 -0500
-Message-ID: <20160923133949.GA24505@rob-hp-laptop>
-References: <20160913195117.2887-1-manabian@gmail.com>
- <20160913195117.2887-3-manabian@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] input: touchscreen: add driver for Zeitec ZET6223
+Date: Fri, 23 Sep 2016 08:41:20 -0500
+Message-ID: <20160923134120.GA26818@rob-hp-laptop>
+References: <20160913210826.30676-1-jelle@vdwaa.nl>
+ <20160913210826.30676-2-jelle@vdwaa.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160913195117.2887-3-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+In-Reply-To: <20160913210826.30676-2-jelle@vdwaa.nl>
+Sender: linux-input-owner@vger.kernel.org
+To: Jelle van der Waa <jelle@vdwaa.nl>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 13, 2016 at 09:51:16PM +0200, Joachim Eastwood wrote:
-> Binding documentation for the NXP LPC boot ROM.
+On Tue, Sep 13, 2016 at 11:08:26PM +0200, Jelle van der Waa wrote:
+> This is a basic driver for the Zeitec ZET6223 I2C touchscreen controllers.
+> The driver does not support firmware loading, which is not required for
+> all tablets which contain this chip.
 > 
-> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Jelle van der Waa <jelle@vdwaa.nl>
 > ---
->  .../devicetree/bindings/firmware/nxp,boot-rom.txt   | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/firmware/nxp,boot-rom.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/firmware/nxp,boot-rom.txt b/Documentation/devicetree/bindings/firmware/nxp,boot-rom.txt
-> new file mode 100644
-> index 0000000..5f3a044
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/firmware/nxp,boot-rom.txt
-> @@ -0,0 +1,21 @@
-> +* NXP LPC boot ROM
-> +
-> +NXP LPC microcontrollers contains a boot ROM used to retrieve part information
-> +and access internal Flash memory and OTP memory. Note that the Flash API is
-> +not available on Flashless devices.
+>  .../bindings/input/touchscreen/zet6223.txt         |  32 ++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
 
-Is this determined at run-time? If not flashless devices should have a 
-different compatible string to determine this then.
+Acked-by: Rob Herring <robh@kernel.org>
 
-> +
-> +Required properties:
-> +- compatible: must contain the following: "nxp,lpc1850-boot-rom".
-> +- reg: physical base address of the ROM and length of memory mapped region.
-> +- syscon: handle to NXP CREG (Configuration Registers) syscon block.
-> +- nvmem-cells: = handle to OTP memory cell which contain the part ID.
-> +- nvmem-cell-names: must contain "PartID".
-> +
-> +Example:
-> +boot_rom: firmware@10400000 {
-> +	compatible = "nxp,lpc1850-boot-rom";
-> +	reg = <0x10400000 0x10000>;
-> +	syscon = <&creg>;
-> +	nvmem-cells = <&part_id>;
-> +	nvmem-cell-names = "PartID";
-> +};
-> -- 
-> 2.9.3
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/input/touchscreen/Kconfig                  |  11 ++
+>  drivers/input/touchscreen/Makefile                 |   1 +
+>  drivers/input/touchscreen/zet6223.c                | 207 +++++++++++++++++++++
+>  5 files changed, 252 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/zet6223.txt
+>  create mode 100644 drivers/input/touchscreen/zet6223.c
