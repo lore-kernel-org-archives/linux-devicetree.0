@@ -1,31 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] media: adv7604: fix bindings inconsistency for
- default-input
-Date: Fri, 23 Sep 2016 15:03:53 -0500
-Message-ID: <20160923200353.GA16845@rob-hp-laptop>
-References: <1474550340-31455-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <1474550340-31455-2-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] nvmem: dt: document lpc1850 OTP binding
+Date: Fri, 23 Sep 2016 22:05:54 +0200
+Message-ID: <CAGhQ9VzwPY9_Wn_-=UoLKE6oyQPvTMpiWSj6q6PGFQvB8P=vuA@mail.gmail.com>
+References: <20160913161241.22492-1-manabian@gmail.com> <20160913161241.22492-3-manabian@gmail.com>
+ <20160923133529.GA23548@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1474550340-31455-2-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: hans.verkuil@cisco.com, niklas.soderlund@ragnatech.se, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, magnus.damm@gmail.com, laurent.pinchart@ideasonboard.com, william.towle@codethink.co.uk, devicetree@vger.kernel.org, radhey.shyam.pandey@xilinx.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160923133529.GA23548@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 22, 2016 at 03:18:59PM +0200, Ulrich Hecht wrote:
-> The text states that default-input is an endpoint property, but in the
-> example it is a device property.
-> 
-> The default input is a property of the chip, not of a particular port, so
-> the example makes more sense.
-> 
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
->  Documentation/devicetree/bindings/media/i2c/adv7604.txt | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+On 23 September 2016 at 15:35, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Sep 13, 2016 at 06:12:40PM +0200, Joachim Eastwood wrote:
+>> Documenation for the LPC18xx/43xx OTP memory bindings.
+>>
+>> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/nvmem/lpc1850-otp.txt        | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/nvmem/lpc1850-otp.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/nvmem/lpc1850-otp.txt b/Documentation/devicetree/bindings/nvmem/lpc1850-otp.txt
+>> new file mode 100644
+>> index 0000000..853b6a7
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/nvmem/lpc1850-otp.txt
+>> @@ -0,0 +1,20 @@
+>> +* NXP LPC18xx OTP memory
+>> +
+>> +Internal OTP (One Time Programmable) memory for NXP LPC18xx/43xx devices.
+>> +
+>> +Required properties:
+>> +  - compatible: Should be "nxp,lpc1850-otp"
+>> +  - reg: Must contain an entry with the physical base address and length
+>> +    for each entry in reg-names.
+>
+>> +  - address-cells: must be set to 1.
+>> +  - size-cells: must be set to 1.
+>
+> Not needed unless you have child nodes.
 
-Acked-by: Rob Herring <robh@kernel.org>
+They will have "nvmem" cell children. See patch 3/3
+
++                       /* Flashless devices has part ID in OTP bank 0 */
++                       part_id: identification@0 {
++                               reg = <0x0 0x10>;
++                       };
+
+These cells are documented in nvmem.txt.
+
+
+regards,
+Joachim Eastwood
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
