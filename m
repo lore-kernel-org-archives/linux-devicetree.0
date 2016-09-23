@@ -1,59 +1,86 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 3/3] ARM: dts: rskrza1: add sdhi1 DT support
-Date: Fri, 23 Sep 2016 14:33:10 +0000
-Message-ID: <SG2PR06MB1165D28EC2B25A642B480F208AC80@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20160922213211.7988-1-chris.brandt@renesas.com>
- <20160922213211.7988-4-chris.brandt@renesas.com>
- <CAMuHMdWckFaU__BM=WAOvJ+fVjEvNdLCFy0GNiKwU159aZTdhg@mail.gmail.com>
- <20160923074123.GD20129@verge.net.au>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC/PATCH] usb: misc: Add a driver for TC7USB40MU
+Date: Fri, 23 Sep 2016 09:35:13 -0500
+Message-ID: <20160923143513.GA29714@rob-hp-laptop>
+References: <20160914014246.31847-1-stephen.boyd@linaro.org>
+ <147384330268.13546.17843140335600627152@sboyd-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160923074123.GD20129-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <147384330268.13546.17843140335600627152@sboyd-linaro>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-> > On Thu, Sep 22, 2016 at 11:32 PM, Chris Brandt
-> <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> > > ---
-> > >  arch/arm/boot/dts/r7s72100-rskrza1.dts | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > >
-> > > diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts
-> > > b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-> > > index e5dea5b..548b51f 100644
-> > > --- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
-> > > +++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-> > > @@ -56,6 +56,10 @@
-> > >         };
-> > >  };
-> > >
-> > > +&sdhi1 {
-> > > +       status =3D "okay";
-> >
-> > On all other boards, we have the bus-width property in the
-> > board-specific .dts instead of in the SoC-specific .dtsi.
+On Wed, Sep 14, 2016 at 01:55:02AM -0700, Stephen Boyd wrote:
+> Quoting Stephen Boyd (2016-09-13 18:42:46)
+> > On the db410c 96boards platform we have a TC7USB40MU[1] on the
+> > board to mux the D+/D- lines from the SoC between a micro usb
+> > "device" port and a USB hub for "host" roles. Upon a role switch,
+> > we need to change this mux to forward the D+/D- lines to either
+> > the port or the hub. Therefore, introduce a driver for this
+> > device that intercepts extcon USB_HOST events and logically
+> > asserts a gpio to mux the "host" D+/D- lines when a host cable is
+> > attached. When the cable goes away, it will logically deassert
+> > the gpio and mux the "device" lines.
+> > 
+> > [1] https://toshiba.semicon-storage.com/ap-en/product/logic/bus-switch/detail.TC7USB40MU.html
+> > 
+> > Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+> > Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> > Cc: <devicetree@vger.kernel.org>
+> > Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+> > ---
+> > 
+> > Should I make the extcon part optional? I could see a case where there are two
+> > "OTG" ports connected to the mux (or two hubs), and for some reason the
+> > software may want to mux between them at runtime. If we mandate an extcon,
+> > that won't be possible to support. Perhaps it would be better to have
+> > the node, but connect it to the usb controller with a phandle (maybe of_graph
+> > endpoints would be useful too) so that when the controller wants to mux over
+> > a port it can do so.
 
-I did see that.
-But, in my opinion, using 4-bit SDHI is way more common that 1-bit SDHI.
-So I figured I'd make 4-bit the 'default' by putting it in the dtsi, and if=
- for some reason someone needed 1-bit, they could override it in the board =
-.dts.
+I've mentioned my opinion on extcon before. The first clue that it needs 
+work is a Linux subsystem name is used for the binding. 
 
+> Here's some dts mock-up on top of the db410c for the of_graph stuff. I
+> haven't written any code around it, but the idea is to allow the binding
+> to specify how the mux is connected to upstream and downstream D+/D-
+> lines. This way, we can do some dt parsing of the endpoints and their
+> parent nodes to figure out if the mux needs to be set high or low to use
+> a device connector or a usb hub based on if the id cable is present.
+> Maybe I'm over thinking things though and we could just have a DT
+> property for that.
 
-> I'd like us to be consistent as much as possible.
-> But I do wonder why it has been added as a board property.
+I think the connector nodes are on the right track, but of-graph doesn't 
+work here because we already have a way to describe USB buses in DT. 
+Following that, would something like this work for you? The vbus-supply 
+and id-gpios are just examples and may not always be there like if the 
+hub controls each port's vbus directly.
 
-It doesn't really matter to me. If you want me to move it to the board dts =
-it to keep it consistent, just let me know and I'll change it.
+usb-controller@1234 {
+	usb-switch@0 {
+		compatible = "toshiba,tc7usb40mu";
+		hub@0 {
+			compatible = "some-hub";
+			port@0 {
+				compatible = "usb-A-connector"
+				vbus-supply = ...;
+			};
+			port@1 {
+				compatible = "usb-A-connector"
+				vbus-supply = ...;
+			};
 
-Chris
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+		};
+		connector@1 {
+			compatible = "usb-ub-connector";
+			vbus-supply = ...;
+			id-gpios = <>;
+		};
+	};
+};
+
+Rob
