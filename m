@@ -1,58 +1,61 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 07/11] dt-bindings: Add DMA bindings for STM32 USART
-Date: Fri, 23 Sep 2016 10:30:43 -0500
-Message-ID: <20160923153043.GA22364@rob-hp-laptop>
-References: <1473957763-30629-1-git-send-email-alexandre.torgue@st.com>
- <1473957763-30629-8-git-send-email-alexandre.torgue@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V3 01/10] Documentation: DT: qcom_hidma: update binding
+ for MSI
+Date: Fri, 23 Sep 2016 10:39:10 -0500
+Message-ID: <20160923153910.GA23150@rob-hp-laptop>
+References: <1473960166-30155-1-git-send-email-okaya@codeaurora.org>
+ <1473960166-30155-2-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1473957763-30629-8-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, gerald.baeza-qxv4g6HH51o@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1473960166-30155-2-git-send-email-okaya@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 15, 2016 at 06:42:39PM +0200, Alexandre TORGUE wrote:
-> Signed-off-by: Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-
-Squash this with the other binding patch. You are describing the h/w 
-block, do so completely. 
-
+On Thu, Sep 15, 2016 at 01:22:37PM -0400, Sinan Kaya wrote:
+> Adding a new binding for qcom,hidma-1.1 to distinguish HW supporting
+> MSI interrupts from the older revision.
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
-> index 75b1400..85ec5f2 100644
-> --- a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
-> +++ b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
-> @@ -12,6 +12,8 @@ stm32(f4) or stm32f7.
->  Optional properties:
->  - pinctrl: The reference on the pins configuration
->  - st,hw-flow-ctrl: bool flag to enable hardware flow control.
-> +- dmas: phandle(s) to DMA controller node(s). Refer to stm32-dma.txt
-> +- dma-names: "rx" and/or "tx"
+> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+> index fd5618b..47bfb5a 100644
+> --- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+> +++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+> @@ -47,12 +47,23 @@ When the OS is not in control of the management interface (i.e. it's a guest),
+>  the channel nodes appear on their own, not under a management node.
 >  
->  Examples:
->  usart4: serial@40004c00 {
-> @@ -32,3 +34,13 @@ usart2: serial@40004400 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_usart2 &pinctrl_usart2_rtscts>;
->  };
+>  Required properties:
+> -- compatible: must contain "qcom,hidma-1.0"
+> +- compatible: must contain "qcom,hidma-1.0" for initial HW or "qcom,hidma-1.1"
+> +for MSI capable HW.
+
+Do you have an SoC part number yet? If so, please use that instead.
+
+>  - reg: Addresses for the transfer and event channel
+>  - interrupts: Should contain the event interrupt
+>  - desc-count: Number of asynchronous requests this channel can handle
+>  - iommus: required a iommu node
+>  
+> +Optional properties for MSI:
+> +- msi-parent: pointer to the MSI controller object with the DeviceID in use.
 > +
-> +usart1: serial@40011000 {
-> +	compatible = "st,stm32-usart", "st,stm32-uart";
-> +	reg = <0x40011000 0x400>;
-> +	interrupts = <37>;
-> +	clocks = <&rcc 0 164>;
-> +	dmas = <&dma2 2 4 0x414 0x0>,
-> +	       <&dma2 7 4 0x414 0x0>;
-> +	dma-names = "rx", "tx";
-> +};
+> +Example:
+> + msi_parent: <&msi0 0x80024>
+> +
+> +msi0 is the MSI controller in the system. Bits 0-5 is the channel ID. 4
+> +is the channel ID. Bits 5-8 is the instance number. This is for the HIDMA
+> +instance 1.
+> +
+>  Example:
+>  
+>  Hypervisor OS configuration:
 > -- 
 > 1.9.1
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
