@@ -1,27 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] mfd: arizona: Add DT options for max_channels_clocked
- and PDM speaker config
-Date: Fri, 23 Sep 2016 08:30:25 -0500
-Message-ID: <20160923133025.GA20371@rob-hp-laptop>
-References: <1473757544-6490-1-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] nvmem: dt: document lpc1850 OTP binding
+Date: Fri, 23 Sep 2016 08:35:29 -0500
+Message-ID: <20160923133529.GA23548@rob-hp-laptop>
+References: <20160913161241.22492-1-manabian@gmail.com>
+ <20160913161241.22492-3-manabian@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1473757544-6490-1-git-send-email-rf@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: lee.jones@linaro.org, patches@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20160913161241.22492-3-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 13, 2016 at 10:05:44AM +0100, Richard Fitzgerald wrote:
-> This patch adds DT settings for the max_channels_clocked, spk_fmt and
-> spk_mute pdata.
+On Tue, Sep 13, 2016 at 06:12:40PM +0200, Joachim Eastwood wrote:
+> Documenation for the LPC18xx/43xx OTP memory bindings.
 > 
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mfd/arizona.txt | 18 ++++++++++++++
->  drivers/mfd/arizona-core.c                        | 30 +++++++++++++++++++++++
->  2 files changed, 48 insertions(+)
+>  .../devicetree/bindings/nvmem/lpc1850-otp.txt        | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/lpc1850-otp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/lpc1850-otp.txt b/Documentation/devicetree/bindings/nvmem/lpc1850-otp.txt
+> new file mode 100644
+> index 0000000..853b6a7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/lpc1850-otp.txt
+> @@ -0,0 +1,20 @@
+> +* NXP LPC18xx OTP memory
+> +
+> +Internal OTP (One Time Programmable) memory for NXP LPC18xx/43xx devices.
+> +
+> +Required properties:
+> +  - compatible: Should be "nxp,lpc1850-otp"
+> +  - reg: Must contain an entry with the physical base address and length
+> +    for each entry in reg-names.
 
-Acked-by: Rob Herring <robh@kernel.org>
+> +  - address-cells: must be set to 1.
+> +  - size-cells: must be set to 1.
+
+Not needed unless you have child nodes.
+
+> +
+> +See nvmem.txt for more information.
+> +
+> +Example:
+> +  otp: otp@40045000 {
+> +    compatible = "nxp,lpc1850-otp";
+> +    reg = <0x40045000 0x1000>;
+> +    #address-cells = <1>;
+> +    #size-cells = <1>;
+> +  };
+> -- 
+> 2.9.3
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
