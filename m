@@ -1,111 +1,43 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: add bindings doc for ZTE VOU display
- controller
-Date: Fri, 23 Sep 2016 17:30:43 -0500
-Message-ID: <20160923223043.GA30909@rob-hp-laptop>
-References: <1474615449-16893-1-git-send-email-shawn.guo@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: drm/bridge: adv7511: Add regulator
+ bindings
+Date: Fri, 23 Sep 2016 17:31:53 -0500
+Message-ID: <20160923223153.GA420@rob-hp-laptop>
+References: <1472640730-24326-1-git-send-email-architt@codeaurora.org>
+ <1474622430-6704-1-git-send-email-architt@codeaurora.org>
+ <1474622430-6704-2-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1474615449-16893-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Baoyou Xie <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1474622430-6704-2-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: andy.gross@linaro.org, laurent.pinchart@ideasonboard.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 23, 2016 at 03:24:08PM +0800, Shawn Guo wrote:
-> It adds initial bindings doc for ZTE VOU display controller.  HDMI is
-> the only supported output device right now.
+On Fri, Sep 23, 2016 at 02:50:27PM +0530, Archit Taneja wrote:
+> Add the regulator supply properties needed by ADV7511 and ADV7533. The
+> regulator names are named after the pin names, except for DVDD_3V on
+> ADV7511, which is left v3p3 to have the same name as it's on ADV7533.
 > 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ADV7511 has a BGVDD pin for which the voltage to be configured isn't
+> clear. This needs to be updated in the document later.
+> 
+> The regulators are specified as optional properties since there can
+> be boards which have a fixed supply directly routed to the pins, and
+> these may not be modelled as regulator supplies.
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Archit Taneja <architt@codeaurora.org>
 > ---
->  .../devicetree/bindings/display/zte,vou.txt        | 67 ++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/zte,vou.txt
+> v2:
+> - Specify regulator supplies for ADV7511 too.
+> - Have separate supply entries for AVDD, DVDD, PVDD, A2VDD pins.
+> - Add additional BGVDD supply for ADV7511.
 > 
-> diff --git a/Documentation/devicetree/bindings/display/zte,vou.txt b/Documentation/devicetree/bindings/display/zte,vou.txt
-> new file mode 100644
-> index 000000000000..b7407219cfa1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/zte,vou.txt
-> @@ -0,0 +1,67 @@
-> +ZTE VOU Display Controller
-> +
-> +This is a display controller found on ZTE ZX296718 SoC.  It includes multiple
-> +Graphic Layer (GL) and Video Layer (VL), two Mixers/Channels, and a few blocks
-> +handling scaling, color space conversion etc.  VOU also integrates the support
-> +for typical output devices, like HDMI, TV Encoder, VGA, and RGB LCD.
-> +
-> +* Master display-subsystem node
-> +
-> +It must be the parent node of all the sub-device nodes.
-> +
-> +Required properties:
-> + - compatible: should be "zte,zx-display-subsystem"
-> + - #address-cells: should be <1>
-> + - #size-cells: should be <1>
-> + - ranges: to allow probing of sub-devices
-> +
-> +* VOU controller device
-> +
-> +Required properties:
-> + - compatible: should be "zte,zx296718-vou"
-> + - reg: Physical base address and length of the whole VOU IO region
-> + - interrupts: VOU interrupt number to the CPU
-> + - clocks: A list of phandle + clock-specifier pairs, one for each entry
-> +   in 'clock-names'
-> + - clock-names: A list of clock names.  It should contain: "aclk", "ppu_wclk",
-> +   "main_wclk" and "aux_wclk".
-> +
-> +* HDMI output device
-> +
-> +Required properties:
-> + - compatible: should be "zte,zx296718-hdmi"
-> + - reg: Physical base address and length of the HDMI device IO region
-> + - interrupts : HDMI interrupt number to the CPU
-> + - clocks: A list of phandle + clock-specifier pairs, one for each entry
-> +   in 'clock-names'
-> + - clock-names: A list of clock names.  It should contain: "osc_cec", "osc_clk"
-> +   and "xclk".
-> +
-> +Example:
-> +
-> +display-subsystem {
-> +	compatible = "zte,zx-display-subsystem";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges;
-> +
-> +	vou: vou@1440000 {
-> +		compatible = "zte,zx296718-vou";
-> +		reg = <0x1440000 0x10000>;
-> +		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&topcrm VOU_ACLK>, <&topcrm VOU_PPU_WCLK>,
-> +			 <&topcrm VOU_MAIN_WCLK>, <&topcrm VOU_AUX_WCLK>;
-> +		clock-names = "aclk", "ppu_wclk",
-> +			      "main_wclk", "aux_wclk";
-> +	};
-> +
-> +	hdmi: hdmi@144c000 {
-> +		compatible = "zte,zx296718-hdmi";
-> +		reg = <0x144c000 0x4000>;
+>  .../devicetree/bindings/display/bridge/adi,adv7511.txt     | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 
-You have overlapping regions here. I'd suggest you kill off
-zte,zx-display-subsystem and make zte,zx296718-vou the top-level node 
-with hdmi and others as the child nodes.
-
-> +		interrupts = <GIC_SPI 82 IRQ_TYPE_EDGE_RISING>;
-> +		clocks = <&topcrm HDMI_OSC_CEC>,
-> +			 <&topcrm HDMI_OSC_CLK>,
-> +			 <&topcrm HDMI_XCLK>;
-> +		clock-names = "osc_cec", "osc_clk", "xclk";
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
