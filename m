@@ -1,64 +1,44 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on Hip06
-Date: Fri, 23 Sep 2016 17:55:10 +0200
-Message-ID: <1849232.KJrfRPHGN6@wuerfel>
-References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com> <10705430.q2aqv5uYO3@wuerfel> <EE11001F9E5DDD47B7634E2F8A612F2E1F8850F2@lhreml507-mbx>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/6] of: Add vendor prefix for Engicam s.r.l company
+Date: Fri, 23 Sep 2016 11:13:38 -0500
+Message-ID: <20160923161338.GA13871@rob-hp-laptop>
+References: <1473967015-8523-1-git-send-email-jagan@amarulasolutions.com>
+ <1473967015-8523-2-git-send-email-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E1F8850F2@lhreml507-mbx>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Cc: "zhichang.yuan" <zhichang.yuan02@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "minyard@acm.org" <minyard@acm.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1473967015-8523-2-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, September 23, 2016 2:59:55 PM CEST Gabriele Paoloni wrote:
+On Fri, Sep 16, 2016 at 12:46:50AM +0530, Jagan Teki wrote:
+> Engicam providing design services of electronic systems with
+> high content of technology, relying on a long experience in
+> electronic design.
 > 
-> > > From the perspective of the indirect IO function the input parameter
-> > > is an unsigned long addr that (now) can be either:
-> > > 1) an IO token coming from a legacy pci device
-> > > 2) a phys address that lives on the LPC bus
-> > >
-> > > These are conceptually two separate address spaces (and actually they
-> > > both start from 0).
-> > 
-> > Why? Any IORESOURCE_IO address always refers to the logical I/O port
-> > range in Linux, not the physical address that is used on a bus.
+> For more info visit
+> http://www.engicam.com/en/
 > 
-> If I read the code correctly when you get an I/O token you just add it
-> to PCI_IOBASE.
-> This is enough since pci_remap_iospace set the virtual address to 
-> PCI_IOBASE + the I/O token offset; so we can read/write to
-> vaddr = PCI_IOBASE + token as pci_remap_iospace has mapped it correctly
-> to the respective PCI cpu address (that is set in the I/O range property
-> of the host controller)
+> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+> Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+> Changes for v5:
+> 	- none
+> Changes for v4:
+> 	- new patch
 > 
-> In the patchset accessors LPC operates directly on the cpu addresses
-> and the input parameter of the accessors can be either an IO token or
-> a cpu address
-> 
-> +static inline void outb(u8 value, unsigned long addr)
-> +{
-> +#ifdef CONFIG_ARM64_INDIRECT_PIO
-> +       if (arm64_extio_ops && arm64_extio_ops->start <= addr &&
-> +                       addr <= arm64_extio_ops->end)
-> 
-> Here below we operate on cpu address
-> 
-> +               extio_outb(value, addr);
-> +       else
-> +#endif
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-I missed this bug earlier, this obviously needs to be
-
-		arm64_extio_ops->outb(value, addr - arm64_extio_ops->start);
-
-or possibly
-
-		arm64_extio_ops->outb(arm64_extio_ops, value, addr);
-
-as the outb function won't know what the offset is, but
-that needed to be fixed regardless.
-
-	Arnd
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
