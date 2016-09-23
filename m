@@ -1,110 +1,81 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: [PATCH 1/3] regulator: axp20x: simplify poly-phase handling
-Date: Tue, 20 Sep 2016 18:09:40 +0200
-Message-ID: <098a013d31924dfd6dff81927a70e91381b1f8d3.1474616699.git.moinejf@free.fr>
-References: <cover.1474616699.git.moinejf@free.fr>
+From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv2 1/3] Documentation: dt: Add TI SCI clock driver
+Date: Fri, 23 Sep 2016 11:04:33 +0300
+Message-ID: <45d8054d-21cb-c90d-7226-387b97040d83@ti.com>
+References: <1472733635-22661-1-git-send-email-t-kristo@ti.com>
+ <1472733635-22661-2-git-send-email-t-kristo@ti.com>
+ <20160912131038.GA13103@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1474616699.git.moinejf-GANU6spQydw@public.gmane.org>
+In-Reply-To: <20160912131038.GA13103@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nm-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Building a list (bitmap) of the slaves included in poly-phase groups
-at probe startup time simplifies the treatment in the regulator
-creation loop.
+On 12/09/16 16:10, Rob Herring wrote:
+> On Thu, Sep 01, 2016 at 03:40:33PM +0300, Tero Kristo wrote:
+>> Add a clock implementation, TI SCI clock, that will hook to the common
+>> clock framework, and allow each clock to be controlled via TI SCI
+>> protocol.
+>>
+>> Signed-off-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+>> Tested-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+>> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/clock/ti,sci-clk.txt       | 51 ++++++++++++++++++++++
+>>  MAINTAINERS                                        |  1 +
+>>  2 files changed, 52 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>> new file mode 100644
+>> index 0000000..231cb80
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>> @@ -0,0 +1,51 @@
+>> +Texas Instruments TI-SCI Clocks
+>> +===============================
+>> +
+>> +All clocks on Texas Instruments' SoCs that contain a System Controller,
+>> +are only controlled by this entity. Communication between a host processor
+>> +running an OS and the System Controller happens through a protocol known
+>> +as TI-SCI[1]. This clock implementation plugs into the common clock
+>> +framework and makes use of the TI-SCI protocol on clock API requests.
+>> +
+>> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+>> +
+>> +Required properties:
+>> +-------------------
+>> +- compatible: Must be "ti,sci-clk"
+>> +- #clock-cells: Shall be 2.
+>> +  In clock consumers, this cell represents the device ID and clock ID
+>> +  exposed by the PM firmware. The assignments can be found in the header
+>> +  files <dt-bindings/genpd/<soc>.h> (which covers the device IDs) and
+>> +  <dt-bindings/clock/<soc>.h> (which covers the clock IDs), where <soc>
+>> +  is the SoC involved, for example 'k2g'.
+>> +- ti,sci: Phandle to the TI SCI device to use for managing the clocks
+>> +
+>> +Optional properties:
+>> +-------------------
+>> +- ti,ssc-clocks: Array of phandle clocks that shall enable spread spectrum
+>> +		 clocking while enabled
+>> +- ti,allow-freq-change-clocks: Array of phandle clocks that shall allow
+>> +			       dynamic clock frequency changes by firmware
+>> +- ti,input-term-clocks: Array of phandle clocks that shall enable input
+>> +			termination
+>
+> These seem like a random set of features to control. What determines the
+> clocks for these? If it is based on the SoC, then make your compatible
+> string SoC specific and don't put this into DT.
 
-Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
----
- drivers/regulator/axp20x-regulator.c | 45 +++++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 24 deletions(-)
+Currently nobody seems to be using these flags, so I will just drop the 
+support for these from the next rev. If anybody will need them at some 
+point, I will figure out how to support these.
 
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 54382ef..4e5e7c8 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -477,30 +477,24 @@ static int axp20x_set_dcdc_workmode(struct regulator_dev *rdev, int id, u32 work
- }
- 
- /*
-- * This function checks whether a regulator is part of a poly-phase
-- * output setup based on the registers settings. Returns true if it is.
-+ * This function checks which regulators are part of poly-phase
-+ * output setups based on the registers settings.
-+ * Returns a bitmap of these regulators.
-  */
--static bool axp20x_is_polyphase_slave(struct axp20x_dev *axp20x, int id)
-+static u32 axp20x_polyphase_slave(struct axp20x_dev *axp20x)
- {
--	u32 reg = 0;
--
--	/* Only AXP806 has poly-phase outputs */
--	if (axp20x->variant != AXP806_ID)
--		return false;
-+	u32 reg = 0, bitmap = 0;
- 
- 	regmap_read(axp20x->regmap, AXP806_DCDC_MODE_CTRL2, &reg);
- 
--	switch (id) {
--	case AXP806_DCDCB:
--		return (((reg & GENMASK(7, 6)) == BIT(6)) ||
--			((reg & GENMASK(7, 6)) == BIT(7)));
--	case AXP806_DCDCC:
--		return ((reg & GENMASK(7, 6)) == BIT(7));
--	case AXP806_DCDCE:
--		return !!(reg & BIT(5));
--	}
-+	if ((reg & GENMASK(7, 6)) == BIT(5))
-+		bitmap |= 1 << AXP806_DCDCE;
-+	if ((reg & GENMASK(7, 6)) == BIT(6))
-+		bitmap |= 1 << AXP806_DCDCB;
-+	if ((reg & GENMASK(7, 6)) == BIT(7))
-+		bitmap |= (1 << AXP806_DCDCB) | (1 << AXP806_DCDCC);
- 
--	return false;
-+	return bitmap;
- }
- 
- static int axp20x_regulator_probe(struct platform_device *pdev)
-@@ -518,6 +512,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 	const char *dcdc1_name = axp22x_regulators[AXP22X_DCDC1].name;
- 	const char *dcdc5_name = axp22x_regulators[AXP22X_DCDC5].name;
- 	bool drivevbus = false;
-+	u32 skip_bitmap = 0;
- 
- 	switch (axp20x->variant) {
- 	case AXP202_ID:
-@@ -535,6 +530,13 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 	case AXP806_ID:
- 		regulators = axp806_regulators;
- 		nregulators = AXP806_REG_ID_MAX;
-+
-+		/*
-+		 * The regulators which are slave in a poly-phase setup
-+		 * are skipped, as their controls are bound to the master
-+		 * regulator and won't work.
-+		 */
-+		skip_bitmap |= axp20x_polyphase_slave(axp20x);
- 		break;
- 	case AXP809_ID:
- 		regulators = axp809_regulators;
-@@ -553,12 +555,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 		const struct regulator_desc *desc = &regulators[i];
- 		struct regulator_desc *new_desc;
- 
--		/*
--		 * If this regulator is a slave in a poly-phase setup,
--		 * skip it, as its controls are bound to the master
--		 * regulator and won't work.
--		 */
--		if (axp20x_is_polyphase_slave(axp20x, i))
-+		if (skip_bitmap & (1 << i))
- 			continue;
- 
- 		/*
--- 
-2.10.0
-
+-Tero
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
