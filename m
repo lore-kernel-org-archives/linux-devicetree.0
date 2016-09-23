@@ -1,32 +1,50 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/2] Add R8A7792 MSIOF support
-Date: Fri, 23 Sep 2016 09:39:52 +0200
-Message-ID: <20160923073952.GC20129@verge.net.au>
-References: <2481458.x1iQg26kO7@wasted.cogentembedded.com>
- <19842984-5776-0740-7552-f63ce30d4bdd@cogentembedded.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: rskrza1: add sdhi1 DT support
+Date: Fri, 23 Sep 2016 09:41:24 +0200
+Message-ID: <20160923074123.GD20129@verge.net.au>
+References: <20160922213211.7988-1-chris.brandt@renesas.com>
+ <20160922213211.7988-4-chris.brandt@renesas.com>
+ <CAMuHMdWckFaU__BM=WAOvJ+fVjEvNdLCFy0GNiKwU159aZTdhg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <19842984-5776-0740-7552-f63ce30d4bdd@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAMuHMdWckFaU__BM=WAOvJ+fVjEvNdLCFy0GNiKwU159aZTdhg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 23, 2016 at 12:18:52AM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 09/05/2016 11:54 PM, Sergei Shtylyov wrote:
-> 
-> >   Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
-> >'renesas-devel-20160905-v4.8-rc5' tag. We're adding the R8A7792 MSIOF clocks
-> >and device nodes. I'm not posting the board patches because the MSIOF driver
-> >seems erratic ATM...
+On Fri, Sep 23, 2016 at 09:09:07AM +0200, Geert Uytterhoeven wrote:
+> On Thu, Sep 22, 2016 at 11:32 PM, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> > Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/r7s72100-rskrza1.dts | 4 ++++
+> >  1 file changed, 4 insertions(+)
 > >
-> >[1/2] ARM: dts: r8a7792: add MSIOF clock
-> >[2/2] ARM: dts: r8a7792: add MSIOF support
+> > diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+> > index e5dea5b..548b51f 100644
+> > --- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
+> > +++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+> > @@ -56,6 +56,10 @@
+> >         };
+> >  };
+> >
+> > +&sdhi1 {
+> > +       status = "okay";
 > 
->    These seem stuck for no apparent reason. Simon?
+> On all other boards, we have the bus-width property in the board-specific
+> .dts instead of in the SoC-specific .dtsi.
 
-Thanks, I have queued these up.
+I'd like us to be consistent as much as possible.
+But I do wonder why it has been added as a board property.
+
+> > +};
+> > +
+> >  &scif2 {
+> >         status = "okay";
+> >  };
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
