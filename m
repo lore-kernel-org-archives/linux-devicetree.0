@@ -1,64 +1,38 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v2 1/4] dt-bindings: drm/bridge: adv7511: Add regulator bindings
-Date: Fri, 23 Sep 2016 14:50:27 +0530
-Message-ID: <1474622430-6704-2-git-send-email-architt@codeaurora.org>
-References: <1472640730-24326-1-git-send-email-architt@codeaurora.org>
- <1474622430-6704-1-git-send-email-architt@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1474622430-6704-1-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: andy.gross@linaro.org, laurent.pinchart@ideasonboard.com
-Cc: linux-arm-msm@vger.kernel.org, robh@kernel.org, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org
+From: Horng-Shyang Liao <hs.liao@mediatek.com>
+Subject: Re: [PATCH v14 4/4] CMDQ: save more energy in idle
+Date: Fri, 23 Sep 2016 17:28:05 +0800
+Message-ID: <1474622885.21723.25.camel@mtksdaap41>
+References: <1473039885-24009-1-git-send-email-hs.liao@mediatek.com>
+         <1473039885-24009-5-git-send-email-hs.liao@mediatek.com>
+         <CABb+yY1YqyReK5bii6n5a_rJ6fgpPi=aC3sfKJdomvM5+NG9FA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABb+yY1YqyReK5bii6n5a_rJ6fgpPi=aC3sfKJdomvM5+NG9FA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Jo
 List-Id: devicetree@vger.kernel.org
 
-Add the regulator supply properties needed by ADV7511 and ADV7533. The
-regulator names are named after the pin names, except for DVDD_3V on
-ADV7511, which is left v3p3 to have the same name as it's on ADV7533.
+On Thu, 2016-09-22 at 13:22 +0530, Jassi Brar wrote:
+> On Mon, Sep 5, 2016 at 7:14 AM, HS Liao <hs.liao@mediatek.com> wrote:
+> > Use clk_disable_unprepare instead of clk_disable to save more energy
+> > when CMDQ is idle.
+> >
+> > Signed-off-by: HS Liao <hs.liao@mediatek.com>
+> > ---
+> >  drivers/mailbox/mtk-cmdq.c | 54 +++++++++++++++++++++++++++++++++++++++-------
+> 
+> The driver is introduced by second patch of the set, so it makes sense
+> to merge this patch into patch 2/4.
 
-ADV7511 has a BGVDD pin for which the voltage to be configured isn't
-clear. This needs to be updated in the document later.
+Hi Jassi,
 
-The regulators are specified as optional properties since there can
-be boards which have a fixed supply directly routed to the pins, and
-these may not be modelled as regulator supplies.
+Could you take a look at previous discussion between Matthias and me?
+http://lkml.iu.edu/hypermail/linux/kernel/1606.2/05239.html
+His basic idea is to simplify first working version.
+Therefore, I move some code to this patch.
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Archit Taneja <architt@codeaurora.org>
----
-v2:
-- Specify regulator supplies for ADV7511 too.
-- Have separate supply entries for AVDD, DVDD, PVDD, A2VDD pins.
-- Add additional BGVDD supply for ADV7511.
-
- .../devicetree/bindings/display/bridge/adi,adv7511.txt     | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-index 6532a59..66e6bae 100644
---- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-+++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-@@ -56,6 +56,20 @@ Optional properties:
- - adi,disable-timing-generator: Only for ADV7533. Disables the internal timing
-   generator. The chip will rely on the sync signals in the DSI data lanes,
-   rather than generate its own timings for HDMI output.
-+- avdd-supply: A 1.8V supply that powers up the AVDD pin on the chip.
-+- dvdd-supply: A 1.8V supply that powers up the DVDD pin on the chip.
-+- pvdd-supply: A 1.8V supply that powers up the PVDD pin on the chip.
-+- v3p3-supply: A 3.3V supply that powers up the pin called DVDD_3V on
-+  ADV7511 and V3P3 on ADV7533.
-+
-+ADV7511 specific supplies:
-+- bgvdd-supply: Powers the BGVDD pin. The voltage isn't clear from
-+  available datasheets.
-+
-+ADV7533 specific supplies:
-+- a2vdd-supply: 1.8V supply that powers up the A2VDD pin on the chip.
-+- v1p2-supply: A supply that powers up the V1P2 pin on the chip. It can be
-+  either 1.2V or 1.8V.
- 
- Required nodes:
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Thanks,
+HS
