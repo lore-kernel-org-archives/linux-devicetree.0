@@ -1,66 +1,37 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 07/11] pci: controller: designware: Add EP mode
- support
-Date: Fri, 23 Sep 2016 09:41:41 -0500
-Message-ID: <20160923144141.GA24842@rob-hp-laptop>
-References: <1473829927-20466-1-git-send-email-kishon@ti.com>
- <1473829927-20466-8-git-send-email-kishon@ti.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 1/4] arm64: arch_timer: Add device tree binding for
+ A-008585 erratum
+Date: Fri, 23 Sep 2016 15:41:53 +0100
+Message-ID: <57E53F31.8000509@arm.com>
+References: <1474533318-7796-1-git-send-email-oss@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1473829927-20466-8-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, hch@infradead.org, Joao.Pinto@synopsys.com, mingkai.hu@nxp.com, m-karicheri2@ti.com, Pratyush Anand <pratyush.anand@gmail.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joao Pinto <jpinto@synopsys.com>, nsekhar@ti.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1474533318-7796-1-git-send-email-oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2016 at 10:42:03AM +0530, Kishon Vijay Abraham I wrote:
-> Add endpoint mode support to designware driver. This uses the
-> EP Core layer introduced recently to add endpoint mode support.
-> *Any* function driver can now use this designware device
-> to achieve the EP functionality.
+On 22/09/16 09:35, Scott Wood wrote:
+> This erratum describes a bug in logic outside the core, so MIDR can't be
+> used to identify its presence, and reading an SoC-specific revision
+> register from common arch timer code would be awkward.  So, describe it
+> in the device tree.
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  .../devicetree/bindings/pci/designware-pcie.txt    |   26 ++-
->  drivers/pci/controller/Kconfig                     |    5 +
->  drivers/pci/controller/Makefile                    |    1 +
->  drivers/pci/controller/pcie-designware-ep.c        |  228 ++++++++++++++++++++
->  drivers/pci/controller/pcie-designware.c           |   30 +++
->  drivers/pci/controller/pcie-designware.h           |   45 ++++
->  6 files changed, 324 insertions(+), 11 deletions(-)
->  create mode 100644 drivers/pci/controller/pcie-designware-ep.c
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> index 6c5322c..bb0b789 100644
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> @@ -6,23 +6,27 @@ Required properties:
->  - reg-names: Must be "config" for the PCIe configuration space.
->      (The old way of getting the configuration address space from "ranges"
->      is deprecated and should be avoided.)
-> -- #address-cells: set to <3>
-> -- #size-cells: set to <2>
-> -- device_type: set to "pci"
-> -- ranges: ranges for the PCI memory and I/O regions
-> -- #interrupt-cells: set to <1>
-> -- interrupt-map-mask and interrupt-map: standard PCI properties
-> -	to define the mapping of the PCIe interface to interrupt
-> +- #address-cells (only for host mode): set to <3>
-> +- #size-cells (only for host mode): set to <2>
-> +- device_type (only for host mode): set to "pci"
-> +- ranges (only for host mode): ranges for the PCI memory and I/O regions
-> +- num-ib-windows (only for EP mode): number of inbound address translation
-> +	windows
-> +- num-ob-windows (only for EP mode): number of outbound address translation
-> +	windows
-> +- #interrupt-cells (only for host mode): set to <1>
-> +- interrupt-map-mask and interrupt-map (only for host mode): standard PCI
-> +	properties to define the mapping of the PCIe interface to interrupt
+>  Documentation/devicetree/bindings/arm/arch_timer.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-It may be clearer to just document EP mode in a separate section even if 
-there's some duplication of properties. Other standard PCI binding 
-properties probably also don't apply.
+Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 
-Rob
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
