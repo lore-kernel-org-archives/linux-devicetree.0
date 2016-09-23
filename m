@@ -1,42 +1,29 @@
-From: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ASoC: simple-card: add support for aux devices
-Date: Fri, 23 Sep 2016 09:44:21 +0300
-Message-ID: <f60f762a-7aa6-cbcd-e27d-52da168befd8@cogentembedded.com>
-References: <1474577444-7598-1-git-send-email-nikita.yoush@cogentembedded.com>
- <87mvizpjg8.wl%kuninori.morimoto.gx@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/3] ARM: dts: r7s72100: add sdhi clock to device tree
+Date: Fri, 23 Sep 2016 08:59:11 +0200
+Message-ID: <CAMuHMdX_7HbtaLPCeMHy1Knk6pfTazP+RKxzM7vdyzAof1Kh1Q@mail.gmail.com>
+References: <20160922213211.7988-1-chris.brandt@renesas.com> <20160922213211.7988-2-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87mvizpjg8.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, =?UTF-8?B?T3R0byBLZWvDpGzDpGluZW4=?= <otto-Gh1NM5ZPXYb1KXRcyAk9cg@public.gmane.org>, Mengdong Lin <mengdong.lin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160922213211.7988-2-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Thu, Sep 22, 2016 at 11:32 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-> This case, I think you want ...
-> 
-> 	simple-audio-card,codec {
-> -		sound-dai = <&codec1>;
-> +		sound-dai = <&codec>;
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Oops... sure, thanks for noticing it.
+Gr{oetje,eeting}s,
 
->>  					  a microphone is attached.
->> +- simple-audio-card,aux-devs		: List of phandles pointing to auxiliary devices, such
->> +					  as amplifiers, to be added to the sound card.
->>  
->>  Optional subnodes:
-> 
-> I think it is very helpful if this document has above sample
+                        Geert
 
-Ok, will send v2 with the example moved from commit message to
-documentation.
-
-Nikita
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
