@@ -1,104 +1,59 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] ipmi: add an Aspeed BT IPMI BMC driver
-Date: Fri, 23 Sep 2016 13:34:21 -0500
-Message-ID: <20160923183421.GA14864@rob-hp-laptop>
-References: <1474354900-5618-1-git-send-email-clg@kaod.org>
- <1474354900-5618-2-git-send-email-clg@kaod.org>
+Subject: Re: [PATCH 1/3] devicetree: bindings: scsi: hisi_sas hip07 support
+Date: Fri, 23 Sep 2016 13:36:41 -0500
+Message-ID: <20160923183641.GA27636@rob-hp-laptop>
+References: <1474368540-186535-1-git-send-email-john.garry@huawei.com>
+ <1474368540-186535-2-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1474354900-5618-2-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
+In-Reply-To: <1474368540-186535-2-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>
-Cc: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hare-IBi9RG/b67k@public.gmane.org, Xiang Chen <chenxiang66-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 20, 2016 at 09:01:38AM +0200, Cédric Le Goater wrote:
-> From: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+On Tue, Sep 20, 2016 at 06:48:58PM +0800, John Garry wrote:
+> Add support for hip07 chipset to bindings.
 > 
-> This patch adds a simple device driver to expose the iBT interface on
-> Aspeed SOCs (AST2400 and AST2500) as a character device. Such SOCs are
-> commonly used as BMCs (BaseBoard Management Controllers) and this
-> driver implements the BMC side of the BT interface.
+> Chipset hip07 has v2 hw.
 > 
-> The BT (Block Transfer) interface is used to perform in-band IPMI
-> communication between a host and its BMC. Entire messages are buffered
-> before sending a notification to the other end, host or BMC, that
-> there is data to be read. Usually, the host emits requests and the BMC
-> responses but the specification provides a mean for the BMC to send
-> SMS Attention (BMC-to-Host attention or System Management Software
-> attention) messages.
+> The sas-v2 quirk amt is expanded to cover hip07.
 > 
-> For this purpose, the driver introduces a specific ioctl on the
-> device: 'BT_BMC_IOCTL_SMS_ATN' that can be used by the system running
-> on the BMC to signal the host of such an event.
-> 
-> The device name defaults to '/dev/ipmi-bt-host'
-> 
-> Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
-> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-> [clg: - checkpatch fixes
->       - added a devicetree binding documentation
->       - replace 'bt_host' by 'bt_bmc' to reflect that the driver is
->         the BMC side of the IPMI BT interface
->       - renamed the device to 'ipmi-bt-host'
->       - introduced a temporary buffer to copy_{to,from}_user
->       - used platform_get_irq()
->       - moved the driver under drivers/char/ipmi/ but kept it as a misc
->         device
->       - changed the compatible cell to "aspeed,ast2400-bt-bmc"
-> ]
-> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> [clg: - checkpatch --strict fixes
->       - removed the use of devm_iounmap, devm_kfree in cleanup paths
->       - introduced an atomic-t to limit opens to 1
->       - introduced a mutex to protect write/read operations]
-> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
-> 
+> Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Xiang Chen <chenxiang66-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 > ---
+>  Documentation/devicetree/bindings/scsi/hisilicon-sas.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
->  Changes since v2:
-> 
->  - fixed checkpatch --strict issues
->  - cleanup'ed includes
->  - limit to one opener
->  - protect write/read operations with a mutex.
->  - removed the use of devm_iounmap, devm_kfree in cleanup paths
-> 
->  Changes since v1:
-> 
->  - replace 'bt_host' by 'bt_bmc' to reflect that the driver is
->    the BMC side of the IPMI BT interface
->  - renamed the device to 'ipmi-bt-host'
->  - introduced a temporary buffer to copy_{to,from}_user
->  - used platform_get_irq()
->  - moved the driver under drivers/char/ipmi/ but kept it as a misc
->    device
->  - changed the compatible cell to "aspeed,ast2400-bt-bmc"
-> 
->  .../bindings/char/ipmi/aspeed,ast2400-bt-bmc.txt   |  23 +
+> diff --git a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+> index bf2411f..e604527 100644
+> --- a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+> +++ b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+> @@ -6,6 +6,7 @@ Main node required properties:
+>    - compatible : value should be as follows:
+>  	(a) "hisilicon,hip05-sas-v1" for v1 hw in hip05 chipset
+>  	(b) "hisilicon,hip06-sas-v2" for v2 hw in hip06 chipset
+> +	(c) "hisilicon,hip07-sas-v2" for v2 hw in hip07 chipset
+>    - sas-addr : array of 8 bytes for host SAS address
+>    - reg : Address and length of the SAS register
+>    - hisilicon,sas-syscon: phandle of syscon used for sas control
+> @@ -47,7 +48,7 @@ Main node required properties:
+>  			increasing order.
+>  
+>  Optional main node properties:
+> - - hip06-sas-v2-quirk-amt : when set, indicates that the v2 controller has the
+> + - hip06/7-sas-v2-quirk-amt : when set, indicates that the v2 controller has the
 
-While similar, this is not the kernel directory structure. Just make 
-this bindings/ipmi/
+Just use the existing property name for hip07.
 
-With that,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  drivers/Makefile                                   |   2 +-
->  drivers/char/ipmi/Kconfig                          |   7 +
->  drivers/char/ipmi/Makefile                         |   1 +
->  drivers/char/ipmi/bt-bmc.c                         | 510 +++++++++++++++++++++
->  include/uapi/linux/Kbuild                          |   1 +
->  include/uapi/linux/bt-bmc.h                        |  18 +
->  7 files changed, 561 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/char/ipmi/aspeed,ast2400-bt-bmc.txt
->  create mode 100644 drivers/char/ipmi/bt-bmc.c
->  create mode 100644 include/uapi/linux/bt-bmc.h
+>  			    "am-max-transmissions" limitation.
+>  
+>  Example:
+> -- 
+> 1.9.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
