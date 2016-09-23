@@ -1,56 +1,111 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] regulator: axp20x: add the AXP813
-Date: Fri, 23 Sep 2016 17:27:05 -0500
-Message-ID: <20160923222705.GA30134@rob-hp-laptop>
-References: <cover.1474621107.git.moinejf@free.fr>
- <21ac1fd8ab33185ec2cdb436272f48571695ce54.1474621108.git.moinejf@free.fr>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Subject: Re: [PATCH 1/2] dt-bindings: add bindings doc for ZTE VOU display
+ controller
+Date: Fri, 23 Sep 2016 17:30:43 -0500
+Message-ID: <20160923223043.GA30909@rob-hp-laptop>
+References: <1474615449-16893-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBO6YS27QKGQE5IMCW6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <21ac1fd8ab33185ec2cdb436272f48571695ce54.1474621108.git.moinejf-GANU6spQydw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1474615449-16893-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Baoyou Xie <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 23, 2016 at 09:22:41AM +0200, Jean-Francois Moine wrote:
-> The X-Powers AXP813 PMIC is close to the AXP803.
-> It is used in some Allwinner boards as the Sinovoip BananaPi M3+.
+On Fri, Sep 23, 2016 at 03:24:08PM +0800, Shawn Guo wrote:
+> It adds initial bindings doc for ZTE VOU display controller.  HDMI is
+> the only supported output device right now.
 > 
-> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mfd/axp20x.txt |   9 +-
->  drivers/mfd/axp20x.c                             |   2 +
->  drivers/regulator/Makefile                       |   2 +-
->  drivers/regulator/axp813.c                       | 229 +++++++++++++++++++++++
->  include/linux/mfd/axp20x.h                       |   1 +
->  5 files changed, 239 insertions(+), 4 deletions(-)
->  create mode 100644 drivers/regulator/axp813.c
+>  .../devicetree/bindings/display/zte,vou.txt        | 67 ++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/zte,vou.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-> index 3332d02..62019fb 100644
-> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-> @@ -8,11 +8,12 @@ axp221 (X-Powers)
->  axp223 (X-Powers)
->  axp803 (X-Powers)
->  axp809 (X-Powers)
-> +axp813 (X-Powers)
->  
->  Required properties:
->  - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
->  	      "x-powers,axp221", "x-powers,axp223", "x-powers,axp803",
-> -	      "x-powers,axp806", "x-powers,axp809"
-> +	      "x-powers,axp806", "x-powers,axp809", "x-powers,axp813"
+> diff --git a/Documentation/devicetree/bindings/display/zte,vou.txt b/Documentation/devicetree/bindings/display/zte,vou.txt
+> new file mode 100644
+> index 000000000000..b7407219cfa1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/zte,vou.txt
+> @@ -0,0 +1,67 @@
+> +ZTE VOU Display Controller
+> +
+> +This is a display controller found on ZTE ZX296718 SoC.  It includes multiple
+> +Graphic Layer (GL) and Video Layer (VL), two Mixers/Channels, and a few blocks
+> +handling scaling, color space conversion etc.  VOU also integrates the support
+> +for typical output devices, like HDMI, TV Encoder, VGA, and RGB LCD.
+> +
+> +* Master display-subsystem node
+> +
+> +It must be the parent node of all the sub-device nodes.
+> +
+> +Required properties:
+> + - compatible: should be "zte,zx-display-subsystem"
+> + - #address-cells: should be <1>
+> + - #size-cells: should be <1>
+> + - ranges: to allow probing of sub-devices
+> +
+> +* VOU controller device
+> +
+> +Required properties:
+> + - compatible: should be "zte,zx296718-vou"
+> + - reg: Physical base address and length of the whole VOU IO region
+> + - interrupts: VOU interrupt number to the CPU
+> + - clocks: A list of phandle + clock-specifier pairs, one for each entry
+> +   in 'clock-names'
+> + - clock-names: A list of clock names.  It should contain: "aclk", "ppu_wclk",
+> +   "main_wclk" and "aux_wclk".
+> +
+> +* HDMI output device
+> +
+> +Required properties:
+> + - compatible: should be "zte,zx296718-hdmi"
+> + - reg: Physical base address and length of the HDMI device IO region
+> + - interrupts : HDMI interrupt number to the CPU
+> + - clocks: A list of phandle + clock-specifier pairs, one for each entry
+> +   in 'clock-names'
+> + - clock-names: A list of clock names.  It should contain: "osc_cec", "osc_clk"
+> +   and "xclk".
+> +
+> +Example:
+> +
+> +display-subsystem {
+> +	compatible = "zte,zx-display-subsystem";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges;
+> +
+> +	vou: vou@1440000 {
+> +		compatible = "zte,zx296718-vou";
+> +		reg = <0x1440000 0x10000>;
+> +		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&topcrm VOU_ACLK>, <&topcrm VOU_PPU_WCLK>,
+> +			 <&topcrm VOU_MAIN_WCLK>, <&topcrm VOU_AUX_WCLK>;
+> +		clock-names = "aclk", "ppu_wclk",
+> +			      "main_wclk", "aux_wclk";
+> +	};
+> +
+> +	hdmi: hdmi@144c000 {
+> +		compatible = "zte,zx296718-hdmi";
+> +		reg = <0x144c000 0x4000>;
 
-Same comment here.
+You have overlapping regions here. I'd suggest you kill off
+zte,zx-display-subsystem and make zte,zx296718-vou the top-level node 
+with hdmi and others as the child nodes.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> +		interrupts = <GIC_SPI 82 IRQ_TYPE_EDGE_RISING>;
+> +		clocks = <&topcrm HDMI_OSC_CEC>,
+> +			 <&topcrm HDMI_OSC_CLK>,
+> +			 <&topcrm HDMI_XCLK>;
+> +		clock-names = "osc_cec", "osc_clk", "xclk";
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
