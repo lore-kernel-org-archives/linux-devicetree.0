@@ -1,126 +1,42 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v4 2/2] arm: dts: qcom: apq8064-ifc6410: Add HDMI support
-Date: Fri, 23 Sep 2016 12:03:07 +0530
-Message-ID: <1474612387-21762-3-git-send-email-architt@codeaurora.org>
-References: <1473780097-11388-1-git-send-email-architt@codeaurora.org>
- <1474612387-21762-1-git-send-email-architt@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1474612387-21762-1-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: andy.gross@linaro.org
-Cc: linux-arm-msm@vger.kernel.org, robdclark@gmail.com, john.stultz@linaro.org, sboyd@codeaurora.org, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org
+From: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ASoC: simple-card: add support for aux devices
+Date: Fri, 23 Sep 2016 09:44:21 +0300
+Message-ID: <f60f762a-7aa6-cbcd-e27d-52da168befd8@cogentembedded.com>
+References: <1474577444-7598-1-git-send-email-nikita.yoush@cogentembedded.com>
+ <87mvizpjg8.wl%kuninori.morimoto.gx@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87mvizpjg8.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, =?UTF-8?B?T3R0byBLZWvDpGzDpGluZW4=?= <otto-Gh1NM5ZPXYb1KXRcyAk9cg@public.gmane.org>, Mengdong Lin <mengdong.lin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add HDMI support on IFC6410. Populate the regulators required by HDMI-TX
-and PHY. Establish the link between the MDP4 DTV encoder and HDMI. Create
-a generic micro HDMI connector DT node. The msm drm driver doesn't parse
-for HDMI connectors in DT, but it will do so later.
+Hi
 
-Cc: devicetree@vger.kernel.org
+> This case, I think you want ...
+> 
+> 	simple-audio-card,codec {
+> -		sound-dai = <&codec1>;
+> +		sound-dai = <&codec>;
 
-Signed-off-by: Archit Taneja <architt@codeaurora.org>
----
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 74 ++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+Oops... sure, thanks for noticing it.
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-index 2eeb090..3d37cab 100644
---- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-@@ -43,6 +43,17 @@
- 		};
- 	};
- 
-+	hdmi-out {
-+		compatible = "hdmi-connector";
-+		type = "d";
-+
-+		port {
-+			hdmi_con: endpoint {
-+				remote-endpoint = <&hdmi_out>;
-+			};
-+		};
-+	};
-+
- 	soc {
- 		pinctrl@800000 {
- 			card_detect: card_detect {
-@@ -64,6 +75,25 @@
- 					bias-disable;
- 				};
- 			};
-+
-+			hdmi_pinctrl: hdmi-pinctrl {
-+				mux {
-+					pins = "gpio70", "gpio71", "gpio72";
-+					function = "hdmi";
-+				};
-+
-+				pinconf_ddc {
-+					pins = "gpio70", "gpio71";
-+					bias-pull-up;
-+					drive-strength = <2>;
-+				};
-+
-+				pinconf_hpd {
-+					pins = "gpio72";
-+					bias-pull-down;
-+					drive-strength = <16>;
-+				};
-+			};
- 		};
- 
- 		rpm@108000 {
-@@ -329,5 +359,49 @@
- 				mmc-pwrseq = <&sdcc4_pwrseq>;
- 			};
- 		};
-+
-+		hdmi-tx@4a00000 {
-+			status = "okay";
-+
-+			core-vdda-supply = <&pm8921_hdmi_switch>;
-+			hdmi-mux-supply = <&ext_3p3v>;
-+
-+			hpd-gpios = <&tlmm_pinmux 72 GPIO_ACTIVE_HIGH>;
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&hdmi_pinctrl>;
-+
-+			ports {
-+				port@0 {
-+					endpoint {
-+						remote-endpoint = <&mdp_dtv_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					endpoint {
-+						remote-endpoint = <&hdmi_con>;
-+					};
-+				};
-+			};
-+		};
-+
-+		hdmi-phy@4a00400 {
-+			status = "okay";
-+
-+			core-vdda-supply = <&pm8921_hdmi_switch>;
-+		};
-+
-+		mdp@5100000 {
-+			status = "okay";
-+
-+			ports {
-+				port@3 {
-+					endpoint {
-+						remote-endpoint = <&hdmi_in>;
-+					};
-+				};
-+			};
-+		};
- 	};
- };
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+>>  					  a microphone is attached.
+>> +- simple-audio-card,aux-devs		: List of phandles pointing to auxiliary devices, such
+>> +					  as amplifiers, to be added to the sound card.
+>>  
+>>  Optional subnodes:
+> 
+> I think it is very helpful if this document has above sample
+
+Ok, will send v2 with the example moved from commit message to
+documentation.
+
+Nikita
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
