@@ -1,85 +1,117 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH V3 RFT 3/5] ARM64: dts: bcm283x: Use dtsi for USB host mode
-Date: Fri, 23 Sep 2016 14:55:28 +0300
-Message-ID: <87vaxm96fj.fsf@eliezer.anholt.net>
-References: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com> <1471792204-21908-4-git-send-email-stefan.wahren@i2se.com> <bb073ea3-2f89-4fc5-e3af-2e27c54f221e@i2se.com> <1473245956.28663.50.camel@redhat.com> <18641a83-ddd7-1689-535a-c5a15b8a54f9@i2se.com> <1473257837.28663.80.camel@redhat.com> <aeba1434-3903-3ec4-1a94-e5c8229f4e5f@i2se.com> <87zimz821m.fsf@eliezer.anholt.net> <4cda98b0-03a6-f43d-0eee-29b7702eac8c@i2se.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 5/8] libfdt: Add fdt_setprop_inplace_namelen_partial
+Date: Fri, 23 Sep 2016 15:02:17 +0300
+Message-ID: <20160923120217.GR8719@lukather>
+References: <20160729095551.13592-1-maxime.ripard@free-electrons.com>
+ <20160729095551.13592-6-maxime.ripard@free-electrons.com>
+ <20160801033642.GV2588@voom.fritz.box>
+ <20160822100721.GI7104@lukather>
+ <20160822130156.GA20266@littlecatz>
+ <20160922063922.GJ8719@lukather>
+ <20160923053120.GY2085@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="M2XkPJ45YXpBrBm3"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4cda98b0-03a6-f43d-0eee-29b7702eac8c-eS4NqCHxEME@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160923053120.GY2085-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+
+--M2XkPJ45YXpBrBm3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
+Hi David,
 
-> Am 23.09.2016 um 10:15 schrieb Eric Anholt:
->> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
->>
->>> Am 07.09.2016 um 16:17 schrieb Gerd Hoffmann:
->>>>   Hi,
->>>>
->>>>> ARM: dts: Remove use of skeleton.dtsi from bcm283x.dtsi
->>>>> ARM64: dts: bcm: Use a symlink to R-Pi dtsi files from arch=3Darm
->>>> Picked them up.
->>>>
->>>>> In case of a multiplatform config with following settings the driver
->>>>> isn't able to "detect" the role:
->>>>>
->>>>> CONFIG_USB=3Dy
->>>>> CONFIG_USB_OTG=3Dy
->>>>> CONFIG_USB_DWC2=3Dy
->>>>> CONFIG_USB_DWC2_DUAL_ROLE=3Dy
->>>>> CONFIG_USB_PHY=3Dy
->>>>> CONFIG_NOP_USB_XCEIV=3Dy
->>>>> CONFIG_USB_GADGET=3Dy
->>>>> CONFIG_USB_ZERO=3Dy
->>>> Configured my kernel that way so the test actually tests something ;)
->>>>
->>>> And ... everything looks fine.  usb ethernet works, and so does the usb
->>>> keyboard.  /proc/device-tree/soc/usb@7e980000/dr_mode exists and
->>>> contains "host".
->>>>
->>>> Tested-by: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>>
->>> This patch hasn't been merged yet. Is there something wrong?
->> I hadn't bumped it back to todo from RFT.  Also, is this a priority
->> patch, since submitting merges is a pain?=20
-> No
->> Does USB break in some way
->> without it?
->
-> No. I only want know if this is still in queue and does someone care
-> about this patch.
+On Fri, Sep 23, 2016 at 03:31:20PM +1000, David Gibson wrote:
+> On Thu, Sep 22, 2016 at 09:39:22AM +0300, Maxime Ripard wrote:
+> > Hi David,
+> >=20
+> > On Mon, Aug 22, 2016 at 09:01:56AM -0400, David Gibson wrote:
+> > > On Mon, Aug 22, 2016 at 12:07:21PM +0200, Maxime Ripard wrote:
+> > > > Hi David,
+> > > >=20
+> > > > On Mon, Aug 01, 2016 at 01:36:42PM +1000, David Gibson wrote:
+> > > > > On Fri, Jul 29, 2016 at 11:55:48AM +0200, Maxime Ripard wrote:
+> > > > > > Add a function to modify inplace only a portion of a property..
+> > > > > >=20
+> > > > > > This is especially useful when the property is an array of valu=
+es, and you
+> > > > > > want to update one of them without changing the DT size.
+> > > > > >=20
+> > > > > > Acked-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > > > > > Reviewed-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> > > > > > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > > >=20
+> > > > > Applied, though I made a couple of tiny tweaks, see below.
+> > > >=20
+> > > > Awesome, thanks!
+> > > >=20
+> > > > Do you still have comments on the last 3 patches?
+> > >=20
+> > > Sorry, I got sidetracked by other things.
+> > >=20
+> > > The only remaining thing I'd like some changes in is the error
+> > > reporting.
+> > >=20
+> > > The biggset problem is that in some places you are returning
+> > > BADSTRUCTURE for badly formatter fixup or other overlay properties.
+> > > BADSTRUCTURE should only be used when there is a problem in the
+> > > encoding of the tree structure itself, not a problem in the encoding
+> > > within a specific property or properties.
+> > >=20
+> > > I don't think your code should ever generate BADSTRUCTURE directly
+> > > (but it could return it when it gets that value returned from a lower
+> > > level function).
+> > >=20
+> > > What I was hoping to have a closer look at was to see if I'd prefer
+> > > just a single 'BADOVERLAY' error for any problem in te overlay
+> > > encoding, or if I'd prefer sveral: BADFIXUP, BADTARGET, or something
+> > > like that.  I'll try to get a closer look, but it probably won't
+> > > happen this week (I'm at KVM Forum).
+> >=20
+> > Did you have time to think about this?
+>=20
+> Finally, yes.  Just sent the detailed reply.
 
-It's in my queue now.  Sorry for missing it!
+I'll have a look, thanks!
 
---=-=-=
+Expect a new version some time next week.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--M2XkPJ45YXpBrBm3
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQIcBAEBCgAGBQJX5RgwAAoJELXWKTbR/J7o1zkP/jW4/m3V6RcfUIJ7p0Q5Y9TM
-u61hXB6M2gGbbnXmklspuKmOabt0nHYTH4HICRXpOvyDbh4JGgAsgaEXRfNo+0gM
-Rdwl7DKM/e4mOgIvYXN8OM7EISL5qMZC9P6cDlf2CYx/2W/C1w8p3rwtHc6xviDm
-7yQR0JEZnx8s/rKZAfFuxEcELjZnIi3KpkhyywFA786VIs67cLlcjsY3Q1vNc9al
-+dQzJUkvbSZ8x9R2PB1qFYr4ivQOXza7sHOXKeMPhnfitHG/OnoGSzBQgof690Hl
-KR/um3LLwWPAHvQ4h8ECjjGejQewih2crQMlB3vQXL8/rzBuJyh5b+kVHwVmQSZk
-jk8J2Fqkp9w3NZa3i47VCBBzqYuSv0tSZ/Ow3NJK+NPrC1ucOWHWlAMSmHdEYKVG
-xz0lHuuVdOtvaUljTziVSuQQy/LBi31t2NfpCsPDnSQkOsLteo48vtBmGw2JvTfF
-ISSfPJ8dTSazHSlAZljR2FLNo5HFLYvZc3wQnw9Jb7Npl2WU326hY0snI8kn60lY
-9wHVoxpmv62Ume6KwAy3L4TJvJQWySq4En+Z1binKIYTKqambcgCM3Qc++/NCzrL
-QiIFS4gGl1HSlkTkAYW6AgzNfs9nQ/gcZtba8VOtkNDkZZrxgmcZ4eMhXl2xezJF
-+motGtN9zx/gNfLSPCIF
-=opoB
+iQIcBAEBAgAGBQJX5RnJAAoJEBx+YmzsjxAg8KUP/jITUcgrC4V4VrlSp0+WXKsA
+qZNNlnMBXBICHsNso5E/lj1bnC1Xjdm3jLUzxNAjS2/Mhp5r4ZcUTxKnoiEUQDuU
+4hNo6B9np9MW5SpZ95jYuaTWe7KwhmqfwTzwOYM2ramDqUAVpJFOu5US4clK3ADA
+k5hDMQTJsTRlFcky5Oj0HVx0SJGHIEq+8kusweO91IJzkAvdtwloE2MrzYn20B69
+PwKI7Agipz+ULa/6O6WpxAp5YGZvgZUu+dvQINg+1kxup7Mdoto2u5Jb7DIWUJye
+vJR2IKCLzA/8YUkjr2FdA4uDy6az+gvgvJdWdzMUv8ZYFQlrrJnGrFj4vJmpUNeL
+mOLjJ+9nHm2avqGtps5EJDcMZQWFVsTjw7KRAaIdXnxsRdBbuU2E76Y/NaEmsNEv
+Dp7LsoyoyvATbqV6Ybms9dLrJBgCrBwdtHkl+rLEZEq/8488uJzqEXsOYsiFEd5d
+7S6QQRp2ipQrx8fqNvo39qz4zpI6192M8yloaAPrhq92ww+vc+C3VDRrd/ahnucB
+SnNkHNQv57+cVO9xKGqt9rDGl8InnGSVkVQzQ6lIINTPC3u+zTWt3sebqXHZKwrA
+2yliE9k+ryfOgtncvUs0sStUEpa8Gr1aZBnfybmegM0yyzFGJ2WNMqI8WTNLlQEu
+oVWnB8McS36vpYNSyBBq
+=sM/c
 -----END PGP SIGNATURE-----
---=-=-=--
+
+--M2XkPJ45YXpBrBm3--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
