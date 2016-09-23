@@ -1,35 +1,62 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 10/19] watchdog: bindings: Remove obsolete platforms from
- dt doc.
-Date: Fri, 23 Sep 2016 10:08:44 -0500
-Message-ID: <20160923150844.GE9176@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 12/19] reset: sti: Remove obsolete platforms from dt
+ binding doc.
+Date: Fri, 23 Sep 2016 10:10:08 -0500
+Message-ID: <20160923151008.GF9176@rob-hp-laptop>
 References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
- <1473859677-9231-11-git-send-email-peter.griffin@linaro.org>
+ <1473859677-9231-13-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1473859677-9231-11-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1473859677-9231-13-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, patrice.chotard@st.com, devicetree@vger.kernel.org, lee.jones@linaro.org, p.zabel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2016 at 02:27:48PM +0100, Peter Griffin wrote:
-> STiH415/6 SoC support is being removed from the kernel
-> so update the dt bding document to reflect this.
+On Wed, Sep 14, 2016 at 02:27:50PM +0100, Peter Griffin wrote:
+> STiH415/6 SoC support is being removed from the kernel.
+> This patch updates the sti dt powerdown bindings and
+> removes references to these obsolete platforms.
 > 
-> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-> Cc: <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Cc: <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Cc: <p.zabel@pengutronix.de>
+> Cc: <robh+dt@kernel.org>
 > ---
->  Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/reset/st,sti-powerdown.txt | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/st,sti-powerdown.txt b/Documentation/devicetree/bindings/reset/st,sti-powerdown.txt
+> index 1cfd21d..9252713 100644
+> --- a/Documentation/devicetree/bindings/reset/st,sti-powerdown.txt
+> +++ b/Documentation/devicetree/bindings/reset/st,sti-powerdown.txt
+> @@ -16,15 +16,14 @@ Please refer to reset.txt in this directory for common reset
+>  controller binding usage.
+>  
+>  Required properties:
+> -- compatible: Should be "st,<chip>-powerdown"
+> -	ex: "st,stih415-powerdown", "st,stih416-powerdown"
+> +- compatible: Should be "st,stih407-powerdown"
+>  - #reset-cells: 1, see below
+>  
+>  example:
+>  
+>  	powerdown: powerdown-controller {
+> +		compatible = "st,stih407-powerdown";
+>  		#reset-cells = <1>;
+> -		compatible = "st,stih415-powerdown";
+>  	};
+>  
+>  
+> @@ -37,11 +36,10 @@ index specifying which channel to use, as described in reset.txt
+>  
+>  example:
+>  
+> -	usb1: usb@fe200000 {
+> -		resets	= <&powerdown STIH41X_USB1_POWERDOWN>;
+> +	st_dwc3: dwc3@8f94000 {
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+usb@ was correct here. With that,
+
+Acked-by: Rob Herring <robh@kernel.org>
