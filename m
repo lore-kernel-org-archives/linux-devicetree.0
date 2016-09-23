@@ -1,81 +1,77 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv2 3/3] clk: keystone: Add sci-clk driver support
-Date: Fri, 23 Sep 2016 11:06:04 +0300
-Message-ID: <9f71ab9b-7aed-ae6f-c057-ed3da0bd5200@ti.com>
-References: <1472733635-22661-1-git-send-email-t-kristo@ti.com>
- <1472733635-22661-4-git-send-email-t-kristo@ti.com>
- <20160902233235.GM12510@codeaurora.org>
- <827e0a46-3771-67a8-1414-0cbaf0e2548e@ti.com>
- <20160916230101.GM7243@codeaurora.org>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH V3 RFT 3/5] ARM64: dts: bcm283x: Use dtsi for USB host mode
+Date: Fri, 23 Sep 2016 11:15:33 +0300
+Message-ID: <87zimz821m.fsf@eliezer.anholt.net>
+References: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com> <1471792204-21908-4-git-send-email-stefan.wahren@i2se.com> <bb073ea3-2f89-4fc5-e3af-2e27c54f221e@i2se.com> <1473245956.28663.50.camel@redhat.com> <18641a83-ddd7-1689-535a-c5a15b8a54f9@i2se.com> <1473257837.28663.80.camel@redhat.com> <aeba1434-3903-3ec4-1a94-e5c8229f4e5f@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160916230101.GM7243@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: nm@ti.com, devicetree@vger.kernel.org, mturquette@baylibre.com, ssantosh@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <aeba1434-3903-3ec4-1a94-e5c8229f4e5f-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/09/16 02:01, Stephen Boyd wrote:
-> On 09/05, Tero Kristo wrote:
->> On 03/09/16 02:32, Stephen Boyd wrote:
->>> I still don't get it. We should be registering hw pointers in
->>> probe and handing them out in the xlate function. Not register
->>> hws in the xlate function and then handing them out as well. I
->>> haven't reviewed anything else in this patch.
->>
->> Ok, let me try to explain the functionality.
->>
->> Probe time hw pointer registration is only needed for special clocks
->> that require extra flags, like adding the spread spectrum flag.
->> There is ever going to be only handful of these.
->>
->> Xlate checks out the sci_clk list, and picks up an existing hw clock
->> if it is there. If not, it will create a new one. The reason this is
->> done like this, the device IDs / clock IDs don't mean anything to
->> the driver itself, the driver just passes these forward to the
->> underlying SCI fwk. And, we don't have inherent knowledge of valid
->> device / clock IDs either, the SCI fwk returns a failure if a
->> specific clock ID is bad. The device / clock IDs are going to be
->> different between different generations of SoC also, and in addition
->> there can be holes in the ID ranges.
->
-> Ok. Thanks for the explanation.
->
-> I understand the desire to make this SoC agnostic and consumer/dt
-> driven. Constructor pattern and all. Unfortunately the OF clk
-> provider is a getter pattern; not a constructor pattern. I'm
-> seriously concerned about the locking here because we're in the
-> framework creating a clk and tying it into a consumer list which
-> could cause all sorts of problems if we want to reenter the
-> framework and register more clks. Recursion abounds and my head
-> explodes! The recursive clk prepare mutex is not something anyone
-> should be thrilled about keeping around.
->
-> So, just don't do this. Instead, register the clks during probe
-> that exist for the firmware. That list could be discoverable with
-> firmware calls, or known based on different compatible strings
-> from DT that have the soc name in it, or something else. Even
-> scanning the entire DT tree for
->
-> 	clocks = <&my_clk_node x y>
-> 	
-> would be better, but probably hugely inefficient and outright
-> buggy with DT overlays so don't do it. If the firmware can't tell
-> us what clks are there, just have a table based on compatible
-> string and be done.
+--=-=-=
+Content-Type: text/plain
 
-Ok, I will add a static mapping of valid clock IDs within the driver and 
-init all of these during probe. I have a working solution for this 
-already, but will post it out only once 4.9-rc1 is out.
+Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
 
--Tero
+> Am 07.09.2016 um 16:17 schrieb Gerd Hoffmann:
+>>   Hi,
+>>
+>>> ARM: dts: Remove use of skeleton.dtsi from bcm283x.dtsi
+>>> ARM64: dts: bcm: Use a symlink to R-Pi dtsi files from arch=arm
+>> Picked them up.
+>>
+>>> In case of a multiplatform config with following settings the driver
+>>> isn't able to "detect" the role:
+>>>
+>>> CONFIG_USB=y
+>>> CONFIG_USB_OTG=y
+>>> CONFIG_USB_DWC2=y
+>>> CONFIG_USB_DWC2_DUAL_ROLE=y
+>>> CONFIG_USB_PHY=y
+>>> CONFIG_NOP_USB_XCEIV=y
+>>> CONFIG_USB_GADGET=y
+>>> CONFIG_USB_ZERO=y
+>> Configured my kernel that way so the test actually tests something ;)
+>>
+>> And ... everything looks fine.  usb ethernet works, and so does the usb
+>> keyboard.  /proc/device-tree/soc/usb@7e980000/dr_mode exists and
+>> contains "host".
+>>
+>> Tested-by: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>
+>
+> This patch hasn't been merged yet. Is there something wrong?
+
+I hadn't bumped it back to todo from RFT.  Also, is this a priority
+patch, since submitting merges is a pain?  Does USB break in some way
+without it?
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCgAGBQJX5OSmAAoJELXWKTbR/J7oIYAQALMalEKwFGI92YbtxKJSsXtZ
+mFDw6aSGp7n1/cvrj8Yitfzr/8YO2v3xhGIvIDHFVt/ENFC+0GwRelI+cz3R5FQb
+TEcGkx1W46iljua6FQqWfOZCAUbilKJflERQSZj7WqoBvI1rYFwctwRCbQ58R/zh
+hR4zUi5POULmXsYy/fD/bpcFPIovHWO8RN0+IDM+Mjw7WsoaTU7ReKTNN0EPWyQf
+M1vhyTgIIZMuw++iinoQYAPslYfDGas3JCljHn3bi+VQ+gT9aRD2EPULHH+41LLX
++Urwg6dMSG+f4+jwRdXsPM4uH6jEeIyIOCEvD62OcRt2Agdnu5M13gskwxw5EeLq
+fuURgBx3uVC3VKXAKxtQ0LChaCjuVGj9Pg825x+h04uC1+BXZ4J8EyqaqUayMqOa
+F/ZhFG3kIQJqwZN6r4pXMLyVmMNP++ep8pGOxn5B5+Oa5L6xPycovBJteIVL+oGH
+T0cY4iRmPRTGgGmOvq52yGilVo6GR8RYWRb6eKzS1ODAP/KeSBqUuNTcGr66Ovzl
+XL7rEJN0bHjScxv5O12s34nUJj0Ma6BPUvhwevmiu8CQ4JCtPiwB5EVcQD1DCbHu
+IQUcT2xrFHhvjJdTu5O1kzotUFfedAMZMjNQPxij88m4ZxTrYRD1HBMEh4m5KngO
+wLWA+RJ28Jau773Mj+W2
+=k45w
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
