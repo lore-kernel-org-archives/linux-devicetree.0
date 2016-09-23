@@ -1,45 +1,66 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 4/4] arm/arm64: arch_timer: Use archdata to indicate
- vdso suitability
-Date: Fri, 23 Sep 2016 15:41:09 +0100
-Message-ID: <57E53F05.9060806@arm.com>
-References: <1474533318-7796-1-git-send-email-oss@buserror.net>
- <1474533318-7796-4-git-send-email-oss@buserror.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH 07/11] pci: controller: designware: Add EP mode
+ support
+Date: Fri, 23 Sep 2016 09:41:41 -0500
+Message-ID: <20160923144141.GA24842@rob-hp-laptop>
+References: <1473829927-20466-1-git-send-email-kishon@ti.com>
+ <1473829927-20466-8-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474533318-7796-4-git-send-email-oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1473829927-20466-8-git-send-email-kishon@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, hch@infradead.org, Joao.Pinto@synopsys.com, mingkai.hu@nxp.com, m-karicheri2@ti.com, Pratyush Anand <pratyush.anand@gmail.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joao Pinto <jpinto@synopsys.com>, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 22/09/16 09:35, Scott Wood wrote:
-> Instead of comparing the name to a magic string, use archdata to
-> explicitly communicate whether the arch timer is suitable for
-> direct vdso access.
+On Wed, Sep 14, 2016 at 10:42:03AM +0530, Kishon Vijay Abraham I wrote:
+> Add endpoint mode support to designware driver. This uses the
+> EP Core layer introduced recently to add endpoint mode support.
+> *Any* function driver can now use this designware device
+> to achieve the EP functionality.
 > 
-> Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-> Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  arch/arm/Kconfig                     |  1 +
->  arch/arm/include/asm/clocksource.h   |  8 ++++++++
->  arch/arm/kernel/vdso.c               |  2 +-
->  arch/arm64/Kconfig                   |  1 +
->  arch/arm64/include/asm/clocksource.h |  8 ++++++++
->  arch/arm64/kernel/vdso.c             |  2 +-
->  drivers/clocksource/arm_arch_timer.c | 11 +++--------
->  7 files changed, 23 insertions(+), 10 deletions(-)
->  create mode 100644 arch/arm/include/asm/clocksource.h
->  create mode 100644 arch/arm64/include/asm/clocksource.h
+>  .../devicetree/bindings/pci/designware-pcie.txt    |   26 ++-
+>  drivers/pci/controller/Kconfig                     |    5 +
+>  drivers/pci/controller/Makefile                    |    1 +
+>  drivers/pci/controller/pcie-designware-ep.c        |  228 ++++++++++++++++++++
+>  drivers/pci/controller/pcie-designware.c           |   30 +++
+>  drivers/pci/controller/pcie-designware.h           |   45 ++++
+>  6 files changed, 324 insertions(+), 11 deletions(-)
+>  create mode 100644 drivers/pci/controller/pcie-designware-ep.c
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> index 6c5322c..bb0b789 100644
+> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> @@ -6,23 +6,27 @@ Required properties:
+>  - reg-names: Must be "config" for the PCIe configuration space.
+>      (The old way of getting the configuration address space from "ranges"
+>      is deprecated and should be avoided.)
+> -- #address-cells: set to <3>
+> -- #size-cells: set to <2>
+> -- device_type: set to "pci"
+> -- ranges: ranges for the PCI memory and I/O regions
+> -- #interrupt-cells: set to <1>
+> -- interrupt-map-mask and interrupt-map: standard PCI properties
+> -	to define the mapping of the PCIe interface to interrupt
+> +- #address-cells (only for host mode): set to <3>
+> +- #size-cells (only for host mode): set to <2>
+> +- device_type (only for host mode): set to "pci"
+> +- ranges (only for host mode): ranges for the PCI memory and I/O regions
+> +- num-ib-windows (only for EP mode): number of inbound address translation
+> +	windows
+> +- num-ob-windows (only for EP mode): number of outbound address translation
+> +	windows
+> +- #interrupt-cells (only for host mode): set to <1>
+> +- interrupt-map-mask and interrupt-map (only for host mode): standard PCI
+> +	properties to define the mapping of the PCIe interface to interrupt
 
-Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+It may be clearer to just document EP mode in a separate section even if 
+there's some duplication of properties. Other standard PCI binding 
+properties probably also don't apply.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
