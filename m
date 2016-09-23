@@ -1,37 +1,43 @@
-From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V3 01/10] Documentation: DT: qcom_hidma: update binding
- for MSI
-Date: Fri, 23 Sep 2016 13:22:39 -0400
-Message-ID: <92feb6b5-b9b9-394d-3cb6-d095df339ebc@codeaurora.org>
-References: <1473960166-30155-1-git-send-email-okaya@codeaurora.org>
- <1473960166-30155-2-git-send-email-okaya@codeaurora.org>
- <20160923153910.GA23150@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] leds: ncp5623: Add device tree binding
+ documentation
+Date: Fri, 23 Sep 2016 12:29:15 -0500
+Message-ID: <20160923172915.GA21731@rob-hp-laptop>
+References: <1474025672-5040-1-git-send-email-florian.vaussard@heig-vd.ch>
+ <1474025672-5040-2-git-send-email-florian.vaussard@heig-vd.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160923153910.GA23150@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <1474025672-5040-2-git-send-email-florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/23/2016 11:39 AM, Rob Herring wrote:
->> Required properties:
->> > -- compatible: must contain "qcom,hidma-1.0"
->> > +- compatible: must contain "qcom,hidma-1.0" for initial HW or "qcom,hidma-1.1"
->> > +for MSI capable HW.
-> Do you have an SoC part number yet? If so, please use that instead.
+On Fri, Sep 16, 2016 at 01:34:31PM +0200, Florian Vaussard wrote:
+> Add device tree binding documentation for On Semiconductor NCP5623 I2C
+> LED driver. The driver can independently control the PWM of the 3
+> channels with 32 levels of intensity.
 > 
+> The current delivered by the current source can also be controlled. To
+> do so, the led-max-microamp property is used by each LED sub-node. The
+> maximum value is then found and used as a limit to compute the final
+> intensity of the current source. If a LED happens to have a lower limit,
+> the PWM is then used to limit the current to the requested value.
+> 
+> In order to control the current source, it is also necessary to know
+> the current on the Iref pin, hence the onnn,led-iref-microamp property.
+> It is usually set using an external bias resistor, following
+> Iref = Vref/Rbias with Vref=0.6V.
+> 
+> Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/leds/leds-ncp5623.txt      | 60 ++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-ncp5623.txt
 
-Unfortunately, I have the same problem like "qcom, hidma-1.0". The SoC name is not settled
-yet and same IP gets used in multiple SoCs. Each IP reports its own version number. This is
-one of the reasons why I sticked to versioning instead of SoC name.
-
--- 
-Sinan Kaya
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
