@@ -1,44 +1,38 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v3 2/2] drm/panel: Add support for Chunghwa
- CLAA070WP03XG panel
-Date: Fri, 23 Sep 2016 13:00:42 -0500
-Message-ID: <20160923180042.GA7132@rob-hp-laptop>
-References: <1474311771-23321-1-git-send-email-ayaka@soulik.info>
- <1474311771-23321-3-git-send-email-ayaka@soulik.info>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] i2c: aspeed: added documentation for Aspeed I2C
+ driver
+Date: Fri, 23 Sep 2016 13:02:19 -0500
+Message-ID: <20160923180219.GA9401@rob-hp-laptop>
+References: <CAFd5g47W-dGVt6hA+FSpqxCqvd5ZpQP=FCCpYGErahF0iKqTEQ@mail.gmail.com>
+ <1474327414-651-1-git-send-email-brendanhiggins@google.com>
+ <1474327414-651-2-git-send-email-brendanhiggins@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1474311771-23321-3-git-send-email-ayaka@soulik.info>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Randy Li <ayaka@soulik.info>
-Cc: dri-devel@lists.freedesktop.org, linux@armlinux.org.uk, kgene@kernel.org, krzk@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, airlied@linux.ie, a.hajda@samsung.com, devicetree@vger.kernel.org
+In-Reply-To: <1474327414-651-2-git-send-email-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 20, 2016 at 03:02:51AM +0800, Randy Li wrote:
-> The Chunghwa CLAA070WP03XG is a 7" 1280x800 panel, which can be
-> supported by the simple panel driver.
+On Mon, Sep 19, 2016 at 04:23:34PM -0700, Brendan Higgins wrote:
+> Added device tree binding documentation for Aspeed I2C controller and
+> busses.
 > 
-> Signed-off-by: Randy Li <ayaka@soulik.info>
+> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 > ---
->  .../display/panel/chunghwa,claa070wp03xg.txt       |  7 ++++++
->  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
->  2 files changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/chunghwa,claa070wp03xg.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/chunghwa,claa070wp03xg.txt b/Documentation/devicetree/bindings/display/panel/chunghwa,claa070wp03xg.txt
-> new file mode 100644
-> index 0000000..dd22685
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/chunghwa,claa070wp03xg.txt
-> @@ -0,0 +1,7 @@
-> +Chunghwa Picture Tubes Ltd. 7" WXGA TFT LCD panel
-> +
-> +Required properties:
-> +- compatible: should be "chunghwa,claa070wp03xg"
+> Changes for v2:
+>   - None
+> Changes for v3:
+>   - Removed reference to "bus" device tree param
+> ---
+>  .../devicetree/bindings/i2c/i2c-aspeed.txt         | 61 ++++++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
 
-What about VCC, VLED, LED_EN (PWM), LVBIT, LVFMT, DITHER signals?
-
-> +
-> +This binding is compatible with the simple-panel binding, which is specified
-> +in simple-panel.txt in this directory.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
