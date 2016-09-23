@@ -1,23 +1,23 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: <sean.wang@mediatek.com>
 Subject: [PATCH net-next] Documentation: devicetree: fix typo in MediaTek ethernet device-tree binding
-Date: Fri, 23 Sep 2016 14:08:29 +0800
-Message-ID: <1474610909-14932-1-git-send-email-sean.wang@mediatek.com>
+Date: Fri, 23 Sep 2016 14:09:32 +0800
+Message-ID: <1474610972-14974-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, sergei.shtylyov@cogentembedded.com
+Cc: nbd@openwrt.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, john@phrozen.org, keyhaede@gmail.com, objelf@gmail.com, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
 
 fix typo in
 Documentation/devicetree/bindings/net/mediatek-net.txt
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Reported-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: devicetree@vger.kernel.org
+Reported-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
  Documentation/devicetree/bindings/net/mediatek-net.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
@@ -37,8 +37,3 @@ index 7111278..f095257 100644
  
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
