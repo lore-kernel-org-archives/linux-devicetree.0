@@ -1,79 +1,32 @@
-From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] arm: dts: zynq: Add MicroZed board support
-Date: Fri, 23 Sep 2016 13:09:12 +0530
-Message-ID: <CAD6G_RR6JSzd-QCUj3wDC30pXabNqaNR1d1jQm9bUq6z0CP=3g@mail.gmail.com>
-References: <1474550489-7005-1-git-send-email-jagan@amarulasolutions.com>
- <20160922205917.GS16583@xsjsorenbubuntu> <4a586da6-8d94-bfbe-ea0c-58b6f8573e7b@xilinx.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/2] Add R8A7792 MSIOF support
+Date: Fri, 23 Sep 2016 09:39:52 +0200
+Message-ID: <20160923073952.GC20129@verge.net.au>
+References: <2481458.x1iQg26kO7@wasted.cogentembedded.com>
+ <19842984-5776-0740-7552-f63ce30d4bdd@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4a586da6-8d94-bfbe-ea0c-58b6f8573e7b-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <19842984-5776-0740-7552-f63ce30d4bdd@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 23, 2016 at 11:33 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wr=
-ote:
-> On 22.9.2016 22:59, S=C3=B6ren Brinkmann wrote:
->> On Thu, 2016-09-22 at 18:51:29 +0530, Jagan Teki wrote:
->>> From: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
->>>
->>> Added basic dts support for MicroZed board.
->>>
->>> - UART
->>> - SDHCI
->>> - Ethernet
->>>
->>> Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>> Signed-off-by: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
->>> ---
->>> Changes for v2:
->>>      - Add SDHCI
->>>      - Add Ethernet
->>>
->>>  arch/arm/boot/dts/Makefile          |  1 +
->>>  arch/arm/boot/dts/zynq-microzed.dts | 95 +++++++++++++++++++++++++++++=
-++++++++
->>>  2 files changed, 96 insertions(+)
->>>  create mode 100644 arch/arm/boot/dts/zynq-microzed.dts
->>>
->>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->>> index faacd52..4d7b858 100644
->>> --- a/arch/arm/boot/dts/Makefile
->>> +++ b/arch/arm/boot/dts/Makefile
->>> @@ -862,6 +862,7 @@ dtb-$(CONFIG_ARCH_VT8500) +=3D \
->>>      wm8750-apc8750.dtb \
->>>      wm8850-w70v2.dtb
->>>  dtb-$(CONFIG_ARCH_ZYNQ) +=3D \
->>> +    zynq-microzed.dtb \
->>>      zynq-parallella.dtb \
->>>      zynq-zc702.dtb \
->>>      zynq-zc706.dtb \
->>> diff --git a/arch/arm/boot/dts/zynq-microzed.dts b/arch/arm/boot/dts/zy=
-nq-microzed.dts
->>> new file mode 100644
->>> index 0000000..9e64496
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/zynq-microzed.dts
->>> @@ -0,0 +1,95 @@
->>> +/*
->>> + * Copyright (C) 2015 Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
->
->
-> Did you created only yourself without copying part of this from others?
-> There is dts in u-boot which I believe you are aware of.
+On Fri, Sep 23, 2016 at 12:18:52AM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 09/05/2016 11:54 PM, Sergei Shtylyov wrote:
+> 
+> >   Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+> >'renesas-devel-20160905-v4.8-rc5' tag. We're adding the R8A7792 MSIOF clocks
+> >and device nodes. I'm not posting the board patches because the MSIOF driver
+> >seems erratic ATM...
+> >
+> >[1/2] ARM: dts: r8a7792: add MSIOF clock
+> >[2/2] ARM: dts: r8a7792: add MSIOF support
+> 
+>    These seem stuck for no apparent reason. Simon?
 
-I sent the initial one few months back so at that time, I was created
-and now I just added USB and Ethernet with the reference of zc702
-board.
-
-thanks!
---=20
-Jagan.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, I have queued these up.
