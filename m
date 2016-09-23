@@ -1,82 +1,49 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v18 6/6] ARM: socfpga: fpga bridge driver support
-Date: Fri, 23 Sep 2016 16:13:19 +0200
-Message-ID: <73ponug19k.fsf@unicorn.hi.pengutronix.de>
-References: <20160712193645.9098-1-atull@opensource.altera.com> <20160712193645.9098-7-atull@opensource.altera.com>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 2/3] ARM: dts: r7s72100: add sdhi to device tree
+Date: Fri, 23 Sep 2016 14:20:04 +0000
+Message-ID: <SG2PR06MB1165C71A8C201614AC2463168AC80@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20160922213211.7988-1-chris.brandt@renesas.com>
+ <20160922213211.7988-3-chris.brandt@renesas.com>
+ <CAMuHMdU8PKGwJ+5JzMix_GHohdYdXPEXwDm4HwmQfSxDY4h95w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20160712193645.9098-7-atull@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@opensource.altera.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Matthew Gerlach <mgerlach@altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, delicious.quinoa@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdU8PKGwJ+5JzMix_GHohdYdXPEXwDm4HwmQfSxDY4h95w@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-Hi!
-
-Alan Tull writes:
-
-> Supports Altera SOCFPGA bridges:
->  * fpga2sdram
->  * fpga2hps
->  * hps2fpga
->  * lwhps2fpga
->
-> Allows enabling/disabling the bridges through the FPGA
-> Bridge Framework API functions.
->
-> The fpga2sdram driver only supports enabling and disabling
-> of the ports that been configured early on.  This is due to
-> a hardware limitation where the read, write, and command
-> ports on the fpga2sdram bridge can only be reconfigured
-> while there are no transactions to the sdram, i.e. when
-> running out of OCRAM before the kernel boots.
->
-> Device tree property 'init-val' configures the driver to
-> enable or disable the bridge during probe.  If the property
-> does not exist, the driver will leave the bridge in its
-> current state.
->
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> Signed-off-by: Matthew Gerlach <mgerlach@altera.com>
-> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
-
-(...)
-
-> +static inline int _alt_fpga2sdram_enable_set(struct alt_fpga2sdram_data *priv,
-> +					     bool enable)
-> +{
-> +	return regmap_update_bits(priv->sdrctl, ALT_SDR_CTL_FPGAPORTRST_OFST,
-> +				  priv->mask, enable ? priv->mask : 0);
-> +}
-
-(...)
-
-> +	/* Get f2s bridge configuration saved in handoff register */
-> +	regmap_read(sysmgr, SYSMGR_ISWGRP_HANDOFF3, &priv->mask);
-> +
-
-Could you maybe add some documentation about this implicit information
-shared between a bootloader and this driver?
-I understand why you do this, but there must be a better way than
-depending on something some bootloader wrote in some undocumented
-register, no?
-The documentation just says:
-
-"These registers are used to store handoff infomation between the
-preloader and the OS. These 8 registers can be used to store any
-information. The contents of these registers have no impact on the
-state of the HPS hardware"
-
-If it is already agreed upon, that a bridge-enable property is okay,
-why not add a port-enable property, too?
-
-Regards,
-Steffen Trumtrar
-
--- 
-Pengutronix e.K.                           | Steffen Trumtrar            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+SGkgR2VlcnQsDQoNCj4gKGR1ZSB0byBsYWNrIG9mIGRvY3VtZW50YXRpb24gYWJvdXQgU0RISSwg
+Zm9yIHRoZSBpbnRlcnJ1cHQgbnVtYmVycyBvbmx5KQ0KPiANCj4gPiAtLS0gYS9hcmNoL2FybS9i
+b290L2R0cy9yN3M3MjEwMC5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcjdzNzIx
+MDAuZHRzaQ0KPiA+IEBAIC00NTgsNCArNDU4LDMyIEBADQo+ID4gICAgICAgICAgICAgICAgICNz
+aXplLWNlbGxzID0gPDA+Ow0KPiA+ICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQi
+Ow0KPiA+ICAgICAgICAgfTsNCj4gPiArDQo+ID4gKyAgICAgICBzZGhpMDogc2RAZTgwNGUwMDAg
+ew0KPiA+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJlbmVzYXMsc2RoaS1yN3M3MjEw
+MCI7DQo+ID4gKyAgICAgICAgICAgICAgIHJlZyA9IDwweGU4MDRlMDAwIDB4MTAwPjsNCj4gPiAr
+ICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDI3MCBJUlFfVFlQRV9MRVZFTF9I
+SUdIDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgR0lDX1NQSSAyNzEgSVJRX1RZ
+UEVfTEVWRUxfSElHSA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEdJQ19TUEkg
+MjcyIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsNCj4gDQo+IENhbm5vdCBjaGNjayB0aGUg
+cmVxdWlyZWQgb3JkZXIsIGJ1dCB0aGUgaW50ZXJydXB0cyBhcmUgY2FsbGVkIFNESEkwXzMsDQo+
+IFNESEkwXzAsIGFuZCBTREhJMF8xIGluIHRoZSBkYXRhc2hlZXQuDQoNCg0KRnJvbSB0aGUgaGFy
+ZHdhcmUgbWFudWFsLCAiVGFibGUgNy4zIExpc3Qgb2YgSW50ZXJydXB0IElEcyI6DQoNClNEIGhv
+c3QgSW50ZXJmYWNlLCBDaGFubmVsIDA6DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
+ICBTREhJMF8zID0gSUQgMzAyICAgKDMwMiAtIDMyID0gMjcwKQ0KICBTREhJMF8wID0gSUQgMzAz
+ICAgKDMwMyAtIDMyID0gMjcxKQ0KICBTREhJMF8xID0gSUQgMzA0ICAgKDMwNCAtIDMyID0gMjcy
+KQ0KDQoNCiNOT1RFOiBUaGUgbmV3IDMuMCB2ZXJzaW9uIG9mIHRoZSBoYXJkd2FyZSBtYW51YWwg
+dGhhdCB3aWxsIGJlIGNvbWluZyBvdXQgd2lsbCBub3cgaGF2ZSB0aGUgU0RISSBjaGFwdGVyIGlu
+Y2x1ZGVkLg0KDQpTbywgaW4gcmVmZXJlbmNlIHRvIHRoYXQgMy4wIG1hbnVhbDoNCg0KICI1MC4z
+LjMgSW50ZXJydXB0IFJlcXVlc3QgYW5kIERNQSBUcmFuc2ZlciBSZXF1ZXN0Ig0KICJUYWJsZSA1
+MC40IEludGVycnVwdCBSZXF1ZXN0Ig0KIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQog
+IENhcmQgZGV0ZWN0IGludGVycnVwdCA9IFNESEkzDQogIENhcmQgYWNjZXNzIGludGVycnVwdCA9
+IFNESEkwDQogIFNESU8gYWNjZXNzIGludGVycnVwdCA9IFNESEkxDQoNCg0KUmVnYXJkbGVzcywg
+aW4gc2hfbW9iaWxlX3NkaGkuYywgdGhleSBhbGwgZ2V0IG1hcHBlZCB0byB0aGUgc2FtZSBJU1Ig
+ZnVuY3Rpb24gYW55d2F5Og0KDQoJaSA9IDA7DQoJd2hpbGUgKDEpIHsNCgkJaXJxID0gcGxhdGZv
+cm1fZ2V0X2lycShwZGV2LCBpKTsNCgkJaWYgKGlycSA8IDApDQoJCQlicmVhazsNCgkJaSsrOw0K
+CQlyZXQgPSBkZXZtX3JlcXVlc3RfaXJxKCZwZGV2LT5kZXYsIGlycSwgdG1pb19tbWNfaXJxLCAw
+LA0KCQkJCSAgZGV2X25hbWUoJnBkZXYtPmRldiksIGhvc3QpOw0KCQlpZiAocmV0KQ0KCQkJZ290
+byBlaXJxOw0KCX0NCg0KDQpDaHJpcw0KDQo=
