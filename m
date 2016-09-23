@@ -1,64 +1,128 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 2/4] arm64: dts: Add timer erratum property for LS2080A
- and LS1043A
-Date: Fri, 23 Sep 2016 15:44:11 +0100
-Message-ID: <57E53FBB.9090208@arm.com>
-References: <1474533318-7796-1-git-send-email-oss@buserror.net>
- <1474533318-7796-2-git-send-email-oss@buserror.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH 08/11] pci: controller: dra7xx: Add EP mode support
+Date: Fri, 23 Sep 2016 09:52:59 -0500
+Message-ID: <20160923145259.GA28285@rob-hp-laptop>
+References: <1473829927-20466-1-git-send-email-kishon@ti.com>
+ <1473829927-20466-9-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474533318-7796-2-git-send-email-oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1473829927-20466-9-git-send-email-kishon@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, hch@infradead.org, Joao.Pinto@synopsys.com, mingkai.hu@nxp.com, m-karicheri2@ti.com, Pratyush Anand <pratyush.anand@gmail.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joao Pinto <jpinto@synopsys.com>, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-With a commit message along the lines of:
-
-Both the LS1043A and LS2080A platforms are affected by the Freescale
-A008585 erratum. Advertise it in their respective device trees.
-
-On 22/09/16 09:35, Scott Wood wrote:
-> Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+On Wed, Sep 14, 2016 at 10:42:04AM +0530, Kishon Vijay Abraham I wrote:
+> The PCIe controller integrated in dra7xx SoCs is capable of operating
+> in endpoint mode. Add support for dra7xx SoCs to operate in endpoint
+> mode.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 +
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 1 +
->  2 files changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/pci/ti-pci.txt |   30 ++-
+>  drivers/pci/controller/Kconfig                   |   21 +++
+>  drivers/pci/controller/pci-dra7xx.c              |  211 +++++++++++++++++++---
+>  3 files changed, 225 insertions(+), 37 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> index e669fbd..952531d 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> @@ -123,6 +123,7 @@
->  			     <1 14 0x1>, /* Physical Non-Secure PPI */
->  			     <1 11 0x1>, /* Virtual PPI */
->  			     <1 10 0x1>; /* Hypervisor PPI */
-> +		fsl,erratum-a008585;
->  	};
+> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
+> index 60e2516..b0e76f6 100644
+> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
+> @@ -1,17 +1,22 @@
+>  TI PCI Controllers
 >  
->  	pmu {
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> index 21023a3..9d3ac19 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> @@ -195,6 +195,7 @@
->  			     <1 14 0x8>, /* Physical Non-Secure PPI, active-low */
->  			     <1 11 0x8>, /* Virtual PPI, active-low */
->  			     <1 10 0x8>; /* Hypervisor PPI, active-low */
-> +		fsl,erratum-a008585;
->  	};
+>  PCIe Designware Controller
+> - - compatible: Should be "ti,dra7-pcie""
+> - - reg : Two register ranges as listed in the reg-names property
+> - - reg-names : The first entry must be "ti-conf" for the TI specific registers
+> -	       The second entry must be "rc-dbics" for the designware pcie
+> -	       registers
+> -	       The third entry must be "config" for the PCIe configuration space
+> + - compatible: Should be "ti,dra7-pcie" for RC
+> +	       Should be "ti,dra7-pcie-ep" for EP
+>   - phys : list of PHY specifiers (used by generic PHY framework)
+>   - phy-names : must be "pcie-phy0", "pcie-phy1", "pcie-phyN".. based on the
+>  	       number of PHYs as specified in *phys* property.
+>   - ti,hwmods : Name of the hwmod associated to the pcie, "pcie<X>",
+>  	       where <X> is the instance number of the pcie from the HW spec.
+> + - num-lanes as specified in ../designware-pcie.txt
+> +
+> +HOST MODE
+> +=========
+> + - reg : Two register ranges as listed in the reg-names property
+> + - reg-names : The first entry must be "ti-conf" for the TI specific registers
+> +	       The second entry must be "rc-dbics" for the designware pcie
+> +	       registers
+> +	       The third entry must be "config" for the PCIe configuration space
+>   - interrupts : Two interrupt entries must be specified. The first one is for
+>  		main interrupt line and the second for MSI interrupt line.
+>   - #address-cells,
+> @@ -19,13 +24,24 @@ PCIe Designware Controller
+>     #interrupt-cells,
+>     device_type,
+>     ranges,
+> -   num-lanes,
+>     interrupt-map-mask,
+>     interrupt-map : as specified in ../designware-pcie.txt
 >  
->  	pmu {
-> 
+>  Optional Property:
+>   - gpios : Should be added if a gpio line is required to drive PERST# line
 
-Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Don't you need gpios as the input side of GPIO outputs in RC mode? Or 
+for EP mode they are all handled by h/w?
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  
+> +DEVICE MODE
+> +===========
+> + - reg : Two register ranges as listed in the reg-names property
+> + - reg-names : "ti-conf" for the TI specific registers
+> +	       "ep_dbics" for the standard configuration registers as
+> +		they are locally accessed within the DIF CS space
+> +	       "ep_dbics2" for the standard configuration registers as
+> +		they are locally accessed within the DIF CS2 space
+> + - interrupts : one interrupt entries must be specified for main interrupt.
+> + - num-ib-windows : number of inbound address translation windows
+> + - num-ob-windows : number of outbound address translation windows
+> +
+>  Example:
+>  axi {
+>  	compatible = "simple-bus";
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index 8574828..4d70981 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -23,6 +23,27 @@ config PCI_DRA7XX_HOST
+>  	 Enables support for the PCIe controller in the DRA7xx SoC to work in
+>  	 host mode.
+>  
+> +config PCI_DRA7XX_EP
+> +	bool "Endpoint Only Mode"
+> +	depends on PCI_ENDPOINT
+> +	select PCIE_DW_EP
+> +	help
+> +	 Enables support for the PCIe controller in the DRA7xx SoC to work in
+> +	 endpoint mode.
+> +
+> +config PCI_DRA7XX_HOST_EP
+
+I'd make these 2 options just RC and EP depending on PCI_DRA7XX_HOST 
+with RC option being default yes.
+
+
+> +	bool "Both Host and Endpoint Mode"
+> +	depends on PCI_MSI_IRQ_DOMAIN
+> +	depends on PCI
+> +	depends on PCI_ENDPOINT
+> +	select PCIE_DW_HOST
+> +	select PCIE_DW_EP
+> +	help
+> +	 Enables support for the PCIe controller in the DRA7xx SoC to work in
+> +	 both endpoint mode and host mode. If the board has 2 PCIe ports and
+> +	 one of them has to work in host mode and the other has to work in
+> +	 EP mode then this option has to be enabled.
+> +
+>  endchoice
+>  
+>  endif
