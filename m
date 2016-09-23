@@ -1,49 +1,91 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 2/3] ARM: dts: r7s72100: add sdhi to device tree
-Date: Fri, 23 Sep 2016 14:20:04 +0000
-Message-ID: <SG2PR06MB1165C71A8C201614AC2463168AC80@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20160922213211.7988-1-chris.brandt@renesas.com>
- <20160922213211.7988-3-chris.brandt@renesas.com>
- <CAMuHMdU8PKGwJ+5JzMix_GHohdYdXPEXwDm4HwmQfSxDY4h95w@mail.gmail.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v6 4/4] arm/arm64: arch_timer: Use archdata to indicate
+ vdso suitability
+Date: Fri, 23 Sep 2016 15:32:03 +0100
+Message-ID: <20160923143203.GZ1041@n2100.armlinux.org.uk>
+References: <1474533318-7796-1-git-send-email-oss@buserror.net>
+ <1474533318-7796-4-git-send-email-oss@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdU8PKGwJ+5JzMix_GHohdYdXPEXwDm4HwmQfSxDY4h95w@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1474533318-7796-4-git-send-email-oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCj4gKGR1ZSB0byBsYWNrIG9mIGRvY3VtZW50YXRpb24gYWJvdXQgU0RISSwg
-Zm9yIHRoZSBpbnRlcnJ1cHQgbnVtYmVycyBvbmx5KQ0KPiANCj4gPiAtLS0gYS9hcmNoL2FybS9i
-b290L2R0cy9yN3M3MjEwMC5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcjdzNzIx
-MDAuZHRzaQ0KPiA+IEBAIC00NTgsNCArNDU4LDMyIEBADQo+ID4gICAgICAgICAgICAgICAgICNz
-aXplLWNlbGxzID0gPDA+Ow0KPiA+ICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQi
-Ow0KPiA+ICAgICAgICAgfTsNCj4gPiArDQo+ID4gKyAgICAgICBzZGhpMDogc2RAZTgwNGUwMDAg
-ew0KPiA+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJlbmVzYXMsc2RoaS1yN3M3MjEw
-MCI7DQo+ID4gKyAgICAgICAgICAgICAgIHJlZyA9IDwweGU4MDRlMDAwIDB4MTAwPjsNCj4gPiAr
-ICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDI3MCBJUlFfVFlQRV9MRVZFTF9I
-SUdIDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgR0lDX1NQSSAyNzEgSVJRX1RZ
-UEVfTEVWRUxfSElHSA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEdJQ19TUEkg
-MjcyIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsNCj4gDQo+IENhbm5vdCBjaGNjayB0aGUg
-cmVxdWlyZWQgb3JkZXIsIGJ1dCB0aGUgaW50ZXJydXB0cyBhcmUgY2FsbGVkIFNESEkwXzMsDQo+
-IFNESEkwXzAsIGFuZCBTREhJMF8xIGluIHRoZSBkYXRhc2hlZXQuDQoNCg0KRnJvbSB0aGUgaGFy
-ZHdhcmUgbWFudWFsLCAiVGFibGUgNy4zIExpc3Qgb2YgSW50ZXJydXB0IElEcyI6DQoNClNEIGhv
-c3QgSW50ZXJmYWNlLCBDaGFubmVsIDA6DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
-ICBTREhJMF8zID0gSUQgMzAyICAgKDMwMiAtIDMyID0gMjcwKQ0KICBTREhJMF8wID0gSUQgMzAz
-ICAgKDMwMyAtIDMyID0gMjcxKQ0KICBTREhJMF8xID0gSUQgMzA0ICAgKDMwNCAtIDMyID0gMjcy
-KQ0KDQoNCiNOT1RFOiBUaGUgbmV3IDMuMCB2ZXJzaW9uIG9mIHRoZSBoYXJkd2FyZSBtYW51YWwg
-dGhhdCB3aWxsIGJlIGNvbWluZyBvdXQgd2lsbCBub3cgaGF2ZSB0aGUgU0RISSBjaGFwdGVyIGlu
-Y2x1ZGVkLg0KDQpTbywgaW4gcmVmZXJlbmNlIHRvIHRoYXQgMy4wIG1hbnVhbDoNCg0KICI1MC4z
-LjMgSW50ZXJydXB0IFJlcXVlc3QgYW5kIERNQSBUcmFuc2ZlciBSZXF1ZXN0Ig0KICJUYWJsZSA1
-MC40IEludGVycnVwdCBSZXF1ZXN0Ig0KIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQog
-IENhcmQgZGV0ZWN0IGludGVycnVwdCA9IFNESEkzDQogIENhcmQgYWNjZXNzIGludGVycnVwdCA9
-IFNESEkwDQogIFNESU8gYWNjZXNzIGludGVycnVwdCA9IFNESEkxDQoNCg0KUmVnYXJkbGVzcywg
-aW4gc2hfbW9iaWxlX3NkaGkuYywgdGhleSBhbGwgZ2V0IG1hcHBlZCB0byB0aGUgc2FtZSBJU1Ig
-ZnVuY3Rpb24gYW55d2F5Og0KDQoJaSA9IDA7DQoJd2hpbGUgKDEpIHsNCgkJaXJxID0gcGxhdGZv
-cm1fZ2V0X2lycShwZGV2LCBpKTsNCgkJaWYgKGlycSA8IDApDQoJCQlicmVhazsNCgkJaSsrOw0K
-CQlyZXQgPSBkZXZtX3JlcXVlc3RfaXJxKCZwZGV2LT5kZXYsIGlycSwgdG1pb19tbWNfaXJxLCAw
-LA0KCQkJCSAgZGV2X25hbWUoJnBkZXYtPmRldiksIGhvc3QpOw0KCQlpZiAocmV0KQ0KCQkJZ290
-byBlaXJxOw0KCX0NCg0KDQpDaHJpcw0KDQo=
+It helps to add the appropriate people to your email if you want to get
+a change into the kernel.  Will has had to point this message out to me.
+
+On Thu, Sep 22, 2016 at 03:35:18AM -0500, Scott Wood wrote:
+> Instead of comparing the name to a magic string, use archdata to
+> explicitly communicate whether the arch timer is suitable for
+> direct vdso access.
+> 
+> Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+> Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm/Kconfig                     |  1 +
+>  arch/arm/include/asm/clocksource.h   |  8 ++++++++
+>  arch/arm/kernel/vdso.c               |  2 +-
+>  arch/arm64/Kconfig                   |  1 +
+>  arch/arm64/include/asm/clocksource.h |  8 ++++++++
+>  arch/arm64/kernel/vdso.c             |  2 +-
+>  drivers/clocksource/arm_arch_timer.c | 11 +++--------
+>  7 files changed, 23 insertions(+), 10 deletions(-)
+>  create mode 100644 arch/arm/include/asm/clocksource.h
+>  create mode 100644 arch/arm64/include/asm/clocksource.h
+> 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index a9c4e48..b2113c2 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -1,6 +1,7 @@
+>  config ARM
+>  	bool
+>  	default y
+> +	select ARCH_CLOCKSOURCE_DATA
+>  	select ARCH_HAS_ATOMIC64_DEC_IF_POSITIVE
+>  	select ARCH_HAS_DEVMEM_IS_ALLOWED
+>  	select ARCH_HAS_ELF_RANDOMIZE
+> diff --git a/arch/arm/include/asm/clocksource.h b/arch/arm/include/asm/clocksource.h
+> new file mode 100644
+> index 0000000..0b350a7
+> --- /dev/null
+> +++ b/arch/arm/include/asm/clocksource.h
+> @@ -0,0 +1,8 @@
+> +#ifndef _ASM_CLOCKSOURCE_H
+> +#define _ASM_CLOCKSOURCE_H
+> +
+> +struct arch_clocksource_data {
+> +	bool vdso_direct;	/* Usable for direct VDSO access? */
+> +};
+> +
+> +#endif
+> diff --git a/arch/arm/kernel/vdso.c b/arch/arm/kernel/vdso.c
+> index 994e971..a0affd1 100644
+> --- a/arch/arm/kernel/vdso.c
+> +++ b/arch/arm/kernel/vdso.c
+> @@ -270,7 +270,7 @@ static bool tk_is_cntvct(const struct timekeeper *tk)
+>  	if (!IS_ENABLED(CONFIG_ARM_ARCH_TIMER))
+>  		return false;
+>  
+> -	if (strcmp(tk->tkr_mono.clock->name, "arch_sys_counter") != 0)
+> +	if (!tk->tkr_mono.clock->archdata.vdso_direct)
+>  		return false;
+>  
+>  	return true;
+
+For the ARM bits: 
+
+Acked-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
