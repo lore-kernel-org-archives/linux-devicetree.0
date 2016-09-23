@@ -1,43 +1,60 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: drm/bridge: adv7511: Add regulator
- bindings
-Date: Fri, 23 Sep 2016 17:31:53 -0500
-Message-ID: <20160923223153.GA420@rob-hp-laptop>
-References: <1472640730-24326-1-git-send-email-architt@codeaurora.org>
- <1474622430-6704-1-git-send-email-architt@codeaurora.org>
- <1474622430-6704-2-git-send-email-architt@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4] devicetree: bindings: uart: Add new compatible string
+ for ZynqMP
+Date: Fri, 23 Sep 2016 17:37:48 -0500
+Message-ID: <20160923223747.GA1163@rob-hp-laptop>
+References: <1474629948-9780-1-git-send-email-navam@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1474622430-6704-2-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: andy.gross@linaro.org, laurent.pinchart@ideasonboard.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1474629948-9780-1-git-send-email-navam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nava kishore Manne <nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Nava kishore Manne <navam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 23, 2016 at 02:50:27PM +0530, Archit Taneja wrote:
-> Add the regulator supply properties needed by ADV7511 and ADV7533. The
-> regulator names are named after the pin names, except for DVDD_3V on
-> ADV7511, which is left v3p3 to have the same name as it's on ADV7533.
+On Fri, Sep 23, 2016 at 04:55:48PM +0530, Nava kishore Manne wrote:
+> From: Nava kishore Manne <nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > 
-> ADV7511 has a BGVDD pin for which the voltage to be configured isn't
-> clear. This needs to be updated in the document later.
+> This patch Adds the new compatible string for ZynqMP.
 > 
-> The regulators are specified as optional properties since there can
-> be boards which have a fixed supply directly routed to the pins, and
-> these may not be modelled as regulator supplies.
-> 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+> Signed-off-by: Nava kishore Manne <navam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > ---
-> v2:
-> - Specify regulator supplies for ADV7511 too.
-> - Have separate supply entries for AVDD, DVDD, PVDD, A2VDD pins.
-> - Add additional BGVDD supply for ADV7511.
+> Changes for v4:
+> 		-Modified the ChangeLog comment.
+> Changes for v3:
+> 		-Added changeLog comment.
+> Changes for v2:
+>                 -None
 > 
->  .../devicetree/bindings/display/bridge/adi,adv7511.txt     | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  Documentation/devicetree/bindings/serial/cdns,uart.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/cdns,uart.txt b/Documentation/devicetree/bindings/serial/cdns,uart.txt
+> index a3eb154..4fe7aae 100644
+> --- a/Documentation/devicetree/bindings/serial/cdns,uart.txt
+> +++ b/Documentation/devicetree/bindings/serial/cdns,uart.txt
+> @@ -1,7 +1,8 @@
+>  Binding for Cadence UART Controller
+>  
+>  Required properties:
+> -- compatible : should be "cdns,uart-r1p8", or "xlnx,xuartps"
+> +- compatible : should be "cdns,uart-r1p8", or "xlnx,xuartps" for Zynq and
+> +               "cdns,uart-r1p12" for Zynq Ultrascale+ MPSoC uart controller.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Please format this as one valid combination per line.
+
+xuartps is not very specific. It needs some abbreviation of "Zynq 
+Ultrascale+ MPSoC" in it.
+
+>  - reg: Should contain UART controller registers location and length.
+>  - interrupts: Should contain UART controller interrupts.
+>  - clocks: Must contain phandles to the UART clocks
+> -- 
+> 2.1.2
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
