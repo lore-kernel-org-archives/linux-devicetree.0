@@ -1,91 +1,55 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2] arm: dts: zynq: Add MicroZed board support
-Date: Fri, 23 Sep 2016 10:54:25 +0200
-Message-ID: <c0cd61f3-28c2-f8c7-f5b6-faf197f39986@xilinx.com>
-References: <1474550489-7005-1-git-send-email-jagan@amarulasolutions.com>
- <20160922205917.GS16583@xsjsorenbubuntu>
- <4a586da6-8d94-bfbe-ea0c-58b6f8573e7b@xilinx.com>
- <CAD6G_RR6JSzd-QCUj3wDC30pXabNqaNR1d1jQm9bUq6z0CP=3g@mail.gmail.com>
- <aa469a8b-7968-1934-1b8e-6978fd0e6922@xilinx.com>
- <CAD6G_RRn0pAF=TsgONQ4yah2VhZXQeBQmeBQ5p46u6R5F8pSqw@mail.gmail.com>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v3 0/4] regulator: axp20x: support AXP803/AXP813 variants
+Date: Fri, 23 Sep 2016 10:58:27 +0200
+Message-ID: <cover.1474621107.git.moinejf@free.fr>
+Reply-To: moinejf-GANU6spQydw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD6G_RRn0pAF=TsgONQ4yah2VhZXQeBQmeBQ5p46u6R5F8pSqw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagannadh.teki@gmail.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBBO7DSO7QKGQERT2XWKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23.9.2016 10:42, Jagan Teki wrote:
-> On Fri, Sep 23, 2016 at 2:07 PM, Michal Simek <michal.simek@xilinx.com> wrote:
->> On 23.9.2016 09:39, Jagan Teki wrote:
->>> On Fri, Sep 23, 2016 at 11:33 AM, Michal Simek <michal.simek@xilinx.com> wrote:
->>>> On 22.9.2016 22:59, Sören Brinkmann wrote:
->>>>> On Thu, 2016-09-22 at 18:51:29 +0530, Jagan Teki wrote:
->>>>>> From: Jagan Teki <jteki@openedev.com>
->>>>>>
->>>>>> Added basic dts support for MicroZed board.
->>>>>>
->>>>>> - UART
->>>>>> - SDHCI
->>>>>> - Ethernet
->>>>>>
->>>>>> Cc: Soren Brinkmann <soren.brinkmann@xilinx.com>
->>>>>> Cc: Michal Simek <michal.simek@xilinx.com>
->>>>>> Signed-off-by: Jagan Teki <jteki@openedev.com>
->>>>>> ---
->>>>>> Changes for v2:
->>>>>>      - Add SDHCI
->>>>>>      - Add Ethernet
->>>>>>
->>>>>>  arch/arm/boot/dts/Makefile          |  1 +
->>>>>>  arch/arm/boot/dts/zynq-microzed.dts | 95 +++++++++++++++++++++++++++++++++++++
->>>>>>  2 files changed, 96 insertions(+)
->>>>>>  create mode 100644 arch/arm/boot/dts/zynq-microzed.dts
->>>>>>
->>>>>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->>>>>> index faacd52..4d7b858 100644
->>>>>> --- a/arch/arm/boot/dts/Makefile
->>>>>> +++ b/arch/arm/boot/dts/Makefile
->>>>>> @@ -862,6 +862,7 @@ dtb-$(CONFIG_ARCH_VT8500) += \
->>>>>>      wm8750-apc8750.dtb \
->>>>>>      wm8850-w70v2.dtb
->>>>>>  dtb-$(CONFIG_ARCH_ZYNQ) += \
->>>>>> +    zynq-microzed.dtb \
->>>>>>      zynq-parallella.dtb \
->>>>>>      zynq-zc702.dtb \
->>>>>>      zynq-zc706.dtb \
->>>>>> diff --git a/arch/arm/boot/dts/zynq-microzed.dts b/arch/arm/boot/dts/zynq-microzed.dts
->>>>>> new file mode 100644
->>>>>> index 0000000..9e64496
->>>>>> --- /dev/null
->>>>>> +++ b/arch/arm/boot/dts/zynq-microzed.dts
->>>>>> @@ -0,0 +1,95 @@
->>>>>> +/*
->>>>>> + * Copyright (C) 2015 Jagan Teki <jteki@openedev.com>
->>>>
->>>>
->>>> Did you created only yourself without copying part of this from others?
->>>> There is dts in u-boot which I believe you are aware of.
->>>
->>> I sent the initial one few months back so at that time, I was created
->>> and now I just added USB and Ethernet with the reference of zc702
->>> board.
->>
->> Can you send me a link to that post? I didn't find it.
-> 
-> Here is the link [1]
-> 
->> Anyway you should keep Xilinx copyright there.
-> 
-> OK then will append Xilinx as well.
-> 
-> [1] http://lkml.iu.edu/hypermail/linux/kernel/1601.1/03236.html
+This patch series adds support for the X-Powers AXP803 and AXP813 PMICs.
+It is based on the previous patch series
+	regulator: axp20x: Simplify various code
 
-ok. It was lkml and devicetree not arm mailing list that's why I didn't
-find it.
+v3:
+- put the code of the new devices in new files instead of in the common
+  axp20x file.
+- fix errors about the regulators and interrupts
+v2:
+- fix lack of support of dcdc frequency
+- notice that the AXP803 is also handled
+- send the patch to the DT maintainers
 
-Thanks,
-Michal
+Jean-Francois Moine (4):
+  regulator: axp20x: move device independant parts to new files
+  regulator: axp20x: duplicate the MFD axp20x-rsb code
+  regulator: axp20x: add the AXP803
+  regulator: axp20x: add the AXP813
+
+ Documentation/devicetree/bindings/mfd/axp20x.txt |  29 ++-
+ drivers/mfd/axp20x.c                             |  15 +
+ drivers/regulator/Makefile                       |   3 +-
+ drivers/regulator/axp-regulator.c                | 347 +++++++++++++++++++
+ drivers/regulator/axp-regulator.h                | 133 ++++++++
+ drivers/regulator/axp20x-regulator.c             | 415 ++---------------------
+ drivers/regulator/axp803.c                       | 225 ++++++++++++
+ drivers/regulator/axp813.c                       | 229 +++++++++++++
+ include/linux/mfd/axp20x.h                       |   2 +
+ 9 files changed, 1012 insertions(+), 388 deletions(-)
+ create mode 100644 drivers/regulator/axp-regulator.c
+ create mode 100644 drivers/regulator/axp-regulator.h
+ create mode 100644 drivers/regulator/axp803.c
+ create mode 100644 drivers/regulator/axp813.c
+
+-- 
+2.10.0
