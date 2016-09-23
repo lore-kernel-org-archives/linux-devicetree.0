@@ -1,68 +1,77 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V3 01/10] Documentation: DT: qcom_hidma: update binding
- for MSI
-Date: Fri, 23 Sep 2016 19:02:39 +0100
-Message-ID: <20160923180239.GC29830@leverpostej>
-References: <1473960166-30155-1-git-send-email-okaya@codeaurora.org>
- <1473960166-30155-2-git-send-email-okaya@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] lm87: Allow channel data to be set from dts file.
+Date: Fri, 23 Sep 2016 13:10:48 -0500
+Message-ID: <20160923181048.GA10498@rob-hp-laptop>
+References: <20160920052240.10242-1-mahoda.ratnayaka@alliedtelesis.co.nz>
+ <d3258440-db4e-a4c2-cca1-9683d0da63a8@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1473960166-30155-2-git-send-email-okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <d3258440-db4e-a4c2-cca1-9683d0da63a8-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Mahoda Ratnayaka <mahoda.ratnayaka-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Cc: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 15, 2016 at 01:22:37PM -0400, Sinan Kaya wrote:
-> Adding a new binding for qcom,hidma-1.1 to distinguish HW supporting
-> MSI interrupts from the older revision.
+On Tue, Sep 20, 2016 at 02:55:42AM -0700, Guenter Roeck wrote:
+> On 09/19/2016 10:22 PM, Mahoda Ratnayaka wrote:
+> >Currently there is no method for setting the channel
+> >value from the DTS file. When, the driver uses a dts
+> >file to initialize the driver platform_data is not set.
+> >As a the result channel variable may not be set correctly.
+> >
+> >Without the channel variable set correctly, some of the
+> >sensors will not be initialized correctly. For example
+> >temp3 sensor sysfs entries.
+> >
+> >This adds the required functionality to set the channel
+> >variable from the DTS file. This is done via reading the
+> >reading a property named "channel" from the lm87 driver.
+> >
+> >Signed-off-by: Mahoda Ratnayaka <mahoda.ratnayaka-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+> >---
+> >
+> >Notes:
+> >     changes since v1:
+> >     Removed unncessary variables channel and np.
+> >     Update the code as per review comments.
+> >
+> > Documentation/devicetree/bindings/hwmon/lm87.txt | 9 +++++++++
+> > drivers/hwmon/lm87.c                             | 7 ++++++-
+> > 2 files changed, 15 insertions(+), 1 deletion(-)
+> >
+> >diff --git a/Documentation/devicetree/bindings/hwmon/lm87.txt b/Documentation/devicetree/bindings/hwmon/lm87.txt
+> >index fefcb48..1906e08 100644
+> >--- a/Documentation/devicetree/bindings/hwmon/lm87.txt
+> >+++ b/Documentation/devicetree/bindings/hwmon/lm87.txt
+> >@@ -6,9 +6,18 @@ Required properties:
+> >
+> > - reg: I2C address
+> >
+> >+optional properties:
+> >+- channels: Value for the channel mode register.
+> >+            This allows configuration of pins with
+> >+            selectable uses on the LM87 device (e.g.
+> >+            choosing between voltage and temperature
+> >+            inputs).
+> >+            See hwmon/lm87 for further information
 > 
-> Signed-off-by: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-> index fd5618b..47bfb5a 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-> +++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-> @@ -47,12 +47,23 @@ When the OS is not in control of the management interface (i.e. it's a guest),
->  the channel nodes appear on their own, not under a management node.
->  
->  Required properties:
-> -- compatible: must contain "qcom,hidma-1.0"
-> +- compatible: must contain "qcom,hidma-1.0" for initial HW or "qcom,hidma-1.1"
-> +for MSI capable HW.
->  - reg: Addresses for the transfer and event channel
->  - interrupts: Should contain the event interrupt
->  - desc-count: Number of asynchronous requests this channel can handle
->  - iommus: required a iommu node
->  
-> +Optional properties for MSI:
-> +- msi-parent: pointer to the MSI controller object with the DeviceID in use.
+> Rob is the ultimate person to comment here, but I think the property description
+> by itself should be complete and technically independent of the implementation.
+> Documentation/hwmon/lm87 describes the implementation, so an (incomplete)
+> reference to it seems inappropriate.
 
-The format of msi-cells depends on the particular msi-controller, so no
-need to mention DeviceID here.
+Yes, please make the binding stand on its own. And please put all of the 
+binding in one patch. You're describing h/w, not adding s/w features.
 
-Please refer to
-Documentation/devicetree/bindings/interrupt-controller/msi.txt
+As far as whether this is configuration or h/w description, it depends 
+on what defines the configuration. If it is fixed by the h/w design then 
+this is okay. If it is a user choice, then no it should not be in DT. 
+Seems like this would be the former case as probably temperature 
+measurement requires a thermistor or something.
 
-> +Example:
-> + msi_parent: <&msi0 0x80024>
-
-This doesn't match (s/_/-/).
-
-> +msi0 is the MSI controller in the system. Bits 0-5 is the channel ID. 4
-> +is the channel ID. Bits 5-8 is the instance number. This is for the HIDMA
-> +instance 1.
-
-I don't think you need any of this text, so long as you refer to the
-generic MSI binding document, as above.
-
-Thanks,
-Mark.
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
