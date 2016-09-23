@@ -1,52 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] ASoC: simple-card: add support for aux devices
-Date: Fri, 23 Sep 2016 17:25:41 -0500
-Message-ID: <20160923222541.GA25693@rob-hp-laptop>
-References: <1474614673-12350-1-git-send-email-nikita.yoush@cogentembedded.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] regulator: axp20x: add the AXP813
+Date: Fri, 23 Sep 2016 17:27:05 -0500
+Message-ID: <20160923222705.GA30134@rob-hp-laptop>
+References: <cover.1474621107.git.moinejf@free.fr>
+ <21ac1fd8ab33185ec2cdb436272f48571695ce54.1474621108.git.moinejf@free.fr>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJIP47K7MERBO6YS27QKGQE5IMCW6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1474614673-12350-1-git-send-email-nikita.yoush@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Otto =?iso-8859-1?Q?Kek=E4l=E4inen?= <otto@seravo.fi>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mengdong Lin <mengdong.lin@linux.intel.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andrew Lunn <andrew@lunn.ch>, Peter Ujfalusi <peter.ujfalusi@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>
+In-Reply-To: <21ac1fd8ab33185ec2cdb436272f48571695ce54.1474621108.git.moinejf-GANU6spQydw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 23, 2016 at 10:11:12AM +0300, Nikita Yushchenko wrote:
-> This patch makes it possible to use simple-card in setups where separate
-> amplifier chip is connected to codec's output.
+On Fri, Sep 23, 2016 at 09:22:41AM +0200, Jean-Francois Moine wrote:
+> The X-Powers AXP813 PMIC is close to the AXP803.
+> It is used in some Allwinner boards as the Sinovoip BananaPi M3+.
 > 
-> Changes from v1:
-> - moved example usage from commit message to Documentation/, as
->   suggested by Kuninori Morimoto,
-> - fixed typo in example usage.
-
-Ah, one more property to the "simple" card. At what point in adding 
-properties is it not simple?
-
-> 
-> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
 > ---
->  .../devicetree/bindings/sound/simple-card.txt      | 37 ++++++++++++++++++++++
->  sound/soc/generic/simple-card.c                    | 34 ++++++++++++++++++++
->  2 files changed, 71 insertions(+)
-
-
+>  Documentation/devicetree/bindings/mfd/axp20x.txt |   9 +-
+>  drivers/mfd/axp20x.c                             |   2 +
+>  drivers/regulator/Makefile                       |   2 +-
+>  drivers/regulator/axp813.c                       | 229 +++++++++++++++++++++++
+>  include/linux/mfd/axp20x.h                       |   1 +
+>  5 files changed, 239 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/regulator/axp813.c
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-> index 59d8628..c7a9393 100644
-> --- a/Documentation/devicetree/bindings/sound/simple-card.txt
-> +++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-> @@ -22,6 +22,8 @@ Optional properties:
->  					  headphones are attached.
->  - simple-audio-card,mic-det-gpio	: Reference to GPIO that signals when
->  					  a microphone is attached.
-> +- simple-audio-card,aux-devs		: List of phandles pointing to auxiliary devices, such
-> +					  as amplifiers, to be added to the sound card.
+> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> index 3332d02..62019fb 100644
+> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
+> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> @@ -8,11 +8,12 @@ axp221 (X-Powers)
+>  axp223 (X-Powers)
+>  axp803 (X-Powers)
+>  axp809 (X-Powers)
+> +axp813 (X-Powers)
+>  
+>  Required properties:
+>  - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
+>  	      "x-powers,axp221", "x-powers,axp223", "x-powers,axp803",
+> -	      "x-powers,axp806", "x-powers,axp809"
+> +	      "x-powers,axp806", "x-powers,axp809", "x-powers,axp813"
 
-I think the property should be specific as to the type of device. What 
-if you have 2 amps? Maybe simple-card can't have 2 outputs. What if you 
-have a chain of devices and need to know the order of them?
+Same comment here.
 
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
