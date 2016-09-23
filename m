@@ -1,33 +1,37 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 2/4] arm64: dts: Add timer erratum property for
- LS2080A and LS1043A
-Date: Fri, 23 Sep 2016 17:27:56 +0100
-Message-ID: <20160923162755.GG6397@arm.com>
-References: <1474533318-7796-1-git-send-email-oss@buserror.net>
- <1474533318-7796-2-git-send-email-oss@buserror.net>
+From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V3 01/10] Documentation: DT: qcom_hidma: update binding
+ for MSI
+Date: Fri, 23 Sep 2016 13:22:39 -0400
+Message-ID: <92feb6b5-b9b9-394d-3cb6-d095df339ebc@codeaurora.org>
+References: <1473960166-30155-1-git-send-email-okaya@codeaurora.org>
+ <1473960166-30155-2-git-send-email-okaya@codeaurora.org>
+ <20160923153910.GA23150@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1474533318-7796-2-git-send-email-oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <20160923153910.GA23150@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 22, 2016 at 03:35:16AM -0500, Scott Wood wrote:
-> Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 +
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 1 +
->  2 files changed, 2 insertions(+)
+On 9/23/2016 11:39 AM, Rob Herring wrote:
+>> Required properties:
+>> > -- compatible: must contain "qcom,hidma-1.0"
+>> > +- compatible: must contain "qcom,hidma-1.0" for initial HW or "qcom,hidma-1.1"
+>> > +for MSI capable HW.
+> Do you have an SoC part number yet? If so, please use that instead.
+> 
 
-This patch conflicts with mainline, but I've queued the other three
-patches in the series in the arm64 tree.
+Unfortunately, I have the same problem like "qcom, hidma-1.0". The SoC name is not settled
+yet and same IP gets used in multiple SoCs. Each IP reports its own version number. This is
+one of the reasons why I sticked to versioning instead of SoC name.
 
-Please send the updated .dts changes via arm-soc.
-
-Will
+-- 
+Sinan Kaya
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
