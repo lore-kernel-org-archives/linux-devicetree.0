@@ -1,86 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC/PATCH] usb: misc: Add a driver for TC7USB40MU
-Date: Fri, 23 Sep 2016 09:35:13 -0500
-Message-ID: <20160923143513.GA29714@rob-hp-laptop>
-References: <20160914014246.31847-1-stephen.boyd@linaro.org>
- <147384330268.13546.17843140335600627152@sboyd-linaro>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 4/4] arm/arm64: arch_timer: Use archdata to indicate
+ vdso suitability
+Date: Fri, 23 Sep 2016 15:41:09 +0100
+Message-ID: <57E53F05.9060806@arm.com>
+References: <1474533318-7796-1-git-send-email-oss@buserror.net>
+ <1474533318-7796-4-git-send-email-oss@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <147384330268.13546.17843140335600627152@sboyd-linaro>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1474533318-7796-4-git-send-email-oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2016 at 01:55:02AM -0700, Stephen Boyd wrote:
-> Quoting Stephen Boyd (2016-09-13 18:42:46)
-> > On the db410c 96boards platform we have a TC7USB40MU[1] on the
-> > board to mux the D+/D- lines from the SoC between a micro usb
-> > "device" port and a USB hub for "host" roles. Upon a role switch,
-> > we need to change this mux to forward the D+/D- lines to either
-> > the port or the hub. Therefore, introduce a driver for this
-> > device that intercepts extcon USB_HOST events and logically
-> > asserts a gpio to mux the "host" D+/D- lines when a host cable is
-> > attached. When the cable goes away, it will logically deassert
-> > the gpio and mux the "device" lines.
-> > 
-> > [1] https://toshiba.semicon-storage.com/ap-en/product/logic/bus-switch/detail.TC7USB40MU.html
-> > 
-> > Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
-> > Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> > Cc: <devicetree@vger.kernel.org>
-> > Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> > ---
-> > 
-> > Should I make the extcon part optional? I could see a case where there are two
-> > "OTG" ports connected to the mux (or two hubs), and for some reason the
-> > software may want to mux between them at runtime. If we mandate an extcon,
-> > that won't be possible to support. Perhaps it would be better to have
-> > the node, but connect it to the usb controller with a phandle (maybe of_graph
-> > endpoints would be useful too) so that when the controller wants to mux over
-> > a port it can do so.
+On 22/09/16 09:35, Scott Wood wrote:
+> Instead of comparing the name to a magic string, use archdata to
+> explicitly communicate whether the arch timer is suitable for
+> direct vdso access.
+> 
+> Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+> Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm/Kconfig                     |  1 +
+>  arch/arm/include/asm/clocksource.h   |  8 ++++++++
+>  arch/arm/kernel/vdso.c               |  2 +-
+>  arch/arm64/Kconfig                   |  1 +
+>  arch/arm64/include/asm/clocksource.h |  8 ++++++++
+>  arch/arm64/kernel/vdso.c             |  2 +-
+>  drivers/clocksource/arm_arch_timer.c | 11 +++--------
+>  7 files changed, 23 insertions(+), 10 deletions(-)
+>  create mode 100644 arch/arm/include/asm/clocksource.h
+>  create mode 100644 arch/arm64/include/asm/clocksource.h
 
-I've mentioned my opinion on extcon before. The first clue that it needs 
-work is a Linux subsystem name is used for the binding. 
+Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 
-> Here's some dts mock-up on top of the db410c for the of_graph stuff. I
-> haven't written any code around it, but the idea is to allow the binding
-> to specify how the mux is connected to upstream and downstream D+/D-
-> lines. This way, we can do some dt parsing of the endpoints and their
-> parent nodes to figure out if the mux needs to be set high or low to use
-> a device connector or a usb hub based on if the id cable is present.
-> Maybe I'm over thinking things though and we could just have a DT
-> property for that.
-
-I think the connector nodes are on the right track, but of-graph doesn't 
-work here because we already have a way to describe USB buses in DT. 
-Following that, would something like this work for you? The vbus-supply 
-and id-gpios are just examples and may not always be there like if the 
-hub controls each port's vbus directly.
-
-usb-controller@1234 {
-	usb-switch@0 {
-		compatible = "toshiba,tc7usb40mu";
-		hub@0 {
-			compatible = "some-hub";
-			port@0 {
-				compatible = "usb-A-connector"
-				vbus-supply = ...;
-			};
-			port@1 {
-				compatible = "usb-A-connector"
-				vbus-supply = ...;
-			};
-
-		};
-		connector@1 {
-			compatible = "usb-ub-connector";
-			vbus-supply = ...;
-			id-gpios = <>;
-		};
-	};
-};
-
-Rob
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
