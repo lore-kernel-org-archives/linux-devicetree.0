@@ -1,44 +1,29 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v3 4/8] drivers:input:tsc2007: check for presence and power down tsc2007 during probe
-Date: Fri, 23 Sep 2016 14:41:12 +0200
-Message-ID: <e029ce6aad9483e706e9ff50fb5dfa7c83d3d27e.1474634475.git.hns@goldelico.com>
-References: <cover.1474634475.git.hns@goldelico.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 07/14] of/platform: Probe "isa" busses by default
+Date: Fri, 23 Sep 2016 07:42:47 -0500
+Message-ID: <CAL_Jsq+mFreBhUeT9b2J07jo0kmXwrJdzAqpd-8_Tcrfa5i2QA@mail.gmail.com>
+References: <20160919212132.28893-1-paul.burton@imgtec.com> <20160919212132.28893-8-paul.burton@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1474634475.git.hns@goldelico.com>
-In-Reply-To: <cover.1474634475.git.hns@goldelico.com>
-References: <cover.1474634475.git.hns@goldelico.com>
+In-Reply-To: <20160919212132.28893-8-paul.burton@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?UTF-8?q?Mika=20Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, Sebastian Reichel <sre@kernel.org>, "Andrew F. Davis" <afd@ti.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, linux-iio@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
+To: Paul Burton <paul.burton@imgtec.com>
+Cc: Linux-MIPS <linux-mips@linux-mips.org>, Ralf Baechle <ralf@linux-mips.org>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-1. check if chip is really present and don't succeed if it isn't.
-2. if it succeeds, power down the chip until accessed
+On Mon, Sep 19, 2016 at 4:21 PM, Paul Burton <paul.burton@imgtec.com> wrote:
+> Since commit 44a7185c2ae6 ("of/platform: Add common method to populate
+> default bus") platforms calling of_platform_bus_probe from an initcall
+> is either a rather unsafe race with of_platform_default_populate_init or
+> a no-op. The MIPS Malta board needs to probe devices under an ISA bus,
+> which we do support in the of_busses array but until now haven't
+> included in of_default_bus_match_table.
+>
+> Add an "isa" entry to of_default_bus_match_table such that we can just
+> accept use of of_platform_default_populate_init & remove the
+> Malta-specific match table in a later patch.
+>
+> Signed-off-by: Paul Burton <paul.burton@imgtec.com>
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/input/touchscreen/tsc2007.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/input/touchscreen/tsc2007.c b/drivers/input/touchscreen/tsc2007.c
-index 559cbc6..3ddc31e 100644
---- a/drivers/input/touchscreen/tsc2007.c
-+++ b/drivers/input/touchscreen/tsc2007.c
-@@ -657,6 +657,15 @@ static int tsc2007_probe(struct i2c_client *client,
- 
- 	tsc2007_stop(ts);
- 
-+	/* power down the chip (TSC2007_SETUP does not ACK on I2C) */
-+	err = tsc2007_xfer(ts, PWRDOWN);
-+	if (err < 0) {
-+		dev_err(&client->dev,
-+			"Failed to setup chip: %d\n", err);
-+		iio_device_unregister(indio_dev);
-+		return err;	/* usually, chip does not respond */
-+	}
-+
- 	err = input_register_device(input_dev);
- 	if (err) {
- 		dev_err(&client->dev,
--- 
-2.7.3
+Acked-by: Rob Herring <robh@kernel.org>
