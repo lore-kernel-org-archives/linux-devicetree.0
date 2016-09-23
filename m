@@ -1,56 +1,64 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: [PATCH] of: Prevent unaligned access in of_alias_scan()
-Date: Fri, 23 Sep 2016 16:38:27 +0100
-Message-ID: <20160923153827.8263-1-paul.burton@imgtec.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on Hip06
+Date: Fri, 23 Sep 2016 17:55:10 +0200
+Message-ID: <1849232.KJrfRPHGN6@wuerfel>
+References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com> <10705430.q2aqv5uYO3@wuerfel> <EE11001F9E5DDD47B7634E2F8A612F2E1F8850F2@lhreml507-mbx>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mips-bounce@linux-mips.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: linux-mips@linux-mips.org
-Cc: Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E1F8850F2@lhreml507-mbx>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Cc: "zhichang.yuan" <zhichang.yuan02@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "minyard@acm.org" <minyard@acm.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-When allocating a struct alias_prop, of_alias_scan() only requested that
-it be aligned on a 4 byte boundary. The struct contains pointers which
-leads to us attempting 64 bit writes on 64 bit systems, and if the CPU
-doesn't support unaligned memory accesses then this causes problems -
-for example on some MIPS64r2 CPUs including the "mips64r2-generic" QEMU
-emulated CPU it will trigger an address error exception.
+On Friday, September 23, 2016 2:59:55 PM CEST Gabriele Paoloni wrote:
+> 
+> > > From the perspective of the indirect IO function the input parameter
+> > > is an unsigned long addr that (now) can be either:
+> > > 1) an IO token coming from a legacy pci device
+> > > 2) a phys address that lives on the LPC bus
+> > >
+> > > These are conceptually two separate address spaces (and actually they
+> > > both start from 0).
+> > 
+> > Why? Any IORESOURCE_IO address always refers to the logical I/O port
+> > range in Linux, not the physical address that is used on a bus.
+> 
+> If I read the code correctly when you get an I/O token you just add it
+> to PCI_IOBASE.
+> This is enough since pci_remap_iospace set the virtual address to 
+> PCI_IOBASE + the I/O token offset; so we can read/write to
+> vaddr = PCI_IOBASE + token as pci_remap_iospace has mapped it correctly
+> to the respective PCI cpu address (that is set in the I/O range property
+> of the host controller)
+> 
+> In the patchset accessors LPC operates directly on the cpu addresses
+> and the input parameter of the accessors can be either an IO token or
+> a cpu address
+> 
+> +static inline void outb(u8 value, unsigned long addr)
+> +{
+> +#ifdef CONFIG_ARM64_INDIRECT_PIO
+> +       if (arm64_extio_ops && arm64_extio_ops->start <= addr &&
+> +                       addr <= arm64_extio_ops->end)
+> 
+> Here below we operate on cpu address
+> 
+> +               extio_outb(value, addr);
+> +       else
+> +#endif
 
-Fix this by requesting alignment for the struct alias_prop allocation
-matching that which the compiler expects, using the __alignof__ keyword.
+I missed this bug earlier, this obviously needs to be
 
-Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mips@linux-mips.org
-Cc: Ralf Baechle <ralf@linux-mips.org>
----
- drivers/of/base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+		arm64_extio_ops->outb(value, addr - arm64_extio_ops->start);
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 3ce6953..448aa40 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2042,7 +2042,7 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
- 			continue;
- 
- 		/* Allocate an alias_prop with enough space for the stem */
--		ap = dt_alloc(sizeof(*ap) + len + 1, 4);
-+		ap = dt_alloc(sizeof(*ap) + len + 1, __alignof__(*ap));
- 		if (!ap)
- 			continue;
- 		memset(ap, 0, sizeof(*ap) + len + 1);
--- 
-2.10.0
+or possibly
+
+		arm64_extio_ops->outb(arm64_extio_ops, value, addr);
+
+as the outb function won't know what the offset is, but
+that needed to be fixed regardless.
+
+	Arnd
