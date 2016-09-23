@@ -1,77 +1,104 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] lm87: Allow channel data to be set from dts file.
-Date: Fri, 23 Sep 2016 13:10:48 -0500
-Message-ID: <20160923181048.GA10498@rob-hp-laptop>
-References: <20160920052240.10242-1-mahoda.ratnayaka@alliedtelesis.co.nz>
- <d3258440-db4e-a4c2-cca1-9683d0da63a8@roeck-us.net>
+Subject: Re: [PATCH v3 1/3] ipmi: add an Aspeed BT IPMI BMC driver
+Date: Fri, 23 Sep 2016 13:34:21 -0500
+Message-ID: <20160923183421.GA14864@rob-hp-laptop>
+References: <1474354900-5618-1-git-send-email-clg@kaod.org>
+ <1474354900-5618-2-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <d3258440-db4e-a4c2-cca1-9683d0da63a8-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <1474354900-5618-2-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Mahoda Ratnayaka <mahoda.ratnayaka-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Cc: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+To: =?iso-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+Cc: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 20, 2016 at 02:55:42AM -0700, Guenter Roeck wrote:
-> On 09/19/2016 10:22 PM, Mahoda Ratnayaka wrote:
-> >Currently there is no method for setting the channel
-> >value from the DTS file. When, the driver uses a dts
-> >file to initialize the driver platform_data is not set.
-> >As a the result channel variable may not be set correctly.
-> >
-> >Without the channel variable set correctly, some of the
-> >sensors will not be initialized correctly. For example
-> >temp3 sensor sysfs entries.
-> >
-> >This adds the required functionality to set the channel
-> >variable from the DTS file. This is done via reading the
-> >reading a property named "channel" from the lm87 driver.
-> >
-> >Signed-off-by: Mahoda Ratnayaka <mahoda.ratnayaka-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-> >---
-> >
-> >Notes:
-> >     changes since v1:
-> >     Removed unncessary variables channel and np.
-> >     Update the code as per review comments.
-> >
-> > Documentation/devicetree/bindings/hwmon/lm87.txt | 9 +++++++++
-> > drivers/hwmon/lm87.c                             | 7 ++++++-
-> > 2 files changed, 15 insertions(+), 1 deletion(-)
-> >
-> >diff --git a/Documentation/devicetree/bindings/hwmon/lm87.txt b/Documentation/devicetree/bindings/hwmon/lm87.txt
-> >index fefcb48..1906e08 100644
-> >--- a/Documentation/devicetree/bindings/hwmon/lm87.txt
-> >+++ b/Documentation/devicetree/bindings/hwmon/lm87.txt
-> >@@ -6,9 +6,18 @@ Required properties:
-> >
-> > - reg: I2C address
-> >
-> >+optional properties:
-> >+- channels: Value for the channel mode register.
-> >+            This allows configuration of pins with
-> >+            selectable uses on the LM87 device (e.g.
-> >+            choosing between voltage and temperature
-> >+            inputs).
-> >+            See hwmon/lm87 for further information
+On Tue, Sep 20, 2016 at 09:01:38AM +0200, Cédric Le Goater wrote:
+> From: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
 > 
-> Rob is the ultimate person to comment here, but I think the property description
-> by itself should be complete and technically independent of the implementation.
-> Documentation/hwmon/lm87 describes the implementation, so an (incomplete)
-> reference to it seems inappropriate.
+> This patch adds a simple device driver to expose the iBT interface on
+> Aspeed SOCs (AST2400 and AST2500) as a character device. Such SOCs are
+> commonly used as BMCs (BaseBoard Management Controllers) and this
+> driver implements the BMC side of the BT interface.
+> 
+> The BT (Block Transfer) interface is used to perform in-band IPMI
+> communication between a host and its BMC. Entire messages are buffered
+> before sending a notification to the other end, host or BMC, that
+> there is data to be read. Usually, the host emits requests and the BMC
+> responses but the specification provides a mean for the BMC to send
+> SMS Attention (BMC-to-Host attention or System Management Software
+> attention) messages.
+> 
+> For this purpose, the driver introduces a specific ioctl on the
+> device: 'BT_BMC_IOCTL_SMS_ATN' that can be used by the system running
+> on the BMC to signal the host of such an event.
+> 
+> The device name defaults to '/dev/ipmi-bt-host'
+> 
+> Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+> [clg: - checkpatch fixes
+>       - added a devicetree binding documentation
+>       - replace 'bt_host' by 'bt_bmc' to reflect that the driver is
+>         the BMC side of the IPMI BT interface
+>       - renamed the device to 'ipmi-bt-host'
+>       - introduced a temporary buffer to copy_{to,from}_user
+>       - used platform_get_irq()
+>       - moved the driver under drivers/char/ipmi/ but kept it as a misc
+>         device
+>       - changed the compatible cell to "aspeed,ast2400-bt-bmc"
+> ]
+> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> [clg: - checkpatch --strict fixes
+>       - removed the use of devm_iounmap, devm_kfree in cleanup paths
+>       - introduced an atomic-t to limit opens to 1
+>       - introduced a mutex to protect write/read operations]
+> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+> 
+> ---
+> 
+>  Changes since v2:
+> 
+>  - fixed checkpatch --strict issues
+>  - cleanup'ed includes
+>  - limit to one opener
+>  - protect write/read operations with a mutex.
+>  - removed the use of devm_iounmap, devm_kfree in cleanup paths
+> 
+>  Changes since v1:
+> 
+>  - replace 'bt_host' by 'bt_bmc' to reflect that the driver is
+>    the BMC side of the IPMI BT interface
+>  - renamed the device to 'ipmi-bt-host'
+>  - introduced a temporary buffer to copy_{to,from}_user
+>  - used platform_get_irq()
+>  - moved the driver under drivers/char/ipmi/ but kept it as a misc
+>    device
+>  - changed the compatible cell to "aspeed,ast2400-bt-bmc"
+> 
+>  .../bindings/char/ipmi/aspeed,ast2400-bt-bmc.txt   |  23 +
 
-Yes, please make the binding stand on its own. And please put all of the 
-binding in one patch. You're describing h/w, not adding s/w features.
+While similar, this is not the kernel directory structure. Just make 
+this bindings/ipmi/
 
-As far as whether this is configuration or h/w description, it depends 
-on what defines the configuration. If it is fixed by the h/w design then 
-this is okay. If it is a user choice, then no it should not be in DT. 
-Seems like this would be the former case as probably temperature 
-measurement requires a thermistor or something.
+With that,
 
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  drivers/Makefile                                   |   2 +-
+>  drivers/char/ipmi/Kconfig                          |   7 +
+>  drivers/char/ipmi/Makefile                         |   1 +
+>  drivers/char/ipmi/bt-bmc.c                         | 510 +++++++++++++++++++++
+>  include/uapi/linux/Kbuild                          |   1 +
+>  include/uapi/linux/bt-bmc.h                        |  18 +
+>  7 files changed, 561 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/char/ipmi/aspeed,ast2400-bt-bmc.txt
+>  create mode 100644 drivers/char/ipmi/bt-bmc.c
+>  create mode 100644 include/uapi/linux/bt-bmc.h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
