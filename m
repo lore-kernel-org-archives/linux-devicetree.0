@@ -1,128 +1,147 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 08/11] pci: controller: dra7xx: Add EP mode support
-Date: Fri, 23 Sep 2016 09:52:59 -0500
-Message-ID: <20160923145259.GA28285@rob-hp-laptop>
-References: <1473829927-20466-1-git-send-email-kishon@ti.com>
- <1473829927-20466-9-git-send-email-kishon@ti.com>
+From: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on Hip06
+Date: Fri, 23 Sep 2016 14:59:55 +0000
+Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E1F8850F2@lhreml507-mbx>
+References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
+ <1760643.vMTR5o5E9g@wuerfel>
+ <EE11001F9E5DDD47B7634E2F8A612F2E1F8842B6@lhreml507-mbx>
+ <10705430.q2aqv5uYO3@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1473829927-20466-9-git-send-email-kishon@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, hch@infradead.org, Joao.Pinto@synopsys.com, mingkai.hu@nxp.com, m-karicheri2@ti.com, Pratyush Anand <pratyush.anand@gmail.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joao Pinto <jpinto@synopsys.com>, nsekhar@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <10705430.q2aqv5uYO3@wuerfel>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "zhichang.yuan" <zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "minyard-HInyCGIudOg@public.gmane.org" <minyard-HInyCGIudOg@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yuanzhichang <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2016 at 10:42:04AM +0530, Kishon Vijay Abraham I wrote:
-> The PCIe controller integrated in dra7xx SoCs is capable of operating
-> in endpoint mode. Add support for dra7xx SoCs to operate in endpoint
-> mode.
+Hi Arnd
+
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+> Sent: 23 September 2016 14:43
+> To: Gabriele Paoloni
+> Cc: zhichang.yuan; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org; minyard-HInyCGIudOg@public.gmane.org;
+> linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; John Garry;
+> will.deacon-5wv7dgnIgG8@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Yuanzhichang;
+> Linuxarm; xuwei (O); linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org; zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; liviu.dudau-5wv7dgnIgG8@public.gmane.org;
+> kantyzc-9Onoh4P/yGk@public.gmane.org
+> Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on
+> Hip06
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  Documentation/devicetree/bindings/pci/ti-pci.txt |   30 ++-
->  drivers/pci/controller/Kconfig                   |   21 +++
->  drivers/pci/controller/pci-dra7xx.c              |  211 +++++++++++++++++++---
->  3 files changed, 225 insertions(+), 37 deletions(-)
+> On Friday, September 23, 2016 10:23:30 AM CEST Gabriele Paoloni wrote:
+> > Hi Arnd
+> >
+> > > -----Original Message-----
+> > > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+> > > Sent: 23 September 2016 10:52
+> > > To: zhichang.yuan
+> > > Cc: Gabriele Paoloni; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+> > > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org;
+> minyard-HInyCGIudOg@public.gmane.org;
+> > > linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; John Garry;
+> > > will.deacon-5wv7dgnIgG8@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Yuanzhichang;
+> > > Linuxarm; xuwei (O); linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > > benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org; zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
+> liviu.dudau-5wv7dgnIgG8@public.gmane.org;
+> > > kantyzc-9Onoh4P/yGk@public.gmane.org
+> > > Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on
+> > > Hip06
+> > >
+> > > On Friday, September 23, 2016 12:27:17 AM CEST zhichang.yuan wrote:
+> > > > For this patch sketch, I have a question.
+> > > > Do we call pci_address_to_pio in arch_of_address_to_pio to get
+> the
+> > > > corresponding logical IO port
+> > > > for LPC??
+> > >
+> > >
+> > > No, of course not, that would be silly:
+> > >
+> > > The argument to pci_address_to_pio() is a phys_addr_t, and we we
+> don't
+> > > have one because there is no address associated with your PIO, that
+> > > is the entire point of your driver!
+> > >
+> > > Also, we already know the mapping because this is what the inb/outb
+> > > workaround is looking at, so there is absolutely no reason to call
+> it
+> > > either.
+> >
+> > Ok assume that we do not call pci_address_to_pio() for the ISA bus...
+> > The LPC driver will register its phys address range in io_range_list,
+> > then the IPMI driver probe will retrieve its physical address calling
+> > of_address_to_resource and will use the indirect io to access this
+> > address.
+> >
+> > From the perspective of the indirect IO function the input parameter
+> > is an unsigned long addr that (now) can be either:
+> > 1) an IO token coming from a legacy pci device
+> > 2) a phys address that lives on the LPC bus
+> >
+> > These are conceptually two separate address spaces (and actually they
+> > both start from 0).
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
-> index 60e2516..b0e76f6 100644
-> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
-> @@ -1,17 +1,22 @@
->  TI PCI Controllers
->  
->  PCIe Designware Controller
-> - - compatible: Should be "ti,dra7-pcie""
-> - - reg : Two register ranges as listed in the reg-names property
-> - - reg-names : The first entry must be "ti-conf" for the TI specific registers
-> -	       The second entry must be "rc-dbics" for the designware pcie
-> -	       registers
-> -	       The third entry must be "config" for the PCIe configuration space
-> + - compatible: Should be "ti,dra7-pcie" for RC
-> +	       Should be "ti,dra7-pcie-ep" for EP
->   - phys : list of PHY specifiers (used by generic PHY framework)
->   - phy-names : must be "pcie-phy0", "pcie-phy1", "pcie-phyN".. based on the
->  	       number of PHYs as specified in *phys* property.
->   - ti,hwmods : Name of the hwmod associated to the pcie, "pcie<X>",
->  	       where <X> is the instance number of the pcie from the HW spec.
-> + - num-lanes as specified in ../designware-pcie.txt
-> +
-> +HOST MODE
-> +=========
-> + - reg : Two register ranges as listed in the reg-names property
-> + - reg-names : The first entry must be "ti-conf" for the TI specific registers
-> +	       The second entry must be "rc-dbics" for the designware pcie
-> +	       registers
-> +	       The third entry must be "config" for the PCIe configuration space
->   - interrupts : Two interrupt entries must be specified. The first one is for
->  		main interrupt line and the second for MSI interrupt line.
->   - #address-cells,
-> @@ -19,13 +24,24 @@ PCIe Designware Controller
->     #interrupt-cells,
->     device_type,
->     ranges,
-> -   num-lanes,
->     interrupt-map-mask,
->     interrupt-map : as specified in ../designware-pcie.txt
->  
->  Optional Property:
->   - gpios : Should be added if a gpio line is required to drive PERST# line
+> Why? Any IORESOURCE_IO address always refers to the logical I/O port
+> range in Linux, not the physical address that is used on a bus.
 
-Don't you need gpios as the input side of GPIO outputs in RC mode? Or 
-for EP mode they are all handled by h/w?
+If I read the code correctly when you get an I/O token you just add it
+to PCI_IOBASE.
+This is enough since pci_remap_iospace set the virtual address to 
+PCI_IOBASE + the I/O token offset; so we can read/write to
+vaddr = PCI_IOBASE + token as pci_remap_iospace has mapped it correctly
+to the respective PCI cpu address (that is set in the I/O range property
+of the host controller)
 
->  
-> +DEVICE MODE
-> +===========
-> + - reg : Two register ranges as listed in the reg-names property
-> + - reg-names : "ti-conf" for the TI specific registers
-> +	       "ep_dbics" for the standard configuration registers as
-> +		they are locally accessed within the DIF CS space
-> +	       "ep_dbics2" for the standard configuration registers as
-> +		they are locally accessed within the DIF CS2 space
-> + - interrupts : one interrupt entries must be specified for main interrupt.
-> + - num-ib-windows : number of inbound address translation windows
-> + - num-ob-windows : number of outbound address translation windows
-> +
->  Example:
->  axi {
->  	compatible = "simple-bus";
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 8574828..4d70981 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -23,6 +23,27 @@ config PCI_DRA7XX_HOST
->  	 Enables support for the PCIe controller in the DRA7xx SoC to work in
->  	 host mode.
->  
-> +config PCI_DRA7XX_EP
-> +	bool "Endpoint Only Mode"
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_DW_EP
-> +	help
-> +	 Enables support for the PCIe controller in the DRA7xx SoC to work in
-> +	 endpoint mode.
-> +
-> +config PCI_DRA7XX_HOST_EP
+In the patchset accessors LPC operates directly on the cpu addresses
+and the input parameter of the accessors can be either an IO token or
+a cpu address
 
-I'd make these 2 options just RC and EP depending on PCI_DRA7XX_HOST 
-with RC option being default yes.
++static inline void outb(u8 value, unsigned long addr)
++{
++#ifdef CONFIG_ARM64_INDIRECT_PIO
++	if (arm64_extio_ops && arm64_extio_ops->start <= addr &&
++			addr <= arm64_extio_ops->end)
 
+Here below we operate on cpu address
 
-> +	bool "Both Host and Endpoint Mode"
-> +	depends on PCI_MSI_IRQ_DOMAIN
-> +	depends on PCI
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_DW_HOST
-> +	select PCIE_DW_EP
-> +	help
-> +	 Enables support for the PCIe controller in the DRA7xx SoC to work in
-> +	 both endpoint mode and host mode. If the board has 2 PCIe ports and
-> +	 one of them has to work in host mode and the other has to work in
-> +	 EP mode then this option has to be enabled.
-> +
->  endchoice
->  
->  endif
++		extio_outb(value, addr);
++	else
++#endif
+
+In the case below we have an I/O token added to PCI_IOBASE
+to calculate the virtual address 
+
++		writeb(value, PCI_IOBASE + addr);
++}
+
+My point is that if do not call pci_address_to_pio() in 
+__of_address_to_resource for the ISA LPC exception then the accessors
+are called either by passing an IO token or a cpu address...and from
+the accessors perspective we do not know...
+
+Thanks
+Gab 
+
+> 
+> > If the input parameter can live on different address spaces that are
+> > overlapped, even if I save the used LPC range in arm64_extio_ops-
+> >start/end
+> > there is no way for the indirect IO to tell if the input parameter is
+> > an I/O token or a phys address that belongs to LPC...
+> 
+> The start address is the offset: if you get an address between 'start'
+> and 'end', you subtract the 'start' from it, and use that to call
+> the registered driver function. That works because we can safely
+> assume that the bus address range that the LPC driver registers starts
+> zero.
+> 
+> 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
