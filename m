@@ -1,30 +1,96 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH net-next] Documentation: devicetree: fix typo in MediaTek
- ethernet device-tree binding
-Date: Fri, 23 Sep 2016 16:48:35 -0500
-Message-ID: <20160923214835.GA10065@rob-hp-laptop>
-References: <1474610972-14974-1-git-send-email-sean.wang@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] regulator: axp20x: add the AXP803
+Date: Fri, 23 Sep 2016 17:17:30 -0500
+Message-ID: <20160923221730.GA10276@rob-hp-laptop>
+References: <cover.1474621107.git.moinejf@free.fr>
+ <6c9e5c21df09a1feb1b00aa000c3c0f77e51eac3.1474621107.git.moinejf@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1474610972-14974-1-git-send-email-sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: davem@davemloft.net, sergei.shtylyov@cogentembedded.com, nbd@openwrt.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, john@phrozen.org, keyhaede@gmail.com, objelf@gmail.com
+In-Reply-To: <6c9e5c21df09a1feb1b00aa000c3c0f77e51eac3.1474621107.git.moinejf-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 23, 2016 at 02:09:32PM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On Fri, Sep 23, 2016 at 09:00:42AM +0200, Jean-Francois Moine wrote:
+> The X-Powers AXP803 PMIC is close to the AXP809 with more outputs.
+> It is used in some Allwinner boards as the Sinovoip BananaPi M64
+> and the Pine A64.
 > 
-> fix typo in
-> Documentation/devicetree/bindings/net/mediatek-net.txt
-> 
-> Cc: devicetree@vger.kernel.org
-> Reported-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/net/mediatek-net.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> not tested
+> ---
+>  Documentation/devicetree/bindings/mfd/axp20x.txt |  32 +++-
+>  drivers/mfd/axp20x.c                             |  13 ++
+>  drivers/regulator/Makefile                       |   3 +-
+>  drivers/regulator/axp803.c                       | 225 +++++++++++++++++++++++
+>  include/linux/mfd/axp20x.h                       |   1 +
+>  5 files changed, 271 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/regulator/axp803.c
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> index 8f3ad9a..3332d02 100644
+> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
+> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> @@ -6,12 +6,13 @@ axp202 (X-Powers)
+>  axp209 (X-Powers)
+>  axp221 (X-Powers)
+>  axp223 (X-Powers)
+> +axp803 (X-Powers)
+>  axp809 (X-Powers)
+>  
+>  Required properties:
+>  - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
+> -	      "x-powers,axp221", "x-powers,axp223", "x-powers,axp806",
+> -	      "x-powers,axp809"
+> +	      "x-powers,axp221", "x-powers,axp223", "x-powers,axp803",
+> +	      "x-powers,axp806", "x-powers,axp809"
 
-Acked-by: Rob Herring <robh@kernel.org>
+If you respin this, please reformat this to one per line.
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  - reg: The I2C slave address or RSB hardware address for the AXP chip
+>  - interrupt-parent: The parent interrupt controller
+>  - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
+> @@ -86,6 +87,33 @@ LDO_IO1		: LDO		: ips-supply		: GPIO 1
+>  RTC_LDO		: LDO		: ips-supply		: always on
+>  DRIVEVBUS	: Enable output	: drivevbus-supply	: external regulator
+>  
+> +AXP803 regulators, type, and corresponding input supply names:
+> +
+> +Regulator	  Type		  Supply Name		  Notes
+> +---------	  ----		  -----------		  -----
+> +DCDC1		: DC-DC buck	: vin1-supply
+> +DCDC2		: DC-DC buck	: vin2-supply
+> +DCDC3		: DC-DC	buck	: vin3-supply
+> +DCDC4		: DC-DC	buck	: vin4-supply
+> +DCDC5		: DC-DC	buck	: vin5-supply
+> +DCDC6		: DC-DC	buck	: vin6-supply
+> +ALDO1		: LDO		: aldoin-supply	: shared supply
+> +ALDO2		: LDO		: aldoin-supply	: shared supply
+> +ALDO3		: LDO		: aldoin-supply	: shared supply
+> +DLDO1		: LDO		: dldoin-supply	: shared supply
+> +DLDO2		: LDO		: dldoin-supply	: shared supply
+> +DLDO3		: LDO		: dldoin-supply	: shared supply
+> +DLDO4		: LDO		: dldoin-supply	: shared supply
+> +ELDO1		: LDO		: eldoin-supply	: shared supply
+> +ELDO2		: LDO		: eldoin-supply	: shared supply
+> +ELDO3		: LDO		: eldoin-supply	: shared supply
+> +FLDO1		: LDO		: fldoin-supply	: shared supply
+> +FLDO2		: LDO		: fldoin-supply	: shared supply
+> +RTC_LDO		: LDO		: ips-supply	: always on
+> +LDO_IO0		: LDO		: ips-supply	: GPIO 0
+> +LDO_IO1		: LDO		: ips-supply	: GPIO 1
+> +DC1SW		: On/Off Switch	:		: DCDC1 secondary output
+> +
+>  AXP806 regulators, type, and corresponding input supply names:
+>  
+>  Regulator	  Type		  Supply Name		  Notes
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
