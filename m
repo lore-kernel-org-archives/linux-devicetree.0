@@ -1,61 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 01/10] Documentation: DT: qcom_hidma: update binding
- for MSI
-Date: Fri, 23 Sep 2016 10:39:10 -0500
-Message-ID: <20160923153910.GA23150@rob-hp-laptop>
-References: <1473960166-30155-1-git-send-email-okaya@codeaurora.org>
- <1473960166-30155-2-git-send-email-okaya@codeaurora.org>
+From: Paul Burton <paul.burton@imgtec.com>
+Subject: [PATCH] of: Prevent unaligned access in of_alias_scan()
+Date: Fri, 23 Sep 2016 16:38:27 +0100
+Message-ID: <20160923153827.8263-1-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1473960166-30155-2-git-send-email-okaya@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-mips-bounce@linux-mips.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: linux-mips@linux-mips.org
+Cc: Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 15, 2016 at 01:22:37PM -0400, Sinan Kaya wrote:
-> Adding a new binding for qcom,hidma-1.1 to distinguish HW supporting
-> MSI interrupts from the older revision.
-> 
-> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-> index fd5618b..47bfb5a 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-> +++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-> @@ -47,12 +47,23 @@ When the OS is not in control of the management interface (i.e. it's a guest),
->  the channel nodes appear on their own, not under a management node.
->  
->  Required properties:
-> -- compatible: must contain "qcom,hidma-1.0"
-> +- compatible: must contain "qcom,hidma-1.0" for initial HW or "qcom,hidma-1.1"
-> +for MSI capable HW.
+When allocating a struct alias_prop, of_alias_scan() only requested that
+it be aligned on a 4 byte boundary. The struct contains pointers which
+leads to us attempting 64 bit writes on 64 bit systems, and if the CPU
+doesn't support unaligned memory accesses then this causes problems -
+for example on some MIPS64r2 CPUs including the "mips64r2-generic" QEMU
+emulated CPU it will trigger an address error exception.
 
-Do you have an SoC part number yet? If so, please use that instead.
+Fix this by requesting alignment for the struct alias_prop allocation
+matching that which the compiler expects, using the __alignof__ keyword.
 
->  - reg: Addresses for the transfer and event channel
->  - interrupts: Should contain the event interrupt
->  - desc-count: Number of asynchronous requests this channel can handle
->  - iommus: required a iommu node
->  
-> +Optional properties for MSI:
-> +- msi-parent: pointer to the MSI controller object with the DeviceID in use.
-> +
-> +Example:
-> + msi_parent: <&msi0 0x80024>
-> +
-> +msi0 is the MSI controller in the system. Bits 0-5 is the channel ID. 4
-> +is the channel ID. Bits 5-8 is the instance number. This is for the HIDMA
-> +instance 1.
-> +
->  Example:
->  
->  Hypervisor OS configuration:
-> -- 
-> 1.9.1
-> 
+Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mips@linux-mips.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+---
+ drivers/of/base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 3ce6953..448aa40 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -2042,7 +2042,7 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+ 			continue;
+ 
+ 		/* Allocate an alias_prop with enough space for the stem */
+-		ap = dt_alloc(sizeof(*ap) + len + 1, 4);
++		ap = dt_alloc(sizeof(*ap) + len + 1, __alignof__(*ap));
+ 		if (!ap)
+ 			continue;
+ 		memset(ap, 0, sizeof(*ap) + len + 1);
+-- 
+2.10.0
