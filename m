@@ -1,60 +1,82 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of: Prevent unaligned access in of_alias_scan()
-Date: Fri, 23 Sep 2016 17:13:32 +0100
-Message-ID: <CACxGe6secYUbnZYCpoZH44nEDAU7chfzjxehxWyyotSQE7fWHg@mail.gmail.com>
-References: <20160923153827.8263-1-paul.burton@imgtec.com>
+From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] cpufreq: ti: Add cpufreq driver to determine
+ available OPPs at runtime
+Date: Fri, 23 Sep 2016 11:17:55 -0500
+Message-ID: <57E555B3.2010304@ti.com>
+References: <20160901025328.376-1-d-gerlach@ti.com>
+ <20160901025328.376-3-d-gerlach@ti.com> <20160907052053.GO27345@vireshk-i7>
+ <57D02C85.7020300@ti.com> <20160908033909.GR27345@vireshk-i7>
+ <57E2E0BE.3070206@ti.com> <20160923051947.GC17336@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160923153827.8263-1-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20160923051947.GC17336@vireshk-i7>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: linux-mips <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 23, 2016 at 4:38 PM, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> When allocating a struct alias_prop, of_alias_scan() only requested that
-> it be aligned on a 4 byte boundary. The struct contains pointers which
-> leads to us attempting 64 bit writes on 64 bit systems, and if the CPU
-> doesn't support unaligned memory accesses then this causes problems -
-> for example on some MIPS64r2 CPUs including the "mips64r2-generic" QEMU
-> emulated CPU it will trigger an address error exception.
+On 09/23/2016 12:19 AM, Viresh Kumar wrote:
+> On 21-09-16, 14:34, Dave Gerlach wrote:
+>> Viresh,
+>> On 09/07/2016 10:39 PM, Viresh Kumar wrote:
+>>> On 07-09-16, 10:04, Dave Gerlach wrote:
+>>>>>> +static const struct of_device_id ti_cpufreq_of_match[] = {
+>>>>>> +	{ .compatible = "operating-points-v2-ti-am3352-cpu",
+>>>>>> +	  .data = &am3x_soc_data, },
+>>>>>> +	{ .compatible = "operating-points-v2-ti-am4372-cpu",
+>>>>>> +	  .data = &am4x_soc_data, },
+>>>>>> +	{ .compatible = "operating-points-v2-ti-dra7-cpu",
+>>>>>> +	  .data = &dra7_soc_data },
+>>>>>
+>>>>> You should be using your SoC compatible strings here. OPP compatible
+>>>>> property isn't supposed to be (mis)used for this purpose.
+>>>>>
+>>>>
+>>>> Referring to my comments in patch 1, what if we end up changing the bindings
+>>>> based on DT maintainer comments? We will have these compatible strings, and
+>>>> at that point is it acceptable to match against them? Or is it still better
+>>>> to match to SoC compatibles? I think it makes sense to just probe against
+>>>> these.
+>>>
+>>> But even then I think these are not correct. You should have added a
+>>> single compatible string: operating-points-v2-ti-cpu.
+>>>
+>>> As the properties will stay the same across machines. And then you
+>>> need to use SoC strings here.
+>>>
+>>
+>> Are you opposed to moving _of_get_opp_desc_node from
+>> drivers/base/power/opp/opp.h to include/linux/pm_opp.h and renaming it
+>> appropriately?
 >
-> Fix this by requesting alignment for the struct alias_prop allocation
-> matching that which the compiler expects, using the __alignof__ keyword.
+> I am not opposed to that, but ...
 >
-> Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>> If I move the ti properties out of the cpu node, as discussed in patch 1 of
+>> this series, and into the operating-points-v2 table, I need a way to get the
+>> operating-points-v2 device node and I think it makes sense to reuse this as
+>> it is what the opp framework uses internally to parse the phandle to the opp
+>> table.
+>
+> I am not sure if those registers belong to the OPP bindings. What are those
+> registers really? What all can be read from them? Why shouldn't they be present
+> as a separate node in DT on the respective bus? Look at how it is done for
+> sti-cpufreq driver.
+>
 
-Looks right to me.
+The sti-cpufreq driver in v4.8-rc7 appears to do what I am already doing 
+in this revision of the patch, reading from a syscon phandle that is 
+part of the cpu node in the DT which is what I was told not to do.
 
-Reviewed-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+The register I am referencing in the syscon is a bit-field describing 
+which OPPs are valid for the system, so it is very relevant to the OPP 
+binding. They really are already present in a separate node, I'm just 
+indexing into a syscon, same as the sti-cpufreq driver appears to be doing.
 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-> Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-> ---
->  drivers/of/base.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 3ce6953..448aa40 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -2042,7 +2042,7 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
->                         continue;
->
->                 /* Allocate an alias_prop with enough space for the stem */
-> -               ap = dt_alloc(sizeof(*ap) + len + 1, 4);
-> +               ap = dt_alloc(sizeof(*ap) + len + 1, __alignof__(*ap));
->                 if (!ap)
->                         continue;
->                 memset(ap, 0, sizeof(*ap) + len + 1);
-> --
-> 2.10.0
->
+Regards,
+Dave
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
