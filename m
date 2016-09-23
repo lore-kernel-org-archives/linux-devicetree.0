@@ -1,59 +1,146 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 6/6] regulator: core: Prevent falling too fast
-Date: Fri, 23 Sep 2016 10:16:25 -0500
-Message-ID: <20160923151625.GA14369@rob-hp-laptop>
-References: <1473871930-99603-1-git-send-email-mka@chromium.org>
- <1473871930-99603-6-git-send-email-mka@chromium.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 1/3] Documentation: devicetree: add qca8k binding
+Date: Fri, 23 Sep 2016 10:23:24 -0500
+Message-ID: <20160923152324.GA15847@rob-hp-laptop>
+References: <1473949601-20674-1-git-send-email-john@phrozen.org>
+ <1473949601-20674-2-git-send-email-john@phrozen.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1473871930-99603-6-git-send-email-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com, Douglas Anderson <dianders@chromium.org>, briannorris@chromium.org, javier@dowhile0.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1473949601-20674-2-git-send-email-john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qsdk-review-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2016 at 09:52:10AM -0700, Matthias Kaehlcke wrote:
-> From: Douglas Anderson <dianders@chromium.org>
+On Thu, Sep 15, 2016 at 04:26:39PM +0200, John Crispin wrote:
+> Add device-tree binding for ar8xxx switch families.
 > 
-> On some boards it is possible that transitioning the regulator downwards
-> too fast will trigger the over voltage protection (OVP) on the
-> regulator. This is because until the voltage actually falls there is
-> time when the requested voltage is much lower than the actual voltage.
-> 
-> We'll fix this OVP problem by allowing users to specify the maximum
-> voltage that we can safely fall. The maximum safe voltage decrease
-> is specified as a percentage of the current voltage. The driver will
-> then break things into separate steps with a delay in between.
-> 
-> In order to figure out what the delay should be we need to figure out
-> how slowly the voltage rail might fall in the worst (slowest) case.
-> We'll assume this worst case is present and delay so we know for sure
-> that we've finished each step.
-> 
-> In this patch we actually block returning from the set_voltage() call
-> until we've finished delaying. A future patch atop this one might
-> choose to return more immediately and let the voltages fall in the
-> background. That would possibly allow us to cancel a slow downward
-> decay if there was a request to go back up.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 > ---
-> Changes in v5:
-> - Leave set_voltage tracepoints where they were
-> - Fixed error handling in code dealing with the device tree, return an error if configuration is invalid
-> - Fixed coding style and formatting issues
-> - Updated commit message
+> Changes in V2
+> * fixup example to include phy nodes and corresponding phandles
+> * add a note explaining why we need to phy nodes
 > 
->  .../devicetree/bindings/regulator/regulator.txt    |  7 ++++
+> Changes in V3
+> * add note stating that the cpu port is always 0
+> 
+>  .../devicetree/bindings/net/dsa/qca8k.txt          |   89 ++++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> new file mode 100644
+> index 0000000..9c67ee4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> @@ -0,0 +1,89 @@
+> +* Qualcomm Atheros QCA8xxx switch family
+> +
+> +Required properties:
+> +
+> +- compatible: should be "qca,qca8337"
+> +- #size-cells: must be 0
+> +- #address-cells: must be 1
+> +
+> +Subnodes:
+> +
+> +The integrated switch subnode should be specified according to the binding
+> +described in dsa/dsa.txt. As the QCA8K switches do not have a N:N mapping of
+> +port and PHY id, each subnode describing a port needs to have a valid phandle
+> +referencing the internal PHY connected to it. The CPU port of this switch is
+> +always port 0.
+> +
+> +Example:
+> +
+> +
+> +	&mdio0 {
+> +		phy_port1: phy@0 {
+> +			reg = <0>;
+> +		};
+> +
+> +		phy_port2: phy@1 {
+> +			reg = <1>;
+> +		};
+> +
+> +		phy_port3: phy@2 {
+> +			reg = <2>;
+> +		};
+> +
+> +		phy_port4: phy@3 {
+> +			reg = <3>;
+> +		};
+> +
+> +		phy_port5: phy@4 {
+> +			reg = <4>;
+> +		};
+> +
+> +		switch0@0 {
 
-For the binding:
+The unit address here is the mdio device address and should be unique. 
+You have 2 devices at 0.
 
-Acked-by: Rob Herring <robh@kernel.org>
+> +			compatible = "qca,qca8337";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			reg = <0>;
 
->  drivers/regulator/core.c                           | 49 +++++++++++++++++++---
->  drivers/regulator/of_regulator.c                   | 42 ++++++++++++++++++-
->  include/linux/regulator/machine.h                  |  2 +
->  4 files changed, 93 insertions(+), 7 deletions(-)
+Not documented.
+
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				port@0 {
+> +					reg = <0>;
+> +					label = "cpu";
+> +					ethernet = <&gmac1>;
+> +					phy-mode = "rgmii";
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					label = "lan1";
+> +					phy-handle = <&phy_port1>;
+> +				};
+> +
+> +				port@2 {
+> +					reg = <2>;
+> +					label = "lan2";
+> +					phy-handle = <&phy_port2>;
+> +				};
+> +
+> +				port@3 {
+> +					reg = <3>;
+> +					label = "lan3";
+> +					phy-handle = <&phy_port3>;
+> +				};
+> +
+> +				port@4 {
+> +					reg = <4>;
+> +					label = "lan4";
+> +					phy-handle = <&phy_port4>;
+> +				};
+> +
+> +				port@5 {
+> +					reg = <5>;
+> +					label = "wan";
+> +					phy-handle = <&phy_port5>;
+> +				};
+> +			};
+> +		};
+> +	};
+> -- 
+> 1.7.10.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
