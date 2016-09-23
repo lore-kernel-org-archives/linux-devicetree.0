@@ -1,7 +1,7 @@
 From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v4 1/2] arm: dts: qcom: apq8064: Add display DT nodes
-Date: Fri, 23 Sep 2016 12:03:06 +0530
-Message-ID: <1474612387-21762-2-git-send-email-architt@codeaurora.org>
+Subject: [PATCH v4 2/2] arm: dts: qcom: apq8064-ifc6410: Add HDMI support
+Date: Fri, 23 Sep 2016 12:03:07 +0530
+Message-ID: <1474612387-21762-3-git-send-email-architt@codeaurora.org>
 References: <1473780097-11388-1-git-send-email-architt@codeaurora.org>
  <1474612387-21762-1-git-send-email-architt@codeaurora.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
@@ -11,124 +11,116 @@ To: andy.gross@linaro.org
 Cc: linux-arm-msm@vger.kernel.org, robdclark@gmail.com, john.stultz@linaro.org, sboyd@codeaurora.org, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-APQ8064 contains a MDP4 based display controller. It contains a HDMI, LVDS
-and 2 DSI outputs.
-
-Add display DT nodes for MDP4, HDMI TX and HDMI PHY. MDP4 based display
-blocks have a flat device hierarchy.
-
-Nodes for other outputs will be added later.
+Add HDMI support on IFC6410. Populate the regulators required by HDMI-TX
+and PHY. Establish the link between the MDP4 DTV encoder and HDMI. Create
+a generic micro HDMI connector DT node. The msm drm driver doesn't parse
+for HDMI connectors in DT, but it will do so later.
 
 Cc: devicetree@vger.kernel.org
 
-Tested-by: John Stultz <john.stultz@linaro.org>
 Signed-off-by: Archit Taneja <architt@codeaurora.org>
 ---
- arch/arm/boot/dts/qcom-apq8064.dtsi | 91 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 74 ++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 74a9b6c..cf660c7 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -955,6 +955,97 @@
- 			reset-names = "axi", "ahb", "por", "pci", "phy";
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+index 2eeb090..3d37cab 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+@@ -43,6 +43,17 @@
+ 		};
+ 	};
+ 
++	hdmi-out {
++		compatible = "hdmi-connector";
++		type = "d";
++
++		port {
++			hdmi_con: endpoint {
++				remote-endpoint = <&hdmi_out>;
++			};
++		};
++	};
++
+ 	soc {
+ 		pinctrl@800000 {
+ 			card_detect: card_detect {
+@@ -64,6 +75,25 @@
+ 					bias-disable;
+ 				};
+ 			};
++
++			hdmi_pinctrl: hdmi-pinctrl {
++				mux {
++					pins = "gpio70", "gpio71", "gpio72";
++					function = "hdmi";
++				};
++
++				pinconf_ddc {
++					pins = "gpio70", "gpio71";
++					bias-pull-up;
++					drive-strength = <2>;
++				};
++
++				pinconf_hpd {
++					pins = "gpio72";
++					bias-pull-down;
++					drive-strength = <16>;
++				};
++			};
+ 		};
+ 
+ 		rpm@108000 {
+@@ -329,5 +359,49 @@
+ 				mmc-pwrseq = <&sdcc4_pwrseq>;
+ 			};
  		};
 +
-+		hdmi: hdmi-tx@4a00000 {
-+			compatible = "qcom,hdmi-tx-8960";
-+			reg = <0x04a00000 0x2f0>;
-+			reg-names = "core_physical";
-+			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mmcc HDMI_APP_CLK>,
-+				 <&mmcc HDMI_M_AHB_CLK>,
-+				 <&mmcc HDMI_S_AHB_CLK>;
-+			clock-names = "core_clk",
-+				      "master_iface_clk",
-+				      "slave_iface_clk";
++		hdmi-tx@4a00000 {
++			status = "okay";
 +
-+			phys = <&hdmi_phy>;
-+			phy-names = "hdmi-phy";
++			core-vdda-supply = <&pm8921_hdmi_switch>;
++			hdmi-mux-supply = <&ext_3p3v>;
++
++			hpd-gpios = <&tlmm_pinmux 72 GPIO_ACTIVE_HIGH>;
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&hdmi_pinctrl>;
 +
 +			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
 +				port@0 {
-+					reg = <0>;
-+					hdmi_in: endpoint {
++					endpoint {
++						remote-endpoint = <&mdp_dtv_out>;
 +					};
 +				};
 +
 +				port@1 {
-+					reg = <1>;
-+					hdmi_out: endpoint {
++					endpoint {
++						remote-endpoint = <&hdmi_con>;
 +					};
 +				};
 +			};
 +		};
 +
-+		hdmi_phy: hdmi-phy@4a00400 {
-+			compatible = "qcom,hdmi-phy-8960";
-+			reg = <0x4a00400 0x60>,
-+			      <0x4a00500 0x100>;
-+			reg-names = "hdmi_phy",
-+				    "hdmi_pll";
++		hdmi-phy@4a00400 {
++			status = "okay";
 +
-+			clocks = <&mmcc HDMI_S_AHB_CLK>;
-+			clock-names = "slave_iface_clk";
++			core-vdda-supply = <&pm8921_hdmi_switch>;
 +		};
 +
-+		mdp: mdp@5100000 {
-+			compatible = "qcom,mdp4";
-+			reg = <0x05100000 0xf0000>;
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mmcc MDP_CLK>,
-+				 <&mmcc MDP_AHB_CLK>,
-+				 <&mmcc MDP_AXI_CLK>,
-+				 <&mmcc MDP_LUT_CLK>,
-+				 <&mmcc HDMI_TV_CLK>,
-+				 <&mmcc MDP_TV_CLK>;
-+			clock-names = "core_clk",
-+				      "iface_clk",
-+				      "bus_clk",
-+				      "lut_clk",
-+				      "hdmi_clk",
-+				      "tv_clk";
++		mdp@5100000 {
++			status = "okay";
 +
 +			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					mdp_lvds_out: endpoint {
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					mdp_dsi1_out: endpoint {
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					mdp_dsi2_out: endpoint {
-+					};
-+				};
-+
 +				port@3 {
-+					reg = <3>;
-+					mdp_dtv_out: endpoint {
++					endpoint {
++						remote-endpoint = <&hdmi_in>;
 +					};
 +				};
 +			};
 +		};
  	};
  };
- #include "qcom-apq8064-pins.dtsi"
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
