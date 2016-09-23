@@ -1,65 +1,89 @@
-From: Michal Simek <michal.simek@xilinx.com>
+From: Jagan Teki <jagannadh.teki@gmail.com>
 Subject: Re: [PATCH v2] arm: dts: zynq: Add MicroZed board support
-Date: Fri, 23 Sep 2016 10:37:05 +0200
-Message-ID: <aa469a8b-7968-1934-1b8e-6978fd0e6922@xilinx.com>
+Date: Fri, 23 Sep 2016 14:12:26 +0530
+Message-ID: <CAD6G_RRn0pAF=TsgONQ4yah2VhZXQeBQmeBQ5p46u6R5F8pSqw@mail.gmail.com>
 References: <1474550489-7005-1-git-send-email-jagan@amarulasolutions.com>
- <20160922205917.GS16583@xsjsorenbubuntu>
- <4a586da6-8d94-bfbe-ea0c-58b6f8573e7b@xilinx.com>
- <CAD6G_RR6JSzd-QCUj3wDC30pXabNqaNR1d1jQm9bUq6z0CP=3g@mail.gmail.com>
+ <20160922205917.GS16583@xsjsorenbubuntu> <4a586da6-8d94-bfbe-ea0c-58b6f8573e7b@xilinx.com>
+ <CAD6G_RR6JSzd-QCUj3wDC30pXabNqaNR1d1jQm9bUq6z0CP=3g@mail.gmail.com> <aa469a8b-7968-1934-1b8e-6978fd0e6922@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAD6G_RR6JSzd-QCUj3wDC30pXabNqaNR1d1jQm9bUq6z0CP=3g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jagan Teki <jagannadh.teki@gmail.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <aa469a8b-7968-1934-1b8e-6978fd0e6922@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjMuOS4yMDE2IDA5OjM5LCBKYWdhbiBUZWtpIHdyb3RlOgo+IE9uIEZyaSwgU2VwIDIzLCAy
-MDE2IGF0IDExOjMzIEFNLCBNaWNoYWwgU2ltZWsgPG1pY2hhbC5zaW1la0B4aWxpbnguY29tPiB3
-cm90ZToKPj4gT24gMjIuOS4yMDE2IDIyOjU5LCBTw7ZyZW4gQnJpbmttYW5uIHdyb3RlOgo+Pj4g
-T24gVGh1LCAyMDE2LTA5LTIyIGF0IDE4OjUxOjI5ICswNTMwLCBKYWdhbiBUZWtpIHdyb3RlOgo+
-Pj4+IEZyb206IEphZ2FuIFRla2kgPGp0ZWtpQG9wZW5lZGV2LmNvbT4KPj4+Pgo+Pj4+IEFkZGVk
-IGJhc2ljIGR0cyBzdXBwb3J0IGZvciBNaWNyb1plZCBib2FyZC4KPj4+Pgo+Pj4+IC0gVUFSVAo+
-Pj4+IC0gU0RIQ0kKPj4+PiAtIEV0aGVybmV0Cj4+Pj4KPj4+PiBDYzogU29yZW4gQnJpbmttYW5u
-IDxzb3Jlbi5icmlua21hbm5AeGlsaW54LmNvbT4KPj4+PiBDYzogTWljaGFsIFNpbWVrIDxtaWNo
-YWwuc2ltZWtAeGlsaW54LmNvbT4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBKYWdhbiBUZWtpIDxqdGVr
-aUBvcGVuZWRldi5jb20+Cj4+Pj4gLS0tCj4+Pj4gQ2hhbmdlcyBmb3IgdjI6Cj4+Pj4gICAgICAt
-IEFkZCBTREhDSQo+Pj4+ICAgICAgLSBBZGQgRXRoZXJuZXQKPj4+Pgo+Pj4+ICBhcmNoL2FybS9i
-b290L2R0cy9NYWtlZmlsZSAgICAgICAgICB8ICAxICsKPj4+PiAgYXJjaC9hcm0vYm9vdC9kdHMv
-enlucS1taWNyb3plZC5kdHMgfCA5NSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrCj4+Pj4gIDIgZmlsZXMgY2hhbmdlZCwgOTYgaW5zZXJ0aW9ucygrKQo+Pj4+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvenlucS1taWNyb3plZC5kdHMKPj4+Pgo+Pj4+
-IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL01ha2VmaWxlCj4+Pj4gaW5kZXggZmFhY2Q1Mi4uNGQ3Yjg1OCAxMDA2NDQKPj4+PiAtLS0g
-YS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZQo+Pj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L01ha2VmaWxlCj4+Pj4gQEAgLTg2Miw2ICs4NjIsNyBAQCBkdGItJChDT05GSUdfQVJDSF9WVDg1
-MDApICs9IFwKPj4+PiAgICAgIHdtODc1MC1hcGM4NzUwLmR0YiBcCj4+Pj4gICAgICB3bTg4NTAt
-dzcwdjIuZHRiCj4+Pj4gIGR0Yi0kKENPTkZJR19BUkNIX1pZTlEpICs9IFwKPj4+PiArICAgIHp5
-bnEtbWljcm96ZWQuZHRiIFwKPj4+PiAgICAgIHp5bnEtcGFyYWxsZWxsYS5kdGIgXAo+Pj4+ICAg
-ICAgenlucS16YzcwMi5kdGIgXAo+Pj4+ICAgICAgenlucS16YzcwNi5kdGIgXAo+Pj4+IGRpZmYg
-LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy96eW5xLW1pY3JvemVkLmR0cyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL3p5bnEtbWljcm96ZWQuZHRzCj4+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+PiBp
-bmRleCAwMDAwMDAwLi45ZTY0NDk2Cj4+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4+ICsrKyBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL3p5bnEtbWljcm96ZWQuZHRzCj4+Pj4gQEAgLTAsMCArMSw5NSBAQAo+Pj4+
-ICsvKgo+Pj4+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTUgSmFnYW4gVGVraSA8anRla2lAb3BlbmVk
-ZXYuY29tPgo+Pgo+Pgo+PiBEaWQgeW91IGNyZWF0ZWQgb25seSB5b3Vyc2VsZiB3aXRob3V0IGNv
-cHlpbmcgcGFydCBvZiB0aGlzIGZyb20gb3RoZXJzPwo+PiBUaGVyZSBpcyBkdHMgaW4gdS1ib290
-IHdoaWNoIEkgYmVsaWV2ZSB5b3UgYXJlIGF3YXJlIG9mLgo+IAo+IEkgc2VudCB0aGUgaW5pdGlh
-bCBvbmUgZmV3IG1vbnRocyBiYWNrIHNvIGF0IHRoYXQgdGltZSwgSSB3YXMgY3JlYXRlZAo+IGFu
-ZCBub3cgSSBqdXN0IGFkZGVkIFVTQiBhbmQgRXRoZXJuZXQgd2l0aCB0aGUgcmVmZXJlbmNlIG9m
-IHpjNzAyCj4gYm9hcmQuCgpDYW4geW91IHNlbmQgbWUgYSBsaW5rIHRvIHRoYXQgcG9zdD8gSSBk
-aWRuJ3QgZmluZCBpdC4KQW55d2F5IHlvdSBzaG91bGQga2VlcCBYaWxpbnggY29weXJpZ2h0IHRo
-ZXJlLgoKVGhhbmtzLApNaWNoYWwKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Fri, Sep 23, 2016 at 2:07 PM, Michal Simek <michal.simek@xilinx.com> wro=
+te:
+> On 23.9.2016 09:39, Jagan Teki wrote:
+>> On Fri, Sep 23, 2016 at 11:33 AM, Michal Simek <michal.simek@xilinx.com>=
+ wrote:
+>>> On 22.9.2016 22:59, S=C3=B6ren Brinkmann wrote:
+>>>> On Thu, 2016-09-22 at 18:51:29 +0530, Jagan Teki wrote:
+>>>>> From: Jagan Teki <jteki@openedev.com>
+>>>>>
+>>>>> Added basic dts support for MicroZed board.
+>>>>>
+>>>>> - UART
+>>>>> - SDHCI
+>>>>> - Ethernet
+>>>>>
+>>>>> Cc: Soren Brinkmann <soren.brinkmann@xilinx.com>
+>>>>> Cc: Michal Simek <michal.simek@xilinx.com>
+>>>>> Signed-off-by: Jagan Teki <jteki@openedev.com>
+>>>>> ---
+>>>>> Changes for v2:
+>>>>>      - Add SDHCI
+>>>>>      - Add Ethernet
+>>>>>
+>>>>>  arch/arm/boot/dts/Makefile          |  1 +
+>>>>>  arch/arm/boot/dts/zynq-microzed.dts | 95 +++++++++++++++++++++++++++=
+++++++++++
+>>>>>  2 files changed, 96 insertions(+)
+>>>>>  create mode 100644 arch/arm/boot/dts/zynq-microzed.dts
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>>>>> index faacd52..4d7b858 100644
+>>>>> --- a/arch/arm/boot/dts/Makefile
+>>>>> +++ b/arch/arm/boot/dts/Makefile
+>>>>> @@ -862,6 +862,7 @@ dtb-$(CONFIG_ARCH_VT8500) +=3D \
+>>>>>      wm8750-apc8750.dtb \
+>>>>>      wm8850-w70v2.dtb
+>>>>>  dtb-$(CONFIG_ARCH_ZYNQ) +=3D \
+>>>>> +    zynq-microzed.dtb \
+>>>>>      zynq-parallella.dtb \
+>>>>>      zynq-zc702.dtb \
+>>>>>      zynq-zc706.dtb \
+>>>>> diff --git a/arch/arm/boot/dts/zynq-microzed.dts b/arch/arm/boot/dts/=
+zynq-microzed.dts
+>>>>> new file mode 100644
+>>>>> index 0000000..9e64496
+>>>>> --- /dev/null
+>>>>> +++ b/arch/arm/boot/dts/zynq-microzed.dts
+>>>>> @@ -0,0 +1,95 @@
+>>>>> +/*
+>>>>> + * Copyright (C) 2015 Jagan Teki <jteki@openedev.com>
+>>>
+>>>
+>>> Did you created only yourself without copying part of this from others?
+>>> There is dts in u-boot which I believe you are aware of.
+>>
+>> I sent the initial one few months back so at that time, I was created
+>> and now I just added USB and Ethernet with the reference of zc702
+>> board.
+>
+> Can you send me a link to that post? I didn't find it.
+
+Here is the link [1]
+
+> Anyway you should keep Xilinx copyright there.
+
+OK then will append Xilinx as well.
+
+[1] http://lkml.iu.edu/hypermail/linux/kernel/1601.1/03236.html
+
+thanks!
+--=20
+Jagan.
