@@ -1,99 +1,228 @@
-From: zhichang <zhichang.yuan02@gmail.com>
-Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on Hip06
-Date: Sat, 24 Sep 2016 16:14:15 +0800
-Message-ID: <05a573de-e963-6590-6ed3-55af97067d7a@gmail.com>
-References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
- <10705430.q2aqv5uYO3@wuerfel>
- <EE11001F9E5DDD47B7634E2F8A612F2E1F8850F2@lhreml507-mbx>
- <1849232.KJrfRPHGN6@wuerfel>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 3/3] regulator: axp20x: simplify device access
+Date: Sat, 24 Sep 2016 16:29:11 +0800
+Message-ID: <CAGb2v64ZpQ=9KUH39cFoRxU6n03cgDoUbHegjFfDWaTLQAZ2wg@mail.gmail.com>
+References: <cover.1474616699.git.moinejf@free.fr> <d3078ed4eefd4de48e4b5666a64f6123f8d72483.1474616699.git.moinejf@free.fr>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1849232.KJrfRPHGN6@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "minyard@acm.org" <minyard@acm.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "zourongrong@gmail.com" <zourongrong@gmail.com>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB4PSTC7QKGQEN7BM3SA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <d3078ed4eefd4de48e4b5666a64f6123f8d72483.1474616699.git.moinejf-GANU6spQydw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Arnd,
+Hi,
 
-On 2016年09月23日 23:55, Arnd Bergmann wrote:
-> On Friday, September 23, 2016 2:59:55 PM CEST Gabriele Paoloni wrote:
->>
->>>> From the perspective of the indirect IO function the input parameter
->>>> is an unsigned long addr that (now) can be either:
->>>> 1) an IO token coming from a legacy pci device
->>>> 2) a phys address that lives on the LPC bus
->>>>
->>>> These are conceptually two separate address spaces (and actually they
->>>> both start from 0).
->>>
->>> Why? Any IORESOURCE_IO address always refers to the logical I/O port
->>> range in Linux, not the physical address that is used on a bus.
->>
->> If I read the code correctly when you get an I/O token you just add it
->> to PCI_IOBASE.
->> This is enough since pci_remap_iospace set the virtual address to 
->> PCI_IOBASE + the I/O token offset; so we can read/write to
->> vaddr = PCI_IOBASE + token as pci_remap_iospace has mapped it correctly
->> to the respective PCI cpu address (that is set in the I/O range property
->> of the host controller)
->>
->> In the patchset accessors LPC operates directly on the cpu addresses
->> and the input parameter of the accessors can be either an IO token or
->> a cpu address
->>
->> +static inline void outb(u8 value, unsigned long addr)
->> +{
->> +#ifdef CONFIG_ARM64_INDIRECT_PIO
->> +       if (arm64_extio_ops && arm64_extio_ops->start <= addr &&
->> +                       addr <= arm64_extio_ops->end)
->>
->> Here below we operate on cpu address
->>
->> +               extio_outb(value, addr);
->> +       else
->> +#endif
-> 
-> I missed this bug earlier, this obviously needs to be
-> 
-> 		arm64_extio_ops->outb(value, addr - arm64_extio_ops->start);
-> 
-> or possibly
-> 
-> 		arm64_extio_ops->outb(arm64_extio_ops, value, addr);
-> 
-> as the outb function won't know what the offset is, but
-> that needed to be fixed regardless.
+On Thu, Sep 22, 2016 at 2:20 AM, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org> wrote:
+> Use the pointer to the main regulator device instead of the pointer
+> to the child platform device.
+>
+> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+> ---
+>  drivers/regulator/axp20x-regulator.c | 45 ++++++++++++++++++------------------
+>  1 file changed, 23 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+> index 7405f5b..244ddc3 100644
+> --- a/drivers/regulator/axp20x-regulator.c
+> +++ b/drivers/regulator/axp20x-regulator.c
+> @@ -347,9 +347,9 @@ static const struct regulator_desc axp809_regulators[] = {
+>         AXP_DESC_SW(AXP809, SW, "sw", "swin", AXP22X_PWR_OUT_CTRL2, BIT(6)),
+>  };
+>
+> -static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
+> +static int axp20x_set_dcdc_freq(struct device *dev, u32 dcdcfreq)
+>  {
+> -       struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
+> +       struct axp20x_dev *axp20x = dev_get_drvdata(dev);
+>         unsigned int reg = AXP20X_DCDC_FREQ;
+>         u32 min, max, def, step;
+>
+> @@ -378,7 +378,7 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
+>                 step = 150;
+>                 break;
+>         default:
+> -               dev_err(&pdev->dev,
+> +               dev_err(dev,
+>                         "Setting DCDC frequency for unsupported AXP variant\n");
+>                 return -EINVAL;
+>         }
+> @@ -388,13 +388,13 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
+>
+>         if (dcdcfreq < min) {
+>                 dcdcfreq = min;
+> -               dev_warn(&pdev->dev, "DCDC frequency too low. Set to %ukHz\n",
+> +               dev_warn(dev, "DCDC frequency too low. Set to %ukHz\n",
+>                          min);
+>         }
+>
+>         if (dcdcfreq > max) {
+>                 dcdcfreq = max;
+> -               dev_warn(&pdev->dev, "DCDC frequency too high. Set to %ukHz\n",
+> +               dev_warn(dev, "DCDC frequency too high. Set to %ukHz\n",
+>                          max);
+>         }
+>
+> @@ -404,24 +404,24 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
+>                                   AXP20X_FREQ_DCDC_MASK, dcdcfreq);
+>  }
+>
+> -static int axp20x_regulator_parse_dt(struct platform_device *pdev)
+> +static int axp20x_regulator_parse_dt(struct device *dev)
+>  {
+>         struct device_node *np, *regulators;
+>         int ret;
+>         u32 dcdcfreq = 0;
+>
+> -       np = of_node_get(pdev->dev.parent->of_node);
+> +       np = of_node_get(dev->of_node);
+>         if (!np)
+>                 return 0;
+>
+>         regulators = of_get_child_by_name(np, "regulators");
+>         if (!regulators) {
+> -               dev_warn(&pdev->dev, "regulators node not found\n");
+> +               dev_warn(dev, "regulators node not found\n");
+>         } else {
+>                 of_property_read_u32(regulators, "x-powers,dcdc-freq", &dcdcfreq);
+> -               ret = axp20x_set_dcdc_freq(pdev, dcdcfreq);
+> +               ret = axp20x_set_dcdc_freq(dev, dcdcfreq);
+>                 if (ret < 0) {
+> -                       dev_err(&pdev->dev, "Error setting dcdc frequency: %d\n", ret);
+> +                       dev_err(dev, "Error setting dcdc frequency: %d\n", ret);
+>                         return ret;
+>                 }
+>
+> @@ -499,11 +499,12 @@ static u32 axp20x_polyphase_slave(struct axp20x_dev *axp20x)
+>
+>  static int axp20x_regulator_probe(struct platform_device *pdev)
+>  {
+> +       struct device *dev = pdev->dev.parent;
 
-In V3, the outb is :
+There are 2 struct device's in play in this function, 1 from the parent,
+and 1 for the platform device for this regulator sub-device.
 
-void outb(u8 value, unsigned long addr)
-{
-	if (!arm64_extio_ops || arm64_extio_ops->start > addr ||
-			arm64_extio_ops->end < addr)
-		writeb(value, PCI_IOBASE + addr);
-	else
-		if (arm64_extio_ops->pfout)
-			arm64_extio_ops->pfout(arm64_extio_ops->devpara,
-				addr + arm64_extio_ops->ptoffset, &value,
-				sizeof(u8), 1);
-}
+>         struct regulator_dev *rdev;
+> -       struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
+> +       struct axp20x_dev *axp20x = dev_get_drvdata(dev);
+>         const struct regulator_desc *regulators;
+>         struct regulator_config config = {
+> -               .dev = pdev->dev.parent,
+> +               .dev = dev,
+>                 .regmap = axp20x->regmap,
+>                 .driver_data = axp20x,
+>         };
+> @@ -532,7 +533,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>                 dcdc5_ix = AXP22X_DCDC5;
+>                 dc1sw_ix = AXP22X_DC1SW;
+>                 dc5ldo_ix = AXP22X_DC5LDO;
+> -               drivevbus = of_property_read_bool(pdev->dev.parent->of_node,
+> +               drivevbus = of_property_read_bool(dev->of_node,
+>                                                   "x-powers,drive-vbus-en");
+>                 break;
+>         case AXP806_ID:
+> @@ -555,13 +556,13 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>                 dc5ldo_ix = AXP809_DC5LDO;
+>                 break;
+>         default:
+> -               dev_err(&pdev->dev, "Unsupported AXP variant: %ld\n",
+> +               dev_err(dev, "Unsupported AXP variant: %ld\n",
 
-here, arm64_extio_ops->ptoffset is the offset between the real legacy IO address
-and the logical IO address, similar to the offset of primary address and
-secondary address in PCI bridge.
+So this one is incorrect. You should use this device's struct,
+not the parent. It's possible the mfd driver supports a PMIC,
+but the regulator driver is still missing.
 
-But in V3, LPC driver call pci_address_to_pio to request the logical IO as PCI
-host bridge during its probing.
+>                         axp20x->variant);
+>                 return -EINVAL;
+>         }
+>
+>         /* This only sets the dcdc freq. Ignore any errors */
+> -       axp20x_regulator_parse_dt(pdev);
+> +       axp20x_regulator_parse_dt(dev);
+>
+>         for (i = 0; i < nregulators; i++) {
+>                 const struct regulator_desc *desc = &regulators[i];
+> @@ -580,7 +581,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>                  * name.
+>                  */
+>                 if (i == dc1sw_ix && dcdc1_name) {
+> -                       new_desc = devm_kzalloc(&pdev->dev, sizeof(*desc),
+> +                       new_desc = devm_kzalloc(dev, sizeof(*desc),
+>                                                 GFP_KERNEL);
+>                         *new_desc = regulators[i];
+>                         new_desc->supply_name = dcdc1_name;
+> @@ -588,16 +589,16 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>                 }
+>
+>                 if (i == dc5ldo_ix && dcdc5_name) {
+> -                       new_desc = devm_kzalloc(&pdev->dev, sizeof(*desc),
+> +                       new_desc = devm_kzalloc(dev, sizeof(*desc),
+>                                                 GFP_KERNEL);
 
+Same here. The devres lifetime should be bound to this driver, not the parent.
 
-cheers,
-Zhichang
+>                         *new_desc = regulators[i];
+>                         new_desc->supply_name = dcdc5_name;
+>                         desc = new_desc;
+>                 }
+>
+> -               rdev = devm_regulator_register(&pdev->dev, desc, &config);
+> +               rdev = devm_regulator_register(dev, desc, &config);
 
+Same here.
 
+>                 if (IS_ERR(rdev)) {
+> -                       dev_err(&pdev->dev, "Failed to register %s\n",
+> +                       dev_err(dev, "Failed to register %s\n",
 
-> 
-> 	Arnd
-> 
+Same here.
+
+>                                 regulators[i].name);
+>
+>                         return PTR_ERR(rdev);
+> @@ -608,7 +609,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>                                            &workmode);
+>                 if (!ret) {
+>                         if (axp20x_set_dcdc_workmode(rdev, i, workmode))
+> -                               dev_err(&pdev->dev, "Failed to set workmode on %s\n",
+> +                               dev_err(dev, "Failed to set workmode on %s\n",
+
+Same here.
+
+>                                         rdev->desc->name);
+>                 }
+>
+> @@ -630,11 +631,11 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>                 /* Change N_VBUSEN sense pin to DRIVEVBUS output pin */
+>                 regmap_update_bits(axp20x->regmap, AXP20X_OVER_TMP,
+>                                    AXP22X_MISC_N_VBUSEN_FUNC, 0);
+> -               rdev = devm_regulator_register(&pdev->dev,
+> +               rdev = devm_regulator_register(dev,
+
+Same here.
+
+>                                                &axp22x_drivevbus_regulator,
+>                                                &config);
+>                 if (IS_ERR(rdev)) {
+> -                       dev_err(&pdev->dev, "Failed to register drivevbus\n");
+> +                       dev_err(dev, "Failed to register drivevbus\n");
+
+Same here.
+
+Regards
+ChenYu
+
+>                         return PTR_ERR(rdev);
+>                 }
+>         }
+> --
+> 2.10.0
+>
