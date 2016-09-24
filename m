@@ -1,160 +1,48 @@
-From: Wolfgang Wiedmeyer <wolfgang-CMKNnOTVkIZM7kwft8N7nw@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: exynos: Add reboot reason support for Trats2
-Date: Sat, 24 Sep 2016 23:04:49 +0200
-Message-ID: <87fuopvwjy.fsf@machinist.wiedmeyer.de>
-References: <20160922205522.GA15917@kozik-lap>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2] ASoC: simple-card: add support for aux devices
+Date: Sat, 24 Sep 2016 19:03:19 +0100
+Message-ID: <20160924180319.i6cnteh6afzcbm77@sirena.org.uk>
+References: <1474614673-12350-1-git-send-email-nikita.yoush@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20160922205522.GA15917@kozik-lap>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zp63scygaaulqc7h"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1474614673-12350-1-git-send-email-nikita.yoush@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Otto =?iso-8859-1?Q?Kek=E4l=E4inen?= <otto@seravo.fi>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mengdong Lin <mengdong.lin@linux.intel.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andrew Lunn <andrew@lunn.ch>, Peter Ujfalusi <peter.ujfalusi@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
+--zp63scygaaulqc7h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Krzysztof Kozlowski writes:
+On Fri, Sep 23, 2016 at 10:11:12AM +0300, Nikita Yushchenko wrote:
+> This patch makes it possible to use simple-card in setups where separate
+> amplifier chip is connected to codec's output.
 
-> On Thu, Sep 22, 2016 at 08:59:03PM +0200, Wolfgang Wiedmeyer wrote:
->>=20
->> Krzysztof Kozlowski writes:
->>=20
->> > On Thu, Sep 22, 2016 at 06:48:35PM +0200, Wolfgang Wiedmeyer wrote:
->> >> This allows to reboot the device into recovery mode and into the down=
-load
->> >> mode of the bootloader.
->> >
->> > Which bootloader? Probably UBoot... or Samsung stock one? Could you put
->> > that information here?
->>=20
->> I'm only working with the stock one. I was under the impression that the
->> stock bootloader cannot be replaced on a i9300 because there's a
->> signature check. Is UBoot loaded after the stock one on Trats2 or how
->> does this work? I didn't find information on that.
->
-> +CC Marek,
->
-> Trats2 is working with U-Boot. Just U-Boot. However I never converted S3
-> into Trats2 on my own. I always used targets prepared to be "Trats2"
-> type.=20
+This doesn't apply to current code, please check and resend.
 
-It would be awesome to be able to run U-Boot on i9300. Is there a way to
-test this by not risking to brick the device, e.g. by booting from the
-SD card? Then I could send an updated version of the patch that is
-compatible with U-Boot :)=20
+> Changes from v1:
 
-> Of course kernel is independent to bootloader but in that case you want
-> to use a specific interface between kernel and specific bootloader
-> type/version. In that case - this should be U-Boot, I think.
+Please put any process noise like inter version changelogs that isn't
+part of the changelog itself after the --- as covered in
+SubmittingPatches.
 
-I absolutely understand that. Having the patch in mainline doesn't make
-much sense if it's not compatible with U-Boot.
-
-Best regards,
-Wolfgang
-
->> >> Signed-off-by: Wolfgang Wiedmeyer <wolfgit-CMKNnOTVkIZM7kwft8N7nw@public.gmane.org>
->> >> ---
->> >>  arch/arm/boot/dts/exynos4412-trats2.dts | 14 ++++++++++++++
->> >>  arch/arm/boot/dts/exynos4x12.dtsi       |  2 +-
->> >>  2 files changed, 15 insertions(+), 1 deletion(-)
->> >>=20
->> >> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/=
-dts/exynos4412-trats2.dts
->> >> index 129e973..a38d1e3 100644
->> >> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
->> >> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
->> >> @@ -1294,3 +1294,17 @@
->> >>  	vtmu-supply =3D <&ldo10_reg>;
->> >>  	status =3D "okay";
->> >>  };
->> >> +
->> >> +&pmu {
->> >> +	compatible =3D "syscon", "simple-mfd";
->> >> +
->> >> +	reboot-mode {
->> >> +		compatible =3D "syscon-reboot-mode";
->> >> +		offset =3D <0x80c>;
->> >> +
->> >> +		mode-normal	=3D <0x12345670>;
->> >> +		mode-bootloader	=3D <0x12345671>;
->> >> +		mode-download	=3D <0x12345671>;
->> >> +		mode-recovery	=3D <0x12345674>;
->> >
->> > Hmmm, how did you get these values? Are they already supported?
->>=20
->> I only have the vendor source drop as documentation. The magic mode
->> values [1] and the offset [2] can be found there.
->
-> It would be useful to mention that in commit msg (just the source)...
-> however as I wrote above, these values should be for U-Boot, not the
-> stock one.
->
-> Best regards,
-> Krzysztof
->
->>=20
->> > It would be nice to document them:
->> > 1. In Documentation/arm/Samsung/Bootloader-interface.txt
->> > 2. In header. I hate such magic numbers... you could add new header ne=
-xt
->> >    to existing rockchip one:
->> >    include/dt-bindings/soc/samsung,boot-mode.h
->> >    (and update maintainers entry :) )
->>=20
->> Thanks for the review! I will do the documentation and update the commit
->> message.
->>=20
->> Best regards,
->> Wolfgang
->>=20
->> [1] https://code.fossencdi.org/kernel_samsung_smdk4412.git/tree/arch/arm=
-/mach-exynos/sec-reboot.c#n65
->>=20
->> [2] https://code.fossencdi.org/kernel_samsung_smdk4412.git/tree/arch/arm=
-/mach-exynos/include/mach/regs-pmu.h#n79
->>=20
->>=20
->> --=20
->> Website: https://fossencdi.org
->> Jabber: wolfgang-CMKNnOTVkIZM7kwft8N7nw@public.gmane.org
->> OpenPGP: 0F30 D1A0 2F73 F70A 6FEE  048E 5816 A24C 1075 7FC4
->> Key download: https://wiedmeyer.de/keys/ww.asc
-
-
-=2D-=20
-Website: https://fossencdi.org
-Jabber: wolfgang-CMKNnOTVkIZM7kwft8N7nw@public.gmane.org
-OpenPGP: 0F30 D1A0 2F73 F70A 6FEE  048E 5816 A24C 1075 7FC4
-Key download: https://wiedmeyer.de/keys/ww.asc
-
---=-=-=
+--zp63scygaaulqc7h
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iQIcBAEBCgAGBQJX5upxAAoJEFgWokwQdX/EcfUP/3nOEr8pqxIAZdjc7/S4Oosq
-9cA4R69GfGYmGo//mT2RYE9L+3hPDXDm4HoAHYd7e871Maecnnf5r7xteBfoY+p9
-ZeWb6oiGBhoO5IftxWBfLcfyKOCm8zLNAysocCM//sR/MBkcZb5NpiDphUcVfePy
-zBITjqK8LmLAvMWj4xsB/SQPxfuOkMBqK+59Uj0iX8srPRxSN7WRqFlSBxY97ftD
-lUvXBttUxJvKAMdk1c77XmBX4XgK+iJKXoYN8SztvshMhTK7iW0yf4aaWgvm8kTX
-fJz94MXKt33nwPvho5SV7v2rXMVLO+7flazypwzMXgZXoeDFdbPJ3PXzpZlZqi1I
-cOPJAKHmMpQfyhuBNNx2Wmpc43RcvqspBrhI0dCE3982e6eSwLBw8avB4cwN2h5V
-qNnj2vxD98SDEz5N/89jySAVOMC5YFSCoXxjmsjDJbHX917NmWNpWD/rorL718Vc
-D6afvKSWVZNpsVsVPPqMvtir23kuvQdteNgtPEjuVKI2vVOe/fzORyM1XyVpAw5m
-uPmF0v+oYlSN9tMnE7nb1Tk6LD/zJrmBK21PQBEMuYpJd/yfxV8Gp15i/CPm0PbZ
-rO8lCrASJJ7zJOv2IjtIPwReHlRqxi0UQiD6Oe0DXy8ZK1JaIqRbZPiM7lLniqy+
-ZsFdXa+SavBY3jPW1jGp
-=+Zl7
+iQEcBAABCAAGBQJX5r/nAAoJECTWi3JdVIfQ+TcH+wSUz/TdiBWl+L4a5PCTBVwX
+4PYGZ5mX4K+KvnyHmH+cEV37q5DP4YVQ76I+Bl9DkHLqCUgWUB6PeLXUvaaisRbx
+26CLNgq9QRvvhhLkFXlhIfkcSxrYRhWnTWuvA3dBuXLq+qEIT0BJvnHbZaR7Qabg
+P6gOysc7DL3w2m75amZ8DEmaZ6JaXF+0pV/fpueeI3EmeV1DFj5mtvglUsS2jXSf
+3ORqQi6gbFC5isOOiSeDFTzyeDfU+K8n7Lkh90lEuFDhdjBjuoK6d++do+wpOyOn
+z9ID81TQBlf6r3/uM1YOj8vwn0k2NR60zOhC1vw0R1pdUhKe3vMMeGiXNAZrUec=
+=OD9I
 -----END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--zp63scygaaulqc7h--
