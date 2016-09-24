@@ -1,53 +1,49 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v3 1/2] leds: ncp5623: Add device tree binding
- documentation
-Date: Sat, 24 Sep 2016 21:06:51 +0200
-Message-ID: <bd220063-5c66-c428-738f-0eeb5f4f0bc7@gmail.com>
-References: <1474025672-5040-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1474025672-5040-2-git-send-email-florian.vaussard@heig-vd.ch>
- <20160924115823.GA8696@amd>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on Hip06
+Date: Sat, 24 Sep 2016 23:00:40 +0200
+Message-ID: <2866656.cISrGNv8pP@wuerfel>
+References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com> <1849232.KJrfRPHGN6@wuerfel> <05a573de-e963-6590-6ed3-55af97067d7a@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160924115823.GA8696@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Florian Vaussard <florian.vaussard@gmail.com>
-Cc: devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@heig-vd.ch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <05a573de-e963-6590-6ed3-55af97067d7a-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: zhichang <zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "minyard-HInyCGIudOg@public.gmane.org" <minyard-HInyCGIudOg@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yuanzhichang <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/2016 01:58 PM, Pavel Machek wrote:
-> Hi!
->
->> +Example
->> +=======
->> +
->> +led1: ncp5623@38 {
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +	compatible = "onnn,ncp5623";
->> +	reg = <0x38>;
->> +	onnn,led-iref-microamp = <10>;
->> +
->> +	led1r@0 {
->> +		label = "ncp:power:red";
->> +		linux,default-trigger = "default-on";
-> ...
->> +	led1b@1 {
->> +		label = "ncp:power:blue";
->> +		reg = <1>;
->
-> Actually... the three LEDs are packaged such as this is one colorful
-> light to the user, right? Some day we'll need to group them, so that
-> kernel can automatically tell this is one led, and probably add extra
-> attributes, such as values that produce white light.
+On Saturday, September 24, 2016 4:14:15 PM CEST zhichang wrote:
+> 
+> In V3, the outb is :
+> 
+> void outb(u8 value, unsigned long addr)
+> {
+>         if (!arm64_extio_ops || arm64_extio_ops->start > addr ||
+>                         arm64_extio_ops->end < addr)
+>                 writeb(value, PCI_IOBASE + addr);
+>         else
+>                 if (arm64_extio_ops->pfout)
+>                         arm64_extio_ops->pfout(arm64_extio_ops->devpara,
+>                                 addr + arm64_extio_ops->ptoffset, &value,
+>                                 sizeof(u8), 1);
+> }
+> 
+> here, arm64_extio_ops->ptoffset is the offset between the real legacy IO address
+> and the logical IO address, similar to the offset of primary address and
+> secondary address in PCI bridge.
 
-We could try out the trigger approach we discussed few months ago.
-Unfortunately I currently don't have enough time to propose the
-implementation. Probably this work could be done on the occasion of
-addition of RGB LED class driver like this, if the author had free
-bandwidth for that.
+Ok, though we can probably simplify this by making the assumption that
+'ptoffset' is the negative of 'start', as the bus we register should
+always start at port zero.
 
--- 
-Best regards,
-Jacek Anaszewski
+> But in V3, LPC driver call pci_address_to_pio to request the logical IO as PCI
+> host bridge during its probing.
+
+Right, so this still needs to be fixed.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
