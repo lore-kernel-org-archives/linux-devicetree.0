@@ -1,146 +1,90 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v3 1/8] drivers:input:tsc2007: add new common binding
- names, pre-calibration, flipping and rotation
-Date: Sat, 24 Sep 2016 02:31:33 +0200
-Message-ID: <20160924003133.htaaiphjrm7vy52t@earth>
-References: <cover.1474634475.git.hns@goldelico.com>
- <1409ed9845f17445a8a67bd6fb16c902c3e4f69c.1474634475.git.hns@goldelico.com>
- <20160923224726.GA4639@rob-hp-laptop>
+From: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Subject: Re: [PATCH v2] clk: hisilicon: add CRG driver for Hi3798CV200 SoC
+Date: Sat, 24 Sep 2016 09:45:11 +0800
+Message-ID: <5a6e3727-214a-c791-3d8d-3982ae2f6bac@hisilicon.com>
+References: <1474183821-7570-1-git-send-email-xuejiancheng@hisilicon.com>
+ <20160923174704.GA32729@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6a6tkmwscmjsvzhb"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160923224726.GA4639@rob-hp-laptop>
-Sender: linux-input-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160923174704.GA32729@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, Mika =?iso-8859-1?Q?Penttil=E4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, linux-iio@vger.kernel.org
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yanhaifeng@hisilicon.com, gaofei@hisilicon.com, hermit.wangheming@hisilicon.com, scott.bambrough@linaro.org, mark.gregotski@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+在 2016/9/24 1:47, Rob Herring 写道:
+> On Sun, Sep 18, 2016 at 03:30:21PM +0800, Jiancheng Xue wrote:
+>> Add CRG driver for Hi3798CV200 SoC. CRG(Clock and Reset
+>> Generator) module generates clock and reset signals used
+>> by other module blocks on SoC.
+>>
+>> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+>> ---
+>> change log
+>> v2:
+>> - Fixed compiling error when compiled as a module.
+>> - Fixed issues pointed by Stephen Boyd.
+>> - Added prefix HISTB for clock index macro definitions.
+>>
+>>  .../clock/{hi3519-crg.txt => hisi-crg.txt}         |  11 +-
+>>  drivers/clk/hisilicon/Kconfig                      |   8 +
+>>  drivers/clk/hisilicon/Makefile                     |   1 +
+>>  drivers/clk/hisilicon/crg-hi3798cv200.c            | 305 +++++++++++++++++++++
+>>  drivers/clk/hisilicon/crg.h                        |  34 +++
+>>  include/dt-bindings/clock/histb-clock.h            |  64 +++++
+>>  6 files changed, 419 insertions(+), 4 deletions(-)
+>>  rename Documentation/devicetree/bindings/clock/{hi3519-crg.txt => hisi-crg.txt} (82%)
+>>  create mode 100644 drivers/clk/hisilicon/crg-hi3798cv200.c
+>>  create mode 100644 drivers/clk/hisilicon/crg.h
+>>  create mode 100644 include/dt-bindings/clock/histb-clock.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/hi3519-crg.txt b/Documentation/devicetree/bindings/clock/hisi-crg.txt
+>> similarity index 82%
+>> rename from Documentation/devicetree/bindings/clock/hi3519-crg.txt
+>> rename to Documentation/devicetree/bindings/clock/hisi-crg.txt
+>> index acd1f23..e3919b6 100644
+>> --- a/Documentation/devicetree/bindings/clock/hi3519-crg.txt
+>> +++ b/Documentation/devicetree/bindings/clock/hisi-crg.txt
+>> @@ -1,7 +1,7 @@
+>> -* Hisilicon Hi3519 Clock and Reset Generator(CRG)
+>> +* HiSilicon Clock and Reset Generator(CRG)
+>>  
+>> -The Hi3519 CRG module provides clock and reset signals to various
+>> -controllers within the SoC.
+>> +The CRG module provides clock and reset signals to various
+>> +modules within the SoC.
+>>  
+>>  This binding uses the following bindings:
+>>      Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> @@ -10,7 +10,10 @@ This binding uses the following bindings:
+>>  Required Properties:
+>>  
+>>  - compatible: should be one of the following.
+>> -  - "hisilicon,hi3519-crg" - controller compatible with Hi3519 SoC.
+>> +  - "hisilicon,hi3516cv300-crg"
+>> +  - "hisilicon,hi3519-crg"
+>> +  - "hisilicon,hi3798cv200-crg"
+>> +  - "hisilicon,hi3798cv200-sysctrl"
+> 
+> Why crg and sysctrl?
+> 
+Hi Rob，
 
---6a6tkmwscmjsvzhb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In Hi3798cv200 SoC, the system controller (sysctrl) is another clock
+provider which provides clocks for some modules such as timer0, uart0,
+ir, led etc. These modules won't be power down when the system enters
+into the stand-by mode. Besides providing above clocks, sysctrl also
+contains registers used to control the whole system and some peripherals.
 
-On Fri, Sep 23, 2016 at 05:47:26PM -0500, Rob Herring wrote:
-> On Fri, Sep 23, 2016 at 02:41:09PM +0200, H. Nikolaus Schaller wrote:
-> > commit b98abe52fa8e ("Input: add common DT binding for touchscreens")
-> > introduced common DT bindings for touchscreens [1] and a helper functio=
-n to
-> > parse the DT.
-> >=20
-> > commit ed7c9870c9bc ("Input: of_touchscreen - add support for inverted =
-/ swapped axes")
-> > added another helper for parsing axis inversion and swapping
-> > and applying them to x and y coordinates.
-> >=20
-> > Both helpers have been integrated to accommodate any orientation of the
-> > touch panel in relation to the LCD.
-> >=20
-> > A new feature is to introduce scaling the min/max ADC values to the scr=
-een
-> > size.
-> >=20
-> > This makes it possible to pre-calibrate the touch so that is (almost)
-> > exactly matches the LCD pixel coordinates it is glued onto. This allows=
- to
-> > well enough operate the touch before a user space calibration step can
-> > improve the precision.
-> >=20
-> > Finally, calculate_pressure has been renamed to calculate_resistance
-> > because that is what it is doing.
->=20
-> Seems like you are breaking compatibility with old DTs. I can't tell for=
-=20
-> sure though.
->=20
-> >=20
-> > [1]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-> >=20
-> > Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> > ---
-> >  .../bindings/input/touchscreen/tsc2007.txt         |  20 ++--
-> >  drivers/input/touchscreen/tsc2007.c                | 126 +++++++++++++=
-++++----
-> >  include/linux/i2c/tsc2007.h                        |   8 ++
-> >  3 files changed, 123 insertions(+), 31 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/tsc200=
-7.txt b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
-> > index ec365e1..6e9fd55 100644
-> > --- a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
-> > +++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
-> > @@ -6,6 +6,7 @@ Required properties:
-> >  - ti,x-plate-ohms: X-plate resistance in ohms.
-> > =20
-> >  Optional properties:
-> > +- generic touch screen properties: see touchscreen binding [2].
-> >  - gpios: the interrupt gpio the chip is connected to (trough the penir=
-q pin).
-> >    The penirq pin goes to low when the panel is touched.
-> >    (see GPIO binding[1] for more details).
-> > @@ -13,17 +14,20 @@ Optional properties:
-> >    (see interrupt binding[0]).
-> >  - interrupts: (gpio) interrupt to which the chip is connected
-> >    (see interrupt binding[0]).
-> > -- ti,max-rt: maximum pressure.
-> > -- ti,fuzzx: specifies the absolute input fuzz x value.
-> > -  If set, it will permit noise in the data up to +- the value given to=
- the fuzz
-> > -  parameter, that is used to filter noise from the event stream.
-> > -- ti,fuzzy: specifies the absolute input fuzz y value.
-> > -- ti,fuzzz: specifies the absolute input fuzz z value.
-> > +- ti,max-rt: maximum pressure resistance above which samples are ignor=
-ed
-> > +  (default: 4095).
-> > +- ti,report-resistance: report resistance (no pressure =3D max_rt) ins=
-tead
-> > +  of pressure (no pressure =3D 0).
-> > +- ti,min-x: minimum value reported by X axis ADC (default 0).
-> > +- ti,max-x: maximum value reported by X axis ADC (default 4095).
-> > +- ti,min-y: minimum value reported by Y axis ADC (default 0).
-> > +- ti,max-y: maximum value reported by Y axis ADC (default 4095).
->=20
-> Seems like these could be common too. They make more sense than giving x=
-=20
-> and y sizes in pixel units which really should come from the panel.
+Thanks,
+Jiancheng
 
-The generic touchscreen properties are described "(in pixels)" in
-the DT, but they are used in the same way.
+>>  
+>>  - reg: physical base address of the controller and length of memory mapped
+>>    region.
+> 
+> .
+> 
 
-So ti,max-[xy] is basically the same as touchscreen-size-[xy],
-except, that the generic bindings don't support min-[xy] !=3D 0.
-
-So maybe change the generic bindings like this:
-
-touchscreen-min-x: minimum value reported by X axis ADC (default 0)
-touchscreen-max-x: maximum value reported by Y axis ADC
-touchscreen-min-y: minimum value reported by Y axis ADC (default 0)
-touchscreen-max-y: maximum value reported by Y axis ADC
-touchscreen-size-x: deprecated alias for touchscreen-max-x
-touchscreen-size-y: deprecated alias for touchscreen-max-y
-
--- Sebastian
-
---6a6tkmwscmjsvzhb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCgAGBQJX5cliAAoJENju1/PIO/qaqrMP/04uFRW5Ph4ytHVxMn1cOw1m
-i2NgDvbFwDZmrRFWU67UYeHc4xMwqGrm0icvkiXg+fNohskwFHDgocR0Ii2QXw6X
-F35f1Gk2JXlp9HBDBfAWJzj91G/cifCr0g+sn9LXl+215L/24N0N71rEoY2DxW0D
-fa1d73mvmYY2rMhKTkwaK5O+hIRrzWUwiSlLiBQm43A4p9NEQasIJMcqKnUVQqNm
-KEJinVyRFKZgObIpMI2mpE7MXIA5jO9Tjyb5KSx7RWmue6Wb22UibiBsfauA6WgX
-kaW4OQpPcezP/jueJOZxMyoymJAZwtwoJidJUK1SUMzIqtdwkLAJMA0p6Mh0ZSBC
-RDQO+TKSITQjlF6m1MVMl0x9ydir6WpahEKoZzfNwvjsUwVqkyXwANDiaJ6TxxJH
-2pG9MpChNuUZjVhQmMeFY904v3Pn5nGaJlrbQDqDtAjcqM8+3HIfvepU7xc3tn6O
-7q3jdRCpqU4nLeUIi0XA4c507HjFtjMHv+dOx0Q1000g0zVAuzA78oNJiDf1UlNY
-k6mMnIfgsEVPfO/QRHEQt+g76shkpnToWLj7deEVIELeV71rKw96/ZQx/XqZQpFM
-WJIPpmVxE7KvMMkA38t/g3laGefUgIL2YXG/JJbNnK3sBpcp+rISdYzEaAUThKXQ
-C4WkIv/25AtEmEtVKRiM
-=W2rx
------END PGP SIGNATURE-----
-
---6a6tkmwscmjsvzhb--
