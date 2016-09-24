@@ -1,54 +1,85 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 0/2] Add initial ZTE VOU DRM/KMS driver
-Date: Sat, 24 Sep 2016 22:26:23 +0800
-Message-ID: <1474727185-24180-1-git-send-email-shawn.guo@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Baoyou Xie <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH v2 1/2] dt-bindings: add bindings doc for ZTE VOU display
+ controller
+Date: Sat, 24 Sep 2016 22:26:24 +0800
+Message-ID: <1474727185-24180-2-git-send-email-shawn.guo@linaro.org>
+References: <1474727185-24180-1-git-send-email-shawn.guo@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1474727185-24180-1-git-send-email-shawn.guo@linaro.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel.vetter@ffwll.ch>, David Airlie <airlied@linux.ie>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Baoyou Xie <xie.baoyou@zte.com.cn>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Jun Nie <jun.nie@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The series adds the initial ZTE VOU display controller DRM/KMS driver.
-There are still some features to be added, like overlay plane, scaling,
-and more output devices support.  But it's already useful with dual
-CRTCs and HDMI monitor working.
-
-Changes for v2:
- - Change device tree bindings to kill the virtual display-subsystem
-   node make VOU the parent node.
-
-Shawn Guo (2):
-  dt-bindings: add bindings doc for ZTE VOU display controller
-  drm: zte: add initial vou drm driver
-
- .../devicetree/bindings/display/zte,vou.txt        |  86 +++
- drivers/gpu/drm/Kconfig                            |   2 +
- drivers/gpu/drm/Makefile                           |   1 +
- drivers/gpu/drm/zte/Kconfig                        |   8 +
- drivers/gpu/drm/zte/Makefile                       |   8 +
- drivers/gpu/drm/zte/zx_crtc.c                      | 691 +++++++++++++++++++++
- drivers/gpu/drm/zte/zx_crtc.h                      |  47 ++
- drivers/gpu/drm/zte/zx_drm_drv.c                   | 258 ++++++++
- drivers/gpu/drm/zte/zx_drm_drv.h                   |  22 +
- drivers/gpu/drm/zte/zx_hdmi.c                      | 540 ++++++++++++++++
- drivers/gpu/drm/zte/zx_plane.c                     | 362 +++++++++++
- drivers/gpu/drm/zte/zx_plane.h                     |  26 +
- 12 files changed, 2051 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/zte,vou.txt
- create mode 100644 drivers/gpu/drm/zte/Kconfig
- create mode 100644 drivers/gpu/drm/zte/Makefile
- create mode 100644 drivers/gpu/drm/zte/zx_crtc.c
- create mode 100644 drivers/gpu/drm/zte/zx_crtc.h
- create mode 100644 drivers/gpu/drm/zte/zx_drm_drv.c
- create mode 100644 drivers/gpu/drm/zte/zx_drm_drv.h
- create mode 100644 drivers/gpu/drm/zte/zx_hdmi.c
- create mode 100644 drivers/gpu/drm/zte/zx_plane.c
- create mode 100644 drivers/gpu/drm/zte/zx_plane.h
-
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SXQgYWRkcyBpbml0aWFsIGJpbmRpbmdzIGRvYyBmb3IgWlRFIFZPVSBkaXNwbGF5IGNvbnRyb2xs
+ZXIuICBIRE1JIGlzCnRoZSBvbmx5IHN1cHBvcnRlZCBvdXRwdXQgZGV2aWNlIHJpZ2h0IG5vdy4K
+ClNpZ25lZC1vZmYtYnk6IFNoYXduIEd1byA8c2hhd24uZ3VvQGxpbmFyby5vcmc+Ci0tLQogLi4u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS96dGUsdm91LnR4dCAgICAgICAgfCA4NiArKysr
+KysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgODYgaW5zZXJ0aW9ucygrKQogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3p0ZSx2b3UudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvenRlLHZvdS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS96dGUsdm91LnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAw
+MDAwMDAuLmQwM2JhNGM0ODEwYwotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3p0ZSx2b3UudHh0CkBAIC0wLDAgKzEsODYgQEAKK1pU
+RSBWT1UgRGlzcGxheSBDb250cm9sbGVyCisKK1RoaXMgaXMgYSBkaXNwbGF5IGNvbnRyb2xsZXIg
+Zm91bmQgb24gWlRFIFpYMjk2NzE4IFNvQy4gIEl0IGluY2x1ZGVzIG11bHRpcGxlCitHcmFwaGlj
+IExheWVyIChHTCkgYW5kIFZpZGVvIExheWVyIChWTCksIHR3byBNaXhlcnMvQ2hhbm5lbHMsIGFu
+ZCBhIGZldyBibG9ja3MKK2hhbmRsaW5nIHNjYWxpbmcsIGNvbG9yIHNwYWNlIGNvbnZlcnNpb24g
+ZXRjLiAgVk9VIGFsc28gaW50ZWdyYXRlcyB0aGUgc3VwcG9ydAorZm9yIHR5cGljYWwgb3V0cHV0
+IGRldmljZXMsIGxpa2UgSERNSSwgVFYgRW5jb2RlciwgVkdBLCBhbmQgUkdCIExDRC4KKworKiBN
+YXN0ZXIgVk9VIG5vZGUKKworSXQgbXVzdCBiZSB0aGUgcGFyZW50IG5vZGUgb2YgYWxsIHRoZSBz
+dWItZGV2aWNlIG5vZGVzLgorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorIC0gY29tcGF0aWJsZTog
+c2hvdWxkIGJlICJ6dGUsengyOTY3MTgtdm91IgorIC0gI2FkZHJlc3MtY2VsbHM6IHNob3VsZCBi
+ZSA8MT4KKyAtICNzaXplLWNlbGxzOiBzaG91bGQgYmUgPDE+CisgLSByZWc6IFBoeXNpY2FsIGJh
+c2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSB3aG9sZSBWT1UgSU8gcmVnaW9uCisgLSByYW5n
+ZXM6IHRvIGFsbG93IHByb2Jpbmcgb2Ygc3ViLWRldmljZXMKKworKiBWT1UgRFBDIGRldmljZQor
+CitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJ6dGUsengy
+OTY3MTgtZHBjIgorIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiBE
+UEMgcmVnaXN0ZXIgcmVnaW9ucywgb25lIGZvciBlYWNoCisgICBlbnRyeSBpbiAncmVnLW5hbWVz
+JworIC0gcmVnLW5hbWVzOiBUaGUgbmFtZXMgb2YgcmVnaXN0ZXIgcmVnaW9ucy4gVGhlIGZvbGxv
+d2luZyByZWdpb25zIGFyZSByZXF1aXJlZDoKKwkib3NkIgorCSJ0aW1pbmdfY3RybCIKKwkiZHRy
+YyIKKwkidm91X2N0cmwiCisJIm90ZnBwdSIKKyAtIGludGVycnVwdHM6IFZPVSBEUEMgaW50ZXJy
+dXB0IG51bWJlciB0byBDUFUKKyAtIGNsb2NrczogQSBsaXN0IG9mIHBoYW5kbGUgKyBjbG9jay1z
+cGVjaWZpZXIgcGFpcnMsIG9uZSBmb3IgZWFjaCBlbnRyeQorICAgaW4gJ2Nsb2NrLW5hbWVzJwor
+IC0gY2xvY2stbmFtZXM6IEEgbGlzdCBvZiBjbG9jayBuYW1lcy4gIFRoZSBmb2xsb3dpbmcgY2xv
+Y2tzIGFyZSByZXF1aXJlZDoKKwkiYWNsayIKKwkicHB1X3djbGsiCisJIm1haW5fd2NsayIKKwki
+YXV4X3djbGsiCisKKyogSERNSSBvdXRwdXQgZGV2aWNlCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6
+CisgLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgInp0ZSx6eDI5NjcxOC1oZG1pIgorIC0gcmVnOiBQ
+aHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgSERNSSBkZXZpY2UgSU8gcmVn
+aW9uCisgLSBpbnRlcnJ1cHRzIDogSERNSSBpbnRlcnJ1cHQgbnVtYmVyIHRvIENQVQorIC0gY2xv
+Y2tzOiBBIGxpc3Qgb2YgcGhhbmRsZSArIGNsb2NrLXNwZWNpZmllciBwYWlycywgb25lIGZvciBl
+YWNoIGVudHJ5CisgICBpbiAnY2xvY2stbmFtZXMnCisgLSBjbG9jay1uYW1lczogQSBsaXN0IG9m
+IGNsb2NrIG5hbWVzLiAgVGhlIGZvbGxvd2luZyBjbG9ja3MgYXJlIHJlcXVpcmVkOgorCSJvc2Nf
+Y2VjIgorCSJvc2NfY2xrIgorCSJ4Y2xrIgorCitFeGFtcGxlOgorCit2b3U6IHZvdUAxNDQwMDAw
+IHsKKwljb21wYXRpYmxlID0gInp0ZSx6eDI5NjcxOC12b3UiOworCSNhZGRyZXNzLWNlbGxzID0g
+PDE+OworCSNzaXplLWNlbGxzID0gPDE+OworCXJlZyA9IDwweDE0NDAwMDAgMHgxMDAwMD47CisJ
+cmFuZ2VzOworCisJZHBjOiBkcGNAMTQ0MDAwMCB7CisJCWNvbXBhdGlibGUgPSAienRlLHp4Mjk2
+NzE4LWRwYyI7CisJCXJlZyA9IDwweDE0NDAwMDAgMHgxMDAwPiwgPDB4MTQ0MTAwMCAweDEwMDA+
+LAorCQkgICAgICA8MHgxNDQ1MDAwIDB4MTAwMD4sIDwweDE0NDYwMDAgMHgxMDAwPiwKKwkJICAg
+ICAgPDB4MTQ0YTAwMCAweDEwMDA+OworCQlyZWctbmFtZXMgPSAib3NkIiwgInRpbWluZ19jdHJs
+IiwKKwkJCSAgICAiZHRyYyIsICJ2b3VfY3RybCIsCisJCQkgICAgIm90ZnBwdSI7CisJCWludGVy
+cnVwdHMgPSA8R0lDX1NQSSA4MSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJY2xvY2tzID0gPCZ0
+b3Bjcm0gVk9VX0FDTEs+LCA8JnRvcGNybSBWT1VfUFBVX1dDTEs+LAorCQkJIDwmdG9wY3JtIFZP
+VV9NQUlOX1dDTEs+LCA8JnRvcGNybSBWT1VfQVVYX1dDTEs+OworCQljbG9jay1uYW1lcyA9ICJh
+Y2xrIiwgInBwdV93Y2xrIiwKKwkJCSAgICAgICJtYWluX3djbGsiLCAiYXV4X3djbGsiOworCX07
+CisKKwloZG1pOiBoZG1pQDE0NGMwMDAgeworCQljb21wYXRpYmxlID0gInp0ZSx6eDI5NjcxOC1o
+ZG1pIjsKKwkJcmVnID0gPDB4MTQ0YzAwMCAweDQwMDA+OworCQlpbnRlcnJ1cHRzID0gPEdJQ19T
+UEkgODIgSVJRX1RZUEVfRURHRV9SSVNJTkc+OworCQljbG9ja3MgPSA8JnRvcGNybSBIRE1JX09T
+Q19DRUM+LAorCQkJIDwmdG9wY3JtIEhETUlfT1NDX0NMSz4sCisJCQkgPCZ0b3Bjcm0gSERNSV9Y
+Q0xLPjsKKwkJY2xvY2stbmFtZXMgPSAib3NjX2NlYyIsICJvc2NfY2xrIiwgInhjbGsiOworCX07
+Cit9OwotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
