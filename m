@@ -1,50 +1,41 @@
 From: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Subject: [PATCH v8 0/3] the fixup for the USB HOST1 at rk3288 platform
-Date: Sun, 25 Sep 2016 02:50:16 +0800
-Message-ID: <1474743019-1050-1-git-send-email-ayaka@soulik.info>
+Subject: [PATCH v8 1/3] phy: Add reset callback for not generic phy
+Date: Sun, 25 Sep 2016 02:50:17 +0800
+Message-ID: <1474743019-1050-2-git-send-email-ayaka@soulik.info>
+References: <1474743019-1050-1-git-send-email-ayaka@soulik.info>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1474743019-1050-1-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-  At this stage it is the only "full features" and well verified 
-USB EHCI controller in this platform. More review is always necessary.
+I forget to add a dummy function in case the CONFIG_GENERIC_PHY
+is disabled.
 
-Although V7 is almost fine but a forget a dummy function for the phy
-system.
+Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+---
+ include/linux/phy/phy.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-changelog:
-v7
-  add the forgot dummy phy_reset() for the generic phy is disabled.
-v7
-  Some minor fixup
-v6
-  Send the last two patches
-v5
-  A few modification at style, add the missing doc in the last 
-  commit.
-v4
-  1. Adding the reset callback in struct phy_ops.
-  2. Moving the reset into phy rockchip usb.
-  3. Trying to call a reset when dwc2 wakeup in rk3288.
-v3
- Rebased from previous commit
-v2
- Rebased from previous commit
-v1
- orignal from google
-
-Randy Li (3):
-  phy: Add reset callback for not generic phy
-  usb: dwc2: assert phy reset when waking up in rk3288 platform
-  ARM: dts: rockchip: Point rk3288 dwc2 usb at the full PHY reset
-
- arch/arm/boot/dts/rk3288.dtsi |  4 ++++
- drivers/usb/dwc2/core_intr.c  | 11 +++++++++++
- include/linux/phy/phy.h       |  7 +++++++
- 3 files changed, 22 insertions(+)
-
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index ee1bed7..78bb0d7 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -253,6 +253,13 @@ static inline int phy_set_mode(struct phy *phy, enum phy_mode mode)
+ 	return -ENOSYS;
+ }
+ 
++static inline int phy_reset(struct phy *phy)
++{
++	if (!phy)
++		return 0;
++	return -ENOSYS;
++}
++
+ static inline int phy_get_bus_width(struct phy *phy)
+ {
+ 	return -ENOSYS;
 -- 
 2.7.4
 
