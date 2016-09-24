@@ -1,66 +1,53 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH 1/3] devicetree: bindings: scsi: hisi_sas hip07 support
-Date: Sat, 24 Sep 2016 19:51:17 +0100
-Message-ID: <397f3957-ed99-d7e9-b808-a299d442b7dd@huawei.com>
-References: <1474368540-186535-1-git-send-email-john.garry@huawei.com>
- <1474368540-186535-2-git-send-email-john.garry@huawei.com>
- <20160923183641.GA27636@rob-hp-laptop>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 1/2] leds: ncp5623: Add device tree binding
+ documentation
+Date: Sat, 24 Sep 2016 21:06:51 +0200
+Message-ID: <bd220063-5c66-c428-738f-0eeb5f4f0bc7@gmail.com>
+References: <1474025672-5040-1-git-send-email-florian.vaussard@heig-vd.ch>
+ <1474025672-5040-2-git-send-email-florian.vaussard@heig-vd.ch>
+ <20160924115823.GA8696@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <20160923183641.GA27636@rob-hp-laptop>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, devicetree@vger.kernel.org, mark.rutland@arm.com, linuxarm@huawei.com, zhangfei.gao@linaro.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, hare@suse.com, Xiang Chen <chenxiang66@hisilicon.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160924115823.GA8696@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>, Florian Vaussard <florian.vaussard@gmail.com>
+Cc: devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@heig-vd.ch>
 List-Id: devicetree@vger.kernel.org
 
-On 23/09/2016 19:36, Rob Herring wrote:
-> On Tue, Sep 20, 2016 at 06:48:58PM +0800, John Garry wrote:
->> Add support for hip07 chipset to bindings.
->>
->> Chipset hip07 has v2 hw.
->>
->> The sas-v2 quirk amt is expanded to cover hip07.
->>
->> Signed-off-by: John Garry <john.garry@huawei.com>
->> Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
->> ---
->>  Documentation/devicetree/bindings/scsi/hisilicon-sas.txt | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
->> index bf2411f..e604527 100644
->> --- a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
->> +++ b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
->> @@ -6,6 +6,7 @@ Main node required properties:
->>    - compatible : value should be as follows:
->>  	(a) "hisilicon,hip05-sas-v1" for v1 hw in hip05 chipset
->>  	(b) "hisilicon,hip06-sas-v2" for v2 hw in hip06 chipset
->> +	(c) "hisilicon,hip07-sas-v2" for v2 hw in hip07 chipset
->>    - sas-addr : array of 8 bytes for host SAS address
->>    - reg : Address and length of the SAS register
->>    - hisilicon,sas-syscon: phandle of syscon used for sas control
->> @@ -47,7 +48,7 @@ Main node required properties:
->>  			increasing order.
->>
->>  Optional main node properties:
->> - - hip06-sas-v2-quirk-amt : when set, indicates that the v2 controller has the
->> + - hip06/7-sas-v2-quirk-amt : when set, indicates that the v2 controller has the
+On 09/24/2016 01:58 PM, Pavel Machek wrote:
+> Hi!
 >
-> Just use the existing property name for hip07.
-
-OK, but you mean existing hip06 property (hip06-sas-v2-quirk-amt), right?
-
+>> +Example
+>> +=======
+>> +
+>> +led1: ncp5623@38 {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	compatible = "onnn,ncp5623";
+>> +	reg = <0x38>;
+>> +	onnn,led-iref-microamp = <10>;
+>> +
+>> +	led1r@0 {
+>> +		label = "ncp:power:red";
+>> +		linux,default-trigger = "default-on";
+> ...
+>> +	led1b@1 {
+>> +		label = "ncp:power:blue";
+>> +		reg = <1>;
 >
->>  			    "am-max-transmissions" limitation.
->>
->>  Example:
->> --
->> 1.9.1
->>
->
-> .
->
+> Actually... the three LEDs are packaged such as this is one colorful
+> light to the user, right? Some day we'll need to group them, so that
+> kernel can automatically tell this is one led, and probably add extra
+> attributes, such as values that produce white light.
 
+We could try out the trigger approach we discussed few months ago.
+Unfortunately I currently don't have enough time to propose the
+implementation. Probably this work could be done on the occasion of
+addition of RGB LED class driver like this, if the author had free
+bandwidth for that.
 
+-- 
+Best regards,
+Jacek Anaszewski
