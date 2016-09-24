@@ -1,80 +1,66 @@
-From: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Subject: [PATCH v8 2/3] usb: dwc2: assert phy reset when waking up in rk3288
- platform
-Date: Sun, 25 Sep 2016 02:50:18 +0800
-Message-ID: <1474743019-1050-3-git-send-email-ayaka@soulik.info>
-References: <1474743019-1050-1-git-send-email-ayaka@soulik.info>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH 1/3] devicetree: bindings: scsi: hisi_sas hip07 support
+Date: Sat, 24 Sep 2016 19:51:17 +0100
+Message-ID: <397f3957-ed99-d7e9-b808-a299d442b7dd@huawei.com>
+References: <1474368540-186535-1-git-send-email-john.garry@huawei.com>
+ <1474368540-186535-2-git-send-email-john.garry@huawei.com>
+ <20160923183641.GA27636@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1474743019-1050-1-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <20160923183641.GA27636@rob-hp-laptop>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, devicetree@vger.kernel.org, mark.rutland@arm.com, linuxarm@huawei.com, zhangfei.gao@linaro.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, hare@suse.com, Xiang Chen <chenxiang66@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-On the rk3288 USB host-only port (the one that's not the OTG-enabled
-port) the PHY can get into a bad state when a wakeup is asserted (not
-just a wakeup from full system suspend but also a wakeup from
-autosuspend).
+On 23/09/2016 19:36, Rob Herring wrote:
+> On Tue, Sep 20, 2016 at 06:48:58PM +0800, John Garry wrote:
+>> Add support for hip07 chipset to bindings.
+>>
+>> Chipset hip07 has v2 hw.
+>>
+>> The sas-v2 quirk amt is expanded to cover hip07.
+>>
+>> Signed-off-by: John Garry <john.garry@huawei.com>
+>> Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+>> ---
+>>  Documentation/devicetree/bindings/scsi/hisilicon-sas.txt | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+>> index bf2411f..e604527 100644
+>> --- a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+>> +++ b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+>> @@ -6,6 +6,7 @@ Main node required properties:
+>>    - compatible : value should be as follows:
+>>  	(a) "hisilicon,hip05-sas-v1" for v1 hw in hip05 chipset
+>>  	(b) "hisilicon,hip06-sas-v2" for v2 hw in hip06 chipset
+>> +	(c) "hisilicon,hip07-sas-v2" for v2 hw in hip07 chipset
+>>    - sas-addr : array of 8 bytes for host SAS address
+>>    - reg : Address and length of the SAS register
+>>    - hisilicon,sas-syscon: phandle of syscon used for sas control
+>> @@ -47,7 +48,7 @@ Main node required properties:
+>>  			increasing order.
+>>
+>>  Optional main node properties:
+>> - - hip06-sas-v2-quirk-amt : when set, indicates that the v2 controller has the
+>> + - hip06/7-sas-v2-quirk-amt : when set, indicates that the v2 controller has the
+>
+> Just use the existing property name for hip07.
 
-We can get the PHY out of its bad state by asserting its "port reset",
-but unfortunately that seems to assert a reset onto the USB bus so it
-could confuse things if we don't actually deenumerate / reenumerate the
-device.
+OK, but you mean existing hip06 property (hip06-sas-v2-quirk-amt), right?
 
-We can also get the PHY out of its bad state by fully resetting it using
-the reset from the CRU (clock reset unit) in chip, which does a more full
-reset.  The CRU-based reset appears to actually cause devices on the bus
-to be removed and reinserted, which fixes the problem (albeit in a hacky
-way).
+>
+>>  			    "am-max-transmissions" limitation.
+>>
+>>  Example:
+>> --
+>> 1.9.1
+>>
+>
+> .
+>
 
-It's unfortunate that we need to do a full re-enumeration of devices at
-wakeup time, but this is better than alternative of letting the bus get
-wedged.
 
-Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
----
- drivers/usb/dwc2/core_intr.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
-index d85c5c9..af27edc 100644
---- a/drivers/usb/dwc2/core_intr.c
-+++ b/drivers/usb/dwc2/core_intr.c
-@@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
- static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
- {
- 	int ret;
-+	struct device_node *np = hsotg->dev->of_node;
- 
- 	/* Clear interrupt */
- 	dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
-@@ -379,6 +380,16 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
- 			/* Restart the Phy Clock */
- 			pcgcctl &= ~PCGCTL_STOPPCLK;
- 			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
-+
-+			/*
-+			 * It is a quirk in Rockchip RK3288, causing by
-+			 * a hardware bug. This will propagate out and
-+			 * eventually we'll re-enumerate the device.
-+			 * Not great but the best we can do.
-+			 */
-+			if (of_device_is_compatible(np, "rockchip,rk3288-usb"))
-+				phy_reset(hsotg->phy);
-+
- 			mod_timer(&hsotg->wkp_timer,
- 				  jiffies + msecs_to_jiffies(71));
- 		} else {
--- 
-2.7.4
