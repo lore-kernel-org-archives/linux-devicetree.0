@@ -1,341 +1,152 @@
-From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Subject: [PATCH v7 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Sat, 24 Sep 2016 05:07:36 +0000
-Message-ID: <22c1ee0f908fe3bf8b70f5e87d659ceb29af1434.1474693319.git.dalias@libc.org>
-References: <cover.1474693319.git.dalias@libc.org>
+From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: Re: [PATCH v3 1/8] drivers:input:tsc2007: add new common binding names, pre-calibration, flipping and rotation
+Date: Sat, 24 Sep 2016 07:28:48 +0200
+Message-ID: <118D373B-21B0-4246-A3C9-0E0373F66656@goldelico.com>
+References: <cover.1474634475.git.hns@goldelico.com> <1409ed9845f17445a8a67bd6fb16c902c3e4f69c.1474634475.git.hns@goldelico.com> <20160923224726.GA4639@rob-hp-laptop>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1474693319.git.dalias-8zAoT0mYgF4@public.gmane.org>
+In-Reply-To: <20160923224726.GA4639@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "Paul E. McKenney" <paulmck-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, =?utf-8?Q?Mika_Penttil=C3=A4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-At the hardware level, the J-Core PIT is integrated with the interrupt
-controller, but it is represented as its own device and has an
-independent programming interface. It provides a 12-bit countdown
-timer, which is not presently used, and a periodic timer. The interval
-length for the latter is programmable via a 32-bit throttle register
-whose units are determined by a bus-period register. The periodic
-timer is used to implement both periodic and oneshot clock event
-modes; in oneshot mode the interrupt handler simply disables the timer
-as soon as it fires.
+Hi,
 
-Despite its device tree node representing an interrupt for the PIT,
-the actual irq generated is programmable, not hard-wired. The driver
-is responsible for programming the PIT to generate the hardware irq
-number that the DT assigns to it.
+> Am 24.09.2016 um 00:47 schrieb Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>=20
+> On Fri, Sep 23, 2016 at 02:41:09PM +0200, H. Nikolaus Schaller wrote:
+>> commit b98abe52fa8e ("Input: add common DT binding for touchscreens")
+>> introduced common DT bindings for touchscreens [1] and a helper =
+function to
+>> parse the DT.
+>>=20
+>> commit ed7c9870c9bc ("Input: of_touchscreen - add support for =
+inverted / swapped axes")
+>> added another helper for parsing axis inversion and swapping
+>> and applying them to x and y coordinates.
+>>=20
+>> Both helpers have been integrated to accommodate any orientation of =
+the
+>> touch panel in relation to the LCD.
+>>=20
+>> A new feature is to introduce scaling the min/max ADC values to the =
+screen
+>> size.
+>>=20
+>> This makes it possible to pre-calibrate the touch so that is (almost)
+>> exactly matches the LCD pixel coordinates it is glued onto. This =
+allows to
+>> well enough operate the touch before a user space calibration step =
+can
+>> improve the precision.
+>>=20
+>> Finally, calculate_pressure has been renamed to calculate_resistance
+>> because that is what it is doing.
+>=20
+> Seems like you are breaking compatibility with old DTs. I can't tell =
+for=20
+> sure though.
 
-On SMP configurations, J-Core provides cpu-local instances of the PIT;
-no broadcast timer is needed. This driver supports the creation of the
-necessary per-cpu clock_event_device instances.
+There is code to take missing values as 0 or maximum. So this will scale =
+1:1
+and should not break old DTs.
 
-A nanosecond-resolution clocksource is provided using the J-Core "RTC"
-registers, which give a 64-bit seconds count and 32-bit nanoseconds
-that wrap every second. The driver converts these to a full-range
-32-bit nanoseconds count.
+>=20
+>>=20
+>> [1]: =
+Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+>>=20
+>> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+>> ---
+>> .../bindings/input/touchscreen/tsc2007.txt         |  20 ++--
+>> drivers/input/touchscreen/tsc2007.c                | 126 =
++++++++++++++++++----
+>> include/linux/i2c/tsc2007.h                        |   8 ++
+>> 3 files changed, 123 insertions(+), 31 deletions(-)
+>>=20
+>> diff --git =
+a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt =
+b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+>> index ec365e1..6e9fd55 100644
+>> --- a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+>> +++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+>> @@ -6,6 +6,7 @@ Required properties:
+>> - ti,x-plate-ohms: X-plate resistance in ohms.
+>>=20
+>> Optional properties:
+>> +- generic touch screen properties: see touchscreen binding [2].
+>> - gpios: the interrupt gpio the chip is connected to (trough the =
+penirq pin).
+>>   The penirq pin goes to low when the panel is touched.
+>>   (see GPIO binding[1] for more details).
+>> @@ -13,17 +14,20 @@ Optional properties:
+>>   (see interrupt binding[0]).
+>> - interrupts: (gpio) interrupt to which the chip is connected
+>>   (see interrupt binding[0]).
+>> -- ti,max-rt: maximum pressure.
+>> -- ti,fuzzx: specifies the absolute input fuzz x value.
+>> -  If set, it will permit noise in the data up to +- the value given =
+to the fuzz
+>> -  parameter, that is used to filter noise from the event stream.
+>> -- ti,fuzzy: specifies the absolute input fuzz y value.
+>> -- ti,fuzzz: specifies the absolute input fuzz z value.
+>> +- ti,max-rt: maximum pressure resistance above which samples are =
+ignored
+>> +  (default: 4095).
+>> +- ti,report-resistance: report resistance (no pressure =3D max_rt) =
+instead
+>> +  of pressure (no pressure =3D 0).
+>> +- ti,min-x: minimum value reported by X axis ADC (default 0).
+>> +- ti,max-x: maximum value reported by X axis ADC (default 4095).
+>> +- ti,min-y: minimum value reported by Y axis ADC (default 0).
+>> +- ti,max-y: maximum value reported by Y axis ADC (default 4095).
+>=20
+> Seems like these could be common too. They make more sense than giving =
+x=20
+> and y sizes in pixel units which really should come from the panel.
 
-Signed-off-by: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
----
- drivers/clocksource/Kconfig     |  10 ++
- drivers/clocksource/Makefile    |   1 +
- drivers/clocksource/jcore-pit.c | 240 ++++++++++++++++++++++++++++++++++++++++
- include/linux/cpuhotplug.h      |   1 +
- 4 files changed, 252 insertions(+)
- create mode 100644 drivers/clocksource/jcore-pit.c
+No. They have a different purpose!
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 5677886..95dd78b 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -407,6 +407,16 @@ config SYS_SUPPORTS_SH_TMU
- config SYS_SUPPORTS_EM_STI
-         bool
- 
-+config CLKSRC_JCORE_PIT
-+	bool "J-Core PIT timer driver"
-+	depends on OF && (SUPERH || COMPILE_TEST)
-+	depends on GENERIC_CLOCKEVENTS
-+	depends on HAS_IOMEM
-+	select CLKSRC_MMIO
-+	help
-+	  This enables build of clocksource and clockevent driver for
-+	  the integrated PIT in the J-Core synthesizable, open source SoC.
-+
- config SH_TIMER_CMT
- 	bool "Renesas CMT timer driver" if COMPILE_TEST
- 	depends on GENERIC_CLOCKEVENTS
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index fd9d6df..cf87f40 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -5,6 +5,7 @@ obj-$(CONFIG_ATMEL_TCB_CLKSRC)	+= tcb_clksrc.o
- obj-$(CONFIG_X86_PM_TIMER)	+= acpi_pm.o
- obj-$(CONFIG_SCx200HR_TIMER)	+= scx200_hrt.o
- obj-$(CONFIG_CS5535_CLOCK_EVENT_SRC)	+= cs5535-clockevt.o
-+obj-$(CONFIG_CLKSRC_JCORE_PIT)		+= jcore-pit.o
- obj-$(CONFIG_SH_TIMER_CMT)	+= sh_cmt.o
- obj-$(CONFIG_SH_TIMER_MTU2)	+= sh_mtu2.o
- obj-$(CONFIG_SH_TIMER_TMU)	+= sh_tmu.o
-diff --git a/drivers/clocksource/jcore-pit.c b/drivers/clocksource/jcore-pit.c
-new file mode 100644
-index 0000000..4c512d7
---- /dev/null
-+++ b/drivers/clocksource/jcore-pit.c
-@@ -0,0 +1,240 @@
-+/*
-+ * J-Core SoC PIT/clocksource driver
-+ *
-+ * Copyright (C) 2015-2016 Smart Energy Instruments, Inc.
-+ *
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/interrupt.h>
-+#include <linux/clockchips.h>
-+#include <linux/clocksource.h>
-+#include <linux/sched_clock.h>
-+#include <linux/cpu.h>
-+#include <linux/cpuhotplug.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+
-+#define PIT_IRQ_SHIFT		12
-+#define PIT_PRIO_SHIFT		20
-+#define PIT_ENABLE_SHIFT	26
-+#define PIT_IRQ_MASK		0x3f
-+#define PIT_PRIO_MASK		0xf
-+
-+#define REG_PITEN		0x00
-+#define REG_THROT		0x10
-+#define REG_COUNT		0x14
-+#define REG_BUSPD		0x18
-+#define REG_SECHI		0x20
-+#define REG_SECLO		0x24
-+#define REG_NSEC		0x28
-+
-+struct jcore_pit {
-+	struct clock_event_device	ced;
-+	__iomem void			*base;
-+	unsigned long			periodic_delta;
-+	unsigned			cpu;
-+	u32				enable_val;
-+};
-+
-+static __iomem void		*jcore_pit_base;
-+struct jcore_pit __percpu	*jcore_pit_percpu;
-+
-+static notrace u64 jcore_sched_clock_read(void)
-+{
-+	u32 seclo, nsec, seclo0;
-+	__iomem void *base = jcore_pit_base;
-+
-+	seclo = readl(base + REG_SECLO);
-+	do {
-+		seclo0 = seclo;
-+		nsec  = readl(base + REG_NSEC);
-+		seclo = readl(base + REG_SECLO);
-+	} while (seclo0 != seclo);
-+
-+	return seclo * NSEC_PER_SEC + nsec;
-+}
-+
-+static cycle_t jcore_clocksource_read(struct clocksource *cs)
-+{
-+	return jcore_sched_clock_read();
-+}
-+
-+static int jcore_pit_disable(struct jcore_pit *pit)
-+{
-+	writel(0, pit->base + REG_PITEN);
-+	return 0;
-+}
-+
-+static int jcore_pit_set(unsigned long delta, struct jcore_pit *pit)
-+{
-+	jcore_pit_disable(pit);
-+	writel(delta, pit->base + REG_THROT);
-+	writel(pit->enable_val, pit->base + REG_PITEN);
-+	return 0;
-+}
-+
-+static int jcore_pit_set_state_shutdown(struct clock_event_device *ced)
-+{
-+	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
-+
-+	return jcore_pit_disable(pit);
-+}
-+
-+static int jcore_pit_set_state_oneshot(struct clock_event_device *ced)
-+{
-+	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
-+
-+	return jcore_pit_disable(pit);
-+}
-+
-+static int jcore_pit_set_state_periodic(struct clock_event_device *ced)
-+{
-+	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
-+
-+	return jcore_pit_set(pit->periodic_delta, pit);
-+}
-+
-+static int jcore_pit_set_next_event(unsigned long delta,
-+				    struct clock_event_device *ced)
-+{
-+	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
-+
-+	return jcore_pit_set(delta, pit);
-+}
-+
-+static int jcore_pit_local_init(unsigned cpu)
-+{
-+	struct jcore_pit *pit = this_cpu_ptr(jcore_pit_percpu);
-+	unsigned buspd, freq, min_delta;
-+
-+	pr_info("Local J-Core PIT init on cpu %u\n", pit->cpu);
-+
-+	buspd = readl(pit->base + REG_BUSPD);
-+	freq = DIV_ROUND_CLOSEST(NSEC_PER_SEC, buspd);
-+	pit->periodic_delta = DIV_ROUND_CLOSEST(NSEC_PER_SEC, HZ * buspd);
-+
-+	/*
-+	 * This is a workaround. When the timer system schedules oneshot
-+	 * events so soon that the interrupt occurs before the softirq
-+	 * part of the timer handler runs, a feedback loop ensues and
-+	 * results in long stalls that are broken up only by other
-+	 * interrupt activity.
-+	 */
-+	min_delta = DIV_ROUND_CLOSEST(5000000, buspd);
-+
-+	clockevents_config_and_register(&pit->ced, freq, min_delta, ULONG_MAX);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t jcore_timer_interrupt(int irq, void *dev_id)
-+{
-+	struct jcore_pit *pit = this_cpu_ptr(dev_id);
-+
-+	if (clockevent_state_oneshot(&pit->ced))
-+		jcore_pit_disable(pit);
-+
-+	pit->ced.event_handler(&pit->ced);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int __init jcore_pit_init(struct device_node *node)
-+{
-+	int err;
-+	unsigned pit_irq, cpu;
-+	unsigned long hwirq;
-+	u32 irqprio, enable_val;
-+
-+	jcore_pit_base = of_iomap(node, 0);
-+	if (!jcore_pit_base) {
-+		pr_err("Error: Cannot map base address for J-Core PIT\n");
-+		return -ENXIO;
-+	}
-+
-+	pit_irq = irq_of_parse_and_map(node, 0);
-+	if (!pit_irq) {
-+		pr_err("Error: J-Core PIT has no IRQ\n");
-+		return -ENXIO;
-+	}
-+
-+	pr_info("Initializing J-Core PIT at %p IRQ %d\n",
-+		jcore_pit_base, pit_irq);
-+
-+	err = clocksource_mmio_init(jcore_pit_base, "jcore_pit_cs",
-+				    NSEC_PER_SEC, 400, 32,
-+				    jcore_clocksource_read);
-+	if (err) {
-+		pr_err("Error registering clocksource device: %d\n", err);
-+		return err;
-+	}
-+
-+	sched_clock_register(jcore_sched_clock_read, 32, NSEC_PER_SEC);
-+
-+	jcore_pit_percpu = alloc_percpu(struct jcore_pit);
-+	if (!jcore_pit_percpu) {
-+		pr_err("Failed to allocate memory for clock event device\n");
-+		return -ENOMEM;
-+	}
-+
-+	err = request_irq(pit_irq, jcore_timer_interrupt,
-+			  IRQF_TIMER | IRQF_PERCPU,
-+			  "jcore_pit", jcore_pit_percpu);
-+	if (err) {
-+		pr_err("pit irq request failed: %d\n", err);
-+		free_percpu(jcore_pit_percpu);
-+		return err;
-+	}
-+
-+	/*
-+	 * The J-Core PIT is not hard-wired to a particular IRQ, but
-+	 * integrated with the interrupt controller such that the IRQ it
-+	 * generates is programmable. The programming interface has a
-+	 * legacy field which was an interrupt priority for AIC1, but
-+	 * which is OR'd onto bits 2-5 of the generated IRQ number when
-+	 * used with J-Core AIC2, so set it to match these bits.
-+	 */
-+	hwirq = irq_get_irq_data(pit_irq)->hwirq;
-+	irqprio = (hwirq >> 2) & PIT_PRIO_MASK;
-+	enable_val = (1U << PIT_ENABLE_SHIFT)
-+		   | (hwirq << PIT_IRQ_SHIFT)
-+		   | (irqprio << PIT_PRIO_SHIFT);
-+
-+	for_each_present_cpu(cpu) {
-+		struct jcore_pit *pit = per_cpu_ptr(jcore_pit_percpu, cpu);
-+
-+		pit->base = of_iomap(node, cpu);
-+		if (!pit->base) {
-+			pr_err("Unable to map PIT for cpu %u\n", cpu);
-+			continue;
-+		}
-+
-+		pit->ced.name = "jcore_pit";
-+		pit->ced.features = CLOCK_EVT_FEAT_PERIODIC
-+				  | CLOCK_EVT_FEAT_ONESHOT
-+				  | CLOCK_EVT_FEAT_PERCPU;
-+		pit->ced.cpumask = cpumask_of(cpu);
-+		pit->ced.rating = 400;
-+		pit->ced.irq = pit_irq;
-+		pit->ced.set_state_shutdown = jcore_pit_set_state_shutdown;
-+		pit->ced.set_state_periodic = jcore_pit_set_state_periodic;
-+		pit->ced.set_state_oneshot = jcore_pit_set_state_oneshot;
-+		pit->ced.set_next_event = jcore_pit_set_next_event;
-+
-+		pit->cpu = cpu;
-+		pit->enable_val = enable_val;
-+	}
-+
-+	cpuhp_setup_state(CPUHP_AP_JCORE_TIMER_STARTING,
-+			  "AP_JCORE_TIMER_STARTING",
-+			  jcore_pit_local_init, NULL);
-+
-+	return 0;
-+}
-+
-+CLOCKSOURCE_OF_DECLARE(jcore_pit, "jcore,pit", jcore_pit_init);
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 34bd805..e2e6c8c 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -52,6 +52,7 @@ enum cpuhp_state {
- 	CPUHP_AP_ARM_ARCH_TIMER_STARTING,
- 	CPUHP_AP_ARM_GLOBAL_TIMER_STARTING,
- 	CPUHP_AP_DUMMY_TIMER_STARTING,
-+	CPUHP_AP_JCORE_TIMER_STARTING,
- 	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
- 	CPUHP_AP_ARM_TWD_STARTING,
- 	CPUHP_AP_METAG_TIMER_STARTING,
--- 
-2.10.0
+You need to scale values like this:
+
+ti,min-x   ->   0
+x          ->   some value between 0 and touchscreen-size-x
+ti,max-x   ->   touchscreen-size-x
+
+So the ti, values describe the ADC raw values while the common bindings
+describe the size in input-event coordinates.
+
+So we need both specified: raw values and pixel values.
+
+>=20
+>> - ti,poll-period: how much time to wait (in milliseconds) before =
+reading again the
+>> -  values from the tsc2007.
+>> +  values from the tsc2007 (default 1).
+>>=20
+>> [0]: =
+Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>> [1]: Documentation/devicetree/bindings/gpio/gpio.txt
+>> +[2]: =
+Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+>>=20
+>> Example:
+>> 	&i2c1 {
+>> @@ -35,6 +39,8 @@ Example:
+>> 			interrupts =3D <0x0 0x8>;
+>> 			gpios =3D <&gpio4 0 0>;
+>> 			ti,x-plate-ohms =3D <180>;
+>> +			touchscreen-size-x =3D <640>;
+>> +			touchscreen-size-y =3D <480>;
+>> 		};
+>>=20
+>> 		/* ... */
+
+BR,
+Nikolaus
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
