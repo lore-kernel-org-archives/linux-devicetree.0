@@ -1,58 +1,64 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] ASoC: simple-card: add support for aux devices
-Date: Sat, 24 Sep 2016 19:00:45 +0100
-Message-ID: <20160924180045.g7ayhbpbaxle34pt@sirena.org.uk>
-References: <1474614673-12350-1-git-send-email-nikita.yoush@cogentembedded.com>
- <20160923222541.GA25693@rob-hp-laptop>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: exynos: Add reboot reason support for Trats2
+Date: Sun, 25 Sep 2016 09:34:45 +0200
+Message-ID: <20160925073445.GA2469@kozik-lap>
+References: <20160922205522.GA15917@kozik-lap>
+ <87fuopvwjy.fsf@machinist.wiedmeyer.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="juilldp5ueknfzut"
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160923222541.GA25693@rob-hp-laptop>
+In-Reply-To: <87fuopvwjy.fsf-6RCjNufJqToCV2nOUgGaAMKAMo+5xgj5@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Otto =?iso-8859-1?Q?Kek=E4l=E4inen?= <otto-Gh1NM5ZPXYb1KXRcyAk9cg@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Mengdong Lin <mengdong.lin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Wolfgang Wiedmeyer <wolfgang-CMKNnOTVkIZM7kwft8N7nw@public.gmane.org>
+Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Sep 24, 2016 at 11:04:49PM +0200, Wolfgang Wiedmeyer wrote:
+> 
+> Krzysztof Kozlowski writes:
+> 
+> > On Thu, Sep 22, 2016 at 08:59:03PM +0200, Wolfgang Wiedmeyer wrote:
+> >> 
+> >> Krzysztof Kozlowski writes:
+> >> 
+> >> > On Thu, Sep 22, 2016 at 06:48:35PM +0200, Wolfgang Wiedmeyer wrote:
+> >> >> This allows to reboot the device into recovery mode and into the download
+> >> >> mode of the bootloader.
+> >> >
+> >> > Which bootloader? Probably UBoot... or Samsung stock one? Could you put
+> >> > that information here?
+> >> 
+> >> I'm only working with the stock one. I was under the impression that the
+> >> stock bootloader cannot be replaced on a i9300 because there's a
+> >> signature check. Is UBoot loaded after the stock one on Trats2 or how
+> >> does this work? I didn't find information on that.
+> >
+> > +CC Marek,
+> >
+> > Trats2 is working with U-Boot. Just U-Boot. However I never converted S3
+> > into Trats2 on my own. I always used targets prepared to be "Trats2"
+> > type. 
+> 
+> It would be awesome to be able to run U-Boot on i9300. Is there a way to
+> test this by not risking to brick the device, e.g. by booting from the
+> SD card? Then I could send an updated version of the patch that is
+> compatible with U-Boot :)
 
---juilldp5ueknfzut
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I don't think the stock bootloader supports chaining another bootloader
+from SD card. There is a way of booting from SD card by shortening a
+resistor but it is an emergency rescue procedure to overwrite existing
+bootloader with data from SD card (to restore device). This thread might
+be interesting:
+http://forum.xda-developers.com/showpost.php?p=47234165&postcount=220
+https://smyl.es/samsung-galaxy-iii-s3-gt-i9300-jtag-leaked-document-how-to-repair-soft-bricked-galaxy-s3/
 
-On Fri, Sep 23, 2016 at 05:25:41PM -0500, Rob Herring wrote:
-> On Fri, Sep 23, 2016 at 10:11:12AM +0300, Nikita Yushchenko wrote:
+On xda-developers you might find more data about this (including the
+procedure for emergency restore from SD card). Somehow people flash and
+unbrick their devices when playing with CyanogenMod...
 
-> > +- simple-audio-card,aux-devs		: List of phandles pointing to auxiliary=
- devices, such
-> > +					  as amplifiers, to be added to the sound card.
-
-> I think the property should be specific as to the type of device. What=20
-> if you have 2 amps? Maybe simple-card can't have 2 outputs. What if you=
-=20
-> have a chain of devices and need to know the order of them?
-
-Sorry, missed this bit...  We already have the audio routing properties
-which define how things are interconnected, this exists to get pure
-analogue components into the set of things that can be routed to.  The
-abstraction we're using hides what the device is well enough.
-
---juilldp5ueknfzut
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEcBAABCAAGBQJX5r9MAAoJECTWi3JdVIfQO8kH/RPjkaokLHO+mmnnrUZu7Edx
-nOCR6HGJbGP22fz1glZyoYhMH9xZdjQA6fCzuIQZLtypS8DX9SkfB9qfxOdmOLNk
-t8ZwnLZ+/EKxd0QXLUBpSkyfVkQPIh7mk/zb96TAqFJQiIl+q8xGfjEbxn+odHYu
-e/o5t1wGqepxXXM5wlEaNy1Hp9oLtjxKvPwY0BfQONj5FwV1lx8kesvMUINgJtsM
-NBLmVenbJZzuHxAH8YTxhzjq8qYWh9Ycrh0wzAEDWL/JqTrfOwQjwQBWjjqP264S
-OodEpg6n2Qq+/pNY8HrK/KnuhuG1+jrFI98eeHrUt7t3T+nJ9d3yKWeDLfSiIkA=
-=x1D7
------END PGP SIGNATURE-----
-
---juilldp5ueknfzut--
+Best regards,
+Krzysztof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
