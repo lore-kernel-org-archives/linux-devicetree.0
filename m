@@ -1,63 +1,118 @@
-From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: [PATCH v3 5/5] mm: enable CONFIG_MOVABLE_NODE on powerpc
-Date: Sun, 25 Sep 2016 13:36:56 -0500
-Message-ID: <1474828616-16608-6-git-send-email-arbab@linux.vnet.ibm.com>
-References: <1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com>
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: owner-linux-mm@kvack.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: mxsfb: Add bindings for the MXSFB
+ KMS/DRM driver
+Date: Sun, 25 Sep 2016 21:13:57 +0200
+Message-ID: <69230eb5-cdc8-c38a-5b33-968e3458bff8@denx.de>
+References: <20160826142742.7236-1-marex@denx.de>
+ <20160902123021.GA20726@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160902123021.GA20726@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-To create a movable node, we need to hotplug all of its memory into
-ZONE_MOVABLE.
+On 09/02/2016 02:30 PM, Rob Herring wrote:
+> On Fri, Aug 26, 2016 at 04:27:41PM +0200, Marek Vasut wrote:
+>> Add DT bindings for new MXSFB driver using the DRM framework.
+>> The old MXSFB fbdev driver bindings are preserved in mxsfb.txt .
 
-Note that to do this, auto_online_blocks should be off. Since the memory
-will first be added to the default zone, we must explicitly use
-online_movable to online.
+Sorry for the late reply.
 
-Because such a node contains no normal memory, can_online_high_movable()
-will only allow us to do the onlining if CONFIG_MOVABLE_NODE is set.
-Enable the use of this config option on PPC64 platforms.
+> They should be documented in the same place as they describe the same 
+> h/w. I've not looked how incompatible they are, but I'd expect that to 
+> be described here.
 
-Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
----
- Documentation/kernel-parameters.txt | 2 +-
- mm/Kconfig                          | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Done, makes sense.
 
-diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-index a4f4d69..3d8460d 100644
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -2344,7 +2344,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
- 			that the amount of memory usable for all allocations
- 			is not too small.
- 
--	movable_node	[KNL,X86] Boot-time switch to enable the effects
-+	movable_node	[KNL,X86,PPC] Boot-time switch to enable the effects
- 			of CONFIG_MOVABLE_NODE=y. See mm/Kconfig for details.
- 
- 	MTD_Partition=	[MTD]
-diff --git a/mm/Kconfig b/mm/Kconfig
-index be0ee11..4b19cd3 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -153,7 +153,7 @@ config MOVABLE_NODE
- 	bool "Enable to assign a node which has only movable memory"
- 	depends on HAVE_MEMBLOCK
- 	depends on NO_BOOTMEM
--	depends on X86_64
-+	depends on X86_64 || PPC64
- 	depends on NUMA
- 	default n
- 	help
+>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+>> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/display/mxsfb-drm.txt      | 33 ++++++++++++++++++++++
+> 
+> DRM is a Linuxism.
+> 
+>>  1 file changed, 33 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/display/mxsfb-drm.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/mxsfb-drm.txt b/Documentation/devicetree/bindings/display/mxsfb-drm.txt
+>> new file mode 100644
+>> index 0000000..e70d337
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/display/mxsfb-drm.txt
+>> @@ -0,0 +1,33 @@
+>> +* Freescale MXS LCD Interface (LCDIF) with KMS/DRM support
+> 
+> KMS/DRM is a Linuxism.
+
+So what do you put in the documentation instead, "driver using of graph" ?
+
+>> +
+>> +Required properties:
+>> +- compatible:	Should be "fsl,imx23-lcdif" for i.MX23.
+>> +		Should be "fsl,imx28-lcdif" for i.MX28 and i.MX6SX.
+> 
+> MX6SX should have it's own compatible string. Knowing some of the 
+> development history, I would doubt they are exactly the same.
+> 
+> Also, IIRC MX50 variants have LCDIF.
+
+OK, done.
+
+>> +- reg:		Address and length of the register set for lcdif
+>> +- interrupts:	Should contain lcdif interrupts
+>> +- clocks:	A list of phandle + clock-specifier pairs, one for each
+>> +		entry in 'clock-names'.
+>> +- clock-names:	A list of clock names. For MXSFB it should contain:
+>> +    - "pix" for the MXSFB block clock
+>> +    - (optional) "axi", "disp_axi" for the bus interface clock on MX6SX
+> 
+> Doesn't this mean required on MX6SX?
+
+Yes, it does, fixed.
+
+>> +
+>> +Required sub-nodes:
+>> +  - port: The connection to an encoder chip.
+>> +
+>> +Example:
+>> +
+>> +	lcdif1: lcdif@02220000 {
+> 
+> Drop the leading 0.
+
+OK
+
+>> +		compatible = "fsl,imx6sx-lcdif", "fsl,imx28-lcdif";
+>> +		reg = <0x02220000 0x4000>;
+>> +		interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+>> +		clocks = <&clks IMX6SX_CLK_LCDIF1_PIX>,
+>> +			 <&clks IMX6SX_CLK_LCDIF_APB>,
+>> +			 <&clks IMX6SX_CLK_DISPLAY_AXI>;
+>> +		clock-names = "pix", "axi", "disp_axi";
+>> +
+>> +		port {
+>> +			parallel_out: endpoint {
+>> +				remote-endpoint = <&panel_in_parallel>;
+>> +			};
+>> +		};
+>> +	};
+>> -- 
+>> 2.9.3
+>>
+
+
 -- 
-1.8.3.1
-
+Best regards,
+Marek Vasut
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
