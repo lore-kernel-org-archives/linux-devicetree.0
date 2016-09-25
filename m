@@ -1,116 +1,68 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] mtd: s3c2410: add device tree support
-Date: Sun, 25 Sep 2016 20:05:05 +0200
-Message-ID: <20160925200505.372672ee@bbrezillon>
-References: <1474125760-28168-1-git-send-email-sergio.prado@e-labworks.com>
-        <20160917193123.762587d0@bbrezillon>
-        <20160925174257.GA20238@sprado-desktop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160925174257.GA20238@sprado-desktop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Reza Arbab <arbab@linux.vnet.ibm.com>
+Subject: [PATCH v3 3/5] powerpc/mm: allow memory hotplug into a memoryless node
+Date: Sun, 25 Sep 2016 13:36:54 -0500
+Message-ID: <1474828616-16608-4-git-send-email-arbab@linux.vnet.ibm.com>
+References: <1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com>
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com>
+Sender: owner-linux-mm@kvack.org
+To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergio,
+Remove the check which prevents us from hotplugging into an empty node.
 
-On Sun, 25 Sep 2016 14:42:57 -0300
-Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org> wrote:
+This limitation has been questioned before [1], and judging by the
+response, there doesn't seem to be a reason we can't remove it. No issues
+have been found in light testing.
 
-> Hi Boris,
-> 
-> > > +Optional properties:
-> > > +- samsung,tacls : time for active CLE/ALE to nWE/nOE
-> > > +- samsung,twrph0 : active time for nWE/nOE
-> > > +- samsung,twrph1 : time for release CLE/ALE from nWE/nOE inactive  
-> > 
-> > Can you try to extract these information from the nand_sdr_timings
-> > struct instead of passing it in your DT?  
-> 
-> I've tested and the nand chip I'm working on is not ONFI or JEDEC
-> compatible, so looks like it is not possible to extract the timing
-> information from nand_sdr_timings. Am I right?
+[1] http://lkml.kernel.org/r/CAGZKiBrmkSa1yyhbf5hwGxubcjsE5SmkSMY4tpANERMe2UG4bg@mail.gmail.com
+    http://lkml.kernel.org/r/20160511215051.GF22115@arbab-laptop.austin.ibm.com
 
-There's an default_onfi_timing_mode in the nand_flash_dev struct. You
-can define a full-id for your NAND chip in the nand-ids table if you
-want. Otherwise, this means you'll have to use ONFI timing mode 0
-(which should work for all NANDs).
+Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
+Acked-by: Balbir Singh <bsingharora@gmail.com>
+Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>
+---
+ arch/powerpc/mm/numa.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-Note that we've recently introduced a generic interface [1] to let NAND
-controllers configure the timings, and let the core select the best
-timings based on the information it has (ONFI, JEDEC or the nand-ids
-table).
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index 75b9cd6..d7ac419 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -1121,7 +1121,7 @@ static int hot_add_node_scn_to_nid(unsigned long scn_addr)
+ int hot_add_scn_to_nid(unsigned long scn_addr)
+ {
+ 	struct device_node *memory = NULL;
+-	int nid, found = 0;
++	int nid;
+ 
+ 	if (!numa_enabled || (min_common_depth < 0))
+ 		return first_online_node;
+@@ -1137,17 +1137,6 @@ int hot_add_scn_to_nid(unsigned long scn_addr)
+ 	if (nid < 0 || !node_online(nid))
+ 		nid = first_online_node;
+ 
+-	if (NODE_DATA(nid)->node_spanned_pages)
+-		return nid;
+-
+-	for_each_online_node(nid) {
+-		if (NODE_DATA(nid)->node_spanned_pages) {
+-			found = 1;
+-			break;
+-		}
+-	}
+-
+-	BUG_ON(!found);
+ 	return nid;
+ }
+ 
+-- 
+1.8.3.1
 
-> 
-> > > +	samsung,ignore_unset_ecc;  
-> > 
-> > Just discovered this ->ignore_unset_ecc property, and I don't
-> > understand why it's here for...
-> > Either you don't want to have ECC, and in this case you should set
-> > NAND_ECC_NONE, or you want to have ECC calculated, and in this case,
-> > the only valid situation where ECC bytes are 0xff is when the page is
-> > erased.
-> > 
-> > If I'm right, please fix the driver instead of adding this DT property.
-> > If I'm wrong, could you explain in more detail when you have ECC bytes
-> > set to 0xff?  
-> 
-> I think you are right but I am not an expert on flash devices and the
-> MTD sub-system. The commit message of this code says "If a block's ecc
-> field is all 0xff, then ignore the ECC correction. This is for systems
-> where some of the blocks, such as the initial cramfs are written without
-> ECC and need to be loaded on start.". Does it make sense?
-
-Well, no, it does not make any sense. What could have a sense is
-enabling ECC on some partitions, but not on others, but that's not
-supported right now (actually, I tried to add support for that once,
-but it was not accepted).
-
-Do you really need that? I mean, is the platform you're trying to
-convert to DT using this property in its platform_data objects?
-
-I'd recommend to drop this property until we figure what it's really
-used for.
-
-> 
-> > > +	for_each_available_child_of_node(np, child) {
-> > > +
-> > > +		sets->name = (char *)child->name;
-> > > +		sets->of_node = child;
-> > > +		sets->nr_chips = 1;
-> > > +
-> > > +		if (!of_property_match_string(child, "nand-ecc-mode", "none"))
-> > > +			sets->disable_ecc = 1;
-> > > +
-> > > +		if (of_get_property(child, "nand-on-flash-bbt", NULL))
-> > > +			sets->flash_bbt = 1;
-> > > +  
-> > 
-> > These properties are automatically extracted in nand_scan_ident(), why
-> > do you need to parse them twice?
-> >   
-> 
-> You are right, there is no need to parse them twice. But taking a look
-> at the code I found a problem. Right now enabling hardware ECC is done
-> at compile time by enabling CONFIG_MTD_NAND_S3C2410_HWECC in the
-> menuconfig. Looks like this config option should be removed so we can
-> select ECC mode using nand-ecc-mode property in the device tree. But
-> this would break current boards that are not using a device tree. So it
-> would be necessary to add a ecc_mode field in the platform_data of these
-> boards and set them all to the default ECC mode (NAND_ECC_SOFT). Is this
-> the right approach?
-
-It's the right approach, indeed.
-
-Thanks,
-
-Boris
-
-[1]http://www.spinics.net/lists/arm-kernel/msg532007.html
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
