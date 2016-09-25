@@ -1,7 +1,7 @@
 From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: [PATCH v3 1/5] drivers/of: introduce of_fdt_is_available()
-Date: Sun, 25 Sep 2016 13:36:52 -0500
-Message-ID: <1474828616-16608-2-git-send-email-arbab@linux.vnet.ibm.com>
+Subject: [PATCH v3 4/5] powerpc/mm: restore top-down allocation when using movable_node
+Date: Sun, 25 Sep 2016 13:36:55 -0500
+Message-ID: <1474828616-16608-5-git-send-email-arbab@linux.vnet.ibm.com>
 References: <1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com>
 Return-path: <owner-linux-mm@kvack.org>
 In-Reply-To: <1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com>
@@ -10,98 +10,37 @@ To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.c
 Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
 List-Id: devicetree@vger.kernel.org
 
-In __fdt_scan_reserved_mem(), the availability of a node is determined
-by testing its "status" property.
+At boot, the movable_node option sets bottom-up memblock allocation.
 
-Move this check into its own function, borrowing logic from the
-unflattened version, of_device_is_available().
+This reduces the chance that, in the window before movable memory has
+been identified, an allocation for the kernel might come from a movable
+node. By going bottom-up, early allocations will most likely come from
+the same node as the kernel image, which is necessarily in a nonmovable
+node.
 
-Another caller will be added in a subsequent patch.
+Then, once any known hotplug memory has been marked, allocation can be
+reset back to top-down. On x86, this is done in numa_init(). This patch
+does the same on power, in numa initmem_init().
 
 Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
 ---
- drivers/of/fdt.c       | 26 +++++++++++++++++++++++---
- include/linux/of_fdt.h |  2 ++
- 2 files changed, 25 insertions(+), 3 deletions(-)
+ arch/powerpc/mm/numa.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 085c638..9241c6e 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -151,6 +151,23 @@ int of_fdt_match(const void *blob, unsigned long node,
- 	return score;
- }
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index d7ac419..fdf1e69 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -945,6 +945,9 @@ void __init initmem_init(void)
+ 	max_low_pfn = memblock_end_of_DRAM() >> PAGE_SHIFT;
+ 	max_pfn = max_low_pfn;
  
-+bool of_fdt_is_available(const void *blob, unsigned long node)
-+{
-+	const char *status;
-+	int statlen;
++	/* bottom-up allocation may have been set by movable_node */
++	memblock_set_bottom_up(false);
 +
-+	status = fdt_getprop(blob, node, "status", &statlen);
-+	if (!status)
-+		return true;
-+
-+	if (statlen) {
-+		if (!strcmp(status, "okay") || !strcmp(status, "ok"))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- static void *unflatten_dt_alloc(void **mem, unsigned long size,
- 				       unsigned long align)
- {
-@@ -647,7 +664,6 @@ static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
- 					  int depth, void *data)
- {
- 	static int found;
--	const char *status;
- 	int err;
- 
- 	if (!found && depth == 1 && strcmp(uname, "reserved-memory") == 0) {
-@@ -667,8 +683,7 @@ static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
- 		return 1;
- 	}
- 
--	status = of_get_flat_dt_prop(node, "status", NULL);
--	if (status && strcmp(status, "okay") != 0 && strcmp(status, "ok") != 0)
-+	if (!of_flat_dt_is_available(node))
- 		return 0;
- 
- 	err = __reserved_mem_reserve_reg(node, uname);
-@@ -809,6 +824,11 @@ int __init of_flat_dt_match(unsigned long node, const char *const *compat)
- 	return of_fdt_match(initial_boot_params, node, compat);
- }
- 
-+bool __init of_flat_dt_is_available(unsigned long node)
-+{
-+	return of_fdt_is_available(initial_boot_params, node);
-+}
-+
- struct fdt_scan_status {
- 	const char *name;
- 	int namelen;
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 26c3302..49e0b8f 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -37,6 +37,7 @@ extern bool of_fdt_is_big_endian(const void *blob,
- 				 unsigned long node);
- extern int of_fdt_match(const void *blob, unsigned long node,
- 			const char *const *compat);
-+extern bool of_fdt_is_available(const void *blob, unsigned long node);
- extern void *of_fdt_unflatten_tree(const unsigned long *blob,
- 				   struct device_node *dad,
- 				   struct device_node **mynodes);
-@@ -59,6 +60,7 @@ extern const void *of_get_flat_dt_prop(unsigned long node, const char *name,
- 				       int *size);
- extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
- extern int of_flat_dt_match(unsigned long node, const char *const *matches);
-+extern bool of_flat_dt_is_available(unsigned long node);
- extern unsigned long of_get_flat_dt_root(void);
- extern int of_get_flat_dt_size(void);
- 
+ 	if (parse_numa_properties())
+ 		setup_nonnuma();
+ 	else
 -- 
 1.8.3.1
 
