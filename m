@@ -1,86 +1,83 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: drm/bridge: adv7511: Add regulator bindings
-Date: Sun, 25 Sep 2016 20:28:21 +0300
-Message-ID: <737415023.GKbfqYIf4s@avalon>
-References: <1472640730-24326-1-git-send-email-architt@codeaurora.org> <1474622430-6704-1-git-send-email-architt@codeaurora.org> <1474622430-6704-2-git-send-email-architt@codeaurora.org>
+From: Sergio Prado <sergio.prado@e-labworks.com>
+Subject: Re: [PATCH] mtd: s3c2410: add device tree support
+Date: Sun, 25 Sep 2016 14:42:57 -0300
+Message-ID: <20160925174257.GA20238@sprado-desktop>
+References: <1474125760-28168-1-git-send-email-sergio.prado@e-labworks.com>
+ <20160917193123.762587d0@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474622430-6704-2-git-send-email-architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160917193123.762587d0@bbrezillon>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, k.kozlowski@samsung.com, richard@nod.at, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Archit,
+Hi Boris,
 
-Thank you for the patch.
+> > +Optional properties:
+> > +- samsung,tacls : time for active CLE/ALE to nWE/nOE
+> > +- samsung,twrph0 : active time for nWE/nOE
+> > +- samsung,twrph1 : time for release CLE/ALE from nWE/nOE inactive
+> 
+> Can you try to extract these information from the nand_sdr_timings
+> struct instead of passing it in your DT?
 
-On Friday 23 Sep 2016 14:50:27 Archit Taneja wrote:
-> Add the regulator supply properties needed by ADV7511 and ADV7533. The
-> regulator names are named after the pin names, except for DVDD_3V on
-> ADV7511, which is left v3p3 to have the same name as it's on ADV7533.
-> 
-> ADV7511 has a BGVDD pin for which the voltage to be configured isn't
-> clear. This needs to be updated in the document later.
-> 
-> The regulators are specified as optional properties since there can
-> be boards which have a fixed supply directly routed to the pins, and
-> these may not be modelled as regulator supplies.
-> 
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
-> v2:
-> - Specify regulator supplies for ADV7511 too.
-> - Have separate supply entries for AVDD, DVDD, PVDD, A2VDD pins.
-> - Add additional BGVDD supply for ADV7511.
-> 
->  .../devicetree/bindings/display/bridge/adi,adv7511.txt     | 14 +++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-> b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt index
-> 6532a59..66e6bae 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-> @@ -56,6 +56,20 @@ Optional properties:
->  - adi,disable-timing-generator: Only for ADV7533. Disables the internal
-> timing generator. The chip will rely on the sync signals in the DSI data
-> lanes, rather than generate its own timings for HDMI output.
-> +- avdd-supply: A 1.8V supply that powers up the AVDD pin on the chip.
-> +- dvdd-supply: A 1.8V supply that powers up the DVDD pin on the chip.
-> +- pvdd-supply: A 1.8V supply that powers up the PVDD pin on the chip.
-> +- v3p3-supply: A 3.3V supply that powers up the pin called DVDD_3V on
-> +  ADV7511 and V3P3 on ADV7533.
-> +
-> +ADV7511 specific supplies:
-> +- bgvdd-supply: Powers the BGVDD pin. The voltage isn't clear from
-> +  available datasheets.
+I've tested and the nand chip I'm working on is not ONFI or JEDEC
+compatible, so looks like it is not possible to extract the timing
+information from nand_sdr_timings. Am I right?
 
-It's a 1.8V supply. The ADV7511 hardware user's guide recommends tying it to 
-the PVDD supply, so I'm not sure we need a separate supply in DT.
-
-Similarly, the user's guide recommends supplying the AVDD, DVDD and PVDD pins 
-with a single 1.8V LDO and three independent filters. We could thus possibly 
-combine them into a single 1.8V supply.
-
-> +ADV7533 specific supplies:
-> +- a2vdd-supply: 1.8V supply that powers up the A2VDD pin on the chip.
-> +- v1p2-supply: A supply that powers up the V1P2 pin on the chip. It can be
-> +  either 1.2V or 1.8V.
+> > +	samsung,ignore_unset_ecc;
 > 
->  Required nodes:
+> Just discovered this ->ignore_unset_ecc property, and I don't
+> understand why it's here for...
+> Either you don't want to have ECC, and in this case you should set
+> NAND_ECC_NONE, or you want to have ECC calculated, and in this case,
+> the only valid situation where ECC bytes are 0xff is when the page is
+> erased.
+> 
+> If I'm right, please fix the driver instead of adding this DT property.
+> If I'm wrong, could you explain in more detail when you have ECC bytes
+> set to 0xff?
+
+I think you are right but I am not an expert on flash devices and the
+MTD sub-system. The commit message of this code says "If a block's ecc
+field is all 0xff, then ignore the ECC correction. This is for systems
+where some of the blocks, such as the initial cramfs are written without
+ECC and need to be loaded on start.". Does it make sense?
+
+> > +	for_each_available_child_of_node(np, child) {
+> > +
+> > +		sets->name = (char *)child->name;
+> > +		sets->of_node = child;
+> > +		sets->nr_chips = 1;
+> > +
+> > +		if (!of_property_match_string(child, "nand-ecc-mode", "none"))
+> > +			sets->disable_ecc = 1;
+> > +
+> > +		if (of_get_property(child, "nand-on-flash-bbt", NULL))
+> > +			sets->flash_bbt = 1;
+> > +
+> 
+> These properties are automatically extracted in nand_scan_ident(), why
+> do you need to parse them twice?
+> 
+
+You are right, there is no need to parse them twice. But taking a look
+at the code I found a problem. Right now enabling hardware ECC is done
+at compile time by enabling CONFIG_MTD_NAND_S3C2410_HWECC in the
+menuconfig. Looks like this config option should be removed so we can
+select ECC mode using nand-ecc-mode property in the device tree. But
+this would break current boards that are not using a device tree. So it
+would be necessary to add a ecc_mode field in the platform_data of these
+boards and set them all to the default ECC mode (NAND_ECC_SOFT). Is this
+the right approach?
+
+Thanks!
 
 -- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sergio Prado
+Embedded Labworks
+Office: +55 11 2628-3461
+Mobile: +55 11 97123-3420
