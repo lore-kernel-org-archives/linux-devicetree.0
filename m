@@ -1,42 +1,34 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v7 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Mon, 26 Sep 2016 23:27:14 +0200
-Message-ID: <4b02ba7d-4a31-297a-bbbd-be26da615e7b@linaro.org>
-References: <cover.1474693319.git.dalias@libc.org>
- <22c1ee0f908fe3bf8b70f5e87d659ceb29af1434.1474693319.git.dalias@libc.org>
- <20160926210716.GA12855@brightrain.aerifal.cx>
+From: "Steven J. Hill" <Steven.Hill@cavium.com>
+Subject: Re: [PATCH v2] MIPS: Octeon: mark GPIO controller node not populated
+ after IRQ init.
+Date: Mon, 26 Sep 2016 17:21:58 -0500
+Message-ID: <da926586-ee9e-07c6-afb1-863093a0895e@cavium.com>
+References: <57C0922C.40907@cavium.com>
+ <20160926204101.GB19498@raspberrypi.musicnaut.iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160926210716.GA12855@brightrain.aerifal.cx>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>, Mark Rutland <Mark.Rutland@arm.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20160926204101.GB19498@raspberrypi.musicnaut.iki.fi>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Aaro Koskinen <aaro.koskinen@iki.fi>, Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org, David Daney <david.daney@cavium.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/09/2016 23:07, Rich Felker wrote:
-> Ping. Is there anything that still needs to be changed for this driver
-> to be acceptable?
+On 09/26/2016 03:41 PM, Aaro Koskinen wrote:
 > 
-
-It is on my radar. I'm reviewing it.
-
-Can you elaborate the workaround mentioned in the changelog. I have been
-digging into the lkml@ thread but it is not clear if the issue is
-related to the time framework, the driver itself or whatever else. Can
-you clarify that ?
-
-Regarding the previous version, did you reach a consensus regarding
-per_cpu irq with Mark Rutland ?
-
-Thanks.
-
-  -- Daniel
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> Ralf, I think this patch should be still included in v4.8 final.
+> 
+> Thanks,
+> 
+> A.
+> 
+Yes, please put it in 4.8 final. Thanks!
