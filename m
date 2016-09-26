@@ -1,83 +1,67 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] usb: dwc2: assert phy reset when waking up in
- rk3288 platform
-Date: Mon, 26 Sep 2016 13:50:03 -0700
-Message-ID: <65475ef5-b391-c543-4ece-a9484270e20b@synopsys.com>
-References: <1474743019-1050-1-git-send-email-ayaka@soulik.info>
- <1474743019-1050-3-git-send-email-ayaka@soulik.info>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v2 2/3] mmc: sh_mmcif: Document r7s72100 DT bindings
+Date: Mon, 26 Sep 2016 20:58:41 +0000
+Message-ID: <SG2PR06MB11650CDC26D69220278ED4C78ACD0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20160920154620.18653-1-chris.brandt@renesas.com>
+ <20160920154620.18653-3-chris.brandt@renesas.com>
+ <20160923191519.GA28901@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474743019-1050-3-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+In-Reply-To: <20160923191519.GA28901@rob-hp-laptop>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/24/2016 11:51 AM, Randy Li wrote:
-> On the rk3288 USB host-only port (the one that's not the OTG-enabled
-> port) the PHY can get into a bad state when a wakeup is asserted (not
-> just a wakeup from full system suspend but also a wakeup from
-> autosuspend).
-> 
-> We can get the PHY out of its bad state by asserting its "port reset",
-> but unfortunately that seems to assert a reset onto the USB bus so it
-> could confuse things if we don't actually deenumerate / reenumerate the
-> device.
-> 
-> We can also get the PHY out of its bad state by fully resetting it using
-> the reset from the CRU (clock reset unit) in chip, which does a more full
-> reset.  The CRU-based reset appears to actually cause devices on the bus
-> to be removed and reinserted, which fixes the problem (albeit in a hacky
-> way).
-> 
-> It's unfortunate that we need to do a full re-enumeration of devices at
-> wakeup time, but this is better than alternative of letting the bus get
-> wedged.
-> 
-> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-> ---
->  drivers/usb/dwc2/core_intr.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
-> index d85c5c9..af27edc 100644
-> --- a/drivers/usb/dwc2/core_intr.c
-> +++ b/drivers/usb/dwc2/core_intr.c
-> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
->  static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->  {
->  	int ret;
-> +	struct device_node *np = hsotg->dev->of_node;
->  
->  	/* Clear interrupt */
->  	dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
-> @@ -379,6 +380,16 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->  			/* Restart the Phy Clock */
->  			pcgcctl &= ~PCGCTL_STOPPCLK;
->  			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
-> +
-> +			/*
-> +			 * It is a quirk in Rockchip RK3288, causing by
-> +			 * a hardware bug. This will propagate out and
-> +			 * eventually we'll re-enumerate the device.
-> +			 * Not great but the best we can do.
-> +			 */
-> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb"))
-> +				phy_reset(hsotg->phy);
-> +
->  			mod_timer(&hsotg->wkp_timer,
->  				  jiffies + msecs_to_jiffies(71));
->  		} else {
-> 
+
+On 9/23/2016, Rob Herring wrote:
+> > diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> > b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> > index ff611fa..1443edb 100644
+> > --- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> > +++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> > @@ -8,12 +8,16 @@ Required properties:
+> >
+> >  - compatible: should be "renesas,mmcif-<soctype>", "renesas,sh-mmcif"
+> as a
+> >    fallback. Examples with <soctype> are:
+> > +	- "renesas,mmcif-r7s72100" for the MMCIF found in r7s72100 SoCs
+> >  	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
+> >  	- "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
+> >  	- "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
+> >  	- "renesas,mmcif-r8a7793" for the MMCIF found in r8a7793 SoCs
+> >  	- "renesas,mmcif-r8a7794" for the MMCIF found in r8a7794 SoCs
+> >
+> > +- interrupts: either 1 shared interrupt, 2 separate interrupts (error
+> > +and int),
+> > +  or 3 separate interrupts (error, int, card detect)
+>=20
+> This should be based on the compatible strings. Surely, 1, 2, or 3 is not
+> valid for all compatibles.
 
 
-Acked-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+That is true. What is your suggestion? Add the specific number of interrupt=
+s for each SoC to the documentation so there is no confusion?
 
-Regards,
-John
+For example:
 
+- interrupts: Some SoCs have only 1 shared interrupt, while others have eit=
+her
+  2 or 3 individual interrupts (error, int, card detect). Below is the numb=
+er
+  of interrupts for each SoC.
+    3: r7s72100 SoC
+    2: r8a7740 SoC
+    1: r8a7790 SoC
+    1: r8a7791 SoC
+    1: r8a7793 SoC
+    1: r8a7794 SoC
+
+
+Chris
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
