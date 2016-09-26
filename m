@@ -1,132 +1,116 @@
-From: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v6 3/6] ARM: dts: imx6q: Add Engicam i.CoreM6 DualLite/Solo initial support
-Date: Tue, 27 Sep 2016 00:55:33 +0530
-Message-ID: <1474917937-29336-3-git-send-email-jteki@openedev.com>
-References: <1474917937-29336-1-git-send-email-jteki@openedev.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474917937-29336-1-git-send-email-jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v2 1/8] doc: DT: vidc: binding document for Qualcomm video
+ driver
+Date: Mon, 26 Sep 2016 22:42:32 +0300
+Message-ID: <b2a1db9d-02d6-56ee-1884-72ab1a4720f4@linaro.org>
+References: <1473248229-5540-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1473248229-5540-2-git-send-email-stanimir.varbanov@linaro.org>
+ <20160916141939.GA2320@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160916141939.GA2320@rob-hp-laptop>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Hi Rob,
 
-i.CoreM6 DualLite/Solo modules are system on module solutions manufactured
-by Engicam with following characteristics:
-CPU           NXP i.MX6 DL, 800MHz
-RAM           1GB, 32, 64 bit, DDR3-800/1066
-NAND          SLC,512MB
-Power supply  Single 5V
-MAX LCD RES   FULLHD
+Thanks for the review!
 
-and more info at
-http://www.engicam.com/en/products/embedded/som/sodimm/i-core-m6s-dl-d-q
+On 09/16/2016 05:19 PM, Rob Herring wrote:
+> On Wed, Sep 07, 2016 at 02:37:02PM +0300, Stanimir Varbanov wrote:
+>> Adds binding document for vidc video encoder/decoder driver
+>>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>> ---
+>>  .../devicetree/bindings/media/qcom,vidc.txt        | 61 ++++++++++++++++++++++
+>>  1 file changed, 61 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/qcom,vidc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/qcom,vidc.txt b/Documentation/devicetree/bindings/media/qcom,vidc.txt
+>> new file mode 100644
+>> index 000000000000..0d50a7b2e3ed
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/qcom,vidc.txt
+>> @@ -0,0 +1,61 @@
+>> +* Qualcomm video encoder/decoder accelerator
+>> +
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: Value should contain
+> 
+> ... one of:
+> 
+>> +			- "qcom,vidc-msm8916"
+>> +			- "qcom,vidc-msm8996"
+>> +- reg:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: Register ranges as listed in the reg-names property
+>> +
+>> +- interrupts:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition:
+> 
+> How many interrupts?
 
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
-Changes for v6:
-        - none
-Changes for v5:
-        - none
-Changes for v4:
-        - new patch
-Changes for v3:
-        - Use compatible as engicam,imx6-icore instead of fsl,imx6-icore
-Changes for v2:
-        - s/oaky/okay/g
+It is one, thanks for the catch.
 
- arch/arm/boot/dts/Makefile         |  1 +
- arch/arm/boot/dts/imx6dl-icore.dts | 59 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-icore.dts
+> 
+>> +
+>> +- power-domains:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: A phandle and power domain specifier pairs to the
+>> +		    power domain which is responsible for collapsing
+>> +		    and restoring power to the peripheral
+> 
+> How many power domains?
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 511510d..6175f44 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -333,6 +333,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-gw552x.dtb \
- 	imx6dl-gw553x.dtb \
- 	imx6dl-hummingboard.dtb \
-+	imx6dl-icore.dtb \
- 	imx6dl-nit6xlite.dtb \
- 	imx6dl-nitrogen6x.dtb \
- 	imx6dl-phytec-pbab01.dtb \
-diff --git a/arch/arm/boot/dts/imx6dl-icore.dts b/arch/arm/boot/dts/imx6dl-icore.dts
-new file mode 100644
-index 0000000..aec332c
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-icore.dts
-@@ -0,0 +1,59 @@
-+/*
-+ * Copyright (C) 2016 Amarula Solutions B.V.
-+ * Copyright (C) 2016 Engicam S.r.l.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6dl.dtsi"
-+#include "imx6qdl-icore.dtsi"
-+
-+/ {
-+	model = "Engicam i.CoreM6 DualLite/Solo Starter Kit";
-+	compatible = "engicam,imx6-icore", "fsl,imx6dl";
-+};
-+
-+&can1 {
-+	status = "okay";
-+};
-+
-+&can2 {
-+	status = "okay";
-+};
+Good question, for vidc-msm8916 it is one power-domain, for vidc-msm8996
+the power domains should be 3. Here the problem is that the genpd
+doesn't permit more than one power-domain per device.
+
+> 
+>> +
+>> +- clocks:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: List of phandle and clock specifier pairs as listed
+>> +		    in clock-names property
+>> +- clock-names:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: Should contain the following entries
+>> +			- "core"  Core video accelerator clock
+>> +			- "iface" Video accelerator AHB clock
+>> +			- "bus"	  Video accelerator AXI clock
+>> +- rproc:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: A phandle to remote processor responsible for
+>> +		    firmware loading
+>> +
+>> +- iommus:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: A list of phandle and IOMMU specifier pairs
+>> +
+>> +* An Example
+>> +	qcom,vidc@1d00000 {
+> 
+> node names should be generic: video-codec@
+
+correct, will update it in next version.
+
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards,
+Stan
