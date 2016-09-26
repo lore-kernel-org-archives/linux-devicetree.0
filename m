@@ -1,34 +1,72 @@
-From: "Steven J. Hill" <Steven.Hill@cavium.com>
-Subject: Re: [PATCH v2] MIPS: Octeon: mark GPIO controller node not populated
- after IRQ init.
-Date: Mon, 26 Sep 2016 17:21:58 -0500
-Message-ID: <da926586-ee9e-07c6-afb1-863093a0895e@cavium.com>
-References: <57C0922C.40907@cavium.com>
- <20160926204101.GB19498@raspberrypi.musicnaut.iki.fi>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH resend] sh_eth: add R8A7743/5 support
+Date: Tue, 27 Sep 2016 01:23:26 +0300
+Message-ID: <1654835.SEcvPVx4OQ@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20160926204101.GB19498@raspberrypi.musicnaut.iki.fi>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Aaro Koskinen <aaro.koskinen@iki.fi>, Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org, David Daney <david.daney@cavium.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/26/2016 03:41 PM, Aaro Koskinen wrote:
-> 
-> Ralf, I think this patch should be still included in v4.8 final.
-> 
-> Thanks,
-> 
-> A.
-> 
-Yes, please put it in 4.8 final. Thanks!
+Add support for the first two members of the Renesas RZ/G family, RZ/G1M/E
+(also known as  R8A7743/5). The Ether core is the same as in the R-Car gen2
+SoCs, so will share the code/data with them...
+
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+
+---
+The patch is against the DaveM's 'net-next.git' repo.
+
+Re-sending with the DT maintainers/list included this time...
+
+ Documentation/devicetree/bindings/net/sh_eth.txt |    2 ++
+ drivers/net/ethernet/renesas/Kconfig             |    2 +-
+ drivers/net/ethernet/renesas/sh_eth.c            |    2 ++
+ 3 files changed, 5 insertions(+), 1 deletion(-)
+
+Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/sh_eth.txt
++++ net-next/Documentation/devicetree/bindings/net/sh_eth.txt
+@@ -5,6 +5,8 @@ interface contains.
+ 
+ Required properties:
+ - compatible: "renesas,gether-r8a7740" if the device is a part of R8A7740 SoC.
++	      "renesas,ether-r8a7743"  if the device is a part of R8A7743 SoC.
++	      "renesas,ether-r8a7745"  if the device is a part of R8A7745 SoC.
+ 	      "renesas,ether-r8a7778"  if the device is a part of R8A7778 SoC.
+ 	      "renesas,ether-r8a7779"  if the device is a part of R8A7779 SoC.
+ 	      "renesas,ether-r8a7790"  if the device is a part of R8A7790 SoC.
+Index: net-next/drivers/net/ethernet/renesas/Kconfig
+===================================================================
+--- net-next.orig/drivers/net/ethernet/renesas/Kconfig
++++ net-next/drivers/net/ethernet/renesas/Kconfig
+@@ -27,7 +27,7 @@ config SH_ETH
+ 	  Renesas SuperH Ethernet device driver.
+ 	  This driver supporting CPUs are:
+ 		- SH7619, SH7710, SH7712, SH7724, SH7734, SH7763, SH7757,
+-		  R8A7740, R8A777x and R8A779x.
++		  R8A7740, R8A774x, R8A777x and R8A779x.
+ 
+ config RAVB
+ 	tristate "Renesas Ethernet AVB support"
+Index: net-next/drivers/net/ethernet/renesas/sh_eth.c
+===================================================================
+--- net-next.orig/drivers/net/ethernet/renesas/sh_eth.c
++++ net-next/drivers/net/ethernet/renesas/sh_eth.c
+@@ -2959,6 +2959,8 @@ static struct sh_eth_plat_data *sh_eth_p
+ 
+ static const struct of_device_id sh_eth_match_table[] = {
+ 	{ .compatible = "renesas,gether-r8a7740", .data = &r8a7740_data },
++	{ .compatible = "renesas,ether-r8a7743", .data = &r8a779x_data },
++	{ .compatible = "renesas,ether-r8a7745", .data = &r8a779x_data },
+ 	{ .compatible = "renesas,ether-r8a7778", .data = &r8a777x_data },
+ 	{ .compatible = "renesas,ether-r8a7779", .data = &r8a777x_data },
+ 	{ .compatible = "renesas,ether-r8a7790", .data = &r8a779x_data },
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
