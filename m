@@ -1,62 +1,44 @@
-From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v2] MIPS: Octeon: mark GPIO controller node not populated
- after IRQ init.
-Date: Mon, 26 Sep 2016 23:41:01 +0300
-Message-ID: <20160926204101.GB19498@raspberrypi.musicnaut.iki.fi>
-References: <57C0922C.40907@cavium.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <57C0922C.40907-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <Steven.Hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v2 0/2] ARM: dts: r7s72100: add sdhi DT
+Date: Mon, 26 Sep 2016 16:40:30 -0400
+Message-ID: <20160926204032.12260-1-chris.brandt@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+SUMMARY:
+This series adds sdhi to the r7s72100 (RZ/A1) Device Tree.
 
-On Fri, Aug 26, 2016 at 02:02:04PM -0500, Steven J. Hill wrote:
-> We clear the OF_POPULATED flag for the GPIO controller node on Octeon
-> processors. Otherwise, none of the devices hanging on the GPIO lines
-> are probed. The 'gpio-leds' driver on OCTEON failed to probe in addition
-> to other devices on Cavium 71xx and 78xx development boards.
-> 
-> Fixes: 15cc2ed6dcf9 ("of/irq: Mark initialised interrupt controllers as populated")
-> Signed-off-by: Steven J. Hill <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> Tested-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+DEPENDECIES:
+This series is dependent on the tmio/sh_sdhi patches being
+applied to add r7s72100 support.
+  mmc: sh_mobile_sdhi: add ocr_mask option
+  mmc: tmio-mmc: add support for 32bit data port
+  mmc: sh_mobile_sdhi: Add r7s72100 support
 
-Ralf, I think this patch should be still included in v4.8 final.
+MERGE CONFLICTS:
+There are also patches being reviewed for adding mmc so depending on how
+they get applied, there might be a line conflict.
+To resolve the merge conflict, simply put the MMC nodes before
+the SDHI nodes (just because that seems to be the order in other
+Renesas SoCs DTs)
 
-Thanks,
+CHANGES:
+V1->V2
+* Removed patch "[PATCH 1/3] ARM: dts: r7s72100: add sdhi clock to device tree"
+  because it has already been queued up
+* moved bus-with property from dtsi to dts
 
-A.
 
-> ---
->  arch/mips/cavium-octeon/octeon-irq.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/mips/cavium-octeon/octeon-irq.c b/arch/mips/cavium-octeon/octeon-irq.c
-> index 5a9b87b..c1eb1ff 100644
-> --- a/arch/mips/cavium-octeon/octeon-irq.c
-> +++ b/arch/mips/cavium-octeon/octeon-irq.c
-> @@ -1619,6 +1619,12 @@ static int __init octeon_irq_init_gpio(
->  		return -ENOMEM;
->  	}
-> 
-> +	/*
-> +	 * Clear the OF_POPULATED flag that was set by of_irq_init()
-> +	 * so that all GPIO devices will be probed.
-> +	 */
-> +	of_node_clear_flag(gpio_node, OF_POPULATED);
-> +
->  	return 0;
->  }
->  /*
-> -- 
-> 1.9.1
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Chris Brandt (2):
+  ARM: dts: r7s72100: add sdhi to device tree
+  ARM: dts: rskrza1: add sdhi1 DT support
+
+ arch/arm/boot/dts/r7s72100-rskrza1.dts |  5 +++++
+ arch/arm/boot/dts/r7s72100.dtsi        | 26 ++++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+)
+
+-- 
+2.9.2
