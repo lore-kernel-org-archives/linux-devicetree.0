@@ -1,71 +1,110 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCH 2/2] ARM: i.MX: dts: add fsl, imx25-wdt compatible to
- all relevant watchdog nodes
-Date: Mon, 26 Sep 2016 08:27:59 +0200
-Message-ID: <20160926062759.3eoezyezog6clz6x@pengutronix.de>
-References: <1474850361-20884-1-git-send-email-vz@mleia.com>
- <1474850361-20884-3-git-send-email-vz@mleia.com>
+From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: drm/bridge: adv7511: Add regulator
+ bindings
+Date: Mon, 26 Sep 2016 12:10:11 +0530
+Message-ID: <57E8C2CB.9000806@codeaurora.org>
+References: <1472640730-24326-1-git-send-email-architt@codeaurora.org>
+ <1474622430-6704-1-git-send-email-architt@codeaurora.org>
+ <1474622430-6704-2-git-send-email-architt@codeaurora.org>
+ <737415023.GKbfqYIf4s@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1474850361-20884-3-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <737415023.GKbfqYIf4s@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Vladimir,
+Hi Laurent,
 
-On Mon, Sep 26, 2016 at 03:39:21AM +0300, Vladimir Zapolskiy wrote:
-> Watchdog device controller found on all modern SoCs from i.MX series
-> and firstly introduced in i.MX25 is not one in one compatible with the
-> watchdog controllers on i.MX21, i.MX27 and i.MX31, the latter
-> controlles don't have WICR (and pretimeout notification support) and
-> WMCR registers. To get benefit from the more advanced watchdog device
-> and to avoid operations over non-existing registers on legacy SoCs add
-> fsl,imx25-wdt compatible to descriptions of all i.MX25 compatible
-> watchdog controllers.
-> 
-> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx35.dtsi   |  3 ++-
->  arch/arm/boot/dts/imx50.dtsi   |  3 ++-
->  arch/arm/boot/dts/imx51.dtsi   |  6 ++++--
->  arch/arm/boot/dts/imx53.dtsi   |  6 ++++--
->  arch/arm/boot/dts/imx6qdl.dtsi |  6 ++++--
->  arch/arm/boot/dts/imx6sl.dtsi  |  6 ++++--
->  arch/arm/boot/dts/imx6sx.dtsi  |  9 ++++++---
->  arch/arm/boot/dts/imx6ul.dtsi  |  6 ++++--
->  arch/arm/boot/dts/imx7s.dtsi   | 12 ++++++++----
->  arch/arm/boot/dts/ls1021a.dtsi |  2 +-
->  arch/arm/boot/dts/vfxxx.dtsi   |  3 ++-
->  11 files changed, 41 insertions(+), 21 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx35.dtsi b/arch/arm/boot/dts/imx35.dtsi
-> index 490b7b4..8fd4482 100644
-> --- a/arch/arm/boot/dts/imx35.dtsi
-> +++ b/arch/arm/boot/dts/imx35.dtsi
-> @@ -284,7 +284,8 @@
->  			};
->  
->  			wdog: wdog@53fdc000 {
-> -				compatible = "fsl,imx35-wdt", "fsl,imx21-wdt";
-> +				compatible = "fsl,imx35-wdt", "fsl,imx25-wdt",
-> +					     "fsl,imx21-wdt";
+On 9/25/2016 10:58 PM, Laurent Pinchart wrote:
+> Hi Archit,
+>
+> Thank you for the patch.
+>
+> On Friday 23 Sep 2016 14:50:27 Archit Taneja wrote:
+>> Add the regulator supply properties needed by ADV7511 and ADV7533. The
+>> regulator names are named after the pin names, except for DVDD_3V on
+>> ADV7511, which is left v3p3 to have the same name as it's on ADV7533.
+>>
+>> ADV7511 has a BGVDD pin for which the voltage to be configured isn't
+>> clear. This needs to be updated in the document later.
+>>
+>> The regulators are specified as optional properties since there can
+>> be boards which have a fixed supply directly routed to the pins, and
+>> these may not be modelled as regulator supplies.
+>>
+>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>> v2:
+>> - Specify regulator supplies for ADV7511 too.
+>> - Have separate supply entries for AVDD, DVDD, PVDD, A2VDD pins.
+>> - Add additional BGVDD supply for ADV7511.
+>>
+>>   .../devicetree/bindings/display/bridge/adi,adv7511.txt     | 14 +++++++++++
+>>   1 file changed, 14 insertions(+)
+>>
+>> diff --git
+>> a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>> b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt index
+>> 6532a59..66e6bae 100644
+>> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>> @@ -56,6 +56,20 @@ Optional properties:
+>>   - adi,disable-timing-generator: Only for ADV7533. Disables the internal
+>> timing generator. The chip will rely on the sync signals in the DSI data
+>> lanes, rather than generate its own timings for HDMI output.
+>> +- avdd-supply: A 1.8V supply that powers up the AVDD pin on the chip.
+>> +- dvdd-supply: A 1.8V supply that powers up the DVDD pin on the chip.
+>> +- pvdd-supply: A 1.8V supply that powers up the PVDD pin on the chip.
+>> +- v3p3-supply: A 3.3V supply that powers up the pin called DVDD_3V on
+>> +  ADV7511 and V3P3 on ADV7533.
+>> +
+>> +ADV7511 specific supplies:
+>> +- bgvdd-supply: Powers the BGVDD pin. The voltage isn't clear from
+>> +  available datasheets.
+>
+> It's a 1.8V supply. The ADV7511 hardware user's guide recommends tying it to
+> the PVDD supply, so I'm not sure we need a separate supply in DT.
 
-When this is used on an old kernel that doesn't know about fsl,imx25-wdt
-this picks up the imx21 driver logic. As this is wrong I think you
-should drop imx21-wdt here. Can one of the dt-people comfirm?
+Thanks for providing the info. I'll update it in the doc.
 
-Best regards
-Uwe
+>
+> Similarly, the user's guide recommends supplying the AVDD, DVDD and PVDD pins
+> with a single 1.8V LDO and three independent filters. We could thus possibly
+> combine them into a single 1.8V supply.
+>
+
+I'd originally specified only one AVDD supply for all the 1.8 V
+supplies, but Rob had recommended using separate supplies for each pin.
+
+I guess it doesn't do much harm specifying separate supplies, a
+board can just provide avdd-supply, and the rest would be assumed dummy.
+It could also help describe boards which may not have followed the
+user guide's recommendation, but I agree that's probably a rare
+scenario.
+
+Is it okay if we stick with multiple supplies as it is in this version?
+
+Thanks for the review.
+
+Archit
+
+>> +ADV7533 specific supplies:
+>> +- a2vdd-supply: 1.8V supply that powers up the A2VDD pin on the chip.
+>> +- v1p2-supply: A supply that powers up the V1P2 pin on the chip. It can be
+>> +  either 1.2V or 1.8V.
+>>
+>>   Required nodes:
+>
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
