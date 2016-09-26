@@ -1,71 +1,73 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH resend] sh_eth: add R8A7743/5 support
-Date: Tue, 27 Sep 2016 01:23:26 +0300
-Message-ID: <1654835.SEcvPVx4OQ@wasted.cogentembedded.com>
+From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Subject: Re: [PATCH v7 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Mon, 26 Sep 2016 18:23:52 -0400
+Message-ID: <20160926222352.GE19318@brightrain.aerifal.cx>
+References: <cover.1474693319.git.dalias@libc.org>
+ <22c1ee0f908fe3bf8b70f5e87d659ceb29af1434.1474693319.git.dalias@libc.org>
+ <20160926210716.GA12855@brightrain.aerifal.cx>
+ <4b02ba7d-4a31-297a-bbbd-be26da615e7b@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4b02ba7d-4a31-297a-bbbd-be26da615e7b-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "Paul E. McKenney" <paulmck-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the first two members of the Renesas RZ/G family, RZ/G1M/E
-(also known as  R8A7743/5). The Ether core is the same as in the R-Car gen2
-SoCs, so will share the code/data with them...
+On Mon, Sep 26, 2016 at 11:27:14PM +0200, Daniel Lezcano wrote:
+> On 26/09/2016 23:07, Rich Felker wrote:
+> > Ping. Is there anything that still needs to be changed for this driver
+> > to be acceptable?
+> 
+> It is on my radar. I'm reviewing it.
+> 
+> Can you elaborate the workaround mentioned in the changelog. I have been
+> digging into the lkml@ thread but it is not clear if the issue is
+> related to the time framework, the driver itself or whatever else. Can
+> you clarify that ?
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+It does not seem to be related to the driver. I'd be happy to have a
+workaround (or even better a fix) at a higher level outside the
+driver. I'll try to summarize what I think is happening.
 
----
-The patch is against the DaveM's 'net-next.git' repo.
+The symptom is heavy irq load (much higher than the 1-2 irqs/sec I
+observed on 4.6, something like 30+ on average) and frequent rcu_sched
+stall messages. Under these conditions the system "feels" responsive
+still, but that seems to be a consequence of other interrupts breaking
+the stall; by inserting and removing the SD card, which is probed
+periodically (1s period) by a kernel thread when there's no irq hooked
+up for the slot, I was able to observe that the card-removed message
+did not appear for several seconds, so apparently the kernel really is
+stalling.
 
-Re-sending with the DT maintainers/list included this time...
+Based on use of ftrace, I was able to see situations where a second
+timer hardirq happened immediately after one occurred, before the
+timer softirq could run. My theory is that this is causing some kind
+of feedback loop where new timer expirations keep getting scheduled
+with a very short interval such that the softirq never gets to run
+(until other interrupt activity disrups the feedback loop). I tried
+reverting 4e85876a9d2a977b4a07389da8c07edf76d10825 which seemed
+relevant and it didn't help, but on further review (right now) there
+seem to be a few related commits just before it that might be
+responsible for the regression. I'll see if I can dig up anything else
+useful.
 
- Documentation/devicetree/bindings/net/sh_eth.txt |    2 ++
- drivers/net/ethernet/renesas/Kconfig             |    2 +-
- drivers/net/ethernet/renesas/sh_eth.c            |    2 ++
- 3 files changed, 5 insertions(+), 1 deletion(-)
+> Regarding the previous version, did you reach a consensus regarding
+> per_cpu irq with Mark Rutland ?
 
-Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
-===================================================================
---- net-next.orig/Documentation/devicetree/bindings/net/sh_eth.txt
-+++ net-next/Documentation/devicetree/bindings/net/sh_eth.txt
-@@ -5,6 +5,8 @@ interface contains.
- 
- Required properties:
- - compatible: "renesas,gether-r8a7740" if the device is a part of R8A7740 SoC.
-+	      "renesas,ether-r8a7743"  if the device is a part of R8A7743 SoC.
-+	      "renesas,ether-r8a7745"  if the device is a part of R8A7745 SoC.
- 	      "renesas,ether-r8a7778"  if the device is a part of R8A7778 SoC.
- 	      "renesas,ether-r8a7779"  if the device is a part of R8A7779 SoC.
- 	      "renesas,ether-r8a7790"  if the device is a part of R8A7790 SoC.
-Index: net-next/drivers/net/ethernet/renesas/Kconfig
-===================================================================
---- net-next.orig/drivers/net/ethernet/renesas/Kconfig
-+++ net-next/drivers/net/ethernet/renesas/Kconfig
-@@ -27,7 +27,7 @@ config SH_ETH
- 	  Renesas SuperH Ethernet device driver.
- 	  This driver supporting CPUs are:
- 		- SH7619, SH7710, SH7712, SH7724, SH7734, SH7763, SH7757,
--		  R8A7740, R8A777x and R8A779x.
-+		  R8A7740, R8A774x, R8A777x and R8A779x.
- 
- config RAVB
- 	tristate "Renesas Ethernet AVB support"
-Index: net-next/drivers/net/ethernet/renesas/sh_eth.c
-===================================================================
---- net-next.orig/drivers/net/ethernet/renesas/sh_eth.c
-+++ net-next/drivers/net/ethernet/renesas/sh_eth.c
-@@ -2959,6 +2959,8 @@ static struct sh_eth_plat_data *sh_eth_p
- 
- static const struct of_device_id sh_eth_match_table[] = {
- 	{ .compatible = "renesas,gether-r8a7740", .data = &r8a7740_data },
-+	{ .compatible = "renesas,ether-r8a7743", .data = &r8a779x_data },
-+	{ .compatible = "renesas,ether-r8a7745", .data = &r8a779x_data },
- 	{ .compatible = "renesas,ether-r8a7778", .data = &r8a777x_data },
- 	{ .compatible = "renesas,ether-r8a7779", .data = &r8a777x_data },
- 	{ .compatible = "renesas,ether-r8a7790", .data = &r8a779x_data },
+I'm not sure. I think I can reasonably say that the existign percpu
+framework is not suitable or necessary for modeling what the jcore
+hardware is doing. The interrupt controller driver seems to have been
+accepted already without use of percpu stuff. I know there was some
+concern that not letting the kernel know whether an irq is percpu or
+not could lead to wrong behavior, but I believe that's only possible
+in the other direction (wrongly registering an irq as percpu when it's
+actually a normal one that could happen on either cpu, in which case
+locking might be wrongly omitted, etc.).
 
+Rich
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
