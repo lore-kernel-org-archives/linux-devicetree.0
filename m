@@ -1,51 +1,69 @@
-From: Nava kishore Manne <nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5] devicetree: bindings: uart: Add new compatible string for ZynqMP
-Date: Mon, 26 Sep 2016 19:36:41 +0530
-Message-ID: <1474898801-36571-1-git-send-email-navam@xilinx.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v4 2/5] ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual
+ initial support
+Date: Mon, 26 Sep 2016 19:58:39 +0530
+Message-ID: <CAMty3ZBtKk7gohpvkYSxUvL-xT_k5oqQXbFsbfEQ9uBaBryveA@mail.gmail.com>
+References: <1473618641-10159-1-git-send-email-jagan@amarulasolutions.com>
+ <1473618641-10159-3-git-send-email-jagan@amarulasolutions.com>
+ <CAOMZO5CsrrqqUPaVbU-ya79VSXgxyspa_fbr8HY1voJgpy2LLg@mail.gmail.com>
+ <CAMty3ZDKrXxmwDFxSBvL_anJQPdXEfnJ40uNv5B6KssQyJJKhA@mail.gmail.com>
+ <CAOMZO5B_ahBJr_Tgz_HShmG9heUwCj4K0N3FHhxja1yg0gCUGA@mail.gmail.com>
+ <CAOf5uw=bMMa98RP=kvA=NfS89TWOEqU3Q2HjpEmzUTVrdg2=sQ@mail.gmail.com>
+ <CAOMZO5CnP3=CNnQcOzra7eQ-cAwProgH+Kws0FHVOw7Q6nCDow@mail.gmail.com>
+ <119ad2fc-8e74-1193-8ee2-417cf1e6fd49@engicam.com> <CAOMZO5BWgqxfbOepJZwqdZceSWKBnSfd38Ab2TV-LN0oDttc-Q@mail.gmail.com>
+ <CAOf5uw=HwErWWqvQ30ZJpb3CupqdvGZ9FnGAxh4+JVTrT6wTjw@mail.gmail.com>
+ <CAOMZO5BHhA8rd0URLNGGLZKN00zFz9d5vsq4CuRWsKyT6yq-oA@mail.gmail.com> <CAOf5uwk3FJ4K4gL8xNNAp-z_AesjwTwSz986gfveVJsOU+N8Ow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOf5uwk3FJ4K4gL8xNNAp-z_AesjwTwSz986gfveVJsOU+N8Ow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
-Cc: Nava kishore Manne <nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Nava kishore Manne <navam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Nava kishore Manne <nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Hi Fabio,
 
-This patch Adds the new compatible string for ZynqMP SoC.
+On Mon, Sep 26, 2016 at 7:26 PM, Michael Trimarchi
+<michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> Hi
+>
+> On Mon, Sep 26, 2016 at 3:55 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Mon, Sep 26, 2016 at 10:54 AM, Michael Trimarchi
+>> <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>>
+>>>> Why don't you simply do like this?
+>>>>
+>>>>        reg_3p3v: regulator-3p3v {
+>>>>                compatible = "regulator-fixed";
+>>>>                regulator-name = "3P3V";
+>>>>                regulator-min-microvolt = <3300000>;
+>>>>                regulator-max-microvolt = <3300000>;
+>>>>        };
+>>>
+>>> Should dts rispect the schematic connection?
+>>
+>> Yes
+>
+> So boot on and always on are used to declare their status and their
+> behavionr. I don't
+> see the point to not specify them in this way
 
-Signed-off-by: Nava kishore Manne <navam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
-Changes for v5:
-		-Fixed some minor comments.
-Changes for v4:
-                -Modified the ChangeLog comment.
-Changes for v3:
-                -Added changeLog comment.
-Changes for v2:
-                -None
+Please try to understand that due to the case where we used fixed
+voltage regulators on SOM as mentioned By Metteo and Michael dt nodes
+should have regulator-always-on and regulator-boot-on properties. And
+even we added one of our module which is already in ML[1]
 
- Documentation/devicetree/bindings/serial/cdns,uart.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Hope this is helpful conclude this thread.
 
-diff --git a/Documentation/devicetree/bindings/serial/cdns,uart.txt b/Documentation/devicetree/bindings/serial/cdns,uart.txt
-index a3eb154..30c885c 100644
---- a/Documentation/devicetree/bindings/serial/cdns,uart.txt
-+++ b/Documentation/devicetree/bindings/serial/cdns,uart.txt
-@@ -1,7 +1,9 @@
- Binding for Cadence UART Controller
- 
- Required properties:
--- compatible : should be "cdns,uart-r1p8", or "xlnx,xuartps"
-+- compatible :
-+  Use "cdns,uart-r1p8", or "xlnx,xuartps" for Zynq-7xxx SoC.
-+  Use "cdns,uart-r1p12" for Zynq Ultrascale+ MPSoC.
- - reg: Should contain UART controller registers location and length.
- - interrupts: Should contain UART controller interrupts.
- - clocks: Must contain phandles to the UART clocks
+[1] http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=a58e4e608bc88735581fdd9861676e522fa3c20d
+
+thanks!
 -- 
-2.1.2
-
+Jagan Teki
+Free Software Engineer | Amarula Solutions
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
