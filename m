@@ -1,78 +1,108 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 4/4] PM / AVS: rockchip-cpu-avs: add driver handling Rockchip cpu avs
-Date: Mon, 26 Sep 2016 10:05:13 +0200
-Message-ID: <20776501.pZ2NDOzLK3@phil>
-References: <1471510341-63926-1-git-send-email-finley.xiao@rock-chips.com> <20160912215515.GF7243@codeaurora.org> <20160926035511.GG17336@vireshk-i7>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: drm/bridge: adv7511: Add regulator bindings
+Date: Mon, 26 Sep 2016 11:12:48 +0300
+Message-ID: <1527982.jPo8JkVTxZ@avalon>
+References: <1472640730-24326-1-git-send-email-architt@codeaurora.org> <737415023.GKbfqYIf4s@avalon> <57E8C2CB.9000806@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20160926035511.GG17336@vireshk-i7>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Finlye Xiao <finley.xiao@rock-chips.com>, srinivas.kandagatla@linaro.org, maxime.ripard@free-electrons.com, robh+dt@kernel.org, frowand.list@gmail.com, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, mark.rutland@arm.com, khilman@kernel.org, nm@ti.com, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, wxt@rock-chips.com, jay.xu@rock-chips.com, rocky.hao@rock-chips.com, tim.chen@rock-chips.com, tony.xie@rock-chips.com, ulysses.huang@rock-chips.com, lin.huang@rock-chips.com
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <57E8C2CB.9000806@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 26. September 2016, 09:25:11 CEST schrieb Viresh Kumar:
-> On 12-09-16, 14:55, Stephen Boyd wrote:
-> > On 08/29, Viresh Kumar wrote:
-> > > On 18-08-16, 16:52, Finlye Xiao wrote:
-> > > > +static int rockchip_adjust_opp_table(struct device *cpu_dev,
-> > > > +				     struct cpufreq_frequency_table *table,
-> > > > +				     int volt)
-> > > > +{
-> > > > +	struct opp_table *opp_table;
-> > > > +	struct cpufreq_frequency_table *pos;
-> > > > +	struct dev_pm_opp *opp;
-> > > > +
-> > > > +	if (!volt)
-> > > > +		return 0;
-> > > > +
-> > > > +	rcu_read_lock();
-> > > > +
-> > > > +	opp_table = _find_opp_table(cpu_dev);
-> > > > +	if (IS_ERR(opp_table)) {
-> > > > +		rcu_read_unlock();
-> > > > +		return PTR_ERR(opp_table);
-> > > > +	}
-> > > > +
-> > > > +	cpufreq_for_each_valid_entry(pos, table) {
-> > > > +		opp = dev_pm_opp_find_freq_exact(cpu_dev, pos->frequency * 1000,
-> > > > +						 true);
-> > > > +		if (IS_ERR(opp))
-> > > > +			continue;
-> > > > +
-> > > > +		opp->u_volt += volt;
-> > > > +		opp->u_volt_min += volt;
-> > > > +		opp->u_volt_max += volt;
-> > > > +	}
-> > > > +
-> > > > +	rcu_read_unlock();
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > 
-> > > I wouldn't prefer altering the opp tables from individual drivers at
-> > > all. At the least, it should be done via some helpers exposed by the
-> > > core.
-> > > 
-> > > But before that I would like to hear from Stephen a bit as I recall he
-> > > was also working on something similar.
-> > 
-> > I had a patch to modify the voltage at runtime for the "current"
-> > OPP. Now that we have regulator and clk control inside OPP that
-> > became a little easier to do without having to do some notifier
-> > from the OPP layer to the consumers. I haven't had time to revive
-> > those patches though. Should we do that?
-> 
-> Perhaps yes, we should have a common place for doing all that.
-> 
-> > Does this need to modify
-> > anything besides the OPP the device is currently running at?
-> 
-> Finlye, can you please answer this ?
+Hi Archit,
 
-If I understand it correctly, depending on the leakage value stored in an 
-efuse, all opp voltages are reduced by a certain value. Right now the driver 
-does it in one go for the full opp table, but of course could also do it for 
-each new opp individually before it gets set.
+On Monday 26 Sep 2016 12:10:11 Archit Taneja wrote:
+> On 9/25/2016 10:58 PM, Laurent Pinchart wrote:
+> > On Friday 23 Sep 2016 14:50:27 Archit Taneja wrote:
+> >> Add the regulator supply properties needed by ADV7511 and ADV7533. The
+> >> regulator names are named after the pin names, except for DVDD_3V on
+> >> ADV7511, which is left v3p3 to have the same name as it's on ADV7533.
+> >> 
+> >> ADV7511 has a BGVDD pin for which the voltage to be configured isn't
+> >> clear. This needs to be updated in the document later.
+> >> 
+> >> The regulators are specified as optional properties since there can
+> >> be boards which have a fixed supply directly routed to the pins, and
+> >> these may not be modelled as regulator supplies.
+> >> 
+> >> Cc: Rob Herring <robh@kernel.org>
+> >> Cc: devicetree@vger.kernel.org
+> >> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+> >> ---
+> >> v2:
+> >> - Specify regulator supplies for ADV7511 too.
+> >> - Have separate supply entries for AVDD, DVDD, PVDD, A2VDD pins.
+> >> - Add additional BGVDD supply for ADV7511.
+> >> 
+> >>   .../devicetree/bindings/display/bridge/adi,adv7511.txt     | 14 +++++++
+> >>   1 file changed, 14 insertions(+)
+> >> 
+> >> diff --git
+> >> a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+> >> b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt index
+> >> 6532a59..66e6bae 100644
+> >> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+> >> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+> >> 
+> >> @@ -56,6 +56,20 @@ Optional properties:
+> >>   - adi,disable-timing-generator: Only for ADV7533. Disables the internal
+> >> 
+> >> timing generator. The chip will rely on the sync signals in the DSI data
+> >> lanes, rather than generate its own timings for HDMI output.
+> >> +- avdd-supply: A 1.8V supply that powers up the AVDD pin on the chip.
+> >> +- dvdd-supply: A 1.8V supply that powers up the DVDD pin on the chip.
+> >> +- pvdd-supply: A 1.8V supply that powers up the PVDD pin on the chip.
+> >> +- v3p3-supply: A 3.3V supply that powers up the pin called DVDD_3V on
+> >> +  ADV7511 and V3P3 on ADV7533.
+> >> +
+> >> +ADV7511 specific supplies:
+> >> +- bgvdd-supply: Powers the BGVDD pin. The voltage isn't clear from
+> >> +  available datasheets.
+> > 
+> > It's a 1.8V supply. The ADV7511 hardware user's guide recommends tying it
+> > to the PVDD supply, so I'm not sure we need a separate supply in DT.
+> 
+> Thanks for providing the info. I'll update it in the doc.
+> 
+> > Similarly, the user's guide recommends supplying the AVDD, DVDD and PVDD
+> > pins with a single 1.8V LDO and three independent filters. We could thus
+> > possibly combine them into a single 1.8V supply.
+> 
+> I'd originally specified only one AVDD supply for all the 1.8 V
+> supplies, but Rob had recommended using separate supplies for each pin.
+> 
+> I guess it doesn't do much harm specifying separate supplies, a
+> board can just provide avdd-supply, and the rest would be assumed dummy.
+
+DT should use the same regulator phandle for all power supplies in that case, 
+not specify a single one.
+
+> It could also help describe boards which may not have followed the
+> user guide's recommendation, but I agree that's probably a rare
+> scenario.
+> 
+> Is it okay if we stick with multiple supplies as it is in this version?
+
+It seems overkill to me but I can live with that. I'd remove the bgvdd supply 
+though.
+
+Rob, what's your opinion on this ? Is there a specific reason why you prefer 
+splitting the 1.8V supply in one supply per pin, when the hardware user's 
+guide recommend powering them from the same LDO ?
+
+> >> +ADV7533 specific supplies:
+> >> +- a2vdd-supply: 1.8V supply that powers up the A2VDD pin on the chip.
+> >> +- v1p2-supply: A supply that powers up the V1P2 pin on the chip. It can
+> >> be
+> >> +  either 1.2V or 1.8V.
+> >> 
+> >>   Required nodes:
+
+-- 
+Regards,
+
+Laurent Pinchart
