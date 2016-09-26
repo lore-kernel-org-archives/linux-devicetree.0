@@ -1,95 +1,91 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] regulator: Prevent falling too fast
-Date: Mon, 26 Sep 2016 10:41:59 -0700
-Message-ID: <CAD=FV=V_ncaKDzwEyCrZNqicoE+dGXN8CJ8dDuvxQ6XP8uxsDg@mail.gmail.com>
-References: <20160906190524.GB79728@google.com> <20160912185633.GH27946@sirena.org.uk>
- <20160913172140.GC62872@google.com> <20160915143945.GJ27974@sirena.org.uk>
- <20160915180223.GE62872@google.com> <20160916163253.GA10189@sirena.org.uk>
- <CAD=FV=U2bi7GEA3Tq4vpzqF8J2hpgN-Vq4Jv=PnaGYhA3Z6vGg@mail.gmail.com> <20160924184133.seh6v6eayt7hwgue@sirena.org.uk>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [RFC/PATCH] usb: misc: Add a driver for TC7USB40MU
+Date: Mon, 26 Sep 2016 11:44:50 -0700
+Message-ID: <147491549050.5206.9497559526723777799@sboyd-linaro>
+References: <20160914014246.31847-1-stephen.boyd@linaro.org>
+ <147384330268.13546.17843140335600627152@sboyd-linaro>
+ <20160917011605.GB10392@b29397-desktop>
+ <147457026249.9057.8712383708019243942@sboyd-linaro>
+ <20160926032927.GA25395@b29397-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160924184133.seh6v6eayt7hwgue-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160926032927.GA25395@b29397-desktop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Quoting Peter Chen (2016-09-25 20:29:27)
+> On Thu, Sep 22, 2016 at 11:51:02AM -0700, Stephen Boyd wrote:
+> > Quoting Peter Chen (2016-09-16 18:16:05)
+> > > On Wed, Sep 14, 2016 at 01:55:02AM -0700, Stephen Boyd wrote:
+> > > > Quoting Stephen Boyd (2016-09-13 18:42:46)
+> > > > > On the db410c 96boards platform we have a TC7USB40MU[1] on the
+> > > > > board to mux the D+/D- lines from the SoC between a micro usb
+> > > > > "device" port and a USB hub for "host" roles. Upon a role switch,
+> > > > > we need to change this mux to forward the D+/D- lines to either
+> > > > > the port or the hub. Therefore, introduce a driver for this
+> > > > > device that intercepts extcon USB_HOST events and logically
+> > > > > asserts a gpio to mux the "host" D+/D- lines when a host cable is
+> > > > > attached. When the cable goes away, it will logically deassert
+> > > > > the gpio and mux the "device" lines.
+> > > > > 
+> > > > > [1] https://toshiba.semicon-storage.com/ap-en/product/logic/bus-switch/detail.TC7USB40MU.html
+> > > > > 
+> > > > > Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+> > > > > Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> > > > > Cc: <devicetree@vger.kernel.org>
+> > > > > Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+> > > > > ---
+> > > > > 
+> > > > > Should I make the extcon part optional? I could see a case where there are two
+> > > > > "OTG" ports connected to the mux (or two hubs), and for some reason the
+> > > > > software may want to mux between them at runtime. If we mandate an extcon,
+> > > > > that won't be possible to support. Perhaps it would be better to have
+> > > > > the node, but connect it to the usb controller with a phandle (maybe of_graph
+> > > > > endpoints would be useful too) so that when the controller wants to mux over
+> > > > > a port it can do so.
+> > > > 
+> > > > Here's some dts mock-up on top of the db410c for the of_graph stuff. I
+> > > > haven't written any code around it, but the idea is to allow the binding
+> > > > to specify how the mux is connected to upstream and downstream D+/D-
+> > > > lines. This way, we can do some dt parsing of the endpoints and their
+> > > > parent nodes to figure out if the mux needs to be set high or low to use
+> > > > a device connector or a usb hub based on if the id cable is present.
+> > > > Maybe I'm over thinking things though and we could just have a DT
+> > > > property for that.
+> > > > 
+> > > >       soc {
+> > > >               usb@78d9000 {
+> > > >                       extcon = <&usb_id>, <&usb_id>;
+> > > 
+> > > Why you have two same extcon phandler? From my mind, one should id,
+> > > another should is vbus. Besides, I find extcon-usb-gpio.c is lack of
+> > > vbus support, how you support vbus detection for
+> > > connection/disconnection with PC for your chipidea msm patch set?
+> > 
+> > This was already in the dts files for db410c. In the chipidea binding
+> > one is for EXTCON_USB (vbus) and one is for EXTCON_USB_HOST (id). My
+> > understanding is that extcon-usb-gpio.c sends events for both EXTCON_USB
+> > and EXTCON_USB_HOST when the gpio changes state. vbus detection is not
+> > that great on this board because we only have on gpio for this.
+> 
+> I think extcon-usb-gpio.c needs to extend for supporting vbus event,
+> otherwise, the micro-b cable's connect/disconnect will introduce
+> EXTCON_USB_HOST event, if you use two <&usb_idx> for both id and
+> vbus event.
+> 
 
-On Sat, Sep 24, 2016 at 11:41 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Sep 19, 2016 at 11:39:24AM -0700, Doug Anderson wrote:
->> On Fri, Sep 16, 2016 at 9:32 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
->> > So the PWM is just configuring this external regulator chip (which
->> > doesn't seem to be described in DT...) and that's just incredibly bad at
->> > coping with voltage changes?  It does sound rather like we ought to be
->> > representing this chip directly in case it needs other workarounds.
->
->> I'm not 100% sure you can blame the regulator chip.  What we describe
->> in the device tree as a "PWM Regulator" is actually:
->
->> 1. Some discreet buck regulator whose output voltage is configured by
->> adjusting an input voltage.  AKA: the buck regulator has "3" inputs:
->> vin, vout, config.  You put a certain voltage on the "config" pin and
->> that controls the value that comes out of "vout".
->
->> 2. A network of resistors, capacitors, and inductors that take the
->> output of a PWM and filter / smooth it enough that it can be a good
->> config input to the discreet buck.
->
-> Ugh, right.  So you're using the PWM regulator output voltage as an
-> input to this other regulator.  TBH that sounds even more like this
-> other regulator should be represented in DT as the consumer of the PWM
-> regulator, the PWM regulator is not actually producing the voltages
-> claimed directly.
-
-I guess I think of the whole network of components as the PWM
-regulator and not the individual discreet BUCK.  I'm also not quite
-sure how you would model it as you're asking.  I suppose you could say
-that all of the resistors / capacitors / inductors end up producing a
-voltage and this voltage is an input to the BUCK.  ...then the BUCK
-looks as the voltage on this control input and uses that to decide how
-to convert VIN to VOUT.  That's sorta how I think about it, but I
-_think_ it's more intertwined than that.  Looking at the schematics
-there are plenty of connections from the output voltage back to the
-PWM (through various discreets).  I really think you can't model it as
-two distinct things: this whole glom of stuff is one beast.
-
-I know for sure that our EEs have massively modified the behavior of
-the whole thing by just changing the resistors / capacitors /
-inductors, changing the undershoot, OVP issue, voltage ranges, default
-voltage, etc.  That's what leads me to believe it's not so separable.
-
-You could possible include some sort of string indicating what the
-model of the BUCK is, but I'm not sure how you would use it at the
-moment.
-
-
->> The actual behavior of the PWM regulator depends as much (or more) on
->> what values you have for the resistors, capacitors, and inductors than
->> it does on the actual buck.  ...so two people using the same discreet
->> buck might have very different behaviors in terms of rise time and how
->> much they are impacted by the over voltage protection.
->
-> Right, these are properties of the PWM regulator.  But for some reason
-> the DCDC is still incapable of understanding it's own transitions and
-> flags out of spec too easily?  That isn't really a sign of high quality,
-> but then this does seem like the DCDC is really intended for a fixed
-> voltage application and is being abused in this system design to scale
-> dynamically so really it's a badly concieved hardware design I suppose.
-
-Yes, it's not ideal hardware.  :(  I wish we could change it to avoid
-this, but at this point I think we're stuck with it.
-
-As I heard it described, the whole PWM regulator concept allows you to
-take relatively low cost BUCKs and make them easy to adjust up or down
-in software.  It may have its downsides, but if it is inexpensive and
-can be made to work by adding a few delays for downward transitions I
-have a feeling that people will want to use it.
-
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sorry, I'm lost now. extcon-usb-gpio.c already supports EXTCON_USB as an
+event. Is the problem that we're using two of the same phandles in the
+binding?
