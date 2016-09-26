@@ -1,70 +1,53 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual
- initial support
-Date: Mon, 26 Sep 2016 19:58:39 +0530
-Message-ID: <CAMty3ZBtKk7gohpvkYSxUvL-xT_k5oqQXbFsbfEQ9uBaBryveA@mail.gmail.com>
-References: <1473618641-10159-1-git-send-email-jagan@amarulasolutions.com>
- <1473618641-10159-3-git-send-email-jagan@amarulasolutions.com>
- <CAOMZO5CsrrqqUPaVbU-ya79VSXgxyspa_fbr8HY1voJgpy2LLg@mail.gmail.com>
- <CAMty3ZDKrXxmwDFxSBvL_anJQPdXEfnJ40uNv5B6KssQyJJKhA@mail.gmail.com>
- <CAOMZO5B_ahBJr_Tgz_HShmG9heUwCj4K0N3FHhxja1yg0gCUGA@mail.gmail.com>
- <CAOf5uw=bMMa98RP=kvA=NfS89TWOEqU3Q2HjpEmzUTVrdg2=sQ@mail.gmail.com>
- <CAOMZO5CnP3=CNnQcOzra7eQ-cAwProgH+Kws0FHVOw7Q6nCDow@mail.gmail.com>
- <119ad2fc-8e74-1193-8ee2-417cf1e6fd49@engicam.com> <CAOMZO5BWgqxfbOepJZwqdZceSWKBnSfd38Ab2TV-LN0oDttc-Q@mail.gmail.com>
- <CAOf5uw=HwErWWqvQ30ZJpb3CupqdvGZ9FnGAxh4+JVTrT6wTjw@mail.gmail.com>
- <CAOMZO5BHhA8rd0URLNGGLZKN00zFz9d5vsq4CuRWsKyT6yq-oA@mail.gmail.com> <CAOf5uwk3FJ4K4gL8xNNAp-z_AesjwTwSz986gfveVJsOU+N8Ow@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 3/3] ARM: dts: rskrza1: add sdhi1 DT support
+Date: Mon, 26 Sep 2016 16:44:32 +0200
+Message-ID: <20160926144432.GB5792@verge.net.au>
+References: <20160922213211.7988-1-chris.brandt@renesas.com>
+ <20160922213211.7988-4-chris.brandt@renesas.com>
+ <CAMuHMdWckFaU__BM=WAOvJ+fVjEvNdLCFy0GNiKwU159aZTdhg@mail.gmail.com>
+ <20160923074123.GD20129@verge.net.au>
+ <SG2PR06MB1165D28EC2B25A642B480F208AC80@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOf5uwk3FJ4K4gL8xNNAp-z_AesjwTwSz986gfveVJsOU+N8Ow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <SG2PR06MB1165D28EC2B25A642B480F208AC80@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+On Fri, Sep 23, 2016 at 02:33:10PM +0000, Chris Brandt wrote:
+> > > On Thu, Sep 22, 2016 at 11:32 PM, Chris Brandt
+> > <chris.brandt@renesas.com> wrote:
+> > > > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> > > > ---
+> > > >  arch/arm/boot/dts/r7s72100-rskrza1.dts | 4 ++++
+> > > >  1 file changed, 4 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts
+> > > > b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+> > > > index e5dea5b..548b51f 100644
+> > > > --- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
+> > > > +++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+> > > > @@ -56,6 +56,10 @@
+> > > >         };
+> > > >  };
+> > > >
+> > > > +&sdhi1 {
+> > > > +       status = "okay";
+> > >
+> > > On all other boards, we have the bus-width property in the
+> > > board-specific .dts instead of in the SoC-specific .dtsi.
+> 
+> I did see that.
+> But, in my opinion, using 4-bit SDHI is way more common that 1-bit SDHI.
+> So I figured I'd make 4-bit the 'default' by putting it in the dtsi, and if for some reason someone needed 1-bit, they could override it in the board .dts.
+> 
+> 
+> > I'd like us to be consistent as much as possible.
+> > But I do wonder why it has been added as a board property.
+> 
+> It doesn't really matter to me. If you want me to move it to the board dts it to keep it consistent, just let me know and I'll change it.
 
-On Mon, Sep 26, 2016 at 7:26 PM, Michael Trimarchi
-<michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
-> Hi
->
-> On Mon, Sep 26, 2016 at 3:55 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Mon, Sep 26, 2016 at 10:54 AM, Michael Trimarchi
->> <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
->>
->>>> Why don't you simply do like this?
->>>>
->>>>        reg_3p3v: regulator-3p3v {
->>>>                compatible = "regulator-fixed";
->>>>                regulator-name = "3P3V";
->>>>                regulator-min-microvolt = <3300000>;
->>>>                regulator-max-microvolt = <3300000>;
->>>>        };
->>>
->>> Should dts rispect the schematic connection?
->>
->> Yes
->
-> So boot on and always on are used to declare their status and their
-> behavionr. I don't
-> see the point to not specify them in this way
-
-Please try to understand that due to the case where we used fixed
-voltage regulators on SOM as mentioned By Metteo and Michael dt nodes
-should have regulator-always-on and regulator-boot-on properties. And
-even we added one of our module which is already in ML[1]
-
-Hope this is helpful conclude this thread.
-
-[1] http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=a58e4e608bc88735581fdd9861676e522fa3c20d
-
-thanks!
--- 
-Jagan Teki
-Free Software Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please do.
