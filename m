@@ -1,116 +1,62 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v2 1/8] doc: DT: vidc: binding document for Qualcomm video
- driver
-Date: Mon, 26 Sep 2016 22:42:32 +0300
-Message-ID: <b2a1db9d-02d6-56ee-1884-72ab1a4720f4@linaro.org>
-References: <1473248229-5540-1-git-send-email-stanimir.varbanov@linaro.org>
- <1473248229-5540-2-git-send-email-stanimir.varbanov@linaro.org>
- <20160916141939.GA2320@rob-hp-laptop>
+From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v2] MIPS: Octeon: mark GPIO controller node not populated
+ after IRQ init.
+Date: Mon, 26 Sep 2016 23:41:01 +0300
+Message-ID: <20160926204101.GB19498@raspberrypi.musicnaut.iki.fi>
+References: <57C0922C.40907@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160916141939.GA2320@rob-hp-laptop>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57C0922C.40907-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <Steven.Hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-Thanks for the review!
-
-On 09/16/2016 05:19 PM, Rob Herring wrote:
-> On Wed, Sep 07, 2016 at 02:37:02PM +0300, Stanimir Varbanov wrote:
->> Adds binding document for vidc video encoder/decoder driver
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->> ---
->>  .../devicetree/bindings/media/qcom,vidc.txt        | 61 ++++++++++++++++++++++
->>  1 file changed, 61 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/qcom,vidc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/qcom,vidc.txt b/Documentation/devicetree/bindings/media/qcom,vidc.txt
->> new file mode 100644
->> index 000000000000..0d50a7b2e3ed
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/qcom,vidc.txt
->> @@ -0,0 +1,61 @@
->> +* Qualcomm video encoder/decoder accelerator
->> +
->> +- compatible:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Value should contain
+On Fri, Aug 26, 2016 at 02:02:04PM -0500, Steven J. Hill wrote:
+> We clear the OF_POPULATED flag for the GPIO controller node on Octeon
+> processors. Otherwise, none of the devices hanging on the GPIO lines
+> are probed. The 'gpio-leds' driver on OCTEON failed to probe in addition
+> to other devices on Cavium 71xx and 78xx development boards.
 > 
-> ... one of:
-> 
->> +			- "qcom,vidc-msm8916"
->> +			- "qcom,vidc-msm8996"
->> +- reg:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: Register ranges as listed in the reg-names property
->> +
->> +- interrupts:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition:
-> 
-> How many interrupts?
+> Fixes: 15cc2ed6dcf9 ("of/irq: Mark initialised interrupt controllers as populated")
+> Signed-off-by: Steven J. Hill <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> Tested-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 
-It is one, thanks for the catch.
+Ralf, I think this patch should be still included in v4.8 final.
 
+Thanks,
+
+A.
+
+> ---
+>  arch/mips/cavium-octeon/octeon-irq.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
->> +
->> +- power-domains:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: A phandle and power domain specifier pairs to the
->> +		    power domain which is responsible for collapsing
->> +		    and restoring power to the peripheral
+> diff --git a/arch/mips/cavium-octeon/octeon-irq.c b/arch/mips/cavium-octeon/octeon-irq.c
+> index 5a9b87b..c1eb1ff 100644
+> --- a/arch/mips/cavium-octeon/octeon-irq.c
+> +++ b/arch/mips/cavium-octeon/octeon-irq.c
+> @@ -1619,6 +1619,12 @@ static int __init octeon_irq_init_gpio(
+>  		return -ENOMEM;
+>  	}
 > 
-> How many power domains?
-
-Good question, for vidc-msm8916 it is one power-domain, for vidc-msm8996
-the power domains should be 3. Here the problem is that the genpd
-doesn't permit more than one power-domain per device.
-
+> +	/*
+> +	 * Clear the OF_POPULATED flag that was set by of_irq_init()
+> +	 * so that all GPIO devices will be probed.
+> +	 */
+> +	of_node_clear_flag(gpio_node, OF_POPULATED);
+> +
+>  	return 0;
+>  }
+>  /*
+> -- 
+> 1.9.1
 > 
->> +
->> +- clocks:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: List of phandle and clock specifier pairs as listed
->> +		    in clock-names property
->> +- clock-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Should contain the following entries
->> +			- "core"  Core video accelerator clock
->> +			- "iface" Video accelerator AHB clock
->> +			- "bus"	  Video accelerator AXI clock
->> +- rproc:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: A phandle to remote processor responsible for
->> +		    firmware loading
->> +
->> +- iommus:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: A list of phandle and IOMMU specifier pairs
->> +
->> +* An Example
->> +	qcom,vidc@1d00000 {
 > 
-> node names should be generic: video-codec@
-
-correct, will update it in next version.
-
--- 
-regards,
-Stan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
