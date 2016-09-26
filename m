@@ -1,111 +1,38 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [RFC/PATCH] usb: misc: Add a driver for TC7USB40MU
-Date: Mon, 26 Sep 2016 11:59:32 -0700
-Message-ID: <147491637201.5206.2359406340350020245@sboyd-linaro>
-References: <20160914014246.31847-1-stephen.boyd@linaro.org>
- <147384330268.13546.17843140335600627152@sboyd-linaro>
- <20160923143513.GA29714@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160923143513.GA29714@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v6 0/6] ARM: dts: imx6q: Add Engicam i.CoreM6 dts
+Date: Tue, 27 Sep 2016 00:53:07 +0530
+Message-ID: <1474917787-29030-1-git-send-email-jteki@openedev.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring (2016-09-23 07:35:13)
-> On Wed, Sep 14, 2016 at 01:55:02AM -0700, Stephen Boyd wrote:
-> > Quoting Stephen Boyd (2016-09-13 18:42:46)
-> > > On the db410c 96boards platform we have a TC7USB40MU[1] on the
-> > > board to mux the D+/D- lines from the SoC between a micro usb
-> > > "device" port and a USB hub for "host" roles. Upon a role switch,
-> > > we need to change this mux to forward the D+/D- lines to either
-> > > the port or the hub. Therefore, introduce a driver for this
-> > > device that intercepts extcon USB_HOST events and logically
-> > > asserts a gpio to mux the "host" D+/D- lines when a host cable is
-> > > attached. When the cable goes away, it will logically deassert
-> > > the gpio and mux the "device" lines.
-> > > 
-> > > [1] https://toshiba.semicon-storage.com/ap-en/product/logic/bus-switch/detail.TC7USB40MU.html
-> > > 
-> > > Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
-> > > Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> > > Cc: <devicetree@vger.kernel.org>
-> > > Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> > > ---
-> > > 
-> > > Should I make the extcon part optional? I could see a case where there are two
-> > > "OTG" ports connected to the mux (or two hubs), and for some reason the
-> > > software may want to mux between them at runtime. If we mandate an extcon,
-> > > that won't be possible to support. Perhaps it would be better to have
-> > > the node, but connect it to the usb controller with a phandle (maybe of_graph
-> > > endpoints would be useful too) so that when the controller wants to mux over
-> > > a port it can do so.
-> 
-> I've mentioned my opinion on extcon before. The first clue that it needs 
-> work is a Linux subsystem name is used for the binding. 
-> 
-> > Here's some dts mock-up on top of the db410c for the of_graph stuff. I
-> > haven't written any code around it, but the idea is to allow the binding
-> > to specify how the mux is connected to upstream and downstream D+/D-
-> > lines. This way, we can do some dt parsing of the endpoints and their
-> > parent nodes to figure out if the mux needs to be set high or low to use
-> > a device connector or a usb hub based on if the id cable is present.
-> > Maybe I'm over thinking things though and we could just have a DT
-> > property for that.
-> 
-> I think the connector nodes are on the right track, but of-graph doesn't 
-> work here because we already have a way to describe USB buses in DT. 
-> Following that, would something like this work for you? The vbus-supply 
-> and id-gpios are just examples and may not always be there like if the 
-> hub controls each port's vbus directly.
+This is series add dts support for Engicam I.Core M6 qdl modules on 
+top of */shawnguo/linux.git for-next.
 
-My philosophical problem with this is that I don't view this usb-switch
-as a usb device. It isn't addressable via the typical USB addressing
-scheme. It's just a simple chip wired down on the board that muxes two
-wires without considering what goes across those wires.
+Jagan Teki (6):
+  of: Add vendor prefix for Engicam s.r.l company
+  ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual initial support
+  ARM: dts: imx6q: Add Engicam i.CoreM6 DualLite/Solo initial support
+  ARM: dts: imx6qdl-icore: Add usbhost support
+  ARM: dts: imx6qdl-icore: Add usbotg support
+  ARM: dts: imx6qdl-icore: Add FEC support
 
-I would agree if this switch was a usb device itself that had a vid/pid
-that we could talk to to switch the mux. But that isn't the case here.
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/imx6dl-icore.dts                 |  59 +++++
+ arch/arm/boot/dts/imx6q-icore.dts                  |  59 +++++
+ arch/arm/boot/dts/imx6qdl-icore.dtsi               | 271 +++++++++++++++++++++
+ 5 files changed, 392 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-icore.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-icore.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-icore.dtsi
 
-> 
-> usb-controller@1234 {
->         usb-switch@0 {
->                 compatible = "toshiba,tc7usb40mu";
->                 hub@0 {
->                         compatible = "some-hub";
->                         port@0 {
->                                 compatible = "usb-A-connector"
->                                 vbus-supply = ...;
->                         };
->                         port@1 {
->                                 compatible = "usb-A-connector"
->                                 vbus-supply = ...;
->                         };
-> 
->                 };
->                 connector@1 {
->                         compatible = "usb-ub-connector";
->                         vbus-supply = ...;
->                         id-gpios = <>;
->                 };
->         };
-> };
-> 
+-- 
+2.7.4
 
-What do we do about a hub downstream of the mux like usb3503? If that's
-on the i2c bus and we need to do some initial setup, shouldn't we put
-the hub under the i2c bus (because that's the addressing scheme) instead
-of under the switch and then use of-graph to describe the connections
-that aren't being used for addressing? My understanding of of-graph is
-pretty weak so perhaps I missed something.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
