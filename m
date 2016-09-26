@@ -1,81 +1,289 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 1/2] clk: rockchip: add I2S internal clock IDs for rk3288
-Date: Sun, 25 Sep 2016 23:50:29 +0200
-Message-ID: <21692410.II2VYnELL8@phil>
-References: <20160907165330.14607-1-john@metanate.com> <2003903.QOgKKA6m1b@phil> <20160907191823.7f955ae2.john@metanate.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160907191823.7f955ae2.john@metanate.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Keeping <john@metanate.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: [RFC PATCH 2/2] ARM: i.MX: dts: add fsl,imx25-wdt compatible to all relevant watchdog nodes
+Date: Mon, 26 Sep 2016 03:39:21 +0300
+Message-ID: <1474850361-20884-3-git-send-email-vz@mleia.com>
+References: <1474850361-20884-1-git-send-email-vz@mleia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1474850361-20884-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi John,
+Watchdog device controller found on all modern SoCs from i.MX series
+and firstly introduced in i.MX25 is not one in one compatible with the
+watchdog controllers on i.MX21, i.MX27 and i.MX31, the latter
+controlles don't have WICR (and pretimeout notification support) and
+WMCR registers. To get benefit from the more advanced watchdog device
+and to avoid operations over non-existing registers on legacy SoCs add
+fsl,imx25-wdt compatible to descriptions of all i.MX25 compatible
+watchdog controllers.
 
-sorry this took so long,
+Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/imx35.dtsi   |  3 ++-
+ arch/arm/boot/dts/imx50.dtsi   |  3 ++-
+ arch/arm/boot/dts/imx51.dtsi   |  6 ++++--
+ arch/arm/boot/dts/imx53.dtsi   |  6 ++++--
+ arch/arm/boot/dts/imx6qdl.dtsi |  6 ++++--
+ arch/arm/boot/dts/imx6sl.dtsi  |  6 ++++--
+ arch/arm/boot/dts/imx6sx.dtsi  |  9 ++++++---
+ arch/arm/boot/dts/imx6ul.dtsi  |  6 ++++--
+ arch/arm/boot/dts/imx7s.dtsi   | 12 ++++++++----
+ arch/arm/boot/dts/ls1021a.dtsi |  2 +-
+ arch/arm/boot/dts/vfxxx.dtsi   |  3 ++-
+ 11 files changed, 41 insertions(+), 21 deletions(-)
 
-Am Mittwoch, 7. September 2016, 19:18:23 CEST schrieb John Keeping:
-> On Wed, 07 Sep 2016 19:58:31 +0200, Heiko Stuebner wrote:
-> > Am Mittwoch, 7. September 2016, 17:53:29 CEST schrieb John Keeping:
-> > > To minimize jitter on the I2S clocks, it is important that the
-> > > denominator in the fractional divider is much greater than the
-> > > numerator.  Add identifiers for these internal clocks so that the
-> > > specific clock topology and rates can be specified in the device tree.
-> > 
-> > The TRM states that the denominator must be bigger than 20. Is this the
-> > one
-> > you found or did you find further constraints?
-> 
-> Is it not that the denominator must be bigger than 20 times the
-> numerator?  That's what we found, although it seems that the greater the
-> divisor the better, so our aim is dividing down from 594MHz from GPLL to
-> the target rate in i2s_frac.
+diff --git a/arch/arm/boot/dts/imx35.dtsi b/arch/arm/boot/dts/imx35.dtsi
+index 490b7b4..8fd4482 100644
+--- a/arch/arm/boot/dts/imx35.dtsi
++++ b/arch/arm/boot/dts/imx35.dtsi
+@@ -284,7 +284,8 @@
+ 			};
+ 
+ 			wdog: wdog@53fdc000 {
+-				compatible = "fsl,imx35-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx35-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x53fdc000 0x4000>;
+ 				clocks = <&clks 74>;
+ 				clock-names = "";
+diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
+index e245713..5ba6d5a 100644
+--- a/arch/arm/boot/dts/imx50.dtsi
++++ b/arch/arm/boot/dts/imx50.dtsi
+@@ -260,7 +260,8 @@
+ 			};
+ 
+ 			wdog1: wdog@53f98000 {
+-				compatible = "fsl,imx50-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx50-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x53f98000 0x4000>;
+ 				interrupts = <58>;
+ 				clocks = <&clks IMX5_CLK_DUMMY>;
+diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
+index f46fe9b..d91f713 100644
+--- a/arch/arm/boot/dts/imx51.dtsi
++++ b/arch/arm/boot/dts/imx51.dtsi
+@@ -345,14 +345,16 @@
+ 			};
+ 
+ 			wdog1: wdog@73f98000 {
+-				compatible = "fsl,imx51-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx51-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x73f98000 0x4000>;
+ 				interrupts = <58>;
+ 				clocks = <&clks IMX5_CLK_DUMMY>;
+ 			};
+ 
+ 			wdog2: wdog@73f9c000 {
+-				compatible = "fsl,imx51-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx51-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x73f9c000 0x4000>;
+ 				interrupts = <59>;
+ 				clocks = <&clks IMX5_CLK_DUMMY>;
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index cd17037..c9edac2 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -390,14 +390,16 @@
+ 			};
+ 
+ 			wdog1: wdog@53f98000 {
+-				compatible = "fsl,imx53-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx53-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x53f98000 0x4000>;
+ 				interrupts = <58>;
+ 				clocks = <&clks IMX5_CLK_DUMMY>;
+ 			};
+ 
+ 			wdog2: wdog@53f9c000 {
+-				compatible = "fsl,imx53-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx53-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x53f9c000 0x4000>;
+ 				interrupts = <59>;
+ 				clocks = <&clks IMX5_CLK_DUMMY>;
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index b620ac8..d73edd7 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -593,14 +593,16 @@
+ 			};
+ 
+ 			wdog1: wdog@020bc000 {
+-				compatible = "fsl,imx6q-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx6q-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x020bc000 0x4000>;
+ 				interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6QDL_CLK_DUMMY>;
+ 			};
+ 
+ 			wdog2: wdog@020c0000 {
+-				compatible = "fsl,imx6q-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx6q-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x020c0000 0x4000>;
+ 				interrupts = <0 81 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6QDL_CLK_DUMMY>;
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 5425150..b8c71bd 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -430,14 +430,16 @@
+ 			};
+ 
+ 			wdog1: wdog@020bc000 {
+-				compatible = "fsl,imx6sl-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx6sl-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x020bc000 0x4000>;
+ 				interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SL_CLK_DUMMY>;
+ 			};
+ 
+ 			wdog2: wdog@020c0000 {
+-				compatible = "fsl,imx6sl-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx6sl-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x020c0000 0x4000>;
+ 				interrupts = <0 81 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SL_CLK_DUMMY>;
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 2863c52..2753c71 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -515,14 +515,16 @@
+ 			};
+ 
+ 			wdog1: wdog@020bc000 {
+-				compatible = "fsl,imx6sx-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx6sx-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x020bc000 0x4000>;
+ 				interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SX_CLK_DUMMY>;
+ 			};
+ 
+ 			wdog2: wdog@020c0000 {
+-				compatible = "fsl,imx6sx-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx6sx-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x020c0000 0x4000>;
+ 				interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SX_CLK_DUMMY>;
+@@ -1178,7 +1180,8 @@
+                         };
+ 
+ 			wdog3: wdog@02288000 {
+-				compatible = "fsl,imx6sx-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx6sx-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x02288000 0x4000>;
+ 				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SX_CLK_DUMMY>;
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 33b95d7..fb0373f 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -483,14 +483,16 @@
+ 			};
+ 
+ 			wdog1: wdog@020bc000 {
+-				compatible = "fsl,imx6ul-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx6ul-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x020bc000 0x4000>;
+ 				interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_WDOG1>;
+ 			};
+ 
+ 			wdog2: wdog@020c0000 {
+-				compatible = "fsl,imx6ul-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx6ul-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x020c0000 0x4000>;
+ 				interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_WDOG2>;
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 1e90bdb..e7c047e 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -394,14 +394,16 @@
+ 			};
+ 
+ 			wdog1: wdog@30280000 {
+-				compatible = "fsl,imx7d-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx7d-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x30280000 0x10000>;
+ 				interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX7D_WDOG1_ROOT_CLK>;
+ 			};
+ 
+ 			wdog2: wdog@30290000 {
+-				compatible = "fsl,imx7d-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx7d-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x30290000 0x10000>;
+ 				interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX7D_WDOG2_ROOT_CLK>;
+@@ -409,7 +411,8 @@
+ 			};
+ 
+ 			wdog3: wdog@302a0000 {
+-				compatible = "fsl,imx7d-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx7d-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x302a0000 0x10000>;
+ 				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX7D_WDOG3_ROOT_CLK>;
+@@ -417,7 +420,8 @@
+ 			};
+ 
+ 			wdog4: wdog@302b0000 {
+-				compatible = "fsl,imx7d-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,imx7d-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x302b0000 0x10000>;
+ 				interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX7D_WDOG4_ROOT_CLK>;
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index 368e219..7e36fd8 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -441,7 +441,7 @@
+ 		};
+ 
+ 		wdog0: watchdog@2ad0000 {
+-			compatible = "fsl,imx21-wdt";
++			compatible = "fsl,imx25-wdt", "fsl,imx21-wdt";
+ 			reg = <0x0 0x2ad0000 0x0 0x10000>;
+ 			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&platform_clk 1>;
+diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+index 2c13ec6..35f32ed 100644
+--- a/arch/arm/boot/dts/vfxxx.dtsi
++++ b/arch/arm/boot/dts/vfxxx.dtsi
+@@ -320,7 +320,8 @@
+ 			};
+ 
+ 			wdoga5: wdog@4003e000 {
+-				compatible = "fsl,vf610-wdt", "fsl,imx21-wdt";
++				compatible = "fsl,vf610-wdt", "fsl,imx25-wdt",
++					     "fsl,imx21-wdt";
+ 				reg = <0x4003e000 0x1000>;
+ 				interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks VF610_CLK_WDT>;
+-- 
+2.8.1
 
-That is good to know ... the TRM probably lost the real information during 
-translation or so and only states that hard value. Looking at the rk3368 TRM 
-just now, the value really is 20 times greater than the numerator.
-
-
-> > Did you try teaching the fractional divider to handle these constraints
-> > before going this way?
-> 
-> No, I hadn't looked at doing that.  I'm not sure how that would work,
-> we'd need to add support for fractional divider changing the parent rate
-> wouldn't we?
-
-Doug had a somewhat similar problem, mentioning the lack of a "bestdiv" 
-equivalent that the standard divider provides. I'm not sure if there isn't a 
-way to provide something like this and/or make the fractional clock honor 
-specific requirments concerning numerator/denominator - any mathematicians 
-around? :-)
-
-One could also replace the generic fraction divider use with a rockchip-
-specific implementation that somehow handles that.
-
-
-> > Exporting the internal clocks really would be sort of plan d or e, after
-> > handling this in the clock framework failed. Especially as i2s rates are
-> > probably dependant on the media being handled (frequencies and such), so
-> > setting fractional rates statically in the dts won't help you much in the
-> > general case, as any new playback could trigger a clk_set_rate call
-> > anyway?
-> 
-> We're not setting the fractional rate specifically, instead we're
-> setting the i2s_pre rate and parent explicitly and banning the i2s_src
-> mux setting to i2s_pre, which means that clk_set_rate on sclk_i2s0 will
-> always change i2s_frac but leave i2s_pre alone.
-
-But then you are again in the situation where some requested rate can ignore 
-those fractional-divider constraints? In general I really don't like encoding 
-such board-specific behaviour into the generic clock tree, like needing to 
-disable parent relationships.
-
-It works for your board now but does not necessarily for all other boards, 
-which might require other "hacks" and also doesn't solve the general problem 
-for all other fractional dividers we have.
-
-
-Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
