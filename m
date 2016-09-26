@@ -1,61 +1,69 @@
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 4/5] powerpc/mm: restore top-down allocation when using movable_node
-Date: Mon, 26 Sep 2016 21:17:43 +0530
-Message-ID: <8760piacio.fsf@linux.vnet.ibm.com>
-References: <1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com> <1474828616-16608-5-git-send-email-arbab@linux.vnet.ibm.com>
+From: "Aneesh Kumar K.V" <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 5/5] mm: enable CONFIG_MOVABLE_NODE on powerpc
+Date: Mon, 26 Sep 2016 21:18:35 +0530
+Message-ID: <8737kmach8.fsf@linux.vnet.ibm.com>
+References: <1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com> <1474828616-16608-6-git-send-email-arbab@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1474828616-16608-5-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1474828616-16608-6-git-send-email-arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Bharata B Rao <bharata-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Alistair Popple <apopple-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Reza Arbab <arbab@linux.vnet.ibm.com> writes:
+Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> writes:
 
-> At boot, the movable_node option sets bottom-up memblock allocation.
+> To create a movable node, we need to hotplug all of its memory into
+> ZONE_MOVABLE.
 >
-> This reduces the chance that, in the window before movable memory has
-> been identified, an allocation for the kernel might come from a movable
-> node. By going bottom-up, early allocations will most likely come from
-> the same node as the kernel image, which is necessarily in a nonmovable
-> node.
+> Note that to do this, auto_online_blocks should be off. Since the memory
+> will first be added to the default zone, we must explicitly use
+> online_movable to online.
 >
-> Then, once any known hotplug memory has been marked, allocation can be
-> reset back to top-down. On x86, this is done in numa_init(). This patch
-> does the same on power, in numa initmem_init().
+> Because such a node contains no normal memory, can_online_high_movable()
+> will only allow us to do the onlining if CONFIG_MOVABLE_NODE is set.
+> Enable the use of this config option on PPC64 platforms.
 >
-> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
+
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+
+> Signed-off-by: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 > ---
->  arch/powerpc/mm/numa.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  Documentation/kernel-parameters.txt | 2 +-
+>  mm/Kconfig                          | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-> index d7ac419..fdf1e69 100644
-> --- a/arch/powerpc/mm/numa.c
-> +++ b/arch/powerpc/mm/numa.c
-> @@ -945,6 +945,9 @@ void __init initmem_init(void)
->  	max_low_pfn = memblock_end_of_DRAM() >> PAGE_SHIFT;
->  	max_pfn = max_low_pfn;
+> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+> index a4f4d69..3d8460d 100644
+> --- a/Documentation/kernel-parameters.txt
+> +++ b/Documentation/kernel-parameters.txt
+> @@ -2344,7 +2344,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+>  			that the amount of memory usable for all allocations
+>  			is not too small.
 >
-> +	/* bottom-up allocation may have been set by movable_node */
-> +	memblock_set_bottom_up(false);
-> +
-
-By then we have done few memblock allocation right ? IMHO, we should do
-this early enough in prom.c after we do parse_early_param, with a
-comment there explaining that, we don't really support hotplug memblock
-and when we do that, this should be moved to a place where we can handle
-memblock allocation such that we avoid spreading memblock allocation to
-movable node.
-
-
->  	if (parse_numa_properties())
->  		setup_nonnuma();
->  	else
+> -	movable_node	[KNL,X86] Boot-time switch to enable the effects
+> +	movable_node	[KNL,X86,PPC] Boot-time switch to enable the effects
+>  			of CONFIG_MOVABLE_NODE=y. See mm/Kconfig for details.
+>
+>  	MTD_Partition=	[MTD]
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index be0ee11..4b19cd3 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -153,7 +153,7 @@ config MOVABLE_NODE
+>  	bool "Enable to assign a node which has only movable memory"
+>  	depends on HAVE_MEMBLOCK
+>  	depends on NO_BOOTMEM
+> -	depends on X86_64
+> +	depends on X86_64 || PPC64
+>  	depends on NUMA
+>  	default n
+>  	help
 > -- 
 > 1.8.3.1
 
--aneesh
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
