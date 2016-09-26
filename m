@@ -1,17 +1,18 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: rk3399_gru_sound: fix recording pop at first attempt" to the asoc tree
-Date: Mon, 26 Sep 2016 09:15:42 -0700
-Message-ID: <E1boYZC-0005RL-8m@finisterre>
-References: <1474552206-31742-1-git-send-email-zhengxing@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1474552206-31742-1-git-send-email-zhengxing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Xing Zheng <zhengxing@rock-chips.com>, Mark Brown <broonie@kernel.org>, linux-rockchip@lists.infradead.org, woojoo.lee@samsung.com, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, heiko@sntech.deXing Zheng <zhengxing@rock-chips.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, dianders@google.comMark Brown <broonie@kernel.org>, smbarber@google.com, hychao@google.com, linux-arm-kernel@lists.infradead.org, cychiang@google.comalsa-devel@alsa-project.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: simple-card: add support for aux devices" to the asoc tree
+Date: Mon, 26 Sep 2016 09:15:34 -0700
+Message-ID: <E1boYZ4-0005Mt-7v@finisterre>
+References: <1474883811-14344-1-git-send-email-nikita.yoush@cogentembedded.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1474883811-14344-1-git-send-email-nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: rk3399_gru_sound: fix recording pop at first attempt
+   ASoC: simple-card: add support for aux devices
 
 has been applied to the asoc tree at
 
@@ -36,83 +37,133 @@ to this mail.
 Thanks,
 Mark
 
->From 3a6f9dce6116cc54e31dc10d176ceecb1a7e4e7f Mon Sep 17 00:00:00 2001
-From: Wonjoon Lee <woojoo.lee@samsung.com>
-Date: Thu, 22 Sep 2016 21:50:06 +0800
-Subject: [PATCH] ASoC: rk3399_gru_sound: fix recording pop at first attempt
+>From 899a247cf6d5bbb9eb799261791441d7d5ea2099 Mon Sep 17 00:00:00 2001
+From: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Date: Mon, 26 Sep 2016 12:56:51 +0300
+Subject: [PATCH] ASoC: simple-card: add support for aux devices
 
-Pop happens when mclk applied but dmic's own boot-time
-Specify dmic delay times in dt to make sure
-clocks are ready earlier than dmic working
+Add device tree property to define auxiliary devices to be added to
+simle-audio-card.
 
-Signed-off-by: Wonjoon Lee <woojoo.lee@samsung.com>
-Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Together with proper audio routing definition, this allows to use
+simple-card in setups where separate amplifier chip is connected to
+codec's output.
+
+Signed-off-by: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- .../bindings/sound/rockchip,rk3399-gru-sound.txt           |  7 +++++++
- sound/soc/rockchip/rk3399_gru_sound.c                      | 14 ++++++++++++++
- 2 files changed, 21 insertions(+)
+ .../devicetree/bindings/sound/simple-card.txt      | 37 ++++++++++++++++++++++
+ sound/soc/generic/simple-card.c                    | 34 ++++++++++++++++++++
+ 2 files changed, 71 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-index f19b6c830a34..eac91db07178 100644
---- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-@@ -6,10 +6,17 @@ Required properties:
-   connected to the codecs
- - rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
+diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
+index cf3979eb3578..5ecdde6d9f63 100644
+--- a/Documentation/devicetree/bindings/sound/simple-card.txt
++++ b/Documentation/devicetree/bindings/sound/simple-card.txt
+@@ -22,6 +22,8 @@ Optional properties:
+ 					  headphones are attached.
+ - simple-audio-card,mic-det-gpio	: Reference to GPIO that signals when
+ 					  a microphone is attached.
++- simple-audio-card,aux-devs		: List of phandles pointing to auxiliary devices, such
++					  as amplifiers, to be added to the sound card.
  
-+Optional properties:
-+- dmic-wakeup-delay-ms : specify delay time (ms) for DMIC ready.
-+  If this option is specified, which means it's required dmic need
-+  delay for DMIC to ready so that rt5514 can avoid recording before
-+  DMIC send valid data
-+
- Example:
+ Optional subnodes:
  
- sound {
- 	compatible = "rockchip,rk3399-gru-sound";
- 	rockchip,cpu = <&i2s0>;
- 	rockchip,codec = <&max98357a &rt5514 &da7219>;
-+	dmic-wakeup-delay-ms = <20>;
+@@ -162,3 +164,38 @@ sound {
+ 		};
+ 	};
  };
-diff --git a/sound/soc/rockchip/rk3399_gru_sound.c b/sound/soc/rockchip/rk3399_gru_sound.c
-index ee0648927afc..9ed735a6cf49 100644
---- a/sound/soc/rockchip/rk3399_gru_sound.c
-+++ b/sound/soc/rockchip/rk3399_gru_sound.c
-@@ -38,6 +38,8 @@
- 
- #define SOUND_FS	256
- 
-+unsigned int rt5514_dmic_delay;
 +
- static struct snd_soc_jack rockchip_sound_jack;
- 
- static const struct snd_soc_dapm_widget rockchip_dapm_widgets[] = {
-@@ -123,6 +125,9 @@ static int rockchip_sound_rt5514_hw_params(struct snd_pcm_substream *substream,
- 		return ret;
- 	}
- 
-+	/* Wait for DMIC stable */
-+	msleep(rt5514_dmic_delay);
++Example 3 - route audio from IMX6 SSI2 through TLV320DAC3100 codec
++through TPA6130A2 amplifier to headphones:
 +
- 	return 0;
- }
- 
-@@ -343,6 +348,15 @@ static int rockchip_sound_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	/* Set DMIC delay */
-+	ret = device_property_read_u32(&pdev->dev, "dmic-delay",
-+					&rt5514_dmic_delay);
-+	if (ret) {
-+		rt5514_dmic_delay = 0;
-+		dev_dbg(&pdev->dev,
-+			"no optional property 'dmic-delay' found, default: no delay\n");
++&i2c0 {
++	codec: tlv320dac3100@18 {
++		compatible = "ti,tlv320dac3100";
++		...
 +	}
 +
- 	rockchip_dailinks[DAILINK_RT5514_DSP].cpu_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
- 	rockchip_dailinks[DAILINK_RT5514_DSP].cpu_dai_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
- 	rockchip_dailinks[DAILINK_RT5514_DSP].platform_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
++	amp: tpa6130a2@60 {
++		compatible = "ti,tpa6130a2";
++		...
++	}
++}
++
++sound {
++	compatible = "simple-audio-card";
++	...
++	simple-audio-card,widgets =
++		"Headphone", "Headphone Jack";
++	simple-audio-card,routing =
++		"Headphone Jack", "HPLEFT",
++		"Headphone Jack", "HPRIGHT",
++		"LEFTIN", "HPL",
++		"RIGHTIN", "HPR";
++	simple-audio-card,aux-devs = <&amp>;
++	simple-audio-card,cpu {
++		sound-dai = <&ssi2>;
++	};
++	simple-audio-card,codec {
++		sound-dai = <&codec>;
++		clocks = ...
++	};
++};
+diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
+index fe0bc5c469e2..f608f8d23f3d 100644
+--- a/sound/soc/generic/simple-card.c
++++ b/sound/soc/generic/simple-card.c
+@@ -318,6 +318,36 @@ static int asoc_simple_card_dai_link_of(struct device_node *node,
+ 	return ret;
+ }
+ 
++static int asoc_simple_card_parse_aux_devs(struct device_node *node,
++					   struct simple_card_data *priv)
++{
++	struct device *dev = simple_priv_to_dev(priv);
++	struct device_node *aux_node;
++	int i, n, len;
++
++	if (!of_find_property(node, PREFIX "aux-devs", &len))
++		return 0;		/* Ok to have no aux-devs */
++
++	n = len / sizeof(__be32);
++	if (n <= 0)
++		return -EINVAL;
++
++	priv->snd_card.aux_dev = devm_kzalloc(dev,
++			n * sizeof(*priv->snd_card.aux_dev), GFP_KERNEL);
++	if (!priv->snd_card.aux_dev)
++		return -ENOMEM;
++
++	for (i = 0; i < n; i++) {
++		aux_node = of_parse_phandle(node, PREFIX "aux-devs", i);
++		if (!aux_node)
++			return -EINVAL;
++		priv->snd_card.aux_dev[i].codec_of_node = aux_node;
++	}
++
++	priv->snd_card.num_aux_devs = n;
++	return 0;
++}
++
+ static int asoc_simple_card_parse_of(struct device_node *node,
+ 				     struct simple_card_data *priv)
+ {
+@@ -372,6 +402,10 @@ static int asoc_simple_card_parse_of(struct device_node *node,
+ 	}
+ 
+ 	ret = asoc_simple_card_parse_card_name(&priv->snd_card, PREFIX);
++	if (ret < 0)
++		goto card_parse_end;
++
++	ret = asoc_simple_card_parse_aux_devs(node, priv);
+ 
+ card_parse_end:
+ 	of_node_put(dai_link);
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
