@@ -1,111 +1,154 @@
-From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: drm/bridge: adv7511: Add regulator
- bindings
-Date: Mon, 26 Sep 2016 12:10:11 +0530
-Message-ID: <57E8C2CB.9000806@codeaurora.org>
-References: <1472640730-24326-1-git-send-email-architt@codeaurora.org>
- <1474622430-6704-1-git-send-email-architt@codeaurora.org>
- <1474622430-6704-2-git-send-email-architt@codeaurora.org>
- <737415023.GKbfqYIf4s@avalon>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH v3 1/3] ipmi: add an Aspeed BT IPMI BMC driver
+Date: Mon, 26 Sep 2016 08:50:48 +0200
+Message-ID: <c3f084ab-9f77-86ab-7875-cbfe654ea18e@kaod.org>
+References: <1474354900-5618-1-git-send-email-clg@kaod.org>
+ <1474354900-5618-2-git-send-email-clg@kaod.org>
+ <20160923183421.GA14864@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <737415023.GKbfqYIf4s@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160923183421.GA14864@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Corey Minyard <minyard@acm.org>, Alistair Popple <alistair@popple.id.au>, Russell King <linux@armlinux.org.uk>, Joel Stanley <joel@jms.id.au>, openipmi-developer@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jk@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hello,
 
-On 9/25/2016 10:58 PM, Laurent Pinchart wrote:
-> Hi Archit,
->
-> Thank you for the patch.
->
-> On Friday 23 Sep 2016 14:50:27 Archit Taneja wrote:
->> Add the regulator supply properties needed by ADV7511 and ADV7533. The
->> regulator names are named after the pin names, except for DVDD_3V on
->> ADV7511, which is left v3p3 to have the same name as it's on ADV7533.
+On 09/23/2016 08:34 PM, Rob Herring wrote:
+> On Tue, Sep 20, 2016 at 09:01:38AM +0200, C=E9dric Le Goater wrote:
+>> From: Alistair Popple <alistair@popple.id.au>
 >>
->> ADV7511 has a BGVDD pin for which the voltage to be configured isn't
->> clear. This needs to be updated in the document later.
+>> This patch adds a simple device driver to expose the iBT interface on
+>> Aspeed SOCs (AST2400 and AST2500) as a character device. Such SOCs are
+>> commonly used as BMCs (BaseBoard Management Controllers) and this
+>> driver implements the BMC side of the BT interface.
 >>
->> The regulators are specified as optional properties since there can
->> be boards which have a fixed supply directly routed to the pins, and
->> these may not be modelled as regulator supplies.
+>> The BT (Block Transfer) interface is used to perform in-band IPMI
+>> communication between a host and its BMC. Entire messages are buffered
+>> before sending a notification to the other end, host or BMC, that
+>> there is data to be read. Usually, the host emits requests and the BMC
+>> responses but the specification provides a mean for the BMC to send
+>> SMS Attention (BMC-to-Host attention or System Management Software
+>> attention) messages.
 >>
->> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> For this purpose, the driver introduces a specific ioctl on the
+>> device: 'BT_BMC_IOCTL_SMS_ATN' that can be used by the system running
+>> on the BMC to signal the host of such an event.
+>>
+>> The device name defaults to '/dev/ipmi-bt-host'
+>>
+>> Signed-off-by: Alistair Popple <alistair@popple.id.au>
+>> Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+>> Signed-off-by: Joel Stanley <joel@jms.id.au>
+>> [clg: - checkpatch fixes
+>>       - added a devicetree binding documentation
+>>       - replace 'bt_host' by 'bt_bmc' to reflect that the driver is
+>>         the BMC side of the IPMI BT interface
+>>       - renamed the device to 'ipmi-bt-host'
+>>       - introduced a temporary buffer to copy_{to,from}_user
+>>       - used platform_get_irq()
+>>       - moved the driver under drivers/char/ipmi/ but kept it as a misc
+>>         device
+>>       - changed the compatible cell to "aspeed,ast2400-bt-bmc"
+>> ]
+>> Signed-off-by: C=E9dric Le Goater <clg@kaod.org>
+>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>> [clg: - checkpatch --strict fixes
+>>       - removed the use of devm_iounmap, devm_kfree in cleanup paths
+>>       - introduced an atomic-t to limit opens to 1
+>>       - introduced a mutex to protect write/read operations]
+>> Signed-off-by: C=E9dric Le Goater <clg@kaod.org>
+>>
 >> ---
->> v2:
->> - Specify regulator supplies for ADV7511 too.
->> - Have separate supply entries for AVDD, DVDD, PVDD, A2VDD pins.
->> - Add additional BGVDD supply for ADV7511.
 >>
->>   .../devicetree/bindings/display/bridge/adi,adv7511.txt     | 14 +++++++++++
->>   1 file changed, 14 insertions(+)
+>>  Changes since v2:
 >>
->> diff --git
->> a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
->> b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt index
->> 6532a59..66e6bae 100644
->> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
->> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
->> @@ -56,6 +56,20 @@ Optional properties:
->>   - adi,disable-timing-generator: Only for ADV7533. Disables the internal
->> timing generator. The chip will rely on the sync signals in the DSI data
->> lanes, rather than generate its own timings for HDMI output.
->> +- avdd-supply: A 1.8V supply that powers up the AVDD pin on the chip.
->> +- dvdd-supply: A 1.8V supply that powers up the DVDD pin on the chip.
->> +- pvdd-supply: A 1.8V supply that powers up the PVDD pin on the chip.
->> +- v3p3-supply: A 3.3V supply that powers up the pin called DVDD_3V on
->> +  ADV7511 and V3P3 on ADV7533.
->> +
->> +ADV7511 specific supplies:
->> +- bgvdd-supply: Powers the BGVDD pin. The voltage isn't clear from
->> +  available datasheets.
->
-> It's a 1.8V supply. The ADV7511 hardware user's guide recommends tying it to
-> the PVDD supply, so I'm not sure we need a separate supply in DT.
-
-Thanks for providing the info. I'll update it in the doc.
-
->
-> Similarly, the user's guide recommends supplying the AVDD, DVDD and PVDD pins
-> with a single 1.8V LDO and three independent filters. We could thus possibly
-> combine them into a single 1.8V supply.
->
-
-I'd originally specified only one AVDD supply for all the 1.8 V
-supplies, but Rob had recommended using separate supplies for each pin.
-
-I guess it doesn't do much harm specifying separate supplies, a
-board can just provide avdd-supply, and the rest would be assumed dummy.
-It could also help describe boards which may not have followed the
-user guide's recommendation, but I agree that's probably a rare
-scenario.
-
-Is it okay if we stick with multiple supplies as it is in this version?
-
-Thanks for the review.
-
-Archit
-
->> +ADV7533 specific supplies:
->> +- a2vdd-supply: 1.8V supply that powers up the A2VDD pin on the chip.
->> +- v1p2-supply: A supply that powers up the V1P2 pin on the chip. It can be
->> +  either 1.2V or 1.8V.
+>>  - fixed checkpatch --strict issues
+>>  - cleanup'ed includes
+>>  - limit to one opener
+>>  - protect write/read operations with a mutex.
+>>  - removed the use of devm_iounmap, devm_kfree in cleanup paths
 >>
->>   Required nodes:
->
+>>  Changes since v1:
+>>
+>>  - replace 'bt_host' by 'bt_bmc' to reflect that the driver is
+>>    the BMC side of the IPMI BT interface
+>>  - renamed the device to 'ipmi-bt-host'
+>>  - introduced a temporary buffer to copy_{to,from}_user
+>>  - used platform_get_irq()
+>>  - moved the driver under drivers/char/ipmi/ but kept it as a misc
+>>    device
+>>  - changed the compatible cell to "aspeed,ast2400-bt-bmc"
+>>
+>>  .../bindings/char/ipmi/aspeed,ast2400-bt-bmc.txt   |  23 +
+> =
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> While similar, this is not the kernel directory structure. Just make =
+
+> this bindings/ipmi/
+> =
+
+> With that,
+> =
+
+> Acked-by: Rob Herring <robh@kernel.org>
+
+OK. So I suppose we should be moving all IPMI documentation under
+the same directory.
+
+
+Corey,
+
+If the move is okay for you, I can send the patch below.
+
+Thanks,
+
+C.
+
+
+>From ca25f89b25209c260480cda5e5532d6bbe83ed43 Mon Sep 17 00:00:00 2001
+From: =3D?UTF-8?q?C=3DC3=3DA9dric=3D20Le=3D20Goater?=3D <clg@kaod.org>
+Date: Mon, 26 Sep 2016 08:45:15 +0200
+Subject: [PATCH] dt-bindings: ipmi: move all documentation under
+ bindings/ipmi/
+MIME-Version: 1.0
+Content-Type: text/plain; charset=3DUTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: C=E9dric Le Goater <clg@kaod.org>
+---
+ .../devicetree/bindings/{char =3D> }/ipmi/aspeed,ast2400-bt-bmc.txt       =
+  | 0
+ Documentation/devicetree/bindings/{ipmi.txt =3D> ipmi/ipmi-smic.txt}      =
+  | 0
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/devicetree/bindings/{char =3D> }/ipmi/aspeed,ast2400-=
+bt-bmc.txt (100%)
+ rename Documentation/devicetree/bindings/{ipmi.txt =3D> ipmi/ipmi-smic.txt=
+} (100%)
+
+diff --git a/Documentation/devicetree/bindings/char/ipmi/aspeed,ast2400-bt-=
+bmc.txt b/Documentation/devicetree/bindings/ipmi/aspeed,ast2400-bt-bmc.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/char/ipmi/aspeed,ast2400-bt-b=
+mc.txt
+rename to Documentation/devicetree/bindings/ipmi/aspeed,ast2400-bt-bmc.txt
+diff --git a/Documentation/devicetree/bindings/ipmi.txt b/Documentation/dev=
+icetree/bindings/ipmi/ipmi-smic.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/ipmi.txt
+rename to Documentation/devicetree/bindings/ipmi/ipmi-smic.txt
+-- =
+
+2.7.4
