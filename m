@@ -1,42 +1,60 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [RFC PATCH 2/2] ARM: i.MX: dts: add fsl, imx25-wdt compatible to
- all relevant watchdog nodes
-Date: Mon, 26 Sep 2016 07:34:19 +0300
-Message-ID: <20160926043419.wljnbmopmfy4kor4@tarshish>
-References: <1474850361-20884-1-git-send-email-vz@mleia.com>
- <1474850361-20884-3-git-send-email-vz@mleia.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 1/2] PM / OPP: compatible is an optional property
+Date: Mon, 26 Sep 2016 10:25:39 +0530
+Message-ID: <20160926045539.GI17336@vireshk-i7>
+References: <be2c4fb0bb58f5b29facbc6f5aaf3dca13cf209e.1474450324.git.viresh.kumar@linaro.org>
+ <483bea3c-a1b4-ce5d-e720-d69fc943ab50@codeaurora.org>
+ <20160923051526.GB17336@vireshk-i7>
+ <20160923195510.GA8699@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1474850361-20884-3-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20160923195510.GA8699@rob-hp-laptop>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
+On 23-09-16, 14:55, Rob Herring wrote:
+> On Fri, Sep 23, 2016 at 10:45:26AM +0530, Viresh Kumar wrote:
+> > On 22-09-16, 12:24, Stephen Boyd wrote:
+> > > On 09/21/2016 02:32 AM, Viresh Kumar wrote:
+> > > > It was never compulsory to have a compatible string in the OPP table.
+> > > > Fix the documentation to mark it optional.
+> > > >
+> 
+> NAK.
+> 
+> > > > Also update its description a bit.
+> > > >
+> > > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > > > ---
+> > > 
+> > > Why? I'd prefer the compatible string to be required so we know what
+> > > sort of node it is.
+> 
+> Agreed.
+> 
+> > Okay, the code doesn't have any checks for it then and that needs to be fixed.
+> 
+> Why? The kernel is not a DT validator.
 
-On Mon, Sep 26, 2016 at 03:39:21AM +0300, Vladimir Zapolskiy wrote:
-> Watchdog device controller found on all modern SoCs from i.MX series
-> and firstly introduced in i.MX25 is not one in one compatible with the
-> watchdog controllers on i.MX21, i.MX27 and i.MX31, the latter
-> controlles don't have WICR (and pretimeout notification support) and
-> WMCR registers. To get benefit from the more advanced watchdog device
-> and to avoid operations over non-existing registers on legacy SoCs add
-> fsl,imx25-wdt compatible to descriptions of all i.MX25 compatible
-> watchdog controllers.
+Hmm.. I thought it should be checking if it can parse those bindings or not.
+What if someone adds compatible property as "foo" for OPP node? Should the OPP
+code even try to parse it?
 
-Maybe also update Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt? 
-In a separate patch.
+> > Just for my clarity, for platforms with special OPP bindings and so a different
+> > compatible string like: "operating-points-v2-XYZ", should the compatible string
+> > contain both "operating-points-v2" and the above one? It would be easier to
+> > check for "operating-points-v2" in that case from core code.
+> 
+> That would imply operating-points-v2-XYZ has extra properties or is 
+> different in some way. If an OS only understanding operating-points-v2 
+> will work, then yes it should have both. If not, then no.
 
-baruch
+Well, in this case that can't be done fully, so we should have only the -xyz
+one. Got it, thanks.
 
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+viresh
