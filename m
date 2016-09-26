@@ -1,163 +1,153 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3] arm: dts: zynq: Add MicroZed board support
-Date: Mon, 26 Sep 2016 08:22:18 +0200
-Message-ID: <f0c33080-0811-a515-f897-e7f851b13b5e@xilinx.com>
-References: <1474624113-22825-1-git-send-email-jagan@amarulasolutions.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 0/8] power: add power sequence library
+Date: Mon, 26 Sep 2016 14:26:49 +0800
+Message-ID: <20160926062649.GB25395@b29397-desktop>
+References: <1474342607-27512-1-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474624113-22825-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1474342607-27512-1-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw3-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23.9.2016 11:48, Jagan Teki wrote:
-> From: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+On Tue, Sep 20, 2016 at 11:36:39AM +0800, Peter Chen wrote:
+> Hi all,
 > 
-> Added basic dts support for MicroZed board.
+> This is a follow-up for my last power sequence framework patch set [1].
+> According to Rob Herring and Ulf Hansson's comments[2]. The kinds of
+> power sequence instances will be added at postcore_initcall, the match
+> criteria is compatible string first, if the compatible string is not
+> matched between dts and library, it will try to use generic power sequence.
+> 	 
+> The host driver just needs to call of_pwrseq_on/of_pwrseq_off
+> if only one power sequence instance is needed, for more power sequences
+> are used, using of_pwrseq_on_list/of_pwrseq_off_list instead (eg, USB hub driver).
 > 
-> - UART
-> - SDHCI
-> - Ethernet
+> In future, if there are special power sequence requirements, the special
+> power sequence library can be created.
 > 
-> Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-> ---
+> This patch set is tested on i.mx6 sabresx evk using a dts change, I use
+> two hot-plug devices to simulate this use case, the related binding
+> change is updated at patch [1/6], The udoo board changes were tested
+> using my last power sequence patch set.[3]
+> 
+> Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
+> need to power on itself before it can be found by ULPI bus.
+> 
+> [1] http://www.spinics.net/lists/linux-usb/msg142755.html
+> [2] http://www.spinics.net/lists/linux-usb/msg143106.html
+> [3] http://www.spinics.net/lists/linux-usb/msg142815.html
+> 
+> Changes for v7:
+> - Create kinds of power sequence instance at postcore_initcall, and match
+>   the instance with node using compatible string, the beneit of this is
+>   the host driver doesn't need to consider which pwrseq instance needs
+>   to be used, and pwrseq core will match it, however, it eats some memories
+>   if less power sequence instances are used. [Patch 2/8]
+> - Add pwrseq_compatible_sample.c to test match pwrseq using device_id. [Patch 2/8]
+> - Fix the comments Vaibhav Hiremath adds for error path for clock and do not
+>   use device_node for parameters at pwrseq_on. [Patch 2/8]
+> - Simplify the caller to use power sequence, follows Alan's commnets [Patch 4/8]
+> - Tested three pwrseq instances together using both specific compatible string and
+>   generic libraries.
+> 
+
+Hi Vaibhav, would you please test if this series can support your case,
+you can add one instance like pwrseq_compatible_sample? If you are busy
+now, but think this series can satisfy your requirement, please ack it.
+I will delete pwrseq_compatible_sample, and only submit the generic one
+at next revision, you can add it later, thanks.
+
+Peter
+
+> Changes for v6:
+> - Add Matthias Kaehlcke's Reviewed-by and Tested-by. (patch [2/6])
+> - Change chipidea core of_node assignment for coming user. (patch [5/6])
+> - Applies Joshua Clayton's three dts changes for two boards,
+>   the USB device's reg has only #address-cells, but without #size-cells.
+> 
+> Changes for v5:
+> - Delete pwrseq_register/pwrseq_unregister, which is useless currently
+> - Fix the linker error when the pwrseq user is compiled as module
+> 
+> Changes for v4:
+> - Create the patch on next-20160722 
+> - Fix the of_node is not NULL after chipidea driver is unbinded [Patch 5/6]
+> - Using more friendly wait method for reset gpio [Patch 2/6]
+> - Support multiple input clocks [Patch 2/6]
+> - Add Rob Herring's ack for DT changes
+> - Add Joshua Clayton's Tested-by
+> 
 > Changes for v3:
-> 	- Add Xilinx copyright
+> - Delete "power-sequence" property at binding-doc, and change related code
+>   at both library and user code.
+> - Change binding-doc example node name with Rob's comments
+> - of_get_named_gpio_flags only gets the gpio, but without setting gpio flags,
+>   add additional code request gpio with proper gpio flags
+> - Add Philipp Zabel's Ack and MAINTAINER's entry
+> 
 > Changes for v2:
-> 	- Add SDHCI
-> 	- Add Ethernet
+> - Delete "pwrseq" prefix and clock-names for properties at dt binding
+> - Should use structure not but its pointer for kzalloc
+> - Since chipidea core has no of_node, let core's of_node equals glue
+>   layer's at core's probe
 > 
->  arch/arm/boot/dts/Makefile          |  1 +
->  arch/arm/boot/dts/zynq-microzed.dts | 96 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 97 insertions(+)
->  create mode 100644 arch/arm/boot/dts/zynq-microzed.dts
+> Joshua Clayton (2):
+>   ARM: dts: imx6qdl: Enable usb node children with <reg>
+>   ARM: dts: imx6q-evi: Fix onboard hub reset line
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index faacd52..4d7b858 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -862,6 +862,7 @@ dtb-$(CONFIG_ARCH_VT8500) += \
->  	wm8750-apc8750.dtb \
->  	wm8850-w70v2.dtb
->  dtb-$(CONFIG_ARCH_ZYNQ) += \
-> +	zynq-microzed.dtb \
->  	zynq-parallella.dtb \
->  	zynq-zc702.dtb \
->  	zynq-zc706.dtb \
-> diff --git a/arch/arm/boot/dts/zynq-microzed.dts b/arch/arm/boot/dts/zynq-microzed.dts
-> new file mode 100644
-> index 0000000..b9376a4
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/zynq-microzed.dts
-> @@ -0,0 +1,96 @@
-> +/*
-> + * Copyright (C) 2011 - 2014 Xilinx
-> + * Copyright (C) 2016 Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +/dts-v1/;
-> +/include/ "zynq-7000.dtsi"
-> +
-> +/ {
-> +	model = "Zynq MicroZED Development Board";
-> +	compatible = "xlnx,zynq-microzed", "xlnx,zynq-7000";
-> +
-> +	aliases {
-> +		ethernet0 = &gem0;
-> +		serial0 = &uart1;
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x0 0x40000000>;
-> +	};
-> +
-> +	chosen {
-> +		bootargs = "earlycon";
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	usb_phy0: phy0 {
-> +		compatible = "usb-nop-xceiv";
-> +		#phy-cells = <0>;
-> +	};
-> +};
-> +
-> +&clkc {
-> +	ps-clk-frequency = <33333333>;
-> +};
-> +
-> +&gem0 {
-> +	status = "okay";
-> +	phy-mode = "rgmii-id";
-> +	phy-handle = <&ethernet_phy>;
-> +
-> +	ethernet_phy: ethernet-phy@0 {
-> +		reg = <0>;
-> +	};
-> +};
-> +
-> +&sdhci0 {
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	status = "okay";
-> +};
-> +
-> +&usb0 {
-> +	status = "okay";
-> +	dr_mode = "host";
-> +	usb-phy = <&usb_phy0>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usb0_default>;
-> +};
-> +
-> +&pinctrl0 {
-> +	pinctrl_usb0_default: usb0-default {
-> +		mux {
-> +			groups = "usb0_0_grp";
-> +			function = "usb0";
-> +		};
-> +
-> +		conf {
-> +			groups = "usb0_0_grp";
-> +			slew-rate = <0>;
-> +			io-standard = <1>;
-> +		};
-> +
-> +		conf-rx {
-> +			pins = "MIO29", "MIO31", "MIO36";
-> +			bias-high-impedance;
-> +		};
-> +
-> +		conf-tx {
-> +			pins = "MIO28", "MIO30", "MIO32", "MIO33", "MIO34",
-> +			       "MIO35", "MIO37", "MIO38", "MIO39";
-> +			bias-disable;
-> +		};
-> +	};
-> +};
+> Peter Chen (6):
+>   binding-doc: power: pwrseq-generic: add binding doc for generic power
+>     sequence library
+>   power: add power sequence library
+>   binding-doc: usb: usb-device: add optional properties for power
+>     sequence
+>   usb: core: add power sequence handling for USB devices
+>   usb: chipidea: let chipidea core device of_node equal's glue layer
+>     device of_node
+>   ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB property
 > 
+>  .../bindings/power/pwrseq/pwrseq-generic.txt       |  48 ++++++
+>  .../devicetree/bindings/usb/usb-device.txt         |  10 +-
+>  MAINTAINERS                                        |   9 +
+>  arch/arm/boot/dts/imx6q-evi.dts                    |  25 +--
+>  arch/arm/boot/dts/imx6qdl-udoo.dtsi                |  26 ++-
+>  arch/arm/boot/dts/imx6qdl.dtsi                     |   6 +
+>  drivers/power/Kconfig                              |   1 +
+>  drivers/power/Makefile                             |   1 +
+>  drivers/power/pwrseq/Kconfig                       |  45 +++++
+>  drivers/power/pwrseq/Makefile                      |   3 +
+>  drivers/power/pwrseq/core.c                        | 190 +++++++++++++++++++++
+>  drivers/power/pwrseq/pwrseq_compatible_sample.c    | 178 +++++++++++++++++++
+>  drivers/power/pwrseq/pwrseq_generic.c              | 177 +++++++++++++++++++
+>  drivers/usb/chipidea/core.c                        |  27 ++-
+>  drivers/usb/core/hub.c                             |  41 ++++-
+>  drivers/usb/core/hub.h                             |   1 +
+>  include/linux/power/pwrseq.h                       |  73 ++++++++
+>  17 files changed, 820 insertions(+), 41 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+>  create mode 100644 drivers/power/pwrseq/Kconfig
+>  create mode 100644 drivers/power/pwrseq/Makefile
+>  create mode 100644 drivers/power/pwrseq/core.c
+>  create mode 100644 drivers/power/pwrseq/pwrseq_compatible_sample.c
+>  create mode 100644 drivers/power/pwrseq/pwrseq_generic.c
+>  create mode 100644 include/linux/power/pwrseq.h
+> 
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Applied.
+-- 
 
-Thanks,
-Michal
-
+Best Regards,
+Peter Chen
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
