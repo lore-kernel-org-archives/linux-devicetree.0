@@ -1,169 +1,107 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "ASoC: simple-card: add support for aux devices" to the asoc tree
-Date: Mon, 26 Sep 2016 09:15:34 -0700
-Message-ID: <E1boYZ4-0005Mt-7v@finisterre>
-References: <1474883811-14344-1-git-send-email-nikita.yoush@cogentembedded.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474883811-14344-1-git-send-email-nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+From: John Keeping <john@metanate.com>
+Subject: Re: [PATCH 1/2] clk: rockchip: add I2S internal clock IDs for
+ rk3288
+Date: Mon, 26 Sep 2016 18:04:39 +0100
+Message-ID: <20160926180439.64a16cf1.john@metanate.com>
+References: <20160907165330.14607-1-john@metanate.com>
+        <2003903.QOgKKA6m1b@phil>
+        <20160907191823.7f955ae2.john@metanate.com>
+        <21692410.II2VYnELL8@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <21692410.II2VYnELL8@phil>
+Sender: linux-clk-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Sun, 25 Sep 2016 23:50:29 +0200, Heiko Stuebner wrote:
 
-   ASoC: simple-card: add support for aux devices
+> Am Mittwoch, 7. September 2016, 19:18:23 CEST schrieb John Keeping:
+> > On Wed, 07 Sep 2016 19:58:31 +0200, Heiko Stuebner wrote:  
+> > > Am Mittwoch, 7. September 2016, 17:53:29 CEST schrieb John Keeping:  
+> > > > To minimize jitter on the I2S clocks, it is important that the
+> > > > denominator in the fractional divider is much greater than the
+> > > > numerator.  Add identifiers for these internal clocks so that the
+> > > > specific clock topology and rates can be specified in the device tree.  
+> > > 
+> > > The TRM states that the denominator must be bigger than 20. Is this the
+> > > one
+> > > you found or did you find further constraints?  
+> > 
+> > Is it not that the denominator must be bigger than 20 times the
+> > numerator?  That's what we found, although it seems that the greater the
+> > divisor the better, so our aim is dividing down from 594MHz from GPLL to
+> > the target rate in i2s_frac.  
+> 
+> That is good to know ... the TRM probably lost the real information during 
+> translation or so and only states that hard value. Looking at the rk3368 TRM 
+> just now, the value really is 20 times greater than the numerator.
+> 
+> 
+> > > Did you try teaching the fractional divider to handle these constraints
+> > > before going this way?  
+> > 
+> > No, I hadn't looked at doing that.  I'm not sure how that would work,
+> > we'd need to add support for fractional divider changing the parent rate
+> > wouldn't we?  
+> 
+> Doug had a somewhat similar problem, mentioning the lack of a "bestdiv" 
+> equivalent that the standard divider provides. I'm not sure if there isn't a 
+> way to provide something like this and/or make the fractional clock honor 
+> specific requirments concerning numerator/denominator - any mathematicians 
+> around? :-)
 
-has been applied to the asoc tree at
+Yes, this is difficult, although I expect a simple approach of setting
+the input as fast as possible would work reasonably well in practice.
+But even when the input is a mux with a fixed set of possible rates it
+is difficult to extract its maximum frequency within the clock
+framework.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+> One could also replace the generic fraction divider use with a rockchip-
+> specific implementation that somehow handles that.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+I hadn't considered that, I assumed there would be a strong preference
+for enhancing the generic code rather than writing a special case
+implementation.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> > > Exporting the internal clocks really would be sort of plan d or e, after
+> > > handling this in the clock framework failed. Especially as i2s rates are
+> > > probably dependant on the media being handled (frequencies and such), so
+> > > setting fractional rates statically in the dts won't help you much in the
+> > > general case, as any new playback could trigger a clk_set_rate call
+> > > anyway?  
+> > 
+> > We're not setting the fractional rate specifically, instead we're
+> > setting the i2s_pre rate and parent explicitly and banning the i2s_src
+> > mux setting to i2s_pre, which means that clk_set_rate on sclk_i2s0 will
+> > always change i2s_frac but leave i2s_pre alone.  
+> 
+> But then you are again in the situation where some requested rate can ignore 
+> those fractional-divider constraints? In general I really don't like encoding 
+> such board-specific behaviour into the generic clock tree, like needing to 
+> disable parent relationships.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Yes, I wouldn't suggest changing the clock mux in the upstream kernel.
+I was hoping specifying an assigned parent in DT would be enough to keep
+the parent set correctly, but it doesn't seem to be.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> It works for your board now but does not necessarily for all other boards, 
+> which might require other "hacks" and also doesn't solve the general problem 
+> for all other fractional dividers we have.
 
-Thanks,
-Mark
+The sensible heuristic is to minimize the length of the clock path when
+there are two equally good routes, which would handle the case where the
+I2S clock can be generated without the need for a fractional divider.
+But I don't think the clock framework has any way to take into account
+that a mux may end up bypassing another clock.
 
->From 899a247cf6d5bbb9eb799261791441d7d5ea2099 Mon Sep 17 00:00:00 2001
-From: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Date: Mon, 26 Sep 2016 12:56:51 +0300
-Subject: [PATCH] ASoC: simple-card: add support for aux devices
+It seems that even without the fractional divider we can't get low
+enough jitter to meet our requirements, so we've decided to use an
+external clock for I2S.  As a result of that, we're no longer using this
+part of the clock tree at all, so I'm happy to drop these patches.
 
-Add device tree property to define auxiliary devices to be added to
-simle-audio-card.
 
-Together with proper audio routing definition, this allows to use
-simple-card in setups where separate amplifier chip is connected to
-codec's output.
-
-Signed-off-by: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/sound/simple-card.txt      | 37 ++++++++++++++++++++++
- sound/soc/generic/simple-card.c                    | 34 ++++++++++++++++++++
- 2 files changed, 71 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-index cf3979eb3578..5ecdde6d9f63 100644
---- a/Documentation/devicetree/bindings/sound/simple-card.txt
-+++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-@@ -22,6 +22,8 @@ Optional properties:
- 					  headphones are attached.
- - simple-audio-card,mic-det-gpio	: Reference to GPIO that signals when
- 					  a microphone is attached.
-+- simple-audio-card,aux-devs		: List of phandles pointing to auxiliary devices, such
-+					  as amplifiers, to be added to the sound card.
- 
- Optional subnodes:
- 
-@@ -162,3 +164,38 @@ sound {
- 		};
- 	};
- };
-+
-+Example 3 - route audio from IMX6 SSI2 through TLV320DAC3100 codec
-+through TPA6130A2 amplifier to headphones:
-+
-+&i2c0 {
-+	codec: tlv320dac3100@18 {
-+		compatible = "ti,tlv320dac3100";
-+		...
-+	}
-+
-+	amp: tpa6130a2@60 {
-+		compatible = "ti,tpa6130a2";
-+		...
-+	}
-+}
-+
-+sound {
-+	compatible = "simple-audio-card";
-+	...
-+	simple-audio-card,widgets =
-+		"Headphone", "Headphone Jack";
-+	simple-audio-card,routing =
-+		"Headphone Jack", "HPLEFT",
-+		"Headphone Jack", "HPRIGHT",
-+		"LEFTIN", "HPL",
-+		"RIGHTIN", "HPR";
-+	simple-audio-card,aux-devs = <&amp>;
-+	simple-audio-card,cpu {
-+		sound-dai = <&ssi2>;
-+	};
-+	simple-audio-card,codec {
-+		sound-dai = <&codec>;
-+		clocks = ...
-+	};
-+};
-diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-index fe0bc5c469e2..f608f8d23f3d 100644
---- a/sound/soc/generic/simple-card.c
-+++ b/sound/soc/generic/simple-card.c
-@@ -318,6 +318,36 @@ static int asoc_simple_card_dai_link_of(struct device_node *node,
- 	return ret;
- }
- 
-+static int asoc_simple_card_parse_aux_devs(struct device_node *node,
-+					   struct simple_card_data *priv)
-+{
-+	struct device *dev = simple_priv_to_dev(priv);
-+	struct device_node *aux_node;
-+	int i, n, len;
-+
-+	if (!of_find_property(node, PREFIX "aux-devs", &len))
-+		return 0;		/* Ok to have no aux-devs */
-+
-+	n = len / sizeof(__be32);
-+	if (n <= 0)
-+		return -EINVAL;
-+
-+	priv->snd_card.aux_dev = devm_kzalloc(dev,
-+			n * sizeof(*priv->snd_card.aux_dev), GFP_KERNEL);
-+	if (!priv->snd_card.aux_dev)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < n; i++) {
-+		aux_node = of_parse_phandle(node, PREFIX "aux-devs", i);
-+		if (!aux_node)
-+			return -EINVAL;
-+		priv->snd_card.aux_dev[i].codec_of_node = aux_node;
-+	}
-+
-+	priv->snd_card.num_aux_devs = n;
-+	return 0;
-+}
-+
- static int asoc_simple_card_parse_of(struct device_node *node,
- 				     struct simple_card_data *priv)
- {
-@@ -372,6 +402,10 @@ static int asoc_simple_card_parse_of(struct device_node *node,
- 	}
- 
- 	ret = asoc_simple_card_parse_card_name(&priv->snd_card, PREFIX);
-+	if (ret < 0)
-+		goto card_parse_end;
-+
-+	ret = asoc_simple_card_parse_aux_devs(node, priv);
- 
- card_parse_end:
- 	of_node_put(dai_link);
--- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+John
