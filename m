@@ -1,81 +1,83 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [RFC/PATCH] usb: misc: Add a driver for TC7USB40MU
-Date: Mon, 26 Sep 2016 11:29:27 +0800
-Message-ID: <20160926032927.GA25395@b29397-desktop>
-References: <20160914014246.31847-1-stephen.boyd@linaro.org>
- <147384330268.13546.17843140335600627152@sboyd-linaro>
- <20160917011605.GB10392@b29397-desktop>
- <147457026249.9057.8712383708019243942@sboyd-linaro>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] PM / AVS: rockchip-cpu-avs: add driver handling
+ Rockchip cpu avs
+Date: Mon, 26 Sep 2016 09:25:11 +0530
+Message-ID: <20160926035511.GG17336@vireshk-i7>
+References: <1471510341-63926-1-git-send-email-finley.xiao@rock-chips.com>
+ <1471510341-63926-5-git-send-email-finley.xiao@rock-chips.com>
+ <20160829060801.GB5094@vireshk-i7>
+ <20160912215515.GF7243@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <147457026249.9057.8712383708019243942@sboyd-linaro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, robh+dt@kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>
+In-Reply-To: <20160912215515.GF7243-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Finlye Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tim.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ulysses.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lin.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 22, 2016 at 11:51:02AM -0700, Stephen Boyd wrote:
-> Quoting Peter Chen (2016-09-16 18:16:05)
-> > On Wed, Sep 14, 2016 at 01:55:02AM -0700, Stephen Boyd wrote:
-> > > Quoting Stephen Boyd (2016-09-13 18:42:46)
-> > > > On the db410c 96boards platform we have a TC7USB40MU[1] on the
-> > > > board to mux the D+/D- lines from the SoC between a micro usb
-> > > > "device" port and a USB hub for "host" roles. Upon a role switch,
-> > > > we need to change this mux to forward the D+/D- lines to either
-> > > > the port or the hub. Therefore, introduce a driver for this
-> > > > device that intercepts extcon USB_HOST events and logically
-> > > > asserts a gpio to mux the "host" D+/D- lines when a host cable is
-> > > > attached. When the cable goes away, it will logically deassert
-> > > > the gpio and mux the "device" lines.
-> > > > 
-> > > > [1] https://toshiba.semicon-storage.com/ap-en/product/logic/bus-switch/detail.TC7USB40MU.html
-> > > > 
-> > > > Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
-> > > > Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> > > > Cc: <devicetree@vger.kernel.org>
-> > > > Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> > > > ---
-> > > > 
-> > > > Should I make the extcon part optional? I could see a case where there are two
-> > > > "OTG" ports connected to the mux (or two hubs), and for some reason the
-> > > > software may want to mux between them at runtime. If we mandate an extcon,
-> > > > that won't be possible to support. Perhaps it would be better to have
-> > > > the node, but connect it to the usb controller with a phandle (maybe of_graph
-> > > > endpoints would be useful too) so that when the controller wants to mux over
-> > > > a port it can do so.
-> > > 
-> > > Here's some dts mock-up on top of the db410c for the of_graph stuff. I
-> > > haven't written any code around it, but the idea is to allow the binding
-> > > to specify how the mux is connected to upstream and downstream D+/D-
-> > > lines. This way, we can do some dt parsing of the endpoints and their
-> > > parent nodes to figure out if the mux needs to be set high or low to use
-> > > a device connector or a usb hub based on if the id cable is present.
-> > > Maybe I'm over thinking things though and we could just have a DT
-> > > property for that.
-> > > 
-> > >       soc {
-> > >               usb@78d9000 {
-> > >                       extcon = <&usb_id>, <&usb_id>;
+On 12-09-16, 14:55, Stephen Boyd wrote:
+> On 08/29, Viresh Kumar wrote:
+> > On 18-08-16, 16:52, Finlye Xiao wrote:
+> > > +static int rockchip_adjust_opp_table(struct device *cpu_dev,
+> > > +				     struct cpufreq_frequency_table *table,
+> > > +				     int volt)
+> > > +{
+> > > +	struct opp_table *opp_table;
+> > > +	struct cpufreq_frequency_table *pos;
+> > > +	struct dev_pm_opp *opp;
+> > > +
+> > > +	if (!volt)
+> > > +		return 0;
+> > > +
+> > > +	rcu_read_lock();
+> > > +
+> > > +	opp_table = _find_opp_table(cpu_dev);
+> > > +	if (IS_ERR(opp_table)) {
+> > > +		rcu_read_unlock();
+> > > +		return PTR_ERR(opp_table);
+> > > +	}
+> > > +
+> > > +	cpufreq_for_each_valid_entry(pos, table) {
+> > > +		opp = dev_pm_opp_find_freq_exact(cpu_dev, pos->frequency * 1000,
+> > > +						 true);
+> > > +		if (IS_ERR(opp))
+> > > +			continue;
+> > > +
+> > > +		opp->u_volt += volt;
+> > > +		opp->u_volt_min += volt;
+> > > +		opp->u_volt_max += volt;
+> > > +	}
+> > > +
+> > > +	rcu_read_unlock();
+> > > +
+> > > +	return 0;
+> > > +}
 > > 
-> > Why you have two same extcon phandler? From my mind, one should id,
-> > another should is vbus. Besides, I find extcon-usb-gpio.c is lack of
-> > vbus support, how you support vbus detection for
-> > connection/disconnection with PC for your chipidea msm patch set?
+> > I wouldn't prefer altering the opp tables from individual drivers at all. At the
+> > least, it should be done via some helpers exposed by the core.
+> > 
+> > But before that I would like to hear from Stephen a bit as I recall he was also
+> > working on something similar.
+> > 
 > 
-> This was already in the dts files for db410c. In the chipidea binding
-> one is for EXTCON_USB (vbus) and one is for EXTCON_USB_HOST (id). My
-> understanding is that extcon-usb-gpio.c sends events for both EXTCON_USB
-> and EXTCON_USB_HOST when the gpio changes state. vbus detection is not
-> that great on this board because we only have on gpio for this.
+> I had a patch to modify the voltage at runtime for the "current"
+> OPP. Now that we have regulator and clk control inside OPP that
+> became a little easier to do without having to do some notifier
+> from the OPP layer to the consumers. I haven't had time to revive
+> those patches though. Should we do that?
 
-I think extcon-usb-gpio.c needs to extend for supporting vbus event,
-otherwise, the micro-b cable's connect/disconnect will introduce
-EXTCON_USB_HOST event, if you use two <&usb_idx> for both id and
-vbus event.
+Perhaps yes, we should have a common place for doing all that.
+
+> Does this need to modify
+> anything besides the OPP the device is currently running at?
+
+Finlye, can you please answer this ?
 
 -- 
-
-Best Regards,
-Peter Chen
+viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
