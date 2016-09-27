@@ -1,71 +1,50 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [PATCH v3 1/2] dt-bindings: display: Add Sharp LQ150X1LG11 panel binding
-Date: Tue, 27 Sep 2016 00:27:11 +0200
-Message-ID: <1474928832-8766-2-git-send-email-peda@axentia.se>
-References: <1474928832-8766-1-git-send-email-peda@axentia.se>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 net-next] net: phy: Add Edge-rate driver for Microsemi
+ PHYs.
+Date: Tue, 27 Sep 2016 16:16:33 +0200
+Message-ID: <20160927141633.GJ28432@lunn.ch>
+References: <1474984075-12312-1-git-send-email-Raju.Lakkaraju@microsemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1474928832-8766-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Gustaf=20Lindstr=C3=B6m?= <gl-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1474984075-12312-1-git-send-email-Raju.Lakkaraju@microsemi.com>
+Sender: netdev-owner@vger.kernel.org
+To: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, Allan.Nielsen@microsemi.com
 List-Id: devicetree@vger.kernel.org
 
-The Sharp 15" LQ150X1LG11 panel is an XGA TFT LCD panel.
+> index 0000000..7ba3855
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> @@ -0,0 +1,61 @@
+> +* Microsemi - vsc8531 Giga bit ethernet phy
+> +
+> +Required properties:
+> +- compatible	: Should contain phy id as "ethernet-phy-idAAAA.BBBB"
+> +		  If the phy's identifier is known then the list may contain an entry
+> +		  of the form: "ethernet-phy-idAAAA.BBBB" where
+> +		  AAAA - The value of the 16 bit Phy Identifier 1 register as
+> +			 4 hex digits. This is the chip vendor OUI bits 3:18
+> +		  BBBB - The value of the 16 bit Phy Identifier 2 register as
+> +			 4 hex digits. This is the chip vendor OUI bits 19:24,
+> +			 followed by 10 bits of a vendor specific ID.
+> +- reg		: The ID number for the phy, usually a small integer
 
-Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
----
- .../bindings/display/panel/sharp,lq150x1lg11.txt   | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
+Please don't copy phy.txt. Just refer to it. Use text like:
 
-diff --git a/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt b/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
-new file mode 100644
-index 000000000000..715ff7e332f2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
-@@ -0,0 +1,36 @@
-+Sharp 15" LQ150X1LG11 XGA TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "sharp,lq150x1lg11"
-+- power-supply: regulator to provide the VCC supply voltage (3.3 volts)
-+
-+Optional properties:
-+- backlight: phandle of the backlight device
-+- rlud-gpios: a single GPIO for the RL/UD (rotate 180 degrees) pin.
-+- lvds-gpios: a single GPIO for the SELLVDS pin.
-+
-+If lrud-gpios and/or ldvs-gpios are not specified, the RL/UD and/or SELLVDS
-+pins are assumed to be handled appropriately by the hardware.
-+
-+Example:
-+
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 100000>;                      /* VBR */
-+
-+		brightness-levels = <0 20 40 60 80 100>;
-+		default-brightness-level = <2>;
-+
-+		power-supply = <&vdd_12v_reg>;               /* VDD */
-+		enable-gpios = <&gpio 42 GPIO_ACTIVE_HIGH>;  /* XSTABY */
-+	};
-+
-+	panel {
-+		compatible = "sharp,lq150x1lg11";
-+
-+		power-supply = <&vcc_3v3_reg>;               /* VCC */
-+
-+		backlight = <&backlight>;
-+		rlud-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;    /* RL/UD */
-+		lvds-gpios = <&gpio 18 GPIO_ACTIVE_HIGH>;    /* SELLVDS */
-+	};
--- 
-2.1.4
+The PHY device uses the binding described in
+Documentation/devicetree/bindings/net/phy.txt
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It may additionally have the following properties
+
+> +Optional properties:
+> +- vsc8531,edge-rate	: Edge rate sets the drive strength of the MAC
+> +			  interface output signals.  Changing the drive
+> +			  strength will affect the edge rate of the output
+> +			  signal.
+
+Are we specifying a rate or a strength? It is called edge-rate, so it
+expect it to be a rate, mV/pS or something similar.
+
+       Andrew
