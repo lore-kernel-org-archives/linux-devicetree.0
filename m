@@ -1,48 +1,37 @@
-From: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Subject: Re: [PATCH 1/3] arm: dts: imx7: Update #pwm-cells for PWM polarity
- control
-Date: Tue, 27 Sep 2016 19:54:24 +0530
-Message-ID: <6739eff0-f6a7-7759-fe91-12790c5372f5@toradex.com>
-References: <20160919142347.11342-1-bhuvanchandra.dv@toradex.com>
- <20160919142347.11342-2-bhuvanchandra.dv@toradex.com>
- <20160923175202.GA2816@rob-hp-laptop>
+From: "Allan W. Nielsen" <allan.nielsen@microsemi.com>
+Subject: Re: [PATCH v3 net-next] net: phy: Add Edge-rate driver for Microsemi
+ PHYs.
+Date: Tue, 27 Sep 2016 16:26:59 +0200
+Message-ID: <20160927142659.GC10776@microsemi.com>
+References: <1474984075-12312-1-git-send-email-Raju.Lakkaraju@microsemi.com>
+ <20160927141633.GJ28432@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160923175202.GA2816@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, thierry.reding@gmail.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160927141633.GJ28432@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/16 23:22, Rob Herring wrote:
+Hi Andrew,
 
-> On Mon, Sep 19, 2016 at 07:53:45PM +0530, Bhuvanchandra DV wrote:
->> Update #pwm-cells to 3 in order to support PWM signal polarity control.
->>
->> Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
->> ---
->>   Documentation/devicetree/bindings/pwm/imx-pwm.txt | 6 +++---
->>   arch/arm/boot/dts/imx7s.dtsi                      | 8 ++++----
->>   2 files changed, 7 insertions(+), 7 deletions(-)
-> The driver will still work with old DTs, right? If so,
+> > +Optional properties:
+> > +- vsc8531,edge-rate  : Edge rate sets the drive strength of the MAC
+> > +                       interface output signals.  Changing the drive
+> > +                       strength will affect the edge rate of the output
+> > +                       signal.
+> 
+> Are we specifying a rate or a strength? It is called edge-rate, so it
+> expect it to be a rate, mV/pS or something similar.
+I do not know - sorry.
 
-This patchset actually depends on the v6 patchset[1] from Lothar.
-Some how that patchset got stalled in ML. I will re-spin the v6
-patchset with the suggestions/changes from Lukasz in this patch[2]
-after testing.
+If it is a hard requirement to document these settings using physical units then
+we need to requist some help from the HW team.
 
-[1]http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/294027.html
-[2]https://www.spinics.net/lists/arm-kernel/msg530818.html
+I will forward this to the HW team - but it will properly take a few days to get
+a decent answer.
 
->
-> Acked-by: Rob Herring <robh@kernel.org>
+Best regards
+Allan W. Nielsen
