@@ -1,98 +1,111 @@
-From: Vagrant Cascadian <vagrantc@aikidev.net>
-Subject: [PATCH v2] ARM: dts: rockchip: temporarily remove emmc hs200 speed
- from rk3288-veyron-speedy.
-Date: Tue, 27 Sep 2016 13:53:46 -0700
-Message-ID: <87twd1vzc5.fsf@aikidev.net>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5758411567483402832=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Aleksey Makarov <aleksey.makarov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v11 1/4] of/serial: move earlycon early_param handling to serial
+Date: Tue, 27 Sep 2016 23:54:12 +0300
+Message-ID: <20160927205418.31529-1-aleksey.makarov@linaro.org>
+References: <20160927151953.GB4371@kroah.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160927151953.GB4371-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Aleksey Makarov <aleksey.makarov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Yury Norov <ynorov-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Zheng, Lv" <lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri
 List-Id: devicetree@vger.kernel.org
 
---===============5758411567483402832==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+We have multiple "earlycon" early_param handlers - merge the DT one into
+the main earlycon one.  It's a cleanup that also will be useful
+to defer setting up DT console until ACPI/DT decision is made.
 
-This essentially mimics what was done with rk3288-veyron-minnie in
-commit 984926781122f034d5bc9962815d135b6c4a8e1d.
+Rename the exported function to avoid clashing with the function from
+arch/microblaze/kernel/prom.c
 
-The eMMC of the speedy Chromebook also appears to need the same tuning
-workaround, as it frequently fails to recognize the eMMC without it.
+Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Aleksey Makarov <aleksey.makarov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Reviewed-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Tested-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Tested-by: Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ drivers/of/fdt.c              | 11 +----------
+ drivers/tty/serial/earlycon.c |  2 +-
+ include/linux/of_fdt.h        |  3 +++
+ 3 files changed, 5 insertions(+), 11 deletions(-)
 
-Signed-off-by: Vagrant Cascadian <vagrantc@aikidev.net>
-=2D--
-Changes in v2:
- - Added Signed-off-by.
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 085c638..c89d5d2 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -924,7 +924,7 @@ static inline void early_init_dt_check_for_initrd(unsigned long node)
+ 
+ #ifdef CONFIG_SERIAL_EARLYCON
+ 
+-static int __init early_init_dt_scan_chosen_serial(void)
++int __init early_init_dt_scan_chosen_stdout(void)
+ {
+ 	int offset;
+ 	const char *p, *q, *options = NULL;
+@@ -968,15 +968,6 @@ static int __init early_init_dt_scan_chosen_serial(void)
+ 	}
+ 	return -ENODEV;
+ }
+-
+-static int __init setup_of_earlycon(char *buf)
+-{
+-	if (buf)
+-		return 0;
+-
+-	return early_init_dt_scan_chosen_serial();
+-}
+-early_param("earlycon", setup_of_earlycon);
+ #endif
+ 
+ /**
+diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
+index 067783f..7aae655 100644
+--- a/drivers/tty/serial/earlycon.c
++++ b/drivers/tty/serial/earlycon.c
+@@ -209,7 +209,7 @@ static int __init param_setup_earlycon(char *buf)
+ 	 * don't generate a warning from parse_early_params() in that case
+ 	 */
+ 	if (!buf || !buf[0])
+-		return 0;
++		return early_init_dt_scan_chosen_stdout();
+ 
+ 	err = setup_earlycon(buf);
+ 	if (err == -ENOENT || err == -EALREADY)
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 26c3302..4341f32 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -14,6 +14,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/init.h>
++#include <linux/errno.h>
+ 
+ /* Definitions used by the flattened device tree */
+ #define OF_DT_HEADER		0xd00dfeed	/* marker */
+@@ -66,6 +67,7 @@ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 				     int depth, void *data);
+ extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 				     int depth, void *data);
++extern int early_init_dt_scan_chosen_stdout(void);
+ extern void early_init_fdt_scan_reserved_mem(void);
+ extern void early_init_fdt_reserve_self(void);
+ extern void early_init_dt_add_memory_arch(u64 base, u64 size);
+@@ -94,6 +96,7 @@ extern void early_get_first_memblock_info(void *, phys_addr_t *);
+ extern u64 of_flat_dt_translate_address(unsigned long node);
+ extern void of_fdt_limit_memory(int limit);
+ #else /* CONFIG_OF_FLATTREE */
++static inline int early_init_dt_scan_chosen_stdout(void) { return -ENODEV; }
+ static inline void early_init_fdt_scan_reserved_mem(void) {}
+ static inline void early_init_fdt_reserve_self(void) {}
+ static inline const char *of_flat_dt_get_machine_name(void) { return NULL; }
+-- 
+2.10.0
 
- arch/arm/boot/dts/rk3288-veyron-speedy.dts | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/dts=
-/rk3288-veyron-speedy.dts
-index a0d033f..500fd18 100644
-=2D-- a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-@@ -124,6 +124,11 @@
-            &sdmmc_bus4>;
- };
-
-+
-+&emmc {
-+       /delete-property/mmc-hs200-1_8v;
-+};
-+
- &vcc_5v {
-    enable-active-high;
-    gpio =3D <&gpio7 21 GPIO_ACTIVE_HIGH>;
-=2D-=20
-2.9.3
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJX6txcAAoJELeLgtSBS5G2zGUQAIGYsCKyw0JDovY+ViWDdD9H
-hxB3oZTC+r+GfSlKA3D+vPMBLvv3oZKBF+JdR+vPEcrQ1kn2FZfAyACc5OCeMmqE
-xo4qXfW88bW8ZPn1+1Ao/Qui8kW54N6KcL1yTpDfGkEdLPLfKEZGPRO5CTQbb3ez
-1qk6RI7NUqELUIjP/EZk3RZLeIRqmkVNPH+otPQknCHI+ok4EYVNqGGt/BWEVDxh
-9ECtLuap4ym/Nv+/kQfFk+wLsiUCR57MtqgIIDqscxOmrf5iqlqTXRO0pHYMJFxG
-CWM2ydAQYBjSni+Bk3WoYI4mCUzChz2uIXGF1w4dy0ONNJ0JPACTRpPaRbKpe/90
-RNhhyhqd1Sdw8CejWLrt79qDdABPtmrardLAP5o9oHTB1l8U+9Wua7zmmsIUFGH3
-xFj8Ypa+Fwwi5KNRuylZCBH4/mTI3ghnjQRcbkUYb3AQ0PaaNlwiyzoapIgzRogX
-IDAQ+b00jrcxxWJXFgv/JV2oSc5snVuRlxoL+0Yia7l+aVxHfrc/2MF1dzvzlWqZ
-ABifKIpGutjGJd/y0vELfNWxdpQp14RgKzpqiH0NJWXyeYK8IMBAKRw7EO8nLkS/
-XzoUIii2/nCLWmFNWPunAQbXtOob2k21YGI9byPuNMMGJH0ZFu7Pdah4CUWwqKh3
-LvGCJ/oYdz6GKZ464D8x
-=+NNd
------END PGP SIGNATURE-----
---=-=-=--
-
-
---===============5758411567483402832==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5758411567483402832==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
