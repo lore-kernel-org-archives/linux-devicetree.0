@@ -1,73 +1,206 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH 2/8] pinctrl: aspeed-g5: Fix names of GPID2 pins
-Date: Wed, 28 Sep 2016 00:20:14 +0930
-Message-ID: <69eda17c16684f4212a9f3e64d9587abfcc7ae74.1474986045.git-series.andrew@aj.id.au>
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Subject: [PATCH 4/8] pinctrl: aspeed-g5: Fix pin association of SPI1 function
+Date: Wed, 28 Sep 2016 00:20:16 +0930
+Message-ID: <bdd34f8c4bfabbc1d3cd05a66ac8734da514b1e5.1474986045.git-series.andrew@aj.id.au>
 References: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
-In-Reply-To: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
-References: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew-zrmu5oMJ5Fs@public.gmane.org>
+In-Reply-To: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew-zrmu5oMJ5Fs@public.gmane.org>
+References: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Fixes simple typos in the initial commit. There is no behavioural
-change.
+The SPI1 function was associated with the wrong pins: The functions that
+those pins provide is either an SPI debug or passthrough function
+coupled to SPI1. Make the SPI1 mux function configure the relevant pins
+and associate new SPI1DEBUG and SPI1PASSTHRU functions with the pins
+that were already defined.
+
+The notation used in the datasheet's multi-function pin table for the SoC is
+often creative: in this case the SYS* signals are enabled by a single bit,
+which is nothing unusual on its own, but in this case the bit was also
+participating in a multi-bit bitfield and therefore represented multiple
+functions. This fact was overlooked in the original patch.
 
 Fixes: 56e57cb6c07f (pinctrl: Add pinctrl-aspeed-g5 driver)
-Reported-by: Xo Wang <xow@google.com>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 ---
- drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt |  4 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c                   | 86 ++++++-
+ 2 files changed, 81 insertions(+), 9 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+index 5e60ad18f147..2ad18c4ea55c 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+@@ -43,7 +43,9 @@ aspeed,ast2500-pinctrl, aspeed,g5-pinctrl:
+ 
+ GPID0 GPID2 GPIE0 I2C10 I2C11 I2C12 I2C13 I2C14 I2C3 I2C4 I2C5 I2C6 I2C7 I2C8
+ I2C9 MAC1LINK MDIO1 MDIO2 OSCCLK PEWAKE PWM0 PWM1 PWM2 PWM3 PWM4 PWM5 PWM6 PWM7
+-RGMII1 RGMII2 RMII1 RMII2 SD1 SPI1 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8
++RGMII1 RGMII2 RMII1 RMII2 SD1 SPI1 SPI1DEBUG SPI1PASSTHRU TIMER4 TIMER5 TIMER6
++TIMER7 TIMER8 VGABIOSROM
++
+ 
+ Examples:
+ 
 diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-index e1ab864e1a7f..14639834a5eb 100644
+index 235d929e74fd..c8c72e8259d3 100644
 --- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
 +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-@@ -151,21 +151,21 @@ FUNC_GROUP_DECL(GPID0, F19, E21);
+@@ -186,24 +186,84 @@ MS_PIN_DECL(C20, GPIOE1, NDCD3, GPIE0OUT);
  
- #define GPID2_DESC      SIG_DESC_SET(SCU8C, 9)
+ FUNC_GROUP_DECL(GPIE0, B20, C20);
  
--#define D20 26
-+#define F20 26
- SIG_EXPR_LIST_DECL_SINGLE(SD2DAT0, SD2, SD2_DESC);
- SIG_EXPR_DECL(GPID2IN, GPID2, GPID2_DESC);
- SIG_EXPR_DECL(GPID2IN, GPID, GPID_DESC);
- SIG_EXPR_LIST_DECL_DUAL(GPID2IN, GPID2, GPID);
--MS_PIN_DECL(D20, GPIOD2, SD2DAT0, GPID2IN);
-+MS_PIN_DECL(F20, GPIOD2, SD2DAT0, GPID2IN);
+-#define SPI1_DESC	SIG_DESC_SET(HW_STRAP1, 13)
++#define SPI1_DESC		{ HW_STRAP1, GENMASK(13, 12), 1, 0 }
++#define SPI1DEBUG_DESC		{ HW_STRAP1, GENMASK(13, 12), 2, 0 }
++#define SPI1PASSTHRU_DESC	{ HW_STRAP1, GENMASK(13, 12), 3, 0 }
++
+ #define C18 64
+-SIG_EXPR_LIST_DECL_SINGLE(SYSCS, SPI1, COND1, SPI1_DESC);
++SIG_EXPR_DECL(SYSCS, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL(SYSCS, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL_DUAL(SYSCS, SPI1DEBUG, SPI1PASSTHRU);
+ SS_PIN_DECL(C18, GPIOI0, SYSCS);
  
--#define D21 27
-+#define D20 27
- SIG_EXPR_LIST_DECL_SINGLE(SD2DAT1, SD2, SD2_DESC);
- SIG_EXPR_DECL(GPID2OUT, GPID2, GPID2_DESC);
- SIG_EXPR_DECL(GPID2OUT, GPID, GPID_DESC);
- SIG_EXPR_LIST_DECL_DUAL(GPID2OUT, GPID2, GPID);
--MS_PIN_DECL(D21, GPIOD3, SD2DAT1, GPID2OUT);
-+MS_PIN_DECL(D20, GPIOD3, SD2DAT1, GPID2OUT);
+ #define E15 65
+-SIG_EXPR_LIST_DECL_SINGLE(SYSCK, SPI1, COND1, SPI1_DESC);
++SIG_EXPR_DECL(SYSCK, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL(SYSCK, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL_DUAL(SYSCK, SPI1DEBUG, SPI1PASSTHRU);
+ SS_PIN_DECL(E15, GPIOI1, SYSCK);
  
--FUNC_GROUP_DECL(GPID2, D20, D21);
-+FUNC_GROUP_DECL(GPID2, F20, D20);
+-#define A14 66
+-SIG_EXPR_LIST_DECL_SINGLE(SYSMOSI, SPI1, COND1, SPI1_DESC);
+-SS_PIN_DECL(A14, GPIOI2, SYSMOSI);
++#define B16 66
++SIG_EXPR_DECL(SYSMOSI, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL(SYSMOSI, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL_DUAL(SYSMOSI, SPI1DEBUG, SPI1PASSTHRU);
++SS_PIN_DECL(B16, GPIOI2, SYSMOSI);
  
- #define GPIE_DESC	SIG_DESC_SET(HW_STRAP1, 21)
- #define GPIE0_DESC	SIG_DESC_SET(SCU8C, 12)
-@@ -614,7 +614,6 @@ static struct pinctrl_pin_desc aspeed_g5_pins[ASPEED_G5_NR_PINS] = {
- 	ASPEED_PINCTRL_PIN(D10),
- 	ASPEED_PINCTRL_PIN(D2),
- 	ASPEED_PINCTRL_PIN(D20),
--	ASPEED_PINCTRL_PIN(D21),
- 	ASPEED_PINCTRL_PIN(D4),
- 	ASPEED_PINCTRL_PIN(D5),
- 	ASPEED_PINCTRL_PIN(D6),
-@@ -630,6 +629,7 @@ static struct pinctrl_pin_desc aspeed_g5_pins[ASPEED_G5_NR_PINS] = {
- 	ASPEED_PINCTRL_PIN(E7),
- 	ASPEED_PINCTRL_PIN(E9),
- 	ASPEED_PINCTRL_PIN(F19),
-+	ASPEED_PINCTRL_PIN(F20),
- 	ASPEED_PINCTRL_PIN(F9),
- 	ASPEED_PINCTRL_PIN(H20),
- 	ASPEED_PINCTRL_PIN(L1),
+ #define C16 67
+-SIG_EXPR_LIST_DECL_SINGLE(SYSMISO, SPI1, COND1, SPI1_DESC);
++SIG_EXPR_DECL(SYSMISO, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL(SYSMISO, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL_DUAL(SYSMISO, SPI1DEBUG, SPI1PASSTHRU);
+ SS_PIN_DECL(C16, GPIOI3, SYSMISO);
+ 
+-FUNC_GROUP_DECL(SPI1, C18, E15, A14, C16);
++#define VB_DESC	SIG_DESC_SET(HW_STRAP1, 5)
++
++#define B15 68
++SIG_EXPR_DECL(SPI1CS0, SPI1, COND1, SPI1_DESC);
++SIG_EXPR_DECL(SPI1CS0, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL(SPI1CS0, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL(SPI1CS0, SIG_EXPR_PTR(SPI1CS0, SPI1),
++			    SIG_EXPR_PTR(SPI1CS0, SPI1DEBUG),
++			    SIG_EXPR_PTR(SPI1CS0, SPI1PASSTHRU));
++SIG_EXPR_LIST_DECL_SINGLE(VBCS, VGABIOSROM, COND1, VB_DESC);
++MS_PIN_DECL(B15, GPIOI4, SPI1CS0, VBCS);
++
++#define C15 69
++SIG_EXPR_DECL(SPI1CK, SPI1, COND1, SPI1_DESC);
++SIG_EXPR_DECL(SPI1CK, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL(SPI1CK, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL(SPI1CK, SIG_EXPR_PTR(SPI1CK, SPI1),
++			    SIG_EXPR_PTR(SPI1CK, SPI1DEBUG),
++			    SIG_EXPR_PTR(SPI1CK, SPI1PASSTHRU));
++SIG_EXPR_LIST_DECL_SINGLE(VBCK, VGABIOSROM, COND1, VB_DESC);
++MS_PIN_DECL(C15, GPIOI5, SPI1CK, VBCK);
++
++#define A14 70
++SIG_EXPR_DECL(SPI1MOSI, SPI1, COND1, SPI1_DESC);
++SIG_EXPR_DECL(SPI1MOSI, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL(SPI1MOSI, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL(SPI1MOSI, SIG_EXPR_PTR(SPI1MOSI, SPI1),
++			    SIG_EXPR_PTR(SPI1MOSI, SPI1DEBUG),
++			    SIG_EXPR_PTR(SPI1MOSI, SPI1PASSTHRU));
++SIG_EXPR_LIST_DECL_SINGLE(VBMOSI, VGABIOSROM, COND1, VB_DESC);
++MS_PIN_DECL(A14, GPIOI6, SPI1MOSI, VBMOSI);
++
++#define A15 71
++SIG_EXPR_DECL(SPI1MISO, SPI1, COND1, SPI1_DESC);
++SIG_EXPR_DECL(SPI1MISO, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL(SPI1MISO, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL(SPI1MISO, SIG_EXPR_PTR(SPI1MISO, SPI1),
++			    SIG_EXPR_PTR(SPI1MISO, SPI1DEBUG),
++			    SIG_EXPR_PTR(SPI1MISO, SPI1PASSTHRU));
++SIG_EXPR_LIST_DECL_SINGLE(VBMISO, VGABIOSROM, COND1, VB_DESC);
++MS_PIN_DECL(A15, GPIOI7, SPI1MISO, VBMISO);
++
++FUNC_GROUP_DECL(SPI1, B15, C15, A14, A15);
++FUNC_GROUP_DECL(SPI1DEBUG, C18, E15, B16, C16, B15, C15, A14, A15);
++FUNC_GROUP_DECL(SPI1PASSTHRU, C18, E15, B16, C16, B15, C15, A14, A15);
++FUNC_GROUP_DECL(VGABIOSROM, B15, C15, A14, A15);
++
++#define R2 72
++SIG_EXPR_LIST_DECL_SINGLE(SGPMCK, SGPM, SIG_DESC_SET(SCU84, 8));
++SS_PIN_DECL(R2, GPIOJ0, SGPMCK);
+ 
+ #define L2 73
+ SIG_EXPR_LIST_DECL_SINGLE(SGPMLD, SGPM, SIG_DESC_SET(SCU84, 9));
+@@ -580,6 +640,7 @@ static struct pinctrl_pin_desc aspeed_g5_pins[ASPEED_G5_NR_PINS] = {
+ 	ASPEED_PINCTRL_PIN(A12),
+ 	ASPEED_PINCTRL_PIN(A13),
+ 	ASPEED_PINCTRL_PIN(A14),
++	ASPEED_PINCTRL_PIN(A15),
+ 	ASPEED_PINCTRL_PIN(A2),
+ 	ASPEED_PINCTRL_PIN(A3),
+ 	ASPEED_PINCTRL_PIN(A4),
+@@ -592,6 +653,8 @@ static struct pinctrl_pin_desc aspeed_g5_pins[ASPEED_G5_NR_PINS] = {
+ 	ASPEED_PINCTRL_PIN(B12),
+ 	ASPEED_PINCTRL_PIN(B13),
+ 	ASPEED_PINCTRL_PIN(B14),
++	ASPEED_PINCTRL_PIN(B15),
++	ASPEED_PINCTRL_PIN(B16),
+ 	ASPEED_PINCTRL_PIN(B2),
+ 	ASPEED_PINCTRL_PIN(B20),
+ 	ASPEED_PINCTRL_PIN(B3),
+@@ -603,6 +666,7 @@ static struct pinctrl_pin_desc aspeed_g5_pins[ASPEED_G5_NR_PINS] = {
+ 	ASPEED_PINCTRL_PIN(C12),
+ 	ASPEED_PINCTRL_PIN(C13),
+ 	ASPEED_PINCTRL_PIN(C14),
++	ASPEED_PINCTRL_PIN(C15),
+ 	ASPEED_PINCTRL_PIN(C16),
+ 	ASPEED_PINCTRL_PIN(C18),
+ 	ASPEED_PINCTRL_PIN(C2),
+@@ -691,11 +755,14 @@ static const struct aspeed_pin_group aspeed_g5_groups[] = {
+ 	ASPEED_PINCTRL_GROUP(RMII2),
+ 	ASPEED_PINCTRL_GROUP(SD1),
+ 	ASPEED_PINCTRL_GROUP(SPI1),
++	ASPEED_PINCTRL_GROUP(SPI1DEBUG),
++	ASPEED_PINCTRL_GROUP(SPI1PASSTHRU),
+ 	ASPEED_PINCTRL_GROUP(TIMER4),
+ 	ASPEED_PINCTRL_GROUP(TIMER5),
+ 	ASPEED_PINCTRL_GROUP(TIMER6),
+ 	ASPEED_PINCTRL_GROUP(TIMER7),
+ 	ASPEED_PINCTRL_GROUP(TIMER8),
++	ASPEED_PINCTRL_GROUP(VGABIOSROM),
+ };
+ 
+ static const struct aspeed_pin_function aspeed_g5_functions[] = {
+@@ -733,11 +800,14 @@ static const struct aspeed_pin_function aspeed_g5_functions[] = {
+ 	ASPEED_PINCTRL_FUNC(RMII2),
+ 	ASPEED_PINCTRL_FUNC(SD1),
+ 	ASPEED_PINCTRL_FUNC(SPI1),
++	ASPEED_PINCTRL_FUNC(SPI1DEBUG),
++	ASPEED_PINCTRL_FUNC(SPI1PASSTHRU),
+ 	ASPEED_PINCTRL_FUNC(TIMER4),
+ 	ASPEED_PINCTRL_FUNC(TIMER5),
+ 	ASPEED_PINCTRL_FUNC(TIMER6),
+ 	ASPEED_PINCTRL_FUNC(TIMER7),
+ 	ASPEED_PINCTRL_FUNC(TIMER8),
++	ASPEED_PINCTRL_FUNC(VGABIOSROM),
+ };
+ 
+ static struct aspeed_pinctrl_data aspeed_g5_pinctrl_data = {
 -- 
 git-series 0.8.10
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
