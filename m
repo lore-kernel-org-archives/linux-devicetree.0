@@ -1,50 +1,48 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 net-next] net: phy: Add Edge-rate driver for Microsemi
- PHYs.
-Date: Tue, 27 Sep 2016 16:16:33 +0200
-Message-ID: <20160927141633.GJ28432@lunn.ch>
-References: <1474984075-12312-1-git-send-email-Raju.Lakkaraju@microsemi.com>
+From: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+Subject: Re: [PATCH 1/3] arm: dts: imx7: Update #pwm-cells for PWM polarity
+ control
+Date: Tue, 27 Sep 2016 19:54:24 +0530
+Message-ID: <6739eff0-f6a7-7759-fe91-12790c5372f5@toradex.com>
+References: <20160919142347.11342-1-bhuvanchandra.dv@toradex.com>
+ <20160919142347.11342-2-bhuvanchandra.dv@toradex.com>
+ <20160923175202.GA2816@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1474984075-12312-1-git-send-email-Raju.Lakkaraju@microsemi.com>
-Sender: netdev-owner@vger.kernel.org
-To: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, Allan.Nielsen@microsemi.com
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160923175202.GA2816@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, thierry.reding@gmail.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> index 0000000..7ba3855
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-> @@ -0,0 +1,61 @@
-> +* Microsemi - vsc8531 Giga bit ethernet phy
-> +
-> +Required properties:
-> +- compatible	: Should contain phy id as "ethernet-phy-idAAAA.BBBB"
-> +		  If the phy's identifier is known then the list may contain an entry
-> +		  of the form: "ethernet-phy-idAAAA.BBBB" where
-> +		  AAAA - The value of the 16 bit Phy Identifier 1 register as
-> +			 4 hex digits. This is the chip vendor OUI bits 3:18
-> +		  BBBB - The value of the 16 bit Phy Identifier 2 register as
-> +			 4 hex digits. This is the chip vendor OUI bits 19:24,
-> +			 followed by 10 bits of a vendor specific ID.
-> +- reg		: The ID number for the phy, usually a small integer
+On 09/23/16 23:22, Rob Herring wrote:
 
-Please don't copy phy.txt. Just refer to it. Use text like:
+> On Mon, Sep 19, 2016 at 07:53:45PM +0530, Bhuvanchandra DV wrote:
+>> Update #pwm-cells to 3 in order to support PWM signal polarity control.
+>>
+>> Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+>> ---
+>>   Documentation/devicetree/bindings/pwm/imx-pwm.txt | 6 +++---
+>>   arch/arm/boot/dts/imx7s.dtsi                      | 8 ++++----
+>>   2 files changed, 7 insertions(+), 7 deletions(-)
+> The driver will still work with old DTs, right? If so,
 
-The PHY device uses the binding described in
-Documentation/devicetree/bindings/net/phy.txt
+This patchset actually depends on the v6 patchset[1] from Lothar.
+Some how that patchset got stalled in ML. I will re-spin the v6
+patchset with the suggestions/changes from Lukasz in this patch[2]
+after testing.
 
-It may additionally have the following properties
+[1]http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/294027.html
+[2]https://www.spinics.net/lists/arm-kernel/msg530818.html
 
-> +Optional properties:
-> +- vsc8531,edge-rate	: Edge rate sets the drive strength of the MAC
-> +			  interface output signals.  Changing the drive
-> +			  strength will affect the edge rate of the output
-> +			  signal.
-
-Are we specifying a rate or a strength? It is called edge-rate, so it
-expect it to be a rate, mV/pS or something similar.
-
-       Andrew
+>
+> Acked-by: Rob Herring <robh@kernel.org>
