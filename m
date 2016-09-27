@@ -1,111 +1,75 @@
-From: Aleksey Makarov <aleksey.makarov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v11 1/4] of/serial: move earlycon early_param handling to serial
-Date: Tue, 27 Sep 2016 23:54:12 +0300
-Message-ID: <20160927205418.31529-1-aleksey.makarov@linaro.org>
-References: <20160927151953.GB4371@kroah.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160927151953.GB4371-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Aleksey Makarov <aleksey.makarov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Yury Norov <ynorov-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Zheng, Lv" <lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [RFC/PATCH] usb: misc: Add a driver for TC7USB40MU
+Date: Tue, 27 Sep 2016 14:25:44 -0700
+Message-ID: <147501154421.20482.11679706034780655409@sboyd-linaro>
+References: <20160914014246.31847-1-stephen.boyd@linaro.org>
+ <147384330268.13546.17843140335600627152@sboyd-linaro>
+ <20160917011605.GB10392@b29397-desktop>
+ <147457026249.9057.8712383708019243942@sboyd-linaro>
+ <20160926032927.GA25395@b29397-desktop>
+ <147491549050.5206.9497559526723777799@sboyd-linaro>
+ <20160927045357.GB27697@b29397-desktop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160927045357.GB27697@b29397-desktop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Quoting Peter Chen (2016-09-26 21:53:58)
+> On Mon, Sep 26, 2016 at 11:44:50AM -0700, Stephen Boyd wrote:
+> > Quoting Peter Chen (2016-09-25 20:29:27)
+> > > On Thu, Sep 22, 2016 at 11:51:02AM -0700, Stephen Boyd wrote:
+> > > > Quoting Peter Chen (2016-09-16 18:16:05)
+> > > > > On Wed, Sep 14, 2016 at 01:55:02AM -0700, Stephen Boyd wrote:
+> > > > > > Quoting Stephen Boyd (2016-09-13 18:42:46)
+> > > > > > 
+> > > > > >       soc {
+> > > > > >               usb@78d9000 {
+> > > > > >                       extcon = <&usb_id>, <&usb_id>;
+> > > > > 
+> > > > > Why you have two same extcon phandler? From my mind, one should id,
+> > > > > another should is vbus. Besides, I find extcon-usb-gpio.c is lack of
+> > > > > vbus support, how you support vbus detection for
+> > > > > connection/disconnection with PC for your chipidea msm patch set?
+> > > > 
+> > > > This was already in the dts files for db410c. In the chipidea binding
+> > > > one is for EXTCON_USB (vbus) and one is for EXTCON_USB_HOST (id). My
+> > > > understanding is that extcon-usb-gpio.c sends events for both EXTCON_USB
+> > > > and EXTCON_USB_HOST when the gpio changes state. vbus detection is not
+> > > > that great on this board because we only have on gpio for this.
+> > > 
+> > > I think extcon-usb-gpio.c needs to extend for supporting vbus event,
+> > > otherwise, the micro-b cable's connect/disconnect will introduce
+> > > EXTCON_USB_HOST event, if you use two <&usb_idx> for both id and
+> > > vbus event.
+> > > 
+> > 
+> > Sorry, I'm lost now. extcon-usb-gpio.c already supports EXTCON_USB as an
+> > event. Is the problem that we're using two of the same phandles in the
+> > binding?
+> 
+> No, ID and VBUS are different events.
+> 
+> http://www.spinics.net/lists/linux-usb/msg147004.html
+> 
 
-We have multiple "earlycon" early_param handlers - merge the DT one into
-the main earlycon one.  It's a cleanup that also will be useful
-to defer setting up DT console until ACPI/DT decision is made.
+Agreed. But we only register for EXTCON_USB or EXTCON_USB_HOST for each
+phandle in the list respectively based on the index of the phandle. So
+with or without the patch you mention I don't see how it matters.
 
-Rename the exported function to avoid clashing with the function from
-arch/microblaze/kernel/prom.c
-
-Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Aleksey Makarov <aleksey.makarov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Reviewed-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Tested-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Tested-by: Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- drivers/of/fdt.c              | 11 +----------
- drivers/tty/serial/earlycon.c |  2 +-
- include/linux/of_fdt.h        |  3 +++
- 3 files changed, 5 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 085c638..c89d5d2 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -924,7 +924,7 @@ static inline void early_init_dt_check_for_initrd(unsigned long node)
- 
- #ifdef CONFIG_SERIAL_EARLYCON
- 
--static int __init early_init_dt_scan_chosen_serial(void)
-+int __init early_init_dt_scan_chosen_stdout(void)
- {
- 	int offset;
- 	const char *p, *q, *options = NULL;
-@@ -968,15 +968,6 @@ static int __init early_init_dt_scan_chosen_serial(void)
- 	}
- 	return -ENODEV;
- }
--
--static int __init setup_of_earlycon(char *buf)
--{
--	if (buf)
--		return 0;
--
--	return early_init_dt_scan_chosen_serial();
--}
--early_param("earlycon", setup_of_earlycon);
- #endif
- 
- /**
-diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
-index 067783f..7aae655 100644
---- a/drivers/tty/serial/earlycon.c
-+++ b/drivers/tty/serial/earlycon.c
-@@ -209,7 +209,7 @@ static int __init param_setup_earlycon(char *buf)
- 	 * don't generate a warning from parse_early_params() in that case
- 	 */
- 	if (!buf || !buf[0])
--		return 0;
-+		return early_init_dt_scan_chosen_stdout();
- 
- 	err = setup_earlycon(buf);
- 	if (err == -ENOENT || err == -EALREADY)
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 26c3302..4341f32 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -14,6 +14,7 @@
- 
- #include <linux/types.h>
- #include <linux/init.h>
-+#include <linux/errno.h>
- 
- /* Definitions used by the flattened device tree */
- #define OF_DT_HEADER		0xd00dfeed	/* marker */
-@@ -66,6 +67,7 @@ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 				     int depth, void *data);
- extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
- 				     int depth, void *data);
-+extern int early_init_dt_scan_chosen_stdout(void);
- extern void early_init_fdt_scan_reserved_mem(void);
- extern void early_init_fdt_reserve_self(void);
- extern void early_init_dt_add_memory_arch(u64 base, u64 size);
-@@ -94,6 +96,7 @@ extern void early_get_first_memblock_info(void *, phys_addr_t *);
- extern u64 of_flat_dt_translate_address(unsigned long node);
- extern void of_fdt_limit_memory(int limit);
- #else /* CONFIG_OF_FLATTREE */
-+static inline int early_init_dt_scan_chosen_stdout(void) { return -ENODEV; }
- static inline void early_init_fdt_scan_reserved_mem(void) {}
- static inline void early_init_fdt_reserve_self(void) {}
- static inline const char *of_flat_dt_get_machine_name(void) { return NULL; }
--- 
-2.10.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We do it this way to trigger the role switch when the cable is
+disconnected. I think the problem with just having the id phandle is
+that we'll never see the vbus event, and so the role switch doesn't
+work.
