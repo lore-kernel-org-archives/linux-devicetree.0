@@ -1,54 +1,61 @@
 From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH 6/8] pinctrl: aspeed-g4: Capture SuperIO pinmux dependency
-Date: Wed, 28 Sep 2016 00:20:18 +0930
-Message-ID: <b5f67ba76018314d08e240f95951751896687d37.1474986045.git-series.andrew@aj.id.au>
-References: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
-In-Reply-To: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
-References: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 0/8] pinctrl: aspeed: Fixes for core and g5,
+ implement remaining pins
+Date: Wed, 28 Sep 2016 00:20:12 +0930
+Message-ID: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Two LPC-related signals in the AST2400 depend on state in the SuperIO IP
-block. Use the recently added infrastructure to capture this
-relationship.
+Hi all,
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c | 4 ++--
- drivers/pinctrl/aspeed/pinctrl-aspeed.h    | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+The initial Aspeed pinctrl patches implemented a subset of pins for each of the
+g4 and g5 SoCs. This series provides a number of fixes to the initial patches,
+mostly for issues identified in the g5 driver. The fixes account for the first
+half of the series (up to and including "pinctrl: aspeed-g5: Fix pin
+association of SPI1 function") and should be applied for 4.9.
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
-index a21b071ff290..ceb13d4955cb 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
-@@ -82,8 +82,8 @@ FUNC_GROUP_DECL(MDIO2, A3, D5);
- 
- #define H19 13
- #define H19_DESC        SIG_DESC_SET(SCU80, 13)
--SIG_EXPR_LIST_DECL_SINGLE(LPCPD, LPCPD, H19_DESC);
--SIG_EXPR_LIST_DECL_SINGLE(LPCSMI, LPCSMI, H19_DESC);
-+SIG_EXPR_LIST_DECL_SINGLE(LPCPD, LPCPD, H19_DESC, SIG_DESC_BIT(SIORD30, 1, 0));
-+SIG_EXPR_LIST_DECL_SINGLE(LPCSMI, LPCSMI, H19_DESC, SIG_DESC_SET(SIORD30, 1));
- MS_PIN_DECL(H19, GPIOB5, LPCPD, LPCSMI);
- 
- FUNC_GROUP_DECL(LPCPD, H19);
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.h b/drivers/pinctrl/aspeed/pinctrl-aspeed.h
-index 4384407d77fb..3a76d2c95584 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed.h
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.h
-@@ -266,6 +266,8 @@
- #define SCUA8           0xA8 /* Multi-function Pin Control #9 */
- #define HW_STRAP2       0xD0 /* Strapping */
- 
-+#define SIORD30		SIG_DESC_TO_REG(ASPEED_IP_SIO, 0x30)
-+
-  /**
-   * A signal descriptor, which describes the register, bits and the
-   * enable/disable values that should be compared or written.
+The second half, from "pinctrl: aspeed: Enable capture of off-SCU pinmux
+state", implements some additional functionality in the core engine for the
+Aspeed SoCs and follows up with patches implementing mux configuration tables
+for all remaining pins. Given the significant additions in the last few
+patches, their lateness in the cycle and the light testing they have received
+they are best left for 4.10, but I'm keen to get them out for review.
+
+Cheers,
+
+Andrew
+
+Andrew Jeffery (8):
+  pinctrl: aspeed: "Not enabled" is a significant mux state
+  pinctrl: aspeed-g5: Fix names of GPID2 pins
+  pinctrl: aspeed-g5: Fix GPIOE1 typo
+  pinctrl: aspeed-g5: Fix pin association of SPI1 function
+  pinctrl: aspeed: Enable capture of off-SCU pinmux state
+  pinctrl: aspeed-g4: Capture SuperIO pinmux dependency
+  pinctrl: aspeed-g4: Add mux configuration for all pins
+  pinctrl: aspeed-g5: Add mux configuration for all pins
+
+ Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt |   36 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c                   | 1098 ++++-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c                   | 1574 ++++++-
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c                      |   65 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed.h                      |   19 +-
+ 5 files changed, 2737 insertions(+), 55 deletions(-)
+
+base-commit: 8d0a0ac0abcdba5b5d52726055c95f1f6234e85e
 -- 
 git-series 0.8.10
