@@ -1,116 +1,55 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4] mfd: arizona: Add DT options for max_channels_clocked
- and PDM speaker config
-Date: Tue, 27 Sep 2016 20:44:59 +0100
-Message-ID: <20160927194459.GM21388@dell>
-References: <1473757544-6490-1-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] DT: EVM: add LEDs
+Date: Tue, 27 Sep 2016 12:49:05 -0700
+Message-ID: <20160927194904.4im7ukktg5afjmki@atomide.com>
+References: <cover.1474953969.git.hns@goldelico.com>
+ <d68619a23d642eacf12fd0a3c51f19d006436cbe.1474953969.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1473757544-6490-1-git-send-email-rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <d68619a23d642eacf12fd0a3c51f19d006436cbe.1474953969.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Sep 2016, Richard Fitzgerald wrote:
+* H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [160926 22:27]:
+> +		led@6 {
+> +			label = "omap5:green:led3";
+> +			gpios = <&gpio9 4 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "heartbeat";
+> +			default-state = "off";
+> +		};
+> +
+> +		led@7 {
+> +			label = "omap5:green:led4";
+> +			gpios = <&gpio9 5 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "heartbeat";
+> +			default-state = "off";
+> +		};
+> +
+> +		led@8 {
+> +			label = "omap5:green:led5";
+> +			gpios = <&gpio9 6 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "heartbeat";
+> +			default-state = "off";
+> +		};
 
-> This patch adds DT settings for the max_channels_clocked, spk_fmt and
-> spk_mute pdata.
-> 
-> Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/arizona.txt | 18 ++++++++++++++
->  drivers/mfd/arizona-core.c                        | 30 +++++++++++++++++++++++
->  2 files changed, 48 insertions(+)
+How about this for defaults:
 
-Applied, thanks.
+- heartbeat for led3
+- cpu0 for led4
+- cpu1 for led5
 
-> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-> index a6e2ea41..8f2e282 100644
-> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> @@ -85,6 +85,24 @@ Optional properties:
->      present, the number of values should be less than or equal to the
->      number of inputs, unspecified inputs will use the chip default.
->  
-> +  - wlf,max-channels-clocked : The maximum number of channels to be clocked on
-> +    each AIF, useful for I2S systems with multiple data lines being mastered.
-> +    Specify one cell for each AIF to be configured, specify zero for AIFs that
-> +    should be handled normally.
-> +    If present, number of cells must be less than or equal to the number of
-> +    AIFs. If less than the number of AIFs, for cells that have not been
-> +    specified the corresponding AIFs will be treated as default setting.
-> +
-> +  - wlf,spk-fmt : PDM speaker data format, must contain 2 cells (OUT5 and OUT6).
-> +    See the datasheet for values.
-> +    The second cell is ignored for codecs that do not have OUT6 (wm5102, wm8997,
-> +      wm8998, wm1814)
-> +
-> +  - wlf,spk-mute : PDM speaker mute setting, must contain 2 cells (OUT5 and OUT6).
-> +    See the datasheet for values.
-> +    The second cell is ignored for codecs that do not have OUT6 (wm5102, wm8997,
-> +    wm8998, wm1814)
-> +
->    - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
->      they are being externally supplied. As covered in
->      Documentation/devicetree/bindings/regulator/regulator.txt
-> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-> index b95ff2d..3687e5f 100644
-> --- a/drivers/mfd/arizona-core.c
-> +++ b/drivers/mfd/arizona-core.c
-> @@ -760,6 +760,7 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
->  	struct property *prop;
->  	const __be32 *cur;
->  	u32 val;
-> +	u32 pdm_val[ARIZONA_MAX_PDM_SPK];
->  	int ret, i;
->  	int count = 0;
->  
-> @@ -816,6 +817,35 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
->  		count++;
->  	}
->  
-> +	count = 0;
-> +	of_property_for_each_u32(arizona->dev->of_node,
-> +				 "wlf,max-channels-clocked",
-> +				 prop, cur, val) {
-> +		if (count == ARRAY_SIZE(pdata->max_channels_clocked))
-> +			break;
-> +
-> +		pdata->max_channels_clocked[count] = val;
-> +		count++;
-> +	}
-> +
-> +	ret = of_property_read_u32_array(arizona->dev->of_node,
-> +					 "wlf,spk-fmt",
-> +					 pdm_val,
-> +					 ARRAY_SIZE(pdm_val));
-> +
-> +	if (ret >= 0)
-> +		for (count = 0; count < ARRAY_SIZE(pdata->spk_fmt); ++count)
-> +			pdata->spk_fmt[count] = pdm_val[count];
-> +
-> +	ret = of_property_read_u32_array(arizona->dev->of_node,
-> +					 "wlf,spk-mute",
-> +					 pdm_val,
-> +					 ARRAY_SIZE(pdm_val));
-> +
-> +	if (ret >= 0)
-> +		for (count = 0; count < ARRAY_SIZE(pdata->spk_mute); ++count)
-> +			pdata->spk_mute[count] = pdm_val[count];
-> +
->  	return 0;
->  }
->  
+Or something along those lines that by default shows the
+active CPUs. Don't have a omap5-uevm near by right now so
+not sure about the ordering of the LEDs for displaying
+cpu0 and cpu1.
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Regards,
+
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
