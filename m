@@ -1,67 +1,98 @@
-From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Subject: Re: [PATCH 2/3] DT: EVM: add LEDs
-Date: Tue, 27 Sep 2016 22:10:35 +0200
-Message-ID: <21B97601-328A-41DC-84EE-AA15A6977E98@goldelico.com>
-References: <cover.1474953969.git.hns@goldelico.com> <d68619a23d642eacf12fd0a3c51f19d006436cbe.1474953969.git.hns@goldelico.com> <20160927194904.4im7ukktg5afjmki@atomide.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160927194904.4im7ukktg5afjmki-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org
+From: Vagrant Cascadian <vagrantc@aikidev.net>
+Subject: [PATCH v2] ARM: dts: rockchip: temporarily remove emmc hs200 speed
+ from rk3288-veyron-speedy.
+Date: Tue, 27 Sep 2016 13:53:46 -0700
+Message-ID: <87twd1vzc5.fsf@aikidev.net>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============5758411567483402832=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+--===============5758411567483402832==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-> Am 27.09.2016 um 21:49 schrieb Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>:
-> 
-> * H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [160926 22:27]:
->> +		led@6 {
->> +			label = "omap5:green:led3";
->> +			gpios = <&gpio9 4 GPIO_ACTIVE_HIGH>;
->> +			linux,default-trigger = "heartbeat";
->> +			default-state = "off";
->> +		};
->> +
->> +		led@7 {
->> +			label = "omap5:green:led4";
->> +			gpios = <&gpio9 5 GPIO_ACTIVE_HIGH>;
->> +			linux,default-trigger = "heartbeat";
->> +			default-state = "off";
->> +		};
->> +
->> +		led@8 {
->> +			label = "omap5:green:led5";
->> +			gpios = <&gpio9 6 GPIO_ACTIVE_HIGH>;
->> +			linux,default-trigger = "heartbeat";
->> +			default-state = "off";
->> +		};
-> 
-> How about this for defaults:
-> 
-> - heartbeat for led3
-> - cpu0 for led4
-> - cpu1 for led5
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Good idea. Will try.
+This essentially mimics what was done with rk3288-veyron-minnie in
+commit 984926781122f034d5bc9962815d135b6c4a8e1d.
 
-What I don't exactly know is if these gpios based on an I2C-expander
-can handle cpu activity triggers or if they are locked up if this i2c
-processing triggers another cpu activity...
+The eMMC of the speedy Chromebook also appears to need the same tuning
+workaround, as it frequently fails to recognize the eMMC without it.
 
-> 
-> Or something along those lines that by default shows the
-> active CPUs. Don't have a omap5-uevm near by right now so
-> not sure about the ordering of the LEDs for displaying
-> cpu0 and cpu1.
+Signed-off-by: Vagrant Cascadian <vagrantc@aikidev.net>
+=2D--
+Changes in v2:
+ - Added Signed-off-by.
 
-Will test tomorrow and if it works I can submit a v2.
+ arch/arm/boot/dts/rk3288-veyron-speedy.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-BR and thanks,
-Nikolaus
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/dts=
+/rk3288-veyron-speedy.dts
+index a0d033f..500fd18 100644
+=2D-- a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+@@ -124,6 +124,11 @@
+            &sdmmc_bus4>;
+ };
+
++
++&emmc {
++       /delete-property/mmc-hs200-1_8v;
++};
++
+ &vcc_5v {
+    enable-active-high;
+    gpio =3D <&gpio7 21 GPIO_ACTIVE_HIGH>;
+=2D-=20
+2.9.3
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJX6txcAAoJELeLgtSBS5G2zGUQAIGYsCKyw0JDovY+ViWDdD9H
+hxB3oZTC+r+GfSlKA3D+vPMBLvv3oZKBF+JdR+vPEcrQ1kn2FZfAyACc5OCeMmqE
+xo4qXfW88bW8ZPn1+1Ao/Qui8kW54N6KcL1yTpDfGkEdLPLfKEZGPRO5CTQbb3ez
+1qk6RI7NUqELUIjP/EZk3RZLeIRqmkVNPH+otPQknCHI+ok4EYVNqGGt/BWEVDxh
+9ECtLuap4ym/Nv+/kQfFk+wLsiUCR57MtqgIIDqscxOmrf5iqlqTXRO0pHYMJFxG
+CWM2ydAQYBjSni+Bk3WoYI4mCUzChz2uIXGF1w4dy0ONNJ0JPACTRpPaRbKpe/90
+RNhhyhqd1Sdw8CejWLrt79qDdABPtmrardLAP5o9oHTB1l8U+9Wua7zmmsIUFGH3
+xFj8Ypa+Fwwi5KNRuylZCBH4/mTI3ghnjQRcbkUYb3AQ0PaaNlwiyzoapIgzRogX
+IDAQ+b00jrcxxWJXFgv/JV2oSc5snVuRlxoL+0Yia7l+aVxHfrc/2MF1dzvzlWqZ
+ABifKIpGutjGJd/y0vELfNWxdpQp14RgKzpqiH0NJWXyeYK8IMBAKRw7EO8nLkS/
+XzoUIii2/nCLWmFNWPunAQbXtOob2k21YGI9byPuNMMGJH0ZFu7Pdah4CUWwqKh3
+LvGCJ/oYdz6GKZ464D8x
+=+NNd
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+--===============5758411567483402832==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5758411567483402832==--
