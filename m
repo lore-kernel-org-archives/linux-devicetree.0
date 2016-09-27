@@ -1,55 +1,65 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH resend] sh_eth: add R8A7743/5 support
-Date: Tue, 27 Sep 2016 21:08:56 +0300
-Message-ID: <b04bbb5d-fda2-f11b-1ff7-1502dcc31e53@cogentembedded.com>
-References: <1654835.SEcvPVx4OQ@wasted.cogentembedded.com>
- <CAMuHMdWq_714eP2q7V6AgopKu-mNx0GLUzyemad2H_ZcFt15ug@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: ti_am335x_tscadc: store physical address
+Date: Tue, 27 Sep 2016 20:40:45 +0100
+Message-ID: <20160927194045.GK21388@dell>
+References: <20160921161134.6951-1-mugunthanvnm@ti.com>
+ <20160921161134.6951-2-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWq_714eP2q7V6AgopKu-mNx0GLUzyemad2H_ZcFt15ug@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160921161134.6951-2-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/27/2016 10:35 AM, Geert Uytterhoeven wrote:
+On Wed, 21 Sep 2016, Mugunthan V N wrote:
 
->> Add support for the first two members of the Renesas RZ/G family, RZ/G1M/E
->> (also known as  R8A7743/5). The Ether core is the same as in the R-Car gen2
->> SoCs, so will share the code/data with them...
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
->> --- net-next.orig/drivers/net/ethernet/renesas/Kconfig
->> +++ net-next/drivers/net/ethernet/renesas/Kconfig
->> @@ -27,7 +27,7 @@ config SH_ETH
->>           Renesas SuperH Ethernet device driver.
->>           This driver supporting CPUs are:
->>                 - SH7619, SH7710, SH7712, SH7724, SH7734, SH7763, SH7757,
->> -                 R8A7740, R8A777x and R8A779x.
->> +                 R8A7740, R8A774x, R8A777x and R8A779x.
->
-> Surely "R8A7740" is covered by "R8A774x"? :-)
+> store the physical address of the device in its priv to use it
+> for DMA addressing in the client drivers.
+> 
+> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/mfd/ti_am335x_tscadc.c       | 1 +
+>  include/linux/mfd/ti_am335x_tscadc.h | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_tscadc.c
+> index c8f027b..0f3fab4 100644
+> --- a/drivers/mfd/ti_am335x_tscadc.c
+> +++ b/drivers/mfd/ti_am335x_tscadc.c
+> @@ -183,6 +183,7 @@ static	int ti_tscadc_probe(struct platform_device *pdev)
+>  		tscadc->irq = err;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	tscadc->tscadc_phys_base = res->start;
 
-    It should be, yes -- but 7740 has completely different Ether core than the 
-RZ/G family. I can fix this if you want...
+This is unusual.  Can't you use a virt_to_phys() variant instead?
 
-> However, the "x" is not a real wildcard (also for '7x and '9x), as the driver
-> doesn't support all possible values of "x".
+>  	tscadc->tscadc_base = devm_ioremap_resource(&pdev->dev, res);
+>  	if (IS_ERR(tscadc->tscadc_base))
+>  		return PTR_ERR(tscadc->tscadc_base);
+> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd/ti_am335x_tscadc.h
+> index 7f55b8b..e45a208 100644
+> --- a/include/linux/mfd/ti_am335x_tscadc.h
+> +++ b/include/linux/mfd/ti_am335x_tscadc.h
+> @@ -155,6 +155,7 @@ struct ti_tscadc_dev {
+>  	struct device *dev;
+>  	struct regmap *regmap;
+>  	void __iomem *tscadc_base;
+> +	phys_addr_t tscadc_phys_base;
+>  	int irq;
+>  	int used_cells;	/* 1-2 */
+>  	int tsc_wires;
 
-    Well, I think for 779x it does, provided that the Ether core exists at all.
-For 777x it doesn't support the SH flavour of 7778 indeed but it's not 
-supported by the kernel at all...
-
-> Apart from that:
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-   Thank you. :-)
-
-> Gr{oetje,eeting}s,
->
->                         Geert
-
-MBR, Sergei
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
