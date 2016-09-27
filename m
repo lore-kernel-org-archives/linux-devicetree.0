@@ -1,53 +1,42 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: rskrza1: add mmc DT support
-Date: Tue, 27 Sep 2016 09:28:41 +0200
-Message-ID: <CAMuHMdXQrO_brqrzZtp4iV8CnxER-yfTYT03YdDxud3Fp0bHAw@mail.gmail.com>
-References: <20160920154620.18653-1-chris.brandt@renesas.com> <20160920154620.18653-4-chris.brandt@renesas.com>
+Subject: Re: [PATCH resend] sh_eth: add R8A7743/5 support
+Date: Tue, 27 Sep 2016 09:35:42 +0200
+Message-ID: <CAMuHMdWq_714eP2q7V6AgopKu-mNx0GLUzyemad2H_ZcFt15ug@mail.gmail.com>
+References: <1654835.SEcvPVx4OQ@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160920154620.18653-4-chris.brandt@renesas.com>
+In-Reply-To: <1654835.SEcvPVx4OQ@wasted.cogentembedded.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+Hi Sergei,
 
-On Tue, Sep 20, 2016 at 5:46 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
-> Since the MMC and SDHI1 on the RSK share the same socket connector (CN1),
-> you cannot enable MMC and SDHI1 at the same time. Therefore the status
-> has been set to disabled because SDHI is more popular with this board.
-> However, keeping this code in here serves as a good way to document how
-> the MMC on the RZ/A1 has been known to work for someone that does want
-> to use MMC instead of SDHI1.
+On Tue, Sep 27, 2016 at 12:23 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Add support for the first two members of the Renesas RZ/G family, RZ/G1M/E
+> (also known as  R8A7743/5). The Ether core is the same as in the R-Car gen2
+> SoCs, so will share the code/data with them...
 >
-> A fixed 3.3 regulator is included because it is required by the mmc
-> driver.
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-I have mixed feelings about adding these "disabled" nodes, purely for
-documentation.
+> --- net-next.orig/drivers/net/ethernet/renesas/Kconfig
+> +++ net-next/drivers/net/ethernet/renesas/Kconfig
+> @@ -27,7 +27,7 @@ config SH_ETH
+>           Renesas SuperH Ethernet device driver.
+>           This driver supporting CPUs are:
+>                 - SH7619, SH7710, SH7712, SH7724, SH7734, SH7763, SH7757,
+> -                 R8A7740, R8A777x and R8A779x.
+> +                 R8A7740, R8A774x, R8A777x and R8A779x.
 
-What do other people think?
+Surely "R8A7740" is covered by "R8A774x"? :-)
+However, the "x" is not a real wildcard (also for '7x and '9x), as the driver
+doesn't support all possible values of "x".
 
-> --- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
-> +++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-> @@ -33,6 +33,15 @@
->                 #address-cells = <1>;
->                 #size-cells = <1>;
->         };
-> +
-> +       d3_3v: regulator-d3-3v {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "D3.3V";
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +               regulator-boot-on;
-> +               regulator-always-on;
-
-'status = "disabled";', too?
-
-> +       };
+Apart from that:
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
 
