@@ -1,58 +1,110 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] mfd: ti_am335x_tscadc: store physical address
-Date: Tue, 27 Sep 2016 20:40:45 +0100
-Message-ID: <20160927194045.GK21388@dell>
-References: <20160921161134.6951-1-mugunthanvnm@ti.com>
- <20160921161134.6951-2-mugunthanvnm@ti.com>
+Subject: Re: [PATCH v4] mfd: arizona: Add DT options for max_channels_clocked
+ and PDM speaker config
+Date: Tue, 27 Sep 2016 20:44:59 +0100
+Message-ID: <20160927194459.GM21388@dell>
+References: <1473757544-6490-1-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160921161134.6951-2-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1473757544-6490-1-git-send-email-rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+To: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Sep 2016, Mugunthan V N wrote:
+On Tue, 13 Sep 2016, Richard Fitzgerald wrote:
 
-> store the physical address of the device in its priv to use it
-> for DMA addressing in the client drivers.
+> This patch adds DT settings for the max_channels_clocked, spk_fmt and
+> spk_mute pdata.
 > 
-> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 > ---
->  drivers/mfd/ti_am335x_tscadc.c       | 1 +
->  include/linux/mfd/ti_am335x_tscadc.h | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_tscadc.c
-> index c8f027b..0f3fab4 100644
-> --- a/drivers/mfd/ti_am335x_tscadc.c
-> +++ b/drivers/mfd/ti_am335x_tscadc.c
-> @@ -183,6 +183,7 @@ static	int ti_tscadc_probe(struct platform_device *pdev)
->  		tscadc->irq = err;
+>  Documentation/devicetree/bindings/mfd/arizona.txt | 18 ++++++++++++++
+>  drivers/mfd/arizona-core.c                        | 30 +++++++++++++++++++++++
+>  2 files changed, 48 insertions(+)
+
+Applied, thanks.
+
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+> index a6e2ea41..8f2e282 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -85,6 +85,24 @@ Optional properties:
+>      present, the number of values should be less than or equal to the
+>      number of inputs, unspecified inputs will use the chip default.
 >  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	tscadc->tscadc_phys_base = res->start;
-
-This is unusual.  Can't you use a virt_to_phys() variant instead?
-
->  	tscadc->tscadc_base = devm_ioremap_resource(&pdev->dev, res);
->  	if (IS_ERR(tscadc->tscadc_base))
->  		return PTR_ERR(tscadc->tscadc_base);
-> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd/ti_am335x_tscadc.h
-> index 7f55b8b..e45a208 100644
-> --- a/include/linux/mfd/ti_am335x_tscadc.h
-> +++ b/include/linux/mfd/ti_am335x_tscadc.h
-> @@ -155,6 +155,7 @@ struct ti_tscadc_dev {
->  	struct device *dev;
->  	struct regmap *regmap;
->  	void __iomem *tscadc_base;
-> +	phys_addr_t tscadc_phys_base;
->  	int irq;
->  	int used_cells;	/* 1-2 */
->  	int tsc_wires;
+> +  - wlf,max-channels-clocked : The maximum number of channels to be clocked on
+> +    each AIF, useful for I2S systems with multiple data lines being mastered.
+> +    Specify one cell for each AIF to be configured, specify zero for AIFs that
+> +    should be handled normally.
+> +    If present, number of cells must be less than or equal to the number of
+> +    AIFs. If less than the number of AIFs, for cells that have not been
+> +    specified the corresponding AIFs will be treated as default setting.
+> +
+> +  - wlf,spk-fmt : PDM speaker data format, must contain 2 cells (OUT5 and OUT6).
+> +    See the datasheet for values.
+> +    The second cell is ignored for codecs that do not have OUT6 (wm5102, wm8997,
+> +      wm8998, wm1814)
+> +
+> +  - wlf,spk-mute : PDM speaker mute setting, must contain 2 cells (OUT5 and OUT6).
+> +    See the datasheet for values.
+> +    The second cell is ignored for codecs that do not have OUT6 (wm5102, wm8997,
+> +    wm8998, wm1814)
+> +
+>    - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
+>      they are being externally supplied. As covered in
+>      Documentation/devicetree/bindings/regulator/regulator.txt
+> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+> index b95ff2d..3687e5f 100644
+> --- a/drivers/mfd/arizona-core.c
+> +++ b/drivers/mfd/arizona-core.c
+> @@ -760,6 +760,7 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
+>  	struct property *prop;
+>  	const __be32 *cur;
+>  	u32 val;
+> +	u32 pdm_val[ARIZONA_MAX_PDM_SPK];
+>  	int ret, i;
+>  	int count = 0;
+>  
+> @@ -816,6 +817,35 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
+>  		count++;
+>  	}
+>  
+> +	count = 0;
+> +	of_property_for_each_u32(arizona->dev->of_node,
+> +				 "wlf,max-channels-clocked",
+> +				 prop, cur, val) {
+> +		if (count == ARRAY_SIZE(pdata->max_channels_clocked))
+> +			break;
+> +
+> +		pdata->max_channels_clocked[count] = val;
+> +		count++;
+> +	}
+> +
+> +	ret = of_property_read_u32_array(arizona->dev->of_node,
+> +					 "wlf,spk-fmt",
+> +					 pdm_val,
+> +					 ARRAY_SIZE(pdm_val));
+> +
+> +	if (ret >= 0)
+> +		for (count = 0; count < ARRAY_SIZE(pdata->spk_fmt); ++count)
+> +			pdata->spk_fmt[count] = pdm_val[count];
+> +
+> +	ret = of_property_read_u32_array(arizona->dev->of_node,
+> +					 "wlf,spk-mute",
+> +					 pdm_val,
+> +					 ARRAY_SIZE(pdm_val));
+> +
+> +	if (ret >= 0)
+> +		for (count = 0; count < ARRAY_SIZE(pdata->spk_mute); ++count)
+> +			pdata->spk_mute[count] = pdm_val[count];
+> +
+>  	return 0;
+>  }
+>  
 
 -- 
 Lee Jones
