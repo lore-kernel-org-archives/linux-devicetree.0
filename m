@@ -1,77 +1,39 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v7 2/2] clocksource: add J-Core timer/clocksource
- driver
-Date: Mon, 26 Sep 2016 19:55:13 -0400 (EDT)
-Message-ID: <alpine.DEB.2.20.1609261936130.4915@nanos>
-References: <cover.1474693319.git.dalias@libc.org> <22c1ee0f908fe3bf8b70f5e87d659ceb29af1434.1474693319.git.dalias@libc.org> <20160926210716.GA12855@brightrain.aerifal.cx> <4b02ba7d-4a31-297a-bbbd-be26da615e7b@linaro.org>
- <20160926222352.GE19318@brightrain.aerifal.cx>
+From: Reza Arbab <arbab@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3 4/5] powerpc/mm: restore top-down allocation when
+ using movable_node
+Date: Mon, 26 Sep 2016 19:14:14 -0500
+Message-ID: <20160927001413.o72fqpfsnsxpu5qq@arbab-laptop>
+References: <1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com>
+ <1474828616-16608-5-git-send-email-arbab@linux.vnet.ibm.com>
+ <1474924351.2857.255.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20160926222352.GE19318@brightrain.aerifal.cx>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <owner-linux-mm@kvack.org>
+Content-Disposition: inline
+In-Reply-To: <1474924351.2857.255.camel@kernel.crashing.org>
+Sender: owner-linux-mm@kvack.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Sep 2016, Rich Felker wrote:
-> On Mon, Sep 26, 2016 at 11:27:14PM +0200, Daniel Lezcano wrote:
-> Based on use of ftrace, I was able to see situations where a second
-> timer hardirq happened immediately after one occurred, before the
-> timer softirq could run. My theory is that this is causing some kind
-> of feedback loop where new timer expirations keep getting scheduled
-> with a very short interval such that the softirq never gets to run
-> (until other interrupt activity disrups the feedback loop). I tried
-> reverting 4e85876a9d2a977b4a07389da8c07edf76d10825 which seemed
-> relevant and it didn't help, but on further review (right now) there
-> seem to be a few related commits just before it that might be
-> responsible for the regression. I'll see if I can dig up anything else
-> useful.
+On Tue, Sep 27, 2016 at 07:12:31AM +1000, Benjamin Herrenschmidt wrote:
+>In any case, if the memory hasn't been hotplug, this shouldn't be 
+>necessary as we shouldn't be considering it for allocation.
 
-Interesting theory, but lets look at the data from the other thread:
+Right. To be clear, the background info I put in the commit log refers 
+to x86, where the SRAT can describe movable nodes which exist at boot.  
+They're trying to avoid allocations from those nodes before they've been 
+identified.
 
-         <idle>-0     [001] d.h.  2646.702790: irq_handler_entry: irq=72 name=jcore_pit
-          <idle>-0     [001] d.h.  2646.703398: softirq_raise: vec=1 [action=TIMER]
-          <idle>-0     [001] d.h.  2646.703607: softirq_raise: vec=9 [action=RCU]
-          <idle>-0     [001] d.h.  2646.703884: softirq_raise: vec=7 [action=SCHED]
-          <idle>-0     [001] d.h.  2646.704191: irq_handler_exit: irq=72 ret=handled
+On power, movable nodes can only exist via hotplug, so that scenario 
+can't happen. We can immediately go back to top-down allocation. That is 
+the missing call being added in the patch.
 
-So it takes 1.4ms to finish the timer irq handler
+-- 
+Reza Arbab
 
-          <idle>-0     [001] d.H.  2646.704509: irq_handler_entry: irq=72 name=jcore_pit
-          <idle>-0     [001] d.H.  2646.704990: softirq_raise: vec=1 [action=TIMER]
-          <idle>-0     [001] d.H.  2646.705182: softirq_raise: vec=9 [action=RCU]
-          <idle>-0     [001] d.H.  2646.705465: softirq_raise: vec=7 [action=SCHED]
-          <idle>-0     [001] d.H.  2646.705761: irq_handler_exit: irq=72 ret=handled
-
-And 1.2ms in this case
-	  
-
-          <idle>-0     [001] d.H.  2646.706071: irq_handler_entry: irq=72 name=jcore_pit
-          <idle>-0     [001] d.H.  2646.706328: irq_handler_exit: irq=72 ret=handled
-
-So this one is actually short enough that the soft interrupt can excute and
-obviously no new timer is scheduled close enough.
-
-          <idle>-0     [001] ..s.  2646.706530: softirq_entry: vec=1 [action=TIMER]
-
-Now the obvious question arises: Why is that handler taking that long? And
-sure the next event being programmed shortely after the other has to do
-with various factors (HZ setting, High-resolution timers enabled?). W/o
-having the corresponding hrtimer tracepoints available (start and expire)
-it's hard to tell what's going on.
-
-But I can tell for sure that there is no feedback loop and its not
-disrupted by some other interrupt. The above trace is merily seing the PIT
-irq and nothing else.
-
-Can you please provide a trace with hrtimer tracepoints enabled and tell us
-the settings of CONFIG_HZ and whether high resolution timers are enabled or
-not.
-
-That workaround of setting min_delta to some absurd big number looks fishy
-at best.
-
-Thanks,
-
-	tglx
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
