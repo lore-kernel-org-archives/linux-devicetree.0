@@ -1,97 +1,96 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC/PATCH] usb: misc: Add a driver for TC7USB40MU
-Date: Tue, 27 Sep 2016 12:53:58 +0800
-Message-ID: <20160927045357.GB27697@b29397-desktop>
-References: <20160914014246.31847-1-stephen.boyd@linaro.org>
- <147384330268.13546.17843140335600627152@sboyd-linaro>
- <20160917011605.GB10392@b29397-desktop>
- <147457026249.9057.8712383708019243942@sboyd-linaro>
- <20160926032927.GA25395@b29397-desktop>
- <147491549050.5206.9497559526723777799@sboyd-linaro>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: [PATCH 2/3] DT: EVM: add LEDs
+Date: Tue, 27 Sep 2016 07:26:09 +0200
+Message-ID: <d68619a23d642eacf12fd0a3c51f19d006436cbe.1474953969.git.hns@goldelico.com>
+References: <cover.1474953969.git.hns@goldelico.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <147491549050.5206.9497559526723777799@sboyd-linaro>
+In-Reply-To: <cover.1474953969.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+In-Reply-To: <cover.1474953969.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+References: <cover.1474953969.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 26, 2016 at 11:44:50AM -0700, Stephen Boyd wrote:
-> Quoting Peter Chen (2016-09-25 20:29:27)
-> > On Thu, Sep 22, 2016 at 11:51:02AM -0700, Stephen Boyd wrote:
-> > > Quoting Peter Chen (2016-09-16 18:16:05)
-> > > > On Wed, Sep 14, 2016 at 01:55:02AM -0700, Stephen Boyd wrote:
-> > > > > Quoting Stephen Boyd (2016-09-13 18:42:46)
-> > > > > > On the db410c 96boards platform we have a TC7USB40MU[1] on the
-> > > > > > board to mux the D+/D- lines from the SoC between a micro usb
-> > > > > > "device" port and a USB hub for "host" roles. Upon a role switch,
-> > > > > > we need to change this mux to forward the D+/D- lines to either
-> > > > > > the port or the hub. Therefore, introduce a driver for this
-> > > > > > device that intercepts extcon USB_HOST events and logically
-> > > > > > asserts a gpio to mux the "host" D+/D- lines when a host cable is
-> > > > > > attached. When the cable goes away, it will logically deassert
-> > > > > > the gpio and mux the "device" lines.
-> > > > > > 
-> > > > > > [1] https://toshiba.semicon-storage.com/ap-en/product/logic/bus-switch/detail.TC7USB40MU.html
-> > > > > > 
-> > > > > > Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > > > > > Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > > > > > Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> > > > > > Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > > > > ---
-> > > > > > 
-> > > > > > Should I make the extcon part optional? I could see a case where there are two
-> > > > > > "OTG" ports connected to the mux (or two hubs), and for some reason the
-> > > > > > software may want to mux between them at runtime. If we mandate an extcon,
-> > > > > > that won't be possible to support. Perhaps it would be better to have
-> > > > > > the node, but connect it to the usb controller with a phandle (maybe of_graph
-> > > > > > endpoints would be useful too) so that when the controller wants to mux over
-> > > > > > a port it can do so.
-> > > > > 
-> > > > > Here's some dts mock-up on top of the db410c for the of_graph stuff. I
-> > > > > haven't written any code around it, but the idea is to allow the binding
-> > > > > to specify how the mux is connected to upstream and downstream D+/D-
-> > > > > lines. This way, we can do some dt parsing of the endpoints and their
-> > > > > parent nodes to figure out if the mux needs to be set high or low to use
-> > > > > a device connector or a usb hub based on if the id cable is present.
-> > > > > Maybe I'm over thinking things though and we could just have a DT
-> > > > > property for that.
-> > > > > 
-> > > > >       soc {
-> > > > >               usb@78d9000 {
-> > > > >                       extcon = <&usb_id>, <&usb_id>;
-> > > > 
-> > > > Why you have two same extcon phandler? From my mind, one should id,
-> > > > another should is vbus. Besides, I find extcon-usb-gpio.c is lack of
-> > > > vbus support, how you support vbus detection for
-> > > > connection/disconnection with PC for your chipidea msm patch set?
-> > > 
-> > > This was already in the dts files for db410c. In the chipidea binding
-> > > one is for EXTCON_USB (vbus) and one is for EXTCON_USB_HOST (id). My
-> > > understanding is that extcon-usb-gpio.c sends events for both EXTCON_USB
-> > > and EXTCON_USB_HOST when the gpio changes state. vbus detection is not
-> > > that great on this board because we only have on gpio for this.
-> > 
-> > I think extcon-usb-gpio.c needs to extend for supporting vbus event,
-> > otherwise, the micro-b cable's connect/disconnect will introduce
-> > EXTCON_USB_HOST event, if you use two <&usb_idx> for both id and
-> > vbus event.
-> > 
-> 
-> Sorry, I'm lost now. extcon-usb-gpio.c already supports EXTCON_USB as an
-> event. Is the problem that we're using two of the same phandles in the
-> binding?
+Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+---
+ arch/arm/boot/dts/omap5-uevm.dts | 60 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-No, ID and VBUS are different events.
-
-http://www.spinics.net/lists/linux-usb/msg147004.html
-
+diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
+index be659e8..19f5f0a 100644
+--- a/arch/arm/boot/dts/omap5-uevm.dts
++++ b/arch/arm/boot/dts/omap5-uevm.dts
+@@ -17,6 +17,66 @@
+ 		device_type = "memory";
+ 		reg = <0x80000000 0x7F000000>; /* 2032 MB */
+ 	};
++
++	evm_leds {
++		compatible = "gpio-leds";
++
++		led@1 {
++			label = "omap5:red:led";
++			gpios = <&gpio9 17 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "mmc0";
++			default-state = "off";
++		};
++
++		led@2 {
++			label = "omap5:green:led";
++			gpios = <&gpio9 18 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "mmc1";
++			default-state = "off";
++		};
++
++		led@3 {
++			label = "omap5:blue:led";
++			gpios = <&gpio9 19 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "mmc2";
++			default-state = "off";
++		};
++
++		led@4 {
++			label = "omap5:green:led1";
++			gpios = <&gpio9 2 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-on";
++			default-state = "off";
++		};
++
++		led@5 {
++			label = "omap5:green:led2";
++			gpios = <&gpio9 3 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-on";
++			default-state = "off";
++		};
++
++		led@6 {
++			label = "omap5:green:led3";
++			gpios = <&gpio9 4 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++			default-state = "off";
++		};
++
++		led@7 {
++			label = "omap5:green:led4";
++			gpios = <&gpio9 5 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++			default-state = "off";
++		};
++
++		led@8 {
++			label = "omap5:green:led5";
++			gpios = <&gpio9 6 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++			default-state = "off";
++		};
++	};
+ };
+ 
+ &hdmi {
 -- 
+2.7.3
 
-Best Regards,
-Peter Chen
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
