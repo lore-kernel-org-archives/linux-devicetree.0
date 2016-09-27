@@ -1,38 +1,71 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH] dt-bindings: Add Keith&Koep vendor prefix
-Date: Wed, 28 Sep 2016 01:33:18 +0200
-Message-ID: <20160927233319.5856-1-marex@denx.de>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v24 9/9] Documentation: dt: chosen properties for arm64
+ kdump
+Date: Wed, 28 Sep 2016 00:39:15 +0100
+Message-ID: <20160927233915.GB3437@remoulade>
+References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
+ <20160809015747.28591-1-takahiro.akashi@linaro.org>
+ <20160819132641.GA12709@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160819132641.GA12709@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add vendor prefix for Keith&Koep GmbH , http://keith-koep.com/en/
+Hi Rob,
 
-Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Reviving an old thread -- "rock" and "hard place" come to mind.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 69caf14..24b9d33 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -146,6 +146,7 @@ jedec	JEDEC Solid State Technology Association
- karo	Ka-Ro electronics GmbH
- keymile	Keymile GmbH
- kinetic Kinetic Technologies
-+keithkoep	Keith & Koep GmbH
- kosagi	Sutajio Ko-Usagi PTE Ltd.
- kyo	Kyocera Corporation
- lacie	LaCie
--- 
-2.9.3
+On Fri, Aug 19, 2016 at 08:26:41AM -0500, Rob Herring wrote:
+> On Tue, Aug 09, 2016 at 10:57:47AM +0900, AKASHI Takahiro wrote:
+> > From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
 
+> > +linux,usable-memory-range
+> > +-------------------------
+> > +
+> > +This property (currently used only on arm64) holds the memory range,
+> > +the base address and the size, which can be used as system ram on
+> > +the *current* kernel. Note that, if this property is present, any memory
+> > +regions under "memory" nodes in DT blob or ones marked as "conventional
+> > +memory" in EFI memory map should be ignored.
+> > +e.g.
+> > +
+> > +/ {
+> > +	chosen {
+> > +		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
+> > +	};
+> > +};
+> 
+> I've read the discussion on this. I think you should use the existing 
+> linux,usable-memory property in the memory nodes. If UEFI systems don't 
+> have memory nodes, then you can find an UEFI way to describe this. DT is 
+> not the dumping ground for what doesn't fit in UEFI. How do x86 systems 
+> work?
+
+Having looked at the proposals, I'm personally much keener on the approach
+above (modulo naming and wording) than trying to bolt memory nodes onto a UEFI
+system, or using reserved-memory to describe the inverse of the allowable
+range.
+
+I completely agree that we want one solution for DT-only and DT+UEFI.
+
+While those approaches reuse existing infrastructure, they end up creating more
+work, and I believe that they create more scope for painful problems. As kdump
+is already a constrained case, I think that it's reasonable to have a
+linux-specific property as above.
+
+I also think we need to figure out how we expect this to work for the
+kexec_file_load case, as that has a criticial impact on the above (e.g. what's
+preferable out of cmdline options vs dt properties).
+
+Can we try to sync at connect to discuss this?
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
