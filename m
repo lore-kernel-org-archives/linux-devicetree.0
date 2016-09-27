@@ -1,34 +1,39 @@
-From: Zhao Qiang <qiang.zhao@nxp.com>
-Subject: [PATCH 3/3] bindings: add compatible "fsl,ls1043-ucc-hdlc" to bindings
-Date: Wed, 28 Sep 2016 11:40:38 +0800
-Message-ID: <1475034038-7217-3-git-send-email-qiang.zhao@nxp.com>
-References: <1475034038-7217-1-git-send-email-qiang.zhao@nxp.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v2] pinctrl: Add SX150X GPIO Extender Pinctrl Driver
+Date: Tue, 27 Sep 2016 18:18:20 +0200
+Message-ID: <83197184-4138-5b21-13e8-3b64787abe46@axentia.se>
+References: <1474991325-1754-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1475034038-7217-1-git-send-email-qiang.zhao@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org
-Cc: mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, xiaobo.xie@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Zhao Qiang <qiang.zhao@nxp.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1474991325-1754-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, linus.walleij@linaro.org
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Wei.Chen@csr.com, stigge@antcom.de, vladimir_zapolskiy@mentor.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
----
- Documentation/devicetree/bindings/soc/fsl/cpm_qe/network.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2016-09-27 17:48, Neil Armstrong wrote:
+> Since the I2C sx150x GPIO expander driver uses platform_data to manage
+> the pins configurations, rewrite the driver as a pinctrl driver using
+> pinconf to get/set pin configurations from DT or debugfs.
+> 
+> The pinctrl driver is functionnally equivalent as the gpio-only driver
+> and can use DT for pinconf. The platform_data confirmation is dropped.
+> 
+> This patchset removed the gpio-only driver and selects the Pinctrl driver
+> config instead. This patchset also migrates the gpio dt-bindings to pinctrl
+> and add the pinctrl optional properties.
+> 
+> The driver was tested with a SX1509 device on a BeagleBone black with
+> interrupt support and on an X86_64 machine over an I2C to USB converter.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/network.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/network.txt
-index 03c7416..325e3e2 100644
---- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/network.txt
-+++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/network.txt
-@@ -45,7 +45,7 @@ Example:
- * HDLC
- 
- Currently defined compatibles:
--- fsl,ucc-hdlc
-+- "fsl,ucc-hdlc", "fsl,ls1043-ucc-hdlc"
- 
- Properties for fsl,ucc-hdlc:
- - rx-clock-name
--- 
-2.1.0.27.g96db324
+Works here for sx1502 (without interrupts) on a custom arm board (SAMA5D3).
+
+Tested-by: Peter Rosin <peda@axentia.se>
+
+Cheers,
+Peter
+
