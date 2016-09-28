@@ -1,82 +1,99 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [v2] rt2x00: add support for mac addr from device tree
-Date: Wed, 28 Sep 2016 13:55:38 +0300
-Message-ID: <87shskwaxh.fsf@kamboji.qca.qualcomm.com>
-References: <1472195813-30471-1-git-send-email-dev@kresin.me>
-        <20160927155057.A4182616F6@smtp.codeaurora.org>
-        <CABwW5nn9gGpzBQq3ag1MhsA-bxGop93=C7mjZG9nmi26G4ar5A@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 1/2] leds: ncp5623: Add device tree binding
+ documentation
+Date: Wed, 28 Sep 2016 12:58:58 +0200
+Message-ID: <20160928105858.GA24545@amd>
+References: <1474025672-5040-1-git-send-email-florian.vaussard@heig-vd.ch>
+ <1474025672-5040-2-git-send-email-florian.vaussard@heig-vd.ch>
+ <20160924115823.GA8696@amd>
+ <836aa19e-7b42-9c86-4f95-3b60b816454c@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABwW5nn9gGpzBQq3ag1MhsA-bxGop93=C7mjZG9nmi26G4ar5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-        (Mathias Kresin's message of "Wed, 28 Sep 2016 12:36:46 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Kresin <dev-zg6vgJgm1sizQB+pC5nmwQ@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <836aa19e-7b42-9c86-4f95-3b60b816454c@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Florian Vaussard <florian.vaussard@gmail.com>
+Cc: devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@heig-vd.ch>
 List-Id: devicetree@vger.kernel.org
 
-Mathias Kresin <dev-zg6vgJgm1sizQB+pC5nmwQ@public.gmane.org> writes:
 
-> 2016-09-27 17:50 GMT+02:00 Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>:
->> Mathias Kresin <dev-zg6vgJgm1sizQB+pC5nmwQ@public.gmane.org> wrote:
->>> On some devices the EEPROMs of Ralink Wi-Fi chips have a default Ralink
->>> MAC address set (RT3062F: 00:0C:43:30:62:00, RT3060F:
->>> 00:0C:43:30:60:00). Using multiple of these devices in the same network
->>> can cause nasty issues.
->>>
->>> Allow to override the MAC in the EEPROM with (a known good) one set in
->>> the device tree to bypass the issue.
->>>
->>> Signed-off-by: Mathias Kresin <dev-zg6vgJgm1sizQB+pC5nmwQ@public.gmane.org>
->>> Acked-by: Stanislaw Gruszka <sgruszka-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>
->> I think this needs to update the devicetree binding document. Also
->> remember to CC the devicetree mailing list.
->>
->> Patch set to Changes Requested.
->>
->> --
->> https://patchwork.kernel.org/patch/9300893/
->
-> Hey Kalle,
->
-> was it intentional not to CC the linux-wireless list?
+--nFreZHaLTZJo0R7j
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-No, that was a bug in my script. Thanks for noticing it! Please always
-report back if my script does something strange.
+On Wed 2016-09-28 12:02:41, Florian Vaussard wrote:
+> Hi Pavel,
+>=20
+> Le 24. 09. 16 =E0 13:58, Pavel Machek a =E9crit :
+> > Hi!
+> >=20
+> >> +Example
+> >> +=3D=3D=3D=3D=3D=3D=3D
+> >> +
+> >> +led1: ncp5623@38 {
+> >> +	#address-cells =3D <1>;
+> >> +	#size-cells =3D <0>;
+> >> +	compatible =3D "onnn,ncp5623";
+> >> +	reg =3D <0x38>;
+> >> +	onnn,led-iref-microamp =3D <10>;
+> >> +
+> >> +	led1r@0 {
+> >> +		label =3D "ncp:power:red";
+> >> +		linux,default-trigger =3D "default-on";
+> > ...
+> >> +	led1b@1 {
+> >> +		label =3D "ncp:power:blue";
+> >> +		reg =3D <1>;
+> >=20
+> > Actually... the three LEDs are packaged such as this is one colorful
+> > light to the user, right? Some day we'll need to group them, so that
+> > kernel can automatically tell this is one led, and probably add extra
+> > attributes, such as values that produce white light.
+> >=20
+>=20
+> Actually, it's up to the hardware designer to choose. On my board for ins=
+tance,
+> this chip is driving an RGB LED, but it can really drive three independen=
+t LEDs
+> if you want.
 
-I'm adding now linux-wireless back.
+Yup. And driving RGB LED is really a bit different from driving three
+independent LEDs: you'd for example like to be able to set the RGB LED
+to white, and you need to know relative intensities for that.
 
-> I thought about _adding_ a devicetree binding document before sending
-> the patch. But in the end it would be an empty file, since I neither
-> add any bindings nor introduce a compatible string. I'm just add
-> support for the generic of_get_mac_address() devicetree property,
-> which is meant to be used via a devicetree pci childnode.
->
-> I grepped though the 4.7 code and found a few driver using
-> of_get_mac_address() without having a devicetree binding document:
->
-> - drivers/net/usb/smsc95xx.c
-> - drivers/net/usb/smsc75xx.c
-> - drivers/net/ethernet/marvell/sky2.c
-> - drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-> - drivers/net/ethernet/wiznet/w5100-spi.c
-> - drivers/net/ethernet/arc/emac_main.c
->
-> Just let me know if you are still the opinion that a devicetree
-> binding document is required to get this patch accepted.
+So it would be good to have hardware description that captures
+difference between RGB LED and three LEDs.
 
-I'm not familiar enough device tree to really comment. Can someone from
-the device tree list (CCed) help?
+(And then, we'll want pattern engine to drive that. One day :-) ).
 
-Full patch here:
+> I agree that the RGB case is quite common nowadays and currently not very=
+ well
+> managed by the LED subsystem. But I do not think that this is specific to=
+ this
+> driver.
 
-https://patchwork.kernel.org/patch/9300893/
+No, it is not.
 
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
--- 
-Kalle Valo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--nFreZHaLTZJo0R7j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlfronIACgkQMOfwapXb+vKFcQCfXxm3DXOW5yTTQaPsnCUO6aGo
+hhYAn3aIrYuFsdyx/2wTOoY+O0o5BpBO
+=c//6
+-----END PGP SIGNATURE-----
+
+--nFreZHaLTZJo0R7j--
