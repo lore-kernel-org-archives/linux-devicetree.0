@@ -1,99 +1,68 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 1/2] leds: ncp5623: Add device tree binding
- documentation
-Date: Wed, 28 Sep 2016 12:58:58 +0200
-Message-ID: <20160928105858.GA24545@amd>
-References: <1474025672-5040-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1474025672-5040-2-git-send-email-florian.vaussard@heig-vd.ch>
- <20160924115823.GA8696@amd>
- <836aa19e-7b42-9c86-4f95-3b60b816454c@gmail.com>
+From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+Subject: Re: [PATCH v3 net-next] net: phy: Add Edge-rate driver for Microsemi
+ PHYs.
+Date: Wed, 28 Sep 2016 16:39:54 +0530
+Message-ID: <20160928110953.GA22063@microsemi.com>
+References: <1474984075-12312-1-git-send-email-Raju.Lakkaraju@microsemi.com>
+ <20160927141633.GJ28432@lunn.ch>
+Reply-To: <Raju.Lakkaraju@microsemi.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
-Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <836aa19e-7b42-9c86-4f95-3b60b816454c@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@gmail.com>
-Cc: devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@heig-vd.ch>
+In-Reply-To: <20160927141633.GJ28432@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, Allan.Nielsen@microsemi.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Andrew,
 
---nFreZHaLTZJo0R7j
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for review and valuable comments.
 
-On Wed 2016-09-28 12:02:41, Florian Vaussard wrote:
-> Hi Pavel,
->=20
-> Le 24. 09. 16 =E0 13:58, Pavel Machek a =E9crit :
-> > Hi!
-> >=20
-> >> +Example
-> >> +=3D=3D=3D=3D=3D=3D=3D
-> >> +
-> >> +led1: ncp5623@38 {
-> >> +	#address-cells =3D <1>;
-> >> +	#size-cells =3D <0>;
-> >> +	compatible =3D "onnn,ncp5623";
-> >> +	reg =3D <0x38>;
-> >> +	onnn,led-iref-microamp =3D <10>;
-> >> +
-> >> +	led1r@0 {
-> >> +		label =3D "ncp:power:red";
-> >> +		linux,default-trigger =3D "default-on";
-> > ...
-> >> +	led1b@1 {
-> >> +		label =3D "ncp:power:blue";
-> >> +		reg =3D <1>;
-> >=20
-> > Actually... the three LEDs are packaged such as this is one colorful
-> > light to the user, right? Some day we'll need to group them, so that
-> > kernel can automatically tell this is one led, and probably add extra
-> > attributes, such as values that produce white light.
-> >=20
->=20
-> Actually, it's up to the hardware designer to choose. On my board for ins=
-tance,
-> this chip is driving an RGB LED, but it can really drive three independen=
-t LEDs
-> if you want.
+Thanks,
+Raju.
+On Tue, Sep 27, 2016 at 04:16:33PM +0200, Andrew Lunn wrote:
+> EXTERNAL EMAIL
+> 
+> 
+> > index 0000000..7ba3855
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> > @@ -0,0 +1,61 @@
+> > +* Microsemi - vsc8531 Giga bit ethernet phy
+> > +
+> > +Required properties:
+> > +- compatible : Should contain phy id as "ethernet-phy-idAAAA.BBBB"
+> > +               If the phy's identifier is known then the list may contain an entry
+> > +               of the form: "ethernet-phy-idAAAA.BBBB" where
+> > +               AAAA - The value of the 16 bit Phy Identifier 1 register as
+> > +                      4 hex digits. This is the chip vendor OUI bits 3:18
+> > +               BBBB - The value of the 16 bit Phy Identifier 2 register as
+> > +                      4 hex digits. This is the chip vendor OUI bits 19:24,
+> > +                      followed by 10 bits of a vendor specific ID.
+> > +- reg                : The ID number for the phy, usually a small integer
+> 
+> Please don't copy phy.txt. Just refer to it. Use text like:
+> 
+> The PHY device uses the binding described in
+> Documentation/devicetree/bindings/net/phy.txt
+> 
+> It may additionally have the following properties
+> 
 
-Yup. And driving RGB LED is really a bit different from driving three
-independent LEDs: you'd for example like to be able to set the RGB LED
-to white, and you need to know relative intensities for that.
+Accepted. 
 
-So it would be good to have hardware description that captures
-difference between RGB LED and three LEDs.
+> > +Optional properties:
+> > +- vsc8531,edge-rate  : Edge rate sets the drive strength of the MAC
+> > +                       interface output signals.  Changing the drive
+> > +                       strength will affect the edge rate of the output
+> > +                       signal.
+> 
+> Are we specifying a rate or a strength? It is called edge-rate, so it
+> expect it to be a rate, mV/pS or something similar.
+> 
 
-(And then, we'll want pattern engine to drive that. One day :-) ).
+Accepted.
 
-> I agree that the RGB case is quite common nowadays and currently not very=
- well
-> managed by the LED subsystem. But I do not think that this is specific to=
- this
-> driver.
-
-No, it is not.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---nFreZHaLTZJo0R7j
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlfronIACgkQMOfwapXb+vKFcQCfXxm3DXOW5yTTQaPsnCUO6aGo
-hhYAn3aIrYuFsdyx/2wTOoY+O0o5BpBO
-=c//6
------END PGP SIGNATURE-----
-
---nFreZHaLTZJo0R7j--
+>        Andrew
