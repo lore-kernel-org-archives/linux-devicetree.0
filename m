@@ -1,30 +1,67 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v2 0/3] ARM: dts: omap5 uevm: add LEDs, USR1 button and EEPROM
-Date: Wed, 28 Sep 2016 20:08:17 +0200
-Message-ID: <cover.1475086099.git.hns@goldelico.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Alan Tull <atull@opensource.altera.com>
+Subject: [PATCH v19 06/12] fpga: add fpga image information struct for socfpga
+ support
+Date: Wed, 28 Sep 2016 13:21:54 -0500
+Message-ID: <20160928182200.15800-7-atull@opensource.altera.com>
+References: <20160928182200.15800-1-atull@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160928182200.15800-1-atull@opensource.altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, delicious.quinoa@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alan Tull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Josh Cartwright <joshc@ni.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, devicetree@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>, Jon Masters <jcm@redhat.com>, Matthew Gerlach <mgerlach@opensource.altera.com>, Frank Rowand <frowand.list@gmail.com>, Walter Goossens <waltergoossens@home.nl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Changes V2:
-* fixed subject of patches to correctly tell that it is for omap5 evm
-* changed default triggers a little to create a nicer default pattern
+Minor changes to the Altera SoCFPGA FPGA Manager support driver
+due to FPGA Manager framework API changes for the new fpga
+image information struct.
 
-2016-09-27 07:26:14: These patches configure
-* the EEPROM
-* the LEDs (with some default triggers)
-* the USR1 gpio button
-for the OMAP5 UEVM board.
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+---
+v19: Added in v19 of this patchset
+---
+ drivers/fpga/socfpga.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-H. Nikolaus Schaller (3):
-  ARM: dts: omap5 uevm: add EEPROM
-  ARM: dts: omap5 uevm: add LEDs
-  ARM: dts: omap5 uevm: add USR1 button
-
- arch/arm/boot/dts/omap5-uevm.dts | 92 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
-
+diff --git a/drivers/fpga/socfpga.c b/drivers/fpga/socfpga.c
+index 27d2ff2..b6672e6 100644
+--- a/drivers/fpga/socfpga.c
++++ b/drivers/fpga/socfpga.c
+@@ -407,13 +407,14 @@ static int socfpga_fpga_reset(struct fpga_manager *mgr)
+ /*
+  * Prepare the FPGA to receive the configuration data.
+  */
+-static int socfpga_fpga_ops_configure_init(struct fpga_manager *mgr, u32 flags,
++static int socfpga_fpga_ops_configure_init(struct fpga_manager *mgr,
++					   struct fpga_image_info *info,
+ 					   const char *buf, size_t count)
+ {
+ 	struct socfpga_fpga_priv *priv = mgr->priv;
+ 	int ret;
+ 
+-	if (flags & FPGA_MGR_PARTIAL_RECONFIG) {
++	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
+ 		dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
+ 		return -EINVAL;
+ 	}
+@@ -478,7 +479,7 @@ static int socfpga_fpga_ops_configure_write(struct fpga_manager *mgr,
+ }
+ 
+ static int socfpga_fpga_ops_configure_complete(struct fpga_manager *mgr,
+-					       u32 flags)
++					       struct fpga_image_info *info)
+ {
+ 	struct socfpga_fpga_priv *priv = mgr->priv;
+ 	u32 status;
 -- 
-2.7.3
+2.9.3
