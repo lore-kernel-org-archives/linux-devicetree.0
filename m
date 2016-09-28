@@ -1,129 +1,54 @@
-From: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: rfkill guidance
-Date: Wed, 28 Sep 2016 13:54:24 -0700
-Message-ID: <fc993a0d-25cc-fb1c-3d96-86b12d1140d2@broadcom.com>
-References: <324c35c6-49ca-174c-db07-674532f3e628@broadcom.com>
- <1474961105.5141.5.camel@sipsolutions.net>
- <0a8cff88-73aa-8311-7afe-98612161421f@broadcom.com>
- <1475044682.4139.18.camel@sipsolutions.net>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH V7 2/6] thermal: bcm2835: add thermal driver for bcm2835 soc
+Date: Wed, 28 Sep 2016 14:10:26 -0700
+Message-ID: <87twczg27x.fsf@eliezer.anholt.net>
+References: <1474446227-1147-1-git-send-email-kernel@martin.sperl.org> <1474446227-1147-3-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475044682.4139.18.camel-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1474446227-1147-3-git-send-email-kernel@martin.sperl.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Russell King <linux@arm.linux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Stefan Wahren <stefan.wahren@i2se.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: Martin Sperl <kernel@martin.sperl.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for your help. Your comment below clarifies what's missing.
+--=-=-=
+Content-Type: text/plain
 
-On 16-09-27 11:38 PM, Johannes Berg wrote:
-> Hi,
-> 
-> Mark, Marek, DT folks - the root of the discussion here is the old
-> rfkill-regulator device-tree support. I'm discussing some details of
-> the system here first, but below we get to the DT discussion.
-> 
-> The old thread is here:
-> http://thread.gmane.org/gmane.linux.kernel/1643236
-> 
->> Sure, I'll tell you what I can. A user space app handles interaction
->> between the kernel and BT radio. When the app is started, it enables
->> the regulator (via the rfkill driver and userspace sysfs interface) 
-> 
-> You should probably consider /dev/rfkill over the sysfs interface :)
-> 
->> to power up the BT chip. The app sends the firmware via a uart to the
->> chip. The chip loads the firmware then goes into a lower power mode.
->> When the app needs to talk to the chip it toggles a gpio (device
->> wake) before sending messages. If the kernel is in a low power mode
->> and the BT chip receives a message that requires handling by the app,
->> then a host wake gpio is driven to wake up the host (kernel).
-> 
-> So the reason then for having it all done in userspace is that there's
-> a UART to communicate with it? Or is the reason that you just don't
-> want the kernel abstraction? There *are* UART BT drivers in the kernel,
-> as far as I can tell, what's the difference? Or is it that there's just
-> a completely different protocol, vs. the HCI protocol used normally?
-> 
-> At this point I'm just curious though, doesn't seem all that important
-> to the discussion :)
+kernel@martin.sperl.org writes:
 
-This clarifies the issue, thanks. Basically the reason is history - this
-user space code has been around for a while. It turns out the HCI BT
-driver doesn't exist as it should. If it did, then the regulator could
-be tied to the driver. Now I see what's missing.
+> From: Martin Sperl <kernel@martin.sperl.org>
+>
+> Add basic thermal driver for bcm2835 SOC.
+>
+> This driver currently relies on the firmware setting up the
+> tsense HW block and does not set it up itself.
+>
+> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+> Acked-by: Eric Anholt <eric@anholt.net>
+> Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-We will push on the team responsible for the BT drivers but all I need
-to know right now is that an rfkill driver isn't necessary.
-> 
-> Although having a DT binding for a kernel driver for the device that
-> includes the regulator might change the discussion somewhat?
-> 
->> In addition to the regulator(s) controlled by the rfkill driver I
->> didn't mention the two gpio's previously. The existing rfkill driver
->> does nothing with them. It just exports the global gpio # to sysfs
->> which the app can read to control via the gpio sysfs interface. These
->> could be hard coded in a startup script or something, they aren't
->> that important but it does handle the conversion to the global gpio#
->> from 1 of 3 gpio controllers on a Cygnus SOC. I'm not sure how to
->> handle that, since the gpio's vary across board variants.
-> 
-> Could also just be exposed in the DT, I guess? Userspace can read the
-> DT, no? Not sure that actually gives you all the dynamic information
-> though that might be needed if there's any kind of mapping going on.
+What's the status of merging this one?  I'd like to merge the other
+patches.
 
-I'm not sure there's any way to have the mapping done by just specifying
-the gpio somewhere outside a driver. This gpio functionality I mentioned
-should probably be handled by the BT HCI driver.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
->>> Indeed, looks like Documentation/ABI/testing/sysfs-class-regulator
->>> is all read-only.
->>
->> There's a regulator driver named userspace-consumer.c that allows
->> enable/disable from userspace, but it doesn't support DT either.
-> 
-> Adding DT support there might make some sense, perhaps? Although that's
-> not really a useful DT binding at all since it won't provide any hints
-> as to how you'd use that, so ... maybe not so much.
-> 
-> As I read it, the main concern about or objection to the rfkill-
-> regulator DT binding was that it's not tied to a device, when it seems
-> that rfkill instances really should be living off a device that they
-> control. That's true for many, but not all devices.
-> 
-> Today we already have all the platform rfkill instances (like the
-> various ACPI ones) that don't live off a device that they control, but
-> instead control the platform's radio functionality. And in some cases,
-> that actually has very similar behaviour to what was proposed in the
-> previous patch, and what you're looking for, in that it sometimes kills
-> power to BT or WiFi chips when soft-disabled (or kicks them off the bus
-> in some other way). Particularly for the ones that call some random
-> ACPI function to deal with things, that can happen.
-> 
-> rfkill-regulator, with its platform driver today, more or less mirrors
-> that. You could even use that with a very simple (few lines of code)
-> platform module that just binds the regulators to rfkill-regulator, I
-> think.
-> 
-> Making this more flexible and configurable with DT would make sense to
-> me, less for the usage of rfkill-for-a-device (which could *also* be
-> done, but isn't what you need or what was discussed before), but more
-> for the usage of rfkill-for-the-platform.
-> 
-> Mark and DT folks - can you clarify your objections to the old patch?
-> Am I reading things correctly, and if so, what do you think about the
-> platform rfkill?
+-----BEGIN PGP SIGNATURE-----
 
-There might be some need for this but for our purpose I think the right
-path is to have a BT driver doing what this user space app is doing and
-then integrate whatever is missing with this HCI User Channel.
-
-> 
-> johannes
-> 
-
-Thanks,
-Jon
+iQIcBAEBCgAGBQJX7DHCAAoJELXWKTbR/J7otGEP/2AXpUo0FKrGMup1VqZh+ZWX
+qtGQ31Y65h26yj4e9Oi25zTWmGpuYh9VXCnEIRPnATlvQNCBU9tWSXOUDRv1AZhB
+xcnK0Iti3hLSrwatguZ80yLxwAG8vsuMZJ35RS24oOMcv1wGL2taFJqbGGMtyiZo
+5qB2IRcQW2lOyAGSOhNPI7A22wn4uhQ9ohki4cMmj+v6EvOhkEhw5T+9dNdlHwx8
+n03eKCnqMXyqg1bHdNUtjyMjk6gbIIQV1jMZLhyh4PMp58fTz6huwMGldBIokyPj
+bvpgMRinZGQtzK7UPvqcpAlUdOc6ySSTTvSs8C+DYQRNh3OxpPLHmXLdldMCLmf1
+l/sEkc0axJvzpb6ODoXJeQGjdEBHchI//69+RhaRdHXNY2YFTlvBSelZgIQiE3rf
+mTgZeVU2iANYJ/bHTHDTUTKWX29dNZXR5G8YCeFOIVNXVg8EOT2MBRo9xc2rulV/
+bjVQQOGX2h28efiEl/1cc1/2SVZR3qhtVi09bStMNlXMAZHbJoNauOHze0rnXWag
+DL39pwKtNYz13Re3ePOpixU1Zq7ZoRYH6etaHc8/wb+3/kxU8XwT5jGsKQszJM20
+YRoN+zttIpAcI8ngciNL1tmN7y8hst/2o+Ggqk2idq1Vs/3LZOqjrPQikKLuOWas
+P08F3HrJZvP9aGqemXB7
+=ZkqH
+-----END PGP SIGNATURE-----
+--=-=-=--
