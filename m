@@ -1,52 +1,58 @@
-From: Corey Minyard <minyard@acm.org>
-Subject: Re: [PATCH] dt-bindings: ipmi: move all
- documentation under bindings/ipmi/
-Date: Wed, 28 Sep 2016 13:37:48 -0500
-Message-ID: <683e77fd-9311-edbb-af0b-e45a57b11212@acm.org>
-References: <1475071661-1342-1-git-send-email-clg@kaod.org>
-Reply-To: minyard@acm.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <openipmi-developer-bounces@lists.sourceforge.net>
-In-Reply-To: <1475071661-1342-1-git-send-email-clg@kaod.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
-	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=openipmi-developer>
-List-Post: <mailto:openipmi-developer@lists.sourceforge.net>
-List-Help: <mailto:openipmi-developer-request@lists.sourceforge.net?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
-	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=subscribe>
-Errors-To: openipmi-developer-bounces@lists.sourceforge.net
-To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>, openipmi-developer@lists.sourceforge.net, Joel Stanley <joel@jms.id.au>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 00/10] ARM: dts: berlin: fix dtc warnings
+Date: Wed, 28 Sep 2016 21:40:21 +0200
+Message-ID: <57EC1CA5.2030102@gmail.com>
+References: <20160906084013.2887-1-jszhang@marvell.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160906084013.2887-1-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T2ssIGFwcGxpZWQuICBJIGZvbGRlZCBpdCBpbiB0byB0aGUgcHJldmlvdXMgcGF0Y2ggdG8gYXZv
-aWQgdGhlIGNoZWNrcGF0Y2gKZXJyb3IgOikuICBBbmQgaXQgZGlkbid0IHNlZW0gaW1wb3J0YW50
-IHRvIGtlZXAgaXQgc2VwYXJhdGUuCgpBbmQgSSBhZGRlZCBSb2IncyBBY2suCgpUaGFua3MsCgot
-Y29yZXkKCk9uIDA5LzI4LzIwMTYgMDk6MDcgQU0sIEPDqWRyaWMgTGUgR29hdGVyIHdyb3RlOgo+
-IFNpZ25lZC1vZmYtYnk6IEPDqWRyaWMgTGUgR29hdGVyIDxjbGdAa2FvZC5vcmc+Cj4gLS0tCj4g
-ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy97Y2hhciA9PiB9L2lwbWkvYXNwZWVkLGFzdDI0MDAt
-YnQtYm1jLnR4dCAgICAgICAgIHwgMAo+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3tpcG1pLnR4dCA9PiBpcG1pL2lwbWktc21pYy50eHR9ICAgICAgICB8IDAKPiAgIDIgZmls
-ZXMgY2hhbmdlZCwgMCBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+ICAgcmVuYW1lIERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy97Y2hhciA9PiB9L2lwbWkvYXNwZWVkLGFz
-dDI0MDAtYnQtYm1jLnR4dCAoMTAwJSkKPiAgIHJlbmFtZSBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3Mve2lwbWkudHh0ID0+IGlwbWkvaXBtaS1zbWljLnR4dH0gKDEwMCUpCj4KPiBk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NoYXIvaXBtaS9h
-c3BlZWQsYXN0MjQwMC1idC1ibWMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2lwbWkvYXNwZWVkLGFzdDI0MDAtYnQtYm1jLnR4dAo+IHNpbWlsYXJpdHkgaW5kZXggMTAw
-JQo+IHJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jaGFyL2lw
-bWkvYXNwZWVkLGFzdDI0MDAtYnQtYm1jLnR4dAo+IHJlbmFtZSB0byBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvaXBtaS9hc3BlZWQsYXN0MjQwMC1idC1ibWMudHh0Cj4gZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pcG1pLnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pcG1pL2lwbWktc21pYy50eHQKPiBzaW1pbGFy
-aXR5IGluZGV4IDEwMCUKPiByZW5hbWUgZnJvbSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvaXBtaS50eHQKPiByZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2lwbWkvaXBtaS1zbWljLnR4dAoKCgotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KT3BlbmlwbWktZGV2ZWxvcGVy
-IG1haWxpbmcgbGlzdApPcGVuaXBtaS1kZXZlbG9wZXJAbGlzdHMuc291cmNlZm9yZ2UubmV0Cmh0
-dHBzOi8vbGlzdHMuc291cmNlZm9yZ2UubmV0L2xpc3RzL2xpc3RpbmZvL29wZW5pcG1pLWRldmVs
-b3Blcgo=
+On 06.09.2016 10:40, Jisheng Zhang wrote:
+> This is a clean up series to fix berlin arm platforms dtc warnings.
+> Firstly we remove skeleton.dtsi inclusion. Then add missing unit name
+> of /soc node and /memory node. Lastly, we fix regulators' name
+>
+> Jisheng Zhang (10):
+>    ARM: dts: berlin2q: Remove skeleton.dtsi inclusion
+>    ARM: dts: berlin2cd: Remove skeleton.dtsi inclusion
+>    ARM: dts: berlin2: Remove skeleton.dtsi inclusion
+>    ARM: dts: berlin2q: Add missing unit name to /soc node
+>    ARM: dts: berlin2cd: Add missing unit name to /soc node
+>    ARM: dts: berlin2: Add missing unit name to /soc node
+>    ARM: dts: berlin2q-marvell-dmp: add missing unit name to /memory node
+>    ARM: dts: chromecast: add missing unit name to /memory node
+
+Jisheng,
+
+Applied the 8 patches above.
+
+>    ARM: dts: sony-nsz-gs7: add missing unit name to /memory node
+
+I didn't receive this one and could not find it online.
+I recreated the patch by using the chromecast patch above, so
+applied.
+
+>    ARM: dts: berlin2q-marvell-dmp: fix regulators' name
+
+I have no clue what it should be fixed to.
+
+Sebastian
+
+>   arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts        |  2 +-
+>   arch/arm/boot/dts/berlin2.dtsi                    |  5 +++--
+>   arch/arm/boot/dts/berlin2cd-google-chromecast.dts |  2 +-
+>   arch/arm/boot/dts/berlin2cd.dtsi                  |  5 +++--
+>   arch/arm/boot/dts/berlin2q-marvell-dmp.dts        | 12 ++++++------
+>   arch/arm/boot/dts/berlin2q.dtsi                   |  6 +++---
+>   6 files changed, 17 insertions(+), 15 deletions(-)
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
