@@ -1,65 +1,228 @@
-From: Nayna Jain <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 2/2] Documentation: tpm: add the Physical TPM device tree binding documentation
-Date: Wed, 28 Sep 2016 04:30:41 -0400
-Message-ID: <1475051441-23008-2-git-send-email-nayna@linux.vnet.ibm.com>
-References: <1475051441-23008-1-git-send-email-nayna@linux.vnet.ibm.com>
+From: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v5] drm/fsl-dcu: Implement gamma_lut atomic crtc properties
+Date: Wed, 28 Sep 2016 16:24:29 +0800
+Message-ID: <1475051069-24452-1-git-send-email-meng.yi@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475051441-23008-1-git-send-email-nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterhuewe-Mmb7MZpHnFY@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, hellerda-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, ltcgcw-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, cclaudio-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, honclo-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, Nayna Jain <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+To: stefan-XLVq0VzYD2Y@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: daniel-/w4YWyX8dFk@public.gmane.org, ville.syrjala-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Newly added support of TPM 2.0 eventlog securityfs pseudo files in tpm
-device driver consumes device tree bindings representing I2C based
-Physical TPM. This patch adds the documentation for corresponding device
-tree bindings of I2C based Physical TPM. These bindings are similar to
-vtpm device tree bindings being used on IBM Power7+ and Power8 Systems
-running PowerVM.
+Gamma correction is optional and can be used to adjust the color
+output values to match the gamut of a particular TFT LCD panel
 
-Suggested-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Nayna Jain <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Split the DCU regs into "regs", "palette", "gamma" and "cursor".
+Create a second regmap for gamma memory space using little endian.
+The registers after the first address space are not accessed yet,
+hence new device trees would even work with old kernels. Just new
+kernel need the new format so we can access the separate gamma
+reg space.
+
+Suggested-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Signed-off-by: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
 ---
-Changelog v2:
+Changes since V1:
+-created a second regmap for gamma
+-updated the DCU DT binding
+-removed Kconfig for gamma and enable gamma when valid data filled.
+-extended and simplified comment lines.
+---
+ .../devicetree/bindings/display/fsl,dcu.txt        | 12 +++++++-
+ drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_crtc.c         | 33 ++++++++++++++++++++
+ drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c          | 35 +++++++++++++++++++++-
+ drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.h          |  7 +++++
+ 4 files changed, 85 insertions(+), 2 deletions(-)
 
-- Include review feedbacks.
-  - Move the doc within bindings/security/tpm.
-  - Add example for compatible property in description.
-  - Delete implicit properties like status, label from description.
-  - Redefine linux,sml-base description.
-
- .../devicetree/bindings/security/tpm/tpm-i2c.txt     | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
-
-diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
-new file mode 100644
-index 0000000..16df8bb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
-@@ -0,0 +1,20 @@
-+* Device Tree Bindings for I2C based Trusted Platform Module(TPM)
+diff --git a/Documentation/devicetree/bindings/display/fsl,dcu.txt b/Documentation/devicetree/bindings/display/fsl,dcu.txt
+index 63ec2a6..8140b5d 100644
+--- a/Documentation/devicetree/bindings/display/fsl,dcu.txt
++++ b/Documentation/devicetree/bindings/display/fsl,dcu.txt
+@@ -6,6 +6,12 @@ Required properties:
+ 	* "fsl,vf610-dcu".
+ 
+ - reg:			Address and length of the register set for dcu.
++			Must contain four address/length tuples:
++			1. Register address space
++			2. Palette/Tile address space
++			3. Gamma address space
++			4. Cursor address space
++- reg-names:		Should be "regs", "palette", "gamma" and "cursor"
+ - clocks:		Handle to "dcu" and "pix" clock (in the order below)
+ 			This can be the same clock (e.g. LS1021a)
+ 			See ../clocks/clock-bindings.txt for details.
+@@ -20,7 +26,11 @@ Optional properties:
+ Examples:
+ dcu: dcu@2ce0000 {
+ 	compatible = "fsl,ls1021a-dcu";
+-	reg = <0x0 0x2ce0000 0x0 0x10000>;
++	reg = <0x0 0x2ce0000 0x0 0x2000>,
++	      <0x0 0x2ce2000 0x0 0x2000>,
++	      <0x0 0x2ce4000 0x0 0xc00>,
++	      <0x0 0x2ce4c00 0x0 0x400>;
++	reg-names = "regs", "palette", "gamma", "cursor";
+ 	clocks = <&platform_clk 0>, <&platform_clk 0>;
+ 	clock-names = "dcu", "pix";
+ 	big-endian;
+diff --git a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_crtc.c b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_crtc.c
+index 3371635..6371e4d 100644
+--- a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_crtc.c
++++ b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_crtc.c
+@@ -22,6 +22,31 @@
+ #include "fsl_dcu_drm_drv.h"
+ #include "fsl_dcu_drm_plane.h"
+ 
++static void fsl_crtc_gamma_set(struct drm_crtc *crtc, struct drm_color_lut *lut,
++			      uint32_t size)
++{
++	struct fsl_dcu_drm_device *fsl_dev = crtc->dev->dev_private;
++	unsigned int i;
 +
-+Required properties:
++	if (crtc->state->gamma_lut->data) {
++		for (i = 0; i < size; i++) {
++			regmap_write(fsl_dev->regmap_gamma, FSL_GAMMA_R + 4 * i,
++				     lut[i].red);
++			regmap_write(fsl_dev->regmap_gamma, FSL_GAMMA_G + 4 * i,
++				     lut[i].green);
++			regmap_write(fsl_dev->regmap_gamma, FSL_GAMMA_B + 4 * i,
++				     lut[i].blue);
++		}
 +
-+- compatible     : 'manufacturer,model', eg. nuvoton,npct650
-+- linux,sml-base : 64-bit base address of the reserved memory allocated for
-+                   the firmware event log
-+- linux,sml-size : size of the memory allocated for the firmware event log
++		regmap_update_bits(fsl_dev->regmap, DCU_DCU_MODE,
++				   DCU_MODE_EN_GAMMA_MASK,
++				   DCU_MODE_GAMMA_ENABLE);
++	} else {
++		regmap_update_bits(fsl_dev->regmap, DCU_DCU_MODE,
++				   DCU_MODE_EN_GAMMA_MASK, 0);
++	}
++}
 +
-+Example (for OpenPower Systems with Nuvoton TPM 2.0 on I2C)
-+----------------------------------------------------------
+ static void fsl_dcu_drm_crtc_atomic_flush(struct drm_crtc *crtc,
+ 					  struct drm_crtc_state *old_crtc_state)
+ {
+@@ -37,6 +62,10 @@ static void fsl_dcu_drm_crtc_atomic_flush(struct drm_crtc *crtc,
+ 			drm_crtc_send_vblank_event(crtc, event);
+ 		spin_unlock_irq(&crtc->dev->event_lock);
+ 	}
 +
-+tpm@57 {
-+	reg = <0x57>;
-+	label = "tpm";
-+	compatible = "nuvoton,npct650", "nuvoton,npct601";
-+	linux,sml-base = <0x7f 0xfd450000>;
-+	linux,sml-size = <0x10000>;
-+	status = "okay";
++	if (crtc->state->color_mgmt_changed && crtc->state->gamma_lut)
++		fsl_crtc_gamma_set(crtc, (struct drm_color_lut *)
++				   crtc->state->gamma_lut->data, 256);
+ }
+ 
+ static void fsl_dcu_drm_disable_crtc(struct drm_crtc *crtc)
+@@ -135,6 +164,7 @@ static const struct drm_crtc_funcs fsl_dcu_drm_crtc_funcs = {
+ 	.page_flip = drm_atomic_helper_page_flip,
+ 	.reset = drm_atomic_helper_crtc_reset,
+ 	.set_config = drm_atomic_helper_set_config,
++	.gamma_set = drm_atomic_helper_legacy_gamma_set,
+ };
+ 
+ int fsl_dcu_drm_crtc_create(struct fsl_dcu_drm_device *fsl_dev)
+@@ -158,5 +188,8 @@ int fsl_dcu_drm_crtc_create(struct fsl_dcu_drm_device *fsl_dev)
+ 
+ 	drm_crtc_helper_add(crtc, &fsl_dcu_drm_crtc_helper_funcs);
+ 
++	drm_crtc_enable_color_mgmt(crtc, 0, false, 256);
++	drm_mode_crtc_set_gamma_size(crtc, 256);
++
+ 	return 0;
+ }
+diff --git a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
+index 092aaec..e662890 100644
+--- a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
++++ b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
+@@ -48,6 +48,20 @@ static const struct regmap_config fsl_dcu_regmap_config = {
+ 	.volatile_reg = fsl_dcu_drm_is_volatile_reg,
+ };
+ 
++/*
++ * force using little endian here since ls1021a's gamma regs are little
++ * endian while the other regs are big endian, and all vf610s's regs
++ * are little endian
++ */
++static const struct regmap_config fsl_dcu_regmap_gamma_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.val_format_endian = REGMAP_ENDIAN_LITTLE,
++
++	.volatile_reg = fsl_dcu_drm_is_volatile_reg,
 +};
++
+ static int fsl_dcu_drm_irq_init(struct drm_device *dev)
+ {
+ 	struct fsl_dcu_drm_device *fsl_dev = dev->dev_private;
+@@ -327,7 +341,7 @@ static int fsl_dcu_drm_probe(struct platform_device *pdev)
+ 	struct drm_device *drm;
+ 	struct device *dev = &pdev->dev;
+ 	struct resource *res;
+-	void __iomem *base;
++	void __iomem *base, *base_gamma;
+ 	struct drm_driver *driver = &fsl_dcu_drm_driver;
+ 	struct clk *pix_clk_in;
+ 	char pix_clk_name[32];
+@@ -370,6 +384,25 @@ static int fsl_dcu_drm_probe(struct platform_device *pdev)
+ 		return PTR_ERR(fsl_dev->regmap);
+ 	}
+ 
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "gamma");
++	if (!res) {
++		dev_err(dev, "could not get gamma memory resource\n");
++		return -ENODEV;
++	}
++
++	base_gamma = devm_ioremap_resource(dev, res);
++	if (IS_ERR(base_gamma)) {
++		ret = PTR_ERR(base_gamma);
++		return ret;
++	}
++
++	fsl_dev->regmap_gamma = devm_regmap_init_mmio(dev, base_gamma,
++			&fsl_dcu_regmap_gamma_config);
++	if (IS_ERR(fsl_dev->regmap_gamma)) {
++		dev_err(dev, "regmap_gamma init failed\n");
++		return PTR_ERR(fsl_dev->regmap_gamma);
++	}
++
+ 	fsl_dev->clk = devm_clk_get(dev, "dcu");
+ 	if (IS_ERR(fsl_dev->clk)) {
+ 		dev_err(dev, "failed to get dcu clock\n");
+diff --git a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.h b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.h
+index 3b371fe7..2610b6c 100644
+--- a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.h
++++ b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.h
+@@ -25,6 +25,8 @@
+ #define DCU_MODE_NORMAL			1
+ #define DCU_MODE_TEST			2
+ #define DCU_MODE_COLORBAR		3
++#define DCU_MODE_EN_GAMMA_MASK		0x04
++#define DCU_MODE_GAMMA_ENABLE		BIT(2)
+ 
+ #define DCU_BGND			0x0014
+ #define DCU_BGND_R(x)			((x) << 16)
+@@ -165,6 +167,10 @@
+ #define VF610_LAYER_REG_NUM		9
+ #define LS1021A_LAYER_REG_NUM		10
+ 
++#define FSL_GAMMA_R			0x000
++#define FSL_GAMMA_G			0x400
++#define FSL_GAMMA_B			0x800
++
+ struct clk;
+ struct device;
+ struct drm_device;
+@@ -182,6 +188,7 @@ struct fsl_dcu_drm_device {
+ 	struct device *dev;
+ 	struct device_node *np;
+ 	struct regmap *regmap;
++	struct regmap *regmap_gamma;
+ 	int irq;
+ 	struct clk *clk;
+ 	struct clk *pix_clk;
 -- 
-2.5.0
+2.1.0.27.g96db324
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
