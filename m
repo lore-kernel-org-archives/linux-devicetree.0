@@ -1,90 +1,62 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH v3 1/3] ipmi: add an Aspeed BT IPMI BMC driver
-Date: Wed, 28 Sep 2016 16:08:01 +0200
-Message-ID: <51788cf6-5d7d-dd74-1083-bdc5ecbd9756@kaod.org>
-References: <1474354900-5618-1-git-send-email-clg@kaod.org>
- <1474354900-5618-2-git-send-email-clg@kaod.org>
- <20160923183421.GA14864@rob-hp-laptop>
- <c3f084ab-9f77-86ab-7875-cbfe654ea18e@kaod.org>
- <85dc3a75-46e0-87ec-91d5-31e686103ee0@acm.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] DT: EVM: add LEDs
+Date: Wed, 28 Sep 2016 08:12:35 -0700
+Message-ID: <20160928151234.c3x36lhnvk4potdy@atomide.com>
+References: <cover.1474953969.git.hns@goldelico.com>
+ <d68619a23d642eacf12fd0a3c51f19d006436cbe.1474953969.git.hns@goldelico.com>
+ <20160927194904.4im7ukktg5afjmki@atomide.com>
+ <21B97601-328A-41DC-84EE-AA15A6977E98@goldelico.com>
+ <20160928033703.erwozguik4rie3cn@atomide.com>
+ <6004B143-F64B-4DA9-A054-3F2AB3FC2346@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <85dc3a75-46e0-87ec-91d5-31e686103ee0@acm.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: minyard@acm.org, Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Alistair Popple <alistair@popple.id.au>, Russell King <linux@armlinux.org.uk>, Joel Stanley <joel@jms.id.au>, openipmi-developer@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jk@ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <6004B143-F64B-4DA9-A054-3F2AB3FC2346-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/28/2016 03:53 PM, Corey Minyard wrote:
-> On 09/26/2016 01:50 AM, C=E9dric Le Goater wrote:
->>
->>>>   Changes since v1:
->>>>
->>>>   - replace 'bt_host' by 'bt_bmc' to reflect that the driver is
->>>>     the BMC side of the IPMI BT interface
->>>>   - renamed the device to 'ipmi-bt-host'
->>>>   - introduced a temporary buffer to copy_{to,from}_user
->>>>   - used platform_get_irq()
->>>>   - moved the driver under drivers/char/ipmi/ but kept it as a misc
->>>>     device
->>>>   - changed the compatible cell to "aspeed,ast2400-bt-bmc"
->>>>
->>>>   .../bindings/char/ipmi/aspeed,ast2400-bt-bmc.txt   |  23 +
->>> While similar, this is not the kernel directory structure. Just make
->>> this bindings/ipmi/
->>>
->>> With that,
->>>
->>> Acked-by: Rob Herring <robh@kernel.org>
->> OK. So I suppose we should be moving all IPMI documentation under
->> the same directory.
->>
->>
->> Corey,
->>
->> If the move is okay for you, I can send the patch below.
->>
->> Thanks,
->>
->> C.
-> =
+* H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [160927 23:50]:
+> Hi,
+> 
+> > Am 28.09.2016 um 05:37 schrieb Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>:
+> > 
+> > * H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [160927 13:11]:
+> >>> Am 27.09.2016 um 21:49 schrieb Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>:
+> >>> How about this for defaults:
+> >>> 
+> >>> - heartbeat for led3
+> >>> - cpu0 for led4
+> >>> - cpu1 for led5
+> >> 
+> >> Good idea. Will try.
+> >> 
+> >> What I don't exactly know is if these gpios based on an I2C-expander
+> >> can handle cpu activity triggers or if they are locked up if this i2c
+> >> processing triggers another cpu activity...
+> > 
+> > Oh right, if the GPIOs are on the i2c bus
+> 
+> yes, they are all gpio9 which is the tca6424 on i2c5.
+> 
+> > it's probably not a good
+> > idea :) Or at least will be inaccurate if the bus can sleep.
+> 
+> I have tested a little by writing to /sys/class/leds/.../trigger.
+> 
+> If I make one LED trigger by "cpu0" it is always on and if I make
+> a second one triggered by "cpu1" the heartbeat becomes irregular.
+> 
+> So indeed this does not work.
 
-> Sorry this took so long, I'm at a conference.  That change is fine, it do=
-es
-> seem to match the structure better.
+So should we just leave the default trigger unpopulated then?
 
-It's ok. =
+Regards,
 
-
-Checkpatch really does not like that patch and I don't know what we can
-do about it. You've been warned :) =
-
-
-Thanks, =
-
-
-C. =
-
-
-
-./scripts/checkpatch.pl --strict  0001-dt-bindings-ipmi-move-all-documentat=
-ion-under-bindin.patch
-WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
-#12: =
-
- .../devicetree/bindings/{char =3D> }/ipmi/aspeed,ast2400-bt-bmc.txt       =
-  | 0
-
-ERROR: Does not appear to be a unified-diff format patch
-
-total: 1 errors, 1 warnings, 0 checks, 0 lines checked
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
