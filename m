@@ -1,7 +1,7 @@
 From: Alan Tull <atull@opensource.altera.com>
-Subject: [PATCH v19 05/12] fpga-mgr: add fpga image information struct
-Date: Wed, 28 Sep 2016 13:21:53 -0500
-Message-ID: <20160928182200.15800-6-atull@opensource.altera.com>
+Subject: [PATCH v19 12/12] fpga-manager: Add Socfpga Arria10 support
+Date: Wed, 28 Sep 2016 13:22:00 -0500
+Message-ID: <20160928182200.15800-13-atull@opensource.altera.com>
 References: <20160928182200.15800-1-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,157 +21,628 @@ To: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, delicious.quinoa@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alan Tull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Josh Cartwright <joshc@ni.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, devicetree@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>, Jon Masters <jcm@redhat.com>, Matthew Gerlach <mgerlach@opensource.altera.com>, Frank Rowand <frowand.list@gmail.com>, Walter Goossens <waltergoossens@home.nl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a minor change in the FPGA Mangager API
-to hold information that is specific to an FPGA image
-file.  This change is expected to bring little, if any,
-pain.
-
-An FPGA image file will have particulars that affect how the
-image is programmed to the FPGA.  One example is that
-current 'flags' currently has one bit which shows whether the
-FPGA image was built for full reconfiguration or partial
-reconfiguration.  Another example is timeout values for
-enabling or disabling the bridges in the FPGA.  As the
-complexity of the FPGA design increases, the bridges in the
-FPGA may take longer times to enable or disable.
-
-This patch adds a new 'struct fpga_image_info', moves the
-current 'u32 flags' to it.  Two other image-specific u32's
-are added for the bridge enable/disable timeouts.  The FPGA
-Manager API functions are changed, replacing the 'u32 flag'
-parameter with a pointer to struct fpga_image_info.
-Subsequent patches fix the existing low level FPGA manager
-drivers.
+Add low level driver to support reprogramming FPGAs for Altera
+SoCFPGA Arria10.
 
 Signed-off-by: Alan Tull <atull@opensource.altera.com>
 ---
-v19: Added in v19 of this patchset
+v19: Added to this patchset as has been changed to use
+       fpga image information struct
+     a checkpatch fix of a block comment
+     do not use clk_put because we are using devm_clk_get
 ---
- drivers/fpga/fpga-mgr.c       | 17 +++++++++--------
- include/linux/fpga/fpga-mgr.h | 23 +++++++++++++++++++----
- 2 files changed, 28 insertions(+), 12 deletions(-)
+ drivers/fpga/Kconfig       |   6 +
+ drivers/fpga/Makefile      |   1 +
+ drivers/fpga/socfpga-a10.c | 572 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 579 insertions(+)
+ create mode 100644 drivers/fpga/socfpga-a10.c
 
-diff --git a/drivers/fpga/fpga-mgr.c b/drivers/fpga/fpga-mgr.c
-index 953dc91..c58b4c4 100644
---- a/drivers/fpga/fpga-mgr.c
-+++ b/drivers/fpga/fpga-mgr.c
-@@ -32,7 +32,7 @@ static struct class *fpga_mgr_class;
- /**
-  * fpga_mgr_buf_load - load fpga from image in buffer
-  * @mgr:	fpga manager
-- * @flags:	flags setting fpga confuration modes
-+ * @info:	fpga image specific information
-  * @buf:	buffer contain fpga image
-  * @count:	byte count of buf
-  *
-@@ -43,8 +43,8 @@ static struct class *fpga_mgr_class;
-  *
-  * Return: 0 on success, negative error code otherwise.
-  */
--int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags, const char *buf,
--		      size_t count)
-+int fpga_mgr_buf_load(struct fpga_manager *mgr, struct fpga_image_info *info,
-+		      const char *buf, size_t count)
- {
- 	struct device *dev = &mgr->dev;
- 	int ret;
-@@ -55,7 +55,7 @@ int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags, const char *buf,
- 	 * ready to receive an FPGA image.
- 	 */
- 	mgr->state = FPGA_MGR_STATE_WRITE_INIT;
--	ret = mgr->mops->write_init(mgr, flags, buf, count);
-+	ret = mgr->mops->write_init(mgr, info, buf, count);
- 	if (ret) {
- 		dev_err(dev, "Error preparing FPGA for writing\n");
- 		mgr->state = FPGA_MGR_STATE_WRITE_INIT_ERR;
-@@ -78,7 +78,7 @@ int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags, const char *buf,
- 	 * steps to finish and set the FPGA into operating mode.
- 	 */
- 	mgr->state = FPGA_MGR_STATE_WRITE_COMPLETE;
--	ret = mgr->mops->write_complete(mgr, flags);
-+	ret = mgr->mops->write_complete(mgr, info);
- 	if (ret) {
- 		dev_err(dev, "Error after writing image data to FPGA\n");
- 		mgr->state = FPGA_MGR_STATE_WRITE_COMPLETE_ERR;
-@@ -93,7 +93,7 @@ EXPORT_SYMBOL_GPL(fpga_mgr_buf_load);
- /**
-  * fpga_mgr_firmware_load - request firmware and load to fpga
-  * @mgr:	fpga manager
-- * @flags:	flags setting fpga confuration modes
-+ * @info:	fpga image specific information
-  * @image_name:	name of image file on the firmware search path
-  *
-  * Request an FPGA image using the firmware class, then write out to the FPGA.
-@@ -103,7 +103,8 @@ EXPORT_SYMBOL_GPL(fpga_mgr_buf_load);
-  *
-  * Return: 0 on success, negative error code otherwise.
-  */
--int fpga_mgr_firmware_load(struct fpga_manager *mgr, u32 flags,
-+int fpga_mgr_firmware_load(struct fpga_manager *mgr,
-+			   struct fpga_image_info *info,
- 			   const char *image_name)
- {
- 	struct device *dev = &mgr->dev;
-@@ -121,7 +122,7 @@ int fpga_mgr_firmware_load(struct fpga_manager *mgr, u32 flags,
- 		return ret;
- 	}
+diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+index 0d1887f..bc56c4c 100644
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -26,6 +26,12 @@ config FPGA_MGR_SOCFPGA
+ 	help
+ 	  FPGA manager driver support for Altera SOCFPGA.
  
--	ret = fpga_mgr_buf_load(mgr, flags, fw->data, fw->size);
-+	ret = fpga_mgr_buf_load(mgr, info, fw->data, fw->size);
++config FPGA_MGR_SOCFPGA_A10
++	tristate "Altera SoCFPGA Arria10"
++	depends on ARCH_SOCFPGA
++	help
++	  FPGA manager driver support for Altera Arria10 SoCFPGA.
++
+ config FPGA_MGR_ZYNQ_FPGA
+ 	tristate "Xilinx Zynq FPGA"
+ 	depends on HAS_DMA
+diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+index a6f874d..8df07bc 100644
+--- a/drivers/fpga/Makefile
++++ b/drivers/fpga/Makefile
+@@ -7,6 +7,7 @@ obj-$(CONFIG_FPGA)			+= fpga-mgr.o
  
- 	release_firmware(fw);
+ # FPGA Manager Drivers
+ obj-$(CONFIG_FPGA_MGR_SOCFPGA)		+= socfpga.o
++obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)	+= socfpga-a10.o
+ obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
  
-diff --git a/include/linux/fpga/fpga-mgr.h b/include/linux/fpga/fpga-mgr.h
-index 0940bf4..040b86d 100644
---- a/include/linux/fpga/fpga-mgr.h
-+++ b/include/linux/fpga/fpga-mgr.h
-@@ -69,6 +69,18 @@ enum fpga_mgr_states {
- #define FPGA_MGR_PARTIAL_RECONFIG	BIT(0)
- 
- /**
-+ * struct fpga_image_info - information specific to a FPGA image
-+ * @flags: boolean flags as defined above
-+ * @enable_timeout_us: maximum time to enable traffic through bridge (uSec)
-+ * @disable_timeout_us: maximum time to disable traffic through bridge (uSec)
+ # FPGA Bridge Drivers
+diff --git a/drivers/fpga/socfpga-a10.c b/drivers/fpga/socfpga-a10.c
+new file mode 100644
+index 0000000..01ca5f0
+--- /dev/null
++++ b/drivers/fpga/socfpga-a10.c
+@@ -0,0 +1,572 @@
++/*
++ * FPGA Manager Driver for Altera Arria10 SoCFPGA
++ *
++ * Copyright (C) 2015-2016 Altera Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
 + */
-+struct fpga_image_info {
-+	u32 flags;
-+	u32 enable_timeout_us;
-+	u32 disable_timeout_us;
++
++#include <linux/clk.h>
++#include <linux/device.h>
++#include <linux/delay.h>
++#include <linux/fpga/fpga-mgr.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/regmap.h>
++
++#define A10_FPGAMGR_DCLKCNT_OFST				0x08
++#define A10_FPGAMGR_DCLKSTAT_OFST				0x0c
++#define A10_FPGAMGR_IMGCFG_CTL_00_OFST				0x70
++#define A10_FPGAMGR_IMGCFG_CTL_01_OFST				0x74
++#define A10_FPGAMGR_IMGCFG_CTL_02_OFST				0x78
++#define A10_FPGAMGR_IMGCFG_STAT_OFST				0x80
++
++#define A10_FPGAMGR_DCLKSTAT_DCLKDONE				BIT(0)
++
++#define A10_FPGAMGR_IMGCFG_CTL_00_S2F_NENABLE_NCONFIG		BIT(0)
++#define A10_FPGAMGR_IMGCFG_CTL_00_S2F_NENABLE_NSTATUS		BIT(1)
++#define A10_FPGAMGR_IMGCFG_CTL_00_S2F_NENABLE_CONDONE		BIT(2)
++#define A10_FPGAMGR_IMGCFG_CTL_00_S2F_NCONFIG			BIT(8)
++#define A10_FPGAMGR_IMGCFG_CTL_00_S2F_NSTATUS_OE		BIT(16)
++#define A10_FPGAMGR_IMGCFG_CTL_00_S2F_CONDONE_OE		BIT(24)
++
++#define A10_FPGAMGR_IMGCFG_CTL_01_S2F_NENABLE_CONFIG		BIT(0)
++#define A10_FPGAMGR_IMGCFG_CTL_01_S2F_PR_REQUEST		BIT(16)
++#define A10_FPGAMGR_IMGCFG_CTL_01_S2F_NCE			BIT(24)
++
++#define A10_FPGAMGR_IMGCFG_CTL_02_EN_CFG_CTRL			BIT(0)
++#define A10_FPGAMGR_IMGCFG_CTL_02_CDRATIO_MASK		(BIT(16) | BIT(17))
++#define A10_FPGAMGR_IMGCFG_CTL_02_CDRATIO_SHIFT			16
++#define A10_FPGAMGR_IMGCFG_CTL_02_CFGWIDTH			BIT(24)
++#define A10_FPGAMGR_IMGCFG_CTL_02_CFGWIDTH_SHIFT		24
++
++#define A10_FPGAMGR_IMGCFG_STAT_F2S_CRC_ERROR			BIT(0)
++#define A10_FPGAMGR_IMGCFG_STAT_F2S_EARLY_USERMODE		BIT(1)
++#define A10_FPGAMGR_IMGCFG_STAT_F2S_USERMODE			BIT(2)
++#define A10_FPGAMGR_IMGCFG_STAT_F2S_NSTATUS_PIN			BIT(4)
++#define A10_FPGAMGR_IMGCFG_STAT_F2S_CONDONE_PIN			BIT(6)
++#define A10_FPGAMGR_IMGCFG_STAT_F2S_PR_READY			BIT(9)
++#define A10_FPGAMGR_IMGCFG_STAT_F2S_PR_DONE			BIT(10)
++#define A10_FPGAMGR_IMGCFG_STAT_F2S_PR_ERROR			BIT(11)
++#define A10_FPGAMGR_IMGCFG_STAT_F2S_NCONFIG_PIN			BIT(12)
++#define A10_FPGAMGR_IMGCFG_STAT_F2S_MSEL_MASK	(BIT(16) | BIT(17) | BIT(18))
++#define A10_FPGAMGR_IMGCFG_STAT_F2S_MSEL_SHIFT		        16
++
++/* FPGA CD Ratio Value */
++#define CDRATIO_x1						0x0
++#define CDRATIO_x2						0x1
++#define CDRATIO_x4						0x2
++#define CDRATIO_x8						0x3
++
++/* Configuration width 16/32 bit */
++#define CFGWDTH_32						1
++#define CFGWDTH_16						0
++
++/*
++ * struct a10_fpga_priv - private data for fpga manager
++ * @regmap: regmap for register access
++ * @fpga_data_addr: iomap for single address data register to FPGA
++ * @clk: clock
++ */
++struct a10_fpga_priv {
++	struct regmap *regmap;
++	void __iomem *fpga_data_addr;
++	struct clk *clk;
 +};
 +
-+/**
-  * struct fpga_manager_ops - ops for low level fpga manager drivers
-  * @state: returns an enum value of the FPGA's state
-  * @write_init: prepare the FPGA to receive confuration data
-@@ -82,10 +94,12 @@ enum fpga_mgr_states {
-  */
- struct fpga_manager_ops {
- 	enum fpga_mgr_states (*state)(struct fpga_manager *mgr);
--	int (*write_init)(struct fpga_manager *mgr, u32 flags,
-+	int (*write_init)(struct fpga_manager *mgr,
-+			  struct fpga_image_info *info,
- 			  const char *buf, size_t count);
- 	int (*write)(struct fpga_manager *mgr, const char *buf, size_t count);
--	int (*write_complete)(struct fpga_manager *mgr, u32 flags);
-+	int (*write_complete)(struct fpga_manager *mgr,
-+			      struct fpga_image_info *info);
- 	void (*fpga_remove)(struct fpga_manager *mgr);
- };
- 
-@@ -109,10 +123,11 @@ struct fpga_manager {
- 
- #define to_fpga_manager(d) container_of(d, struct fpga_manager, dev)
- 
--int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags,
-+int fpga_mgr_buf_load(struct fpga_manager *mgr, struct fpga_image_info *info,
- 		      const char *buf, size_t count);
- 
--int fpga_mgr_firmware_load(struct fpga_manager *mgr, u32 flags,
-+int fpga_mgr_firmware_load(struct fpga_manager *mgr,
-+			   struct fpga_image_info *info,
- 			   const char *image_name);
- 
- struct fpga_manager *of_fpga_mgr_get(struct device_node *node);
++static bool socfpga_a10_fpga_writeable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case A10_FPGAMGR_DCLKCNT_OFST:
++	case A10_FPGAMGR_DCLKSTAT_OFST:
++	case A10_FPGAMGR_IMGCFG_CTL_00_OFST:
++	case A10_FPGAMGR_IMGCFG_CTL_01_OFST:
++	case A10_FPGAMGR_IMGCFG_CTL_02_OFST:
++		return true;
++	}
++	return false;
++}
++
++static bool socfpga_a10_fpga_readable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case A10_FPGAMGR_DCLKCNT_OFST:
++	case A10_FPGAMGR_DCLKSTAT_OFST:
++	case A10_FPGAMGR_IMGCFG_CTL_00_OFST:
++	case A10_FPGAMGR_IMGCFG_CTL_01_OFST:
++	case A10_FPGAMGR_IMGCFG_CTL_02_OFST:
++	case A10_FPGAMGR_IMGCFG_STAT_OFST:
++		return true;
++	}
++	return false;
++}
++
++static const struct regmap_config socfpga_a10_fpga_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.writeable_reg = socfpga_a10_fpga_writeable_reg,
++	.readable_reg = socfpga_a10_fpga_readable_reg,
++	.max_register = A10_FPGAMGR_IMGCFG_STAT_OFST,
++	.cache_type = REGCACHE_NONE,
++};
++
++/*
++ * from the register map description of cdratio in imgcfg_ctrl_02:
++ *  Normal Configuration    : 32bit Passive Parallel
++ *  Partial Reconfiguration : 16bit Passive Parallel
++ */
++static void socfpga_a10_fpga_set_cfg_width(struct a10_fpga_priv *priv,
++					   int width)
++{
++	width <<= A10_FPGAMGR_IMGCFG_CTL_02_CFGWIDTH_SHIFT;
++
++	regmap_update_bits(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_02_OFST,
++			   A10_FPGAMGR_IMGCFG_CTL_02_CFGWIDTH, width);
++}
++
++static void socfpga_a10_fpga_generate_dclks(struct a10_fpga_priv *priv,
++					    u32 count)
++{
++	u32 val;
++	unsigned int i;
++
++	/* Clear any existing DONE status. */
++	regmap_write(priv->regmap, A10_FPGAMGR_DCLKSTAT_OFST,
++		     A10_FPGAMGR_DCLKSTAT_DCLKDONE);
++
++	/* Issue the DCLK regmap. */
++	regmap_write(priv->regmap, A10_FPGAMGR_DCLKCNT_OFST, count);
++
++	/* wait till the dclkcnt done */
++	for (i = 0; i < 100; i++) {
++		regmap_read(priv->regmap, A10_FPGAMGR_DCLKSTAT_OFST, &val);
++		if (val)
++			break;
++		udelay(1);
++	}
++
++	/* Clear DONE status. */
++	regmap_write(priv->regmap, A10_FPGAMGR_DCLKSTAT_OFST,
++		     A10_FPGAMGR_DCLKSTAT_DCLKDONE);
++}
++
++static int socfpga_a10_fpga_encrypted(struct fpga_manager *mgr,
++				      u32 *buf32, size_t buf32_size)
++{
++	int encrypt;
++
++	if (buf32_size < 70)
++		return -EINVAL;
++
++	encrypt = ((buf32[69] >> 2) & 3) != 0;
++
++	dev_dbg(&mgr->dev, "header word %d = %08x encrypt=%d\n",
++		69, buf32[69], encrypt);
++
++	return encrypt;
++}
++
++static int socfpga_a10_fpga_compressed(struct fpga_manager *mgr,
++				       u32 *buf32, size_t buf32_size)
++{
++	int compress;
++
++	if (buf32_size < 230)
++		return -EINVAL;
++
++	compress = !((buf32[229] >> 1) & 1);
++
++	dev_dbg(&mgr->dev, "header word %d = %08x compress=%d\n",
++		229, buf32[229], compress);
++
++	return compress;
++}
++
++static unsigned int socfpga_a10_fpga_get_cd_ratio(unsigned int cfg_width,
++						  bool encrypt, bool compress)
++{
++	unsigned int cd_ratio;
++
++	/*
++	 * cd ratio is dependent on cfg width and whether the bitstream
++	 * is encrypted and/or compressed.
++	 *
++	 * | width | encr. | compr. | cd ratio |
++	 * |  16   |   0   |   0    |     1    |
++	 * |  16   |   0   |   1    |     4    |
++	 * |  16   |   1   |   0    |     2    |
++	 * |  16   |   1   |   1    |     4    |
++	 * |  32   |   0   |   0    |     1    |
++	 * |  32   |   0   |   1    |     8    |
++	 * |  32   |   1   |   0    |     4    |
++	 * |  32   |   1   |   1    |     8    |
++	 */
++	if (!compress && !encrypt)
++		return CDRATIO_x1;
++
++	if (compress)
++		cd_ratio = CDRATIO_x4;
++	else
++		cd_ratio = CDRATIO_x2;
++
++	/* If 32 bit, double the cd ratio by incrementing the field  */
++	if (cfg_width == CFGWDTH_32)
++		cd_ratio += 1;
++
++	return cd_ratio;
++}
++
++static int socfpga_a10_fpga_set_cdratio(struct fpga_manager *mgr,
++					unsigned int cfg_width,
++					const char *buf, size_t count)
++{
++	struct a10_fpga_priv *priv = mgr->priv;
++	unsigned int cd_ratio;
++	int encrypt, compress;
++
++	encrypt = socfpga_a10_fpga_encrypted(mgr, (u32 *)buf, count / 4);
++	if (encrypt < 0)
++		return -EINVAL;
++
++	compress = socfpga_a10_fpga_compressed(mgr, (u32 *)buf, count / 4);
++	if (compress < 0)
++		return -EINVAL;
++
++	cd_ratio = socfpga_a10_fpga_get_cd_ratio(cfg_width, encrypt, compress);
++
++	regmap_update_bits(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_02_OFST,
++			   A10_FPGAMGR_IMGCFG_CTL_02_CDRATIO_MASK,
++			   cd_ratio << A10_FPGAMGR_IMGCFG_CTL_02_CDRATIO_SHIFT);
++
++	return 0;
++}
++
++static u32 socfpga_a10_fpga_read_stat(struct a10_fpga_priv *priv)
++{
++	u32 val;
++
++	regmap_read(priv->regmap, A10_FPGAMGR_IMGCFG_STAT_OFST, &val);
++
++	return val;
++}
++
++static int socfpga_a10_fpga_wait_for_pr_ready(struct a10_fpga_priv *priv)
++{
++	u32 reg, i;
++
++	for (i = 0; i < 10 ; i++) {
++		reg = socfpga_a10_fpga_read_stat(priv);
++
++		if (reg & A10_FPGAMGR_IMGCFG_STAT_F2S_PR_ERROR)
++			return -EINVAL;
++
++		if (reg & A10_FPGAMGR_IMGCFG_STAT_F2S_PR_READY)
++			return 0;
++	}
++
++	return -ETIMEDOUT;
++}
++
++static int socfpga_a10_fpga_wait_for_pr_done(struct a10_fpga_priv *priv)
++{
++	u32 reg, i;
++
++	for (i = 0; i < 10 ; i++) {
++		reg = socfpga_a10_fpga_read_stat(priv);
++
++		if (reg & A10_FPGAMGR_IMGCFG_STAT_F2S_PR_ERROR)
++			return -EINVAL;
++
++		if (reg & A10_FPGAMGR_IMGCFG_STAT_F2S_PR_DONE)
++			return 0;
++	}
++
++	return -ETIMEDOUT;
++}
++
++/* Start the FPGA programming by initialize the FPGA Manager */
++static int socfpga_a10_fpga_write_init(struct fpga_manager *mgr,
++				       struct fpga_image_info *info,
++				       const char *buf, size_t count)
++{
++	struct a10_fpga_priv *priv = mgr->priv;
++	unsigned int cfg_width;
++	u32 msel, stat, mask;
++	int ret;
++
++	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG)
++		cfg_width = CFGWDTH_16;
++	else
++		return -EINVAL;
++
++	/* Check for passive parallel (msel == 000 or 001) */
++	msel = socfpga_a10_fpga_read_stat(priv);
++	msel &= A10_FPGAMGR_IMGCFG_STAT_F2S_MSEL_MASK;
++	msel >>= A10_FPGAMGR_IMGCFG_STAT_F2S_MSEL_SHIFT;
++	if ((msel != 0) && (msel != 1)) {
++		dev_dbg(&mgr->dev, "Fail: invalid msel=%d\n", msel);
++		return -EINVAL;
++	}
++
++	/* Make sure no external devices are interfering */
++	stat = socfpga_a10_fpga_read_stat(priv);
++	mask = A10_FPGAMGR_IMGCFG_STAT_F2S_NCONFIG_PIN |
++	       A10_FPGAMGR_IMGCFG_STAT_F2S_NSTATUS_PIN;
++	if ((stat & mask) != mask)
++		return -EINVAL;
++
++	/* Set cfg width */
++	socfpga_a10_fpga_set_cfg_width(priv, cfg_width);
++
++	/* Determine cd ratio from bitstream header and set cd ratio */
++	ret = socfpga_a10_fpga_set_cdratio(mgr, cfg_width, buf, count);
++	if (ret)
++		return ret;
++
++	/*
++	 * Clear s2f_nce to enable chip select.  Leave pr_request
++	 * unasserted and override disabled.
++	 */
++	regmap_write(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_01_OFST,
++		     A10_FPGAMGR_IMGCFG_CTL_01_S2F_NENABLE_CONFIG);
++
++	/* Set cfg_ctrl to enable s2f dclk and data */
++	regmap_update_bits(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_02_OFST,
++			   A10_FPGAMGR_IMGCFG_CTL_02_EN_CFG_CTRL,
++			   A10_FPGAMGR_IMGCFG_CTL_02_EN_CFG_CTRL);
++
++	/*
++	 * Disable overrides not needed for pr.
++	 * s2f_config==1 leaves reset deasseted.
++	 */
++	regmap_write(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_00_OFST,
++		     A10_FPGAMGR_IMGCFG_CTL_00_S2F_NENABLE_NCONFIG |
++		     A10_FPGAMGR_IMGCFG_CTL_00_S2F_NENABLE_NSTATUS |
++		     A10_FPGAMGR_IMGCFG_CTL_00_S2F_NENABLE_CONDONE |
++		     A10_FPGAMGR_IMGCFG_CTL_00_S2F_NCONFIG);
++
++	/* Enable override for data, dclk, nce, and pr_request to CSS */
++	regmap_update_bits(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_01_OFST,
++			   A10_FPGAMGR_IMGCFG_CTL_01_S2F_NENABLE_CONFIG, 0);
++
++	/* Send some clocks to clear out any errors */
++	socfpga_a10_fpga_generate_dclks(priv, 256);
++
++	/* Assert pr_request */
++	regmap_update_bits(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_01_OFST,
++			   A10_FPGAMGR_IMGCFG_CTL_01_S2F_PR_REQUEST,
++			   A10_FPGAMGR_IMGCFG_CTL_01_S2F_PR_REQUEST);
++
++	/* Do some dclks, wait for pr_ready */
++	socfpga_a10_fpga_generate_dclks(priv, 0x7ff);
++
++	/* Wait for pr_ready */
++	return socfpga_a10_fpga_wait_for_pr_ready(priv);
++}
++
++/*
++ * write data to the FPGA data register
++ */
++static int socfpga_a10_fpga_write(struct fpga_manager *mgr, const char *buf,
++				  size_t count)
++{
++	struct a10_fpga_priv *priv = mgr->priv;
++	u32 *buffer_32 = (u32 *)buf;
++	size_t i = 0;
++
++	if (count <= 0)
++		return -EINVAL;
++
++	/* Write out the complete 32-bit chunks */
++	while (count >= sizeof(u32)) {
++		writel(buffer_32[i++], priv->fpga_data_addr);
++		count -= sizeof(u32);
++	}
++
++	/* Write out remaining non 32-bit chunks */
++	switch (count) {
++	case 3:
++		writel(buffer_32[i++] & 0x00ffffff, priv->fpga_data_addr);
++		break;
++	case 2:
++		writel(buffer_32[i++] & 0x0000ffff, priv->fpga_data_addr);
++		break;
++	case 1:
++		writel(buffer_32[i++] & 0x000000ff, priv->fpga_data_addr);
++		break;
++	case 0:
++		break;
++	default:
++		/* This will never happen */
++		return -EFAULT;
++	}
++
++	return 0;
++}
++
++static int socfpga_a10_fpga_write_complete(struct fpga_manager *mgr,
++					   struct fpga_image_info *info)
++{
++	struct a10_fpga_priv *priv = mgr->priv;
++	u32 reg;
++	int ret;
++
++	/* Wait for pr_done */
++	ret = socfpga_a10_fpga_wait_for_pr_done(priv);
++
++	/* Clear pr_request */
++	regmap_update_bits(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_01_OFST,
++			   A10_FPGAMGR_IMGCFG_CTL_01_S2F_PR_REQUEST, 0);
++
++	/* Send some clocks to clear out any errors */
++	socfpga_a10_fpga_generate_dclks(priv, 256);
++
++	/* Disable s2f dclk and data */
++	regmap_update_bits(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_02_OFST,
++			   A10_FPGAMGR_IMGCFG_CTL_02_EN_CFG_CTRL, 0);
++
++	/* Deassert chip select */
++	regmap_update_bits(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_01_OFST,
++			   A10_FPGAMGR_IMGCFG_CTL_01_S2F_NCE,
++			   A10_FPGAMGR_IMGCFG_CTL_01_S2F_NCE);
++
++	/* Disable data, dclk, nce, and pr_request override to CSS */
++	regmap_update_bits(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_01_OFST,
++			   A10_FPGAMGR_IMGCFG_CTL_01_S2F_NENABLE_CONFIG,
++			   A10_FPGAMGR_IMGCFG_CTL_01_S2F_NENABLE_CONFIG);
++
++	/* Return any errors regarding pr_done or pr_error */
++	if (ret)
++		return ret;
++
++	/* Final check */
++	reg = socfpga_a10_fpga_read_stat(priv);
++
++	if (((reg & A10_FPGAMGR_IMGCFG_STAT_F2S_USERMODE) == 0) ||
++	    ((reg & A10_FPGAMGR_IMGCFG_STAT_F2S_CONDONE_PIN) == 0) ||
++	    ((reg & A10_FPGAMGR_IMGCFG_STAT_F2S_NSTATUS_PIN) == 0)) {
++		dev_dbg(&mgr->dev,
++			"Timeout in final check. Status=%08xf\n", reg);
++		return -ETIMEDOUT;
++	}
++
++	return 0;
++}
++
++static enum fpga_mgr_states socfpga_a10_fpga_state(struct fpga_manager *mgr)
++{
++	struct a10_fpga_priv *priv = mgr->priv;
++	u32 reg = socfpga_a10_fpga_read_stat(priv);
++
++	if (reg & A10_FPGAMGR_IMGCFG_STAT_F2S_USERMODE)
++		return FPGA_MGR_STATE_OPERATING;
++
++	if (reg & A10_FPGAMGR_IMGCFG_STAT_F2S_PR_READY)
++		return FPGA_MGR_STATE_WRITE;
++
++	if (reg & A10_FPGAMGR_IMGCFG_STAT_F2S_CRC_ERROR)
++		return FPGA_MGR_STATE_WRITE_COMPLETE_ERR;
++
++	if ((reg & A10_FPGAMGR_IMGCFG_STAT_F2S_NSTATUS_PIN) == 0)
++		return FPGA_MGR_STATE_RESET;
++
++	return FPGA_MGR_STATE_UNKNOWN;
++}
++
++static const struct fpga_manager_ops socfpga_a10_fpga_mgr_ops = {
++	.state = socfpga_a10_fpga_state,
++	.write_init = socfpga_a10_fpga_write_init,
++	.write = socfpga_a10_fpga_write,
++	.write_complete = socfpga_a10_fpga_write_complete,
++};
++
++static int socfpga_a10_fpga_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct a10_fpga_priv *priv;
++	void __iomem *reg_base;
++	struct resource *res;
++	int ret;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	/* First mmio base is for register access */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	reg_base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(reg_base))
++		return PTR_ERR(reg_base);
++
++	/* Second mmio base is for writing FPGA image data */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	priv->fpga_data_addr = devm_ioremap_resource(dev, res);
++	if (IS_ERR(priv->fpga_data_addr))
++		return PTR_ERR(priv->fpga_data_addr);
++
++	/* regmap for register access */
++	priv->regmap = devm_regmap_init_mmio(dev, reg_base,
++					     &socfpga_a10_fpga_regmap_config);
++	if (IS_ERR(priv->regmap))
++		return -ENODEV;
++
++	priv->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(priv->clk)) {
++		dev_err(dev, "no clock specified\n");
++		return PTR_ERR(priv->clk);
++	}
++
++	ret = clk_prepare_enable(priv->clk);
++	if (ret) {
++		dev_err(dev, "could not enable clock\n");
++		return -EBUSY;
++	}
++
++	return fpga_mgr_register(dev, "SoCFPGA Arria10 FPGA Manager",
++				 &socfpga_a10_fpga_mgr_ops, priv);
++}
++
++static int socfpga_a10_fpga_remove(struct platform_device *pdev)
++{
++	struct fpga_manager *mgr = platform_get_drvdata(pdev);
++	struct a10_fpga_priv *priv = mgr->priv;
++
++	fpga_mgr_unregister(&pdev->dev);
++	clk_disable_unprepare(priv->clk);
++
++	return 0;
++}
++
++static const struct of_device_id socfpga_a10_fpga_of_match[] = {
++	{ .compatible = "altr,socfpga-a10-fpga-mgr", },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, socfpga_a10_fpga_of_match);
++
++static struct platform_driver socfpga_a10_fpga_driver = {
++	.probe = socfpga_a10_fpga_probe,
++	.remove = socfpga_a10_fpga_remove,
++	.driver = {
++		.name	= "socfpga_a10_fpga_manager",
++		.of_match_table = socfpga_a10_fpga_of_match,
++	},
++};
++
++module_platform_driver(socfpga_a10_fpga_driver);
++
++MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
++MODULE_DESCRIPTION("SoCFPGA Arria10 FPGA Manager");
++MODULE_LICENSE("GPL v2");
 -- 
 2.9.3
