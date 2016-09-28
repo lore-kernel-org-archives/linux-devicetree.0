@@ -1,38 +1,124 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 2/3] DT: EVM: add LEDs
-Date: Tue, 27 Sep 2016 20:37:04 -0700
-Message-ID: <20160928033703.erwozguik4rie3cn@atomide.com>
-References: <cover.1474953969.git.hns@goldelico.com>
- <d68619a23d642eacf12fd0a3c51f19d006436cbe.1474953969.git.hns@goldelico.com>
- <20160927194904.4im7ukktg5afjmki@atomide.com>
- <21B97601-328A-41DC-84EE-AA15A6977E98@goldelico.com>
+From: Zhao Qiang <qiang.zhao@nxp.com>
+Subject: [PATCH 1/3] ls1043ardb: add qe node to ls1043ardb
+Date: Wed, 28 Sep 2016 11:40:36 +0800
+Message-ID: <1475034038-7217-1-git-send-email-qiang.zhao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <21B97601-328A-41DC-84EE-AA15A6977E98@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
+To: robh+dt@kernel.org
+Cc: mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, xiaobo.xie@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Zhao Qiang <qiang.zhao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [160927 13:11]:
-> > Am 27.09.2016 um 21:49 schrieb Tony Lindgren <tony@atomide.com>:
-> > How about this for defaults:
-> > 
-> > - heartbeat for led3
-> > - cpu0 for led4
-> > - cpu1 for led5
-> 
-> Good idea. Will try.
-> 
-> What I don't exactly know is if these gpios based on an I2C-expander
-> can handle cpu activity triggers or if they are locked up if this i2c
-> processing triggers another cpu activity...
+Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 16 ++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi    | 66 +++++++++++++++++++++++
+ 2 files changed, 82 insertions(+)
 
-Oh right, if the GPIOs are on the i2c bus it's probably not a good
-idea :) Or at least will be inaccurate if the bus can sleep.
-
-Regards,
-
-Tony
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+index 4084631..4fc60e7 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+@@ -124,6 +124,22 @@
+ 	};
+ };
+ 
++&uqe {
++	ucc_hdlc: ucc@2000 {
++		compatible = "fsl,ls1043-ucc-hdlc", "fsl,ucc-hdlc";
++		rx-clock-name = "clk8";
++		tx-clock-name = "clk9";
++		fsl,rx-sync-clock = "rsync_pin";
++		fsl,tx-sync-clock = "tsync_pin";
++		fsl,tx-timeslot-mask = <0xfffffffe>;
++		fsl,rx-timeslot-mask = <0xfffffffe>;
++		fsl,tdm-framer-type = "e1";
++		fsl,tdm-id = <0>;
++		fsl,siram-entry-id = <0>;
++		fsl,tdm-interface;
++	};
++};
++
+ &duart0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index e669fbd..f6b6775 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -388,6 +388,72 @@
+ 			#interrupt-cells = <2>;
+ 		};
+ 
++		uqe: uqe@2400000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			device_type = "qe";
++			compatible = "fsl,qe", "simple-bus";
++			ranges = <0x0 0x0 0x2400000 0x40000>;
++			reg = <0x0 0x2400000 0x0 0x480>;
++			brg-frequency = <100000000>;
++			bus-frequency = <200000000>;
++
++			fsl,qe-num-riscs = <1>;
++			fsl,qe-num-snums = <28>;
++
++			qeic: qeic@80 {
++				compatible = "fsl,qe-ic";
++				reg = <0x80 0x80>;
++				#address-cells = <0>;
++				interrupt-controller;
++				#interrupt-cells = <1>;
++				interrupts = <0 77 0x04 0 77 0x04>;
++			};
++
++			si1: si@700 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,ls1043-qe-si",
++						"fsl,t1040-qe-si";
++				reg = <0x700 0x80>;
++			};
++
++			siram1: siram@1000 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				compatible = "fsl,ls1043-qe-siram",
++						"fsl,t1040-qe-siram";
++				reg = <0x1000 0x800>;
++			};
++
++			ucc@2000 {
++				cell-index = <1>;
++				reg = <0x2000 0x200>;
++				interrupts = <32>;
++				interrupt-parent = <&qeic>;
++			};
++
++			ucc@2200 {
++				cell-index = <3>;
++				reg = <0x2200 0x200>;
++				interrupts = <34>;
++				interrupt-parent = <&qeic>;
++			};
++
++			muram@10000 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				compatible = "fsl,qe-muram", "fsl,cpm-muram";
++				ranges = <0x0 0x10000 0x6000>;
++
++				data-only@0 {
++					compatible = "fsl,qe-muram-data",
++					"fsl,cpm-muram-data";
++					reg = <0x0 0x6000>;
++				};
++			};
++		};
++
+ 		lpuart0: serial@2950000 {
+ 			compatible = "fsl,ls1021a-lpuart";
+ 			reg = <0x0 0x2950000 0x0 0x1000>;
+-- 
+2.1.0.27.g96db324
