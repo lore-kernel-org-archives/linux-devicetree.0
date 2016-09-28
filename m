@@ -1,8 +1,7 @@
 From: Alan Tull <atull@opensource.altera.com>
-Subject: [PATCH v19 06/12] fpga: add fpga image information struct for socfpga
- support
-Date: Wed, 28 Sep 2016 13:21:54 -0500
-Message-ID: <20160928182200.15800-7-atull@opensource.altera.com>
+Subject: [PATCH v19 02/12] doc: fpga-mgr: add fpga image info to api
+Date: Wed, 28 Sep 2016 13:21:50 -0500
+Message-ID: <20160928182200.15800-3-atull@opensource.altera.com>
 References: <20160928182200.15800-1-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,46 +21,111 @@ To: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, delicious.quinoa@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alan Tull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Josh Cartwright <joshc@ni.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, devicetree@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>, Jon Masters <jcm@redhat.com>, Matthew Gerlach <mgerlach@opensource.altera.com>, Frank Rowand <frowand.list@gmail.com>, Walter Goossens <waltergoossens@home.nl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Minor changes to the Altera SoCFPGA FPGA Manager support driver
-due to FPGA Manager framework API changes for the new fpga
-image information struct.
+This patch adds a minor change in the FPGA Mangager API
+to hold information that is specific to an FPGA image
+file.  This change is expected to bring little, if any,
+pain.
+
+An FPGA image file will have particulars that affect how the
+image is programmed to the FPGA.  One example is that
+current 'flags' currently has one bit which shows whether the
+FPGA image was built for full reconfiguration or partial
+reconfiguration.  Another example is timeout values for
+enabling or disabling the bridges in the FPGA.  As the
+complexity of the FPGA design increases, the bridges in the
+FPGA may take longer times to enable or disable.
+
+This patch documents the change in the FPGA Manager API
+functions, replacing the 'u32 flag' parameter with a pointer
+to struct fpga_image_info.
 
 Signed-off-by: Alan Tull <atull@opensource.altera.com>
 ---
 v19: Added in v19 of this patchset
 ---
- drivers/fpga/socfpga.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ Documentation/fpga/fpga-mgr.txt | 32 +++++++++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/fpga/socfpga.c b/drivers/fpga/socfpga.c
-index 27d2ff2..b6672e6 100644
---- a/drivers/fpga/socfpga.c
-+++ b/drivers/fpga/socfpga.c
-@@ -407,13 +407,14 @@ static int socfpga_fpga_reset(struct fpga_manager *mgr)
- /*
-  * Prepare the FPGA to receive the configuration data.
-  */
--static int socfpga_fpga_ops_configure_init(struct fpga_manager *mgr, u32 flags,
-+static int socfpga_fpga_ops_configure_init(struct fpga_manager *mgr,
-+					   struct fpga_image_info *info,
- 					   const char *buf, size_t count)
- {
- 	struct socfpga_fpga_priv *priv = mgr->priv;
- 	int ret;
+diff --git a/Documentation/fpga/fpga-mgr.txt b/Documentation/fpga/fpga-mgr.txt
+index ce3e84f..9227e3f 100644
+--- a/Documentation/fpga/fpga-mgr.txt
++++ b/Documentation/fpga/fpga-mgr.txt
+@@ -18,21 +18,25 @@ API Functions:
+ To program the FPGA from a file or from a buffer:
+ -------------------------------------------------
  
--	if (flags & FPGA_MGR_PARTIAL_RECONFIG) {
-+	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
- 		dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
- 		return -EINVAL;
- 	}
-@@ -478,7 +479,7 @@ static int socfpga_fpga_ops_configure_write(struct fpga_manager *mgr,
- }
+-	int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags,
++	int fpga_mgr_buf_load(struct fpga_manager *mgr,
++			      struct fpga_image_info *info,
+ 		              const char *buf, size_t count);
  
- static int socfpga_fpga_ops_configure_complete(struct fpga_manager *mgr,
--					       u32 flags)
-+					       struct fpga_image_info *info)
- {
- 	struct socfpga_fpga_priv *priv = mgr->priv;
- 	u32 status;
+ Load the FPGA from an image which exists as a buffer in memory.
+ 
+-	int fpga_mgr_firmware_load(struct fpga_manager *mgr, u32 flags,
++	int fpga_mgr_firmware_load(struct fpga_manager *mgr,
++				   struct fpga_image_info *info,
+ 		                   const char *image_name);
+ 
+ Load the FPGA from an image which exists as a file.  The image file must be on
+-the firmware search path (see the firmware class documentation).
+-
+-For both these functions, flags == 0 for normal full reconfiguration or
+-FPGA_MGR_PARTIAL_RECONFIG for partial reconfiguration.  If successful, the FPGA
+-ends up in operating mode.  Return 0 on success or a negative error code.
++the firmware search path (see the firmware class documentation).  If successful,
++the FPGA ends up in operating mode.  Return 0 on success or a negative error
++code.
+ 
++A FPGA design contained in a FPGA image file will likely have particulars that
++affect how the image is programmed to the FPGA.  These are contained in struct
++fpga_image_info.  Currently the only such particular is a single flag bit
++indicating whether the image is for full or partial reconfiguration.
+ 
+ To get/put a reference to a FPGA manager:
+ -----------------------------------------
+@@ -70,8 +74,11 @@ struct device_node *mgr_node = ...
+ char *buf = ...
+ int count = ...
+ 
++/* struct with information about the FPGA image to program. */
++struct fpga_image_info info;
++
+ /* flags indicates whether to do full or partial reconfiguration */
+-int flags = 0;
++info.flags = 0;
+ 
+ int ret;
+ 
+@@ -79,7 +86,7 @@ int ret;
+ struct fpga_manager *mgr = of_fpga_mgr_get(mgr_node);
+ 
+ /* Load the buffer to the FPGA */
+-ret = fpga_mgr_buf_load(mgr, flags, buf, count);
++ret = fpga_mgr_buf_load(mgr, &info, buf, count);
+ 
+ /* Release the FPGA manager */
+ fpga_mgr_put(mgr);
+@@ -96,8 +103,11 @@ struct device_node *mgr_node = ...
+ /* FPGA image is in this file which is in the firmware search path */
+ const char *path = "fpga-image-9.rbf"
+ 
++/* struct with information about the FPGA image to program. */
++struct fpga_image_info info;
++
+ /* flags indicates whether to do full or partial reconfiguration */
+-int flags = 0;
++info.flags = 0;
+ 
+ int ret;
+ 
+@@ -105,7 +115,7 @@ int ret;
+ struct fpga_manager *mgr = of_fpga_mgr_get(mgr_node);
+ 
+ /* Get the firmware image (path) and load it to the FPGA */
+-ret = fpga_mgr_firmware_load(mgr, flags, path);
++ret = fpga_mgr_firmware_load(mgr, &info, path);
+ 
+ /* Release the FPGA manager */
+ fpga_mgr_put(mgr);
 -- 
 2.9.3
