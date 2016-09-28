@@ -1,56 +1,59 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] mfd: cros_ec_spi: Add compatible string for NI
- version of cros-ec-spi
-Date: Wed, 28 Sep 2016 10:32:35 -0700
-Message-ID: <CAAtXAHdd+WdcHzobkgwjMTi78ZnZ-wTA_0OB8LEpAdJEOsQ91w@mail.gmail.com>
-References: <1475081961-3858-1-git-send-email-moritz.fischer@ettus.com>
- <1475081961-3858-3-git-send-email-moritz.fischer@ettus.com> <CAKdAkRRMbfJWeiEWWDUPemWS9f4rzSWX4T1sp+qD9_BDoU-Jdg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: rfkill guidance
+Date: Wed, 28 Sep 2016 19:33:05 +0200
+Message-ID: <A8F63484-5A61-45B2-B1FD-493CBD36506D@holtmann.org>
+References: <324c35c6-49ca-174c-db07-674532f3e628@broadcom.com>
+ <1474961105.5141.5.camel@sipsolutions.net>
+ <0a8cff88-73aa-8311-7afe-98612161421f@broadcom.com>
+ <1475044682.4139.18.camel@sipsolutions.net>
+ <1475045391.4139.26.camel@sipsolutions.net>
+Mime-Version: 1.0 (Mac OS X Mail 10.0 \(3226\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKdAkRRMbfJWeiEWWDUPemWS9f4rzSWX4T1sp+qD9_BDoU-Jdg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1475045391.4139.26.camel-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio.lopez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, moritz.fischer.private-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, julia-acOepvfBmUk@public.gmane.org
+To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Cc: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dmitry,
+Hi Johannes,
 
-On Wed, Sep 28, 2016 at 10:27 AM, Dmitry Torokhov
-<dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Sep 28, 2016 at 9:59 AM, Moritz Fischer
-> <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> wrote:
->> Add compatible string for NI version of cros-ec-spi.
->>
->> Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/mfd/cros_ec_spi.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/mfd/cros_ec_spi.c b/drivers/mfd/cros_ec_spi.c
->> index ebe9b94..e4504ec 100644
->> --- a/drivers/mfd/cros_ec_spi.c
->> +++ b/drivers/mfd/cros_ec_spi.c
->> @@ -708,6 +708,7 @@ static SIMPLE_DEV_PM_OPS(cros_ec_spi_pm_ops, cros_ec_spi_suspend,
->>                          cros_ec_spi_resume);
->>
->>  static const struct of_device_id cros_ec_spi_of_match[] = {
->> +       { .compatible = "ni,cros-ec-spi", },
->
-> I am confused: if the 2 controllers are the same, why do we need the
-> new compat string, at least in the driver? Shouldn't DTS simply use
-> "google,cros-ec-spi", or maybe both (compatible = "ni,cros-ec-spi",
-> "google,cros-ec-spi")?
+>> Today we already have all the platform rfkill instances (like the
+>> various ACPI ones) that don't live off a device that they control,
+>> but instead control the platform's radio functionality. And in some
+>> cases, that actually has very similar behaviour to what was proposed
+>> in the previous patch, and what you're looking for, in that it
+>> sometimes kills power to BT or WiFi chips when soft-disabled (or
+>> kicks them off the bus in some other way).
+> 
+> Actually, let me retract that a bit. Obviously they *do* control a
+> device or radio, but we don't actually know which one. And that can
+> actually become a problem, since we don't even know how they work etc.
+> 
+> So IOW, even with the ACPI stuff, there's no real "platform rfkill"
+> concept - it's always killing a specific radio.
+> 
+> There used to be some rfkill that was just reflecting the button state,
+> but I think we got rid of that in favour of reflecting button state
+> through hid/input, if it doesn't also control a radio.
+> 
+> So, actually, the more I think about it the more I agree with Mark's
+> objection. It doesn't really make sense to have a concept of an rfkill
+> and not know what radio it controls.
+> 
+> In your particular case, Jon, it's complicated by the fact that you
+> don't want to bind a kernel driver with the rfkill, not sure where
+> you'd get a device to tie the rfkill to then.
 
-It might deviate in the future, but you're right, the driver patch is
-not required for now
-since we can use the fallback mechanism until there really *is* a
-difference. We can probably
-drop this one for now.
+we are actually taking away the RFKILL switches that are represented by specific GPIOs. We are mapping these into the Bluetooth driver itself. This has been done for Intel and Broadcom UART based Bluetooth chips. The power control is done via the Bluetooth subsystem and that is how it should be. Enumeration of these GPIOs is done from ACPI or eventually DT (which has not made it upstream yet).
 
-Cheers,
+In addition, we do not want this crazy Android side of things with custom vendor specific power control via userspace or whatever crazy is done there. It can be all done through the Bluetooth subsystem and still use Android on top of it. There is a concept called HCI User Channel that allows user space application to gain exclusive access to the HCI transport. It has the advantage that the kernel does all the driver integration and handles power control.
 
-Moritz
+Regards
+
+Marcel
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
