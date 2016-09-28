@@ -1,50 +1,79 @@
-From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
-Subject: Re: rfkill guidance
-Date: Wed, 28 Sep 2016 08:49:51 +0200
-Message-ID: <1475045391.4139.26.camel@sipsolutions.net>
-References: <324c35c6-49ca-174c-db07-674532f3e628@broadcom.com>
-         <1474961105.5141.5.camel@sipsolutions.net>
-         <0a8cff88-73aa-8311-7afe-98612161421f@broadcom.com>
-         (sfid-20160928_002127_321746_FD82CF46) <1475044682.4139.18.camel@sipsolutions.net>
-         (sfid-20160928_083815_252455_876B9E2B)
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Nayna Jain <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 1/2] Documentation: tpm: add the IBM Virtual TPM device tree binding documentation
+Date: Wed, 28 Sep 2016 04:30:40 -0400
+Message-ID: <1475051441-23008-1-git-send-email-nayna@linux.vnet.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475044682.4139.18.camel-cdvu00un1VgdHxzADdlk8Q@public.gmane.org> (sfid-20160928_083815_252455_876B9E2B)
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterhuewe-Mmb7MZpHnFY@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, hellerda-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, ltcgcw-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, cclaudio-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, honclo-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, Nayna Jain <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Today we already have all the platform rfkill instances (like the
-> various ACPI ones) that don't live off a device that they control,
-> but instead control the platform's radio functionality. And in some
-> cases, that actually has very similar behaviour to what was proposed
-> in the previous patch, and what you're looking for, in that it
-> sometimes kills power to BT or WiFi chips when soft-disabled (or
-> kicks them off the bus in some other way).
+Virtual TPM, which is being used on IBM POWER7+ and POWER8 systems running
+POWERVM, is currently supported by tpm device driver but lacks the
+documentation. This patch adds the missing documentation for the existing
+support.
 
-Actually, let me retract that a bit. Obviously they *do* control a
-device or radio, but we don't actually know which one. And that can
-actually become a problem, since we don't even know how they work etc.
+Suggested-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Nayna Jain <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+---
+Changelog v2:
 
-So IOW, even with the ACPI stuff, there's no real "platform rfkill"
-concept - it's always killing a specific radio.
+- New Patch
 
-There used to be some rfkill that was just reflecting the button state,
-but I think we got rid of that in favour of reflecting button state
-through hid/input, if it doesn't also control a radio.
+ .../devicetree/bindings/security/tpm/ibmvtpm.txt   | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
 
-So, actually, the more I think about it the more I agree with Mark's
-objection. It doesn't really make sense to have a concept of an rfkill
-and not know what radio it controls.
+diff --git a/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt b/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
+new file mode 100644
+index 0000000..d89f999
+--- /dev/null
++++ b/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
+@@ -0,0 +1,41 @@
++* Device Tree Bindings for IBM Virtual Trusted Platform Module(vtpm)
++
++Required properties:
++
++- compatible            : property name that conveys the platform architecture
++                          identifiers, as 'IBM,vtpm'
++- device_type           : specifies type of virtual device
++- interrupts            : property specifying the interrupt source number and
++                          sense code associated with this virtual I/O Adapters
++- ibm,my-drc-index      : integer index for the connector between the device
++                          and its parent - present only if Dynamic
++                          Reconfiguration(DR) Connector is enabled
++- ibm,#dma-address-cells: specifies the number of cells that are used to
++                          encode the physical address field of dma-window
++                          properties
++- ibm,#dma-size-cells   : specifies the number of cells that are used to
++                          encode the size field of dma-window properties
++- ibm,my-dma-window     : specifies DMA window associated with this virtual
++                          IOA
++- ibm,loc-code          : specifies the unique and persistent location code
++                          associated with this virtual I/O Adapters
++- linux,sml-base        : 64-bit base address of the reserved memory allocated
++                          for the firmware event log
++- linux,sml-size        : size of the memory allocated for the firmware event log
++
++Example (IBM Virtual Trusted Platform Module)
++---------------------------------------------
++
++                vtpm@30000003 {
++                        ibm,#dma-size-cells = <0x2>;
++                        compatible = "IBM,vtpm";
++                        device_type = "IBM,vtpm";
++                        ibm,my-drc-index = <0x30000003>;
++                        ibm,#dma-address-cells = <0x2>;
++                        linux,sml-base = <0xc60e 0x0>;
++                        interrupts = <0xa0003 0x0>;
++                        ibm,my-dma-window = <0x10000003 0x0 0x0 0x0 0x10000000>;
++                        ibm,loc-code = "U8286.41A.10082DV-V3-C3";
++                        reg = <0x30000003>;
++                        linux,sml-size = <0xbce10200>;
++                };
+-- 
+2.5.0
 
-In your particular case, Jon, it's complicated by the fact that you
-don't want to bind a kernel driver with the rfkill, not sure where
-you'd get a device to tie the rfkill to then.
-
-johannes
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
