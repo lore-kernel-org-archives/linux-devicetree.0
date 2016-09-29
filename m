@@ -1,100 +1,122 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v19 12/12] fpga-manager: Add Socfpga Arria10 support
-Date: Thu, 29 Sep 2016 09:49:04 -0700
-Message-ID: <CAAtXAHe927JSxaCs0LK8bm57mPRKvZ7ZaAvus_XDnzcQMmdAWw@mail.gmail.com>
-References: <20160928182200.15800-1-atull@opensource.altera.com> <20160928182200.15800-13-atull@opensource.altera.com>
+From: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH RESEND v3] mwifiex: parse device tree node for PCIe
+Date: Thu, 29 Sep 2016 09:54:07 -0700
+Message-ID: <CACK8Z6FpmLgdwEoN5Sg6VX691u3MAHKfg691gMpzPSsQtsAQJg@mail.gmail.com>
+References: <1475167183-18376-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160928182200.15800-13-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Cyril Chemparathy <cyril.chemparathy-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Matthew Gerlach <mgerlach-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, julia-acOepvfBmUk@public.gmane.org
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475167183-18376-1-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
+[+brian]
 
-On Wed, Sep 28, 2016 at 11:22 AM, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
-
-> +static void socfpga_a10_fpga_generate_dclks(struct a10_fpga_priv *priv,
-> +                                           u32 count)
+On Thu, Sep 29, 2016 at 9:39 AM, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
+> From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>
+> This patch derives device tree node from pcie bus layer framework.
+> Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
+> marvell-8xxx.txt) to accomodate PCIe changes.
+>
+> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> ---
+> v2: Included vendor and product IDs in compatible strings for PCIe
+> chipsets(Rob Herring)
+> v3: Patch is created using -M option so that it will only include diff of
+> original and renamed files(Rob Herring)
+> Resend v3: Resending the patch because I missed to include device tree mailing
+> while sending v3.
+> ---
+>  .../{marvell-sd8xxx.txt => marvell-8xxx.txt}         |  8 +++++---
+>  drivers/net/wireless/marvell/mwifiex/pcie.c          | 20 ++++++++++++++++++++
+>  drivers/net/wireless/marvell/mwifiex/sta_cmd.c       |  3 ++-
+>  3 files changed, 27 insertions(+), 4 deletions(-)
+>  rename Documentation/devicetree/bindings/net/wireless/{marvell-sd8xxx.txt => marvell-8xxx.txt} (91%)
+>
+> diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+> similarity index 91%
+> rename from Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+> rename to Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+> index c421aba..dfe5f8e 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+> @@ -1,8 +1,8 @@
+> -Marvell 8897/8997 (sd8897/sd8997) SDIO devices
+> +Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
+>  ------
+>
+> -This node provides properties for controlling the marvell sdio wireless device.
+> -The node is expected to be specified as a child node to the SDIO controller that
+> +This node provides properties for controlling the marvell sdio/pcie wireless device.
+> +The node is expected to be specified as a child node to the SDIO/PCIE controller that
+>  connects the device to the system.
+>
+>  Required properties:
+> @@ -10,6 +10,8 @@ Required properties:
+>    - compatible : should be one of the following:
+>         * "marvell,sd8897"
+>         * "marvell,sd8997"
+> +       * "pci11ab,2b42"
+> +       * "pci1b4b,2b42"
+>
+>  Optional properties:
+>
+> diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+> index 063c707..f1eeb73 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/pcie.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+> @@ -37,6 +37,23 @@ static struct mwifiex_if_ops pcie_ops;
+>
+>  static struct semaphore add_remove_card_sem;
+>
+> +static const struct of_device_id mwifiex_pcie_of_match_table[] = {
+> +       { .compatible = "pci11ab,2b42" },
+> +       { .compatible = "pci1b4b,2b42" },
+> +       { }
+> +};
+> +
+> +static int mwifiex_pcie_probe_of(struct device *dev)
 > +{
-> +       u32 val;
-> +       unsigned int i;
-> +
-> +       /* Clear any existing DONE status. */
-> +       regmap_write(priv->regmap, A10_FPGAMGR_DCLKSTAT_OFST,
-> +                    A10_FPGAMGR_DCLKSTAT_DCLKDONE);
-> +
-> +       /* Issue the DCLK regmap. */
-> +       regmap_write(priv->regmap, A10_FPGAMGR_DCLKCNT_OFST, count);
-> +
-> +       /* wait till the dclkcnt done */
-> +       for (i = 0; i < 100; i++) {
-> +               regmap_read(priv->regmap, A10_FPGAMGR_DCLKSTAT_OFST, &val);
-> +               if (val)
-> +                       break;
-> +               udelay(1);
+> +       if (!dev->of_node ||
+> +           !of_match_node(mwifiex_pcie_of_match_table, dev->of_node)) {
+> +               pr_err("pcie device node not available");
+> +               return -1;
 > +       }
-
-It's quite new, but regmap_read_poll_timeout() might be a good fit here?
-
-> +static int socfpga_a10_fpga_encrypted(struct fpga_manager *mgr,
-> +                                     u32 *buf32, size_t buf32_size)
-> +{
-> +       int encrypt;
 > +
-> +       if (buf32_size < 70)
-> +               return -EINVAL;
-> +
-> +       encrypt = ((buf32[69] >> 2) & 3) != 0;
-> +
-> +       dev_dbg(&mgr->dev, "header word %d = %08x encrypt=%d\n",
-> +               69, buf32[69], encrypt);
-Maybe a named constants for magic 69 / 70 value :)
-
-> +static int socfpga_a10_fpga_compressed(struct fpga_manager *mgr,
-> +                                      u32 *buf32, size_t buf32_size)
-> +{
-> +       int compress;
-> +
-> +       if (buf32_size < 230)
-> +               return -EINVAL;
-> +
-> +       compress = !((buf32[229] >> 1) & 1);
-> +
-> +       dev_dbg(&mgr->dev, "header word %d = %08x compress=%d\n",
-> +               229, buf32[229], compress);
-> +
-> +       return compress;
+> +       return 0;
 > +}
-Same here, a comment on 229/230 would work too I guess.
-
-> +/* Start the FPGA programming by initialize the FPGA Manager */
-> +static int socfpga_a10_fpga_write_init(struct fpga_manager *mgr,
-> +                                      struct fpga_image_info *info,
-> +                                      const char *buf, size_t count)
-> +{
-> +       struct a10_fpga_priv *priv = mgr->priv;
-> +       unsigned int cfg_width;
-> +       u32 msel, stat, mask;
-> +       int ret;
 > +
-> +       if (info->flags & FPGA_MGR_PARTIAL_RECONFIG)
-> +               cfg_width = CFGWDTH_16;
-> +       else
-> +               return -EINVAL;
-
-So we can *only* do partial reconfig? Am I missing something here?
-
-> +       /* Do some dclks, wait for pr_ready */
-> +       socfpga_a10_fpga_generate_dclks(priv, 0x7ff);
-
-Maybe a named constant?
-
-Cheers,
-Moritz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  static int
+>  mwifiex_map_pci_memory(struct mwifiex_adapter *adapter, struct sk_buff *skb,
+>                        size_t size, int flags)
+> @@ -206,6 +223,9 @@ static int mwifiex_pcie_probe(struct pci_dev *pdev,
+>                 card->pcie.can_ext_scan = data->can_ext_scan;
+>         }
+>
+> +       /* device tree node parsing and platform specific configuration*/
+> +       mwifiex_pcie_probe_of(&pdev->dev);
+> +
+>         if (mwifiex_add_card(card, &add_remove_card_sem, &pcie_ops,
+>                              MWIFIEX_PCIE)) {
+>                 pr_err("%s failed\n", __func__);
+> diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+> index 638d30a..f2a7a13 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+> @@ -2218,7 +2218,8 @@ int mwifiex_sta_init_cmd(struct mwifiex_private *priv, u8 first_sta, bool init)
+>                  * The cal-data can be read from device tree and/or
+>                  * a configuration file and downloaded to firmware.
+>                  */
+> -               if (priv->adapter->iface_type == MWIFIEX_SDIO &&
+> +               if ((priv->adapter->iface_type == MWIFIEX_SDIO ||
+> +                   priv->adapter->iface_type == MWIFIEX_PCIE) &&
+>                     adapter->dev->of_node) {
+>                         adapter->dt_node = adapter->dev->of_node;
+>                         if (of_property_read_u32(adapter->dt_node,
+> --
+> 1.9.1
+>
