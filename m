@@ -1,48 +1,74 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v19 05/12] fpga-mgr: add fpga image information struct
-Date: Thu, 29 Sep 2016 10:43:19 -0700
-Message-ID: <914ed9fb-c219-d034-7a5e-a400b80dfee0@xilinx.com>
-References: <20160928182200.15800-1-atull@opensource.altera.com>
- <20160928182200.15800-6-atull@opensource.altera.com>
- <CAAtXAHcdSsVUE4hQ6isCp7_35ZKb60EAKAgtGwBR41apwPpe=g@mail.gmail.com>
- <CANk1AXTbKhiSu3XN4HgTM_rBBQ315qseH06RzojOOZrV74M7yQ@mail.gmail.com>
+From: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] Documentation: dt: net: add mt76 wireless device
+ binding
+Date: Thu, 29 Sep 2016 20:31:30 +0200
+Message-ID: <e7d435b2-6b59-45af-07eb-b10789d61a9c@nbd.name>
+References: <20160905095128.80560-1-nbd@nbd.name>
+ <20160905095128.80560-2-nbd@nbd.name>
+ <87eg4uu0f3.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANk1AXTbKhiSu3XN4HgTM_rBBQ315qseH06RzojOOZrV74M7yQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <delicious.quinoa@gmail.com>, Moritz Fischer <moritz.fischer@ettus.com>
-Cc: Alan Tull <atull@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jon Masters <jcm@redhat.com>, Walter Goossens <waltergoossens@home.nl>, Michal Simek <michal.simek@xilinx.com>, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, Josh Cartwright <joshc@ni.com>, Matthew Gerlach <mgerlach@opensource.altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87eg4uu0f3.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 28.9.2016 21:34, Alan Tull wrote:
-> On Wed, Sep 28, 2016 at 6:41 PM, Moritz Fischer
-> <moritz.fischer@ettus.com> wrote:
-> Hi Moritz,
+On 2016-09-08 12:54, Kalle Valo wrote:
+> Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org> writes:
 > 
->> Hi Alan,
+>> Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+>> ---
+>>  .../bindings/net/wireless/mediatek,mt76.txt        | 26 ++++++++++++++++++++++
+>>  1 file changed, 26 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
 >>
->> generally ok with the change.
+>> diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+>> new file mode 100644
+>> index 0000000..d51c35f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+>> @@ -0,0 +1,26 @@
+>> +* MediaTek mt76xx devices
+>> +
+>> +This node provides properties for configuring the MediaTek mt76xx wireless
+>> +device. The node is expected to be specified as a child node of the PCI
+>> +controller to which the wireless chip is connected.
+>> +
+>> +Optional properties:
+>> +
+>> +- mac-address: See ethernet.txt in the parent directory
+>> +- local-mac-address: See ethernet.txt in the parent directory
+>> +- mediatek,2ghz: Override the 2.4 GHz band capability from EEPROM
+>> +- mediatek,5ghz: Override the 5 GHz band capability from EEPROM
+>> +- mediatek,mtd-eeprom: Specify a MTD partition + offset containing EEPROM data
+>> +
+>> +&pcie {
+>> +	status = "okay";
+>> +
+>> +	pcie0 {
+>> +		mt76@0,0 {
+>> +			reg = <0x0000 0 0 0 0>;
+>> +			device_type = "pci";
+>> +			mediatek,mtd-eeprom = <&factory 0x8000>;
+>> +			mediatek,2ghz = <0>;
+>> +		};
+>> +	};
+>> +};
 > 
-> Cool!
+> I need an ack from device tree maintainers, CCing the devicetree list.
+> Do we need to resend or this ok?
 > 
->>
->> On Wed, Sep 28, 2016 at 11:21 AM, Alan Tull <atull@opensource.altera.com> wrote:
->>
->>> -int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags, const char *buf,
->>> -                     size_t count)
->>> +int fpga_mgr_buf_load(struct fpga_manager *mgr, struct fpga_image_info *info,
->>> +                     const char *buf, size_t count)
->>
->> Doesn't this break the both socfpga and zynq if [6/12] and [7/12] are
->> not part of this commit?
->> i.e shouldn't 5,6 and 7 be a single commit?
+> Patchwork link:
 > 
-> Yeah, squashing those would improve bisectability.
+> https://patchwork.kernel.org/patch/9313309/
+Ping?
 
-Improve? :-)
+- Felix
 
-Definitely this needs to be the part of this commit.
-
-M
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
