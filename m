@@ -1,106 +1,82 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: display: display-timing: Add property
- to configure sync drive edge
-Date: Thu, 29 Sep 2016 13:52:51 +0300
-Message-ID: <68e2ba2d-90e6-d8c9-3595-cf566b18923e@ti.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] video: display_timing: Add flags to select the
+ edge when the sync is driven
+Date: Thu, 29 Sep 2016 13:54:11 +0300
+Message-ID: <091c4fd9-d037-4e7e-b003-140395a2ca38@ti.com>
 References: <20160922103526.24925-1-peter.ujfalusi@ti.com>
- <20160922103526.24925-2-peter.ujfalusi@ti.com>
+ <20160922103526.24925-3-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1216971084=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160922103526.24925-2-peter.ujfalusi@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, robh+dt@kernel.org, plagnioj@jcrosoft.com, airlied@linux.ie, thierry.reding@gmail.com
-Cc: daniel.vetter@ffwll.ch, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature";
+        boundary="TI5JhQnQSt0kwJ89cghREPshaHHRBb9oV"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160922103526.24925-3-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============1216971084==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="nnCH8aA2qe7rnTeF8JpK3Jw3L6TI2uCos"
-
---nnCH8aA2qe7rnTeF8JpK3Jw3L6TI2uCos
-Content-Type: multipart/mixed; boundary="LoAnIed6b77XEb6R3cre25Oo5fMaPQbOn";
+--TI5JhQnQSt0kwJ89cghREPshaHHRBb9oV
+Content-Type: multipart/mixed; boundary="53AoaU7D08ljTN5QuGanBcsRLsOqfbbK6";
  protected-headers="v1"
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, robh+dt@kernel.org,
- plagnioj@jcrosoft.com, airlied@linux.ie, thierry.reding@gmail.com
-Cc: linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- daniel.vetter@ffwll.ch, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org
-Message-ID: <68e2ba2d-90e6-d8c9-3595-cf566b18923e@ti.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: display: display-timing: Add property
- to configure sync drive edge
-References: <20160922103526.24925-1-peter.ujfalusi@ti.com>
- <20160922103526.24925-2-peter.ujfalusi@ti.com>
-In-Reply-To: <20160922103526.24925-2-peter.ujfalusi@ti.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org,
+ airlied-cv59FeDIM0c@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ daniel.vetter-/w4YWyX8dFk@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org,
+ devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Message-ID: <091c4fd9-d037-4e7e-b003-140395a2ca38-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] video: display_timing: Add flags to select the
+ edge when the sync is driven
+References: <20160922103526.24925-1-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+ <20160922103526.24925-3-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20160922103526.24925-3-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 
---LoAnIed6b77XEb6R3cre25Oo5fMaPQbOn
+--53AoaU7D08ljTN5QuGanBcsRLsOqfbbK6
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
 On 22/09/16 13:35, Peter Ujfalusi wrote:
-> There are display panels which demands that the sync signal is driven o=
-n
-> different edge than the pixel data.
-> With the syncclk-active property we can specify the clk edge to be used=
- to
-> drive the sync signal. When the property is missing it indicates that t=
-he
-> sync is driven on the same edge as the pixel data.
->=20
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: devicetree@vger.kernel.org
+> The sync can be - and for some panels it must be - driven on different =
+edge
+> then the data.
+
+Well, the "can be" depends on the display controller =3D).
+
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > ---
->  .../devicetree/bindings/display/panel/display-timing.txt          | 8 =
-++++++++
->  1 file changed, 8 insertions(+)
+>  include/video/display_timing.h | 4 ++++
+>  1 file changed, 4 insertions(+)
 >=20
-> diff --git a/Documentation/devicetree/bindings/display/panel/display-ti=
-ming.txt b/Documentation/devicetree/bindings/display/panel/display-timing=
-=2Etxt
-> index e1d4a0b59612..81a75893d1b8 100644
-> --- a/Documentation/devicetree/bindings/display/panel/display-timing.tx=
-t
-> +++ b/Documentation/devicetree/bindings/display/panel/display-timing.tx=
-t
-> @@ -32,6 +32,14 @@ optional properties:
->  			- active low  =3D drive pixel data on falling edge/
->  					sample data on rising edge
->  			- ignored     =3D ignored
-> + - syncclk-active: with
-> +			- active high =3D drive sync on rising edge/
-> +					sample sync on falling edge of pixel
-> +					clock
-> +			- active low  =3D drive sync on falling edge/
-> +					sample sync on rising edge of pixel
-> +					clock
-> +			- omitted     =3D same configuration as pixelclk-active
+> diff --git a/include/video/display_timing.h b/include/video/display_tim=
+ing.h
+> index 28d9d0d566ca..3d289e990aca 100644
+> --- a/include/video/display_timing.h
+> +++ b/include/video/display_timing.h
+> @@ -28,6 +28,10 @@ enum display_flags {
+>  	DISPLAY_FLAGS_INTERLACED	=3D BIT(8),
+>  	DISPLAY_FLAGS_DOUBLESCAN	=3D BIT(9),
+>  	DISPLAY_FLAGS_DOUBLECLK		=3D BIT(10),
+> +	/* drive sync on pos. edge */
+> +	DISPLAY_FLAGS_SYNC_POSEDGE	=3D BIT(11),
+> +	/* drive sync on neg. edge */
+> +	DISPLAY_FLAGS_SYNC_NEGEDGE	=3D BIT(12),
+>  };
+> =20
+>  /*
+>=20
 
-I wonder if the "sample sync on..." should be left out here. It makes
-sense for the pixel data, but for sync... Do the panels "sample" it, or
-do they trigger on rising/falling edge?
-
-Well, maybe that's a bit on the nitpick side, so:
-
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 
  Tomi
 
 
---LoAnIed6b77XEb6R3cre25Oo5fMaPQbOn--
+--53AoaU7D08ljTN5QuGanBcsRLsOqfbbK6--
 
---nnCH8aA2qe7rnTeF8JpK3Jw3L6TI2uCos
+--TI5JhQnQSt0kwJ89cghREPshaHHRBb9oV
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -108,31 +84,23 @@ Content-Disposition: attachment; filename="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJX7PKDAAoJEPo9qoy8lh71f6EP/0QaDHhUvNN7j3eKBp7JH8Qv
-2ml1gOCp2i37X5karFcZ0uQzc8aYkAGl+BLJDv0wyGwb/fpPIsYcnNjb9lvf4STI
-f4jz5iJVNxI8MtQMo91n/Ha1bYdkOqIZvSaUKxkayB9vEB/0zd6IksOD+yBI/YlX
-ZrbHjoyfUf4VVu9VZZHrcDbERl3HlWuMXESzm6liHLaOGI3xvubxQwJ15vNqaLXk
-y9h3oZmmBTnSqeab6KCk0OkTqNeclN4kRWOlljgObfUt6eSirDSG8DOOnmndQzW2
-Jc4tAQ4apZFxec0KRq7jPUMnHxjIsYbmr4vSZq7HB5R36TaIcW2rwk5mHIx925AP
-NKg5LDctnTEmhOEIZMfE+ioSNNPkPagn4XCxlsFqs0UR92h1+4Fz6n55IJbH6c7J
-4bUC+/qDZVC+9yfCaohkOMiM/8ZeGPlkQqwDiMzuicLInXxzyCHJQbrZXIogZ7hw
-ui5jWGCSK+RFaeRktoTd0sruKd9peV9DyUIjNkSiunErqncsEnVfm8IPtT/gQKGd
-GUQznR2MfvgEsGiOo6kQOSJfDQ+mFDeedCNl++6Y2LpYkI5dGG4F4UE1geiRE4SI
-Qty3arrWRj9EZlkp2YqCQzR0KcBKrinSPga2Ue21TBvOJdyPhRieLXJ6OlhIzZRn
-+AigStpm1wwq8W03Hrjc
-=og3m
+iQIcBAEBCAAGBQJX7PLTAAoJEPo9qoy8lh71w5MP/i9UO8HkG2WUA0w6/VYDVVkp
+tdy9v+rchBet8xc1LakGAlncd2ug20u4O5b7SZKph1RG9ScfFhRzV+T/hDoNdIiU
+ytqNFMuG81FmFL6J8vf/M+4aKBnlKxz/MHgkUazST9dvw9/MuAt66b5sRK1VXkaX
+I2yPaSPpOSvLpHSMsp3L3twWykpvsm5oYdiUFg289RKafQSwESyxkol+AlPECvB0
+zl8DoKmYVU/EGErL+N1csTVYB/7XDvXYktWAC60DqSsjVIY1PvO6F9uETPbBDqxI
+WFD1piCOb5mZYUQE1Fb3hGaqIMwGlRSynxhN2vQfEwRb2o94nATO3JQeGg9HKrcV
+T7wkSw1O3Qb8VSgXDMPAAVA4EJVKUPr1Gj6JIY4hxqaFtzUh/duqU8N4FBnjZK2F
+pIMfHot9VWKBvtADAz/ioqnEHyTuhzAROiFysi//6vucbEqwIiTAZf9N8/LLF+ox
+C+WI7Jon8Jk9KgXof+tvKO8ROY9rRxX09fA9cw+dmIkrcqoEzNjTCrYnPCo6OGv/
+CenzT7BmYr4uURUik3hps/T6C8iQs0EG1O0uMTyzYKo3R5Z2yfCdTCFdep0qQKpp
+CdwhvBp0CyJwMeSEDNfQfIL480Kq3XICxpqievii8Jn2w3xaI3KXEW9BsYDtLtck
+x6eiThk+MRV7JsFY2fNe
+=OLgV
 -----END PGP SIGNATURE-----
 
---nnCH8aA2qe7rnTeF8JpK3Jw3L6TI2uCos--
-
---===============1216971084==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1216971084==--
+--TI5JhQnQSt0kwJ89cghREPshaHHRBb9oV--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
