@@ -1,26 +1,71 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V5 4/4] dts/imx6q-b850v3: Use GE B850v3 LVDS/DP++ Bridge
-Date: Thu, 29 Sep 2016 03:39:40 -0700
-Message-ID: <20160929103939.GA15435@x250>
-References: <61b63c6a5fec9fce0332e5e9db676e6b6a6fc180.1470739193.git.peter.senna@collabora.com>
- <137a-57e8dc00-1-42b5770@58989149>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH 00/10] ARM: dts: berlin: fix dtc warnings
+Date: Thu, 29 Sep 2016 18:44:12 +0800
+Message-ID: <20160929184412.7c535749@xhacker>
+References: <20160906084013.2887-1-jszhang@marvell.com>
+        <57EC1CA5.2030102@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <137a-57e8dc00-1-42b5770@58989149>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, jslaby-AlSwsSmVLrQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, Rob Herring <robh-DgEjT+Ai2yhQFI55V6+gNQ@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <57EC1CA5.2030102@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 26, 2016 at 09:27:59AM +0100, Peter Senna Tschudin wrote:
-> Patch 1/4 is already on linux-next, but what about this one? Ping?
+Hi Sebastian,
 
-Ping me after driver part (patch #3) lands on mainline.
+On Wed, 28 Sep 2016 21:40:21 +0200 Sebastian Hesselbarth wrote:
 
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On 06.09.2016 10:40, Jisheng Zhang wrote:
+> > This is a clean up series to fix berlin arm platforms dtc warnings.
+> > Firstly we remove skeleton.dtsi inclusion. Then add missing unit name
+> > of /soc node and /memory node. Lastly, we fix regulators' name
+> >
+> > Jisheng Zhang (10):
+> >    ARM: dts: berlin2q: Remove skeleton.dtsi inclusion
+> >    ARM: dts: berlin2cd: Remove skeleton.dtsi inclusion
+> >    ARM: dts: berlin2: Remove skeleton.dtsi inclusion
+> >    ARM: dts: berlin2q: Add missing unit name to /soc node
+> >    ARM: dts: berlin2cd: Add missing unit name to /soc node
+> >    ARM: dts: berlin2: Add missing unit name to /soc node
+> >    ARM: dts: berlin2q-marvell-dmp: add missing unit name to /memory node
+> >    ARM: dts: chromecast: add missing unit name to /memory node  
+> 
+> Jisheng,
+> 
+> Applied the 8 patches above.
+> 
+> >    ARM: dts: sony-nsz-gs7: add missing unit name to /memory node  
+> 
+> I didn't receive this one and could not find it online.
+> I recreated the patch by using the chromecast patch above, so
+> applied.
+> 
+> >    ARM: dts: berlin2q-marvell-dmp: fix regulators' name  
+> 
+> I have no clue what it should be fixed to.
+
+DTC will complain with W=1:
+
+Warning (unit_address_vs_reg): Node /regulators/regulator@0 has a unit
+name, but no reg property
+
+This patch tries to fix that warning.
+
+Thanks,
+Jisheng
+
+> 
+> Sebastian
+> 
+> >   arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts        |  2 +-
+> >   arch/arm/boot/dts/berlin2.dtsi                    |  5 +++--
+> >   arch/arm/boot/dts/berlin2cd-google-chromecast.dts |  2 +-
+> >   arch/arm/boot/dts/berlin2cd.dtsi                  |  5 +++--
+> >   arch/arm/boot/dts/berlin2q-marvell-dmp.dts        | 12 ++++++------
+> >   arch/arm/boot/dts/berlin2q.dtsi                   |  6 +++---
+> >   6 files changed, 17 insertions(+), 15 deletions(-)
+> >  
+> 
