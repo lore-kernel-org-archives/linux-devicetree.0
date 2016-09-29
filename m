@@ -1,61 +1,42 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V4 00/10] dmaengine: qcom_hidma: add MSI interrupt support
-Date: Wed, 28 Sep 2016 22:12:37 -0400
-Message-ID: <1475115167-5898-1-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V4 02/10] Documentation: DT: qcom_hidma: correct spelling mistakes
+Date: Wed, 28 Sep 2016 22:12:39 -0400
+Message-ID: <1475115167-5898-3-git-send-email-okaya@codeaurora.org>
+References: <1475115167-5898-1-git-send-email-okaya@codeaurora.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1475115167-5898-1-git-send-email-okaya@codeaurora.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>
+Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The new version of the HW supports MSI interrupts instead of wired
-interrupts. The MSI interrupts are especially useful for the guest machine
-execution. The wired interrupts usually trap to the hypervisor and then are
-relayed to the actual interrupt.
+Fix the spelling mistakes and extra and statements in the sentences.
 
-The MSI interrupts can be directly fed into the interrupt controller.
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+---
+ Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Adding a new OF compat string (qcom,hidma-1.1) and ACPI string (QCOM8062)
-to distinguish newer HW from the older ones.
-
-v4:
-* device tree binding update to refer to msi.txt
-
-v3:
-* day 0 fix for when ACPI is not compiled in
-* https://www.spinics.net/lists/arm-kernel/msg532179.html
-
-v2:
-https://patchwork.kernel.org/patch/9326399/
-* Documentation update for DT bindings
-* Rebased to slave-next
-* Dropped dmaengine: qcom_hidma: eliminate processed variables. Replaced it
-  with dmaengine: qcom_hidma: protect common data structures
-
-v1:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/444167.html
-* initial implementation
-
-Sinan Kaya (10):
-  Documentation: DT: qcom_hidma: update binding for MSI
-  Documentation: DT: qcom_hidma: correct spelling mistakes
-  of: irq: make of_msi_configure accessible from modules
-  dmaengine: qcom_hidma: configure DMA and MSI for OF
-  dmaengine: qcom_hidma: make pending_tre_count atomic
-  dmaengine: qcom_hidma: make error and success path common
-  dmaengine: qcom_hidma: bring out interrupt cause
-  dmaengine: qcom_hidma: add a common API to setup the interrupt
-  dmaengine: qcom_hidma: protect common data structures
-  dmaengine: qcom_hidma: add MSI support for interrupts
-
- .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  12 +-
- drivers/dma/qcom/hidma.c                           | 129 +++++++++-
- drivers/dma/qcom/hidma.h                           |   6 +-
- drivers/dma/qcom/hidma_dbg.c                       |   3 +-
- drivers/dma/qcom/hidma_ll.c                        | 278 ++++++++++-----------
- drivers/dma/qcom/hidma_mgmt.c                      |   5 +-
- drivers/of/irq.c                                   |   1 +
- 7 files changed, 275 insertions(+), 159 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+index 2c5e4b8..55492c2 100644
+--- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
++++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+@@ -5,13 +5,13 @@ memcpy and memset capabilities. It has been designed for virtualized
+ environments.
+ 
+ Each HIDMA HW instance consists of multiple DMA channels. These channels
+-share the same bandwidth. The bandwidth utilization can be parititioned
++share the same bandwidth. The bandwidth utilization can be partitioned
+ among channels based on the priority and weight assignments.
+ 
+ There are only two priority levels and 15 weigh assignments possible.
+ 
+ Other parameters here determine how much of the system bus this HIDMA
+-instance can use like maximum read/write request and and number of bytes to
++instance can use like maximum read/write request and number of bytes to
+ read/write in a single burst.
+ 
+ Main node required properties:
 -- 
 1.9.1
