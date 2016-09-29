@@ -1,124 +1,95 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: drm/mediatek: fixed the calc method of data rate per lane
-Date: Thu, 29 Sep 2016 15:43:00 +0800
-Message-ID: <1475134980.13398.13.camel@mtksdaap41>
-References: <1472191831-7150-1-git-send-email-jitao.shi@mediatek.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [PATCH 5/8] pinctrl: aspeed: Enable capture of off-SCU pinmux
+ state
+Date: Thu, 29 Sep 2016 17:24:59 +0930
+Message-ID: <1475135699.24463.21.camel@aj.id.au>
+References: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
+         <a266046d34009e6e92c4c76699c550c2ba44bd5c.1474986045.git-series.andrew@aj.id.au>
+         <CACPK8Xc7y3GtcJCVYYs-JKTqBZvqVeZaz5MUk=UX151SX1xEFw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1472191831-7150-1-git-send-email-jitao.shi@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-Vy7UROloIyw7sybRF/wJ"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACPK8Xc7y3GtcJCVYYs-JKTqBZvqVeZaz5MUk=UX151SX1xEFw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEppdGFvOgoKU29ycnkgZm9yIGxhdGUgcmVwbHkuClNvbWUgY29tbWVudHMgaW5saW5lLgoK
-T24gRnJpLCAyMDE2LTA4LTI2IGF0IDE0OjEwICswODAwLCBKaXRhbyBTaGkgd3JvdGU6Cj4gVHVu
-ZSBkc2kgZnJhbWUgcmF0ZSBieSBwaXhlbCBjbG9jaywgZHNpIGFkZCBzb21lIGV4dHJhIHNpZ25h
-bCAoaS5lLiBUbHB4LAo+IFRocy1wcmVwYXJlLCBUaHMtemVybywgVGhzLXRyYWlsLFRocy1leGl0
-KSB3aGVuIGVudGVyIGFuZCBleGl0IExQIG1vZGUsIHRoaXMKPiBzaWduYWwgd2lsbCBjYXVzZSBo
-LXRpbWUgbGFyZ2VyIHRoYW4gbm9ybWFsIGFuZCByZWR1Y2UgRlBTLgo+IE5lZWQgdG8gbXVsdGlw
-bHkgYSBjb2VmZmljaWVudCB0byBvZmZzZXQgdGhlIGV4dHJhIHNpZ25hbCdzIGVmZmVjdC4KPiBj
-b2VmZmljaWVudCA9ICgoaHRvdGFsKmJwcC9sYW5lX251bWJlcikrVGxweCtUaHNfcHJlcCtUaHNf
-emVybytUaHNfdHJhaWwrCj4gICAgICAgICAgICAgICAgIFRoc19leGl0KS8oaHRvdGFsKmJwcC9s
-YW5lX251bWJlcikpCj4gCj4gU2lnbmVkLW9mZi1ieTogSml0YW8gU2hpIDxqaXRhby5zaGlAbWVk
-aWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jIHwg
-IDExMSArKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0KPiAgMSBmaWxlIGNoYW5n
-ZWQsIDY3IGluc2VydGlvbnMoKyksIDQ0IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kc2kuYwo+IGluZGV4IDI4YjIwNDQuLjUwNmFhMjIgMTAwNjQ0Cgpbc25pcC4uLl0K
-Cj4gIAo+IC1zdGF0aWMgdm9pZCBkc2lfcGh5X3RpbWNvbmZpZyhzdHJ1Y3QgbXRrX2RzaSAqZHNp
-KQo+ICtzdGF0aWMgdm9pZCBkc2lfcGh5X3RpbWNvbmZpZyhzdHJ1Y3QgbXRrX2RzaSAqZHNpLCB1
-MzIgcGh5X3RpbWluZzAsCj4gKwkJCSAgICAgIHUzMiBwaHlfdGltaW5nMSwgdTMyIHBoeV90aW1p
-bmcyLAo+ICsJCQkgICAgICB1MzIgcGh5X3RpbWluZzMpCj4gIHsKPiAtCXUzMiB0aW1jb24wLCB0
-aW1jb24xLCB0aW1jb24yLCB0aW1jb24zOwo+IC0JdW5zaWduZWQgaW50IHVpLCBjeWNsZV90aW1l
-Owo+IC0JdW5zaWduZWQgaW50IGxweDsKPiAtCj4gLQl1aSA9IDEwMDAgLyBkc2ktPmRhdGFfcmF0
-ZSArIDB4MDE7Cj4gLQljeWNsZV90aW1lID0gODAwMCAvIGRzaS0+ZGF0YV9yYXRlICsgMHgwMTsK
-PiAtCWxweCA9IDU7Cj4gLQo+IC0JdGltY29uMCA9ICg4IDw8IDI0KSB8ICgweGEgPDwgMTYpIHwg
-KDB4NiA8PCA4KSB8IGxweDsKPiAtCXRpbWNvbjEgPSAoNyA8PCAyNCkgfCAoNSAqIGxweCA8PCAx
-NikgfCAoKDMgKiBscHgpIC8gMikgPDwgOCB8Cj4gLQkJICAoNCAqIGxweCk7Cj4gLQl0aW1jb24y
-ID0gKChOU19UT19DWUNMRSgweDY0LCBjeWNsZV90aW1lKSArIDB4YSkgPDwgMjQpIHwKPiAtCQkg
-IChOU19UT19DWUNMRSgweDE1MCwgY3ljbGVfdGltZSkgPDwgMTYpOwo+IC0JdGltY29uMyA9ICgy
-ICogbHB4KSA8PCAxNiB8IE5TX1RPX0NZQ0xFKDgwICsgNTIgKiB1aSwgY3ljbGVfdGltZSkgPDwg
-OCB8Cj4gLQkJICAgTlNfVE9fQ1lDTEUoMHg0MCwgY3ljbGVfdGltZSk7Cj4gLQo+IC0Jd3JpdGVs
-KHRpbWNvbjAsIGRzaS0+cmVncyArIERTSV9QSFlfVElNRUNPTjApOwo+IC0Jd3JpdGVsKHRpbWNv
-bjEsIGRzaS0+cmVncyArIERTSV9QSFlfVElNRUNPTjEpOwo+IC0Jd3JpdGVsKHRpbWNvbjIsIGRz
-aS0+cmVncyArIERTSV9QSFlfVElNRUNPTjIpOwo+IC0Jd3JpdGVsKHRpbWNvbjMsIGRzaS0+cmVn
-cyArIERTSV9QSFlfVElNRUNPTjMpOwo+ICsJd3JpdGVsKHBoeV90aW1pbmcwLCBkc2ktPnJlZ3Mg
-KyBEU0lfUEhZX1RJTUVDT04wKTsKPiArCXdyaXRlbChwaHlfdGltaW5nMSwgZHNpLT5yZWdzICsg
-RFNJX1BIWV9USU1FQ09OMSk7Cj4gKwl3cml0ZWwocGh5X3RpbWluZzIsIGRzaS0+cmVncyArIERT
-SV9QSFlfVElNRUNPTjIpOwo+ICsJd3JpdGVsKHBoeV90aW1pbmczLCBkc2ktPnJlZ3MgKyBEU0lf
-UEhZX1RJTUVDT04zKTsKPiAgfQo+ICAKPiAgc3RhdGljIHZvaWQgbXRrX2RzaV9lbmFibGUoc3Ry
-dWN0IG10a19kc2kgKmRzaSkKPiBAQCAtMjAyLDE5ICsxODYsNTcgQEAgc3RhdGljIGludCBtdGtf
-ZHNpX3Bvd2Vyb24oc3RydWN0IG10a19kc2kgKmRzaSkKPiAgewo+ICAJc3RydWN0IGRldmljZSAq
-ZGV2ID0gZHNpLT5kZXY7Cj4gIAlpbnQgcmV0Owo+ICsJdTY0IGJpdF9jbG9jaywgdG90YWxfYml0
-czsKPiArCXUzMiBodG90YWwsIGh0b3RhbF9iaXRzLCBiaXRfcGVyX3BpeGVsLCBvdmVyaGVhZF9j
-eWNsZXMsIG92ZXJoZWFkX2JpdHM7Cj4gKwl1MzIgcGh5X3RpbWluZzAsIHBoeV90aW1pbmcxLCBw
-aHlfdGltaW5nMiwgcGh5X3RpbWluZzM7Cj4gIAo+ICAJaWYgKCsrZHNpLT5yZWZjb3VudCAhPSAx
-KQo+ICAJCXJldHVybiAwOwo+ICAKPiArCXBoeV90aW1pbmcwID0gTFBYKDUpIHwgSFNfUFJQUig2
-KSB8IEhTX1pFUk8oMTApIHwgSFNfVFJBSUwoOCk7Cj4gKwlwaHlfdGltaW5nMSA9IFRBX0dPKDIw
-KSB8IFRBX1NVUkUoNykgfCBUQV9HRVQoMjUpIHwgREFfSFNfRVhJVCg3KTsKPiArCXBoeV90aW1p
-bmcyID0gQ0xLX1pFUk8oMzgpIHwgQ0xLX1RSQUlMKDIyKTsKPiArCXBoeV90aW1pbmczID0gQ0xL
-X0hTX1BSUFIoOCkgfCBDTEtfSFNfUE9TVCgyMSkgfCBDTEtfSFNfRVhJVCgxMCk7CgpUaGUgb3Jp
-Z2luYWwgcGh5X3RpbWluZzIgYW5kIHBoeV90aW1pbmczIGlzIGRlZmluZWQgYXMKCgl0aW1jb24y
-ID0gKChOU19UT19DWUNMRSgweDY0LCBjeWNsZV90aW1lKSArIDB4YSkgPDwgMjQpIHwKCQkgIChO
-U19UT19DWUNMRSgweDE1MCwgY3ljbGVfdGltZSkgPDwgMTYpOwoJdGltY29uMyA9ICgyICogbHB4
-KSA8PCAxNiB8IE5TX1RPX0NZQ0xFKDgwICsgNTIgKiB1aSwgY3ljbGVfdGltZSkgPDwgOAp8CgkJ
-ICAgTlNfVE9fQ1lDTEUoMHg0MCwgY3ljbGVfdGltZSk7CgpUaGV5IGFyZSB2YXJpZWQgYnkgY3lj
-bGVfdGltZS4gSSB0aGluayB5b3Ugc2hvdWxkIG5vdCB1c2UgYSBmaXhlZCB2YWx1ZQpmb3IgdGhl
-bS4KCj4gKwo+ICsJc3dpdGNoIChkc2ktPmZvcm1hdCkgewo+ICsJY2FzZSBNSVBJX0RTSV9GTVRf
-UkdCNTY1Ogo+ICsJCWJpdF9wZXJfcGl4ZWwgPSAxNjsKPiArCQlicmVhazsKPiArCWNhc2UgTUlQ
-SV9EU0lfRk1UX1JHQjY2Nl9QQUNLRUQ6Cj4gKwkJYml0X3Blcl9waXhlbCA9IDE4Owo+ICsJCWJy
-ZWFrOwo+ICsJY2FzZSBNSVBJX0RTSV9GTVRfUkdCNjY2Ogo+ICsJY2FzZSBNSVBJX0RTSV9GTVRf
-UkdCODg4Ogo+ICsJZGVmYXVsdDoKPiArCQliaXRfcGVyX3BpeGVsID0gMjQ7Cj4gKwkJYnJlYWs7
-Cj4gKwl9Cj4gIAkvKioKPiAtCSAqIGRhdGFfcmF0ZSA9IChwaXhlbF9jbG9jayAvIDEwMDApICog
-cGl4ZWxfZGlwdGggKiBtaXBpX3JhdGlvOwo+IC0JICogcGl4ZWxfY2xvY2sgdW5pdCBpcyBLaHos
-IGRhdGFfcmF0YSB1bml0IGlzIE1Ieiwgc28gbmVlZCBkaXZpZGUgMTAwMC4KPiAtCSAqIG1pcGlf
-cmF0aW8gaXMgbWlwaSBjbGsgY29lZmZpY2llbnQgZm9yIGJhbGFuY2UgdGhlIHBpeGVsIGNsayBp
-biBtaXBpLgo+IC0JICogd2Ugc2V0IG1pcGlfcmF0aW8gaXMgMS4wNS4KPiArCSAqIGRhdGFfcmF0
-ZSA9IChwaXhlbF9jbG9jaykgKiBiaXRfcGVyX3BpeGVsICogbWlwaV9yYXRpbyAvIGxhbmVfbnVt
-Owo+ICsJICogdm0ucGl4ZWxjbG9jayBpcyBLaHosIGRhdGFfcmF0YSB1bml0IGlzIEh6LCBzbyBu
-ZWVkIHRvIG11bHRpcGx5IDEwMDAKPiArCSAqIG1pcGlfcmF0aW8gaXMgKGh0b3RhbCAqIGJ5dGVf
-cGVyX3BpeGVsIC8gbGFuZV9udW0gKyBUbHB4ICsgVGhzX3ByZXAKPiArCSAqCQkgICsgVGhzdHJh
-aWwgKyBUaHNfZXhpdCArIFRoc196ZXJvKSAvCj4gKwkgKgkJIChodG90YWwgKiBieXRlX3Blcl9w
-aXhlbCAvbGFuZV9udW1iZXIpCj4gIAkgKi8KPiAtCWRzaS0+ZGF0YV9yYXRlID0gZHNpLT52bS5w
-aXhlbGNsb2NrICogMyAqIDIxIC8gKDEgKiAxMDAwICogMTApOwo+ICsJYml0X2Nsb2NrID0gZHNp
-LT52bS5waXhlbGNsb2NrICogMTAwMCAqIGJpdF9wZXJfcGl4ZWw7Cj4gKwlodG90YWwgPSBkc2kt
-PnZtLmhhY3RpdmUgKyBkc2ktPnZtLmhiYWNrX3BvcmNoICsgZHNpLT52bS5oZnJvbnRfcG9yY2gg
-Kwo+ICsJCSBkc2ktPnZtLmhzeW5jX2xlbjsKPiArCWh0b3RhbF9iaXRzID0gaHRvdGFsICogYml0
-X3Blcl9waXhlbDsKPiArCj4gKwkvKioKPiArCSAqIG92ZXJoZWFkID0gbHB4ICsgaHNfcHJlcGFy
-ZSArIGhzX3plcm8gKyBoc190cmFpbCArIGhzX2V4aXQKPiArCSAqLwo+ICsJb3ZlcmhlYWRfY3lj
-bGVzID0gKHBoeV90aW1pbmcwICYgMHhmZikgKyAocGh5X3RpbWluZzAgPj4gOCAmIDB4ZmYpICsK
-PiArCQkJICAocGh5X3RpbWluZzAgPj4gMTYgJiAweGZmKSArCj4gKwkJCSAgKHBoeV90aW1pbmcw
-ID4+IDI0ICYgMHhmZikgKwo+ICsJCQkgIChwaHlfdGltaW5nMSA+PiAyNCAmIDB4ZmYpOwoKSSB0
-aGluayBwaHlfdGltaW5nMCBhbmQgcGh5X3RpbWluZzEgaXMgZGVmaW5lZCBhcwoKCXBoeV90aW1p
-bmcwID0gTFBYKGEpIHwgSFNfUFJQUihiKSB8IEhTX1pFUk8oYykgfCBIU19UUkFJTChkKTsKCXBo
-eV90aW1pbmcxID0gVEFfR08oZSkgfCBUQV9TVVJFKGYpIHwgVEFfR0VUKGcpIHwgREFfSFNfRVhJ
-VChoKTsKClNvLCBpdCBjb3VsZCBiZSBhIG1vcmUgc2ltcGxlIHdheSB0byBhc3NpZ24gb3Zlcmhl
-YWRfY3ljbGVzIGxpa2UgdGhpcwoKCW92ZXJoZWFkX2N5Y2xlcyA9IGEgKyBiICsgYyArIGQgKyBo
-OwoKQmVjYXVzZSB0aGVzZSB2YXJpYWJsZSBhcmUgY29uc3RhbnQsIG1heWJlIHlvdSBjYW4gZGVm
-aW5lIHRoZW0gYXMKc3ltYm9scy4KCgo+ICsJb3ZlcmhlYWRfYml0cyA9IG92ZXJoZWFkX2N5Y2xl
-cyAqIGRzaS0+bGFuZXMgKiA4Owo+ICsJdG90YWxfYml0cyA9IGh0b3RhbF9iaXRzICsgb3Zlcmhl
-YWRfYml0czsKPiArCj4gKwlkc2ktPmRhdGFfcmF0ZSA9IERJVl9ST1VORF9VUF9VTEwoYml0X2Ns
-b2NrICogdG90YWxfYml0cywKPiArCQkJCQkgIGh0b3RhbF9iaXRzICogZHNpLT5sYW5lcyk7Cj4g
-IAo+IC0JcmV0ID0gY2xrX3NldF9yYXRlKGRzaS0+aHNfY2xrLCBkc2ktPmRhdGFfcmF0ZSAqIDEw
-MDAwMDApOwo+ICsJcmV0ID0gY2xrX3NldF9yYXRlKGRzaS0+aHNfY2xrLCBkc2ktPmRhdGFfcmF0
-ZSk7Cj4gIAlpZiAocmV0IDwgMCkgewo+ICAJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIHNldCBk
-YXRhIHJhdGU6ICVkXG4iLCByZXQpOwo+ICAJCWdvdG8gZXJyX3JlZmNvdW50Owo+IEBAIC0yMzYs
-NyArMjU4LDggQEAgc3RhdGljIGludCBtdGtfZHNpX3Bvd2Vyb24oc3RydWN0IG10a19kc2kgKmRz
-aSkKPiAgCj4gIAltdGtfZHNpX2VuYWJsZShkc2kpOwo+ICAJbXRrX2RzaV9yZXNldChkc2kpOwo+
-IC0JZHNpX3BoeV90aW1jb25maWcoZHNpKTsKPiArCWRzaV9waHlfdGltY29uZmlnKGRzaSwgcGh5
-X3RpbWluZzAsIHBoeV90aW1pbmcxLCBwaHlfdGltaW5nMiwKPiArCQkJICBwaHlfdGltaW5nMyk7
-Cj4gIAo+ICAJcmV0dXJuIDA7Cj4gIAoKUmVnYXJkcywKQ0sKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+--=-Vy7UROloIyw7sybRF/wJ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, 2016-09-29 at 16:15 +0930, Joel Stanley wrote:
+> On Wed, Sep 28, 2016 at 12:20 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
+> >=20
+> > The System Control Unit IP in the Aspeed SoCs is typically where the
+> > pinmux configuration is found.
+> >=20
+> > But not always.
+> >=20
+> > On the AST2400 and AST2500 a number of pins depend on state in one of
+> > the SIO, LPC or GFX IP blocks, so add support to at least capture what
+> > that state is. The pinctrl engine for the Aspeed SoCs doesn't try to
+> > inspect or modify the state of the off-SCU IP blocks. Instead, it logs
+> > the state requirement with the expectation that the platform
+> > designer/maintainer arranges for the appropriate configuration to be
+> > applied through the associated drivers.
+> This is unfortunate.
+>=20
+> This patch kicks the can down the road, but doesn't solve the problem
+> for a user who wants to configure some functionality that depends on
+> the non-SCU bits. Because of this I'm not sure if we want to put it in
+> the tree.
+
+I agree that there's not much functionality from a user's perspective,
+but the "kicking the can down the road" assessment might be a little
+harsh. Given the lack of user functionality it becomes more difficult
+to argue for the patch's inclusion given the additional complexity, but
+it does mean that the g4/g5 drivers can completely specify their
+dependencies and not have the aspeed pinctrl core do the wrong thing
+when it encounters the non-SCU IP offsets. It gets us half-way to
+having the pinctrl driver actually configure the state (knowing what it
+needs to configure), which I feel is more than a kick-the-can-down-the-
+road boondoggle.
+
+>=20
+> However, I'm not sure what a proper solution would look like.
+
+So if we accept that a proper solution includes specifying the off-SCU
+dependencies, the remaining question is how do we tastefully apply the
+desired state on register-spaces the pinctrl driver doesn't own.
+
+>  Perhaps
+> Linus can point out another SoC that has a similar problem?
+
+Or failing that, an approach that is acceptable...
+
+Cheers,
+
+Andrew
+--=-Vy7UROloIyw7sybRF/wJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCgAGBQJX7MjTAAoJEJ0dnzgO5LT5xSIQAIgZqQDmsguxEVfI8v/zVJHA
+UdIlOiLW8wUP5LToIF0JHqT0XgMDp6PlBVb7FCCbn10AknoQOG/1ogZpNoZebVX7
+tuD5tldeSi+lLelpbvTrwue4m9gvRu8FwjnNJv44dIXBMFhm/Zs4enYnh9KaNeZv
+gdqf0+ClCo6yLAm7TSK16Nc16BRct3YqSqaUrvytqT5PzGaycogJNRx8bc7o/Tx/
+D14gH1arZOSzumvQRrpvq/URkRUsZDE9JH3sovDttbd/Mb9BqiXhd+kkRZcqeUsf
+gUP8kuEHArfyAE7i4zZcsG9W8RHY2DGHLShOyXg7VuDRNPtgJYSkEHhypCzC0tnR
+6zurYRu2bEZVnUgDspw6ACdfJVypkqIAfLIJUVf3u0rb2PLTkoDOcNAVJCyNC7LS
+vIFrrZftonNpORwYoNmrzthL5CjLPLVw7T/XZMZrupxDmOV2QgCOOTrcxosqlxF4
+K/od1reRhhfiCkDdjDLHSdNF5MRNb2snh99pu18G2ng6vDD7WOPnmFz25RljwQWi
+zJC8XAv/ZJ2HaIqGq95b7v1Xp6uza2hMX3yPqEW1N6IFqifCLqWky/Ac9O3lmAM1
++Lgoz3YD+M2JSStBuqTQBHtsiHEAERMD032hFIE6dKzpkaITZaZT2VxwK04deUdx
+bKAxH1NxY59RcrkKAfpk
+=vVsy
+-----END PGP SIGNATURE-----
+
+--=-Vy7UROloIyw7sybRF/wJ--
