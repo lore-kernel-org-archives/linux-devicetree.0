@@ -1,241 +1,26 @@
-From: Muhammad Abdul WAHAB <muhammadabdul.wahab@supelec.fr>
-Subject: [PATCH] Adding Support for Coresight Components on Zynq 7000.
-Date: Thu, 29 Sep 2016 12:26:13 +0200
-Message-ID: <c6836102-9b7e-a9d9-bad9-34b100d4ae49@supelec.fr>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V5 4/4] dts/imx6q-b850v3: Use GE B850v3 LVDS/DP++ Bridge
+Date: Thu, 29 Sep 2016 03:39:40 -0700
+Message-ID: <20160929103939.GA15435@x250>
+References: <61b63c6a5fec9fce0332e5e9db676e6b6a6fc180.1470739193.git.peter.senna@collabora.com>
+ <137a-57e8dc00-1-42b5770@58989149>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <137a-57e8dc00-1-42b5770@58989149>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, jslaby-AlSwsSmVLrQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, Rob Herring <robh-DgEjT+Ai2yhQFI55V6+gNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Coresight components are present on the Zynq SoC but the corresponding
-device tree entries are missing. This patch adds device tree entries for
-coresight components while explaining how it was done in order to allow
-porting towards other boards easily.
+On Mon, Sep 26, 2016 at 09:27:59AM +0100, Peter Senna Tschudin wrote:
+> Patch 1/4 is already on linux-next, but what about this one? Ping?
 
-By adding the entries for Coresight components in the device tree: if no
-files are created in sysfile system, you need to contact the board designer
-to sort out the problem. On some boards, Coresight components are not
-powered on boot.
+Ping me after driver part (patch #3) lands on mainline.
 
-Signed-off-by: Muhammad Abdul Wahab <muhammadabdul.wahab@centralesupelec.fr>
----
-The documentation file was very helpful
-(Documentation/devicetree/bindings/arm/coresight.txt). However, few details
-can be added to make it more clear for beginners.
-
-Things to modify in device tree when changing the board are mainly:
-
-- address
-- `clocks` field
-- some references in other entries may be missing (e.g. for `CPU` field in
-   ETM/PTM component, references need to be created)
-
-Furthermore, the `reg` field should be adapted according to
-`#address-cells` and `#size-cells`. It may appear obvious, not for
-beginners.
-
-## Testing
-
-The trace sink components need to be enabled by accessing through sysfile
-system.
-
-     echo 1 > /sys/bus/coresight/devices/@addr.etb/enable\_sink
-
-Then enable the CS source component:
-
-     echo 1 > /sys/bus/coresight/devices/@addr.ptm/enable\_source
-
-By default, CS Source components are configured to trace the kernel.
-
-Then the trace can be read by dumping ETB.
-
-     dd if=/dev/@addr.etb of=trace_kernel.bin
-
-The trace can be visualized by:
-
-     hexdump -C trace_kernel.bin
-
-Or stored using:
-
-     hexdump -C trace_kernel.bin > trace_kernel.txt
-
-The trace need to be decoded to be readable. All these above steps can now
-be performed with Perf Library which was not available at the time I was
-playing with DT entries.
-
---- linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi.orig     2016-07-24 
-21:23:50.000000000 +0200
-+++ linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi    2016-09-28 
-19:13:52.651881000 +0200
-@@ -363,5 +363,159 @@
-              reg = <0xf8005000 0x1000>;
-              timeout-sec = <10>;
-          };
-+
-+        etb@F8801000 {
-+            compatible = "arm,coresight-etb10", "arm,primecell";
-+            reg = <0xf8801000 0x1000>;
-+            coresight-default-sink;
-+            clocks = <&clkc 47>;
-+            clock-names = "apb_pclk";
-+
-+            port {
-+
-+                endpoint@0 {
-+                    slave-mode;
-+                    remote-endpoint = <0x8>;
-+                    linux,phandle = <0xd>;
-+                    phandle = <0xd>;
-+                };
-+            };
-+        };
-+
-+        tpiu@F8803000 {
-+            compatible = "arm,coresight-tpiu", "arm,primecell";
-+            reg = <0xf8803000 0x1000>;
-+            clocks = <&clkc 47>, <&clkc 16>;
-+            clock-names = "apb_pclk", "fclk1";
-+            clock-frequency=<0xee6b280>;
-+
-+            port {
-+
-+                endpoint@0 {
-+                    slave-mode;
-+                    remote-endpoint = <0x9>;
-+                    linux,phandle = <0xe>;
-+                    phandle = <0xe>;
-+                };
-+            };
-+        };
-+
-+        funnel@F8804000 {
-+            compatible = "arm,coresight-funnel", "arm,primecell";
-+            reg = <0xf8804000 0x1000>;
-+            clocks = <&clkc 47>;
-+            clock-names = "apb_pclk";
-+
-+            ports {
-+                #address-cells = <0x1>;
-+                #size-cells = <0x0>;
-+
-+                port@0 {
-+                    reg = <0x0>;
-+
-+                    endpoint {
-+                        remote-endpoint = <0xa>;
-+                        linux,phandle = <0xf>;
-+                        phandle = <0xf>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <0x0>;
-+
-+                    endpoint {
-+                        slave-mode;
-+                        remote-endpoint = <0xb>;
-+                        linux,phandle = <0x11>;
-+                        phandle = <0x11>;
-+                    };
-+                };
-+
-+                port@2 {
-+                    reg = <0x1>;
-+
-+                    endpoint {
-+                        slave-mode;
-+                        remote-endpoint = <0xc>;
-+                        linux,phandle = <0x13>;
-+                        phandle = <0x13>;
-+                    };
-+                };
-+            };
-+        };
-+
-+        replicator {
-+            compatible = "arm,coresight-replicator";
-+
-+            ports {
-+                #address-cells = <0x1>;
-+                #size-cells = <0x0>;
-+
-+                port@0 {
-+                    reg = <0x0>;
-+
-+                    endpoint {
-+                        remote-endpoint = <0xd>;
-+                        linux,phandle = <0x8>;
-+                        phandle = <0x8>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <0x1>;
-+
-+                    endpoint {
-+                        remote-endpoint = <0xe>;
-+                        linux,phandle = <0x9>;
-+                        phandle = <0x9>;
-+                    };
-+                };
-+
-+                port@2 {
-+                    reg = <0x0>;
-+
-+                    endpoint {
-+                        slave-mode;
-+                        remote-endpoint = <0xf>;
-+                        linux,phandle = <0xa>;
-+                        phandle = <0xa>;
-+                    };
-+                };
-+            };
-+        };
-+
-+        ptm0@F889C000 {
-+            compatible = "arm,coresight-etm3x", "arm,primecell";
-+            reg = <0xf889c000 0x1000>;
-+            cpu = <0x10>;
-+            clocks = <&clkc 47>;
-+            clock-names = "apb_pclk";
-+
-+            port {
-+
-+                endpoint {
-+                    remote-endpoint = <0x11>;
-+                    linux,phandle = <0xb>;
-+                    phandle = <0xb>;
-+                };
-+            };
-+        };
-+
-+        ptm1@F889D000 {
-+            compatible = "arm,coresight-etm3x", "arm,primecell";
-+            reg = <0xf889d000 0x1000>;
-+            cpu = <0x12>;
-+            clocks = <&clkc 47>;
-+            clock-names = "apb_pclk";
-+
-+            port {
-+
-+                endpoint {
-+                    remote-endpoint = <0x13>;
-+                    linux,phandle = <0xc>;
-+                    phandle = <0xc>;
-+                };
-+            };
-+        };
-      };
-  };
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
