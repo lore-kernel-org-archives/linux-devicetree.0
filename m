@@ -1,82 +1,101 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] video: display_timing: Add flags to select the
- edge when the sync is driven
-Date: Thu, 29 Sep 2016 13:54:11 +0300
-Message-ID: <091c4fd9-d037-4e7e-b003-140395a2ca38@ti.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v2 3/3] video: of: display_timing: Add support for
+ syncclk-active property
+Date: Thu, 29 Sep 2016 13:55:36 +0300
+Message-ID: <f2d2e5df-07ef-854d-9128-6adc91c83b95@ti.com>
 References: <20160922103526.24925-1-peter.ujfalusi@ti.com>
- <20160922103526.24925-3-peter.ujfalusi@ti.com>
+ <20160922103526.24925-4-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature";
-        boundary="TI5JhQnQSt0kwJ89cghREPshaHHRBb9oV"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160922103526.24925-3-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0552262441=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160922103526.24925-4-peter.ujfalusi@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, robh+dt@kernel.org, airlied@linux.ie, thierry.reding@gmail.com
+Cc: daniel.vetter@ffwll.ch, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---TI5JhQnQSt0kwJ89cghREPshaHHRBb9oV
-Content-Type: multipart/mixed; boundary="53AoaU7D08ljTN5QuGanBcsRLsOqfbbK6";
- protected-headers="v1"
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org,
- airlied-cv59FeDIM0c@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- daniel.vetter-/w4YWyX8dFk@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org,
- devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Message-ID: <091c4fd9-d037-4e7e-b003-140395a2ca38-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] video: display_timing: Add flags to select the
- edge when the sync is driven
-References: <20160922103526.24925-1-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
- <20160922103526.24925-3-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-In-Reply-To: <20160922103526.24925-3-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+--===============0552262441==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="AoekTJxip2eUwhwRA9krLrDwrQEHmJPJc"
 
---53AoaU7D08ljTN5QuGanBcsRLsOqfbbK6
+--AoekTJxip2eUwhwRA9krLrDwrQEHmJPJc
+Content-Type: multipart/mixed; boundary="wKPrXeOmNt1WcMUV6ASi7fNlRawp05Evk";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, robh+dt@kernel.org,
+ airlied@linux.ie, thierry.reding@gmail.com
+Cc: linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ daniel.vetter@ffwll.ch, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org
+Message-ID: <f2d2e5df-07ef-854d-9128-6adc91c83b95@ti.com>
+Subject: Re: [PATCH v2 3/3] video: of: display_timing: Add support for
+ syncclk-active property
+References: <20160922103526.24925-1-peter.ujfalusi@ti.com>
+ <20160922103526.24925-4-peter.ujfalusi@ti.com>
+In-Reply-To: <20160922103526.24925-4-peter.ujfalusi@ti.com>
+
+--wKPrXeOmNt1WcMUV6ASi7fNlRawp05Evk
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
 On 22/09/16 13:35, Peter Ujfalusi wrote:
-> The sync can be - and for some panels it must be - driven on different =
-edge
-> then the data.
+> Configure the DISPLAY_FLAGS_SYNC_POSEDGE/NEGEDGE flags according to the=
 
-Well, the "can be" depends on the display controller =3D).
-
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> binding document.
+> If the syncclk-active is present in DT, configure the flags accordingly=
+, if
+> it is omitted it means that the SYNC edge is following the pixdata
+> configuration.
+>=20
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: devicetree@vger.kernel.org
 > ---
->  include/video/display_timing.h | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/video/of_display_timing.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 >=20
-> diff --git a/include/video/display_timing.h b/include/video/display_tim=
-ing.h
-> index 28d9d0d566ca..3d289e990aca 100644
-> --- a/include/video/display_timing.h
-> +++ b/include/video/display_timing.h
-> @@ -28,6 +28,10 @@ enum display_flags {
->  	DISPLAY_FLAGS_INTERLACED	=3D BIT(8),
->  	DISPLAY_FLAGS_DOUBLESCAN	=3D BIT(9),
->  	DISPLAY_FLAGS_DOUBLECLK		=3D BIT(10),
-> +	/* drive sync on pos. edge */
-> +	DISPLAY_FLAGS_SYNC_POSEDGE	=3D BIT(11),
-> +	/* drive sync on neg. edge */
-> +	DISPLAY_FLAGS_SYNC_NEGEDGE	=3D BIT(12),
->  };
+> diff --git a/drivers/video/of_display_timing.c b/drivers/video/of_displ=
+ay_timing.c
+> index 8a1076beecd3..db992c684f09 100644
+> --- a/drivers/video/of_display_timing.c
+> +++ b/drivers/video/of_display_timing.c
+> @@ -88,6 +88,15 @@ static int of_parse_display_timing(const struct devi=
+ce_node *np,
+>  		dt->flags |=3D val ? DISPLAY_FLAGS_PIXDATA_POSEDGE :
+>  				DISPLAY_FLAGS_PIXDATA_NEGEDGE;
 > =20
->  /*
+> +	if (!of_property_read_u32(np, "syncclk-active", &val))
+> +		dt->flags |=3D val ? DISPLAY_FLAGS_SYNC_POSEDGE :
+> +				DISPLAY_FLAGS_SYNC_NEGEDGE;
+> +	else if (dt->flags & (DISPLAY_FLAGS_PIXDATA_POSEDGE |
+> +			      DISPLAY_FLAGS_PIXDATA_NEGEDGE))
+> +		dt->flags |=3D dt->flags & DISPLAY_FLAGS_PIXDATA_POSEDGE ?
+> +				DISPLAY_FLAGS_SYNC_POSEDGE :
+> +				DISPLAY_FLAGS_SYNC_NEGEDGE;
+> +
+>  	if (of_property_read_bool(np, "interlaced"))
+>  		dt->flags |=3D DISPLAY_FLAGS_INTERLACED;
+>  	if (of_property_read_bool(np, "doublescan"))
 >=20
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
  Tomi
 
 
---53AoaU7D08ljTN5QuGanBcsRLsOqfbbK6--
+--wKPrXeOmNt1WcMUV6ASi7fNlRawp05Evk--
 
---TI5JhQnQSt0kwJ89cghREPshaHHRBb9oV
+--AoekTJxip2eUwhwRA9krLrDwrQEHmJPJc
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -84,23 +103,31 @@ Content-Disposition: attachment; filename="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJX7PLTAAoJEPo9qoy8lh71w5MP/i9UO8HkG2WUA0w6/VYDVVkp
-tdy9v+rchBet8xc1LakGAlncd2ug20u4O5b7SZKph1RG9ScfFhRzV+T/hDoNdIiU
-ytqNFMuG81FmFL6J8vf/M+4aKBnlKxz/MHgkUazST9dvw9/MuAt66b5sRK1VXkaX
-I2yPaSPpOSvLpHSMsp3L3twWykpvsm5oYdiUFg289RKafQSwESyxkol+AlPECvB0
-zl8DoKmYVU/EGErL+N1csTVYB/7XDvXYktWAC60DqSsjVIY1PvO6F9uETPbBDqxI
-WFD1piCOb5mZYUQE1Fb3hGaqIMwGlRSynxhN2vQfEwRb2o94nATO3JQeGg9HKrcV
-T7wkSw1O3Qb8VSgXDMPAAVA4EJVKUPr1Gj6JIY4hxqaFtzUh/duqU8N4FBnjZK2F
-pIMfHot9VWKBvtADAz/ioqnEHyTuhzAROiFysi//6vucbEqwIiTAZf9N8/LLF+ox
-C+WI7Jon8Jk9KgXof+tvKO8ROY9rRxX09fA9cw+dmIkrcqoEzNjTCrYnPCo6OGv/
-CenzT7BmYr4uURUik3hps/T6C8iQs0EG1O0uMTyzYKo3R5Z2yfCdTCFdep0qQKpp
-CdwhvBp0CyJwMeSEDNfQfIL480Kq3XICxpqievii8Jn2w3xaI3KXEW9BsYDtLtck
-x6eiThk+MRV7JsFY2fNe
-=OLgV
+iQIcBAEBCAAGBQJX7PMoAAoJEPo9qoy8lh71d+gP/RTR8cHx87dvkEO1k4M8KIGA
+OYx0zNUWlFgGmB+WAlbblSigoB/MoWDFeAV52XWgtRdX18hhjPDjSYLVcZDJCp0M
+qnrpYVXgyy582DpE8cYfhYpYnW4hj/hrOmSeOsmv+mvCmWbUPMW33Lxtr5aNBKM+
+PV5mX5f9664SE/EwRv+TAM4cLzhUKpLXHlxlYxbl37cfPkLahOB3TGnyCWKo4/Jx
+3QN4HC7e3y80KvIbyMJihwy+B1KXDOStlJ23tfZOy6VbAf2VqiWPjLz66J8jYtot
+xNArb2559X3S6iRCsAxJNlyIjxPDLod+SDwgcQ5Ba6nYXTuhqppUyQVcW7vrBiPi
+mXOtDxwRAZ8hCoNc2ZJa9MzeTN1ogdrHBozLLFFzDpBtWb6vA7lnf3npiLe3cWuq
+K1pw73yPRFVCOTzqHoTG5HMIGv2FkEhOLJKgFzUjllQvso9wQT/3Hd5Bddoma6jL
+d2fY1QjMCXrLhw5DJK0DkP0E2g/nk+YAl64yR5Pl2zpsmE1dJpRWGUKjN3PrHwT8
+i4Z4Ujq0egKOhxfc16DDneNxlrCnmc1YG/fkLUieUWJ5lWcQk67py3PBgdSXkSaZ
+liFYvG2ZsrFC/sA3lNV+WZpIKszMLIbE+AGy1hwH8eIY0pS8O/dvzBWpVty65+53
+TO9CoDgvmHQOf2HtTIzG
+=hunD
 -----END PGP SIGNATURE-----
 
---TI5JhQnQSt0kwJ89cghREPshaHHRBb9oV--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--AoekTJxip2eUwhwRA9krLrDwrQEHmJPJc--
+
+--===============0552262441==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0552262441==--
