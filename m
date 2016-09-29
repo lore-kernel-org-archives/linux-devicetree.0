@@ -1,92 +1,48 @@
-From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH V4 08/10] dmaengine: qcom_hidma: add a common API to setup the interrupt
-Date: Wed, 28 Sep 2016 22:12:45 -0400
-Message-ID: <1475115167-5898-9-git-send-email-okaya@codeaurora.org>
-References: <1475115167-5898-1-git-send-email-okaya@codeaurora.org>
+From: Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v19 05/12] fpga-mgr: add fpga image information struct
+Date: Wed, 28 Sep 2016 23:34:51 -0500
+Message-ID: <CANk1AXTbKhiSu3XN4HgTM_rBBQ315qseH06RzojOOZrV74M7yQ@mail.gmail.com>
+References: <20160928182200.15800-1-atull@opensource.altera.com>
+ <20160928182200.15800-6-atull@opensource.altera.com> <CAAtXAHcdSsVUE4hQ6isCp7_35ZKb60EAKAgtGwBR41apwPpe=g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475115167-5898-1-git-send-email-okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <CAAtXAHcdSsVUE4hQ6isCp7_35ZKb60EAKAgtGwBR41apwPpe=g@mail.gmail.com>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-Cc: agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Cyril Chemparathy <cyril.chemparathy-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>, Matthew Gerlach <mgerlach-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Introducing the hidma_ll_setup_irq function to set up the interrupt
-type externally from the OS interface.
+On Wed, Sep 28, 2016 at 6:41 PM, Moritz Fischer
+<moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> wrote:
+Hi Moritz,
 
-Signed-off-by: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- drivers/dma/qcom/hidma.h    |  2 ++
- drivers/dma/qcom/hidma_ll.c | 27 +++++++++++++++++++++++----
- 2 files changed, 25 insertions(+), 4 deletions(-)
+> Hi Alan,
+>
+> generally ok with the change.
 
-diff --git a/drivers/dma/qcom/hidma.h b/drivers/dma/qcom/hidma.h
-index 3f2ddd4..181f7e0 100644
---- a/drivers/dma/qcom/hidma.h
-+++ b/drivers/dma/qcom/hidma.h
-@@ -46,6 +46,7 @@ struct hidma_tre {
- };
- 
- struct hidma_lldev {
-+	bool msi_support;		/* flag indicating MSI support    */
- 	bool initialized;		/* initialized flag               */
- 	u8 trch_state;			/* trch_state of the device	  */
- 	u8 evch_state;			/* evch_state of the device	  */
-@@ -145,6 +146,7 @@ int hidma_ll_disable(struct hidma_lldev *lldev);
- int hidma_ll_enable(struct hidma_lldev *llhndl);
- void hidma_ll_set_transfer_params(struct hidma_lldev *llhndl, u32 tre_ch,
- 	dma_addr_t src, dma_addr_t dest, u32 len, u32 flags);
-+void hidma_ll_setup_irq(struct hidma_lldev *lldev, bool msi);
- int hidma_ll_setup(struct hidma_lldev *lldev);
- struct hidma_lldev *hidma_ll_init(struct device *dev, u32 max_channels,
- 			void __iomem *trca, void __iomem *evca,
-diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
-index 088935f..f0630e0 100644
---- a/drivers/dma/qcom/hidma_ll.c
-+++ b/drivers/dma/qcom/hidma_ll.c
-@@ -672,17 +672,36 @@ int hidma_ll_setup(struct hidma_lldev *lldev)
- 	writel(HIDMA_EVRE_SIZE * nr_tres,
- 			lldev->evca + HIDMA_EVCA_RING_LEN_REG);
- 
--	/* support IRQ only for now */
-+	/* configure interrupts */
-+	hidma_ll_setup_irq(lldev, lldev->msi_support);
-+
-+	rc = hidma_ll_enable(lldev);
-+	if (rc)
-+		return rc;
-+
-+	return rc;
-+}
-+
-+void hidma_ll_setup_irq(struct hidma_lldev *lldev, bool msi)
-+{
-+	u32 val;
-+
-+	lldev->msi_support = msi;
-+
-+	/* disable interrupts again after reset */
-+	writel(0, lldev->evca + HIDMA_EVCA_IRQ_CLR_REG);
-+	writel(0, lldev->evca + HIDMA_EVCA_IRQ_EN_REG);
-+
-+	/* support IRQ by default */
- 	val = readl(lldev->evca + HIDMA_EVCA_INTCTRL_REG);
- 	val &= ~0xF;
--	val |= 0x1;
-+	if (!lldev->msi_support)
-+		val = val | 0x1;
- 	writel(val, lldev->evca + HIDMA_EVCA_INTCTRL_REG);
- 
- 	/* clear all pending interrupts and enable them */
- 	writel(ENABLE_IRQS, lldev->evca + HIDMA_EVCA_IRQ_CLR_REG);
- 	writel(ENABLE_IRQS, lldev->evca + HIDMA_EVCA_IRQ_EN_REG);
--
--	return hidma_ll_enable(lldev);
- }
- 
- struct hidma_lldev *hidma_ll_init(struct device *dev, u32 nr_tres,
--- 
-1.9.1
+Cool!
 
+>
+> On Wed, Sep 28, 2016 at 11:21 AM, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
+>
+>> -int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags, const char *buf,
+>> -                     size_t count)
+>> +int fpga_mgr_buf_load(struct fpga_manager *mgr, struct fpga_image_info *info,
+>> +                     const char *buf, size_t count)
+>
+> Doesn't this break the both socfpga and zynq if [6/12] and [7/12] are
+> not part of this commit?
+> i.e shouldn't 5,6 and 7 be a single commit?
+
+Yeah, squashing those would improve bisectability.
+
+Alan
+aka atull
+
+>
+> Cheers,
+> Moritz
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
