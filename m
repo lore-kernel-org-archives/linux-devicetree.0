@@ -1,101 +1,78 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v6 1/4] mfd: mxs-lradc: Add support for mxs-lradc MFD
-Date: Thu, 29 Sep 2016 21:15:50 +0200 (CEST)
-Message-ID: <1269746175.25077.ef1d8693-0ff3-4b50-a424-49eebba23da1.open-xchange@email.1und1.de>
-References: <cover.1474108510.git.ksenija.stanojevic@gmail.com>
- <b50209289b241995c6fd5e23c7343448857fc301.1474108510.git.ksenija.stanojevic@gmail.com>
- <20160928010533.GQ21388@dell>
- <1882238802.204734.75f5f595-10ac-4107-8738-e75dfde001f1.open-xchange@email.1und1.de>
- <20160929171540.GB2844@dell>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/2] backlight: arcxcnn: devicetree bindings for
+ ArticSand devices
+Date: Thu, 29 Sep 2016 20:21:12 +0100
+Message-ID: <20160929191937.GA3405@remoulade>
+References: <1475166937-6299-1-git-send-email-olimpiu@arcticsand.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160929171540.GB2844@dell>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ksenija Stanojevic <ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1475166937-6299-1-git-send-email-olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
-
-[add Rob and Mark]
-
-> Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> hat am 29. September 2016 um 19:15
-> geschrieben:
+On Thu, Sep 29, 2016 at 12:35:37PM -0400, Olimpiu Dejeu wrote:
+> Resubmition of arcxcnn backliught driver bindings correcting the file 
+>  location, device name, and proper use of reg for device address
 > 
+> Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
 > 
-> On Thu, 29 Sep 2016, Stefan Wahren wrote:
-> > > Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> hat am 28. September 2016 um 03:05
-> > > geschrieben:
-> > > 
-> > > 
-> > > On Sat, 17 Sep 2016, Ksenija Stanojevic wrote:
-> > > 
-> > > > +
-> > > > +static int mxs_lradc_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +	const struct of_device_id *of_id;
-> > > > +	struct device *dev = &pdev->dev;
-> > > > +	struct device_node *node = dev->of_node;
-> > > > +	struct mxs_lradc *lradc;
-> > > > +	struct mfd_cell *cells = NULL;
-> > > > +	int ret = 0;
-> > > > +	u32 ts_wires = 0;
-> > > > +
-> > > > +	lradc = devm_kzalloc(&pdev->dev, sizeof(*lradc), GFP_KERNEL);
-> > > > +	if (!lradc)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	of_id = of_match_device(mxs_lradc_dt_ids, &pdev->dev);
-> > > > +	lradc->soc = (enum mxs_lradc_id)of_id->data;
-> > > > +
-> > > > +	lradc->clk = devm_clk_get(&pdev->dev, NULL);
-> > > > +	if (IS_ERR(lradc->clk)) {
-> > > > +		dev_err(dev, "Failed to get the delay unit clock\n");
-> > > > +		return PTR_ERR(lradc->clk);
-> > > > +	}
-> > > > +
-> > > > +	ret = clk_prepare_enable(lradc->clk);
-> > > > +	if (ret) {
-> > > > +		dev_err(dev, "Failed to enable the delay unit clock\n");
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > > +	ret = of_property_read_u32(node, "fsl,lradc-touchscreen-wires",
-> > > 
-> > > Have you moved the documentation into devicetree/bindings/mfd?
-> > > 
-> > 
-> > i hope it's okay if i answer. The binding has moved to
-> > devicetree/binding/iio/adc/ [1]
-> > 
-> > Should it move completely to mfd or split too?
-> > 
-> > I'm asking myself how we keep DT ABI in the latter case.
-> > 
-> > [1] -
-> > http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt
+> ---
+>  .../bindings/leds/backlight/arcxcnn_bl.txt         | 30 ++++++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  2 files changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
 > 
-> I haven't read into the documentation too to deeply, but it stands to
-> reason that the bindings which are now being used in MFD should be
-> documented in the MFD binding document, and the ones which are no longer
-> used in the IIO driver should be removed.
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+> new file mode 100644
+> index 0000000..bcf5664
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+> @@ -0,0 +1,30 @@
+> +Binding for ArcticSand arc2c0608 LED driver
+> +
+> +Required properties:
+> +- compatible: should be "arc,arc2c0608"
+> +- reg: slave address
+> +
+> +Optional properties:
+> +- default-brightness: brightness value on boot, value from: 0-4095
+> +- label: The name of the backlight device
+> +			See Documentation/devicetree/bindings/leds/common.txt
+> +- led-sources: List of enabled channels from 0 to 5.
+> +			See Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Example:
+> +
+> +arc2c0608@30 {
+> +	compatible = "arc,arc2c0608";
+> +	reg = <0x30>;
+> +	default-brightness = <500>;
+> +	label = "lcd-backlight";
+> +	linux,default-trigger = "backlight";
+> +	led-sources = <0 1 2 5>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	prog@6 {
+> +		reg = <0x06>;
+> +		val = <0x0F>;
+> +	};
 
-sure, that isn't a problem.
+What is this prog@6 sub-node?
 
-The more interesting question would be: do we need a new compatible string for
-the mfd driver?
+It isn't documented above, and its properties look incredibly suspicious --
+this doesn't look right to me.
 
-In that case the ADC won't probe for the combination of old devicetree blobs and
-new kernel.
+As a general note, please put binding patches earlier in the series than the
+code implementing them, as per
+Documentation/devicetree/bindings/submitting-patches.txt.
 
-Regards
-Stefan
-
-> 
-> -- 
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
