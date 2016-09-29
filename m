@@ -1,22 +1,108 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v19 04/12] add sysfs document for fpga bridge class
-Date: Thu, 29 Sep 2016 14:54:47 -0700
-Message-ID: <CAAtXAHfyB5b=udt+nHnVivLBcMS6amHeb3orfthSdc6F=1ZujA@mail.gmail.com>
-References: <20160928182200.15800-1-atull@opensource.altera.com> <20160928182200.15800-5-atull@opensource.altera.com>
+From: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
+Subject: Re: [PATCH 1/2] fsl-quadspi: fix QUAD read, add NORMAL, DUAL and FAST
+ reads
+Date: Thu, 29 Sep 2016 22:09:33 +0000
+Message-ID: <DB5PR0401MB184590EED7EB8A68E7352E8997CE0@DB5PR0401MB1845.eurprd04.prod.outlook.com>
+References: <20160927055957.427-1-albert.aribaud@3adev.fr>
+        <20160928200652.GA31901@shlinux2>,<20160928234546.6df9c893.albert.aribaud@3adev.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160928182200.15800-5-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+In-Reply-To: <20160928234546.6df9c893.albert.aribaud-iEu9NFBzPZE@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Cyril Chemparathy <cyril.chemparathy-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Matthew Gerlach <mgerlach-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, julia-acOepvfBmUk@public.gmane.org
+To: Albert ARIBAUD <albert.aribaud-iEu9NFBzPZE@public.gmane.org>, Han Xu <xhnjupt-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 28, 2016 at 11:21 AM, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
-> Add documentation for new FPGA bridge class's sysfs interface.
+From: Albert ARIBAUD <albert.aribaud-iEu9NFBzPZE@public.gmane.org>
+Sent: Wednesday, September 28, 2016 3:45 PM
+To: Han Xu
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Han Xu
+Subject: Re: [PATCH 1/2] fsl-quadspi: fix QUAD read, add NORMAL, DUAL and F=
+AST reads
+
+Hello Han,
+
+Le Thu, 29 Sep 2016 04:06:52 +0800, Han Xu <xhnjupt-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> a =E9crit :
+
+> Too much changes in one patch, need to split to several patches.
+
+Will do.
+
+> > +#define QUADSPI_SPTRCLR                    0x15c
+> > +#define QUADSPI_SPTRCLR_BFPTRC_SHIFT               0
+> > +#define QUADSPI_SPTRCLR_BFPTRC_MASK                (0x1 << QUADSPI_SPT=
+RCLR_BFPTRC_SHIFT)
+> > +
 >
-> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Acked-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+> offset 0x15c is SR register for i.MX, not sure where does SPTRCLR come fr=
+om
+
+It's a typo -- should have been 0x16c, not 0x15c. It is the Vybrid's
+Sequence Pointer Clear Register. Apparently, the bad register write did
+not screw thing up enough to cause any visible issue. Thanks for
+pointing it out.
+
+> > +    /* use 24-bit addresses for up to 16MB, 32-bit above 16MB */
+> > +   if (q->nor_size <=3D SZ_16M)
+> > +           addrlen =3D ADDR24BIT;
+> > +   else
+> > +           addrlen =3D ADDR32BIT;
+>
+> A better patch fetch info from nor structure, refer to
+> https://patchwork.ozlabs.org/patch/613429/
+
+v3 (https://patchwork.kernel.org/patch/9287005/) seems poised to go in
+at some point. I can base my patches above it. I will mention the
+dependency in my series' cover letter.
+
+> > + * When using two ports, the SEQID to use for one port might differ fr=
+om
+> > + * the one to use for the other (e.g., if one port can do 4-pad reads =
+but
+> > + * the other cannot). So we set up a basic mode here (SEQID_READ) and =
+we
+> > + * will set up the proper SEQID for the port right before doing the AH=
+B
+> > + * access(es).
+> >   */
+>
+> It's rare to find this use case, considering the amount of lut is only 16=
+,
+> please don't add two many luts in this way. I will send a patch soon for
+> dynamic lut change, please add these extra luts in dynamic lut list.
+
+I'm fine with switching to a dynamic LUT list; this matches the "two
+ports with different characteristics" well. Is the patch already
+available somewhere so that I can rebase over it in advance?
+
+Just sent the patch out, refer to https://patchwork.ozlabs.org/patch/676791=
+/
+
+> >     /* Read out the data directly from the AHB buffer.*/
+> > -   memcpy(buf, q->ahb_addr + q->chip_base_addr + from - q->memmap_offs=
+,
+> > -           len);
+> > +   memcpy(buf, q->ahb_addr + nor_ofs + from, len);
+>
+> No much diff from the previous implementation
+
+Still, it simplifies the memcpy source address computation.
+
+> > +           ret =3D spi_nor_scan(nor, NULL, readmode);
+>
+> Not necessary, can fetch info from nor structure
+> https://patchwork.ozlabs.org/patch/613429/
+
+Ditto.
+
+Thanks for your review!
+
+Cordialement,
+Albert ARIBAUD
+3ADEV
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
