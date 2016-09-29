@@ -1,491 +1,568 @@
 Return-Path: <muhammadabdul.wahab@supelec.fr>
-Subject: Re: [PATCH] Adding Support for Coresight Components on Zynq 7000.
-References: <c6836102-9b7e-a9d9-bad9-34b100d4ae49@supelec.fr>
- <20160929143411.GE16583@xsjsorenbubuntu>
 From: Muhammad Abdul WAHAB <muhammadabdul.wahab@supelec.fr>
-Message-ID: <253d0d82-276e-9c94-9727-df6f0925085e@supelec.fr>
-Date: Fri, 30 Sep 2016 09:34:26 +0200
+Subject: [PATCH] Adding Support for Coresight Components on Zynq 7000.
+Message-ID: <7ab0d935-1525-30a8-24f1-fa4c5bbeb872@supelec.fr>
+Date: Thu, 29 Sep 2016 12:10:15 +0200
 MIME-Version: 1.0
-In-Reply-To: <20160929143411.GE16583@xsjsorenbubuntu>
 Content-Type: multipart/alternative;
- boundary="------------EB7E0B80F7AD576D8A896AB4"
-To: =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+ boundary="------------C23A167FEE54F5563FF2420A"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
 This is a multi-part message in MIME format.
---------------EB7E0B80F7AD576D8A896AB4
+--------------C23A167FEE54F5563FF2420A
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Sören,
+The Coresight components are present on the Zynq SoC but the corresponding
+device tree entries are missing. This patch adds device tree entries for
+coresight components while explaining how it was done in order to allow
+porting towards other boards easily.
 
-Thank you for your remarks. I corrected a few things as you suggested.
+By adding the entries for Coresight components in the device tree: if no
+files are created in sysfs file system, you need to contact the board 
+designer
+to sort out the problem. On some boards, Coresight components are not
+powered on boot.
 
-> I'm curious, did you test that with external debug tools. I have the
-> feeling the kernel using the debug HW could interfere with JTAG
-> debuggers, external trace tools, etc.
-
-I did not test with any external debug tools. For testing, I obtained
-trace for simple function (e.g. loop) on Xilinx standalone and I then
-traced the same function under Linux. Then, I compare both traces
-obtained under standalone and under Linux. I decoded the trace to make
-  sure that the trace I get corresponds to my function. The instructions
-for testing here only allows users to see that coresight components
-are enabled and generating traces. The trace still need to be decoded
-to make sure whether the trace is correct or not. It can be done by
-openCSD[1] library.
-
-> Use labels please.
-
-I changed the entries to use labels. I don't need phandle anymore.
-
->> +        tpiu@F8803000 {
->>> +            compatible = "arm,coresight-tpiu", "arm,primecell";
->>> +            reg = <0xf8803000 0x1000>;
->>> +            clocks = <&clkc 47>, <&clkc 16>;
-> I'm not sure this is correct for every setup. Sorry, that I don't recall
-> all the details, I haven't used tracing in a long time. But I guess this
-> clock is configurable as you're referring an fclk here. The other thing
-> that makes me a little suspicious is, that nothing in here uses the
-> 'dbg_trc' clock that the clock controller provides.
-
-The TPIU setup included in my patch is specific to my configuration of TPIU.
-The second clock is configurable but I didn't know how to do so. As in
-Vivado setup I chose "fclk1" as the clock for TPIU, I decided to put fclk1.
-But, I am not sure about this. I am having some problems when I recover the
-trace from TPIU: it is not the same as in ETB even though it resembles a lot.
-I don't know if the problem is coming from the device tree or from the driver.
-I will have a look at 'dbg_trc' clock.
-
->> +            clock-names = "apb_pclk", "fclk1";
-> Those names (at least fclk1) is not a good name for tpiu to identify
-> it's input. fclk1 is a zynq-specific clock, and as mentioned above, it
-> seems likely that this could easily become a different one. The
-> clock-names are meant to identify an input from the consumer's
-> perspective. The correct names should be documented in the DT binding.
-
-The first name was chosen as "apb_pclk" because it was recommended in
-Documentation. On the second name, I agree with you but again for TPIU DT
-entry, I am not sure how to make this clock configurable. So, that's why
-I put the same clock name as I had in my Vivado setup. If you have any
-leads on how to make it configurable, I will be happy to take a look
-into it.
-
->> +            clock-frequency=<0xee6b280>;
-> I cannot find this property in the binding.
-
-This property was described in clock binding (in an example [2]) and the
-value here (250MHz) corresponds to the value I had chosen in Vivado for
-TPIU input clock.
-
-> I think nodes were ordered alphabetically in our DTs.
-
-Yes, I modified the patch to take care of it. Thank you.
-
-Muhammad Abdul WAHAB
-
-[1]:https://github.com/Linaro/OpenCSD
-[2]: Documentation/devicetree/bindings/clock/clock-bindings.txt
+Signed-off-by: Muhammad Abdul Wahab <muhammadabdul.wahab@centralesupelec.fr>
 ---
---- linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi.orig    2016-07-24 21:23:50.000000000 +0200
-+++ linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi    2016-09-29 20:42:44.286322433 +0200
-@@ -96,6 +96,57 @@
-              rx-fifo-depth = <0x40>;
+The documentation file was very helpful
+(Documentation/devicetree/bindings/arm/coresight.txt). However, few details
+can be added to make it more clear for beginners.
+
+Things to modify in device tree when changing the board are mainly:
+
+- address
+- `clocks` field
+- some references in other entries may be missing (e.g. for `CPU` field in
+   ETM/PTM component, references may need to be created)
+
+Furthermore, the `reg` field should be adapted according to
+`#address-cells` and `#size-cells`. It may appear obvious, not for
+beginners.
+
+## Testing
+
+The trace sink components need to be enabled by accessing through sysfile
+system.
+
+     echo 1 > /sys/bus/coresight/devices/@addr.etb/enable\_sink
+
+Then enable the CS source component:
+
+     echo 1 > /sys/bus/coresight/devices/@addr.ptm/enable\_source
+
+By default, CS Source components are configured to trace the kernel.
+
+Then the trace can be read by dumping ETB.
+
+     dd if=/dev/@addr.etb of=trace_kernel.bin
+
+The trace can be visualized by:
+
+     hexdump -C trace_kernel.bin
+
+Or stored using:
+
+     hexdump -C trace_kernel.bin > trace_kernel.txt
+
+The trace need to be decoded to be readable. All these above steps can now
+be performed with Perf Library which was not available at the time I was
+playing with DT entries.
+
+--- linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi.orig     2016-07-24 
+21:23:50.000000000 +0200
++++ linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi    2016-09-28 
+19:13:52.651881000 +0200
+@@ -363,5 +363,159 @@
+              reg = <0xf8005000 0x1000>;
+              timeout-sec = <10>;
           };
-  
-+        etb@F8801000 {
-+            compatible = "arm,coresight-etb10", "arm,primecell";
-+            reg = <0xf8801000 0x1000>;
 +
-+            coresight-default-sink;
-+            clocks = <&clkc 47>;
-+            clock-names = "apb_pclk";
++ etb@F8801000 {
++ compatible = "arm,coresight-etb10", "arm,primecell";
++ reg = <0xf8801000 0x1000>;
++ coresight-default-sink;
++ clocks = <&clkc 47>;
++ clock-names = "apb_pclk";
 +
-+            port {
-+                etb_in_port: endpoint@0 {
-+                    slave-mode;
-+                    remote-endpoint = <&replicator_out_port0>;
-+                };
-+            };
-+        };
++ port {
 +
-+        funnel@F8804000 {
-+            compatible = "arm,coresight-funnel", "arm,primecell";
-+            reg = <0xf8804000 0x1000>;
++ endpoint@0 {
++ slave-mode;
++ remote-endpoint = <0x8>;
++ linux,phandle = <0xd>;
++ phandle = <0xd>;
++ };
++ };
++ };
 +
-+            clocks = <&clkc 47>;
-+            clock-names = "apb_pclk";
-+            ports {
-+                #address-cells = <0x1>;
-+                #size-cells = <0x0>;
++ tpiu@F8803000 {
++ compatible = "arm,coresight-tpiu", "arm,primecell";
++ reg = <0xf8803000 0x1000>;
++ clocks = <&clkc 47>, <&clkc 16>;
++ clock-names = "apb_pclk", "fclk1";
++ clock-frequency=<0xee6b280>;
 +
-+                port@0 {
-+                    reg = <0x0>;
-+                    funnel_out_port0: endpoint {
-+                        remote-endpoint = <&replicator_in_port0>;
-+                    };
-+                };
++ port {
 +
-+                port@1 {
-+                    reg = <0x0>;
-+                    funnel_in_port0: endpoint {
-+                        slave-mode;
-+                        remote-endpoint = <&ptm0_out_port>;
-+                    };
-+                };
++ endpoint@0 {
++ slave-mode;
++ remote-endpoint = <0x9>;
++ linux,phandle = <0xe>;
++ phandle = <0xe>;
++ };
++ };
++ };
 +
-+                port@2 {
-+                    reg = <0x1>;
-+                    funnel_in_port1: endpoint {
-+                        slave-mode;
-+                        remote-endpoint = <&ptm1_out_port>;
-+                    };
-+                };
-+            };
-+        };
++ funnel@F8804000 {
++ compatible = "arm,coresight-funnel", "arm,primecell";
++ reg = <0xf8804000 0x1000>;
++ clocks = <&clkc 47>;
++ clock-names = "apb_pclk";
 +
-          gpio0: gpio@e000a000 {
-              compatible = "xlnx,zynq-gpio-1.0";
-              #gpio-cells = <2>;
-@@ -311,6 +362,82 @@
-              clocks = <&clkc 4>;
-          };
-  
-+        ptm0@F889C000 {
-+            compatible = "arm,coresight-etm3x", "arm,primecell";
-+            reg = <0xf889c000 0x1000>;
++ ports {
++ #address-cells = <0x1>;
++ #size-cells = <0x0>;
 +
-+            cpu = <&cpu0>;
-+            clocks = <&clkc 47>;
-+            clock-names = "apb_pclk";
++ port@0 {
++ reg = <0x0>;
 +
-+            port {
-+                ptm0_out_port: endpoint {
-+                    remote-endpoint = <&funnel_in_port0>;
-+                };
-+            };
-+        };
++ endpoint {
++ remote-endpoint = <0xa>;
++ linux,phandle = <0xf>;
++ phandle = <0xf>;
++ };
++ };
 +
-+        ptm1@F889D000 {
-+            compatible = "arm,coresight-etm3x", "arm,primecell";
-+            reg = <0xf889d000 0x1000>;
++ port@1 {
++ reg = <0x0>;
 +
-+            cpu = <&cpu1>;
-+            clocks = <&clkc 47>;
-+            clock-names = "apb_pclk";
++ endpoint {
++ slave-mode;
++ remote-endpoint = <0xb>;
++ linux,phandle = <0x11>;
++ phandle = <0x11>;
++ };
++ };
 +
-+            port {
-+                ptm1_out_port: endpoint {
-+                    remote-endpoint = <&funnel_in_port1>;
-+                };
-+            };
-+        };
++ port@2 {
++ reg = <0x1>;
 +
-+        replicator {
-+            compatible = "arm,coresight-replicator";
++ endpoint {
++ slave-mode;
++ remote-endpoint = <0xc>;
++ linux,phandle = <0x13>;
++ phandle = <0x13>;
++ };
++ };
++ };
++ };
 +
-+            ports {
-+                #address-cells = <0x1>;
-+                #size-cells = <0x0>;
++ replicator {
++ compatible = "arm,coresight-replicator";
 +
-+                port@0 {
-+                    reg = <0x0>;
-+                    replicator_out_port0: endpoint {
-+                        remote-endpoint = <&etb_in_port>;
-+                    };
-+                };
++ ports {
++ #address-cells = <0x1>;
++ #size-cells = <0x0>;
 +
-+                port@1 {
-+                    reg = <0x1>;
-+                    replicator_out_port1: endpoint {
-+                        remote-endpoint = <&tpiu_in_port>;
-+                    };
-+                };
++ port@0 {
++ reg = <0x0>;
 +
-+                port@2 {
-+                    reg = <0x0>;
-+                    replicator_in_port0: endpoint {
-+                        slave-mode;
-+                        remote-endpoint = <&funnel_out_port0>;
-+                    };
-+                };
-+            };
-+        };
++ endpoint {
++ remote-endpoint = <0xd>;
++ linux,phandle = <0x8>;
++ phandle = <0x8>;
++ };
++ };
 +
-+        tpiu@F8803000 {
-+            compatible = "arm,coresight-tpiu", "arm,primecell";
-+            reg = <0xf8803000 0x1000>;
++ port@1 {
++ reg = <0x1>;
 +
-+            clocks = <&clkc 47>, <&clkc 46>;
-+            clock-names = "apb_pclk", "configurable_clk";
-+            clock-frequency=<0xee6b280>;
++ endpoint {
++ remote-endpoint = <0xe>;
++ linux,phandle = <0x9>;
++ phandle = <0x9>;
++ };
++ };
 +
-+            port {
-+                tpiu_in_port: endpoint@0 {
-+                    slave-mode;
-+                    remote-endpoint = <&replicator_out_port0>;
-+                };
-+            };
-+        };
++ port@2 {
++ reg = <0x0>;
 +
-          ttc0: timer@f8001000 {
-              interrupt-parent = <&intc>;
-              interrupts = <0 10 4>, <0 11 4>, <0 12 4>;
++ endpoint {
++ slave-mode;
++ remote-endpoint = <0xf>;
++ linux,phandle = <0xa>;
++ phandle = <0xa>;
++ };
++ };
++ };
++ };
++
++ ptm0@F889C000 {
++ compatible = "arm,coresight-etm3x", "arm,primecell";
++ reg = <0xf889c000 0x1000>;
++ cpu = <0x10>;
++ clocks = <&clkc 47>;
++ clock-names = "apb_pclk";
++
++ port {
++
++ endpoint {
++ remote-endpoint = <0x11>;
++ linux,phandle = <0xb>;
++ phandle = <0xb>;
++ };
++ };
++ };
++
++ ptm1@F889D000 {
++ compatible = "arm,coresight-etm3x", "arm,primecell";
++ reg = <0xf889d000 0x1000>;
++ cpu = <0x12>;
++ clocks = <&clkc 47>;
++ clock-names = "apb_pclk";
++
++ port {
++
++ endpoint {
++ remote-endpoint = <0x13>;
++ linux,phandle = <0xc>;
++ phandle = <0xc>;
++ };
++ };
++ };
+      };
+  };
 
 
---------------EB7E0B80F7AD576D8A896AB4
+--------------C23A167FEE54F5563FF2420A
 Content-Type: text/html; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
 <html>
   <head>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
   </head>
   <body bgcolor="#FFFFFF" text="#000000">
-    <div class="moz-text-plain" wrap="true" graphical-quote="true"
-      style="font-family: -moz-fixed; font-size: 14px;" lang="x-unicode">
-      <pre wrap="">Hi Sören,
-
-Thank you for your remarks. I corrected a few things as you suggested.
-</pre>
-      <blockquote type="cite" style="color: #000000;">
-        <pre wrap="">I'm curious, did you test that with external debug tools. I have the
-feeling the kernel using the debug HW could interfere with JTAG
-debuggers, external trace tools, etc.
-</pre>
-      </blockquote>
-      <pre wrap="">I did not test with any external debug tools. For testing, I obtained 
-trace for simple function (e.g. loop) on Xilinx standalone and I then
-traced the same function under Linux. Then, I compare both traces 
-obtained under standalone and under Linux. I decoded the trace to make
- sure that the trace I get corresponds to my function. The instructions
-for testing here only allows users to see that coresight components
-are enabled and generating traces. The trace still need to be decoded
-to make sure whether the trace is correct or not. It can be done by 
-openCSD[1] library.
-</pre>
-      <blockquote type="cite" style="color: #000000;">
-        <pre wrap="">Use labels please. 
-</pre>
-      </blockquote>
-      <pre wrap="">I changed the entries to use labels. I don't need phandle anymore.
-</pre>
-      <blockquote type="cite" style="color: #000000;">
-        <blockquote type="cite" style="color: #000000;">
-          <pre wrap="">+        tpiu@F8803000 {
-</pre>
-          <blockquote type="cite" style="color: #000000;">
-            <pre wrap="">+            compatible = "arm,coresight-tpiu", "arm,primecell";
-+            reg = &lt;0xf8803000 0x1000&gt;;
-+            clocks = &lt;&amp;clkc 47&gt;, &lt;&amp;clkc 16&gt;;
-</pre>
-          </blockquote>
-        </blockquote>
-        <pre wrap="">I'm not sure this is correct for every setup. Sorry, that I don't recall
-all the details, I haven't used tracing in a long time. But I guess this
-clock is configurable as you're referring an fclk here. The other thing
-that makes me a little suspicious is, that nothing in here uses the
-'dbg_trc' clock that the clock controller provides.
-</pre>
-      </blockquote>
-      <pre wrap="">The TPIU setup included in my patch is specific to my configuration of TPIU.
-The second clock is configurable but I didn't know how to do so. As in 
-Vivado setup I chose "fclk1" as the clock for TPIU, I decided to put fclk1.
-But, I am not sure about this. I am having some problems when I recover the
-trace from TPIU: it is not the same as in ETB even though it resembles a lot.
-I don't know if the problem is coming from the device tree or from the driver.
-I will have a look at 'dbg_trc' clock.
-</pre>
-      <blockquote type="cite" style="color: #000000;">
-        <blockquote type="cite" style="color: #000000;">
-          <pre wrap="">+            clock-names = "apb_pclk", "fclk1";
-</pre>
-        </blockquote>
-        <pre wrap="">Those names (at least fclk1) is not a good name for tpiu to identify
-it's input. fclk1 is a zynq-specific clock, and as mentioned above, it
-seems likely that this could easily become a different one. The
-clock-names are meant to identify an input from the consumer's
-perspective. The correct names should be documented in the DT binding.
-</pre>
-      </blockquote>
-      <pre wrap="">The first name was chosen as "apb_pclk" because it was recommended in
-Documentation. On the second name, I agree with you but again for TPIU DT
-entry, I am not sure how to make this clock configurable. So, that's why
-I put the same clock name as I had in my Vivado setup. If you have any 
-leads on how to make it configurable, I will be happy to take a look 
-into it.
-</pre>
-      <blockquote type="cite" style="color: #000000;">
-        <blockquote type="cite" style="color: #000000;">
-          <pre wrap="">+            clock-frequency=&lt;0xee6b280&gt;;
-</pre>
-        </blockquote>
-        <pre wrap="">I cannot find this property in the binding.
-</pre>
-      </blockquote>
-      <pre wrap="">This property was described in clock binding (in an example [2]) and the
-value here (250MHz) corresponds to the value I had chosen in Vivado for
-TPIU input clock.
-</pre>
-      <blockquote type="cite" style="color: #000000;">
-        <pre wrap="">I think nodes were ordered alphabetically in our DTs.
-</pre>
-      </blockquote>
-      <pre wrap="">Yes, I modified the patch to take care of it. Thank you.
-
-Muhammad Abdul WAHAB
-
-[1]: <a class="moz-txt-link-freetext" href="https://github.com/Linaro/OpenCSD">https://github.com/Linaro/OpenCSD</a>
-[2]: Documentation/devicetree/bindings/clock/clock-bindings.txt
----
---- linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi.orig    2016-07-24 21:23:50.000000000 +0200
-+++ linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi    2016-09-29 20:42:44.286322433 +0200
-@@ -96,6 +96,57 @@
-             rx-fifo-depth = &lt;0x40&gt;;
-         };
- 
-+        etb@F8801000 {
-+            compatible = "arm,coresight-etb10", "arm,primecell";
-+            reg = &lt;0xf8801000 0x1000&gt;;
-+
-+            coresight-default-sink;
-+            clocks = &lt;&amp;clkc 47&gt;;
-+            clock-names = "apb_pclk";
-+
-+            port {
-+                etb_in_port: endpoint@0 {
-+                    slave-mode;
-+                    remote-endpoint = &lt;&amp;replicator_out_port0&gt;;
-+                };
-+            };
-+        };
-+
-+        funnel@F8804000 {
-+            compatible = "arm,coresight-funnel", "arm,primecell";
-+            reg = &lt;0xf8804000 0x1000&gt;;
-+           
-+            clocks = &lt;&amp;clkc 47&gt;;
-+            clock-names = "apb_pclk";
-+            ports {
-+                #address-cells = &lt;0x1&gt;;
-+                #size-cells = &lt;0x0&gt;;
-+
-+                port@0 {
-+                    reg = &lt;0x0&gt;;
-+                    funnel_out_port0: endpoint {
-+                        remote-endpoint = &lt;&amp;replicator_in_port0&gt;;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = &lt;0x0&gt;;
-+                    funnel_in_port0: endpoint {
-+                        slave-mode;
-+                        remote-endpoint = &lt;&amp;ptm0_out_port&gt;;
-+                    };
-+                };
-+
-+                port@2 {
-+                    reg = &lt;0x1&gt;;
-+                    funnel_in_port1: endpoint {
-+                        slave-mode;
-+                        remote-endpoint = &lt;&amp;ptm1_out_port&gt;;
-+                    };
-+                };
-+            };
-+        };
-+
-         gpio0: gpio@e000a000 {
-             compatible = "xlnx,zynq-gpio-1.0";
-             #gpio-cells = &lt;2&gt;;
-@@ -311,6 +362,82 @@
-             clocks = &lt;&amp;clkc 4&gt;;
-         };
- 
-+        ptm0@F889C000 {
-+            compatible = "arm,coresight-etm3x", "arm,primecell";
-+            reg = &lt;0xf889c000 0x1000&gt;;
-+
-+            cpu = &lt;&amp;cpu0&gt;;
-+            clocks = &lt;&amp;clkc 47&gt;;
-+            clock-names = "apb_pclk";
-+
-+            port {
-+                ptm0_out_port: endpoint {
-+                    remote-endpoint = &lt;&amp;funnel_in_port0&gt;;
-+                };
-+            };
-+        };
-+
-+        ptm1@F889D000 {
-+            compatible = "arm,coresight-etm3x", "arm,primecell";
-+            reg = &lt;0xf889d000 0x1000&gt;;
-+           
-+            cpu = &lt;&amp;cpu1&gt;;
-+            clocks = &lt;&amp;clkc 47&gt;;
-+            clock-names = "apb_pclk";
-+
-+            port {
-+                ptm1_out_port: endpoint {
-+                    remote-endpoint = &lt;&amp;funnel_in_port1&gt;;                   
-+                };
-+            };
-+        };
-+
-+        replicator {
-+            compatible = "arm,coresight-replicator";
-+
-+            ports {
-+                #address-cells = &lt;0x1&gt;;
-+                #size-cells = &lt;0x0&gt;;
-+
-+                port@0 {
-+                    reg = &lt;0x0&gt;;
-+                    replicator_out_port0: endpoint {
-+                        remote-endpoint = &lt;&amp;etb_in_port&gt;;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = &lt;0x1&gt;;
-+                    replicator_out_port1: endpoint {
-+                        remote-endpoint = &lt;&amp;tpiu_in_port&gt;;
-+                    };
-+                };
-+
-+                port@2 {
-+                    reg = &lt;0x0&gt;;
-+                    replicator_in_port0: endpoint {
-+                        slave-mode;
-+                        remote-endpoint = &lt;&amp;funnel_out_port0&gt;;
-+                    };
-+                };
-+            };
-+        };
-+
-+        tpiu@F8803000 {
-+            compatible = "arm,coresight-tpiu", "arm,primecell";
-+            reg = &lt;0xf8803000 0x1000&gt;;
-+
-+            clocks = &lt;&amp;clkc 47&gt;, &lt;&amp;clkc 46&gt;;
-+            clock-names = "apb_pclk", "configurable_clk";
-+            clock-frequency=&lt;0xee6b280&gt;;
-+
-+            port {
-+                tpiu_in_port: endpoint@0 {
-+                    slave-mode;
-+                    remote-endpoint = &lt;&amp;replicator_out_port0&gt;;
-+                };
-+            };
-+        };
-+
-         ttc0: timer@f8001000 {
-             interrupt-parent = &lt;&amp;intc&gt;;
-             interrupts = &lt;0 10 4&gt;, &lt;0 11 4&gt;, &lt;0 12 4&gt;;
-</pre>
-    </div>
+    <p>The Coresight components are present on the Zynq SoC but the
+      corresponding <br>
+      device tree entries are missing. This patch adds device tree
+      entries for <br>
+      coresight components while explaining how it was done in order to
+      allow <br>
+      porting towards other boards easily. <br>
+       <br>
+      By adding the entries for Coresight components in the device tree:
+      if no <br>
+      files are created in sysfs file system, you need to contact the
+      board designer<br>
+      to sort out the problem. On some boards, Coresight components are
+      not <br>
+      powered on boot.<br>
+      <br>
+      Signed-off-by: Muhammad Abdul Wahab
+      <a class="moz-txt-link-rfc2396E" href="mailto:muhammadabdul.wahab@centralesupelec.fr">&lt;muhammadabdul.wahab@centralesupelec.fr&gt;</a><br>
+      ---<br>
+      The documentation file was very helpful <br>
+      (Documentation/devicetree/bindings/arm/coresight.txt). However,
+      few details<br>
+      can be added to make it more clear for beginners.<br>
+      <br>
+      Things to modify in device tree when changing the board are
+      mainly: <br>
+      <br>
+      <span style="color: #808080; ">- </span>address<br>
+      <span style="color: #808080; ">- </span><span style="color:
+        #008000; ">`clocks`</span> field<br>
+      <span style="color: #808080; ">- </span>some references in other
+      entries may be missing (e.g. for <span style="color: #008000; ">`CPU`</span> field
+      in<br>
+        ETM/PTM component, references may need to be created)<br>
+      <br>
+      Furthermore, the <span style="color: #008000; ">`reg`</span> field
+      should be adapted according to <br>
+      <span style="color: #008000; ">`#address-cells`</span> and <span
+        style="color: #008000; ">`#size-cells`</span>. It may appear
+      obvious, not for <br>
+      beginners. <br>
+      <br>
+      <span style="color: #b22222; ">## Testing</span><br>
+      <br>
+      The trace sink components need to be enabled by accessing through
+      sysfile <br>
+      system. <br>
+      <br>
+      <span style="color: #008000; ">    echo 1 &gt;
+        /sys/bus/coresight/devices/@addr.etb/enable\_sink</span><br>
+      <br>
+      Then enable the CS source component: <br>
+      <br>
+      <span style="color: #008000; ">    echo 1 &gt;
+        /sys/bus/coresight/devices/@addr.ptm/enable\_source</span><br>
+      <br>
+      By default, CS Source components are configured to trace the
+      kernel.<br>
+      <br>
+      Then the trace can be read by dumping ETB. <br>
+      <br>
+      <span style="color: #008000; ">    dd <a class="moz-txt-link-abbreviated" href="mailto:if=/dev/@addr.etb">if=/dev/@addr.etb</a>
+        of=trace_kernel.bin</span><br>
+      <br>
+      The trace can be visualized by: <br>
+      <br>
+      <span style="color: #008000; ">    hexdump -C trace_kernel.bin </span><br>
+      <br>
+      Or stored using:<br>
+      <br>
+      <span style="color: #008000; ">    hexdump -C trace_kernel.bin
+        &gt; trace_kernel.txt</span><br>
+      <br>
+      The trace need to be decoded to be readable. All these above steps
+      can now <br>
+      be performed with Perf Library which was not available at the time
+      I was <br>
+      playing with DT entries. <br>
+      <br>
+      --- linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi.orig     2016-07-24
+      21:23:50.000000000 +0200<br>
+      +++ linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi    2016-09-28
+      19:13:52.651881000 +0200<br>
+      @@ -363,5 +363,159 @@<br>
+                   reg = &lt;0xf8005000 0x1000&gt;;<br>
+                   timeout-sec = &lt;10&gt;;<br>
+               };<br>
+      +<br>
+      <span style="color: #808080; ">+        </span>etb@F8801000 {<br>
+      <span style="color: #808080; ">+            </span>compatible =
+      "arm,coresight-etb10", "arm,primecell";<br>
+      <span style="color: #808080; ">+            </span>reg =
+      &lt;0xf8801000 0x1000&gt;;<br>
+      <span style="color: #808080; ">+            </span>coresight-default-sink;<br>
+      <span style="color: #808080; ">+            </span>clocks =
+      &lt;&amp;clkc 47&gt;;<br>
+      <span style="color: #808080; ">+            </span>clock-names =
+      "apb_pclk";<br>
+      +<br>
+      <span style="color: #808080; ">+            </span>port {<br>
+      +<br>
+      <span style="color: #808080; ">+                </span>endpoint@0
+      {<br>
+      <span style="color: #808080; ">+                    </span>slave-mode;<br>
+      <span style="color: #808080; ">+                    </span>remote-endpoint
+      = &lt;0x8&gt;;<br>
+      <span style="color: #808080; ">+                    </span>linux,phandle
+      = &lt;0xd&gt;;<br>
+      <span style="color: #808080; ">+                    </span>phandle
+      = &lt;0xd&gt;;<br>
+      <span style="color: #808080; ">+                </span>};<br>
+      <span style="color: #808080; ">+            </span>};<br>
+      <span style="color: #808080; ">+        </span>};<br>
+      +<br>
+      <span style="color: #808080; ">+        </span>tpiu@F8803000 {<br>
+      <span style="color: #808080; ">+            </span>compatible =
+      "arm,coresight-tpiu", "arm,primecell";<br>
+      <span style="color: #808080; ">+            </span>reg =
+      &lt;0xf8803000 0x1000&gt;;<br>
+      <span style="color: #808080; ">+            </span>clocks =
+      &lt;&amp;clkc 47&gt;, &lt;&amp;clkc 16&gt;;<br>
+      <span style="color: #808080; ">+            </span>clock-names =
+      "apb_pclk", "fclk1";<br>
+      <span style="color: #808080; ">+            </span>clock-frequency=&lt;0xee6b280&gt;;<br>
+      +<br>
+      <span style="color: #808080; ">+            </span>port {<br>
+      +<br>
+      <span style="color: #808080; ">+                </span>endpoint@0
+      {<br>
+      <span style="color: #808080; ">+                    </span>slave-mode;<br>
+      <span style="color: #808080; ">+                    </span>remote-endpoint
+      = &lt;0x9&gt;;<br>
+      <span style="color: #808080; ">+                    </span>linux,phandle
+      = &lt;0xe&gt;;<br>
+      <span style="color: #808080; ">+                    </span>phandle
+      = &lt;0xe&gt;;<br>
+      <span style="color: #808080; ">+                </span>};<br>
+      <span style="color: #808080; ">+            </span>};<br>
+      <span style="color: #808080; ">+        </span>};<br>
+      +<br>
+      <span style="color: #808080; ">+        </span>funnel@F8804000 {<br>
+      <span style="color: #808080; ">+            </span>compatible =
+      "arm,coresight-funnel", "arm,primecell";<br>
+      <span style="color: #808080; ">+            </span>reg =
+      &lt;0xf8804000 0x1000&gt;;<br>
+      <span style="color: #808080; ">+            </span>clocks =
+      &lt;&amp;clkc 47&gt;;<br>
+      <span style="color: #808080; ">+            </span>clock-names =
+      "apb_pclk";<br>
+      +<br>
+      <span style="color: #808080; ">+            </span>ports {<br>
+      <span style="color: #808080; ">+                </span>#address-cells
+      = &lt;0x1&gt;;<br>
+      <span style="color: #808080; ">+                </span>#size-cells
+      = &lt;0x0&gt;;<br>
+      +<br>
+      <span style="color: #808080; ">+                </span>port@0 {<br>
+      <span style="color: #808080; ">+                    </span>reg =
+      &lt;0x0&gt;;<br>
+      +<br>
+      <span style="color: #808080; ">+                    </span>endpoint
+      {<br>
+      <span style="color: #808080; ">+                        </span>remote-endpoint
+      = &lt;0xa&gt;;<br>
+      <span style="color: #808080; ">+                        </span>linux,phandle
+      = &lt;0xf&gt;;<br>
+      <span style="color: #808080; ">+                        </span>phandle
+      = &lt;0xf&gt;;<br>
+      <span style="color: #808080; ">+                    </span>};<br>
+      <span style="color: #808080; ">+                </span>};<br>
+      +<br>
+      <span style="color: #808080; ">+                </span>port@1 {<br>
+      <span style="color: #808080; ">+                    </span>reg =
+      &lt;0x0&gt;;<br>
+      +<br>
+      <span style="color: #808080; ">+                    </span>endpoint
+      {<br>
+      <span style="color: #808080; ">+                        </span>slave-mode;<br>
+      <span style="color: #808080; ">+                        </span>remote-endpoint
+      = &lt;0xb&gt;;<br>
+      <span style="color: #808080; ">+                        </span>linux,phandle
+      = &lt;0x11&gt;;<br>
+      <span style="color: #808080; ">+                        </span>phandle
+      = &lt;0x11&gt;;<br>
+      <span style="color: #808080; ">+                    </span>};<br>
+      <span style="color: #808080; ">+                </span>};<br>
+      +<br>
+      <span style="color: #808080; ">+                </span>port@2 {<br>
+      <span style="color: #808080; ">+                    </span>reg =
+      &lt;0x1&gt;;<br>
+      +<br>
+      <span style="color: #808080; ">+                    </span>endpoint
+      {<br>
+      <span style="color: #808080; ">+                        </span>slave-mode;<br>
+      <span style="color: #808080; ">+                        </span>remote-endpoint
+      = &lt;0xc&gt;;<br>
+      <span style="color: #808080; ">+                        </span>linux,phandle
+      = &lt;0x13&gt;;<br>
+      <span style="color: #808080; ">+                        </span>phandle
+      = &lt;0x13&gt;;<br>
+      <span style="color: #808080; ">+                    </span>};<br>
+      <span style="color: #808080; ">+                </span>};<br>
+      <span style="color: #808080; ">+            </span>};<br>
+      <span style="color: #808080; ">+        </span>};<br>
+      +<br>
+      <span style="color: #808080; ">+        </span>replicator {<br>
+      <span style="color: #808080; ">+            </span>compatible =
+      "arm,coresight-replicator";<br>
+      +<br>
+      <span style="color: #808080; ">+            </span>ports {<br>
+      <span style="color: #808080; ">+                </span>#address-cells
+      = &lt;0x1&gt;;<br>
+      <span style="color: #808080; ">+                </span>#size-cells
+      = &lt;0x0&gt;;<br>
+      +<br>
+      <span style="color: #808080; ">+                </span>port@0 {<br>
+      <span style="color: #808080; ">+                    </span>reg =
+      &lt;0x0&gt;;<br>
+      +<br>
+      <span style="color: #808080; ">+                    </span>endpoint
+      {<br>
+      <span style="color: #808080; ">+                        </span>remote-endpoint
+      = &lt;0xd&gt;;<br>
+      <span style="color: #808080; ">+                        </span>linux,phandle
+      = &lt;0x8&gt;;<br>
+      <span style="color: #808080; ">+                        </span>phandle
+      = &lt;0x8&gt;;<br>
+      <span style="color: #808080; ">+                    </span>};<br>
+      <span style="color: #808080; ">+                </span>};<br>
+      +<br>
+      <span style="color: #808080; ">+                </span>port@1 {<br>
+      <span style="color: #808080; ">+                    </span>reg =
+      &lt;0x1&gt;;<br>
+      +<br>
+      <span style="color: #808080; ">+                    </span>endpoint
+      {<br>
+      <span style="color: #808080; ">+                        </span>remote-endpoint
+      = &lt;0xe&gt;;<br>
+      <span style="color: #808080; ">+                        </span>linux,phandle
+      = &lt;0x9&gt;;<br>
+      <span style="color: #808080; ">+                        </span>phandle
+      = &lt;0x9&gt;;<br>
+      <span style="color: #808080; ">+                    </span>};<br>
+      <span style="color: #808080; ">+                </span>};<br>
+      +<br>
+      <span style="color: #808080; ">+                </span>port@2 {<br>
+      <span style="color: #808080; ">+                    </span>reg =
+      &lt;0x0&gt;;<br>
+      +<br>
+      <span style="color: #808080; ">+                    </span>endpoint
+      {<br>
+      <span style="color: #808080; ">+                        </span>slave-mode;<br>
+      <span style="color: #808080; ">+                        </span>remote-endpoint
+      = &lt;0xf&gt;;<br>
+      <span style="color: #808080; ">+                        </span>linux,phandle
+      = &lt;0xa&gt;;<br>
+      <span style="color: #808080; ">+                        </span>phandle
+      = &lt;0xa&gt;;<br>
+      <span style="color: #808080; ">+                    </span>};<br>
+      <span style="color: #808080; ">+                </span>};<br>
+      <span style="color: #808080; ">+            </span>};<br>
+      <span style="color: #808080; ">+        </span>};<br>
+      +<br>
+      <span style="color: #808080; ">+        </span>ptm0@F889C000 {<br>
+      <span style="color: #808080; ">+            </span>compatible =
+      "arm,coresight-etm3x", "arm,primecell";<br>
+      <span style="color: #808080; ">+            </span>reg =
+      &lt;0xf889c000 0x1000&gt;;<br>
+      <span style="color: #808080; ">+            </span>cpu =
+      &lt;0x10&gt;;<br>
+      <span style="color: #808080; ">+            </span>clocks =
+      &lt;&amp;clkc 47&gt;;<br>
+      <span style="color: #808080; ">+            </span>clock-names =
+      "apb_pclk";<br>
+      +<br>
+      <span style="color: #808080; ">+            </span>port {<br>
+      +<br>
+      <span style="color: #808080; ">+                </span>endpoint {<br>
+      <span style="color: #808080; ">+                    </span>remote-endpoint
+      = &lt;0x11&gt;;<br>
+      <span style="color: #808080; ">+                    </span>linux,phandle
+      = &lt;0xb&gt;;<br>
+      <span style="color: #808080; ">+                    </span>phandle
+      = &lt;0xb&gt;;<br>
+      <span style="color: #808080; ">+                </span>};<br>
+      <span style="color: #808080; ">+            </span>};<br>
+      <span style="color: #808080; ">+        </span>};<br>
+      +<br>
+      <span style="color: #808080; ">+        </span>ptm1@F889D000 {<br>
+      <span style="color: #808080; ">+            </span>compatible =
+      "arm,coresight-etm3x", "arm,primecell";<br>
+      <span style="color: #808080; ">+            </span>reg =
+      &lt;0xf889d000 0x1000&gt;;<br>
+      <span style="color: #808080; ">+            </span>cpu =
+      &lt;0x12&gt;;<br>
+      <span style="color: #808080; ">+            </span>clocks =
+      &lt;&amp;clkc 47&gt;;<br>
+      <span style="color: #808080; ">+            </span>clock-names =
+      "apb_pclk";<br>
+      +<br>
+      <span style="color: #808080; ">+            </span>port {<br>
+      +<br>
+      <span style="color: #808080; ">+                </span>endpoint {<br>
+      <span style="color: #808080; ">+                    </span>remote-endpoint
+      = &lt;0x13&gt;;<br>
+      <span style="color: #808080; ">+                    </span>linux,phandle
+      = &lt;0xc&gt;;<br>
+      <span style="color: #808080; ">+                    </span>phandle
+      = &lt;0xc&gt;;<br>
+      <span style="color: #808080; ">+                </span>};<br>
+      <span style="color: #808080; ">+            </span>};<br>
+      <span style="color: #808080; ">+        </span>};<br>
+           };<br>
+       };</p>
   </body>
 </html>
 
---------------EB7E0B80F7AD576D8A896AB4--
+--------------C23A167FEE54F5563FF2420A--
