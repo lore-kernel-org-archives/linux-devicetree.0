@@ -1,75 +1,119 @@
-From: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Subject: [PATCH 2/2] backlight: arcxcnn: devicetree bindings for ArticSand
- devices
-Date: Thu, 29 Sep 2016 12:35:37 -0400
-Message-ID: <1475166937-6299-1-git-send-email-olimpiu@arcticsand.com>
+From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH RESEND v3] mwifiex: parse device tree node for PCIe
+Date: Thu, 29 Sep 2016 22:09:43 +0530
+Message-ID: <1475167183-18376-1-git-send-email-akarwar@marvell.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Resubmition of arcxcnn backliught driver bindings correcting the file 
- location, device name, and proper use of reg for device address
+From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+This patch derives device tree node from pcie bus layer framework.
+Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
+marvell-8xxx.txt) to accomodate PCIe changes.
 
+Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- .../bindings/leds/backlight/arcxcnn_bl.txt         | 30 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- 2 files changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+v2: Included vendor and product IDs in compatible strings for PCIe
+chipsets(Rob Herring)
+v3: Patch is created using -M option so that it will only include diff of
+original and renamed files(Rob Herring)
+Resend v3: Resending the patch because I missed to include device tree mailing
+while sending v3.
+---
+ .../{marvell-sd8xxx.txt => marvell-8xxx.txt}         |  8 +++++---
+ drivers/net/wireless/marvell/mwifiex/pcie.c          | 20 ++++++++++++++++++++
+ drivers/net/wireless/marvell/mwifiex/sta_cmd.c       |  3 ++-
+ 3 files changed, 27 insertions(+), 4 deletions(-)
+ rename Documentation/devicetree/bindings/net/wireless/{marvell-sd8xxx.txt => marvell-8xxx.txt} (91%)
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-new file mode 100644
-index 0000000..bcf5664
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-@@ -0,0 +1,30 @@
-+Binding for ArcticSand arc2c0608 LED driver
-+
-+Required properties:
-+- compatible: should be "arc,arc2c0608"
-+- reg: slave address
-+
-+Optional properties:
-+- default-brightness: brightness value on boot, value from: 0-4095
-+- label: The name of the backlight device
-+			See Documentation/devicetree/bindings/leds/common.txt
-+- led-sources: List of enabled channels from 0 to 5.
-+			See Documentation/devicetree/bindings/leds/common.txt
-+
-+Example:
-+
-+arc2c0608@30 {
-+	compatible = "arc,arc2c0608";
-+	reg = <0x30>;
-+	default-brightness = <500>;
-+	label = "lcd-backlight";
-+	linux,default-trigger = "backlight";
-+	led-sources = <0 1 2 5>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	prog@6 {
-+		reg = <0x06>;
-+		val = <0x0F>;
-+	};
+diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+similarity index 91%
+rename from Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+rename to Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+index c421aba..dfe5f8e 100644
+--- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
++++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+@@ -1,8 +1,8 @@
+-Marvell 8897/8997 (sd8897/sd8997) SDIO devices
++Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
+ ------
+ 
+-This node provides properties for controlling the marvell sdio wireless device.
+-The node is expected to be specified as a child node to the SDIO controller that
++This node provides properties for controlling the marvell sdio/pcie wireless device.
++The node is expected to be specified as a child node to the SDIO/PCIE controller that
+ connects the device to the system.
+ 
+ Required properties:
+@@ -10,6 +10,8 @@ Required properties:
+   - compatible : should be one of the following:
+ 	* "marvell,sd8897"
+ 	* "marvell,sd8997"
++	* "pci11ab,2b42"
++	* "pci1b4b,2b42"
+ 
+ Optional properties:
+ 
+diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+index 063c707..f1eeb73 100644
+--- a/drivers/net/wireless/marvell/mwifiex/pcie.c
++++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+@@ -37,6 +37,23 @@ static struct mwifiex_if_ops pcie_ops;
+ 
+ static struct semaphore add_remove_card_sem;
+ 
++static const struct of_device_id mwifiex_pcie_of_match_table[] = {
++	{ .compatible = "pci11ab,2b42" },
++	{ .compatible = "pci1b4b,2b42" },
++	{ }
 +};
 +
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 1992aa9..dc8546f 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -27,6 +27,7 @@ analogix	Analogix Semiconductor, Inc.
- apm	Applied Micro Circuits Corporation (APM)
- aptina	Aptina Imaging
- arasan	Arasan Chip Systems
-+arc Artic Sand Technologies
- arm	ARM Ltd.
- armadeus	ARMadeus Systems SARL
- arrow	Arrow Electronics
++static int mwifiex_pcie_probe_of(struct device *dev)
++{
++	if (!dev->of_node ||
++	    !of_match_node(mwifiex_pcie_of_match_table, dev->of_node)) {
++		pr_err("pcie device node not available");
++		return -1;
++	}
++
++	return 0;
++}
++
+ static int
+ mwifiex_map_pci_memory(struct mwifiex_adapter *adapter, struct sk_buff *skb,
+ 		       size_t size, int flags)
+@@ -206,6 +223,9 @@ static int mwifiex_pcie_probe(struct pci_dev *pdev,
+ 		card->pcie.can_ext_scan = data->can_ext_scan;
+ 	}
+ 
++	/* device tree node parsing and platform specific configuration*/
++	mwifiex_pcie_probe_of(&pdev->dev);
++
+ 	if (mwifiex_add_card(card, &add_remove_card_sem, &pcie_ops,
+ 			     MWIFIEX_PCIE)) {
+ 		pr_err("%s failed\n", __func__);
+diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+index 638d30a..f2a7a13 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+@@ -2218,7 +2218,8 @@ int mwifiex_sta_init_cmd(struct mwifiex_private *priv, u8 first_sta, bool init)
+ 		 * The cal-data can be read from device tree and/or
+ 		 * a configuration file and downloaded to firmware.
+ 		 */
+-		if (priv->adapter->iface_type == MWIFIEX_SDIO &&
++		if ((priv->adapter->iface_type == MWIFIEX_SDIO ||
++		    priv->adapter->iface_type == MWIFIEX_PCIE) &&
+ 		    adapter->dev->of_node) {
+ 			adapter->dt_node = adapter->dev->of_node;
+ 			if (of_property_read_u32(adapter->dt_node,
 -- 
-2.7.4
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
