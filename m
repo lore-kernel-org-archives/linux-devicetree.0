@@ -1,51 +1,47 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v2 1/2] Documentation: tpm: add the IBM Virtual TPM
- device tree binding documentation
-Date: Thu, 29 Sep 2016 14:04:13 +0300
-Message-ID: <20160929110413.GA14359@intel.com>
-References: <1475051441-23008-1-git-send-email-nayna@linux.vnet.ibm.com>
+From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Subject: Re: rfkill guidance
+Date: Thu, 29 Sep 2016 13:22:11 +0200
+Message-ID: <1475148131.6673.10.camel@sipsolutions.net>
+References: <324c35c6-49ca-174c-db07-674532f3e628@broadcom.com>
+         <1474961105.5141.5.camel@sipsolutions.net>
+         <0a8cff88-73aa-8311-7afe-98612161421f@broadcom.com>
+         <1475044682.4139.18.camel@sipsolutions.net>
+         <fc993a0d-25cc-fb1c-3d96-86b12d1140d2@broadcom.com>
+         (sfid-20160928_225432_125394_86BA511B)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1475051441-23008-1-git-send-email-nayna@linux.vnet.ibm.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Nayna Jain <nayna@linux.vnet.ibm.com>
-Cc: devicetree@vger.kernel.org, tpmdd-devel@lists.sourceforge.net, robh@kernel.org, wsa@the-dreams.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-i2c@vger.kernel.org, peterhuewe@gmx.de, tpmdd@selhorst.net, hellerda@linux.vnet.ibm.com, ltcgcw@us.ibm.com, cclaudio@linux.vnet.ibm.com, honclo@linux.vnet.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <fc993a0d-25cc-fb1c-3d96-86b12d1140d2-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> (sfid-20160928_225432_125394_86BA511B)
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 28, 2016 at 04:30:40AM -0400, Nayna Jain wrote:
-> Virtual TPM, which is being used on IBM POWER7+ and POWER8 systems running
-> POWERVM, is currently supported by tpm device driver but lacks the
-> documentation. This patch adds the missing documentation for the existing
-> support.
-> 
-> Suggested-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-> Signed-off-by: Nayna Jain <nayna@linux.vnet.ibm.com>
-> ---
-> Changelog v2:
-> 
-> - New Patch
-> 
->  .../devicetree/bindings/security/tpm/ibmvtpm.txt   | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt b/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
-> new file mode 100644
-> index 0000000..d89f999
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
-> @@ -0,0 +1,41 @@
-> +* Device Tree Bindings for IBM Virtual Trusted Platform Module(vtpm)
-> +
-> +Required properties:
-> +
-> +- compatible            : property name that conveys the platform architecture
-> +                          identifiers, as 'IBM,vtpm'
-> +- device_type           : specifies type of virtual device
+> This clarifies the issue, thanks. Basically the reason is history -
+> this user space code has been around for a while. It turns out the
+> HCI BT driver doesn't exist as it should. If it did, then the
+> regulator could be tied to the driver. Now I see what's missing.
 
-A generic device tree question. What is the difference between
-these fields? Why the I2C one does have 'device_type'?
+So like what Marcel wrote over in his email, but with regulator vs.
+GPIO. Seems completely reasonable for the BT HCI driver to support
+that, if you ask me.
 
-/Jarkko
+> We will push on the team responsible for the BT drivers but all I
+> need to know right now is that an rfkill driver isn't necessary.
+
+And indeed, that would get rid of the need for anything rfkill.
+
+> There might be some need for this but for our purpose I think the
+> right path is to have a BT driver doing what this user space app is
+> doing and then integrate whatever is missing with this HCI User
+> Channel.
+> 
+
+Sounds good to me, even if I have no idea (and don't really need to
+know) what all that is :)
+
+I'll look at killing the rfkill-regulator driver entirely though,
+since, afaict, nothing uses it.
+
+johannes
