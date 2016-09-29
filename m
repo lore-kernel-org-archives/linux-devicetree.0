@@ -1,90 +1,46 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] backlight: arcxcnn: add support for ArticSand devices
-Date: Thu, 29 Sep 2016 20:32:05 +0100
-Message-ID: <20160929193204.GB3405@remoulade>
-References: <1475166879-6255-1-git-send-email-olimpiu@arcticsand.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] DT: irqchip: renesas-irqc: document R8A7743/5 support
+Date: Fri, 30 Sep 2016 00:25:29 +0300
+Message-ID: <19681841.MzyqfDfWny@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1475166879-6255-1-git-send-email-olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 29, 2016 at 12:34:39PM -0400, Olimpiu Dejeu wrote:
-> Resubmition of arcxcnn backliught driver adding definitions of the
->  internal registers of the chip. 
+Renesas  RZ/G SoC have the R-Car gen2 compatible IRQC interrupt controllers.
+Document RZ/G1[ME] (also known as R8A774[35]) SoC bindings.
 
-s/backliught/backlight/
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-[...]
+---
+The patch is against the 'tip.git' repo's 'irq/core' branch.
 
-> +#ifdef CONFIG_OF
-> +static int arcxcnn_parse_dt(struct arcxcnn *lp)
-> +{
-> +	struct device *dev = lp->dev;
-> +	struct device_node *node = dev->of_node;
-> +	u32 prog_length, prog_val, num_entry, sources[6];
-> +	int ret;
-> +
-> +	if (!node) {
-> +		dev_err(dev, "no platform data.\n");
-> +		return -EINVAL;
-> +	}
-> +	of_property_read_string(node, "label", &lp->pdata->name);
-> +	of_property_read_u32(node, "default-brightness", &prog_val);
-> +	lp->pdata->initial_brightness = prog_val;
+ Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-You must check the return value of the of_ accessors. If there's no
-default-brightness property in the DT, prog_val will be uninitialised here.
+Index: tip/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+===================================================================
+--- tip.orig/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
++++ tip/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+@@ -1,10 +1,12 @@
+-DT bindings for the R-Mobile/R-Car interrupt controller
++DT bindings for the R-Mobile/R-Car/RZ/G interrupt controller
+ 
+ Required properties:
+ 
+ - compatible: has to be "renesas,irqc-<soctype>", "renesas,irqc" as fallback.
+   Examples with soctypes are:
+     - "renesas,irqc-r8a73a4" (R-Mobile APE6)
++    - "renesas,irqc-r8a7743" (RZ/G1M)
++    - "renesas,irqc-r8a7745" (RZ/G1E)
+     - "renesas,irqc-r8a7790" (R-Car H2)
+     - "renesas,irqc-r8a7791" (R-Car M2-W)
+     - "renesas,irqc-r8a7792" (R-Car V2H)
 
-> +	of_property_read_u32(node, "pwm-period", &lp->pdata->period_ns);
-
-This was not in the binding document.
-
-> +	/* Fill program from platform data if defined
-> +	*/
-> +	lp->pdata->prog_entries = 0;
-> +	prog_length = of_get_child_count(node);
-> +	if (prog_length > 0) {
-> +		struct device_node *child;
-> +		u32 i = 0;
-> +
-> +		for_each_child_of_node(node, child) {
-> +			if (i >= ARCXCNN_MAX_PROGENTRIES)
-> +				break;
-> +			of_property_read_u32(child, "reg", &prog_val);
-> +			lp->pdata->prog_addr[i] = (u8)prog_val;
-> +			of_property_read_u32(child, "val", &prog_val);
-> +			lp->pdata->prog_data[i] = (u8)prog_val;
-> +			i++;
-> +		}
-> +		lp->pdata->prog_entries = i;
-> +	}
-
-This was also not documented.
-
-What is this? What is it used for? Why is it in the DT?
-
-> +	/* playback program now that its all installed */
-> +	for (i = 0; i < lp->pdata->prog_entries; i++) {
-> +		arcxcnn_write_byte(lp, lp->pdata->prog_addr[i],
-> +				lp->pdata->prog_data[i]);
-> +		/*
-> +		printk(KERN_ALERT "%02X, %02X\n",
-> +			lp->pdata->prog_addr[i], lp->pdata->prog_data[i]);
-> +		*/
-> +	}
-
-Why is it necessary to have an arbitrary register programming sequence? What
-exactly varies between parts?
-
-I don't think this is the right way to solve your problem.
-
-Thanks,
-Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
