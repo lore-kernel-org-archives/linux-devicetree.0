@@ -1,133 +1,51 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v2 3/3] video: of: display_timing: Add support for
- syncclk-active property
-Date: Thu, 29 Sep 2016 13:55:36 +0300
-Message-ID: <f2d2e5df-07ef-854d-9128-6adc91c83b95@ti.com>
-References: <20160922103526.24925-1-peter.ujfalusi@ti.com>
- <20160922103526.24925-4-peter.ujfalusi@ti.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] Documentation: tpm: add the IBM Virtual TPM
+ device tree binding documentation
+Date: Thu, 29 Sep 2016 14:04:13 +0300
+Message-ID: <20160929110413.GA14359@intel.com>
+References: <1475051441-23008-1-git-send-email-nayna@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0552262441=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160922103526.24925-4-peter.ujfalusi@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, robh+dt@kernel.org, airlied@linux.ie, thierry.reding@gmail.com
-Cc: daniel.vetter@ffwll.ch, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1475051441-23008-1-git-send-email-nayna@linux.vnet.ibm.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Nayna Jain <nayna@linux.vnet.ibm.com>
+Cc: devicetree@vger.kernel.org, tpmdd-devel@lists.sourceforge.net, robh@kernel.org, wsa@the-dreams.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-i2c@vger.kernel.org, peterhuewe@gmx.de, tpmdd@selhorst.net, hellerda@linux.vnet.ibm.com, ltcgcw@us.ibm.com, cclaudio@linux.vnet.ibm.com, honclo@linux.vnet.ibm.com
 List-Id: devicetree@vger.kernel.org
 
---===============0552262441==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="AoekTJxip2eUwhwRA9krLrDwrQEHmJPJc"
-
---AoekTJxip2eUwhwRA9krLrDwrQEHmJPJc
-Content-Type: multipart/mixed; boundary="wKPrXeOmNt1WcMUV6ASi7fNlRawp05Evk";
- protected-headers="v1"
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, robh+dt@kernel.org,
- airlied@linux.ie, thierry.reding@gmail.com
-Cc: linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- daniel.vetter@ffwll.ch, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org
-Message-ID: <f2d2e5df-07ef-854d-9128-6adc91c83b95@ti.com>
-Subject: Re: [PATCH v2 3/3] video: of: display_timing: Add support for
- syncclk-active property
-References: <20160922103526.24925-1-peter.ujfalusi@ti.com>
- <20160922103526.24925-4-peter.ujfalusi@ti.com>
-In-Reply-To: <20160922103526.24925-4-peter.ujfalusi@ti.com>
-
---wKPrXeOmNt1WcMUV6ASi7fNlRawp05Evk
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-On 22/09/16 13:35, Peter Ujfalusi wrote:
-> Configure the DISPLAY_FLAGS_SYNC_POSEDGE/NEGEDGE flags according to the=
-
-> binding document.
-> If the syncclk-active is present in DT, configure the flags accordingly=
-, if
-> it is omitted it means that the SYNC edge is following the pixdata
-> configuration.
->=20
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: devicetree@vger.kernel.org
+On Wed, Sep 28, 2016 at 04:30:40AM -0400, Nayna Jain wrote:
+> Virtual TPM, which is being used on IBM POWER7+ and POWER8 systems running
+> POWERVM, is currently supported by tpm device driver but lacks the
+> documentation. This patch adds the missing documentation for the existing
+> support.
+> 
+> Suggested-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+> Signed-off-by: Nayna Jain <nayna@linux.vnet.ibm.com>
 > ---
->  drivers/video/of_display_timing.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->=20
-> diff --git a/drivers/video/of_display_timing.c b/drivers/video/of_displ=
-ay_timing.c
-> index 8a1076beecd3..db992c684f09 100644
-> --- a/drivers/video/of_display_timing.c
-> +++ b/drivers/video/of_display_timing.c
-> @@ -88,6 +88,15 @@ static int of_parse_display_timing(const struct devi=
-ce_node *np,
->  		dt->flags |=3D val ? DISPLAY_FLAGS_PIXDATA_POSEDGE :
->  				DISPLAY_FLAGS_PIXDATA_NEGEDGE;
-> =20
-> +	if (!of_property_read_u32(np, "syncclk-active", &val))
-> +		dt->flags |=3D val ? DISPLAY_FLAGS_SYNC_POSEDGE :
-> +				DISPLAY_FLAGS_SYNC_NEGEDGE;
-> +	else if (dt->flags & (DISPLAY_FLAGS_PIXDATA_POSEDGE |
-> +			      DISPLAY_FLAGS_PIXDATA_NEGEDGE))
-> +		dt->flags |=3D dt->flags & DISPLAY_FLAGS_PIXDATA_POSEDGE ?
-> +				DISPLAY_FLAGS_SYNC_POSEDGE :
-> +				DISPLAY_FLAGS_SYNC_NEGEDGE;
+> Changelog v2:
+> 
+> - New Patch
+> 
+>  .../devicetree/bindings/security/tpm/ibmvtpm.txt   | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt b/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
+> new file mode 100644
+> index 0000000..d89f999
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
+> @@ -0,0 +1,41 @@
+> +* Device Tree Bindings for IBM Virtual Trusted Platform Module(vtpm)
 > +
->  	if (of_property_read_bool(np, "interlaced"))
->  		dt->flags |=3D DISPLAY_FLAGS_INTERLACED;
->  	if (of_property_read_bool(np, "doublescan"))
->=20
+> +Required properties:
+> +
+> +- compatible            : property name that conveys the platform architecture
+> +                          identifiers, as 'IBM,vtpm'
+> +- device_type           : specifies type of virtual device
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+A generic device tree question. What is the difference between
+these fields? Why the I2C one does have 'device_type'?
 
- Tomi
-
-
---wKPrXeOmNt1WcMUV6ASi7fNlRawp05Evk--
-
---AoekTJxip2eUwhwRA9krLrDwrQEHmJPJc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJX7PMoAAoJEPo9qoy8lh71d+gP/RTR8cHx87dvkEO1k4M8KIGA
-OYx0zNUWlFgGmB+WAlbblSigoB/MoWDFeAV52XWgtRdX18hhjPDjSYLVcZDJCp0M
-qnrpYVXgyy582DpE8cYfhYpYnW4hj/hrOmSeOsmv+mvCmWbUPMW33Lxtr5aNBKM+
-PV5mX5f9664SE/EwRv+TAM4cLzhUKpLXHlxlYxbl37cfPkLahOB3TGnyCWKo4/Jx
-3QN4HC7e3y80KvIbyMJihwy+B1KXDOStlJ23tfZOy6VbAf2VqiWPjLz66J8jYtot
-xNArb2559X3S6iRCsAxJNlyIjxPDLod+SDwgcQ5Ba6nYXTuhqppUyQVcW7vrBiPi
-mXOtDxwRAZ8hCoNc2ZJa9MzeTN1ogdrHBozLLFFzDpBtWb6vA7lnf3npiLe3cWuq
-K1pw73yPRFVCOTzqHoTG5HMIGv2FkEhOLJKgFzUjllQvso9wQT/3Hd5Bddoma6jL
-d2fY1QjMCXrLhw5DJK0DkP0E2g/nk+YAl64yR5Pl2zpsmE1dJpRWGUKjN3PrHwT8
-i4Z4Ujq0egKOhxfc16DDneNxlrCnmc1YG/fkLUieUWJ5lWcQk67py3PBgdSXkSaZ
-liFYvG2ZsrFC/sA3lNV+WZpIKszMLIbE+AGy1hwH8eIY0pS8O/dvzBWpVty65+53
-TO9CoDgvmHQOf2HtTIzG
-=hunD
------END PGP SIGNATURE-----
-
---AoekTJxip2eUwhwRA9krLrDwrQEHmJPJc--
-
---===============0552262441==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0552262441==--
+/Jarkko
