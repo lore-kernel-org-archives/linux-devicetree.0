@@ -1,104 +1,164 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 1/4] mfd: mxs-lradc: Add support for mxs-lradc MFD
-Date: Fri, 30 Sep 2016 00:14:30 +0100
-Message-ID: <20160929231430.GB13971@dell>
-References: <cover.1474108510.git.ksenija.stanojevic@gmail.com>
- <b50209289b241995c6fd5e23c7343448857fc301.1474108510.git.ksenija.stanojevic@gmail.com>
- <20160928010533.GQ21388@dell>
- <1882238802.204734.75f5f595-10ac-4107-8738-e75dfde001f1.open-xchange@email.1und1.de>
- <20160929171540.GB2844@dell>
- <1269746175.25077.ef1d8693-0ff3-4b50-a424-49eebba23da1.open-xchange@email.1und1.de>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] drm: zte: add initial vou drm driver
+Date: Thu, 29 Sep 2016 16:42:47 -0700
+Message-ID: <20160929234246.GA18734@x250>
+References: <1474727185-24180-1-git-send-email-shawn.guo@linaro.org>
+ <1474727185-24180-3-git-send-email-shawn.guo@linaro.org>
+ <20160925205809.GR20761@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1269746175.25077.ef1d8693-0ff3-4b50-a424-49eebba23da1.open-xchange@email.1und1.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Ksenija Stanojevic <ksenija.stanojevic@gmail.com>, linux-input@vger.kernel.org, pmeerw@pmeerw.net, jic23@kernel.org, linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de, dmitry.torokhov@gmail.com, harald@ccbib.org, fabio.estevam@freescale.com, linux-iio@vger.kernel.org, marex@denx.de, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+In-Reply-To: <20160925205809.GR20761-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Baoyou Xie <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 29 Sep 2016, Stefan Wahren wrote:
-
-> Hi Lee,
-> 
-> [add Rob and Mark]
-> 
-> > Lee Jones <lee.jones@linaro.org> hat am 29. September 2016 um 19:15
-> > geschrieben:
+On Sun, Sep 25, 2016 at 10:58:09PM +0200, Daniel Vetter wrote:
+> On Sat, Sep 24, 2016 at 10:26:25PM +0800, Shawn Guo wrote:
+> > It adds the initial ZTE VOU display controller DRM driver.  There are
+> > still some features to be added, like overlay plane, scaling, and more
+> > output devices support.  But it's already useful with dual CRTCs and
+> > HDMI monitor working.
 > > 
+> > It's been tested on Debian Jessie LXDE desktop with modesetting driver.
 > > 
-> > On Thu, 29 Sep 2016, Stefan Wahren wrote:
-> > > > Lee Jones <lee.jones@linaro.org> hat am 28. September 2016 um 03:05
-> > > > geschrieben:
-> > > > 
-> > > > 
-> > > > On Sat, 17 Sep 2016, Ksenija Stanojevic wrote:
-> > > > 
-> > > > > +
-> > > > > +static int mxs_lradc_probe(struct platform_device *pdev)
-> > > > > +{
-> > > > > +	const struct of_device_id *of_id;
-> > > > > +	struct device *dev = &pdev->dev;
-> > > > > +	struct device_node *node = dev->of_node;
-> > > > > +	struct mxs_lradc *lradc;
-> > > > > +	struct mfd_cell *cells = NULL;
-> > > > > +	int ret = 0;
-> > > > > +	u32 ts_wires = 0;
-> > > > > +
-> > > > > +	lradc = devm_kzalloc(&pdev->dev, sizeof(*lradc), GFP_KERNEL);
-> > > > > +	if (!lradc)
-> > > > > +		return -ENOMEM;
-> > > > > +
-> > > > > +	of_id = of_match_device(mxs_lradc_dt_ids, &pdev->dev);
-> > > > > +	lradc->soc = (enum mxs_lradc_id)of_id->data;
-> > > > > +
-> > > > > +	lradc->clk = devm_clk_get(&pdev->dev, NULL);
-> > > > > +	if (IS_ERR(lradc->clk)) {
-> > > > > +		dev_err(dev, "Failed to get the delay unit clock\n");
-> > > > > +		return PTR_ERR(lradc->clk);
-> > > > > +	}
-> > > > > +
-> > > > > +	ret = clk_prepare_enable(lradc->clk);
-> > > > > +	if (ret) {
-> > > > > +		dev_err(dev, "Failed to enable the delay unit clock\n");
-> > > > > +		return ret;
-> > > > > +	}
-> > > > > +
-> > > > > +	ret = of_property_read_u32(node, "fsl,lradc-touchscreen-wires",
-> > > > 
-> > > > Have you moved the documentation into devicetree/bindings/mfd?
-> > > > 
-> > > 
-> > > i hope it's okay if i answer. The binding has moved to
-> > > devicetree/binding/iio/adc/ [1]
-> > > 
-> > > Should it move completely to mfd or split too?
-> > > 
-> > > I'm asking myself how we keep DT ABI in the latter case.
-> > > 
-> > > [1] -
-> > > http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt
-> > 
-> > I haven't read into the documentation too to deeply, but it stands to
-> > reason that the bindings which are now being used in MFD should be
-> > documented in the MFD binding document, and the ones which are no longer
-> > used in the IIO driver should be removed.
+> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> sure, that isn't a problem.
+> I've done a very quick read-through, looks real pretty. A few comments
+> below and in-line.
+
+Thanks much for looking at it.
+
+> For testing, have you tried to run i-g-t validation tests per our
+> documentation? See https://dri.freedesktop.org/docs/drm/gpu/drm-uapi.html#validating-changes-with-igt
+
+Sorry for my ignorance on that.  I'm on business travel right now, and
+will give it a try once I get back to the hardware.
+
+> >  drivers/gpu/drm/Kconfig          |   2 +
+> >  drivers/gpu/drm/Makefile         |   1 +
+> >  drivers/gpu/drm/zte/Kconfig      |   8 +
+> >  drivers/gpu/drm/zte/Makefile     |   8 +
+> >  drivers/gpu/drm/zte/zx_crtc.c    | 691 +++++++++++++++++++++++++++++++++++++++
+> >  drivers/gpu/drm/zte/zx_crtc.h    |  47 +++
+> >  drivers/gpu/drm/zte/zx_drm_drv.c | 258 +++++++++++++++
+> >  drivers/gpu/drm/zte/zx_drm_drv.h |  22 ++
+> >  drivers/gpu/drm/zte/zx_hdmi.c    | 540 ++++++++++++++++++++++++++++++
+> >  drivers/gpu/drm/zte/zx_plane.c   | 362 ++++++++++++++++++++
+> >  drivers/gpu/drm/zte/zx_plane.h   |  26 ++
+> >  11 files changed, 1965 insertions(+)
+> >  create mode 100644 drivers/gpu/drm/zte/Kconfig
+> >  create mode 100644 drivers/gpu/drm/zte/Makefile
+> >  create mode 100644 drivers/gpu/drm/zte/zx_crtc.c
+> >  create mode 100644 drivers/gpu/drm/zte/zx_crtc.h
+> >  create mode 100644 drivers/gpu/drm/zte/zx_drm_drv.c
+> >  create mode 100644 drivers/gpu/drm/zte/zx_drm_drv.h
+> >  create mode 100644 drivers/gpu/drm/zte/zx_hdmi.c
+> >  create mode 100644 drivers/gpu/drm/zte/zx_plane.c
+> >  create mode 100644 drivers/gpu/drm/zte/zx_plane.h
 > 
-> The more interesting question would be: do we need a new compatible string for
-> the mfd driver?
+> New entry in MAINTAINERS listening you (and probably dri-devel as the m-l)
+> is missing.
 
-No, I don't think that is necessary.
+Okay.  I will add a patch to do that in the next version.
 
-> In that case the ADC won't probe for the combination of old devicetree blobs and
-> new kernel.
+> > +static int zx_drm_bind(struct device *dev)
+> > +{
+> > +	struct drm_device *drm;
+> > +	struct zx_drm_private *priv;
+> > +	int ret;
+> > +
+> > +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > +	if (!priv)
+> > +		return -ENOMEM;
+> > +
+> > +	drm = drm_dev_alloc(&zx_drm_driver, dev);
+> > +	if (!drm)
+> > +		return -ENOMEM;
+> > +
+> > +	drm->dev_private = priv;
+> > +	dev_set_drvdata(dev, drm);
+> > +
+> > +	drm_mode_config_init(drm);
+> > +	drm->mode_config.min_width = 16;
+> > +	drm->mode_config.min_height = 16;
+> > +	drm->mode_config.max_width = 4096;
+> > +	drm->mode_config.max_height = 4096;
+> > +	drm->mode_config.funcs = &zx_drm_mode_config_funcs;
+> > +
+> > +	ret = drm_dev_register(drm, 0);
+> 
+> drm_dev_register should be the last function call in your bind function.
+> Similar for unbind, drm_dev_register should be called first.
+> 
+> As a consequence of that you can remove the drm_connector_(un)register
+> calls, those are only needed for hotplugged connectors like dp mst. But
+> with correct ordering of drm_dev_(un)register that function will also take
+> care of connector registration and unregistration.
 
+Aha, that's the trick to save the call to drm_connector_register() from
+connector driver.  Thanks for the info.
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> > +static int zx_hdmi_get_edid_block(void *data, u8 *buf, unsigned int block,
+> > +				  size_t len)
+> > +{
+> > +	struct zx_hdmi *hdmi = data;
+> > +	int retry = 0;
+> > +	int ret = 0;
+> > +	int i = 0;
+> > +	u8 val;
+> > +
+> > +	/* Enable DDC master access */
+> > +	val = hdmi_readb(hdmi, TPI_DDC_MASTER_EN);
+> > +	val |= HW_DDC_MASTER;
+> > +	hdmi_writeb(hdmi, TPI_DDC_MASTER_EN, val);
+> > +
+> > +	hdmi_writeb(hdmi, ZX_DDC_ADDR, 0xa0);
+> > +	hdmi_writeb(hdmi, ZX_DDC_OFFSET, block * EDID_LENGTH);
+> > +	/* Bits [9:8] of bytes */
+> > +	hdmi_writeb(hdmi, ZX_DDC_DIN_CNT2, (len >> 8) & 0xff);
+> > +	/* Bits [7:0] of bytes */
+> > +	hdmi_writeb(hdmi, ZX_DDC_DIN_CNT1, len & 0xff);
+> > +
+> > +	/* Clear FIFO */
+> > +	val = hdmi_readb(hdmi, ZX_DDC_CMD);
+> > +	val &= ~DDC_CMD_MASK;
+> > +	val |= DDC_CMD_CLEAR_FIFO;
+> > +	hdmi_writeb(hdmi, ZX_DDC_CMD, val);
+> > +
+> > +	/* Kick off the read */
+> > +	val = hdmi_readb(hdmi, ZX_DDC_CMD);
+> > +	val &= ~DDC_CMD_MASK;
+> > +	val |= DDC_CMD_SEQUENTIAL_READ;
+> > +	hdmi_writeb(hdmi, ZX_DDC_CMD, val);
+> 
+> It looks like the ZX_DDC register range implements a hw i2c engine (since
+> you specifiy port and offsets and everything). Please implement it as an
+> i2c_adapter driver and use the normal drm_get_edid function.
+
+Okay.  I will give it a try to see if it works.
+
+> > +static int zx_gl_plane_atomic_check(struct drm_plane *plane,
+> > +				    struct drm_plane_state *state)
+> > +{
+> > +	u32 src_w, src_h;
+> > +
+> > +	src_w = state->src_w >> 16;
+> > +	src_h = state->src_h >> 16;
+> > +
+> > +	/* TODO: support scaling of the plane source */
+> > +	if ((src_w != state->crtc_w) || (src_h != state->crtc_h))
+> > +		return -EINVAL;
+> 
+> This is generally not enough checking. You probably need a call to
+> drm_plane_helper_check_state.
+
+Okay, will do.
+
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
