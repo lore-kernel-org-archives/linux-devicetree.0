@@ -1,74 +1,101 @@
-From: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] Documentation: dt: net: add mt76 wireless device
- binding
-Date: Thu, 29 Sep 2016 20:31:30 +0200
-Message-ID: <e7d435b2-6b59-45af-07eb-b10789d61a9c@nbd.name>
-References: <20160905095128.80560-1-nbd@nbd.name>
- <20160905095128.80560-2-nbd@nbd.name>
- <87eg4uu0f3.fsf@kamboji.qca.qualcomm.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v6 1/4] mfd: mxs-lradc: Add support for mxs-lradc MFD
+Date: Thu, 29 Sep 2016 21:15:50 +0200 (CEST)
+Message-ID: <1269746175.25077.ef1d8693-0ff3-4b50-a424-49eebba23da1.open-xchange@email.1und1.de>
+References: <cover.1474108510.git.ksenija.stanojevic@gmail.com>
+ <b50209289b241995c6fd5e23c7343448857fc301.1474108510.git.ksenija.stanojevic@gmail.com>
+ <20160928010533.GQ21388@dell>
+ <1882238802.204734.75f5f595-10ac-4107-8738-e75dfde001f1.open-xchange@email.1und1.de>
+ <20160929171540.GB2844@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87eg4uu0f3.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160929171540.GB2844@dell>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ksenija Stanojevic <ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-09-08 12:54, Kalle Valo wrote:
-> Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org> writes:
-> 
->> Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
->> ---
->>  .../bindings/net/wireless/mediatek,mt76.txt        | 26 ++++++++++++++++++++++
->>  1 file changed, 26 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->>
->> diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->> new file mode 100644
->> index 0000000..d51c35f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->> @@ -0,0 +1,26 @@
->> +* MediaTek mt76xx devices
->> +
->> +This node provides properties for configuring the MediaTek mt76xx wireless
->> +device. The node is expected to be specified as a child node of the PCI
->> +controller to which the wireless chip is connected.
->> +
->> +Optional properties:
->> +
->> +- mac-address: See ethernet.txt in the parent directory
->> +- local-mac-address: See ethernet.txt in the parent directory
->> +- mediatek,2ghz: Override the 2.4 GHz band capability from EEPROM
->> +- mediatek,5ghz: Override the 5 GHz band capability from EEPROM
->> +- mediatek,mtd-eeprom: Specify a MTD partition + offset containing EEPROM data
->> +
->> +&pcie {
->> +	status = "okay";
->> +
->> +	pcie0 {
->> +		mt76@0,0 {
->> +			reg = <0x0000 0 0 0 0>;
->> +			device_type = "pci";
->> +			mediatek,mtd-eeprom = <&factory 0x8000>;
->> +			mediatek,2ghz = <0>;
->> +		};
->> +	};
->> +};
-> 
-> I need an ack from device tree maintainers, CCing the devicetree list.
-> Do we need to resend or this ok?
-> 
-> Patchwork link:
-> 
-> https://patchwork.kernel.org/patch/9313309/
-Ping?
+Hi Lee,
 
-- Felix
+[add Rob and Mark]
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> hat am 29. September 2016 um 19:15
+> geschrieben:
+> 
+> 
+> On Thu, 29 Sep 2016, Stefan Wahren wrote:
+> > > Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> hat am 28. September 2016 um 03:05
+> > > geschrieben:
+> > > 
+> > > 
+> > > On Sat, 17 Sep 2016, Ksenija Stanojevic wrote:
+> > > 
+> > > > +
+> > > > +static int mxs_lradc_probe(struct platform_device *pdev)
+> > > > +{
+> > > > +	const struct of_device_id *of_id;
+> > > > +	struct device *dev = &pdev->dev;
+> > > > +	struct device_node *node = dev->of_node;
+> > > > +	struct mxs_lradc *lradc;
+> > > > +	struct mfd_cell *cells = NULL;
+> > > > +	int ret = 0;
+> > > > +	u32 ts_wires = 0;
+> > > > +
+> > > > +	lradc = devm_kzalloc(&pdev->dev, sizeof(*lradc), GFP_KERNEL);
+> > > > +	if (!lradc)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	of_id = of_match_device(mxs_lradc_dt_ids, &pdev->dev);
+> > > > +	lradc->soc = (enum mxs_lradc_id)of_id->data;
+> > > > +
+> > > > +	lradc->clk = devm_clk_get(&pdev->dev, NULL);
+> > > > +	if (IS_ERR(lradc->clk)) {
+> > > > +		dev_err(dev, "Failed to get the delay unit clock\n");
+> > > > +		return PTR_ERR(lradc->clk);
+> > > > +	}
+> > > > +
+> > > > +	ret = clk_prepare_enable(lradc->clk);
+> > > > +	if (ret) {
+> > > > +		dev_err(dev, "Failed to enable the delay unit clock\n");
+> > > > +		return ret;
+> > > > +	}
+> > > > +
+> > > > +	ret = of_property_read_u32(node, "fsl,lradc-touchscreen-wires",
+> > > 
+> > > Have you moved the documentation into devicetree/bindings/mfd?
+> > > 
+> > 
+> > i hope it's okay if i answer. The binding has moved to
+> > devicetree/binding/iio/adc/ [1]
+> > 
+> > Should it move completely to mfd or split too?
+> > 
+> > I'm asking myself how we keep DT ABI in the latter case.
+> > 
+> > [1] -
+> > http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt
+> 
+> I haven't read into the documentation too to deeply, but it stands to
+> reason that the bindings which are now being used in MFD should be
+> documented in the MFD binding document, and the ones which are no longer
+> used in the IIO driver should be removed.
+
+sure, that isn't a problem.
+
+The more interesting question would be: do we need a new compatible string for
+the mfd driver?
+
+In that case the ADC won't probe for the combination of old devicetree blobs and
+new kernel.
+
+Regards
+Stefan
+
+> 
+> -- 
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org │ Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
