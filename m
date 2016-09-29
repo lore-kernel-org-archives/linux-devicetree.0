@@ -1,48 +1,109 @@
-From: Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v19 05/12] fpga-mgr: add fpga image information struct
-Date: Wed, 28 Sep 2016 23:34:51 -0500
-Message-ID: <CANk1AXTbKhiSu3XN4HgTM_rBBQ315qseH06RzojOOZrV74M7yQ@mail.gmail.com>
-References: <20160928182200.15800-1-atull@opensource.altera.com>
- <20160928182200.15800-6-atull@opensource.altera.com> <CAAtXAHcdSsVUE4hQ6isCp7_35ZKb60EAKAgtGwBR41apwPpe=g@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] DT: EVM: add LEDs
+Date: Thu, 29 Sep 2016 00:14:01 -0500
+Message-ID: <CAL_Jsq+hVD2TCubk8vGf8cS7dyLQj1o0ChnQ=MobKkV352uCSQ@mail.gmail.com>
+References: <cover.1474953969.git.hns@goldelico.com> <d68619a23d642eacf12fd0a3c51f19d006436cbe.1474953969.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAtXAHcdSsVUE4hQ6isCp7_35ZKb60EAKAgtGwBR41apwPpe=g@mail.gmail.com>
+In-Reply-To: <d68619a23d642eacf12fd0a3c51f19d006436cbe.1474953969.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Cyril Chemparathy <cyril.chemparathy-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>, Matthew Gerlach <mgerlach-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 28, 2016 at 6:41 PM, Moritz Fischer
-<moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> wrote:
-Hi Moritz,
+On Tue, Sep 27, 2016 at 12:26 AM, H. Nikolaus Schaller
+<hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
 
-> Hi Alan,
+The subject gives no indication this is for OMAP. Please follow
+standard patterns.
+
+> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/omap5-uevm.dts | 60 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
 >
-> generally ok with the change.
+> diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
+> index be659e8..19f5f0a 100644
+> --- a/arch/arm/boot/dts/omap5-uevm.dts
+> +++ b/arch/arm/boot/dts/omap5-uevm.dts
+> @@ -17,6 +17,66 @@
+>                 device_type = "memory";
+>                 reg = <0x80000000 0x7F000000>; /* 2032 MB */
+>         };
+> +
+> +       evm_leds {
+> +               compatible = "gpio-leds";
+> +
+> +               led@1 {
 
-Cool!
+Drop the unit address. There's no reg property.
 
+> +                       label = "omap5:red:led";
+> +                       gpios = <&gpio9 17 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "mmc0";
+> +                       default-state = "off";
+> +               };
+> +
+> +               led@2 {
+> +                       label = "omap5:green:led";
+> +                       gpios = <&gpio9 18 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "mmc1";
+> +                       default-state = "off";
+> +               };
+> +
+> +               led@3 {
+> +                       label = "omap5:blue:led";
+> +                       gpios = <&gpio9 19 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "mmc2";
+> +                       default-state = "off";
+> +               };
+> +
+> +               led@4 {
+> +                       label = "omap5:green:led1";
+> +                       gpios = <&gpio9 2 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "default-on";
+> +                       default-state = "off";
+> +               };
+> +
+> +               led@5 {
+> +                       label = "omap5:green:led2";
+> +                       gpios = <&gpio9 3 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "default-on";
+> +                       default-state = "off";
+> +               };
+> +
+> +               led@6 {
+> +                       label = "omap5:green:led3";
+> +                       gpios = <&gpio9 4 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "heartbeat";
+> +                       default-state = "off";
+> +               };
+> +
+> +               led@7 {
+> +                       label = "omap5:green:led4";
+> +                       gpios = <&gpio9 5 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "heartbeat";
+> +                       default-state = "off";
+> +               };
+> +
+> +               led@8 {
+> +                       label = "omap5:green:led5";
+> +                       gpios = <&gpio9 6 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "heartbeat";
+> +                       default-state = "off";
+> +               };
+> +       };
+>  };
 >
-> On Wed, Sep 28, 2016 at 11:21 AM, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
+>  &hdmi {
+> --
+> 2.7.3
 >
->> -int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags, const char *buf,
->> -                     size_t count)
->> +int fpga_mgr_buf_load(struct fpga_manager *mgr, struct fpga_image_info *info,
->> +                     const char *buf, size_t count)
->
-> Doesn't this break the both socfpga and zynq if [6/12] and [7/12] are
-> not part of this commit?
-> i.e shouldn't 5,6 and 7 be a single commit?
-
-Yeah, squashing those would improve bisectability.
-
-Alan
-aka atull
-
->
-> Cheers,
-> Moritz
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
