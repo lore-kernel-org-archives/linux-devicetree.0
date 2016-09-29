@@ -1,65 +1,64 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH RFC v2 12/12] ARM: dts: sk-rzg1m: add Ether support
-Date: Fri, 30 Sep 2016 01:35:57 +0300
-Message-ID: <2289242.teybpFdFcf@wasted.cogentembedded.com>
-References: <1987532.PE2ex6PrJ5@wasted.cogentembedded.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] Documentation: dt: net: add mt76 wireless device binding
+Date: Fri, 30 Sep 2016 00:41:41 +0200
+Message-ID: <201609300041.41876.arnd@arndb.de>
+References: <20160905095128.80560-1-nbd@nbd.name> <87eg4uu0f3.fsf@kamboji.qca.qualcomm.com> <e7d435b2-6b59-45af-07eb-b10789d61a9c@nbd.name>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1987532.PE2ex6PrJ5-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e7d435b2-6b59-45af-07eb-b10789d61a9c-Vt+b4OUoWG0@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Define the SK-RZG1M board dependent part of the Ether device node.
-Enable DHCP and NFS root  for the kernel booting.
+On Thursday 29 September 2016, Felix Fietkau wrote:
+> On 2016-09-08 12:54, Kalle Valo wrote:
+> > Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org> writes:
+> > 
+> >> Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+> >> ---
+> >>  .../bindings/net/wireless/mediatek,mt76.txt        | 26 ++++++++++++++++++++++
+> >>  1 file changed, 26 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+> >> new file mode 100644
+> >> index 0000000..d51c35f
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+> >> @@ -0,0 +1,26 @@
+> >> +* MediaTek mt76xx devices
+> >> +
+> >> +This node provides properties for configuring the MediaTek mt76xx wireless
+> >> +device. The node is expected to be specified as a child node of the PCI
+> >> +controller to which the wireless chip is connected.
+> >> +
+> >> +Optional properties:
+> >> +
+> >> +- mac-address: See ethernet.txt in the parent directory
+> >> +- local-mac-address: See ethernet.txt in the parent directory
+> >> +- mediatek,2ghz: Override the 2.4 GHz band capability from EEPROM
+> >> +- mediatek,5ghz: Override the 5 GHz band capability from EEPROM
+> >> +- mediatek,mtd-eeprom: Specify a MTD partition + offset containing EEPROM data
+> >> +
+> >> +&pcie {
+> >> +	status = "okay";
+> >> +
+> >> +	pcie0 {
+> >> +		mt76@0,0 {
+> >> +			reg = <0x0000 0 0 0 0>;
 
-Based on the original (and large) patch by Dmitry Shifrin
-<dmitry.shifrin-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
+Maybe have an examplep of a real register address other than zero?
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> >> +			device_type = "pci";
+> >> +			mediatek,mtd-eeprom = <&factory 0x8000>;
+> >> +			mediatek,2ghz = <0>;
 
----
-Changes in version 2:
-- new patch.
+It's not clear what the possible values for the 2ghz property are,
+can you be more verbose in the description? How is <0> different
+from no property?
 
- arch/arm/boot/dts/r8a7743-sk-rzg1m.dts |   15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-Index: renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
-+++ renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
-@@ -20,7 +20,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "ignore_loglevel";
-+		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-@@ -42,3 +42,16 @@
- &scif0 {
- 	status = "okay";
- };
-+
-+&ether {
-+	phy-handle = <&phy1>;
-+	renesas,ether-link-active-low;
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+		interrupt-parent = <&irqc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		micrel,led-mode = <1>;
-+	};
-+};
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
