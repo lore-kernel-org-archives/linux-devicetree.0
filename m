@@ -1,62 +1,85 @@
-From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/4] Add DMA support for ti_am335x_adc driver
-Date: Thu, 29 Sep 2016 18:31:30 +0530
-Message-ID: <ff19f584-e4e5-61ff-046d-68ec37ab51c2@ti.com>
-References: <20160921161134.6951-1-mugunthanvnm@ti.com>
- <22588f2d-d0de-7911-35ed-92094f7dd28d@kernel.org>
+From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] mwifiex: parse device tree node for PCIe
+Date: Thu, 29 Sep 2016 13:58:23 +0000
+Message-ID: <0fb142f41f764496bc1242507717f0f7@SC-EXCH04.marvell.com>
+References: <1473434254-16782-1-git-send-email-akarwar@marvell.com>
+ <20160919212753.GA16598@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <22588f2d-d0de-7911-35ed-92094f7dd28d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20160919212753.GA16598@rob-hp-laptop>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 25 September 2016 03:11 PM, Jonathan Cameron wrote:
-> On 21/09/16 17:11, Mugunthan V N wrote:
->> > The ADC has a 64 work depth fifo length which holds the ADC data
->> > till the CPU reads. So when a user program needs a large ADC data
->> > to operate on, then it has to do multiple reads to get its
->> > buffer. Currently if the application asks for 4 samples per
->> > channel with all 8 channels are enabled, kernel can provide only
->> > 3 samples per channel when all 8 channels are enabled (logs at
->> > [1]). So with DMA support user can request for large number of
->> > samples at a time (logs at [2]).
->> > 
->> > Tested the patch on AM437x-gp-evm and AM335x Boneblack with the
->> > patch [3] to enable ADC and pushed a branch for testing [4]
->> > 
->> > [1] - http://pastebin.ubuntu.com/23211490/
->> > [2] - http://pastebin.ubuntu.com/23211492/
->> > [3] - http://pastebin.ubuntu.com/23211494/
->> > [4] - git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git iio-dma
-> Just curious.  How fast is the ADC sampling at in these?  Never that
-> obvious for this driver!
+Hi Rob,
+
+> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Tuesday, September 20, 2016 2:58 AM
+> To: Amitkumar Karwar
+> Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Cathy Luo; Nishant Sarmukadam;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Wei-Ning Huang; Xinming Hu
+> Subject: Re: [PATCH] mwifiex: parse device tree node for PCIe
 > 
-> I'm also curious as to whether you started to hit the limits of the
-> kfifo based interface.  Might be worth considering adding alternative
-> support for the dma buffers interface which is obviously much lower
-> overhead.
+> On Fri, Sep 09, 2016 at 08:47:34PM +0530, Amitkumar Karwar wrote:
+> > From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> >
+> > This patch derives device tree node from pcie bus layer framework.
+> > Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
+> > marvell-8xxx.txt) to accomodate PCIe changes.
+> >
+> > Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> > Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >  .../bindings/net/wireless/marvell-8xxx.txt         | 64
+> ++++++++++++++++++++++
+> >  .../bindings/net/wireless/marvell-sd8xxx.txt       | 63 -------------
+> --------
 > 
-> Good to have this work prior to that as the kfifo stuff is somewhat
-> easier to use.
+> Resend using -M option so I do have to figure out if you added 1 line or
+> changed a bunch.
+> 
+> >  drivers/net/wireless/marvell/mwifiex/pcie.c        | 19 +++++++
+> >  drivers/net/wireless/marvell/mwifiex/sta_cmd.c     |  3 +-
+> >  4 files changed, 85 insertions(+), 64 deletions(-)  create mode
+> > 100644 Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+> >  delete mode 100644
+> > Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+> > b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+> > new file mode 100644
+> > index 0000000..a8a95aa
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+> > @@ -0,0 +1,64 @@
+> > +Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
+> > +------
+> > +
+> > +This node provides properties for controlling the marvell sdio/pcie
+> wireless device.
+> > +The node is expected to be specified as a child node to the SDIO/PCIE
+> > +controller that connects the device to the system.
+> > +
+> > +Required properties:
+> > +
+> > +  - compatible : should be one of the following:
+> > +	* "marvell,sd8897"
+> > +	* "marvell,sd8997"
+> > +	* "marvell,pcie8997"
+> 
+> PCIe uses vendor and product IDs for compatible strings. Please read the
+> OF PCI bus bindings doc.
+> 
 
-Currently ADC clock is 3MHz, which can produce a data rate of 225KBps
-per channel with no open delay and no averaging of samples. So when all
-8 Channels are enables the data rate will be 1.75MBps
+Thanks for review. I have submitted updated version(V3) with this change.
 
-ADC can be operated at 24MHz, which can generate a data rate of 28MBps
-with all 8 channels enabled and no open delay and averaging, but our
-target is to get 800K samples per second per channel which has a data
-rate of 12.5MBps
-
-I think with this data rate, DMA will be the best option to implement
-without any data loss and less cpu overload to read the ADC samples.
-
-Regards
-Mugunthan V N
+Regards,
+Amitkumar Karwar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
