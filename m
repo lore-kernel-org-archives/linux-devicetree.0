@@ -1,191 +1,65 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH RFC v2 1/12] ARM: shmobile: r8a7743: add clock index macros
-Date: Fri, 30 Sep 2016 01:16:37 +0300
-Message-ID: <2980900.By1HmtprOu@wasted.cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH RFC v2 2/12] ARM: shmobile: r8a7743: add power domain index macros
+Date: Fri, 30 Sep 2016 01:17:47 +0300
+Message-ID: <10048005.ZebNI1l2xW@wasted.cogentembedded.com>
 References: <1987532.PE2ex6PrJ5@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1987532.PE2ex6PrJ5@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1987532.PE2ex6PrJ5-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add macros usable by the device tree sources to reference the R8A7743
-clocks  by index.
+Add macros usable by the device tree sources to reference R8A7743 SYSC power
+domains by index.
 
 Based on the original (and large) patch by Dmitry Shifrin
-<dmitry.shifrin@cogentembedded.com>.
+<dmitry.shifrin-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
 ---
 Changes in version 2:
-- fixed the file copyright.
+- added Geert's tag.
 
- include/dt-bindings/clock/r8a7743-clock.h |  157 ++++++++++++++++++++++++++++++
- 1 file changed, 157 insertions(+)
+ include/dt-bindings/power/r8a7743-sysc.h |   25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-Index: renesas/include/dt-bindings/clock/r8a7743-clock.h
+Index: renesas/include/dt-bindings/power/r8a7743-sysc.h
 ===================================================================
 --- /dev/null
-+++ renesas/include/dt-bindings/clock/r8a7743-clock.h
-@@ -0,0 +1,157 @@
++++ renesas/include/dt-bindings/power/r8a7743-sysc.h
+@@ -0,0 +1,25 @@
 +/*
 + * Copyright (C) 2016 Cogent Embedded Inc.
 + *
 + * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#ifndef __DT_BINDINGS_POWER_R8A7743_SYSC_H__
++#define __DT_BINDINGS_POWER_R8A7743_SYSC_H__
++
++/*
++ * These power domain indices match the numbers of the interrupt bits
++ * representing the power areas in the various Interrupt Registers
++ * (e.g. SYSCISR, Interrupt Status Register)
 + */
 +
-+#ifndef __DT_BINDINGS_CLOCK_R8A7743_H__
-+#define __DT_BINDINGS_CLOCK_R8A7743_H__
++#define R8A7743_PD_CA15_CPU0		 0
++#define R8A7743_PD_CA15_CPU1		 1
++#define R8A7743_PD_CA15_SCU		12
++#define R8A7743_PD_SGX			20
 +
-+/* CPG */
-+#define R8A7743_CLK_MAIN		0
-+#define R8A7743_CLK_PLL0		1
-+#define R8A7743_CLK_PLL1		2
-+#define R8A7743_CLK_PLL3		3
-+#define R8A7743_CLK_LB			4
-+#define R8A7743_CLK_QSPI		5
-+#define R8A7743_CLK_SDH			6
-+#define R8A7743_CLK_SD0			7
-+#define R8A7743_CLK_Z			8
-+#define R8A7743_CLK_RCAN		9
++/* Always-on power area */
++#define R8A7743_PD_ALWAYS_ON		32
 +
-+/* MSTP0 */
-+#define R8A7743_CLK_MSIOF0		0
-+
-+/* MSTP1 */
-+#define R8A7743_CLK_VCP0		1
-+#define R8A7743_CLK_VPC0		3
-+#define R8A7743_CLK_TMU1		11
-+#define R8A7743_CLK_3DG			12
-+#define R8A7743_CLK_2DDMAC		15
-+#define R8A7743_CLK_FDP1_1		18
-+#define R8A7743_CLK_FDP1_0		19
-+#define R8A7743_CLK_TMU3		21
-+#define R8A7743_CLK_TMU2		22
-+#define R8A7743_CLK_CMT0		24
-+#define R8A7743_CLK_TMU0		25
-+#define R8A7743_CLK_VSP1_DU1		27
-+#define R8A7743_CLK_VSP1_DU0		28
-+#define R8A7743_CLK_VSP1_S		31
-+
-+/* MSTP2 */
-+#define R8A7743_CLK_SCIFA2		2
-+#define R8A7743_CLK_SCIFA1		3
-+#define R8A7743_CLK_SCIFA0		4
-+#define R8A7743_CLK_MSIOF2		5
-+#define R8A7743_CLK_SCIFB0		6
-+#define R8A7743_CLK_SCIFB1		7
-+#define R8A7743_CLK_MSIOF1		8
-+#define R8A7743_CLK_SCIFB2		16
-+#define R8A7743_CLK_SYS_DMAC1		18
-+#define R8A7743_CLK_SYS_DMAC0		19
-+
-+/* MSTP3 */
-+#define R8A7743_CLK_TPU0		4
-+#define R8A7743_CLK_SDHI2		11
-+#define R8A7743_CLK_SDHI1		12
-+#define R8A7743_CLK_SDHI0		14
-+#define R8A7743_CLK_MMCIF0		15
-+#define R8A7743_CLK_IIC0		18
-+#define R8A7743_CLK_PCIEC		19
-+#define R8A7743_CLK_IIC1		23
-+#define R8A7743_CLK_SSUSB		28
-+#define R8A7743_CLK_CMT1		29
-+#define R8A7743_CLK_USBDMAC0		30
-+#define R8A7743_CLK_USBDMAC1		31
-+
-+/* MSTP4 */
-+#define R8A7743_CLK_IRQC		7
-+
-+/* MSTP5 */
-+#define R8A7743_CLK_AUDIO_DMAC1		1
-+#define R8A7743_CLK_AUDIO_DMAC0		2
-+#define R8A7743_CLK_THERMAL		22
-+#define R8A7743_CLK_PWM			23
-+
-+/* MSTP7 */
-+#define R8A7743_CLK_EHCI		3
-+#define R8A7743_CLK_HSUSB		4
-+#define R8A7743_CLK_HSCIF2		13
-+#define R8A7743_CLK_SCIF5		14
-+#define R8A7743_CLK_SCIF4		15
-+#define R8A7743_CLK_HSCIF1		16
-+#define R8A7743_CLK_HSCIF0		17
-+#define R8A7743_CLK_SCIF3		18
-+#define R8A7743_CLK_SCIF2		19
-+#define R8A7743_CLK_SCIF1		20
-+#define R8A7743_CLK_SCIF0		21
-+#define R8A7743_CLK_DU1			23
-+#define R8A7743_CLK_DU0			24
-+#define R8A7743_CLK_LVDS0		26
-+
-+/* MSTP8 */
-+#define R8A7743_CLK_IPMMU_SGX		0
-+#define R8A7743_CLK_VIN2		9
-+#define R8A7743_CLK_VIN1		10
-+#define R8A7743_CLK_VIN0		11
-+#define R8A7743_CLK_ETHER		13
-+#define R8A7743_CLK_SATA1		14
-+#define R8A7743_CLK_SATA0		15
-+
-+/* MSTP9 */
-+#define R8A7743_CLK_GPIO7		4
-+#define R8A7743_CLK_GPIO6		5
-+#define R8A7743_CLK_GPIO5		7
-+#define R8A7743_CLK_GPIO4		8
-+#define R8A7743_CLK_GPIO3		9
-+#define R8A7743_CLK_GPIO2		10
-+#define R8A7743_CLK_GPIO1		11
-+#define R8A7743_CLK_GPIO0		12
-+#define R8A7743_CLK_RCAN1		15
-+#define R8A7743_CLK_RCAN0		16
-+#define R8A7743_CLK_QSPI_MOD		17
-+#define R8A7743_CLK_I2C5		25
-+#define R8A7743_CLK_IICDVFS		26
-+#define R8A7743_CLK_I2C4		27
-+#define R8A7743_CLK_I2C3		28
-+#define R8A7743_CLK_I2C2		29
-+#define R8A7743_CLK_I2C1		30
-+#define R8A7743_CLK_I2C0		31
-+
-+/* MSTP10 */
-+#define R8A7743_CLK_SSI_ALL		5
-+#define R8A7743_CLK_SSI9		6
-+#define R8A7743_CLK_SSI8		7
-+#define R8A7743_CLK_SSI7		8
-+#define R8A7743_CLK_SSI6		9
-+#define R8A7743_CLK_SSI5		10
-+#define R8A7743_CLK_SSI4		11
-+#define R8A7743_CLK_SSI3		12
-+#define R8A7743_CLK_SSI2		13
-+#define R8A7743_CLK_SSI1		14
-+#define R8A7743_CLK_SSI0		15
-+#define R8A7743_CLK_SCU_ALL		17
-+#define R8A7743_CLK_SCU_DVC1		18
-+#define R8A7743_CLK_SCU_DVC0		19
-+#define R8A7743_CLK_SCU_CTU1_MIX1	20
-+#define R8A7743_CLK_SCU_CTU0_MIX0	21
-+#define R8A7743_CLK_SCU_SRC9		22
-+#define R8A7743_CLK_SCU_SRC8		23
-+#define R8A7743_CLK_SCU_SRC7		24
-+#define R8A7743_CLK_SCU_SRC6		25
-+#define R8A7743_CLK_SCU_SRC5		26
-+#define R8A7743_CLK_SCU_SRC4		27
-+#define R8A7743_CLK_SCU_SRC3		28
-+#define R8A7743_CLK_SCU_SRC2		29
-+#define R8A7743_CLK_SCU_SRC1		30
-+#define R8A7743_CLK_SCU_SRC0		31
-+
-+/* MSTP11 */
-+#define R8A7743_CLK_SCIFA3		6
-+#define R8A7743_CLK_SCIFA4		7
-+#define R8A7743_CLK_SCIFA5		8
-+
-+#endif /* __DT_BINDINGS_CLOCK_R8A7743_H__ */
++#endif /* __DT_BINDINGS_POWER_R8A7743_SYSC_H__ */
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
