@@ -1,72 +1,41 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH 2/6] ARM: dts: stm32f429: add LSI and LSE clocks
-Date: Fri, 30 Sep 2016 16:25:05 +0200
-Message-ID: <1475245509-6487-3-git-send-email-gabriel.fernandez@st.com>
-References: <1475245509-6487-1-git-send-email-gabriel.fernandez@st.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] Documentation: dt: net: add mt76 wireless device binding
+Date: Fri, 30 Sep 2016 16:36:43 +0200
+Message-ID: <201609301636.43363.arnd@arndb.de>
+References: <20160905095128.80560-1-nbd@nbd.name> <201609300041.41876.arnd@arndb.de> <3334122f-0d79-f910-a414-5b9cafd9901f@nbd.name>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1475245509-6487-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3334122f-0d79-f910-a414-5b9cafd9901f-Vt+b4OUoWG0@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+On Friday 30 September 2016, Felix Fietkau wrote:
+> >> >> + pcie0 {
+> >> >> +         mt76@0,0 {
+> >> >> +                 reg = <0x0000 0 0 0 0>;
+> > 
+> > Maybe have an examplep of a real register address other than zero?
+> This is a real example referring to the first device on a PCI bus.
+> I copy&pasted this from a .dts file that we use in LEDE.
 
-This patch adds lsi / lse oscillators. These clocks can be use by
-RTC clocks.
-The clock drivers needs to disable the power domain write protection using
-syscon / regmap to enable these clocks.
+Ok, I see.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- arch/arm/boot/dts/stm32f429.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+> >> >> +                 device_type = "pci";
+> >> >> +                 mediatek,mtd-eeprom = <&factory 0x8000>;
+> >> >> +                 mediatek,2ghz = <0>;
+> > 
+> > It's not clear what the possible values for the 2ghz property are,
+> > can you be more verbose in the description? How is <0> different
+> > from no property?
+> 0 means disabled, no property means unchanged (compared to EEPROM).
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index 35df462..0979fb6 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -55,6 +55,18 @@
- 			compatible = "fixed-clock";
- 			clock-frequency = <0>;
- 		};
-+
-+		clk-lse {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <32768>;
-+		};
-+
-+		clk-lsi {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <32000>;
-+		};
- 	};
- 
- 	soc {
-@@ -176,6 +188,11 @@
- 			reg = <0x40013800 0x400>;
- 		};
- 
-+		pwrcfg: power-config@40007000 {
-+			compatible = "syscon";
-+			reg = <0x40007000 0x400>;
-+		};
-+
- 		pin-controller {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -330,6 +347,7 @@
- 			compatible = "st,stm32f42xx-rcc", "st,stm32-rcc";
- 			reg = <0x40023800 0x400>;
- 			clocks = <&clk_hse>;
-+			st,syscfg = <&pwrcfg>;
- 		};
- 
- 		dma1: dma-controller@40026000 {
--- 
-1.9.1
+Maybe have a boolean property instead then to say "mediatek,2ghz-disabled" ?
 
+If zero is the only possible value, there is no need to put a number in there.
+
+	Arnd
