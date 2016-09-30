@@ -1,74 +1,54 @@
-From: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] Documentation: dt: net: add mt76 wireless device
- binding
-Date: Fri, 30 Sep 2016 10:48:04 +0200
-Message-ID: <3334122f-0d79-f910-a414-5b9cafd9901f@nbd.name>
-References: <20160905095128.80560-1-nbd@nbd.name>
- <87eg4uu0f3.fsf@kamboji.qca.qualcomm.com>
- <e7d435b2-6b59-45af-07eb-b10789d61a9c@nbd.name>
- <201609300041.41876.arnd@arndb.de>
+From: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v14 4/4] CMDQ: save more energy in idle
+Date: Fri, 30 Sep 2016 16:56:06 +0800
+Message-ID: <1475225766.25044.33.camel@mtksdaap41>
+References: <1473039885-24009-1-git-send-email-hs.liao@mediatek.com>
+         <1473039885-24009-5-git-send-email-hs.liao@mediatek.com>
+         <CABb+yY1YqyReK5bii6n5a_rJ6fgpPi=aC3sfKJdomvM5+NG9FA@mail.gmail.com>
+         <1474622885.21723.25.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201609300041.41876.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <1474622885.21723.25.camel@mtksdaap41>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jo
 List-Id: devicetree@vger.kernel.org
 
-On 2016-09-30 00:41, Arnd Bergmann wrote:
-> On Thursday 29 September 2016, Felix Fietkau wrote:
->> On 2016-09-08 12:54, Kalle Valo wrote:
->> > Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org> writes:
->> > 
->> >> Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
->> >> ---
->> >>  .../bindings/net/wireless/mediatek,mt76.txt        | 26 ++++++++++++++++++++++
->> >>  1 file changed, 26 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->> >> new file mode 100644
->> >> index 0000000..d51c35f
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->> >> @@ -0,0 +1,26 @@
->> >> +* MediaTek mt76xx devices
->> >> +
->> >> +This node provides properties for configuring the MediaTek mt76xx wireless
->> >> +device. The node is expected to be specified as a child node of the PCI
->> >> +controller to which the wireless chip is connected.
->> >> +
->> >> +Optional properties:
->> >> +
->> >> +- mac-address: See ethernet.txt in the parent directory
->> >> +- local-mac-address: See ethernet.txt in the parent directory
->> >> +- mediatek,2ghz: Override the 2.4 GHz band capability from EEPROM
->> >> +- mediatek,5ghz: Override the 5 GHz band capability from EEPROM
->> >> +- mediatek,mtd-eeprom: Specify a MTD partition + offset containing EEPROM data
->> >> +
->> >> +&pcie {
->> >> +	status = "okay";
->> >> +
->> >> +	pcie0 {
->> >> +		mt76@0,0 {
->> >> +			reg = <0x0000 0 0 0 0>;
+On Fri, 2016-09-23 at 17:28 +0800, Horng-Shyang Liao wrote:
+> On Thu, 2016-09-22 at 13:22 +0530, Jassi Brar wrote:
+> > On Mon, Sep 5, 2016 at 7:14 AM, HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > Use clk_disable_unprepare instead of clk_disable to save more energy
+> > > when CMDQ is idle.
+> > >
+> > > Signed-off-by: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > ---
+> > >  drivers/mailbox/mtk-cmdq.c | 54 +++++++++++++++++++++++++++++++++++++++-------
+> > 
+> > The driver is introduced by second patch of the set, so it makes sense
+> > to merge this patch into patch 2/4.
 > 
-> Maybe have an examplep of a real register address other than zero?
-This is a real example referring to the first device on a PCI bus.
-I copy&pasted this from a .dts file that we use in LEDE.
-
->> >> +			device_type = "pci";
->> >> +			mediatek,mtd-eeprom = <&factory 0x8000>;
->> >> +			mediatek,2ghz = <0>;
+> Hi Jassi,
 > 
-> It's not clear what the possible values for the 2ghz property are,
-> can you be more verbose in the description? How is <0> different
-> from no property?
-0 means disabled, no property means unchanged (compared to EEPROM).
+> Could you take a look at previous discussion between Matthias and me?
+> http://lkml.iu.edu/hypermail/linux/kernel/1606.2/05239.html
+> His basic idea is to simplify first working version.
+> Therefore, I move some code to this patch.
+> 
+> Thanks,
+> HS
+> 
 
-- Felix
+Hi Jassi,
+
+What do you think about our previous discussion?
+
+Thanks,
+HS
+
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
