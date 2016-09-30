@@ -1,67 +1,51 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: dts: meson-gxbb-odroidc2: Enable USB Nodes
-Date: Fri, 30 Sep 2016 08:49:27 -0700
-Message-ID: <7h7f9tgzg8.fsf@baylibre.com>
-References: <1475227059-17462-1-git-send-email-brian.kim@hardkernel.com>
+From: Christ van Willegen <cvwillegen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Letux-kernel] [PATCH v3 1/8] drivers:input:tsc2007: add new
+ common binding names, pre-calibration, flipping and rotation
+Date: Fri, 30 Sep 2016 18:23:14 +0200
+Message-ID: <CA+Ot1Owa_evu62LJpH+TdUkLWd0n+0Dm30Q1-5KFJ6w_UBPfQQ@mail.gmail.com>
+References: <cover.1474634475.git.hns@goldelico.com> <1409ed9845f17445a8a67bd6fb16c902c3e4f69c.1474634475.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475227059-17462-1-git-send-email-brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>
-        (Brian Kim's message of "Fri, 30 Sep 2016 18:17:39 +0900")
+In-Reply-To: <1409ed9845f17445a8a67bd6fb16c902c3e4f69c.1474634475.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Kim <brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, moon.linux-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org
+To: Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, =?UTF-8?Q?Mika_Penttil=C3=A4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Brian Kim <brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org> writes:
+Hi,
 
-> Enable both gxbb USB controller and add a 5V regulator for the OTG port
-> VBUS
->
-> Signed-off-by: Brian Kim <brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>
+I saw this earlier, but didn't think it important to mention, but:
 
-Thanks for the patch.
 
-In the future, please state what branch the patch should apply to when
-not using mainline.  Because of the sd_emmc nodes in your patch, I could
-tell that it was based on my integ branch so was able to figure it out,
-but it's very helpful to maintainers if you state the branch and/or any
-dependencies explicity.
+On Fri, Sep 23, 2016 at 2:41 PM, H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
 
-> ---
->  .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> index 8d89edc..997c671 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> @@ -64,6 +64,18 @@
->  		reg = <0x0 0x0 0x0 0x80000000>;
->  	};
->  
-> +	usb_pwr: regulator-usb-pwrs {
+> diff --git a/drivers/input/touchscreen/tsc2007.c b/drivers/input/touchscreen/tsc2007.c
+> index 5d0cd51..9a11509 100644
+> --- a/drivers/input/touchscreen/tsc2007.c
+> +++ b/drivers/input/touchscreen/tsc2007.c
 
-minor nit: since this is specific to the OTG part, can you call this
-usb_otg_pwr? ...
+> +                       /* scale ADC values to desired output range */
+> +                       sx = (ts->prop.max_x * (tc.x - ts->min_x))
+> +                               / (ts->max_x - ts->min_x);
+> +                       sy = (ts->prop.max_y * (tc.y - ts->min_y))
+> +                               / (ts->max_y - ts->min_y);
+> +                       rt = (input->absinfo[ABS_PRESSURE].maximum * rt) /
+> +                               ts->max_rt;
 
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "USB_PWR";
+If ts->max_rt is zero, or ts->max_x == ts->min_x, or ts->max_y ==
+ts->min_y, these yield a division by zero error.
 
-... and rename this also?
+Ofcourse, this is under control of the DT-maintainer(s) of the device
+(if I'm not mistaking), but throwing an error on DT parse if (one of)
+these condition(s) is met yields better info to the DT-maintainer than
+a /0 error...
 
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +
-> +		gpio = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +
+If you (or others) agree, could you add this to the patch?
 
-Thanks
+Regards,
 
-Kevin
+Christ van Willegen
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
