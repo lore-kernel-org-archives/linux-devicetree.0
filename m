@@ -1,113 +1,75 @@
-From: Bhaskar U <bhaskar.upadhaya@nxp.com>
-Subject: RE: [linux-devel] [PATCH v2 1/1] arm64: Add DTS support for FSL's
- LS1012A SoC
-Date: Fri, 30 Sep 2016 11:38:29 +0000
-Message-ID: <AM4PR0401MB22757E27E45F67FA5657AAAF8CC10@AM4PR0401MB2275.eurprd04.prod.outlook.com>
-References: <1472207241-18461-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
- <20160829095239.GM30790@tiger> <1472493061.13245.39.camel@buserror.net>
- <20160830120220.GC8363@tiger>
- <HE1PR0401MB2636B40376255680B6A58CFB8DE00@HE1PR0401MB2636.eurprd04.prod.outlook.com>
- <20160905014636.GB25778@tiger>
- <DB5PR0401MB1928BE0E1C08DD2FAC582FE191F90@DB5PR0401MB1928.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <DB5PR0401MB1928BE0E1C08DD2FAC582FE191F90@DB5PR0401MB1928.eurprd04.prod.outlook.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Scott Wood <scott.wood@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Stuart
- Yoder <stuart.yoder@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pratiyush Srivastava <pratiyush.srivastava@nxp.com>, Scott Wood <oss@buserror.net>, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, "linux-devel@gforge.freescale.net" <linux-devel@gforge.freescale.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 0/5] drm: Add Support for Passive RGB to VGA bridges
+Date: Fri, 30 Sep 2016 14:13:47 +0200
+Message-ID: <20160930121352.30184-1-maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+This serie is about adding support for the RGB to VGA bridge found in
+the A13-Olinuxino and the CHIP VGA adapter.
 
->-----Original Message-----
->From: Scott Wood
->Sent: Tuesday, September 06, 2016 10:36 PM
->To: Shawn Guo <shawnguo@kernel.org>; Stuart Yoder <stuart.yoder@nxp.com>;
->Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>
->Cc: devicetree@vger.kernel.org; Bhaskar U <bhaskar.upadhaya@nxp.com>; Scott
->Wood <oss@buserror.net>; Prabhakar Kushwaha
-><prabhakar.kushwaha@nxp.com>; linux-devel@gforge.freescale.net; Pratiyush
->Srivastava <pratiyush.srivastava@nxp.com>; linux-arm-
->kernel@lists.infradead.org
->Subject: Re: [linux-devel] [PATCH v2 1/1] arm64: Add DTS support for FSL's
->LS1012A SoC
->
->On 09/04/2016 08:47 PM, Shawn Guo wrote:
->> On Tue, Aug 30, 2016 at 02:07:17PM +0000, Stuart Yoder wrote:
->>>> On Mon, Aug 29, 2016 at 12:51:01PM -0500, Scott Wood wrote:
->>>>> On Mon, 2016-08-29 at 17:52 +0800, Shawn Guo wrote:
->>>>>> On Fri, Aug 26, 2016 at 03:57:21PM +0530, Bhaskar Upadhaya wrote:
->>>>>>>
->>>>>>> +		clockgen: clocking@1ee1000 {
->>>>>>> +			compatible = "fsl,ls1012a-clockgen";
->>>>>> The compatible cannot be found in binding docs.
->>>>>
->>>>> From Documentation/devicetree/bindings/clock/qoriq-clock.txt:
->>>>>
->>>>> - compatible: Should contain a chip-specific clock block compatible
->>>>>         string and (if applicable) may contain a chassis-version clock
->>>>>         compatible string.
->>>>>
->>>>>         Chip-specific strings are of the form "fsl,<chip>-clockgen", such as:
->>>>>         * "fsl,p2041-clockgen"
->>>>>         * "fsl,p3041-clockgen"
->>>>>         * "fsl,p4080-clockgen"
->>>>>         * "fsl,p5020-clockgen"
->>>>>         * "fsl,p5040-clockgen"
->>>>>         * "fsl,t4240-clockgen"
->>>>>         * "fsl,b4420-clockgen"
->>>>>         * "fsl,b4860-clockgen"
->>>>>         * "fsl,ls1021a-clockgen"
->>>>>         Chassis-version clock strings include:
->>>>>         * "fsl,qoriq-clockgen-1.0": for chassis 1.0 clocks
->>>>>         * "fsl,qoriq-clockgen-2.0": for chassis 2.0 clocks
->>>>>
->>>>> I really hope we don't have to update every single
->>>>> fsl,<chip>-whatever binding every time a new chip comes out.  There
->>>>> are already other chips not listed, FWIW (e.g. t1040, t2080, ls1043a, and
->ls2080a).  That's why it says "such as".
->>>>
->>>> If I remember correctly, DT maintainers want every supported
->>>> compatible string explicitly listed in bindings doc.  And they even
->>>> added a check into checkpatch.pl with commit bff5da433525
->>>> ("checkpatch: add DT compatible string documentation checks").
->>>
->>> See Documentation/devicetree/bindings/submitting-patches.txt:
->>>
->>>   5) The wildcard "<chip>" may be used in compatible strings, as in
->>>      the following example:
->>>
->>>          - compatible: Must contain '"nvidia,<chip>-pcie",
->>>            "nvidia,tegra20-pcie"' where <chip> is tegra30, tegra132, ...
->>>
->>>      As in the above example, the known values of "<chip>" should be
->>>      documented if it is used.
->>>
->>> It _is_ allowed to use the <chip> wildcard, and so you will not find
->>> all full compatible strings explicitly listed in bindings.  However,
->>> the chips themselves "should" be listed.
->>
->> + Rob and Mark
->>
->> Oops, I'm not aware of this DT document.  In that case, the DT
->> document and checkpatch is basically asking for conflicting thing.
->> Rob, Mark, can you guys please clarify?
->
->Checkpatch is a useful tool but it can't get everything right all the time.
->
+Both these boards rely on an entirely passive bridge made out of
+resitor ladders that do not require any initialisation. The only thing
+needed is to get the timings from the screen if available (and if not,
+fall back on XGA standards), set up the display pipeline to output on
+the RGB bus with the proper timings, and you're done.
 
-So what should we do, shall I add "compatible = "fsl,ls1012a-clockgen";" in Documentation/devicetree/bindings/clock/qoriq-clock.txt ?
+This serie also fixes a bunch of bugs uncovered when trying to
+increase the resolution, and hence the pixel clock, of our
+pipeline. It also fixes a few bugs in the DRM driver itself that went
+unnoticed before.
 
->-Scott
+Let me know what you think,
+Maxime
+
+Changes from v3:
+  - Depends on OF in Kconfig
+  - Fixed typos in the driver comments
+  - Removed the mention of a "passive" bridge in the bindings doc
+  - Made the strcuture const
+  - Removed the nops and best_encoders implementations
+  - Removed the call to drm_bridge_enable in the sun4i driver
+
+Changes from v2:
+  - Changed the compatible as suggested
+  - Rebased on top 4.8
+
+Changes from v1:
+  - Switch to using a vga-connector
+  - Use drm_encoder bridge pointer instead of doing our own
+  - Report the connector status as unknown instead of connected by
+    default, and as connected only if we can retrieve the EDID.
+  - Switch to of_i2c_get_adapter by node, and put the reference when done
+  - Rebased on linux-next	      
+
+Maxime Ripard (5):
+  drm/sun4i: rgb: Remove the bridge enable/disable functions
+  drm/bridge: Add RGB to VGA bridge support
+  ARM: sun5i: a13-olinuxino: Enable VGA bridge
+  ARM: multi_v7: enable VGA bridge
+  ARM: sunxi: Enable VGA bridge
+
+ .../bindings/display/bridge/rgb-to-vga-bridge.txt  |  48 +++++
+ arch/arm/boot/dts/sun5i-a13-olinuxino.dts          |  54 +++++
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm/configs/sunxi_defconfig                   |   1 +
+ drivers/gpu/drm/bridge/Kconfig                     |   7 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ drivers/gpu/drm/bridge/rgb-to-vga.c                | 239 +++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun4i_rgb.c                  |   6 -
+ 8 files changed, 351 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.txt
+ create mode 100644 drivers/gpu/drm/bridge/rgb-to-vga.c
+
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
