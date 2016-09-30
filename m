@@ -1,81 +1,108 @@
-From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Subject: Re: [Letux-kernel] [PATCH v3 1/8] drivers:input:tsc2007: add new common binding names, pre-calibration, flipping and rotation
-Date: Fri, 30 Sep 2016 18:36:47 +0200
-Message-ID: <BB701067-29E9-4491-BEB5-AD0EBE89A28A@goldelico.com>
-References: <cover.1474634475.git.hns@goldelico.com> <1409ed9845f17445a8a67bd6fb16c902c3e4f69c.1474634475.git.hns@goldelico.com> <CA+Ot1Owa_evu62LJpH+TdUkLWd0n+0Dm30Q1-5KFJ6w_UBPfQQ@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+Ot1Owa_evu62LJpH+TdUkLWd0n+0Dm30Q1-5KFJ6w_UBPfQQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?utf-8?Q?Mika_Penttil=C3=A4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] Adding Support for Coresight Components on Zynq 7000.
+Date: Fri, 30 Sep 2016 09:53:25 -0700
+Message-ID: <20160930165325.GA7630@xsjsorenbubuntu>
+References: <c6836102-9b7e-a9d9-bad9-34b100d4ae49@supelec.fr>
+ <20160929143411.GE16583@xsjsorenbubuntu>
+ <920cac6c-e56a-60d5-4882-22892058346d@supelec.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <920cac6c-e56a-60d5-4882-22892058346d-vbcOdlJ0SulGWvitb5QawA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Muhammad Abdul WAHAB <muhammadabdul.wahab-vbcOdlJ0SulGWvitb5QawA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Christ,
+Hi Muhammad,
 
-> Am 30.09.2016 um 18:23 schrieb Christ van Willegen =
-<cvwillegen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->=20
-> Hi,
->=20
-> I saw this earlier, but didn't think it important to mention, but:
->=20
->=20
-> On Fri, Sep 23, 2016 at 2:41 PM, H. Nikolaus Schaller =
-<hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
->=20
->> diff --git a/drivers/input/touchscreen/tsc2007.c =
-b/drivers/input/touchscreen/tsc2007.c
->> index 5d0cd51..9a11509 100644
->> --- a/drivers/input/touchscreen/tsc2007.c
->> +++ b/drivers/input/touchscreen/tsc2007.c
->=20
->> +                       /* scale ADC values to desired output range =
-*/
->> +                       sx =3D (ts->prop.max_x * (tc.x - ts->min_x))
->> +                               / (ts->max_x - ts->min_x);
->> +                       sy =3D (ts->prop.max_y * (tc.y - ts->min_y))
->> +                               / (ts->max_y - ts->min_y);
->> +                       rt =3D (input->absinfo[ABS_PRESSURE].maximum =
-* rt) /
->> +                               ts->max_rt;
->=20
-> If ts->max_rt is zero, or ts->max_x =3D=3D ts->min_x, or ts->max_y =3D=3D=
+On Fri, 2016-09-30 at 09:39:51 +0200, Muhammad Abdul WAHAB wrote:
+> Hi Sören,
+> 
+> Thank you for your remarks. I corrected a few things as you suggested.
+> 
+[...]
+> >> +        tpiu@F8803000 {
+> >>>
+> >>> +            compatible = "arm,coresight-tpiu", "arm,primecell";
+> >>> +            reg = <0xf8803000 0x1000>;
+> >>> +            clocks = <&clkc 47>, <&clkc 16>;
+> >>
+> >
+> > I'm not sure this is correct for every setup. Sorry, that I don't recall
+> > all the details, I haven't used tracing in a long time. But I guess this
+> > clock is configurable as you're referring an fclk here. The other thing
+> > that makes me a little suspicious is, that nothing in here uses the
+> > 'dbg_trc' clock that the clock controller provides.
+> 
+> The TPIU setup included in my patch is specific to my configuration of TPIU.
+> The second clock is configurable but I didn't know how to do so. As in
+> Vivado setup I chose "fclk1" as the clock for TPIU, I decided to put fclk1.
+> But, I am not sure about this. I am having some problems when I recover the
+> trace from TPIU: it is not the same as in ETB even though it resembles a
+> lot.
+> I don't know if the problem is coming from the device tree or from the
+> driver.
+> I will have a look at 'dbg_trc' clock.
 
-> ts->min_y, these yield a division by zero error.
+I tried to refresh my Zynq knowledge a bit. The clkc provides the
+dbg_trc clock, and that is the clock you need (not fclk). I couldn't
+find it in the binding (I guess I messed that up), but apparently,
+you can provide a 'trace_emio_clk' as input to the clkc node in the
+Zynq DT. Then, with the muxes correctly configured (FSBL should do
+that if you select the EMIO trace clock in Vivado), the dbg_trc
+output of the clkc should be that EMIO clock. And the dbg_trc output
+of the clkc is what should be consumed by the tpiu node. Though, as
+I see it the binding/driver for the TPIU do not support that.
 
-Ah, that is a good observation!
+I.e.
+In the clkc description you'd have to add 'trace_emio_clk' to the
+clock-names property together with a matching reference in the 'clocks'
+property. As this change would be specific to local setups, this is not
+really appropriate for upstream.
 
->=20
-> Ofcourse, this is under control of the DT-maintainer(s) of the device
-> (if I'm not mistaking)
+Then, for the trace clock, ideally the TPIU would consume and enable it
+as needed.
 
-Yes, the DT should be designed properly.
+> 
+> >>
+> >> +            clock-names = "apb_pclk", "fclk1";
+> >>
+> > Those names (at least fclk1) is not a good name for tpiu to identify
+> > it's input. fclk1 is a zynq-specific clock, and as mentioned above, it
+> > seems likely that this could easily become a different one. The
+> > clock-names are meant to identify an input from the consumer's
+> > perspective. The correct names should be documented in the DT binding.
+> 
+> The first name was chosen as "apb_pclk" because it was recommended in
+> Documentation. On the second name, I agree with you but again for TPIU DT
+> entry, I am not sure how to make this clock configurable. So, that's why
+> I put the same clock name as I had in my Vivado setup. If you have any
+> leads on how to make it configurable, I will be happy to take a look
+> into it.
 
-> , but throwing an error on DT parse if (one of)
-> these condition(s) is met yields better info to the DT-maintainer than
-> a /0 error...
+Unfortunately, this is not how it works. The DT bindings are not a
+recommendation. The DT description must follow the binding, otherwise
+drivers will not work correctly, or best case, just ignore what you put
+there.
 
-Yes, but I wonder how likely it is to happen at all.
+> 
+> >> +            clock-frequency=<0xee6b280>;
+> >>
+> > I cannot find this property in the binding.
+> >
+> 
+> This property was described in clock binding (in an example [2]) and the
+> value here (250MHz) corresponds to the value I had chosen in Vivado for
+> TPIU input clock.
 
-In an case there is an indicative message (either /0 or an explaining =
-one) in
-the boot log which goes away as soon as it has been fixed.
+As I don't see this in the coresight binding, I doubt that it has any
+effect or should be here.
 
-This is already better than in many other cases where things simply fail =
-without
-any message...
-
-So I would weight the likelihood of happening vs. the additional code
-to check every time.
-
->=20
-> If you (or others) agree, could you add this to the patch?
-
-If maintainers request, I can easily add it. But personally I do not see
-it as absolutely necessary.
-
-BR and many thanks,
-Nikolaus
+	Sören
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
