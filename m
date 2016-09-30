@@ -1,56 +1,75 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [PATCH 1/4] mfd: ti_am335x_tscadc: store physical address
-Date: Fri, 30 Sep 2016 14:13:16 +0530
-Message-ID: <f271b805-82c2-a45e-0de9-39edafd34d2e@ti.com>
-References: <20160921161134.6951-1-mugunthanvnm@ti.com>
- <20160921161134.6951-2-mugunthanvnm@ti.com> <20160927194045.GK21388@dell>
+From: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] Documentation: dt: net: add mt76 wireless device
+ binding
+Date: Fri, 30 Sep 2016 10:48:04 +0200
+Message-ID: <3334122f-0d79-f910-a414-5b9cafd9901f@nbd.name>
+References: <20160905095128.80560-1-nbd@nbd.name>
+ <87eg4uu0f3.fsf@kamboji.qca.qualcomm.com>
+ <e7d435b2-6b59-45af-07eb-b10789d61a9c@nbd.name>
+ <201609300041.41876.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160927194045.GK21388@dell>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Vignesh R <vigneshr@ti.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, "Andrew F
- . Davis" <afd@ti.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, linux-omap@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201609300041.41876.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 28 September 2016 01:10 AM, Lee Jones wrote:
-> On Wed, 21 Sep 2016, Mugunthan V N wrote:
+On 2016-09-30 00:41, Arnd Bergmann wrote:
+> On Thursday 29 September 2016, Felix Fietkau wrote:
+>> On 2016-09-08 12:54, Kalle Valo wrote:
+>> > Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org> writes:
+>> > 
+>> >> Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+>> >> ---
+>> >>  .../bindings/net/wireless/mediatek,mt76.txt        | 26 ++++++++++++++++++++++
+>> >>  1 file changed, 26 insertions(+)
+>> >>  create mode 100644 Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+>> >> new file mode 100644
+>> >> index 0000000..d51c35f
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+>> >> @@ -0,0 +1,26 @@
+>> >> +* MediaTek mt76xx devices
+>> >> +
+>> >> +This node provides properties for configuring the MediaTek mt76xx wireless
+>> >> +device. The node is expected to be specified as a child node of the PCI
+>> >> +controller to which the wireless chip is connected.
+>> >> +
+>> >> +Optional properties:
+>> >> +
+>> >> +- mac-address: See ethernet.txt in the parent directory
+>> >> +- local-mac-address: See ethernet.txt in the parent directory
+>> >> +- mediatek,2ghz: Override the 2.4 GHz band capability from EEPROM
+>> >> +- mediatek,5ghz: Override the 5 GHz band capability from EEPROM
+>> >> +- mediatek,mtd-eeprom: Specify a MTD partition + offset containing EEPROM data
+>> >> +
+>> >> +&pcie {
+>> >> +	status = "okay";
+>> >> +
+>> >> +	pcie0 {
+>> >> +		mt76@0,0 {
+>> >> +			reg = <0x0000 0 0 0 0>;
 > 
->> store the physical address of the device in its priv to use it
->> for DMA addressing in the client drivers.
->>
->> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
->> ---
->>  drivers/mfd/ti_am335x_tscadc.c       | 1 +
->>  include/linux/mfd/ti_am335x_tscadc.h | 1 +
->>  2 files changed, 2 insertions(+)
->>
->> diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_tscadc.c
->> index c8f027b..0f3fab4 100644
->> --- a/drivers/mfd/ti_am335x_tscadc.c
->> +++ b/drivers/mfd/ti_am335x_tscadc.c
->> @@ -183,6 +183,7 @@ static	int ti_tscadc_probe(struct platform_device *pdev)
->>  		tscadc->irq = err;
->>  
->>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	tscadc->tscadc_phys_base = res->start;
-> 
-> This is unusual.  Can't you use a virt_to_phys() variant instead?
-> 
+> Maybe have an examplep of a real register address other than zero?
+This is a real example referring to the first device on a PCI bus.
+I copy&pasted this from a .dts file that we use in LEDE.
 
-I tried using virt_to_phys(), but its not working for me.
-Also saw many drivers uses like this to get physical address
-("git grep -n " res->start;" drivers/*").
+>> >> +			device_type = "pci";
+>> >> +			mediatek,mtd-eeprom = <&factory 0x8000>;
+>> >> +			mediatek,2ghz = <0>;
+> 
+> It's not clear what the possible values for the 2ghz property are,
+> can you be more verbose in the description? How is <0> different
+> from no property?
+0 means disabled, no property means unchanged (compared to EEPROM).
 
-Regards
-Mugunthan V N
+- Felix
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
