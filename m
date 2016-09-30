@@ -1,35 +1,56 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH RFC v2 10/12] DT: arm: shmobile: document SK-RZG1M board
-Date: Fri, 30 Sep 2016 10:32:33 +0200
-Message-ID: <CAMuHMdUuVMmmNrp6jaNBSua4afGZRDiSAK8F_4KD-Y0HQ76CQA@mail.gmail.com>
-References: <1987532.PE2ex6PrJ5@wasted.cogentembedded.com> <32082029.3R2IVcCXuY@wasted.cogentembedded.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [PATCH 1/4] mfd: ti_am335x_tscadc: store physical address
+Date: Fri, 30 Sep 2016 14:13:16 +0530
+Message-ID: <f271b805-82c2-a45e-0de9-39edafd34d2e@ti.com>
+References: <20160921161134.6951-1-mugunthanvnm@ti.com>
+ <20160921161134.6951-2-mugunthanvnm@ti.com> <20160927194045.GK21388@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <32082029.3R2IVcCXuY@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160927194045.GK21388@dell>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Vignesh R <vigneshr@ti.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, "Andrew F
+ . Davis" <afd@ti.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, linux-omap@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 30, 2016 at 12:32 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Document the SK-RZG1M device tree bindings, listing it as a supported board.
->
-> This allows to use checkpatch.pl to validate .dts files referring to the
-> SK-RZG1M board.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+On Wednesday 28 September 2016 01:10 AM, Lee Jones wrote:
+> On Wed, 21 Sep 2016, Mugunthan V N wrote:
+> 
+>> store the physical address of the device in its priv to use it
+>> for DMA addressing in the client drivers.
+>>
+>> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+>> ---
+>>  drivers/mfd/ti_am335x_tscadc.c       | 1 +
+>>  include/linux/mfd/ti_am335x_tscadc.h | 1 +
+>>  2 files changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_tscadc.c
+>> index c8f027b..0f3fab4 100644
+>> --- a/drivers/mfd/ti_am335x_tscadc.c
+>> +++ b/drivers/mfd/ti_am335x_tscadc.c
+>> @@ -183,6 +183,7 @@ static	int ti_tscadc_probe(struct platform_device *pdev)
+>>  		tscadc->irq = err;
+>>  
+>>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	tscadc->tscadc_phys_base = res->start;
+> 
+> This is unusual.  Can't you use a virt_to_phys() variant instead?
+> 
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I tried using virt_to_phys(), but its not working for me.
+Also saw many drivers uses like this to get physical address
+("git grep -n " res->start;" drivers/*").
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards
+Mugunthan V N
