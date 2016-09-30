@@ -1,25 +1,27 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] DT: irqchip: renesas-irqc: document R8A7743/5 support
-Date: Fri, 30 Sep 2016 10:29:48 +0200
-Message-ID: <CAMuHMdUMzddV-BZ3SSkraTHJ6Kqi3YFTb3t1c+jkZ6pk60PTnw@mail.gmail.com>
-References: <19681841.MzyqfDfWny@wasted.cogentembedded.com>
+Subject: Re: [PATCH RFC v2 10/12] DT: arm: shmobile: document SK-RZG1M board
+Date: Fri, 30 Sep 2016 10:32:33 +0200
+Message-ID: <CAMuHMdUuVMmmNrp6jaNBSua4afGZRDiSAK8F_4KD-Y0HQ76CQA@mail.gmail.com>
+References: <1987532.PE2ex6PrJ5@wasted.cogentembedded.com> <32082029.3R2IVcCXuY@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <19681841.MzyqfDfWny@wasted.cogentembedded.com>
+In-Reply-To: <32082029.3R2IVcCXuY@wasted.cogentembedded.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 29, 2016 at 11:25 PM, Sergei Shtylyov
+On Fri, Sep 30, 2016 at 12:32 AM, Sergei Shtylyov
 <sergei.shtylyov@cogentembedded.com> wrote:
-> Renesas  RZ/G SoC have the R-Car gen2 compatible IRQC interrupt controllers.
-> Document RZ/G1[ME] (also known as R8A774[35]) SoC bindings.
+> Document the SK-RZG1M device tree bindings, listing it as a supported board.
+>
+> This allows to use checkpatch.pl to validate .dts files referring to the
+> SK-RZG1M board.
 >
 > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
 
