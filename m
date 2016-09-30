@@ -1,93 +1,491 @@
-Return-Path: <jorik@kippendief.biz>
+Return-Path: <muhammadabdul.wahab@supelec.fr>
+Subject: Re: [PATCH] Adding Support for Coresight Components on Zynq 7000.
+References: <c6836102-9b7e-a9d9-bad9-34b100d4ae49@supelec.fr>
+ <20160929143411.GE16583@xsjsorenbubuntu>
+From: Muhammad Abdul WAHAB <muhammadabdul.wahab@supelec.fr>
+Message-ID: <253d0d82-276e-9c94-9727-df6f0925085e@supelec.fr>
+Date: Fri, 30 Sep 2016 09:34:26 +0200
 MIME-Version: 1.0
-In-Reply-To: <CAGb2v66c8uFHUtVtHOZCfxDEEgG7CzZgBRKWMUQS7NTizF6jyQ@mail.gmail.com>
-References: <1472671858-29220-1-git-send-email-jorik@kippendief.biz>
- <1472671858-29220-4-git-send-email-jorik@kippendief.biz> <CAGb2v66c8uFHUtVtHOZCfxDEEgG7CzZgBRKWMUQS7NTizF6jyQ@mail.gmail.com>
-From: Jorik Jonker <jorik@kippendief.biz>
-Date: Thu, 1 Sep 2016 08:31:08 +0200
-Message-ID: <CAKqGPHwBqWn05SQqEPUQiwxi=WyBJ2LFto2Ucbh8w=Eqe49eTA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/7] dts: sun8i-h3: add i2c0/i2c1 SoC peripherals
-Content-Type: multipart/alternative; boundary=001a11411d66f7a796053b6c5be0
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+In-Reply-To: <20160929143411.GE16583@xsjsorenbubuntu>
+Content-Type: multipart/alternative;
+ boundary="------------EB7E0B80F7AD576D8A896AB4"
+To: =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---001a11411d66f7a796053b6c5be0
-Content-Type: text/plain; charset=UTF-8
+This is a multi-part message in MIME format.
+--------------EB7E0B80F7AD576D8A896AB4
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi Sören,
 
-A bit tricky to reply to two mails in one, as I think my reply relates to
-both, but here it goes.
+Thank you for your remarks. I corrected a few things as you suggested.
 
-On 1 September 2016 at 04:42, Chen-Yu Tsai <wens@csie.org> wrote:
+> I'm curious, did you test that with external debug tools. I have the
+> feeling the kernel using the debug HW could interfere with JTAG
+> debuggers, external trace tools, etc.
 
-> On Thu, Sep 1, 2016 at 3:30 AM,  <jorik@kippendief.biz> wrote:
-> > From: Jorik Jonker <jorik@kippendief.biz>
-> >
-> > This enables the i2c0/i2c1 peripherals of the SoC. There is actually a
-> third
-> > controller, but I do not have a board on hands on which i2c2 is exposed
-> in such
-> > a way that I can verify that it works.
->
-> If they are listed in the manual, and the interrupts, clocks, resets, pins
-> all exist, that is good enough for me.
->
+I did not test with any external debug tools. For testing, I obtained
+trace for simple function (e.g. loop) on Xilinx standalone and I then
+traced the same function under Linux. Then, I compare both traces
+obtained under standalone and under Linux. I decoded the trace to make
+  sure that the trace I get corresponds to my function. The instructions
+for testing here only allows users to see that coresight components
+are enabled and generating traces. The trace still need to be decoded
+to make sure whether the trace is correct or not. It can be done by
+openCSD[1] library.
 
-That sounds sensible, I will do that in v3.
+> Use labels please.
 
-> These pinmuxes are the only ones possible for each peripheral.
-> Please drop the _a suffix and the @0 address for both of them.
+I changed the entries to use labels. I don't need phandle anymore.
 
-Agreed. But: I think the same goes for UARTs 0-3, of which 0-1 have a
-pinmux following the _a / @0 syntax in current kernel. There are not really
-options here, except leaving out RTS/CTS on uarts1-3, which one could do in
-a board-specific pinmux.
+>> +        tpiu@F8803000 {
+>>> +            compatible = "arm,coresight-tpiu", "arm,primecell";
+>>> +            reg = <0xf8803000 0x1000>;
+>>> +            clocks = <&clkc 47>, <&clkc 16>;
+> I'm not sure this is correct for every setup. Sorry, that I don't recall
+> all the details, I haven't used tracing in a long time. But I guess this
+> clock is configurable as you're referring an fclk here. The other thing
+> that makes me a little suspicious is, that nothing in here uses the
+> 'dbg_trc' clock that the clock controller provides.
 
-Moreover, I could put all the pinmux-peripheral associations for H3 in the
-DTSI, removing them from the DTS files (including already existing), as the
-associations themselves are not really board specific, right?
+The TPIU setup included in my patch is specific to my configuration of TPIU.
+The second clock is configurable but I didn't know how to do so. As in
+Vivado setup I chose "fclk1" as the clock for TPIU, I decided to put fclk1.
+But, I am not sure about this. I am having some problems when I recover the
+trace from TPIU: it is not the same as in ETB even though it resembles a lot.
+I don't know if the problem is coming from the device tree or from the driver.
+I will have a look at 'dbg_trc' clock.
 
-Best,
-Jorik
+>> +            clock-names = "apb_pclk", "fclk1";
+> Those names (at least fclk1) is not a good name for tpiu to identify
+> it's input. fclk1 is a zynq-specific clock, and as mentioned above, it
+> seems likely that this could easily become a different one. The
+> clock-names are meant to identify an input from the consumer's
+> perspective. The correct names should be documented in the DT binding.
 
---001a11411d66f7a796053b6c5be0
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+The first name was chosen as "apb_pclk" because it was recommended in
+Documentation. On the second name, I agree with you but again for TPIU DT
+entry, I am not sure how to make this clock configurable. So, that's why
+I put the same clock name as I had in my Vivado setup. If you have any
+leads on how to make it configurable, I will be happy to take a look
+into it.
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote"><div=
->Hi,</div><div><br></div><div>A bit tricky to reply to two mails in one, as=
- I think my reply relates to both, but here it goes.</div><div><br></div></=
-div><div class=3D"gmail_quote">On 1 September 2016 at 04:42, Chen-Yu Tsai <=
-span dir=3D"ltr">&lt;<a href=3D"mailto:wens@csie.org" target=3D"_blank">wen=
-s@csie.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=
-=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
--left:1ex"><span class=3D"gmail-">On Thu, Sep 1, 2016 at 3:30 AM,=C2=A0 &lt=
-;<a href=3D"mailto:jorik@kippendief.biz">jorik@kippendief.biz</a>&gt; wrote=
-:<br>
-&gt; From: Jorik Jonker &lt;<a href=3D"mailto:jorik@kippendief.biz">jorik@k=
-ippendief.biz</a>&gt;<br>
-&gt;<br>
-&gt; This enables the i2c0/i2c1 peripherals of the SoC. There is actually a=
- third<br>
-&gt; controller, but I do not have a board on hands on which i2c2 is expose=
-d in such<br>
-&gt; a way that I can verify that it works.<br>
-<br>
-</span>If they are listed in the manual, and the interrupts, clocks, resets=
-, pins<br>
-all exist, that is good enough for me.<br></blockquote><div><br></div><div>=
-That sounds sensible, I will do that in v3.=C2=A0<br></div><div><br></div><=
-div>&gt; These pinmuxes are the only ones possible for each peripheral.<br>=
-</div><div>&gt; Please drop the _a suffix and the @0 address for both of th=
-em.<br></div><div><br></div><div>Agreed. But: I think the same goes for UAR=
-Ts 0-3, of which 0-1 have a pinmux following the _a / @0 syntax in current =
-kernel. There are not really options here, except leaving out RTS/CTS on ua=
-rts1-3, which one could do in a board-specific pinmux.</div><div><br></div>=
-<div>Moreover, I could put all the pinmux-peripheral associations for H3 in=
- the DTSI, removing them from the DTS files (including already existing), a=
-s the associations themselves are not really board specific, right?</div><d=
-iv><br></div><div>Best,</div><div>Jorik</div></div></div></div>
+>> +            clock-frequency=<0xee6b280>;
+> I cannot find this property in the binding.
 
---001a11411d66f7a796053b6c5be0--
+This property was described in clock binding (in an example [2]) and the
+value here (250MHz) corresponds to the value I had chosen in Vivado for
+TPIU input clock.
+
+> I think nodes were ordered alphabetically in our DTs.
+
+Yes, I modified the patch to take care of it. Thank you.
+
+Muhammad Abdul WAHAB
+
+[1]:https://github.com/Linaro/OpenCSD
+[2]: Documentation/devicetree/bindings/clock/clock-bindings.txt
+---
+--- linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi.orig    2016-07-24 21:23:50.000000000 +0200
++++ linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi    2016-09-29 20:42:44.286322433 +0200
+@@ -96,6 +96,57 @@
+              rx-fifo-depth = <0x40>;
+          };
+  
++        etb@F8801000 {
++            compatible = "arm,coresight-etb10", "arm,primecell";
++            reg = <0xf8801000 0x1000>;
++
++            coresight-default-sink;
++            clocks = <&clkc 47>;
++            clock-names = "apb_pclk";
++
++            port {
++                etb_in_port: endpoint@0 {
++                    slave-mode;
++                    remote-endpoint = <&replicator_out_port0>;
++                };
++            };
++        };
++
++        funnel@F8804000 {
++            compatible = "arm,coresight-funnel", "arm,primecell";
++            reg = <0xf8804000 0x1000>;
++
++            clocks = <&clkc 47>;
++            clock-names = "apb_pclk";
++            ports {
++                #address-cells = <0x1>;
++                #size-cells = <0x0>;
++
++                port@0 {
++                    reg = <0x0>;
++                    funnel_out_port0: endpoint {
++                        remote-endpoint = <&replicator_in_port0>;
++                    };
++                };
++
++                port@1 {
++                    reg = <0x0>;
++                    funnel_in_port0: endpoint {
++                        slave-mode;
++                        remote-endpoint = <&ptm0_out_port>;
++                    };
++                };
++
++                port@2 {
++                    reg = <0x1>;
++                    funnel_in_port1: endpoint {
++                        slave-mode;
++                        remote-endpoint = <&ptm1_out_port>;
++                    };
++                };
++            };
++        };
++
+          gpio0: gpio@e000a000 {
+              compatible = "xlnx,zynq-gpio-1.0";
+              #gpio-cells = <2>;
+@@ -311,6 +362,82 @@
+              clocks = <&clkc 4>;
+          };
+  
++        ptm0@F889C000 {
++            compatible = "arm,coresight-etm3x", "arm,primecell";
++            reg = <0xf889c000 0x1000>;
++
++            cpu = <&cpu0>;
++            clocks = <&clkc 47>;
++            clock-names = "apb_pclk";
++
++            port {
++                ptm0_out_port: endpoint {
++                    remote-endpoint = <&funnel_in_port0>;
++                };
++            };
++        };
++
++        ptm1@F889D000 {
++            compatible = "arm,coresight-etm3x", "arm,primecell";
++            reg = <0xf889d000 0x1000>;
++
++            cpu = <&cpu1>;
++            clocks = <&clkc 47>;
++            clock-names = "apb_pclk";
++
++            port {
++                ptm1_out_port: endpoint {
++                    remote-endpoint = <&funnel_in_port1>;
++                };
++            };
++        };
++
++        replicator {
++            compatible = "arm,coresight-replicator";
++
++            ports {
++                #address-cells = <0x1>;
++                #size-cells = <0x0>;
++
++                port@0 {
++                    reg = <0x0>;
++                    replicator_out_port0: endpoint {
++                        remote-endpoint = <&etb_in_port>;
++                    };
++                };
++
++                port@1 {
++                    reg = <0x1>;
++                    replicator_out_port1: endpoint {
++                        remote-endpoint = <&tpiu_in_port>;
++                    };
++                };
++
++                port@2 {
++                    reg = <0x0>;
++                    replicator_in_port0: endpoint {
++                        slave-mode;
++                        remote-endpoint = <&funnel_out_port0>;
++                    };
++                };
++            };
++        };
++
++        tpiu@F8803000 {
++            compatible = "arm,coresight-tpiu", "arm,primecell";
++            reg = <0xf8803000 0x1000>;
++
++            clocks = <&clkc 47>, <&clkc 46>;
++            clock-names = "apb_pclk", "configurable_clk";
++            clock-frequency=<0xee6b280>;
++
++            port {
++                tpiu_in_port: endpoint@0 {
++                    slave-mode;
++                    remote-endpoint = <&replicator_out_port0>;
++                };
++            };
++        };
++
+          ttc0: timer@f8001000 {
+              interrupt-parent = <&intc>;
+              interrupts = <0 10 4>, <0 11 4>, <0 12 4>;
+
+
+--------------EB7E0B80F7AD576D8A896AB4
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    <div class="moz-text-plain" wrap="true" graphical-quote="true"
+      style="font-family: -moz-fixed; font-size: 14px;" lang="x-unicode">
+      <pre wrap="">Hi Sören,
+
+Thank you for your remarks. I corrected a few things as you suggested.
+</pre>
+      <blockquote type="cite" style="color: #000000;">
+        <pre wrap="">I'm curious, did you test that with external debug tools. I have the
+feeling the kernel using the debug HW could interfere with JTAG
+debuggers, external trace tools, etc.
+</pre>
+      </blockquote>
+      <pre wrap="">I did not test with any external debug tools. For testing, I obtained 
+trace for simple function (e.g. loop) on Xilinx standalone and I then
+traced the same function under Linux. Then, I compare both traces 
+obtained under standalone and under Linux. I decoded the trace to make
+ sure that the trace I get corresponds to my function. The instructions
+for testing here only allows users to see that coresight components
+are enabled and generating traces. The trace still need to be decoded
+to make sure whether the trace is correct or not. It can be done by 
+openCSD[1] library.
+</pre>
+      <blockquote type="cite" style="color: #000000;">
+        <pre wrap="">Use labels please. 
+</pre>
+      </blockquote>
+      <pre wrap="">I changed the entries to use labels. I don't need phandle anymore.
+</pre>
+      <blockquote type="cite" style="color: #000000;">
+        <blockquote type="cite" style="color: #000000;">
+          <pre wrap="">+        tpiu@F8803000 {
+</pre>
+          <blockquote type="cite" style="color: #000000;">
+            <pre wrap="">+            compatible = "arm,coresight-tpiu", "arm,primecell";
++            reg = &lt;0xf8803000 0x1000&gt;;
++            clocks = &lt;&amp;clkc 47&gt;, &lt;&amp;clkc 16&gt;;
+</pre>
+          </blockquote>
+        </blockquote>
+        <pre wrap="">I'm not sure this is correct for every setup. Sorry, that I don't recall
+all the details, I haven't used tracing in a long time. But I guess this
+clock is configurable as you're referring an fclk here. The other thing
+that makes me a little suspicious is, that nothing in here uses the
+'dbg_trc' clock that the clock controller provides.
+</pre>
+      </blockquote>
+      <pre wrap="">The TPIU setup included in my patch is specific to my configuration of TPIU.
+The second clock is configurable but I didn't know how to do so. As in 
+Vivado setup I chose "fclk1" as the clock for TPIU, I decided to put fclk1.
+But, I am not sure about this. I am having some problems when I recover the
+trace from TPIU: it is not the same as in ETB even though it resembles a lot.
+I don't know if the problem is coming from the device tree or from the driver.
+I will have a look at 'dbg_trc' clock.
+</pre>
+      <blockquote type="cite" style="color: #000000;">
+        <blockquote type="cite" style="color: #000000;">
+          <pre wrap="">+            clock-names = "apb_pclk", "fclk1";
+</pre>
+        </blockquote>
+        <pre wrap="">Those names (at least fclk1) is not a good name for tpiu to identify
+it's input. fclk1 is a zynq-specific clock, and as mentioned above, it
+seems likely that this could easily become a different one. The
+clock-names are meant to identify an input from the consumer's
+perspective. The correct names should be documented in the DT binding.
+</pre>
+      </blockquote>
+      <pre wrap="">The first name was chosen as "apb_pclk" because it was recommended in
+Documentation. On the second name, I agree with you but again for TPIU DT
+entry, I am not sure how to make this clock configurable. So, that's why
+I put the same clock name as I had in my Vivado setup. If you have any 
+leads on how to make it configurable, I will be happy to take a look 
+into it.
+</pre>
+      <blockquote type="cite" style="color: #000000;">
+        <blockquote type="cite" style="color: #000000;">
+          <pre wrap="">+            clock-frequency=&lt;0xee6b280&gt;;
+</pre>
+        </blockquote>
+        <pre wrap="">I cannot find this property in the binding.
+</pre>
+      </blockquote>
+      <pre wrap="">This property was described in clock binding (in an example [2]) and the
+value here (250MHz) corresponds to the value I had chosen in Vivado for
+TPIU input clock.
+</pre>
+      <blockquote type="cite" style="color: #000000;">
+        <pre wrap="">I think nodes were ordered alphabetically in our DTs.
+</pre>
+      </blockquote>
+      <pre wrap="">Yes, I modified the patch to take care of it. Thank you.
+
+Muhammad Abdul WAHAB
+
+[1]: <a class="moz-txt-link-freetext" href="https://github.com/Linaro/OpenCSD">https://github.com/Linaro/OpenCSD</a>
+[2]: Documentation/devicetree/bindings/clock/clock-bindings.txt
+---
+--- linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi.orig    2016-07-24 21:23:50.000000000 +0200
++++ linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi    2016-09-29 20:42:44.286322433 +0200
+@@ -96,6 +96,57 @@
+             rx-fifo-depth = &lt;0x40&gt;;
+         };
+ 
++        etb@F8801000 {
++            compatible = "arm,coresight-etb10", "arm,primecell";
++            reg = &lt;0xf8801000 0x1000&gt;;
++
++            coresight-default-sink;
++            clocks = &lt;&amp;clkc 47&gt;;
++            clock-names = "apb_pclk";
++
++            port {
++                etb_in_port: endpoint@0 {
++                    slave-mode;
++                    remote-endpoint = &lt;&amp;replicator_out_port0&gt;;
++                };
++            };
++        };
++
++        funnel@F8804000 {
++            compatible = "arm,coresight-funnel", "arm,primecell";
++            reg = &lt;0xf8804000 0x1000&gt;;
++           
++            clocks = &lt;&amp;clkc 47&gt;;
++            clock-names = "apb_pclk";
++            ports {
++                #address-cells = &lt;0x1&gt;;
++                #size-cells = &lt;0x0&gt;;
++
++                port@0 {
++                    reg = &lt;0x0&gt;;
++                    funnel_out_port0: endpoint {
++                        remote-endpoint = &lt;&amp;replicator_in_port0&gt;;
++                    };
++                };
++
++                port@1 {
++                    reg = &lt;0x0&gt;;
++                    funnel_in_port0: endpoint {
++                        slave-mode;
++                        remote-endpoint = &lt;&amp;ptm0_out_port&gt;;
++                    };
++                };
++
++                port@2 {
++                    reg = &lt;0x1&gt;;
++                    funnel_in_port1: endpoint {
++                        slave-mode;
++                        remote-endpoint = &lt;&amp;ptm1_out_port&gt;;
++                    };
++                };
++            };
++        };
++
+         gpio0: gpio@e000a000 {
+             compatible = "xlnx,zynq-gpio-1.0";
+             #gpio-cells = &lt;2&gt;;
+@@ -311,6 +362,82 @@
+             clocks = &lt;&amp;clkc 4&gt;;
+         };
+ 
++        ptm0@F889C000 {
++            compatible = "arm,coresight-etm3x", "arm,primecell";
++            reg = &lt;0xf889c000 0x1000&gt;;
++
++            cpu = &lt;&amp;cpu0&gt;;
++            clocks = &lt;&amp;clkc 47&gt;;
++            clock-names = "apb_pclk";
++
++            port {
++                ptm0_out_port: endpoint {
++                    remote-endpoint = &lt;&amp;funnel_in_port0&gt;;
++                };
++            };
++        };
++
++        ptm1@F889D000 {
++            compatible = "arm,coresight-etm3x", "arm,primecell";
++            reg = &lt;0xf889d000 0x1000&gt;;
++           
++            cpu = &lt;&amp;cpu1&gt;;
++            clocks = &lt;&amp;clkc 47&gt;;
++            clock-names = "apb_pclk";
++
++            port {
++                ptm1_out_port: endpoint {
++                    remote-endpoint = &lt;&amp;funnel_in_port1&gt;;                   
++                };
++            };
++        };
++
++        replicator {
++            compatible = "arm,coresight-replicator";
++
++            ports {
++                #address-cells = &lt;0x1&gt;;
++                #size-cells = &lt;0x0&gt;;
++
++                port@0 {
++                    reg = &lt;0x0&gt;;
++                    replicator_out_port0: endpoint {
++                        remote-endpoint = &lt;&amp;etb_in_port&gt;;
++                    };
++                };
++
++                port@1 {
++                    reg = &lt;0x1&gt;;
++                    replicator_out_port1: endpoint {
++                        remote-endpoint = &lt;&amp;tpiu_in_port&gt;;
++                    };
++                };
++
++                port@2 {
++                    reg = &lt;0x0&gt;;
++                    replicator_in_port0: endpoint {
++                        slave-mode;
++                        remote-endpoint = &lt;&amp;funnel_out_port0&gt;;
++                    };
++                };
++            };
++        };
++
++        tpiu@F8803000 {
++            compatible = "arm,coresight-tpiu", "arm,primecell";
++            reg = &lt;0xf8803000 0x1000&gt;;
++
++            clocks = &lt;&amp;clkc 47&gt;, &lt;&amp;clkc 46&gt;;
++            clock-names = "apb_pclk", "configurable_clk";
++            clock-frequency=&lt;0xee6b280&gt;;
++
++            port {
++                tpiu_in_port: endpoint@0 {
++                    slave-mode;
++                    remote-endpoint = &lt;&amp;replicator_out_port0&gt;;
++                };
++            };
++        };
++
+         ttc0: timer@f8001000 {
+             interrupt-parent = &lt;&amp;intc&gt;;
+             interrupts = &lt;0 10 4&gt;, &lt;0 11 4&gt;, &lt;0 12 4&gt;;
+</pre>
+    </div>
+  </body>
+</html>
+
+--------------EB7E0B80F7AD576D8A896AB4--
