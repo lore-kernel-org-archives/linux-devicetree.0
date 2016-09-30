@@ -1,72 +1,201 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 1/4] libfdt: Add new errors for the overlay code
-Date: Fri, 30 Sep 2016 14:24:46 +0200
-Message-ID: <20160930122446.GT4189@lukather>
-References: <20160929112908.4468-1-maxime.ripard@free-electrons.com>
- <20160929112908.4468-2-maxime.ripard@free-electrons.com>
- <20160930014349.GU30519@umbus.fritz.box>
+From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] drm: zte: add initial vou drm driver
+Date: Fri, 30 Sep 2016 13:34:14 +0100
+Message-ID: <CACvgo51feNJYrHaKT+M06Z7kOUqzYo1Uv_TAHdLhNXPtRUwsvw@mail.gmail.com>
+References: <1474727185-24180-1-git-send-email-shawn.guo@linaro.org> <1474727185-24180-3-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Q/AGl/UrDvkbRExF"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160930014349.GU30519-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1474727185-24180-3-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Baoyou Xie <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Shawn,
 
---Q/AGl/UrDvkbRExF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+A couple of fly-by suggestions, which I hope you'll find useful :-)
 
-Hi David,
+On 24 September 2016 at 15:26, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-On Fri, Sep 30, 2016 at 11:43:49AM +1000, David Gibson wrote:
-> On Thu, Sep 29, 2016 at 01:29:05PM +0200, Maxime Ripard wrote:
-> > Add a few new error codes to report the failure conditions we might
-> > encounter in the overlay application code:
-> >    - FDT_ERR_BADFIXUP, when an overlay fixup property is not properly
-> >      formatted.
-> >    - FDT_ERR_BADOVERLAY, when an overlay cannot be parsed, even though =
-its
-> >      structure is correct
->=20
-> So, my thought had been to combine all problems with the overlay for
-> fixup formatting into a single error code BADOVERLAY.
+> +
+ > +       val = ((vm.hsync_len - 1) << SYNC_WIDE_SHIFT) & SYNC_WIDE_MASK;
+To save some writing/minimise the chances to typos getting, in you can
+have single/collection to static inline functions similar to msm [1].
+On a similar note inline wrappers zte_read/write/mask (around
+writel/readl) will provide quite useful for debugging/tracing :-)
 
-Ok, that works for me. I'll merge the two.
-
-Thanks!
-Maxime
+[1] drivers/gpu/drm/msm/adreno/a4xx.xml.h
 
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> +       if (IS_ERR(zcrtc->pixclk))
+> +               return ERR_PTR(PTR_ERR(zcrtc->pixclk));
+You might want to s/ERR_PTR(PTR_ERR// or s/ERR_PTR(PTR_ERR/ERR_CAST/
+through the patch.
 
---Q/AGl/UrDvkbRExF
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> +static int zx_drm_bind(struct device *dev)
+> +{
+> +       struct drm_device *drm;
+> +       struct zx_drm_private *priv;
+> +       int ret;
+> +
+> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       drm = drm_dev_alloc(&zx_drm_driver, dev);
+> +       if (!drm)
+> +               return -ENOMEM;
+> +
+> +       drm->dev_private = priv;
+> +       dev_set_drvdata(dev, drm);
+> +
+> +       drm_mode_config_init(drm);
+> +       drm->mode_config.min_width = 16;
+> +       drm->mode_config.min_height = 16;
+> +       drm->mode_config.max_width = 4096;
+> +       drm->mode_config.max_height = 4096;
+> +       drm->mode_config.funcs = &zx_drm_mode_config_funcs;
+> +
+> +       ret = drm_dev_register(drm, 0);
+The documentation states that drm_dev_register() should be called
+after the hardware is setup. which some drivers seems to interpret as
+...
 
-iQIcBAEBAgAGBQJX7lmOAAoJEBx+YmzsjxAg/usP/2N/WG8hcNKint4riyCk71M/
-REw0hTUqGuCiSvwJdBLG2q//2321SoQR3DdhAwSiIv1i1EV7rCkCBBdYY8suSkth
-/9dK0FmhR/2D1FXZRzmuGXm0dWurXYeio62KYQG5oAmc1GLzJWnNmeHvxH8k5qJj
-YpzxkyEYpLvm4wCu2Dchz4pLbSmovpOxitDi2HSjVSUKqo4cGmrdl++2To6MB4sH
-NuP0kDaSgpoyunkYIfPovgZhvVO2sqeQEafGfMKWo5DUtWC5hOXIDDLHdWCXnKEn
-L21A2rm8hAhPIBFmA/1PAJJMtBJQB1AZLU+hUZW7DB4DYGz5fW7iayjsVPpqOI8d
-1RRP5svIx7j8TUzb/rEJ8+ImMEL8tbMY9LLFgd9ItRmThVb7ZaHefz/x1rqhdlHU
-WKJEQvTB2LIv4sl/7vYfhE33ETSP5jq9cPSOVsjAEUb1jzjrEKiB+J4nPTUIJEhZ
-sM5gFiq+piUJ7PI88CoG6ySRYucWt2RDLzkCavzUSq/AI88rIvwCnQZs7hq7vsFw
-7tVmBSJrl52xjolZXSLIXRuDULBWxlO7fuWqEh5WOVwLmzMTYf+O69Lb5IOtRb1g
-+FLNjeDq83Kha/qCCJiNRzx9fTCv8oNxicrQ5wQlg5FE8VZ+lQF1YWUdUdLtFIwU
-G0DorCdi3US5JH8AWDkO
-=gldu
------END PGP SIGNATURE-----
+> +       if (ret)
+> +               goto out_free;
+> +
+> +       ret = component_bind_all(dev, drm);
+> +       if (ret) {
+> +               DRM_ERROR("Failed to bind all components\n");
+> +               goto out_unregister;
+> +       }
+> +
+> +       ret = drm_vblank_init(drm, drm->mode_config.num_crtc);
+> +       if (ret < 0) {
+> +               DRM_ERROR("failed to initialise vblank\n");
+> +               goto out_unbind;
+> +       }
+> +
+> +       /*
+> +        * We will manage irq handler on our own.  In this case, irq_enabled
+> +        * need to be true for using vblank core support.
+> +        */
+> +       drm->irq_enabled = true;
+> +
+> +       drm_mode_config_reset(drm);
+> +       drm_kms_helper_poll_init(drm);
+> +
+> +       priv->fbdev = drm_fbdev_cma_init(drm, 32, drm->mode_config.num_crtc,
+> +                                        drm->mode_config.num_connector);
+... calling it after these. If that's the correct case - perhaps we
+can throw a WARN or similar within the above functions to catch
+present/future misuse ?
 
---Q/AGl/UrDvkbRExF--
+
+> +       if (IS_ERR(priv->fbdev)) {
+> +               ret = PTR_ERR(priv->fbdev);
+> +               priv->fbdev = NULL;
+> +               goto out_fini;
+> +       }
+> +
+> +       return 0;
+> +
+> +out_fini:
+> +       drm_kms_helper_poll_fini(drm);
+> +       drm_mode_config_cleanup(drm);
+> +       drm_vblank_cleanup(drm);
+> +out_unbind:
+> +       component_unbind_all(dev, drm);
+> +out_unregister:
+> +       drm_dev_unregister(drm);
+> +out_free:
+> +       dev_set_drvdata(dev, NULL);
+> +       drm_dev_unref(drm);
+> +       return ret;
+> +}
+> +
+> +static void zx_drm_unbind(struct device *dev)
+> +{
+> +       struct drm_device *drm = dev_get_drvdata(dev);
+> +       struct zx_drm_private *priv = drm->dev_private;
+> +
+> +       if (priv->fbdev) {
+> +               drm_fbdev_cma_fini(priv->fbdev);
+> +               priv->fbdev = NULL;
+> +       }
+> +       drm_kms_helper_poll_fini(drm);
+> +       component_unbind_all(dev, drm);
+> +       drm_vblank_cleanup(drm);
+> +       drm_mode_config_cleanup(drm);
+> +       drm_dev_unregister(drm);
+> +       drm_dev_unref(drm);
+> +       drm->dev_private = NULL;
+> +       dev_set_drvdata(dev, NULL);
+This and the teardown path in bind() are asymmetrical. Furthermore you
+want to call drm_dev_unregister() first, according to its
+documentation.
+As mentioned above - perhaps it's worth providing feedback for drivers
+which get the order wrong ?
+
+
+
+> +static int zx_hdmi_bind(struct device *dev, struct device *master, void *data)
+> +{
+
+
+> +
+> +       clk_prepare_enable(hdmi->cec_clk);
+> +       clk_prepare_enable(hdmi->osc_clk);
+> +       clk_prepare_enable(hdmi->xclk);
+> +
+> +       ret = zx_hdmi_register(drm, hdmi);
+> +       if (ret)
+> +               return ret;
+> +
+
+> +       return 0;
+> +}
+> +
+> +static void zx_hdmi_unbind(struct device *dev, struct device *master,
+> +                          void *data)
+> +{
+> +       struct zx_hdmi *hdmi = dev_get_drvdata(dev);
+> +
+> +       clk_disable_unprepare(hdmi->cec_clk);
+> +       clk_disable_unprepare(hdmi->osc_clk);
+> +       clk_disable_unprepare(hdmi->xclk);
+Nit: you want the teardown to happen in reverse order of the setup. I
+might have missed a few similar cases within the patch, so please
+double-check.
+
+
+> +static int zx_gl_get_fmt(uint32_t format)
+> +{
+> +       switch (format) {
+> +       case DRM_FORMAT_ARGB8888:
+> +       case DRM_FORMAT_XRGB8888:
+> +               return GL_FMT_ARGB8888;
+> +       case DRM_FORMAT_RGB888:
+> +               return GL_FMT_RGB888;
+> +       case DRM_FORMAT_RGB565:
+> +               return GL_FMT_RGB565;
+> +       case DRM_FORMAT_ARGB1555:
+> +               return GL_FMT_ARGB1555;
+> +       case DRM_FORMAT_ARGB4444:
+> +               return GL_FMT_ARGB4444;
+> +       default:
+> +               WARN_ONCE(1, "invalid pixel format %d\n", format);
+> +               return -EINVAL;
+Afaics the only user of this is atomic_update() and that function
+cannot fail. You might want to move this to the _check() function.
+Same logic goes for the rest of the driver, in case I've missed any.
+
+
+Regards,
+Emil
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
