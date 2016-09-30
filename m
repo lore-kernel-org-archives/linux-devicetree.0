@@ -1,39 +1,41 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v7 2/4] libfdt: Extend the reach of FDT_ERR_BADPHANDLE
-Date: Fri, 30 Sep 2016 15:57:15 +0200
-Message-ID: <20160930135717.16511-3-maxime.ripard@free-electrons.com>
-References: <20160930135717.16511-1-maxime.ripard@free-electrons.com>
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160930135717.16511-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Stuart Yoder <stuart.yoder@nxp.com>
+Subject: RE: [PATCH v2 1/1] arm64: Add DTS support for FSL's LS1012A SoC
+Date: Fri, 30 Sep 2016 13:57:59 +0000
+Message-ID: <VI1PR0401MB2638C032B77C9313C17BBE898DC10@VI1PR0401MB2638.eurprd04.prod.outlook.com>
+References: <1472207241-18461-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1472207241-18461-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: Bhaskar U <bhaskar.upadhaya@nxp.com>, "oss@buserror.net" <oss@buserror.net>, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, "linux-devel@gforge.freescale.net" <linux-devel@gforge.freescale.net>, Pratiyush Srivastava <pratiyush.srivastava@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-So far, the BADPHANDLE error was only used for incorrect phandle values.
-Extend that meaning to an improperly formatted phandle property.
+> +		dspi0: dspi@2100000 {
+> +			compatible = "fsl,ls1012a-dspi",
+> +				     "fsl,ls1043a-dspi",
+> +				     "fsl,ls1021a-v1.0-dspi";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x0 0x2100000 0x0 0x10000>;
+> +			interrupts = <0 64 0x4>;
+> +			clock-names = "dspi";
+> +			clocks = <&clockgen 4 0>;
+> +			spi-num-chipselects = <5>;
+> +			big-endian;
+> +			status = "enabled";
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- libfdt/libfdt.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+"enabled" is not a valid status value.
 
-diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
-index 361cc6c7198c..d2e5e031fb35 100644
---- a/libfdt/libfdt.h
-+++ b/libfdt/libfdt.h
-@@ -79,8 +79,10 @@
- 	 * (e.g. missing a leading / for a function which requires an
- 	 * absolute path) */
- #define FDT_ERR_BADPHANDLE	6
--	/* FDT_ERR_BADPHANDLE: Function was passed an invalid phandle
--	 * value.  phandle values of 0 and -1 are not permitted. */
-+	/* FDT_ERR_BADPHANDLE: Function was passed an invalid phandle.
-+	 * This can be caused either by an invalid phandle property
-+	 * length, or the phandle value was either 0 or -1, which are
-+	 * not permitted. */
- #define FDT_ERR_BADSTATE	7
- 	/* FDT_ERR_BADSTATE: Function was passed an incomplete device
- 	 * tree created by the sequential-write functions, which is
--- 
-2.9.3
+Stuart
