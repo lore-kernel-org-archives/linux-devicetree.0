@@ -1,107 +1,153 @@
-From: Stuart Yoder <stuart.yoder@nxp.com>
-Subject: RE: [PATCH v2 1/1] arm64: Add DTS support for FSL's LS1012A SoC
-Date: Fri, 30 Sep 2016 13:55:34 +0000
-Message-ID: <VI1PR0401MB2638683943A984F9C638F4A88DC10@VI1PR0401MB2638.eurprd04.prod.outlook.com>
-References: <1472207241-18461-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
- <20160829095239.GM30790@tiger>
- <AM4PR0401MB22753C87DE074EE7BF456CE48CC10@AM4PR0401MB2275.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM4PR0401MB22753C87DE074EE7BF456CE48CC10@AM4PR0401MB2275.eurprd04.prod.outlook.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bhaskar U <bhaskar.upadhaya@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pratiyush Srivastava <pratiyush.srivastava@nxp.com>, "oss@buserror.net" <oss@buserror.net>, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, "linux-devel@gforge.freescale.net" <linux-devel@gforge.freescale.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v7 0/4] libfdt: Add support for device tree overlays
+Date: Fri, 30 Sep 2016 15:57:13 +0200
+Message-ID: <20160930135717.16511-1-maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> >> +&qspi {
-> >> +	num-cs = <2>;
-> >> +	bus-num = <0>;
-> >> +	status = "disabled";
-> >
-> >Why is it being disabled?
-> 
-> Ok, will change like below.
-> status = "okay";
+Hi,
 
-The comment was not "change this to okay".  The question is why is this disabled?
-Can you explain why it was disabled?   Should it have been disasbled?  Is qspi
-working and tested on this board?
+The device tree overlays are a great solution to the issue raised by
+the bunch expandable boards we find everywhere these days, like the
+Beaglebone, Raspberry Pi or CHIP.
 
-> 
-> >
-> >> +	fsl,ddr-sampling-point = <4>;
-> >
-> >I do not find the bindings for this property, neither how driver supports it.
-> 
-> Yes the QSPI DDR mode is not yet up-streamed, so  I will remove this property as of now.
-> 
-> >
-> >> +
-> >> +	qflash0: s25fs512s@0 {
-> >> +		compatible = "spansion,m25p80";
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <1>;
-> >> +		spi-max-frequency = <20000000>;
-> >> +		m25p,fast-read;
-> >> +		reg = <0>;
-> >> +	};
-> >> +};
-> >> +
-> >> +&i2c0 {
-> >> +	status = "okay";
-> >> +
-> >> +	codec: sgtl5000@a {
-> >> +		#sound-dai-cells = <0>;
-> >> +		compatible = "fsl,sgtl5000";
-> >> +		reg = <0xa>;
-> >> +		VDDA-supply = <&reg_1p8v>;
-> >> +		VDDIO-supply = <&reg_1p8v>;
-> >> +		clocks = <&sys_mclk>;
-> >> +	};
-> >> +};
-> >> +
-> >> +&duart0 {
-> >> +	status = "okay";
-> >> +};
-> >> +
-> >> +&esdhc0 {
-> >> +	status = "disabled";
-> >
-> >We prefer to disable devices which have board level options by default in
-> ><soc>.dtsi, and enable them per availability in <board>.dts.
-> 
-> Ok , will make the status as okay i.e. status = "okay";
+Although for now Linux is the only available tool that can deal with
+overlays, some other components like bootloaders or user-space tools
+might need to apply these overlays on top of a base device tree.
 
-Again, the feedback was not "set this to okay".  Why was esdhc0 set to "disabled"
-here in the first place?  Was there a reason?
+To address these use cases, we introduce a new function to the libfdt,
+fdt_overlay_apply, that does just that.
 
-The comment is that if there are certain boards where esdhc0 is not available,
-then fsl-ls1012a.dtsi should set this to "disabled" and board .dts files should
-override it.
+You can find a test program here: http://code.bulix.org/792zum-99476?raw
 
-> >
-> >> +};
-> >> +
-> >> +&esdhc1 {
-> >> +	status = "disabled";
-> >> +};
-> >> +
-> >> +&sai2 {
-> >> +	status = "disabled";
-> >> +};
+This is the last patches sent to U-boot, with the modifications
+suggested by David, and the additional test cases.
 
-Same comment for the above nodes.  The fsl-ls1012a.dtsi should set them to
-disabled and any .dts file should override with "ok" if applicable.
+Let me know what you think!
+Maxime
 
-Stuart
+Changes from v6:
+  - Removed FDT_ERR_BADFIXUP
+  - Changed a few errors returned according to David suggestions
+
+Changes from v5:
+  - Added the extra error codes suggested by David
+  - Changed slightly the meaning of BADPHANDLE
+  - Added an extra error check to deal with overlay without fixups
+  - Fixed a test failure that went unnoticed so far (Thanks Tim!)
+  - Rebased on top of 1.4.2
+
+Changes from libfdt v4:
+  - Renamed the index parameter in fdt_setprop_inplace_namelen_partial
+    to idx
+  - Changed the fdt_setprop_inplace_namelen_partial tests to modify
+    the existing compatibles instead of relying on new properties
+
+Changes from libfdt v3:
+  - Fixed a few error in the fixup parsing code
+  - Added test cases with overlays with poorly formatted fixups
+  - Fixed a few error, types returned
+  - Added a new error for poorly formatted fixups
+  - Added new tests for fdt_setprop_inplace_namelen_partial
+  - Fixed the documentation of fdt_for_each_property_offset and
+    fdt_for_each_subnode
+
+Changes from libfdt v2:
+  - Added test cases for the overlays that don't require overlay
+    support in dtc
+  - Only treat as fragments the top-level subnodes with an __overlay__
+    subnode
+  - Fixed kerneldoc for subnodes and property iterators
+  - Improve kerneldoc for fdt_get_max_phandle
+  - Make sure the fixup properties length is a multiple of 4 bytes
+  - Improve the error checking on a few places
+  - Improve a few variables names and types
+
+Changes from U-Boot v4:
+  - Added test cases for the functions
+  - Changed the fdt_for_each_subnode argument order
+  - Don't error out if -1 phandle is found in fdt_get_max_phandle
+  - Used libfdt's fdt_path_offset_namelen
+
+Changes from U-Boot v3:
+  - Moved the patch to introduce fdt_getprop_namelen_w earlier to keep
+    bisectability
+  - Renamed fdt_setprop_inplace_namelen_by_index in
+    fdt_setprop_inplace_namelen_partial
+  - Reintroduced the check on the property length in fdt_setprop_inplace
+  - Made sure the code was taking the non 32bits-aligned phandles
+  - Used memchr instead of strchr in the fixup parsing code, and made
+    sure the cases where the fixup format was wrong was reported as an
+    error.
+  - Fixed a bug where a property in a overlay having multiple phandles
+    local to that overlay would only resolve the first one. Also added
+    a test case for this
+  - Added kerneldocs for all the overlay functions
+  - Added a patch to fix a typo in separator
+  - A few fixes, function renamings, error checking changes here and there
+
+Changes from U-boot v2 / libfdt v1
+  - Reworked the code to deal with Pantelis and David numerous
+    comments, among which:
+    * Remove the need for malloc in the overlay code, and added some
+      libfdt functions to do that
+    * Remove the DT magic in case of an error to not be able to use it
+      anymore
+    * Removed the fdt_ and _ function prefix for the static functions
+    * Plus the usual bunch of rework, error checking and optimizations.
+
+Maxime Ripard (4):
+  libfdt: Add new errors for the overlay code
+  libfdt: Extend the reach of FDT_ERR_BADPHANDLE
+  libfdt: Add overlay application function
+  tests: Add tests cases for the overlay code
+
+ libfdt/Makefile.libfdt                      |   2 +-
+ libfdt/fdt_overlay.c                        | 670 ++++++++++++++++++++++++++++
+ libfdt/fdt_strerror.c                       |   3 +
+ libfdt/libfdt.h                             |  48 +-
+ libfdt/libfdt_env.h                         |   1 +
+ tests/.gitignore                            |   2 +
+ tests/Makefile.tests                        |   3 +-
+ tests/overlay.c                             | 232 ++++++++++
+ tests/overlay_bad_fixup.c                   |  70 +++
+ tests/overlay_bad_fixup_bad_index.dts       |  14 +
+ tests/overlay_bad_fixup_base.dtsi           |  18 +
+ tests/overlay_bad_fixup_empty.dts           |  14 +
+ tests/overlay_bad_fixup_empty_index.dts     |  14 +
+ tests/overlay_bad_fixup_index_trailing.dts  |  14 +
+ tests/overlay_bad_fixup_path_empty_prop.dts |  14 +
+ tests/overlay_bad_fixup_path_only.dts       |  14 +
+ tests/overlay_bad_fixup_path_only_sep.dts   |  14 +
+ tests/overlay_bad_fixup_path_prop.dts       |  14 +
+ tests/overlay_base.dts                      |  21 +
+ tests/overlay_overlay_dtc.dts               |  85 ++++
+ tests/overlay_overlay_nodtc.dts             |  82 ++++
+ tests/run_tests.sh                          |  32 ++
+ 22 files changed, 1376 insertions(+), 5 deletions(-)
+ create mode 100644 libfdt/fdt_overlay.c
+ create mode 100644 tests/overlay.c
+ create mode 100644 tests/overlay_bad_fixup.c
+ create mode 100644 tests/overlay_bad_fixup_bad_index.dts
+ create mode 100644 tests/overlay_bad_fixup_base.dtsi
+ create mode 100644 tests/overlay_bad_fixup_empty.dts
+ create mode 100644 tests/overlay_bad_fixup_empty_index.dts
+ create mode 100644 tests/overlay_bad_fixup_index_trailing.dts
+ create mode 100644 tests/overlay_bad_fixup_path_empty_prop.dts
+ create mode 100644 tests/overlay_bad_fixup_path_only.dts
+ create mode 100644 tests/overlay_bad_fixup_path_only_sep.dts
+ create mode 100644 tests/overlay_bad_fixup_path_prop.dts
+ create mode 100644 tests/overlay_base.dts
+ create mode 100644 tests/overlay_overlay_dtc.dts
+ create mode 100644 tests/overlay_overlay_nodtc.dts
+
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
