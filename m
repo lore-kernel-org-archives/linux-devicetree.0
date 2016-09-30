@@ -1,108 +1,244 @@
-From: John Syne <john3909@gmail.com>
-Subject: Re: [PATCH 0/4] Add DMA support for ti_am335x_adc driver
-Date: Thu, 29 Sep 2016 20:37:19 -0700
-Message-ID: <FB72863E-4B9D-4202-8837-F4B70AA0C045@gmail.com>
-References: <20160921161134.6951-1-mugunthanvnm@ti.com> <22588f2d-d0de-7911-35ed-92094f7dd28d@kernel.org> <ff19f584-e4e5-61ff-046d-68ec37ab51c2@ti.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ff19f584-e4e5-61ff-046d-68ec37ab51c2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Lee Jones <lee.jones@linaro.org>, Vignesh R <vigneshr@ti.com>, "Andrew F . Davis" <afd@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Muhammad Abdul WAHAB <muhammadabdul.wahab-vbcOdlJ0SulGWvitb5QawA@public.gmane.org>
+Subject: Re: [PATCH] Adding Support for Coresight Components on Zynq 7000.
+Date: Fri, 30 Sep 2016 09:39:51 +0200
+Message-ID: <920cac6c-e56a-60d5-4882-22892058346d@supelec.fr>
+References: <c6836102-9b7e-a9d9-bad9-34b100d4ae49@supelec.fr>
+ <20160929143411.GE16583@xsjsorenbubuntu>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160929143411.GE16583@xsjsorenbubuntu>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-I applied your patches to the following kernel:
+Hi Sören,
 
-github.com/RobertCNelson/bb-kernel.git=20
-branch am33x-v4.8
+Thank you for your remarks. I corrected a few things as you suggested.
 
-Changing=20
-#define REG_DMAENABLE_CLEAR	0x038
-to
-#define REG_DMAENABLE_CLEAR	0x03C
+ > I'm curious, did you test that with external debug tools. I have the
+ > feeling the kernel using the debug HW could interfere with JTAG
+ > debuggers, external trace tools, etc.
 
-Also applying the following DTS changes:
+I did not test with any external debug tools. For testing, I obtained
+trace for simple function (e.g. loop) on Xilinx standalone and I then
+traced the same function under Linux. Then, I compare both traces
+obtained under standalone and under Linux. I decoded the trace to make
+  sure that the trace I get corresponds to my function. The instructions
+for testing here only allows users to see that coresight components
+are enabled and generating traces. The trace still need to be decoded
+to make sure whether the trace is correct or not. It can be done by
+openCSD[1] library.
 
-		target =3D <&tscadc>;
-		__overlay__ {
+ > Use labels please.
+I changed the entries to use labels. I don't need phandle anymore.
 
-			status =3D "okay";
-			adc {
-				ti,adc-channels =3D <0 1 2 3 4 5 6>;
-				ti,chan-step-avg =3D <0x1 0x1 0x1 0x1 =
-0x1 0x1 0x1>;
-				ti,chan-step-opendelay =3D <0x0 0x0 0x0 =
-0x0 0x0 0x0 0x0>;
-				ti,chan-step-sampledelay =3D <0x0 0x0 =
-0x0 0x0 0x0 0x0 0x0>;
-			};
-		};
+ >> +        tpiu@F8803000 {
+ >>>
+ >>> +            compatible = "arm,coresight-tpiu", "arm,primecell";
+ >>> +            reg = <0xf8803000 0x1000>;
+ >>> +            clocks = <&clkc 47>, <&clkc 16>;
+ >>
+ >
+ > I'm not sure this is correct for every setup. Sorry, that I don't recall
+ > all the details, I haven't used tracing in a long time. But I guess this
+ > clock is configurable as you're referring an fclk here. The other thing
+ > that makes me a little suspicious is, that nothing in here uses the
+ > 'dbg_trc' clock that the clock controller provides.
 
-Running on a BeagleBoneBlack, I was able to stream samples at 200ksps =
-continuously and it looked stable.=20
+The TPIU setup included in my patch is specific to my configuration of TPIU.
+The second clock is configurable but I didn't know how to do so. As in
+Vivado setup I chose "fclk1" as the clock for TPIU, I decided to put fclk1.
+But, I am not sure about this. I am having some problems when I recover the
+trace from TPIU: it is not the same as in ETB even though it resembles a 
+lot.
+I don't know if the problem is coming from the device tree or from the 
+driver.
+I will have a look at 'dbg_trc' clock.
 
-htop showed CPU utilization between 5% and 7%
+ >>
+ >> +            clock-names = "apb_pclk", "fclk1";
+ >>
+ > Those names (at least fclk1) is not a good name for tpiu to identify
+ > it's input. fclk1 is a zynq-specific clock, and as mentioned above, it
+ > seems likely that this could easily become a different one. The
+ > clock-names are meant to identify an input from the consumer's
+ > perspective. The correct names should be documented in the DT binding.
 
-Thank you for getting this to work.
+The first name was chosen as "apb_pclk" because it was recommended in
+Documentation. On the second name, I agree with you but again for TPIU DT
+entry, I am not sure how to make this clock configurable. So, that's why
+I put the same clock name as I had in my Vivado setup. If you have any
+leads on how to make it configurable, I will be happy to take a look
+into it.
 
-Regards,
-John
+ >> +            clock-frequency=<0xee6b280>;
+ >>
+ > I cannot find this property in the binding.
+ >
 
+This property was described in clock binding (in an example [2]) and the
+value here (250MHz) corresponds to the value I had chosen in Vivado for
+TPIU input clock.
 
+ > I think nodes were ordered alphabetically in our DTs.
 
+Yes, I modified the patch to take care of it. Thank you.
 
-> On Sep 29, 2016, at 6:01 AM, Mugunthan V N <mugunthanvnm@ti.com> =
-wrote:
->=20
-> On Sunday 25 September 2016 03:11 PM, Jonathan Cameron wrote:
->> On 21/09/16 17:11, Mugunthan V N wrote:
->>>> The ADC has a 64 work depth fifo length which holds the ADC data
->>>> till the CPU reads. So when a user program needs a large ADC data
->>>> to operate on, then it has to do multiple reads to get its
->>>> buffer. Currently if the application asks for 4 samples per
->>>> channel with all 8 channels are enabled, kernel can provide only
->>>> 3 samples per channel when all 8 channels are enabled (logs at
->>>> [1]). So with DMA support user can request for large number of
->>>> samples at a time (logs at [2]).
->>>>=20
->>>> Tested the patch on AM437x-gp-evm and AM335x Boneblack with the
->>>> patch [3] to enable ADC and pushed a branch for testing [4]
->>>>=20
->>>> [1] - http://pastebin.ubuntu.com/23211490/
->>>> [2] - http://pastebin.ubuntu.com/23211492/
->>>> [3] - http://pastebin.ubuntu.com/23211494/
->>>> [4] - git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git =
-iio-dma
->> Just curious.  How fast is the ADC sampling at in these?  Never that
->> obvious for this driver!
->>=20
->> I'm also curious as to whether you started to hit the limits of the
->> kfifo based interface.  Might be worth considering adding alternative
->> support for the dma buffers interface which is obviously much lower
->> overhead.
->>=20
->> Good to have this work prior to that as the kfifo stuff is somewhat
->> easier to use.
->=20
-> Currently ADC clock is 3MHz, which can produce a data rate of 225KBps
-> per channel with no open delay and no averaging of samples. So when =
-all
-> 8 Channels are enables the data rate will be 1.75MBps
->=20
-> ADC can be operated at 24MHz, which can generate a data rate of 28MBps
-> with all 8 channels enabled and no open delay and averaging, but our
-> target is to get 800K samples per second per channel which has a data
-> rate of 12.5MBps
->=20
-> I think with this data rate, DMA will be the best option to implement
-> without any data loss and less cpu overload to read the ADC samples.
->=20
-> Regards
-> Mugunthan V N
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" =
-in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Muhammad Abdul WAHAB
+
+[1]: https://github.com/Linaro/OpenCSD
+[2]: Documentation/devicetree/bindings/clock/clock-bindings.txt
+---
+--- linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi.orig    2016-07-24 
+21:23:50.000000000 +0200
++++ linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi    2016-09-29 
+20:42:44.286322433 +0200
+@@ -96,6 +96,57 @@
+              rx-fifo-depth = <0x40>;
+          };
+
++        etb@F8801000 {
++            compatible = "arm,coresight-etb10", "arm,primecell";
++            reg = <0xf8801000 0x1000>;
++
++            coresight-default-sink;
++            clocks = <&clkc 47>;
++            clock-names = "apb_pclk";
++
++            port {
++                etb_in_port: endpoint@0 {
++                    slave-mode;
++                    remote-endpoint = <&replicator_out_port0>;
++                };
++            };
++        };
++
++        funnel@F8804000 {
++            compatible = "arm,coresight-funnel", "arm,primecell";
++            reg = <0xf8804000 0x1000>;
++
++            clocks = <&clkc 47>;
++            clock-names = "apb_pclk";
++            ports {
++                #address-cells = <0x1>;
++                #size-cells = <0x0>;
++
++                port@0 {
++                    reg = <0x0>;
++                    funnel_out_port0: endpoint {
++                        remote-endpoint = <&replicator_in_port0>;
++                    };
++                };
++
++                port@1 {
++                    reg = <0x0>;
++                    funnel_in_port0: endpoint {
++                        slave-mode;
++                        remote-endpoint = <&ptm0_out_port>;
++                    };
++                };
++
++                port@2 {
++                    reg = <0x1>;
++                    funnel_in_port1: endpoint {
++                        slave-mode;
++                        remote-endpoint = <&ptm1_out_port>;
++                    };
++                };
++            };
++        };
++
+          gpio0: gpio@e000a000 {
+              compatible = "xlnx,zynq-gpio-1.0";
+              #gpio-cells = <2>;
+@@ -311,6 +362,82 @@
+              clocks = <&clkc 4>;
+          };
+
++        ptm0@F889C000 {
++            compatible = "arm,coresight-etm3x", "arm,primecell";
++            reg = <0xf889c000 0x1000>;
++
++            cpu = <&cpu0>;
++            clocks = <&clkc 47>;
++            clock-names = "apb_pclk";
++
++            port {
++                ptm0_out_port: endpoint {
++                    remote-endpoint = <&funnel_in_port0>;
++                };
++            };
++        };
++
++        ptm1@F889D000 {
++            compatible = "arm,coresight-etm3x", "arm,primecell";
++            reg = <0xf889d000 0x1000>;
++
++            cpu = <&cpu1>;
++            clocks = <&clkc 47>;
++            clock-names = "apb_pclk";
++
++            port {
++                ptm1_out_port: endpoint {
++                    remote-endpoint = <&funnel_in_port1>;
++                };
++            };
++        };
++
++        replicator {
++            compatible = "arm,coresight-replicator";
++
++            ports {
++                #address-cells = <0x1>;
++                #size-cells = <0x0>;
++
++                port@0 {
++                    reg = <0x0>;
++                    replicator_out_port0: endpoint {
++                        remote-endpoint = <&etb_in_port>;
++                    };
++                };
++
++                port@1 {
++                    reg = <0x1>;
++                    replicator_out_port1: endpoint {
++                        remote-endpoint = <&tpiu_in_port>;
++                    };
++                };
++
++                port@2 {
++                    reg = <0x0>;
++                    replicator_in_port0: endpoint {
++                        slave-mode;
++                        remote-endpoint = <&funnel_out_port0>;
++                    };
++                };
++            };
++        };
++
++        tpiu@F8803000 {
++            compatible = "arm,coresight-tpiu", "arm,primecell";
++            reg = <0xf8803000 0x1000>;
++
++            clocks = <&clkc 47>, <&clkc 46>;
++            clock-names = "apb_pclk", "configurable_clk";
++            clock-frequency=<0xee6b280>;
++
++            port {
++                tpiu_in_port: endpoint@0 {
++                    slave-mode;
++                    remote-endpoint = <&replicator_out_port0>;
++                };
++            };
++        };
++
+          ttc0: timer@f8001000 {
+              interrupt-parent = <&intc>;
+              interrupts = <0 10 4>, <0 11 4>, <0 12 4>;
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
