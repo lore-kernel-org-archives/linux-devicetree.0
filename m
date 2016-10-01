@@ -1,34 +1,58 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V4 05/10] dmaengine: qcom_hidma: make pending_tre_count
- atomic
-Date: Sat, 1 Oct 2016 11:19:43 -0400
-Message-ID: <e5782331-0dc6-9e0e-777c-372dc88f38e3@codeaurora.org>
-References: <1475115167-5898-1-git-send-email-okaya@codeaurora.org>
- <1475115167-5898-6-git-send-email-okaya@codeaurora.org>
- <20161001061906.GG2467@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161001061906.GG2467@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH 0/3] enable reset_control_reset for shared reset lines
+Date: Sat,  1 Oct 2016 17:21:31 +0200
+Message-ID: <20161001152134.8168-1-martin.blumenstingl@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/1/2016 2:19 AM, Vinod Koul wrote:
->> Making it atomic so that it can be updated from multiple contexts.
-> How is it multiple contexts? It's either existing context of MSI, not both!
-> 
+This patch allows using reset_control_reset on a shared reset line.
+There are some restrictions though (all of these only apply to shared
+resets):
+- reset_control_reset cannot be used after reset_control_assert
+- reset_control_assert cannot be used after reset_control_reset
+- only the first call to reset_control_reset will be passed to the
+  hardware. The only exception is when all consumers of the
+  reset_control are gone (reset_control_put)
 
-I was trying to mean multiple processor contexts here. The driver allocates 11
-MSI interrupts. Each MSI interrupt can be assigned to a different CPU. Then, 
-we have a race condition for common variables as they share the same interrupt
-handler with a different cause bit. 
+The idea came up when discussing the reset logic in the
+phy-meson8b-usb2 PHY driver, see [0] and [1]
 
-I will put the above description into the commit text.
+An example where this is needed is the Amlogic Meson8b and GXBB SoCs
+where two USB PHYs share one reset line. The reset controller only
+supports reset pulses (and thus only implements .reset).
+The only workaround so far is to make the reset optional in the
+driver and only add the reset to one of the two PHYs, to mimic the
+behavior implemented by patch 1.
+
+I also added the Meson USB2 PHY patch to this series to show that this
+new functionality can be used with only minimal changes. These patches
+can simply be dropped as they depend on the phy-meson8b-usb2 driver
+patch, and the dts patch has a runtime-dependency on patch 1 and 2
+(otherwise the phy-meson8b-usb2 driver would try to request the reset
+line exclusively, preventing the other PHY from initializing).
+
+
+[0] http://lists.infradead.org/pipermail/linux-amlogic/2016-September/001233.html
+[1] http://lists.infradead.org/pipermail/linux-amlogic/2016-September/001197.html
+
+
+Martin Blumenstingl (3):
+  reset: allow using reset_control_reset with shared reset
+  phy: meson8b-usb2: request a shared reset line
+  ARM64: dts: meson-gxbb: add the USB reset also to the second USB PHY
+
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi |  1 +
+ drivers/phy/phy-meson8b-usb2.c              |  3 +--
+ drivers/reset/core.c                        | 31 +++++++++++++++++++++++------
+ 3 files changed, 27 insertions(+), 8 deletions(-)
 
 -- 
-Sinan Kaya
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.10.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
