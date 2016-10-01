@@ -1,143 +1,42 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] iio: dac: mcp4725: support voltage reference
- selection
-Date: Sat, 1 Oct 2016 12:23:44 +0100
-Message-ID: <7f13e3bd-9052-dbff-e296-f8f7975d1e3b@kernel.org>
-References: <1475241588-18429-1-git-send-email-tomas@novotny.cz>
- <1475241588-18429-2-git-send-email-tomas@novotny.cz>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH RFC v2 0/12] Add R8A7743/SK-RZG1M board support
+Date: Sat, 1 Oct 2016 13:29:48 +0200
+Message-ID: <CAMuHMdX1vNH5SYNuQ4UdvjcVump+GP=MN3ri3DF4JpH48hX3vQ@mail.gmail.com>
+References: <1987532.PE2ex6PrJ5@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475241588-18429-2-git-send-email-tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yong Li <sdliyong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1987532.PE2ex6PrJ5@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30/09/16 14:19, Tomas Novotny wrote:
-> MCP47x6 chip supports selection of a voltage reference (VDD, VREF buffered
-> or unbuffered). MCP4725 doesn't have this feature thus the setting is
-> ignored and user is warned if there is an attempt to set a value other than
-> zero.
-> 
-> The setting is stored only in the volatile memory of the chip. You need to
-> manually store it to the EEPROM of the chip via 'store_eeprom' sysfs entry.
-> 
-> Signed-off-by: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
-> ---
->  drivers/iio/dac/mcp4725.c       | 45 +++++++++++++++++++++++++++++++++++++----
->  include/linux/iio/dac/mcp4725.h |  1 +
->  2 files changed, 42 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/dac/mcp4725.c b/drivers/iio/dac/mcp4725.c
-> index cca935c..f8e54f1 100644
-> --- a/drivers/iio/dac/mcp4725.c
-> +++ b/drivers/iio/dac/mcp4725.c
-> @@ -28,7 +28,9 @@
->  
->  struct mcp4725_data {
->  	struct i2c_client *client;
-> +	int id;
->  	u16 vref_mv;
-> +	unsigned vref_mode;
->  	u16 dac_value;
->  	bool powerdown;
->  	unsigned powerdown_mode;
-> @@ -86,6 +88,7 @@ static ssize_t mcp4725_store_eeprom(struct device *dev,
->  		return 0;
->  
->  	inoutbuf[0] = 0x60; /* write EEPROM */
-> +	inoutbuf[0] |= data->vref_mode << 3;
->  	inoutbuf[1] = data->dac_value >> 4;
->  	inoutbuf[2] = (data->dac_value & 0xf) << 4;
->  
-> @@ -329,8 +332,10 @@ static int mcp4725_probe(struct i2c_client *client,
->  	struct mcp4725_data *data;
->  	struct iio_dev *indio_dev;
->  	struct mcp4725_platform_data *platform_data = client->dev.platform_data;
-> -	u8 inbuf[3];
-> +	u8 inoutbuf[3];
->  	u8 pd;
-> +	u8 vref;
-> +	int ret;
->  	int err;
->  
->  	if (!platform_data || !platform_data->vref_mv) {
-> @@ -344,6 +349,17 @@ static int mcp4725_probe(struct i2c_client *client,
->  	data = iio_priv(indio_dev);
->  	i2c_set_clientdata(client, indio_dev);
->  	data->client = client;
-> +	data->id = id->driver_data;
-> +
-> +	if (data->id == MCP4725 && platform_data->vref_mode > 0) {
-> +		dev_warn(&client->dev, "vref mode is unavailable on MCP4725, ignoring");
-> +		platform_data->vref_mode = 0;
-> +	}
-> +
-> +	if (data->id == MCP4726 && platform_data->vref_mode > 3) {
-> +		dev_err(&client->dev, "vref mode is out of range");
-> +		return -EINVAL;
-> +	}
->  
->  	indio_dev->dev.parent = &client->dev;
->  	indio_dev->name = id->name;
-> @@ -353,17 +369,38 @@ static int mcp4725_probe(struct i2c_client *client,
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  
->  	data->vref_mv = platform_data->vref_mv;
-> +	data->vref_mode = platform_data->vref_mode;
->  
->  	/* read current DAC value */
-> -	err = i2c_master_recv(client, inbuf, 3);
-> +	err = i2c_master_recv(client, inoutbuf, 3);
->  	if (err < 0) {
->  		dev_err(&client->dev, "failed to read DAC value");
->  		return err;
->  	}
-> -	pd = (inbuf[0] >> 1) & 0x3;
-> +	pd = (inoutbuf[0] >> 1) & 0x3;
->  	data->powerdown = pd > 0 ? true : false;
->  	data->powerdown_mode = pd ? pd - 1 : 2; /* largest register to gnd */
-> -	data->dac_value = (inbuf[1] << 4) | (inbuf[2] >> 4);
-> +	data->dac_value = (inoutbuf[1] << 4) | (inoutbuf[2] >> 4);
-> +	vref = inoutbuf[0] >> 3 & 0x3;
-> +
-> +	if (data->id == MCP4726 && vref != data->vref_mode) {
-> +		dev_info(&client->dev,
-> +			"vref_mode differs (conf: %d, eeprom: %d), setting %d",
-> +			data->vref_mode, vref, data->vref_mode);
-> +
-> +		inoutbuf[0] = 0x40;
-> +		inoutbuf[0] |= data->vref_mode << 3;
-> +		if (data->powerdown)
-> +			inoutbuf[0] |= data->powerdown << 1;
-> +		inoutbuf[1] = data->dac_value >> 4;
-> +		inoutbuf[2] = (data->dac_value & 0xf) << 4;
-> +
-> +		ret = i2c_master_send(data->client, inoutbuf, 3);
-> +		if (ret < 0)
-> +			return ret;
-> +		else if (ret != 3)
-> +			return -EIO;
-> +	}
->  
->  	return iio_device_register(indio_dev);
->  }
-> diff --git a/include/linux/iio/dac/mcp4725.h b/include/linux/iio/dac/mcp4725.h
-> index 91530e6..370022b 100644
-> --- a/include/linux/iio/dac/mcp4725.h
-> +++ b/include/linux/iio/dac/mcp4725.h
-> @@ -11,6 +11,7 @@
->  
->  struct mcp4725_platform_data {
->  	u16 vref_mv;
-> +	unsigned vref_mode;
-Hmm. Should probably move the platform support over to using regulators.
-This is a horible bit of legacy code.
+Hi Sergei,
 
-Jonathan
->  };
->  
->  #endif /* IIO_DAC_MCP4725_H_ */
-> 
+On Fri, Sep 30, 2016 at 12:14 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+>    Here's the set of 12 patches against Simon Horman's 'renesas.git' repo,
+> 'renesas-devel-20160926-v4.8-rc8' tag. I'm adding the device tree support for
+> the R8A7743-based SK-RZG1M board. The SoC is close to R8A7791 and the board
+> seems  identical to the R8A7791/Porter board. This version includes the Ether,
+> so the board should boot with NFS root now. I tried to address all the comments
+> to the version 1 (except the need to use the new CPG/MSSR drivers -- this one
+> will be addressed RSN). The DMAC/SCIF/IRQC bindings patches posted recently are
+
+There's an (old) version of an r8a7791 CPG/MSSR driver at
+https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/cpg-mssr-v4
+
+To handle it cleanly, this is going to need "[PATCH/RFC v3 00/22] soc:
+renesas: Add R-Car RST driver for obtaining mode pin state"...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
