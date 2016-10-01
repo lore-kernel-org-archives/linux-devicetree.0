@@ -1,43 +1,196 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 3/3] ARM64: dts: meson-gxbb: add the USB reset also to the second USB PHY
-Date: Sat,  1 Oct 2016 17:21:34 +0200
-Message-ID: <20161001152134.8168-4-martin.blumenstingl@googlemail.com>
-References: <20161001152134.8168-1-martin.blumenstingl@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161001152134.8168-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v7 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Sat, 1 Oct 2016 13:05:08 -0400
+Message-ID: <20161001170508.GO19318@brightrain.aerifal.cx>
+References: <cover.1474693319.git.dalias@libc.org>
+ <22c1ee0f908fe3bf8b70f5e87d659ceb29af1434.1474693319.git.dalias@libc.org>
+ <20160926210716.GA12855@brightrain.aerifal.cx>
+ <4b02ba7d-4a31-297a-bbbd-be26da615e7b@linaro.org>
+ <20160926222352.GE19318@brightrain.aerifal.cx>
+ <alpine.DEB.2.20.1609261936130.4915@nanos>
+ <20160927004258.GF19318@brightrain.aerifal.cx>
+ <20160927220820.GH19318@brightrain.aerifal.cx>
+ <alpine.DEB.2.20.1609301319410.4799@nanos>
+ <20160930134835.GT14933@linux.vnet.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160930134835.GT14933@linux.vnet.ibm.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-When the USB PHY driver was introduced the reset framework did not
-have support for triggering a reset pulse for shared resets. On GXBB
-however there is only one reset line for both PHYs (meaning we have a
-shared reset line). With the latest changes to the reset framework and
-the corresponding updates to the phy-meson8b-usb2 driver we can now pass
-the reset to the second PHY as well.
+On Fri, Sep 30, 2016 at 06:48:35AM -0700, Paul E. McKenney wrote:
+> On Fri, Sep 30, 2016 at 03:15:11PM +0200, Thomas Gleixner wrote:
+> > On Tue, 27 Sep 2016, Rich Felker wrote:
+> > > I've managed to get a trace with a stall. I'm not sure what the best
+> > > way to share the full thing is, since it's large, but here are the
+> > > potentially interesting parts.
+> 
+> [ . . . ]
+> 
+> Some RCU commentary, on the off-chance that it helps...
+> 
+> > So that should kick rcu_sched-7 in 10ms, latest 20ms from now and CPU1 goes
+> > into a NOHZ idle sleep.
+> > 
+> > >           <idle>-0     [001] d...   109.953436: tick_stop: success=1 dependency=NONE
+> > >           <idle>-0     [001] d...   109.953617: hrtimer_cancel: hrtimer=109f449c
+> > >           <idle>-0     [001] d...   109.953818: hrtimer_start: hrtimer=109f449c function=tick_sched_timer expires=109880000000 softexpires=109880000000
+> > 
+> > which is (using the 0.087621us delta between the trace clock and clock
+> > MONO) at: 109.880 + 0.087621 = 109.968
+> > 
+> > Which is about correct as we expect the RCU timer to fire at:
+> >       
+> >       109.952633 + 0.01 = 109.963633
+> > 
+> > or latest at
+> > 
+> >       109.952633 + 0.02 = 109.983633
+> >    
+> > There is another caveat. That nohz stuff can queue the rcu timer on CPU0, which
+> > it did not because:
+> 
+> Just for annoying completeness, the location of the timer depends on how
+> the rcuo callback-offload kthreads are constrained.  And yes, in the most
+> constrained case where all CPUs except for CPU 0 are nohz CPUs, they will
+> by default all run on CPU 0.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+In default full nohz configuration, am I correct that all cpus except
+cpu0 willd be nohz and that the rcu callbacks then have to run on
+cpu0?
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index cfa3902..2e89ec4 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -165,6 +165,7 @@
- 			compatible = "amlogic,meson-gxbb-usb2-phy";
- 			#phy-cells = <0>;
- 			reg = <0x0 0xc0000020 0x0 0x20>;
-+			resets = <&reset RESET_USB_OTG>;
- 			clocks = <&clkc CLKID_USB>, <&clkc CLKID_USB1>;
- 			clock-names = "usb_general", "usb";
- 			status = "disabled";
--- 
-2.10.0
+> > >        rcu_sched-7     [001] d...   109.952633: timer_start: timer=160a9eb0 function=process_timeout expires=4294948284 [timeout=1] flags=0x00000001
+> > 
+> > The CPU nr encoded in flags is: 1
+> > 
+> > Now we cancel and restart the timer w/o seing the interrupt expiring
+> > it. And that expiry should have happened at 109.968000 !?!
+> > 
+> > >           <idle>-0     [001] d...   109.968225: hrtimer_cancel: hrtimer=109f449c
+> > >           <idle>-0     [001] d...   109.968526: hrtimer_start: hrtimer=109f449c function=tick_sched_timer expires=109890000000 softexpires=109890000000
+> > 
+> > So this advances the next tick even further out. And CPU 0 sets the timer to
+> > the exact smae value:
+> > 
+> > >           <idle>-0     [000] d.h.   109.969104: hrtimer_start: hrtimer=109e949c function=tick_sched_timer expires=109890000000 softexpires=109890000000
+> > 
+> > 
+> > >           <idle>-0     [000] d.h.   109.977690: irq_handler_entry: irq=16 name=jcore_pit
+> > >           <idle>-0     [000] d.h.   109.977911: hrtimer_cancel: hrtimer=109e949c
+> > >           <idle>-0     [000] d.h.   109.978053: hrtimer_expire_entry: hrtimer=109e949c function=tick_sched_timer now=109890434160
+> > 
+> > Which expires here. And CPU1 instead of getting an interrupt and expiring
+> > the timer does the cancel/restart to the next jiffie again:
+> > 
+> > >           <idle>-0     [001] d...   109.978206: hrtimer_cancel: hrtimer=109f449c
+> > >           <idle>-0     [001] d...   109.978495: hrtimer_start: hrtimer=109f449c function=tick_sched_timer expires=109900000000 softexpires=109900000000
+> > 
+> > And this repeats;
+> > 
+> > >           <idle>-0     [000] d.h.   109.987726: irq_handler_entry: irq=16 name=jcore_pit
+> > >           <idle>-0     [000] d.h.   109.987954: hrtimer_cancel: hrtimer=109e949c
+> > >           <idle>-0     [000] d.h.   109.988095: hrtimer_expire_entry: hrtimer=109e949c function=tick_sched_timer now=109900474620
+> > 
+> > >           <idle>-0     [001] d...   109.988243: hrtimer_cancel: hrtimer=109f449c
+> > >           <idle>-0     [001] d...   109.988537: hrtimer_start: hrtimer=109f449c fun9c
+> > 
+> > There is something badly wrong here.
+> > 
+> > >           <idle>-0     [000] ..s.   110.019443: softirq_entry: vec=1 [action=TIMER]
+> > >           <idle>-0     [000] ..s.   110.019617: softirq_exit: vec=1 [action=TIMER]
+> > >           <idle>-0     [000] ..s.   110.019730: softirq_entry: vec=7 [action=SCHED]
+> > >           <idle>-0     [000] ..s.   110.020174: softirq_exit: vec=7 [action=SCHED]
+> > >           <idle>-0     [000] d.h.   110.027674: irq_handler_entry: irq=16 name=jcore_pit
+> > > 
+> > > The rcu_sched process does not run again after the tick_stop until
+> > > 132s, and only a few RCU softirqs happen (all shown above). During
+> > > this time, cpu1 has no interrupt activity and nothing in the trace
+> > > except the above hrtimer_cancel/hrtimer_start pairs (not sure how
+> > > they're happening without any interrupts).
+> > 
+> > If you drop out of the arch idle into the core idle loop then you might end
+> > up with this. You want to add a few trace points or trace_printks() to the
+> > involved functions. tick_nohz_restart() tick_nohz_stop_sched_tick()
+> > tick_nohz_restart_sched_tick() and the idle code should be a good starting
+> > point.
+> > 
+> > > This pattern repeats until almost 131s, where cpu1 goes into a frenzy
+> > > of hrtimer_cancel/start:
+> > 
+> > It's not a frenzy. It's the same pattern as above. It arms the timer to the
+> > next tick, but that timer never ever fires. And it does that every tick ....
+> > 
+> > Please put a tracepoint into your set_next_event() callback as well. SO
+> > this changes here:
+> > 
+> > >           <idle>-0     [001] d...   132.198170: hrtimer_cancel: hrtimer=109f449c
+> > >           <idle>-0     [001] d...   132.198451: hrtimer_start: hrtimer=109f449c function=tick_sched_timer expires=132120000000 softexpires=132120000000
+> > 
+> > >           <idle>-0     [001] dnh.   132.205860: irq_handler_entry: irq=20 name=ipi
+> > >           <idle>-0     [001] dnh.   132.206041: irq_handler_exit: irq=20 ret=handle
+> > 
+> > So CPU1 gets an IPI
+> > 
+> > >           <idle>-0     [001] dn..   132.206650: hrtimer_cancel: hrtimer=109f449c
+> > 49c function=tick_sched_timer now=132119115200
+> > >           <idle>-0     [001] dn..   132.206936: hrtimer_start: hrtimer=109f449c function=tick_sched_timer expires=132120000000 softexpires=132120000000
+> > 
+> > And rcu-sched-7 gets running magically, but we don't know what woke it
+> > up. Definitely not the timer, because that did not fire.
+> > 
+> > >        rcu_sched-7     [001] d...   132.207710: timer_cancel: timer=160a9eb0
+> 
+> It could have been an explicit wakeup at the end of a grace period.  That
+> would explain its cancelling the timer, anyway.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think the rcu stall handler kicked it, no? Looking at the code
+again, maybe that behavior needs to be explicitly turned on, so maybe
+it's just the uart interrupt activity/load from the stall message that
+breaks the stall condition.
+
+> > > - During the whole sequence, hrtimer expiration times are being set to
+> > >   exact jiffies (@ 100 Hz), whereas before it they're quite arbitrary.
+> > 
+> > When a CPU goes into NOHZ idle and the next (timer/hrtimer) is farther out
+> > than the next tick, then tick_sched_timer is set to this next event which
+> > can be far out. So that's expected.
+> > 
+> > > - The CLOCK_MONOTONIC hrtimer times do not match up with the
+> > >   timestamps; they're off by about 0.087s. I assume this is just
+> > >   sched_clock vs clocksource time and not a big deal.
+> > 
+> > Yes. You can tell the tracer to use clock monotonic so then they should match.
+> > 
+> > > - The rcu_sched process is sleeping with timeout=1. This seems
+> > >   odd/excessive.
+> > 
+> > Why is that odd? That's one tick, i.e. 10ms in your case. And that's not
+> > the problem at all. The problem is your timer not firing, but the cpu is
+> > obviously either getting out of idle and then moves the tick ahead for some
+> > unknown reason.
+> 
+> And a one-jiffy timeout is in fact expected behavior when HZ=100.
+> You have to be running HZ=250 or better to have two-jiffy timeouts,
+> and HZ=500 or better for three-jiffy timeouts.
+
+One possible theory I'm looking at is that the two cpus are both
+waking up (leaving cpu_idle_poll or cpuidle_idle_call) every jiffy
+with sufficient consistency that every time the rcu_gp_fqs_check_wake
+loop wakes up in rcu_gp_kthread, the other cpu is in cpu_idle_loop but
+outside the rcu_idle_enter/rcu_idle_exit range. Would this block
+forward process? I added an LED indicator in rcu_gp_fqs_check_wake
+that shows the low 2 bits of rnp->qsmask every time it's called, and
+under normal operation the LEDs just flash on momentarily or just one
+stays on for a few seconds then goes off. During a stall both are
+stuck on. I'm still trying to make sense of the code but my impression
+so far is that, on a 2-cpu machine, this is a leaf node and the 2 bits
+correspond directly to cpus; is that right? If so I'm a bit confused
+because I don't see how forward progress could ever happen if the cpu
+on which rcu_gp_kthread is blocking forward progress of
+rcu_gp_kthread.
+
+Rich
