@@ -1,120 +1,53 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH V4 05/10] dmaengine: qcom_hidma: make pending_tre_count
- atomic
-Date: Sat, 1 Oct 2016 11:49:06 +0530
-Message-ID: <20161001061906.GG2467@localhost>
-References: <1475115167-5898-1-git-send-email-okaya@codeaurora.org>
- <1475115167-5898-6-git-send-email-okaya@codeaurora.org>
+From: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+Subject: [PATCH v2 0/6] Support PWM polarity control
+Date: Sat, 1 Oct 2016 15:42:29 +0530
+Message-ID: <20161001101235.24598-1-bhuvanchandra.dv@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1475115167-5898-6-git-send-email-okaya@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org, thierry.reding@gmail.com
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, l.majewski@samsung.com, Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan@agner.ch, robh+dt@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 28, 2016 at 10:12:42PM -0400, Sinan Kaya wrote:
-> Getting ready for the MSI interrupts. The pending_tre_count is used
-> in the interrupt handler to make sure all outstanding requests are
-> serviced.
-> 
-> Making it atomic so that it can be updated from multiple contexts.
+Changes since v2:
 
-How is it multiple contexts? It's either existing context of MSI, not both!
+- Picked the stalled patchset[1] from Lothar Wassmann which adds the basic
+  support for polarity control on imx-pwm driver and adds backward compatibility
+  support for devices which does not have polarity control feature.
 
-> 
-> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
-> ---
->  drivers/dma/qcom/hidma.h     |  2 +-
->  drivers/dma/qcom/hidma_dbg.c |  3 ++-
->  drivers/dma/qcom/hidma_ll.c  | 13 ++++++-------
->  3 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/dma/qcom/hidma.h b/drivers/dma/qcom/hidma.h
-> index e52e207..3f2ddd4 100644
-> --- a/drivers/dma/qcom/hidma.h
-> +++ b/drivers/dma/qcom/hidma.h
-> @@ -58,7 +58,7 @@ struct hidma_lldev {
->  	void __iomem *evca;		/* Event Channel address          */
->  	struct hidma_tre
->  		**pending_tre_list;	/* Pointers to pending TREs	  */
-> -	s32 pending_tre_count;		/* Number of TREs pending	  */
-> +	atomic_t pending_tre_count;	/* Number of TREs pending	  */
->  
->  	void *tre_ring;			/* TRE ring			  */
->  	dma_addr_t tre_dma;		/* TRE ring to be shared with HW  */
-> diff --git a/drivers/dma/qcom/hidma_dbg.c b/drivers/dma/qcom/hidma_dbg.c
-> index fa827e5..87db285 100644
-> --- a/drivers/dma/qcom/hidma_dbg.c
-> +++ b/drivers/dma/qcom/hidma_dbg.c
-> @@ -74,7 +74,8 @@ static void hidma_ll_devstats(struct seq_file *s, void *llhndl)
->  	seq_printf(s, "tre_ring_handle=%pap\n", &lldev->tre_dma);
->  	seq_printf(s, "tre_ring_size = 0x%x\n", lldev->tre_ring_size);
->  	seq_printf(s, "tre_processed_off = 0x%x\n", lldev->tre_processed_off);
-> -	seq_printf(s, "pending_tre_count=%d\n", lldev->pending_tre_count);
-> +	seq_printf(s, "pending_tre_count=%d\n",
-> +			atomic_read(&lldev->pending_tre_count));
->  	seq_printf(s, "evca=%p\n", lldev->evca);
->  	seq_printf(s, "evre_ring=%p\n", lldev->evre_ring);
->  	seq_printf(s, "evre_ring_handle=%pap\n", &lldev->evre_dma);
-> diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
-> index 3224f24..29fef4f 100644
-> --- a/drivers/dma/qcom/hidma_ll.c
-> +++ b/drivers/dma/qcom/hidma_ll.c
-> @@ -218,10 +218,9 @@ static int hidma_post_completed(struct hidma_lldev *lldev, int tre_iterator,
->  	 * Keep track of pending TREs that SW is expecting to receive
->  	 * from HW. We got one now. Decrement our counter.
->  	 */
-> -	lldev->pending_tre_count--;
-> -	if (lldev->pending_tre_count < 0) {
-> +	if (atomic_dec_return(&lldev->pending_tre_count) < 0) {
->  		dev_warn(lldev->dev, "tre count mismatch on completion");
-> -		lldev->pending_tre_count = 0;
-> +		atomic_set(&lldev->pending_tre_count, 0);
->  	}
->  
->  	spin_unlock_irqrestore(&lldev->lock, flags);
-> @@ -321,7 +320,7 @@ void hidma_cleanup_pending_tre(struct hidma_lldev *lldev, u8 err_info,
->  	u32 tre_read_off;
->  
->  	tre_iterator = lldev->tre_processed_off;
-> -	while (lldev->pending_tre_count) {
-> +	while (atomic_read(&lldev->pending_tre_count)) {
->  		if (hidma_post_completed(lldev, tre_iterator, err_info,
->  					 err_code))
->  			break;
-> @@ -548,7 +547,7 @@ void hidma_ll_queue_request(struct hidma_lldev *lldev, u32 tre_ch)
->  	tre->err_code = 0;
->  	tre->err_info = 0;
->  	tre->queued = 1;
-> -	lldev->pending_tre_count++;
-> +	atomic_inc(&lldev->pending_tre_count);
->  	lldev->tre_write_offset = (lldev->tre_write_offset + HIDMA_TRE_SIZE)
->  					% lldev->tre_ring_size;
->  	spin_unlock_irqrestore(&lldev->lock, flags);
-> @@ -654,7 +653,7 @@ int hidma_ll_setup(struct hidma_lldev *lldev)
->  	u32 val;
->  	u32 nr_tres = lldev->nr_tres;
->  
-> -	lldev->pending_tre_count = 0;
-> +	atomic_set(&lldev->pending_tre_count, 0);
->  	lldev->tre_processed_off = 0;
->  	lldev->evre_processed_off = 0;
->  	lldev->tre_write_offset = 0;
-> @@ -816,7 +815,7 @@ int hidma_ll_uninit(struct hidma_lldev *lldev)
->  	tasklet_kill(&lldev->task);
->  	memset(lldev->trepool, 0, required_bytes);
->  	lldev->trepool = NULL;
-> -	lldev->pending_tre_count = 0;
-> +	atomic_set(&lldev->pending_tre_count, 0);
->  	lldev->tre_write_offset = 0;
->  
->  	rc = hidma_ll_reset(lldev);
-> -- 
-> 1.9.1
-> 
+Changes since Lothars v6:
+
+- Squash Lukasz patch[2].
+
+[1] http://thread.gmane.org/gmane.linux.pwm/1621
+[2] https://www.spinics.net/lists/arm-kernel/msg530818.html
+
+Bhuvanchandra DV (3):
+  arm: dts: imx7: Update #pwm-cells for PWM polarity control
+  arm: dts: imx7-colibri: Use pwm polarity control
+  arm: dts: imx7-colibri: Use enable-gpios for BL_ON
+
+Lothar Wassmann (3):
+  pwm: print error messages with pr_err() instead of pr_debug()
+  pwm: core: make the PWM_POLARITY flag in DTB optional
+  pwm: imx: support output polarity inversion
+
+ Documentation/devicetree/bindings/pwm/imx-pwm.txt |  6 +--
+ arch/arm/boot/dts/imx7-colibri.dtsi               | 12 +++++-
+ arch/arm/boot/dts/imx7s.dtsi                      |  8 ++--
+ drivers/pwm/core.c                                | 31 ++++++++------
+ drivers/pwm/pwm-imx.c                             | 51 +++++++++++++++++++++--
+ 5 files changed, 83 insertions(+), 25 deletions(-)
 
 -- 
-~Vinod
+2.9.2
