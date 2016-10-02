@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v2 5/7] ath9k: consistently use get_eeprom_rev(ah)
-Date: Mon,  3 Oct 2016 00:29:11 +0200
-Message-ID: <20161002222913.12223-6-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 7/7] ath9k: define all EEPROM fields in Little Endian format
+Date: Mon,  3 Oct 2016 00:29:13 +0200
+Message-ID: <20161002222913.12223-8-martin.blumenstingl@googlemail.com>
 References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
  <20161002222913.12223-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -11,353 +11,864 @@ To: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCn
 Cc: chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The AR5416_VER_MASK macro does the same as get_eeprom_rev, except that
-one has to know the actual EEPROM type (and providing a reference to
-that in a variable named "eep"). Additionally the eeprom_*.c
-implementations used the same shifting logic multiple times to get the
-eeprom revision which was also unnecessary duplication of
-get_eeprom_rev.
+The ar9300_eeprom logic is already using only 8-bit (endian neutral),
+__le16 and __le32 fields to state explicitly how the values should be
+interpreted.
+All other EEPROM implementations (4k, 9287 and def) were using u16 and
+u32 fields with additional logic to swap the values (read from the
+original EEPROM) so they match the current CPUs endianness.
 
-Also use the AR5416_EEP_VER_MINOR_MASK macro where needed and introduce
-a similar macro (AR5416_EEP_VER_MAJOR_MASK) for the major version.
-Finally drop AR9287_EEP_VER_MINOR_MASK since it simply duplicates the
-already defined AR5416_EEP_VER_MINOR_MASK.
+The EEPROM format defaults to "all values are Little Endian", indicated
+by the absence of the AR5416_EEPMISC_BIG_ENDIAN in the u8 EEPMISC
+register. If we detect that the EEPROM indicates Big Endian mode
+(AR5416_EEPMISC_BIG_ENDIAN is set in the EEPMISC register) then we'll
+swap the values to convert them into Little Endian. This is done by
+activating the EEPMISC based logic in ath9k_hw_nvram_swap_data even if
+AH_NO_EEP_SWAP is set (this makes ath9k behave like the FreeBSD driver,
+which also does not have a flag to enable swapping based on the
+AR5416_EEPMISC_BIG_ENDIAN bit). Before this logic was only used to
+enable swapping when "current CPU endianness != EEPROM endianness".
+
+After changing all relevant fields to __le16 and __le32 sparse was used
+to check that all code which reads any of these fields uses
+le{16,32}_to_cpu.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- drivers/net/wireless/ath/ath9k/eeprom.h      |  4 +--
- drivers/net/wireless/ath/ath9k/eeprom_4k.c   | 32 ++++++++++------------
- drivers/net/wireless/ath/ath9k/eeprom_9287.c | 19 +++++++------
- drivers/net/wireless/ath/ath9k/eeprom_def.c  | 41 +++++++++++++++-------------
- drivers/net/wireless/ath/ath9k/xmit.c        |  3 +-
- 5 files changed, 52 insertions(+), 47 deletions(-)
+ drivers/net/wireless/ath/ath9k/eeprom.c      |  27 ++-----
+ drivers/net/wireless/ath/ath9k/eeprom.h      |  75 ++++++++++--------
+ drivers/net/wireless/ath/ath9k/eeprom_4k.c   |  94 +++++++++-------------
+ drivers/net/wireless/ath/ath9k/eeprom_9287.c |  98 ++++++++++-------------
+ drivers/net/wireless/ath/ath9k/eeprom_def.c  | 114 ++++++++++++---------------
+ 5 files changed, 174 insertions(+), 234 deletions(-)
 
+diff --git a/drivers/net/wireless/ath/ath9k/eeprom.c b/drivers/net/wireless/ath/ath9k/eeprom.c
+index 0e46797..fb80ec8 100644
+--- a/drivers/net/wireless/ath/ath9k/eeprom.c
++++ b/drivers/net/wireless/ath/ath9k/eeprom.c
+@@ -155,17 +155,10 @@ bool ath9k_hw_nvram_read(struct ath_hw *ah, u32 off, u16 *data)
+ 	return ret;
+ }
+ 
+-#ifdef __BIG_ENDIAN
+-#define EXPECTED_EEPMISC_ENDIAN AR5416_EEPMISC_BIG_ENDIAN
+-#else
+-#define EXPECTED_EEPMISC_ENDIAN 0
+-#endif
+-
+ int ath9k_hw_nvram_swap_data(struct ath_hw *ah, bool *swap_needed, int size)
+ {
+ 	u16 magic;
+ 	u16 *eepdata;
+-	u8 eepmisc;
+ 	int i;
+ 	bool needs_byteswap = false;
+ 	struct ath_common *common = ath9k_hw_common(ah);
+@@ -203,25 +196,17 @@ int ath9k_hw_nvram_swap_data(struct ath_hw *ah, bool *swap_needed, int size)
+ 		}
+ 	}
+ 
+-	*swap_needed = false;
+-
+-	eepmisc = ah->eep_ops->get_eepmisc(ah);
+-	if ((eepmisc & AR5416_EEPMISC_BIG_ENDIAN) != EXPECTED_EEPMISC_ENDIAN) {
+-		if (ah->ah_flags & AH_NO_EEP_SWAP) {
+-			ath_info(common,
+-				 "Ignoring endianness difference in eepmisc register.\n");
+-		} else {
+-			*swap_needed = true;
+-			ath_dbg(common, EEPROM,
+-				"EEPROM needs swapping according to the eepmisc register.\n");
+-		}
++	if (ah->eep_ops->get_eepmisc(ah) & AR5416_EEPMISC_BIG_ENDIAN) {
++		*swap_needed = true;
++		ath_dbg(common, EEPROM,
++			"Big Endian EEPROM detected according to EEPMISC register.\n");
++	} else {
++		*swap_needed = false;
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-#undef EXPECTED_EEPMISC_VAL
+-
+ bool ath9k_hw_nvram_validate_checksum(struct ath_hw *ah, int size)
+ {
+ 	u32 i, sum = 0;
 diff --git a/drivers/net/wireless/ath/ath9k/eeprom.h b/drivers/net/wireless/ath/ath9k/eeprom.h
-index 8ef8090..5a24fb5 100644
+index 5a24fb5..30bf722 100644
 --- a/drivers/net/wireless/ath/ath9k/eeprom.h
 +++ b/drivers/net/wireless/ath/ath9k/eeprom.h
-@@ -99,7 +99,6 @@
- #define FBIN2FREQ(x, y)		((y) ? (2300 + x) : (4800 + 5 * x))
- #define ath9k_hw_use_flash(_ah)	(!(_ah->ah_flags & AH_USE_EEPROM))
+@@ -23,6 +23,17 @@
+ #include <net/cfg80211.h>
+ #include "ar9003_eeprom.h"
  
--#define AR5416_VER_MASK (eep->baseEepHeader.version & AR5416_EEP_VER_MINOR_MASK)
- #define OLC_FOR_AR9280_20_LATER (AR_SREV_9280_20_OR_LATER(ah) && \
- 				 ah->eep_ops->get_eeprom(ah, EEP_OL_PWRCTRL))
- #define OLC_FOR_AR9287_10_LATER (AR_SREV_9287_11_OR_LATER(ah) && \
-@@ -121,6 +120,8 @@
++/* helpers to swap EEPROM fields, which are stored as __le16 or __le32. Since
++ * we are 100% sure about it we __force these to u16/u32 for the swab calls to
++ * silence the sparse checks. These macros are used when we have a Big Endian
++ * EEPROM (according to AR5416_EEPMISC_BIG_ENDIAN) and need to convert the
++ * fields to __le16/__le32.
++ */
++#define EEPROM_FIELD_SWAB16(field) \
++	(field = (__force __le16)swab16((__force u16)field))
++#define EEPROM_FIELD_SWAB32(field) \
++	(field = (__force __le32)swab32((__force u32)field))
++
+ #ifdef __BIG_ENDIAN
+ #define AR5416_EEPROM_MAGIC 0x5aa5
+ #else
+@@ -270,19 +281,19 @@ enum ath9k_hal_freq_band {
+ };
  
- #define AR5416_EEP_NO_BACK_VER       0x1
- #define AR5416_EEP_VER               0xE
-+#define AR5416_EEP_VER_MAJOR_SHIFT   12
-+#define AR5416_EEP_VER_MAJOR_MASK    0xF000
- #define AR5416_EEP_VER_MINOR_MASK    0x0FFF
- #define AR5416_EEP_MINOR_VER_2       0x2
- #define AR5416_EEP_MINOR_VER_3       0x3
-@@ -177,7 +178,6 @@
- #define AR9280_TX_GAIN_TABLE_SIZE 22
+ struct base_eep_header {
+-	u16 length;
+-	u16 checksum;
+-	u16 version;
++	__le16 length;
++	__le16 checksum;
++	__le16 version;
+ 	u8 opCapFlags;
+ 	u8 eepMisc;
+-	u16 regDmn[2];
++	__le16 regDmn[2];
+ 	u8 macAddr[6];
+ 	u8 rxMask;
+ 	u8 txMask;
+-	u16 rfSilent;
+-	u16 blueToothOptions;
+-	u16 deviceCap;
+-	u32 binBuildNumber;
++	__le16 rfSilent;
++	__le16 blueToothOptions;
++	__le16 deviceCap;
++	__le32 binBuildNumber;
+ 	u8 deviceType;
+ 	u8 pwdclkind;
+ 	u8 fastClk5g;
+@@ -300,33 +311,33 @@ struct base_eep_header {
+ } __packed;
  
- #define AR9287_EEP_VER               0xE
--#define AR9287_EEP_VER_MINOR_MASK    0xFFF
- #define AR9287_EEP_MINOR_VER_1       0x1
- #define AR9287_EEP_MINOR_VER_2       0x2
- #define AR9287_EEP_MINOR_VER_3       0x3
+ struct base_eep_header_4k {
+-	u16 length;
+-	u16 checksum;
+-	u16 version;
++	__le16 length;
++	__le16 checksum;
++	__le16 version;
+ 	u8 opCapFlags;
+ 	u8 eepMisc;
+-	u16 regDmn[2];
++	__le16 regDmn[2];
+ 	u8 macAddr[6];
+ 	u8 rxMask;
+ 	u8 txMask;
+-	u16 rfSilent;
+-	u16 blueToothOptions;
+-	u16 deviceCap;
+-	u32 binBuildNumber;
++	__le16 rfSilent;
++	__le16 blueToothOptions;
++	__le16 deviceCap;
++	__le32 binBuildNumber;
+ 	u8 deviceType;
+ 	u8 txGainType;
+ } __packed;
+ 
+ 
+ struct spur_chan {
+-	u16 spurChan;
++	__le16 spurChan;
+ 	u8 spurRangeLow;
+ 	u8 spurRangeHigh;
+ } __packed;
+ 
+ struct modal_eep_header {
+-	u32 antCtrlChain[AR5416_MAX_CHAINS];
+-	u32 antCtrlCommon;
++	__le32 antCtrlChain[AR5416_MAX_CHAINS];
++	__le32 antCtrlCommon;
+ 	u8 antennaGainCh[AR5416_MAX_CHAINS];
+ 	u8 switchSettling;
+ 	u8 txRxAttenCh[AR5416_MAX_CHAINS];
+@@ -361,7 +372,7 @@ struct modal_eep_header {
+ 	u8 db_ch1;
+ 	u8 lna_ctl;
+ 	u8 miscBits;
+-	u16 xpaBiasLvlFreq[3];
++	__le16 xpaBiasLvlFreq[3];
+ 	u8 futureModal[6];
+ 
+ 	struct spur_chan spurChans[AR_EEPROM_MODAL_SPURS];
+@@ -375,8 +386,8 @@ struct calDataPerFreqOpLoop {
+ } __packed;
+ 
+ struct modal_eep_4k_header {
+-	u32 antCtrlChain[AR5416_EEP4K_MAX_CHAINS];
+-	u32 antCtrlCommon;
++	__le32 antCtrlChain[AR5416_EEP4K_MAX_CHAINS];
++	__le32 antCtrlCommon;
+ 	u8 antennaGainCh[AR5416_EEP4K_MAX_CHAINS];
+ 	u8 switchSettling;
+ 	u8 txRxAttenCh[AR5416_EEP4K_MAX_CHAINS];
+@@ -440,19 +451,19 @@ struct modal_eep_4k_header {
+ } __packed;
+ 
+ struct base_eep_ar9287_header {
+-	u16 length;
+-	u16 checksum;
+-	u16 version;
++	__le16 length;
++	__le16 checksum;
++	__le16 version;
+ 	u8 opCapFlags;
+ 	u8 eepMisc;
+-	u16 regDmn[2];
++	__le16 regDmn[2];
+ 	u8 macAddr[6];
+ 	u8 rxMask;
+ 	u8 txMask;
+-	u16 rfSilent;
+-	u16 blueToothOptions;
+-	u16 deviceCap;
+-	u32 binBuildNumber;
++	__le16 rfSilent;
++	__le16 blueToothOptions;
++	__le16 deviceCap;
++	__le32 binBuildNumber;
+ 	u8 deviceType;
+ 	u8 openLoopPwrCntl;
+ 	int8_t pwrTableOffset;
+@@ -462,8 +473,8 @@ struct base_eep_ar9287_header {
+ } __packed;
+ 
+ struct modal_eep_ar9287_header {
+-	u32 antCtrlChain[AR9287_MAX_CHAINS];
+-	u32 antCtrlCommon;
++	__le32 antCtrlChain[AR9287_MAX_CHAINS];
++	__le32 antCtrlCommon;
+ 	int8_t antennaGainCh[AR9287_MAX_CHAINS];
+ 	u8 switchSettling;
+ 	u8 txRxAttenCh[AR9287_MAX_CHAINS];
 diff --git a/drivers/net/wireless/ath/ath9k/eeprom_4k.c b/drivers/net/wireless/ath/ath9k/eeprom_4k.c
-index d466871..76ce109 100644
+index 76ce109..4a01ebe 100644
 --- a/drivers/net/wireless/ath/ath9k/eeprom_4k.c
 +++ b/drivers/net/wireless/ath/ath9k/eeprom_4k.c
-@@ -20,12 +20,17 @@
+@@ -20,7 +20,7 @@
  
  static int ath9k_hw_4k_get_eeprom_ver(struct ath_hw *ah)
  {
--	return ((ah->eeprom.map4k.baseEepHeader.version >> 12) & 0xF);
-+	u16 version = ah->eeprom.map4k.baseEepHeader.version;
-+
-+	return (version & AR5416_EEP_VER_MAJOR_MASK) >>
-+		AR5416_EEP_VER_MAJOR_SHIFT;
- }
+-	u16 version = ah->eeprom.map4k.baseEepHeader.version;
++	u16 version = le16_to_cpu(ah->eeprom.map4k.baseEepHeader.version);
+ 
+ 	return (version & AR5416_EEP_VER_MAJOR_MASK) >>
+ 		AR5416_EEP_VER_MAJOR_SHIFT;
+@@ -28,7 +28,7 @@ static int ath9k_hw_4k_get_eeprom_ver(struct ath_hw *ah)
  
  static int ath9k_hw_4k_get_eeprom_rev(struct ath_hw *ah)
  {
--	return ((ah->eeprom.map4k.baseEepHeader.version) & 0xFFF);
-+	u16 version = ah->eeprom.map4k.baseEepHeader.version;
+-	u16 version = ah->eeprom.map4k.baseEepHeader.version;
++	u16 version = le16_to_cpu(ah->eeprom.map4k.baseEepHeader.version);
+ 
+ 	return version & AR5416_EEP_VER_MINOR_MASK;
+ }
+@@ -76,8 +76,8 @@ static bool ath9k_hw_4k_fill_eeprom(struct ath_hw *ah)
+ static u32 ath9k_dump_4k_modal_eeprom(char *buf, u32 len, u32 size,
+ 				      struct modal_eep_4k_header *modal_hdr)
+ {
+-	PR_EEP("Chain0 Ant. Control", modal_hdr->antCtrlChain[0]);
+-	PR_EEP("Ant. Common Control", modal_hdr->antCtrlCommon);
++	PR_EEP("Chain0 Ant. Control", le16_to_cpu(modal_hdr->antCtrlChain[0]));
++	PR_EEP("Ant. Common Control", le32_to_cpu(modal_hdr->antCtrlCommon));
+ 	PR_EEP("Chain0 Ant. Gain", modal_hdr->antennaGainCh[0]);
+ 	PR_EEP("Switch Settle", modal_hdr->switchSettling);
+ 	PR_EEP("Chain0 TxRxAtten", modal_hdr->txRxAttenCh[0]);
+@@ -132,6 +132,7 @@ static u32 ath9k_hw_4k_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
+ {
+ 	struct ar5416_eeprom_4k *eep = &ah->eeprom.map4k;
+ 	struct base_eep_header_4k *pBase = &eep->baseEepHeader;
++	u32 binBuildNumber = le32_to_cpu(pBase->binBuildNumber);
+ 
+ 	if (!dump_base_hdr) {
+ 		len += scnprintf(buf + len, size - len,
+@@ -143,10 +144,10 @@ static u32 ath9k_hw_4k_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
+ 
+ 	PR_EEP("Major Version", ath9k_hw_4k_get_eeprom_ver(ah));
+ 	PR_EEP("Minor Version", ath9k_hw_4k_get_eeprom_rev(ah));
+-	PR_EEP("Checksum", pBase->checksum);
+-	PR_EEP("Length", pBase->length);
+-	PR_EEP("RegDomain1", pBase->regDmn[0]);
+-	PR_EEP("RegDomain2", pBase->regDmn[1]);
++	PR_EEP("Checksum", le16_to_cpu(pBase->checksum));
++	PR_EEP("Length", le16_to_cpu(pBase->length));
++	PR_EEP("RegDomain1", le16_to_cpu(pBase->regDmn[0]));
++	PR_EEP("RegDomain2", le16_to_cpu(pBase->regDmn[1]));
+ 	PR_EEP("TX Mask", pBase->txMask);
+ 	PR_EEP("RX Mask", pBase->rxMask);
+ 	PR_EEP("Allow 5GHz", !!(pBase->opCapFlags & AR5416_OPFLAGS_11A));
+@@ -160,9 +161,9 @@ static u32 ath9k_hw_4k_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
+ 	PR_EEP("Disable 5Ghz HT40", !!(pBase->opCapFlags &
+ 					AR5416_OPFLAGS_N_5G_HT40));
+ 	PR_EEP("Big Endian", !!(pBase->eepMisc & AR5416_EEPMISC_BIG_ENDIAN));
+-	PR_EEP("Cal Bin Major Ver", (pBase->binBuildNumber >> 24) & 0xFF);
+-	PR_EEP("Cal Bin Minor Ver", (pBase->binBuildNumber >> 16) & 0xFF);
+-	PR_EEP("Cal Bin Build", (pBase->binBuildNumber >> 8) & 0xFF);
++	PR_EEP("Cal Bin Major Ver", (binBuildNumber >> 24) & 0xFF);
++	PR_EEP("Cal Bin Minor Ver", (binBuildNumber >> 16) & 0xFF);
++	PR_EEP("Cal Bin Build", (binBuildNumber >> 8) & 0xFF);
+ 	PR_EEP("TX Gain type", pBase->txGainType);
+ 
+ 	len += scnprintf(buf + len, size - len, "%20s : %pM\n", "MacAddress",
+@@ -194,54 +195,31 @@ static int ath9k_hw_4k_check_eeprom(struct ath_hw *ah)
+ 		return err;
+ 
+ 	if (need_swap)
+-		el = swab16(eep->baseEepHeader.length);
++		el = swab16((__force u16)eep->baseEepHeader.length);
+ 	else
+-		el = eep->baseEepHeader.length;
++		el = le16_to_cpu(eep->baseEepHeader.length);
+ 
+ 	el = min(el / sizeof(u16), SIZE_EEPROM_4K);
+ 	if (!ath9k_hw_nvram_validate_checksum(ah, el))
+ 		return -EINVAL;
+ 
+ 	if (need_swap) {
+-		u32 integer;
+-		u16 word;
+-
+-		word = swab16(eep->baseEepHeader.length);
+-		eep->baseEepHeader.length = word;
+-
+-		word = swab16(eep->baseEepHeader.checksum);
+-		eep->baseEepHeader.checksum = word;
+-
+-		word = swab16(eep->baseEepHeader.version);
+-		eep->baseEepHeader.version = word;
+-
+-		word = swab16(eep->baseEepHeader.regDmn[0]);
+-		eep->baseEepHeader.regDmn[0] = word;
+-
+-		word = swab16(eep->baseEepHeader.regDmn[1]);
+-		eep->baseEepHeader.regDmn[1] = word;
+-
+-		word = swab16(eep->baseEepHeader.rfSilent);
+-		eep->baseEepHeader.rfSilent = word;
+-
+-		word = swab16(eep->baseEepHeader.blueToothOptions);
+-		eep->baseEepHeader.blueToothOptions = word;
+-
+-		word = swab16(eep->baseEepHeader.deviceCap);
+-		eep->baseEepHeader.deviceCap = word;
+-
+-		integer = swab32(eep->modalHeader.antCtrlCommon);
+-		eep->modalHeader.antCtrlCommon = integer;
+-
+-		for (i = 0; i < AR5416_EEP4K_MAX_CHAINS; i++) {
+-			integer = swab32(eep->modalHeader.antCtrlChain[i]);
+-			eep->modalHeader.antCtrlChain[i] = integer;
+-		}
+-
+-		for (i = 0; i < AR_EEPROM_MODAL_SPURS; i++) {
+-			word = swab16(eep->modalHeader.spurChans[i].spurChan);
+-			eep->modalHeader.spurChans[i].spurChan = word;
+-		}
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.length);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.checksum);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.version);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.regDmn[0]);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.regDmn[1]);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.rfSilent);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.blueToothOptions);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.deviceCap);
++		EEPROM_FIELD_SWAB32(eep->modalHeader.antCtrlCommon);
 +
-+	return version & AR5416_EEP_VER_MINOR_MASK;
++		for (i = 0; i < AR5416_EEP4K_MAX_CHAINS; i++)
++			EEPROM_FIELD_SWAB32(eep->modalHeader.antCtrlChain[i]);
++
++		for (i = 0; i < AR_EEPROM_MODAL_SPURS; i++)
++			EEPROM_FIELD_SWAB16(
++				eep->modalHeader.spurChans[i].spurChan);
+ 	}
+ 
+ 	if (!ath9k_hw_nvram_check_version(ah, AR5416_EEP_VER,
+@@ -270,13 +248,13 @@ static u32 ath9k_hw_4k_get_eeprom(struct ath_hw *ah,
+ 	case EEP_MAC_MSW:
+ 		return get_unaligned_be16(pBase->macAddr + 4);
+ 	case EEP_REG_0:
+-		return pBase->regDmn[0];
++		return le16_to_cpu(pBase->regDmn[0]);
+ 	case EEP_OP_CAP:
+-		return pBase->deviceCap;
++		return le16_to_cpu(pBase->deviceCap);
+ 	case EEP_OP_MODE:
+ 		return pBase->opCapFlags;
+ 	case EEP_RF_SILENT:
+-		return pBase->rfSilent;
++		return le16_to_cpu(pBase->rfSilent);
+ 	case EEP_OB_2:
+ 		return pModal->ob_0;
+ 	case EEP_DB_2:
+@@ -724,7 +702,7 @@ static void ath9k_hw_4k_set_gain(struct ath_hw *ah,
+ {
+ 	ENABLE_REG_RMW_BUFFER(ah);
+ 	REG_RMW(ah, AR_PHY_SWITCH_CHAIN_0,
+-		pModal->antCtrlChain[0], 0);
++		le32_to_cpu(pModal->antCtrlChain[0]), 0);
+ 
+ 	REG_RMW(ah, AR_PHY_TIMING_CTRL4(0),
+ 		SM(pModal->iqCalICh[0], AR_PHY_TIMING_CTRL4_IQCORR_Q_I_COFF) |
+@@ -790,7 +768,7 @@ static void ath9k_hw_4k_set_board_values(struct ath_hw *ah,
+ 	pModal = &eep->modalHeader;
+ 	txRxAttenLocal = 23;
+ 
+-	REG_WRITE(ah, AR_PHY_SWITCH_COM, pModal->antCtrlCommon);
++	REG_WRITE(ah, AR_PHY_SWITCH_COM, le32_to_cpu(pModal->antCtrlCommon));
+ 
+ 	/* Single chain for 4K EEPROM*/
+ 	ath9k_hw_4k_set_gain(ah, pModal, eep, txRxAttenLocal);
+@@ -1054,7 +1032,7 @@ static void ath9k_hw_4k_set_board_values(struct ath_hw *ah,
+ 
+ static u16 ath9k_hw_4k_get_spur_channel(struct ath_hw *ah, u16 i, bool is2GHz)
+ {
+-	return ah->eeprom.map4k.modalHeader.spurChans[i].spurChan;
++	return le16_to_cpu(ah->eeprom.map4k.modalHeader.spurChans[i].spurChan);
  }
  
- #define SIZE_EEPROM_4K (sizeof(struct ar5416_eeprom_4k) / sizeof(u16))
-@@ -136,8 +141,8 @@ static u32 ath9k_hw_4k_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
- 		goto out;
- 	}
- 
--	PR_EEP("Major Version", pBase->version >> 12);
--	PR_EEP("Minor Version", pBase->version & 0xFFF);
-+	PR_EEP("Major Version", ath9k_hw_4k_get_eeprom_ver(ah));
-+	PR_EEP("Minor Version", ath9k_hw_4k_get_eeprom_rev(ah));
- 	PR_EEP("Checksum", pBase->checksum);
- 	PR_EEP("Length", pBase->length);
- 	PR_EEP("RegDomain1", pBase->regDmn[0]);
-@@ -314,14 +319,12 @@ static void ath9k_hw_set_4k_power_cal_table(struct ath_hw *ah,
- 
- 	xpdMask = pEepData->modalHeader.xpdGain;
- 
--	if ((pEepData->baseEepHeader.version & AR5416_EEP_VER_MINOR_MASK) >=
--	    AR5416_EEP_MINOR_VER_2) {
-+	if (ath9k_hw_4k_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_2)
- 		pdGainOverlap_t2 =
- 			pEepData->modalHeader.pdGainOverlap;
--	} else {
-+	else
- 		pdGainOverlap_t2 = (u16)(MS(REG_READ(ah, AR_PHY_TPCRG5),
- 					    AR_PHY_TPCRG5_PD_GAIN_OVERLAP));
--	}
- 
- 	pCalBChans = pEepData->calFreqPier2G;
- 	numPiers = AR5416_EEP4K_NUM_2G_CAL_PIERS;
-@@ -607,10 +610,8 @@ static void ath9k_hw_4k_set_txpower(struct ath_hw *ah,
- 
- 	memset(ratesArray, 0, sizeof(ratesArray));
- 
--	if ((pEepData->baseEepHeader.version & AR5416_EEP_VER_MINOR_MASK) >=
--	    AR5416_EEP_MINOR_VER_2) {
-+	if (ath9k_hw_4k_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_2)
- 		ht40PowerIncForPdadc = pModal->ht40PowerIncForPdadc;
--	}
- 
- 	ath9k_hw_set_4k_power_per_rate_table(ah, chan,
- 					     &ratesArray[0], cfgCtl,
-@@ -730,8 +731,7 @@ static void ath9k_hw_4k_set_gain(struct ath_hw *ah,
- 		SM(pModal->iqCalQCh[0], AR_PHY_TIMING_CTRL4_IQCORR_Q_Q_COFF),
- 		AR_PHY_TIMING_CTRL4_IQCORR_Q_Q_COFF | AR_PHY_TIMING_CTRL4_IQCORR_Q_I_COFF);
- 
--	if ((eep->baseEepHeader.version & AR5416_EEP_VER_MINOR_MASK) >=
--	    AR5416_EEP_MINOR_VER_3) {
-+	if (ath9k_hw_4k_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_3) {
- 		txRxAttenLocal = pModal->txRxAttenCh[0];
- 
- 		REG_RMW_FIELD(ah, AR_PHY_GAIN_2GHZ,
-@@ -1009,16 +1009,14 @@ static void ath9k_hw_4k_set_board_values(struct ath_hw *ah,
- 	REG_RMW_FIELD(ah, AR_PHY_EXT_CCA0, AR_PHY_EXT_CCA0_THRESH62,
- 		      pModal->thresh62);
- 
--	if ((eep->baseEepHeader.version & AR5416_EEP_VER_MINOR_MASK) >=
--						AR5416_EEP_MINOR_VER_2) {
-+	if (ath9k_hw_4k_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_2) {
- 		REG_RMW_FIELD(ah, AR_PHY_RF_CTL2, AR_PHY_TX_END_DATA_START,
- 			      pModal->txFrameToDataStart);
- 		REG_RMW_FIELD(ah, AR_PHY_RF_CTL2, AR_PHY_TX_END_PA_ON,
- 			      pModal->txFrameToPaOn);
- 	}
- 
--	if ((eep->baseEepHeader.version & AR5416_EEP_VER_MINOR_MASK) >=
--						AR5416_EEP_MINOR_VER_3) {
-+	if (ath9k_hw_4k_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_3) {
- 		if (IS_CHAN_HT40(chan))
- 			REG_RMW_FIELD(ah, AR_PHY_SETTLING,
- 				      AR_PHY_SETTLING_SWITCH,
+ static u8 ath9k_hw_4k_get_eepmisc(struct ath_hw *ah)
 diff --git a/drivers/net/wireless/ath/ath9k/eeprom_9287.c b/drivers/net/wireless/ath/ath9k/eeprom_9287.c
-index 7f85bd1..daeaf12 100644
+index daeaf12..9611f02 100644
 --- a/drivers/net/wireless/ath/ath9k/eeprom_9287.c
 +++ b/drivers/net/wireless/ath/ath9k/eeprom_9287.c
-@@ -22,12 +22,17 @@
+@@ -22,7 +22,7 @@
  
  static int ath9k_hw_ar9287_get_eeprom_ver(struct ath_hw *ah)
  {
--	return (ah->eeprom.map9287.baseEepHeader.version >> 12) & 0xF;
-+	u16 version = ah->eeprom.map9287.baseEepHeader.version;
-+
-+	return (version & AR5416_EEP_VER_MAJOR_MASK) >>
-+		AR5416_EEP_VER_MAJOR_SHIFT;
- }
+-	u16 version = ah->eeprom.map9287.baseEepHeader.version;
++	u16 version = le16_to_cpu(ah->eeprom.map9287.baseEepHeader.version);
+ 
+ 	return (version & AR5416_EEP_VER_MAJOR_MASK) >>
+ 		AR5416_EEP_VER_MAJOR_SHIFT;
+@@ -30,7 +30,7 @@ static int ath9k_hw_ar9287_get_eeprom_ver(struct ath_hw *ah)
  
  static int ath9k_hw_ar9287_get_eeprom_rev(struct ath_hw *ah)
  {
--	return (ah->eeprom.map9287.baseEepHeader.version) & 0xFFF;
-+	u16 version = ah->eeprom.map9287.baseEepHeader.version;
-+
-+	return version & AR5416_EEP_VER_MINOR_MASK;
- }
+-	u16 version = ah->eeprom.map9287.baseEepHeader.version;
++	u16 version = le16_to_cpu(ah->eeprom.map9287.baseEepHeader.version);
  
- static bool __ath9k_hw_ar9287_fill_eeprom(struct ath_hw *ah)
-@@ -132,8 +137,8 @@ static u32 ath9k_hw_ar9287_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
- 		goto out;
+ 	return version & AR5416_EEP_VER_MINOR_MASK;
+ }
+@@ -79,9 +79,9 @@ static bool ath9k_hw_ar9287_fill_eeprom(struct ath_hw *ah)
+ static u32 ar9287_dump_modal_eeprom(char *buf, u32 len, u32 size,
+ 				    struct modal_eep_ar9287_header *modal_hdr)
+ {
+-	PR_EEP("Chain0 Ant. Control", modal_hdr->antCtrlChain[0]);
+-	PR_EEP("Chain1 Ant. Control", modal_hdr->antCtrlChain[1]);
+-	PR_EEP("Ant. Common Control", modal_hdr->antCtrlCommon);
++	PR_EEP("Chain0 Ant. Control", le16_to_cpu(modal_hdr->antCtrlChain[0]));
++	PR_EEP("Chain1 Ant. Control", le16_to_cpu(modal_hdr->antCtrlChain[1]));
++	PR_EEP("Ant. Common Control", le32_to_cpu(modal_hdr->antCtrlCommon));
+ 	PR_EEP("Chain0 Ant. Gain", modal_hdr->antennaGainCh[0]);
+ 	PR_EEP("Chain1 Ant. Gain", modal_hdr->antennaGainCh[1]);
+ 	PR_EEP("Switch Settle", modal_hdr->switchSettling);
+@@ -128,6 +128,7 @@ static u32 ath9k_hw_ar9287_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
+ {
+ 	struct ar9287_eeprom *eep = &ah->eeprom.map9287;
+ 	struct base_eep_ar9287_header *pBase = &eep->baseEepHeader;
++	u32 binBuildNumber = le32_to_cpu(pBase->binBuildNumber);
+ 
+ 	if (!dump_base_hdr) {
+ 		len += scnprintf(buf + len, size - len,
+@@ -139,10 +140,10 @@ static u32 ath9k_hw_ar9287_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
+ 
+ 	PR_EEP("Major Version", ath9k_hw_ar9287_get_eeprom_ver(ah));
+ 	PR_EEP("Minor Version", ath9k_hw_ar9287_get_eeprom_rev(ah));
+-	PR_EEP("Checksum", pBase->checksum);
+-	PR_EEP("Length", pBase->length);
+-	PR_EEP("RegDomain1", pBase->regDmn[0]);
+-	PR_EEP("RegDomain2", pBase->regDmn[1]);
++	PR_EEP("Checksum", le16_to_cpu(pBase->checksum));
++	PR_EEP("Length", le16_to_cpu(pBase->length));
++	PR_EEP("RegDomain1", le16_to_cpu(pBase->regDmn[0]));
++	PR_EEP("RegDomain2", le16_to_cpu(pBase->regDmn[1]));
+ 	PR_EEP("TX Mask", pBase->txMask);
+ 	PR_EEP("RX Mask", pBase->rxMask);
+ 	PR_EEP("Allow 5GHz", !!(pBase->opCapFlags & AR5416_OPFLAGS_11A));
+@@ -156,9 +157,9 @@ static u32 ath9k_hw_ar9287_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
+ 	PR_EEP("Disable 5Ghz HT40", !!(pBase->opCapFlags &
+ 					AR5416_OPFLAGS_N_5G_HT40));
+ 	PR_EEP("Big Endian", !!(pBase->eepMisc & AR5416_EEPMISC_BIG_ENDIAN));
+-	PR_EEP("Cal Bin Major Ver", (pBase->binBuildNumber >> 24) & 0xFF);
+-	PR_EEP("Cal Bin Minor Ver", (pBase->binBuildNumber >> 16) & 0xFF);
+-	PR_EEP("Cal Bin Build", (pBase->binBuildNumber >> 8) & 0xFF);
++	PR_EEP("Cal Bin Major Ver", (binBuildNumber >> 24) & 0xFF);
++	PR_EEP("Cal Bin Minor Ver", (binBuildNumber >> 16) & 0xFF);
++	PR_EEP("Cal Bin Build", (binBuildNumber >> 8) & 0xFF);
+ 	PR_EEP("Power Table Offset", pBase->pwrTableOffset);
+ 	PR_EEP("OpenLoop Power Ctrl", pBase->openLoopPwrCntl);
+ 
+@@ -182,8 +183,7 @@ static u32 ath9k_hw_ar9287_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
+ 
+ static int ath9k_hw_ar9287_check_eeprom(struct ath_hw *ah)
+ {
+-	u32 el, integer;
+-	u16 word;
++	u32 el;
+ 	int i, err;
+ 	bool need_swap;
+ 	struct ar9287_eeprom *eep = &ah->eeprom.map9287;
+@@ -193,51 +193,31 @@ static int ath9k_hw_ar9287_check_eeprom(struct ath_hw *ah)
+ 		return err;
+ 
+ 	if (need_swap)
+-		el = swab16(eep->baseEepHeader.length);
++		el = swab16((__force u16)eep->baseEepHeader.length);
+ 	else
+-		el = eep->baseEepHeader.length;
++		el = le16_to_cpu(eep->baseEepHeader.length);
+ 
+ 	el = min(el / sizeof(u16), SIZE_EEPROM_AR9287);
+ 	if (!ath9k_hw_nvram_validate_checksum(ah, el))
+ 		return -EINVAL;
+ 
+ 	if (need_swap) {
+-		word = swab16(eep->baseEepHeader.length);
+-		eep->baseEepHeader.length = word;
+-
+-		word = swab16(eep->baseEepHeader.checksum);
+-		eep->baseEepHeader.checksum = word;
+-
+-		word = swab16(eep->baseEepHeader.version);
+-		eep->baseEepHeader.version = word;
+-
+-		word = swab16(eep->baseEepHeader.regDmn[0]);
+-		eep->baseEepHeader.regDmn[0] = word;
+-
+-		word = swab16(eep->baseEepHeader.regDmn[1]);
+-		eep->baseEepHeader.regDmn[1] = word;
+-
+-		word = swab16(eep->baseEepHeader.rfSilent);
+-		eep->baseEepHeader.rfSilent = word;
+-
+-		word = swab16(eep->baseEepHeader.blueToothOptions);
+-		eep->baseEepHeader.blueToothOptions = word;
+-
+-		word = swab16(eep->baseEepHeader.deviceCap);
+-		eep->baseEepHeader.deviceCap = word;
+-
+-		integer = swab32(eep->modalHeader.antCtrlCommon);
+-		eep->modalHeader.antCtrlCommon = integer;
+-
+-		for (i = 0; i < AR9287_MAX_CHAINS; i++) {
+-			integer = swab32(eep->modalHeader.antCtrlChain[i]);
+-			eep->modalHeader.antCtrlChain[i] = integer;
+-		}
+-
+-		for (i = 0; i < AR_EEPROM_MODAL_SPURS; i++) {
+-			word = swab16(eep->modalHeader.spurChans[i].spurChan);
+-			eep->modalHeader.spurChans[i].spurChan = word;
+-		}
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.length);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.checksum);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.version);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.regDmn[0]);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.regDmn[1]);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.rfSilent);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.blueToothOptions);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.deviceCap);
++		EEPROM_FIELD_SWAB32(eep->modalHeader.antCtrlCommon);
++
++		for (i = 0; i < AR9287_MAX_CHAINS; i++)
++			EEPROM_FIELD_SWAB32(eep->modalHeader.antCtrlChain[i]);
++
++		for (i = 0; i < AR_EEPROM_MODAL_SPURS; i++)
++			EEPROM_FIELD_SWAB16(
++				eep->modalHeader.spurChans[i].spurChan);
  	}
  
--	PR_EEP("Major Version", pBase->version >> 12);
--	PR_EEP("Minor Version", pBase->version & 0xFFF);
-+	PR_EEP("Major Version", ath9k_hw_ar9287_get_eeprom_ver(ah));
-+	PR_EEP("Minor Version", ath9k_hw_ar9287_get_eeprom_rev(ah));
- 	PR_EEP("Checksum", pBase->checksum);
- 	PR_EEP("Length", pBase->length);
- 	PR_EEP("RegDomain1", pBase->regDmn[0]);
-@@ -383,8 +388,7 @@ static void ath9k_hw_set_ar9287_power_cal_table(struct ath_hw *ah,
+ 	if (!ath9k_hw_nvram_check_version(ah, AR9287_EEP_VER,
+@@ -267,13 +247,13 @@ static u32 ath9k_hw_ar9287_get_eeprom(struct ath_hw *ah,
+ 	case EEP_MAC_MSW:
+ 		return get_unaligned_be16(pBase->macAddr + 4);
+ 	case EEP_REG_0:
+-		return pBase->regDmn[0];
++		return le16_to_cpu(pBase->regDmn[0]);
+ 	case EEP_OP_CAP:
+-		return pBase->deviceCap;
++		return le16_to_cpu(pBase->deviceCap);
+ 	case EEP_OP_MODE:
+ 		return pBase->opCapFlags;
+ 	case EEP_RF_SILENT:
+-		return pBase->rfSilent;
++		return le16_to_cpu(pBase->rfSilent);
+ 	case EEP_TX_MASK:
+ 		return pBase->txMask;
+ 	case EEP_RX_MASK:
+@@ -878,13 +858,13 @@ static void ath9k_hw_ar9287_set_board_values(struct ath_hw *ah,
  
- 	xpdMask = pEepData->modalHeader.xpdGain;
+ 	pModal = &eep->modalHeader;
  
--	if ((pEepData->baseEepHeader.version & AR9287_EEP_VER_MINOR_MASK) >=
--	    AR9287_EEP_MINOR_VER_2)
-+	if (ath9k_hw_ar9287_get_eeprom_rev(ah) >= AR9287_EEP_MINOR_VER_2)
- 		pdGainOverlap_t2 = pEepData->modalHeader.pdGainOverlap;
- 	else
- 		pdGainOverlap_t2 = (u16)(MS(REG_READ(ah, AR_PHY_TPCRG5),
-@@ -733,8 +737,7 @@ static void ath9k_hw_ar9287_set_txpower(struct ath_hw *ah,
+-	REG_WRITE(ah, AR_PHY_SWITCH_COM, pModal->antCtrlCommon);
++	REG_WRITE(ah, AR_PHY_SWITCH_COM, le32_to_cpu(pModal->antCtrlCommon));
  
- 	memset(ratesArray, 0, sizeof(ratesArray));
+ 	for (i = 0; i < AR9287_MAX_CHAINS; i++)	{
+ 		regChainOffset = i * 0x1000;
  
--	if ((pEepData->baseEepHeader.version & AR9287_EEP_VER_MINOR_MASK) >=
--	    AR9287_EEP_MINOR_VER_2)
-+	if (ath9k_hw_ar9287_get_eeprom_rev(ah) >= AR9287_EEP_MINOR_VER_2)
- 		ht40PowerIncForPdadc = pModal->ht40PowerIncForPdadc;
+ 		REG_WRITE(ah, AR_PHY_SWITCH_CHAIN_0 + regChainOffset,
+-			  pModal->antCtrlChain[i]);
++			  le32_to_cpu(pModal->antCtrlChain[i]));
  
- 	ath9k_hw_set_ar9287_power_per_rate_table(ah, chan,
+ 		REG_WRITE(ah, AR_PHY_TIMING_CTRL4(0) + regChainOffset,
+ 			  (REG_READ(ah, AR_PHY_TIMING_CTRL4(0) + regChainOffset)
+@@ -982,7 +962,9 @@ static void ath9k_hw_ar9287_set_board_values(struct ath_hw *ah,
+ static u16 ath9k_hw_ar9287_get_spur_channel(struct ath_hw *ah,
+ 					    u16 i, bool is2GHz)
+ {
+-	return ah->eeprom.map9287.modalHeader.spurChans[i].spurChan;
++	__le16 spur_ch = ah->eeprom.map9287.modalHeader.spurChans[i].spurChan;
++
++	return le16_to_cpu(spur_ch);
+ }
+ 
+ static u8 ath9k_hw_ar9287_get_eepmisc(struct ath_hw *ah)
 diff --git a/drivers/net/wireless/ath/ath9k/eeprom_def.c b/drivers/net/wireless/ath/ath9k/eeprom_def.c
-index e9af4a5..bd5bd62 100644
+index bd5bd62..7d52234 100644
 --- a/drivers/net/wireless/ath/ath9k/eeprom_def.c
 +++ b/drivers/net/wireless/ath/ath9k/eeprom_def.c
-@@ -79,12 +79,17 @@ static void ath9k_olc_get_pdadcs(struct ath_hw *ah,
+@@ -79,7 +79,7 @@ static void ath9k_olc_get_pdadcs(struct ath_hw *ah,
  
  static int ath9k_hw_def_get_eeprom_ver(struct ath_hw *ah)
  {
--	return ((ah->eeprom.def.baseEepHeader.version >> 12) & 0xF);
-+	u16 version = ah->eeprom.def.baseEepHeader.version;
-+
-+	return (version & AR5416_EEP_VER_MAJOR_MASK) >>
-+		AR5416_EEP_VER_MAJOR_SHIFT;
- }
+-	u16 version = ah->eeprom.def.baseEepHeader.version;
++	u16 version = le16_to_cpu(ah->eeprom.def.baseEepHeader.version);
+ 
+ 	return (version & AR5416_EEP_VER_MAJOR_MASK) >>
+ 		AR5416_EEP_VER_MAJOR_SHIFT;
+@@ -87,7 +87,7 @@ static int ath9k_hw_def_get_eeprom_ver(struct ath_hw *ah)
  
  static int ath9k_hw_def_get_eeprom_rev(struct ath_hw *ah)
  {
--	return ((ah->eeprom.def.baseEepHeader.version) & 0xFFF);
-+	u16 version = ah->eeprom.def.baseEepHeader.version;
+-	u16 version = ah->eeprom.def.baseEepHeader.version;
++	u16 version = le16_to_cpu(ah->eeprom.def.baseEepHeader.version);
+ 
+ 	return version & AR5416_EEP_VER_MINOR_MASK;
+ }
+@@ -135,10 +135,10 @@ static bool ath9k_hw_def_fill_eeprom(struct ath_hw *ah)
+ static u32 ath9k_def_dump_modal_eeprom(char *buf, u32 len, u32 size,
+ 				       struct modal_eep_header *modal_hdr)
+ {
+-	PR_EEP("Chain0 Ant. Control", modal_hdr->antCtrlChain[0]);
+-	PR_EEP("Chain1 Ant. Control", modal_hdr->antCtrlChain[1]);
+-	PR_EEP("Chain2 Ant. Control", modal_hdr->antCtrlChain[2]);
+-	PR_EEP("Ant. Common Control", modal_hdr->antCtrlCommon);
++	PR_EEP("Chain0 Ant. Control", le16_to_cpu(modal_hdr->antCtrlChain[0]));
++	PR_EEP("Chain1 Ant. Control", le16_to_cpu(modal_hdr->antCtrlChain[1]));
++	PR_EEP("Chain2 Ant. Control", le16_to_cpu(modal_hdr->antCtrlChain[2]));
++	PR_EEP("Ant. Common Control", le32_to_cpu(modal_hdr->antCtrlCommon));
+ 	PR_EEP("Chain0 Ant. Gain", modal_hdr->antennaGainCh[0]);
+ 	PR_EEP("Chain1 Ant. Gain", modal_hdr->antennaGainCh[1]);
+ 	PR_EEP("Chain2 Ant. Gain", modal_hdr->antennaGainCh[2]);
+@@ -194,9 +194,9 @@ static u32 ath9k_def_dump_modal_eeprom(char *buf, u32 len, u32 size,
+ 	PR_EEP("Chain1 OutputBias", modal_hdr->ob_ch1);
+ 	PR_EEP("Chain1 DriverBias", modal_hdr->db_ch1);
+ 	PR_EEP("LNA Control", modal_hdr->lna_ctl);
+-	PR_EEP("XPA Bias Freq0", modal_hdr->xpaBiasLvlFreq[0]);
+-	PR_EEP("XPA Bias Freq1", modal_hdr->xpaBiasLvlFreq[1]);
+-	PR_EEP("XPA Bias Freq2", modal_hdr->xpaBiasLvlFreq[2]);
++	PR_EEP("XPA Bias Freq0", le16_to_cpu(modal_hdr->xpaBiasLvlFreq[0]));
++	PR_EEP("XPA Bias Freq1", le16_to_cpu(modal_hdr->xpaBiasLvlFreq[1]));
++	PR_EEP("XPA Bias Freq2", le16_to_cpu(modal_hdr->xpaBiasLvlFreq[2]));
+ 
+ 	return len;
+ }
+@@ -206,6 +206,7 @@ static u32 ath9k_hw_def_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
+ {
+ 	struct ar5416_eeprom_def *eep = &ah->eeprom.def;
+ 	struct base_eep_header *pBase = &eep->baseEepHeader;
++	u32 binBuildNumber = le32_to_cpu(pBase->binBuildNumber);
+ 
+ 	if (!dump_base_hdr) {
+ 		len += scnprintf(buf + len, size - len,
+@@ -221,10 +222,10 @@ static u32 ath9k_hw_def_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
+ 
+ 	PR_EEP("Major Version", ath9k_hw_def_get_eeprom_ver(ah));
+ 	PR_EEP("Minor Version", ath9k_hw_def_get_eeprom_rev(ah));
+-	PR_EEP("Checksum", pBase->checksum);
+-	PR_EEP("Length", pBase->length);
+-	PR_EEP("RegDomain1", pBase->regDmn[0]);
+-	PR_EEP("RegDomain2", pBase->regDmn[1]);
++	PR_EEP("Checksum", le16_to_cpu(pBase->checksum));
++	PR_EEP("Length", le16_to_cpu(pBase->length));
++	PR_EEP("RegDomain1", le16_to_cpu(pBase->regDmn[0]));
++	PR_EEP("RegDomain2", le16_to_cpu(pBase->regDmn[1]));
+ 	PR_EEP("TX Mask", pBase->txMask);
+ 	PR_EEP("RX Mask", pBase->rxMask);
+ 	PR_EEP("Allow 5GHz", !!(pBase->opCapFlags & AR5416_OPFLAGS_11A));
+@@ -238,9 +239,9 @@ static u32 ath9k_hw_def_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
+ 	PR_EEP("Disable 5Ghz HT40", !!(pBase->opCapFlags &
+ 					AR5416_OPFLAGS_N_5G_HT40));
+ 	PR_EEP("Big Endian", !!(pBase->eepMisc & AR5416_EEPMISC_BIG_ENDIAN));
+-	PR_EEP("Cal Bin Major Ver", (pBase->binBuildNumber >> 24) & 0xFF);
+-	PR_EEP("Cal Bin Minor Ver", (pBase->binBuildNumber >> 16) & 0xFF);
+-	PR_EEP("Cal Bin Build", (pBase->binBuildNumber >> 8) & 0xFF);
++	PR_EEP("Cal Bin Major Ver", (binBuildNumber >> 24) & 0xFF);
++	PR_EEP("Cal Bin Minor Ver", (binBuildNumber >> 16) & 0xFF);
++	PR_EEP("Cal Bin Build", (binBuildNumber >> 8) & 0xFF);
+ 	PR_EEP("OpenLoop Power Ctrl", pBase->openLoopPwrCntl);
+ 
+ 	len += scnprintf(buf + len, size - len, "%20s : %pM\n", "MacAddress",
+@@ -273,61 +274,40 @@ static int ath9k_hw_def_check_eeprom(struct ath_hw *ah)
+ 		return err;
+ 
+ 	if (need_swap)
+-		el = swab16(eep->baseEepHeader.length);
++		el = swab16((__force u16)eep->baseEepHeader.length);
+ 	else
+-		el = eep->baseEepHeader.length;
++		el = le16_to_cpu(eep->baseEepHeader.length);
+ 
+ 	el = min(el / sizeof(u16), SIZE_EEPROM_DEF);
+ 	if (!ath9k_hw_nvram_validate_checksum(ah, el))
+ 		return -EINVAL;
+ 
+ 	if (need_swap) {
+-		u32 integer, j;
+-		u16 word;
++		u32 j;
+ 
+-		word = swab16(eep->baseEepHeader.length);
+-		eep->baseEepHeader.length = word;
+-
+-		word = swab16(eep->baseEepHeader.checksum);
+-		eep->baseEepHeader.checksum = word;
+-
+-		word = swab16(eep->baseEepHeader.version);
+-		eep->baseEepHeader.version = word;
+-
+-		word = swab16(eep->baseEepHeader.regDmn[0]);
+-		eep->baseEepHeader.regDmn[0] = word;
+-
+-		word = swab16(eep->baseEepHeader.regDmn[1]);
+-		eep->baseEepHeader.regDmn[1] = word;
+-
+-		word = swab16(eep->baseEepHeader.rfSilent);
+-		eep->baseEepHeader.rfSilent = word;
+-
+-		word = swab16(eep->baseEepHeader.blueToothOptions);
+-		eep->baseEepHeader.blueToothOptions = word;
+-
+-		word = swab16(eep->baseEepHeader.deviceCap);
+-		eep->baseEepHeader.deviceCap = word;
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.length);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.checksum);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.version);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.regDmn[0]);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.regDmn[1]);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.rfSilent);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.blueToothOptions);
++		EEPROM_FIELD_SWAB16(eep->baseEepHeader.deviceCap);
+ 
+ 		for (j = 0; j < ARRAY_SIZE(eep->modalHeader); j++) {
+ 			struct modal_eep_header *pModal =
+ 				&eep->modalHeader[j];
+-			integer = swab32(pModal->antCtrlCommon);
+-			pModal->antCtrlCommon = integer;
++			EEPROM_FIELD_SWAB32(pModal->antCtrlCommon);
+ 
+-			for (i = 0; i < AR5416_MAX_CHAINS; i++) {
+-				integer = swab32(pModal->antCtrlChain[i]);
+-				pModal->antCtrlChain[i] = integer;
+-			}
+-			for (i = 0; i < 3; i++) {
+-				word = swab16(pModal->xpaBiasLvlFreq[i]);
+-				pModal->xpaBiasLvlFreq[i] = word;
+-			}
++			for (i = 0; i < AR5416_MAX_CHAINS; i++)
++				EEPROM_FIELD_SWAB32(pModal->antCtrlChain[i]);
+ 
+-			for (i = 0; i < AR_EEPROM_MODAL_SPURS; i++) {
+-				word = swab16(pModal->spurChans[i].spurChan);
+-				pModal->spurChans[i].spurChan = word;
+-			}
++			for (i = 0; i < 3; i++)
++				EEPROM_FIELD_SWAB16(pModal->xpaBiasLvlFreq[i]);
 +
-+	return version & AR5416_EEP_VER_MINOR_MASK;
++			for (i = 0; i < AR_EEPROM_MODAL_SPURS; i++)
++				EEPROM_FIELD_SWAB16(
++					pModal->spurChans[i].spurChan);
+ 		}
+ 	}
+ 
+@@ -337,7 +317,7 @@ static int ath9k_hw_def_check_eeprom(struct ath_hw *ah)
+ 
+ 	/* Enable fixup for AR_AN_TOP2 if necessary */
+ 	if ((ah->hw_version.devid == AR9280_DEVID_PCI) &&
+-	    ((eep->baseEepHeader.version & 0xff) > 0x0a) &&
++	    ((le16_to_cpu(eep->baseEepHeader.version) & 0xff) > 0x0a) &&
+ 	    (eep->baseEepHeader.pwdclkind == 0))
+ 		ah->need_an_top2_fixup = true;
+ 
+@@ -370,13 +350,13 @@ static u32 ath9k_hw_def_get_eeprom(struct ath_hw *ah,
+ 	case EEP_MAC_MSW:
+ 		return get_unaligned_be16(pBase->macAddr + 4);
+ 	case EEP_REG_0:
+-		return pBase->regDmn[0];
++		return le16_to_cpu(pBase->regDmn[0]);
+ 	case EEP_OP_CAP:
+-		return pBase->deviceCap;
++		return le16_to_cpu(pBase->deviceCap);
+ 	case EEP_OP_MODE:
+ 		return pBase->opCapFlags;
+ 	case EEP_RF_SILENT:
+-		return pBase->rfSilent;
++		return le16_to_cpu(pBase->rfSilent);
+ 	case EEP_OB_5:
+ 		return pModal[0].ob;
+ 	case EEP_DB_5:
+@@ -490,11 +470,13 @@ static void ath9k_hw_def_set_board_values(struct ath_hw *ah,
+ 	struct ar5416_eeprom_def *eep = &ah->eeprom.def;
+ 	int i, regChainOffset;
+ 	u8 txRxAttenLocal;
++	u32 antCtrlCommon;
+ 
+ 	pModal = &(eep->modalHeader[IS_CHAN_2GHZ(chan)]);
+ 	txRxAttenLocal = IS_CHAN_2GHZ(chan) ? 23 : 44;
++	antCtrlCommon = le32_to_cpu(pModal->antCtrlCommon);
+ 
+-	REG_WRITE(ah, AR_PHY_SWITCH_COM, pModal->antCtrlCommon & 0xffff);
++	REG_WRITE(ah, AR_PHY_SWITCH_COM, antCtrlCommon & 0xffff);
+ 
+ 	for (i = 0; i < AR5416_MAX_CHAINS; i++) {
+ 		if (AR_SREV_9280(ah)) {
+@@ -508,7 +490,7 @@ static void ath9k_hw_def_set_board_values(struct ath_hw *ah,
+ 			regChainOffset = i * 0x1000;
+ 
+ 		REG_WRITE(ah, AR_PHY_SWITCH_CHAIN_0 + regChainOffset,
+-			  pModal->antCtrlChain[i]);
++			  le32_to_cpu(pModal->antCtrlChain[i]));
+ 
+ 		REG_WRITE(ah, AR_PHY_TIMING_CTRL4(0) + regChainOffset,
+ 			  (REG_READ(ah, AR_PHY_TIMING_CTRL4(0) + regChainOffset) &
+@@ -655,7 +637,7 @@ static void ath9k_hw_def_set_board_values(struct ath_hw *ah,
+ static void ath9k_hw_def_set_addac(struct ath_hw *ah,
+ 				   struct ath9k_channel *chan)
+ {
+-#define XPA_LVL_FREQ(cnt) (pModal->xpaBiasLvlFreq[cnt])
++#define XPA_LVL_FREQ(cnt) (le16_to_cpu(pModal->xpaBiasLvlFreq[cnt]))
+ 	struct modal_eep_header *pModal;
+ 	struct ar5416_eeprom_def *eep = &ah->eeprom.def;
+ 	u8 biaslevel;
+@@ -1315,7 +1297,9 @@ static void ath9k_hw_def_set_txpower(struct ath_hw *ah,
+ 
+ static u16 ath9k_hw_def_get_spur_channel(struct ath_hw *ah, u16 i, bool is2GHz)
+ {
+-	return ah->eeprom.def.modalHeader[is2GHz].spurChans[i].spurChan;
++	__le16 spch = ah->eeprom.def.modalHeader[is2GHz].spurChans[i].spurChan;
++
++	return le16_to_cpu(spch);
  }
  
- #define SIZE_EEPROM_DEF (sizeof(struct ar5416_eeprom_def) / sizeof(u16))
-@@ -214,8 +219,8 @@ static u32 ath9k_hw_def_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
- 		goto out;
- 	}
- 
--	PR_EEP("Major Version", pBase->version >> 12);
--	PR_EEP("Minor Version", pBase->version & 0xFFF);
-+	PR_EEP("Major Version", ath9k_hw_def_get_eeprom_ver(ah));
-+	PR_EEP("Minor Version", ath9k_hw_def_get_eeprom_rev(ah));
- 	PR_EEP("Checksum", pBase->checksum);
- 	PR_EEP("Length", pBase->length);
- 	PR_EEP("RegDomain1", pBase->regDmn[0]);
-@@ -391,27 +396,27 @@ static u32 ath9k_hw_def_get_eeprom(struct ath_hw *ah,
- 	case EEP_TXGAIN_TYPE:
- 		return pBase->txGainType;
- 	case EEP_OL_PWRCTRL:
--		if (AR5416_VER_MASK >= AR5416_EEP_MINOR_VER_19)
-+		if (ath9k_hw_def_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_19)
- 			return pBase->openLoopPwrCntl ? true : false;
- 		else
- 			return false;
- 	case EEP_RC_CHAIN_MASK:
--		if (AR5416_VER_MASK >= AR5416_EEP_MINOR_VER_19)
-+		if (ath9k_hw_def_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_19)
- 			return pBase->rcChainMask;
- 		else
- 			return 0;
- 	case EEP_DAC_HPWR_5G:
--		if (AR5416_VER_MASK >= AR5416_EEP_MINOR_VER_20)
-+		if (ath9k_hw_def_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_20)
- 			return pBase->dacHiPwrMode_5G;
- 		else
- 			return 0;
- 	case EEP_FRAC_N_5G:
--		if (AR5416_VER_MASK >= AR5416_EEP_MINOR_VER_22)
-+		if (ath9k_hw_def_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_22)
- 			return pBase->frac_n_5g;
- 		else
- 			return 0;
- 	case EEP_PWR_TABLE_OFFSET:
--		if (AR5416_VER_MASK >= AR5416_EEP_MINOR_VER_21)
-+		if (ath9k_hw_def_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_21)
- 			return pBase->pwr_table_offset;
- 		else
- 			return AR5416_PWR_TABLE_OFFSET_DB;
-@@ -434,7 +439,7 @@ static void ath9k_hw_def_set_gain(struct ath_hw *ah,
- 				  u8 txRxAttenLocal, int regChainOffset, int i)
- {
- 	ENABLE_REG_RMW_BUFFER(ah);
--	if (AR5416_VER_MASK >= AR5416_EEP_MINOR_VER_3) {
-+	if (ath9k_hw_def_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_3) {
- 		txRxAttenLocal = pModal->txRxAttenCh[i];
- 
- 		if (AR_SREV_9280_20_OR_LATER(ah)) {
-@@ -603,7 +608,7 @@ static void ath9k_hw_def_set_board_values(struct ath_hw *ah,
- 			      pModal->thresh62);
- 	}
- 
--	if (AR5416_VER_MASK >= AR5416_EEP_MINOR_VER_2) {
-+	if (ath9k_hw_def_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_2) {
- 		REG_RMW_FIELD(ah, AR_PHY_RF_CTL2,
- 			      AR_PHY_TX_END_DATA_START,
- 			      pModal->txFrameToDataStart);
-@@ -611,7 +616,7 @@ static void ath9k_hw_def_set_board_values(struct ath_hw *ah,
- 			      pModal->txFrameToPaOn);
- 	}
- 
--	if (AR5416_VER_MASK >= AR5416_EEP_MINOR_VER_3) {
-+	if (ath9k_hw_def_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_3) {
- 		if (IS_CHAN_HT40(chan))
- 			REG_RMW_FIELD(ah, AR_PHY_SETTLING,
- 				      AR_PHY_SETTLING_SWITCH,
-@@ -619,13 +624,14 @@ static void ath9k_hw_def_set_board_values(struct ath_hw *ah,
- 	}
- 
- 	if (AR_SREV_9280_20_OR_LATER(ah) &&
--	    AR5416_VER_MASK >= AR5416_EEP_MINOR_VER_19)
-+	    ath9k_hw_def_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_19)
- 		REG_RMW_FIELD(ah, AR_PHY_CCK_TX_CTRL,
- 			      AR_PHY_CCK_TX_CTRL_TX_DAC_SCALE_CCK,
- 			      pModal->miscBits);
- 
- 
--	if (AR_SREV_9280_20(ah) && AR5416_VER_MASK >= AR5416_EEP_MINOR_VER_20) {
-+	if (AR_SREV_9280_20(ah) &&
-+	    ath9k_hw_def_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_20) {
- 		if (IS_CHAN_2GHZ(chan))
- 			REG_RMW_FIELD(ah, AR_AN_TOP1, AR_AN_TOP1_DACIPMODE,
- 					eep->baseEepHeader.dacLpMode);
-@@ -796,8 +802,7 @@ static void ath9k_hw_set_def_power_cal_table(struct ath_hw *ah,
- 
- 	pwr_table_offset = ah->eep_ops->get_eeprom(ah, EEP_PWR_TABLE_OFFSET);
- 
--	if ((pEepData->baseEepHeader.version & AR5416_EEP_VER_MINOR_MASK) >=
--	    AR5416_EEP_MINOR_VER_2) {
-+	if (ath9k_hw_def_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_2) {
- 		pdGainOverlap_t2 =
- 			pEepData->modalHeader[modalIdx].pdGainOverlap;
- 	} else {
-@@ -1169,10 +1174,8 @@ static void ath9k_hw_def_set_txpower(struct ath_hw *ah,
- 
- 	memset(ratesArray, 0, sizeof(ratesArray));
- 
--	if ((pEepData->baseEepHeader.version & AR5416_EEP_VER_MINOR_MASK) >=
--	    AR5416_EEP_MINOR_VER_2) {
-+	if (ath9k_hw_def_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_2)
- 		ht40PowerIncForPdadc = pModal->ht40PowerIncForPdadc;
--	}
- 
- 	ath9k_hw_set_def_power_per_rate_table(ah, chan,
- 					       &ratesArray[0], cfgCtl,
-diff --git a/drivers/net/wireless/ath/ath9k/xmit.c b/drivers/net/wireless/ath/ath9k/xmit.c
-index 52bfbb9..2f35e7a 100644
---- a/drivers/net/wireless/ath/ath9k/xmit.c
-+++ b/drivers/net/wireless/ath/ath9k/xmit.c
-@@ -1132,8 +1132,9 @@ static u8 ath_get_rate_txpower(struct ath_softc *sc, struct ath_buf *bf,
- 		if (is_40) {
- 			u8 power_ht40delta;
- 			struct ar5416_eeprom_def *eep = &ah->eeprom.def;
-+			u16 eeprom_rev = ah->eep_ops->get_eeprom_rev(ah);
- 
--			if (AR5416_VER_MASK >= AR5416_EEP_MINOR_VER_2) {
-+			if (eeprom_rev >= AR5416_EEP_MINOR_VER_2) {
- 				bool is_2ghz;
- 				struct modal_eep_header *pmodal;
- 
+ static u8 ath9k_hw_def_get_eepmisc(struct ath_hw *ah)
 -- 
 2.10.0
 
