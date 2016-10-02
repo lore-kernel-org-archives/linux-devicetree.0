@@ -1,52 +1,41 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH] ARM: dts: vf610-zii-dev-rev-b: Remove I2C3
-Date: Sat,  1 Oct 2016 18:28:39 -0700
-Message-ID: <1475371719-28736-1-git-send-email-andrew.smirnov@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: vfxxx: Add node corresponding to OCOTP
+Date: Sat,  1 Oct 2016 18:30:22 -0700
+Message-ID: <1475371822-28879-1-git-send-email-andrew.smirnov@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I2C3 bus was only brought out in revision A1 of the board and revision
-B1 only brings out 3 I2C busses (I2C0, I2C1 and I2C2).
+Add node corresponding to OCOTP IP block.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/vf610-zii-dev-rev-b.dts | 14 --------------
- 1 file changed, 14 deletions(-)
+ arch/arm/boot/dts/vfxxx.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-index 5c1fcab..fa19cfd 100644
---- a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-+++ b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-@@ -499,13 +499,6 @@
- 	};
- };
+diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+index 2c13ec6..75850c0 100644
+--- a/arch/arm/boot/dts/vfxxx.dtsi
++++ b/arch/arm/boot/dts/vfxxx.dtsi
+@@ -520,6 +520,12 @@
+ 				status = "disabled";
+ 			};
  
--&i2c3 {
--	clock-frequency = <100000>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_i2c3>;
--	status = "okay";
--};
--
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart0>;
-@@ -663,13 +656,6 @@
- 		>;
- 	};
- 
--	pinctrl_i2c3: i2c3grp {
--		fsl,pins = <
--			VF610_PAD_PTA30__I2C3_SCL	0x37ff
--			VF610_PAD_PTA31__I2C3_SDA	0x37ff
--		>;
--	};
--
- 	pinctrl_leds_debug: pinctrl-leds-debug {
- 		fsl,pins = <
- 			 VF610_PAD_PTD20__GPIO_74	0x31c2
++			ocotp: ocotp@400a5000 {
++				compatible = "fsl,vf610-ocotp";
++				reg = <0x400a5000 0x1000>;
++				clocks = <&clks VF610_CLK_OCOTP>;
++			};
++
+ 			snvs0: snvs@400a7000 {
+ 			    compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
+ 				reg = <0x400a7000 0x2000>;
 -- 
 2.5.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
