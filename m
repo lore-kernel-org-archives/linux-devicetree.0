@@ -1,48 +1,57 @@
-From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/2] Documentation: dt: iio: humidity: add hts221 sensor device binding
-Date: Sun,  2 Oct 2016 19:48:17 +0200
-Message-ID: <1475430497-7861-3-git-send-email-lorenzo.bianconi@st.com>
-References: <1475430497-7861-1-git-send-email-lorenzo.bianconi@st.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v7 2/3] ath9k: add a helper to get the string representation of ath_bus_type
+Date: Sun,  2 Oct 2016 23:47:42 +0200
+Message-ID: <20161002214743.2263-3-martin.blumenstingl@googlemail.com>
+References: <20160906214623.20424-1-martin.blumenstingl@googlemail.com>
+ <20161002214743.2263-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475430497-7861-1-git-send-email-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <20161002214743.2263-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org
+Cc: mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn-yOkvZcmFvRU@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
----
- .../devicetree/bindings/iio/humidity/hts221.txt       | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/humidity/hts221.txt
+This can be used when the ath_bus_type has to be presented in a log
+message or firmware filename.
 
-diff --git a/Documentation/devicetree/bindings/iio/humidity/hts221.txt b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
-new file mode 100644
-index 0000000..46a152c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
-@@ -0,0 +1,19 @@
-+* HTS221 STM humidity + temperature sensor
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ drivers/net/wireless/ath/ath.h  | 6 ++++++
+ drivers/net/wireless/ath/main.c | 7 +++++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/drivers/net/wireless/ath/ath.h b/drivers/net/wireless/ath/ath.h
+index da7a7c8..f3f2784 100644
+--- a/drivers/net/wireless/ath/ath.h
++++ b/drivers/net/wireless/ath/ath.h
+@@ -327,4 +327,10 @@ static inline const char *ath_opmode_to_string(enum nl80211_iftype opmode)
+ }
+ #endif
+ 
++extern const char *ath_bus_type_strings[];
++static inline const char *ath_bus_type_to_string(enum ath_bus_type bustype)
++{
++	return ath_bus_type_strings[bustype];
++}
 +
-+Required properties:
-+- compatible: should be "st,hts221"
-+- reg: i2c address of the sensor / spi cs line
+ #endif /* ATH_H */
+diff --git a/drivers/net/wireless/ath/main.c b/drivers/net/wireless/ath/main.c
+index 338d723..89f4b05 100644
+--- a/drivers/net/wireless/ath/main.c
++++ b/drivers/net/wireless/ath/main.c
+@@ -90,3 +90,10 @@ void ath_printk(const char *level, const struct ath_common* common,
+ 	va_end(args);
+ }
+ EXPORT_SYMBOL(ath_printk);
 +
-+Optional properties:
-+- interrupts: interrupt mapping for GPIO IRQ. It should be configured with
-+	      flags IRQ_TYPE_LEVEL_HIGH or IRQ_TYPE_EDGE_RISING
-+- interrupt-parent: should be the phandle for the interrupt controller
-+
-+Example:
-+
-+hts221@5f {
-+	compatible = "st,hts221";
-+	reg = <0x5f>;
-+	interrupt-parent = <&gpio0>;
-+	interrupts = <0 IRQ_TYPE_EDGE_RISING>;
++const char *ath_bus_type_strings[] = {
++	[ATH_PCI] = "pci",
++	[ATH_AHB] = "ahb",
++	[ATH_USB] = "usb",
 +};
++EXPORT_SYMBOL(ath_bus_type_strings);
 -- 
-2.7.4
+2.10.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
