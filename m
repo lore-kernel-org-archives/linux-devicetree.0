@@ -1,7 +1,7 @@
 From: Jeremy McNicoll <jmcnicol@redhat.com>
-Subject: [RFC V2 PATCH 09/12] arm64: dts: move Huawei Angler (Nexus 6P) to qcom directory
-Date: Sat,  1 Oct 2016 19:38:36 -0700
-Message-ID: <1475375919-618-10-git-send-email-jmcnicol@redhat.com>
+Subject: [RFC V2 PATCH 10/12] arm64: dts: msm8994 issolate non standard bootloader/LK entries
+Date: Sat,  1 Oct 2016 19:38:37 -0700
+Message-ID: <1475375919-618-11-git-send-email-jmcnicol@redhat.com>
 References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
@@ -10,56 +10,78 @@ To: robh+dt@kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, arnd@arndb.
 Cc: jeremymc@redhat.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Given that this is a MSM SoC and not a specific vendor created
-SoC moving associated device tree files to qcom directory.
+These non standard DT entries need to be cast aside as to not
+pollute the main device tree bindings.  Without these essential
+DT items the bootloader/LK will not pass control over to the kernel
+and thus never boot.
 
 Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
 ---
- arch/arm64/boot/dts/huawei/Makefile                             | 5 -----
- arch/arm64/boot/dts/qcom/Makefile                               | 4 ++--
- arch/arm64/boot/dts/{huawei => qcom}/msm8994-angler-rev-101.dts | 2 +-
- 3 files changed, 3 insertions(+), 8 deletions(-)
- delete mode 100644 arch/arm64/boot/dts/huawei/Makefile
- rename arch/arm64/boot/dts/{huawei => qcom}/msm8994-angler-rev-101.dts (96%)
+ .../arm64/boot/dts/qcom/msm8994-angler-rev-101.dts |  1 -
+ arch/arm64/boot/dts/qcom/msm8994.dtsi              |  3 +--
+ .../boot/dts/qcom/nexus6p_bootloader_bits.dtsi     | 24 ++++++++++++++++++++++
+ 3 files changed, 25 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/nexus6p_bootloader_bits.dtsi
 
-diff --git a/arch/arm64/boot/dts/huawei/Makefile b/arch/arm64/boot/dts/huawei/Makefile
-deleted file mode 100644
-index 4b31ff4..0000000
---- a/arch/arm64/boot/dts/huawei/Makefile
-+++ /dev/null
-@@ -1,5 +0,0 @@
--dtb-$(CONFIG_MACH_HUAWEI) += msm8994-angler-rev-101.dtb
--
--always          := $(dtb-y)
--subdir-y        := $(dts-dirs)
--clean-files     := *.dtb
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index cee6bcc..84f102d 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -1,5 +1,5 @@
--dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb msm8992-bullhead-rev-101.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb msm8996-mtp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb msm8994-angler-rev-101.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/huawei/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-similarity index 96%
-rename from arch/arm64/boot/dts/huawei/msm8994-angler-rev-101.dts
-rename to arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-index 07a71d6..5cff29f 100644
---- a/arch/arm64/boot/dts/huawei/msm8994-angler-rev-101.dts
+diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+index 5cff29f..a0fb9c3 100644
+--- a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
 +++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-@@ -13,7 +13,7 @@
- 
- /dts-v1/;
- 
--#include "../qcom/msm8994-v2.0.dtsi"
-+#include "msm8994-v2.0.dtsi"
- 
+@@ -18,7 +18,6 @@
  / {
  	model = "HUAWEI MSM8994 ANGLER rev-1.01";
+ 	compatible = "qcom,msm8994";
+-	qcom,board-id= <8026 0>;
+ };
+ 
+ / {
+diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+index c95cb73..7fdda23 100644
+--- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+@@ -15,12 +15,11 @@
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-msm8994.h>
++#include "nexus6p_bootloader_bits.dtsi"
+ 
+ / {
+ 	model = "Qualcomm Technologies, Inc. MSM 8994";
+ 	compatible = "qcom,msm8994";
+-	qcom,msm-id = <207 0x0>;
+-	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
+ 	interrupt-parent = <&intc>;
+ 
+ 	#address-cells = <2>;
+diff --git a/arch/arm64/boot/dts/qcom/nexus6p_bootloader_bits.dtsi b/arch/arm64/boot/dts/qcom/nexus6p_bootloader_bits.dtsi
+new file mode 100644
+index 0000000..c40618d
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/nexus6p_bootloader_bits.dtsi
+@@ -0,0 +1,24 @@
++/*
++ * Copyright (c) 2016, Red Hat Inc.
++ * Author: Jeremy McNicoll
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++/* WARNING:  This file and associated DTS nodes are non-standard
++	and their use should be avoided.  If this code is referenced
++	in any way you put yourself at great risk of catching Bubonic
++	plague. */
++
++/ {
++	qcom,board-id = <8026 0>;
++	qcom,msm-id = <257 0>;
++	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
++};
 -- 
 2.6.1
