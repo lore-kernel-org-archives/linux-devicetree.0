@@ -1,38 +1,67 @@
-From: =?UTF-8?B?5Y6G5YWF5ZC0?= <gamelust-kt6GEuszC50tUSr10GuUVEEOCMrvLtNR@public.gmane.org>
-Subject: =?UTF-8?B?5Y6G5YWF5ZC044GV44KT44GL44KJZXN0aGV0?=
- =?UTF-8?B?aWNzYWxvbiBhbmVsIOa1pua3u+W6lyDjgJzjgqLjg43jg6vjgJzjga7ntLk=?=
- =?UTF-8?B?5LuL44Oh44O844Or44GM5bGK44GN44G+44GX44Gf77yB?=
-Date: Sun, 2 Oct 2016 15:10:08 +0900
-Message-ID: <201610020610.u926A8D3024971@vps-8g-1.smartbox>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: BASE64
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/2] dt: bindings: vendor-prefix: Add 3 accelerometer vendor prefixes
+Date: Sun,  2 Oct 2016 17:51:35 +0200
+Message-ID: <20161002155135.23298-2-hdegoede@redhat.com>
+References: <20161002155135.23298-1-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161002155135.23298-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CuWOhuWFheWQtCDjgZXjgpPjgYvjgonjga7ntLnku4vjg6Hjg7zjg6sKCmh0dHA6Ly93d3cubnJi
-dC1lc3RoZS5uZXQvc2VhcmNoL3NhbG9uX2RldGFpbC5waHA/c2Fsb25faWQ9YW5lbAoK44CQ5r6z
-6Zeo6YeR5rKZ6ZuG5Zui44CR6K+a5L+h5ZOB54mM77yM5aSn6aKd5peg5b+n77yaaHR0cDovL3d3
-dy44MzQ1MTYuY29tLz9kZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZ+WKoOWwj+WmueW+ruS/oeWS
-qOivomFtanNqdDg4OA0K5Y2a5b2p55WM54us5a62MeWFg+WPr+a4uOaIj++8jOWFpeasvuWNs+mA
-gTEl57qi5Yip5peg5LiK6ZmQ77yI5pSv5oyB6LSi5LuY6YCa44CB5pSv5LuY5a6d44CB5b6u5L+h
-77yJ77yM6L+Y5Lqr5aSp5aSp6L+U5rC0MS4yJe+8jDI05bCP5pe25Lu75oSP5Y+W5qy+77yMMOaJ
-i+e7rei0ueOAguWbveW6huacn+mXtOaJgOacieS8muWRmOWPjeawtDEuNyV+IOS6v+WFg+e6ouWM
-heWkp+i1oOmAge+8jOacgOmrmOWPr+iOt+W+lzg4ODg45YWD5aSn56S877yB6L+Y5Zyo562J5LuA
-5LmI6LW25b+r5p2l5ZCn77yBDQrmvrPpl6jph5Hmspnpm4blm6It5YWo55CD5pyA5aSn5Y2a5b2p
-5YWs5Y+477yM5Lul5L+h6KqJ5Li65Z+656GA77yM6K+a5L+h5Li65oub54mM77yBDQotLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCiAgICAgICAgICAgICAgICAgICAg
-6Iul5L2g5qyy5ZOt5peg5rOq77yM6YKj5bCx5bCd6K+V552A6K+05Ye65p2l44CC5pyJ5pe25LiA
-5byA5Y+j77yM5L2g55qE55y85rOq5bCx5Lya6Lef552A5rWB77yM55y85rOq6IO96K+05Ye65L2g
-5LiN6IO96K+05b6X5Lic6KW/44CCCgoKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-Cuaylue4hOOBruOCqOOCueODhuOCteODreODs05BVkkK44CQIOaylue4hOODiuODgeODpeODqeOD
-q+ODk+ODpeODvOODhuOCo+OAkQpodHRwOi8vbnJidC1lc3RoZS5uZXQvCi0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQrmoKrlvI/kvJrnpL7jg5njg7zjgrnjg7vjg5Djg7Pjgq8K44CS
-OTAwLTAwMDUK5rKW57iE55yM6YKj6KaH5biC5aSp5LmFMeS4geebrjEx55WqNeWPtwp0ZWzjgIDv
-vZzjgIAwOTgtODk0LTM5MTYKbWFpbOOAgCDvvZzjgIBpbmZvQG5yYnQtZXN0aGUubmV0Ci0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo=
+Recently the kernel has gotten support in the iio subsystem for a number
+of new accelerometers from Domintech, mCube, Memsic and MiraMEMS.
+
+This commit adds the vendor prefixes already used for these vendors
+in Documentation/devicetree/bindings/i2c/trivial-devices.txt to
+vendor-prefixes.txt.
+
+Domintech's full company name was taken from copyright headers for
+their drivers from: https://github.com/domintech/
+
+The other full company names were taken from the company's websites:
+http://www.mcubemems.com/
+http://www.memsic.com/
+http://www.miramems.com/en/
+
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 3651670..c4eb298 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -75,6 +75,7 @@ digilent	Diglent, Inc.
+ dlg	Dialog Semiconductor
+ dlink	D-Link Corporation
+ dmo	Data Modul AG
++domintech	Domintech Technology Co.
+ dptechnics	DPTechnics
+ dragino	Dragino Technology Co., Limited
+ ea	Embedded Artists AB
+@@ -156,13 +157,16 @@ lltc	Linear Technology Corporation
+ marvell	Marvell Technology Group Ltd.
+ maxim	Maxim Integrated Products
+ meas	Measurement Specialties
++mcube	mCube
+ mediatek	MediaTek Inc.
+ melexis	Melexis N.V.
++memsic	MEMSIC Inc.
+ merrii	Merrii Technology Co., Ltd.
+ micrel	Micrel Inc.
+ microchip	Microchip Technology Inc.
+ micron	Micron Technology Inc.
+ minix	MINIX Technology Ltd.
++miramems	MiraMEMS Sensing Technology Co., Ltd.
+ mitsubishi	Mitsubishi Electric Corporation
+ mosaixtech	Mosaix Technologies, Inc.
+ moxa	Moxa
+-- 
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
