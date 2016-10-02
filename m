@@ -1,27 +1,38 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: vf610-zii-dev-rev-b: Remove I2C3
-Date: Sun, 2 Oct 2016 09:19:03 +0200
-Message-ID: <20161002071903.GD5304@lunn.ch>
-References: <1475371719-28736-1-git-send-email-andrew.smirnov@gmail.com>
+From: =?UTF-8?B?5Y6G5YWF5ZC0?= <gamelust-kt6GEuszC50tUSr10GuUVEEOCMrvLtNR@public.gmane.org>
+Subject: =?UTF-8?B?5Y6G5YWF5ZC044GV44KT44GL44KJZXN0aGV0?=
+ =?UTF-8?B?aWNzYWxvbiBhbmVsIOa1pua3u+W6lyDjgJzjgqLjg43jg6vjgJzjga7ntLk=?=
+ =?UTF-8?B?5LuL44Oh44O844Or44GM5bGK44GN44G+44GX44Gf77yB?=
+Date: Sun, 2 Oct 2016 15:10:08 +0900
+Message-ID: <201610020610.u926A8D3024971@vps-8g-1.smartbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: BASE64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1475371719-28736-1-git-send-email-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 01, 2016 at 06:28:39PM -0700, Andrey Smirnov wrote:
-> I2C3 bus was only brought out in revision A1 of the board and revision
-> B1 only brings out 3 I2C busses (I2C0, I2C1 and I2C2).
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-
-    Andrew
+CuWOhuWFheWQtCDjgZXjgpPjgYvjgonjga7ntLnku4vjg6Hjg7zjg6sKCmh0dHA6Ly93d3cubnJi
+dC1lc3RoZS5uZXQvc2VhcmNoL3NhbG9uX2RldGFpbC5waHA/c2Fsb25faWQ9YW5lbAoK44CQ5r6z
+6Zeo6YeR5rKZ6ZuG5Zui44CR6K+a5L+h5ZOB54mM77yM5aSn6aKd5peg5b+n77yaaHR0cDovL3d3
+dy44MzQ1MTYuY29tLz9kZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZ+WKoOWwj+WmueW+ruS/oeWS
+qOivomFtanNqdDg4OA0K5Y2a5b2p55WM54us5a62MeWFg+WPr+a4uOaIj++8jOWFpeasvuWNs+mA
+gTEl57qi5Yip5peg5LiK6ZmQ77yI5pSv5oyB6LSi5LuY6YCa44CB5pSv5LuY5a6d44CB5b6u5L+h
+77yJ77yM6L+Y5Lqr5aSp5aSp6L+U5rC0MS4yJe+8jDI05bCP5pe25Lu75oSP5Y+W5qy+77yMMOaJ
+i+e7rei0ueOAguWbveW6huacn+mXtOaJgOacieS8muWRmOWPjeawtDEuNyV+IOS6v+WFg+e6ouWM
+heWkp+i1oOmAge+8jOacgOmrmOWPr+iOt+W+lzg4ODg45YWD5aSn56S877yB6L+Y5Zyo562J5LuA
+5LmI6LW25b+r5p2l5ZCn77yBDQrmvrPpl6jph5Hmspnpm4blm6It5YWo55CD5pyA5aSn5Y2a5b2p
+5YWs5Y+477yM5Lul5L+h6KqJ5Li65Z+656GA77yM6K+a5L+h5Li65oub54mM77yBDQotLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCiAgICAgICAgICAgICAgICAgICAg
+6Iul5L2g5qyy5ZOt5peg5rOq77yM6YKj5bCx5bCd6K+V552A6K+05Ye65p2l44CC5pyJ5pe25LiA
+5byA5Y+j77yM5L2g55qE55y85rOq5bCx5Lya6Lef552A5rWB77yM55y85rOq6IO96K+05Ye65L2g
+5LiN6IO96K+05b6X5Lic6KW/44CCCgoKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+Cuaylue4hOOBruOCqOOCueODhuOCteODreODs05BVkkK44CQIOaylue4hOODiuODgeODpeODqeOD
+q+ODk+ODpeODvOODhuOCo+OAkQpodHRwOi8vbnJidC1lc3RoZS5uZXQvCi0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQrmoKrlvI/kvJrnpL7jg5njg7zjgrnjg7vjg5Djg7Pjgq8K44CS
+OTAwLTAwMDUK5rKW57iE55yM6YKj6KaH5biC5aSp5LmFMeS4geebrjEx55WqNeWPtwp0ZWzjgIDv
+vZzjgIAwOTgtODk0LTM5MTYKbWFpbOOAgCDvvZzjgIBpbmZvQG5yYnQtZXN0aGUubmV0Ci0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
