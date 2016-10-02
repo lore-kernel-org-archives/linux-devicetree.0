@@ -1,173 +1,269 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH] usb: xhci: add support for performing fake doorbell
-Date: Sat,  1 Oct 2016 23:58:10 +0200
-Message-ID: <20161001215817.25384-1-zajec5@gmail.com>
+From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Subject: Re: [PATCH v7 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Sat, 1 Oct 2016 20:00:49 -0400
+Message-ID: <20161002000049.GP19318@brightrain.aerifal.cx>
+References: <20160926210716.GA12855@brightrain.aerifal.cx>
+ <4b02ba7d-4a31-297a-bbbd-be26da615e7b@linaro.org>
+ <20160926222352.GE19318@brightrain.aerifal.cx>
+ <alpine.DEB.2.20.1609261936130.4915@nanos>
+ <20160927004258.GF19318@brightrain.aerifal.cx>
+ <20160927220820.GH19318@brightrain.aerifal.cx>
+ <alpine.DEB.2.20.1609301319410.4799@nanos>
+ <20160930134835.GT14933@linux.vnet.ibm.com>
+ <20161001170508.GO19318@brightrain.aerifal.cx>
+ <20161001175837.GP14933@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161001175837.GP14933-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Paul E. McKenney" <paulmck-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
+On Sat, Oct 01, 2016 at 10:58:37AM -0700, Paul E. McKenney wrote:
+> On Sat, Oct 01, 2016 at 01:05:08PM -0400, Rich Felker wrote:
+> > On Fri, Sep 30, 2016 at 06:48:35AM -0700, Paul E. McKenney wrote:
+> > > On Fri, Sep 30, 2016 at 03:15:11PM +0200, Thomas Gleixner wrote:
+> > > > On Tue, 27 Sep 2016, Rich Felker wrote:
+> > > > > I've managed to get a trace with a stall. I'm not sure what the best
+> > > > > way to share the full thing is, since it's large, but here are the
+> > > > > potentially interesting parts.
+> > > 
+> > > [ . . . ]
+> > > 
+> > > Some RCU commentary, on the off-chance that it helps...
+> > > 
+> > > > So that should kick rcu_sched-7 in 10ms, latest 20ms from now and CPU1 goes
+> > > > into a NOHZ idle sleep.
+> > > > 
+> > > > >           <idle>-0     [001] d...   109.953436: tick_stop: success=1 dependency=NONE
+> > > > >           <idle>-0     [001] d...   109.953617: hrtimer_cancel: hrtimer=109f449c
+> > > > >           <idle>-0     [001] d...   109.953818: hrtimer_start: hrtimer=109f449c function=tick_sched_timer expires=109880000000 softexpires=109880000000
+> > > > 
+> > > > which is (using the 0.087621us delta between the trace clock and clock
+> > > > MONO) at: 109.880 + 0.087621 = 109.968
+> > > > 
+> > > > Which is about correct as we expect the RCU timer to fire at:
+> > > >       
+> > > >       109.952633 + 0.01 = 109.963633
+> > > > 
+> > > > or latest at
+> > > > 
+> > > >       109.952633 + 0.02 = 109.983633
+> > > >    
+> > > > There is another caveat. That nohz stuff can queue the rcu timer on CPU0, which
+> > > > it did not because:
+> > > 
+> > > Just for annoying completeness, the location of the timer depends on how
+> > > the rcuo callback-offload kthreads are constrained.  And yes, in the most
+> > > constrained case where all CPUs except for CPU 0 are nohz CPUs, they will
+> > > by default all run on CPU 0.
+> > 
+> > In default full nohz configuration, am I correct that all cpus except
+> > cpu0 willd be nohz and that the rcu callbacks then have to run on
+> > cpu0?
+> 
+> In recent kernels, it looks to me that the default is that none of the
+> CPUs will be nohz by default.  You have to build with both NO_HZ_FULL
+> and NO_HZ_FULL_ALL to get the everything-on-CPU-0 behavior.
 
-Broadcom's Northstar XHCI controllers seem to need a special start
-procedure to work correctly. There isn't any official documentation on
-this, the problem is that controller doesn't detect any connected
-devices with default setup. Moreover connecting USB device to controller
-that doesn't run properly can cause SoC's watchdog issues.
+Actually NO_HZ_FULL is not supported because
+HAVE_VIRT_CPU_ACCOUNTING_GEN and HAVE_CONTEXT_TRACKING are missing, so
+it's just normal NO_HZ. I listed the relevant config items somewhere
+earlier in this thread I think.
 
-A workaround that was successfully tested on multiple devices is to
-perform a fake doorbell. This patch adds code for doing that and a DT
-binding enabling it.
+> But are there rcu0 kthreads running on your system?
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
- Documentation/devicetree/bindings/usb/usb-xhci.txt |  2 +
- drivers/usb/host/xhci-plat.c                       |  6 +++
- drivers/usb/host/xhci.c                            | 63 ++++++++++++++++++++--
- drivers/usb/host/xhci.h                            |  1 +
- 4 files changed, 69 insertions(+), 3 deletions(-)
+Apparently not:
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index 966885c..ce01b7f 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -26,6 +26,8 @@ Required properties:
- Optional properties:
-   - clocks: reference to a clock
-   - usb3-lpm-capable: determines if platform is USB3 LPM capable
-+  - usb3-fake-doorbell: determines if controller requires a fake doorbell when
-+			starting it
- 
- Example:
- 	usb@f0931000 {
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index ed56bf9..c26dc77 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -56,12 +56,18 @@ static int xhci_priv_init_quirk(struct usb_hcd *hcd)
- 
- static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
- {
-+	struct platform_device	*pdev = to_platform_device(dev);
-+	struct device_node	*node = pdev->dev.of_node;
-+
- 	/*
- 	 * As of now platform drivers don't provide MSI support so we ensure
- 	 * here that the generic code does not try to make a pci_dev from our
- 	 * dev struct in order to setup MSI
- 	 */
- 	xhci->quirks |= XHCI_PLAT;
-+
-+	if (node && of_property_read_bool(node, "usb3-fake-doorbell"))
-+		xhci->quirks |= XHCI_FAKE_DOORBELL;
- }
- 
- /* called during probe() after chip reset completes */
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 1a4ca02..c77035e9b 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -153,6 +153,49 @@ static int xhci_start(struct xhci_hcd *xhci)
- 	return ret;
- }
- 
-+/**
-+ * xhci_fake_doorbell - Perform a fake doorbell on a specified slot
-+ *
-+ * Some controllers require a fake doorbell to start correctly. Without that
-+ * they simply don't detect any devices.
-+ */
-+static int xhci_fake_doorbell(struct xhci_hcd *xhci, int slot_id)
-+{
-+	u32 temp;
-+
-+	/* Alloc a virt device for that slot */
-+	if (!xhci_alloc_virt_device(xhci, slot_id, NULL, GFP_NOIO)) {
-+		xhci_warn(xhci, "Could not allocate xHCI USB device data structures\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* Ring fake doorbell for slot_id ep 0 */
-+	xhci_ring_ep_doorbell(xhci, slot_id, 0, 0);
-+	usleep_range(1000, 1500);
-+
-+	/* Read the status to check if HSE is set or not */
-+	temp = readl(&xhci->op_regs->status);
-+
-+	/* Clear HSE if set */
-+	if (temp & STS_FATAL) {
-+		xhci_dbg(xhci, "HSE problem detected, status: 0x%08x\n", temp);
-+		temp &= ~0x1fff;
-+		temp |= STS_FATAL;
-+		writel(temp, &xhci->op_regs->status);
-+		usleep_range(1000, 1500);
-+		readl(&xhci->op_regs->status);
-+	}
-+
-+	/* Free virt device */
-+	xhci_free_virt_device(xhci, slot_id);
-+
-+	/* We're done if controller is already running */
-+	if (readl(&xhci->op_regs->command) & CMD_RUN)
-+		return 0;
-+
-+	return xhci_start(xhci);
-+}
-+
- /*
-  * Reset a halted HC.
-  *
-@@ -565,10 +608,20 @@ int xhci_init(struct usb_hcd *hcd)
- 
- static int xhci_run_finished(struct xhci_hcd *xhci)
- {
--	if (xhci_start(xhci)) {
--		xhci_halt(xhci);
--		return -ENODEV;
-+	int err;
-+
-+	err = xhci_start(xhci);
-+	if (err) {
-+		err = -ENODEV;
-+		goto err_halt;
-+	}
-+
-+	if (xhci->quirks & XHCI_FAKE_DOORBELL) {
-+		err = xhci_fake_doorbell(xhci, 1);
-+		if (err)
-+			goto err_halt;
- 	}
-+
- 	xhci->shared_hcd->state = HC_STATE_RUNNING;
- 	xhci->cmd_ring_state = CMD_RING_STATE_RUNNING;
- 
-@@ -578,6 +631,10 @@ static int xhci_run_finished(struct xhci_hcd *xhci)
- 	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
- 			"Finished xhci_run for USB3 roothub");
- 	return 0;
-+
-+err_halt:
-+	xhci_halt(xhci);
-+	return err;
- }
- 
- /*
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index b2c1dc5..52d7498 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1653,6 +1653,7 @@ struct xhci_hcd {
- #define XHCI_MTK_HOST		(1 << 21)
- #define XHCI_SSIC_PORT_UNUSED	(1 << 22)
- #define XHCI_NO_64BIT_SUPPORT	(1 << 23)
-+#define XHCI_FAKE_DOORBELL	(1 << 24)
- 	unsigned int		num_active_eps;
- 	unsigned int		limit_active_eps;
- 	/* There are two roothubs to keep track of bus suspend info for */
--- 
-2.9.3
+# ps aux | grep rcu
+    7 root       0:00 [rcu_sched]
+    8 root       0:00 [rcu_bh]
+  395 root       0:00 grep rcu
+          
+> > > > >        rcu_sched-7     [001] d...   109.952633: timer_start: timer=160a9eb0 function=process_timeout expires=4294948284 [timeout=1] flags=0x00000001
+> > > > 
+> > > > The CPU nr encoded in flags is: 1
+> > > > 
+> > > > Now we cancel and restart the timer w/o seing the interrupt expiring
+> > > > it. And that expiry should have happened at 109.968000 !?!
+> > > > 
+> > > > >           <idle>-0     [001] d...   109.968225: hrtimer_cancel: hrtimer=109f449c
+> > > > >           <idle>-0     [001] d...   109.968526: hrtimer_start: hrtimer=109f449c function=tick_sched_timer expires=109890000000 softexpires=109890000000
+> > > > 
+> > > > So this advances the next tick even further out. And CPU 0 sets the timer to
+> > > > the exact smae value:
+> > > > 
+> > > > >           <idle>-0     [000] d.h.   109.969104: hrtimer_start: hrtimer=109e949c function=tick_sched_timer expires=109890000000 softexpires=109890000000
+> > > > 
+> > > > 
+> > > > >           <idle>-0     [000] d.h.   109.977690: irq_handler_entry: irq=16 name=jcore_pit
+> > > > >           <idle>-0     [000] d.h.   109.977911: hrtimer_cancel: hrtimer=109e949c
+> > > > >           <idle>-0     [000] d.h.   109.978053: hrtimer_expire_entry: hrtimer=109e949c function=tick_sched_timer now=109890434160
+> > > > 
+> > > > Which expires here. And CPU1 instead of getting an interrupt and expiring
+> > > > the timer does the cancel/restart to the next jiffie again:
+> > > > 
+> > > > >           <idle>-0     [001] d...   109.978206: hrtimer_cancel: hrtimer=109f449c
+> > > > >           <idle>-0     [001] d...   109.978495: hrtimer_start: hrtimer=109f449c function=tick_sched_timer expires=109900000000 softexpires=109900000000
+> > > > 
+> > > > And this repeats;
+> > > > 
+> > > > >           <idle>-0     [000] d.h.   109.987726: irq_handler_entry: irq=16 name=jcore_pit
+> > > > >           <idle>-0     [000] d.h.   109.987954: hrtimer_cancel: hrtimer=109e949c
+> > > > >           <idle>-0     [000] d.h.   109.988095: hrtimer_expire_entry: hrtimer=109e949c function=tick_sched_timer now=109900474620
+> > > > 
+> > > > >           <idle>-0     [001] d...   109.988243: hrtimer_cancel: hrtimer=109f449c
+> > > > >           <idle>-0     [001] d...   109.988537: hrtimer_start: hrtimer=109f449c fun9c
+> > > > 
+> > > > There is something badly wrong here.
+> > > > 
+> > > > >           <idle>-0     [000] ..s.   110.019443: softirq_entry: vec=1 [action=TIMER]
+> > > > >           <idle>-0     [000] ..s.   110.019617: softirq_exit: vec=1 [action=TIMER]
+> > > > >           <idle>-0     [000] ..s.   110.019730: softirq_entry: vec=7 [action=SCHED]
+> > > > >           <idle>-0     [000] ..s.   110.020174: softirq_exit: vec=7 [action=SCHED]
+> > > > >           <idle>-0     [000] d.h.   110.027674: irq_handler_entry: irq=16 name=jcore_pit
+> > > > > 
+> > > > > The rcu_sched process does not run again after the tick_stop until
+> > > > > 132s, and only a few RCU softirqs happen (all shown above). During
+> > > > > this time, cpu1 has no interrupt activity and nothing in the trace
+> > > > > except the above hrtimer_cancel/hrtimer_start pairs (not sure how
+> > > > > they're happening without any interrupts).
+> > > > 
+> > > > If you drop out of the arch idle into the core idle loop then you might end
+> > > > up with this. You want to add a few trace points or trace_printks() to the
+> > > > involved functions. tick_nohz_restart() tick_nohz_stop_sched_tick()
+> > > > tick_nohz_restart_sched_tick() and the idle code should be a good starting
+> > > > point.
+> > > > 
+> > > > > This pattern repeats until almost 131s, where cpu1 goes into a frenzy
+> > > > > of hrtimer_cancel/start:
+> > > > 
+> > > > It's not a frenzy. It's the same pattern as above. It arms the timer to the
+> > > > next tick, but that timer never ever fires. And it does that every tick ....
+> > > > 
+> > > > Please put a tracepoint into your set_next_event() callback as well. SO
+> > > > this changes here:
+> > > > 
+> > > > >           <idle>-0     [001] d...   132.198170: hrtimer_cancel: hrtimer=109f449c
+> > > > >           <idle>-0     [001] d...   132.198451: hrtimer_start: hrtimer=109f449c function=tick_sched_timer expires=132120000000 softexpires=132120000000
+> > > > 
+> > > > >           <idle>-0     [001] dnh.   132.205860: irq_handler_entry: irq=20 name=ipi
+> > > > >           <idle>-0     [001] dnh.   132.206041: irq_handler_exit: irq=20 ret=handle
+> > > > 
+> > > > So CPU1 gets an IPI
+> > > > 
+> > > > >           <idle>-0     [001] dn..   132.206650: hrtimer_cancel: hrtimer=109f449c
+> > > > 49c function=tick_sched_timer now=132119115200
+> > > > >           <idle>-0     [001] dn..   132.206936: hrtimer_start: hrtimer=109f449c function=tick_sched_timer expires=132120000000 softexpires=132120000000
+> > > > 
+> > > > And rcu-sched-7 gets running magically, but we don't know what woke it
+> > > > up. Definitely not the timer, because that did not fire.
+> > > > 
+> > > > >        rcu_sched-7     [001] d...   132.207710: timer_cancel: timer=160a9eb0
+> > > 
+> > > It could have been an explicit wakeup at the end of a grace period.  That
+> > > would explain its cancelling the timer, anyway.
+> > 
+> > I think the rcu stall handler kicked it, no? Looking at the code
+> > again, maybe that behavior needs to be explicitly turned on, so maybe
+> > it's just the uart interrupt activity/load from the stall message that
+> > breaks the stall condition.
+> 
+> That is indeed another alternative.  But either way, if your timers aren't
+> waking rcu_sched up when it asks to be awakened, you will very likely get
+> RCU CPU stall warning messages.  And on small systems, rcu_sched asks to
+> be awakened every few jiffies by default.
+
+Can you clarify which timer you think should be waking it up and
+isn't? Maybe I'm mistaken but it looks to me like rcu_gp_kthread() is
+waking up as expected, only to go back to sleep due to failure of
+rcu_gp_fqs_check_wake to end the loop.
+
+To demonstrate this to myself, I hacked rcu_gp_fqs_check_wake to show
+2 low bits of rnp->qsmask on LEDs. I also put a hook to update them in
+cpu_idle_loop just now, just in case. At least one, and usually two,
+LEDs are on when the stalls happen.
+
+> > > > > - During the whole sequence, hrtimer expiration times are being set to
+> > > > >   exact jiffies (@ 100 Hz), whereas before it they're quite arbitrary.
+> > > > 
+> > > > When a CPU goes into NOHZ idle and the next (timer/hrtimer) is farther out
+> > > > than the next tick, then tick_sched_timer is set to this next event which
+> > > > can be far out. So that's expected.
+> > > > 
+> > > > > - The CLOCK_MONOTONIC hrtimer times do not match up with the
+> > > > >   timestamps; they're off by about 0.087s. I assume this is just
+> > > > >   sched_clock vs clocksource time and not a big deal.
+> > > > 
+> > > > Yes. You can tell the tracer to use clock monotonic so then they should match.
+> > > > 
+> > > > > - The rcu_sched process is sleeping with timeout=1. This seems
+> > > > >   odd/excessive.
+> > > > 
+> > > > Why is that odd? That's one tick, i.e. 10ms in your case. And that's not
+> > > > the problem at all. The problem is your timer not firing, but the cpu is
+> > > > obviously either getting out of idle and then moves the tick ahead for some
+> > > > unknown reason.
+> > > 
+> > > And a one-jiffy timeout is in fact expected behavior when HZ=100.
+> > > You have to be running HZ=250 or better to have two-jiffy timeouts,
+> > > and HZ=500 or better for three-jiffy timeouts.
+> > 
+> > One possible theory I'm looking at is that the two cpus are both
+> > waking up (leaving cpu_idle_poll or cpuidle_idle_call) every jiffy
+> > with sufficient consistency that every time the rcu_gp_fqs_check_wake
+> > loop wakes up in rcu_gp_kthread, the other cpu is in cpu_idle_loop but
+> > outside the rcu_idle_enter/rcu_idle_exit range. Would this block
+> > forward process? I added an LED indicator in rcu_gp_fqs_check_wake
+> > that shows the low 2 bits of rnp->qsmask every time it's called, and
+> > under normal operation the LEDs just flash on momentarily or just one
+> > stays on for a few seconds then goes off. During a stall both are
+> > stuck on. I'm still trying to make sense of the code but my impression
+> > so far is that, on a 2-cpu machine, this is a leaf node and the 2 bits
+> > correspond directly to cpus; is that right? If so I'm a bit confused
+> > because I don't see how forward progress could ever happen if the cpu
+> > on which rcu_gp_kthread is blocking forward progress of
+> > rcu_gp_kthread.
+> 
+> No.  If the CPUs are entering and leaving idle, and if your timers
+> were waking up rcu_sched every few jiffies like it asks, then the
+> repeated idle entry/exit events would be noticed, courtesy of the atomic
+> increments of ->dynticks and the rcu_sched kthread's snapshotting and
+> checking of this value.
+
+I don't see how rcu_sched could notice the changes if it's stuck in
+the wait loop I think it's stuck in. There is no check of ->dynticks
+in rcu_gp_fqs_check_wake. Just in case checking *gfp & RCU_GP_FLAG_FQS
+accomplishes this, I updated my LED hacks to clear the LEDs in that
+exit path (and killed the other place that could turn them back on
+from cpu_idle_loop) but I still get 2 LEDs on for 21s followed by a
+stall message.
+
+> Even if the CPUs were always non-idle on every
+> time force_quiescent_state() is invoked, give or take the possibility
+> of counter wrap -- but even on a 32-bit system, that takes awhile.
+
+Perhaps force_quiescent_state is not getting invoked? Does that sound
+plausible, and if so, how should I go about debugging it? I see it is
+called from the stall reporting code, so that's presumably what's
+breaking the stalls.
+
+> But if your timers don't wake up rcu_sched, then force_quiescent_state()
+> will never be called, and the ->dynticks counter will be neither
+> snapshotted nor checked, which will mean that the idle CPUs will never
+> be noticed, which might mean that the grace period never completes.
+> Which will definitely result in an RCU CPU stall warning like the one
+> that you are seeing.
+
+I don't follow. I thought force_quiescent_state was called by other
+code to break rcu_sched out of the loop I'm finding it stuck in, not
+by rcu_sched itself.
+
+Rich
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
