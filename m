@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v2 1/7] ath9k: Add a #define for the EEPROM "eepmisc" endianness bit
-Date: Mon,  3 Oct 2016 00:29:07 +0200
-Message-ID: <20161002222913.12223-2-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 6/7] ath9k: Make the EEPROM swapping check use the eepmisc register
+Date: Mon,  3 Oct 2016 00:29:12 +0200
+Message-ID: <20161002222913.12223-7-martin.blumenstingl@googlemail.com>
 References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
  <20161002222913.12223-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -11,107 +11,130 @@ To: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCn
 Cc: chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This replaces a magic number with a named #define. Additionally it
-removes two "eeprom format" specific #defines for the "big endianness"
-bit which are the same on all eeprom formats.
+There are two ways of swapping the EEPROM data in the ath9k driver:
+1) swab16 based on the first two EEPROM "magic" bytes (same for all
+   EEPROM formats)
+2) field and EEPROM format specific swab16/swab32 (different for
+   eeprom_def, eeprom_4k and eeprom_9287)
+
+The result of the first check was used to also enable the second swap.
+This behavior seems incorrect, since the data may only be byte-swapped
+(afterwards the data could be in the correct endianness).
+Thus we introduce a separate check based on the "eepmisc" register
+(which is part of the EEPROM data). When bit 0 is set, then the EEPROM
+format specific values are in "big endian". This is also done by the
+FreeBSD kernel, see [0] for example.
+
+This allows us to parse EEPROMs with the "correct" magic bytes but
+swapped EEPROM format specific values. These EEPROMs (mostly found in
+lantiq and broadcom based big endian MIPS based devices) only worked
+due to platform specific "hacks" which swapped the EEPROM so the
+magic was inverted, which also enabled the format specific swapping.
+With this patch the old behavior is still supported, but neither
+recommended nor needed anymore.
+
+[0]
+https://github.com/freebsd/freebsd/blob/50719b56d9ce8d7d4beb53b16e9edb2e9a4a7a18/sys/dev/ath/ath_hal/ah_eeprom_9287.c#L351
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- drivers/net/wireless/ath/ath9k/ar9003_eeprom.c | 3 ++-
- drivers/net/wireless/ath/ath9k/ar9003_eeprom.h | 1 -
- drivers/net/wireless/ath/ath9k/eeprom.h        | 4 +++-
- drivers/net/wireless/ath/ath9k/eeprom_4k.c     | 2 +-
- drivers/net/wireless/ath/ath9k/eeprom_9287.c   | 2 +-
- drivers/net/wireless/ath/ath9k/eeprom_def.c    | 2 +-
- 6 files changed, 8 insertions(+), 6 deletions(-)
+ drivers/net/wireless/ath/ath9k/eeprom.c | 57 ++++++++++++++++++++++++---------
+ 1 file changed, 41 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c b/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
-index 08607d7..ea7b819 100644
---- a/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
-+++ b/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
-@@ -3468,7 +3468,8 @@ static u32 ath9k_hw_ar9003_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
- 					AR5416_OPFLAGS_N_5G_HT20));
- 	PR_EEP("Disable 5Ghz HT40", !!(pBase->opCapFlags.opFlags &
- 					AR5416_OPFLAGS_N_5G_HT40));
--	PR_EEP("Big Endian", !!(pBase->opCapFlags.eepMisc & 0x01));
-+	PR_EEP("Big Endian", !!(pBase->opCapFlags.eepMisc &
-+				AR5416_EEPMISC_BIG_ENDIAN));
- 	PR_EEP("RF Silent", pBase->rfSilent);
- 	PR_EEP("BT option", pBase->blueToothOptions);
- 	PR_EEP("Device Cap", pBase->deviceCap);
-diff --git a/drivers/net/wireless/ath/ath9k/ar9003_eeprom.h b/drivers/net/wireless/ath/ath9k/ar9003_eeprom.h
-index 107bcfb..0a4c736 100644
---- a/drivers/net/wireless/ath/ath9k/ar9003_eeprom.h
-+++ b/drivers/net/wireless/ath/ath9k/ar9003_eeprom.h
-@@ -38,7 +38,6 @@
- #define AR9300_NUM_CTLS_2G           12
- #define AR9300_NUM_BAND_EDGES_5G     8
- #define AR9300_NUM_BAND_EDGES_2G     4
--#define AR9300_EEPMISC_BIG_ENDIAN    0x01
- #define AR9300_EEPMISC_WOW           0x02
- #define AR9300_CUSTOMER_DATA_SIZE    20
+diff --git a/drivers/net/wireless/ath/ath9k/eeprom.c b/drivers/net/wireless/ath/ath9k/eeprom.c
+index a449588..0e46797 100644
+--- a/drivers/net/wireless/ath/ath9k/eeprom.c
++++ b/drivers/net/wireless/ath/ath9k/eeprom.c
+@@ -155,11 +155,19 @@ bool ath9k_hw_nvram_read(struct ath_hw *ah, u32 off, u16 *data)
+ 	return ret;
+ }
  
-diff --git a/drivers/net/wireless/ath/ath9k/eeprom.h b/drivers/net/wireless/ath/ath9k/eeprom.h
-index 4465c65..c466ada 100644
---- a/drivers/net/wireless/ath/ath9k/eeprom.h
-+++ b/drivers/net/wireless/ath/ath9k/eeprom.h
-@@ -161,6 +161,9 @@
- #define AR5416_EEP_TXGAIN_ORIGINAL         0
- #define AR5416_EEP_TXGAIN_HIGH_POWER       1
- 
-+/* Endianness of EEPROM content */
-+#define AR5416_EEPMISC_BIG_ENDIAN          0x01
++#ifdef __BIG_ENDIAN
++#define EXPECTED_EEPMISC_ENDIAN AR5416_EEPMISC_BIG_ENDIAN
++#else
++#define EXPECTED_EEPMISC_ENDIAN 0
++#endif
 +
- #define AR5416_EEP4K_START_LOC                64
- #define AR5416_EEP4K_NUM_2G_CAL_PIERS         3
- #define AR5416_EEP4K_NUM_2G_CCK_TARGET_POWERS 3
-@@ -191,7 +194,6 @@
- #define AR9287_NUM_CTLS              	12
- #define AR9287_NUM_BAND_EDGES        	4
- #define AR9287_PD_GAIN_ICEPTS           1
--#define AR9287_EEPMISC_BIG_ENDIAN       0x01
- #define AR9287_EEPMISC_WOW              0x02
- #define AR9287_MAX_CHAINS               2
- #define AR9287_ANT_16S                  32
-diff --git a/drivers/net/wireless/ath/ath9k/eeprom_4k.c b/drivers/net/wireless/ath/ath9k/eeprom_4k.c
-index 5da0826..780cb49 100644
---- a/drivers/net/wireless/ath/ath9k/eeprom_4k.c
-+++ b/drivers/net/wireless/ath/ath9k/eeprom_4k.c
-@@ -154,7 +154,7 @@ static u32 ath9k_hw_4k_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
- 					AR5416_OPFLAGS_N_5G_HT20));
- 	PR_EEP("Disable 5Ghz HT40", !!(pBase->opCapFlags &
- 					AR5416_OPFLAGS_N_5G_HT40));
--	PR_EEP("Big Endian", !!(pBase->eepMisc & 0x01));
-+	PR_EEP("Big Endian", !!(pBase->eepMisc & AR5416_EEPMISC_BIG_ENDIAN));
- 	PR_EEP("Cal Bin Major Ver", (pBase->binBuildNumber >> 24) & 0xFF);
- 	PR_EEP("Cal Bin Minor Ver", (pBase->binBuildNumber >> 16) & 0xFF);
- 	PR_EEP("Cal Bin Build", (pBase->binBuildNumber >> 8) & 0xFF);
-diff --git a/drivers/net/wireless/ath/ath9k/eeprom_9287.c b/drivers/net/wireless/ath/ath9k/eeprom_9287.c
-index 1a019a3..f483ba2 100644
---- a/drivers/net/wireless/ath/ath9k/eeprom_9287.c
-+++ b/drivers/net/wireless/ath/ath9k/eeprom_9287.c
-@@ -150,7 +150,7 @@ static u32 ath9k_hw_ar9287_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
- 					AR5416_OPFLAGS_N_5G_HT20));
- 	PR_EEP("Disable 5Ghz HT40", !!(pBase->opCapFlags &
- 					AR5416_OPFLAGS_N_5G_HT40));
--	PR_EEP("Big Endian", !!(pBase->eepMisc & 0x01));
-+	PR_EEP("Big Endian", !!(pBase->eepMisc & AR5416_EEPMISC_BIG_ENDIAN));
- 	PR_EEP("Cal Bin Major Ver", (pBase->binBuildNumber >> 24) & 0xFF);
- 	PR_EEP("Cal Bin Minor Ver", (pBase->binBuildNumber >> 16) & 0xFF);
- 	PR_EEP("Cal Bin Build", (pBase->binBuildNumber >> 8) & 0xFF);
-diff --git a/drivers/net/wireless/ath/ath9k/eeprom_def.c b/drivers/net/wireless/ath/ath9k/eeprom_def.c
-index 959682f..39b1b27 100644
---- a/drivers/net/wireless/ath/ath9k/eeprom_def.c
-+++ b/drivers/net/wireless/ath/ath9k/eeprom_def.c
-@@ -232,7 +232,7 @@ static u32 ath9k_hw_def_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
- 					AR5416_OPFLAGS_N_5G_HT20));
- 	PR_EEP("Disable 5Ghz HT40", !!(pBase->opCapFlags &
- 					AR5416_OPFLAGS_N_5G_HT40));
--	PR_EEP("Big Endian", !!(pBase->eepMisc & 0x01));
-+	PR_EEP("Big Endian", !!(pBase->eepMisc & AR5416_EEPMISC_BIG_ENDIAN));
- 	PR_EEP("Cal Bin Major Ver", (pBase->binBuildNumber >> 24) & 0xFF);
- 	PR_EEP("Cal Bin Minor Ver", (pBase->binBuildNumber >> 16) & 0xFF);
- 	PR_EEP("Cal Bin Build", (pBase->binBuildNumber >> 8) & 0xFF);
+ int ath9k_hw_nvram_swap_data(struct ath_hw *ah, bool *swap_needed, int size)
+ {
+ 	u16 magic;
+ 	u16 *eepdata;
++	u8 eepmisc;
+ 	int i;
++	bool needs_byteswap = false;
+ 	struct ath_common *common = ath9k_hw_common(ah);
+ 
+ 	if (!ath9k_hw_nvram_read(ah, AR5416_EEPROM_MAGIC_OFFSET, &magic)) {
+@@ -167,36 +175,53 @@ int ath9k_hw_nvram_swap_data(struct ath_hw *ah, bool *swap_needed, int size)
+ 		return -EIO;
+ 	}
+ 
+-	*swap_needed = false;
+ 	if (swab16(magic) == AR5416_EEPROM_MAGIC) {
++		needs_byteswap = true;
++		ath_dbg(common, EEPROM,
++			"EEPROM needs byte-swapping to correct endianness.\n");
++	} else if (magic != AR5416_EEPROM_MAGIC) {
++		if (ath9k_hw_use_flash(ah)) {
++			ath_dbg(common, EEPROM,
++				"Ignoring invalid EEPROM magic (0x%04x).\n",
++				magic);
++		} else {
++			ath_err(common,
++				"Invalid EEPROM magic (0x%04x).\n", magic);
++			return -EINVAL;
++		}
++	}
++
++	if (needs_byteswap) {
+ 		if (ah->ah_flags & AH_NO_EEP_SWAP) {
+ 			ath_info(common,
+ 				 "Ignoring endianness difference in EEPROM magic bytes.\n");
+ 		} else {
+-			*swap_needed = true;
+-		}
+-	} else if (magic != AR5416_EEPROM_MAGIC) {
+-		if (ath9k_hw_use_flash(ah))
+-			return 0;
++			eepdata = (u16 *)(&ah->eeprom);
+ 
+-		ath_err(common,
+-			"Invalid EEPROM Magic (0x%04x).\n", magic);
+-		return -EINVAL;
++			for (i = 0; i < size; i++)
++				eepdata[i] = swab16(eepdata[i]);
++		}
+ 	}
+ 
+-	eepdata = (u16 *)(&ah->eeprom);
+-
+-	if (*swap_needed) {
+-		ath_dbg(common, EEPROM,
+-			"EEPROM Endianness is not native.. Changing.\n");
++	*swap_needed = false;
+ 
+-		for (i = 0; i < size; i++)
+-			eepdata[i] = swab16(eepdata[i]);
++	eepmisc = ah->eep_ops->get_eepmisc(ah);
++	if ((eepmisc & AR5416_EEPMISC_BIG_ENDIAN) != EXPECTED_EEPMISC_ENDIAN) {
++		if (ah->ah_flags & AH_NO_EEP_SWAP) {
++			ath_info(common,
++				 "Ignoring endianness difference in eepmisc register.\n");
++		} else {
++			*swap_needed = true;
++			ath_dbg(common, EEPROM,
++				"EEPROM needs swapping according to the eepmisc register.\n");
++		}
+ 	}
+ 
+ 	return 0;
+ }
+ 
++#undef EXPECTED_EEPMISC_VAL
++
+ bool ath9k_hw_nvram_validate_checksum(struct ath_hw *ah, int size)
+ {
+ 	u32 i, sum = 0;
 -- 
 2.10.0
 
