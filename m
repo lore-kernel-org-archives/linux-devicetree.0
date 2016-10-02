@@ -1,101 +1,50 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v7 3/3] ath9k: parse the device configuration from an OF node
-Date: Sun,  2 Oct 2016 23:47:43 +0200
-Message-ID: <20161002214743.2263-4-martin.blumenstingl@googlemail.com>
-References: <20160906214623.20424-1-martin.blumenstingl@googlemail.com>
- <20161002214743.2263-1-martin.blumenstingl@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161002214743.2263-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org
-Cc: mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn-yOkvZcmFvRU@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Jon Masters <jcm@jonmasters.org>
+Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on Hip06
+Date: Sun, 2 Oct 2016 15:03:58 -0700
+Message-ID: <2af4f2d8-e3a4-fa00-e700-60af70bf4560@jonmasters.org>
+References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
+ <5140357.dcW9ibtZJ6@wuerfel> <57D963C4.4010406@hisilicon.com>
+ <5869118.UilSPY9Sai@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5869118.UilSPY9Sai@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, gabriele.paoloni@huawei.com, minyard@acm.org, linux-pci@vger.kernel.org, gregkh@linuxfoundation.org, john.garry@huawei.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, "zhichang.yuan" <yuanzhichang@hisilicon.com>, linuxarm@huawei.com, xuwei5@hisilicon.com, linux-serial@vger.kernel.org, benh@kernel.crashing.org, zourongrong@gmail.com, liviu.dudau@arm.com, kantyzc@163.com, zhichang.yuan02@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This allows setting the MAC address and specifying that the firmware
-will be requested from userspace (because there might not be a hardware
-EEPROM connected to the chip) for ath9k based PCI devices using
-the device tree.
+On 09/14/2016 02:32 PM, Arnd Bergmann wrote:
+> On Wednesday, September 14, 2016 10:50:44 PM CEST zhichang.yuan wrote:
 
-There is some out-of-tree code to "convert devicetree to
-ath9k_platform_data" (for example in OpenWrt and LEDE) which becomes
-obsolete with this patch.
+>> And there are probably multiple child devices under LPC, the global arm64_extio_ops only can cover one PIO range. It is fortunate only ipmi driver can not support I/O
+>> operation registering, serial driver has serial_in/serial_out to
+>> be registered. So, only the PIO range for ipmi device is stored
+>> in arm64_extio_ops and the indirect-IO
+>> works well for ipmi device.
+> 
+> You should not do that in the serial driver, please just use the
+> normal 8250 driver that works fine once you handle the entire
+> port range.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- drivers/net/wireless/ath/ath9k/init.c | 42 +++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+Just for the record, Arnd has the right idea. There is only one type of
+UART permitted by SBSA (PL011). We carved out an exception for a design
+that was already in flight and allowed it to be 16550. That other design
+was then corrected in future generations to be PL011 as we required it
+to be. Then there's the Hip06. I've given feedback elsewhere about the
+need for there to be (at most) two types of UART in the wild. This "LPC"
+stuff needs cleaning up (feedback given elsewhere already on that), but
+we won't be adding a third serial driver into the mix in order to make
+it work. There will be standard ARM servers. There will not be the
+kinda-sorta-standard. Thanks.
 
-diff --git a/drivers/net/wireless/ath/ath9k/init.c b/drivers/net/wireless/ath/ath9k/init.c
-index cfa3fe8..b7c8ff9 100644
---- a/drivers/net/wireless/ath/ath9k/init.c
-+++ b/drivers/net/wireless/ath/ath9k/init.c
-@@ -20,6 +20,8 @@
- #include <linux/slab.h>
- #include <linux/ath9k_platform.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_net.h>
- #include <linux/relay.h>
- #include <net/ieee80211_radiotap.h>
- 
-@@ -555,6 +557,42 @@ static int ath9k_init_platform(struct ath_softc *sc)
- 	return 0;
- }
- 
-+static int ath9k_of_init(struct ath_softc *sc)
-+{
-+	struct device_node *np = sc->dev->of_node;
-+	struct ath_hw *ah = sc->sc_ah;
-+	struct ath_common *common = ath9k_hw_common(ah);
-+	enum ath_bus_type bus_type = common->bus_ops->ath_bus_type;
-+	const char *mac;
-+	char eeprom_name[100];
-+	int ret;
-+
-+	if (!of_device_is_available(np))
-+		return 0;
-+
-+	ath_dbg(common, CONFIG, "parsing configuration from OF node\n");
-+
-+	if (of_property_read_bool(np, "qca,no-eeprom")) {
-+		/* ath9k-eeprom-<bus>-<id>.bin */
-+		scnprintf(eeprom_name, sizeof(eeprom_name),
-+			  "ath9k-eeprom-%s-%s.bin",
-+			  ath_bus_type_to_string(bus_type), dev_name(ah->dev));
-+
-+		ret = ath9k_eeprom_request(sc, eeprom_name);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	mac = of_get_mac_address(np);
-+	if (mac)
-+		ether_addr_copy(common->macaddr, mac);
-+
-+	ah->ah_flags &= ~AH_USE_EEPROM;
-+	ah->ah_flags |= AH_NO_EEP_SWAP;
-+
-+	return 0;
-+}
-+
- static int ath9k_init_softc(u16 devid, struct ath_softc *sc,
- 			    const struct ath_bus_ops *bus_ops)
- {
-@@ -611,6 +649,10 @@ static int ath9k_init_softc(u16 devid, struct ath_softc *sc,
- 	if (ret)
- 		return ret;
- 
-+	ret = ath9k_of_init(sc);
-+	if (ret)
-+		return ret;
-+
- 	if (ath9k_led_active_high != -1)
- 		ah->config.led_active_high = ath9k_led_active_high == 1;
- 
--- 
-2.10.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jon.
