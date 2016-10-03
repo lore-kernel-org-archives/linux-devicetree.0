@@ -1,33 +1,38 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] fsl-quadspi: introduce per-bus spi-bus-width property
-Date: Mon, 3 Oct 2016 13:51:43 -0500
-Message-ID: <20161003185143.GA27634@rob-hp-laptop>
-References: <20160927055957.427-1-albert.aribaud@3adev.fr>
- <20160927055957.427-2-albert.aribaud@3adev.fr>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4] i2c: hibvt: add Hisilicon BVT I2C controller driver
+Date: Mon, 3 Oct 2016 13:52:54 -0500
+Message-ID: <20161003185254.GA29178@rob-hp-laptop>
+References: <1474959063-6126-1-git-send-email-wenpan@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160927055957.427-2-albert.aribaud-iEu9NFBzPZE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Albert ARIBAUD (3ADEV)" <albert.aribaud-iEu9NFBzPZE@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1474959063-6126-1-git-send-email-wenpan@hisilicon.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Pan Wen <wenpan@hisilicon.com>
+Cc: wsa@the-dreams.de, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, howell.yang@hisilicon.com, xuejiancheng@hisilicon.com, jalen.hsu@hisilicon.com, lvkuanliang@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, kevin.lixu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 27, 2016 at 07:59:57AM +0200, Albert ARIBAUD (3ADEV) wrote:
-> Introduce spi-bus-width property for bus subnodes, to
-> specify per-bus capability to use NORMAL, FAST, DUAL,
-> and/or QUAD reads.
+On Tue, Sep 27, 2016 at 02:51:03PM +0800, Pan Wen wrote:
+> add Hisilicon BVT I2C controller driver support.
 > 
-> Signed-off-by: Albert ARIBAUD (3ADEV) <albert.aribaud-iEu9NFBzPZE@public.gmane.org>
+> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
 > ---
->  Documentation/devicetree/bindings/mtd/fsl-quadspi.txt | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+> change log
+> v4:
+> Modify the default frequency to 100KHz.
+> v3:
+> Add a SoC specific compatible string.
+> v2:
+> 1)Fixed a compile error.
+> 2)Dropped the clock-names property.
+>  .../devicetree/bindings/i2c/i2c-hibvt.txt          |  24 +
 
-Make this a common property.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/i2c/busses/Kconfig                         |  10 +
+>  drivers/i2c/busses/Makefile                        |   1 +
+>  drivers/i2c/busses/i2c-hibvt.c                     | 737 +++++++++++++++++++++
+>  4 files changed, 772 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
+>  create mode 100644 drivers/i2c/busses/i2c-hibvt.c
