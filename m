@@ -1,70 +1,66 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] ARM: dts: vfxxx: Enable DMA for DSPI on Vybrid
-Date: Mon, 03 Oct 2016 11:05:59 -0700
-Message-ID: <48b237c5d8709a67112465ea147f4c0c@agner.ch>
-References: <63fc108e2df00d2297a9b7014955f203bc802f34.1475498805.git.maitysanchayan@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5] devicetree: bindings: uart: Add new compatible string
+ for ZynqMP
+Date: Mon, 3 Oct 2016 13:42:34 -0500
+Message-ID: <20161003184234.GA13165@rob-hp-laptop>
+References: <1474898801-36571-1-git-send-email-navam@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <63fc108e2df00d2297a9b7014955f203bc802f34.1475498805.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1474898801-36571-1-git-send-email-navam@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nava kishore Manne <nava.manne@xilinx.com>
+Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, jslaby@suse.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, punnaia@xilinx.com, Nava kishore Manne <navam@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-03 05:50, Sanchayan Maity wrote:
-> Enable DMA for DSPI on Vybrid.
-
-Hm, we have that in 4.4 already, is that meant for 4.1?
-
+On Mon, Sep 26, 2016 at 07:36:41PM +0530, Nava kishore Manne wrote:
+> From: Nava kishore Manne <nava.manne@xilinx.com>
 > 
-> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> This patch Adds the new compatible string for ZynqMP SoC.
+> 
+> Signed-off-by: Nava kishore Manne <navam@xilinx.com>
 > ---
->  arch/arm/boot/dts/vf-colibri.dtsi | 4 ++++
->  arch/arm/boot/dts/vfxxx.dtsi      | 6 ++++++
->  2 files changed, 10 insertions(+)
+> Changes for v5:
+> 		-Fixed some minor comments.
+
+Not a useful changelog. The point of these comments is to remind the 
+reviewers of what they commented on.
+
+> Changes for v4:
+>                 -Modified the ChangeLog comment.
+> Changes for v3:
+>                 -Added changeLog comment.
+> Changes for v2:
+>                 -None
 > 
-> diff --git a/arch/arm/boot/dts/vf-colibri.dtsi
-> b/arch/arm/boot/dts/vf-colibri.dtsi
-> index b741709..21bfef9 100644
-> --- a/arch/arm/boot/dts/vf-colibri.dtsi
-> +++ b/arch/arm/boot/dts/vf-colibri.dtsi
-> @@ -108,6 +108,10 @@
->  	status = "okay";
->  };
+>  Documentation/devicetree/bindings/serial/cdns,uart.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/cdns,uart.txt b/Documentation/devicetree/bindings/serial/cdns,uart.txt
+> index a3eb154..30c885c 100644
+> --- a/Documentation/devicetree/bindings/serial/cdns,uart.txt
+> +++ b/Documentation/devicetree/bindings/serial/cdns,uart.txt
+> @@ -1,7 +1,9 @@
+>  Binding for Cadence UART Controller
 >  
-> +&edma1 {
-> +	status = "okay";
-> +};
-> +
->  &esdhc1 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_esdhc1>;
-> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-> index 2c13ec6..eac4213 100644
-> --- a/arch/arm/boot/dts/vfxxx.dtsi
-> +++ b/arch/arm/boot/dts/vfxxx.dtsi
-> @@ -194,6 +194,9 @@
->  				clocks = <&clks VF610_CLK_DSPI0>;
->  				clock-names = "dspi";
->  				spi-num-chipselects = <6>;
-> +				dmas = <&edma1 1 12>,
-> +					<&edma1 1 13>;
-> +				dma-names = "rx", "tx";
->  				status = "disabled";
->  			};
->  
-> @@ -206,6 +209,9 @@
->  				clocks = <&clks VF610_CLK_DSPI1>;
->  				clock-names = "dspi";
->  				spi-num-chipselects = <4>;
-> +				dmas = <&edma1 1 14>,
-> +					<&edma1 1 15>;
-> +				dma-names = "rx", "tx";
->  				status = "disabled";
->  			};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  Required properties:
+> -- compatible : should be "cdns,uart-r1p8", or "xlnx,xuartps"
+> +- compatible :
+> +  Use "cdns,uart-r1p8", or "xlnx,xuartps" for Zynq-7xxx SoC.
+
+This is still not right. It was wrong before, but you are touching it so 
+make it right. 
+
+OR doesn't match the dts files. It is AND and the opposite order.
+
+xlnx,xuartps wasn't the best naming, but it's in use so we'll have to 
+live with it for zynq-7xxx.
+
+> +  Use "cdns,uart-r1p12" for Zynq Ultrascale+ MPSoC.
+
+What I meant here was this should have something like "xlnx,mpsoc-uart" 
+as the first compatible with "cdns,uart-r1p12" as the second. Not sure 
+if "mpsoc" is the best name here. 
+
+Rob
