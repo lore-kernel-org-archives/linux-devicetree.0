@@ -1,85 +1,53 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH v2 2/2] drm: zte: add initial vou drm driver
-Date: Mon, 3 Oct 2016 11:36:01 +0100
-Message-ID: <CACvgo53A7BpVWHgkFrZsjWnw_uW6xDmKRsrxF=46HOEWQ43BxA@mail.gmail.com>
-References: <1474727185-24180-1-git-send-email-shawn.guo@linaro.org>
- <1474727185-24180-3-git-send-email-shawn.guo@linaro.org>
- <CACvgo51feNJYrHaKT+M06Z7kOUqzYo1Uv_TAHdLhNXPtRUwsvw@mail.gmail.com>
- <20161001002228.GA2989@x250>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 04/12] ASoC: dapm: Introduce DAPM_DOUBLE_R dual
+ channel dual register control type
+Date: Mon,  3 Oct 2016 19:07:56 +0800
+Message-ID: <20161003110804.28235-5-wens@csie.org>
+References: <20161003110804.28235-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20161001002228.GA2989@x250>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Baoyou Xie <xie.baoyou@zte.com.cn>, ML dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Jun Nie <jun.nie@linaro.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBIPYZC7QKGQELNDPRCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161003110804.28235-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMSBPY3RvYmVyIDIwMTYgYXQgMDE6MjIsIFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9y
-Zz4gd3JvdGU6Cj4gSGkgRW1pbCwKPgo+IE9uIEZyaSwgU2VwIDMwLCAyMDE2IGF0IDAxOjM0OjE0
-UE0gKzAxMDAsIEVtaWwgVmVsaWtvdiB3cm90ZToKPj4gSGkgU2hhd24sCj4+Cj4+IEEgY291cGxl
-IG9mIGZseS1ieSBzdWdnZXN0aW9ucywgd2hpY2ggSSBob3BlIHlvdSdsbCBmaW5kIHVzZWZ1bCA6
-LSkKPgo+IFRoYW5rcyBmb3IgdGhlIHN1Z2dlc3Rpb25zLgo+Cj4+IE9uIDI0IFNlcHRlbWJlciAy
-MDE2IGF0IDE1OjI2LCBTaGF3biBHdW8gPHNoYXduLmd1b0BsaW5hcm8ub3JnPiB3cm90ZToKPj4K
-Pj4gPiArCj4+ICA+ICsgICAgICAgdmFsID0gKCh2bS5oc3luY19sZW4gLSAxKSA8PCBTWU5DX1dJ
-REVfU0hJRlQpICYgU1lOQ19XSURFX01BU0s7Cj4+IFRvIHNhdmUgc29tZSB3cml0aW5nL21pbmlt
-aXNlIHRoZSBjaGFuY2VzIHRvIHR5cG9zIGdldHRpbmcsIGluIHlvdSBjYW4KPj4gaGF2ZSBzaW5n
-bGUvY29sbGVjdGlvbiB0byBzdGF0aWMgaW5saW5lIGZ1bmN0aW9ucyBzaW1pbGFyIHRvIG1zbSBb
-MV0uCj4+IE9uIGEgc2ltaWxhciBub3RlIGlubGluZSB3cmFwcGVycyB6dGVfcmVhZC93cml0ZS9t
-YXNrIChhcm91bmQKPj4gd3JpdGVsL3JlYWRsKSB3aWxsIHByb3ZpZGUgcXVpdGUgdXNlZnVsIGZv
-ciBkZWJ1Z2dpbmcvdHJhY2luZyA6LSkKPj4KPj4gWzFdIGRyaXZlcnMvZ3B1L2RybS9tc20vYWRy
-ZW5vL2E0eHgueG1sLmgKPgo+IEkgd291bGQgbm90IGFkZCBhIGhlYWRlciBmaWxlIHdpdGggaHVu
-ZHJlZHMgb3IgdGhvdXNhbmRzIG9mIGRlZmluZXMKPiB3aGlsZSBvbmx5IHRlbnMgb2YgdGhlbSBh
-cmUgYWN0dWFsbHkgdXNlZC4gIEZvciBkZWJ1Z2dpbmcsIEkgcHJlZmVyCj4gdG8gcHJpbnQgcGFy
-dGljdWxhciByZWdpc3RlcnMgdGhhbiBldmVyeSBzaW5nbGUgcmVhZC93cml0ZSwgd2hpY2gKPiBt
-aWdodCBub3QgYmUgZWFzeSB0byBjaGVjayB3aGF0IEkgd2FudCB0byBjaGVjay4KPgpJJ3ZlIG5l
-dmVyIGltcGxpZWQgYWRkaW5nIGh1bmRyZWRzL2V0YyBkZWZpbmVzLCBidXQgYSBmZXcKbWFjcm9z
-L2lubGluZXMgd2hpY2ggZ2V0IHlvdSBmcm9tCgogIHZhbCA9ICgodm0uaHN5bmNfbGVuIC0gMSkg
-PDwgU1lOQ19XSURFX1NISUZUKSAmIFNZTkNfV0lERV9NQVNLOwogIC4uLi4KICB2YWwgPSByZWFk
-bCh2b3UtPnZvdWN0bCArIFZPVV9DTEtfRU4pOwogIHZhbCB8PSBpbmYtPmNsb2Nrc19lbl9iaXRz
-OwogIHdyaXRlbCh2YWwsIHZvdS0+dm91Y3RsICsgVk9VX0NMS19FTik7Cgp0bwoKICB2YWwgPSBT
-WU5DX1dJREUodm0uaHN5bmNfbGVuIC0gMSk7CiAgLi4uCiAgenRlX3ZvdWN0bF9tYXNrKHZvdSwg
-Vk9VX0NMS19FTiwgbWFzaywgdmFsdWUpOyAvLyBvciBhbnkgcGVybXV0YXRpb24Kb2YgdXBwZXIv
-bG93ZXIgY2FzZSwgYXJndW1lbnQgb3JkZXIsIHVzZS9kaXNjYXJkIHRoZSBWT1VfIHJlZ2lzdGVy
-CnByZWZpeCwgZXRjLgoKClRoZSBsYXR0ZXIgdGVuZHMgdG8gYmUgZWFzaWVyIHRvIHJlYWQgYW5k
-IGxlc3MgZXJyb3IgcHJvbmUuIEVpdGhlcgp3YXksIGl0IHdhcyBqdXN0IGEgc3VnZ2VzdGlvbi4K
-Cgo+PiA+ICtzdGF0aWMgaW50IHp4X2dsX2dldF9mbXQodWludDMyX3QgZm9ybWF0KQo+PiA+ICt7
-Cj4+ID4gKyAgICAgICBzd2l0Y2ggKGZvcm1hdCkgewo+PiA+ICsgICAgICAgY2FzZSBEUk1fRk9S
-TUFUX0FSR0I4ODg4Ogo+PiA+ICsgICAgICAgY2FzZSBEUk1fRk9STUFUX1hSR0I4ODg4Ogo+PiA+
-ICsgICAgICAgICAgICAgICByZXR1cm4gR0xfRk1UX0FSR0I4ODg4Owo+PiA+ICsgICAgICAgY2Fz
-ZSBEUk1fRk9STUFUX1JHQjg4ODoKPj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIEdMX0ZNVF9S
-R0I4ODg7Cj4+ID4gKyAgICAgICBjYXNlIERSTV9GT1JNQVRfUkdCNTY1Ogo+PiA+ICsgICAgICAg
-ICAgICAgICByZXR1cm4gR0xfRk1UX1JHQjU2NTsKPj4gPiArICAgICAgIGNhc2UgRFJNX0ZPUk1B
-VF9BUkdCMTU1NToKPj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIEdMX0ZNVF9BUkdCMTU1NTsK
-Pj4gPiArICAgICAgIGNhc2UgRFJNX0ZPUk1BVF9BUkdCNDQ0NDoKPj4gPiArICAgICAgICAgICAg
-ICAgcmV0dXJuIEdMX0ZNVF9BUkdCNDQ0NDsKPj4gPiArICAgICAgIGRlZmF1bHQ6Cj4+ID4gKyAg
-ICAgICAgICAgICAgIFdBUk5fT05DRSgxLCAiaW52YWxpZCBwaXhlbCBmb3JtYXQgJWRcbiIsIGZv
-cm1hdCk7Cj4+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOwo+PiBBZmFpY3MgdGhl
-IG9ubHkgdXNlciBvZiB0aGlzIGlzIGF0b21pY191cGRhdGUoKSBhbmQgdGhhdCBmdW5jdGlvbgo+
-PiBjYW5ub3QgZmFpbC4gWW91IG1pZ2h0IHdhbnQgdG8gbW92ZSB0aGlzIHRvIHRoZSBfY2hlY2so
-KSBmdW5jdGlvbi4KPj4gU2FtZSBsb2dpYyBnb2VzIGZvciB0aGUgcmVzdCBvZiB0aGUgZHJpdmVy
-LCBpbiBjYXNlIEkndmUgbWlzc2VkIGFueS4KPgo+IFRoZSBmdW5jdGlvbiBkb2VzIHRoZSBjb252
-ZXJzaW9uIGZyb20gRFJNIGZvcm1hdCB2YWx1ZXMgdG8gdGhlIG9uZXMgdGhhdAo+IGhhcmR3YXJl
-IGFjY2VwdHMuICBBbmQgSSBuZWVkIHRvIHNldCB1cCBoYXJkd2FyZSByZWdpc3RlciB3aXRoIHRo
-ZQo+IGNvbnZlcnRlZCB2YWx1ZS4KPgo+IEkgc3VwcG9zZSB0aGF0IHRoZSBlcnJvciBjYXNlIGlu
-ICdkZWZhdWx0JyBzaG91bGQgbmV2ZXIgYmUgaGl0LCBzaW5jZQo+IGFsbCB2YWxpZCBmb3JtYXQg
-aGF2ZSBiZWVuIHJlcG9ydGVkIHRvIERSTSBjb3JlIGJ5IGdsX2Zvcm1hdHM/ICBJbiB0aGF0Cj4g
-Y2FzZSwgSSBjYW4gc2ltcGx5IGRyb3AgdGhlIFdBUk4gYW5kIHJldHVybiBhIHNhbmUgZGVmYXVs
-dCBmb3JtYXQKPiBpbnN0ZWFkPwo+CkknZCBqdXN0IGRvIHRoZSBlcnJvciBjaGVja2luZyBpbiBj
-aGVjaygpIGZ1bmN0aW9uIGFuZCBrZWVwIHRoZQptYXBwaW5nIGluIHVwZGF0ZSgpLiBBcyBkZXZz
-IGFkZCBuZXcgZm9ybWF0cyB0byBEUk0gY29yZSBpdCdzIG5vdApwb3NzaWJsZSBmb3IgdGhlbSB0
-byB0ZXN0IGV2ZXJ5IGRyaXZlciBzbyBnZXR0aW5nIGEgZmFpbHVyZSBlYXJseSBpcwpiZXR0ZXIg
-KGltaG8pIHRoYW4gZ2V0dGluZyBzdWJ0bGUgdmlzdWFsIGFuZC9vciBvdGhlciBpc3N1ZXMuIEVp
-dGhlcgp3YXkgaXQncyB1cC10byB5b3UgcmVhbGx5LgoKUmVnYXJkcywKRW1pbApfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+A DAPM_DOUBLE_R control type can be used for dual channel mixer input
+selectors / mute controls across 2 registers, possibly toggling both
+channels together.
+
+The control is meant to be shared by 2 widgets, 1 for each channel,
+such that the mixer control exposed to userspace remains a combined
+stereo control.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ include/sound/soc-dapm.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/include/sound/soc-dapm.h b/include/sound/soc-dapm.h
+index f74ec19687f8..a466f4bdc835 100644
+--- a/include/sound/soc-dapm.h
++++ b/include/sound/soc-dapm.h
+@@ -277,6 +277,11 @@ struct device;
+ 	.info = snd_soc_info_volsw, \
+ 	.get = snd_soc_dapm_get_volsw, .put = snd_soc_dapm_put_volsw, \
+ 	.private_value = SOC_DOUBLE_VALUE(reg, lshift, rshift, max, invert, 0) }
++#define SOC_DAPM_DOUBLE_R(xname, lreg, rreg, shift, max, invert) \
++{	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
++	.info = snd_soc_info_volsw, \
++	.get = snd_soc_dapm_get_volsw, .put = snd_soc_dapm_put_volsw, \
++	.private_value = SOC_DOUBLE_R_VALUE(lreg, rreg, shift, max, invert) }
+ #define SOC_DAPM_SINGLE(xname, reg, shift, max, invert) \
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
+ 	.info = snd_soc_info_volsw, \
+-- 
+2.9.3
