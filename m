@@ -1,61 +1,36 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 2/2] fsl-quadspi: introduce per-bus spi-bus-width property
-Date: Mon, 3 Oct 2016 21:57:58 +0200
-Message-ID: <CAMuHMdW6WJBj3TiXU0mmwKJmcwp28HEVUSD17-7RH7-UXFtX1g@mail.gmail.com>
-References: <20160927055957.427-1-albert.aribaud@3adev.fr> <20160927055957.427-2-albert.aribaud@3adev.fr>
- <20161003185143.GA27634@rob-hp-laptop>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v7 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Mon, 3 Oct 2016 18:10:39 -0400
+Message-ID: <20161003221039.GR19318@brightrain.aerifal.cx>
+References: <cover.1474693319.git.dalias@libc.org>
+ <22c1ee0f908fe3bf8b70f5e87d659ceb29af1434.1474693319.git.dalias@libc.org>
+ <20160926210716.GA12855@brightrain.aerifal.cx>
+ <4b02ba7d-4a31-297a-bbbd-be26da615e7b@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161003185143.GA27634@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "Albert ARIBAUD (3ADEV)" <albert.aribaud-iEu9NFBzPZE@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4b02ba7d-4a31-297a-bbbd-be26da615e7b@linaro.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 3, 2016 at 8:51 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Sep 27, 2016 at 07:59:57AM +0200, Albert ARIBAUD (3ADEV) wrote:
->> Introduce spi-bus-width property for bus subnodes, to
->> specify per-bus capability to use NORMAL, FAST, DUAL,
->> and/or QUAD reads.
->>
->> Signed-off-by: Albert ARIBAUD (3ADEV) <albert.aribaud-iEu9NFBzPZE@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mtd/fsl-quadspi.txt | 18 ++++++++++++++++++
->>  1 file changed, 18 insertions(+)
->
-> Make this a common property.
+On Mon, Sep 26, 2016 at 11:27:14PM +0200, Daniel Lezcano wrote:
+> On 26/09/2016 23:07, Rich Felker wrote:
+> > Ping. Is there anything that still needs to be changed for this driver
+> > to be acceptable?
+> 
+> It is on my radar. I'm reviewing it.
+> 
+> Can you elaborate the workaround mentioned in the changelog. I have been
+> digging into the lkml@ thread but it is not clear if the issue is
+> related to the time framework, the driver itself or whatever else. Can
+> you clarify that ?
 
-They already exist:
+Do you have comments on any remaining issues other than this
+workaround? If not I don't mind removing the workaround and trying to
+solve the issue separately later. Let me know and either way I'll
+submit a v8.
 
-Documentation/devicetree/bindings/spi/spi-bus.txt:
-- spi-tx-bus-width - (optional) The bus width (number of data wires) that is
-                      used for MOSI. Defaults to 1 if not present.
-- spi-rx-bus-width - (optional) The bus width (number of data wires) that is
-                      used for MISO. Defaults to 1 if not present.
-
-The above are for normal/dual/quad.
-
-"Fast" is not a property of the bus, but of the SPI slave, right? Cfr.
-
-Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt:
-- m25p,fast-read : Use the "fast read" opcode to read data from the chip instead
-                   of the usual "read" opcode. This opcode is not supported by
-                   all chips and support for it can not be detected at runtime.
-                   Refer to your chips' datasheet to check if this is supported
-                   by your chip.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rich
