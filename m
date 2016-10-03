@@ -1,43 +1,43 @@
-From: Vijay Kumar B <vijaykumar-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
-Subject: [RESEND PATCH] ARM: dts: pxa2xx: Specify all interrupts for the GPIO controller.
-Date: Mon,  3 Oct 2016 15:48:12 +0530
-Message-ID: <1475489892-10316-1-git-send-email-vijaykumar@zilogic.com>
-References: <1475489412-9758-1-git-send-email-vijaykumar@zilogic.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 6/9] dt-bindings: pinctrl: Deprecate sunxi pinctrl bindings
+Date: Mon,  3 Oct 2016 12:21:04 +0200
+Message-ID: <fad5a977d8ecdd43b37d7028b1bc32d8667b65a2.1475489558.git-series.maxime.ripard@free-electrons.com>
+References: <cover.26c6f76b361d146fb079d744251f020ef6d2db7d.1475489558.git-series.maxime.ripard@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475489412-9758-1-git-send-email-vijaykumar-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <cover.26c6f76b361d146fb079d744251f020ef6d2db7d.1475489558.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.26c6f76b361d146fb079d744251f020ef6d2db7d.1475489558.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+References: <cover.26c6f76b361d146fb079d744251f020ef6d2db7d.1475489558.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Vijay Kumar B <vijaykumar-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The PXA GPIO controller has 3 interrupt outputs, this needs to be
-indicated in the DTS file. Without this mainstone's CPLD interrupt 0
-will not be raised to the processor.
+The generic pin configuration and multiplexing should be preferred now,
+even though we still support the old one.
 
-Signed-off-by: Vijay Kumar B. <vijaykumar-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Deepak S. <deepak-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/pxa2xx.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt | 5 +++++
+ 1 file changed, 5 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/pxa2xx.dtsi b/arch/arm/boot/dts/pxa2xx.dtsi
-index 5e5af07..9ca2e5b 100644
---- a/arch/arm/boot/dts/pxa2xx.dtsi
-+++ b/arch/arm/boot/dts/pxa2xx.dtsi
-@@ -54,8 +54,8 @@
- 			reg = <0x40e00000 0x10000>;
- 			gpio-controller;
- 			#gpio-cells = <0x2>;
--			interrupts = <10>;
--			interrupt-names = "gpio_mux";
-+			interrupts = <8 9 10>;
-+			interrupt-names = "gpio0", "gpio1", "gpio_mux";
- 			interrupt-controller;
- 			#interrupt-cells = <0x2>;
- 			ranges;
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+index 69617220c5d6..e8b7cf64fdf1 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+@@ -36,6 +36,11 @@ pins it needs, and how they should be configured, with regard to muxer
+ configuration, drive strength and pullups. If one of these options is
+ not set, its actual value will be unspecified.
+ 
++This driver supports the generic pin multiplexing and configuration
++bindings.
++
++*** Deprecated pin configuration and multiplexing binding
++
+ Required subnode-properties:
+ 
+ - allwinner,pins: List of strings containing the pin name.
 -- 
-2.1.4
-
+git-series 0.8.10
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
