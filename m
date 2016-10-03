@@ -1,66 +1,68 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5] devicetree: bindings: uart: Add new compatible string
- for ZynqMP
-Date: Mon, 3 Oct 2016 13:42:34 -0500
-Message-ID: <20161003184234.GA13165@rob-hp-laptop>
-References: <1474898801-36571-1-git-send-email-navam@xilinx.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: display: Add Sharp LQ150X1LG11 panel
+ binding
+Date: Mon, 3 Oct 2016 13:46:45 -0500
+Message-ID: <20161003184645.GA23584@rob-hp-laptop>
+References: <1474928832-8766-1-git-send-email-peda@axentia.se>
+ <1474928832-8766-2-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1474898801-36571-1-git-send-email-navam@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nava kishore Manne <nava.manne@xilinx.com>
-Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, jslaby@suse.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, punnaia@xilinx.com, Nava kishore Manne <navam@xilinx.com>
+In-Reply-To: <1474928832-8766-2-git-send-email-peda@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, Gustaf =?iso-8859-1?Q?Lindstr=F6m?= <gl@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 26, 2016 at 07:36:41PM +0530, Nava kishore Manne wrote:
-> From: Nava kishore Manne <nava.manne@xilinx.com>
-> 
-> This patch Adds the new compatible string for ZynqMP SoC.
-> 
-> Signed-off-by: Nava kishore Manne <navam@xilinx.com>
-> ---
-> Changes for v5:
-> 		-Fixed some minor comments.
-
-Not a useful changelog. The point of these comments is to remind the 
-reviewers of what they commented on.
-
-> Changes for v4:
->                 -Modified the ChangeLog comment.
-> Changes for v3:
->                 -Added changeLog comment.
-> Changes for v2:
->                 -None
-> 
->  Documentation/devicetree/bindings/serial/cdns,uart.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/cdns,uart.txt b/Documentation/devicetree/bindings/serial/cdns,uart.txt
-> index a3eb154..30c885c 100644
-> --- a/Documentation/devicetree/bindings/serial/cdns,uart.txt
-> +++ b/Documentation/devicetree/bindings/serial/cdns,uart.txt
-> @@ -1,7 +1,9 @@
->  Binding for Cadence UART Controller
->  
->  Required properties:
-> -- compatible : should be "cdns,uart-r1p8", or "xlnx,xuartps"
-> +- compatible :
-> +  Use "cdns,uart-r1p8", or "xlnx,xuartps" for Zynq-7xxx SoC.
-
-This is still not right. It was wrong before, but you are touching it so 
-make it right. 
-
-OR doesn't match the dts files. It is AND and the opposite order.
-
-xlnx,xuartps wasn't the best naming, but it's in use so we'll have to 
-live with it for zynq-7xxx.
-
-> +  Use "cdns,uart-r1p12" for Zynq Ultrascale+ MPSoC.
-
-What I meant here was this should have something like "xlnx,mpsoc-uart" 
-as the first compatible with "cdns,uart-r1p12" as the second. Not sure 
-if "mpsoc" is the best name here. 
-
-Rob
+T24gVHVlLCBTZXAgMjcsIDIwMTYgYXQgMTI6Mjc6MTFBTSArMDIwMCwgUGV0ZXIgUm9zaW4gd3Jv
+dGU6Cj4gVGhlIFNoYXJwIDE1IiBMUTE1MFgxTEcxMSBwYW5lbCBpcyBhbiBYR0EgVEZUIExDRCBw
+YW5lbC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlhLnNlPgo+
+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFycCxscTE1MHgxbGcxMS50eHQg
+ICB8IDM2ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDM2IGluc2Vy
+dGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMTUweDFsZzExLnR4dAo+IAo+IGRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFy
+cCxscTE1MHgxbGcxMS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9wYW5lbC9zaGFycCxscTE1MHgxbGcxMS50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+
+IGluZGV4IDAwMDAwMDAwMDAwMC4uNzE1ZmY3ZTMzMmYyCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxx
+MTUweDFsZzExLnR4dAo+IEBAIC0wLDAgKzEsMzYgQEAKPiArU2hhcnAgMTUiIExRMTUwWDFMRzEx
+IFhHQSBURlQgTENEIHBhbmVsCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBh
+dGlibGU6IHNob3VsZCBiZSAic2hhcnAsbHExNTB4MWxnMTEiCj4gKy0gcG93ZXItc3VwcGx5OiBy
+ZWd1bGF0b3IgdG8gcHJvdmlkZSB0aGUgVkNDIHN1cHBseSB2b2x0YWdlICgzLjMgdm9sdHMpCgpT
+aG91bGQgYmUgbmFtZWQgYWNjb3JkaW5nIHRvIHRoZSBpbnB1dCwgc28gdmNjLXN1cHBseS4KCj4g
+Kwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICstIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0aGUg
+YmFja2xpZ2h0IGRldmljZQo+ICstIHJsdWQtZ3Bpb3M6IGEgc2luZ2xlIEdQSU8gZm9yIHRoZSBS
+TC9VRCAocm90YXRlIDE4MCBkZWdyZWVzKSBwaW4uCj4gKy0gbHZkcy1ncGlvczogYSBzaW5nbGUg
+R1BJTyBmb3IgdGhlIFNFTExWRFMgcGluLgoKV2h5IG5vdCBzZWxsdmRzLWdwaW9zPwoKPiArCj4g
+K0lmIGxydWQtZ3Bpb3MgYW5kL29yIGxkdnMtZ3Bpb3MgYXJlIG5vdCBzcGVjaWZpZWQsIHRoZSBS
+TC9VRCBhbmQvb3IgU0VMTFZEUwoKdHlwb3MuLi4KCj4gK3BpbnMgYXJlIGFzc3VtZWQgdG8gYmUg
+aGFuZGxlZCBhcHByb3ByaWF0ZWx5IGJ5IHRoZSBoYXJkd2FyZS4KPiArCj4gK0V4YW1wbGU6Cj4g
+Kwo+ICsJYmFja2xpZ2h0OiBiYWNrbGlnaHQgewo+ICsJCWNvbXBhdGlibGUgPSAicHdtLWJhY2ts
+aWdodCI7Cj4gKwkJcHdtcyA9IDwmcHdtIDAgMTAwMDAwPjsgICAgICAgICAgICAgICAgICAgICAg
+LyogVkJSICovCj4gKwo+ICsJCWJyaWdodG5lc3MtbGV2ZWxzID0gPDAgMjAgNDAgNjAgODAgMTAw
+PjsKPiArCQlkZWZhdWx0LWJyaWdodG5lc3MtbGV2ZWwgPSA8Mj47Cj4gKwo+ICsJCXBvd2VyLXN1
+cHBseSA9IDwmdmRkXzEydl9yZWc+OyAgICAgICAgICAgICAgIC8qIFZERCAqLwo+ICsJCWVuYWJs
+ZS1ncGlvcyA9IDwmZ3BpbyA0MiBHUElPX0FDVElWRV9ISUdIPjsgIC8qIFhTVEFCWSAqLwo+ICsJ
+fTsKPiArCj4gKwlwYW5lbCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJzaGFycCxscTE1MHgxbGcxMSI7
+Cj4gKwo+ICsJCXBvd2VyLXN1cHBseSA9IDwmdmNjXzN2M19yZWc+OyAgICAgICAgICAgICAgIC8q
+IFZDQyAqLwo+ICsKPiArCQliYWNrbGlnaHQgPSA8JmJhY2tsaWdodD47Cj4gKwkJcmx1ZC1ncGlv
+cyA9IDwmZ3BpbyAxNyBHUElPX0FDVElWRV9ISUdIPjsgICAgLyogUkwvVUQgKi8KPiArCQlsdmRz
+LWdwaW9zID0gPCZncGlvIDE4IEdQSU9fQUNUSVZFX0hJR0g+OyAgICAvKiBTRUxMVkRTICovCj4g
+Kwl9Owo+IC0tIAo+IDIuMS40Cj4gCj4gLS0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlz
+dDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSIgaW4KPiB0aGUgYm9keSBv
+ZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZwo+IE1vcmUgbWFqb3Jkb21v
+IGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbApfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
