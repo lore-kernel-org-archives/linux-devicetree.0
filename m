@@ -1,65 +1,54 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3] drm: tilcdc: add a da850-specific compatible string
-Date: Mon,  3 Oct 2016 17:45:19 +0200
-Message-ID: <1475509519-29516-1-git-send-email-bgolaszewski@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/3] net: smsc911x: add u16 workaround for pxa platforms
+Date: Mon, 3 Oct 2016 16:46:25 +0100
+Message-ID: <20161003154624.GG7632@leverpostej>
+References: <1475485553-18747-1-git-send-email-robert.jarzmik@free.fr>
+ <1475485553-18747-3-git-send-email-robert.jarzmik@free.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1475485553-18747-3-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Due to some potential tweaks for the da850 LCDC (for example: the
-required memory bandwith settings) we need a separate compatible
-for the IP present on the da850 boards.
+On Mon, Oct 03, 2016 at 11:05:53AM +0200, Robert Jarzmik wrote:
+> Add a workaround for mainstone, idp and stargate2 boards, for u16 writes
+> which must be aligned on 32 bits addresses.
+> 
+> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/net/smsc911x.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/smsc911x.txt b/Documentation/devicetree/bindings/net/smsc911x.txt
+> index 3fed3c124411..224965b7453c 100644
+> --- a/Documentation/devicetree/bindings/net/smsc911x.txt
+> +++ b/Documentation/devicetree/bindings/net/smsc911x.txt
+> @@ -13,6 +13,8 @@ Optional properties:
+>  - reg-io-width : Specify the size (in bytes) of the IO accesses that
+>    should be performed on the device.  Valid value for SMSC LAN is
+>    2 or 4.  If it's omitted or invalid, the size would be 2.
+> +- reg-u16-align4 : Boolean, put in place the workaround the force all
+> +  		   u16 writes to be 32 bits aligned
 
-Suggested-by: Sekhar Nori <nsekhar@ti.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
-v1 -> v2:
-- added the new compatible to the bindings documentation
+This property name and description is confusing.
 
-v2 -> v3:
-- made the documentation more detailed
+How exactly does this differ from having reg-io-width = <4>, which is
+documented immediately above?
 
- Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt | 6 ++++--
- drivers/gpu/drm/tilcdc/tilcdc_drv.c                         | 1 +
- 2 files changed, 5 insertions(+), 2 deletions(-)
+Thanks,
+Mark.
 
-diff --git a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
-index a83abd7..6fddb4f 100644
---- a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
-+++ b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
-@@ -1,7 +1,9 @@
- Device-Tree bindings for tilcdc DRM driver
- 
- Required properties:
-- - compatible: value should be "ti,am33xx-tilcdc".
-+ - compatible: value should be one of the following:
-+    - "ti,am33xx-tilcdc" for AM335x based boards
-+    - "ti,da850-tilcdc" for DA850/AM18x/OMAP-L138 based boards
-  - interrupts: the interrupt number
-  - reg: base address and size of the LCDC device
- 
-@@ -51,7 +53,7 @@ Optional nodes:
- Example:
- 
- 	fb: fb@4830e000 {
--		compatible = "ti,am33xx-tilcdc";
-+		compatible = "ti,am33xx-tilcdc", "ti,da850-tilcdc";
- 		reg = <0x4830e000 0x1000>;
- 		interrupt-parent = <&intc>;
- 		interrupts = <36>;
-diff --git a/drivers/gpu/drm/tilcdc/tilcdc_drv.c b/drivers/gpu/drm/tilcdc/tilcdc_drv.c
-index a694977..231f2c7 100644
---- a/drivers/gpu/drm/tilcdc/tilcdc_drv.c
-+++ b/drivers/gpu/drm/tilcdc/tilcdc_drv.c
-@@ -723,6 +723,7 @@ static int tilcdc_pdev_remove(struct platform_device *pdev)
- 
- static struct of_device_id tilcdc_of_match[] = {
- 		{ .compatible = "ti,am33xx-tilcdc", },
-+		{ .compatible = "ti,da850-tilcdc", },
- 		{ },
- };
- MODULE_DEVICE_TABLE(of, tilcdc_of_match);
--- 
-2.9.3
+>  - smsc,irq-active-high : Indicates the IRQ polarity is active-high
+>  - smsc,irq-push-pull : Indicates the IRQ type is push-pull
+>  - smsc,force-internal-phy : Forces SMSC LAN controller to use
+> -- 
+> 2.1.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
