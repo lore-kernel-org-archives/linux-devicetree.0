@@ -1,57 +1,61 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH 3/3] net: smsc911x: add u16 workaround for pxa platforms
-Date: Mon, 03 Oct 2016 21:12:31 +0200
-Message-ID: <871szx9rhc.fsf@belgarion.home>
-References: <1475485553-18747-1-git-send-email-robert.jarzmik@free.fr>
-        <1475485553-18747-3-git-send-email-robert.jarzmik@free.fr>
-        <20161003154624.GG7632@leverpostej> <87oa319zv8.fsf@belgarion.home>
-        <20161003165032.GB15313@leverpostej>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 2/2] fsl-quadspi: introduce per-bus spi-bus-width property
+Date: Mon, 3 Oct 2016 21:57:58 +0200
+Message-ID: <CAMuHMdW6WJBj3TiXU0mmwKJmcwp28HEVUSD17-7RH7-UXFtX1g@mail.gmail.com>
+References: <20160927055957.427-1-albert.aribaud@3adev.fr> <20160927055957.427-2-albert.aribaud@3adev.fr>
+ <20161003185143.GA27634@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Nicolas Pitre <nico@fluxnic.net>, Russell King - ARM Linux <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161003185143.GA27634@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "Albert ARIBAUD (3ADEV)" <albert.aribaud-iEu9NFBzPZE@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Mark Rutland <mark.rutland@arm.com> writes:
-
-> On Mon, Oct 03, 2016 at 06:11:23PM +0200, Robert Jarzmik wrote:
->> Mark Rutland <mark.rutland@arm.com> writes:
->> 
->> reg-u16-align4 tells that a specific hardware doesn't support 16 bit writes not
->> being 32 bits aligned, or said differently that a "store" 16 bits wide on an
->> address of the format 4*n + 2 deserves a special handling in the driver, while a
->> store 16 bits wide on an address of the format 4*n can follow the simple casual
->> case.
+On Mon, Oct 3, 2016 at 8:51 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Sep 27, 2016 at 07:59:57AM +0200, Albert ARIBAUD (3ADEV) wrote:
+>> Introduce spi-bus-width property for bus subnodes, to
+>> specify per-bus capability to use NORMAL, FAST, DUAL,
+>> and/or QUAD reads.
+>>
+>> Signed-off-by: Albert ARIBAUD (3ADEV) <albert.aribaud-iEu9NFBzPZE@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/mtd/fsl-quadspi.txt | 18 ++++++++++++++++++
+>>  1 file changed, 18 insertions(+)
 >
-> If I've understood correctly, effectively the low 2 address lines to the
-> device are hard-wired to zero, e.g. a 16-bit access to 4*n + 2 would go
-> to 4*n + 0 on the device? Or is the failure case distinct from that?
-It is distinct.
+> Make this a common property.
 
-The "awful truth" is that an FPGA lies between the system bus and the
-smc91c111. And this FPGA cannot handle correctly the 4*n + 2 u16 writes.
+They already exist:
 
-> Do we have other platforms where similar is true? e.g. u8 accesses
-> requiring 16-bit alignment?
+Documentation/devicetree/bindings/spi/spi-bus.txt:
+- spi-tx-bus-width - (optional) The bus width (number of data wires) that is
+                      used for MOSI. Defaults to 1 if not present.
+- spi-rx-bus-width - (optional) The bus width (number of data wires) that is
+                      used for MISO. Defaults to 1 if not present.
 
-Not really, ie. not with a alignement requirement.
+The above are for normal/dual/quad.
 
-But there are of course these ones are handled by reg-io-width and the
-SMC_USE_xxx_BITS flags as far as I understand it. These cases are when a
-platform declares SMC91X_USE_16BIT or SMC91X_USE_32BIT, but not SMC91X_USE_8BIT,
-which would make me think of :
- - CONFIG_SH_SH4202_MICRODEV,
- - CONFIG_M32R
- - several omap1 boards
- - 1 sa1100 board
- - several MMP and realview boards
+"Fast" is not a property of the bus, but of the SPI slave, right? Cfr.
 
-With all these platforms, each u8 access is replaced with a u16 access and a
-mask / shift + mask.
+Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt:
+- m25p,fast-read : Use the "fast read" opcode to read data from the chip instead
+                   of the usual "read" opcode. This opcode is not supported by
+                   all chips and support for it can not be detected at runtime.
+                   Refer to your chips' datasheet to check if this is supported
+                   by your chip.
 
-Cheers.
+Gr{oetje,eeting}s,
 
--- 
-Robert
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
