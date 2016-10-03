@@ -1,44 +1,42 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 net-next] net: phy: Add Edge-rate driver for Microsemi
- PHYs.
-Date: Mon, 3 Oct 2016 09:56:56 +0200
-Message-ID: <20161003075656.GC18219@lunn.ch>
-References: <1475062449-22168-1-git-send-email-Raju.Lakkaraju@microsemi.com>
- <20160928161653.GA25553@lunn.ch>
- <20161003072043.GA24259@microsemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161003072043.GA24259@microsemi.com>
-Sender: netdev-owner@vger.kernel.org
-To: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, Allan.Nielsen@microsemi.com
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH 2/3] net: smc91x: take into account half-word workaround
+Date: Mon,  3 Oct 2016 11:05:52 +0200
+Message-ID: <1475485553-18747-2-git-send-email-robert.jarzmik@free.fr>
+References: <1475485553-18747-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475485553-18747-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > > +        vsc8531_0: ethernet-phy@0 {
-> > > +                compatible = "ethernet-phy-id0007.0570";
-> > > +                vsc8531,vddmac               = /bits/ 16 <MSCC_VDDMAC_3300>;
-> > > +                vsc8531,edge-slowdown        = /bits/ 8  <17>;
-> > 
-> > No, real values please:
-> > 
-> >                 vsc8531,vddmac          = <2000>;
-> >                 vsc8531,edge-slowdown   = <21>;
-> > 
-> > The driver should then do the maths to figure out the nearest magic
-> > value to write to the register, or complain the settings are out of
-> > range with an -EINVAL.
+For device-tree builds, platforms such as mainstone, idp and stargate2
+must have their u16 writes all aligned on 32 bit boundaries. This is
+already enabled in platform data builds, and this patch adds it to
+device-tree builds.
 
-I think you missed my point. Notice my example does not use values
-from the table. Is there a reason not to use the PHY with 2000mv? Or
-does it break when you don't use one of the 4 listed voltages?
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+---
+ drivers/net/ethernet/smsc/smc91x.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I was wanting you to implement some formula, which given the voltage
-and percentage slowdown, returns the magic number. Hence the comment:
+diff --git a/drivers/net/ethernet/smsc/smc91x.c b/drivers/net/ethernet/smsc/smc91x.c
+index b1f74e06d98e..b081d5ca88ce 100644
+--- a/drivers/net/ethernet/smsc/smc91x.c
++++ b/drivers/net/ethernet/smsc/smc91x.c
+@@ -2323,6 +2323,8 @@ static int smc_drv_probe(struct platform_device *pdev)
+ 		if (!device_property_read_u32(&pdev->dev, "reg-shift",
+ 					      &val))
+ 			lp->io_shift = val;
++		lp->half_word_align4 =
++			device_property_read_bool(&pdev->dev, "reg-u16-align4");
+ 	}
+ #endif
+ 
+-- 
+2.1.4
 
-> > FYI: No floating point maths are allowed in the kernel.
-
-You need to do integer arithmetic, which is why i suggested mV, not V.
-
-  Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
