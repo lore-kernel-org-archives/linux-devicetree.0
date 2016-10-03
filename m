@@ -1,55 +1,72 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: lpc32xx: add device node for IRAM on-chip
- memory
-Date: Sun, 2 Oct 2016 22:09:23 -0700
-Message-ID: <20161003050923.GA4403@localhost>
-References: <1467931601-25067-1-git-send-email-vz@mleia.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v3 2/2] ARM64: dts: bcm: Use a symlink to R-Pi dtsi files
+ from arch=arm
+Date: Sun, 2 Oct 2016 22:57:14 -0700
+Message-ID: <20161003055714.GA12261@localhost>
+References: <1471516926-11466-1-git-send-email-ijc@hellion.org.uk>
+ <1471516926-11466-2-git-send-email-ijc@hellion.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1467931601-25067-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1471516926-11466-2-git-send-email-ijc@hellion.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ian Campbell <ijc@hellion.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Eric Anholt <eric@anholt.net>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 08, 2016 at 01:46:41AM +0300, Vladimir Zapolskiy wrote:
-> The change adds a new device node with description of generic SRAM
-> on-chip memory found on NXP LPC32xx SoC series and connected to AHB
-> matrix slave port 3.
+On Thu, Aug 18, 2016 at 11:42:06AM +0100, Ian Campbell wrote:
+> The ../../../arm... style cross-references added by commit 9d56c22a7861
+> ("ARM: bcm2835: Add devicetree for the Raspberry Pi 3.") do not work in the
+> context of the split device-tree repository[0] (where the directory
+> structure differs). As with commit 8ee57b8182c4 ("ARM64: dts: vexpress: Use
+> a symlink to vexpress-v2m-rs1.dtsi from arch=arm") use symlinks instead.
 > 
-> Note that NXP LPC3220 SoC has 128KiB of SRAM memory, the other
-> LPC3230, LPC3240 and LPC3250 SoCs all have 256KiB SRAM space,
-> in the shared DTSI file this change specifies 128KiB SRAM size.
+> [0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
 > 
-> Also it's worth to mention that the SRAM area contains of 64KiB banks,
-> 2 banks on LPC3220 and 4 banks on the other SoCs from the series, and
-> all SRAM banks but the first one have independent power controls,
-> the description of this feature will be added with the introduction of
-> power domains for the SoC series.
-> 
-> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-> Cc: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Ian Campbell <ijc@hellion.org.uk>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: Eric Anholt <eric@anholt.net>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Lee Jones <lee@kernel.org>
+> Cc: Gerd Hoffmann <kraxel@redhat.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-rpi-kernel@lists.infradead.org
+> Cc: arm@kernel.org
 > ---
-> 
-> Hi Arnd, Olof, Kevin,
-> 
-> please consider to include this NXP LPC32xx DT change directly to
-> ARM tree for v4.8.
-> 
-> The SRAM device node will be utilized to store PM resume code
-> and to store MAC buffers.
+> v2: No more need for skeleton.dtsi since this was cleaned up in the previous
+>     patch
+> v3: Collected tags
 
 Hi,
 
-When sweeping my inbox looking for patches we had missed, this still showed
-up from back in July. I've now applied it, it'll make it into 4.9 (in
-next/late). Sorry for missing it earlier.
+I still think this is fundamentally the wrong approach. We shouldn't have
+created these file links in the first place.
+
+I'd rather have something like this in our tree:
+
+arch/arm64/boot/dts/include/arm -> ../../../../arm/boot/dts
+arch/arm64/boot/dts/include/arm64 -> ../..
+arch/arm/boot/dts/include/arm64 -> ../../../../arm64/boot/dts
+arch/arm/boot/dts/include/arm -> ../..
+
+
+That way you can include by using <arm/bcm2835-rpi.dtsi> instead.
+
+You'll populate another (or the same) directory with links as appropriate
+in your out-of-tree version of the DT contents.
+
+No more symlinked files, and still a clear way of showing that you're
+referencing contents out of the other architecture.
+
+Considerably cleaner, isn't it?
 
 
 -Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
