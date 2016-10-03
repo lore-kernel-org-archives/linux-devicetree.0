@@ -1,46 +1,78 @@
-From: Credit Suisse Bank England <werberthfurtado-opADqmyLwHrdnys6gewWnQ@public.gmane.org>
-Subject: Credit Suisse Bank England
-Date: Mon, 3 Oct 2016 04:16:27 -0300 (BRT)
-Message-ID: <643775337.158794.1475478987031.JavaMail.root__49554.9297346317$1475480295$gmane$org@detran.ma.gov.br>
-Reply-To: Chris Williams <chriswilliams-creditsuisse-O5WfVfzUwx8@public.gmane.org>
+From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+Subject: Re: [PATCH v4 net-next] net: phy: Add Edge-rate driver for Microsemi
+ PHYs.
+Date: Mon, 3 Oct 2016 12:50:45 +0530
+Message-ID: <20161003072043.GA24259@microsemi.com>
+References: <1475062449-22168-1-git-send-email-Raju.Lakkaraju@microsemi.com>
+ <20160928161653.GA25553@lunn.ch>
+Reply-To: <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160928161653.GA25553-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Guten Tag, wie geht es Ihnen heute? Ich habe Ihre E-Mail-Kontakt aus Ihrem Land Business Directory und beschlossen, mit Ihnen in Verbindung zu diesem Business-Vorschlag. Ich bin Herr Chris Williams der Investment Banking Abteilung der Credit Suisse Bank One Cabot Square, London E14 4QJ, Großbritannien. Ich bin Kontaktaufnahme mit Ihnen in Bezug auf ein Geschäft Vorschlag, die von einer immensen Vorteil für uns beide sein wird.
+Hi Andrew,
 
-In meiner Abteilung, entdeckte ich eine verlassene Summe von £ 17,5 Mio. GBP (Siebzehn Millionen fünfhunderttausend britische Pfund Sterling) in einem Konto, das zu einem unserer ausländischen Kunden verstorbenen Herrn Brodskij Nikolai, ein russischer Geschäftsmann, der ein Opfer war, gehört der Malaysia Airlines Flight 370 (MH370 / MAS370), die im Süden der indische Ozean auf 8. März 2014 auf dem Weg von Kuala Lumpur international Airport abgestürzt zu Beijing Capital International Airport zu töten alle an Bord.
+Thank you for code review and valuable comments.
 
-Informieren Sie sich über den untenstehenden Link für die Passagierliste:
+On Wed, Sep 28, 2016 at 06:16:53PM +0200, Andrew Lunn wrote:
+> EXTERNAL EMAIL
+> 
+> 
+> > +Optional properties:
+> > +- vsc8531,vddmac     : The vddmac in mV.
+> > +- vsc8531,edge-slowdown      : % the edge should be slowed down relative to
+> > +                       the fastest possible edge time. Native sign
+> > +                       need not enter.
+> > +                       Edge rate sets the drive strength of the MAC
+> > +                       interface output signals.  Changing the drive
+> > +                       strength will affect the edge rate of the output
+> > +                       signal.  The goal of this setting is to help
+> > +                       reduce electrical emission (EMI) by being able
+> > +                       to reprogram drive strength and in effect slow
+> > +                       down the edge rate if desired.  Table 5 shows the
+> 
+> Hi Raju
+> 
+> There is no table five here? Is that a reference to a data sheet
+> table?
+> 
 
+I accepted your comment.
+It was typo. It should be Table 1.
+Yes. In datasheet Edge rate control is Table 5.
 
-http://online.wsj.com/news/articles/SB10001424052702303369904579427230127866184
+> > +Example:
+> > +
+> > +        vsc8531_0: ethernet-phy@0 {
+> > +                compatible = "ethernet-phy-id0007.0570";
+> > +                vsc8531,vddmac               = /bits/ 16 <MSCC_VDDMAC_3300>;
+> > +                vsc8531,edge-slowdown        = /bits/ 8  <17>;
+> 
+> No, real values please:
+> 
+>                 vsc8531,vddmac          = <2000>;
+>                 vsc8531,edge-slowdown   = <21>;
+> 
+> The driver should then do the maths to figure out the nearest magic
+> value to write to the register, or complain the settings are out of
+> range with an -EINVAL.
+> 
+> FYI: No floating point maths are allowed in the kernel.
+> 
 
-MR Brodskij Nikolai Nummer 7 auf der Liste, Seit seinem Tod unserer Bank hat für die nächsten Angehörigen zu kommen für die Behauptung seiner Gelder und Güter schätzten die Summe von £ 17,5 Mio. GBP, aber niemand hat so, ich persönlich getan gewartet , waren nicht erfolgreich bei der Suche nach einer seiner Verwandten. Ich suche Ihre Zustimmung an Sie an die Bank, wie die nächsten Angehörigen des Verstorbenen zu präsentieren, so dass die Erlöse aus diesem Konto bei £ 17,5 Mio. GBP an Sie gezahlt werden bewertet.
+I accepted your review comment. I will change and resend again.
 
+>    Andrew
 
-Der Deal wird in diesem Verhältnis aufgeteilt: 55% für mich und 45% zu Ihnen. Ich habe in meinem Besitz alle notwendigen und wichtigen Dokumente, die in diesem Geschäft verwendet werden kann. Ich brauche Ihre ehrliche Zusammenarbeit, Verschwiegenheit und Vertrauen, damit wir sehen diese Verhandlung durch. Ich garantiere Ihnen 100% Erfolg in diesem Geschäft, wenden Sie sich bitte sicher sein, dass Sie das Angebot unter einer legitimen Anordnung, die Sie aus der Verletzung des Gesetzes sowohl hier als auch in Großbritannien und in Ihrem Land zu schützen wird ausgeführt.
-
-Wenn Sie in der Lage, dem Umgang mit diesem Angebot sind, bitte zurück zu mir mit folgenden Angaben, damit wir fortfahren:
-
-1. Ihr vollständiger Name:
-2. Telefonnummer:
-3. Kontakt-Adresse:
-4. Alter:
-5. Geschlecht:
-6. Beruf:
-7. Ihre Nationalität:
-
-
-Nachdem durch eine methodische Suche gegangen, entschied ich mich, Sie zu kontaktieren hoffen, dass Sie diesen Vorschlag interessant, Bitte auf Ihrer Bestätigung dieser Nachricht und geben Sie Ihr Interesse, ich will dich mit mehr Informationen liefern zu finden.
-
-Ihre Zustimmung zu dieser E-Mail und Business-Vorschlag wird sehr geschätzt werden.
-
-Freundliche Grüße,
-Chris Williams
+---
+Thanks,
+Raju.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
