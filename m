@@ -1,50 +1,40 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/5] drivers/of: introduce of_fdt_is_available()
-Date: Mon, 3 Oct 2016 10:28:45 -0500
-Message-ID: <CAL_JsqKkYFeENE226QFsoqEMJEPpXET0-xJOWoA0j_tbOPu0_g@mail.gmail.com>
-References: <1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com> <1474828616-16608-2-git-send-email-arbab@linux.vnet.ibm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 1/6] of: Add vendor prefix for Engicam s.r.l company
+Date: Mon, 3 Oct 2016 10:36:49 -0500
+Message-ID: <CAL_JsqL9ewVsWL1HUtPuMHvcSP+nW=d=F3++ibLhOF64xz8YwQ@mail.gmail.com>
+References: <1474917937-29336-1-git-send-email-jteki@openedev.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1474828616-16608-2-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.or>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1474917937-29336-1-git-send-email-jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 25, 2016 at 1:36 PM, Reza Arbab <arbab@linux.vnet.ibm.com> wrote:
-> In __fdt_scan_reserved_mem(), the availability of a node is determined
-> by testing its "status" property.
+On Mon, Sep 26, 2016 at 2:25 PM, Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org> wrote:
+> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 >
-> Move this check into its own function, borrowing logic from the
-> unflattened version, of_device_is_available().
+> Engicam providing design services of electronic systems with
+> high content of technology, relying on a long experience in
+> electronic design.
 >
-> Another caller will be added in a subsequent patch.
+> For more info visit
+> http://www.engicam.com/en/
 >
-> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
-> ---
->  drivers/of/fdt.c       | 26 +++++++++++++++++++++++---
->  include/linux/of_fdt.h |  2 ++
->  2 files changed, 25 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 085c638..9241c6e 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -151,6 +151,23 @@ int of_fdt_match(const void *blob, unsigned long node,
->         return score;
->  }
->
-> +bool of_fdt_is_available(const void *blob, unsigned long node)
+> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+> Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-of_fdt_device_is_available
+I've applied this patch to the DT tree to avoid any conflicts with
+sorting vendor-prefixes.txt.
 
-[...]
-
-> +bool __init of_flat_dt_is_available(unsigned long node)
-
-And of_flat_dt_device_is_available
-
-With that,
-
-Acked-by: Rob Herring <robh@kernel.org>
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
