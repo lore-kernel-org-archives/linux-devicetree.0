@@ -1,50 +1,65 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v6 1/6] of: Add vendor prefix for Engicam s.r.l company
-Date: Mon, 3 Oct 2016 21:14:50 +0530
-Message-ID: <CAMty3ZBHPXEUUZcep9_8qDgKF=ts8HSb1gkMWQt9ioJuG5u_qg@mail.gmail.com>
-References: <1474917937-29336-1-git-send-email-jteki@openedev.com> <CAL_JsqL9ewVsWL1HUtPuMHvcSP+nW=d=F3++ibLhOF64xz8YwQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqL9ewVsWL1HUtPuMHvcSP+nW=d=F3++ibLhOF64xz8YwQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v3] drm: tilcdc: add a da850-specific compatible string
+Date: Mon,  3 Oct 2016 17:45:19 +0200
+Message-ID: <1475509519-29516-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 3, 2016 at 9:06 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Sep 26, 2016 at 2:25 PM, Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org> wrote:
->> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->>
->> Engicam providing design services of electronic systems with
->> high content of technology, relying on a long experience in
->> electronic design.
->>
->> For more info visit
->> http://www.engicam.com/en/
->>
->> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
->> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
->> Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->
-> I've applied this patch to the DT tree to avoid any conflicts with
-> sorting vendor-prefixes.txt.
+Due to some potential tweaks for the da850 LCDC (for example: the
+required memory bandwith settings) we need a separate compatible
+for the IP present on the da850 boards.
 
-Thanks.
+Suggested-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+v1 -> v2:
+- added the new compatible to the bindings documentation
 
-Shawn - can you pick this series.
+v2 -> v3:
+- made the documentation more detailed
 
-thanks!
+ Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt | 6 ++++--
+ drivers/gpu/drm/tilcdc/tilcdc_drv.c                         | 1 +
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
+index a83abd7..6fddb4f 100644
+--- a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
++++ b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
+@@ -1,7 +1,9 @@
+ Device-Tree bindings for tilcdc DRM driver
+ 
+ Required properties:
+- - compatible: value should be "ti,am33xx-tilcdc".
++ - compatible: value should be one of the following:
++    - "ti,am33xx-tilcdc" for AM335x based boards
++    - "ti,da850-tilcdc" for DA850/AM18x/OMAP-L138 based boards
+  - interrupts: the interrupt number
+  - reg: base address and size of the LCDC device
+ 
+@@ -51,7 +53,7 @@ Optional nodes:
+ Example:
+ 
+ 	fb: fb@4830e000 {
+-		compatible = "ti,am33xx-tilcdc";
++		compatible = "ti,am33xx-tilcdc", "ti,da850-tilcdc";
+ 		reg = <0x4830e000 0x1000>;
+ 		interrupt-parent = <&intc>;
+ 		interrupts = <36>;
+diff --git a/drivers/gpu/drm/tilcdc/tilcdc_drv.c b/drivers/gpu/drm/tilcdc/tilcdc_drv.c
+index a694977..231f2c7 100644
+--- a/drivers/gpu/drm/tilcdc/tilcdc_drv.c
++++ b/drivers/gpu/drm/tilcdc/tilcdc_drv.c
+@@ -723,6 +723,7 @@ static int tilcdc_pdev_remove(struct platform_device *pdev)
+ 
+ static struct of_device_id tilcdc_of_match[] = {
+ 		{ .compatible = "ti,am33xx-tilcdc", },
++		{ .compatible = "ti,da850-tilcdc", },
+ 		{ },
+ };
+ MODULE_DEVICE_TABLE(of, tilcdc_of_match);
 -- 
-Jagan Teki
-Free Software Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.3
