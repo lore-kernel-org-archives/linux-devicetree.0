@@ -1,43 +1,57 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 0/3] Broadcom AVS CPUfreq driver
-Date: Mon, 3 Oct 2016 08:59:01 +0530
-Message-ID: <20161003032901.GA4664@vireshk-i7>
-References: <1475272561-8446-1-git-send-email-mmayer@broadcom.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH V4 04/10] dmaengine: qcom_hidma: configure DMA and MSI
+ for OF
+Date: Mon, 3 Oct 2016 09:08:52 +0530
+Message-ID: <20161003033851.GP2467@localhost>
+References: <1475115167-5898-1-git-send-email-okaya@codeaurora.org>
+ <1475115167-5898-5-git-send-email-okaya@codeaurora.org>
+ <20161001061710.GF2467@localhost>
+ <da6536a3-353e-1364-7074-9d3dcbcc4171@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1475272561-8446-1-git-send-email-mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <da6536a3-353e-1364-7074-9d3dcbcc4171@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dan Williams <dan.j.williams@intel.com>, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 30-09-16, 14:55, Markus Mayer wrote:
-> This series contains the CPUfreq driver for Broadcom SoCs that use "AVS
-> Firmware" for voltage and frequency scaling. All voltage and frequency
-> transitions are performed by the firmware and are therefore hidden from
-> Linux.
+On Sat, Oct 01, 2016 at 11:15:00AM -0400, Sinan Kaya wrote:
+> On 10/1/2016 2:17 AM, Vinod Koul wrote:
+> > On Wed, Sep 28, 2016 at 10:12:41PM -0400, Sinan Kaya wrote:
+> >> Configure the DMA bindings for the device tree based firmware.
+> >>
+> >> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+> >> ---
+> >>  drivers/dma/qcom/hidma_mgmt.c | 5 ++++-
+> >>  1 file changed, 4 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/dma/qcom/hidma_mgmt.c b/drivers/dma/qcom/hidma_mgmt.c
+> >> index 82f36e4..e8f6b84 100644
+> >> --- a/drivers/dma/qcom/hidma_mgmt.c
+> >> +++ b/drivers/dma/qcom/hidma_mgmt.c
+> >> @@ -375,8 +375,11 @@ static int __init hidma_mgmt_of_populate_channels(struct device_node *np)
+> >>  			ret = PTR_ERR(new_pdev);
+> >>  			goto out;
+> >>  		}
+> >> +		of_node_get(child);
+> >> +		new_pdev->dev.of_node = child;
+> >>  		of_dma_configure(&new_pdev->dev, child);
+> >> -
+> >> +		of_msi_configure(&new_pdev->dev, child);
+> >> +		of_node_put(child);
+> > 
+> > should this be done unconditionally? Dont we needto call this only for
+> > platforms with msi?
 > 
-> The driver provides a standard CPUfreq interface to other kernel
-> components and to userland on the one hand and communicates with the
-> AVS co-processor on the other.
-> 
-> Communication between the two processors is via shared mailbox
-> registers and interrupts (ARM -> AVS to tell the firmware that there is
-> a command to process and AVS -> ARM to tell the driver that a command
-> finished executing).
-> 
-> lkml.org seems to be down for me. Here are patchwork links to the original
-> series:
+> I followed the pattern in of_platform_device_create_pdata function. of_msi_configure does
+> nothing if MSI is not enabled as irq_find_matching_host returns NULL. It didn't have any
+> side effects on my testing either.
 
-My fault really. I wanted to review it earlier but couldn't :(
+yeah later on I did look up the of_msi_configure() and I suspected this. I
+think it would be worthwhile to document this assumption here.
 
-I should be doing it this week though.
-
+Thanks
 -- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+~Vinod
