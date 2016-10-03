@@ -1,41 +1,57 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 7/8] pinctrl: aspeed-g4: Add mux configuration for all
- pins
-Date: Mon, 3 Oct 2016 14:08:33 -0500
-Message-ID: <20161003190833.GA3065@rob-hp-laptop>
-References: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
- <e0d8fa6cd444972e6f048f98da98f0439e6ca39b.1474986045.git-series.andrew@aj.id.au>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH 3/3] net: smsc911x: add u16 workaround for pxa platforms
+Date: Mon, 03 Oct 2016 21:12:31 +0200
+Message-ID: <871szx9rhc.fsf@belgarion.home>
+References: <1475485553-18747-1-git-send-email-robert.jarzmik@free.fr>
+        <1475485553-18747-3-git-send-email-robert.jarzmik@free.fr>
+        <20161003154624.GG7632@leverpostej> <87oa319zv8.fsf@belgarion.home>
+        <20161003165032.GB15313@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <e0d8fa6cd444972e6f048f98da98f0439e6ca39b.1474986045.git-series.andrew-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Timothy Pearson <tpearson-z0qzliK6Om0mgXJStvpl+vpXobYPEAuW@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Nicolas Pitre <nico@fluxnic.net>, Russell King - ARM Linux <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 28, 2016 at 12:20:19AM +0930, Andrew Jeffery wrote:
-> The patch introducing the g4 pinctrl driver implemented a smattering of
-> pins to flesh out the implementation of the core and provide bare-bones
-> support for some OpenPOWER platforms. Now, update the bindings document
-> to reflect the complete functionality and implement the necessary pin
-> configuration tables in the driver.
+Mark Rutland <mark.rutland@arm.com> writes:
 
-We prefer bindings to be complete if possible where as drivers can be 
-expanded over time.
+> On Mon, Oct 03, 2016 at 06:11:23PM +0200, Robert Jarzmik wrote:
+>> Mark Rutland <mark.rutland@arm.com> writes:
+>> 
+>> reg-u16-align4 tells that a specific hardware doesn't support 16 bit writes not
+>> being 32 bits aligned, or said differently that a "store" 16 bits wide on an
+>> address of the format 4*n + 2 deserves a special handling in the driver, while a
+>> store 16 bits wide on an address of the format 4*n can follow the simple casual
+>> case.
+>
+> If I've understood correctly, effectively the low 2 address lines to the
+> device are hard-wired to zero, e.g. a 16-bit access to 4*n + 2 would go
+> to 4*n + 0 on the device? Or is the failure case distinct from that?
+It is distinct.
 
-> 
-> Cc: Timothy Pearson <tpearson-z0qzliK6Om0mgXJStvpl+vpXobYPEAuW@public.gmane.org>
-> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt |   19 +-
+The "awful truth" is that an FPGA lies between the system bus and the
+smc91c111. And this FPGA cannot handle correctly the 4*n + 2 u16 writes.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Do we have other platforms where similar is true? e.g. u8 accesses
+> requiring 16-bit alignment?
 
->  drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c                   | 1094 ++++++-
->  2 files changed, 1093 insertions(+), 20 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Not really, ie. not with a alignement requirement.
+
+But there are of course these ones are handled by reg-io-width and the
+SMC_USE_xxx_BITS flags as far as I understand it. These cases are when a
+platform declares SMC91X_USE_16BIT or SMC91X_USE_32BIT, but not SMC91X_USE_8BIT,
+which would make me think of :
+ - CONFIG_SH_SH4202_MICRODEV,
+ - CONFIG_M32R
+ - several omap1 boards
+ - 1 sa1100 board
+ - several MMP and realview boards
+
+With all these platforms, each u8 access is replaced with a u16 access and a
+mask / shift + mask.
+
+Cheers.
+
+-- 
+Robert
