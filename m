@@ -1,219 +1,638 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v5 2/5] drm/bridge: Add RGB to VGA bridge support
-Date: Mon, 3 Oct 2016 16:40:57 +0530
-Message-ID: <8795dc49-26f9-0505-f442-2ca74b51872f@codeaurora.org>
-References: <20160930143709.1388-1-maxime.ripard@free-electrons.com>
- <20160930143709.1388-3-maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 05/12] ASoC: sun4i-codec: Add support for A31 playback
+ through headphone output
+Date: Mon, 3 Oct 2016 13:47:09 +0200
+Message-ID: <20161003114709.GC5228@lukather>
+References: <20161003110804.28235-1-wens@csie.org>
+ <20161003110804.28235-6-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160930143709.1388-3-maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="FsscpQKzF/jJk6ya"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161003110804.28235-6-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWF4aW1lLAoKT24gMDkvMzAvMjAxNiAwODowNyBQTSwgTWF4aW1lIFJpcGFyZCB3cm90ZToK
-PiBTb21lIGJvYXJkcyBoYXZlIGFuIGVudGlyZWx5IHBhc3NpdmUgUkdCIHRvIFZHQSBicmlkZ2Us
-IGJhc2VkIG9uIGVpdGhlcgo+IERBQ3Mgb3IgcmVzaXN0b3IgbGFkZGVycy4KPgo+IFRob3NlIG1p
-Z2h0IG9yIG1pZ2h0IG5vdCBoYXZlIGFuIGkyYyBidXMgcm91dGVkIHRvIHRoZSBWR0EgY29ubmVj
-dG9yIGluCj4gb3JkZXIgdG8gYWNjZXNzIHRoZSBzY3JlZW4gRURJRHMuCj4KPiBBZGQgYSBicmlk
-Z2UgdGhhdCBkb2Vzbid0IGRvIGFueXRoaW5nIGJ1dCBleHBvc2UgdGhlIG1vZGVzIGF2YWlsYWJs
-ZSBvbiB0aGUKPiBzY3JlZW4sIGVpdGhlciBiYXNlZCBvbiB0aGUgRURJRHMgaWYgYXZhaWxhYmxl
-LCBvciBiYXNlZCBvbiB0aGUgWEdBCj4gc3RhbmRhcmRzLgo+Cj4gQWNrZWQtYnk6IFJvYiBIZXJy
-aW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4
-aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNw
-bGF5L2JyaWRnZS9yZ2ItdG8tdmdhLWJyaWRnZS50eHQgIHwgIDQ4ICsrKysrCj4gIGRyaXZlcnMv
-Z3B1L2RybS9icmlkZ2UvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgIHwgICA3ICsKPiAgZHJp
-dmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+
-ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3JnYi10by12Z2EuYyAgICAgICAgICAgICAgICB8IDIy
-OSArKysrKysrKysrKysrKysrKysrKysKPiAgNCBmaWxlcyBjaGFuZ2VkLCAyODUgaW5zZXJ0aW9u
-cygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvYnJpZGdlL3JnYi10by12Z2EtYnJpZGdlLnR4dAo+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9yZ2ItdG8tdmdhLmMKPgo+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmdiLXRv
-LXZnYS1icmlkZ2UudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYnJpZGdlL3JnYi10by12Z2EtYnJpZGdlLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4g
-aW5kZXggMDAwMDAwMDAwMDAwLi5hODM3NWJjMWY5Y2IKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JnYi10by12
-Z2EtYnJpZGdlLnR4dAo+IEBAIC0wLDAgKzEsNDggQEAKPiArRHVtYiBSR0IgdG8gVkdBIGJyaWRn
-ZQo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gKwo+ICtUaGlzIGJpbmRpbmcgaXMgYWltZWQg
-Zm9yIGR1bWIgUkdCIHRvIFZHQSBicmlkZ2VzIHRoYXQgZG8gbm90IHJlcXVpcmUKPiArYW55IGNv
-bmZpZ3VyYXRpb24uCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICsKPiArLSBjb21wYXRp
-YmxlOiBNdXN0IGJlICJyZ2ItdG8tdmdhLWJyaWRnZSIKCkknZCB0YWxrZWQgdG8gTGF1cmVudCBv
-biBJUkMgaWYgaGUncyBva2F5IHdpdGggdGhpcy4gQW5kIEkgZ3Vlc3MgeW91IHRvCmhhZCBkaXNj
-dXNzZWQgaXQgZHVyaW5nIFhEQyB0b28uIEhlJ3Mgc3VnZ2VzdGVkIHRoYXQgaXQnZCBiZSBiZXR0
-ZXIgdG8KaGF2ZSB0aGUgY29tcGF0aWJsZSBzdHJpbmcgYXMgInNpbXBsZS12Z2EtZGFjIi4KClNv
-bWUgb2YgdGhlIHJlYXNvbnMgYmVoaW5kIGhhdmluZyB0aGlzOgoKLSBXZSBkb24ndCBuZWVkIHRv
-IHNwZWNpZnkgInJnYiIgaW4gdGhlIGNvbXBhdGlibGUgc3RyaW5nIHNpbmNlIG1vc3QKc2ltcGxl
-IFZHQSBEQUNzIGNhbiBvbmx5IHdvcmsgd2l0aCBhbiBSR0IgaW5wdXQuCi0gQWxzbywgd2l0aCAi
-ZGFjIiBzcGVjaWZpZWQgaW4gdGhlIHN0cmluZywgd2UgZG9uJ3QgbmVlZCB0bwpzcGVjaWZpY2Fs
-bHkgbWVudGlvbiAiYnJpZGdlIiBpbiB0aGUgc3RyaW5nLiBBbHNvLCBicmlkZ2UgaXMgYSBkcm0K
-c3BlY2lmaWMgdGVybS4KLSAic2ltcGxlIiBpcyBjb25zaWRlcmVkIGJlY2F1c2UgaXQncyBhbiB1
-bmNvbmZpZ3VyYWJsZSBicmlkZ2UsIGFuZCBpdAptaWdodCBiZSBtaXNsZWFkaW5nIGZvciBvdGhl
-ciBWR0EgREFDcyB0byBub3QgdXNlICJ2Z2EtZGFjIi4KCldoYXQgZG8geW91IHRoaW5rIGFib3V0
-IHRoaXM/IElmIHlvdSB0aGluayBpdCdzIGdvb2QsIHdvdWxkIGl0IGJlCnBvc3NpYmxlIGZvciB5
-b3UgdG8gY2hhbmdlIHRoaXM/IEkgZ3Vlc3MgaXQncyBva2F5IGZvciB0aGUgcmVzdCBvZgp0aGUg
-cGF0Y2ggdG8gc3RheSB0aGUgc2FtZS4KClNvcnJ5IGFib3V0IHRoZSBjaHVybi4KClRoYW5rcywK
-QXJjaGl0Cgo+ICsKPiArUmVxdWlyZWQgbm9kZXM6Cj4gKwo+ICtUaGlzIGRldmljZSBoYXMgdHdv
-IHZpZGVvIHBvcnRzLiBUaGVpciBjb25uZWN0aW9ucyBhcmUgbW9kZWxlZCB1c2luZyB0aGUgT0YK
-PiArZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9ncmFwaC50eHQuCj4gKwo+ICstIFZpZGVvIHBvcnQgMCBmb3IgUkdCIGlucHV0Cj4g
-Ky0gVmlkZW8gcG9ydCAxIGZvciBWR0Egb3V0cHV0Cj4gKwo+ICsKPiArRXhhbXBsZQo+ICstLS0t
-LS0tCj4gKwo+ICticmlkZ2Ugewo+ICsJY29tcGF0aWJsZSA9ICJyZ2ItdG8tdmdhLWJyaWRnZSI7
-Cj4gKwkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCSNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiAr
-CXBvcnRzIHsKPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkjc2l6ZS1jZWxscyA9IDww
-PjsKPiArCj4gKwkJcG9ydEAwIHsKPiArCQkJcmVnID0gPDA+Owo+ICsKPiArCQkJdmdhX2JyaWRn
-ZV9pbjogZW5kcG9pbnQgewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ0Y29uMF9vdXRfdmdh
-PjsKPiArCQkJfTsKPiArCQl9Owo+ICsKPiArCQlwb3J0QDEgewo+ICsJCQlyZWcgPSA8MT47Cj4g
-Kwo+ICsJCQl2Z2FfYnJpZGdlX291dDogZW5kcG9pbnQgewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50
-ID0gPCZ2Z2FfY29uX2luPjsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiArfTsKPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnIGIvZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS9LY29uZmlnCj4gaW5kZXggYjU5MGU2NzgwNTJkLi5kNjkwMzk4YzU0MWMgMTAwNjQ0Cj4g
-LS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnCj4gKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL2JyaWRnZS9LY29uZmlnCj4gQEAgLTE3LDYgKzE3LDEzIEBAIGNvbmZpZyBEUk1fQU5BTE9H
-SVhfQU5YNzhYWAo+ICAJICB0aGUgSERNSSBvdXRwdXQgb2YgYW4gYXBwbGljYXRpb24gcHJvY2Vz
-c29yIHRvIE15RFAKPiAgCSAgb3IgRGlzcGxheVBvcnQuCj4KPiArY29uZmlnIERSTV9SR0JfVE9f
-VkdBCj4gKwl0cmlzdGF0ZSAiRHVtYiBSR0IgdG8gVkdBIEJyaWRnZSBzdXBwb3J0Igo+ICsJZGVw
-ZW5kcyBvbiBPRgo+ICsJc2VsZWN0IERSTV9LTVNfSEVMUEVSCj4gKwloZWxwCj4gKwkgIFN1cHBv
-cnQgZm9yIHBhc3NpdmUgUkdCIHRvIFZHQSBicmlkZ2VzCj4gKwo+ICBjb25maWcgRFJNX0RXX0hE
-TUkKPiAgCXRyaXN0YXRlCj4gIAlzZWxlY3QgRFJNX0tNU19IRUxQRVIKPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
-TWFrZWZpbGUKPiBpbmRleCBlZmRiMDdlODc4ZjUuLjNiYjhjYmUwOWZlOSAxMDA2NDQKPiAtLS0g
-YS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlCj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS9NYWtlZmlsZQo+IEBAIC0xLDYgKzEsNyBAQAo+ICBjY2ZsYWdzLXkgOj0gLUlpbmNs
-dWRlL2RybQo+Cj4gIG9iai0kKENPTkZJR19EUk1fQU5BTE9HSVhfQU5YNzhYWCkgKz0gYW5hbG9n
-aXgtYW54Nzh4eC5vCj4gK29iai0kKENPTkZJR19EUk1fUkdCX1RPX1ZHQSkgKz0gcmdiLXRvLXZn
-YS5vCj4gIG9iai0kKENPTkZJR19EUk1fRFdfSERNSSkgKz0gZHctaGRtaS5vCj4gIG9iai0kKENP
-TkZJR19EUk1fRFdfSERNSV9BSEJfQVVESU8pICs9IGR3LWhkbWktYWhiLWF1ZGlvLm8KPiAgb2Jq
-LSQoQ09ORklHX0RSTV9OWFBfUFROMzQ2MCkgKz0gbnhwLXB0bjM0NjAubwo+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3JnYi10by12Z2EuYyBiL2RyaXZlcnMvZ3B1L2RybS9i
-cmlkZ2UvcmdiLXRvLXZnYS5jCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAw
-MDAwMDAuLjVmZjRkNGYzNTk4Zgo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2dwdS9k
-cm0vYnJpZGdlL3JnYi10by12Z2EuYwo+IEBAIC0wLDAgKzEsMjI5IEBACj4gKy8qCj4gKyAqIENv
-cHlyaWdodCAoQykgMjAxNS0yMDE2IEZyZWUgRWxlY3Ryb25zCj4gKyAqIENvcHlyaWdodCAoQykg
-MjAxNS0yMDE2IE5leHRUaGluZyBDbwo+ICsgKgo+ICsgKiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUu
-cmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiArICoKPiArICogVGhpcyBwcm9ncmFtIGlzIGZy
-ZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vcgo+ICsgKiBtb2RpZnkg
-aXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBhcwo+
-ICsgKiBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbjsgZWl0aGVyIHZl
-cnNpb24gMiBvZgo+ICsgKiB0aGUgTGljZW5zZSwgb3IgKGF0IHlvdXIgb3B0aW9uKSBhbnkgbGF0
-ZXIgdmVyc2lvbi4KPiArICovCj4gKwo+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4gKyNp
-bmNsdWRlIDxsaW51eC9vZl9ncmFwaC5oPgo+ICsKPiArI2luY2x1ZGUgPGRybS9kcm1QLmg+Cj4g
-KyNpbmNsdWRlIDxkcm0vZHJtX2F0b21pY19oZWxwZXIuaD4KPiArI2luY2x1ZGUgPGRybS9kcm1f
-Y3J0Yy5oPgo+ICsjaW5jbHVkZSA8ZHJtL2RybV9jcnRjX2hlbHBlci5oPgo+ICsKPiArc3RydWN0
-IGR1bWJfdmdhIHsKPiArCXN0cnVjdCBkcm1fYnJpZGdlCWJyaWRnZTsKPiArCXN0cnVjdCBkcm1f
-Y29ubmVjdG9yCWNvbm5lY3RvcjsKPiArCj4gKwlzdHJ1Y3QgaTJjX2FkYXB0ZXIJKmRkYzsKPiAr
-fTsKPiArCj4gK3N0YXRpYyBpbmxpbmUgc3RydWN0IGR1bWJfdmdhICoKPiArZHJtX2JyaWRnZV90
-b19kdW1iX3ZnYShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+ICt7Cj4gKwlyZXR1cm4gY29u
-dGFpbmVyX29mKGJyaWRnZSwgc3RydWN0IGR1bWJfdmdhLCBicmlkZ2UpOwo+ICt9Cj4gKwo+ICtz
-dGF0aWMgaW5saW5lIHN0cnVjdCBkdW1iX3ZnYSAqCj4gK2RybV9jb25uZWN0b3JfdG9fZHVtYl92
-Z2Eoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiArewo+ICsJcmV0dXJuIGNvbnRh
-aW5lcl9vZihjb25uZWN0b3IsIHN0cnVjdCBkdW1iX3ZnYSwgY29ubmVjdG9yKTsKPiArfQo+ICsK
-PiArc3RhdGljIGludCBkdW1iX3ZnYV9nZXRfbW9kZXMoc3RydWN0IGRybV9jb25uZWN0b3IgKmNv
-bm5lY3RvcikKPiArewo+ICsJc3RydWN0IGR1bWJfdmdhICp2Z2EgPSBkcm1fY29ubmVjdG9yX3Rv
-X2R1bWJfdmdhKGNvbm5lY3Rvcik7Cj4gKwlzdHJ1Y3QgZWRpZCAqZWRpZDsKPiArCWludCByZXQ7
-Cj4gKwo+ICsJaWYgKElTX0VSUih2Z2EtPmRkYykpCj4gKwkJZ290byBmYWxsYmFjazsKPiArCj4g
-KwllZGlkID0gZHJtX2dldF9lZGlkKGNvbm5lY3RvciwgdmdhLT5kZGMpOwo+ICsJaWYgKCFlZGlk
-KSB7Cj4gKwkJRFJNX0lORk8oIkVESUQgcmVhZG91dCBmYWlsZWQsIGZhbGxpbmcgYmFjayB0byBz
-dGFuZGFyZCBtb2Rlc1xuIik7Cj4gKwkJZ290byBmYWxsYmFjazsKPiArCX0KPiArCj4gKwlkcm1f
-bW9kZV9jb25uZWN0b3JfdXBkYXRlX2VkaWRfcHJvcGVydHkoY29ubmVjdG9yLCBlZGlkKTsKPiAr
-CXJldHVybiBkcm1fYWRkX2VkaWRfbW9kZXMoY29ubmVjdG9yLCBlZGlkKTsKPiArCj4gK2ZhbGxi
-YWNrOgo+ICsJLyoKPiArCSAqIEluIGNhc2Ugd2UgY2Fubm90IHJldHJpZXZlIHRoZSBFRElEcyAo
-YnJva2VuIG9yIG1pc3NpbmcgaTJjCj4gKwkgKiBidXMpLCBmYWxsYmFjayBvbiB0aGUgWEdBIHN0
-YW5kYXJkcwo+ICsJICovCj4gKwlyZXQgPSBkcm1fYWRkX21vZGVzX25vZWRpZChjb25uZWN0b3Is
-IDE5MjAsIDEyMDApOwo+ICsKPiArCS8qIEFuZCBwcmVmZXIgYSBtb2RlIHByZXR0eSBtdWNoIGFu
-eW9uZSBjYW4gaGFuZGxlICovCj4gKwlkcm1fc2V0X3ByZWZlcnJlZF9tb2RlKGNvbm5lY3Rvciwg
-MTAyNCwgNzY4KTsKPiArCj4gKwlyZXR1cm4gcmV0Owo+ICt9Cj4gKwo+ICtzdGF0aWMgY29uc3Qg
-c3RydWN0IGRybV9jb25uZWN0b3JfaGVscGVyX2Z1bmNzIGR1bWJfdmdhX2Nvbl9oZWxwZXJfZnVu
-Y3MgPSB7Cj4gKwkuZ2V0X21vZGVzCT0gZHVtYl92Z2FfZ2V0X21vZGVzLAo+ICt9Owo+ICsKPiAr
-c3RhdGljIGVudW0gZHJtX2Nvbm5lY3Rvcl9zdGF0dXMKPiArZHVtYl92Z2FfY29ubmVjdG9yX2Rl
-dGVjdChzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yLCBib29sIGZvcmNlKQo+ICt7Cj4g
-KwlzdHJ1Y3QgZHVtYl92Z2EgKnZnYSA9IGRybV9jb25uZWN0b3JfdG9fZHVtYl92Z2EoY29ubmVj
-dG9yKTsKPiArCj4gKwkvKgo+ICsJICogRXZlbiBpZiB3ZSBoYXZlIGFuIEkyQyBidXMsIHdlIGNh
-bid0IGFzc3VtZSB0aGF0IHRoZSBjYWJsZQo+ICsJICogaXMgZGlzY29ubmVjdGVkIGlmIGRybV9w
-cm9iZV9kZGMgZmFpbHMuIFNvbWUgY2FibGVzIGRvbid0Cj4gKwkgKiB3aXJlIHRoZSBEREMgcGlu
-cywgb3IgdGhlIEkyQyBidXMgbWlnaHQgbm90IGJlIHdvcmtpbmcgYXQKPiArCSAqIGFsbC4KPiAr
-CSAqLwo+ICsJaWYgKCFJU19FUlIodmdhLT5kZGMpICYmIGRybV9wcm9iZV9kZGModmdhLT5kZGMp
-KQo+ICsJCXJldHVybiBjb25uZWN0b3Jfc3RhdHVzX2Nvbm5lY3RlZDsKPiArCj4gKwlyZXR1cm4g
-Y29ubmVjdG9yX3N0YXR1c191bmtub3duOwo+ICt9Cj4gKwo+ICtzdGF0aWMgdm9pZAo+ICtkdW1i
-X3ZnYV9jb25uZWN0b3JfZGVzdHJveShzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKQo+
-ICt7Cj4gKwlkcm1fY29ubmVjdG9yX2NsZWFudXAoY29ubmVjdG9yKTsKPiArfQo+ICsKPiArc3Rh
-dGljIGNvbnN0IHN0cnVjdCBkcm1fY29ubmVjdG9yX2Z1bmNzIGR1bWJfdmdhX2Nvbl9mdW5jcyA9
-IHsKPiArCS5kcG1zCQkJPSBkcm1fYXRvbWljX2hlbHBlcl9jb25uZWN0b3JfZHBtcywKPiArCS5k
-ZXRlY3QJCQk9IGR1bWJfdmdhX2Nvbm5lY3Rvcl9kZXRlY3QsCj4gKwkuZmlsbF9tb2RlcwkJPSBk
-cm1faGVscGVyX3Byb2JlX3NpbmdsZV9jb25uZWN0b3JfbW9kZXMsCj4gKwkuZGVzdHJveQkJPSBk
-dW1iX3ZnYV9jb25uZWN0b3JfZGVzdHJveSwKPiArCS5yZXNldAkJCT0gZHJtX2F0b21pY19oZWxw
-ZXJfY29ubmVjdG9yX3Jlc2V0LAo+ICsJLmF0b21pY19kdXBsaWNhdGVfc3RhdGUJPSBkcm1fYXRv
-bWljX2hlbHBlcl9jb25uZWN0b3JfZHVwbGljYXRlX3N0YXRlLAo+ICsJLmF0b21pY19kZXN0cm95
-X3N0YXRlCT0gZHJtX2F0b21pY19oZWxwZXJfY29ubmVjdG9yX2Rlc3Ryb3lfc3RhdGUsCj4gK307
-Cj4gKwo+ICtzdGF0aWMgaW50IGR1bWJfdmdhX2F0dGFjaChzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJp
-ZGdlKQo+ICt7Cj4gKwlzdHJ1Y3QgZHVtYl92Z2EgKnZnYSA9IGRybV9icmlkZ2VfdG9fZHVtYl92
-Z2EoYnJpZGdlKTsKPiArCWludCByZXQ7Cj4gKwo+ICsJaWYgKCFicmlkZ2UtPmVuY29kZXIpIHsK
-PiArCQlEUk1fRVJST1IoIk1pc3NpbmcgZW5jb2RlclxuIik7Cj4gKwkJcmV0dXJuIC1FTk9ERVY7
-Cj4gKwl9Cj4gKwo+ICsJZHJtX2Nvbm5lY3Rvcl9oZWxwZXJfYWRkKCZ2Z2EtPmNvbm5lY3RvciwK
-PiArCQkJCSAmZHVtYl92Z2FfY29uX2hlbHBlcl9mdW5jcyk7Cj4gKwlyZXQgPSBkcm1fY29ubmVj
-dG9yX2luaXQoYnJpZGdlLT5kZXYsICZ2Z2EtPmNvbm5lY3RvciwKPiArCQkJCSAmZHVtYl92Z2Ff
-Y29uX2Z1bmNzLCBEUk1fTU9ERV9DT05ORUNUT1JfVkdBKTsKPiArCWlmIChyZXQpIHsKPiArCQlE
-Uk1fRVJST1IoIkZhaWxlZCB0byBpbml0aWFsaXplIGNvbm5lY3RvclxuIik7Cj4gKwkJcmV0dXJu
-IHJldDsKPiArCX0KPiArCj4gKwlkcm1fbW9kZV9jb25uZWN0b3JfYXR0YWNoX2VuY29kZXIoJnZn
-YS0+Y29ubmVjdG9yLAo+ICsJCQkJCSAgYnJpZGdlLT5lbmNvZGVyKTsKPiArCj4gKwlyZXR1cm4g
-MDsKPiArfQo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fYnJpZGdlX2Z1bmNzIGR1bWJf
-dmdhX2JyaWRnZV9mdW5jcyA9IHsKPiArCS5hdHRhY2gJCT0gZHVtYl92Z2FfYXR0YWNoLAo+ICt9
-Owo+ICsKPiArc3RhdGljIHN0cnVjdCBpMmNfYWRhcHRlciAqZHVtYl92Z2FfcmV0cmlldmVfZGRj
-KHN0cnVjdCBkZXZpY2UgKmRldikKPiArewo+ICsJc3RydWN0IGRldmljZV9ub2RlICplbmRfbm9k
-ZSwgKnBoYW5kbGUsICpyZW1vdGU7Cj4gKwlzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmRkYzsKPiArCj4g
-KwllbmRfbm9kZSA9IG9mX2dyYXBoX2dldF9lbmRwb2ludF9ieV9yZWdzKGRldi0+b2Zfbm9kZSwg
-MSwgLTEpOwo+ICsJaWYgKCFlbmRfbm9kZSkgewo+ICsJCWRldl9lcnIoZGV2LCAiTWlzc2luZyBj
-b25uZWN0b3IgZW5kcG9pbnRcbiIpOwo+ICsJCXJldHVybiBFUlJfUFRSKC1FTk9ERVYpOwo+ICsJ
-fQo+ICsKPiArCXJlbW90ZSA9IG9mX2dyYXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQoZW5kX25v
-ZGUpOwo+ICsJb2Zfbm9kZV9wdXQoZW5kX25vZGUpOwo+ICsJaWYgKCFyZW1vdGUpIHsKPiArCQlk
-ZXZfZXJyKGRldiwgIkVuYWJsZSB0byBwYXJzZSByZW1vdGUgbm9kZVxuIik7Cj4gKwkJcmV0dXJu
-IEVSUl9QVFIoLUVJTlZBTCk7Cj4gKwl9Cj4gKwo+ICsJcGhhbmRsZSA9IG9mX3BhcnNlX3BoYW5k
-bGUocmVtb3RlLCAiZGRjLWkyYy1idXMiLCAwKTsKPiArCW9mX25vZGVfcHV0KHJlbW90ZSk7Cj4g
-KwlpZiAoIXBoYW5kbGUpCj4gKwkJcmV0dXJuIEVSUl9QVFIoLUVOT0RFVik7Cj4gKwo+ICsJZGRj
-ID0gb2ZfZ2V0X2kyY19hZGFwdGVyX2J5X25vZGUocGhhbmRsZSk7Cj4gKwlvZl9ub2RlX3B1dChw
-aGFuZGxlKTsKPiArCWlmICghZGRjKQo+ICsJCXJldHVybiBFUlJfUFRSKC1FUFJPQkVfREVGRVIp
-Owo+ICsKPiArCXJldHVybiBkZGM7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgZHVtYl92Z2FfcHJv
-YmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiArewo+ICsJc3RydWN0IGR1bWJfdmdh
-ICp2Z2E7Cj4gKwlpbnQgcmV0Owo+ICsKPiArCXZnYSA9IGRldm1fa3phbGxvYygmcGRldi0+ZGV2
-LCBzaXplb2YoKnZnYSksIEdGUF9LRVJORUwpOwo+ICsJaWYgKCF2Z2EpCj4gKwkJcmV0dXJuIC1F
-Tk9NRU07Cj4gKwlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCB2Z2EpOwo+ICsKPiArCXZnYS0+
-ZGRjID0gZHVtYl92Z2FfcmV0cmlldmVfZGRjKCZwZGV2LT5kZXYpOwo+ICsJaWYgKElTX0VSUih2
-Z2EtPmRkYykpIHsKPiArCQlpZiAoUFRSX0VSUih2Z2EtPmRkYykgPT0gLUVOT0RFVikgewo+ICsJ
-CQlkZXZfaW5mbygmcGRldi0+ZGV2LAo+ICsJCQkJICJObyBpMmMgYnVzIHNwZWNpZmllZC4uLiBE
-aXNhYmxpbmcgRURJRCByZWFkb3V0XG4iKTsKPiArCQl9IGVsc2Ugewo+ICsJCQlkZXZfZXJyKCZw
-ZGV2LT5kZXYsICJDb3VsZG4ndCByZXRyaWV2ZSBpMmMgYnVzXG4iKTsKPiArCQkJcmV0dXJuIFBU
-Ul9FUlIodmdhLT5kZGMpOwo+ICsJCX0KPiArCX0KPiArCj4gKwl2Z2EtPmJyaWRnZS5mdW5jcyA9
-ICZkdW1iX3ZnYV9icmlkZ2VfZnVuY3M7Cj4gKwl2Z2EtPmJyaWRnZS5vZl9ub2RlID0gcGRldi0+
-ZGV2Lm9mX25vZGU7Cj4gKwo+ICsJcmV0ID0gZHJtX2JyaWRnZV9hZGQoJnZnYS0+YnJpZGdlKTsK
-PiArCWlmIChyZXQgJiYgIUlTX0VSUih2Z2EtPmRkYykpCj4gKwkJaTJjX3B1dF9hZGFwdGVyKHZn
-YS0+ZGRjKTsKPiArCj4gKwlyZXR1cm4gcmV0Owo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGR1bWJf
-dmdhX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICt7Cj4gKwlzdHJ1Y3Qg
-ZHVtYl92Z2EgKnZnYSA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBkZXYpOwo+ICsKPiArCWRybV9i
-cmlkZ2VfcmVtb3ZlKCZ2Z2EtPmJyaWRnZSk7Cj4gKwo+ICsJaWYgKCFJU19FUlIodmdhLT5kZGMp
-KQo+ICsJCWkyY19wdXRfYWRhcHRlcih2Z2EtPmRkYyk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30K
-PiArCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGR1bWJfdmdhX21hdGNoW10g
-PSB7Cj4gKwl7IC5jb21wYXRpYmxlID0gInJnYi10by12Z2EtYnJpZGdlIiB9LAo+ICsJe30sCj4g
-K307Cj4gK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGR1bWJfdmdhX21hdGNoKTsKPiArCj4gK3N0
-cnVjdCBwbGF0Zm9ybV9kcml2ZXIgZHVtYl92Z2FfZHJpdmVyID0gewo+ICsJLnByb2JlCT0gZHVt
-Yl92Z2FfcHJvYmUsCj4gKwkucmVtb3ZlCT0gZHVtYl92Z2FfcmVtb3ZlLAo+ICsJLmRyaXZlcgkJ
-PSB7Cj4gKwkJLm5hbWUJCT0gInJnYi10by12Z2EtYnJpZGdlIiwKPiArCQkub2ZfbWF0Y2hfdGFi
-bGUJPSBkdW1iX3ZnYV9tYXRjaCwKPiArCX0sCj4gK307Cj4gK21vZHVsZV9wbGF0Zm9ybV9kcml2
-ZXIoZHVtYl92Z2FfZHJpdmVyKTsKPiArCj4gK01PRFVMRV9BVVRIT1IoIk1heGltZSBSaXBhcmQg
-PG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPiIpOwo+ICtNT0RVTEVfREVTQ1JJUFRJ
-T04oIkR1bWIgUkdCIHRvIFZHQSBicmlkZ2UgZHJpdmVyIik7Cj4gK01PRFVMRV9MSUNFTlNFKCJH
-UEwiKTsKPgoKLS0gClF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVy
-IG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQ
-cm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+--FsscpQKzF/jJk6ya
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Mon, Oct 03, 2016 at 07:07:57PM +0800, Chen-Yu Tsai wrote:
+> The A31 has a similar codec to the A10/A20. The PCM parts are very
+> similar, with just different register offsets. The analog paths are
+> very different. There are more inputs and outputs.
+>=20
+> The quirks structure is expanded to include different register offsets
+> and separate callbacks for creating the ASoC card. Also the DMA burst
+> length is increased to 8. While the A10 DMA engine supports bursts of
+> 1, 4 and 8, the A31 engine only supports 1 and 8.
+>=20
+> This patch adds support for the basic playback path of the A31 codec,
+> from the DAC to the headphones. Headphone detection, microphone,
+> signaling, other inputs/outputs and capture will be added later.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  .../devicetree/bindings/sound/sun4i-codec.txt      |   6 +-
+>  sound/soc/sunxi/sun4i-codec.c                      | 396 +++++++++++++++=
+++----
+>  2 files changed, 334 insertions(+), 68 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/sound/sun4i-codec.txt b/Do=
+cumentation/devicetree/bindings/sound/sun4i-codec.txt
+> index 0dce690f78f5..1d2411cea98d 100644
+> --- a/Documentation/devicetree/bindings/sound/sun4i-codec.txt
+> +++ b/Documentation/devicetree/bindings/sound/sun4i-codec.txt
+> @@ -1,8 +1,10 @@
+>  * Allwinner A10 Codec
+> =20
+>  Required properties:
+> -- compatible: must be either "allwinner,sun4i-a10-codec" or
+> -  "allwinner,sun7i-a20-codec"
+> +- compatible: must be one of the following compatibles:
+> +		- "allwinner,sun4i-a10-codec"
+> +		- "allwinner,sun6i-a31-codec"
+> +		- "allwinner,sun7i-a20-codec"
+
+I'm guessing it needs a reset line?
+
+>  - reg: must contain the registers location and length
+>  - interrupts: must contain the codec interrupt
+>  - dmas: DMA channels for tx and rx dma. See the DMA client binding,
+> diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
+> index e047ec06d538..9916714ecb71 100644
+> --- a/sound/soc/sunxi/sun4i-codec.c
+> +++ b/sound/soc/sunxi/sun4i-codec.c
+> @@ -3,6 +3,7 @@
+>   * Copyright 2014 Jon Smirl <jonsmirl@gmail.com>
+>   * Copyright 2015 Maxime Ripard <maxime.ripard@free-electrons.com>
+>   * Copyright 2015 Adam Sampson <ats@offog.org>
+> + * Copyright 2016 Chen-Yu Tsai <wens@csie.org>
+>   *
+>   * Based on the Allwinner SDK driver, released under the GPL.
+>   *
+> @@ -24,8 +25,9 @@
+>  #include <linux/delay.h>
+>  #include <linux/slab.h>
+>  #include <linux/of.h>
+> -#include <linux/of_platform.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_platform.h>
+>  #include <linux/clk.h>
+>  #include <linux/regmap.h>
+>  #include <linux/gpio/consumer.h>
+> @@ -55,6 +57,8 @@
+>  #define SUN4I_CODEC_DAC_FIFOC_FIFO_FLUSH		(0)
+>  #define SUN4I_CODEC_DAC_FIFOS			(0x08)
+>  #define SUN4I_CODEC_DAC_TXDATA			(0x0c)
+> +
+> +/* Codec DAC side analog signal controls */
+>  #define SUN4I_CODEC_DAC_ACTL			(0x10)
+>  #define SUN4I_CODEC_DAC_ACTL_DACAENR			(31)
+>  #define SUN4I_CODEC_DAC_ACTL_DACAENL			(30)
+> @@ -81,6 +85,8 @@
+>  #define SUN4I_CODEC_ADC_FIFOC_FIFO_FLUSH		(0)
+>  #define SUN4I_CODEC_ADC_FIFOS			(0x20)
+>  #define SUN4I_CODEC_ADC_RXDATA			(0x24)
+> +
+> +/* Codec ADC side analog signal controls */
+>  #define SUN4I_CODEC_ADC_ACTL			(0x28)
+>  #define SUN4I_CODEC_ADC_ACTL_ADC_R_EN			(31)
+>  #define SUN4I_CODEC_ADC_ACTL_ADC_L_EN			(30)
+> @@ -93,18 +99,106 @@
+>  #define SUN4I_CODEC_ADC_ACTL_DDE			(3)
+>  #define SUN4I_CODEC_ADC_DEBUG			(0x2c)
+> =20
+> -/* Other various ADC registers */
+> +/* FIFO counters */
+>  #define SUN4I_CODEC_DAC_TXCNT			(0x30)
+>  #define SUN4I_CODEC_ADC_RXCNT			(0x34)
+> +
+> +/* Other various ADC registers */
+>  #define SUN7I_CODEC_AC_DAC_CAL			(0x38)
+>  #define SUN7I_CODEC_AC_MIC_PHONE_CAL		(0x3c)
+> =20
+> +/*** sun6i specific register offsets ***/
+> +#define SUN6I_CODEC_ADC_FIFOC			(0x10)
+> +#define SUN6I_CODEC_ADC_FIFOC_EN_AD			(28)
+> +#define SUN6I_CODEC_ADC_FIFOS			(0x14)
+> +#define SUN6I_CODEC_ADC_RXDATA			(0x18)
+> +#define SUN6I_CODEC_OM_DACA_CTRL		(0x20)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_DACAREN		(31)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_DACALEN		(30)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_RMIXEN			(29)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_LMIXEN			(28)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_RMIX_MIC1		(23)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_RMIX_MIC2		(22)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_RMIX_PHONE		(21)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_RMIX_PHONEP		(20)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_RMIX_LINEINR		(19)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_RMIX_DACR		(18)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_RMIX_DACL		(17)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_LMIX_MIC1		(16)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_LMIX_MIC2		(15)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_LMIX_PHONE		(14)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_LMIX_PHONEN		(13)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_LMIX_LINEINL		(12)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_LMIX_DACL		(11)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_LMIX_DACR		(10)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_RHPIS			(9)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_LHPIS			(8)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_RHPPAMUTE		(7)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_LHPPAMUTE		(6)
+> +#define SUN6I_CODEC_OM_DACA_CTRL_HPVOL			(0)
+> +#define SUN6I_CODEC_OM_PA_CTRL			(0x24)
+> +#define SUN6I_CODEC_OM_PA_CTRL_HPPAEN			(31)
+> +#define SUN6I_CODEC_OM_PA_CTRL_MIC1G			(15)
+> +#define SUN6I_CODEC_OM_PA_CTRL_MIC2G			(12)
+> +#define SUN6I_CODEC_OM_PA_CTRL_LINEING			(9)
+> +#define SUN6I_CODEC_OM_PA_CTRL_PHONEG			(6)
+> +#define SUN6I_CODEC_OM_PA_CTRL_PHONEPG			(3)
+> +#define SUN6I_CODEC_OM_PA_CTRL_PHONENG			(0)
+> +#define SUN6I_CODEC_MIC_CTRL			(0x28)
+> +#define SUN6I_CODEC_MIC_CTRL_HBIASEN			(31)
+> +#define SUN6I_CODEC_MIC_CTRL_MBIASEN			(30)
+> +#define SUN6I_CODEC_MIC_CTRL_MIC1AMPEN			(28)
+> +#define SUN6I_CODEC_MIC_CTRL_MIC1BOOST			(25)
+> +#define SUN6I_CODEC_MIC_CTRL_MIC2AMPEN			(24)
+> +#define SUN6I_CODEC_MIC_CTRL_MIC2BOOST			(21)
+> +#define SUN6I_CODEC_MIC_CTRL_MIC2SLT			(20)
+> +#define SUN6I_CODEC_MIC_CTRL_LINEOUTLEN			(19)
+> +#define SUN6I_CODEC_MIC_CTRL_LINEOUTREN			(18)
+> +#define SUN6I_CODEC_MIC_CTRL_LINEOUTLSRC		(17)
+> +#define SUN6I_CODEC_MIC_CTRL_LINEOUTRSRC		(16)
+> +#define SUN6I_CODEC_MIC_CTRL_LINEOUTVC			(11)
+> +#define SUN6I_CODEC_MIC_CTRL_PHONEPREG			(8)
+> +#define SUN6I_CODEC_ADC_ACTL			(0x2c)
+> +#define SUN6I_CODEC_ADC_ACTL_ADCREN			(31)
+> +#define SUN6I_CODEC_ADC_ACTL_ADCLEN			(30)
+> +#define SUN6I_CODEC_ADC_ACTL_ADCRG			(27)
+> +#define SUN6I_CODEC_ADC_ACTL_ADCLG			(24)
+> +#define SUN6I_CODEC_ADC_ACTL_RADCMIX_MIC1		(13)
+> +#define SUN6I_CODEC_ADC_ACTL_RADCMIX_MIC2		(12)
+> +#define SUN6I_CODEC_ADC_ACTL_RADCMIX_PHONE		(11)
+> +#define SUN6I_CODEC_ADC_ACTL_RADCMIX_PHONEP		(10)
+> +#define SUN6I_CODEC_ADC_ACTL_RADCMIX_LINEINR		(9)
+> +#define SUN6I_CODEC_ADC_ACTL_RADCMIX_OMIXR		(8)
+> +#define SUN6I_CODEC_ADC_ACTL_RADCMIX_OMIXL		(7)
+> +#define SUN6I_CODEC_ADC_ACTL_LADCMIX_MIC1		(6)
+> +#define SUN6I_CODEC_ADC_ACTL_LADCMIX_MIC2		(5)
+> +#define SUN6I_CODEC_ADC_ACTL_LADCMIX_PHONE		(4)
+> +#define SUN6I_CODEC_ADC_ACTL_LADCMIX_PHONEN		(3)
+> +#define SUN6I_CODEC_ADC_ACTL_LADCMIX_LINEINL		(2)
+> +#define SUN6I_CODEC_ADC_ACTL_LADCMIX_OMIXL		(1)
+> +#define SUN6I_CODEC_ADC_ACTL_LADCMIX_OMIXR		(0)
+> +#define SUN6I_CODEC_ADDA_TUNE			(0x30)
+> +#define SUN6I_CODEC_CALIBRATION			(0x34)
+> +#define SUN6I_CODEC_DAC_TXCNT			(0x40)
+> +#define SUN6I_CODEC_ADC_RXCNT			(0x44)
+> +#define SUN6I_CODEC_HMIC_CTL			(0x50)
+> +#define SUN6I_CODEC_HMIC_DATA			(0x54)
+> +
+> +/* TODO sun6i DAP (Digital Audio Processing) bits */
+> +
+> +struct sun4i_codec_regs {
+> +	u32	adc_fifoc;
+> +	u32	adc_fifos;
+> +	u32	adc_rxdata;
+> +};
+> +
+>  struct sun4i_codec {
+>  	struct device	*dev;
+>  	struct regmap	*regmap;
+>  	struct clk	*clk_apb;
+>  	struct clk	*clk_module;
+>  	struct gpio_desc *gpio_pa;
+> +	const struct sun4i_codec_regs *regs;
+
+You're reimplementing reg_field here.
+
+> =20
+>  	struct snd_dmaengine_dai_dma_data	capture_dma_data;
+>  	struct snd_dmaengine_dai_dma_data	playback_dma_data;
+> @@ -134,7 +228,7 @@ static void sun4i_codec_stop_playback(struct sun4i_co=
+dec *scodec)
+>  static void sun4i_codec_start_capture(struct sun4i_codec *scodec)
+>  {
+>  	/* Enable ADC DRQ */
+> -	regmap_update_bits(scodec->regmap, SUN4I_CODEC_ADC_FIFOC,
+> +	regmap_update_bits(scodec->regmap, scodec->regs->adc_fifoc,
+>  			   BIT(SUN4I_CODEC_ADC_FIFOC_ADC_DRQ_EN),
+>  			   BIT(SUN4I_CODEC_ADC_FIFOC_ADC_DRQ_EN));
+>  }
+> @@ -142,7 +236,7 @@ static void sun4i_codec_start_capture(struct sun4i_co=
+dec *scodec)
+>  static void sun4i_codec_stop_capture(struct sun4i_codec *scodec)
+>  {
+>  	/* Disable ADC DRQ */
+> -	regmap_update_bits(scodec->regmap, SUN4I_CODEC_ADC_FIFOC,
+> +	regmap_update_bits(scodec->regmap, scodec->regs->adc_fifoc,
+>  			   BIT(SUN4I_CODEC_ADC_FIFOC_ADC_DRQ_EN), 0);
+>  }
+> =20
+> @@ -186,13 +280,13 @@ static int sun4i_codec_prepare_capture(struct snd_p=
+cm_substream *substream,
+> =20
+> =20
+>  	/* Flush RX FIFO */
+> -	regmap_update_bits(scodec->regmap, SUN4I_CODEC_ADC_FIFOC,
+> +	regmap_update_bits(scodec->regmap, scodec->regs->adc_fifoc,
+>  			   BIT(SUN4I_CODEC_ADC_FIFOC_FIFO_FLUSH),
+>  			   BIT(SUN4I_CODEC_ADC_FIFOC_FIFO_FLUSH));
+> =20
+> =20
+>  	/* Set RX FIFO trigger level */
+> -	regmap_update_bits(scodec->regmap, SUN4I_CODEC_ADC_FIFOC,
+> +	regmap_update_bits(scodec->regmap, scodec->regs->adc_fifoc,
+>  			   0xf << SUN4I_CODEC_ADC_FIFOC_RX_TRIG_LEVEL,
+>  			   0x7 << SUN4I_CODEC_ADC_FIFOC_RX_TRIG_LEVEL);
+> =20
+> @@ -201,9 +295,12 @@ static int sun4i_codec_prepare_capture(struct snd_pc=
+m_substream *substream,
+>  	 *        Allwinner's code mentions that it is related
+>  	 *        related to microphone gain
+>  	 */
+> -	regmap_update_bits(scodec->regmap, SUN4I_CODEC_ADC_ACTL,
+> -			   0x3 << 25,
+> -			   0x1 << 25);
+> +	if (!of_device_is_compatible(scodec->dev->of_node,
+> +				     "allwinner,sun6i-a31-codec")) {
+> +		regmap_update_bits(scodec->regmap, SUN4I_CODEC_ADC_ACTL,
+> +				   0x3 << 25,
+> +				   0x1 << 25);
+> +	}
+> =20
+>  	if (of_device_is_compatible(scodec->dev->of_node,
+>  				    "allwinner,sun7i-a20-codec"))
+> @@ -213,7 +310,7 @@ static int sun4i_codec_prepare_capture(struct snd_pcm=
+_substream *substream,
+>  				   0x1 << 8);
+> =20
+>  	/* Fill most significant bits with valid data MSB */
+> -	regmap_update_bits(scodec->regmap, SUN4I_CODEC_ADC_FIFOC,
+> +	regmap_update_bits(scodec->regmap, scodec->regs->adc_fifoc,
+>  			   BIT(SUN4I_CODEC_ADC_FIFOC_RX_FIFO_MODE),
+>  			   BIT(SUN4I_CODEC_ADC_FIFOC_RX_FIFO_MODE));
+> =20
+> @@ -342,17 +439,17 @@ static int sun4i_codec_hw_params_capture(struct sun=
+4i_codec *scodec,
+>  					 unsigned int hwrate)
+>  {
+>  	/* Set ADC sample rate */
+> -	regmap_update_bits(scodec->regmap, SUN4I_CODEC_ADC_FIFOC,
+> +	regmap_update_bits(scodec->regmap, scodec->regs->adc_fifoc,
+>  			   7 << SUN4I_CODEC_ADC_FIFOC_ADC_FS,
+>  			   hwrate << SUN4I_CODEC_ADC_FIFOC_ADC_FS);
+> =20
+>  	/* Set the number of channels we want to use */
+>  	if (params_channels(params) =3D=3D 1)
+> -		regmap_update_bits(scodec->regmap, SUN4I_CODEC_ADC_FIFOC,
+> +		regmap_update_bits(scodec->regmap, scodec->regs->adc_fifoc,
+>  				   BIT(SUN4I_CODEC_ADC_FIFOC_MONO_EN),
+>  				   BIT(SUN4I_CODEC_ADC_FIFOC_MONO_EN));
+>  	else
+> -		regmap_update_bits(scodec->regmap, SUN4I_CODEC_ADC_FIFOC,
+> +		regmap_update_bits(scodec->regmap, scodec->regs->adc_fifoc,
+>  				   BIT(SUN4I_CODEC_ADC_FIFOC_MONO_EN), 0);
+> =20
+>  	return 0;
+> @@ -385,7 +482,7 @@ static int sun4i_codec_hw_params_playback(struct sun4=
+i_codec *scodec,
+>  				   BIT(SUN4I_CODEC_DAC_FIFOC_TX_SAMPLE_BITS),
+>  				   BIT(SUN4I_CODEC_DAC_FIFOC_TX_SAMPLE_BITS));
+> =20
+> -		/* Set TX FIFO mode to padding the LSBs with 0 */
+> +		/* Use higher 24 bits of TX FIFO */
+>  		regmap_update_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+>  				   BIT(SUN4I_CODEC_DAC_FIFOC_TX_FIFO_MODE),
+>  				   0);
+> @@ -396,7 +493,7 @@ static int sun4i_codec_hw_params_playback(struct sun4=
+i_codec *scodec,
+>  				   BIT(SUN4I_CODEC_DAC_FIFOC_TX_SAMPLE_BITS),
+>  				   0);
+> =20
+> -		/* Set TX FIFO mode to repeat the MSB */
+> +		/* Use lower 16 bits of TX FIFO */
+>  		regmap_update_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+>  				   BIT(SUN4I_CODEC_DAC_FIFOC_TX_FIFO_MODE),
+>  				   BIT(SUN4I_CODEC_DAC_FIFOC_TX_FIFO_MODE));
+> @@ -502,7 +599,7 @@ static struct snd_soc_dai_driver sun4i_codec_dai =3D {
+>  	},
+>  };
+> =20
+> -/*** Codec ***/
+> +/*** sun4i Codec ***/
+>  static const struct snd_kcontrol_new sun4i_codec_pa_mute =3D
+>  	SOC_DAPM_SINGLE("Switch", SUN4I_CODEC_DAC_ACTL,
+>  			SUN4I_CODEC_DAC_ACTL_PA_MUTE, 1, 0);
+> @@ -638,6 +735,114 @@ static struct snd_soc_codec_driver sun4i_codec_code=
+c =3D {
+>  	},
+>  };
+> =20
+> +/*** sun6i Codec ***/
+> +
+> +/* mixer controls */
+> +static const struct snd_kcontrol_new sun6i_codec_mixer_controls[] =3D {
+> +	SOC_DAPM_DOUBLE("DAC Playback Switch",
+> +			SUN6I_CODEC_OM_DACA_CTRL,
+> +			SUN6I_CODEC_OM_DACA_CTRL_LMIX_DACL,
+> +			SUN6I_CODEC_OM_DACA_CTRL_RMIX_DACR, 1, 0),
+> +	SOC_DAPM_DOUBLE("DAC Reversed Playback Switch",
+> +			SUN6I_CODEC_OM_DACA_CTRL,
+> +			SUN6I_CODEC_OM_DACA_CTRL_LMIX_DACR,
+> +			SUN6I_CODEC_OM_DACA_CTRL_RMIX_DACL, 1, 0),
+> +};
+> +
+> +/* headphone controls */
+> +static const char * const sun6i_codec_hp_src_enum_text[] =3D {
+> +	"DAC", "Mixer",
+> +};
+> +
+> +static SOC_ENUM_DOUBLE_DECL(sun6i_codec_hp_src_enum,
+> +			    SUN6I_CODEC_OM_DACA_CTRL,
+> +			    SUN6I_CODEC_OM_DACA_CTRL_LHPIS,
+> +			    SUN6I_CODEC_OM_DACA_CTRL_RHPIS,
+> +			    sun6i_codec_hp_src_enum_text);
+> +
+> +static const struct snd_kcontrol_new sun6i_codec_hp_src[] =3D {
+> +	SOC_DAPM_ENUM("Headphone Source Playback Route", sun6i_codec_hp_src_enu=
+m),
+> +};
+> +
+> +/* volume / mute controls */
+> +static const DECLARE_TLV_DB_SCALE(sun6i_codec_dvol_scale, -7308, 116, 0);
+> +static const DECLARE_TLV_DB_SCALE(sun6i_codec_hp_vol_scale, -6300, 100, =
+1);
+> +
+> +static const struct snd_kcontrol_new sun6i_codec_codec_widgets[] =3D {
+> +	SOC_SINGLE_TLV("DAC Playback Volume", SUN4I_CODEC_DAC_DPC,
+> +		       SUN4I_CODEC_DAC_DPC_DVOL, 0x3f, 1,
+> +		       sun6i_codec_dvol_scale),
+> +	SOC_SINGLE_TLV("Headphone Playback Volume",
+> +		       SUN6I_CODEC_OM_DACA_CTRL,
+> +		       SUN6I_CODEC_OM_DACA_CTRL_HPVOL, 0x3f, 0,
+> +		       sun6i_codec_hp_vol_scale),
+> +	SOC_DOUBLE("Headphone Playback Switch",
+> +		   SUN6I_CODEC_OM_DACA_CTRL,
+> +		   SUN6I_CODEC_OM_DACA_CTRL_LHPPAMUTE,
+> +		   SUN6I_CODEC_OM_DACA_CTRL_RHPPAMUTE, 1, 0),
+> +};
+> +
+> +static const struct snd_soc_dapm_widget sun6i_codec_codec_dapm_widgets[]=
+ =3D {
+> +	/* Digital parts of the DACs */
+> +	SND_SOC_DAPM_SUPPLY("DAC Enable", SUN4I_CODEC_DAC_DPC,
+> +			    SUN4I_CODEC_DAC_DPC_EN_DA, 0,
+> +			    NULL, 0),
+> +
+> +	/* Analog parts of the DACs */
+> +	SND_SOC_DAPM_DAC("Left DAC", "Codec Playback", SUN6I_CODEC_OM_DACA_CTRL,
+> +			 SUN6I_CODEC_OM_DACA_CTRL_DACALEN, 0),
+> +	SND_SOC_DAPM_DAC("Right DAC", "Codec Playback", SUN6I_CODEC_OM_DACA_CTR=
+L,
+> +			 SUN6I_CODEC_OM_DACA_CTRL_DACAREN, 0),
+> +
+> +	/* Mixers */
+> +	SOC_MIXER_ARRAY("Left Mixer", SUN6I_CODEC_OM_DACA_CTRL,
+> +			SUN6I_CODEC_OM_DACA_CTRL_LMIXEN, 0,
+> +			sun6i_codec_mixer_controls),
+> +	SOC_MIXER_ARRAY("Right Mixer", SUN6I_CODEC_OM_DACA_CTRL,
+> +			SUN6I_CODEC_OM_DACA_CTRL_RMIXEN, 0,
+> +			sun6i_codec_mixer_controls),
+> +
+> +	/* Headphone output path */
+> +	SND_SOC_DAPM_MUX("Headphone Source Playback Route",
+> +			 SND_SOC_NOPM, 0, 0, sun6i_codec_hp_src),
+> +	SND_SOC_DAPM_OUT_DRV("Headphone Amp", SUN6I_CODEC_OM_PA_CTRL,
+> +			     SUN6I_CODEC_OM_PA_CTRL_HPPAEN, 0, NULL, 0),
+> +	SND_SOC_DAPM_OUTPUT("HP"),
+> +};
+> +
+> +static const struct snd_soc_dapm_route sun6i_codec_codec_dapm_routes[] =
+=3D {
+> +	/* DAC Routes */
+> +	{ "Left DAC", NULL, "DAC Enable" },
+> +	{ "Right DAC", NULL, "DAC Enable" },
+> +
+> +	/* Left Mixer Routes */
+> +	{ "Left Mixer", "DAC Playback Switch", "Left DAC" },
+> +	{ "Left Mixer", "DAC Reversed Playback Switch", "Right DAC" },
+> +
+> +	/* Right Mixer Routes */
+> +	{ "Right Mixer", "DAC Playback Switch", "Right DAC" },
+> +	{ "Right Mixer", "DAC Reversed Playback Switch", "Left DAC" },
+> +
+> +	/* Headphone Routes */
+> +	{ "Headphone Source Playback Route", "DAC", "Left DAC" },
+> +	{ "Headphone Source Playback Route", "DAC", "Right DAC" },
+> +	{ "Headphone Source Playback Route", "Mixer", "Left Mixer" },
+> +	{ "Headphone Source Playback Route", "Mixer", "Right Mixer" },
+> +	{ "Headphone Amp", NULL, "Headphone Source Playback Route" },
+> +	{ "HP", NULL, "Headphone Amp" },
+> +};
+> +
+> +static struct snd_soc_codec_driver sun6i_codec_codec =3D {
+> +	.component_driver =3D {
+> +		.controls		=3D sun6i_codec_codec_widgets,
+> +		.num_controls		=3D ARRAY_SIZE(sun6i_codec_codec_widgets),
+> +		.dapm_widgets		=3D sun6i_codec_codec_dapm_widgets,
+> +		.num_dapm_widgets	=3D ARRAY_SIZE(sun6i_codec_codec_dapm_widgets),
+> +		.dapm_routes		=3D sun6i_codec_codec_dapm_routes,
+> +		.num_dapm_routes	=3D ARRAY_SIZE(sun6i_codec_codec_dapm_routes),
+> +	},
+> +};
+> +
+>  static const struct snd_soc_component_driver sun4i_codec_component =3D {
+>  	.name =3D "sun4i-codec",
+>  };
+> @@ -678,45 +883,6 @@ static struct snd_soc_dai_driver dummy_cpu_dai =3D {
+>  	 },
+>  };
+> =20
+> -static const struct regmap_config sun4i_codec_regmap_config =3D {
+> -	.reg_bits	=3D 32,
+> -	.reg_stride	=3D 4,
+> -	.val_bits	=3D 32,
+> -	.max_register	=3D SUN4I_CODEC_ADC_RXCNT,
+> -};
+> -
+> -static const struct regmap_config sun7i_codec_regmap_config =3D {
+> -	.reg_bits	=3D 32,
+> -	.reg_stride	=3D 4,
+> -	.val_bits	=3D 32,
+> -	.max_register	=3D SUN7I_CODEC_AC_MIC_PHONE_CAL,
+> -};
+> -
+> -struct sun4i_codec_quirks {
+> -	const struct regmap_config *regmap_config;
+> -};
+> -
+> -static const struct sun4i_codec_quirks sun4i_codec_quirks =3D {
+> -	.regmap_config =3D &sun4i_codec_regmap_config,
+> -};
+> -
+> -static const struct sun4i_codec_quirks sun7i_codec_quirks =3D {
+> -	.regmap_config =3D &sun7i_codec_regmap_config,
+> -};
+> -
+> -static const struct of_device_id sun4i_codec_of_match[] =3D {
+> -	{
+> -		.compatible =3D "allwinner,sun4i-a10-codec",
+> -		.data =3D &sun4i_codec_quirks,
+> -	},
+> -	{
+> -		.compatible =3D "allwinner,sun7i-a20-codec",
+> -		.data =3D &sun7i_codec_quirks,
+> -	},
+> -	{}
+> -};
+> -MODULE_DEVICE_TABLE(of, sun4i_codec_of_match);
+> -
+>  static struct snd_soc_dai_link *sun4i_codec_create_link(struct device *d=
+ev,
+>  							int *num_links)
+>  {
+> @@ -781,6 +947,102 @@ static struct snd_soc_card *sun4i_codec_create_card=
+(struct device *dev)
+>  	return card;
+>  };
+> =20
+> +static struct snd_soc_card *sun6i_codec_create_card(struct device *dev)
+> +{
+> +	struct snd_soc_card *card;
+> +
+> +	card =3D devm_kzalloc(dev, sizeof(*card), GFP_KERNEL);
+> +	if (!card)
+> +		return NULL;
+> +
+> +	card->dai_link =3D sun4i_codec_create_link(dev, &card->num_links);
+> +	if (!card->dai_link)
+> +		return NULL;
+> +
+> +	card->dev	=3D dev;
+> +	card->name	=3D "sun4i-codec";
+> +
+> +	return card;
+> +};
+> +
+> +static const struct regmap_config sun4i_codec_regmap_config =3D {
+> +	.reg_bits	=3D 32,
+> +	.reg_stride	=3D 4,
+> +	.val_bits	=3D 32,
+> +	.max_register	=3D SUN4I_CODEC_ADC_RXCNT,
+> +};
+> +
+> +static const struct regmap_config sun6i_codec_regmap_config =3D {
+> +	.reg_bits	=3D 32,
+> +	.reg_stride	=3D 4,
+> +	.val_bits	=3D 32,
+> +	.max_register	=3D SUN6I_CODEC_HMIC_DATA,
+> +};
+> +
+> +static const struct regmap_config sun7i_codec_regmap_config =3D {
+> +	.reg_bits	=3D 32,
+> +	.reg_stride	=3D 4,
+> +	.val_bits	=3D 32,
+> +	.max_register	=3D SUN7I_CODEC_AC_MIC_PHONE_CAL,
+> +};
+> +
+> +static const struct sun4i_codec_regs sun4i_codec_regs =3D {
+> +	.adc_fifoc	=3D SUN4I_CODEC_ADC_FIFOC,
+> +	.adc_fifos	=3D SUN4I_CODEC_ADC_FIFOS,
+> +	.adc_rxdata	=3D SUN4I_CODEC_ADC_RXDATA,
+> +};
+> +
+> +static const struct sun4i_codec_regs sun6i_codec_regs =3D {
+> +	.adc_fifoc	=3D SUN6I_CODEC_ADC_FIFOC,
+> +	.adc_fifos	=3D SUN6I_CODEC_ADC_FIFOS,
+> +	.adc_rxdata	=3D SUN6I_CODEC_ADC_RXDATA,
+> +};
+> +
+> +struct sun4i_codec_quirks {
+> +	const struct regmap_config *regmap_config;
+> +	const struct snd_soc_codec_driver *codec;
+> +	const struct sun4i_codec_regs *regs;
+> +	struct snd_soc_card * (*create_card)(struct device *dev);
+> +};
+> +
+> +static const struct sun4i_codec_quirks sun4i_codec_quirks =3D {
+> +	.regmap_config	=3D &sun4i_codec_regmap_config,
+> +	.regs		=3D &sun4i_codec_regs,
+> +	.codec		=3D &sun4i_codec_codec,
+> +	.create_card	=3D sun4i_codec_create_card,
+> +};
+> +
+> +static const struct sun4i_codec_quirks sun6i_a31_codec_quirks =3D {
+> +	.regmap_config	=3D &sun6i_codec_regmap_config,
+> +	.regs		=3D &sun6i_codec_regs,
+> +	.codec		=3D &sun6i_codec_codec,
+> +	.create_card	=3D sun6i_codec_create_card,
+> +};
+> +
+> +static const struct sun4i_codec_quirks sun7i_codec_quirks =3D {
+> +	.regmap_config	=3D &sun7i_codec_regmap_config,
+> +	.regs		=3D &sun4i_codec_regs,
+> +	.codec		=3D &sun4i_codec_codec,
+> +	.create_card	=3D sun4i_codec_create_card,
+> +};
+> +
+> +static const struct of_device_id sun4i_codec_of_match[] =3D {
+> +	{
+> +		.compatible =3D "allwinner,sun4i-a10-codec",
+> +		.data =3D &sun4i_codec_quirks,
+> +	},
+> +	{
+> +		.compatible =3D "allwinner,sun6i-a31-codec",
+> +		.data =3D &sun6i_a31_codec_quirks,
+> +	},
+> +	{
+> +		.compatible =3D "allwinner,sun7i-a20-codec",
+> +		.data =3D &sun7i_codec_quirks,
+> +	},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, sun4i_codec_of_match);
+> +
+
+I don't really like moving blocks of code over and over again,
+especially in the middle of an unrelated patch.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--FsscpQKzF/jJk6ya
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJX8kU9AAoJEBx+YmzsjxAgsMoP/1KplNJqczHrl1/VJEQALFhi
+aIZlcygA/kJlr0l5E5GVNW4xM0HSRL+4xWjKEmyia/KSdGksl3zqvzxQ0fuvV89R
+uCKPOoqo05DMHEm+kOBOkdOtfMMDo+GBF/XWunXTDbraNa77djay/huwJRJDaR6j
+mjOszC5doih2RALSqYHRk7ihmxExs51I3203BQWiKawcoAkkRrP/o4P1sgUmV8l7
+8gN1Ol66ie2lIsq6zlh9Msvt+riZHaj95qhf5+UfwDo8TUeaSTp5oGSFIgci8HKm
+6M/ee3jYs1GEm38buZYLVDrVACvDme9l4LUGNql4e7kHKy4a7IfJNZpaZ+4IlcAe
+0uGEbCxu8ShY3fhlLCQXObs1soYAWx7YdeKDUhKlZ+7k+Zq9YZdu/xFvxoljmiJZ
+9uPgEI2vVAaB2AciXcYZUfoihdyvBBBec9kyusRq0lttinhLjawLVFCV3KifTI33
+ncO64MFXBI+z/Btdm60usCk0plAn19byy8saT3Qr0Sxo/zgeEedUtib5LyHManWY
+hnV6WKuptl+7pEzZkeVaDa6CQKFrSUoIo2M1BCDrhmRBxS+O0+QmvMWjPJhwvHjH
+cl4FMMT2Oc8wgZmKApZHSkhWpY/wDW2Ea1v+o3AyMsEJnx8y685PbuuZ8+pIXzkj
+Cf0bw04QAILcXVfdBJnW
+=0YYW
+-----END PGP SIGNATURE-----
+
+--FsscpQKzF/jJk6ya--
