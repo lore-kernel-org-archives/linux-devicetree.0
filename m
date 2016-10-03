@@ -1,70 +1,48 @@
-From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
-Subject: Re: [PATCH v4 net-next] net: phy: Add Edge-rate driver for Microsemi
- PHYs.
-Date: Mon, 3 Oct 2016 14:53:35 +0530
-Message-ID: <20161003092333.GA24705@microsemi.com>
-References: <1475062449-22168-1-git-send-email-Raju.Lakkaraju@microsemi.com>
- <20160928161653.GA25553@lunn.ch>
- <20161003072043.GA24259@microsemi.com>
- <20161003075656.GC18219@lunn.ch>
-Reply-To: <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+From: Vijay Kumar B <vijaykumar@zilogic.com>
+Subject: [PATCH] Specify all interrupts for the GPIO controller.
+Date: Mon,  3 Oct 2016 15:40:12 +0530
+Message-ID: <1475489412-9758-1-git-send-email-vijaykumar@zilogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161003075656.GC18219-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Vijay Kumar B <vijaykumar@zilogic.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+The PXA GPIO controller has 3 interrupt outputs, this needs to be
+indicated in the DTS file. Without this mainstone's CPLD interrupt 0
+will not be raised to the processor.
 
+Signed-off-by: Vijay Kumar B. <vijaykumar@zilogic.com>
+Reviewed-by: Deepak S. <deepak@zilogic.com>
+---
+ arch/arm/boot/dts/pxa2xx.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Mon, Oct 03, 2016 at 09:56:56AM +0200, Andrew Lunn wrote:
-> EXTERNAL EMAIL
-> 
-> 
-> > > > +        vsc8531_0: ethernet-phy@0 {
-> > > > +                compatible = "ethernet-phy-id0007.0570";
-> > > > +                vsc8531,vddmac               = /bits/ 16 <MSCC_VDDMAC_3300>;
-> > > > +                vsc8531,edge-slowdown        = /bits/ 8  <17>;
-> > >
-> > > No, real values please:
-> > >
-> > >                 vsc8531,vddmac          = <2000>;
-> > >                 vsc8531,edge-slowdown   = <21>;
-> > >
-> > > The driver should then do the maths to figure out the nearest magic
-> > > value to write to the register, or complain the settings are out of
-> > > range with an -EINVAL.
-> 
-> I think you missed my point. Notice my example does not use values
-> from the table. Is there a reason not to use the PHY with 2000mv? Or
-> does it break when you don't use one of the 4 listed voltages?
-> 
-As per PHY data sheet, It should use one of the voltage in list.
-i.e. 3.3V (3300 mV) or 2.5V (2500 mV) or 1.8V (1800 mV) or 1.5V (1500).
-Other voltages are not accepted. Drivr considers default as 3.3V (3300 mV).
-
-> I was wanting you to implement some formula, which given the voltage
-> and percentage slowdown, returns the magic number. Hence the comment:
-> 
-
-Based on Voltage selection and percentage slowdown, Driver pick the
-magic number from Edge rate table.
-
-> > > FYI: No floating point maths are allowed in the kernel.
-> 
-> You need to do integer arithmetic, which is why i suggested mV, not V.
-> 
-I understood your suggestion and used voltage in milli Volts.
-
->   Andrew
-
-Thanks,
-Raju.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/pxa2xx.dtsi b/arch/arm/boot/dts/pxa2xx.dtsi
+index 5e5af07..9ca2e5b 100644
+--- a/arch/arm/boot/dts/pxa2xx.dtsi
++++ b/arch/arm/boot/dts/pxa2xx.dtsi
+@@ -54,8 +54,8 @@
+ 			reg = <0x40e00000 0x10000>;
+ 			gpio-controller;
+ 			#gpio-cells = <0x2>;
+-			interrupts = <10>;
+-			interrupt-names = "gpio_mux";
++			interrupts = <8 9 10>;
++			interrupt-names = "gpio0", "gpio1", "gpio_mux";
+ 			interrupt-controller;
+ 			#interrupt-cells = <0x2>;
+ 			ranges;
+-- 
+2.1.4
