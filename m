@@ -1,177 +1,195 @@
-From: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
-Subject: Re: [PATCH 1/3] iio: dac: mcp4725: support voltage reference
- selection
-Date: Mon, 3 Oct 2016 14:34:37 +0200
-Message-ID: <20161003143437.7157d460@tomas.local.tbs-biometrics.cz>
-References: <1475241588-18429-1-git-send-email-tomas@novotny.cz>
-        <1475241588-18429-2-git-send-email-tomas@novotny.cz>
-        <7f13e3bd-9052-dbff-e296-f8f7975d1e3b@kernel.org>
-        <alpine.DEB.2.02.1610011345040.21854@pmeerw.net>
+From: Muhammad Abdul WAHAB <muhammadabdul.wahab-vbcOdlJ0SulGWvitb5QawA@public.gmane.org>
+Subject: Re: [PATCH] Adding Support for Coresight Components on Zynq 7000.
+Date: Mon, 3 Oct 2016 14:56:16 +0200
+Message-ID: <5b56a00a-ac69-b15d-1155-bab53ed766f3@supelec.fr>
+References: <c6836102-9b7e-a9d9-bad9-34b100d4ae49@supelec.fr>
+ <20160929143411.GE16583@xsjsorenbubuntu>
+ <920cac6c-e56a-60d5-4882-22892058346d@supelec.fr>
+ <20160930165325.GA7630@xsjsorenbubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1610011345040.21854-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+In-Reply-To: <20160930165325.GA7630@xsjsorenbubuntu>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yong Li <sdliyong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan, Peter,
+Hi Sören,
 
-On Sat, 1 Oct 2016 13:48:38 +0200 (CEST), Peter Meerwald-Stadler
-<pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org> wrote:
-> 
-> some additional comments
-> 
-> On Sat, 1 Oct 2016, Jonathan Cameron wrote:
-> 
-> > On 30/09/16 14:19, Tomas Novotny wrote:
-> > > MCP47x6 chip supports selection of a voltage reference (VDD, VREF buffered
-> > > or unbuffered). MCP4725 doesn't have this feature thus the setting is
-> > > ignored and user is warned if there is an attempt to set a value other than
-> > > zero.
-> > > 
-> > > The setting is stored only in the volatile memory of the chip. You need to
-> > > manually store it to the EEPROM of the chip via 'store_eeprom' sysfs entry.
-> > > 
-> > > Signed-off-by: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
-> > > ---
-> > >  drivers/iio/dac/mcp4725.c       | 45 +++++++++++++++++++++++++++++++++++++----
-> > >  include/linux/iio/dac/mcp4725.h |  1 +
-> > >  2 files changed, 42 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/iio/dac/mcp4725.c b/drivers/iio/dac/mcp4725.c
-> > > index cca935c..f8e54f1 100644
-> > > --- a/drivers/iio/dac/mcp4725.c
-> > > +++ b/drivers/iio/dac/mcp4725.c
-> > > @@ -28,7 +28,9 @@
-> > >  
-> > >  struct mcp4725_data {
-> > >  	struct i2c_client *client;
-> > > +	int id;
-> > >  	u16 vref_mv;
-> > > +	unsigned vref_mode;
-> > >  	u16 dac_value;
-> > >  	bool powerdown;
-> > >  	unsigned powerdown_mode;
-> > > @@ -86,6 +88,7 @@ static ssize_t mcp4725_store_eeprom(struct device *dev,
-> > >  		return 0;
-> > >  
-> > >  	inoutbuf[0] = 0x60; /* write EEPROM */
-> > > +	inoutbuf[0] |= data->vref_mode << 3;
-> > >  	inoutbuf[1] = data->dac_value >> 4;
-> > >  	inoutbuf[2] = (data->dac_value & 0xf) << 4;
-> > >  
-> > > @@ -329,8 +332,10 @@ static int mcp4725_probe(struct i2c_client *client,
-> > >  	struct mcp4725_data *data;
-> > >  	struct iio_dev *indio_dev;
-> > >  	struct mcp4725_platform_data *platform_data = client->dev.platform_data;
-> > > -	u8 inbuf[3];
-> > > +	u8 inoutbuf[3];
-> > >  	u8 pd;
-> > > +	u8 vref;
-> > > +	int ret;
-> > >  	int err;
-> > >  
-> > >  	if (!platform_data || !platform_data->vref_mv) {
-> > > @@ -344,6 +349,17 @@ static int mcp4725_probe(struct i2c_client *client,
-> > >  	data = iio_priv(indio_dev);
-> > >  	i2c_set_clientdata(client, indio_dev);
-> > >  	data->client = client;
-> > > +	data->id = id->driver_data;
-> > > +
-> > > +	if (data->id == MCP4725 && platform_data->vref_mode > 0) {
-> > > +		dev_warn(&client->dev, "vref mode is unavailable on MCP4725, ignoring");
-> > > +		platform_data->vref_mode = 0;
-> > > +	}
-> > > +
-> > > +	if (data->id == MCP4726 && platform_data->vref_mode > 3) {
-> > > +		dev_err(&client->dev, "vref mode is out of range");
-> > > +		return -EINVAL;
-> > > +	}
-> > >  
-> > >  	indio_dev->dev.parent = &client->dev;
-> > >  	indio_dev->name = id->name;
-> > > @@ -353,17 +369,38 @@ static int mcp4725_probe(struct i2c_client *client,
-> > >  	indio_dev->modes = INDIO_DIRECT_MODE;
-> > >  
-> > >  	data->vref_mv = platform_data->vref_mv;
-> > > +	data->vref_mode = platform_data->vref_mode;
-> > >  
-> > >  	/* read current DAC value */
-> > > -	err = i2c_master_recv(client, inbuf, 3);
-> > > +	err = i2c_master_recv(client, inoutbuf, 3);
-> > >  	if (err < 0) {
-> > >  		dev_err(&client->dev, "failed to read DAC value");
-> > >  		return err;
-> > >  	}
-> > > -	pd = (inbuf[0] >> 1) & 0x3;
-> > > +	pd = (inoutbuf[0] >> 1) & 0x3;
-> > >  	data->powerdown = pd > 0 ? true : false;
-> > >  	data->powerdown_mode = pd ? pd - 1 : 2; /* largest register to gnd */
-> > > -	data->dac_value = (inbuf[1] << 4) | (inbuf[2] >> 4);
-> > > +	data->dac_value = (inoutbuf[1] << 4) | (inoutbuf[2] >> 4);
-> > > +	vref = inoutbuf[0] >> 3 & 0x3;
-> 
-> parenthesis would be good to make the expression above more clear
+ > I tried to refresh my Zynq knowledge a bit. The clkc provides the
+ > dbg_trc clock, and that is the clock you need (not fclk). I couldn't
+ > find it in the binding (I guess I messed that up), but apparently,
+ > you can provide a 'trace_emio_clk' as input to the clkc node in the
+ > Zynq DT. Then, with the muxes correctly configured (FSBL should do
+ > that if you select the EMIO trace clock in Vivado), the dbg_trc
+ > output of the clkc should be that EMIO clock. And the dbg_trc output
+ > of the clkc is what should be consumed by the tpiu node. Though, as
+ > I see it the binding/driver for the TPIU do not support that.
+ >
+ > I.e.
+ > In the clkc description you'd have to add 'trace_emio_clk' to the
+ > clock-names property together with a matching reference in the 'clocks'
+ > property. As this change would be specific to local setups, this is not
+ > really appropriate for upstream.
+ >
+ > Then, for the trace clock, ideally the TPIU would consume and enable it
+ > as needed.
 
-ok.
+Thank you very much for this. I will have a look into it.
+Below is the patch without TPIU, is it possible to submit it ? I will 
+submit the TPIU part very soon once I manage to get it working.
 
-> > > +
-> > > +	if (data->id == MCP4726 && vref != data->vref_mode) {
-> > > +		dev_info(&client->dev,
-> > > +			"vref_mode differs (conf: %d, eeprom: %d), setting %d",
-> > > +			data->vref_mode, vref, data->vref_mode);
-> 
-> use %u, these are unsigned variables
+ > Unfortunately, this is not how it works. The DT bindings are not a
+ > recommendation. The DT description must follow the binding, otherwise
+ > drivers will not work correctly, or best case, just ignore what you put
+ > there.
 
-Yes, you are right.
+Thanks. The idea of including TPIU part was to get feedback as I am far 
+from being an expert on DT.
 
-> > > +
-> > > +		inoutbuf[0] = 0x40;
-> > > +		inoutbuf[0] |= data->vref_mode << 3;
-> > > +		if (data->powerdown)
-> > > +			inoutbuf[0] |= data->powerdown << 1;
-> > > +		inoutbuf[1] = data->dac_value >> 4;
-> > > +		inoutbuf[2] = (data->dac_value & 0xf) << 4;
-> > > +
-> > > +		ret = i2c_master_send(data->client, inoutbuf, 3);
-> > > +		if (ret < 0)
-> > > +			return ret;
-> > > +		else if (ret != 3)
-> > > +			return -EIO;
-> > > +	}
-> > >  
-> > >  	return iio_device_register(indio_dev);
-> > >  }
-> > > diff --git a/include/linux/iio/dac/mcp4725.h b/include/linux/iio/dac/mcp4725.h
-> > > index 91530e6..370022b 100644
-> > > --- a/include/linux/iio/dac/mcp4725.h
-> > > +++ b/include/linux/iio/dac/mcp4725.h
-> > > @@ -11,6 +11,7 @@
-> > >  
-> > >  struct mcp4725_platform_data {
-> > >  	u16 vref_mv;
-> > > +	unsigned vref_mode;
-> > Hmm. Should probably move the platform support over to using regulators.
-> > This is a horible bit of legacy code.
+ > As I don't see this in the coresight binding, I doubt that it has any
+ > effect or should be here.
 
-ok, I will do.
+That's what I was thinking also. I will re-look into TPIU part and send 
+it soon. Besides, if I want to ask you a question regarding TPIU or DT, 
+can I contact you alone or should I keep sending it to all the CS/DT 
+maintainers ?
 
-Thanks for the review,
+Thanks,
+M.Abdul WAHAB
+---
+--- linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi.orig    2016-07-24 
+21:23:50.000000000 +0200
++++ linux-4.7/arch/arm/boot/dts/zynq-7000.dtsi    2016-10-03 
+14:38:00.164515838 +0200
+@@ -96,6 +96,57 @@
+              rx-fifo-depth = <0x40>;
+          };
 
-Tomas
++        etb@F8801000 {
++            compatible = "arm,coresight-etb10", "arm,primecell";
++            reg = <0xf8801000 0x1000>;
++
++            coresight-default-sink;
++            clocks = <&clkc 47>;
++            clock-names = "apb_pclk";
++
++            port {
++                etb_in_port: endpoint@0 {
++                    slave-mode;
++                    remote-endpoint = <&replicator_out_port0>;
++                };
++            };
++        };
++
++        funnel@F8804000 {
++            compatible = "arm,coresight-funnel", "arm,primecell";
++            reg = <0xf8804000 0x1000>;
++
++            clocks = <&clkc 47>;
++            clock-names = "apb_pclk";
++            ports {
++                #address-cells = <0x1>;
++                #size-cells = <0x0>;
++
++                port@0 {
++                    reg = <0x0>;
++                    funnel_out_port0: endpoint {
++                        remote-endpoint = <&replicator_in_port0>;
++                    };
++                };
++
++                port@1 {
++                    reg = <0x0>;
++                    funnel_in_port0: endpoint {
++                        slave-mode;
++                        remote-endpoint = <&ptm0_out_port>;
++                    };
++                };
++
++                port@2 {
++                    reg = <0x1>;
++                    funnel_in_port1: endpoint {
++                        slave-mode;
++                        remote-endpoint = <&ptm1_out_port>;
++                    };
++                };
++            };
++        };
++
+          gpio0: gpio@e000a000 {
+              compatible = "xlnx,zynq-gpio-1.0";
+              #gpio-cells = <2>;
+@@ -311,6 +362,67 @@
+              clocks = <&clkc 4>;
+          };
 
-> > Jonathan
-> > >  };
-> > >  
-> > >  #endif /* IIO_DAC_MCP4725_H_ */
-> > > 
-> > 
-> 
-
-
++        ptm0@F889C000 {
++            compatible = "arm,coresight-etm3x", "arm,primecell";
++            reg = <0xf889c000 0x1000>;
++
++            cpu = <&cpu0>;
++            clocks = <&clkc 47>;
++            clock-names = "apb_pclk";
++
++            port {
++                ptm0_out_port: endpoint {
++                    remote-endpoint = <&funnel_in_port0>;
++                };
++            };
++        };
++
++        ptm1@F889D000 {
++            compatible = "arm,coresight-etm3x", "arm,primecell";
++            reg = <0xf889d000 0x1000>;
++
++            cpu = <&cpu1>;
++            clocks = <&clkc 47>;
++            clock-names = "apb_pclk";
++
++            port {
++                ptm1_out_port: endpoint {
++                    remote-endpoint = <&funnel_in_port1>;
++                };
++            };
++        };
++
++        replicator {
++            compatible = "arm,coresight-replicator";
++
++            ports {
++                #address-cells = <0x1>;
++                #size-cells = <0x0>;
++
++                port@0 {
++                    reg = <0x0>;
++                    replicator_out_port0: endpoint {
++                        remote-endpoint = <&etb_in_port>;
++                    };
++                };
++
++                port@1 {
++                    reg = <0x1>;
++                    replicator_out_port1: endpoint {
++                        remote-endpoint = <&tpiu_in_port>;
++                    };
++                };
++
++                port@2 {
++                    reg = <0x0>;
++                    replicator_in_port0: endpoint {
++                        slave-mode;
++                        remote-endpoint = <&funnel_out_port0>;
++                    };
++                };
++            };
++        };
++
+          ttc0: timer@f8001000 {
+              interrupt-parent = <&intc>;
+              interrupts = <0 10 4>,
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
