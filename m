@@ -1,90 +1,52 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] phy: micrel.c: Support ksz9031 energy-detect power-down mode
-Date: Mon,  3 Oct 2016 15:04:30 +0200
-Message-ID: <1475499870-11465-1-git-send-email-mike.looijmans@topic.nl>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, f.fainelli@gmail.com, Mike Looijmans <mike.looijmans@topic.nl>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] Documentation: dt: net: add mt76 wireless device binding
+Date: Mon, 03 Oct 2016 16:29:15 +0300
+Message-ID: <87vax9r26s.fsf@kamboji.qca.qualcomm.com>
+References: <20160905095128.80560-1-nbd@nbd.name>
+        <201609301636.43363.arnd@arndb.de>
+        <557be2b8-5ff1-83ea-f6d1-6421c2465969@nbd.name>
+        <201609301658.35039.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201609301658.35039.arnd-r2nGTMty4D4@public.gmane.org> (Arnd Bergmann's message of
+        "Fri, 30 Sep 2016 16:58:34 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Set bit 0 in register 1C.23 to enable the EDPD feature of the
-KSZ9031 PHY. This reduces power consumption when the link is
-down. To use this, set "enable-edpd" in the devicetree.
+Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
- .../devicetree/bindings/net/micrel-ksz90x1.txt        |  6 ++++++
- drivers/net/phy/micrel.c                              | 19 +++++++++++++++++++
- 2 files changed, 25 insertions(+)
+> On Friday 30 September 2016, Felix Fietkau wrote:
+>> >> >> >> +                 device_type = "pci";
+>> >> >> >> +                 mediatek,mtd-eeprom = <&factory 0x8000>;
+>> >> >> >> +                 mediatek,2ghz = <0>;
+>> >> > 
+>> >> > It's not clear what the possible values for the 2ghz property are,
+>> >> > can you be more verbose in the description? How is <0> different
+>> >> > from no property?
+>> >> 0 means disabled, no property means unchanged (compared to EEPROM).
+>> > 
+>> > Maybe have a boolean property instead then to say "mediatek,2ghz-disabled" ?
+>> > 
+>> > If zero is the only possible value, there is no need to put a number in there.
+>> 1 is also possible, which will force-enable the capability.
+>
+> Ok, then both those values should be documented in the binding.
 
-diff --git a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-index f9c32ad..fbec6f8 100644
---- a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-+++ b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-@@ -56,6 +56,11 @@ KSZ9031:
-       - txd2-skew-ps : Skew control of TX data 2 pad
-       - txd3-skew-ps : Skew control of TX data 3 pad
- 
-+    Boolean:
-+
-+      - enable-edpd : Not related to timing. Specify this property to enable
-+                      energy-detect power-down mode in the PHY.
-+
- Examples:
- 
- 	mdio {
-@@ -64,6 +69,7 @@ Examples:
- 			rxdv-skew-ps = <0>;
- 			txc-skew-ps = <3000>;
- 			txen-skew-ps = <0>;
-+			enable-edpd;
- 			reg = <0>;
- 		};
- 	};
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 4516c8a..0a365b4 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -409,6 +409,10 @@ static int ksz9021_config_init(struct phy_device *phydev)
- #define MII_KSZ9031RN_TX_DATA_PAD_SKEW	6
- #define MII_KSZ9031RN_CLK_PAD_SKEW	8
- 
-+/* MMD Address 0x1C */
-+#define MII_KSZ9031RN_EDPD		0x23
-+#define MII_KSZ9031RN_EDPD_ENABLE	BIT(0)
-+
- static int ksz9031_extended_write(struct phy_device *phydev,
- 				  u8 mode, u32 dev_addr, u32 regnum, u16 val)
- {
-@@ -480,6 +484,18 @@ static int ksz9031_center_flp_timing(struct phy_device *phydev)
- 	return genphy_restart_aneg(phydev);
- }
- 
-+/* Enable energy-detect power-down mode */
-+static int ksz9031_enable_edpd(struct phy_device *phydev)
-+{
-+	int reg;
-+
-+	reg = ksz9031_extended_read(phydev, OP_DATA, 0x1C, MII_KSZ9031RN_EDPD);
-+	if (reg < 0)
-+		return reg;
-+	return ksz9031_extended_write(phydev, OP_DATA, 0x1C, MII_KSZ9031RN_EDPD,
-+				      reg | MII_KSZ9031RN_EDPD_ENABLE);
-+}
-+
- static int ksz9031_config_init(struct phy_device *phydev)
- {
- 	const struct device *dev = &phydev->mdio.dev;
-@@ -522,6 +538,9 @@ static int ksz9031_config_init(struct phy_device *phydev)
- 		ksz9031_of_load_skew_values(phydev, of_node,
- 				MII_KSZ9031RN_TX_DATA_PAD_SKEW, 4,
- 				tx_data_skews, 4);
-+
-+		if (of_property_read_bool(of_node, "enable-edpd"))
-+			ksz9031_enable_edpd(phydev);
- 	}
- 
- 	return ksz9031_center_flp_timing(phydev);
+Related to this, Martin sent patches which add generic bindings for
+enabling 2 Ghz and 5 Ghz bands.
+
+[RFC,1/3] Documentation: dt-bindings: add IEEE 802.11 binding documentation
+https://patchwork.kernel.org/patch/9359833/
+
+[RFC,2/3] of: add IEEE 802.11 device configuration support code
+https://patchwork.kernel.org/patch/9359837/
+
 -- 
-1.9.1
+Kalle Valo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
