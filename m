@@ -1,38 +1,39 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] i2c: hibvt: add Hisilicon BVT I2C controller driver
-Date: Mon, 3 Oct 2016 13:52:54 -0500
-Message-ID: <20161003185254.GA29178@rob-hp-laptop>
-References: <1474959063-6126-1-git-send-email-wenpan@hisilicon.com>
+Subject: Re: [PATCH 4/8] pinctrl: aspeed-g5: Fix pin association of SPI1
+ function
+Date: Mon, 3 Oct 2016 13:57:13 -0500
+Message-ID: <20161003185713.GA30227@rob-hp-laptop>
+References: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
+ <bdd34f8c4bfabbc1d3cd05a66ac8734da514b1e5.1474986045.git-series.andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1474959063-6126-1-git-send-email-wenpan@hisilicon.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Pan Wen <wenpan@hisilicon.com>
-Cc: wsa@the-dreams.de, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, howell.yang@hisilicon.com, xuejiancheng@hisilicon.com, jalen.hsu@hisilicon.com, lvkuanliang@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, kevin.lixu@hisilicon.com
+In-Reply-To: <bdd34f8c4bfabbc1d3cd05a66ac8734da514b1e5.1474986045.git-series.andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 27, 2016 at 02:51:03PM +0800, Pan Wen wrote:
-> add Hisilicon BVT I2C controller driver support.
+On Wed, Sep 28, 2016 at 12:20:16AM +0930, Andrew Jeffery wrote:
+> The SPI1 function was associated with the wrong pins: The functions that
+> those pins provide is either an SPI debug or passthrough function
+> coupled to SPI1. Make the SPI1 mux function configure the relevant pins
+> and associate new SPI1DEBUG and SPI1PASSTHRU functions with the pins
+> that were already defined.
 > 
-> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
+> The notation used in the datasheet's multi-function pin table for the SoC is
+> often creative: in this case the SYS* signals are enabled by a single bit,
+> which is nothing unusual on its own, but in this case the bit was also
+> participating in a multi-bit bitfield and therefore represented multiple
+> functions. This fact was overlooked in the original patch.
+> 
+> Fixes: 56e57cb6c07f (pinctrl: Add pinctrl-aspeed-g5 driver)
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 > ---
-> change log
-> v4:
-> Modify the default frequency to 100KHz.
-> v3:
-> Add a SoC specific compatible string.
-> v2:
-> 1)Fixed a compile error.
-> 2)Dropped the clock-names property.
->  .../devicetree/bindings/i2c/i2c-hibvt.txt          |  24 +
+>  Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt |  4 +-
 
 Acked-by: Rob Herring <robh@kernel.org>
 
->  drivers/i2c/busses/Kconfig                         |  10 +
->  drivers/i2c/busses/Makefile                        |   1 +
->  drivers/i2c/busses/i2c-hibvt.c                     | 737 +++++++++++++++++++++
->  4 files changed, 772 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
->  create mode 100644 drivers/i2c/busses/i2c-hibvt.c
+>  drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c                   | 86 ++++++-
+>  2 files changed, 81 insertions(+), 9 deletions(-)
