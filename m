@@ -1,130 +1,77 @@
-From: Lukasz Majewski <l.majewski@majess.pl>
-Subject: Re: [PATCH v2 0/6] Support PWM polarity control
-Date: Tue, 4 Oct 2016 09:48:05 +0200
-Message-ID: <20161004094805.466ebc6d@jawa>
-References: <20161001101235.24598-1-bhuvanchandra.dv@toradex.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v3 1/2] dt-bindings: display: Add Sharp LQ150X1LG11 panel
+ binding
+Date: Tue, 4 Oct 2016 06:58:43 +0200
+Message-ID: <f48111d6-f924-3520-05ca-e77b0f51a26d@axentia.se>
+References: <1474928832-8766-1-git-send-email-peda@axentia.se>
+ <1474928832-8766-2-git-send-email-peda@axentia.se>
+ <20161003184645.GA23584@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6448540708196151922=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161001101235.24598-1-bhuvanchandra.dv@toradex.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, l.majewski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan@agner.ch, robh+dt@kernel.org, thierry.reding@gmail.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20161003184645.GA23584@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, =?UTF-8?Q?Gustaf_Lindstr=c3=b6m?= <gl@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
---===============6448540708196151922==
-Content-Type: multipart/signed; micalg=pgp-sha1;
- boundary="Sig_/X=kkHv9sKcq+KBrXQ.0/zz5"; protocol="application/pgp-signature"
-
---Sig_/X=kkHv9sKcq+KBrXQ.0/zz5
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-Dear Bhuvanchandra,
-
-Thank you for your effort to send those patches to ML.
-
-> Changes since v2:
->=20
-> - Picked the stalled patchset[1] from Lothar Wassmann which adds the
-> basic support for polarity control on imx-pwm driver and adds
-> backward compatibility support for devices which does not have
-> polarity control feature.
->=20
-> Changes since Lothars v6:
->=20
-> - Squash Lukasz patch[2].
->=20
-> [1] http://thread.gmane.org/gmane.linux.pwm/1621
-> [2] https://www.spinics.net/lists/arm-kernel/msg530818.html
->=20
-> Bhuvanchandra DV (3):
->   arm: dts: imx7: Update #pwm-cells for PWM polarity control
->   arm: dts: imx7-colibri: Use pwm polarity control
->   arm: dts: imx7-colibri: Use enable-gpios for BL_ON
->=20
-> Lothar Wassmann (3):
->   pwm: print error messages with pr_err() instead of pr_debug()
->   pwm: core: make the PWM_POLARITY flag in DTB optional
->   pwm: imx: support output polarity inversion
-
-For some reason this patchset works differently than the one developed
-by Lothar.
-
-The difference is with the brightness level control.
-
-My brightness definition in DTS:
-
-           pwms =3D <&pwm2 0 5000000 PWM_POLARITY_INVERTED>;
-
- 		brightness-levels =3D <  0   1   2   3   4   5   6   7   8   9
-
-					 ..  ............
-				    250 251 252 253 254 255>;
-		default-brightness-level =3D <50>;
-		enable-gpios =3D <&gpio1 2 GPIO_ACTIVE_LOW>;
-
-When I go to the backlight sysfs entry:
-
-cd /sys/devices/soc0/backlight/backlight/backlight
-
-It seems like the brightness level control is inverted - i.e.=20
-'echo 20 > brightness" makes picture on the screen very bright, and=20
-'echo 200 > brightness' makes the picture diminish.
-
-With my "internal" patches the situation is opposite (and I've checked it w=
-ith
-my HW connections).
-
-Could you check on your setup if similar situation takes place? I mean
-if the brightness control works as expected?
-
-Thanks in advance,
-=C5=81ukasz Majewski
-
->=20
->  Documentation/devicetree/bindings/pwm/imx-pwm.txt |  6 +--
->  arch/arm/boot/dts/imx7-colibri.dtsi               | 12 +++++-
->  arch/arm/boot/dts/imx7s.dtsi                      |  8 ++--
->  drivers/pwm/core.c                                | 31 ++++++++------
->  drivers/pwm/pwm-imx.c                             | 51
-> +++++++++++++++++++++-- 5 files changed, 83 insertions(+), 25
-> deletions(-)
->=20
-
-
---Sig_/X=kkHv9sKcq+KBrXQ.0/zz5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEARECAAYFAlfzXs0ACgkQf9/hG2YwgjEc5QCgxRwKKNoYv3w9mw51nYD6uOcl
-PvEAnjygNuh+8QQTFvPDkiS3SZcqX8j+
-=FGHs
------END PGP SIGNATURE-----
-
---Sig_/X=kkHv9sKcq+KBrXQ.0/zz5--
-
-
---===============6448540708196151922==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6448540708196151922==--
+T24gMjAxNi0xMC0wMyAyMDo0NiwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVHVlLCBTZXAgMjcs
+IDIwMTYgYXQgMTI6Mjc6MTFBTSArMDIwMCwgUGV0ZXIgUm9zaW4gd3JvdGU6Cj4+IFRoZSBTaGFy
+cCAxNSIgTFExNTBYMUxHMTEgcGFuZWwgaXMgYW4gWEdBIFRGVCBMQ0QgcGFuZWwuCj4+Cj4+IFNp
+Z25lZC1vZmYtYnk6IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+Cj4+IC0tLQo+PiAgLi4u
+L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHExNTB4MWxnMTEudHh0ICAgfCAzNiArKysr
+KysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKQo+
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL3NoYXJwLGxxMTUweDFsZzExLnR4dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHExNTB4
+MWxnMTEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
+ZWwvc2hhcnAsbHExNTB4MWxnMTEudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4
+IDAwMDAwMDAwMDAwMC4uNzE1ZmY3ZTMzMmYyCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHExNTB4
+MWxnMTEudHh0Cj4+IEBAIC0wLDAgKzEsMzYgQEAKPj4gK1NoYXJwIDE1IiBMUTE1MFgxTEcxMSBY
+R0EgVEZUIExDRCBwYW5lbAo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArLSBjb21w
+YXRpYmxlOiBzaG91bGQgYmUgInNoYXJwLGxxMTUweDFsZzExIgo+PiArLSBwb3dlci1zdXBwbHk6
+IHJlZ3VsYXRvciB0byBwcm92aWRlIHRoZSBWQ0Mgc3VwcGx5IHZvbHRhZ2UgKDMuMyB2b2x0cykK
+PiAKPiBTaG91bGQgYmUgbmFtZWQgYWNjb3JkaW5nIHRvIHRoZSBpbnB1dCwgc28gdmNjLXN1cHBs
+eS4KClJpZ2h0LCBJIHdhbnRlZCB0byBkbyB0aGF0LCBidXQgdGhlIHNpbXBsZS1wYW5lbCBiaW5k
+aW5ncyBoYXMgcG93ZXItc3VwcGx5CmFzIHJlcXVpcmVkIGFuZCBJIGRlc3BlcmF0ZWx5IHdhbnRl
+ZCB0byBiZSBjb21wYXRpYmxlIGluIG9yZGVyIHRvIG1ha2UgdXNlCm9mIHRoZSBzaW1wbGUtcGFu
+ZWwgZHJpdmVyLiBUaGF0IGRyaXZlciBkb2VzIHJlcXVpcmUgdGhpcyBlbnRyeSwgc28gSSBkbwpu
+b3Qgc2VlIGFueSB3YXkgYXJvdW5kIGl0LiBBbnkgYWR2aWNlIGZvciB0aGlzIHNpdHVhdGlvbj8K
+Cj4+ICsKPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4+ICstIGJhY2tsaWdodDogcGhhbmRsZSBv
+ZiB0aGUgYmFja2xpZ2h0IGRldmljZQo+PiArLSBybHVkLWdwaW9zOiBhIHNpbmdsZSBHUElPIGZv
+ciB0aGUgUkwvVUQgKHJvdGF0ZSAxODAgZGVncmVlcykgcGluLgo+PiArLSBsdmRzLWdwaW9zOiBh
+IHNpbmdsZSBHUElPIGZvciB0aGUgU0VMTFZEUyBwaW4uCj4gCj4gV2h5IG5vdCBzZWxsdmRzLWdw
+aW9zPwoKSSdsbCBjaGFuZ2UgdGhhdCBpbiB2NC4KIAo+PiArCj4+ICtJZiBscnVkLWdwaW9zIGFu
+ZC9vciBsZHZzLWdwaW9zIGFyZSBub3Qgc3BlY2lmaWVkLCB0aGUgUkwvVUQgYW5kL29yIFNFTExW
+RFMKPiAKPiB0eXBvcy4uLgoKR29vZCB0aGluZyB5b3UgYWRkZWQgdGhlIHBsdXJhbCwgSSBmb3Vu
+ZCBzL2xydWQvcmx1ZC8gYW5kIHMvbGR2cy9sdmRzLwpOaWNlIGNhdGNoIGJ0dywgdGhhbmtzIQoK
+Pj4gK3BpbnMgYXJlIGFzc3VtZWQgdG8gYmUgaGFuZGxlZCBhcHByb3ByaWF0ZWx5IGJ5IHRoZSBo
+YXJkd2FyZS4KPj4gKwo+PiArRXhhbXBsZToKPj4gKwo+PiArCWJhY2tsaWdodDogYmFja2xpZ2h0
+IHsKPj4gKwkJY29tcGF0aWJsZSA9ICJwd20tYmFja2xpZ2h0IjsKPj4gKwkJcHdtcyA9IDwmcHdt
+IDAgMTAwMDAwPjsgICAgICAgICAgICAgICAgICAgICAgLyogVkJSICovCj4+ICsKPj4gKwkJYnJp
+Z2h0bmVzcy1sZXZlbHMgPSA8MCAyMCA0MCA2MCA4MCAxMDA+Owo+PiArCQlkZWZhdWx0LWJyaWdo
+dG5lc3MtbGV2ZWwgPSA8Mj47Cj4+ICsKPj4gKwkJcG93ZXItc3VwcGx5ID0gPCZ2ZGRfMTJ2X3Jl
+Zz47ICAgICAgICAgICAgICAgLyogVkREICovCj4+ICsJCWVuYWJsZS1ncGlvcyA9IDwmZ3BpbyA0
+MiBHUElPX0FDVElWRV9ISUdIPjsgIC8qIFhTVEFCWSAqLwo+PiArCX07Cj4+ICsKPj4gKwlwYW5l
+bCB7Cj4+ICsJCWNvbXBhdGlibGUgPSAic2hhcnAsbHExNTB4MWxnMTEiOwo+PiArCj4+ICsJCXBv
+d2VyLXN1cHBseSA9IDwmdmNjXzN2M19yZWc+OyAgICAgICAgICAgICAgIC8qIFZDQyAqLwo+PiAr
+Cj4+ICsJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKPj4gKwkJcmx1ZC1ncGlvcyA9IDwmZ3Bp
+byAxNyBHUElPX0FDVElWRV9ISUdIPjsgICAgLyogUkwvVUQgKi8KPj4gKwkJbHZkcy1ncGlvcyA9
+IDwmZ3BpbyAxOCBHUElPX0FDVElWRV9ISUdIPjsgICAgLyogU0VMTFZEUyAqLwo+PiArCX07Cj4+
+IC0tIAo+PiAyLjEuNAo+Pgo+PiAtLQo+PiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDog
+c2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSIgaW4KPj4gdGhlIGJvZHkgb2Yg
+YSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPj4gTW9yZSBtYWpvcmRvbW8g
+aW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
