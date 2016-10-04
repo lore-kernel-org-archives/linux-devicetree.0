@@ -1,63 +1,100 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 07/14] ASoC: Add sun8i audio card
-Date: Tue, 4 Oct 2016 14:25:07 +0200
-Message-ID: <20161004142507.56a6fab6@free-electrons.com>
-References: <cover.1475569400.git.mylene.josserand@free-electrons.com>
-        <33d641ff43f0c0349cdfa2cdbbfdcdde66205596.1475571575.git.mylene.josserand@free-electrons.com>
+From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+Subject: Re: [PATCH v6 net-next] net: phy: Add Edge-rate driver for Microsemi
+ PHYs.
+Date: Tue, 4 Oct 2016 17:56:50 +0530
+Message-ID: <20161004122648.GA12301@microsemi.com>
+References: <1475581272-12093-1-git-send-email-Raju.Lakkaraju@microsemi.com>
+ <20161004115132.GG11677@lunn.ch>
+Reply-To: <Raju.Lakkaraju@microsemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <33d641ff43f0c0349cdfa2cdbbfdcdde66205596.1475571575.git.mylene.josserand@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@free-electrons.com>
-Cc: vinod.koul@intel.com, maxime.ripard@free-electrons.com, wens@csie.org, mturquette@baylibre.com, sboyd@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, lee.jones@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, alexandre.belloni@free-electrons.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161004115132.GG11677@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, Allan.Nielsen@microsemi.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Andrew,
 
-On Tue,  4 Oct 2016 11:46:20 +0200, Mylène Josserand wrote:
+Thank you for review comment.
+In another thread, I wrote my comment as below.
 
-> +config SND_SUN8I
-> +	tristate "Allwinner SUN6I/SUN8I audio card support"
-> +	select SND_SUN8I_CODEC
-> +	select SND_SUN4I_I2S
-> +	select SND_SUN8I_CODEC_ANALOG
-> +	select REGMAP_MMIO
+-----------------------------------------------------------------
+> In edge_table, remove the -'s and call edge_rate_magic_get with 
+> positive values. The table is also missing "static const".
+> edge_rate_magic_get is missing its prefix, so keeping the name space 
+> clean.
+> 
 
-I believe you need a:
+I will add "static const" to table and also add prefix vsc85xx_ to edge_rate_magic_get function.
 
-	depends on OF
+Regarding remove the -'s in table, PHY data sheet descript the concept of edge rate with table. I would like to keep the same table in driver.
 
-since you're unconditionally using some DT-related functionality in the
-driver code.
+> Since you are using real values, you can remove mscc-phy-vsc8531.h.
+-------------------------------------------------------------------------
 
-> +#include <linux/firmware.h>
+But I did not see your comment. I though you accepted to keep the table
+as in PHY Data sheet. 
 
-Do you really need this header file? I don't see anything
-firmware-loading related in the driver.
+Is any thing wrong if i keep in table with '-' (minus) values?
 
-> +static int sun8i_probe(struct platform_device *pdev)
-> +{
-> +	struct snd_soc_dai_link *link = &sun8i_dai_link;
-> +	struct device_node *np = pdev->dev.of_node;
-> +	int ret;
-> +
-> +	/* register the soc card */
-> +	sun8i_card.dev = &pdev->dev;
-> +
-> +	/* Retrieve the audio-codec from DT */
-> +	link->codec_of_node = of_parse_phandle(np, "allwinner,audio-codec", 0);
+Thanks,
+Raju.
 
-Whenever you're using of_parse_phandle(), you must have a corresponding
-of_node_put() to release the reference to the Device Tree node. So I
-guess this should be done 1/ in the error path of ->probe(), and 2/
-during the ->remove() hook.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+On Tue, Oct 04, 2016 at 01:51:32PM +0200, Andrew Lunn wrote:
+> EXTERNAL EMAIL
+> 
+> 
+> On Tue, Oct 04, 2016 at 05:11:12PM +0530, Raju Lakkaraju wrote:
+> > From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+> >
+> > Edge-rate:
+> > As system and networking speeds increase, a signal's output transition,
+> > also know as the edge rate or slew rate (V/ns), takes on greater importance
+> > because high-speed signals come with a price. That price is an assortment of
+> > interference problems like ringing on the line, signal overshoot and
+> > undershoot, extended signal settling times, crosstalk noise, transmission
+> > line reflections, false signal detection by the receiving device and
+> > electromagnetic interference (EMI) -- all of which can negate the potential
+> > gains designers are seeking when they try to increase system speeds through
+> > the use of higher performance logic devices. The fact is, faster signaling
+> > edge rates can cause a higher level of electrical noise or other type of
+> > interference that can actually lead to slower line speeds and lower maximum
+> > system frequencies. This parameter allow the board designers to change the
+> > driving strange, and thereby change the EMI behavioral.
+> >
+> > Edge-rate parameters (vddmac, edge-slowdown) get from Device Tree.
+> >
+> > Tested on Beaglebone Black with VSC 8531 PHY.
+> >
+> > Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+> >
+> > ---
+> > All the review comments updated and resending for review.
+> >
+> > Change set:
+> > v1:
+> > - Initial version of Edge-rate driver add by using IOCTL.
+> > v2:
+> > - Changed edge-rate parameter to Device Tree with magic number.
+> > v3:
+> > - Added Device Tree documentati0n and edge-rate parameter table.
+> >   Added probe function initialize the vsc8531 private data structure.
+> > v4:
+> > - As per review comment, Device Tree parameters (vddmac, edge-slowdown)
+> >   added.
+> > v5:
+> > - As per review comment, Device Tree Document parameters (vddmac,
+> >   edge-slowdown) real numbers added. Table number changed from 5 to 1.
+> > v6:
+> > - As per review comment, Removed Device Tree header file. Removed MACROs
+> >   and add ARRAYSIZE
+> 
+> But you ignored my request to make the table values positive, and to
+> enforce an exact match in the table.
+> 
+> NACK
+> 
+>         Andrew
