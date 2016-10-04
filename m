@@ -1,175 +1,75 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
-        <mylene.josserand@free-electrons.com>
-Subject: [PATCH 07/14] ASoC: Add sun8i audio card
-Date: Tue,  4 Oct 2016 11:46:20 +0200
-Message-ID: <33d641ff43f0c0349cdfa2cdbbfdcdde66205596.1475571575.git.mylene.josserand@free-electrons.com>
-References: <cover.1475569400.git.mylene.josserand@free-electrons.com>
+From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+Subject: Re: [PATCH v5 net-next] net: phy: Add Edge-rate driver for Microsemi
+ PHYs.
+Date: Tue, 4 Oct 2016 15:33:45 +0530
+Message-ID: <20161004100344.GA31709@microsemi.com>
+References: <1475479393-24308-1-git-send-email-Raju.Lakkaraju@microsemi.com>
+ <20161004.004859.1105270097322633239.davem@davemloft.net>
+ <20161004065401.GA6097@lunn.ch>
+Reply-To: <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1475569400.git.mylene.josserand@free-electrons.com>
-In-Reply-To: <cover.1475571575.git.mylene.josserand@free-electrons.com>
-References: <cover.1475571575.git.mylene.josserand@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, maxime.ripard@free-electrons.com, wens@csie.org, mturquette@baylibre.com, sboyd@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, lee.jones@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, thomas.petazzoni@free-electrons.com, mylene.josserand@free-electrons.com, alexandre.belloni@free-electrons.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161004065401.GA6097-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the audio card for sun8i SoC. This card links the codec driver
-(digital part) with the DAI driver. The analog codec driver is
-added as an aux_device.
+Hi Andrew,
 
-Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
----
- sound/soc/sunxi/Kconfig  |  14 +++++++
- sound/soc/sunxi/Makefile |   1 +
- sound/soc/sunxi/sun8i.c  | 101 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 116 insertions(+)
- create mode 100644 sound/soc/sunxi/sun8i.c
+Thank you for comments. I will fix and send the patch.
 
-diff --git a/sound/soc/sunxi/Kconfig b/sound/soc/sunxi/Kconfig
-index 9e287b0..7b97395 100644
---- a/sound/soc/sunxi/Kconfig
-+++ b/sound/soc/sunxi/Kconfig
-@@ -27,6 +27,20 @@ config SND_SUN4I_SPDIF
- 	  Say Y or M to add support for the S/PDIF audio block in the Allwinner
- 	  A10 and affiliated SoCs.
- 
-+config SND_SUN8I
-+	tristate "Allwinner SUN6I/SUN8I audio card support"
-+	select SND_SUN8I_CODEC
-+	select SND_SUN4I_I2S
-+	select SND_SUN8I_CODEC_ANALOG
-+	select REGMAP_MMIO
-+	help
-+	  This option enables the audio card for Allwinner A33 (sun8i) SoC.
-+	  It enables the DAI driver (SND_SUN4I_I2S), the digital audio
-+	  codec driver (SND_SUN8I_CODEC) and the analog codec driver
-+	  (SND_SUN8I_CODEC_ANALOG).
-+
-+	  Say Y or M if you want to add sun8i/6i card support
-+
- config SND_SUN8I_CODEC
- 	tristate "Allwinner SUN8I audio codec"
- 	select REGMAP_MMIO
-diff --git a/sound/soc/sunxi/Makefile b/sound/soc/sunxi/Makefile
-index 1da63d3..7f1bab9 100644
---- a/sound/soc/sunxi/Makefile
-+++ b/sound/soc/sunxi/Makefile
-@@ -1,5 +1,6 @@
- obj-$(CONFIG_SND_SUN4I_CODEC) += sun4i-codec.o
- obj-$(CONFIG_SND_SUN4I_I2S) += sun4i-i2s.o
- obj-$(CONFIG_SND_SUN4I_SPDIF) += sun4i-spdif.o
-+obj-$(CONFIG_SND_SUN8I) += sun8i.o
- obj-$(CONFIG_SND_SUN8I_CODEC) += sun8i-codec.o
- obj-$(CONFIG_SND_SUN8I_CODEC_ANALOG) += sun8i-codec-analog.o
-diff --git a/sound/soc/sunxi/sun8i.c b/sound/soc/sunxi/sun8i.c
-new file mode 100644
-index 0000000..565cd88
---- /dev/null
-+++ b/sound/soc/sunxi/sun8i.c
-@@ -0,0 +1,101 @@
-+/*
-+ * ALSA SoC driver for Allwinner sun8i SoC
-+ *
-+ * Copyright (C) 2016 Mylène Josserand <mylene.josserand@free-electrons.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/firmware.h>
-+#include <linux/module.h>
-+
-+#include <sound/soc.h>
-+
-+static struct snd_soc_aux_dev sun8i_audio_prcm_aux_devs[] = {
-+	{
-+		.name = "sun8i-codec-analog",
-+		.codec_name = "sun8i-codec-analog.0",
-+	},
-+};
-+
-+static struct snd_soc_dai_link sun8i_dai_link = {
-+	.name           = "sun4i-i2s",
-+	.stream_name    = "Playback",
-+	.codec_dai_name = "sun8i",
-+	.dai_fmt        = SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_I2S |
-+			SND_SOC_DAIFMT_CBM_CFM,
-+};
-+
-+static struct snd_soc_card sun8i_card = {
-+	.name           = "sun8i-card",
-+	.owner          = THIS_MODULE,
-+	.dai_link       = &sun8i_dai_link,
-+	.num_links      = 1,
-+	.aux_dev	= sun8i_audio_prcm_aux_devs,
-+	.num_aux_devs	= ARRAY_SIZE(sun8i_audio_prcm_aux_devs),
-+};
-+
-+static int sun8i_probe(struct platform_device *pdev)
-+{
-+	struct snd_soc_dai_link *link = &sun8i_dai_link;
-+	struct device_node *np = pdev->dev.of_node;
-+	int ret;
-+
-+	/* register the soc card */
-+	sun8i_card.dev = &pdev->dev;
-+
-+	/* Retrieve the audio-codec from DT */
-+	link->codec_of_node = of_parse_phandle(np, "allwinner,audio-codec", 0);
-+	if (!link->codec_of_node) {
-+		dev_err(&pdev->dev, "Missing audio codec\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Retrieve DAI from DT */
-+	link->cpu_of_node = of_parse_phandle(np, "allwinner,i2s-controller", 0);
-+	if (!link->cpu_of_node) {
-+		dev_err(&pdev->dev, "Missing I2S controller\n");
-+		return -EINVAL;
-+	}
-+
-+	link->platform_of_node = link->cpu_of_node;
-+
-+	/* Register the sound card */
-+	ret = devm_snd_soc_register_card(&pdev->dev, &sun8i_card);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"Soc register card failed %d\n", ret);
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id sun8i_of_match[] = {
-+	{ .compatible = "allwinner,sun8i-audio", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, sun8i_of_match);
-+
-+static struct platform_driver sun8i_card_driver = {
-+	.probe = sun8i_probe,
-+	.driver = {
-+		.name   = "sun8i-audio",
-+		.of_match_table = sun8i_of_match,
-+	},
-+};
-+
-+module_platform_driver(sun8i_card_driver);
-+
-+MODULE_AUTHOR("Mylène Josserand <mylene.josserand@free-electrons.com>");
-+MODULE_DESCRIPTION("Allwinner sun8i machine ASoC driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.9.3
+Thanks,
+Raju.
+
+On Tue, Oct 04, 2016 at 08:54:01AM +0200, Andrew Lunn wrote:
+> EXTERNAL EMAIL
+> 
+> 
+> On Tue, Oct 04, 2016 at 12:48:59AM -0400, David Miller wrote:
+> > From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+> > Date: Mon, 3 Oct 2016 12:53:13 +0530
+> >
+> > > From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+> > >
+> > > Edge-rate:
+> > > As system and networking speeds increase, a signal's output transition,
+> > > also know as the edge rate or slew rate (V/ns), takes on greater importance
+> > > because high-speed signals come with a price. That price is an assortment of
+> > > interference problems like ringing on the line, signal overshoot and
+> > > undershoot, extended signal settling times, crosstalk noise, transmission
+> > > line reflections, false signal detection by the receiving device and
+> > > electromagnetic interference (EMI) -- all of which can negate the potential
+> > > gains designers are seeking when they try to increase system speeds through
+> > > the use of higher performance logic devices. The fact is, faster signaling
+> > > edge rates can cause a higher level of electrical noise or other type of
+> > > interference that can actually lead to slower line speeds and lower maximum
+> > > system frequencies. This parameter allow the board designers to change the
+> > > driving strange, and thereby change the EMI behavioral.
+> > >
+> > > Edge-rate parameters (vddmac, edge-slowdown) get from Device Tree.
+> > >
+> > > Tested on Beaglebone Black with VSC 8531 PHY.
+> > >
+> > > Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+> >
+> > Applied, thanks.
+> 
+> Oh dear. It was not ready for acceptance yet. I guess you missed all
+> the discussion because it was attached to the previous version of the
+> patch.
+> 
+> Raju you now need to submit fixup patches relative to the version
+> David has accepted, to fix the issues we were discussing.
+> 
+
+Accepted.
+
+>       Andrew
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
