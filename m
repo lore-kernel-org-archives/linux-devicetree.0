@@ -1,62 +1,62 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] ARM: dts: dra72-evm-revc: fix correct phy delay
-Date: Tue, 4 Oct 2016 15:14:56 +0200
-Message-ID: <20161004131456.GN11677@lunn.ch>
-References: <20161004125607.10569-1-mugunthanvnm@ti.com>
- <20161004125607.10569-5-mugunthanvnm@ti.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 06/14] ASoC: Add sun8i digital audio codec
+Date: Tue, 4 Oct 2016 15:16:03 +0200
+Message-ID: <20161004151603.38aac5b2@free-electrons.com>
+References: <cover.1475569400.git.mylene.josserand@free-electrons.com>
+        <85cbd9926e52d0aa03f6bbfd8794373d8db491e0.1475571575.git.mylene.josserand@free-electrons.com>
+        <20161004144008.0d07d18c@free-electrons.com>
+        <20161004130727.srmaielkvd2z5k3s@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161004125607.10569-5-mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161004130727.srmaielkvd2z5k3s@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@free-electrons.com>, vinod.koul@intel.com, maxime.ripard@free-electrons.com, wens@csie.org, mturquette@baylibre.com, sboyd@codeaurora.org, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, lee.jones@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, alexandre.belloni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 04, 2016 at 06:26:07PM +0530, Mugunthan V N wrote:
-> The current delay settings of the phy are not the optimal value,
-> fix it with correct values.
+Hello,
 
-This should be a separate patch, since it has nothing to do with impedance.
+On Tue, 4 Oct 2016 15:07:27 +0200, Mark Brown wrote:
 
-     Andrew
+> > /*
+> >  * ...
+> >  */  
+> 
+> I don't care, IIRC that's something from CodingStyle which checkpatch
+> moans about.
 
+Correct. The
+
+/* ..
+ * ..
+ */
+
+style is mandatory for net/ and crypto code, but not in the rest of the
+kernel.
+
+> > I'm probably missing something, but in the sun4i-codec.c driver, those
+> > fields are initialized directly in the snd_soc_codec_driver structure,
+> > not in the .component_driver sub-structure.  
 > 
-> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-> ---
->  arch/arm/boot/dts/dra72-evm-revc.dts | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> We're in the process of pushing everything out to component level, this
+> update should be made in the old code if it's not happened already.
+
+OK.
+
+> > > +	if (clk_prepare_enable(scodec->clk_module))
+> > > +		pr_err("err:open failed;\n");  
 > 
-> diff --git a/arch/arm/boot/dts/dra72-evm-revc.dts b/arch/arm/boot/dts/dra72-evm-revc.dts
-> index d626cd7..8472a8c 100644
-> --- a/arch/arm/boot/dts/dra72-evm-revc.dts
-> +++ b/arch/arm/boot/dts/dra72-evm-revc.dts
-> @@ -59,16 +59,16 @@
->  &davinci_mdio {
->  	dp83867_0: ethernet-phy@2 {
->  		reg = <2>;
-> -		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
-> -		ti,tx-internal-delay = <DP83867_RGMIIDCTL_1_NS>;
-> +		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_25_NS>;
-> +		ti,tx-internal-delay = <DP83867_RGMIIDCTL_250_PS>;
->  		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_8_B_NIB>;
->  		ti,min-output-imepdance;
->  	};
->  
->  	dp83867_1: ethernet-phy@3 {
->  		reg = <3>;
-> -		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
-> -		ti,tx-internal-delay = <DP83867_RGMIIDCTL_1_NS>;
-> +		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_25_NS>;
-> +		ti,tx-internal-delay = <DP83867_RGMIIDCTL_250_PS>;
->  		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_8_B_NIB>;
->  		ti,min-output-imepdance;
->  	};
-> -- 
-> 2.10.0.372.g6fe1b14
+> > Grr, pr_err, not good. Plus you want to return with an error from the
+> > probe() function.  
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Also when printing an error message use dev_err().
+
+That's why I said "Grr, pr_err, not good" :)
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
