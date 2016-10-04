@@ -1,80 +1,134 @@
-From: Brian Kim <brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>
-Subject: [PATCH v2] ARM64: dts: meson-gxbb-odroidc2: Enable USB Nodes
-Date: Tue,  4 Oct 2016 16:06:43 +0900
-Message-ID: <1475564803-9616-1-git-send-email-brian.kim@hardkernel.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, moon.linux-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org
+From: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] crypto: caam: add support for iMX6UL
+Date: Tue, 4 Oct 2016 09:32:59 -0400
+Message-ID: <20161004133259.GA30071@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, horia.geanta-3arQi8VN3Tc@public.gmane.org, tudor-dan.ambarus-3arQi8VN3Tc@public.gmane.org, marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandru.porosanu-3arQi8VN3Tc@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable both gxbb USB controller and add a 5V regulator for the OTG port
-VBUS
+i.MX6UL does only require three clocks to enable CAAM module.
 
-Signed-off-by: Brian Kim <brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>
+Signed-off-by: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
-This patch was written on Kevin Hilman's repository[1] and branch[2]:
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git
-[2] v4.8/integ
+ .../devicetree/bindings/crypto/fsl-sec4.txt        | 20 +++++++++++++
+ drivers/crypto/caam/ctrl.c                         | 35 ++++++++++++----------
+ 2 files changed, 40 insertions(+), 15 deletions(-)
 
-Chnages since v1:
-- rename the usb_pwr node to usb_otg_pwr
-- rename the regulator-name "USB_PWR" to "USB_OTG_PWR"
-
- .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 8d89edc..bfacaf7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -64,6 +64,18 @@
- 		reg = <0x0 0x0 0x0 0x80000000>;
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+index adeca34..6617e24 100644
+--- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
++++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+@@ -123,6 +123,9 @@ PROPERTIES
+ 
+ 
+ EXAMPLE
++
++i.MX6Q/DL/SX requires four clocks
++
+ 	crypto@300000 {
+ 		compatible = "fsl,sec-v4.0";
+ 		fsl,sec-era = <2>;
+@@ -139,6 +142,23 @@ EXAMPLE
+ 		clock-names = "mem", "aclk", "ipg", "emi_slow";
  	};
  
-+	usb_otg_pwr: regulator-usb-pwrs {
-+		compatible = "regulator-fixed";
 +
-+		regulator-name = "USB_OTG_PWR";
++i.MX6UL does only require three clocks
 +
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
++	crypto: caam@2140000 {
++		compatible = "fsl,sec-v4.0";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0x2140000 0x3c000>;
++		ranges = <0 0x2140000 0x3c000>;
++		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
 +
-+		gpio = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
++		clocks = <&clks IMX6UL_CLK_CAAM_MEM>,
++			 <&clks IMX6UL_CLK_CAAM_ACLK>,
++			 <&clks IMX6UL_CLK_CAAM_IPG>;
++		clock-names = "mem", "aclk", "ipg";
 +	};
 +
- 	leds {
- 		compatible = "gpio-leds";
- 		blue {
-@@ -149,6 +161,23 @@
- 	pinctrl-names = "default";
- };
+ =====================================================================
+ Job Ring (JR) Node
  
-+&usb0_phy {
-+	status = "okay";
-+	phy-supply = <&usb_otg_pwr>;
-+};
-+
-+&usb1_phy {
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
-+
- /* SD */
- &sd_emmc_b {
- 	status = "okay";
+diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+index 0ec112e..5abaf37 100644
+--- a/drivers/crypto/caam/ctrl.c
++++ b/drivers/crypto/caam/ctrl.c
+@@ -329,8 +329,8 @@ static int caam_remove(struct platform_device *pdev)
+ 	clk_disable_unprepare(ctrlpriv->caam_ipg);
+ 	clk_disable_unprepare(ctrlpriv->caam_mem);
+ 	clk_disable_unprepare(ctrlpriv->caam_aclk);
+-	clk_disable_unprepare(ctrlpriv->caam_emi_slow);
+-
++	if (!of_machine_is_compatible("fsl,imx6ul"))
++		clk_disable_unprepare(ctrlpriv->caam_emi_slow);
+ 	return 0;
+ }
+ 
+@@ -481,14 +481,16 @@ static int caam_probe(struct platform_device *pdev)
+ 	}
+ 	ctrlpriv->caam_aclk = clk;
+ 
+-	clk = caam_drv_identify_clk(&pdev->dev, "emi_slow");
+-	if (IS_ERR(clk)) {
+-		ret = PTR_ERR(clk);
+-		dev_err(&pdev->dev,
+-			"can't identify CAAM emi_slow clk: %d\n", ret);
+-		return ret;
++	if (!of_machine_is_compatible("fsl,imx6ul")) {
++		clk = caam_drv_identify_clk(&pdev->dev, "emi_slow");
++		if (IS_ERR(clk)) {
++			ret = PTR_ERR(clk);
++			dev_err(&pdev->dev,
++				"can't identify CAAM emi_slow clk: %d\n", ret);
++			return ret;
++		}
++		ctrlpriv->caam_emi_slow = clk;
+ 	}
+-	ctrlpriv->caam_emi_slow = clk;
+ 
+ 	ret = clk_prepare_enable(ctrlpriv->caam_ipg);
+ 	if (ret < 0) {
+@@ -509,11 +511,13 @@ static int caam_probe(struct platform_device *pdev)
+ 		goto disable_caam_mem;
+ 	}
+ 
+-	ret = clk_prepare_enable(ctrlpriv->caam_emi_slow);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "can't enable CAAM emi slow clock: %d\n",
+-			ret);
+-		goto disable_caam_aclk;
++	if (!of_machine_is_compatible("fsl,imx6ul")) {
++		ret = clk_prepare_enable(ctrlpriv->caam_emi_slow);
++		if (ret < 0) {
++			dev_err(&pdev->dev, "can't enable CAAM emi slow clock: %d\n",
++				ret);
++			goto disable_caam_aclk;
++		}
+ 	}
+ 
+ 	/* Get configuration properties from device tree */
+@@ -829,7 +833,8 @@ caam_remove:
+ iounmap_ctrl:
+ 	iounmap(ctrl);
+ disable_caam_emi_slow:
+-	clk_disable_unprepare(ctrlpriv->caam_emi_slow);
++	if (!of_machine_is_compatible("fsl,imx6ul"))
++		clk_disable_unprepare(ctrlpriv->caam_emi_slow);
+ disable_caam_aclk:
+ 	clk_disable_unprepare(ctrlpriv->caam_aclk);
+ disable_caam_mem:
 -- 
-2.7.4
+2.8.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
