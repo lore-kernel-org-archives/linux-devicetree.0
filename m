@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [RFC 08/10] ARM64: dts: amlogic: enable gpio interrupt controller on gxbb
-Date: Tue,  4 Oct 2016 17:08:26 +0200
-Message-ID: <1475593708-10526-9-git-send-email-jbrunet@baylibre.com>
+Subject: [RFC 06/10] ARM64: meson: enable MESON_IRQ_GPIO in Kconfig
+Date: Tue,  4 Oct 2016 17:08:24 +0200
+Message-ID: <1475593708-10526-7-git-send-email-jbrunet@baylibre.com>
 References: <1475593708-10526-1-git-send-email-jbrunet@baylibre.com>
 Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <1475593708-10526-1-git-send-email-jbrunet@baylibre.com>
@@ -10,53 +10,25 @@ To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Thomas
 Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add select MESON_IRQ_GPIO in Kconfig for Amlogic's meson SoC family
+
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm64/Kconfig.platforms | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 610e0e1c3cee..e5c6372dbe1c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -183,6 +183,21 @@
- 				#reset-cells = <1>;
- 			};
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index cfbdf02ef566..846479d4492d 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -95,6 +95,7 @@ config ARCH_MESON
+ 	select PINCTRL_MESON
+ 	select COMMON_CLK_AMLOGIC
+ 	select COMMON_CLK_GXBB
++	select MESON_GPIO_IRQ
+ 	help
+ 	  This enables support for the Amlogic S905 SoCs.
  
-+			gpio_interrupt: interrupt-controller@9880 {
-+				compatible = "amlogic,gxbb-gpio-intc";
-+				reg = <0x0 0x9880 0x0 0x10>;
-+				interrupts = <GIC_SPI 64 IRQ_TYPE_NONE>,
-+					   <GIC_SPI 65 IRQ_TYPE_NONE>,
-+					   <GIC_SPI 66 IRQ_TYPE_NONE>,
-+					   <GIC_SPI 67 IRQ_TYPE_NONE>,
-+					   <GIC_SPI 68 IRQ_TYPE_NONE>,
-+					   <GIC_SPI 69 IRQ_TYPE_NONE>,
-+					   <GIC_SPI 70 IRQ_TYPE_NONE>,
-+					   <GIC_SPI 71 IRQ_TYPE_NONE>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
- 			uart_A: serial@84c0 {
- 				compatible = "amlogic,meson-uart";
- 				reg = <0x0 0x84c0 0x0 0x14>;
-@@ -307,6 +322,7 @@
- 					reg-names = "mux", "pull", "gpio";
- 					gpio-controller;
- 					#gpio-cells = <2>;
-+					interrupt-parent = <&gpio_interrupt>;
- 				};
- 
- 				uart_ao_a_pins: uart_ao_a {
-@@ -426,6 +442,7 @@
- 					reg-names = "mux", "pull", "pull-enable", "gpio";
- 					gpio-controller;
- 					#gpio-cells = <2>;
-+					interrupt-parent = <&gpio_interrupt>;
- 				};
- 
- 				emmc_pins: emmc {
 -- 
 2.7.4
 
