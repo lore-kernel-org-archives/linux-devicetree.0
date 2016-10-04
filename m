@@ -1,109 +1,80 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 03/14] ASoC: sun4i-i2s: Add apb reset
-Date: Tue, 4 Oct 2016 17:42:18 +0200
-Message-ID: <20161004154218.GM5228@lukather>
-References: <cover.1475569400.git.mylene.josserand@free-electrons.com>
- <2c5abe6578c8e4e841cb59357d88ce397551a593.1475571575.git.mylene.josserand@free-electrons.com>
- <20161004141516.53c6fa8c@free-electrons.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: [PATCH v4 2/2] drm/panel: simple: add support for Sharp LQ150X1LG11 panels
+Date: Tue, 4 Oct 2016 17:29:21 +0200
+Message-ID: <1475594961-5713-3-git-send-email-peda@axentia.se>
+References: <1475594961-5713-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="JfVplkuTfB13Rsg5"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161004141516.53c6fa8c@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@free-electrons.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-sunxi@googlegroups.com, vinod.koul@intel.com, linux-kernel@vger.kernel.org, mturquette@baylibre.com, tiwai@suse.com, sboyd@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org, perex@perex.cz, wens@csie.org, broonie@kernel.org, alexandre.belloni@free-electrons.com, dmaengine@vger.kernel.org, lee.jones@linaro.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475594961-5713-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Gustaf=20Lindstr=C3=B6m?= <gl-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Gustaf Lindström <gl-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 
---JfVplkuTfB13Rsg5
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The Sharp 15" LQ150X1LG11 panel is an XGA TFT LCD panel.
 
-Hi,
+The simple-panel driver is used to get support for essential
+functionality of the panel.
 
-On Tue, Oct 04, 2016 at 02:15:16PM +0200, Thomas Petazzoni wrote:
-> Hello,
->=20
-> On Tue,  4 Oct 2016 11:46:16 +0200, Myl=E8ne Josserand wrote:
->=20
-> >  #include <sound/dmaengine_pcm.h>
-> >  #include <sound/pcm_params.h>
-> > @@ -589,6 +590,7 @@ static int sun4i_i2s_probe(struct platform_device *=
-pdev)
-> >  {
-> >  	struct sun4i_i2s *i2s;
-> >  	struct resource *res;
-> > +	struct reset_control *reset_apb;
-> >  	void __iomem *regs;
-> >  	int irq, ret;
-> > =20
-> > @@ -626,7 +628,19 @@ static int sun4i_i2s_probe(struct platform_device =
-*pdev)
-> >  		dev_err(&pdev->dev, "Can't get our mod clock\n");
-> >  		return PTR_ERR(i2s->mod_clk);
-> >  	}
-> > -=09
-> > +
-> > +	reset_apb =3D devm_reset_control_get(&pdev->dev, "apb_reset");
->=20
-> I believe this is a change in the Device Tree binding, since you're
-> adding support for a new resource. Perhaps the Device Tree binding
-> documentation should be updated accordingly?
+Signed-off-by: Gustaf Lindström <gl-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+---
+ drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-Indeed.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 85143d1b9b31..58cfe0a7a9d6 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1386,6 +1386,30 @@ static const struct panel_desc sharp_lq123p1jx31 = {
+ 	},
+ };
+ 
++static const struct drm_display_mode sharp_lq150x1lg11_mode = {
++	.clock = 71100,
++	.hdisplay = 1024,
++	.hsync_start = 1024 + 168,
++	.hsync_end = 1024 + 168 + 64,
++	.htotal = 1024 + 168 + 64 + 88,
++	.vdisplay = 768,
++	.vsync_start = 768 + 37,
++	.vsync_end = 768 + 37 + 2,
++	.vtotal = 768 + 37 + 2 + 8,
++	.vrefresh = 60,
++};
++
++static const struct panel_desc sharp_lq150x1lg11 = {
++	.modes = &sharp_lq150x1lg11_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 304,
++		.height = 228,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB565_1X16,
++};
++
+ static const struct drm_display_mode shelly_sca07010_bfn_lnn_mode = {
+ 	.clock = 33300,
+ 	.hdisplay = 800,
+@@ -1641,6 +1665,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "sharp,lq123p1jx31",
+ 		.data = &sharp_lq123p1jx31,
+ 	}, {
++		.compatible = "sharp,lq150x1lg11",
++		.data = &sharp_lq150x1lg11,
++	}, {
+ 		.compatible = "shelly,sca07010-bfn-lnn",
+ 		.data = &shelly_sca07010_bfn_lnn,
+ 	}, {
+-- 
+2.1.4
 
-You have two solutions to do that:
-  - Either mark it as optional and use reset_control_get_optional
-    (because here, you broke the other SoCs that have that controller
-    but no reset line)
-  - Or introduce a new compatible, and make the reset property
-    mandatory for that new compatible.
-
-I prefer the latter, since you get a stricter error check, and you
-cannot end up in a situation where your driver probes but is
-useless. But you'll find both in our drivers.
-
-> > +	}
-> > +
-> > +	ret =3D reset_control_deassert(reset_apb);
-> > +	if (ret < 0) {
-> > +		dev_err(&pdev->dev, "Can't deassert apb reset (%d)\n", ret);
-> > +		return ret;
-> > +	}
->=20
-> Do you need to re-assert the reset line in the ->remove() hook?
-
-Even better, you can add it to the runtime_pm hooks! :)
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---JfVplkuTfB13Rsg5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJX883aAAoJEBx+YmzsjxAgTc4QAL62RJw5dXv9CTB06fQ8erFG
-KRm7cM35mifXfs6oCfG+eFX3gzlvcvUbDc/+5GBa9VWa+0eY9++0Mc98NWGdl8A+
-8l1W2immpdfDILgk+4Qi2stMyHDMFaV5sqZirNCDVhRnxGAV7KqO9DSd+9EZgb+E
-7sj3iy/4E9Jhd5F0LLGcu0VVbIkb0Nv1RmD/ankvCKICycdVVGAo/iZZ3YtLY6sP
-G+HRnNtK87VP5+x5sVS+VazQB8nfZFUv77DS3ms8VtwMjk+w7J139iv10iGFghgS
-OVJbSxVAiELq0ipxezO/Zi8DAI5u0EwYjp1LxHiwaKUPttaJViYpoc0DGcPHugu5
-/39Z3K6EP9sbf/dqySARo4BX9gj+9EAXkrKADJW2UVI3r0Xj4P482J52+f53x4qY
-ihiuYnZ4bxqz3GNf2HW3fdzVCvr5fQidmr74hXY/I+VoZtUH4+oBSTcKV07mAVuU
-ArAUPzfQpM3n2MZmEDpsJpmZB+Ba/xEeOPCrRF9wfXmGdyxA+uhfrykZNPjsGdv2
-OpesbVGybZoyB5uF/C7P9YC4zgtFh0hhB91it1AMQ6MhQ/L46Br3yD/AWP90HwsP
-722A1MNqajt1WDvmuspZPsvjP93COKCFJ1YPv1c967xSR1hsPESizbv7FGcGZfxa
-gxZSfN+PV+yoI8vcJNVu
-=9ZGk
------END PGP SIGNATURE-----
-
---JfVplkuTfB13Rsg5--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
