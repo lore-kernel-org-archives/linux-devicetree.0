@@ -1,46 +1,52 @@
-From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 4/5] powerpc/mm: restore top-down allocation when
- using movable_node
-Date: Tue, 4 Oct 2016 15:23:36 -0500
-Message-ID: <20161004202336.cp7o3772ygfn4o3k@arbab-laptop.austin.ibm.com>
-References: <1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com>
- <1474828616-16608-5-git-send-email-arbab@linux.vnet.ibm.com>
- <1474924351.2857.255.camel@kernel.crashing.org>
- <20160927001413.o72fqpfsnsxpu5qq@arbab-laptop>
- <e161a34e-4e58-42f5-49ed-3e7913189eb9@gmail.com>
+From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Subject: Re: [PATCH v7 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Tue, 4 Oct 2016 16:58:37 -0400
+Message-ID: <20161004205837.GC19318@brightrain.aerifal.cx>
+References: <cover.1474693319.git.dalias@libc.org>
+ <22c1ee0f908fe3bf8b70f5e87d659ceb29af1434.1474693319.git.dalias@libc.org>
+ <20160926210716.GA12855@brightrain.aerifal.cx>
+ <4b02ba7d-4a31-297a-bbbd-be26da615e7b@linaro.org>
+ <20161003221039.GR19318@brightrain.aerifal.cx>
+ <20161004070623.GM14933@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <e161a34e-4e58-42f5-49ed-3e7913189eb9@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Balbir Singh <bsingharora@gmail.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
+In-Reply-To: <20161004070623.GM14933-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Paul E. McKenney" <paulmck-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 04, 2016 at 11:48:30AM +1100, Balbir Singh wrote:
->On 27/09/16 10:14, Reza Arbab wrote:
->> Right. To be clear, the background info I put in the commit log 
->> refers to x86, where the SRAT can describe movable nodes which exist 
->> at boot.  They're trying to avoid allocations from those nodes before 
->> they've been identified.
->>
->> On power, movable nodes can only exist via hotplug, so that scenario 
->> can't happen. We can immediately go back to top-down allocation. That 
->> is the missing call being added in the patch.
->
->Can we fix cmdline_parse_movable_node() to do the right thing? I 
->suspect that code is heavily x86 only in the sense that no other arch 
->needs it.
+On Tue, Oct 04, 2016 at 12:06:23AM -0700, Paul E. McKenney wrote:
+> On Mon, Oct 03, 2016 at 06:10:39PM -0400, Rich Felker wrote:
+> > On Mon, Sep 26, 2016 at 11:27:14PM +0200, Daniel Lezcano wrote:
+> > > On 26/09/2016 23:07, Rich Felker wrote:
+> > > > Ping. Is there anything that still needs to be changed for this driver
+> > > > to be acceptable?
+> > > 
+> > > It is on my radar. I'm reviewing it.
+> > > 
+> > > Can you elaborate the workaround mentioned in the changelog. I have been
+> > > digging into the lkml@ thread but it is not clear if the issue is
+> > > related to the time framework, the driver itself or whatever else. Can
+> > > you clarify that ?
+> > 
+> > Do you have comments on any remaining issues other than this
+> > workaround? If not I don't mind removing the workaround and trying to
+> > solve the issue separately later. Let me know and either way I'll
+> > submit a v8.
+> 
+> One question of interest to me is whether this patchset prevents the
+> RCU CPU stall warnings that you are seeing.
 
-Good idea. We could change it so things only go bottom-up on x86 in the 
-first place.
+With the 5ms minimum delta, I didn't observe any rcu_sched stall
+warnings. At 2.5ms I thought it was gone but eventually saw one. With
+the previous mindelta = 1, i.e. 1 hardware bus period, I get the
+stalls regularly.
 
-A nice consequence is that CONFIG_MOVABLE_NODE would then basically be 
-usable on any platform with memory hotplug, not just PPC64 and X86_64.
-
-I'll see if I can move the relevant code into an arch_*() call or 
-otherwise factor it out.
-
--- 
-Reza Arbab
+Rich
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
