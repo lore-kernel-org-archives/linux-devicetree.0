@@ -1,44 +1,47 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 5/7] arm64: dts: exynos: Add dts files for Samsung
- Exynos5433 64bit SoC
-Date: Tue, 4 Oct 2016 15:37:35 +0200
-Message-ID: <CAMuHMdV3WdS75QXsJgEXirqV-d=RJa-LTq4OdvS6fgQWS+DO-A@mail.gmail.com>
-References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com> <1472046551-703-6-git-send-email-cw00.choi@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472046551-703-6-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, jh80.chung@samsung.com, Seung-Woo Kim <sw0312.kim@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Inki Dae <inki.dae@samsung.com>, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 3/3] dt-bindings: oxnas: Update Pinctrl and GPIO for OX820 Support
+Date: Tue,  4 Oct 2016 15:41:48 +0200
+Message-ID: <20161004134148.23028-4-narmstrong@baylibre.com>
+References: <20161004134148.23028-1-narmstrong@baylibre.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20161004134148.23028-1-narmstrong@baylibre.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org, gnurou@gmail.com
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-oxnas@lists.tuxfamily.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 24, 2016 at 3:49 PM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ Documentation/devicetree/bindings/gpio/gpio_oxnas.txt       | 2 +-
+ Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> +       cluster_a53_opp_table: opp_table0 {
-> +               compatible = "operating-points-v2";
-> +               opp-shared;
-> +
-> +               opp@400000000 {
-> +                       opp-hz = /bits/ 64 <400000000>;
-> +                       opp-microvolt = <900000>;
-> +               };
+diff --git a/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+index 928ed4f..9665147 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+@@ -3,7 +3,7 @@
+ Please refer to gpio.txt for generic information regarding GPIO bindings.
+ 
+ Required properties:
+- - compatible: "oxsemi,ox810se-gpio"
++ - compatible: "oxsemi,ox810se-gpio" or "oxsemi,ox820-gpio"
+  - reg: Base address and length for the device.
+  - interrupts: The port interrupt shared by all pins.
+  - gpio-controller: Marks the port as GPIO controller.
+diff --git a/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
+index d607432..09e81a9 100644
+--- a/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
+@@ -9,7 +9,7 @@ used for a specific device or function. This node represents configurations of
+ pins, optional function, and optional mux related configuration.
+ 
+ Required properties for pin controller node:
+- - compatible: "oxsemi,ox810se-pinctrl"
++ - compatible: "oxsemi,ox810se-pinctrl" or "oxsemi,ox820-pinctrl"
+  - oxsemi,sys-ctrl: a phandle to the system controller syscon node
+ 
+ Required properties for pin configuration sub-nodes:
+-- 
+2.7.0
 
-With W=1:
-
-Warning (unit_address_vs_reg): Node /opp_table0/opp@400000000 has a
-unit name, but no reg property
-...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
