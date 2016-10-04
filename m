@@ -1,68 +1,73 @@
-From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on Hip06
-Date: Tue, 4 Oct 2016 13:02:25 +0100
-Message-ID: <6bbfeb57-7a55-6a3e-60b2-3f44525e5882@huawei.com>
-References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
- <5140357.dcW9ibtZJ6@wuerfel> <57D963C4.4010406@hisilicon.com>
- <5869118.UilSPY9Sai@wuerfel>
- <2af4f2d8-e3a4-fa00-e700-60af70bf4560@jonmasters.org>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 01/14] dma: sun6i-dma: Add burst case of 4
+Date: Tue, 4 Oct 2016 14:12:21 +0200
+Message-ID: <20161004141221.55327f1b@free-electrons.com>
+References: <cover.1475569400.git.mylene.josserand@free-electrons.com>
+        <3a2404510b5f8b16ae3bb193982d70f158700b2b.1475571575.git.mylene.josserand@free-electrons.com>
+        <20161004124011.d7f5754a082d5f17d5185fc4@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2af4f2d8-e3a4-fa00-e700-60af70bf4560-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>
+In-Reply-To: <20161004124011.d7f5754a082d5f17d5185fc4-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Masters <jcm-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: "zhichang.yuan" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, minyard-HInyCGIudOg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, kantyzc-9Onoh4P/yGk@public.gmane.org, zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/2016 23:03, Jon Masters wrote:
-> On 09/14/2016 02:32 PM, Arnd Bergmann wrote:
->> On Wednesday, September 14, 2016 10:50:44 PM CEST zhichang.yuan wrote:
->
->>> And there are probably multiple child devices under LPC, the global arm64_extio_ops only can cover one PIO range. It is fortunate only ipmi driver can not support I/O
->>> operation registering, serial driver has serial_in/serial_out to
->>> be registered. So, only the PIO range for ipmi device is stored
->>> in arm64_extio_ops and the indirect-IO
->>> works well for ipmi device.
->>
->> You should not do that in the serial driver, please just use the
->> normal 8250 driver that works fine once you handle the entire
->> port range.
->
-> Just for the record, Arnd has the right idea. There is only one type of
-> UART permitted by SBSA (PL011). We carved out an exception for a design
-> that was already in flight and allowed it to be 16550. That other design
-> was then corrected in future generations to be PL011 as we required it
-> to be. Then there's the Hip06. I've given feedback elsewhere about the
-> need for there to be (at most) two types of UART in the wild. This "LPC"
-> stuff needs cleaning up (feedback given elsewhere already on that), but
-> we won't be adding a third serial driver into the mix in order to make
-> it work. There will be standard ARM servers. There will not be the
-> kinda-sorta-standard. Thanks.
->
+Hello,
 
-Right, so I think Zhichang can make the necessary generic changes to 
-8250 OF driver to support IO port as well as MMIO-based.
+On Tue, 4 Oct 2016 12:40:11 +0200, Jean-Francois Moine wrote:
 
-However an LPC-based earlycon driver is still required.
+> > Add the case of a burst of 4 which is handled by the SoC.
+> > 
+> > Signed-off-by: Mylène Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  drivers/dma/sun6i-dma.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+> > index 8346199..0485204 100644
+> > --- a/drivers/dma/sun6i-dma.c
+> > +++ b/drivers/dma/sun6i-dma.c
+> > @@ -240,6 +240,8 @@ static inline s8 convert_burst(u32 maxburst)
+> >  	switch (maxburst) {
+> >  	case 1:
+> >  		return 0;
+> > +	case 4:
+> > +		return 1;
+> >  	case 8:
+> >  		return 2;
+> >  	default:
+> > -- 
+> > 2.9.3  
+> 
+> This patch has already been rejected by Maxime in the threads
+> 	http://www.spinics.net/lists/dmaengine/msg08610.html
+> and
+> 	http://www.spinics.net/lists/dmaengine/msg08719.html
+> 
+> I hope you will find the way he wants for this maxburst to be added.
 
-A note on hip07-based D05 (for those unaware): this does not use 
-LPC-based uart. It uses PL011. The hardware guys have managed some 
-trickery where they loopback the serial line around the BMC/CPLD. But we 
-still need it for hip06 D03 and any other boards which want to use LPC 
-bus for uart.
+I was about to reply to Mylene's e-mail, suggesting that she should add
+a comment in the code (and maybe in the commit log) to explain why this
+addition is needed, and also that even though the schematics say that
+value "1" (max burst size of 4 bytes) is reserved, it is in fact
+incorrect. The Allwinner BSP code is really using this value, and it's
+the value that makes audio work, so we believe the datasheet is simply
+incorrect.
 
-A question on SBSA: does it propose how to provide serial via BMC for SOL?
+We already discussed it with Maxime, so I believe he should agree this
+time. But I would suggest to have such details explained in the commit
+log and in a comment in the code.
 
+Best regards,
 
-> Jon.
->
->
-> .
->
-
-
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
