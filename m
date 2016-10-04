@@ -1,47 +1,48 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 3/3] dt-bindings: oxnas: Update Pinctrl and GPIO for OX820 Support
-Date: Tue,  4 Oct 2016 15:41:48 +0200
-Message-ID: <20161004134148.23028-4-narmstrong@baylibre.com>
-References: <20161004134148.23028-1-narmstrong@baylibre.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20161004134148.23028-1-narmstrong@baylibre.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org, gnurou@gmail.com
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-oxnas@lists.tuxfamily.org, devicetree@vger.kernel.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt: bindings: vendor-prefix: Add 3 accelerometer
+ vendor prefixes
+Date: Tue, 4 Oct 2016 08:44:01 -0500
+Message-ID: <20161004134401.GA12103@rob-hp-laptop>
+References: <20161002155135.23298-1-hdegoede@redhat.com>
+ <20161002155135.23298-2-hdegoede@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161002155135.23298-2-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- Documentation/devicetree/bindings/gpio/gpio_oxnas.txt       | 2 +-
- Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On Sun, Oct 02, 2016 at 05:51:35PM +0200, Hans de Goede wrote:
+> Recently the kernel has gotten support in the iio subsystem for a number
+> of new accelerometers from Domintech, mCube, Memsic and MiraMEMS.
+> 
+> This commit adds the vendor prefixes already used for these vendors
+> in Documentation/devicetree/bindings/i2c/trivial-devices.txt to
+> vendor-prefixes.txt.
+> 
+> Domintech's full company name was taken from copyright headers for
+> their drivers from: https://github.com/domintech/
+> 
+> The other full company names were taken from the company's websites:
+> http://www.mcubemems.com/
+> http://www.memsic.com/
+> http://www.miramems.com/en/
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
-index 928ed4f..9665147 100644
---- a/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
-@@ -3,7 +3,7 @@
- Please refer to gpio.txt for generic information regarding GPIO bindings.
- 
- Required properties:
-- - compatible: "oxsemi,ox810se-gpio"
-+ - compatible: "oxsemi,ox810se-gpio" or "oxsemi,ox820-gpio"
-  - reg: Base address and length for the device.
-  - interrupts: The port interrupt shared by all pins.
-  - gpio-controller: Marks the port as GPIO controller.
-diff --git a/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
-index d607432..09e81a9 100644
---- a/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
-@@ -9,7 +9,7 @@ used for a specific device or function. This node represents configurations of
- pins, optional function, and optional mux related configuration.
- 
- Required properties for pin controller node:
-- - compatible: "oxsemi,ox810se-pinctrl"
-+ - compatible: "oxsemi,ox810se-pinctrl" or "oxsemi,ox820-pinctrl"
-  - oxsemi,sys-ctrl: a phandle to the system controller syscon node
- 
- Required properties for pin configuration sub-nodes:
--- 
-2.7.0
+I've applied this one to avoid any conflicts with sorting 
+vendor-prefixes.txt. I fixed up the sorting of mcube.
 
+Patch 1 conflicts with Jonathan's tree, so I'll let him take it.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
