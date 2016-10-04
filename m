@@ -1,7 +1,7 @@
 From: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 2/5] ARM: DT: STiH407: Add label for sti-hdmi node
-Date: Tue, 4 Oct 2016 18:11:54 +0200
-Message-ID: <1475597517-14225-3-git-send-email-arnaud.pouliquen@st.com>
+Subject: [PATCH 3/5] ARM: DT: STiH410: Add label for sti-hdmi node
+Date: Tue, 4 Oct 2016 18:11:55 +0200
+Message-ID: <1475597517-14225-4-git-send-email-arnaud.pouliquen@st.com>
 References: <1475597517-14225-1-git-send-email-arnaud.pouliquen@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -16,14 +16,14 @@ Needed to declare HDMI device in sound card
 
 Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
 ---
- arch/arm/boot/dts/stih407.dtsi | 2 +-
+ arch/arm/boot/dts/stih410.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stih407.dtsi b/arch/arm/boot/dts/stih407.dtsi
-index 291ffac..fa14983 100644
---- a/arch/arm/boot/dts/stih407.dtsi
-+++ b/arch/arm/boot/dts/stih407.dtsi
-@@ -102,7 +102,7 @@
+diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
+index a3ef734..281a124 100644
+--- a/arch/arm/boot/dts/stih410.dtsi
++++ b/arch/arm/boot/dts/stih410.dtsi
+@@ -193,7 +193,7 @@
  							 <&clk_s_d2_quadfs 0>;
  			};
  
