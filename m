@@ -1,133 +1,44 @@
-From: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] crypto: caam: add support for iMX6UL
-Date: Tue, 4 Oct 2016 09:32:59 -0400
-Message-ID: <20161004133259.GA30071@gmail.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v5 net-next] net: phy: Add Edge-rate driver for Microsemi
+ PHYs.
+Date: Tue, 4 Oct 2016 09:36:02 +0200
+Message-ID: <20161004073602.GA7511@lunn.ch>
+References: <1475479393-24308-1-git-send-email-Raju.Lakkaraju@microsemi.com>
+ <20161004.004859.1105270097322633239.davem@davemloft.net>
+ <20161004065401.GA6097@lunn.ch>
+ <20161004.030134.1142321103427028880.davem@davemloft.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
+In-Reply-To: <20161004.030134.1142321103427028880.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, horia.geanta-3arQi8VN3Tc@public.gmane.org, tudor-dan.ambarus-3arQi8VN3Tc@public.gmane.org, marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandru.porosanu-3arQi8VN3Tc@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-i.MX6UL does only require three clocks to enable CAAM module.
+On Tue, Oct 04, 2016 at 03:01:34AM -0400, David Miller wrote:
+> From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> Date: Tue, 4 Oct 2016 08:54:01 +0200
+> 
+> > Oh dear. It was not ready for acceptance yet. I guess you missed all
+> > the discussion because it was attached to the previous version of the
+> > patch.
+> > 
+> > Raju you now need to submit fixup patches relative to the version
+> > David has accepted, to fix the issues we were discussing.
+> 
+> My bad, I'm trying to queue everything up for the merge window
+> pull request.
 
-Signed-off-by: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/crypto/fsl-sec4.txt        | 20 +++++++++++++
- drivers/crypto/caam/ctrl.c                         | 35 ++++++++++++----------
- 2 files changed, 40 insertions(+), 15 deletions(-)
+Hi David
 
-diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-index adeca34..6617e24 100644
---- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-+++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-@@ -123,6 +123,9 @@ PROPERTIES
- 
- 
- EXAMPLE
-+
-+i.MX6Q/DL/SX requires four clocks
-+
- 	crypto@300000 {
- 		compatible = "fsl,sec-v4.0";
- 		fsl,sec-era = <2>;
-@@ -139,6 +142,23 @@ EXAMPLE
- 		clock-names = "mem", "aclk", "ipg", "emi_slow";
- 	};
- 
-+
-+i.MX6UL does only require three clocks
-+
-+	crypto: caam@2140000 {
-+		compatible = "fsl,sec-v4.0";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x2140000 0x3c000>;
-+		ranges = <0 0x2140000 0x3c000>;
-+		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		clocks = <&clks IMX6UL_CLK_CAAM_MEM>,
-+			 <&clks IMX6UL_CLK_CAAM_ACLK>,
-+			 <&clks IMX6UL_CLK_CAAM_IPG>;
-+		clock-names = "mem", "aclk", "ipg";
-+	};
-+
- =====================================================================
- Job Ring (JR) Node
- 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index 0ec112e..5abaf37 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -329,8 +329,8 @@ static int caam_remove(struct platform_device *pdev)
- 	clk_disable_unprepare(ctrlpriv->caam_ipg);
- 	clk_disable_unprepare(ctrlpriv->caam_mem);
- 	clk_disable_unprepare(ctrlpriv->caam_aclk);
--	clk_disable_unprepare(ctrlpriv->caam_emi_slow);
--
-+	if (!of_machine_is_compatible("fsl,imx6ul"))
-+		clk_disable_unprepare(ctrlpriv->caam_emi_slow);
- 	return 0;
- }
- 
-@@ -481,14 +481,16 @@ static int caam_probe(struct platform_device *pdev)
- 	}
- 	ctrlpriv->caam_aclk = clk;
- 
--	clk = caam_drv_identify_clk(&pdev->dev, "emi_slow");
--	if (IS_ERR(clk)) {
--		ret = PTR_ERR(clk);
--		dev_err(&pdev->dev,
--			"can't identify CAAM emi_slow clk: %d\n", ret);
--		return ret;
-+	if (!of_machine_is_compatible("fsl,imx6ul")) {
-+		clk = caam_drv_identify_clk(&pdev->dev, "emi_slow");
-+		if (IS_ERR(clk)) {
-+			ret = PTR_ERR(clk);
-+			dev_err(&pdev->dev,
-+				"can't identify CAAM emi_slow clk: %d\n", ret);
-+			return ret;
-+		}
-+		ctrlpriv->caam_emi_slow = clk;
- 	}
--	ctrlpriv->caam_emi_slow = clk;
- 
- 	ret = clk_prepare_enable(ctrlpriv->caam_ipg);
- 	if (ret < 0) {
-@@ -509,11 +511,13 @@ static int caam_probe(struct platform_device *pdev)
- 		goto disable_caam_mem;
- 	}
- 
--	ret = clk_prepare_enable(ctrlpriv->caam_emi_slow);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "can't enable CAAM emi slow clock: %d\n",
--			ret);
--		goto disable_caam_aclk;
-+	if (!of_machine_is_compatible("fsl,imx6ul")) {
-+		ret = clk_prepare_enable(ctrlpriv->caam_emi_slow);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "can't enable CAAM emi slow clock: %d\n",
-+				ret);
-+			goto disable_caam_aclk;
-+		}
- 	}
- 
- 	/* Get configuration properties from device tree */
-@@ -829,7 +833,8 @@ caam_remove:
- iounmap_ctrl:
- 	iounmap(ctrl);
- disable_caam_emi_slow:
--	clk_disable_unprepare(ctrlpriv->caam_emi_slow);
-+	if (!of_machine_is_compatible("fsl,imx6ul"))
-+		clk_disable_unprepare(ctrlpriv->caam_emi_slow);
- disable_caam_aclk:
- 	clk_disable_unprepare(ctrlpriv->caam_aclk);
- disable_caam_mem:
--- 
-2.8.0
+We should be able to get fixups done quickly. The binding concept is
+now hashed out, unless it takes another unexpected twist and turn.  So
+even if we miss the pull request, the fixup should be ready for when
+-rc1 comes out.
 
+     Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
