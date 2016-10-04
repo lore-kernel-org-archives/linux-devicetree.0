@@ -1,179 +1,97 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [RFC 04/10] pinctrl: meson: allow gpio to request irq
-Date: Tue,  4 Oct 2016 17:08:22 +0200
-Message-ID: <1475593708-10526-5-git-send-email-jbrunet@baylibre.com>
-References: <1475593708-10526-1-git-send-email-jbrunet@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475593708-10526-1-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 01/14] dma: sun6i-dma: Add burst case of 4
+Date: Tue, 4 Oct 2016 21:10:09 +0530
+Message-ID: <20161004154009.GH2467@localhost>
+References: <cover.1475569400.git.mylene.josserand@free-electrons.com>
+ <3a2404510b5f8b16ae3bb193982d70f158700b2b.1475571575.git.mylene.josserand@free-electrons.com>
+ <20161004124011.d7f5754a082d5f17d5185fc4@free.fr>
+ <20161004141221.55327f1b@free-electrons.com>
+ <20161004154651.3d0eb02badb6dc66758dd3aa@free.fr>
+Reply-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDLNNTP63EBBBVUWZ67QKGQEYD55NZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20161004154651.3d0eb02badb6dc66758dd3aa-GANU6spQydw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the ability for gpio to request irq from the gpio interrupt controller
-if present. We have to specificaly that the parent interrupt controller is
-the gpio interrupt controller because gpio on meson SoCs can't generate
-interrupt directly on the GIC.
+On Tue, Oct 04, 2016 at 03:46:51PM +0200, Jean-Francois Moine wrote:
+> On Tue, 4 Oct 2016 14:12:21 +0200
+> Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>=20
+> > > > Add the case of a burst of 4 which is handled by the SoC.
+> > > >=20
+> > > > Signed-off-by: Myl=C4=8Dne Josserand <mylene.josserand@free-electro=
+ns.com>
+> > > > ---
+> > > >  drivers/dma/sun6i-dma.c | 2 ++
+> > > >  1 file changed, 2 insertions(+)
+> > > >=20
+> > > > diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+> > > > index 8346199..0485204 100644
+> > > > --- a/drivers/dma/sun6i-dma.c
+> > > > +++ b/drivers/dma/sun6i-dma.c
+> > > > @@ -240,6 +240,8 @@ static inline s8 convert_burst(u32 maxburst)
+> > > >  	switch (maxburst) {
+> > > >  	case 1:
+> > > >  		return 0;
+> > > > +	case 4:
+> > > > +		return 1;
+> > > >  	case 8:
+> > > >  		return 2;
+> > > >  	default:
+> > > > --=20
+> > > > 2.9.3 =20
+> > >=20
+> > > This patch has already been rejected by Maxime in the threads
+> > > 	http://www.spinics.net/lists/dmaengine/msg08610.html
+> > > and
+> > > 	http://www.spinics.net/lists/dmaengine/msg08719.html
+> > >=20
+> > > I hope you will find the way he wants for this maxburst to be added.
+> >=20
+> > I was about to reply to Mylene's e-mail, suggesting that she should add
+> > a comment in the code (and maybe in the commit log) to explain why this
+> > addition is needed, and also that even though the schematics say that
+> > value "1" (max burst size of 4 bytes) is reserved, it is in fact
+> > incorrect. The Allwinner BSP code is really using this value, and it's
+> > the value that makes audio work, so we believe the datasheet is simply
+> > incorrect.
+> >=20
+> > We already discussed it with Maxime, so I believe he should agree this
+> > time. But I would suggest to have such details explained in the commit
+> > log and in a comment in the code.
+>=20
+> Strange. Looking at the datasheets of the A23, A31, A33, A83T and H3
+> (these are the SoCs using the DMA sun6i), only the H3 can have 4 as the
+> burst size (the doc is unclear for the A31).
+>=20
+> Well, I was submitting for the H3, Myl=C4=8Dne is submitting for the A33.
+> So, what about the A23, A31 and A83T?
 
-Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- drivers/pinctrl/Kconfig               |  2 +
- drivers/pinctrl/meson/pinctrl-meson.c | 83 ++++++++++++++++++++++++++++++++++-
- drivers/pinctrl/meson/pinctrl-meson.h |  1 +
- 3 files changed, 85 insertions(+), 1 deletion(-)
+Since these are device properties, I feel we should move this to DT. That
+way any new controller can have any variation based on the mood of hw
+designer that day and we can hopefully cope with it :-)
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 0e75d94972ba..d5bfbfcddab0 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -126,7 +126,9 @@ config PINCTRL_MESON
- 	select PINCONF
- 	select GENERIC_PINCONF
- 	select GPIOLIB
-+	select IRQ_DOMAIN
- 	select OF_GPIO
-+	select OF_IRQ
- 	select REGMAP_MMIO
- 
- config PINCTRL_OXNAS
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-index 57122eda155a..f9be3ff5e11d 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson.c
-@@ -50,6 +50,7 @@
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/of_irq.h>
- #include <linux/pinctrl/pinconf-generic.h>
- #include <linux/pinctrl/pinconf.h>
- #include <linux/pinctrl/pinctrl.h>
-@@ -481,6 +482,58 @@ static void meson_gpio_set(struct gpio_chip *chip, unsigned gpio, int value)
- 			   value ? BIT(bit) : 0);
- }
- 
-+static int meson_gpio_to_hwirq(struct meson_bank *bank, unsigned int offset)
-+{
-+	unsigned int hwirq;
-+
-+	if (bank->irq_first < 0)
-+		/* this bank cannot generate irqs */
-+		return -1;
-+
-+	hwirq = offset - bank->first + bank->irq_first;
-+
-+	if (hwirq > bank->irq_last)
-+		/* this pin cannot generate irqs */
-+		return -1;
-+
-+	return hwirq;
-+}
-+
-+static int meson_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct meson_pinctrl *pc = gpiochip_get_data(chip);
-+	struct meson_bank *bank;
-+	struct irq_fwspec fwspec;
-+	unsigned int hwirq;
-+	int ret;
-+
-+	ret = meson_get_bank(pc, offset, &bank);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * The interrupt controller might be missing, in such case we can't
-+	 * provide an interrupt for a pin
-+	 */
-+	if (is_fwnode_irqchip(pc->fwnode)) {
-+		dev_info(pc->dev, "interrupt controller not found\n");
-+		return 0;
-+	}
-+
-+	hwirq = meson_gpio_to_hwirq(bank, offset);
-+	if (hwirq < 0) {
-+		dev_dbg(pc->dev, "no interrupt for pin %u\n", offset);
-+		return 0;
-+	}
-+
-+	fwspec.fwnode = pc->fwnode;
-+	fwspec.param_count = 2;
-+	fwspec.param[0] = hwirq;
-+	fwspec.param[1] = IRQ_TYPE_NONE;
-+
-+	return irq_create_fwspec_mapping(&fwspec);
-+}
-+
- static int meson_gpio_get(struct gpio_chip *chip, unsigned gpio)
- {
- 	struct meson_pinctrl *pc = gpiochip_get_data(chip);
-@@ -539,6 +592,7 @@ static int meson_gpiolib_register(struct meson_pinctrl *pc)
- 	pc->chip.direction_output = meson_gpio_direction_output;
- 	pc->chip.get = meson_gpio_get;
- 	pc->chip.set = meson_gpio_set;
-+	pc->chip.to_irq = meson_gpio_to_irq;
- 	pc->chip.base = pc->data->pin_base;
- 	pc->chip.ngpio = pc->data->num_pins;
- 	pc->chip.can_sleep = false;
-@@ -598,6 +652,33 @@ static struct regmap *meson_map_resource(struct meson_pinctrl *pc,
- 	return devm_regmap_init_mmio(pc->dev, base, &meson_regmap_config);
- }
- 
-+static int meson_pinctrl_get_irq_gpio_intc(struct meson_pinctrl *pc,
-+					   struct device_node *node)
-+{
-+	struct device_node *np;
-+
-+	/*
-+	 * Make sure gpio don't request IRQ directly to the GIC
-+	 * TODO: Find a better way to make sure we have a compatible
-+	 *       Interrupt controller here
-+	 */
-+	if (!of_get_property(node, "interrupt-parent", NULL)) {
-+		dev_dbg(pc->dev, "interrupt controller not found\n");
-+		pc->fwnode = NULL;
-+		return 0;
-+	}
-+
-+	np = of_irq_find_parent(node);
-+	if (!np) {
-+		dev_err(pc->dev, "irq parent not found\n");
-+		return -EINVAL;
-+	}
-+
-+	pc->fwnode = of_node_to_fwnode(np);
-+
-+	return 0;
-+}
-+
- static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
- 				  struct device_node *node)
- {
-@@ -643,7 +724,7 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
- 		return PTR_ERR(pc->reg_gpio);
- 	}
- 
--	return 0;
-+	return meson_pinctrl_get_irq_gpio_intc(pc, gpio_np);
- }
- 
- static int meson_pinctrl_probe(struct platform_device *pdev)
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
-index 785705996e60..4bcc4900b3eb 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.h
-+++ b/drivers/pinctrl/meson/pinctrl-meson.h
-@@ -122,6 +122,7 @@ struct meson_pinctrl {
- 	struct regmap *reg_gpio;
- 	struct gpio_chip chip;
- 	struct device_node *of_node;
-+	struct fwnode_handle *fwnode;
- };
- 
- #define PIN(x, b)	(b + x)
--- 
-2.7.4
+But yes we would need to set the bursts supported in driver and allow above
+for supported bursts only.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+~Vinod
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
