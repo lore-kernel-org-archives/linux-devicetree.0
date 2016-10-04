@@ -1,49 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: display: Add Sharp LQ150X1LG11 panel binding
-Date: Tue, 4 Oct 2016 08:11:49 -0500
-Message-ID: <CAL_Jsq+iuBOOAfwT6FK9LkzcLTPwRF47uizaCcqSk1Y+JTJk0A@mail.gmail.com>
-References: <1474928832-8766-1-git-send-email-peda@axentia.se>
- <1474928832-8766-2-git-send-email-peda@axentia.se> <20161003184645.GA23584@rob-hp-laptop>
- <f48111d6-f924-3520-05ca-e77b0f51a26d@axentia.se>
+From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] ARM: dts: dra72-evm-revc: fix correct phy delay
+ and impedance settings
+Date: Tue, 4 Oct 2016 18:41:00 +0530
+Message-ID: <a4ef7fc1-73f7-7136-0d60-6ce8a8ff33b9@ti.com>
+References: <20161004125607.10569-1-mugunthanvnm@ti.com>
+ <20161004125607.10569-4-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f48111d6-f924-3520-05ca-e77b0f51a26d@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: open list <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Gustaf_Lindstr=C3=B6m?= <gl@axentia.se>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161004125607.10569-4-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 3, 2016 at 11:58 PM, Peter Rosin <peda@axentia.se> wrote:
-> On 2016-10-03 20:46, Rob Herring wrote:
->> On Tue, Sep 27, 2016 at 12:27:11AM +0200, Peter Rosin wrote:
->>> The Sharp 15" LQ150X1LG11 panel is an XGA TFT LCD panel.
->>>
->>> Signed-off-by: Peter Rosin <peda@axentia.se>
->>> ---
->>>  .../bindings/display/panel/sharp,lq150x1lg11.txt   | 36 ++++++++++++++++++++++
->>>  1 file changed, 36 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt b/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
->>> new file mode 100644
->>> index 000000000000..715ff7e332f2
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
->>> @@ -0,0 +1,36 @@
->>> +Sharp 15" LQ150X1LG11 XGA TFT LCD panel
->>> +
->>> +Required properties:
->>> +- compatible: should be "sharp,lq150x1lg11"
->>> +- power-supply: regulator to provide the VCC supply voltage (3.3 volts)
->>
->> Should be named according to the input, so vcc-supply.
->
-> Right, I wanted to do that, but the simple-panel bindings has power-supply
-> as required and I desperately wanted to be compatible in order to make use
-> of the simple-panel driver. That driver does require this entry, so I do
-> not see any way around it. Any advice for this situation?
 
-Okay, it's fine given it's a single supply.
 
-Rob
+On Tuesday 04 October 2016 06:26 PM, Mugunthan V N wrote:
+> The default impedance settings of the phy is not the optimal
+> value, due to this the second ethernet is not working. Fix it
+> with correct values which makes the second ethernet port to work.
+> 
+> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/dra72-evm-revc.dts | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/dra72-evm-revc.dts b/arch/arm/boot/dts/dra72-evm-revc.dts
+> index f9cfd3b..d626cd7 100644
+> --- a/arch/arm/boot/dts/dra72-evm-revc.dts
+> +++ b/arch/arm/boot/dts/dra72-evm-revc.dts
+> @@ -62,6 +62,7 @@
+>  		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
+>  		ti,tx-internal-delay = <DP83867_RGMIIDCTL_1_NS>;
+>  		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_8_B_NIB>;
+> +		ti,min-output-imepdance;
+
+s/imepdance/impedance
+
+>  	};
+>  
+>  	dp83867_1: ethernet-phy@3 {
+> @@ -69,5 +70,6 @@
+>  		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
+>  		ti,tx-internal-delay = <DP83867_RGMIIDCTL_1_NS>;
+>  		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_8_B_NIB>;
+> +		ti,min-output-imepdance;
+
+same here.
+
+Thanks and regards,
+Lokesh
+
+>  	};
+>  };
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
