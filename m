@@ -1,105 +1,77 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 09/14] dt-bindings: sound: Add sun8i codec documentation
-Date: Tue, 4 Oct 2016 18:19:50 +0200
-Message-ID: <20161004161950.GP5228@lukather>
-References: <cover.1475571575.git.mylene.josserand@free-electrons.com>
- <a5b0bdc6b50dfcc2dc0145d00edd08fee3ce7764.1475571575.git.mylene.josserand@free-electrons.com>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 0/2] R-Car DU: Add support for LVDS mode selection
+Date: Tue,  4 Oct 2016 19:23:28 +0300
+Message-ID: <1475598210-26857-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Bi+HF1AHjw0mn3zx"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a5b0bdc6b50dfcc2dc0145d00edd08fee3ce7764.1475571575.git.mylene.josserand@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@free-electrons.com>
-Cc: vinod.koul@intel.com, wens@csie.org, mturquette@baylibre.com, sboyd@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, lee.jones@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, thomas.petazzoni@free-electrons.com, alexandre.belloni@free-electrons.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---Bi+HF1AHjw0mn3zx
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Oct 04, 2016 at 11:46:22AM +0200, Myl=E8ne Josserand wrote:
-> Add the documentation for dt-binding of the digital audio codec driver
-> for sun8i SoC.
->=20
-> Signed-off-by: Myl=E8ne Josserand <mylene.josserand@free-electrons.com>
-> ---
->  .../devicetree/bindings/sound/sun8i-codec.txt      | 24 ++++++++++++++++=
-++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/sun8i-codec.t=
-xt
->=20
-> diff --git a/Documentation/devicetree/bindings/sound/sun8i-codec.txt b/Do=
-cumentation/devicetree/bindings/sound/sun8i-codec.txt
-> new file mode 100644
-> index 0000000..1808869
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/sun8i-codec.txt
-> @@ -0,0 +1,24 @@
-> +* Allwinner A23/A33 Codec
-> +
-> +Required properties:
-> +- compatible: must be either "allwinner,sun4i-a23-codec" or
-> +  "allwinner,sun7i-a33-codec"
-
-Copy and paste issue ? :)
-
-One compatible by line is usually favored, since when you'll add new
-compatibles, you don't have to modify the context.xs
-
-> +- reg: must contain the registers location and length
-> +- interrupts: must contain the codec interrupt
-> +- clocks: a list of phandle + clock-specifer pairs, one for each entry
-> +  in clock-names.
-> +- clock-names: should contain followings:
-> +   - "apb": the parent APB clock for this controller
-> +   - "codec": the parent module clock
-
-We're usually calling them "bus" and "mod".
-
-> +
-> +Example:
-> +codec: codec@01c22e00 {
-> +	#sound-dai-cells =3D <0>;
-> +	compatible =3D "allwinner,sun8i-a33-codec";
-> +	reg =3D <0x01c22e00 0x400>; /* SUNXI_AUDIO_PBASE + 0x200 */
-> +	reg-names =3D "audio";
-
-You don't define reg-names in your bindings, while your code relies on
-it. It isn't really needed, since you have only one couple of base +
-size, so it should just go away.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---Bi+HF1AHjw0mn3zx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJX89amAAoJEBx+YmzsjxAgAvsP/0g2m6b5C2k2QAmN/LjCdE9v
-p2o912Ypsefw2Cx4Bi1hvgMFq5+6mRNZIH7qoypMSCO3FL5mAtRWcFz9d0Ej4KMp
-SnRxfCtfa68t54V677eDTGp0gEhS0iCiehxgz5hkNJnw5r6FXpUM0HzTq8fbPiI6
-vUhwOF+wGKqVYfpwEL9lA7tDixtspnDAJlbTQEH7EXkeR03HKPD2DB9eG1LfHYMl
-M+cNv17eBlG3xuMl58jvrhJr2ndk/rpEgieoBPagJr6lU3WFLRCQovL8hiJjHbyl
-alISLNzhKWdq34xfSw8Jw8UB5ViFtbYUDPTkM5PAwU2Qud29KbRir1vXFCL1KpeW
-kOcDrRK0UjWYn7tKHJz4/Tx9mYFYlCNvl+okOL6OgkfdhFXCJXM5srGHjaUi2BR6
-5pwbHB3OTc5VD7LGk1av0+OCN0TUxYuC+lS+ppXmqqjtIRh5pKo+fSrTgFoBe47Q
-Zd+pHYdoHrvPflcx6A2LI3eqQKH8Xajcq3RClkZV06x0+hO3IjDEG+TBd/yA1MS+
-sn6hBjfXN4H8Wrnz2qTNng5vzH7TO0D5fUpz1GP1Y93lnQ2Xg10486vMcC4AsLUh
-AwJe1qzqe+bTSDYfFW0FkQWpqSAEMMUKcJ6yMUb2JxW+nhundREUTRvgp++SDTte
-1SvrCsYrmBwzi/cCNo6L
-=PCFx
------END PGP SIGNATURE-----
-
---Bi+HF1AHjw0mn3zx--
+SGVsbG8sCgpUaGlzIHBhdGNoIHNlcmllcyBhZGRzIHN1cHBvcnQgZm9yIExWRFMgbW9kZSBzZWxl
+Y3Rpb24gaW4gdGhlIFItQ2FyIERVIGRyaXZlci4KClBhdGNoIDEvMiBkZWZpbmVzIGEgbmV3IERU
+IGJpbmRpbmcgZm9yIExWRFMgcGFuZWwuIENvbXBhcmVkIHRvIHRoZSBleGlzdGluZwpEUEkgcGFu
+ZWwgYmluZGluZ3MgdGhhdCBhcmUgY3VycmVudGx5IGFidXNlZCBieSB0aGUgZHJpdmVyIGZvciBM
+VkRTIHBhbmVsLAp0aGlzIG5ldyBiaW5kaW5nIHNwZWNpZmllcyB0aGUgTFZEUyBtb3JlIGV4cGxp
+Y2l0bHkuIFBhdGNoIDIvMiB0aGVuIGFkZHMKc3VwcG9ydCBmb3IgdGhlIG5ldyBiaW5kaW5ncyB0
+byB0aGUgZHJpdmVyLCByZXRyaWV2aW5nIHRoZSBtb2RlIGZyb20gRFQgYW5kCmNvbmZpZ3VyaW5n
+IHRoZSBoYXJkd2FyZSBhY2NvcmRpbmdseS4KClRoZSBMVkRTIHBhbmVsIERUIGJpbmRpbmdzIGFy
+ZSBiYXNlZCBvbiB0aGUgcmVsZXZhbnQgc3RhbmRhcmRzIEkgaGF2ZSBiZWVuCmFibGUgdG8gZmlu
+ZCwgYXMgd2VsbCBhcyBvbiBleGlzdGluZyBMVkRTLXJlbGF0ZWQgY29kZSBhbmQgRFQgYmluZGlu
+Z3MKYXZhaWxhYmxlIGluIHRoZSBtYWlubGluZSBrZXJuZWwuIFRob3NlIGluY2x1ZGUKCi0gdGhl
+IExWRFMgZm9ybWF0cyBNRURJQV9CVVNfRk1UX1JHQjY2Nl8xWDdYM19TUFdHLAogIE1FRElBX0JV
+U19GTVRfUkdCODg4XzFYN1g0X1NQV0cgYW5kIE1FRElBX0JVU19GTVRfUkdCODg4XzFYN1g0X0pF
+SURBCiAgKERvY3VtZW50YXRpb24vbWVkaWEvdWFwaS92NGwvc3ViZGV2LWZvcm1hdHMucnN0KQot
+IGlNWCBkaXNwbGF5IERUIGJpbmRpbmdzIGF2YWlsYWJsZSBpbgogIChEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbXgvbGRiLnR4dCkKLSB0aGUgZHJpdmVycy9ncHUv
+ZHJtL2lteC8gZHJpdmVyCgpJbiBhZGRpdGlvbiB0byB0aGUgdGhyZWUgbW9kZXMgc3BlY2lmaWVk
+IGluIHRoZSBMVkRTIHBhbmVsIERUIGJpbmRpbmdzLCB0aGUKUmVuZXNhcyBSLUNhciBEVSBhbHNv
+IHN1cHBvcnRzIHRoZSBmb2xsb3dpbmcgdHdvIG1vZGVzLgoKU2xvdCAgICAgICAwICAgICAgIDEg
+ICAgICAgMiAgICAgICAzICAgICAgIDQgICAgICAgNSAgICAgICA2CiAgICAgICBfX19fX19fX19f
+X19fX19fICAgICAgICAgICAgICAgICAgICAgICAgIF9fX19fX19fX19fX19fX19fCkNsb2NrICAg
+ICAgICAgICAgICAgICAgXF9fX19fX19fX19fX19fX19fX19fX19fLwogICAgICAgICBfX19fX18g
+IF9fX19fXyAgX19fX19fICBfX19fX18gIF9fX19fXyAgX19fX19fICBfX19fX18KREFUQTAgID48
+X0NUTDBfPjxfX1I3X18+PF9fUjZfXz48X19SNV9fPjxfX1I0X18+PF9fUjNfXz48X19SMl9fPjwK
+REFUQTEgID48X0NUTDFfPjxfX0c3X18+PF9fRzZfXz48X19HNV9fPjxfX0c0X18+PF9fRzNfXz48
+X19HMl9fPjwKREFUQTIgID48X0NUTDJfPjxfX0I3X18+PF9fQjZfXz48X19CNV9fPjxfX0I0X18+
+PF9fQjNfXz48X19CMl9fPjwKREFUQTMgID48X0NUTDNfPjxfX0IxX18+PF9fQjBfXz48X19HMV9f
+PjxfX0cwX18+PF9fUjFfXz48X19SMF9fPjwKICAgICAgICAgX19fX19fICBfX19fX18gIF9fX19f
+XyAgX19fX19fICBfX19fX18gIF9fX19fXyAgX19fX19fCkRBVEEwICA+PF9DVEwwXz48X19SNV9f
+PjxfX1I0X18+PF9fUjNfXz48X19SMl9fPjxfX1IxX18+PF9fUjBfXz48CkRBVEExICA+PF9DVEwx
+Xz48X19HNV9fPjxfX0c0X18+PF9fRzNfXz48X19HMl9fPjxfX0cxX18+PF9fRzBfXz48CkRBVEEy
+ICA+PF9DVEwyXz48X19CNV9fPjxfX0I0X18+PF9fQjNfXz48X19CMl9fPjxfX0IxX18+PF9fQjBf
+Xz48CkRBVEEzICA+PF9DVEwzXz48X19CN19fPjxfX0I2X18+PF9fRzdfXz48X19HNl9fPjxfX1I3
+X18+PF9fUjZfXz48CgphbmQgdGhlaXIgbWlycm9yZWQgdmVyc2lvbi4KCkkgaGF2ZW4ndCBiZWVu
+IGFibGUgdG8gZmluZCBhbnkgc3RhbmRhcmQgZGVmaW5pbmcgdGhvc2UgZGF0YSBtYXBwaW5ncywg
+bm9yIGFueQpwYW5lbCB1c2luZyB0aGVtLiBUaGUgY29udHJvbCBzaWduYWxzIHBvc2l0aW9ucyBj
+b3JyZXNwb25kIHRvIERDLWJhbGFuY2VkIExWRFMKKHNlZSBmaWd1cmUgMTggb24gcGFnZSAxOSBv
+ZiBodHRwOi8vd3d3LnRpLmNvbS9saXQvZHMvc3ltbGluay9kczkwY2YzODgucGRmKSwKYnV0IHRo
+ZSBSLUNhciBEVSBkb2Vzbid0IHN1cHBvcnQgREMtYmFsYW5jZWQgTFZEUyBhcyBmYXIgYXMgSSBj
+YW4gdGVsbCwgc28KaXQncyBub3QgYSBtYXRjaC4gSWYgYW55b25lIGtub3dzIG9mIG90aGVyIGRl
+dmljZXMgc3VwcG9ydGluZyB0aGVzZSBkYXRhCm1hcHBpbmdzIG9yIG9mIHN0YW5kYXJkcyBkZWZp
+bmluZyB0aGVtIEkgd291bGQgYXBwcmVjaWF0ZSB0aGUgaW5mb3JtYXRpb24gYW5kCndpbGwgdXBk
+YXRlIHRoZSBiaW5kaW5ncyBhY2NvcmRpbmdseS4KCgpMYXVyZW50IFBpbmNoYXJ0ICgyKToKICBk
+ZXZpY2V0cmVlL2JpbmRpbmdzOiBkaXNwbGF5OiBBZGQgYmluZGluZ3MgZm9yIExWRFMgcGFuZWxz
+CiAgZHJtOiByY2FyLWR1OiBBZGQgc3VwcG9ydCBmb3IgTFZEUyBtb2RlIHNlbGVjdGlvbgoKIC4u
+Li9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWx2ZHMudHh0ICAgICAgICAgIHwgMTE5ICsr
+KysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9sdmRz
+Y29uLmMgICAgICAgICAgfCAgMjkgKysrKysKIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJf
+ZHVfbHZkc2VuYy5jICAgICAgICAgIHwgIDExICstCiBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9y
+Y2FyX2R1X2x2ZHNlbmMuaCAgICAgICAgICB8ICAxMyArKysKIDQgZmlsZXMgY2hhbmdlZCwgMTcw
+IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtbHZkcy50eHQK
+Ci0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
