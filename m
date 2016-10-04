@@ -1,75 +1,44 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND v3] mwifiex: parse device tree node for PCIe
-Date: Tue, 4 Oct 2016 08:34:46 -0500
-Message-ID: <20161004133446.GD3065@rob-hp-laptop>
-References: <1475167183-18376-1-git-send-email-akarwar@marvell.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 5/7] arm64: dts: exynos: Add dts files for Samsung
+ Exynos5433 64bit SoC
+Date: Tue, 4 Oct 2016 15:37:35 +0200
+Message-ID: <CAMuHMdV3WdS75QXsJgEXirqV-d=RJa-LTq4OdvS6fgQWS+DO-A@mail.gmail.com>
+References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com> <1472046551-703-6-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1475167183-18376-1-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1472046551-703-6-git-send-email-cw00.choi@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, jh80.chung@samsung.com, Seung-Woo Kim <sw0312.kim@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Inki Dae <inki.dae@samsung.com>, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 29, 2016 at 10:09:43PM +0530, Amitkumar Karwar wrote:
-> From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> 
-> This patch derives device tree node from pcie bus layer framework.
-> Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
-> marvell-8xxx.txt) to accomodate PCIe changes.
-> 
-> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> ---
-> v2: Included vendor and product IDs in compatible strings for PCIe
-> chipsets(Rob Herring)
-> v3: Patch is created using -M option so that it will only include diff of
-> original and renamed files(Rob Herring)
-> Resend v3: Resending the patch because I missed to include device tree mailing
-> while sending v3.
-> ---
->  .../{marvell-sd8xxx.txt => marvell-8xxx.txt}         |  8 +++++---
->  drivers/net/wireless/marvell/mwifiex/pcie.c          | 20 ++++++++++++++++++++
->  drivers/net/wireless/marvell/mwifiex/sta_cmd.c       |  3 ++-
->  3 files changed, 27 insertions(+), 4 deletions(-)
->  rename Documentation/devicetree/bindings/net/wireless/{marvell-sd8xxx.txt => marvell-8xxx.txt} (91%)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-> similarity index 91%
-> rename from Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
-> rename to Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-> index c421aba..dfe5f8e 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-> @@ -1,8 +1,8 @@
-> -Marvell 8897/8997 (sd8897/sd8997) SDIO devices
-> +Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
->  ------
->  
-> -This node provides properties for controlling the marvell sdio wireless device.
-> -The node is expected to be specified as a child node to the SDIO controller that
-> +This node provides properties for controlling the marvell sdio/pcie wireless device.
+On Wed, Aug 24, 2016 at 3:49 PM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
 
-Capitalize SDIO/PCIe
+> +       cluster_a53_opp_table: opp_table0 {
+> +               compatible = "operating-points-v2";
+> +               opp-shared;
+> +
+> +               opp@400000000 {
+> +                       opp-hz = /bits/ 64 <400000000>;
+> +                       opp-microvolt = <900000>;
+> +               };
 
-> +The node is expected to be specified as a child node to the SDIO/PCIE controller that
->  connects the device to the system.
->  
->  Required properties:
-> @@ -10,6 +10,8 @@ Required properties:
->    - compatible : should be one of the following:
->  	* "marvell,sd8897"
->  	* "marvell,sd8997"
-> +	* "pci11ab,2b42"
-> +	* "pci1b4b,2b42"
+With W=1:
 
-The string is pciVVVV,DDDD. Looks like you have vendor and device 
-swapped.
+Warning (unit_address_vs_reg): Node /opp_table0/opp@400000000 has a
+unit name, but no reg property
+...
 
-Rob
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
