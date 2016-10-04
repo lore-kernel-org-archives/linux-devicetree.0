@@ -1,77 +1,126 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v3 1/2] dt-bindings: display: Add Sharp LQ150X1LG11 panel
- binding
-Date: Tue, 4 Oct 2016 06:58:43 +0200
-Message-ID: <f48111d6-f924-3520-05ca-e77b0f51a26d@axentia.se>
-References: <1474928832-8766-1-git-send-email-peda@axentia.se>
- <1474928832-8766-2-git-send-email-peda@axentia.se>
- <20161003184645.GA23584@rob-hp-laptop>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v2 2/4] drivers: iio: ti_am335x_adc: add dma support
+Date: Tue, 4 Oct 2016 11:32:16 +0300
+Message-ID: <0ff2c6ef-3fa1-dc8b-fb6e-1a4dcfea8ea9@ti.com>
+References: <20161003130318.12591-1-mugunthanvnm@ti.com>
+ <20161003130318.12591-3-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20161003184645.GA23584@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, =?UTF-8?Q?Gustaf_Lindstr=c3=b6m?= <gl@axentia.se>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161003130318.12591-3-mugunthanvnm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mugunthan V N <mugunthanvnm@ti.com>, linux-iio@vger.kernel.org
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Lee Jones <lee.jones@linaro.org>, Vignesh R <vigneshr@ti.com>, "Andrew F . Davis" <afd@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, John Syne <john3909@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNi0xMC0wMyAyMDo0NiwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVHVlLCBTZXAgMjcs
-IDIwMTYgYXQgMTI6Mjc6MTFBTSArMDIwMCwgUGV0ZXIgUm9zaW4gd3JvdGU6Cj4+IFRoZSBTaGFy
-cCAxNSIgTFExNTBYMUxHMTEgcGFuZWwgaXMgYW4gWEdBIFRGVCBMQ0QgcGFuZWwuCj4+Cj4+IFNp
-Z25lZC1vZmYtYnk6IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+Cj4+IC0tLQo+PiAgLi4u
-L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHExNTB4MWxnMTEudHh0ICAgfCAzNiArKysr
-KysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKQo+
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3BhbmVsL3NoYXJwLGxxMTUweDFsZzExLnR4dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHExNTB4
-MWxnMTEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
-ZWwvc2hhcnAsbHExNTB4MWxnMTEudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4
-IDAwMDAwMDAwMDAwMC4uNzE1ZmY3ZTMzMmYyCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHExNTB4
-MWxnMTEudHh0Cj4+IEBAIC0wLDAgKzEsMzYgQEAKPj4gK1NoYXJwIDE1IiBMUTE1MFgxTEcxMSBY
-R0EgVEZUIExDRCBwYW5lbAo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArLSBjb21w
-YXRpYmxlOiBzaG91bGQgYmUgInNoYXJwLGxxMTUweDFsZzExIgo+PiArLSBwb3dlci1zdXBwbHk6
-IHJlZ3VsYXRvciB0byBwcm92aWRlIHRoZSBWQ0Mgc3VwcGx5IHZvbHRhZ2UgKDMuMyB2b2x0cykK
-PiAKPiBTaG91bGQgYmUgbmFtZWQgYWNjb3JkaW5nIHRvIHRoZSBpbnB1dCwgc28gdmNjLXN1cHBs
-eS4KClJpZ2h0LCBJIHdhbnRlZCB0byBkbyB0aGF0LCBidXQgdGhlIHNpbXBsZS1wYW5lbCBiaW5k
-aW5ncyBoYXMgcG93ZXItc3VwcGx5CmFzIHJlcXVpcmVkIGFuZCBJIGRlc3BlcmF0ZWx5IHdhbnRl
-ZCB0byBiZSBjb21wYXRpYmxlIGluIG9yZGVyIHRvIG1ha2UgdXNlCm9mIHRoZSBzaW1wbGUtcGFu
-ZWwgZHJpdmVyLiBUaGF0IGRyaXZlciBkb2VzIHJlcXVpcmUgdGhpcyBlbnRyeSwgc28gSSBkbwpu
-b3Qgc2VlIGFueSB3YXkgYXJvdW5kIGl0LiBBbnkgYWR2aWNlIGZvciB0aGlzIHNpdHVhdGlvbj8K
-Cj4+ICsKPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4+ICstIGJhY2tsaWdodDogcGhhbmRsZSBv
-ZiB0aGUgYmFja2xpZ2h0IGRldmljZQo+PiArLSBybHVkLWdwaW9zOiBhIHNpbmdsZSBHUElPIGZv
-ciB0aGUgUkwvVUQgKHJvdGF0ZSAxODAgZGVncmVlcykgcGluLgo+PiArLSBsdmRzLWdwaW9zOiBh
-IHNpbmdsZSBHUElPIGZvciB0aGUgU0VMTFZEUyBwaW4uCj4gCj4gV2h5IG5vdCBzZWxsdmRzLWdw
-aW9zPwoKSSdsbCBjaGFuZ2UgdGhhdCBpbiB2NC4KIAo+PiArCj4+ICtJZiBscnVkLWdwaW9zIGFu
-ZC9vciBsZHZzLWdwaW9zIGFyZSBub3Qgc3BlY2lmaWVkLCB0aGUgUkwvVUQgYW5kL29yIFNFTExW
-RFMKPiAKPiB0eXBvcy4uLgoKR29vZCB0aGluZyB5b3UgYWRkZWQgdGhlIHBsdXJhbCwgSSBmb3Vu
-ZCBzL2xydWQvcmx1ZC8gYW5kIHMvbGR2cy9sdmRzLwpOaWNlIGNhdGNoIGJ0dywgdGhhbmtzIQoK
-Pj4gK3BpbnMgYXJlIGFzc3VtZWQgdG8gYmUgaGFuZGxlZCBhcHByb3ByaWF0ZWx5IGJ5IHRoZSBo
-YXJkd2FyZS4KPj4gKwo+PiArRXhhbXBsZToKPj4gKwo+PiArCWJhY2tsaWdodDogYmFja2xpZ2h0
-IHsKPj4gKwkJY29tcGF0aWJsZSA9ICJwd20tYmFja2xpZ2h0IjsKPj4gKwkJcHdtcyA9IDwmcHdt
-IDAgMTAwMDAwPjsgICAgICAgICAgICAgICAgICAgICAgLyogVkJSICovCj4+ICsKPj4gKwkJYnJp
-Z2h0bmVzcy1sZXZlbHMgPSA8MCAyMCA0MCA2MCA4MCAxMDA+Owo+PiArCQlkZWZhdWx0LWJyaWdo
-dG5lc3MtbGV2ZWwgPSA8Mj47Cj4+ICsKPj4gKwkJcG93ZXItc3VwcGx5ID0gPCZ2ZGRfMTJ2X3Jl
-Zz47ICAgICAgICAgICAgICAgLyogVkREICovCj4+ICsJCWVuYWJsZS1ncGlvcyA9IDwmZ3BpbyA0
-MiBHUElPX0FDVElWRV9ISUdIPjsgIC8qIFhTVEFCWSAqLwo+PiArCX07Cj4+ICsKPj4gKwlwYW5l
-bCB7Cj4+ICsJCWNvbXBhdGlibGUgPSAic2hhcnAsbHExNTB4MWxnMTEiOwo+PiArCj4+ICsJCXBv
-d2VyLXN1cHBseSA9IDwmdmNjXzN2M19yZWc+OyAgICAgICAgICAgICAgIC8qIFZDQyAqLwo+PiAr
-Cj4+ICsJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKPj4gKwkJcmx1ZC1ncGlvcyA9IDwmZ3Bp
-byAxNyBHUElPX0FDVElWRV9ISUdIPjsgICAgLyogUkwvVUQgKi8KPj4gKwkJbHZkcy1ncGlvcyA9
-IDwmZ3BpbyAxOCBHUElPX0FDVElWRV9ISUdIPjsgICAgLyogU0VMTFZEUyAqLwo+PiArCX07Cj4+
-IC0tIAo+PiAyLjEuNAo+Pgo+PiAtLQo+PiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDog
-c2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSIgaW4KPj4gdGhlIGJvZHkgb2Yg
-YSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPj4gTW9yZSBtYWpvcmRvbW8g
-aW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 10/03/16 16:03, Mugunthan V N wrote:
+> +static int tiadc_request_dma(struct platform_device *pdev,
+> +			     struct tiadc_device *adc_dev)
+> +{
+> +	struct tiadc_dma	*dma = &adc_dev->dma;
+> +	dma_cap_mask_t		mask;
+> +
+> +	/* Default slave configuration parameters */
+> +	dma->conf.direction = DMA_DEV_TO_MEM;
+> +	dma->conf.src_addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
+> +	dma->conf.src_addr = adc_dev->mfd_tscadc->tscadc_phys_base + REG_FIFO1;
+> +
+> +	dma_cap_zero(mask);
+> +	dma_cap_set(DMA_CYCLIC, mask);
+> +
+> +	/* Get a channel for RX */
+> +	dma->chan = dma_request_chan(adc_dev->mfd_tscadc->dev, "fifo1");
+> +	if (!dma->chan)
+> +		return -ENODEV;
+
+dma_request_chan() ERR_PTR in case of failure, never NULL. You should reuse
+the returned error code to support deferred probing.
+
+> +
+> +	/* RX buffer */
+> +	dma->buf = dma_alloc_coherent(dma->chan->device->dev, DMA_BUFFER_SIZE,
+> +				      &dma->addr, GFP_KERNEL);
+> +	if (!dma->buf)
+> +		goto err;
+> +
+> +	return 0;
+> +err:
+> +	dma_release_channel(dma->chan);
+> +
+> +	return -ENOMEM;
+> +}
+> +
+>  static int tiadc_parse_dt(struct platform_device *pdev,
+>  			  struct tiadc_device *adc_dev)
+>  {
+> @@ -512,8 +639,14 @@ static int tiadc_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, indio_dev);
+>  
+> +	err = tiadc_request_dma(pdev, adc_dev);
+> +	if (err && err != -ENODEV)
+> +		goto err_dma;
+
+You should handle the deferred probing for DMA channel.
+
+> +
+>  	return 0;
+>  
+> +err_dma:
+> +	iio_device_unregister(indio_dev);
+>  err_buffer_unregister:
+>  	tiadc_iio_buffered_hardware_remove(indio_dev);
+>  err_free_channels:
+> @@ -525,8 +658,14 @@ static int tiadc_remove(struct platform_device *pdev)
+>  {
+>  	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+> +	struct tiadc_dma *dma = &adc_dev->dma;
+>  	u32 step_en;
+>  
+> +	if (dma->chan) {
+> +		dma_free_coherent(dma->chan->device->dev, DMA_BUFFER_SIZE,
+> +				  dma->buf, dma->addr);
+> +		dma_release_channel(dma->chan);
+> +	}
+>  	iio_device_unregister(indio_dev);
+>  	tiadc_iio_buffered_hardware_remove(indio_dev);
+>  	tiadc_channels_remove(indio_dev);
+> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd/ti_am335x_tscadc.h
+> index e45a208..b9a53e0 100644
+> --- a/include/linux/mfd/ti_am335x_tscadc.h
+> +++ b/include/linux/mfd/ti_am335x_tscadc.h
+> @@ -23,6 +23,8 @@
+>  #define REG_IRQENABLE		0x02C
+>  #define REG_IRQCLR		0x030
+>  #define REG_IRQWAKEUP		0x034
+> +#define REG_DMAENABLE_SET	0x038
+> +#define REG_DMAENABLE_CLEAR	0x03c
+>  #define REG_CTRL		0x040
+>  #define REG_ADCFSM		0x044
+>  #define REG_CLKDIV		0x04C
+> @@ -36,6 +38,7 @@
+>  #define REG_FIFO0THR		0xE8
+>  #define REG_FIFO1CNT		0xF0
+>  #define REG_FIFO1THR		0xF4
+> +#define REG_DMA1REQ		0xF8
+>  #define REG_FIFO0		0x100
+>  #define REG_FIFO1		0x200
+>  
+> @@ -126,6 +129,10 @@
+>  #define FIFOREAD_DATA_MASK (0xfff << 0)
+>  #define FIFOREAD_CHNLID_MASK (0xf << 16)
+>  
+> +/* DMA ENABLE/CLEAR Register */
+> +#define DMA_FIFO0		BIT(0)
+> +#define DMA_FIFO1		BIT(1)
+> +
+>  /* Sequencer Status */
+>  #define SEQ_STATUS BIT(5)
+>  #define CHARGE_STEP		0x11
+> 
+
+
+-- 
+Péter
