@@ -1,61 +1,77 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 2/9] pinctrl: sunxi: Add bindings define
-Date: Tue, 4 Oct 2016 09:57:07 +0800
-Message-ID: <CAGb2v65V2VjFujJBNRJoAvOKF5p1aE0vJOp-4NeBJHiMH8y80Q@mail.gmail.com>
-References: <cover.26c6f76b361d146fb079d744251f020ef6d2db7d.1475489558.git-series.maxime.ripard@free-electrons.com>
- <f56e271107221a2f41f256e2759a92cfe29624a8.1475489558.git-series.maxime.ripard@free-electrons.com>
+From: Brian Kim <brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: meson-gxbb-odroidc2: Enable USB Nodes
+Date: Tue, 4 Oct 2016 11:00:55 +0900
+Message-ID: <491f3dd3-e489-1e94-fe08-40a1d9188dec@hardkernel.com>
+References: <1475227059-17462-1-git-send-email-brian.kim@hardkernel.com>
+ <7h7f9tgzg8.fsf@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <f56e271107221a2f41f256e2759a92cfe29624a8.1475489558.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7h7f9tgzg8.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, moon.linux-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 3, 2016 at 6:21 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> Since we have some bindings header for our hardcoded flags, let's use them
-> when we can.
 
-"Use macros from bindings header file for DT parsing"
 
-would make the subject clearer.
-
-Otherwise,
-
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+On 2016년 10월 01일 00:49, Kevin Hilman wrote:
+> Brian Kim <brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org> writes:
+>
+>> Enable both gxbb USB controller and add a 5V regulator for the OTG port
+>> VBUS
+>>
+>> Signed-off-by: Brian Kim <brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>
+> Thanks for the patch.
+>
+> In the future, please state what branch the patch should apply to when
+> not using mainline.  Because of the sd_emmc nodes in your patch, I could
+> tell that it was based on my integ branch so was able to figure it out,
+> but it's very helpful to maintainers if you state the branch and/or any
+> dependencies explicity.
+Okay, I will do next time.
+I guessed the branch is your latest working branch by the commit logs.
 
 >
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> ---
->  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+>> ---
+>>  .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 29 ++++++++++++++++++++++
+>>  1 file changed, 29 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+>> index 8d89edc..997c671 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+>> @@ -64,6 +64,18 @@
+>>  		reg = <0x0 0x0 0x0 0x80000000>;
+>>  	};
+>>  
+>> +	usb_pwr: regulator-usb-pwrs {
+> minor nit: since this is specific to the OTG part, can you call this
+> usb_otg_pwr? ...
+Sure.
+
 >
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> index 64f7f6dcc027..5be455d5e252 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> @@ -28,6 +28,8 @@
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
+>> +		compatible = "regulator-fixed";
+>> +
+>> +		regulator-name = "USB_PWR";
+> ... and rename this also?
+Yes, I will change the name to "USB_OTG_PWR".
+
 >
-> +#include <dt-bindings/pinctrl/sun4i-a10.h>
-> +
->  #include "../core.h"
->  #include "../../gpio/gpiolib.h"
->  #include "pinctrl-sunxi.h"
-> @@ -164,9 +166,9 @@ static int sunxi_pctrl_parse_bias_prop(struct device_node *node)
->                 return -EINVAL;
+>> +		regulator-min-microvolt = <5000000>;
+>> +		regulator-max-microvolt = <5000000>;
+>> +
+>> +		gpio = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
+>> +		enable-active-high;
+>> +	};
+>> +
+> Thanks
 >
->         switch (val) {
-> -       case 1:
-> +       case SUN4I_PINCTRL_PULL_UP:
->                 return PIN_CONFIG_BIAS_PULL_UP;
-> -       case 2:
-> +       case SUN4I_PINCTRL_PULL_DOWN:
->                 return PIN_CONFIG_BIAS_PULL_DOWN;
->         }
+> Kevin
 >
-> --
-> git-series 0.8.10
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
