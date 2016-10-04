@@ -1,34 +1,80 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v5 net-next] net: phy: Add Edge-rate driver for
- Microsemi PHYs.
-Date: Tue, 04 Oct 2016 03:01:34 -0400 (EDT)
-Message-ID: <20161004.030134.1142321103427028880.davem@davemloft.net>
-References: <1475479393-24308-1-git-send-email-Raju.Lakkaraju@microsemi.com>
-        <20161004.004859.1105270097322633239.davem@davemloft.net>
-        <20161004065401.GA6097@lunn.ch>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161004065401.GA6097-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andrew-g2DYL2Zd6BY@public.gmane.org
-Cc: Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org
+From: Brian Kim <brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>
+Subject: [PATCH v2] ARM64: dts: meson-gxbb-odroidc2: Enable USB Nodes
+Date: Tue,  4 Oct 2016 16:06:43 +0900
+Message-ID: <1475564803-9616-1-git-send-email-brian.kim@hardkernel.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, moon.linux-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Date: Tue, 4 Oct 2016 08:54:01 +0200
+Enable both gxbb USB controller and add a 5V regulator for the OTG port
+VBUS
 
-> Oh dear. It was not ready for acceptance yet. I guess you missed all
-> the discussion because it was attached to the previous version of the
-> patch.
-> 
-> Raju you now need to submit fixup patches relative to the version
-> David has accepted, to fix the issues we were discussing.
+Signed-off-by: Brian Kim <brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>
+---
+This patch was written on Kevin Hilman's repository[1] and branch[2]:
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git
+[2] v4.8/integ
 
-My bad, I'm trying to queue everything up for the merge window
-pull request.
+Chnages since v1:
+- rename the usb_pwr node to usb_otg_pwr
+- rename the regulator-name "USB_PWR" to "USB_OTG_PWR"
+
+ .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index 8d89edc..bfacaf7 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -64,6 +64,18 @@
+ 		reg = <0x0 0x0 0x0 0x80000000>;
+ 	};
+ 
++	usb_otg_pwr: regulator-usb-pwrs {
++		compatible = "regulator-fixed";
++
++		regulator-name = "USB_OTG_PWR";
++
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++
++		gpio = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		blue {
+@@ -149,6 +161,23 @@
+ 	pinctrl-names = "default";
+ };
+ 
++&usb0_phy {
++	status = "okay";
++	phy-supply = <&usb_otg_pwr>;
++};
++
++&usb1_phy {
++	status = "okay";
++};
++
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
++
+ /* SD */
+ &sd_emmc_b {
+ 	status = "okay";
+-- 
+2.7.4
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
