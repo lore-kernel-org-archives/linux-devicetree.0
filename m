@@ -1,80 +1,47 @@
-From: maitysanchayan@gmail.com
-Subject: Re: [PATCH v1 1/2] ARM: dts: vfxxx: Enable DMA for DSPI on Vybrid
-Date: Tue, 4 Oct 2016 10:02:29 +0530
-Message-ID: <20161004043228.GA1424@Sanchayan-Arch.localdomain>
-References: <63fc108e2df00d2297a9b7014955f203bc802f34.1475498805.git.maitysanchayan@gmail.com>
- <48b237c5d8709a67112465ea147f4c0c@agner.ch>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH v5 net-next] net: phy: Add Edge-rate driver for
+ Microsemi PHYs.
+Date: Tue, 04 Oct 2016 00:48:59 -0400 (EDT)
+Message-ID: <20161004.004859.1105270097322633239.davem@davemloft.net>
+References: <1475479393-24308-1-git-send-email-Raju.Lakkaraju@microsemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <48b237c5d8709a67112465ea147f4c0c@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: broonie@kernel.org, shawnguo@kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bhuvanchandra.dv@toradex.com
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475479393-24308-1-git-send-email-Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Stefan,
+From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+Date: Mon, 3 Oct 2016 12:53:13 +0530
 
-On 16-10-03 11:05:59, Stefan Agner wrote:
-> On 2016-10-03 05:50, Sanchayan Maity wrote:
-> > Enable DMA for DSPI on Vybrid.
+> From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
 > 
-> Hm, we have that in 4.4 already, is that meant for 4.1?
-
-Sorry?! I send this out for mainline and the patch series is based
-on top of shawn's for-next branch. Did not intend it for our downstream
-4.1.
-
-Thanks.
-
-Regards,
-Stefan.
-
+> Edge-rate:
+> As system and networking speeds increase, a signal's output transition,
+> also know as the edge rate or slew rate (V/ns), takes on greater importance
+> because high-speed signals come with a price. That price is an assortment of
+> interference problems like ringing on the line, signal overshoot and
+> undershoot, extended signal settling times, crosstalk noise, transmission
+> line reflections, false signal detection by the receiving device and
+> electromagnetic interference (EMI) -- all of which can negate the potential
+> gains designers are seeking when they try to increase system speeds through
+> the use of higher performance logic devices. The fact is, faster signaling
+> edge rates can cause a higher level of electrical noise or other type of
+> interference that can actually lead to slower line speeds and lower maximum
+> system frequencies. This parameter allow the board designers to change the
+> driving strange, and thereby change the EMI behavioral.
 > 
-> > 
-> > Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/vf-colibri.dtsi | 4 ++++
-> >  arch/arm/boot/dts/vfxxx.dtsi      | 6 ++++++
-> >  2 files changed, 10 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/vf-colibri.dtsi
-> > b/arch/arm/boot/dts/vf-colibri.dtsi
-> > index b741709..21bfef9 100644
-> > --- a/arch/arm/boot/dts/vf-colibri.dtsi
-> > +++ b/arch/arm/boot/dts/vf-colibri.dtsi
-> > @@ -108,6 +108,10 @@
-> >  	status = "okay";
-> >  };
-> >  
-> > +&edma1 {
-> > +	status = "okay";
-> > +};
-> > +
-> >  &esdhc1 {
-> >  	pinctrl-names = "default";
-> >  	pinctrl-0 = <&pinctrl_esdhc1>;
-> > diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-> > index 2c13ec6..eac4213 100644
-> > --- a/arch/arm/boot/dts/vfxxx.dtsi
-> > +++ b/arch/arm/boot/dts/vfxxx.dtsi
-> > @@ -194,6 +194,9 @@
-> >  				clocks = <&clks VF610_CLK_DSPI0>;
-> >  				clock-names = "dspi";
-> >  				spi-num-chipselects = <6>;
-> > +				dmas = <&edma1 1 12>,
-> > +					<&edma1 1 13>;
-> > +				dma-names = "rx", "tx";
-> >  				status = "disabled";
-> >  			};
-> >  
-> > @@ -206,6 +209,9 @@
-> >  				clocks = <&clks VF610_CLK_DSPI1>;
-> >  				clock-names = "dspi";
-> >  				spi-num-chipselects = <4>;
-> > +				dmas = <&edma1 1 14>,
-> > +					<&edma1 1 15>;
-> > +				dma-names = "rx", "tx";
-> >  				status = "disabled";
-> >  			};
+> Edge-rate parameters (vddmac, edge-slowdown) get from Device Tree.
+> 
+> Tested on Beaglebone Black with VSC 8531 PHY.
+> 
+> Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
