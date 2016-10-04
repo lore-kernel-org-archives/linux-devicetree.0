@@ -1,45 +1,35 @@
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH v2 0/3] hisi_sas add hip07 support
-Date: Tue, 4 Oct 2016 19:11:08 +0800
-Message-ID: <1475579471-11308-1-git-send-email-john.garry@huawei.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH 05/14] mfd: sun6i-prcm: Add sun8i analog codec as
+ subnode
+Date: Tue, 4 Oct 2016 12:52:17 +0200
+Message-ID: <20161004125217.952342ecac68d3da3336cc76@free.fr>
+References: <cover.1475569400.git.mylene.josserand@free-electrons.com>
+        <c74aea452bd1831f439dd67884cb2879e0849f03.1475571575.git.mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-scsi-owner@vger.kernel.org>
-Sender: linux-scsi-owner@vger.kernel.org
-To: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linuxarm@huawei.com, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, hare@suse.com, John Garry <john.garry@huawei.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c74aea452bd1831f439dd67884cb2879e0849f03.1475571575.git.mylene.josserand@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@free-electrons.com>
+Cc: vinod.koul@intel.com, maxime.ripard@free-electrons.com, wens@csie.org, mturquette@baylibre.com, sboyd@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, lee.jones@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, alexandre.belloni@free-electrons.com, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset introduces support for hip07 SoC.
+On Tue,  4 Oct 2016 11:46:18 +0200
+Mylène Josserand <mylene.josserand@free-electrons.com> wrote:
 
-The hip07 SoC has the same v2 hw as in hip06.
+> The sun8i audio codec is using PRCM registers to configure all the
+> analog part of the audio codec. It is added as a subnode of the PRCM
+> with his resource (offset of 0x1c0).
+> 
+> Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
+> ---
+>  drivers/mfd/sun6i-prcm.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+	[snip]
 
-Support for different reference clock is required
-as some SAS registers need be programmed
-differently, depending on the refclock rate.
-
-Related patchset:
-- https://patchwork.ozlabs.org/patch/665172/
-  Once 4.9-rc1 is released, the D03 dts can be
-  updated for the refclock.
-  Note: there will be only 1 D03 dts, UEFI will update
-  		the refclock rate for that board in the fdt at
-  		boottime.
-
-Differences to v1:
-- dropped sas-v2 quirk amt for hip07
-
-John Garry (3):
-  devicetree: bindings: scsi: hisi_sas add hip07 support
-  hisi_sas: add device tree support for hip07
-  hisi_sas: add v2 hw support for different refclk
-
- Documentation/devicetree/bindings/scsi/hisilicon-sas.txt | 1 +
- drivers/scsi/hisi_sas/hisi_sas.h                         | 2 ++
- drivers/scsi/hisi_sas/hisi_sas_main.c                    | 7 +++++++
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c                   | 5 ++++-
- 4 files changed, 14 insertions(+), 1 deletion(-)
+I was heard that the PRCM as a MFD would disappear.
 
 -- 
-1.9.1
-
+Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
