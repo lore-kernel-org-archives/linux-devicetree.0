@@ -1,47 +1,45 @@
-From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
-Subject: Re: [PATCH v6 net-next] net: phy: Add Edge-rate driver for Microsemi
- PHYs.
-Date: Tue, 4 Oct 2016 19:35:59 +0530
-Message-ID: <20161004140557.GA29229@microsemi.com>
-References: <1475581272-12093-1-git-send-email-Raju.Lakkaraju@microsemi.com>
- <20161004115132.GG11677@lunn.ch>
- <20161004122648.GA12301@microsemi.com>
- <20161004125319.GK11677@lunn.ch>
-Reply-To: <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt: bindings: vendor-prefix: Add 3 accelerometer
+ vendor prefixes
+Date: Tue, 4 Oct 2016 09:18:25 -0500
+Message-ID: <CAL_JsqKZvrVCEhWW6WLT77xUsJz3-+HRYt4O9NJiEbBM3PRq1Q@mail.gmail.com>
+References: <20161002155135.23298-1-hdegoede@redhat.com> <20161002155135.23298-2-hdegoede@redhat.com>
+ <20161004134401.GA12103@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161004125319.GK11677-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161004134401.GA12103@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+On Tue, Oct 4, 2016 at 8:44 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Sun, Oct 02, 2016 at 05:51:35PM +0200, Hans de Goede wrote:
+>> Recently the kernel has gotten support in the iio subsystem for a number
+>> of new accelerometers from Domintech, mCube, Memsic and MiraMEMS.
+>>
+>> This commit adds the vendor prefixes already used for these vendors
+>> in Documentation/devicetree/bindings/i2c/trivial-devices.txt to
+>> vendor-prefixes.txt.
+>>
+>> Domintech's full company name was taken from copyright headers for
+>> their drivers from: https://github.com/domintech/
+>>
+>> The other full company names were taken from the company's websites:
+>> http://www.mcubemems.com/
+>> http://www.memsic.com/
+>> http://www.miramems.com/en/
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>
+> I've applied this one to avoid any conflicts with sorting
+> vendor-prefixes.txt. I fixed up the sorting of mcube.
 
-Thank you for review comments.
-I accepted your review comment and change the code.
-I resent for code review.
+I've now dropped this because Domintech is already in Jonathan's tree.
+Please respin.
 
-Thanks,
-Raju.
-
-On Tue, Oct 04, 2016 at 02:53:19PM +0200, Andrew Lunn wrote:
-> EXTERNAL EMAIL
-> 
-> 
-> > Regarding remove the -'s in table, PHY data sheet descript the
-> > concept of edge rate with table. I would like to keep the same table
-> > in driver.
-> 
-> The double negative makes the code ugly. Plus a negative slowdown is a
-> speed up! The kernel maintainability and sanity comes first, and if
-> the data sheet is crazy, because it uses negative slows downs, it
-> should be ignored. Get the data sheet fixed....
-> 
->        Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
