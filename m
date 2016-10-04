@@ -1,101 +1,49 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v2 2/4] net: phy: dp83867: add support for MAC impedance
- configuration
-Date: Tue, 4 Oct 2016 18:40:21 +0530
-Message-ID: <7fa4f84d-2fa2-55e4-2883-9e0294924ad0@ti.com>
-References: <20161004125607.10569-1-mugunthanvnm@ti.com>
- <20161004125607.10569-3-mugunthanvnm@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: display: Add Sharp LQ150X1LG11 panel binding
+Date: Tue, 4 Oct 2016 08:11:49 -0500
+Message-ID: <CAL_Jsq+iuBOOAfwT6FK9LkzcLTPwRF47uizaCcqSk1Y+JTJk0A@mail.gmail.com>
+References: <1474928832-8766-1-git-send-email-peda@axentia.se>
+ <1474928832-8766-2-git-send-email-peda@axentia.se> <20161003184645.GA23584@rob-hp-laptop>
+ <f48111d6-f924-3520-05ca-e77b0f51a26d@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161004125607.10569-3-mugunthanvnm@ti.com>
+In-Reply-To: <f48111d6-f924-3520-05ca-e77b0f51a26d@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>, netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, David Miller <davem@davemloft.net>, Sekhar Nori <nsekhar@ti.com>
+To: Peter Rosin <peda@axentia.se>
+Cc: open list <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Gustaf_Lindstr=C3=B6m?= <gl@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 3, 2016 at 11:58 PM, Peter Rosin <peda@axentia.se> wrote:
+> On 2016-10-03 20:46, Rob Herring wrote:
+>> On Tue, Sep 27, 2016 at 12:27:11AM +0200, Peter Rosin wrote:
+>>> The Sharp 15" LQ150X1LG11 panel is an XGA TFT LCD panel.
+>>>
+>>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>>> ---
+>>>  .../bindings/display/panel/sharp,lq150x1lg11.txt   | 36 ++++++++++++++++++++++
+>>>  1 file changed, 36 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt b/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
+>>> new file mode 100644
+>>> index 000000000000..715ff7e332f2
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
+>>> @@ -0,0 +1,36 @@
+>>> +Sharp 15" LQ150X1LG11 XGA TFT LCD panel
+>>> +
+>>> +Required properties:
+>>> +- compatible: should be "sharp,lq150x1lg11"
+>>> +- power-supply: regulator to provide the VCC supply voltage (3.3 volts)
+>>
+>> Should be named according to the input, so vcc-supply.
+>
+> Right, I wanted to do that, but the simple-panel bindings has power-supply
+> as required and I desperately wanted to be compatible in order to make use
+> of the simple-panel driver. That driver does require this entry, so I do
+> not see any way around it. Any advice for this situation?
 
+Okay, it's fine given it's a single supply.
 
-On Tuesday 04 October 2016 06:26 PM, Mugunthan V N wrote:
-> Add support for programmable MAC impedance configuration
-> 
-> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
-> ---
->  drivers/net/phy/dp83867.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-> index 91177a4..795ae17 100644
-> --- a/drivers/net/phy/dp83867.c
-> +++ b/drivers/net/phy/dp83867.c
-> @@ -33,6 +33,7 @@
->  /* Extended Registers */
->  #define DP83867_RGMIICTL	0x0032
->  #define DP83867_RGMIIDCTL	0x0086
-> +#define DP83867_IO_MUX_CFG	0x0170
->  
->  #define DP83867_SW_RESET	BIT(15)
->  #define DP83867_SW_RESTART	BIT(14)
-> @@ -62,10 +63,17 @@
->  /* RGMIIDCTL bits */
->  #define DP83867_RGMII_TX_CLK_DELAY_SHIFT	4
->  
-> +/* IO_MUX_CFG bits */
-> +#define DP83867_IO_MUX_CFG_IO_IMPEDANCE_CTRL	0x1f
-> +
-> +#define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MAX	0x0
-> +#define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MIN	0x1f
-> +
->  struct dp83867_private {
->  	int rx_id_delay;
->  	int tx_id_delay;
->  	int fifo_depth;
-> +	int io_impedance;
->  };
->  
->  static int dp83867_ack_interrupt(struct phy_device *phydev)
-> @@ -111,6 +119,14 @@ static int dp83867_of_init(struct phy_device *phydev)
->  	if (!of_node)
->  		return -ENODEV;
->  
-> +	dp83867->io_impedance = -EINVAL;
-> +
-> +	/* Optional configuration */
-> +	if (of_property_read_bool(of_node, "ti,max-output-imepdance"))
-
-s/imepdance/impedance
-
-> +		dp83867->io_impedance = DP83867_IO_MUX_CFG_IO_IMPEDANCE_MAX;
-> +	else if (of_property_read_bool(of_node, "ti,min-output-imepdance"))
-
-s/imepdance/impedance
-
-Thanks and regards,
-Lokesh
-
-> +		dp83867->io_impedance = DP83867_IO_MUX_CFG_IO_IMPEDANCE_MIN;
-> +
->  	ret = of_property_read_u32(of_node, "ti,rx-internal-delay",
->  				   &dp83867->rx_id_delay);
->  	if (ret)
-> @@ -184,6 +200,18 @@ static int dp83867_config_init(struct phy_device *phydev)
->  
->  		phy_write_mmd_indirect(phydev, DP83867_RGMIIDCTL,
->  				       DP83867_DEVADDR, delay);
-> +
-> +		if (dp83867->io_impedance >= 0) {
-> +			val = phy_read_mmd_indirect(phydev, DP83867_IO_MUX_CFG,
-> +						    DP83867_DEVADDR);
-> +
-> +			val &= ~DP83867_IO_MUX_CFG_IO_IMPEDANCE_CTRL;
-> +			val |= dp83867->io_impedance &
-> +			       DP83867_IO_MUX_CFG_IO_IMPEDANCE_CTRL;
-> +
-> +			phy_write_mmd_indirect(phydev, DP83867_IO_MUX_CFG,
-> +					       DP83867_DEVADDR, val);
-> +		}
->  	}
->  
->  	return 0;
-> 
+Rob
