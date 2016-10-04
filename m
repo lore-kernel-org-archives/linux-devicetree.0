@@ -1,36 +1,40 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v7 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Mon, 3 Oct 2016 18:10:39 -0400
-Message-ID: <20161003221039.GR19318@brightrain.aerifal.cx>
-References: <cover.1474693319.git.dalias@libc.org>
- <22c1ee0f908fe3bf8b70f5e87d659ceb29af1434.1474693319.git.dalias@libc.org>
- <20160926210716.GA12855@brightrain.aerifal.cx>
- <4b02ba7d-4a31-297a-bbbd-be26da615e7b@linaro.org>
+From: Balbir Singh <bsingharora@gmail.com>
+Subject: Re: [PATCH v3 4/5] powerpc/mm: restore top-down allocation when using
+ movable_node
+Date: Tue, 4 Oct 2016 11:48:30 +1100
+Message-ID: <e161a34e-4e58-42f5-49ed-3e7913189eb9@gmail.com>
+References: <1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com>
+ <1474828616-16608-5-git-send-email-arbab@linux.vnet.ibm.com>
+ <1474924351.2857.255.camel@kernel.crashing.org>
+ <20160927001413.o72fqpfsnsxpu5qq@arbab-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4b02ba7d-4a31-297a-bbbd-be26da615e7b@linaro.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <20160927001413.o72fqpfsnsxpu5qq@arbab-laptop>
+Sender: owner-linux-mm@kvack.org
+To: Reza Arbab <arbab@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 26, 2016 at 11:27:14PM +0200, Daniel Lezcano wrote:
-> On 26/09/2016 23:07, Rich Felker wrote:
-> > Ping. Is there anything that still needs to be changed for this driver
-> > to be acceptable?
-> 
-> It is on my radar. I'm reviewing it.
-> 
-> Can you elaborate the workaround mentioned in the changelog. I have been
-> digging into the lkml@ thread but it is not clear if the issue is
-> related to the time framework, the driver itself or whatever else. Can
-> you clarify that ?
 
-Do you have comments on any remaining issues other than this
-workaround? If not I don't mind removing the workaround and trying to
-solve the issue separately later. Let me know and either way I'll
-submit a v8.
 
-Rich
+On 27/09/16 10:14, Reza Arbab wrote:
+> On Tue, Sep 27, 2016 at 07:12:31AM +1000, Benjamin Herrenschmidt wrote:
+>> In any case, if the memory hasn't been hotplug, this shouldn't be necessary as we shouldn't be considering it for allocation.
+> 
+> Right. To be clear, the background info I put in the commit log refers to x86, where the SRAT can describe movable nodes which exist at boot.  They're trying to avoid allocations from those nodes before they've been identified.
+> 
+> On power, movable nodes can only exist via hotplug, so that scenario can't happen. We can immediately go back to top-down allocation. That is the missing call being added in the patch.
+> 
+
+Can we fix cmdline_parse_movable_node() to do the right thing? I suspect that
+code is heavily x86 only in the sense that no other arch needs it.
+
+Balbir Singh.
+
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
