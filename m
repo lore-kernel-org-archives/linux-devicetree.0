@@ -1,77 +1,164 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 0/2] R-Car DU: Add support for LVDS mode selection
-Date: Tue,  4 Oct 2016 19:23:28 +0300
-Message-ID: <1475598210-26857-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-media@vger.kernel.org
+From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: [PATCH 2/2] drm: rcar-du: Add support for LVDS mode selection
+Date: Tue,  4 Oct 2016 19:23:30 +0300
+Message-ID: <1475598210-26857-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1475598210-26857-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475598210-26857-1-git-send-email-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgpUaGlzIHBhdGNoIHNlcmllcyBhZGRzIHN1cHBvcnQgZm9yIExWRFMgbW9kZSBzZWxl
-Y3Rpb24gaW4gdGhlIFItQ2FyIERVIGRyaXZlci4KClBhdGNoIDEvMiBkZWZpbmVzIGEgbmV3IERU
-IGJpbmRpbmcgZm9yIExWRFMgcGFuZWwuIENvbXBhcmVkIHRvIHRoZSBleGlzdGluZwpEUEkgcGFu
-ZWwgYmluZGluZ3MgdGhhdCBhcmUgY3VycmVudGx5IGFidXNlZCBieSB0aGUgZHJpdmVyIGZvciBM
-VkRTIHBhbmVsLAp0aGlzIG5ldyBiaW5kaW5nIHNwZWNpZmllcyB0aGUgTFZEUyBtb3JlIGV4cGxp
-Y2l0bHkuIFBhdGNoIDIvMiB0aGVuIGFkZHMKc3VwcG9ydCBmb3IgdGhlIG5ldyBiaW5kaW5ncyB0
-byB0aGUgZHJpdmVyLCByZXRyaWV2aW5nIHRoZSBtb2RlIGZyb20gRFQgYW5kCmNvbmZpZ3VyaW5n
-IHRoZSBoYXJkd2FyZSBhY2NvcmRpbmdseS4KClRoZSBMVkRTIHBhbmVsIERUIGJpbmRpbmdzIGFy
-ZSBiYXNlZCBvbiB0aGUgcmVsZXZhbnQgc3RhbmRhcmRzIEkgaGF2ZSBiZWVuCmFibGUgdG8gZmlu
-ZCwgYXMgd2VsbCBhcyBvbiBleGlzdGluZyBMVkRTLXJlbGF0ZWQgY29kZSBhbmQgRFQgYmluZGlu
-Z3MKYXZhaWxhYmxlIGluIHRoZSBtYWlubGluZSBrZXJuZWwuIFRob3NlIGluY2x1ZGUKCi0gdGhl
-IExWRFMgZm9ybWF0cyBNRURJQV9CVVNfRk1UX1JHQjY2Nl8xWDdYM19TUFdHLAogIE1FRElBX0JV
-U19GTVRfUkdCODg4XzFYN1g0X1NQV0cgYW5kIE1FRElBX0JVU19GTVRfUkdCODg4XzFYN1g0X0pF
-SURBCiAgKERvY3VtZW50YXRpb24vbWVkaWEvdWFwaS92NGwvc3ViZGV2LWZvcm1hdHMucnN0KQot
-IGlNWCBkaXNwbGF5IERUIGJpbmRpbmdzIGF2YWlsYWJsZSBpbgogIChEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbXgvbGRiLnR4dCkKLSB0aGUgZHJpdmVycy9ncHUv
-ZHJtL2lteC8gZHJpdmVyCgpJbiBhZGRpdGlvbiB0byB0aGUgdGhyZWUgbW9kZXMgc3BlY2lmaWVk
-IGluIHRoZSBMVkRTIHBhbmVsIERUIGJpbmRpbmdzLCB0aGUKUmVuZXNhcyBSLUNhciBEVSBhbHNv
-IHN1cHBvcnRzIHRoZSBmb2xsb3dpbmcgdHdvIG1vZGVzLgoKU2xvdCAgICAgICAwICAgICAgIDEg
-ICAgICAgMiAgICAgICAzICAgICAgIDQgICAgICAgNSAgICAgICA2CiAgICAgICBfX19fX19fX19f
-X19fX19fICAgICAgICAgICAgICAgICAgICAgICAgIF9fX19fX19fX19fX19fX19fCkNsb2NrICAg
-ICAgICAgICAgICAgICAgXF9fX19fX19fX19fX19fX19fX19fX19fLwogICAgICAgICBfX19fX18g
-IF9fX19fXyAgX19fX19fICBfX19fX18gIF9fX19fXyAgX19fX19fICBfX19fX18KREFUQTAgID48
-X0NUTDBfPjxfX1I3X18+PF9fUjZfXz48X19SNV9fPjxfX1I0X18+PF9fUjNfXz48X19SMl9fPjwK
-REFUQTEgID48X0NUTDFfPjxfX0c3X18+PF9fRzZfXz48X19HNV9fPjxfX0c0X18+PF9fRzNfXz48
-X19HMl9fPjwKREFUQTIgID48X0NUTDJfPjxfX0I3X18+PF9fQjZfXz48X19CNV9fPjxfX0I0X18+
-PF9fQjNfXz48X19CMl9fPjwKREFUQTMgID48X0NUTDNfPjxfX0IxX18+PF9fQjBfXz48X19HMV9f
-PjxfX0cwX18+PF9fUjFfXz48X19SMF9fPjwKICAgICAgICAgX19fX19fICBfX19fX18gIF9fX19f
-XyAgX19fX19fICBfX19fX18gIF9fX19fXyAgX19fX19fCkRBVEEwICA+PF9DVEwwXz48X19SNV9f
-PjxfX1I0X18+PF9fUjNfXz48X19SMl9fPjxfX1IxX18+PF9fUjBfXz48CkRBVEExICA+PF9DVEwx
-Xz48X19HNV9fPjxfX0c0X18+PF9fRzNfXz48X19HMl9fPjxfX0cxX18+PF9fRzBfXz48CkRBVEEy
-ICA+PF9DVEwyXz48X19CNV9fPjxfX0I0X18+PF9fQjNfXz48X19CMl9fPjxfX0IxX18+PF9fQjBf
-Xz48CkRBVEEzICA+PF9DVEwzXz48X19CN19fPjxfX0I2X18+PF9fRzdfXz48X19HNl9fPjxfX1I3
-X18+PF9fUjZfXz48CgphbmQgdGhlaXIgbWlycm9yZWQgdmVyc2lvbi4KCkkgaGF2ZW4ndCBiZWVu
-IGFibGUgdG8gZmluZCBhbnkgc3RhbmRhcmQgZGVmaW5pbmcgdGhvc2UgZGF0YSBtYXBwaW5ncywg
-bm9yIGFueQpwYW5lbCB1c2luZyB0aGVtLiBUaGUgY29udHJvbCBzaWduYWxzIHBvc2l0aW9ucyBj
-b3JyZXNwb25kIHRvIERDLWJhbGFuY2VkIExWRFMKKHNlZSBmaWd1cmUgMTggb24gcGFnZSAxOSBv
-ZiBodHRwOi8vd3d3LnRpLmNvbS9saXQvZHMvc3ltbGluay9kczkwY2YzODgucGRmKSwKYnV0IHRo
-ZSBSLUNhciBEVSBkb2Vzbid0IHN1cHBvcnQgREMtYmFsYW5jZWQgTFZEUyBhcyBmYXIgYXMgSSBj
-YW4gdGVsbCwgc28KaXQncyBub3QgYSBtYXRjaC4gSWYgYW55b25lIGtub3dzIG9mIG90aGVyIGRl
-dmljZXMgc3VwcG9ydGluZyB0aGVzZSBkYXRhCm1hcHBpbmdzIG9yIG9mIHN0YW5kYXJkcyBkZWZp
-bmluZyB0aGVtIEkgd291bGQgYXBwcmVjaWF0ZSB0aGUgaW5mb3JtYXRpb24gYW5kCndpbGwgdXBk
-YXRlIHRoZSBiaW5kaW5ncyBhY2NvcmRpbmdseS4KCgpMYXVyZW50IFBpbmNoYXJ0ICgyKToKICBk
-ZXZpY2V0cmVlL2JpbmRpbmdzOiBkaXNwbGF5OiBBZGQgYmluZGluZ3MgZm9yIExWRFMgcGFuZWxz
-CiAgZHJtOiByY2FyLWR1OiBBZGQgc3VwcG9ydCBmb3IgTFZEUyBtb2RlIHNlbGVjdGlvbgoKIC4u
-Li9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWx2ZHMudHh0ICAgICAgICAgIHwgMTE5ICsr
-KysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9sdmRz
-Y29uLmMgICAgICAgICAgfCAgMjkgKysrKysKIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJf
-ZHVfbHZkc2VuYy5jICAgICAgICAgIHwgIDExICstCiBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9y
-Y2FyX2R1X2x2ZHNlbmMuaCAgICAgICAgICB8ICAxMyArKysKIDQgZmlsZXMgY2hhbmdlZCwgMTcw
-IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtbHZkcy50eHQK
-Ci0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Retrieve the LVDS mode from the panel node and configure the LVDS
+encoder accordingly. LVDS mode selection is static as LVDS panels can't
+be hot-plugged on any of the device supported by the driver. Support for
+dynamic mode selection can be implemented in the future if needed
+without any impact on the DT bindings.
+
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+---
+ drivers/gpu/drm/rcar-du/rcar_du_lvdscon.c | 29 +++++++++++++++++++++++++++++
+ drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c | 11 +++++++++--
+ drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.h | 13 +++++++++++++
+ 3 files changed, 51 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_lvdscon.c b/drivers/gpu/drm/rcar-du/rcar_du_lvdscon.c
+index 64e9f0b86e58..71a70b06f16b 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_lvdscon.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_lvdscon.c
+@@ -24,6 +24,7 @@
+ #include "rcar_du_encoder.h"
+ #include "rcar_du_kms.h"
+ #include "rcar_du_lvdscon.h"
++#include "rcar_du_lvdsenc.h"
+ 
+ struct rcar_du_lvds_connector {
+ 	struct rcar_du_connector connector;
+@@ -33,6 +34,8 @@ struct rcar_du_lvds_connector {
+ 		unsigned int height_mm;		/* Panel height in mm */
+ 		struct videomode mode;
+ 	} panel;
++
++	unsigned int mode;
+ };
+ 
+ #define to_rcar_lvds_connector(c) \
+@@ -100,6 +103,32 @@ int rcar_du_lvds_connector_init(struct rcar_du_device *rcdu,
+ 	of_property_read_u32(np, "width-mm", &lvdscon->panel.width_mm);
+ 	of_property_read_u32(np, "height-mm", &lvdscon->panel.height_mm);
+ 
++	if (of_device_is_compatible(np, "panel-lvds")) {
++		enum rcar_lvds_mode mode = 0;
++		const char *mapping = NULL;
++
++		of_property_read_string(np, "data-mapping", &mapping);
++		if (!mapping) {
++			dev_dbg(rcdu->dev,
++				"required property %s not found in %s node\n",
++				"data-mapping", np->full_name);
++			return -EINVAL;
++		}
++
++		if (!strcmp(mapping, "jeida-18") ||
++		    !strcmp(mapping, "jeida-24"))
++			mode = RCAR_LVDS_MODE_JEIDA;
++		else if (!strcmp(mapping, "vesa-24"))
++			mode = RCAR_LVDS_MODE_VESA;
++		else
++			return -EINVAL;
++
++		if (of_find_property(np, "data-mirror", NULL))
++			mode |= RCAR_LVDS_MODE_MIRROR;
++
++		rcar_du_lvdsenc_set_mode(renc->lvds, mode);
++	}
++
+ 	connector = &lvdscon->connector.connector;
+ 	connector->display_info.width_mm = lvdscon->panel.width_mm;
+ 	connector->display_info.height_mm = lvdscon->panel.height_mm;
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c b/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
+index b74105a80a6e..c8c22850947a 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
+@@ -31,6 +31,7 @@ struct rcar_du_lvdsenc {
+ 	bool enabled;
+ 
+ 	enum rcar_lvds_input input;
++	enum rcar_lvds_mode mode;
+ };
+ 
+ static void rcar_lvds_write(struct rcar_du_lvdsenc *lvds, u32 reg, u32 data)
+@@ -61,7 +62,7 @@ static void rcar_du_lvdsenc_start_gen2(struct rcar_du_lvdsenc *lvds,
+ 	/* Select the input, hardcode mode 0, enable LVDS operation and turn
+ 	 * bias circuitry on.
+ 	 */
+-	lvdcr0 = LVDCR0_BEN | LVDCR0_LVEN;
++	lvdcr0 = (lvds->mode << LVDCR0_LVMD_SHIFT) | LVDCR0_BEN | LVDCR0_LVEN;
+ 	if (rcrtc->index == 2)
+ 		lvdcr0 |= LVDCR0_DUSEL;
+ 	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
+@@ -107,7 +108,7 @@ static void rcar_du_lvdsenc_start_gen3(struct rcar_du_lvdsenc *lvds,
+ 	/* Turn the PLL on, set it to LVDS normal mode, wait for the startup
+ 	 * delay and turn the output on.
+ 	 */
+-	lvdcr0 = LVDCR0_PLLON;
++	lvdcr0 = (lvds->mode << LVDCR0_LVMD_SHIFT) | LVDCR0_PLLON;
+ 	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
+ 
+ 	lvdcr0 |= LVDCR0_PWD;
+@@ -210,6 +211,12 @@ void rcar_du_lvdsenc_atomic_check(struct rcar_du_lvdsenc *lvds,
+ 		mode->clock = clamp(mode->clock, 25175, 148500);
+ }
+ 
++void rcar_du_lvdsenc_set_mode(struct rcar_du_lvdsenc *lvds,
++			      enum rcar_lvds_mode mode)
++{
++	lvds->mode = mode;
++}
++
+ static int rcar_du_lvdsenc_get_resources(struct rcar_du_lvdsenc *lvds,
+ 					 struct platform_device *pdev)
+ {
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.h b/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.h
+index dfdba746edf4..7218ac89333e 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.h
++++ b/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.h
+@@ -26,8 +26,17 @@ enum rcar_lvds_input {
+ 	RCAR_LVDS_INPUT_DU2,
+ };
+ 
++/* Keep in sync with the LVDCR0.LVMD hardware register values. */
++enum rcar_lvds_mode {
++	RCAR_LVDS_MODE_JEIDA = 0,
++	RCAR_LVDS_MODE_MIRROR = 1,
++	RCAR_LVDS_MODE_VESA = 4,
++};
++
+ #if IS_ENABLED(CONFIG_DRM_RCAR_LVDS)
+ int rcar_du_lvdsenc_init(struct rcar_du_device *rcdu);
++void rcar_du_lvdsenc_set_mode(struct rcar_du_lvdsenc *lvds,
++			      enum rcar_lvds_mode mode);
+ int rcar_du_lvdsenc_enable(struct rcar_du_lvdsenc *lvds,
+ 			   struct drm_crtc *crtc, bool enable);
+ void rcar_du_lvdsenc_atomic_check(struct rcar_du_lvdsenc *lvds,
+@@ -37,6 +46,10 @@ static inline int rcar_du_lvdsenc_init(struct rcar_du_device *rcdu)
+ {
+ 	return 0;
+ }
++static inline void rcar_du_lvdsenc_set_mode(struct rcar_du_lvdsenc *lvds,
++					    enum rcar_lvds_mode mode)
++{
++}
+ static inline int rcar_du_lvdsenc_enable(struct rcar_du_lvdsenc *lvds,
+ 					 struct drm_crtc *crtc, bool enable)
+ {
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
