@@ -1,133 +1,111 @@
-From: Ritesh Harjani <riteshh@codeaurora.org>
-Subject: Re: [PATCH v4 3/9] mmc: sdhci-msm: add pltfm_data support to get
- clk-rates from DT
-Date: Tue, 4 Oct 2016 15:03:56 +0530
-Message-ID: <c12ab329-f3cb-b346-45c6-e5603aeb5fc8@codeaurora.org>
-References: <1472033024-14890-1-git-send-email-riteshh@codeaurora.org>
- <1472033024-14890-4-git-send-email-riteshh@codeaurora.org>
- <20160825222747.GU19826@codeaurora.org>
- <1a44bb54-d88c-737d-7fb1-e7c3597ac03b@codeaurora.org>
- <20160907161428.GY12510@codeaurora.org>
- <f40ac4e7-7e12-26e2-254a-99b6e5d25cd3@codeaurora.org>
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
+        <mylene.josserand@free-electrons.com>
+Subject: [PATCH 00/14] ASoc: sunxi: Add Allwinner A33 codec driver
+Date: Tue,  4 Oct 2016 11:46:13 +0200
+Message-ID: <cover.1475569400.git.mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <f40ac4e7-7e12-26e2-254a-99b6e5d25cd3@codeaurora.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, pramod.gurav@linaro.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: vinod.koul@intel.com, maxime.ripard@free-electrons.com, wens@csie.org, mturquette@baylibre.com, sboyd@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, lee.jones@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, thomas.petazzoni@free-electrons.com, mylene.josserand@free-electrons.com, alexandre.belloni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen/Adrian,
-
-Let me give a little background on this. We would need more suggestions 
-and opinion on this. Sorry for the delay it took.
+Hi everyone,
 
 
-Background -
-Below change adds clk-rates DT entry since sdhci-msm driver uses this 
-clk-rates table to find the nearest *floor* value of clock (this clock 
-request comes will come from core layer) supported by msm platform.
+This patchset add the audio codec for Allwinner A33 (sun8i) SoC.
 
-Currently we don't have an API from clock driver which we can use it 
-here to find these values(supported by msm platforms) and call for 
-clk_set_rate. Hence the custom DT entry to have a table.
+It adds different drivers:
+   - sun8i-codec-analog (patch 4): This driver implements the analog part
+   of the audio codec. The analog part is handled in PRCM registers so this
+   driver must be added as prcm's subnode (patch 5).
+   - sun8i-codec (patch 6): This driver implements the digital part of the
+   A33 codec.
+   - sun8i (patch 7): This driver implements a sound card for A33.
+   It links the DAI and the audio codec. The analog codec driver is handled
+   as an "aux_device".
 
-Please let us know if there is an API to find the floor value of clock 
-from clock driver. I tried clk_set_max_rate, but it is not giving 
-expected output (at least for msm platforms).
+The DAI for this codec is the same than for A20: "sun4i-i2s".
+The digital codec code is coming from Allwinner's BSP (after some
+cleanup and DAPM conversion) [1]
+The analog codec driver is coming from Chen-Yu Tsai's driver [2]
+with some modifications (such as read/write regmap functions).
 
+Currently, all the drivers handle only the playback feature.
+The other ones (such as capture) and all other interfaces except
+headphone are not supported.
 
-Comment-
-The request from Stephen was to check if we could utilize OppV2 
-framework since it provides an API - dev_pm_opp_find_freq_floor.
-Also to check if we could get it done from existing clock driver APIs.
-Please correct me I am missing anything.
+These drivers are functional except for one issue. When playing a sound
+for the first time, a short delay can be noticed. On a second play
+(right after), the sound is played correctly. If we wait a short time
+(~5 sec), the delay is back.
+There is the same behavior for left/right channel. On the first
+time, a left sound is played on the left channel but in the second
+time, the sound will be played on wrong channel.
 
+These issues will be fixed in a second time. Is someone have suggestions
+about it?
 
-Concern and opinion?
-1. What about if there are more clocks getting added to sdhci DT node?
-I see the Oppv2 framework taking device pointer as 1st argument. In 
-cases where we have more than 1 clocks per device, how will Oppv2 handle 
-this?
-2. Here the concern is that shifting to Oppv2 framework only for use of 
-this 1 API does not seems very useful. In case if there exist a clock 
-driver API to do this, we may not have anything to be populated in DT.
+Examples of amixer commands:
+	amixer set 'Headphone' 75%
+	amixer set 'Headphone' on
+	amixer set 'DAC' on
+	amixer set 'Right DAC Mixer RSlot 0' on
+	amixer set 'Left DAC Mixer LSlot 0' on
+	amixer set 'DAC Reversed Right' on
+	amixer set 'DAC Reversed Left' on
 
+It was tested on Parrot and Sinlinx board where device tree's modifications
+are added (patch 11 to 14).
 
-Opinion and suggestions please?
-Is it ok to continue to use clk-rates DT entry here for this case?
+Thank you in advance,
+Best regards,
 
+[1]: https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/sound/soc/sunxi/audiocodec/sun8iw5_sndcodec.c
+[2]: https://github.com/wens/linux/tree/a31-audio
 
-Regards
-Ritesh
+Mylène Josserand (14):
+  dma: sun6i-dma: Add burst case of 4
+  clk: ccu-sun8i-a33: Add CLK_SET_RATE_PARENT to ac-dig
+  ASoC: sun4i-i2s: Add apb reset
+  ASoC: Add sun8i analog codec driver
+  mfd: sun6i-prcm: Add sun8i analog codec as subnode
+  ASoC: Add sun8i digital audio codec
+  ASoC: Add sun8i audio card
+  dt-bindings: sound: Add sun8i analog codec documentation
+  dt-bindings: sound: Add sun8i codec documentation
+  dt-bindings: sound: Add sun8i audio card documentation
+  ARM: dts: sun8i: Add analog codec on prcm node
+  ARM: dts: sun8i: Add audio codec, dai and card for A33
+  ARM: dts: sun8i: parrot: Enable audio nodes
+  ARM: dts: sun8i: sinlinx: Enable audio nodes
 
+ .../devicetree/bindings/sound/sun8i-audio.txt      |  17 +
+ .../bindings/sound/sun8i-codec-analog.txt          |  20 +
+ .../devicetree/bindings/sound/sun8i-codec.txt      |  24 +
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi               |   7 +
+ arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts     |   8 +
+ arch/arm/boot/dts/sun8i-a33.dtsi                   |  33 ++
+ arch/arm/boot/dts/sun8i-r16-parrot.dts             |   8 +
+ drivers/clk/sunxi-ng/ccu-sun8i-a33.c               |   2 +-
+ drivers/dma/sun6i-dma.c                            |   2 +
+ drivers/mfd/sun6i-prcm.c                           |  16 +
+ sound/soc/sunxi/Kconfig                            |  30 ++
+ sound/soc/sunxi/Makefile                           |   3 +
+ sound/soc/sunxi/sun4i-i2s.c                        |  16 +-
+ sound/soc/sunxi/sun8i-codec-analog.c               | 305 +++++++++++++
+ sound/soc/sunxi/sun8i-codec.c                      | 492 +++++++++++++++++++++
+ sound/soc/sunxi/sun8i.c                            | 101 +++++
+ 16 files changed, 1082 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/sun8i-audio.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/sun8i-codec.txt
+ create mode 100644 sound/soc/sunxi/sun8i-codec-analog.c
+ create mode 100644 sound/soc/sunxi/sun8i-codec.c
+ create mode 100644 sound/soc/sunxi/sun8i.c
 
-On 9/12/2016 11:47 AM, Ritesh Harjani wrote:
-> Hi Stephen,
->
->
-> On 9/7/2016 9:44 PM, Stephen Boyd wrote:
->> On 08/30, Ritesh Harjani wrote:
->>> On 8/26/2016 3:57 AM, Stephen Boyd wrote:
->>>> On 08/24, Ritesh Harjani wrote:
->>>>> This adds support for sdhc-msm controllers to get supported
->>>>> clk-rates from DT. sdhci-msm would need it's own set_clock
->>>>> ops to be implemented. For this, supported clk-rates needs
->>>>> to be populated in sdhci_msm_pltfm_data.
->>>>>
->>>>> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
->>>>> ---
->>>>
->>>> Please include the DT binding review list in binding updates.
-> Sure, will do it.
->
->>>>
->>>>> .../devicetree/bindings/mmc/sdhci-msm.txt          |  1 +
->>>>> drivers/mmc/host/sdhci-msm.c                       | 60
->>>>> ++++++++++++++++++++++
->>>>> 2 files changed, 61 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->>>>> b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->>>>> index 485483a..6a83b38 100644
->>>>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->>>>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->>>>> @@ -17,6 +17,7 @@ Required properties:
->>>>>     "iface" - Main peripheral bus clock (PCLK/HCLK - AHB Bus clock)
->>>>> (required)
->>>>>     "core"    - SDC MMC clock (MCLK) (required)
->>>>>     "bus"    - SDCC bus voter clock (optional)
->>>>> +- clk-rates: Array of supported GCC clock frequencies for sdhc,
->>>>> Units - Hz.
->>>>>
->>>>
->>>> Why not use OPPv2 binding for this? We already have a way to
->>>> express frequencies for devices with that binding, and we'll need
->>>> to attach voltages to those frequencies at some point in the
->>>> future if we want to handle DVFS on these devices.
->>>>
->>> OPPv2 may not work out in this case. This was also discussed at [1].
->>> These clk-rates are not as per voltage points(or any OPP) but as per
->>> bus speed mode request from higher layer.
->>>
->>
->> That post you link to had a response from Andy that echoed the
->> same sentiment and then no reply.
->>
->> Are they a set of frequencies the device can operate at? Yes. Do
->> they have associated voltages that aren't expressed in this
->> patch? Yes.
->>
->> Perhaps I've missed something though and the index of the array
->> of rates corresponds to some bus speed mode? That isn't clearly
->> expressed in the binding. Do the frequencies come from some spec
->> for those bus speed modes? Either way, I'd like to understand why
->> we need to put frequency tables into DT (hint: the commit text
->> should explain that).
->>
-> As discussed offline, I will get back on this.
->
-> Regards
-> Ritesh
+-- 
+2.9.3
+
