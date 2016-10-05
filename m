@@ -1,35 +1,32 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 1/3] dt: cpufreq: brcm: New binding document
- for brcmstb-avs-cpufreq
-Date: Wed, 5 Oct 2016 08:57:56 +0530
-Message-ID: <20161005032756.GI4664@vireshk-i7>
-References: <1475272561-8446-1-git-send-email-mmayer@broadcom.com>
- <1475272561-8446-2-git-send-email-mmayer@broadcom.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [PATCH v2 2/4] net: phy: dp83867: add support for MAC impedance
+ configuration
+Date: Wed, 5 Oct 2016 08:58:27 +0530
+Message-ID: <20264692-6a13-58c0-c262-f631af8f355e@ti.com>
+References: <20161004125607.10569-1-mugunthanvnm@ti.com>
+ <20161004125607.10569-3-mugunthanvnm@ti.com> <20161004131032.GL11677@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1475272561-8446-2-git-send-email-mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161004131032.GL11677@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, David Miller <davem@davemloft.net>, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 30-09-16, 14:55, Markus Mayer wrote:
-> Add the binding document for the new brcmstb-avs-cpufreq driver.
+On Tuesday 04 October 2016 06:40 PM, Andrew Lunn wrote:
+>> +	if (of_property_read_bool(of_node, "ti,max-output-imepdance"))
+>> +		dp83867->io_impedance = DP83867_IO_MUX_CFG_IO_IMPEDANCE_MAX;
+>> +	else if (of_property_read_bool(of_node, "ti,min-output-imepdance"))
 > 
-> Signed-off-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  .../bindings/cpufreq/brcm,stb-avs-cpu-freq.txt     | 77 ++++++++++++++++++++++
->  MAINTAINERS                                        |  7 ++
->  2 files changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
+> Did you really test this? Or did you make the same typos in your device
+> tree file?
+> 
 
-Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+I have tested this and attached the log in cover letter. Since there is
+a typo error on both dts and driver it worked as expected. Will send a
+v3 ASAP.
 
--- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Mugunthan V N
