@@ -1,164 +1,85 @@
-From: Horng-Shyang Liao <hs.liao@mediatek.com>
-Subject: Re: [PATCH v14 2/4] CMDQ: Mediatek CMDQ driver
-Date: Wed, 5 Oct 2016 10:54:24 +0800
-Message-ID: <1475636064.21937.25.camel@mtksdaap41>
-References: <1473039885-24009-1-git-send-email-hs.liao@mediatek.com>
-         <1473039885-24009-3-git-send-email-hs.liao@mediatek.com>
-         <1475204778.13398.28.camel@mtksdaap41>
-         <1475225778.25044.35.camel@mtksdaap41>
-         <1475226691.13398.35.camel@mtksdaap41> <1475228829.3658.1.camel@mtksdaap41>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 08/14] dt-bindings: sound: Add sun8i analog
+ codec documentation
+Date: Wed, 5 Oct 2016 10:59:47 +0800
+Message-ID: <CAGb2v67gT9j6-NYj04+et2PNHRGFUzhgCnVgX+eoPGybArL60A@mail.gmail.com>
+References: <cover.1475571575.git.mylene.josserand@free-electrons.com>
+ <06ea14939405c3eb0fb9be655d26ee564a04a53d.1475571575.git.mylene.josserand@free-electrons.com>
+ <20161004162430.GQ5228@lukather>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1475228829.3658.1.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.co>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBO6Z2G7QKGQEPB5QNMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161004162430.GQ5228@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-09-30 at 17:47 +0800, Horng-Shyang Liao wrote:
-> On Fri, 2016-09-30 at 17:11 +0800, CK Hu wrote:
-> > Hi, HS:
-> > 
-> > One comment inline
-> > 
-> > On Fri, 2016-09-30 at 16:56 +0800, Horng-Shyang Liao wrote:
-> > > Hi CK,
-> > > 
-> > > Please see my inline reply.
-> > > 
-> > > On Fri, 2016-09-30 at 11:06 +0800, CK Hu wrote:
-> > > > Hi, HS:
-> > > > 
-> > > > On Mon, 2016-09-05 at 09:44 +0800, HS Liao wrote:
-> > > > > This patch is first version of Mediatek Command Queue(CMDQ) driver. The
-> > > > > CMDQ is used to help write registers with critical time limitation,
-> > > > > such as updating display configuration during the vblank. It controls
-> > > > > Global Command Engine (GCE) hardware to achieve this requirement.
-> > > > > Currently, CMDQ only supports display related hardwares, but we expect
-> > > > > it can be extended to other hardwares for future requirements.
-> > > > > 
-> > > > > Signed-off-by: HS Liao <hs.liao@mediatek.com>
-> > > > > Signed-off-by: CK Hu <ck.hu@mediatek.com>
-> > > > > ---
-> > > > 
-> > > > [snip...]
-> > > > 
-> > > > > +
-> > > > > +struct cmdq_task {
-> > > > > +	struct cmdq		*cmdq;
-> > > > > +	struct list_head	list_entry;
-> > > > > +	void			*va_base;
-> > > > > +	dma_addr_t		pa_base;
-> > > > > +	size_t			cmd_buf_size; /* command occupied size */
-> > > > > +	size_t			buf_size; /* real buffer size */
-> > > > > +	bool			finalized;
-> > > > > +	struct cmdq_thread	*thread;
-> > > > 
-> > > > I think thread info could be removed from cmdq_task. Only
-> > > > cmdq_task_handle_error() and cmdq_task_insert_into_thread() use
-> > > > task->thread and caller of both function has the thread info. So you
-> > > > could just pass thread info into these two function and remove thread
-> > > > info in cmdq_task.
-> > > 
-> > > This modification will remove 1 pointer but add 2 pointers. Moreover,
-> > > more pointers will need to be delivered between functions for future
-> > > extension. IMHO, it would be better to keep thread pointer inside
-> > > cmdq_task.
-> > > 
-> > > > > +	struct cmdq_task_cb	cb;
-> > > > 
-> > > > I think this callback function is equal to mailbox client tx_done
-> > > > callback. It's better to use already-defined interface rather than
-> > > > creating your own.
-> > > 
-> > > This is because CMDQ driver allows different callback functions for
-> > > different tasks, but mailbox only allows one callback function per
-> > > channel. But, I think I can add a wrapper for tx_done to call CMDQ
-> > > callback functions. So, I will use tx_done in CMDQ v15.
-> > 
-> > Up to now, one callback function for one channel is enough for DRM. So
-> > 'different callback function for different sent-message' looks like an
-> > advanced function. Maybe you should not include it in first patch. 
-> > 
-> > Regards,
-> > CK
-> 
-> Hi CK,
-> 
-> OK. I will do it.
-> 
+On Wed, Oct 5, 2016 at 12:24 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
+>
+> On Tue, Oct 04, 2016 at 11:46:21AM +0200, Myl=C3=A8ne Josserand wrote:
+>> Add the documentation for dt-binding of the analog audiocodec
+>> driver for SUN8I SoC.
+>>
+>> Signed-off-by: Myl=C3=A8ne Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTGGXanvQGlWp@public.gmane.org=
+m>
+>> ---
+>>  .../devicetree/bindings/sound/sun8i-codec-analog.txt | 20 +++++++++++++=
++++++++
+>>  1 file changed, 20 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/sound/sun8i-codec-=
+analog.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/sun8i-codec-analog.=
+txt b/Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
+>> new file mode 100644
+>> index 0000000..a03ec20
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
+>> @@ -0,0 +1,20 @@
+>> +* Allwinner A23/A33 Analog Codec
+>> +
+>> +This codec must be handled as a PRCM subnode.
+>
+> Like Mark was saying, you should probably reference the sun6i-prcm.txt
+> binding here
+>
+>> +Required properties:
+>> +- compatible: must be either "allwinner,sun8i-codec-analog"
+>
+> Our compatible prefix is <family>-<soc>, and using the older SoC that
+> introduced that block.
+>
+> In this case, that would be sun6i-a31, I think?
+
+sun6i-a31s actually, but a31s has extra line out controls,
+so the right one would be sun8i-a23. Both are listed in my
+original driver.
+
+ChenYu
+
+>
 > Thanks,
-> HS
-> 
-> [snip...]
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
 
-
-Hi CK,
-
-After I trace mailbox driver, I realize that CMDQ driver cannot use
-tx_done.
-
-CMDQ clients will flush many tasks into CMDQ driver, and then CMDQ
-driver will apply these tasks into GCE HW "immediately". These tasks,
-which are queued in GCE HW, may not execute immediately since they
-may need to wait event(s), e.g. vsync.
-
-However, in mailbox driver, mailbox uses a software buffer to queue
-sent messages. It only sends next message until previous message is
-done. This cannot fulfill CMDQ's requirement.
-
-Quote some code from mailbox driver. Please notice "active_req" part.
-
-static void msg_submit(struct mbox_chan *chan)
-{
-	...
-	if (!chan->msg_count || chan->active_req)
-		goto exit;
-	...
-	err = chan->mbox->ops->send_data(chan, data);
-	if (!err) {
-		chan->active_req = data;
-		chan->msg_count--;
-	}
-	...
-}
-
-static void tx_tick(struct mbox_chan *chan, int r)
-{
-	...
-	spin_lock_irqsave(&chan->lock, flags);
-	mssg = chan->active_req;
-	chan->active_req = NULL;
-	spin_unlock_irqrestore(&chan->lock, flags);
-	...
-}
-
-Current workable CMDQ driver uses mbox_client_txdone() to prevent
-this issue, and then uses self callback functions to handle done tasks.
-
-int cmdq_task_flush_async(struct cmdq_client *client, struct cmdq_task
-*task, cmdq_async_flush_cb cb, void *data)
-{
-	...
-	mbox_send_message(client->chan, task);
-	/* We can send next task immediately, so just call txdone. */
-	mbox_client_txdone(client->chan, 0);
-	...
-}
-
-Another solution is to use rx_callback; i.e. CMDQ mailbox controller
-call mbox_chan_received_data() when CMDQ task is done. But, this may
-violate the design of mailbox. What do you think?
-
-Thanks,
-HS
-
-
-Hi Jassi,
-
-Do you have any suggestion about previous situation?
-
-Thanks,
-HS
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
