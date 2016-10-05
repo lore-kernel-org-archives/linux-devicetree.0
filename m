@@ -1,92 +1,58 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v4 8/8] ARM64: dts: meson-gxbb: Add SCPI with cpufreq & sensors Nodes
-Date: Wed,  5 Oct 2016 09:33:34 +0200
-Message-ID: <1475652814-30619-9-git-send-email-narmstrong@baylibre.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 6/8] dt-bindings: Add support for Amlogic GXBB SCPI Interface
+Date: Wed,  5 Oct 2016 09:33:32 +0200
+Message-ID: <1475652814-30619-7-git-send-email-narmstrong@baylibre.com>
 References: <1475652814-30619-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1475652814-30619-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, khilman@baylibre.com, heiko@sntech.de, wxt@rock-chips.com, frank.wang@rock-chips.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475652814-30619-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 48 +++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ Documentation/devicetree/bindings/arm/arm,scpi.txt | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 88f98f5..3fdb2d7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -74,6 +74,28 @@
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+index faa4b44..04bc171 100644
+--- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
++++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+@@ -7,7 +7,7 @@ by Linux to initiate various system control and power operations.
  
-+	scpi {
-+		compatible = "amlogic,meson-gxbb-scpi";
-+		mboxes = <&mailbox 1 &mailbox 2>;
-+		shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
-+
-+		clocks {
-+			compatible = "arm,scpi-clocks";
-+
-+			scpi_dvfs: scpi_clocks@0 {
-+				compatible = "arm,scpi-dvfs-clocks";
-+				#clock-cells = <1>;
-+				clock-indices = <0>;
-+				clock-output-names = "vcpu";
-+			};
-+		};
-+
-+		scpi_sensors: sensors {
-+			compatible = "arm,scpi-sensors";
-+			#thermal-sensor-cells = <1>;
-+		};
-+	};
-+
- 	soc {
- 		usb0_phy: phy@c0000000 {
- 			compatible = "amlogic,meson-gxbb-usb2-phy";
-@@ -101,6 +123,16 @@
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0 0x0 0xc8000000 0x14000>;
-+
-+			cpu_scp_lpri: scp-shmem@0 {
-+				compatible = "amlogic,meson-gxbb-scp-shmem";
-+				reg = <0x13000 0x400>;
-+			};
-+
-+			cpu_scp_hpri: scp-shmem@200 {
-+				compatible = "amlogic,meson-gxbb-scp-shmem";
-+				reg = <0x13400 0x400>;
-+			};
- 		};
+ Required properties:
  
- 		usb0: usb@c9000000 {
-@@ -143,6 +175,22 @@
- 	};
- };
+-- compatible : should be "arm,scpi"
++- compatible : should be "arm,scpi" or "amlogic,meson-gxbb-scpi"
+ - mboxes: List of phandle and mailbox channel specifiers
+ 	  All the channels reserved by remote SCP firmware for use by
+ 	  SCPI message protocol should be specified in any order
+@@ -60,7 +60,8 @@ A small area of SRAM is reserved for SCPI communication between application
+ processors and SCP.
  
-+&cpu0 {
-+	clocks = <&scpi_dvfs 0>;
-+};
-+
-+&cpu1 {
-+	clocks = <&scpi_dvfs 0>;
-+};
-+
-+&cpu2 {
-+	clocks = <&scpi_dvfs 0>;
-+};
-+
-+&cpu3 {
-+	clocks = <&scpi_dvfs 0>;
-+};
-+
- &cbus {
- 	reset: reset-controller@4404 {
- 		compatible = "amlogic,meson-gxbb-reset";
+ Required properties:
+-- compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno
++- compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno,
++		or "amlogic,meson-gxbb-sram" for Amlogic GXBB SoC.
+ 
+ The rest of the properties should follow the generic mmio-sram description
+ found in ../../sram/sram.txt
+@@ -70,7 +71,8 @@ Each sub-node represents the reserved area for SCPI.
+ Required sub-node properties:
+ - reg : The base offset and size of the reserved area with the SRAM
+ - compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
+-	       shared memory on Juno platforms
++	       shared memory on Juno platforms or
++	       "amlogic,meson-gxbb-scp-shmem" for Amlogic GXBB SoC.
+ 
+ Sensor bindings for the sensors based on SCPI Message Protocol
+ --------------------------------------------------------------
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
