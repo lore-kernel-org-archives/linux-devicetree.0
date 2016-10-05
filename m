@@ -1,70 +1,55 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/6] clk: oxnas: Add dt-bindings include file for OX820
-Date: Wed,  5 Oct 2016 17:07:48 +0200
-Message-ID: <20161005150752.22618-3-narmstrong@baylibre.com>
+Subject: [PATCH 6/6] dt-bindings: clk: oxnas,stdclk: Add OX820 bindings
+Date: Wed,  5 Oct 2016 17:07:52 +0200
+Message-ID: <20161005150752.22618-7-narmstrong@baylibre.com>
 References: <20161005150752.22618-1-narmstrong@baylibre.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20161005150752.22618-1-narmstrong@baylibre.com>
-Sender: linux-clk-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: sboyd@codeaurora.org
 Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-oxnas@lists.tuxfamily.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In order to support the Oxford Semiconductor Gate clocks, add a
-dedicated dt-binding include file for gate indexes.
+Add OX820 bindings and remove clock indices from bindings since they are present
+in the dt-bindings headers files.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- include/dt-bindings/clock/oxsemi,ox820.h | 40 ++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 include/dt-bindings/clock/oxsemi,ox820.h
+ .../devicetree/bindings/clock/oxnas,stdclk.txt        | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
-diff --git a/include/dt-bindings/clock/oxsemi,ox820.h b/include/dt-bindings/clock/oxsemi,ox820.h
-new file mode 100644
-index 0000000..f661ecc
---- /dev/null
-+++ b/include/dt-bindings/clock/oxsemi,ox820.h
-@@ -0,0 +1,40 @@
-+/*
-+ * Copyright (C) 2016 Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef DT_CLOCK_OXSEMI_OX820_H
-+#define DT_CLOCK_OXSEMI_OX820_H
-+
-+/* PLLs */
-+#define CLK_820_PLLA		0
-+#define CLK_820_PLLB		1
-+
-+/* Gate Clocks */
-+#define CLK_820_LEON		2
-+#define CLK_820_DMA_SGDMA	3
-+#define CLK_820_CIPHER		4
-+#define CLK_820_SD		5
-+#define CLK_820_SATA		6
-+#define CLK_820_AUDIO		7
-+#define CLK_820_USBMPH		8
-+#define CLK_820_ETHA		9
-+#define CLK_820_PCIEA		10
-+#define CLK_820_NAND		11
-+#define CLK_820_PCIEB		12
-+#define CLK_820_ETHB		13
-+#define CLK_820_REF600		14
-+#define CLK_820_USBDEV		15
-+
-+#endif /* DT_CLOCK_OXSEMI_OX820_H */
+diff --git a/Documentation/devicetree/bindings/clock/oxnas,stdclk.txt b/Documentation/devicetree/bindings/clock/oxnas,stdclk.txt
+index 208cca6..b652f3f 100644
+--- a/Documentation/devicetree/bindings/clock/oxnas,stdclk.txt
++++ b/Documentation/devicetree/bindings/clock/oxnas,stdclk.txt
+@@ -5,22 +5,15 @@ Please also refer to clock-bindings.txt in this directory for common clock
+ bindings usage.
+ 
+ Required properties:
+-- compatible: Should be "oxsemi,ox810se-stdclk"
++- compatible: For OX810SE, should be "oxsemi,ox810se-stdclk"
++	      For OX820, should be "oxsemi,ox820-stdclk"
+ - #clock-cells: 1, see below
+ 
+ Parent node should have the following properties :
+-- compatible: Should be "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd"
+-
+-For OX810SE, the clock indices are :
+- - 0: LEON
+- - 1: DMA_SGDMA
+- - 2: CIPHER
+- - 3: SATA
+- - 4: AUDIO
+- - 5: USBMPH
+- - 6: ETHA
+- - 7: PCIA
+- - 8: NAND
++- compatible: For OX810SE, should be
++		"oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd"
++	      For OX820, should be
++		"oxsemi,ox820-sys-ctrl", "syscon", "simple-mfd"
+ 
+ example:
+ 
 -- 
 2.7.0
-
