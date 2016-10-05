@@ -1,110 +1,72 @@
-From: Nayna <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] Documentation: tpm: add the IBM
- Virtual TPM device tree binding documentation
-Date: Thu, 6 Oct 2016 01:44:32 +0530
-Message-ID: <57F55F28.1090005@linux.vnet.ibm.com>
-References: <1475051441-23008-1-git-send-email-nayna@linux.vnet.ibm.com>
-	<20160929110413.GA14359@intel.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 0/3] of: add common bindings to (de)activate IEEE 802.11 bands
+Date: Wed, 5 Oct 2016 15:31:35 -0500
+Message-ID: <CAL_JsqJfxEZCtdNi-wRgrtdmkPsGw0-ZMGhdbcoQ=seyij5LiQ@mail.gmail.com>
+References: <20161002225059.16757-1-martin.blumenstingl@googlemail.com>
+ <CAL_Jsq+cie=enhUYBF-OSrMdQ5S_048JF31ghEjtBNAmkGbB9Q@mail.gmail.com>
+ <CAFBinCCDjZs6szRw0D1rwB89tUo+-RNFH2_g=K+Xj2iRJuUZDQ@mail.gmail.com> <23f49efe-ddef-ea16-00de-7477e4872d82@nbd.name>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20160929110413.GA14359-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, honclo-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cclaudio-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <23f49efe-ddef-ea16-00de-7477e4872d82-Vt+b4OUoWG0@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 5, 2016 at 1:36 PM, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org> wrote:
+> On 2016-10-05 20:25, Martin Blumenstingl wrote:
+>> On Mon, Oct 3, 2016 at 5:22 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Sun, Oct 2, 2016 at 5:50 PM, Martin Blumenstingl
+>>> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+>>>> There are at least two drivers (ath9k and mt76) out there, where
+>>>> devicetree authors need to override the enabled bands.
+>>>>
+>>>> For ath9k there is only one use-case: disabling a band which has been
+>>>> incorrectly enabled by the vendor in the EEPROM (enabling a band is not
+>>>> possible because the calibration data would be missing in the EEPROM).
+>>>> The mt76 driver (currently pending for review) however allows enabling
+>>>> and disabling the 2.4GHz and 5GHz band, see [0].
+>>>>
+>>>> Based on the discussion of (earlier versions of) my ath9k devicetree
+>>>> patch it was suggested [1] that we use enable- and disable- properties.
+>>>> The current patch implements:
+>>>> - bands can be enabled or disabled with the corresponding property
+>>>> - if both (disable and enable) properties are given and a driver asks
+>>>>   whether the band is enabled then the logic will return false (= not
+>>>>   enabled, preferring the disabled flag)
+>>>> - if both (disable and enable) properties are given and a driver asks
+>>>>   whether the band is disabled then the logic will return true (again,
+>>>>   preferring the disabled flag over the enabled flag)
+>>>>
+>>>> We can still change the logic to do what the mt76 driver does (I am
+>>>> fine with both solutions):
+>>>> - property not available: driver decides which bands to enable
+>>>> - property set to 0: disable the band
+>>>> - property set to 1: enable the band
+>>>
+>>> I prefer this way. Really, I'd prefer just a boolean disable property.
+>>> I'm not sure why you need the enable. We usually have these tri-state
+>>> properties when you want not present to mean use the bootloader or
+>>> default setting. Try to make not present the most common case.
+>> Felix: could you please give a few details why mt76 can not only
+>> disable but also enable a specific band?
+>> There is no specific comment in the sources [0] why this is needed.
+>> All other drivers that I am aware of (ath9k, rt2x00) only allow
+>> disabling a specific band, they never enable it (this has to be done
+>> explicitly by the EEPROM).
+> None of the devices use it at the moment, I probably added it when I
+> played with a device that had broken EEPROM data. I guess I decided to
+> do it this way because on many devices the band capability field simply
+> cannot be trusted.
+> I guess I would be okay with just having a disable property and adding
+> an enable property later only if we end up actually needing it.
 
+If EEPROM is commonly wrong or missing, then seems like you want to
+plan ahead and support both enable and disable.
 
-On 09/29/2016 04:34 PM, Jarkko Sakkinen wrote:
-> On Wed, Sep 28, 2016 at 04:30:40AM -0400, Nayna Jain wrote:
->> Virtual TPM, which is being used on IBM POWER7+ and POWER8 systems running
->> POWERVM, is currently supported by tpm device driver but lacks the
->> documentation. This patch adds the missing documentation for the existing
->> support.
->>
->> Suggested-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
->> Signed-off-by: Nayna Jain <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
->> ---
->> Changelog v2:
->>
->> - New Patch
->>
->>   .../devicetree/bindings/security/tpm/ibmvtpm.txt   | 41 ++++++++++++++++++++++
->>   1 file changed, 41 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
->>
->> diff --git a/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt b/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
->> new file mode 100644
->> index 0000000..d89f999
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
->> @@ -0,0 +1,41 @@
->> +* Device Tree Bindings for IBM Virtual Trusted Platform Module(vtpm)
->> +
->> +Required properties:
->> +
->> +- compatible            : property name that conveys the platform architecture
->> +                          identifiers, as 'IBM,vtpm'
->> +- device_type           : specifies type of virtual device
->
-> A generic device tree question. What is the difference between
-> these fields? Why the I2C one does have 'device_type'?
+The other approach I've mentioned before is just put raw EEPROM data
+into DT to override the EEPROM. This would be better if there's a
+large number of settings you need.
 
-Please find the details as below:
-
-compatible - Standard property name as per IEEE 1275, specifying the 
-interface compatible with this device. This property is consumed by 
-linux kernel for selection of device driver.
-
-device_type - Standard property name as per IEEE 1275, specifying the 
-device type. This property MAY be used by linux kernel for device driver 
-selection. It is used in the case of IBM virtual TPM driver.
-
-/**
-  * vio_register_device_node: - Register a new vio device.
-  * @of_node:    The OF node for this device.
-  *
-  * Creates and initializes a vio_dev structure from the data in
-  * of_node and adds it to the list of virtual devices.
-  * Returns a pointer to the created vio_dev or NULL if node has
-  * NULL device_type or compatible fields.
-  */
-struct vio_dev *vio_register_device_node(struct device_node *of_node)
-
-and vtpm device table being defined as below:
-
-static struct vio_device_id tpm_ibmvtpm_device_table[] = {
-         { "IBM,vtpm", "IBM,vtpm"}, 
------------------------------------> type,compat
-         { "", "" }
-};
-
-So, vio (virtual) devices uses both device_type and compatible property 
-for device registration and driver selection.
-In case of physical TPM, it is only compatible property being used for 
-device driver selection
-
-Also, please note that device_type property is now deprecated in latest 
-Device Tree specs.
-
-Thanks & Regards,
-    - Nayna
-
-
->
-> /Jarkko
->
-
-
-------------------------------------------------------------------------------
-Check out the vibrant tech community on one of the world's most 
-engaging tech sites, SlashDot.org! http://sdm.link/slashdot
+Rob
