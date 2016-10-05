@@ -1,67 +1,77 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v8 net-next] net: phy: Add Edge-rate driver for Microsemi
- PHYs.
-Date: Wed, 5 Oct 2016 14:07:02 +0200
-Message-ID: <20161005120702.GO5575@lunn.ch>
-References: <1475667578-20799-1-git-send-email-Raju.Lakkaraju@microsemi.com>
+From: Mylene Josserand <mylene.josserand@free-electrons.com>
+Subject: Re: [PATCH 08/14] dt-bindings: sound: Add sun8i analog codec
+ documentation
+Date: Wed, 5 Oct 2016 14:08:54 +0200
+Message-ID: <b94e3b11-8edb-a632-f7f1-217a594f310c@free-electrons.com>
+References: <cover.1475571575.git.mylene.josserand@free-electrons.com>
+ <06ea14939405c3eb0fb9be655d26ee564a04a53d.1475571575.git.mylene.josserand@free-electrons.com>
+ <20161004162430.GQ5228@lukather>
+ <CAGb2v67gT9j6-NYj04+et2PNHRGFUzhgCnVgX+eoPGybArL60A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1475667578-20799-1-git-send-email-Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v67gT9j6-NYj04+et2PNHRGFUzhgCnVgX+eoPGybArL60A@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Vinod Koul <vinod.koul@intel.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-el>
 List-Id: devicetree@vger.kernel.org
 
-> - As per review comment, Added DT vddmac, slowdown value error check. 
+Hello,
 
-So i said an exact match, which this is not.
 
-How about something like:
+On 05/10/2016 04:59, Chen-Yu Tsai wrote:
+> On Wed, Oct 5, 2016 at 12:24 AM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+>> Hi,
+>>
+>> On Tue, Oct 04, 2016 at 11:46:21AM +0200, Mylène Josserand wrote:
+>>> Add the documentation for dt-binding of the analog audiocodec
+>>> driver for SUN8I SoC.
+>>>
+>>> Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
+>>> ---
+>>>  .../devicetree/bindings/sound/sun8i-codec-analog.txt | 20 ++++++++++++++++++++
+>>>  1 file changed, 20 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt b/Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
+>>> new file mode 100644
+>>> index 0000000..a03ec20
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
+>>> @@ -0,0 +1,20 @@
+>>> +* Allwinner A23/A33 Analog Codec
+>>> +
+>>> +This codec must be handled as a PRCM subnode.
+>>
+>> Like Mark was saying, you should probably reference the sun6i-prcm.txt
+>> binding here
 
-static u8 vsc85xx_edge_rate_magic_get(u16 vddmac, u8 slowdown)
-{
-	u8 vdd;
-	u8 sd;
 
-	for (vdd = 0; vdd < ARRAY_SIZE(edge_table); vdd++)
-		if (edge_table[vdd].vddmac == vddmac)
-			for (sd = 0; sd < MSCC_SLOWDOWN_MAX; sd++)
-				if (edge_table[vdd].slowdown[sd] == slowdown)
-					return (MSCC_SLOWDOWN_MAX - sd - 1);
- 	return -EINVAL;
-}
+Okay, I will explain more how it works.
 
-> @@ -197,15 +203,34 @@ static int vsc8531_of_init(struct phy_device *phydev)
-  
-  	rc = of_property_read_u16(of_node, "vsc8531,vddmac",
-  				  &vsc8531->vddmac);
- 	if (rc == -EINVAL)
- 		vddmac = MSCC_VDDMAC_3300;
 
-  	rc = of_property_read_u8(of_node, "vsc8531,edge-slowdown",
-  				 &vsc8531->edge_slowdown);
- 	if (rc == -EINVAL)
-  		edge_slowdown = 0;
+>>
+>>> +Required properties:
+>>> +- compatible: must be either "allwinner,sun8i-codec-analog"
+>>
+>> Our compatible prefix is <family>-<soc>, and using the older SoC that
+>> introduced that block.
+>>
+>> In this case, that would be sun6i-a31, I think?
+>
+> sun6i-a31s actually, but a31s has extra line out controls,
+> so the right one would be sun8i-a23. Both are listed in my
+> original driver.
 
- 	vsc8531->rate_magic = edge_rate_magic_get(vddmac, edge_slowdown);
-	if (vsc8531->rate_magic < 0) {
- 	   dev_err(phydev->dev, "Invalid vsc8531,vddmac or vsc8531,edge-slowdown");
-	   return vsc8531->rate_magic;
-        }
 
->  static int vsc8531_of_init(struct phy_device *phydev)
-> @@ -232,8 +257,8 @@ static int vsc85xx_config_init(struct phy_device *phydev)
->  	if (rc)
->  		return rc;
->  
->  	rc = vsc85xx_edge_rate_cntl_set(phydev, vsc8531->rate_magic);
->  	if (rc)
->  		return rc;
+It is noted.
 
-	Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+
+
+-- 
+Mylène Josserand, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
