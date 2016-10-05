@@ -1,55 +1,110 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC 1/2] sdhci: Add device tree property sd-broken-highspeed
-Date: Wed, 5 Oct 2016 15:03:44 -0500
-Message-ID: <CAL_JsqLjtn2-FaO_h9JWOsZqttQ35yV6KOnQz2Z-cMr=0GHJCg@mail.gmail.com>
-References: <1474660869-15532-1-git-send-email-zach.brown@ni.com>
- <1474660869-15532-2-git-send-email-zach.brown@ni.com> <CAPDyKFogDKM86XKo1iQE1KU5HpEic23FD5YQGF9QjSFYBDJn4Q@mail.gmail.com>
+From: Nayna <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] Documentation: tpm: add the IBM
+ Virtual TPM device tree binding documentation
+Date: Thu, 6 Oct 2016 01:44:32 +0530
+Message-ID: <57F55F28.1090005@linux.vnet.ibm.com>
+References: <1475051441-23008-1-git-send-email-nayna@linux.vnet.ibm.com>
+	<20160929110413.GA14359@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFogDKM86XKo1iQE1KU5HpEic23FD5YQGF9QjSFYBDJn4Q@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Zach Brown <zach.brown@ni.com>, Adrian Hunter <adrian.hunter@intel.com>, Mark Rutland <mark.rutland@arm.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20160929110413.GA14359-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, honclo-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cclaudio-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 5, 2016 at 1:33 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> On 23 September 2016 at 22:01, Zach Brown <zach.brown@ni.com> wrote:
->> Certain board configurations can make highspeed malfunction due to
->> timing issues. In these cases a way is needed to force the controller
->> and card into standard speed even if they otherwise appear to be capable
->> of highspeed.
+
+
+On 09/29/2016 04:34 PM, Jarkko Sakkinen wrote:
+> On Wed, Sep 28, 2016 at 04:30:40AM -0400, Nayna Jain wrote:
+>> Virtual TPM, which is being used on IBM POWER7+ and POWER8 systems running
+>> POWERVM, is currently supported by tpm device driver but lacks the
+>> documentation. This patch adds the missing documentation for the existing
+>> support.
 >>
->> The sd-broken-highspeed property will let the sdhci driver know that
->> highspeed will not work.
->>
->> Signed-off-by: Zach Brown <zach.brown@ni.com>
+>> Suggested-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+>> Signed-off-by: Nayna Jain <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 >> ---
->>  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
->>  1 file changed, 2 insertions(+)
+>> Changelog v2:
 >>
->> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
->> index 8a37782..59332ea 100644
->> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
->> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
->> @@ -52,6 +52,8 @@ Optional properties:
->>  - no-sdio: controller is limited to send sdio cmd during initialization
->>  - no-sd: controller is limited to send sd cmd during initialization
->>  - no-mmc: controller is limited to send mmc cmd during initialization
->> +- sd-broken-highspeed: Highspeed is broken, even if the controller and card
->> +  themselves claim they support highspeed.
+>> - New Patch
+>>
+>>   .../devicetree/bindings/security/tpm/ibmvtpm.txt   | 41 ++++++++++++++++++++++
+>>   1 file changed, 41 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt b/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
+>> new file mode 100644
+>> index 0000000..d89f999
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
+>> @@ -0,0 +1,41 @@
+>> +* Device Tree Bindings for IBM Virtual Trusted Platform Module(vtpm)
+>> +
+>> +Required properties:
+>> +
+>> +- compatible            : property name that conveys the platform architecture
+>> +                          identifiers, as 'IBM,vtpm'
+>> +- device_type           : specifies type of virtual device
 >
-> Regarding a broken card, that is managed via the card quirks and not in DT.
->
-> If this is about a controller limitation, we already have the option
-> to describe what it supports, so we don't need an option to tell what
-> it *not* supports.
->
-> For example "cap-sd-highspeed" tells whether the controller supports
-> SD high-speed, please use that instead.
+> A generic device tree question. What is the difference between
+> these fields? Why the I2C one does have 'device_type'?
 
-If a controller has a capability register and it lies (perhaps the
-board has limitations that the SoC does not), then you may need to
-disable a feature.
+Please find the details as below:
 
-Rob
+compatible - Standard property name as per IEEE 1275, specifying the 
+interface compatible with this device. This property is consumed by 
+linux kernel for selection of device driver.
+
+device_type - Standard property name as per IEEE 1275, specifying the 
+device type. This property MAY be used by linux kernel for device driver 
+selection. It is used in the case of IBM virtual TPM driver.
+
+/**
+  * vio_register_device_node: - Register a new vio device.
+  * @of_node:    The OF node for this device.
+  *
+  * Creates and initializes a vio_dev structure from the data in
+  * of_node and adds it to the list of virtual devices.
+  * Returns a pointer to the created vio_dev or NULL if node has
+  * NULL device_type or compatible fields.
+  */
+struct vio_dev *vio_register_device_node(struct device_node *of_node)
+
+and vtpm device table being defined as below:
+
+static struct vio_device_id tpm_ibmvtpm_device_table[] = {
+         { "IBM,vtpm", "IBM,vtpm"}, 
+-----------------------------------> type,compat
+         { "", "" }
+};
+
+So, vio (virtual) devices uses both device_type and compatible property 
+for device registration and driver selection.
+In case of physical TPM, it is only compatible property being used for 
+device driver selection
+
+Also, please note that device_type property is now deprecated in latest 
+Device Tree specs.
+
+Thanks & Regards,
+    - Nayna
+
+
+>
+> /Jarkko
+>
+
+
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most 
+engaging tech sites, SlashDot.org! http://sdm.link/slashdot
