@@ -1,94 +1,205 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v14 2/4] CMDQ: Mediatek CMDQ driver
-Date: Wed, 5 Oct 2016 09:07:54 +0530
-Message-ID: <CAJe_ZhcXw1-MOEiiix5VTtKEVr9Z23s_OyikboDYCd0RQwS5pg@mail.gmail.com>
-References: <1473039885-24009-1-git-send-email-hs.liao@mediatek.com>
- <1473039885-24009-3-git-send-email-hs.liao@mediatek.com> <1475204778.13398.28.camel@mtksdaap41>
- <1475225778.25044.35.camel@mtksdaap41> <1475226691.13398.35.camel@mtksdaap41>
- <1475228829.3658.1.camel@mtksdaap41> <1475636064.21937.25.camel@mtksdaap41>
+From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 07/14] ASoC: Add sun8i audio card
+Date: Wed, 5 Oct 2016 08:04:26 +0200
+Message-ID: <CAEKpxBkUbCGJdToReQx7P+5i92doUdNeMvA5fiDACGcniY=nJg@mail.gmail.com>
+References: <cover.1475571575.git.mylene.josserand@free-electrons.com>
+ <cover.1475569400.git.mylene.josserand@free-electrons.com> <33d641ff43f0c0349cdfa2cdbbfdcdde66205596.1475571575.git.mylene.josserand@free-electrons.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475636064.21937.25.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Monica Wang <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBB25P2K7QKGQEBC32CII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <33d641ff43f0c0349cdfa2cdbbfdcdde66205596.1475571575.git.mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 5 October 2016 at 08:24, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> On Fri, 2016-09-30 at 17:47 +0800, Horng-Shyang Liao wrote:
->> On Fri, 2016-09-30 at 17:11 +0800, CK Hu wrote:
+On 4 October 2016 at 11:46, Myl=C3=A8ne Josserand
+<mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Add the audio card for sun8i SoC. This card links the codec driver
+> (digital part) with the DAI driver. The analog codec driver is
+> added as an aux_device.
+>
+> Signed-off-by: Myl=C3=A8ne Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org=
+>
+> ---
+>  sound/soc/sunxi/Kconfig  |  14 +++++++
+>  sound/soc/sunxi/Makefile |   1 +
+>  sound/soc/sunxi/sun8i.c  | 101 +++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 116 insertions(+)
+>  create mode 100644 sound/soc/sunxi/sun8i.c
+>
+> diff --git a/sound/soc/sunxi/Kconfig b/sound/soc/sunxi/Kconfig
+> index 9e287b0..7b97395 100644
+> --- a/sound/soc/sunxi/Kconfig
+> +++ b/sound/soc/sunxi/Kconfig
+> @@ -27,6 +27,20 @@ config SND_SUN4I_SPDIF
+>           Say Y or M to add support for the S/PDIF audio block in the All=
+winner
+>           A10 and affiliated SoCs.
+>
+> +config SND_SUN8I
+> +       tristate "Allwinner SUN6I/SUN8I audio card support"
+> +       select SND_SUN8I_CODEC
+> +       select SND_SUN4I_I2S
+> +       select SND_SUN8I_CODEC_ANALOG
+> +       select REGMAP_MMIO
+> +       help
+> +         This option enables the audio card for Allwinner A33 (sun8i) So=
+C.
+> +         It enables the DAI driver (SND_SUN4I_I2S), the digital audio
+> +         codec driver (SND_SUN8I_CODEC) and the analog codec driver
+> +         (SND_SUN8I_CODEC_ANALOG).
+> +
+> +         Say Y or M if you want to add sun8i/6i card support
+> +
+>  config SND_SUN8I_CODEC
+>         tristate "Allwinner SUN8I audio codec"
+>         select REGMAP_MMIO
+> diff --git a/sound/soc/sunxi/Makefile b/sound/soc/sunxi/Makefile
+> index 1da63d3..7f1bab9 100644
+> --- a/sound/soc/sunxi/Makefile
+> +++ b/sound/soc/sunxi/Makefile
+> @@ -1,5 +1,6 @@
+>  obj-$(CONFIG_SND_SUN4I_CODEC) +=3D sun4i-codec.o
+>  obj-$(CONFIG_SND_SUN4I_I2S) +=3D sun4i-i2s.o
+>  obj-$(CONFIG_SND_SUN4I_SPDIF) +=3D sun4i-spdif.o
+> +obj-$(CONFIG_SND_SUN8I) +=3D sun8i.o
+>  obj-$(CONFIG_SND_SUN8I_CODEC) +=3D sun8i-codec.o
+>  obj-$(CONFIG_SND_SUN8I_CODEC_ANALOG) +=3D sun8i-codec-analog.o
+> diff --git a/sound/soc/sunxi/sun8i.c b/sound/soc/sunxi/sun8i.c
+> new file mode 100644
+> index 0000000..565cd88
+> --- /dev/null
+> +++ b/sound/soc/sunxi/sun8i.c
+> @@ -0,0 +1,101 @@
+> +/*
+> + * ALSA SoC driver for Allwinner sun8i SoC
+> + *
+> + * Copyright (C) 2016 Myl=C3=A8ne Josserand <mylene.josserand@free-elect=
+rons.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/firmware.h>
+> +#include <linux/module.h>
+> +
+> +#include <sound/soc.h>
+> +
+> +static struct snd_soc_aux_dev sun8i_audio_prcm_aux_devs[] =3D {
+> +       {
+> +               .name =3D "sun8i-codec-analog",
+> +               .codec_name =3D "sun8i-codec-analog.0",
+> +       },
+> +};
+> +
+> +static struct snd_soc_dai_link sun8i_dai_link =3D {
+> +       .name           =3D "sun4i-i2s",
+> +       .stream_name    =3D "Playback",
+> +       .codec_dai_name =3D "sun8i",
+> +       .dai_fmt        =3D SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_I2S |
+> +                       SND_SOC_DAIFMT_CBM_CFM,
+> +};
+> +
+> +static struct snd_soc_card sun8i_card =3D {
+> +       .name           =3D "sun8i-card",
+> +       .owner          =3D THIS_MODULE,
+> +       .dai_link       =3D &sun8i_dai_link,
+> +       .num_links      =3D 1,
+> +       .aux_dev        =3D sun8i_audio_prcm_aux_devs,
+> +       .num_aux_devs   =3D ARRAY_SIZE(sun8i_audio_prcm_aux_devs),
+> +};
+> +
+> +static int sun8i_probe(struct platform_device *pdev)
+> +{
+> +       struct snd_soc_dai_link *link =3D &sun8i_dai_link;
+> +       struct device_node *np =3D pdev->dev.of_node;
+> +       int ret;
+> +
+> +       /* register the soc card */
+> +       sun8i_card.dev =3D &pdev->dev;
+> +
+> +       /* Retrieve the audio-codec from DT */
+> +       link->codec_of_node =3D of_parse_phandle(np, "allwinner,audio-cod=
+ec", 0);
+> +       if (!link->codec_of_node) {
+> +               dev_err(&pdev->dev, "Missing audio codec\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       /* Retrieve DAI from DT */
+> +       link->cpu_of_node =3D of_parse_phandle(np, "allwinner,i2s-control=
+ler", 0);
+Now that I've spent some time trying to add my changes for the H3
+ontop of your code,  I think this file should be more generic and rely
+on the dtsi more. It's pretty A33 specific but with little effort it
+can be worked to cover all of the sun8i type drivers. I would change
+"allwinner,i2s-controller" to "allwinner,audio-dai" for starters and
+then maybe pull in some info for the dai-link from the dtsi.
+CK
+> +       if (!link->cpu_of_node) {
+> +               dev_err(&pdev->dev, "Missing I2S controller\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       link->platform_of_node =3D link->cpu_of_node;
+> +
+> +       /* Register the sound card */
+> +       ret =3D devm_snd_soc_register_card(&pdev->dev, &sun8i_card);
+> +       if (ret) {
+> +               dev_err(&pdev->dev,
+> +                       "Soc register card failed %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static const struct of_device_id sun8i_of_match[] =3D {
+> +       { .compatible =3D "allwinner,sun8i-audio", },
+> +       {},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, sun8i_of_match);
+> +
+> +static struct platform_driver sun8i_card_driver =3D {
+> +       .probe =3D sun8i_probe,
+> +       .driver =3D {
+> +               .name   =3D "sun8i-audio",
+> +               .of_match_table =3D sun8i_of_match,
+> +       },
+> +};
+> +
+> +module_platform_driver(sun8i_card_driver);
+> +
+> +MODULE_AUTHOR("Myl=C3=A8ne Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTGGXanvQGlWp@public.gmane.org=
+m>");
+> +MODULE_DESCRIPTION("Allwinner sun8i machine ASoC driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.9.3
+>
 
->
-> After I trace mailbox driver, I realize that CMDQ driver cannot use
-> tx_done.
->
-> CMDQ clients will flush many tasks into CMDQ driver, and then CMDQ
-> driver will apply these tasks into GCE HW "immediately". These tasks,
-> which are queued in GCE HW, may not execute immediately since they
-> may need to wait event(s), e.g. vsync.
->
-> However, in mailbox driver, mailbox uses a software buffer to queue
-> sent messages. It only sends next message until previous message is
-> done. This cannot fulfill CMDQ's requirement.
->
-I understand
- a) GCE HW can internally queue many tasks in some 'FIFO'
- b) Execution of some task may have to wait until some external event
-occurs (like vsync)
- c) GCE does not generate irq/flag for each task executed (?)
-
-If so, may be your tx_done should return 'true' so long as the GCE HW
-can accept tasks in its 'FIFO'. For mailbox api, any task that is
-queued on GCE, is assumed to be transmitted.
-
-> Quote some code from mailbox driver. Please notice "active_req" part.
->
-> static void msg_submit(struct mbox_chan *chan)
-> {
->         ...
->         if (!chan->msg_count || chan->active_req)
->                 goto exit;
->         ...
->         err = chan->mbox->ops->send_data(chan, data);
->         if (!err) {
->                 chan->active_req = data;
->                 chan->msg_count--;
->         }
->         ...
-> }
->
-> static void tx_tick(struct mbox_chan *chan, int r)
-> {
->         ...
->         spin_lock_irqsave(&chan->lock, flags);
->         mssg = chan->active_req;
->         chan->active_req = NULL;
->         spin_unlock_irqrestore(&chan->lock, flags);
->         ...
-> }
->
-> Current workable CMDQ driver uses mbox_client_txdone() to prevent
-> this issue, and then uses self callback functions to handle done tasks.
->
-> int cmdq_task_flush_async(struct cmdq_client *client, struct cmdq_task
-> *task, cmdq_async_flush_cb cb, void *data)
-> {
->         ...
->         mbox_send_message(client->chan, task);
->         /* We can send next task immediately, so just call txdone. */
->         mbox_client_txdone(client->chan, 0);
->         ...
-> }
->
-> Another solution is to use rx_callback; i.e. CMDQ mailbox controller
-> call mbox_chan_received_data() when CMDQ task is done. But, this may
-> violate the design of mailbox. What do you think?
->
-If my point (c) above does not hold, maybe look at implementing
-tx_done() callback and submit next task from the callback of last
-done.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
