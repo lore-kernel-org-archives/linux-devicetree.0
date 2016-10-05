@@ -1,143 +1,41 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RESEND PATCH v2 2/3] dt-bindings: reset: oxnas: Add include file with reset indexes
-Date: Wed,  5 Oct 2016 17:27:09 +0200
-Message-ID: <20161005152710.2898-3-narmstrong@baylibre.com>
-References: <20161005152710.2898-1-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161005152710.2898-1-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-oxnas@lists.tuxfamily.org, Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: marvell: Add definition for the Globalscale
+ Marvell ESPRESSOBin Board
+Date: Wed, 5 Oct 2016 17:28:37 +0200
+Message-ID: <20161005172837.5ea130a1@free-electrons.com>
+References: <20161005142734.18995-1-romain.perier@free-electrons.com>
+        <87fuoaygie.fsf@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87fuoaygie.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yahuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT include file for Oxford Semiconductor OX810SE and OX820 reset
-controller support.
+Hello,
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- include/dt-bindings/reset/oxsemi,ox810se.h | 53 ++++++++++++++++++++++++++++++
- include/dt-bindings/reset/oxsemi,ox820.h   | 53 ++++++++++++++++++++++++++++++
- 2 files changed, 106 insertions(+)
- create mode 100644 include/dt-bindings/reset/oxsemi,ox810se.h
- create mode 100644 include/dt-bindings/reset/oxsemi,ox820.h
+On Wed, 05 Oct 2016 17:14:49 +0200, Gregory CLEMENT wrote:
 
-diff --git a/include/dt-bindings/reset/oxsemi,ox810se.h b/include/dt-bindings/reset/oxsemi,ox810se.h
-new file mode 100644
-index 0000000..960c26e
---- /dev/null
-+++ b/include/dt-bindings/reset/oxsemi,ox810se.h
-@@ -0,0 +1,53 @@
-+/*
-+ * Copyright (C) 2016 Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef DT_RESET_OXSEMI_OX810SE_H
-+#define DT_RESET_OXSEMI_OX810SE_H
-+
-+#define RESET_ARM	0
-+#define RESET_COPRO	1
-+/* Reserved		2 */
-+/* Reserved		3 */
-+#define RESET_USBHS	4
-+#define RESET_USBHSPHY	5
-+#define RESET_MAC	6
-+#define RESET_PCI	7
-+#define RESET_DMA	8
-+#define RESET_DPE	9
-+#define RESET_DDR	10
-+#define RESET_SATA	11
-+#define RESET_SATA_LINK	12
-+#define RESET_SATA_PHY	13
-+ /* Reserved		14 */
-+#define RESET_NAND	15
-+#define RESET_GPIO	16
-+#define RESET_UART1	17
-+#define RESET_UART2	18
-+#define RESET_MISC	19
-+#define RESET_I2S	20
-+#define RESET_AHB_MON	21
-+#define RESET_UART3	22
-+#define RESET_UART4	23
-+#define RESET_SGDMA	24
-+/* Reserved		25 */
-+/* Reserved		26 */
-+/* Reserved		27 */
-+/* Reserved		28 */
-+/* Reserved		29 */
-+/* Reserved		30 */
-+#define RESET_BUS	31
-+
-+#endif /* DT_RESET_OXSEMI_OX810SE_H */
-diff --git a/include/dt-bindings/reset/oxsemi,ox820.h b/include/dt-bindings/reset/oxsemi,ox820.h
-new file mode 100644
-index 0000000..cc6797b
---- /dev/null
-+++ b/include/dt-bindings/reset/oxsemi,ox820.h
-@@ -0,0 +1,53 @@
-+/*
-+ * Copyright (C) 2016 Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef DT_RESET_OXSEMI_OX820_H
-+#define DT_RESET_OXSEMI_OX820_H
-+
-+#define RESET_SCU	0
-+#define RESET_LEON	1
-+#define RESET_ARM0	2
-+#define RESET_ARM1	3
-+#define RESET_USBHS	4
-+#define RESET_USBPHYA	5
-+#define RESET_MAC	6
-+#define RESET_PCIEA	7
-+#define RESET_SGDMA	8
-+#define RESET_CIPHER	9
-+#define RESET_DDR	10
-+#define RESET_SATA	11
-+#define RESET_SATA_LINK	12
-+#define RESET_SATA_PHY	13
-+#define RESET_PCIEPHY	14
-+#define RESET_NAND	15
-+#define RESET_GPIO	16
-+#define RESET_UART1	17
-+#define RESET_UART2	18
-+#define RESET_MISC	19
-+#define RESET_I2S	20
-+#define RESET_SD	21
-+#define RESET_MAC_2	22
-+#define RESET_PCIEB	23
-+#define RESET_VIDEO	24
-+#define RESET_DDR_PHY	25
-+#define RESET_USBPHYB	26
-+#define RESET_USBDEV	27
-+/* Reserved		29 */
-+#define RESET_ARMDBG	29
-+#define RESET_PLLA	30
-+#define RESET_PLLB	31
-+
-+#endif /* DT_RESET_OXSEMI_OX820_H */
+> > +	memory {
+> > +		device_type = "memory";  
+> 
+> 
+> According to the kickstarter page the boards will came with different
+> amount of memory (from 512MB to 2GB). So we could put a comment
+> here about tuning this value depending of the board.
+
+U-Boot does this tuning automatically, so there is no need for the user
+to tune anything here.
+
+Thomas
 -- 
-2.7.0
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
