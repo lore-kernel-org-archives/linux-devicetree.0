@@ -1,59 +1,34 @@
-From: Karl Beldan <karl.beldan@gmail.com>
-Subject: Re: [PATCH 0/2] ARM: davinci: initial infrastructure for LCDC
-Date: Wed, 5 Oct 2016 15:16:46 +0000
-Message-ID: <20161005151646.qpdycrefwbdrzhtq@gobelin>
-References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 1/3] reset: oxnas: Add OX820 support
+Date: Wed,  5 Oct 2016 17:23:34 +0200
+Message-ID: <20161005152336.467-2-narmstrong@baylibre.com>
+References: <20161005152336.467-1-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161005152336.467-1-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-oxnas@lists.tuxfamily.org, Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBPY3QgMDUsIDIwMTYgYXQgMDM6MDU6MzBQTSArMDIwMCwgQmFydG9zeiBHb2xhc3pl
-d3NraSB3cm90ZToKPiBBZnRlciBkaXNjdXNzaW5nIHRoZSBtYXR0ZXIgd2l0aCBMYXVyZW50IFBp
-bmNoYXJ0IGl0IHR1cm5lZCBvdXQgdGhhdAo+IHVzaW5nIHRpLHRpbGNkYyxwYW5lbCB3YXMgd3Jv
-bmcgYW5kIHdlIHNob3VsZCBnbyB3aXRoIHRoZSBuZXcKPiBzaW1wbGUtdmdhLWRhYyBkcml2ZXIg
-cHJvcG9zZWQgYnkgTWF4aW1lIFJpcGFyZCBhbmQgY3VycmVudGx5IGJlaW5nCj4gcmV2aWV3ZWQu
-Cj4gCj4gVGhlIGRhODUwLWxjZGsgYm9hcmQgb24gd2hpY2ggSSdtIHdvcmtpbmcgaGFzIGEgVEhT
-ODEzNSB2aWRlbyBEQUMgZm9yCj4gd2hpY2ggdGhlIG5ldyBkcml2ZXIgc2VlbXMgdG8gYmUgYmVz
-dCBzdWl0ZWQgYW5kIHdlJ2xsIGJlIGFibGUgdG8KPiBxdWVyeSB0aGUgY29ubmVjdGVkIGRpc3Bs
-YXkgZm9yIHN1cHBvcnRlZCBtb2RlcyBpbnN0ZWFkIG9mIGhhcmRjb2RpbmcKPiB0aGVtIGluIHRo
-ZSBkdCBhcyBpcyBuZWVkZWQgZm9yIHRoZSBwYW5lbCBkcml2ZXIuCj4gCgpJIG1lYW50IHRvIHBv
-aW50IHRvIHRoZXNlIG5ldyBjaGFuZ2VzIGJ1dCB0aGVuIGl0IHNsaXBwZWQgbXkgbWluZCwgaXQg
-aXMKY2xlYXJseSB0aGUgd2F5IHRvIGdvLgoKUmVnYXJkcywgCkthcmwKCgo+IEluIHRoZSBtZWFu
-dGltZSBJJ20gcG9zdGluZyB0d28gcGF0Y2hlcyBiYXNlZCBvbiBLYXJsIEJlbGRhbidzCj4gcHJl
-dmlvdXMgd29yayB0aGF0IGNhbiBhbHJlYWR5IGJlIG1lcmdlZC4KPiAKPiBUaGUgZmlyc3Qgb25l
-IGFkZHMgT0ZfREVWX0FVWERBVEEgZW50cnkgdG8gZGE4eHgtZHQuYy4gSSBjaGFuZ2VkIHRoZQo+
-IGNvbXBhdGlibGUgc3RyaW5nIHRvIHRoZSBuZXcgb25lIHdlJ3JlIGludHJvZHVjaW5nIGluIHRo
-ZSB0aWxjZGMKPiBkcml2ZXIuCj4gCj4gVGhlIHNlY29uZCBhZGRzIHRoZSBsY2QgcGlucyBhbmQg
-dGhlIGRpc3BsYXkgbm9kZSB0byBkYTg1MC5kdHNpLiBBcwo+IHN1Z2dlc3RlZCBieSBTZWtoYXI6
-IEkgbW92ZWQgdGhlIHBpbnMgbm9kZSwgd2hpY2ggd2FzIHByZXZpb3VzbHkgaW4KPiBkYTg1MC1s
-Y2RrLmR0cywgdG8gZGE4NTAuZHRzaS4gSSBhbHNvIHNxdWFzaGVkIEthcmwncyB0d28gcGF0Y2hl
-cyBhbmQKPiByZW1vdmVkIHRoZSBwYW5lbCBub2RlLgo+IAo+IFRlc3RlZCBvbiBhIGRhODUwLWxj
-ZGsgd2l0aCBhbiBMQ0QgZGlzcGxheSBjb25uZWN0ZWQgb3ZlciBWR0Egd2l0aAo+IHR3byBwYXRj
-aGVzIGFscmVhZHkgcG9zdGVkIHRvIHRoZSBkcm0gbWFpbGluZyBsaXN0Ogo+IAo+ICAgZHJtOiB0
-aWxjZGM6IGFkZCBhIGRhODUwLXNwZWNpZmljIGNvbXBhdGlibGUgc3RyaW5nCj4gICBkcm06IHRp
-bGNkYzogYWRkIGEgd29ya2Fyb3VuZCBmb3IgZmFpbGVkIGNsa19zZXRfcmF0ZSgpCj4gCj4gYW5k
-IHNvbWUgYWRkaXRpb25hbCB3b3JrLWluLXByb2dyZXNzL2hhY2tzIG9uIHRvcCBvZiB0aGF0Lgo+
-IAo+IEthcmwgQmVsZGFuICgyKToKPiAgIEFSTTogZGF2aW5jaTogZGE4eHgtZHQ6IGFkZCBPRl9E
-RVZfQVVYREFUQSBlbnRyeSBmb3IgbGNkYwo+ICAgQVJNOiBkdHM6IGRhODUwOiBhZGQgYSBub2Rl
-IGZvciB0aGUgTENEIGNvbnRyb2xsZXIKPiAKPiAgYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRz
-aSAgICAgfCAyOSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICBhcmNoL2FybS9tYWNo
-LWRhdmluY2kvZGE4eHgtZHQuYyB8ICAxICsKPiAgMiBmaWxlcyBjaGFuZ2VkLCAzMCBpbnNlcnRp
-b25zKCspCj4gCj4gLS0gCj4gMi45LjMKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+In order to support the Oxford Semiconductor OX820 SoC, add a new
+compatible string.
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/reset/reset-oxnas.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/reset/reset-oxnas.c b/drivers/reset/reset-oxnas.c
+index 9449805..0d9036d 100644
+--- a/drivers/reset/reset-oxnas.c
++++ b/drivers/reset/reset-oxnas.c
+@@ -80,6 +80,7 @@ static const struct reset_control_ops oxnas_reset_ops = {
+ 
+ static const struct of_device_id oxnas_reset_dt_ids[] = {
+ 	 { .compatible = "oxsemi,ox810se-reset", },
++	 { .compatible = "oxsemi,ox820-reset", },
+ 	 { /* sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, oxnas_reset_dt_ids);
+-- 
+2.7.0
