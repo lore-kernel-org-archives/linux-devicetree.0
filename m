@@ -1,24 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] DT: irqchip: renesas-irqc: document R8A7743/5 support
-Date: Wed, 5 Oct 2016 08:10:47 -0500
-Message-ID: <20161005131046.GA10946@rob-hp-laptop>
-References: <19681841.MzyqfDfWny@wasted.cogentembedded.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH] leds: leds-pca963x: add nxp,leds-suspend property
+Date: Wed, 05 Oct 2016 15:11:32 +0200
+Message-ID: <65b2fdc5-549d-555c-fefe-70d856ea4ca5@samsung.com>
+References: <CGME20161005022942eucas1p2b092723a0c38c116cc971971e43b169e@eucas1p2.samsung.com>
+ <1475634572-18274-1-git-send-email-matt@ranostay.consulting>
+ <0ba8033f-d0b3-8b2f-8ff4-fa47dcf50ba1@samsung.com>
+ <CAL_JsqKVR9nHoAXcFVPBXp1io7_WCL6Jsrv=oJKGBopatL27sQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <19681841.MzyqfDfWny@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <CAL_JsqKVR9nHoAXcFVPBXp1io7_WCL6Jsrv=oJKGBopatL27sQ@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Matt Ranostay <mranostay@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Matt Ranostay <matt@ranostay.consulting>, Richard Purdie <rpurdie@rpsys.net>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 30, 2016 at 12:25:29AM +0300, Sergei Shtylyov wrote:
-> Renesas  RZ/G SoC have the R-Car gen2 compatible IRQC interrupt controllers.
-> Document RZ/G1[ME] (also known as R8A774[35]) SoC bindings.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+On 10/05/2016 02:22 PM, Rob Herring wrote:
+> On Wed, Oct 5, 2016 at 3:09 AM, Jacek Anaszewski
+> <j.anaszewski@samsung.com> wrote:
+>> Hi Matt,
+>>
+>> On 10/05/2016 04:29 AM, Matt Ranostay wrote:
+>>>
+>>> Allow the LED subsystem to blank the LEDS on suspend.
+>>>
+>>> Cc: Richard Purdie <rpurdie@rpsys.net>
+>>> Cc: Jacek Anaszewski <j.anaszewski@samsung.com>
+>>> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+>>> ---
+>>>  Documentation/devicetree/bindings/leds/pca963x.txt | 1 +
+>>>  drivers/leds/leds-pca963x.c                        | 9 +++++++++
+>>>  include/linux/platform_data/leds-pca963x.h         | 6 ++++++
+>>>  3 files changed, 16 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/leds/pca963x.txt
+>>> b/Documentation/devicetree/bindings/leds/pca963x.txt
+>>> index dafbe9931c2b..61b1f037ebd0 100644
+>>> --- a/Documentation/devicetree/bindings/leds/pca963x.txt
+>>> +++ b/Documentation/devicetree/bindings/leds/pca963x.txt
+>>> @@ -7,6 +7,7 @@ Optional properties:
+>>>  - nxp,totem-pole : use totem pole (push-pull) instead of open-drain
+>>> (pca9632 defaults
+>>>    to open-drain, newer chips to totem pole)
+>>>  - nxp,hw-blink : use hardware blinking instead of software blinking
+>>> +- nxp,leds-suspend : turn off LEDS on system suspend
+>>
+>>
+>> How about making this property generic and adding it to the common LED
+>> bindings?
+>>
+>> Cc Rob.
+>
+> Fine with me though seems like keeping on would be less common. Maybe
+> "keep-in-suspend". Also, if this is a user decision, then it should be
+> a sysfs attr and shouldn't be in DT.
 
-Applied, thanks.
+Matt, did you have any specific reason for making it configurable?
+I like the idea of adding generic sysfs attribute for that, which
+would allow for customizing behaviour for a LED used as torch.
+I believe that in most use cases the user doesn't want that the LED
+used as torch went off on suspend.
 
-Rob
+-- 
+Best regards,
+Jacek Anaszewski
