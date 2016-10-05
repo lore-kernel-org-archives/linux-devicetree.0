@@ -1,154 +1,59 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: marvell: Add definition for the Globalscale Marvell ESPRESSOBin Board
-Date: Wed, 05 Oct 2016 17:14:49 +0200
-Message-ID: <87fuoaygie.fsf@free-electrons.com>
-References: <20161005142734.18995-1-romain.perier@free-electrons.com>
+From: Karl Beldan <karl.beldan@gmail.com>
+Subject: Re: [PATCH 0/2] ARM: davinci: initial infrastructure for LCDC
+Date: Wed, 5 Oct 2016 15:16:46 +0000
+Message-ID: <20161005151646.qpdycrefwbdrzhtq@gobelin>
+References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161005142734.18995-1-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Romain
-        Perier's message of "Wed, 5 Oct 2016 16:27:34 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yahuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Romain,
- 
- On mer., oct. 05 2016, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-
-> This adds a basic definition for this board.
->
-> Signed-off-by: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/marvell/Makefile               |  1 +
->  .../boot/dts/marvell/armada-3720-espressobin.dts   | 78 ++++++++++++++++++++++
->  2 files changed, 79 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
->
-> diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-> index 308468d..392eeb6 100644
-> --- a/arch/arm64/boot/dts/marvell/Makefile
-> +++ b/arch/arm64/boot/dts/marvell/Makefile
-> @@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-stb.dtb
->  
->  # Mvebu SoC Family
->  dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
-> +dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
->  dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
->  
->  always		:= $(dtb-y)
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> new file mode 100644
-> index 0000000..57035a3
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> @@ -0,0 +1,78 @@
-> +/*
-> + * Device Tree file for Globalscale Marvell ESPRESSOBin Board
-> + * Copyright (C) 2016 Marvell
-> + *
-> + * Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "armada-372x.dtsi"
-> +
-> +/ {
-> +	model = "Globalscale Marvell ESPRESSOBin Board";
-> +	compatible = "globalscale,espressobin", "marvell,armada3720", "marvell,armada3710";
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-
-
-According to the kickstarter page the boards will came with different
-amount of memory (from 512MB to 2GB). So we could put a comment
-here about tuning this value depending of the board.
-> +		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
-> +	};
-> +};
-> +
-
-Could you add information about the connector for each of the following
-interfaces?
-
-You can have a look on the armada-3720-db.dts to see the kind of info I
-expect.
-
-Thanks,
-
-Gregory
-
-> +&pcie0 {
-> +	status = "okay";
-> +};
-> +
-> +&sata {
-> +	status = "okay";
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +&usb3 {
-> +	status = "okay";
-> +};
-> -- 
-> 2.9.3
->
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBPY3QgMDUsIDIwMTYgYXQgMDM6MDU6MzBQTSArMDIwMCwgQmFydG9zeiBHb2xhc3pl
+d3NraSB3cm90ZToKPiBBZnRlciBkaXNjdXNzaW5nIHRoZSBtYXR0ZXIgd2l0aCBMYXVyZW50IFBp
+bmNoYXJ0IGl0IHR1cm5lZCBvdXQgdGhhdAo+IHVzaW5nIHRpLHRpbGNkYyxwYW5lbCB3YXMgd3Jv
+bmcgYW5kIHdlIHNob3VsZCBnbyB3aXRoIHRoZSBuZXcKPiBzaW1wbGUtdmdhLWRhYyBkcml2ZXIg
+cHJvcG9zZWQgYnkgTWF4aW1lIFJpcGFyZCBhbmQgY3VycmVudGx5IGJlaW5nCj4gcmV2aWV3ZWQu
+Cj4gCj4gVGhlIGRhODUwLWxjZGsgYm9hcmQgb24gd2hpY2ggSSdtIHdvcmtpbmcgaGFzIGEgVEhT
+ODEzNSB2aWRlbyBEQUMgZm9yCj4gd2hpY2ggdGhlIG5ldyBkcml2ZXIgc2VlbXMgdG8gYmUgYmVz
+dCBzdWl0ZWQgYW5kIHdlJ2xsIGJlIGFibGUgdG8KPiBxdWVyeSB0aGUgY29ubmVjdGVkIGRpc3Bs
+YXkgZm9yIHN1cHBvcnRlZCBtb2RlcyBpbnN0ZWFkIG9mIGhhcmRjb2RpbmcKPiB0aGVtIGluIHRo
+ZSBkdCBhcyBpcyBuZWVkZWQgZm9yIHRoZSBwYW5lbCBkcml2ZXIuCj4gCgpJIG1lYW50IHRvIHBv
+aW50IHRvIHRoZXNlIG5ldyBjaGFuZ2VzIGJ1dCB0aGVuIGl0IHNsaXBwZWQgbXkgbWluZCwgaXQg
+aXMKY2xlYXJseSB0aGUgd2F5IHRvIGdvLgoKUmVnYXJkcywgCkthcmwKCgo+IEluIHRoZSBtZWFu
+dGltZSBJJ20gcG9zdGluZyB0d28gcGF0Y2hlcyBiYXNlZCBvbiBLYXJsIEJlbGRhbidzCj4gcHJl
+dmlvdXMgd29yayB0aGF0IGNhbiBhbHJlYWR5IGJlIG1lcmdlZC4KPiAKPiBUaGUgZmlyc3Qgb25l
+IGFkZHMgT0ZfREVWX0FVWERBVEEgZW50cnkgdG8gZGE4eHgtZHQuYy4gSSBjaGFuZ2VkIHRoZQo+
+IGNvbXBhdGlibGUgc3RyaW5nIHRvIHRoZSBuZXcgb25lIHdlJ3JlIGludHJvZHVjaW5nIGluIHRo
+ZSB0aWxjZGMKPiBkcml2ZXIuCj4gCj4gVGhlIHNlY29uZCBhZGRzIHRoZSBsY2QgcGlucyBhbmQg
+dGhlIGRpc3BsYXkgbm9kZSB0byBkYTg1MC5kdHNpLiBBcwo+IHN1Z2dlc3RlZCBieSBTZWtoYXI6
+IEkgbW92ZWQgdGhlIHBpbnMgbm9kZSwgd2hpY2ggd2FzIHByZXZpb3VzbHkgaW4KPiBkYTg1MC1s
+Y2RrLmR0cywgdG8gZGE4NTAuZHRzaS4gSSBhbHNvIHNxdWFzaGVkIEthcmwncyB0d28gcGF0Y2hl
+cyBhbmQKPiByZW1vdmVkIHRoZSBwYW5lbCBub2RlLgo+IAo+IFRlc3RlZCBvbiBhIGRhODUwLWxj
+ZGsgd2l0aCBhbiBMQ0QgZGlzcGxheSBjb25uZWN0ZWQgb3ZlciBWR0Egd2l0aAo+IHR3byBwYXRj
+aGVzIGFscmVhZHkgcG9zdGVkIHRvIHRoZSBkcm0gbWFpbGluZyBsaXN0Ogo+IAo+ICAgZHJtOiB0
+aWxjZGM6IGFkZCBhIGRhODUwLXNwZWNpZmljIGNvbXBhdGlibGUgc3RyaW5nCj4gICBkcm06IHRp
+bGNkYzogYWRkIGEgd29ya2Fyb3VuZCBmb3IgZmFpbGVkIGNsa19zZXRfcmF0ZSgpCj4gCj4gYW5k
+IHNvbWUgYWRkaXRpb25hbCB3b3JrLWluLXByb2dyZXNzL2hhY2tzIG9uIHRvcCBvZiB0aGF0Lgo+
+IAo+IEthcmwgQmVsZGFuICgyKToKPiAgIEFSTTogZGF2aW5jaTogZGE4eHgtZHQ6IGFkZCBPRl9E
+RVZfQVVYREFUQSBlbnRyeSBmb3IgbGNkYwo+ICAgQVJNOiBkdHM6IGRhODUwOiBhZGQgYSBub2Rl
+IGZvciB0aGUgTENEIGNvbnRyb2xsZXIKPiAKPiAgYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRz
+aSAgICAgfCAyOSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICBhcmNoL2FybS9tYWNo
+LWRhdmluY2kvZGE4eHgtZHQuYyB8ICAxICsKPiAgMiBmaWxlcyBjaGFuZ2VkLCAzMCBpbnNlcnRp
+b25zKCspCj4gCj4gLS0gCj4gMi45LjMKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
