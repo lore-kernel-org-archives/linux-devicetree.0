@@ -1,60 +1,66 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v3 11/11] ARM: dts: sk-rzg1m: add Ether support
-Date: Thu, 06 Oct 2016 00:48:09 +0300
-Message-ID: <1764267.cmIUehPqzi@wasted.cogentembedded.com>
-References: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+From: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
+Subject: [PATCH 0/3] mtd: s3c2410: add device tree support
+Date: Wed,  5 Oct 2016 20:46:54 -0300
+Message-ID: <1475711217-974-1-git-send-email-sergio.prado@e-labworks.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the SK-RZG1M board dependent part of the Ether device node.
-Enable DHCP and NFS root  for the kernel booting.
+This series adds support for configuring Samsung's s3c2410 and
+compatible flash memory controller via devicetree.
 
-Based on the original (and large) patch by Dmitry Shifrin
-<dmitry.shifrin@cogentembedded.com>.
+Tested on FriendlyARM mini2440, based on s3c2440 SoC.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Patch 3 depends on patch 1.
 
----
-Changes in version 2:
-- new patch.
+Changes since v1:
+- read timings from nand_sdr_timings when booting with a device tree
+- naming improvements in the device tree binding
+  (s/nand/nand-controller/, s/_/-, s/children/child)
+- dropped property samsung,ignore_unset_ecc
+- remove @0 from nand device node
+- checking pdev->dev.of_node instead of using ifdef CONFIG_OF_MTD
+- preventing from parsing device tree properties twice
+- increment the nand controller child node refcount, since we
+  maintain a reference to it and its name field
+- using of_device_get_match_data() instead of of_match_device()
+  to make the code simpler
+- remove CONFIG_MTD_NAND_S3C2410_HWECC compile option so we can
+  select ECC mode using nand-ecc-mode property in the device tree
 
- arch/arm/boot/dts/r8a7743-sk-rzg1m.dts |   15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+Sergio Prado (3):
+  mtd: s3c2410: make ecc mode configurable via platform data
+  dt-bindings: mtd: add DT binding for s3c2410 flash controller
+  mtd: s3c2410: parse the device configuration from OF node
 
-Index: renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
-+++ renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
-@@ -20,7 +20,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "ignore_loglevel";
-+		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-@@ -42,3 +42,16 @@
- &scif0 {
- 	status = "okay";
- };
-+
-+&ether {
-+	phy-handle = <&phy1>;
-+	renesas,ether-link-active-low;
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+		interrupt-parent = <&irqc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		micrel,led-mode = <1>;
-+	};
-+};
+ .../devicetree/bindings/mtd/samsung-s3c2410.txt    |  57 +++++
+ arch/arm/mach-s3c24xx/common-smdk.c                |   1 +
+ arch/arm/mach-s3c24xx/mach-anubis.c                |   1 +
+ arch/arm/mach-s3c24xx/mach-at2440evb.c             |   1 +
+ arch/arm/mach-s3c24xx/mach-bast.c                  |   1 +
+ arch/arm/mach-s3c24xx/mach-gta02.c                 |   1 +
+ arch/arm/mach-s3c24xx/mach-jive.c                  |   1 +
+ arch/arm/mach-s3c24xx/mach-mini2440.c              |   1 +
+ arch/arm/mach-s3c24xx/mach-osiris.c                |   1 +
+ arch/arm/mach-s3c24xx/mach-qt2410.c                |   1 +
+ arch/arm/mach-s3c24xx/mach-rx1950.c                |   1 +
+ arch/arm/mach-s3c24xx/mach-rx3715.c                |   1 +
+ arch/arm/mach-s3c24xx/mach-vstms.c                 |   1 +
+ arch/arm/mach-s3c64xx/mach-hmt.c                   |   1 +
+ arch/arm/mach-s3c64xx/mach-mini6410.c              |   1 +
+ arch/arm/mach-s3c64xx/mach-real6410.c              |   1 +
+ drivers/mtd/nand/Kconfig                           |   9 -
+ drivers/mtd/nand/s3c2410.c                         | 284 +++++++++++++++------
+ include/linux/platform_data/mtd-nand-s3c2410.h     |   7 +-
+ 19 files changed, 289 insertions(+), 83 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
