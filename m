@@ -1,68 +1,369 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2 2/4] drivers: iio: ti_am335x_adc: add dma support
-Date: Wed, 5 Oct 2016 09:31:23 +0300
-Message-ID: <de6bbf1c-e9e2-83b1-73c2-49aa64cc939c@ti.com>
-References: <20161003130318.12591-1-mugunthanvnm@ti.com>
- <20161003130318.12591-3-mugunthanvnm@ti.com>
- <0ff2c6ef-3fa1-dc8b-fb6e-1a4dcfea8ea9@ti.com>
- <e9c3108e-ffd1-472a-a2d3-2948665de217@ti.com>
+From: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v7 21/22] iommu/dma: Add support for mapping MSIs
+Date: Wed, 5 Oct 2016 07:00:42 +0000
+Message-ID: <DB6PR0402MB2694B2E5AE266F138784D2C2E6C40@DB6PR0402MB2694.eurprd04.prod.outlook.com>
+References: <cover.1473695704.git.robin.murphy@arm.com>
+	<2273af20d844bd618c6a90b57e639700328ebf7f.1473695704.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e9c3108e-ffd1-472a-a2d3-2948665de217@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mugunthan V N <mugunthanvnm@ti.com>, linux-iio@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, "Andrew F . Davis" <afd@ti.com>, John Syne <john3909@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <2273af20d844bd618c6a90b57e639700328ebf7f.1473695704.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "punit.agrawal-5wv7dgnIgG8@public.gmane.org" <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, "thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMDUvMTYgMDk6MjEsIE11Z3VudGhhbiBWIE4gd3JvdGU6Cj4gT24gVHVlc2RheSAwNCBP
-Y3RvYmVyIDIwMTYgMDI6MDIgUE0sIFBldGVyIFVqZmFsdXNpIHdyb3RlOgo+PiBPbiAxMC8wMy8x
-NiAxNjowMywgTXVndW50aGFuIFYgTiB3cm90ZToKPj4+ICtzdGF0aWMgaW50IHRpYWRjX3JlcXVl
-c3RfZG1hKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCj4+PiArCQkJICAgICBzdHJ1Y3Qg
-dGlhZGNfZGV2aWNlICphZGNfZGV2KQo+Pj4gK3sKPj4+ICsJc3RydWN0IHRpYWRjX2RtYQkqZG1h
-ID0gJmFkY19kZXYtPmRtYTsKPj4+ICsJZG1hX2NhcF9tYXNrX3QJCW1hc2s7Cj4+PiArCj4+PiAr
-CS8qIERlZmF1bHQgc2xhdmUgY29uZmlndXJhdGlvbiBwYXJhbWV0ZXJzICovCj4+PiArCWRtYS0+
-Y29uZi5kaXJlY3Rpb24gPSBETUFfREVWX1RPX01FTTsKPj4+ICsJZG1hLT5jb25mLnNyY19hZGRy
-X3dpZHRoID0gRE1BX1NMQVZFX0JVU1dJRFRIXzJfQllURVM7Cj4+PiArCWRtYS0+Y29uZi5zcmNf
-YWRkciA9IGFkY19kZXYtPm1mZF90c2NhZGMtPnRzY2FkY19waHlzX2Jhc2UgKyBSRUdfRklGTzE7
-Cj4+PiArCj4+PiArCWRtYV9jYXBfemVybyhtYXNrKTsKPj4+ICsJZG1hX2NhcF9zZXQoRE1BX0NZ
-Q0xJQywgbWFzayk7Cj4+PiArCj4+PiArCS8qIEdldCBhIGNoYW5uZWwgZm9yIFJYICovCj4+PiAr
-CWRtYS0+Y2hhbiA9IGRtYV9yZXF1ZXN0X2NoYW4oYWRjX2Rldi0+bWZkX3RzY2FkYy0+ZGV2LCAi
-ZmlmbzEiKTsKPj4+ICsJaWYgKCFkbWEtPmNoYW4pCj4+PiArCQlyZXR1cm4gLUVOT0RFVjsKPj4K
-Pj4gZG1hX3JlcXVlc3RfY2hhbigpIEVSUl9QVFIgaW4gY2FzZSBvZiBmYWlsdXJlLCBuZXZlciBO
-VUxMLiBZb3Ugc2hvdWxkIHJldXNlCj4+IHRoZSByZXR1cm5lZCBlcnJvciBjb2RlIHRvIHN1cHBv
-cnQgZGVmZXJyZWQgcHJvYmluZy4KPiAKPiBXaWxsIGZpeCB0aGlzIGluIHYzLgo+IAo+Pgo+Pj4g
-Kwo+Pj4gKwkvKiBSWCBidWZmZXIgKi8KPj4+ICsJZG1hLT5idWYgPSBkbWFfYWxsb2NfY29oZXJl
-bnQoZG1hLT5jaGFuLT5kZXZpY2UtPmRldiwgRE1BX0JVRkZFUl9TSVpFLAo+Pj4gKwkJCQkgICAg
-ICAmZG1hLT5hZGRyLCBHRlBfS0VSTkVMKTsKPj4+ICsJaWYgKCFkbWEtPmJ1ZikKPj4+ICsJCWdv
-dG8gZXJyOwo+Pj4gKwo+Pj4gKwlyZXR1cm4gMDsKPj4+ICtlcnI6Cj4+PiArCWRtYV9yZWxlYXNl
-X2NoYW5uZWwoZG1hLT5jaGFuKTsKPj4+ICsKPj4+ICsJcmV0dXJuIC1FTk9NRU07Cj4+PiArfQo+
-Pj4gKwo+Pj4gIHN0YXRpYyBpbnQgdGlhZGNfcGFyc2VfZHQoc3RydWN0IHBsYXRmb3JtX2Rldmlj
-ZSAqcGRldiwKPj4+ICAJCQkgIHN0cnVjdCB0aWFkY19kZXZpY2UgKmFkY19kZXYpCj4+PiAgewo+
-Pj4gQEAgLTUxMiw4ICs2MzksMTQgQEAgc3RhdGljIGludCB0aWFkY19wcm9iZShzdHJ1Y3QgcGxh
-dGZvcm1fZGV2aWNlICpwZGV2KQo+Pj4gIAo+Pj4gIAlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2
-LCBpbmRpb19kZXYpOwo+Pj4gIAo+Pj4gKwllcnIgPSB0aWFkY19yZXF1ZXN0X2RtYShwZGV2LCBh
-ZGNfZGV2KTsKPj4+ICsJaWYgKGVyciAmJiBlcnIgIT0gLUVOT0RFVikKPj4+ICsJCWdvdG8gZXJy
-X2RtYTsKPj4KPj4gWW91IHNob3VsZCBoYW5kbGUgdGhlIGRlZmVycmVkIHByb2JpbmcgZm9yIERN
-QSBjaGFubmVsLgo+IAo+ICsJZG1hLT5jaGFuID0gZG1hX3JlcXVlc3RfY2hhbihhZGNfZGV2LT5t
-ZmRfdHNjYWRjLT5kZXYsICJmaWZvMSIpOwo+ICsJaWYgKElTX0VSUihkbWEtPmNoYW4pKSB7Cj4g
-KwkJaW50IHJldCA9IFBUUl9FUlIoZG1hLT5jaGFuKTsKPiArCj4gKwkJZG1hLT5jaGFuID0gTlVM
-TDsKPiArCQlyZXR1cm4gcmV0OwoKWW91IGRvbid0IG5lZWQgdGhlICdyZXQnIHZhcmlhYmxlOgoJ
-CXJldHVybiBQVFJfRVJSKGRtYS0+Y2hhbik7Cgo+ICsJfQo+IAo+IFdpdGggdGhpcyBwcm9iZSBk
-ZWZlciB3aWxsIGJlIHRha2VuIGNhcmUgYW5kIEFEQyB3aWxsIGNvbnRpbnVlIHdpdGhvdXQKPiBE
-TUEgd2hlbiByZXF1ZXN0IGNoYW5uZWwgcmV0dXJucyAtRU5PREVWLgoKSSB3b3VsZCByYXRoZXIg
-aGF2ZSBleHBsaWNpdCBjaGVjayBmb3IgZGVmZXJyZWQgcHJvYmU6CgplcnIgPSB0aWFkY19yZXF1
-ZXN0X2RtYShwZGV2LCBhZGNfZGV2KTsKaWYgKGVyciAmJiBlcnIgPT0gLUVQUk9CRV9ERUZFUikK
-CWdvdG8gZXJyX2RtYTsKCgotLSAKUMOpdGVyCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+
+> -----Original Message-----
+> From: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org [mailto:iommu-
+> bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org] On Behalf Of Robin Murphy
+> Sent: Monday, September 12, 2016 21:44
+> To: will.deacon-5wv7dgnIgG8@public.gmane.org; joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
+> foundation.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; punit.agrawal-5wv7dgnIgG8@public.gmane.org;
+> thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+> Subject: [PATCH v7 21/22] iommu/dma: Add support for mapping MSIs
+> 
+> When an MSI doorbell is located downstream of an IOMMU, attaching devices
+> to a DMA ops domain and switching on translation leads to a rude shock when
+> their attempt to write to the physical address returned by the irqchip driver
+> faults (or worse, writes into some already-mapped
+> buffer) and no interrupt is forthcoming.
+> 
+> Address this by adding a hook for relevant irqchip drivers to call from their
+> compose_msi_msg() callback, to swizzle the physical address with an
+> appropriatly-mapped IOVA for any device attached to one of our DMA ops
+> domains.
+> 
+> Acked-by: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+> Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/iommu/dma-iommu.c        | 136
+> ++++++++++++++++++++++++++++++++++-----
+>  drivers/irqchip/irq-gic-v2m.c    |   3 +
+>  drivers/irqchip/irq-gic-v3-its.c |   3 +
+>  include/linux/dma-iommu.h        |   9 +++
+>  4 files changed, 136 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c index
+> 00c8a08d56e7..4329d18080cf 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -25,10 +25,28 @@
+>  #include <linux/huge_mm.h>
+>  #include <linux/iommu.h>
+>  #include <linux/iova.h>
+> +#include <linux/irq.h>
+>  #include <linux/mm.h>
+>  #include <linux/scatterlist.h>
+>  #include <linux/vmalloc.h>
+> 
+> +struct iommu_dma_msi_page {
+> +	struct list_head	list;
+> +	dma_addr_t		iova;
+> +	phys_addr_t		phys;
+> +};
+> +
+> +struct iommu_dma_cookie {
+> +	struct iova_domain	iovad;
+> +	struct list_head	msi_page_list;
+> +	spinlock_t		msi_lock;
+> +};
+> +
+> +static inline struct iova_domain *cookie_iovad(struct iommu_domain
+> +*domain) {
+> +	return &((struct iommu_dma_cookie *)domain->iova_cookie)->iovad; }
+> +
+>  int iommu_dma_init(void)
+>  {
+>  	return iova_cache_get();
+> @@ -43,15 +61,19 @@ int iommu_dma_init(void)
+>   */
+>  int iommu_get_dma_cookie(struct iommu_domain *domain)  {
+> -	struct iova_domain *iovad;
+> +	struct iommu_dma_cookie *cookie;
+> 
+>  	if (domain->iova_cookie)
+>  		return -EEXIST;
+> 
+> -	iovad = kzalloc(sizeof(*iovad), GFP_KERNEL);
+> -	domain->iova_cookie = iovad;
+> +	cookie = kzalloc(sizeof(*cookie), GFP_KERNEL);
+> +	if (!cookie)
+> +		return -ENOMEM;
+> 
+> -	return iovad ? 0 : -ENOMEM;
+> +	spin_lock_init(&cookie->msi_lock);
+> +	INIT_LIST_HEAD(&cookie->msi_page_list);
+> +	domain->iova_cookie = cookie;
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(iommu_get_dma_cookie);
+> 
+> @@ -63,14 +85,20 @@ EXPORT_SYMBOL(iommu_get_dma_cookie);
+>   */
+>  void iommu_put_dma_cookie(struct iommu_domain *domain)  {
+> -	struct iova_domain *iovad = domain->iova_cookie;
+> +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+> +	struct iommu_dma_msi_page *msi, *tmp;
+> 
+> -	if (!iovad)
+> +	if (!cookie)
+>  		return;
+> 
+> -	if (iovad->granule)
+> -		put_iova_domain(iovad);
+> -	kfree(iovad);
+> +	if (cookie->iovad.granule)
+> +		put_iova_domain(&cookie->iovad);
+> +
+> +	list_for_each_entry_safe(msi, tmp, &cookie->msi_page_list, list) {
+> +		list_del(&msi->list);
+> +		kfree(msi);
+> +	}
+> +	kfree(cookie);
+>  	domain->iova_cookie = NULL;
+>  }
+>  EXPORT_SYMBOL(iommu_put_dma_cookie);
+> @@ -88,7 +116,7 @@ EXPORT_SYMBOL(iommu_put_dma_cookie);
+>   */
+>  int iommu_dma_init_domain(struct iommu_domain *domain, dma_addr_t
+> base, u64 size)  {
+> -	struct iova_domain *iovad = domain->iova_cookie;
+> +	struct iova_domain *iovad = cookie_iovad(domain);
+>  	unsigned long order, base_pfn, end_pfn;
+> 
+>  	if (!iovad)
+> @@ -155,7 +183,7 @@ int dma_direction_to_prot(enum dma_data_direction
+> dir, bool coherent)  static struct iova *__alloc_iova(struct iommu_domain
+> *domain, size_t size,
+>  		dma_addr_t dma_limit)
+>  {
+> -	struct iova_domain *iovad = domain->iova_cookie;
+> +	struct iova_domain *iovad = cookie_iovad(domain);
+>  	unsigned long shift = iova_shift(iovad);
+>  	unsigned long length = iova_align(iovad, size) >> shift;
+> 
+> @@ -171,7 +199,7 @@ static struct iova *__alloc_iova(struct iommu_domain
+> *domain, size_t size,
+>  /* The IOVA allocator knows what we mapped, so just unmap whatever that
+> was */  static void __iommu_dma_unmap(struct iommu_domain *domain,
+> dma_addr_t dma_addr)  {
+> -	struct iova_domain *iovad = domain->iova_cookie;
+> +	struct iova_domain *iovad = cookie_iovad(domain);
+>  	unsigned long shift = iova_shift(iovad);
+>  	unsigned long pfn = dma_addr >> shift;
+>  	struct iova *iova = find_iova(iovad, pfn); @@ -294,7 +322,7 @@ struct
+> page **iommu_dma_alloc(struct device *dev, size_t size, gfp_t gfp,
+>  		void (*flush_page)(struct device *, const void *, phys_addr_t))  {
+>  	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+> -	struct iova_domain *iovad = domain->iova_cookie;
+> +	struct iova_domain *iovad = cookie_iovad(domain);
+>  	struct iova *iova;
+>  	struct page **pages;
+>  	struct sg_table sgt;
+> @@ -386,7 +414,7 @@ dma_addr_t iommu_dma_map_page(struct device
+> *dev, struct page *page,  {
+>  	dma_addr_t dma_addr;
+>  	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+> -	struct iova_domain *iovad = domain->iova_cookie;
+> +	struct iova_domain *iovad = cookie_iovad(domain);
+>  	phys_addr_t phys = page_to_phys(page) + offset;
+>  	size_t iova_off = iova_offset(iovad, phys);
+>  	size_t len = iova_align(iovad, size + iova_off); @@ -495,7 +523,7 @@
+> int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg,
+>  		int nents, int prot)
+>  {
+>  	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+> -	struct iova_domain *iovad = domain->iova_cookie;
+> +	struct iova_domain *iovad = cookie_iovad(domain);
+>  	struct iova *iova;
+>  	struct scatterlist *s, *prev = NULL;
+>  	dma_addr_t dma_addr;
+> @@ -587,3 +615,81 @@ int iommu_dma_mapping_error(struct device *dev,
+> dma_addr_t dma_addr)  {
+>  	return dma_addr == DMA_ERROR_CODE;
+>  }
+> +
+> +static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device
+> *dev,
+> +		phys_addr_t msi_addr, struct iommu_domain *domain) {
+> +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+> +	struct iommu_dma_msi_page *msi_page;
+> +	struct iova_domain *iovad = &cookie->iovad;
+> +	struct iova *iova;
+> +	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
+> +
+> +	msi_addr &= ~(phys_addr_t)iova_mask(iovad);
+> +	list_for_each_entry(msi_page, &cookie->msi_page_list, list)
+> +		if (msi_page->phys == msi_addr)
+> +			return msi_page;
+> +
+> +	msi_page = kzalloc(sizeof(*msi_page), GFP_ATOMIC);
+> +	if (!msi_page)
+> +		return NULL;
+> +
+> +	iova = __alloc_iova(domain, iovad->granule, dma_get_mask(dev));
+
+I think this should be 'iova = __alloc_iova(domain, iovad->granule, dma_get_mask(dev));'
+as __alloc_iova takes input parameter as 'struct iova_domain *'
+
+Regards,
+Nipun
+
+> +	if (!iova)
+> +		goto out_free_page;
+> +
+> +	msi_page->phys = msi_addr;
+> +	msi_page->iova = iova_dma_addr(iovad, iova);
+> +	if (iommu_map(domain, msi_page->iova, msi_addr, iovad->granule,
+> prot))
+> +		goto out_free_iova;
+> +
+> +	INIT_LIST_HEAD(&msi_page->list);
+> +	list_add(&msi_page->list, &cookie->msi_page_list);
+> +	return msi_page;
+> +
+> +out_free_iova:
+> +	__free_iova(iovad, iova);
+> +out_free_page:
+> +	kfree(msi_page);
+> +	return NULL;
+> +}
+> +
+> +void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg) {
+> +	struct device *dev = msi_desc_to_dev(irq_get_msi_desc(irq));
+> +	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+> +	struct iommu_dma_cookie *cookie;
+> +	struct iommu_dma_msi_page *msi_page;
+> +	phys_addr_t msi_addr = (u64)msg->address_hi << 32 | msg->address_lo;
+> +	unsigned long flags;
+> +
+> +	if (!domain || !domain->iova_cookie)
+> +		return;
+> +
+> +	cookie = domain->iova_cookie;
+> +
+> +	/*
+> +	 * We disable IRQs to rule out a possible inversion against
+> +	 * irq_desc_lock if, say, someone tries to retarget the affinity
+> +	 * of an MSI from within an IPI handler.
+> +	 */
+> +	spin_lock_irqsave(&cookie->msi_lock, flags);
+> +	msi_page = iommu_dma_get_msi_page(dev, msi_addr, domain);
+> +	spin_unlock_irqrestore(&cookie->msi_lock, flags);
+> +
+> +	if (WARN_ON(!msi_page)) {
+> +		/*
+> +		 * We're called from a void callback, so the best we can do is
+> +		 * 'fail' by filling the message with obviously bogus values.
+> +		 * Since we got this far due to an IOMMU being present, it's
+> +		 * not like the existing address would have worked anyway...
+> +		 */
+> +		msg->address_hi = ~0U;
+> +		msg->address_lo = ~0U;
+> +		msg->data = ~0U;
+> +	} else {
+> +		msg->address_hi = upper_32_bits(msi_page->iova);
+> +		msg->address_lo &= iova_mask(&cookie->iovad);
+> +		msg->address_lo += lower_32_bits(msi_page->iova);
+> +	}
+> +}
+> diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c index
+> 35eb7ac5d21f..863e073c6f7f 100644
+> --- a/drivers/irqchip/irq-gic-v2m.c
+> +++ b/drivers/irqchip/irq-gic-v2m.c
+> @@ -16,6 +16,7 @@
+>  #define pr_fmt(fmt) "GICv2m: " fmt
+> 
+>  #include <linux/acpi.h>
+> +#include <linux/dma-iommu.h>
+>  #include <linux/irq.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/kernel.h>
+> @@ -108,6 +109,8 @@ static void gicv2m_compose_msi_msg(struct irq_data
+> *data, struct msi_msg *msg)
+> 
+>  	if (v2m->flags & GICV2M_NEEDS_SPI_OFFSET)
+>  		msg->data -= v2m->spi_offset;
+> +
+> +	iommu_dma_map_msi_msg(data->irq, msg);
+>  }
+> 
+>  static struct irq_chip gicv2m_irq_chip = { diff --git a/drivers/irqchip/irq-gic-v3-
+> its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 36b9c28a5c91..98ff669d5962 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/bitmap.h>
+>  #include <linux/cpu.h>
+>  #include <linux/delay.h>
+> +#include <linux/dma-iommu.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/log2.h>
+>  #include <linux/mm.h>
+> @@ -655,6 +656,8 @@ static void its_irq_compose_msi_msg(struct irq_data
+> *d, struct msi_msg *msg)
+>  	msg->address_lo		= addr & ((1UL << 32) - 1);
+>  	msg->address_hi		= addr >> 32;
+>  	msg->data		= its_get_event_id(d);
+> +
+> +	iommu_dma_map_msi_msg(d->irq, msg);
+>  }
+> 
+>  static struct irq_chip its_irq_chip = { diff --git a/include/linux/dma-iommu.h
+> b/include/linux/dma-iommu.h index 81c5c8d167ad..5ee806e41b5c 100644
+> --- a/include/linux/dma-iommu.h
+> +++ b/include/linux/dma-iommu.h
+> @@ -21,6 +21,7 @@
+> 
+>  #ifdef CONFIG_IOMMU_DMA
+>  #include <linux/iommu.h>
+> +#include <linux/msi.h>
+> 
+>  int iommu_dma_init(void);
+> 
+> @@ -62,9 +63,13 @@ void iommu_dma_unmap_sg(struct device *dev, struct
+> scatterlist *sg, int nents,  int iommu_dma_supported(struct device *dev, u64
+> mask);  int iommu_dma_mapping_error(struct device *dev, dma_addr_t
+> dma_addr);
+> 
+> +/* The DMA API isn't _quite_ the whole story, though... */ void
+> +iommu_dma_map_msi_msg(int irq, struct msi_msg *msg);
+> +
+>  #else
+> 
+>  struct iommu_domain;
+> +struct msi_msg;
+> 
+>  static inline int iommu_dma_init(void)
+>  {
+> @@ -80,6 +85,10 @@ static inline void iommu_put_dma_cookie(struct
+> iommu_domain *domain)  {  }
+> 
+> +static inline void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
+> +{ }
+> +
+>  #endif	/* CONFIG_IOMMU_DMA */
+>  #endif	/* __KERNEL__ */
+>  #endif	/* __DMA_IOMMU_H */
+> --
+> 2.8.1.dirty
+> 
+> _______________________________________________
+> iommu mailing list
+> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
