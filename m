@@ -1,34 +1,61 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v3 0/11] Add R8A7743/SK-RZG1M board support
-Date: Thu, 06 Oct 2016 00:23:55 +0300
-Message-ID: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com>
+Subject: [PATCH v3 01/11] ARM: shmobile: r8a7743: add power domain index macros
+Date: Thu, 06 Oct 2016 00:31:30 +0300
+Message-ID: <5183851.NpIWVzMZV9@wasted.cogentembedded.com>
+References: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Cc: magnus.damm@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Add macros usable by the device tree sources to reference R8A7743 SYSC power
+domains by index.
 
-   Here's the set of 11 patches against Simon Horman's 'renesas.git' repo's
-'renesas-devel-20161003-v4.8' tag. I'm adding the device tree support for
-the R8A7743-based SK-RZG1M board. The SoC is close to R8A7791 and the board
-seems identical to the R8A7791/Porter board. The device tree patches depend on
-the R8A7743 CPG/MSSR driver series just posted in order to compile and work.
+Based on the original (and large) patch by Dmitry Shifrin
+<dmitry.shifrin@cogentembedded.com>.
 
-[01/12] ARM: shmobile: r8a7743: add power domain index macros
-[02/12] soc: renesas: rcar-sysc: add R8A7743 support
-[03/12] ARM: shmobile: r8a7743: basic SoC support
-[04/12] ARM: dts: r8a7743: initial SoC device tree
-[05/12] ARM: dts: r8a7743: add SYS-DMAC support
-[06/12] ARM: dts: r8a7743: add [H]SCIF{A|B} support
-[07/12] ARM: dts: r8a7743: add Ether support
-[08/12] ARM: dts: r8a7743: add IRQC support
-[09/12] DT: arm: shmobile: document SK-RZG1M board
-[10/12] ARM: dts: sk-rzg1m: initial device tree
-[11/12] ARM: dts: sk-rzg1m: add Ether support
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-WBR, Sergei
+---
+Changes in version 2:
+- added Geert's tag.
+
+ include/dt-bindings/power/r8a7743-sysc.h |   25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+Index: renesas/include/dt-bindings/power/r8a7743-sysc.h
+===================================================================
+--- /dev/null
++++ renesas/include/dt-bindings/power/r8a7743-sysc.h
+@@ -0,0 +1,25 @@
++/*
++ * Copyright (C) 2016 Cogent Embedded Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#ifndef __DT_BINDINGS_POWER_R8A7743_SYSC_H__
++#define __DT_BINDINGS_POWER_R8A7743_SYSC_H__
++
++/*
++ * These power domain indices match the numbers of the interrupt bits
++ * representing the power areas in the various Interrupt Registers
++ * (e.g. SYSCISR, Interrupt Status Register)
++ */
++
++#define R8A7743_PD_CA15_CPU0		 0
++#define R8A7743_PD_CA15_CPU1		 1
++#define R8A7743_PD_CA15_SCU		12
++#define R8A7743_PD_SGX			20
++
++/* Always-on power area */
++#define R8A7743_PD_ALWAYS_ON		32
++
++#endif /* __DT_BINDINGS_POWER_R8A7743_SYSC_H__ */
