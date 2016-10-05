@@ -1,121 +1,64 @@
-From: Horng-Shyang Liao <hs.liao@mediatek.com>
-Subject: Re: [PATCH v14 2/4] CMDQ: Mediatek CMDQ driver
-Date: Wed, 5 Oct 2016 20:31:45 +0800
-Message-ID: <1475670705.335.27.camel@mtksdaap41>
-References: <1473039885-24009-1-git-send-email-hs.liao@mediatek.com>
-         <1473039885-24009-3-git-send-email-hs.liao@mediatek.com>
-         <1475204778.13398.28.camel@mtksdaap41>
-         <1475225778.25044.35.camel@mtksdaap41>
-         <1475226691.13398.35.camel@mtksdaap41> <1475228829.3658.1.camel@mtksdaap41>
-         <1475636064.21937.25.camel@mtksdaap41>
-         <CAJe_ZhcXw1-MOEiiix5VTtKEVr9Z23s_OyikboDYCd0RQwS5pg@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5] devicetree: bindings: uart: Add new compatible string
+ for ZynqMP
+Date: Wed, 5 Oct 2016 07:52:09 -0500
+Message-ID: <CAL_Jsq+RJbHmayX8HdoWzPxxCrGKZjjyRQrwPzSmdOnHTKkC2Q@mail.gmail.com>
+References: <1474898801-36571-1-git-send-email-navam@xilinx.com>
+ <20161003184234.GA13165@rob-hp-laptop> <C89496FEAE474D468F30D558A9468D9F26D2AB89@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJe_ZhcXw1-MOEiiix5VTtKEVr9Z23s_OyikboDYCd0RQwS5pg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jaswinder.singh@linaro.org>
-Cc: CK Hu <ck.hu@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Monica Wang <monica.wang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>, Jassi Brar <jassisinghbrar@gmail.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Devicetree List <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Glory Hung <glory.hung@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <C89496FEAE474D468F30D558A9468D9F26D2AB89-4lKfpRxZ5enZMOc0yg5rMog+Gb3gawCHQz34XiSyOiE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nava kishore Manne <nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "jslaby-IBi9RG/b67k@public.gmane.org" <jslaby-IBi9RG/b67k@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-10-05 at 09:07 +0530, Jassi Brar wrote:
-> On 5 October 2016 at 08:24, Horng-Shyang Liao <hs.liao@mediatek.com> wrote:
-> > On Fri, 2016-09-30 at 17:47 +0800, Horng-Shyang Liao wrote:
-> >> On Fri, 2016-09-30 at 17:11 +0800, CK Hu wrote:
-> 
-> >
-> > After I trace mailbox driver, I realize that CMDQ driver cannot use
-> > tx_done.
-> >
-> > CMDQ clients will flush many tasks into CMDQ driver, and then CMDQ
-> > driver will apply these tasks into GCE HW "immediately". These tasks,
-> > which are queued in GCE HW, may not execute immediately since they
-> > may need to wait event(s), e.g. vsync.
-> >
-> > However, in mailbox driver, mailbox uses a software buffer to queue
-> > sent messages. It only sends next message until previous message is
-> > done. This cannot fulfill CMDQ's requirement.
-> >
-> I understand
->  a) GCE HW can internally queue many tasks in some 'FIFO'
->  b) Execution of some task may have to wait until some external event
-> occurs (like vsync)
->  c) GCE does not generate irq/flag for each task executed (?)
-> 
-> If so, may be your tx_done should return 'true' so long as the GCE HW
-> can accept tasks in its 'FIFO'. For mailbox api, any task that is
-> queued on GCE, is assumed to be transmitted.
-> 
-> > Quote some code from mailbox driver. Please notice "active_req" part.
-> >
-> > static void msg_submit(struct mbox_chan *chan)
-> > {
-> >         ...
-> >         if (!chan->msg_count || chan->active_req)
-> >                 goto exit;
-> >         ...
-> >         err = chan->mbox->ops->send_data(chan, data);
-> >         if (!err) {
-> >                 chan->active_req = data;
-> >                 chan->msg_count--;
-> >         }
-> >         ...
-> > }
-> >
-> > static void tx_tick(struct mbox_chan *chan, int r)
-> > {
-> >         ...
-> >         spin_lock_irqsave(&chan->lock, flags);
-> >         mssg = chan->active_req;
-> >         chan->active_req = NULL;
-> >         spin_unlock_irqrestore(&chan->lock, flags);
-> >         ...
-> > }
-> >
-> > Current workable CMDQ driver uses mbox_client_txdone() to prevent
-> > this issue, and then uses self callback functions to handle done tasks.
-> >
-> > int cmdq_task_flush_async(struct cmdq_client *client, struct cmdq_task
-> > *task, cmdq_async_flush_cb cb, void *data)
-> > {
-> >         ...
-> >         mbox_send_message(client->chan, task);
-> >         /* We can send next task immediately, so just call txdone. */
-> >         mbox_client_txdone(client->chan, 0);
-> >         ...
-> > }
-> >
-> > Another solution is to use rx_callback; i.e. CMDQ mailbox controller
-> > call mbox_chan_received_data() when CMDQ task is done. But, this may
-> > violate the design of mailbox. What do you think?
-> >
-> If my point (c) above does not hold, maybe look at implementing
-> tx_done() callback and submit next task from the callback of last
-> done.
+On Wed, Oct 5, 2016 at 7:23 AM, Nava kishore Manne
+<nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi Rob,
+>
+>         Thanks for the review...
+>
+>> > Changes for v5:
+>> >             -Fixed some minor comments.
+>>
+>> Not a useful changelog. The point of these comments is to remind the
+>> reviewers of what they commented on.
+>
+> Ok will take care from next version onwards...
+>
+>> >  Required properties:
+>> > -- compatible : should be "cdns,uart-r1p8", or "xlnx,xuartps"
+>> > +- compatible :
+>> > +  Use "cdns,uart-r1p8", or "xlnx,xuartps" for Zynq-7xxx SoC.
+>>
+>> This is still not right. It was wrong before, but you are touching it so make it
+>> right.
+>>
+>> OR doesn't match the dts files. It is AND and the opposite order.
+>>
+>> xlnx,xuartps wasn't the best naming, but it's in use so we'll have to live with it
+>> for zynq-7xxx.
+>>
+>> > +  Use "cdns,uart-r1p12" for Zynq Ultrascale+ MPSoC.
+>>
+>> What I meant here was this should have something like "xlnx,mpsoc-uart"
+>> as the first compatible with "cdns,uart-r1p12" as the second. Not sure if
+>> "mpsoc" is the best name here.
+>
+> You mean something like below
+>  Use "xlnx,xuartps" or "cdns,uart-r1p8" for Zynq-7xxx SoC.
 
+As I said, it is not an OR condition. 'Use "xlnx,xuartps",
+"cdns,uart-r1p8" for Zynq-7xxx SoC
 
-Hi Jassi,
+> Use "xlnx,zynqmp-uart" or " cdns,uart-r1p12" for Zynq Ultrascale+ MPSoC.
 
-For point (c), GCE irq means 1~n tasks done or
-0~n tasks done + 1 task error.
-In irq, we can know which tasks are done by register and GCE pc.
+Yes, but as above.
 
-As I mentioned before, we cannot submit next task after previous task
-call tx_done. We need to submit multiple tasks to GCE HW immediately
-and queue them in GCE HW. Let me explain this requirement by mouse
-cursor example. User may move mouse quickly between two vsync, so DRM
-may update display registers frequently. For CMDQ, that means many tasks
-are flushed into CMDQ driver, and CMDQ driver needs to process all of
-them in next vblank. Therefore, we cannot block any CMDQ task in SW
-buffer.
-
-CMDQ needs to call callback function to notice clients which tasks are
-done. In my previous e-mail, I mentioned that rx_callback may be an
-alternative solution. However, it seems to violate the design of
-mailbox. Therefore, I think mailbox may not have a good solution for
-CMDQ callback currently. IMHO, the better way is to use CMDQ self
-callback for now.
-
-Thanks,
-HS
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
