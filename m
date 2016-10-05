@@ -1,53 +1,112 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] devicetree: net: micrel-ksz90x1.txt: Properly explain skew settings
-Date: Wed,  5 Oct 2016 16:03:08 +0200
-Message-ID: <1475676188-10639-1-git-send-email-mike.looijmans@topic.nl>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, Mike Looijmans <mike.looijmans@topic.nl>
+From: Gerald Baeza <gerald.baeza@st.com>
+Subject: Re: [PATCH 02/11] DOCUMENTATION: dt-bindings: Document the STM32
+ USART bindings
+Date: Wed, 5 Oct 2016 16:09:12 +0200
+Message-ID: <dd28f224-3e3b-0a00-f978-16861b946fd1@st.com>
+References: <1473957763-30629-1-git-send-email-alexandre.torgue@st.com>
+ <1473957763-30629-3-git-send-email-alexandre.torgue@st.com>
+ <20160923152907.GA19206@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160923152907.GA19206@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Jiri Slaby <jslaby@suse.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The KSZ9031 skew registers contain an offset, the chip's default value
-is "neutral" which does not add any skew. Programming a 0 into a skew
-property will actually set it the maximal negative adjustment and not
-to a neutral position as one would expect.
+On 09/23/2016 05:29 PM, Rob Herring wrote:
+> On Thu, Sep 15, 2016 at 06:42:34PM +0200, Alexandre TORGUE wrote:
+>> This adds documentation of device tree bindings for the
+>> STM32 USART
+>
+> Please make your subject prefixes consistent and drop "DOCUMENTATION".
+>
 
-Explain this situation in the devicetree binding documentation and list
-the settings that the chip considers neutral.
+Ok, thanks
 
-Changing the implementation to accept negative values would have been
-a better solution, but would break existing configurations.
+>>
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+>>
+>> diff --git a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+>> new file mode 100644
+>> index 0000000..75b1400
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+>> @@ -0,0 +1,34 @@
+>> +* STMicroelectronics STM32 USART
+>> +
+>> +Required properties:
+>> +- compatible: Can be either "st,stm32-usart", "st,stm32-uart",
+>> +"st,stm32f7-usart" or "st,stm32f7-uart" depending on whether
+>> +the device supports synchronous mode and is compatible with
+>> +stm32(f4) or stm32f7.
+>
+> Why not put f4 in the compatible string. stm32 is too generic.
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
- Documentation/devicetree/bindings/net/micrel-ksz90x1.txt | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+The initial binding is not in current kernel so it has been put in this 
+serie as PATCH 07/11. It will be squashed with this one, as you requested.
 
-diff --git a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-index f9c32ad..c35b5b4 100644
---- a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-+++ b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-@@ -34,16 +34,17 @@ KSZ9031:
- 
-   All skew control options are specified in picoseconds. The minimum
-   value is 0, and the maximum is property-dependent. The increment
--  step is 60ps.
-+  step is 60ps. The default value is the neutral setting, so setting
-+  rxc-skew-ps=<0> actually results in -900 picoseconds adjustment.
- 
-   Optional properties:
- 
--    Maximum value of 1860:
-+    Maximum value of 1860, default value 900:
- 
-       - rxc-skew-ps : Skew control of RX clock pad
-       - txc-skew-ps : Skew control of TX clock pad
- 
--    Maximum value of 900:
-+    Maximum value of 900, default value 420:
- 
-       - rxdv-skew-ps : Skew control of RX CTL pad
-       - txen-skew-ps : Skew control of TX CTL pad
--- 
-1.9.1
+But the driver tty/serial/stm32-usart.c was already upstreamed and it 
+already mentions the "st,stm32-usart" and "st,stm32-uart" for stm32f4 so 
+I kept this as it for backward compatibility for those who already use 
+the driver.
+
+I do not have the history to explain this inconsistency but can you 
+confirm that keeping the existing compatible values from the driver is 
+the good approach please?
+
+> What determines sync mode or not? If it is IP configuration fixed in the
+> design, then this is fine. If it is user choice or board dependent, then
+> use a separate property.
+
+This is IP configuration fixed in the design, indeed.
+
+>> +- reg: The address and length of the peripheral registers space
+>> +- interrupts: The interrupt line of the USART instance
+>> +- clocks: The input clock of the USART instance
+>> +
+>> +Optional properties:
+>> +- pinctrl: The reference on the pins configuration
+>> +- st,hw-flow-ctrl: bool flag to enable hardware flow control.
+>> +
+>> +Examples:
+>> +usart4: serial@40004c00 {
+>> +	compatible = "st,stm32-uart";
+>> +	reg = <0x40004c00 0x400>;
+>> +	interrupts = <52>;
+>> +	clocks = <&clk_pclk1>;
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_usart4>;
+>> +};
+>> +
+>> +usart2: serial@40004400 {
+>> +	compatible = "st,stm32-usart", "st,stm32-uart";
+>
+> What are valid combinations? usart is sync only, not sync and async?
+
+usart (sync and async) is a superset of uart (async).
+But the current driver does not use the synchronous mode, so the 
+distinction is just here to be consistent with the reference manual 
+instances naming (so configuration).
+
+>> +	reg = <0x40004400 0x400>;
+>> +	interrupts = <38>;
+>> +	clocks = <&clk_pclk1>;
+>> +	st,hw-flow-ctrl;
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_usart2 &pinctrl_usart2_rtscts>;
+>> +};
+>> --
+>> 1.9.1
+>>
