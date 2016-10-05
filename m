@@ -1,112 +1,153 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 02/11] DOCUMENTATION: dt-bindings: Document the STM32
- USART bindings
-Date: Wed, 5 Oct 2016 10:13:12 -0500
-Message-ID: <CAL_JsqK=VCHcPbupnwLVEWehqJbXfGD1CSZT++A4+N6DD6VqxA@mail.gmail.com>
-References: <1473957763-30629-1-git-send-email-alexandre.torgue@st.com>
- <1473957763-30629-3-git-send-email-alexandre.torgue@st.com>
- <20160923152907.GA19206@rob-hp-laptop> <dd28f224-3e3b-0a00-f978-16861b946fd1@st.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: marvell: Add definition for the Globalscale Marvell ESPRESSOBin Board
+Date: Wed, 05 Oct 2016 17:14:49 +0200
+Message-ID: <87fuoaygie.fsf@free-electrons.com>
+References: <20161005142734.18995-1-romain.perier@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <dd28f224-3e3b-0a00-f978-16861b946fd1-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <20161005142734.18995-1-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Romain
+        Perier's message of "Wed, 5 Oct 2016 16:27:34 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>
-Cc: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yahuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 5, 2016 at 9:09 AM, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org> wrote:
-> On 09/23/2016 05:29 PM, Rob Herring wrote:
->>
->> On Thu, Sep 15, 2016 at 06:42:34PM +0200, Alexandre TORGUE wrote:
->>>
->>> This adds documentation of device tree bindings for the
->>> STM32 USART
->>
->>
->> Please make your subject prefixes consistent and drop "DOCUMENTATION".
->>
->
-> Ok, thanks
->
->>>
->>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
->>>
->>> diff --git a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
->>> b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
->>> new file mode 100644
->>> index 0000000..75b1400
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
->>> @@ -0,0 +1,34 @@
->>> +* STMicroelectronics STM32 USART
->>> +
->>> +Required properties:
->>> +- compatible: Can be either "st,stm32-usart", "st,stm32-uart",
->>> +"st,stm32f7-usart" or "st,stm32f7-uart" depending on whether
->>> +the device supports synchronous mode and is compatible with
->>> +stm32(f4) or stm32f7.
->>
->>
->> Why not put f4 in the compatible string. stm32 is too generic.
->
->
-> The initial binding is not in current kernel so it has been put in this
-> serie as PATCH 07/11. It will be squashed with this one, as you requested.
->
-> But the driver tty/serial/stm32-usart.c was already upstreamed and it
-> already mentions the "st,stm32-usart" and "st,stm32-uart" for stm32f4 so I
-> kept this as it for backward compatibility for those who already use the
-> driver.
->
-> I do not have the history to explain this inconsistency but can you confirm
-> that keeping the existing compatible values from the driver is the good
-> approach please?
+Hi Romain,
+ 
+ On mer., oct. 05 2016, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Yes, keep it as it. Please reformat 1 valid combination per line.
+> This adds a basic definition for this board.
+>
+> Signed-off-by: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/marvell/Makefile               |  1 +
+>  .../boot/dts/marvell/armada-3720-espressobin.dts   | 78 ++++++++++++++++++++++
+>  2 files changed, 79 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+>
+> diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+> index 308468d..392eeb6 100644
+> --- a/arch/arm64/boot/dts/marvell/Makefile
+> +++ b/arch/arm64/boot/dts/marvell/Makefile
+> @@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-stb.dtb
+>  
+>  # Mvebu SoC Family
+>  dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
+> +dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
+>  dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
+>  
+>  always		:= $(dtb-y)
+> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+> new file mode 100644
+> index 0000000..57035a3
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+> @@ -0,0 +1,78 @@
+> +/*
+> + * Device Tree file for Globalscale Marvell ESPRESSOBin Board
+> + * Copyright (C) 2016 Marvell
+> + *
+> + * Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
 
->> What determines sync mode or not? If it is IP configuration fixed in the
->> design, then this is fine. If it is user choice or board dependent, then
->> use a separate property.
->
->
-> This is IP configuration fixed in the design, indeed.
->
->>> +- reg: The address and length of the peripheral registers space
->>> +- interrupts: The interrupt line of the USART instance
->>> +- clocks: The input clock of the USART instance
->>> +
->>> +Optional properties:
->>> +- pinctrl: The reference on the pins configuration
->>> +- st,hw-flow-ctrl: bool flag to enable hardware flow control.
->>> +
->>> +Examples:
->>> +usart4: serial@40004c00 {
->>> +       compatible = "st,stm32-uart";
->>> +       reg = <0x40004c00 0x400>;
->>> +       interrupts = <52>;
->>> +       clocks = <&clk_pclk1>;
->>> +       pinctrl-names = "default";
->>> +       pinctrl-0 = <&pinctrl_usart4>;
->>> +};
->>> +
->>> +usart2: serial@40004400 {
->>> +       compatible = "st,stm32-usart", "st,stm32-uart";
->>
->>
->> What are valid combinations? usart is sync only, not sync and async?
->
->
-> usart (sync and async) is a superset of uart (async).
-> But the current driver does not use the synchronous mode, so the distinction
-> is just here to be consistent with the reference manual instances naming (so
-> configuration).
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "armada-372x.dtsi"
+> +
+> +/ {
+> +	model = "Globalscale Marvell ESPRESSOBin Board";
+> +	compatible = "globalscale,espressobin", "marvell,armada3720", "marvell,armada3710";
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
 
-Okay, but this point is not clear in the compatible text. The
-description should allow me to validate the example or a dts file.
 
-Rob
+According to the kickstarter page the boards will came with different
+amount of memory (from 512MB to 2GB). So we could put a comment
+here about tuning this value depending of the board.
+> +		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
+> +	};
+> +};
+> +
+
+Could you add information about the connector for each of the following
+interfaces?
+
+You can have a look on the armada-3720-db.dts to see the kind of info I
+expect.
+
+Thanks,
+
+Gregory
+
+> +&pcie0 {
+> +	status = "okay";
+> +};
+> +
+> +&sata {
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&usb3 {
+> +	status = "okay";
+> +};
+> -- 
+> 2.9.3
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
