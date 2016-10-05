@@ -1,58 +1,24 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 2/2] ARM: dts: da850: add a node for the LCD controller
-Date: Wed,  5 Oct 2016 15:05:32 +0200
-Message-ID: <1475672732-17111-3-git-send-email-bgolaszewski@baylibre.com>
-References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] DT: irqchip: renesas-irqc: document R8A7743/5 support
+Date: Wed, 5 Oct 2016 08:10:47 -0500
+Message-ID: <20161005131046.GA10946@rob-hp-laptop>
+References: <19681841.MzyqfDfWny@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>, Karl Beldan <karl.beldan@gmail.com>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Karl Beldan <kbeldan@baylibre.com>, Jyri Sarha <jsarha@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <19681841.MzyqfDfWny@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogS2FybCBCZWxkYW4gPGtiZWxkYW5AYmF5bGlicmUuY29tPgoKQWRkIHBpbnMgdXNlZCBi
-eSB0aGUgTENEIGNvbnRyb2xsZXIgYW5kIGEgZGlzYWJsZWQgTENEQyBub2RlIHRvIGJlCnJldXNl
-ZCBpbiBkZXZpY2UgdHJlZXMgaW5jbHVkaW5nIGRhODUwLmR0c2kuCgpTaWduZWQtb2ZmLWJ5OiBL
-YXJsIEJlbGRhbiA8a2JlbGRhbkBiYXlsaWJyZS5jb20+CltCYXJ0b3N6OgogIC0gYWRkZWQgdGhl
-IGNvbW1pdCBkZXNjcmlwdGlvbgogIC0gY2hhbmdlZCB0aGUgZHQgbm9kZSBuYW1lIHRvIGEgZ2Vu
-ZXJpYyBvbmUKICAtIGFkZGVkIGEgZGE4NTAtc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmcKICAt
-IHJlbW92ZWQgdGhlIHRpbGNkYyxwYW5lbCBub2RlCiAgLSBtb3ZlZCB0aGUgcGlucyBkZWZpbml0
-aW9ucyB0byBkYTg1MC5kdHNpIGFzIHN1Z2dlc3RlZCBieQogICAgU2VraGFyIE5vcmkgKHdhcyBp
-bjogZGE4NTAtbGNkay5kdHMpXQpTaWduZWQtb2ZmLWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tpIDxi
-Z29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0
-c2kgfCAyOSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDI5
-IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNp
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQppbmRleCBmNzllMWI5Li4zMjkwOGFlIDEw
-MDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL2RhODUwLmR0c2kKQEAgLTE4Niw2ICsxODYsMjcgQEAKIAkJCQkJMHhjIDB4ODg4ODg4
-ODggMHhmZmZmZmZmZgogCQkJCT47CiAJCQl9OworCQkJbGNkX3BpbnM6IHBpbm11eF9sY2RfcGlu
-cyB7CisJCQkJcGluY3RybC1zaW5nbGUsYml0cyA9IDwKKwkJCQkJLyoKKwkJCQkJICogTENEX0Rb
-Ml0sIExDRF9EWzNdLCBMQ0RfRFs0XSwgTENEX0RbNV0sCisJCQkJCSAqIExDRF9EWzZdLCBMQ0Rf
-RFs3XQorCQkJCQkgKi8KKwkJCQkJMHg0MCAweDIyMjIyMjAwIDB4ZmZmZmZmMDAKKwkJCQkJLyoK
-KwkJCQkJICogTENEX0RbMTBdLCBMQ0RfRFsxMV0sIExDRF9EWzEyXSwgTENEX0RbMTNdLAorCQkJ
-CQkgKiBMQ0RfRFsxNF0sIExDRF9EWzE1XSwgTENEX0RbMF0sIExDRF9EWzFdCisJCQkJCSAqLwor
-CQkJCQkweDQ0IDB4MjIyMjIyMjIgMHhmZmZmZmZmZgorCQkJCQkvKiBMQ0RfRFs4XSwgTENEX0Rb
-OV0gKi8KKwkJCQkJMHg0OCAweDAwMDAwMDIyIDB4MDAwMDAwZmYKKworCQkJCQkvKiBMQ0RfUENM
-SyAqLworCQkJCQkweDQ4IDB4MDIwMDAwMDAgMHgwZjAwMDAwMAorCQkJCQkvKiBMQ0RfQUNfRU5C
-X0NTLCBMQ0RfVlNZTkMsIExDRF9IU1lOQyAqLworCQkJCQkweDRjIDB4MDIwMDAwMjIgMHgwZjAw
-MDBmZgorCQkJCT47CisJCQl9OwogCiAJCX07CiAJCWVkbWEwOiBlZG1hQDAgewpAQCAtMzk5LDYg
-KzQyMCwxNCBAQAogCQkJCTwmZWRtYTAgMCAxPjsKIAkJCWRtYS1uYW1lcyA9ICJ0eCIsICJyeCI7
-CiAJCX07CisKKwkJZGlzcGxheTogZGlzcGxheUAyMTMwMDAgeworCQkJY29tcGF0aWJsZSA9ICJ0
-aSxhbTMzeHgtdGlsY2RjIiwgInRpLGRhODUwLXRpbGNkYyI7CisJCQlyZWcgPSA8MHgyMTMwMDAg
-MHgxMDAwPjsKKwkJCWludGVycnVwdC1wYXJlbnQgPSA8JmludGM+OworCQkJaW50ZXJydXB0cyA9
-IDw1Mj47CisJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOworCQl9OwogCX07CiAJYWVtaWY6IGFlbWlm
-QDY4MDAwMDAwIHsKIAkJY29tcGF0aWJsZSA9ICJ0aSxkYTg1MC1hZW1pZiI7Ci0tIAoyLjkuMwoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri, Sep 30, 2016 at 12:25:29AM +0300, Sergei Shtylyov wrote:
+> Renesas  RZ/G SoC have the R-Car gen2 compatible IRQC interrupt controllers.
+> Document RZ/G1[ME] (also known as R8A774[35]) SoC bindings.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+Applied, thanks.
+
+Rob
