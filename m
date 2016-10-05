@@ -1,83 +1,164 @@
-From: Matt Ranostay <mranostay@gmail.com>
-Subject: [PATCH] leds: leds-pca963x: add nxp,leds-suspend property
-Date: Tue,  4 Oct 2016 19:29:32 -0700
-Message-ID: <1475634572-18274-1-git-send-email-matt@ranostay.consulting>
-Return-path: <linux-leds-owner@vger.kernel.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Matt Ranostay <matt@ranostay.consulting>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>
+From: Horng-Shyang Liao <hs.liao@mediatek.com>
+Subject: Re: [PATCH v14 2/4] CMDQ: Mediatek CMDQ driver
+Date: Wed, 5 Oct 2016 10:54:24 +0800
+Message-ID: <1475636064.21937.25.camel@mtksdaap41>
+References: <1473039885-24009-1-git-send-email-hs.liao@mediatek.com>
+         <1473039885-24009-3-git-send-email-hs.liao@mediatek.com>
+         <1475204778.13398.28.camel@mtksdaap41>
+         <1475225778.25044.35.camel@mtksdaap41>
+         <1475226691.13398.35.camel@mtksdaap41> <1475228829.3658.1.camel@mtksdaap41>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1475228829.3658.1.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.co>
 List-Id: devicetree@vger.kernel.org
 
-Allow the LED subsystem to blank the LEDS on suspend.
+On Fri, 2016-09-30 at 17:47 +0800, Horng-Shyang Liao wrote:
+> On Fri, 2016-09-30 at 17:11 +0800, CK Hu wrote:
+> > Hi, HS:
+> > 
+> > One comment inline
+> > 
+> > On Fri, 2016-09-30 at 16:56 +0800, Horng-Shyang Liao wrote:
+> > > Hi CK,
+> > > 
+> > > Please see my inline reply.
+> > > 
+> > > On Fri, 2016-09-30 at 11:06 +0800, CK Hu wrote:
+> > > > Hi, HS:
+> > > > 
+> > > > On Mon, 2016-09-05 at 09:44 +0800, HS Liao wrote:
+> > > > > This patch is first version of Mediatek Command Queue(CMDQ) driver. The
+> > > > > CMDQ is used to help write registers with critical time limitation,
+> > > > > such as updating display configuration during the vblank. It controls
+> > > > > Global Command Engine (GCE) hardware to achieve this requirement.
+> > > > > Currently, CMDQ only supports display related hardwares, but we expect
+> > > > > it can be extended to other hardwares for future requirements.
+> > > > > 
+> > > > > Signed-off-by: HS Liao <hs.liao@mediatek.com>
+> > > > > Signed-off-by: CK Hu <ck.hu@mediatek.com>
+> > > > > ---
+> > > > 
+> > > > [snip...]
+> > > > 
+> > > > > +
+> > > > > +struct cmdq_task {
+> > > > > +	struct cmdq		*cmdq;
+> > > > > +	struct list_head	list_entry;
+> > > > > +	void			*va_base;
+> > > > > +	dma_addr_t		pa_base;
+> > > > > +	size_t			cmd_buf_size; /* command occupied size */
+> > > > > +	size_t			buf_size; /* real buffer size */
+> > > > > +	bool			finalized;
+> > > > > +	struct cmdq_thread	*thread;
+> > > > 
+> > > > I think thread info could be removed from cmdq_task. Only
+> > > > cmdq_task_handle_error() and cmdq_task_insert_into_thread() use
+> > > > task->thread and caller of both function has the thread info. So you
+> > > > could just pass thread info into these two function and remove thread
+> > > > info in cmdq_task.
+> > > 
+> > > This modification will remove 1 pointer but add 2 pointers. Moreover,
+> > > more pointers will need to be delivered between functions for future
+> > > extension. IMHO, it would be better to keep thread pointer inside
+> > > cmdq_task.
+> > > 
+> > > > > +	struct cmdq_task_cb	cb;
+> > > > 
+> > > > I think this callback function is equal to mailbox client tx_done
+> > > > callback. It's better to use already-defined interface rather than
+> > > > creating your own.
+> > > 
+> > > This is because CMDQ driver allows different callback functions for
+> > > different tasks, but mailbox only allows one callback function per
+> > > channel. But, I think I can add a wrapper for tx_done to call CMDQ
+> > > callback functions. So, I will use tx_done in CMDQ v15.
+> > 
+> > Up to now, one callback function for one channel is enough for DRM. So
+> > 'different callback function for different sent-message' looks like an
+> > advanced function. Maybe you should not include it in first patch. 
+> > 
+> > Regards,
+> > CK
+> 
+> Hi CK,
+> 
+> OK. I will do it.
+> 
+> Thanks,
+> HS
+> 
+> [snip...]
 
-Cc: Richard Purdie <rpurdie@rpsys.net>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>
-Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
----
- Documentation/devicetree/bindings/leds/pca963x.txt | 1 +
- drivers/leds/leds-pca963x.c                        | 9 +++++++++
- include/linux/platform_data/leds-pca963x.h         | 6 ++++++
- 3 files changed, 16 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/leds/pca963x.txt b/Documentation/devicetree/bindings/leds/pca963x.txt
-index dafbe9931c2b..61b1f037ebd0 100644
---- a/Documentation/devicetree/bindings/leds/pca963x.txt
-+++ b/Documentation/devicetree/bindings/leds/pca963x.txt
-@@ -7,6 +7,7 @@ Optional properties:
- - nxp,totem-pole : use totem pole (push-pull) instead of open-drain (pca9632 defaults
-   to open-drain, newer chips to totem pole)
- - nxp,hw-blink : use hardware blinking instead of software blinking
-+- nxp,leds-suspend : turn off LEDS on system suspend
- 
- Each led is represented as a sub-node of the nxp,pca963x device.
- 
-diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
-index 407eba11e187..9a347b94f1db 100644
---- a/drivers/leds/leds-pca963x.c
-+++ b/drivers/leds/leds-pca963x.c
-@@ -294,6 +294,12 @@ pca963x_dt_init(struct i2c_client *client, struct pca963x_chipdef *chip)
- 	else
- 		pdata->blink_type = PCA963X_SW_BLINK;
- 
-+	/* default to turning off LEDs on suspend */
-+	if (of_property_read_bool(np, "nxp,leds-suspend"))
-+		pdata->suspend = PCA963X_LED_SUSPEND;
-+	else
-+		pdata->suspend = PCA963X_LED_RETAIN;
-+
- 	return pdata;
- }
- 
-@@ -386,6 +392,9 @@ static int pca963x_probe(struct i2c_client *client,
- 		if (pdata && pdata->blink_type == PCA963X_HW_BLINK)
- 			pca963x[i].led_cdev.blink_set = pca963x_blink_set;
- 
-+		if (pdata && pdata->suspend == PCA963X_LED_SUSPEND)
-+			pca963x[i].led_cdev.flags = LED_CORE_SUSPENDRESUME;
-+
- 		err = led_classdev_register(&client->dev, &pca963x[i].led_cdev);
- 		if (err < 0)
- 			goto exit;
-diff --git a/include/linux/platform_data/leds-pca963x.h b/include/linux/platform_data/leds-pca963x.h
-index e731f0036329..e5bad91e2fab 100644
---- a/include/linux/platform_data/leds-pca963x.h
-+++ b/include/linux/platform_data/leds-pca963x.h
-@@ -33,10 +33,16 @@ enum pca963x_blink_type {
- 	PCA963X_HW_BLINK,
- };
- 
-+enum pca963x_suspend {
-+	PCA963X_LED_RETAIN,
-+	PCA963X_LED_SUSPEND,
-+};
-+
- struct pca963x_platform_data {
- 	struct led_platform_data leds;
- 	enum pca963x_outdrv outdrv;
- 	enum pca963x_blink_type blink_type;
-+	enum pca963x_suspend suspend;
- };
- 
- #endif /* __LINUX_PCA963X_H*/
--- 
-2.7.4
+Hi CK,
+
+After I trace mailbox driver, I realize that CMDQ driver cannot use
+tx_done.
+
+CMDQ clients will flush many tasks into CMDQ driver, and then CMDQ
+driver will apply these tasks into GCE HW "immediately". These tasks,
+which are queued in GCE HW, may not execute immediately since they
+may need to wait event(s), e.g. vsync.
+
+However, in mailbox driver, mailbox uses a software buffer to queue
+sent messages. It only sends next message until previous message is
+done. This cannot fulfill CMDQ's requirement.
+
+Quote some code from mailbox driver. Please notice "active_req" part.
+
+static void msg_submit(struct mbox_chan *chan)
+{
+	...
+	if (!chan->msg_count || chan->active_req)
+		goto exit;
+	...
+	err = chan->mbox->ops->send_data(chan, data);
+	if (!err) {
+		chan->active_req = data;
+		chan->msg_count--;
+	}
+	...
+}
+
+static void tx_tick(struct mbox_chan *chan, int r)
+{
+	...
+	spin_lock_irqsave(&chan->lock, flags);
+	mssg = chan->active_req;
+	chan->active_req = NULL;
+	spin_unlock_irqrestore(&chan->lock, flags);
+	...
+}
+
+Current workable CMDQ driver uses mbox_client_txdone() to prevent
+this issue, and then uses self callback functions to handle done tasks.
+
+int cmdq_task_flush_async(struct cmdq_client *client, struct cmdq_task
+*task, cmdq_async_flush_cb cb, void *data)
+{
+	...
+	mbox_send_message(client->chan, task);
+	/* We can send next task immediately, so just call txdone. */
+	mbox_client_txdone(client->chan, 0);
+	...
+}
+
+Another solution is to use rx_callback; i.e. CMDQ mailbox controller
+call mbox_chan_received_data() when CMDQ task is done. But, this may
+violate the design of mailbox. What do you think?
+
+Thanks,
+HS
+
+
+Hi Jassi,
+
+Do you have any suggestion about previous situation?
+
+Thanks,
+HS
