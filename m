@@ -1,108 +1,123 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] Support PWM polarity control
-Date: Wed, 05 Oct 2016 09:50:27 -0700
-Message-ID: <be9c9f6b22788ca4d9c9243a46932945@agner.ch>
-References: <20161001101235.24598-1-bhuvanchandra.dv@toradex.com>
- <20161004094805.466ebc6d@jawa>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [GIT PULL] DeviceTree updates for 4.9
+Date: Wed, 5 Oct 2016 12:18:20 -0500
+Message-ID: <CAL_Jsq+aJuFqPzLfEEyU1sVbyYg3Jzn+kEYpYWpXVisQLVyppw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161004094805.466ebc6d@jawa>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lukasz Majewski <l.majewski-AM3owJQeAb5mR6Xm/wNWPw@public.gmane.org>
-Cc: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
+Hi Linus,
 
-On 2016-10-04 00:48, Lukasz Majewski wrote:
-> Dear Bhuvanchandra,
-> 
-> Thank you for your effort to send those patches to ML.
-> 
->> Changes since v2:
->>
->> - Picked the stalled patchset[1] from Lothar Wassmann which adds the
->> basic support for polarity control on imx-pwm driver and adds
->> backward compatibility support for devices which does not have
->> polarity control feature.
->>
->> Changes since Lothars v6:
->>
->> - Squash Lukasz patch[2].
->>
->> [1] http://thread.gmane.org/gmane.linux.pwm/1621
->> [2] https://www.spinics.net/lists/arm-kernel/msg530818.html
->>
->> Bhuvanchandra DV (3):
->>   arm: dts: imx7: Update #pwm-cells for PWM polarity control
->>   arm: dts: imx7-colibri: Use pwm polarity control
->>   arm: dts: imx7-colibri: Use enable-gpios for BL_ON
->>
->> Lothar Wassmann (3):
->>   pwm: print error messages with pr_err() instead of pr_debug()
->>   pwm: core: make the PWM_POLARITY flag in DTB optional
->>   pwm: imx: support output polarity inversion
-> 
-> For some reason this patchset works differently than the one developed
-> by Lothar.
-> 
-> The difference is with the brightness level control.
-> 
-> My brightness definition in DTS:
-> 
->            pwms = <&pwm2 0 5000000 PWM_POLARITY_INVERTED>;
-> 
->  		brightness-levels = <  0   1   2   3   4   5   6   7   8   9
-> 
-> 					 ..  ............
-> 				    250 251 252 253 254 255>;
-> 		default-brightness-level = <50>;
-> 		enable-gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
-> 
+Please pull DeviceTree updates for 4.9. Details below.
 
-If you are using something else than i.MX 7 you also want to update the
-SoC level device tree, specifically change the pwm-cells property:
-#pwm-cells = <3>;
+Rob
 
 
-> When I go to the backlight sysfs entry:
-> 
-> cd /sys/devices/soc0/backlight/backlight/backlight
-> 
-> It seems like the brightness level control is inverted - i.e. 
-> 'echo 20 > brightness" makes picture on the screen very bright, and 
-> 'echo 200 > brightness' makes the picture diminish.
-> 
-> With my "internal" patches the situation is opposite (and I've checked it with
-> my HW connections).
+The following changes since commit fa8410b355251fd30341662a40ac6b22d3e38468:
 
-Just to check whether the driver actually applies the polarity you can
-add a #define DEBUG at the top of the driver (drivers/pwm/pwm-imx.c) and
-pass ignore_loglevel as kernel command line. This should give you "PWM
-supports output inversion" at startup and a "... polarity set to .."
-message whenever the polarity is set.
+  Linux 4.8-rc3 (2016-08-21 16:14:10 -0700)
 
---
-Stefan
+are available in the git repository at:
 
-> 
-> Could you check on your setup if similar situation takes place? I mean
-> if the brightness control works as expected?
-> 
-> Thanks in advance,
-> Łukasz Majewski
-> 
->>
->>  Documentation/devicetree/bindings/pwm/imx-pwm.txt |  6 +--
->>  arch/arm/boot/dts/imx7-colibri.dtsi               | 12 +++++-
->>  arch/arm/boot/dts/imx7s.dtsi                      |  8 ++--
->>  drivers/pwm/core.c                                | 31 ++++++++------
->>  drivers/pwm/pwm-imx.c                             | 51
->> +++++++++++++++++++++-- 5 files changed, 83 insertions(+), 25
->> deletions(-)
->>
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-for-4.9
+
+for you to fetch changes up to 87e5fc99b0280b492724cc7f2d8d9ad37b980087:
+
+  DT: irqchip: renesas-irqc: document R8A7743/5 support (2016-10-05
+08:09:30 -0500)
+
+----------------------------------------------------------------
+DeviceTree updates for 4.9:
+
+- Update changeset documentation on locking to reflect current code
+
+- Fix alphabetizing of vendor-prefixes.txt
+
+- Add various vendor prefixes
+
+- Add ESP8089 WiFi binding
+
+- Add new variable sized array parsing functions
+
+----------------------------------------------------------------
+Bharat Kumar Gogada (1):
+      PCI: Xilinx NWL PCIe: Updating device tree documentation with
+prefetchable memory space
+
+Guenther Wutz (1):
+      Documentation: devicetree: spi: fix wrong spi-bus documentation
+
+Hans de Goede (1):
+      dt: bindings: Add binding for ESP8089 wifi chips
+
+Heiko Stuebner (1):
+      devicetree: Add vendor-prefix for Silead Inc.
+
+Jagan Teki (1):
+      of: Add vendor prefix for Engicam s.r.l company
+
+Lucas Stach (1):
+      dt-bindings: add vendor prefix for Auvidea GmbH
+
+Marek Vasut (1):
+      dt-bindings: Add Keith&Koep vendor prefix
+
+Neil Armstrong (1):
+      dt-bindings: vendor-prefixes: Add Sierra Wireless
+
+Niklas Cassel (1):
+      bindings: PCI: artpec: correct pci binding example
+
+Randy Li (1):
+      devicetree: bindings: Add vendor prefix for Topeet.
+
+Rask Ingemann Lambertsen (2):
+      devicetree: Sort vendor prefixes in alphabetical order
+      devicetree: Add vendor prefix for Shenzhen Sunchip Technology Co., Ltd
+
+Richard Fitzgerald (2):
+      of: Make of_find_property_value_of_size take a length range
+      of: Add array read functions with min/max size limits
+
+Robin Murphy (1):
+      of/platform: Initialise dev->fwnode appropriately
+
+Sebastiaan Schalbroeck (1):
+      Documentation: devicetree: Fix max77693 spelling errors
+
+Sergei Shtylyov (1):
+      DT: irqchip: renesas-irqc: document R8A7743/5 support
+
+Stephen Warren (1):
+      dt: net: enhance DWC EQoS binding to support Tegra186
+
+Vinay Simha BN (2):
+      dt-bindings: Add Japan Display Inc vendor id
+      dt-bindings: Add summit vendor id
+
+Wolfram Sang (1):
+      Documentation: devicetree: changesets do locking on their own meanwhile
+
+ .../bindings/interrupt-controller/renesas,irqc.txt |   4 +-
+ Documentation/devicetree/bindings/mfd/max77693.txt |  12 +-
+ .../bindings/net/snps,dwc-qos-ethernet.txt         |  99 +++++++++++-
+ .../bindings/net/wireless/esp,esp8089.txt          |  31 ++++
+ .../devicetree/bindings/pci/axis,artpec6-pcie.txt  |   7 +-
+ .../devicetree/bindings/pci/xilinx-nwl-pcie.txt    |   5 +-
+ Documentation/devicetree/bindings/spi/spi-bus.txt  |   2 +-
+ .../devicetree/bindings/vendor-prefixes.txt        |  35 +++--
+ Documentation/devicetree/changesets.txt            |  19 +--
+ drivers/of/base.c                                  | 171 ++++++++++++++-------
+ drivers/of/platform.c                              |   2 +
+ include/linux/of.h                                 | 144 +++++++++++++++--
+ 12 files changed, 423 insertions(+), 108 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/net/wireless/esp,esp8089.txt
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
