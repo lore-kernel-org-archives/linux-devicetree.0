@@ -1,40 +1,87 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RESEND PATCH v2 0/3]
-Date: Wed,  5 Oct 2016 17:27:07 +0200
-Message-ID: <20161005152710.2898-1-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-oxnas@lists.tuxfamily.org, Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [RESEND PATCH v2 3/3] dt-bindings: reset: oxnas: Update for OX820
+Date: Wed,  5 Oct 2016 17:27:10 +0200
+Message-ID: <20161005152710.2898-4-narmstrong@baylibre.com>
+References: <20161005152710.2898-1-narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161005152710.2898-1-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a resend of v2 with the actual changes on patch number 3.
+Add new compatible string for reset and sys-ctrl for the Oxford
+Semiconductor OX820 Support.
+Drop the OX810SE indices since they moved in a dedicated include file.
 
-This patchset adds support for the reset controller in the Oxford
-Semiconductor OX820 SoC, big brother of the OX810SE.
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/reset/oxnas,reset.txt      | 44 +++++-----------------
+ 1 file changed, 9 insertions(+), 35 deletions(-)
 
-Since this driver uses a regmap access, it's important to tag each
-compatible SoC since the regmap offset could differ in later SoCs.
-
-This patchet also moves the reset indices to a clean DT include file.
-
-
-Changes since v1 at: http://lkml.kernel.org/r/20160909131955.27334-1-narmstrong@baylibre.com
- - Reformat bindings
- - Add reference to include files in bindings
-
-Neil Armstrong (3):
-  reset: oxnas: Add OX820 support
-  dt-bindings: reset: oxnas: Add include file with reset indexes
-  dt-bindings: reset: oxnas: Update for OX820
-
- .../devicetree/bindings/reset/oxnas,reset.txt      | 44 ++++--------------
- drivers/reset/reset-oxnas.c                        |  1 +
- include/dt-bindings/reset/oxsemi,ox810se.h         | 53 ++++++++++++++++++++++
- include/dt-bindings/reset/oxsemi,ox820.h           | 53 ++++++++++++++++++++++
- 4 files changed, 116 insertions(+), 35 deletions(-)
- create mode 100644 include/dt-bindings/reset/oxsemi,ox810se.h
- create mode 100644 include/dt-bindings/reset/oxsemi,ox820.h
-
+diff --git a/Documentation/devicetree/bindings/reset/oxnas,reset.txt b/Documentation/devicetree/bindings/reset/oxnas,reset.txt
+index 6f06db9..d27ccb5 100644
+--- a/Documentation/devicetree/bindings/reset/oxnas,reset.txt
++++ b/Documentation/devicetree/bindings/reset/oxnas,reset.txt
+@@ -5,45 +5,19 @@ Please also refer to reset.txt in this directory for common reset
+ controller binding usage.
+ 
+ Required properties:
+-- compatible: Should be "oxsemi,ox810se-reset"
++- compatible: For OX810SE, should be "oxsemi,ox810se-reset"
++	      For OX820, should be "oxsemi,ox820-reset"
+ - #reset-cells: 1, see below
+ 
+ Parent node should have the following properties :
+-- compatible: Should be "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd"
++- compatible: For OX810SE, should be :
++			"oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd"
++	      For OX820, should be :
++			"oxsemi,ox820-sys-ctrl", "syscon", "simple-mfd"
+ 
+-For OX810SE, the indices are :
+- - 0 : ARM
+- - 1 : COPRO
+- - 2 : Reserved
+- - 3 : Reserved
+- - 4 : USBHS
+- - 5 : USBHSPHY
+- - 6 : MAC
+- - 7 : PCI
+- - 8 : DMA
+- - 9 : DPE
+- - 10 : DDR
+- - 11 : SATA
+- - 12 : SATA_LINK
+- - 13 : SATA_PHY
+- - 14 : Reserved
+- - 15 : NAND
+- - 16 : GPIO
+- - 17 : UART1
+- - 18 : UART2
+- - 19 : MISC
+- - 20 : I2S
+- - 21 : AHB_MON
+- - 22 : UART3
+- - 23 : UART4
+- - 24 : SGDMA
+- - 25 : Reserved
+- - 26 : Reserved
+- - 27 : Reserved
+- - 28 : Reserved
+- - 29 : Reserved
+- - 30 : Reserved
+- - 31 : BUS
++Reset indices are in dt-bindings include files :
++- For OX810SE: include/dt-bindings/reset/oxsemi,ox810se.h
++- For OX820: include/dt-bindings/reset/oxsemi,ox820.h
+ 
+ example:
+ 
 -- 
 2.7.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
