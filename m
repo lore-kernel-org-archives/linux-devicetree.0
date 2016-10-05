@@ -1,55 +1,52 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: marvell: Add definition for the Globalscale Marvell ESPRESSOBin Board
-Date: Wed, 05 Oct 2016 17:35:51 +0200
-Message-ID: <87bmyyyfjc.fsf@free-electrons.com>
-References: <20161005142734.18995-1-romain.perier@free-electrons.com>
-        <87fuoaygie.fsf@free-electrons.com>
-        <20161005172837.5ea130a1@free-electrons.com>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: [PATCH 1/1] ARM: at91/dt: sama5d2: enable FIFOs for high-speed i2c
+ controllers
+Date: Wed, 5 Oct 2016 18:53:07 +0200
+Message-ID: <69f559c9dd08696d280a2cea0f666ef18253e459.1475685906.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161005172837.5ea130a1-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Thomas Petazzoni's
-        message of "Wed, 5 Oct 2016 17:28:37 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yahuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: Cyrille Pitchen <cyrille.pitchen@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+This patch enables the RX and TX FIFOs (16 data each) of the two
+high-speed i2c controllers (i2c0 and i2c1).
+
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+---
+ arch/arm/boot/dts/sama5d2.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index 35bf72d57f7c..20e5bc182c2d 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -1052,6 +1052,7 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				clocks = <&twi0_clk>;
++				atmel,fifo-size = <16>;
+ 				status = "disabled";
+ 			};
  
- On mer., oct. 05 2016, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-
-> Hello,
->
-> On Wed, 05 Oct 2016 17:14:49 +0200, Gregory CLEMENT wrote:
->
->> > +	memory {
->> > +		device_type = "memory";  
->> 
->> 
->> According to the kickstarter page the boards will came with different
->> amount of memory (from 512MB to 2GB). So we could put a comment
->> here about tuning this value depending of the board.
->
-> U-Boot does this tuning automatically, so there is no need for the user
-> to tune anything here.
-
-Great!
-
-It was not the case with the first Armada XP and 370 boards, but at this
-time we appended the dtb to the kernel and the U-Boot on these board was
-not dt capable.
-
-Thanks,
-
-Gregory
-
+@@ -1253,6 +1254,7 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				clocks = <&twi1_clk>;
++				atmel,fifo-size = <16>;
+ 				status = "disabled";
+ 			};
+ 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
