@@ -1,67 +1,53 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] ARM64: dts: meson-gx: Add missing L2 cache node
-Date: Wed,  5 Oct 2016 15:53:50 +0200
-Message-ID: <1475675630-31514-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH] devicetree: net: micrel-ksz90x1.txt: Properly explain skew settings
+Date: Wed,  5 Oct 2016 16:03:08 +0200
+Message-ID: <1475676188-10639-1-git-send-email-mike.looijmans@topic.nl>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, Mike Looijmans <mike.looijmans@topic.nl>
 List-Id: devicetree@vger.kernel.org
 
-In order to remove the boot warning :
-[    2.290933] Unable to detect cache hierarchy from DT for CPU 0
-And add missing L2 cache hierarchy information, add a simple l2 cache node
-and reference it from the A53 cpu nodes.
+The KSZ9031 skew registers contain an offset, the chip's default value
+is "neutral" which does not add any skew. Programming a 0 into a skew
+property will actually set it the maximal negative adjustment and not
+to a neutral position as one would expect.
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Explain this situation in the devicetree binding documentation and list
+the settings that the chip considers neutral.
+
+Changing the implementation to accept negative values would have been
+a better solution, but would break existing configurations.
+
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
 ---
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/devicetree/bindings/net/micrel-ksz90x1.txt | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 0737056..a6cd953 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -64,6 +64,7 @@
- 			compatible = "arm,cortex-a53", "arm,armv8";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			next-level-cache = <&l2>;
- 		};
+diff --git a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+index f9c32ad..c35b5b4 100644
+--- a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
++++ b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+@@ -34,16 +34,17 @@ KSZ9031:
  
- 		cpu1: cpu@1 {
-@@ -71,6 +72,7 @@
- 			compatible = "arm,cortex-a53", "arm,armv8";
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
-+			next-level-cache = <&l2>;
- 		};
+   All skew control options are specified in picoseconds. The minimum
+   value is 0, and the maximum is property-dependent. The increment
+-  step is 60ps.
++  step is 60ps. The default value is the neutral setting, so setting
++  rxc-skew-ps=<0> actually results in -900 picoseconds adjustment.
  
- 		cpu2: cpu@2 {
-@@ -78,6 +80,7 @@
- 			compatible = "arm,cortex-a53", "arm,armv8";
- 			reg = <0x0 0x2>;
- 			enable-method = "psci";
-+			next-level-cache = <&l2>;
- 		};
+   Optional properties:
  
- 		cpu3: cpu@3 {
-@@ -85,6 +88,11 @@
- 			compatible = "arm,cortex-a53", "arm,armv8";
- 			reg = <0x0 0x3>;
- 			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		l2: l2-cache0 {
-+			compatible = "cache";
- 		};
- 	};
+-    Maximum value of 1860:
++    Maximum value of 1860, default value 900:
  
+       - rxc-skew-ps : Skew control of RX clock pad
+       - txc-skew-ps : Skew control of TX clock pad
+ 
+-    Maximum value of 900:
++    Maximum value of 900, default value 420:
+ 
+       - rxdv-skew-ps : Skew control of RX CTL pad
+       - txen-skew-ps : Skew control of TX CTL pad
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
