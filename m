@@ -1,408 +1,287 @@
-From: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v7 21/22] iommu/dma: Add support for mapping MSIs
-Date: Wed, 5 Oct 2016 11:31:43 +0000
-Message-ID: <DB6PR0402MB26943799B4B9E50BC5A93D65E6C40@DB6PR0402MB2694.eurprd04.prod.outlook.com>
-References: <cover.1473695704.git.robin.murphy@arm.com>
-	<2273af20d844bd618c6a90b57e639700328ebf7f.1473695704.git.robin.murphy@arm.com>
-	<DB6PR0402MB2694B2E5AE266F138784D2C2E6C40@DB6PR0402MB2694.eurprd04.prod.outlook.com>
-	<6ec9519b-01df-3be8-2967-7556bd306909@arm.com>
+From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+Subject: [PATCH v8 net-next] net: phy: Add Edge-rate driver for Microsemi PHYs.
+Date: Wed, 5 Oct 2016 17:09:38 +0530
+Message-ID: <1475667578-20799-1-git-send-email-Raju.Lakkaraju@microsemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <6ec9519b-01df-3be8-2967-7556bd306909-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "punit.agrawal-5wv7dgnIgG8@public.gmane.org" <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: f.fainelli@gmail.com, Allan.Nielsen@microsemi.com, andrew@lunn.ch, Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
 
+Edge-rate:
+As system and networking speeds increase, a signal's output transition,
+also know as the edge rate or slew rate (V/ns), takes on greater importance
+because high-speed signals come with a price. That price is an assortment of
+interference problems like ringing on the line, signal overshoot and
+undershoot, extended signal settling times, crosstalk noise, transmission
+line reflections, false signal detection by the receiving device and
+electromagnetic interference (EMI) -- all of which can negate the potential
+gains designers are seeking when they try to increase system speeds through
+the use of higher performance logic devices. The fact is, faster signaling
+edge rates can cause a higher level of electrical noise or other type of
+interference that can actually lead to slower line speeds and lower maximum
+system frequencies. This parameter allow the board designers to change the
+driving strange, and thereby change the EMI behavioral.
 
-> -----Original Message-----
-> From: Robin Murphy [mailto:robin.murphy-5wv7dgnIgG8@public.gmane.org]
-> Sent: Wednesday, October 05, 2016 15:26
-> To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-> Cc: will.deacon-5wv7dgnIgG8@public.gmane.org; joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
-> foundation.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; punit.agrawal-5wv7dgnIgG8@public.gmane.org;
-> thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
-> Subject: Re: [PATCH v7 21/22] iommu/dma: Add support for mapping MSIs
-> 
-> On 05/10/16 08:00, Nipun Gupta wrote:
-> >
-> >
-> >> -----Original Message-----
-> >> From: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org [mailto:iommu-
-> >> bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org] On Behalf Of Robin Murphy
-> >> Sent: Monday, September 12, 2016 21:44
-> >> To: will.deacon-5wv7dgnIgG8@public.gmane.org; joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
-> >> foundation.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; punit.agrawal-5wv7dgnIgG8@public.gmane.org;
-> >> thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
-> >> Subject: [PATCH v7 21/22] iommu/dma: Add support for mapping MSIs
-> >>
-> >> When an MSI doorbell is located downstream of an IOMMU, attaching
-> >> devices to a DMA ops domain and switching on translation leads to a
-> >> rude shock when their attempt to write to the physical address
-> >> returned by the irqchip driver faults (or worse, writes into some
-> >> already-mapped
-> >> buffer) and no interrupt is forthcoming.
-> >>
-> >> Address this by adding a hook for relevant irqchip drivers to call
-> >> from their
-> >> compose_msi_msg() callback, to swizzle the physical address with an
-> >> appropriatly-mapped IOVA for any device attached to one of our DMA
-> >> ops domains.
-> >>
-> >> Acked-by: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-> >> Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> >> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> >> ---
-> >>  drivers/iommu/dma-iommu.c        | 136
-> >> ++++++++++++++++++++++++++++++++++-----
-> >>  drivers/irqchip/irq-gic-v2m.c    |   3 +
-> >>  drivers/irqchip/irq-gic-v3-its.c |   3 +
-> >>  include/linux/dma-iommu.h        |   9 +++
-> >>  4 files changed, 136 insertions(+), 15 deletions(-)
-> >>
-> >> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> >> index 00c8a08d56e7..4329d18080cf 100644
-> >> --- a/drivers/iommu/dma-iommu.c
-> >> +++ b/drivers/iommu/dma-iommu.c
-> >> @@ -25,10 +25,28 @@
-> >>  #include <linux/huge_mm.h>
-> >>  #include <linux/iommu.h>
-> >>  #include <linux/iova.h>
-> >> +#include <linux/irq.h>
-> >>  #include <linux/mm.h>
-> >>  #include <linux/scatterlist.h>
-> >>  #include <linux/vmalloc.h>
-> >>
-> >> +struct iommu_dma_msi_page {
-> >> +	struct list_head	list;
-> >> +	dma_addr_t		iova;
-> >> +	phys_addr_t		phys;
-> >> +};
-> >> +
-> >> +struct iommu_dma_cookie {
-> >> +	struct iova_domain	iovad;
-> >> +	struct list_head	msi_page_list;
-> >> +	spinlock_t		msi_lock;
-> >> +};
-> >> +
-> >> +static inline struct iova_domain *cookie_iovad(struct iommu_domain
-> >> +*domain) {
-> >> +	return &((struct iommu_dma_cookie *)domain->iova_cookie)->iovad; }
-> >> +
-> >>  int iommu_dma_init(void)
-> >>  {
-> >>  	return iova_cache_get();
-> >> @@ -43,15 +61,19 @@ int iommu_dma_init(void)
-> >>   */
-> >>  int iommu_get_dma_cookie(struct iommu_domain *domain)  {
-> >> -	struct iova_domain *iovad;
-> >> +	struct iommu_dma_cookie *cookie;
-> >>
-> >>  	if (domain->iova_cookie)
-> >>  		return -EEXIST;
-> >>
-> >> -	iovad = kzalloc(sizeof(*iovad), GFP_KERNEL);
-> >> -	domain->iova_cookie = iovad;
-> >> +	cookie = kzalloc(sizeof(*cookie), GFP_KERNEL);
-> >> +	if (!cookie)
-> >> +		return -ENOMEM;
-> >>
-> >> -	return iovad ? 0 : -ENOMEM;
-> >> +	spin_lock_init(&cookie->msi_lock);
-> >> +	INIT_LIST_HEAD(&cookie->msi_page_list);
-> >> +	domain->iova_cookie = cookie;
-> >> +	return 0;
-> >>  }
-> >>  EXPORT_SYMBOL(iommu_get_dma_cookie);
-> >>
-> >> @@ -63,14 +85,20 @@ EXPORT_SYMBOL(iommu_get_dma_cookie);
-> >>   */
-> >>  void iommu_put_dma_cookie(struct iommu_domain *domain)  {
-> >> -	struct iova_domain *iovad = domain->iova_cookie;
-> >> +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
-> >> +	struct iommu_dma_msi_page *msi, *tmp;
-> >>
-> >> -	if (!iovad)
-> >> +	if (!cookie)
-> >>  		return;
-> >>
-> >> -	if (iovad->granule)
-> >> -		put_iova_domain(iovad);
-> >> -	kfree(iovad);
-> >> +	if (cookie->iovad.granule)
-> >> +		put_iova_domain(&cookie->iovad);
-> >> +
-> >> +	list_for_each_entry_safe(msi, tmp, &cookie->msi_page_list, list) {
-> >> +		list_del(&msi->list);
-> >> +		kfree(msi);
-> >> +	}
-> >> +	kfree(cookie);
-> >>  	domain->iova_cookie = NULL;
-> >>  }
-> >>  EXPORT_SYMBOL(iommu_put_dma_cookie);
-> >> @@ -88,7 +116,7 @@ EXPORT_SYMBOL(iommu_put_dma_cookie);
-> >>   */
-> >>  int iommu_dma_init_domain(struct iommu_domain *domain, dma_addr_t
-> >> base, u64 size)  {
-> >> -	struct iova_domain *iovad = domain->iova_cookie;
-> >> +	struct iova_domain *iovad = cookie_iovad(domain);
-> >>  	unsigned long order, base_pfn, end_pfn;
-> >>
-> >>  	if (!iovad)
-> >> @@ -155,7 +183,7 @@ int dma_direction_to_prot(enum
-> dma_data_direction
-> >> dir, bool coherent)  static struct iova *__alloc_iova(struct
-> >> iommu_domain *domain, size_t size,
-> >>  		dma_addr_t dma_limit)
-> >>  {
-> >> -	struct iova_domain *iovad = domain->iova_cookie;
-> >> +	struct iova_domain *iovad = cookie_iovad(domain);
-> >>  	unsigned long shift = iova_shift(iovad);
-> >>  	unsigned long length = iova_align(iovad, size) >> shift;
-> >>
-> >> @@ -171,7 +199,7 @@ static struct iova *__alloc_iova(struct
-> >> iommu_domain *domain, size_t size,
-> >>  /* The IOVA allocator knows what we mapped, so just unmap whatever
-> >> that was */  static void __iommu_dma_unmap(struct iommu_domain
-> >> *domain, dma_addr_t dma_addr)  {
-> >> -	struct iova_domain *iovad = domain->iova_cookie;
-> >> +	struct iova_domain *iovad = cookie_iovad(domain);
-> >>  	unsigned long shift = iova_shift(iovad);
-> >>  	unsigned long pfn = dma_addr >> shift;
-> >>  	struct iova *iova = find_iova(iovad, pfn); @@ -294,7 +322,7 @@
-> >> struct page **iommu_dma_alloc(struct device *dev, size_t size, gfp_t gfp,
-> >>  		void (*flush_page)(struct device *, const void *, phys_addr_t))  {
-> >>  	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
-> >> -	struct iova_domain *iovad = domain->iova_cookie;
-> >> +	struct iova_domain *iovad = cookie_iovad(domain);
-> >>  	struct iova *iova;
-> >>  	struct page **pages;
-> >>  	struct sg_table sgt;
-> >> @@ -386,7 +414,7 @@ dma_addr_t iommu_dma_map_page(struct device
-> *dev,
-> >> struct page *page,  {
-> >>  	dma_addr_t dma_addr;
-> >>  	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
-> >> -	struct iova_domain *iovad = domain->iova_cookie;
-> >> +	struct iova_domain *iovad = cookie_iovad(domain);
-> >>  	phys_addr_t phys = page_to_phys(page) + offset;
-> >>  	size_t iova_off = iova_offset(iovad, phys);
-> >>  	size_t len = iova_align(iovad, size + iova_off); @@ -495,7 +523,7
-> >> @@ int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg,
-> >>  		int nents, int prot)
-> >>  {
-> >>  	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
-> >> -	struct iova_domain *iovad = domain->iova_cookie;
-> >> +	struct iova_domain *iovad = cookie_iovad(domain);
-> >>  	struct iova *iova;
-> >>  	struct scatterlist *s, *prev = NULL;
-> >>  	dma_addr_t dma_addr;
-> >> @@ -587,3 +615,81 @@ int iommu_dma_mapping_error(struct device *dev,
-> >> dma_addr_t dma_addr)  {
-> >>  	return dma_addr == DMA_ERROR_CODE;
-> >>  }
-> >> +
-> >> +static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct
-> >> +device
-> >> *dev,
-> >> +		phys_addr_t msi_addr, struct iommu_domain *domain) {
-> >> +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
-> >> +	struct iommu_dma_msi_page *msi_page;
-> >> +	struct iova_domain *iovad = &cookie->iovad;
-> >> +	struct iova *iova;
-> >> +	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
-> >> +
-> >> +	msi_addr &= ~(phys_addr_t)iova_mask(iovad);
-> >> +	list_for_each_entry(msi_page, &cookie->msi_page_list, list)
-> >> +		if (msi_page->phys == msi_addr)
-> >> +			return msi_page;
-> >> +
-> >> +	msi_page = kzalloc(sizeof(*msi_page), GFP_ATOMIC);
-> >> +	if (!msi_page)
-> >> +		return NULL;
-> >> +
-> >> +	iova = __alloc_iova(domain, iovad->granule, dma_get_mask(dev));
-> >
-> > I think this should be 'iova = __alloc_iova(domain, iovad->granule,
-> dma_get_mask(dev));'
-> 
-> Er, yes... I fully agree. That's why it is exactly that.
-> 
-> > as __alloc_iova takes input parameter as 'struct iova_domain *'
-> 
-> Joking aside, though, I guess you've overlooked the change introduced by
-> c987ff0d3cb3 ("iommu/dma: Respect IOMMU aperture when allocating")?
+Edge-rate parameters (vddmac, edge-slowdown) get from Device Tree.
 
-Ooops!! My bad. That's right, I missed out this change.
+Tested on Beaglebone Black with VSC 8531 PHY.
 
-Thanks,
-Nipun
+Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
 
-> 
-> Robin.
-> 
-> >
-> > Regards,
-> > Nipun
-> >
-> >> +	if (!iova)
-> >> +		goto out_free_page;
-> >> +
-> >> +	msi_page->phys = msi_addr;
-> >> +	msi_page->iova = iova_dma_addr(iovad, iova);
-> >> +	if (iommu_map(domain, msi_page->iova, msi_addr, iovad->granule,
-> >> prot))
-> >> +		goto out_free_iova;
-> >> +
-> >> +	INIT_LIST_HEAD(&msi_page->list);
-> >> +	list_add(&msi_page->list, &cookie->msi_page_list);
-> >> +	return msi_page;
-> >> +
-> >> +out_free_iova:
-> >> +	__free_iova(iovad, iova);
-> >> +out_free_page:
-> >> +	kfree(msi_page);
-> >> +	return NULL;
-> >> +}
-> >> +
-> >> +void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg) {
-> >> +	struct device *dev = msi_desc_to_dev(irq_get_msi_desc(irq));
-> >> +	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
-> >> +	struct iommu_dma_cookie *cookie;
-> >> +	struct iommu_dma_msi_page *msi_page;
-> >> +	phys_addr_t msi_addr = (u64)msg->address_hi << 32 | msg->address_lo;
-> >> +	unsigned long flags;
-> >> +
-> >> +	if (!domain || !domain->iova_cookie)
-> >> +		return;
-> >> +
-> >> +	cookie = domain->iova_cookie;
-> >> +
-> >> +	/*
-> >> +	 * We disable IRQs to rule out a possible inversion against
-> >> +	 * irq_desc_lock if, say, someone tries to retarget the affinity
-> >> +	 * of an MSI from within an IPI handler.
-> >> +	 */
-> >> +	spin_lock_irqsave(&cookie->msi_lock, flags);
-> >> +	msi_page = iommu_dma_get_msi_page(dev, msi_addr, domain);
-> >> +	spin_unlock_irqrestore(&cookie->msi_lock, flags);
-> >> +
-> >> +	if (WARN_ON(!msi_page)) {
-> >> +		/*
-> >> +		 * We're called from a void callback, so the best we can do is
-> >> +		 * 'fail' by filling the message with obviously bogus values.
-> >> +		 * Since we got this far due to an IOMMU being present, it's
-> >> +		 * not like the existing address would have worked anyway...
-> >> +		 */
-> >> +		msg->address_hi = ~0U;
-> >> +		msg->address_lo = ~0U;
-> >> +		msg->data = ~0U;
-> >> +	} else {
-> >> +		msg->address_hi = upper_32_bits(msi_page->iova);
-> >> +		msg->address_lo &= iova_mask(&cookie->iovad);
-> >> +		msg->address_lo += lower_32_bits(msi_page->iova);
-> >> +	}
-> >> +}
-> >> diff --git a/drivers/irqchip/irq-gic-v2m.c
-> >> b/drivers/irqchip/irq-gic-v2m.c index 35eb7ac5d21f..863e073c6f7f
-> >> 100644
-> >> --- a/drivers/irqchip/irq-gic-v2m.c
-> >> +++ b/drivers/irqchip/irq-gic-v2m.c
-> >> @@ -16,6 +16,7 @@
-> >>  #define pr_fmt(fmt) "GICv2m: " fmt
-> >>
-> >>  #include <linux/acpi.h>
-> >> +#include <linux/dma-iommu.h>
-> >>  #include <linux/irq.h>
-> >>  #include <linux/irqdomain.h>
-> >>  #include <linux/kernel.h>
-> >> @@ -108,6 +109,8 @@ static void gicv2m_compose_msi_msg(struct
-> >> irq_data *data, struct msi_msg *msg)
-> >>
-> >>  	if (v2m->flags & GICV2M_NEEDS_SPI_OFFSET)
-> >>  		msg->data -= v2m->spi_offset;
-> >> +
-> >> +	iommu_dma_map_msi_msg(data->irq, msg);
-> >>  }
-> >>
-> >>  static struct irq_chip gicv2m_irq_chip = { diff --git
-> >> a/drivers/irqchip/irq-gic-v3- its.c
-> >> b/drivers/irqchip/irq-gic-v3-its.c
-> >> index 36b9c28a5c91..98ff669d5962 100644
-> >> --- a/drivers/irqchip/irq-gic-v3-its.c
-> >> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> >> @@ -18,6 +18,7 @@
-> >>  #include <linux/bitmap.h>
-> >>  #include <linux/cpu.h>
-> >>  #include <linux/delay.h>
-> >> +#include <linux/dma-iommu.h>
-> >>  #include <linux/interrupt.h>
-> >>  #include <linux/log2.h>
-> >>  #include <linux/mm.h>
-> >> @@ -655,6 +656,8 @@ static void its_irq_compose_msi_msg(struct
-> >> irq_data *d, struct msi_msg *msg)
-> >>  	msg->address_lo		= addr & ((1UL << 32) - 1);
-> >>  	msg->address_hi		= addr >> 32;
-> >>  	msg->data		= its_get_event_id(d);
-> >> +
-> >> +	iommu_dma_map_msi_msg(d->irq, msg);
-> >>  }
-> >>
-> >>  static struct irq_chip its_irq_chip = { diff --git
-> >> a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h index
-> >> 81c5c8d167ad..5ee806e41b5c 100644
-> >> --- a/include/linux/dma-iommu.h
-> >> +++ b/include/linux/dma-iommu.h
-> >> @@ -21,6 +21,7 @@
-> >>
-> >>  #ifdef CONFIG_IOMMU_DMA
-> >>  #include <linux/iommu.h>
-> >> +#include <linux/msi.h>
-> >>
-> >>  int iommu_dma_init(void);
-> >>
-> >> @@ -62,9 +63,13 @@ void iommu_dma_unmap_sg(struct device *dev,
-> struct
-> >> scatterlist *sg, int nents,  int iommu_dma_supported(struct device
-> >> *dev, u64 mask);  int iommu_dma_mapping_error(struct device *dev,
-> >> dma_addr_t dma_addr);
-> >>
-> >> +/* The DMA API isn't _quite_ the whole story, though... */ void
-> >> +iommu_dma_map_msi_msg(int irq, struct msi_msg *msg);
-> >> +
-> >>  #else
-> >>
-> >>  struct iommu_domain;
-> >> +struct msi_msg;
-> >>
-> >>  static inline int iommu_dma_init(void)  { @@ -80,6 +85,10 @@ static
-> >> inline void iommu_put_dma_cookie(struct iommu_domain *domain)  {  }
-> >>
-> >> +static inline void iommu_dma_map_msi_msg(int irq, struct msi_msg
-> >> +*msg) { }
-> >> +
-> >>  #endif	/* CONFIG_IOMMU_DMA */
-> >>  #endif	/* __KERNEL__ */
-> >>  #endif	/* __DMA_IOMMU_H */
-> >> --
-> >> 2.8.1.dirty
-> >>
-> >> _______________________________________________
-> >> iommu mailing list
-> >> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-> >> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-> >
+---
+All the review comments updated and resending for review.
+
+Change set:
+v1:
+- Initial version of Edge-rate driver add by using IOCTL.
+v2:
+- Changed edge-rate parameter to Device Tree with magic number.
+v3:
+- Added Device Tree documentati0n and edge-rate parameter table.
+  Added probe function initialize the vsc8531 private data structure.
+v4:
+- As per review comment, Device Tree parameters (vddmac, edge-slowdown)
+  added.
+v5:
+- As per review comment, Device Tree Document parameters (vddmac, 
+  edge-slowdown) real numbers added. Table number changed from 5 to 1.
+v6:
+- As per review comment, Removed Device Tree header file. Removed MACROs
+  and add ARRAYSIZE
+v7:
+- As per review comment, Removed '-'s (minus) sign in Edge rate table. 
+v8:
+- As per review comment, Added DT vddmac, slowdown value error check. 
+
+---
+
+ .../devicetree/bindings/net/mscc-phy-vsc8531.txt   | 22 +++----
+ drivers/net/phy/mscc.c                             | 69 +++++++++++++++-------
+ include/dt-bindings/net/mscc-phy-vsc8531.h         | 21 -------
+ 3 files changed, 59 insertions(+), 53 deletions(-)
+ delete mode 100644 include/dt-bindings/net/mscc-phy-vsc8531.h
+
+diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+index 99c7eb0..1173498 100644
+--- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
++++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+@@ -8,8 +8,7 @@ Required properties:
+ Optional properties:
+ - vsc8531,vddmac	: The vddmac in mV.
+ - vsc8531,edge-slowdown	: % the edge should be slowed down relative to
+-			  the fastest possible edge time. Native sign
+-			  need not enter.
++			  the fastest possible edge time.
+ 			  Edge rate sets the drive strength of the MAC
+ 			  interface output signals.  Changing the drive
+ 			  strength will affect the edge rate of the output
+@@ -18,7 +17,8 @@ Optional properties:
+ 			  to reprogram drive strength and in effect slow
+ 			  down the edge rate if desired.  Table 1 shows the
+ 			  impact to the edge rate per VDDMAC supply for each
+-			  drive strength setting.
++			  drive strength setting. VDDMAC supply voltage
++			  should be one of the value in Table-1 first row.
+ 			  Ref: Table:1 - Edge rate change below.
+ 
+ Note: see dt-bindings/net/mscc-phy-vsc8531.h for applicable values
+@@ -29,23 +29,25 @@ Table: 1 - Edge rate change
+ |								|
+ | 3300 mV	2500 mV		1800 mV		1500 mV		|
+ |---------------------------------------------------------------|
++| 0%		0%		0%		0%		|
++|								|
+ | Default	Deafult		Default		Default		|
+ | (Fastest)			(recommended)	(recommended)	|
+ |---------------------------------------------------------------|
+-| -2%		-3%		-5%		-6%		|
++| 2%		3%		5%		6%		|
+ |---------------------------------------------------------------|
+-| -4%		-6%		-9%		-14%		|
++| 4%		6%		9%		14%		|
+ |---------------------------------------------------------------|
+-| -7%		-10%		-16%		-21%		|
++| 7%		10%		16%		21%		|
+ |(recommended)	(recommended)					|
+ |---------------------------------------------------------------|
+-| -10%		-14%		-23%		-29%		|
++| 10%		14%		23%		29%		|
+ |---------------------------------------------------------------|
+-| -17%		-23%		-35%		-42%		|
++| 17%		23%		35%		42%		|
+ |---------------------------------------------------------------|
+-| -29%		-37%		-52%		-58%		|
++| 29%		37%		52%		58%		|
+ |---------------------------------------------------------------|
+-| -53%		-63%		-76%		-77%		|
++| 53%		63%		76%		77%		|
+ | (slowest)							|
+ |---------------------------------------------------------------|
+ 
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index a17573e..30f147e 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -12,7 +12,6 @@
+ #include <linux/mii.h>
+ #include <linux/phy.h>
+ #include <linux/of.h>
+-#include <dt-bindings/net/mscc-phy-vsc8531.h>
+ 
+ enum rgmii_rx_clock_delay {
+ 	RGMII_RX_CLK_DELAY_0_2_NS = 0,
+@@ -56,16 +55,18 @@ enum rgmii_rx_clock_delay {
+ #define PHY_ID_VSC8531			  0x00070570
+ #define PHY_ID_VSC8541			  0x00070770
+ 
++#define MSCC_SLOWDOWN_MAX		  8
++
+ struct edge_rate_table {
+ 	u16 vddmac;
+-	int slowdown[MSCC_SLOWDOWN_MAX];
++	u8 slowdown[MSCC_SLOWDOWN_MAX];
+ };
+ 
+-struct edge_rate_table edge_table[MSCC_VDDMAC_MAX] = {
+-	{3300, { 0, -2, -4,  -7,  -10, -17, -29, -53} },
+-	{2500, { 0, -3, -6,  -10, -14, -23, -37, -63} },
+-	{1800, { 0, -5, -9,  -16, -23, -35, -52, -76} },
+-	{1500, { 0, -6, -14, -21, -29, -42, -58, -77} },
++static const struct edge_rate_table edge_table[] = {
++	{3300, { 0, 2, 4,  7,  10, 17, 29, 53} },
++	{2500, { 0, 3, 6,  10, 14, 23, 37, 63} },
++	{1800, { 0, 5, 9,  16, 23, 35, 52, 76} },
++	{1500, { 0, 6, 14, 21, 29, 42, 58, 77} },
+ };
+ 
+ struct vsc8531_private {
+@@ -81,24 +82,28 @@ static int vsc85xx_phy_page_set(struct phy_device *phydev, u8 page)
+ 	return rc;
+ }
+ 
+-static u8 edge_rate_magic_get(u16 vddmac,
+-			      int slowdown)
++static u8 vsc85xx_edge_rate_magic_get(u16 vddmac,
++				      u8 slowdown)
+ {
+-	int rc = (MSCC_SLOWDOWN_MAX - 1);
++	int rc = (ARRAY_SIZE(edge_table[0].slowdown) - 1);
+ 	u8 vdd;
+ 	u8 sd;
+ 
+-	for (vdd = 0; vdd < MSCC_VDDMAC_MAX; vdd++) {
++	for (vdd = 0; vdd < ARRAY_SIZE(edge_table); vdd++) {
+ 		if (edge_table[vdd].vddmac == vddmac) {
+-			for (sd = 0; sd < MSCC_SLOWDOWN_MAX; sd++) {
+-				if (edge_table[vdd].slowdown[sd] <= slowdown) {
+-					rc = (MSCC_SLOWDOWN_MAX - sd - 1);
+-					break;
++			for (sd = 0;
++			     sd < ARRAY_SIZE(edge_table[0].slowdown);
++			     sd++) {
++				if (edge_table[vdd].slowdown[sd] >= slowdown) {
++					rc = (ARRAY_SIZE(edge_table[0].slowdown)
++					      - sd - 1);
++					goto out;
+ 				}
+ 			}
+ 		}
+ 	}
+ 
++out:
+ 	return rc;
+ }
+ 
+@@ -188,6 +193,7 @@ out_unlock:
+ static int vsc8531_of_init(struct phy_device *phydev)
+ {
+ 	int rc;
++	u8 vdd;
+ 	struct vsc8531_private *vsc8531 = phydev->priv;
+ 	struct device *dev = &phydev->mdio.dev;
+ 	struct device_node *of_node = dev->of_node;
+@@ -197,15 +203,34 @@ static int vsc8531_of_init(struct phy_device *phydev)
+ 
+ 	rc = of_property_read_u16(of_node, "vsc8531,vddmac",
+ 				  &vsc8531->vddmac);
+-	if (rc == -EINVAL)
+-		vsc8531->vddmac = MSCC_VDDMAC_3300;
++	if (rc == -EINVAL) {
++		phydev_err(phydev, "DT VDDMAC not define\n");
++		vsc8531->vddmac = 3300;
++	} else {
++		for (vdd = 0; vdd < ARRAY_SIZE(edge_table); vdd++) {
++			if (edge_table[vdd].vddmac == vsc8531->vddmac)
++				break;
++		}
++		if (vdd == ARRAY_SIZE(edge_table)) {
++			phydev_err(phydev, "Invalid VDDMAC\n");
++			return -EINVAL;
++		}
++	}
++
+ 	rc = of_property_read_u8(of_node, "vsc8531,edge-slowdown",
+ 				 &vsc8531->edge_slowdown);
+-	if (rc == -EINVAL)
++	if (rc == -EINVAL) {
++		phydev_err(phydev, "DT Edgerate slowdown not define\n");
+ 		vsc8531->edge_slowdown = 0;
++	} else {
++		if (edge_table[vdd].slowdown[MSCC_SLOWDOWN_MAX - 1] <
++		    vsc8531->edge_slowdown) {
++			phydev_err(phydev, "Invalid Edge slowdown\n");
++			return -EINVAL;
++		}
++	}
+ 
+-	rc = 0;
+-	return rc;
++	return 0;
+ }
+ #else
+ static int vsc8531_of_init(struct phy_device *phydev)
+@@ -232,8 +257,8 @@ static int vsc85xx_config_init(struct phy_device *phydev)
+ 	if (rc)
+ 		return rc;
+ 
+-	edge_rate = edge_rate_magic_get(vsc8531->vddmac,
+-					-(int)vsc8531->edge_slowdown);
++	edge_rate = vsc85xx_edge_rate_magic_get(vsc8531->vddmac,
++						vsc8531->edge_slowdown);
+ 	rc = vsc85xx_edge_rate_cntl_set(phydev, edge_rate);
+ 	if (rc)
+ 		return rc;
+diff --git a/include/dt-bindings/net/mscc-phy-vsc8531.h b/include/dt-bindings/net/mscc-phy-vsc8531.h
+deleted file mode 100644
+index 2383dd2..0000000
+--- a/include/dt-bindings/net/mscc-phy-vsc8531.h
++++ /dev/null
+@@ -1,21 +0,0 @@
+-/*
+- * Device Tree constants for Microsemi VSC8531 PHY
+- *
+- * Author: Nagaraju Lakkaraju
+- *
+- * License: Dual MIT/GPL
+- * Copyright (c) 2016 Microsemi Corporation
+- */
+-
+-#ifndef _DT_BINDINGS_MSCC_VSC8531_H
+-#define _DT_BINDINGS_MSCC_VSC8531_H
+-
+-/* MAC interface Edge rate control VDDMAC in milli Volts */
+-#define MSCC_VDDMAC_3300		 3300
+-#define MSCC_VDDMAC_2500		 2500
+-#define MSCC_VDDMAC_1800		 1800
+-#define MSCC_VDDMAC_1500		 1500
+-#define MSCC_VDDMAC_MAX			 4
+-#define MSCC_SLOWDOWN_MAX		 8
+-
+-#endif
+-- 
+2.7.4
