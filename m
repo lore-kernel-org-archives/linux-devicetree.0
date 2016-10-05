@@ -1,122 +1,116 @@
-From: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] arm64: dts: marvell: Add definition for the Globalscale Marvell ESPRESSOBin Board
-Date: Wed,  5 Oct 2016 16:27:34 +0200
-Message-ID: <20161005142734.18995-1-romain.perier@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yahuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Ritesh Harjani <riteshh@codeaurora.org>
+Subject: [PATCH v5 00/12] mmc: sdhci-msm: Add clk-rates, DDR, HS400 support
+Date: Wed,  5 Oct 2016 20:10:28 +0530
+Message-ID: <1475678440-3525-1-git-send-email-riteshh@codeaurora.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, shawn.lin@rock-chips.com
+Cc: david.brown@linaro.org, andy.gross@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, sboyd@codeaurora.org, bjorn.andersson@linaro.org, pramod.gurav@linaro.org, Ritesh Harjani <riteshh@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a basic definition for this board.
+Hi, 
 
-Signed-off-by: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm64/boot/dts/marvell/Makefile               |  1 +
- .../boot/dts/marvell/armada-3720-espressobin.dts   | 78 ++++++++++++++++++++++
- 2 files changed, 79 insertions(+)
- create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+This is v5 version of the patch series with addition of HS400 patches in this.
+These are tested on internal msm8996 & db410c HW.
 
-diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-index 308468d..392eeb6 100644
---- a/arch/arm64/boot/dts/marvell/Makefile
-+++ b/arch/arm64/boot/dts/marvell/Makefile
-@@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-stb.dtb
- 
- # Mvebu SoC Family
- dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
-+dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
- 
- always		:= $(dtb-y)
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-new file mode 100644
-index 0000000..57035a3
---- /dev/null
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-@@ -0,0 +1,78 @@
-+/*
-+ * Device Tree file for Globalscale Marvell ESPRESSOBin Board
-+ * Copyright (C) 2016 Marvell
-+ *
-+ * Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "armada-372x.dtsi"
-+
-+/ {
-+	model = "Globalscale Marvell ESPRESSOBin Board";
-+	compatible = "globalscale,espressobin", "marvell,armada3720", "marvell,armada3710";
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
-+	};
-+};
-+
-+&pcie0 {
-+	status = "okay";
-+};
-+
-+&sata {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&usb3 {
-+	status = "okay";
-+};
+Though there is a discussion going on w.r.t. clk-rates DT entry[6]
+but I would like to get below patches reviewed, since these
+patches should not be functionally impacted.
+
+Changes from v4 -> v5 :-
+1. Added HS400 sdhci-msm controller specific changes:- (Patch 10, 11, 12)
+2. Addressed comment from Adrian on Patch 07 @[3].
+3. Addressed comment from Arnd on Patch 03, to directly add
+   clk_table into sdhci_msm_host. [4]
+4. Addressed comment from Bjorn to not enforce having clk-rates property
+   in DT for older targets based on discussion at [5]
+5. Retained Acks from Adrian on patches (01 & 02 & 06) where there were no
+   changes made while addressing above comments.
+
+
+Older history:- 
+This is v4 version of the patch series.
+Patches 01, 02, 05 & 06 were Acked-by Adrian.
+
+Changes from v3 -> v4 :-
+1. Addressed comments from Adrian on Patch 03, 07, 08.
+2. Addressed comments from Bjorn on Patch 03.
+3. Added clk-rate support for sdhc DT nodes to all MSM platforms.
+   in Pacth 04.
+4. Rebased on next branch of Ulf.
+
+Changes from v2 -> v3 :-
+1. Addded Patch 01 based on Bjorn comment[2] - 
+   This fixes/unrolls the poor coding style of read/writes of
+   registers from base sdhci-msm driver.
+
+2. Fixed/unrolled poor style of reads/writes of registers in Patch 02,
+   based on Bjorn comment[2]. Also changed name of flag from
+   use_updated_dll_reset -> use_14lpp_dll_reset.
+
+Changes from v1->v2 :-
+1. Removed patch 06 & 08 from v1 patch series[1]
+(which were introducing unnecessary quirks).
+   Instead have implemented __sdhci_msm_set_clock version of
+   sdhci_set_clock in sdhci_msm driver itself in patch 07 of
+   this patch series.
+2. Enabled extra quirk (SDHCI_QUIRK2_PRESET_VALUE_BROKEN) in
+   patch 05 of this patch series. 
+
+
+Description of patches :-
+This patchset adds clk-rates & other required changes to
+upstream sdhci-msm driver from codeaurora tree.
+It has been tested on a db410c Dragonboard and msm8996 based
+platform.
+
+Patch 0002 - Adds updated dll sequence for newer controllers
+which has minor_version >= 0x42. This is required for msm8996.
+
+MSM controller HW recommendation is to use the base MCI clock
+and directly control this MCI clock at GCC in order to
+change the clk-rate. 
+Patches 03-07 bring in required change for this to
+sdhci-msm and DT.
+
+MSM controller would require 2x clock rate from source
+for DDR bus speed modes. Patch 08 adds this support.
+
+Patch 09 - adds DDR support in DT for sdhc1 of msm8916.
+
+
+[1]:- http://www.spinics.net/lists/linux-mmc/msg38467.html
+[2]:- http://www.spinics.net/lists/linux-mmc/msg38578.html 
+[3]:- https://patchwork.kernel.org/patch/9289345/
+[4]:- https://www.spinics.net/lists/linux-mmc/msg39107.html
+[5]:- http://www.spinics.net/lists/linux-mmc/msg38749.html
+[6]:- https://patchwork.kernel.org/patch/9297381/
+
+Ritesh Harjani (9):
+  mmc: sdhci-msm: Change poor style writel/readl of registers
+  mmc: sdhci-msm: add pltfm_data support to get clk-rates from DT
+  ARM: dts: qcom: Add clk-rates to sdhc1 & sdhc2
+  mmc: sdhci-msm: Add get_min_clock() and get_max_clock() callback
+  mmc: sdhci-msm: Enable few quirks
+  mmc: sdhci-msm: Implement set_clock callback for sdhci-msm
+  mmc: sdhci-msm: Add clock changes for DDR mode.
+  arm64: dts: qcom: msm8916: Add ddr support to sdhc1
+  sdhci: sdhci-msm: update dll configuration
+
+Venkat Gopalakrishnan (3):
+  mmc: sdhci-msm: Update DLL reset sequence
+  mmc: sdhci-msm: Add HS400 platform support
+  mmc: sdhci-msm: Add calibration tuning for CDCLP533 circuit
+
+ .../devicetree/bindings/mmc/sdhci-msm.txt          |   1 +
+ arch/arm/boot/dts/qcom-apq8084.dtsi                |   4 +
+ arch/arm/boot/dts/qcom-msm8974.dtsi                |   4 +
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              |   5 +
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              |   2 +
+ drivers/mmc/host/sdhci-msm.c                       | 721 ++++++++++++++++++++-
+ 6 files changed, 703 insertions(+), 34 deletions(-)
+
 -- 
-2.9.3
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, 
+a Linux Foundation Collaborative Project.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
