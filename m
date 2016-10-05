@@ -1,46 +1,94 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [PATCH v2 3/4] ARM: dts: dra72-evm-revc: fix correct phy delay
- and impedance settings
-Date: Wed, 5 Oct 2016 08:59:14 +0530
-Message-ID: <c454c5d8-e5d6-28f4-a02d-3ce0bc05d986@ti.com>
-References: <20161004125607.10569-1-mugunthanvnm@ti.com>
- <20161004125607.10569-4-mugunthanvnm@ti.com>
- <a4ef7fc1-73f7-7136-0d60-6ce8a8ff33b9@ti.com>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v14 2/4] CMDQ: Mediatek CMDQ driver
+Date: Wed, 5 Oct 2016 09:07:54 +0530
+Message-ID: <CAJe_ZhcXw1-MOEiiix5VTtKEVr9Z23s_OyikboDYCd0RQwS5pg@mail.gmail.com>
+References: <1473039885-24009-1-git-send-email-hs.liao@mediatek.com>
+ <1473039885-24009-3-git-send-email-hs.liao@mediatek.com> <1475204778.13398.28.camel@mtksdaap41>
+ <1475225778.25044.35.camel@mtksdaap41> <1475226691.13398.35.camel@mtksdaap41>
+ <1475228829.3658.1.camel@mtksdaap41> <1475636064.21937.25.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <a4ef7fc1-73f7-7136-0d60-6ce8a8ff33b9@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, David Miller <davem@davemloft.net>, Sekhar Nori <nsekhar@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475636064.21937.25.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Monica Wang <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 04 October 2016 06:41 PM, Lokesh Vutla wrote:
-> 
-> On Tuesday 04 October 2016 06:26 PM, Mugunthan V N wrote:
->> > The default impedance settings of the phy is not the optimal
->> > value, due to this the second ethernet is not working. Fix it
->> > with correct values which makes the second ethernet port to work.
->> > 
->> > Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
->> > ---
->> >  arch/arm/boot/dts/dra72-evm-revc.dts | 2 ++
->> >  1 file changed, 2 insertions(+)
->> > 
->> > diff --git a/arch/arm/boot/dts/dra72-evm-revc.dts b/arch/arm/boot/dts/dra72-evm-revc.dts
->> > index f9cfd3b..d626cd7 100644
->> > --- a/arch/arm/boot/dts/dra72-evm-revc.dts
->> > +++ b/arch/arm/boot/dts/dra72-evm-revc.dts
->> > @@ -62,6 +62,7 @@
->> >  		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
->> >  		ti,tx-internal-delay = <DP83867_RGMIIDCTL_1_NS>;
->> >  		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_8_B_NIB>;
->> > +		ti,min-output-imepdance;
-> s/imepdance/impedance
-> 
+On 5 October 2016 at 08:24, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> On Fri, 2016-09-30 at 17:47 +0800, Horng-Shyang Liao wrote:
+>> On Fri, 2016-09-30 at 17:11 +0800, CK Hu wrote:
 
-Thanks for quick catch. Will fix this in v3.
+>
+> After I trace mailbox driver, I realize that CMDQ driver cannot use
+> tx_done.
+>
+> CMDQ clients will flush many tasks into CMDQ driver, and then CMDQ
+> driver will apply these tasks into GCE HW "immediately". These tasks,
+> which are queued in GCE HW, may not execute immediately since they
+> may need to wait event(s), e.g. vsync.
+>
+> However, in mailbox driver, mailbox uses a software buffer to queue
+> sent messages. It only sends next message until previous message is
+> done. This cannot fulfill CMDQ's requirement.
+>
+I understand
+ a) GCE HW can internally queue many tasks in some 'FIFO'
+ b) Execution of some task may have to wait until some external event
+occurs (like vsync)
+ c) GCE does not generate irq/flag for each task executed (?)
 
-Regards
-Mugunthan V N
+If so, may be your tx_done should return 'true' so long as the GCE HW
+can accept tasks in its 'FIFO'. For mailbox api, any task that is
+queued on GCE, is assumed to be transmitted.
+
+> Quote some code from mailbox driver. Please notice "active_req" part.
+>
+> static void msg_submit(struct mbox_chan *chan)
+> {
+>         ...
+>         if (!chan->msg_count || chan->active_req)
+>                 goto exit;
+>         ...
+>         err = chan->mbox->ops->send_data(chan, data);
+>         if (!err) {
+>                 chan->active_req = data;
+>                 chan->msg_count--;
+>         }
+>         ...
+> }
+>
+> static void tx_tick(struct mbox_chan *chan, int r)
+> {
+>         ...
+>         spin_lock_irqsave(&chan->lock, flags);
+>         mssg = chan->active_req;
+>         chan->active_req = NULL;
+>         spin_unlock_irqrestore(&chan->lock, flags);
+>         ...
+> }
+>
+> Current workable CMDQ driver uses mbox_client_txdone() to prevent
+> this issue, and then uses self callback functions to handle done tasks.
+>
+> int cmdq_task_flush_async(struct cmdq_client *client, struct cmdq_task
+> *task, cmdq_async_flush_cb cb, void *data)
+> {
+>         ...
+>         mbox_send_message(client->chan, task);
+>         /* We can send next task immediately, so just call txdone. */
+>         mbox_client_txdone(client->chan, 0);
+>         ...
+> }
+>
+> Another solution is to use rx_callback; i.e. CMDQ mailbox controller
+> call mbox_chan_received_data() when CMDQ task is done. But, this may
+> violate the design of mailbox. What do you think?
+>
+If my point (c) above does not hold, maybe look at implementing
+tx_done() callback and submit next task from the callback of last
+done.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
