@@ -1,58 +1,83 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v4 1/2] dt-bindings: display: Add Sharp LQ150X1LG11 panel
- binding
-Date: Tue, 4 Oct 2016 17:29:20 +0200
-Message-ID: <1475594961-5713-2-git-send-email-peda@axentia.se>
-References: <1475594961-5713-1-git-send-email-peda@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1475594961-5713-1-git-send-email-peda@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Peter Rosin <peda@axentia.se>
+From: Matt Ranostay <mranostay@gmail.com>
+Subject: [PATCH] leds: leds-pca963x: add nxp,leds-suspend property
+Date: Tue,  4 Oct 2016 19:29:32 -0700
+Message-ID: <1475634572-18274-1-git-send-email-matt@ranostay.consulting>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Matt Ranostay <matt@ranostay.consulting>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFNoYXJwIDE1IiBMUTE1MFgxTEcxMSBwYW5lbCBpcyBhbiBYR0EgVEZUIExDRCBwYW5lbC4K
-ClNpZ25lZC1vZmYtYnk6IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+Ci0tLQogLi4uL2Jp
-bmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHExNTB4MWxnMTEudHh0ICAgfCAzNiArKysrKysr
-KysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKQogY3JlYXRl
-IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Bh
-bmVsL3NoYXJwLGxxMTUweDFsZzExLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMTUweDFsZzExLnR4dCBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMTUw
-eDFsZzExLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjBmNTdj
-MzE0MzUwNgotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMTUweDFsZzExLnR4dApAQCAtMCwwICsxLDM2IEBA
-CitTaGFycCAxNSIgTFExNTBYMUxHMTEgWEdBIFRGVCBMQ0QgcGFuZWwKKworUmVxdWlyZWQgcHJv
-cGVydGllczoKKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJzaGFycCxscTE1MHgxbGcxMSIKKy0g
-cG93ZXItc3VwcGx5OiByZWd1bGF0b3IgdG8gcHJvdmlkZSB0aGUgVkNDIHN1cHBseSB2b2x0YWdl
-ICgzLjMgdm9sdHMpCisKK09wdGlvbmFsIHByb3BlcnRpZXM6CistIGJhY2tsaWdodDogcGhhbmRs
-ZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZQorLSBybHVkLWdwaW9zOiBhIHNpbmdsZSBHUElPIGZv
-ciB0aGUgUkwvVUQgKHJvdGF0ZSAxODAgZGVncmVlcykgcGluLgorLSBzZWxsdmRzLWdwaW9zOiBh
-IHNpbmdsZSBHUElPIGZvciB0aGUgU0VMTFZEUyBwaW4uCisKK0lmIHJsdWQtZ3Bpb3MgYW5kL29y
-IHNlbGx2ZHMtZ3Bpb3MgYXJlIG5vdCBzcGVjaWZpZWQsIHRoZSBSTC9VRCBhbmQvb3IgU0VMTFZE
-UworcGlucyBhcmUgYXNzdW1lZCB0byBiZSBoYW5kbGVkIGFwcHJvcHJpYXRlbHkgYnkgdGhlIGhh
-cmR3YXJlLgorCitFeGFtcGxlOgorCisJYmFja2xpZ2h0OiBiYWNrbGlnaHQgeworCQljb21wYXRp
-YmxlID0gInB3bS1iYWNrbGlnaHQiOworCQlwd21zID0gPCZwd20gMCAxMDAwMDA+OyAgICAgICAg
-ICAgICAgICAgICAgICAvKiBWQlIgKi8KKworCQlicmlnaHRuZXNzLWxldmVscyA9IDwwIDIwIDQw
-IDYwIDgwIDEwMD47CisJCWRlZmF1bHQtYnJpZ2h0bmVzcy1sZXZlbCA9IDwyPjsKKworCQlwb3dl
-ci1zdXBwbHkgPSA8JnZkZF8xMnZfcmVnPjsgICAgICAgICAgICAgICAvKiBWREQgKi8KKwkJZW5h
-YmxlLWdwaW9zID0gPCZncGlvIDQyIEdQSU9fQUNUSVZFX0hJR0g+OyAgLyogWFNUQUJZICovCisJ
-fTsKKworCXBhbmVsIHsKKwkJY29tcGF0aWJsZSA9ICJzaGFycCxscTE1MHgxbGcxMSI7CisKKwkJ
-cG93ZXItc3VwcGx5ID0gPCZ2Y2NfM3YzX3JlZz47ICAgICAgICAgICAgICAgLyogVkNDICovCisK
-KwkJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+OworCQlybHVkLWdwaW9zID0gPCZncGlvIDE3IEdQ
-SU9fQUNUSVZFX0hJR0g+OyAgICAvKiBSTC9VRCAqLworCQlzZWxsdmRzLWdwaW9zID0gPCZncGlv
-IDE4IEdQSU9fQUNUSVZFX0hJR0g+OyAvKiBTRUxMVkRTICovCisJfTsKLS0gCjIuMS40CgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Allow the LED subsystem to blank the LEDS on suspend.
+
+Cc: Richard Purdie <rpurdie@rpsys.net>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>
+Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+---
+ Documentation/devicetree/bindings/leds/pca963x.txt | 1 +
+ drivers/leds/leds-pca963x.c                        | 9 +++++++++
+ include/linux/platform_data/leds-pca963x.h         | 6 ++++++
+ 3 files changed, 16 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/leds/pca963x.txt b/Documentation/devicetree/bindings/leds/pca963x.txt
+index dafbe9931c2b..61b1f037ebd0 100644
+--- a/Documentation/devicetree/bindings/leds/pca963x.txt
++++ b/Documentation/devicetree/bindings/leds/pca963x.txt
+@@ -7,6 +7,7 @@ Optional properties:
+ - nxp,totem-pole : use totem pole (push-pull) instead of open-drain (pca9632 defaults
+   to open-drain, newer chips to totem pole)
+ - nxp,hw-blink : use hardware blinking instead of software blinking
++- nxp,leds-suspend : turn off LEDS on system suspend
+ 
+ Each led is represented as a sub-node of the nxp,pca963x device.
+ 
+diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
+index 407eba11e187..9a347b94f1db 100644
+--- a/drivers/leds/leds-pca963x.c
++++ b/drivers/leds/leds-pca963x.c
+@@ -294,6 +294,12 @@ pca963x_dt_init(struct i2c_client *client, struct pca963x_chipdef *chip)
+ 	else
+ 		pdata->blink_type = PCA963X_SW_BLINK;
+ 
++	/* default to turning off LEDs on suspend */
++	if (of_property_read_bool(np, "nxp,leds-suspend"))
++		pdata->suspend = PCA963X_LED_SUSPEND;
++	else
++		pdata->suspend = PCA963X_LED_RETAIN;
++
+ 	return pdata;
+ }
+ 
+@@ -386,6 +392,9 @@ static int pca963x_probe(struct i2c_client *client,
+ 		if (pdata && pdata->blink_type == PCA963X_HW_BLINK)
+ 			pca963x[i].led_cdev.blink_set = pca963x_blink_set;
+ 
++		if (pdata && pdata->suspend == PCA963X_LED_SUSPEND)
++			pca963x[i].led_cdev.flags = LED_CORE_SUSPENDRESUME;
++
+ 		err = led_classdev_register(&client->dev, &pca963x[i].led_cdev);
+ 		if (err < 0)
+ 			goto exit;
+diff --git a/include/linux/platform_data/leds-pca963x.h b/include/linux/platform_data/leds-pca963x.h
+index e731f0036329..e5bad91e2fab 100644
+--- a/include/linux/platform_data/leds-pca963x.h
++++ b/include/linux/platform_data/leds-pca963x.h
+@@ -33,10 +33,16 @@ enum pca963x_blink_type {
+ 	PCA963X_HW_BLINK,
+ };
+ 
++enum pca963x_suspend {
++	PCA963X_LED_RETAIN,
++	PCA963X_LED_SUSPEND,
++};
++
+ struct pca963x_platform_data {
+ 	struct led_platform_data leds;
+ 	enum pca963x_outdrv outdrv;
+ 	enum pca963x_blink_type blink_type;
++	enum pca963x_suspend suspend;
+ };
+ 
+ #endif /* __LINUX_PCA963X_H*/
+-- 
+2.7.4
