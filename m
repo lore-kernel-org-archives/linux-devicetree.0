@@ -1,104 +1,104 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 2/2] ARM: dts: meson-gxbb: Add support for the Nexbox A95X
- Board
-Date: Wed,  5 Oct 2016 10:09:40 +0200
-Message-ID: <1475654980-16414-3-git-send-email-narmstrong@baylibre.com>
-References: <1475654980-16414-1-git-send-email-narmstrong@baylibre.com>
+From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] drivers: iio: ti_am335x_adc: add dma support
+Date: Wed, 5 Oct 2016 13:47:55 +0530
+Message-ID: <1ffce826-b94a-5b9f-ffb4-ba2d0324b246@ti.com>
+References: <20161003130318.12591-1-mugunthanvnm@ti.com>
+ <20161003130318.12591-3-mugunthanvnm@ti.com>
+ <0ff2c6ef-3fa1-dc8b-fb6e-1a4dcfea8ea9@ti.com>
+ <e9c3108e-ffd1-472a-a2d3-2948665de217@ti.com>
+ <de6bbf1c-e9e2-83b1-73c2-49aa64cc939c@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1475654980-16414-1-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: khilman@baylibre.com, carlo@caione.org
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <de6bbf1c-e9e2-83b1-73c2-49aa64cc939c-l0cyMroinI0@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, John Syne <john3909-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHN1cHBvcnQgZm9yIHRoZSBTOTA1IChHWEJCKSB2ZXJzaW9uIG9mIHRoZSBOZXhib3ggQTk1
-WC4KClNpZ25lZC1vZmYtYnk6IE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNv
-bT4KLS0tCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvTWFrZWZpbGUgICAgICAgICAgICAg
-ICB8ICAgMSArCiAuLi4vYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLW5leGJveC1hOTV4LmR0
-cyAgICB8IDEwOCArKysrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMTA5IGlu
-c2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9n
-aWMvbWVzb24tZ3hiYi1uZXhib3gtYTk1eC5kdHMKCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jv
-b3QvZHRzL2FtbG9naWMvTWFrZWZpbGUgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvTWFr
-ZWZpbGUKaW5kZXggNTdlMGFlMC4uNWE2NDA1MCAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9ib290
-L2R0cy9hbWxvZ2ljL01ha2VmaWxlCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9N
-YWtlZmlsZQpAQCAtMSwzICsxLDQgQEAKK2R0Yi0kKENPTkZJR19BUkNIX01FU09OKSArPSBtZXNv
-bi1neGJiLW5leGJveC1hOTV4LmR0YgogZHRiLSQoQ09ORklHX0FSQ0hfTUVTT04pICs9IG1lc29u
-LWd4YmItb2Ryb2lkYzIuZHRiCiBkdGItJChDT05GSUdfQVJDSF9NRVNPTikgKz0gbWVzb24tZ3hi
-Yi1wMjAwLmR0YgogZHRiLSQoQ09ORklHX0FSQ0hfTUVTT04pICs9IG1lc29uLWd4YmItcDIwMS5k
-dGIKZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLW5l
-eGJveC1hOTV4LmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLW5l
-eGJveC1hOTV4LmR0cwpuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi44MGQ3YjM1
-Ci0tLSAvZGV2L251bGwKKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4
-YmItbmV4Ym94LWE5NXguZHRzCkBAIC0wLDAgKzEsMTA4IEBACisvKgorICogQ29weXJpZ2h0IChj
-KSAyMDE2IEFuZHJlYXMgRsOkcmJlcgorICogQ29weXJpZ2h0IChjKSAyMDE2IEJheUxpYnJlLCBJ
-bmMuCisgKiBBdXRob3I6IE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGtlcm5lbC5vcmc+Cisg
-KgorICogVGhpcyBmaWxlIGlzIGR1YWwtbGljZW5zZWQ6IHlvdSBjYW4gdXNlIGl0IGVpdGhlciB1
-bmRlciB0aGUgdGVybXMKKyAqIG9mIHRoZSBHUEwgb3IgdGhlIFgxMSBsaWNlbnNlLCBhdCB5b3Vy
-IG9wdGlvbi4gTm90ZSB0aGF0IHRoaXMgZHVhbAorICogbGljZW5zaW5nIG9ubHkgYXBwbGllcyB0
-byB0aGlzIGZpbGUsIGFuZCBub3QgdGhpcyBwcm9qZWN0IGFzIGEKKyAqIHdob2xlLgorICoKKyAq
-ICBhKSBUaGlzIGxpYnJhcnkgaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUg
-aXQgYW5kL29yCisgKiAgICAgbW9kaWZ5IGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdl
-bmVyYWwgUHVibGljIExpY2Vuc2UgYXMKKyAqICAgICBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29m
-dHdhcmUgRm91bmRhdGlvbjsgZWl0aGVyIHZlcnNpb24gMiBvZiB0aGUKKyAqICAgICBMaWNlbnNl
-LCBvciAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLgorICoKKyAqICAgICBUaGlz
-IGxpYnJhcnkgaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1
-bCwKKyAqICAgICBidXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1w
-bGllZCB3YXJyYW50eSBvZgorICogICAgIE1FUkNIQU5UQUJJTElUWSBvciBGSVRORVNTIEZPUiBB
-IFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUKKyAqICAgICBHTlUgR2VuZXJhbCBQdWJsaWMg
-TGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLgorICoKKyAqIE9yLCBhbHRlcm5hdGl2ZWx5LAorICoK
-KyAqICBiKSBQZXJtaXNzaW9uIGlzIGhlcmVieSBncmFudGVkLCBmcmVlIG9mIGNoYXJnZSwgdG8g
-YW55IHBlcnNvbgorICogICAgIG9idGFpbmluZyBhIGNvcHkgb2YgdGhpcyBzb2Z0d2FyZSBhbmQg
-YXNzb2NpYXRlZCBkb2N1bWVudGF0aW9uCisgKiAgICAgZmlsZXMgKHRoZSAiU29mdHdhcmUiKSwg
-dG8gZGVhbCBpbiB0aGUgU29mdHdhcmUgd2l0aG91dAorICogICAgIHJlc3RyaWN0aW9uLCBpbmNs
-dWRpbmcgd2l0aG91dCBsaW1pdGF0aW9uIHRoZSByaWdodHMgdG8gdXNlLAorICogICAgIGNvcHks
-IG1vZGlmeSwgbWVyZ2UsIHB1Ymxpc2gsIGRpc3RyaWJ1dGUsIHN1YmxpY2Vuc2UsIGFuZC9vcgor
-ICogICAgIHNlbGwgY29waWVzIG9mIHRoZSBTb2Z0d2FyZSwgYW5kIHRvIHBlcm1pdCBwZXJzb25z
-IHRvIHdob20gdGhlCisgKiAgICAgU29mdHdhcmUgaXMgZnVybmlzaGVkIHRvIGRvIHNvLCBzdWJq
-ZWN0IHRvIHRoZSBmb2xsb3dpbmcKKyAqICAgICBjb25kaXRpb25zOgorICoKKyAqICAgICBUaGUg
-YWJvdmUgY29weXJpZ2h0IG5vdGljZSBhbmQgdGhpcyBwZXJtaXNzaW9uIG5vdGljZSBzaGFsbCBi
-ZQorICogICAgIGluY2x1ZGVkIGluIGFsbCBjb3BpZXMgb3Igc3Vic3RhbnRpYWwgcG9ydGlvbnMg
-b2YgdGhlIFNvZnR3YXJlLgorICoKKyAqICAgICBUSEUgU09GVFdBUkUgSVMgUFJPVklERUQgIkFT
-IElTIiwgV0lUSE9VVCBXQVJSQU5UWSBPRiBBTlkgS0lORCwKKyAqICAgICBFWFBSRVNTIE9SIElN
-UExJRUQsIElOQ0xVRElORyBCVVQgTk9UIExJTUlURUQgVE8gVEhFIFdBUlJBTlRJRVMKKyAqICAg
-ICBPRiBNRVJDSEFOVEFCSUxJVFksIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFIEFO
-RAorICogICAgIE5PTklORlJJTkdFTUVOVC4gSU4gTk8gRVZFTlQgU0hBTEwgVEhFIEFVVEhPUlMg
-T1IgQ09QWVJJR0hUCisgKiAgICAgSE9MREVSUyBCRSBMSUFCTEUgRk9SIEFOWSBDTEFJTSwgREFN
-QUdFUyBPUiBPVEhFUiBMSUFCSUxJVFksCisgKiAgICAgV0hFVEhFUiBJTiBBTiBBQ1RJT04gT0Yg
-Q09OVFJBQ1QsIFRPUlQgT1IgT1RIRVJXSVNFLCBBUklTSU5HCisgKiAgICAgRlJPTSwgT1VUIE9G
-IE9SIElOIENPTk5FQ1RJT04gV0lUSCBUSEUgU09GVFdBUkUgT1IgVEhFIFVTRSBPUgorICogICAg
-IE9USEVSIERFQUxJTkdTIElOIFRIRSBTT0ZUV0FSRS4KKyAqLworCisvZHRzLXYxLzsKKworI2lu
-Y2x1ZGUgIm1lc29uLWd4YmIuZHRzaSIKKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9ncGlvL2dwaW8u
-aD4KKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnB1dC9pbnB1dC5oPgorCisvIHsKKwljb21wYXRp
-YmxlID0gIm5leGJveCxhOTV4IiwgImFtbG9naWMsbWVzb24tZ3hiYiI7CisJbW9kZWwgPSAiTkVY
-Qk9YIEE5NVgiOworCQorCWFsaWFzZXMgeworCQlzZXJpYWwwID0gJnVhcnRfQU87CisJfTsKKwor
-CWNob3NlbiB7CisJCXN0ZG91dC1wYXRoID0gInNlcmlhbDA6MTE1MjAwbjgiOworCX07CisKKwlt
-ZW1vcnlAMCB7CisJCWRldmljZV90eXBlID0gIm1lbW9yeSI7CisJCXJlZyA9IDwweDAgMHgwIDB4
-MCAweDQwMDAwMDAwPjsKKwl9OworCisJbGVkcyB7CisJCWNvbXBhdGlibGUgPSAiZ3Bpby1sZWRz
-IjsKKwkJYmx1ZSB7CisJCQlsYWJlbCA9ICJhOTV4OnN5c3RlbS1zdGF0dXMiOworCQkJZ3Bpb3Mg
-PSA8JmdwaW9fYW8gR1BJT0FPXzEzIEdQSU9fQUNUSVZFX0xPVz47CisJCQlsaW51eCxkZWZhdWx0
-LXRyaWdnZXIgPSAiaGVhcnRiZWF0IjsKKwkJCWRlZmF1bHQtc3RhdGUgPSAib2ZmIjsKKwkJfTsK
-Kwl9OworCisJZ3Bpby1rZXlzLXBvbGxlZCB7CisJCWNvbXBhdGlibGUgPSAiZ3Bpby1rZXlzLXBv
-bGxlZCI7CisJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkjc2l6ZS1jZWxscyA9IDwwPjsKKwkJ
-cG9sbC1pbnRlcnZhbCA9IDwxMDA+OworCisJCWJ1dHRvbkAwIHsKKwkJCWxhYmVsID0gInJlc2V0
-IjsKKwkJCWxpbnV4LGNvZGUgPSA8S0VZX1JFU1RBUlQ+OworCQkJZ3Bpb3MgPSA8JmdwaW9fYW8g
-R1BJT0FPXzMgR1BJT19BQ1RJVkVfTE9XPjsKKwkJfTsKKwl9OworfTsKKworJnVhcnRfQU8gewor
-CXN0YXR1cyA9ICJva2F5IjsKKwlwaW5jdHJsLTAgPSA8JnVhcnRfYW9fYV9waW5zPjsKKwlwaW5j
-dHJsLW5hbWVzID0gImRlZmF1bHQiOworfTsKKworJmV0aG1hYyB7CisJc3RhdHVzID0gIm9rYXki
-OworCXBpbmN0cmwtMCA9IDwmZXRoX3BpbnM+OworCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7
-Cit9OworCismaXIgeworCXN0YXR1cyA9ICJva2F5IjsKKwlwaW5jdHJsLTAgPSA8JnJlbW90ZV9p
-bnB1dF9hb19waW5zPjsKKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOworfTsKLS0gCjEuOS4x
-CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
-YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
-LWtlcm5lbAo=
+On Wednesday 05 October 2016 12:01 PM, Peter Ujfalusi wrote:
+> On 10/05/16 09:21, Mugunthan V N wrote:
+>> On Tuesday 04 October 2016 02:02 PM, Peter Ujfalusi wrote:
+>>> On 10/03/16 16:03, Mugunthan V N wrote:
+>>>> +static int tiadc_request_dma(struct platform_device *pdev,
+>>>> +			     struct tiadc_device *adc_dev)
+>>>> +{
+>>>> +	struct tiadc_dma	*dma = &adc_dev->dma;
+>>>> +	dma_cap_mask_t		mask;
+>>>> +
+>>>> +	/* Default slave configuration parameters */
+>>>> +	dma->conf.direction = DMA_DEV_TO_MEM;
+>>>> +	dma->conf.src_addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
+>>>> +	dma->conf.src_addr = adc_dev->mfd_tscadc->tscadc_phys_base + REG_FIFO1;
+>>>> +
+>>>> +	dma_cap_zero(mask);
+>>>> +	dma_cap_set(DMA_CYCLIC, mask);
+>>>> +
+>>>> +	/* Get a channel for RX */
+>>>> +	dma->chan = dma_request_chan(adc_dev->mfd_tscadc->dev, "fifo1");
+>>>> +	if (!dma->chan)
+>>>> +		return -ENODEV;
+>>>
+>>> dma_request_chan() ERR_PTR in case of failure, never NULL. You should reuse
+>>> the returned error code to support deferred probing.
+>>
+>> Will fix this in v3.
+>>
+>>>
+>>>> +
+>>>> +	/* RX buffer */
+>>>> +	dma->buf = dma_alloc_coherent(dma->chan->device->dev, DMA_BUFFER_SIZE,
+>>>> +				      &dma->addr, GFP_KERNEL);
+>>>> +	if (!dma->buf)
+>>>> +		goto err;
+>>>> +
+>>>> +	return 0;
+>>>> +err:
+>>>> +	dma_release_channel(dma->chan);
+>>>> +
+>>>> +	return -ENOMEM;
+>>>> +}
+>>>> +
+>>>>  static int tiadc_parse_dt(struct platform_device *pdev,
+>>>>  			  struct tiadc_device *adc_dev)
+>>>>  {
+>>>> @@ -512,8 +639,14 @@ static int tiadc_probe(struct platform_device *pdev)
+>>>>  
+>>>>  	platform_set_drvdata(pdev, indio_dev);
+>>>>  
+>>>> +	err = tiadc_request_dma(pdev, adc_dev);
+>>>> +	if (err && err != -ENODEV)
+>>>> +		goto err_dma;
+>>>
+>>> You should handle the deferred probing for DMA channel.
+>>
+>> +	dma->chan = dma_request_chan(adc_dev->mfd_tscadc->dev, "fifo1");
+>> +	if (IS_ERR(dma->chan)) {
+>> +		int ret = PTR_ERR(dma->chan);
+>> +
+>> +		dma->chan = NULL;
+>> +		return ret;
+> 
+> You don't need the 'ret' variable:
+> 		return PTR_ERR(dma->chan);
+
+So you mean change all *if (dma->chan)* to *if (IS_ERR(dma->chan))*?
+
+> 
+>> +	}
+>>
+>> With this probe defer will be taken care and ADC will continue without
+>> DMA when request channel returns -ENODEV.
+> 
+> I would rather have explicit check for deferred probe:
+> 
+> err = tiadc_request_dma(pdev, adc_dev);
+> if (err && err == -EPROBE_DEFER)
+> 	goto err_dma;
+
+But in this case any other failure other than -EPROBE_DEFER will be
+masked and ADC will be in PIO mode?
+
+Regards
+Mugunthan V N
