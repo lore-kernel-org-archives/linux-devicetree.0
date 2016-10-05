@@ -1,85 +1,82 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: [PATCH 5/8] dt/bindings: Update binding for PM domain idle states
-Date: Wed,  5 Oct 2016 14:31:56 -0600
-Message-ID: <1475699519-109623-6-git-send-email-lina.iyer@linaro.org>
-References: <1475699519-109623-1-git-send-email-lina.iyer@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1475699519-109623-1-git-send-email-lina.iyer@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, brendan.jackman@arm.com, lorenzo.pieralisi@arm.com, sudeep.holla@arm.com, Juri.Lelli@arm.com, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>
+From: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+Subject: Re: [RFC 0/3] of: add common bindings to (de)activate IEEE 802.11
+ bands
+Date: Wed, 5 Oct 2016 22:34:14 +0200
+Message-ID: <a8b3e633-fc5e-31ec-9e44-0ee4be58d8bc@nbd.name>
+References: <20161002225059.16757-1-martin.blumenstingl@googlemail.com>
+ <CAL_Jsq+cie=enhUYBF-OSrMdQ5S_048JF31ghEjtBNAmkGbB9Q@mail.gmail.com>
+ <CAFBinCCDjZs6szRw0D1rwB89tUo+-RNFH2_g=K+Xj2iRJuUZDQ@mail.gmail.com>
+ <23f49efe-ddef-ea16-00de-7477e4872d82@nbd.name>
+ <CAL_JsqJfxEZCtdNi-wRgrtdmkPsGw0-ZMGhdbcoQ=seyij5LiQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJfxEZCtdNi-wRgrtdmkPsGw0-ZMGhdbcoQ=seyij5LiQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Update DT bindings to describe idle states of PM domains.
+On 2016-10-05 22:31, Rob Herring wrote:
+> On Wed, Oct 5, 2016 at 1:36 PM, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org> wrote:
+>> On 2016-10-05 20:25, Martin Blumenstingl wrote:
+>>> On Mon, Oct 3, 2016 at 5:22 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>> On Sun, Oct 2, 2016 at 5:50 PM, Martin Blumenstingl
+>>>> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+>>>>> There are at least two drivers (ath9k and mt76) out there, where
+>>>>> devicetree authors need to override the enabled bands.
+>>>>>
+>>>>> For ath9k there is only one use-case: disabling a band which has been
+>>>>> incorrectly enabled by the vendor in the EEPROM (enabling a band is not
+>>>>> possible because the calibration data would be missing in the EEPROM).
+>>>>> The mt76 driver (currently pending for review) however allows enabling
+>>>>> and disabling the 2.4GHz and 5GHz band, see [0].
+>>>>>
+>>>>> Based on the discussion of (earlier versions of) my ath9k devicetree
+>>>>> patch it was suggested [1] that we use enable- and disable- properties.
+>>>>> The current patch implements:
+>>>>> - bands can be enabled or disabled with the corresponding property
+>>>>> - if both (disable and enable) properties are given and a driver asks
+>>>>>   whether the band is enabled then the logic will return false (= not
+>>>>>   enabled, preferring the disabled flag)
+>>>>> - if both (disable and enable) properties are given and a driver asks
+>>>>>   whether the band is disabled then the logic will return true (again,
+>>>>>   preferring the disabled flag over the enabled flag)
+>>>>>
+>>>>> We can still change the logic to do what the mt76 driver does (I am
+>>>>> fine with both solutions):
+>>>>> - property not available: driver decides which bands to enable
+>>>>> - property set to 0: disable the band
+>>>>> - property set to 1: enable the band
+>>>>
+>>>> I prefer this way. Really, I'd prefer just a boolean disable property.
+>>>> I'm not sure why you need the enable. We usually have these tri-state
+>>>> properties when you want not present to mean use the bootloader or
+>>>> default setting. Try to make not present the most common case.
+>>> Felix: could you please give a few details why mt76 can not only
+>>> disable but also enable a specific band?
+>>> There is no specific comment in the sources [0] why this is needed.
+>>> All other drivers that I am aware of (ath9k, rt2x00) only allow
+>>> disabling a specific band, they never enable it (this has to be done
+>>> explicitly by the EEPROM).
+>> None of the devices use it at the moment, I probably added it when I
+>> played with a device that had broken EEPROM data. I guess I decided to
+>> do it this way because on many devices the band capability field simply
+>> cannot be trusted.
+>> I guess I would be okay with just having a disable property and adding
+>> an enable property later only if we end up actually needing it.
+> 
+> If EEPROM is commonly wrong or missing, then seems like you want to
+> plan ahead and support both enable and disable.
+> 
+> The other approach I've mentioned before is just put raw EEPROM data
+> into DT to override the EEPROM. This would be better if there's a
+> large number of settings you need.
+So far, other EEPROM settings didn't need to be changed.
 
-This patch is based on the original patch by Marc Titinger.
-
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Marc Titinger <mtitinger+renesas@baylibre.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/power/power_domain.txt     | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-index 025b5e7..a043315 100644
---- a/Documentation/devicetree/bindings/power/power_domain.txt
-+++ b/Documentation/devicetree/bindings/power/power_domain.txt
-@@ -29,6 +29,10 @@ Optional properties:
-    specified by this binding. More details about power domain specifier are
-    available in the next section.
- 
-+- domain-idle-states : A phandle of an idle-state that shall be soaked into a
-+                generic domain power state. The idle state definitions are
-+                compatible with arm,idle-state specified in [1].
-+
- Example:
- 
- 	power: power-controller@12340000 {
-@@ -59,6 +63,36 @@ The nodes above define two power controllers: 'parent' and 'child'.
- Domains created by the 'child' power controller are subdomains of '0' power
- domain provided by the 'parent' power controller.
- 
-+Example 3:
-+	parent: power-controller@12340000 {
-+		compatible = "foo,power-controller";
-+		reg = <0x12340000 0x1000>;
-+		#power-domain-cells = <1>;
-+		domain-idle-states = <&DOMAIN_RET, &DOMAIN_PWR_DN>;
-+	};
-+
-+	child: power-controller@12341000 {
-+		compatible = "foo,power-controller";
-+		reg = <0x12341000 0x1000>;
-+		power-domains = <&parent 0>;
-+		#power-domain-cells = <1>;
-+		domain-idle-states = <&DOMAIN_PWR_DN>;
-+	};
-+
-+	DOMAIN_RET: state@0 {
-+		compatible = "arm,idle-state";
-+		entry-latency-us = <1000>;
-+		exit-latency-us = <2000>;
-+		min-residency-us = <10000>;
-+	};
-+
-+	DOMAIN_PWR_DN: state@1 {
-+		compatible = "arm,idle-state";
-+		entry-latency-us = <5000>;
-+		exit-latency-us = <8000>;
-+		min-residency-us = <7000>;
-+	};
-+
- ==PM domain consumers==
- 
- Required properties:
-@@ -76,3 +110,5 @@ Example:
- The node above defines a typical PM domain consumer device, which is located
- inside a PM domain with index 0 of a power controller represented by a node
- with the label "power".
-+
-+[1]. Documentation/devicetree/bindings/arm/idle-states.txt
--- 
-2.7.4
+- Felix
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
