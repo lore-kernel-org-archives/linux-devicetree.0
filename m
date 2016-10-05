@@ -1,98 +1,70 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH] ARM64: dts: meson-gxbb: Add rmii pinctrl node and rename rgmii node
-Date: Wed,  5 Oct 2016 16:44:33 +0200
-Message-ID: <1475678673-15277-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: carlo@caione.org, khilman@baylibre.com
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH 2/6] clk: oxnas: Add dt-bindings include file for OX820
+Date: Wed,  5 Oct 2016 17:07:48 +0200
+Message-ID: <20161005150752.22618-3-narmstrong@baylibre.com>
+References: <20161005150752.22618-1-narmstrong@baylibre.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20161005150752.22618-1-narmstrong@baylibre.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: sboyd@codeaurora.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-oxnas@lists.tuxfamily.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-For boards only supporting 10/100 ethernet over a RMII PHY link, add
-a separate pinctrl node. By the way, rename the existing node to rgmii
-specific naming in all boards dts.
+In order to support the Oxford Semiconductor Gate clocks, add a
+dedicated dt-binding include file for gate indexes.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts  |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi     |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi          | 17 ++++++++++++++++-
- 4 files changed, 19 insertions(+), 4 deletions(-)
+ include/dt-bindings/clock/oxsemi,ox820.h | 40 ++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 include/dt-bindings/clock/oxsemi,ox820.h
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index e6e3491..325b9c5 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -83,7 +83,7 @@
- 
- &ethmac {
- 	status = "okay";
--	pinctrl-0 = <&eth_pins>;
-+	pinctrl-0 = <&eth_rgmii_pins>;
- 	pinctrl-names = "default";
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-index 06a34dc..031d69b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-@@ -81,7 +81,7 @@
- 
- &ethmac {
- 	status = "okay";
--	pinctrl-0 = <&eth_pins>;
-+	pinctrl-0 = <&eth_rgmii_pins>;
- 	pinctrl-names = "default";
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 73f1593..e93221a 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -82,7 +82,7 @@
- 
- &ethmac {
- 	status = "okay";
--	pinctrl-0 = <&eth_pins>;
-+	pinctrl-0 = <&eth_rgmii_pins>;
- 	pinctrl-names = "default";
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 443811b..aad639a 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -443,7 +443,7 @@
- 			};
- 		};
- 
--		eth_pins: eth_c {
-+		eth_rgmii_pins: eth-rgmii {
- 			mux {
- 				groups = "eth_mdio",
- 				       "eth_mdc",
-@@ -463,6 +463,21 @@
- 			};
- 		};
- 
-+		eth_rmii_pins: eth-rmii {
-+			mux {
-+				groups = "eth_mdio",
-+				       "eth_mdc",
-+				       "eth_clk_rx_clk",
-+				       "eth_rx_dv",
-+				       "eth_rxd0",
-+				       "eth_rxd1",
-+				       "eth_tx_en",
-+				       "eth_txd0",
-+				       "eth_txd1";
-+				function = "eth";
-+			};
-+		};
+diff --git a/include/dt-bindings/clock/oxsemi,ox820.h b/include/dt-bindings/clock/oxsemi,ox820.h
+new file mode 100644
+index 0000000..f661ecc
+--- /dev/null
++++ b/include/dt-bindings/clock/oxsemi,ox820.h
+@@ -0,0 +1,40 @@
++/*
++ * Copyright (C) 2016 Neil Armstrong <narmstrong@baylibre.com>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
 +
- 		pwm_a_x_pins: pwm_a_x {
- 			mux {
- 				groups = "pwm_a_x";
++#ifndef DT_CLOCK_OXSEMI_OX820_H
++#define DT_CLOCK_OXSEMI_OX820_H
++
++/* PLLs */
++#define CLK_820_PLLA		0
++#define CLK_820_PLLB		1
++
++/* Gate Clocks */
++#define CLK_820_LEON		2
++#define CLK_820_DMA_SGDMA	3
++#define CLK_820_CIPHER		4
++#define CLK_820_SD		5
++#define CLK_820_SATA		6
++#define CLK_820_AUDIO		7
++#define CLK_820_USBMPH		8
++#define CLK_820_ETHA		9
++#define CLK_820_PCIEA		10
++#define CLK_820_NAND		11
++#define CLK_820_PCIEB		12
++#define CLK_820_ETHB		13
++#define CLK_820_REF600		14
++#define CLK_820_USBDEV		15
++
++#endif /* DT_CLOCK_OXSEMI_OX820_H */
 -- 
-1.9.1
+2.7.0
+
