@@ -1,87 +1,112 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: [PATCH v3 2/4] net: phy: dp83867: add support for MAC impedance configuration
-Date: Thu, 6 Oct 2016 10:43:53 +0530
-Message-ID: <20161006051355.15947-3-mugunthanvnm@ti.com>
-References: <20161006051355.15947-1-mugunthanvnm@ti.com>
+From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 1/2] sdhci: Add device tree property sd-broken-highspeed
+Date: Thu, 6 Oct 2016 09:13:24 +0300
+Message-ID: <7acb34a9-d323-b112-f796-92c2a962743c@intel.com>
+References: <1474660869-15532-1-git-send-email-zach.brown@ni.com>
+ <1474660869-15532-2-git-send-email-zach.brown@ni.com>
+ <CAPDyKFogDKM86XKo1iQE1KU5HpEic23FD5YQGF9QjSFYBDJn4Q@mail.gmail.com>
+ <CAL_JsqLjtn2-FaO_h9JWOsZqttQ35yV6KOnQz2Z-cMr=0GHJCg@mail.gmail.com>
+ <20161005212223.GK10625@jcartwri.amer.corp.natinst.com>
+ <5972c8f4-23b5-7dbb-b87c-7be7ec5b1a17@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161006051355.15947-1-mugunthanvnm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, David Miller <davem@davemloft.net>, Sekhar Nori <nsekhar@ti.com>, Mugunthan V N <mugunthanvnm@ti.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5972c8f4-23b5-7dbb-b87c-7be7ec5b1a17-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Julia Cartwright <julia-acOepvfBmUk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for programmable MAC impedance configuration
+On 06/10/16 04:34, Shawn Lin wrote:
+> On 2016/10/6 5:22, Julia Cartwright wrote:
+>> On Wed, Oct 05, 2016 at 03:03:44PM -0500, Rob Herring wrote:
+>>> On Wed, Oct 5, 2016 at 1:33 PM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>> On 23 September 2016 at 22:01, Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org> wrote:
+>>>>> Certain board configurations can make highspeed malfunction due to
+>>>>> timing issues. In these cases a way is needed to force the controller
+>>>>> and card into standard speed even if they otherwise appear to be capable
+>>>>> of highspeed.
+>>>>>
+>>>>> The sd-broken-highspeed property will let the sdhci driver know that
+>>>>> highspeed will not work.
+>>>>>
+>>>>> Signed-off-by: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+>>>>>  1 file changed, 2 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt
+>>>>> b/Documentation/devicetree/bindings/mmc/mmc.txt
+>>>>> index 8a37782..59332ea 100644
+>>>>> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+>>>>> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+>>>>> @@ -52,6 +52,8 @@ Optional properties:
+>>>>>  - no-sdio: controller is limited to send sdio cmd during initialization
+>>>>>  - no-sd: controller is limited to send sd cmd during initialization
+>>>>>  - no-mmc: controller is limited to send mmc cmd during initialization
+>>>>> +- sd-broken-highspeed: Highspeed is broken, even if the controller and
+>>>>> card
+>>>>> +  themselves claim they support highspeed.
+>>>>
+>>>> Regarding a broken card, that is managed via the card quirks and not in DT.
+>>>>
+>>>> If this is about a controller limitation, we already have the option
+>>>> to describe what it supports, so we don't need an option to tell what
+>>>> it *not* supports.
+>>>>
+>>>> For example "cap-sd-highspeed" tells whether the controller supports
+>>>> SD high-speed, please use that instead.
+>>>
+>>> If a controller has a capability register and it lies (perhaps the
+>>> board has limitations that the SoC does not), then you may need to
+>>> disable a feature.
+>>
+>> That's precisely the case here.  This is a board-level problem, not a
+>> card or controller problem.  As Zach mentioned in the cover letter, the
+>> trace length between controller and card on some of our boards is too
+>> long to meet high-speed timings, even though both card and controller
+>> advertise it.
+> 
+> IIRC, I saw the same problem while using sdhci to bring up a
+> industrial board for vehicle. The trace length is so long that
+> I have to limit the max-frequency to make it works properly when
+> running at hishspeed.
+> 
+> So could you try to limit the max-frequency in your DT to see
+> if it could work for you? I guess it should work as once reducing
+> the frequency, the timing per cycle will be large enough to meet
+> the spec. At least that helped me solve my problem.
+> 
+> For further consideration, I deployed a mechanism called "tuning for
+> non UHS or non-hs200/400" for my donwstream tree at that time. The basic
+> concept is to ask devices to send ext_csd(or send status for SD case)
+> *repeatedly*. Some hosts, i.e. sdhci-of-arasan or dw_mmc-rockchip, can
+> manually set rx delay via some clock unit registers to capture the
+> working sample window and select the middle point of the longest good
+> phase region. The same for retune. But it is a little complicated, and
+> could only be applicable to the hosts who could adjust the rx delay
+> manually when claiming the caps of MMC_CAPS_CAN_TUNING_FOR_HS, whatever
+> the name is...
+> 
+> I don't know if it is worth to add this, and I don't know if it's
+> a legit way. Anyway, I just share my thought(experience) for you and
+> linux-mmc to think more about how to deal with the case you meet rather
+> than sacrificing the performence by removing highspeed or reducing
+> frequency..
+> 
 
-Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
----
- drivers/net/phy/dp83867.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+As Shawn points out, using max-frequency is a possibility. Did you consider
+that?
 
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index 91177a4..1b63924 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -33,6 +33,7 @@
- /* Extended Registers */
- #define DP83867_RGMIICTL	0x0032
- #define DP83867_RGMIIDCTL	0x0086
-+#define DP83867_IO_MUX_CFG	0x0170
- 
- #define DP83867_SW_RESET	BIT(15)
- #define DP83867_SW_RESTART	BIT(14)
-@@ -62,10 +63,17 @@
- /* RGMIIDCTL bits */
- #define DP83867_RGMII_TX_CLK_DELAY_SHIFT	4
- 
-+/* IO_MUX_CFG bits */
-+#define DP83867_IO_MUX_CFG_IO_IMPEDANCE_CTRL	0x1f
-+
-+#define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MAX	0x0
-+#define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MIN	0x1f
-+
- struct dp83867_private {
- 	int rx_id_delay;
- 	int tx_id_delay;
- 	int fifo_depth;
-+	int io_impedance;
- };
- 
- static int dp83867_ack_interrupt(struct phy_device *phydev)
-@@ -111,6 +119,14 @@ static int dp83867_of_init(struct phy_device *phydev)
- 	if (!of_node)
- 		return -ENODEV;
- 
-+	dp83867->io_impedance = -EINVAL;
-+
-+	/* Optional configuration */
-+	if (of_property_read_bool(of_node, "ti,max-output-impedance"))
-+		dp83867->io_impedance = DP83867_IO_MUX_CFG_IO_IMPEDANCE_MAX;
-+	else if (of_property_read_bool(of_node, "ti,min-output-impedance"))
-+		dp83867->io_impedance = DP83867_IO_MUX_CFG_IO_IMPEDANCE_MIN;
-+
- 	ret = of_property_read_u32(of_node, "ti,rx-internal-delay",
- 				   &dp83867->rx_id_delay);
- 	if (ret)
-@@ -184,6 +200,18 @@ static int dp83867_config_init(struct phy_device *phydev)
- 
- 		phy_write_mmd_indirect(phydev, DP83867_RGMIIDCTL,
- 				       DP83867_DEVADDR, delay);
-+
-+		if (dp83867->io_impedance >= 0) {
-+			val = phy_read_mmd_indirect(phydev, DP83867_IO_MUX_CFG,
-+						    DP83867_DEVADDR);
-+
-+			val &= ~DP83867_IO_MUX_CFG_IO_IMPEDANCE_CTRL;
-+			val |= dp83867->io_impedance &
-+			       DP83867_IO_MUX_CFG_IO_IMPEDANCE_CTRL;
-+
-+			phy_write_mmd_indirect(phydev, DP83867_IO_MUX_CFG,
-+					       DP83867_DEVADDR, val);
-+		}
- 	}
- 
- 	return 0;
--- 
-2.10.0.372.g6fe1b14
+There are 2 high speed caps:
+	cap-sd-highspeed
+	cap-mmc-highspeed
+
+Yet patch in 2, the effect of sd-broken-highspeed is to suppress highspeed
+for both SD and MMC.  Should it then be called just broken-highspeed?
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
