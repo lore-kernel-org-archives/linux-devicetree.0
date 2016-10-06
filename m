@@ -1,107 +1,229 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [RFC 1/2] sdhci: Add device tree property sd-broken-highspeed
-Date: Thu, 6 Oct 2016 09:34:02 +0800
-Message-ID: <5972c8f4-23b5-7dbb-b87c-7be7ec5b1a17@rock-chips.com>
-References: <1474660869-15532-1-git-send-email-zach.brown@ni.com>
- <1474660869-15532-2-git-send-email-zach.brown@ni.com>
- <CAPDyKFogDKM86XKo1iQE1KU5HpEic23FD5YQGF9QjSFYBDJn4Q@mail.gmail.com>
- <CAL_JsqLjtn2-FaO_h9JWOsZqttQ35yV6KOnQz2Z-cMr=0GHJCg@mail.gmail.com>
- <20161005212223.GK10625@jcartwri.amer.corp.natinst.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v3] PCI: rockchip: Support property to specify the link
+ capability
+Date: Wed, 5 Oct 2016 19:18:31 -0700
+Message-ID: <20161006021830.GA18624@localhost>
+References: <1475654717-15159-1-git-send-email-shawn.lin@rock-chips.com>
+ <20161005224642.GA111810@google.com>
+ <d81bcc67-22cc-774c-d9f3-445633303278@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161005212223.GK10625@jcartwri.amer.corp.natinst.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Julia Cartwright <julia@ni.com>, Rob Herring <robh+dt@kernel.org>
-Cc: shawn.lin@rock-chips.com, Ulf Hansson <ulf.hansson@linaro.org>, Zach Brown <zach.brown@ni.com>, Adrian Hunter <adrian.hunter@intel.com>, Mark Rutland <mark.rutland@arm.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <d81bcc67-22cc-774c-d9f3-445633303278@rock-chips.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Rajat Jain <rajatja@google.com>, Wenrui Li <wenrui.li@rock-chips.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016/10/6 5:22, Julia Cartwright wrote:
-> On Wed, Oct 05, 2016 at 03:03:44PM -0500, Rob Herring wrote:
->> On Wed, Oct 5, 2016 at 1:33 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->>> On 23 September 2016 at 22:01, Zach Brown <zach.brown@ni.com> wrote:
->>>> Certain board configurations can make highspeed malfunction due to
->>>> timing issues. In these cases a way is needed to force the controller
->>>> and card into standard speed even if they otherwise appear to be capable
->>>> of highspeed.
->>>>
->>>> The sd-broken-highspeed property will let the sdhci driver know that
->>>> highspeed will not work.
->>>>
->>>> Signed-off-by: Zach Brown <zach.brown@ni.com>
->>>> ---
->>>>  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
->>>>  1 file changed, 2 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
->>>> index 8a37782..59332ea 100644
->>>> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
->>>> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
->>>> @@ -52,6 +52,8 @@ Optional properties:
->>>>  - no-sdio: controller is limited to send sdio cmd during initialization
->>>>  - no-sd: controller is limited to send sd cmd during initialization
->>>>  - no-mmc: controller is limited to send mmc cmd during initialization
->>>> +- sd-broken-highspeed: Highspeed is broken, even if the controller and card
->>>> +  themselves claim they support highspeed.
->>>
->>> Regarding a broken card, that is managed via the card quirks and not in DT.
->>>
->>> If this is about a controller limitation, we already have the option
->>> to describe what it supports, so we don't need an option to tell what
->>> it *not* supports.
->>>
->>> For example "cap-sd-highspeed" tells whether the controller supports
->>> SD high-speed, please use that instead.
->>
->> If a controller has a capability register and it lies (perhaps the
->> board has limitations that the SoC does not), then you may need to
->> disable a feature.
->
-> That's precisely the case here.  This is a board-level problem, not a
-> card or controller problem.  As Zach mentioned in the cover letter, the
-> trace length between controller and card on some of our boards is too
-> long to meet high-speed timings, even though both card and controller
-> advertise it.
++ devicetree (you dropped them from v2 and v3)
 
-IIRC, I saw the same problem while using sdhci to bring up a
-industrial board for vehicle. The trace length is so long that
-I have to limit the max-frequency to make it works properly when
-running at hishspeed.
+On Thu, Oct 06, 2016 at 10:00:04AM +0800, Shawn Lin wrote:
+> 在 2016/10/6 6:46, Brian Norris 写道:
+> >Hi,
+> >
+> >On Wed, Oct 05, 2016 at 04:05:17PM +0800, Shawn Lin wrote:
+> >>From: Brian Norris <briannorris@chromium.org>
+> >>
+> >>rk3399 supports PCIe 2.x link speeds marginally at best, and on some
+> >>boards, the link won't train at 5 GT/s at all. Rather than sacrifice 500
+> >>ms waiting for training that will never happen, let's add a property
+> >>from devicetree to specify link capability.
+> >>
+> >>Signed-off-by: Brian Norris <briannorris@chromium.org>
+> >>Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> >>
+> >>---
+> >>
+> >>Changes in v3:
+> >>- Cast a warning for invalid max link speed and use gen1 for it.
+> >>  That looks better than v2. (Suggested by Brian)
+> >>
+> >>Changes in v2:
+> >>- rename the property to rockchip,max-link-speed according to
+> >>  Bjorn's recommendation and take some bits from imx6q-pcie to
+> >>  make this requirement more consisent.
+> >>
+> >> .../devicetree/bindings/pci/rockchip-pcie.txt      |  2 +
+> >> drivers/pci/host/pcie-rockchip.c                   | 62 ++++++++++++++--------
+> >> 2 files changed, 42 insertions(+), 22 deletions(-)
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> >>index ba67b39..7bb730e 100644
+> >>--- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> >>+++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> >>@@ -42,6 +42,8 @@ Required properties:
+> >> Optional Property:
+> >> - ep-gpios: contain the entry for pre-reset gpio
+> >> - num-lanes: number of lanes to use
+> >>+- rockchip,max-link-speed: Specify PCI gen for link capability. Must
+> >>+	be '2' for gen2, and '1' for gen1, otherwise will default to gen1.
+> >
+> >I'm still not sure why we want incorrect DT entries to default to 1
+> >instead of just being rejected as incorrect (i.e., and error). But
+> >assuming people are OK with that behavior, I'll review the rest...
+> 
+> yep, personally I don't like to stop driver from running or to
+> trigger BUG_ON only if the incorrect DT value. If that happens, it
 
-So could you try to limit the max-frequency in your DT to see
-if it could work for you? I guess it should work as once reducing
-the frequency, the timing per cycle will be large enough to meet
-the spec. At least that helped me solve my problem.
+I would never suggest BUG_ON() for this. But failing to probe with an
+invalid DT is fine IMO. But I won't insist; the patch is fine with me
+other than the doc vs. code issue below. I'll leave it to the
+maintainers on this.
 
-For further consideration, I deployed a mechanism called "tuning for
-non UHS or non-hs200/400" for my donwstream tree at that time. The basic
-concept is to ask devices to send ext_csd(or send status for SD case) 
-*repeatedly*. Some hosts, i.e. sdhci-of-arasan or dw_mmc-rockchip, can
-manually set rx delay via some clock unit registers to capture the
-working sample window and select the middle point of the longest good
-phase region. The same for retune. But it is a little complicated, and
-could only be applicable to the hosts who could adjust the rx delay
-manually when claiming the caps of MMC_CAPS_CAN_TUNING_FOR_HS, whatever
-the name is...
+> implies we should deploy proper error handling and cast a warning
+> should be enough for people to debug. If the max-link-speed is
+> incorrect, I assume the owner of this DT doesn't actually read
+> the doc at all. At least he/she doesn't know what this property means.
+> So we could use the *nature* capability for sure it could bring up
+> the boards, for instance 1 lanes, gen1... etc.
+> 
+> I was told to write code like this and have been insisting on this for
+> quite a long time. Does it sound sane to you? :)
 
-I don't know if it is worth to add this, and I don't know if it's
-a legit way. Anyway, I just share my thought(experience) for you and
-linux-mmc to think more about how to deal with the case you meet rather
-than sacrificing the performence by removing highspeed or reducing
-frequency..
+I tend to prefer strict DT interpretations, so you don't accidentally
+cause yourself backwards compatibility problems in the future when you
+want to extend this for chip N+1 that supports new features. But it's
+not a big deal.
 
+> >
+> >> - vpcie3v3-supply: The phandle to the 3.3v regulator to use for PCIe.
+> >> - vpcie1v8-supply: The phandle to the 1.8v regulator to use for PCIe.
+> >> - vpcie0v9-supply: The phandle to the 0.9v regulator to use for PCIe.
+> >>diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
+> >>index 35591b1..66476ea 100644
+> >>--- a/drivers/pci/host/pcie-rockchip.c
+> >>+++ b/drivers/pci/host/pcie-rockchip.c
+> >>@@ -53,6 +53,7 @@
+> >> #define   PCIE_CLIENT_ARI_ENABLE	  HIWORD_UPDATE_BIT(0x0008)
+> >> #define   PCIE_CLIENT_CONF_LANE_NUM(x)	  HIWORD_UPDATE(0x0030, ENCODE_LANES(x))
+> >> #define   PCIE_CLIENT_MODE_RC		  HIWORD_UPDATE_BIT(0x0040)
+> >>+#define   PCIE_CLIENT_GEN_SEL_1		  HIWORD_UPDATE(0x0080, 0)
+> >> #define   PCIE_CLIENT_GEN_SEL_2		  HIWORD_UPDATE_BIT(0x0080)
+> >> #define PCIE_CLIENT_BASIC_STATUS1	(PCIE_CLIENT_BASE + 0x48)
+> >> #define   PCIE_CLIENT_LINK_STATUS_UP		0x00300000
+> >>@@ -205,6 +206,7 @@ struct rockchip_pcie {
+> >> 	struct	gpio_desc *ep_gpio;
+> >> 	u32	lanes;
+> >> 	u8	root_bus_nr;
+> >>+	int	link_gen;
+> >> 	struct	device *dev;
+> >> 	struct	irq_domain *irq_domain;
+> >> };
+> >>@@ -443,13 +445,19 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+> >> 		return err;
+> >> 	}
+> >>
+> >>+	if (rockchip->link_gen == 2)
+> >>+		rockchip_pcie_write(rockchip, PCIE_CLIENT_GEN_SEL_2,
+> >>+				    PCIE_CLIENT_CONFIG);
+> >>+	else
+> >>+		rockchip_pcie_write(rockchip, PCIE_CLIENT_GEN_SEL_1,
+> >>+				    PCIE_CLIENT_CONFIG);
+> >>+
+> >> 	rockchip_pcie_write(rockchip,
+> >> 			    PCIE_CLIENT_CONF_ENABLE |
+> >> 			    PCIE_CLIENT_LINK_TRAIN_ENABLE |
+> >> 			    PCIE_CLIENT_ARI_ENABLE |
+> >> 			    PCIE_CLIENT_CONF_LANE_NUM(rockchip->lanes) |
+> >>-			    PCIE_CLIENT_MODE_RC |
+> >>-			    PCIE_CLIENT_GEN_SEL_2,
+> >>+			    PCIE_CLIENT_MODE_RC,
+> >> 				PCIE_CLIENT_CONFIG);
+> >>
+> >> 	err = phy_power_on(rockchip->phy);
+> >>@@ -550,29 +558,31 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+> >> 		msleep(20);
+> >> 	}
+> >>
+> >>-	/*
+> >>-	 * Enable retrain for gen2. This should be configured only after
+> >>-	 * gen1 finished.
+> >>-	 */
+> >>-	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
+> >>-	status |= PCIE_RC_CONFIG_LCS_RETRAIN_LINK;
+> >>-	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
+> >>+	if (rockchip->link_gen == 2) {
+> >>+		/*
+> >>+		 * Enable retrain for gen2. This should be configured only after
+> >>+		 * gen1 finished.
+> >>+		 */
+> >>+		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
+> >>+		status |= PCIE_RC_CONFIG_LCS_RETRAIN_LINK;
+> >>+		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
+> >>+
+> >>+		timeout = jiffies + msecs_to_jiffies(500);
+> >>+		for (;;) {
+> >>+			status = rockchip_pcie_read(rockchip, PCIE_CORE_CTRL);
+> >>+			if ((status & PCIE_CORE_PL_CONF_SPEED_MASK) ==
+> >>+					PCIE_CORE_PL_CONF_SPEED_5G) {
+> >>+				dev_dbg(dev, "PCIe link training gen2 pass!\n");
+> >>+				break;
+> >>+			}
+> >>
+> >>-	timeout = jiffies + msecs_to_jiffies(500);
+> >>-	for (;;) {
+> >>-		status = rockchip_pcie_read(rockchip, PCIE_CORE_CTRL);
+> >>-		if ((status & PCIE_CORE_PL_CONF_SPEED_MASK) ==
+> >>-		    PCIE_CORE_PL_CONF_SPEED_5G) {
+> >>-			dev_dbg(dev, "PCIe link training gen2 pass!\n");
+> >>-			break;
+> >>-		}
+> >>+			if (time_after(jiffies, timeout)) {
+> >>+				dev_dbg(dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
+> >>+				break;
+> >>+			}
+> >>
+> >>-		if (time_after(jiffies, timeout)) {
+> >>-			dev_dbg(dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
+> >>-			break;
+> >>+			msleep(20);
+> >> 		}
+> >>-
+> >>-		msleep(20);
+> >> 	}
+> >>
+> >> 	/* Check the final link width from negotiated lane counter from MGMT */
+> >>@@ -781,6 +791,14 @@ static int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+> >> 		rockchip->lanes = 1;
+> >> 	}
+> >>
+> >>+	rockchip->link_gen = 2;
+> >
+> >Isn't the above assignment violating the binding doc? Setting to 2 means
+> >that if the property isn't found, we default to gen2. That's OK with me,
+> >but you should make the binding doc match it.
+> 
+> It should be backward compatible with the old DTBs without this
+> propery. Otherwise, they did use gen2 but they cannot achieve it now
+> without adding the new propery.
 
->
-> Thanks,
->    Julia
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+Yes, defaulting to gen2 is probably the best choice.
 
+> But I agreee I should commet the doc more clearly.
 
--- 
-Best Regards
-Shawn Lin
+Yes, just please update the doc.
+
+Brian
+
+> >
+> >>+	err = of_property_read_u32(node, "rockchip,max-link-speed",
+> >>+				   &rockchip->link_gen);
+> >
+> >^^ you can get sign errors here, since link_gen is 'int', but this
+> >function reads 'u32'. Maybe use a temporary u32.
+> >
+> 
+> Good catch.
+> 
+> >Brian
+> >
+> >>+	if (!err && rockchip->link_gen != 1 && rockchip->link_gen != 2) {
+> >>+		dev_warn(dev, "invalid max-link-speed, default to use gen1\n");
+> >>+		rockchip->link_gen = 1;
+> >>+	}
+> >>+
+> >> 	rockchip->core_rst = devm_reset_control_get(dev, "core");
+> >> 	if (IS_ERR(rockchip->core_rst)) {
+> >> 		if (PTR_ERR(rockchip->core_rst) != -EPROBE_DEFER)
