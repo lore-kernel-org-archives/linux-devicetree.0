@@ -1,50 +1,158 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH V3 2/4] ARM64 LPC: LPC driver implementation on Hip06
-Date: Thu, 6 Oct 2016 14:31:52 +0100
-Message-ID: <3bab676a-2b65-8f27-d414-9cacc055094e@huawei.com>
-References: <1473855354-150093-1-git-send-email-yuanzhichang@hisilicon.com>
- <5140357.dcW9ibtZJ6@wuerfel> <57D963C4.4010406@hisilicon.com>
- <5869118.UilSPY9Sai@wuerfel>
- <2af4f2d8-e3a4-fa00-e700-60af70bf4560@jonmasters.org>
- <6bbfeb57-7a55-6a3e-60b2-3f44525e5882@huawei.com>
- <1475713112.3784.183.camel@kernel.crashing.org>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: marvell: Add definition for the Globalscale Marvell ESPRESSOBin Board
+Date: Thu, 06 Oct 2016 16:44:59 +0200
+Message-ID: <87h98pwn84.fsf@free-electrons.com>
+References: <20161006091429.8974-1-romain.perier@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1475713112.3784.183.camel@kernel.crashing.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jon Masters <jcm@jonmasters.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: "zhichang.yuan" <yuanzhichang@hisilicon.com>, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, gabriele.paoloni@huawei.com, minyard@acm.org, gregkh@linuxfoundation.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, linuxarm@huawei.com, linux-serial@vger.kernel.org, linux-pci@vger.kernel.org, zourongrong@gmail.com, liviu.dudau@arm.com, kantyzc@163.com, zhichang.yuan02@gmail.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161006091429.8974-1-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Romain
+        Perier's message of "Thu, 6 Oct 2016 11:14:29 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yahuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/10/2016 01:18, Benjamin Herrenschmidt wrote:
-> On Tue, 2016-10-04 at 13:02 +0100, John Garry wrote:
->> Right, so I think Zhichang can make the necessary generic changes to
->> 8250 OF driver to support IO port as well as MMIO-based.
->>
->> However an LPC-based earlycon driver is still required.
->>
->> A note on hip07-based D05 (for those unaware): this does not use
->> LPC-based uart. It uses PL011. The hardware guys have managed some
->> trickery where they loopback the serial line around the BMC/CPLD. But we
->> still need it for hip06 D03 and any other boards which want to use LPC
->> bus for uart.
->>
->> A question on SBSA: does it propose how to provide serial via BMC for SOL?
->
-> Probably another reason to keep 8250 as a legal option ... The (very
-> popular) Aspeed BMCs tend to do this via a 8250-looking virtual UART on
-> LPC.
->
-> Cheers,
-> Ben,
+Hi Romain,
+ 
+ On jeu., oct. 06 2016, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-I think we're talking about the same thing for our LPC-based UART.
+> This is a high performance 64 bit dual core low power consuming
+> networking computing platform based on the ARMv8 architecture.
+> It contains an Armada 3720 running up to 1.2Ghz.
+>
+> This commit adds a basic definition for this board.
+>
+> Signed-off-by: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-John
+Applied on mvebu/dt64-4.10, I also added that the uart is exported on
+the micro USB connector through an FTDI.
 
+Thanks,
+
+Gregory
+
+> ---
 >
+> Changes in v2:
+>  - Improved commit message
+>  - Added informations about connectors
 >
-> .
+>  arch/arm64/boot/dts/marvell/Makefile               |  1 +
+>  .../boot/dts/marvell/armada-3720-espressobin.dts   | 82 ++++++++++++++++++++++
+>  2 files changed, 83 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
 >
+> diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+> index 308468d..392eeb6 100644
+> --- a/arch/arm64/boot/dts/marvell/Makefile
+> +++ b/arch/arm64/boot/dts/marvell/Makefile
+> @@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-stb.dtb
+>  
+>  # Mvebu SoC Family
+>  dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
+> +dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
+>  dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
+>  
+>  always		:= $(dtb-y)
+> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+> new file mode 100644
+> index 0000000..ae005f1
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+> @@ -0,0 +1,82 @@
+> +/*
+> + * Device Tree file for Globalscale Marvell ESPRESSOBin Board
+> + * Copyright (C) 2016 Marvell
+> + *
+> + * Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "armada-372x.dtsi"
+> +
+> +/ {
+> +	model = "Globalscale Marvell ESPRESSOBin Board";
+> +	compatible = "globalscale,espressobin", "marvell,armada3720", "marvell,armada3710";
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
+> +	};
+> +};
+> +
+> +/* J9 */
+> +&pcie0 {
+> +	status = "okay";
+> +};
+> +
+> +/* J6 */
+> +&sata {
+> +	status = "okay";
+> +};
+> +
+> +/* J5 */
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +/* J7 */
+> +&usb3 {
+> +	status = "okay";
+> +};
+> -- 
+> 2.9.3
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
