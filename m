@@ -1,34 +1,43 @@
-From: Robin van der Gracht <robin@protonic.nl>
-Subject: [PATCH v7 1/3] of: add vendor prefix for Holtek Semiconductor
-Date: Thu,  6 Oct 2016 13:53:31 +0200
-Message-ID: <1475754813-1200-2-git-send-email-robin@protonic.nl>
+From: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
+Subject: [PATCH v7 3/3] MAINTAINERS: auxdisplay: Added myself as maintainer for ht16k33 driver
+Date: Thu,  6 Oct 2016 13:53:33 +0200
+Message-ID: <1475754813-1200-4-git-send-email-robin@protonic.nl>
 References: <1475754813-1200-1-git-send-email-robin@protonic.nl>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1475754813-1200-1-git-send-email-robin@protonic.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Robin van der Gracht <robin@protonic.nl>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475754813-1200-1-git-send-email-robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch introduces a vendor prefix for Holtek Semiconductor Inc.
-
-Signed-off-by: Robin van der Gracht <robin@protonic.nl>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
+CC: Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 77e985f..2bf7ffd 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -125,6 +125,7 @@ hitex	Hitex Development Tools
- holt	Holt Integrated Circuits, Inc.
- honeywell	Honeywell
- hp	Hewlett Packard
-+holtek	Holtek Semiconductor, Inc.
- i2se	I2SE GmbH
- ibm	International Business Machines (IBM)
- idt	Integrated Device Technologies, Inc.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 841ffa3..7e7368e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2998,6 +2998,12 @@ F:	drivers/usb/host/whci/
+ F:	drivers/usb/wusbcore/
+ F:	include/linux/usb/wusb*
+ 
++HT16K33 LED CONTROLLER DRIVER
++M:	Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
++S:	Maintained
++F:	drivers/auxdisplay/ht16k33.c
++F:	Documentation/devicetree/bindings/display/ht16k33.txt
++
+ CFAG12864B LCD DRIVER
+ M:	Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ W:	http://miguelojeda.es/auxdisplay.htm
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
