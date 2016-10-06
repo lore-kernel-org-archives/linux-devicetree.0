@@ -1,95 +1,131 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7 0/4] libfdt: Add support for device tree overlays
-Date: Thu, 6 Oct 2016 13:24:39 +0200
-Message-ID: <20161006112439.GB4684@lukather>
-References: <20160930135717.16511-1-maxime.ripard@free-electrons.com>
- <20161006094756.GR18733@umbus.fritz.box>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH v9 17/19] drm/virtio: kconfig: Fix recursive dependency issue.
+Date: Thu, 6 Oct 2016 12:31:25 +0100
+Message-ID: <CACvgo52zh5ZH8YhOJ=eE=RA7m=4vUoVFCdW+YSyN8WSHVi=Maw@mail.gmail.com>
+References: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
+ <1473081421-16555-18-git-send-email-peter.griffin@linaro.org>
+ <CACvgo52_g7anGBd9HTUyYsbp5QmQEk9LR3nNHgSTgjQ29G3ViA@mail.gmail.com>
+ <20160920083251.GB26093@griffinp-ThinkPad-X1-Carbon-2nd> <CACvgo53fuoPVjBAkZbWFPVxosObjvxoDgFdR_BkSTgevqyGg9g@mail.gmail.com>
+ <20161006104807.GB436@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="jho1yZJdad60DJr+"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161006094756.GR18733-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161006104807.GB436@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, LAKML <linux-arm-kernel@lists.infradead.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, kernel@stlinux.com, vinod.koul@intel.com, patrice.chotard@st.com, dan.j.williams@intel.com, David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-remoteproc@vger.kernel.org, ML dri-devel <dri-devel@lists.freedesktop.org>, "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>, dmaengine@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Peter,
 
---jho1yZJdad60DJr+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 6 October 2016 at 11:48, Peter Griffin <peter.griffin@linaro.org> wrote:
+> Hi Emil,
+>
+> On Wed, 21 Sep 2016, Emil Velikov wrote:
+>
+>> On 20 September 2016 at 09:32, Peter Griffin <peter.griffin@linaro.org> wrote:
+>> > Hi Emil,
+>> >
+>> > On Tue, 20 Sep 2016, Emil Velikov wrote:
+>> >
+>> >> On 5 September 2016 at 14:16, Peter Griffin <peter.griffin@linaro.org> wrote:
+>> >> > ST_SLIM_REMOTEPROC must select REMOTEPROC, which exposes the following
+>> >> > recursive dependency.
+>> >
+>> >
+>> >> >
+>> >> From a humble skim through remoteproc, drm and a few other subsystems
+>> >> I think the above is wrong. All the drivers (outside of remoteproc),
+>> >> that I've seen, depend on the core component, they don't select it.
+>> >
+>> > I will let Bjorn comment on the remoteproc subsystem Kconfig design, and
+>> > why it is like it is.
+>> >
+>> > For this particular SLIM_RPROC I have added it to Kconfig in keeping with all
+>> > the other drivers in the remoteproc subsystem which has exposed this recursive
+>> > dependency issue.
+>> >
+>> > For this particular kconfig symbol a quick grep reveals more drivers in
+>> > the kernel using 'select', than 'depend on'
+>> >
+>> > git grep "select VIRTIO" | wc -l
+>> > 14
+>> >
+>> > git grep "depends on VIRTIO" | wc -l
+>> > 10
+>> >
+>> Might be worth taking a closer look into these at some point.
+>
+> VIRTIO has no dependencies, and is a non visible symbol. Its Kconfig help also
+> mentions that drivers should select it.
+>
+This is a (un)fortunate detail cannot/should not overrule the other
+arguments I've mentioned, should it ?
 
-Hi David,
+>>
+>> >
+>> >> Furthermore most places explicitly hide the drivers from the menu if
+>> >> the core component isn't enabled.
+>> >
+>> > Remoteproc subsystem takes a different approach, the core code is only enabled
+>> > if a driver which relies on it is enabled. This IMHO makes sense, as
+>> > remoteproc is not widely used (only a few particular ARM SoC's).
+>> >
+>> > It is true that for subsystems which rely on the core component being
+>> > explicitly enabled, they often tend to hide drivers which depend on it
+>> > from the menu unless it is. This also makes sense.
+>> >
+>> >>
+>> >> Is there something that requires such a different/unusual behaviour in
+>> >> remoteproc ?
+>> >>
+>> >
+>> > I'm not sure it is that unusual...looking at config USB, it selects USB_COMMON in
+>> > mfd subsystem, client drivers select MFD_CORE.
+>> >
+>> On the USB case I'm not sure what the reasoning behind the USB vs
+>> USB_COMMON split. In seems that one could just fold them, but that's
+>> another topic. On the MFD side... it follows the select {,mis,ab}use.
+>> With one (the only one?) MFD driver not using/selecting MFD_CORE doing
+>> it's own version of mfd_add_devices... which could be reworked,
+>> possibly.
+>
+> Much like selecting VIRTIO in this patch, MFD_CORE is a non visible symbol
+> with no dependencies so it matches the documentation Jani referenced.
+>
+> I personally think the approach taken makes sense, as why would you want to have
+> a CONFIG_MFD_CORE=y symbol being enabled unless you actually have a MFD device
+> which uses it also enabled in your kernel?
+>
+> It seems to me a good solution to make the client drivers select the core
+> component so that it only gets enabled if at least one driver requires it.
+> This avoids having useless core code which will never be used compiled into the
+> kernel and in the end a smaller kernel size for a given kernel configuration (better
+> cache use etc etc).
+>
+>> > I've added Arnd to this thread, as I've seen lots of Kconfig patches from him
+>> > recently, maybe he has some thoughts on whether this is the correct fix or not?
+>> >
+>> Ack. Fwiw, I believe that the reasoning put by Jani is perfeclty
+>> reasonable, but it'll be great to hear others as well.
+>
+> Yes me to. However I don't think anything in this patch is at odds with the
+> documentation Jani has referenced.
+>
+It case it's not clear, let me elaborate:
 
-On Thu, Oct 06, 2016 at 08:47:56PM +1100, David Gibson wrote:
-> On Fri, Sep 30, 2016 at 03:57:13PM +0200, Maxime Ripard wrote:
-> > Hi,
-> >=20
-> > The device tree overlays are a great solution to the issue raised by
-> > the bunch expandable boards we find everywhere these days, like the
-> > Beaglebone, Raspberry Pi or CHIP.
-> >=20
-> > Although for now Linux is the only available tool that can deal with
-> > overlays, some other components like bootloaders or user-space tools
-> > might need to apply these overlays on top of a base device tree.
-> >=20
-> > To address these use cases, we introduce a new function to the libfdt,
-> > fdt_overlay_apply, that does just that.
-> >=20
-> > You can find a test program here: http://code.bulix.org/792zum-99476?raw
-> >=20
-> > This is the last patches sent to U-boot, with the modifications
-> > suggested by David, and the additional test cases.
-> >=20
-> > Let me know what you think!
-> > Maxime
->=20
-> Looking pretty good.  There's a minor error in 3/4 which I've pointed
-> out, it can be fixed in a followup.
->=20
-> An error in the conditionals means it's trying to run some of the
-> tests which require an overlay-aware dtc on even when that's not
-> available - I adjusted 4/4 to correct that.
+Yes, using depend might not be the most user-friendly thing to do and
+in the long term we might want to move to select.
+Yes, I agree with the argument about symbol visibility but that is not
+the only contributing factor.
 
-While chasing that, I found that it was actually a bug in a condition
-that was stricter than it should, I'll send follow-up with that and
-the fix you asked.
+If one wants to pick on specific users which opt for $driver select
+$core they must do the same for $driver depends on $core. Check the
+number 'in favour" of each case and draw their conclusions ;-)
 
-> It also hit build failures on Travis, because the compiler version
-> there complains about local variables named 'index' shadowing the
-> standard library function.  I've corrected that with a followup patch.
->=20
-> With that done, the whole lot has been committed to master.
+In particular: both MFD_CORE and USB_COMMON, are _optional_ as only
+some drivers depends on them. Thus giving them as an example is
+wrong/irrelevant, I'm afraid.
 
-Thanks a lot,
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---jho1yZJdad60DJr+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJX9jR3AAoJEBx+YmzsjxAgv5YP/RlsvrbduecN81CP3Z/OSah6
-KinWGQ3pTKOhmanmVak7+wsQmCit0smPGl44gQzFHf09NCRBn2qUBfxLhpWBYP4q
-mxQziq9pNKLBaTeTV9E6nTpYgxgvr4UwypZ+C8s3jRbCrtSIqvem5nZYpL15v9uK
-ZC54IQRghFKZ6kxmpCX9Xtt+iNRGUpCTjd0RxlHuj5Z/zjwpbj4zDBSO53wuJZRe
-X6BiylqhHYoiaC4Q0inG+zlLE82oj8T058iFaGbC1D+4Gp9dJN1AjguVgViKI4kY
-4c0K5agoDx3b6Mswg/ojEKhapEAlXdoGZsOXlu2fY9feYFKdxUrsCO1/jzfP2Ai9
-R8zHc0oI4B1eRbbeFUb1uEfvSGpdRha3/+d4D+xzLpGSzdWqY6x62egdfxhCFGPv
-9lbbEHEXUkhVCxjv5ZG+GofNCEP2Jna2BngJ6FI2alKEgrnm7dTwjodnIYLnnQyk
-5xQY2awaf+UQvx06Pdw7TW1tP4wZvswJ9GWsQ1L15arulrwdgcZOgdFIZdwIkUtF
-tcSp/tFOuttsAiw1FMZRvuqrGUGmyxmVvNQAhF9dwPGkqcUsrALRYsZSblXPYUA5
-vEYTdbdA7TnmZVPZkEacQi5FdQPH4EPdexStxeAGVDo3THnPOPsBE1hEKWs+YQSv
-Cmz6uZhRzhhe4VxJhf8o
-=Mkhj
------END PGP SIGNATURE-----
-
---jho1yZJdad60DJr+--
+Thanks
+Emil
