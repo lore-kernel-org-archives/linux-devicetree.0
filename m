@@ -1,8 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 4/9] drm/sun4i: Add compatible string for
- A31/A31s TCON (timing controller)
-Date: Fri,  7 Oct 2016 00:06:24 +0800
-Message-ID: <20161006160629.11198-5-wens@csie.org>
+Subject: [PATCH 3/9] drm/sun4i: Put dotclock range into tcon
+ quirks and check against them
+Date: Fri,  7 Oct 2016 00:06:23 +0800
+Message-ID: <20161006160629.11198-4-wens@csie.org>
 References: <20161006160629.11198-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -20,105 +20,91 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The A31 TCON has mux controls for how TCON outputs are routed to the
-HDMI and MIPI DSI blocks.
+In commit bb43d40d7c83 ("drm/sun4i: rgb: Validate the clock rate") the
+driver was rounding the requested clock rate and then checking the
+result against the original requested rate.
 
-Since the A31s does not have MIPI DSI, it only has a mux for the HDMI
-controller input.
+This does not work well for a number of reasons:
 
-This patch only adds support for the compatible strings. Actual support
-for the mux controls should be added with HDMI and MIPI DSI support.
+  - The pixel clock does not have enough resolution to be able to
+    provide all sub-MHz clock rates. This makes it filter out most modes
+    found in simple-panel.
 
+  - When first introduced, the main limiting factors were the video PLL
+    clock range (27 ~ 381 MHz) and the lowest divider (6). On sun6i and
+    later, the valid PLL clock range is extended to 30 ~ 600 MHz. The
+    PLL's multiplier and divider can make it go much higher out of range,
+    but the clock driver currently has no checks for it.
+
+Since the limits are well known, we can hard code the range into the
+tcon driver, and check against them. And we really only care about the
+upper limit, which affects the highest resolutions we can support.
+
+Fixes: bb43d40d7c83 ("drm/sun4i: rgb: Validate the clock rate")
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- .../devicetree/bindings/display/sunxi/sun4i-drm.txt     |  4 +++-
- drivers/gpu/drm/sun4i/sun4i_drv.c                       |  2 ++
- drivers/gpu/drm/sun4i/sun4i_tcon.c                      | 17 +++++++++++++++++
- drivers/gpu/drm/sun4i/sun4i_tcon.h                      |  2 ++
- 4 files changed, 24 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun4i_rgb.c  | 8 +-------
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 2 ++
+ drivers/gpu/drm/sun4i/sun4i_tcon.h | 1 +
+ 3 files changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-index 5368961cd727..15fdca8909f2 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-@@ -28,6 +28,8 @@ The TCON acts as a timing controller for RGB, LVDS and TV interfaces.
- Required properties:
-  - compatible: value must be either:
-    * allwinner,sun5i-a13-tcon
-+   * allwinner,sun6i-a31-tcon
-+   * allwinner,sun6i-a31s-tcon
-    * allwinner,sun8i-a33-tcon
-  - reg: base address and size of memory-mapped region
-  - interrupts: interrupt associated to this IP
-@@ -50,7 +52,7 @@ Required properties:
-   second the block connected to the TCON channel 1 (usually the TV
-   encoder)
+diff --git a/drivers/gpu/drm/sun4i/sun4i_rgb.c b/drivers/gpu/drm/sun4i/sun4i_rgb.c
+index 8b520d9f5bd9..edbb42ead1f1 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_rgb.c
++++ b/drivers/gpu/drm/sun4i/sun4i_rgb.c
+@@ -60,8 +60,6 @@ static int sun4i_rgb_mode_valid(struct drm_connector *connector,
+ 	struct sun4i_tcon *tcon = drv->tcon;
+ 	u32 hsync = mode->hsync_end - mode->hsync_start;
+ 	u32 vsync = mode->vsync_end - mode->vsync_start;
+-	unsigned long rate = mode->clock * 1000;
+-	long rounded_rate;
  
--On the A13, there is one more clock required:
-+On SoCs other than the A33, there is one more clock required:
-    - 'tcon-ch1': The clock driving the TCON channel 1
+ 	DRM_DEBUG_DRIVER("Validating modes...\n");
  
- DRC
-diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-index c4d03c1b6db8..35af3728c4ee 100644
---- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-@@ -206,6 +206,8 @@ static bool sun4i_drv_node_is_frontend(struct device_node *node)
- static bool sun4i_drv_node_is_tcon(struct device_node *node)
- {
- 	return of_device_is_compatible(node, "allwinner,sun5i-a13-tcon") ||
-+		of_device_is_compatible(node, "allwinner,sun6i-a31-tcon") ||
-+		of_device_is_compatible(node, "allwinner,sun6i-a31s-tcon") ||
- 		of_device_is_compatible(node, "allwinner,sun8i-a33-tcon");
- }
+@@ -93,11 +91,7 @@ static int sun4i_rgb_mode_valid(struct drm_connector *connector,
  
+ 	DRM_DEBUG_DRIVER("Vertical parameters OK\n");
+ 
+-	rounded_rate = clk_round_rate(tcon->dclk, rate);
+-	if (rounded_rate < rate)
+-		return MODE_CLOCK_LOW;
+-
+-	if (rounded_rate > rate)
++	if (mode->clock > tcon->quirks->max_clock)
+ 		return MODE_CLOCK_HIGH;
+ 
+ 	DRM_DEBUG_DRIVER("Clock rate OK\n");
 diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index 5a5407193753..745708f85ab6 100644
+index c6c1c7ce94a1..5a5407193753 100644
 --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
 +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -590,6 +590,21 @@ const struct sun4i_tcon_quirks sun5i_a13_quirks = {
- 	.has_dma_src	= true,
+@@ -583,6 +583,7 @@ static int sun4i_tcon_remove(struct platform_device *pdev)
+ }
+ 
+ const struct sun4i_tcon_quirks sun5i_a13_quirks = {
++	.max_clock	= 63500,
+ 	.is_sun5i	= true,
+ 	.has_channel_1	= true,
+ 	.has_bypass_src	= true,
+@@ -590,6 +591,7 @@ const struct sun4i_tcon_quirks sun5i_a13_quirks = {
  };
  
-+const struct sun4i_tcon_quirks sun6i_a31_quirks = {
-+	.max_clock	= 200000,
-+	.has_channel_1	= true,
-+	.has_dma_src	= true,
-+	.has_hdmi_mux	= true,
-+	.has_dsi_mux	= true,
-+};
-+
-+const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
-+	.max_clock	= 200000,
-+	.has_channel_1	= true,
-+	.has_dma_src	= true,
-+	.has_hdmi_mux	= true,
-+};
-+
  const struct sun4i_tcon_quirks sun8i_a33_quirks = {
- 	.max_clock	= 200000,
++	.max_clock	= 200000,
  	/* nothing is supported */
-@@ -597,6 +612,8 @@ const struct sun4i_tcon_quirks sun8i_a33_quirks = {
- 
- static const struct of_device_id sun4i_tcon_of_table[] = {
- 	{ .compatible = "allwinner,sun5i-a13-tcon", .data = &sun5i_a13_quirks },
-+	{ .compatible = "allwinner,sun6i-a31-tcon", .data = &sun6i_a31_quirks },
-+	{ .compatible = "allwinner,sun6i-a31s-tcon", .data = &sun6i_a31s_quirks },
- 	{ .compatible = "allwinner,sun8i-a33-tcon", .data = &sun8i_a33_quirks },
- 	{ }
  };
+ 
 diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-index 972ca2b7c8c2..deebb97e9c3f 100644
+index 96c4f15c6922..972ca2b7c8c2 100644
 --- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
 +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-@@ -148,6 +148,8 @@ struct sun4i_tcon_quirks {
+@@ -143,6 +143,7 @@
+ #define SUN4I_TCON_MAX_CHANNELS		2
+ 
+ struct sun4i_tcon_quirks {
++	int	max_clock;	/* Highest possible dotclock in kHz */
+ 	bool	is_sun5i;	/* sun5i has undocumented mux */
  	bool	has_channel_1;	/* a33 does not have channel 1 */
  	bool	has_bypass_src;	/* has separate input bypassing CEU */
- 	bool	has_dma_src;	/* has DMA input */
-+	bool	has_hdmi_mux;	/* HDMI source selector */
-+	bool	has_dsi_mux;	/* MIPI DSI source selector */
- };
- 
- struct sun4i_tcon {
 -- 
 2.9.3
