@@ -1,135 +1,84 @@
-From: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 4/5] mm: make processing of movable_node arch-specific
-Date: Thu,  6 Oct 2016 13:36:34 -0500
-Message-ID: <1475778995-1420-5-git-send-email-arbab@linux.vnet.ibm.com>
-References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475778995-1420-1-git-send-email-arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: Bharata B Rao <bharata-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Alistair Popple <apopple-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Aneesh Kumar K.V" <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Tang Chen <tangchen-BthXqXjhjHXQFUHtdCDX3A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org
+From: Reza Arbab <arbab@linux.vnet.ibm.com>
+Subject: [PATCH v4 0/5] powerpc/mm: movable hotplug memory nodes
+Date: Thu,  6 Oct 2016 13:36:30 -0500
+Message-ID: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
+Return-path: <owner-linux-mm@kvack.org>
+Sender: owner-linux-mm@kvack.org
+To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
 List-Id: devicetree@vger.kernel.org
 
-Currently, CONFIG_MOVABLE_NODE depends on X86_64. In preparation to
-enable it for other arches, we need to factor a detail which is unique
-to x86 out of the generic mm code.
+These changes enable the dynamic creation of movable nodes on power.
 
-Specifically, as documented in kernel-parameters.txt, the use of
-"movable_node" should remain restricted to x86:
+On x86, the ACPI SRAT memory affinity structure can mark memory
+hotpluggable, allowing the kernel to possibly create movable nodes at
+boot.
 
-movable_node    [KNL,X86] Boot-time switch to enable the effects
-                of CONFIG_MOVABLE_NODE=y. See mm/Kconfig for details.
+While power has no analog of this SRAT information, we can still create
+a movable memory node, post boot, by hotplugging all of the node's
+memory into ZONE_MOVABLE.
 
-This option tells x86 to find movable nodes identified by the ACPI SRAT.
-On other arches, it would have no benefit, only the undesired side
-effect of setting bottom-up memblock allocation.
+We provide a way to describe the extents and numa associativity of such 
+a node in the device tree, while deferring the memory addition to take 
+place through hotplug.
 
-Since #ifdef CONFIG_MOVABLE_NODE will no longer be enough to restrict
-this option to x86, move it to an arch-specific compilation unit
-instead.
+In v1, this patchset introduced a new dt compatible id to explicitly 
+create a memoryless node at boot. Here, things have been simplified to 
+be applicable regardless of the status of node hotplug on power. We 
+still intend to enable hotadding a pgdat, but that's now untangled as a 
+separate topic.
 
-Signed-off-by: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
----
- arch/x86/mm/numa.c  | 35 ++++++++++++++++++++++++++++++++++-
- mm/memory_hotplug.c | 31 -------------------------------
- 2 files changed, 34 insertions(+), 32 deletions(-)
+v4:
+* Rename of_fdt_is_available() to of_fdt_device_is_available().
+  Rename of_flat_dt_is_available() to of_flat_dt_device_is_available().
 
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index fb68210..e95cab4 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -887,6 +887,38 @@ EXPORT_SYMBOL(cpumask_of_node);
- #endif	/* !CONFIG_DEBUG_PER_CPU_MAPS */
- 
- #ifdef CONFIG_MEMORY_HOTPLUG
-+
-+static int __init cmdline_parse_movable_node(char *p)
-+{
-+#ifdef CONFIG_MOVABLE_NODE
-+	/*
-+	 * Memory used by the kernel cannot be hot-removed because Linux
-+	 * cannot migrate the kernel pages. When memory hotplug is
-+	 * enabled, we should prevent memblock from allocating memory
-+	 * for the kernel.
-+	 *
-+	 * ACPI SRAT records all hotpluggable memory ranges. But before
-+	 * SRAT is parsed, we don't know about it.
-+	 *
-+	 * The kernel image is loaded into memory at very early time. We
-+	 * cannot prevent this anyway. So on NUMA system, we set any
-+	 * node the kernel resides in as un-hotpluggable.
-+	 *
-+	 * Since on modern servers, one node could have double-digit
-+	 * gigabytes memory, we can assume the memory around the kernel
-+	 * image is also un-hotpluggable. So before SRAT is parsed, just
-+	 * allocate memory near the kernel image to try the best to keep
-+	 * the kernel away from hotpluggable memory.
-+	 */
-+	memblock_set_bottom_up(true);
-+	movable_node_enabled = true;
-+#else
-+	pr_warn("movable_node option not supported\n");
-+#endif
-+	return 0;
-+}
-+early_param("movable_node", cmdline_parse_movable_node);
-+
- int memory_add_physaddr_to_nid(u64 start)
- {
- 	struct numa_meminfo *mi = &numa_meminfo;
-@@ -899,4 +931,5 @@ int memory_add_physaddr_to_nid(u64 start)
- 	return nid;
- }
- EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
--#endif
-+
-+#endif /* CONFIG_MEMORY_HOTPLUG */
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 9d29ba0..79c709a 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1738,37 +1738,6 @@ static bool can_offline_normal(struct zone *zone, unsigned long nr_pages)
- }
- #endif /* CONFIG_MOVABLE_NODE */
- 
--static int __init cmdline_parse_movable_node(char *p)
--{
--#ifdef CONFIG_MOVABLE_NODE
--	/*
--	 * Memory used by the kernel cannot be hot-removed because Linux
--	 * cannot migrate the kernel pages. When memory hotplug is
--	 * enabled, we should prevent memblock from allocating memory
--	 * for the kernel.
--	 *
--	 * ACPI SRAT records all hotpluggable memory ranges. But before
--	 * SRAT is parsed, we don't know about it.
--	 *
--	 * The kernel image is loaded into memory at very early time. We
--	 * cannot prevent this anyway. So on NUMA system, we set any
--	 * node the kernel resides in as un-hotpluggable.
--	 *
--	 * Since on modern servers, one node could have double-digit
--	 * gigabytes memory, we can assume the memory around the kernel
--	 * image is also un-hotpluggable. So before SRAT is parsed, just
--	 * allocate memory near the kernel image to try the best to keep
--	 * the kernel away from hotpluggable memory.
--	 */
--	memblock_set_bottom_up(true);
--	movable_node_enabled = true;
--#else
--	pr_warn("movable_node option not supported\n");
--#endif
--	return 0;
--}
--early_param("movable_node", cmdline_parse_movable_node);
--
- /* check which state of node_states will be changed when offline memory */
- static void node_states_check_changes_offline(unsigned long nr_pages,
- 		struct zone *zone, struct memory_notify *arg)
+* Instead of restoring top-down allocation, ensure it never goes
+  bottom-up in the first place, by making movable_node arch-specific.
+
+* Use MEMORY_HOTPLUG instead of PPC64 in the mm/Kconfig patch.
+
+v3:
+* http://lkml.kernel.org/r/1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com
+
+* Use Rob Herring's suggestions to improve the node availability check.
+
+* More verbose commit log in the patch enabling CONFIG_MOVABLE_NODE.
+
+* Add a patch to restore top-down allocation the way x86 does.
+
+v2:
+* http://lkml.kernel.org/r/1473883618-14998-1-git-send-email-arbab@linux.vnet.ibm.com
+
+* Use the "status" property of standard dt memory nodes instead of 
+  introducing a new "ibm,hotplug-aperture" compatible id.
+
+* Remove the patch which explicitly creates a memoryless node. This set 
+  no longer has any bearing on whether the pgdat is created at boot or 
+  at the time of memory addition.
+
+v1:
+* http://lkml.kernel.org/r/1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com
+
+Reza Arbab (5):
+  drivers/of: introduce of_fdt_device_is_available()
+  drivers/of: do not add memory for unavailable nodes
+  powerpc/mm: allow memory hotplug into a memoryless node
+  mm: make processing of movable_node arch-specific
+  mm: enable CONFIG_MOVABLE_NODE on non-x86 arches
+
+ arch/powerpc/mm/numa.c | 13 +------------
+ arch/x86/mm/numa.c     | 35 ++++++++++++++++++++++++++++++++++-
+ drivers/of/fdt.c       | 29 ++++++++++++++++++++++++++---
+ include/linux/of_fdt.h |  2 ++
+ mm/Kconfig             |  2 +-
+ mm/memory_hotplug.c    | 31 -------------------------------
+ 6 files changed, 64 insertions(+), 48 deletions(-)
+
 -- 
 1.8.3.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
