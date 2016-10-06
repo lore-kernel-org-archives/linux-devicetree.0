@@ -1,113 +1,65 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH 9/9] [DO NOT MERGE] ARM: dts: sun6i: Enable
- 7" LCD panel on Sinlinx SinA31s
-Date: Fri, 07 Oct 2016 00:23:00 +0800
-Message-ID: <1057651475770980@web10h.yandex.ru>
-References: <20161006160629.11198-1-wens@csie.org> <20161006160629.11198-10-wens@csie.org>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: Re: [PATCH V1 04/10] watchdog: da9061: watchdog driver (RFC)
+Date: Thu, 6 Oct 2016 16:28:14 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CCE242C@SW-EX-MBX02.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB2HU3G7QKGQEKOGWZ6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161006160629.11198-10-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@iguana.be>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Zhang Rui <rui.zhang@intel.com>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Guenter,
 
+Thanks for your reply.
 
-07.10.2016, 00:06, "Chen-Yu Tsai" <wens-jdAy2FN1RRM@public.gmane.org>:
-> Sinlinx SinA31s comes with an optional 7" 1024x600 LCD panel with
-> capacitive touch panel that bolts on to the board.
->
-> Enable the display using a panel with close timings. This patch is more
-> of a proof of concept. The LCD panel has no markings whatsoever, and
-> the timings are not exactly the same, and as a result the display produce=
-s
-> glitch lines sometimes.
+On 06 October 2016 14:28, Guenter Roeck, wrote:
 
-As you say, you can use the panel of SinA33...
+> To: Steve Twiss; LINUX-KERNEL; LINUX-WATCHDOG; Wim Van Sebroeck
+> Subject: Re: [PATCH V1 04/10] watchdog: da9061: watchdog driver
 
->
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
-> =C2=A0arch/arm/boot/dts/sun6i-a31s-sina31s.dts | 30 +++++++++++++++++++++=
-+++++++++
-> =C2=A01 file changed, 30 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun6i-a31s-sina31s.dts b/arch/arm/boot/dts=
-/sun6i-a31s-sina31s.dts
-> index 6ead2f5c847a..2d5cf8c9a12f 100644
-> --- a/arch/arm/boot/dts/sun6i-a31s-sina31s.dts
-> +++ b/arch/arm/boot/dts/sun6i-a31s-sina31s.dts
-> @@ -63,6 +63,23 @@
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0gpios =3D <&pio 7 13 GPIO_ACTIVE_HIGH>; /* PH13 */
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
-> +
-> + panel: panel {
-> + compatible =3D "avic,tm070ddh03", "simple-panel";
-> + #address-cells =3D <1>;
-> + #size-cells =3D <0>;
-> +
-> + port@0 {
-> + reg =3D <0>;
-> + #address-cells =3D <1>;
-> + #size-cells =3D <0>;
-> +
-> + panel_input: endpoint@0 {
-> + reg =3D <0>;
-> + remote-endpoint =3D <&tcon0_out_lcd>;
-> + };
-> + };
-> + };
-> =C2=A0};
->
-> =C2=A0&ehci0 {
-> @@ -148,6 +165,19 @@
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0regulator-name =3D =
-"vcc-gmac-phy";
-> =C2=A0};
->
-> +&tcon0 {
-> + pinctrl-names =3D "default";
-> + pinctrl-0 =3D <&lcd0_rgb888_pins>;
-> + status =3D "okay";
-> +};
-> +
-> +&tcon0_out {
-> + tcon0_out_lcd: endpoint@0 {
-> + reg =3D <0>;
-> + remote-endpoint =3D <&panel_input>;
-> + };
-> +};
-> +
-> =C2=A0&usbphy {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0status =3D "okay";
-> =C2=A0};
-> --
-> 2.9.3
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+[...]
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> > @@ -180,6 +180,11 @@ static const struct watchdog_info da9062_watchdog_info = {
+> >  	.identity = "DA9062 WDT",
+> >  };
+> >
+> > +static const struct watchdog_info da9061_watchdog_info = {
+> > +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
+> > +	.identity = "DA9061 WDT",
+> 
+> This adds a lot of complexity to the driver just to be able to display "DA9061".
+> Why not just change the existing identity to "DA9061/DA9062 WDT" ?
+
+This is true.
+I am using the compatible string to pick a different configuration .data block:
+
+{ .compatible = "dlg,da9062-watchdog", .data = &da9062_watchdog_info },
+{ .compatible = "dlg,da9061-watchdog", .data = &da9061_watchdog_info },
+
+when the only real difference between the DA9061 and DA9062 watchdog driver
+is the name. Functionally they are identical in this case.
+This was a similar comment in Dialog's internal review on this exact same point.
+"Why not just report one thing?"
+
+My answer to that was because it would allow to distinguish between different chips.
+The watchdog driver would report the correct chip type, despite the driver always
+being for DA9062.
+
+This exact same thing would happen with da9063-onkey and da9062-thermal also.
+For the ONKEY it is marginally confused by needing to support 63, but for 62 and 61
+it is the same thing. Only the name is different.
+
+I have TO:'d Dmitry Torokhov; Eduardo Valentin; Zhang Rui, for that reason.
+
+But, it is just my opinion to keep the "name" different.
+This will not be my decision if accepted into the Linux kernel, but I would like to 
+at least be consistent for DA9061 and DA9062 so ... is this an issue?
+
+The same question applies to thermal and onkey as well.
+
+Regards,
+Steve
