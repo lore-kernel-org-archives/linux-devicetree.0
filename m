@@ -1,157 +1,50 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: marvell: Add definition for the Globalscale Marvell ESPRESSOBin Board
-Date: Thu, 06 Oct 2016 16:44:59 +0200
-Message-ID: <87h98pwn84.fsf@free-electrons.com>
-References: <20161006091429.8974-1-romain.perier@free-electrons.com>
+From: Markus Mayer <markus.mayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RESEND PATCH v2 2/3] cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq
+ driver for Broadcom STB SoCs
+Date: Thu, 6 Oct 2016 07:51:59 -0700
+Message-ID: <CAGt4E5sWLbGO7b7mX5CHKRDbtp5iqaapbV=YUJbRVHyCeJL8nQ@mail.gmail.com>
+References: <1475272561-8446-1-git-send-email-mmayer@broadcom.com>
+ <1475272561-8446-3-git-send-email-mmayer@broadcom.com> <20161005032509.GG4664@vireshk-i7>
+ <CAGt4E5s9UBam4RKsq3k1P77-81NR-8AeQi==7dBNnp37xxtr_g@mail.gmail.com> <20161006040139.GA17619@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161006091429.8974-1-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Romain
-        Perier's message of "Thu, 6 Oct 2016 11:14:29 +0200")
+In-Reply-To: <20161006040139.GA17619@vireshk-i7>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yahuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Romain,
- 
- On jeu., oct. 06 2016, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-
-> This is a high performance 64 bit dual core low power consuming
-> networking computing platform based on the ARMv8 architecture.
-> It contains an Armada 3720 running up to 1.2Ghz.
+On 5 October 2016 at 21:01, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Thanks for accepting all the comments :)
 >
-> This commit adds a basic definition for this board.
+> On 05-10-16, 14:04, Markus Mayer wrote:
+>> Is there an easy way for me to know via the framework whether init is
+>> being called for the first time vs. init is being called on a
+>> different core after a previous attempt to initialize on another core
+>> failed?
+>>
+>> I could use a driver-global variable for the driver to remember if it
+>> has been initialized, but that seems a bit hacky.
 >
-> Signed-off-by: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> You don't really need to have any special code here, specially for the case that
+> may never get hit. For example, if we fail to initialize something for CPU0,
+> cpufreq core will try calling this routine for other CPUs as well. I don't think
+> there is anything wrong in letting cpufreq core trying that. Why stop it or
+> return early? It wouldn't happen normally, unless there is a bug in there.
 
-Applied on mvebu/dt64-4.10, I also added that the uart is exported on
-the micro USB connector through an FTDI.
+During early development, when the driver couldn't fully register, I
+would see the init() function called four times, i.e. once for each
+core. If the first call succeeded, that was it. It would only get
+called once. But if it failed, all cores would try to register. And I
+wanted to avoid spilling the same error message four times.
+
+I'll look at that again. It may have had something to do with how the
+driver worked back then. If it doesn't happen anymore, I'll just get
+rid of this code.
 
 Thanks,
-
-Gregory
-
-> ---
->
-> Changes in v2:
->  - Improved commit message
->  - Added informations about connectors
->
->  arch/arm64/boot/dts/marvell/Makefile               |  1 +
->  .../boot/dts/marvell/armada-3720-espressobin.dts   | 82 ++++++++++++++++++++++
->  2 files changed, 83 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
->
-> diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-> index 308468d..392eeb6 100644
-> --- a/arch/arm64/boot/dts/marvell/Makefile
-> +++ b/arch/arm64/boot/dts/marvell/Makefile
-> @@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-stb.dtb
->  
->  # Mvebu SoC Family
->  dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
-> +dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
->  dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
->  
->  always		:= $(dtb-y)
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> new file mode 100644
-> index 0000000..ae005f1
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> @@ -0,0 +1,82 @@
-> +/*
-> + * Device Tree file for Globalscale Marvell ESPRESSOBin Board
-> + * Copyright (C) 2016 Marvell
-> + *
-> + * Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "armada-372x.dtsi"
-> +
-> +/ {
-> +	model = "Globalscale Marvell ESPRESSOBin Board";
-> +	compatible = "globalscale,espressobin", "marvell,armada3720", "marvell,armada3710";
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
-> +	};
-> +};
-> +
-> +/* J9 */
-> +&pcie0 {
-> +	status = "okay";
-> +};
-> +
-> +/* J6 */
-> +&sata {
-> +	status = "okay";
-> +};
-> +
-> +/* J5 */
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +/* J7 */
-> +&usb3 {
-> +	status = "okay";
-> +};
-> -- 
-> 2.9.3
->
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+-Markus
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
