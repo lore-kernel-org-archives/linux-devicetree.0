@@ -1,892 +1,134 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v7 4/4] tests: Add tests cases for the overlay code
-Date: Thu, 6 Oct 2016 19:33:48 +1100
-Message-ID: <20161006083348.GN18733@umbus.fritz.box>
-References: <20160930135717.16511-1-maxime.ripard@free-electrons.com>
- <20160930135717.16511-5-maxime.ripard@free-electrons.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH v9 17/19] drm/virtio: kconfig: Fix recursive dependency
+	issue.
+Date: Thu, 6 Oct 2016 10:37:21 +0100
+Message-ID: <20161006093721.GA436@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
+	<1473081421-16555-18-git-send-email-peter.griffin@linaro.org>
+	<CACvgo52_g7anGBd9HTUyYsbp5QmQEk9LR3nNHgSTgjQ29G3ViA@mail.gmail.com>
+	<20160920083251.GB26093@griffinp-ThinkPad-X1-Carbon-2nd>
+	<8760pqncee.fsf@intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="JLiXfqD9/Kt1b+Pq"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <virtualization-bounces@lists.linux-foundation.org>
 Content-Disposition: inline
-In-Reply-To: <20160930135717.16511-5-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <8760pqncee.fsf@intel.com>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
+	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
+List-Post: <mailto:virtualization@lists.linux-foundation.org>
+List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
+	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
+Sender: virtualization-bounces@lists.linux-foundation.org
+Errors-To: virtualization-bounces@lists.linux-foundation.org
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: devicetree <devicetree@vger.kernel.org>, kernel@stlinux.com, Arnd Bergmann <arnd@arndb.de>, vinod.koul@intel.com, linux-remoteproc@vger.kernel.org, Emil Velikov <emil.l.velikov@gmail.com>, patrice.chotard@st.com, ML dri-devel <dri-devel@lists.freedesktop.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, dan.j.williams@intel.com, bjorn.andersson@linaro.org, lee.jones@linaro.org, "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jani,
 
---JLiXfqD9/Kt1b+Pq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sorry for the delay, I've been travelling last week.
 
-On Fri, Sep 30, 2016 at 03:57:17PM +0200, Maxime Ripard wrote:
-> Add some test infrastructure to test that the overlay can be merged, but
-> also that poorly formatted fixups would fail as expected.
->=20
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Tue, 20 Sep 2016, Jani Nikula wrote:
 
-Hrm.  All the overlay_bad_fixup testcases fail for me.
+> On Tue, 20 Sep 2016, Peter Griffin <peter.griffin@linaro.org> wrote:
+> > Hi Emil,
+> >
+> > On Tue, 20 Sep 2016, Emil Velikov wrote:
+> >
+> >> On 5 September 2016 at 14:16, Peter Griffin <peter.griffin@linaro.org> wrote:
+> >> > ST_SLIM_REMOTEPROC must select REMOTEPROC, which exposes the following
+> >> > recursive dependency.
+> >
+> >
+> >> >
+> >> From a humble skim through remoteproc, drm and a few other subsystems
+> >> I think the above is wrong. All the drivers (outside of remoteproc),
+> >> that I've seen, depend on the core component, they don't select it.
+> >
+> > I will let Bjorn comment on the remoteproc subsystem Kconfig design, and
+> > why it is like it is.
+> >
+> > For this particular SLIM_RPROC I have added it to Kconfig in keeping with all
+> > the other drivers in the remoteproc subsystem which has exposed this recursive
+> > dependency issue.
+> >
+> > For this particular kconfig symbol a quick grep reveals more drivers in
+> > the kernel using 'select', than 'depend on'
+> >
+> > git grep "select VIRTIO" | wc -l
+> > 14
+> >
+> > git grep "depends on VIRTIO" | wc -l
+> > 10
+> >
+> >
+> >> Furthermore most places explicitly hide the drivers from the menu if
+> >> the core component isn't enabled.
+> >
+> > Remoteproc subsystem takes a different approach, the core code is only enabled
+> > if a driver which relies on it is enabled. This IMHO makes sense, as
+> > remoteproc is not widely used (only a few particular ARM SoC's).
+> >
+> > It is true that for subsystems which rely on the core component being
+> > explicitly enabled, they often tend to hide drivers which depend on it
+> > from the menu unless it is. This also makes sense.
+> >
+> >> 
+> >> Is there something that requires such a different/unusual behaviour in
+> >> remoteproc ?
+> >> 
+> >
+> > I'm not sure it is that unusual...looking at config USB, it selects USB_COMMON in
+> > mfd subsystem, client drivers select MFD_CORE.
+> >
+> > I've added Arnd to this thread, as I've seen lots of Kconfig patches from him
+> > recently, maybe he has some thoughts on whether this is the correct fix or not?
+> 
+> 
+> Documentation/kbuild/kconfig-language.txt:
+> 
+>   Note:
+> 	select should be used with care. select will force
+> 	a symbol to a value without visiting the dependencies.
+> 	By abusing select you are able to select a symbol FOO even
+> 	if FOO depends on BAR that is not set.
+> 	In general use select only for non-visible symbols
+> 	(no prompts anywhere) and for symbols with no dependencies.
+> 	That will limit the usefulness but on the other hand avoid
+> 	the illegal configurations all over.
 
-> ---
->  tests/.gitignore                            |   2 +
->  tests/Makefile.tests                        |   3 +-
->  tests/overlay.c                             | 232 ++++++++++++++++++++++=
-++++++
->  tests/overlay_bad_fixup.c                   |  70 +++++++++
->  tests/overlay_bad_fixup_bad_index.dts       |  14 ++
->  tests/overlay_bad_fixup_base.dtsi           |  18 +++
->  tests/overlay_bad_fixup_empty.dts           |  14 ++
->  tests/overlay_bad_fixup_empty_index.dts     |  14 ++
->  tests/overlay_bad_fixup_index_trailing.dts  |  14 ++
->  tests/overlay_bad_fixup_path_empty_prop.dts |  14 ++
->  tests/overlay_bad_fixup_path_only.dts       |  14 ++
->  tests/overlay_bad_fixup_path_only_sep.dts   |  14 ++
->  tests/overlay_bad_fixup_path_prop.dts       |  14 ++
->  tests/overlay_base.dts                      |  21 +++
->  tests/overlay_overlay_dtc.dts               |  85 ++++++++++
->  tests/overlay_overlay_nodtc.dts             |  82 ++++++++++
->  tests/run_tests.sh                          |  32 ++++
->  17 files changed, 656 insertions(+), 1 deletion(-)
->  create mode 100644 tests/overlay.c
->  create mode 100644 tests/overlay_bad_fixup.c
->  create mode 100644 tests/overlay_bad_fixup_bad_index.dts
->  create mode 100644 tests/overlay_bad_fixup_base.dtsi
->  create mode 100644 tests/overlay_bad_fixup_empty.dts
->  create mode 100644 tests/overlay_bad_fixup_empty_index.dts
->  create mode 100644 tests/overlay_bad_fixup_index_trailing.dts
->  create mode 100644 tests/overlay_bad_fixup_path_empty_prop.dts
->  create mode 100644 tests/overlay_bad_fixup_path_only.dts
->  create mode 100644 tests/overlay_bad_fixup_path_only_sep.dts
->  create mode 100644 tests/overlay_bad_fixup_path_prop.dts
->  create mode 100644 tests/overlay_base.dts
->  create mode 100644 tests/overlay_overlay_dtc.dts
->  create mode 100644 tests/overlay_overlay_nodtc.dts
->=20
-> diff --git a/tests/.gitignore b/tests/.gitignore
-> index fa4616ba28c2..354b565aa095 100644
-> --- a/tests/.gitignore
-> +++ b/tests/.gitignore
-> @@ -35,6 +35,8 @@ tmp.*
->  /nopulate
->  /notfound
->  /open_pack
-> +/overlay
-> +/overlay_bad_fixup
->  /parent_offset
->  /path-references
->  /path_offset
-> diff --git a/tests/Makefile.tests b/tests/Makefile.tests
-> index 196518c83eda..eb039c5a40c1 100644
-> --- a/tests/Makefile.tests
-> +++ b/tests/Makefile.tests
-> @@ -24,7 +24,8 @@ LIB_TESTS_L =3D get_mem_rsv \
->  	utilfdt_test \
->  	integer-expressions \
->  	property_iterate \
-> -	subnode_iterate
-> +	subnode_iterate \
-> +	overlay overlay_bad_fixup
->  LIB_TESTS =3D $(LIB_TESTS_L:%=3D$(TESTS_PREFIX)%)
-> =20
->  LIBTREE_TESTS_L =3D truncated_property
-> diff --git a/tests/overlay.c b/tests/overlay.c
-> new file mode 100644
-> index 000000000000..e467b037255f
-> --- /dev/null
-> +++ b/tests/overlay.c
-> @@ -0,0 +1,232 @@
-> +/*
-> + * libfdt - Flat Device Tree manipulation
-> + *	Testcase for DT overlays()
-> + * Copyright (C) 2016 Free Electrons
-> + * Copyright (C) 2016 NextThing Co.
-> + *
-> + * This library is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU Lesser General Public License
-> + * as published by the Free Software Foundation; either version 2.1 of
-> + * the License, or (at your option) any later version.
-> + *
-> + * This library is distributed in the hope that it will be useful, but
-> + * WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> + * Lesser General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU Lesser General Public
-> + * License along with this library; if not, write to the Free Software
-> + * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 =
-USA
-> + */
-> +
-> +#include <stdio.h>
-> +
-> +#include <libfdt.h>
-> +
-> +#include "tests.h"
-> +
-> +#define CHECK(code) \
-> +	{ \
-> +		if (code) \
-> +			FAIL(#code ": %s", fdt_strerror(code)); \
-> +	}
-> +
-> +/* 4k ought to be enough for anybody */
-> +#define FDT_COPY_SIZE	(4 * 1024)
-> +
-> +static int fdt_getprop_u32_by_index(void *fdt, const char *path,
-> +				    const char *name, int index,
-> +				    unsigned long *out)
-> +{
-> +	const fdt32_t *val;
-> +	int node_off;
-> +	int len;
-> +
-> +	node_off =3D fdt_path_offset(fdt, path);
-> +	if (node_off < 0)
-> +		return node_off;
-> +
-> +	val =3D fdt_getprop(fdt, node_off, name, &len);
-> +	if (!val || (len < (sizeof(uint32_t) * (index + 1))))
-> +		return -FDT_ERR_NOTFOUND;
-> +
-> +	*out =3D fdt32_to_cpu(*(val + index));
-> +
-> +	return 0;
-> +}
-> +
-> +static int check_getprop_string_by_name(void *fdt, const char *path,
-> +					const char *name, const char *val)
-> +{
-> +	int node_off;
-> +
-> +	node_off =3D fdt_path_offset(fdt, path);
-> +	if (node_off < 0)
-> +		return node_off;
-> +
-> +	check_getprop_string(fdt, node_off, name, val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int check_getprop_u32_by_name(void *fdt, const char *path,
-> +				     const char *name, uint32_t val)
-> +{
-> +	int node_off;
-> +
-> +	node_off =3D fdt_path_offset(fdt, path);
-> +	CHECK(node_off < 0);
-> +
-> +	check_getprop_cell(fdt, node_off, name, val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int check_getprop_null_by_name(void *fdt, const char *path,
-> +				      const char *name)
-> +{
-> +	int node_off;
-> +
-> +	node_off =3D fdt_path_offset(fdt, path);
-> +	CHECK(node_off < 0);
-> +
-> +	check_property(fdt, node_off, name, 0, NULL);
-> +
-> +	return 0;
-> +}
-> +
-> +static int fdt_overlay_change_int_property(void *fdt)
-> +{
-> +	return check_getprop_u32_by_name(fdt, "/test-node", "test-int-property",
-> +					 43);
-> +}
-> +
-> +static int fdt_overlay_change_str_property(void *fdt)
-> +{
-> +	return check_getprop_string_by_name(fdt, "/test-node",
-> +					    "test-str-property", "foobar");
-> +}
-> +
-> +static int fdt_overlay_add_str_property(void *fdt)
-> +{
-> +	return check_getprop_string_by_name(fdt, "/test-node",
-> +					    "test-str-property-2", "foobar2");
-> +}
-> +
-> +static int fdt_overlay_add_node(void *fdt)
-> +{
-> +	return check_getprop_null_by_name(fdt, "/test-node/new-node",
-> +					  "new-property");
-> +}
-> +
-> +static int fdt_overlay_add_subnode_property(void *fdt)
-> +{
-> +	check_getprop_null_by_name(fdt, "/test-node/sub-test-node",
-> +				   "sub-test-property");
-> +	check_getprop_null_by_name(fdt, "/test-node/sub-test-node",
-> +				   "new-sub-test-property");
-> +
-> +	return 0;
-> +}
-> +
-> +static int fdt_overlay_local_phandle(void *fdt)
-> +{
-> +	uint32_t local_phandle;
-> +	unsigned long val =3D 0;
-> +	int off;
-> +
-> +	off =3D fdt_path_offset(fdt, "/test-node/new-local-node");
-> +	CHECK(off < 0);
-> +
-> +	local_phandle =3D fdt_get_phandle(fdt, off);
-> +	CHECK(!local_phandle);
-> +
-> +	CHECK(fdt_getprop_u32_by_index(fdt, "/test-node",
-> +				       "test-several-phandle",
-> +				       0, &val));
-> +	CHECK(val !=3D local_phandle);
-> +
-> +	CHECK(fdt_getprop_u32_by_index(fdt, "/test-node",
-> +				       "test-several-phandle",
-> +				       1, &val));
-> +	CHECK(val !=3D local_phandle);
-> +
-> +	return 0;
-> +}
-> +
-> +static int fdt_overlay_local_phandles(void *fdt)
-> +{
-> +	uint32_t local_phandle, test_phandle;
-> +	unsigned long val =3D 0;
-> +	int off;
-> +
-> +	off =3D fdt_path_offset(fdt, "/test-node/new-local-node");
-> +	CHECK(off < 0);
-> +
-> +	local_phandle =3D fdt_get_phandle(fdt, off);
-> +	CHECK(!local_phandle);
-> +
-> +	off =3D fdt_path_offset(fdt, "/test-node");
-> +	CHECK(off < 0);
-> +
-> +	test_phandle =3D fdt_get_phandle(fdt, off);
-> +	CHECK(!test_phandle);
-> +
-> +	CHECK(fdt_getprop_u32_by_index(fdt, "/test-node",
-> +				       "test-phandle", 0, &val));
-> +	CHECK(test_phandle !=3D val);
-> +
-> +	CHECK(fdt_getprop_u32_by_index(fdt, "/test-node",
-> +				       "test-phandle", 1, &val));
-> +	CHECK(local_phandle !=3D val);
-> +
-> +	return 0;
-> +}
-> +
-> +static void *open_dt(char *path)
-> +{
-> +	void *dt, *copy;
-> +
-> +	dt =3D load_blob(path);
-> +	copy =3D xmalloc(FDT_COPY_SIZE);
-> +
-> +	/*
-> +	 * Resize our DTs to 4k so that we have room to operate on
-> +	 */
-> +	CHECK(fdt_open_into(dt, copy, FDT_COPY_SIZE));
-> +
-> +	return copy;
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	void *fdt_base, *fdt_overlay;
-> +
-> +	test_init(argc, argv);
-> +	if (argc !=3D 3)
-> +		CONFIG("Usage: %s <base dtb> <overlay dtb>", argv[0]);
-> +
-> +	fdt_base =3D open_dt(argv[1]);
-> +	fdt_overlay =3D open_dt(argv[2]);
-> +
-> +	/* Apply the overlay */
-> +	CHECK(fdt_overlay_apply(fdt_base, fdt_overlay));
-> +
-> +	fdt_overlay_change_int_property(fdt_base);
-> +	fdt_overlay_change_str_property(fdt_base);
-> +	fdt_overlay_add_str_property(fdt_base);
-> +	fdt_overlay_add_node(fdt_base);
-> +	fdt_overlay_add_subnode_property(fdt_base);
-> +
-> +	/*
-> +	 * If the base tree has a __symbols__ node, do the tests that
-> +	 * are only successful with a proper phandle support, and thus
-> +	 * dtc -@
-> +	 */
-> +	if (fdt_path_offset(fdt_base, "/__symbols__") >=3D 0) {
-> +		fdt_overlay_local_phandle(fdt_base);
-> +		fdt_overlay_local_phandles(fdt_base);
-> +	}
-> +
-> +	PASS();
-> +}
-> diff --git a/tests/overlay_bad_fixup.c b/tests/overlay_bad_fixup.c
-> new file mode 100644
-> index 000000000000..5014f5ec0868
-> --- /dev/null
-> +++ b/tests/overlay_bad_fixup.c
-> @@ -0,0 +1,70 @@
-> +/*
-> + * libfdt - Flat Device Tree manipulation
-> + *	Testcase for DT overlays()
-> + * Copyright (C) 2016 Free Electrons
-> + * Copyright (C) 2016 NextThing Co.
-> + *
-> + * This library is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU Lesser General Public License
-> + * as published by the Free Software Foundation; either version 2.1 of
-> + * the License, or (at your option) any later version.
-> + *
-> + * This library is distributed in the hope that it will be useful, but
-> + * WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> + * Lesser General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU Lesser General Public
-> + * License along with this library; if not, write to the Free Software
-> + * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 =
-USA
-> + */
-> +
-> +#include <stdio.h>
-> +
-> +#include <libfdt.h>
-> +
-> +#include "tests.h"
-> +
-> +#define CHECK(code, expected)					\
-> +	{							\
-> +		err =3D (code);					\
-> +		if (err !=3D expected)				\
-> +			FAIL(#code ": %s", fdt_strerror(err));	\
-> +	}
-> +
-> +/* 4k ought to be enough for anybody */
-> +#define FDT_COPY_SIZE	(4 * 1024)
-> +
-> +static void *open_dt(char *path)
-> +{
-> +	void *dt, *copy;
-> +	int err;
-> +
-> +	dt =3D load_blob(path);
-> +	copy =3D xmalloc(FDT_COPY_SIZE);
-> +
-> +	/*
-> +	 * Resize our DTs to 4k so that we have room to operate on
-> +	 */
-> +	CHECK(fdt_open_into(dt, copy, FDT_COPY_SIZE), 0);
-> +
-> +	return copy;
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	void *fdt_base, *fdt_overlay;
-> +	int err;
-> +
-> +	test_init(argc, argv);
-> +	if (argc !=3D 3)
-> +		CONFIG("Usage: %s <base dtb> <overlay dtb>", argv[0]);
-> +
-> +	fdt_base =3D open_dt(argv[1]);
-> +	fdt_overlay =3D open_dt(argv[2]);
-> +
-> +	/* Apply the overlay */
-> +	CHECK(fdt_overlay_apply(fdt_base, fdt_overlay), -FDT_ERR_BADOVERLAY);
-> +
-> +	PASS();
-> +}
-> diff --git a/tests/overlay_bad_fixup_bad_index.dts b/tests/overlay_bad_fi=
-xup_bad_index.dts
-> new file mode 100644
-> index 000000000000..b5cf13137169
-> --- /dev/null
-> +++ b/tests/overlay_bad_fixup_bad_index.dts
-> @@ -0,0 +1,14 @@
-> +/*
-> + * Copyright (c) 2016 NextThing Co
-> + * Copyright (c) 2016 Free Electrons
-> + *
-> + * SPDX-License-Identifier:	GPL-2.0+
-> + */
-> +
-> +/include/ "overlay_bad_fixup_base.dtsi"
-> +
-> +/ {
-> +	__fixups__ {
-> +		test =3D "/fragment@0:target:ab";
-> +	};
-> +};
-> diff --git a/tests/overlay_bad_fixup_base.dtsi b/tests/overlay_bad_fixup_=
-base.dtsi
-> new file mode 100644
-> index 000000000000..216bcab52263
-> --- /dev/null
-> +++ b/tests/overlay_bad_fixup_base.dtsi
-> @@ -0,0 +1,18 @@
-> +/*
-> + * Copyright (c) 2016 NextThing Co
-> + * Copyright (c) 2016 Free Electrons
-> + *
-> + * SPDX-License-Identifier:	GPL-2.0+
-> + */
-> +
-> +/dts-v1/;
-> +
-> +/ {
-> +	fragment@0 {
-> +		target =3D <0xffffffff>;
-> +
-> +		__overlay__ {
-> +			test-property;
-> +		};
-> +	};
-> +};
-> diff --git a/tests/overlay_bad_fixup_empty.dts b/tests/overlay_bad_fixup_=
-empty.dts
-> new file mode 100644
-> index 000000000000..e111db4c8527
-> --- /dev/null
-> +++ b/tests/overlay_bad_fixup_empty.dts
-> @@ -0,0 +1,14 @@
-> +/*
-> + * Copyright (c) 2016 NextThing Co
-> + * Copyright (c) 2016 Free Electrons
-> + *
-> + * SPDX-License-Identifier:	GPL-2.0+
-> + */
-> +
-> +/include/ "overlay_bad_fixup_base.dtsi"
-> +
-> +/ {
-> +	__fixups__ {
-> +		test =3D "";
-> +	};
-> +};
-> diff --git a/tests/overlay_bad_fixup_empty_index.dts b/tests/overlay_bad_=
-fixup_empty_index.dts
-> new file mode 100644
-> index 000000000000..9e12e2177ad5
-> --- /dev/null
-> +++ b/tests/overlay_bad_fixup_empty_index.dts
-> @@ -0,0 +1,14 @@
-> +/*
-> + * Copyright (c) 2016 NextThing Co
-> + * Copyright (c) 2016 Free Electrons
-> + *
-> + * SPDX-License-Identifier:	GPL-2.0+
-> + */
-> +
-> +/include/ "overlay_bad_fixup_base.dtsi"
-> +
-> +/ {
-> +	__fixups__ {
-> +		test =3D "/fragment@0:target:";
-> +	};
-> +};
-> diff --git a/tests/overlay_bad_fixup_index_trailing.dts b/tests/overlay_b=
-ad_fixup_index_trailing.dts
-> new file mode 100644
-> index 000000000000..f586bef4d374
-> --- /dev/null
-> +++ b/tests/overlay_bad_fixup_index_trailing.dts
-> @@ -0,0 +1,14 @@
-> +/*
-> + * Copyright (c) 2016 NextThing Co
-> + * Copyright (c) 2016 Free Electrons
-> + *
-> + * SPDX-License-Identifier:	GPL-2.0+
-> + */
-> +
-> +/include/ "overlay_bad_fixup_base.dtsi"
-> +
-> +/ {
-> +	__fixups__ {
-> +		test =3D "/fragment@0:target:0a";
-> +	};
-> +};
-> diff --git a/tests/overlay_bad_fixup_path_empty_prop.dts b/tests/overlay_=
-bad_fixup_path_empty_prop.dts
-> new file mode 100644
-> index 000000000000..608b5f9247b5
-> --- /dev/null
-> +++ b/tests/overlay_bad_fixup_path_empty_prop.dts
-> @@ -0,0 +1,14 @@
-> +/*
-> + * Copyright (c) 2016 NextThing Co
-> + * Copyright (c) 2016 Free Electrons
-> + *
-> + * SPDX-License-Identifier:	GPL-2.0+
-> + */
-> +
-> +/include/ "overlay_bad_fixup_base.dtsi"
-> +
-> +/ {
-> +	__fixups__ {
-> +		test =3D "/fragment@0::";
-> +	};
-> +};
-> diff --git a/tests/overlay_bad_fixup_path_only.dts b/tests/overlay_bad_fi=
-xup_path_only.dts
-> new file mode 100644
-> index 000000000000..2485dd965ee5
-> --- /dev/null
-> +++ b/tests/overlay_bad_fixup_path_only.dts
-> @@ -0,0 +1,14 @@
-> +/*
-> + * Copyright (c) 2016 NextThing Co
-> + * Copyright (c) 2016 Free Electrons
-> + *
-> + * SPDX-License-Identifier:	GPL-2.0+
-> + */
-> +
-> +/include/ "overlay_bad_fixup_base.dtsi"
-> +
-> +/ {
-> +	__fixups__ {
-> +		test =3D "/fragment@0";
-> +	};
-> +};
-> diff --git a/tests/overlay_bad_fixup_path_only_sep.dts b/tests/overlay_ba=
-d_fixup_path_only_sep.dts
-> new file mode 100644
-> index 000000000000..3cbf6c40fba5
-> --- /dev/null
-> +++ b/tests/overlay_bad_fixup_path_only_sep.dts
-> @@ -0,0 +1,14 @@
-> +/*
-> + * Copyright (c) 2016 NextThing Co
-> + * Copyright (c) 2016 Free Electrons
-> + *
-> + * SPDX-License-Identifier:	GPL-2.0+
-> + */
-> +
-> +/include/ "overlay_bad_fixup_base.dtsi"
-> +
-> +/ {
-> +	__fixups__ {
-> +		test =3D "/fragment@0:";
-> +	};
-> +};
-> diff --git a/tests/overlay_bad_fixup_path_prop.dts b/tests/overlay_bad_fi=
-xup_path_prop.dts
-> new file mode 100644
-> index 000000000000..ca79b52bcb22
-> --- /dev/null
-> +++ b/tests/overlay_bad_fixup_path_prop.dts
-> @@ -0,0 +1,14 @@
-> +/*
-> + * Copyright (c) 2016 NextThing Co
-> + * Copyright (c) 2016 Free Electrons
-> + *
-> + * SPDX-License-Identifier:	GPL-2.0+
-> + */
-> +
-> +/include/ "overlay_bad_fixup_base.dtsi"
-> +
-> +/ {
-> +	__fixups__ {
-> +		test =3D "/fragment@0:target";
-> +	};
-> +};
-> diff --git a/tests/overlay_base.dts b/tests/overlay_base.dts
-> new file mode 100644
-> index 000000000000..2603adb6821e
-> --- /dev/null
-> +++ b/tests/overlay_base.dts
-> @@ -0,0 +1,21 @@
-> +/*
-> + * Copyright (c) 2016 NextThing Co
-> + * Copyright (c) 2016 Free Electrons
-> + *
-> + * SPDX-License-Identifier:	GPL-2.0+
-> + */
-> +
-> +/dts-v1/;
-> +
-> +/ {
-> +	test: test-node {
-> +		test-int-property =3D <42>;
-> +		test-str-property =3D "foo";
-> +
-> +		subtest: sub-test-node {
-> +			sub-test-property;
-> +		};
-> +	};
-> +};
-> +
-> +
-> diff --git a/tests/overlay_overlay_dtc.dts b/tests/overlay_overlay_dtc.dts
-> new file mode 100644
-> index 000000000000..30d2362f746b
-> --- /dev/null
-> +++ b/tests/overlay_overlay_dtc.dts
-> @@ -0,0 +1,85 @@
-> +/*
-> + * Copyright (c) 2016 NextThing Co
-> + * Copyright (c) 2016 Free Electrons
-> + *
-> + * SPDX-License-Identifier:	GPL-2.0+
-> + */
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +/ {
-> +	/* Test that we can change an int by another */
-> +	fragment@0 {
-> +		target =3D <&test>;
-> +
-> +		__overlay__ {
-> +			test-int-property =3D <43>;
-> +		};
-> +	};
-> +
-> +	/* Test that we can replace a string by a longer one */
-> +	fragment@1 {
-> +		target =3D <&test>;
-> +
-> +		__overlay__ {
-> +			test-str-property =3D "foobar";
-> +		};
-> +	};
-> +
-> +	/* Test that we add a new property */
-> +	fragment@2 {
-> +		target =3D <&test>;
-> +
-> +		__overlay__ {
-> +			test-str-property-2 =3D "foobar2";
-> +		};
-> +	};
-> +
-> +	/* Test that we add a new node (by phandle) */
-> +	fragment@3 {
-> +		target =3D <&test>;
-> +
-> +		__overlay__ {
-> +			new-node {
-> +				new-property;
-> +			};
-> +		};
-> +	};
-> +
-> +	fragment@5 {
-> +		target =3D <&test>;
-> +
-> +		__overlay__ {
-> +			local: new-local-node {
-> +				new-property;
-> +			};
-> +		};
-> +	};
-> +
-> +	fragment@6 {
-> +		target =3D <&test>;
-> +
-> +		__overlay__ {
-> +			test-phandle =3D <&test>, <&local>;
-> +		};
-> +	};
-> +
-> +	fragment@7 {
-> +		target =3D <&test>;
-> +
-> +		__overlay__ {
-> +			test-several-phandle =3D <&local>, <&local>;
-> +		};
-> +	};
-> +
-> +	fragment@8 {
-> +		target =3D <&test>;
-> +
-> +		__overlay__ {
-> +			sub-test-node {
-> +				new-sub-test-property;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/tests/overlay_overlay_nodtc.dts b/tests/overlay_overlay_nodt=
-c.dts
-> new file mode 100644
-> index 000000000000..e8d0f96d889c
-> --- /dev/null
-> +++ b/tests/overlay_overlay_nodtc.dts
-> @@ -0,0 +1,82 @@
-> +/*
-> + * Copyright (c) 2016 NextThing Co
-> + * Copyright (c) 2016 Free Electrons
-> + *
-> + * SPDX-License-Identifier:	GPL-2.0+
-> + */
-> +
-> +/dts-v1/;
-> +
-> +/ {
-> +	fragment@0 {
-> +		target-path =3D "/test-node";
-> +
-> +		__overlay__ {
-> +			test-int-property =3D <43>;
-> +		};
-> +	};
-> +
-> +	/* Test that we can replace a string by a longer one */
-> +	fragment@1 {
-> +		target-path =3D "/test-node";
-> +
-> +		__overlay__ {
-> +			test-str-property =3D "foobar";
-> +		};
-> +	};
-> +
-> +	/* Test that we add a new property */
-> +	fragment@2 {
-> +		target-path =3D "/test-node";
-> +
-> +		__overlay__ {
-> +			test-str-property-2 =3D "foobar2";
-> +		};
-> +	};
-> +
-> +	fragment@3 {
-> +		target-path =3D "/test-node";
-> +
-> +		__overlay__ {
-> +			new-node {
-> +				new-property;
-> +			};
-> +		};
-> +	};
-> +
-> +	fragment@4 {
-> +		target-path =3D "/";
-> +
-> +		__overlay__ {
-> +			local: new-local-node {
-> +				new-property;
-> +			};
-> +		};
-> +	};
-> +
-> +	fragment@5 {
-> +		target-path =3D "/";
-> +
-> +		__overlay__ {
-> +			test-several-phandle =3D <&local>, <&local>;
-> +		};
-> +	};
-> +
-> +	fragment@6 {
-> +		target-path =3D "/test-node";
-> +
-> +		__overlay__ {
-> +			sub-test-node {
-> +				new-sub-test-property;
-> +			};
-> +		};
-> +	};
-> +
-> +	__local_fixups__ {
-> +		fragment@5 {
-> +			__overlay__ {
-> +				test-several-phandle =3D <0 4>;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-> index f4b32e4296d0..dc19f80b2fb6 100755
-> --- a/tests/run_tests.sh
-> +++ b/tests/run_tests.sh
-> @@ -160,6 +160,37 @@ run_fdtdump_test() {
->      base_run_test sh fdtdump-runtest.sh "$file"
->  }
-> =20
-> +BAD_FIXUP_TREES=3D"bad_index \
-> +		empty \
-> +		empty_index \
-> +		index_trailing \
-> +		path_empty_prop \
-> +		path_only \
-> +		path_only_sep \
-> +		path_prop"
-> +
-> +overlay_tests () {
-> +    # Overlay tests that don't require overlay support in dtc
-> +    run_dtc_test -I dts -O dtb -o overlay_base.dtb overlay_base.dts
-> +    run_dtc_test -I dts -O dtb -o overlay_overlay.dtb overlay_overlay_no=
-dtc.dts
-> +    run_test overlay overlay_base.dtb overlay_overlay.dtb
-> +
-> +    # Overlay tests that requires overlay support in dtc
-> +    echo "/dts-v1/; / {};" | $DTC -@ > /dev/null 2>&1
-> +    if [ $? -eq 0 ]; then
-> +        run_dtc_test -@ -I dts -O dtb -o overlay_base.dtb overlay_base.d=
-ts
-> +        run_dtc_test -@ -I dts -O dtb -o overlay_overlay.dtb overlay_ove=
-rlay_dtc.dts
-> +        run_test overlay overlay_base.dtb overlay_overlay.dtb
-> +    fi
-> +
-> +    # Bad fixup tests
-> +    for test in $BAD_FIXUP_TREES; do
-> +	tree=3D"overlay_bad_fixup_$test"
-> +	run_dtc_test -I dts -O dtb -o $tree.dtb $tree.dts
-> +	run_test overlay_bad_fixup overlay_base.dtb $tree.dtb
-> +    done
-> +}
-> +
->  tree1_tests () {
->      TREE=3D$1
-> =20
-> @@ -273,6 +304,7 @@ libfdt_tests () {
->      run_test appendprop2 appendprop1.test.dtb
->      run_dtc_test -I dts -O dtb -o appendprop.test.dtb appendprop.dts
->      run_test dtbs_equal_ordered appendprop2.test.dtb appendprop.test.dtb
-> +    overlay_tests
-> =20
->      for basetree in test_tree1.dtb sw_tree1.test.dtb rw_tree1.test.dtb; =
-do
->  	run_test nopulate $basetree
+Thanks for the documentation link. I believe this proves this patch is an
+appropriate fix as VIRTIO is a non-visible symbol, and has no dependencies.
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+In fact the help text for VIRTIO even states this option should be selected
+by any driver which implements virtio.
 
---JLiXfqD9/Kt1b+Pq
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> People tend to abuse select because it's "convenient". If you depend,
+> but some of your dependencies aren't met, you're in for some digging
+> through Kconfig to find the missing deps. Just to make the option you
+> want visible in menuconfig. If you instead select something with
+> dependencies, it'll be right most of the time, and it's "convenient",
+> until it breaks. (And hey, it usually breaks for someone else with some
+> other config, so it's still convenient for you.)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+I'm sure they do but in this case it is actually the use of 'depends on'
+which has caused the breakage and inconvenience for somebody else and sadly this
+inconvienice is still on-going due to this patch not being applied or getting an
+acked-by from the appropriate maintainers.
 
-iQIcBAEBCAAGBQJX9gxpAAoJEGw4ysog2bOSJgUP/0igme0jdaEzbvZgy3I8rBCh
-Zi/92Z/dvnPyiRwc9C81Wjdv5ErdCDu08tfZ2zeCx1e9G6Beug4cEMu8RVG2eL3F
-CE6E5MtkHjTw2b11eOjaG2yhx7Ycf7Fq+VxESPD4YJKxbUgDO/mi2U/GvC0AC2S2
-iIV1MWTo04sGZ7nGi7ma5Sz/EcHSQDF4774JCmfGMbc8RebtUJitRqJqOi+iB3gU
-qgqHKQraBHqhlsIFQQUGGNuNGTvLL51W4sLx7VN5yo3OZOOiIiSx4xFji6e/gVFT
-BamwCCz1DxdMF9DdU9GOgvhugHxR28MWi0mAm6vNeY2mnYvFdH29rWY8px7XGb5V
-NO1Hpev3wnuIw57dsD35svfMoThRIa7+5RayTGi/k2gvExv95nPk5mS1WviCJlop
-BydtrhTrHUxnXBR7bH7KrUbBeQtAjUcGdcgsE/ZN4rwCSGUnoQNR60Ef2lebsNse
-GLkurhhAhlbOsWL+BTOiSaCKs5H+NeSuO9R7ezaabW99xYD0zxdF+uPqWNJvTZ3M
-GVg3iwj8ZH0eu+NvQ59l84EQ4YYqSqf1w4GqJ7e70JyvnQRUw2Z3VNpFLZNG4R15
-xrOH+iZfZVERtS4/t6n60KKtVlvI92IOkOZINEEpHB4w01fi31rPo0ZHuLyAqj0T
-OEzHuSQRAPv09n6beN0B
-=nwXR
------END PGP SIGNATURE-----
+> 
+> Perhaps kconfig should complain about selecting visible symbols and
+> symbols with dependencies.
 
---JLiXfqD9/Kt1b+Pq--
+That sounds like it would be a useful addition.
+
+Is it possible to get this patch applied or an acked-by to avoid further delay
+to the fdma series?
+
+regards,
+
+Peter.
