@@ -1,7 +1,7 @@
 From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: [PATCH v4 2/5] drivers/of: do not add memory for unavailable nodes
-Date: Thu,  6 Oct 2016 13:36:32 -0500
-Message-ID: <1475778995-1420-3-git-send-email-arbab@linux.vnet.ibm.com>
+Subject: [PATCH v4 5/5] mm: enable CONFIG_MOVABLE_NODE on non-x86 arches
+Date: Thu,  6 Oct 2016 13:36:35 -0500
+Message-ID: <1475778995-1420-6-git-send-email-arbab@linux.vnet.ibm.com>
 References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
 Return-path: <owner-linux-mm@kvack.org>
 In-Reply-To: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
@@ -10,41 +10,36 @@ To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.c
 Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
 List-Id: devicetree@vger.kernel.org
 
-Respect the standard dt "status" property when scanning memory nodes in
-early_init_dt_scan_memory(), so that if the node is unavailable, no
-memory will be added.
+To support movable memory nodes (CONFIG_MOVABLE_NODE), at least one of
+the following must be true:
 
-The use case at hand is accelerator or device memory, which may be
-unusable until post-boot initialization of the memory link. Such a node
-can be described in the dt as any other, given its status is "disabled".
-Per the device tree specification,
+1. We're on x86. This arch has the capability to identify movable nodes
+   at boot by parsing the ACPI SRAT, if the movable_node option is used.
 
-"disabled"
-	Indicates that the device is not presently operational, but it
-	might become operational in the future (for example, something
-	is not plugged in, or switched off).
+2. Our config supports memory hotplug, which means that a movable node
+   can be created by hotplugging all of its memory into ZONE_MOVABLE.
 
-Once such memory is made operational, it can then be hotplugged.
+Fix the Kconfig definition of CONFIG_MOVABLE_NODE, which currently
+recognizes (1), but not (2).
 
 Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
 ---
- drivers/of/fdt.c | 3 +++
- 1 file changed, 3 insertions(+)
+ mm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index b138efb..08e5d94 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -1056,6 +1056,9 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
- 	} else if (strcmp(type, "memory") != 0)
- 		return 0;
- 
-+	if (!of_flat_dt_device_is_available(node))
-+		return 0;
-+
- 	reg = of_get_flat_dt_prop(node, "linux,usable-memory", &l);
- 	if (reg == NULL)
- 		reg = of_get_flat_dt_prop(node, "reg", &l);
+diff --git a/mm/Kconfig b/mm/Kconfig
+index be0ee11..5d0818f 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -153,7 +153,7 @@ config MOVABLE_NODE
+ 	bool "Enable to assign a node which has only movable memory"
+ 	depends on HAVE_MEMBLOCK
+ 	depends on NO_BOOTMEM
+-	depends on X86_64
++	depends on X86_64 || MEMORY_HOTPLUG
+ 	depends on NUMA
+ 	default n
+ 	help
 -- 
 1.8.3.1
 
