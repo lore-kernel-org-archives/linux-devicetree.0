@@ -1,82 +1,122 @@
-From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v9 17/19] drm/virtio: kconfig: Fix recursive dependency issue.
-Date: Thu, 6 Oct 2016 11:45:41 +0100
-Message-ID: <CACvgo50vU5_=KFUCAZDaQPepPdsbnF8KN1b+f6KJNuBW6qRdSg@mail.gmail.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH v9 17/19] drm/virtio: kconfig: Fix recursive dependency
+	issue.
+Date: Thu, 6 Oct 2016 11:48:07 +0100
+Message-ID: <20161006104807.GB436@griffinp-ThinkPad-X1-Carbon-2nd>
 References: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
- <1473081421-16555-18-git-send-email-peter.griffin@linaro.org>
- <CACvgo52_g7anGBd9HTUyYsbp5QmQEk9LR3nNHgSTgjQ29G3ViA@mail.gmail.com>
- <20160920083251.GB26093@griffinp-ThinkPad-X1-Carbon-2nd> <8760pqncee.fsf@intel.com>
- <20161006093721.GA436@griffinp-ThinkPad-X1-Carbon-2nd>
+	<1473081421-16555-18-git-send-email-peter.griffin@linaro.org>
+	<CACvgo52_g7anGBd9HTUyYsbp5QmQEk9LR3nNHgSTgjQ29G3ViA@mail.gmail.com>
+	<20160920083251.GB26093@griffinp-ThinkPad-X1-Carbon-2nd>
+	<CACvgo53fuoPVjBAkZbWFPVxosObjvxoDgFdR_BkSTgevqyGg9g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161006093721.GA436@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jani Nikula <jani.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:VIRTIO GPU DRIVER" <virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <virtualization-bounces@lists.linux-foundation.org>
+Content-Disposition: inline
+In-Reply-To: <CACvgo53fuoPVjBAkZbWFPVxosObjvxoDgFdR_BkSTgevqyGg9g@mail.gmail.com>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
+	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
+List-Post: <mailto:virtualization@lists.linux-foundation.org>
+List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
+	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
+Sender: virtualization-bounces@lists.linux-foundation.org
+Errors-To: virtualization-bounces@lists.linux-foundation.org
+To: Emil Velikov <emil.l.velikov@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, kernel@stlinux.com, Arnd Bergmann <arnd@arndb.de>, vinod.koul@intel.com, lee.jones@linaro.org, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, ML dri-devel <dri-devel@lists.freedesktop.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, David Airlie <airlied@linux.ie>, dmaengine@vger.kernel.org, dan.j.williams@intel.com, bjorn.andersson@linaro.org, "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6 October 2016 at 10:37, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+Hi Emil,
 
-> In fact the help text for VIRTIO even states this option should be select=
-ed
-> by any driver which implements virtio.
->
-Almost but not quite. It says:
+On Wed, 21 Sep 2016, Emil Velikov wrote:
 
-"This option is selected by any driver which implements the virtio _bus_"
+> On 20 September 2016 at 09:32, Peter Griffin <peter.griffin@linaro.org> wrote:
+> > Hi Emil,
+> >
+> > On Tue, 20 Sep 2016, Emil Velikov wrote:
+> >
+> >> On 5 September 2016 at 14:16, Peter Griffin <peter.griffin@linaro.org> wrote:
+> >> > ST_SLIM_REMOTEPROC must select REMOTEPROC, which exposes the following
+> >> > recursive dependency.
+> >
+> >
+> >> >
+> >> From a humble skim through remoteproc, drm and a few other subsystems
+> >> I think the above is wrong. All the drivers (outside of remoteproc),
+> >> that I've seen, depend on the core component, they don't select it.
+> >
+> > I will let Bjorn comment on the remoteproc subsystem Kconfig design, and
+> > why it is like it is.
+> >
+> > For this particular SLIM_RPROC I have added it to Kconfig in keeping with all
+> > the other drivers in the remoteproc subsystem which has exposed this recursive
+> > dependency issue.
+> >
+> > For this particular kconfig symbol a quick grep reveals more drivers in
+> > the kernel using 'select', than 'depend on'
+> >
+> > git grep "select VIRTIO" | wc -l
+> > 14
+> >
+> > git grep "depends on VIRTIO" | wc -l
+> > 10
+> >
+> Might be worth taking a closer look into these at some point.
 
-REMOTEPROC obviously does that while the ST SLIM driver does not. Thus
-the latter should _not_ select, be that explicitly or implicitly via
-REMOTEPROC, the symbol.
+VIRTIO has no dependencies, and is a non visible symbol. Its Kconfig help also
+mentions that drivers should select it.
 
->>
->> People tend to abuse select because it's "convenient". If you depend,
->> but some of your dependencies aren't met, you're in for some digging
->> through Kconfig to find the missing deps. Just to make the option you
->> want visible in menuconfig. If you instead select something with
->> dependencies, it'll be right most of the time, and it's "convenient",
->> until it breaks. (And hey, it usually breaks for someone else with some
->> other config, so it's still convenient for you.)
->
-> I'm sure they do but in this case it is actually the use of 'depends on'
-> which has caused the breakage and inconvenience for somebody else and sad=
-ly this
-> inconvienice is still on-going due to this patch not being applied or get=
-ting an
-> acked-by from the appropriate maintainers.
->
-Surely you're not saying that pre-existing driver following the
-documentation, is 'causing breakage' for a new driver {ab,mis}using a
-feature ?
+> 
+> >
+> >> Furthermore most places explicitly hide the drivers from the menu if
+> >> the core component isn't enabled.
+> >
+> > Remoteproc subsystem takes a different approach, the core code is only enabled
+> > if a driver which relies on it is enabled. This IMHO makes sense, as
+> > remoteproc is not widely used (only a few particular ARM SoC's).
+> >
+> > It is true that for subsystems which rely on the core component being
+> > explicitly enabled, they often tend to hide drivers which depend on it
+> > from the menu unless it is. This also makes sense.
+> >
+> >>
+> >> Is there something that requires such a different/unusual behaviour in
+> >> remoteproc ?
+> >>
+> >
+> > I'm not sure it is that unusual...looking at config USB, it selects USB_COMMON in
+> > mfd subsystem, client drivers select MFD_CORE.
+> >
+> On the USB case I'm not sure what the reasoning behind the USB vs
+> USB_COMMON split. In seems that one could just fold them, but that's
+> another topic. On the MFD side... it follows the select {,mis,ab}use.
+> With one (the only one?) MFD driver not using/selecting MFD_CORE doing
+> it's own version of mfd_add_devices... which could be reworked,
+> possibly.
 
-This reminds me an old saying: "If the shoe doesn=E2=80=99t fit, it doesn=
-=E2=80=99t
-mean there is anything wrong with your feet."
-You seem to be suggesting the opposite ?
+Much like selecting VIRTIO in this patch, MFD_CORE is a non visible symbol
+with no dependencies so it matches the documentation Jani referenced.
 
->>
->> Perhaps kconfig should complain about selecting visible symbols and
->> symbols with dependencies.
->
-> That sounds like it would be a useful addition.
->
-> Is it possible to get this patch applied or an acked-by to avoid further =
-delay
-> to the fdma series?
->
-Please don't apply duct tape, especially where it's _not_ needed.
+I personally think the approach taken makes sense, as why would you want to have
+a CONFIG_MFD_CORE=y symbol being enabled unless you actually have a MFD device
+which uses it also enabled in your kernel?
 
-$ sed -i s/select REMOTEPROC/depends on REMOTEPROC/ drivers/remoteproc/Kcon=
-fig
+It seems to me a good solution to make the client drivers select the core
+component so that it only gets enabled if at least one driver requires it.
+This avoids having useless core code which will never be used compiled into the
+kernel and in the end a smaller kernel size for a given kernel configuration (better
+cache use etc etc).
 
-... will resolve things in the right place. The alternative will lead
-to random issues in other subsystems.
+> > I've added Arnd to this thread, as I've seen lots of Kconfig patches from him
+> > recently, maybe he has some thoughts on whether this is the correct fix or not?
+> >
+> Ack. Fwiw, I believe that the reasoning put by Jani is perfeclty
+> reasonable, but it'll be great to hear others as well.
 
-Regards,
-Emil
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes me to. However I don't think anything in this patch is at odds with the
+documentation Jani has referenced. 
+
+regards,
+
+Peter.
