@@ -1,112 +1,66 @@
-From: Markus Mayer <mmayer@broadcom.com>
-Subject: Re: [RESEND PATCH v2 2/3] cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq
- driver for Broadcom STB SoCs
-Date: Thu, 6 Oct 2016 14:04:59 -0700
-Message-ID: <20161006210459.GA19063@lbrmn-mmayer.ric.broadcom.com>
-References: <1475272561-8446-1-git-send-email-mmayer@broadcom.com>
- <1475272561-8446-3-git-send-email-mmayer@broadcom.com>
- <20161005032509.GG4664@vireshk-i7>
- <CAGt4E5s9UBam4RKsq3k1P77-81NR-8AeQi==7dBNnp37xxtr_g@mail.gmail.com>
- <20161006040139.GA17619@vireshk-i7>
- <CAGt4E5sWLbGO7b7mX5CHKRDbtp5iqaapbV=YUJbRVHyCeJL8nQ@mail.gmail.com>
+From: Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 0/4] libfdt: Add support for device tree overlays
+Date: Thu, 6 Oct 2016 22:16:04 +0100
+Message-ID: <6338fcb9-ffda-a04b-6c6e-2fd254b58dda@gmail.com>
+References: <20160930135717.16511-1-maxime.ripard@free-electrons.com>
+ <20161006094756.GR18733@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGt4E5sWLbGO7b7mX5CHKRDbtp5iqaapbV=YUJbRVHyCeJL8nQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161006094756.GR18733-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?Antoine_T=c3=a9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 06, 2016 at 07:51:59AM -0700, Markus Mayer wrote:
-> On 5 October 2016 at 21:01, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > Thanks for accepting all the comments :)
+On 06/10/2016 10:47, David Gibson wrote:
+> On Fri, Sep 30, 2016 at 03:57:13PM +0200, Maxime Ripard wrote:
+>> Hi,
+>>
+>> The device tree overlays are a great solution to the issue raised by
+>> the bunch expandable boards we find everywhere these days, like the
+>> Beaglebone, Raspberry Pi or CHIP.
+>>
+>> Although for now Linux is the only available tool that can deal with
+>> overlays, some other components like bootloaders or user-space tools
+>> might need to apply these overlays on top of a base device tree.
+>>
+>> To address these use cases, we introduce a new function to the libfdt,
+>> fdt_overlay_apply, that does just that.
+>>
+>> You can find a test program here: http://code.bulix.org/792zum-99476?raw
+>>
+>> This is the last patches sent to U-boot, with the modifications
+>> suggested by David, and the additional test cases.
+>>
+>> Let me know what you think!
+>> Maxime
+> Looking pretty good.  There's a minor error in 3/4 which I've pointed
+> out, it can be fixed in a followup.
+>
+> An error in the conditionals means it's trying to run some of the
+> tests which require an overlay-aware dtc on even when that's not
+> available - I adjusted 4/4 to correct that.
+>
+> It also hit build failures on Travis, because the compiler version
+> there complains about local variables named 'index' shadowing the
+> standard library function.  I've corrected that with a followup patch.
+>
+> With that done, the whole lot has been committed to master.
+>
+Now that upstream libfdt can resolve and apply overlays we need a way
+of generating them. I have a set of three patches from Pantelis that
+add "plugin" support to dtc, together with two downstream (Raspberry Pi)
+patches that fix an uninitialised memory reference and restrict
+__local_fixups__  generation to overlays.
 
-Unfortunately, I'll have to take back one agreed-upon change.
+Is there already a plan to get the enhanced dtc upstreamed? If so, can I
+get the downstream fixes included?
 
-In this piece of code, brcm_avs_is_firmware_loaded() has to come after
-requesting the IRQ.
+Phil Elwell
 
-
-	priv->base = __map_region(BRCM_AVS_CPU_DATA);
-	if (!priv->base) {
-		dev_err(dev, "Couldn't find property %s in device tree.\n",
-			BRCM_AVS_CPU_DATA);
-		return -ENOENT;
-	}
-
-	priv->avs_intr_base = __map_region(BRCM_AVS_CPU_INTR);
-	if (!priv->avs_intr_base) {
-		dev_err(dev, "Couldn't find property %s in device tree.\n",
-			BRCM_AVS_CPU_INTR);
-		ret = -ENOENT;
-		goto unmap_base;
-	}
-
-	host_irq = platform_get_irq_byname(pdev, BRCM_AVS_HOST_INTR);
-	if (host_irq < 0) {
-		dev_err(dev, "Couldn't find interrupt %s -- %d\n",
-			BRCM_AVS_HOST_INTR, host_irq);
-		ret = host_irq;
-		goto unmap_intr_base;
-	}
-
-	ret = devm_request_irq(dev, host_irq, irq_handler, IRQF_TRIGGER_RISING,
-			       BRCM_AVS_HOST_INTR, priv);
-	if (ret) {
-		dev_err(dev, "IRQ request failed: %s (%d) -- %d\n",
-			BRCM_AVS_HOST_INTR, host_irq, ret);
-		goto unmap_intr_base;
-	}
-
-	if (brcm_avs_is_firmware_loaded(priv))
-		return 0;
-
-The reason being that we need to be ready to receive interrupts from the
-co-processor to tell us the GET_PMAP command completed.
-brcm_avs_is_firmware_loaded() issues the GET_PMAP command to ensure the
-firmware supports it. If I try to run brcm_avs_is_firmware_loaded() before
-setting up interrupts, I get a timeout in the driver -- because it never
-receives the interrupt saying the command is done.
-
-And I have to check the firmware supports the GET_PMAP command, because it
-is possible for somebody to choose to run a firmware that does not support
-DVFS, even though the hardware would support it.
-
-> >> Is there an easy way for me to know via the framework whether init is
-> >> being called for the first time vs. init is being called on a
-> >> different core after a previous attempt to initialize on another core
-> >> failed?
-> >>
-> >> I could use a driver-global variable for the driver to remember if it
-> >> has been initialized, but that seems a bit hacky.
-> >
-> > You don't really need to have any special code here, specially for the case that
-> > may never get hit. For example, if we fail to initialize something for CPU0,
-> > cpufreq core will try calling this routine for other CPUs as well. I don't think
-> > there is anything wrong in letting cpufreq core trying that. Why stop it or
-> > return early? It wouldn't happen normally, unless there is a bug in there.
-> 
-> During early development, when the driver couldn't fully register, I
-> would see the init() function called four times, i.e. once for each
-> core. If the first call succeeded, that was it. It would only get
-> called once. But if it failed, all cores would try to register. And I
-> wanted to avoid spilling the same error message four times.
-> 
-> I'll look at that again. It may have had something to do with how the
-> driver worked back then. If it doesn't happen anymore, I'll just get
-> rid of this code.
-
-Okay, I looked some more and compared it to what cpufreq-dt is doing to
-initialize. That lead me onto the right track. They simply do things they
-only want done once via the driver's probe function rather than CPUfreq's
-init function. So, I broke my initialization code up into two parts. 
-Everything up to checking if the firmware is loaded is now being called from
-brcm_avs_cpufreq_probe(). The frequency table code is still being called
-from brcm_avs_cpufreq_init().
-
-That means that if the initial hardware checks fail, it won't try again.
-
-Regards,
--Markus
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
