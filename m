@@ -1,42 +1,46 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 2/3] cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq
- driver for Broadcom STB SoCs
-Date: Thu, 6 Oct 2016 09:31:39 +0530
-Message-ID: <20161006040139.GA17619@vireshk-i7>
-References: <1475272561-8446-1-git-send-email-mmayer@broadcom.com>
- <1475272561-8446-3-git-send-email-mmayer@broadcom.com>
- <20161005032509.GG4664@vireshk-i7>
- <CAGt4E5s9UBam4RKsq3k1P77-81NR-8AeQi==7dBNnp37xxtr_g@mail.gmail.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: [PATCH v3 0/4] add support for impedance control for TI dp83867 phy and fix 2nd ethernet on dra72 rev C evm
+Date: Thu, 6 Oct 2016 10:43:51 +0530
+Message-ID: <20161006051355.15947-1-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGt4E5s9UBam4RKsq3k1P77-81NR-8AeQi==7dBNnp37xxtr_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Mayer <markus.mayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, David Miller <davem@davemloft.net>, Sekhar Nori <nsekhar@ti.com>, Mugunthan V N <mugunthanvnm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for accepting all the comments :)
+Add support for configurable impedance control for TI dp83867
+phy via devicetree. More documentation in [1].
+CPSW second ethernet is not working, fix it by enabling
+impedance configuration on the phy.
 
-On 05-10-16, 14:04, Markus Mayer wrote:
-> Is there an easy way for me to know via the framework whether init is
-> being called for the first time vs. init is being called on a
-> different core after a previous attempt to initialize on another core
-> failed?
-> 
-> I could use a driver-global variable for the driver to remember if it
-> has been initialized, but that seems a bit hacky.
+Verified the patch on DRA72 Rev C evm, logs at [2]. Also pushed
+a branch [3] for others to test.
 
-You don't really need to have any special code here, specially for the case that
-may never get hit. For example, if we fail to initialize something for CPU0,
-cpufreq core will try calling this routine for other CPUs as well. I don't think
-there is anything wrong in letting cpufreq core trying that. Why stop it or
-return early? It wouldn't happen normally, unless there is a bug in there.
+Changes from v2:
+* Fixed a typo in dts and driver.
+
+Changes from initial version:
+* As per Sekhar's comment, instead of passing impedance values,
+  change to max and min impedance from DT
+* Adopted phy_read_mmd_indirect() to cunnrent implementation.
+* Corrected the phy delay timings to the optimal value.
+
+[1] - http://www.ti.com/lit/ds/symlink/dp83867ir.pdf
+[2] - http://pastebin.ubuntu.com/23283056/
+[3] - git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git dp83867-v3
+
+Mugunthan V N (4):
+  net: phy: dp83867: Add documentation for optional impedance control
+  net: phy: dp83867: add support for MAC impedance configuration
+  ARM: dts: dra72-evm-revc: add phy impedance settings
+  ARM: dts: dra72-evm-revc: fix correct phy delay
+
+ .../devicetree/bindings/net/ti,dp83867.txt         | 12 ++++++++++
+ arch/arm/boot/dts/dra72-evm-revc.dts               | 10 ++++----
+ drivers/net/phy/dp83867.c                          | 28 ++++++++++++++++++++++
+ 3 files changed, 46 insertions(+), 4 deletions(-)
 
 -- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.10.0.372.g6fe1b14
