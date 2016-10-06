@@ -1,131 +1,123 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH v9 17/19] drm/virtio: kconfig: Fix recursive dependency issue.
-Date: Thu, 6 Oct 2016 12:31:25 +0100
-Message-ID: <CACvgo52zh5ZH8YhOJ=eE=RA7m=4vUoVFCdW+YSyN8WSHVi=Maw@mail.gmail.com>
-References: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
- <1473081421-16555-18-git-send-email-peter.griffin@linaro.org>
- <CACvgo52_g7anGBd9HTUyYsbp5QmQEk9LR3nNHgSTgjQ29G3ViA@mail.gmail.com>
- <20160920083251.GB26093@griffinp-ThinkPad-X1-Carbon-2nd> <CACvgo53fuoPVjBAkZbWFPVxosObjvxoDgFdR_BkSTgevqyGg9g@mail.gmail.com>
- <20161006104807.GB436@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] drm/bridge: Add RGB to VGA bridge support
+Date: Thu, 6 Oct 2016 17:09:57 +0530
+Message-ID: <96cef428-19e5-ff98-1de1-fa31dd8d4142@codeaurora.org>
+References: <20160930143709.1388-1-maxime.ripard@free-electrons.com>
+ <20160930143709.1388-3-maxime.ripard@free-electrons.com>
+ <8795dc49-26f9-0505-f442-2ca74b51872f@codeaurora.org>
+ <20161006072106.GA4684@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161006104807.GB436@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, LAKML <linux-arm-kernel@lists.infradead.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, kernel@stlinux.com, vinod.koul@intel.com, patrice.chotard@st.com, dan.j.williams@intel.com, David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-remoteproc@vger.kernel.org, ML dri-devel <dri-devel@lists.freedesktop.org>, "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>, dmaengine@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161006072106.GA4684@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
 
-On 6 October 2016 at 11:48, Peter Griffin <peter.griffin@linaro.org> wrote:
-> Hi Emil,
->
-> On Wed, 21 Sep 2016, Emil Velikov wrote:
->
->> On 20 September 2016 at 09:32, Peter Griffin <peter.griffin@linaro.org> wrote:
->> > Hi Emil,
->> >
->> > On Tue, 20 Sep 2016, Emil Velikov wrote:
->> >
->> >> On 5 September 2016 at 14:16, Peter Griffin <peter.griffin@linaro.org> wrote:
->> >> > ST_SLIM_REMOTEPROC must select REMOTEPROC, which exposes the following
->> >> > recursive dependency.
->> >
->> >
->> >> >
->> >> From a humble skim through remoteproc, drm and a few other subsystems
->> >> I think the above is wrong. All the drivers (outside of remoteproc),
->> >> that I've seen, depend on the core component, they don't select it.
->> >
->> > I will let Bjorn comment on the remoteproc subsystem Kconfig design, and
->> > why it is like it is.
->> >
->> > For this particular SLIM_RPROC I have added it to Kconfig in keeping with all
->> > the other drivers in the remoteproc subsystem which has exposed this recursive
->> > dependency issue.
->> >
->> > For this particular kconfig symbol a quick grep reveals more drivers in
->> > the kernel using 'select', than 'depend on'
->> >
->> > git grep "select VIRTIO" | wc -l
->> > 14
->> >
->> > git grep "depends on VIRTIO" | wc -l
->> > 10
->> >
->> Might be worth taking a closer look into these at some point.
->
-> VIRTIO has no dependencies, and is a non visible symbol. Its Kconfig help also
-> mentions that drivers should select it.
->
-This is a (un)fortunate detail cannot/should not overrule the other
-arguments I've mentioned, should it ?
 
+On 10/06/2016 12:51 PM, Maxime Ripard wrote:
+> Hi Archit,
+>
+> On Mon, Oct 03, 2016 at 04:40:57PM +0530, Archit Taneja wrote:
+>> Hi Maxime,
 >>
->> >
->> >> Furthermore most places explicitly hide the drivers from the menu if
->> >> the core component isn't enabled.
->> >
->> > Remoteproc subsystem takes a different approach, the core code is only enabled
->> > if a driver which relies on it is enabled. This IMHO makes sense, as
->> > remoteproc is not widely used (only a few particular ARM SoC's).
->> >
->> > It is true that for subsystems which rely on the core component being
->> > explicitly enabled, they often tend to hide drivers which depend on it
->> > from the menu unless it is. This also makes sense.
->> >
->> >>
->> >> Is there something that requires such a different/unusual behaviour in
->> >> remoteproc ?
->> >>
->> >
->> > I'm not sure it is that unusual...looking at config USB, it selects USB_COMMON in
->> > mfd subsystem, client drivers select MFD_CORE.
->> >
->> On the USB case I'm not sure what the reasoning behind the USB vs
->> USB_COMMON split. In seems that one could just fold them, but that's
->> another topic. On the MFD side... it follows the select {,mis,ab}use.
->> With one (the only one?) MFD driver not using/selecting MFD_CORE doing
->> it's own version of mfd_add_devices... which could be reworked,
->> possibly.
+>> On 09/30/2016 08:07 PM, Maxime Ripard wrote:
+>>> Some boards have an entirely passive RGB to VGA bridge, based on either
+>>> DACs or resistor ladders.
+>>>
+>>> Those might or might not have an i2c bus routed to the VGA connector in
+>>> order to access the screen EDIDs.
+>>>
+>>> Add a bridge that doesn't do anything but expose the modes available on the
+>>> screen, either based on the EDIDs if available, or based on the XGA
+>>> standards.
+>>>
+>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> ---
+>>> .../bindings/display/bridge/rgb-to-vga-bridge.txt  |  48 +++++
+>>> drivers/gpu/drm/bridge/Kconfig                     |   7 +
+>>> drivers/gpu/drm/bridge/Makefile                    |   1 +
+>>> drivers/gpu/drm/bridge/rgb-to-vga.c                | 229 +++++++++++++++++++++
+>>> 4 files changed, 285 insertions(+)
+>>> create mode 100644 Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.txt
+>>> create mode 100644 drivers/gpu/drm/bridge/rgb-to-vga.c
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.txt b/Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.txt
+>>> new file mode 100644
+>>> index 000000000000..a8375bc1f9cb
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.txt
+>>> @@ -0,0 +1,48 @@
+>>> +Dumb RGB to VGA bridge
+>>> +----------------------
+>>> +
+>>> +This binding is aimed for dumb RGB to VGA bridges that do not require
+>>> +any configuration.
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible: Must be "rgb-to-vga-bridge"
+>>
+>> I'd talked to Laurent on IRC if he's okay with this. And I guess you to
+>> had discussed it during XDC too. He's suggested that it'd be better to
+>> have the compatible string as "simple-vga-dac".
 >
-> Much like selecting VIRTIO in this patch, MFD_CORE is a non visible symbol
-> with no dependencies so it matches the documentation Jani referenced.
->
-> I personally think the approach taken makes sense, as why would you want to have
-> a CONFIG_MFD_CORE=y symbol being enabled unless you actually have a MFD device
-> which uses it also enabled in your kernel?
->
-> It seems to me a good solution to make the client drivers select the core
-> component so that it only gets enabled if at least one driver requires it.
-> This avoids having useless core code which will never be used compiled into the
-> kernel and in the end a smaller kernel size for a given kernel configuration (better
-> cache use etc etc).
->
->> > I've added Arnd to this thread, as I've seen lots of Kconfig patches from him
->> > recently, maybe he has some thoughts on whether this is the correct fix or not?
->> >
->> Ack. Fwiw, I believe that the reasoning put by Jani is perfeclty
->> reasonable, but it'll be great to hear others as well.
->
-> Yes me to. However I don't think anything in this patch is at odds with the
-> documentation Jani has referenced.
->
-It case it's not clear, let me elaborate:
+> I just wished this bikeshedding had taken place publicly and be
+> actually part of that discussion, but yeah, ok.
 
-Yes, using depend might not be the most user-friendly thing to do and
-in the long term we might want to move to select.
-Yes, I agree with the argument about symbol visibility but that is not
-the only contributing factor.
+Sorry about that. I'd pinged him for an Ack, the discussion went
+more than that :)
 
-If one wants to pick on specific users which opt for $driver select
-$core they must do the same for $driver depends on $core. Check the
-number 'in favour" of each case and draw their conclusions ;-)
+>
+>> Some of the reasons behind having this:
+>>
+>> - We don't need to specify "rgb" in the compatible string since most
+>> simple VGA DACs can only work with an RGB input.
+>
+> Ok.
+>
+>> - Also, with "dac" specified in the string, we don't need to
+>> specifically mention "bridge" in the string. Also, bridge is a drm
+>> specific term.
+>>
+>> - "simple" is considered because it's an unconfigurable bridge, and it
+>> might be misleading for other VGA DACs to not use "vga-dac".
+>
+> All those "simple" bindings are just the biggest lie we ever
+> told. It's simple when you introduce it, and then grows into something
+> much more complicated than a non-simple implementation.
 
-In particular: both MFD_CORE and USB_COMMON, are _optional_ as only
-some drivers depends on them. Thus giving them as an example is
-wrong/irrelevant, I'm afraid.
+"simple" here is supposed to mean that it's an unconfigurable RGB to
+VGA DAC. This isn't supposed to follow the simple-panel model, where
+you add the "simple-panel" string in the compatible node, along with
+you chip specific compatible string.
 
-Thanks
-Emil
+In other words, this driver shouldn't be touched again in the future :)
+If someone wants to write a RGB to VGA driver which is even
+slightly configurable, they'll need to write a new bridge driver.
+
+Thanks,
+Archit
+
+>
+>> What do you think about this? If you think it's good, would it be
+>> possible for you to change this? I guess it's okay for the rest of
+>> the patch to stay the same.
+>
+> I'll update and respin the serie.
+>
+> Thanks,
+> Maxime
+>
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
