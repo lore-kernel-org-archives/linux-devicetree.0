@@ -1,267 +1,230 @@
-From: Rahul Bedarkar <rahul.bedarkar-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/2] MIPS: DTS: img: add device tree for Marduk board
-Date: Thu, 6 Oct 2016 18:01:34 +0530
-Message-ID: <1475757094-31089-2-git-send-email-rahul.bedarkar@imgtec.com>
-References: <1475757094-31089-1-git-send-email-rahul.bedarkar@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
+Subject: [PATCH v2] auxdisplay: ht16k33: Keyscan function is now optional
+Date: Thu,  6 Oct 2016 14:41:58 +0200
+Message-ID: <1475757718-3044-1-git-send-email-robin@protonic.nl>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475757094-31089-1-git-send-email-rahul.bedarkar-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rahul Bedarkar <rahul.bedarkar-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+To: Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Imagination Technologies' Marduk board which is based
-on Pistachio SoC. It is also known as Creator Ci40. Marduk is legacy
-name and will be there for decades.
-
-Documentation for this board can be found on
-https://docs.creatordev.io/ci40/
-
-This patch adds initial support for board with following peripherals:
-
-* PWM based heartbeat LED
-* GPIO based buttons
-* SPI NOR flash on SPI1
-* UART0 and UART1
-* SD card
-* Ethernet
-* USB
-* PWM
-* ADC
-* I2C
-
-Signed-off-by: Rahul Bedarkar <rahul.bedarkar-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
 ---
- .../bindings/mips/img/pistachio-marduk.txt         |  10 ++
- MAINTAINERS                                        |   6 +
- arch/mips/boot/dts/img/Makefile                    |   9 ++
- arch/mips/boot/dts/img/pistachio_marduk.dts        | 163 +++++++++++++++++++++
- 4 files changed, 188 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/img/pistachio-marduk.txt
- create mode 100644 arch/mips/boot/dts/img/Makefile
- create mode 100644 arch/mips/boot/dts/img/pistachio_marduk.dts
+Changes in v2:
+	- Removed the trailing dot in the patch subject
 
-diff --git a/Documentation/devicetree/bindings/mips/img/pistachio-marduk.txt b/Documentation/devicetree/bindings/mips/img/pistachio-marduk.txt
-new file mode 100644
-index 0000000..2d5126d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/img/pistachio-marduk.txt
-@@ -0,0 +1,10 @@
-+Imagination Technologies' Pistachio SoC based Marduk Board
-+==========================================================
-+
-+Compatible string must be "img,pistachio-marduk", "img,pistachio"
-+
-+Hardware and other related documentation is available at
-+https://docs.creatordev.io/ci40/
-+
-+It is also known as Creator Ci40. Marduk is legacy name and will
-+be there for decades.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 98bcf06..8e6c962b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7515,6 +7515,12 @@ W:	http://www.kernel.org/doc/man-pages
- L:	linux-man-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
- S:	Maintained
+ .../devicetree/bindings/display/ht16k33.txt        |  15 ++-
+ drivers/auxdisplay/ht16k33.c                       | 126 +++++++++++----------
+ 2 files changed, 73 insertions(+), 68 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/ht16k33.txt b/Documentation/devicetree/bindings/display/ht16k33.txt
+index 8e5b30b..e2c9048 100644
+--- a/Documentation/devicetree/bindings/display/ht16k33.txt
++++ b/Documentation/devicetree/bindings/display/ht16k33.txt
+@@ -4,18 +4,21 @@ Holtek ht16k33 RAM mapping 16*8 LED controller driver with keyscan
+ Required properties:
+ - compatible:		"holtek,ht16k33"
+ - reg:			I2C slave address of the chip.
+-- interrupt-parent:	A phandle pointing to the interrupt controller
+-			serving the interrupt for this chip.
+-- interrupts:		Interrupt specification for the key pressed interrupt.
+ - refresh-rate-hz:	Display update interval in HZ.
+-- debounce-delay-ms:	Debouncing interval time in milliseconds.
+-- linux,keymap: 	The keymap for keys as described in the binding
+-			document (devicetree/bindings/input/matrix-keymap.txt).
  
-+MARDUK (CREATOR CI40) DEVICE TREE SUPPORT
-+M:	Rahul Bedarkar <rahul.bedarkar-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-+L:	linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-+S:	Maintained
-+F:	arch/mips/boot/dts/img/pistachio_marduk.dts
+ Optional properties:
+ - linux,no-autorepeat:	Disable keyrepeat.
+ - default-brightness-level: Initial brightness level [0-15] (default: 15).
+ 
++- Keypad
++ Supply the 'interrupts' property to enable the keyscan feature.
++ - interrupts:		Interrupt specification for the key pressed interrupt.
++ - interrupt-parent:	A phandle pointing to the interrupt controller
++			serving the interrupt for this chip.
++ - debounce-delay-ms:	Debouncing interval time in milliseconds.
++ - linux,keymap: 	The keymap for keys as described in the binding
++			document (devicetree/bindings/input/matrix-keymap.txt).
 +
- MARVELL 88E6XXX ETHERNET SWITCH FABRIC DRIVER
- M:	Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
- M:	Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-diff --git a/arch/mips/boot/dts/img/Makefile b/arch/mips/boot/dts/img/Makefile
-new file mode 100644
-index 0000000..69a65f0
---- /dev/null
-+++ b/arch/mips/boot/dts/img/Makefile
-@@ -0,0 +1,9 @@
-+dtb-$(CONFIG_MACH_PISTACHIO)	+= pistachio_marduk.dtb
+ Example:
+ 
+ &i2c1 {
+diff --git a/drivers/auxdisplay/ht16k33.c b/drivers/auxdisplay/ht16k33.c
+index 9c09bbc..5cf8fb4 100644
+--- a/drivers/auxdisplay/ht16k33.c
++++ b/drivers/auxdisplay/ht16k33.c
+@@ -334,15 +334,71 @@ static struct fb_ops ht16k33_fb_ops = {
+ 	.fb_mmap = ht16k33_mmap,
+ };
+ 
++static int ht16k33_register_keypad(struct ht16k33_priv *priv)
++{
++	int rows, cols, err;
++	struct ht16k33_keypad *keypad = &priv->keypad;
++	struct device *dev = &priv->client->dev;
 +
-+obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
++	keypad->dev = devm_input_allocate_device(dev);
++	if (!keypad->dev)
++		return -ENOMEM;
 +
-+# Force kbuild to make empty built-in.o if necessary
-+obj-				+= dummy.o
++	keypad->dev->name = dev_name(dev);
++	keypad->dev->id.bustype = BUS_I2C;
++	keypad->dev->open = ht16k33_keypad_start;
++	keypad->dev->close = ht16k33_keypad_stop;
 +
-+always				:= $(dtb-y)
-+clean-files			:= *.dtb *.dtb.S
-diff --git a/arch/mips/boot/dts/img/pistachio_marduk.dts b/arch/mips/boot/dts/img/pistachio_marduk.dts
-new file mode 100644
-index 0000000..378381e
---- /dev/null
-+++ b/arch/mips/boot/dts/img/pistachio_marduk.dts
-@@ -0,0 +1,163 @@
-+/*
-+ * Copyright (C) 2015, 2016 Imagination Technologies Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * IMG Marduk board is also known as Creator Ci40.
-+ */
++	if (!of_get_property(dev->of_node, "linux,no-autorepeat", NULL))
++		__set_bit(EV_REP, keypad->dev->evbit);
 +
-+/dts-v1/;
++	err = of_property_read_u32(dev->of_node, "debounce-delay-ms",
++				   &keypad->debounce_ms);
++	if (err) {
++		dev_err(dev, "key debounce delay not specified\n");
++		return err;
++	}
 +
-+#include "pistachio.dtsi"
++	err = devm_request_threaded_irq(dev, priv->client->irq, NULL,
++					ht16k33_irq_thread,
++					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
++					DRIVER_NAME, priv);
++	if (err) {
++		dev_err(dev, "Failed to request irq %i\n", priv->client->irq);
++		return err;
++	}
 +
-+/ {
-+	model = "IMG Marduk (Creator Ci40)";
-+	compatible = "img,pistachio-marduk", "img,pistachio";
++	disable_irq_nosync(priv->client->irq);
++	rows = HT16K33_MATRIX_KEYPAD_MAX_ROWS;
++	cols = HT16K33_MATRIX_KEYPAD_MAX_COLS;
++	err = matrix_keypad_parse_of_params(dev, &rows, &cols);
++	if (err)
++		return err;
 +
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		ethernet0 = &enet;
-+		spi0 = &spfi0;
-+		spi1 = &spfi1;
-+	};
++	err = matrix_keypad_build_keymap(NULL, NULL, rows, cols, NULL,
++					 keypad->dev);
++	if (err) {
++		dev_err(dev, "failed to build keymap\n");
++		return err;
++	}
 +
-+	chosen {
-+		bootargs = "root=/dev/sda1 rootwait ro lpj=723968";
-+		stdout-path = "serial1:115200";
-+	};
++	input_set_drvdata(keypad->dev, priv);
++	keypad->rows = rows;
++	keypad->cols = cols;
++	keypad->row_shift = get_count_order(cols);
++	INIT_DELAYED_WORK(&keypad->work, ht16k33_keypad_scan);
 +
-+	memory {
-+		device_type = "memory";
-+		reg =  <0x00000000 0x08000000>;
-+	};
++	return input_register_device(keypad->dev);
++}
 +
-+	reg_1v8: fixed-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "aux_adc_vref";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+	};
-+
-+	internal_dac_supply: internal_dac_supply {
-+		compatible = "regulator-fixed";
-+		regulator-name = "internal_dac_supply";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	pwm_leds {
-+		compatible = "pwm-leds";
-+		heartbeat {
-+			label = "marduk:red:heartbeat";
-+			pwms = <&pwm 3 300000>;
-+			max-brightness = <255>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		button@1 {
-+			label = "Button 1";
-+			linux,code = <0x101>; /* BTN_1 */
-+			gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;
-+		};
-+		button@2 {
-+			label = "Button 2";
-+			linux,code = <0x102>; /* BTN_2 */
-+			gpios = <&gpio2 14 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&internal_dac {
-+	VDD-supply = <&internal_dac_supply>;
-+};
-+
-+&spfi1 {
-+	status = "okay";
-+
-+	pinctrl-0 = <&spim1_pins>, <&spim1_quad_pins>, <&spim1_cs0_pin>,
-+		    <&spim1_cs1_pin>;
-+	pinctrl-names = "default";
-+	cs-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>, <&gpio0 1 GPIO_ACTIVE_HIGH>;
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <50000000>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+	assigned-clock-rates = <114278400>, <1843200>;
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&usb {
-+	status = "okay";
-+};
-+
-+&enet {
-+	status = "okay";
-+};
-+
-+&pin_enet {
-+	drive-strength = <2>;
-+};
-+
-+&pin_enet_phy_clk {
-+	drive-strength = <2>;
-+};
-+
-+&sdhost {
-+	status = "okay";
-+	bus-width = <4>;
-+	disable-wp;
-+};
-+
-+&pin_sdhost_cmd {
-+	drive-strength = <2>;
-+};
-+
-+&pin_sdhost_data {
-+	drive-strength = <2>;
-+};
-+
-+&pwm {
-+	status = "okay";
-+
-+	pinctrl-0 = <&pwmpdm0_pin>, <&pwmpdm1_pin>, <&pwmpdm2_pin>,
-+		    <&pwmpdm3_pin>;
-+	pinctrl-names = "default";
-+};
-+
-+&adc {
-+	status = "okay";
-+	vref-supply = <&reg_1v8>;
-+	adc-reserved-channels = <0x10>;
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	tpm@20 {
-+		compatible = "infineon,slb9645tt";
-+		reg = <0x20>;
-+	};
-+
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+};
+ static int ht16k33_probe(struct i2c_client *client,
+ 				  const struct i2c_device_id *id)
+ {
+ 	int err;
+-	uint32_t rows, cols, dft_brightness;
++	uint32_t dft_brightness;
+ 	struct backlight_device *bl;
+ 	struct backlight_properties bl_props;
+ 	struct ht16k33_priv *priv;
+-	struct ht16k33_keypad *keypad;
+ 	struct ht16k33_fbdev *fbdev;
+ 	struct device_node *node = client->dev.of_node;
+ 	const char *dev_id = dev_name(&client->dev);
+@@ -352,11 +408,6 @@ static int ht16k33_probe(struct i2c_client *client,
+ 		return -EIO;
+ 	}
+ 
+-	if (client->irq <= 0) {
+-		dev_err(&client->dev, "No IRQ specified\n");
+-		return -EINVAL;
+-	}
+-
+ 	priv = devm_kzalloc(&client->dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
+@@ -364,7 +415,6 @@ static int ht16k33_probe(struct i2c_client *client,
+ 	priv->client = client;
+ 	i2c_set_clientdata(client, priv);
+ 	fbdev = &priv->fbdev;
+-	keypad = &priv->keypad;
+ 
+ 	priv->workqueue = create_singlethread_workqueue(dev_id);
+ 	if (priv->workqueue == NULL)
+@@ -417,61 +467,12 @@ static int ht16k33_probe(struct i2c_client *client,
+ 		goto err_fbdev_info;
+ 
+ 	/* Keypad */
+-	keypad->dev = devm_input_allocate_device(&client->dev);
+-	if (!keypad->dev) {
+-		err = -ENOMEM;
+-		goto err_fbdev_unregister;
+-	}
+-
+-	keypad->dev->name = dev_id;
+-	keypad->dev->id.bustype = BUS_I2C;
+-	keypad->dev->open = ht16k33_keypad_start;
+-	keypad->dev->close = ht16k33_keypad_stop;
+-
+-	if (!of_get_property(node, "linux,no-autorepeat", NULL))
+-		__set_bit(EV_REP, keypad->dev->evbit);
+-
+-	err = of_property_read_u32(node, "debounce-delay-ms",
+-				   &keypad->debounce_ms);
+-	if (err) {
+-		dev_err(&client->dev, "key debounce delay not specified\n");
+-		goto err_fbdev_unregister;
++	if (client->irq > 0) {
++		err = ht16k33_register_keypad(priv);
++		if (err)
++			goto err_fbdev_unregister;
+ 	}
+ 
+-	err = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+-					ht16k33_irq_thread,
+-					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+-					DRIVER_NAME, priv);
+-	if (err) {
+-		dev_err(&client->dev, "irq request failed %d, error %d\n",
+-			client->irq, err);
+-		goto err_fbdev_unregister;
+-	}
+-
+-	disable_irq_nosync(client->irq);
+-	rows = HT16K33_MATRIX_KEYPAD_MAX_ROWS;
+-	cols = HT16K33_MATRIX_KEYPAD_MAX_COLS;
+-	err = matrix_keypad_parse_of_params(&client->dev, &rows, &cols);
+-	if (err)
+-		goto err_fbdev_unregister;
+-
+-	err = matrix_keypad_build_keymap(NULL, NULL, rows, cols, NULL,
+-					 keypad->dev);
+-	if (err) {
+-		dev_err(&client->dev, "failed to build keymap\n");
+-		goto err_fbdev_unregister;
+-	}
+-
+-	input_set_drvdata(keypad->dev, priv);
+-	keypad->rows = rows;
+-	keypad->cols = cols;
+-	keypad->row_shift = get_count_order(cols);
+-	INIT_DELAYED_WORK(&keypad->work, ht16k33_keypad_scan);
+-
+-	err = input_register_device(keypad->dev);
+-	if (err)
+-		goto err_fbdev_unregister;
+-
+ 	/* Backlight */
+ 	memset(&bl_props, 0, sizeof(struct backlight_properties));
+ 	bl_props.type = BACKLIGHT_RAW;
+@@ -504,7 +505,8 @@ static int ht16k33_probe(struct i2c_client *client,
+ 	return 0;
+ 
+ err_keypad_unregister:
+-	input_unregister_device(keypad->dev);
++	if (priv->keypad.dev)
++		input_unregister_device(priv->keypad.dev);
+ err_fbdev_unregister:
+ 	unregister_framebuffer(fbdev->info);
+ err_fbdev_info:
 -- 
-2.6.2
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
