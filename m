@@ -1,125 +1,81 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v5 2/5] drm/bridge: Add RGB to VGA bridge support
-Date: Thu, 06 Oct 2016 20:27:39 +0300
-Message-ID: <5319260.UeCnJXKVPe@avalon>
-References: <20160930143709.1388-1-maxime.ripard@free-electrons.com> <20161006072106.GA4684@lukather> <96cef428-19e5-ff98-1de1-fa31dd8d4142@codeaurora.org>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 06/14] ASoC: Add sun8i digital audio codec
+Date: Thu, 6 Oct 2016 20:23:03 +0200
+Message-ID: <20161006182303.sftz3c7hjhv7xell@piout.net>
+References: <cover.1475571575.git.mylene.josserand@free-electrons.com>
+ <85cbd9926e52d0aa03f6bbfd8794373d8db491e0.1475571575.git.mylene.josserand@free-electrons.com>
+ <20161004161549.GO5228@lukather>
+ <901741475770017@web21g.yandex.ru>
+Reply-To: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <96cef428-19e5-ff98-1de1-fa31dd8d4142-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCKYNX7Y3IMBBCFN3K7QKGQEC7BRKMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <901741475770017-TgaBlLcPqFtxpj1cXAZ9Bg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org" <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "tiwai-IBi9RG/b67k@public.gmane.org" <tiwai-IBi9RG/b67k@public.gmane.org>, "sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dma
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 07/10/2016 at 00:06:57 +0800, Icenowy Zheng wrote :
+> 05.10.2016, 00:20, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> > Hi,
+> >
+> >> =C2=A0+static const struct of_device_id sun8i_codec_of_match[] =3D {
+> >> =C2=A0+ { .compatible =3D "allwinner,sun8i-a33-codec" },
+> >> =C2=A0+ { .compatible =3D "allwinner,sun8i-a23-codec" },
+> >
+> > I thought that the A23 and A33 had different codecs? In that case, it
+> > wouldn't be a good assumption to make
+>=20
+> Yes.
+>=20
+> >
+> >> =C2=A0+ {}
+> >> =C2=A0+};
+> >> =C2=A0+MODULE_DEVICE_TABLE(of, sun8i_codec_of_match);
+> >> =C2=A0+
+> >> =C2=A0+static struct platform_driver sun8i_codec_driver =3D {
+> >> =C2=A0+ .driver =3D {
+> >> =C2=A0+ .name =3D "sun8i-codec",
+> >> =C2=A0+ .owner =3D THIS_MODULE,
+> >> =C2=A0+ .of_match_table =3D sun8i_codec_of_match,
+> >> =C2=A0+ },
+> >> =C2=A0+ .probe =3D sun8i_codec_probe,
+> >> =C2=A0+ .remove =3D sun8i_codec_remove,
+> >> =C2=A0+};
+> >> =C2=A0+module_platform_driver(sun8i_codec_driver);
+> >> =C2=A0+
+> >> =C2=A0+MODULE_DESCRIPTION("Allwinner A33 (sun8i) codec driver");
+> >> =C2=A0+MODULE_AUTHOR("huanxin<huanxin-jFKXxz0WcGyYHARAtoI1EgC/G2K4zDHf@public.gmane.org>");
+> >
+> > Those obfuscated email adresses are not really helpful :)
+>=20
+> This kind of email addresses  are kept in many places in mainline kernel.
+>=20
+> e.g. drivers/mmc/host/sunxi-mmc.c have 'Aaron Maoye <leafy.myeh@reuuimlla=
+tech.com>'
+>=20
 
-On Thursday 06 Oct 2016 17:09:57 Archit Taneja wrote:
-> On 10/06/2016 12:51 PM, Maxime Ripard wrote:
-> > On Mon, Oct 03, 2016 at 04:40:57PM +0530, Archit Taneja wrote:
-> >> On 09/30/2016 08:07 PM, Maxime Ripard wrote:
-> >>> Some boards have an entirely passive RGB to VGA bridge, based on either
-> >>> DACs or resistor ladders.
-> >>> 
-> >>> Those might or might not have an i2c bus routed to the VGA connector in
-> >>> order to access the screen EDIDs.
-> >>> 
-> >>> Add a bridge that doesn't do anything but expose the modes available on
-> >>> the screen, either based on the EDIDs if available, or based on the XGA
-> >>> standards.
-> >>> 
-> >>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >>> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >>> ---
-> >>> .../bindings/display/bridge/rgb-to-vga-bridge.txt  |  48 +++++
-> >>> drivers/gpu/drm/bridge/Kconfig                     |   7 +
-> >>> drivers/gpu/drm/bridge/Makefile                    |   1 +
-> >>> drivers/gpu/drm/bridge/rgb-to-vga.c                | 229 +++++++++++++++
-> >>> 4 files changed, 285 insertions(+)
-> >>> create mode 100644
-> >>> Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.txt
-> >>> create mode 100644 drivers/gpu/drm/bridge/rgb-to-vga.c
-> >>> 
-> >>> diff --git
-> >>> a/Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.tx
-> >>> t
-> >>> b/Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.tx
-> >>> t new file mode 100644
-> >>> index 000000000000..a8375bc1f9cb
-> >>> --- /dev/null
-> >>> +++
-> >>> b/Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.tx
-> >>> t @@ -0,0 +1,48 @@
-> >>> +Dumb RGB to VGA bridge
-> >>> +----------------------
-> >>> +
-> >>> +This binding is aimed for dumb RGB to VGA bridges that do not require
-> >>> +any configuration.
-> >>> +
-> >>> +Required properties:
-> >>> +
-> >>> +- compatible: Must be "rgb-to-vga-bridge"
-> >> 
-> >> I'd talked to Laurent on IRC if he's okay with this. And I guess you to
-> >> had discussed it during XDC too. He's suggested that it'd be better to
-> >> have the compatible string as "simple-vga-dac".
-> > 
-> > I just wished this bikeshedding had taken place publicly and be
-> > actually part of that discussion, but yeah, ok.
-> 
-> Sorry about that. I'd pinged him for an Ack, the discussion went
-> more than that :)
-> 
-> >> Some of the reasons behind having this:
-> >> 
-> >> - We don't need to specify "rgb" in the compatible string since most
-> >> simple VGA DACs can only work with an RGB input.
-> > 
-> > Ok.
-> > 
-> >> - Also, with "dac" specified in the string, we don't need to
-> >> specifically mention "bridge" in the string. Also, bridge is a drm
-> >> specific term.
-> >> 
-> >> - "simple" is considered because it's an unconfigurable bridge, and it
-> >> might be misleading for other VGA DACs to not use "vga-dac".
-> > 
-> > All those "simple" bindings are just the biggest lie we ever
-> > told. It's simple when you introduce it, and then grows into something
-> > much more complicated than a non-simple implementation.
-> 
-> "simple" here is supposed to mean that it's an unconfigurable RGB to
-> VGA DAC. This isn't supposed to follow the simple-panel model, where
-> you add the "simple-panel" string in the compatible node, along with
-> you chip specific compatible string.
+Well, that is only one place and it is a comment, not in the
+MODULE_AUTHOR macro. I would agree that it is not useful to have a stale
+email address in MODULE_AUTHOR.
 
-I agree with Maxime, I don't like the word "simple". My preference would be 
-"vga-dac" for a lack of a better qualifier than "simple" to describe the fact 
-that the device requires no configuration. My only concern with "vga-dac" is 
-that we would restrict usage of that compatible string for a subset of VGA 
-DACs, with more complex devices not being compatible with "vga-dac" even 
-though they are VGA DACs. That's a problem I can live with though.
+--=20
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-> In other words, this driver shouldn't be touched again in the future :)
-> If someone wants to write a RGB to VGA driver which is even
-> slightly configurable, they'll need to write a new bridge driver.
-
-I'm sure that won't be true. I can certainly foresee the addition of 
-regulators support for instance. It's unfortunately never black and white.
-
-> >> What do you think about this? If you think it's good, would it be
-> >> possible for you to change this? I guess it's okay for the rest of
-> >> the patch to stay the same.
-> > 
-> > I'll update and respin the serie.
-
--- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
