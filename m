@@ -1,112 +1,173 @@
-From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 1/2] sdhci: Add device tree property sd-broken-highspeed
-Date: Thu, 6 Oct 2016 09:13:24 +0300
-Message-ID: <7acb34a9-d323-b112-f796-92c2a962743c@intel.com>
-References: <1474660869-15532-1-git-send-email-zach.brown@ni.com>
- <1474660869-15532-2-git-send-email-zach.brown@ni.com>
- <CAPDyKFogDKM86XKo1iQE1KU5HpEic23FD5YQGF9QjSFYBDJn4Q@mail.gmail.com>
- <CAL_JsqLjtn2-FaO_h9JWOsZqttQ35yV6KOnQz2Z-cMr=0GHJCg@mail.gmail.com>
- <20161005212223.GK10625@jcartwri.amer.corp.natinst.com>
- <5972c8f4-23b5-7dbb-b87c-7be7ec5b1a17@rock-chips.com>
+From: Lukasz Majewski <l.majewski@majess.pl>
+Subject: Re: [PATCH v2 0/6] Support PWM polarity control
+Date: Thu, 6 Oct 2016 08:26:17 +0200
+Message-ID: <20161006082617.54ebf41e@jawa>
+References: <20161001101235.24598-1-bhuvanchandra.dv@toradex.com>
+ <20161004094805.466ebc6d@jawa>
+ <be9c9f6b22788ca4d9c9243a46932945@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5972c8f4-23b5-7dbb-b87c-7be7ec5b1a17-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Julia Cartwright <julia-acOepvfBmUk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============0461454752968917853=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <be9c9f6b22788ca4d9c9243a46932945@agner.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, l.majewski@samsung.com, Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, thierry.reding@gmail.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/10/16 04:34, Shawn Lin wrote:
-> On 2016/10/6 5:22, Julia Cartwright wrote:
->> On Wed, Oct 05, 2016 at 03:03:44PM -0500, Rob Herring wrote:
->>> On Wed, Oct 5, 2016 at 1:33 PM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>> On 23 September 2016 at 22:01, Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org> wrote:
->>>>> Certain board configurations can make highspeed malfunction due to
->>>>> timing issues. In these cases a way is needed to force the controller
->>>>> and card into standard speed even if they otherwise appear to be capable
->>>>> of highspeed.
->>>>>
->>>>> The sd-broken-highspeed property will let the sdhci driver know that
->>>>> highspeed will not work.
->>>>>
->>>>> Signed-off-by: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
->>>>>  1 file changed, 2 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt
->>>>> b/Documentation/devicetree/bindings/mmc/mmc.txt
->>>>> index 8a37782..59332ea 100644
->>>>> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
->>>>> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
->>>>> @@ -52,6 +52,8 @@ Optional properties:
->>>>>  - no-sdio: controller is limited to send sdio cmd during initialization
->>>>>  - no-sd: controller is limited to send sd cmd during initialization
->>>>>  - no-mmc: controller is limited to send mmc cmd during initialization
->>>>> +- sd-broken-highspeed: Highspeed is broken, even if the controller and
->>>>> card
->>>>> +  themselves claim they support highspeed.
->>>>
->>>> Regarding a broken card, that is managed via the card quirks and not in DT.
->>>>
->>>> If this is about a controller limitation, we already have the option
->>>> to describe what it supports, so we don't need an option to tell what
->>>> it *not* supports.
->>>>
->>>> For example "cap-sd-highspeed" tells whether the controller supports
->>>> SD high-speed, please use that instead.
->>>
->>> If a controller has a capability register and it lies (perhaps the
->>> board has limitations that the SoC does not), then you may need to
->>> disable a feature.
->>
->> That's precisely the case here.  This is a board-level problem, not a
->> card or controller problem.  As Zach mentioned in the cover letter, the
->> trace length between controller and card on some of our boards is too
->> long to meet high-speed timings, even though both card and controller
->> advertise it.
-> 
-> IIRC, I saw the same problem while using sdhci to bring up a
-> industrial board for vehicle. The trace length is so long that
-> I have to limit the max-frequency to make it works properly when
-> running at hishspeed.
-> 
-> So could you try to limit the max-frequency in your DT to see
-> if it could work for you? I guess it should work as once reducing
-> the frequency, the timing per cycle will be large enough to meet
-> the spec. At least that helped me solve my problem.
-> 
-> For further consideration, I deployed a mechanism called "tuning for
-> non UHS or non-hs200/400" for my donwstream tree at that time. The basic
-> concept is to ask devices to send ext_csd(or send status for SD case)
-> *repeatedly*. Some hosts, i.e. sdhci-of-arasan or dw_mmc-rockchip, can
-> manually set rx delay via some clock unit registers to capture the
-> working sample window and select the middle point of the longest good
-> phase region. The same for retune. But it is a little complicated, and
-> could only be applicable to the hosts who could adjust the rx delay
-> manually when claiming the caps of MMC_CAPS_CAN_TUNING_FOR_HS, whatever
-> the name is...
-> 
-> I don't know if it is worth to add this, and I don't know if it's
-> a legit way. Anyway, I just share my thought(experience) for you and
-> linux-mmc to think more about how to deal with the case you meet rather
-> than sacrificing the performence by removing highspeed or reducing
-> frequency..
-> 
+--===============0461454752968917853==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ boundary="Sig_/fc7ZTByV.E_+wg3czjqxszt"; protocol="application/pgp-signature"
 
-As Shawn points out, using max-frequency is a possibility. Did you consider
-that?
+--Sig_/fc7ZTByV.E_+wg3czjqxszt
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-There are 2 high speed caps:
-	cap-sd-highspeed
-	cap-mmc-highspeed
+Hi Stefan,
 
-Yet patch in 2, the effect of sd-broken-highspeed is to suppress highspeed
-for both SD and MMC.  Should it then be called just broken-highspeed?
+> Hi Lukasz,
+>=20
+> On 2016-10-04 00:48, Lukasz Majewski wrote:
+> > Dear Bhuvanchandra,
+> >=20
+> > Thank you for your effort to send those patches to ML.
+> >=20
+> >> Changes since v2:
+> >>
+> >> - Picked the stalled patchset[1] from Lothar Wassmann which adds
+> >> the basic support for polarity control on imx-pwm driver and adds
+> >> backward compatibility support for devices which does not have
+> >> polarity control feature.
+> >>
+> >> Changes since Lothars v6:
+> >>
+> >> - Squash Lukasz patch[2].
+> >>
+> >> [1] http://thread.gmane.org/gmane.linux.pwm/1621
+> >> [2] https://www.spinics.net/lists/arm-kernel/msg530818.html
+> >>
+> >> Bhuvanchandra DV (3):
+> >>   arm: dts: imx7: Update #pwm-cells for PWM polarity control
+> >>   arm: dts: imx7-colibri: Use pwm polarity control
+> >>   arm: dts: imx7-colibri: Use enable-gpios for BL_ON
+> >>
+> >> Lothar Wassmann (3):
+> >>   pwm: print error messages with pr_err() instead of pr_debug()
+> >>   pwm: core: make the PWM_POLARITY flag in DTB optional
+> >>   pwm: imx: support output polarity inversion
+> >=20
+> > For some reason this patchset works differently than the one
+> > developed by Lothar.
+> >=20
+> > The difference is with the brightness level control.
+> >=20
+> > My brightness definition in DTS:
+> >=20
+> >            pwms =3D <&pwm2 0 5000000 PWM_POLARITY_INVERTED>;
+> >=20
+> >  		brightness-levels =3D <  0   1   2   3   4   5   6
+> > 7   8   9
+> >=20
+> > 					 ..  ............
+> > 				    250 251 252 253 254 255>;
+> > 		default-brightness-level =3D <50>;
+> > 		enable-gpios =3D <&gpio1 2 GPIO_ACTIVE_LOW>;
+> >=20
+>=20
+> If you are using something else than i.MX 7 you also want to update
+> the SoC level device tree, specifically change the pwm-cells property:
+> #pwm-cells =3D <3>;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Good point. However, it is declared elsewhere (with pwm2 node)
+
+&pwm2 {
+	#pwm-cells =3D <3>;
+	pinctrl-names =3D "default";
+	pinctrl-0 =3D <&pinctrl_pwm2>;
+	status =3D "okay";
+};
+
+
+>=20
+>=20
+> > When I go to the backlight sysfs entry:
+> >=20
+> > cd /sys/devices/soc0/backlight/backlight/backlight
+> >=20
+> > It seems like the brightness level control is inverted - i.e.=20
+> > 'echo 20 > brightness" makes picture on the screen very bright, and=20
+> > 'echo 200 > brightness' makes the picture diminish.
+> >=20
+> > With my "internal" patches the situation is opposite (and I've
+> > checked it with my HW connections).
+>=20
+> Just to check whether the driver actually applies the polarity you can
+> add a #define DEBUG at the top of the driver (drivers/pwm/pwm-imx.c)
+> and pass ignore_loglevel as kernel command line. This should give you
+> "PWM supports output inversion" at startup and a "... polarity set
+> to .." message whenever the polarity is set.
+
+The problem is with the Bhuvanchandra original patch.
+
+I will point it out when replying to original patch.
+
+Thanks for support,
+
+=C5=81ukasz Majewski
+
+>=20
+> --
+> Stefan
+>=20
+> >=20
+> > Could you check on your setup if similar situation takes place? I
+> > mean if the brightness control works as expected?
+> >=20
+> > Thanks in advance,
+> > =C5=81ukasz Majewski
+> >=20
+> >>
+> >>  Documentation/devicetree/bindings/pwm/imx-pwm.txt |  6 +--
+> >>  arch/arm/boot/dts/imx7-colibri.dtsi               | 12 +++++-
+> >>  arch/arm/boot/dts/imx7s.dtsi                      |  8 ++--
+> >>  drivers/pwm/core.c                                | 31
+> >> ++++++++------ drivers/pwm/pwm-imx.c                             |
+> >> 51 +++++++++++++++++++++-- 5 files changed, 83 insertions(+), 25
+> >> deletions(-)
+> >>
+
+
+--Sig_/fc7ZTByV.E_+wg3czjqxszt
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iEYEARECAAYFAlf17pAACgkQf9/hG2YwgjFtWQCgjnDuvLODUb3SDUMzpSvG4rcC
+PgAAnAv/7rL08z0DXp715hDcZeVcwFbs
+=igpo
+-----END PGP SIGNATURE-----
+
+--Sig_/fc7ZTByV.E_+wg3czjqxszt--
+
+
+--===============0461454752968917853==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0461454752968917853==--
