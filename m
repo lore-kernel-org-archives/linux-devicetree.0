@@ -1,80 +1,109 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH 06/14] ASoC: Add sun8i digital audio codec
-Date: Fri, 07 Oct 2016 00:06:57 +0800
-Message-ID: <901741475770017@web21g.yandex.ru>
-References: <cover.1475571575.git.mylene.josserand@free-electrons.com>
-	 <85cbd9926e52d0aa03f6bbfd8794373d8db491e0.1475571575.git.mylene.josserand@free-electrons.com> <20161004161549.GO5228@lukather>
+Subject: Re: [PATCH 9/9] [DO NOT MERGE] ARM: dts: sun6i: Enable
+ 7" LCD panel on Sinlinx SinA31s
+Date: Fri, 07 Oct 2016 00:23:00 +0800
+Message-ID: <1057651475770980@web10h.yandex.ru>
+References: <20161006160629.11198-1-wens@csie.org> <20161006160629.11198-10-wens@csie.org>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBJHN3G7QKGQE53HDGLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB2HU3G7QKGQEKOGWZ6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161004161549.GO5228@lukather>
+In-Reply-To: <20161006160629.11198-10-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?utf-8?B?TXlsw6huZSBKb3NzZXJhbmQ=?= <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org" <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "tiwai-IBi9RG/b67k@public.gmane.org" <tiwai-IBi9RG/b67k@public.gmane.org>, "sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TZUIDd8j+nm9g@public.gmane.org>
+To: "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-05.10.2016, 00:20, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> Hi,
+07.10.2016, 00:06, "Chen-Yu Tsai" <wens-jdAy2FN1RRM@public.gmane.org>:
+> Sinlinx SinA31s comes with an optional 7" 1024x600 LCD panel with
+> capacitive touch panel that bolts on to the board.
 >
->> =C2=A0+static const struct of_device_id sun8i_codec_of_match[] =3D {
->> =C2=A0+ { .compatible =3D "allwinner,sun8i-a33-codec" },
->> =C2=A0+ { .compatible =3D "allwinner,sun8i-a23-codec" },
->
-> I thought that the A23 and A33 had different codecs? In that case, it
-> wouldn't be a good assumption to make
+> Enable the display using a panel with close timings. This patch is more
+> of a proof of concept. The LCD panel has no markings whatsoever, and
+> the timings are not exactly the same, and as a result the display produce=
+s
+> glitch lines sometimes.
 
-Yes.
-
->
->> =C2=A0+ {}
->> =C2=A0+};
->> =C2=A0+MODULE_DEVICE_TABLE(of, sun8i_codec_of_match);
->> =C2=A0+
->> =C2=A0+static struct platform_driver sun8i_codec_driver =3D {
->> =C2=A0+ .driver =3D {
->> =C2=A0+ .name =3D "sun8i-codec",
->> =C2=A0+ .owner =3D THIS_MODULE,
->> =C2=A0+ .of_match_table =3D sun8i_codec_of_match,
->> =C2=A0+ },
->> =C2=A0+ .probe =3D sun8i_codec_probe,
->> =C2=A0+ .remove =3D sun8i_codec_remove,
->> =C2=A0+};
->> =C2=A0+module_platform_driver(sun8i_codec_driver);
->> =C2=A0+
->> =C2=A0+MODULE_DESCRIPTION("Allwinner A33 (sun8i) codec driver");
->> =C2=A0+MODULE_AUTHOR("huanxin<huanxin-jFKXxz0WcGyYHARAtoI1EgC/G2K4zDHf@public.gmane.org>");
->
-> Those obfuscated email adresses are not really helpful :)
-
-This kind of email addresses  are kept in many places in mainline kernel.
-
-e.g. drivers/mmc/host/sunxi-mmc.c have 'Aaron Maoye <leafy.myeh@reuuimllate=
-ch.com>'
+As you say, you can use the panel of SinA33...
 
 >
-> Thanks,
-> Maxime
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+> =C2=A0arch/arm/boot/dts/sun6i-a31s-sina31s.dts | 30 +++++++++++++++++++++=
++++++++++
+> =C2=A01 file changed, 30 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun6i-a31s-sina31s.dts b/arch/arm/boot/dts=
+/sun6i-a31s-sina31s.dts
+> index 6ead2f5c847a..2d5cf8c9a12f 100644
+> --- a/arch/arm/boot/dts/sun6i-a31s-sina31s.dts
+> +++ b/arch/arm/boot/dts/sun6i-a31s-sina31s.dts
+> @@ -63,6 +63,23 @@
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0gpios =3D <&pio 7 13 GPIO_ACTIVE_HIGH>; /* PH13 */
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
+> +
+> + panel: panel {
+> + compatible =3D "avic,tm070ddh03", "simple-panel";
+> + #address-cells =3D <1>;
+> + #size-cells =3D <0>;
+> +
+> + port@0 {
+> + reg =3D <0>;
+> + #address-cells =3D <1>;
+> + #size-cells =3D <0>;
+> +
+> + panel_input: endpoint@0 {
+> + reg =3D <0>;
+> + remote-endpoint =3D <&tcon0_out_lcd>;
+> + };
+> + };
+> + };
+> =C2=A0};
+>
+> =C2=A0&ehci0 {
+> @@ -148,6 +165,19 @@
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0regulator-name =3D =
+"vcc-gmac-phy";
+> =C2=A0};
+>
+> +&tcon0 {
+> + pinctrl-names =3D "default";
+> + pinctrl-0 =3D <&lcd0_rgb888_pins>;
+> + status =3D "okay";
+> +};
+> +
+> +&tcon0_out {
+> + tcon0_out_lcd: endpoint@0 {
+> + reg =3D <0>;
+> + remote-endpoint =3D <&panel_input>;
+> + };
+> +};
+> +
+> =C2=A0&usbphy {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0status =3D "okay";
+> =C2=A0};
+> --
+> 2.9.3
 >
 > --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-> ,
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> You received this message because you are subscribed to the Google Groups=
+ "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
 
 --=20
 You received this message because you are subscribed to the Google Groups "=
