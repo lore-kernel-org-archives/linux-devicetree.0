@@ -1,13 +1,14 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 0/9] drm/sun4i: Support first display pipeline
- on sun6i
-Date: Fri,  7 Oct 2016 00:06:20 +0800
-Message-ID: <20161006160629.11198-1-wens@csie.org>
+Subject: [PATCH 8/9] ARM: dts: sun6i: Add A31 LCD0 RGB888 pins
+Date: Fri,  7 Oct 2016 00:06:28 +0800
+Message-ID: <20161006160629.11198-9-wens@csie.org>
+References: <20161006160629.11198-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBCPN3G7QKGQEMZJUG5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBC7N3G7QKGQEXOICRPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161006160629.11198-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,48 +19,37 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+The LCD0 controller on the A31 can do RGB output up to 8 bits per
+channel. Add the pins for RGB888 output.
 
-This series adds support for the first display pipeline found on the
-A31 and A31s SoCs, with output through the RGB LCD interface.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun6i-a31.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-This has been tested on the Sinlinx SinA31s development board, with
-its included 7" LCD panel (see last patch), and the Merrii Hummingbird
-A31 development board, with its RGB-VGA bridge using Maxime's dumb VGA
-bridge patches. The Hummingbird A31 patches will be sent once Maxime's
-patches are merged.
-
-The last patch is only included for completeness. The LCD panel is
-not exactly supported, and Maxime's previous attempt to add it was
-postponed pending discussion.
-
-
-Regards
-ChenYu
-
-Chen-Yu Tsai (9):
-  drm/sun4i: sun6i-drc: Support DRC on A31 and A31s
-  drm/sun4i: tcon: Move SoC specific quirks to a DT matched data
-    structure
-  drm/sun4i: Put dotclock range into tcon quirks and check against them
-  drm/sun4i: Add compatible string for A31/A31s TCON (timing controller)
-  drm/sun4i: Add compatible strings for A31/A31s display pipelines
-  ARM: dts: sun6i: Sort pinmux setting nodes
-  ARM: dts: sun6i: Add device nodes for first display pipeline
-  ARM: dts: sun6i: Add A31 LCD0 RGB888 pins
-  [DO NOT MERGE] ARM: dts: sun6i: Enable 7" LCD panel on Sinlinx SinA31s
-
- .../bindings/display/sunxi/sun4i-drm.txt           |  10 +-
- arch/arm/boot/dts/sun6i-a31.dtsi                   | 247 +++++++++++++++++----
- arch/arm/boot/dts/sun6i-a31s-sina31s.dts           |  30 +++
- arch/arm/boot/dts/sun6i-a31s.dtsi                  |   8 +
- drivers/gpu/drm/sun4i/sun4i_backend.c              |   1 +
- drivers/gpu/drm/sun4i/sun4i_drv.c                  |   5 +
- drivers/gpu/drm/sun4i/sun4i_rgb.c                  |   8 +-
- drivers/gpu/drm/sun4i/sun4i_tcon.c                 |  54 +++--
- drivers/gpu/drm/sun4i/sun4i_tcon.h                 |  16 +-
- drivers/gpu/drm/sun4i/sun6i_drc.c                  |   2 +
- 10 files changed, 313 insertions(+), 68 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index 4d2c7786b92a..2e8bf93dcfb2 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -540,6 +540,19 @@
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
++			lcd0_rgb888_pins: lcd0_rgb888 {
++				allwinner,pins = "PD0", "PD1", "PD2", "PD3",
++						 "PD4", "PD5", "PD6", "PD7",
++						 "PD8", "PD9", "PD10", "PD11",
++						 "PD12", "PD13", "PD14", "PD15",
++						 "PD16", "PD17", "PD18", "PD19",
++						 "PD20", "PD21", "PD22", "PD23",
++						 "PD24", "PD25", "PD26", "PD27";
++				allwinner,function = "lcd0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
+ 			mmc0_pins_a: mmc0@0 {
+ 				allwinner,pins = "PF0", "PF1", "PF2",
+ 						 "PF3", "PF4", "PF5";
 -- 
 2.9.3
