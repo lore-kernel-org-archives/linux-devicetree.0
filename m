@@ -1,72 +1,75 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 1/2] sdhci: Add device tree property sd-broken-highspeed
-Date: Thu, 6 Oct 2016 10:03:56 +0200
-Message-ID: <CAPDyKFqw7mcvW=HTnZ9AoDFEk4TTBsecphaYxMGrEneDoKOevw@mail.gmail.com>
-References: <1474660869-15532-1-git-send-email-zach.brown@ni.com>
- <1474660869-15532-2-git-send-email-zach.brown@ni.com> <CAPDyKFogDKM86XKo1iQE1KU5HpEic23FD5YQGF9QjSFYBDJn4Q@mail.gmail.com>
- <CAL_JsqLjtn2-FaO_h9JWOsZqttQ35yV6KOnQz2Z-cMr=0GHJCg@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 5/8] dt/bindings: Update binding for PM domain idle states
+Date: Thu, 6 Oct 2016 10:06:48 +0200
+Message-ID: <CAMuHMdWxft8o493XN2zg1wj2By7P+qBkrvyQOt7WdBnhPAvSXQ@mail.gmail.com>
+References: <1475699519-109623-1-git-send-email-lina.iyer@linaro.org> <1475699519-109623-6-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLjtn2-FaO_h9JWOsZqttQ35yV6KOnQz2Z-cMr=0GHJCg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1475699519-109623-6-git-send-email-lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Juri.Lelli-5wv7dgnIgG8@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5 October 2016 at 22:03, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Oct 5, 2016 at 1:33 PM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On 23 September 2016 at 22:01, Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org> wrote:
->>> Certain board configurations can make highspeed malfunction due to
->>> timing issues. In these cases a way is needed to force the controller
->>> and card into standard speed even if they otherwise appear to be capable
->>> of highspeed.
->>>
->>> The sd-broken-highspeed property will let the sdhci driver know that
->>> highspeed will not work.
->>>
->>> Signed-off-by: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
->>> index 8a37782..59332ea 100644
->>> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
->>> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
->>> @@ -52,6 +52,8 @@ Optional properties:
->>>  - no-sdio: controller is limited to send sdio cmd during initialization
->>>  - no-sd: controller is limited to send sd cmd during initialization
->>>  - no-mmc: controller is limited to send mmc cmd during initialization
->>> +- sd-broken-highspeed: Highspeed is broken, even if the controller and card
->>> +  themselves claim they support highspeed.
->>
->> Regarding a broken card, that is managed via the card quirks and not in DT.
->>
->> If this is about a controller limitation, we already have the option
->> to describe what it supports, so we don't need an option to tell what
->> it *not* supports.
->>
->> For example "cap-sd-highspeed" tells whether the controller supports
->> SD high-speed, please use that instead.
+On Wed, Oct 5, 2016 at 10:31 PM, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Update DT bindings to describe idle states of PM domains.
 >
-> If a controller has a capability register and it lies (perhaps the
-> board has limitations that the SoC does not), then you may need to
-> disable a feature.
+> This patch is based on the original patch by Marc Titinger.
+>
+> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> Signed-off-by: Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/power/power_domain.txt     | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+> index 025b5e7..a043315 100644
+> --- a/Documentation/devicetree/bindings/power/power_domain.txt
+> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+> @@ -29,6 +29,10 @@ Optional properties:
+>     specified by this binding. More details about power domain specifier are
+>     available in the next section.
+>
+> +- domain-idle-states : A phandle of an idle-state that shall be soaked into a
+> +                generic domain power state. The idle state definitions are
+> +                compatible with arm,idle-state specified in [1].
+> +
+>  Example:
+>
+>         power: power-controller@12340000 {
+> @@ -59,6 +63,36 @@ The nodes above define two power controllers: 'parent' and 'child'.
+>  Domains created by the 'child' power controller are subdomains of '0' power
+>  domain provided by the 'parent' power controller.
+>
+> +Example 3:
+> +       parent: power-controller@12340000 {
 
-I understand, although the SDHCI capabilities register is broken for
-most SDHCI variants. In principle, we would more or less have to add a
-*-broken binding for each bit in that register. I don't like that!
+With W=1, this is gonna trigger:
 
-Maybe a better option is to add a "sdhci-cap-broken" or perhaps
-"sdhci-cap-speed-modes-broken", which tells the driver to not rely on
-the capabilities register and instead find out what *is* supported by
-looking at the other mmc generic DT bindings.
+    Warning (unit_address_vs_reg): Node foo has a unit name, but no reg property
 
-What do you think of that?
+Yes, there are pre-existing users in this file.
 
-Kind regards
-Uffe
+> +               compatible = "foo,power-controller";
+> +               reg = <0x12340000 0x1000>;
+> +               #power-domain-cells = <1>;
+> +               domain-idle-states = <&DOMAIN_RET, &DOMAIN_PWR_DN>;
+> +       };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
