@@ -1,124 +1,112 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v5 2/5] drm/bridge: Add RGB to VGA bridge support
-Date: Fri, 07 Oct 2016 00:04:13 +0300
-Message-ID: <1757833.hOePAQC2sg@avalon>
-References: <20160930143709.1388-1-maxime.ripard@free-electrons.com>
- <5319260.UeCnJXKVPe@avalon>
- <CAOw6vbLC=HnnpuaxFf8EzSTmuYoZd-r1aqx-ixja97Ht_U6S6Q@mail.gmail.com>
+From: Markus Mayer <mmayer@broadcom.com>
+Subject: Re: [RESEND PATCH v2 2/3] cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq
+ driver for Broadcom STB SoCs
+Date: Thu, 6 Oct 2016 14:04:59 -0700
+Message-ID: <20161006210459.GA19063@lbrmn-mmayer.ric.broadcom.com>
+References: <1475272561-8446-1-git-send-email-mmayer@broadcom.com>
+ <1475272561-8446-3-git-send-email-mmayer@broadcom.com>
+ <20161005032509.GG4664@vireshk-i7>
+ <CAGt4E5s9UBam4RKsq3k1P77-81NR-8AeQi==7dBNnp37xxtr_g@mail.gmail.com>
+ <20161006040139.GA17619@vireshk-i7>
+ <CAGt4E5sWLbGO7b7mX5CHKRDbtp5iqaapbV=YUJbRVHyCeJL8nQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAOw6vbLC=HnnpuaxFf8EzSTmuYoZd-r1aqx-ixja97Ht_U6S6Q@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sean Paul <seanpaul@chromium.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGt4E5sWLbGO7b7mX5CHKRDbtp5iqaapbV=YUJbRVHyCeJL8nQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2VhbiwKCk9uIFRodXJzZGF5IDA2IE9jdCAyMDE2IDE1OjUzOjI4IFNlYW4gUGF1bCB3cm90
-ZToKPiBPbiBUaHUsIE9jdCA2LCAyMDE2IGF0IDE6MjcgUE0sIExhdXJlbnQgUGluY2hhcnQgd3Jv
-dGU6Cj4gPiBPbiBUaHVyc2RheSAwNiBPY3QgMjAxNiAxNzowOTo1NyBBcmNoaXQgVGFuZWphIHdy
-b3RlOgo+ID4+IE9uIDEwLzA2LzIwMTYgMTI6NTEgUE0sIE1heGltZSBSaXBhcmQgd3JvdGU6Cj4g
-Pj4+IE9uIE1vbiwgT2N0IDAzLCAyMDE2IGF0IDA0OjQwOjU3UE0gKzA1MzAsIEFyY2hpdCBUYW5l
-amEgd3JvdGU6Cj4gPj4+PiBPbiAwOS8zMC8yMDE2IDA4OjA3IFBNLCBNYXhpbWUgUmlwYXJkIHdy
-b3RlOgo+ID4+Pj4+IFNvbWUgYm9hcmRzIGhhdmUgYW4gZW50aXJlbHkgcGFzc2l2ZSBSR0IgdG8g
-VkdBIGJyaWRnZSwgYmFzZWQgb24KPiA+Pj4+PiBlaXRoZXIgREFDcyBvciByZXNpc3RvciBsYWRk
-ZXJzLgo+ID4+Pj4+IAo+ID4+Pj4+IFRob3NlIG1pZ2h0IG9yIG1pZ2h0IG5vdCBoYXZlIGFuIGky
-YyBidXMgcm91dGVkIHRvIHRoZSBWR0EgY29ubmVjdG9yCj4gPj4+Pj4gaW4gb3JkZXIgdG8gYWNj
-ZXNzIHRoZSBzY3JlZW4gRURJRHMuCj4gPj4+Pj4gCj4gPj4+Pj4gQWRkIGEgYnJpZGdlIHRoYXQg
-ZG9lc24ndCBkbyBhbnl0aGluZyBidXQgZXhwb3NlIHRoZSBtb2RlcyBhdmFpbGFibGUKPiA+Pj4+
-PiBvbiB0aGUgc2NyZWVuLCBlaXRoZXIgYmFzZWQgb24gdGhlIEVESURzIGlmIGF2YWlsYWJsZSwg
-b3IgYmFzZWQgb24KPiA+Pj4+PiB0aGUgWEdBIHN0YW5kYXJkcy4KPiA+Pj4+PiAKPiA+Pj4+PiBB
-Y2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPiA+Pj4+PiBTaWduZWQtb2Zm
-LWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+
-Pj4+PiAtLS0KPiA+Pj4+PiAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmdiLXRvLXZnYS1i
-cmlkZ2UudHh0ICB8ICA0OCArKysrKwo+ID4+Pj4+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2Nv
-bmZpZyAgICAgICAgICAgICAgICAgICAgIHwgICA3ICsKPiA+Pj4+PiBkcml2ZXJzL2dwdS9kcm0v
-YnJpZGdlL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4gPj4+Pj4gZHJpdmVy
-cy9ncHUvZHJtL2JyaWRnZS9yZ2ItdG8tdmdhLmMgICAgICAgICAgICAgICAgfCAyMjkgKysrKysr
-KysrKysrKwo+ID4+Pj4+IDQgZmlsZXMgY2hhbmdlZCwgMjg1IGluc2VydGlvbnMoKykKPiA+Pj4+
-PiBjcmVhdGUgbW9kZSAxMDA2NDQKPiA+Pj4+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9icmlkZ2UvcmdiLXRvLXZnYS1icmlkZ2UudHgKPiA+Pj4+PiB0Cj4gPj4+
-Pj4gY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvcmdiLXRvLXZnYS5j
-Cj4gPj4+Pj4gCj4gPj4+Pj4gZGlmZiAtLWdpdAo+ID4+Pj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JnYi10by12Z2EtYnJpZGdlLgo+ID4+Pj4+
-IHR4dAo+ID4+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-YnJpZGdlL3JnYi10by12Z2EtYnJpZGdlLgo+ID4+Pj4+IHR4dAo+ID4+Pj4+IG5ldyBmaWxlIG1v
-ZGUgMTAwNjQ0Cj4gPj4+Pj4gaW5kZXggMDAwMDAwMDAwMDAwLi5hODM3NWJjMWY5Y2IKPiA+Pj4+
-PiAtLS0gL2Rldi9udWxsCj4gPj4+Pj4gKysrCj4gPj4+Pj4gYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmdiLXRvLXZnYS1icmlkZ2UuCj4gPj4+Pj4g
-dHgKPiA+Pj4+PiB0IEBAIC0wLDAgKzEsNDggQEAKPiA+Pj4+PiArRHVtYiBSR0IgdG8gVkdBIGJy
-aWRnZQo+ID4+Pj4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gPj4+Pj4gKwo+ID4+Pj4+ICtU
-aGlzIGJpbmRpbmcgaXMgYWltZWQgZm9yIGR1bWIgUkdCIHRvIFZHQSBicmlkZ2VzIHRoYXQgZG8g
-bm90Cj4gPj4+Pj4gcmVxdWlyZQo+ID4+Pj4+ICthbnkgY29uZmlndXJhdGlvbi4KPiA+Pj4+PiAr
-Cj4gPj4+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPj4+Pj4gKwo+ID4+Pj4+ICstIGNvbXBh
-dGlibGU6IE11c3QgYmUgInJnYi10by12Z2EtYnJpZGdlIgo+ID4+Pj4gCj4gPj4+PiBJJ2QgdGFs
-a2VkIHRvIExhdXJlbnQgb24gSVJDIGlmIGhlJ3Mgb2theSB3aXRoIHRoaXMuIEFuZCBJIGd1ZXNz
-IHlvdQo+ID4+Pj4gdG8gaGFkIGRpc2N1c3NlZCBpdCBkdXJpbmcgWERDIHRvby4gSGUncyBzdWdn
-ZXN0ZWQgdGhhdCBpdCdkIGJlIGJldHRlcgo+ID4+Pj4gdG8gaGF2ZSB0aGUgY29tcGF0aWJsZSBz
-dHJpbmcgYXMgInNpbXBsZS12Z2EtZGFjIi4KPiA+Pj4gCj4gPj4+IEkganVzdCB3aXNoZWQgdGhp
-cyBiaWtlc2hlZGRpbmcgaGFkIHRha2VuIHBsYWNlIHB1YmxpY2x5IGFuZCBiZQo+ID4+PiBhY3R1
-YWxseSBwYXJ0IG9mIHRoYXQgZGlzY3Vzc2lvbiwgYnV0IHllYWgsIG9rLgo+ID4+IAo+ID4+IFNv
-cnJ5IGFib3V0IHRoYXQuIEknZCBwaW5nZWQgaGltIGZvciBhbiBBY2ssIHRoZSBkaXNjdXNzaW9u
-IHdlbnQKPiA+PiBtb3JlIHRoYW4gdGhhdCA6KQo+ID4+IAo+ID4+Pj4gU29tZSBvZiB0aGUgcmVh
-c29ucyBiZWhpbmQgaGF2aW5nIHRoaXM6Cj4gPj4+PiAKPiA+Pj4+IC0gV2UgZG9uJ3QgbmVlZCB0
-byBzcGVjaWZ5ICJyZ2IiIGluIHRoZSBjb21wYXRpYmxlIHN0cmluZyBzaW5jZSBtb3N0Cj4gPj4+
-PiBzaW1wbGUgVkdBIERBQ3MgY2FuIG9ubHkgd29yayB3aXRoIGFuIFJHQiBpbnB1dC4KPiA+Pj4g
-Cj4gPj4+IE9rLgo+ID4+PiAKPiA+Pj4+IC0gQWxzbywgd2l0aCAiZGFjIiBzcGVjaWZpZWQgaW4g
-dGhlIHN0cmluZywgd2UgZG9uJ3QgbmVlZCB0bwo+ID4+Pj4gc3BlY2lmaWNhbGx5IG1lbnRpb24g
-ImJyaWRnZSIgaW4gdGhlIHN0cmluZy4gQWxzbywgYnJpZGdlIGlzIGEgZHJtCj4gPj4+PiBzcGVj
-aWZpYyB0ZXJtLgo+ID4+Pj4gCj4gPj4+PiAtICJzaW1wbGUiIGlzIGNvbnNpZGVyZWQgYmVjYXVz
-ZSBpdCdzIGFuIHVuY29uZmlndXJhYmxlIGJyaWRnZSwgYW5kIGl0Cj4gPj4+PiBtaWdodCBiZSBt
-aXNsZWFkaW5nIGZvciBvdGhlciBWR0EgREFDcyB0byBub3QgdXNlICJ2Z2EtZGFjIi4KPiA+Pj4g
-Cj4gPj4+IEFsbCB0aG9zZSAic2ltcGxlIiBiaW5kaW5ncyBhcmUganVzdCB0aGUgYmlnZ2VzdCBs
-aWUgd2UgZXZlcgo+ID4+PiB0b2xkLiBJdCdzIHNpbXBsZSB3aGVuIHlvdSBpbnRyb2R1Y2UgaXQs
-IGFuZCB0aGVuIGdyb3dzIGludG8gc29tZXRoaW5nCj4gPj4+IG11Y2ggbW9yZSBjb21wbGljYXRl
-ZCB0aGFuIGEgbm9uLXNpbXBsZSBpbXBsZW1lbnRhdGlvbi4KPiA+PiAKPiA+PiAic2ltcGxlIiBo
-ZXJlIGlzIHN1cHBvc2VkIHRvIG1lYW4gdGhhdCBpdCdzIGFuIHVuY29uZmlndXJhYmxlIFJHQiB0
-bwo+ID4+IFZHQSBEQUMuIFRoaXMgaXNuJ3Qgc3VwcG9zZWQgdG8gZm9sbG93IHRoZSBzaW1wbGUt
-cGFuZWwgbW9kZWwsIHdoZXJlCj4gPj4geW91IGFkZCB0aGUgInNpbXBsZS1wYW5lbCIgc3RyaW5n
-IGluIHRoZSBjb21wYXRpYmxlIG5vZGUsIGFsb25nIHdpdGgKPiA+PiB5b3UgY2hpcCBzcGVjaWZp
-YyBjb21wYXRpYmxlIHN0cmluZy4KPiA+IAo+ID4gSSBhZ3JlZSB3aXRoIE1heGltZSwgSSBkb24n
-dCBsaWtlIHRoZSB3b3JkICJzaW1wbGUiLiBNeSBwcmVmZXJlbmNlIHdvdWxkCj4gPiBiZSAidmdh
-LWRhYyIgZm9yIGEgbGFjayBvZiBhIGJldHRlciBxdWFsaWZpZXIgdGhhbiAic2ltcGxlIiB0byBk
-ZXNjcmliZQo+ID4gdGhlIGZhY3QgdGhhdCB0aGUgZGV2aWNlIHJlcXVpcmVzIG5vIGNvbmZpZ3Vy
-YXRpb24uIE15IG9ubHkgY29uY2VybiB3aXRoCj4gPiAidmdhLWRhYyIgaXMgdGhhdCB3ZSB3b3Vs
-ZCByZXN0cmljdCB1c2FnZSBvZiB0aGF0IGNvbXBhdGlibGUgc3RyaW5nIGZvciBhCj4gPiBzdWJz
-ZXQgb2YgVkdBIERBQ3MsIHdpdGggbW9yZSBjb21wbGV4IGRldmljZXMgbm90IGJlaW5nIGNvbXBh
-dGlibGUgd2l0aAo+ID4gInZnYS1kYWMiIGV2ZW4gdGhvdWdoIHRoZXkgYXJlIFZHQSBEQUNzLiBU
-aGF0J3MgYSBwcm9ibGVtIEkgY2FuIGxpdmUgd2l0aAo+ID4gdGhvdWdoLgo+Cj4gV2hpbGUgd2Un
-cmUgYmlrZXNoZWRkaW5nIChmZWVsIGZyZWUgdG8gaWdub3JlIG15IGlucHV0IG9uIHRoaXMpLCBJ
-Cj4gdGhpbmsgTWF4aW1lJ3MgaW5pdGlhbCAiZHVtYiIgcXVhbGlmaWVyIHdhcyBiZXR0ZXIgdGhh
-biAic2ltcGxlIi4KCkkgdGhpbmsgSSBhZ3JlZS4KCj4gSSB0aGluayAicGFzc2l2ZSIgYWxzbyBn
-ZXRzIHRoZSBwb2ludCBhY3Jvc3MgYmV0dGVyIHRoYW4gInNpbXBsZSIsIHdoaWNoCj4gd2UndmUg
-YWxyZWFkeSBlc3RhYmxpc2hlZCBhcyBzb21ldGhpbmcgZWxzZSBpbiBkcm0uCgpUbyBteSBlbGVj
-dHJpY2FsIGVuZ2luZWVyJ3MgZWFyLCBwYXNzaXZlIHJlZmVycyB0byBhIGNvbXBvbmVudCBvciBj
-b21iaW5hdGlvbiAKb2YgY29tcG9uZW50cyB0aGF0IGlzIG5vdCBjYXBhYmxlIG9mIHBvd2VyIGdh
-aW4uIFRoZSByZXNpc3RvcnMgbGFkZGVyIFZHQSBEQUMgCnRoYXQgTWF4aW1lIGlzIHRyeWluZyB0
-byBzdXBwb3J0IGlzIGEgcGFzc2l2ZSBzeXN0ZW0sIGJ1dCB0aGUgQURWNzEyMyBWR0EgREFDIAp0
-aGF0IGVxdWFsbHkgcmVxdWlyZXMgbm8gY29uZmlndXJhdGlvbiBpcyBhbiBhY3RpdmUgY29tcG9u
-ZW50LgoKPiBOb3cgdGhhdCBJJ3ZlIGdvdHRlbiB0aGF0IG91dCBvZiB0aGUgd2F5LCB0aGlzIHBh
-dGNoIGxvb2tzIGdvb2QgdG8gbWUKPiByZWdhcmRsZXNzIG9mIHRoZSBuYW1lLgo+IAo+IFJldmll
-d2VkLWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVsQGNocm9taXVtLm9yZz4KPiAKPiBTZWFuCj4gCj4g
-Pj4gSW4gb3RoZXIgd29yZHMsIHRoaXMgZHJpdmVyIHNob3VsZG4ndCBiZSB0b3VjaGVkIGFnYWlu
-IGluIHRoZSBmdXR1cmUgOikKPiA+PiBJZiBzb21lb25lIHdhbnRzIHRvIHdyaXRlIGEgUkdCIHRv
-IFZHQSBkcml2ZXIgd2hpY2ggaXMgZXZlbgo+ID4+IHNsaWdodGx5IGNvbmZpZ3VyYWJsZSwgdGhl
-eSdsbCBuZWVkIHRvIHdyaXRlIGEgbmV3IGJyaWRnZSBkcml2ZXIuCj4gPiAKPiA+IEknbSBzdXJl
-IHRoYXQgd29uJ3QgYmUgdHJ1ZS4gSSBjYW4gY2VydGFpbmx5IGZvcmVzZWUgdGhlIGFkZGl0aW9u
-IG9mCj4gPiByZWd1bGF0b3JzIHN1cHBvcnQgZm9yIGluc3RhbmNlLiBJdCdzIHVuZm9ydHVuYXRl
-bHkgbmV2ZXIgYmxhY2sgYW5kIHdoaXRlLgo+ID4gCj4gPj4+PiBXaGF0IGRvIHlvdSB0aGluayBh
-Ym91dCB0aGlzPyBJZiB5b3UgdGhpbmsgaXQncyBnb29kLCB3b3VsZCBpdCBiZQo+ID4+Pj4gcG9z
-c2libGUgZm9yIHlvdSB0byBjaGFuZ2UgdGhpcz8gSSBndWVzcyBpdCdzIG9rYXkgZm9yIHRoZSBy
-ZXN0IG9mCj4gPj4+PiB0aGUgcGF0Y2ggdG8gc3RheSB0aGUgc2FtZS4KPiA+Pj4gCj4gPj4+IEkn
-bGwgdXBkYXRlIGFuZCByZXNwaW4gdGhlIHNlcmllLgoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBp
-bmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, Oct 06, 2016 at 07:51:59AM -0700, Markus Mayer wrote:
+> On 5 October 2016 at 21:01, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > Thanks for accepting all the comments :)
+
+Unfortunately, I'll have to take back one agreed-upon change.
+
+In this piece of code, brcm_avs_is_firmware_loaded() has to come after
+requesting the IRQ.
+
+
+	priv->base = __map_region(BRCM_AVS_CPU_DATA);
+	if (!priv->base) {
+		dev_err(dev, "Couldn't find property %s in device tree.\n",
+			BRCM_AVS_CPU_DATA);
+		return -ENOENT;
+	}
+
+	priv->avs_intr_base = __map_region(BRCM_AVS_CPU_INTR);
+	if (!priv->avs_intr_base) {
+		dev_err(dev, "Couldn't find property %s in device tree.\n",
+			BRCM_AVS_CPU_INTR);
+		ret = -ENOENT;
+		goto unmap_base;
+	}
+
+	host_irq = platform_get_irq_byname(pdev, BRCM_AVS_HOST_INTR);
+	if (host_irq < 0) {
+		dev_err(dev, "Couldn't find interrupt %s -- %d\n",
+			BRCM_AVS_HOST_INTR, host_irq);
+		ret = host_irq;
+		goto unmap_intr_base;
+	}
+
+	ret = devm_request_irq(dev, host_irq, irq_handler, IRQF_TRIGGER_RISING,
+			       BRCM_AVS_HOST_INTR, priv);
+	if (ret) {
+		dev_err(dev, "IRQ request failed: %s (%d) -- %d\n",
+			BRCM_AVS_HOST_INTR, host_irq, ret);
+		goto unmap_intr_base;
+	}
+
+	if (brcm_avs_is_firmware_loaded(priv))
+		return 0;
+
+The reason being that we need to be ready to receive interrupts from the
+co-processor to tell us the GET_PMAP command completed.
+brcm_avs_is_firmware_loaded() issues the GET_PMAP command to ensure the
+firmware supports it. If I try to run brcm_avs_is_firmware_loaded() before
+setting up interrupts, I get a timeout in the driver -- because it never
+receives the interrupt saying the command is done.
+
+And I have to check the firmware supports the GET_PMAP command, because it
+is possible for somebody to choose to run a firmware that does not support
+DVFS, even though the hardware would support it.
+
+> >> Is there an easy way for me to know via the framework whether init is
+> >> being called for the first time vs. init is being called on a
+> >> different core after a previous attempt to initialize on another core
+> >> failed?
+> >>
+> >> I could use a driver-global variable for the driver to remember if it
+> >> has been initialized, but that seems a bit hacky.
+> >
+> > You don't really need to have any special code here, specially for the case that
+> > may never get hit. For example, if we fail to initialize something for CPU0,
+> > cpufreq core will try calling this routine for other CPUs as well. I don't think
+> > there is anything wrong in letting cpufreq core trying that. Why stop it or
+> > return early? It wouldn't happen normally, unless there is a bug in there.
+> 
+> During early development, when the driver couldn't fully register, I
+> would see the init() function called four times, i.e. once for each
+> core. If the first call succeeded, that was it. It would only get
+> called once. But if it failed, all cores would try to register. And I
+> wanted to avoid spilling the same error message four times.
+> 
+> I'll look at that again. It may have had something to do with how the
+> driver worked back then. If it doesn't happen anymore, I'll just get
+> rid of this code.
+
+Okay, I looked some more and compared it to what cpufreq-dt is doing to
+initialize. That lead me onto the right track. They simply do things they
+only want done once via the driver's probe function rather than CPUfreq's
+init function. So, I broke my initialization code up into two parts. 
+Everything up to checking if the firmware is loaded is now being called from
+brcm_avs_cpufreq_probe(). The frequency table code is still being called
+from brcm_avs_cpufreq_init().
+
+That means that if the initial hardware checks fail, it won't try again.
+
+Regards,
+-Markus
