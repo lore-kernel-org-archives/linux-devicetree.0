@@ -1,89 +1,96 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v7 0/4] libfdt: Add support for device tree overlays
-Date: Thu, 6 Oct 2016 20:47:56 +1100
-Message-ID: <20161006094756.GR18733@umbus.fritz.box>
-References: <20160930135717.16511-1-maxime.ripard@free-electrons.com>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH v9 17/19] drm/virtio: kconfig: Fix recursive dependency issue.
+Date: Thu, 6 Oct 2016 11:10:17 +0100
+Message-ID: <CACvgo50RghJs6Sfpp1z5SSnX=J1dBFAJeFzA=MOBDCo4PsiC9Q@mail.gmail.com>
+References: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
+ <1473081421-16555-18-git-send-email-peter.griffin@linaro.org>
+ <CACvgo52_g7anGBd9HTUyYsbp5QmQEk9LR3nNHgSTgjQ29G3ViA@mail.gmail.com>
+ <20160920083251.GB26093@griffinp-ThinkPad-X1-Carbon-2nd> <CACvgo53fuoPVjBAkZbWFPVxosObjvxoDgFdR_BkSTgevqyGg9g@mail.gmail.com>
+ <20160927170115.GD7509@tuxbot>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="phbq2bkSb+hZnunM"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160930135717.16511-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160927170115.GD7509@tuxbot>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, Arnd Bergmann <arnd@arndb.de>, LAKML <linux-arm-kernel@lists.infradead.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, kernel@stlinux.com, vinod.koul@intel.com, patrice.chotard@st.com, dan.j.williams@intel.com, David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>, Ohad Ben-Cohen <ohad@wizery.com>, devicetree <devicetree@vger.kernel.org>, linux-remoteproc@vger.kernel.org, ML dri-devel <dri-devel@lists.freedesktop.org>, "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>, dmaengine@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Bjorn,
 
---phbq2bkSb+hZnunM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 27 September 2016 at 18:01, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> On Wed 21 Sep 05:09 PDT 2016, Emil Velikov wrote:
+>
+>> On 20 September 2016 at 09:32, Peter Griffin <peter.griffin@linaro.org> wrote:
+>> > Hi Emil,
+>> >
+>> > On Tue, 20 Sep 2016, Emil Velikov wrote:
+>> >
+>> >> On 5 September 2016 at 14:16, Peter Griffin <peter.griffin@linaro.org> wrote:
+>> >> > ST_SLIM_REMOTEPROC must select REMOTEPROC, which exposes the following
+>> >> > recursive dependency.
+>> >
+>> >
+>> >> >
+>> >> From a humble skim through remoteproc, drm and a few other subsystems
+>> >> I think the above is wrong. All the drivers (outside of remoteproc),
+>> >> that I've seen, depend on the core component, they don't select it.
+>> >
+>> > I will let Bjorn comment on the remoteproc subsystem Kconfig design, and
+>> > why it is like it is.
+>> >
+>> > For this particular SLIM_RPROC I have added it to Kconfig in keeping with all
+>> > the other drivers in the remoteproc subsystem which has exposed this recursive
+>> > dependency issue.
+>> >
+>> > For this particular kconfig symbol a quick grep reveals more drivers in
+>> > the kernel using 'select', than 'depend on'
+>> >
+>> > git grep "select VIRTIO" | wc -l
+>> > 14
+>> >
+>> > git grep "depends on VIRTIO" | wc -l
+>> > 10
+>> >
+>> Might be worth taking a closer look into these at some point.
+>>
+>
+> The general idea here is that VIRTIO provides the "framework" and as
+> such drivers implementing VIRTIO do select and drivers using virtio use
+> depends.
+>
+> This is found in several places around the kernel.
+>
+>> >
+>> >> Furthermore most places explicitly hide the drivers from the menu if
+>> >> the core component isn't enabled.
+>> >
+>> > Remoteproc subsystem takes a different approach, the core code is only enabled
+>> > if a driver which relies on it is enabled. This IMHO makes sense, as
+>> > remoteproc is not widely used (only a few particular ARM SoC's).
+>> >
+>> > It is true that for subsystems which rely on the core component being
+>> > explicitly enabled, they often tend to hide drivers which depend on it
+>> > from the menu unless it is. This also makes sense.
+>> >
+>> >>
+>> >> Is there something that requires such a different/unusual behaviour in
+>> >> remoteproc ?
+>> >>
+>
+> There's nothing unusual in remoteproc that forces us to stay with this
+> model; however the parts related to the REMOTEPROC config is useless by
+> themselves.
+>
+I'm afraid that the "supporting" arguments you're using are generic
+and not specific to remoteproc. Although as Jani mentioned and pointed
+to the documentation, remoteproc is {mis,ab}using 'select' leading to
+issues elsewhere.
 
-On Fri, Sep 30, 2016 at 03:57:13PM +0200, Maxime Ripard wrote:
-> Hi,
->=20
-> The device tree overlays are a great solution to the issue raised by
-> the bunch expandable boards we find everywhere these days, like the
-> Beaglebone, Raspberry Pi or CHIP.
->=20
-> Although for now Linux is the only available tool that can deal with
-> overlays, some other components like bootloaders or user-space tools
-> might need to apply these overlays on top of a base device tree.
->=20
-> To address these use cases, we introduce a new function to the libfdt,
-> fdt_overlay_apply, that does just that.
->=20
-> You can find a test program here: http://code.bulix.org/792zum-99476?raw
->=20
-> This is the last patches sent to U-boot, with the modifications
-> suggested by David, and the additional test cases.
->=20
-> Let me know what you think!
-> Maxime
+In the long term we might want to switch to 'select' and attribute
+kconfig like Jani suggested.  But in the short term we want to avoid
+select-ing things just for our "convenience".
 
-Looking pretty good.  There's a minor error in 3/4 which I've pointed
-out, it can be fixed in a followup.
-
-An error in the conditionals means it's trying to run some of the
-tests which require an overlay-aware dtc on even when that's not
-available - I adjusted 4/4 to correct that.
-
-It also hit build failures on Travis, because the compiler version
-there complains about local variables named 'index' shadowing the
-standard library function.  I've corrected that with a followup patch.
-
-With that done, the whole lot has been committed to master.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---phbq2bkSb+hZnunM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJX9h3JAAoJEGw4ysog2bOSDEQP+wZ+Kod4heAX5xd5yVxu/wDC
-htc03+thnHdBLXGRMTFt9edy1NKiHBCIvCdW846B9cT/Y3X7K6IkhDuIJydrFn/G
-dSWjzmHaBEZlZYvQtJ3LKxYMrpJUXtusE81cWl7anky2uFjVokAWjQgARXoK2YGZ
-Q0lUTtWR2B5FL0ejZDJIpCCG1Ng8aCzudrABH9i/v8Dh5moRjvmKZGKIskBxVs2T
-aiyRGPByXyyQLyBzAHpL3NLne6musN5VFkaI9m1kWExrdf444Ot5eexkrvBQZLjc
-g270bWYDmx//I+EH61klEvnqU04qWzOZQbQsqjBji3hf3z7F+AX092dz/rGP2UUl
-/ttwnckifymfCZtAuMP1ud6HQFslSNKIMkQPzIEBelCHnaDPXCDX5E5R+I83LXCH
-inglDwaPCUWUX6UdyncrKp9e7kjeexp4TUonfHLaHtJuDU695r+ZOZ2DwdSim4YJ
-hpMINmpv+5PH3GEedGXMCpDWrKOHKexMnt8yjhD3HZTbaAt4yPPiXjbcFSw3Sbww
-OCWfomeuh8HTB9yFp9b1HhkSJumWATnNLoae7aE439TiBo7nryis0IG/i4cQ/saT
-aDeyL5fHapdi6lcVEgMxdVlNPa0anVRM6Uy2jnDyjn3Jnq4glTyRryFwVKYJ4XKW
-ymSBGcuimi6sq9wMQJC3
-=mig8
------END PGP SIGNATURE-----
-
---phbq2bkSb+hZnunM--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Emil
