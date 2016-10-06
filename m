@@ -1,43 +1,57 @@
-From: Vijay Kumar <vijay.ac.kumar@oracle.com>
-Subject: [PATCH v2 2/2] Documentation/ABI: Added ABI information for devspec and obppath.
-Date: Thu,  6 Oct 2016 12:06:12 -0700
-Message-ID: <1475780772-252393-2-git-send-email-vijay.ac.kumar@oracle.com>
-References: <1475780772-252393-1-git-send-email-vijay.ac.kumar@oracle.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1475780772-252393-1-git-send-email-vijay.ac.kumar@oracle.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, vijay.ac.kumar@oracle.com
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH v6 1/5] drm/sun4i: rgb: Remove the bridge enable/disable
+ functions
+Date: Thu, 6 Oct 2016 15:43:21 -0400
+Message-ID: <CAOw6vbJ5C95rxK6--zEintO=qeu+Pm=OcvB+SYzQuvz5pSQaaw@mail.gmail.com>
+References: <cover.2ec28e2292f37131839babc08427ef9f1aece26a.1475740611.git-series.maxime.ripard@free-electrons.com>
+ <5100ee37c9bbb53f8227bd38f1d3160e507c489d.1475740611.git-series.maxime.ripard@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5100ee37c9bbb53f8227bd38f1d3160e507c489d.1475740611.git-series.maxime.ripard@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Updated Documentation/ABI for devspec and obppath sysfs entries.
-
-Signed-off-by: Vijay Kumar <vijay.ac.kumar@oracle.com>
----
- Documentation/ABI/stable/sysfs-devices |   14 ++++++++++++++
- 1 files changed, 14 insertions(+), 0 deletions(-)
-
-diff --git a/Documentation/ABI/stable/sysfs-devices b/Documentation/ABI/stable/sysfs-devices
-index df449d7..35c457f 100644
---- a/Documentation/ABI/stable/sysfs-devices
-+++ b/Documentation/ABI/stable/sysfs-devices
-@@ -8,3 +8,17 @@ Description:
- 		Any device associated with a device-tree node will have
- 		an of_path symlink pointing to the corresponding device
- 		node in /sys/firmware/devicetree/
-+
-+What:		/sys/devices/*/devspec
-+Date:		October 2016
-+Contact:	Device Tree mailing list <devicetree@vger.kernel.org>
-+Description:
-+		If CONFIG_OF is enabled, then this file is present. When
-+		read, it returns full name of the device node.
-+
-+What:		/sys/devices/*/obppath
-+Date:		October 2016
-+Contact:	Device Tree mailing list <devicetree@vger.kernel.org>
-+Description:
-+		If CONFIG_OF is enabled, then this file is present. When
-+		read, it returns full name of the device node.
--- 
-1.7.1
+T24gVGh1LCBPY3QgNiwgMjAxNiBhdCAzOjU3IEFNLCBNYXhpbWUgUmlwYXJkCjxtYXhpbWUucmlw
+YXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cj4gVGhlIGF0b21pYyBoZWxwZXJzIGFscmVh
+ZHkgY2FsbCB0aGUgZHJtX2JyaWRnZV9lbmFibGUgb24gb3VyIGJlaGFsZiwKPiB0aGVyZSdzIG5v
+IG5lZWQgdG8gZG8gaXQgYSBzZWNvbmQgdGltZS4KPgo+IFJlcG9ydGVkLWJ5OiBTZWFuIFBhdWwg
+PHNlYW5wYXVsQGNocm9taXVtLm9yZz4KClJldmlld2VkLWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVs
+QGNocm9taXVtLm9yZz4KCj4gU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJp
+cGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9z
+dW40aV9yZ2IuYyB8IDYgLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAwIGluc2VydGlvbnMoKyks
+IDYgZGVsZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1
+bjRpX3JnYi5jIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3JnYi5jCj4gaW5kZXggNGU0
+YmVhNmYzOTVjLi5kMTk4YWQ3ZTUzMjMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N1
+bjRpL3N1bjRpX3JnYi5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3JnYi5j
+Cj4gQEAgLTE1NSw5ICsxNTUsNiBAQCBzdGF0aWMgdm9pZCBzdW40aV9yZ2JfZW5jb2Rlcl9lbmFi
+bGUoc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyKQo+ICAgICAgICAgaWYgKCFJU19FUlIodGNv
+bi0+cGFuZWwpKQo+ICAgICAgICAgICAgICAgICBkcm1fcGFuZWxfcHJlcGFyZSh0Y29uLT5wYW5l
+bCk7Cj4KPiAtICAgICAgIC8qIGVuY29kZXItPmJyaWRnZSBjYW4gYmUgTlVMTDsgZHJtX2JyaWRn
+ZV9lbmFibGUgY2hlY2tzIGZvciBpdCAqLwo+IC0gICAgICAgZHJtX2JyaWRnZV9lbmFibGUoZW5j
+b2Rlci0+YnJpZGdlKTsKPiAtCj4gICAgICAgICBzdW40aV90Y29uX2NoYW5uZWxfZW5hYmxlKHRj
+b24sIDApOwo+Cj4gICAgICAgICBpZiAoIUlTX0VSUih0Y29uLT5wYW5lbCkpCj4gQEAgLTE3Nyw5
+ICsxNzQsNiBAQCBzdGF0aWMgdm9pZCBzdW40aV9yZ2JfZW5jb2Rlcl9kaXNhYmxlKHN0cnVjdCBk
+cm1fZW5jb2RlciAqZW5jb2RlcikKPgo+ICAgICAgICAgc3VuNGlfdGNvbl9jaGFubmVsX2Rpc2Fi
+bGUodGNvbiwgMCk7Cj4KPiAtICAgICAgIC8qIGVuY29kZXItPmJyaWRnZSBjYW4gYmUgTlVMTDsg
+ZHJtX2JyaWRnZV9kaXNhYmxlIGNoZWNrcyBmb3IgaXQgKi8KPiAtICAgICAgIGRybV9icmlkZ2Vf
+ZGlzYWJsZShlbmNvZGVyLT5icmlkZ2UpOwo+IC0KPiAgICAgICAgIGlmICghSVNfRVJSKHRjb24t
+PnBhbmVsKSkKPiAgICAgICAgICAgICAgICAgZHJtX3BhbmVsX3VucHJlcGFyZSh0Y29uLT5wYW5l
+bCk7Cj4gIH0KPiAtLQo+IGdpdC1zZXJpZXMgMC44LjEwCj4gX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4gZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
