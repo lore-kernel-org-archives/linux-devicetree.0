@@ -1,39 +1,34 @@
-From: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
-Subject: [PATCH v7 0/3] auxdisplay: Introduce ht16k33 driver
-Date: Thu,  6 Oct 2016 13:53:30 +0200
-Message-ID: <1475754813-1200-1-git-send-email-robin@protonic.nl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
+From: Robin van der Gracht <robin@protonic.nl>
+Subject: [PATCH v7 1/3] of: add vendor prefix for Holtek Semiconductor
+Date: Thu,  6 Oct 2016 13:53:31 +0200
+Message-ID: <1475754813-1200-2-git-send-email-robin@protonic.nl>
+References: <1475754813-1200-1-git-send-email-robin@protonic.nl>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1475754813-1200-1-git-send-email-robin@protonic.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Robin van der Gracht <robin@protonic.nl>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds a new driver to the auxdisplay subsystem. It also adds
-devicetree binding documentation and a new vendor prefix.
+This patch introduces a vendor prefix for Holtek Semiconductor Inc.
 
-I added myself as maintainer to the MAINTAINERS file.
+Signed-off-by: Robin van der Gracht <robin@protonic.nl>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-@Greg: Would you like to review and push this upstream?
-
-Robin van der Gracht (3):
-  of: add vendor prefix for Holtek Semiconductor
-  auxdisplay: ht16k33: Driver for LED controller
-  MAINTAINERS: auxdisplay: Added myself as maintainer for ht16k33 driver
-
- .../devicetree/bindings/display/ht16k33.txt        |  42 ++
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- MAINTAINERS                                        |   6 +
- drivers/auxdisplay/Kconfig                         |   9 +
- drivers/auxdisplay/Makefile                        |   1 +
- drivers/auxdisplay/ht16k33.c                       | 563 +++++++++++++++++++++
- 6 files changed, 622 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/ht16k33.txt
- create mode 100644 drivers/auxdisplay/ht16k33.c
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 77e985f..2bf7ffd 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -125,6 +125,7 @@ hitex	Hitex Development Tools
+ holt	Holt Integrated Circuits, Inc.
+ honeywell	Honeywell
+ hp	Hewlett Packard
++holtek	Holtek Semiconductor, Inc.
+ i2se	I2SE GmbH
+ ibm	International Business Machines (IBM)
+ idt	Integrated Device Technologies, Inc.
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
