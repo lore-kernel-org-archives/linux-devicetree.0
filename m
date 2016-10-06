@@ -1,73 +1,135 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: [PATCH V1 10/10] MAINTAINERS: da9062/61 updates to the Dialog
- Semiconductor search terms
-Date: Thu, 6 Oct 2016 09:43:31 +0100
-Message-ID: <7b6327b7626d7b7ce35db79d78a228107d6da847.1475743411.git.stwiss.opensource@diasemi.com>
-References: <cover.1475743411.git.stwiss.opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1475743411.git.stwiss.opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Support Opensource <support.opensource@diasemi.com>
+From: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2] arm64: dts: marvell: Add definition for the Globalscale Marvell ESPRESSOBin Board
+Date: Thu,  6 Oct 2016 11:14:29 +0200
+Message-ID: <20161006091429.8974-1-romain.perier@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yahuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource@diasemi.com>
+This is a high performance 64 bit dual core low power consuming
+networking computing platform based on the ARMv8 architecture.
+It contains an Armada 3720 running up to 1.2Ghz.
 
-Hi,
+This commit adds a basic definition for this board.
 
-Dialog Semiconductor support would like to add to the MAINTAINERS search
-terms. This update will allow us to follow files for device tree bindings
-and source code relating to input onkey drivers, chip thermal monitoring
-and watchdog timers.
-
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-
+Signed-off-by: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
-This patch applies against linux-next and v4.8
 
-Hi,
+Changes in v2:
+ - Improved commit message
+ - Added informations about connectors
 
-This patch depends on acceptance of the following from this patch set:
+ arch/arm64/boot/dts/marvell/Makefile               |  1 +
+ .../boot/dts/marvell/armada-3720-espressobin.dts   | 82 ++++++++++++++++++++++
+ 2 files changed, 83 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
 
-- [PATCH V1 5/10] PMIC temperature monitoring
-
-and also from the following binding file changes:
-
-- [PATCH V1 6/10] Binding for onkey
-- [PATCH V1 7/10] Binding for watchdog
-- [PATCH V1 8/10] Binding for thermal
-
-Regards,
-Steve Twiss, Dialog Semiconductor Ltd.
-
-
- MAINTAINERS | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f593300..a7fd809 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3752,7 +3752,10 @@ W:	http://www.dialog-semiconductor.com/products
- S:	Supported
- F:	Documentation/hwmon/da90??
- F:	Documentation/devicetree/bindings/mfd/da90*.txt
-+F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
-+F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
- F:	Documentation/devicetree/bindings/regulator/da92*.txt
-+F:	Documentation/devicetree/bindings/watchdog/da92??-wdt.txt
- F:	Documentation/devicetree/bindings/sound/da[79]*.txt
- F:	drivers/gpio/gpio-da90??.c
- F:	drivers/hwmon/da90??-hwmon.c
-@@ -3767,6 +3770,7 @@ F:	drivers/power/da9052-battery.c
- F:	drivers/power/da91??-*.c
- F:	drivers/regulator/da903x.c
- F:	drivers/regulator/da9???-regulator.[ch]
-+F:	drivers/thermal/da90??-thermal.c
- F:	drivers/rtc/rtc-da90??.c
- F:	drivers/video/backlight/da90??_bl.c
- F:	drivers/watchdog/da90??_wdt.c
+diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+index 308468d..392eeb6 100644
+--- a/arch/arm64/boot/dts/marvell/Makefile
++++ b/arch/arm64/boot/dts/marvell/Makefile
+@@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-stb.dtb
+ 
+ # Mvebu SoC Family
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
++dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
+ 
+ always		:= $(dtb-y)
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+new file mode 100644
+index 0000000..ae005f1
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+@@ -0,0 +1,82 @@
++/*
++ * Device Tree file for Globalscale Marvell ESPRESSOBin Board
++ * Copyright (C) 2016 Marvell
++ *
++ * Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "armada-372x.dtsi"
++
++/ {
++	model = "Globalscale Marvell ESPRESSOBin Board";
++	compatible = "globalscale,espressobin", "marvell,armada3720", "marvell,armada3710";
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
++	};
++};
++
++/* J9 */
++&pcie0 {
++	status = "okay";
++};
++
++/* J6 */
++&sata {
++	status = "okay";
++};
++
++/* J5 */
++&uart0 {
++	status = "okay";
++};
++
++/* J7 */
++&usb3 {
++	status = "okay";
++};
 -- 
-end-of-patch for PATCH V1
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
