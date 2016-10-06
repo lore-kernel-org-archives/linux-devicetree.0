@@ -1,675 +1,994 @@
-From: Robin van der Gracht <robin@protonic.nl>
-Subject: [PATCH v7 2/3] auxdisplay: ht16k33: Driver for LED controller
-Date: Thu,  6 Oct 2016 13:53:32 +0200
-Message-ID: <1475754813-1200-3-git-send-email-robin@protonic.nl>
-References: <1475754813-1200-1-git-send-email-robin@protonic.nl>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1475754813-1200-1-git-send-email-robin@protonic.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Robin van der Gracht <robin@protonic.nl>
+From: Rahul Bedarkar <rahul.bedarkar-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] MIPS: DTS: add base device tree for Pistachio SoC
+Date: Thu, 6 Oct 2016 18:01:33 +0530
+Message-ID: <1475757094-31089-1-git-send-email-rahul.bedarkar@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rahul Bedarkar <rahul.bedarkar-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Added a driver for the Holtek HT16K33 LED controller with keyscan.
+Add support for the base Device Tree for Imagination Technologies'
+Pistachio SoC.
 
-Signed-off-by: Robin van der Gracht <robin@protonic.nl>
-CC: Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
+This commit supports the following peripherals:
+
+ * Clocks
+ * Pinctrl and GPIO
+ * UART
+ * SPI
+ * I2C
+ * PWM
+ * ADC
+ * Watchdog
+ * Ethernet
+ * MMC
+ * DMA engine
+ * Crypto
+ * I2S
+ * SPDIF
+ * Internal DAC
+ * Timer
+ * USB
+ * IR
+ * Interrupt Controller
+
+Signed-off-by: Rahul Bedarkar <rahul.bedarkar-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 ---
-Changes in v7:
-    - Fixed unit for debounce-delay-ms in doc (microseconds -> milliseconds)
+ MAINTAINERS                           |   2 +-
+ arch/mips/boot/dts/img/pistachio.dtsi | 924 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 925 insertions(+), 1 deletion(-)
+ create mode 100644 arch/mips/boot/dts/img/pistachio.dtsi
 
- .../devicetree/bindings/display/ht16k33.txt        |  42 ++
- drivers/auxdisplay/Kconfig                         |   9 +
- drivers/auxdisplay/Makefile                        |   1 +
- drivers/auxdisplay/ht16k33.c                       | 563 +++++++++++++++++++++
- 4 files changed, 615 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/ht16k33.txt
- create mode 100644 drivers/auxdisplay/ht16k33.c
-
-diff --git a/Documentation/devicetree/bindings/display/ht16k33.txt b/Documentation/devicetree/bindings/display/ht16k33.txt
-new file mode 100644
-index 0000000..8e5b30b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/ht16k33.txt
-@@ -0,0 +1,42 @@
-+Holtek ht16k33 RAM mapping 16*8 LED controller driver with keyscan
-+-------------------------------------------------------------------------------
-+
-+Required properties:
-+- compatible:		"holtek,ht16k33"
-+- reg:			I2C slave address of the chip.
-+- interrupt-parent:	A phandle pointing to the interrupt controller
-+			serving the interrupt for this chip.
-+- interrupts:		Interrupt specification for the key pressed interrupt.
-+- refresh-rate-hz:	Display update interval in HZ.
-+- debounce-delay-ms:	Debouncing interval time in milliseconds.
-+- linux,keymap: 	The keymap for keys as described in the binding
-+			document (devicetree/bindings/input/matrix-keymap.txt).
-+
-+Optional properties:
-+- linux,no-autorepeat:	Disable keyrepeat.
-+- default-brightness-level: Initial brightness level [0-15] (default: 15).
-+
-+Example:
-+
-+&i2c1 {
-+	ht16k33: ht16k33@70 {
-+		compatible = "holtek,ht16k33";
-+		reg = <0x70>;
-+		refresh-rate-hz = <20>;
-+		debounce-delay-ms = <50>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <5 (IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_EDGE_RISING)>;
-+		linux,keymap = <
-+			MATRIX_KEY(2, 0, KEY_F6)
-+			MATRIX_KEY(3, 0, KEY_F8)
-+			MATRIX_KEY(4, 0, KEY_F10)
-+			MATRIX_KEY(5, 0, KEY_F4)
-+			MATRIX_KEY(6, 0, KEY_F2)
-+			MATRIX_KEY(2, 1, KEY_F5)
-+			MATRIX_KEY(3, 1, KEY_F7)
-+			MATRIX_KEY(4, 1, KEY_F9)
-+			MATRIX_KEY(5, 1, KEY_F3)
-+			MATRIX_KEY(6, 1, KEY_F1)
-+		>;
-+	};
-+};
-diff --git a/drivers/auxdisplay/Kconfig b/drivers/auxdisplay/Kconfig
-index c07e725..75ad4f5 100644
---- a/drivers/auxdisplay/Kconfig
-+++ b/drivers/auxdisplay/Kconfig
-@@ -119,4 +119,13 @@ config CFAG12864B_RATE
- 	  If you compile this as a module, you can still override this
- 	  value using the module parameters.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 207eaef..98bcf06 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9509,7 +9509,7 @@ L:      linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+ S:      Maintained
+ F:      arch/mips/pistachio/
+ F:      arch/mips/include/asm/mach-pistachio/
+-F:      arch/mips/boot/dts/pistachio/
++F:      arch/mips/boot/dts/img/pistachio*
+ F:      arch/mips/configs/pistachio*_defconfig
  
-+config HT16K33
-+	tristate "Holtek Ht16K33 LED controller with keyscan"
-+	depends on FB && OF && I2C && INPUT
-+	select INPUT_MATRIXKMAP
-+	select FB_BACKLIGHT
-+	help
-+	  Say yes here to add support for Holtek HT16K33, RAM mapping 16*8
-+	  LED controller driver with keyscan.
-+
- endif # AUXDISPLAY
-diff --git a/drivers/auxdisplay/Makefile b/drivers/auxdisplay/Makefile
-index 8a8936a..d7c9ef5 100644
---- a/drivers/auxdisplay/Makefile
-+++ b/drivers/auxdisplay/Makefile
-@@ -4,3 +4,4 @@
- 
- obj-$(CONFIG_KS0108)		+= ks0108.o
- obj-$(CONFIG_CFAG12864B)	+= cfag12864b.o cfag12864bfb.o
-+obj-$(CONFIG_HT16K33)		+= ht16k33.o
-diff --git a/drivers/auxdisplay/ht16k33.c b/drivers/auxdisplay/ht16k33.c
+ PKTCDVD DRIVER
+diff --git a/arch/mips/boot/dts/img/pistachio.dtsi b/arch/mips/boot/dts/img/pistachio.dtsi
 new file mode 100644
-index 0000000..eeb323f
+index 0000000..57809f6
 --- /dev/null
-+++ b/drivers/auxdisplay/ht16k33.c
-@@ -0,0 +1,563 @@
++++ b/arch/mips/boot/dts/img/pistachio.dtsi
+@@ -0,0 +1,924 @@
 +/*
-+ * HT16K33 driver
-+ *
-+ * Author: Robin van der Gracht <robin@protonic.nl>
-+ *
-+ * Copyright: (C) 2016 Protonic Holland.
++ * Copyright (C) 2015, 2016 Imagination Technologies Ltd.
++ * Copyright (C) 2015 Google, Inc.
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
 + * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
 + */
 +
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/i2c.h>
-+#include <linux/of.h>
-+#include <linux/fb.h>
-+#include <linux/slab.h>
-+#include <linux/backlight.h>
-+#include <linux/input.h>
-+#include <linux/input/matrix_keypad.h>
-+#include <linux/workqueue.h>
-+#include <linux/mm.h>
++#include <dt-bindings/clock/pistachio-clk.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/mips-gic.h>
++#include <dt-bindings/reset/pistachio-resets.h>
 +
-+/* Registers */
-+#define REG_SYSTEM_SETUP		0x20
-+#define REG_SYSTEM_SETUP_OSC_ON		BIT(0)
++/ {
++	compatible = "img,pistachio";
 +
-+#define REG_DISPLAY_SETUP		0x80
-+#define REG_DISPLAY_SETUP_ON		BIT(0)
++	#address-cells = <1>;
++	#size-cells = <1>;
 +
-+#define REG_ROWINT_SET			0xA0
-+#define REG_ROWINT_SET_INT_EN		BIT(0)
-+#define REG_ROWINT_SET_INT_ACT_HIGH	BIT(1)
++	interrupt-parent = <&gic>;
 +
-+#define REG_BRIGHTNESS			0xE0
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+/* Defines */
-+#define DRIVER_NAME			"ht16k33"
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "mti,interaptiv";
++			reg = <0>;
++			clocks = <&clk_core CLK_MIPS_PLL>;
++			clock-names = "cpu";
++			clock-latency = <1000>;
++			operating-points = <
++				/* kHz    uV(dummy) */
++				546000 1150000
++				520000 1100000
++				494000 1000000
++				468000 950000
++				442000 900000
++				416000 800000
++			>;
++		};
++	};
 +
-+#define MIN_BRIGHTNESS			0x1
-+#define MAX_BRIGHTNESS			0x10
++	i2c0: i2c@18100000 {
++		compatible = "img,scb-i2c";
++		reg = <0x18100000 0x200>;
++		interrupts = <GIC_SHARED 2 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_periph PERIPH_CLK_I2C0>,
++			 <&cr_periph SYS_CLK_I2C0>;
++		clock-names = "scb", "sys";
++		assigned-clocks = <&clk_periph PERIPH_CLK_I2C0_PRE_DIV>,
++				  <&clk_periph PERIPH_CLK_I2C0_DIV>;
++		assigned-clock-rates = <100000000>, <33333334>;
++		status = "disabled";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c0_pins>;
 +
-+#define HT16K33_MATRIX_LED_MAX_COLS	8
-+#define HT16K33_MATRIX_LED_MAX_ROWS	16
-+#define HT16K33_MATRIX_KEYPAD_MAX_COLS	3
-+#define HT16K33_MATRIX_KEYPAD_MAX_ROWS	12
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
 +
-+#define BYTES_PER_ROW		(HT16K33_MATRIX_LED_MAX_ROWS / 8)
-+#define HT16K33_FB_SIZE		(HT16K33_MATRIX_LED_MAX_COLS * BYTES_PER_ROW)
++	i2c1: i2c@18100200 {
++		compatible = "img,scb-i2c";
++		reg = <0x18100200 0x200>;
++		interrupts = <GIC_SHARED 3 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_periph PERIPH_CLK_I2C1>,
++			 <&cr_periph SYS_CLK_I2C1>;
++		clock-names = "scb", "sys";
++		assigned-clocks = <&clk_periph PERIPH_CLK_I2C1_PRE_DIV>,
++				  <&clk_periph PERIPH_CLK_I2C1_DIV>;
++		assigned-clock-rates = <100000000>, <33333334>;
++		status = "disabled";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c1_pins>;
 +
-+struct ht16k33_keypad {
-+	struct input_dev *dev;
-+	spinlock_t lock;
-+	struct delayed_work work;
-+	uint32_t cols;
-+	uint32_t rows;
-+	uint32_t row_shift;
-+	uint32_t debounce_ms;
-+	uint16_t last_key_state[HT16K33_MATRIX_KEYPAD_MAX_COLS];
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	i2c2: i2c@18100400 {
++		compatible = "img,scb-i2c";
++		reg = <0x18100400 0x200>;
++		interrupts = <GIC_SHARED 4 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_periph PERIPH_CLK_I2C2>,
++			 <&cr_periph SYS_CLK_I2C2>;
++		clock-names = "scb", "sys";
++		assigned-clocks = <&clk_periph PERIPH_CLK_I2C2_PRE_DIV>,
++				  <&clk_periph PERIPH_CLK_I2C2_DIV>;
++		assigned-clock-rates = <100000000>, <33333334>;
++		status = "disabled";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c2_pins>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	i2c3: i2c@18100600 {
++		compatible = "img,scb-i2c";
++		reg = <0x18100600 0x200>;
++		interrupts = <GIC_SHARED 5 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_periph PERIPH_CLK_I2C3>,
++			 <&cr_periph SYS_CLK_I2C3>;
++		clock-names = "scb", "sys";
++		assigned-clocks = <&clk_periph PERIPH_CLK_I2C3_PRE_DIV>,
++				  <&clk_periph PERIPH_CLK_I2C3_DIV>;
++		assigned-clock-rates = <100000000>, <33333334>;
++		status = "disabled";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c3_pins>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	i2s_in: i2s-in@18100800 {
++		compatible = "img,i2s-in";
++		reg = <0x18100800 0x200>;
++		interrupts = <GIC_SHARED 7 IRQ_TYPE_LEVEL_HIGH>;
++		dmas = <&mdc 30 0xffffffff 0>;
++		dma-names = "rx";
++		clocks = <&cr_periph SYS_CLK_I2S_IN>;
++		clock-names = "sys";
++		img,i2s-channels = <6>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2s_in_pins>;
++		status = "disabled";
++
++		#sound-dai-cells = <0>;
++	};
++
++	i2s_out: i2s-out@18100a00 {
++		compatible = "img,i2s-out";
++		reg = <0x18100a00 0x200>;
++		interrupts = <GIC_SHARED 13 IRQ_TYPE_LEVEL_HIGH>;
++		dmas = <&mdc 23 0xffffffff 0>;
++		dma-names = "tx";
++		clocks = <&cr_periph SYS_CLK_I2S_OUT>,
++			 <&clk_core CLK_I2S>;
++		clock-names = "sys", "ref";
++		assigned-clocks = <&clk_core CLK_I2S_DIV>;
++		assigned-clock-rates = <12288000>;
++		img,i2s-channels = <6>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2s_out_pins>;
++		status = "disabled";
++		resets = <&pistachio_reset PISTACHIO_RESET_I2S_OUT>;
++		reset-names = "rst";
++		#sound-dai-cells = <0>;
++	};
++
++	parallel_out: parallel-audio-out@18100c00 {
++		compatible = "img,parallel-out";
++		reg = <0x18100c00 0x100>;
++		interrupts = <GIC_SHARED 19 IRQ_TYPE_LEVEL_HIGH>;
++		dmas = <&mdc 16 0xffffffff 0>;
++		dma-names = "tx";
++		clocks = <&cr_periph SYS_CLK_PAUD_OUT>,
++			 <&clk_core CLK_AUDIO_DAC>;
++		clock-names = "sys", "ref";
++		assigned-clocks = <&clk_core CLK_AUDIO_DAC_DIV>;
++		assigned-clock-rates = <12288000>;
++		status = "disabled";
++		resets = <&pistachio_reset PISTACHIO_RESET_PRL_OUT>;
++		reset-names = "rst";
++		#sound-dai-cells = <0>;
++	};
++
++	spdif_out: spdif-out@18100d00 {
++		compatible = "img,spdif-out";
++		reg = <0x18100d00 0x100>;
++		interrupts = <GIC_SHARED 21 IRQ_TYPE_LEVEL_HIGH>;
++		dmas = <&mdc 14 0xffffffff 0>;
++		dma-names = "tx";
++		clocks = <&cr_periph SYS_CLK_SPDIF_OUT>,
++			 <&clk_core CLK_SPDIF>;
++		clock-names = "sys", "ref";
++		assigned-clocks = <&clk_core CLK_SPDIF_DIV>;
++		assigned-clock-rates = <12288000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&spdif_out_pin>;
++		status = "disabled";
++		resets = <&pistachio_reset PISTACHIO_RESET_SPDIF_OUT>;
++		reset-names = "rst";
++		#sound-dai-cells = <0>;
++	};
++
++	spdif_in: spdif-in@18100e00 {
++		compatible = "img,spdif-in";
++		reg = <0x18100e00 0x100>;
++		interrupts = <GIC_SHARED 20 IRQ_TYPE_LEVEL_HIGH>;
++		dmas = <&mdc 15 0xffffffff 0>;
++		dma-names = "rx";
++		clocks = <&cr_periph SYS_CLK_SPDIF_IN>;
++		clock-names = "sys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&spdif_in_pin>;
++		status = "disabled";
++
++		#sound-dai-cells = <0>;
++	};
++
++	internal_dac: internal-dac {
++		compatible = "img,pistachio-internal-dac";
++		img,cr-top = <&cr_top>;
++		img,voltage-select = <1>;
++
++		#sound-dai-cells = <0>;
++	};
++
++	spfi0: spi@18100f00 {
++		compatible = "img,spfi";
++		reg = <0x18100f00 0x100>;
++		interrupts = <GIC_SHARED 22 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_core CLK_SPI0>, <&cr_periph SYS_CLK_SPI0_MASTER>;
++		clock-names = "sys", "spfi";
++		dmas = <&mdc 9 0xffffffff 0>, <&mdc 10 0xffffffff 0>;
++		dma-names = "rx", "tx";
++		spfi-max-frequency = <50000000>;
++		status = "disabled";
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	spfi1: spi@18101000 {
++		compatible = "img,spfi";
++		reg = <0x18101000 0x100>;
++		interrupts = <GIC_SHARED 26 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_core CLK_SPI1>, <&cr_periph SYS_CLK_SPI1>;
++		clock-names = "sys", "spfi";
++		dmas = <&mdc 1 0xffffffff 0>, <&mdc 2 0xffffffff 0>;
++		dma-names = "rx", "tx";
++		img,supports-quad-mode;
++		spfi-max-frequency = <50000000>;
++		status = "disabled";
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	pwm: pwm@18101300 {
++		compatible = "img,pistachio-pwm";
++		reg = <0x18101300 0x100>;
++		clocks = <&clk_periph PERIPH_CLK_PWM>,
++			 <&cr_periph SYS_CLK_PWM>;
++		clock-names = "pwm", "sys";
++		img,cr-periph = <&cr_periph>;
++		#pwm-cells = <2>;
++		status = "disabled";
++	};
++
++	uart0: uart@18101400 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x18101400 0x100>;
++		interrupts = <GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_core CLK_UART0>, <&cr_periph SYS_CLK_UART0>;
++		clock-names = "baudclk", "apb_pclk";
++		assigned-clocks = <&clk_core CLK_UART0_INTERNAL_DIV>,
++				  <&clk_core CLK_UART0_DIV>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		pinctrl-0 = <&uart0_pins>, <&uart0_rts_cts_pins>;
++		pinctrl-names = "default";
++		status = "disabled";
++	};
++
++	uart1: uart@18101500 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x18101500 0x100>;
++		interrupts = <GIC_SHARED 25 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_core CLK_UART1>, <&cr_periph SYS_CLK_UART1>;
++		clock-names = "baudclk", "apb_pclk";
++		assigned-clocks = <&clk_core CLK_UART1_INTERNAL_DIV>,
++				  <&clk_core CLK_UART1_DIV>;
++		assigned-clock-rates = <114278400>, <1843200>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		pinctrl-0 = <&uart1_pins>;
++		pinctrl-names = "default";
++		status = "disabled";
++	};
++
++	adc: adc@18101600 {
++		compatible = "cosmic,10001-adc";
++		reg = <0x18101600 0x24>;
++		adc-reserved-channels = <0x30>;
++		clocks = <&clk_core CLK_AUX_ADC>;
++		clock-names = "adc";
++		assigned-clocks = <&clk_core CLK_AUX_ADC_INTERNAL_DIV>,
++				  <&clk_core CLK_AUX_ADC_DIV>;
++		assigned-clock-rates = <100000000>, <1000000>;
++		status = "disabled";
++
++		#io-channel-cells = <1>;
++	};
++
++	pinctrl: pinctrl@18101c00 {
++		compatible = "img,pistachio-system-pinctrl";
++		reg = <0x18101c00 0x400>;
++
++		gpio0: gpio0 {
++			interrupts = <GIC_SHARED 71 IRQ_TYPE_LEVEL_HIGH>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl 0 0 16>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		gpio1: gpio1 {
++			interrupts = <GIC_SHARED 72 IRQ_TYPE_LEVEL_HIGH>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl 0 16 16>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		gpio2: gpio2 {
++			interrupts = <GIC_SHARED 73 IRQ_TYPE_LEVEL_HIGH>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl 0 32 16>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		gpio3: gpio3 {
++			interrupts = <GIC_SHARED 74 IRQ_TYPE_LEVEL_HIGH>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl 0 48 16>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		gpio4: gpio4 {
++			interrupts = <GIC_SHARED 75 IRQ_TYPE_LEVEL_HIGH>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl 0 64 16>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		gpio5: gpio5 {
++			interrupts = <GIC_SHARED 76 IRQ_TYPE_LEVEL_HIGH>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl 0 80 10>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		i2c0_pins: i2c0-pins {
++			pin_i2c0: i2c0 {
++				pins = "mfio28", "mfio29";
++				function = "i2c0";
++				drive-strength = <4>;
++			};
++		};
++
++		i2c1_pins: i2c1-pins {
++			pin_i2c1: i2c1 {
++				pins = "mfio30", "mfio31";
++				function = "i2c1";
++				drive-strength = <4>;
++			};
++		};
++
++		i2c2_pins: i2c2-pins {
++			pin_i2c2: i2c2 {
++				pins = "mfio32", "mfio33";
++				function = "i2c2";
++				drive-strength = <4>;
++			};
++		};
++
++		i2c3_pins: i2c3-pins {
++			pin_i2c3: i2c3 {
++				pins = "mfio34", "mfio35";
++				function = "i2c3";
++				drive-strength = <4>;
++			};
++		};
++
++		spim0_pins: spim0-pins {
++			pin_spim0: spim0 {
++				pins = "mfio9", "mfio10";
++				function = "spim0";
++				drive-strength = <4>;
++			};
++			spim0_clk: spim0-clk {
++				pins = "mfio8";
++				function = "spim0";
++				drive-strength = <4>;
++			};
++		};
++
++		spim0_cs0_alt_pin: spim0-cs0-alt-pin {
++			spim0-cs0 {
++				pins = "mfio2";
++				drive-strength = <2>;
++			};
++		};
++
++		spim0_cs1_pin: spim0-cs1-pin {
++			spim0-cs1 {
++				pins = "mfio1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim0_cs2_pin: spim0-cs2-pin {
++			spim0-cs2 {
++				pins = "mfio55";
++				drive-strength = <2>;
++			};
++		};
++
++		spim0_cs2_alt_pin: spim0-cs2-alt-pin {
++			spim0-cs2 {
++				pins = "mfio28";
++				drive-strength = <2>;
++			};
++		};
++
++		spim0_cs3_pin: spim0-cs3-pin {
++			spim0-cs3 {
++				pins = "mfio56";
++				drive-strength = <2>;
++			};
++		};
++
++		spim0_cs3_alt_pin: spim0-cs3-alt-pin {
++			spim0-cs3 {
++				pins = "mfio29";
++				drive-strength = <2>;
++			};
++		};
++
++		spim0_cs4_pin: spim0-cs4-pin {
++			spim0-cs4 {
++				pins = "mfio57";
++				drive-strength = <2>;
++			};
++		};
++
++		spim0_cs4_alt_pin: spim0-cs4-alt-pin {
++			spim0-cs4 {
++				pins = "mfio30";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_pins: spim1-pins {
++			spim1 {
++				pins = "mfio3", "mfio4", "mfio5";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_quad_pins: spim1-quad-pins {
++			spim1-quad {
++				pins = "mfio6", "mfio7";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs0_pin: spim1-cs0-pins {
++			spim1-cs0 {
++				pins = "mfio0";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs1_pin: spim1-cs1-pin {
++			spim1-cs1 {
++				pins = "mfio1";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs1_alt_pin: spim1-cs1-alt-pin {
++			spim1-cs1 {
++				pins = "mfio58";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs2_pin: spim1-cs2-pin {
++			spim1-cs2 {
++				pins = "mfio2";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs2_alt0_pin: spim1-cs2-alt0-pin {
++			spim1-cs2 {
++				pins = "mfio31";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs2_alt1_pin: spim1-cs2-alt1-pin {
++			spim1-cs2 {
++				pins = "mfio55";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs3_pin: spim1-cs3-pin {
++			spim1-cs3 {
++				pins = "mfio56";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs4_pin: spim1-cs4-pin {
++			spim1-cs4 {
++				pins = "mfio57";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		uart0_pins: uart0-pins {
++			uart0 {
++				pins = "mfio55", "mfio56";
++				function = "uart0";
++				drive-strength = <2>;
++			};
++		};
++
++		uart0_rts_cts_pins: uart0-rts-cts-pins {
++			uart0-rts-cts {
++				pins = "mfio57", "mfio58";
++				function = "uart0";
++				drive-strength = <2>;
++			};
++		};
++
++		uart1_pins: uart1-pins {
++			uart1 {
++				pins = "mfio59", "mfio60";
++				function = "uart1";
++				drive-strength = <2>;
++			};
++		};
++
++		uart1_rts_cts_pins: uart1-rts-cts-pins {
++			uart1-rts-cts {
++				  pins = "mfio1", "mfio2";
++				  function = "uart1";
++				  drive-strength = <2>;
++			};
++		};
++
++		enet_pins: enet-pins {
++			pin_enet: enet {
++				pins = "mfio63", "mfio64", "mfio65", "mfio66",
++				       "mfio67", "mfio68", "mfio69", "mfio70";
++				function = "eth";
++				slew-rate = <1>;
++				drive-strength = <4>;
++			};
++			pin_enet_phy_clk: enet-phy-clk {
++				pins = "mfio71";
++				function = "eth";
++				slew-rate = <1>;
++				drive-strength = <8>;
++			};
++		};
++
++		sdhost_pins: sdhost-pins {
++			pin_sdhost_clk: sdhost-clk {
++				pins = "mfio15";
++				function = "sdhost";
++				slew-rate = <1>;
++				drive-strength = <4>;
++			};
++			pin_sdhost_cmd: sdhost-cmd {
++				pins = "mfio16";
++				function = "sdhost";
++				slew-rate = <1>;
++				drive-strength = <4>;
++			};
++			pin_sdhost_data: sdhost-data {
++				pins = "mfio17", "mfio18", "mfio19", "mfio20",
++				       "mfio21", "mfio22", "mfio23", "mfio24";
++				function = "sdhost";
++				slew-rate = <1>;
++				drive-strength = <4>;
++			};
++			pin_sdhost_power_select: sdhost-power-select {
++				pins = "mfio25";
++				function = "sdhost";
++				slew-rate = <1>;
++				drive-strength = <2>;
++			};
++			pin_sdhost_card_detect: sdhost-card-detect {
++				pins = "mfio26";
++				function = "sdhost";
++				drive-strength = <2>;
++			};
++			pin_sdhost_write_protect: sdhost-write-protect {
++				pins = "mfio27";
++				function = "sdhost";
++				drive-strength = <2>;
++			};
++		};
++
++		ir_pin: ir-pin {
++			ir-data {
++				pins = "mfio72";
++				function = "ir";
++				drive-strength = <2>;
++			};
++		};
++
++		pwmpdm0_pin: pwmpdm0-pin {
++			pwmpdm0 {
++				pins = "mfio73";
++				function = "pwmpdm";
++				drive-strength = <2>;
++			};
++		};
++
++		pwmpdm1_pin: pwmpdm1-pin {
++			pwmpdm1 {
++				pins = "mfio74";
++				function = "pwmpdm";
++				drive-strength = <2>;
++			};
++		};
++
++		pwmpdm2_pin: pwmpdm2-pin {
++			pwmpdm2 {
++				pins = "mfio75";
++				function = "pwmpdm";
++				drive-strength = <2>;
++			};
++		};
++
++		pwmpdm3_pin: pwmpdm3-pin {
++			pwmpdm3 {
++				pins = "mfio76";
++				function = "pwmpdm";
++				drive-strength = <2>;
++			};
++		};
++
++		dac_clk_pin: dac-clk-pin {
++			pin_dac_clk: dac-clk {
++				pins = "mfio45";
++				function = "i2s_dac_clk";
++				drive-strength = <4>;
++			};
++		};
++
++		i2s_mclk_pin: i2s-mclk-pin {
++			pin_i2s_mclk: i2s-mclk {
++				pins = "mfio36";
++				function = "i2s_out";
++				drive-strength = <4>;
++			};
++		};
++
++		spdif_out_pin: spdif-out-pin {
++			spdif-out {
++				pins = "mfio61";
++				function = "spdif_out";
++				slew-rate = <1>;
++				drive-strength = <2>;
++			};
++		};
++
++		spdif_in_pin: spdif-in-pin {
++			spdif-in {
++				pins = "mfio62";
++				function = "spdif_in";
++				drive-strength = <2>;
++			};
++		};
++
++		i2s_out_pins: i2s-out-pins {
++			pins_i2s_out_clk: i2s-out-clk {
++				pins = "mfio37", "mfio38";
++				function = "i2s_out";
++				drive-strength = <4>;
++			};
++			pins_i2s_out: i2s-out {
++				pins = "mfio39", "mfio40",
++				       "mfio41", "mfio42",
++				       "mfio43", "mfio44";
++				function = "i2s_out";
++				drive-strength = <2>;
++			};
++		};
++
++		i2s_in_pins: i2s-in-pins {
++			i2s-in {
++				pins = "mfio47", "mfio48", "mfio49",
++				       "mfio50", "mfio51", "mfio52",
++				       "mfio53", "mfio54";
++				function = "i2s_in";
++				drive-strength = <2>;
++			};
++		};
++	};
++
++	timer: timer@18102000 {
++		compatible = "img,pistachio-gptimer";
++		reg = <0x18102000 0x100>;
++		interrupts = <GIC_SHARED 60 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_periph PERIPH_CLK_COUNTER_FAST>,
++			 <&cr_periph SYS_CLK_TIMER>;
++		clock-names = "fast", "sys";
++		img,cr-periph = <&cr_periph>;
++	};
++
++	wdt: watchdog@18102100 {
++		compatible = "img,pdc-wdt";
++		reg = <0x18102100 0x100>;
++		interrupts = <GIC_SHARED 52 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_periph PERIPH_CLK_WD>, <&cr_periph SYS_CLK_WD>;
++		clock-names = "wdt", "sys";
++		assigned-clocks = <&clk_periph PERIPH_CLK_WD_PRE_DIV>,
++				  <&clk_periph PERIPH_CLK_WD_DIV>;
++		assigned-clock-rates = <4000000>, <32768>;
++	};
++
++	ir: ir@18102200 {
++		compatible = "img,ir-rev1";
++		reg = <0x18102200 0x100>;
++		interrupts = <GIC_SHARED 51 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_periph PERIPH_CLK_IR>, <&cr_periph SYS_CLK_IR>;
++		clock-names = "core", "sys";
++		assigned-clocks = <&clk_periph PERIPH_CLK_IR_PRE_DIV>,
++				  <&clk_periph PERIPH_CLK_IR_DIV>;
++		assigned-clock-rates = <4000000>, <32768>;
++		pinctrl-0 = <&ir_pin>;
++		pinctrl-names = "default";
++		status = "disabled";
++	};
++
++	usb: usb@18120000 {
++		compatible = "snps,dwc2";
++		reg = <0x18120000 0x1c000>;
++		interrupts = <GIC_SHARED 49 IRQ_TYPE_LEVEL_HIGH>;
++		phys = <&usb_phy>;
++		phy-names = "usb2-phy";
++		g-tx-fifo-size = <256 256 256 256>;
++		status = "disabled";
++	};
++
++	enet: ethernet@18140000 {
++		compatible = "snps,dwmac";
++		reg = <0x18140000 0x2000>;
++		interrupts = <GIC_SHARED 50 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "macirq";
++		clocks = <&clk_core CLK_ENET>, <&cr_periph SYS_CLK_ENET>;
++		clock-names = "stmmaceth", "pclk";
++		assigned-clocks = <&clk_core CLK_ENET_MUX>,
++				  <&clk_core CLK_ENET_DIV>;
++		assigned-clock-parents = <&clk_core CLK_SYS_INTERNAL_DIV>;
++		assigned-clock-rates = <0>, <50000000>;
++		pinctrl-0 = <&enet_pins>;
++		pinctrl-names = "default";
++		phy-mode = "rmii";
++		status = "disabled";
++	};
++
++	sdhost: mmc@18142000 {
++		compatible = "img,pistachio-dw-mshc";
++		reg = <0x18142000 0x400>;
++		interrupts = <GIC_SHARED 39 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_core CLK_SD_HOST>, <&cr_periph SYS_CLK_SD_HOST>;
++		clock-names = "ciu", "biu";
++		pinctrl-0 = <&sdhost_pins>;
++		pinctrl-names = "default";
++		fifo-depth = <0x20>;
++		num-slots = <1>;
++		clock-frequency = <50000000>;
++		bus-width = <8>;
++		cap-mmc-highspeed;
++		cap-sd-highspeed;
++		status = "disabled";
++	};
++
++	sram: sram@1b000000 {
++		compatible = "mmio-sram";
++		reg = <0x1b000000 0x10000>;
++	};
++
++	mdc: dma-controller@18143000 {
++		compatible = "img,pistachio-mdc-dma";
++		reg = <0x18143000 0x1000>;
++		interrupts = <GIC_SHARED 27 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 28 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 29 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 30 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 31 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 32 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 33 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 34 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 35 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 36 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 37 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 38 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cr_periph SYS_CLK_MDC>;
++		clock-names = "sys";
++
++		img,max-burst-multiplier = <16>;
++		img,cr-periph = <&cr_periph>;
++
++		#dma-cells = <3>;
++	};
++
++	clk_core: clk@18144000 {
++		compatible = "img,pistachio-clk", "syscon";
++		clocks = <&xtal>, <&cr_top EXT_CLK_AUDIO_IN>,
++			 <&cr_top EXT_CLK_ENET_IN>;
++		clock-names = "xtal", "audio_refclk_ext_gate",
++			      "ext_enet_in_gate";
++		reg = <0x18144000 0x800>;
++		#clock-cells = <1>;
++	};
++
++	clk_periph: clk@18144800 {
++		compatible = "img,pistachio-clk-periph";
++		reg = <0x18144800 0x1000>;
++		clocks = <&clk_core CLK_PERIPH_SYS>;
++		clock-names = "periph_sys_core";
++		#clock-cells = <1>;
++	};
++
++	cr_periph: clk@18148000 {
++		compatible = "img,pistachio-cr-periph", "syscon", "simple-bus";
++		reg = <0x18148000 0x1000>;
++		clocks = <&clk_periph PERIPH_CLK_SYS>;
++		clock-names = "sys";
++		#clock-cells = <1>;
++
++		pistachio_reset: reset-controller {
++			compatible = "img,pistachio-reset";
++			#reset-cells = <1>;
++		};
++	};
++
++	cr_top: clk@18149000 {
++		compatible = "img,pistachio-cr-top", "syscon";
++		reg = <0x18149000 0x200>;
++		#clock-cells = <1>;
++	};
++
++	hash: hash@18149600 {
++		compatible = "img,hash-accelerator";
++		reg = <0x18149600 0x100>, <0x18101100 0x4>;
++		interrupts = <GIC_SHARED 59 IRQ_TYPE_LEVEL_HIGH>;
++		dmas = <&mdc 8 0xffffffff 0>;
++		dma-names = "tx";
++		clocks = <&cr_periph SYS_CLK_HASH>,
++			 <&clk_periph PERIPH_CLK_ROM>;
++		clock-names = "sys", "hash";
++	};
++
++	gic: interrupt-controller@1bdc0000 {
++		compatible = "mti,gic";
++		reg = <0x1bdc0000 0x20000>;
++
++		interrupt-controller;
++		#interrupt-cells = <3>;
++
++		timer {
++			compatible = "mti,gic-timer";
++			interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
++			clocks = <&clk_core CLK_MIPS>;
++		};
++	};
++
++	usb_phy: usb-phy {
++		compatible = "img,pistachio-usb-phy";
++		clocks = <&clk_core CLK_USB_PHY>;
++		clock-names = "usb_phy";
++		assigned-clocks = <&clk_core CLK_USB_PHY_DIV>;
++		assigned-clock-rates = <50000000>;
++		img,refclk = <0x2>;
++		img,cr-top = <&cr_top>;
++		#phy-cells = <0>;
++	};
++
++	xtal: xtal {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <52000000>;
++		clock-output-names = "xtal";
++	};
 +};
-+
-+struct ht16k33_fbdev {
-+	struct fb_info *info;
-+	uint32_t refresh_rate;
-+	uint8_t *buffer;
-+	uint8_t *cache;
-+	struct delayed_work work;
-+};
-+
-+struct ht16k33_priv {
-+	struct i2c_client *client;
-+	struct ht16k33_keypad keypad;
-+	struct ht16k33_fbdev fbdev;
-+	struct workqueue_struct *workqueue;
-+};
-+
-+static struct fb_fix_screeninfo ht16k33_fb_fix = {
-+	.id		= DRIVER_NAME,
-+	.type		= FB_TYPE_PACKED_PIXELS,
-+	.visual		= FB_VISUAL_MONO10,
-+	.xpanstep	= 0,
-+	.ypanstep	= 0,
-+	.ywrapstep	= 0,
-+	.line_length	= HT16K33_MATRIX_LED_MAX_ROWS,
-+	.accel		= FB_ACCEL_NONE,
-+};
-+
-+static struct fb_var_screeninfo ht16k33_fb_var = {
-+	.xres = HT16K33_MATRIX_LED_MAX_ROWS,
-+	.yres = HT16K33_MATRIX_LED_MAX_COLS,
-+	.xres_virtual = HT16K33_MATRIX_LED_MAX_ROWS,
-+	.yres_virtual = HT16K33_MATRIX_LED_MAX_COLS,
-+	.bits_per_pixel = 1,
-+	.red = { 0, 1, 0 },
-+	.green = { 0, 1, 0 },
-+	.blue = { 0, 1, 0 },
-+	.left_margin = 0,
-+	.right_margin = 0,
-+	.upper_margin = 0,
-+	.lower_margin = 0,
-+	.vmode = FB_VMODE_NONINTERLACED,
-+};
-+
-+static int ht16k33_display_on(struct ht16k33_priv *priv)
-+{
-+	uint8_t data = REG_DISPLAY_SETUP | REG_DISPLAY_SETUP_ON;
-+
-+	return i2c_smbus_write_byte(priv->client, data);
-+}
-+
-+static int ht16k33_display_off(struct ht16k33_priv *priv)
-+{
-+	return i2c_smbus_write_byte(priv->client, REG_DISPLAY_SETUP);
-+}
-+
-+static void ht16k33_fb_queue(struct ht16k33_priv *priv)
-+{
-+	struct ht16k33_fbdev *fbdev = &priv->fbdev;
-+
-+	queue_delayed_work(priv->workqueue, &fbdev->work,
-+		msecs_to_jiffies(HZ / fbdev->refresh_rate));
-+}
-+
-+static void ht16k33_keypad_queue(struct ht16k33_priv *priv)
-+{
-+	struct ht16k33_keypad *keypad = &priv->keypad;
-+
-+	queue_delayed_work(priv->workqueue, &keypad->work,
-+		msecs_to_jiffies(keypad->debounce_ms));
-+}
-+
-+/*
-+ * This gets the fb data from cache and copies it to ht16k33 display RAM
-+ */
-+static void ht16k33_fb_update(struct work_struct *work)
-+{
-+	struct ht16k33_fbdev *fbdev =
-+		container_of(work, struct ht16k33_fbdev, work.work);
-+	struct ht16k33_priv *priv =
-+		container_of(fbdev, struct ht16k33_priv, fbdev);
-+
-+	uint8_t *p1, *p2;
-+	int len, pos = 0, first = -1;
-+
-+	p1 = fbdev->cache;
-+	p2 = fbdev->buffer;
-+
-+	/* Search for the first byte with changes */
-+	while (pos < HT16K33_FB_SIZE && first < 0) {
-+		if (*(p1++) - *(p2++))
-+			first = pos;
-+		pos++;
-+	}
-+
-+	/* No changes found */
-+	if (first < 0)
-+		goto requeue;
-+
-+	len = HT16K33_FB_SIZE - first;
-+	p1 = fbdev->cache + HT16K33_FB_SIZE - 1;
-+	p2 = fbdev->buffer + HT16K33_FB_SIZE - 1;
-+
-+	/* Determine i2c transfer length */
-+	while (len > 1) {
-+		if (*(p1--) - *(p2--))
-+			break;
-+		len--;
-+	}
-+
-+	p1 = fbdev->cache + first;
-+	p2 = fbdev->buffer + first;
-+	if (!i2c_smbus_write_i2c_block_data(priv->client, first, len, p2))
-+		memcpy(p1, p2, len);
-+requeue:
-+	ht16k33_fb_queue(priv);
-+}
-+
-+static int ht16k33_keypad_start(struct input_dev *dev)
-+{
-+	struct ht16k33_priv *priv = input_get_drvdata(dev);
-+	struct ht16k33_keypad *keypad = &priv->keypad;
-+
-+	/*
-+	 * Schedule an immediate key scan to capture current key state;
-+	 * columns will be activated and IRQs be enabled after the scan.
-+	 */
-+	queue_delayed_work(priv->workqueue, &keypad->work, 0);
-+	return 0;
-+}
-+
-+static void ht16k33_keypad_stop(struct input_dev *dev)
-+{
-+	struct ht16k33_priv *priv = input_get_drvdata(dev);
-+	struct ht16k33_keypad *keypad = &priv->keypad;
-+
-+	cancel_delayed_work(&keypad->work);
-+	/*
-+	 * ht16k33_keypad_scan() will leave IRQs enabled;
-+	 * we should disable them now.
-+	 */
-+	disable_irq_nosync(priv->client->irq);
-+}
-+
-+static int ht16k33_initialize(struct ht16k33_priv *priv)
-+{
-+	uint8_t byte;
-+	int err;
-+	uint8_t data[HT16K33_MATRIX_LED_MAX_COLS * 2];
-+
-+	/* Clear RAM (8 * 16 bits) */
-+	memset(data, 0, sizeof(data));
-+	err = i2c_smbus_write_block_data(priv->client, 0, sizeof(data), data);
-+	if (err)
-+		return err;
-+
-+	/* Turn on internal oscillator */
-+	byte = REG_SYSTEM_SETUP_OSC_ON | REG_SYSTEM_SETUP;
-+	err = i2c_smbus_write_byte(priv->client, byte);
-+	if (err)
-+		return err;
-+
-+	/* Configure INT pin */
-+	byte = REG_ROWINT_SET | REG_ROWINT_SET_INT_ACT_HIGH;
-+	if (priv->client->irq > 0)
-+		byte |= REG_ROWINT_SET_INT_EN;
-+	return i2c_smbus_write_byte(priv->client, byte);
-+}
-+
-+/*
-+ * This gets the keys from keypad and reports it to input subsystem
-+ */
-+static void ht16k33_keypad_scan(struct work_struct *work)
-+{
-+	struct ht16k33_keypad *keypad =
-+		container_of(work, struct ht16k33_keypad, work.work);
-+	struct ht16k33_priv *priv =
-+		container_of(keypad, struct ht16k33_priv, keypad);
-+	const unsigned short *keycodes = keypad->dev->keycode;
-+	uint16_t bits_changed, new_state[HT16K33_MATRIX_KEYPAD_MAX_COLS];
-+	uint8_t data[HT16K33_MATRIX_KEYPAD_MAX_COLS * 2];
-+	int row, col, code;
-+	bool reschedule = false;
-+
-+	if (i2c_smbus_read_i2c_block_data(priv->client, 0x40, 6, data) != 6) {
-+		dev_err(&priv->client->dev, "Failed to read key data\n");
-+		goto end;
-+	}
-+
-+	for (col = 0; col < keypad->cols; col++) {
-+		new_state[col] = (data[col * 2 + 1] << 8) | data[col * 2];
-+		if (new_state[col])
-+			reschedule = true;
-+		bits_changed = keypad->last_key_state[col] ^ new_state[col];
-+
-+		while (bits_changed) {
-+			row = ffs(bits_changed) - 1;
-+			code = MATRIX_SCAN_CODE(row, col, keypad->row_shift);
-+			input_event(keypad->dev, EV_MSC, MSC_SCAN, code);
-+			input_report_key(keypad->dev, keycodes[code],
-+					 new_state[col] & BIT(row));
-+			bits_changed &= ~BIT(row);
-+		}
-+	}
-+	input_sync(keypad->dev);
-+	memcpy(keypad->last_key_state, new_state, sizeof(new_state));
-+
-+end:
-+	if (reschedule)
-+		ht16k33_keypad_queue(priv);
-+	else
-+		enable_irq(priv->client->irq);
-+}
-+
-+static irqreturn_t ht16k33_irq_thread(int irq, void *dev)
-+{
-+	struct ht16k33_priv *priv = dev;
-+
-+	disable_irq_nosync(priv->client->irq);
-+	ht16k33_keypad_queue(priv);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int ht16k33_bl_update_status(struct backlight_device *bl)
-+{
-+	int brightness = bl->props.brightness;
-+	struct ht16k33_priv *priv = bl_get_data(bl);
-+
-+	if (bl->props.power != FB_BLANK_UNBLANK ||
-+	    bl->props.fb_blank != FB_BLANK_UNBLANK ||
-+	    bl->props.state & BL_CORE_FBBLANK || brightness == 0) {
-+		return ht16k33_display_off(priv);
-+	}
-+
-+	ht16k33_display_on(priv);
-+	return i2c_smbus_write_byte(priv->client,
-+				    REG_BRIGHTNESS | (brightness - 1));
-+}
-+
-+static int ht16k33_bl_check_fb(struct backlight_device *bl, struct fb_info *fi)
-+{
-+	struct ht16k33_priv *priv = bl_get_data(bl);
-+
-+	return (fi == NULL) || (fi->par == priv);
-+}
-+
-+static const struct backlight_ops ht16k33_bl_ops = {
-+	.update_status	= ht16k33_bl_update_status,
-+	.check_fb	= ht16k33_bl_check_fb,
-+};
-+
-+static int ht16k33_mmap(struct fb_info *info, struct vm_area_struct *vma)
-+{
-+	struct ht16k33_priv *priv = info->par;
-+
-+	return vm_insert_page(vma, vma->vm_start,
-+			      virt_to_page(priv->fbdev.buffer));
-+}
-+
-+static struct fb_ops ht16k33_fb_ops = {
-+	.owner = THIS_MODULE,
-+	.fb_read = fb_sys_read,
-+	.fb_write = fb_sys_write,
-+	.fb_fillrect = sys_fillrect,
-+	.fb_copyarea = sys_copyarea,
-+	.fb_imageblit = sys_imageblit,
-+	.fb_mmap = ht16k33_mmap,
-+};
-+
-+static int ht16k33_probe(struct i2c_client *client,
-+				  const struct i2c_device_id *id)
-+{
-+	int err;
-+	uint32_t rows, cols, dft_brightness;
-+	struct backlight_device *bl;
-+	struct backlight_properties bl_props;
-+	struct ht16k33_priv *priv;
-+	struct ht16k33_keypad *keypad;
-+	struct ht16k33_fbdev *fbdev;
-+	struct device_node *node = client->dev.of_node;
-+
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
-+		dev_err(&client->dev, "i2c_check_functionality error\n");
-+		return -EIO;
-+	}
-+
-+	if (client->irq <= 0) {
-+		dev_err(&client->dev, "No IRQ specified\n");
-+		return -EINVAL;
-+	}
-+
-+	priv = devm_kzalloc(&client->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->client = client;
-+	i2c_set_clientdata(client, priv);
-+	fbdev = &priv->fbdev;
-+	keypad = &priv->keypad;
-+
-+	priv->workqueue = create_singlethread_workqueue(DRIVER_NAME "-wq");
-+	if (priv->workqueue == NULL)
-+		return -ENOMEM;
-+
-+	err = ht16k33_initialize(priv);
-+	if (err)
-+		goto err_destroy_wq;
-+
-+	/* Framebuffer (2 bytes per column) */
-+	BUILD_BUG_ON(PAGE_SIZE < HT16K33_FB_SIZE);
-+	fbdev->buffer = (unsigned char *) get_zeroed_page(GFP_KERNEL);
-+	if (!fbdev->buffer) {
-+		err = -ENOMEM;
-+		goto err_free_fbdev;
-+	}
-+
-+	fbdev->cache = devm_kmalloc(&client->dev, HT16K33_FB_SIZE, GFP_KERNEL);
-+	if (!fbdev->cache) {
-+		err = -ENOMEM;
-+		goto err_fbdev_buffer;
-+	}
-+
-+	fbdev->info = framebuffer_alloc(0, &client->dev);
-+	if (!fbdev->info) {
-+		err = -ENOMEM;
-+		goto err_fbdev_buffer;
-+	}
-+
-+	err = of_property_read_u32(node, "refresh-rate-hz",
-+		&fbdev->refresh_rate);
-+	if (err) {
-+		dev_err(&client->dev, "refresh rate not specified\n");
-+		goto err_fbdev_info;
-+	}
-+	fb_bl_default_curve(fbdev->info, 0, MIN_BRIGHTNESS, MAX_BRIGHTNESS);
-+
-+	INIT_DELAYED_WORK(&fbdev->work, ht16k33_fb_update);
-+	fbdev->info->fbops = &ht16k33_fb_ops;
-+	fbdev->info->screen_base = (char __iomem *) fbdev->buffer;
-+	fbdev->info->screen_size = HT16K33_FB_SIZE;
-+	fbdev->info->fix = ht16k33_fb_fix;
-+	fbdev->info->var = ht16k33_fb_var;
-+	fbdev->info->pseudo_palette = NULL;
-+	fbdev->info->flags = FBINFO_FLAG_DEFAULT;
-+	fbdev->info->par = priv;
-+
-+	err = register_framebuffer(fbdev->info);
-+	if (err)
-+		goto err_fbdev_info;
-+
-+	/* Keypad */
-+	keypad->dev = devm_input_allocate_device(&client->dev);
-+	if (!keypad->dev) {
-+		err = -ENOMEM;
-+		goto err_fbdev_unregister;
-+	}
-+
-+	keypad->dev->name = DRIVER_NAME"-keypad";
-+	keypad->dev->id.bustype = BUS_I2C;
-+	keypad->dev->open = ht16k33_keypad_start;
-+	keypad->dev->close = ht16k33_keypad_stop;
-+
-+	if (!of_get_property(node, "linux,no-autorepeat", NULL))
-+		__set_bit(EV_REP, keypad->dev->evbit);
-+
-+	err = of_property_read_u32(node, "debounce-delay-ms",
-+				   &keypad->debounce_ms);
-+	if (err) {
-+		dev_err(&client->dev, "key debounce delay not specified\n");
-+		goto err_fbdev_unregister;
-+	}
-+
-+	err = devm_request_threaded_irq(&client->dev, client->irq, NULL,
-+					ht16k33_irq_thread,
-+					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-+					DRIVER_NAME, priv);
-+	if (err) {
-+		dev_err(&client->dev, "irq request failed %d, error %d\n",
-+			client->irq, err);
-+		goto err_fbdev_unregister;
-+	}
-+
-+	disable_irq_nosync(client->irq);
-+	rows = HT16K33_MATRIX_KEYPAD_MAX_ROWS;
-+	cols = HT16K33_MATRIX_KEYPAD_MAX_COLS;
-+	err = matrix_keypad_parse_of_params(&client->dev, &rows, &cols);
-+	if (err)
-+		goto err_fbdev_unregister;
-+
-+	err = matrix_keypad_build_keymap(NULL, NULL, rows, cols, NULL,
-+					 keypad->dev);
-+	if (err) {
-+		dev_err(&client->dev, "failed to build keymap\n");
-+		goto err_fbdev_unregister;
-+	}
-+
-+	input_set_drvdata(keypad->dev, priv);
-+	keypad->rows = rows;
-+	keypad->cols = cols;
-+	keypad->row_shift = get_count_order(cols);
-+	INIT_DELAYED_WORK(&keypad->work, ht16k33_keypad_scan);
-+
-+	err = input_register_device(keypad->dev);
-+	if (err)
-+		goto err_fbdev_unregister;
-+
-+	/* Backlight */
-+	memset(&bl_props, 0, sizeof(struct backlight_properties));
-+	bl_props.type = BACKLIGHT_RAW;
-+	bl_props.max_brightness = MAX_BRIGHTNESS;
-+
-+	bl = devm_backlight_device_register(&client->dev, DRIVER_NAME"-bl",
-+					    &client->dev, priv,
-+					    &ht16k33_bl_ops, &bl_props);
-+	if (IS_ERR(bl)) {
-+		dev_err(&client->dev, "failed to register backlight\n");
-+		err = PTR_ERR(bl);
-+		goto err_keypad_unregister;
-+	}
-+
-+	err = of_property_read_u32(node, "default-brightness-level",
-+				   &dft_brightness);
-+	if (err) {
-+		dft_brightness = MAX_BRIGHTNESS;
-+	} else if (dft_brightness > MAX_BRIGHTNESS) {
-+		dev_warn(&client->dev,
-+			 "invalid default brightness level: %u, using %u\n",
-+			 dft_brightness, MAX_BRIGHTNESS);
-+		dft_brightness = MAX_BRIGHTNESS;
-+	}
-+
-+	bl->props.brightness = dft_brightness;
-+	ht16k33_bl_update_status(bl);
-+
-+	ht16k33_fb_queue(priv);
-+	return 0;
-+
-+err_keypad_unregister:
-+	input_unregister_device(keypad->dev);
-+err_fbdev_unregister:
-+	unregister_framebuffer(fbdev->info);
-+err_fbdev_info:
-+	framebuffer_release(fbdev->info);
-+err_fbdev_buffer:
-+	free_page((unsigned long) fbdev->buffer);
-+err_free_fbdev:
-+	kfree(fbdev);
-+err_destroy_wq:
-+	destroy_workqueue(priv->workqueue);
-+
-+	return err;
-+}
-+
-+static int ht16k33_remove(struct i2c_client *client)
-+{
-+	struct ht16k33_priv *priv = i2c_get_clientdata(client);
-+	struct ht16k33_keypad *keypad = &priv->keypad;
-+	struct ht16k33_fbdev *fbdev = &priv->fbdev;
-+
-+	ht16k33_keypad_stop(keypad->dev);
-+
-+	cancel_delayed_work(&fbdev->work);
-+	unregister_framebuffer(fbdev->info);
-+	framebuffer_release(fbdev->info);
-+	free_page((unsigned long) fbdev->buffer);
-+
-+	destroy_workqueue(priv->workqueue);
-+	return 0;
-+}
-+
-+static const struct i2c_device_id ht16k33_i2c_match[] = {
-+	{ "ht16k33", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, ht16k33_i2c_match);
-+
-+static const struct of_device_id ht16k33_of_match[] = {
-+	{ .compatible = "holtek,ht16k33", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ht16k33_of_match);
-+
-+static struct i2c_driver ht16k33_driver = {
-+	.probe		= ht16k33_probe,
-+	.remove		= ht16k33_remove,
-+	.driver		= {
-+		.name		= DRIVER_NAME,
-+		.of_match_table	= of_match_ptr(ht16k33_of_match),
-+	},
-+	.id_table = ht16k33_i2c_match,
-+};
-+module_i2c_driver(ht16k33_driver);
-+
-+MODULE_DESCRIPTION("Holtek HT16K33 driver");
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Robin van der Gracht <robin@protonic.nl>");
 -- 
-2.7.4
+2.6.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
