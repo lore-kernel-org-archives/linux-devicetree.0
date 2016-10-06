@@ -1,98 +1,158 @@
-From: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/8] dt/bindings: Update binding for PM domain idle states
-Date: Thu, 6 Oct 2016 09:56:25 -0600
-Message-ID: <20161006155625.GG28930@linaro.org>
-References: <1475699519-109623-1-git-send-email-lina.iyer@linaro.org>
- <1475699519-109623-6-git-send-email-lina.iyer@linaro.org>
- <CAMuHMdWxft8o493XN2zg1wj2By7P+qBkrvyQOt7WdBnhPAvSXQ@mail.gmail.com>
- <CAMuHMdUKbJ1Mt3viEkbCDmZGHQjGi_E=bxEBSHOB1MMY+qfSYQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 2/9] drm/sun4i: tcon: Move SoC specific quirks to a DT matched data structure
+Date: Fri,  7 Oct 2016 00:06:22 +0800
+Message-ID: <20161006160629.11198-3-wens@csie.org>
+References: <20161006160629.11198-1-wens@csie.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUKbJ1Mt3viEkbCDmZGHQjGi_E=bxEBSHOB1MMY+qfSYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20161006160629.11198-1-wens-jdAy2FN1RRM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Juri.Lelli-5wv7dgnIgG8@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 06 2016 at 02:09 -0600, Geert Uytterhoeven wrote:
->On Thu, Oct 6, 2016 at 10:06 AM, Geert Uytterhoeven
-><geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->> On Wed, Oct 5, 2016 at 10:31 PM, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> Update DT bindings to describe idle states of PM domains.
->>>
->>> This patch is based on the original patch by Marc Titinger.
->>>
->>> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
->>> Signed-off-by: Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Signed-off-by: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/power/power_domain.txt     | 36 ++++++++++++++++++++++
->>>  1 file changed, 36 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
->>> index 025b5e7..a043315 100644
->>> --- a/Documentation/devicetree/bindings/power/power_domain.txt
->>> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
->>> @@ -29,6 +29,10 @@ Optional properties:
->>>     specified by this binding. More details about power domain specifier are
->>>     available in the next section.
->>>
->>> +- domain-idle-states : A phandle of an idle-state that shall be soaked into a
->>> +                generic domain power state. The idle state definitions are
->>> +                compatible with arm,idle-state specified in [1].
->>> +
->>>  Example:
->>>
->>>         power: power-controller@12340000 {
->>> @@ -59,6 +63,36 @@ The nodes above define two power controllers: 'parent' and 'child'.
->>>  Domains created by the 'child' power controller are subdomains of '0' power
->>>  domain provided by the 'parent' power controller.
->>>
->>> +Example 3:
->>> +       parent: power-controller@12340000 {
->>
->> With W=1, this is gonna trigger:
->>
->>     Warning (unit_address_vs_reg): Node foo has a unit name, but no reg property
->>
->> Yes, there are pre-existing users in this file.
->
->Scrap this... switching desktops causes loss of position...
->
->>> +               compatible = "foo,power-controller";
->>> +               reg = <0x12340000 0x1000>;
->>> +               #power-domain-cells = <1>;
->>> +               domain-idle-states = <&DOMAIN_RET, &DOMAIN_PWR_DN>;
->>> +       };
->
->+       DOMAIN_RET: state@0 {
->+               compatible = "arm,idle-state";
->+               entry-latency-us = <1000>;
->+               exit-latency-us = <2000>;
->+               min-residency-us = <10000>;
->
->This one is gonna trigger
->
->Warning (unit_address_vs_reg): Node foo has a unit name, but no reg property
->
->+       };
->
-Its just an example, Will fix the example.
+We already have some differences between the 2 supported SoCs.
+More will be added as we support other SoCs. To avoid bloating
+the probe function with even more conditionals, move the quirks
+to a separate data structure that's tied to the compatible string.
 
->Gr{oetje,eeting}s,
->
->                        Geert
->
->--
->Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
->
->In personal conversations with technical people, I call myself a hacker. But
->when I'm talking to journalists I just say "programmer" or something like that.
->                                -- Linus Torvalds
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 35 ++++++++++++++++++++---------------
+ drivers/gpu/drm/sun4i/sun4i_tcon.h | 13 +++++++++----
+ 2 files changed, 29 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index cadacb517f95..c6c1c7ce94a1 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -20,6 +20,7 @@
+ #include <linux/component.h>
+ #include <linux/ioport.h>
+ #include <linux/of_address.h>
++#include <linux/of_device.h>
+ #include <linux/of_graph.h>
+ #include <linux/of_irq.h>
+ #include <linux/regmap.h>
+@@ -62,7 +63,7 @@ void sun4i_tcon_channel_disable(struct sun4i_tcon *tcon, int channel)
+ 		return;
+ 	}
+ 
+-	WARN_ON(!tcon->has_channel_1);
++	WARN_ON(!tcon->quirks->has_channel_1);
+ 	regmap_update_bits(tcon->regs, SUN4I_TCON1_CTL_REG,
+ 			   SUN4I_TCON1_CTL_TCON_ENABLE, 0);
+ 	clk_disable_unprepare(tcon->sclk1);
+@@ -80,7 +81,7 @@ void sun4i_tcon_channel_enable(struct sun4i_tcon *tcon, int channel)
+ 		return;
+ 	}
+ 
+-	WARN_ON(!tcon->has_channel_1);
++	WARN_ON(!tcon->quirks->has_channel_1);
+ 	regmap_update_bits(tcon->regs, SUN4I_TCON1_CTL_REG,
+ 			   SUN4I_TCON1_CTL_TCON_ENABLE,
+ 			   SUN4I_TCON1_CTL_TCON_ENABLE);
+@@ -202,7 +203,7 @@ void sun4i_tcon1_mode_set(struct sun4i_tcon *tcon,
+ 	u8 clk_delay;
+ 	u32 val;
+ 
+-	WARN_ON(!tcon->has_channel_1);
++	WARN_ON(!tcon->quirks->has_channel_1);
+ 
+ 	/* Adjust clock delay */
+ 	clk_delay = sun4i_tcon_get_clk_delay(mode, 1);
+@@ -266,7 +267,7 @@ void sun4i_tcon1_mode_set(struct sun4i_tcon *tcon,
+ 	/*
+ 	 * FIXME: Undocumented bits
+ 	 */
+-	if (tcon->has_mux)
++	if (tcon->quirks->is_sun5i)
+ 		regmap_write(tcon->regs, SUN4I_TCON_MUX_CTRL_REG, 1);
+ }
+ EXPORT_SYMBOL(sun4i_tcon1_mode_set);
+@@ -327,7 +328,7 @@ static int sun4i_tcon_init_clocks(struct device *dev,
+ 		return PTR_ERR(tcon->sclk0);
+ 	}
+ 
+-	if (tcon->has_channel_1) {
++	if (tcon->quirks->has_channel_1) {
+ 		tcon->sclk1 = devm_clk_get(dev, "tcon-ch1");
+ 		if (IS_ERR(tcon->sclk1)) {
+ 			dev_err(dev, "Couldn't get the TCON channel 1 clock\n");
+@@ -487,14 +488,7 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+ 	drv->tcon = tcon;
+ 	tcon->drm = drm;
+ 	tcon->dev = dev;
+-
+-	if (of_device_is_compatible(dev->of_node, "allwinner,sun5i-a13-tcon")) {
+-		tcon->has_mux = true;
+-		tcon->has_channel_1 = true;
+-	} else {
+-		tcon->has_mux = false;
+-		tcon->has_channel_1 = false;
+-	}
++	tcon->quirks = of_device_get_match_data(dev);
+ 
+ 	tcon->lcd_rst = devm_reset_control_get(dev, "lcd");
+ 	if (IS_ERR(tcon->lcd_rst)) {
+@@ -588,9 +582,20 @@ static int sun4i_tcon_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++const struct sun4i_tcon_quirks sun5i_a13_quirks = {
++	.is_sun5i	= true,
++	.has_channel_1	= true,
++	.has_bypass_src	= true,
++	.has_dma_src	= true,
++};
++
++const struct sun4i_tcon_quirks sun8i_a33_quirks = {
++	/* nothing is supported */
++};
++
+ static const struct of_device_id sun4i_tcon_of_table[] = {
+-	{ .compatible = "allwinner,sun5i-a13-tcon" },
+-	{ .compatible = "allwinner,sun8i-a33-tcon" },
++	{ .compatible = "allwinner,sun5i-a13-tcon", .data = &sun5i_a13_quirks },
++	{ .compatible = "allwinner,sun8i-a33-tcon", .data = &sun8i_a33_quirks },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, sun4i_tcon_of_table);
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+index 12bd48925f4d..96c4f15c6922 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+@@ -142,6 +142,13 @@
+ 
+ #define SUN4I_TCON_MAX_CHANNELS		2
+ 
++struct sun4i_tcon_quirks {
++	bool	is_sun5i;	/* sun5i has undocumented mux */
++	bool	has_channel_1;	/* a33 does not have channel 1 */
++	bool	has_bypass_src;	/* has separate input bypassing CEU */
++	bool	has_dma_src;	/* has DMA input */
++};
++
+ struct sun4i_tcon {
+ 	struct device			*dev;
+ 	struct drm_device		*drm;
+@@ -160,12 +167,10 @@ struct sun4i_tcon {
+ 	/* Reset control */
+ 	struct reset_control		*lcd_rst;
+ 
+-	/* Platform adjustments */
+-	bool				has_mux;
+-
+ 	struct drm_panel		*panel;
+ 
+-	bool				has_channel_1;
++	/* Platform adjustments */
++	const struct sun4i_tcon_quirks	*quirks;
+ };
+ 
+ struct drm_bridge *sun4i_tcon_find_bridge(struct device_node *node);
+-- 
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
