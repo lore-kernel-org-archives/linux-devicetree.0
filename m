@@ -1,113 +1,135 @@
-From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: [PATCH v4 1/5] drivers/of: introduce of_fdt_device_is_available()
-Date: Thu,  6 Oct 2016 13:36:31 -0500
-Message-ID: <1475778995-1420-2-git-send-email-arbab@linux.vnet.ibm.com>
+From: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 4/5] mm: make processing of movable_node arch-specific
+Date: Thu,  6 Oct 2016 13:36:34 -0500
+Message-ID: <1475778995-1420-5-git-send-email-arbab@linux.vnet.ibm.com>
 References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: owner-linux-mm@kvack.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475778995-1420-1-git-send-email-arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Bharata B Rao <bharata-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Alistair Popple <apopple-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Aneesh Kumar K.V" <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Tang Chen <tangchen-BthXqXjhjHXQFUHtdCDX3A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In __fdt_scan_reserved_mem(), the availability of a node is determined
-by testing its "status" property.
+Currently, CONFIG_MOVABLE_NODE depends on X86_64. In preparation to
+enable it for other arches, we need to factor a detail which is unique
+to x86 out of the generic mm code.
 
-Move this check into its own function, borrowing logic from the
-unflattened version, of_device_is_available().
+Specifically, as documented in kernel-parameters.txt, the use of
+"movable_node" should remain restricted to x86:
 
-Another caller will be added in a subsequent patch.
+movable_node    [KNL,X86] Boot-time switch to enable the effects
+                of CONFIG_MOVABLE_NODE=y. See mm/Kconfig for details.
 
-Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
-Acked-by: Rob Herring <robh@kernel.org>
+This option tells x86 to find movable nodes identified by the ACPI SRAT.
+On other arches, it would have no benefit, only the undesired side
+effect of setting bottom-up memblock allocation.
+
+Since #ifdef CONFIG_MOVABLE_NODE will no longer be enough to restrict
+this option to x86, move it to an arch-specific compilation unit
+instead.
+
+Signed-off-by: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
- drivers/of/fdt.c       | 26 +++++++++++++++++++++++---
- include/linux/of_fdt.h |  2 ++
- 2 files changed, 25 insertions(+), 3 deletions(-)
+ arch/x86/mm/numa.c  | 35 ++++++++++++++++++++++++++++++++++-
+ mm/memory_hotplug.c | 31 -------------------------------
+ 2 files changed, 34 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 085c638..b138efb 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -151,6 +151,23 @@ int of_fdt_match(const void *blob, unsigned long node,
- 	return score;
- }
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index fb68210..e95cab4 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -887,6 +887,38 @@ EXPORT_SYMBOL(cpumask_of_node);
+ #endif	/* !CONFIG_DEBUG_PER_CPU_MAPS */
  
-+bool of_fdt_device_is_available(const void *blob, unsigned long node)
+ #ifdef CONFIG_MEMORY_HOTPLUG
++
++static int __init cmdline_parse_movable_node(char *p)
 +{
-+	const char *status;
-+	int statlen;
-+
-+	status = fdt_getprop(blob, node, "status", &statlen);
-+	if (!status)
-+		return true;
-+
-+	if (statlen) {
-+		if (!strcmp(status, "okay") || !strcmp(status, "ok"))
-+			return true;
-+	}
-+
-+	return false;
++#ifdef CONFIG_MOVABLE_NODE
++	/*
++	 * Memory used by the kernel cannot be hot-removed because Linux
++	 * cannot migrate the kernel pages. When memory hotplug is
++	 * enabled, we should prevent memblock from allocating memory
++	 * for the kernel.
++	 *
++	 * ACPI SRAT records all hotpluggable memory ranges. But before
++	 * SRAT is parsed, we don't know about it.
++	 *
++	 * The kernel image is loaded into memory at very early time. We
++	 * cannot prevent this anyway. So on NUMA system, we set any
++	 * node the kernel resides in as un-hotpluggable.
++	 *
++	 * Since on modern servers, one node could have double-digit
++	 * gigabytes memory, we can assume the memory around the kernel
++	 * image is also un-hotpluggable. So before SRAT is parsed, just
++	 * allocate memory near the kernel image to try the best to keep
++	 * the kernel away from hotpluggable memory.
++	 */
++	memblock_set_bottom_up(true);
++	movable_node_enabled = true;
++#else
++	pr_warn("movable_node option not supported\n");
++#endif
++	return 0;
 +}
++early_param("movable_node", cmdline_parse_movable_node);
 +
- static void *unflatten_dt_alloc(void **mem, unsigned long size,
- 				       unsigned long align)
+ int memory_add_physaddr_to_nid(u64 start)
  {
-@@ -647,7 +664,6 @@ static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
- 					  int depth, void *data)
- {
- 	static int found;
--	const char *status;
- 	int err;
- 
- 	if (!found && depth == 1 && strcmp(uname, "reserved-memory") == 0) {
-@@ -667,8 +683,7 @@ static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
- 		return 1;
- 	}
- 
--	status = of_get_flat_dt_prop(node, "status", NULL);
--	if (status && strcmp(status, "okay") != 0 && strcmp(status, "ok") != 0)
-+	if (!of_flat_dt_device_is_available(node))
- 		return 0;
- 
- 	err = __reserved_mem_reserve_reg(node, uname);
-@@ -809,6 +824,11 @@ int __init of_flat_dt_match(unsigned long node, const char *const *compat)
- 	return of_fdt_match(initial_boot_params, node, compat);
+ 	struct numa_meminfo *mi = &numa_meminfo;
+@@ -899,4 +931,5 @@ int memory_add_physaddr_to_nid(u64 start)
+ 	return nid;
  }
- 
-+bool __init of_flat_dt_device_is_available(unsigned long node)
-+{
-+	return of_fdt_device_is_available(initial_boot_params, node);
-+}
+ EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
+-#endif
 +
- struct fdt_scan_status {
- 	const char *name;
- 	int namelen;
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 26c3302..4ff8c8e 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -37,6 +37,7 @@ extern bool of_fdt_is_big_endian(const void *blob,
- 				 unsigned long node);
- extern int of_fdt_match(const void *blob, unsigned long node,
- 			const char *const *compat);
-+extern bool of_fdt_device_is_available(const void *blob, unsigned long node);
- extern void *of_fdt_unflatten_tree(const unsigned long *blob,
- 				   struct device_node *dad,
- 				   struct device_node **mynodes);
-@@ -59,6 +60,7 @@ extern const void *of_get_flat_dt_prop(unsigned long node, const char *name,
- 				       int *size);
- extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
- extern int of_flat_dt_match(unsigned long node, const char *const *matches);
-+extern bool of_flat_dt_device_is_available(unsigned long node);
- extern unsigned long of_get_flat_dt_root(void);
- extern int of_get_flat_dt_size(void);
++#endif /* CONFIG_MEMORY_HOTPLUG */
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 9d29ba0..79c709a 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1738,37 +1738,6 @@ static bool can_offline_normal(struct zone *zone, unsigned long nr_pages)
+ }
+ #endif /* CONFIG_MOVABLE_NODE */
  
+-static int __init cmdline_parse_movable_node(char *p)
+-{
+-#ifdef CONFIG_MOVABLE_NODE
+-	/*
+-	 * Memory used by the kernel cannot be hot-removed because Linux
+-	 * cannot migrate the kernel pages. When memory hotplug is
+-	 * enabled, we should prevent memblock from allocating memory
+-	 * for the kernel.
+-	 *
+-	 * ACPI SRAT records all hotpluggable memory ranges. But before
+-	 * SRAT is parsed, we don't know about it.
+-	 *
+-	 * The kernel image is loaded into memory at very early time. We
+-	 * cannot prevent this anyway. So on NUMA system, we set any
+-	 * node the kernel resides in as un-hotpluggable.
+-	 *
+-	 * Since on modern servers, one node could have double-digit
+-	 * gigabytes memory, we can assume the memory around the kernel
+-	 * image is also un-hotpluggable. So before SRAT is parsed, just
+-	 * allocate memory near the kernel image to try the best to keep
+-	 * the kernel away from hotpluggable memory.
+-	 */
+-	memblock_set_bottom_up(true);
+-	movable_node_enabled = true;
+-#else
+-	pr_warn("movable_node option not supported\n");
+-#endif
+-	return 0;
+-}
+-early_param("movable_node", cmdline_parse_movable_node);
+-
+ /* check which state of node_states will be changed when offline memory */
+ static void node_states_check_changes_offline(unsigned long nr_pages,
+ 		struct zone *zone, struct memory_notify *arg)
 -- 
 1.8.3.1
 
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
