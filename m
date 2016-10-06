@@ -1,89 +1,101 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v6 0/5] drm: Add Support for Passive RGB to VGA bridges
-Date: Thu,  6 Oct 2016 09:57:04 +0200
-Message-ID: <cover.2ec28e2292f37131839babc08427ef9f1aece26a.1475740611.git-series.maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Archit Taneja <architt@codeaurora.org>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 3/5] ARM: sun5i: a13-olinuxino: Enable VGA bridge
+Date: Thu,  6 Oct 2016 09:57:07 +0200
+Message-ID: <18a9e5fe32396dd60390d6fa52fd7b0da9f2a72f.1475740611.git-series.maxime.ripard@free-electrons.com>
+References: <cover.2ec28e2292f37131839babc08427ef9f1aece26a.1475740611.git-series.maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.2ec28e2292f37131839babc08427ef9f1aece26a.1475740611.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.2ec28e2292f37131839babc08427ef9f1aece26a.1475740611.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+References: <cover.2ec28e2292f37131839babc08427ef9f1aece26a.1475740611.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpUaGlzIHNlcmllIGlzIGFib3V0IGFkZGluZyBzdXBwb3J0IGZvciB0aGUgUkdCIHRvIFZH
-QSBicmlkZ2UgZm91bmQgaW4KdGhlIEExMy1PbGludXhpbm8gYW5kIHRoZSBDSElQIFZHQSBhZGFw
-dGVyLgoKQm90aCB0aGVzZSBib2FyZHMgcmVseSBvbiBhbiBlbnRpcmVseSBwYXNzaXZlIGJyaWRn
-ZSBtYWRlIG91dCBvZgpyZXNpdG9yIGxhZGRlcnMgdGhhdCBkbyBub3QgcmVxdWlyZSBhbnkgaW5p
-dGlhbGlzYXRpb24uIFRoZSBvbmx5IHRoaW5nCm5lZWRlZCBpcyB0byBnZXQgdGhlIHRpbWluZ3Mg
-ZnJvbSB0aGUgc2NyZWVuIGlmIGF2YWlsYWJsZSAoYW5kIGlmIG5vdCwKZmFsbCBiYWNrIG9uIFhH
-QSBzdGFuZGFyZHMpLCBzZXQgdXAgdGhlIGRpc3BsYXkgcGlwZWxpbmUgdG8gb3V0cHV0IG9uCnRo
-ZSBSR0IgYnVzIHdpdGggdGhlIHByb3BlciB0aW1pbmdzLCBhbmQgeW91J3JlIGRvbmUuCgpUaGlz
-IHNlcmllIGFsc28gZml4ZXMgYSBidW5jaCBvZiBidWdzIHVuY292ZXJlZCB3aGVuIHRyeWluZyB0
-bwppbmNyZWFzZSB0aGUgcmVzb2x1dGlvbiwgYW5kIGhlbmNlIHRoZSBwaXhlbCBjbG9jaywgb2Yg
-b3VyCnBpcGVsaW5lLiBJdCBhbHNvIGZpeGVzIGEgZmV3IGJ1Z3MgaW4gdGhlIERSTSBkcml2ZXIg
-aXRzZWxmIHRoYXQgd2VudAp1bm5vdGljZWQgYmVmb3JlLgoKTGV0IG1lIGtub3cgd2hhdCB5b3Ug
-dGhpbmssCk1heGltZQoKQ2hhbmdlcyBmcm9tIHY1OgogIC0gUmVuYW1lZCB0byBzaW1wbGUtdmdh
-LWRhYwoKQ2hhbmdlcyBmcm9tIHY0OgogIC0gUmVtb3ZlZCB1bnVzZWQgZnVuY3Rpb25zCgpDaGFu
-Z2VzIGZyb20gdjM6CiAgLSBEZXBlbmRzIG9uIE9GIGluIEtjb25maWcKICAtIEZpeGVkIHR5cG9z
-IGluIHRoZSBkcml2ZXIgY29tbWVudHMKICAtIFJlbW92ZWQgdGhlIG1lbnRpb24gb2YgYSAicGFz
-c2l2ZSIgYnJpZGdlIGluIHRoZSBiaW5kaW5ncyBkb2MKICAtIE1hZGUgdGhlIHN0cmN1dHVyZSBj
-b25zdAogIC0gUmVtb3ZlZCB0aGUgbm9wcyBhbmQgYmVzdF9lbmNvZGVycyBpbXBsZW1lbnRhdGlv
-bnMKICAtIFJlbW92ZWQgdGhlIGNhbGwgdG8gZHJtX2JyaWRnZV9lbmFibGUgaW4gdGhlIHN1bjRp
-IGRyaXZlcgoKQ2hhbmdlcyBmcm9tIHYyOgogIC0gQ2hhbmdlZCB0aGUgY29tcGF0aWJsZSBhcyBz
-dWdnZXN0ZWQKICAtIFJlYmFzZWQgb24gdG9wIDQuOAoKQ2hhbmdlcyBmcm9tIHYxOgogIC0gU3dp
-dGNoIHRvIHVzaW5nIGEgdmdhLWNvbm5lY3RvcgogIC0gVXNlIGRybV9lbmNvZGVyIGJyaWRnZSBw
-b2ludGVyIGluc3RlYWQgb2YgZG9pbmcgb3VyIG93bgogIC0gUmVwb3J0IHRoZSBjb25uZWN0b3Ig
-c3RhdHVzIGFzIHVua25vd24gaW5zdGVhZCBvZiBjb25uZWN0ZWQgYnkKICAgIGRlZmF1bHQsIGFu
-ZCBhcyBjb25uZWN0ZWQgb25seSBpZiB3ZSBjYW4gcmV0cmlldmUgdGhlIEVESUQuCiAgLSBTd2l0
-Y2ggdG8gb2ZfaTJjX2dldF9hZGFwdGVyIGJ5IG5vZGUsIGFuZCBwdXQgdGhlIHJlZmVyZW5jZSB3
-aGVuIGRvbmUKICAtIFJlYmFzZWQgb24gbGludXgtbmV4dAoKTWF4aW1lIFJpcGFyZCAoNSk6CiAg
-ZHJtL3N1bjRpOiByZ2I6IFJlbW92ZSB0aGUgYnJpZGdlIGVuYWJsZS9kaXNhYmxlIGZ1bmN0aW9u
-cwogIGRybS9icmlkZ2U6IEFkZCBSR0IgdG8gVkdBIGJyaWRnZSBzdXBwb3J0CiAgQVJNOiBzdW41
-aTogYTEzLW9saW51eGlubzogRW5hYmxlIFZHQSBicmlkZ2UKICBBUk06IG11bHRpX3Y3OiBlbmFi
-bGUgVkdBIGJyaWRnZQogIEFSTTogc3VueGk6IEVuYWJsZSBWR0EgYnJpZGdlCgogLi4uL2JpbmRp
-bmdzL2Rpc3BsYXkvYnJpZGdlL3JnYi10by12Z2EtYnJpZGdlLnR4dCAgfCAgNDggKysrKysKIGFy
-Y2gvYXJtL2Jvb3QvZHRzL3N1bjVpLWExMy1vbGludXhpbm8uZHRzICAgICAgICAgIHwgIDU0ICsr
-KysrCiBhcmNoL2FybS9jb25maWdzL211bHRpX3Y3X2RlZmNvbmZpZyAgICAgICAgICAgICAgICB8
-ICAgMSArCiBhcmNoL2FybS9jb25maWdzL3N1bnhpX2RlZmNvbmZpZyAgICAgICAgICAgICAgICAg
-ICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAgICAgICAgICAg
-ICAgICB8ICAgNyArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAgICAgICAgICAg
-ICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3JnYi10by12Z2EuYyAgICAg
-ICAgICAgICAgICB8IDIyOSArKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9z
-dW40aS9zdW40aV9yZ2IuYyAgICAgICAgICAgICAgICAgIHwgICA2IC0KIDggZmlsZXMgY2hhbmdl
-ZCwgMzQxIGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JnYi10by12
-Z2EtYnJpZGdlLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
-cmdiLXRvLXZnYS5jCgotLQoyLjkuMwoKTWF4aW1lIFJpcGFyZCAoNSk6CiAgZHJtL3N1bjRpOiBy
-Z2I6IFJlbW92ZSB0aGUgYnJpZGdlIGVuYWJsZS9kaXNhYmxlIGZ1bmN0aW9ucwogIGRybS9icmlk
-Z2U6IEFkZCBSR0IgdG8gVkdBIGJyaWRnZSBzdXBwb3J0CiAgQVJNOiBzdW41aTogYTEzLW9saW51
-eGlubzogRW5hYmxlIFZHQSBicmlkZ2UKICBBUk06IG11bHRpX3Y3OiBlbmFibGUgVkdBIGJyaWRn
-ZQogIEFSTTogc3VueGk6IEVuYWJsZSBWR0EgYnJpZGdlCgogRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpbXBsZS12Z2EtZGFjLnR4dCB8ICA0OCArKysr
-KysrKysrKysrKystCiBhcmNoL2FybS9ib290L2R0cy9zdW41aS1hMTMtb2xpbnV4aW5vLmR0cyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDU0ICsrKysrKysrKysrKysrKysrLQogYXJjaC9h
-cm0vY29uZmlncy9tdWx0aV92N19kZWZjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICB8ICAgMSArLQogYXJjaC9hcm0vY29uZmlncy9zdW54aV9kZWZjb25maWcgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArLQogZHJpdmVycy9ncHUvZHJtL2JyaWRn
-ZS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNyArKy0K
-IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAgIDEgKy0KIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2ltcGxlLXZnYS1k
-YWMuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAyMjkgKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLQog
-ZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3JnYi5jICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAgNiArLS0KIDggZmlsZXMgY2hhbmdlZCwgMzQxIGluc2VydGlvbnMoKyks
-IDYgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpbXBsZS12Z2EtZGFjLnR4dAogY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2ltcGxlLXZnYS1kYWMuYwoKLS0gCmdp
-dC1zZXJpZXMgMC44LjEwCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+Now that we have support for the VGA bridges using our DRM driver, enable
+the display engine for the Olimex A13-Olinuxino.
+
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun5i-a13-olinuxino.dts | 54 ++++++++++++++++++++++++-
+ 1 file changed, 54 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sun5i-a13-olinuxino.dts b/arch/arm/boot/dts/sun5i-a13-olinuxino.dts
+index b3c234c65ea1..c69e0b0b7b55 100644
+--- a/arch/arm/boot/dts/sun5i-a13-olinuxino.dts
++++ b/arch/arm/boot/dts/sun5i-a13-olinuxino.dts
+@@ -72,6 +72,47 @@
+ 			default-state = "on";
+ 		};
+ 	};
++
++	bridge {
++		compatible = "simple-vga-dac";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				vga_bridge_in: endpoint {
++					remote-endpoint = <&tcon0_out_vga>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				vga_bridge_out: endpoint {
++					remote-endpoint = <&vga_con_in>;
++				};
++			};
++		};
++	};
++
++	vga {
++		compatible = "vga-connector";
++
++		port {
++			vga_con_in: endpoint {
++				remote-endpoint = <&vga_bridge_out>;
++			};
++		};
++	};
++};
++
++&be0 {
++	status = "okay";
+ };
+ 
+ &ehci0 {
+@@ -211,6 +252,19 @@
+ 	status = "okay";
+ };
+ 
++&tcon0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&lcd_rgb666_pins>;
++	status = "okay";
++};
++
++&tcon0_out {
++	tcon0_out_vga: endpoint@0 {
++		reg = <0>;
++		remote-endpoint = <&vga_bridge_in>;
++	};
++};
++
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins_b>;
+-- 
+git-series 0.8.10
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
