@@ -1,65 +1,38 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH V1 04/10] watchdog: da9061: watchdog driver (RFC)
-Date: Fri, 7 Oct 2016 16:35:54 -0700
-Message-ID: <20161007233554.GA21386@dtor-ws>
-References: <6ED8E3B22081A4459DAC7699F3695FB7018CCE242C@SW-EX-MBX02.diasemi.com>
- <20161006184927.GB11915@roeck-us.net>
- <6ED8E3B22081A4459DAC7699F3695FB7018CCE2732@SW-EX-MBX02.diasemi.com>
- <20161007170214.GA21349@roeck-us.net>
- <6ED8E3B22081A4459DAC7699F3695FB7018CCE282C@SW-EX-MBX02.diasemi.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 00/10] Introduce Juniper PTXPMB CPLD driver
+Date: Fri, 7 Oct 2016 16:39:56 -0700
+Message-ID: <57F8324C.2040804@gmail.com>
+References: <1475853451-22121-1-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7018CCE282C@SW-EX-MBX02.diasemi.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@iguana.be>, Lee Jones <lee.jones@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475853451-22121-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Debjit Ghosh <dghosh-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Georgi Vlaev <gvlaev-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Guenter Roeck <groeck-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, JawaharBalaji Thirumalaisamy <jawaharb-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Rajat Jain <rajatjain-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 07, 2016 at 06:01:23PM +0000, Steve Twiss wrote:
-> On 07 October 2016 18:02, Guenter Roeck wrote:
+On 10/07/16 08:17, Pantelis Antoniou wrote:
+> Add Juniper's PTXPMB FPGA CPLD driver. Those FPGAs
+> are present in Juniper's PTX series of routers.
 > 
-> > > On 06 October 2016 19:49, Guenter Roeck wrote:
-> > > > On Thu, Oct 06, 2016 at 04:28:14PM +0000, Steve Twiss wrote:
-> > > > > I am using the compatible string to pick a different configuration .data block:
-> > > > > { .compatible = "dlg,da9062-watchdog", .data = &da9062_watchdog_info },
-> > > > > { .compatible = "dlg,da9061-watchdog", .data = &da9061_watchdog_info },
-> > > > >
-> > > > > But, it is just my opinion to keep the "name" different.
-> > > > > This will not be my decision if accepted into the Linux kernel, but I would like to
-> > > > > at least be consistent for DA9061 and DA9062 so ... is this an issue?
-> > > >
-> > > > FWIW the driver doesn't really need to be updated in the first place.
-> > > > A compatible statement listing both da9061 and da9062 would do it.
-> > >
-> > > I will make the changes you requested: deprecate the existing compatibility
-> > > for da9062-watchdog and make a new compatibility string which combines both
-> > > da9061 and da9062.
-> > >
-> > That is not what I asked for.
+> The MFD driver provices watchdog/i2c/gpio/mtd devices.
 > 
-> Ok. Did you mean separate compatible statements with data sections pointing at 
-> the same structure?
+> There are full device tree binding documents for the
+> master mfd driver and for all slave drivers.
 > 
-> Like this:
-> { .compatible = "dlg,da9062-watchdog", .data = &da9062_watchdog_info },
-> { .compatible = "dlg,da9061-watchdog", .data = &da9062_watchdog_info },
-> 
-> So this would be the only change needed in the device driver.
+> This patchset is against mainline as of today: v4.8-9431-g3477d16
+> and is dependent on the "Juniper prerequisites" and
+> "Juniper infrastructure" patchsets sent earlier.
 
-If there is no change in IP block then I do not see why we need to
-introduce new names at all. The dts can specify fallback compatible
-stting. Note, it is called *compatible* not "model" or "device id" or
-whatever. So you can just say in DTS:
+Pointers to the patchsets please.
 
-	compatible = "dlg,da9061-watchdog", "dlg,da9062-watchdog";
+< snip >
 
-and leave the driver alone. That goes for input part as well. You only
-need to add new compatible to the driver when it in fact is
-*incompatible* with the existing blocks.
+-Frank
 
-Thanks.
-
--- 
-Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
