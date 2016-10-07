@@ -1,11 +1,14 @@
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH 0/6] Introduce Juniper CBC FPGA
-Date: Fri,  7 Oct 2016 18:20:08 +0300
-Message-ID: <1475853614-22409-1-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH 5/6] gpio: gpio-cbc-presense: Document bindings of CBC FPGA
+ presence
+Date: Fri,  7 Oct 2016 18:20:13 +0300
+Message-ID: <1475853614-22409-6-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1475853614-22409-1-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1475853614-22409-1-git-send-email-pantelis.antoniou@konsulko.com>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -19,70 +22,55 @@ To: Lee Jones <lee.jones@linaro.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-kernel@vger.kernel.org, JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Debjit Ghosh <dghosh@juniper.net>, Mohammad Kamil <mkamil@juniper.net>, Georgi Vlaev <gvlaev@juniper.net>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-Add Juniper's PTX1K CBC FPGA driver. Those FPGAs
-are present in Juniper's PTX series of routers.
+From: Georgi Vlaev <gvlaev@juniper.net>
 
-The MFD driver provices a gpio device and a special
-driver for Juniper's board infrastucture.
-The FPGA infrastucture driver is providing an interface
-for user-space handling of the FPGA in those platforms.
+Add device tree bindings document for the presence virtual GPIOs
+on Juniper's CBC FPGA.
 
-There are full device tree binding documents for the
-master mfd driver and for the slave driver.
-
-This patchset is against mainline as of today: v4.8-9431-g3477d16
-and is dependent on the "Juniper prerequisites" and
-"Juniper infrastructure" patchsets sent earlier.
-
-Georgi Vlaev (5):
-  mfd: Add support for the PTX1K CBC FPGA
-  gpio: Add support for PTX1K CBC FPGA spare GPIOs
-  gpio: gpio-cbc: Document bindings of CBC FPGA GPIO block
-  gpio: cbc-presence: Add CBC presence detect as GPIO driver
-  gpio: gpio-cbc-presense: Document bindings of CBC FPGA presence
-
-Tom Kavanagh (1):
-  staging: jnx: CBD-FPGA infrastructure
-
- .../bindings/gpio/jnx,gpio-cbc-presense.txt        |  31 +
- .../devicetree/bindings/gpio/jnx,gpio-cbc.txt      |  30 +
- drivers/gpio/Kconfig                               |  23 +
- drivers/gpio/Makefile                              |   2 +
- drivers/gpio/gpio-cbc-presence.c                   | 460 ++++++++++
- drivers/gpio/gpio-cbc.c                            | 236 +++++
- drivers/mfd/Kconfig                                |  16 +
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/cbc-core.c                             | 971 +++++++++++++++++++++
- drivers/staging/jnx/Kconfig                        |  34 +
- drivers/staging/jnx/Makefile                       |   5 +
- drivers/staging/jnx/jnx-cbc-ptx1k.c                | 242 +++++
- drivers/staging/jnx/jnx-cbd-fpga-common.c          | 332 +++++++
- drivers/staging/jnx/jnx-cbd-fpga-common.h          |  27 +
- drivers/staging/jnx/jnx-cbd-fpga-core.c            | 540 ++++++++++++
- drivers/staging/jnx/jnx-cbd-fpga-core.h            |  68 ++
- drivers/staging/jnx/jnx-cbd-fpga-platdata.h        |  51 ++
- drivers/staging/jnx/jnx-cbd-fpga-ptx1k.c           | 134 +++
- drivers/staging/jnx/jnx-cbd-fpga-ptx21k.c          | 143 +++
- drivers/staging/jnx/jnx-cbd-fpga-ptx3k.c           | 111 +++
- drivers/staging/jnx/jnx-cbd-fpga-ptx5k.c           | 107 +++
- include/linux/mfd/cbc-core.h                       | 181 ++++
- 22 files changed, 3745 insertions(+)
+Signed-off-by: Georgi Vlaev <gvlaev@juniper.net>
+[Ported from Juniper kernel]
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+---
+ .../bindings/gpio/jnx,gpio-cbc-presense.txt        | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/gpio/jnx,gpio-cbc-presense.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/jnx,gpio-cbc.txt
- create mode 100644 drivers/gpio/gpio-cbc-presence.c
- create mode 100644 drivers/gpio/gpio-cbc.c
- create mode 100644 drivers/mfd/cbc-core.c
- create mode 100644 drivers/staging/jnx/jnx-cbc-ptx1k.c
- create mode 100644 drivers/staging/jnx/jnx-cbd-fpga-common.c
- create mode 100644 drivers/staging/jnx/jnx-cbd-fpga-common.h
- create mode 100644 drivers/staging/jnx/jnx-cbd-fpga-core.c
- create mode 100644 drivers/staging/jnx/jnx-cbd-fpga-core.h
- create mode 100644 drivers/staging/jnx/jnx-cbd-fpga-platdata.h
- create mode 100644 drivers/staging/jnx/jnx-cbd-fpga-ptx1k.c
- create mode 100644 drivers/staging/jnx/jnx-cbd-fpga-ptx21k.c
- create mode 100644 drivers/staging/jnx/jnx-cbd-fpga-ptx3k.c
- create mode 100644 drivers/staging/jnx/jnx-cbd-fpga-ptx5k.c
- create mode 100644 include/linux/mfd/cbc-core.h
 
+diff --git a/Documentation/devicetree/bindings/gpio/jnx,gpio-cbc-presense.txt b/Documentation/devicetree/bindings/gpio/jnx,gpio-cbc-presense.txt
+new file mode 100644
+index 0000000..f44e5a0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/jnx,gpio-cbc-presense.txt
+@@ -0,0 +1,31 @@
++Juniper CBC FPGA GPIO presence block
++
++Required properties:
++
++- compatible:
++    Must be one of "jnx,gpio-cbc-presence", "jnx,gpio-cbc-presence-other",
++    "jnx,gpio-cbc-presence-sib"
++
++Optional properties:
++
++- reg:
++    Address and length of the register set for the device. This is optional since
++    usually the parent MFD driver fills it in.
++
++- #gpio-cells:
++    Should be <2>.  The first cell is the pin number (within the controller's
++    pin space), and the second is used for the following flags:
++	bit[0]: direction (0 = out, 1 = in)
++	bit[1]: init high
++	bit[2]: active low
++
++- gpio-controller:
++    Specifies that the node is a GPIO controller.
++
++Example:
++
++gpio_cbc_presense {
++	compatible = "jnx,gpio-cbc-presense";
++	#gpio-cells = <2>;
++	gpio-controller;
++};
 -- 
 1.9.1
