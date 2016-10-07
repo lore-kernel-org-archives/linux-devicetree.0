@@ -1,88 +1,122 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH v9 17/19] drm/virtio: kconfig: Fix recursive dependency
-	issue.
-Date: Fri, 7 Oct 2016 18:44:41 +0100
-Message-ID: <20161007174441.GA27720@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
-	<1473081421-16555-18-git-send-email-peter.griffin@linaro.org>
-	<CACvgo52_g7anGBd9HTUyYsbp5QmQEk9LR3nNHgSTgjQ29G3ViA@mail.gmail.com>
-	<20160920083251.GB26093@griffinp-ThinkPad-X1-Carbon-2nd>
-	<8760pqncee.fsf@intel.com>
-	<20161006093721.GA436@griffinp-ThinkPad-X1-Carbon-2nd>
-	<CACvgo50vU5_=KFUCAZDaQPepPdsbnF8KN1b+f6KJNuBW6qRdSg@mail.gmail.com>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH V1 05/10] thermal: da9062/61: Thermal junction
+ temperature monitoring driver
+Date: Fri, 7 Oct 2016 17:48:56 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CCE2815@SW-EX-MBX02.diasemi.com>
+References: <cover.1475743411.git.stwiss.opensource@diasemi.com>
+ <b5ce58ca00f7ab30a025d24083549241f135b0e9.1475743411.git.stwiss.opensource@diasemi.com>
+ <3bc9fd76-2885-b07a-9df8-7802b7535da2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <virtualization-bounces@lists.linux-foundation.org>
-Content-Disposition: inline
-In-Reply-To: <CACvgo50vU5_=KFUCAZDaQPepPdsbnF8KN1b+f6KJNuBW6qRdSg@mail.gmail.com>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
-List-Post: <mailto:virtualization@lists.linux-foundation.org>
-List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
-Sender: virtualization-bounces@lists.linux-foundation.org
-Errors-To: virtualization-bounces@lists.linux-foundation.org
-To: Emil Velikov <emil.l.velikov@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, kernel@stlinux.com, Arnd Bergmann <arnd@arndb.de>, vinod.koul@intel.com, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, Jani Nikula <jani.nikula@linux.intel.com>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, dmaengine@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, dan.j.williams@intel.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Lee Jones <lee.jones@linaro.org>, "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <3bc9fd76-2885-b07a-9df8-7802b7535da2@ti.com>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Keerthy <a0393675@ti.com>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>
+Cc: DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRW1pbCwKCk9uIFRodSwgMDYgT2N0IDIwMTYsIEVtaWwgVmVsaWtvdiB3cm90ZToKCj4gT24g
-NiBPY3RvYmVyIDIwMTYgYXQgMTA6MzcsIFBldGVyIEdyaWZmaW4gPHBldGVyLmdyaWZmaW5AbGlu
-YXJvLm9yZz4gd3JvdGU6Cj4gCj4gPiBJbiBmYWN0IHRoZSBoZWxwIHRleHQgZm9yIFZJUlRJTyBl
-dmVuIHN0YXRlcyB0aGlzIG9wdGlvbiBzaG91bGQgYmUgc2VsZWN0ZWQKPiA+IGJ5IGFueSBkcml2
-ZXIgd2hpY2ggaW1wbGVtZW50cyB2aXJ0aW8uCj4gPgo+IEFsbW9zdCBidXQgbm90IHF1aXRlLiBJ
-dCBzYXlzOgo+IAo+ICJUaGlzIG9wdGlvbiBpcyBzZWxlY3RlZCBieSBhbnkgZHJpdmVyIHdoaWNo
-IGltcGxlbWVudHMgdGhlIHZpcnRpbyBfYnVzXyIKPiAKCkFoIEkgdGhvdWdodCBEUk1fVklSVElP
-X0dQVSB3YXMgaW1wbGVtZW50aW5nIGEgdmlydGlvIGJ1cywgYnVzIGl0IHNlZW1zIHRoYXQgaXQg
-CnVzZXMgcGNpLiBXaGljaCBkb2VzIHJhaXNlIHRoZSBxdWVzdGlvbiBvZiB3aHkgaXQgaXMgZGVw
-ZW5kaW5nIG9uIFZJUlRJTyBhdCBhbGwKYW5kIG5vdCBWSVJUSU9fUENJLgoKPiBSRU1PVEVQUk9D
-IG9idmlvdXNseSBkb2VzIHRoYXQgd2hpbGUgdGhlIFNUIFNMSU0gZHJpdmVyIGRvZXMgbm90LiBU
-aHVzCj4gdGhlIGxhdHRlciBzaG91bGQgX25vdF8gc2VsZWN0LCBiZSB0aGF0IGV4cGxpY2l0bHkg
-b3IgaW1wbGljaXRseSB2aWEKPiBSRU1PVEVQUk9DLCB0aGUgc3ltYm9sLgoKWWVwIE9LLgoKPiAK
-PiA+Pgo+ID4+IFBlb3BsZSB0ZW5kIHRvIGFidXNlIHNlbGVjdCBiZWNhdXNlIGl0J3MgImNvbnZl
-bmllbnQiLiBJZiB5b3UgZGVwZW5kLAo+ID4+IGJ1dCBzb21lIG9mIHlvdXIgZGVwZW5kZW5jaWVz
-IGFyZW4ndCBtZXQsIHlvdSdyZSBpbiBmb3Igc29tZSBkaWdnaW5nCj4gPj4gdGhyb3VnaCBLY29u
-ZmlnIHRvIGZpbmQgdGhlIG1pc3NpbmcgZGVwcy4gSnVzdCB0byBtYWtlIHRoZSBvcHRpb24geW91
-Cj4gPj4gd2FudCB2aXNpYmxlIGluIG1lbnVjb25maWcuIElmIHlvdSBpbnN0ZWFkIHNlbGVjdCBz
-b21ldGhpbmcgd2l0aAo+ID4+IGRlcGVuZGVuY2llcywgaXQnbGwgYmUgcmlnaHQgbW9zdCBvZiB0
-aGUgdGltZSwgYW5kIGl0J3MgImNvbnZlbmllbnQiLAo+ID4+IHVudGlsIGl0IGJyZWFrcy4gKEFu
-ZCBoZXksIGl0IHVzdWFsbHkgYnJlYWtzIGZvciBzb21lb25lIGVsc2Ugd2l0aCBzb21lCj4gPj4g
-b3RoZXIgY29uZmlnLCBzbyBpdCdzIHN0aWxsIGNvbnZlbmllbnQgZm9yIHlvdS4pCj4gPgo+ID4g
-SSdtIHN1cmUgdGhleSBkbyBidXQgaW4gdGhpcyBjYXNlIGl0IGlzIGFjdHVhbGx5IHRoZSB1c2Ug
-b2YgJ2RlcGVuZHMgb24nCj4gPiB3aGljaCBoYXMgY2F1c2VkIHRoZSBicmVha2FnZSBhbmQgaW5j
-b252ZW5pZW5jZSBmb3Igc29tZWJvZHkgZWxzZSBhbmQgc2FkbHkgdGhpcwo+ID4gaW5jb252aWVu
-aWNlIGlzIHN0aWxsIG9uLWdvaW5nIGR1ZSB0byB0aGlzIHBhdGNoIG5vdCBiZWluZyBhcHBsaWVk
-IG9yIGdldHRpbmcgYW4KPiA+IGFja2VkLWJ5IGZyb20gdGhlIGFwcHJvcHJpYXRlIG1haW50YWlu
-ZXJzLgo+ID4KPiBTdXJlbHkgeW91J3JlIG5vdCBzYXlpbmcgdGhhdCBwcmUtZXhpc3RpbmcgZHJp
-dmVyIGZvbGxvd2luZyB0aGUKPiBkb2N1bWVudGF0aW9uLCBpcyAnY2F1c2luZyBicmVha2FnZScg
-Zm9yIGEgbmV3IGRyaXZlciB7YWIsbWlzfXVzaW5nIGEKPiBmZWF0dXJlID8KCllvdXIgcmlnaHQg
-SSB3YXNuJ3Qgc2F5aW5nIHRoYXQgOikKCk15IHBvaW50IHdhcyB0aGF0IHRoaXMgcGF0Y2ggd2Fz
-bid0ICd3cm9uZycgd2hlbiByZWZlcnJpbmcgdG8gdGhlIEtjb25maWcKZG9jdW1lbnRhdGlvbiBK
-YW5pIHJlZmVyZW5jZWQgYXMgVklSVElPIGhhcyBubyBkZXBlbmRlbmNpZXMuCgpBbHNvIEkgdGhv
-dWdodCBEUk1fVklSVElPX0dQVSBkcml2ZXIgaW1wbGVtZW50ZWQgYSBWSVJUSU8gYnVzIHdoaWNo
-IHJlLWVuZm9yY2VkCnRoZSB2aWV3IHRoYXQgaXQgc2hvdWxkIGJlIHNlbGVjdGluZyBWSVJUSU8u
-IAoKPiAKPiBUaGlzIHJlbWluZHMgbWUgYW4gb2xkIHNheWluZzogIklmIHRoZSBzaG9lIGRvZXNu
-4oCZdCBmaXQsIGl0IGRvZXNu4oCZdAo+IG1lYW4gdGhlcmUgaXMgYW55dGhpbmcgd3Jvbmcgd2l0
-aCB5b3VyIGZlZXQuIgoKSWYgdGhlIHNob2UgZG9lc24ndCBmaXQsIGNob3Agb2ZmIHRoZSBsZWcg
-OikKCj4gWW91IHNlZW0gdG8gYmUgc3VnZ2VzdGluZyB0aGUgb3Bwb3NpdGUgPwo+IAo+ID4+Cj4g
-Pj4gUGVyaGFwcyBrY29uZmlnIHNob3VsZCBjb21wbGFpbiBhYm91dCBzZWxlY3RpbmcgdmlzaWJs
-ZSBzeW1ib2xzIGFuZAo+ID4+IHN5bWJvbHMgd2l0aCBkZXBlbmRlbmNpZXMuCj4gPgo+ID4gVGhh
-dCBzb3VuZHMgbGlrZSBpdCB3b3VsZCBiZSBhIHVzZWZ1bCBhZGRpdGlvbi4KPiA+Cj4gPiBJcyBp
-dCBwb3NzaWJsZSB0byBnZXQgdGhpcyBwYXRjaCBhcHBsaWVkIG9yIGFuIGFja2VkLWJ5IHRvIGF2
-b2lkIGZ1cnRoZXIgZGVsYXkKPiA+IHRvIHRoZSBmZG1hIHNlcmllcz8KPiA+Cj4gUGxlYXNlIGRv
-bid0IGFwcGx5IGR1Y3QgdGFwZSwgZXNwZWNpYWxseSB3aGVyZSBpdCdzIF9ub3RfIG5lZWRlZC4K
-PiAKPiAkIHNlZCAtaSBzL3NlbGVjdCBSRU1PVEVQUk9DL2RlcGVuZHMgb24gUkVNT1RFUFJPQy8g
-ZHJpdmVycy9yZW1vdGVwcm9jL0tjb25maWcKPiAKPiAuLi4gd2lsbCByZXNvbHZlIHRoaW5ncyBp
-biB0aGUgcmlnaHQgcGxhY2UuIFRoZSBhbHRlcm5hdGl2ZSB3aWxsIGxlYWQKPiB0byByYW5kb20g
-aXNzdWVzIGluIG90aGVyIHN1YnN5c3RlbXMuCj4gCgpJZiBCam9ybiBpcyBPSyB3aXRoIGl0LCB0
-aGVuIGl0IGlzIGZpbmUgd2l0aCBtZS4KCkkgd2lsbCB1cGRhdGUgcmVtb3RlcHJvYyBLY29uZmln
-IHNldHVwIGluIGZkbWEgdjEwLCB0aGlzIHdpbGwgZHJvcCB0aGUKcmVxdWlyZW1lbnQgZm9yIHRo
-aXMgcGF0Y2ggaW4gZHJtIHN1YnN5c3RlbS4KCkkgY2FuIHRoZW4gc2VuZCB0aGUgd2hpdGVzcGFj
-ZSBjbGVhbnVwIHBhdGNoIHNlcGFyYXRlbHkgdG8gRFJNIE1MLgoKcmVnYXJkcywKClBldGVyLgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpWaXJ0dWFsaXph
-dGlvbiBtYWlsaW5nIGxpc3QKVmlydHVhbGl6YXRpb25AbGlzdHMubGludXgtZm91bmRhdGlvbi5v
-cmcKaHR0cHM6Ly9saXN0cy5saW51eGZvdW5kYXRpb24ub3JnL21haWxtYW4vbGlzdGluZm8vdmly
-dHVhbGl6YXRpb24=
+Hi,
+
+On 07 October 2016 06:29, Keerthy [mailto:a0393675@ti.com] wrote:
+> On Thursday 06 October 2016 02:13 PM, Steve Twiss wrote:
+> > From: Steve Twiss <stwiss.opensource@diasemi.com>
+
+[...]
+
+> > +
+> > +static int da9062_thermal_get_trip_type(struct thermal_zone_device *z,
+> > +				int trip,
+> > +				enum thermal_trip_type *type)
+> > +{
+> > +	struct da9062_thermal *thermal = z->devdata;
+> > +
+> > +	switch (trip) {
+> > +	case 0:
+> > +		*type = THERMAL_TRIP_HOT;
+> 
+> 125C is pretty hot. Just a suggestion, do look at THERMAL_TRIP_CRITICAL.
+> 
+
+Quite warm.
+I got this from the Documentation/devicetree/bindings/thermal/thermal.txt
+	"hot":		A trip point to notify emergency
+	"critical":	Hardware not reliable.
+
+The junction temperature supervision characteristics for DA9061 supports three
+levels and 125degC is the lowest "warning" level.  This warning level is intended
+for non-invasive temperature control where the necessary mitigation is under
+software control of the system.
+
+The other two levels are hotter than 125degC and it is not possible to intervene
+using software. The hardware will automatically power off.
+
+[...]
+
+> > +static int da9062_thermal_notify(struct thermal_zone_device *z,
+> > +				 int trip,
+> > +				 enum thermal_trip_type type)
+> > +{
+> > +	struct da9062_thermal *thermal = z->devdata;
+> > +
+> > +	switch (type) {
+> > +	case THERMAL_TRIP_HOT:
+> > +		dev_warn(thermal->dev, "Reached HOT (125degC)
+> temperature\n");
+> 
+> Any cooling action? What is done once you reach this high temperature?
+
+There is nothing to do in the device driver. This is just a stub for board specific additions
+to mitigate the temperature. There is a similar function in the  RCAR thermal driver which
+contains a FIXME comment. But, apart from helping with my testing, it doesn't add
+anything in the driver. It can be removed.
+
+[...]
+
+> > +static const struct da9062_thermal_config da9062_config = {
+> > +	.name = "da9062-thermal",
+> > +};
+> > +
+> > +static const struct da9062_thermal_config da9061_config = {
+> > +	.name = "da9061-thermal",
+> > +};
+> > +
+> > +static const struct of_device_id da9062_compatible_reg_id_table[] = {
+> > +	{ .compatible = "dlg,da9062-thermal", .data = &da9062_config },
+> > +	{ .compatible = "dlg,da9061-thermal", .data = &da9061_config },
+> 
+> Two separate compatible values. Do you have anything different apart
+> from the name? Why use 2 compatibles when there is absolutely no
+> difference?
+
+Yes.
+This was a comment for the watchdog device driver as well. My concern was having 
+multiple devices (61 and 62) in the same system -- and allowing the driver to report 
+the hardware difference.
+
+There is discussion going on about this in other threads. Not certain of the final outcome
+yet, apart from my existing proposal should be changed.
+
+-- From Guenter Roeck:
+-- http://www.spinics.net/lists/linux-watchdog/msg10040.html
+
+[...]
+
+> > +	INIT_DELAYED_WORK(&thermal->work, da9062_thermal_poll_on);
+> > +	mutex_init(&thermal->lock);
+> 
+> thermal_zone_device_register itself does
+> INIT_DELAYED_WORK(&(tz->poll_queue), thermal_zone_device_check);
+> 
+> refer: drivers/thermal/thermal_core.c
+> 
+> It does a periodic monitoring of the temperature as well. Do you really
+> want to have an additional work for monitoring temperature in your
+> driver also?
+
+I will take a look at this for V2.
+
+Regards,
+Steve
+
