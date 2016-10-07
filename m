@@ -1,100 +1,233 @@
-From: ahaslam@baylibre.com
-Subject: [PATCH/RFT 00/12] Add DT support for ohci-da8xx
-Date: Fri,  7 Oct 2016 18:42:45 +0200
-Message-ID: <1475858577-10366-1-git-send-email-ahaslam@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, nsekhar@ti.com, stern@rowland.harvard.edu, khilman@baylibre.com, sshtylyov@ru.mvista.com, david@lechnology.com
-Cc: devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Subject: [PATCH/RFT 03/12] ARM: davinci: rename root_hub to platform_data
+Date: Fri,  7 Oct 2016 18:42:48 +0200
+Message-ID: <1475858577-10366-4-git-send-email-ahaslam@baylibre.com>
+References: <1475858577-10366-1-git-send-email-ahaslam@baylibre.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475858577-10366-1-git-send-email-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Axel Haslam <ahaslam@baylibre.com>
+From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-The purpose of this patch series is to add DT support to the ohci-da8xx
-glue driver without breaking the non-DT boot, which is still used in
-unconverted davinci devices.
+To prepare for DT support we will remove the usb callback function
+pointers. Since this structure will only pass data to the driver, It
+seems better to rename the structure root_hub structure to platform_data
 
-To Achieve this, the first 8 patches make sure that the non-DT based
-enumeration works, and prepares the stage for a DT migration by removing
-dependencies on the board files (moving VBUS, and over current
-handling to the driver). The last 4 patches actually add the DT
-documentation and bindings for the ohci-da8xx driver.
+There is no functional change.
 
-Testing was done on a omap138-lcdk board, using DT, and non-DT boot,
-and checking that in both cases the hub, usb mass storage and an input
-device are correctly enumerated and working.
+Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/mach-davinci/board-da830-evm.c     |  2 +-
+ arch/arm/mach-davinci/board-omapl138-hawk.c |  2 +-
+ arch/arm/mach-davinci/include/mach/da8xx.h  |  2 +-
+ arch/arm/mach-davinci/usb-da8xx.c           |  2 +-
+ drivers/usb/host/ohci-da8xx.c               | 36 ++++++++++++++---------------
+ include/linux/platform_data/usb-davinci.h   |  6 ++---
+ 6 files changed, 25 insertions(+), 25 deletions(-)
 
-Since there have been some recent and ongoing efforts from David Lechner
-to clean up davinci-mach code and the ochi-da8xx driver, this series
-builds upon that work. Specifically:
-
-* the accepted but soon to be reposted patch to remove mach code form
-the ohci driver[1].
-
-* The patch series to add phy nodes, and move usb clocks to a common
-file [2].
-
-A git branch based on tag: next-20161004 with the dependencies patches is
-available in my github here [3].
-
-The omap138-lcdk does not have gpios to control vbus and get over current
-interrupt notifications, hence i was not able to test these and added
-the RFT tag. If anyone has a da830-evm based board and could
-confirm that ohci is correctly working, i would appreciate it.
-(the OHCI option needs to be enabled in menuconfig)
-
-P.D: It seems that the davinci-gpio driver is broken for DT based boot
-and any gpio > 32. (luckly none of the DT based boards use gpios yet)
-The probelm is that we have 144 gpios in the gpio controller as correctly
-declared on the DT (they are not separate gpio controllers as in am3xx),
-but the driver creates several gpio chips of 32 pins each, confusing the
-"gpio chip to pin" matching logic of gpiolib-of. I think we might need to
-fix this by creating a single gpio chip in gpio-davinci.c
-
-[1] [PATCH v6 1/3] usb: ohci-da8xx: Remove code that references mach
-    http://www.gossamer-threads.com/lists/linux/kernel/2518807
-[2] [PATCH v5 0/5] da8xx USB PHY platform devices and clocks (was "da8xx UBS clocks")
-    http://www.spinics.net/lists/linux-usb/msg140568.html
-[3] github branch with all dependante patches
-    https://github.com/axelhaslamx/linux-axel/commits/ohci-da8xx-dt
-
-Axel Haslam (12):
-  ARM: davinci: da8xx: Enable the usb20 "per" clk on phy_clk_enable
-  ARM: davinci: hawk: add full constraints for ohci plat boot
-  ARM: davinci: rename root_hub to platform_data
-  USB: ohci-da8xx: Divide power up time in the ohci driver
-  USB: ohci-da8xx: Fix probe for devices with no vbus/oci gpio
-  ARM: davinci: hawk: Remove oci and vbus gpios
-  USB: ohci-da8xx: Request gpios and handle interrupt in the driver
-  ARM: davinci: register the usb20_phy clock on the SoC file
-  usb: host: ohci-da8xx: Add devicetree bindings documentation
-  USB: ohci-da8xx: Add device tree support
-  ARM: dts: da850: Add the usb ohci device node
-  ARM: dts: da850-lcdk: enable ohci usb
-
- .../devicetree/bindings/usb/ohci-da8xx.txt         |  32 +++++
- arch/arm/boot/dts/da850-lcdk.dts                   |   9 ++
- arch/arm/boot/dts/da850.dtsi                       |   8 ++
- arch/arm/mach-davinci/board-da830-evm.c            |  75 +---------
- arch/arm/mach-davinci/board-omapl138-hawk.c        | 105 +-------------
- arch/arm/mach-davinci/da850.c                      |   2 +
- arch/arm/mach-davinci/include/mach/da8xx.h         |   2 +-
- arch/arm/mach-davinci/usb-da8xx.c                  |  15 +-
- drivers/usb/host/ohci-da8xx.c                      | 158 +++++++++++++++++----
- include/linux/platform_data/usb-davinci.h          |  22 ++-
- 10 files changed, 218 insertions(+), 210 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/ohci-da8xx.txt
-
+diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
+index c62766e..18d2b10 100644
+--- a/arch/arm/mach-davinci/board-da830-evm.c
++++ b/arch/arm/mach-davinci/board-da830-evm.c
+@@ -87,7 +87,7 @@ static int da830_evm_usb_ocic_notify(da8xx_ocic_handler_t handler)
+ 	return error;
+ }
+ 
+-static struct da8xx_ohci_root_hub da830_evm_usb11_pdata = {
++static struct da8xx_ohci_platform_data da830_evm_usb11_pdata = {
+ 	.set_power	= da830_evm_usb_set_power,
+ 	.get_power	= da830_evm_usb_get_power,
+ 	.get_oci	= da830_evm_usb_get_oci,
+diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
+index 1dc6112..a2bf3eb 100644
+--- a/arch/arm/mach-davinci/board-omapl138-hawk.c
++++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
+@@ -226,7 +226,7 @@ static int hawk_usb_ocic_notify(da8xx_ocic_handler_t handler)
+ 	return error;
+ }
+ 
+-static struct da8xx_ohci_root_hub omapl138_hawk_usb11_pdata = {
++static struct da8xx_ohci_platform_data omapl138_hawk_usb11_pdata = {
+ 	.set_power      = hawk_usb_set_power,
+ 	.get_power      = hawk_usb_get_power,
+ 	.get_oci        = hawk_usb_get_oci,
+diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
+index 38d932e..f7d6fd9 100644
+--- a/arch/arm/mach-davinci/include/mach/da8xx.h
++++ b/arch/arm/mach-davinci/include/mach/da8xx.h
+@@ -94,7 +94,7 @@ int da8xx_register_usb20_phy_clk(bool use_usb_refclkin);
+ int da8xx_register_usb11_phy_clk(bool use_usb_refclkin);
+ int da8xx_register_usb_phy(void);
+ int da8xx_register_usb20(unsigned mA, unsigned potpgt);
+-int da8xx_register_usb11(struct da8xx_ohci_root_hub *pdata);
++int da8xx_register_usb11(struct da8xx_ohci_platform_data *pdata);
+ int da8xx_register_emac(void);
+ int da8xx_register_uio_pruss(void);
+ int da8xx_register_lcdc(struct da8xx_lcdc_platform_data *pdata);
+diff --git a/arch/arm/mach-davinci/usb-da8xx.c b/arch/arm/mach-davinci/usb-da8xx.c
+index 982e105..36e3460 100644
+--- a/arch/arm/mach-davinci/usb-da8xx.c
++++ b/arch/arm/mach-davinci/usb-da8xx.c
+@@ -337,7 +337,7 @@ static struct platform_device da8xx_usb11_device = {
+ 	.resource	= da8xx_usb11_resources,
+ };
+ 
+-int __init da8xx_register_usb11(struct da8xx_ohci_root_hub *pdata)
++int __init da8xx_register_usb11(struct da8xx_ohci_platform_data *pdata)
+ {
+ 	da8xx_usb11_device.dev.platform_data = pdata;
+ 	return platform_device_register(&da8xx_usb11_device);
+diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
+index 3656d7c..8ed9a52 100644
+--- a/drivers/usb/host/ohci-da8xx.c
++++ b/drivers/usb/host/ohci-da8xx.c
+@@ -64,20 +64,20 @@ static void ohci_da8xx_disable(void)
+ /*
+  * Handle the port over-current indicator change.
+  */
+-static void ohci_da8xx_ocic_handler(struct da8xx_ohci_root_hub *hub,
++static void ohci_da8xx_ocic_handler(struct da8xx_ohci_platform_data *pdata,
+ 				    unsigned port)
+ {
+ 	ocic_mask |= 1 << port;
+ 
+ 	/* Once over-current is detected, the port needs to be powered down */
+-	if (hub->get_oci(port) > 0)
+-		hub->set_power(port, 0);
++	if (pdata->get_oci(port) > 0)
++		pdata->set_power(port, 0);
+ }
+ 
+ static int ohci_da8xx_init(struct usb_hcd *hcd)
+ {
+ 	struct device *dev		= hcd->self.controller;
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
++	struct da8xx_ohci_platform_data *pdata	= dev_get_platdata(dev);
+ 	struct ohci_hcd	*ohci		= hcd_to_ohci(hcd);
+ 	int result;
+ 	u32 rh_a;
+@@ -107,16 +107,16 @@ static int ohci_da8xx_init(struct usb_hcd *hcd)
+ 	 * the correct hub descriptor...
+ 	 */
+ 	rh_a = ohci_readl(ohci, &ohci->regs->roothub.a);
+-	if (hub->set_power) {
++	if (pdata->set_power) {
+ 		rh_a &= ~RH_A_NPS;
+ 		rh_a |=  RH_A_PSM;
+ 	}
+-	if (hub->get_oci) {
++	if (pdata->get_oci) {
+ 		rh_a &= ~RH_A_NOCP;
+ 		rh_a |=  RH_A_OCPM;
+ 	}
+ 	rh_a &= ~RH_A_POTPGT;
+-	rh_a |= hub->potpgt << 24;
++	rh_a |= pdata->potpgt << 24;
+ 	ohci_writel(ohci, rh_a, &ohci->regs->roothub.a);
+ 
+ 	return result;
+@@ -167,7 +167,7 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 				  u16 wIndex, char *buf, u16 wLength)
+ {
+ 	struct device *dev		= hcd->self.controller;
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
++	struct da8xx_ohci_platform_data *pdata	= dev_get_platdata(dev);
+ 	int temp;
+ 
+ 	switch (typeReq) {
+@@ -181,11 +181,11 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 		temp = roothub_portstatus(hcd_to_ohci(hcd), wIndex - 1);
+ 
+ 		/* The port power status (PPS) bit defaults to 1 */
+-		if (hub->get_power && hub->get_power(wIndex) == 0)
++		if (pdata->get_power && pdata->get_power(wIndex) == 0)
+ 			temp &= ~RH_PS_PPS;
+ 
+ 		/* The port over-current indicator (POCI) bit is always 0 */
+-		if (hub->get_oci && hub->get_oci(wIndex) > 0)
++		if (pdata->get_oci && pdata->get_oci(wIndex) > 0)
+ 			temp |=  RH_PS_POCI;
+ 
+ 		/* The over-current indicator change (OCIC) bit is 0 too */
+@@ -210,10 +210,10 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			dev_dbg(dev, "%sPortFeature(%u): %s\n",
+ 				temp ? "Set" : "Clear", wIndex, "POWER");
+ 
+-			if (!hub->set_power)
++			if (!pdata->set_power)
+ 				return -EPIPE;
+ 
+-			return hub->set_power(wIndex, temp) ? -EPIPE : 0;
++			return pdata->set_power(wIndex, temp) ? -EPIPE : 0;
+ 		case USB_PORT_FEAT_C_OVER_CURRENT:
+ 			dev_dbg(dev, "%sPortFeature(%u): %s\n",
+ 				temp ? "Set" : "Clear", wIndex,
+@@ -288,12 +288,12 @@ static const struct hc_driver ohci_da8xx_hc_driver = {
+ static int usb_hcd_da8xx_probe(const struct hc_driver *driver,
+ 			       struct platform_device *pdev)
+ {
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(&pdev->dev);
++	struct da8xx_ohci_platform_data *pdata	= dev_get_platdata(&pdev->dev);
+ 	struct usb_hcd	*hcd;
+ 	struct resource *mem;
+ 	int error, irq;
+ 
+-	if (hub == NULL)
++	if (pdata == NULL)
+ 		return -ENODEV;
+ 
+ 	usb11_clk = devm_clk_get(&pdev->dev, "usb11");
+@@ -337,8 +337,8 @@ static int usb_hcd_da8xx_probe(const struct hc_driver *driver,
+ 
+ 	device_wakeup_enable(hcd->self.controller);
+ 
+-	if (hub->ocic_notify) {
+-		error = hub->ocic_notify(ohci_da8xx_ocic_handler);
++	if (pdata->ocic_notify) {
++		error = pdata->ocic_notify(ohci_da8xx_ocic_handler);
+ 		if (!error)
+ 			return 0;
+ 	}
+@@ -361,9 +361,9 @@ static int usb_hcd_da8xx_probe(const struct hc_driver *driver,
+ static inline void
+ usb_hcd_da8xx_remove(struct usb_hcd *hcd, struct platform_device *pdev)
+ {
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(&pdev->dev);
++	struct da8xx_ohci_platform_data *pdata	= dev_get_platdata(&pdev->dev);
+ 
+-	hub->ocic_notify(NULL);
++	pdata->ocic_notify(NULL);
+ 	usb_remove_hcd(hcd);
+ 	usb_put_hcd(hcd);
+ }
+diff --git a/include/linux/platform_data/usb-davinci.h b/include/linux/platform_data/usb-davinci.h
+index e0bc4ab..dffe3bf 100644
+--- a/include/linux/platform_data/usb-davinci.h
++++ b/include/linux/platform_data/usb-davinci.h
+@@ -34,13 +34,13 @@
+ #define CFGCHIP2_REFFREQ_24MHZ	(2 << 0)
+ #define CFGCHIP2_REFFREQ_48MHZ	(3 << 0)
+ 
+-struct	da8xx_ohci_root_hub;
++struct	da8xx_ohci_platform_data;
+ 
+-typedef void (*da8xx_ocic_handler_t)(struct da8xx_ohci_root_hub *hub,
++typedef void (*da8xx_ocic_handler_t)(struct da8xx_ohci_platform_data *pdata,
+ 				     unsigned port);
+ 
+ /* Passed as the platform data to the OHCI driver */
+-struct	da8xx_ohci_root_hub {
++struct	da8xx_ohci_platform_data {
+ 	/* Switch the port power on/off */
+ 	int	(*set_power)(unsigned port, int on);
+ 	/* Read the port power status */
 -- 
 2.7.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
