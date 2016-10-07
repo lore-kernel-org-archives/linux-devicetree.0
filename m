@@ -1,87 +1,92 @@
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH 7/7] hwmon: ptx1kbf: Add PTX1K I2CS BootFPGA sensor driver
-Date: Fri,  7 Oct 2016 18:22:04 +0300
-Message-ID: <1475853724-22557-8-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1475853724-22557-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1475853724-22557-1-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 4/6] gpio: cbc-presence: Add CBC presence detect as GPIO driver
+Date: Fri,  7 Oct 2016 18:20:12 +0300
+Message-ID: <1475853614-22409-5-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1475853614-22409-1-git-send-email-pantelis.antoniou@konsulko.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1475853614-22409-1-git-send-email-pantelis.antoniou@konsulko.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Jean Delvare <jdelvare@suse.com>, Georgi Vlaev <gvlaev@juniper.net>, Guenter Roeck <linux@roeck-us.net>, JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-kernel@vger.kernel.org, JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Debjit Ghosh <dghosh@juniper.net>, Mohammad Kamil <mkamil@juniper.net>, Georgi Vlaev <gvlaev@juniper.net>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
 From: Georgi Vlaev <gvlaev@juniper.net>
 
-The drivers allows reading CPU, PCH and DIMM modules teperatures
-from the I2CS FPGA via the SMLink1 to the PCH.
+This driver exports the CB FPGA presence detect bits from a
+single 32bit CB register as GPIOs.
 
 Signed-off-by: Georgi Vlaev <gvlaev@juniper.net>
 Signed-off-by: Guenter Roeck <groeck@juniper.net>
 [Ported from Juniper kernel]
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- drivers/hwmon/Kconfig             |  17 ++++++
- drivers/hwmon/Makefile            |   1 +
- drivers/hwmon/jnx_ptx1kbf_hwmon.c | 123 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 141 insertions(+)
- create mode 100644 drivers/hwmon/jnx_ptx1kbf_hwmon.c
+ drivers/gpio/Kconfig             |  12 +
+ drivers/gpio/Makefile            |   1 +
+ drivers/gpio/gpio-cbc-presence.c | 460 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 473 insertions(+)
+ create mode 100644 drivers/gpio/gpio-cbc-presence.c
 
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index b9348d2..5b66c7b 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -674,6 +674,23 @@ config SENSORS_JNX_FAN
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index b29f521..ef8f408 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -158,6 +158,18 @@ config GPIO_CBC
  	  This driver can also be built as a module.  If so, the module
- 	  will be called jnx-fan.
+ 	  will be called gpio-cbc.
  
-+config SENSORS_JNX_PTX1KBF
-+	tristate "Juniper Networks PTX1000 I2CS BootFPGA thermal sensors"
-+	depends on MFD_JUNIPER_PTX1KBF
++config GPIO_CBC_PRESENCE
++	tristate "Juniper Networks PTX1K CBC presence detect as GPIO"
++	depends on MFD_JUNIPER_CBC && OF
++	default y if JNX_CONNECTOR
 +	help
-+	  If you say yes here you get support for the hardware
-+	  monitoring features of the Juniper Networks PTX1000 I2CS BootFPGA
-+	  on the LPC bus. The CPU's digital thermal sensor can be read over
-+	  the PECI interface. PECI is connected to the PCH and the PCH's
-+	  Management Engine (ME) can be configured to poll CPU and DIMM
-+	  temperatures over the PECI interface. Then, it is possible for an
-+	  external I2C master (in the I2CS FPGA) to read CPU, DIMM and PCH
-+	  temperatures from the PCH over SMLink1 (which is connected to the board
-+	  I2C tree).
++	  This driver exports the CH_PRS and OTHER_CH_PRS presence detect
++	  bits of the PTX1K RCB CBC FPGA as GPIOs on the relevant Juniper
++	  platforms. Select if JNX_CONNECTOR is selected.
 +
 +	  This driver can also be built as a module.  If so, the module
-+	  will be called jnx_ptx1kbf_hwmon.
++	  will be called gpio-cbc-presence.
 +
- config SENSORS_POWR1220
- 	tristate "Lattice POWR1220 Power Monitoring"
- 	depends on I2C
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index eea631e..a3dedef 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -82,6 +82,7 @@ obj-$(CONFIG_SENSORS_INA3221)	+= ina3221.o
- obj-$(CONFIG_SENSORS_IT87)	+= it87.o
- obj-$(CONFIG_SENSORS_JC42)	+= jc42.o
- obj-$(CONFIG_SENSORS_JNX_FAN)   += jnx-fan.o
-+obj-$(CONFIG_SENSORS_JNX_PTX1KBF)	+= jnx_ptx1kbf_hwmon.o
- obj-$(CONFIG_SENSORS_JZ4740)	+= jz4740-hwmon.o
- obj-$(CONFIG_SENSORS_K8TEMP)	+= k8temp.o
- obj-$(CONFIG_SENSORS_K10TEMP)	+= k10temp.o
-diff --git a/drivers/hwmon/jnx_ptx1kbf_hwmon.c b/drivers/hwmon/jnx_ptx1kbf_hwmon.c
+ config GPIO_CLPS711X
+ 	tristate "CLPS711X GPIO support"
+ 	depends on ARCH_CLPS711X || COMPILE_TEST
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 78dd0d4..825c2636 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -34,6 +34,7 @@ obj-$(CONFIG_GPIO_BCM_KONA)	+= gpio-bcm-kona.o
+ obj-$(CONFIG_GPIO_BRCMSTB)	+= gpio-brcmstb.o
+ obj-$(CONFIG_GPIO_BT8XX)	+= gpio-bt8xx.o
+ obj-$(CONFIG_GPIO_CBC)		+= gpio-cbc.o
++obj-$(CONFIG_GPIO_CBC_PRESENCE)	+= gpio-cbc-presence.o
+ obj-$(CONFIG_GPIO_CLPS711X)	+= gpio-clps711x.o
+ obj-$(CONFIG_GPIO_CS5535)	+= gpio-cs5535.o
+ obj-$(CONFIG_GPIO_CRYSTAL_COVE)	+= gpio-crystalcove.o
+diff --git a/drivers/gpio/gpio-cbc-presence.c b/drivers/gpio/gpio-cbc-presence.c
 new file mode 100644
-index 0000000..a9d6562
+index 0000000..ab16c0b
 --- /dev/null
-+++ b/drivers/hwmon/jnx_ptx1kbf_hwmon.c
-@@ -0,0 +1,123 @@
++++ b/drivers/gpio/gpio-cbc-presence.c
+@@ -0,0 +1,460 @@
 +/*
-+ * Juniper Networks PTX1K RCB I2CS Boot FPGA hwmon driver
++ * Juniper Networks PTX1K CBC presence detect as GPIO driver
 + *
-+ * Copyright (C) 2014 Juniper Networks. All rights reserved.
++ * Copyright (c) 2014, Juniper Networks
 + * Author: Georgi Vlaev <gvlaev@juniper.net>
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
++ * the Free Software Foundation; version 2 of the License.
 + *
 + * This program is distributed in the hope that it will be useful,
 + * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -89,111 +94,449 @@ index 0000000..a9d6562
 + * GNU General Public License for more details.
 + */
 +
-+#include <linux/err.h>
 +#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
++#include <linux/init.h>
++#include <linux/pci.h>
++#include <linux/gpio.h>
++#include <linux/errno.h>
++#include <linux/of_device.h>
++#include <linux/of_platform.h>
++#include <linux/of_gpio.h>
 +#include <linux/io.h>
-+#include <linux/hwmon.h>
-+#include <linux/hwmon-sysfs.h>
-+#include <linux/mfd/ptx1k-bootfpga.h>
++#include <linux/module.h>
++#include <linux/interrupt.h>
++#include <linux/irqdomain.h>
++#include <linux/mfd/cbc-core.h>
 +
-+#define DRVNAME "jnx-ptx1kbf-hwmon"
++/*
++ * PTX1K RCB CBC:
++ * We have 26 presence bits in 2 regs.
++ * Interrupts are raised per bit change in a reg (2 ints)
++ *
++ * CBC_TOP_REGS_CH_PRS:
++ * FPC[7:0] -> FPC[7:0]
++ * FAN[16] -> FAN[0]
++ * CB[22:21] -> CB[1:0]
++ * FPD[23]
++ * OTHER_RE[26]
++ *
++ * CBC_TOP_REGS_OTHER_CH_PRS:
++ * PSM[4:0]
++ * SIB[10:5] -> SIB[5:0]
++ * SFPP[21:20] -> SFPP[1:0]
++ */
 +
-+struct bf_hwmon {
++/*
++ * struct cbc_presence_gpio - GPIO private data structure.
++ * @base: PCI base address of Memory mapped I/O register.
++ * @dev: Pointer to device structure.
++ * @gpio: Data for GPIO infrastructure.
++ */
++struct cbc_presence_gpio {
 +	void __iomem *base;
++	struct device *dev;
++	struct gpio_chip gpio;
++	struct mutex irq_lock;
++	struct mutex work_lock;
++	struct irq_domain *domain;
++	int irq;
++	u32 reg;
++	unsigned long presence_cache;
++	unsigned long presence_irq_enabled;
++	unsigned long mask;
++	unsigned long always_present;
++	unsigned long poll_interval;
++	u8 irq_type[32];
++	struct delayed_work work;
 +};
 +
-+static const char *const bf_temp_label[] = {
-+	"CPU", "PCH", "DIMM1", "DIMM2"
-+};
-+
-+static ssize_t bf_show_temp(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
++static u32 cbc_presence_read(struct cbc_presence_gpio *cpg)
 +{
-+	struct bf_hwmon *hwmon = dev_get_drvdata(dev);
-+	int channel = to_sensor_dev_attr(attr)->index;
-+
-+	return sprintf(buf, "%d\n", be16_to_cpu(ioread16(hwmon->base +
-+				BOOT_FPGA_CPU_TEMP_MSB + (channel * 2))));
++	return ioread32(cpg->base + cpg->reg) | cpg->always_present;
 +}
 +
-+static ssize_t bf_show_label(struct device *dev,
-+			     struct device_attribute *attr, char *buf)
++static int cbc_presence_gpio_get(struct gpio_chip *gc, unsigned int nr)
 +{
-+	int channel = to_sensor_dev_attr(attr)->index;
++	struct cbc_presence_gpio *cpg =
++			container_of(gc, struct cbc_presence_gpio, gpio);
++	unsigned long data, pos, ord = 0;
 +
-+	return sprintf(buf, "%s\n", bf_temp_label[channel]);
++	data = cbc_presence_read(cpg);
++	for_each_set_bit(pos, &cpg->mask, fls(cpg->mask)) {
++		if (ord == nr)
++			return !!test_bit(ord, &data);
++		ord++;
++	}
++	return 0;
 +}
 +
-+/* CPU Temp */
-+static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, bf_show_temp, NULL, 0);
-+static SENSOR_DEVICE_ATTR(temp1_label, S_IRUGO, bf_show_label, NULL, 0);
-+/* PCH Temp */
-+static SENSOR_DEVICE_ATTR(temp2_input, S_IRUGO, bf_show_temp, NULL, 1);
-+static SENSOR_DEVICE_ATTR(temp2_label, S_IRUGO, bf_show_label, NULL, 1);
-+/* DIMM1 Temp */
-+static SENSOR_DEVICE_ATTR(temp3_input, S_IRUGO, bf_show_temp, NULL, 2);
-+static SENSOR_DEVICE_ATTR(temp3_label, S_IRUGO, bf_show_label, NULL, 2);
-+/* DIMM2 Temp */
-+static SENSOR_DEVICE_ATTR(temp4_input, S_IRUGO, bf_show_temp, NULL, 3);
-+static SENSOR_DEVICE_ATTR(temp4_label, S_IRUGO, bf_show_label, NULL, 3);
++static int cbc_presence_gpio_direction_input(struct gpio_chip *gc,
++					     unsigned int nr)
++{
++	/* all pins are input pins */
++	return 0;
++}
 +
-+static struct attribute *bf_attrs[] = {
-+	&sensor_dev_attr_temp1_input.dev_attr.attr,
-+	&sensor_dev_attr_temp1_label.dev_attr.attr,
-+	&sensor_dev_attr_temp2_input.dev_attr.attr,
-+	&sensor_dev_attr_temp2_label.dev_attr.attr,
-+	&sensor_dev_attr_temp3_input.dev_attr.attr,
-+	&sensor_dev_attr_temp3_label.dev_attr.attr,
-+	&sensor_dev_attr_temp4_input.dev_attr.attr,
-+	&sensor_dev_attr_temp4_label.dev_attr.attr,
-+	NULL
++static int cbc_presence_gpio_to_irq(struct gpio_chip *gc, unsigned int offset)
++{
++	struct cbc_presence_gpio *cpg = container_of(gc,
++						struct cbc_presence_gpio, gpio);
++
++	return irq_create_mapping(cpg->domain, offset);
++}
++
++static void cbc_presence_irq_mask(struct irq_data *data)
++{
++	struct cbc_presence_gpio *cpg = irq_data_get_irq_chip_data(data);
++
++	clear_bit(data->hwirq, &cpg->presence_irq_enabled);
++}
++
++static void cbc_presence_irq_unmask(struct irq_data *data)
++{
++	struct cbc_presence_gpio *cpg = irq_data_get_irq_chip_data(data);
++
++	set_bit(data->hwirq, &cpg->presence_irq_enabled);
++}
++
++static int cbc_presence_irq_set_type(struct irq_data *data, unsigned int type)
++{
++	struct cbc_presence_gpio *cpg = irq_data_get_irq_chip_data(data);
++
++	cpg->irq_type[data->hwirq] = type & 0x0f;
++
++	return 0;
++}
++
++static void cbc_presence_irq_bus_lock(struct irq_data *data)
++{
++	struct cbc_presence_gpio *cpg = irq_data_get_irq_chip_data(data);
++
++	mutex_lock(&cpg->irq_lock);
++}
++
++static void cbc_presence_irq_bus_unlock(struct irq_data *data)
++{
++	struct cbc_presence_gpio *cpg = irq_data_get_irq_chip_data(data);
++
++	/* Synchronize interrupts to chip */
++
++	mutex_unlock(&cpg->irq_lock);
++}
++
++static struct irq_chip cbc_presence_irq_chip = {
++	.name = "gpio-cbc-presence",
++	.irq_mask = cbc_presence_irq_mask,
++	.irq_unmask = cbc_presence_irq_unmask,
++	.irq_set_type = cbc_presence_irq_set_type,
++	.irq_bus_lock = cbc_presence_irq_bus_lock,
++	.irq_bus_sync_unlock = cbc_presence_irq_bus_unlock,
 +};
 +
-+ATTRIBUTE_GROUPS(bf);
-+
-+static int bf_hwmon_probe(struct platform_device *pdev)
++static int cbc_presence_gpio_irq_map(struct irq_domain *domain,
++				unsigned int irq, irq_hw_number_t hwirq)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct device *hwmon_dev;
-+	struct bf_hwmon *hwmon;
-+	struct resource *mem;
++	irq_set_chip_data(irq, domain->host_data);
++	irq_set_chip(irq, &cbc_presence_irq_chip);
++	irq_set_nested_thread(irq, true);
++	irq_set_noprobe(irq);
 +
-+	hwmon = devm_kzalloc(dev, sizeof(*hwmon), GFP_KERNEL);
-+	if (!hwmon)
++	return 0;
++}
++
++static const struct irq_domain_ops cbc_presence_gpio_irq_domain_ops = {
++	.map = cbc_presence_gpio_irq_map,
++	.xlate = irq_domain_xlate_twocell,
++};
++
++static void cbc_presence_gpio_irq_work(struct cbc_presence_gpio *cpg)
++{
++	unsigned long data, pos, ord = 0;
++
++	data = cbc_presence_read(cpg);
++
++	mutex_lock(&cpg->work_lock);
++	for_each_set_bit(pos, &cpg->mask, fls(cpg->mask)) {
++		int type, bit;
++
++		if (!test_bit(ord, &cpg->presence_irq_enabled)) {
++			ord++;
++			continue;
++		}
++
++		bit = test_bit(pos, &data);
++		if (bit == test_bit(pos, &cpg->presence_cache)) {
++			ord++;
++			continue;
++		}
++
++		type = cpg->irq_type[ord];
++		/*
++		 * check irq->type for match. Only handle edge triggered
++		 * interrupts; anything else doesn't make sense here.
++		 */
++		if (((type & IRQ_TYPE_EDGE_RISING) && bit) ||
++		    ((type & IRQ_TYPE_EDGE_FALLING) && !bit)) {
++			int virq = irq_find_mapping(cpg->domain, ord);
++
++			handle_nested_irq(virq);
++		}
++		ord++;
++	}
++	cpg->presence_cache = data;
++	mutex_unlock(&cpg->work_lock);
++}
++
++static irqreturn_t cbc_presence_gpio_irq_handler(int irq, void *data)
++{
++	struct cbc_presence_gpio *cpg = data;
++
++	cbc_presence_gpio_irq_work(cpg);
++
++	return IRQ_HANDLED;
++}
++
++static void cbc_presence_gpio_worker(struct work_struct *work)
++{
++	struct cbc_presence_gpio *cpg =
++		container_of(work, struct cbc_presence_gpio, work.work);
++
++	cbc_presence_gpio_irq_work(cpg);
++	schedule_delayed_work(&cpg->work,
++				msecs_to_jiffies(cpg->poll_interval));
++}
++
++static int cbc_presence_gpio_irq_setup(struct device *dev,
++					struct cbc_presence_gpio *cpg)
++{
++	int ret;
++
++	cpg->domain = irq_domain_add_linear(dev->of_node,
++				hweight_long(cpg->mask),
++				&cbc_presence_gpio_irq_domain_ops,
++				cpg);
++
++	if (cpg->domain == NULL)
 +		return -ENOMEM;
 +
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!mem) {
-+		dev_err(&pdev->dev, "Failed to get platform mmio resource\n");
-+		return -ENOENT;
++	INIT_DELAYED_WORK(&cpg->work, cbc_presence_gpio_worker);
++
++	if (cpg->irq) {
++		dev_info(dev, "Setting up interrupt %d\n", cpg->irq);
++		ret = devm_request_threaded_irq(dev, cpg->irq, NULL,
++						cbc_presence_gpio_irq_handler,
++						IRQF_ONESHOT,
++						dev_name(dev), cpg);
++		if (ret)
++			goto out_remove_domain;
++	} else {
++		schedule_delayed_work(&cpg->work, 1);
 +	}
 +
-+	hwmon->base = devm_ioremap_nocache(dev, mem->start, resource_size(mem));
-+	if (IS_ERR(hwmon->base)) {
-+		dev_err(dev, "Failed to ioremap mmio memory\n");
-+		return PTR_ERR(hwmon->base);
-+	}
++	cpg->gpio.to_irq = cbc_presence_gpio_to_irq;
 +
-+	hwmon_dev = devm_hwmon_device_register_with_groups(dev, "jnx_ptx1kbf",
-+							   hwmon, bf_groups);
-+	return PTR_ERR_OR_ZERO(hwmon_dev);
++	return 0;
++
++out_remove_domain:
++	irq_domain_remove(cpg->domain);
++	return ret;
 +}
 +
-+static struct platform_driver bf_hwmon_driver = {
-+	.probe  = bf_hwmon_probe,
-+	.driver = {
-+		.name = DRVNAME,
-+		.owner = THIS_MODULE,
-+	},
++static void cbc_presence_gpio_irq_teardown(struct device *dev,
++					struct cbc_presence_gpio *cpg)
++{
++	int i;
++
++	if (!cpg->irq)
++		cancel_delayed_work_sync(&cpg->work);
++
++	for (i = 0; i < cpg->gpio.ngpio; i++) {
++		int irq = irq_find_mapping(cpg->domain, i);
++
++		if (irq > 0)
++			irq_dispose_mapping(irq);
++	}
++	irq_domain_remove(cpg->domain);
++}
++
++static int cbc_presence_gpio_of_xlate(struct gpio_chip *gpio,
++				  const struct of_phandle_args *gpiospec,
++				  u32 *flags)
++{
++	if (WARN_ON(gpio->of_gpio_n_cells < 2))
++		return -EINVAL;
++
++	if (WARN_ON(gpiospec->args_count < gpio->of_gpio_n_cells))
++		return -EINVAL;
++
++	if (gpiospec->args[0] > gpio->ngpio)
++		return -EINVAL;
++
++	if (flags)
++		*flags = gpiospec->args[1] >> 16;
++
++	return gpiospec->args[0];
++}
++
++static void cbc_presence_gpio_setup(struct cbc_presence_gpio *cpg)
++{
++	struct gpio_chip *gpio = &cpg->gpio;
++
++	gpio->label = dev_name(cpg->dev);
++	gpio->owner = THIS_MODULE;
++	gpio->get = cbc_presence_gpio_get;
++	gpio->direction_input = cbc_presence_gpio_direction_input;
++	gpio->dbg_show = NULL;
++	gpio->base = -1;
++	gpio->ngpio = hweight_long(cpg->mask);
++	gpio->can_sleep = 0;
++	gpio->of_node = cpg->dev->of_node;
++	gpio->of_xlate = cbc_presence_gpio_of_xlate;
++	gpio->of_gpio_n_cells = 2;
++}
++
++static int cbc_presence_of_setup(struct cbc_presence_gpio *cpg)
++{
++	struct device *dev = cpg->dev;
++	struct device_node *node = dev->of_node;
++	u32 value;
++	int ret;
++
++	/* reg := CBC_TOP_REGS_CH_PRS | CBC_TOP_REGS_OTHER_CH_PRS */
++	ret = of_property_read_u32(node, "reg", &value);
++	if (ret) {
++		dev_err(dev, "failed to read the <reg> property.\n");
++		return ret;
++	}
++	cpg->reg = value;
++
++	/* mask := valid presence bits in <reg> */
++	ret = of_property_read_u32(node, "mask", &value);
++	if (ret)
++		value = 0xffffffff;
++	cpg->mask = value;
++
++	/*
++	 * always-present := some frus are always present, but not reported
++	 * e.g MP/BP on PTX1K & PTX3K
++	 */
++	ret = of_property_read_u32(node, "always-present", &value);
++	if (ret)
++		value = 0;
++	cpg->always_present = value;
++
++	/*
++	 * poll-interval := some CBC releses don't support interrupts.
++	 * Default poll interval is 1000 msec
++	 */
++	ret = of_property_read_u32(node, "poll-interval", &value);
++	if (ret)
++		value = 1000;
++	cpg->poll_interval = value;
++
++	return 0;
++}
++
++static int cbc_presence_gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct cbc_presence_gpio *cpg;
++	struct resource *res;
++	int ret;
++
++	cpg = devm_kzalloc(dev, sizeof(struct cbc_presence_gpio),
++			GFP_KERNEL);
++	if (cpg == NULL)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res)
++		return -ENODEV;
++
++	cpg->base = devm_ioremap_nocache(dev, res->start, resource_size(res));
++	if (IS_ERR(cpg->base))
++		return -ENOMEM;
++
++	ret = platform_get_irq(pdev, 0);
++	if (ret > 0)
++		cpg->irq = ret;
++
++	cpg->dev = dev;
++	mutex_init(&cpg->irq_lock);
++	mutex_init(&cpg->work_lock);
++
++	ret = cbc_presence_of_setup(cpg);
++	if (ret)
++		return -ENODEV;
++
++	cbc_presence_gpio_setup(cpg);
++
++	/* cache the current presence */
++	cpg->presence_cache = cbc_presence_read(cpg);
++
++	ret = cbc_presence_gpio_irq_setup(dev, cpg);
++	if (ret < 0) {
++		dev_err(dev, "Failed to setup CBC presence irqs\n");
++		return ret;
++	}
++
++	ret = gpiochip_add(&cpg->gpio);
++	if (ret) {
++		dev_err(dev, "Failed to register CBC presence gpio\n");
++		goto err;
++	}
++
++	platform_set_drvdata(pdev, cpg);
++
++	return 0;
++err:
++	gpiochip_remove(&cpg->gpio);
++
++	if (cpg->domain)
++		cbc_presence_gpio_irq_teardown(dev, cpg);
++
++	return ret;
++}
++
++static int cbc_presence_gpio_remove(struct platform_device *pdev)
++{
++	struct cbc_presence_gpio *cpg = platform_get_drvdata(pdev);
++
++	cancel_delayed_work_sync(&cpg->work);
++	if (cpg->domain)
++		cbc_presence_gpio_irq_teardown(&pdev->dev, cpg);
++
++	gpiochip_remove(&cpg->gpio);
++
++	return 0;
++}
++
++static const struct of_device_id cbc_presence_gpio_ids[] = {
++	{ .compatible = "jnx,gpio-cbc-presence", },
++	/*
++	 * These are the same devices ... MFD OF hackery to
++	 * get around the single of_node compatible match
++	 * mfd_add_device() for the OTHER_CH_PRESENCE
++	 */
++	{ .compatible = "jnx,gpio-cbc-presence-other", },
++	{ .compatible = "jnx,gpio-cbc-presence-sib", },
++	{ },
 +};
++MODULE_DEVICE_TABLE(of, cbc_presence_gpio_ids);
 +
-+module_platform_driver(bf_hwmon_driver);
++static struct platform_driver cbc_presence_gpio_driver = {
++	.driver = {
++		.name = "gpio-cbc-presence",
++		.owner  = THIS_MODULE,
++		.of_match_table = cbc_presence_gpio_ids,
++	},
++	.probe = cbc_presence_gpio_probe,
++	.remove = cbc_presence_gpio_remove,
++};
++module_platform_driver(cbc_presence_gpio_driver);
 +
-+MODULE_DESCRIPTION("Juniper Networks PTX1K RCB I2CS Boot FPGA hwmon driver");
++MODULE_DESCRIPTION("Juniper Networks CB presence detect as GPIO driver");
 +MODULE_AUTHOR("Georgi Vlaev <gvlaev@juniper.net>");
 +MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:" DRVNAME);
 -- 
 1.9.1
