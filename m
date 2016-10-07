@@ -1,60 +1,37 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 03/11] ARM: shmobile: r8a7743: basic SoC support
-Date: Fri, 7 Oct 2016 12:11:38 +0200
-Message-ID: <CAMuHMdWH8_uREVnc6_iFqAw3Ms+fV3hXpy5Pngn+zcei1EOOpQ@mail.gmail.com>
-References: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com> <15557770.lH5aPepOeZ@wasted.cogentembedded.com>
- <20161007031537.GK13721@verge.net.au> <2345971.ESZSzve5jF@avalon> <836d9018-e8f4-27ef-bfff-06932184d59f@cogentembedded.com>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [v7,
+ 1/3] Documentation: dt: net: add ath9k wireless device binding
+Date: Fri,  7 Oct 2016 12:17:43 +0000 (UTC)
+Message-ID: <20161007121743.E625B61AF8@smtp.codeaurora.org>
+References: <20161002214743.2263-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <836d9018-e8f4-27ef-bfff-06932184d59f@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161002214743.2263-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn-yOkvZcmFvRU@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> Add documentation how devicetree can be used to configure ath9k based
+> devices.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 
-On Fri, Oct 7, 2016 at 12:02 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 10/7/2016 11:33 AM, Laurent Pinchart wrote:
->>>> Add minimal support for the RZ/G1M (R8A7743) SoC.
->>>> Based on the original (and large) patch by Dmitry Shifrin
->>>> <dmitry.shifrin@cogentembedded.com>.
->>>>
->>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>
->>>
->>> Thanks, I have queued this up.
->>
->>
->> I'd like to see this patch rebased on top of "[PATCH] ARM: shmobile:
->> Consolidate R8A779[234] machine definitions".
->
->
->    R87743 is analogous to R8A7791, not R8A779[234], not sure how it is
-> connected to your patch.
+Looks good to me but missing the ack from DT maintainers, will wait for
+that.
 
-The comment
+3 patches set to Deferred.
 
-+       /*
-+        * R8A7790 and R8A7791 can't be handled here as long as they need SMP
-+        * initialization fallback.
-+        */
+9359805 [v7,1/3] Documentation: dt: net: add ath9k wireless device binding
+9359801 [v7,2/3] ath9k: add a helper to get the string representation of ath_bus_type
+9359803 [v7,3/3] ath9k: parse the device configuration from an OF node
 
-is not about r8a7790/r8a7791 in se, but about backward compatibility support
-for DTBs without APMU nodes and CPU enable-methods.
+-- 
+https://patchwork.kernel.org/patch/9359805/
 
-For new SoCs, we mandate the presence of these in the DTB.
+Documentation about submitting wireless patches and checking status
+from patchwork:
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
