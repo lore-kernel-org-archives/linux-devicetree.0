@@ -1,64 +1,122 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: RE: [PATCH V1 04/10] watchdog: da9061: watchdog driver (RFC)
-Date: Fri, 7 Oct 2016 14:56:17 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CCE2732@SW-EX-MBX02.diasemi.com>
-References: <6ED8E3B22081A4459DAC7699F3695FB7018CCE242C@SW-EX-MBX02.diasemi.com>
- <20161006184927.GB11915@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20161006184927.GB11915@roeck-us.net>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@iguana.be>
-Cc: Lee Jones <lee.jones@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2] ARM64: dts: meson-gxbb: Add rmii pinctrl node and rename rgmii node
+Date: Fri,  7 Oct 2016 16:59:15 +0200
+Message-ID: <1475852355-24096-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06 October 2016 19:49, Guenter Roeck wrote:
-> Subject: Re: [PATCH V1 04/10] watchdog: da9061: watchdog driver (RFC)
-> 
-> Hi Steve,
+For boards only supporting 10/100 ethernet over a RMII PHY link, add
+a separate pinctrl node. By the way, rename the existing node to rgmii
+specific naming in all boards dts.
 
-[...]
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts |  3 ++-
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts    |  2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi       |  2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi   |  2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi            | 17 ++++++++++++++++-
+ 5 files changed, 21 insertions(+), 5 deletions(-)
 
-> On Thu, Oct 06, 2016 at 04:28:14PM +0000, Steve Twiss wrote:
-> > I am using the compatible string to pick a different configuration .data block:
-> >
-> > { .compatible = "dlg,da9062-watchdog", .data = &da9062_watchdog_info },
-> > { .compatible = "dlg,da9061-watchdog", .data = &da9061_watchdog_info },
-> >
-> > when the only real difference between the DA9061 and DA9062 watchdog driver
-> > is the name. Functionally they are identical in this case.
-[...]
-> > This exact same thing would happen with da9063-onkey and da9062-thermal also.
-> > For the ONKEY it is marginally confused by needing to support 63, but for 62 and 61
-> > it is the same thing. Only the name is different.
-> >
-[...]
-> > But, it is just my opinion to keep the "name" different.
-> > This will not be my decision if accepted into the Linux kernel, but I would like to
-> > at least be consistent for DA9061 and DA9062 so ... is this an issue?
-> 
-> 
-> Yes, for me it is. The driver is still the same, and I don't see the point
-> of increasing code size and making the driver less readable just to be able
-> to report a slightly different driver identification string. And each time
-> a similar HW is added we would go through the same effort, again for no
-> good reason.
-> 
+Changes since v1 at http://lkml.kernel.org/r/1475678673-15277-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org :
+ - Change Nexbox A95X to rmii interface
 
-My reason for doing this was to report the hardware identification, not the
-driver name. But, there would certainly be a lot less to do if I was to make
-DA9061 core use the DA9062 watchdog.
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+index 80d7b35..399d85f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+@@ -97,8 +97,9 @@
  
-> FWIW the driver doesn't really need to be updated in the first place.
-> A compatible statement listing both da9061 and da9062 would do it.
+ &ethmac {
+ 	status = "okay";
+-	pinctrl-0 = <&eth_pins>;
++	pinctrl-0 = <&eth_rmii_pins>;
+ 	pinctrl-names = "default";
++	phy-mode = "rmii";
+ };
+ 
+ &ir {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index e6e3491..325b9c5 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -83,7 +83,7 @@
+ 
+ &ethmac {
+ 	status = "okay";
+-	pinctrl-0 = <&eth_pins>;
++	pinctrl-0 = <&eth_rgmii_pins>;
+ 	pinctrl-names = "default";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+index 06a34dc..031d69b 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+@@ -81,7 +81,7 @@
+ 
+ &ethmac {
+ 	status = "okay";
+-	pinctrl-0 = <&eth_pins>;
++	pinctrl-0 = <&eth_rgmii_pins>;
+ 	pinctrl-names = "default";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+index 73f1593..e93221a 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+@@ -82,7 +82,7 @@
+ 
+ &ethmac {
+ 	status = "okay";
+-	pinctrl-0 = <&eth_pins>;
++	pinctrl-0 = <&eth_rgmii_pins>;
+ 	pinctrl-names = "default";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index 443811b..aad639a 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -443,7 +443,7 @@
+ 			};
+ 		};
+ 
+-		eth_pins: eth_c {
++		eth_rgmii_pins: eth-rgmii {
+ 			mux {
+ 				groups = "eth_mdio",
+ 				       "eth_mdc",
+@@ -463,6 +463,21 @@
+ 			};
+ 		};
+ 
++		eth_rmii_pins: eth-rmii {
++			mux {
++				groups = "eth_mdio",
++				       "eth_mdc",
++				       "eth_clk_rx_clk",
++				       "eth_rx_dv",
++				       "eth_rxd0",
++				       "eth_rxd1",
++				       "eth_tx_en",
++				       "eth_txd0",
++				       "eth_txd1";
++				function = "eth";
++			};
++		};
++
+ 		pwm_a_x_pins: pwm_a_x {
+ 			mux {
+ 				groups = "pwm_a_x";
+-- 
+1.9.1
 
-I will make the changes you requested: deprecate the existing compatibility
-for da9062-watchdog and make a new compatibility string which combines both
-da9061 and da9062.
-
-Regards,
-Stephen
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
