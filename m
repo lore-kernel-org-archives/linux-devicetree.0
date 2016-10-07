@@ -1,65 +1,54 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V1 04/10] watchdog: da9061: watchdog driver (RFC)
-Date: Fri, 7 Oct 2016 10:02:14 -0700
-Message-ID: <20161007170214.GA21349@roeck-us.net>
-References: <6ED8E3B22081A4459DAC7699F3695FB7018CCE242C@SW-EX-MBX02.diasemi.com>
- <20161006184927.GB11915@roeck-us.net>
- <6ED8E3B22081A4459DAC7699F3695FB7018CCE2732@SW-EX-MBX02.diasemi.com>
+From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH 1/3] fpga manager: Add cyclonespi driver for Altera
+ fpgas
+Date: Fri, 7 Oct 2016 13:21:15 -0500
+Message-ID: <alpine.DEB.2.02.1610071248320.32627@linuxheads99>
+References: <cover.1475783742.git.stillcompiling@gmail.com> <4b4432c04b4ea92a2af814e3d7866c33f2eb12ea.1475783742.git.stillcompiling@gmail.com> <CAAtXAHcWLpn3DFP6YLWqBxsMQ0O=HNNCmB+kHbHhyAHFHQUbwA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7018CCE2732@SW-EX-MBX02.diasemi.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: Wim Van Sebroeck <wim@iguana.be>, Lee Jones <lee.jones@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAtXAHcWLpn3DFP6YLWqBxsMQ0O=HNNCmB+kHbHhyAHFHQUbwA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Cc: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, julia-acOepvfBmUk@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 07, 2016 at 02:56:17PM +0000, Steve Twiss wrote:
-> On 06 October 2016 19:49, Guenter Roeck wrote:
-> > Subject: Re: [PATCH V1 04/10] watchdog: da9061: watchdog driver (RFC)
-> > 
-> > Hi Steve,
-> 
-> [...]
-> 
-> > On Thu, Oct 06, 2016 at 04:28:14PM +0000, Steve Twiss wrote:
-> > > I am using the compatible string to pick a different configuration .data block:
-> > >
-> > > { .compatible = "dlg,da9062-watchdog", .data = &da9062_watchdog_info },
-> > > { .compatible = "dlg,da9061-watchdog", .data = &da9061_watchdog_info },
-> > >
-> > > when the only real difference between the DA9061 and DA9062 watchdog driver
-> > > is the name. Functionally they are identical in this case.
-> [...]
-> > > This exact same thing would happen with da9063-onkey and da9062-thermal also.
-> > > For the ONKEY it is marginally confused by needing to support 63, but for 62 and 61
-> > > it is the same thing. Only the name is different.
-> > >
-> [...]
-> > > But, it is just my opinion to keep the "name" different.
-> > > This will not be my decision if accepted into the Linux kernel, but I would like to
-> > > at least be consistent for DA9061 and DA9062 so ... is this an issue?
-> > 
-> > 
-> > Yes, for me it is. The driver is still the same, and I don't see the point
-> > of increasing code size and making the driver less readable just to be able
-> > to report a slightly different driver identification string. And each time
-> > a similar HW is added we would go through the same effort, again for no
-> > good reason.
-> > 
-> 
-> My reason for doing this was to report the hardware identification, not the
-> driver name. But, there would certainly be a lot less to do if I was to make
-> DA9061 core use the DA9062 watchdog.
->  
-> > FWIW the driver doesn't really need to be updated in the first place.
-> > A compatible statement listing both da9061 and da9062 would do it.
-> 
-> I will make the changes you requested: deprecate the existing compatibility
-> for da9062-watchdog and make a new compatibility string which combines both
-> da9061 and da9062.
-> 
-That is not what I asked for.
+On Fri, 7 Oct 2016, Moritz Fischer wrote:
 
-Guenter
+> > +static inline u32 revbit8x4(u32 n)
+> > +{
+> > +       n = ((n & 0xF0F0F0F0UL) >> 4) | ((n & 0x0F0F0F0FUL) << 4);
+> > +       n = ((n & 0xCCCCCCCCUL) >> 2) | ((n & 0x33333333UL) << 2);
+> > +       n = ((n & 0xAAAAAAAAUL) >> 1) | ((n & 0x55555555UL) << 1);
+> > +       return n;
+> > +}
+> 
+> During the Zynq FPGA manager reviews we decided that manipulating the bitstream
+> to be consumable by the driver is userland's job.
+
+Moritz, Can you remind me what that issue was there (or point me to
+that email, I can't find it)?  I don't think I had a problem with that
+in your case.  In general I think if these drivers can take the
+bitstream that comes from the manufacturer's tools and stuff it into
+the FPGA, then we are accomplishing what we want.  So I am OK with
+this here.  The intent of the driver is to load a standard rbf, same
+as the other Altera FPGA drivers.
+
+There is a problem here though it will be easy to fix.  This call to
+revbit8x4 should happen in cyclonespi_write(), not in
+cyclonespi_write_init(). The reason for that is that write_init() may
+just get the first chunk of the image (the header) and that write()
+will be called multiple times for the remaining chunks.  The current
+FPGA manager API won't show this problem since you have to give
+fpga_mgr_buf_load the whole image buffer at once.  But it is easy to
+imagine that some time in the future we may want to expand the FPGA
+manager API to support streaming where we don't have the whole buffer.
+
+Thanks for submitting, Joshua.  Will be looking at this over the
+next several days.
+
+Alan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
