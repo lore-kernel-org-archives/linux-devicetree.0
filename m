@@ -1,45 +1,37 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCHv1] hwmon: Add tc654 driver
-Date: Thu, 6 Oct 2016 23:13:50 +0000
-Message-ID: <5dcea99a8a5f40be85d021ae74d2ed35@svr-chch-ex1.atlnz.lc>
-References: <20161006225702.GA9365@roeck-us.net>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH] devicetree: net: micrel-ksz90x1.txt: Properly explain
+ skew settings
+Date: Thu, 06 Oct 2016 20:49:23 -0400 (EDT)
+Message-ID: <20161006.204923.1914066918563386131.davem@davemloft.net>
+References: <1475676188-10639-1-git-send-email-mike.looijmans@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, Masahiko Iwamoto <iwamoto@allied-telesis.co.jp>, Joshua Scott <Joshua.Scott@alliedtelesis.co.nz>, Kevin Tsai <ktsai@capellamicro.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475676188-10639-1-git-send-email-mike.looijmans-Oq418RWZeHk@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mike.looijmans-Oq418RWZeHk@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2016 11:57 AM, Guenter Roeck wrote:=0A=
-> On Fri, Oct 07, 2016 at 10:36:47AM +1300, Chris Packham wrote:=0A=
->> Add support for the tc654 and tc655 fan controllers from Microchip.=0A=
->>=0A=
->> http://ww1.microchip.com/downloads/en/DeviceDoc/20001734C.pdf=0A=
->>=0A=
->> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
->> ---=0A=
->>=0A=
->> Hi Gunter,=0A=
->>=0A=
->> I realise this isn't using the new hwmon registration API. This is=0A=
->> essentially a forward port from an older kernel. I can attempt a=0A=
->> conversion as a follow up patch but I loose the ability to actually test=
-=0A=
->> the driver.=0A=
->>=0A=
-> No problem.=0A=
->=0A=
-> Can you send me a register dump for this chip ?=0A=
-=0A=
-Here you go=0A=
-=0A=
-[root@awplus /flash]# i2cdump /dev/i2c-0 0x1b=0A=
-Dump of device 0x1b on /dev/i2c-0=0A=
-  0: 76 00 0a 0a 2a 02 00 54 00 b3 31 01 ff ff ff 00  v...*..T..1.....=0A=
-=0A=
-I'll read through the rest of your comments and reply with a v2 later.=0A=
-=0A=
-=0A=
+From: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
+Date: Wed,  5 Oct 2016 16:03:08 +0200
+
+> The KSZ9031 skew registers contain an offset, the chip's default value
+> is "neutral" which does not add any skew. Programming a 0 into a skew
+> property will actually set it the maximal negative adjustment and not
+> to a neutral position as one would expect.
+> 
+> Explain this situation in the devicetree binding documentation and list
+> the settings that the chip considers neutral.
+> 
+> Changing the implementation to accept negative values would have been
+> a better solution, but would break existing configurations.
+> 
+> Signed-off-by: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
+
+Applied.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
