@@ -1,58 +1,47 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/2] ARM: dts: r7s72100: add sdhi DT
-Date: Fri, 7 Oct 2016 13:41:51 +0900
-Message-ID: <20161007044147.GA5855@verge.net.au>
-References: <20160926204032.12260-1-chris.brandt@renesas.com>
+From: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+Subject: Re: [PATCH v2 5/6] arm: dts: imx7-colibri: Use pwm polarity control
+Date: Fri, 7 Oct 2016 10:19:59 +0530
+Message-ID: <269990b4-ef58-e64b-2658-70bacfe51381@toradex.com>
+References: <20161001101235.24598-1-bhuvanchandra.dv@toradex.com>
+ <20161001101235.24598-6-bhuvanchandra.dv@toradex.com>
+ <20161006084007.44c5cbae@jawa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160926204032.12260-1-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161006084007.44c5cbae@jawa>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lukasz Majewski <l.majewski@majess.pl>
+Cc: devicetree@vger.kernel.org, stefan@agner.ch, thierry.reding@gmail.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 26, 2016 at 04:40:30PM -0400, Chris Brandt wrote:
-> SUMMARY:
-> This series adds sdhi to the r7s72100 (RZ/A1) Device Tree.
-> 
-> DEPENDECIES:
-> This series is dependent on the tmio/sh_sdhi patches being
-> applied to add r7s72100 support.
->   mmc: sh_mobile_sdhi: add ocr_mask option
->   mmc: tmio-mmc: add support for 32bit data port
->   mmc: sh_mobile_sdhi: Add r7s72100 support
-> 
-> MERGE CONFLICTS:
-> There are also patches being reviewed for adding mmc so depending on how
-> they get applied, there might be a line conflict.
-> To resolve the merge conflict, simply put the MMC nodes before
-> the SDHI nodes (just because that seems to be the order in other
-> Renesas SoCs DTs)
-
-Thanks for the notes above.
-
-I have decided to queue this up (for v4.10). Please let me know
-if that was not desired. Or if subsequently it becomes undesirable
-(i.e. if I should drop these patches).
-
-> CHANGES:
-> V1->V2
-> * Removed patch "[PATCH 1/3] ARM: dts: r7s72100: add sdhi clock to device tree"
->   because it has already been queued up
-> * moved bus-with property from dtsi to dts
-> 
-> 
-> Chris Brandt (2):
->   ARM: dts: r7s72100: add sdhi to device tree
->   ARM: dts: rskrza1: add sdhi1 DT support
-> 
->  arch/arm/boot/dts/r7s72100-rskrza1.dts |  5 +++++
->  arch/arm/boot/dts/r7s72100.dtsi        | 26 ++++++++++++++++++++++++++
->  2 files changed, 31 insertions(+)
-> 
-> -- 
-> 2.9.2
-> 
-> 
+T24gMTAvMDYvMTYgMTI6MTAsIEx1a2FzeiBNYWpld3NraSB3cm90ZToKCj4gT24gU2F0LCAxIE9j
+dCAyMDE2IDE1OjQyOjM0ICswNTMwCj4gQmh1dmFuY2hhbmRyYSBEViA8Ymh1dmFuY2hhbmRyYS5k
+dkB0b3JhZGV4LmNvbT4gd3JvdGU6Cj4KPj4gQ29uZmlndXJlIFBXTSBwb2xhcml0eSBjb250cm9s
+Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBCaHV2YW5jaGFuZHJhIERWIDxiaHV2YW5jaGFuZHJhLmR2
+QHRvcmFkZXguY29tPgo+PiAtLS0KPj4gICBhcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmku
+ZHRzaSB8IDIgKy0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRp
+b24oLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS5k
+dHNpCj4+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kgaW5kZXggYTljYzY1
+Ny4uMmFmNWUzZSAxMDA2NDQKPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJp
+LmR0c2kKPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kKPj4gQEAg
+LTQzLDcgKzQzLDcgQEAKPj4gICAvIHsKPj4gICAJYmw6IGJhY2tsaWdodCB7Cj4+ICAgCQljb21w
+YXRpYmxlID0gInB3bS1iYWNrbGlnaHQiOwo+PiAtCQlwd21zID0gPCZwd20xIDAgNTAwMDAwMD47
+Cj4+ICsJCXB3bXMgPSA8JnB3bTEgMCA1MDAwMDAwIDA+Owo+IE15IHJlY29tbWVuZGF0aW9uIHdv
+dWxkIGJlIHRvIGFkZDoKPiAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcHdtL3B3bS5oPgo+Cj4gYW5k
+IHRoZW4gZGVmaW5lIHB3bXMgYXM6Cj4KPiBwd21zID0gPCZwd20xIDAgNTAwMDAwMCBQV01fUE9M
+QVJJVFlfTk9STUFMPjsKPgo+IEl0IHdvdWxkIGJlIG1vcmUgcmVhZGFibGUKCk9rLCB3aWxsIGFk
+ZCB0aGF0LgoKLS0KQmh1dmFuCgo+Cj4gQmVzdCByZWdhcmRzLAo+IMWBdWthc3ogTWFqZXdza2kK
+Pgo+PiAgIAl9Owo+PiAgIAo+PiAgIAlyZWdfbW9kdWxlXzN2MzogcmVndWxhdG9yLW1vZHVsZS0z
+djMgewoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LWFybS1rZXJuZWwK
