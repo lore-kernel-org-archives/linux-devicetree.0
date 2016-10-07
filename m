@@ -1,34 +1,26 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: shmobile: alt/gose: Add board part number to DT
- bindings
-Date: Fri, 7 Oct 2016 12:32:15 +0900
-Message-ID: <20161007033214.GO13721@verge.net.au>
-References: <1475587248-13670-1-git-send-email-geert+renesas@glider.be>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: dts: r8a7794: Fix W=1 dtc warnings
+Date: Fri, 7 Oct 2016 12:33:52 +0900
+Message-ID: <20161007033352.GP13721@verge.net.au>
+References: <1475587908-22151-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1475587248-13670-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1475587908-22151-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 04, 2016 at 03:20:46PM +0200, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
-> 
-> This series at the missing board part numbers for r8a7794/alt and
-> r8a7793/gose to the DT binding documentation, like is done for the other
-> boards.
-> 
-> Thanks for applying!
-> 
-> Geert Uytterhoeven (2):
->   ARM: shmobile: r8a7794/alt: Add board part number to DT bindings
->   ARM: shmobile: r8a7793/gose: Add board part number to DT bindings
+On Tue, Oct 04, 2016 at 03:31:48PM +0200, Geert Uytterhoeven wrote:
+> Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,dvc/dvc@0 has a unit name, but no reg property
 
-Thanks, I have queued these up.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+...
+
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  arch/arm/boot/dts/r8a7794.dtsi | 58 +++++++++++++++++++++---------------------
+>  1 file changed, 29 insertions(+), 29 deletions(-)
+
+Thanks, I have queued this up.
