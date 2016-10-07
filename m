@@ -1,61 +1,36 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH 1/7] ARM: dts: am335x-icev2: Add Industrial input support
-Date: Fri, 7 Oct 2016 09:44:22 -0500
-Message-ID: <20161007144428.16671-1-afd@ti.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH] ARM64: dts: meson-gx: Add missing L2 cache node
+Date: Fri, 07 Oct 2016 07:43:48 -0700
+Message-ID: <7h7f9kfcd7.fsf@baylibre.com>
+References: <1475675630-31514-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1475675630-31514-1-git-send-email-narmstrong@baylibre.com> (Neil
+ Armstrong's message of "Wed, 5 Oct 2016 15:53:50 +0200")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: carlo@caione.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The SN65HVS882 is available on the AM335x-ICEv2 and is attached to SPI0.
-Input is attached to the I/O header.
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
----
- arch/arm/boot/dts/am335x-icev2.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+> In order to remove the boot warning :
+> [    2.290933] Unable to detect cache hierarchy from DT for CPU 0
+> And add missing L2 cache hierarchy information, add a simple l2 cache node
+> and reference it from the A53 cpu nodes.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-diff --git a/arch/arm/boot/dts/am335x-icev2.dts b/arch/arm/boot/dts/am335x-icev2.dts
-index 85e04c2..d46efc6 100644
---- a/arch/arm/boot/dts/am335x-icev2.dts
-+++ b/arch/arm/boot/dts/am335x-icev2.dts
-@@ -187,6 +187,8 @@
- 			AM33XX_IOPAD(0x954, PIN_INPUT_PULLUP | MUX_MODE0) /* (B17) spi0_d0.spi0_d0 */
- 			AM33XX_IOPAD(0x958, PIN_INPUT_PULLUP | MUX_MODE0) /* (B16) spi0_d1.spi0_d1 */
- 			AM33XX_IOPAD(0x95c, PIN_INPUT_PULLUP | MUX_MODE0) /* (A16) spi0_cs0.spi0_cs0 */
-+			AM33XX_IOPAD(0x960, PIN_INPUT_PULLUP | MUX_MODE0) /* (C15) spi0_cs1.spi0_cs1 */
-+			AM33XX_IOPAD(0x9a0, PIN_INPUT_PULLUP | MUX_MODE7) /* (B12) mcasp0_aclkr.gpio3[18] */
- 		>;
- 	};
- 
-@@ -224,6 +226,24 @@
- 	};
- };
- 
-+&spi0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_pins_default>;
-+
-+	sn65hvs882@1 {
-+		compatible = "pisosr-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		load-gpios = <&gpio3 18 GPIO_ACTIVE_LOW>;
-+
-+		reg = <1>;
-+		spi-max-frequency = <1000000>;
-+		spi-cpol;
-+	};
-+};
-+
- #include "tps65910.dtsi"
- 
- &tps {
--- 
-2.10.0
+Applied to v4.10/dt64.
+
+Kevin
