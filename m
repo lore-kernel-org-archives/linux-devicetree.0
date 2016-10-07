@@ -1,100 +1,58 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 2/3] cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq
- driver for Broadcom STB SoCs
-Date: Fri, 7 Oct 2016 09:11:33 +0530
-Message-ID: <20161007034133.GB3954@vireshk-i7>
-References: <1475272561-8446-1-git-send-email-mmayer@broadcom.com>
- <1475272561-8446-3-git-send-email-mmayer@broadcom.com>
- <20161005032509.GG4664@vireshk-i7>
- <CAGt4E5s9UBam4RKsq3k1P77-81NR-8AeQi==7dBNnp37xxtr_g@mail.gmail.com>
- <20161006040139.GA17619@vireshk-i7>
- <CAGt4E5sWLbGO7b7mX5CHKRDbtp5iqaapbV=YUJbRVHyCeJL8nQ@mail.gmail.com>
- <20161006210459.GA19063@lbrmn-mmayer.ric.broadcom.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/2] ARM: dts: r7s72100: add sdhi DT
+Date: Fri, 7 Oct 2016 13:41:51 +0900
+Message-ID: <20161007044147.GA5855@verge.net.au>
+References: <20160926204032.12260-1-chris.brandt@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161006210459.GA19063-opzSsqMRwNylyEujtbL6/5Ym1tgvmhRUMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160926204032.12260-1-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06-10-16, 14:04, Markus Mayer wrote:
-> Unfortunately, I'll have to take back one agreed-upon change.
+On Mon, Sep 26, 2016 at 04:40:30PM -0400, Chris Brandt wrote:
+> SUMMARY:
+> This series adds sdhi to the r7s72100 (RZ/A1) Device Tree.
 > 
-> In this piece of code, brcm_avs_is_firmware_loaded() has to come after
-> requesting the IRQ.
+> DEPENDECIES:
+> This series is dependent on the tmio/sh_sdhi patches being
+> applied to add r7s72100 support.
+>   mmc: sh_mobile_sdhi: add ocr_mask option
+>   mmc: tmio-mmc: add support for 32bit data port
+>   mmc: sh_mobile_sdhi: Add r7s72100 support
 > 
-> 
-> 	priv->base = __map_region(BRCM_AVS_CPU_DATA);
-> 	if (!priv->base) {
-> 		dev_err(dev, "Couldn't find property %s in device tree.\n",
-> 			BRCM_AVS_CPU_DATA);
-> 		return -ENOENT;
-> 	}
-> 
-> 	priv->avs_intr_base = __map_region(BRCM_AVS_CPU_INTR);
-> 	if (!priv->avs_intr_base) {
-> 		dev_err(dev, "Couldn't find property %s in device tree.\n",
-> 			BRCM_AVS_CPU_INTR);
-> 		ret = -ENOENT;
-> 		goto unmap_base;
-> 	}
-> 
-> 	host_irq = platform_get_irq_byname(pdev, BRCM_AVS_HOST_INTR);
-> 	if (host_irq < 0) {
-> 		dev_err(dev, "Couldn't find interrupt %s -- %d\n",
-> 			BRCM_AVS_HOST_INTR, host_irq);
-> 		ret = host_irq;
-> 		goto unmap_intr_base;
-> 	}
-> 
-> 	ret = devm_request_irq(dev, host_irq, irq_handler, IRQF_TRIGGER_RISING,
-> 			       BRCM_AVS_HOST_INTR, priv);
-> 	if (ret) {
-> 		dev_err(dev, "IRQ request failed: %s (%d) -- %d\n",
-> 			BRCM_AVS_HOST_INTR, host_irq, ret);
-> 		goto unmap_intr_base;
-> 	}
-> 
-> 	if (brcm_avs_is_firmware_loaded(priv))
-> 		return 0;
-> 
-> The reason being that we need to be ready to receive interrupts from the
-> co-processor to tell us the GET_PMAP command completed.
-> brcm_avs_is_firmware_loaded() issues the GET_PMAP command to ensure the
-> firmware supports it. If I try to run brcm_avs_is_firmware_loaded() before
-> setting up interrupts, I get a timeout in the driver -- because it never
-> receives the interrupt saying the command is done.
-> 
-> And I have to check the firmware supports the GET_PMAP command, because it
-> is possible for somebody to choose to run a firmware that does not support
-> DVFS, even though the hardware would support it.
+> MERGE CONFLICTS:
+> There are also patches being reviewed for adding mmc so depending on how
+> they get applied, there might be a line conflict.
+> To resolve the merge conflict, simply put the MMC nodes before
+> the SDHI nodes (just because that seems to be the order in other
+> Renesas SoCs DTs)
 
-Fair enough.
+Thanks for the notes above.
 
-> Okay, I looked some more and compared it to what cpufreq-dt is doing to
-> initialize. That lead me onto the right track. They simply do things they
-> only want done once via the driver's probe function rather than CPUfreq's
-> init function. So, I broke my initialization code up into two parts. 
+I have decided to queue this up (for v4.10). Please let me know
+if that was not desired. Or if subsequently it becomes undesirable
+(i.e. if I should drop these patches).
 
-I wanted to suggest that earlier, but then didn't do it :)
-
-> Everything up to checking if the firmware is loaded is now being called from
-> brcm_avs_cpufreq_probe(). The frequency table code is still being called
-> from brcm_avs_cpufreq_init().
-
-Looks fine.
-
-> That means that if the initial hardware checks fail, it won't try again.
-
-Yeah, but if init fails for some reason, then it will get called again for other
-CPUs. Which is of course the right thing IMO.
-
--- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> CHANGES:
+> V1->V2
+> * Removed patch "[PATCH 1/3] ARM: dts: r7s72100: add sdhi clock to device tree"
+>   because it has already been queued up
+> * moved bus-with property from dtsi to dts
+> 
+> 
+> Chris Brandt (2):
+>   ARM: dts: r7s72100: add sdhi to device tree
+>   ARM: dts: rskrza1: add sdhi1 DT support
+> 
+>  arch/arm/boot/dts/r7s72100-rskrza1.dts |  5 +++++
+>  arch/arm/boot/dts/r7s72100.dtsi        | 26 ++++++++++++++++++++++++++
+>  2 files changed, 31 insertions(+)
+> 
+> -- 
+> 2.9.2
+> 
+> 
