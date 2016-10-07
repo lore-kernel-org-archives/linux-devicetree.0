@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/9] drm/sun4i: tcon: Move SoC specific
- quirks to a DT matched data structure
-Date: Fri, 7 Oct 2016 10:38:53 +0200
-Message-ID: <20161007083853.GH4684@lukather>
+Subject: Re: [PATCH 4/9] drm/sun4i: Add compatible string for
+ A31/A31s TCON (timing controller)
+Date: Fri, 7 Oct 2016 10:55:28 +0200
+Message-ID: <20161007085528.GJ4684@lukather>
 References: <20161006160629.11198-1-wens@csie.org>
- <20161006160629.11198-3-wens@csie.org>
+ <20161006160629.11198-5-wens@csie.org>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vtJ+CqYNzKB4ukR4"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDF4327QKGQEXIUSHMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="07FIeBX8hApXX6Bi"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBIV4327QKGQEDA4ALKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20161006160629.11198-3-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <20161006160629.11198-5-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,26 +24,24 @@ Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-Dg
 List-Id: devicetree@vger.kernel.org
 
 
---vtJ+CqYNzKB4ukR4
+--07FIeBX8hApXX6Bi
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
 Hi,
 
-On Fri, Oct 07, 2016 at 12:06:22AM +0800, Chen-Yu Tsai wrote:
-> +struct sun4i_tcon_quirks {
-> +	bool	is_sun5i;	/* sun5i has undocumented mux */
-> +	bool	has_channel_1;	/* a33 does not have channel 1 */
-> +	bool	has_bypass_src;	/* has separate input bypassing CEU */
-> +	bool	has_dma_src;	/* has DMA input */
-> +};
-> +
+On Fri, Oct 07, 2016 at 12:06:24AM +0800, Chen-Yu Tsai wrote:
+> The A31 TCON has mux controls for how TCON outputs are routed to the
+> HDMI and MIPI DSI blocks.
+> 
+> Since the A31s does not have MIPI DSI, it only has a mux for the HDMI
+> controller input.
+> 
+> This patch only adds support for the compatible strings. Actual support
+> for the mux controls should be added with HDMI and MIPI DSI support.
 
-I'd really prefer to keep the has_mux quirk name. is_sun5i doesn't
-really relate to what we're doing there, is redundant with the
-compatible, and render the other quirks name useless, since we could
-just have is_sun.i quirks and deal with that (which is essentially
-what we were doing before).
+Then let's add those fields then, having dead code and useless
+variables is never a good option :)
 
 Maxime
 
@@ -51,4 +49,4 @@ Maxime
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---vtJ+CqYNzKB4ukR4--
+--07FIeBX8hApXX6Bi--
