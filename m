@@ -1,60 +1,123 @@
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
-Subject: Re: [PATCH v4 5/5] mm: enable CONFIG_MOVABLE_NODE on non-x86 arches
-Date: Fri, 07 Oct 2016 12:10:21 +0530
-Message-ID: <87wphkmzl6.fsf@linux.vnet.ibm.com>
-References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com> <1475778995-1420-6-git-send-email-arbab@linux.vnet.ibm.com>
+From: Lukasz Majewski <l.majewski@majess.pl>
+Subject: Re: [PATCH v2 5/6] arm: dts: imx7-colibri: Use pwm polarity control
+Date: Fri, 7 Oct 2016 08:41:20 +0200
+Message-ID: <20161007084120.32a92ca8@jawa>
+References: <20161001101235.24598-1-bhuvanchandra.dv@toradex.com>
+ <20161001101235.24598-6-bhuvanchandra.dv@toradex.com>
+ <20161006084007.44c5cbae@jawa>
+ <5fd194a3-5bfb-2fab-af82-95c87a0e7af1@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <1475778995-1420-6-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: owner-linux-mm@kvack.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
+Content-Type: multipart/mixed; boundary="===============8463018458340299999=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5fd194a3-5bfb-2fab-af82-95c87a0e7af1@toradex.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+Cc: devicetree@vger.kernel.org, stefan@agner.ch, thierry.reding@gmail.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Reza Arbab <arbab@linux.vnet.ibm.com> writes:
+--===============8463018458340299999==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ boundary="Sig_/uUwdY2XtvbRIN1i_3ABmIU4"; protocol="application/pgp-signature"
 
-> To support movable memory nodes (CONFIG_MOVABLE_NODE), at least one of
-> the following must be true:
->
-> 1. We're on x86. This arch has the capability to identify movable nodes
->    at boot by parsing the ACPI SRAT, if the movable_node option is used.
->
-> 2. Our config supports memory hotplug, which means that a movable node
->    can be created by hotplugging all of its memory into ZONE_MOVABLE.
->
-> Fix the Kconfig definition of CONFIG_MOVABLE_NODE, which currently
-> recognizes (1), but not (2).
->
+--Sig_/uUwdY2XtvbRIN1i_3ABmIU4
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-We now enable a lot of new code on different arch, such as the new node list
-N_MEMORY.
+On Fri, 7 Oct 2016 11:38:52 +0530
+Bhuvanchandra DV <bhuvanchandra.dv@toradex.com> wrote:
 
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.vnet.ibm.com>
+> On 10/06/16 12:10, Lukasz Majewski wrote:
+>=20
+> > On Sat, 1 Oct 2016 15:42:34 +0530
+> > Bhuvanchandra DV <bhuvanchandra.dv@toradex.com> wrote:
+> >
+> >> Configure PWM polarity control.
+> >>
+> >> Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+> >> ---
+> >>   arch/arm/boot/dts/imx7-colibri.dtsi | 2 +-
+> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi
+> >> b/arch/arm/boot/dts/imx7-colibri.dtsi index a9cc657..2af5e3e 100644
+> >> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
+> >> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+> >> @@ -43,7 +43,7 @@
+> >>   / {
+> >>   	bl: backlight {
+> >>   		compatible =3D "pwm-backlight";
+> >> -		pwms =3D <&pwm1 0 5000000>;
+> >> +		pwms =3D <&pwm1 0 5000000 0>;
+> > My recommendation would be to add:
+> > #include <dt-bindings/pwm/pwm.h>
+> >
+> > and then define pwms as:
+> >
+> > pwms =3D <&pwm1 0 5000000 PWM_POLARITY_NORMAL>;
+>=20
+> Addendum:
+> There is no "PWM_POLARITY_NORMAL" defined in "#include
+> <dt-bindings/pwm/pwm.h>" I guess it is helpful when polarity
+> inversion is enabled.
 
-> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
-> ---
->  mm/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index be0ee11..5d0818f 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -153,7 +153,7 @@ config MOVABLE_NODE
->  	bool "Enable to assign a node which has only movable memory"
->  	depends on HAVE_MEMBLOCK
->  	depends on NO_BOOTMEM
-> -	depends on X86_64
-> +	depends on X86_64 || MEMORY_HOTPLUG
->  	depends on NUMA
->  	default n
->  	help
-> -- 
-> 1.8.3.1
+Yes, you are right :-), the normal polarity is assumed to be the
+default.
 
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+There is only defined flag for inversion.
+
+Sorry for the noise.
+
+Best regards,
+=C5=81ukasz Majewski
+
+>=20
+> --
+> Bhuvan
+>=20
+> >
+> > It would be more readable
+> >
+> > Best regards,
+> > =C5=81ukasz Majewski
+> >
+> >>   	};
+> >>  =20
+> >>   	reg_module_3v3: regulator-module-3v3 {
+>=20
+
+
+--Sig_/uUwdY2XtvbRIN1i_3ABmIU4
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iEYEARECAAYFAlf3Q5YACgkQf9/hG2YwgjGZ+wCgrveQiYMc4sQJUTASJKXhXbGU
+qx8An2GGjvMhDEb4dYhtpBI4Ee0xqeJ7
+=bRwB
+-----END PGP SIGNATURE-----
+
+--Sig_/uUwdY2XtvbRIN1i_3ABmIU4--
+
+
+--===============8463018458340299999==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8463018458340299999==--
