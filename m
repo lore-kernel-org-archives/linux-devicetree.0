@@ -1,64 +1,30 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v4 01/10] ethernet: add sun8i-emac driver
-Date: Fri, 07 Oct 2016 08:02:39 -0700
-Message-ID: <1475852559.1945.2.camel@perches.com>
-References: <1475828757-926-1-git-send-email-clabbe.montjoie@gmail.com>
-         <1475828757-926-2-git-send-email-clabbe.montjoie@gmail.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2] ARM64: dts: meson-gxbb: Add rmii pinctrl node and rename rgmii node
+Date: Fri, 07 Oct 2016 08:12:13 -0700
+Message-ID: <7hy420dwhe.fsf@baylibre.com>
+References: <1475852355-24096-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1475828757-926-2-git-send-email-clabbe.montjoie@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, davem@davemloft.net, f.fainelli@gmail.com, andrew@lunn.ch
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475852355-24096-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
+        Armstrong's message of "Fri, 7 Oct 2016 16:59:15 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-10-07 at 10:25 +0200, Corentin Labbe wrote:
-> This patch add support for sun8i-emac ethernet MAC hardware.
-> It could be found in Allwinner H3/A83T/A64 SoCs.
+Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
-trivial notes:
+> For boards only supporting 10/100 ethernet over a RMII PHY link, add
+> a separate pinctrl node. By the way, rename the existing node to rgmii
+> specific naming in all boards dts.
+>
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-> diff --git a/drivers/net/ethernet/allwinner/sun8i-emac.c b/drivers/net/ethernet/allwinner/sun8i-emac.c
-[]
-> +static const char const estats_str[][ETH_GSTRING_LEN] = {
+Applied to v4.10/dt64,
 
-one too many const
-
-> +/* MAGIC value for knowing if a descriptor is available or not */
-> +#define DCLEAN cpu_to_le32(BIT(16) | BIT(14) | BIT(12) | BIT(10) | BIT(9))
-
-Aren't there #defines for these bits?
-
-> +static void sun8i_emac_flow_ctrl(struct sun8i_emac_priv *priv, int duplex,
-> +				 int fc)
-> +{
-> +	u32 flow = 0;
-> +
-> +	flow = readl(priv->base + EMAC_RX_CTL0);
-> +	if (fc & EMAC_FLOW_RX)
-> +		flow |= BIT(16);
-> +	else
-> +		flow &= ~BIT(16);
-> +	writel(flow, priv->base + EMAC_RX_CTL0);
-> +
-> +	flow = readl(priv->base + EMAC_TX_FLOW_CTL);
-> +	if (fc & EMAC_FLOW_TX)
-> +		flow |= BIT(0);
-> +	else
-> +		flow &= ~BIT(0);
-
-more magic bits that could be #defines
-
-> +static int sun8i_emac_rx_from_ddesc(struct net_device *ndev, int i)
-> +{
-> []
-> +	/* the checksum or length of received frame's payload is wrong*/
-> +	if (dstatus & BIT(0)) {
-[]
-> +	if (dstatus & BIT(1)) {
-[]
-> +	if ((dstatus & BIT(3))) {
-
-etc...
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
