@@ -1,303 +1,428 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V5 10/10] dmaengine: qcom_hidma: add MSI support for interrupts
-Date: Fri,  7 Oct 2016 01:25:15 -0400
-Message-ID: <1475817915-11976-11-git-send-email-okaya@codeaurora.org>
-References: <1475817915-11976-1-git-send-email-okaya@codeaurora.org>
+From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V1 05/10] thermal: da9062/61: Thermal junction temperature
+ monitoring driver
+Date: Fri, 7 Oct 2016 10:58:59 +0530
+Message-ID: <3bc9fd76-2885-b07a-9df8-7802b7535da2@ti.com>
+References: <cover.1475743411.git.stwiss.opensource@diasemi.com>
+ <b5ce58ca00f7ab30a025d24083549241f135b0e9.1475743411.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1475817915-11976-1-git-send-email-okaya@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, agross@codeaurora.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b5ce58ca00f7ab30a025d24083549241f135b0e9.1475743411.git.stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, LINUX-INPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-WATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The interrupts can now be delivered as platform MSI interrupts on newer
-platforms. The code looks for a new OF and ACPI strings in order to enable
-the functionality.
+Steve,
 
-Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
----
- drivers/dma/qcom/hidma.c    | 143 ++++++++++++++++++++++++++++++++++++++++++--
- drivers/dma/qcom/hidma.h    |   2 +
- drivers/dma/qcom/hidma_ll.c |   8 +++
- 3 files changed, 147 insertions(+), 6 deletions(-)
+On Thursday 06 October 2016 02:13 PM, Steve Twiss wrote:
+> From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+>
+> Add junction temperature monitoring supervisor device driver, compatible
+> with the DA9062 and DA9061 PMICs.
+>
+> If the PMIC's internal junction temperature rises above TEMP_WARN (125
+> degC) an interrupt is issued. This TEMP_WARN level is defined as the
+> THERMAL_TRIP_HOT trip-wire inside the device driver. A kernel work queue
+> is configured to repeatedly poll this temperature trip-wire, between 1 and
+> 10 second intervals (defaulting at 3 seconds).
+>
+> This first level of temperature supervision is intended for non-invasive
+> temperature control, where the necessary measures for cooling the system
+> down are left to the host software. In this case, inside the thermal
+> notification function da9062_thermal_notify().
+>
+> Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+>
+> ---
+> This patch applies against linux-next and v4.8
+>
+> Regards,
+> Steve Twiss, Dialog Semiconductor Ltd.
+>
+>
+>  drivers/thermal/Kconfig          |  10 ++
+>  drivers/thermal/Makefile         |   1 +
+>  drivers/thermal/da9062-thermal.c | 313 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 324 insertions(+)
+>  create mode 100644 drivers/thermal/da9062-thermal.c
+>
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 2d702ca..da58e54 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -272,6 +272,16 @@ config DB8500_CPUFREQ_COOLING
+>  	  bound cpufreq cooling device turns active to set CPU frequency low to
+>  	  cool down the CPU.
+>
+> +config DA9062_THERMAL
+> +	tristate "DA9062/DA9061 Dialog Semiconductor thermal driver"
+> +	depends on MFD_DA9062
+> +	depends on OF
+> +	help
+> +	  Enable this for the Dialog Semiconductor thermal sensor driver.
+> +	  This will report PMIC junction over-temperature for one thermal trip
+> +	  zone.
+> +	  Compatible with the DA9062 and DA9061 PMICs.
+> +
+>  config INTEL_POWERCLAMP
+>  	tristate "Intel PowerClamp idle injection driver"
+>  	depends on THERMAL
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index 10b07c1..0a2b3f2 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -38,6 +38,7 @@ obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
+>  obj-$(CONFIG_TANGO_THERMAL)	+= tango_thermal.o
+>  obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
+>  obj-$(CONFIG_DB8500_CPUFREQ_COOLING)	+= db8500_cpufreq_cooling.o
+> +obj-$(CONFIG_DA9062_THERMAL)	+= da9062-thermal.o
+>  obj-$(CONFIG_INTEL_POWERCLAMP)	+= intel_powerclamp.o
+>  obj-$(CONFIG_X86_PKG_TEMP_THERMAL)	+= x86_pkg_temp_thermal.o
+>  obj-$(CONFIG_INTEL_SOC_DTS_IOSF_CORE)	+= intel_soc_dts_iosf.o
+> diff --git a/drivers/thermal/da9062-thermal.c b/drivers/thermal/da9062-thermal.c
+> new file mode 100644
+> index 0000000..feeabf6
+> --- /dev/null
+> +++ b/drivers/thermal/da9062-thermal.c
+> @@ -0,0 +1,313 @@
+> +/*
+> + * Thermal device driver for DA9062 and DA9061
+> + * Copyright (C) 2016  Dialog Semiconductor Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/errno.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/workqueue.h>
+> +#include <linux/regmap.h>
+> +#include <linux/thermal.h>
+> +#include <linux/of.h>
+> +
+> +#include <linux/mfd/da9062/core.h>
+> +#include <linux/mfd/da9062/registers.h>
+> +
+> +#define DA9062_DEFAULT_POLLING_MS_PERIOD	3000
+> +#define DA9062_MAX_POLLING_MS_PERIOD		10000
+> +#define DA9062_MIN_POLLING_MS_PERIOD		1000
+> +
+> +#define DA9062_MILLI_CELSIUS(t)			((t)*1000)
+> +
+> +struct da9062_thermal_config {
+> +	const char *name;
+> +};
+> +
+> +struct da9062_thermal {
+> +	struct da9062 *hw;
+> +	struct delayed_work work;
+> +	struct thermal_zone_device *zone;
+> +	enum thermal_device_mode mode;
+> +	unsigned int polling_period;
+> +	struct mutex lock;
+> +	int temperature;
+> +	int irq;
+> +	const struct da9062_thermal_config *config;
+> +	struct device *dev;
+> +};
+> +
+> +static void da9062_thermal_poll_on(struct work_struct *work)
+> +{
+> +	struct da9062_thermal *thermal = container_of(work,
+> +						struct da9062_thermal,
+> +						work.work);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	/* clear E_TEMP */
+> +	ret = regmap_write(thermal->hw->regmap,
+> +				DA9062AA_EVENT_B,
+> +				DA9062AA_E_TEMP_MASK);
+> +	if (ret < 0) {
+> +		dev_err(thermal->dev,
+> +			"Cannot clear the TJUNC temperature status\n");
+> +		goto err_enable_irq;
+> +	}
+> +
+> +	/* Now read E_TEMP again: it is acting like a status bit.
+> +	 * If over-temperature, then this status will be true.
+> +	 * If not over-temperature, this staus will be false.
+> +	 */
+> +	ret = regmap_read(thermal->hw->regmap,
+> +			  DA9062AA_EVENT_B,
+> +			  &val);
+> +	if (ret < 0) {
+> +		dev_err(thermal->dev,
+> +			"Cannot check the TJUNC temperature status\n");
+> +		goto err_enable_irq;
+> +	} else {
+> +		if (val & DA9062AA_E_TEMP_MASK) {
+> +			mutex_lock(&thermal->lock);
+> +			thermal->temperature = DA9062_MILLI_CELSIUS(125);
+> +			mutex_unlock(&thermal->lock);
+> +			thermal_zone_device_update(thermal->zone);
+> +
+> +			schedule_delayed_work(&thermal->work,
+> +				msecs_to_jiffies(thermal->polling_period));
+> +			return;
+> +		} else {
+> +			mutex_lock(&thermal->lock);
+> +			thermal->temperature = DA9062_MILLI_CELSIUS(0);
+> +			mutex_unlock(&thermal->lock);
+> +			thermal_zone_device_update(thermal->zone);
+> +		}
+> +	}
+> +
+> +err_enable_irq:
+> +	enable_irq(thermal->irq);
+> +}
+> +
+> +static irqreturn_t da9062_thermal_irq_handler(int irq, void *data)
+> +{
+> +	struct da9062_thermal *thermal = data;
+> +
+> +	disable_irq_nosync(thermal->irq);
+> +	schedule_delayed_work(&thermal->work, 0);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int da9062_thermal_get_mode(struct thermal_zone_device *z,
+> +				   enum thermal_device_mode *mode)
+> +{
+> +	struct da9062_thermal *thermal = z->devdata;
+> +	*mode = thermal->mode;
+> +	return 0;
+> +}
+> +
+> +static int da9062_thermal_get_trip_type(struct thermal_zone_device *z,
+> +				int trip,
+> +				enum thermal_trip_type *type)
+> +{
+> +	struct da9062_thermal *thermal = z->devdata;
+> +
+> +	switch (trip) {
+> +	case 0:
+> +		*type = THERMAL_TRIP_HOT;
 
-diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
-index 10a9e3a..7b13213 100644
---- a/drivers/dma/qcom/hidma.c
-+++ b/drivers/dma/qcom/hidma.c
-@@ -56,6 +56,7 @@
- #include <linux/irq.h>
- #include <linux/atomic.h>
- #include <linux/pm_runtime.h>
-+#include <linux/msi.h>
- 
- #include "../dmaengine.h"
- #include "hidma.h"
-@@ -70,6 +71,7 @@
- #define HIDMA_ERR_INFO_SW			0xFF
- #define HIDMA_ERR_CODE_UNEXPECTED_TERMINATE	0x0
- #define HIDMA_NR_DEFAULT_DESC			10
-+#define HIDMA_MSI_INTS				11
- 
- static inline struct hidma_dev *to_hidma_dev(struct dma_device *dmadev)
- {
-@@ -530,6 +532,15 @@ static irqreturn_t hidma_chirq_handler(int chirq, void *arg)
- 	return hidma_ll_inthandler(chirq, lldev);
- }
- 
-+static irqreturn_t hidma_chirq_handler_msi(int chirq, void *arg)
-+{
-+	struct hidma_lldev **lldevp = arg;
-+	struct hidma_dev *dmadev = to_hidma_dev_from_lldev(lldevp);
-+
-+	return hidma_ll_inthandler_msi(chirq, *lldevp,
-+				       1 << (chirq - dmadev->msi_virqbase));
-+}
-+
- static ssize_t hidma_show_values(struct device *dev,
- 				 struct device_attribute *attr, char *buf)
- {
-@@ -584,6 +595,104 @@ static int hidma_sysfs_init(struct hidma_dev *dev)
- 	return device_create_file(dev->ddev.dev, dev->chid_attrs);
- }
- 
-+#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
-+static void hidma_write_msi_msg(struct msi_desc *desc, struct msi_msg *msg)
-+{
-+	struct device *dev = msi_desc_to_dev(desc);
-+	struct hidma_dev *dmadev = dev_get_drvdata(dev);
-+
-+	if (!desc->platform.msi_index) {
-+		writel(msg->address_lo, dmadev->dev_evca + 0x118);
-+		writel(msg->address_hi, dmadev->dev_evca + 0x11C);
-+		writel(msg->data, dmadev->dev_evca + 0x120);
-+	}
-+}
-+#endif
-+
-+static void hidma_free_msis(struct hidma_dev *dmadev)
-+{
-+#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
-+	struct device *dev = dmadev->ddev.dev;
-+	struct msi_desc *desc;
-+
-+	/* free allocated MSI interrupts above */
-+	for_each_msi_entry(desc, dev)
-+		devm_free_irq(dev, desc->irq, &dmadev->lldev);
-+
-+	platform_msi_domain_free_irqs(dev);
-+#endif
-+}
-+
-+static int hidma_request_msi(struct hidma_dev *dmadev,
-+			     struct platform_device *pdev)
-+{
-+#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
-+	int rc;
-+	struct msi_desc *desc;
-+	struct msi_desc *failed_desc = NULL;
-+
-+	rc = platform_msi_domain_alloc_irqs(&pdev->dev, HIDMA_MSI_INTS,
-+					    hidma_write_msi_msg);
-+	if (rc)
-+		return rc;
-+
-+	for_each_msi_entry(desc, &pdev->dev) {
-+		if (!desc->platform.msi_index)
-+			dmadev->msi_virqbase = desc->irq;
-+
-+		rc = devm_request_irq(&pdev->dev, desc->irq,
-+				       hidma_chirq_handler_msi,
-+				       0, "qcom-hidma-msi",
-+				       &dmadev->lldev);
-+		if (rc) {
-+			failed_desc = desc;
-+			break;
-+		}
-+	}
-+
-+	if (rc) {
-+		/* free allocated MSI interrupts above */
-+		for_each_msi_entry(desc, &pdev->dev) {
-+			if (desc == failed_desc)
-+				break;
-+			devm_free_irq(&pdev->dev, desc->irq,
-+				      &dmadev->lldev);
-+		}
-+	} else {
-+		/* Add callback to free MSIs on teardown */
-+		hidma_ll_setup_irq(dmadev->lldev, true);
-+
-+	}
-+	if (rc)
-+		dev_warn(&pdev->dev,
-+			 "failed to request MSI irq, falling back to wired IRQ\n");
-+	return rc;
-+#else
-+	return -EINVAL;
-+#endif
-+}
-+
-+static bool hidma_msi_capable(struct device *dev)
-+{
-+	struct acpi_device *adev = ACPI_COMPANION(dev);
-+	const char *of_compat;
-+	int ret = -EINVAL;
-+
-+	if (!adev || acpi_disabled) {
-+		ret = device_property_read_string(dev, "compatible",
-+						  &of_compat);
-+		if (ret)
-+			return false;
-+
-+		ret = strcmp(of_compat, "qcom,hidma-1.1");
-+	} else {
-+#ifdef CONFIG_ACPI
-+		ret = strcmp(acpi_device_hid(adev), "QCOM8062");
-+#endif
-+	}
-+	return ret == 0;
-+}
-+
- static int hidma_probe(struct platform_device *pdev)
- {
- 	struct hidma_dev *dmadev;
-@@ -593,6 +702,7 @@ static int hidma_probe(struct platform_device *pdev)
- 	void __iomem *evca;
- 	void __iomem *trca;
- 	int rc;
-+	bool msi;
- 
- 	pm_runtime_set_autosuspend_delay(&pdev->dev, HIDMA_AUTOSUSPEND_TIMEOUT);
- 	pm_runtime_use_autosuspend(&pdev->dev);
-@@ -654,6 +764,12 @@ static int hidma_probe(struct platform_device *pdev)
- 	dmadev->ddev.device_terminate_all = hidma_terminate_all;
- 	dmadev->ddev.copy_align = 8;
- 
-+	/*
-+	 * Determine the MSI capability of the platform. Old HW doesn't
-+	 * support MSI.
-+	 */
-+	msi = hidma_msi_capable(&pdev->dev);
-+
- 	device_property_read_u32(&pdev->dev, "desc-count",
- 				 &dmadev->nr_descriptors);
- 
-@@ -682,10 +798,17 @@ static int hidma_probe(struct platform_device *pdev)
- 		goto dmafree;
- 	}
- 
--	rc = devm_request_irq(&pdev->dev, chirq, hidma_chirq_handler, 0,
--			      "qcom-hidma", dmadev->lldev);
--	if (rc)
--		goto uninit;
-+	platform_set_drvdata(pdev, dmadev);
-+	if (msi)
-+		rc = hidma_request_msi(dmadev, pdev);
-+
-+	if (!msi || rc) {
-+		hidma_ll_setup_irq(dmadev->lldev, false);
-+		rc = devm_request_irq(&pdev->dev, chirq, hidma_chirq_handler,
-+				      0, "qcom-hidma", dmadev->lldev);
-+		if (rc)
-+			goto uninit;
-+	}
- 
- 	INIT_LIST_HEAD(&dmadev->ddev.channels);
- 	rc = hidma_chan_init(dmadev, 0);
-@@ -701,12 +824,14 @@ static int hidma_probe(struct platform_device *pdev)
- 	hidma_debug_init(dmadev);
- 	hidma_sysfs_init(dmadev);
- 	dev_info(&pdev->dev, "HI-DMA engine driver registration complete\n");
--	platform_set_drvdata(pdev, dmadev);
- 	pm_runtime_mark_last_busy(dmadev->ddev.dev);
- 	pm_runtime_put_autosuspend(dmadev->ddev.dev);
- 	return 0;
- 
- uninit:
-+	if (msi)
-+		hidma_free_msis(dmadev);
-+
- 	hidma_debug_uninit(dmadev);
- 	hidma_ll_uninit(dmadev->lldev);
- dmafree:
-@@ -724,7 +849,11 @@ static int hidma_remove(struct platform_device *pdev)
- 
- 	pm_runtime_get_sync(dmadev->ddev.dev);
- 	dma_async_device_unregister(&dmadev->ddev);
--	devm_free_irq(dmadev->ddev.dev, dmadev->irq, dmadev->lldev);
-+	if (!dmadev->lldev->msi_support)
-+		devm_free_irq(dmadev->ddev.dev, dmadev->irq, dmadev->lldev);
-+	else
-+		hidma_free_msis(dmadev);
-+
- 	tasklet_kill(&dmadev->task);
- 	hidma_sysfs_uninit(dmadev);
- 	hidma_debug_uninit(dmadev);
-@@ -741,12 +870,14 @@ static int hidma_remove(struct platform_device *pdev)
- #if IS_ENABLED(CONFIG_ACPI)
- static const struct acpi_device_id hidma_acpi_ids[] = {
- 	{"QCOM8061"},
-+	{"QCOM8062"},
- 	{},
- };
- #endif
- 
- static const struct of_device_id hidma_match[] = {
- 	{.compatible = "qcom,hidma-1.0",},
-+	{.compatible = "qcom,hidma-1.1",},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, hidma_match);
-diff --git a/drivers/dma/qcom/hidma.h b/drivers/dma/qcom/hidma.h
-index b74a56e..b6a9028 100644
---- a/drivers/dma/qcom/hidma.h
-+++ b/drivers/dma/qcom/hidma.h
-@@ -115,6 +115,7 @@ struct hidma_dev {
- 	int				irq;
- 	int				chidx;
- 	u32				nr_descriptors;
-+	int				msi_virqbase;
- 
- 	struct hidma_lldev		*lldev;
- 	void				__iomem *dev_trca;
-@@ -156,6 +157,7 @@ struct hidma_lldev *hidma_ll_init(struct device *dev, u32 max_channels,
- 			u8 chidx);
- int hidma_ll_uninit(struct hidma_lldev *llhndl);
- irqreturn_t hidma_ll_inthandler(int irq, void *arg);
-+irqreturn_t hidma_ll_inthandler_msi(int irq, void *arg, int cause);
- void hidma_cleanup_pending_tre(struct hidma_lldev *llhndl, u8 err_info,
- 				u8 err_code);
- int hidma_debug_init(struct hidma_dev *dmadev);
-diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
-index aa76ec1..40bcf31 100644
---- a/drivers/dma/qcom/hidma_ll.c
-+++ b/drivers/dma/qcom/hidma_ll.c
-@@ -478,6 +478,14 @@ irqreturn_t hidma_ll_inthandler(int chirq, void *arg)
- 	return IRQ_HANDLED;
- }
- 
-+irqreturn_t hidma_ll_inthandler_msi(int chirq, void *arg, int cause)
-+{
-+	struct hidma_lldev *lldev = arg;
-+
-+	hidma_ll_int_handler_internal(lldev, cause);
-+	return IRQ_HANDLED;
-+}
-+
- int hidma_ll_enable(struct hidma_lldev *lldev)
- {
- 	u32 val;
--- 
-1.9.1
+125C is pretty hot. Just a suggestion, do look at THERMAL_TRIP_CRITICAL.
+
+> +		break;
+> +	default:
+> +		dev_err(thermal->dev,
+> +			"Driver does not support more than 1 trip-wire\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int da9062_thermal_get_trip_temp(struct thermal_zone_device *z,
+> +					int trip,
+> +					int *temp)
+> +{
+> +	struct da9062_thermal *thermal = z->devdata;
+> +
+> +	switch (trip) {
+> +	case 0:
+> +		*temp = DA9062_MILLI_CELSIUS(125);
+> +		break;
+> +	default:
+> +		dev_err(thermal->dev,
+> +			"Driver does not support more than 1 trip-wire\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int da9062_thermal_notify(struct thermal_zone_device *z,
+> +				 int trip,
+> +				 enum thermal_trip_type type)
+> +{
+> +	struct da9062_thermal *thermal = z->devdata;
+> +
+> +	switch (type) {
+> +	case THERMAL_TRIP_HOT:
+> +		dev_warn(thermal->dev, "Reached HOT (125degC) temperature\n");
+
+Any cooling action? What is done once you reach this high temperature?
+
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int da9062_thermal_get_temp(struct thermal_zone_device *z,
+> +				   int *temp)
+> +{
+> +	struct da9062_thermal *thermal = z->devdata;
+> +
+> +	mutex_lock(&thermal->lock);
+> +	*temp = thermal->temperature;
+> +	mutex_unlock(&thermal->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct thermal_zone_device_ops da9062_thermal_ops = {
+> +	.get_temp	= da9062_thermal_get_temp,
+> +	.get_mode	= da9062_thermal_get_mode,
+> +	.get_trip_type	= da9062_thermal_get_trip_type,
+> +	.get_trip_temp	= da9062_thermal_get_trip_temp,
+> +	.notify		= da9062_thermal_notify,
+> +};
+> +
+> +static const struct da9062_thermal_config da9062_config = {
+> +	.name = "da9062-thermal",
+> +};
+> +
+> +static const struct da9062_thermal_config da9061_config = {
+> +	.name = "da9061-thermal",
+> +};
+> +
+> +static const struct of_device_id da9062_compatible_reg_id_table[] = {
+> +	{ .compatible = "dlg,da9062-thermal", .data = &da9062_config },
+> +	{ .compatible = "dlg,da9061-thermal", .data = &da9061_config },
+
+Two separate compatible values. Do you have anything different apart 
+from the name? Why use 2 compatibles when there is absolutely no difference?
+
+> +	{ },
+> +};
+> +
+> +static int da9062_thermal_probe(struct platform_device *pdev)
+> +{
+> +	struct da9062 *chip = dev_get_drvdata(pdev->dev.parent);
+> +	struct da9062_thermal *thermal;
+> +	unsigned int pp_tmp = DA9062_DEFAULT_POLLING_MS_PERIOD;
+> +	const struct of_device_id *match;
+> +	int ret = 0;
+> +
+> +	match = of_match_node(da9062_compatible_reg_id_table,
+> +			      pdev->dev.of_node);
+> +	if (!match)
+> +		return -ENXIO;
+> +
+> +	if (pdev->dev.of_node) {
+> +		if (!of_property_read_u32(pdev->dev.of_node,
+> +					"dlg,tjunc-temp-polling-period-ms",
+> +					&pp_tmp)) {
+> +			if (pp_tmp < DA9062_MIN_POLLING_MS_PERIOD ||
+> +				pp_tmp > DA9062_MAX_POLLING_MS_PERIOD)
+> +				pp_tmp = DA9062_DEFAULT_POLLING_MS_PERIOD;
+> +		}
+> +
+> +		dev_dbg(&pdev->dev,
+> +			 "TJUNC temp polling period set at %d ms\n",
+> +			 pp_tmp);
+> +	}
+> +
+> +	thermal = devm_kzalloc(&pdev->dev, sizeof(struct da9062_thermal),
+> +			     GFP_KERNEL);
+> +	if (!thermal) {
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	thermal->config = match->data;
+> +
+> +	INIT_DELAYED_WORK(&thermal->work, da9062_thermal_poll_on);
+> +	mutex_init(&thermal->lock);
+
+thermal_zone_device_register itself does
+INIT_DELAYED_WORK(&(tz->poll_queue), thermal_zone_device_check);
+
+refer: drivers/thermal/thermal_core.c
+
+It does a periodic monitoring of the temperature as well. Do you really 
+want to have an additional work for monitoring temperature in your 
+driver also?
+
+> +
+> +	thermal->zone = thermal_zone_device_register(thermal->config->name,
+> +					1, 0, thermal,
+> +					&da9062_thermal_ops, NULL, 0,
+> +					0);
+> +	if (IS_ERR(thermal->zone)) {
+> +		dev_err(&pdev->dev, "Cannot register thermal zone device\n");
+> +		ret = PTR_ERR(thermal->zone);
+> +		goto err;
+> +	}
+> +
+> +	ret = platform_get_irq_byname(pdev, "THERMAL");
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to get platform IRQ.\n");
+> +		goto err_zone;
+> +	}
+> +	thermal->irq = ret;
+> +
+> +	ret = request_threaded_irq(thermal->irq, NULL,
+> +				   da9062_thermal_irq_handler,
+> +				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+> +				   "THERMAL", thermal);
+> +	if (ret) {
+> +		dev_err(&pdev->dev,
+> +			"Failed to request thermal device IRQ.\n");
+> +		goto err_zone;
+> +	}
+> +
+> +	thermal->hw = chip;
+> +	thermal->polling_period = pp_tmp;
+> +	thermal->mode = THERMAL_DEVICE_ENABLED;
+> +	thermal->dev = &pdev->dev;
+> +
+> +	platform_set_drvdata(pdev, thermal);
+> +	return 0;
+> +
+> +err_zone:
+> +	thermal_zone_device_unregister(thermal->zone);
+> +err:
+> +	return ret;
+> +}
+> +
+> +static int da9062_thermal_remove(struct platform_device *pdev)
+> +{
+> +	struct	da9062_thermal *thermal = platform_get_drvdata(pdev);
+> +
+> +	free_irq(thermal->irq, thermal);
+> +	thermal_zone_device_unregister(thermal->zone);
+> +	cancel_delayed_work_sync(&thermal->work);
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver da9062_thermal_driver = {
+> +	.probe	= da9062_thermal_probe,
+> +	.remove	= da9062_thermal_remove,
+> +	.driver	= {
+> +		.name	= "da9062-thermal",
+> +		.of_match_table = da9062_compatible_reg_id_table,
+> +	},
+> +};
+> +
+> +module_platform_driver(da9062_thermal_driver);
+> +
+> +MODULE_AUTHOR("Steve Twiss, Dialog Semiconductor");
+> +MODULE_DESCRIPTION("Thermal TJUNC device driver for Dialog DA9062 and DA9061");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:da9062-thermal");
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
