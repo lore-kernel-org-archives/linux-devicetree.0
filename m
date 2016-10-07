@@ -1,132 +1,71 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC 1/2] staging: jnx: Add Juniper connector driver
-Date: Fri, 07 Oct 2016 09:25:27 -0700
-Message-ID: <1475857527.1945.7.camel@perches.com>
-References: <1475853372-21997-1-git-send-email-pantelis.antoniou@konsulko.com>
-         <1475853372-21997-2-git-send-email-pantelis.antoniou@konsulko.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 3/3] mtd: s3c2410: parse the device configuration from OF
+ node
+Date: Fri, 7 Oct 2016 19:28:10 +0300
+Message-ID: <20161007162810.GB4222@kozik-lap>
+References: <1475711217-974-1-git-send-email-sergio.prado@e-labworks.com>
+ <1475711217-974-4-git-send-email-sergio.prado@e-labworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475853372-21997-2-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alon Ronen <aronen-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Debjit Ghosh <dghosh-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Dhruva Diveneni <ddevineni-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Georgi Vlaev <gvlaev-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Yu-Lin Lu <ylu-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1475711217-974-4-git-send-email-sergio.prado@e-labworks.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sergio Prado <sergio.prado@e-labworks.com>
+Cc: linux@armlinux.org.uk, linux@simtec.co.uk, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, kgene@kernel.org, krzk@kernel.org, javier@osg.samsung.com, boris.brezillon@free-electrons.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-10-07 at 18:16 +0300, Pantelis Antoniou wrote:
-> diff --git a/drivers/staging/jnx/jnx-connector.c b/drivers/staging/jnx/jnx-connector.c
-[]
-> +struct jnx_conn_data {
-> +	struct device *dev;		/* parent (platform) device */
-> +	const char *name[NUM_OVERLAYS];	/* overlay file names */
-> +	bool enabled;			/* true if can handle interrupts */
-> +	bool poweron;			/* true if assumed to be powered on */
-
-maybe use pahole and remove some of the wasteful padding
-
-> +	int attention_button;		/* attention button gpio pin */
-> +	bool have_attention_button;	/* true if attention button exists */
-> +	unsigned long attention_button_holdtime;/* button hold time, jiffies */
-> +	bool attention_ignore;		/* true if handled by user space */
-> +	int power_enable;		/* power enable gpio pin */
-> +	bool auto_enable;		/* true if board should auto-enable */
-> +	struct jnx_i2c_power_seq pon;	/* power-on sequence */
-[]
-> +	u32 gpio_flags;
-> +	u16 assembly_id;
-> +	int slot;			/* slot number */
-> +	int type;			/* card type */
-> +	bool static_assembly_id;	/* true if assembly_id is static */
-> +	bool assembly_id_valid;		/* true if assembly_id is valid */
-> +	int adapter;			/* parent i2c adapter number */
-[]
-> +	struct mutex mutex;		/* mutex to protect state changes */
-> +	bool synchronous;		/* true if state changes are ok */
-> +	struct mutex fdt_mutex;		/* mutex to protect fdt accesses */
-[]
-> +	bool standby_to_master;		/* standby:master_ev processing */
+On Wed, Oct 05, 2016 at 08:46:57PM -0300, Sergio Prado wrote:
+> Allows configuring Samsung's s3c2410 memory controller using a
+> devicetree.
+> 
+> Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
+> ---
+>  drivers/mtd/nand/s3c2410.c                     | 171 ++++++++++++++++++++++---
+>  include/linux/platform_data/mtd-nand-s3c2410.h |   1 +
+>  2 files changed, 156 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/s3c2410.c b/drivers/mtd/nand/s3c2410.c
+> index 174ac9dc4265..352cf2656bc8 100644
+> --- a/drivers/mtd/nand/s3c2410.c
+> +++ b/drivers/mtd/nand/s3c2410.c
+> @@ -39,6 +39,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/clk.h>
+>  #include <linux/cpufreq.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>  
+>  #include <linux/mtd/mtd.h>
+>  #include <linux/mtd/nand.h>
+> @@ -185,6 +187,26 @@ struct s3c2410_nand_info {
+>  #endif
+>  };
+>  
+> +struct s3c24XX_nand_devtype_data {
+> +	enum s3c_cpu_type type;
 > +};
-[]
-> +/*
-> + * jnx_conn_insert_ideeprom()
-> + *   Inserts ideeprom with a parent from OF prop
-> + */
-> +static int jnx_conn_insert_ideeprom(struct jnx_conn_data *data,
-> +				    struct i2c_adapter *adap,
-> +				    struct device_node *node,
-> +				    struct i2c_board_info *info)
-> +{
-> +	struct device *dev = data->dev;
-> +	struct i2c_adapter *parent = NULL;
-> +	struct i2c_client *client;
-> +	struct device_node *anode;
-> +	struct at24_platform_data at24_pdata = {
-> +		.byte_len = 256,
-> +		.page_size = 4,
-> +		.setup = jnx_conn_at24_callback,
-> +		.context = data,
-> +	};
 > +
-> +	info->platform_data = &at24_pdata;
-
-Assigning a temporary address through a pointer argument?
-Isn't there a better way?
-
-> +/*
-> + * jnx_conn_verify_overlay()
-> + *
-> + * Verify if overlay is compatible with this board/slot
-> + */
-> +static int jnx_conn_verify_overlay(struct jnx_conn_data *data,
-> +				   struct device_node *np)
-> +{
-[]
-> +	ret = of_property_read_u32(np, "type", &var);
-> +	if (ret) {
-> +		dev_err(dev, "Missing type property\n");
-> +		return ret;
-> +	}
-> +	if (var != data->type) {
-> +		dev_err(dev, "Wrong type: Expected %d, got %d\n",
-> +			data->type, var);
-> +		return -EINVAL;
-> +	}
+> +struct s3c24XX_nand_devtype_data s3c2410_nand_devtype_data = {
+> +	.type = TYPE_S3C2410,
+> +};
 > +
-> +	/*
-> +	 * 'assembly-ids' property must exist, and one of its entries must match
-> +	 * the card assembly id
-> +	 */
-> +	assembly_ids = of_get_property(np, "assembly-ids", &size);
-> +	if (!assembly_ids || size < sizeof(u32)) {
-> +		dev_err(dev, "Bad assembly-ids property\n");
-> +		return -EINVAL;
-> +	}
-> +	ret = -EINVAL;
-> +	for (i = 0; i < size / sizeof(u32); i++) {
-> +		if (be32_to_cpu(assembly_ids[i]) == data->assembly_id) {
-> +			ret = 0;
-> +			break;
-> +		}
-> +	}
-> +	if (ret) {
-> +		dev_err(dev, "Assembly ID 0x%x not supported by overlay\n",
-> +			data->assembly_id);
-> +		return ret;
-> +	}
+> +struct s3c24XX_nand_devtype_data s3c2412_nand_devtype_data = {
+> +	.type = TYPE_S3C2412,
+> +};
+> +
+> +struct s3c24XX_nand_devtype_data s3c2440_nand_devtype_data = {
+> +	.type = TYPE_S3C2440,
+> +};
+> +
+> +struct s3c24XX_nand_devtype_data s3c6400_nand_devtype_data = {
+> +	.type = TYPE_S3C2412,
 
-Given all the direct returns above here, perhaps
+All of these look like candidate for static const.
 
-	for (i = 0; i < size / sizeof(u32); i++) {
-		if (be32_to_cpu(assembly_ids[i]) == data->assembly_id)
-			return 0;
-	}
+Additionally you are not actually differentiating between s3c2412 and
+s3c64xx so I think there is not need of samsung,s3c6400-nand compatible.
+Just use existing one.
 
-	dev_err(...);
-	return -EINVAL;
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
