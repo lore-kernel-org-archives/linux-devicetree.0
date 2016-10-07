@@ -1,46 +1,37 @@
-Return-Path: <j-keerthy@ti.com>
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 1/4] Documentation: pinctrl: palmas: Add ti,palmas-powerhold-override property definition
-Date: Thu, 27 Oct 2016 14:40:11 +0530
-Message-ID: <1477559414-12520-2-git-send-email-j-keerthy@ti.com>
-In-Reply-To: <1477559414-12520-1-git-send-email-j-keerthy@ti.com>
-References: <1477559414-12520-1-git-send-email-j-keerthy@ti.com>
+Return-Path: <kvalo@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-To: tony@atomide.com, lee.jones@linaro.org, robh+dt@kernel.org
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, nm@ti.com, j-keerthy@ti.com, t-kristo@ti.com
+Content-Transfer-Encoding: 7bit
+Subject: Re: [v7,
+ 1/3] Documentation: dt: net: add ath9k wireless device binding
+From: Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20161002214743.2263-2-martin.blumenstingl@googlemail.com>
+References: <20161002214743.2263-2-martin.blumenstingl@googlemail.com>
+Message-Id: <20161007121743.B811261AF6@smtp.codeaurora.org>
+Date: Fri,  7 Oct 2016 12:17:43 +0000 (UTC)
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: ath9k-devel@lists.ath9k.org, devicetree@vger.kernel.org, linux-wireless@vger.kernel.org, ath9k-devel@qca.qualcomm.com, mcgrof@do-not-panic.com, mark.rutland@arm.com, robh+dt@kernel.org, chunkeey@googlemail.com, arend.vanspriel@broadcom.com, julian.calaby@gmail.com, bjorn@mork.no, linux@rempel-privat.de, nbd@nbd.name
 List-ID: <devicetree@vger.kernel.org>
 
-GPIO7 is configured in POWERHOLD mode which has higher priority
-over DEV_ON bit and keeps the PMIC supplies on even after the DEV_ON
-bit is turned off. This property enables driver to over ride the
-POWERHOLD value to GPIO7 so as to turn off the PMIC in power off
-scenarios.
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+> Add documentation how devicetree can be used to configure ath9k based
+> devices.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Looks good to me but missing the ack from DT maintainers, will wait for
+that.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
-index caf297b..c28d4eb8 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
-@@ -35,6 +35,15 @@ Optional properties:
- - ti,palmas-enable-dvfs2: Enable DVFS2. Configure pins for DVFS2 mode.
- 	Selection primary or secondary function associated to GPADC_START
- 	and SYSEN2 pin/pad for DVFS2 interface
-+- ti,palmas-override-powerhold: This is applicable for PMICs for which
-+	GPIO7 is configured in POWERHOLD mode which has higher priority
-+	over DEV_ON bit and keeps the PMIC supplies on even after the DEV_ON
-+	bit is turned off. This property enables driver to over ride the
-+	POWERHOLD value to GPIO7 so as to turn off the PMIC in power off
-+	scenarios. So for GPIO7 if ti,palmas-override-powerhold is set
-+	then the GPIO_7 field should never be muxed to anything else.
-+	It should be set to POWERHOLD by default and only in case of
-+	power off scenarios the driver will over ride the mux value.
- 
- This binding uses the following generic properties as defined in
- pinctrl-bindings.txt:
+3 patches set to Deferred.
+
+9359805 [v7,1/3] Documentation: dt: net: add ath9k wireless device binding
+9359801 [v7,2/3] ath9k: add a helper to get the string representation of ath_bus_type
+9359803 [v7,3/3] ath9k: parse the device configuration from an OF node
+
 -- 
-1.9.1
+https://patchwork.kernel.org/patch/9359805/
+
+Documentation about submitting wireless patches and checking status
+from patchwork:
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
