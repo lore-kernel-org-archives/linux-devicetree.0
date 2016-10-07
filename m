@@ -1,124 +1,34 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v5 2/5] drm/bridge: Add RGB to VGA bridge support
-Date: Fri, 07 Oct 2016 12:28:36 +0300
-Message-ID: <8761864.fTCFeSakG2@avalon>
-References: <20160930143709.1388-1-maxime.ripard@free-electrons.com>
- <1757833.hOePAQC2sg@avalon>
- <f39e907c-424f-7572-f88e-5dd0b6009631@codeaurora.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 04/11] ARM: dts: r8a7743: initial SoC device tree
+Date: Fri, 7 Oct 2016 12:57:28 +0300
+Message-ID: <cd1391d1-d2b5-6315-ee15-0253019d9836@cogentembedded.com>
+References: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com>
+ <2883940.Oo8sg10L7m@wasted.cogentembedded.com>
+ <20161007030932.GH13721@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <f39e907c-424f-7572-f88e-5dd0b6009631@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20161007030932.GH13721@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJjaGl0LAoKT24gRnJpZGF5IDA3IE9jdCAyMDE2IDEwOjI3OjMxIEFyY2hpdCBUYW5lamEg
-d3JvdGU6Cj4gT24gMTAvMDcvMjAxNiAwMjozNCBBTSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToK
-PiA+IE9uIFRodXJzZGF5IDA2IE9jdCAyMDE2IDE1OjUzOjI4IFNlYW4gUGF1bCB3cm90ZToKPiA+
-PiBPbiBUaHUsIE9jdCA2LCAyMDE2IGF0IDE6MjcgUE0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6
-Cj4gPj4+IE9uIFRodXJzZGF5IDA2IE9jdCAyMDE2IDE3OjA5OjU3IEFyY2hpdCBUYW5lamEgd3Jv
-dGU6Cj4gPj4+PiBPbiAxMC8wNi8yMDE2IDEyOjUxIFBNLCBNYXhpbWUgUmlwYXJkIHdyb3RlOgo+
-ID4+Pj4+IE9uIE1vbiwgT2N0IDAzLCAyMDE2IGF0IDA0OjQwOjU3UE0gKzA1MzAsIEFyY2hpdCBU
-YW5lamEgd3JvdGU6Cj4gPj4+Pj4+IE9uIDA5LzMwLzIwMTYgMDg6MDcgUE0sIE1heGltZSBSaXBh
-cmQgd3JvdGU6Cj4gPj4+Pj4+PiBTb21lIGJvYXJkcyBoYXZlIGFuIGVudGlyZWx5IHBhc3NpdmUg
-UkdCIHRvIFZHQSBicmlkZ2UsIGJhc2VkIG9uCj4gPj4+Pj4+PiBlaXRoZXIgREFDcyBvciByZXNp
-c3RvciBsYWRkZXJzLgo+ID4+Pj4+Pj4gCj4gPj4+Pj4+PiBUaG9zZSBtaWdodCBvciBtaWdodCBu
-b3QgaGF2ZSBhbiBpMmMgYnVzIHJvdXRlZCB0byB0aGUgVkdBIGNvbm5lY3Rvcgo+ID4+Pj4+Pj4g
-aW4gb3JkZXIgdG8gYWNjZXNzIHRoZSBzY3JlZW4gRURJRHMuCj4gPj4+Pj4+PiAKPiA+Pj4+Pj4+
-IEFkZCBhIGJyaWRnZSB0aGF0IGRvZXNuJ3QgZG8gYW55dGhpbmcgYnV0IGV4cG9zZSB0aGUgbW9k
-ZXMgYXZhaWxhYmxlCj4gPj4+Pj4+PiBvbiB0aGUgc2NyZWVuLCBlaXRoZXIgYmFzZWQgb24gdGhl
-IEVESURzIGlmIGF2YWlsYWJsZSwgb3IgYmFzZWQgb24KPiA+Pj4+Pj4+IHRoZSBYR0Egc3RhbmRh
-cmRzLgo+ID4+Pj4+Pj4gCj4gPj4+Pj4+PiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
-bmVsLm9yZz4KPiA+Pj4+Pj4+IFNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5y
-aXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+ID4+Pj4+Pj4gLS0tCj4gPj4+Pj4+PiAuLi4vYmlu
-ZGluZ3MvZGlzcGxheS9icmlkZ2UvcmdiLXRvLXZnYS1icmlkZ2UudHh0ICB8ICA0OCArKysrKwo+
-ID4+Pj4+Pj4gZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnICAgICAgICAgICAgICAgICAg
-ICAgfCAgIDcgKwo+ID4+Pj4+Pj4gZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAg
-ICAgICAgICAgICAgICAgfCAgIDEgKwo+ID4+Pj4+Pj4gZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9y
-Z2ItdG8tdmdhLmMgICAgICAgICAgICAgICAgfCAyMjkgKysrKysrKysrKysKPiA+Pj4+Pj4+IDQg
-ZmlsZXMgY2hhbmdlZCwgMjg1IGluc2VydGlvbnMoKykKPiA+Pj4+Pj4+IGNyZWF0ZSBtb2RlIDEw
-MDY0NAo+ID4+Pj4+Pj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-YnJpZGdlL3JnYi10by12Z2EtYnJpZGdlLnQKPiA+Pj4+Pj4+IHh0Cj4gPj4+Pj4+PiBjcmVhdGUg
-bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9yZ2ItdG8tdmdhLmMKPiA+Pj4+Pj4+
-IAo+ID4+Pj4+Pj4gZGlmZiAtLWdpdAo+ID4+Pj4+Pj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmdiLXRvLXZnYS1icmlkZ2UKPiA+Pj4+Pj4+IC4K
-PiA+Pj4+Pj4+IHR4dAo+ID4+Pj4+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9icmlkZ2UvcmdiLXRvLXZnYS1icmlkZ2UKPiA+Pj4+Pj4+IC4KPiA+Pj4+Pj4+
-IHR4dAo+ID4+Pj4+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+Pj4+Pj4+IGluZGV4IDAwMDAw
-MDAwMDAwMC4uYTgzNzViYzFmOWNiCj4gPj4+Pj4+PiAtLS0gL2Rldi9udWxsCj4gPj4+Pj4+PiAr
-KysKPiA+Pj4+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-YnJpZGdlL3JnYi10by12Z2EtYnJpZGdlCj4gPj4+Pj4+PiAuCj4gPj4+Pj4+PiB0eAo+ID4+Pj4+
-Pj4gdCBAQCAtMCwwICsxLDQ4IEBACj4gPj4+Pj4+PiArRHVtYiBSR0IgdG8gVkdBIGJyaWRnZQo+
-ID4+Pj4+Pj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+Pj4+Pj4+ICsKPiA+Pj4+Pj4+ICtU
-aGlzIGJpbmRpbmcgaXMgYWltZWQgZm9yIGR1bWIgUkdCIHRvIFZHQSBicmlkZ2VzIHRoYXQgZG8g
-bm90Cj4gPj4+Pj4+PiByZXF1aXJlCj4gPj4+Pj4+PiArYW55IGNvbmZpZ3VyYXRpb24uCj4gPj4+
-Pj4+PiArCj4gPj4+Pj4+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+Pj4+Pj4+ICsKPiA+Pj4+
-Pj4+ICstIGNvbXBhdGlibGU6IE11c3QgYmUgInJnYi10by12Z2EtYnJpZGdlIgo+ID4+Pj4+PiAK
-PiA+Pj4+Pj4gSSdkIHRhbGtlZCB0byBMYXVyZW50IG9uIElSQyBpZiBoZSdzIG9rYXkgd2l0aCB0
-aGlzLiBBbmQgSSBndWVzcyB5b3UKPiA+Pj4+Pj4gdG8gaGFkIGRpc2N1c3NlZCBpdCBkdXJpbmcg
-WERDIHRvby4gSGUncyBzdWdnZXN0ZWQgdGhhdCBpdCdkIGJlCj4gPj4+Pj4+IGJldHRlcgo+ID4+
-Pj4+PiB0byBoYXZlIHRoZSBjb21wYXRpYmxlIHN0cmluZyBhcyAic2ltcGxlLXZnYS1kYWMiLgo+
-ID4+Pj4+IAo+ID4+Pj4+IEkganVzdCB3aXNoZWQgdGhpcyBiaWtlc2hlZGRpbmcgaGFkIHRha2Vu
-IHBsYWNlIHB1YmxpY2x5IGFuZCBiZQo+ID4+Pj4+IGFjdHVhbGx5IHBhcnQgb2YgdGhhdCBkaXNj
-dXNzaW9uLCBidXQgeWVhaCwgb2suCj4gPj4+PiAKPiA+Pj4+IFNvcnJ5IGFib3V0IHRoYXQuIEkn
-ZCBwaW5nZWQgaGltIGZvciBhbiBBY2ssIHRoZSBkaXNjdXNzaW9uIHdlbnQKPiA+Pj4+IG1vcmUg
-dGhhbiB0aGF0IDopCj4gPj4+PiAKPiA+Pj4+Pj4gU29tZSBvZiB0aGUgcmVhc29ucyBiZWhpbmQg
-aGF2aW5nIHRoaXM6Cj4gPj4+Pj4+IAo+ID4+Pj4+PiAtIFdlIGRvbid0IG5lZWQgdG8gc3BlY2lm
-eSAicmdiIiBpbiB0aGUgY29tcGF0aWJsZSBzdHJpbmcgc2luY2UgbW9zdAo+ID4+Pj4+PiBzaW1w
-bGUgVkdBIERBQ3MgY2FuIG9ubHkgd29yayB3aXRoIGFuIFJHQiBpbnB1dC4KPiA+Pj4+PiAKPiA+
-Pj4+PiBPay4KPiA+Pj4+PiAKPiA+Pj4+Pj4gLSBBbHNvLCB3aXRoICJkYWMiIHNwZWNpZmllZCBp
-biB0aGUgc3RyaW5nLCB3ZSBkb24ndCBuZWVkIHRvCj4gPj4+Pj4+IHNwZWNpZmljYWxseSBtZW50
-aW9uICJicmlkZ2UiIGluIHRoZSBzdHJpbmcuIEFsc28sIGJyaWRnZSBpcyBhIGRybQo+ID4+Pj4+
-PiBzcGVjaWZpYyB0ZXJtLgo+ID4+Pj4+PiAKPiA+Pj4+Pj4gLSAic2ltcGxlIiBpcyBjb25zaWRl
-cmVkIGJlY2F1c2UgaXQncyBhbiB1bmNvbmZpZ3VyYWJsZSBicmlkZ2UsIGFuZAo+ID4+Pj4+PiBp
-dCBtaWdodCBiZSBtaXNsZWFkaW5nIGZvciBvdGhlciBWR0EgREFDcyB0byBub3QgdXNlICJ2Z2Et
-ZGFjIi4KPiA+Pj4+PiAKPiA+Pj4+PiBBbGwgdGhvc2UgInNpbXBsZSIgYmluZGluZ3MgYXJlIGp1
-c3QgdGhlIGJpZ2dlc3QgbGllIHdlIGV2ZXIKPiA+Pj4+PiB0b2xkLiBJdCdzIHNpbXBsZSB3aGVu
-IHlvdSBpbnRyb2R1Y2UgaXQsIGFuZCB0aGVuIGdyb3dzIGludG8gc29tZXRoaW5nCj4gPj4+Pj4g
-bXVjaCBtb3JlIGNvbXBsaWNhdGVkIHRoYW4gYSBub24tc2ltcGxlIGltcGxlbWVudGF0aW9uLgo+
-ID4+Pj4gCj4gPj4+PiAic2ltcGxlIiBoZXJlIGlzIHN1cHBvc2VkIHRvIG1lYW4gdGhhdCBpdCdz
-IGFuIHVuY29uZmlndXJhYmxlIFJHQiB0bwo+ID4+Pj4gVkdBIERBQy4gVGhpcyBpc24ndCBzdXBw
-b3NlZCB0byBmb2xsb3cgdGhlIHNpbXBsZS1wYW5lbCBtb2RlbCwgd2hlcmUKPiA+Pj4+IHlvdSBh
-ZGQgdGhlICJzaW1wbGUtcGFuZWwiIHN0cmluZyBpbiB0aGUgY29tcGF0aWJsZSBub2RlLCBhbG9u
-ZyB3aXRoCj4gPj4+PiB5b3UgY2hpcCBzcGVjaWZpYyBjb21wYXRpYmxlIHN0cmluZy4KPiA+Pj4g
-Cj4gPj4+IEkgYWdyZWUgd2l0aCBNYXhpbWUsIEkgZG9uJ3QgbGlrZSB0aGUgd29yZCAic2ltcGxl
-Ii4gTXkgcHJlZmVyZW5jZSB3b3VsZAo+ID4+PiBiZSAidmdhLWRhYyIgZm9yIGEgbGFjayBvZiBh
-IGJldHRlciBxdWFsaWZpZXIgdGhhbiAic2ltcGxlIiB0byBkZXNjcmliZQo+ID4+PiB0aGUgZmFj
-dCB0aGF0IHRoZSBkZXZpY2UgcmVxdWlyZXMgbm8gY29uZmlndXJhdGlvbi4gTXkgb25seSBjb25j
-ZXJuIHdpdGgKPiA+Pj4gInZnYS1kYWMiIGlzIHRoYXQgd2Ugd291bGQgcmVzdHJpY3QgdXNhZ2Ug
-b2YgdGhhdCBjb21wYXRpYmxlIHN0cmluZyBmb3IKPiA+Pj4gYSBzdWJzZXQgb2YgVkdBIERBQ3Ms
-IHdpdGggbW9yZSBjb21wbGV4IGRldmljZXMgbm90IGJlaW5nIGNvbXBhdGlibGUKPiA+Pj4gd2l0
-aCAidmdhLWRhYyIgZXZlbiB0aG91Z2ggdGhleSBhcmUgVkdBIERBQ3MuIFRoYXQncyBhIHByb2Js
-ZW0gSSBjYW4KPiA+Pj4gbGl2ZSB3aXRoIHRob3VnaC4KPiA+PiAKPiA+PiBXaGlsZSB3ZSdyZSBi
-aWtlc2hlZGRpbmcgKGZlZWwgZnJlZSB0byBpZ25vcmUgbXkgaW5wdXQgb24gdGhpcyksIEkKPiA+
-PiB0aGluayBNYXhpbWUncyBpbml0aWFsICJkdW1iIiBxdWFsaWZpZXIgd2FzIGJldHRlciB0aGFu
-ICJzaW1wbGUiLgo+ID4gCj4gPiBJIHRoaW5rIEkgYWdyZWUuCj4gPiAKPiA+PiBJIHRoaW5rICJw
-YXNzaXZlIiBhbHNvIGdldHMgdGhlIHBvaW50IGFjcm9zcyBiZXR0ZXIgdGhhbiAic2ltcGxlIiwg
-d2hpY2gKPiA+PiB3ZSd2ZSBhbHJlYWR5IGVzdGFibGlzaGVkIGFzIHNvbWV0aGluZyBlbHNlIGlu
-IGRybS4KPiA+IAo+ID4gVG8gbXkgZWxlY3RyaWNhbCBlbmdpbmVlcidzIGVhciwgcGFzc2l2ZSBy
-ZWZlcnMgdG8gYSBjb21wb25lbnQgb3IKPiA+IGNvbWJpbmF0aW9uIG9mIGNvbXBvbmVudHMgdGhh
-dCBpcyBub3QgY2FwYWJsZSBvZiBwb3dlciBnYWluLiBUaGUKPiA+IHJlc2lzdG9ycyBsYWRkZXIg
-VkdBIERBQyB0aGF0IE1heGltZSBpcyB0cnlpbmcgdG8gc3VwcG9ydCBpcyBhIHBhc3NpdmUKPiA+
-IHN5c3RlbSwgYnV0IHRoZSBBRFY3MTIzIFZHQSBEQUMgdGhhdCBlcXVhbGx5IHJlcXVpcmVzIG5v
-IGNvbmZpZ3VyYXRpb24gaXMKPiA+IGFuIGFjdGl2ZSBjb21wb25lbnQuCj4gCj4gSWYgbm8gb25l
-IGhhcyBhbnkgbW9yZSBvYmplY3Rpb25zIHdpdGhpbiB0aGUgbmV4dCBkYXksIEknbGwgcHVsbCBp
-bgo+IE1heGltZSdzIHY1IFJHQiB0byBWR0EgYnJpZGdlIGRyaXZlciwKCkknbSB0ZXN0aW5nIHRo
-ZSBwYXRjaCB3aXRoIHJjYXItZHUtZHJtIGFuZCB3aWxsIHByb3ZpZGUgcmVzdWx0cyB0b2RheS4K
-Cj4gYW5kIGNoYW5nZSB0aGUgY29tcGF0aWJsZSB0byAiZHVtYi12Z2EtZGFjIi4KCkZlZWwgZnJl
-ZSB0byBpZ25vcmUgdGhlIGJpa2VzaGVkZGluZywgYnV0ICJ0cmFuc3BhcmVudCIgY291bGQgYmUg
-YSBjYW5kaWRhdGUgCnRvIHJlcGxhY2UgImR1bWIiIChlaXRoZXIgYXMgInZnYS1kYWMtdHJhbnNw
-YXJlbnQiIG9yICJ0cmFuc3BhcmVudC12Z2EtZGFjIikuCgotLSAKUmVnYXJkcywKCkxhdXJlbnQg
-UGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 10/7/2016 6:09 AM, Simon Horman wrote:
+
+>> The  initial R8A7743 SoC device tree including CPU cores, GIC, timer, SYSC,
+>> CPG, and the required clock descriptions.
+>>
+>> Based on the original (and large) patch by Dmitry Shifrin
+>> <dmitry.shifrin@cogentembedded.com>.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> I notice that this patch enables two CPUs. Have you tested SMP and:
+> - CPU hotplug
+> - Suspend to RAM
+
+    No, not really. I'll remove CPU1. :-<
+
+MBR, Sergei
