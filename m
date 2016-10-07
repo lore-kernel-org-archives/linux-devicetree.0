@@ -1,88 +1,75 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: [PATCH v2 5/8] dt/bindings: Update binding for PM domain idle states
-Date: Fri,  7 Oct 2016 15:36:58 -0700
-Message-ID: <1475879821-8035-6-git-send-email-lina.iyer@linaro.org>
-References: <1475879821-8035-1-git-send-email-lina.iyer@linaro.org>
+From: Markus Mayer <markus.mayer@broadcom.com>
+Subject: Re: [RESEND PATCH v2 0/3] Broadcom AVS CPUfreq driver
+Date: Fri, 7 Oct 2016 16:22:09 -0700
+Message-ID: <CAGt4E5tj_e8R3x+3Fce5_aBYF1mRf+WhOADa5bZOKEu=RvR18Q@mail.gmail.com>
+References: <1475882406-1992-1-git-send-email-mmayer@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1475879821-8035-1-git-send-email-lina.iyer@linaro.org>
+In-Reply-To: <1475882406-1992-1-git-send-email-mmayer@broadcom.com>
 Sender: linux-pm-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, brendan.jackman@arm.com, lorenzo.pieralisi@arm.com, sudeep.holla@arm.com, Juri.Lelli@arm.com, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>
+To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Markus Mayer <mmayer@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Update DT bindings to describe idle states of PM domains.
+My apologies. Please ignore this e-mail. Proper series coming up shortly.
 
-This patch is based on the original patch by Marc Titinger.
+Regards,
+-Markus
 
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Marc Titinger <mtitinger+renesas@baylibre.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/power/power_domain.txt     | 38 ++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-index 025b5e7..7f8f27e 100644
---- a/Documentation/devicetree/bindings/power/power_domain.txt
-+++ b/Documentation/devicetree/bindings/power/power_domain.txt
-@@ -29,6 +29,10 @@ Optional properties:
-    specified by this binding. More details about power domain specifier are
-    available in the next section.
- 
-+- domain-idle-states : A phandle of an idle-state that shall be soaked into a
-+                generic domain power state. The idle state definitions are
-+                compatible with arm,idle-state specified in [1].
-+
- Example:
- 
- 	power: power-controller@12340000 {
-@@ -59,6 +63,38 @@ The nodes above define two power controllers: 'parent' and 'child'.
- Domains created by the 'child' power controller are subdomains of '0' power
- domain provided by the 'parent' power controller.
- 
-+Example 3:
-+	parent: power-controller@12340000 {
-+		compatible = "foo,power-controller";
-+		reg = <0x12340000 0x1000>;
-+		#power-domain-cells = <0>;
-+		domain-idle-states = <&DOMAIN_RET>, <&DOMAIN_PWR_DN>;
-+	};
-+
-+	child: power-controller@12341000 {
-+		compatible = "foo,power-controller";
-+		reg = <0x12341000 0x1000>;
-+		power-domains = <&parent 0>;
-+		#power-domain-cells = <0>;
-+		domain-idle-states = <&DOMAIN_PWR_DN>;
-+	};
-+
-+	DOMAIN_RET: state@0 {
-+		compatible = "arm,idle-state";
-+		reg = <0x0>;
-+		entry-latency-us = <1000>;
-+		exit-latency-us = <2000>;
-+		min-residency-us = <10000>;
-+	};
-+
-+	DOMAIN_PWR_DN: state@1 {
-+		compatible = "arm,idle-state";
-+		reg = <0x1>;
-+		entry-latency-us = <5000>;
-+		exit-latency-us = <8000>;
-+		min-residency-us = <7000>;
-+	};
-+
- ==PM domain consumers==
- 
- Required properties:
-@@ -76,3 +112,5 @@ Example:
- The node above defines a typical PM domain consumer device, which is located
- inside a PM domain with index 0 of a power controller represented by a node
- with the label "power".
-+
-+[1]. Documentation/devicetree/bindings/arm/idle-states.txt
--- 
-2.7.4
-
+On 7 October 2016 at 16:20, Markus Mayer <mmayer@broadcom.com> wrote:
+> This series contains the CPUfreq driver for Broadcom SoCs that use "AVS
+> Firmware" for voltage and frequency scaling. All voltage and frequency
+> transitions are performed by the firmware and are therefore hidden from
+> Linux.
+>
+> The driver provides a standard CPUfreq interface to other kernel
+> components and to userland on the one hand and communicates with the
+> AVS co-processor on the other.
+>
+> Communication between the two processors is via shared mailbox
+> registers and interrupts (ARM -> AVS to tell the firmware that there is
+> a command to process and AVS -> ARM to tell the driver that a command
+> finished executing).
+>
+> lkml.org seems to be down for me. Here are patchwork links to the original
+> series:
+>
+> https://patchwork.kernel.org/patch/9278119/
+> https://patchwork.kernel.org/patch/9278121/
+> https://patchwork.kernel.org/patch/9278127/
+>
+> Changes from v1:
+>     - renamed binding document
+>     - rewrote the introduction of the binding document
+>     - created a new driver documentation file that contains Linux specific
+>       information that was previously part of the binding document
+>     - renamed the driver (and related config options) to include a reference
+>       to "STB", since this implementation is primarily intended for use on
+>       set-top boxes
+>     - improved comments
+>     - updated function __map_region()
+>     - updated struct private_data
+>     - added code to unmap memory regions in the error and exit paths
+>     - added new sysfs property to report frequency directly from the
+>       co-processor register
+>
+> Markus Mayer (3):
+>   dt: cpufreq: brcm: New binding document for brcmstb-avs-cpufreq
+>   cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver for Broadcom STB SoCs
+>   cpufreq: brcmstb-avs-cpufreq: add debugfs support
+>
+>  Documentation/cpu-freq/brcmstb-avs-cpufreq.txt     |   27 +
+>  .../bindings/cpufreq/brcm,stb-avs-cpu-freq.txt     |   77 ++
+>  MAINTAINERS                                        |    9 +
+>  drivers/cpufreq/Kconfig.arm                        |   10 +
+>  drivers/cpufreq/Makefile                           |    1 +
+>  drivers/cpufreq/brcmstb-avs-cpufreq.c              | 1026 ++++++++++++++++++++
+>  6 files changed, 1150 insertions(+)
+>  create mode 100644 Documentation/cpu-freq/brcmstb-avs-cpufreq.txt
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
+>  create mode 100644 drivers/cpufreq/brcmstb-avs-cpufreq.c
+>
+> --
+> 2.7.4
+>
