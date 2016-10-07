@@ -1,122 +1,64 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2] ARM64: dts: meson-gxbb: Add rmii pinctrl node and rename rgmii node
-Date: Fri,  7 Oct 2016 16:59:15 +0200
-Message-ID: <1475852355-24096-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v4 01/10] ethernet: add sun8i-emac driver
+Date: Fri, 07 Oct 2016 08:02:39 -0700
+Message-ID: <1475852559.1945.2.camel@perches.com>
+References: <1475828757-926-1-git-send-email-clabbe.montjoie@gmail.com>
+         <1475828757-926-2-git-send-email-clabbe.montjoie@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1475828757-926-2-git-send-email-clabbe.montjoie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Corentin Labbe <clabbe.montjoie@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, davem@davemloft.net, f.fainelli@gmail.com, andrew@lunn.ch
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-For boards only supporting 10/100 ethernet over a RMII PHY link, add
-a separate pinctrl node. By the way, rename the existing node to rgmii
-specific naming in all boards dts.
+On Fri, 2016-10-07 at 10:25 +0200, Corentin Labbe wrote:
+> This patch add support for sun8i-emac ethernet MAC hardware.
+> It could be found in Allwinner H3/A83T/A64 SoCs.
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts |  3 ++-
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts    |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi       |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi   |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi            | 17 ++++++++++++++++-
- 5 files changed, 21 insertions(+), 5 deletions(-)
+trivial notes:
 
-Changes since v1 at http://lkml.kernel.org/r/1475678673-15277-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org :
- - Change Nexbox A95X to rmii interface
+> diff --git a/drivers/net/ethernet/allwinner/sun8i-emac.c b/drivers/net/ethernet/allwinner/sun8i-emac.c
+[]
+> +static const char const estats_str[][ETH_GSTRING_LEN] = {
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-index 80d7b35..399d85f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -97,8 +97,9 @@
- 
- &ethmac {
- 	status = "okay";
--	pinctrl-0 = <&eth_pins>;
-+	pinctrl-0 = <&eth_rmii_pins>;
- 	pinctrl-names = "default";
-+	phy-mode = "rmii";
- };
- 
- &ir {
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index e6e3491..325b9c5 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -83,7 +83,7 @@
- 
- &ethmac {
- 	status = "okay";
--	pinctrl-0 = <&eth_pins>;
-+	pinctrl-0 = <&eth_rgmii_pins>;
- 	pinctrl-names = "default";
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-index 06a34dc..031d69b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-@@ -81,7 +81,7 @@
- 
- &ethmac {
- 	status = "okay";
--	pinctrl-0 = <&eth_pins>;
-+	pinctrl-0 = <&eth_rgmii_pins>;
- 	pinctrl-names = "default";
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 73f1593..e93221a 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -82,7 +82,7 @@
- 
- &ethmac {
- 	status = "okay";
--	pinctrl-0 = <&eth_pins>;
-+	pinctrl-0 = <&eth_rgmii_pins>;
- 	pinctrl-names = "default";
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 443811b..aad639a 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -443,7 +443,7 @@
- 			};
- 		};
- 
--		eth_pins: eth_c {
-+		eth_rgmii_pins: eth-rgmii {
- 			mux {
- 				groups = "eth_mdio",
- 				       "eth_mdc",
-@@ -463,6 +463,21 @@
- 			};
- 		};
- 
-+		eth_rmii_pins: eth-rmii {
-+			mux {
-+				groups = "eth_mdio",
-+				       "eth_mdc",
-+				       "eth_clk_rx_clk",
-+				       "eth_rx_dv",
-+				       "eth_rxd0",
-+				       "eth_rxd1",
-+				       "eth_tx_en",
-+				       "eth_txd0",
-+				       "eth_txd1";
-+				function = "eth";
-+			};
-+		};
-+
- 		pwm_a_x_pins: pwm_a_x {
- 			mux {
- 				groups = "pwm_a_x";
--- 
-1.9.1
+one too many const
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +/* MAGIC value for knowing if a descriptor is available or not */
+> +#define DCLEAN cpu_to_le32(BIT(16) | BIT(14) | BIT(12) | BIT(10) | BIT(9))
+
+Aren't there #defines for these bits?
+
+> +static void sun8i_emac_flow_ctrl(struct sun8i_emac_priv *priv, int duplex,
+> +				 int fc)
+> +{
+> +	u32 flow = 0;
+> +
+> +	flow = readl(priv->base + EMAC_RX_CTL0);
+> +	if (fc & EMAC_FLOW_RX)
+> +		flow |= BIT(16);
+> +	else
+> +		flow &= ~BIT(16);
+> +	writel(flow, priv->base + EMAC_RX_CTL0);
+> +
+> +	flow = readl(priv->base + EMAC_TX_FLOW_CTL);
+> +	if (fc & EMAC_FLOW_TX)
+> +		flow |= BIT(0);
+> +	else
+> +		flow &= ~BIT(0);
+
+more magic bits that could be #defines
+
+> +static int sun8i_emac_rx_from_ddesc(struct net_device *ndev, int i)
+> +{
+> []
+> +	/* the checksum or length of received frame's payload is wrong*/
+> +	if (dstatus & BIT(0)) {
+[]
+> +	if (dstatus & BIT(1)) {
+[]
+> +	if ((dstatus & BIT(3))) {
+
+etc...
