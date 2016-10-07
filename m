@@ -1,14 +1,11 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V5 02/10] Documentation: DT: qcom_hidma: correct spelling
- mistakes
-Date: Fri,  7 Oct 2016 01:25:07 -0400
-Message-ID: <1475817915-11976-3-git-send-email-okaya@codeaurora.org>
-References: <1475817915-11976-1-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V5 00/10] dmaengine: qcom_hidma: add MSI interrupt support
+Date: Fri,  7 Oct 2016 01:25:05 -0400
+Message-ID: <1475817915-11976-1-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1475817915-11976-1-git-send-email-okaya@codeaurora.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,36 +16,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: Mark Rutland <mark.rutland@arm.com>, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, agross@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Cc: Sinan Kaya <okaya@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arnd@arndb.de, agross@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Fix the spelling mistakes and extra and statements in the sentences.
+The new version of the HW supports MSI interrupts instead of wired
+interrupts. The MSI interrupts are especially useful for the guest machine
+execution. The wired interrupts usually trap to the hypervisor and then are
+relayed to the actual interrupt.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
----
- Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The MSI interrupts can be directly fed into the interrupt controller.
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-index 2c5e4b8..55492c2 100644
---- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-+++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-@@ -5,13 +5,13 @@ memcpy and memset capabilities. It has been designed for virtualized
- environments.
- 
- Each HIDMA HW instance consists of multiple DMA channels. These channels
--share the same bandwidth. The bandwidth utilization can be parititioned
-+share the same bandwidth. The bandwidth utilization can be partitioned
- among channels based on the priority and weight assignments.
- 
- There are only two priority levels and 15 weigh assignments possible.
- 
- Other parameters here determine how much of the system bus this HIDMA
--instance can use like maximum read/write request and and number of bytes to
-+instance can use like maximum read/write request and number of bytes to
- read/write in a single burst.
- 
- Main node required properties:
+Adding a new OF compat string (qcom,hidma-1.1) and ACPI string (QCOM8062)
+to distinguish newer HW from the older ones.
+
+v5:
+* dmaengine: qcom_hidma: add MSI support for interrupts
+** Return MSI interrupts before calling platform_msi_domain_free_irqs.
+Also cleanup MSI interrupts on the error path.
+** Free the legacy IRQ only if MSI is disabled
+* add dmaengine: qcom_hidma: break completion processing on error
+in order to break the completions if an error is observed while servicing
+completed work.
+* drop dmaengine: qcom_hidma: make error and success path common
+as the success path assumes that we'll get the number of notifications for
+the
+jobs queued. This is not true under error conditions.
+* simplify dmaengine: qcom_hidma: protect common data structures. We just
+need to protect the TRE processed offset. It is the variable that keeps
+track
+of outstanding requests.
+* document assumptions about of_msi_configure routine call.
+
+v4:
+http://www.spinics.net/lists/devicetree/msg144563.html
+* device tree binding update to refer to msi.txt
+
+v3:
+* day 0 fix for when ACPI is not compiled in
+* https://www.spinics.net/lists/arm-kernel/msg532179.html
+
+v2:
+https://patchwork.kernel.org/patch/9326399/
+* Documentation update for DT bindings
+* Rebased to slave-next
+* Dropped dmaengine: qcom_hidma: eliminate processed variables. Replaced it
+  with dmaengine: qcom_hidma: protect common data structures
+
+v1:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/444167.html
+* initial implementation
+
+Sinan Kaya (10):
+  Documentation: DT: qcom_hidma: update binding for MSI
+  Documentation: DT: qcom_hidma: correct spelling mistakes
+  of: irq: make of_msi_configure accessible from modules
+  dmaengine: qcom_hidma: configure DMA and MSI for OF
+  dmaengine: qcom_hidma: make pending_tre_count atomic
+  dmaengine: qcom_hidma: bring out interrupt cause
+  dmaengine: qcom_hidma: add a common API to setup the interrupt
+  dmaengine: qcom_hidma: protect common data structures
+  dmaengine: qcom_hidma: break completion processing on error
+  dmaengine: qcom_hidma: add MSI support for interrupts
+
+ .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  12 +-
+ drivers/dma/qcom/hidma.c                           | 143 ++++++++++++++++++-
+ drivers/dma/qcom/hidma.h                           |   6 +-
+ drivers/dma/qcom/hidma_dbg.c                       |   3 +-
+ drivers/dma/qcom/hidma_ll.c                        | 156 ++++++++++++---------
+ drivers/dma/qcom/hidma_mgmt.c                      |   9 +-
+ drivers/of/irq.c                                   |   1 +
+ 7 files changed, 250 insertions(+), 80 deletions(-)
+
 -- 
 1.9.1
