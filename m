@@ -1,77 +1,80 @@
-From: ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Subject: [PATCH/RFT 04/12] USB: ohci-da8xx: Divide power up time in the ohci driver
-Date: Fri,  7 Oct 2016 18:42:49 +0200
-Message-ID: <1475858577-10366-5-git-send-email-ahaslam@baylibre.com>
+From: ahaslam@baylibre.com
+Subject: [PATCH/RFT 01/12] ARM: davinci: da8xx: Enable the usb20 "per" clk on
+ phy_clk_enable
+Date: Fri,  7 Oct 2016 18:42:46 +0200
+Message-ID: <1475858577-10366-2-git-send-email-ahaslam@baylibre.com>
 References: <1475858577-10366-1-git-send-email-ahaslam@baylibre.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475858577-10366-1-git-send-email-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1475858577-10366-1-git-send-email-ahaslam@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, nsekhar@ti.com, stern@rowland.harvard.edu, khilman@baylibre.com, sshtylyov@ru.mvista.com, david@lechnology.com
+Cc: devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Axel Haslam <ahaslam@baylibre.com>
 
-Instead of requiring platform data to know that the effective time
-should be diveded by two, Make that operation in the driver so that
-users (platform board files/Device tree) dont have to worry about it.
+While probing ochi phy with usb20 phy as a parent clock for usb11_phy,
+the usb20_phy clock enable would time out. This is because the usb20
+module clock needs to enabled while trying to lock the usb20_phy PLL.
 
-Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Call clk enable and get for the usb20 peripheral before trying to
+enable the phy PLL.
+
+Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
 ---
- arch/arm/mach-davinci/board-da830-evm.c     | 2 +-
- arch/arm/mach-davinci/board-omapl138-hawk.c | 2 +-
- drivers/usb/host/ohci-da8xx.c               | 8 ++++++--
- 3 files changed, 8 insertions(+), 4 deletions(-)
+ arch/arm/mach-davinci/usb-da8xx.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
-index 18d2b10..8d126e4 100644
---- a/arch/arm/mach-davinci/board-da830-evm.c
-+++ b/arch/arm/mach-davinci/board-da830-evm.c
-@@ -94,7 +94,7 @@ static struct da8xx_ohci_platform_data da830_evm_usb11_pdata = {
- 	.ocic_notify	= da830_evm_usb_ocic_notify,
+diff --git a/arch/arm/mach-davinci/usb-da8xx.c b/arch/arm/mach-davinci/usb-da8xx.c
+index 9e41a7f..982e105 100644
+--- a/arch/arm/mach-davinci/usb-da8xx.c
++++ b/arch/arm/mach-davinci/usb-da8xx.c
+@@ -53,11 +53,19 @@ int __init da8xx_register_usb_refclkin(int rate)
  
- 	/* TPS2065 switch @ 5V */
--	.potpgt		= (3 + 1) / 2,	/* 3 ms max */
-+	.potpgt		= 3,	/* 3 ms max */
- };
+ static void usb20_phy_clk_enable(struct clk *clk)
+ {
++	struct clk *usb20_clk;
+ 	u32 val;
+ 	u32 timeout = 500000; /* 500 msec */
  
- static irqreturn_t da830_evm_usb_ocic_irq(int irq, void *dev_id)
-diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
-index a2bf3eb..f9cd388 100644
---- a/arch/arm/mach-davinci/board-omapl138-hawk.c
-+++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
-@@ -232,7 +232,7 @@ static struct da8xx_ohci_platform_data omapl138_hawk_usb11_pdata = {
- 	.get_oci        = hawk_usb_get_oci,
- 	.ocic_notify    = hawk_usb_ocic_notify,
- 	/* TPS2087 switch @ 5V */
--	.potpgt         = (3 + 1) / 2,  /* 3 ms max */
-+	.potpgt         = 3  /* 3 ms max */
- };
+ 	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
  
- static irqreturn_t omapl138_hawk_usb_ocic_irq(int irq, void *dev_id)
-diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
-index 8ed9a52..3c85d6c 100644
---- a/drivers/usb/host/ohci-da8xx.c
-+++ b/drivers/usb/host/ohci-da8xx.c
-@@ -115,8 +115,12 @@ static int ohci_da8xx_init(struct usb_hcd *hcd)
- 		rh_a &= ~RH_A_NOCP;
- 		rh_a |=  RH_A_OCPM;
- 	}
--	rh_a &= ~RH_A_POTPGT;
--	rh_a |= pdata->potpgt << 24;
-+
-+	if (pdata->potpgt) {
-+		rh_a &= ~RH_A_POTPGT;
-+		rh_a |= (DIV_ROUND_UP(pdata->potpgt, 2) << 24);
++	usb20_clk = clk_get(NULL, "usb20");
++	if (IS_ERR(usb20_clk)) {
++		pr_err("could not get usb20 clk\n");
++		return;
 +	}
 +
- 	ohci_writel(ohci, rh_a, &ohci->regs->roothub.a);
++	clk_prepare_enable(usb20_clk);
+ 	/*
+ 	 * Turn on the USB 2.0 PHY, but just the PLL, and not OTG. The USB 1.1
+ 	 * host may use the PLL clock without USB 2.0 OTG being used.
+@@ -70,11 +78,14 @@ static void usb20_phy_clk_enable(struct clk *clk)
+ 	while (--timeout) {
+ 		val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
+ 		if (val & CFGCHIP2_PHYCLKGD)
+-			return;
++			goto done;
+ 		udelay(1);
+ 	}
  
- 	return result;
+ 	pr_err("Timeout waiting for USB 2.0 PHY clock good.\n");
++done:
++	clk_disable_unprepare(usb20_clk);
++	clk_put(usb20_clk);
+ }
+ 
+ static void usb20_phy_clk_disable(struct clk *clk)
 -- 
 2.7.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
