@@ -1,68 +1,95 @@
-From: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Subject: [PATCH v3 6/6] arm: dts: imx7-colibri: Use enable-gpios for BL_ON
-Date: Fri, 7 Oct 2016 20:41:29 +0530
-Message-ID: <20161007151129.6043-7-bhuvanchandra.dv@toradex.com>
-References: <20161007151129.6043-1-bhuvanchandra.dv@toradex.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161007151129.6043-1-bhuvanchandra.dv@toradex.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, thierry.reding@gmail.com
-Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, l.majewski@samsung.com, Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan@agner.ch, robh+dt@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH 2/3] uapi: jnx: Export board types to user space
+Date: Fri,  7 Oct 2016 18:15:24 +0300
+Message-ID: <1475853325-21796-3-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1475853325-21796-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1475853325-21796-1-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Debjit Ghosh <dghosh@juniper.net>, Guenter Roeck <linux@roeck-us.net>, JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>, Mohammad Kamil <mkamil@juniper.net>, Rajat Jain <rajatjain@juniper.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use pwm-backlight driver 'enable-gpios' property for backlight on/off control.
+From: Guenter Roeck <groeck@juniper.net>
 
-Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+Board type definitions are part of the kernel/user ABI and
+thus need to be exported.
+
+Signed-off-by: Guenter Roeck <groeck@juniper.net>
+Signed-off-by: Mohammad Kamil <mkamil@juniper.net>
+[Ported from Juniper kernel]
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- arch/arm/boot/dts/imx7-colibri.dtsi | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ include/uapi/linux/Kbuild           |  1 +
+ include/uapi/linux/jnx/Kbuild       |  2 ++
+ include/uapi/linux/jnx/jnx-subsys.h | 38 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 41 insertions(+)
+ create mode 100644 include/uapi/linux/jnx/Kbuild
+ create mode 100644 include/uapi/linux/jnx/jnx-subsys.h
 
-diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index 2af5e3e..ce5edb5 100644
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -43,7 +43,10 @@
- / {
- 	bl: backlight {
- 		compatible = "pwm-backlight";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_bl_on>;
- 		pwms = <&pwm1 0 5000000 0>;
-+		enable-gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
- 	};
- 
- 	reg_module_3v3: regulator-module-3v3 {
-@@ -356,7 +359,6 @@
- 		fsl,pins = <
- 			MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x14 /* SODIMM 65 */
- 			MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x14 /* SODIMM 69 */
--			MX7D_PAD_SD1_WP__GPIO5_IO1		0x14 /* SODIMM 71 */
- 			MX7D_PAD_I2C4_SDA__GPIO4_IO15		0x14 /* SODIMM 75 */
- 			MX7D_PAD_ECSPI1_MISO__GPIO4_IO18	0x14 /* SODIMM 79 */
- 			MX7D_PAD_I2C3_SCL__GPIO4_IO12		0x14 /* SODIMM 81 */
-@@ -388,6 +390,12 @@
- 		>;
- 	};
- 
-+		pinctrl_gpio_bl_on: gpio-bl-on {
-+			fsl,pins = <
-+				MX7D_PAD_SD1_WP__GPIO5_IO1		0x14
-+			>;
-+		};
+diff --git a/include/uapi/linux/Kbuild b/include/uapi/linux/Kbuild
+index d0352a9..3c83af1 100644
+--- a/include/uapi/linux/Kbuild
++++ b/include/uapi/linux/Kbuild
+@@ -8,6 +8,7 @@ header-y += hdlc/
+ header-y += hsi/
+ header-y += iio/
+ header-y += isdn/
++header-y += jnx/
+ header-y += mmc/
+ header-y += nfsd/
+ header-y += raid/
+diff --git a/include/uapi/linux/jnx/Kbuild b/include/uapi/linux/jnx/Kbuild
+new file mode 100644
+index 0000000..bd1ddc6
+--- /dev/null
++++ b/include/uapi/linux/jnx/Kbuild
+@@ -0,0 +1,2 @@
++# UAPI Header export list
++header-y += jnx-subsys.h
+diff --git a/include/uapi/linux/jnx/jnx-subsys.h b/include/uapi/linux/jnx/jnx-subsys.h
+new file mode 100644
+index 0000000..5bb9ea8
+--- /dev/null
++++ b/include/uapi/linux/jnx/jnx-subsys.h
+@@ -0,0 +1,38 @@
++/*
++ * Juniper board type definitions
++ *
++ * These definitions are needed by user-space applications.
++ *
++ * Copyright (C) 2012-2014 Juniper Networks. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
- 	pinctrl_i2c1_int: i2c1-int-grp { /* PMIC / TOUCH */
- 		fsl,pins = <
- 			MX7D_PAD_GPIO1_IO13__GPIO1_IO13	0x79
++#ifndef _UAPI_JNX_SUBSYS_H
++#define _UAPI_JNX_SUBSYS_H
++
++/*
++ * Juniper Board Type Definitions
++ */
++#define JNX_BOARD_TYPE_UNKNOWN	0
++#define JNX_BOARD_TYPE_RE	1
++#define JNX_BOARD_TYPE_FPC	2
++#define JNX_BOARD_TYPE_SPMB	3
++#define JNX_BOARD_TYPE_CB	4
++#define JNX_BOARD_TYPE_PS	5
++#define JNX_BOARD_TYPE_FAN	6
++#define JNX_BOARD_TYPE_FPM	7
++#define JNX_BOARD_TYPE_CG	8
++#define JNX_BOARD_TYPE_MIDPLANE	9
++#define JNX_BOARD_TYPE_PIC	10
++#define JNX_BOARD_TYPE_SIB	11
++
++#endif /* _UAPI_JNX_SUBSYS_H */
 -- 
-2.10.0
+1.9.1
