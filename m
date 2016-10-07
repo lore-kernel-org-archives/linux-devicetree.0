@@ -1,111 +1,140 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] phy: nop: Add a new phy driver for No-Op transceiver
-Date: Fri, 7 Oct 2016 11:53:06 +0530
-Message-ID: <beaeb462-0f21-eab5-bda3-f59fa0aa0625@codeaurora.org>
-References: <1475577817-28500-1-git-send-email-vivek.gautam@codeaurora.org>
- <57F4EE05.8000407@ti.com>
+From: "Aneesh Kumar K.V" <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 4/5] mm: make processing of movable_node arch-specific
+Date: Fri, 07 Oct 2016 12:07:11 +0530
+Message-ID: <87zimgmzqg.fsf@linux.vnet.ibm.com>
+References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com> <1475778995-1420-5-git-send-email-arbab@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57F4EE05.8000407-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1475778995-1420-5-git-send-email-arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Bharata B Rao <bharata-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Alistair Popple <apopple-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tang Chen <tangchen-BthXqXjhjHXQFUHtdCDX3A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> writes:
 
-
-On 10/05/2016 05:41 PM, Kishon Vijay Abraham I wrote:
-> Hi,
+> Currently, CONFIG_MOVABLE_NODE depends on X86_64. In preparation to
+> enable it for other arches, we need to factor a detail which is unique
+> to x86 out of the generic mm code.
 >
-> On Tuesday 04 October 2016 04:13 PM, Vivek Gautam wrote:
->> No-Op phy transceiver can be used on platforms that have
->> controllers which themselves provide PHY functionality and
->> there's no separate PHY controller available.
->>
->> This driver provides a basic skeleton for a nop-phy driver.
->> This can be further extended to add required features.
->>
->> Inspired by phy-generic driver in drivers/usb/phy.
->>
->> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->> Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> ---
->>
->> Hi Kishon, Felipe,
->>
->> This patch has been lying in my tree for sometime.
->> This introduces a skeletal nop-phy driver based on generic
->> phy framework.
->> I mainly use this driver when I have only one phy driver available
->> for testing for a controller that uses more than one phy.
->>
->> But this can be further extended to add any feature support for
->> controllers that don't have a separate PHY controller and that
->> themselves provide the PHY functionality, a purpose similar
->> to what drivers/usb/phy/phy-generic.c driver serves.
->>
->> Do you think we have a requirement for such a driver in the generic
->> phy layer? I hope this driver can do some good.
->> Let me know your comments on this.
->>
->> Thanks
->> Vivek
->>
->>   Documentation/devicetree/bindings/phy/phy-nop.txt |  22 +++
->>   drivers/phy/Kconfig                               |  10 ++
->>   drivers/phy/Makefile                              |   1 +
->>   drivers/phy/phy-nop.c                             | 193 ++++++++++++++++++++++
->>   4 files changed, 226 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/phy-nop.txt
->>   create mode 100644 drivers/phy/phy-nop.c
->>
->> diff --git a/Documentation/devicetree/bindings/phy/phy-nop.txt b/Documentation/devicetree/bindings/phy/phy-nop.txt
->> new file mode 100644
->> index 0000000..6cb6779
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/phy-nop.txt
-[snip]
+> Specifically, as documented in kernel-parameters.txt, the use of
+> "movable_node" should remain restricted to x86:
+>
+> movable_node    [KNL,X86] Boot-time switch to enable the effects
+>                 of CONFIG_MOVABLE_NODE=y. See mm/Kconfig for details.
+>
+> This option tells x86 to find movable nodes identified by the ACPI SRAT.
+> On other arches, it would have no benefit, only the undesired side
+> effect of setting bottom-up memblock allocation.
+>
+> Since #ifdef CONFIG_MOVABLE_NODE will no longer be enough to restrict
+> this option to x86, move it to an arch-specific compilation unit
+> instead.
 
->> +
->> +Example:
->> +	phy_nop: phy_nop {
->> +		compatible = "phy-nop";
->> +		#phy-cells = <0>;
->> +	};
-> I don't think this qualifies to be modeled as dt. device tree should try to
-> represent HW and not workaround SW issues by creating dummy nodes. For such
-> cases phy_optional_get should suffice?
-
-You are right. The device tree should model the hardware on the platform.
-But what i am trying to model here is a simple phy binding that the 
-users can
-use taking a phandle for this PHY in their device nodes.
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 
 >
-> I'm more towards having a simple-phy, along the lines of [1]
+> Signed-off-by: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/x86/mm/numa.c  | 35 ++++++++++++++++++++++++++++++++++-
+>  mm/memory_hotplug.c | 31 -------------------------------
+>  2 files changed, 34 insertions(+), 32 deletions(-)
 >
-> [1] -> https://patchwork.kernel.org/patch/8153691/
-
-Cool, the above patch looks good, and is quite similar to what i meant 
-to do.
-I will drop this one.
-
-But that patch hasn't move forward. I will ping in that thread, so that we
-can have a re-spin of that patch that can be reviewed further and merged.
-
+> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> index fb68210..e95cab4 100644
+> --- a/arch/x86/mm/numa.c
+> +++ b/arch/x86/mm/numa.c
+> @@ -887,6 +887,38 @@ EXPORT_SYMBOL(cpumask_of_node);
+>  #endif	/* !CONFIG_DEBUG_PER_CPU_MAPS */
 >
-> Thanks
-> Kishon
-[snip]
-
-
-Thanks
-Vivek
-
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+> +
+> +static int __init cmdline_parse_movable_node(char *p)
+> +{
+> +#ifdef CONFIG_MOVABLE_NODE
+> +	/*
+> +	 * Memory used by the kernel cannot be hot-removed because Linux
+> +	 * cannot migrate the kernel pages. When memory hotplug is
+> +	 * enabled, we should prevent memblock from allocating memory
+> +	 * for the kernel.
+> +	 *
+> +	 * ACPI SRAT records all hotpluggable memory ranges. But before
+> +	 * SRAT is parsed, we don't know about it.
+> +	 *
+> +	 * The kernel image is loaded into memory at very early time. We
+> +	 * cannot prevent this anyway. So on NUMA system, we set any
+> +	 * node the kernel resides in as un-hotpluggable.
+> +	 *
+> +	 * Since on modern servers, one node could have double-digit
+> +	 * gigabytes memory, we can assume the memory around the kernel
+> +	 * image is also un-hotpluggable. So before SRAT is parsed, just
+> +	 * allocate memory near the kernel image to try the best to keep
+> +	 * the kernel away from hotpluggable memory.
+> +	 */
+> +	memblock_set_bottom_up(true);
+> +	movable_node_enabled = true;
+> +#else
+> +	pr_warn("movable_node option not supported\n");
+> +#endif
+> +	return 0;
+> +}
+> +early_param("movable_node", cmdline_parse_movable_node);
+> +
+>  int memory_add_physaddr_to_nid(u64 start)
+>  {
+>  	struct numa_meminfo *mi = &numa_meminfo;
+> @@ -899,4 +931,5 @@ int memory_add_physaddr_to_nid(u64 start)
+>  	return nid;
+>  }
+>  EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
+> -#endif
+> +
+> +#endif /* CONFIG_MEMORY_HOTPLUG */
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 9d29ba0..79c709a 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1738,37 +1738,6 @@ static bool can_offline_normal(struct zone *zone, unsigned long nr_pages)
+>  }
+>  #endif /* CONFIG_MOVABLE_NODE */
+>
+> -static int __init cmdline_parse_movable_node(char *p)
+> -{
+> -#ifdef CONFIG_MOVABLE_NODE
+> -	/*
+> -	 * Memory used by the kernel cannot be hot-removed because Linux
+> -	 * cannot migrate the kernel pages. When memory hotplug is
+> -	 * enabled, we should prevent memblock from allocating memory
+> -	 * for the kernel.
+> -	 *
+> -	 * ACPI SRAT records all hotpluggable memory ranges. But before
+> -	 * SRAT is parsed, we don't know about it.
+> -	 *
+> -	 * The kernel image is loaded into memory at very early time. We
+> -	 * cannot prevent this anyway. So on NUMA system, we set any
+> -	 * node the kernel resides in as un-hotpluggable.
+> -	 *
+> -	 * Since on modern servers, one node could have double-digit
+> -	 * gigabytes memory, we can assume the memory around the kernel
+> -	 * image is also un-hotpluggable. So before SRAT is parsed, just
+> -	 * allocate memory near the kernel image to try the best to keep
+> -	 * the kernel away from hotpluggable memory.
+> -	 */
+> -	memblock_set_bottom_up(true);
+> -	movable_node_enabled = true;
+> -#else
+> -	pr_warn("movable_node option not supported\n");
+> -#endif
+> -	return 0;
+> -}
+> -early_param("movable_node", cmdline_parse_movable_node);
+> -
+>  /* check which state of node_states will be changed when offline memory */
+>  static void node_states_check_changes_offline(unsigned long nr_pages,
+>  		struct zone *zone, struct memory_notify *arg)
+> -- 
+> 1.8.3.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
