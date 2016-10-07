@@ -1,75 +1,44 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH 0/7] Introduce PTX1K Boot FPGA driver
-Date: Fri,  7 Oct 2016 18:21:57 +0300
-Message-ID: <1475853724-22557-1-git-send-email-pantelis.antoniou@konsulko.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org, linux-watchdog@vger.kernel.org, Georgi Vlaev <gvlaev@juniper.net>, Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-kernel@vger.kernel.org, JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Guenter Roeck <linux@roeck-us.net>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH 4/10] MAINTAINERS: add entry for Marvell Xenon MMC Host Controller drivers
+Date: Fri,  7 Oct 2016 17:22:50 +0200
+Message-ID: <86b237c01d9767d4e0edf6d41194ab959838e5c0.1475853198.git-series.gregory.clement@free-electrons.com>
+References: <cover.990e3503c30c18ecf50dd48bce3d52811f03ca22.1475853198.git-series.gregory.clement@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.990e3503c30c18ecf50dd48bce3d52811f03ca22.1475853198.git-series.gregory.clement@free-electrons.com>
+In-Reply-To: <cover.990e3503c30c18ecf50dd48bce3d52811f03ca22.1475853198.git-series.gregory.clement@free-electrons.com>
+References: <cover.990e3503c30c18ecf50dd48bce3d52811f03ca22.1475853198.git-series.gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Ziji Hu <huziji@marvell.com>, "Jack(SH) Zhu" <jmzhu@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Shiwu Zhang <zhangshw@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.com>, Xueping Liu <xpliu@marvell.com>, Hilbert Zhang <zzhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Juniper's PTX1K Boot FPGA driver. Those FPGAs
-are present in Juniper's PTX series of routers.
+From: Ziji Hu <huziji@marvell.com>
 
-The MFD driver provices watchdog/mtd/hwmon devices.
+Add maintainer entry for Marvell Xenon eMMC/SD/SDIO Host
+Controller drivers.
 
-There are full device tree binding documents for the
-master mfd driver and for the slave driver.
+Signed-off-by: Hu Ziji <huziji@marvell.com>
+Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+---
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+), 0 deletions(-)
 
-This patchset is against mainline as of today: v4.8-9431-g3477d16
-and is dependent on the "Juniper prerequisites" and
-"Juniper infrastructure" patchsets sent earlier.
-
-Georgi Vlaev (7):
-  mfd: Add PTX1K I2CS BootFPGA MFD driver
-  mfd: dt-bindings: Add bindings for the Juniper PTX1K Boot FPGA
-  watchdog: Add PTX1K I2CS BootFPGA watchdog driver.
-  watchdog: ptx1kbf-wdt: Add ptx1kbf device tree bindings
-  mtd: ptx1kbf: Add PTX1K BootFPGA MTD driver
-  mtd: ptx1kbf: Bindings for Juniper's PTX1K Boot FPGA
-  hwmon: ptx1kbf: Add PTX1K I2CS BootFPGA sensor driver
-
- .../devicetree/bindings/mfd/jnx-ptx1k-bootfpga.txt |  34 ++
- .../devicetree/bindings/mtd/ptx1kbf-mtd.txt        |  23 +
- .../bindings/watchdog/jnx-ptx1kbf-wdt.txt          |  17 +
- drivers/hwmon/Kconfig                              |  17 +
- drivers/hwmon/Makefile                             |   1 +
- drivers/hwmon/jnx_ptx1kbf_hwmon.c                  | 123 ++++
- drivers/mfd/Kconfig                                |  11 +
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/ptx1k-bootfpga.c                       | 462 ++++++++++++++
- drivers/mtd/devices/Kconfig                        |  10 +
- drivers/mtd/devices/Makefile                       |   1 +
- drivers/mtd/devices/jnx_ptx1kbf_mtd.c              | 677 +++++++++++++++++++++
- drivers/watchdog/Kconfig                           |  15 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/jnx_ptx1kbf_wdt.c                 | 229 +++++++
- include/linux/mfd/ptx1k-bootfpga.h                 |  93 +++
- 16 files changed, 1715 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/jnx-ptx1k-bootfpga.txt
- create mode 100644 Documentation/devicetree/bindings/mtd/ptx1kbf-mtd.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/jnx-ptx1kbf-wdt.txt
- create mode 100644 drivers/hwmon/jnx_ptx1kbf_hwmon.c
- create mode 100644 drivers/mfd/ptx1k-bootfpga.c
- create mode 100644 drivers/mtd/devices/jnx_ptx1kbf_mtd.c
- create mode 100644 drivers/watchdog/jnx_ptx1kbf_wdt.c
- create mode 100644 include/linux/mfd/ptx1k-bootfpga.h
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 207eaefd3b97..89adcd57aa25 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7578,6 +7578,11 @@ M:	Nicolas Pitre <nico@fluxnic.net>
+ S:	Odd Fixes
+ F:	drivers/mmc/host/mvsdio.*
+ 
++MARVELL XENON MMC/SD/SDIO HOST CONTROLLER DRIVER
++M:	Ziji Hu <huziji@marvell.com>
++L:	linux-mmc@vger.kernel.org
++S:	Supported
++
+ MATROX FRAMEBUFFER DRIVER
+ L:	linux-fbdev@vger.kernel.org
+ S:	Orphan
 -- 
-1.9.1
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+git-series 0.8.10
