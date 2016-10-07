@@ -1,68 +1,307 @@
-From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] fpga manager: Add cyclonespi driver for Altera fpgas
-Date: Fri, 7 Oct 2016 13:54:02 -0700
-Message-ID: <46d5a356-f2c1-3b9f-45f3-4910c97695dc@gmail.com>
-References: <cover.1475783742.git.stillcompiling@gmail.com>
- <4b4432c04b4ea92a2af814e3d7866c33f2eb12ea.1475783742.git.stillcompiling@gmail.com>
- <CAAtXAHcWLpn3DFP6YLWqBxsMQ0O=HNNCmB+kHbHhyAHFHQUbwA@mail.gmail.com>
- <alpine.DEB.2.02.1610071248320.32627@linuxheads99>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 09/10] net: phy: Add MDIO driver for Juniper's SAM FPGA
+Date: Fri, 7 Oct 2016 23:13:26 +0200
+Message-ID: <20161007211326.GB10197@lunn.ch>
+References: <1475853518-22264-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1475853518-22264-10-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1610071248320.32627@linuxheads99>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, julia-acOepvfBmUk@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1475853518-22264-10-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: netdev-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Miller <davem@davemloft.net>
+Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Peter Rosin <peda@axentia.se>, Debjit Ghosh <dghosh@juniper.net>, Georgi Vlaev <gvlaev@juniper.net>, Guenter Roeck <linux@roeck-us.net>, Maryam Seraj <mseraj@juniper.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, linux-mtd@lists.infradead.org, linux-watchdog@vger.
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 07, 2016 at 06:18:37PM +0300, Pantelis Antoniou wrote:
+> From: Georgi Vlaev <gvlaev@juniper.net>
+> 
+> Add driver for the MDIO IP block present in Juniper's
+> SAM FPGA.
+> 
+> This driver supports only Clause 45 of the 802.3 spec.
+> 
+> Note that due to the fact that there are no drivers for
+> Broadcom/Avago retimers on 10/40Ge path that are controlled
+> from the MDIO interface there is a method to have direct
+> access to registers via a debugfs interface.
 
-On 10/07/2016 11:21 AM, atull wrote:
-> On Fri, 7 Oct 2016, Moritz Fischer wrote:
->
->>> +static inline u32 revbit8x4(u32 n)
->>> +{
->>> +       n = ((n & 0xF0F0F0F0UL) >> 4) | ((n & 0x0F0F0F0FUL) << 4);
->>> +       n = ((n & 0xCCCCCCCCUL) >> 2) | ((n & 0x33333333UL) << 2);
->>> +       n = ((n & 0xAAAAAAAAUL) >> 1) | ((n & 0x55555555UL) << 1);
->>> +       return n;
->>> +}
-The real issue is that The FPGA wants lsb first, and my SPI driver
-doesn't support it.
-What I really wanted to do here was to get generic support for lsb-first
-SPI into the SPI subsystem.
->> During the Zynq FPGA manager reviews we decided that manipulating the bitstream
->> to be consumable by the driver is userland's job.
-> Moritz, Can you remind me what that issue was there (or point me to
-> that email, I can't find it)?  I don't think I had a problem with that
-> in your case.  In general I think if these drivers can take the
-> bitstream that comes from the manufacturer's tools and stuff it into
-> the FPGA, then we are accomplishing what we want.  So I am OK with
-> this here.  The intent of the driver is to load a standard rbf, same
-> as the other Altera FPGA drivers.
-> There is a problem here though it will be easy to fix.  This call to
-> revbit8x4 should happen in cyclonespi_write(), not in
-> cyclonespi_write_init(). The reason for that is that write_init() may
-> just get the first chunk of the image (the header) and that write()
-> will be called multiple times for the remaining chunks.  The current
-> FPGA manager API won't show this problem since you have to give
-> fpga_mgr_buf_load the whole image buffer at once.  But it is easy to
-> imagine that some time in the future we may want to expand the FPGA
-> manager API to support streaming where we don't have the whole buffer.
-OK.
-If generic lsb first support for SPI is too high a bar (which it may be),
-I will move the bit reversing code into the write function.
-> Thanks for submitting, Joshua.  Will be looking at this over the
-> next several days.
->
-> Alan
-Thanks for the quick response!
-I'll be looking forward to your review,
+This seems to be the wrong solution. Why not write those drivers?
 
-Joshua Clayton
+Controlling stuff from user space is generally frowned up. So i expect
+DaveM will NACK this patch. Please remove all the debugfs stuff.
+
+> +static int mdio_sam_stat_wait(struct mii_bus *bus, u32 wait_mask)
+> +{
+> +	struct mdio_sam_data *data = bus->priv;
+> +	unsigned long timeout;
+> +	u32 stat;
+> +
+> +	timeout = jiffies + msecs_to_jiffies(MDIO_RDY_TMO);
+> +	do {
+> +		stat = ioread32(data->base + MDIO_STATUS);
+> +		if (stat & wait_mask)
+> +			return 0;
+> +
+> +		usleep_range(50, 100);
+> +	} while (time_before(jiffies, timeout));
+> +
+> +	return -EBUSY;
+
+I've recently had to fix a loop like this in another
+driver. usleep_range(50, 100) can sleep for a lot longer. If it sleeps
+for MDIO_RDY_TMO you exit out with -EBUSY after a single iteration,
+which is not what you want. It is better to make a fixed number of
+iterations rather than a timeout.
+
+> +}
+> +
+> +static int mdio_sam_read(struct mii_bus *bus, int phy_id, int regnum)
+> +{
+> +	struct mdio_sam_data *data = bus->priv;
+> +	u32 command, res;
+> +	int ret;
+> +
+> +	/* mdiobus_read holds the bus->mdio_lock mutex */
+> +
+> +	if (!(regnum & MII_ADDR_C45))
+> +		return -ENXIO;
+> +
+> +	ret = mdio_sam_stat_wait(bus, STAT_REG_RDY);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	command = regnum & 0x1fffff; /* regnum = (dev_id << 16) | reg */
+> +	command |= ((phy_id & 0x1f) << 21);
+> +
+> +	iowrite32(command, data->base + MDIO_CMD1);
+> +	ioread32(data->base + MDIO_CMD1);
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	iowrite32(CMD2_READ | CMD2_ENABLE, data->base + MDIO_CMD2);
+> +	ioread32(data->base + MDIO_CMD2);
+
+Why do you need to read the values back? Hardware bug?
+
+> +	iowrite32(TBL_CMD_REG_GO, data->base + MDIO_TBL_CMD);
+> +	ioread32(data->base + MDIO_TBL_CMD);
+
+Although not wrong, most drivers use writel().
+
+> +
+> +	usleep_range(50, 100);
+> +
+> +	ret = mdio_sam_stat_wait(bus, (STAT_REG_DONE | STAT_REG_ERR));
+
+Do you really need a wait before calling mdio_sam_stat_wait()? Isn't
+that what it is supposed to do, wait...
+
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	res = ioread32(data->base + MDIO_RESULT);
+> +
+> +	if (res & RES_ERROR || !(res & RES_SUCCESS))
+> +		return -EIO;
+> +
+> +	return (res & 0xffff);
+> +}
+> +
+> +static int mdio_sam_write(struct mii_bus *bus, int phy_id, int regnum, u16 val)
+> +{
+> +	struct mdio_sam_data *data = bus->priv;
+> +	u32 command;
+> +	int ret;
+> +
+> +	/* mdiobus_write holds the bus->mdio_lock mutex */
+> +
+> +	if (!(regnum & MII_ADDR_C45))
+> +		return -ENXIO;
+> +
+> +	ret = mdio_sam_stat_wait(bus, STAT_REG_RDY);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	command = regnum & 0x1fffff; /* regnum = (dev_id << 16) | reg */
+> +	command |= ((phy_id & 0x1f) << 21);
+> +
+> +	iowrite32(command, data->base + MDIO_CMD1);
+> +	ioread32(data->base + MDIO_CMD1);
+> +	iowrite32(CMD2_ENABLE | val, data->base + MDIO_CMD2);
+> +	ioread32(data->base + MDIO_CMD2);
+> +	iowrite32(TBL_CMD_REG_GO, data->base + MDIO_TBL_CMD);
+> +	ioread32(data->base + MDIO_TBL_CMD);
+> +
+> +	usleep_range(50, 100);
+> +
+> +	ret = mdio_sam_stat_wait(bus, (STAT_REG_DONE | STAT_REG_ERR));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mdio_sam_reset(struct mii_bus *bus)
+> +{
+> +	struct mdio_sam_data *data = bus->priv;
+> +
+> +	iowrite32(TBL_CMD_SOFT_RESET, data->base + MDIO_TBL_CMD);
+> +	ioread32(data->base + MDIO_TBL_CMD);
+> +	mdelay(10);
+> +	iowrite32(0, data->base + MDIO_TBL_CMD);
+> +	ioread32(data->base + MDIO_TBL_CMD);
+> +
+> +	/* zero tables */
+> +	memset_io(data->base + MDIO_CMD1, 0, 0x1000);
+> +	memset_io(data->base + MDIO_PRI_CMD1, 0, 0x1000);
+
+What tables?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int mdio_sam_of_register_bus(struct platform_device *pdev,
+> +				    struct device_node *np, void __iomem *base)
+> +{
+> +	struct mii_bus *bus;
+> +	struct mdio_sam_data *data;
+> +	u32 reg;
+> +	int ret;
+> +
+> +	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*data));
+> +	if (!bus)
+> +		return -ENOMEM;
+> +
+> +	/* bus offset */
+> +	ret = of_property_read_u32(np, "reg", &reg);
+> +	if (ret)
+> +		return -ENODEV;
+> +
+> +	data = bus->priv;
+> +	data->base = base + reg;
+> +
+> +	bus->parent = &pdev->dev;
+> +	bus->name = "mdio-sam";
+> +	bus->read = mdio_sam_read;
+> +	bus->write = mdio_sam_write;
+> +	bus->reset = mdio_sam_reset;
+> +	snprintf(bus->id, MII_BUS_ID_SIZE, "mdiosam-%x-%x", pdev->id, reg);
+> +
+> +	ret = of_mdiobus_register(bus, np);
+> +	if (ret < 0)
+> +		return ret;
+> +#ifdef CONFIG_DEBUG_FS
+> +	ret = mdio_sam_debugfs_init(bus);
+> +	if (ret < 0)
+> +		goto err_unregister;
+> +#endif
+> +	ret = device_create_bin_file(&bus->dev, &bin_attr_raw_io);
+> +	if (ret)
+> +		goto err_debugfs;
+> +
+> +	return 0;
+> +
+> +err_debugfs:
+> +#ifdef CONFIG_DEBUG_FS
+> +	mdio_sam_debugfs_remove(bus);
+> +#endif
+> +err_unregister:
+> +	mdiobus_unregister(bus);
+> +
+> +	return ret;
+> +}
+> +
+> +static int mdio_sam_of_unregister_bus(struct device_node *np)
+> +{
+> +	struct mii_bus *bus;
+> +
+> +	bus = of_mdio_find_bus(np);
+> +	if (bus) {
+> +		device_remove_bin_file(&bus->dev, &bin_attr_raw_io);
+> +#ifdef CONFIG_DEBUG_FS
+> +		mdio_sam_debugfs_remove(bus);
+> +#endif
+> +		mdiobus_unregister(bus);
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int mdio_sam_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np;
+> +	struct resource *res;
+> +	void __iomem *base;
+> +	int ret;
+> +
+> +	if (!pdev->dev.of_node)
+> +		return -ENODEV;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_nocache(&pdev->dev, res->start,
+> +				    resource_size(res));
+
+Why nocache?
+
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	for_each_available_child_of_node(pdev->dev.of_node, np) {
+> +		ret = mdio_sam_of_register_bus(pdev, np, base);
+> +		if (ret)
+> +			goto err;
+> +	}
+
+This is odd. There does not seem to be any shared resources. So you
+should really have one MDIO bus as one device in the device tree.
+
+
+
+       Andrew
+
+> +
+> +	return 0;
+> +err:
+> +	/* roll back everything */
+> +	for_each_available_child_of_node(pdev->dev.of_node, np)
+> +		mdio_sam_of_unregister_bus(np);
+> +
+> +	return ret;
+> +}
+> +
+> +static int mdio_sam_remove(struct platform_device *pdev)
+> +{
+> +	struct device_node *np;
+> +
+> +	for_each_available_child_of_node(pdev->dev.of_node, np)
+> +		mdio_sam_of_unregister_bus(np);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id mdio_sam_of_match[] = {
+> +	{ .compatible = "jnx,mdio-sam" },
+> +	{  }
+> +};
+> +MODULE_DEVICE_TABLE(of, mdio_sam_of_match);
+> +
+> +static struct platform_driver mdio_sam_driver = {
+> +	.probe = mdio_sam_probe,
+> +	.remove = mdio_sam_remove,
+> +	.driver = {
+> +		.name = "mdio-sam",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = mdio_sam_of_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(mdio_sam_driver);
+> +
+> +MODULE_ALIAS("platform:mdio-sam");
+> +MODULE_AUTHOR("Georgi Vlaev <gvlaev@juniper.net>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("Juniper Networks SAM MDIO bus driver");
+> -- 
+> 1.9.1
+> 
