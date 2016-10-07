@@ -1,102 +1,73 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 0/6] Introduce Juniper CBC FPGA
-Date: Fri, 7 Oct 2016 22:37:39 +0200
-Message-ID: <20161007203739.GA23946@kroah.com>
-References: <1475853614-22409-1-git-send-email-pantelis.antoniou@konsulko.com>
- <20161007153944.GA13519@kroah.com>
- <DD6D31CF-54E9-4A14-A9DD-C447D10006C9@konsulko.com>
+From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] doc: dt: add cyclone-spi binding document
+Date: Fri, 7 Oct 2016 13:41:07 -0700
+Message-ID: <ffff9995-d3d2-de8e-54b1-468252a725c0@gmail.com>
+References: <cover.1475783742.git.stillcompiling@gmail.com>
+ <4b4432c04b4ea92a2af814e3d7866c33f2eb12ea.1475783742.git.stillcompiling@gmail.com>
+ <8d89e70475e8e1c3ce5117a0367c8444c11c61e3.1475783742.git.stillcompiling@gmail.com>
+ <CAAtXAHeZLBT-y8xTKgG4PnZA6DH1z5=FoaM4ipC3pTEVU9KR+Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <DD6D31CF-54E9-4A14-A9DD-C447D10006C9@konsulko.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, devel@driverdev.osuosl.org, devicetree <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "<linux-kernel@vger.kernel.org>" <linux-kernel@vger.kernel.org>, JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Debjit Ghosh <dghosh@juniper.net>, Mohammad Kamil <mkamil@juniper.net>, Georgi Vlaev <gvlaev@juniper.net>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAtXAHeZLBT-y8xTKgG4PnZA6DH1z5=FoaM4ipC3pTEVU9KR+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 07, 2016 at 09:53:29PM +0300, Pantelis Antoniou wrote:
-> Hi Greg,
-> 
-> > On Oct 7, 2016, at 18:39 , Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> > 
-> > On Fri, Oct 07, 2016 at 06:20:08PM +0300, Pantelis Antoniou wrote:
-> >> Add Juniper's PTX1K CBC FPGA driver. Those FPGAs
-> >> are present in Juniper's PTX series of routers.
-> >> 
-> >> The MFD driver provices a gpio device and a special
-> >> driver for Juniper's board infrastucture.
-> >> The FPGA infrastucture driver is providing an interface
-> >> for user-space handling of the FPGA in those platforms.
-> >> 
-> >> There are full device tree binding documents for the
-> >> master mfd driver and for the slave driver.
-> >> 
-> >> This patchset is against mainline as of today: v4.8-9431-g3477d16
-> >> and is dependent on the "Juniper prerequisites" and
-> >> "Juniper infrastructure" patchsets sent earlier.
-> >> 
-> >> Georgi Vlaev (5):
-> >>  mfd: Add support for the PTX1K CBC FPGA
-> >>  gpio: Add support for PTX1K CBC FPGA spare GPIOs
-> >>  gpio: gpio-cbc: Document bindings of CBC FPGA GPIO block
-> >>  gpio: cbc-presence: Add CBC presence detect as GPIO driver
-> >>  gpio: gpio-cbc-presense: Document bindings of CBC FPGA presence
-> >> 
-> >> Tom Kavanagh (1):
-> >>  staging: jnx: CBD-FPGA infrastructure
-> >> 
-> >> .../bindings/gpio/jnx,gpio-cbc-presense.txt        |  31 +
-> >> .../devicetree/bindings/gpio/jnx,gpio-cbc.txt      |  30 +
-> >> drivers/gpio/Kconfig                               |  23 +
-> >> drivers/gpio/Makefile                              |   2 +
-> >> drivers/gpio/gpio-cbc-presence.c                   | 460 ++++++++++
-> >> drivers/gpio/gpio-cbc.c                            | 236 +++++
-> >> drivers/mfd/Kconfig                                |  16 +
-> >> drivers/mfd/Makefile                               |   1 +
-> >> drivers/mfd/cbc-core.c                             | 971 +++++++++++++++++++++
-> >> drivers/staging/jnx/Kconfig                        |  34 +
-> >> drivers/staging/jnx/Makefile                       |   5 +
-> >> drivers/staging/jnx/jnx-cbc-ptx1k.c                | 242 +++++
-> >> drivers/staging/jnx/jnx-cbd-fpga-common.c          | 332 +++++++
-> >> drivers/staging/jnx/jnx-cbd-fpga-common.h          |  27 +
-> >> drivers/staging/jnx/jnx-cbd-fpga-core.c            | 540 ++++++++++++
-> >> drivers/staging/jnx/jnx-cbd-fpga-core.h            |  68 ++
-> >> drivers/staging/jnx/jnx-cbd-fpga-platdata.h        |  51 ++
-> >> drivers/staging/jnx/jnx-cbd-fpga-ptx1k.c           | 134 +++
-> >> drivers/staging/jnx/jnx-cbd-fpga-ptx21k.c          | 143 +++
-> >> drivers/staging/jnx/jnx-cbd-fpga-ptx3k.c           | 111 +++
-> >> drivers/staging/jnx/jnx-cbd-fpga-ptx5k.c           | 107 +++
-> >> include/linux/mfd/cbc-core.h                       | 181 ++++
-> >> 22 files changed, 3745 insertions(+)
-> > 
-> > Please don't mix driver submissions like this.  Staging stuff needs to
-> > go to the staging maintainer, gpio to that one, mfd to that one, and so
-> > on.
-> > 
-> > there's almost nothing anyone can do with this series as-is, sorry.
-> > 
-> > please split it up.
-> > 
-> 
-> Now I’m confused, this is a typical MFD submission:
-> 
-> https://lwn.net/Articles/587032/
-> 
-> Looks like it’s normal for a single patchset against multiple subsystems.
+Moritz,
 
-Not when it crosses the drivers/staging/ boundry.
+thank you very much for the review.
+ 
+On 10/06/2016 07:53 PM, Moritz Fischer wrote:
+> Hi Joshua,
+>
+> On Thu, Oct 6, 2016 at 1:34 PM, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Describe a cyclonespi devicetree entry, required features
+>>
+>> Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../bindings/fpga/cyclone-spi-fpga-mgr.txt         | 23 ++++++++++++++++++++++
+>>  1 file changed, 23 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/fpga/cyclone-spi-fpga-mgr.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/fpga/cyclone-spi-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/cyclone-spi-fpga-mgr.txt
+>> new file mode 100644
+>> index 0000000..8de34db
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/fpga/cyclone-spi-fpga-mgr.txt
+>> @@ -0,0 +1,23 @@
+>> +Altera SOCFPGA FPGA Manager
+> Copy & Paste? :)
+Oops :(
+As you might image, documentation was the last item done with the least attention.
+Will fix.
+>
+>> +Altera cyclone FPGAs support a method of loading the bitstream over what is
+> cyclone->Cyclone
+OK.
+>> +referred to as "passive serial".
+>> +The passive serial link is not technically spi, and might require extra
+>> +circuits in order to play nicely with other spi slaves on the same bus.
+>> +
+>> +See https://www.altera.com/literature/hb/cyc/cyc_c51013.pdf
+>> +
+>> +Required properties:
+>> +- compatible  : should contain "altr,cyclonespi-fpga-mgr"
+> Alan, do you guys have any input on the compat string?
+I am open to change if it makes sense. I tried to keep the format similar.
+> I think generally the bindings should go before the actual usage in
+> your patch series. Meaning you wanna document the binding
+> before you use it. I think this patch should be [1/3].
+Ah, In my mind I had it backwards.
+> Cheers,
+>
+> Moritz
+I'll give Alan a chance to review and then spin a V2
 
-> Do we have a definitive form for this?
-
-Either submit all of this stuff "properly", or put it in staging, don't
-cross the boundry if at all possible, it just causes a lot of confusion
-and headache as the staging stuff could be deleted at any time.
-
-You still haven't explained why you feel drivers/staging/ is the right
-place for this codebase.  Again, why not just submit it "properly"?
-
-thanks,
-
-greg k-h
+Joshua Clayton
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
