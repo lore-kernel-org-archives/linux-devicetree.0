@@ -1,56 +1,130 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] mtd: s3c2410: make ecc mode configurable via
- platform data
-Date: Fri, 7 Oct 2016 18:48:40 +0300
-Message-ID: <20161007154840.GA4222@kozik-lap>
-References: <1475711217-974-1-git-send-email-sergio.prado@e-labworks.com>
- <1475711217-974-2-git-send-email-sergio.prado@e-labworks.com>
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC 1/2] staging: jnx: Add Juniper connector driver
+Date: Fri, 07 Oct 2016 09:25:27 -0700
+Message-ID: <1475857527.1945.7.camel@perches.com>
+References: <1475853372-21997-1-git-send-email-pantelis.antoniou@konsulko.com>
+         <1475853372-21997-2-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1475711217-974-2-git-send-email-sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
+In-Reply-To: <1475853372-21997-2-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
-Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alon Ronen <aronen-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Debjit Ghosh <dghosh-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Dhruva Diveneni <ddevineni-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Georgi Vlaev <gvlaev-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Yu-Lin Lu <ylu-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 05, 2016 at 08:46:55PM -0300, Sergio Prado wrote:
-> Removing CONFIG_MTD_NAND_S3C2410_HWECC option and adding a ecc_mode
-> field in the drivers's platform data structure so it can be selectable
-> via platform data.
-> 
-> Also setting this field to NAND_ECC_SOFT in all boards using this
-> driver since none of them had CONFIG_MTD_NAND_S3C2410_HWECC enabled.
-> 
-> Signed-off-by: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
-> ---
->  arch/arm/mach-s3c24xx/common-smdk.c            |   1 +
->  arch/arm/mach-s3c24xx/mach-anubis.c            |   1 +
->  arch/arm/mach-s3c24xx/mach-at2440evb.c         |   1 +
->  arch/arm/mach-s3c24xx/mach-bast.c              |   1 +
->  arch/arm/mach-s3c24xx/mach-gta02.c             |   1 +
->  arch/arm/mach-s3c24xx/mach-jive.c              |   1 +
->  arch/arm/mach-s3c24xx/mach-mini2440.c          |   1 +
->  arch/arm/mach-s3c24xx/mach-osiris.c            |   1 +
->  arch/arm/mach-s3c24xx/mach-qt2410.c            |   1 +
->  arch/arm/mach-s3c24xx/mach-rx1950.c            |   1 +
->  arch/arm/mach-s3c24xx/mach-rx3715.c            |   1 +
->  arch/arm/mach-s3c24xx/mach-vstms.c             |   1 +
->  arch/arm/mach-s3c64xx/mach-hmt.c               |   1 +
->  arch/arm/mach-s3c64xx/mach-mini6410.c          |   1 +
->  arch/arm/mach-s3c64xx/mach-real6410.c          |   1 +
->  drivers/mtd/nand/Kconfig                       |   9 --
->  drivers/mtd/nand/s3c2410.c                     | 119 +++++++++++++------------
->  include/linux/platform_data/mtd-nand-s3c2410.h |   6 +-
->  18 files changed, 79 insertions(+), 70 deletions(-)
->
+On Fri, 2016-10-07 at 18:16 +0300, Pantelis Antoniou wrote:
+> diff --git a/drivers/staging/jnx/jnx-connector.c b/drivers/staging/jnx/jnx-connector.c
+[]
+> +struct jnx_conn_data {
+> +	struct device *dev;		/* parent (platform) device */
+> +	const char *name[NUM_OVERLAYS];	/* overlay file names */
+> +	bool enabled;			/* true if can handle interrupts */
+> +	bool poweron;			/* true if assumed to be powered on */
 
+maybe use pahole and remove some of the wasteful padding
 
-Acked-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> +	int attention_button;		/* attention button gpio pin */
+> +	bool have_attention_button;	/* true if attention button exists */
+> +	unsigned long attention_button_holdtime;/* button hold time, jiffies */
+> +	bool attention_ignore;		/* true if handled by user space */
+> +	int power_enable;		/* power enable gpio pin */
+> +	bool auto_enable;		/* true if board should auto-enable */
+> +	struct jnx_i2c_power_seq pon;	/* power-on sequence */
+[]
+> +	u32 gpio_flags;
+> +	u16 assembly_id;
+> +	int slot;			/* slot number */
+> +	int type;			/* card type */
+> +	bool static_assembly_id;	/* true if assembly_id is static */
+> +	bool assembly_id_valid;		/* true if assembly_id is valid */
+> +	int adapter;			/* parent i2c adapter number */
+[]
+> +	struct mutex mutex;		/* mutex to protect state changes */
+> +	bool synchronous;		/* true if state changes are ok */
+> +	struct mutex fdt_mutex;		/* mutex to protect fdt accesses */
+[]
+> +	bool standby_to_master;		/* standby:master_ev processing */
+> +};
+[]
+> +/*
+> + * jnx_conn_insert_ideeprom()
+> + *   Inserts ideeprom with a parent from OF prop
+> + */
+> +static int jnx_conn_insert_ideeprom(struct jnx_conn_data *data,
+> +				    struct i2c_adapter *adap,
+> +				    struct device_node *node,
+> +				    struct i2c_board_info *info)
+> +{
+> +	struct device *dev = data->dev;
+> +	struct i2c_adapter *parent = NULL;
+> +	struct i2c_client *client;
+> +	struct device_node *anode;
+> +	struct at24_platform_data at24_pdata = {
+> +		.byte_len = 256,
+> +		.page_size = 4,
+> +		.setup = jnx_conn_at24_callback,
+> +		.context = data,
+> +	};
+> +
+> +	info->platform_data = &at24_pdata;
 
-Best regards,
-Krzysztof
+Assigning a temporary address through a pointer argument?
+Isn't there a better way?
+
+> +/*
+> + * jnx_conn_verify_overlay()
+> + *
+> + * Verify if overlay is compatible with this board/slot
+> + */
+> +static int jnx_conn_verify_overlay(struct jnx_conn_data *data,
+> +				   struct device_node *np)
+> +{
+[]
+> +	ret = of_property_read_u32(np, "type", &var);
+> +	if (ret) {
+> +		dev_err(dev, "Missing type property\n");
+> +		return ret;
+> +	}
+> +	if (var != data->type) {
+> +		dev_err(dev, "Wrong type: Expected %d, got %d\n",
+> +			data->type, var);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * 'assembly-ids' property must exist, and one of its entries must match
+> +	 * the card assembly id
+> +	 */
+> +	assembly_ids = of_get_property(np, "assembly-ids", &size);
+> +	if (!assembly_ids || size < sizeof(u32)) {
+> +		dev_err(dev, "Bad assembly-ids property\n");
+> +		return -EINVAL;
+> +	}
+> +	ret = -EINVAL;
+> +	for (i = 0; i < size / sizeof(u32); i++) {
+> +		if (be32_to_cpu(assembly_ids[i]) == data->assembly_id) {
+> +			ret = 0;
+> +			break;
+> +		}
+> +	}
+> +	if (ret) {
+> +		dev_err(dev, "Assembly ID 0x%x not supported by overlay\n",
+> +			data->assembly_id);
+> +		return ret;
+> +	}
+
+Given all the direct returns above here, perhaps
+
+	for (i = 0; i < size / sizeof(u32); i++) {
+		if (be32_to_cpu(assembly_ids[i]) == data->assembly_id)
+			return 0;
+	}
+
+	dev_err(...);
+	return -EINVAL;
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
