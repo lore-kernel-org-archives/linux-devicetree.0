@@ -1,35 +1,30 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 01/11] ARM: shmobile: r8a7743: add power domain index
- macros
-Date: Fri, 7 Oct 2016 12:14:50 +0900
-Message-ID: <20161007031450.GI13721@verge.net.au>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v3 02/11] soc: renesas: rcar-sysc: add R8A7743 support
+Date: Fri, 7 Oct 2016 12:15:07 +0900
+Message-ID: <20161007031507.GJ13721@verge.net.au>
 References: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com>
- <5183851.NpIWVzMZV9@wasted.cogentembedded.com>
+ <1691511.DcOcZO89eZ@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5183851.NpIWVzMZV9@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com
+In-Reply-To: <1691511.DcOcZO89eZ-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 06, 2016 at 12:31:30AM +0300, Sergei Shtylyov wrote:
-> Add macros usable by the device tree sources to reference R8A7743 SYSC power
-> domains by index.
+On Wed, Oct 05, 2016 at 02:35:01PM -0700, Sergei Shtylyov wrote:
+> Add support for RZ/G1M (R8A7743) SoC power areas to the R-Car SYSC driver.
 > 
 > Based on the original (and large) patch by Dmitry Shifrin
-> <dmitry.shifrin@cogentembedded.com>.
+> <dmitry.shifrin-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> ---
-> Changes in version 2:
-> - added Geert's tag.
-> 
->  include/dt-bindings/power/r8a7743-sysc.h |   25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
 Thanks, I have queued this up.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
