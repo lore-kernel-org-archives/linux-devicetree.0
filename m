@@ -1,74 +1,54 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 7/9] ARM: sunxi: Remove useless allwinner,drive property
-Date: Fri, 7 Oct 2016 11:11:22 +0200
-Message-ID: <20161007091122.GN4684@lukather>
-References: <cover.26c6f76b361d146fb079d744251f020ef6d2db7d.1475489558.git-series.maxime.ripard@free-electrons.com>
- <01cd77ccced851276fcb3625b3d7805f5260fb59.1475489558.git-series.maxime.ripard@free-electrons.com>
- <CAGb2v65SmZqR-MJgNxa0RGUYyWgeLHQcQfa0b8U0XiEtp+RfBg@mail.gmail.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RESEND PATCH v2 -next 0/3] ARM64: amlogic: Add support for GXL SoC Family
+Date: Fri, 07 Oct 2016 06:33:06 -0700
+Message-ID: <7hfuo8ffn1.fsf@baylibre.com>
+References: <1475595430-30075-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="XBg9NAhDNArbJUtw"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v65SmZqR-MJgNxa0RGUYyWgeLHQcQfa0b8U0XiEtp+RfBg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475595430-30075-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
+        Armstrong's message of "Tue, 4 Oct 2016 17:37:07 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: afaerber-l3A5Bk7waGM@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
---XBg9NAhDNArbJUtw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> This is a resend rebased on linux-next-20161004 tag.
+>
+> The new Amlogic GXL SoCs (S905X and S905D) are part of the Meson GX family and
+> share some common features that can be described in a common GX dtsi file used
+> by the Meson GXBB and Meson GXL Family dtsi.
+>
+> This patchset introduces the common GX dtsi and switches the GXBB to use
+> the common GX dtsi.
+> Then it introduces the GXL S905X SoC with the GXL common dtsi, then the S905D
+> dtsi and the p212 board dts.
+> Finally the GXL S905D SoC is introduced with a S905D dtsi using the GXL common
+> and the p23x Board dtsi for the p231 and p230 development boards.
+>
+> Changes since v1 at http://lkml.kernel.org/r/20160903082227.30559-1-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org :
+>  - Add missing copyrigh in gx dtsi
+>  - Rename gxl SoCs compatibles to amlogic,s905x and amlogic,s905d
+>
+> Changes since RFC v1:
+>  - Merge GX common and GXBB changes in a single patch
+>  - Integrate GXL S905X patch
+>  - Add support for S905D and the p23x boards
+>
+> Note: This patchset integrates the patch "ARM64: dts: amlogic: Add basic support for Amlogic S905X" [1]
+> from Carlo Caione.
 
-On Tue, Oct 04, 2016 at 10:34:39AM +0800, Chen-Yu Tsai wrote:
-> On Mon, Oct 3, 2016 at 6:21 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > The allwinner,drive property set to 10mA was really considered as our
-> > default. Remove all those properties entirely to make that obvious.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
->=20
-> Did you use sed or some other scripting tool to do this patch?
-> Including the command should make it easier to verify the result,
-> instead of having to go through the 93 files here.
+I'm applying this series as the first DT change for v4.10, so all future
+DT patches should be applied on top of this.
 
-Yeah, I used some dumb sed commands.
+It's available in the v4.10/dt64 branch of my tree[1].
 
-Unfortunately, it disappeared from my history, but given my sed-fu, it
-was pretty trivial, just a succession of
-sed -i 'd/SUN4I_PINCTRL_10_MA' *.dtsi
+Kevin
 
-Something along those lines, and pretty much the same thing for the
-next patches.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---XBg9NAhDNArbJUtw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJX92a6AAoJEBx+YmzsjxAgolAQAJ+jqMxPxUQNBwhMh+fvR6wg
-SYrKRL1FVm4oo26apN8GkC9lG/4KEljco3LZSIIUOgLCxZeQV/ZCOtDIaG4Co+K1
-/Ar4fGgonzIzPvliCsIERvEzRrYh2+jUOag8+rJGAXu6g8lZb+N40YKrRHyAtmsS
-Xe+SmSklrjlplnqjPqcwt/6DDHq64x/7n6PFqFqc81EFzHjgsZLqcVWXVE7cIJ9g
-ullUohwPh3EyC+SZa3gUtyTA+iyURU5htahDMZhwk8tNJLfbkvQml/YaORiVXcPW
-yK+TcRllmtD4xKkPGdzdRlTMZeykoYmAG6HMNIpqcydSqoCN/ERDcqhbo0ZpPUZo
-8v8j8wG+cgH/4plD5QSWQq0bDhZ0xCW5HN5GcsQ2XI/k7mDlRgPyBp4JfNmxWUXJ
-CtxwXb+W1oCEPwonrwAk+1W6zx/G3RRd3W0bQ8mUMfPTK7heuidiJk8vT0mahRo5
-G/gKJsvKebjbpB9xj/eB+4Wq8MZT0GYTONQ4ujTNmG/KkcCkFNxXP0Pw19B0fllj
-tGQDkexmfDftBsVCnkAxAD57o7u57eUIBBmTXyHPCMgAUxN4+NPSVGmmlz8/J9Xx
-Bm3qLFy/sqL5RvNHfWc4ZkpvBIwA8YXItt/aNK+gs50Qmtz9fbZBmxxJDXqXxW2t
-E918utc8M4BEy2OIFhxK
-=+rJa
------END PGP SIGNATURE-----
-
---XBg9NAhDNArbJUtw--
+[1] https://git.kernel.org/cgit/linux/kernel/git/khilman/linux-amlogic.git
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
