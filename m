@@ -1,29 +1,33 @@
 From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v3 09/11] DT: arm: shmobile: document SK-RZG1M board
-Date: Fri, 7 Oct 2016 12:21:56 +0900
-Message-ID: <20161007032155.GL13721@verge.net.au>
-References: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com>
- <1619405.o5fA0fLKdG@wasted.cogentembedded.com>
+Subject: Re: [PATCH 0/2] ARM: shmobile: alt/gose: Add board part number to DT
+ bindings
+Date: Fri, 7 Oct 2016 12:32:15 +0900
+Message-ID: <20161007033214.GO13721@verge.net.au>
+References: <1475587248-13670-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1619405.o5fA0fLKdG-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+In-Reply-To: <1475587248-13670-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 06, 2016 at 12:45:18AM +0300, Sergei Shtylyov wrote:
-> Document the SK-RZG1M device tree bindings, listing it as a supported board.
+On Tue, Oct 04, 2016 at 03:20:46PM +0200, Geert Uytterhoeven wrote:
+> 	Hi Simon, Magnus,
 > 
-> This allows to use checkpatch.pl to validate .dts files referring to the
-> SK-RZG1M board.
+> This series at the missing board part numbers for r8a7794/alt and
+> r8a7793/gose to the DT binding documentation, like is done for the other
+> boards.
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Thanks for applying!
+> 
+> Geert Uytterhoeven (2):
+>   ARM: shmobile: r8a7794/alt: Add board part number to DT bindings
+>   ARM: shmobile: r8a7793/gose: Add board part number to DT bindings
 
-Thanks, I have queued this up as "ARM: shmobile: document SK-RZG1M board"
+Thanks, I have queued these up.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
