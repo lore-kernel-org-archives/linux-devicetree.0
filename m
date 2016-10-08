@@ -1,348 +1,380 @@
-From: Georgi Vlaev <gvlaev@juniper.net>
-Subject: Re: [PATCH 09/10] net: phy: Add MDIO driver for Juniper's SAM FPGA
-Date: Sat, 8 Oct 2016 09:30:57 -0700
-Message-ID: <20161008163056.GA17131@svl-evodev-gvlaev.juniper.net>
-References: <1475853518-22264-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1475853518-22264-10-git-send-email-pantelis.antoniou@konsulko.com>
- <20161007211326.GB10197@lunn.ch>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] iio: accel: Add driver for dmard10 3-axis
+ Accelerometer
+Date: Sat, 8 Oct 2016 18:10:37 +0100
+Message-ID: <e23b116d-ad5a-d0ea-a899-f61b06ba7790@kernel.org>
+References: <20161008123426.8991-1-hdegoede@redhat.com>
+ <20161008123426.8991-3-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161007211326.GB10197@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Miller <davem@davemloft.net>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Debjit Ghosh <dghosh@juniper.net>, Guenter Roeck <linux@roeck-us.net>, Maryam Seraj <mseraj@juniper.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161008123426.8991-3-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+On 08/10/16 13:34, Hans de Goede wrote:
+> Add a driver for the Domintech ARD10 3-axis Accelerometer, based on the
+> android driver found here: https://github.com/domintech/dmard10
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v2:
+> -prefix all defines with DMARD10_ and uppercase them all
+> -Cleanup typography of some comments
+> -Use defines for offsets in databuffer
+> -Use i2c_smbus_write_byte_data() where applicable
+> -Reduce unnecessarily large buffer size in dmard10_shutdown()
+> -Use __le16 buffer in dmard10_read_raw()
+> Changes in v3:
+> -Express unit in m/s^2 instead of in "G"
+Looks good to me. I thought about leaving it for a few days, but as the change
+is so minor I would guess anyone who cared would have had plenty of time
+to look at V2.
 
-On 16-10-07 23:13:26, Andrew Lunn wrote:
-> On Fri, Oct 07, 2016 at 06:18:37PM +0300, Pantelis Antoniou wrote:
-> > From: Georgi Vlaev <gvlaev@juniper.net>
-> > 
-> > Add driver for the MDIO IP block present in Juniper's
-> > SAM FPGA.
-> > 
-> > This driver supports only Clause 45 of the 802.3 spec.
-> > 
-> > Note that due to the fact that there are no drivers for
-> > Broadcom/Avago retimers on 10/40Ge path that are controlled
-> > from the MDIO interface there is a method to have direct
-> > access to registers via a debugfs interface.
-> 
-> This seems to be the wrong solution. Why not write those drivers?
-> 
-> Controlling stuff from user space is generally frowned up. So i expect
-> DaveM will NACK this patch. Please remove all the debugfs stuff.
+It'll be sat in my testing branch until next weekend anyway if anyone does
+get a chance to take a look!
 
-I'll drop the debugfs and sysfs attributes. This will remove the
-access from the user space.
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
+Thanks. Another nice neat little driver.  Will be interesting to see
+if anyone wants to ultimately try doing 'push' type data flows on these
+devices.  Easy to add later though and I always like the approach where
+the driver gains that feature after we are sure the simple stuff is
+working well.
+
+Jonathan
+> ---
+>  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+>  drivers/iio/accel/Kconfig                          |  10 +
+>  drivers/iio/accel/Makefile                         |   1 +
+>  drivers/iio/accel/dmard10.c                        | 266 +++++++++++++++++++++
+>  4 files changed, 278 insertions(+)
+>  create mode 100644 drivers/iio/accel/dmard10.c
 > 
-> > +static int mdio_sam_stat_wait(struct mii_bus *bus, u32 wait_mask)
-> > +{
-> > +	struct mdio_sam_data *data = bus->priv;
-> > +	unsigned long timeout;
-> > +	u32 stat;
-> > +
-> > +	timeout = jiffies + msecs_to_jiffies(MDIO_RDY_TMO);
-> > +	do {
-> > +		stat = ioread32(data->base + MDIO_STATUS);
-> > +		if (stat & wait_mask)
-> > +			return 0;
-> > +
-> > +		usleep_range(50, 100);
-> > +	} while (time_before(jiffies, timeout));
-> > +
-> > +	return -EBUSY;
-> 
-> I've recently had to fix a loop like this in another
-> driver. usleep_range(50, 100) can sleep for a lot longer. If it sleeps
-> for MDIO_RDY_TMO you exit out with -EBUSY after a single iteration,
-> which is not what you want. It is better to make a fixed number of
-> iterations rather than a timeout.
+> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> index ce9db50..4689b31 100644
+> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> @@ -39,6 +39,7 @@ dallas,ds75		Digital Thermometer and Thermostat
+>  dlg,da9053		DA9053: flexible system level PMIC with multicore support
+>  dlg,da9063		DA9063: system PMIC for quad-core application processors
+>  domintech,dmard09	DMARD09: 3-axis Accelerometer
+> +domintech,dmard10	DMARD10: 3-axis Accelerometer
+>  epson,rx8010		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
+>  epson,rx8025		High-Stability. I2C-Bus INTERFACE REAL TIME CLOCK MODULE
+>  epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
+> diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+> index 6bf1b64..6236fd5 100644
+> --- a/drivers/iio/accel/Kconfig
+> +++ b/drivers/iio/accel/Kconfig
+> @@ -73,6 +73,16 @@ config DMARD09
+>  	  Choosing M will build the driver as a module. If so, the module
+>  	  will be called dmard09.
+>  
+> +config DMARD10
+> +	tristate "Domintech DMARD10 3-axis Accelerometer Driver"
+> +	depends on I2C
+> +	help
+> +	  Say yes here to get support for the Domintech DMARD10 3-axis
+> +	  accelerometer.
+> +
+> +	  Choosing M will build the driver as a module. If so, the module
+> +	  will be called dmard10.
+> +
+>  config HID_SENSOR_ACCEL_3D
+>  	depends on HID_SENSOR_HUB
+>  	select IIO_BUFFER
+> diff --git a/drivers/iio/accel/Makefile b/drivers/iio/accel/Makefile
+> index 07a0c72..9f51559 100644
+> --- a/drivers/iio/accel/Makefile
+> +++ b/drivers/iio/accel/Makefile
+> @@ -10,6 +10,7 @@ obj-$(CONFIG_BMC150_ACCEL_I2C) += bmc150-accel-i2c.o
+>  obj-$(CONFIG_BMC150_ACCEL_SPI) += bmc150-accel-spi.o
+>  obj-$(CONFIG_DMARD06)	+= dmard06.o
+>  obj-$(CONFIG_DMARD09)	+= dmard09.o
+> +obj-$(CONFIG_DMARD10)	+= dmard10.o
+>  obj-$(CONFIG_HID_SENSOR_ACCEL_3D) += hid-sensor-accel-3d.o
+>  obj-$(CONFIG_KXCJK1013) += kxcjk-1013.o
+>  obj-$(CONFIG_KXSD9)	+= kxsd9.o
+> diff --git a/drivers/iio/accel/dmard10.c b/drivers/iio/accel/dmard10.c
+> new file mode 100644
+> index 0000000..b8736cc
+> --- /dev/null
+> +++ b/drivers/iio/accel/dmard10.c
+> @@ -0,0 +1,266 @@
+> +/**
+> + * IIO driver for the 3-axis accelerometer Domintech ARD10.
+> + *
+> + * Copyright (c) 2016 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> + * Copyright (c) 2012 Domintech Technology Co., Ltd
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/i2c.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/byteorder/generic.h>
+> +
+> +#define DMARD10_REG_ACTR			0x00
+> +#define DMARD10_REG_AFEM			0x0c
+> +#define DMARD10_REG_STADR			0x12
+> +#define DMARD10_REG_STAINT			0x1c
+> +#define DMARD10_REG_MISC2			0x1f
+> +#define DMARD10_REG_PD				0x21
+> +
+> +#define DMARD10_MODE_OFF			0x00
+> +#define DMARD10_MODE_STANDBY			0x02
+> +#define DMARD10_MODE_ACTIVE			0x06
+> +#define DMARD10_MODE_READ_OTP			0x12
+> +#define DMARD10_MODE_RESET_DATA_PATH		0x82
+> +
+> +/* AFEN set 1, ATM[2:0]=b'000 (normal), EN_Z/Y/X/T=1 */
+> +#define DMARD10_VALUE_AFEM_AFEN_NORMAL		0x8f
+> +/* ODR[3:0]=b'0111 (100Hz), CCK[3:0]=b'0100 (204.8kHZ) */
+> +#define DMARD10_VALUE_CKSEL_ODR_100_204		0x74
+> +/* INTC[6:5]=b'00 */
+> +#define DMARD10_VALUE_INTC			0x00
+> +/* TAP1/TAP2 Average 2 */
+> +#define DMARD10_VALUE_TAPNS_AVE_2		0x11
+> +
+> +#define DMARD10_VALUE_STADR			0x55
+> +#define DMARD10_VALUE_STAINT			0xaa
+> +#define DMARD10_VALUE_MISC2_OSCA_EN		0x08
+> +#define DMARD10_VALUE_PD_RST			0x52
+> +
+> +/* Offsets into the buffer read in dmard10_read_raw() */
+> +#define DMARD10_X_OFFSET			1
+> +#define DMARD10_Y_OFFSET			2
+> +#define DMARD10_Z_OFFSET			3
+> +
+> +/*
+> + * a value of + or -128 corresponds to + or - 1G
+> + * scale = 9.81 / 128 = 0.076640625
+> + */
+> +
+> +static const int dmard10_nscale = 76640625;
+> +
+> +#define DMARD10_CHANNEL(reg, axis) {	\
+> +	.type = IIO_ACCEL,	\
+> +	.address = reg,	\
+> +	.modified = 1,	\
+> +	.channel2 = IIO_MOD_##axis,	\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),	\
+> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> +}
+> +
+> +static const struct iio_chan_spec dmard10_channels[] = {
+> +	DMARD10_CHANNEL(DMARD10_X_OFFSET, X),
+> +	DMARD10_CHANNEL(DMARD10_Y_OFFSET, Y),
+> +	DMARD10_CHANNEL(DMARD10_Z_OFFSET, Z),
+> +};
+> +
+> +struct dmard10_data {
+> +	struct i2c_client *client;
+> +};
+> +
+> +/* Init sequence taken from the android driver */
+> +static int dmard10_reset(struct i2c_client *client)
+> +{
+> +	unsigned char buffer[7];
+> +	int ret;
+> +
+> +	/* 1. Powerdown reset */
+> +	ret = i2c_smbus_write_byte_data(client, DMARD10_REG_PD,
+> +						DMARD10_VALUE_PD_RST);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/*
+> +	 * 2. ACTR => Standby mode => Download OTP to parameter reg =>
+> +	 *    Standby mode => Reset data path => Standby mode
+> +	 */
+> +	buffer[0] = DMARD10_REG_ACTR;
+> +	buffer[1] = DMARD10_MODE_STANDBY;
+> +	buffer[2] = DMARD10_MODE_READ_OTP;
+> +	buffer[3] = DMARD10_MODE_STANDBY;
+> +	buffer[4] = DMARD10_MODE_RESET_DATA_PATH;
+> +	buffer[5] = DMARD10_MODE_STANDBY;
+> +	ret = i2c_master_send(client, buffer, 6);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* 3. OSCA_EN = 1, TSTO = b'000 (INT1 = normal, TEST0 = normal) */
+> +	ret = i2c_smbus_write_byte_data(client, DMARD10_REG_MISC2,
+> +						DMARD10_VALUE_MISC2_OSCA_EN);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* 4. AFEN = 1 (AFE will powerdown after ADC) */
+> +	buffer[0] = DMARD10_REG_AFEM;
+> +	buffer[1] = DMARD10_VALUE_AFEM_AFEN_NORMAL;
+> +	buffer[2] = DMARD10_VALUE_CKSEL_ODR_100_204;
+> +	buffer[3] = DMARD10_VALUE_INTC;
+> +	buffer[4] = DMARD10_VALUE_TAPNS_AVE_2;
+> +	buffer[5] = 0x00; /* DLYC, no delay timing */
+> +	buffer[6] = 0x07; /* INTD=1 push-pull, INTA=1 active high, AUTOT=1 */
+> +	ret = i2c_master_send(client, buffer, 7);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* 5. Activation mode */
+> +	ret = i2c_smbus_write_byte_data(client, DMARD10_REG_ACTR,
+> +						DMARD10_MODE_ACTIVE);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +/* Shutdown sequence taken from the android driver */
+> +static int dmard10_shutdown(struct i2c_client *client)
+> +{
+> +	unsigned char buffer[3];
+> +
+> +	buffer[0] = DMARD10_REG_ACTR;
+> +	buffer[1] = DMARD10_MODE_STANDBY;
+> +	buffer[2] = DMARD10_MODE_OFF;
+> +
+> +	return i2c_master_send(client, buffer, 3);
+> +}
+> +
+> +static int dmard10_read_raw(struct iio_dev *indio_dev,
+> +				struct iio_chan_spec const *chan,
+> +				int *val, int *val2, long mask)
+> +{
+> +	struct dmard10_data *data = iio_priv(indio_dev);
+> +	__le16 buf[4];
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		/*
+> +		 * Read 8 bytes starting at the REG_STADR register, trying to
+> +		 * read the individual X, Y, Z registers will always read 0.
+> +		 */
+> +		ret = i2c_smbus_read_i2c_block_data(data->client,
+> +						    DMARD10_REG_STADR,
+> +						    sizeof(buf), (u8 *)buf);
+> +		if (ret < 0)
+> +			return ret;
+> +		ret = le16_to_cpu(buf[chan->address]);
+> +		*val = sign_extend32(ret, 12);
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = 0;
+> +		*val2 = dmard10_nscale;
+> +		return IIO_VAL_INT_PLUS_NANO;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_info dmard10_info = {
+> +	.driver_module	= THIS_MODULE,
+> +	.read_raw	= dmard10_read_raw,
+> +};
+> +
+> +static int dmard10_probe(struct i2c_client *client,
+> +			const struct i2c_device_id *id)
+> +{
+> +	int ret;
+> +	struct iio_dev *indio_dev;
+> +	struct dmard10_data *data;
+> +
+> +	/* These 2 registers have special POR reset values used for id */
+> +	ret = i2c_smbus_read_byte_data(client, DMARD10_REG_STADR);
+> +	if (ret != DMARD10_VALUE_STADR)
+> +		return (ret < 0) ? ret : -ENODEV;
+> +
+> +	ret = i2c_smbus_read_byte_data(client, DMARD10_REG_STAINT);
+> +	if (ret != DMARD10_VALUE_STAINT)
+> +		return (ret < 0) ? ret : -ENODEV;
+> +
+> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+> +	if (!indio_dev) {
+> +		dev_err(&client->dev, "iio allocation failed!\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	data = iio_priv(indio_dev);
+> +	data->client = client;
+> +	i2c_set_clientdata(client, indio_dev);
+> +
+> +	indio_dev->dev.parent = &client->dev;
+> +	indio_dev->info = &dmard10_info;
+> +	indio_dev->name = "dmard10";
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = dmard10_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(dmard10_channels);
+> +
+> +	ret = dmard10_reset(client);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = iio_device_register(indio_dev);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "device_register failed\n");
+> +		dmard10_shutdown(client);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int dmard10_remove(struct i2c_client *client)
+> +{
+> +	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> +
+> +	iio_device_unregister(indio_dev);
+> +
+> +	return dmard10_shutdown(client);
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int dmard10_suspend(struct device *dev)
+> +{
+> +	return dmard10_shutdown(to_i2c_client(dev));
+> +}
+> +
+> +static int dmard10_resume(struct device *dev)
+> +{
+> +	return dmard10_reset(to_i2c_client(dev));
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(dmard10_pm_ops, dmard10_suspend, dmard10_resume);
+> +
+> +static const struct i2c_device_id dmard10_i2c_id[] = {
+> +	{"dmard10", 0},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(i2c, dmard10_i2c_id);
+> +
+> +static struct i2c_driver dmard10_driver = {
+> +	.driver = {
+> +		.name = "dmard10",
+> +		.pm = &dmard10_pm_ops,
+> +	},
+> +	.probe		= dmard10_probe,
+> +	.remove		= dmard10_remove,
+> +	.id_table	= dmard10_i2c_id,
+> +};
+> +
+> +module_i2c_driver(dmard10_driver);
+> +
+> +MODULE_AUTHOR("Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>");
+> +MODULE_DESCRIPTION("Domintech ARD10 3-Axis Accelerometer driver");
+> +MODULE_LICENSE("GPL v2");
 > 
 
-OK, I'll change it.
-
-> > +}
-> > +
-> > +static int mdio_sam_read(struct mii_bus *bus, int phy_id, int regnum)
-> > +{
-> > +	struct mdio_sam_data *data = bus->priv;
-> > +	u32 command, res;
-> > +	int ret;
-> > +
-> > +	/* mdiobus_read holds the bus->mdio_lock mutex */
-> > +
-> > +	if (!(regnum & MII_ADDR_C45))
-> > +		return -ENXIO;
-> > +
-> > +	ret = mdio_sam_stat_wait(bus, STAT_REG_RDY);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	command = regnum & 0x1fffff; /* regnum = (dev_id << 16) | reg */
-> > +	command |= ((phy_id & 0x1f) << 21);
-> > +
-> > +	iowrite32(command, data->base + MDIO_CMD1);
-> > +	ioread32(data->base + MDIO_CMD1);
-> 
-> 
-> > +	iowrite32(CMD2_READ | CMD2_ENABLE, data->base + MDIO_CMD2);
-> > +	ioread32(data->base + MDIO_CMD2);
-> 
-> Why do you need to read the values back? Hardware bug?
-> 
-
-We have a lot of these 'SAM' type of FPGAs, that follow the
-same spec, but implemented in a different way. Some software
-revisions have issues.
-
-> > +	iowrite32(TBL_CMD_REG_GO, data->base + MDIO_TBL_CMD);
-> > +	ioread32(data->base + MDIO_TBL_CMD);
-> 
-> Although not wrong, most drivers use writel().
-> 
-> > +
-> > +	usleep_range(50, 100);
-> > +
-> > +	ret = mdio_sam_stat_wait(bus, (STAT_REG_DONE | STAT_REG_ERR));
-> 
-> Do you really need a wait before calling mdio_sam_stat_wait()? Isn't
-> that what it is supposed to do, wait...
-> 
-
-I'll remove it.
-
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	res = ioread32(data->base + MDIO_RESULT);
-> > +
-> > +	if (res & RES_ERROR || !(res & RES_SUCCESS))
-> > +		return -EIO;
-> > +
-> > +	return (res & 0xffff);
-> > +}
-> > +
-> > +static int mdio_sam_write(struct mii_bus *bus, int phy_id, int regnum, u16 val)
-> > +{
-> > +	struct mdio_sam_data *data = bus->priv;
-> > +	u32 command;
-> > +	int ret;
-> > +
-> > +	/* mdiobus_write holds the bus->mdio_lock mutex */
-> > +
-> > +	if (!(regnum & MII_ADDR_C45))
-> > +		return -ENXIO;
-> > +
-> > +	ret = mdio_sam_stat_wait(bus, STAT_REG_RDY);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	command = regnum & 0x1fffff; /* regnum = (dev_id << 16) | reg */
-> > +	command |= ((phy_id & 0x1f) << 21);
-> > +
-> > +	iowrite32(command, data->base + MDIO_CMD1);
-> > +	ioread32(data->base + MDIO_CMD1);
-> > +	iowrite32(CMD2_ENABLE | val, data->base + MDIO_CMD2);
-> > +	ioread32(data->base + MDIO_CMD2);
-> > +	iowrite32(TBL_CMD_REG_GO, data->base + MDIO_TBL_CMD);
-> > +	ioread32(data->base + MDIO_TBL_CMD);
-> > +
-> > +	usleep_range(50, 100);
-> > +
-> > +	ret = mdio_sam_stat_wait(bus, (STAT_REG_DONE | STAT_REG_ERR));
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int mdio_sam_reset(struct mii_bus *bus)
-> > +{
-> > +	struct mdio_sam_data *data = bus->priv;
-> > +
-> > +	iowrite32(TBL_CMD_SOFT_RESET, data->base + MDIO_TBL_CMD);
-> > +	ioread32(data->base + MDIO_TBL_CMD);
-> > +	mdelay(10);
-> > +	iowrite32(0, data->base + MDIO_TBL_CMD);
-> > +	ioread32(data->base + MDIO_TBL_CMD);
-> > +
-> > +	/* zero tables */
-> > +	memset_io(data->base + MDIO_CMD1, 0, 0x1000);
-> > +	memset_io(data->base + MDIO_PRI_CMD1, 0, 0x1000);
-> 
-> What tables?
-> 
-
-For each bus, the MDIO block has 3 tables of 512 entries - 2
-"command" and one "result" table. Addresses and data are
-written in the "command" table, the returned value for a
-read command is written in the "result" table. Once a start
-is triggered, the FPGA will flush all entries in those tables,
-starting from offset 0. We don't want to have stale entries
-in the tables, as they might result in transactions on the bus,
-so we have to clear everything at least once. Actually we're
-using just a single entry (1/512) from those tables.
-
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int mdio_sam_of_register_bus(struct platform_device *pdev,
-> > +				    struct device_node *np, void __iomem *base)
-> > +{
-> > +	struct mii_bus *bus;
-> > +	struct mdio_sam_data *data;
-> > +	u32 reg;
-> > +	int ret;
-> > +
-> > +	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*data));
-> > +	if (!bus)
-> > +		return -ENOMEM;
-> > +
-> > +	/* bus offset */
-> > +	ret = of_property_read_u32(np, "reg", &reg);
-> > +	if (ret)
-> > +		return -ENODEV;
-> > +
-> > +	data = bus->priv;
-> > +	data->base = base + reg;
-> > +
-> > +	bus->parent = &pdev->dev;
-> > +	bus->name = "mdio-sam";
-> > +	bus->read = mdio_sam_read;
-> > +	bus->write = mdio_sam_write;
-> > +	bus->reset = mdio_sam_reset;
-> > +	snprintf(bus->id, MII_BUS_ID_SIZE, "mdiosam-%x-%x", pdev->id, reg);
-> > +
-> > +	ret = of_mdiobus_register(bus, np);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +#ifdef CONFIG_DEBUG_FS
-> > +	ret = mdio_sam_debugfs_init(bus);
-> > +	if (ret < 0)
-> > +		goto err_unregister;
-> > +#endif
-> > +	ret = device_create_bin_file(&bus->dev, &bin_attr_raw_io);
-> > +	if (ret)
-> > +		goto err_debugfs;
-> > +
-> > +	return 0;
-> > +
-> > +err_debugfs:
-> > +#ifdef CONFIG_DEBUG_FS
-> > +	mdio_sam_debugfs_remove(bus);
-> > +#endif
-> > +err_unregister:
-> > +	mdiobus_unregister(bus);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int mdio_sam_of_unregister_bus(struct device_node *np)
-> > +{
-> > +	struct mii_bus *bus;
-> > +
-> > +	bus = of_mdio_find_bus(np);
-> > +	if (bus) {
-> > +		device_remove_bin_file(&bus->dev, &bin_attr_raw_io);
-> > +#ifdef CONFIG_DEBUG_FS
-> > +		mdio_sam_debugfs_remove(bus);
-> > +#endif
-> > +		mdiobus_unregister(bus);
-> > +	}
-> > +	return 0;
-> > +}
-> > +
-> > +static int mdio_sam_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device_node *np;
-> > +	struct resource *res;
-> > +	void __iomem *base;
-> > +	int ret;
-> > +
-> > +	if (!pdev->dev.of_node)
-> > +		return -ENODEV;
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	base = devm_ioremap_nocache(&pdev->dev, res->start,
-> > +				    resource_size(res));
-> 
-> Why nocache?
-> 
-
-I'll change it to devm_ioremap().
-
-> > +	if (IS_ERR(base))
-> > +		return PTR_ERR(base);
-> > +
-> > +	for_each_available_child_of_node(pdev->dev.of_node, np) {
-> > +		ret = mdio_sam_of_register_bus(pdev, np, base);
-> > +		if (ret)
-> > +			goto err;
-> > +	}
-> 
-> This is odd. There does not seem to be any shared resources. So you
-> should really have one MDIO bus as one device in the device tree.
-> 
-
-Well, there's no shared resource, so probably it can be changed to
-a single device/bus. This might require changing the parent MFD as
-well.
-
-> 
-> 
->        Andrew
-> 
-> > +
-> > +	return 0;
-> > +err:
-> > +	/* roll back everything */
-> > +	for_each_available_child_of_node(pdev->dev.of_node, np)
-> > +		mdio_sam_of_unregister_bus(np);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int mdio_sam_remove(struct platform_device *pdev)
-> > +{
-> > +	struct device_node *np;
-> > +
-> > +	for_each_available_child_of_node(pdev->dev.of_node, np)
-> > +		mdio_sam_of_unregister_bus(np);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id mdio_sam_of_match[] = {
-> > +	{ .compatible = "jnx,mdio-sam" },
-> > +	{  }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, mdio_sam_of_match);
-> > +
-> > +static struct platform_driver mdio_sam_driver = {
-> > +	.probe = mdio_sam_probe,
-> > +	.remove = mdio_sam_remove,
-> > +	.driver = {
-> > +		.name = "mdio-sam",
-> > +		.owner = THIS_MODULE,
-> > +		.of_match_table = mdio_sam_of_match,
-> > +	},
-> > +};
-> > +
-> > +module_platform_driver(mdio_sam_driver);
-> > +
-> > +MODULE_ALIAS("platform:mdio-sam");
-> > +MODULE_AUTHOR("Georgi Vlaev <gvlaev@juniper.net>");
-> > +MODULE_LICENSE("GPL");
-> > +MODULE_DESCRIPTION("Juniper Networks SAM MDIO bus driver");
-> > -- 
-> > 1.9.1
-> > 
-
--- 
-joe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
