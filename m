@@ -1,93 +1,74 @@
-From: Ziji Hu <huziji@marvell.com>
-Subject: Re: [PATCH 2/10] mmc: sdhci: Export
- sdhci_start_signal_voltage_switch() in sdhci.c
-Date: Sat, 8 Oct 2016 14:26:37 +0800
-Message-ID: <0de88699-7cbb-a057-fd8a-83de37445623@marvell.com>
-References: <cover.990e3503c30c18ecf50dd48bce3d52811f03ca22.1475853198.git-series.gregory.clement@free-electrons.com>
- <9a660a813af58ad7c108fd06289513302426c9fb.1475853198.git-series.gregory.clement@free-electrons.com>
- <9bfe6e9a-c06e-481a-b5ea-af58820093bf@rock-chips.com>
+From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH V1 04/10] watchdog: da9061: watchdog driver (RFC)
+Date: Sat, 8 Oct 2016 06:33:57 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CCE291E@SW-EX-MBX02.diasemi.com>
+References: <6ED8E3B22081A4459DAC7699F3695FB7018CCE242C@SW-EX-MBX02.diasemi.com>
+ <20161006184927.GB11915@roeck-us.net>
+ <6ED8E3B22081A4459DAC7699F3695FB7018CCE2732@SW-EX-MBX02.diasemi.com>
+ <20161007170214.GA21349@roeck-us.net>
+ <6ED8E3B22081A4459DAC7699F3695FB7018CCE282C@SW-EX-MBX02.diasemi.com>
+ <20161007233554.GA21386@dtor-ws>
+ <84f51754-cbd4-7a85-6ab6-83e1f47fd936@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9bfe6e9a-c06e-481a-b5ea-af58820093bf@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, "Jack(SH) Zhu" <jmzhu@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Shiwu Zhang <zhangshw@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.com>, Xueping Liu <xpliu@marvell.com>, Hilbert Zhang <zzhang@marvell.com>, Liuliu Zhao <zhaoliul@marvell.com>, Peng Zhu <zhupeng@marvell.com>, Yu Cao <yuca>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <84f51754-cbd4-7a85-6ab6-83e1f47fd936-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-INPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-WATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+On 08 October 2016 01:22, Guenter Roeck wrote:
+> On 10/07/2016 04:35 PM, Dmitry Torokhov wrote:
+> > On Fri, Oct 07, 2016 at 06:01:23PM +0000, Steve Twiss wrote:
+> >> On 07 October 2016 18:02, Guenter Roeck wrote:
+> >>
+> >>>> On 06 October 2016 19:49, Guenter Roeck wrote:
+> >>>>> On Thu, Oct 06, 2016 at 04:28:14PM +0000, Steve Twiss wrote:
+> >>>>>> I am using the compatible string to pick a different configuration .data block:
+> >>>>>> { .compatible = "dlg,da9062-watchdog", .data = &da9062_watchdog_info },
+> >>>>>> { .compatible = "dlg,da9061-watchdog", .data = &da9061_watchdog_info },
+> >>>>>>
+> >>>>>> But, it is just my opinion to keep the "name" different.
+> >>>>>> This will not be my decision if accepted into the Linux kernel, but I would like to
+> >>>>>> at least be consistent for DA9061 and DA9062 so ... is this an issue?
+> >>>>>
+> >>>>> FWIW the driver doesn't really need to be updated in the first place.
+> >>>>> A compatible statement listing both da9061 and da9062 would do it.
+> >>>>
+> >>>> I will make the changes you requested: deprecate the existing compatibility
+> >>>> for da9062-watchdog and make a new compatibility string which combines both
+> >>>> da9061 and da9062.
+> >>>>
+> >>> That is not what I asked for.
+> >>
+> >> Ok. Did you mean separate compatible statements with data sections pointing at
+> >> the same structure?
+> >>
+> >> Like this:
+> >> { .compatible = "dlg,da9062-watchdog", .data = &da9062_watchdog_info },
+> >> { .compatible = "dlg,da9061-watchdog", .data = &da9062_watchdog_info },
+> >>
+> >> So this would be the only change needed in the device driver.
+> >
+> > If there is no change in IP block then I do not see why we need to
+> > introduce new names at all. The dts can specify fallback compatible
+> > stting. Note, it is called *compatible* not "model" or "device id" or
+> > whatever. So you can just say in DTS:
+> >
+> > 	compatible = "dlg,da9061-watchdog", "dlg,da9062-watchdog";
+> >
+> > and leave the driver alone. That goes for input part as well. You only
+> > need to add new compatible to the driver when it in fact is
+> > *incompatible* with the existing blocks.
+> >
+> Yes, exactly.
 
-On 2016/10/8 10:40, Shawn Lin wrote:
-> Hi,
-> 
-> ÔÚ 2016/10/7 23:22, Gregory CLEMENT Ð´µÀ:
->> From: Ziji Hu <huziji@marvell.com>
->>
->> Export sdhci_start_signal_voltage_switch() from sdhci.c.
->> Thus vendor sdhci driver can implement its own signal voltage
->> switch routine.
->>
-> 
-> You can overwtite this callback within your driver itself.
-> That is what other sdhci variant drivers did, so patch 1-3 are
-> unnecessary.
-
-    Thanks a lot for your reply.
-
-    Our SDHC driver just requests some pre- and post- operations besides common standard SDHC functions.
-    Overwriting those common functions costs too much.
-
-    Thank you.
-
-Best regards,
-Hu Ziji
-
-> 
->> Signed-off-by: Hu Ziji <huziji@marvell.com>
->> Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
->> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
->> ---
->>  drivers/mmc/host/sdhci.c | 5 +++--
->>  drivers/mmc/host/sdhci.h | 2 ++
->>  2 files changed, 5 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->> index d4bb818c52d5..2250ea22231f 100644
->> --- a/drivers/mmc/host/sdhci.c
->> +++ b/drivers/mmc/host/sdhci.c
->> @@ -1828,8 +1828,8 @@ static void sdhci_enable_sdio_irq(struct mmc_host *mmc, int enable)
->>      spin_unlock_irqrestore(&host->lock, flags);
->>  }
->>
->> -static int sdhci_start_signal_voltage_switch(struct mmc_host *mmc,
->> -                         struct mmc_ios *ios)
->> +int sdhci_start_signal_voltage_switch(struct mmc_host *mmc,
->> +                      struct mmc_ios *ios)
->>  {
->>      struct sdhci_host *host = mmc_priv(mmc);
->>      u16 ctrl;
->> @@ -1921,6 +1921,7 @@ static int sdhci_start_signal_voltage_switch(struct mmc_host *mmc,
->>          return 0;
->>      }
->>  }
->> +EXPORT_SYMBOL_GPL(sdhci_start_signal_voltage_switch);
->>
->>  static int sdhci_card_busy(struct mmc_host *mmc)
->>  {
->> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
->> index 21dc80b8ae3d..c38ab65b9a97 100644
->> --- a/drivers/mmc/host/sdhci.h
->> +++ b/drivers/mmc/host/sdhci.h
->> @@ -687,6 +687,8 @@ void sdhci_set_bus_width(struct sdhci_host *host, int width);
->>  void sdhci_reset(struct sdhci_host *host, u8 mask);
->>  void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing);
->>  void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios);
->> +int sdhci_start_signal_voltage_switch(struct mmc_host *mmc,
->> +                      struct mmc_ios *ios);
->>
->>  #ifdef CONFIG_PM
->>  extern int sdhci_suspend_host(struct sdhci_host *host);
->>
-> 
-> 
+Dmitry, Guenter,
+Thanks for putting things straight on this.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
