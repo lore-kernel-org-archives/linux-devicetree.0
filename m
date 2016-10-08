@@ -1,56 +1,131 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt: bindings: i2c/trivial-devices.txt: Add 2 iio
- supported accelerometers
-Date: Sat, 8 Oct 2016 18:02:44 +0100
-Message-ID: <d2dc4bdc-236b-b66d-8fd6-11ab077747bd@kernel.org>
-References: <20161008123426.8991-1-hdegoede@redhat.com>
- <20161008123426.8991-2-hdegoede@redhat.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH v7 2/2] clocksource: add J-Core timer/clocksource
+ driver
+Date: Sat, 8 Oct 2016 19:03:30 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1610081827170.5222@nanos>
+References: <22c1ee0f908fe3bf8b70f5e87d659ceb29af1434.1474693319.git.dalias@libc.org> <20160926210716.GA12855@brightrain.aerifal.cx> <4b02ba7d-4a31-297a-bbbd-be26da615e7b@linaro.org> <20160926222352.GE19318@brightrain.aerifal.cx> <alpine.DEB.2.20.1609261936130.4915@nanos>
+ <20160927004258.GF19318@brightrain.aerifal.cx> <20160927220820.GH19318@brightrain.aerifal.cx> <alpine.DEB.2.20.1609301319410.4799@nanos> <20161008013210.GX19318@brightrain.aerifal.cx> <alpine.DEB.2.20.1610081312190.5222@nanos>
+ <20161008162614.GY19318@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161008123426.8991-2-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20161008162614.GY19318-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Paul E. McKenney" <paulmck-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/10/16 13:34, Hans de Goede wrote:
-> Add compatible strings for 2 accelerometers which follow the trivial
-> i2c device bindings and have been supported by the iio subsystem for
-> a while now.
+On Sat, 8 Oct 2016, Rich Felker wrote:
+> On Sat, Oct 08, 2016 at 01:32:06PM +0200, Thomas Gleixner wrote:
+> > CPU spins and waits for an interrupt to happen
+> > 
+> > 
+> >           <idle>-0     [000] d...   150.841530: rcu_dyntick: End 0 1
+> > 
+> > Dropping out of the spin about the time we expect the PIT interrupt to
+> > fire. And an interrupt is the reason why we drop out because the 'need
+> > resched' flag is not set and we end up in:
 > 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Applied and pushed out as testing for the autobuilders to ignore it ;)
+> OK, I missed that.
+> 
+> >           <idle>-0     [000] d.s.   150.841724: tick_irq_enter: update jiffies via irq
+> > 
+> > which is called from irq_enter()
+> > 
+> >           <idle>-0     [000] d.s.   150.841918: tick_do_update_jiffies64: finished do_timer(1)
+> >           <idle>-0     [000] d.s.   150.842348: tick_do_update_jiffies64: finished updating jiffies
+> > 
+> > 
+> > So here we would expect:
+> > 
+> >     	 irq_handler_entry: irq=16 name=jcore_pit
+> > 	 ...
+> > 	 irq_handler_exit .....
+> >     	 
+> > 
+> > or any other interrupt being invoked. But we see this here:
+> 
+> According to the trace the 'irq' is soft ('s'). I couldn't find the
+> code path from the idle loop to softirq but so maybe this is a bug. Is
+> it possible that in some cases the arch irq entry does not get
+> identified as a hard irq or traced and then the subsequent tick code
+> thinks it's running in a softirq and behaves differently? I could add
+> more tracing around irq entry.
+
+No.
+
+irq_enter()
+	if (is_idle_task(current) && !in_interrupt()) {
+	   	local_bh_disable();
+		tick_irq_enter();
+		local_bh_enable();
+	}
+	__irq_enter()
+		preempt_count_add(HARDIRQ_OFFSET);
+
+So the 's' comes from local_bh_disable() and the code does not behave
+special because of that. It's just always that way. Look at all the other
+instances of tick_irq_enter() which do not show that issue.
+
+> >           <idle>-0     [000] d...   150.842603: __tick_nohz_idle_enter: can stop idle tick
+> > 
+> > And that's just wrong. 
+> 
+> Can you explain?
+
+Because you drop out the idle spin due to an interrupt, but no interrupt is
+handled according to the trace. You just go back to sleep and the trace is
+full of this behaviour.
+
+> > Both CPUs have the same interrupt number for their per cpu PIT interrupt.
+> > 
+> > IIRC you said earlier when the percpu interrupt discussion happened, that
+> > your per cpu PITs have distinct interrupt numbers, but that does not seem
+> > the case here.
+> 
+> No, I said the opposite. They use the same irq number but they're each
+> wired to their own cpu, and there's no way for them to fire on the
+> wrong cpu.
+
+Your patch does:
+
+> +       err = request_irq(pit_irq, jcore_timer_interrupt,
+> +                         IRQF_TIMER | IRQF_PERCPU,
+> +                         "jcore_pit", jcore_pit_percpu);
+
+which is the wrong thing to do. You need request_percpu_irq() here, but of
+course with the irq chip you are using, which has every callback as a noop,
+it does not matter at all. So that's not an issue and not the reason for
+this wreckage.
+
+But what you need to figure out is why this happens:
+
+100.00x	 hrtimer_start(expires = 100.01)
+100.00x	 idle spin
+100.01x	 tick_irq_enter()
+100.01x	 tick_stop()
+
+i.e. why do you drop out of your idle spin, take the low level interrupt
+entry path which calls irq_enter() -> tick_irq_enter() and then you do not
+handle any interrupt at all and drop back into the idle loop. That's the
+real question and that's a problem in your architecture low level interrupt
+entry code or some hardware related issue. But certainly not a bug in the
+core tick code.
+
+You can come up with another boat load of weird theories about bugs in
+that code, but I won't even have a look _before_ you can explain why the
+above sequence happens and the PIT timer interrupt is not handled.
 
 Thanks,
 
-Jonathan
-> ---
->  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> index fbbad64..ce9db50 100644
-> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> @@ -44,6 +44,7 @@ epson,rx8025		High-Stability. I2C-Bus INTERFACE REAL TIME CLOCK MODULE
->  epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
->  fsl,mag3110		MAG3110: Xtrinsic High Accuracy, 3D Magnetometer
->  fsl,mc13892		MC13892: Power Management Integrated Circuit (PMIC) for i.MX35/51
-> +fsl,mma7660		MMA7660FC: 3-Axis Orientation/Motion Detection Sensor
->  fsl,mma8450		MMA8450Q: Xtrinsic Low-power, 3-axis Xtrinsic Accelerometer
->  fsl,mpl3115		MPL3115: Absolute Digital Pressure Sensor
->  fsl,mpr121		MPR121: Proximity Capacitive Touch Sensor Controller
-> @@ -57,6 +58,7 @@ maxim,max1237		Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
->  maxim,max6625		9-Bit/12-Bit Temperature Sensors with I²C-Compatible Serial Interface
->  mc,rv3029c2		Real Time Clock Module with I2C-Bus
->  mcube,mc3230		mCube 3-axis 8-bit digital accelerometer
-> +memsic,mxc6225		MEMSIC 2-axis 8-bit digital accelerometer
->  microchip,mcp4531-502	Microchip 7-bit Single I2C Digital Potentiometer (5k)
->  microchip,mcp4531-103	Microchip 7-bit Single I2C Digital Potentiometer (10k)
->  microchip,mcp4531-503	Microchip 7-bit Single I2C Digital Potentiometer (50k)
-> 
+	tglx
+
+
+
+
+    
+
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
