@@ -1,45 +1,30 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 04/11] ARM: dts: r8a7743: initial SoC device tree
-Date: Sat, 8 Oct 2016 11:28:51 +0900
-Message-ID: <20161008022851.GA14617@verge.net.au>
-References: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com>
- <2883940.Oo8sg10L7m@wasted.cogentembedded.com>
- <20161007030932.GH13721@verge.net.au>
- <cd1391d1-d2b5-6315-ee15-0253019d9836@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <cd1391d1-d2b5-6315-ee15-0253019d9836@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+From: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2] arm64: dts: rename ns2.txt to brcm,ns2.txt
+Date: Sat,  8 Oct 2016 13:48:04 -0700
+Message-ID: <1475959684-18085-1-git-send-email-scott.branden@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 07, 2016 at 12:57:28PM +0300, Sergei Shtylyov wrote:
-> On 10/7/2016 6:09 AM, Simon Horman wrote:
-> 
-> >>The  initial R8A7743 SoC device tree including CPU cores, GIC, timer, SYSC,
-> >>CPG, and the required clock descriptions.
-> >>
-> >>Based on the original (and large) patch by Dmitry Shifrin
-> >><dmitry.shifrin@cogentembedded.com>.
-> >>
-> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> >
-> >I notice that this patch enables two CPUs. Have you tested SMP and:
-> >- CPU hotplug
-> >- Suspend to RAM
-> 
->    No, not really. I'll remove CPU1. :-<
+Rename ns2.txt to brcm,ns2.txt to match naming convention followed
+by rest of Broadcom binding documentation.
 
-Thanks.
+Signed-off-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/bcm/{ns2.txt => brcm,ns2.txt} | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/devicetree/bindings/arm/bcm/{ns2.txt => brcm,ns2.txt} (100%)
+
+diff --git a/Documentation/devicetree/bindings/arm/bcm/ns2.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,ns2.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/bcm/ns2.txt
+rename to Documentation/devicetree/bindings/arm/bcm/brcm,ns2.txt
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
