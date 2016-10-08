@@ -1,38 +1,34 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [RFC 0/2] Juniper DT based connector driver
-Date: Sat, 8 Oct 2016 19:11:54 +0300
-Message-ID: <45F613B3-5666-40E2-9D77-E8A536503DAA@konsulko.com>
-References: <1475853372-21997-1-git-send-email-pantelis.antoniou@konsulko.com>
- <CAL_Jsq+eMNw0Q9ZWx1UV8YrBgzVfB+O6gDjwTU9kvwwbKp+vmA@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <CAL_Jsq+eMNw0Q9ZWx1UV8YrBgzVfB+O6gDjwTU9kvwwbKp+vmA@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Yu-Lin Lu <ylu@juniper.net>, devel@driverdev.osuosl.org, Alon Ronen <aronen@juniper.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dhruva Diveneni <ddevineni@juniper.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Debjit Ghosh <dghosh@juniper.net>, Georgi Vlaev <gvlaev@juniper.net>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2] ARM64: dts: meson-gxbb-odroidc2: Enable USB Nodes
+Date: Sat, 08 Oct 2016 09:12:49 -0700
+Message-ID: <7hbmyues5a.fsf@baylibre.com>
+References: <1475564803-9616-1-git-send-email-brian.kim@hardkernel.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475564803-9616-1-git-send-email-brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>
+        (Brian Kim's message of "Tue, 4 Oct 2016 16:06:43 +0900")
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Kim <brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, moon.linux-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKPiBPbiBPY3QgOCwgMjAxNiwgYXQgMTk6MTAgLCBSb2IgSGVycmluZyA8cm9iaCtk
-dEBrZXJuZWwub3JnPiB3cm90ZToKPiAKPiBPbiBGcmksIE9jdCA3LCAyMDE2IGF0IDEwOjE2IEFN
-LCBQYW50ZWxpcyBBbnRvbmlvdQo+IDxwYW50ZWxpcy5hbnRvbmlvdUBrb25zdWxrby5jb20+IHdy
-b3RlOgo+PiBJbnRyb2R1Y2UgYSBKdW5pcGVyIFBUWCByb3V0ZXIgc2VyaWVzIERUIG92ZXJsYXkg
-YmFzZWQKPj4gY29ubmVjdG9yIGRyaXZlci4KPj4gCj4+IFRoaXMgaXMgc3VibWl0dGVkIGFzIGFu
-IFJGQyBzaW5jZSBzb21lIE9GIGluZnJhc3RydWN0dXJlCj4+IHBhdGNoZXMgKGxpa2UgY2hhbmdl
-c2V0IGhlbHBlcnMgZXRjKSBhcmUgbm90IHlldCBtYWlubGluZWQuCj4gCj4gQmVjYXVzZSB5b3Ug
-aGF2ZW4ndCBzZW50IHRoZW0gb3V0IGFnYWluLiBUaGVyZSB3ZXJlIG9ubHkgbWlub3IgaXNzdWVz
-Lgo+IFNvbWVvbmUgZWxzZSBzYWlkIHJlY2VudGx5IHRoZXkgd2VyZSBnb2luZyB0byByZWZyZXNo
-IHRoZW0sIGJ1dCBJCj4gaGF2ZW4ndCBzZWVuIHRoZW0uCj4gCgpZZXMsIHRoZXkgd2lsbCBnbyBv
-dXQgcmlnaHQgYWZ0ZXIgRUxDRS4KCj4gUm9iCgpSZWdhcmRzCgrigJQgUGFudGVsaXMKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBs
-aXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRy
-aXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVsCg==
+Brian Kim <brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org> writes:
+
+> Enable both gxbb USB controller and add a 5V regulator for the OTG port
+> VBUS
+>
+> Signed-off-by: Brian Kim <brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>
+> ---
+> This patch was written on Kevin Hilman's repository[1] and branch[2]:
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git
+> [2] v4.8/integ
+
+Applied to the v4.10/dt64 branch, and will be included shortly in the
+integration branch.
+
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
