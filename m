@@ -1,49 +1,114 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/6] clk: stm32f469: Add QSPI clock
-Date: Sat, 8 Oct 2016 15:50:03 -0500
-Message-ID: <20161008205003.GB17455@rob-hp-laptop>
-References: <1475245509-6487-1-git-send-email-gabriel.fernandez@st.com>
- <1475245509-6487-6-git-send-email-gabriel.fernandez@st.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] Documentation: tpm: add the IBM
+ Virtual TPM device tree binding documentation
+Date: Sat, 8 Oct 2016 16:01:12 -0500
+Message-ID: <20161008210112.GA22112@rob-hp-laptop>
+References: <1475051441-23008-1-git-send-email-nayna@linux.vnet.ibm.com>
+	<20160929110413.GA14359@intel.com>
+	<57F55F28.1090005@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1475245509-6487-6-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: gabriel.fernandez@st.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
+In-Reply-To: <57F55F28.1090005-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Nayna <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, honclo-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cclaudio-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 30, 2016 at 04:25:08PM +0200, gabriel.fernandez@st.com wrote:
-> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+On Thu, Oct 06, 2016 at 01:44:32AM +0530, Nayna wrote:
 > 
-> This patch adds the QSPI clock for stm32f469 discovery board.
-> The gate mapping is a little bit different from stm32f429 soc.
 > 
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-> ---
->  .../devicetree/bindings/clock/st,stm32-rcc.txt     |   4 +-
->  drivers/clk/clk-stm32f4.c                          | 173 ++++++++++++++++++---
->  2 files changed, 158 insertions(+), 19 deletions(-)
+> On 09/29/2016 04:34 PM, Jarkko Sakkinen wrote:
+> >On Wed, Sep 28, 2016 at 04:30:40AM -0400, Nayna Jain wrote:
+> >>Virtual TPM, which is being used on IBM POWER7+ and POWER8 systems running
+> >>POWERVM, is currently supported by tpm device driver but lacks the
+> >>documentation. This patch adds the missing documentation for the existing
+> >>support.
+> >>
+> >>Suggested-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> >>Signed-off-by: Nayna Jain <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> >>---
+> >>Changelog v2:
+> >>
+> >>- New Patch
+> >>
+> >>  .../devicetree/bindings/security/tpm/ibmvtpm.txt   | 41 ++++++++++++++++++++++
+> >>  1 file changed, 41 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt b/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
+> >>new file mode 100644
+> >>index 0000000..d89f999
+> >>--- /dev/null
+> >>+++ b/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
+> >>@@ -0,0 +1,41 @@
+> >>+* Device Tree Bindings for IBM Virtual Trusted Platform Module(vtpm)
+> >>+
+> >>+Required properties:
+> >>+
+> >>+- compatible            : property name that conveys the platform architecture
+> >>+                          identifiers, as 'IBM,vtpm'
+> >>+- device_type           : specifies type of virtual device
+> >
+> >A generic device tree question. What is the difference between
+> >these fields? Why the I2C one does have 'device_type'?
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
-> index fee3205..eace3de 100644
-> --- a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
-> +++ b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
-> @@ -8,7 +8,9 @@ Please also refer to clock-bindings.txt in this directory for common clock
->  controller binding usage.
->  
->  Required properties:
-> -- compatible: Should be "st,stm32f42xx-rcc"
-> +- compatible: Should be:
-> +  "st,stm32f42xx-rcc"
-> +  "st,stm32f46xx-rcc"
+> Please find the details as below:
+> 
+> compatible - Standard property name as per IEEE 1275, specifying the
+> interface compatible with this device. This property is consumed by linux
+> kernel for selection of device driver.
+> 
+> device_type - Standard property name as per IEEE 1275, specifying the device
+> type. This property MAY be used by linux kernel for device driver selection.
+> It is used in the case of IBM virtual TPM driver.
 
-Generally, we don't use wildcards in compatible strings. I know there's 
-lots of part numbers of stm32 parts which I guess are often same die 
-with different fusing or package. Your compatible strings should be at 
-least specific enough to identify parts that are really different die. 
+AIUI, this should be a standard value such as serial, pci, etc. I don't 
+think your use here is correct, but I could be wrong. I'm not certain 
+what you do with devices that don't have a standard type.
 
->  - reg: should be register base and length as documented in the
->    datasheet
->  - #clock-cells: 2, device nodes should specify the clock in their "clocks"
+> 
+> /**
+>  * vio_register_device_node: - Register a new vio device.
+>  * @of_node:    The OF node for this device.
+>  *
+>  * Creates and initializes a vio_dev structure from the data in
+>  * of_node and adds it to the list of virtual devices.
+>  * Returns a pointer to the created vio_dev or NULL if node has
+>  * NULL device_type or compatible fields.
+>  */
+> struct vio_dev *vio_register_device_node(struct device_node *of_node)
+> 
+> and vtpm device table being defined as below:
+> 
+> static struct vio_device_id tpm_ibmvtpm_device_table[] = {
+>         { "IBM,vtpm", "IBM,vtpm"}, ----------------------------------->
+> type,compat
+>         { "", "" }
+> };
+> 
+> So, vio (virtual) devices uses both device_type and compatible property for
+> device registration and driver selection.
+> In case of physical TPM, it is only compatible property being used for
+> device driver selection
+> 
+> Also, please note that device_type property is now deprecated in latest
+> Device Tree specs.
+
+Deprecated for Flattened DT only. OpenFirmware implementations 
+can/should still use this.
+
+Rob
+
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most 
+engaging tech sites, SlashDot.org! http://sdm.link/slashdot
