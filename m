@@ -1,62 +1,45 @@
 From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 0/2] add support to STM HTS221 humidity + temperature sensor
-Date: Sat,  8 Oct 2016 09:45:50 +0200
-Message-ID: <1475912752-6444-1-git-send-email-lorenzo.bianconi@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH v3 2/2] Documentation: dt: iio: humidity: add hts221 sensor device binding
+Date: Sat,  8 Oct 2016 09:45:52 +0200
+Message-ID: <1475912752-6444-3-git-send-email-lorenzo.bianconi@st.com>
+References: <1475912752-6444-1-git-send-email-lorenzo.bianconi@st.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475912752-6444-1-git-send-email-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Changes since v2:
-- fix endianness issue in hts221_parse_caldata()
-- make dev->buffer large enough to avoid the memcpy() in
-  hts221_buffer_handler_thread()
-- remove trigger top half routine and move timestamp sampling in
-  hts221_buffer_handler_thread()
-- use devm_iio_* routines to register iio_device/trigger and setup
-  iio_triggered_buffer
-- reduce spi max read/write size
-- cosmetics
-
-Changes since v1:
-- use single iio_device for both humidity and temperature sensors
-- use iio_claim_direct_mode() routine instead of grabbing the mutex directly
-- use more unique prefix for all defines
-- remove useless dev_info()
-- use of_match_ptr instead of access directly to of_match_table
-- use devm_iio_* routines
-- use info_mask_shared_by_all element for sampling_frequency
-- use oversampling ABI for humidityrelative_avg_sample and temp_avg_sample
-
-Lorenzo Bianconi (2):
-  iio: humidity: add support to hts221 rh/temp combo device
-  Documentation: dt: iio: humidity: add hts221 sensor device binding
-
- .../devicetree/bindings/iio/humidity/hts221.txt    |  19 +
- drivers/iio/humidity/Kconfig                       |   2 +
- drivers/iio/humidity/Makefile                      |   1 +
- drivers/iio/humidity/hts221/Kconfig                |  23 +
- drivers/iio/humidity/hts221/Makefile               |   6 +
- drivers/iio/humidity/hts221/hts221.h               |  78 +++
- drivers/iio/humidity/hts221/hts221_buffer.c        | 168 +++++
- drivers/iio/humidity/hts221/hts221_core.c          | 684 +++++++++++++++++++++
- drivers/iio/humidity/hts221/hts221_i2c.c           | 110 ++++
- drivers/iio/humidity/hts221/hts221_spi.c           | 125 ++++
- 10 files changed, 1216 insertions(+)
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+---
+ .../devicetree/bindings/iio/humidity/hts221.txt       | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/iio/humidity/hts221.txt
- create mode 100644 drivers/iio/humidity/hts221/Kconfig
- create mode 100644 drivers/iio/humidity/hts221/Makefile
- create mode 100644 drivers/iio/humidity/hts221/hts221.h
- create mode 100644 drivers/iio/humidity/hts221/hts221_buffer.c
- create mode 100644 drivers/iio/humidity/hts221/hts221_core.c
- create mode 100644 drivers/iio/humidity/hts221/hts221_i2c.c
- create mode 100644 drivers/iio/humidity/hts221/hts221_spi.c
 
+diff --git a/Documentation/devicetree/bindings/iio/humidity/hts221.txt b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+new file mode 100644
+index 0000000..46a152c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+@@ -0,0 +1,19 @@
++* HTS221 STM humidity + temperature sensor
++
++Required properties:
++- compatible: should be "st,hts221"
++- reg: i2c address of the sensor / spi cs line
++
++Optional properties:
++- interrupts: interrupt mapping for GPIO IRQ. It should be configured with
++	      flags IRQ_TYPE_LEVEL_HIGH or IRQ_TYPE_EDGE_RISING
++- interrupt-parent: should be the phandle for the interrupt controller
++
++Example:
++
++hts221@5f {
++	compatible = "st,hts221";
++	reg = <0x5f>;
++	interrupt-parent = <&gpio0>;
++	interrupts = <0 IRQ_TYPE_EDGE_RISING>;
++};
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
