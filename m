@@ -1,68 +1,45 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V1 04/10] watchdog: da9061: watchdog driver (RFC)
-Date: Fri, 7 Oct 2016 17:22:09 -0700
-Message-ID: <84f51754-cbd4-7a85-6ab6-83e1f47fd936@roeck-us.net>
-References: <6ED8E3B22081A4459DAC7699F3695FB7018CCE242C@SW-EX-MBX02.diasemi.com>
- <20161006184927.GB11915@roeck-us.net>
- <6ED8E3B22081A4459DAC7699F3695FB7018CCE2732@SW-EX-MBX02.diasemi.com>
- <20161007170214.GA21349@roeck-us.net>
- <6ED8E3B22081A4459DAC7699F3695FB7018CCE282C@SW-EX-MBX02.diasemi.com>
- <20161007233554.GA21386@dtor-ws>
+From: Ziji Hu <huziji@marvell.com>
+Subject: Re: [PATCH 4/10] MAINTAINERS: add entry for Marvell Xenon MMC Host
+ Controller drivers
+Date: Sat, 8 Oct 2016 08:59:57 +0800
+Message-ID: <05c3c587-96ee-94e9-8508-54d048ab297a@marvell.com>
+References: <cover.990e3503c30c18ecf50dd48bce3d52811f03ca22.1475853198.git-series.gregory.clement@free-electrons.com>
+ <86b237c01d9767d4e0edf6d41194ab959838e5c0.1475853198.git-series.gregory.clement@free-electrons.com>
+ <1475873086.1945.20.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20161007233554.GA21386@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: Wim Van Sebroeck <wim@iguana.be>, Lee Jones <lee.jones@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1475873086.1945.20.camel@perches.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, "Jack(SH) Zhu" <jmzhu@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Shiwu Zhang <zhangshw@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.com>, Xueping Liu <xpliu@marvell.com>, Hilbert Zhang <zzhang@marvell.com>, Liuliu Zhao <zhaoliul@marvell.com>, Peng Zhu <zhupeng@marvell.com>, Yu Cao <yuca>
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2016 04:35 PM, Dmitry Torokhov wrote:
-> On Fri, Oct 07, 2016 at 06:01:23PM +0000, Steve Twiss wrote:
->> On 07 October 2016 18:02, Guenter Roeck wrote:
->>
->>>> On 06 October 2016 19:49, Guenter Roeck wrote:
->>>>> On Thu, Oct 06, 2016 at 04:28:14PM +0000, Steve Twiss wrote:
->>>>>> I am using the compatible string to pick a different configuration .data block:
->>>>>> { .compatible = "dlg,da9062-watchdog", .data = &da9062_watchdog_info },
->>>>>> { .compatible = "dlg,da9061-watchdog", .data = &da9061_watchdog_info },
->>>>>>
->>>>>> But, it is just my opinion to keep the "name" different.
->>>>>> This will not be my decision if accepted into the Linux kernel, but I would like to
->>>>>> at least be consistent for DA9061 and DA9062 so ... is this an issue?
->>>>>
->>>>> FWIW the driver doesn't really need to be updated in the first place.
->>>>> A compatible statement listing both da9061 and da9062 would do it.
->>>>
->>>> I will make the changes you requested: deprecate the existing compatibility
->>>> for da9062-watchdog and make a new compatibility string which combines both
->>>> da9061 and da9062.
->>>>
->>> That is not what I asked for.
->>
->> Ok. Did you mean separate compatible statements with data sections pointing at
->> the same structure?
->>
->> Like this:
->> { .compatible = "dlg,da9062-watchdog", .data = &da9062_watchdog_info },
->> { .compatible = "dlg,da9061-watchdog", .data = &da9062_watchdog_info },
->>
->> So this would be the only change needed in the device driver.
->
-> If there is no change in IP block then I do not see why we need to
-> introduce new names at all. The dts can specify fallback compatible
-> stting. Note, it is called *compatible* not "model" or "device id" or
-> whatever. So you can just say in DTS:
->
-> 	compatible = "dlg,da9061-watchdog", "dlg,da9062-watchdog";
->
-> and leave the driver alone. That goes for input part as well. You only
-> need to add new compatible to the driver when it in fact is
-> *incompatible* with the existing blocks.
->
-Yes, exactly.
+Hi Joe,
 
-Thanks,
-Guenter
+On 2016/10/8 4:44, Joe Perches wrote:
+> On Fri, 2016-10-07 at 17:22 +0200, Gregory CLEMENT wrote:
+>> Add maintainer entry for Marvell Xenon eMMC/SD/SDIO Host
+>> Controller drivers.
+> []
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+> []
+>> @@ -7578,6 +7578,11 @@ M:	Nicolas Pitre <nico@fluxnic.net>
+>>  S:	Odd Fixes
+>>  F:	drivers/mmc/host/mvsdio.*
+>>  
+>> +MARVELL XENON MMC/SD/SDIO HOST CONTROLLER DRIVER
+>> +M:	Ziji Hu <huziji@marvell.com>
+>> +L:	linux-mmc@vger.kernel.org
+>> +S:	Supported
+> 
+> You should really add F: file patterns here
+> 
+	The specific file patterns will be added later when the corresponding file is included in patch.
+	Otherwise, it cannot pass checkpatch.pl.
 
+	Thank you.
+
+Best regards,
+Hu Ziji
