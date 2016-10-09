@@ -1,165 +1,89 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/2] devicetree/bindings: display: Add bindings for LVDS
- panels
-Date: Sun, 09 Oct 2016 19:33:21 +0300
-Message-ID: <1645400.RKG9rcP36z@avalon>
-References: <1475598210-26857-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1475598210-26857-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <20161009012939.GY18158@rob-hp-laptop>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 00/17] pinctrl: exynos/samsung: Add header with values
+ used for configuration
+Date: Sun, 9 Oct 2016 19:39:10 +0300
+Message-ID: <20161009163910.GB9672@kozik-lap>
+References: <1472987060-28293-1-git-send-email-krzk@kernel.org>
+ <CA+Ln22Eotn=dLyA8KYT_6Fnwvp1sTSxzP8DepAFB2P8EUMME6Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20161009012939.GY18158@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CA+Ln22Eotn=dLyA8KYT_6Fnwvp1sTSxzP8DepAFB2P8EUMME6Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gU2F0dXJkYXkgMDggT2N0IDIwMTYgMjA6Mjk6MzkgUm9iIEhlcnJpbmcgd3Jv
-dGU6Cj4gT24gVHVlLCBPY3QgMDQsIDIwMTYgYXQgMDc6MjM6MjlQTSArMDMwMCwgTGF1cmVudCBQ
-aW5jaGFydCB3cm90ZToKPiA+IExWRFMgaXMgYSBwaHlzaWNhbCBsYXllciBzcGVjaWZpY2F0aW9u
-IGRlZmluZWQgaW4gQU5TSS9USUEvRUlBLTY0NC1BLgo+ID4gTXVsdGlwbGUgaW5jb21wYXRpYmxl
-IGRhdGEgbGluayBsYXllcnMgaGF2ZSBiZWVuIHVzZWQgb3ZlciB0aW1lIHRvCj4gPiB0cmFuc21p
-dCBpbWFnZSBkYXRhIHRvIExWRFMgcGFuZWxzLiBUaGlzIGJpbmRpbmcgc3VwcG9ydHMgZGlzcGxh
-eSBwYW5lbHMKPiA+IGNvbXBhdGlibGUgd2l0aCB0aGUgSkVJREEtNTktMTk5OSwgT3Blbi1MREkg
-YW5kIFZFU0EgU1dQRwo+ID4gc3BlY2lmaWNhdGlvbnMuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6
-IExhdXJlbnQgUGluY2hhcnQKPiA+IDxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNvbmJv
-YXJkLmNvbT4KPiA+IC0tLQo+ID4gCj4gPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFu
-ZWwtbHZkcy50eHQgICAgICAgICAgfCAxMTkgKysrKysrKysrKysrKysrKwo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAxMTkgaW5zZXJ0aW9ucygrKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NAo+ID4gIERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWx2ZHMu
-dHh0PiAKPiA+IGRpZmYgLS1naXQKPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtbHZkcy50eHQKPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtbHZkcy50eHQgbmV3IGZpbGUKPiA+
-IG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjI1MDg2MWYyNjczZQo+ID4gLS0t
-IC9kZXYvbnVsbAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcGFuZWwvcGFuZWwtbHZkcy50eHQKPiA+IEBAIC0wLDAgKzEsMTE5IEBACj4gPiArR2Vu
-ZXJpYyBMVkRTIFBhbmVsCj4gPiArPT09PT09PT09PT09PT09PT09Cj4gPiArCj4gPiArTFZEUyBp
-cyBhIHBoeXNpY2FsIGxheWVyIHNwZWNpZmljYXRpb24gZGVmaW5lZCBpbiBBTlNJL1RJQS9FSUEt
-NjQ0LUEuCj4gPiBNdWx0aXBsZQo+ID4gK2luY29tcGF0aWJsZSBkYXRhIGxpbmsgbGF5ZXJzIGhh
-dmUgYmVlbiB1c2VkIG92ZXIgdGltZSB0byB0cmFuc21pdCBpbWFnZQo+ID4gZGF0YQo+ID4gK3Rv
-IExWRFMgcGFuZWxzLiBUaGlzIGJpbmRpbmdzIHN1cHBvcnRzIGRpc3BsYXkgcGFuZWxzIGNvbXBh
-dGlibGUgd2l0aCB0aGUKPiA+ICtmb2xsb3dpbmcgc3BlY2lmaWNhdGlvbnMuCj4gPiArCj4gPiAr
-W0pFSURBXSAiRGlnaXRhbCBJbnRlcmZhY2UgU3RhbmRhcmRzIGZvciBNb25pdG9yIiwgSkVJREEt
-NTktMTk5OSwKPiA+IEZlYnJ1YXJ5Cj4gPiArMTk5OSAoVmVyc2lvbiAxLjApLCBKYXBhbiBFbGVj
-dHJvbmljIEluZHVzdHJ5IERldmVsb3BtZW50IEFzc29jaWF0aW9uCj4gPiAoSkVJREEpCj4gPiAr
-W0xESV0gIk9wZW4gTFZEUyBEaXNwbGF5IEludGVyZmFjZSIsIE1heSAxOTk5IChWZXJzaW9uIDAu
-OTUpLCBOYXRpb25hbAo+ID4gK1NlbWljb25kdWN0b3IKPiA+ICtbVkVTQV0gIlZFU0EgTm90ZWJv
-b2sgUGFuZWwgU3RhbmRhcmQiLCBPY3RvYmVyIDIwMDcgKFZlcnNpb24gMS4wKSwgVmlkZW8KPiA+
-ICtFbGVjdHJvbmljcyBTdGFuZGFyZHMgQXNzb2NpYXRpb24gKFZFU0EpCj4gPiArCj4gPiArRGV2
-aWNlIGNvbXBhdGlibGUgd2l0aCB0aG9zZSBzcGVjaWZpY2F0aW9ucyBoYXZlIGJlZW4gbWFya2V0
-ZWQgdW5kZXIgdGhlCj4gPiArRlBELUxpbmsgYW5kIEZsYXRMaW5rIGJyYW5kcy4KPiA+ICsKPiA+
-ICsKPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gKy0gY29tcGF0aWJsZTogc2hhbGwgY29u
-dGFpbiAicGFuZWwtbHZkcyIKPiAKPiBNYXliZSBhcyBhIGZhbGxiYWNrLCBidXQgb24gaXRzIG93
-biwgbm8gd2F5LgoKV2hpY2ggYnJpbmdzIGFuIGludGVyZXN0aW5nIHF1ZXN0aW9uOiB3aGVuIGRl
-c2lnbmluZyBnZW5lcmljIERUIGJpbmRpbmdzLCAKd2hhdCdzIHRoZSBydWxlIHJlZ2FyZGluZyAK
-Cj4gPiArLSB3aWR0aC1tbTogcGFuZWwgZGlzcGxheSB3aWR0aCBpbiBtaWxsaW1ldGVycwo+ID4g
-Ky0gaGVpZ2h0LW1tOiBwYW5lbCBkaXNwbGF5IGhlaWdodCBpbiBtaWxsaW1ldGVycwo+IAo+IFRo
-aXMgaXMgYWxyZWFkeSBkb2N1bWVudGVkIGZvciBhbGwgcGFuZWxzIElJUkMuCgpOb3RlIHRoYXQg
-dGhpcyBEVCBiaW5kaW5nIGhhcyBub3RoaW5nIHRvIGRvIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBi
-aW5kaW5nLiBJdCAKaXMgaW5zdGVhZCBzaW1pbGFyIHRvIHRoZSBwYW5lbC1kcGkgYW5kIHBhbmVs
-LWRzaS1jbSBiaW5kaW5ncyAod2hpY2ggY3VycmVudGx5IApkb24ndCBidXQgc2hvdWxkIHNwZWNp
-ZnkgdGhlIHBhbmVsIHNpemUgaW4gRFQpLiBUaGUgTFZEUyBwYW5lbCBkcml2ZXIgd2lsbCAKKm5v
-dCogaW5jbHVkZSBhbnkgcGFuZWwtc3BlY2lmaWMgaW5mb3JtYXRpb24gc3VjaCBhcyBzaXplIG9y
-IHRpbWluZ3MsIHRoZXNlIAphcmUgc3BlY2lmaWVkIGluIERULgoKPiA+ICstIGRhdGEtbWFwcGlu
-ZzogdGhlIGNvbG9yIHNpZ25hbHMgbWFwcGluZyBvcmRlciwgImplaWRhLTE4IiwgImplaWRhLTI0
-Igo+ID4gKyAgb3IgInZlc2EtMjQiCj4gCj4gTWF5YmUgdGhpcyBzaG91bGQgYmUgcGFydCBvZiB0
-aGUgY29tcGF0aWJsZS4KCkkndmUgdGhvdWdodCBhYm91dCBpdCwgYnV0IGdpdmVuIHRoYXQgc29t
-ZSBwYW5lbHMgc3VwcG9ydCBzZWxlY3RpbmcgYmV0d2VlbiAKbXVsdGlwbGUgbW9kZXMgKHRocm91
-Z2ggYSBtb2RlIHBpbiB0aGF0IGlzIHVzdWFsbHkgaGFyZHdpcmVkKSwgSSBiZWxpZXZlIGEgCnNl
-cGFyYXRlIERUIHByb3BlcnR5IG1ha2VzIHNlbnNlLgoKRnVydGhlcm1vcmUsIExWRFMgZGF0YSBv
-cmdhbml6YXRpb24gaXMgY29udHJvbGxlZCBieSB0aGUgY29tYmluYXRpb24gb2YgYm90aCAKZGF0
-YS1tYXBwaW5nIGFuZCBkYXRhLW1pcnJvci4gSXQgbWFrZXMgbGl0dGxlIHNlbnNlIGZyb20gbXkg
-cG9pbnQgb2YgdmlldyB0byAKaGFuZGxlIG9uZSBhcyBwYXJ0IG9mIHRoZSBjb21wYXRpYmxlIHN0
-cmluZyBhbmQgdGhlIG90aGVyIG9uZSBhcyBhIHNlcGFyYXRlIApwcm9wZXJ0eS4KCj4gPiArT3B0
-aW9uYWwgcHJvcGVydGllczoKPiA+ICstIGxhYmVsOiBhIHN5bWJvbGljIG5hbWUgZm9yIHRoZSBw
-YW5lbAo+IAo+IENvdWxkIGJlIGZvciBhbnkgcGFuZWwgb3IgZGlzcGxheSBjb25uZWN0b3IuCgpZ
-ZXMsIGJ1dCBJJ20gbm90IHN1cmUgdG8gdW5kZXJzdGFuZCBob3cgdGhhdCdzIHJlbGV2YW50IDot
-KQoKPiA+ICstIGF2ZGQtc3VwcGx5OiByZWZlcmVuY2UgdG8gdGhlIHJlZ3VsYXRvciB0aGF0IHBv
-d2VycyB0aGUgcGFuZWwKPiBhbmFsb2cgc3VwcGx5Cj4gPiArLSBkdmRkLXN1cHBseTogcmVmZXJl
-bmNlIHRvIHRoZSByZWd1bGF0b3IgdGhhdCBwb3dlcnMgdGhlIHBhbmVsIGRpZ2l0YWwKPiA+IHN1
-cHBseQo+Cj4gV2hpY2ggb25lIGhhcyB0byBiZSBwb3dlcmVkIG9uIGZpcnN0LCB3aGF0IHZvbHRh
-Z2UsIGFuZCB3aXRoIHdoYXQgdGltZQo+IGluIGJldHdlZW4/IFRoaXMgaXMgd2h5ICJnZW5lcmlj
-IiBvciAic2ltcGxlIiBiaW5kaW5ncyBkb24ndCB3b3JrLgoKVGhlIGFib3ZlLW1lbnRpb25lZCBz
-cGVjaWZpY2F0aW9ucyBhbHNvIGRlZmluZSBjb25uZWN0b3JzLCBwaW5vdXRzIGFuZCBwb3dlciAK
-c3VwcGxpZXMsIGJ1dCBtYW55IExWRFMgcGFuZWxzIGNvbXBhdGlibGUgd2l0aCB0aGUgTFZEUyBw
-aHlzaWNhbCBhbmQgZGF0YSAKbGF5ZXJzIHVzZSBhIGRpZmZlcmVudCBjb25uZWN0b3Igd2l0aCBz
-bWFsbCBkaWZmZXJlbmNlcyBpbiBwb3dlciBzdXBwbGllcy4KCkkgYmVsaWV2ZSB0aGUgdm9sdGFn
-ZSBpcyBpcnJlbGV2YW50IGhlcmUsIGl0IGRvZXNuJ3QgbmVlZCB0byBiZSBjb250cm9sbGVkIGJ5
-IAp0aGUgb3BlcmF0aW5nIHN5c3RlbS4gUG93ZXIgc3VwcGxpZXMgb3JkZXIgYW5kIHRpbWluZyBp
-cyByZWxldmFudCwgSSdsbCAKaW52ZXN0aWdhdGUgdGhlIGxldmVsIG9mIGRpZmZlcmVuY2VzIGJl
-dHdlZW4gcGFuZWxzLiBJJ20gYWxzbyBmaW5lIHdpdGggCmRyb3BwaW5nIHRob3NlIHByb3BlcnRp
-ZXMgZm9yIG5vdy4KCj4gPiArLSBkYXRhLW1pcnJvcjogaWYgc2V0LCByZXZlcnNlIHRoZSBiaXQg
-b3JkZXIgb24gYWxsIGRhdGEgbGFuZXMgKDYgdG8gMAo+ID4gaW5zdGVhZAo+ID4gKyAgb2YgMCB0
-byA2KQo+ID4gKwo+ID4gK1JlcXVpcmVkIG5vZGVzOgo+ID4gKy0gT25lICJwYW5lbC10aW1pbmci
-IG5vZGUgY29udGFpbmluZyB2aWRlbyB0aW1pbmdzLCBpbiBhY2NvcmRhbmNlIHdpdGgKPiA+IHRo
-ZQo+ID4gKyAgZGlzcGxheSB0aW1pbmcgYmluZGluZ3MgZGVmaW5lZCBpbgo+ID4gKyAgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZGlzcGxheS10aW1pbmcudHh0Lgo+
-IAo+IEknbGwgbGV0IFRoaWVycnkgY29tbWVudCBvbiB0aGlzIG9uZS4KPiAKPiA+ICstIE9uZSAi
-cG9ydCIgY2hpbGQgbm9kZSBmb3IgdGhlIExWRFMgaW5wdXQgcG9ydCwgaW4gYWNjb3JkYW5jZSB3
-aXRoIHRoZQo+ID4gKyAgdmlkZW8gaW50ZXJmYWNlIGJpbmRpbmdzIGRlZmluZWQgaW4KPiA+ICsg
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2Vz
-LnR4dC4KPiA+ICsKPiA+ICsKPiA+ICtMVkRTIGRhdGEgbWFwcGluZ3MgYXJlIGRlZmluZWQgYXMg
-Zm9sbG93cy4KPiA+ICsKPiA+ICstICJqZWlkYS0xOCIgLSAxOC1iaXQgZGF0YSBtYXBwaW5nIGNv
-bXBhdGlibGUgd2l0aCB0aGUgW0pFSURBXSwgW0xESV0gYW5kCj4gPiArICBbVkVTQV0gc3BlY2lm
-aWNhdGlvbnMuIERhdGEgYXJlIHRyYW5zZmVycmVkIGFzIGZvbGxvd3Mgb24gMyBMVkRTIGxhbmVz
-Lgo+ID4gKwo+ID4gK1Nsb3QJICAgIDAgICAgICAgMSAgICAgICAyICAgICAgIDMgICAgICAgNCAg
-ICAgICA1ICAgICAgIDYKPiA+ICsJX19fX19fX19fX19fX19fXyAgICAgICAgICAgICAgICAgICAg
-ICAgICBfX19fX19fX19fX19fX19fXwo+ID4gK0Nsb2NrCSAgICAgICAgICAgICAgICBcX19fX19f
-X19fX19fX19fX19fX19fX18vCj4gPiArCSAgX19fX19fICBfX19fX18gIF9fX19fXyAgX19fX19f
-ICBfX19fX18gIF9fX19fXyAgX19fX19fCj4gPiArREFUQTAJPjxfX0cwX18+PF9fUjVfXz48X19S
-NF9fPjxfX1IzX18+PF9fUjJfXz48X19SMV9fPjxfX1IwX18+PAo+ID4gK0RBVEExCT48X19CMV9f
-PjxfX0IwX18+PF9fRzVfXz48X19HNF9fPjxfX0czX18+PF9fRzJfXz48X19HMV9fPjwKPiA+ICtE
-QVRBMgk+PF9DVEwyXz48X0NUTDFfPjxfQ1RMMF8+PF9fQjVfXz48X19CNF9fPjxfX0IzX18+PF9f
-QjJfXz48Cj4gPiArCj4gPiArLSAiamVpZGEtMjQiIC0gMjQtYml0IGRhdGEgbWFwcGluZyBjb21w
-YXRpYmxlIHdpdGggdGhlIFtEU0lNXSBhbmQgW0xESV0KPiA+ICsgIHNwZWNpZmljYXRpb25zLiBE
-YXRhIGFyZSB0cmFuc2ZlcnJlZCBhcyBmb2xsb3dzIG9uIDQgTFZEUyBsYW5lcy4KPiA+ICsKPiA+
-ICtTbG90CSAgICAwICAgICAgIDEgICAgICAgMiAgICAgICAzICAgICAgIDQgICAgICAgNSAgICAg
-ICA2Cj4gPiArCV9fX19fX19fX19fX19fX18gICAgICAgICAgICAgICAgICAgICAgICAgX19fX19f
-X19fX19fX19fX18KPiA+ICtDbG9jawkgICAgICAgICAgICAgICAgXF9fX19fX19fX19fX19fX19f
-X19fX19fLwo+ID4gKwkgIF9fX19fXyAgX19fX19fICBfX19fX18gIF9fX19fXyAgX19fX19fICBf
-X19fX18gIF9fX19fXwo+ID4gK0RBVEEwCT48X19HMl9fPjxfX1I3X18+PF9fUjZfXz48X19SNV9f
-PjxfX1I0X18+PF9fUjNfXz48X19SMl9fPjwKPiA+ICtEQVRBMQk+PF9fQjNfXz48X19CMl9fPjxf
-X0c3X18+PF9fRzZfXz48X19HNV9fPjxfX0c0X18+PF9fRzNfXz48Cj4gPiArREFUQTIJPjxfQ1RM
-Ml8+PF9DVEwxXz48X0NUTDBfPjxfX0I3X18+PF9fQjZfXz48X19CNV9fPjxfX0I0X18+PAo+ID4g
-K0RBVEEzCT48X0NUTDNfPjxfX0IxX18+PF9fQjBfXz48X19HMV9fPjxfX0cwX18+PF9fUjFfXz48
-X19SMF9fPjwKPiA+ICsKPiA+ICstICJ2ZXNhLTI0IiAtIDI0LWJpdCBkYXRhIG1hcHBpbmcgY29t
-cGF0aWJsZSB3aXRoIHRoZSBbVkVTQV0KPiA+IHNwZWNpZmljYXRpb24uICsgIERhdGEgYXJlIHRy
-YW5zZmVycmVkIGFzIGZvbGxvd3Mgb24gNCBMVkRTIGxhbmVzLgo+ID4gKwo+ID4gK1Nsb3QJICAg
-IDAgICAgICAgMSAgICAgICAyICAgICAgIDMgICAgICAgNCAgICAgICA1ICAgICAgIDYKPiA+ICsJ
-X19fX19fX19fX19fX19fXyAgICAgICAgICAgICAgICAgICAgICAgICBfX19fX19fX19fX19fX19f
-Xwo+ID4gK0Nsb2NrCSAgICAgICAgICAgICAgICBcX19fX19fX19fX19fX19fX19fX19fX18vCj4g
-PiArCSAgX19fX19fICBfX19fX18gIF9fX19fXyAgX19fX19fICBfX19fX18gIF9fX19fXyAgX19f
-X19fCj4gPiArREFUQTAJPjxfX0cwX18+PF9fUjVfXz48X19SNF9fPjxfX1IzX18+PF9fUjJfXz48
-X19SMV9fPjxfX1IwX18+PAo+ID4gK0RBVEExCT48X19CMV9fPjxfX0IwX18+PF9fRzVfXz48X19H
-NF9fPjxfX0czX18+PF9fRzJfXz48X19HMV9fPjwKPiA+ICtEQVRBMgk+PF9DVEwyXz48X0NUTDFf
-PjxfQ1RMMF8+PF9fQjVfXz48X19CNF9fPjxfX0IzX18+PF9fQjJfXz48Cj4gPiArREFUQTMJPjxf
-Q1RMM18+PF9fQjdfXz48X19CNl9fPjxfX0c3X18+PF9fRzZfXz48X19SN19fPjxfX1I2X18+PAo+
-ID4gKwo+ID4gKwo+ID4gK0NvbnRyb2wgc2lnbmFscyBhcmUgbWFwcGVkIGFzIGZvbGxvd3MuCj4g
-PiArCj4gPiArQ1RMMDogSFN5bmMKPiA+ICtDVEwxOiBWU3luYwo+ID4gK0NUTDI6IERhdGEgRW5h
-YmxlCj4gPiArQ1RMMzogMAo+ID4gKwo+ID4gKwo+ID4gK0V4YW1wbGUKPiA+ICstLS0tLS0tCj4g
-PiArCj4gPiArcGFuZWwgewo+ID4gKwljb21wYXRpYmxlID0gIm1pdHN1YmlzaGksYWExMjF0ZDAx
-IiwgInBhbmVsLWx2ZHMiOwo+ID4gKwlsYWJlbCA9ICJsY2QiOwo+IAo+IEtpbmQgb2YgdXNlbGVz
-cyBpbiB5b3VyIGV4YW1wbGUuCgpJIGNhbiByZW5hbWUgdGhhdCB0byAiTENEMCIgZm9yIGluc3Rh
-bmNlLgoKPiA+ICsKPiA+ICsJd2lkdGgtbW0gPSA8MjYxPjsKPiA+ICsJaGVpZ2h0LW1tID0gPDE2
-Mz47Cj4gPiArCj4gPiArCWRhdGEtbWFwcGluZyA9ICJqZWlkYS0yNCI7Cj4gPiArCj4gPiArCXBh
-bmVsLXRpbWluZyB7Cj4gPiArCQkvKiAxMjgweDgwMCBANjBIeiAqLwo+ID4gKwkJY2xvY2stZnJl
-cXVlbmN5ID0gPDcxMDAwMDAwPjsKPiA+ICsJCWhhY3RpdmUgPSA8MTI4MD47Cj4gPiArCQl2YWN0
-aXZlID0gPDgwMD47Cj4gPiArCQloc3luYy1sZW4gPSA8NzA+Owo+ID4gKwkJaGZyb250LXBvcmNo
-ID0gPDIwPjsKPiA+ICsJCWhiYWNrLXBvcmNoID0gPDcwPjsKPiA+ICsJCXZzeW5jLWxlbiA9IDw1
-PjsKPiA+ICsJCXZmcm9udC1wb3JjaCA9IDwzPjsKPiA+ICsJCXZiYWNrLXBvcmNoID0gPDE1PjsK
-PiA+ICsJfTsKPiA+ICsKPiA+ICsJcG9ydCB7Cj4gPiArCQlwYW5lbF9pbjogZW5kcG9pbnQgewo+
-ID4gKwkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbHZkc19jb25uZWN0b3I+Owo+ID4gKwkJfTsKPiA+
-ICsJfTsKPiA+ICt9OwoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Sun, Oct 09, 2016 at 04:04:11PM +0900, Tomasz Figa wrote:
+> Hi Krzysztof,
+> 
+> 2016-09-04 20:04 GMT+09:00 Krzysztof Kozlowski <krzk@kernel.org>:
+> >
+> > Hi,
+> >
+> > Changes since v2
+> > ================
+> > 1. Combine separate patchsets into one. Previously I sent separately the fixes
+> >    and changes for S3C platforms.
+> > 2. Fix issues pointed during review.
+> > 3. Add review tags.
+> >
+> > Changes since v1
+> > ================
+> > 1. Follow Arnd's suggestion about moving the macros to common place.
+> > 2. Subjects: replace "GPIO" with "pinctrl".
+> > 3. There were some major changes here so I did not add Javier's
+> >    reviewed-by and tested-by tags.
+> >
+> > Merging
+> > =======
+> > Patches #1 and #2 should probably go through pinctrl tree. In that case I would
+> > appreciate a stable branch/tag so DTS could base on top of it.
+> >
+> > Goal
+> > ====
+> > Increase readability:
+> >         uart0_data: uart0-data {
+> >                 samsung,pins = "gpa0-0", "gpa0-1";
+> > -               samsung,pin-function = <2>;
+> > -               samsung,pin-pud = <0>;
+> > -               samsung,pin-drv = <0>;
+> > +               samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
+> > +               samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> > +               samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> 
+> I like the idea, thanks for cleaning this up. However I'd like to
+> bikeshed the prefix a bit. Since the properties are already prefixed
+> by "samsung,", I think it would make much more sense to also prefix
+> the generic values with "SAMSUNG_". Of course for soc/family-specific
+> values, the soc/family name prefix sounds right.
+
+I am lost. Sorry, I don't get what kind of final prefixes you would like
+to have.
+
+SAMSUNG_EXYNOS4_PIN_DRV_LV1
+SAMSUNG_EXYNOS5260_PIN_DRV_LV1
+?
+
+> Similarly for rest of the value names, such as SAMSUNG_PIN_PUD instead
+> of SAMSUNG_PIN_PULL, which obviously sounds more like correct English,
+> however hurts the consistency and could confuse the people writing new
+> dts files.
+
+SAMSUNG_S3C64XX_PIN_PUD_NONE
+SAMSUNG_EXYNOS_PIN_PUD_NONE
+
+?
+
+Best regards,
+Krzysztof
