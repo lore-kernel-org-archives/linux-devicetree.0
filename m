@@ -1,16 +1,16 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: oxnas: Update Pinctrl and GPIO for
- OX820 Support
-Date: Sat, 8 Oct 2016 20:29:24 -0500
-Message-ID: <20161009012924.GU18158@rob-hp-laptop>
-References: <20161004134148.23028-1-narmstrong@baylibre.com>
- <20161004134148.23028-4-narmstrong@baylibre.com>
+Subject: Re: [RFC 02/10] dt-bindings: interrupt-controller: add DT binding
+ for meson GPIO interrupt controller
+Date: Sat, 8 Oct 2016 20:29:27 -0500
+Message-ID: <20161009012927.GV18158@rob-hp-laptop>
+References: <1475593708-10526-1-git-send-email-jbrunet@baylibre.com>
+ <1475593708-10526-3-git-send-email-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20161004134148.23028-4-narmstrong@baylibre.com>
+In-Reply-To: <1475593708-10526-3-git-send-email-jbrunet@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,29 +20,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: gnurou@gmail.com, devicetree@vger.kernel.org, linux-oxnas@lists.tuxfamily.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Kevin Hilman <khilman@baylibre.com>, linux-gpio@vger.kernel.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 04, 2016 at 03:41:48PM +0200, Neil Armstrong wrote:
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio_oxnas.txt       | 2 +-
->  Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
-> index 928ed4f..9665147 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
-> @@ -3,7 +3,7 @@
->  Please refer to gpio.txt for generic information regarding GPIO bindings.
->  
->  Required properties:
-> - - compatible: "oxsemi,ox810se-gpio"
-> + - compatible: "oxsemi,ox810se-gpio" or "oxsemi,ox820-gpio"
-
-It is preferred to have one per line, but it's fine unless you respin 
-the series.
-
-Acked-by: Rob Herring <robh@kernel.org>
+T24gVHVlLCBPY3QgMDQsIDIwMTYgYXQgMDU6MDg6MjBQTSArMDIwMCwgSmVyb21lIEJydW5ldCB3
+cm90ZToKPiBUaGlzIGNvbW1pdCBhZGRzIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5ncyBkZXNjcmlw
+dGlvbiBmb3IgQW1sb2dpYydzIEdQSU8KPiBpbnRlcnJ1cHQgY29udHJvbGxlciBhdmFpbGFibGUg
+b24gdGhlIG1lc29uOCwgbWVzb244YiBhbmQgZ3hiYiBTb0MgZmFtaWxpZXMKPiAKPiBTaWduZWQt
+b2ZmLWJ5OiBKZXJvbWUgQnJ1bmV0IDxqYnJ1bmV0QGJheWxpYnJlLmNvbT4KPiAtLS0KPiAgLi4u
+L2FtbG9naWMsbWVzb24tZ3Bpby1pbnRjLnR4dCAgICAgICAgICAgICAgICAgICAgfCAzOSArKysr
+KysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzOSBpbnNlcnRpb25zKCspCj4g
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50
+ZXJydXB0LWNvbnRyb2xsZXIvYW1sb2dpYyxtZXNvbi1ncGlvLWludGMudHh0Cj4gCj4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJv
+bGxlci9hbWxvZ2ljLG1lc29uLWdwaW8taW50Yy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYW1sb2dpYyxtZXNvbi1ncGlvLWludGMu
+dHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmJkNGNjZWVm
+Y2RhMQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYW1sb2dpYyxtZXNvbi1ncGlvLWludGMudHh0Cj4g
+QEAgLTAsMCArMSwzOSBAQAo+ICtBbWxvZ2ljIG1lc29uIEdQSU8gaW50ZXJydXB0IGNvbnRyb2xs
+ZXIKPiArCj4gK01lc29uIFNvQ3MgY29udGFpbnMgYW4gaW50ZXJydXB0IGNvbnRyb2xsZXIgd2hp
+Y2ggaXMgYWJsZSB3YXRjaCB0aGUgU29DIHBhZHMKPiArYW5kIGdlbmVyYXRlIGFuIGludGVycnVw
+dCBvbiBlZGdlcyBvciBsZXZlbC4gVGhlIGNvbnRyb2xsZXIgaXMgZXNzZW50aWFsbHkgYQo+ICsy
+NTYgcGFkcyB0byA4IEdJQyBpbnRlcnJ1cHQgbXVsdGlwbGV4ZXIsIHdpdGggYSBmaWx0ZXIgYmxv
+Y2sgdG8gc2VsZWN0IGVkZ2UKPiArb3IgbGV2ZWwgYW5kIHBvbGFyaXR5LiBXZSBkb27igJl0IGV4
+cG9zZSBhbGwgMjU2IG11eCBpbnB1dHMgYmVjYXVzZSB0aGUKPiArZG9jdW1lbnRhdGlvbiBzaG93
+cyB0aGF0IHVwcGVyIHBhcnQgaXMgbm90IG1hcHBlZCB0byBhbnkgcGFkLiBUaGUgYWN0dWFsIG51
+bWJlcgo+ICtvZiBpbnRlcnJ1cHQgZXhwb3NlZCBkZXBlbmRzIG9uIHRoZSBTb0MuCj4gKwo+ICtS
+ZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICsKPiArLSBjb21wYXRpYmxlIDogc2hvdWxkIGJlOiAiYW1s
+b2dpYyxtZXNvbjgtZ3Bpby1pbnRj4oCdIG9yCj4gKyAg4oCcYW1sb2dpYyxtZXNvbjhiLWdwaW8t
+aW50Y+KAnSBvciDigJxhbWxvZ2ljLGd4YmItZ3Bpby1pbnRj4oCdCgpPbmUgcGVyIGxpbmUgcGxl
+YXNlIGlmIHlvdSByZXNwaW4gdGhlIHNlcmllcy4KCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9i
+aEBrZXJuZWwub3JnPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtYXJtLWtlcm5lbAo=
