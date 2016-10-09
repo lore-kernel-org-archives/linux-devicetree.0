@@ -1,68 +1,75 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] dt: bindings: vendor-prefix: Add 3 accelerometer
- vendor prefixes
-Date: Sun, 9 Oct 2016 08:37:47 +0100
-Message-ID: <2f68311d-5c65-0bc1-aea8-401a843ebfd0@kernel.org>
-References: <20161006170650.13518-1-hdegoede@redhat.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: add bindings doc for ZTE VOU display
+ controller
+Date: Sun, 9 Oct 2016 15:49:10 +0800
+Message-ID: <20161009074910.GA15400@tiger>
+References: <1474727185-24180-1-git-send-email-shawn.guo@linaro.org>
+ <1474727185-24180-2-git-send-email-shawn.guo@linaro.org>
+ <20161003174429.GA26054@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161006170650.13518-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20161003174429.GA26054@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, Baoyou Xie <xie.baoyou@zte.com.cn>, dri-devel@lists.freedesktop.org, Jun Nie <jun.nie@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/10/16 18:06, Hans de Goede wrote:
-> Recently the kernel has gotten support in the iio subsystem for a number
-> of new accelerometers from mCube, Memsic and MiraMEMS.
-> 
-> This commit adds the vendor prefixes already used for these vendors
-> in Documentation/devicetree/bindings/i2c/trivial-devices.txt to
-> vendor-prefixes.txt.
-> 
-> The "full" company names were taken from the company's websites:
-> http://www.mcubemems.com/
-> http://www.memsic.com/
-> http://www.miramems.com/en/
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Applied to the togreg branch of iio.git - initially pushed out as testing.
-Thanks,
-
-Jonathan
-> ---
-> Changes in v2:
-> -Drop domintech, it is already in the iio/next tree
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 5c67e91..abe0129 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -157,13 +157,16 @@ lltc	Linear Technology Corporation
->  marvell	Marvell Technology Group Ltd.
->  maxim	Maxim Integrated Products
->  meas	Measurement Specialties
-> +mcube	mCube
->  mediatek	MediaTek Inc.
->  melexis	Melexis N.V.
-> +memsic	MEMSIC Inc.
->  merrii	Merrii Technology Co., Ltd.
->  micrel	Micrel Inc.
->  microchip	Microchip Technology Inc.
->  micron	Micron Technology Inc.
->  minix	MINIX Technology Ltd.
-> +miramems	MiraMEMS Sensing Technology Co., Ltd.
->  mitsubishi	Mitsubishi Electric Corporation
->  mosaixtech	Mosaix Technologies, Inc.
->  moxa	Moxa
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBPY3QgMDMsIDIwMTYgYXQgMTI6NDQ6MjlQTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4gPiArRXhhbXBsZToKPiA+ICsKPiA+ICt2b3U6IHZvdUAxNDQwMDAwIHsKPiA+ICsJY29t
+cGF0aWJsZSA9ICJ6dGUsengyOTY3MTgtdm91IjsKPiA+ICsJI2FkZHJlc3MtY2VsbHMgPSA8MT47
+Cj4gPiArCSNzaXplLWNlbGxzID0gPDE+Owo+ID4gKwlyZWcgPSA8MHgxNDQwMDAwIDB4MTAwMDA+
+Owo+ID4gKwlyYW5nZXM7Cj4gCj4gWW91IHN0aWxsIGhhdmUgb3ZlcmxhcHBpbmcgYWRkcmVzc2Vz
+LiBFeHBsaWNpdGx5IGxpc3QgdGhlIHN1YiByYW5nZXMgaW4gCj4gcmVnIGhlcmUgdXNlZCBieSB0
+aGUgVk9VIGRyaXZlciBpZiB0aGUgZHJpdmVyIHVzYWdlIGRvZXNuJ3Qgb3ZlcmxhcC4gSWYgCj4g
+dGhlcmUgaXMgb3ZlcmxhcCAoMiBkcml2ZXJzIGFjY2Vzc2luZyB0aGUgc2FtZSByYW5nZSksIHRo
+ZW4geW91IG5lZWQgCj4gc29tZSBBUElzIGJldHdlZW4gdGhlIGNvbXBvbmVudHMgKG9yIHBvc3Np
+Ymx5IHJlZ21hcCkuCgpUaGUgZHJpdmVyIG1hdGNoaW5nICJ6dGUsengyOTY3MTgtdm91IiBkb2Vz
+bid0IG1hcCBvciBhY2Nlc3MgdGhlIGFueQoncmVnJyBhZGRyZXNzLiAgVGhlICdyZWcnIHByb3Bl
+cnR5IGhlcmUgaXMgbW9yZSBsaWtlIGEgaGludCB0ZWxsaW5nCnRoYXQgdGhlIFZPVSBibG9jayBj
+b3ZlcnMgdGhlIGFkZHJlc3Mgc3BhY2Ugb2YgYWxsIGNoaWxkIGRldmljZXMuCgpJIHdpbGwgc2lt
+cGx5IGRyb3AgdGhlICdyZWcnIHByb3BlcnR5IGhlcmUuCgo+IEFsc28sIGRvbid0IGRvIGFuIGVt
+cHR5IHJhbmdlcyBoZXJlLiBGaWxsIGl0IGluIHNvIHRoZSBjaGlsZCBub2RlcyBhcmUgCj4ganVz
+dCBvZmZzZXRzIG9mIDB4MTQ0MDAwMAoKT2theS4gIEkgdGhvdWdodCB0aGF0IGVtcHR5ICdyYW5n
+ZXMnIGlzIGZpbmUgYXMgbG9uZyBhcyBwYXJlbnQgYW5kIGNoaWxkCmFkZHJlc3Mgc3BhY2VzIGFy
+ZSBpZGVudGljYWwgKDE6MSBtYXBwaW5nKS4KClNvIHdpdGggeW91ciBzdWdnZXN0aW9uLCBJIG1h
+ZGUgdGhlIGNoYW5nZXMgYmVsb3cuICBMZXQgbWUga25vdyBpZiB0aGlzCmlzIHN0aWxsIG5vdCB3
+aGF0IHlvdSBhcmUgYXNraW5nIGZvci4KClNoYXduCgotLS0tLTg8LS0tLS0tLS0tLS0tLS0tLS0K
+CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS96
+dGUsdm91LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3p0
+ZSx2b3UudHh0CmluZGV4IGQwM2JhNGM0ODEwYy4uNmJiNGFiMjUxN2VmIDEwMDY0NAotLS0gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS96dGUsdm91LnR4dAorKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS96dGUsdm91LnR4dApA
+QCAtNTYsMTQgKzU2LDEzIEBAIHZvdTogdm91QDE0NDAwMDAgewogICAgICAgIGNvbXBhdGlibGUg
+PSAienRlLHp4Mjk2NzE4LXZvdSI7CiAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47CiAgICAg
+ICAgI3NpemUtY2VsbHMgPSA8MT47Ci0gICAgICAgcmVnID0gPDB4MTQ0MDAwMCAweDEwMDAwPjsK
+LSAgICAgICByYW5nZXM7CisgICAgICAgcmFuZ2VzID0gPDAgMHgxNDQwMDAwIDB4MTAwMDA+Owog
+Ci0gICAgICAgZHBjOiBkcGNAMTQ0MDAwMCB7CisgICAgICAgZHBjOiBkcGNAMCB7CiAgICAgICAg
+ICAgICAgICBjb21wYXRpYmxlID0gInp0ZSx6eDI5NjcxOC1kcGMiOwotICAgICAgICAgICAgICAg
+cmVnID0gPDB4MTQ0MDAwMCAweDEwMDA+LCA8MHgxNDQxMDAwIDB4MTAwMD4sCi0gICAgICAgICAg
+ICAgICAgICAgICA8MHgxNDQ1MDAwIDB4MTAwMD4sIDwweDE0NDYwMDAgMHgxMDAwPiwKLSAgICAg
+ICAgICAgICAgICAgICAgIDwweDE0NGEwMDAgMHgxMDAwPjsKKyAgICAgICAgICAgICAgIHJlZyA9
+IDwweDAwMDAgMHgxMDAwPiwgPDB4MTAwMCAweDEwMDA+LAorICAgICAgICAgICAgICAgICAgICAg
+PDB4NTAwMCAweDEwMDA+LCA8MHg2MDAwIDB4MTAwMD4sCisgICAgICAgICAgICAgICAgICAgICA8
+MHhhMDAwIDB4MTAwMD47CiAgICAgICAgICAgICAgICByZWctbmFtZXMgPSAib3NkIiwgInRpbWlu
+Z19jdHJsIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJkdHJjIiwgInZvdV9jdHJsIiwK
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICJvdGZwcHUiOwpAQCAtNzQsOSArNzMsOSBAQCB2
+b3U6IHZvdUAxNDQwMDAwIHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIm1haW5fd2Ns
+ayIsICJhdXhfd2NsayI7CiAgICAgICAgfTsKIAotICAgICAgIGhkbWk6IGhkbWlAMTQ0YzAwMCB7
+CisgICAgICAgaGRtaTogaGRtaUBjMDAwIHsKICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAi
+enRlLHp4Mjk2NzE4LWhkbWkiOwotICAgICAgICAgICAgICAgcmVnID0gPDB4MTQ0YzAwMCAweDQw
+MDA+OworICAgICAgICAgICAgICAgcmVnID0gPDB4YzAwMCAweDQwMDA+OwogICAgICAgICAgICAg
+ICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDgyIElSUV9UWVBFX0VER0VfUklTSU5HPjsKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
