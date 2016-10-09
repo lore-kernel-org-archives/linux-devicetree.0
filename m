@@ -1,13 +1,14 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: [PATCH v2 4/4] ARM: sunxi: enable battery on reference design tablets
-Date: Sun,  9 Oct 2016 14:27:14 +0800
-Message-ID: <20161009062714.5085-4-icenowy@aosc.xyz>
-References: <20161009062714.5085-1-icenowy@aosc.xyz>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [RESEND PATCH v6, 3/5] usb: xhci-mtk: make IPPC register optional
+Date: Sun, 9 Oct 2016 14:50:28 +0800
+Message-ID: <1475995828.15546.12.camel@mhfsdcap03>
+References: <1474437277-27201-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1474437277-27201-4-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161009062714.5085-1-icenowy@aosc.xyz>
+In-Reply-To: <1474437277-27201-4-git-send-email-chunfeng.yun@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,52 +18,22 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, =?UTF-8?q?Bruno=20Pr=C3=A9mont?= <bonbons@linux-vserser.org>, Michael Haas <haas@computerlinguist.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Icenowy Zheng <icenowy@aosc.xyz>, Sebastian Reichel <sre@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alan Cooper <alcooperx@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-mediatek@lists.infradead.orgGreg Kroah-Hartman" <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, Oliver Neukum <oneukum@suse.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Since battery is one part of the reference design of Allwinner tablets,
-enable the battery node of reference design tablets.
+On Wed, 2016-09-21 at 13:54 +0800, Chunfeng Yun wrote:
+> Make IPPC register optional to support host side of dual-role mode,
+> due to it is moved into common glue layer for simplification.
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>  drivers/usb/host/xhci-mtk.c |   36 +++++++++++++++++++++++++++++-------
+>  1 file changed, 29 insertions(+), 7 deletions(-)
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
----
-Changes since v1:
-- Applied to reference design tablet, not Q8 only now.
-- Add support for sun5i reference design tablet.
+Hi Mathias,
 
- arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi | 4 ++++
- arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi | 4 ++++
- 2 files changed, 8 insertions(+)
+    Would you please take a little time out of your busy schedule and
+help review this patch?
 
-diff --git a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
-index 20cc940..9e17b46 100644
---- a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
-+++ b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
-@@ -92,6 +92,10 @@
- 
- #include "axp209.dtsi"
- 
-+&battery {
-+	status = "okay";
-+};
-+
- &lradc {
- 	vref-supply = <&reg_ldo2>;
- };
-diff --git a/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
-index 9d90361..74517ab 100644
---- a/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
-+++ b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
-@@ -112,6 +112,10 @@
- 
- #include "axp22x.dtsi"
- 
-+&battery {
-+	status = "okay";
-+};
-+
- &reg_aldo1 {
- 	regulator-always-on;
- 	regulator-min-microvolt = <3000000>;
--- 
-2.10.0
+    Thank you very much.
