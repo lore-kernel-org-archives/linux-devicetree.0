@@ -1,58 +1,40 @@
-From: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v2 2/2] ls1043ardb: add ds26522 node to dts
-Date: Sun, 9 Oct 2016 10:12:39 +0800
-Message-ID: <1475979159-20597-2-git-send-email-qiang.zhao@nxp.com>
-References: <1475979159-20597-1-git-send-email-qiang.zhao@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC V2 PATCH 01/12] msm8994 clocks: global clock support Global
+ clock support for the msm8994 SOC.
+Date: Sat, 8 Oct 2016 20:28:44 -0500
+Message-ID: <20161009012844.GF18158@rob-hp-laptop>
+References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
+ <1475375919-618-2-git-send-email-jmcnicol@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475979159-20597-1-git-send-email-qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xiaobo.xie-3arQi8VN3Tc@public.gmane.org, Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1475375919-618-2-git-send-email-jmcnicol@redhat.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jeremy McNicoll <jmcnicol@redhat.com>
+Cc: andy.gross@linaro.org, sboyd@codeaurora.org, arnd@arndb.de, bjorn.andersson@linaro.org, git@kchr.de, jeremymc@redhat.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-add ds26522 node to fsl-ls1043a-rdb.dts
+On Sat, Oct 01, 2016 at 07:38:28PM -0700, Jeremy McNicoll wrote:
+> From: Bastian Köcher <git@kchr.de>
+> 
+> The clock definition was ported from the Google 3.10 kernel tree to
+> work with the latest kernel.
+> 
+> Signed-off-by: Bastian Köcher <mail@kchr.de>
+> ---
+>  .../devicetree/bindings/clock/qcom,gcc.txt         |    2 +
 
-Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
----
-Changes for v2:
-	- na
+>  include/dt-bindings/clock/qcom,gcc-msm8994.h       |  145 ++
 
- arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+It's preferred to but bindings in separate patches.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-index a6a39fc..7f93bcc 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-@@ -122,6 +122,22 @@
- 		reg = <0>;
- 		spi-max-frequency = <1000000>; /* input clock */
- 	};
-+
-+	slic@2 {
-+		compatible = "maxim,ds26522";
-+		reg = <2>;
-+		spi-max-frequency = <2000000>;
-+		fsl,spi-cs-sck-delay = <100>;
-+		fsl,spi-sck-cs-delay = <50>;
-+	};
-+
-+	slic@3 {
-+		compatible = "maxim,ds26522";
-+		reg = <3>;
-+		spi-max-frequency = <2000000>;
-+		fsl,spi-cs-sck-delay = <100>;
-+		fsl,spi-sck-cs-delay = <50>;
-+	};
- };
- 
- &uqe {
--- 
-2.1.0.27.g96db324
+Acked-by: Rob Herring <robh@kernel.org>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/clk/qcom/Kconfig                           |    9 +
+>  drivers/clk/qcom/Makefile                          |    1 +
+>  drivers/clk/qcom/gcc-msm8994.c                     | 2501 ++++++++++++++++++++
+>  5 files changed, 2658 insertions(+)
+>  create mode 100644 drivers/clk/qcom/gcc-msm8994.c
+>  create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8994.h
