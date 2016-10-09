@@ -1,42 +1,84 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] ARM: dts: am33xx: add DMA properties for tscadc
-Date: Sun, 9 Oct 2016 09:34:52 +0100
-Message-ID: <b8272b0e-3051-445b-865e-968d2dac1a9f@kernel.org>
-References: <20161005090443.24576-1-mugunthanvnm@ti.com>
- <20161005090443.24576-4-mugunthanvnm@ti.com>
+Subject: Re: [PATCH 2/4] staging: iio: isl29018: document device tree bindings
+Date: Sun, 9 Oct 2016 09:48:14 +0100
+Message-ID: <c7fe672e-3776-a738-91a2-249f7948d606@kernel.org>
+References: <1475801317-29449-1-git-send-email-masneyb@onstation.org>
+ <1475801317-29449-2-git-send-email-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161005090443.24576-4-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1475801317-29449-2-git-send-email-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, John Syne <john3909-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/10/16 10:04, Mugunthan V N wrote:
-> Add DMA properties for tscadc
+On 07/10/16 01:48, Brian Masney wrote:
+> Fix the following warnings from checkpatch:
 > 
-> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Do the binding docs need updating to reflect this?  I can't immediately
-find the relevant doc to check!
+> WARNING: DT compatible string "isil,isl29018" appears un-documented --
+> check ./Documentation/devicetree/bindings/
+> WARNING: DT compatible string "isil,isl29023" appears un-documented --
+> check ./Documentation/devicetree/bindings/
+> WARNING: DT compatible string "isil,isl29035" appears un-documented --
+> check ./Documentation/devicetree/bindings/
+> 
+> Signed-off-by: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+Device tree patches should always be cc'd to the device tree list and
+maintainers. (done above).
+
+As this is very simple I'm happy to take it without an Ack from
+them (though one would always be welcome and can be added for
+a week or so as I'm not pushing this out in a non rebasing tree yet).
+
+Applied to the togreg branch of iio.git - pushed out as testing for
+the autobuilders to play with it.
+
+Mark and Rob, just noticed we are down to just the two of you.
+Good luck guys and hope you find more assistance soon if you
+want it.
+
+Thanks,
 
 Jonathan
 > ---
->  arch/arm/boot/dts/am33xx.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
+>  .../devicetree/bindings/iio/light/isl29018.txt     | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.txt
 > 
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index 98748c6..6d607b8 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -917,6 +917,8 @@
->  			interrupts = <16>;
->  			ti,hwmods = "adc_tsc";
->  			status = "disabled";
-> +			dmas = <&edma 53 0>, <&edma 57 0>;
-> +			dma-names = "fifo0", "fifo1";
->  
->  			tsc {
->  				compatible = "ti,am3359-tsc";
+> diff --git a/Documentation/devicetree/bindings/iio/light/isl29018.txt b/Documentation/devicetree/bindings/iio/light/isl29018.txt
+> new file mode 100644
+> index 0000000..7e53524
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/isl29018.txt
+> @@ -0,0 +1,28 @@
+> +* ISL 29018/29023/29035 I2C ALS, Proximity, and Infrared sensor
+> +
+> +Required properties:
+> +
+> +  - compatible: Should be one of
+> +		"isil,isl29018"
+> +		"isil,isl29023"
+> +		"isil,isl29035"
+> +  - reg: the I2C address of the device
+> +
+> +Optional properties:
+> +
+> +  - interrupt-parent: should be the phandle for the interrupt controller
+> +  - interrupts: the sole interrupt generated by the device
+> +
+> +  Refer to interrupt-controller/interrupts.txt for generic interrupt client
+> +  node bindings.
+> +
+> +  - vcc-supply: phandle to the regulator that provides power to the sensor.
+> +
+> +Example:
+> +
+> +isl29018@44 {
+> +	compatible = "isil,isl29018";
+> +	reg = <0x44>;
+> +	interrupt-parent = <&gpio>;
+> +	interrupts = <TEGRA_GPIO(Z, 2) IRQ_TYPE_LEVEL_HIGH>;
+> +};
 > 
