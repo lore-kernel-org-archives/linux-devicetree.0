@@ -1,49 +1,46 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5] drm/fsl-dcu: Implement gamma_lut atomic crtc properties
-Date: Sat, 8 Oct 2016 20:28:22 -0500
-Message-ID: <20161009012822.GB18158@rob-hp-laptop>
-References: <1475051069-24452-1-git-send-email-meng.yi@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 05/12] ASoC: sun4i-codec: Add support for
+ A31 playback through headphone output
+Date: Sat, 8 Oct 2016 20:29:03 -0500
+Message-ID: <20161009012903.GN18158@rob-hp-laptop>
+References: <20161003110804.28235-1-wens@csie.org>
+ <20161003110804.28235-6-wens@csie.org>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJIP47K7MERBYN2427QKGQEGTQYPPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1475051069-24452-1-git-send-email-meng.yi@nxp.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Meng Yi <meng.yi@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+In-Reply-To: <20161003110804.28235-6-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBTZXAgMjgsIDIwMTYgYXQgMDQ6MjQ6MjlQTSArMDgwMCwgTWVuZyBZaSB3cm90ZToK
-PiBHYW1tYSBjb3JyZWN0aW9uIGlzIG9wdGlvbmFsIGFuZCBjYW4gYmUgdXNlZCB0byBhZGp1c3Qg
-dGhlIGNvbG9yCj4gb3V0cHV0IHZhbHVlcyB0byBtYXRjaCB0aGUgZ2FtdXQgb2YgYSBwYXJ0aWN1
-bGFyIFRGVCBMQ0QgcGFuZWwKPiAKPiBTcGxpdCB0aGUgRENVIHJlZ3MgaW50byAicmVncyIsICJw
-YWxldHRlIiwgImdhbW1hIiBhbmQgImN1cnNvciIuCj4gQ3JlYXRlIGEgc2Vjb25kIHJlZ21hcCBm
-b3IgZ2FtbWEgbWVtb3J5IHNwYWNlIHVzaW5nIGxpdHRsZSBlbmRpYW4uCj4gVGhlIHJlZ2lzdGVy
-cyBhZnRlciB0aGUgZmlyc3QgYWRkcmVzcyBzcGFjZSBhcmUgbm90IGFjY2Vzc2VkIHlldCwKPiBo
-ZW5jZSBuZXcgZGV2aWNlIHRyZWVzIHdvdWxkIGV2ZW4gd29yayB3aXRoIG9sZCBrZXJuZWxzLiBK
-dXN0IG5ldwo+IGtlcm5lbCBuZWVkIHRoZSBuZXcgZm9ybWF0IHNvIHdlIGNhbiBhY2Nlc3MgdGhl
-IHNlcGFyYXRlIGdhbW1hCj4gcmVnIHNwYWNlLgo+IAo+IFN1Z2dlc3RlZC1ieTogU3RlZmFuIEFn
-bmVyIDxzdGVmYW5AYWduZXIuY2g+Cj4gU2lnbmVkLW9mZi1ieTogTWVuZyBZaSA8bWVuZy55aUBu
-eHAuY29tPgo+IC0tLQo+IENoYW5nZXMgc2luY2UgVjE6Cj4gLWNyZWF0ZWQgYSBzZWNvbmQgcmVn
-bWFwIGZvciBnYW1tYQo+IC11cGRhdGVkIHRoZSBEQ1UgRFQgYmluZGluZwo+IC1yZW1vdmVkIEtj
-b25maWcgZm9yIGdhbW1hIGFuZCBlbmFibGUgZ2FtbWEgd2hlbiB2YWxpZCBkYXRhIGZpbGxlZC4K
-PiAtZXh0ZW5kZWQgYW5kIHNpbXBsaWZpZWQgY29tbWVudCBsaW5lcy4KPiAtLS0KPiAgLi4uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9mc2wsZGN1LnR4dCAgICAgICAgfCAxMiArKysrKysr
-LQoKQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cgo+ICBkcml2ZXJzL2dw
-dS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9jcnRjLmMgICAgICAgICB8IDMzICsrKysrKysrKysr
-KysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5jICAg
-ICAgICAgIHwgMzUgKysrKysrKysrKysrKysrKysrKysrLQo+ICBkcml2ZXJzL2dwdS9kcm0vZnNs
-LWRjdS9mc2xfZGN1X2RybV9kcnYuaCAgICAgICAgICB8ICA3ICsrKysrCj4gIDQgZmlsZXMgY2hh
-bmdlZCwgODUgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Mon, Oct 03, 2016 at 07:07:57PM +0800, Chen-Yu Tsai wrote:
+> The A31 has a similar codec to the A10/A20. The PCM parts are very
+> similar, with just different register offsets. The analog paths are
+> very different. There are more inputs and outputs.
+> 
+> The quirks structure is expanded to include different register offsets
+> and separate callbacks for creating the ASoC card. Also the DMA burst
+> length is increased to 8. While the A10 DMA engine supports bursts of
+> 1, 4 and 8, the A31 engine only supports 1 and 8.
+> 
+> This patch adds support for the basic playback path of the A31 codec,
+> from the DAC to the headphones. Headphone detection, microphone,
+> signaling, other inputs/outputs and capture will be added later.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  .../devicetree/bindings/sound/sun4i-codec.txt      |   6 +-
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  sound/soc/sunxi/sun4i-codec.c                      | 396 +++++++++++++++++----
+>  2 files changed, 334 insertions(+), 68 deletions(-)
