@@ -1,58 +1,74 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC 02/10] dt-bindings: interrupt-controller: add DT binding
- for meson GPIO interrupt controller
-Date: Sat, 8 Oct 2016 20:29:27 -0500
-Message-ID: <20161009012927.GV18158@rob-hp-laptop>
-References: <1475593708-10526-1-git-send-email-jbrunet@baylibre.com>
- <1475593708-10526-3-git-send-email-jbrunet@baylibre.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 1/3] Documentation: dt: net: add ath9k wireless device
+ binding
+Date: Sat, 8 Oct 2016 20:28:56 -0500
+Message-ID: <20161009012856.GK18158@rob-hp-laptop>
+References: <20160906214623.20424-1-martin.blumenstingl@googlemail.com>
+ <20161002214743.2263-1-martin.blumenstingl@googlemail.com>
+ <20161002214743.2263-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1475593708-10526-3-git-send-email-jbrunet@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Kevin Hilman <khilman@baylibre.com>, linux-gpio@vger.kernel.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20161002214743.2263-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn-yOkvZcmFvRU@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBPY3QgMDQsIDIwMTYgYXQgMDU6MDg6MjBQTSArMDIwMCwgSmVyb21lIEJydW5ldCB3
-cm90ZToKPiBUaGlzIGNvbW1pdCBhZGRzIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5ncyBkZXNjcmlw
-dGlvbiBmb3IgQW1sb2dpYydzIEdQSU8KPiBpbnRlcnJ1cHQgY29udHJvbGxlciBhdmFpbGFibGUg
-b24gdGhlIG1lc29uOCwgbWVzb244YiBhbmQgZ3hiYiBTb0MgZmFtaWxpZXMKPiAKPiBTaWduZWQt
-b2ZmLWJ5OiBKZXJvbWUgQnJ1bmV0IDxqYnJ1bmV0QGJheWxpYnJlLmNvbT4KPiAtLS0KPiAgLi4u
-L2FtbG9naWMsbWVzb24tZ3Bpby1pbnRjLnR4dCAgICAgICAgICAgICAgICAgICAgfCAzOSArKysr
-KysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzOSBpbnNlcnRpb25zKCspCj4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50
-ZXJydXB0LWNvbnRyb2xsZXIvYW1sb2dpYyxtZXNvbi1ncGlvLWludGMudHh0Cj4gCj4gZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJv
-bGxlci9hbWxvZ2ljLG1lc29uLWdwaW8taW50Yy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYW1sb2dpYyxtZXNvbi1ncGlvLWludGMu
-dHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmJkNGNjZWVm
-Y2RhMQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYW1sb2dpYyxtZXNvbi1ncGlvLWludGMudHh0Cj4g
-QEAgLTAsMCArMSwzOSBAQAo+ICtBbWxvZ2ljIG1lc29uIEdQSU8gaW50ZXJydXB0IGNvbnRyb2xs
-ZXIKPiArCj4gK01lc29uIFNvQ3MgY29udGFpbnMgYW4gaW50ZXJydXB0IGNvbnRyb2xsZXIgd2hp
-Y2ggaXMgYWJsZSB3YXRjaCB0aGUgU29DIHBhZHMKPiArYW5kIGdlbmVyYXRlIGFuIGludGVycnVw
-dCBvbiBlZGdlcyBvciBsZXZlbC4gVGhlIGNvbnRyb2xsZXIgaXMgZXNzZW50aWFsbHkgYQo+ICsy
-NTYgcGFkcyB0byA4IEdJQyBpbnRlcnJ1cHQgbXVsdGlwbGV4ZXIsIHdpdGggYSBmaWx0ZXIgYmxv
-Y2sgdG8gc2VsZWN0IGVkZ2UKPiArb3IgbGV2ZWwgYW5kIHBvbGFyaXR5LiBXZSBkb27igJl0IGV4
-cG9zZSBhbGwgMjU2IG11eCBpbnB1dHMgYmVjYXVzZSB0aGUKPiArZG9jdW1lbnRhdGlvbiBzaG93
-cyB0aGF0IHVwcGVyIHBhcnQgaXMgbm90IG1hcHBlZCB0byBhbnkgcGFkLiBUaGUgYWN0dWFsIG51
-bWJlcgo+ICtvZiBpbnRlcnJ1cHQgZXhwb3NlZCBkZXBlbmRzIG9uIHRoZSBTb0MuCj4gKwo+ICtS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICsKPiArLSBjb21wYXRpYmxlIDogc2hvdWxkIGJlOiAiYW1s
-b2dpYyxtZXNvbjgtZ3Bpby1pbnRj4oCdIG9yCj4gKyAg4oCcYW1sb2dpYyxtZXNvbjhiLWdwaW8t
-aW50Y+KAnSBvciDigJxhbWxvZ2ljLGd4YmItZ3Bpby1pbnRj4oCdCgpPbmUgcGVyIGxpbmUgcGxl
-YXNlIGlmIHlvdSByZXNwaW4gdGhlIHNlcmllcy4KCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9i
-aEBrZXJuZWwub3JnPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtYXJtLWtlcm5lbAo=
+On Sun, Oct 02, 2016 at 11:47:41PM +0200, Martin Blumenstingl wrote:
+> Add documentation how devicetree can be used to configure ath9k based
+> devices.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/wireless/qca,ath9k.txt | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+> new file mode 100644
+> index 0000000..9b58ede
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+> @@ -0,0 +1,30 @@
+> +* Qualcomm Atheros ath9k wireless devices
+> +
+> +This node provides properties for configuring the ath9k wireless device. The
+> +node is expected to be specified as a child node of the PCI controller to
+> +which the wireless chip is connected.
+> +
+> +Required properties:
+> +- compatible: For PCI and PCIe devices this should be an identifier following
+> +		the format as defined in "PCI Bus Binding to Open Firmware"
+> +		Revision 2.1. One of the possible formats is "pciVVVV,DDDD"
+> +		where VVVV is the PCI vendor ID and DDDD is PCI device ID.
+
+Are there some known values you can document here? Like the one in the 
+example.
+
+> +- reg: Address and length of the register set for the device.
+> +
+> +Optional properties:
+> +- qca,no-eeprom: Indicates that there is no physical EEPROM connected to the
+> +			ath9k wireless chip (in this case the calibration /
+> +			EEPROM data will be loaded from userspace using the
+> +			kernel firmware loader).
+> +- mac-address: See ethernet.txt in the parent directory
+> +- local-mac-address: See ethernet.txt in the parent directory
+> +
+> +
+> +In this example, the node is defined as child node of the PCI controller:
+> +&pci0 {
+> +	ath9k@168c,002d {
+
+wifi@...
+
+> +		compatible = "pci168c,002d";
+> +		reg = <0x7000 0 0 0 0x1000>;
+> +		qca,no-eeprom;
+> +	};
+> +};
+> -- 
+> 2.10.0
+> 
