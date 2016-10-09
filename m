@@ -1,84 +1,119 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] staging: iio: isl29018: document device tree bindings
-Date: Sun, 9 Oct 2016 09:48:14 +0100
-Message-ID: <c7fe672e-3776-a738-91a2-249f7948d606@kernel.org>
-References: <1475801317-29449-1-git-send-email-masneyb@onstation.org>
- <1475801317-29449-2-git-send-email-masneyb@onstation.org>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v7 2/2] clocksource: add J-Core timer/clocksource
+ driver
+Date: Sun, 9 Oct 2016 11:14:20 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1610091050500.5222@nanos>
+References: <4b02ba7d-4a31-297a-bbbd-be26da615e7b@linaro.org> <20160926222352.GE19318@brightrain.aerifal.cx> <alpine.DEB.2.20.1609261936130.4915@nanos> <20160927004258.GF19318@brightrain.aerifal.cx> <20160927220820.GH19318@brightrain.aerifal.cx>
+ <alpine.DEB.2.20.1609301319410.4799@nanos> <20161008013210.GX19318@brightrain.aerifal.cx> <alpine.DEB.2.20.1610081312190.5222@nanos> <20161008162614.GY19318@brightrain.aerifal.cx> <alpine.DEB.2.20.1610081827170.5222@nanos>
+ <20161009012810.GZ19318@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475801317-29449-2-git-send-email-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161009012810.GZ19318@brightrain.aerifal.cx>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/10/16 01:48, Brian Masney wrote:
-> Fix the following warnings from checkpatch:
+Rich,
+
+On Sat, 8 Oct 2016, Rich Felker wrote:
+> On Sat, Oct 08, 2016 at 07:03:30PM +0200, Thomas Gleixner wrote:
+> > Because you drop out the idle spin due to an interrupt, but no interrupt is
+> > handled according to the trace. You just go back to sleep and the trace is
+> > full of this behaviour.
 > 
-> WARNING: DT compatible string "isil,isl29018" appears un-documented --
-> check ./Documentation/devicetree/bindings/
-> WARNING: DT compatible string "isil,isl29023" appears un-documented --
-> check ./Documentation/devicetree/bindings/
-> WARNING: DT compatible string "isil,isl29035" appears un-documented --
-> check ./Documentation/devicetree/bindings/
+> Found the problem. IRQD_IRQ_INPROGRESS is causing the interrupt to be
+> ignored if the same interrupt is being handled on the other cpu.
+> Modifying the jcore aic driver to call handle_percpu_irq rather than
+> handle_simple_irq when the irq was registered as percpu solves the
+> problem, but I'm actually concerned that handle_simple_irq would also
+> be wrong in the case of non-percpu irqs if they could be delivered on
+> either core -- if another irq arrives after the driver is finished
+> checking for new device status, but before the IRQD_IRQ_INPROGRESS
+> flag is removed, it seems handle_simple_irq loses the irq. This is not
+> a problem for the current hardware since non-percpu irqs always arrive
+> on cpu0, but I'd rather improve the driver to properly handle possible
+> future hardware that allows irq delivery on any core.
+
+We guarantee no-rentrancy for the handlers. That's why we have special
+treatment for per cpu interrupts and edge type interrupts, where we mark
+the interrupt pending when it arrives before the in progress flag is
+cleared and then call the handler again when it returns. For level type
+interrupts this is not required because level is going to stay raised in
+the hardware.
+
+> > which is the wrong thing to do. You need request_percpu_irq() here, but of
+> > course with the irq chip you are using, which has every callback as a noop,
+> > it does not matter at all. So that's not an issue and not the reason for
+> > this wreckage.
 > 
-> Signed-off-by: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-Device tree patches should always be cc'd to the device tree list and
-maintainers. (done above).
+> Mentioning this was helpful to get me looking at the right things
+> tracking from the irq entry point to where the irq was lost/dropped,
+> so thanks for bringing it up.
 
-As this is very simple I'm happy to take it without an Ack from
-them (though one would always be welcome and can be added for
-a week or so as I'm not pushing this out in a non rebasing tree yet).
+Duh, forgot about reentrancy. I should have thought about it when staring
+at the traces. I noticed that the irq on the other cpu was handled exactly
+at the same point, but I did not make the connection. In all hte
+problematic cases there is this sequence:
 
-Applied to the togreg branch of iio.git - pushed out as testing for
-the autobuilders to play with it.
+          <idle>-0     [000] d.s.   150.861703: tick_irq_enter: update jiffies via irq
+          <idle>-0     [001] d.h.   150.861827: irq_handler_entry: irq=16 name=jcore_pit
 
-Mark and Rob, just noticed we are down to just the two of you.
-Good luck guys and hope you find more assistance soon if you
-want it.
+i.e. the handler on cpu1 is invoked before cpu0 has reached
+handle_simple_irq(). 
+
+> request_irq ends up working fine still because IRQF_PERCPU causes
+> __setup_irq to mark the irqdesc/irq_data as percpu, so that my handle
+> function can treat it differently. Here's the patch that has it working:
+ 
+> diff --git a/drivers/irqchip/irq-jcore-aic.c b/drivers/irqchip/irq-jcore-aic.c
+> index 5e5e3bb..b53a8a5 100644
+> --- a/drivers/irqchip/irq-jcore-aic.c
+> +++ b/drivers/irqchip/irq-jcore-aic.c
+> @@ -25,12 +25,20 @@
+>  
+>  static struct irq_chip jcore_aic;
+>  
+> +static void handle_jcore_irq(struct irq_desc *desc)
+> +{
+> +	if (irq_is_percpu(irq_desc_get_irq(desc)))
+> +		handle_percpu_irq(desc);
+> +	else
+> +		handle_simple_irq(desc);
+> +}
+> +
+>  static int jcore_aic_irqdomain_map(struct irq_domain *d, unsigned int irq,
+>  				   irq_hw_number_t hwirq)
+>  {
+>  	struct irq_chip *aic = d->host_data;
+>  
+> -	irq_set_chip_and_handler(irq, aic, handle_simple_irq);
+> +	irq_set_chip_and_handler(irq, aic, handle_jcore_irq);
+
+What you should do is:
+
+     	if (jcore_irq_per_cpu(hwirq))
+		irq_set_chip_and_handler(irq, aic, handle_percpu_irq);
+	else
+		irq_set_chip_and_handler(irq, aic, handle_simple_irq);
+	
+That avoids the conditional in the irq delivery path, which is overly
+expensive as you end up looking up the irq descriptor which you already
+have. You can avoid the lookup by using:
+
+      if (irqd_is_per_cpu(irq_desc_get_irq_data(desc)))
+
+but that's still a conditional in the hotpath which you can avoid entirely
+by setting up the proper handler when you map it.
+
+> Apologies for this big distraction for what was ultimately a driver
+> bug on my side. I was misled by the way it seemed to be a regression,
+> since the symptoms did not appear in earlier kernel versions for
+> whatever reason (likely just chance).
+
+No problem. Glad that I was able to help.
 
 Thanks,
 
-Jonathan
-> ---
->  .../devicetree/bindings/iio/light/isl29018.txt     | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/isl29018.txt b/Documentation/devicetree/bindings/iio/light/isl29018.txt
-> new file mode 100644
-> index 0000000..7e53524
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/isl29018.txt
-> @@ -0,0 +1,28 @@
-> +* ISL 29018/29023/29035 I2C ALS, Proximity, and Infrared sensor
-> +
-> +Required properties:
-> +
-> +  - compatible: Should be one of
-> +		"isil,isl29018"
-> +		"isil,isl29023"
-> +		"isil,isl29035"
-> +  - reg: the I2C address of the device
-> +
-> +Optional properties:
-> +
-> +  - interrupt-parent: should be the phandle for the interrupt controller
-> +  - interrupts: the sole interrupt generated by the device
-> +
-> +  Refer to interrupt-controller/interrupts.txt for generic interrupt client
-> +  node bindings.
-> +
-> +  - vcc-supply: phandle to the regulator that provides power to the sensor.
-> +
-> +Example:
-> +
-> +isl29018@44 {
-> +	compatible = "isil,isl29018";
-> +	reg = <0x44>;
-> +	interrupt-parent = <&gpio>;
-> +	interrupts = <TEGRA_GPIO(Z, 2) IRQ_TYPE_LEVEL_HIGH>;
-> +};
-> 
+	tglx
