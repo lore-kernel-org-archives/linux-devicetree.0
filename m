@@ -1,45 +1,80 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC V2 PATCH 05/12] msm8992: defconfig updates to support initrd
-Date: Sat, 8 Oct 2016 20:28:49 -0500
-Message-ID: <20161009012849.GH18158@rob-hp-laptop>
-References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
- <1475375919-618-6-git-send-email-jmcnicol@redhat.com>
+Subject: Re: [PATCH 3/3] net: smsc911x: add u16 workaround for pxa platforms
+Date: Sat, 8 Oct 2016 20:28:58 -0500
+Message-ID: <20161009012858.GL18158@rob-hp-laptop>
+References: <1475485553-18747-1-git-send-email-robert.jarzmik@free.fr>
+ <1475485553-18747-3-git-send-email-robert.jarzmik@free.fr>
+ <20161003154624.GG7632@leverpostej>
+ <20161003160913.GQ1041@n2100.armlinux.org.uk>
+ <20161003164228.GA15313@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1475375919-618-6-git-send-email-jmcnicol@redhat.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jeremy McNicoll <jmcnicol@redhat.com>
-Cc: andy.gross@linaro.org, sboyd@codeaurora.org, arnd@arndb.de, bjorn.andersson@linaro.org, git@kchr.de, jeremymc@redhat.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20161003164228.GA15313@leverpostej>
+Sender: netdev-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Robert Jarzmik <robert.jarzmik@free.fr>, Nicolas Pitre <nico@fluxnic.net>, Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 01, 2016 at 07:38:32PM -0700, Jeremy McNicoll wrote:
-> Given the mimimal hardware support for msm8992 currently enable
-> a reasonable sized initrd for booting.
+On Mon, Oct 03, 2016 at 05:42:29PM +0100, Mark Rutland wrote:
+> On Mon, Oct 03, 2016 at 05:09:13PM +0100, Russell King - ARM Linux wrote:
+> > Please note that the binding doc for smsc,lan91c111.txt is slightly wrong
+> > on two counts:
+> > 
+> > 1) compatible property:
+> > 
+> > compatible = "smsc,lan91c111";
+> > 
+> > vs the code:
+> > 
+> > static const struct of_device_id smc91x_match[] = {
+> >         { .compatible = "smsc,lan91c94", },
+> >         { .compatible = "smsc,lan91c111", },
+> >         {},
+> > };
+> > MODULE_DEVICE_TABLE(of, smc91x_match);
+> > 
+> > So the binding document needs to mention that smsc,lan91c94 is a valid
+> > compatible for this device.
 > 
-> Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
-> ---
->  arch/arm64/configs/defconfig | 3 +++
->  1 file changed, 3 insertions(+)
+> Yes, it should.
 > 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 26dc69a..d8dace3 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -21,6 +21,9 @@ CONFIG_CGROUP_HUGETLB=y
->  # CONFIG_NET_NS is not set
->  CONFIG_SCHED_AUTOGROUP=y
->  CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_BLK_DEV_RAM=y
+> > 2) reg-io-width property:
+> > 
+> > - reg-io-width : Mask of sizes (in bytes) of the IO accesses that
+> >   are supported on the device.  Valid value for SMSC LAN91c111 are
+> >   1, 2 or 4.  If it's omitted or invalid, the size would be 2 meaning
+> >   16-bit access only.
+>  
+> > Moreover, look at the property name vs the binding description.  It's
+> > property name says it's a width, but the description says it's a mask
+> > of sizes - these really aren't the same thing.  Once you start
+> > specifying these other legal masks, it makes a nonsense of the "width"
+> > part of the name.  It's too late to try and fix this now though.
+> 
+> Indeed, as-is this is nonsense. :(
+> 
+> The best we can do here is to add a big fat notice regarding the
+> misnaming; adding a new property is only giong to cause more confusion.
 
-I don't think this is needed. Isn't the option above here enough?
+Just fix the text here removing the mask part. This is a common property 
+and not a mask. The rest saying 1, 2, 4 being valid is correct. There 
+are no occurences using this as a mask in kernel dts files either.
 
-> +CONFIG_BLK_DEV_RAM_COUNT=y
-> +CONFIG_BLK_DEV_RAM_SIZE=16384
->  CONFIG_KALLSYMS_ALL=y
->  # CONFIG_COMPAT_BRK is not set
->  CONFIG_PROFILING=y
-> -- 
-> 2.6.1
 > 
+> > The binding document really needs to get fixed - I'll try to cook up a
+> > patch during this week to correct these points, but it probably needs
+> > coordination if others are going to be changing this as well.
+> 
+> Thanks for handling both of these.
+> 
+> Given the historical rate of change of the binding document, I suspect
+> the stuff for pxa platforms is going to be the only potential conflict.
+> 
+> Either all of that can go via the DT tree (independent of any new code),
+> or we can ack the whole lot and it can all go via the net tree in one
+> go.
+> 
+> Thanks,
+> Mark.
