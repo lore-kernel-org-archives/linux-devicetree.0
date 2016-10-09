@@ -1,84 +1,83 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] Documentation: dtb: lm87: Add hwmon binding
- documentation.
-Date: Sat, 8 Oct 2016 20:29:11 -0500
-Message-ID: <20161009012911.GQ18158@rob-hp-laptop>
-References: <20161004005123.2004-1-mahoda.ratnayaka@alliedtelesis.co.nz>
+From: Po Liu <po.liu-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v6 3/3] pci:add support aer/pme interrupts with none
+ MSI/MSI-X/INTx mode
+Date: Sun, 9 Oct 2016 02:47:36 +0000
+Message-ID: <VI1PR0401MB170914050D7ADE4E8FC96A0A92D80@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+References: <1473741659-17618-3-git-send-email-po.liu@nxp.com>
+ <1475226697-7709-1-git-send-email-po.liu@nxp.com>
+ <1475226697-7709-3-git-send-email-po.liu@nxp.com>
+ <20161008204959.GA17455@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161004005123.2004-1-mahoda.ratnayaka-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+In-Reply-To: <20161008204959.GA17455@rob-hp-laptop>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mahoda Ratnayaka <mahoda.ratnayaka-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Roy Zang <roy.zang-3arQi8VN3Tc@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "M.H. Lian" <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 04, 2016 at 01:51:23PM +1300, Mahoda Ratnayaka wrote:
-> This patch adds lm87 hwmon device tree node documentation.
-> 
-> Signed-off-by: Mahoda Ratnayaka <mahoda.ratnayaka-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-> ---
-> 
-> Notes:
->     Changes since v1:
->      As suggested include all the changes are moved in
->      to the same patch and the all the optional properties
->      are now defined instead of using a single variable to
->      indicate those properties.
-> 
->  Documentation/devicetree/bindings/hwmon/lm87.txt | 29 ++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/lm87.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/lm87.txt b/Documentation/devicetree/bindings/hwmon/lm87.txt
-> new file mode 100644
-> index 0000000..ac578fff
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/lm87.txt
-> @@ -0,0 +1,29 @@
-> +*LM87 hwmon sensor.
-> +
-> +Required properties:
-> +- compatible: Should be
-> +	"ti,lm87"
-> +
-> +- reg: I2C address
-> +
-> +optional properties:
-> +- has-temp3: This configures pins 18 and 19 to be used as a second
-> +             remote temperature sensing channel. By default the pins
-> +             are configured as voltage input pins in0 and in5.
-> +
-> +- has-in6: When set, pin 5 is configured to be used as voltage input
-> +           in6. Otherwise the pin is set as FAN1 input.
-> +
-> +- has-in7: When set, pin 6 is configured to be used as voltage input
-> +           in6. Otherwise the pin is set as FAN2 input.
-
-Should be in7 ^^^?
-
-These need vendor prefixes. Or would they apply for multiple vendors of 
-LM87?
-
-> +
-> +- has-vcc-5v: sets the nominal voltage for internal VCC measurement to 5V.
-> +              Default is 3.3V.
-
-This is set to what the supply voltage is? If so, use the regulator 
-binding.
-
-> +
-> +Example:
-> +
-> +lm87@2e {
-> +	compatible = "ti,lm87";
-> +	reg = <0x2e>;
-> +	has-temp3;
-> +};
-> -- 
-> 2.10.0
-> 
+SGkgUm9iLA0KDQpCZXN0IHJlZ2FyZHMsDQpMaXUgUG8NCg0KPiAgLS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0NCj4gIEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0K
+PiAgU2VudDogU3VuZGF5LCBPY3RvYmVyIDA5LCAyMDE2IDQ6NTAgQU0NCj4gIFRvOiBQbyBMaXUN
+Cj4gIENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmc7DQo+ICBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZzsgQmpvcm4gSGVsZ2FhczsNCj4gIFNoYXduIEd1bzsgTWFyYyBa
+eW5naWVyOyBSb3kgWmFuZzsgTWluZ2thaSBIdTsgU3R1YXJ0IFlvZGVyOyBMZW8gTGk7DQo+ICBB
+cm5kIEJlcmdtYW5uOyBNLkguIExpYW47IE11cmFsaSBLYXJpY2hlcmkNCj4gIFN1YmplY3Q6IFJl
+OiBbUEFUQ0ggdjYgMy8zXSBwY2k6YWRkIHN1cHBvcnQgYWVyL3BtZSBpbnRlcnJ1cHRzIHdpdGgg
+bm9uZQ0KPiAgTVNJL01TSS1YL0lOVHggbW9kZQ0KPiAgDQo+ICBPbiBGcmksIFNlcCAzMCwgMjAx
+NiBhdCAwNToxMTozN1BNICswODAwLCBQbyBMaXUgd3JvdGU6DQo+ICA+IE9uIHNvbWUgcGxhdGZv
+cm1zLCByb290IHBvcnQgZG9lc24ndCBzdXBwb3J0IE1TSS9NU0ktWC9JTlR4IGluIFJDIG1vZGUu
+DQo+ICA+IFdoZW4gY2hpcCBzdXBwb3J0IHRoZSBhZXIvcG1lIGludGVycnVwdHMgd2l0aCBub25l
+IE1TSS9NU0ktWC9JTlR4DQo+ICA+IG1vZGUsIG1heWJlIHRoZXJlIGlzIGludGVycnVwdCBsaW5l
+IGZvciBhZXIgcG1lIGV0Yy4gU2VhcmNoIHRoZQ0KPiAgPiBpbnRlcnJ1cHQgbnVtYmVyIGluIHRo
+ZSBmZHQgZmlsZS4gVGhlbiBmaXh1cCB0aGUgZGV2LT5pcnEgd2l0aCBpdC4NCj4gIA0KPiAgQWdh
+aW4sIGV4cGxhaW4gd2h5IHlvdSBhcmUgYnJlYWtpbmcgY29tcGF0aWJpbGl0eS4gV2lsbCBhbiBv
+bGQgZHRiIHVzaW5nDQo+ICAiaW50ciIgc3RpbGwgd29yayB3aXRoIHRoaXMgY2hhbmdlPyBJdCBz
+aG91bGQgbm9ybWFsbHkuIFRoZXJlIGFyZSBzb21lDQo+ICBleGNlcHRpb25zLCBidXQgeW91IG5l
+ZWQgdG8gc2F5IHdoYXQgdGhleSBhcmUuDQo+ICANCk9rLCB1bmRlcnN0YW5kLg0KDQo+ICA+DQo+
+ICA+IFNpZ25lZC1vZmYtYnk6IFBvIExpdSA8cG8ubGl1QG54cC5jb20+DQo+ICA+IC0tLQ0KPiAg
+PiBjaGFuZ2VzIGZvciB2NjoNCj4gID4gCS0gbW9kaWZ5IGJpbmRpbmdzIGZvciAiYWVyIiJwbWUi
+Ow0KPiAgPiAJLSBjaGFuZ2luZyB0byB0aGUgaG9vZCBtZXRob2QgdG8gaW1wbGVtZW50IHRoZSBh
+ZXIgcG1lIGludGVycnVwdDsNCj4gID4gCS0gYWRkIHBtZSBpbnRlcnJ1cHQgaW4gdGhlIHNhbWUg
+d2F5Ow0KPiAgPg0KPiAgPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUt
+cGNpLnR4dCAgICAgfCAxMyArKysrKy0tDQo+ICA+ICBhcmNoL2FybS9rZXJuZWwvYmlvczMyLmMg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB8IDQzDQo+ICArKysrKysrKysrKysrKysrKysrKysr
+DQo+ICA+ICBhcmNoL2FybTY0L2tlcm5lbC9wY2kuYyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB8IDQzDQo+ICArKysrKysrKysrKysrKysrKysrKysrDQo+ICA+ICBkcml2ZXJzL3BjaS9wY2ll
+L3BvcnRkcnZfY29yZS5jICAgICAgICAgICAgICAgICAgICB8IDMxDQo+ICArKysrKysrKysrKysr
+KystDQo+ICA+ICBpbmNsdWRlL2xpbnV4L3BjaS5oICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB8ICAxICsNCj4gID4gIDUgZmlsZXMgY2hhbmdlZCwgMTI2IGluc2VydGlvbnMoKyksIDUg
+ZGVsZXRpb25zKC0pDQo+ICA+DQo+ICA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLnR4dA0KPiAgPiBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+ICA+IGluZGV4
+IDQxZTlmNTUuLjUxZWQ0OWUgMTAwNjQ0DQo+ICA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+ICA+ICsrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+ICA+IEBA
+IC0xOCw4ICsxOCwxMiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAgPiAgLSByZWc6IGJhc2Ug
+YWRkcmVzc2VzIGFuZCBsZW5ndGhzIG9mIHRoZSBQQ0llIGNvbnRyb2xsZXINCj4gID4gIC0gaW50
+ZXJydXB0czogQSBsaXN0IG9mIGludGVycnVwdCBvdXRwdXRzIG9mIHRoZSBjb250cm9sbGVyLiBN
+dXN0DQo+ICBjb250YWluIGFuDQo+ICA+ICAgIGVudHJ5IGZvciBlYWNoIGVudHJ5IGluIHRoZSBp
+bnRlcnJ1cHQtbmFtZXMgcHJvcGVydHkuDQo+ICA+IC0tIGludGVycnVwdC1uYW1lczogTXVzdCBp
+bmNsdWRlIHRoZSBmb2xsb3dpbmcgZW50cmllczoNCj4gID4gLSAgImludHIiOiBUaGUgaW50ZXJy
+dXB0IHRoYXQgaXMgYXNzZXJ0ZWQgZm9yIGNvbnRyb2xsZXIgaW50ZXJydXB0cw0KPiAgPiArLSBp
+bnRlcnJ1cHQtbmFtZXM6IEl0IGNvdWxkIGluY2x1ZGUgdGhlIGZvbGxvd2luZyBlbnRyaWVzOg0K
+PiAgDQo+ICAiQ291bGQiIGlzIG5vdCBzdHJvbmcgZW5vdWdoLiBFdmVyeSB2YWxpZCBjb21iaW5h
+dGlvbiBvZiBpbnRlcnJ1cHRzDQo+ICBzaG91bGQgY29ycmVzcG9uZCB0byBhIHNwZWNpZmljIGNv
+bXBhdGlibGUgc3RyaW5nLiBBIGdpdmVuIHZlcnNpb24gb2YNCj4gIGgvdyBlaXRoZXIgaGFzIHRo
+ZXNlIGludGVycnVwdHMgb3Igbm90Lg0KDQpPaywgd2lsbCBjaGFuZ2UgdG8gJ211c3QnLg0KDQo+
+ICANCj4gID4gKyAgImFlciI6IEFzc2VydGVkIGZvciBhZXIgaW50ZXJydXB0IHdoZW4gY2hpcCBz
+dXBwb3J0IHRoZSBhZXINCj4gIGludGVycnVwdCB3aXRoDQo+ICA+ICsJCSBub25lIE1TSS9NU0kt
+WC9JTlR4IG1vZGUsYnV0IHRoZXJlIGlzIGludGVycnVwdCBsaW5lIGZvcg0KPiAgYWVyLg0KPiAg
+PiArICAicG1lIjogQXNzZXJ0ZWQgZm9yIHBtZSBpbnRlcnJ1cHQgd2hlbiBjaGlwIHN1cHBvcnQg
+dGhlIHBtZQ0KPiAgaW50ZXJydXB0IHdpdGgNCj4gID4gKwkJIG5vbmUgTVNJL01TSS1YL0lOVHgg
+bW9kZSxidXQgdGhlcmUgaXMgaW50ZXJydXB0IGxpbmUgZm9yDQo+ICBwbWUuDQo+ICA+ICsgIC4u
+Li4uLg0KPiAgPiAgLSBmc2wscGNpZS1zY2ZnOiBNdXN0IGluY2x1ZGUgdHdvIGVudHJpZXMuDQo+
+ICA+ICAgIFRoZSBmaXJzdCBlbnRyeSBtdXN0IGJlIGEgbGluayB0byB0aGUgU0NGRyBkZXZpY2Ug
+bm9kZQ0KPiAgPiAgICBUaGUgc2Vjb25kIGVudHJ5IG11c3QgYmUgJzAnIG9yICcxJyBiYXNlZCBv
+biBwaHlzaWNhbCBQQ0llDQo+ICBjb250cm9sbGVyIGluZGV4Lg0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
