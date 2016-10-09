@@ -1,37 +1,48 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: display: Add Sharp LQ150X1LG11 panel
- binding
-Date: Sat, 8 Oct 2016 20:29:36 -0500
-Message-ID: <20161009012936.GX18158@rob-hp-laptop>
-References: <1475594961-5713-1-git-send-email-peda@axentia.se>
- <1475594961-5713-2-git-send-email-peda@axentia.se>
+Subject: Re: [PATCH 3/3] dt-bindings: oxnas: Update Pinctrl and GPIO for
+ OX820 Support
+Date: Sat, 8 Oct 2016 20:29:24 -0500
+Message-ID: <20161009012924.GU18158@rob-hp-laptop>
+References: <20161004134148.23028-1-narmstrong@baylibre.com>
+ <20161004134148.23028-4-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1475594961-5713-2-git-send-email-peda@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+In-Reply-To: <20161004134148.23028-4-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: gnurou@gmail.com, devicetree@vger.kernel.org, linux-oxnas@lists.tuxfamily.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBPY3QgMDQsIDIwMTYgYXQgMDU6Mjk6MjBQTSArMDIwMCwgUGV0ZXIgUm9zaW4gd3Jv
-dGU6Cj4gVGhlIFNoYXJwIDE1IiBMUTE1MFgxTEcxMSBwYW5lbCBpcyBhbiBYR0EgVEZUIExDRCBw
-YW5lbC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlhLnNlPgo+
-IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFycCxscTE1MHgxbGcxMS50eHQg
-ICB8IDM2ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDM2IGluc2Vy
-dGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMTUweDFsZzExLnR4dAoKQWNrZWQtYnk6IFJv
-YiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, Oct 04, 2016 at 03:41:48PM +0200, Neil Armstrong wrote:
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio_oxnas.txt       | 2 +-
+>  Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+> index 928ed4f..9665147 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+> @@ -3,7 +3,7 @@
+>  Please refer to gpio.txt for generic information regarding GPIO bindings.
+>  
+>  Required properties:
+> - - compatible: "oxsemi,ox810se-gpio"
+> + - compatible: "oxsemi,ox810se-gpio" or "oxsemi,ox820-gpio"
+
+It is preferred to have one per line, but it's fine unless you respin 
+the series.
+
+Acked-by: Rob Herring <robh@kernel.org>
