@@ -1,75 +1,304 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: add bindings doc for ZTE VOU display
- controller
-Date: Sun, 9 Oct 2016 15:49:10 +0800
-Message-ID: <20161009074910.GA15400@tiger>
-References: <1474727185-24180-1-git-send-email-shawn.guo@linaro.org>
- <1474727185-24180-2-git-send-email-shawn.guo@linaro.org>
- <20161003174429.GA26054@rob-hp-laptop>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] drivers: iio: ti_am335x_adc: add dma support
+Date: Sun, 9 Oct 2016 09:30:39 +0100
+Message-ID: <d0105217-a8ee-cd8e-221d-34c19257765e@kernel.org>
+References: <20161005090443.24576-1-mugunthanvnm@ti.com>
+ <20161005090443.24576-3-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20161003174429.GA26054@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, Baoyou Xie <xie.baoyou@zte.com.cn>, dri-devel@lists.freedesktop.org, Jun Nie <jun.nie@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161005090443.24576-3-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, John Syne <john3909-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBPY3QgMDMsIDIwMTYgYXQgMTI6NDQ6MjlQTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3Jv
-dGU6Cj4gPiArRXhhbXBsZToKPiA+ICsKPiA+ICt2b3U6IHZvdUAxNDQwMDAwIHsKPiA+ICsJY29t
-cGF0aWJsZSA9ICJ6dGUsengyOTY3MTgtdm91IjsKPiA+ICsJI2FkZHJlc3MtY2VsbHMgPSA8MT47
-Cj4gPiArCSNzaXplLWNlbGxzID0gPDE+Owo+ID4gKwlyZWcgPSA8MHgxNDQwMDAwIDB4MTAwMDA+
-Owo+ID4gKwlyYW5nZXM7Cj4gCj4gWW91IHN0aWxsIGhhdmUgb3ZlcmxhcHBpbmcgYWRkcmVzc2Vz
-LiBFeHBsaWNpdGx5IGxpc3QgdGhlIHN1YiByYW5nZXMgaW4gCj4gcmVnIGhlcmUgdXNlZCBieSB0
-aGUgVk9VIGRyaXZlciBpZiB0aGUgZHJpdmVyIHVzYWdlIGRvZXNuJ3Qgb3ZlcmxhcC4gSWYgCj4g
-dGhlcmUgaXMgb3ZlcmxhcCAoMiBkcml2ZXJzIGFjY2Vzc2luZyB0aGUgc2FtZSByYW5nZSksIHRo
-ZW4geW91IG5lZWQgCj4gc29tZSBBUElzIGJldHdlZW4gdGhlIGNvbXBvbmVudHMgKG9yIHBvc3Np
-Ymx5IHJlZ21hcCkuCgpUaGUgZHJpdmVyIG1hdGNoaW5nICJ6dGUsengyOTY3MTgtdm91IiBkb2Vz
-bid0IG1hcCBvciBhY2Nlc3MgdGhlIGFueQoncmVnJyBhZGRyZXNzLiAgVGhlICdyZWcnIHByb3Bl
-cnR5IGhlcmUgaXMgbW9yZSBsaWtlIGEgaGludCB0ZWxsaW5nCnRoYXQgdGhlIFZPVSBibG9jayBj
-b3ZlcnMgdGhlIGFkZHJlc3Mgc3BhY2Ugb2YgYWxsIGNoaWxkIGRldmljZXMuCgpJIHdpbGwgc2lt
-cGx5IGRyb3AgdGhlICdyZWcnIHByb3BlcnR5IGhlcmUuCgo+IEFsc28sIGRvbid0IGRvIGFuIGVt
-cHR5IHJhbmdlcyBoZXJlLiBGaWxsIGl0IGluIHNvIHRoZSBjaGlsZCBub2RlcyBhcmUgCj4ganVz
-dCBvZmZzZXRzIG9mIDB4MTQ0MDAwMAoKT2theS4gIEkgdGhvdWdodCB0aGF0IGVtcHR5ICdyYW5n
-ZXMnIGlzIGZpbmUgYXMgbG9uZyBhcyBwYXJlbnQgYW5kIGNoaWxkCmFkZHJlc3Mgc3BhY2VzIGFy
-ZSBpZGVudGljYWwgKDE6MSBtYXBwaW5nKS4KClNvIHdpdGggeW91ciBzdWdnZXN0aW9uLCBJIG1h
-ZGUgdGhlIGNoYW5nZXMgYmVsb3cuICBMZXQgbWUga25vdyBpZiB0aGlzCmlzIHN0aWxsIG5vdCB3
-aGF0IHlvdSBhcmUgYXNraW5nIGZvci4KClNoYXduCgotLS0tLTg8LS0tLS0tLS0tLS0tLS0tLS0K
-CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS96
-dGUsdm91LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3p0
-ZSx2b3UudHh0CmluZGV4IGQwM2JhNGM0ODEwYy4uNmJiNGFiMjUxN2VmIDEwMDY0NAotLS0gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS96dGUsdm91LnR4dAorKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS96dGUsdm91LnR4dApA
-QCAtNTYsMTQgKzU2LDEzIEBAIHZvdTogdm91QDE0NDAwMDAgewogICAgICAgIGNvbXBhdGlibGUg
-PSAienRlLHp4Mjk2NzE4LXZvdSI7CiAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47CiAgICAg
-ICAgI3NpemUtY2VsbHMgPSA8MT47Ci0gICAgICAgcmVnID0gPDB4MTQ0MDAwMCAweDEwMDAwPjsK
-LSAgICAgICByYW5nZXM7CisgICAgICAgcmFuZ2VzID0gPDAgMHgxNDQwMDAwIDB4MTAwMDA+Owog
-Ci0gICAgICAgZHBjOiBkcGNAMTQ0MDAwMCB7CisgICAgICAgZHBjOiBkcGNAMCB7CiAgICAgICAg
-ICAgICAgICBjb21wYXRpYmxlID0gInp0ZSx6eDI5NjcxOC1kcGMiOwotICAgICAgICAgICAgICAg
-cmVnID0gPDB4MTQ0MDAwMCAweDEwMDA+LCA8MHgxNDQxMDAwIDB4MTAwMD4sCi0gICAgICAgICAg
-ICAgICAgICAgICA8MHgxNDQ1MDAwIDB4MTAwMD4sIDwweDE0NDYwMDAgMHgxMDAwPiwKLSAgICAg
-ICAgICAgICAgICAgICAgIDwweDE0NGEwMDAgMHgxMDAwPjsKKyAgICAgICAgICAgICAgIHJlZyA9
-IDwweDAwMDAgMHgxMDAwPiwgPDB4MTAwMCAweDEwMDA+LAorICAgICAgICAgICAgICAgICAgICAg
-PDB4NTAwMCAweDEwMDA+LCA8MHg2MDAwIDB4MTAwMD4sCisgICAgICAgICAgICAgICAgICAgICA8
-MHhhMDAwIDB4MTAwMD47CiAgICAgICAgICAgICAgICByZWctbmFtZXMgPSAib3NkIiwgInRpbWlu
-Z19jdHJsIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJkdHJjIiwgInZvdV9jdHJsIiwK
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICJvdGZwcHUiOwpAQCAtNzQsOSArNzMsOSBAQCB2
-b3U6IHZvdUAxNDQwMDAwIHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIm1haW5fd2Ns
-ayIsICJhdXhfd2NsayI7CiAgICAgICAgfTsKIAotICAgICAgIGhkbWk6IGhkbWlAMTQ0YzAwMCB7
-CisgICAgICAgaGRtaTogaGRtaUBjMDAwIHsKICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAi
-enRlLHp4Mjk2NzE4LWhkbWkiOwotICAgICAgICAgICAgICAgcmVnID0gPDB4MTQ0YzAwMCAweDQw
-MDA+OworICAgICAgICAgICAgICAgcmVnID0gPDB4YzAwMCAweDQwMDA+OwogICAgICAgICAgICAg
-ICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDgyIElSUV9UWVBFX0VER0VfUklTSU5HPjsKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 05/10/16 10:04, Mugunthan V N wrote:
+> This patch adds the required pieces to ti_am335x_adc driver for
+> DMA support
+> 
+> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Hi,
+
+Just the one question inline.  I'll also need an Ack from Lee as
+this touches code in mfd (as does the previous patch).
+We have obviously missed this merge window, so no particular rush.
+
+Otherwise, looking very nice indeed.  Got to get my BBB out and play
+with this now ;)
+
+Jonathan
+> ---
+>  drivers/iio/adc/ti_am335x_adc.c      | 148 ++++++++++++++++++++++++++++++++++-
+>  include/linux/mfd/ti_am335x_tscadc.h |   7 ++
+>  2 files changed, 152 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ti_am335x_adc.c b/drivers/iio/adc/ti_am335x_adc.c
+> index c3cfacca..ad9dec3 100644
+> --- a/drivers/iio/adc/ti_am335x_adc.c
+> +++ b/drivers/iio/adc/ti_am335x_adc.c
+> @@ -30,10 +30,28 @@
+>  #include <linux/iio/buffer.h>
+>  #include <linux/iio/kfifo_buf.h>
+>  
+> +#include <linux/dmaengine.h>
+> +#include <linux/dma-mapping.h>
+> +
+> +#define DMA_BUFFER_SIZE		SZ_2K
+> +
+> +struct tiadc_dma {
+> +	struct dma_slave_config	conf;
+> +	struct dma_chan		*chan;
+> +	dma_addr_t		addr;
+> +	dma_cookie_t		cookie;
+> +	u8			*buf;
+> +	int			current_period;
+> +	int			period_size;
+> +	u8			fifo_thresh;
+> +};
+> +
+>  struct tiadc_device {
+>  	struct ti_tscadc_dev *mfd_tscadc;
+> +	struct tiadc_dma dma;
+>  	struct mutex fifo1_lock; /* to protect fifo access */
+>  	int channels;
+> +	int total_ch_enabled;
+>  	u8 channel_line[8];
+>  	u8 channel_step[8];
+>  	int buffer_en_ch_steps;
+> @@ -198,6 +216,67 @@ static irqreturn_t tiadc_worker_h(int irq, void *private)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static void tiadc_dma_rx_complete(void *param)
+> +{
+> +	struct iio_dev *indio_dev = param;
+> +	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+> +	struct tiadc_dma *dma = &adc_dev->dma;
+> +	u8 *data;
+> +	int i;
+> +
+> +	data = dma->buf + dma->current_period * dma->period_size;
+> +	dma->current_period = 1 - dma->current_period; /* swap the buffer ID */
+> +
+> +	for (i = 0; i < dma->period_size; i += indio_dev->scan_bytes) {
+> +		iio_push_to_buffers(indio_dev, data);
+> +		data += indio_dev->scan_bytes;
+> +	}
+Hmm. Another case for the mooted iio_push_to_buffers_multi. Guess
+we should move on with that one ;)
+> +}
+> +
+> +static int tiadc_start_dma(struct iio_dev *indio_dev)
+> +{
+> +	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+> +	struct tiadc_dma *dma = &adc_dev->dma;
+> +	struct dma_async_tx_descriptor *desc;
+> +
+> +	dma->current_period = 0; /* We start to fill period 0 */
+> +	/*
+> +	 * Make the fifo thresh as the multiple of total number of
+> +	 * channels enabled, so make sure that cyclic DMA period
+> +	 * length is also a multiple of total number of channels
+> +	 * enabled. This ensures that no invalid data is reported
+> +	 * to the stack via iio_push_to_buffers().
+> +	 */
+> +	dma->fifo_thresh = rounddown(FIFO1_THRESHOLD + 1,
+> +				     adc_dev->total_ch_enabled) - 1;
+> +	/* Make sure that period length is multiple of fifo thresh level */
+> +	dma->period_size = rounddown(DMA_BUFFER_SIZE / 2,
+> +				    (dma->fifo_thresh + 1) * sizeof(u16));
+> +
+> +	dma->conf.src_maxburst = dma->fifo_thresh + 1;
+> +	dmaengine_slave_config(dma->chan, &dma->conf);
+> +
+> +	desc = dmaengine_prep_dma_cyclic(dma->chan, dma->addr,
+> +					 dma->period_size * 2,
+> +					 dma->period_size, DMA_DEV_TO_MEM,
+> +					 DMA_PREP_INTERRUPT);
+> +	if (!desc)
+> +		return -EBUSY;
+> +
+> +	desc->callback = tiadc_dma_rx_complete;
+> +	desc->callback_param = indio_dev;
+> +
+> +	dma->cookie = dmaengine_submit(desc);
+> +
+> +	dma_async_issue_pending(dma->chan);
+> +
+> +	tiadc_writel(adc_dev, REG_FIFO1THR, dma->fifo_thresh);
+> +	tiadc_writel(adc_dev, REG_DMA1REQ, dma->fifo_thresh);
+> +	tiadc_writel(adc_dev, REG_DMAENABLE_SET, DMA_FIFO1);
+> +
+> +	return 0;
+> +}
+> +
+>  static int tiadc_buffer_preenable(struct iio_dev *indio_dev)
+>  {
+>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+> @@ -218,20 +297,30 @@ static int tiadc_buffer_preenable(struct iio_dev *indio_dev)
+>  static int tiadc_buffer_postenable(struct iio_dev *indio_dev)
+>  {
+>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+> +	struct tiadc_dma *dma = &adc_dev->dma;
+> +	unsigned int irq_enable;
+>  	unsigned int enb = 0;
+>  	u8 bit;
+>  
+>  	tiadc_step_config(indio_dev);
+> -	for_each_set_bit(bit, indio_dev->active_scan_mask, adc_dev->channels)
+> +	for_each_set_bit(bit, indio_dev->active_scan_mask, adc_dev->channels) {
+>  		enb |= (get_adc_step_bit(adc_dev, bit) << 1);
+> +		adc_dev->total_ch_enabled++;
+> +	}
+>  	adc_dev->buffer_en_ch_steps = enb;
+>  
+> +	if (dma->chan)
+> +		tiadc_start_dma(indio_dev);
+> +
+>  	am335x_tsc_se_set_cache(adc_dev->mfd_tscadc, enb);
+>  
+>  	tiadc_writel(adc_dev,  REG_IRQSTATUS, IRQENB_FIFO1THRES
+>  				| IRQENB_FIFO1OVRRUN | IRQENB_FIFO1UNDRFLW);
+> -	tiadc_writel(adc_dev,  REG_IRQENABLE, IRQENB_FIFO1THRES
+> -				| IRQENB_FIFO1OVRRUN);
+> +
+> +	irq_enable = IRQENB_FIFO1OVRRUN;
+> +	if (!dma->chan)
+> +		irq_enable |= IRQENB_FIFO1THRES;
+This changes the non dma behaviour as we no longer set IRQENB_FIFO1THRES.
+Why?  Was it wrong before?
+> +	tiadc_writel(adc_dev,  REG_IRQENABLE, irq_enable);
+>  
+>  	return 0;
+>  }
+> @@ -239,12 +328,18 @@ static int tiadc_buffer_postenable(struct iio_dev *indio_dev)
+>  static int tiadc_buffer_predisable(struct iio_dev *indio_dev)
+>  {
+>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+> +	struct tiadc_dma *dma = &adc_dev->dma;
+>  	int fifo1count, i, read;
+>  
+>  	tiadc_writel(adc_dev, REG_IRQCLR, (IRQENB_FIFO1THRES |
+>  				IRQENB_FIFO1OVRRUN | IRQENB_FIFO1UNDRFLW));
+>  	am335x_tsc_se_clr(adc_dev->mfd_tscadc, adc_dev->buffer_en_ch_steps);
+>  	adc_dev->buffer_en_ch_steps = 0;
+> +	adc_dev->total_ch_enabled = 0;
+> +	if (dma->chan) {
+> +		tiadc_writel(adc_dev, REG_DMAENABLE_CLEAR, 0x2);
+> +		dmaengine_terminate_async(dma->chan);
+> +	}
+>  
+>  	/* Flush FIFO of leftover data in the time it takes to disable adc */
+>  	fifo1count = tiadc_readl(adc_dev, REG_FIFO1CNT);
+> @@ -430,6 +525,41 @@ static const struct iio_info tiadc_info = {
+>  	.driver_module = THIS_MODULE,
+>  };
+>  
+> +static int tiadc_request_dma(struct platform_device *pdev,
+> +			     struct tiadc_device *adc_dev)
+> +{
+> +	struct tiadc_dma	*dma = &adc_dev->dma;
+> +	dma_cap_mask_t		mask;
+> +
+> +	/* Default slave configuration parameters */
+> +	dma->conf.direction = DMA_DEV_TO_MEM;
+> +	dma->conf.src_addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
+> +	dma->conf.src_addr = adc_dev->mfd_tscadc->tscadc_phys_base + REG_FIFO1;
+> +
+> +	dma_cap_zero(mask);
+> +	dma_cap_set(DMA_CYCLIC, mask);
+> +
+> +	/* Get a channel for RX */
+> +	dma->chan = dma_request_chan(adc_dev->mfd_tscadc->dev, "fifo1");
+> +	if (IS_ERR(dma->chan)) {
+> +		int ret = PTR_ERR(dma->chan);
+> +
+> +		dma->chan = NULL;
+> +		return ret;
+> +	}
+> +
+> +	/* RX buffer */
+> +	dma->buf = dma_alloc_coherent(dma->chan->device->dev, DMA_BUFFER_SIZE,
+> +				      &dma->addr, GFP_KERNEL);
+> +	if (!dma->buf)
+> +		goto err;
+> +
+> +	return 0;
+> +err:
+> +	dma_release_channel(dma->chan);
+> +	return -ENOMEM;
+> +}
+> +
+>  static int tiadc_parse_dt(struct platform_device *pdev,
+>  			  struct tiadc_device *adc_dev)
+>  {
+> @@ -512,8 +642,14 @@ static int tiadc_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, indio_dev);
+>  
+> +	err = tiadc_request_dma(pdev, adc_dev);
+> +	if (err && err == -EPROBE_DEFER)
+> +		goto err_dma;
+> +
+>  	return 0;
+>  
+> +err_dma:
+> +	iio_device_unregister(indio_dev);
+>  err_buffer_unregister:
+>  	tiadc_iio_buffered_hardware_remove(indio_dev);
+>  err_free_channels:
+> @@ -525,8 +661,14 @@ static int tiadc_remove(struct platform_device *pdev)
+>  {
+>  	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+> +	struct tiadc_dma *dma = &adc_dev->dma;
+>  	u32 step_en;
+>  
+> +	if (dma->chan) {
+> +		dma_free_coherent(dma->chan->device->dev, DMA_BUFFER_SIZE,
+> +				  dma->buf, dma->addr);
+> +		dma_release_channel(dma->chan);
+> +	}
+>  	iio_device_unregister(indio_dev);
+>  	tiadc_iio_buffered_hardware_remove(indio_dev);
+>  	tiadc_channels_remove(indio_dev);
+> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd/ti_am335x_tscadc.h
+> index e45a208..b9a53e0 100644
+> --- a/include/linux/mfd/ti_am335x_tscadc.h
+> +++ b/include/linux/mfd/ti_am335x_tscadc.h
+> @@ -23,6 +23,8 @@
+>  #define REG_IRQENABLE		0x02C
+>  #define REG_IRQCLR		0x030
+>  #define REG_IRQWAKEUP		0x034
+> +#define REG_DMAENABLE_SET	0x038
+> +#define REG_DMAENABLE_CLEAR	0x03c
+>  #define REG_CTRL		0x040
+>  #define REG_ADCFSM		0x044
+>  #define REG_CLKDIV		0x04C
+> @@ -36,6 +38,7 @@
+>  #define REG_FIFO0THR		0xE8
+>  #define REG_FIFO1CNT		0xF0
+>  #define REG_FIFO1THR		0xF4
+> +#define REG_DMA1REQ		0xF8
+>  #define REG_FIFO0		0x100
+>  #define REG_FIFO1		0x200
+>  
+> @@ -126,6 +129,10 @@
+>  #define FIFOREAD_DATA_MASK (0xfff << 0)
+>  #define FIFOREAD_CHNLID_MASK (0xf << 16)
+>  
+> +/* DMA ENABLE/CLEAR Register */
+> +#define DMA_FIFO0		BIT(0)
+> +#define DMA_FIFO1		BIT(1)
+> +
+>  /* Sequencer Status */
+>  #define SEQ_STATUS BIT(5)
+>  #define CHARGE_STEP		0x11
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
