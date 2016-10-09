@@ -1,40 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/3] Documentation: dt-bindings: update the
- meson-usb2-phy example
-Date: Sat, 8 Oct 2016 20:28:25 -0500
-Message-ID: <20161009012825.GC18158@rob-hp-laptop>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
- <20161001121900.1168-1-martin.blumenstingl@googlemail.com>
- <20161001121900.1168-2-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: display: Add Sharp LQ150X1LG11 panel
+ binding
+Date: Sat, 8 Oct 2016 20:29:36 -0500
+Message-ID: <20161009012936.GX18158@rob-hp-laptop>
+References: <1475594961-5713-1-git-send-email-peda@axentia.se>
+ <1475594961-5713-2-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20161001121900.1168-2-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, johnyoun@synopsys.com, khilman@baylibre.com, kishon@ti.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1475594961-5713-2-git-send-email-peda@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 01, 2016 at 02:18:58PM +0200, Martin Blumenstingl wrote:
-> Update the example so the node name uses a dash (instead of an
-> underscore) as per convention.
-> Additionally it updates the example register offset to a real example
-> (the old value was taken from a draft where there was an additional PHY
-> bus).
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  Documentation/devicetree/bindings/phy/meson-usb2-phy.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-
-Acked-by: Rob Herring <robh@kernel.org>
+T24gVHVlLCBPY3QgMDQsIDIwMTYgYXQgMDU6Mjk6MjBQTSArMDIwMCwgUGV0ZXIgUm9zaW4gd3Jv
+dGU6Cj4gVGhlIFNoYXJwIDE1IiBMUTE1MFgxTEcxMSBwYW5lbCBpcyBhbiBYR0EgVEZUIExDRCBw
+YW5lbC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlhLnNlPgo+
+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFycCxscTE1MHgxbGcxMS50eHQg
+ICB8IDM2ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDM2IGluc2Vy
+dGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMTUweDFsZzExLnR4dAoKQWNrZWQtYnk6IFJv
+YiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
