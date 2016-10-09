@@ -1,57 +1,29 @@
-From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Subject: [PATCH v8 1/2] of: add J-Core timer bindings
+From: Rich Felker <dalias@libc.org>
+Subject: [PATCH v8 0/2] J-Core timer support
 Date: Sun, 09 Oct 2016 05:34:22 +0000
-Message-ID: <d0a88916e6e665c188cad897c6e95ba6bc9f6f78.1475990489.git.dalias@libc.org>
-References: <cover.1475990489.git.dalias@libc.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1475990489.git.dalias-8zAoT0mYgF4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "Paul E. McKenney" <paulmck-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Message-ID: <cover.1475990489.git.dalias@libc.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/timer/jcore,pit.txt        | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/jcore,pit.txt
+Resubmitted with the (incorrect) workaround for rcu_sched stalls
+removed, since the problem was found in the interrupt controller
+driver; a separate patch will be submitted for it.
 
-diff --git a/Documentation/devicetree/bindings/timer/jcore,pit.txt b/Documentation/devicetree/bindings/timer/jcore,pit.txt
-new file mode 100644
-index 0000000..af5dd35
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/jcore,pit.txt
-@@ -0,0 +1,24 @@
-+J-Core Programmable Interval Timer and Clocksource
-+
-+Required properties:
-+
-+- compatible: Must be "jcore,pit".
-+
-+- reg: Memory region(s) for timer/clocksource registers. For SMP,
-+  there should be one region per cpu, indexed by the sequential,
-+  zero-based hardware cpu number.
-+
-+- interrupts: An interrupt to assign for the timer. The actual pit
-+  core is integrated with the aic and allows the timer interrupt
-+  assignment to be programmed by software, but this property is
-+  required in order to reserve an interrupt number that doesn't
-+  conflict with other devices.
-+
-+
-+Example:
-+
-+timer@200 {
-+	compatible = "jcore,pit";
-+	reg = < 0x200 0x30 0x500 0x30 >;
-+	interrupts = < 0x48 >;
-+};
+Rich Felker (2):
+  of: add J-Core timer bindings
+  clocksource: add J-Core timer/clocksource driver
+
+ .../devicetree/bindings/timer/jcore,pit.txt        |  24 +++
+ drivers/clocksource/Kconfig                        |  10 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/jcore-pit.c                    | 231 +++++++++++++++++++++
+ include/linux/cpuhotplug.h                         |   1 +
+ 5 files changed, 267 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/jcore,pit.txt
+ create mode 100644 drivers/clocksource/jcore-pit.c
+
 -- 
 2.10.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
