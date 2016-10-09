@@ -1,119 +1,96 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v7 2/2] clocksource: add J-Core timer/clocksource
- driver
-Date: Sun, 9 Oct 2016 11:14:20 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1610091050500.5222@nanos>
-References: <4b02ba7d-4a31-297a-bbbd-be26da615e7b@linaro.org> <20160926222352.GE19318@brightrain.aerifal.cx> <alpine.DEB.2.20.1609261936130.4915@nanos> <20160927004258.GF19318@brightrain.aerifal.cx> <20160927220820.GH19318@brightrain.aerifal.cx>
- <alpine.DEB.2.20.1609301319410.4799@nanos> <20161008013210.GX19318@brightrain.aerifal.cx> <alpine.DEB.2.20.1610081312190.5222@nanos> <20161008162614.GY19318@brightrain.aerifal.cx> <alpine.DEB.2.20.1610081827170.5222@nanos>
- <20161009012810.GZ19318@brightrain.aerifal.cx>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v7 1/3] Documentation: dt: net: add ath9k
+	wireless device binding
+Date: Sun, 9 Oct 2016 11:54:11 +0200
+Message-ID: <CAFBinCA_4JMGZ5ZPzqaSoZqfTS3HvUCu0CuGtFXypHHmQUHx-A@mail.gmail.com>
+References: <20160906214623.20424-1-martin.blumenstingl@googlemail.com>
+	<20161002214743.2263-1-martin.blumenstingl@googlemail.com>
+	<20161002214743.2263-2-martin.blumenstingl@googlemail.com>
+	<20161009012856.GK18158@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161009012810.GZ19318@brightrain.aerifal.cx>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ath9k-devel-bounces@lists.ath9k.org>
+In-Reply-To: <20161009012856.GK18158@rob-hp-laptop>
+List-Unsubscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
+	<mailto:ath9k-devel-request@lists.ath9k.org?subject=unsubscribe>
+List-Archive: <http://lists.ath9k.org/pipermail/ath9k-devel>
+List-Post: <mailto:ath9k-devel@lists.ath9k.org>
+List-Help: <mailto:ath9k-devel-request@lists.ath9k.org?subject=help>
+List-Subscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
+	<mailto:ath9k-devel-request@lists.ath9k.org?subject=subscribe>
+Sender: ath9k-devel-bounces@lists.ath9k.org
+Errors-To: ath9k-devel-bounces@lists.ath9k.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, arend.vanspriel@broadcom.com, mcgrof@do-not-panic.com, julian.calaby@gmail.com, linux-wireless@vger.kernel.org, ath9k-devel@qca.qualcomm.com, ath9k-devel@lists.ath9k.org, bjorn@mork.no, chunkeey@googlemail.com, kvalo@codeaurora.org, nbd@nbd.name
 List-Id: devicetree@vger.kernel.org
 
-Rich,
+On Sun, Oct 9, 2016 at 3:28 AM, Rob Herring <robh@kernel.org> wrote:
+> On Sun, Oct 02, 2016 at 11:47:41PM +0200, Martin Blumenstingl wrote:
+>> Add documentation how devicetree can be used to configure ath9k based
+>> devices.
+>>
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>> ---
+>>  .../devicetree/bindings/net/wireless/qca,ath9k.txt | 30 ++++++++++++++++++++++
+>>  1 file changed, 30 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+>> new file mode 100644
+>> index 0000000..9b58ede
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+>> @@ -0,0 +1,30 @@
+>> +* Qualcomm Atheros ath9k wireless devices
+>> +
+>> +This node provides properties for configuring the ath9k wireless device. The
+>> +node is expected to be specified as a child node of the PCI controller to
+>> +which the wireless chip is connected.
+>> +
+>> +Required properties:
+>> +- compatible: For PCI and PCIe devices this should be an identifier following
+>> +             the format as defined in "PCI Bus Binding to Open Firmware"
+>> +             Revision 2.1. One of the possible formats is "pciVVVV,DDDD"
+>> +             where VVVV is the PCI vendor ID and DDDD is PCI device ID.
+>
+> Are there some known values you can document here? Like the one in the
+> example.
+what do you have in mind there?
 
-On Sat, 8 Oct 2016, Rich Felker wrote:
-> On Sat, Oct 08, 2016 at 07:03:30PM +0200, Thomas Gleixner wrote:
-> > Because you drop out the idle spin due to an interrupt, but no interrupt is
-> > handled according to the trace. You just go back to sleep and the trace is
-> > full of this behaviour.
-> 
-> Found the problem. IRQD_IRQ_INPROGRESS is causing the interrupt to be
-> ignored if the same interrupt is being handled on the other cpu.
-> Modifying the jcore aic driver to call handle_percpu_irq rather than
-> handle_simple_irq when the irq was registered as percpu solves the
-> problem, but I'm actually concerned that handle_simple_irq would also
-> be wrong in the case of non-percpu irqs if they could be delivered on
-> either core -- if another irq arrives after the driver is finished
-> checking for new device status, but before the IRQD_IRQ_INPROGRESS
-> flag is removed, it seems handle_simple_irq loses the irq. This is not
-> a problem for the current hardware since non-percpu irqs always arrive
-> on cpu0, but I'd rather improve the driver to properly handle possible
-> future hardware that allows irq delivery on any core.
+there are lots of supported device IDs just with vendor 0x168c (Atheros):
+echo $(grep 'PCI_VDEVICE(ATHEROS'
+drivers/net/wireless/ath/ath9k/pci.c; grep '{
+PCI_DEVICE_SUB(PCI_VENDOR_ID_ATHEROS'
+drivers/net/wireless/ath/ath9k/pci.c -A1) | grep -Eo "0x[
+0-9A-Z]{4}" | sort -u
+Also some device IDs seem to be used by different chips, for example
+0x0029 is used for both, AR9220 and AR9223 - see [0]
 
-We guarantee no-rentrancy for the handlers. That's why we have special
-treatment for per cpu interrupts and edge type interrupts, where we mark
-the interrupt pending when it arrives before the in progress flag is
-cleared and then call the handler again when it returns. For level type
-interrupts this is not required because level is going to stay raised in
-the hardware.
+I could extend the documentation with something like:
+vendor ID is usually 168c (Atheros) and device ID is one of the
+following, depending on the actual chipset:
+- 002d: AR9227 (PCI variant of AR9287)
+- 002e: AR9287 (PCI-e)
+- ...
 
-> > which is the wrong thing to do. You need request_percpu_irq() here, but of
-> > course with the irq chip you are using, which has every callback as a noop,
-> > it does not matter at all. So that's not an issue and not the reason for
-> > this wreckage.
-> 
-> Mentioning this was helpful to get me looking at the right things
-> tracking from the irq entry point to where the irq was lost/dropped,
-> so thanks for bringing it up.
+>> +- reg: Address and length of the register set for the device.
+>> +
+>> +Optional properties:
+>> +- qca,no-eeprom: Indicates that there is no physical EEPROM connected to the
+>> +                     ath9k wireless chip (in this case the calibration /
+>> +                     EEPROM data will be loaded from userspace using the
+>> +                     kernel firmware loader).
+>> +- mac-address: See ethernet.txt in the parent directory
+>> +- local-mac-address: See ethernet.txt in the parent directory
+>> +
+>> +
+>> +In this example, the node is defined as child node of the PCI controller:
+>> +&pci0 {
+>> +     ath9k@168c,002d {
+>
+> wifi@...
+will fix that, thanks for the hint
 
-Duh, forgot about reentrancy. I should have thought about it when staring
-at the traces. I noticed that the irq on the other cpu was handled exactly
-at the same point, but I did not make the connection. In all hte
-problematic cases there is this sequence:
 
-          <idle>-0     [000] d.s.   150.861703: tick_irq_enter: update jiffies via irq
-          <idle>-0     [001] d.h.   150.861827: irq_handler_entry: irq=16 name=jcore_pit
-
-i.e. the handler on cpu1 is invoked before cpu0 has reached
-handle_simple_irq(). 
-
-> request_irq ends up working fine still because IRQF_PERCPU causes
-> __setup_irq to mark the irqdesc/irq_data as percpu, so that my handle
-> function can treat it differently. Here's the patch that has it working:
- 
-> diff --git a/drivers/irqchip/irq-jcore-aic.c b/drivers/irqchip/irq-jcore-aic.c
-> index 5e5e3bb..b53a8a5 100644
-> --- a/drivers/irqchip/irq-jcore-aic.c
-> +++ b/drivers/irqchip/irq-jcore-aic.c
-> @@ -25,12 +25,20 @@
->  
->  static struct irq_chip jcore_aic;
->  
-> +static void handle_jcore_irq(struct irq_desc *desc)
-> +{
-> +	if (irq_is_percpu(irq_desc_get_irq(desc)))
-> +		handle_percpu_irq(desc);
-> +	else
-> +		handle_simple_irq(desc);
-> +}
-> +
->  static int jcore_aic_irqdomain_map(struct irq_domain *d, unsigned int irq,
->  				   irq_hw_number_t hwirq)
->  {
->  	struct irq_chip *aic = d->host_data;
->  
-> -	irq_set_chip_and_handler(irq, aic, handle_simple_irq);
-> +	irq_set_chip_and_handler(irq, aic, handle_jcore_irq);
-
-What you should do is:
-
-     	if (jcore_irq_per_cpu(hwirq))
-		irq_set_chip_and_handler(irq, aic, handle_percpu_irq);
-	else
-		irq_set_chip_and_handler(irq, aic, handle_simple_irq);
-	
-That avoids the conditional in the irq delivery path, which is overly
-expensive as you end up looking up the irq descriptor which you already
-have. You can avoid the lookup by using:
-
-      if (irqd_is_per_cpu(irq_desc_get_irq_data(desc)))
-
-but that's still a conditional in the hotpath which you can avoid entirely
-by setting up the proper handler when you map it.
-
-> Apologies for this big distraction for what was ultimately a driver
-> bug on my side. I was misled by the way it seemed to be a regression,
-> since the symptoms did not appear in earlier kernel versions for
-> whatever reason (likely just chance).
-
-No problem. Glad that I was able to help.
-
-Thanks,
-
-	tglx
+[0] https://wireless.wiki.kernel.org/en/users/drivers/ath9k/devices
