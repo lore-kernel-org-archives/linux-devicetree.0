@@ -1,67 +1,37 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 10/10] hwmon: i2cs-fan: Add hwmon dts binding
- documentation
-Date: Mon, 10 Oct 2016 15:29:03 -0500
-Message-ID: <20161010202903.GA9122@rob-hp-laptop>
-References: <1475853669-22480-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1475853669-22480-11-git-send-email-pantelis.antoniou@konsulko.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/7] Introduce PTX1K Boot FPGA driver
+Date: Mon, 10 Oct 2016 15:32:12 -0500
+Message-ID: <20161010203212.GA10128@rob-hp-laptop>
+References: <1475853724-22557-1-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1475853669-22480-11-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Jean Delvare <jdelvare@suse.com>, Peter Rosin <peda@axentia.se>, Avirup Banerjee <abanerjee@juniper.net>, Georgi Vlaev <gvlaev@juniper.net>, Guenter Roeck <linux@roeck-us.net>, JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org, linux-hwmon@vger.kernel.org
+In-Reply-To: <1475853724-22557-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Georgi Vlaev <gvlaev-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, JawaharBalaji Thirumalaisamy <jawaharb-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 07, 2016 at 06:21:09PM +0300, Pantelis Antoniou wrote:
-> From: Georgi Vlaev <gvlaev@juniper.net>
+On Fri, Oct 07, 2016 at 06:21:57PM +0300, Pantelis Antoniou wrote:
+> Add Juniper's PTX1K Boot FPGA driver. Those FPGAs
+> are present in Juniper's PTX series of routers.
 > 
-> Adds the I2CS Fan Tray hwmon device tree node documentation.
+> The MFD driver provices watchdog/mtd/hwmon devices.
 > 
-> Signed-off-by: Georgi Vlaev <gvlaev@juniper.net>
-> [Ported from Juniper kernel]
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> ---
->  Documentation/devicetree/bindings/hwmon/i2cs-fan.txt | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/i2cs-fan.txt
+> There are full device tree binding documents for the
+> master mfd driver and for the slave driver.
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/i2cs-fan.txt b/Documentation/devicetree/bindings/hwmon/i2cs-fan.txt
-> new file mode 100644
-> index 0000000..4ef880c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/i2cs-fan.txt
-> @@ -0,0 +1,19 @@
-> +Hwmon driver for Juniper fan trays on I2CS Slave FPGA
+> This patchset is against mainline as of today: v4.8-9431-g3477d16
+> and is dependent on the "Juniper prerequisites" and
+> "Juniper infrastructure" patchsets sent earlier.
 
-This is a h/w description, not a driver.
+You've exceeded the number of patches I'm willing to review at once for 
+one person and I'm tired of making the same comments. So fix anything 
+I've already mentioned elsewhere and send this series again.
 
-> +
-> +Required properties:
-> +
-> +- compatible: "i2cs-fan-hwmon"
-
-I doubt any fan control h/w has "hwmon" in the name.
-
-> +
-> +Optional properties:
-> +
-> +- num-fans: fans per tray (default 14)
-> +
-> +- tach-factor: TACH count scaling factor (default 120)
-
-vendor prefixes needed.
-
-> +
-> +Example:
-> +
-> +fan-hwmon {
-> +	compatible = "jnx,i2cs-fan-hwmon";
-> +	num-fans = <6>;
-> +	tach-factor = <33>;
-> +};
-> -- 
-> 1.9.1
-> 
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
