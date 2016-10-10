@@ -1,82 +1,78 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: add bindings doc for ZTE VOU display
- controller
-Date: Mon, 10 Oct 2016 16:48:21 -0500
-Message-ID: <20161010214821.GA17551@rob-hp-laptop>
-References: <1474727185-24180-1-git-send-email-shawn.guo@linaro.org>
- <1474727185-24180-2-git-send-email-shawn.guo@linaro.org>
- <20161003174429.GA26054@rob-hp-laptop>
- <20161009074910.GA15400@tiger>
+Subject: Re: [PATCH v4] pwm: add pwm driver for HiSilicon BVT SOCs
+Date: Mon, 10 Oct 2016 16:53:39 -0500
+Message-ID: <20161010215339.GA21660@rob-hp-laptop>
+References: <1476097516-164577-1-git-send-email-yuanjian12@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161009074910.GA15400@tiger>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, Baoyou Xie <xie.baoyou@zte.com.cn>, dri-devel@lists.freedesktop.org, Jun Nie <jun.nie@linaro.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1476097516-164577-1-git-send-email-yuanjian12@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jian Yuan <yuanjian12@hisilicon.com>
+Cc: thierry.reding@gmail.com, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xuejiancheng@hisilicon.com, kevin.lixu@hisilicon.com, jalen.hsu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBPY3QgMDksIDIwMTYgYXQgMDM6NDk6MTBQTSArMDgwMCwgU2hhd24gR3VvIHdyb3Rl
-Ogo+IE9uIE1vbiwgT2N0IDAzLCAyMDE2IGF0IDEyOjQ0OjI5UE0gLTA1MDAsIFJvYiBIZXJyaW5n
-IHdyb3RlOgo+ID4gPiArRXhhbXBsZToKPiA+ID4gKwo+ID4gPiArdm91OiB2b3VAMTQ0MDAwMCB7
-Cj4gPiA+ICsJY29tcGF0aWJsZSA9ICJ6dGUsengyOTY3MTgtdm91IjsKPiA+ID4gKwkjYWRkcmVz
-cy1jZWxscyA9IDwxPjsKPiA+ID4gKwkjc2l6ZS1jZWxscyA9IDwxPjsKPiA+ID4gKwlyZWcgPSA8
-MHgxNDQwMDAwIDB4MTAwMDA+Owo+ID4gPiArCXJhbmdlczsKPiA+IAo+ID4gWW91IHN0aWxsIGhh
-dmUgb3ZlcmxhcHBpbmcgYWRkcmVzc2VzLiBFeHBsaWNpdGx5IGxpc3QgdGhlIHN1YiByYW5nZXMg
-aW4gCj4gPiByZWcgaGVyZSB1c2VkIGJ5IHRoZSBWT1UgZHJpdmVyIGlmIHRoZSBkcml2ZXIgdXNh
-Z2UgZG9lc24ndCBvdmVybGFwLiBJZiAKPiA+IHRoZXJlIGlzIG92ZXJsYXAgKDIgZHJpdmVycyBh
-Y2Nlc3NpbmcgdGhlIHNhbWUgcmFuZ2UpLCB0aGVuIHlvdSBuZWVkIAo+ID4gc29tZSBBUElzIGJl
-dHdlZW4gdGhlIGNvbXBvbmVudHMgKG9yIHBvc3NpYmx5IHJlZ21hcCkuCj4gCj4gVGhlIGRyaXZl
-ciBtYXRjaGluZyAienRlLHp4Mjk2NzE4LXZvdSIgZG9lc24ndCBtYXAgb3IgYWNjZXNzIHRoZSBh
-bnkKPiAncmVnJyBhZGRyZXNzLiAgVGhlICdyZWcnIHByb3BlcnR5IGhlcmUgaXMgbW9yZSBsaWtl
-IGEgaGludCB0ZWxsaW5nCj4gdGhhdCB0aGUgVk9VIGJsb2NrIGNvdmVycyB0aGUgYWRkcmVzcyBz
-cGFjZSBvZiBhbGwgY2hpbGQgZGV2aWNlcy4KPiAKPiBJIHdpbGwgc2ltcGx5IGRyb3AgdGhlICdy
-ZWcnIHByb3BlcnR5IGhlcmUuCj4gCj4gPiBBbHNvLCBkb24ndCBkbyBhbiBlbXB0eSByYW5nZXMg
-aGVyZS4gRmlsbCBpdCBpbiBzbyB0aGUgY2hpbGQgbm9kZXMgYXJlIAo+ID4ganVzdCBvZmZzZXRz
-IG9mIDB4MTQ0MDAwMAo+IAo+IE9rYXkuICBJIHRob3VnaHQgdGhhdCBlbXB0eSAncmFuZ2VzJyBp
-cyBmaW5lIGFzIGxvbmcgYXMgcGFyZW50IGFuZCBjaGlsZAo+IGFkZHJlc3Mgc3BhY2VzIGFyZSBp
-ZGVudGljYWwgKDE6MSBtYXBwaW5nKS4KCkl0IGlzIGZpbmUsIGJ1dCBpdCdzIGp1c3QgYmV0dGVy
-IHBvbGljeSB0byBsaW1pdCB0aGUgc2NvcGUgb2YgdGhpbmdzLgoKPiBTbyB3aXRoIHlvdXIgc3Vn
-Z2VzdGlvbiwgSSBtYWRlIHRoZSBjaGFuZ2VzIGJlbG93LiAgTGV0IG1lIGtub3cgaWYgdGhpcwo+
-IGlzIHN0aWxsIG5vdCB3aGF0IHlvdSBhcmUgYXNraW5nIGZvci4KCkxvb2tzIGZpbmUuIFdpdGgg
-dGhhdCwKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKPiAKPiBTaGF3
-bgo+IAo+IC0tLS0tODwtLS0tLS0tLS0tLS0tLS0tLQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS96dGUsdm91LnR4dCBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3p0ZSx2b3UudHh0Cj4gaW5kZXggZDAz
-YmE0YzQ4MTBjLi42YmI0YWIyNTE3ZWYgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvenRlLHZvdS50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS96dGUsdm91LnR4dAo+IEBAIC01NiwxNCArNTYs
-MTMgQEAgdm91OiB2b3VAMTQ0MDAwMCB7Cj4gICAgICAgICBjb21wYXRpYmxlID0gInp0ZSx6eDI5
-NjcxOC12b3UiOwo+ICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gICAgICAgICAjc2l6
-ZS1jZWxscyA9IDwxPjsKPiAtICAgICAgIHJlZyA9IDwweDE0NDAwMDAgMHgxMDAwMD47Cj4gLSAg
-ICAgICByYW5nZXM7Cj4gKyAgICAgICByYW5nZXMgPSA8MCAweDE0NDAwMDAgMHgxMDAwMD47Cj4g
-IAo+IC0gICAgICAgZHBjOiBkcGNAMTQ0MDAwMCB7Cj4gKyAgICAgICBkcGM6IGRwY0AwIHsKPiAg
-ICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJ6dGUsengyOTY3MTgtZHBjIjsKPiAtICAgICAg
-ICAgICAgICAgcmVnID0gPDB4MTQ0MDAwMCAweDEwMDA+LCA8MHgxNDQxMDAwIDB4MTAwMD4sCj4g
-LSAgICAgICAgICAgICAgICAgICAgIDwweDE0NDUwMDAgMHgxMDAwPiwgPDB4MTQ0NjAwMCAweDEw
-MDA+LAo+IC0gICAgICAgICAgICAgICAgICAgICA8MHgxNDRhMDAwIDB4MTAwMD47Cj4gKyAgICAg
-ICAgICAgICAgIHJlZyA9IDwweDAwMDAgMHgxMDAwPiwgPDB4MTAwMCAweDEwMDA+LAo+ICsgICAg
-ICAgICAgICAgICAgICAgICA8MHg1MDAwIDB4MTAwMD4sIDwweDYwMDAgMHgxMDAwPiwKPiArICAg
-ICAgICAgICAgICAgICAgICAgPDB4YTAwMCAweDEwMDA+Owo+ICAgICAgICAgICAgICAgICByZWct
-bmFtZXMgPSAib3NkIiwgInRpbWluZ19jdHJsIiwKPiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgImR0cmMiLCAidm91X2N0cmwiLAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAib3Rm
-cHB1IjsKPiBAQCAtNzQsOSArNzMsOSBAQCB2b3U6IHZvdUAxNDQwMDAwIHsKPiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAibWFpbl93Y2xrIiwgImF1eF93Y2xrIjsKPiAgICAgICAgIH07
-Cj4gIAo+IC0gICAgICAgaGRtaTogaGRtaUAxNDRjMDAwIHsKPiArICAgICAgIGhkbWk6IGhkbWlA
-YzAwMCB7Cj4gICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAienRlLHp4Mjk2NzE4LWhkbWki
-Owo+IC0gICAgICAgICAgICAgICByZWcgPSA8MHgxNDRjMDAwIDB4NDAwMD47Cj4gKyAgICAgICAg
-ICAgICAgIHJlZyA9IDwweGMwMDAgMHg0MDAwPjsKPiAgICAgICAgICAgICAgICAgaW50ZXJydXB0
-cyA9IDxHSUNfU1BJIDgyIElSUV9UWVBFX0VER0VfUklTSU5HPjsKPiAKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Mon, Oct 10, 2016 at 07:05:16PM +0800, Jian Yuan wrote:
+> From: yuanjian <yuanjian12@hisilicon.com>
+> 
+> Add PWM driver for the PWM controller found on HiSilicon BVT SOCs, like Hi3519V100, Hi3516CV300, etc.
+> The PWM controller is primarily in charge of controlling P-Iris lens.
+> 
+> Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+> Signed-off-by: Jian Yuan <yuanjian12@hisilicon.com>
+> ---
+> Change Log:
+> v4:
+> Add #pwm-cells in the bindings document.
+> v3:
+> fixed issues pointed by thierry.
+> Add PWM compatible string for Hi3519V100.
+> Implement .apply() function which support atomic, instead of .enable()/.disable()/.config().
+> v2:
+> The number of PWMs is change to be probeable based on the compatible string.
+> 
+>  .../devicetree/bindings/pwm/pwm-hibvt.txt          |  23 ++
+>  drivers/pwm/Kconfig                                |   9 +
+>  drivers/pwm/Makefile                               |   1 +
+>  drivers/pwm/pwm-hibvt.c                            | 270 +++++++++++++++++++++
+>  4 files changed, 303 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
+>  create mode 100644 drivers/pwm/pwm-hibvt.c
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
+> new file mode 100644
+> index 0000000..609284f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
+> @@ -0,0 +1,23 @@
+> +Hisilicon PWM controller
+> +
+> +Required properties:
+> +-compatible: should contain one SoC specific compatible string and one generic compatible
+> +string "hisilicon, hibvt-pwm". The SoC specific strings supported including:
+
+Extra space          ^
+
+With that, for the binding:
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> +	"hisilicon,hi3516cv300-pwm"
+> +	"hisilicon,hi3519v100-pwm"
+> +- reg: physical base address and length of the controller's registers.
+> +- clocks: phandle and clock specifier of the PWM reference clock.
+> +- resets: phandle and reset specifier for the PWM controller reset.
+> +- #pwm-cells: Should be 2. See pwm.txt in this directory for a description of
+> +  the cells format.
+> +
+> +Example:
+> +	pwm: pwm@12130000 {
+> +
+> +		compatible = "hisilicon,hi3516cv300-pwm", "hisilicon,hibvt-pwm";
+> +		compatible = "hisilicon,hi3519v100-pwm", "hisilicon,hibvt-pwm";
+> +		reg = <0x12130000 0x10000>;
+> +		clocks = <&crg_ctrl HI3516CV300_PWM_CLK>;
+> +		resets = <&crg_ctrl 0x38 0>;
+> +		#pwm-cells = <2>;
+> +	};
