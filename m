@@ -1,42 +1,76 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCHv2 5/8] ARM: socfpga: dts: Add SPI Master1 for Arria10 SR
- chip
-Date: Mon, 10 Oct 2016 16:54:39 -0500
-Message-ID: <alpine.DEB.2.02.1610101653260.23008@linux-builds1>
-References: <1464889948-28793-1-git-send-email-tthayer@opensource.altera.com> <1464889948-28793-6-git-send-email-tthayer@opensource.altera.com> <9ed01d54-4c7e-1bfa-7f29-8feb309b9b50@opensource.altera.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH/RFT 09/12] usb: host: ohci-da8xx: Add devicetree bindings
+ documentation
+Date: Mon, 10 Oct 2016 18:33:25 -0500
+Message-ID: <33e5d2ff-4d39-2d84-670c-5cac12518945@lechnology.com>
+References: <1475858577-10366-1-git-send-email-ahaslam@baylibre.com>
+ <1475858577-10366-10-git-send-email-ahaslam@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <9ed01d54-4c7e-1bfa-7f29-8feb309b9b50@opensource.altera.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thor Thayer <tthayer@opensource.altera.com>
-Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475858577-10366-10-git-send-email-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Oct 2016, Thor Thayer wrote:
+On 10/07/2016 11:42 AM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
+> From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>
+> This patch documents the device tree bindings required for
+> the ohci controller found in TI da8xx family of SoC's
+>
+> Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/usb/ohci-da8xx.txt         | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ohci-da8xx.txt
+>
+> diff --git a/Documentation/devicetree/bindings/usb/ohci-da8xx.txt b/Documentation/devicetree/bindings/usb/ohci-da8xx.txt
+> new file mode 100644
+> index 0000000..e954ce5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/ohci-da8xx.txt
+> @@ -0,0 +1,32 @@
+> +DA8XX USB OHCI controller
+> +
+> +Required properties:
+> +
+> + - compatible: Should be "ti,da830-ohci"
+> + - reg:        Should contain one register range i.e. start and length
+> + - interrupts: Description of the interrupt line
+> + - phys:       Phandle for the PHY device
+> + - phy-names:  Should be "usb-phy"
+> +
 
-> Hi Dihn,
-> 
-> On 06/02/2016 12:52 PM, tthayer@opensource.altera.com wrote:
-> > From: Thor Thayer <tthayer@opensource.altera.com>
-> > 
-> > Add the Altera Arria10 SPI Master Node in preparation for
-> > the A10SR MFD node.
-> > 
-> > Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> > ---
-> > v2:  No change
-> > ---
-> >  arch/arm/boot/dts/socfpga_arria10.dtsi |   15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> > 
-> > 
-> I lost track of this patch. Any comments on this patch?
-> 
+If these are required, shouldn't they say "Must" instead of "Should"?
 
-Sorry about that, I missed it too.
+> +Optional properties:
+> + - vbus-gpio:  If present, specifies a gpio that needs to be
+> +               activated for the bus to be powered.
+> + - oci-gpio:   If present, specifies a gpio that needs to be
+> +               activated for the overcurrent detection.
+> + - power_on_delay: Power On to Power Good time - in ms.
+> +
+> +Example for omap138-lck:
+> +
+> +usb_phy: usb-phy {
+> +        compatible = "ti,da830-usb-phy";
+> +        #phy-cells = <1>;
+> +        status = "disabled";
+> +};
+> +usb11: usb11@0225000 {
+> +        compatible = "ti,da830-ohci";
+> +        reg = <0x225000 0x1000>;
+> +        interrupts = <59>;
+> +        phys = <&usb_phy 1>;
+> +        phy-names = "usb-phy";
+> +        status = "disabled";
+> +};
+>
 
-Applied.
-
-BR,
-Dinh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
