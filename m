@@ -1,75 +1,36 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH/RFT 09/12] usb: host: ohci-da8xx: Add devicetree bindings
- documentation
-Date: Mon, 10 Oct 2016 18:33:25 -0500
-Message-ID: <33e5d2ff-4d39-2d84-670c-5cac12518945@lechnology.com>
-References: <1475858577-10366-1-git-send-email-ahaslam@baylibre.com>
- <1475858577-10366-10-git-send-email-ahaslam@baylibre.com>
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCHv2 8/8] ARM: socfpga: dts: Add LED framework to A10-SR
+ GPIO
+Date: Mon, 10 Oct 2016 17:02:17 -0500
+Message-ID: <alpine.DEB.2.02.1610101701460.23008@linux-builds1>
+References: <1464889948-28793-1-git-send-email-tthayer@opensource.altera.com> <1464889948-28793-9-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="US-ASCII"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475858577-10366-10-git-send-email-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1464889948-28793-9-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2016 11:42 AM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
-> From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->
-> This patch documents the device tree bindings required for
-> the ohci controller found in TI da8xx family of SoC's
->
-> Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+On Thu, 2 Jun 2016, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+
+> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> 
+> Add the LED framework to the Arria10 System Resource chip GPIO hooks.
+> 
+> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 > ---
->  .../devicetree/bindings/usb/ohci-da8xx.txt         | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/ohci-da8xx.txt
->
-> diff --git a/Documentation/devicetree/bindings/usb/ohci-da8xx.txt b/Documentation/devicetree/bindings/usb/ohci-da8xx.txt
-> new file mode 100644
-> index 0000000..e954ce5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/ohci-da8xx.txt
-> @@ -0,0 +1,32 @@
-> +DA8XX USB OHCI controller
-> +
-> +Required properties:
-> +
-> + - compatible: Should be "ti,da830-ohci"
-> + - reg:        Should contain one register range i.e. start and length
-> + - interrupts: Description of the interrupt line
-> + - phys:       Phandle for the PHY device
-> + - phy-names:  Should be "usb-phy"
-> +
-
-If these are required, shouldn't they say "Must" instead of "Should"?
-
-> +Optional properties:
-> + - vbus-gpio:  If present, specifies a gpio that needs to be
-> +               activated for the bus to be powered.
-> + - oci-gpio:   If present, specifies a gpio that needs to be
-> +               activated for the overcurrent detection.
-> + - power_on_delay: Power On to Power Good time - in ms.
-> +
-> +Example for omap138-lck:
-> +
-> +usb_phy: usb-phy {
-> +        compatible = "ti,da830-usb-phy";
-> +        #phy-cells = <1>;
-> +        status = "disabled";
-> +};
-> +usb11: usb11@0225000 {
-> +        compatible = "ti,da830-ohci";
-> +        reg = <0x225000 0x1000>;
-> +        interrupts = <59>;
-> +        phys = <&usb_phy 1>;
-> +        phy-names = "usb-phy";
-> +        status = "disabled";
-> +};
+> v2  No change
+> ---
+>  arch/arm/boot/dts/socfpga_arria10_socdk.dtsi |   24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 >
 
+Applied.
+ 
+BR,
+Dinh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
