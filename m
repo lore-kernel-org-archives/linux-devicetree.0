@@ -1,45 +1,108 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH/RFT 08/12] ARM: davinci: register the usb20_phy clock on
- the SoC file
-Date: Mon, 10 Oct 2016 18:27:49 -0500
-Message-ID: <383dd208-ff45-fde9-6500-ca12ec0ca805@lechnology.com>
-References: <1475858577-10366-1-git-send-email-ahaslam@baylibre.com>
- <1475858577-10366-9-git-send-email-ahaslam@baylibre.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [PATCH 0/8] pinctrl: aspeed: Fixes for core and g5, implement
+ remaining pins
+Date: Tue, 11 Oct 2016 09:57:35 +1030
+Message-ID: <1476142055.16733.4.camel@aj.id.au>
+References: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
+ <CACRpkdZWbx1_SYJMOn40teQaEw1JAq80kDAp7N+OYaMRRO6NBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1475858577-10366-9-git-send-email-ahaslam@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ahaslam@baylibre.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, nsekhar@ti.com, stern@rowland.harvard.edu, khilman@baylibre.com, sshtylyov@ru.mvista.com
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============6780135098504128546=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdZWbx1_SYJMOn40teQaEw1JAq80kDAp7N+OYaMRRO6NBg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, openbmc@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2016 11:42 AM, ahaslam@baylibre.com wrote:
-> From: Axel Haslam <ahaslam@baylibre.com>
->
-> The usb20_phy clock needs to be registered for the driver to be able
-> to get and enable a clock. Currently the usb phy clocks are registered
-> form board files, which will not be called during a device tree based
-> boot.
->
-> To be able to probe correctly usb form a device tree boot, register
-> the usb phy clocks form the SoC specific init.
->
-> Unfourtunatly, davinci does not have proper clock support on device tree
-> yet, so by registering the clock form de SoC specific file we are
-> forced to hardcode the parent clock, and cannot select refclkin as
-> parent for any of the phy clocks of the da850 family.
 
-FYI, I have started working on the clocks as well if you want to take it 
-and run with it.
+--===============6780135098504128546==
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-hVK1QdoxUWFNXarmauyO"
 
-https://github.com/dlech/ev3dev-kernel/compare/9d6b50cde34b51309c74d97c26b1430c7ff6aa0f...d02084598785c369fdb23884171cbbec4fef77b0
 
-(Ignore the ev3dev commit stuck in the middle there.)
+--=-hVK1QdoxUWFNXarmauyO
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->
-> As none of the current da850 based boards currently in mainline use
-> refclkin as source. I guess we can live with this limitation until clocks
-> are correctly represented through CCF/device tree.
->
+On Mon, 2016-10-10 at 09:59 +0200, Linus Walleij wrote:
+> On Tue, Sep 27, 2016 at 4:50 PM, Andrew Jeffery <andrew@aj.id.au> wrote:
+>=20
+> >=20
+> > The initial Aspeed pinctrl patches implemented a subset of pins for eac=
+h of the
+> > g4 and g5 SoCs. This series provides a number of fixes to the initial p=
+atches,
+> > mostly for issues identified in the g5 driver. The fixes account for th=
+e first
+> > half of the series (up to and including "pinctrl: aspeed-g5: Fix pin
+> > association of SPI1 function") and should be applied for 4.9.
+> Those are applied for fixes.
+
+Thanks!
+
+>=20
+> >=20
+> > The second half, from "pinctrl: aspeed: Enable capture of off-SCU pinmu=
+x
+> > state", implements some additional functionality in the core engine for=
+ the
+> > Aspeed SoCs and follows up with patches implementing mux configuration =
+tables
+> > for all remaining pins. Given the significant additions in the last few
+> > patches, their lateness in the cycle and the light testing they have re=
+ceived
+> > they are best left for 4.10, but I'm keen to get them out for review.
+> I'm holding these back until v4.9-rc1 is out.
+
+No worries; they need some discussion when you have the time.
+
+Cheers,
+
+Andrew
+--=-hVK1QdoxUWFNXarmauyO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCgAGBQJX/CPnAAoJEJ0dnzgO5LT5TsgP/jg5DRyy/3c4awC9o87ZxF4W
+pjTa7TZaLrC9K6Y0yKUVkRb4VQST0ho7+XWa1sUU5BqRkYNxaU3+dgfKTLRq7rhl
+CFxu/zUAWNxMhWZ6gbeJAkEmUGrvhrV0lVhKg/Ect4uYF8rIVtvDpfM7xrpQF9mM
+Ty9PxvtybzI2DqtClNgcCOZYtFNe257zPzFkoYoq4fzPA4f/44SwusWbrAztHISp
+CC/diW7YgNo8/8Y/6AniTy86mcSiGdZ5YWC6qGAjEGVi2SqCHZ5ZSEk8yYu6dGX7
+i4FpUK7R7fUej2li1Z6qvatR/Id85DsjoTz705ywUHbxkILNfY3mALtMf4exWHug
+NXS+TJKy4Gqv4C6kQ429m2ZhrZ0hGheHkQnXh9EBM9+0Cqg40ROdlQkawowSu3yU
+DdlgX2HELuO3PtP50r83U+ya+v892KVj2M1wQh1+VwYTPm8fi9rA+OKgPLkAYdpk
+v+QuKI/65SaxJpr7BEQeIDdI18CcTTwLBIWnPa4ZN34OX/Z2ErQGXpIX0wDcCTCV
+s1dlCe7TPU3UMi7ZElQD+gYNuQ5y2Ac8R67vEY93inhlR6gwdyvA6PsAvolsnf7k
+ZfXPjUQdcY6VRujxX1gZTZzkeGW7sQiwiCRT5OITD1Nq6vt/n5kuJ4jtWa597vJd
+wZiR4q2ucEOj8XdzvtDb
+=Yx7F
+-----END PGP SIGNATURE-----
+
+--=-hVK1QdoxUWFNXarmauyO--
+
+
+
+--===============6780135098504128546==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6780135098504128546==--
