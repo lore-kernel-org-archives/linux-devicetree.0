@@ -1,67 +1,45 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH/RFT 07/12] USB: ohci-da8xx: Request gpios and handle
- interrupt in the driver
-Date: Mon, 10 Oct 2016 18:18:46 -0500
-Message-ID: <22f1532a-b651-3330-b2ce-9a64a35c85af@lechnology.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH/RFT 08/12] ARM: davinci: register the usb20_phy clock on
+ the SoC file
+Date: Mon, 10 Oct 2016 18:27:49 -0500
+Message-ID: <383dd208-ff45-fde9-6500-ca12ec0ca805@lechnology.com>
 References: <1475858577-10366-1-git-send-email-ahaslam@baylibre.com>
- <1475858577-10366-8-git-send-email-ahaslam@baylibre.com>
+ <1475858577-10366-9-git-send-email-ahaslam@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1475858577-10366-8-git-send-email-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1475858577-10366-9-git-send-email-ahaslam@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ahaslam@baylibre.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, nsekhar@ti.com, stern@rowland.harvard.edu, khilman@baylibre.com, sshtylyov@ru.mvista.com
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2016 11:42 AM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
-> From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+On 10/07/2016 11:42 AM, ahaslam@baylibre.com wrote:
+> From: Axel Haslam <ahaslam@baylibre.com>
 >
-> Currently requesting the vbus and overcurrent gpio is handled on
-> the board specific file. But this does not play well moving to
-> device tree.
+> The usb20_phy clock needs to be registered for the driver to be able
+> to get and enable a clock. Currently the usb phy clocks are registered
+> form board files, which will not be called during a device tree based
+> boot.
 >
-> In preparation to migrate to a device tree boot, handle requesting
-> gpios and overcurrent interrupt on the usb driver itself, thus avoiding
-> callbacks to arch/mach*
+> To be able to probe correctly usb form a device tree boot, register
+> the usb phy clocks form the SoC specific init.
 >
+> Unfourtunatly, davinci does not have proper clock support on device tree
+> yet, so by registering the clock form de SoC specific file we are
+> forced to hardcode the parent clock, and cannot select refclkin as
+> parent for any of the phy clocks of the da850 family.
 
-Instead of using gpios, it seems like it would be better to use a 
-regulator here. I don't know of any real-life cases, but who is to say 
-someone will not design a board that uses a regulator controlled by I2C 
-instead of gpios or something like that.
+FYI, I have started working on the clocks as well if you want to take it 
+and run with it.
 
-Then, boards that don't have gpios can just use a fixed regulator (or 
-you can make the regulator optional). Using a regulator would also allow 
-users to decide how to respond to overcurrent events (by supplying their 
-own regulator driver) instead of the behavior being dictated by the ohci 
-driver.
+https://github.com/dlech/ev3dev-kernel/compare/9d6b50cde34b51309c74d97c26b1430c7ff6aa0f...d02084598785c369fdb23884171cbbec4fef77b0
 
-In my particular area of interest (LEGO MINDSTORMS EV3), the 5V 
-(hardware) regulator for VBUS does use gpios, but the 5V is also shared 
-with the LEGO input and output ports. So what I would ultimately like to 
-be able to do is have userspace notified of an overcurrent event and let 
-userspace decided when to turn the vbus back on. For example, someone 
-might plug something into one of the LEGO input or output ports that 
-causes a short circuit. I would like to display a notification to the 
-user and wait for them to correct the problem and then press a button to 
-turn the power back on.
+(Ignore the ev3dev commit stuck in the middle there.)
 
-This will require some modifications to the regulator subsystem though. 
-I actually started work on this a while back, but haven't had the time 
-to pursue it any farther.
-
-Here are my WIP patches in case there is any interest:
-* 
-https://github.com/dlech/ev3dev-kernel/commit/541a42b3b8ed639e95bbc835df3292f80190c789
-* 
-https://github.com/dlech/ev3dev-kernel/commit/2ba99b1ad6a06c944dd33a073f54044e71b75ae6
-* 
-https://github.com/dlech/ev3dev-kernel/commit/cdb03caa50e64931d4f2836c648739aa4385ed3b
-* 
-https://github.com/dlech/ev3dev-kernel/commit/9d6b50cde34b51309c74d97c26b1430c7ff6aa0f
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> As none of the current da850 based boards currently in mainline use
+> refclkin as source. I guess we can live with this limitation until clocks
+> are correctly represented through CCF/device tree.
+>
