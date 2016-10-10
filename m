@@ -1,44 +1,82 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: rename ns2.txt to brcm,ns2.txt
-Date: Mon, 10 Oct 2016 16:44:43 -0500
-Message-ID: <20161010214443.GA17115@rob-hp-laptop>
-References: <1475959684-18085-1-git-send-email-scott.branden@broadcom.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: add bindings doc for ZTE VOU display
+ controller
+Date: Mon, 10 Oct 2016 16:48:21 -0500
+Message-ID: <20161010214821.GA17551@rob-hp-laptop>
+References: <1474727185-24180-1-git-send-email-shawn.guo@linaro.org>
+ <1474727185-24180-2-git-send-email-shawn.guo@linaro.org>
+ <20161003174429.GA26054@rob-hp-laptop>
+ <20161009074910.GA15400@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1475959684-18085-1-git-send-email-scott.branden@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Scott Branden <scott.branden@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20161009074910.GA15400@tiger>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, Baoyou Xie <xie.baoyou@zte.com.cn>, dri-devel@lists.freedesktop.org, Jun Nie <jun.nie@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 08, 2016 at 01:48:04PM -0700, Scott Branden wrote:
-> Rename ns2.txt to brcm,ns2.txt to match naming convention followed
-> by rest of Broadcom binding documentation.
-> 
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> ---
->  Documentation/devicetree/bindings/arm/bcm/{ns2.txt => brcm,ns2.txt} | 0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename Documentation/devicetree/bindings/arm/bcm/{ns2.txt => brcm,ns2.txt} (100%)
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/ns2.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,ns2.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arm/bcm/ns2.txt
-> rename to Documentation/devicetree/bindings/arm/bcm/brcm,ns2.txt
-> -- 
-> 2.5.0
-> 
+T24gU3VuLCBPY3QgMDksIDIwMTYgYXQgMDM6NDk6MTBQTSArMDgwMCwgU2hhd24gR3VvIHdyb3Rl
+Ogo+IE9uIE1vbiwgT2N0IDAzLCAyMDE2IGF0IDEyOjQ0OjI5UE0gLTA1MDAsIFJvYiBIZXJyaW5n
+IHdyb3RlOgo+ID4gPiArRXhhbXBsZToKPiA+ID4gKwo+ID4gPiArdm91OiB2b3VAMTQ0MDAwMCB7
+Cj4gPiA+ICsJY29tcGF0aWJsZSA9ICJ6dGUsengyOTY3MTgtdm91IjsKPiA+ID4gKwkjYWRkcmVz
+cy1jZWxscyA9IDwxPjsKPiA+ID4gKwkjc2l6ZS1jZWxscyA9IDwxPjsKPiA+ID4gKwlyZWcgPSA8
+MHgxNDQwMDAwIDB4MTAwMDA+Owo+ID4gPiArCXJhbmdlczsKPiA+IAo+ID4gWW91IHN0aWxsIGhh
+dmUgb3ZlcmxhcHBpbmcgYWRkcmVzc2VzLiBFeHBsaWNpdGx5IGxpc3QgdGhlIHN1YiByYW5nZXMg
+aW4gCj4gPiByZWcgaGVyZSB1c2VkIGJ5IHRoZSBWT1UgZHJpdmVyIGlmIHRoZSBkcml2ZXIgdXNh
+Z2UgZG9lc24ndCBvdmVybGFwLiBJZiAKPiA+IHRoZXJlIGlzIG92ZXJsYXAgKDIgZHJpdmVycyBh
+Y2Nlc3NpbmcgdGhlIHNhbWUgcmFuZ2UpLCB0aGVuIHlvdSBuZWVkIAo+ID4gc29tZSBBUElzIGJl
+dHdlZW4gdGhlIGNvbXBvbmVudHMgKG9yIHBvc3NpYmx5IHJlZ21hcCkuCj4gCj4gVGhlIGRyaXZl
+ciBtYXRjaGluZyAienRlLHp4Mjk2NzE4LXZvdSIgZG9lc24ndCBtYXAgb3IgYWNjZXNzIHRoZSBh
+bnkKPiAncmVnJyBhZGRyZXNzLiAgVGhlICdyZWcnIHByb3BlcnR5IGhlcmUgaXMgbW9yZSBsaWtl
+IGEgaGludCB0ZWxsaW5nCj4gdGhhdCB0aGUgVk9VIGJsb2NrIGNvdmVycyB0aGUgYWRkcmVzcyBz
+cGFjZSBvZiBhbGwgY2hpbGQgZGV2aWNlcy4KPiAKPiBJIHdpbGwgc2ltcGx5IGRyb3AgdGhlICdy
+ZWcnIHByb3BlcnR5IGhlcmUuCj4gCj4gPiBBbHNvLCBkb24ndCBkbyBhbiBlbXB0eSByYW5nZXMg
+aGVyZS4gRmlsbCBpdCBpbiBzbyB0aGUgY2hpbGQgbm9kZXMgYXJlIAo+ID4ganVzdCBvZmZzZXRz
+IG9mIDB4MTQ0MDAwMAo+IAo+IE9rYXkuICBJIHRob3VnaHQgdGhhdCBlbXB0eSAncmFuZ2VzJyBp
+cyBmaW5lIGFzIGxvbmcgYXMgcGFyZW50IGFuZCBjaGlsZAo+IGFkZHJlc3Mgc3BhY2VzIGFyZSBp
+ZGVudGljYWwgKDE6MSBtYXBwaW5nKS4KCkl0IGlzIGZpbmUsIGJ1dCBpdCdzIGp1c3QgYmV0dGVy
+IHBvbGljeSB0byBsaW1pdCB0aGUgc2NvcGUgb2YgdGhpbmdzLgoKPiBTbyB3aXRoIHlvdXIgc3Vn
+Z2VzdGlvbiwgSSBtYWRlIHRoZSBjaGFuZ2VzIGJlbG93LiAgTGV0IG1lIGtub3cgaWYgdGhpcwo+
+IGlzIHN0aWxsIG5vdCB3aGF0IHlvdSBhcmUgYXNraW5nIGZvci4KCkxvb2tzIGZpbmUuIFdpdGgg
+dGhhdCwKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKPiAKPiBTaGF3
+bgo+IAo+IC0tLS0tODwtLS0tLS0tLS0tLS0tLS0tLQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS96dGUsdm91LnR4dCBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3p0ZSx2b3UudHh0Cj4gaW5kZXggZDAz
+YmE0YzQ4MTBjLi42YmI0YWIyNTE3ZWYgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvenRlLHZvdS50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS96dGUsdm91LnR4dAo+IEBAIC01NiwxNCArNTYs
+MTMgQEAgdm91OiB2b3VAMTQ0MDAwMCB7Cj4gICAgICAgICBjb21wYXRpYmxlID0gInp0ZSx6eDI5
+NjcxOC12b3UiOwo+ICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gICAgICAgICAjc2l6
+ZS1jZWxscyA9IDwxPjsKPiAtICAgICAgIHJlZyA9IDwweDE0NDAwMDAgMHgxMDAwMD47Cj4gLSAg
+ICAgICByYW5nZXM7Cj4gKyAgICAgICByYW5nZXMgPSA8MCAweDE0NDAwMDAgMHgxMDAwMD47Cj4g
+IAo+IC0gICAgICAgZHBjOiBkcGNAMTQ0MDAwMCB7Cj4gKyAgICAgICBkcGM6IGRwY0AwIHsKPiAg
+ICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJ6dGUsengyOTY3MTgtZHBjIjsKPiAtICAgICAg
+ICAgICAgICAgcmVnID0gPDB4MTQ0MDAwMCAweDEwMDA+LCA8MHgxNDQxMDAwIDB4MTAwMD4sCj4g
+LSAgICAgICAgICAgICAgICAgICAgIDwweDE0NDUwMDAgMHgxMDAwPiwgPDB4MTQ0NjAwMCAweDEw
+MDA+LAo+IC0gICAgICAgICAgICAgICAgICAgICA8MHgxNDRhMDAwIDB4MTAwMD47Cj4gKyAgICAg
+ICAgICAgICAgIHJlZyA9IDwweDAwMDAgMHgxMDAwPiwgPDB4MTAwMCAweDEwMDA+LAo+ICsgICAg
+ICAgICAgICAgICAgICAgICA8MHg1MDAwIDB4MTAwMD4sIDwweDYwMDAgMHgxMDAwPiwKPiArICAg
+ICAgICAgICAgICAgICAgICAgPDB4YTAwMCAweDEwMDA+Owo+ICAgICAgICAgICAgICAgICByZWct
+bmFtZXMgPSAib3NkIiwgInRpbWluZ19jdHJsIiwKPiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgImR0cmMiLCAidm91X2N0cmwiLAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAib3Rm
+cHB1IjsKPiBAQCAtNzQsOSArNzMsOSBAQCB2b3U6IHZvdUAxNDQwMDAwIHsKPiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAibWFpbl93Y2xrIiwgImF1eF93Y2xrIjsKPiAgICAgICAgIH07
+Cj4gIAo+IC0gICAgICAgaGRtaTogaGRtaUAxNDRjMDAwIHsKPiArICAgICAgIGhkbWk6IGhkbWlA
+YzAwMCB7Cj4gICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAienRlLHp4Mjk2NzE4LWhkbWki
+Owo+IC0gICAgICAgICAgICAgICByZWcgPSA8MHgxNDRjMDAwIDB4NDAwMD47Cj4gKyAgICAgICAg
+ICAgICAgIHJlZyA9IDwweGMwMDAgMHg0MDAwPjsKPiAgICAgICAgICAgICAgICAgaW50ZXJydXB0
+cyA9IDxHSUNfU1BJIDgyIElSUV9UWVBFX0VER0VfUklTSU5HPjsKPiAKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
