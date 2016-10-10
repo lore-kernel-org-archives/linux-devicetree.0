@@ -1,69 +1,66 @@
-From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC V2 PATCH 03/12] msm8994 clocks: fix mapping
-Date: Mon, 10 Oct 2016 15:47:25 -0700
-Message-ID: <e952ee53-4725-4937-c96e-429ad08df6d4@redhat.com>
-References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
- <1475375919-618-4-git-send-email-jmcnicol@redhat.com>
- <20161009012853.GI18158@rob-hp-laptop>
- <228eb3b0-6c4e-230a-1750-0f97ec5c024f@redhat.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH/RFT 07/12] USB: ohci-da8xx: Request gpios and handle
+ interrupt in the driver
+Date: Mon, 10 Oct 2016 18:18:46 -0500
+Message-ID: <22f1532a-b651-3330-b2ce-9a64a35c85af@lechnology.com>
+References: <1475858577-10366-1-git-send-email-ahaslam@baylibre.com>
+ <1475858577-10366-8-git-send-email-ahaslam@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <228eb3b0-6c4e-230a-1750-0f97ec5c024f-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1475858577-10366-8-git-send-email-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, git-LJ92rlH3Dns@public.gmane.org, jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-10 3:04 PM, Jeremy McNicoll wrote:
-> On 2016-10-08 6:28 PM, Rob Herring wrote:
->> On Sat, Oct 01, 2016 at 07:38:30PM -0700, Jeremy McNicoll wrote:
->>> The paren_map is used for looking up which value to write into
->>> and the cmd_rcgr is for configuring the parent muxing so a change
->>>  2 to 5 means that the 3rd parent should be mux #5 rather than #2.
->>>
->>> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>  drivers/clk/qcom/gcc-msm8994.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> This should be squashed.
->>
+On 10/07/2016 11:42 AM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
+> From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 >
-> It was done this way explicitly as I am not the original author and
-
-Just to make sure its clear.  I am not the original author of this patch:
-
-http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/442801.html
-
--jeremy
-
-> felt it was important that the description / explanation was properly
-> captured.
+> Currently requesting the vbus and overcurrent gpio is handled on
+> the board specific file. But this does not play well moving to
+> device tree.
 >
-> -jeremy
->
->>>
->>> diff --git a/drivers/clk/qcom/gcc-msm8994.c
->>> b/drivers/clk/qcom/gcc-msm8994.c
->>> index 3897cfd..39b40d4 100644
->>> --- a/drivers/clk/qcom/gcc-msm8994.c
->>> +++ b/drivers/clk/qcom/gcc-msm8994.c
->>> @@ -50,7 +50,7 @@ static const char * const gcc_xo_gpll0[] = {
->>>  static const struct parent_map gcc_xo_gpll0_gpll4_map[] = {
->>>      { P_XO, 0 },
->>>      { P_GPLL0, 1 },
->>> -    { P_GPLL4, 2 },
->>> +    { P_GPLL4, 5 },
->>>  };
->>>
->>>  static const char * const gcc_xo_gpll0_gpll4[] = {
->>> --
->>> 2.6.1
->>>
+> In preparation to migrate to a device tree boot, handle requesting
+> gpios and overcurrent interrupt on the usb driver itself, thus avoiding
+> callbacks to arch/mach*
 >
 
+Instead of using gpios, it seems like it would be better to use a 
+regulator here. I don't know of any real-life cases, but who is to say 
+someone will not design a board that uses a regulator controlled by I2C 
+instead of gpios or something like that.
+
+Then, boards that don't have gpios can just use a fixed regulator (or 
+you can make the regulator optional). Using a regulator would also allow 
+users to decide how to respond to overcurrent events (by supplying their 
+own regulator driver) instead of the behavior being dictated by the ohci 
+driver.
+
+In my particular area of interest (LEGO MINDSTORMS EV3), the 5V 
+(hardware) regulator for VBUS does use gpios, but the 5V is also shared 
+with the LEGO input and output ports. So what I would ultimately like to 
+be able to do is have userspace notified of an overcurrent event and let 
+userspace decided when to turn the vbus back on. For example, someone 
+might plug something into one of the LEGO input or output ports that 
+causes a short circuit. I would like to display a notification to the 
+user and wait for them to correct the problem and then press a button to 
+turn the power back on.
+
+This will require some modifications to the regulator subsystem though. 
+I actually started work on this a while back, but haven't had the time 
+to pursue it any farther.
+
+Here are my WIP patches in case there is any interest:
+* 
+https://github.com/dlech/ev3dev-kernel/commit/541a42b3b8ed639e95bbc835df3292f80190c789
+* 
+https://github.com/dlech/ev3dev-kernel/commit/2ba99b1ad6a06c944dd33a073f54044e71b75ae6
+* 
+https://github.com/dlech/ev3dev-kernel/commit/cdb03caa50e64931d4f2836c648739aa4385ed3b
+* 
+https://github.com/dlech/ev3dev-kernel/commit/9d6b50cde34b51309c74d97c26b1430c7ff6aa0f
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
