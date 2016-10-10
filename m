@@ -1,81 +1,98 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2 5/8] dt/bindings: Update binding for PM domain idle
- states
-Date: Mon, 10 Oct 2016 18:19:21 +0100
-Message-ID: <09dce7fd-6757-12ad-1900-573bf75b27a4@arm.com>
-References: <1475879821-8035-1-git-send-email-lina.iyer@linaro.org>
- <1475879821-8035-6-git-send-email-lina.iyer@linaro.org>
- <4e55d6ad-8de7-72d7-7512-5e4ff2aabc79@arm.com>
- <20161010164342.GC44885@linaro.org>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v4] PCI: rockchip: Support property to specify the link
+ capability
+Date: Mon, 10 Oct 2016 10:20:47 -0700
+Message-ID: <20161010172046.GA30803@localhost>
+References: <1475743800-1036-1-git-send-email-shawn.lin@rock-chips.com>
+ <20161010141639.GA22113@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20161010164342.GC44885@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ulf.hansson@linaro.org, khilman@kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, brendan.jackman@arm.com, lorenzo.pieralisi@arm.com, Juri.Lelli@arm.com, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161010141639.GA22113@rob-hp-laptop>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Rajat Jain <rajatja@google.com>, Wenrui Li <wenrui.li@rock-chips.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
+On Mon, Oct 10, 2016 at 09:16:39AM -0500, Rob Herring wrote:
+> On Thu, Oct 06, 2016 at 04:50:00PM +0800, Shawn Lin wrote:
+> > From: Brian Norris <briannorris@chromium.org>
+> > 
+> > rk3399 supports PCIe 2.x link speeds marginally at best, and on some
+> > boards, the link won't train at 5 GT/s at all. Rather than sacrifice 500
+> > ms waiting for training that will never happen, let's add a property
+> > from devicetree to specify link capability.
+> > 
+> > Signed-off-by: Brian Norris <briannorris@chromium.org>
+> > Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> > 
+> > ---
+> > 
+> > Changes in v4:
+> > - define link_gen as u32
+> > - elaborate more for rockchip,max-link-speed on doc
+> > 
+> > Changes in v3:
+> > - Cast a warning for invalid max link speed and use gen1 for it.
+> >   That looks better than v2. (Suggested by Brian)
+> > 
+> > Changes in v2:
+> > - rename the property to rockchip,max-link-speed according to
+> >   Bjorn's recommendation and take some bits from imx6q-pcie to
+> >   make this requirement more consisent.
+> > 
+> >  .../devicetree/bindings/pci/rockchip-pcie.txt      |  4 ++
+> >  drivers/pci/host/pcie-rockchip.c                   | 63 ++++++++++++++--------
+> >  2 files changed, 44 insertions(+), 23 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> > index ba67b39..9bb29de 100644
+> > --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> > +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> > @@ -42,6 +42,10 @@ Required properties:
+> >  Optional Property:
+> >  - ep-gpios: contain the entry for pre-reset gpio
+> >  - num-lanes: number of lanes to use
+> > +- rockchip,max-link-speed: Specify PCI gen for link capability. Must
+> > +	be '2' for gen2, and '1' for gen1, otherwise will default to gen1.
+> > +	For backward compatibility, if this property isn't assigned, we
+> > +	use gen2 by default.
+> 
+> Defaults to gen1 or gen2?
 
-On 10/10/16 17:43, Lina Iyer wrote:
-> On Mon, Oct 10 2016 at 09:45 -0600, Sudeep Holla wrote:
->>
->>
->> On 07/10/16 23:36, Lina Iyer wrote:
->>> Update DT bindings to describe idle states of PM domains.
->>>
->>> This patch is based on the original patch by Marc Titinger.
->>>
->>> Cc: <devicetree@vger.kernel.org>
->>> Signed-off-by: Marc Titinger <mtitinger+renesas@baylibre.com>
->>> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
->>> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
->>> Acked-by: Rob Herring <robh@kernel.org>
->>> ---
->>> .../devicetree/bindings/power/power_domain.txt     | 38
->>> ++++++++++++++++++++++
->>> 1 file changed, 38 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt
->>> b/Documentation/devicetree/bindings/power/power_domain.txt
->>> index 025b5e7..7f8f27e 100644
->>> --- a/Documentation/devicetree/bindings/power/power_domain.txt
->>> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
->>> @@ -29,6 +29,10 @@ Optional properties:
->>>    specified by this binding. More details about power domain
->>> specifier are
->>>    available in the next section.
->>>
->>> +- domain-idle-states : A phandle of an idle-state that shall be
->>> soaked into a
->>> +                generic domain power state. The idle state
->>> definitions are
->>> +                compatible with arm,idle-state specified in [1].
->>> +
->>
->> Please do add the following details to the binding. IMO, this binding is
->> not complete in terms of specification as there are few open questions:
->>
->> 1. What not define a standard compatible instead of "arm,idle-state" ?
->>   I agree it can be used, but as part of this *generic* binding, IMO
->>   it's better to have something generic and can be used by devices.
->>   Otherwise, this binding becomes CPU specific, that too ARM CPU
->>   specific.
->>
-> We had gone down this path of having a separate DT bindings for domains
-> that is not arm,idle-state. See RFC patches. But the binding did closely
-> match this and it so was suggested that we use arm,idle-state which is
-> already defined.
->
+The wording is a bit confusing, but I think Shawn intended for:
+(a) if no property is provided, default to the maximum supported (i.e.,
+    gen2), to keep backward compatibility
+(b) if a property is provided, but it doesn't contain 1 or 2, just
+    default to 1
 
-Are you referring to [1] here ? Sorry, I did some search quickly and
-could find this, wanted to check if I am looking at the right one ?
+I already disagreed with (b) (and suggested we make this an error
+instead; we have no business accepting malformed device trees here IMO).
+Alternatives to clear up the confusion Rob pointed out might include:
+(1) explaining this better (i.e., what does "otherwise" mean in the
+    original sentence?)
+(2) changing this to uniformly default to 2 (if someone used an
+    unsupported value, treat it as if the property wasn't there at all)
+(3) reject incorrect values outright (so we don't have this fuzzy middle
+    ground at all)
 
--- 
-Regards,
-Sudeep
+> Let's drop rockchip and make this a common property. 
 
-[1] 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/353261.html
+As in, handle this in some generic/common way? AFAICT, there's really
+no way to do that given the current structure of PCIe handling (and the
+nature of these kinds of limitations).
+
+Or, do you just mean make the name common? (i.e,. "max-link-speed"
+instead of "rockchip,max-link-speed")
+
+Also for the record, Shawn already sent v5 before your comments.
+Presumably he'll need a v6 then...
+
+Brian
+
+> >  - vpcie3v3-supply: The phandle to the 3.3v regulator to use for PCIe.
+> >  - vpcie1v8-supply: The phandle to the 1.8v regulator to use for PCIe.
+> >  - vpcie0v9-supply: The phandle to the 0.9v regulator to use for PCIe.
