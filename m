@@ -1,25 +1,23 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/8] pinctrl: aspeed-g5: Fix names of GPID2 pins
-Date: Mon, 10 Oct 2016 09:56:16 +0200
-Message-ID: <CACRpkdadqMmooefJ8v0nADQ_zgifF8M2ULeiihvhK2Hqur6LEA@mail.gmail.com>
+Subject: Re: [PATCH 3/8] pinctrl: aspeed-g5: Fix GPIOE1 typo
+Date: Mon, 10 Oct 2016 09:57:29 +0200
+Message-ID: <CACRpkdYvgN0_yogc05kdcwqNzyMx=rZXQ1i_v1k4S0evKnYqrw@mail.gmail.com>
 References: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
- <69eda17c16684f4212a9f3e64d9587abfcc7ae74.1474986045.git-series.andrew@aj.id.au>
+ <9364de84d3be30a5349298e219ca827d176d7ba8.1474986045.git-series.andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <69eda17c16684f4212a9f3e64d9587abfcc7ae74.1474986045.git-series.andrew@aj.id.au>
-Sender: linux-gpio-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9364de84d3be30a5349298e219ca827d176d7ba8.1474986045.git-series.andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Andrew Jeffery <andrew@aj.id.au>
 Cc: Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 On Tue, Sep 27, 2016 at 4:50 PM, Andrew Jeffery <andrew@aj.id.au> wrote:
 
-> Fixes simple typos in the initial commit. There is no behavioural
-> change.
+> This prevented C20 from successfully being muxed as GPIO.
 >
 > Fixes: 56e57cb6c07f (pinctrl: Add pinctrl-aspeed-g5 driver)
-> Reported-by: Xo Wang <xow@google.com>
 > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
 Patch applied for fixes.
