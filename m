@@ -1,78 +1,55 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] pwm: add pwm driver for HiSilicon BVT SOCs
-Date: Mon, 10 Oct 2016 16:53:39 -0500
-Message-ID: <20161010215339.GA21660@rob-hp-laptop>
-References: <1476097516-164577-1-git-send-email-yuanjian12@hisilicon.com>
+Subject: Re: [PATCHv4] hwmon: Add tc654 driver
+Date: Mon, 10 Oct 2016 16:54:42 -0500
+Message-ID: <20161010215442.GA22578@rob-hp-laptop>
+References: <b8294ac3-7bac-eeb3-8923-ed569a19cab2@roeck-us.net>
+ <20161010212633.5436-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1476097516-164577-1-git-send-email-yuanjian12@hisilicon.com>
+In-Reply-To: <20161010212633.5436-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jian Yuan <yuanjian12@hisilicon.com>
-Cc: thierry.reding@gmail.com, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xuejiancheng@hisilicon.com, kevin.lixu@hisilicon.com, jalen.hsu@hisilicon.com
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: linux@roeck-us.net, linux-hwmon@vger.kernel.org, iwamoto@allied-telesis.co.jp, Joshua.Scott@alliedtelesis.co.nz, Kevin Tsai <ktsai@capellamicro.com>, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 10, 2016 at 07:05:16PM +0800, Jian Yuan wrote:
-> From: yuanjian <yuanjian12@hisilicon.com>
+On Tue, Oct 11, 2016 at 10:26:31AM +1300, Chris Packham wrote:
+> Add support for the tc654 and tc655 fan controllers from Microchip.
 > 
-> Add PWM driver for the PWM controller found on HiSilicon BVT SOCs, like Hi3519V100, Hi3516CV300, etc.
-> The PWM controller is primarily in charge of controlling P-Iris lens.
+> http://ww1.microchip.com/downloads/en/DeviceDoc/20001734C.pdf
 > 
-> Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-> Signed-off-by: Jian Yuan <yuanjian12@hisilicon.com>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 > ---
-> Change Log:
-> v4:
-> Add #pwm-cells in the bindings document.
-> v3:
-> fixed issues pointed by thierry.
-> Add PWM compatible string for Hi3519V100.
-> Implement .apply() function which support atomic, instead of .enable()/.disable()/.config().
-> v2:
-> The number of PWMs is change to be probeable based on the compatible string.
+> Changes in v4:
+> - tab-align values in #defines
+> - ensure locking in set_pwm covers updating cached values
+> - populate the cached value for the config register in tc654_probe()
 > 
->  .../devicetree/bindings/pwm/pwm-hibvt.txt          |  23 ++
->  drivers/pwm/Kconfig                                |   9 +
->  drivers/pwm/Makefile                               |   1 +
->  drivers/pwm/pwm-hibvt.c                            | 270 +++++++++++++++++++++
->  4 files changed, 303 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
->  create mode 100644 drivers/pwm/pwm-hibvt.c
+> Changes in v3:
+> - typofix in documentation
+> - add missing value to tc654_pwm_map, re-generate based on datasheet.
+> - remove unnecessary hwmon_dev member from struct tc654_data
+> - bug fixes in set_fan_min() and show_pwm_mode()
+> - miscellaneous style fixes
+>  
+> Changes in v2:
+> - Add Documentation/hwmon/tc654
+> - Incorporate most of the review comments from Guenter. Additional error
+>   handling is added. Unused/unnecessary code is removed. I decided not
+>   to go down the regmap path yet. I may circle back to it when I look at
+>   using regmap in the adm9240 driver.
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
-> new file mode 100644
-> index 0000000..609284f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
-> @@ -0,0 +1,23 @@
-> +Hisilicon PWM controller
-> +
-> +Required properties:
-> +-compatible: should contain one SoC specific compatible string and one generic compatible
-> +string "hisilicon, hibvt-pwm". The SoC specific strings supported including:
+>  .../devicetree/bindings/i2c/trivial-devices.txt    |   2 +
 
-Extra space          ^
-
-With that, for the binding:
+Expect a merge conflict with the IIO tree.
 
 Acked-by: Rob Herring <robh@kernel.org>
 
-> +	"hisilicon,hi3516cv300-pwm"
-> +	"hisilicon,hi3519v100-pwm"
-> +- reg: physical base address and length of the controller's registers.
-> +- clocks: phandle and clock specifier of the PWM reference clock.
-> +- resets: phandle and reset specifier for the PWM controller reset.
-> +- #pwm-cells: Should be 2. See pwm.txt in this directory for a description of
-> +  the cells format.
-> +
-> +Example:
-> +	pwm: pwm@12130000 {
-> +
-> +		compatible = "hisilicon,hi3516cv300-pwm", "hisilicon,hibvt-pwm";
-> +		compatible = "hisilicon,hi3519v100-pwm", "hisilicon,hibvt-pwm";
-> +		reg = <0x12130000 0x10000>;
-> +		clocks = <&crg_ctrl HI3516CV300_PWM_CLK>;
-> +		resets = <&crg_ctrl 0x38 0>;
-> +		#pwm-cells = <2>;
-> +	};
+>  Documentation/hwmon/tc654                          |  31 ++
+>  drivers/hwmon/Kconfig                              |  11 +
+>  drivers/hwmon/Makefile                             |   1 +
+>  drivers/hwmon/tc654.c                              | 514 +++++++++++++++++++++
+>  5 files changed, 559 insertions(+)
+>  create mode 100644 Documentation/hwmon/tc654
+>  create mode 100644 drivers/hwmon/tc654.c
