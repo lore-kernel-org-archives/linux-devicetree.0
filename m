@@ -1,44 +1,69 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v5 2/5] drm/bridge: Add RGB to VGA bridge support
-Date: Mon, 10 Oct 2016 10:15:26 +0300
-Message-ID: <2147837.toaTVtNybe@avalon>
-References: <20160930143709.1388-1-maxime.ripard@free-electrons.com>
- <20161007091444.GO4684@lukather>
- <04679d93-ae58-7c94-616e-2eec23e84d6e@codeaurora.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/8] pinctrl: aspeed: "Not enabled" is a significant mux state
+Date: Mon, 10 Oct 2016 09:55:02 +0200
+Message-ID: <CACRpkdY3m3cMohOApQOR_xae4Hxfdrnqp3BpizYVgQ-YTTVppg@mail.gmail.com>
+References: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
+ <a2fce70d4285ec2321a64a4f7145ea8a90d988b3.1474986045.git-series.andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <04679d93-ae58-7c94-616e-2eec23e84d6e@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <a2fce70d4285ec2321a64a4f7145ea8a90d988b3.1474986045.git-series.andrew@aj.id.au>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJjaGl0LAoKT24gTW9uZGF5IDEwIE9jdCAyMDE2IDExOjA1OjEwIEFyY2hpdCBUYW5lamEg
-d3JvdGU6Cj4gT24gMTAvMDcvMjAxNiAwMjo0NCBQTSwgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiA+
-IE9uIEZyaSwgT2N0IDA3LCAyMDE2IGF0IDEwOjI3OjMxQU0gKzA1MzAsIEFyY2hpdCBUYW5lamEg
-d3JvdGU6Cgpbc25pcF0KCj4gPj4gSWYgbm8gb25lIGhhcyBhbnkgbW9yZSBvYmplY3Rpb25zIHdp
-dGhpbiB0aGUgbmV4dCBkYXksIEknbGwgcHVsbCBpbgo+ID4+IE1heGltZSdzIHY1IFJHQiB0byBW
-R0EgYnJpZGdlIGRyaXZlciwgYW5kIGNoYW5nZSB0aGUgY29tcGF0aWJsZSB0bwo+ID4+ICJkdW1i
-LXZnYS1kYWMiLgo+ID4gCj4gPiBUaGF0IHdvcmtzIGZvciBtZS4gWW91J2xsIHByb2JhYmx5IHdh
-bnQgdG8gdXBkYXRlIHRoZSBLY29uZmlnIGFuZCBmaWxlCj4gPiBuYW1lIHRvIG1hdGNoIHRob3Vn
-aC4KPiAKPiBRdWV1ZWQgdG8gZHJtLW1pc2MsIHdpdGggdGhlIGNoYW5nZXMgc3VnZ2VzdGVkIGJ5
-IHlvdSBhbmQgTGF1cmVudC4KClRob3NlIGNoYW5nZXMgd291bGQgaGF2ZSBiZWVuIHdvcnRoIGEg
-cmVwb3N0LiBJJ3ZlIGhhZCBhIGxvb2sgYXQgdGhlIHBhdGNoIAp5b3UndmUgY29tbWl0dGVkIGFu
-ZCBpdCBsb29rcyBPSyB0byBtZSwgc28gbm8gaGFybSBkb25lICh0aGUgY29tbWl0IG1lc3NhZ2Ug
-aXMgCmEgYml0IGluYWNjdXJhdGUsIGJ1dCBpdCdzIG5vdCB0aGUgZW5kIG9mIHRoZSB3b3JsZCku
-IENvdWxkIHlvdSBwbGVhc2UgbWFrZSAKc3VyZSB5b3UgcmVwb3N0IHBhdGNoZXMgaW4gdGhlIGZ1
-dHVyZSB3aGVuIHlvdSBjaGFuZ2UgdGhlbSBpbiBub24tdHJpdmlhbCB3YXlzIAo/CgotLSAKUmVn
-YXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+On Tue, Sep 27, 2016 at 4:50 PM, Andrew Jeffery <andrew@aj.id.au> wrote:
+
+> Consider a scenario with one pin P that has two signals A and B, where A
+> is defined to be higher priority than B: That is, if the mux IP is in a
+> state that would consider both A and B to be active on P, then A will be
+> the active signal.
+>
+> To instead configure B as the active signal we must configure the mux so
+> that A is inactive. The mux state for signals can be described by
+> logical operations on one or more bits from one or more registers (a
+> "signal expression"), which in some cases leads to aliased mux states for
+> a particular signal. Further, signals described by multi-bit bitfields
+> often do not only need to record the states that would make them active
+> (the "enable" expressions), but also the states that makes them inactive
+> (the "disable" expressions). All of this combined leads to four possible
+> states for a signal:
+>
+>          1. A signal is active with respect to an "enable" expression
+>          2. A signal is not active with respect to an "enable" expression
+>          3. A signal is inactive with respect to a "disable" expression
+>          4. A signal is not inactive with respect to a "disable" expression
+>
+> In the case of P, if we are looking to activate B without explicitly
+> having configured A it's enough to consider A inactive if all of A's
+> "enable" signal expressions evaluate to "not active". If any evaluate to
+> "active" then the corresponding "disable" states must be applied so it
+> becomes inactive.
+>
+> For example, on the AST2400 the pins composing GPIO bank H provide
+> signals ROMD8 through ROMD15 (high priority) and those for UART6 (low
+> priority). The mux states for ROMD8 through ROMD15 are aliased, i.e.
+> there are two mux states that result in the respective signals being
+> configured:
+>
+>          A. SCU90[6]=1
+>          B. Strap[4,1:0]=100
+>
+> Further, the second mux state is a 3-bit bitfield that explicitly
+> defines the enabled state but the disabled state is implicit, i.e. if
+> Strap[4,1:0] is not exactly "100" then ROMD8 through ROMD15 are not
+> considered active. This requires the mux function evaluation logic to
+> use approach 2. above, however the existing code was using approach 3.
+> The problem was brought to light on the Palmetto machines where the
+> strap register value is 0x120ce416, and prevented GPIO requests in bank
+> H from succeeding despite the hardware being in a position to allow
+> them.
+>
+> Fixes: 318398c09a8d ("pinctrl: Add core pinctrl support for Aspeed SoCs")
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+
+Patch applied for fixes.
+
+Yours,
+Linus Walleij
