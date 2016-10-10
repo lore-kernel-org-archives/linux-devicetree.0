@@ -1,169 +1,176 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v5] PCI: rockchip: Support property to specify the link capability
-Date: Mon, 10 Oct 2016 18:25:28 +0800
-Message-ID: <1476095128-15380-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Rajat Jain <rajatja@google.com>, Wenrui Li <wenrui.li@rock-chips.com>, Brian Norris <briannorris@chromium.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>
+From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 07/12] mmc: sdhci-msm: Implement set_clock callback for
+ sdhci-msm
+Date: Mon, 10 Oct 2016 13:16:49 +0300
+Message-ID: <20faeedb-ae65-fab7-f52f-aaec2aebe755@intel.com>
+References: <1475678440-3525-1-git-send-email-riteshh@codeaurora.org>
+ <1475678440-3525-8-git-send-email-riteshh@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475678440-3525-8-git-send-email-riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Cc: david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alex.lemberg-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, mateusz.nowak-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Yuliy.Izrailov-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, asutoshd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, david.griego-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, venkatg-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pramod.gurav-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+On 05/10/16 17:40, Ritesh Harjani wrote:
+> sdhci-msm controller may have different clk-rates for each
+> bus speed mode. Thus implement set_clock callback for
+> sdhci-msm driver.
+> 
+> Signed-off-by: Sahitya Tummala <stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 110 ++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 109 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 542ddad..9d18cf0 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -84,6 +84,7 @@ struct sdhci_msm_host {
+>  	struct clk *bus_clk;	/* SDHC bus voter clock */
+>  	u32 *clk_table;
+>  	int clk_table_sz;
+> +	u32 clk_rate;
+>  	struct mmc_host *mmc;
+>  	bool use_14lpp_dll_reset;
+>  };
+> @@ -588,6 +589,113 @@ static unsigned int sdhci_msm_get_min_clock(struct sdhci_host *host)
+>  	}
+>  }
+>  
+> +static unsigned int sdhci_msm_get_msm_clk_rate(struct sdhci_host *host,
+> +					u32 req_clk)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> +	int count;
+> +	unsigned int sel_clk = -1;
+> +
+> +	if (!msm_host->clk_table)
+> +		return clk_round_rate(msm_host->clk, ULONG_MAX);
+> +
+> +	count = msm_host->clk_table_sz;
+> +
+> +	while (count--) {
+> +		sel_clk = msm_host->clk_table[count];
+> +		if (req_clk >= sel_clk)
+> +			return sel_clk;
+> +	}
+> +
+> +	return sel_clk;
+> +}
+> +
+> +/**
+> + * __sdhci_msm_set_clock - sdhci_msm clock control.
+> + *
+> + * Description:
+> + * Implement MSM version of sdhci_set_clock.
+> + * This is required since MSM controller does not
+> + * use internal divider and instead directly control
+> + * the GCC clock as per HW recommendation.
+> + **/
+> +void __sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
+> +{
+> +	u16 clk;
+> +	unsigned long timeout;
+> +
+> +	/*
+> +	 * Keep actual_clock as zero -
+> +	 * - since there is no divider used so no need of having actual_clock.
+> +	 * - MSM controller uses SDCLK for data timeout calculation. If
+> +	 *   actual_clock is zero, host->clock is taken for calculation.
+> +	 */
+> +	host->mmc->actual_clock = 0;
+> +
+> +	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
+> +
+> +	if (clock == 0)
+> +		return;
+> +
+> +	/*
+> +	 * MSM controller do not use clock divider.
+> +	 * Thus read SDHCI_CLOCK_CONTROL and only enable
+> +	 * clock with no divider value programmed.
+> +	 */
+> +	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+> +
+> +	clk |= SDHCI_CLOCK_INT_EN;
+> +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+> +
+> +	/* Wait max 20 ms */
+> +	timeout = 20;
+> +	while (!((clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL))
+> +		& SDHCI_CLOCK_INT_STABLE)) {
+> +		if (timeout == 0) {
+> +			pr_err("%s: Internal clock never stabilised.\n",
+> +			       mmc_hostname(host->mmc));
+> +			return;
+> +		}
+> +		timeout--;
+> +		mdelay(1);
+> +	}
+> +
+> +	clk |= SDHCI_CLOCK_CARD_EN;
+> +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+> +}
+> +
+> +static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> +	u32 msm_clock;
+> +	int rc;
+> +
+> +	if (!clock)
 
-rk3399 supports PCIe 2.x link speeds marginally at best, and on some
-boards, the link won't train at 5 GT/s at all. Rather than sacrifice 500
-ms waiting for training that will never happen, let's add a property
-from devicetree to specify link capability.
+Wouldn't you still need to set msm_host->clk_rate = clock in this case
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
+> +		goto out;
+> +
+> +	spin_unlock_irq(&host->lock);
+> +	if ((clock != msm_host->clk_rate) && msm_host->clk_table) {
+> +		msm_clock = sdhci_msm_get_msm_clk_rate(host, clock);
+> +		rc = clk_set_rate(msm_host->clk, msm_clock);
+> +		if (rc) {
+> +			pr_err("%s: failed to set clock at rate %u, requested clock rate %u\n",
+> +				mmc_hostname(host->mmc), msm_clock, clock);
+> +			goto out;
+> +		}
+> +		msm_host->clk_rate = clock;
+> +		pr_debug("%s: setting clock at rate %lu\n",
+> +			mmc_hostname(host->mmc), clk_get_rate(msm_host->clk));
+> +	}
+> +
+> +	spin_lock_irq(&host->lock);
+> +out:
+> +	if (!msm_host->clk_table)
+> +		return sdhci_set_clock(host, clock);
 
----
+Could put the above 2 lines at the start and then no need to check
+msm_host->clk_table again.
 
-Changes in v5:
-- rebase the code since it isn't cleanly applied after Bjorn's cleanup
+> +	__sdhci_msm_set_clock(host, clock);
+> +}
+> +
+>  static const struct of_device_id sdhci_msm_dt_match[] = {
+>  	{ .compatible = "qcom,sdhci-msm-v4" },
+>  	{},
+> @@ -598,7 +706,7 @@ MODULE_DEVICE_TABLE(of, sdhci_msm_dt_match);
+>  static const struct sdhci_ops sdhci_msm_ops = {
+>  	.platform_execute_tuning = sdhci_msm_execute_tuning,
+>  	.reset = sdhci_reset,
+> -	.set_clock = sdhci_set_clock,
+> +	.set_clock = sdhci_msm_set_clock,
+>  	.get_min_clock = sdhci_msm_get_min_clock,
+>  	.get_max_clock = sdhci_msm_get_max_clock,
+>  	.set_bus_width = sdhci_set_bus_width,
+> 
 
-Changes in v4:
-- define link_gen as u32
-- elaborate more for rockchip,max-link-speed on doc
-
-Changes in v3:
-- Cast a warning for invalid max link speed and use gen1 for it.
-  That looks better than v2. (Suggested by Brian)
-
-Changes in v2:
-- rename the property to rockchip,max-link-speed according to
-  Bjorn's recommendation and take some bits from imx6q-pcie to
-  make this requirement more consisent.
-
- .../devicetree/bindings/pci/rockchip-pcie.txt      |  4 ++
- drivers/pci/host/pcie-rockchip.c                   | 62 ++++++++++++++--------
- 2 files changed, 44 insertions(+), 22 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-index ba67b39..9bb29de 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-@@ -42,6 +42,10 @@ Required properties:
- Optional Property:
- - ep-gpios: contain the entry for pre-reset gpio
- - num-lanes: number of lanes to use
-+- rockchip,max-link-speed: Specify PCI gen for link capability. Must
-+	be '2' for gen2, and '1' for gen1, otherwise will default to gen1.
-+	For backward compatibility, if this property isn't assigned, we
-+	use gen2 by default.
- - vpcie3v3-supply: The phandle to the 3.3v regulator to use for PCIe.
- - vpcie1v8-supply: The phandle to the 1.8v regulator to use for PCIe.
- - vpcie0v9-supply: The phandle to the 0.9v regulator to use for PCIe.
-diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
-index b3548d0..cdbd98d 100644
---- a/drivers/pci/host/pcie-rockchip.c
-+++ b/drivers/pci/host/pcie-rockchip.c
-@@ -53,6 +53,7 @@
- #define   PCIE_CLIENT_ARI_ENABLE	  HIWORD_UPDATE_BIT(0x0008)
- #define   PCIE_CLIENT_CONF_LANE_NUM(x)	  HIWORD_UPDATE(0x0030, ENCODE_LANES(x))
- #define   PCIE_CLIENT_MODE_RC		  HIWORD_UPDATE_BIT(0x0040)
-+#define   PCIE_CLIENT_GEN_SEL_1		  HIWORD_UPDATE(0x0080, 0)
- #define   PCIE_CLIENT_GEN_SEL_2		  HIWORD_UPDATE_BIT(0x0080)
- #define PCIE_CLIENT_BASIC_STATUS1	(PCIE_CLIENT_BASE + 0x48)
- #define   PCIE_CLIENT_LINK_STATUS_UP		0x00300000
-@@ -200,6 +201,7 @@ struct rockchip_pcie {
- 	struct	gpio_desc *ep_gpio;
- 	u32	lanes;
- 	u8	root_bus_nr;
-+	u32	link_gen;
- 	struct	device *dev;
- 	struct	irq_domain *irq_domain;
- };
-@@ -437,13 +439,19 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 		return err;
- 	}
- 
-+	if (rockchip->link_gen == 2)
-+		rockchip_writel(rockchip, PCIE_CLIENT_CONFIG,
-+				PCIE_CLIENT_GEN_SEL_2);
-+	else
-+		rockchip_writel(rockchip, PCIE_CLIENT_CONFIG,
-+				PCIE_CLIENT_GEN_SEL_1);
-+
- 	rockchip_writel(rockchip, PCIE_CLIENT_CONFIG,
- 			    PCIE_CLIENT_CONF_ENABLE |
- 			    PCIE_CLIENT_LINK_TRAIN_ENABLE |
- 			    PCIE_CLIENT_ARI_ENABLE |
- 			    PCIE_CLIENT_CONF_LANE_NUM(rockchip->lanes) |
--			    PCIE_CLIENT_MODE_RC |
--			    PCIE_CLIENT_GEN_SEL_2);
-+			    PCIE_CLIENT_MODE_RC);
- 
- 	err = phy_power_on(rockchip->phy);
- 	if (err) {
-@@ -519,29 +527,31 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 		msleep(20);
- 	}
- 
--	/*
--	 * Enable retrain for gen2. This should be configured only after
--	 * gen1 finished.
--	 */
--	status = rockchip_readl(rockchip, PCIE_RC_CONFIG_LCS);
--	status |= PCIE_RC_CONFIG_LCS_RETRAIN_LINK;
--	rockchip_writel(rockchip, PCIE_RC_CONFIG_LCS, status);
-+	if (rockchip->link_gen == 2) {
-+		/*
-+		 * Enable retrain for gen2. This should be configured
-+		 * only after gen1 finished.
-+		 */
-+		status = rockchip_readl(rockchip, PCIE_RC_CONFIG_LCS);
-+		status |= PCIE_RC_CONFIG_LCS_RETRAIN_LINK;
-+		rockchip_writel(rockchip, PCIE_RC_CONFIG_LCS, status);
-+
-+		timeout = jiffies + msecs_to_jiffies(500);
-+		for (;;) {
-+			status = rockchip_readl(rockchip, PCIE_CORE_CTRL);
-+			if ((status & PCIE_CORE_PL_CONF_SPEED_MASK) ==
-+			    PCIE_CORE_PL_CONF_SPEED_5G) {
-+				dev_dbg(dev, "PCIe link training gen2 pass!\n");
-+				break;
-+			}
- 
--	timeout = jiffies + msecs_to_jiffies(500);
--	for (;;) {
--		status = rockchip_readl(rockchip, PCIE_CORE_CTRL);
--		if ((status & PCIE_CORE_PL_CONF_SPEED_MASK) ==
--		    PCIE_CORE_PL_CONF_SPEED_5G) {
--			dev_dbg(dev, "PCIe link training gen2 pass!\n");
--			break;
--		}
-+			if (time_after(jiffies, timeout)) {
-+				dev_dbg(dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
-+				break;
-+			}
- 
--		if (time_after(jiffies, timeout)) {
--			dev_dbg(dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
--			break;
-+			msleep(20);
- 		}
--
--		msleep(20);
- 	}
- 
- 	/* Check the final link width from negotiated lane counter from MGMT */
-@@ -747,6 +757,14 @@ static int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
- 		rockchip->lanes = 1;
- 	}
- 
-+	rockchip->link_gen = 2;
-+	err = of_property_read_u32(node, "rockchip,max-link-speed",
-+				   &rockchip->link_gen);
-+	if (!err && rockchip->link_gen != 1 && rockchip->link_gen != 2) {
-+		dev_warn(dev, "invalid max-link-speed, default to use gen1\n");
-+		rockchip->link_gen = 1;
-+	}
-+
- 	rockchip->core_rst = devm_reset_control_get(dev, "core");
- 	if (IS_ERR(rockchip->core_rst)) {
- 		if (PTR_ERR(rockchip->core_rst) != -EPROBE_DEFER)
--- 
-2.3.7
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
