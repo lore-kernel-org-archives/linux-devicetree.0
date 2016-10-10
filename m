@@ -1,98 +1,88 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v4] PCI: rockchip: Support property to specify the link
- capability
-Date: Mon, 10 Oct 2016 10:20:47 -0700
-Message-ID: <20161010172046.GA30803@localhost>
-References: <1475743800-1036-1-git-send-email-shawn.lin@rock-chips.com>
- <20161010141639.GA22113@rob-hp-laptop>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 04/10] i2c: i2c-mux-i2cs: Add device tree bindings
+Date: Mon, 10 Oct 2016 17:48:51 +0200
+Message-ID: <83dc46b5-9c37-2813-0eca-267250e7cf2e@axentia.se>
+References: <1475853669-22480-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1475853669-22480-5-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161010141639.GA22113@rob-hp-laptop>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Rajat Jain <rajatja@google.com>, Wenrui Li <wenrui.li@rock-chips.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1475853669-22480-5-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Jean Delvare <jdelvare@suse.com>, Avirup Banerjee <abanerjee@juniper.net>, Georgi Vlaev <gvlaev@juniper.net>, Guenter Roeck <linux@roeck-us.net>, JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Mon, Oct 10, 2016 at 09:16:39AM -0500, Rob Herring wrote:
-> On Thu, Oct 06, 2016 at 04:50:00PM +0800, Shawn Lin wrote:
-> > From: Brian Norris <briannorris@chromium.org>
-> > 
-> > rk3399 supports PCIe 2.x link speeds marginally at best, and on some
-> > boards, the link won't train at 5 GT/s at all. Rather than sacrifice 500
-> > ms waiting for training that will never happen, let's add a property
-> > from devicetree to specify link capability.
-> > 
-> > Signed-off-by: Brian Norris <briannorris@chromium.org>
-> > Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> > 
-> > ---
-> > 
-> > Changes in v4:
-> > - define link_gen as u32
-> > - elaborate more for rockchip,max-link-speed on doc
-> > 
-> > Changes in v3:
-> > - Cast a warning for invalid max link speed and use gen1 for it.
-> >   That looks better than v2. (Suggested by Brian)
-> > 
-> > Changes in v2:
-> > - rename the property to rockchip,max-link-speed according to
-> >   Bjorn's recommendation and take some bits from imx6q-pcie to
-> >   make this requirement more consisent.
-> > 
-> >  .../devicetree/bindings/pci/rockchip-pcie.txt      |  4 ++
-> >  drivers/pci/host/pcie-rockchip.c                   | 63 ++++++++++++++--------
-> >  2 files changed, 44 insertions(+), 23 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> > index ba67b39..9bb29de 100644
-> > --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> > +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> > @@ -42,6 +42,10 @@ Required properties:
-> >  Optional Property:
-> >  - ep-gpios: contain the entry for pre-reset gpio
-> >  - num-lanes: number of lanes to use
-> > +- rockchip,max-link-speed: Specify PCI gen for link capability. Must
-> > +	be '2' for gen2, and '1' for gen1, otherwise will default to gen1.
-> > +	For backward compatibility, if this property isn't assigned, we
-> > +	use gen2 by default.
+On 2016-10-07 17:21, Pantelis Antoniou wrote:
+> From: Georgi Vlaev <gvlaev@juniper.net>
 > 
-> Defaults to gen1 or gen2?
+> Add binding document for the i2c mux driver of Juniper's I2CS FPGA.
+> 
+> Signed-off-by: Georgi Vlaev <gvlaev@juniper.net>
+> [Ported from Juniper kernel]
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> ---
+>  .../devicetree/bindings/i2c/jnx,i2c-mux-i2cs.txt   | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/jnx,i2c-mux-i2cs.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/jnx,i2c-mux-i2cs.txt b/Documentation/devicetree/bindings/i2c/jnx,i2c-mux-i2cs.txt
+> new file mode 100644
+> index 0000000..03d917f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/jnx,i2c-mux-i2cs.txt
+> @@ -0,0 +1,27 @@
+> +* Juniper I2C Mux on I2CS
+> +
+> +	I2C mux driver for switching the RE access to the FPC i2c bus.
+> +	Compatible with the FPC variant of the I2CS.
+> +
+> +Required properties:
+> +
+> +  - compatible: "jnx,i2cs-mux-i2cs".
 
-The wording is a bit confusing, but I think Shawn intended for:
-(a) if no property is provided, default to the maximum supported (i.e.,
-    gen2), to keep backward compatibility
-(b) if a property is provided, but it doesn't contain 1 or 2, just
-    default to 1
+jnx,i2c-mux-i2cs
 
-I already disagreed with (b) (and suggested we make this an error
-instead; we have no business accepting malformed device trees here IMO).
-Alternatives to clear up the confusion Rob pointed out might include:
-(1) explaining this better (i.e., what does "otherwise" mean in the
-    original sentence?)
-(2) changing this to uniformly default to 2 (if someone used an
-    unsupported value, treat it as if the property wasn't there at all)
-(3) reject incorrect values outright (so we don't have this fuzzy middle
-    ground at all)
+> +
+> +The following required properties are defined externally:
+> +
+> +  - Standard I2C mux properties. See i2c-mux.txt in this directory.
 
-> Let's drop rockchip and make this a common property. 
+To accommodate changes pending for 4.9, change "mux" to "gate" in
+this line...
 
-As in, handle this in some generic/common way? AFAICT, there's really
-no way to do that given the current structure of PCIe handling (and the
-nature of these kinds of limitations).
+> +  - I2C child bus nodes. See i2c-mux.txt in this directory.
 
-Or, do you just mean make the name common? (i.e,. "max-link-speed"
-instead of "rockchip,max-link-speed")
+This line is wrong since the child nodes themselves are optional in
+i2c-gate.txt (and i2c-mux.txt). I guess you can just drop it since
+the child nodes are mentioned in i2c-gate.txt (and i2c-mux.txt).
 
-Also for the record, Shawn already sent v5 before your comments.
-Presumably he'll need a v6 then...
+> +
+> +Example:
+> +
+> +fpc0_mux {
+> +	compatible = "jnx,i2c-mux-i2cs";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
 
-Brian
+...drop these two...
 
-> >  - vpcie3v3-supply: The phandle to the 3.3v regulator to use for PCIe.
-> >  - vpcie1v8-supply: The phandle to the 1.8v regulator to use for PCIe.
-> >  - vpcie0v9-supply: The phandle to the 0.9v regulator to use for PCIe.
+> +
+> +	fpc0i2c0: i2c@0 {
+
+...change i2c@0 to i2c-gate...
+
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0>;
+
+...and drop reg.
+
+Cheers,
+Peter
+
+> +	};
+> +};
+> 
+
