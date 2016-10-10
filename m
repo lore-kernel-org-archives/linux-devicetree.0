@@ -1,95 +1,150 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] PCI: rockchip: Support property to specify the link capability
-Date: Mon, 10 Oct 2016 14:34:10 -0500
-Message-ID: <CAL_Jsq+p3Vnw0U4ja09HRbfJ_ECzZjHCGmajAoVRdpPZrM6KTA@mail.gmail.com>
-References: <1475743800-1036-1-git-send-email-shawn.lin@rock-chips.com>
- <20161010141639.GA22113@rob-hp-laptop> <20161010172046.GA30803@localhost>
+Subject: Re: [PATCH 02/10] mfd: sam: Add documentation for the SAM FPGA
+Date: Mon, 10 Oct 2016 14:47:55 -0500
+Message-ID: <20161010194755.GA16910@rob-hp-laptop>
+References: <1475853518-22264-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1475853518-22264-3-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20161010172046.GA30803@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rajat Jain <rajatja@google.com>, Wenrui Li <wenrui.li@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1475853518-22264-3-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Peter Rosin <peda@axentia.se>, Debjit Ghosh <dghosh@juniper.net>, Georgi Vlaev <gvlaev@juniper.net>, Guenter Roeck <linux@roeck-us.net>, Maryam Seraj <mseraj@juniper.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, linux-mtd@lists.infradead.org, linux-watchdog@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 10, 2016 at 12:20 PM, Brian Norris <briannorris@chromium.org> wrote:
-> Hi Rob,
->
-> On Mon, Oct 10, 2016 at 09:16:39AM -0500, Rob Herring wrote:
->> On Thu, Oct 06, 2016 at 04:50:00PM +0800, Shawn Lin wrote:
->> > From: Brian Norris <briannorris@chromium.org>
->> >
->> > rk3399 supports PCIe 2.x link speeds marginally at best, and on some
->> > boards, the link won't train at 5 GT/s at all. Rather than sacrifice 500
->> > ms waiting for training that will never happen, let's add a property
->> > from devicetree to specify link capability.
->> >
->> > Signed-off-by: Brian Norris <briannorris@chromium.org>
->> > Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->> >
->> > ---
->> >
->> > Changes in v4:
->> > - define link_gen as u32
->> > - elaborate more for rockchip,max-link-speed on doc
->> >
->> > Changes in v3:
->> > - Cast a warning for invalid max link speed and use gen1 for it.
->> >   That looks better than v2. (Suggested by Brian)
->> >
->> > Changes in v2:
->> > - rename the property to rockchip,max-link-speed according to
->> >   Bjorn's recommendation and take some bits from imx6q-pcie to
->> >   make this requirement more consisent.
->> >
->> >  .../devicetree/bindings/pci/rockchip-pcie.txt      |  4 ++
->> >  drivers/pci/host/pcie-rockchip.c                   | 63 ++++++++++++++--------
->> >  2 files changed, 44 insertions(+), 23 deletions(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->> > index ba67b39..9bb29de 100644
->> > --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->> > +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->> > @@ -42,6 +42,10 @@ Required properties:
->> >  Optional Property:
->> >  - ep-gpios: contain the entry for pre-reset gpio
->> >  - num-lanes: number of lanes to use
->> > +- rockchip,max-link-speed: Specify PCI gen for link capability. Must
->> > +   be '2' for gen2, and '1' for gen1, otherwise will default to gen1.
->> > +   For backward compatibility, if this property isn't assigned, we
->> > +   use gen2 by default.
->>
->> Defaults to gen1 or gen2?
->
-> The wording is a bit confusing, but I think Shawn intended for:
-> (a) if no property is provided, default to the maximum supported (i.e.,
->     gen2), to keep backward compatibility
-> (b) if a property is provided, but it doesn't contain 1 or 2, just
->     default to 1
->
-> I already disagreed with (b) (and suggested we make this an error
-> instead; we have no business accepting malformed device trees here IMO).
-> Alternatives to clear up the confusion Rob pointed out might include:
-> (1) explaining this better (i.e., what does "otherwise" mean in the
->     original sentence?)
-> (2) changing this to uniformly default to 2 (if someone used an
->     unsupported value, treat it as if the property wasn't there at all)
-> (3) reject incorrect values outright (so we don't have this fuzzy middle
->     ground at all)
+On Fri, Oct 07, 2016 at 06:18:30PM +0300, Pantelis Antoniou wrote:
+> From: Georgi Vlaev <gvlaev@juniper.net>
+> 
+> Add DT bindings document for the SAM MFD device.
+> 
+> Signed-off-by: Georgi Vlaev <gvlaev@juniper.net>
+> [Ported from Juniper kernel]
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/jnx-sam.txt | 94 +++++++++++++++++++++++
+>  1 file changed, 94 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/jnx-sam.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/jnx-sam.txt b/Documentation/devicetree/bindings/mfd/jnx-sam.txt
+> new file mode 100644
+> index 0000000..b4af7ea
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/jnx-sam.txt
+> @@ -0,0 +1,94 @@
+> +Device-Tree bindings for Juniper Networks SAM MFD
+> +
+> +Required properties:
+> +
+> +- compatible - Must be: "jnx,sam"
 
-Sounds good.
+Kind of generic. Only 1 FPGA version or some other way to tell the 
+version?
 
->> Let's drop rockchip and make this a common property.
->
-> As in, handle this in some generic/common way? AFAICT, there's really
-> no way to do that given the current structure of PCIe handling (and the
-> nature of these kinds of limitations).
->
-> Or, do you just mean make the name common? (i.e,. "max-link-speed"
-> instead of "rockchip,max-link-speed")
+> +
+> +Optional properties:
+> +
+> +- pma-coefficients: A set of tupples containing the configuration of the PMA.
 
-Right, just the name and document in a common spot. Could be a simple
-helper function that drivers can call as well.
+What's a PMA? What type of configuration? How many entries?
 
-Rob
+> +Device                   Description
+> +------                   -----------
+> +jnx,i2c-sam		: I2C mux driver
+> +jnx,gpio-sam		: GPIO block
+> +jnx,flash-sam		: MTD Flash
+> +jnx,mdio-sam		: MDIO interfaces
+> +
+> +All these optional nodes are described in their respective binding
+> +documents.
+> +
+> +Example node:
+> +
+> +pci-0000-10-00.0 {
+
+What are the numbers?
+
+> +	compatible = "jnx,sam";
+
+If this is a PCI device, then it should use PCI compatible string 
+syntax.
+
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	pma-coefficients = <4 0x0>;
+> +
+> +	i2c-sam@10 {
+> +		compatible = "jnx,i2c-sam";
+> +		mux-channels = <2>;
+> +		master-offset = <0x10000>;
+> +	};
+> +
+> +	gpiogpqam0: gpio-sam@10 {
+
+gpio@...
+
+Where does 10 come from?
+
+> +		compatible = "jnx,gpio-sam";
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		gpio-count = <297>;
+> +		interrupt-controller;
+> +		/*
+> +		* 1st cell: gpio interrupt status bit
+> +		* 2nd cell: 1st pin
+> +		* 3rd cell: # of pins
+> +		*/
+> +		gpio-interrupts =
+> +			<0 0 12>,   /* phy_int_monitor_en [16] */
+> +			<1 235 24>, /* qsfpp_fpga_int_monitor [17] */
+> +			<2 259 24>, /* qsfpp_fpga_modprs_monitor [18] */
+> +			<3 295 1>,  /* si5345_fpga_monitor [19] */
+> +			<4 294 1>;  /* fpc_pic_int_monitor [20] */
+> +	};
+> +
+> +	flash-sam@10 {
+> +		compatible = "jnx,flash-sam";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		partition@0 {
+> +		reg = <0x0 0x400000>;
+> +			label = "pic0-golden";
+> +			read-only;
+> +		};
+> +		partition@400000 {
+> +			reg = <0x400000 0x400000>;
+> +			label = "pic0-user";
+> +		};
+> +	};
+> +
+> +	mdio-sam@10 {
+> +		compatible = "jnx,mdio-sam";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0x40000>;
+> +
+> +		/* mii_bus types */
+> +		mdio0: mdio-sam@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x0>;
+> +		};
+> +
+> +		mdio1: mdio-sam@4000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x4000>;
+> +		};
+> +
+> +		mdio2: mdio-sam@8000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x8000>;
+> +		};
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
