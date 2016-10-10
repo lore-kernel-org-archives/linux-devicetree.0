@@ -1,82 +1,46 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH/RFT 09/12] usb: host: ohci-da8xx: Add devicetree bindings
- documentation
-Date: Mon, 10 Oct 2016 16:35:39 -0500
-Message-ID: <20161010213539.GA11883@rob-hp-laptop>
-References: <1475858577-10366-1-git-send-email-ahaslam@baylibre.com>
- <1475858577-10366-10-git-send-email-ahaslam@baylibre.com>
+Subject: Re: [PATCH v2 2/2] clk: renesas: cpg-mssr: add R8A7743 support
+Date: Mon, 10 Oct 2016 16:37:43 -0500
+Message-ID: <20161010213743.GA12919@rob-hp-laptop>
+References: <9246696.7P1aOyyQt4@wasted.cogentembedded.com>
+ <2357731.SxJodxn1PJ@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1475858577-10366-10-git-send-email-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <2357731.SxJodxn1PJ-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 07, 2016 at 06:42:54PM +0200, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
-> From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+On Fri, Oct 07, 2016 at 11:47:49PM +0300, Sergei Shtylyov wrote:
+> Add RZ/G1M (R8A7743) Clock  Pulse Generator / Module Standby and Software
+> Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
+> (and RZ/G) code.
 > 
-> This patch documents the device tree bindings required for
-> the ohci controller found in TI da8xx family of SoC's
+> Based on the proof-of-concept R8A7791 CPG/MSSR patch by Geert Uytterhoeven
+> <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>.
 > 
-> Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> 
 > ---
->  .../devicetree/bindings/usb/ohci-da8xx.txt         | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/ohci-da8xx.txt
+> Changes in version 2:
+> - documented the R8A7743 device tree binding;
+> - fixed whitespace errors/warnings reported by checkpatch.pl;
+> - used  tabs instead of spaces for indentation;
+> - fixed the PLL3 column name in the PLL table.
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/ohci-da8xx.txt b/Documentation/devicetree/bindings/usb/ohci-da8xx.txt
-> new file mode 100644
-> index 0000000..e954ce5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/ohci-da8xx.txt
-> @@ -0,0 +1,32 @@
-> +DA8XX USB OHCI controller
-> +
-> +Required properties:
-> +
-> + - compatible: Should be "ti,da830-ohci"
-> + - reg:        Should contain one register range i.e. start and length
-> + - interrupts: Description of the interrupt line
-> + - phys:       Phandle for the PHY device
-> + - phy-names:  Should be "usb-phy"
-> +
-> +Optional properties:
-> + - vbus-gpio:  If present, specifies a gpio that needs to be
+>  Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt |    4 
 
-vbus-gpios
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> +               activated for the bus to be powered.
-> + - oci-gpio:   If present, specifies a gpio that needs to be
-
-oci-gpios
-
-> +               activated for the overcurrent detection.
-> + - power_on_delay: Power On to Power Good time - in ms.
-
-power-on-delay-ms
-
-> +
-> +Example for omap138-lck:
-> +
-> +usb_phy: usb-phy {
-> +        compatible = "ti,da830-usb-phy";
-> +        #phy-cells = <1>;
-> +        status = "disabled";
-> +};
-> +usb11: usb11@0225000 {
-> +        compatible = "ti,da830-ohci";
-> +        reg = <0x225000 0x1000>;
-> +        interrupts = <59>;
-> +        phys = <&usb_phy 1>;
-> +        phy-names = "usb-phy";
-> +        status = "disabled";
-> +};
-> -- 
-> 2.7.1
-> 
+>  drivers/clk/renesas/Kconfig                                  |    1 
+>  drivers/clk/renesas/Makefile                                 |    1 
+>  drivers/clk/renesas/r8a7743-cpg-mssr.c                       |  268 +++++++++++
+>  drivers/clk/renesas/renesas-cpg-mssr.c                       |    6 
+>  drivers/clk/renesas/renesas-cpg-mssr.h                       |    1 
+>  6 files changed, 280 insertions(+), 1 deletion(-)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
