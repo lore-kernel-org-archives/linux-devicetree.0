@@ -1,80 +1,71 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] dt: bindings: vendor-prefix: Add 3 accelerometer
- vendor prefixes
-Date: Mon, 10 Oct 2016 21:19:32 +0100
-Message-ID: <4b2e56d0-db1f-25e8-35ed-00ee25b11176@kernel.org>
-References: <20161006170650.13518-1-hdegoede@redhat.com>
- <20161010145046.GA25572@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 04/10] i2c: i2c-mux-i2cs: Add device tree bindings
+Date: Mon, 10 Oct 2016 15:25:55 -0500
+Message-ID: <20161010202555.GA7182@rob-hp-laptop>
+References: <1475853669-22480-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1475853669-22480-5-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161010145046.GA25572@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1475853669-22480-5-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Jean Delvare <jdelvare@suse.com>, Peter Rosin <peda@axentia.se>, Avirup Banerjee <abanerjee@juniper.net>, Georgi Vlaev <gvlaev@juniper.net>, Guenter Roeck <linux@roeck-us.net>, JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/16 15:50, Rob Herring wrote:
-> On Thu, Oct 06, 2016 at 07:06:50PM +0200, Hans de Goede wrote:
->> Recently the kernel has gotten support in the iio subsystem for a number
->> of new accelerometers from mCube, Memsic and MiraMEMS.
->>
->> This commit adds the vendor prefixes already used for these vendors
->> in Documentation/devicetree/bindings/i2c/trivial-devices.txt to
->> vendor-prefixes.txt.
->>
->> The "full" company names were taken from the company's websites:
->> http://www.mcubemems.com/
->> http://www.memsic.com/
->> http://www.miramems.com/en/
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->> Changes in v2:
->> -Drop domintech, it is already in the iio/next tree
->> ---
->>  Documentation/devicetree/bindings/vendor-prefixes.txt | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> index 5c67e91..abe0129 100644
->> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> @@ -157,13 +157,16 @@ lltc	Linear Technology Corporation
->>  marvell	Marvell Technology Group Ltd.
->>  maxim	Maxim Integrated Products
->>  meas	Measurement Specialties
->> +mcube	mCube
+On Fri, Oct 07, 2016 at 06:21:03PM +0300, Pantelis Antoniou wrote:
+> From: Georgi Vlaev <gvlaev@juniper.net>
 > 
-> Not in alphabetical order.
-Fixed up.
-
-Thanks,
-
-Jonathan
+> Add binding document for the i2c mux driver of Juniper's I2CS FPGA.
 > 
->>  mediatek	MediaTek Inc.
->>  melexis	Melexis N.V.
->> +memsic	MEMSIC Inc.
->>  merrii	Merrii Technology Co., Ltd.
->>  micrel	Micrel Inc.
->>  microchip	Microchip Technology Inc.
->>  micron	Micron Technology Inc.
->>  minix	MINIX Technology Ltd.
->> +miramems	MiraMEMS Sensing Technology Co., Ltd.
->>  mitsubishi	Mitsubishi Electric Corporation
->>  mosaixtech	Mosaix Technologies, Inc.
->>  moxa	Moxa
->> -- 
->> 2.9.3
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Georgi Vlaev <gvlaev@juniper.net>
+> [Ported from Juniper kernel]
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> ---
+>  .../devicetree/bindings/i2c/jnx,i2c-mux-i2cs.txt   | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/jnx,i2c-mux-i2cs.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/jnx,i2c-mux-i2cs.txt b/Documentation/devicetree/bindings/i2c/jnx,i2c-mux-i2cs.txt
+> new file mode 100644
+> index 0000000..03d917f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/jnx,i2c-mux-i2cs.txt
+> @@ -0,0 +1,27 @@
+> +* Juniper I2C Mux on I2CS
+> +
+> +	I2C mux driver for switching the RE access to the FPC i2c bus.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What is RE?
+
+> +	Compatible with the FPC variant of the I2CS.
+> +
+> +Required properties:
+> +
+> +  - compatible: "jnx,i2cs-mux-i2cs".
+> +
+> +The following required properties are defined externally:
+> +
+> +  - Standard I2C mux properties. See i2c-mux.txt in this directory.
+> +  - I2C child bus nodes. See i2c-mux.txt in this directory.
+> +
+> +Example:
+> +
+> +fpc0_mux {
+> +	compatible = "jnx,i2c-mux-i2cs";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+
+Needs some address? 
+
+> +
+> +	fpc0i2c0: i2c@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0>;
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
