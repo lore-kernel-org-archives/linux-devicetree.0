@@ -1,64 +1,93 @@
-From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH 1/3] fpga manager: Add cyclonespi driver for Altera
- fpgas
-Date: Mon, 10 Oct 2016 13:38:18 -0500
-Message-ID: <alpine.DEB.2.02.1610101148520.28839@linuxheads99>
-References: <cover.1475783742.git.stillcompiling@gmail.com> <4b4432c04b4ea92a2af814e3d7866c33f2eb12ea.1475783742.git.stillcompiling@gmail.com> <CAAtXAHcWLpn3DFP6YLWqBxsMQ0O=HNNCmB+kHbHhyAHFHQUbwA@mail.gmail.com> <alpine.DEB.2.02.1610071248320.32627@linuxheads99>
- <CAAtXAHfax5qve7bpxNoObZOZGZk1CoJkusMecMXyMc_w1JBbvw@mail.gmail.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v19 03/12] add bindings document for altera freeze bridge
+Date: Mon, 10 Oct 2016 13:45:26 -0500
+Message-ID: <alpine.DEB.2.02.1610101340230.28839@linuxheads99>
+References: <20160928182200.15800-1-atull@opensource.altera.com>
+ <20160928182200.15800-4-atull@opensource.altera.com>
+ <20161008204946.GC11595@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAtXAHfax5qve7bpxNoObZOZGZk1CoJkusMecMXyMc_w1JBbvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Cc: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, julia-acOepvfBmUk@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161008204946.GC11595@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, delicious.quinoa@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Josh Cartwright <joshc@ni.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, devicetree@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>, Jon Masters <jcm@redhat.com>, Matthew Gerlach <mgerlach@opensource.altera.com>, Frank Rowand <frowand.list@gmail.com>, Walter Goossens <waltergoossens@home.nl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 7 Oct 2016, Moritz Fischer wrote:
+On Sat, 8 Oct 2016, Rob Herring wrote:
 
-> Hi Alan,
+> On Wed, Sep 28, 2016 at 01:21:51PM -0500, Alan Tull wrote:
+> > Add bindings document for the Altera Freeze Bridge.  A Freeze
+> > Bridge is used to gate traffic to/from a region of a FPGA
+> > such that that region can be reprogrammed.  The Freeze Bridge
+> > exist in FPGA fabric that is not currently being reconfigured.
+> > 
+> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> > Signed-off-by: Matthew Gerlach <mgerlach@opensource.altera.com>
+> > ---
+> > v19: Added in v19 of patchset, uses fpga image info struct
+> > ---
+> >  .../bindings/fpga/altera-freeze-bridge.txt         | 23 ++++++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt
+> > new file mode 100644
+> > index 0000000..97ecc11
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt
+> > @@ -0,0 +1,23 @@
+> > +Altera Freeze Bridge Controller Driver
+> > +
+> > +The Altera Freeze Bridge Controller manages one or more freeze bridges.
+> > +The controller can freeze/disable the bridges which prevents signal
+> > +changes from passing through the bridge.  The controller can also
+> > +unfreeze/enable the bridges which allows traffic to pass through the
+> > +bridge normally.
+> > +
+> > +Required properties:
+> > +- compatible		: Should contain "altr,freeze-bridge-controller"
 > 
-> On Fri, Oct 7, 2016 at 11:21 AM, atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
-> 
-> > Moritz, Can you remind me what that issue was there (or point me to
-> > that email, I can't find it)?  I don't think I had a problem with that
-> > in your case.  In general I think if these drivers can take the
-> > bitstream that comes from the manufacturer's tools and stuff it into
-> > the FPGA, then we are accomplishing what we want.  So I am OK with
-> > this here.  The intent of the driver is to load a standard rbf, same
-> > as the other Altera FPGA drivers.
-> 
-> My first version of the zynq fpga manager had byte swapping in there
-> and detection of which format was used. Greg even (accidentially)
-> merged my initial code
-> which I then cleaned up in 4d10eaff5bfc69997a769f9c83b749f0a8c542fa
-> ("fpga: zynq-fpga: Change fw format to handle bin instead of bit.") to
-> address the review
-> comments.
-> 
-> I do see your point about useability, and if this is something that
-> keeps coming up
-> we could pull that into the framework with a flag to SWAP or as part
-> of the image_information
-> struct.
-> 
-> Thoughts?
+> Only one version of the h/w?
 
-I agree.  Some day we may want to see it useful to extend
-the flow to do that.  Currently it's not needed so we can
-wait until we see clearly what is needed.
-
-Alan
+The h/w has a version register.  Currently the driver reads
+the reg and exits if rev != 2.  Future version support can be
+keyed off this register.
 
 > 
-> Cheers,
+> > +- regs			: base address and size for freeze bridge module
+> > +
+> > +Optional properties:
+> > +- bridge-enable		: 0 if driver should disable bridge at startup
+> > +			  1 if driver should enable bridge at startup
+> > +			  Default is to leave bridge in current state.
+> > +
+> > +Example:
+> > +	freeze_controller@100000450 {
 > 
-> Moritz
-> 
-> [1] https://mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg995245.html
-> 
+> Underscore...
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes.
+
+> 
+> > +		compatible = "altr,freeze-bridge-controller";
+> > +		regs = <0x1000 0x10>;
+> > +		bridge-enable = <0>;
+> > +	};
+> > -- 
+> > 2.9.3
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
