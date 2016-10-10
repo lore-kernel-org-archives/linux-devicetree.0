@@ -1,153 +1,157 @@
-From: "linshunquan (A)" <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH] mfd: Add HiSilicon Flash Memory Controller(FMC) driver
-Date: Mon, 10 Oct 2016 11:19:16 +0800
-Message-ID: <6108fbb9-e82b-f56e-cf41-18d8859fbdfd@hisilicon.com>
-References: <1473130643-12310-1-git-send-email-linshunquan1@hisilicon.com>
- <20160913145607.GA11998@rob-hp-laptop>
- <6b522be0-dcec-a84b-f161-69b8805bef62@hisilicon.com>
- <CAL_Jsq+8qPYfiA_bojPP2vm6PGPr9B=ntct=OyhoJTervMZMuA@mail.gmail.com>
+From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] drm/bridge: Add RGB to VGA bridge support
+Date: Mon, 10 Oct 2016 11:05:10 +0530
+Message-ID: <04679d93-ae58-7c94-616e-2eec23e84d6e@codeaurora.org>
+References: <20160930143709.1388-1-maxime.ripard@free-electrons.com>
+ <5319260.UeCnJXKVPe@avalon>
+ <CAOw6vbLC=HnnpuaxFf8EzSTmuYoZd-r1aqx-ixja97Ht_U6S6Q@mail.gmail.com>
+ <1757833.hOePAQC2sg@avalon>
+ <f39e907c-424f-7572-f88e-5dd0b6009631@codeaurora.org>
+ <20161007091444.GO4684@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+8qPYfiA_bojPP2vm6PGPr9B=ntct=OyhoJTervMZMuA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20161007091444.GO4684@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "jalen.hsu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <jalen.hsu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, lvkuanliang 00222834 <lvkuanliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "kevin.lixu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <kevin.lixu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, quqi-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 2016/9/15 5:56, Rob Herring wrote:
-> On Wed, Sep 14, 2016 at 4:12 AM, linshunquan (A)
-> <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
+On 10/07/2016 02:44 PM, Maxime Ripard wrote:
+> On Fri, Oct 07, 2016 at 10:27:31AM +0530, Archit Taneja wrote:
 >>
 >>
->> On 2016/9/13 22:56, Rob Herring wrote:
->>> On Tue, Sep 06, 2016 at 10:57:22AM +0800, linshunquan 00354166 wrote:
->>>> From: Shunquan Lin <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->>>>
->>>> This patch adds driver support for HiSilicon Flash Memory
->>>> Controller(FMC). HiSilicon FMC is a multi-functions device which
->>>> supports SPI Nor flash controller, SPI nand Flash controller and
->>>> parallel nand flash controller.
->>>>
->>>> Signed-off-by: Shunquan Lin <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->>>> +    - spi-nor:
->>>> +    Required properties:
->>>> +            - compatible : "hisilicon,fmc-spi-nor"
->>>> +    see "Documentation/devicetree/bindings/mtd/hisilicon,fmc-spi-nor.txt
->>>> +
->>>> +    - spi-nand:
->>>> +    Required properties:
->>>> +            - compatible : "hisilicon,fmc-spi-nand"
->>>> +            - reg : The chipselect for spi-nand devices
->>>> +            - address-cells : Should be 1.
->>>> +            - size-cells : Should be 0.
->>>> +
->>>> +    - nand:
->>>> +    Required properties:
->>>> +            - compatible : "hisilicon,fmc-nand"
->>>> +            - reg : The chipselect for nand devices
->>>> +            - address-cells : Should be 1.
->>>> +            - size-cells : Should be 0.
->>>> +
->>>> +Example:
->>>> +fmc: spi-nor-controller@10000000 {
->>>> +             compatible = "hisilicon,hisi-fmc";
->>>> +             reg = <0x10000000 0x1000>, <0x14000000 0x1000000>;
->>>> +             reg-names = "control", "memory";
->>>> +             clocks = <&crg FMC_CLK>;
->>>> +             #address-cells = <1>;
->>>> +             #size-cells = <0>;
->>>> +
->>>> +             hisfc:spi-nor@0 {
->>>> +                               compatible = "hisilicon,fmc-spi-nor";
+>> On 10/07/2016 02:34 AM, Laurent Pinchart wrote:
+>>> Hi Sean,
 >>>
->>> Is this an actual h/w sub-block? If not remove this node and make the
->>> spi-nor the immediate child.
+>>> On Thursday 06 Oct 2016 15:53:28 Sean Paul wrote:
+>>>> On Thu, Oct 6, 2016 at 1:27 PM, Laurent Pinchart wrote:
+>>>>> On Thursday 06 Oct 2016 17:09:57 Archit Taneja wrote:
+>>>>>> On 10/06/2016 12:51 PM, Maxime Ripard wrote:
+>>>>>>> On Mon, Oct 03, 2016 at 04:40:57PM +0530, Archit Taneja wrote:
+>>>>>>>> On 09/30/2016 08:07 PM, Maxime Ripard wrote:
+>>>>>>>>> Some boards have an entirely passive RGB to VGA bridge, based on
+>>>>>>>>> either DACs or resistor ladders.
+>>>>>>>>>
+>>>>>>>>> Those might or might not have an i2c bus routed to the VGA connector
+>>>>>>>>> in order to access the screen EDIDs.
+>>>>>>>>>
+>>>>>>>>> Add a bridge that doesn't do anything but expose the modes available
+>>>>>>>>> on the screen, either based on the EDIDs if available, or based on
+>>>>>>>>> the XGA standards.
+>>>>>>>>>
+>>>>>>>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>>>>>>> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>>>>>>> ---
+>>>>>>>>> .../bindings/display/bridge/rgb-to-vga-bridge.txt  |  48 +++++
+>>>>>>>>> drivers/gpu/drm/bridge/Kconfig                     |   7 +
+>>>>>>>>> drivers/gpu/drm/bridge/Makefile                    |   1 +
+>>>>>>>>> drivers/gpu/drm/bridge/rgb-to-vga.c                | 229 +++++++++++++
+>>>>>>>>> 4 files changed, 285 insertions(+)
+>>>>>>>>> create mode 100644
+>>>>>>>>> Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.tx
+>>>>>>>>> t
+>>>>>>>>> create mode 100644 drivers/gpu/drm/bridge/rgb-to-vga.c
+>>>>>>>>>
+>>>>>>>>> diff --git
+>>>>>>>>> a/Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.
+>>>>>>>>> txt
+>>>>>>>>> b/Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.
+>>>>>>>>> txt
+>>>>>>>>> new file mode 100644
+>>>>>>>>> index 000000000000..a8375bc1f9cb
+>>>>>>>>> --- /dev/null
+>>>>>>>>> +++
+>>>>>>>>> b/Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.
+>>>>>>>>> tx
+>>>>>>>>> t @@ -0,0 +1,48 @@
+>>>>>>>>> +Dumb RGB to VGA bridge
+>>>>>>>>> +----------------------
+>>>>>>>>> +
+>>>>>>>>> +This binding is aimed for dumb RGB to VGA bridges that do not
+>>>>>>>>> require
+>>>>>>>>> +any configuration.
+>>>>>>>>> +
+>>>>>>>>> +Required properties:
+>>>>>>>>> +
+>>>>>>>>> +- compatible: Must be "rgb-to-vga-bridge"
+>>>>>>>>
+>>>>>>>> I'd talked to Laurent on IRC if he's okay with this. And I guess you
+>>>>>>>> to had discussed it during XDC too. He's suggested that it'd be better
+>>>>>>>> to have the compatible string as "simple-vga-dac".
+>>>>>>>
+>>>>>>> I just wished this bikeshedding had taken place publicly and be
+>>>>>>> actually part of that discussion, but yeah, ok.
+>>>>>>
+>>>>>> Sorry about that. I'd pinged him for an Ack, the discussion went
+>>>>>> more than that :)
+>>>>>>
+>>>>>>>> Some of the reasons behind having this:
+>>>>>>>>
+>>>>>>>> - We don't need to specify "rgb" in the compatible string since most
+>>>>>>>> simple VGA DACs can only work with an RGB input.
+>>>>>>>
+>>>>>>> Ok.
+>>>>>>>
+>>>>>>>> - Also, with "dac" specified in the string, we don't need to
+>>>>>>>> specifically mention "bridge" in the string. Also, bridge is a drm
+>>>>>>>> specific term.
+>>>>>>>>
+>>>>>>>> - "simple" is considered because it's an unconfigurable bridge, and it
+>>>>>>>> might be misleading for other VGA DACs to not use "vga-dac".
+>>>>>>>
+>>>>>>> All those "simple" bindings are just the biggest lie we ever
+>>>>>>> told. It's simple when you introduce it, and then grows into something
+>>>>>>> much more complicated than a non-simple implementation.
+>>>>>>
+>>>>>> "simple" here is supposed to mean that it's an unconfigurable RGB to
+>>>>>> VGA DAC. This isn't supposed to follow the simple-panel model, where
+>>>>>> you add the "simple-panel" string in the compatible node, along with
+>>>>>> you chip specific compatible string.
+>>>>>
+>>>>> I agree with Maxime, I don't like the word "simple". My preference would
+>>>>> be "vga-dac" for a lack of a better qualifier than "simple" to describe
+>>>>> the fact that the device requires no configuration. My only concern with
+>>>>> "vga-dac" is that we would restrict usage of that compatible string for a
+>>>>> subset of VGA DACs, with more complex devices not being compatible with
+>>>>> "vga-dac" even though they are VGA DACs. That's a problem I can live with
+>>>>> though.
+>>>>
+>>>> While we're bikeshedding (feel free to ignore my input on this), I
+>>>> think Maxime's initial "dumb" qualifier was better than "simple".
 >>>
+>>> I think I agree.
+>>>
+>>>> I think "passive" also gets the point across better than "simple", which
+>>>> we've already established as something else in drm.
+>>>
+>>> To my electrical engineer's ear, passive refers to a component or combination
+>>> of components that is not capable of power gain. The resistors ladder VGA DAC
+>>> that Maxime is trying to support is a passive system, but the ADV7123 VGA DAC
+>>> that equally requires no configuration is an active component.
 >>
->> Hi Herring,
->> Thanks for your reply. Firstly I must correct a mistake here:
->>          fmc: spi-nor-controller@10000000 {
->>                  compatible = "hisilicon,hisi-fmc";
->>                 ...
->>   correct to:
->>          fmc: flash-memory-controller@10000000 {
->>                  compatible = "hisilicon,hisi-fmc";
->>                 ...
->>
->> Spi-nor is a sub block of HiSilicon Flash Memory Controller(FMC), HiSilicon FMC
->> is a multi-functions device, besides it also supports SPI Nand and Parallel Nand.
-> 
-> I understand that, but then were are the registers for the sub-blocks?
-> If there is only a single set of chipselects for all devices (i.e. 0
-> to N) and no separate register blocks for the sub-blocks, then you
-> don't need this intermediate node.
-> 
+>> If no one has any more objections within the next day, I'll pull in
+>> Maxime's v5 RGB to VGA bridge driver, and change the compatible to
+>> "dumb-vga-dac".
+>
+> That works for me. You'll probably want to update the Kconfig and file
+> name to match though.
 
-Hi Rob，
-I'm sorry it's taken me so long to get back to you.
+Queued to drm-misc, with the changes suggested by you and Laurent.
 
-To the HiSilicon FMC, different devices have different chipselect, and you are right,
-the register blocks are no separate, but spi nor, spi nand and nand may require
-different initial configuration of default sublock clocks and clock frequencies, so
-I think this node is necessary.
+Thanks,
+Archit
 
-Here is a sample about the soc Hi3519:
+>
+> Maxime
+>
 
-in arch/arm/boot/dts/hi3519.dtsi defined:
-
-fmc: flash-memory-controller@10000000 {
-    compatible = "hisilicon,hisi-fmc";
-    reg = <0x10000000 0x1000>, <0x14000000 0x1000000>;
-    reg-names = "control", "memory";
-    clocks = <&crg HI3519_FMC_CLK>;
-    #address-cells = <1>;
-    #size-cells = <0>;
-
-    hisfc:spi-nor {
-        compatible = "hisilicon,hisi-sfc";
-        assigned-clocks = <&crg HI3519_FMC_CLK>;
-        assigned-clock-rates = <24000000>;
-        #address-cells = <1>;
-        #size-cells = <0>;
-    };
-
-    hisnfc:spi-nand {
-        compatible = "hisilicon,fmc-spi-nand";
-        assigned-clocks = <&crg HI3519_FMC_CLK>;
-        assigned-clock-rates = <3000000>;
-        #address-cells = <1>;
-        #size-cells = <0>;
-    };
-};
-
-in arch/arm/boot/dts/hi3519-demb.dts, which include hi3519.disi, defined:
-
-&hisfc {
-    hi_sfc@0 {
-        compatible = "jedec,spi-nor";
-        reg = <0>;
-        spi-max-frequency = <160000000>;
-        m25p,fast-read;
-    };
-};
-
-&hisnfc {
-    hinand@0 {
-        compatible = "jedec,spi-nand";
-        reg = <0>;
-        spi-max-frequency = <200000000>;
-    };
-};
-
-Maybe I have not well understood on DTS, I hope I can get some suggestions from Rob.
-
-Best regards
-/Shunquan Lin
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
