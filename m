@@ -1,202 +1,110 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v3 3/6] pwm: imx: support output polarity inversion
-Date: Mon, 10 Oct 2016 14:01:03 -0700
-Message-ID: <5325a332099473a2d8382530f79c5a8e@agner.ch>
-References: <20161007151129.6043-1-bhuvanchandra.dv@toradex.com>
- <20161007151129.6043-4-bhuvanchandra.dv@toradex.com>
+From: Mahoda Ratnayaka <Mahoda.Ratnayaka@alliedtelesis.co.nz>
+Subject: Re: [PATCH v2] Documentation: dtb: lm87: Add hwmon binding
+ documentation.
+Date: Mon, 10 Oct 2016 21:25:33 +0000
+Message-ID: <1476134733241.14174@alliedtelesis.co.nz>
+References: <20161004005123.2004-1-mahoda.ratnayaka@alliedtelesis.co.nz>,<20161009012911.GQ18158@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161007151129.6043-4-bhuvanchandra.dv@toradex.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Cc: shawnguo@kernel.org, thierry.reding@gmail.com, l.majewski@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lothar Wassmann <LW@karo-electronics.de>, boris.brezillon@free-electrons.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <20161009012911.GQ18158@rob-hp-laptop>
+Content-Language: en-NZ
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, Chris Packham <Chris.Packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-07 08:11, Bhuvanchandra DV wrote:
-> From: Lothar Wassmann <LW@KARO-electronics.de>
-> 
-> The i.MX pwm unit on i.MX27 and newer SoCs provides a configurable output
-> polarity. This patch adds support to utilize this feature where available.
-> 
-> Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
-> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-> Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-> Acked-by: Shawn Guo <shawn.guo@linaro.org>
-> Reviewed-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
->  Documentation/devicetree/bindings/pwm/imx-pwm.txt |  6 +--
->  drivers/pwm/pwm-imx.c                             | 51 +++++++++++++++++++++--
->  2 files changed, 51 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-> b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-> index e00c2e9..c61bdf8 100644
-> --- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-> @@ -6,8 +6,8 @@ Required properties:
->    - "fsl,imx1-pwm" for PWM compatible with the one integrated on i.MX1
->    - "fsl,imx27-pwm" for PWM compatible with the one integrated on i.MX27
->  - reg: physical base address and length of the controller's registers
-> -- #pwm-cells: should be 2. See pwm.txt in this directory for a description of
-> -  the cells format.
-> +- #pwm-cells: 2 for i.MX1 and 3 for i.MX27 and newer SoCs. See pwm.txt
-> +  in this directory for a description of the cells format.
->  - clocks : Clock specifiers for both ipg and per clocks.
->  - clock-names : Clock names should include both "ipg" and "per"
->  See the clock consumer binding,
-> @@ -17,7 +17,7 @@ See the clock consumer binding,
->  Example:
->  
->  pwm1: pwm@53fb4000 {
-> -	#pwm-cells = <2>;
-> +	#pwm-cells = <3>;
->  	compatible = "fsl,imx53-pwm", "fsl,imx27-pwm";
->  	reg = <0x53fb4000 0x4000>;
->  	clocks = <&clks IMX5_CLK_PWM1_IPG_GATE>,
-> diff --git a/drivers/pwm/pwm-imx.c b/drivers/pwm/pwm-imx.c
-> index d600fd5..c37d223 100644
-> --- a/drivers/pwm/pwm-imx.c
-> +++ b/drivers/pwm/pwm-imx.c
-> @@ -38,6 +38,7 @@
->  #define MX3_PWMCR_DOZEEN		(1 << 24)
->  #define MX3_PWMCR_WAITEN		(1 << 23)
->  #define MX3_PWMCR_DBGEN			(1 << 22)
-> +#define MX3_PWMCR_POUTC			(1 << 18)
->  #define MX3_PWMCR_CLKSRC_IPG_HIGH	(2 << 16)
->  #define MX3_PWMCR_CLKSRC_IPG		(1 << 16)
->  #define MX3_PWMCR_SWR			(1 << 3)
-> @@ -180,6 +181,9 @@ static int imx_pwm_config_v2(struct pwm_chip *chip,
->  	if (enable)
->  		cr |= MX3_PWMCR_EN;
->  
-> +	if (pwm->args.polarity == PWM_POLARITY_INVERSED)
-> +		cr |= MX3_PWMCR_POUTC;
-> +
-
-This seems wrong to me, the config callback is meant for period/duty
-cycle only. The set_polarity callback should get called in case a
-different polarity is requested.
-
-
->  	writel(cr, imx->mmio_base + MX3_PWMCR);
->  
->  	return 0;
-> @@ -240,27 +244,62 @@ static void imx_pwm_disable(struct pwm_chip
-> *chip, struct pwm_device *pwm)
->  	clk_disable_unprepare(imx->clk_per);
->  }
->  
-> -static struct pwm_ops imx_pwm_ops = {
-> +static int imx_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				enum pwm_polarity polarity)
-> +{
-> +	struct imx_chip *imx = to_imx_chip(chip);
-> +	u32 val;
-> +
-> +	if (polarity == pwm->args.polarity)
-> +		return 0;
-
-I don't think that this is right. Today, pwm_apply_args (in
-include/linux/pwm.h) copies the polarity from args to state.polarity,
-which is then passed as polarity argument to this function. So this will
-always return 0 afaict.
-
-I would just drop that.
-
-There is probably one little problem in the current state of affairs: If
-the bootloader makes use of a PWM channel with inverted state, then the
-kernel would not know about that and currently assume a wrong initial
-state... I guess at one point in time we should implement the state
-retrieval callback and move to the new atomic PWM API, which would mean
-to implement apply callback.
-
---
-Stefan
-
-
-> +
-> +	val = readl(imx->mmio_base + MX3_PWMCR);
-> +
-> +	if (polarity == PWM_POLARITY_INVERSED)
-> +		val |= MX3_PWMCR_POUTC;
-> +	else
-> +		val &= ~MX3_PWMCR_POUTC;
-> +
-> +	writel(val, imx->mmio_base + MX3_PWMCR);
-> +
-> +	dev_dbg(imx->chip.dev, "%s: polarity set to %s\n", __func__,
-> +		polarity == PWM_POLARITY_INVERSED ? "inverted" : "normal");
-> +
-> +	return 0;
-> +}
-> +
-> +static struct pwm_ops imx_pwm_ops_v1 = {
->  	.enable = imx_pwm_enable,
->  	.disable = imx_pwm_disable,
->  	.config = imx_pwm_config,
->  	.owner = THIS_MODULE,
->  };
->  
-> +static struct pwm_ops imx_pwm_ops_v2 = {
-> +	.enable = imx_pwm_enable,
-> +	.disable = imx_pwm_disable,
-> +	.set_polarity = imx_pwm_set_polarity,
-> +	.config = imx_pwm_config,
-> +	.owner = THIS_MODULE,
-> +};
-> +
->  struct imx_pwm_data {
->  	int (*config)(struct pwm_chip *chip,
->  		struct pwm_device *pwm, int duty_ns, int period_ns);
->  	void (*set_enable)(struct pwm_chip *chip, bool enable);
-> +	struct pwm_ops *pwm_ops;
->  };
->  
->  static struct imx_pwm_data imx_pwm_data_v1 = {
->  	.config = imx_pwm_config_v1,
->  	.set_enable = imx_pwm_set_enable_v1,
-> +	.pwm_ops = &imx_pwm_ops_v1,
->  };
->  
->  static struct imx_pwm_data imx_pwm_data_v2 = {
->  	.config = imx_pwm_config_v2,
->  	.set_enable = imx_pwm_set_enable_v2,
-> +	.pwm_ops = &imx_pwm_ops_v2,
->  };
->  
->  static const struct of_device_id imx_pwm_dt_ids[] = {
-> @@ -282,6 +321,8 @@ static int imx_pwm_probe(struct platform_device *pdev)
->  	if (!of_id)
->  		return -ENODEV;
->  
-> +	data = of_id->data;
-> +
->  	imx = devm_kzalloc(&pdev->dev, sizeof(*imx), GFP_KERNEL);
->  	if (imx == NULL)
->  		return -ENOMEM;
-> @@ -300,18 +341,22 @@ static int imx_pwm_probe(struct platform_device *pdev)
->  		return PTR_ERR(imx->clk_ipg);
->  	}
->  
-> -	imx->chip.ops = &imx_pwm_ops;
-> +	imx->chip.ops = data->pwm_ops;
->  	imx->chip.dev = &pdev->dev;
->  	imx->chip.base = -1;
->  	imx->chip.npwm = 1;
->  	imx->chip.can_sleep = true;
-> +	if (data->pwm_ops->set_polarity) {
-> +		dev_dbg(&pdev->dev, "PWM supports output inversion\n");
-> +		imx->chip.of_xlate = of_pwm_xlate_with_flags;
-> +		imx->chip.of_pwm_n_cells = 3;
-> +	}
->  
->  	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	imx->mmio_base = devm_ioremap_resource(&pdev->dev, r);
->  	if (IS_ERR(imx->mmio_base))
->  		return PTR_ERR(imx->mmio_base);
->  
-> -	data = of_id->data;
->  	imx->config = data->config;
->  	imx->set_enable = data->set_enable;
+Hi Rob,=0A=
+=0A=
+Thank you for the comments, I'll address them and send back another patch s=
+hortly.=0A=
+=0A=
+As, for your question about " These need vendor prefixes. Or would they app=
+ly for multiple vendors of LM87?"=0A=
+=0A=
+The driver is shared between the ADM1024 H/W monitoring sensor and LM87 sen=
+sor, and both of them have the=0A=
+same pin configuration for setting the channel mode register.  So, I don't =
+think vendor prefixes are applicable for=0A=
+this case.=0A=
+=0A=
+Thanks,=0A=
+Mahoda=0A=
+________________________________________=0A=
+From: Rob Herring <robh@kernel.org>=0A=
+Sent: Sunday, 9 October 2016 2:29 p.m.=0A=
+To: Mahoda Ratnayaka=0A=
+Cc: devicetree@vger.kernel.org; Mark Rutland; linux-hwmon@vger.kernel.org; =
+Chris Packham=0A=
+Subject: Re: [PATCH v2] Documentation: dtb: lm87: Add hwmon binding documen=
+tation.=0A=
+=0A=
+On Tue, Oct 04, 2016 at 01:51:23PM +1300, Mahoda Ratnayaka wrote:=0A=
+> This patch adds lm87 hwmon device tree node documentation.=0A=
+>=0A=
+> Signed-off-by: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>=0A=
+> ---=0A=
+>=0A=
+> Notes:=0A=
+>     Changes since v1:=0A=
+>      As suggested include all the changes are moved in=0A=
+>      to the same patch and the all the optional properties=0A=
+>      are now defined instead of using a single variable to=0A=
+>      indicate those properties.=0A=
+>=0A=
+>  Documentation/devicetree/bindings/hwmon/lm87.txt | 29 ++++++++++++++++++=
+++++++=0A=
+>  1 file changed, 29 insertions(+)=0A=
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/lm87.txt=0A=
+>=0A=
+> diff --git a/Documentation/devicetree/bindings/hwmon/lm87.txt b/Documenta=
+tion/devicetree/bindings/hwmon/lm87.txt=0A=
+> new file mode 100644=0A=
+> index 0000000..ac578fff=0A=
+> --- /dev/null=0A=
+> +++ b/Documentation/devicetree/bindings/hwmon/lm87.txt=0A=
+> @@ -0,0 +1,29 @@=0A=
+> +*LM87 hwmon sensor.=0A=
+> +=0A=
+> +Required properties:=0A=
+> +- compatible: Should be=0A=
+> +     "ti,lm87"=0A=
+> +=0A=
+> +- reg: I2C address=0A=
+> +=0A=
+> +optional properties:=0A=
+> +- has-temp3: This configures pins 18 and 19 to be used as a second=0A=
+> +             remote temperature sensing channel. By default the pins=0A=
+> +             are configured as voltage input pins in0 and in5.=0A=
+> +=0A=
+> +- has-in6: When set, pin 5 is configured to be used as voltage input=0A=
+> +           in6. Otherwise the pin is set as FAN1 input.=0A=
+> +=0A=
+> +- has-in7: When set, pin 6 is configured to be used as voltage input=0A=
+> +           in6. Otherwise the pin is set as FAN2 input.=0A=
+=0A=
+Should be in7 ^^^?=0A=
+=0A=
+These need vendor prefixes. Or would they apply for multiple vendors of=0A=
+LM87?=0A=
+=0A=
+> +=0A=
+> +- has-vcc-5v: sets the nominal voltage for internal VCC measurement to 5=
+V.=0A=
+> +              Default is 3.3V.=0A=
+=0A=
+This is set to what the supply voltage is? If so, use the regulator=0A=
+binding.=0A=
+=0A=
+> +=0A=
+> +Example:=0A=
+> +=0A=
+> +lm87@2e {=0A=
+> +     compatible =3D "ti,lm87";=0A=
+> +     reg =3D <0x2e>;=0A=
+> +     has-temp3;=0A=
+> +};=0A=
+> --=0A=
+> 2.10.0=0A=
+>=0A=
