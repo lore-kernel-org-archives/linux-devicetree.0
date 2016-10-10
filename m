@@ -1,42 +1,66 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] net: smc91x: isolate u16 writes alignment workaround
-Date: Mon, 10 Oct 2016 08:30:34 +0200
-Message-ID: <87zimc7m2d.fsf@belgarion.home>
-References: <1476045227-2970-1-git-send-email-robert.jarzmik@free.fr>
-        <CAHp75Vco13D7qQmC8vn6HGg9RYOwR-MgL2uo_cn_OSo4sk84UQ@mail.gmail.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v3] drm: tilcdc: add a da850-specific compatible string
+Date: Mon, 10 Oct 2016 09:54:08 +0300
+Message-ID: <cbf66671-3de5-6772-6382-05a1ca593871@ti.com>
+References: <1475509519-29516-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75Vco13D7qQmC8vn6HGg9RYOwR-MgL2uo_cn_OSo4sk84UQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-        (Andy Shevchenko's message of "Mon, 10 Oct 2016 00:55:17 +0300")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1475509519-29516-1-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
-
->> +#define SMC_outw(lp, v, a, r)                                          \
->> +       _SMC_outw_align4((v), (a), (r),                                 \
->> +                        IS_BUILTIN(CONFIG_ARCH_PXA) && ((r) & 2) &&    \
->> +                        lp->half_word_align4)
->
-> Hmm... Isn't enough to have just (r) & 2 && lp->half_word_align4 ?
-
-It wouldn't be equivalent to what we had before.
-
-The point of the previous code was to compile out as much as possible of this
-test. Therefore, at compilation time for omap1 boards, the compiler would
-evaluate the test to 0, and never leave the workaround code compiled.
-
-So it would be enough, but worse performance wise and not equivalent for non-pxa
-boards, hence this test.
-
-Cheers.
-
--- 
-Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTAvMDMvMTYgMTg6NDUsIEJhcnRvc3ogR29sYXN6ZXdza2kgd3JvdGU6Cj4gRHVlIHRvIHNv
+bWUgcG90ZW50aWFsIHR3ZWFrcyBmb3IgdGhlIGRhODUwIExDREMgKGZvciBleGFtcGxlOiB0aGUK
+PiByZXF1aXJlZCBtZW1vcnkgYmFuZHdpdGggc2V0dGluZ3MpIHdlIG5lZWQgYSBzZXBhcmF0ZSBj
+b21wYXRpYmxlCj4gZm9yIHRoZSBJUCBwcmVzZW50IG9uIHRoZSBkYTg1MCBib2FyZHMuCj4gCj4g
+U3VnZ2VzdGVkLWJ5OiBTZWtoYXIgTm9yaSA8bnNla2hhckB0aS5jb20+Cj4gU2lnbmVkLW9mZi1i
+eTogQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbT4KClRoYW5r
+cywKSSBwaWNrIHRoaXMgdXAsIGJ1dCBJIHdvbid0IHNlbmQgaXQgZm9yIDQuOSBhbnkgbW9yZS4g
+VGhlIExDREMgcmV2MQpzdXBwb3J0IGlzIG5vdCB5ZXQgY29tcGxldGUgaW4gNC45IGFueXdheS4K
+CkJSLApKeXJpCgo+IC0tLQo+IHYxIC0+IHYyOgo+IC0gYWRkZWQgdGhlIG5ldyBjb21wYXRpYmxl
+IHRvIHRoZSBiaW5kaW5ncyBkb2N1bWVudGF0aW9uCj4gCj4gdjIgLT4gdjM6Cj4gLSBtYWRlIHRo
+ZSBkb2N1bWVudGF0aW9uIG1vcmUgZGV0YWlsZWQKPiAKPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGlsY2RjL3RpbGNkYy50eHQgfCA2ICsrKystLQo+ICBkcml2
+ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19kcnYuYyAgICAgICAgICAgICAgICAgICAgICAgICB8
+IDEgKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkK
+PiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvdGlsY2RjL3RpbGNkYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS90aWxjZGMvdGlsY2RjLnR4dAo+IGluZGV4IGE4M2FiZDcuLjZmZGRiNGYgMTAwNjQ0
+Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGlsY2Rj
+L3RpbGNkYy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS90aWxjZGMvdGlsY2RjLnR4dAo+IEBAIC0xLDcgKzEsOSBAQAo+ICBEZXZpY2UtVHJlZSBi
+aW5kaW5ncyBmb3IgdGlsY2RjIERSTSBkcml2ZXIKPiAgCj4gIFJlcXVpcmVkIHByb3BlcnRpZXM6
+Cj4gLSAtIGNvbXBhdGlibGU6IHZhbHVlIHNob3VsZCBiZSAidGksYW0zM3h4LXRpbGNkYyIuCj4g
+KyAtIGNvbXBhdGlibGU6IHZhbHVlIHNob3VsZCBiZSBvbmUgb2YgdGhlIGZvbGxvd2luZzoKPiAr
+ICAgIC0gInRpLGFtMzN4eC10aWxjZGMiIGZvciBBTTMzNXggYmFzZWQgYm9hcmRzCj4gKyAgICAt
+ICJ0aSxkYTg1MC10aWxjZGMiIGZvciBEQTg1MC9BTTE4eC9PTUFQLUwxMzggYmFzZWQgYm9hcmRz
+Cj4gICAtIGludGVycnVwdHM6IHRoZSBpbnRlcnJ1cHQgbnVtYmVyCj4gICAtIHJlZzogYmFzZSBh
+ZGRyZXNzIGFuZCBzaXplIG9mIHRoZSBMQ0RDIGRldmljZQo+ICAKPiBAQCAtNTEsNyArNTMsNyBA
+QCBPcHRpb25hbCBub2RlczoKPiAgRXhhbXBsZToKPiAgCj4gIAlmYjogZmJANDgzMGUwMDAgewo+
+IC0JCWNvbXBhdGlibGUgPSAidGksYW0zM3h4LXRpbGNkYyI7Cj4gKwkJY29tcGF0aWJsZSA9ICJ0
+aSxhbTMzeHgtdGlsY2RjIiwgInRpLGRhODUwLXRpbGNkYyI7Cj4gIAkJcmVnID0gPDB4NDgzMGUw
+MDAgMHgxMDAwPjsKPiAgCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZpbnRjPjsKPiAgCQlpbnRlcnJ1
+cHRzID0gPDM2PjsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNf
+ZHJ2LmMgYi9kcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19kcnYuYwo+IGluZGV4IGE2OTQ5
+NzcuLjIzMWYyYzcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNf
+ZHJ2LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19kcnYuYwo+IEBAIC03
+MjMsNiArNzIzLDcgQEAgc3RhdGljIGludCB0aWxjZGNfcGRldl9yZW1vdmUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldikKPiAgCj4gIHN0YXRpYyBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHRpbGNk
+Y19vZl9tYXRjaFtdID0gewo+ICAJCXsgLmNvbXBhdGlibGUgPSAidGksYW0zM3h4LXRpbGNkYyIs
+IH0sCj4gKwkJeyAuY29tcGF0aWJsZSA9ICJ0aSxkYTg1MC10aWxjZGMiLCB9LAo+ICAJCXsgfSwK
+PiAgfTsKPiAgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgdGlsY2RjX29mX21hdGNoKTsKPiAKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
