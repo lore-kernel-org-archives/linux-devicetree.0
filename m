@@ -1,100 +1,97 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH 08/10] leds: Add binding for Juniper's I2CS FPGA
-Date: Mon, 10 Oct 2016 11:41:45 +0200
-Message-ID: <36af086b-ffae-8f69-ee32-6a2956822bc6@samsung.com>
-References: <1475853669-22480-1-git-send-email-pantelis.antoniou@konsulko.com>
- <CGME20161007152351eucas1p1685ee4ca39b4b8845ae5076a023445d5@eucas1p1.samsung.com>
- <1475853669-22480-9-git-send-email-pantelis.antoniou@konsulko.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v5 05/12] mmc: sdhci-msm: Add get_min_clock() and
+ get_max_clock() callback
+Date: Mon, 10 Oct 2016 12:46:50 +0300
+Message-ID: <54b602df-9c23-dc81-fd51-d04b441b99c0@intel.com>
+References: <1475678440-3525-1-git-send-email-riteshh@codeaurora.org>
+ <1475678440-3525-6-git-send-email-riteshh@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-reply-to: <1475853669-22480-9-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Richard Purdie <rpurdie@rpsys.net>, Jean Delvare <jdelvare@suse.com>, Peter Rosin <peda@axentia.se>, Avirup Banerjee <abanerjee@juniper.net>, Georgi Vlaev <gvlaev@juniper.net>, Guenter Roeck <linux@roeck-us.net>, JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org, linux-hwmon@vger.kernel.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1475678440-3525-6-git-send-email-riteshh@codeaurora.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ritesh Harjani <riteshh@codeaurora.org>, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, shawn.lin@rock-chips.com
+Cc: david.brown@linaro.org, andy.gross@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, sboyd@codeaurora.org, bjorn.andersson@linaro.org, pramod.gurav@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pantelis,
-
-On 10/07/2016 05:21 PM, Pantelis Antoniou wrote:
-> From: Georgi Vlaev <gvlaev@juniper.net>
->
-> Document bindings for the I2CS FPGA leds.
->
-> Signed-off-by: Georgi Vlaev <gvlaev@juniper.net>
-> [Ported from Juniper kernel]
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+On 05/10/16 17:40, Ritesh Harjani wrote:
+> This add get_min_clock() and get_max_clock() callback
+> for sdhci-msm. sdhci-msm min/max clocks may be different
+> hence implement these callbacks.
+> 
+> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
 > ---
->  .../devicetree/bindings/leds/leds-i2cs.txt         | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-i2cs.txt
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-i2cs.txt b/Documentation/devicetree/bindings/leds/leds-i2cs.txt
-> new file mode 100644
-> index 0000000..100e584
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-i2cs.txt
-> @@ -0,0 +1,34 @@
-> +Juniper I2CS LED driver.
+>  drivers/mmc/host/sdhci-msm.c | 29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 042ecb2..4e17201 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -68,6 +68,7 @@
+>  #define CORE_VENDOR_SPEC_CAPABILITIES0	0x11c
+>  
+>  #define TCXO_FREQ		19200000
+> +#define SDHCI_MSM_MIN_CLOCK	400000
+>  
+>  #define CDR_SELEXT_SHIFT	20
+>  #define CDR_SELEXT_MASK		(0xf << CDR_SELEXT_SHIFT)
+> @@ -561,6 +562,32 @@ static irqreturn_t sdhci_msm_pwr_irq(int irq, void *data)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static unsigned int sdhci_msm_get_max_clock(struct sdhci_host *host)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> +	int count;
 > +
-> +This is present in Juniper platforms that use a I2CS Slave FPGA.
+> +	if (msm_host->clk_table) {
+
+I don't know if DT allows empty arrays, but if it does, might not
+msm_host->clk_table_sz be zero here.
+
+> +		count = msm_host->clk_table_sz;
+> +		return msm_host->clk_table[count - 1];
+> +	} else {
+
+'else' is redundant here.
+
+> +		return clk_round_rate(msm_host->clk, ULONG_MAX);
+> +	}
+> +}
 > +
-> +Required properties:
-> +  - compatible: must be "jnx,leds-i2cs"
-
-s/compatible:/compatible :/
-
-Also treat the description as a regular sentence, i.e. begin it
-with a capital letter and put a dot at the end.
-
-> +  - #address-cells : must be 1.
-> +  - #size-cells : must be 0.
-
-s/must/Must/
-
-> +Each led is represented as a sub-node of the jnx,leds-i2cs device.
+> +static unsigned int sdhci_msm_get_min_clock(struct sdhci_host *host)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
 > +
-> +LED sub-node properties:
-> +- label : (optional) see Documentation/devicetree/bindings/leds/common.txt
-> +- reg : number of LED
-> +- linux,default-trigger : (optional)
-> +   see Documentation/devicetree/bindings/leds/common.txt
+> +	if (msm_host->clk_table) {
 
-Driver uses also "hw-blink" property. Please document it here, but
-add also a prefix:
+Same about possibility of msm_host->clk_table_sz being zero.
 
-jnx,hw-blink
+> +		return msm_host->clk_table[0];
+> +	} else {
 
-Also "jnx" entry should be added to 
-Documentation/devicetree/bindings/vendor-prefixes.txt.
+'else' is redundant here.
 
-> +Example:
+> +		return SDHCI_MSM_MIN_CLOCK;
+> +	}
+> +}
 > +
-> +leds_fpc0: leds-jnx-i2cs {
-> +	compatible = "jnx,leds-i2cs";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	fpc0-fail {
-> +		reg = <1>;
+>  static const struct of_device_id sdhci_msm_dt_match[] = {
+>  	{ .compatible = "qcom,sdhci-msm-v4" },
+>  	{},
+> @@ -572,6 +599,8 @@ static const struct sdhci_ops sdhci_msm_ops = {
+>  	.platform_execute_tuning = sdhci_msm_execute_tuning,
+>  	.reset = sdhci_reset,
+>  	.set_clock = sdhci_set_clock,
+> +	.get_min_clock = sdhci_msm_get_min_clock,
+> +	.get_max_clock = sdhci_msm_get_max_clock,
+>  	.set_bus_width = sdhci_set_bus_width,
+>  	.set_uhs_signaling = sdhci_msm_set_uhs_signaling,
+>  	.voltage_switch = sdhci_msm_voltage_switch,
+> 
 
-It would be good to provide also an example of "label"
-property to suggest LED class device name according to
-the LED class device naming convention.
-See Documentation/leds/leds-class.txt for details.
-
-> +		linux,default-trigger = "fpc0-fail";
-> +	};
-> +
-> +	fpc0-ok {
-> +		reg = <2>;
-> +		linux,default-trigger = "fpc0-ok";
-> +	};
-> +};
->
-
-
--- 
-Best regards,
-Jacek Anaszewski
