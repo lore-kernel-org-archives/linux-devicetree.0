@@ -1,44 +1,37 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH RESEND] ARM: dts: keystone-k2*: Increase SPI Flash
- partition size for U-Boot
-Date: Mon, 10 Oct 2016 15:31:45 +0100
-Message-ID: <20161010143144.GB1041@n2100.armlinux.org.uk>
-References: <20161010141141.21333-1-vigneshr@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/9] drm/sun4i: sun6i-drc: Support DRC on A31 and A31s
+Date: Mon, 10 Oct 2016 09:45:37 -0500
+Message-ID: <20161010144537.GA22357@rob-hp-laptop>
+References: <20161006160629.11198-1-wens@csie.org>
+ <20161006160629.11198-2-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20161010141141.21333-1-vigneshr@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Santosh Shilimkar <ssantosh@kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20161006160629.11198-2-wens@csie.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 10, 2016 at 07:41:41PM +0530, Vignesh R wrote:
-> U-Boot SPI Boot image is now more than 512KB for Keystone2 devices and
-> cannot fit into existing partition. So, increase the SPI Flash partition
-> for U-Boot to 1MB for all Keystone2 devices.
-> 
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
-> ---
-> 
-> This was submitted to v4.9 merge window but was never picked up:
-> https://patchwork.kernel.org/patch/9135023/
-
-I think you need to explain why it's safe to change the layout of the
-flash partitions like this.
-
-- What is this "misc" partition?
-
-- Why is it safe to move the "misc" partition in this way?
-
-- Do users need to do anything with data stored in the "misc" partition
-  when changing kernels?
-
-If the "misc" partition is simply unused space on the flash device, why
-list it in DT?
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+T24gRnJpLCBPY3QgMDcsIDIwMTYgYXQgMTI6MDY6MjFBTSArMDgwMCwgQ2hlbi1ZdSBUc2FpIHdy
+b3RlOgo+IFRoZSBBMzEgYW5kIEEzMXMgYWxzbyBoYXZlIHRoZSBEUkMgYXMgcGFydCBvZiB0aGUg
+ZGlzcGxheSBwaXBlbGluZS4KPiBBcyB3ZSBrbm93IHZpcnR1YWxseSBub3RoaW5nIGFib3V0IHRo
+ZW0sIGp1c3QgYWRkIGNvbXBhdGlibGUgc3RyaW5ncwo+IGZvciBib3RoIFNvQ3MgdG8gdGhlIHN0
+dWIgZHJpdmVyLgo+IAo+IFNpZ25lZC1vZmYtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9y
+Zz4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Vu
+eGkvc3VuNGktZHJtLnR4dCB8IDIgKysKPiAgZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjZpX2Ry
+Yy5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDIgKysKPiAgMiBmaWxlcyBjaGFuZ2Vk
+LCA0IGluc2VydGlvbnMoKykKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
+PgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
