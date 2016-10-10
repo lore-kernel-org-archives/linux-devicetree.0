@@ -1,72 +1,108 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] dt: bindings: vendor-prefix: Add 3 accelerometer
- vendor prefixes
-Date: Mon, 10 Oct 2016 09:50:46 -0500
-Message-ID: <20161010145046.GA25572@rob-hp-laptop>
-References: <20161006170650.13518-1-hdegoede@redhat.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 10/10] net: mdio-sam: Add device tree documentation for
+ SAM MDIO
+Date: Mon, 10 Oct 2016 16:53:09 +0200
+Message-ID: <aad9e8eb-2c15-3c83-067a-e76e0bc73e44@axentia.se>
+References: <1475853518-22264-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1475853518-22264-11-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161006170650.13518-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1475853518-22264-11-git-send-email-pantelis.antoniou@konsulko.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, linux-watchdog@vger.kernel.org, Georgi Vlaev <gvlaev@juniper.net>, Wolfram Sang <wsa@the-dreams.de>, Maryam Seraj <mseraj@juniper.net>, David Woodhouse <dwmw2@infradead.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Debjit Ghosh <dghosh@juniper.net>, netdev@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 06, 2016 at 07:06:50PM +0200, Hans de Goede wrote:
-> Recently the kernel has gotten support in the iio subsystem for a number
-> of new accelerometers from mCube, Memsic and MiraMEMS.
+On 2016-10-07 17:18, Pantelis Antoniou wrote:
+> From: Georgi Vlaev <gvlaev@juniper.net>
 > 
-> This commit adds the vendor prefixes already used for these vendors
-> in Documentation/devicetree/bindings/i2c/trivial-devices.txt to
-> vendor-prefixes.txt.
+> Add device tree bindings document for the SAM MDIO block
+> present in Juniper's SAM FPGA.
 > 
-> The "full" company names were taken from the company's websites:
-> http://www.mcubemems.com/
-> http://www.memsic.com/
-> http://www.miramems.com/en/
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Georgi Vlaev <gvlaev@juniper.net>
+> [Ported from Juniper kernel]
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 > ---
-> Changes in v2:
-> -Drop domintech, it is already in the iio/next tree
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>  Documentation/devicetree/bindings/net/mdio-sam.txt | 48 ++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/mdio-sam.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 5c67e91..abe0129 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -157,13 +157,16 @@ lltc	Linear Technology Corporation
->  marvell	Marvell Technology Group Ltd.
->  maxim	Maxim Integrated Products
->  meas	Measurement Specialties
-> +mcube	mCube
+> diff --git a/Documentation/devicetree/bindings/net/mdio-sam.txt b/Documentation/devicetree/bindings/net/mdio-sam.txt
+> new file mode 100644
+> index 0000000..7d354e0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/mdio-sam.txt
+> @@ -0,0 +1,48 @@
+> +Juniper SAM FPGA MFD MDIO bus properties.
+> +
+> +Required properties:
+> +- compatible : "jnx,mdio-sam"
+> +- reg : The start offset of the MDIO bus range
+> +- #address-cells = <1>;
+> +- #size-cells = <0>;
+> +
+> +Optional properties:
+> +
+> +Required properties for child nodes:
+> +- #address-cells = <1>;
+> +- #size-cells = <0>;
+> +- reg : The MDIO bus offset within the MDIO range.
+> +
+> +
+> +Example :
+> +
+> +	sam@10 {
+> +		compatible = "jnx,sam";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		mdio-sam@10 {
 
-Not in alphabetical order.
+This should be mdio-sam@40000, OR ...
 
->  mediatek	MediaTek Inc.
->  melexis	Melexis N.V.
-> +memsic	MEMSIC Inc.
->  merrii	Merrii Technology Co., Ltd.
->  micrel	Micrel Inc.
->  microchip	Microchip Technology Inc.
->  micron	Micron Technology Inc.
->  minix	MINIX Technology Ltd.
-> +miramems	MiraMEMS Sensing Technology Co., Ltd.
->  mitsubishi	Mitsubishi Electric Corporation
->  mosaixtech	Mosaix Technologies, Inc.
->  moxa	Moxa
-> -- 
-> 2.9.3
+> +			compatible = "jnx,mdio-sam";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x40000>;
+
+... this should be reg = <0x10>. AFAIK.
+
+Cheers,
+Peter
+
+> +
+> +			mdio0: mdio-sam@0 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				reg = <0x0>;
+> +			};
+> +
+> +			mdio1: mdio-sam@4000 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				reg = <0x4000>;
+> +			};
+> +
+> +			mdio2: mdio-sam@8000 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				reg = <0x8000>;
+> +			};
+> +		};
+> +	};
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
