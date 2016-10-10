@@ -1,49 +1,134 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v5 2/5] drm/bridge: Add RGB to VGA bridge support
-Date: Mon, 10 Oct 2016 15:04:45 +0530
-Message-ID: <b5059860-82be-32eb-bfd9-2d5bb2d88cb9@codeaurora.org>
-References: <20160930143709.1388-1-maxime.ripard@free-electrons.com>
- <20161007091444.GO4684@lukather>
- <04679d93-ae58-7c94-616e-2eec23e84d6e@codeaurora.org>
- <2147837.toaTVtNybe@avalon>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v5 03/12] mmc: sdhci-msm: add pltfm_data support to get
+ clk-rates from DT
+Date: Mon, 10 Oct 2016 12:35:40 +0300
+Message-ID: <7e5c2bfe-0a67-71e2-d083-49d9a712482e@intel.com>
+References: <1475678440-3525-1-git-send-email-riteshh@codeaurora.org>
+ <1475678440-3525-4-git-send-email-riteshh@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <2147837.toaTVtNybe@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1475678440-3525-4-git-send-email-riteshh@codeaurora.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ritesh Harjani <riteshh@codeaurora.org>, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, shawn.lin@rock-chips.com
+Cc: david.brown@linaro.org, andy.gross@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, sboyd@codeaurora.org, bjorn.andersson@linaro.org, pramod.gurav@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxMC8xMC8yMDE2IDEyOjQ1IFBNLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+IEhpIEFy
-Y2hpdCwKPgo+IE9uIE1vbmRheSAxMCBPY3QgMjAxNiAxMTowNToxMCBBcmNoaXQgVGFuZWphIHdy
-b3RlOgo+PiBPbiAxMC8wNy8yMDE2IDAyOjQ0IFBNLCBNYXhpbWUgUmlwYXJkIHdyb3RlOgo+Pj4g
-T24gRnJpLCBPY3QgMDcsIDIwMTYgYXQgMTA6Mjc6MzFBTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3
-cm90ZToKPgo+IFtzbmlwXQo+Cj4+Pj4gSWYgbm8gb25lIGhhcyBhbnkgbW9yZSBvYmplY3Rpb25z
-IHdpdGhpbiB0aGUgbmV4dCBkYXksIEknbGwgcHVsbCBpbgo+Pj4+IE1heGltZSdzIHY1IFJHQiB0
-byBWR0EgYnJpZGdlIGRyaXZlciwgYW5kIGNoYW5nZSB0aGUgY29tcGF0aWJsZSB0bwo+Pj4+ICJk
-dW1iLXZnYS1kYWMiLgo+Pj4KPj4+IFRoYXQgd29ya3MgZm9yIG1lLiBZb3UnbGwgcHJvYmFibHkg
-d2FudCB0byB1cGRhdGUgdGhlIEtjb25maWcgYW5kIGZpbGUKPj4+IG5hbWUgdG8gbWF0Y2ggdGhv
-dWdoLgo+Pgo+PiBRdWV1ZWQgdG8gZHJtLW1pc2MsIHdpdGggdGhlIGNoYW5nZXMgc3VnZ2VzdGVk
-IGJ5IHlvdSBhbmQgTGF1cmVudC4KPgo+IFRob3NlIGNoYW5nZXMgd291bGQgaGF2ZSBiZWVuIHdv
-cnRoIGEgcmVwb3N0LiBJJ3ZlIGhhZCBhIGxvb2sgYXQgdGhlIHBhdGNoCj4geW91J3ZlIGNvbW1p
-dHRlZCBhbmQgaXQgbG9va3MgT0sgdG8gbWUsIHNvIG5vIGhhcm0gZG9uZSAodGhlIGNvbW1pdCBt
-ZXNzYWdlIGlzCj4gYSBiaXQgaW5hY2N1cmF0ZSwgYnV0IGl0J3Mgbm90IHRoZSBlbmQgb2YgdGhl
-IHdvcmxkKS4gQ291bGQgeW91IHBsZWFzZSBtYWtlCj4gc3VyZSB5b3UgcmVwb3N0IHBhdGNoZXMg
-aW4gdGhlIGZ1dHVyZSB3aGVuIHlvdSBjaGFuZ2UgdGhlbSBpbiBub24tdHJpdmlhbCB3YXlzCj4g
-PwoKU29ycnkgYWJvdXQgdGhhdC4gV2lsbCByZXBvc3QgZnJvbSBub3cgb253YXJkcyBpZiB0aGUg
-Y2hhbmdlcyBhcmUgdG9vCnNpZ25pZmljYW50LgoKQXJjaGl0Cgo+CgotLSAKUXVhbGNvbW0gSW5u
-b3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEg
-TGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 05/10/16 17:40, Ritesh Harjani wrote:
+> This adds support for sdhc-msm controllers to get supported
+> clk-rates from DT. sdhci-msm would need it's own set_clock
+> ops to be implemented. For this, supported clk-rates needs
+> to be populated in sdhci_msm_pltfm_data.
+> 
+> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
+> ---
+>  .../devicetree/bindings/mmc/sdhci-msm.txt          |  1 +
+>  drivers/mmc/host/sdhci-msm.c                       | 48 ++++++++++++++++++++++
+>  2 files changed, 49 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> index 485483a..6a83b38 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> @@ -17,6 +17,7 @@ Required properties:
+>  	"iface" - Main peripheral bus clock (PCLK/HCLK - AHB Bus clock) (required)
+>  	"core"	- SDC MMC clock (MCLK) (required)
+>  	"bus"	- SDCC bus voter clock (optional)
+> +- clk-rates: Array of supported GCC clock frequencies for sdhc, Units - Hz.
+>  
+>  Example:
+>  
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 85ddaae..042ecb2 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -81,6 +81,8 @@ struct sdhci_msm_host {
+>  	struct clk *clk;	/* main SD/MMC bus clock */
+>  	struct clk *pclk;	/* SDHC peripheral bus clock */
+>  	struct clk *bus_clk;	/* SDHC bus voter clock */
+> +	u32 *clk_table;
+> +	int clk_table_sz;
+>  	struct mmc_host *mmc;
+>  	bool use_14lpp_dll_reset;
+>  };
+> @@ -582,6 +584,50 @@ static const struct sdhci_pltfm_data sdhci_msm_pdata = {
+>  	.ops = &sdhci_msm_ops,
+>  };
+>  
+> +static int sdhci_msm_dt_get_array(struct device *dev, const char *prop_name,
+> +				u32 **table, int *size)
+
+It is nice to align to the open parenthesis.  Have a look at the checks from
+checkpatch --strict
+
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	int count, ret;
+> +	u32 *arr;
+> +
+> +	count = of_property_count_elems_of_size(np, prop_name, sizeof(u32));
+
+Shouldn't this be of_property_count_u32_elems()
+
+> +	if (count < 0) {
+> +		dev_warn(dev, "%s: Invalid dt property, err(%d)\n",
+> +				prop_name, count);
+> +		return count;
+> +	}
+> +
+> +	arr = kcalloc(count, sizeof(*arr), GFP_KERNEL);
+> +	if (!arr)
+> +		return -ENOMEM;
+> +
+> +	ret = of_property_read_u32_array(np, prop_name, arr, count);
+> +	if (ret) {
+> +		kfree(arr);
+> +		dev_warn(dev, "%s Invalid dt array property, err(%d)\n",
+
+'err(%d)' is an unusual style for printing error numbers.  'error %d' looks
+better.
+
+Also in some messages you have 'DT' and others 'dt'.  Also here it is '%s'
+but above '%s:', and some messages start with a lower case letter and some
+upper case.  Please try to make everything consistent.
+
+> +				prop_name, ret);
+> +		return ret;
+> +	}
+> +	*table = arr;
+> +	*size = count;
+> +	return 0;
+> +}
+> +
+> +void sdhci_msm_populate_dt(struct device *dev,
+> +						struct sdhci_msm_host *msm_host)
+
+Align to open parenthesis
+
+> +{
+> +	int table_sz = 0;
+> +	u32 *table = NULL;
+> +
+> +	if (sdhci_msm_dt_get_array(dev, "clk-rates", &table, &table_sz)) {
+> +		dev_warn(dev, "failed in DT parsing for supported clk-rates\n");
+> +		return;
+> +	}
+> +	msm_host->clk_table = table;
+> +	msm_host->clk_table_sz = table_sz;
+> +}
+> +
+>  static int sdhci_msm_probe(struct platform_device *pdev)
+>  {
+>  	struct sdhci_host *host;
+> @@ -608,6 +654,8 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>  
+>  	sdhci_get_of_property(pdev);
+>  
+> +	sdhci_msm_populate_dt(&pdev->dev, msm_host);
+> +
+>  	/* Setup SDCC bus voter clock. */
+>  	msm_host->bus_clk = devm_clk_get(&pdev->dev, "bus");
+>  	if (!IS_ERR(msm_host->bus_clk)) {
+> 
+
