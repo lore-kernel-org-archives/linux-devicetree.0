@@ -1,74 +1,306 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 10/10] mtd: ngpmb_nvram: Add bindings for Juniper's ngpmb
- NVRAM
-Date: Mon, 10 Oct 2016 13:18:46 -0500
-Message-ID: <20161010181846.GA32705@rob-hp-laptop>
-References: <1475853451-22121-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1475853451-22121-11-git-send-email-pantelis.antoniou@konsulko.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH 1/3] fpga manager: Add cyclonespi driver for Altera fpgas
+Date: Mon, 10 Oct 2016 13:29:48 -0500
+Message-ID: <alpine.DEB.2.02.1610101058390.28839@linuxheads99>
+References: <cover.1475783742.git.stillcompiling@gmail.com>
+ <4b4432c04b4ea92a2af814e3d7866c33f2eb12ea.1475783742.git.stillcompiling@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1475853451-22121-11-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Debjit Ghosh <dghosh-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Georgi Vlaev <gvlaev-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Guenter Roeck <groeck-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, JawaharBalaji Thirumalaisamy <jawaharb-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Rajat Jain <rajatjain-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.orglinux
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4b4432c04b4ea92a2af814e3d7866c33f2eb12ea.1475783742.git.stillcompiling@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joshua Clayton <stillcompiling@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 07, 2016 at 06:17:31PM +0300, Pantelis Antoniou wrote:
-> From: Georgi Vlaev <gvlaev-3r7Miqu9kMnR7s880joybQ@public.gmane.org>
+On Thu, 6 Oct 2016, Joshua Clayton wrote:
+
+> cyclonespi loads fpga firmware over spi, using the "passive serial"
+> interface on Altera Cyclone FPGAS.
 > 
-> Add device tree binging document for the ngpmb NVRAM device.
+> one of the simpler ways to set up an fpga at runtime.
+> The signal interface is close to unidirectional spi with lsb first.
 > 
-> Signed-off-by: Georgi Vlaev <gvlaev-3r7Miqu9kMnR7s880joybQ@public.gmane.org>
-> [Ported from Juniper kernel]
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
 > ---
->  .../devicetree/bindings/mtd/ngpmb-nvram.txt        | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/ngpmb-nvram.txt
+>  drivers/fpga/Kconfig      |   6 ++
+>  drivers/fpga/Makefile     |   1 +
+>  drivers/fpga/cyclonespi.c | 173 ++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 180 insertions(+)
+>  create mode 100644 drivers/fpga/cyclonespi.c
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/ngpmb-nvram.txt b/Documentation/devicetree/bindings/mtd/ngpmb-nvram.txt
+> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+> index cd84934..ccad5b1 100644
+> --- a/drivers/fpga/Kconfig
+> +++ b/drivers/fpga/Kconfig
+> @@ -13,6 +13,12 @@ config FPGA
+>  
+
+Hi Joshua,
+
+This looks really good.  Mostly minor comments.
+
+>  if FPGA
+>  
+> +config FPGA_MGR_CYCLONE_SPI
+
+Suggestions here and below to keep PS in the name of things.
+Such as FPGA_MGR_CYCLONE_PS_SPI.
+
+> +	tristate "Altera Cyclone V SPI"
+
+"Altera Cyclone V Passive Serial over SPI" ?
+
+> +	depends on SPI
+> +	help
+> +	  FPGA manager driver support for Altera Cyclone V over SPI
+> +
+>  config FPGA_MGR_SOCFPGA
+>  	tristate "Altera SOCFPGA FPGA Manager"
+>  	depends on ARCH_SOCFPGA
+> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+> index 8d83fc6..c03f40de 100644
+> --- a/drivers/fpga/Makefile
+> +++ b/drivers/fpga/Makefile
+> @@ -6,5 +6,6 @@
+>  obj-$(CONFIG_FPGA)			+= fpga-mgr.o
+>  
+>  # FPGA Manager Drivers
+> +obj-$(CONFIG_FPGA_MGR_CYCLONE_SPI)	+= cyclonespi.o
+
+cyclone-ps-spi.o and change name of c file.
+
+>  obj-$(CONFIG_FPGA_MGR_SOCFPGA)		+= socfpga.o
+>  obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
+> diff --git a/drivers/fpga/cyclonespi.c b/drivers/fpga/cyclonespi.c
 > new file mode 100644
-> index 0000000..297ad0e
+> index 0000000..1ffa67c
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/ngpmb-nvram.txt
+> +++ b/drivers/fpga/cyclonespi.c
+> @@ -0,0 +1,173 @@
+> +/**
+> + * Copyright (c) 2015 United Western Technologies, Corporation
+> + *
+> + * Joshua Clayton <stillcompiling@gmail.com>
+> + *
+> + * Manage Altera fpga firmware that is loaded over spi.
+> + * Firmware must be in binary "rbf" format.
+> + * Works on Cyclone V. Should work on cyclone series.
+> + * May work on other Altera fpgas.
+> + *
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/fpga/fpga-mgr.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/spi/spi.h>
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Joshua Clayton <stillcompiling@gmail.com>");
+> +MODULE_DESCRIPTION("Module to load Altera FPGA firmware over spi");
 
-mtd is really flash. sram/ or nvmem/ are probably better choices.
-
-> @@ -0,0 +1,22 @@
-> +Non Volatile RAM device on a Juniper NG PMB FPGA
-> +
-> +These devices are found in the PTX series of Juniper routers.
-> +
-> +Required properties:
-> +- compatible : must be "jnx,ngpmb-nvram"
-
-Compatible with mmio-sram?
+Please move these 3 MODULE_* lines to the bottom of this file.
 
 > +
-> +Optional properties:
-> +- reg : memory address for the RAM, note that this is not
-> +required since usually the device is a subdevice of the SAM MFD
-> +driver which fills in the register fields.
-> +
-> +For the rest of the properties, see mtd-physmap.txt.
-> +
-> +The device tree may optionally contain sub-nodes describing partitions of the
-> +address space. See partition.txt for more detail.
-
-sram or nvmem style partitioning is probably more appropriate.
-
-> +
-> +Example:
-> +
-> +ngpmb_nvram {
-> +	compatible = "jnx,ngpmb-nvram";
+> +struct cyclonespi_conf {
+> +	struct gpio_desc *reset;
+> +	struct gpio_desc *status;
+> +	struct spi_device *spi;
 > +};
+> +
+> +static const struct of_device_id of_ef_match[] = {
+> +	{ .compatible = "altr,cyclonespi-fpga-mgr", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, of_ef_match);
+> +
+> +static enum fpga_mgr_states cyclonespi_state(struct fpga_manager *mgr)
+> +{
+> +	return mgr->state;
+
+fpga-mgr.c's fpga_mgr_register() reads the initial state
+from this function.  Please return one of the values of enum
+fpga_mgr_states here.  If state isn't known, then use
+FPGA_MGR_STATE_UNKNOWN.
+
+> +}
+> +
+> +static inline u32 revbit8x4(u32 n)
+> +{
+> +	n = ((n & 0xF0F0F0F0UL) >> 4) | ((n & 0x0F0F0F0FUL) << 4);
+> +	n = ((n & 0xCCCCCCCCUL) >> 2) | ((n & 0x33333333UL) << 2);
+> +	n = ((n & 0xAAAAAAAAUL) >> 1) | ((n & 0x55555555UL) << 1);
+> +	return n;
+> +}
+> +
+> +static int cyclonespi_write_init(struct fpga_manager *mgr, u32 flags,
+> +				const char *buf, size_t count)
+> +{
+> +	struct cyclonespi_conf *conf = (struct cyclonespi_conf *)mgr->priv;
+> +	u32 *fw32 = (u32 *)buf;
+> +	const u32 *fw_end = (u32 *)(buf + count);
+> +
+> +	if (flags & FPGA_MGR_PARTIAL_RECONFIG) {
+> +		dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	gpiod_set_value(conf->reset, 0);
+> +	udelay(50);
+
+Moritz brought up whether the delay/sleep values should be
+configurable.  It looks like these are set values and have
+probably been increased for good measure.  These could be
+macros named to contain symbol names in the datasheet's PS
+timing waveform, if that is where these are coming from.
+
+The timing diagram has the Tcf2st0 as 800nSec max and
+Tcf2st1 (below) as 40uSec.  I guess either we are looking at
+different specs or you just found that you got better
+results if you padded the values out?
+
+I would normally suggest a convention of macro names
+that maps neatly to the value names in the datasheet
+such as CYCLONE_PS_TCF2ST0_USEC.  The problem is
+the units.
+
+
+> +	if (gpiod_get_value(conf->status) == 1) {
+> +		dev_err(&mgr->dev, "Status pin should be low.\n");
+> +		return -EIO;
+> +	}
+> +
+> +	gpiod_set_value(conf->reset, 1);
+> +	msleep(1);
+
+CYCLONE_PS_TCF2ST1_USEC?  I'm not sure what to suggest
+because the units in the timing diagram I'm looking at are
+nanoseconds but this ended up being a mSec.
+
+> +	if (gpiod_get_value(conf->status) == 0) {
+> +		dev_err(&mgr->dev, "Status pin not ready.\n");
+> +		return -EIO;
+> +	}
+> +
+> +	/* set buffer to lsb first */
+> +	while (fw32 < fw_end) {
+> +		*fw32 = revbit8x4(*fw32);
+> +		fw32++;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int cyclonespi_write(struct fpga_manager *mgr, const char *buf,
+> +			   size_t count)
+
+Please fix checkpatch.pl warnings.  Here and a few other places it
+says "CHECK: Alignment should match open parenthesis"
+
+> +{
+> +	struct cyclonespi_conf *conf = (struct cyclonespi_conf *)mgr->priv;
+> +	const char *fw_data = buf;
+> +	const char *fw_data_end = fw_data + count;
+> +
+> +	while (fw_data < fw_data_end) {
+> +		int ret;
+> +		int stride = fw_data_end - fw_data;
+> +
+> +		if (stride > SZ_4K)
+> +			stride = SZ_4K;
+> +
+> +		ret = spi_write(conf->spi, fw_data, stride);
+> +		if (ret) {
+> +			dev_err(&mgr->dev, "spi error in firmware write: %d\n",
+> +					ret);
+> +			return ret;
+> +		}
+> +		fw_data += stride;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int cyclonespi_write_complete(struct fpga_manager *mgr, u32 flags)
+> +{
+> +	struct cyclonespi_conf *conf = (struct cyclonespi_conf *)mgr->priv;
+> +
+> +	if (gpiod_get_value(conf->status) == 0) {
+> +		dev_err(&mgr->dev, "Error during configuration.\n");
+> +		return -EIO;
+> +	}
+
+Does your hardware give you access to the CONF_DONE pin?
+If so, can you get better status info from that?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct fpga_manager_ops cyclonespi_ops = {
+> +	.state = cyclonespi_state,
+> +	.write_init = cyclonespi_write_init,
+> +	.write = cyclonespi_write,
+> +	.write_complete = cyclonespi_write_complete,
+> +};
+> +
+> +static int cyclonespi_probe(struct spi_device *spi)
+> +{
+> +	struct cyclonespi_conf *conf = devm_kzalloc(&spi->dev, sizeof(*conf),
+> +						GFP_KERNEL);
+> +
+> +	if (!conf)
+> +		return -ENOMEM;
+> +
+> +	conf->spi = spi;
+> +	conf->reset = devm_gpiod_get(&spi->dev, "reset", GPIOD_OUT_LOW);
+> +	if (IS_ERR(conf->reset)) {
+> +		dev_err(&spi->dev, "Failed to get reset gpio: %ld\n",
+> +			PTR_ERR(conf->reset));
+> +		return PTR_ERR(conf->reset);
+> +	}
+> +
+> +	conf->status = devm_gpiod_get(&spi->dev, "status", GPIOD_IN);
+> +	if (IS_ERR(conf->status)) {
+> +		dev_err(&spi->dev, "Failed to get status gpio: %ld\n",
+> +				PTR_ERR(conf->status));
+> +		return PTR_ERR(conf->status);
+> +	}
+> +
+> +	return fpga_mgr_register(&spi->dev, "Altera SPI FPGA Manager",
+> +				 &cyclonespi_ops, conf);
+> +}
+> +
+> +static int cyclonespi_remove(struct spi_device *spi)
+> +{
+> +	fpga_mgr_unregister(&spi->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct spi_driver cyclonespi_driver = {
+> +	.driver = {
+> +		.name   = "cyclonespi",
+> +		.owner  = THIS_MODULE,
+> +		.of_match_table = of_match_ptr(of_ef_match),
+> +	},
+> +	.probe  = cyclonespi_probe,
+> +	.remove = cyclonespi_remove,
+> +};
+> +
+> +module_spi_driver(cyclonespi_driver)
 > -- 
-> 1.9.1
+> 2.7.4
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
