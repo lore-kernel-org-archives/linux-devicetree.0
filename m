@@ -1,257 +1,417 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v5 10/12] mmc: sdhci-msm: Add HS400 platform support
-Date: Mon, 10 Oct 2016 15:08:24 +0300
-Message-ID: <0596e37d-0d8d-0f8e-8884-4404e2979593@intel.com>
-References: <1475678440-3525-1-git-send-email-riteshh@codeaurora.org>
- <1475678440-3525-11-git-send-email-riteshh@codeaurora.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v1 2/2] arm64: dts: rockchip: Add PX5 Evaluation board
+Date: Mon, 10 Oct 2016 14:23:15 +0200
+Message-ID: <16590443.vsxkmsdpMT@phil>
+References: <1473529249-6151-1-git-send-email-andy.yan@rock-chips.com> <1473529623-6268-1-git-send-email-andy.yan@rock-chips.com> <ef2bb52c-26f9-49a5-fe18-538effcd30b0@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1475678440-3525-11-git-send-email-riteshh@codeaurora.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ritesh Harjani <riteshh@codeaurora.org>, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, shawn.lin@rock-chips.com
-Cc: david.brown@linaro.org, andy.gross@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, sboyd@codeaurora.org, bjorn.andersson@linaro.org, pramod.gurav@linaro.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ef2bb52c-26f9-49a5-fe18-538effcd30b0@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: Andy Yan <andy.yan@rock-chips.com>, devicetree@vger.kernel.org, briannorris@chromium.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip <linux-rockchip@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/10/16 17:40, Ritesh Harjani wrote:
-> From: Venkat Gopalakrishnan <venkatg@codeaurora.org>
+Hi Andreas, Andy,
+
+Am Dienstag, 13. September 2016, 14:23:35 CEST schrieb Andreas Färber:
+> Hi,
 > 
-> The following msm platform specific changes are added to support HS400.
-> - Allow tuning for HS400 mode.
-> - Configure HS400 timing mode using the VENDOR_SPECIFIC_FUNC register.
+> Am 10.09.2016 um 19:47 schrieb Andy Yan:
+> > PX5 EVB is designed by Rockchip for automotive field,
+> > which intergrated with CVBS(TP2825)/MIPI DSI/CSI/LVDS
+> > HDMI video input/output interface, audio codec ES8396,
+> > WIFI/BT(on RTL8723BS), Gsensor BMA250E and light&proximity
+> > sensor STK3410.
+> > 
+> > Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 > 
-> Signed-off-by: Venkat Gopalakrishnan <venkatg@codeaurora.org>
-> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
-> ---
->  drivers/mmc/host/sdhci-msm.c | 124 +++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 113 insertions(+), 11 deletions(-)
+> Most comments from PX3 1/2 apply here, too.
+
+ammended te commit
+
+> > ---
+> > 
+> > Changes in v1:
+> > - board rename
+> > - add vendor prefix for i2c interfaced devices
+> > 
+> >  Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+> >  arch/arm64/boot/dts/rockchip/Makefile              |   1 +
+> >  arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts    | 304
+> >  +++++++++++++++++++++ 3 files changed, 309 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt
+> > b/Documentation/devicetree/bindings/arm/rockchip.txt index
+> > 6da3881..b6f92d6 100644
+> > --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+> > +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+> > @@ -107,6 +107,10 @@ Rockchip platforms device tree bindings
+> > 
+> >      Required root node properties:
+> >        - compatible = "rockchip,r88", "rockchip,rk3368";
+> > 
+> > +- Rockchip PX5 Evaluation board:
+> > +    Required root node properties:
+> > +      - compatible = "rockchip,px5-evb", "rockchip,px5",
+> > "rockchip,rk3368"; +
+> > 
+> >  - Rockchip RK3228 Evaluation board:
+> >      Required root node properties:
+> >       - compatible = "rockchip,rk3228-evb", "rockchip,rk3228";
+> > 
+> > diff --git a/arch/arm64/boot/dts/rockchip/Makefile
+> > b/arch/arm64/boot/dts/rockchip/Makefile index 7037a16..86c74b2 100644
+> > --- a/arch/arm64/boot/dts/rockchip/Makefile
+> > +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> > @@ -1,6 +1,7 @@
+> > 
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-geekbox.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
+> > 
+> > +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-px5-evb.dtb
 > 
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index eb1a9e3..612fa82 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -31,6 +31,7 @@
->  #define HC_MODE_EN		0x1
->  #define CORE_POWER		0x0
->  #define CORE_SW_RST		BIT(7)
-> +#define FF_CLK_SW_RST_DIS	BIT(13)
->  
->  #define CORE_PWRCTL_STATUS	0xdc
->  #define CORE_PWRCTL_MASK	0xe0
-> @@ -64,11 +65,18 @@
->  
->  #define CORE_VENDOR_SPEC	0x10c
->  #define CORE_CLK_PWRSAVE	BIT(1)
-> +#define CORE_HC_MCLK_SEL_DFLT	(2 << 8)
-> +#define CORE_HC_MCLK_SEL_HS400	(3 << 8)
-> +#define CORE_HC_MCLK_SEL_MASK	(3 << 8)
-> +#define CORE_HC_SELECT_IN_EN	(1 << 18)
-> +#define CORE_HC_SELECT_IN_HS400	(6 << 19)
-> +#define CORE_HC_SELECT_IN_MASK	(7 << 19)
->  
->  #define CORE_VENDOR_SPEC_CAPABILITIES0	0x11c
->  
->  #define TCXO_FREQ		19200000
->  #define SDHCI_MSM_MIN_CLOCK	400000
-> +#define CORE_FREQ_100MHZ	(100 * 1000 * 1000)
->  
->  #define CDR_SELEXT_SHIFT	20
->  #define CDR_SELEXT_MASK		(0xf << CDR_SELEXT_SHIFT)
-> @@ -87,6 +95,8 @@ struct sdhci_msm_host {
->  	u32 clk_rate;
->  	struct mmc_host *mmc;
->  	bool use_14lpp_dll_reset;
-> +	bool tuning_done;
-> +	bool calibration_done;
->  };
->  
->  /* Platform specific tuning */
-> @@ -175,8 +185,8 @@ out:
->   * Find out the greatest range of consecuitive selected
->   * DLL clock output phases that can be used as sampling
->   * setting for SD3.0 UHS-I card read operation (in SDR104
-> - * timing mode) or for eMMC4.5 card read operation (in HS200
-> - * timing mode).
-> + * timing mode) or for eMMC4.5 card read operation (in
-> + * HS400/HS200 timing mode).
->   * Select the 3/4 of the range and configure the DLL with the
->   * selected DLL clock output phase.
->   */
-> @@ -428,9 +438,10 @@ static int sdhci_msm_execute_tuning(struct sdhci_host *host, u32 opcode)
->  	 * Tuning is required for SDR104, HS200 and HS400 cards and
->  	 * if clock frequency is greater than 100MHz in these modes.
->  	 */
-> -	if (host->clock <= 100 * 1000 * 1000 ||
-> -	    !((ios.timing == MMC_TIMING_MMC_HS200) ||
-> -	      (ios.timing == MMC_TIMING_UHS_SDR104)))
-> +	if (host->clock <= CORE_FREQ_100MHZ ||
-> +		!((ios.timing == MMC_TIMING_MMC_HS400) ||
-> +		(ios.timing == MMC_TIMING_MMC_HS200) ||
-> +		(ios.timing == MMC_TIMING_UHS_SDR104)))
+> There is no PX5 listed on your English website (yet), but given that you
+> have your own rockchip/ folder for arm64 I would encourage you to rename
+> to px5-evb.dtb independent of any internal heritage or compatibility the
+> SoC has. Compare apq/ipq/msm in qcom.
 
-Don't need () around ios.timing == MMC_TIMING_MMC_HS400 etc
+I prefer to keep it like it is, see comment in px3 patch.
 
->  		return 0;
->  
->  retry:
-> @@ -488,7 +499,10 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
->  					unsigned int uhs)
->  {
->  	struct mmc_host *mmc = host->mmc;
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->  	u16 ctrl_2;
-> +	u32 config;
->  
->  	ctrl_2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
->  	/* Select Bus Speed Mode for host */
-> @@ -503,6 +517,7 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
->  	case MMC_TIMING_UHS_SDR50:
->  		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
->  		break;
-> +	case MMC_TIMING_MMC_HS400:
->  	case MMC_TIMING_MMC_HS200:
->  	case MMC_TIMING_UHS_SDR104:
->  		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
-> @@ -519,11 +534,33 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
->  	 * provide feedback clock, the mode selection can be any value less
->  	 * than 3'b011 in bits [2:0] of HOST CONTROL2 register.
->  	 */
-> -	if (host->clock <= 100000000 &&
-> -	    (uhs == MMC_TIMING_MMC_HS400 ||
-> -	     uhs == MMC_TIMING_MMC_HS200 ||
-> -	     uhs == MMC_TIMING_UHS_SDR104))
-> -		ctrl_2 &= ~SDHCI_CTRL_UHS_MASK;
-> +	if (host->clock <= CORE_FREQ_100MHZ) {
-> +		if ((uhs == MMC_TIMING_MMC_HS400) ||
-> +			(uhs == MMC_TIMING_MMC_HS200) ||
-> +			(uhs == MMC_TIMING_UHS_SDR104))
-> +			ctrl_2 &= ~SDHCI_CTRL_UHS_MASK;
-> +		/*
-> +		 * Make sure DLL is disabled when not required
-> +		 *
-> +		 * Write 1 to DLL_RST bit of DLL_CONFIG register
-> +		 */
-> +		config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +		config |= CORE_DLL_RST;
-> +		writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +
-> +		/* Write 1 to DLL_PDN bit of DLL_CONFIG register */
-> +		config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +		config |= CORE_DLL_PDN;
-> +		writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +
-> +		wmb(); /* drain writebuffer */
-
-Memory barrier could use more explanation.
-
-> +
-> +		/*
-> +		 * The DLL needs to be restored and CDCLP533 recalibrated
-> +		 * when the clock frequency is set back to 400MHz.
-> +		 */
-> +		msm_host->calibration_done = false;
-> +	}
->  
->  	dev_dbg(mmc_dev(mmc), "%s: clock=%u uhs=%u ctrl_2=0x%x\n",
->  		mmc_hostname(host->mmc), host->clock, uhs, ctrl_2);
-> @@ -670,7 +707,7 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
->  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->  	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->  	struct mmc_ios curr_ios = host->mmc->ios;
-> -	u32 msm_clock;
-> +	u32 msm_clock, config;
->  	int rc;
->  
->  	if (!clock)
-> @@ -691,6 +728,66 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
->  	}
->  	msm_clock = sdhci_msm_get_msm_clk_rate(host, clock);
->  
-> +	/*
-> +	 * In general all timing modes are controlled via UHS mode select in
-> +	 * Host Control2 register. eMMC specific HS200/HS400 doesn't have
-> +	 * their respective modes defined here, hence we use these values.
-> +	 *
-> +	 * HS200 - SDR104 (Since they both are equivalent in functionality)
-> +	 * HS400 - This involves multiple configurations
-> +	 *		Initially SDR104 - when tuning is required as HS200
-> +	 *		Then when switching to DDR @ 400MHz (HS400) we use
-> +	 *		the vendor specific HC_SELECT_IN to control the mode.
-> +	 *
-> +	 * In addition to controlling the modes we also need to select the
-> +	 * correct input clock for DLL depending on the mode.
-> +	 *
-> +	 * HS400 - divided clock (free running MCLK/2)
-> +	 * All other modes - default (free running MCLK)
-> +	 */
-> +	if (curr_ios.timing == MMC_TIMING_MMC_HS400) {
-> +		/* Select the divided clock (free running MCLK/2) */
-> +		config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
-> +		config &= ~CORE_HC_MCLK_SEL_MASK;
-> +		config |= CORE_HC_MCLK_SEL_HS400;
-> +
-> +		writel_relaxed(config, host->ioaddr + CORE_VENDOR_SPEC);
-> +		/*
-> +		 * Select HS400 mode using the HC_SELECT_IN from VENDOR SPEC
-> +		 * register
-> +		 */
-> +		if (msm_host->tuning_done && !msm_host->calibration_done) {
-
-
-In this patch, tuning_done and calibration_done are never true.  Is that
-intended?
-
-
-> +			/*
-> +			 * Write 0x6 to HC_SELECT_IN and 1 to HC_SELECT_IN_EN
-> +			 * field in VENDOR_SPEC_FUNC
-> +			 */
-> +			config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
-> +			config |= CORE_HC_SELECT_IN_HS400;
-> +			config |= CORE_HC_SELECT_IN_EN;
-> +			writel_relaxed(config, host->ioaddr + CORE_VENDOR_SPEC);
-> +		}
-> +	} else {
-> +		/* Select the default clock (free running MCLK) */
-> +		config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
-> +		config &= ~CORE_HC_MCLK_SEL_MASK;
-> +		config |= CORE_HC_MCLK_SEL_DFLT;
-> +		writel_relaxed(config, host->ioaddr + CORE_VENDOR_SPEC);
-> +
-> +		/*
-> +		 * Disable HC_SELECT_IN to be able to use the UHS mode select
-> +		 * configuration from Host Control2 register for all other
-> +		 * modes.
-> +		 *
-> +		 * Write 0 to HC_SELECT_IN and HC_SELECT_IN_EN field
-> +		 * in VENDOR_SPEC_FUNC
-> +		 */
-> +		config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
-> +		config &= ~CORE_HC_SELECT_IN_EN;
-> +		config &= ~CORE_HC_SELECT_IN_MASK;
-> +		writel_relaxed(config, host->ioaddr + CORE_VENDOR_SPEC);
-> +	}
-> +	wmb(); /* drain writebuffer */
-
-Memory barrier could use more explanation.
-
-> +
->  	if ((msm_clock != msm_host->clk_rate) && msm_host->clk_table) {
->  		rc = clk_set_rate(msm_host->clk, msm_clock);
->  		if (rc) {
-> @@ -876,6 +973,11 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  	/* Set HC_MODE_EN bit in HC_MODE register */
->  	writel_relaxed(HC_MODE_EN, (msm_host->core_mem + CORE_HC_MODE));
->  
-> +	/* Set FF_CLK_SW_RST_DIS bit in HC_MODE register */
-> +	config = readl_relaxed(msm_host->core_mem + CORE_HC_MODE);
-> +	config |= FF_CLK_SW_RST_DIS;
-> +	writel_relaxed(config, msm_host->core_mem + CORE_HC_MODE);
-> +
->  	host_version = readw_relaxed((host->ioaddr + SDHCI_HOST_VERSION));
->  	dev_dbg(&pdev->dev, "Host Version: 0x%x Vendor Version 0x%x\n",
->  		host_version, ((host_version & SDHCI_VENDOR_VER_MASK) >>
 > 
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
+> >  
+> >  always		:= $(dtb-y)
+> > 
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts
+> > b/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts new file mode 100644
+> > index 0000000..be0e915
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts
+> > @@ -0,0 +1,304 @@
+> > +/*
+> > + * Copyright (c) 2016 Fuzhou Rockchip Electronics Co., Ltd
+> > + *
+> > + * This file is dual-licensed: you can use it either under the terms
+> > + * of the GPL or the X11 license, at your option. Note that this dual
+> > + * licensing only applies to this file, and not this project as a
+> > + * whole.
+> > + *
+> > + *  a) This file is free software; you can redistribute it and/or
+> > + *     modify it under the terms of the GNU General Public License as
+> > + *     published by the Free Software Foundation; either version 2 of the
+> > + *     License, or (at your option) any later version.
+> > + *
+> > + *     This file is distributed in the hope that it will be useful,
+> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + *     GNU General Public License for more details.
+> > + *
+> > + * Or, alternatively,
+> > + *
+> > + *  b) Permission is hereby granted, free of charge, to any person
+> > + *     obtaining a copy of this software and associated documentation
+> > + *     files (the "Software"), to deal in the Software without
+> > + *     restriction, including without limitation the rights to use,
+> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> > + *     sell copies of the Software, and to permit persons to whom the
+> > + *     Software is furnished to do so, subject to the following
+> > + *     conditions:
+> > + *
+> > + *     The above copyright notice and this permission notice shall be
+> > + *     included in all copies or substantial portions of the Software.
+> > + *
+> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> > + *     OTHER DEALINGS IN THE SOFTWARE.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "rk3368.dtsi"
+> 
+> Similarly suggest a px5.dtsi here.
+> 
+> > +#include <dt-bindings/input/input.h>
+> > +
+> > +/ {
+> > +	model = "Rockchip PX5 EVB";
+> > +	compatible = "rockchip,px5-evb", "rockchip,px5", "rockchip,rk3368";
+> > +
+> > +	chosen {
+> > +		stdout-path = "serial4:115200n8";
+> > +	};
+> > +
+> > +	memory@0 {
+> > +		device_type = "memory";
+> > +		reg = <0x0 0x0 0x0 0x80000000>;
+> > +	};
+> > +
+> > +	keys: gpio-keys {
+> > +		compatible = "gpio-keys";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pwr_key>;
+> > +
+> > +		power {
+> > +			gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
+> > +			label = "GPIO Power";
+> > +			linux,code = <KEY_POWER>;
+> > +			wakeup-source;
+> > +		};
+> > +	};
+> > +
+> > +	vcc_sys: vcc-sys-regulator {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "vcc_sys";
+> > +		regulator-min-microvolt = <5000000>;
+> > +		regulator-max-microvolt = <5000000>;
+> > +		regulator-always-on;
+> > +		regulator-boot-on;
+> > +	};
+> > +};
+> > +
+> > +&emmc {
+> > +	status = "okay";
+> > +	bus-width = <8>;
+> > +	cap-mmc-highspeed;
+> > +	clock-frequency = <150000000>;
+> > +	disable-wp;
+> > +	keep-power-in-suspend;
+> > +	non-removable;
+> > +	num-slots = <1>;
+> > +	vmmc-supply = <&vcc_io>;
+> > +	vqmmc-supply = <&vcc18_flash>;
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&emmc_clk>, <&emmc_cmd>, <&emmc_bus8>;
+> > +};
+> > +
+> > +&i2c0 {
+> > +	status = "okay";
+> > +
+> > +	rk808: pmic@1b {
+> > +		compatible = "rockchip,rk808";
+> > +		reg = <0x1b>;
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pmic_int>, <&pmic_sleep>;
+> > +		interrupt-parent = <&gpio0>;
+> > +		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
+> > +		rockchip,system-power-controller;
+> > +		vcc1-supply = <&vcc_sys>;
+> > +		vcc2-supply = <&vcc_sys>;
+> > +		vcc3-supply = <&vcc_sys>;
+> > +		vcc4-supply = <&vcc_sys>;
+> > +		vcc6-supply = <&vcc_sys>;
+> > +		vcc7-supply = <&vcc_sys>;
+> > +		vcc8-supply = <&vcc_io>;
+> > +		vcc9-supply = <&vcc_sys>;
+> > +		vcc10-supply = <&vcc_sys>;
+> > +		vcc11-supply = <&vcc_sys>;
+> > +		vcc12-supply = <&vcc_io>;
+> > +		clock-output-names = "xin32k", "rk808-clkout2";
+> > +		#clock-cells = <1>;
+> > +
+> > +		regulators {
+> > +			vdd_cpu: DCDC_REG1 {
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <700000>;
+> > +				regulator-max-microvolt = <1500000>;
+> > +				regulator-name = "vdd_cpu";
+> > +			};
+> > +
+> > +			vdd_log: DCDC_REG2 {
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <700000>;
+> > +				regulator-max-microvolt = <1500000>;
+> > +				regulator-name = "vdd_log";
+> > +			};
+> > +
+> > +			vcc_ddr: DCDC_REG3 {
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-name = "vcc_ddr";
+> > +			};
+> > +
+> > +			vcc_io: DCDC_REG4 {
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <3300000>;
+> > +				regulator-max-microvolt = <3300000>;
+> > +				regulator-name = "vcc_io";
+> > +			};
+> > +
+> > +			vcc18_flash: LDO_REG1 {
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <1800000>;
+> > +				regulator-max-microvolt = <1800000>;
+> > +				regulator-name = "vcc18_flash";
+> > +			};
+> > +
+> > +			vcca_33: LDO_REG2 {
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <3300000>;
+> > +				regulator-max-microvolt = <3300000>;
+> > +				regulator-name = "vcca_33";
+> > +			};
+> > +
+> > +			vdd_10: LDO_REG3 {
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <1000000>;
+> > +				regulator-max-microvolt = <1000000>;
+> > +				regulator-name = "vdd_10";
+> > +			};
+> > +
+> > +			avdd_33: LDO_REG4 {
+> > +				regulator-min-microvolt = <3300000>;
+> > +				regulator-max-microvolt = <3300000>;
+> > +				regulator-name = "avdd_33";
+> > +			};
+> > +
+> > +			vccio_sd: LDO_REG5 {
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <1800000>;
+> > +				regulator-max-microvolt = <3300000>;
+> > +				regulator-name = "vccio_sd";
+> > +			};
+> > +
+> > +			vdd10_lcd: LDO_REG6 {
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <1000000>;
+> > +				regulator-max-microvolt = <1000000>;
+> > +				regulator-name = "vdd10_lcd";
+> > +			};
+> > +
+> > +			vcc_18: LDO_REG7 {
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <1800000>;
+> > +				regulator-max-microvolt = <1800000>;
+> > +				regulator-name = "vcc_18";
+> > +			};
+> > +
+> > +			vcc18_lcd: LDO_REG8 {
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <1800000>;
+> > +				regulator-max-microvolt = <1800000>;
+> > +				regulator-name = "vcc18_lcd";
+> > +			};
+> > +
+> > +			vcc_sd: SWITCH_REG1 {
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-name = "vcc_sd";
+> > +			};
+> > +
+> > +			vcc33_lcd: SWITCH_REG2 {
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-name = "vcc33_lcd";
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&i2c1 {
+> > +	status = "okay";
+> > +
+> > +	/* Accelerometer */
+> > +	bma250@18 {
 
+changed to accelerometer@18 similar to px3
+
+> > +		compatible = "bosch,bma250";
+> > +		reg = <0x18>;
+> > +		interrupt-parent = <&gpio2>;
+> > +		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
+> > +	};
+> > +
+> > +	stk3410@48 {
+> > +		compatible = "sensortek,STK3310";
+> > +		reg = <0x48>;
+> > +		interrupt-parent = <&gpio2>;
+> > +		interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
+> > +	};
+> > +};
+> > +
+> > +&i2c2 {
+> > +	status = "okay";
+> > +
+> > +	gsl1680: touchscreen@40 {
+> > +		compatible = "silead,gsl1680";
+> > +		reg = <0x40>;
+> > +		interrupt-parent = <&gpio3>;
+> > +		interrupts = <28 IRQ_TYPE_EDGE_FALLING>;
+> > +		power-gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
+> > +		touchscreen-size-x = <800>;
+> > +		touchscreen-size-y = <1280>;
+> > +		silead,max-fingers = <5>;
+> > +	};
+> > +};
+> > +
+> > +&pinctrl {
+> > +
+> 
+> Drop white line?
+
+seems I dropped that already.
+
+
+> > +	keys {
+> > +		pwr_key: pwr-key {
+> > +			rockchip,pins = <0 2 RK_FUNC_GPIO &pcfg_pull_none>;
+> > +		};
+> > +	};
+> > +
+> > +	pmic {
+> > +		pmic_sleep: pmic-sleep {
+> > +			rockchip,pins = <0 0 RK_FUNC_2 &pcfg_pull_none>;
+> > +		};
+> > +
+> > +		pmic_int: pmic-int {
+> > +			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_up>;
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&tsadc {
+> > +	status = "okay";
+> > +	rockchip,hw-tshut-mode = <0>; /* CRU */
+> > +	rockchip,hw-tshut-polarity = <1>; /* high */
+> > +};
+> > +
+> > +&uart4 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&usb_host0_ehci {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&usb_otg {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&wdt {
+> > +	status = "okay";
+> > +};
+> 
+> Otherwise formally looks fine.
+
+Thanks for looking at the patch.
+
+
+Heiko
