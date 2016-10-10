@@ -1,69 +1,70 @@
-From: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>
-Subject: [PATCH v3] Documentation: dtb: lm87: Add hwmon binding documentation.
-Date: Tue, 11 Oct 2016 11:40:17 +1300
-Message-ID: <20161010224017.23362-1-mahoda.ratnayaka@alliedtelesis.co.nz>
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org
-Cc: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>, Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC V2 PATCH 03/12] msm8994 clocks: fix mapping
+Date: Mon, 10 Oct 2016 15:47:25 -0700
+Message-ID: <e952ee53-4725-4937-c96e-429ad08df6d4@redhat.com>
+References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
+ <1475375919-618-4-git-send-email-jmcnicol@redhat.com>
+ <20161009012853.GI18158@rob-hp-laptop>
+ <228eb3b0-6c4e-230a-1750-0f97ec5c024f@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <228eb3b0-6c4e-230a-1750-0f97ec5c024f-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, git-LJ92rlH3Dns@public.gmane.org, jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds lm87 hwmon device tree node documentation.
+On 2016-10-10 3:04 PM, Jeremy McNicoll wrote:
+> On 2016-10-08 6:28 PM, Rob Herring wrote:
+>> On Sat, Oct 01, 2016 at 07:38:30PM -0700, Jeremy McNicoll wrote:
+>>> The paren_map is used for looking up which value to write into
+>>> and the cmd_rcgr is for configuring the parent muxing so a change
+>>>  2 to 5 means that the 3rd parent should be mux #5 rather than #2.
+>>>
+>>> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>  drivers/clk/qcom/gcc-msm8994.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> This should be squashed.
+>>
+>
+> It was done this way explicitly as I am not the original author and
 
-Signed-off-by: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>
----
+Just to make sure its clear.  I am not the original author of this patch:
 
-Notes:
-    Changes since v1:
-     As suggested include all the changes are moved in
-     to the same patch and the all the optional properties
-     are now defined instead of using a single variable to
-     indicate those properties.
-    
-    Changes since v2:
-     Changed has-vcc-5v to use regulator binding and fixed
-     a minor copy paste mistake.
+http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/442801.html
 
- Documentation/devicetree/bindings/hwmon/lm87.txt | 30 ++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/lm87.txt
+-jeremy
 
-diff --git a/Documentation/devicetree/bindings/hwmon/lm87.txt b/Documentation/devicetree/bindings/hwmon/lm87.txt
-new file mode 100644
-index 0000000..ce93d45
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/lm87.txt
-@@ -0,0 +1,30 @@
-+*LM87 hwmon sensor.
-+
-+Required properties:
-+- compatible: Should be
-+	"ti,lm87"
-+
-+- reg: I2C address
-+
-+optional properties:
-+- has-temp3: This configures pins 18 and 19 to be used as a second
-+             remote temperature sensing channel. By default the pins
-+             are configured as voltage input pins in0 and in5.
-+
-+- has-in6: When set, pin 5 is configured to be used as voltage input
-+           in6. Otherwise the pin is set as FAN1 input.
-+
-+- has-in7: When set, pin 6 is configured to be used as voltage input
-+           in7. Otherwise the pin is set as FAN2 input.
-+
-+- vcc-supply: sets the nominal voltage for internal VCC measurement to 5V.
-+              Default is 3.3V.
-+
-+Example:
-+
-+lm87@2e {
-+	compatible = "ti,lm87";
-+	reg = <0x2e>;
-+	has-temp3;
-+	vcc-supply = <&reg_5v0>;
-+};
--- 
-2.10.1
+> felt it was important that the description / explanation was properly
+> captured.
+>
+> -jeremy
+>
+>>>
+>>> diff --git a/drivers/clk/qcom/gcc-msm8994.c
+>>> b/drivers/clk/qcom/gcc-msm8994.c
+>>> index 3897cfd..39b40d4 100644
+>>> --- a/drivers/clk/qcom/gcc-msm8994.c
+>>> +++ b/drivers/clk/qcom/gcc-msm8994.c
+>>> @@ -50,7 +50,7 @@ static const char * const gcc_xo_gpll0[] = {
+>>>  static const struct parent_map gcc_xo_gpll0_gpll4_map[] = {
+>>>      { P_XO, 0 },
+>>>      { P_GPLL0, 1 },
+>>> -    { P_GPLL4, 2 },
+>>> +    { P_GPLL4, 5 },
+>>>  };
+>>>
+>>>  static const char * const gcc_xo_gpll0_gpll4[] = {
+>>> --
+>>> 2.6.1
+>>>
+>
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
