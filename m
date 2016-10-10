@@ -1,46 +1,33 @@
-From: Jeremy McNicoll <jmcnicol@redhat.com>
-Subject: Re: [RFC V2 PATCH 09/12] arm64: dts: move Huawei Angler (Nexus 6P) to
- qcom directory
-Date: Mon, 10 Oct 2016 15:21:53 -0700
-Message-ID: <4611eab0-84b3-3c6f-2df0-87fe21afc8df@redhat.com>
-References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
- <1475375919-618-10-git-send-email-jmcnicol@redhat.com>
- <20161009012854.GJ18158@rob-hp-laptop>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCHv2 6/8] ARM: socfpga: dts: Add Devkit A10-SR fields for
+ Arria10
+Date: Mon, 10 Oct 2016 16:58:24 -0500
+Message-ID: <alpine.DEB.2.02.1610101657460.23008@linux-builds1>
+References: <1464889948-28793-1-git-send-email-tthayer@opensource.altera.com> <1464889948-28793-7-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20161009012854.GJ18158@rob-hp-laptop>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: andy.gross@linaro.org, sboyd@codeaurora.org, arnd@arndb.de, bjorn.andersson@linaro.org, git@kchr.de, jeremymc@redhat.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1464889948-28793-7-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thor Thayer <tthayer@opensource.altera.com>
+Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-08 6:28 PM, Rob Herring wrote:
-> On Sat, Oct 01, 2016 at 07:38:36PM -0700, Jeremy McNicoll wrote:
->> Given that this is a MSM SoC and not a specific vendor created
->> SoC moving associated device tree files to qcom directory.
->>
->> Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
->> ---
->>  arch/arm64/boot/dts/huawei/Makefile                             | 5 -----
->>  arch/arm64/boot/dts/qcom/Makefile                               | 4 ++--
->>  arch/arm64/boot/dts/{huawei => qcom}/msm8994-angler-rev-101.dts | 2 +-
->
-> What tree are you based on? There's no huawei dir in mainline. You need
-> to rebase everything.
+On Thu, 2 Jun 2016, tthayer@opensource.altera.com wrote:
 
-One change was made to 8/12 and explicitly documented, unfortunately the
-list was getting long.   A way to deal with this situation was discussed 
-on IRC with a few people regarding the best way to deal with this, and 
-this is how they instructed me to deal with this type of scenario.
+> From: Thor Thayer <tthayer@opensource.altera.com>
+> 
+> Add the Altera Arria10 System Resource node. This is a Multi-Function
+> device with GPIO expander support.
+> 
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+> v2  Addition of irq controller tags to match with bindings.
+> ---
+>  arch/arm/boot/dts/socfpga_arria10_socdk.dtsi |   21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 
--jeremy
+Applied.
 
-
-
-
->
->>  3 files changed, 3 insertions(+), 8 deletions(-)
->>  delete mode 100644 arch/arm64/boot/dts/huawei/Makefile
->>  rename arch/arm64/boot/dts/{huawei => qcom}/msm8994-angler-rev-101.dts (96%)
+BR,
+Dinh
