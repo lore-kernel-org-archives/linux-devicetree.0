@@ -1,70 +1,76 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] input: pwm-beeper: add documentation for volume
- devicetree bindings
-Date: Mon, 10 Oct 2016 10:20:55 -0500
-Message-ID: <20161010152055.GA6868@rob-hp-laptop>
-References: <fe6349a5-7935-5be7-6dc1-7e80fa9dceeb@exceet.de>
- <1475831223-6006-1-git-send-email-frieder.schrempf@exceet.de>
- <1475831223-6006-3-git-send-email-frieder.schrempf@exceet.de>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2 5/8] dt/bindings: Update binding for PM domain idle
+ states
+Date: Mon, 10 Oct 2016 16:45:06 +0100
+Message-ID: <4e55d6ad-8de7-72d7-7512-5e4ff2aabc79@arm.com>
+References: <1475879821-8035-1-git-send-email-lina.iyer@linaro.org>
+ <1475879821-8035-6-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1475831223-6006-3-git-send-email-frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Schrempf Frieder <frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
-Cc: "dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1475879821-8035-6-git-send-email-lina.iyer@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: ulf.hansson@linaro.org, khilman@kernel.org, Sudeep Holla <sudeep.holla@arm.com>, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, brendan.jackman@arm.com, lorenzo.pieralisi@arm.com, Juri.Lelli@arm.com, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 07, 2016 at 09:08:17AM +0000, Schrempf Frieder wrote:
-> This patch adds the documentation for the devicetree bindings to set
-> the volume levels.
-> 
-> Signed-off-by: Frieder Schrempf <frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
+
+
+On 07/10/16 23:36, Lina Iyer wrote:
+> Update DT bindings to describe idle states of PM domains.
+>
+> This patch is based on the original patch by Marc Titinger.
+>
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Marc Titinger <mtitinger+renesas@baylibre.com>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+> Acked-by: Rob Herring <robh@kernel.org>
 > ---
-> Changes in v2:
->  - split into 3 separate patches
->  - make volume properties optional
-> 
->  .../devicetree/bindings/input/pwm-beeper.txt       | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
-> index be332ae..6d8ba4e 100644
-> --- a/Documentation/devicetree/bindings/input/pwm-beeper.txt
-> +++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
-> @@ -5,3 +5,25 @@ Registers a PWM device as beeper.
->  Required properties:
->  - compatible: should be "pwm-beeper"
->  - pwms: phandle to the physical PWM device
+>  .../devicetree/bindings/power/power_domain.txt     | 38 ++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+> index 025b5e7..7f8f27e 100644
+> --- a/Documentation/devicetree/bindings/power/power_domain.txt
+> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+> @@ -29,6 +29,10 @@ Optional properties:
+>     specified by this binding. More details about power domain specifier are
+>     available in the next section.
+>
+> +- domain-idle-states : A phandle of an idle-state that shall be soaked into a
+> +                generic domain power state. The idle state definitions are
+> +                compatible with arm,idle-state specified in [1].
 > +
-> +Optional properties:
-> +- volume-levels: Array of distinct volume levels. These need to be in the
-> +      range of 0 to 500, while 0 means 0% duty cycle (mute) and 500 means
-> +      50% duty cycle (max volume).
-> +      Please note that the actual volume of most beepers is highly
-> +      non-linear, which means that low volume levels are probably somewhere
-> +      in the range of 1 to 30 (0.1-3% duty cycle).
 
-What does the index correspond to? The linear volume?
+Please do add the following details to the binding. IMO, this binding is
+not complete in terms of specification as there are few open questions:
 
-> +- default-volume-level: the default volume level (index into the
-> +      array defined by the "volume-levels" property)
-> +
-> +The volume level can be set via sysfs under /sys/class/input/inputX/volume.
-> +The maximum volume level index can be read from /sys/class/input/inputX/max_volume_level.
-> +
-> +Example:
-> +
-> +	pwm-beeper {
-> +		compatible = "pwm-beeper";
-> +		pwms = <&pwm4 0 5000>;
-> +		volume-levels = <0 8 20 40 500>;
-> +		default-volume-level = <4>;
-> +	};
-> -- 
-> 1.9.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1. What not define a standard compatible instead of "arm,idle-state" ?
+    I agree it can be used, but as part of this *generic* binding, IMO
+    it's better to have something generic and can be used by devices.
+    Otherwise, this binding becomes CPU specific, that too ARM CPU
+    specific.
+
+2. Now taking CPU as a special device, how does this co-exist with the
+    cpu-idle-states ? Better to have some description may be in the ARM
+    CPU idle binding document(not here of-course)
+
+3. I still haven't seen any explanation for not considering complete
+    hierarchical power domain representation which was raised in earlier
+    versions. I had provided example for the proposal. I just saw them
+    already in use in the upstream kernel by Renasas. e.g.:
+    arch/arm/boot/dts/r8a73a4.dtsi
+
+    How does that fit with your proposal, though you have not made one
+    yet for CPUs in this binding ? In the above file, CPUs have either
+    own power domain inside the L2 one which is cluster level power
+    domain.
+
+One must be able to get answers to these above questions with this
+binding. Until then it's *incomplete* though it may be correct.
+
+-- 
+Regards,
+Sudeep
