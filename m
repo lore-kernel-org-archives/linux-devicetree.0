@@ -1,34 +1,48 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH devicetree] ARM: BCM53573: Specify PMU and its ILP clock
- in the DT
-Date: Mon, 10 Oct 2016 01:57:32 -0700
-Message-ID: <c6443f52-e76b-f8a0-ad00-ce0dd950081e@gmail.com>
-References: <20160917201346.15060-1-zajec5@gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: rename ns2.txt to brcm,ns2.txt
+Date: Mon, 10 Oct 2016 02:06:50 -0700
+Message-ID: <f4f0bcec-cdd0-89ff-a48a-8a430b656075@gmail.com>
+References: <1475959684-18085-1-git-send-email-scott.branden@broadcom.com>
+ <c0cfffa7-d72a-6acb-c457-cd696e24f2eb@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160917201346.15060-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, "open list:BROADCOM BCM53573 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c0cfffa7-d72a-6acb-c457-cd696e24f2eb-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwOS8xNy8yMDE2IDAxOjEzIFBNLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4gRnJvbTog
-UmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+IAo+IElMUCBjbG9jayAoc29tZXRp
-bWVzIGNhbGxlZCBhICJzbG93IGNsb2NrIikgaXMgYSBwYXJ0IG9mIFBNVSAoUG93ZXIKPiBNYW5h
-Z2VtZW50IFVuaXQpLiBUaGVyZSBoYXMgYmVlbiByZWNlbnRseSBhZGRlZCBhIGRyaXZlciBmb3Ig
-aXQsIHNvIGFkZAo+IGEgcHJvcGVyIGVudHJ5IGluIHRoZSBEVCBhcyB3ZWxsLgo+IAo+IFNpZ25l
-ZC1vZmYtYnk6IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KCkFwcGxpZWQsIHRo
-YW5rcyEKLS0gCkZsb3JpYW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+
+On 10/08/2016 02:02 PM, Ray Jui wrote:
+> On 10/8/2016 1:48 PM, Scott Branden wrote:
+>> Rename ns2.txt to brcm,ns2.txt to match naming convention followed
+>> by rest of Broadcom binding documentation.
+>>
+>> Signed-off-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/bcm/{ns2.txt => brcm,ns2.txt} | 0
+>>  1 file changed, 0 insertions(+), 0 deletions(-)
+>>  rename Documentation/devicetree/bindings/arm/bcm/{ns2.txt =>
+>> brcm,ns2.txt} (100%)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/bcm/ns2.txt
+>> b/Documentation/devicetree/bindings/arm/bcm/brcm,ns2.txt
+>> similarity index 100%
+>> rename from Documentation/devicetree/bindings/arm/bcm/ns2.txt
+>> rename to Documentation/devicetree/bindings/arm/bcm/brcm,ns2.txt
+>>
+> 
+> Looks good to me!
+> 
+> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+
+Applied, thanks!
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
