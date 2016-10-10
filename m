@@ -1,79 +1,95 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 03/12] mmc: sdhci-msm: add pltfm_data support to get
- clk-rates from DT
-Date: Mon, 10 Oct 2016 14:29:07 -0500
-Message-ID: <CAL_JsqKfBjR9sTqzOMdM-ifDJiL_2RNrjAn3cvezvisLqZu-Wg@mail.gmail.com>
-References: <1475678440-3525-1-git-send-email-riteshh@codeaurora.org>
- <1475678440-3525-4-git-send-email-riteshh@codeaurora.org> <20161010125738.GA26940@rob-hp-laptop>
- <1a7f9c09-70a6-da2a-ca84-78a0331e3b4d@codeaurora.org>
+Subject: Re: [PATCH v4] PCI: rockchip: Support property to specify the link capability
+Date: Mon, 10 Oct 2016 14:34:10 -0500
+Message-ID: <CAL_Jsq+p3Vnw0U4ja09HRbfJ_ECzZjHCGmajAoVRdpPZrM6KTA@mail.gmail.com>
+References: <1475743800-1036-1-git-send-email-shawn.lin@rock-chips.com>
+ <20161010141639.GA22113@rob-hp-laptop> <20161010172046.GA30803@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1a7f9c09-70a6-da2a-ca84-78a0331e3b4d@codeaurora.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ritesh Harjani <riteshh@codeaurora.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Shawn Lin <shawn.lin@rock-chips.com>, David Brown <david.brown@linaro.org>, Andy Gross <andy.gross@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, David Griego <david.griego@linaro.org>, Sahitya Tummala <stummala@codeaurora.org>, venkatg@codeaurora.org, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, pramod.gurav@linaro.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20161010172046.GA30803@localhost>
+Sender: linux-pci-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rajat Jain <rajatja@google.com>, Wenrui Li <wenrui.li@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 10, 2016 at 11:07 AM, Ritesh Harjani <riteshh@codeaurora.org> wrote:
+On Mon, Oct 10, 2016 at 12:20 PM, Brian Norris <briannorris@chromium.org> wrote:
 > Hi Rob,
 >
-> Thanks for review.
->
-> On 10/10/2016 6:27 PM, Rob Herring wrote:
+> On Mon, Oct 10, 2016 at 09:16:39AM -0500, Rob Herring wrote:
+>> On Thu, Oct 06, 2016 at 04:50:00PM +0800, Shawn Lin wrote:
+>> > From: Brian Norris <briannorris@chromium.org>
+>> >
+>> > rk3399 supports PCIe 2.x link speeds marginally at best, and on some
+>> > boards, the link won't train at 5 GT/s at all. Rather than sacrifice 500
+>> > ms waiting for training that will never happen, let's add a property
+>> > from devicetree to specify link capability.
+>> >
+>> > Signed-off-by: Brian Norris <briannorris@chromium.org>
+>> > Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>> >
+>> > ---
+>> >
+>> > Changes in v4:
+>> > - define link_gen as u32
+>> > - elaborate more for rockchip,max-link-speed on doc
+>> >
+>> > Changes in v3:
+>> > - Cast a warning for invalid max link speed and use gen1 for it.
+>> >   That looks better than v2. (Suggested by Brian)
+>> >
+>> > Changes in v2:
+>> > - rename the property to rockchip,max-link-speed according to
+>> >   Bjorn's recommendation and take some bits from imx6q-pcie to
+>> >   make this requirement more consisent.
+>> >
+>> >  .../devicetree/bindings/pci/rockchip-pcie.txt      |  4 ++
+>> >  drivers/pci/host/pcie-rockchip.c                   | 63 ++++++++++++++--------
+>> >  2 files changed, 44 insertions(+), 23 deletions(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+>> > index ba67b39..9bb29de 100644
+>> > --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+>> > +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+>> > @@ -42,6 +42,10 @@ Required properties:
+>> >  Optional Property:
+>> >  - ep-gpios: contain the entry for pre-reset gpio
+>> >  - num-lanes: number of lanes to use
+>> > +- rockchip,max-link-speed: Specify PCI gen for link capability. Must
+>> > +   be '2' for gen2, and '1' for gen1, otherwise will default to gen1.
+>> > +   For backward compatibility, if this property isn't assigned, we
+>> > +   use gen2 by default.
 >>
->> On Wed, Oct 05, 2016 at 08:10:31PM +0530, Ritesh Harjani wrote:
->>>
->>> This adds support for sdhc-msm controllers to get supported
->>> clk-rates from DT. sdhci-msm would need it's own set_clock
->>> ops to be implemented. For this, supported clk-rates needs
->>> to be populated in sdhci_msm_pltfm_data.
->>>
->>> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
->>> ---
->>>  .../devicetree/bindings/mmc/sdhci-msm.txt          |  1 +
->>>  drivers/mmc/host/sdhci-msm.c                       | 48
->>> ++++++++++++++++++++++
->>>  2 files changed, 49 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->>> b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->>> index 485483a..6a83b38 100644
->>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->>> @@ -17,6 +17,7 @@ Required properties:
->>>         "iface" - Main peripheral bus clock (PCLK/HCLK - AHB Bus clock)
->>> (required)
->>>         "core"  - SDC MMC clock (MCLK) (required)
->>>         "bus"   - SDCC bus voter clock (optional)
->>> +- clk-rates: Array of supported GCC clock frequencies for sdhc, Units -
->>> Hz.
->>
->>
->> Why can't some combination of assigned-clock-rates and querying the
->> clock provider for rates be used here?
+>> Defaults to gen1 or gen2?
 >
-> From what I understood, assigned-clock-rates would only work for setting
-> some default clock rates for certain clocks by calling
-> of_clk_set_defaults.
+> The wording is a bit confusing, but I think Shawn intended for:
+> (a) if no property is provided, default to the maximum supported (i.e.,
+>     gen2), to keep backward compatibility
+> (b) if a property is provided, but it doesn't contain 1 or 2, just
+>     default to 1
 >
-> Whereas the requirement here is -
-> That since SDHC msm directly controls the clk(core clock) at source, it's
-> sdhci-msm driver needs to know the supported clk-rates by the underlying
-> platform to configure the nearest floor value supported on this platform
-> (when the request arrives from the core layer to switch the clock).
+> I already disagreed with (b) (and suggested we make this an error
+> instead; we have no business accepting malformed device trees here IMO).
+> Alternatives to clear up the confusion Rob pointed out might include:
+> (1) explaining this better (i.e., what does "otherwise" mean in the
+>     original sentence?)
+> (2) changing this to uniformly default to 2 (if someone used an
+>     unsupported value, treat it as if the property wasn't there at all)
+> (3) reject incorrect values outright (so we don't have this fuzzy middle
+>     ground at all)
 
-Why does clk_round_rate not work for you? That will round down to the
-nearest frequency supported.
+Sounds good.
 
-> Hence the table of clk-rates is provided for sdhci-msm.
+>> Let's drop rockchip and make this a common property.
 >
->>
->> Minimally this would need unit suffix and either be made common or have
->> a vendor prefix.
+> As in, handle this in some generic/common way? AFAICT, there's really
+> no way to do that given the current structure of PCIe handling (and the
+> nature of these kinds of limitations).
 >
-> Sure will this work in that case - "qcom-clk-rates"
+> Or, do you just mean make the name common? (i.e,. "max-link-speed"
+> instead of "rockchip,max-link-speed")
 
-"qcom,clk-rates", but I'm not yet convinced this is right.
+Right, just the name and document in a common spot. Could be a simple
+helper function that drivers can call as well.
 
 Rob
