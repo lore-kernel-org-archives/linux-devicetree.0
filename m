@@ -1,665 +1,293 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCHv3] hwmon: Add tc654 driver
-Date: Mon, 10 Oct 2016 06:21:40 -0700
-Message-ID: <b8294ac3-7bac-eeb3-8923-ed569a19cab2@roeck-us.net>
-References: <20161007182939.GA9031@roeck-us.net>
- <20161009221222.29409-1-chris.packham@alliedtelesis.co.nz>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v5 12/12] sdhci: sdhci-msm: update dll configuration
+Date: Mon, 10 Oct 2016 16:27:52 +0300
+Message-ID: <0d0df134-63ed-18c4-818e-1fae1b114b2c@intel.com>
+References: <1475678440-3525-1-git-send-email-riteshh@codeaurora.org>
+ <1475678440-3525-13-git-send-email-riteshh@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161009221222.29409-1-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: iwamoto-sK/J6oeM9AhgKrQr38906+qrae++aQT8@public.gmane.org, Joshua.Scott-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1475678440-3525-13-git-send-email-riteshh@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Ritesh Harjani <riteshh@codeaurora.org>, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, shawn.lin@rock-chips.com
+Cc: david.brown@linaro.org, andy.gross@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, sboyd@codeaurora.org, bjorn.andersson@linaro.org, pramod.gurav@linaro.org, Krishna Konda <kkonda@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2016 03:12 PM, Chris Packham wrote:
-> Add support for the tc654 and tc655 fan controllers from Microchip.
->
-> http://ww1.microchip.com/downloads/en/DeviceDoc/20001734C.pdf
->
-> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+On 05/10/16 17:40, Ritesh Harjani wrote:
+> The newer msm sdhci's cores use a different DLL hardware for HS400.
+> Update the configuration and calibration of the newer DLL block.
+> 
+> The HS400 DLL block used previously is CDC LP 533 and requires
+> programming multiple registers and waiting for configuration to
+> complete and then enable it. It has about 18 register writes and
+> two register reads.
+> 
+> The newer HS400 DLL block is SDC4 DLL and requires two register
+> writes for configuration and one register read to confirm that it
+> is initialized. There is an additional register write to enable
+> the power save mode for SDC4 DLL block.
+> 
+> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
+> Signed-off-by: Krishna Konda <kkonda@codeaurora.org>
 > ---
-> Changes in v3:
-> - typofix in documentation
-> - add missing value to tc654_pwm_map, re-generate based on datasheet.
-> - remove unnecessary hwmon_dev member from struct tc654_data
-> - bug fixes in set_fan_min() and show_pwm_mode()
-> - miscellaneous style fixes
->
-> Changes in v2:
-> - Add Documentation/hwmon/tc654
-> - Incorporate most of the review comments from Guenter. Additional error
->   handling is added. Unused/unnecessary code is removed. I decided not
->   to go down the regmap path yet. I may circle back to it when I look at
->   using regmap in the adm9240 driver.
->
->  .../devicetree/bindings/i2c/trivial-devices.txt    |   2 +
->  Documentation/hwmon/tc654                          |  31 ++
->  drivers/hwmon/Kconfig                              |  11 +
->  drivers/hwmon/Makefile                             |   1 +
->  drivers/hwmon/tc654.c                              | 509 +++++++++++++++++++++
->  5 files changed, 554 insertions(+)
->  create mode 100644 Documentation/hwmon/tc654
->  create mode 100644 drivers/hwmon/tc654.c
->
-> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> index 1416c6a0d2cd..833fb9f133d3 100644
-> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> @@ -122,6 +122,8 @@ microchip,mcp4662-502	Microchip 8-bit Dual I2C Digital Potentiometer with NV Mem
->  microchip,mcp4662-103	Microchip 8-bit Dual I2C Digital Potentiometer with NV Memory (10k)
->  microchip,mcp4662-503	Microchip 8-bit Dual I2C Digital Potentiometer with NV Memory (50k)
->  microchip,mcp4662-104	Microchip 8-bit Dual I2C Digital Potentiometer with NV Memory (100k)
-> +microchip,tc654		PWM Fan Speed Controller With Fan Fault Detection
-> +microchip,tc655		PWM Fan Speed Controller With Fan Fault Detection
->  national,lm63		Temperature sensor with integrated fan control
->  national,lm75		I2C TEMP SENSOR
->  national,lm80		Serial Interface ACPI-Compatible Microprocessor System Hardware Monitor
-> diff --git a/Documentation/hwmon/tc654 b/Documentation/hwmon/tc654
-> new file mode 100644
-> index 000000000000..91a2843f5f98
-> --- /dev/null
-> +++ b/Documentation/hwmon/tc654
-> @@ -0,0 +1,31 @@
-> +Kernel driver tc654
-> +===================
+>  drivers/mmc/host/sdhci-msm.c | 141 ++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 127 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index dbf80a9c..ddc8dc9 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/mmc/mmc.h>
+>  #include <linux/slab.h>
+> +#include <linux/iopoll.h>
+>  
+>  #include "sdhci-pltfm.h"
+>  
+> @@ -50,6 +51,7 @@
+>  #define INT_MASK		0xf
+>  #define MAX_PHASES		16
+>  #define CORE_DLL_LOCK		BIT(7)
+> +#define CORE_DDR_DLL_LOCK	BIT(11)
+>  #define CORE_DLL_EN		BIT(16)
+>  #define CORE_CDR_EN		BIT(17)
+>  #define CORE_CK_OUT_EN		BIT(18)
+> @@ -61,6 +63,7 @@
+>  #define CORE_DLL_STATUS		0x108
+>  
+>  #define CORE_DLL_CONFIG_2	0x1b4
+> +#define CORE_DDR_CAL_EN		BIT(0)
+>  #define CORE_FLL_CYCLE_CNT	BIT(18)
+>  #define CORE_DLL_CLOCK_DISABLE	BIT(21)
+>  
+> @@ -99,6 +102,11 @@
+>  #define CORE_DDR_200_CFG		0x184
+>  #define CORE_CDC_T4_DLY_SEL		BIT(0)
+>  #define CORE_START_CDC_TRAFFIC		BIT(6)
+> +#define CORE_VENDOR_SPEC3	0x1b0
+> +#define CORE_PWRSAVE_DLL	BIT(3)
 > +
-> +Supported chips:
-> +  * Microship TC654 and TC655
-> +    Prefix: 'tc654'
-> +    Datasheet: http://ww1.microchip.com/downloads/en/DeviceDoc/20001734C.pdf
-> +
-> +Authors:
-> +        Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-> +        Masahiko Iwamoto <iwamoto-sK/J6oeM9AhgKrQr38906+qrae++aQT8@public.gmane.org>
-> +
-> +Description
-> +-----------
-> +This driver implements support for the Microchip TC654 and TC655.
-> +
-> +The TC654 uses the 2-wire interface compatible with the SMBUS 2.0
-> +specification. The TC654 has two (2) inputs for measuring fan RPM and
-> +one (1) PWM output which can be used for fan control.
-> +
-> +Configuration Notes
-> +-------------------
-> +Ordinarily the pwm1_mode ABI is used for controlling the pwm output
-> +mode.  However, for this chip the output is always pwm, and the
-> +pwm1_mode determines if the pwm output is controlled via the pwm1 value
-> +or via the Vin analog input.
-> +
-> +
-> +Setting pwm1_mode to 1 will cause the pwm output to be driven based on
-> +the pwm1 value. Setting pwm1_mode to 0 will cause the pwm output to be
-> +driven based on the Vin input.
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 45cef3d2c75c..8681bc65cde5 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -907,6 +907,17 @@ config SENSORS_MCP3021
->  	  This driver can also be built as a module.  If so, the module
->  	  will be called mcp3021.
->
-> +config SENSORS_TC654
-> +	tristate "Microchip TC654/TC655 and compatibles"
-> +	depends on I2C
-> +	help
-> +	  If you say yes here you get support for TC654 and TC655.
-> +	  The TC654 and TC655 are PWM mode fan speed controllers with
-> +	  FanSense technology for use with brushless DC fans.
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called tc654.
-> +
->  config SENSORS_MENF21BMC_HWMON
->  	tristate "MEN 14F021P00 BMC Hardware Monitoring"
->  	depends on MFD_MENF21BMC
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index aecf4ba17460..c651f0f1d047 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -122,6 +122,7 @@ obj-$(CONFIG_SENSORS_MAX6697)	+= max6697.o
->  obj-$(CONFIG_SENSORS_MAX31790)	+= max31790.o
->  obj-$(CONFIG_SENSORS_MC13783_ADC)+= mc13783-adc.o
->  obj-$(CONFIG_SENSORS_MCP3021)	+= mcp3021.o
-> +obj-$(CONFIG_SENSORS_TC654)	+= tc654.o
->  obj-$(CONFIG_SENSORS_MENF21BMC_HWMON) += menf21bmc_hwmon.o
->  obj-$(CONFIG_SENSORS_NCT6683)	+= nct6683.o
->  obj-$(CONFIG_SENSORS_NCT6775)	+= nct6775.o
-> diff --git a/drivers/hwmon/tc654.c b/drivers/hwmon/tc654.c
-> new file mode 100644
-> index 000000000000..456e0bb9f94f
-> --- /dev/null
-> +++ b/drivers/hwmon/tc654.c
-> @@ -0,0 +1,509 @@
-> +/*
-> + * tc654.c - Linux kernel modules for fan speed controller
-> + *
-> + * Copyright (C) 2016 Allied Telesis Labs NZ
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/err.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/hwmon-sysfs.h>
-> +#include <linux/i2c.h>
-> +#include <linux/init.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/slab.h>
-> +#include <linux/util_macros.h>
-> +
-> +enum tc654_regs {
-> +	TC654_REG_RPM1 = 0x00,	/* RPM Output 1 */
-> +	TC654_REG_RPM2 = 0x01,	/* RPM Output 2 */
-> +	TC654_REG_FAN_FAULT1 = 0x02,	/* Fan Fault 1 Threshold */
-> +	TC654_REG_FAN_FAULT2 = 0x03,	/* Fan Fault 2 Threshold */
-> +	TC654_REG_CONFIG = 0x04,	/* Configuration */
-> +	TC654_REG_STATUS = 0x05,	/* Status */
-> +	TC654_REG_DUTY_CYCLE = 0x06,	/* Fan Speed Duty Cycle */
-> +	TC654_REG_MFR_ID = 0x07,	/* Manufacturer Identification */
-> +	TC654_REG_VER_ID = 0x08,	/* Version Identification */
-> +};
-> +
-> +/* Macros to easily index the registers */
-> +#define TC654_REG_RPM(idx) (TC654_REG_RPM1 + (idx))
-> +#define TC654_REG_FAN_FAULT(idx) (TC654_REG_FAN_FAULT1 + (idx))
-> +
-> +/* Config register bits */
-> +#define TC654_REG_CONFIG_RES BIT(6)	/* Resolution Selection */
-> +#define TC654_REG_CONFIG_DUTYC BIT(5)	/* Duty Cycle Control Method */
-> +#define TC654_REG_CONFIG_SDM BIT(0)	/* Shutdown Mode */
-> +
-> +/* Status register bits */
-> +#define TC654_REG_STATUS_F2F BIT(1)	/* Fan 2 Fault */
-> +#define TC654_REG_STATUS_F1F BIT(0)	/* Fan 1 Fault */
-> +
-> +/* RPM resolution for RPM Output registers */
-> +#define TC654_HIGH_RPM_RESOLUTION 25	/* 25 RPM resolution */
-> +#define TC654_LOW_RPM_RESOLUTION 50	/* 50 RPM resolution */
-> +
-> +/* Convert to the fan fault RPM threshold from register value */
-> +#define TC654_FAN_FAULT_FROM_REG(val) ((val) * 50)	/* 50 RPM resolution */
-> +
-> +/* Convert to register value from the fan fault RPM threshold */
-> +#define TC654_FAN_FAULT_TO_REG(val) (((val) / 50) & 0xff)
-> +
+> +#define CORE_DDR_CONFIG		0x1b8
+> +#define DDR_CONFIG_POR_VAL	0x80040853
+>  
+>  #define CORE_VENDOR_SPEC_CAPABILITIES0	0x11c
+>  
+> @@ -127,6 +135,7 @@ struct sdhci_msm_host {
+>  	bool tuning_done;
+>  	bool calibration_done;
+>  	u8 saved_tuning_phase;
+> +	bool use_cdclp533;
+>  };
+>  
+>  /* Platform specific tuning */
+> @@ -460,7 +469,7 @@ static int sdhci_msm_cdclp533_calibration(struct sdhci_host *host)
+>  {
+>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>  	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> -	u32 wait_cnt, config;
+> +	u32 config, calib_done;
+>  	int ret;
+>  
+>  	pr_debug("%s: Enter %s\n", mmc_hostname(host->mmc), __func__);
+> @@ -552,18 +561,13 @@ static int sdhci_msm_cdclp533_calibration(struct sdhci_host *host)
+>  	wmb(); /* drain writebuffer */
+>  
+>  	/* Poll on CALIBRATION_DONE field in CORE_CSR_CDC_STATUS0 to be 1 */
+> -	wait_cnt = 50;
+> -	while (!(readl_relaxed(host->ioaddr + CORE_CSR_CDC_STATUS0)
+> -			& CORE_CALIBRATION_DONE)) {
+> -		/* max. wait for 50us sec for CALIBRATION_DONE bit to be set */
+> -		if (--wait_cnt == 0) {
+> -			pr_err("%s: %s: CDC Calibration was not completed\n",
+> +	ret = readl_poll_timeout(host->ioaddr + CORE_CSR_CDC_STATUS0,
 
-Nitpick, but the above defines are difficult to read. Can you tab-align the values ?
+This code was added in a previous patch, so it would make more sense to make
+it use readl_poll_timeout in the first place.  Was there a reason to use
+readl_poll_timeout instead of readl_relaxed_poll_timeout()?
 
-> +/* Register data is read (and cached) at most once per second. */
-> +#define TC654_UPDATE_INTERVAL	HZ
+> +		 calib_done, (calib_done & CORE_CALIBRATION_DONE), 1, 50);
 > +
-> +struct tc654_data {
-> +	struct i2c_client *client;
-> +
-> +	/* update mutex */
-> +	struct mutex update_lock;
-> +
-> +	/* tc654 register cache */
-> +	bool valid;
-> +	unsigned long last_updated;	/* in jiffies */
-> +
-> +	u8 rpm_output[2];	/* The fan RPM data for fans 1 and 2 is then
-> +				 * written to registers RPM1 and RPM2
-> +				 */
-> +	u8 fan_fault[2];	/* The Fan Fault Threshold Registers are used to
-> +				 * set the fan fault threshold levels for fan 1
-> +				 * and fan 2
-> +				 */
-> +	u8 config;	/* The Configuration Register is an 8-bit read/
-> +			 * writable multi-function control register
-> +			 *   7: Fan Fault Clear
-> +			 *      1 = Clear Fan Fault
-> +			 *      0 = Normal Operation (default)
-> +			 *   6: Resolution Selection for RPM Output Registers
-> +			 *      RPM Output Registers (RPM1 and RPM2) will be
-> +			 *      set for
-> +			 *      1 = 25 RPM (9-bit) resolution
-> +			 *      0 = 50 RPM (8-bit) resolution (default)
-> +			 *   5: Duty Cycle Control Method
-> +			 *      The V OUT duty cycle will be controlled via
-> +			 *      1 = the SMBus interface.
-> +			 *      0 = via the V IN analog input pin. (default)
-> +			 * 4,3: Fan 2 Pulses Per Rotation
-> +			 *      00 = 1
-> +			 *      01 = 2 (default)
-> +			 *      10 = 4
-> +			 *      11 = 8
-> +			 * 2,1: Fan 1 Pulses Per Rotation
-> +			 *      00 = 1
-> +			 *      01 = 2 (default)
-> +			 *      10 = 4
-> +			 *      11 = 8
-> +			 *   0: Shutdown Mode
-> +			 *      1 = Shutdown mode.
-> +			 *      0 = Normal operation. (default)
-> +			 */
-> +	u8 status;	/* The Status register provides all the information
-> +			 * about what is going on within the TC654/TC655
-> +			 * devices.
-> +			 * 7,6: Unimplemented, Read as '0'
-> +			 *   5: Over-Temperature Fault Condition
-> +			 *      1 = Over-Temperature condition has occurred
-> +			 *      0 = Normal operation. V IN is less than 2.6V
-> +			 *   4: RPM2 Counter Overflow
-> +			 *      1 = Fault condition
-> +			 *      0 = Normal operation
-> +			 *   3: RPM1 Counter Overflow
-> +			 *      1 = Fault condition
-> +			 *      0 = Normal operation
-> +			 *   2: V IN Input Status
-> +			 *      1 = V IN is open
-> +			 *      0 = Normal operation. voltage present at V IN
-> +			 *   1: Fan 2 Fault
-> +			 *      1 = Fault condition
-> +			 *      0 = Normal operation
-> +			 *   0: Fan 1 Fault
-> +			 *      1 = Fault condition
-> +			 *      0 = Normal operation
-> +			 */
-> +	u8 duty_cycle;	/* The DUTY_CYCLE register is a 4-bit read/
-> +			 * writable register used to control the duty
-> +			 * cycle of the V OUT output.
-> +			 */
-> +};
-> +
-> +/* helper to grab and cache data, at most one time per second */
-> +static struct tc654_data *tc654_update_client(struct device *dev)
+> +	if (ret == -ETIMEDOUT) {
+> +		pr_err("%s: %s: CDC Calibration was not completed\n",
+>  				mmc_hostname(host->mmc), __func__);
+> -			ret = -ETIMEDOUT;
+> -			goto out;
+> -		}
+> -		/* wait for 1us before polling again */
+> -		udelay(1);
+> +		goto out;
+>  	}
+>  
+>  	/* Verify CDC_ERROR_CODE field in CORE_CSR_CDC_STATUS0 is 0 */
+> @@ -586,6 +590,86 @@ out:
+>  	return ret;
+>  }
+>  
+> +static int sdhci_msm_cm_dll_sdc4_calibration(struct sdhci_host *host)
 > +{
-> +	struct tc654_data *data = dev_get_drvdata(dev);
-> +	struct i2c_client *client = data->client;
-> +	int ret = 0;
-> +
-> +	mutex_lock(&data->update_lock);
-> +	if (time_before(jiffies, data->last_updated + TC654_UPDATE_INTERVAL) &&
-> +	    likely(data->valid))
-> +		goto out;
-> +
-> +	ret = i2c_smbus_read_byte_data(client, TC654_REG_RPM(0));
-> +	if (ret < 0)
-> +		goto out;
-> +	data->rpm_output[0] = ret;
-> +
-> +	ret = i2c_smbus_read_byte_data(client, TC654_REG_RPM(1));
-> +	if (ret < 0)
-> +		goto out;
-> +	data->rpm_output[1] = ret;
-> +
-> +	ret = i2c_smbus_read_byte_data(client, TC654_REG_FAN_FAULT(0));
-> +	if (ret < 0)
-> +		goto out;
-> +	data->fan_fault[0] = ret;
-> +
-> +	ret = i2c_smbus_read_byte_data(client, TC654_REG_FAN_FAULT(1));
-> +	if (ret < 0)
-> +		goto out;
-> +	data->fan_fault[1] = ret;
-> +
-> +	ret = i2c_smbus_read_byte_data(client, TC654_REG_CONFIG);
-> +	if (ret < 0)
-> +		goto out;
-> +	data->config = ret;
-> +
-> +	ret = i2c_smbus_read_byte_data(client, TC654_REG_STATUS);
-> +	if (ret < 0)
-> +		goto out;
-> +	data->status = ret;
-> +
-> +	ret = i2c_smbus_read_byte_data(client, TC654_REG_DUTY_CYCLE);
-> +	if (ret < 0)
-> +		goto out;
-> +	data->duty_cycle = ret & 0x0f;
-> +
-> +	data->last_updated = jiffies;
-> +	data->valid = true;
-> +out:
-> +	mutex_unlock(&data->update_lock);
-> +
-> +	if (ret < 0)		/* upon error, encode it in return value */
-> +		data = ERR_PTR(ret);
-> +
-> +	return data;
-> +}
-> +
-> +/*
-> + * sysfs attributes
-> + */
-> +
-> +static ssize_t show_fan(struct device *dev, struct device_attribute *da,
-> +			char *buf)
-> +{
-> +	int nr = to_sensor_dev_attr(da)->index;
-> +	struct tc654_data *data = tc654_update_client(dev);
-> +	int val;
-> +
-> +	if (IS_ERR(data))
-> +		return PTR_ERR(data);
-> +
-> +	if (data->config & TC654_REG_CONFIG_RES)
-> +		val = data->rpm_output[nr] * TC654_HIGH_RPM_RESOLUTION;
-> +	else
-> +		val = data->rpm_output[nr] * TC654_LOW_RPM_RESOLUTION;
-> +
-> +	return sprintf(buf, "%d\n", val);
-> +}
-> +
-> +static ssize_t show_fan_min(struct device *dev, struct device_attribute *da,
-> +			    char *buf)
-> +{
-> +	int nr = to_sensor_dev_attr(da)->index;
-> +	struct tc654_data *data = tc654_update_client(dev);
-> +
-> +	if (IS_ERR(data))
-> +		return PTR_ERR(data);
-> +
-> +	return sprintf(buf, "%d\n",
-> +		       TC654_FAN_FAULT_FROM_REG(data->fan_fault[nr]));
-> +}
-> +
-> +static ssize_t set_fan_min(struct device *dev, struct device_attribute *da,
-> +			   const char *buf, size_t count)
-> +{
-> +	int nr = to_sensor_dev_attr(da)->index;
-> +	struct tc654_data *data = dev_get_drvdata(dev);
-> +	struct i2c_client *client = data->client;
-> +	unsigned long val;
+> +	u32 dll_status, config;
 > +	int ret;
 > +
-> +	if (kstrtoul(buf, 10, &val))
-> +		return -EINVAL;
+> +	pr_debug("%s: Enter %s\n", mmc_hostname(host->mmc), __func__);
 > +
-> +	val = clamp_val(val, 0, 12750);
+> +	/*
+> +	 * Currently the CORE_DDR_CONFIG register defaults to desired
+> +	 * configuration on reset. Currently reprogramming the power on
+> +	 * reset (POR) value in case it might have been modified by
+> +	 * bootloaders. In the future, if this changes, then the desired
+> +	 * values will need to be programmed appropriately.
+> +	 */
+> +	writel_relaxed(DDR_CONFIG_POR_VAL, host->ioaddr + CORE_DDR_CONFIG);
 > +
-> +	mutex_lock(&data->update_lock);
+> +	/* Write 1 to DDR_CAL_EN field in CORE_DLL_CONFIG_2 */
+> +	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2);
+> +	config |= CORE_DDR_CAL_EN;
+> +	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG_2);
 > +
-> +	data->fan_fault[nr] = TC654_FAN_FAULT_TO_REG(val);
-> +	ret = i2c_smbus_write_byte_data(client, TC654_REG_FAN_FAULT(nr),
-> +					data->fan_fault[nr]);
+> +	/* Poll on DDR_DLL_LOCK bit in CORE_DLL_STATUS to be set */
+> +	ret = readl_poll_timeout(host->ioaddr + CORE_DLL_STATUS,
+
+Was there a reason to use readl_poll_timeout instead of
+readl_relaxed_poll_timeout()?
+
+> +		 dll_status, (dll_status & CORE_DDR_DLL_LOCK), 10, 1000);
 > +
-> +	mutex_unlock(&data->update_lock);
-> +	return ret < 0 ? ret : count;
-> +}
-> +
-> +static ssize_t show_fan_alarm(struct device *dev, struct device_attribute *da,
-> +			      char *buf)
-> +{
-> +	int nr = to_sensor_dev_attr(da)->index;
-> +	struct tc654_data *data = tc654_update_client(dev);
-> +	int val;
-> +
-> +	if (IS_ERR(data))
-> +		return PTR_ERR(data);
-> +
-> +	if (nr == 0)
-> +		val = !!(data->status & TC654_REG_STATUS_F1F);
-> +	else
-> +		val = !!(data->status & TC654_REG_STATUS_F2F);
-> +
-> +	return sprintf(buf, "%d\n", val);
-> +}
-> +
-> +static const u8 TC654_FAN_PULSE_SHIFT[] = { 1, 3 };
-> +
-> +static ssize_t show_fan_pulses(struct device *dev, struct device_attribute *da,
-> +			      char *buf)
-> +{
-> +	int nr = to_sensor_dev_attr(da)->index;
-> +	struct tc654_data *data = tc654_update_client(dev);
-> +	u8 val;
-> +
-> +	if (IS_ERR(data))
-> +		return PTR_ERR(data);
-> +
-> +	val = BIT((data->config >> TC654_FAN_PULSE_SHIFT[nr]) & 0x03);
-> +	return sprintf(buf, "%d\n", val);
-> +}
-> +
-> +static ssize_t set_fan_pulses(struct device *dev, struct device_attribute *da,
-> +			     const char *buf, size_t count)
-> +{
-> +	int nr = to_sensor_dev_attr(da)->index;
-> +	struct tc654_data *data = dev_get_drvdata(dev);
-> +	struct i2c_client *client = data->client;
-> +	u8 config;
-> +	unsigned long val;
-> +	int ret;
-> +
-> +	if (kstrtoul(buf, 10, &val))
-> +		return -EINVAL;
-> +
-> +	switch (val) {
-> +	case 1:
-> +		config = 0;
-> +		break;
-> +	case 2:
-> +		config = 1;
-> +		break;
-> +	case 4:
-> +		config = 2;
-> +		break;
-> +	case 8:
-> +		config = 3;
-> +		break;
-> +	default:
-> +		return -EINVAL;
+> +	if (ret == -ETIMEDOUT) {
+> +		pr_err("%s: %s: CM_DLL_SDC4 Calibration was not completed\n",
+> +				mmc_hostname(host->mmc), __func__);
+> +		goto out;
 > +	}
 > +
-> +	mutex_lock(&data->update_lock);
-> +
-> +	data->config &= ~(0x03 << TC654_FAN_PULSE_SHIFT[nr]);
-> +	data->config |= (config << TC654_FAN_PULSE_SHIFT[nr]);
-> +	ret = i2c_smbus_write_byte_data(client, TC654_REG_CONFIG, data->config);
-> +
-> +	mutex_unlock(&data->update_lock);
-> +	return ret < 0 ? ret : count;
-> +}
-> +
-> +static ssize_t show_pwm_mode(struct device *dev,
-> +			     struct device_attribute *da, char *buf)
-> +{
-> +	struct tc654_data *data = tc654_update_client(dev);
-> +
-> +	if (IS_ERR(data))
-> +		return PTR_ERR(data);
-> +
-> +	return sprintf(buf, "%d\n", !!(data->config & TC654_REG_CONFIG_DUTYC));
-> +}
-> +
-> +static ssize_t set_pwm_mode(struct device *dev,
-> +			    struct device_attribute *da,
-> +			    const char *buf, size_t count)
-> +{
-> +	struct tc654_data *data = dev_get_drvdata(dev);
-> +	struct i2c_client *client = data->client;
-> +	unsigned long val;
-> +	int ret;
-> +
-> +	if (kstrtoul(buf, 10, &val))
-> +		return -EINVAL;
-> +
-> +	if (val != 0 && val != 1)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&data->update_lock);
-> +
-> +	if (val)
-> +		data->config |= TC654_REG_CONFIG_DUTYC;
-> +	else
-> +		data->config &= ~TC654_REG_CONFIG_DUTYC;
-
-I just realized that this won't work as intended. Problem is that you
-only fill data->config when reading an attribute. So, if a set function
-is called prior to reading an attribute, data->config will be 0, and
-you end up overwriting the original configuration.
-
-> +
-> +	ret = i2c_smbus_write_byte_data(client, TC654_REG_CONFIG, data->config);
-> +
-> +	mutex_unlock(&data->update_lock);
-> +	return ret < 0 ? ret : count;
-> +}
-> +
-> +static const int tc654_pwm_map[16] = { 77,  88, 102, 112, 124, 136, 148, 160,
-> +				      172, 184, 196, 207, 219, 231, 243, 255};
-> +
-> +static ssize_t show_pwm(struct device *dev, struct device_attribute *da,
-> +			       char *buf)
-> +{
-> +	struct tc654_data *data = tc654_update_client(dev);
-> +	int pwm;
-> +
-> +	if (IS_ERR(data))
-> +		return PTR_ERR(data);
-> +
-> +	if (data->config & TC654_REG_CONFIG_SDM)
-> +		pwm = 0;
-> +	else
-> +		pwm = tc654_pwm_map[data->duty_cycle];
-> +
-> +	return sprintf(buf, "%d\n", pwm);
-> +}
-> +
-> +static ssize_t set_pwm(struct device *dev, struct device_attribute *da,
-> +			      const char *buf, size_t count)
-> +{
-> +	struct tc654_data *data = dev_get_drvdata(dev);
-> +	struct i2c_client *client = data->client;
-> +	unsigned long val;
-> +	int ret;
-> +
-> +	if (kstrtoul(buf, 10, &val))
-> +		return -EINVAL;
-> +	if (val > 255)
-> +		return -EINVAL;
-> +
-> +	if (val == 0)
-> +		data->config |= TC654_REG_CONFIG_SDM;
-> +	else
-> +		data->config &= ~TC654_REG_CONFIG_SDM;
-> +
-> +	data->duty_cycle = find_closest(val, tc654_pwm_map,
-> +					ARRAY_SIZE(tc654_pwm_map));
-> +
-> +	mutex_lock(&data->update_lock);
-> +
-The lock has to be earlier, before writing duty_cycle.
-
-> +	ret = i2c_smbus_write_byte_data(client, TC654_REG_CONFIG, data->config);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	ret = i2c_smbus_write_byte_data(client, TC654_REG_DUTY_CYCLE,
-> +				  data->duty_cycle);
-> +	if (ret < 0)
-> +		goto out;
-
-This goto is not necessary.
-
-> +
+> +	/* set CORE_PWRSAVE_DLL bit in CORE_VENDOR_SPEC3 */
+> +	config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC3);
+> +	config |= CORE_PWRSAVE_DLL;
+> +	writel_relaxed(config, host->ioaddr + CORE_VENDOR_SPEC3);
+> +	wmb(); /* drain writebuffer */
 > +out:
-> +	mutex_unlock(&data->update_lock);
-> +	return ret < 0 ? ret : count;
+> +	pr_debug("%s: Exit %s, ret:%d\n", mmc_hostname(host->mmc),
+> +			__func__, ret);
+> +	return ret;
 > +}
 > +
-> +static SENSOR_DEVICE_ATTR(fan1_input, S_IRUGO, show_fan, NULL, 0);
-> +static SENSOR_DEVICE_ATTR(fan2_input, S_IRUGO, show_fan, NULL, 1);
-> +static SENSOR_DEVICE_ATTR(fan1_min, S_IWUSR | S_IRUGO, show_fan_min,
-> +			  set_fan_min, 0);
-> +static SENSOR_DEVICE_ATTR(fan2_min, S_IWUSR | S_IRUGO, show_fan_min,
-> +			  set_fan_min, 1);
-> +static SENSOR_DEVICE_ATTR(fan1_alarm, S_IRUGO, show_fan_alarm, NULL, 0);
-> +static SENSOR_DEVICE_ATTR(fan2_alarm, S_IRUGO, show_fan_alarm, NULL, 1);
-> +static SENSOR_DEVICE_ATTR(fan1_pulses, S_IWUSR | S_IRUGO, show_fan_pulses,
-> +			  set_fan_pulses, 0);
-> +static SENSOR_DEVICE_ATTR(fan2_pulses, S_IWUSR | S_IRUGO, show_fan_pulses,
-> +			  set_fan_pulses, 1);
-> +static SENSOR_DEVICE_ATTR(pwm1_mode, S_IWUSR | S_IRUGO,
-> +			  show_pwm_mode, set_pwm_mode, 0);
-> +static SENSOR_DEVICE_ATTR(pwm1, S_IWUSR | S_IRUGO, show_pwm,
-> +			  set_pwm, 0);
-> +
-> +/* Driver data */
-> +static struct attribute *tc654_attrs[] = {
-> +	&sensor_dev_attr_fan1_input.dev_attr.attr,
-> +	&sensor_dev_attr_fan2_input.dev_attr.attr,
-> +	&sensor_dev_attr_fan1_min.dev_attr.attr,
-> +	&sensor_dev_attr_fan2_min.dev_attr.attr,
-> +	&sensor_dev_attr_fan1_alarm.dev_attr.attr,
-> +	&sensor_dev_attr_fan2_alarm.dev_attr.attr,
-> +	&sensor_dev_attr_fan1_pulses.dev_attr.attr,
-> +	&sensor_dev_attr_fan2_pulses.dev_attr.attr,
-> +	&sensor_dev_attr_pwm1_mode.dev_attr.attr,
-> +	&sensor_dev_attr_pwm1.dev_attr.attr,
-> +	NULL
-> +};
-> +
-> +ATTRIBUTE_GROUPS(tc654);
-> +
-> +/*
-> + * device probe and removal
-> + */
-> +
-> +static int tc654_probe(struct i2c_client *client,
-> +		       const struct i2c_device_id *id)
+> +static int sdhci_msm_hs400_dll_calibration(struct sdhci_host *host)
 > +{
-> +	struct device *dev = &client->dev;
-> +	struct tc654_data *data;
-> +	struct device *hwmon_dev;
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> +	int ret;
+> +	u32 config;
 > +
-> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
-> +		return -ENODEV;
+> +	pr_debug("%s: Enter %s\n", mmc_hostname(host->mmc), __func__);
 > +
-> +	data = devm_kzalloc(dev, sizeof(struct tc654_data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
+> +	/*
+> +	 * Retuning in HS400 (DDR mode) will fail, just reset the
+> +	 * tuning block and restore the saved tuning phase.
+> +	 */
+> +	ret = msm_init_cm_dll(host);
+> +	if (ret)
+> +		goto out;
 > +
-> +	data->client = client;
-> +	mutex_init(&data->update_lock);
+> +	/* Set the selected phase in delay line hw block */
+> +	ret = msm_config_cm_dll_phase(host, msm_host->saved_tuning_phase);
+> +	if (ret)
+> +		goto out;
 > +
-> +	hwmon_dev =
-> +	    devm_hwmon_device_register_with_groups(dev, client->name, data,
-> +						   tc654_groups);
-> +	return PTR_ERR_OR_ZERO(hwmon_dev);
+> +	/* Write 1 to CMD_DAT_TRACK_SEL field in DLL_CONFIG */
+> +	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
+> +	config |= CORE_CMD_DAT_TRACK_SEL;
+> +	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
+> +	if (msm_host->use_cdclp533)
+> +		/* Calibrate CDCLP533 DLL HW */
+> +		ret = sdhci_msm_cdclp533_calibration(host);
+
+sdhci_msm_cdclp533_calibration() does some of the steps above all over
+again.  Is that intended?
+
+
+> +	else
+> +		/* Calibrate CM_DLL_SDC4 HW */
+> +		ret = sdhci_msm_cm_dll_sdc4_calibration(host);
+> +out:
+> +	pr_debug("%s: Exit %s, ret:%d\n", mmc_hostname(host->mmc),
+> +			__func__, ret);
+> +	return ret;
 > +}
 > +
-> +static const struct i2c_device_id tc654_id[] = {
-> +	{"tc654", 0},
-> +	{"tc655", 0},
-> +	{}
-> +};
-> +
-> +MODULE_DEVICE_TABLE(i2c, tc654_id);
-> +
-> +static struct i2c_driver tc654_driver = {
-> +	.driver = {
-> +		   .name = "tc654",
-> +		   },
-> +	.probe = tc654_probe,
-> +	.id_table = tc654_id,
-> +};
-> +
-> +module_i2c_driver(tc654_driver);
-> +
-> +MODULE_AUTHOR("Allied Telesis Labs");
-> +MODULE_DESCRIPTION("Microchip TC654/TC655 driver");
-> +MODULE_LICENSE("GPL");
->
+>  static int sdhci_msm_execute_tuning(struct sdhci_host *host, u32 opcode)
+>  {
+>  	int tuning_seq_cnt = 3;
+> @@ -737,7 +821,7 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
+>  	if (host->clock > CORE_FREQ_100MHZ &&
+>  	   msm_host->tuning_done && !msm_host->calibration_done &&
+>  	   (mmc->ios.timing == MMC_TIMING_MMC_HS400))
+> -		if (!sdhci_msm_cdclp533_calibration(host))
+> +		if (!sdhci_msm_hs400_dll_calibration(host))
+>  			msm_host->calibration_done = true;
+>  
+>  	spin_lock_irq(&host->lock);
+> @@ -883,7 +967,7 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
+>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>  	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>  	struct mmc_ios curr_ios = host->mmc->ios;
+> -	u32 msm_clock, config;
+> +	u32 msm_clock, config, dll_lock;
+>  	int rc;
+>  
+>  	if (!clock)
+> @@ -942,7 +1026,29 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
+>  			config |= CORE_HC_SELECT_IN_EN;
+>  			writel_relaxed(config, host->ioaddr + CORE_VENDOR_SPEC);
+>  		}
+> +		if (!msm_host->clk_rate && !msm_host->use_cdclp533) {
+> +			/*
+> +			 * Poll on DLL_LOCK and DDR_DLL_LOCK bits in
+> +			 * CORE_DLL_STATUS to be set.  This should get set
+> +			 * with in 15 us at 200 MHz.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+'with in' -> 'within'
+
+> +			 */
+> +			rc = readl_poll_timeout(host->ioaddr + CORE_DLL_STATUS,
+
+Was there a reason to use readl_poll_timeout instead of
+readl_relaxed_poll_timeout()?
+
+> +					dll_lock, (dll_lock & (CORE_DLL_LOCK |
+> +					CORE_DDR_DLL_LOCK)), 10, 1000);
+
+The comment says 'DLL_LOCK and DDR_DLL_LOCK' but the logic looks 'DLL_LOCK
+or DDR_DLL_LOCK'
+
+> +			if (rc == -ETIMEDOUT)
+> +				pr_err("%s: Unable to get DLL_LOCK/DDR_DLL_LOCK, dll_status: 0x%08x\n",
+> +					mmc_hostname(host->mmc), dll_lock);
+> +		}
+>  	} else {
+> +		if (!msm_host->use_cdclp533) {
+> +			/* set CORE_PWRSAVE_DLL bit in CORE_VENDOR_SPEC3 */
+> +			config = readl_relaxed(host->ioaddr +
+> +					CORE_VENDOR_SPEC3);
+> +			config &= ~CORE_PWRSAVE_DLL;
+> +			writel_relaxed(config, host->ioaddr +
+> +					CORE_VENDOR_SPEC3);
+> +		}
+> +
+>  		/* Select the default clock (free running MCLK) */
+>  		config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
+>  		config &= ~CORE_HC_MCLK_SEL_MASK;
+> @@ -1172,6 +1278,13 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>  		msm_host->use_14lpp_dll_reset = true;
+>  
+>  	/*
+> +	 * SDCC 5 controller with major version 1, minor version 0x34 and later
+> +	 * with HS 400 mode support will use CM DLL instead of CDC LP 533 DLL.
+> +	 */
+> +	if ((core_major == 1) && (core_minor < 0x34))
+> +		msm_host->use_cdclp533 = true;
+> +
+> +	/*
+>  	 * Support for some capabilities is not advertised by newer
+>  	 * controller versions and must be explicitly enabled.
+>  	 */
+> 
