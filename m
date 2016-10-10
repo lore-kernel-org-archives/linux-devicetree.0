@@ -1,203 +1,265 @@
-From: Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v5 07/12] mmc: sdhci-msm: Implement set_clock callback for
- sdhci-msm
-Date: Mon, 10 Oct 2016 16:47:56 +0530
-Message-ID: <a3bad2ce-be3f-aab9-ace7-2874e25ffa3a@codeaurora.org>
-References: <1475678440-3525-1-git-send-email-riteshh@codeaurora.org>
- <1475678440-3525-8-git-send-email-riteshh@codeaurora.org>
- <20faeedb-ae65-fab7-f52f-aaec2aebe755@intel.com>
- <d35224cf-52e0-5ccc-9596-1c338df41c36@intel.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] ARM: dts: add rockchip PX3 Evaluation board
+Date: Mon, 10 Oct 2016 19:25:52 +0800
+Message-ID: <0a74b063-a94f-00d9-d1f7-a417c03c06a9@rock-chips.com>
+References: <1473529249-6151-1-git-send-email-andy.yan@rock-chips.com>
+ <1473529440-6202-1-git-send-email-andy.yan@rock-chips.com>
+ <64f4be31-1b19-60e3-da7c-f2fec186fab9@suse.de> <738050204.FfkOZgkGGl@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d35224cf-52e0-5ccc-9596-1c338df41c36-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <738050204.FfkOZgkGGl@phil>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alex.lemberg-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, mateusz.nowak-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Yuliy.Izrailov-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, asutoshd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, david.griego-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, venkatg-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pramod.gurav-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Adrian,
+Hi Heiko:
 
 
-On 10/10/2016 3:53 PM, Adrian Hunter wrote:
-> On 10/10/16 13:16, Adrian Hunter wrote:
->> On 05/10/16 17:40, Ritesh Harjani wrote:
->>> sdhci-msm controller may have different clk-rates for each
->>> bus speed mode. Thus implement set_clock callback for
->>> sdhci-msm driver.
+On 2016年10月10日 17:54, Heiko Stuebner wrote:
+> Hi Andreas, Andy,
+>
+> Am Dienstag, 13. September 2016, 14:14:01 CEST schrieb Andreas Färber:
+>> Hi Andy,
+>>
+>> This patch didn't make it to linux-rockchip list somehow...
+>> Not sure why I'm CC'ed, I don't have access to such a board to check, so
+>> just a couple formal nitpicks:
+>>
+>> Am 10.09.2016 um 19:44 schrieb Andy Yan:
+>>> PX3 EVB is designed by Rockchip for automotive field,
+>>> which intergrated with CVBS(TP2825)/MIPI DSI/LVDS/HDMI
+>> "integrated"
+>> but the grammar is somewhat incorrect with "which" referring to field -
+>> I assume you meant "with integrated CVBS..."?
+>>
+>>> video input/output interface, WIFI/BT/GPS(on a module
+>> Also please always leave a space before an opening parenthesis in
+>> English text. Similarly above, spaces around "/" would help recognize
+>> that MIPI DSI belongs together rather than being two lists.
+>>
+>> If nothing else applies below then maybe Heiko can edit it for you?
+> I've fixed the remarks in the commit description.
+>
+>
+>>> named S500 which based on MT6620), Gsensor BMA250E and
+>>> light&proximity sensor STK3410.
 >>>
->>> Signed-off-by: Sahitya Tummala <stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>> Signed-off-by: Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>
 >>> ---
->>>  drivers/mmc/host/sdhci-msm.c | 110 ++++++++++++++++++++++++++++++++++++++++++-
->>>  1 file changed, 109 insertions(+), 1 deletion(-)
 >>>
->>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->>> index 542ddad..9d18cf0 100644
->>> --- a/drivers/mmc/host/sdhci-msm.c
->>> +++ b/drivers/mmc/host/sdhci-msm.c
->>> @@ -84,6 +84,7 @@ struct sdhci_msm_host {
->>>  	struct clk *bus_clk;	/* SDHC bus voter clock */
->>>  	u32 *clk_table;
->>>  	int clk_table_sz;
->>> +	u32 clk_rate;
->>>  	struct mmc_host *mmc;
->>>  	bool use_14lpp_dll_reset;
->>>  };
->>> @@ -588,6 +589,113 @@ static unsigned int sdhci_msm_get_min_clock(struct sdhci_host *host)
->>>  	}
->>>  }
+>>> Changes in v1:
+>>> - board rename
+>>> - add vendor prefix for i2c interfaced sensors
+>>> - use stdout-path to set the default console
 >>>
->>> +static unsigned int sdhci_msm_get_msm_clk_rate(struct sdhci_host *host,
->>> +					u32 req_clk)
->>> +{
->>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->>> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->>> +	int count;
->>> +	unsigned int sel_clk = -1;
+>>>   Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+>>>   arch/arm/boot/dts/Makefile                         |   1 +
+>>>   arch/arm/boot/dts/rk3188-px3-evb.dts               | 337
+>>>   +++++++++++++++++++++ 3 files changed, 342 insertions(+)
+>>>   create mode 100644 arch/arm/boot/dts/rk3188-px3-evb.dts
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt
+>>> b/Documentation/devicetree/bindings/arm/rockchip.txt index
+>>> 6668645..6da3881 100644
+>>> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+>>> @@ -21,6 +21,10 @@ Rockchip platforms device tree bindings
+>>>
+>>>       Required root node properties:
+>>>         - compatible = "radxa,rock", "rockchip,rk3188";
+>>>
+>>> +- Rockchip PX3 Evaluation board:
+>>> +    Required root node properties:
+>>> +      - compatible = "rockchip,px3-evb", "rockchip,px3",
+>>> "rockchip,rk3188";
+>> How compatible is PX3 with RK3188? It is a separate SoC product:
+>>
+>> http://www.rock-chips.com/a/en/products/rkpower/2015/1125/730.html
+>>
+>> Wondering whether or not to drop the third compatible string.
+> As discussed in IRC (and with arm-soc maintainers), I intend to keep the
+> rk3188 part, as the chip really is just a (hardened?) variant of the consumer
+> rk3188, but shares the same internals with the original.
+>
 >>> +
->>> +	if (!msm_host->clk_table)
->>> +		return clk_round_rate(msm_host->clk, ULONG_MAX);
->>> +
->>> +	count = msm_host->clk_table_sz;
->>> +
->>> +	while (count--) {
->>> +		sel_clk = msm_host->clk_table[count];
->>> +		if (req_clk >= sel_clk)
->>> +			return sel_clk;
->>> +	}
->>> +
->>> +	return sel_clk;
->>> +}
->>> +
->>> +/**
->>> + * __sdhci_msm_set_clock - sdhci_msm clock control.
+>>>
+>>>   - Radxa Rock2 Square board:
+>>>       Required root node properties:
+>>>         - compatible = "radxa,rock2-square", "rockchip,rk3288";
+>>>
+>>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>>> index faacd52..88d27a2 100644
+>>> --- a/arch/arm/boot/dts/Makefile
+>>> +++ b/arch/arm/boot/dts/Makefile
+>>> @@ -620,6 +620,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+>>>
+>>>   	rk3066a-marsboard.dtb \
+>>>   	rk3066a-rayeager.dtb \
+>>>   	rk3188-radxarock.dtb \
+>>>
+>>> +	rk3188-px3-evb.dtb \
+>> Affects file naming as well: px3-evb.dtb?
+> see above
+>
+>>>   	rk3228-evb.dtb \
+>>>   	rk3229-evb.dtb \
+>>>   	rk3288-evb-act8846.dtb \
+>>>
+>>> diff --git a/arch/arm/boot/dts/rk3188-px3-evb.dts
+>>> b/arch/arm/boot/dts/rk3188-px3-evb.dts new file mode 100644
+>>> index 0000000..f6bc738
+>>> --- /dev/null
+>>> +++ b/arch/arm/boot/dts/rk3188-px3-evb.dts
+>>> @@ -0,0 +1,337 @@
+>>> +/*
+>>> + * Copyright (c) 2016 Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 >>> + *
->>> + * Description:
->>> + * Implement MSM version of sdhci_set_clock.
->>> + * This is required since MSM controller does not
->>> + * use internal divider and instead directly control
->>> + * the GCC clock as per HW recommendation.
->>> + **/
->>> +void __sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
->>> +{
->>> +	u16 clk;
->>> +	unsigned long timeout;
+>>> + * This file is dual-licensed: you can use it either under the terms
+>>> + * of the GPL or the X11 license, at your option. Note that this dual
+>>> + * licensing only applies to this file, and not this project as a
+>>> + * whole.
+>>> + *
+>>> + *  a) This file is free software; you can redistribute it and/or
+>>> + *     modify it under the terms of the GNU General Public License as
+>>> + *     published by the Free Software Foundation; either version 2 of the
+>>> + *     License, or (at your option) any later version.
+>>> + *
+>>> + *     This file is distributed in the hope that it will be useful,
+>>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>> + *     GNU General Public License for more details.
+>>> + *
+>>> + * Or, alternatively,
+>>> + *
+>>> + *  b) Permission is hereby granted, free of charge, to any person
+>>> + *     obtaining a copy of this software and associated documentation
+>>> + *     files (the "Software"), to deal in the Software without
+>>> + *     restriction, including without limitation the rights to use,
+>>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>>> + *     sell copies of the Software, and to permit persons to whom the
+>>> + *     Software is furnished to do so, subject to the following
+>>> + *     conditions:
+>>> + *
+>>> + *     The above copyright notice and this permission notice shall be
+>>> + *     included in all copies or substantial portions of the Software.
+>>> + *
+>>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>>> + */
 >>> +
->>> +	/*
->>> +	 * Keep actual_clock as zero -
->>> +	 * - since there is no divider used so no need of having actual_clock.
->>> +	 * - MSM controller uses SDCLK for data timeout calculation. If
->>> +	 *   actual_clock is zero, host->clock is taken for calculation.
->>> +	 */
->>> +	host->mmc->actual_clock = 0;
->>> +
->>> +	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
->>> +
->>> +	if (clock == 0)
->>> +		return;
->>> +
->>> +	/*
->>> +	 * MSM controller do not use clock divider.
->>> +	 * Thus read SDHCI_CLOCK_CONTROL and only enable
->>> +	 * clock with no divider value programmed.
->>> +	 */
->>> +	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
->>> +
->>> +	clk |= SDHCI_CLOCK_INT_EN;
->>> +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
->>> +
->>> +	/* Wait max 20 ms */
->>> +	timeout = 20;
->>> +	while (!((clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL))
->>> +		& SDHCI_CLOCK_INT_STABLE)) {
->>> +		if (timeout == 0) {
->>> +			pr_err("%s: Internal clock never stabilised.\n",
->>> +			       mmc_hostname(host->mmc));
->>> +			return;
->>> +		}
->>> +		timeout--;
->>> +		mdelay(1);
->>> +	}
->>> +
->>> +	clk |= SDHCI_CLOCK_CARD_EN;
->>> +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
->>> +}
->>> +
->>> +static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
->>> +{
->>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->>> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->>> +	u32 msm_clock;
->>> +	int rc;
->>> +
->>> +	if (!clock)
->>
->> Wouldn't you still need to set msm_host->clk_rate = clock in this case
-Yes. Will do that.
-
->>
->>> +		goto out;
->>> +
->>> +	spin_unlock_irq(&host->lock);
->>> +	if ((clock != msm_host->clk_rate) && msm_host->clk_table) {
->>> +		msm_clock = sdhci_msm_get_msm_clk_rate(host, clock);
->>> +		rc = clk_set_rate(msm_host->clk, msm_clock);
->>> +		if (rc) {
->>> +			pr_err("%s: failed to set clock at rate %u, requested clock rate %u\n",
->>> +				mmc_hostname(host->mmc), msm_clock, clock);
->>> +			goto out;
+>>> +/dts-v1/;
+>>> +#include <dt-bindings/input/input.h>
+>>> +#include "rk3188.dtsi"
+>> I'm surprised there is no [rk3188-]px3.dtsi here! Surely some automotive
+>> vendor may design their own board with it and should have at least the
+>> two trailing compatible strings pre-set.
+> see above. I don't think there is a need to pollute the directory with
+> (nearly) empty dtsi files, especially as the compatible will get overwritten by
+> a board compatible anyway.
 >
-> 'goto out' leaves spinlock unlocked
-Thanks for catching it.
-
->
->>> +		}
->>> +		msm_host->clk_rate = clock;
->>> +		pr_debug("%s: setting clock at rate %lu\n",
->>> +			mmc_hostname(host->mmc), clk_get_rate(msm_host->clk));
->>> +	}
 >>> +
->>> +	spin_lock_irq(&host->lock);
->>> +out:
->>> +	if (!msm_host->clk_table)
->>> +		return sdhci_set_clock(host, clock);
->>
->> Could put the above 2 lines at the start and then no need to check
->> msm_host->clk_table again.
-I wanted to make this change, but then may be because of later patches 
-which modifies sdhci_msm_set_clock for UHS modes, I did not move this to 
-top.
-I reviewed that part again, I will make the necessary changes.
-Thanks.
-
-
->>
->>> +	__sdhci_msm_set_clock(host, clock);
->>> +}
+>>> +/ {
+>>> +	model = "Rockchip PX3-EVB";
+>>> +	compatible = "rockchip,px3-evb", "rockchip,px3", "rockchip,rk3188";
 >>> +
->>>  static const struct of_device_id sdhci_msm_dt_match[] = {
->>>  	{ .compatible = "qcom,sdhci-msm-v4" },
->>>  	{},
->>> @@ -598,7 +706,7 @@ MODULE_DEVICE_TABLE(of, sdhci_msm_dt_match);
->>>  static const struct sdhci_ops sdhci_msm_ops = {
->>>  	.platform_execute_tuning = sdhci_msm_execute_tuning,
->>>  	.reset = sdhci_reset,
->>> -	.set_clock = sdhci_set_clock,
->>> +	.set_clock = sdhci_msm_set_clock,
->>>  	.get_min_clock = sdhci_msm_get_min_clock,
->>>  	.get_max_clock = sdhci_msm_get_max_clock,
->>>  	.set_bus_width = sdhci_set_bus_width,
->>>
+>>> +	chosen {
+>>> +		stdout-path = "serial2:115200n8";
+>>> +	};
+>>> +
+>>> +	memory {
+>>> +		device_type = "memory";
+>>> +		reg = <0x60000000 0x80000000>;
+>>> +	};
+>>> +
+>>> +	gpio-keys {
+>>> +		compatible = "gpio-keys";
+>>> +		autorepeat;
+>>> +
+>>> +		power {
+>>> +			gpios = <&gpio0 4 GPIO_ACTIVE_LOW>;
+>>> +			linux,code = <KEY_POWER>;
+>>> +			label = "GPIO Key Power";
+>>> +			linux,input-type = <1>;
+>>> +			wakeup-source;
+>>> +			debounce-interval = <100>;
+>>> +		};
+>>> +	};
+>>> +
+>>> +	vcc_sys: vsys-regulator {
+>>> +		compatible = "regulator-fixed";
+>>> +		regulator-name = "vsys";
+>>> +		regulator-min-microvolt = <5000000>;
+>>> +		regulator-max-microvolt = <5000000>;
+>>> +		regulator-boot-on;
+>>> +	};
+>>> +};
+>>> +
+>>> +&cpu0 {
+>>> +	cpu0-supply = <&vdd_cpu>;
+>>> +};
+>>> +
+>>> +&i2c0 {
+>>> +	status = "okay";
+>>> +
+>>> +	 /* Accelerometer */
+>> Space after tab intentional?
 >>
->>
+>>> +	bma250@18 {
+>>> +		compatible = "bosch,bma250";
+>>> +		reg = <0x18>;
+>>> +		interrupt-parent = <&gpio0>;
+>>> +		interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
+>>> +	};
+>>> +
+>>> +	stk3410@48 {
+>>> +		compatible = "sensortek,STK3310";
+>>> +		reg = <0x48>;
+>>> +		interrupt-parent = <&gpio1>;
+>>> +		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
+>>> +	};
+>> Generally it is undesired to repeat the compatible name as node name -
+>> did you compare other .dts files? (e.g., accelerometer@18 would be
+>> self-documenting) If this is a copy from an existing .dts then please
+>> ignore this comment.
+> due to the compatible ambiguity, I had dropped the stk3410 node anyway.
+> I've also checked how the bma250 gets specified and there are both variants in
+> use (accelerometer@ and bmc250@). So to set a good example for the future,
+> I've changed the node name to accelerometer@18 and dropped the now self
+> explanatory comment obove it.
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 >
+>>> +};
+>>> +
+>>> +&i2c1 {
+>>> +	status = "okay";
+>>> +	clock-frequency = <400000>;
+>> Insert white line?
+> done
+>
+>
+> Heiko
+>
+>
+
+
+
+  I have no problem with these above, Thanks for all you have done.
+
+
+
+
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
