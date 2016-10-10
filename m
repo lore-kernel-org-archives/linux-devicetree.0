@@ -1,79 +1,99 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V1 09/10] Documentation: dt: mfd: da9062/61 MFD binding
-Date: Mon, 10 Oct 2016 08:42:35 -0500
-Message-ID: <20161010134235.GA20577@rob-hp-laptop>
-References: <cover.1475743411.git.stwiss.opensource@diasemi.com>
- <7a21f22bd62817b63ba64e11eecadfb78338ee46.1475743411.git.stwiss.opensource@diasemi.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH RESEND] ARM: dts: keystone-k2*: Increase SPI Flash partition
+ size for U-Boot
+Date: Mon, 10 Oct 2016 19:41:41 +0530
+Message-ID: <20161010141141.21333-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7a21f22bd62817b63ba64e11eecadfb78338ee46.1475743411.git.stwiss.opensource@diasemi.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <ssantosh@kernel.org>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vignesh R <vigneshr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 06, 2016 at 09:43:31AM +0100, Steve Twiss wrote:
-> From: Steve Twiss <stwiss.opensource@diasemi.com>
-> 
-> Extend existing DA9062 binding information to include the DA9061 PMIC for
-> MFD core and regulators.
-> 
-> Add a da9062-onkey link to the existing onkey binding file.
-> 
-> Add a da9062-thermal link to the new temperature monitoring binding file
-> found in [PATCH V1 8/10].
-> 
-> Delete the da9062-watchdog section and replace it with a link to the new
-> DA9061/62 binding information file added by [PATCH V1 7/10].
-> 
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-> 
-> ---
-> This patch applies against linux-next and v4.8
-> 
-> Hi,
-> 
-> This patch depends on acceptance of the main code for the DA9061 MFD:
-> 
-> - [PATCH V1 1/10] mfd: da9061: MFD core support
-> 
-> and also from the following binding file changes:
-> 
-> - [PATCH V1 6/10] Binding for onkey
-> - [PATCH V1 7/10] Binding for watchdog
-> - [PATCH V1 8/10] Binding for thermal
-> 
-> Regards,
-> Steve Twiss, Dialog Semiconductor Ltd.
-> 
-> 
->  Documentation/devicetree/bindings/mfd/da9062.txt | 45 +++++++++++++++++-------
->  1 file changed, 33 insertions(+), 12 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt b/Documentation/devicetree/bindings/mfd/da9062.txt
-> index 38802b5..38ba5e2 100644
-> --- a/Documentation/devicetree/bindings/mfd/da9062.txt
-> +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+U-Boot SPI Boot image is now more than 512KB for Keystone2 devices and
+cannot fit into existing partition. So, increase the SPI Flash partition
+for U-Boot to 1MB for all Keystone2 devices.
 
-[...]
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+---
 
->  Example:
-> @@ -64,10 +89,6 @@ Example:
->  			compatible = "dlg,da9062-rtc";
->  		};
->  
-> -		watchdog {
-> -			compatible = "dlg,da9062-watchdog";
-> -		};
-> -
+This was submitted to v4.9 merge window but was never picked up:
+https://patchwork.kernel.org/patch/9135023/
 
-I don't understand why this is removed?
+ arch/arm/boot/dts/keystone-k2e-evm.dts  | 4 ++--
+ arch/arm/boot/dts/keystone-k2hk-evm.dts | 4 ++--
+ arch/arm/boot/dts/keystone-k2l-evm.dts  | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
->  		regulators {
->  			DA9062_BUCK1: buck1 {
->  				regulator-name = "BUCK1";
-> -- 
-> end-of-patch for PATCH V1
-> 
+diff --git a/arch/arm/boot/dts/keystone-k2e-evm.dts b/arch/arm/boot/dts/keystone-k2e-evm.dts
+index ae1ebe7ee021..08ca9dc6ef7c 100644
+--- a/arch/arm/boot/dts/keystone-k2e-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2e-evm.dts
+@@ -137,13 +137,13 @@
+ 
+ 		partition@0 {
+ 			label = "u-boot-spl";
+-			reg = <0x0 0x80000>;
++			reg = <0x0 0x100000>;
+ 			read-only;
+ 		};
+ 
+ 		partition@1 {
+ 			label = "misc";
+-			reg = <0x80000 0xf80000>;
++			reg = <0x100000 0xf00000>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/keystone-k2hk-evm.dts b/arch/arm/boot/dts/keystone-k2hk-evm.dts
+index 2156ff92d08f..369e1245f1ba 100644
+--- a/arch/arm/boot/dts/keystone-k2hk-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2hk-evm.dts
+@@ -161,13 +161,13 @@
+ 
+ 		partition@0 {
+ 			label = "u-boot-spl";
+-			reg = <0x0 0x80000>;
++			reg = <0x0 0x100000>;
+ 			read-only;
+ 		};
+ 
+ 		partition@1 {
+ 			label = "misc";
+-			reg = <0x80000 0xf80000>;
++			reg = <0x100000 0xf00000>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/keystone-k2l-evm.dts b/arch/arm/boot/dts/keystone-k2l-evm.dts
+index 056b42f99d7a..63ae65987ca5 100644
+--- a/arch/arm/boot/dts/keystone-k2l-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2l-evm.dts
+@@ -110,13 +110,13 @@
+ 
+ 		partition@0 {
+ 			label = "u-boot-spl";
+-			reg = <0x0 0x80000>;
++			reg = <0x0 0x100000>;
+ 			read-only;
+ 		};
+ 
+ 		partition@1 {
+ 			label = "misc";
+-			reg = <0x80000 0xf80000>;
++			reg = <0x100000 0xf00000>;
+ 		};
+ 	};
+ };
+-- 
+2.10.1
