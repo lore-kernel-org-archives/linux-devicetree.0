@@ -1,85 +1,80 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/4] gpio: ptxpmb-ext-cpld: Document bindings of PTXPMB
- extended CPLD
-Date: Mon, 10 Oct 2016 15:19:36 -0500
-Message-ID: <20161010201936.GB32418@rob-hp-laptop>
-References: <1475853574-22339-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1475853574-22339-5-git-send-email-pantelis.antoniou@konsulko.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] dt: bindings: vendor-prefix: Add 3 accelerometer
+ vendor prefixes
+Date: Mon, 10 Oct 2016 21:19:32 +0100
+Message-ID: <4b2e56d0-db1f-25e8-35ed-00ee25b11176@kernel.org>
+References: <20161006170650.13518-1-hdegoede@redhat.com>
+ <20161010145046.GA25572@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1475853574-22339-5-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Georgi Vlaev <gvlaev@juniper.net>, Guenter Roeck <linux@roeck-us.net>, JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, linux-mtd@lists.infradead.org, linux-watchdog@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161010145046.GA25572@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 07, 2016 at 06:19:34PM +0300, Pantelis Antoniou wrote:
-> From: Georgi Vlaev <gvlaev@juniper.net>
+On 10/10/16 15:50, Rob Herring wrote:
+> On Thu, Oct 06, 2016 at 07:06:50PM +0200, Hans de Goede wrote:
+>> Recently the kernel has gotten support in the iio subsystem for a number
+>> of new accelerometers from mCube, Memsic and MiraMEMS.
+>>
+>> This commit adds the vendor prefixes already used for these vendors
+>> in Documentation/devicetree/bindings/i2c/trivial-devices.txt to
+>> vendor-prefixes.txt.
+>>
+>> The "full" company names were taken from the company's websites:
+>> http://www.mcubemems.com/
+>> http://www.memsic.com/
+>> http://www.miramems.com/en/
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>> Changes in v2:
+>> -Drop domintech, it is already in the iio/next tree
+>> ---
+>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index 5c67e91..abe0129 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -157,13 +157,16 @@ lltc	Linear Technology Corporation
+>>  marvell	Marvell Technology Group Ltd.
+>>  maxim	Maxim Integrated Products
+>>  meas	Measurement Specialties
+>> +mcube	mCube
 > 
-> Add device tree bindings document for the GPIO driver of
-> Juniper's PTXPMB extended CPLD.
+> Not in alphabetical order.
+Fixed up.
+
+Thanks,
+
+Jonathan
 > 
-> Signed-off-by: Georgi Vlaev <gvlaev@juniper.net>
-> [Ported from Juniper kernel]
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> ---
->  .../bindings/gpio/jnx,gpio-ptxpmb-ext-cpld.txt     | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/jnx,gpio-ptxpmb-ext-cpld.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/jnx,gpio-ptxpmb-ext-cpld.txt b/Documentation/devicetree/bindings/gpio/jnx,gpio-ptxpmb-ext-cpld.txt
-> new file mode 100644
-> index 0000000..87f01b9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/jnx,gpio-ptxpmb-ext-cpld.txt
-> @@ -0,0 +1,36 @@
-> +Juniper PTXPMB extended CPLD GPIO block
-> +
-> +Required properties:
-> +
-> +- compatible:
-> +    Must be "jnx,gpio-ptxpmb-ext-cpld"
+>>  mediatek	MediaTek Inc.
+>>  melexis	Melexis N.V.
+>> +memsic	MEMSIC Inc.
+>>  merrii	Merrii Technology Co., Ltd.
+>>  micrel	Micrel Inc.
+>>  microchip	Microchip Technology Inc.
+>>  micron	Micron Technology Inc.
+>>  minix	MINIX Technology Ltd.
+>> +miramems	MiraMEMS Sensing Technology Co., Ltd.
+>>  mitsubishi	Mitsubishi Electric Corporation
+>>  mosaixtech	Mosaix Technologies, Inc.
+>>  moxa	Moxa
+>> -- 
+>> 2.9.3
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Generally, '-gpio' would be last.
-
-> +
-> +- #gpio-cells:
-> +    Should be <2>.  The first cell is the pin number (within the controller's
-> +    pin space), and the second is used for the following flags:
-> +	bit[0]: direction (0 = out, 1 = in)
-> +	bit[1]: init high
-> +	bit[2]: active low
-
-Same comment as all the other gpio bindings...
-
-> +
-> +- gpio-controller:
-> +    Specifies that the node is a GPIO controller.
-> +
-> +- interrupt-controller:
-> +    Specifies that the node is an interrupt controller.
-> +
-> +Optional properties:
-> +
-> +- reg:
-> +    Address and length of the register set for the device. Usually supplied
-> +    by the parent MFD device.
-
-Make it required.
-
-> +
-> +
-> +Example:
-> +
-> +gpio_ext_cpld: cpld-ext-gpio {
-> +	compatible = "jnx,gpio-ptxpmb-ext-cpld";
-> +	#gpio-cells = <2>;
-> +	#interrupt-cells = <2>;
-> +	gpio-controller;
-> +	interrupt-controller;
-> +};
-> -- 
-> 1.9.1
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
