@@ -1,39 +1,73 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/8] pinctrl: aspeed: Fixes for core and g5, implement
- remaining pins
-Date: Mon, 10 Oct 2016 09:59:57 +0200
-Message-ID: <CACRpkdZWbx1_SYJMOn40teQaEw1JAq80kDAp7N+OYaMRRO6NBg@mail.gmail.com>
-References: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC 02/10] dt-bindings: interrupt-controller: add DT binding
+ for meson GPIO interrupt controller
+Date: Mon, 10 Oct 2016 10:11:17 +0200
+Message-ID: <1476087077.10616.1.camel@baylibre.com>
+References: <1475593708-10526-1-git-send-email-jbrunet@baylibre.com>
+         <1475593708-10526-3-git-send-email-jbrunet@baylibre.com>
+         <20161009012927.GV18158@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew-zrmu5oMJ5Fs@public.gmane.org>
+In-Reply-To: <20161009012927.GV18158@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Cc: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 27, 2016 at 4:50 PM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
+On Sat, 2016-10-08 at 20:29 -0500, Rob Herring wrote:
+> On Tue, Oct 04, 2016 at 05:08:20PM +0200, Jerome Brunet wrote:
+> > 
+> > This commit adds the device tree bindings description for Amlogic's
+> > GPIO
+> > interrupt controller available on the meson8, meson8b and gxbb SoC
+> > families
+> > 
+> > Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../amlogic,meson-gpio-intc.txt                    | 39
+> > ++++++++++++++++++++++
+> >  1 file changed, 39 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-
+> > controller/amlogic,meson-gpio-intc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/interrupt-
+> > controller/amlogic,meson-gpio-intc.txt
+> > b/Documentation/devicetree/bindings/interrupt-
+> > controller/amlogic,meson-gpio-intc.txt
+> > new file mode 100644
+> > index 000000000000..bd4cceefcda1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-
+> > controller/amlogic,meson-gpio-intc.txt
+> > @@ -0,0 +1,39 @@
+> > +Amlogic meson GPIO interrupt controller
+> > +
+> > +Meson SoCs contains an interrupt controller which is able watch
+> > the SoC pads
+> > +and generate an interrupt on edges or level. The controller is
+> > essentially a
+> > +256 pads to 8 GIC interrupt multiplexer, with a filter block to
+> > select edge
+> > +or level and polarity. We don’t expose all 256 mux inputs because
+> > the
+> > +documentation shows that upper part is not mapped to any pad. The
+> > actual number
+> > +of interrupt exposed depends on the SoC.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible : should be: "amlogic,meson8-gpio-intc” or
+> > +  “amlogic,meson8b-gpio-intc” or “amlogic,gxbb-gpio-intc”
+> 
+> One per line please if you respin the series.
 
-> The initial Aspeed pinctrl patches implemented a subset of pins for each of the
-> g4 and g5 SoCs. This series provides a number of fixes to the initial patches,
-> mostly for issues identified in the g5 driver. The fixes account for the first
-> half of the series (up to and including "pinctrl: aspeed-g5: Fix pin
-> association of SPI1 function") and should be applied for 4.9.
+Got it. There will be a respin for sure.
+Thx Rob
 
-Those are applied for fixes.
-
-> The second half, from "pinctrl: aspeed: Enable capture of off-SCU pinmux
-> state", implements some additional functionality in the core engine for the
-> Aspeed SoCs and follows up with patches implementing mux configuration tables
-> for all remaining pins. Given the significant additions in the last few
-> patches, their lateness in the cycle and the light testing they have received
-> they are best left for 4.10, but I'm keen to get them out for review.
-
-I'm holding these back until v4.9-rc1 is out.
-
-Yours,
-Linus Walleij
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
