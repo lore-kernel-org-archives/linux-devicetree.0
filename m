@@ -1,44 +1,102 @@
-From: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [RFC V3 PATCH] dt-bindings: qcom: Add msm899(2/4) bindings
-Date: Mon, 10 Oct 2016 17:52:36 -0700
-Message-ID: <1476147156-4474-1-git-send-email-jeremymc@redhat.com>
-References: <20161009012847.GG18158@rob-hp-laptop>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161009012847.GG18158@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Subject: Re: [PATCH v2] clk: hisilicon: add CRG driver for Hi3798CV200 SoC
+Date: Tue, 11 Oct 2016 09:22:16 +0800
+Message-ID: <8d4d296c-5814-1ad6-4102-600762cbac8b@hisilicon.com>
+References: <1474183821-7570-1-git-send-email-xuejiancheng@hisilicon.com>
+ <20160923174704.GA32729@rob-hp-laptop>
+ <5a6e3727-214a-c791-3d8d-3982ae2f6bac@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5a6e3727-214a-c791-3d8d-3982ae2f6bac@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yanhaifeng@hisilicon.com, gaofei@hisilicon.com, hermit.wangheming@hisilicon.com, scott.bambrough@linaro.org, mark.gregotski@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-
-Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-V2->V3:
-   Added 8994 and 8994v2
 
 
- Documentation/devicetree/bindings/arm/qcom.txt | 3 +++
- 1 file changed, 3 insertions(+)
+在 2016/9/24 9:45, Jiancheng Xue 写道:
+> 在 2016/9/24 1:47, Rob Herring 写道:
+>> On Sun, Sep 18, 2016 at 03:30:21PM +0800, Jiancheng Xue wrote:
+>>> Add CRG driver for Hi3798CV200 SoC. CRG(Clock and Reset
+>>> Generator) module generates clock and reset signals used
+>>> by other module blocks on SoC.
+>>>
+>>> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+>>> ---
+>>> change log
+>>> v2:
+>>> - Fixed compiling error when compiled as a module.
+>>> - Fixed issues pointed by Stephen Boyd.
+>>> - Added prefix HISTB for clock index macro definitions.
+>>>
+>>>  .../clock/{hi3519-crg.txt => hisi-crg.txt}         |  11 +-
+>>>  drivers/clk/hisilicon/Kconfig                      |   8 +
+>>>  drivers/clk/hisilicon/Makefile                     |   1 +
+>>>  drivers/clk/hisilicon/crg-hi3798cv200.c            | 305 +++++++++++++++++++++
+>>>  drivers/clk/hisilicon/crg.h                        |  34 +++
+>>>  include/dt-bindings/clock/histb-clock.h            |  64 +++++
+>>>  6 files changed, 419 insertions(+), 4 deletions(-)
+>>>  rename Documentation/devicetree/bindings/clock/{hi3519-crg.txt => hisi-crg.txt} (82%)
+>>>  create mode 100644 drivers/clk/hisilicon/crg-hi3798cv200.c
+>>>  create mode 100644 drivers/clk/hisilicon/crg.h
+>>>  create mode 100644 include/dt-bindings/clock/histb-clock.h
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/clock/hi3519-crg.txt b/Documentation/devicetree/bindings/clock/hisi-crg.txt
+>>> similarity index 82%
+>>> rename from Documentation/devicetree/bindings/clock/hi3519-crg.txt
+>>> rename to Documentation/devicetree/bindings/clock/hisi-crg.txt
+>>> index acd1f23..e3919b6 100644
+>>> --- a/Documentation/devicetree/bindings/clock/hi3519-crg.txt
+>>> +++ b/Documentation/devicetree/bindings/clock/hisi-crg.txt
+>>> @@ -1,7 +1,7 @@
+>>> -* Hisilicon Hi3519 Clock and Reset Generator(CRG)
+>>> +* HiSilicon Clock and Reset Generator(CRG)
+>>>  
+>>> -The Hi3519 CRG module provides clock and reset signals to various
+>>> -controllers within the SoC.
+>>> +The CRG module provides clock and reset signals to various
+>>> +modules within the SoC.
+>>>  
+>>>  This binding uses the following bindings:
+>>>      Documentation/devicetree/bindings/clock/clock-bindings.txt
+>>> @@ -10,7 +10,10 @@ This binding uses the following bindings:
+>>>  Required Properties:
+>>>  
+>>>  - compatible: should be one of the following.
+>>> -  - "hisilicon,hi3519-crg" - controller compatible with Hi3519 SoC.
+>>> +  - "hisilicon,hi3516cv300-crg"
+>>> +  - "hisilicon,hi3519-crg"
+>>> +  - "hisilicon,hi3798cv200-crg"
+>>> +  - "hisilicon,hi3798cv200-sysctrl"
+>>
+>> Why crg and sysctrl?
+>>
+> Hi Rob，
+> 
+> In Hi3798cv200 SoC, the system controller (sysctrl) is another clock
+> provider which provides clocks for some modules such as timer0, uart0,
+> ir, led etc. These modules won't be power down when the system enters
+> into the stand-by mode. Besides providing above clocks, sysctrl also
+> contains registers used to control the whole system and some peripherals.
+> 
+Hi Rob，
 
-diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
-index 3e24518..a473989 100644
---- a/Documentation/devicetree/bindings/arm/qcom.txt
-+++ b/Documentation/devicetree/bindings/arm/qcom.txt
-@@ -22,6 +22,9 @@ The 'SoC' element must be one of the following strings:
- 	msm8916
- 	msm8974
- 	msm8996
-+	msm8992
-+	msm8994
-+	msm8994v2
- 
- The 'board' element must be one of the following strings:
- 
--- 
-2.6.1
+Do you still have any questions about this? Could you help me to ack this binding?
+Thank you!
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Jiancheng
+> 
+>>>  
+>>>  - reg: physical base address of the controller and length of memory mapped
+>>>    region.
+>>
+>> .
+>>
+> 
+> 
+> .
+> 
