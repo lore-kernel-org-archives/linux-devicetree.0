@@ -1,101 +1,74 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v6 2/3] of/pci: Add helper function to parse max-link-speed from dt
-Date: Tue, 11 Oct 2016 12:26:26 +0800
-Message-ID: <1476159987-31372-2-git-send-email-shawn.lin@rock-chips.com>
-References: <1476159987-31372-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476159987-31372-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v14 2/4] CMDQ: Mediatek CMDQ driver
+Date: Tue, 11 Oct 2016 09:49:51 +0530
+Message-ID: <CAJe_ZhcSCiwnuRS2zm605enO_ZLaOY+fEXhNfP2f6AYT3NUxmg@mail.gmail.com>
+References: <1473039885-24009-1-git-send-email-hs.liao@mediatek.com>
+ <1473039885-24009-3-git-send-email-hs.liao@mediatek.com>
+ <1475204778.13398.28.camel@mtksdaap41>
+ <1475225778.25044.35.camel@mtksdaap41> <1475226691.13398.35.camel@mtksdaap41>
+ <1475228829.3658.1.camel@mtksdaap41> <1475636064.21937.25.camel@mtksdaap41>
+ <CAJe_ZhcXw1-MOEiiix5VTtKEVr9Z23s_OyikboDYCd0RQwS5pg@mail.gmail.com>
+ <1475670705.335.27.camel@mtksdaap41>
+ <CAJe_ZheeEe0xEj733pxr4q=-YzxKHgRM4MMPDJNHa9uRC9Q2zA@mail.gmail.com>
+ <1475758897.4102.31.camel@mtksdaap41>
+ <CAJe_ZheptRQSmQp2gagqUyXqkOpi1qaTo8QPDTFpQ-+62B6kUw@mail.gmail.com>
+ <1476153632.477.2.camel@mtksdaap41>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1476153632.477.2.camel@mtksdaap41>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Monica Wang <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh@medi>
 List-Id: devicetree@vger.kernel.org
 
-This new helper function could be used by host drivers to
-get the limitaion of max link speed provided by dt. If the
-property isn't assigned or is invalid, it will return -EINVAL
-to the caller.
+On 11 October 2016 at 08:10, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> On Thu, 2016-10-06 at 18:40 +0530, Jassi Brar wrote:
+>> On 6 October 2016 at 18:31, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>>
+>> > Back to our original statement, we need to flush all tasks to queue
+>> > in GCE HW; i.e. we need to use mbox_client_txdone after
+>> > mbox_send_message, or send tx_done once mailbox controller receive
+>> > message (task). However, we still need a way to notice done tasks to
+>> > clients. Currently, we don't have a good way to call callback in mailbox
+>> > framework. Therefore, CMDQ driver has its owner callback functions.
+>> >
+>> mbox_client_txdone() is called by the client driver when only it knows
+>> the messages has been transmitted (i.e your submitted tasks are done).
+>> Obviously the client driver should do any callbacks to its users
+>> upstream.
+>
+> Hi Jassi,
+>
+> In current CMDQ driver, mbox_client_txdone() is called to prevent the
+> blocking of chan->active_req. It is not the real point of CMDQ task
+> done, so the client driver cannot do any callbacks to its user upstream.
+>
+> (1) If we don't use mbox_client_txdone(), could you tell us an
+>     alternative way to prevent the blocking of chan->active_req?
+>     And then we can use tx_done when CMDQ task is relly done.
+>
+mbox_client_txdone() should be used only when the mailbox controller
+driver can't figure when the TX is done. Client driver (by like some
+reply packet) realises the TX is done (for the reply to have arrived).
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
-
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
-
- drivers/of/of_pci.c    | 27 +++++++++++++++++++++++++++
- include/linux/of_pci.h |  7 +++++++
- 2 files changed, 34 insertions(+)
-
-diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-index 589b30c..91fd465 100644
---- a/drivers/of/of_pci.c
-+++ b/drivers/of/of_pci.c
-@@ -120,6 +120,33 @@ int of_get_pci_domain_nr(struct device_node *node)
- EXPORT_SYMBOL_GPL(of_get_pci_domain_nr);
- 
- /**
-+ * This function will try to find the limitation of link speed by finding
-+ * a property called "max-link-speed" of the given device node.
-+ *
-+ * @node: device tree node with the max link speed information
-+ *
-+ * Returns the associated max link speed from DT, or a negative value if the
-+ * required property is not found or is invalid.
-+ */
-+int of_get_pci_max_link_speed(struct device_node *node)
-+{
-+	const __be32 *value;
-+	int len;
-+	u16 max_link_speed;
-+
-+	value = of_get_property(node, "max-link-speed", &len);
-+	if (!value || len < sizeof(*value))
-+		return -EINVAL;
-+
-+	max_link_speed = (u16)be32_to_cpup(value);
-+	if (max_link_speed > 4)
-+		return -EINVAL;
-+
-+	return max_link_speed;
-+}
-+EXPORT_SYMBOL_GPL(of_get_pci_max_link_speed);
-+
-+/**
-  * of_pci_check_probe_only - Setup probe only mode if linux,pci-probe-only
-  *                           is present and valid
-  */
-diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-index b969e94..a8946d7 100644
---- a/include/linux/of_pci.h
-+++ b/include/linux/of_pci.h
-@@ -16,6 +16,7 @@ int of_pci_get_devfn(struct device_node *np);
- int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
- int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
- int of_get_pci_domain_nr(struct device_node *node);
-+int of_get_pci_max_link_speed(struct device_node *node);
- void of_pci_check_probe_only(void);
- #else
- static inline int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq)
-@@ -52,6 +53,12 @@ of_get_pci_domain_nr(struct device_node *node)
- 	return -1;
- }
- 
-+static inline int
-+of_get_pci_max_link_speed(struct device_node *node)
-+{
-+	return -EINVAL;
-+}
-+
- static inline void of_pci_check_probe_only(void) { }
- #endif
- 
--- 
-2.3.7
+ If your hardware does flag/irq when tx is done, you should prefer
+that over mbox_client_txdone().
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> (2) If we use mbox_client_txdone() to prevent the blocking of
+>     chan->active_req, could CMDQ driver just uses self-defined callback
+>     function to notice client driver CMDQ task done?
+>
+Anything above the mailbox api, is none of its business. Your platform
+specific 'server' driver can implement its own callbacks to notify its
+users.
