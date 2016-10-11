@@ -1,36 +1,70 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] thermal: rockchip: improve the warning log
-Date: Tue, 11 Oct 2016 09:03:02 +0200
-Message-ID: <6259981.fCVDkTTFBl@phil>
-References: <1476151655-18415-1-git-send-email-shawn.lin@rock-chips.com>
+From: Patrice Chotard <patrice.chotard@st.com>
+Subject: Re: [PATCH 15/19] reset: sti: Remove STiH415/6 reset support
+Date: Tue, 11 Oct 2016 09:05:05 +0200
+Message-ID: <b9a50ba1-9932-0d71-6b61-efccee587d74@st.com>
+References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
+ <1473859677-9231-16-git-send-email-peter.griffin@linaro.org>
+ <1474963347.2494.8.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476151655-18415-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1474963347.2494.8.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Peter Griffin <peter.griffin@linaro.org>
+Cc: devicetree@vger.kernel.org, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 11. Oktober 2016, 10:07:34 CEST schrieb Shawn Lin:
-> It is no necessary to print warning agian and again if we don't
-> add rockchip,grf for dt, otherwise I saw the following log when
-> doing suspend-2-resume. We only need to print it once when parsing
-> dt. It looks quite trivial but the log is apparently verbose.
-> 
-> [   26.615415] PM: early resume of devices complete after 1.539 msecs
-> [   26.622002] rk_tsadcv2_initialize: Missing rockchip,grf property
-> [   26.629359] rk_gmac-dwmac ff290000.ethernet: init for RGMII
-> [   26.639794] PM: resume of devices complete after 18.109 msecs
-> [   26.646925] Restarting tasks ... done.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> Reviewed-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Hi Philipp
 
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 09/27/2016 10:02 AM, Philipp Zabel wrote:
+> Hi Peter,
+> 
+> Am Mittwoch, den 14.09.2016, 14:27 +0100 schrieb Peter Griffin:
+>> Support for STiH415/6 SoCs is being removed from the
+>> kernel because the platforms are obsolete. This patch removes
+>> the reset drivers for these SoC's.
+>>
+>> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+>> Cc: <p.zabel@pengutronix.de>
+>> ---
+
+[...]
+
+>> -	.driver = {
+>> -		.name = "reset-stih416",
+>> -		.of_match_table = stih416_reset_match,
+>> -	},
+>> -};
+>> -
+>> -static int __init stih416_reset_init(void)
+>> -{
+>> -	return platform_driver_register(&stih416_reset_driver);
+>> -}
+>> -arch_initcall(stih416_reset_init);
+> 
+> Can I pick up patches 15 and 19, or are there dependencies in the
+> series?
+
+Yes, you can pick up patches 15 and 19
+
+> In the latter case,
+> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+> to merge both together with the other patches. Currently there is no
+> conflict with changes queued from the reset tree.
+> 
+> regards
+> Philipp
+> 
+
+Thanks
+
+Patrice
