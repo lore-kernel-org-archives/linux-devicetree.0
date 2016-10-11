@@ -1,86 +1,105 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] input: pwm-beeper: add documentation for volume
- devicetree bindings
-Date: Tue, 11 Oct 2016 08:39:57 -0500
-Message-ID: <CAL_JsqLGY+6eWb4dN-TMmt+PJSK6zm6gPgO3SCPa4esSpTzW8w@mail.gmail.com>
-References: <fe6349a5-7935-5be7-6dc1-7e80fa9dceeb@exceet.de>
- <1475831223-6006-1-git-send-email-frieder.schrempf@exceet.de>
- <1475831223-6006-3-git-send-email-frieder.schrempf@exceet.de>
- <20161010152055.GA6868@rob-hp-laptop> <24e35d49-7c3d-b094-f0b7-96367389f249@exceet.de>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 1/4] PCI: designware: Fix compiler warning
+Date: Tue, 11 Oct 2016 08:50:50 -0500
+Message-ID: <20161011135050.GA26715@localhost>
+References: <1476190715-16884-1-git-send-email-kishon@ti.com>
+ <1476190715-16884-2-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <24e35d49-7c3d-b094-f0b7-96367389f249@exceet.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Schrempf Frieder <frieder.schrempf@exceet.de>
-Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "luis@debethencourt.com" <luis@debethencourt.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1476190715-16884-2-git-send-email-kishon@ti.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, Jingoo Han <jingoohan1@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 11, 2016 at 3:17 AM, Schrempf Frieder
-<frieder.schrempf@exceet.de> wrote:
-> On 10.10.2016 17:20, Rob Herring wrote:
->> On Fri, Oct 07, 2016 at 09:08:17AM +0000, Schrempf Frieder wrote:
->>> This patch adds the documentation for the devicetree bindings to set
->>> the volume levels.
->>>
->>> Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
->>> ---
->>> Changes in v2:
->>>  - split into 3 separate patches
->>>  - make volume properties optional
->>>
->>>  .../devicetree/bindings/input/pwm-beeper.txt       | 22 ++++++++++++++++++++++
->>>  1 file changed, 22 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
->>> index be332ae..6d8ba4e 100644
->>> --- a/Documentation/devicetree/bindings/input/pwm-beeper.txt
->>> +++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
->>> @@ -5,3 +5,25 @@ Registers a PWM device as beeper.
->>>  Required properties:
->>>  - compatible: should be "pwm-beeper"
->>>  - pwms: phandle to the physical PWM device
->>> +
->>> +Optional properties:
->>> +- volume-levels: Array of distinct volume levels. These need to be in the
->>> +      range of 0 to 500, while 0 means 0% duty cycle (mute) and 500 means
->>> +      50% duty cycle (max volume).
->>> +      Please note that the actual volume of most beepers is highly
->>> +      non-linear, which means that low volume levels are probably somewhere
->>> +      in the range of 1 to 30 (0.1-3% duty cycle).
->>
->> What does the index correspond to? The linear volume?
->
-> In most cases users probably need linear volume levels (e.g. 0%, 25%,
-> 50%, 75%, 100%) and in this case the index would indeed correspond to
-> the linear perceived volume.
->
-> But also non-linear relations are possible (e.g. 0%, 20%, 100%), if the
-> user needs for example "mute", "low", "high" as volume levels.
+[+cc Jingoo, Kukjin, Krzysztof, linux-samsung-soc]
 
-Exclude off/mute and this is still linear. Also, the user exposed
-levels could be a subset of the defined h/w levels. That should be
-independent of DT.
+On Tue, Oct 11, 2016 at 06:28:32PM +0530, Kishon Vijay Abraham I wrote:
+> Fix the following compilation warning in dw_pcie_readl_unroll()
+> and dw_pcie_writel_unroll() by just invoking dw_pcie_readl_rc() and
+> dw_pcie_writel_rc() respectively instead of adding redundant code.
+> 
+> pcie-designware.c: In function 'dw_pcie_readl_unroll':
+> pcie-designware.c:165:32: warning: passing argument 2 of
+>  'pp->ops->readl_rc' makes integer from pointer without a cast
+>  [-Wint-conversion]
+>    return pp->ops->readl_rc(pp, pp->dbi_base + offset + reg);
+>                                 ^
+> pcie-designware.c:165:32: note: expected 'u32 {aka unsigned int}' but
+>  argument is of type 'void *'
+> pcie-designware.c: In function 'dw_pcie_writel_unroll':
+> pcie-designware.c:176:31: warning: passing argument 3 of
+>  'pp->ops->writel_rc' makes integer from pointer without a cast
+>  [-Wint-conversion]
+>    pp->ops->writel_rc(pp, val, pp->dbi_base + offset + reg);
+>                                ^
+> drivers/pci/host/pcie-designware.c:176:31: note: expected 'u32
+>  {aka unsigned int}' but argument is of type 'void *'
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/host/pcie-designware.c |   10 ++--------
+>  1 file changed, 2 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+> index 5ee8772..b8feea4 100644
+> --- a/drivers/pci/host/pcie-designware.c
+> +++ b/drivers/pci/host/pcie-designware.c
+> @@ -161,10 +161,7 @@ static inline u32 dw_pcie_readl_unroll(struct pcie_port *pp, u32 index, u32 reg)
+>  {
+>  	u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
+>  
+> -	if (pp->ops->readl_rc)
+> -		return pp->ops->readl_rc(pp, pp->dbi_base + offset + reg);
 
-> The linearization (defining the corresponding duty cycle for each index)
-> depends on the beeper and the perception of the user.
+I think this was worse than just a compiler warning, wasn't it?  I
+think I completely broke exynos (the only implementer of
+pp->ops->readl_rc) because we passed "pp->dbi_base + offset + reg" to
+exynos_pcie_readl_rc(), which then added pp->dbi_base again:
 
-This has to be a consistent interface across h/w to have a userspace
-that can work across h/w. For that, you have to define the binding as
-linear. Of course, it's all measured by perception and not completely
-accurate which is fine.
+  val = readl(pp->dbi_base + reg);
 
-> For the example array definition below, I tried different duty cycles
-> and found values of 0.8%, 2%, 4%, 50% to be approximately correspondent
-> to perceived volume levels of 25%, 50%, 75%, 100% in my case.
->
->>
->>> +- default-volume-level: the default volume level (index into the
->>> +      array defined by the "volume-levels" property)
->>> +
->>> +The volume level can be set via sysfs under /sys/class/input/inputX/volume.
->>> +The maximum volume level index can be read from /sys/class/input/inputX/max_volume_level.
+I incorporated your patch to use dw_pcie_readl_rc() directly (thanks a
+lot for noticing that!) into pci/host-designware.
 
-Also, drop this. Not relevant to the binding.
+Then I rebased all the branches that were based on pci/host-designware
+and repushed everything:
 
-Rob
+  pci/host-designware
+  pci/host-armada
+  pci/host-artpec
+  pci/host-dra7xx
+  pci/host-exynos
+  pci/host-hisi
+  pci/host-imx6
+  pci/host-keystone
+  pci/host-layerscape
+  pci/host-qcom
+  pci/host-spear
+
+> -	return readl(pp->dbi_base + offset + reg);
+> +	return dw_pcie_readl_rc(pp, offset + reg);
+>  }
+>  
+>  static inline void dw_pcie_writel_unroll(struct pcie_port *pp, u32 index,
+> @@ -172,10 +169,7 @@ static inline void dw_pcie_writel_unroll(struct pcie_port *pp, u32 index,
+>  {
+>  	u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
+>  
+> -	if (pp->ops->writel_rc)
+> -		pp->ops->writel_rc(pp, val, pp->dbi_base + offset + reg);
+> -	else
+> -		writel(val, pp->dbi_base + offset + reg);
+> +	dw_pcie_writel_rc(pp, offset + reg, val);
+>  }
+>  
+>  static int dw_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
