@@ -1,65 +1,75 @@
-From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC V3 PATCH] dt-bindings: qcom: Add msm899(2/4) bindings
-Date: Tue, 11 Oct 2016 14:25:06 -0700
-Message-ID: <ab018442-c929-e328-11a3-6e7fd21e56b8@redhat.com>
-References: <20161009012847.GG18158@rob-hp-laptop>
- <1476147156-4474-1-git-send-email-jeremymc@redhat.com>
- <20161011164207.GT7509@tuxbot>
+From: Haixia Shi <hshi@chromium.org>
+Subject: [PATCH v4] drm/panel: simple: Add support for AUO t215hvn01
+Date: Tue, 11 Oct 2016 14:59:16 -0700
+Message-ID: <1476223156-6163-1-git-send-email-hshi@chromium.org>
+References: <1476141557-4613-1-git-send-email-hshi@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161011164207.GT7509@tuxbot>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1476141557-4613-1-git-send-email-hshi@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Emil Velikov <emil.l.velikov@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Haixia Shi <hshi@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-11 9:42 AM, Bjorn Andersson wrote:
-> On Mon 10 Oct 17:52 PDT 2016, Jeremy McNicoll wrote:
->
->> From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>
->> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->> V2->V3:
->>    Added 8994 and 8994v2
->>
->>
->>  Documentation/devicetree/bindings/arm/qcom.txt | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
->> index 3e24518..a473989 100644
->> --- a/Documentation/devicetree/bindings/arm/qcom.txt
->> +++ b/Documentation/devicetree/bindings/arm/qcom.txt
->> @@ -22,6 +22,9 @@ The 'SoC' element must be one of the following strings:
->>  	msm8916
->>  	msm8974
->>  	msm8996
->> +	msm8992
->> +	msm8994
->
-> Please keep these sorted.
->
->> +	msm8994v2
->
-> What's different with v2? Why do we list it here?
->
-
-I'll have to defer to QC folks on this one.
-
--jeremy
-
-> Regards,
-> Bjorn
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIEFVTyB0MjE1aHZuMDEgaXMgYSAyMS41IiBGSEQgKDE5MjB4MTA4MCkgY29sb3IgVEZUIExD
+RCBwYW5lbC4KClRoaXMgcGFuZWwgaXMgdXNlZCBvbiB0aGUgQWNlciBDaHJvbWViYXNlIDIxLjUt
+aW5jaCBBbGwtaW4tT25lIChEQzIyMUhRKS4KCkxpbmsgdG8gc3BlYzogaHR0cDovL3d3dy51ZG1n
+cm91cC5jb20vZnRwL1QyMTVIVk4wMS4wLnBkZgoKdjI6IGZpeCBhbHBoYWJldGljYWwgb3JkZXIK
+djM6IHJlbW92ZSBtaW5vciByZXZpc2lvbiBzdWZmaXggIi4wIiBhbmQgYWRkIGxpbmsgdG8gc3Bl
+Ywp2NDogYWRkIGR0LWJpbmRpbmcgZG9jdW1lbnRhdGlvbgoKU2lnbmVkLW9mZi1ieTogSGFpeGlh
+IFNoaSA8aHNoaUBjaHJvbWl1bS5vcmc+ClRlc3RlZC1ieTogSGFpeGlhIFNoaSA8aHNoaUBjaHJv
+bWl1bS5vcmc+ClJldmlld2VkLWJ5OiBTdMOpcGhhbmUgTWFyY2hlc2luIDxtYXJjaGV1QGNocm9t
+aXVtLm9yZz4KQ2M6IEVtaWwgVmVsaWtvdiA8ZW1pbC5sLnZlbGlrb3ZAZ21haWwuY29tPgpDYzog
+VGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbT4KQ2M6IERhdmlkIEFpcmxp
+ZSA8YWlybGllZEBsaW51eC5pZT4KQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+
+CkNjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPgpDYzogZGV2aWNldHJlZUB2
+Z2VyLmtlcm5lbC5vcmcKQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcKLS0tCiAuLi4v
+YmluZGluZ3MvZGlzcGxheS9wYW5lbC9hdW8sdDIxNWh2bjAxLnR4dCAgICAgICB8ICA3ICsrKysr
+CiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAgICAgICB8IDMw
+ICsrKysrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMzcgaW5zZXJ0aW9ucygr
+KQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL2F1byx0MjE1aHZuMDEudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXVvLHQyMTVodm4wMS50eHQgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hdW8sdDIxNWh2
+bjAxLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi5jYmQ5ZGEzCi0tLSAv
+ZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+cGFuZWwvYXVvLHQyMTVodm4wMS50eHQKQEAgLTAsMCArMSw3IEBACitBVSBPcHRyb25pY3MgQ29y
+cG9yYXRpb24gMjEuNSIgRkhEICgxOTIweDEwODApIGNvbG9yIFRGVCBMQ0QgcGFuZWwKKworUmVx
+dWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJhdW8sdDIxNWh2bjAx
+IgorCitUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmlu
+ZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCitpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGly
+ZWN0b3J5LgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5j
+IGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCmluZGV4IDExM2RiM2MuLjI1
+NmMyMDEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwor
+KysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKQEAgLTU1NSw2ICs1NTUs
+MzMgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGF1b19iMTMzaHRuMDEgPSB7CiAJ
+fSwKIH07CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBhdW9fdDIxNWh2
+bjAxX21vZGUgPSB7CisJLmNsb2NrID0gMTQ4ODAwLAorCS5oZGlzcGxheSA9IDE5MjAsCisJLmhz
+eW5jX3N0YXJ0ID0gMTkyMCArIDg4LAorCS5oc3luY19lbmQgPSAxOTIwICsgODggKyA0NCwKKwku
+aHRvdGFsID0gMTkyMCArIDg4ICsgNDQgKyAxNDgsCisJLnZkaXNwbGF5ID0gMTA4MCwKKwkudnN5
+bmNfc3RhcnQgPSAxMDgwICsgNCwKKwkudnN5bmNfZW5kID0gMTA4MCArIDQgKyA1LAorCS52dG90
+YWwgPSAxMDgwICsgNCArIDUgKyAzNiwKKwkudnJlZnJlc2ggPSA2MCwKK307CisKK3N0YXRpYyBj
+b25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBhdW9fdDIxNWh2bjAxID0geworCS5tb2RlcyA9ICZhdW9f
+dDIxNWh2bjAxX21vZGUsCisJLm51bV9tb2RlcyA9IDEsCisJLmJwYyA9IDgsCisJLnNpemUgPSB7
+CisJCS53aWR0aCA9IDQzMCwKKwkJLmhlaWdodCA9IDI3MCwKKwl9LAorCS5kZWxheSA9IHsKKwkJ
+LmRpc2FibGUgPSA1LAorCQkudW5wcmVwYXJlID0gMTAwMCwKKwl9Cit9OworCiBzdGF0aWMgY29u
+c3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgYXZpY190bTA3MGRkaDAzX21vZGUgPSB7CiAJLmNs
+b2NrID0gNTEyMDAsCiAJLmhkaXNwbGF5ID0gMTAyNCwKQEAgLTE1NzUsNiArMTYwMiw5IEBAIHN0
+YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJ
+CS5jb21wYXRpYmxlID0gImF1byxiMTMzeHRuMDEiLAogCQkuZGF0YSA9ICZhdW9fYjEzM3h0bjAx
+LAogCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAiYXVvLHQyMTVodm4wMSIsCisJCS5kYXRhID0gJmF1
+b190MjE1aHZuMDEsCisJfSwgewogCQkuY29tcGF0aWJsZSA9ICJhdmljLHRtMDcwZGRoMDMiLAog
+CQkuZGF0YSA9ICZhdmljX3RtMDcwZGRoMDMsCiAJfSwgewotLSAKMi44LjAucmMzLjIyNi5nMzlk
+NDAyMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
