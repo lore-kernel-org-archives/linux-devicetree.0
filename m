@@ -1,160 +1,66 @@
 From: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
-Subject: [PATCH v2 1/4] iio: dac: mcp4725: use regulator framework
-Date: Tue, 11 Oct 2016 15:57:40 +0200
-Message-ID: <1476194263-12015-2-git-send-email-tomas@novotny.cz>
+Subject: [PATCH v2 3/4] Documentation: dt: iio: add mcp4725/6 dac device binding
+Date: Tue, 11 Oct 2016 15:57:42 +0200
+Message-ID: <1476194263-12015-4-git-send-email-tomas@novotny.cz>
 References: <1476194263-12015-1-git-send-email-tomas@novotny.cz>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1476194263-12015-1-git-send-email-tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yong Li <sdliyong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use a standard framework to get the reference voltage. It is done that way
-in the iio subsystem and it will simplify extending of the driver.
-
-Structure mcp4725_platform_data is left undeleted because it used in the
-next patch.
-
-This change breaks the current users of the driver, but there is no
-mainline user of struct mcp4725_platform_data.
-
 Signed-off-by: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
 ---
- drivers/iio/dac/mcp4725.c       | 46 +++++++++++++++++++++++++++++++++--------
- include/linux/iio/dac/mcp4725.h |  1 -
- 2 files changed, 37 insertions(+), 10 deletions(-)
+ .../devicetree/bindings/iio/dac/mcp4725.txt        | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/mcp4725.txt
 
-diff --git a/drivers/iio/dac/mcp4725.c b/drivers/iio/dac/mcp4725.c
-index cca935c..2b28b1f 100644
---- a/drivers/iio/dac/mcp4725.c
-+++ b/drivers/iio/dac/mcp4725.c
-@@ -18,6 +18,7 @@
- #include <linux/i2c.h>
- #include <linux/err.h>
- #include <linux/delay.h>
-+#include <linux/regulator/consumer.h>
- 
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
-@@ -28,10 +29,10 @@
- 
- struct mcp4725_data {
- 	struct i2c_client *client;
--	u16 vref_mv;
- 	u16 dac_value;
- 	bool powerdown;
- 	unsigned powerdown_mode;
-+	struct regulator *vdd_reg;
- };
- 
- static int mcp4725_suspend(struct device *dev)
-@@ -283,13 +284,18 @@ static int mcp4725_read_raw(struct iio_dev *indio_dev,
- 			   int *val, int *val2, long mask)
- {
- 	struct mcp4725_data *data = iio_priv(indio_dev);
-+	int ret;
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
- 		*val = data->dac_value;
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SCALE:
--		*val = data->vref_mv;
-+		ret = regulator_get_voltage(data->vdd_reg);
-+		if (ret < 0)
-+			return ret;
+diff --git a/Documentation/devicetree/bindings/iio/dac/mcp4725.txt b/Documentation/devicetree/bindings/iio/dac/mcp4725.txt
+new file mode 100644
+index 0000000..1bc6c09
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/dac/mcp4725.txt
+@@ -0,0 +1,35 @@
++Microchip mcp4725 and mcp4726 DAC device driver
 +
-+		*val = ret / 1000;
- 		*val2 = 12;
- 		return IIO_VAL_FRACTIONAL_LOG2;
- 	}
-@@ -328,12 +334,12 @@ static int mcp4725_probe(struct i2c_client *client,
- {
- 	struct mcp4725_data *data;
- 	struct iio_dev *indio_dev;
--	struct mcp4725_platform_data *platform_data = client->dev.platform_data;
-+	struct mcp4725_platform_data *pdata = dev_get_platdata(&client->dev);
- 	u8 inbuf[3];
- 	u8 pd;
- 	int err;
- 
--	if (!platform_data || !platform_data->vref_mv) {
-+	if (!pdata) {
- 		dev_err(&client->dev, "invalid platform data");
- 		return -EINVAL;
- 	}
-@@ -345,6 +351,14 @@ static int mcp4725_probe(struct i2c_client *client,
- 	i2c_set_clientdata(client, indio_dev);
- 	data->client = client;
- 
-+	data->vdd_reg = devm_regulator_get(&client->dev, "vdd");
-+	if (IS_ERR(data->vdd_reg))
-+		return PTR_ERR(data->vdd_reg);
++Required properties:
++	- compatible: Must be "microchip,mcp4725" or "microchip,mcp4726"
++	- reg: Should contain the DAC I2C address
++	- vdd-supply: Phandle to the Vdd power supply. This supply is used as a
++	  voltage reference on mcp4725. It is used as a voltage reference on
++	  mcp4726 if there is no vref-supply specified.
 +
-+	err = regulator_enable(data->vdd_reg);
-+	if (err)
-+		return err;
++Optional properties (valid only for mcp4726):
++	- vref-supply: Optional phandle to the Vref power supply. Vref pin is
++	  used as a voltage reference when this supply is specified.
++	- microchip,vref-buffered: Boolean to enable buffering of the external
++	  Vref pin. This boolean is not valid without the vref-supply. Quoting
++	  the datasheet: This is offered in cases where the reference voltage
++	  does not have the current capability not to drop its voltage when
++	  connected to the internal resistor ladder circuit.
 +
- 	indio_dev->dev.parent = &client->dev;
- 	indio_dev->name = id->name;
- 	indio_dev->info = &mcp4725_info;
-@@ -352,25 +366,39 @@ static int mcp4725_probe(struct i2c_client *client,
- 	indio_dev->num_channels = 1;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 
--	data->vref_mv = platform_data->vref_mv;
--
- 	/* read current DAC value */
- 	err = i2c_master_recv(client, inbuf, 3);
- 	if (err < 0) {
- 		dev_err(&client->dev, "failed to read DAC value");
--		return err;
-+		goto err_disable_vdd_reg;
- 	}
- 	pd = (inbuf[0] >> 1) & 0x3;
- 	data->powerdown = pd > 0 ? true : false;
- 	data->powerdown_mode = pd ? pd - 1 : 2; /* largest register to gnd */
- 	data->dac_value = (inbuf[1] << 4) | (inbuf[2] >> 4);
- 
--	return iio_device_register(indio_dev);
-+	err = iio_device_register(indio_dev);
-+	if (err)
-+		goto err_disable_vdd_reg;
++Examples:
 +
-+	return 0;
++	/* simple mcp4725 */
++	mcp4725@60 {
++		compatible = "microchip,mcp4725";
++		reg = <0x60>;
++		vdd-supply = <&vdac_vdd>;
++	};
 +
-+
-+err_disable_vdd_reg:
-+	regulator_disable(data->vdd_reg);
-+
-+	return err;
- }
- 
- static int mcp4725_remove(struct i2c_client *client)
- {
--	iio_device_unregister(i2c_get_clientdata(client));
-+	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-+	struct mcp4725_data *data = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+
-+	regulator_disable(data->vdd_reg);
-+
- 	return 0;
- }
- 
-diff --git a/include/linux/iio/dac/mcp4725.h b/include/linux/iio/dac/mcp4725.h
-index 91530e6..7c062e8 100644
---- a/include/linux/iio/dac/mcp4725.h
-+++ b/include/linux/iio/dac/mcp4725.h
-@@ -10,7 +10,6 @@
- #define IIO_DAC_MCP4725_H_
- 
- struct mcp4725_platform_data {
--	u16 vref_mv;
- };
- 
- #endif /* IIO_DAC_MCP4725_H_ */
++	/* mcp4726 with the buffered external reference voltage */
++	mcp4726@60 {
++		compatible = "microchip,mcp4726";
++		reg = <0x60>;
++		vdd-supply = <&vdac_vdd>;
++		vref-supply = <&vdac_vref>;
++		microchip,vref-buffered;
++	};
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
