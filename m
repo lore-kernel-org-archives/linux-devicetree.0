@@ -1,94 +1,49 @@
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Subject: Re: [PATCH v8 10/16] mm/memblock: add a new function
- memblock_alloc_near_nid
-Date: Tue, 11 Oct 2016 09:44:20 +0800
-Message-ID: <57FC43F4.1020909@huawei.com>
-References: <1472712907-12700-1-git-send-email-thunder.leizhen@huawei.com>
- <1472712907-12700-11-git-send-email-thunder.leizhen@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472712907-12700-11-git-send-email-thunder.leizhen@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, linux-mm <linux-mm@kvack.org>
-Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH v2 2/2] dt-bindings: rockchip-thermal: fix the misleading description
+Date: Tue, 11 Oct 2016 10:07:35 +0800
+Message-ID: <1476151655-18415-2-git-send-email-shawn.lin@rock-chips.com>
+References: <1476151655-18415-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1476151655-18415-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Caesar Wang <wxt@rock-chips.com>, Shawn Lin <shawn.lin@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
+"rockchip,hw-tshut-temp", "rockchip,hw-tshut-mode" and
+"rockchip,hw-tshut-polarity" are not a required properties
+actually as the code could also work by loading the default
+settings there. So it is apprently misleading, although we
+prefer to get these from DT. And it seems we miss the 'rockchip,grf'
+here which should also be an optional property.
+
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+---
+
+Changes in v2: None
+
+ Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+index 08efe6b..43003ae 100644
+--- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+@@ -22,10 +22,13 @@ Required properties:
+ 	      TSADC controller.
+ - pinctrl-2 : The "sleep" pinctrl state, it will be in for suspend.
+ - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
++
++Optional properties:
+ - rockchip,hw-tshut-temp : The hardware-controlled shutdown temperature value.
+ - rockchip,hw-tshut-mode : The hardware-controlled shutdown mode 0:CRU 1:GPIO.
+ - rockchip,hw-tshut-polarity : The hardware-controlled active polarity 0:LOW
+ 			       1:HIGH.
++- rockchip,grf : The phandle of the syscon node for the general register file.
+ 
+ Exiample:
+ tsadc: tsadc@ff280000 {
+-- 
+2.3.7
 
 
-On 2016/9/1 14:55, Zhen Lei wrote:
-> If HAVE_MEMORYLESS_NODES is selected, and some memoryless numa nodes are
-> actually exist. The percpu variable areas and numa control blocks of that
-> memoryless numa nodes must be allocated from the nearest available node
-> to improve performance.
-> 
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-> ---
->  include/linux/memblock.h |  1 +
->  mm/memblock.c            | 28 ++++++++++++++++++++++++++++
->  2 files changed, 29 insertions(+)
-
-Hi Will,
-  It seems no one take care about this, how about I move below function into arch/arm64/mm/numa.c
-again? So that, merge it and patch 11 into one.
-
-> 
-> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> index 2925da2..8e866e0 100644
-> --- a/include/linux/memblock.h
-> +++ b/include/linux/memblock.h
-> @@ -290,6 +290,7 @@ static inline int memblock_get_region_node(const struct memblock_region *r)
-> 
->  phys_addr_t memblock_alloc_nid(phys_addr_t size, phys_addr_t align, int nid);
->  phys_addr_t memblock_alloc_try_nid(phys_addr_t size, phys_addr_t align, int nid);
-> +phys_addr_t memblock_alloc_near_nid(phys_addr_t size, phys_addr_t align, int nid);
-> 
->  phys_addr_t memblock_alloc(phys_addr_t size, phys_addr_t align);
-> 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 483197e..6578fff 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -1189,6 +1189,34 @@ again:
->  	return ret;
->  }
-> 
-> +phys_addr_t __init memblock_alloc_near_nid(phys_addr_t size, phys_addr_t align, int nid)
-> +{
-> +	int i, best_nid, distance;
-> +	u64 pa;
-> +	DECLARE_BITMAP(nodes_map, MAX_NUMNODES);
-> +
-> +	bitmap_zero(nodes_map, MAX_NUMNODES);
-> +
-> +find_nearest_node:
-> +	best_nid = NUMA_NO_NODE;
-> +	distance = INT_MAX;
-> +
-> +	for_each_clear_bit(i, nodes_map, MAX_NUMNODES)
-> +		if (node_distance(nid, i) < distance) {
-> +			best_nid = i;
-> +			distance = node_distance(nid, i);
-> +		}
-> +
-> +	pa = memblock_alloc_nid(size, align, best_nid);
-> +	if (!pa) {
-> +		BUG_ON(best_nid == NUMA_NO_NODE);
-> +		bitmap_set(nodes_map, best_nid, 1);
-> +		goto find_nearest_node;
-> +	}
-> +
-> +	return pa;
-> +}
-> +
->  phys_addr_t __init __memblock_alloc_base(phys_addr_t size, phys_addr_t align, phys_addr_t max_addr)
->  {
->  	return memblock_alloc_base_nid(size, align, max_addr, NUMA_NO_NODE,
-> --
-> 2.5.0
-> 
-> 
-> 
-> .
-> 
