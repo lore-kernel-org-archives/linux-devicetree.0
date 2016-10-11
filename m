@@ -1,58 +1,86 @@
-From: Balbir Singh <bsingharora@gmail.com>
-Subject: Re: [PATCH v4 5/5] mm: enable CONFIG_MOVABLE_NODE on non-x86 arches
-Date: Wed, 12 Oct 2016 00:17:31 +1100
-Message-ID: <6d781236-3f2a-8fe6-682f-efa2c01bf429@gmail.com>
-References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
- <1475778995-1420-6-git-send-email-arbab@linux.vnet.ibm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/3] input: pwm-beeper: add documentation for volume
+ devicetree bindings
+Date: Tue, 11 Oct 2016 08:39:57 -0500
+Message-ID: <CAL_JsqLGY+6eWb4dN-TMmt+PJSK6zm6gPgO3SCPa4esSpTzW8w@mail.gmail.com>
+References: <fe6349a5-7935-5be7-6dc1-7e80fa9dceeb@exceet.de>
+ <1475831223-6006-1-git-send-email-frieder.schrempf@exceet.de>
+ <1475831223-6006-3-git-send-email-frieder.schrempf@exceet.de>
+ <20161010152055.GA6868@rob-hp-laptop> <24e35d49-7c3d-b094-f0b7-96367389f249@exceet.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <1475778995-1420-6-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: owner-linux-mm@kvack.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <24e35d49-7c3d-b094-f0b7-96367389f249@exceet.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Schrempf Frieder <frieder.schrempf@exceet.de>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "luis@debethencourt.com" <luis@debethencourt.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Oct 11, 2016 at 3:17 AM, Schrempf Frieder
+<frieder.schrempf@exceet.de> wrote:
+> On 10.10.2016 17:20, Rob Herring wrote:
+>> On Fri, Oct 07, 2016 at 09:08:17AM +0000, Schrempf Frieder wrote:
+>>> This patch adds the documentation for the devicetree bindings to set
+>>> the volume levels.
+>>>
+>>> Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
+>>> ---
+>>> Changes in v2:
+>>>  - split into 3 separate patches
+>>>  - make volume properties optional
+>>>
+>>>  .../devicetree/bindings/input/pwm-beeper.txt       | 22 ++++++++++++++++++++++
+>>>  1 file changed, 22 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+>>> index be332ae..6d8ba4e 100644
+>>> --- a/Documentation/devicetree/bindings/input/pwm-beeper.txt
+>>> +++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+>>> @@ -5,3 +5,25 @@ Registers a PWM device as beeper.
+>>>  Required properties:
+>>>  - compatible: should be "pwm-beeper"
+>>>  - pwms: phandle to the physical PWM device
+>>> +
+>>> +Optional properties:
+>>> +- volume-levels: Array of distinct volume levels. These need to be in the
+>>> +      range of 0 to 500, while 0 means 0% duty cycle (mute) and 500 means
+>>> +      50% duty cycle (max volume).
+>>> +      Please note that the actual volume of most beepers is highly
+>>> +      non-linear, which means that low volume levels are probably somewhere
+>>> +      in the range of 1 to 30 (0.1-3% duty cycle).
+>>
+>> What does the index correspond to? The linear volume?
+>
+> In most cases users probably need linear volume levels (e.g. 0%, 25%,
+> 50%, 75%, 100%) and in this case the index would indeed correspond to
+> the linear perceived volume.
+>
+> But also non-linear relations are possible (e.g. 0%, 20%, 100%), if the
+> user needs for example "mute", "low", "high" as volume levels.
 
+Exclude off/mute and this is still linear. Also, the user exposed
+levels could be a subset of the defined h/w levels. That should be
+independent of DT.
 
-On 07/10/16 05:36, Reza Arbab wrote:
-> To support movable memory nodes (CONFIG_MOVABLE_NODE), at least one of
-> the following must be true:
-> 
-> 1. We're on x86. This arch has the capability to identify movable nodes
->    at boot by parsing the ACPI SRAT, if the movable_node option is used.
-> 
-> 2. Our config supports memory hotplug, which means that a movable node
->    can be created by hotplugging all of its memory into ZONE_MOVABLE.
-> 
-> Fix the Kconfig definition of CONFIG_MOVABLE_NODE, which currently
-> recognizes (1), but not (2).
-> 
-> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
-> ---
->  mm/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index be0ee11..5d0818f 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -153,7 +153,7 @@ config MOVABLE_NODE
->  	bool "Enable to assign a node which has only movable memory"
->  	depends on HAVE_MEMBLOCK
->  	depends on NO_BOOTMEM
-> -	depends on X86_64
-> +	depends on X86_64 || MEMORY_HOTPLUG
->  	depends on NUMA
->  	default n
->  	help
-> 
+> The linearization (defining the corresponding duty cycle for each index)
+> depends on the beeper and the perception of the user.
 
-Acked-by: Balbir Singh <bsingharora@gmail.com>
+This has to be a consistent interface across h/w to have a userspace
+that can work across h/w. For that, you have to define the binding as
+linear. Of course, it's all measured by perception and not completely
+accurate which is fine.
 
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+> For the example array definition below, I tried different duty cycles
+> and found values of 0.8%, 2%, 4%, 50% to be approximately correspondent
+> to perceived volume levels of 25%, 50%, 75%, 100% in my case.
+>
+>>
+>>> +- default-volume-level: the default volume level (index into the
+>>> +      array defined by the "volume-levels" property)
+>>> +
+>>> +The volume level can be set via sysfs under /sys/class/input/inputX/volume.
+>>> +The maximum volume level index can be read from /sys/class/input/inputX/max_volume_level.
+
+Also, drop this. Not relevant to the binding.
+
+Rob
