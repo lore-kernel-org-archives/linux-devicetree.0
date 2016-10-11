@@ -1,46 +1,68 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 2/9] drm/sun4i: tcon: Move SoC specific
- quirks to a DT matched data structure
-Date: Tue, 11 Oct 2016 17:16:21 +0800
-Message-ID: <CAGb2v67vZLCtUOaqBwtAnHmCMpoxmh3pxjtD5TL2nWp3Lm-Pzg@mail.gmail.com>
-References: <20161006160629.11198-1-wens@csie.org> <20161006160629.11198-3-wens@csie.org>
- <20161007083853.GH4684@lukather>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Subject: Re: [PATCH 5/6] clk: stm32f469: Add QSPI clock
+Date: Tue, 11 Oct 2016 11:17:16 +0200
+Message-ID: <61b117b7-1a30-f433-872a-c9087ba41fc1@st.com>
+References: <1475245509-6487-1-git-send-email-gabriel.fernandez@st.com>
+ <1475245509-6487-6-git-send-email-gabriel.fernandez@st.com>
+ <20161008205003.GB17455@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB7W36K7QKGQEYZSEXIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161007083853.GH4684@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161008205003.GB17455@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, amelie.delaunay@st.com, Alexandre Torgue <alexandre.torgue@st.com>, olivier.bideau@st.com, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, ludovic.barre@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 7, 2016 at 4:38 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Fri, Oct 07, 2016 at 12:06:22AM +0800, Chen-Yu Tsai wrote:
->> +struct sun4i_tcon_quirks {
->> +     bool    is_sun5i;       /* sun5i has undocumented mux */
->> +     bool    has_channel_1;  /* a33 does not have channel 1 */
->> +     bool    has_bypass_src; /* has separate input bypassing CEU */
->> +     bool    has_dma_src;    /* has DMA input */
->> +};
->> +
->
-> I'd really prefer to keep the has_mux quirk name. is_sun5i doesn't
-> really relate to what we're doing there, is redundant with the
-> compatible, and render the other quirks name useless, since we could
-> just have is_sun.i quirks and deal with that (which is essentially
-> what we were doing before).
+Hi Rob,
 
-Lets call it has_unknown_mux then. has_mux would be confusing with
-the HDMI and MIPI DSI muxes on sun6i.
+Thanks for reviewing
 
-ChenYu
+On 10/08/2016 10:50 PM, Rob Herring wrote:
+> On Fri, Sep 30, 2016 at 04:25:08PM +0200, gabriel.fernandez@st.com wrote:
+>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>
+>> This patch adds the QSPI clock for stm32f469 discovery board.
+>> The gate mapping is a little bit different from stm32f429 soc.
+>>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+>> ---
+>>   .../devicetree/bindings/clock/st,stm32-rcc.txt     |   4 +-
+>>   drivers/clk/clk-stm32f4.c                          | 173 ++++++++++++++++++---
+>>   2 files changed, 158 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
+>> index fee3205..eace3de 100644
+>> --- a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
+>> +++ b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
+>> @@ -8,7 +8,9 @@ Please also refer to clock-bindings.txt in this directory for common clock
+>>   controller binding usage.
+>>   
+>>   Required properties:
+>> -- compatible: Should be "st,stm32f42xx-rcc"
+>> +- compatible: Should be:
+>> +  "st,stm32f42xx-rcc"
+>> +  "st,stm32f46xx-rcc"
+> Generally, we don't use wildcards in compatible strings. I know there's
+> lots of part numbers of stm32 parts which I guess are often same die
+> with different fusing or package. Your compatible strings should be at
+> least specific enough to identify parts that are really different die.
+okay i will propose "st,stm32f469-rcc" if no one is against.
+
+BR
+
+Gabriel
+
+>
+>>   - reg: should be register base and length as documented in the
+>>     datasheet
+>>   - #clock-cells: 2, device nodes should specify the clock in their "clocks"
