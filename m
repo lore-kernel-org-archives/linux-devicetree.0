@@ -1,102 +1,53 @@
-From: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Subject: Re: [PATCH v2] clk: hisilicon: add CRG driver for Hi3798CV200 SoC
-Date: Tue, 11 Oct 2016 09:22:16 +0800
-Message-ID: <8d4d296c-5814-1ad6-4102-600762cbac8b@hisilicon.com>
-References: <1474183821-7570-1-git-send-email-xuejiancheng@hisilicon.com>
- <20160923174704.GA32729@rob-hp-laptop>
- <5a6e3727-214a-c791-3d8d-3982ae2f6bac@hisilicon.com>
+From: Sergio Prado <sergio.prado@e-labworks.com>
+Subject: Re: [PATCH 3/3] mtd: s3c2410: parse the device configuration from OF
+ node
+Date: Mon, 10 Oct 2016 22:31:04 -0300
+Message-ID: <20161011013104.GA10064@sprado-desktop>
+References: <1475711217-974-1-git-send-email-sergio.prado@e-labworks.com>
+ <1475711217-974-4-git-send-email-sergio.prado@e-labworks.com>
+ <20161007162810.GB4222@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5a6e3727-214a-c791-3d8d-3982ae2f6bac@hisilicon.com>
+Content-Disposition: inline
+In-Reply-To: <20161007162810.GB4222@kozik-lap>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yanhaifeng@hisilicon.com, gaofei@hisilicon.com, hermit.wangheming@hisilicon.com, scott.bambrough@linaro.org, mark.gregotski@linaro.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux@armlinux.org.uk, linux@simtec.co.uk, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, kgene@kernel.org, javier@osg.samsung.com, boris.brezillon@free-electrons.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 07, 2016 at 07:28:10PM +0300, Krzysztof Kozlowski wrote:
 
+> > +struct s3c24XX_nand_devtype_data {
+> > +	enum s3c_cpu_type type;
+> > +};
+> > +
+> > +struct s3c24XX_nand_devtype_data s3c2410_nand_devtype_data = {
+> > +	.type = TYPE_S3C2410,
+> > +};
+> > +
+> > +struct s3c24XX_nand_devtype_data s3c2412_nand_devtype_data = {
+> > +	.type = TYPE_S3C2412,
+> > +};
+> > +
+> > +struct s3c24XX_nand_devtype_data s3c2440_nand_devtype_data = {
+> > +	.type = TYPE_S3C2440,
+> > +};
+> > +
+> > +struct s3c24XX_nand_devtype_data s3c6400_nand_devtype_data = {
+> > +	.type = TYPE_S3C2412,
+> 
+> All of these look like candidate for static const.
+> 
+> Additionally you are not actually differentiating between s3c2412 and
+> s3c64xx so I think there is not need of samsung,s3c6400-nand compatible.
+> Just use existing one.
+> 
+> Best regards,
+> Krzysztof
 
-在 2016/9/24 9:45, Jiancheng Xue 写道:
-> 在 2016/9/24 1:47, Rob Herring 写道:
->> On Sun, Sep 18, 2016 at 03:30:21PM +0800, Jiancheng Xue wrote:
->>> Add CRG driver for Hi3798CV200 SoC. CRG(Clock and Reset
->>> Generator) module generates clock and reset signals used
->>> by other module blocks on SoC.
->>>
->>> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
->>> ---
->>> change log
->>> v2:
->>> - Fixed compiling error when compiled as a module.
->>> - Fixed issues pointed by Stephen Boyd.
->>> - Added prefix HISTB for clock index macro definitions.
->>>
->>>  .../clock/{hi3519-crg.txt => hisi-crg.txt}         |  11 +-
->>>  drivers/clk/hisilicon/Kconfig                      |   8 +
->>>  drivers/clk/hisilicon/Makefile                     |   1 +
->>>  drivers/clk/hisilicon/crg-hi3798cv200.c            | 305 +++++++++++++++++++++
->>>  drivers/clk/hisilicon/crg.h                        |  34 +++
->>>  include/dt-bindings/clock/histb-clock.h            |  64 +++++
->>>  6 files changed, 419 insertions(+), 4 deletions(-)
->>>  rename Documentation/devicetree/bindings/clock/{hi3519-crg.txt => hisi-crg.txt} (82%)
->>>  create mode 100644 drivers/clk/hisilicon/crg-hi3798cv200.c
->>>  create mode 100644 drivers/clk/hisilicon/crg.h
->>>  create mode 100644 include/dt-bindings/clock/histb-clock.h
->>>
->>> diff --git a/Documentation/devicetree/bindings/clock/hi3519-crg.txt b/Documentation/devicetree/bindings/clock/hisi-crg.txt
->>> similarity index 82%
->>> rename from Documentation/devicetree/bindings/clock/hi3519-crg.txt
->>> rename to Documentation/devicetree/bindings/clock/hisi-crg.txt
->>> index acd1f23..e3919b6 100644
->>> --- a/Documentation/devicetree/bindings/clock/hi3519-crg.txt
->>> +++ b/Documentation/devicetree/bindings/clock/hisi-crg.txt
->>> @@ -1,7 +1,7 @@
->>> -* Hisilicon Hi3519 Clock and Reset Generator(CRG)
->>> +* HiSilicon Clock and Reset Generator(CRG)
->>>  
->>> -The Hi3519 CRG module provides clock and reset signals to various
->>> -controllers within the SoC.
->>> +The CRG module provides clock and reset signals to various
->>> +modules within the SoC.
->>>  
->>>  This binding uses the following bindings:
->>>      Documentation/devicetree/bindings/clock/clock-bindings.txt
->>> @@ -10,7 +10,10 @@ This binding uses the following bindings:
->>>  Required Properties:
->>>  
->>>  - compatible: should be one of the following.
->>> -  - "hisilicon,hi3519-crg" - controller compatible with Hi3519 SoC.
->>> +  - "hisilicon,hi3516cv300-crg"
->>> +  - "hisilicon,hi3519-crg"
->>> +  - "hisilicon,hi3798cv200-crg"
->>> +  - "hisilicon,hi3798cv200-sysctrl"
->>
->> Why crg and sysctrl?
->>
-> Hi Rob，
-> 
-> In Hi3798cv200 SoC, the system controller (sysctrl) is another clock
-> provider which provides clocks for some modules such as timer0, uart0,
-> ir, led etc. These modules won't be power down when the system enters
-> into the stand-by mode. Besides providing above clocks, sysctrl also
-> contains registers used to control the whole system and some peripherals.
-> 
-Hi Rob，
+You are right. I'll review and send V2.
 
-Do you still have any questions about this? Could you help me to ack this binding?
-Thank you!
+Best regards,
 
-Regards,
-Jiancheng
-> 
->>>  
->>>  - reg: physical base address of the controller and length of memory mapped
->>>    region.
->>
->> .
->>
-> 
-> 
-> .
-> 
+Sergio Prado
