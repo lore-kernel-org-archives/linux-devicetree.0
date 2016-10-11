@@ -1,61 +1,61 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v2 1/2] thermal: rockchip: improve the warning log
-Date: Tue, 11 Oct 2016 10:07:34 +0800
-Message-ID: <1476151655-18415-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Caesar Wang <wxt@rock-chips.com>, Shawn Lin <shawn.lin@rock-chips.com>
+From: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v14 2/4] CMDQ: Mediatek CMDQ driver
+Date: Tue, 11 Oct 2016 10:40:32 +0800
+Message-ID: <1476153632.477.2.camel@mtksdaap41>
+References: <1473039885-24009-1-git-send-email-hs.liao@mediatek.com>
+         <1473039885-24009-3-git-send-email-hs.liao@mediatek.com>
+         <1475204778.13398.28.camel@mtksdaap41>
+         <1475225778.25044.35.camel@mtksdaap41>
+         <1475226691.13398.35.camel@mtksdaap41> <1475228829.3658.1.camel@mtksdaap41>
+         <1475636064.21937.25.camel@mtksdaap41>
+         <CAJe_ZhcXw1-MOEiiix5VTtKEVr9Z23s_OyikboDYCd0RQwS5pg@mail.gmail.com>
+         <1475670705.335.27.camel@mtksdaap41>
+         <CAJe_ZheeEe0xEj733pxr4q=-YzxKHgRM4MMPDJNHa9uRC9Q2zA@mail.gmail.com>
+         <1475758897.4102.31.camel@mtksdaap41>
+         <CAJe_ZheptRQSmQp2gagqUyXqkOpi1qaTo8QPDTFpQ-+62B6kUw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJe_ZheptRQSmQp2gagqUyXqkOpi1qaTo8QPDTFpQ-+62B6kUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Monica Wang <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm->
 List-Id: devicetree@vger.kernel.org
 
-It is no necessary to print warning agian and again if we don't
-add rockchip,grf for dt, otherwise I saw the following log when
-doing suspend-2-resume. We only need to print it once when parsing
-dt. It looks quite trivial but the log is apparently verbose.
+On Thu, 2016-10-06 at 18:40 +0530, Jassi Brar wrote:
+> On 6 October 2016 at 18:31, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> 
+> > Back to our original statement, we need to flush all tasks to queue
+> > in GCE HW; i.e. we need to use mbox_client_txdone after
+> > mbox_send_message, or send tx_done once mailbox controller receive
+> > message (task). However, we still need a way to notice done tasks to
+> > clients. Currently, we don't have a good way to call callback in mailbox
+> > framework. Therefore, CMDQ driver has its owner callback functions.
+> >
+> mbox_client_txdone() is called by the client driver when only it knows
+> the messages has been transmitted (i.e your submitted tasks are done).
+> Obviously the client driver should do any callbacks to its users
+> upstream.
 
-[   26.615415] PM: early resume of devices complete after 1.539 msecs
-[   26.622002] rk_tsadcv2_initialize: Missing rockchip,grf property
-[   26.629359] rk_gmac-dwmac ff290000.ethernet: init for RGMII
-[   26.639794] PM: resume of devices complete after 18.109 msecs
-[   26.646925] Restarting tasks ... done.
+Hi Jassi,
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+In current CMDQ driver, mbox_client_txdone() is called to prevent the
+blocking of chan->active_req. It is not the real point of CMDQ task
+done, so the client driver cannot do any callbacks to its user upstream.
 
-Reviewed-by: Caesar Wang <wxt@rock-chips.com>
----
+(1) If we don't use mbox_client_txdone(), could you tell us an
+    alternative way to prevent the blocking of chan->active_req?
+    And then we can use tx_done when CMDQ task is relly done.
+(2) If we use mbox_client_txdone() to prevent the blocking of
+    chan->active_req, could CMDQ driver just uses self-defined callback
+    function to notice client driver CMDQ task done?
 
-Changes in v2:
-- fix typos(Heiko)
-
- drivers/thermal/rockchip_thermal.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
-index e227a9f..b811b0f 100644
---- a/drivers/thermal/rockchip_thermal.c
-+++ b/drivers/thermal/rockchip_thermal.c
-@@ -524,11 +524,6 @@ static void rk_tsadcv2_initialize(struct regmap *grf, void __iomem *regs,
- 		       regs + TSADCV2_AUTO_PERIOD_HT);
- 	writel_relaxed(TSADCV2_HIGHT_TSHUT_DEBOUNCE_COUNT,
- 		       regs + TSADCV2_HIGHT_TSHUT_DEBOUNCE);
--
--	if (IS_ERR(grf)) {
--		pr_warn("%s: Missing rockchip,grf property\n", __func__);
--		return;
--	}
- }
- 
- /**
-@@ -971,6 +966,8 @@ static int rockchip_configure_from_dt(struct device *dev,
- 	 * need this property.
- 	 */
- 	thermal->grf = syscon_regmap_lookup_by_phandle(np, "rockchip,grf");
-+	if (IS_ERR(thermal->grf))
-+		dev_warn(dev, "Missing rockchip,grf property\n");
- 
- 	return 0;
- }
--- 
-2.3.7
+Thanks,
+HS
 
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
