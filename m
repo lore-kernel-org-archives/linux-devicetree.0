@@ -1,76 +1,52 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 3/4] PCI: dra7xx: Add support to force RC to work in GEN1
- mode
-Date: Tue, 11 Oct 2016 21:49:55 +0530
-Message-ID: <cd8d9591-1f21-a44d-93e5-282acd992900@ti.com>
-References: <1476190715-16884-1-git-send-email-kishon@ti.com>
- <1476190715-16884-4-git-send-email-kishon@ti.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC V3 PATCH] dt-bindings: qcom: Add msm899(2/4) bindings
+Date: Tue, 11 Oct 2016 09:42:07 -0700
+Message-ID: <20161011164207.GT7509@tuxbot>
+References: <20161009012847.GG18158@rob-hp-laptop>
+ <1476147156-4474-1-git-send-email-jeremymc@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1476190715-16884-4-git-send-email-kishon@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1476147156-4474-1-git-send-email-jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 11 October 2016 06:28 PM, Kishon Vijay Abraham I wrote:
-> PCIe in AM57x/DRA7x devices is by default
-> configured to work in GEN2 mode.  However there
-> may be situations when working in GEN1 mode is
-> desired. One example is limitation i925 (PCIe GEN2
-> mode not supported at junction temperatures < 0C).
+On Mon 10 Oct 17:52 PDT 2016, Jeremy McNicoll wrote:
+
+> From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 > 
-> Add support to force Root Complex to work in GEN1
-> mode if so desired, but don't force GEN1 mode on
-> any board just yet.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/pci/ti-pci.txt |    1 +
->  drivers/pci/host/pci-dra7xx.c                    |   27 ++++++++++++++++++++++
->  2 files changed, 28 insertions(+)
+> V2->V3:
+>    Added 8994 and 8994v2
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
-> index 60e2516..a3d6ca3 100644
-> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
-> @@ -25,6 +25,7 @@ PCIe Designware Controller
->  
->  Optional Property:
->   - gpios : Should be added if a gpio line is required to drive PERST# line
-> + - ti,pcie-is-gen1 : Force the PCIe controller to work in GEN1 (2.5 GT/s).
->  
->  Example:
->  axi {
-> diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-dra7xx.c
-> index 4ccba6d..2a669cb 100644
-> --- a/drivers/pci/host/pci-dra7xx.c
-> +++ b/drivers/pci/host/pci-dra7xx.c
-> @@ -63,11 +63,14 @@
->  #define	LINK_UP						BIT(16)
->  #define	DRA7XX_CPU_TO_BUS_ADDR				0x0FFFFFFF
->  
-> +#define EXP_CAP_ID_OFFSET				0x70
-> +
->  struct dra7xx_pcie {
->  	struct pcie_port	pp;
->  	void __iomem		*base;		/* DT ti_conf */
->  	int			phy_count;	/* DT phy-names count */
->  	struct phy		**phy;
-> +	bool			is_gen1;
+> 
+>  Documentation/devicetree/bindings/arm/qcom.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
+> index 3e24518..a473989 100644
+> --- a/Documentation/devicetree/bindings/arm/qcom.txt
+> +++ b/Documentation/devicetree/bindings/arm/qcom.txt
+> @@ -22,6 +22,9 @@ The 'SoC' element must be one of the following strings:
+>  	msm8916
+>  	msm8974
+>  	msm8996
+> +	msm8992
+> +	msm8994
 
-I think it will be nice to reference the errata number as comments in
-the code along with references to TI public documentation that explains
-the said errata.
+Please keep these sorted.
 
-Or may be this can be added to the binding documentation. Somewhere 'git
-grep' can find.
+> +	msm8994v2
 
-BTW, per Documentation/devicetree/bindings/submitting-patches.txt, the
-binding documentation should be a separate patch.
+What's different with v2? Why do we list it here?
 
-Thanks,
-Sekhar
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
