@@ -1,75 +1,89 @@
-From: Haixia Shi <hshi@chromium.org>
-Subject: [PATCH v4] drm/panel: simple: Add support for AUO t215hvn01
-Date: Tue, 11 Oct 2016 14:59:16 -0700
-Message-ID: <1476223156-6163-1-git-send-email-hshi@chromium.org>
-References: <1476141557-4613-1-git-send-email-hshi@chromium.org>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] include: dt-bindings: Add GPIO pin index definition for rockchip pinctrl
+Date: Wed, 12 Oct 2016 00:00:12 +0200
+Message-ID: <13068948.jkWM1OvpR7@phil>
+References: <1473210053-23743-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1476141557-4613-1-git-send-email-hshi@chromium.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Emil Velikov <emil.l.velikov@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Haixia Shi <hshi@chromium.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473210053-23743-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEFVTyB0MjE1aHZuMDEgaXMgYSAyMS41IiBGSEQgKDE5MjB4MTA4MCkgY29sb3IgVEZUIExD
-RCBwYW5lbC4KClRoaXMgcGFuZWwgaXMgdXNlZCBvbiB0aGUgQWNlciBDaHJvbWViYXNlIDIxLjUt
-aW5jaCBBbGwtaW4tT25lIChEQzIyMUhRKS4KCkxpbmsgdG8gc3BlYzogaHR0cDovL3d3dy51ZG1n
-cm91cC5jb20vZnRwL1QyMTVIVk4wMS4wLnBkZgoKdjI6IGZpeCBhbHBoYWJldGljYWwgb3JkZXIK
-djM6IHJlbW92ZSBtaW5vciByZXZpc2lvbiBzdWZmaXggIi4wIiBhbmQgYWRkIGxpbmsgdG8gc3Bl
-Ywp2NDogYWRkIGR0LWJpbmRpbmcgZG9jdW1lbnRhdGlvbgoKU2lnbmVkLW9mZi1ieTogSGFpeGlh
-IFNoaSA8aHNoaUBjaHJvbWl1bS5vcmc+ClRlc3RlZC1ieTogSGFpeGlhIFNoaSA8aHNoaUBjaHJv
-bWl1bS5vcmc+ClJldmlld2VkLWJ5OiBTdMOpcGhhbmUgTWFyY2hlc2luIDxtYXJjaGV1QGNocm9t
-aXVtLm9yZz4KQ2M6IEVtaWwgVmVsaWtvdiA8ZW1pbC5sLnZlbGlrb3ZAZ21haWwuY29tPgpDYzog
-VGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbT4KQ2M6IERhdmlkIEFpcmxp
-ZSA8YWlybGllZEBsaW51eC5pZT4KQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+
-CkNjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPgpDYzogZGV2aWNldHJlZUB2
-Z2VyLmtlcm5lbC5vcmcKQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcKLS0tCiAuLi4v
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9hdW8sdDIxNWh2bjAxLnR4dCAgICAgICB8ICA3ICsrKysr
-CiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAgICAgICB8IDMw
-ICsrKysrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMzcgaW5zZXJ0aW9ucygr
-KQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3BhbmVsL2F1byx0MjE1aHZuMDEudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXVvLHQyMTVodm4wMS50eHQgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hdW8sdDIxNWh2
-bjAxLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi5jYmQ5ZGEzCi0tLSAv
-ZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvYXVvLHQyMTVodm4wMS50eHQKQEAgLTAsMCArMSw3IEBACitBVSBPcHRyb25pY3MgQ29y
-cG9yYXRpb24gMjEuNSIgRkhEICgxOTIweDEwODApIGNvbG9yIFRGVCBMQ0QgcGFuZWwKKworUmVx
-dWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJhdW8sdDIxNWh2bjAx
-IgorCitUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmlu
-ZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCitpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGly
-ZWN0b3J5LgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5j
-IGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCmluZGV4IDExM2RiM2MuLjI1
-NmMyMDEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwor
-KysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKQEAgLTU1NSw2ICs1NTUs
-MzMgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGF1b19iMTMzaHRuMDEgPSB7CiAJ
-fSwKIH07CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBhdW9fdDIxNWh2
-bjAxX21vZGUgPSB7CisJLmNsb2NrID0gMTQ4ODAwLAorCS5oZGlzcGxheSA9IDE5MjAsCisJLmhz
-eW5jX3N0YXJ0ID0gMTkyMCArIDg4LAorCS5oc3luY19lbmQgPSAxOTIwICsgODggKyA0NCwKKwku
-aHRvdGFsID0gMTkyMCArIDg4ICsgNDQgKyAxNDgsCisJLnZkaXNwbGF5ID0gMTA4MCwKKwkudnN5
-bmNfc3RhcnQgPSAxMDgwICsgNCwKKwkudnN5bmNfZW5kID0gMTA4MCArIDQgKyA1LAorCS52dG90
-YWwgPSAxMDgwICsgNCArIDUgKyAzNiwKKwkudnJlZnJlc2ggPSA2MCwKK307CisKK3N0YXRpYyBj
-b25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBhdW9fdDIxNWh2bjAxID0geworCS5tb2RlcyA9ICZhdW9f
-dDIxNWh2bjAxX21vZGUsCisJLm51bV9tb2RlcyA9IDEsCisJLmJwYyA9IDgsCisJLnNpemUgPSB7
-CisJCS53aWR0aCA9IDQzMCwKKwkJLmhlaWdodCA9IDI3MCwKKwl9LAorCS5kZWxheSA9IHsKKwkJ
-LmRpc2FibGUgPSA1LAorCQkudW5wcmVwYXJlID0gMTAwMCwKKwl9Cit9OworCiBzdGF0aWMgY29u
-c3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgYXZpY190bTA3MGRkaDAzX21vZGUgPSB7CiAJLmNs
-b2NrID0gNTEyMDAsCiAJLmhkaXNwbGF5ID0gMTAyNCwKQEAgLTE1NzUsNiArMTYwMiw5IEBAIHN0
-YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJ
-CS5jb21wYXRpYmxlID0gImF1byxiMTMzeHRuMDEiLAogCQkuZGF0YSA9ICZhdW9fYjEzM3h0bjAx
-LAogCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAiYXVvLHQyMTVodm4wMSIsCisJCS5kYXRhID0gJmF1
-b190MjE1aHZuMDEsCisJfSwgewogCQkuY29tcGF0aWJsZSA9ICJhdmljLHRtMDcwZGRoMDMiLAog
-CQkuZGF0YSA9ICZhdmljX3RtMDcwZGRoMDMsCiAJfSwgewotLSAKMi44LjAucmMzLjIyNi5nMzlk
-NDAyMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Am Mittwoch, 7. September 2016, 09:00:53 CEST schrieb Andy Yan:
+> Add gpio pin index definition to make it easier to describe
+> GPIO in dts.
+> 
+> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+just as a heads up, as I didn't respond yet:
+
+Looks good and I'll take them, I just want to wait for the merge-window to 
+close (should be the coming sunday), to be able to put the header change in a 
+shared branch for the case that other users appear during the 4.10 cycle.
+
+
+Heiko
+
+> ---
+> 
+> Changes in v1:
+> - remove gpio bank definition RK_GPIO7/8
+> - redefine GPIO PIN as RK_PA/B/C/Dx
+> 
+>  include/dt-bindings/pinctrl/rockchip.h | 33
+> +++++++++++++++++++++++++++++++++ 1 file changed, 33 insertions(+)
+> 
+> diff --git a/include/dt-bindings/pinctrl/rockchip.h
+> b/include/dt-bindings/pinctrl/rockchip.h index 743e66a..aaec8ba 100644
+> --- a/include/dt-bindings/pinctrl/rockchip.h
+> +++ b/include/dt-bindings/pinctrl/rockchip.h
+> @@ -25,6 +25,39 @@
+>  #define RK_GPIO4	4
+>  #define RK_GPIO6	6
+> 
+> +#define RK_PA0		0
+> +#define RK_PA1		1
+> +#define RK_PA2		2
+> +#define RK_PA3		3
+> +#define RK_PA4		4
+> +#define RK_PA5		5
+> +#define RK_PA6		6
+> +#define RK_PA7		7
+> +#define RK_PB0		8
+> +#define RK_PB1		9
+> +#define RK_PB2		10
+> +#define RK_PB3		11
+> +#define RK_PB4		12
+> +#define RK_PB5		13
+> +#define RK_PB6		14
+> +#define RK_PB7		15
+> +#define RK_PC0		16
+> +#define RK_PC1		17
+> +#define RK_PC2		18
+> +#define RK_PC3		19
+> +#define RK_PC4		20
+> +#define RK_PC5		21
+> +#define RK_PC6		22
+> +#define RK_PC7		23
+> +#define RK_PD0		24
+> +#define RK_PD1		25
+> +#define RK_PD2		26
+> +#define RK_PD3		27
+> +#define RK_PD4		28
+> +#define RK_PD5		29
+> +#define RK_PD6		30
+> +#define RK_PD7		31
+> +
+>  #define RK_FUNC_GPIO	0
+>  #define RK_FUNC_1	1
+>  #define RK_FUNC_2	2
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
