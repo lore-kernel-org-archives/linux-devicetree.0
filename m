@@ -1,7 +1,7 @@
 From: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
-Subject: [PATCH v2 4/4] iio: dac: mcp4725: add devicetree support
-Date: Tue, 11 Oct 2016 15:57:43 +0200
-Message-ID: <1476194263-12015-5-git-send-email-tomas@novotny.cz>
+Subject: [PATCH v2 1/4] iio: dac: mcp4725: use regulator framework
+Date: Tue, 11 Oct 2016 15:57:40 +0200
+Message-ID: <1476194263-12015-2-git-send-email-tomas@novotny.cz>
 References: <1476194263-12015-1-git-send-email-tomas@novotny.cz>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1476194263-12015-1-git-send-email-tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
@@ -10,95 +10,151 @@ To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree
 Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yong Li <sdliyong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Use a standard framework to get the reference voltage. It is done that way
+in the iio subsystem and it will simplify extending of the driver.
+
+Structure mcp4725_platform_data is left undeleted because it used in the
+next patch.
+
+This change breaks the current users of the driver, but there is no
+mainline user of struct mcp4725_platform_data.
+
 Signed-off-by: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
 ---
- drivers/iio/dac/mcp4725.c | 46 +++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 41 insertions(+), 5 deletions(-)
+ drivers/iio/dac/mcp4725.c       | 46 +++++++++++++++++++++++++++++++++--------
+ include/linux/iio/dac/mcp4725.h |  1 -
+ 2 files changed, 37 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/iio/dac/mcp4725.c b/drivers/iio/dac/mcp4725.c
-index 29cf85d..b8954f2 100644
+index cca935c..2b28b1f 100644
 --- a/drivers/iio/dac/mcp4725.c
 +++ b/drivers/iio/dac/mcp4725.c
-@@ -19,6 +19,7 @@
+@@ -18,6 +18,7 @@
+ #include <linux/i2c.h>
  #include <linux/err.h>
  #include <linux/delay.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/of.h>
++#include <linux/regulator/consumer.h>
  
  #include <linux/iio/iio.h>
  #include <linux/iio/sysfs.h>
-@@ -364,6 +365,30 @@ static const struct iio_info mcp4725_info = {
- 	.driver_module = THIS_MODULE,
+@@ -28,10 +29,10 @@
+ 
+ struct mcp4725_data {
+ 	struct i2c_client *client;
+-	u16 vref_mv;
+ 	u16 dac_value;
+ 	bool powerdown;
+ 	unsigned powerdown_mode;
++	struct regulator *vdd_reg;
  };
  
-+#ifdef CONFIG_OF
-+static int mcp4725_probe_dt(struct device *dev,
-+			    struct mcp4725_platform_data *pdata)
-+{
-+	struct device_node *np = dev->of_node;
-+
-+	if (!np)
-+		return -ENODEV;
-+
-+	/* check if is the vref-supply defined */
-+	pdata->use_vref = of_property_read_bool(np, "vref-supply");
-+	pdata->vref_buffered =
-+		of_property_read_bool(np, "microchip,vref-buffered");
-+
-+	return 0;
-+}
-+#else
-+static int mcp4725_probe_dt(struct device *dev,
-+			    struct mcp4725_platform_data *platform_data)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
- static int mcp4725_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
+ static int mcp4725_suspend(struct device *dev)
+@@ -283,13 +284,18 @@ static int mcp4725_read_raw(struct iio_dev *indio_dev,
+ 			   int *val, int *val2, long mask)
  {
-@@ -375,11 +400,6 @@ static int mcp4725_probe(struct i2c_client *client,
- 	u8 ref;
+ 	struct mcp4725_data *data = iio_priv(indio_dev);
++	int ret;
+ 
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_RAW:
+ 		*val = data->dac_value;
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SCALE:
+-		*val = data->vref_mv;
++		ret = regulator_get_voltage(data->vdd_reg);
++		if (ret < 0)
++			return ret;
++
++		*val = ret / 1000;
+ 		*val2 = 12;
+ 		return IIO_VAL_FRACTIONAL_LOG2;
+ 	}
+@@ -328,12 +334,12 @@ static int mcp4725_probe(struct i2c_client *client,
+ {
+ 	struct mcp4725_data *data;
+ 	struct iio_dev *indio_dev;
+-	struct mcp4725_platform_data *platform_data = client->dev.platform_data;
++	struct mcp4725_platform_data *pdata = dev_get_platdata(&client->dev);
+ 	u8 inbuf[3];
+ 	u8 pd;
  	int err;
  
--	if (!pdata) {
--		dev_err(&client->dev, "invalid platform data");
--		return -EINVAL;
--	}
--
- 	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
- 	if (indio_dev == NULL)
- 		return -ENOMEM;
-@@ -388,6 +408,19 @@ static int mcp4725_probe(struct i2c_client *client,
- 	data->client = client;
- 	data->id = id->driver_data;
- 
+-	if (!platform_data || !platform_data->vref_mv) {
 +	if (!pdata) {
-+		pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata)
-+			return -ENOMEM;
-+
-+		err = mcp4725_probe_dt(&client->dev, pdata);
-+		if (err) {
-+			dev_err(&client->dev,
-+				"invalid platform or devicetree data");
-+			return err;
-+		}
-+	}
-+
- 	if (data->id == MCP4725 && pdata->use_vref) {
- 		dev_warn(&client->dev,
- 			"ignoring unavailable external reference on MCP4725");
-@@ -460,6 +493,9 @@ static int mcp4725_probe(struct i2c_client *client,
- 	if (err)
- 		goto err_disable_vref_reg;
+ 		dev_err(&client->dev, "invalid platform data");
+ 		return -EINVAL;
+ 	}
+@@ -345,6 +351,14 @@ static int mcp4725_probe(struct i2c_client *client,
+ 	i2c_set_clientdata(client, indio_dev);
+ 	data->client = client;
  
-+	if (!dev_get_platdata(&client->dev))
-+		devm_kfree(&client->dev, pdata);
++	data->vdd_reg = devm_regulator_get(&client->dev, "vdd");
++	if (IS_ERR(data->vdd_reg))
++		return PTR_ERR(data->vdd_reg);
++
++	err = regulator_enable(data->vdd_reg);
++	if (err)
++		return err;
++
+ 	indio_dev->dev.parent = &client->dev;
+ 	indio_dev->name = id->name;
+ 	indio_dev->info = &mcp4725_info;
+@@ -352,25 +366,39 @@ static int mcp4725_probe(struct i2c_client *client,
+ 	indio_dev->num_channels = 1;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 
+-	data->vref_mv = platform_data->vref_mv;
+-
+ 	/* read current DAC value */
+ 	err = i2c_master_recv(client, inbuf, 3);
+ 	if (err < 0) {
+ 		dev_err(&client->dev, "failed to read DAC value");
+-		return err;
++		goto err_disable_vdd_reg;
+ 	}
+ 	pd = (inbuf[0] >> 1) & 0x3;
+ 	data->powerdown = pd > 0 ? true : false;
+ 	data->powerdown_mode = pd ? pd - 1 : 2; /* largest register to gnd */
+ 	data->dac_value = (inbuf[1] << 4) | (inbuf[2] >> 4);
+ 
+-	return iio_device_register(indio_dev);
++	err = iio_device_register(indio_dev);
++	if (err)
++		goto err_disable_vdd_reg;
++
++	return 0;
++
++
++err_disable_vdd_reg:
++	regulator_disable(data->vdd_reg);
++
++	return err;
+ }
+ 
+ static int mcp4725_remove(struct i2c_client *client)
+ {
+-	iio_device_unregister(i2c_get_clientdata(client));
++	struct iio_dev *indio_dev = i2c_get_clientdata(client);
++	struct mcp4725_data *data = iio_priv(indio_dev);
++
++	iio_device_unregister(indio_dev);
++
++	regulator_disable(data->vdd_reg);
 +
  	return 0;
+ }
  
- err_disable_vref_reg:
+diff --git a/include/linux/iio/dac/mcp4725.h b/include/linux/iio/dac/mcp4725.h
+index 91530e6..7c062e8 100644
+--- a/include/linux/iio/dac/mcp4725.h
++++ b/include/linux/iio/dac/mcp4725.h
+@@ -10,7 +10,6 @@
+ #define IIO_DAC_MCP4725_H_
+ 
+ struct mcp4725_platform_data {
+-	u16 vref_mv;
+ };
+ 
+ #endif /* IIO_DAC_MCP4725_H_ */
 -- 
 2.1.4
