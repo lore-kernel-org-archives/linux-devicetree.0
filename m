@@ -1,147 +1,58 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 7/10] mmc: sdhci-xenon: Add support to PHYs of Marvell
- Xenon SDHC
-Date: Tue, 11 Oct 2016 15:39:17 +0300
-Message-ID: <bfe30317-bb3b-b3dc-e9df-87b6ba100307@intel.com>
-References: <cover.990e3503c30c18ecf50dd48bce3d52811f03ca22.1475853198.git-series.gregory.clement@free-electrons.com>
- <e08ffb085d02a784b28456ac47fa4dc6540a9139.1475853198.git-series.gregory.clement@free-electrons.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/5] pwm: Add Allwinner A31 SoC support
+Date: Tue, 11 Oct 2016 14:45:52 +0200
+Message-ID: <20161011124552.GX3462@lukather>
+References: <20161011063449.54775-1-icenowy@aosc.xyz>
+ <20161011063449.54775-2-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e08ffb085d02a784b28456ac47fa4dc6540a9139.1475853198.git-series.gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
-Cc: Hilbert Zhang <zzhang@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Romain Perier <romain.perier@free-electrons.com>, Liuliu Zhao <zhaoliul@marvell.com>, Peng Zhu <zhupeng@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ziji Hu <huziji@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Xueping Liu <xpliu@marvell.com>, Shiwu Zhang <zhangshw@marvell.com>, Yu Cao <yucao@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Hanna Hawa <hannah@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzo>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="iXVVnr8Hn1WiTnFI"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBAV66O7QKGQE2LD65GA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20161011063449.54775-2-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/10/16 18:22, Gregory CLEMENT wrote:
-> From: Ziji Hu <huziji@marvell.com>
+
+--iXVVnr8Hn1WiTnFI
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi,
+
+On Tue, Oct 11, 2016 at 02:34:46PM +0800, Icenowy Zheng wrote:
+> This adds a generic PWM framework driver for the PWM controller found
+> on Allwinner A31 and A31s SoCs.
 > 
-> Marvell Xenon eMMC/SD/SDIO Host Controller contains PHY.
-> Three types of PHYs are supported.
+> The PWM controller is different with other Allwinner SoCs, with a
+> control register per channel (in other SoCs the control register is
+> shared), and each channel are allocated 16 bytes of address (but only 8
+> bytes are used.)
 > 
-> Add support to multiple types of PHYs init and configuration.
-> Add register definitions of PHYs.
-> 
-> Signed-off-by: Hu Ziji <huziji@marvell.com>
-> Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  MAINTAINERS                        |    1 +-
->  drivers/mmc/host/Makefile          |    2 +-
->  drivers/mmc/host/sdhci-xenon-phy.c | 1141 +++++++++++++++++++++++++++++-
->  drivers/mmc/host/sdhci-xenon-phy.h |  157 ++++-
->  drivers/mmc/host/sdhci-xenon.c     |    4 +-
->  drivers/mmc/host/sdhci-xenon.h     |   17 +-
->  6 files changed, 1321 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/mmc/host/sdhci-xenon-phy.c
->  create mode 100644 drivers/mmc/host/sdhci-xenon-phy.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 859420e5dfd3..b5673c2ee5f2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7583,6 +7583,7 @@ M:	Ziji Hu <huziji@marvell.com>
->  L:	linux-mmc@vger.kernel.org
->  S:	Supported
->  F:	drivers/mmc/host/sdhci-xenon.*
-> +F:	drivers/mmc/host/sdhci-xenon-phy.*
->  F:	Documentation/devicetree/bindings/mmc/marvell,sdhci-xenon.txt
->  
->  MATROX FRAMEBUFFER DRIVER
-> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-> index 75eaf743486c..4f2854556ff7 100644
-> --- a/drivers/mmc/host/Makefile
-> +++ b/drivers/mmc/host/Makefile
-> @@ -82,4 +82,4 @@ ifeq ($(CONFIG_CB710_DEBUG),y)
->  endif
->  
->  obj-$(CONFIG_MMC_SDHCI_XENON)	+= sdhci-xenon-driver.o
-> -sdhci-xenon-driver-y		+= sdhci-xenon.o
-> +sdhci-xenon-driver-y		+= sdhci-xenon.o sdhci-xenon-phy.o
-> diff --git a/drivers/mmc/host/sdhci-xenon-phy.c b/drivers/mmc/host/sdhci-xenon-phy.c
-> new file mode 100644
-> index 000000000000..4eb8fea1bec9
-> --- /dev/null
-> +++ b/drivers/mmc/host/sdhci-xenon-phy.c
+> In order to use the driver for all channels, device nodes should be
+> created per channel.
 
-<SNIP>
+I don't think there's any need for a new driver that duplicates most
+of the logic. The bitfields look roughly the same, and the only
+difference is the split difference.
 
-> +static int __xenon_emmc_delay_adj_test(struct mmc_card *card)
-> +{
-> +	int err;
-> +	u8 *ext_csd = NULL;
-> +
-> +	err = mmc_get_ext_csd(card, &ext_csd);
-> +	kfree(ext_csd);
-> +
-> +	return err;
-> +}
-> +
-> +static int __xenon_sdio_delay_adj_test(struct mmc_card *card)
-> +{
-> +	struct mmc_command cmd = {0};
-> +	int err;
-> +
-> +	cmd.opcode = SD_IO_RW_DIRECT;
-> +	cmd.flags = MMC_RSP_R5 | MMC_CMD_AC;
-> +
-> +	err = mmc_wait_for_cmd(card->host, &cmd, 0);
-> +	if (err)
-> +		return err;
-> +
-> +	if (cmd.resp[0] & R5_ERROR)
-> +		return -EIO;
-> +	if (cmd.resp[0] & R5_FUNCTION_NUMBER)
-> +		return -EINVAL;
-> +	if (cmd.resp[0] & R5_OUT_OF_RANGE)
-> +		return -ERANGE;
-> +	return 0;
-> +}
-> +
-> +static int __xenon_sd_delay_adj_test(struct mmc_card *card)
-> +{
-> +	struct mmc_command cmd = {0};
-> +	int err;
-> +
-> +	cmd.opcode = MMC_SEND_STATUS;
-> +	cmd.arg = card->rca << 16;
-> +	cmd.flags = MMC_RSP_R1 | MMC_CMD_AC;
-> +
-> +	err = mmc_wait_for_cmd(card->host, &cmd, 0);
-> +	return err;
-> +}
-> +
-> +static int xenon_delay_adj_test(struct mmc_card *card)
-> +{
-> +	WARN_ON(!card);
-> +	WARN_ON(!card->host);
-> +
-> +	if (mmc_card_mmc(card))
-> +		return __xenon_emmc_delay_adj_test(card);
-> +	else if (mmc_card_sd(card))
-> +		return __xenon_sd_delay_adj_test(card);
-> +	else if (mmc_card_sdio(card))
-> +		return __xenon_sdio_delay_adj_test(card);
-> +	else
-> +		return -EINVAL;
-> +}
+This is something that can easily be handled without creating a new
+driver using regmap's reg_field, or through an intermediate functino
+that returns the register offset.
 
-So you are issuing commands from the ->set_ios() callback.  I would want to
-get Ulf's OK for that before going further.
+Maxime
 
-One thing: you will need to ensure you don't trigger get HS400 re-tuning
-because it will call back into ->set_ios().
-
-And you have the problem that you need to get a reference to the card before
-the card device has been added.  As I wrote in response to the previous
-patch, you should get Ulf's help with that too.
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--iXVVnr8Hn1WiTnFI--
