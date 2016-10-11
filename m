@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v2 2/9] pinctrl: sunxi: Use macros from bindings header file for DT parsing
-Date: Tue, 11 Oct 2016 17:46:00 +0200
-Message-ID: <5de3087f625d6d4a4d552d4a85faafac689f5f54.1476200742.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 6/9] dt-bindings: pinctrl: Deprecate sunxi pinctrl bindings
+Date: Tue, 11 Oct 2016 17:46:04 +0200
+Message-ID: <ee6d214a14ed31689c5f70fc6ee5736c3d26737b.1476200742.git-series.maxime.ripard@free-electrons.com>
 References: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
@@ -12,39 +12,40 @@ To: Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Maxi
 Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Since we have some bindings header for our hardcoded flags, let's use them
-when we can.
+The generic pin configuration and multiplexing should be preferred now,
+even though we still support the old one.
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- drivers/pinctrl/sunxi/pinctrl-sunxi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 64f7f6dcc027..5be455d5e252 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -28,6 +28,8 @@
- #include <linux/platform_device.h>
- #include <linux/slab.h>
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+index 69617220c5d6..ff351493be47 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+@@ -36,6 +36,22 @@ pins it needs, and how they should be configured, with regard to muxer
+ configuration, drive strength and pullups. If one of these options is
+ not set, its actual value will be unspecified.
  
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
++This driver supports the generic pin multiplexing and configuration
++bindings. For details on each properties, you can refer to
++./pinctrl-bindings.txt.
 +
- #include "../core.h"
- #include "../../gpio/gpiolib.h"
- #include "pinctrl-sunxi.h"
-@@ -164,9 +166,9 @@ static int sunxi_pctrl_parse_bias_prop(struct device_node *node)
- 		return -EINVAL;
++Required sub-node properties:
++  - pins
++  - function
++
++Optional sub-node properties:
++  - bias-disable
++  - bias-pull-up
++  - bias-pull-down
++  - drive-strength
++
++*** Deprecated pin configuration and multiplexing binding
++
+ Required subnode-properties:
  
- 	switch (val) {
--	case 1:
-+	case SUN4I_PINCTRL_PULL_UP:
- 		return PIN_CONFIG_BIAS_PULL_UP;
--	case 2:
-+	case SUN4I_PINCTRL_PULL_DOWN:
- 		return PIN_CONFIG_BIAS_PULL_DOWN;
- 	}
- 
+ - allwinner,pins: List of strings containing the pin name.
 -- 
 git-series 0.8.10
