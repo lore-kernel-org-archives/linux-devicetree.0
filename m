@@ -1,71 +1,54 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [RESEND PATCH v6, 3/5] usb: xhci-mtk: make IPPC register
- optional
-Date: Tue, 11 Oct 2016 10:44:06 +0800
-Message-ID: <1476153846.15546.15.camel@mhfsdcap03>
-References: <1474437277-27201-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1474437277-27201-4-git-send-email-chunfeng.yun@mediatek.com>
-         <62b78471-d93f-a5c2-20ef-dfeeea1720db@gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/5] dt-bindings: add vendor prefix for ILI
+ Technology Corp
+Date: Mon, 10 Oct 2016 20:13:26 -0700
+Message-ID: <CAKdAkRT0WJ8EL62bumM1yz58LEAEqvmeX_hYzOZzAA0RvxJa3A@mail.gmail.com>
+References: <20161011003359.26079-1-icenowy@aosc.xyz>
+Reply-To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <62b78471-d93f-a5c2-20ef-dfeeea1720db@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Oliver Neukum <oneukum@suse.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Alan Cooper <alcooperx@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDP6N55ZUYDRBV5R6G7QKGQEUGQAFRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161011003359.26079-1-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Henrik Rydberg <rydberg-FFUHeuDi6mxAfugRpC6u6w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Rask Ingemann Lambertsen <ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jeffrey Lin <jeffrey.lin-s3Ivl27awEzQT0dZR+AlfA@public.gmane.org>, Javier
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-10-10 at 12:55 +0200, Matthias Brugger wrote:
-> 
-> On 09/21/2016 07:54 AM, Chunfeng Yun wrote:
-> > Make IPPC register optional to support host side of dual-role mode,
-> > due to it is moved into common glue layer for simplification.
-> >
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> >  drivers/usb/host/xhci-mtk.c |   36 +++++++++++++++++++++++++++++-------
-> >  1 file changed, 29 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-> > index 79959f1..4bf99b9 100644
-> > --- a/drivers/usb/host/xhci-mtk.c
-> > +++ b/drivers/usb/host/xhci-mtk.c
-> > @@ -94,6 +94,9 @@ static int xhci_mtk_host_enable(struct xhci_hcd_mtk *mtk)
-> >  	int ret;
-> >  	int i;
-> >
-> > +	if (ippc == NULL)
-> > +		return 0;
-> > +
-> >  	/* power on host ip */
-> >  	value = readl(&ippc->ip_pw_ctr1);
-> >  	value &= ~CTRL1_IP_HOST_PDN;
-> > @@ -139,6 +142,9 @@ static int xhci_mtk_host_disable(struct xhci_hcd_mtk *mtk)
-> >  	int ret;
-> >  	int i;
-> >
-> > +	if (ippc == NULL)
-> > +		return 0;
-> > +
-> >  	/* power down all u3 ports */
-> >  	for (i = 0; i < mtk->num_u3_ports; i++) {
-> >  		value = readl(&ippc->u3_ctrl_p[i]);
-> > @@ -173,6 +179,9 @@ static int xhci_mtk_ssusb_config(struct xhci_hcd_mtk *mtk)
-> >  	struct mu3c_ippc_regs __iomem *ippc = mtk->ippc_regs;
-> >  	u32 value;
-> >
-> > +	if (ippc == NULL)
-> > +		return 0;
-> > +
-> 
-> I would prefer to add a flag/bool in xhci_hcd_mtk to signal the absence 
-> of the ippc. Or at least use a macro which checks the presence before 
-> calling any of this three functions.
+On Mon, Oct 10, 2016 at 5:33 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+> ILI Technology Corp (a.k.a Ilitek, http://www.ilitek.com/index-e.asp ) is a
+> company that produces LCD driver ICs and touch screen controller ICs.
 
-Ok. I will modify it later.
+Was there patch 3/5? I do not see it in my mailbox.
 
-thanks.
-> 
-> Regards,
-> Matthias
+>
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 24c6f65..4d37fdc 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -130,6 +130,7 @@ i2se        I2SE GmbH
+>  ibm    International Business Machines (IBM)
+>  idt    Integrated Device Technologies, Inc.
+>  ifi    Ingenieurburo Fur Ic-Technologie (I/F/I)
+> +ilitek ILI Technologies Corp.
+>  img    Imagination Technologies Ltd.
+>  infineon Infineon Technologies
+>  inforce        Inforce Computing
+> --
+> 2.10.1
+>
+
+
+
+-- 
+Dmitry
