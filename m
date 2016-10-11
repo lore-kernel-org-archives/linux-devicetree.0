@@ -1,117 +1,76 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: Re: [PATCH v3 16/18] dt-bindings: Document img,boston-clock binding
-Date: Tue, 11 Oct 2016 17:00:44 +0100
-Message-ID: <2468748.fALFhzhDcI@np-p-burton>
-References: <20161005171824.18014-1-paul.burton@imgtec.com> <20161005171824.18014-17-paul.burton@imgtec.com> <20161010130121.GA31827@rob-hp-laptop>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 3/4] PCI: dra7xx: Add support to force RC to work in GEN1
+ mode
+Date: Tue, 11 Oct 2016 21:49:55 +0530
+Message-ID: <cd8d9591-1f21-a44d-93e5-282acd992900@ti.com>
+References: <1476190715-16884-1-git-send-email-kishon@ti.com>
+ <1476190715-16884-4-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1510261.TKAFVGyAAe";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20161010130121.GA31827@rob-hp-laptop>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Rob Herring <robh@kernel.org>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1476190715-16884-4-git-send-email-kishon@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---nextPart1510261.TKAFVGyAAe
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-
-On Monday, 10 October 2016 08:01:21 BST Rob Herring wrote:
-> On Wed, Oct 05, 2016 at 06:18:22PM +0100, Paul Burton wrote:
-> > Add device tree binding documentation for the clocks provided by the
-> > MIPS Boston development board from Imagination Technologies, and a
-> > header file describing the available clocks for use by device trees &
-> > driver.
-> > 
-> > Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-> > Cc: Michael Turquette <mturquette@baylibre.com>
-> > Cc: Stephen Boyd <sboyd@codeaurora.org>
-> > Cc: linux-clk@vger.kernel.org
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: devicetree@vger.kernel.org
-> > 
-> > ---
-> > 
-> > Changes in v3: None
-> > Changes in v2:
-> > - Add BOSTON_CLK_INPUT to expose the input clock.
-> > 
-> >  .../devicetree/bindings/clock/img,boston-clock.txt | 27
-> >  ++++++++++++++++++++++ include/dt-bindings/clock/boston-clock.h         
-> >   | 14 +++++++++++ 2 files changed, 41 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/clock/img,boston-clock.txt create mode
-> >  100644 include/dt-bindings/clock/boston-clock.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/clock/img,boston-clock.txt
-> > b/Documentation/devicetree/bindings/clock/img,boston-clock.txt new file
-> > mode 100644
-> > index 0000000..c01ea60
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/img,boston-clock.txt
-> > @@ -0,0 +1,27 @@
-> > +Binding for Imagination Technologies MIPS Boston clock sources.
-> > +
-> > +This binding uses the common clock binding[1].
-> > +
-> > +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > +
-> > +Required properties:
-> > +- compatible : Should be "img,boston-clock".
-> > +- #clock-cells : Should be set to 1.
-> > +  Values available for clock consumers can be found in the header file:
-> > +    <dt-bindings/clock/boston-clock.h>
-> > +- regmap : Phandle to the Boston platform register system controller.
-> > +  This should contain a phandle to the system controller node covering
-> > the
-> > +  platform registers provided by the Boston board.
+On Tuesday 11 October 2016 06:28 PM, Kishon Vijay Abraham I wrote:
+> PCIe in AM57x/DRA7x devices is by default
+> configured to work in GEN2 mode.  However there
+> may be situations when working in GEN1 mode is
+> desired. One example is limitation i925 (PCIe GEN2
+> mode not supported at junction temperatures < 0C).
 > 
-> Can you just make the clock node a child of the system controller and
-> drop this?
+> Add support to force Root Complex to work in GEN1
+> mode if so desired, but don't force GEN1 mode on
+> any board just yet.
 > 
-> Rob
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> ---
+>  Documentation/devicetree/bindings/pci/ti-pci.txt |    1 +
+>  drivers/pci/host/pci-dra7xx.c                    |   27 ++++++++++++++++++++++
+>  2 files changed, 28 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
+> index 60e2516..a3d6ca3 100644
+> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
+> @@ -25,6 +25,7 @@ PCIe Designware Controller
+>  
+>  Optional Property:
+>   - gpios : Should be added if a gpio line is required to drive PERST# line
+> + - ti,pcie-is-gen1 : Force the PCIe controller to work in GEN1 (2.5 GT/s).
+>  
+>  Example:
+>  axi {
+> diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-dra7xx.c
+> index 4ccba6d..2a669cb 100644
+> --- a/drivers/pci/host/pci-dra7xx.c
+> +++ b/drivers/pci/host/pci-dra7xx.c
+> @@ -63,11 +63,14 @@
+>  #define	LINK_UP						BIT(16)
+>  #define	DRA7XX_CPU_TO_BUS_ADDR				0x0FFFFFFF
+>  
+> +#define EXP_CAP_ID_OFFSET				0x70
+> +
+>  struct dra7xx_pcie {
+>  	struct pcie_port	pp;
+>  	void __iomem		*base;		/* DT ti_conf */
+>  	int			phy_count;	/* DT phy-names count */
+>  	struct phy		**phy;
+> +	bool			is_gen1;
 
-Hi Rob,
- 
-(Apologies to anyone who received my last; my mail client seems to be 
-misconfigured & previously sent HTML mail.)
+I think it will be nice to reference the errata number as comments in
+the code along with references to TI public documentation that explains
+the said errata.
 
-As I mentioned before technically that could be done, but it would really not 
-be at all reflective of the hardware & so seems somewhat contrary to the 
-purpose of a device tree.
- 
+Or may be this can be added to the binding documentation. Somewhere 'git
+grep' can find.
+
+BTW, per Documentation/devicetree/bindings/submitting-patches.txt, the
+binding documentation should be a separate patch.
+
 Thanks,
-    Paul
---nextPart1510261.TKAFVGyAAe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJX/QysAAoJEIIg2fppPBxl8D8P/jZEbGy4OwrZEmOTXP+Der/O
-n0oNrjzD6VkgKOAc4lIZNjRPgHxUXb/qFdL6ObfOnVYxmlfs+KrvzZoO6YbleaG2
-Oq3qMqvJsV+VKxPqB2HKVRM/S9pN+GpXdp553oRkPUJwCFJrrTuuW9YHE6c6gegm
-O57H2nG/M6KF4mXfQj9sN/H1fU14kwwfEgTRovPZg6m2imLS8yd1behdAY9nRlZj
-tanMDIEZlWnrdP61ZAfVAsa/V+ussaJWc40miqHyDEGprLHZ4n9PrwJeMdrJ1SOa
-aaFv8Qpk+UiY9Ia+7wL2K9Gdn1aCmbfqcoXZWTQ1hZi1SPTuLYGrXw8FmGnxh5FW
-X1SKtW458oP5uW6aQX+r5ixqzoCF6/eUgjH/8BAa60q9nDdA1MlYDk1SfmxnQ+/0
-0H5gj+7bR9RoLkGthxCYQuRBncxO3zTL4f6EcNNdjpPiGIVju3BWe2MNTqycf+HO
-Acpr5gOAyiK7xDxkRBU4kzL3HxUJuC0VyC61FljgSh1ZAUcKRp8BeULY6W4+haxF
-P2UCRXv0bX0l5OEr0YGaOB+yMyEc4JxyxkrCeRNK6iMFR7vDY16Ng+UhHNa1bpog
-C1QxPNrkaqSlYAZzF/Q9FnNhCZS1a17z9SszCVO2yAm2w2CZ1MHUK3ib90wWrTkX
-10x2FoSR4zN6GDY6AlC/
-=Oluv
------END PGP SIGNATURE-----
-
---nextPart1510261.TKAFVGyAAe--
+Sekhar
