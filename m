@@ -1,50 +1,46 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: RE: [PATCH V1 06/10] Documentation: dt: input: temperature driver
-Date: Tue, 11 Oct 2016 11:43:21 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CCE2CC4@SW-EX-MBX02.diasemi.com>
-References: <cover.1475743411.git.stwiss.opensource@diasemi.com>
- <313a15d14dd20a8cb8ac99a4cd423798343c5b65.1475743411.git.stwiss.opensource@diasemi.com>
- <20161010133718.GA9643@rob-hp-laptop>
+From: Balbir Singh <bsingharora@gmail.com>
+Subject: Re: [PATCH v4 4/5] mm: make processing of movable_node arch-specific
+Date: Tue, 11 Oct 2016 23:26:19 +1100
+Message-ID: <235f2d20-cf84-08df-1fb4-08ee258fdc52@gmail.com>
+References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
+ <1475778995-1420-5-git-send-email-arbab@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20161010133718.GA9643@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <1475778995-1420-5-git-send-email-arbab@linux.vnet.ibm.com>
+Sender: owner-linux-mm@kvack.org
+To: Reza Arbab <arbab@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 10 October 2016 14:37 Rob Herring wrote:
-> On Thu, Oct 06, 2016 at 09:43:30AM +0100, Steve Twiss wrote:
-> > From: Steve Twiss <stwiss.opensource@diasemi.com>
+
+On 07/10/16 05:36, Reza Arbab wrote:
+> Currently, CONFIG_MOVABLE_NODE depends on X86_64. In preparation to
+> enable it for other arches, we need to factor a detail which is unique
+> to x86 out of the generic mm code.
 > 
-> The subject is wrong.
-
-Copy/paste error -- I will fix that.
-
-> > Add binding information for DA9061 onkey.
-> >
-> > This patch updates the compatible string "dlg,da9061-onkey" to support
-> > DA9061, removes ther reference to KEY_SLEEP (which the driver no longer
+> Specifically, as documented in kernel-parameters.txt, the use of
+> "movable_node" should remain restricted to x86:
 > 
-> s/ther/the/
-
-And this.
-
-> > supports) and fixes a typo in the example.
+> movable_node    [KNL,X86] Boot-time switch to enable the effects
+>                 of CONFIG_MOVABLE_NODE=y. See mm/Kconfig for details.
 > 
-> Why is KEY_SLEEP being removed?
+> This option tells x86 to find movable nodes identified by the ACPI SRAT.
+> On other arches, it would have no benefit, only the undesired side
+> effect of setting bottom-up memblock allocation.
+> 
+> Since #ifdef CONFIG_MOVABLE_NODE will no longer be enough to restrict
+> this option to x86, move it to an arch-specific compilation unit
+> instead.
+> 
+> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
 
-Supporting KEY_SLEEP was not the general convention and the typical solution should have been
-for KEY_POWER to support both cases of suspend and S/W power off.
-I changed the driver, but failed to update the documentation at that time, so am now updating this
-as part of the DA9061.
+Acked-by: Balbir Singh <bsingharora@gmail.com>
 
-I will add that information in the next V2 patch e-mail.
-
-Regards,
-Steve
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
