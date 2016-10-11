@@ -1,118 +1,117 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v2 5/9] pinctrl: sunxi: Support generic binding
-Date: Tue, 11 Oct 2016 17:46:03 +0200
-Message-ID: <1b0c33c875ca715c65eea2f4689ccf44233ea64b.1476200742.git-series.maxime.ripard@free-electrons.com>
-References: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
-References: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Paul Burton <paul.burton@imgtec.com>
+Subject: Re: [PATCH v3 16/18] dt-bindings: Document img,boston-clock binding
+Date: Tue, 11 Oct 2016 17:00:44 +0100
+Message-ID: <2468748.fALFhzhDcI@np-p-burton>
+References: <20161005171824.18014-1-paul.burton@imgtec.com> <20161005171824.18014-17-paul.burton@imgtec.com> <20161010130121.GA31827@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart1510261.TKAFVGyAAe";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20161010130121.GA31827@rob-hp-laptop>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Our bindings are mostly irrelevant now that we have generic pinctrl
-bindings that cover exactly the same uses cases.
+--nextPart1510261.TKAFVGyAAe
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Add support for the new ones, and obviously keep our old binding support in
-order to keep the ABI stable.
+On Monday, 10 October 2016 08:01:21 BST Rob Herring wrote:
+> On Wed, Oct 05, 2016 at 06:18:22PM +0100, Paul Burton wrote:
+> > Add device tree binding documentation for the clocks provided by the
+> > MIPS Boston development board from Imagination Technologies, and a
+> > header file describing the available clocks for use by device trees &
+> > driver.
+> > 
+> > Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+> > Cc: Michael Turquette <mturquette@baylibre.com>
+> > Cc: Stephen Boyd <sboyd@codeaurora.org>
+> > Cc: linux-clk@vger.kernel.org
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: devicetree@vger.kernel.org
+> > 
+> > ---
+> > 
+> > Changes in v3: None
+> > Changes in v2:
+> > - Add BOSTON_CLK_INPUT to expose the input clock.
+> > 
+> >  .../devicetree/bindings/clock/img,boston-clock.txt | 27
+> >  ++++++++++++++++++++++ include/dt-bindings/clock/boston-clock.h         
+> >   | 14 +++++++++++ 2 files changed, 41 insertions(+)
+> >  create mode 100644
+> >  Documentation/devicetree/bindings/clock/img,boston-clock.txt create mode
+> >  100644 include/dt-bindings/clock/boston-clock.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/img,boston-clock.txt
+> > b/Documentation/devicetree/bindings/clock/img,boston-clock.txt new file
+> > mode 100644
+> > index 0000000..c01ea60
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/img,boston-clock.txt
+> > @@ -0,0 +1,27 @@
+> > +Binding for Imagination Technologies MIPS Boston clock sources.
+> > +
+> > +This binding uses the common clock binding[1].
+> > +
+> > +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > +
+> > +Required properties:
+> > +- compatible : Should be "img,boston-clock".
+> > +- #clock-cells : Should be set to 1.
+> > +  Values available for clock consumers can be found in the header file:
+> > +    <dt-bindings/clock/boston-clock.h>
+> > +- regmap : Phandle to the Boston platform register system controller.
+> > +  This should contain a phandle to the system controller node covering
+> > the
+> > +  platform registers provided by the Boston board.
+> 
+> Can you just make the clock node a child of the system controller and
+> drop this?
+> 
+> Rob
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- drivers/pinctrl/sunxi/pinctrl-sunxi.c | 48 ++++++++++++++++++++++++++--
- 1 file changed, 46 insertions(+), 2 deletions(-)
+Hi Rob,
+ 
+(Apologies to anyone who received my last; my mail client seems to be 
+misconfigured & previously sent HTML mail.)
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 2ee8d48ed5d3..71b78566e871 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -150,18 +150,33 @@ static int sunxi_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
+As I mentioned before technically that could be done, but it would really not 
+be at all reflective of the hardware & so seems somewhat contrary to the 
+purpose of a device tree.
  
- static bool sunxi_pctrl_has_bias_prop(struct device_node *node)
- {
--	return of_find_property(node, "allwinner,pull", NULL);
-+	return of_find_property(node, "bias-pull-up", NULL) ||
-+		of_find_property(node, "bias-pull-down", NULL) ||
-+		of_find_property(node, "bias-disable", NULL) ||
-+		of_find_property(node, "allwinner,pull", NULL);
- }
- 
- static bool sunxi_pctrl_has_drive_prop(struct device_node *node)
- {
--	return of_find_property(node, "allwinner,drive", NULL);
-+	return of_find_property(node, "drive-strength", NULL) ||
-+		of_find_property(node, "allwinner,drive", NULL);
- }
- 
- static int sunxi_pctrl_parse_bias_prop(struct device_node *node)
- {
- 	u32 val;
- 
-+	/* Try the new style binding */
-+	if (of_find_property(node, "bias-pull-up", NULL))
-+		return PIN_CONFIG_BIAS_PULL_UP;
-+
-+	if (of_find_property(node, "bias-pull-down", NULL))
-+		return PIN_CONFIG_BIAS_PULL_DOWN;
-+
-+	if (of_find_property(node, "bias-disable", NULL))
-+		return PIN_CONFIG_BIAS_DISABLE;
-+
-+	/* And fall back to the old binding */
- 	if (of_property_read_u32(node, "allwinner,pull", &val))
- 		return -EINVAL;
- 
-@@ -181,6 +196,21 @@ static int sunxi_pctrl_parse_drive_prop(struct device_node *node)
- {
- 	u32 val;
- 
-+	/* Try the new style binding */
-+	if (!of_property_read_u32(node, "drive-strength", &val)) {
-+		/* We can't go below 10mA ... */
-+		if (val < 10)
-+			return -EINVAL;
-+
-+		/* ... and only up to 40 mA ... */
-+		if (val > 40)
-+			val = 40;
-+
-+		/* by steps of 10 mA */
-+		return rounddown(val, 10);
-+	}
-+
-+	/* And then fall back to the old binding */
- 	if (of_property_read_u32(node, "allwinner,drive", &val))
- 		return -EINVAL;
- 
-@@ -192,6 +222,12 @@ static const char *sunxi_pctrl_parse_function_prop(struct device_node *node)
- 	const char *function;
- 	int ret;
- 
-+	/* Try the generic binding */
-+	ret = of_property_read_string(node, "function", &function);
-+	if (!ret)
-+		return function;
-+
-+	/* And fall back to our legacy one */
- 	ret = of_property_read_string(node, "allwinner,function", &function);
- 	if (!ret)
- 		return function;
-@@ -204,6 +240,14 @@ static const char *sunxi_pctrl_find_pins_prop(struct device_node *node,
- {
- 	int count;
- 
-+	/* Try the generic binding */
-+	count = of_property_count_strings(node, "pins");
-+	if (count > 0) {
-+		*npins = count;
-+		return "pins";
-+	}
-+
-+	/* And fall back to our legacy one */
- 	count = of_property_count_strings(node, "allwinner,pins");
- 	if (count > 0) {
- 		*npins = count;
--- 
-git-series 0.8.10
+Thanks,
+    Paul
+--nextPart1510261.TKAFVGyAAe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCAAGBQJX/QysAAoJEIIg2fppPBxl8D8P/jZEbGy4OwrZEmOTXP+Der/O
+n0oNrjzD6VkgKOAc4lIZNjRPgHxUXb/qFdL6ObfOnVYxmlfs+KrvzZoO6YbleaG2
+Oq3qMqvJsV+VKxPqB2HKVRM/S9pN+GpXdp553oRkPUJwCFJrrTuuW9YHE6c6gegm
+O57H2nG/M6KF4mXfQj9sN/H1fU14kwwfEgTRovPZg6m2imLS8yd1behdAY9nRlZj
+tanMDIEZlWnrdP61ZAfVAsa/V+ussaJWc40miqHyDEGprLHZ4n9PrwJeMdrJ1SOa
+aaFv8Qpk+UiY9Ia+7wL2K9Gdn1aCmbfqcoXZWTQ1hZi1SPTuLYGrXw8FmGnxh5FW
+X1SKtW458oP5uW6aQX+r5ixqzoCF6/eUgjH/8BAa60q9nDdA1MlYDk1SfmxnQ+/0
+0H5gj+7bR9RoLkGthxCYQuRBncxO3zTL4f6EcNNdjpPiGIVju3BWe2MNTqycf+HO
+Acpr5gOAyiK7xDxkRBU4kzL3HxUJuC0VyC61FljgSh1ZAUcKRp8BeULY6W4+haxF
+P2UCRXv0bX0l5OEr0YGaOB+yMyEc4JxyxkrCeRNK6iMFR7vDY16Ng+UhHNa1bpog
+C1QxPNrkaqSlYAZzF/Q9FnNhCZS1a17z9SszCVO2yAm2w2CZ1MHUK3ib90wWrTkX
+10x2FoSR4zN6GDY6AlC/
+=Oluv
+-----END PGP SIGNATURE-----
+
+--nextPart1510261.TKAFVGyAAe--
