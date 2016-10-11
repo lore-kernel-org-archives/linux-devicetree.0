@@ -1,58 +1,70 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/5] pwm: Add Allwinner A31 SoC support
-Date: Tue, 11 Oct 2016 14:45:52 +0200
-Message-ID: <20161011124552.GX3462@lukather>
-References: <20161011063449.54775-1-icenowy@aosc.xyz>
- <20161011063449.54775-2-icenowy@aosc.xyz>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 1/4] PCI: designware: Fix compiler warning
+Date: Tue, 11 Oct 2016 18:28:32 +0530
+Message-ID: <1476190715-16884-2-git-send-email-kishon@ti.com>
+References: <1476190715-16884-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="iXVVnr8Hn1WiTnFI"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBAV66O7QKGQE2LD65GA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20161011063449.54775-2-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1476190715-16884-1-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
+Fix the following compilation warning in dw_pcie_readl_unroll()
+and dw_pcie_writel_unroll() by just invoking dw_pcie_readl_rc() and
+dw_pcie_writel_rc() respectively instead of adding redundant code.
 
---iXVVnr8Hn1WiTnFI
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+pcie-designware.c: In function 'dw_pcie_readl_unroll':
+pcie-designware.c:165:32: warning: passing argument 2 of
+ 'pp->ops->readl_rc' makes integer from pointer without a cast
+ [-Wint-conversion]
+   return pp->ops->readl_rc(pp, pp->dbi_base + offset + reg);
+                                ^
+pcie-designware.c:165:32: note: expected 'u32 {aka unsigned int}' but
+ argument is of type 'void *'
+pcie-designware.c: In function 'dw_pcie_writel_unroll':
+pcie-designware.c:176:31: warning: passing argument 3 of
+ 'pp->ops->writel_rc' makes integer from pointer without a cast
+ [-Wint-conversion]
+   pp->ops->writel_rc(pp, val, pp->dbi_base + offset + reg);
+                               ^
+drivers/pci/host/pcie-designware.c:176:31: note: expected 'u32
+ {aka unsigned int}' but argument is of type 'void *'
 
-Hi,
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/pci/host/pcie-designware.c |   10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-On Tue, Oct 11, 2016 at 02:34:46PM +0800, Icenowy Zheng wrote:
-> This adds a generic PWM framework driver for the PWM controller found
-> on Allwinner A31 and A31s SoCs.
-> 
-> The PWM controller is different with other Allwinner SoCs, with a
-> control register per channel (in other SoCs the control register is
-> shared), and each channel are allocated 16 bytes of address (but only 8
-> bytes are used.)
-> 
-> In order to use the driver for all channels, device nodes should be
-> created per channel.
-
-I don't think there's any need for a new driver that duplicates most
-of the logic. The bitfields look roughly the same, and the only
-difference is the split difference.
-
-This is something that can easily be handled without creating a new
-driver using regmap's reg_field, or through an intermediate functino
-that returns the register offset.
-
-Maxime
-
+diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+index 5ee8772..b8feea4 100644
+--- a/drivers/pci/host/pcie-designware.c
++++ b/drivers/pci/host/pcie-designware.c
+@@ -161,10 +161,7 @@ static inline u32 dw_pcie_readl_unroll(struct pcie_port *pp, u32 index, u32 reg)
+ {
+ 	u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
+ 
+-	if (pp->ops->readl_rc)
+-		return pp->ops->readl_rc(pp, pp->dbi_base + offset + reg);
+-
+-	return readl(pp->dbi_base + offset + reg);
++	return dw_pcie_readl_rc(pp, offset + reg);
+ }
+ 
+ static inline void dw_pcie_writel_unroll(struct pcie_port *pp, u32 index,
+@@ -172,10 +169,7 @@ static inline void dw_pcie_writel_unroll(struct pcie_port *pp, u32 index,
+ {
+ 	u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
+ 
+-	if (pp->ops->writel_rc)
+-		pp->ops->writel_rc(pp, val, pp->dbi_base + offset + reg);
+-	else
+-		writel(val, pp->dbi_base + offset + reg);
++	dw_pcie_writel_rc(pp, offset + reg, val);
+ }
+ 
+ static int dw_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---iXVVnr8Hn1WiTnFI--
+1.7.9.5
