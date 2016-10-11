@@ -1,105 +1,104 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 1/4] PCI: designware: Fix compiler warning
-Date: Tue, 11 Oct 2016 08:50:50 -0500
-Message-ID: <20161011135050.GA26715@localhost>
-References: <1476190715-16884-1-git-send-email-kishon@ti.com>
- <1476190715-16884-2-git-send-email-kishon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1476190715-16884-2-git-send-email-kishon@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, Jingoo Han <jingoohan1@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org
+From: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
+Subject: [PATCH v2 4/4] iio: dac: mcp4725: add devicetree support
+Date: Tue, 11 Oct 2016 15:57:43 +0200
+Message-ID: <1476194263-12015-5-git-send-email-tomas@novotny.cz>
+References: <1476194263-12015-1-git-send-email-tomas@novotny.cz>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476194263-12015-1-git-send-email-tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yong Li <sdliyong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[+cc Jingoo, Kukjin, Krzysztof, linux-samsung-soc]
+Signed-off-by: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
+---
+ drivers/iio/dac/mcp4725.c | 46 +++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 41 insertions(+), 5 deletions(-)
 
-On Tue, Oct 11, 2016 at 06:28:32PM +0530, Kishon Vijay Abraham I wrote:
-> Fix the following compilation warning in dw_pcie_readl_unroll()
-> and dw_pcie_writel_unroll() by just invoking dw_pcie_readl_rc() and
-> dw_pcie_writel_rc() respectively instead of adding redundant code.
-> 
-> pcie-designware.c: In function 'dw_pcie_readl_unroll':
-> pcie-designware.c:165:32: warning: passing argument 2 of
->  'pp->ops->readl_rc' makes integer from pointer without a cast
->  [-Wint-conversion]
->    return pp->ops->readl_rc(pp, pp->dbi_base + offset + reg);
->                                 ^
-> pcie-designware.c:165:32: note: expected 'u32 {aka unsigned int}' but
->  argument is of type 'void *'
-> pcie-designware.c: In function 'dw_pcie_writel_unroll':
-> pcie-designware.c:176:31: warning: passing argument 3 of
->  'pp->ops->writel_rc' makes integer from pointer without a cast
->  [-Wint-conversion]
->    pp->ops->writel_rc(pp, val, pp->dbi_base + offset + reg);
->                                ^
-> drivers/pci/host/pcie-designware.c:176:31: note: expected 'u32
->  {aka unsigned int}' but argument is of type 'void *'
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/host/pcie-designware.c |   10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-> index 5ee8772..b8feea4 100644
-> --- a/drivers/pci/host/pcie-designware.c
-> +++ b/drivers/pci/host/pcie-designware.c
-> @@ -161,10 +161,7 @@ static inline u32 dw_pcie_readl_unroll(struct pcie_port *pp, u32 index, u32 reg)
->  {
->  	u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
->  
-> -	if (pp->ops->readl_rc)
-> -		return pp->ops->readl_rc(pp, pp->dbi_base + offset + reg);
-
-I think this was worse than just a compiler warning, wasn't it?  I
-think I completely broke exynos (the only implementer of
-pp->ops->readl_rc) because we passed "pp->dbi_base + offset + reg" to
-exynos_pcie_readl_rc(), which then added pp->dbi_base again:
-
-  val = readl(pp->dbi_base + reg);
-
-I incorporated your patch to use dw_pcie_readl_rc() directly (thanks a
-lot for noticing that!) into pci/host-designware.
-
-Then I rebased all the branches that were based on pci/host-designware
-and repushed everything:
-
-  pci/host-designware
-  pci/host-armada
-  pci/host-artpec
-  pci/host-dra7xx
-  pci/host-exynos
-  pci/host-hisi
-  pci/host-imx6
-  pci/host-keystone
-  pci/host-layerscape
-  pci/host-qcom
-  pci/host-spear
-
-> -	return readl(pp->dbi_base + offset + reg);
-> +	return dw_pcie_readl_rc(pp, offset + reg);
->  }
->  
->  static inline void dw_pcie_writel_unroll(struct pcie_port *pp, u32 index,
-> @@ -172,10 +169,7 @@ static inline void dw_pcie_writel_unroll(struct pcie_port *pp, u32 index,
->  {
->  	u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
->  
-> -	if (pp->ops->writel_rc)
-> -		pp->ops->writel_rc(pp, val, pp->dbi_base + offset + reg);
-> -	else
-> -		writel(val, pp->dbi_base + offset + reg);
-> +	dw_pcie_writel_rc(pp, offset + reg, val);
->  }
->  
->  static int dw_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
-> -- 
-> 1.7.9.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/iio/dac/mcp4725.c b/drivers/iio/dac/mcp4725.c
+index 29cf85d..b8954f2 100644
+--- a/drivers/iio/dac/mcp4725.c
++++ b/drivers/iio/dac/mcp4725.c
+@@ -19,6 +19,7 @@
+ #include <linux/err.h>
+ #include <linux/delay.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/of.h>
+ 
+ #include <linux/iio/iio.h>
+ #include <linux/iio/sysfs.h>
+@@ -364,6 +365,30 @@ static const struct iio_info mcp4725_info = {
+ 	.driver_module = THIS_MODULE,
+ };
+ 
++#ifdef CONFIG_OF
++static int mcp4725_probe_dt(struct device *dev,
++			    struct mcp4725_platform_data *pdata)
++{
++	struct device_node *np = dev->of_node;
++
++	if (!np)
++		return -ENODEV;
++
++	/* check if is the vref-supply defined */
++	pdata->use_vref = of_property_read_bool(np, "vref-supply");
++	pdata->vref_buffered =
++		of_property_read_bool(np, "microchip,vref-buffered");
++
++	return 0;
++}
++#else
++static int mcp4725_probe_dt(struct device *dev,
++			    struct mcp4725_platform_data *platform_data)
++{
++	return -ENODEV;
++}
++#endif
++
+ static int mcp4725_probe(struct i2c_client *client,
+ 			 const struct i2c_device_id *id)
+ {
+@@ -375,11 +400,6 @@ static int mcp4725_probe(struct i2c_client *client,
+ 	u8 ref;
+ 	int err;
+ 
+-	if (!pdata) {
+-		dev_err(&client->dev, "invalid platform data");
+-		return -EINVAL;
+-	}
+-
+ 	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+ 	if (indio_dev == NULL)
+ 		return -ENOMEM;
+@@ -388,6 +408,19 @@ static int mcp4725_probe(struct i2c_client *client,
+ 	data->client = client;
+ 	data->id = id->driver_data;
+ 
++	if (!pdata) {
++		pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
++		if (!pdata)
++			return -ENOMEM;
++
++		err = mcp4725_probe_dt(&client->dev, pdata);
++		if (err) {
++			dev_err(&client->dev,
++				"invalid platform or devicetree data");
++			return err;
++		}
++	}
++
+ 	if (data->id == MCP4725 && pdata->use_vref) {
+ 		dev_warn(&client->dev,
+ 			"ignoring unavailable external reference on MCP4725");
+@@ -460,6 +493,9 @@ static int mcp4725_probe(struct i2c_client *client,
+ 	if (err)
+ 		goto err_disable_vref_reg;
+ 
++	if (!dev_get_platdata(&client->dev))
++		devm_kfree(&client->dev, pdata);
++
+ 	return 0;
+ 
+ err_disable_vref_reg:
+-- 
+2.1.4
