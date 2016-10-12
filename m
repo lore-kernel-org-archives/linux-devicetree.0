@@ -1,27 +1,56 @@
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [RFC PATCH 05/11] pci: rename *host* directory to *controller*
-Date: Wed, 12 Oct 2016 05:43:15 -0700
-Message-ID: <20161012124315.GC942@infradead.org>
-References: <1473829927-20466-1-git-send-email-kishon@ti.com>
- <1473829927-20466-6-git-send-email-kishon@ti.com>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [v2] rt2x00: add support for mac addr from device tree
+Date: Wed, 12 Oct 2016 15:53:37 +0300
+Message-ID: <87mvi9g23y.fsf@kamboji.qca.qualcomm.com>
+References: <1472195813-30471-1-git-send-email-dev@kresin.me>
+        <20160927155057.A4182616F6@smtp.codeaurora.org>
+        <CABwW5nn9gGpzBQq3ag1MhsA-bxGop93=C7mjZG9nmi26G4ar5A@mail.gmail.com>
+        <87shskwaxh.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1473829927-20466-6-git-send-email-kishon@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, Joao.Pinto@synopsys.com, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Joao Pinto <jpinto@synopsys.com>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, nsekhar@ti.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, hch@infradead.org, m-karicheri2@ti.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, mingkai.hu@nxp.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87shskwaxh.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org> (Kalle Valo's message
+        of "Wed, 28 Sep 2016 13:55:38 +0300")
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Kresin <dev-zg6vgJgm1sizQB+pC5nmwQ@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a big and painful change.  I'd suggest to either drop it for
-now or convince Bjorn to take it as a scripted renamed just after -rc1.
+Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+
+>> I thought about _adding_ a devicetree binding document before sending
+>> the patch. But in the end it would be an empty file, since I neither
+>> add any bindings nor introduce a compatible string. I'm just add
+>> support for the generic of_get_mac_address() devicetree property,
+>> which is meant to be used via a devicetree pci childnode.
+>>
+>> I grepped though the 4.7 code and found a few driver using
+>> of_get_mac_address() without having a devicetree binding document:
+>>
+>> - drivers/net/usb/smsc95xx.c
+>> - drivers/net/usb/smsc75xx.c
+>> - drivers/net/ethernet/marvell/sky2.c
+>> - drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+>> - drivers/net/ethernet/wiznet/w5100-spi.c
+>> - drivers/net/ethernet/arc/emac_main.c
+>>
+>> Just let me know if you are still the opinion that a devicetree
+>> binding document is required to get this patch accepted.
+>
+> I'm not familiar enough device tree to really comment. Can someone from
+> the device tree list (CCed) help?
+>
+> Full patch here:
+>
+> https://patchwork.kernel.org/patch/9300893/
+
+I didn't get any comments so I guess we don't need to document the use
+of mac-address in the driver binding document. At least
+Documentation/devicetree/bindings/net/ethernet.txt supports that, even
+if rt2x00 is a wireless driver.
+
+Unless I get any objections I'm planning to apply this to
+wireless-drivers-next (once it's open again).
+
+-- 
+Kalle Valo
