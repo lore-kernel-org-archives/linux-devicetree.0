@@ -1,83 +1,47 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v7 0/4] libfdt: Add support for device tree overlays
-Date: Wed, 12 Oct 2016 17:06:07 +0200
-Message-ID: <965C6014-692F-4021-9E3D-945ED32307B7@konsulko.com>
-References: <20160930135717.16511-1-maxime.ripard@free-electrons.com> <20161006094756.GR18733@umbus.fritz.box> <6338fcb9-ffda-a04b-6c6e-2fd254b58dda@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6338fcb9-ffda-a04b-6c6e-2fd254b58dda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Subject: [PATCH v3 1/2] Add OV5647 device tree documentation
+Date: Wed, 12 Oct 2016 17:02:21 +0100
+Message-ID: <0f85bdabe4951533e6fe7a842cc5dfa0f2cd8a6c.1476286687.git.roliveir@synopsys.com>
+References: <cover.1476286687.git.roliveir@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1476286687.git.roliveir@synopsys.com>
+In-Reply-To: <cover.1476286687.git.roliveir@synopsys.com>
+References: <cover.1476286687.git.roliveir@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, geert@linux-m68k.org, akpm@linux-foundation.org, kvalo@codeaurora.org, linux@roeck-us.net, hverkuil@xs4all.nl, lars@metafoo.de, pavel@ucw.cz, robert.jarzmik@free.fr, slongerbeam@gmail.com, dheitmueller@kernellabs.com, pali.rohar@gmail.com, CARLOS.PALMINHA@synopsys.com, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Phil,
+Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
+---
+ .../devicetree/bindings/media/i2c/ov5647.txt          | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
 
-> On Oct 6, 2016, at 23:16 , Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
-wrote:
->=20
-> On 06/10/2016 10:47, David Gibson wrote:
->> On Fri, Sep 30, 2016 at 03:57:13PM +0200, Maxime Ripard wrote:
->>> Hi,
->>>=20
->>> The device tree overlays are a great solution to the issue raised by
->>> the bunch expandable boards we find everywhere these days, like the
->>> Beaglebone, Raspberry Pi or CHIP.
->>>=20
->>> Although for now Linux is the only available tool that can deal with
->>> overlays, some other components like bootloaders or user-space tools
->>> might need to apply these overlays on top of a base device tree.
->>>=20
->>> To address these use cases, we introduce a new function to the =
-libfdt,
->>> fdt_overlay_apply, that does just that.
->>>=20
->>> You can find a test program here: =
-http://code.bulix.org/792zum-99476?raw
->>>=20
->>> This is the last patches sent to U-boot, with the modifications
->>> suggested by David, and the additional test cases.
->>>=20
->>> Let me know what you think!
->>> Maxime
->> Looking pretty good.  There's a minor error in 3/4 which I've pointed
->> out, it can be fixed in a followup.
->>=20
->> An error in the conditionals means it's trying to run some of the
->> tests which require an overlay-aware dtc on even when that's not
->> available - I adjusted 4/4 to correct that.
->>=20
->> It also hit build failures on Travis, because the compiler version
->> there complains about local variables named 'index' shadowing the
->> standard library function.  I've corrected that with a followup =
-patch.
->>=20
->> With that done, the whole lot has been committed to master.
->>=20
-> Now that upstream libfdt can resolve and apply overlays we need a way
-> of generating them. I have a set of three patches from Pantelis that
-> add "plugin" support to dtc, together with two downstream (Raspberry =
-Pi)
-> patches that fix an uninitialised memory reference and restrict
-> __local_fixups__  generation to overlays.
->=20
-> Is there already a plan to get the enhanced dtc upstreamed? If so, can =
-I
-> get the downstream fixes included?
->=20
-
-David, my patchset is kept updated against mainline dtc.
-What are the remaining stumbling blocks in getting in accepted?
-
-> Phil Elwell
-
-Regards
-
-=97 Pantelis
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+new file mode 100644
+index 0000000..4c91b3b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+@@ -0,0 +1,19 @@
++Omnivision OV5647 raw image sensor
++---------------------------------
++
++OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
++and CCI (I2C compatible) control bus.
++
++Required properties:
++
++- compatible	: "ovti,ov5647";
++- reg		: I2C slave address of the sensor;
++
++The common video interfaces bindings (see video-interfaces.txt) should be
++used to specify link to the image data receiver. The OV5647 device
++node should contain one 'port' child node with an 'endpoint' subnode.
++
++Following properties are valid for the endpoint node:
++
++- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
++  video-interfaces.txt.  The sensor supports only two data lanes.
+-- 
+2.9.3
