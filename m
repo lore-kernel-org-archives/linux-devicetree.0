@@ -1,52 +1,48 @@
-From: Zach Brown <zach.brown@ni.com>
-Subject: [RFC v2 2/2] sdhci: Prevent SD from doing high-speed timing when broken-highspeed property is set
-Date: Wed, 12 Oct 2016 13:40:56 -0500
-Message-ID: <1476297656-7019-3-git-send-email-zach.brown@ni.com>
-References: <1476297656-7019-1-git-send-email-zach.brown@ni.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1476297656-7019-1-git-send-email-zach.brown@ni.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: ulf.hansson@linaro.org
-Cc: adrian.hunter@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zach.brown@ni.com
+From: <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 3/3] dt/bindings: Add milivolt, milliamps, and nanohenry units
+Date: Wed, 12 Oct 2016 13:53:30 -0500
+Message-ID: <e4a605af-3b2d-4e29-a5c4-991e34f1205f@EX3.ad.cirrus.com>
+References: <1476298410-1157-1-git-send-email-Paul.Handrigan@cirrus.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476298410-1157-1-git-send-email-Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-When the broken-highspeed property is set the sdhci driver will not
-go into highspeed mode even if the controller and card appear to
-otherwise support highspeed mode.
+From: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 
-This is useful in cases where the controller and card support highspeed,
-but the board configuration or some other issue make highspeed
-impossible. For example, we send the SDIO lines through a fpga so we
-need the data to change on the falling edge of the clock or there will
-be issues with hold time.
+Add millivolt, milliamp, and nanohenry units to the Electricity
+category.
 
-Signed-off-by: Zach Brown <zach.brown@ni.com>
+Signed-off-by: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/mmc/host/sdhci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/property-units.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 4805566..17e6c50 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -22,6 +22,7 @@
- #include <linux/scatterlist.h>
- #include <linux/regulator/consumer.h>
- #include <linux/pm_runtime.h>
-+#include <linux/of.h>
+diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
+index 12278d7..92d6793 100644
+--- a/Documentation/devicetree/bindings/property-units.txt
++++ b/Documentation/devicetree/bindings/property-units.txt
+@@ -25,9 +25,12 @@ Distance
+ Electricity
+ ----------------------------------------
+ -microamp	: micro amps
++-milliamp	: milli amps
+ -ohms		: Ohms
+ -micro-ohms	: micro Ohms
+ -microvolt	: micro volts
++-millivolt	: micro volts
++-nanohenry	: nano henries
  
- #include <linux/leds.h>
- 
-@@ -3274,7 +3275,8 @@ int sdhci_setup_host(struct sdhci_host *host)
- 	if (host->quirks2 & SDHCI_QUIRK2_HOST_NO_CMD23)
- 		mmc->caps &= ~MMC_CAP_CMD23;
- 
--	if (host->caps & SDHCI_CAN_DO_HISPD)
-+	if ((host->caps & SDHCI_CAN_DO_HISPD) &&
-+	    !(of_property_read_bool(mmc_dev(mmc)->of_node, "broken-highspeed")))
- 		mmc->caps |= MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED;
- 
- 	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) &&
+ Temperature
+ ----------------------------------------
 -- 
-2.7.4
+1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
