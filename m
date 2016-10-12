@@ -1,110 +1,95 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v7 0/4] libfdt: Add support for device tree overlays
-Date: Thu, 13 Oct 2016 08:41:57 +1100
-Message-ID: <20161012214157.GA18039@umbus.fritz.box>
-References: <20160930135717.16511-1-maxime.ripard@free-electrons.com>
- <20161006094756.GR18733@umbus.fritz.box>
- <6338fcb9-ffda-a04b-6c6e-2fd254b58dda@gmail.com>
- <965C6014-692F-4021-9E3D-945ED32307B7@konsulko.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <965C6014-692F-4021-9E3D-945ED32307B7-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/3] Broadcom STB AVS CPUfreq driver
+Date: Wed, 12 Oct 2016 15:12:53 -0700
+Message-ID: <1476310376-32699-1-git-send-email-mmayer@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This series contains the CPUfreq driver for Broadcom SoCs that use "AVS
+Firmware" for voltage and frequency scaling. All voltage and frequency
+transitions are performed by the firmware and are therefore hidden from
+Linux.
 
---DocE+STaALJfprDB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The driver provides a standard CPUfreq interface to other kernel
+components and to userland on the one hand and communicates with the
+AVS co-processor on the other.
 
-On Wed, Oct 12, 2016 at 05:06:07PM +0200, Pantelis Antoniou wrote:
-> Hi Phil,
->=20
-> > On Oct 6, 2016, at 23:16 , Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
-e:
-> >=20
-> > On 06/10/2016 10:47, David Gibson wrote:
-> >> On Fri, Sep 30, 2016 at 03:57:13PM +0200, Maxime Ripard wrote:
-> >>> Hi,
-> >>>=20
-> >>> The device tree overlays are a great solution to the issue raised by
-> >>> the bunch expandable boards we find everywhere these days, like the
-> >>> Beaglebone, Raspberry Pi or CHIP.
-> >>>=20
-> >>> Although for now Linux is the only available tool that can deal with
-> >>> overlays, some other components like bootloaders or user-space tools
-> >>> might need to apply these overlays on top of a base device tree.
-> >>>=20
-> >>> To address these use cases, we introduce a new function to the libfdt,
-> >>> fdt_overlay_apply, that does just that.
-> >>>=20
-> >>> You can find a test program here: http://code.bulix.org/792zum-99476?=
-raw
-> >>>=20
-> >>> This is the last patches sent to U-boot, with the modifications
-> >>> suggested by David, and the additional test cases.
-> >>>=20
-> >>> Let me know what you think!
-> >>> Maxime
-> >> Looking pretty good.  There's a minor error in 3/4 which I've pointed
-> >> out, it can be fixed in a followup.
-> >>=20
-> >> An error in the conditionals means it's trying to run some of the
-> >> tests which require an overlay-aware dtc on even when that's not
-> >> available - I adjusted 4/4 to correct that.
-> >>=20
-> >> It also hit build failures on Travis, because the compiler version
-> >> there complains about local variables named 'index' shadowing the
-> >> standard library function.  I've corrected that with a followup patch.
-> >>=20
-> >> With that done, the whole lot has been committed to master.
-> >>=20
-> > Now that upstream libfdt can resolve and apply overlays we need a way
-> > of generating them. I have a set of three patches from Pantelis that
-> > add "plugin" support to dtc, together with two downstream (Raspberry Pi)
-> > patches that fix an uninitialised memory reference and restrict
-> > __local_fixups__  generation to overlays.
-> >=20
-> > Is there already a plan to get the enhanced dtc upstreamed? If so, can I
-> > get the downstream fixes included?
-> >=20
->=20
-> David, my patchset is kept updated against mainline dtc.
-> What are the remaining stumbling blocks in getting in accepted?
+Communication between the two processors is via shared mailbox
+registers and interrupts (ARM -> AVS to tell the firmware that there is
+a command to process and AVS -> ARM to tell the driver that a command
+finished executing).
 
-Well, repost it and we'll see.
+Changes from v3:
+    - moved code from brcm_avs_cpufreq_exit() into brcm_avs_cpufreq_remove()
+    - removed brcm_avs_cpufreq_exit() altogether
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Changes from v2:
+    - removed file Documentation/cpu-freq/brcmstb-avs-cpufreq.txt, instead
+      adding the text as comment in the driver itself
+    - wildcard match in MAINTAINERS file (drivers/cpufreq/brcmstb*)
+    - drivers/cpufreq/Kconfig.arm: have ARM_BRCMSTB_AVS_CPUFREQ default y
+      for ARCH_BRCMSTB
+    - fixed naming and Kconfig entry for CONFIG_ARM_BRCMSTB_AVS_CPUFREQ_DEBUG
+    - reordered and fixed include files
+    - made sure driver name doesn't exceed size of cpufreq_driver.name
+    - got rid of device_node pointers in struct private_data; there's no
+      need for them, as we can call of_node_put() in __map_region()
+    - don't set driver_data for CPUFREQ_TABLE_END
+    - have brcm_avs_cpufreq_get() read from the firmware rather than return
+      policy->cur
+    - don't update policy->cur in brcm_avs_target_index()
+    - created new function brcm_avs_prepare_init() to handle compatibility
+      checks during initialization and moved corresponding code from
+      brcm_avs_cpufreq_init() to the new function
+    - brcm_avs_prepare_init() is called from brcm_avs_cpufreq_probe() and
+      therefore will only be called once, even in the case of an error,
+      whereas brcm_avs_cpufreq_init() is called for every core if there is
+      an error
+    - renamed brcm_avs_cpu_(init|exit) to brcm_avs_cpufreq_(init|exit)
+    - added platform_set_drvdata(pdev, NULL) upon deregistration
+    - fixed various style complaints by checkpatch.pl --strict
+    - fixed other style issues
+    - updated and improved some comments
+    - added Viresh's Acks to patches 1/3 and 3/3
 
---DocE+STaALJfprDB
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes from v1:
+    - renamed binding document
+    - rewrote the introduction of the binding document
+    - created a new driver documentation file that contains Linux specific
+      information that was previously part of the binding document
+    - renamed the driver (and related config options) to include a reference
+      to "STB", since this implementation is primarily intended for use on
+      set-top boxes
+    - improved comments
+    - updated function __map_region()
+    - updated struct private_data
+    - added code to unmap memory regions in the error and exit paths
+    - added new sysfs property to report frequency directly from the
+      co-processor register
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
 
-iQIcBAEBCAAGBQJX/q4jAAoJEGw4ysog2bOScqAP/0UZsaa8YCx9C2g9VukUSgJo
-/qgOD23M/NBZq1zebE8luxv0bPKFWmI+XQVCQXcZi0ESOd9Adq0gryGSmJlbFat5
-09vY3WPyS0NMvTPGf9RygYU6RDGgPn7XNXWn56oRI6rTe17vuYTI/xttSqCRNs9v
-5VR8TUynVfzdGpeQQEjY5fP/4ApUBFU+2gTIKrGQ0X8tZ/BDBaPtdrCWFZprcEyF
-7GKWXVttw2WoAAqgbQ44sDANj+c/alKSdV6N3nCBEEWY+kb6PMTwVoHGmFFdNUrt
-i52mrfMjto207AvYHvTLt6kFOi1nqZxj0qW9CyrOmkBgqzRkqVBkh3nSIznQVGZa
-ReLiV3rftVqXXZCufxChOQWaTCzZ7VQMX40QyK4/13BNT6/VV5QMaIfRTQnU2k4A
-Oy7XosivU5N08A/GT0JUfdBzmV+9nT7y4dGdJjbHwmZI5Z/byPvUpYP1NtbeyJZI
-+nc2FgL8MEJc2oNqXwUW04yah4VtDHJArtW8dOGmi6hm2fuJ8GSqko7Daht3/qay
-rtpssKdBIYompuoaWeiQ+9KHlZmz5O7iXa3mexb4iyGtrlxNok1M260MXgwxIVsZ
-LY2MixEU1k405KRBN003pTMGvJj//AlTnEo4qPY82yDyZkA12cl7Njmlwz4GMVwh
-2bq0KRz2Ym+pcxYlkrQV
-=FVCe
------END PGP SIGNATURE-----
 
---DocE+STaALJfprDB--
+Markus Mayer (3):
+  dt: cpufreq: brcm: New binding document for brcmstb-avs-cpufreq
+  cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver for Broadcom STB SoCs
+  cpufreq: brcmstb-avs-cpufreq: add debugfs support
+
+ .../bindings/cpufreq/brcm,stb-avs-cpu-freq.txt     |   76 ++
+ MAINTAINERS                                        |    8 +
+ drivers/cpufreq/Kconfig.arm                        |   21 +
+ drivers/cpufreq/Makefile                           |    1 +
+ drivers/cpufreq/brcmstb-avs-cpufreq.c              | 1057 ++++++++++++++++++++
+ 5 files changed, 1163 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
+ create mode 100644 drivers/cpufreq/brcmstb-avs-cpufreq.c
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
