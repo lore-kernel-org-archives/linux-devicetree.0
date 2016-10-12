@@ -1,40 +1,60 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 0/11] Add R8A7743/SK-RZG1M board support
-Date: Wed, 12 Oct 2016 11:29:56 +0300
-Message-ID: <cea44556-a578-fb54-11b8-f21f5b991caa@cogentembedded.com>
-References: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com>
- <5be99d76-a082-129b-1aa6-b6f7402ae79b@cogentembedded.com>
- <20161012080905.GD31183@verge.net.au>
+From: LABBE Corentin <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH v4 10/10] ARM: sunxi: Enable sun8i-emac driver on
+ multi_v7_defconfig
+Date: Wed, 12 Oct 2016 10:36:15 +0200
+Message-ID: <20161012083615.GA23377@Red>
+References: <1475828757-926-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1475828757-926-11-git-send-email-clabbe.montjoie@gmail.com>
+ <20161010123046.GH3462@lukather>
+ <20161010123511.GA16103@Red>
+ <20161010150943.fa7ca85fe52f4c6f9508b5eb@free.fr>
+ <20161011094042.GS3462@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161012080905.GD31183-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161011094042.GS3462@lukather>
+Sender: netdev-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Jean-Francois Moine <moinejf@free.fr>, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/12/2016 11:09 AM, Simon Horman wrote:
+On Tue, Oct 11, 2016 at 11:40:42AM +0200, Maxime Ripard wrote:
+> On Mon, Oct 10, 2016 at 03:09:43PM +0200, Jean-Francois Moine wrote:
+> > On Mon, 10 Oct 2016 14:35:11 +0200
+> > LABBE Corentin <clabbe.montjoie@gmail.com> wrote:
+> > 
+> > > On Mon, Oct 10, 2016 at 02:30:46PM +0200, Maxime Ripard wrote:
+> > > > On Fri, Oct 07, 2016 at 10:25:57AM +0200, Corentin Labbe wrote:
+> > > > > Enable the sun8i-emac driver in the multi_v7 default configuration
+> > > > > 
+> > > > > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> > > > > ---
+> > > > >  arch/arm/configs/multi_v7_defconfig | 1 +
+> > > > >  1 file changed, 1 insertion(+)
+> > > > > 
+> > > > > diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+> > > > > index 5845910..f44d633 100644
+> > > > > --- a/arch/arm/configs/multi_v7_defconfig
+> > > > > +++ b/arch/arm/configs/multi_v7_defconfig
+> > > > > @@ -229,6 +229,7 @@ CONFIG_NETDEVICES=y
+> > > > >  CONFIG_VIRTIO_NET=y
+> > > > >  CONFIG_HIX5HD2_GMAC=y
+> > > > >  CONFIG_SUN4I_EMAC=y
+> > > > > +CONFIG_SUN8I_EMAC=y
+> > > > 
+> > > > Any reason to build it statically?
+> > > 
+> > > No, just copied the same than CONFIG_SUN4I_EMAC that probably do
+> > > not need it also.
+> > 
+> > All arm configs are done the same way, and, some day, the generic ARM
+> > V7 kernel will not be loadable in 1Gb RAM...
+> 
+> Yeah, if possible, I'd really like to avoid introducing statically
+> built drivers to multi_v7.
+> 
 
->>>   Here's the set of 11 patches against Simon Horman's 'renesas.git' repo's
->>> 'renesas-devel-20161003-v4.8' tag. I'm adding the device tree support for
->>> the R8A7743-based SK-RZG1M board. The SoC is close to R8A7791 and the board
->>> seems identical to the R8A7791/Porter board. The device tree patches depend on
->>> the R8A7743 CPG/MSSR driver series just posted in order to compile and work.
->>
->>    Forgot to mention that this version causes a regression with the sh_eth
->> driver (well, actually with phylib): since IRQC now gets a deferred probing,
->> PHY IRQ doesn't work anymore -- phylib falls back to polling.
->
-> Is there a resolution to that problem?
+I forgot to said it in my first answer, but yes I will change it.
 
-    Geert has posted his IRQC driver patch recently. Not sure if it was 
-intended for merging but it solves the issue.
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
