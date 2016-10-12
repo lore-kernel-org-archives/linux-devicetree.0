@@ -1,284 +1,363 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v8 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Wed, 12 Oct 2016 11:27:11 +0200
-Message-ID: <20161012092711.GC1697@mai>
-References: <cover.1475990489.git.dalias@libc.org>
- <588ea0a3175fcf5d409ca32249f24760f2f6f839.1475990489.git.dalias@libc.org>
- <20161011181812.GA1697@mai>
- <20161011202850.GK19318@brightrain.aerifal.cx>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161011202850.GK19318@brightrain.aerifal.cx>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+From: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [RFC V3 PATCH 1/7] arm64: dts: msm8992 SoC and LG Bullhead (Nexus 5X) support
+Date: Wed, 12 Oct 2016 02:37:28 -0700
+Message-ID: <1476265054-22511-2-git-send-email-jeremymc@redhat.com>
+References: <1476265054-22511-1-git-send-email-jeremymc@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476265054-22511-1-git-send-email-jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 11, 2016 at 04:28:50PM -0400, Rich Felker wrote:
-> On Tue, Oct 11, 2016 at 08:18:12PM +0200, Daniel Lezcano wrote:
-> > 
-> > Hi Rich,
-> > 
-> > On Sun, Oct 09, 2016 at 05:34:22AM +0000, Rich Felker wrote:
-> > > At the hardware level, the J-Core PIT is integrated with the interrupt
-> > > controller, but it is represented as its own device and has an
-> > > independent programming interface. It provides a 12-bit countdown
-> > > timer, which is not presently used, and a periodic timer. The interval
-> > > length for the latter is programmable via a 32-bit throttle register
-> > > whose units are determined by a bus-period register. The periodic
-> > > timer is used to implement both periodic and oneshot clock event
-> > > modes; in oneshot mode the interrupt handler simply disables the timer
-> > > as soon as it fires.
-> > > 
-> > > Despite its device tree node representing an interrupt for the PIT,
-> > > the actual irq generated is programmable, not hard-wired. The driver
-> > > is responsible for programming the PIT to generate the hardware irq
-> > > number that the DT assigns to it.
-> > > 
-> > > On SMP configurations, J-Core provides cpu-local instances of the PIT;
-> > > no broadcast timer is needed. This driver supports the creation of the
-> > > necessary per-cpu clock_event_device instances.
-> > 
-> > For my personnal information, why no broadcast timer is needed ?
-> 
-> Broadcast timer is only needed if you don't have percpu local timers.
-> Early on in SMP development I actually tested with an ipi broadcast
-> timer and performance was noticably worse.
+From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Obviously. I thought there were another reason related to power management.
+Initial device tree support for Qualcomm MSM8992 SoC and
+LG Bullhead / Google Nexus 5X support.
+
+Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm64/boot/dts/qcom/Makefile                  |   2 +-
+ .../boot/dts/qcom/msm8992-bullhead-rev-101.dts     |  41 ++++
+ arch/arm64/boot/dts/qcom/msm8992-pins.dtsi         |  38 ++++
+ arch/arm64/boot/dts/qcom/msm8992.dtsi              | 220 +++++++++++++++++++++
+ 4 files changed, 300 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8992.dtsi
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index fa1f661..cee6bcc 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -1,5 +1,5 @@
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
+-dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb msm8992-bullhead-rev-101.dtb
  
-> > Are the CPUs on always-on power down ?
-> 
-> For now they are always on and don't even have the sleep instruction
-> (i.e. stop cpu clock until interrupt) implemented. Adding sleep will
-> be the first power-saving step, and perhaps the only one for now,
-> since there doesn't seem to be any indication (according to the ppl
-> working on the hardware) that a deeper sleep would provide significant
-> additional savings.
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+new file mode 100644
+index 0000000..93b643b
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+@@ -0,0 +1,41 @@
++/* Copyright (c) 2015, LGE Inc. All rights reserved.
++ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++/dts-v1/;
++
++#include "msm8992.dtsi"
++
++/ {
++	model = "LGE MSM8992 BULLHEAD rev-1.01";
++	compatible = "qcom,msm8992";
++	qcom,board-id = <0xb64 0>;
++};
++
++/ {
++	aliases {
++		serial0 = &blsp1_uart2;
++	};
++
++	chosen {
++		stdout-path = "serial0";
++	};
++
++	soc {
++		serial@f991e000 {
++			status = "okay";
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&blsp1_uart2_default>;
++			pinctrl-1 = <&blsp1_uart2_sleep>;
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
+new file mode 100644
+index 0000000..d2a26f0
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
+@@ -0,0 +1,38 @@
++/*
++ * Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++&msmgpio {
++	blsp1_uart2_default: blsp1_uart2_default {
++		pinmux {
++			function = "blsp_uart2";
++			pins = "gpio4", "gpio5";
++		};
++		pinconf {
++			pins = "gpio4", "gpio5";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart2_sleep: blsp1_uart2_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio4", "gpio5";
++		};
++		pinconf {
++			pins = "gpio4", "gpio5";
++			drive-strength = <2>;
++			bias-pull-down;
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+new file mode 100644
+index 0000000..6bee3e3
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+@@ -0,0 +1,220 @@
++/* Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/qcom,gcc-msm8994.h>
++
++/ {
++	model = "Qualcomm Technologies, Inc. MSM 8992";
++	compatible = "qcom,msm8992";
++	qcom,msm-id = <251 0>, <252 0>;
++	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
++	interrupt-parent = <&intc>;
++
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	chosen { };
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++		cpu-map {
++			cluster0 {
++				core0 {
++					cpu = <&CPU0>;
++				};
++			};
++		};
++
++		CPU0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x0 0x0>;
++			next-level-cache = <&L2_0>;
++			// The currents(uA) correspond to the frequencies in the
++			// frequency table.
++			current = < 18250 //384000 kHZ
++				24330 //460800 kHZ
++				26920 //600000 kHZ
++				34600 //672000 kHz
++				38150 //787200 kHZ
++				46880 //864000 kHZ
++				55940 //960000 kHZ
++				81740 //1248000 kHZ
++				105870>; //1440000 kHZ
++			L2_0: l2-cache {
++				compatible = "cache";
++				cache-level = <2>;
++			};
++		};
++	};
++
++	soc: soc { };
++
++	memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++
++		device_type = "memory";
++		reg = <0 0 0 0>;
++
++		peripheral_mem: peripheral_region@0 {
++			linux,reserve-contiguous-region;
++			linux,reserve-region;
++			linux,remove-completely;
++			reg = <0 0x07400000 0 0x1c00000>;
++			label = "peripheral_mem";
++		};
++	};
++
++};
++
++&soc {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges = <0 0 0 0xffffffff>;
++	compatible = "simple-bus";
++
++	intc: interrupt-controller@f9000000 {
++		compatible = "qcom,msm-qgic2";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		reg = <0xf9000000 0x1000>,
++			<0xf9002000 0x1000>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <1 2 0xf08>,
++				<1 3 0xf08>,
++				<1 4 0xf08>,
++				<1 1 0xf08>;
++		clock-frequency = <19200000>;
++	};
++
++	timer@f9020000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++		compatible = "arm,armv7-timer-mem";
++		reg = <0xf9020000 0x1000>;
++		clock-frequency = <19200000>;
++
++		frame@f9021000 {
++			frame-number = <0>;
++			interrupts = <0 9 0x4>,
++					<0 8 0x4>;
++			reg = <0xf9021000 0x1000>,
++				<0xf9022000 0x1000>;
++		};
++
++		frame@f9023000 {
++			frame-number = <1>;
++			interrupts = <0 10 0x4>;
++			reg = <0xf9023000 0x1000>;
++			status = "disabled";
++		};
++
++		frame@f9024000 {
++			frame-number = <2>;
++			interrupts = <0 11 0x4>;
++			reg = <0xf9024000 0x1000>;
++			status = "disabled";
++		};
++
++		frame@f9025000 {
++			frame-number = <3>;
++			interrupts = <0 12 0x4>;
++			reg = <0xf9025000 0x1000>;
++			status = "disabled";
++		};
++
++		frame@f9026000 {
++			frame-number = <4>;
++			interrupts = <0 13 0x4>;
++			reg = <0xf9026000 0x1000>;
++			status = "disabled";
++		};
++
++		frame@f9027000 {
++			frame-number = <5>;
++			interrupts = <0 14 0x4>;
++			reg = <0xf9027000 0x1000>;
++			status = "disabled";
++		};
++
++		frame@f9028000 {
++			frame-number = <6>;
++			interrupts = <0 15 0x4>;
++			reg = <0xf9028000 0x1000>;
++			status = "disabled";
++		};
++	};
++
++	restart@fc4ab000 {
++		compatible = "qcom,pshold";
++		reg = <0xfc4ab000 0x4>;
++	};
++
++	msmgpio: pinctrl@fd510000 {
++		compatible = "qcom,msm8994-pinctrl", "qcom,msm8974-pinctrl";
++		reg = <0xfd510000 0x4000>;
++		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	blsp1_uart2: serial@f991e000 {
++		compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++		reg = <0xf991e000 0x1000>;
++		interrupts = <0 108 0>;
++		status = "disabled";
++		clock-names = "core", "iface";
++		clocks = <&clock_gcc GCC_BLSP1_UART2_APPS_CLK>,
++			<&clock_gcc GCC_BLSP1_AHB_CLK>;
++	};
++
++	clock_gcc: qcom,gcc@fc400000 {
++		compatible = "qcom,gcc-8994";
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++		#power-domain-cells = <1>;
++		reg = <0xfc400000 0x2000>;
++		clock-names = "xo", "xo_a_clk";
++	};
++
++	clock_rpm: qcom,rpmcc@fc401880 {
++		compatible = "qcom,rpmcc";
++		reg = <0xfc401880 0x4>;
++		reg-names = "cc_base";
++		#clock-cells = <1>;
++	};
++
++	clocks {
++		xo_board: xo_board {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <19200000>;
++		};
++
++		sleep_clk: sleep_clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <32768>;
++		};
++	};
++};
++
++#include "msm8992-pins.dtsi"
+-- 
+2.6.1
 
-Ok.
-
-However, the 'sleep' state is not, in the power management terminology,
-the idle state described above. It is called "clock gated" / "Wait for
-Interrupt".
-
-The 'sleep' state lose the CPU context.
- 
-> > > A nanosecond-resolution clocksource is provided using the J-Core "RTC"
-> > > registers, which give a 64-bit seconds count and 32-bit nanoseconds
-> > > that wrap every second. The driver converts these to a full-range
-> > > 32-bit nanoseconds count.
-> > > 
-> > > Signed-off-by: Rich Felker <dalias@libc.org>
-> > > ---
-> > >  drivers/clocksource/Kconfig     |  10 ++
-> > >  drivers/clocksource/Makefile    |   1 +
-> > >  drivers/clocksource/jcore-pit.c | 231 ++++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/cpuhotplug.h      |   1 +
-> > >  4 files changed, 243 insertions(+)
-> > >  create mode 100644 drivers/clocksource/jcore-pit.c
-> > > 
-> > > diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> > > index 5677886..95dd78b 100644
-> > > --- a/drivers/clocksource/Kconfig
-> > > +++ b/drivers/clocksource/Kconfig
-> > > @@ -407,6 +407,16 @@ config SYS_SUPPORTS_SH_TMU
-> > >  config SYS_SUPPORTS_EM_STI
-> > >          bool
-> > >  
-> > > +config CLKSRC_JCORE_PIT
-> > > +	bool "J-Core PIT timer driver"
-> > > +	depends on OF && (SUPERH || COMPILE_TEST)
-> > 
-> > Actually the idea is to have the SUPERH to select this timer, not create
-> > a dependency on SUPERH from here.
-> > 
-> > We don't want to prompt in the configuration menu the drivers because it
-> > would be impossible to anyone to know which timer comes with which
-> > hardware, so we let the platform to select the timer it needs.
-> 
-> I thought we discussed this before. For users building a kernel for
-> legacy SH systems, especially in the current state where they're only
-> supported with hard-coded board files rather than device tree, it
-> makes no sense to build drivers for J-core hardware. It would make
-> sense to be on by default for CONFIG_SH_DEVICE_TREE with a compatible
-> CPU selection, but at least at this time, not for SUPERH in general.
-
-Probably I am missing the point but why the user would have to unselect
-this driver manually ? The user wants a config file nothing more or a very
-trivial option. Can you imagine someone can know every single IP block for
-each boards of the same arch and be able to disable/enable the right ones ?
-
-> Anyway I'd really like to do this non-invasively as long as we have a
-> mix of legacy and new stuff and the legacy stuff is not readily
-> testable. Once all of arch/sh is moved over to device tree, could we
-> revisit this and make all the drivers follow a common policy (on by
-> default if they're associated with boards/SoCs using a matching or
-> compatible CPU model, or something like that, but still able to be
-> disabled manually, since the user might be trying to get a tiny-ish
-> embedded kernel)?
-
-I understand the goal is to have one single configuration and everything
-DT based and it sounds great but what is missing here is just a subarch,
-not an option to enable/disable the timer.
-
-Give a try with:
-
-make ARCH=arm multi_v7_defconfig menuconfig
-
---> System Type
-
-That is what you are looking for, a SUPERH config option selecting all the
-common options and then a JCORE config option adding the different missing
-bits, namely the CLKSRC_JCORE_PIT.
-
-> > The exception is to enable in order to compile on non-native platform to
-> > compile-test a bunch of drivers (eg. compile most of the clocksource / 
-> > clockevents drivers on a x86 big server).
-> > 
-> > That's why we should have:
-> > 
-> > config CLKSRC_JCORE_PIT
-> > 	bool "J-Core PIT timer driver" if COMPILE_TEST
-> > 
-> > So the jcore pit driver option appears only if compile test is enabled
-> > otherwise it is a silent option and the user doesn't have to deal with
-> > it. Having consistent dependency like the other drivers will help future
-> > changes to consolidate the Kconfig.
-> 
-> I don't think this matches the user expectation for the arch yet. For
-> now we have a j2_defconfig that enables the drivers and other kernel
-> settings expected to be useful for J-core socs. I want to modernize
-> this all but that's a separate project.
-> 
-> > [ ... ]              
-> > 
-> > > +#define REG_PITEN		0x00
-> > > +#define REG_THROT		0x10
-> > > +#define REG_COUNT		0x14
-> > > +#define REG_BUSPD		0x18
-> > > +#define REG_SECHI		0x20
-> > > +#define REG_SECLO		0x24
-> > > +#define REG_NSEC		0x28
-> > > +
-> > > +struct jcore_pit {
-> > > +	struct clock_event_device	ced;
-> > > +	__iomem void			*base;
-> > 
-> > It is not '__iomem void *' but 'void __iomem *'. This appears multiple
-> > times in this code.
-> 
-> OK, I'll change that.
-> 
-> > > +	unsigned long			periodic_delta;
-> > > +	unsigned			cpu;
-> > 
-> > This field is pointless, 'cpu' is only used for a trace in the init
-> > function which has already the cpu has parameter.
-> 
-> OK, will remove. It was needed for the old notify framework but not
-> for cpu hotplug framework, I think.
-> 
-> > > +	u32				enable_val;
-> > > +};
-> > > +
-> > > +static __iomem void		*jcore_pit_base;
-> > 
-> > static void __iomem *jcore_pit_base;
-> 
-> OK.
-> 
-> > > +struct jcore_pit __percpu	*jcore_pit_percpu;
-> > 
-> > static.
-> 
-> OK.
-> 
-> > [ ... ]
-> > 
-> > > +static int __init jcore_pit_init(struct device_node *node)
-> > > +{
-> > 
-> > [ ... ]
-> 
-> Was there something analogous you wanted me to change here, or just
-> leftover quoting?
-
-No, I just cut until the function name in order to give the context for
-the next comment and then cut inside the function.
-
-> > > +	/*
-> > > +	 * The J-Core PIT is not hard-wired to a particular IRQ, but
-> > > +	 * integrated with the interrupt controller such that the IRQ it
-> > > +	 * generates is programmable. The programming interface has a
-> > > +	 * legacy field which was an interrupt priority for AIC1, but
-> > > +	 * which is OR'd onto bits 2-5 of the generated IRQ number when
-> > > +	 * used with J-Core AIC2, so set it to match these bits.
-> > > +	 */
-> > > +	hwirq = irq_get_irq_data(pit_irq)->hwirq;
-> > > +	irqprio = (hwirq >> 2) & PIT_PRIO_MASK;
-> > > +	enable_val = (1U << PIT_ENABLE_SHIFT)
-> > > +		   | (hwirq << PIT_IRQ_SHIFT)
-> > > +		   | (irqprio << PIT_PRIO_SHIFT);
-> > > +
-> > 
-> > Why mention AIC1 if there is not test to check if AIC1 || AIC2 ?
-> > 
-> > Will be the same information available if the irqchip is AIC1 ?
-> 
-> The bit layout of the PIT enable register is:
-> 
-> 	.....e..ppppiiiiiiii............
-> 
-> where the .'s indicate unrelated/unused bits, e is enable, p is
-> priority, and i is hard irq number.
-> 
-> For the PIT included in AIC1 (obsolete but still in use), any hard irq
-> (trap number) can be programmed via the 8 iiiiiiii bits, and a
-> priority (0-15) is programmable separately in the pppp bits.
-> 
-> For the PIT included in AIC2 (current), the programming interface is
-> equivalent modulo interrupt mapping. This is why a different
-> compatible tag was not used. However only traps 64-127 (the ones
-> actually intended to be used for interrupts, rather than
-> syscalls/exceptions/etc.) can be programmed (the high 2 bits of i are
-> ignored) and the priority pppp is <<2'd and or'd onto the irq number.
-> This was a poor decision made on the hardware engineering side based
-> on a wrong assumption that preserving old priority mapping of outdated
-> software was important, whereas priorities weren't/aren't even being
-> used.
-> 
-> When we do the next round of interrupt controller improvements (AIC3)
-> the PIT programming interface should remain compatible with the
-> driver; likely the priority bits will just be ignored.
-> 
-> If we do want to change the programming interface beyond this at some
-> point (that maay be a good idea, since we have identified several
-> things that are less than ideal for Linux, like the sechi/seclo/ns
-> clocksource), a new compatible tag will be added instead.
-
-Ok, thanks for the clarification. Can you add your answer as a comment for
-the bits dance above ?
-
-> > I have to admin I find strange this driver has to invoke irq_get_irq_data(),
-> > it is the only one and it sounds even strange it has to be stored per cpu below.
-> 
-> The timer will not actually generate the irq it's assigned to (or any
-> interrupt at all) unless/until it's programmed for the (hard) irq
-> number. The need to use irq_get_irq_data comes from the fact that the
-> hardware needs the hard irq number, not a virq number, which could in
-> principle be different.
-> 
-> There's probably some argument that could have been made that the
-> irqchip and clocksource/timer driver should have been unified since
-> they're unified in the hardware and have this awkward programming
-> relationship, but that didn't fit the Linux model very well and I
-> think having them factored like this encourages future versions of the
-> hardware to adapt to the model the software wants.
-
-Ok, thanks.
-
-  -- Daniel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
