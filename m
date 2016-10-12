@@ -1,52 +1,102 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 2/2] clk: renesas: cpg-mssr: add R8A7743 support
-Date: Wed, 12 Oct 2016 13:31:33 +0200
-Message-ID: <CAMuHMdXNawoU5U+G296fxe_AKPGW=71Fcz9Kj932QYESDX+smw@mail.gmail.com>
-References: <9246696.7P1aOyyQt4@wasted.cogentembedded.com> <2357731.SxJodxn1PJ@wasted.cogentembedded.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: shmobile: r8a7743: add CPG clock index macros
+Date: Wed, 12 Oct 2016 13:39:23 +0200
+Message-ID: <CAMuHMdWrowTK8KxthrEO0DNHsBn-_PyY0GcRCc38wY6iynshiA@mail.gmail.com>
+References: <9246696.7P1aOyyQt4@wasted.cogentembedded.com> <5042465.lGNbhCeBLl@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <2357731.SxJodxn1PJ@wasted.cogentembedded.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5042465.lGNbhCeBLl-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Sergei,
 
-On Fri, Oct 7, 2016 at 10:47 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Add RZ/G1M (R8A7743) Clock  Pulse Generator / Module Standby and Software
-> Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
-> (and RZ/G) code.
+On Fri, Oct 7, 2016 at 10:46 PM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Add macros usable by the device tree sources to reference the R8A7743 CPG
+> clocks  by index.
 >
-> Based on the proof-of-concept R8A7791 CPG/MSSR patch by Geert Uytterhoeven
-> <geert+renesas@glider.be>.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
 Thanks for your patch!
 
+It would be good to refer to the table and version of the datasheet
+(i.e. Table 7.2b, I have Rev. 0.50 of the RZ/G series User's Manual).
+
 > --- /dev/null
-> +++ renesas/drivers/clk/renesas/r8a7743-cpg-mssr.c
+> +++ renesas/include/dt-bindings/clock/r8a7743-cpg-mssr.h
+> @@ -0,0 +1,43 @@
+> +/*
+> + * Copyright (C) 2016 Cogent Embedded Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +#ifndef __DT_BINDINGS_CLOCK_R8A7743_CPG_MSSR_H__
+> +#define __DT_BINDINGS_CLOCK_R8A7743_CPG_MSSR_H__
+> +
+> +#include <dt-bindings/clock/renesas-cpg-mssr.h>
+> +
+> +/* r8a7743 CPG Core Clocks */
+> +#define R8A7743_CLK_Z          0
+> +#define R8A7743_CLK_ZG         1
+> +#define R8A7743_CLK_ZTR                2
+> +#define R8A7743_CLK_ZTRD2      3
+> +#define R8A7743_CLK_ZT         4
+> +#define R8A7743_CLK_ZX         5
+> +#define R8A7743_CLK_ZS         6
+> +#define R8A7743_CLK_HP         7
 
-> +static const unsigned int r8a7743_crit_mod_clks[] __initconst = {
-> +       MOD_CLK_ID(408),        /* INTC-AP (GIC) */
+In this particular case, I think we should leave holes in the numbering for
+clocks that exist on r8a7791. That way we can easily reuse the driver on
+r8a7791 later, and NULLify the entries for clocks that do not exist on r8a7743.
 
-This clock is actually called "INTC-SYS" on the RZ/G series, like on most other
-Renesas SoCs.
+I.e. a one entry hole here, ...
 
-> +};
+> +#define R8A7743_CLK_B          8
+> +#define R8A7743_CLK_LB         9
+> +#define R8A7743_CLK_P          10
+> +#define R8A7743_CLK_CL         11
+> +#define R8A7743_CLK_M2         12
 
-The rest looks good at first sight. I'll have a closer look after ELC-E.
+... a one entry hole here, ...
+
+> +#define R8A7743_CLK_ZB3                13
+> +#define R8A7743_CLK_ZB3D2      14
+> +#define R8A7743_CLK_DDR                15
+> +#define R8A7743_CLK_SDH                16
+> +#define R8A7743_CLK_SD0                17
+> +#define R8A7743_CLK_SD2                18
+> +#define R8A7743_CLK_SD3                19
+> +#define R8A7743_CLK_MMC0       20
+> +#define R8A7743_CLK_MP         21
+
+... and a two entry hole here.
+
+> +#define R8A7743_CLK_QSPI       22
+> +#define R8A7743_CLK_CP         23
+> +#define R8A7743_CLK_RCAN       24
+> +#define R8A7743_CLK_R          25
+> +#define R8A7743_CLK_OSC                26
+> +
+> +#endif /* __DT_BINDINGS_CLOCK_R8A7743_CPG_MSSR_H__ */
 
 Gr{oetje,eeting}s,
 
                         Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
 In personal conversations with technical people, I call myself a hacker. But
 when I'm talking to journalists I just say "programmer" or something like that.
                                 -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
