@@ -1,15 +1,15 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH v4 08/10] ARM: dts: sun8i: Enable sun8i-emac on the
- Orange Pi 2
-Date: Wed, 12 Oct 2016 10:55:59 +0200
-Message-ID: <20161012105559.aaf9122e376fa5969a2e61d9@free.fr>
-References: <1475828757-926-1-git-send-email-clabbe.montjoie@gmail.com>
- <1475828757-926-9-git-send-email-clabbe.montjoie@gmail.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 3/3] mtd: s3c2410: parse the device configuration from
+ OF node
+Date: Wed, 12 Oct 2016 11:01:05 +0200
+Message-ID: <20161012110105.49830f86@bbrezillon>
+References: <1475711217-974-1-git-send-email-sergio.prado@e-labworks.com>
+ <1475711217-974-4-git-send-email-sergio.prado@e-labworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1475828757-926-9-git-send-email-clabbe.montjoie@gmail.com>
+In-Reply-To: <1475711217-974-4-git-send-email-sergio.prado@e-labworks.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,69 +19,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, maxime.ripard@free-electrons.com, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+To: Sergio Prado <sergio.prado@e-labworks.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, richard@nod.at, linux@armlinux.org.uk, robh+dt@kernel.org, linux-kernel@vger.kernel.org, javier@osg.samsung.com, kgene@kernel.org, linux-mtd@lists.infradead.org, krzk@kernel.org, computersforpeace@gmail.com, dwmw2@infradead.org, linux@simtec.co.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  7 Oct 2016 10:25:55 +0200
-Corentin Labbe <clabbe.montjoie@gmail.com> wrote:
+Hi Sergio,
 
-> The sun8i-emac hardware is present on the Orange PI 2.
-> It uses the internal PHY.
-> =
+On Wed,  5 Oct 2016 20:46:57 -0300
+Sergio Prado <sergio.prado@e-labworks.com> wrote:
 
-> This patch create the needed emac node.
-> =
-
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> Allows configuring Samsung's s3c2410 memory controller using a
+> devicetree.
+> 
+> Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
 > ---
->  arch/arm/boot/dts/sun8i-h3-orangepi-2.dts | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> =
+>  drivers/mtd/nand/s3c2410.c                     | 171 ++++++++++++++++++++++---
+>  include/linux/platform_data/mtd-nand-s3c2410.h |   1 +
+>  2 files changed, 156 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/s3c2410.c b/drivers/mtd/nand/s3c2410.c
+> index 174ac9dc4265..352cf2656bc8 100644
+> --- a/drivers/mtd/nand/s3c2410.c
+> +++ b/drivers/mtd/nand/s3c2410.c
 
-> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dt=
-s/sun8i-h3-orangepi-2.dts
-> index f93f5d1..5608eb4 100644
-> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-> @@ -54,6 +54,7 @@
->  =
+[...]
 
->  	aliases {
->  		serial0 =3D &uart0;
-> +		ethernet0 =3D &emac;
-
-As there is no 'of_alias_get_id' in the driver, this alias is useless.
-
->  	};
->  =
-
->  	chosen {
-> @@ -184,3 +185,10 @@
->  	usb1_vbus-supply =3D <&reg_usb1_vbus>;
->  	status =3D "okay";
->  };
 > +
-> +&emac {
-> +	phy-handle =3D <&int_mii_phy>;
-> +	phy-mode =3D "mii";
-> +	allwinner,leds-active-low;
-> +	status =3D "okay";
-> +};
-> -- =
+> +static int s3c2410_nand_init_timings(struct s3c2410_nand_info *info,
+> +				     struct nand_chip *chip)
+> +{
+> +	struct s3c2410_platform_nand *pdata = info->platform;
+> +	const struct nand_sdr_timings *t;
+> +	int tacls, mode;
+> +
+> +	mode = onfi_get_async_timing_mode(chip);
+> +	if (mode == ONFI_TIMING_MODE_UNKNOWN)
+> +		mode = chip->onfi_timing_mode_default;
+> +
+> +	t = onfi_async_timing_mode_to_sdr_timings(mode);
+> +	if (IS_ERR(t))
+> +		return PTR_ERR(t);
 
-> 2.7.3
-> =
+We recently introduced an method to automate timing selection and
+configuration [1]. Can you switch to this approach (the changes are in
+the nand/next branch [2] and should appear in 4.9-rc1)?
 
-> =
+Thanks,
 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Boris
 
-
--- =
-
-Ken ar c'henta=F1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+[1]https://www.spinics.net/lists/arm-kernel/msg532007.html 
+[2]https://github.com/linux-nand/linux/tree/nand/next
