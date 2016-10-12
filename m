@@ -1,53 +1,52 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH v3 0/3] add device tree support for rtc-rv8803
-Date: Wed, 12 Oct 2016 13:28:27 +0200
-Message-ID: <20161012112827.mrvledaqmh3dwg2s@piout.net>
-References: <1467211201-17252-1-git-send-email-dirk.behme@de.bosch.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 2/2] clk: renesas: cpg-mssr: add R8A7743 support
+Date: Wed, 12 Oct 2016 13:31:33 +0200
+Message-ID: <CAMuHMdXNawoU5U+G296fxe_AKPGW=71Fcz9Kj932QYESDX+smw@mail.gmail.com>
+References: <9246696.7P1aOyyQt4@wasted.cogentembedded.com> <2357731.SxJodxn1PJ@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1467211201-17252-1-git-send-email-dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <2357731.SxJodxn1PJ@wasted.cogentembedded.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Sergei,
 
-On 29/06/2016 at 16:39:58 +0200, Dirk Behme wrote :
-> From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-> 
-> Changes v2:
-> - rename mc to microcrystal
-> - rename vdetoff to vdet-disable
-> 
-> Changes v3:
-> - remove of_device_id patch
-> - use device type instead of of_device_is_compatible
-> 
-> Oleksij Rempel (3):
->   devicetree: Add Micro Crystal AG vendor id
->   dt/bindings: Add bindings for Micro Crystal rv8803
->   rtc: rv8803: Be able to set VDETOFF and SWOFF via devcie tree
-> 
->  .../devicetree/bindings/rtc/epson,rx8900.txt       | 22 ++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  drivers/rtc/rtc-rv8803.c                           | 50 +++++++++++++++++++++-
->  3 files changed, 71 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/rtc/epson,rx8900.txt
-> 
+On Fri, Oct 7, 2016 at 10:47 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Add RZ/G1M (R8A7743) Clock  Pulse Generator / Module Standby and Software
+> Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
+> (and RZ/G) code.
+>
+> Based on the proof-of-concept R8A7791 CPG/MSSR patch by Geert Uytterhoeven
+> <geert+renesas@glider.be>.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-I'm applying those patches now because I didn't have to propose anything
-better and I don't want to hold off on them too long. But I'm not really
-happy with the fact that not putting any property in DT may change the
-current configuration.
+Thanks for your patch!
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> --- /dev/null
+> +++ renesas/drivers/clk/renesas/r8a7743-cpg-mssr.c
+
+> +static const unsigned int r8a7743_crit_mod_clks[] __initconst = {
+> +       MOD_CLK_ID(408),        /* INTC-AP (GIC) */
+
+This clock is actually called "INTC-SYS" on the RZ/G series, like on most other
+Renesas SoCs.
+
+> +};
+
+The rest looks good at first sight. I'll have a closer look after ELC-E.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
