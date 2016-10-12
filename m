@@ -1,100 +1,177 @@
 From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v7 2/3] of/pci: Add helper function to parse max-link-speed from dt
-Date: Wed, 12 Oct 2016 10:01:24 +0800
-Message-ID: <1476237685-14539-2-git-send-email-shawn.lin@rock-chips.com>
+Subject: [PATCH v7 3/3] PCI: rockchip: Specify the link capability
+Date: Wed, 12 Oct 2016 10:01:25 +0800
+Message-ID: <1476237685-14539-3-git-send-email-shawn.lin@rock-chips.com>
 References: <1476237685-14539-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 In-Reply-To: <1476237685-14539-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This new helper function could be used by host drivers to
-get the limitaion of max link speed provided by dt. If the
-property isn't assigned or is invalid, it will return -EINVAL
-to the caller.
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
+rk3399 supports PCIe 2.x link speeds marginally at best, and on some
+boards, the link won't train at 5 GT/s at all. Rather than sacrifice
+500ms waiting for training that will never happen, let's use the helper
+function, of_pci_get_max_link_speed, to get the max link speed from DT
+and specify link capability.
+
+Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
 ---
 
 Changes in v7:
-- rename the function name and using of_property_read_u32
-  suggested by Rob
+- rebase on Bjorn's host-rockcip branch again since it isn't applied
+  cleanly after the cleanup
+- call new function, of_pci_get_max_link_speed.
 
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+Changes in v6:
+- user helper function of_get_pci_max_link_speed and use gen2 by default
+  if finding any errors from of_get_pci_max_link_speed. It could be
+  backward compatibe to the old dtb. (Suggested by Rob)
 
- drivers/of/of_pci.c    | 21 +++++++++++++++++++++
- include/linux/of_pci.h |  7 +++++++
- 2 files changed, 28 insertions(+)
+Changes in v5:
+- rebase the code since it isn't cleanly applied after Bjorn's cleanup
 
-diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-index 589b30c..0c566ca 100644
---- a/drivers/of/of_pci.c
-+++ b/drivers/of/of_pci.c
-@@ -120,6 +120,27 @@ int of_get_pci_domain_nr(struct device_node *node)
- EXPORT_SYMBOL_GPL(of_get_pci_domain_nr);
+Changes in v4:
+- define link_gen as u32
+- elaborate more for rockchip,max-link-speed on doc
+
+Changes in v3:
+- Cast a warning for invalid max link speed and use gen1 for it.
+  That looks better than v2. (Suggested by Brian)
+
+Changes in v2:
+- rename the property to rockchip,max-link-speed according to
+  Bjorn's recommendation and take some bits from imx6q-pcie to
+  make this requirement more consisent.
+
+ drivers/pci/host/pcie-rockchip.c | 67 ++++++++++++++++++++++++----------------
+ 1 file changed, 41 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
+index db917c7..03734b7 100644
+--- a/drivers/pci/host/pcie-rockchip.c
++++ b/drivers/pci/host/pcie-rockchip.c
+@@ -53,6 +53,7 @@
+ #define   PCIE_CLIENT_ARI_ENABLE	  HIWORD_UPDATE_BIT(0x0008)
+ #define   PCIE_CLIENT_CONF_LANE_NUM(x)	  HIWORD_UPDATE(0x0030, ENCODE_LANES(x))
+ #define   PCIE_CLIENT_MODE_RC		  HIWORD_UPDATE_BIT(0x0040)
++#define   PCIE_CLIENT_GEN_SEL_1		  HIWORD_UPDATE(0x0080, 0)
+ #define   PCIE_CLIENT_GEN_SEL_2		  HIWORD_UPDATE_BIT(0x0080)
+ #define PCIE_CLIENT_BASIC_STATUS1	(PCIE_CLIENT_BASE + 0x48)
+ #define   PCIE_CLIENT_LINK_STATUS_UP		0x00300000
+@@ -200,6 +201,7 @@ struct rockchip_pcie {
+ 	struct	gpio_desc *ep_gpio;
+ 	u32	lanes;
+ 	u8	root_bus_nr;
++	int	link_gen;
+ 	struct	device *dev;
+ 	struct	irq_domain *irq_domain;
+ };
+@@ -441,13 +443,19 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip_pcie)
+ 		return err;
+ 	}
  
- /**
-+ * This function will try to find the limitation of link speed by finding
-+ * a property called "max-link-speed" of the given device node.
-+ *
-+ * @node: device tree node with the max link speed information
-+ *
-+ * Returns the associated max link speed from DT, or a negative value if the
-+ * required property is not found or is invalid.
-+ */
-+int of_pci_get_max_link_speed(struct device_node *node)
-+{
-+	u32 max_link_speed;
++	if (rockchip_pcie->link_gen == 2)
++		rockchip_pcie_writel(rockchip_pcie, PCIE_CLIENT_CONFIG,
++				PCIE_CLIENT_GEN_SEL_2);
++	else
++		rockchip_pcie_writel(rockchip_pcie, PCIE_CLIENT_CONFIG,
++				PCIE_CLIENT_GEN_SEL_1);
 +
-+	if (of_property_read_u32(node, "max-link-speed", &max_link_speed) ||
-+	    max_link_speed > 4)
-+		return -EINVAL;
-+
-+	return max_link_speed;
-+}
-+EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
-+
-+/**
-  * of_pci_check_probe_only - Setup probe only mode if linux,pci-probe-only
-  *                           is present and valid
-  */
-diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-index b969e94..2e668e3 100644
---- a/include/linux/of_pci.h
-+++ b/include/linux/of_pci.h
-@@ -16,6 +16,7 @@ int of_pci_get_devfn(struct device_node *np);
- int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
- int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
- int of_get_pci_domain_nr(struct device_node *node);
-+int of_pci_get_max_link_speed(struct device_node *node);
- void of_pci_check_probe_only(void);
- #else
- static inline int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq)
-@@ -52,6 +53,12 @@ of_get_pci_domain_nr(struct device_node *node)
- 	return -1;
- }
+ 	rockchip_pcie_writel(rockchip_pcie, PCIE_CLIENT_CONFIG,
+-			    PCIE_CLIENT_CONF_ENABLE |
+-			    PCIE_CLIENT_LINK_TRAIN_ENABLE |
+-			    PCIE_CLIENT_ARI_ENABLE |
+-			    PCIE_CLIENT_CONF_LANE_NUM(rockchip_pcie->lanes) |
+-			    PCIE_CLIENT_MODE_RC |
+-			    PCIE_CLIENT_GEN_SEL_2);
++			     PCIE_CLIENT_CONF_ENABLE |
++			     PCIE_CLIENT_LINK_TRAIN_ENABLE |
++			     PCIE_CLIENT_ARI_ENABLE |
++			     PCIE_CLIENT_CONF_LANE_NUM(rockchip_pcie->lanes) |
++			     PCIE_CLIENT_MODE_RC);
  
-+static inline int
-+of_pci_get_max_link_speed(struct device_node *node)
-+{
-+	return -EINVAL;
-+}
-+
- static inline void of_pci_check_probe_only(void) { }
- #endif
+ 	err = phy_power_on(rockchip_pcie->phy);
+ 	if (err) {
+@@ -526,29 +534,32 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip_pcie)
+ 		msleep(20);
+ 	}
  
+-	/*
+-	 * Enable retrain for gen2. This should be configured only after
+-	 * gen1 finished.
+-	 */
+-	status = rockchip_pcie_readl(rockchip_pcie, PCIE_RC_CONFIG_LCS);
+-	status |= PCIE_RC_CONFIG_LCS_RETRAIN_LINK;
+-	rockchip_pcie_writel(rockchip_pcie, PCIE_RC_CONFIG_LCS, status);
++	if (rockchip_pcie->link_gen == 2) {
++		/*
++		 * Enable retrain for gen2. This should be configured
++		 * only after gen1 finished.
++		 */
++		status = rockchip_pcie_readl(rockchip_pcie, PCIE_RC_CONFIG_LCS);
++		status |= PCIE_RC_CONFIG_LCS_RETRAIN_LINK;
++		rockchip_pcie_writel(rockchip_pcie, PCIE_RC_CONFIG_LCS, status);
++
++		timeout = jiffies + msecs_to_jiffies(500);
++		for (;;) {
++			status = rockchip_pcie_readl(rockchip_pcie,
++						     PCIE_CORE_CTRL);
++			if ((status & PCIE_CORE_PL_CONF_SPEED_MASK) ==
++			    PCIE_CORE_PL_CONF_SPEED_5G) {
++				dev_dbg(dev, "PCIe link training gen2 pass!\n");
++				break;
++			}
+ 
+-	timeout = jiffies + msecs_to_jiffies(500);
+-	for (;;) {
+-		status = rockchip_pcie_readl(rockchip_pcie, PCIE_CORE_CTRL);
+-		if ((status & PCIE_CORE_PL_CONF_SPEED_MASK) ==
+-		    PCIE_CORE_PL_CONF_SPEED_5G) {
+-			dev_dbg(dev, "PCIe link training gen2 pass!\n");
+-			break;
+-		}
++			if (time_after(jiffies, timeout)) {
++				dev_dbg(dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
++				break;
++			}
+ 
+-		if (time_after(jiffies, timeout)) {
+-			dev_dbg(dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
+-			break;
++			msleep(20);
+ 		}
+-
+-		msleep(20);
+ 	}
+ 
+ 	/* Check the final link width from negotiated lane counter from MGMT */
+@@ -756,6 +767,10 @@ static int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip_pcie)
+ 		rockchip_pcie->lanes = 1;
+ 	}
+ 
++	rockchip_pcie->link_gen = of_pci_get_max_link_speed(node);
++	if (rockchip_pcie->link_gen < 0 || rockchip_pcie->link_gen > 2)
++		rockchip_pcie->link_gen = 2;
++
+ 	rockchip_pcie->core_rst = devm_reset_control_get(dev, "core");
+ 	if (IS_ERR(rockchip_pcie->core_rst)) {
+ 		if (PTR_ERR(rockchip_pcie->core_rst) != -EPROBE_DEFER)
 -- 
 2.3.7
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
