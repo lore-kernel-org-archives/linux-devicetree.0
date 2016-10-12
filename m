@@ -1,43 +1,62 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver
- for Broadcom STB SoCs
-Date: Wed, 12 Oct 2016 11:08:42 +0530
-Message-ID: <20161012053842.GF19385@vireshk-i7>
-References: <1475882487-2155-1-git-send-email-mmayer@broadcom.com>
- <1475882487-2155-3-git-send-email-mmayer@broadcom.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 4/5] ARM: dts: sun6i: add pinmux for PWM0
+Date: Wed, 12 Oct 2016 15:27:37 +0800
+Message-ID: <CAGb2v6736Lr+EZM3HfP1r8RkbwF3bbDes_BtpW5aTWsGeoU2nA@mail.gmail.com>
+References: <20161012042059.40015-1-icenowy@aosc.xyz> <20161012042059.40015-4-icenowy@aosc.xyz>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1475882487-2155-3-git-send-email-mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBA6M667QKGQENG3HCEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161012042059.40015-4-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07-10-16, 16:21, Markus Mayer wrote:
-> +static int brcm_avs_cpufreq_exit(struct cpufreq_policy *policy)
-> +{
-> +	struct private_data *priv = policy->driver_data;
-> +
-> +	iounmap(priv->base);
-> +	iounmap(priv->avs_intr_base);
-> +
-> +	return 0;
-> +}
+On Wed, Oct 12, 2016 at 12:20 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+> PWM0 is used by sun6i tablets as the backlight PWM.
+>
+> Add pinmux for it.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun6i-a31.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+> index 97626ce..76f5a06 100644
+> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+> @@ -494,6 +494,13 @@
+>                                 allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>                         };
+>
+> +                       pwm0_pins: pwm0@0 {
+> +                               allwinner,pins = "PH13";
+> +                               allwinner,function = "pwm0";
+> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +                               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
 
-Shouldn't the above be done in the below routine instead ?
+Maxime is updating the pinctrl bindings to use generic pinconf,
+but otherwise this patch looks good.
 
-> +static int brcm_avs_cpufreq_remove(struct platform_device *pdev)
-> +{
-> +	platform_set_drvdata(pdev, NULL);
+ChenYu
+
+> +                       };
 > +
-> +	return cpufreq_unregister_driver(&brcm_avs_driver);
-> +}
-
--- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>                         mmc0_pins_a: mmc0@0 {
+>                                 allwinner,pins = "PF0", "PF1", "PF2",
+>                                                  "PF3", "PF4", "PF5";
+> --
+> 2.10.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
