@@ -1,50 +1,110 @@
 From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC 0/1] misc: Add Allwinner Q8 tablet hardware manager
-Date: Wed, 12 Oct 2016 10:48:11 +0100
-Message-ID: <20161012094811.GA19509@remoulade>
-References: <20160901190820.21987-1-hdegoede@redhat.com>
- <CAL_JsqJVkPPiDh66nhfh0D7BvkZ7KKN0X7uhfPGgiYbc2Ca1rg@mail.gmail.com>
-Reply-To: mark.rutland-5wv7dgnIgG8@public.gmane.org
+Subject: Re: [RFC V3 PATCH 1/7] arm64: dts: msm8992 SoC and LG Bullhead
+ (Nexus 5X) support
+Date: Wed, 12 Oct 2016 11:30:02 +0100
+Message-ID: <20161012103001.GB19509@remoulade>
+References: <1476265054-22511-1-git-send-email-jeremymc@redhat.com>
+ <1476265054-22511-2-git-send-email-jeremymc@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRMFBMIXEGBBZMN7C7QKGQEUZ5HELQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJVkPPiDh66nhfh0D7BvkZ7KKN0X7uhfPGgiYbc2Ca1rg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1476265054-22511-2-git-send-email-jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Oct 12, 2016 at 02:37:28AM -0700, Jeremy McNicoll wrote:
+> +/ {
+> +	model = "LGE MSM8992 BULLHEAD rev-1.01";
+> +	compatible = "qcom,msm8992";
+> +	qcom,board-id = <0xb64 0>;
+> +};
 
-On Fri, Sep 09, 2016 at 04:32:06PM -0500, Rob Herring wrote:
-> On Thu, Sep 1, 2016 at 2:08 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> > Hi All,
-> >
-> > Here is a first RFC for the q8 tablet hw-manager I've been talking
-> > about for a while now.
-> >
-> > The touchscreen part is finished, I'll start working on the
-> > accelerometer bits next.
-> 
-> This at least partially overlaps with the "overlay manager" just
-> posted. A dev board having different devices attached and a production
-> device have 2nd source components are not really different problems.
-> We need a common solution and can't have each platform making up their
-> own scheme.
+This last property doesn't seem to be documented or used in mainline.
 
-To follow up discussions at ELC-E, I agree that we need a common solution (if
-this has to happen in the kernel rather than in an earlier stage of the boot
-process).
+What is it for?
 
-Otherwise, we're creating pseudo-board-files, and a whole new set of problems
-for ourselves.
+> +/ {
+> +	aliases {
+> +		serial0 = &blsp1_uart2;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0";
+> +	};
 
-Thanks
+I'd recommend describing the configured rate, per
+Documentation/devicetree/bindings/chosen.txt
+
+[...]
+
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. MSM 8992";
+> +	compatible = "qcom,msm8992";
+> +	qcom,msm-id = <251 0>, <252 0>;
+> +	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
+
+These last two are not documented, and not used in mainline.
+
+What are they for?
+
+> +	memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +
+> +		device_type = "memory";
+> +		reg = <0 0 0 0>;
+
+If this is filled in by the bootloader, please havea coment to that effect.
+
+> +		peripheral_mem: peripheral_region@0 {
+> +			linux,reserve-contiguous-region;
+> +			linux,reserve-region;
+> +			linux,remove-completely;
+> +			reg = <0 0x07400000 0 0x1c00000>;
+> +			label = "peripheral_mem";
+> +		};
+> +	};
+
+What is this?
+
+There aren't any sub-nodes of memory (iirc reserved-memory is a separate node),
+an none of these 'liux,' prefixed properties exist in mainline.
+
+[...]
+
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <1 2 0xf08>,
+> +				<1 3 0xf08>,
+> +				<1 4 0xf08>,
+> +				<1 1 0xf08>;
+> +		clock-frequency = <19200000>;
+> +	};
+
+Why is the FW not programming the frequency register?
+
+> +	clocks {
+> +		xo_board: xo_board {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <19200000>;
+> +		};
+> +
+> +		sleep_clk: sleep_clk {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <32768>;
+> +		};
+> +	};
+
+Get rid of the clocks container node, and places these directly under the root node.
+
+Thanks,
 Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
