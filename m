@@ -1,67 +1,52 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH RESEND] ARM: dts: keystone-k2*: Increase SPI Flash
- partition size for U-Boot
-Date: Wed, 12 Oct 2016 16:40:20 +0530
-Message-ID: <71299871-965f-aef3-7301-4d587430a1a5@ti.com>
-References: <20161010141141.21333-1-vigneshr@ti.com>
- <20161010143144.GB1041@n2100.armlinux.org.uk>
- <d1a4b59e-5524-9851-425e-5e86e05a593c@oracle.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [rtc-linux] [PATCH v3 0/3] add device tree support for rtc-rv8803
+Date: Wed, 12 Oct 2016 13:28:27 +0200
+Message-ID: <20161012112827.mrvledaqmh3dwg2s@piout.net>
+References: <1467211201-17252-1-git-send-email-dirk.behme@de.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d1a4b59e-5524-9851-425e-5e86e05a593c-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1467211201-17252-1-git-send-email-dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Monday 10 October 2016 09:31 PM, Santosh Shilimkar wrote:
-> Vignesh,
+On 29/06/2016 at 16:39:58 +0200, Dirk Behme wrote :
+> From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 > 
-> On 10/10/2016 7:31 AM, Russell King - ARM Linux wrote:
->> On Mon, Oct 10, 2016 at 07:41:41PM +0530, Vignesh R wrote:
->>> U-Boot SPI Boot image is now more than 512KB for Keystone2 devices and
->>> cannot fit into existing partition. So, increase the SPI Flash partition
->>> for U-Boot to 1MB for all Keystone2 devices.
->>>
->>> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
->>> ---
->>>
->>> This was submitted to v4.9 merge window but was never picked up:
->>> https://patchwork.kernel.org/patch/9135023/
+> Changes v2:
+> - rename mc to microcrystal
+> - rename vdetoff to vdet-disable
 > 
-> Another point is, if you want me to pick your patch, please copy
-> me next time :-). AFAIK, am seeing this patch in my inbox first time.
+> Changes v3:
+> - remove of_device_id patch
+> - use device type instead of of_device_is_compatible
+> 
+> Oleksij Rempel (3):
+>   devicetree: Add Micro Crystal AG vendor id
+>   dt/bindings: Add bindings for Micro Crystal rv8803
+>   rtc: rv8803: Be able to set VDETOFF and SWOFF via devcie tree
+> 
+>  .../devicetree/bindings/rtc/epson,rx8900.txt       | 22 ++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  drivers/rtc/rtc-rv8803.c                           | 50 +++++++++++++++++++++-
+>  3 files changed, 71 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/epson,rx8900.txt
 > 
 
-Sorry, I did address the previous patch to you. Not sure what happened :(
-
->>
->> I think you need to explain why it's safe to change the layout of the
->> flash partitions like this.
->>
->> - What is this "misc" partition?
->>
->> - Why is it safe to move the "misc" partition in this way?
->>
->> - Do users need to do anything with data stored in the "misc" partition
->>   when changing kernels?
->>
->> If the "misc" partition is simply unused space on the flash device, why
->> list it in DT?
->>
-> Thanks Russell. Yes, above clarification would be good to get first.
-
-
-Ok, will send v2 with updated commit message as per my reply in other
-thread.
+I'm applying those patches now because I didn't have to propose anything
+better and I don't want to hold off on them too long. But I'm not really
+happy with the fact that not putting any property in DT may change the
+current configuration.
 
 -- 
-Regards
-Vignesh
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
