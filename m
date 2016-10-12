@@ -1,60 +1,87 @@
-From: LABBE Corentin <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH v4 10/10] ARM: sunxi: Enable sun8i-emac driver on
- multi_v7_defconfig
-Date: Wed, 12 Oct 2016 10:36:15 +0200
-Message-ID: <20161012083615.GA23377@Red>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v4 08/10] ARM: dts: sun8i: Enable sun8i-emac on the
+ Orange Pi 2
+Date: Wed, 12 Oct 2016 10:55:59 +0200
+Message-ID: <20161012105559.aaf9122e376fa5969a2e61d9@free.fr>
 References: <1475828757-926-1-git-send-email-clabbe.montjoie@gmail.com>
- <1475828757-926-11-git-send-email-clabbe.montjoie@gmail.com>
- <20161010123046.GH3462@lukather>
- <20161010123511.GA16103@Red>
- <20161010150943.fa7ca85fe52f4c6f9508b5eb@free.fr>
- <20161011094042.GS3462@lukather>
+ <1475828757-926-9-git-send-email-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161011094042.GS3462@lukather>
-Sender: netdev-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Jean-Francois Moine <moinejf@free.fr>, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1475828757-926-9-git-send-email-clabbe.montjoie@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, maxime.ripard@free-electrons.com, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 11, 2016 at 11:40:42AM +0200, Maxime Ripard wrote:
-> On Mon, Oct 10, 2016 at 03:09:43PM +0200, Jean-Francois Moine wrote:
-> > On Mon, 10 Oct 2016 14:35:11 +0200
-> > LABBE Corentin <clabbe.montjoie@gmail.com> wrote:
-> > 
-> > > On Mon, Oct 10, 2016 at 02:30:46PM +0200, Maxime Ripard wrote:
-> > > > On Fri, Oct 07, 2016 at 10:25:57AM +0200, Corentin Labbe wrote:
-> > > > > Enable the sun8i-emac driver in the multi_v7 default configuration
-> > > > > 
-> > > > > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > > > > ---
-> > > > >  arch/arm/configs/multi_v7_defconfig | 1 +
-> > > > >  1 file changed, 1 insertion(+)
-> > > > > 
-> > > > > diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> > > > > index 5845910..f44d633 100644
-> > > > > --- a/arch/arm/configs/multi_v7_defconfig
-> > > > > +++ b/arch/arm/configs/multi_v7_defconfig
-> > > > > @@ -229,6 +229,7 @@ CONFIG_NETDEVICES=y
-> > > > >  CONFIG_VIRTIO_NET=y
-> > > > >  CONFIG_HIX5HD2_GMAC=y
-> > > > >  CONFIG_SUN4I_EMAC=y
-> > > > > +CONFIG_SUN8I_EMAC=y
-> > > > 
-> > > > Any reason to build it statically?
-> > > 
-> > > No, just copied the same than CONFIG_SUN4I_EMAC that probably do
-> > > not need it also.
-> > 
-> > All arm configs are done the same way, and, some day, the generic ARM
-> > V7 kernel will not be loadable in 1Gb RAM...
-> 
-> Yeah, if possible, I'd really like to avoid introducing statically
-> built drivers to multi_v7.
-> 
+On Fri,  7 Oct 2016 10:25:55 +0200
+Corentin Labbe <clabbe.montjoie@gmail.com> wrote:
 
-I forgot to said it in my first answer, but yes I will change it.
+> The sun8i-emac hardware is present on the Orange PI 2.
+> It uses the internal PHY.
+> =
 
-Regards
+> This patch create the needed emac node.
+> =
+
+> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> ---
+>  arch/arm/boot/dts/sun8i-h3-orangepi-2.dts | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> =
+
+> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dt=
+s/sun8i-h3-orangepi-2.dts
+> index f93f5d1..5608eb4 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
+> @@ -54,6 +54,7 @@
+>  =
+
+>  	aliases {
+>  		serial0 =3D &uart0;
+> +		ethernet0 =3D &emac;
+
+As there is no 'of_alias_get_id' in the driver, this alias is useless.
+
+>  	};
+>  =
+
+>  	chosen {
+> @@ -184,3 +185,10 @@
+>  	usb1_vbus-supply =3D <&reg_usb1_vbus>;
+>  	status =3D "okay";
+>  };
+> +
+> +&emac {
+> +	phy-handle =3D <&int_mii_phy>;
+> +	phy-mode =3D "mii";
+> +	allwinner,leds-active-low;
+> +	status =3D "okay";
+> +};
+> -- =
+
+> 2.7.3
+> =
+
+> =
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+-- =
+
+Ken ar c'henta=F1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
