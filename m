@@ -1,92 +1,83 @@
-From: Axel Haslam <ahaslam@baylibre.com>
-Subject: Re: [PATCH/RFT 07/12] USB: ohci-da8xx: Request gpios and handle
- interrupt in the driver
-Date: Wed, 12 Oct 2016 17:01:52 +0200
-Message-ID: <CAKXjFTMO_tCzLxc5wznrW_g6rxMYT8jBgHCtiFfpHq_6M=RZWA@mail.gmail.com>
-References: <1475858577-10366-1-git-send-email-ahaslam@baylibre.com>
- <1475858577-10366-8-git-send-email-ahaslam@baylibre.com> <22f1532a-b651-3330-b2ce-9a64a35c85af@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <22f1532a-b651-3330-b2ce-9a64a35c85af@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org, Sekhar Nori <nsekhar@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Kevin Hilman <khilman@baylibre.com>, Sergei Shtylyov <sshtylyov@ru.mvista.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v7 0/4] libfdt: Add support for device tree overlays
+Date: Wed, 12 Oct 2016 17:06:07 +0200
+Message-ID: <965C6014-692F-4021-9E3D-945ED32307B7@konsulko.com>
+References: <20160930135717.16511-1-maxime.ripard@free-electrons.com> <20161006094756.GR18733@umbus.fritz.box> <6338fcb9-ffda-a04b-6c6e-2fd254b58dda@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6338fcb9-ffda-a04b-6c6e-2fd254b58dda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David
+Hi Phil,
 
-On Tue, Oct 11, 2016 at 1:18 AM, David Lechner <david@lechnology.com> wrote:
-> On 10/07/2016 11:42 AM, ahaslam@baylibre.com wrote:
->>
->> From: Axel Haslam <ahaslam@baylibre.com>
->>
->> Currently requesting the vbus and overcurrent gpio is handled on
->> the board specific file. But this does not play well moving to
->> device tree.
->>
->> In preparation to migrate to a device tree boot, handle requesting
->> gpios and overcurrent interrupt on the usb driver itself, thus avoiding
->> callbacks to arch/mach*
->>
->
-> Instead of using gpios, it seems like it would be better to use a regulator
-> here. I don't know of any real-life cases, but who is to say someone
-> not design a board that uses a regulator controlled by I2C instead of gpios
-> or something like that.
->
-> Then, boards that don't have gpios can just use a fixed regulator (or you
-> can make the regulator optional). Using a regulator would also allow users
-> to decide how to respond to overcurrent events (by supplying their own
-> regulator driver) instead of the behavior being dictated by the ohci driver.
+> On Oct 6, 2016, at 23:16 , Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
+wrote:
+>=20
+> On 06/10/2016 10:47, David Gibson wrote:
+>> On Fri, Sep 30, 2016 at 03:57:13PM +0200, Maxime Ripard wrote:
+>>> Hi,
+>>>=20
+>>> The device tree overlays are a great solution to the issue raised by
+>>> the bunch expandable boards we find everywhere these days, like the
+>>> Beaglebone, Raspberry Pi or CHIP.
+>>>=20
+>>> Although for now Linux is the only available tool that can deal with
+>>> overlays, some other components like bootloaders or user-space tools
+>>> might need to apply these overlays on top of a base device tree.
+>>>=20
+>>> To address these use cases, we introduce a new function to the =
+libfdt,
+>>> fdt_overlay_apply, that does just that.
+>>>=20
+>>> You can find a test program here: =
+http://code.bulix.org/792zum-99476?raw
+>>>=20
+>>> This is the last patches sent to U-boot, with the modifications
+>>> suggested by David, and the additional test cases.
+>>>=20
+>>> Let me know what you think!
+>>> Maxime
+>> Looking pretty good.  There's a minor error in 3/4 which I've pointed
+>> out, it can be fixed in a followup.
+>>=20
+>> An error in the conditionals means it's trying to run some of the
+>> tests which require an overlay-aware dtc on even when that's not
+>> available - I adjusted 4/4 to correct that.
+>>=20
+>> It also hit build failures on Travis, because the compiler version
+>> there complains about local variables named 'index' shadowing the
+>> standard library function.  I've corrected that with a followup =
+patch.
+>>=20
+>> With that done, the whole lot has been committed to master.
+>>=20
+> Now that upstream libfdt can resolve and apply overlays we need a way
+> of generating them. I have a set of three patches from Pantelis that
+> add "plugin" support to dtc, together with two downstream (Raspberry =
+Pi)
+> patches that fix an uninitialised memory reference and restrict
+> __local_fixups__  generation to overlays.
+>=20
+> Is there already a plan to get the enhanced dtc upstreamed? If so, can =
+I
+> get the downstream fixes included?
+>=20
 
+David, my patchset is kept updated against mainline dtc.
+What are the remaining stumbling blocks in getting in accepted?
 
-I  agree that we should use a regulator for the vbus power.
-i will make that change.  However, im not so sure about using the
-regulator for the overcurrent handling. There seems to be no other
-driver doing this, and as you mention, we would need to change the regulator
-framework, which might not be justifiable. I think there is not another way
-to handle the over current notification other than powering the port off.
-
->
-> In my particular area of interest (LEGO MINDSTORMS EV3), the 5V (hardware)
-> regulator for VBUS does use gpios, but the 5V is also shared with the LEGO
-> input and output ports. So what I would ultimately like to be able to do is
-> have userspace notified of an overcurrent event and let userspace decided
-> when to turn the vbus back on. For example, someone might plug something
-> into one of the LEGO input or output ports that causes a short circuit. I
-> would like to display a notification to the user and wait for them to
-> correct the problem and then press a button to turn the power back on.
->
-
-how about using regulator for vbus, but keeping gpio for overcurrent
-notifications?
-
-For the usersapce handling you describe above, maybe we should be able to
-listen for an usb overcurrent uevent in userspace? it seems this
-question was asked
-a couple of years back[1], but im not sure what the conclusion was. In any case,
-we could have DT and non-DT based ohci-da8xx working,
-And could work on a uevent notification for the scenario you describe
-above which
-i think is not specific to the ohci-da8xx.
-
-[1]http://linux-usb.vger.kernel.narkive.com/SjcUB5hk/how-best-to-get-over-current-notification-to-user-application
-
+> Phil Elwell
 
 Regards
-Axel
 
-> This will require some modifications to the regulator subsystem though. I
-> actually started work on this a while back, but haven't had the time to
-> pursue it any farther.
->
-> Here are my WIP patches in case there is any interest:
-> *
-> https://github.com/dlech/ev3dev-kernel/commit/541a42b3b8ed639e95bbc835df3292f80190c789
-> *
-> https://github.com/dlech/ev3dev-kernel/commit/2ba99b1ad6a06c944dd33a073f54044e71b75ae6
-> *
-> https://github.com/dlech/ev3dev-kernel/commit/cdb03caa50e64931d4f2836c648739aa4385ed3b
-> *
-> https://github.com/dlech/ev3dev-kernel/commit/9d6b50cde34b51309c74d97c26b1430c7ff6aa0f
+=97 Pantelis
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
