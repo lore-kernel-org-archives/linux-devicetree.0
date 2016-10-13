@@ -1,62 +1,86 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v7 2/8] power: add power sequence library
-Date: Thu, 13 Oct 2016 16:57:39 +0800
-Message-ID: <20161013085739.GA19151@b29397-desktop>
-References: <1474342607-27512-1-git-send-email-peter.chen@nxp.com>
- <4691591.qnCGxrEkrZ@phil>
- <20161013012216.GA8114@b29397-desktop>
- <10186696.bBGEe05eC7@phil>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH RESEND] ARM: dts: keystone-k2*: Increase SPI Flash
+ partition size for U-Boot
+Date: Thu, 13 Oct 2016 17:46:53 +0530
+Message-ID: <ac18b275-4b84-f95a-1882-b9da983b5cbe@ti.com>
+References: <20161010141141.21333-1-vigneshr@ti.com>
+ <20161010143144.GB1041@n2100.armlinux.org.uk>
+ <c3be6bfc-9cfa-bcd8-5988-ee8bdd9fa506@ti.com>
+ <20161012115703.GE1041@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <10186696.bBGEe05eC7@phil>
-Sender: linux-pm-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, dbaryshkov@gmail.com, dwmw3@infradead.org, k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org, stillcompiling@gmail.com, linux-kernel@vger.kernel.org, mka@chromium.org, vaibhav.hiremath@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161012115703.GE1041@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "Karicheri,
+ Muralidharan" <m-karicheri2@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 13, 2016 at 09:04:42AM +0200, Heiko Stuebner wrote:
-> > > > +static int __init pwrseq_generic_register(void)
-> > > > +{
-> > > > +	struct pwrseq_generic *pwrseq_gen;
-> > > > +	int i;
-> > > > +
-> > > > +	for (i = 0; i < CONFIG_PWRSEQ_GENERIC_INSTANCE_NUMBER; i++) {
-> > > > +		pwrseq_gen = kzalloc(sizeof(*pwrseq_gen), GFP_KERNEL);
-> > > > +		if (!pwrseq_gen)
-> > > > +			return -ENOMEM;
-> > > > +
-> > > > +		pwrseq_gen->pwrseq.pwrseq_of_match_table = generic_id_table;
-> > > > +		pwrseq_gen->pwrseq.get = pwrseq_generic_get;
-> > > > +		pwrseq_gen->pwrseq.on = pwrseq_generic_on;
-> > > > +		pwrseq_gen->pwrseq.off = pwrseq_generic_off;
-> > > > +		pwrseq_gen->pwrseq.put = pwrseq_generic_put;
-> > > > +		pwrseq_gen->pwrseq.free = pwrseq_generic_free;
-> > > > +
-> > > > +		pwrseq_register(&pwrseq_gen->pwrseq);
-> > > > +	}
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +postcore_initcall(pwrseq_generic_register)
-> > > 
-> > > I see that you need to have it preallocated for the compatible matching,
-> > > but wouldn't it also work to either just register the type and allocate
-> > > dynamically or otherwise just allocate a new spare everytime
-> > > pwrseq_generic_get() picks up the previous spare?
-> > 
-> > Before compatible matching, the host driver doesn't know which pwrseq type
-> > for its child node, then doesn't know which pwrseq instance needs to be
-> > allocated. From dts, we don't know which pwrseq type for the node.
-> 
-> yes, that is why I was suggesting allocating one (or two) here in 
-> pwrseq_generic_register() and every time pwrseq_generic_get() grabs the last 
-> free sequence instance, you allocate a new free spare one in that function.
 
-Good idea.
+
+On Wednesday 12 October 2016 05:27 PM, Russell King - ARM Linux wrote:
+> On Wed, Oct 12, 2016 at 04:30:28PM +0530, Vignesh R wrote:
+[...]
+>>>
+>>> - What is this "misc" partition?
+>>>
+>>
+>> This partition seems to exists from the very beginning.  I believe, this
+>> is just a spare area of flash that can be used as per end-user
+>> requirement. Either to store a small filesystem or kernel. Copying
+>> Murali who added above partition if he has any input here.
+>>
+>>> - Why is it safe to move the "misc" partition in this way?
+>>>
+>>> - Do users need to do anything with data stored in the "misc" partition
+>>>   when changing kernels?
+>>>
+>>
+>> MTD layer will take care of most abstractions (like start address etc).
+>> Will add a note in commit message informing about the reduction in size
+>> of the partition.
+>>
+>>> If the "misc" partition is simply unused space on the flash device, why
+>>> list it in DT?
+>>>
+>>
+>> If the unused space is not listed in the DT, then there is no /dev/mtdX
+>> node created for the unused section. User will then have to manually
+>> edit DT, in order to get the node and mount it. Instead, lets make it
+>> available by default.
+> 
+> So, taken all together, your argument is:
+> 
+> - We want a user partition
+> - It's okay to destroy the data in the user's partition by moving it
+>   around randomly between kernel versions.
+> 
+> The two do not naturally go together at all.  You're messing with user
+> expectations in ways you should not be.  This really is not an acceptable
+> approach.
+> 
+
+Ok, I understand that if the user just updates to new kernel(w/o
+updating bootloader) then this patch will end up setting "misc"
+partition at wrong offset. At this point, I don't see how to provide a
+way to upgrade boot loader at the same time support old and new layouts
+simultaneously.
+Could you please suggest an alternative approach that would enable users
+to update U-Boot partition?
+If not, then I guess, will have to drop this patch. Note that, this
+means there won't be a straight forward way of updating SPI U-Boot
+partition from kernel for K2 devices.
 
 -- 
-
-Best Regards,
-Peter Chen
+Regards
+Vignesh
