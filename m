@@ -1,90 +1,138 @@
-From: Karl Beldan <karl.beldan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: da850: Add basic DTS for the L138/C6748 Dev Kit
-Date: Thu, 13 Oct 2016 07:14:54 +0000
-Message-ID: <20161013071454.a44v7oikcifxklty@gobelin>
-References: <20160804144332.4841-1-kbeldan@baylibre.com>
- <20160804182902.GA22499@rob-hp-laptop>
- <20160804210326.GE15013@gobelin>
- <CAL_Jsq+3eWgcYc=wpgVCadSFQUyE+WLfA3kTb10AuoZfiKsKog@mail.gmail.com>
- <20160804234349.GA4391@gobelin>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: cs35l34: Add device tree bindings file
+	for cs35l34" to the asoc tree
+Date: Thu, 13 Oct 2016 09:40:12 +0200
+Message-ID: <E1buace-000259-5L@finisterre>
+References: <9581bbdd-b3b1-4230-8321-46942f3dfd09@EX3.ad.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160804234349.GA4391@gobelin>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <9581bbdd-b3b1-4230-8321-46942f3dfd09@EX3.ad.cirrus.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Paul Handrigan <Paul.Handrigan@cirrus.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, brian.austin@cirrus.com, robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2016 at 11:43:49PM +0000, Karl Beldan wrote:
-> On Thu, Aug 04, 2016 at 04:13:10PM -0500, Rob Herring wrote:
-> > +Peter H
-> > 
-> > On Thu, Aug 4, 2016 at 4:03 PM, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> > > On Thu, Aug 04, 2016 at 01:29:02PM -0500, Rob Herring wrote:
-> > >> On Thu, Aug 04, 2016 at 02:43:32PM +0000, Karl Beldan wrote:
-> > >> > The LCDK is the successor to the late Hawkboard and has the same machine
-> > >> > number.
-> > >> > Among the differences are the flash (16bits vs 8bits) and some pins
-> > >> > (MMC, LEDs, buttons, some external connectors), however the main
-> > >> > components remain the same (eth. PHY, Audio Codec, Video decoder and
-> > >> > DAC) except for the main PMIC, different and hard-wired on the LCDK (the
-> > >> > LDOs and DCDCs are always ON).
-> > >> > A DT-only boot with this addition gives functional uart, reboot via
-> > >> > watchdog, rtc, ethernet and MMC (I added the CD gpio for the MMC
-> > >> > although davinci_mmc doesn't call yet the mmc core OF facilities).
-> > 
-> > [...]
-> > 
-> > >> > +   aliases {
-> > >> > +           serial2 = &serial2;
-> > >> > +   };
-> > >> > +
-> > >> > +   chosen {
-> > >> > +           bootargs = "console=ttyS2,115200n8 earlycon";
-> > >>
-> > >> You don't need console with stdout-path set. And really, earlycon should
-> > >> not be the default.
-> > >>
-> > > Ok for earlycon.
-> > >
-> > > For the console, I thought likewise .. until I _struggled_ to understand
-> > > why the console was disappearing under my feet.
-> > > It seemed even stranger when I started looking at the codepath because
-> > > drivers/of/base.c would properly add_preferred_console as expected after
-> > > the corresponding UART was added. But the reality was there, without it
-> > > the console was not like stdout-path.
-> > > Among the commits that could instill doubt as to whether stdout-path
-> > > rules is f64255b5072d:
-> > > "The assumption that at least 1 preferred console will be registered
-> > > when the stdout-path property is set is invalid, which can result in
-> > > _no_ consoles.", though it didn't answer my question.
-> > > I started looking whether tty0 was not getting in the way and in the end
-> > > I came up with setting console.
-> > > But you seem affirmative.
-> > 
-> > There have been some issues in this area, but I thought they were in
-> > conjunction with earlycon and solved now. This is a fairly common
-> > review request for dts files, so I'm surprised if it doesn't work
-> > right. Maybe having tty0 or not has some influence. Or people just
-> > accept review comments without testing or caring...
-> > 
-> I can assure you I tested without early{con,printk} ;).
-> 
-> Now I have just rechecked the codepaths and something caught my
-> attention in kernel/printk/printk.c:__add_preferred_console(): if
-> console_cmdline is empty selected_console gets unconditionally set to
-> zero ! Knowing this I confirmed by replacing with idx (works), and also
-> by using ttyS0 (i.e. alias serial0 = &uart2) (works), this would not
-> affect DTs using serial0. It's late here so I'll stop there.
->  
+The patch
 
-The stdout-path bug was fixed last week by Paul Burton in 05fd007e4629 
-("console: don't prefer first registered if DT specifies stdout-path").
- 
-Karl
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+   ASoC: cs35l34: Add device tree bindings file for cs35l34
+
+has been applied to the asoc tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 41f8bf322da58162f67d9a9119fd3c86ff8cee2f Mon Sep 17 00:00:00 2001
+From: Paul Handrigan <Paul.Handrigan@cirrus.com>
+Date: Wed, 12 Oct 2016 13:53:29 -0500
+Subject: [PATCH] ASoC: cs35l34: Add device tree bindings file for cs35l34
+
+Add device tree bindings file for the cs35l34 8V boosted
+class D amplifier.
+
+Signed-off-by: Paul Handrigan <Paul.Handrigan@cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../devicetree/bindings/sound/cs35l34.txt          | 64 ++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cs35l34.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/cs35l34.txt b/Documentation/devicetree/bindings/sound/cs35l34.txt
+new file mode 100644
+index 000000000000..b218ead2e68e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cs35l34.txt
+@@ -0,0 +1,64 @@
++CS35L34 Speaker Amplifier
++
++Required properties:
++
++  - compatible : "cirrus,cs35l34"
++
++  - reg : the I2C address of the device for I2C.
++
++  - VA-supply, VP-supply : power supplies for the device,
++    as covered in
++    Documentation/devicetree/bindings/regulator/regulator.txt.
++
++  - cirrus,boost-vtge-millivolt : Boost Voltage Value.  Configures the boost
++    converter's output voltage in mV. The range is from VP to 8V with
++    increments of 100mV.
++
++  - cirrus,boost-nanohenry: Inductor value for boost converter. The value is
++    in nH and they can be values of 1000nH, 1100nH, 1200nH, 1500nH, and 2200nH.
++
++Optional properties:
++
++  - reset-gpios: GPIO used to reset the amplifier.
++
++  - interrupt-parent : Specifies the phandle of the interrupt controller to
++    which the IRQs from CS35L34 are delivered to.
++  - interrupts : IRQ line info CS35L34.
++    (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++    for further information relating to interrupt properties)
++
++  - cirrus,boost-peak-milliamp : Boost converter peak current limit in mA. The
++    range starts at 1200mA and goes to a maximum of 3840mA with increments of
++    80mA. The default value is 2480mA.
++
++  - cirrus,i2s-sdinloc : ADSP SDIN I2S channel location. Indicates whether the
++    received mono data is in the left or right portion of the I2S frame
++    according to the AD0 pin or directly via this configuration.
++    0x0 (Default) = Selected by AD0 input (if AD0 = LOW, use left channel),
++    0x2 = Left,
++    0x1 = Selected by the inversion of the AD0 input (if AD0 = LOW, use right
++    channel),
++    0x3 = Right.
++
++  - cirrus,gain-zc-disable: Boolean property. If set, the gain change will take
++    effect without waiting for a zero cross.
++
++  - cirrus,tdm-rising-edge: Boolean property. If set, data is on the rising edge of
++    SCLK. Otherwise, data is on the falling edge of SCLK.
++
++
++Example:
++
++cs35l34: cs35l34@40 {
++	compatible = "cirrus,cs35l34";
++	reg = <0x40>;
++
++	interrupt-parent = <&gpio8>;
++	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++
++	reset-gpios = <&gpio 10 0>;
++
++	cirrus,boost-vtge-milltvolt = <8000>; /* 8V */
++	cirrus,boost-ind-nanohenry = <1000>; /* 1uH */
++	cirrus,boost-peak-milliamp = <3000>; /* 3A */
++};
+-- 
+2.9.3
