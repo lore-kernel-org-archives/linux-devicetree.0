@@ -1,271 +1,102 @@
-From: <tthayer@opensource.altera.com>
-Subject: [PATCH 2/4] misc: Add Altera Arria10 System Resource Control
-Date: Thu, 13 Oct 2016 16:32:07 -0500
-Message-ID: <1476394329-31696-3-git-send-email-tthayer@opensource.altera.com>
-References: <1476394329-31696-1-git-send-email-tthayer@opensource.altera.com>
+From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/3] soc: Support for NPS HW scheduling
+Date: Thu, 13 Oct 2016 17:52:28 +0300
+Message-ID: <1476370350-3853-2-git-send-email-noamca@mellanox.com>
+References: <1476370350-3853-1-git-send-email-noamca@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1476394329-31696-1-git-send-email-tthayer@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@opensource.altera.com, inux@armlinux.org.uk, arnd@arndb.de, gregkh@linuxfoundation.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, Thor Thayer <tthayer@opensource.altera.com>, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476370350-3853-1-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer@opensource.altera.com>
+From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 
-This patch adds the Altera Arria10 control & monitoring
-functions to the Arria10 System Resource chip.
+This header file is for NPS400 SoC.
+It includes macros for save/restore of HW scheduling.
+Control is done by writing core functional registers.
+This code was moved from arc/plat-eznps so it can be used
+from driver/clocksourec/, available only for CONFIG_EZNPS_MTM_EXT.
 
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 ---
- MAINTAINERS                     |    1 +
- drivers/misc/Kconfig            |    7 ++
- drivers/misc/Makefile           |    1 +
- drivers/misc/altera-a10sr-mon.c |  184 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 193 insertions(+)
- create mode 100644 drivers/misc/altera-a10sr-mon.c
+ include/soc/nps/mtm.h |   61 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 61 insertions(+), 0 deletions(-)
+ create mode 100644 include/soc/nps/mtm.h
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1cd38a7..a0919ec 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -625,6 +625,7 @@ M:	Thor Thayer <tthayer@opensource.altera.com>
- S:	Maintained
- F:	drivers/gpio/gpio-altera-a10sr.c
- F:	drivers/mfd/altera-a10sr.c
-+F: 	drivers/misc/altera-a10sr-mon.c
- F:	include/linux/mfd/altera-a10sr.h
- 
- ALTERA TRIPLE SPEED ETHERNET DRIVER
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 64971ba..9dd33c4 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -766,6 +766,13 @@ config PANEL_BOOT_MESSAGE
- 	  An empty message will only clear the display at driver init time. Any other
- 	  printf()-formatted message is valid with newline and escape codes.
- 
-+config ALTERA_A10SR_MON
-+	tristate "Altera Arria10 System Resource Monitor"
-+	depends on MFD_ALTERA_A10SR
-+	help
-+	  This enables the System Resource monitor driver for the Altera
-+	  Arria10 DevKit.
-+
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
- source "drivers/misc/cb710/Kconfig"
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index 3198336..fd69f0c 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -43,6 +43,7 @@ obj-y				+= ti-st/
- obj-y				+= lis3lv02d/
- obj-$(CONFIG_USB_SWITCH_FSA9480) += fsa9480.o
- obj-$(CONFIG_ALTERA_STAPL)	+=altera-stapl/
-+obj-$(CONFIG_ALTERA_A10SR_MON)  += altera-a10sr-mon.o
- obj-$(CONFIG_INTEL_MEI)		+= mei/
- obj-$(CONFIG_VMWARE_VMCI)	+= vmw_vmci/
- obj-$(CONFIG_LATTICE_ECP3_CONFIG)	+= lattice-ecp3-config.o
-diff --git a/drivers/misc/altera-a10sr-mon.c b/drivers/misc/altera-a10sr-mon.c
+diff --git a/include/soc/nps/mtm.h b/include/soc/nps/mtm.h
 new file mode 100644
-index 0000000..c07fb97
+index 0000000..9327010
 --- /dev/null
-+++ b/drivers/misc/altera-a10sr-mon.c
-@@ -0,0 +1,184 @@
++++ b/include/soc/nps/mtm.h
+@@ -0,0 +1,61 @@
 +/*
-+ *  Copyright Altera Corporation (C) 2014-2016. All Rights Reserved
++ * Copyright (c) 2016, Mellanox Technologies. All rights reserved.
 + *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
++ * This software is available to you under a choice of one of two
++ * licenses.  You may choose to be licensed under the terms of the GNU
++ * General Public License (GPL) Version 2, available from the file
++ * COPYING in the main directory of this source tree, or the
++ * OpenIB.org BSD license below:
 + *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
++ *     Redistribution and use in source and binary forms, with or
++ *     without modification, are permitted provided that the following
++ *     conditions are met:
 + *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ *      - Redistributions of source code must retain the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer.
 + *
-+ * Monitor driver for the Altera Arria10 MAX5 System Resource Chip
-+ * Adapted from ics932s401.c
++ *      - Redistributions in binary form must reproduce the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer in the documentation and/or other materials
++ *        provided with the distribution.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
++ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
++ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
++ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
 + */
 +
-+#include <linux/err.h>
-+#include <linux/mfd/altera-a10sr.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
++#ifndef SOC_NPS_MTM_H
++#define SOC_NPS_MTM_H
 +
-+struct altr_a10sr_regs {
-+	struct regmap		*regmap;
-+	struct attribute_group	attr_grp;
-+};
++#define CTOP_INST_HWSCHD_OFF_R3                 0x3B6F00BF
++#define CTOP_INST_HWSCHD_RESTORE_R3             0x3E6F70C3
 +
-+static ssize_t a10sr_show(struct device *dev,
-+			  struct device_attribute *devattr, char *buf);
-+static ssize_t a10sr_store(struct device *dev,
-+			   struct device_attribute *devattr, const char *buf,
-+			   size_t count);
++#define DEFINE_SCHD_FLAG(type, name)    type name
 +
-+/* Define FS entries */
-+static DEVICE_ATTR(max5_version, 0444, a10sr_show, NULL);
-+static DEVICE_ATTR(max5_led, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_button, 0444, a10sr_show, NULL);
-+static DEVICE_ATTR(max5_button_irq, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_pg1, 0444, a10sr_show, NULL);
-+static DEVICE_ATTR(max5_pg2, 0444, a10sr_show, NULL);
-+static DEVICE_ATTR(max5_pg3, 0444, a10sr_show, NULL);
-+static DEVICE_ATTR(max5_fmcab, 0444, a10sr_show, NULL);
-+static DEVICE_ATTR(max5_hps_resets, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_per_resets, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_sfpa, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_sfpb, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_i2c_master, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_wm_rst, 0444, a10sr_show, NULL);
-+static DEVICE_ATTR(max5_wm_rst_key, 0444, a10sr_show, NULL);
-+static DEVICE_ATTR(max5_pmbus, 0644, a10sr_show, a10sr_store);
-+
-+static struct attribute *altr_a10sr_attr[] = {
-+	&dev_attr_max5_version.attr,
-+	&dev_attr_max5_led.attr,
-+	&dev_attr_max5_button.attr,
-+	&dev_attr_max5_button_irq.attr,
-+	&dev_attr_max5_pg1.attr,
-+	&dev_attr_max5_pg2.attr,
-+	&dev_attr_max5_pg3.attr,
-+	&dev_attr_max5_fmcab.attr,
-+	&dev_attr_max5_hps_resets.attr,
-+	&dev_attr_max5_per_resets.attr,
-+	&dev_attr_max5_sfpa.attr,
-+	&dev_attr_max5_sfpb.attr,
-+	&dev_attr_max5_i2c_master.attr,
-+	&dev_attr_max5_wm_rst.attr,
-+	&dev_attr_max5_wm_rst_key.attr,
-+	&dev_attr_max5_pmbus.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group a10sr_attr_group = {
-+	.attrs = altr_a10sr_attr,
-+};
-+
-+static ssize_t a10sr_show(struct device *dev, struct device_attribute *devattr,
-+			  char *buf)
++static inline void hw_schd_save(unsigned int *flags)
 +{
-+	int i, ret;
-+	unsigned int val;
-+	struct altr_a10sr_regs *a10sr_regs = dev_get_drvdata(dev);
-+
-+	for (i = 0; i < ARRAY_SIZE(altr_a10sr_attr); i++) {
-+		if (devattr == (struct device_attribute *)altr_a10sr_attr[i])
-+			break;
-+	}
-+
-+	if (i >= ARRAY_SIZE(altr_a10sr_attr))
-+		return -EINVAL;
-+
-+	/* Shift because LS bit signifies Read/Write */
-+	i <<= 1;
-+	ret = regmap_read(a10sr_regs->regmap, i, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sprintf(buf, "0x%X\n", val);
++	__asm__ __volatile__(
++	"       .word %1\n"
++	"       st r3,[%0]\n"
++	:
++	: "r"(flags), "i"(CTOP_INST_HWSCHD_OFF_R3)
++	: "r3", "memory");
 +}
 +
-+static ssize_t a10sr_store(struct device *dev,
-+			   struct device_attribute *devattr, const char *buf,
-+			   size_t count)
++static inline void hw_schd_restore(unsigned int flags)
 +{
-+	struct altr_a10sr_regs *a10sr_regs = dev_get_drvdata(dev);
-+	unsigned long val;
-+	int i, ret;
-+
-+	ret = kstrtol(buf, 0, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	for (i = 0; i < ARRAY_SIZE(altr_a10sr_attr); i++) {
-+		if (devattr == (struct device_attribute *)altr_a10sr_attr[i])
-+			break;
-+	}
-+	if (i >= ARRAY_SIZE(altr_a10sr_attr))
-+		return -EINVAL;
-+
-+	/* Shift because LS bit signifies Read/Write */
-+	i <<= 1;
-+	ret = regmap_write(a10sr_regs->regmap, i, val);
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
++	__asm__ __volatile__(
++	"       mov r3, %0\n"
++	"       .word %1\n"
++	:
++	: "r"(flags), "i"(CTOP_INST_HWSCHD_RESTORE_R3)
++	: "r3");
 +}
 +
-+static int altr_a10sr_regs_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct altr_a10sr_regs *a10regs;
-+	struct altr_a10sr *a10sr = dev_get_drvdata(pdev->dev.parent);
-+
-+	a10regs = devm_kzalloc(&pdev->dev, sizeof(*a10regs), GFP_KERNEL);
-+	if (!a10regs)
-+		return -ENOMEM;
-+
-+	a10regs->regmap = a10sr->regmap;
-+	a10regs->attr_grp = a10sr_attr_group;
-+
-+	platform_set_drvdata(pdev, a10regs);
-+
-+	ret = sysfs_create_group(&pdev->dev.kobj, &a10sr_attr_group);
-+	if (ret)
-+		goto err_mem;
-+
-+	return 0;
-+
-+err_mem:
-+	return ret;
-+}
-+
-+static int altr_a10sr_regs_remove(struct platform_device *pdev)
-+{
-+	struct altr_a10sr_regs *a10regs = platform_get_drvdata(pdev);
-+
-+	sysfs_remove_group(&pdev->dev.kobj, &a10regs->attr_grp);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id altr_a10sr_regs_of_match[] = {
-+	{ .compatible = "altr,a10sr-mon" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, altr_a10sr_regs_of_match);
-+
-+static struct platform_driver altr_a10sr_regs_driver = {
-+	.probe = altr_a10sr_regs_probe,
-+	.remove = altr_a10sr_regs_remove,
-+	.driver = {
-+		.name = "altr_a10sr_mon",
-+		.of_match_table = altr_a10sr_regs_of_match,
-+	},
-+};
-+
-+module_platform_driver(altr_a10sr_regs_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Thor Thayer");
-+MODULE_DESCRIPTION("Monitor Driver for Altera Arria10 System Resource Chip");
++#endif /* SOC_NPS_MTM_H */
 -- 
-1.7.9.5
+1.7.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
