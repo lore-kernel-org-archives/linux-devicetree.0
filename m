@@ -1,86 +1,44 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH RESEND] ARM: dts: keystone-k2*: Increase SPI Flash
- partition size for U-Boot
-Date: Thu, 13 Oct 2016 17:46:53 +0530
-Message-ID: <ac18b275-4b84-f95a-1882-b9da983b5cbe@ti.com>
-References: <20161010141141.21333-1-vigneshr@ti.com>
- <20161010143144.GB1041@n2100.armlinux.org.uk>
- <c3be6bfc-9cfa-bcd8-5988-ee8bdd9fa506@ti.com>
- <20161012115703.GE1041@n2100.armlinux.org.uk>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v4 0/3] Broadcom STB AVS CPUfreq driver
+Date: Thu, 13 Oct 2016 14:49:59 +0200
+Message-ID: <CAJZ5v0hT-gJuOnODkBJPKYVzqyc=bj685RDw=hqgAiFaoEzCug@mail.gmail.com>
+References: <1476310376-32699-1-git-send-email-mmayer@broadcom.com> <20161013054506.GB2991@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161012115703.GE1041@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "Karicheri,
- Muralidharan" <m-karicheri2@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161013054506.GB2991@vireshk-i7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Markus Mayer <mmayer@broadcom.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Oct 13, 2016 at 7:45 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On 12-10-16, 15:12, Markus Mayer wrote:
+>> This series contains the CPUfreq driver for Broadcom SoCs that use "AVS
+>> Firmware" for voltage and frequency scaling. All voltage and frequency
+>> transitions are performed by the firmware and are therefore hidden from
+>> Linux.
+>>
+>> The driver provides a standard CPUfreq interface to other kernel
+>> components and to userland on the one hand and communicates with the
+>> AVS co-processor on the other.
+>>
+>> Communication between the two processors is via shared mailbox
+>> registers and interrupts (ARM -> AVS to tell the firmware that there is
+>> a command to process and AVS -> ARM to tell the driver that a command
+>> finished executing).
+>>
+>> Changes from v3:
+>>     - moved code from brcm_avs_cpufreq_exit() into brcm_avs_cpufreq_remove()
+>>     - removed brcm_avs_cpufreq_exit() altogether
+>
+> For the entire series:
+>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
+OK
 
-On Wednesday 12 October 2016 05:27 PM, Russell King - ARM Linux wrote:
-> On Wed, Oct 12, 2016 at 04:30:28PM +0530, Vignesh R wrote:
-[...]
->>>
->>> - What is this "misc" partition?
->>>
->>
->> This partition seems to exists from the very beginning.  I believe, this
->> is just a spare area of flash that can be used as per end-user
->> requirement. Either to store a small filesystem or kernel. Copying
->> Murali who added above partition if he has any input here.
->>
->>> - Why is it safe to move the "misc" partition in this way?
->>>
->>> - Do users need to do anything with data stored in the "misc" partition
->>>   when changing kernels?
->>>
->>
->> MTD layer will take care of most abstractions (like start address etc).
->> Will add a note in commit message informing about the reduction in size
->> of the partition.
->>
->>> If the "misc" partition is simply unused space on the flash device, why
->>> list it in DT?
->>>
->>
->> If the unused space is not listed in the DT, then there is no /dev/mtdX
->> node created for the unused section. User will then have to manually
->> edit DT, in order to get the node and mount it. Instead, lets make it
->> available by default.
-> 
-> So, taken all together, your argument is:
-> 
-> - We want a user partition
-> - It's okay to destroy the data in the user's partition by moving it
->   around randomly between kernel versions.
-> 
-> The two do not naturally go together at all.  You're messing with user
-> expectations in ways you should not be.  This really is not an acceptable
-> approach.
-> 
+I gess patch [1/3] needs some ACKs from the DT bindings maintainers?
 
-Ok, I understand that if the user just updates to new kernel(w/o
-updating bootloader) then this patch will end up setting "misc"
-partition at wrong offset. At this point, I don't see how to provide a
-way to upgrade boot loader at the same time support old and new layouts
-simultaneously.
-Could you please suggest an alternative approach that would enable users
-to update U-Boot partition?
-If not, then I guess, will have to drop this patch. Note that, this
-means there won't be a straight forward way of updating SPI U-Boot
-partition from kernel for K2 devices.
-
--- 
-Regards
-Vignesh
+Thanks,
+Rafael
