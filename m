@@ -1,10 +1,12 @@
 From: Noam Camus <noamca@mellanox.com>
-Subject: [PATCH 0/3] Add clockevet for timer-nps driver to NPS400 SoC
-Date: Thu, 13 Oct 2016 17:52:27 +0300
-Message-ID: <1476370350-3853-1-git-send-email-noamca@mellanox.com>
+Subject: [PATCH 2/3] ARC: [plat-eznps] remove macros for timer0 TSI
+Date: Thu, 13 Oct 2016 17:52:29 +0300
+Message-ID: <1476370350-3853-3-git-send-email-noamca@mellanox.com>
+References: <1476370350-3853-1-git-send-email-noamca@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1476370350-3853-1-git-send-email-noamca@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com
 Cc: daniel.lezcano@linaro.org, tglx@linutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Noam Camus <noamca@mellanox.com>
@@ -12,39 +14,27 @@ List-Id: devicetree@vger.kernel.org
 
 From: Noam Camus <noamca@mellanox.com>
 
-In first version of this driver we supported clocksource for the NPS400.
-The support for clockevent was taken from Synopsys ARC timer driver.
-This was good for working with our simulator of NPS400.
-However in NPS400 ASIC the timers behave differently than simulation.
-The timers in ASIC are shared between all threads whithin a core
-and hence need different driver to support this behaviour.
+Now it is defined at include/soc/nps/mtm.h
+It will be used by module from driver/clocksource/
 
-The idea of this design is that we got 16 HW threads per core
-each represented at bimask in a shared register in this core.
-So when thread wants that next clockevent expiration will produce
-timer interrupt to itself the correspondance bit in this register
-should be set.
-So theoretically if all 16 bits are set then all HW threads will get
-timer interrupt on next expiration of timer 0.
+Signed-off-by: Noam Camus <noamca@mellanox.com>
+---
+ arch/arc/plat-eznps/include/plat/ctop.h |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
 
-Note that we use Synopsys ARC design naming convention for the timers
-where:
-timer0 is used for clockevents
-timer1 is used for clocksource.
-
-Noam Camus (3):
-  soc: Support for NPS HW scheduling
-  ARC: [plat-eznps] remove macros for timer0 TSI
-  clocksource: Add clockevent support to NPS400 driver
-
- .../bindings/timer/ezchip,nps400-timer.txt         |   15 --
- .../bindings/timer/ezchip,nps400-timer0.txt        |   17 ++
- .../bindings/timer/ezchip,nps400-timer1.txt        |   15 ++
- arch/arc/plat-eznps/include/plat/ctop.h            |    2 -
- drivers/clocksource/timer-nps.c                    |  239 +++++++++++++++++++-
- include/soc/nps/mtm.h                              |   61 +++++
- 6 files changed, 322 insertions(+), 27 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
- create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
- create mode 100644 include/soc/nps/mtm.h
+diff --git a/arch/arc/plat-eznps/include/plat/ctop.h b/arch/arc/plat-eznps/include/plat/ctop.h
+index 9d6718c..ee2e32d 100644
+--- a/arch/arc/plat-eznps/include/plat/ctop.h
++++ b/arch/arc/plat-eznps/include/plat/ctop.h
+@@ -46,9 +46,7 @@
+ #define CTOP_AUX_UDMC				(CTOP_AUX_BASE + 0x300)
+ 
+ /* EZchip core instructions */
+-#define CTOP_INST_HWSCHD_OFF_R3			0x3B6F00BF
+ #define CTOP_INST_HWSCHD_OFF_R4			0x3C6F00BF
+-#define CTOP_INST_HWSCHD_RESTORE_R3		0x3E6F70C3
+ #define CTOP_INST_HWSCHD_RESTORE_R4		0x3E6F7103
+ #define CTOP_INST_SCHD_RW			0x3E6F7004
+ #define CTOP_INST_SCHD_RD			0x3E6F7084
+-- 
+1.7.1
