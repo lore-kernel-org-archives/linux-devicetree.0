@@ -1,59 +1,105 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] binding: irqchip: mtk-cirq: Add binding document
-Date: Thu, 13 Oct 2016 15:00:11 +0200
-Message-ID: <58b24238-659c-c7da-d93c-65db63990930@gmail.com>
-References: <1476335194-26604-1-git-send-email-youlin.pei@mediatek.com>
- <1476335194-26604-2-git-send-email-youlin.pei@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] leds: leds-pca963x: workaround group blink scaling issue
+Date: Thu, 13 Oct 2016 06:16:12 -0700
+Message-ID: <1476364572-26849-1-git-send-email-matt@ranostay.consulting>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476335194-26604-2-git-send-email-youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+PCA9632TK part seems to incorrectly blink at ~1.3x of the programmed
+rate. This patchset add a nxp,period-scale devicetree property to
+adjust for this misconfiguration.
 
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/leds/pca963x.txt |  3 +++
+ drivers/leds/leds-pca963x.c                        | 18 +++++++++++++++---
+ 2 files changed, 18 insertions(+), 3 deletions(-)
 
-On 10/13/2016 07:06 AM, Youlin Pei wrote:
-> This commit adds the device tree binding document for
-> the mediatek cirq.
->
-> Signed-off-by: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->
-> ---
-> base on v4.8-rc1
-> ---
->  .../interrupt-controller/mediatek,cirq.txt         |   30 ++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
->
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
-> new file mode 100644
-> index 0000000..ad16953
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
-> @@ -0,0 +1,30 @@
-> +* Mediatek 27xx cirq
-> +
-> +In Mediatek SOCs, the CIRQ is a low power interrupt controller designed to
-> +works outside MCUSYS which comprises with Cortex-Ax cores,CCI and GIC.
-> +The external interrupts (outside MCUSYS) will feed through CIRQ and connect
-> +to GIC in MCUSYS. When CIRQ is enabled, it will record the edge-sensitive
-> +interrupts and generated a pulse signal to parent interrupt controller when
-> +flush command is executed. With CIRQ, MCUSYS can be completely turned off
-> +to improve the system power consumption without losing interrupts.
-> +
-> +Required properties:
-> +- compatible: should be: "mediatek,mt2701-cirq".
+diff --git a/Documentation/devicetree/bindings/leds/pca963x.txt b/Documentation/devicetree/bindings/leds/pca963x.txt
+index dafbe9931c2b..dfbdb123a9bf 100644
+--- a/Documentation/devicetree/bindings/leds/pca963x.txt
++++ b/Documentation/devicetree/bindings/leds/pca963x.txt
+@@ -7,6 +7,9 @@ Optional properties:
+ - nxp,totem-pole : use totem pole (push-pull) instead of open-drain (pca9632 defaults
+   to open-drain, newer chips to totem pole)
+ - nxp,hw-blink : use hardware blinking instead of software blinking
++- nxp,period-scale : In some configurations, the chip blinks faster than expected.
++		     This parameter provides a scaling ratio (fixed point, decimal divided
++		     by 1000) to compensate, e.g. 1300=1.3x and 750=0.75x.
+ 
+ Each led is represented as a sub-node of the nxp,pca963x device.
+ 
+diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
+index 407eba11e187..b6ce1f2ec33e 100644
+--- a/drivers/leds/leds-pca963x.c
++++ b/drivers/leds/leds-pca963x.c
+@@ -59,6 +59,7 @@ struct pca963x_chipdef {
+ 	u8			grpfreq;
+ 	u8			ledout_base;
+ 	int			n_leds;
++	unsigned int		scaling;
+ };
+ 
+ static struct pca963x_chipdef pca963x_chipdefs[] = {
+@@ -189,6 +190,14 @@ static int pca963x_led_set(struct led_classdev *led_cdev,
+ 	return pca963x_brightness(pca963x, value);
+ }
+ 
++static unsigned int pca963x_period_scale(struct pca963x_led *pca963x,
++	unsigned int val)
++{
++	unsigned int scaling = pca963x->chip->chipdef->scaling;
++
++	return scaling ? DIV_ROUND_CLOSEST(val * scaling, 1000) : val;
++}
++
+ static int pca963x_blink_set(struct led_classdev *led_cdev,
+ 		unsigned long *delay_on, unsigned long *delay_off)
+ {
+@@ -207,14 +216,14 @@ static int pca963x_blink_set(struct led_classdev *led_cdev,
+ 		time_off = 500;
+ 	}
+ 
+-	period = time_on + time_off;
++	period = pca963x_period_scale(pca963x, time_on + time_off);
+ 
+ 	/* If period not supported by hardware, default to someting sane. */
+ 	if ((period < PCA963X_BLINK_PERIOD_MIN) ||
+ 	    (period > PCA963X_BLINK_PERIOD_MAX)) {
+ 		time_on = 500;
+ 		time_off = 500;
+-		period = time_on + time_off;
++		period = pca963x_period_scale(pca963x, 1000);
+ 	}
+ 
+ 	/*
+@@ -222,7 +231,7 @@ static int pca963x_blink_set(struct led_classdev *led_cdev,
+ 	 *	(time_on / period) = (GDC / 256) ->
+ 	 *		GDC = ((time_on * 256) / period)
+ 	 */
+-	gdc = (time_on * 256) / period;
++	gdc = (pca963x_period_scale(pca963x, time_on) * 256) / period;
+ 
+ 	/*
+ 	 * From manual: period = ((GFRQ + 1) / 24) in seconds.
+@@ -294,6 +303,9 @@ pca963x_dt_init(struct i2c_client *client, struct pca963x_chipdef *chip)
+ 	else
+ 		pdata->blink_type = PCA963X_SW_BLINK;
+ 
++	if (of_property_read_u32(np, "nxp,period-scale", &chip->scaling))
++		chip->scaling = 1000;
++
+ 	return pdata;
+ }
+ 
+-- 
+2.7.4
 
-The cirq is present in several SoCs. I suppose it is the same core in 
-all of them. So we can name it mediatek,mtk-cirq and add a 
-mediatek,mtXXXX-cirq for every SoC, just in case we will need it.
-
-Thanks,
-Matthias
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
