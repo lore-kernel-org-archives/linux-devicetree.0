@@ -1,57 +1,50 @@
-From: Youlin Pei <youlin.pei@mediatek.com>
-Subject: [PATCH 1/3] binding: irqchip: mtk-cirq: Add binding document
-Date: Thu, 13 Oct 2016 13:06:32 +0800
-Message-ID: <1476335194-26604-2-git-send-email-youlin.pei@mediatek.com>
+From: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 3/3] ARM: dts: mt2701: Add mtk-cirq node for mt2701
+Date: Thu, 13 Oct 2016 13:06:34 +0800
+Message-ID: <1476335194-26604-4-git-send-email-youlin.pei@mediatek.com>
 References: <1476335194-26604-1-git-send-email-youlin.pei@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1476335194-26604-1-git-send-email-youlin.pei@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: youlin.pei@mediatek.com, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, hongkun.cao@mediatek.com, yong.wu@mediatek.com, erin.lo@mediatek.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1476335194-26604-1-git-send-email-youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the device tree binding document for
-the mediatek cirq.
+This commit add mtk-cirq node to mt2701 dtsi.
 
-Signed-off-by: Youlin Pei <youlin.pei@mediatek.com>
-
+Signed-off-by: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
-base on v4.8-rc1
----
- .../interrupt-controller/mediatek,cirq.txt         |   30 ++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
+ arch/arm/boot/dts/mt2701.dtsi |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
-new file mode 100644
-index 0000000..ad16953
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
-@@ -0,0 +1,30 @@
-+* Mediatek 27xx cirq
-+
-+In Mediatek SOCs, the CIRQ is a low power interrupt controller designed to
-+works outside MCUSYS which comprises with Cortex-Ax cores,CCI and GIC.
-+The external interrupts (outside MCUSYS) will feed through CIRQ and connect
-+to GIC in MCUSYS. When CIRQ is enabled, it will record the edge-sensitive
-+interrupts and generated a pulse signal to parent interrupt controller when
-+flush command is executed. With CIRQ, MCUSYS can be completely turned off
-+to improve the system power consumption without losing interrupts.
-+
-+Required properties:
-+- compatible: should be: "mediatek,mt2701-cirq".
-+- interrupt-controller : Identifies the node as an interrupt controller.
-+- #interrupt-cells : Use the same format as specified by GIC in arm,gic.txt.
-+- interrupt-parent: phandle of irq parent for cirq. The parent must
-+  use the same interrupt-cells format as GIC.
-+- reg: Physical base address of the cirq registers and length of memory
-+  mapped region.
-+- mediatek,ext-irq-start: Identifies external irq start number in different
-+  SOCs.
-+
-+Example:
+diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+index 7eab6f4..a314df9 100644
+--- a/arch/arm/boot/dts/mt2701.dtsi
++++ b/arch/arm/boot/dts/mt2701.dtsi
+@@ -21,7 +21,7 @@
+ 
+ / {
+ 	compatible = "mediatek,mt2701";
+-	interrupt-parent = <&sysirq>;
++	interrupt-parent = <&cirq>;
+ 
+ 	cpus {
+ 		#address-cells = <1>;
+@@ -158,6 +158,15 @@
+ 		reg = <0 0x10200100 0 0x1c>;
+ 	};
+ 
 +	cirq: interrupt-controller@10204000 {
 +		compatible = "mediatek,mt2701-cirq";
 +		interrupt-controller;
@@ -60,5 +53,9 @@ index 0000000..ad16953
 +		reg = <0 0x10204000 0 0x4000>;
 +		mediatek,ext-irq-start = <32>;
 +	};
++
+ 	apmixedsys: syscon@10209000 {
+ 		compatible = "mediatek,mt2701-apmixedsys", "syscon";
+ 		reg = <0 0x10209000 0 0x1000>;
 -- 
 1.7.9.5
