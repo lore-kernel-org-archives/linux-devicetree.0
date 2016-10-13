@@ -1,40 +1,48 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v4 0/3] Broadcom STB AVS CPUfreq driver
-Date: Thu, 13 Oct 2016 11:15:06 +0530
-Message-ID: <20161013054506.GB2991@vireshk-i7>
-References: <1476310376-32699-1-git-send-email-mmayer@broadcom.com>
+From: Rahul Bedarkar <Rahul.Bedarkar@imgtec.com>
+Subject: Re: [PATCH 2/2] MIPS: DTS: img: add device tree for Marduk board
+Date: Thu, 13 Oct 2016 12:32:10 +0530
+Message-ID: <57FF3172.4010709@imgtec.com>
+References: <1475757094-31089-1-git-send-email-rahul.bedarkar@imgtec.com>
+ <1475757094-31089-2-git-send-email-rahul.bedarkar@imgtec.com>
+ <20161010142152.GA7920@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1476310376-32699-1-git-send-email-mmayer@broadcom.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Markus Mayer <mmayer@broadcom.com>
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20161010142152.GA7920@rob-hp-laptop>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Rob Herring <robh@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Mark Rutland <mark.rutland@arm.com>, James Hartley <james.hartley@imgtec.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12-10-16, 15:12, Markus Mayer wrote:
-> This series contains the CPUfreq driver for Broadcom SoCs that use "AVS
-> Firmware" for voltage and frequency scaling. All voltage and frequency
-> transitions are performed by the firmware and are therefore hidden from
-> Linux.
-> 
-> The driver provides a standard CPUfreq interface to other kernel
-> components and to userland on the one hand and communicates with the
-> AVS co-processor on the other.
-> 
-> Communication between the two processors is via shared mailbox
-> registers and interrupts (ARM -> AVS to tell the firmware that there is
-> a command to process and AVS -> ARM to tell the driver that a command
-> finished executing).
-> 
-> Changes from v3:
->     - moved code from brcm_avs_cpufreq_exit() into brcm_avs_cpufreq_remove()
->     - removed brcm_avs_cpufreq_exit() altogether
+Hi,
 
-For the entire series:
+On Monday 10 October 2016 07:51 PM, Rob Herring wrote:
+>> +
+>> +	memory {
+>
+> Is 0 the actual base, or that gets filled in by bootloader? If the
+> formet, add unit address.
+>
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Bootloader (uboot) can override or fixup memory node. But with version 
+of bootloader I tested with, base address is hardcoded to 0 and only 
+size may get changed. But since booloader can override or fixup memory 
+node, I assume we don't add unit address in this case.
 
--- 
-viresh
+>> +		device_type = "memory";
+>> +		reg =  <0x00000000 0x08000000>;
+
+I now realized that size is incorrectly specified in memory node. It 
+should be 256MB and not 128MB. I will fix this in v2.
+
+Thanks,
+Rahul
