@@ -1,56 +1,41 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [RFC v2 1/2] sdhci: Add device tree property broken-highspeed
-Date: Thu, 13 Oct 2016 11:27:23 +0900
-Message-ID: <3a259c3a-6b5e-2464-8402-488b13f03730@samsung.com>
-References: <1476297656-7019-1-git-send-email-zach.brown@ni.com>
- <CGME20161012184209epcas1p17eb49c81943bd40560d9284a274b127b@epcas1p1.samsung.com>
- <1476297656-7019-2-git-send-email-zach.brown@ni.com>
+From: Jeremy McNicoll <jmcnicol@redhat.com>
+Subject: Re: [RFC V3 PATCH 1/7] arm64: dts: msm8992 SoC and LG Bullhead (Nexus
+ 5X) support
+Date: Wed, 12 Oct 2016 21:15:01 -0700
+Message-ID: <1b144a88-965e-55d4-ffc8-32357992dfe4@redhat.com>
+References: <1476265054-22511-1-git-send-email-jeremymc@redhat.com>
+ <1476265054-22511-2-git-send-email-jeremymc@redhat.com>
+ <20161012103001.GB19509@remoulade>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1476297656-7019-2-git-send-email-zach.brown@ni.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zach Brown <zach.brown@ni.com>, ulf.hansson@linaro.org
-Cc: adrian.hunter@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20161012103001.GB19509@remoulade>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Jeremy McNicoll <jeremymc@redhat.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, arnd@arndb.de, bjorn.andersson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/13/2016 03:40 AM, Zach Brown wrote:
-> Certain board configurations can make highspeed malfuction due to timing
-> issues. In these cases a way is needed to force the controller and card
-> into standard speed even if they otherwise appear to be capable of
-> highspeed.
+On 2016-10-12 3:30 AM, Mark Rutland wrote:
+> On Wed, Oct 12, 2016 at 02:37:28AM -0700, Jeremy McNicoll wrote:
+>> +/ {
+>> +	model = "LGE MSM8992 BULLHEAD rev-1.01";
+>> +	compatible = "qcom,msm8992";
+>> +	qcom,board-id = <0xb64 0>;
+>> +};
+>
+> This last property doesn't seem to be documented or used in mainline.
+>
+> What is it for?
 
-I'm not sure "broken-hishspeed" property is relevant to only sdhci driver? otherwise on card side..?
-Subject looks like only sdhci driver..And your RFC patch should be supported only SDHCI driver.
-But your [patch 1/2] can cause the confusing in future..because there are just comment as "controller".
+It is needed for the bootloader/LK, without it LK will not jump to the
+kernel and this results in silent boot death.
 
-Then developer who refer to mmc.txt will add the property "broken-highspeed".
-I'm not sure what is correct way..but to prevent confusing..you mentioned only "sdhci" driver or supporting other controller.
+Thanks for your feedback its greatly appreciated, I am going to hold off
+on addressing it until we agree on how to handle the 3 DT entries:
+'qcom,board-id' 'qcom,msm-id' 'qcom,pmic-id'
 
-Best Regards,
-Jaehoon Chung
 
-> 
-> The broken-highspeed property will let the sdhci driver know that
-> highspeed will not work.
-> 
-> Signed-off-by: Zach Brown <zach.brown@ni.com>
-> ---
->  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-> index 8a37782..a2b298c 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-> @@ -52,6 +52,8 @@ Optional properties:
->  - no-sdio: controller is limited to send sdio cmd during initialization
->  - no-sd: controller is limited to send sd cmd during initialization
->  - no-mmc: controller is limited to send mmc cmd during initialization
-> +- broken-highspeed: Highspeed is broken, even if the controller and card
-> +  themselves claim they support highspeed.
->  
->  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
->  polarity properties, we have to fix the meaning of the "normal" and "inverted"
-> 
+<snip>
+
+-jeremy
