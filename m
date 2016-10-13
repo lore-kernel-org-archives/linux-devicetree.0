@@ -1,1286 +1,397 @@
-From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 1/2] iio: humidity: add support to hts221 rh/temp combo device
-Date: Thu, 13 Oct 2016 22:06:04 +0200
-Message-ID: <1476389165-13542-2-git-send-email-lorenzo.bianconi@st.com>
-References: <1476389165-13542-1-git-send-email-lorenzo.bianconi@st.com>
+From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 3/3] clocksource: Add clockevent support to NPS400 driver
+Date: Thu, 13 Oct 2016 17:52:30 +0300
+Message-ID: <1476370350-3853-4-git-send-email-noamca@mellanox.com>
+References: <1476370350-3853-1-git-send-email-noamca@mellanox.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476389165-13542-1-git-send-email-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <1476370350-3853-1-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support to STM HTS221 humidity + temperature sensor
+From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 
-http://www.st.com/resource/en/datasheet/hts221.pdf
+Till now we used clockevent from generic ARC driver.
+This was enough as long as we worked with simple multicore SoC.
+When we are working with multithread SoC each HW thread can be
+scheduled to receive timer interrupt using timer mask register
+(TSI1).
 
-- continuous mode support
-- i2c support
-- spi support
-- trigger mode support
+This patch will provide a way to control clock events per
+HW thread.
 
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Driver can be used from device tree by:
+compatible = "ezchip,nps400-timer0" <-- for clocksource
+compatible = "ezchip,nps400-timer1" <-- for clockevent
+
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 ---
- drivers/iio/humidity/Kconfig         |  22 ++
- drivers/iio/humidity/Makefile        |   7 +
- drivers/iio/humidity/hts221.h        |  73 ++++
- drivers/iio/humidity/hts221_buffer.c | 168 +++++++++
- drivers/iio/humidity/hts221_core.c   | 687 +++++++++++++++++++++++++++++++++++
- drivers/iio/humidity/hts221_i2c.c    | 110 ++++++
- drivers/iio/humidity/hts221_spi.c    | 125 +++++++
- 7 files changed, 1192 insertions(+)
- create mode 100644 drivers/iio/humidity/hts221.h
- create mode 100644 drivers/iio/humidity/hts221_buffer.c
- create mode 100644 drivers/iio/humidity/hts221_core.c
- create mode 100644 drivers/iio/humidity/hts221_i2c.c
- create mode 100644 drivers/iio/humidity/hts221_spi.c
+ .../bindings/timer/ezchip,nps400-timer.txt         |   15 --
+ .../bindings/timer/ezchip,nps400-timer0.txt        |   17 ++
+ .../bindings/timer/ezchip,nps400-timer1.txt        |   15 ++
+ drivers/clocksource/timer-nps.c                    |  239 +++++++++++++++++++-
+ 4 files changed, 261 insertions(+), 25 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
 
-diff --git a/drivers/iio/humidity/Kconfig b/drivers/iio/humidity/Kconfig
-index b17e2e2..6fd11d0 100644
---- a/drivers/iio/humidity/Kconfig
-+++ b/drivers/iio/humidity/Kconfig
-@@ -34,6 +34,28 @@ config HDC100X
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called hdc100x.
+diff --git a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt
+deleted file mode 100644
+index c8c03d7..0000000
+--- a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt
++++ /dev/null
+@@ -1,15 +0,0 @@
+-NPS Network Processor
+-
+-Required properties:
+-
+-- compatible :	should be "ezchip,nps400-timer"
+-
+-Clocks required for compatible = "ezchip,nps400-timer":
+-- clocks : Must contain a single entry describing the clock input
+-
+-Example:
+-
+-timer {
+-	compatible = "ezchip,nps400-timer";
+-	clocks = <&sysclk>;
+-};
+diff --git a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
+new file mode 100644
+index 0000000..e3cfce8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
+@@ -0,0 +1,17 @@
++NPS Network Processor
++
++Required properties:
++
++- compatible :	should be "ezchip,nps400-timer0"
++
++Clocks required for compatible = "ezchip,nps400-timer0":
++- interrupts : The interrupt of the first timer
++- clocks : Must contain a single entry describing the clock input
++
++Example:
++
++timer {
++	compatible = "ezchip,nps400-timer0";
++	interrupts = <3>;
++	clocks = <&sysclk>;
++};
+diff --git a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
+new file mode 100644
+index 0000000..c0ab419
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
+@@ -0,0 +1,15 @@
++NPS Network Processor
++
++Required properties:
++
++- compatible :	should be "ezchip,nps400-timer1"
++
++Clocks required for compatible = "ezchip,nps400-timer1":
++- clocks : Must contain a single entry describing the clock input
++
++Example:
++
++timer {
++	compatible = "ezchip,nps400-timer1";
++	clocks = <&sysclk>;
++};
+diff --git a/drivers/clocksource/timer-nps.c b/drivers/clocksource/timer-nps.c
+index 70c149a..6134dd2 100644
+--- a/drivers/clocksource/timer-nps.c
++++ b/drivers/clocksource/timer-nps.c
+@@ -46,7 +46,7 @@
+ /* This array is per cluster of CPUs (Each NPS400 cluster got 256 CPUs) */
+ static void *nps_msu_reg_low_addr[NPS_CLUSTER_NUM] __read_mostly;
  
-+config HTS221
-+	tristate "STMicroelectronics HTS221 sensor Driver"
-+	depends on (I2C || SPI)
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
-+	select HTS221_I2C if (I2C)
-+	select HTS221_SPI if (SPI_MASTER)
-+	help
-+	  Say yes here to build support for STMicroelectronics HTS221
-+	  temperature-humidity sensor
+-static unsigned long nps_timer_rate;
++static unsigned long nps_timer1_freq;
+ 
+ static cycle_t nps_clksrc_read(struct clocksource *clksrc)
+ {
+@@ -55,11 +55,17 @@ static cycle_t nps_clksrc_read(struct clocksource *clksrc)
+ 	return (cycle_t)ioread32be(nps_msu_reg_low_addr[cluster]);
+ }
+ 
+-static int __init nps_setup_clocksource(struct device_node *node,
+-					struct clk *clk)
++static void __init nps_setup_clocksource(struct device_node *node)
+ {
++	struct clk *clk;
+ 	int ret, cluster;
+ 
++	clk = of_clk_get(node, 0);
++	if (IS_ERR(clk)) {
++		pr_err("Can't get timer clock.\n");
++		return;
++	}
 +
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called hts221.
+ 	for (cluster = 0; cluster < NPS_CLUSTER_NUM; cluster++)
+ 		nps_msu_reg_low_addr[cluster] =
+ 			nps_host_reg((cluster << NPS_CLUSTER_OFFSET),
+@@ -71,10 +77,10 @@ static int __init nps_setup_clocksource(struct device_node *node,
+ 		return ret;
+ 	}
+ 
+-	nps_timer_rate = clk_get_rate(clk);
++	nps_timer1_freq = clk_get_rate(clk);
+ 
+-	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "EZnps-tick",
+-				    nps_timer_rate, 301, 32, nps_clksrc_read);
++	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "nps-tick",
++				    nps_timer1_freq, 301, 32, nps_clksrc_read);
+ 	if (ret) {
+ 		pr_err("Couldn't register clock source.\n");
+ 		clk_disable_unprepare(clk);
+@@ -83,9 +89,199 @@ static int __init nps_setup_clocksource(struct device_node *node,
+ 	return ret;
+ }
+ 
+-static int __init nps_timer_init(struct device_node *node)
++CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clksrc, "ezchip,nps400-timer1",
++		       nps_setup_clocksource);
 +
-+config HTS221_I2C
-+	tristate
-+	depends on HTS221
++#ifdef CONFIG_EZNPS_MTM_EXT
++#include <soc/nps/mtm.h>
 +
-+config HTS221_SPI
-+	tristate
-+	depends on HTS221
++/* Timer related Aux registers */
++#define AUX_REG_TIMER0_TSI	0xFFFFF850	/* timer 0 HW threads mask */
++#define NPS_REG_TIMER0_LIMIT	0x23		/* timer 0 limit */
++#define NPS_REG_TIMER0_CTRL	0x22		/* timer 0 control */
++#define NPS_REG_TIMER0_CNT	0x21		/* timer 0 count */
 +
- config HTU21
- 	tristate "Measurement Specialties HTU21 humidity & temperature sensor"
- 	depends on I2C
-diff --git a/drivers/iio/humidity/Makefile b/drivers/iio/humidity/Makefile
-index 4a73442..a6850e4 100644
---- a/drivers/iio/humidity/Makefile
-+++ b/drivers/iio/humidity/Makefile
-@@ -5,6 +5,13 @@
- obj-$(CONFIG_AM2315) += am2315.o
- obj-$(CONFIG_DHT11) += dht11.o
- obj-$(CONFIG_HDC100X) += hdc100x.o
++#define TIMER0_CTRL_IE	(1 << 0) /* Interrupt when Count reaches limit */
++#define TIMER0_CTRL_NH	(1 << 1) /* Count only when CPU NOT halted */
 +
-+hts221-y := hts221_core.o \
-+	    hts221_buffer.o
-+obj-$(CONFIG_HTS221) += hts221.o
-+obj-$(CONFIG_HTS221_I2C) += hts221_i2c.o
-+obj-$(CONFIG_HTS221_SPI) += hts221_spi.o
++#define NPS_TIMER_MAX	0xFFFFFFFF
 +
- obj-$(CONFIG_HTU21) += htu21.o
- obj-$(CONFIG_SI7005) += si7005.o
- obj-$(CONFIG_SI7020) += si7020.o
-diff --git a/drivers/iio/humidity/hts221.h b/drivers/iio/humidity/hts221.h
-new file mode 100644
-index 0000000..0d2993c
---- /dev/null
-+++ b/drivers/iio/humidity/hts221.h
-@@ -0,0 +1,73 @@
++static unsigned long nps_timer0_freq;
++static unsigned long nps_timer0_irq;
++
 +/*
-+ * STMicroelectronics hts221 sensor driver
-+ *
-+ * Copyright 2016 STMicroelectronics Inc.
-+ *
-+ * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-+ *
-+ * Licensed under the GPL-2.
++ * Arm the timer to interrupt after @cycles
 + */
-+
-+#ifndef HTS221_H
-+#define HTS221_H
-+
-+#define HTS221_DEV_NAME		"hts221"
-+
-+#include <linux/iio/iio.h>
-+
-+#define HTS221_RX_MAX_LENGTH	8
-+#define HTS221_TX_MAX_LENGTH	8
-+
-+#define HTS221_DATA_SIZE	2
-+
-+struct hts221_transfer_buffer {
-+	u8 rx_buf[HTS221_RX_MAX_LENGTH];
-+	u8 tx_buf[HTS221_TX_MAX_LENGTH] ____cacheline_aligned;
-+};
-+
-+struct hts221_transfer_function {
-+	int (*read)(struct device *dev, u8 addr, int len, u8 *data);
-+	int (*write)(struct device *dev, u8 addr, int len, u8 *data);
-+};
-+
-+#define HTS221_AVG_DEPTH	8
-+struct hts221_avg_avl {
-+	u16 avg;
-+	u8 val;
-+};
-+
-+enum hts221_sensor_type {
-+	HTS221_SENSOR_H,
-+	HTS221_SENSOR_T,
-+	HTS221_SENSOR_MAX,
-+};
-+
-+struct hts221_sensor {
-+	u8 cur_avg_idx;
-+	int slope, b_gen;
-+};
-+
-+struct hts221_hw {
-+	const char *name;
-+	struct device *dev;
-+
-+	struct mutex lock;
-+	struct iio_trigger *trig;
-+	int irq;
-+
-+	struct hts221_sensor sensors[HTS221_SENSOR_MAX];
-+
-+	u8 odr;
-+
-+	const struct hts221_transfer_function *tf;
-+	struct hts221_transfer_buffer tb;
-+};
-+
-+int hts221_config_drdy(struct hts221_hw *hw, bool enable);
-+int hts221_probe(struct iio_dev *iio_dev);
-+int hts221_power_on(struct hts221_hw *hw);
-+int hts221_power_off(struct hts221_hw *hw);
-+int hts221_allocate_buffers(struct hts221_hw *hw);
-+int hts221_allocate_triggers(struct hts221_hw *hw);
-+
-+#endif /* HTS221_H */
-diff --git a/drivers/iio/humidity/hts221_buffer.c b/drivers/iio/humidity/hts221_buffer.c
-new file mode 100644
-index 0000000..6b174fd
---- /dev/null
-+++ b/drivers/iio/humidity/hts221_buffer.c
-@@ -0,0 +1,168 @@
-+/*
-+ * STMicroelectronics hts221 sensor driver
-+ *
-+ * Copyright 2016 STMicroelectronics Inc.
-+ *
-+ * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-+ *
-+ * Licensed under the GPL-2.
-+ */
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/interrupt.h>
-+#include <linux/irqreturn.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/interrupt.h>
-+#include <linux/iio/events.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
-+#include <linux/iio/buffer.h>
-+
-+#include "hts221.h"
-+
-+#define HTS221_REG_STATUS_ADDR		0x27
-+#define HTS221_RH_DRDY_MASK		BIT(1)
-+#define HTS221_TEMP_DRDY_MASK		BIT(0)
-+
-+static int hts221_trig_set_state(struct iio_trigger *trig, bool state)
++static void nps_clkevent_timer_event_setup(unsigned int cycles)
 +{
-+	struct iio_dev *iio_dev = iio_trigger_get_drvdata(trig);
-+	struct hts221_hw *hw = iio_priv(iio_dev);
++	write_aux_reg(NPS_REG_TIMER0_LIMIT, cycles);
++	write_aux_reg(NPS_REG_TIMER0_CNT, 0);   /* start from 0 */
 +
-+	return hts221_config_drdy(hw, state);
++	write_aux_reg(NPS_REG_TIMER0_CTRL, TIMER0_CTRL_IE | TIMER0_CTRL_NH);
 +}
 +
-+static const struct iio_trigger_ops hts221_trigger_ops = {
-+	.owner = THIS_MODULE,
-+	.set_trigger_state = hts221_trig_set_state,
++static void nps_clkevent_rm_thread(bool remove_thread)
++{
++	unsigned int cflags;
++	unsigned int enabled_threads;
++	unsigned long flags;
++	int thread;
++
++	local_irq_save(flags);
++	hw_schd_save(&cflags);
++
++	enabled_threads = read_aux_reg(AUX_REG_TIMER0_TSI);
++
++	/* remove thread from TSI1 */
++	if (remove_thread) {
++		thread = read_aux_reg(CTOP_AUX_THREAD_ID);
++		enabled_threads &= ~(1 << thread);
++		write_aux_reg(AUX_REG_TIMER0_TSI, enabled_threads);
++	}
++
++	/* Re-arm the timer if needed */
++	if (!enabled_threads)
++		write_aux_reg(NPS_REG_TIMER0_CTRL, TIMER0_CTRL_NH);
++	else
++		write_aux_reg(NPS_REG_TIMER0_CTRL,
++			      TIMER0_CTRL_IE | TIMER0_CTRL_NH);
++
++	hw_schd_restore(cflags);
++	local_irq_restore(flags);
++}
++
++static void nps_clkevent_add_thread(bool set_event)
++{
++	int thread;
++	unsigned int cflags, enabled_threads;
++	unsigned long flags;
++
++	local_irq_save(flags);
++	hw_schd_save(&cflags);
++
++	/* add thread to TSI1 */
++	thread = read_aux_reg(CTOP_AUX_THREAD_ID);
++	enabled_threads = read_aux_reg(AUX_REG_TIMER0_TSI);
++	enabled_threads |= (1 << thread);
++	write_aux_reg(AUX_REG_TIMER0_TSI, enabled_threads);
++
++	/* set next timer event */
++	if (set_event)
++		write_aux_reg(NPS_REG_TIMER0_CTRL,
++			      TIMER0_CTRL_IE | TIMER0_CTRL_NH);
++
++	hw_schd_restore(cflags);
++	local_irq_restore(flags);
++}
++
++static int nps_clkevent_set_next_event(unsigned long delta,
++				       struct clock_event_device *dev)
++{
++	struct irq_desc *desc = irq_to_desc(nps_timer0_irq);
++	struct irq_chip *chip = irq_data_get_irq_chip(&desc->irq_data);
++
++	nps_clkevent_add_thread(true);
++	chip->irq_unmask(&desc->irq_data);
++
++	return 0;
++}
++
++/*
++ * Whenever anyone tries to change modes, we just mask interrupts
++ * and wait for the next event to get set.
++ */
++static int nps_clkevent_timer_shutdown(struct clock_event_device *dev)
++{
++	struct irq_desc *desc = irq_to_desc(nps_timer0_irq);
++	struct irq_chip *chip = irq_data_get_irq_chip(&desc->irq_data);
++
++	chip->irq_mask(&desc->irq_data);
++
++	return 0;
++}
++
++static int nps_clkevent_set_periodic(struct clock_event_device *dev)
+ {
++	nps_clkevent_add_thread(false);
++	if (read_aux_reg(CTOP_AUX_THREAD_ID) == 0)
++		nps_clkevent_timer_event_setup(nps_timer0_freq / HZ);
++
++	return 0;
++}
++
++static int nps_clkevent_set_oneshot(struct clock_event_device *dev)
++{
++	nps_clkevent_rm_thread(true);
++	nps_clkevent_timer_shutdown(dev);
++
++	return 0;
++}
++
++static DEFINE_PER_CPU(struct clock_event_device, nps_clockevent_device) = {
++	.name				=	"NPS Timer0",
++	.features			=	CLOCK_EVT_FEAT_ONESHOT |
++						CLOCK_EVT_FEAT_PERIODIC,
++	.rating				=	300,
++	.set_next_event			=	nps_clkevent_set_next_event,
++	.set_state_periodic		=	nps_clkevent_set_periodic,
++	.set_state_oneshot		=	nps_clkevent_set_oneshot,
++	.set_state_oneshot_stopped	=	nps_clkevent_timer_shutdown,
++	.set_state_shutdown		=	nps_clkevent_timer_shutdown,
++	.tick_resume			=	nps_clkevent_timer_shutdown,
 +};
 +
-+static irqreturn_t hts221_trigger_handler_thread(int irq, void *private)
++static irqreturn_t timer_irq_handler(int irq, void *dev_id)
 +{
-+	struct hts221_hw *hw = (struct hts221_hw *)private;
-+	u8 status;
-+	int err;
-+
-+	err = hw->tf->read(hw->dev, HTS221_REG_STATUS_ADDR, sizeof(status),
-+			   &status);
-+	if (err < 0)
-+		return IRQ_HANDLED;
-+
-+	/* H_DA bit (humidity data available) is routed to DRDY line.
-+	 * Humidity sample is computed after temperature one.
-+	 * Here we can assume data channels are both available if H_DA bit
-+	 * is set in status register
++	/*
++	 * Note that generic IRQ core could have passed @evt for @dev_id if
++	 * irq_set_chip_and_handler() asked for handle_percpu_devid_irq()
 +	 */
-+	if (!(status & HTS221_RH_DRDY_MASK))
-+		return IRQ_NONE;
++	struct clock_event_device *evt = this_cpu_ptr(&nps_clockevent_device);
++	int irq_reenable = clockevent_state_periodic(evt);
 +
-+	iio_trigger_poll_chained(hw->trig);
++	nps_clkevent_rm_thread(!irq_reenable);
 +
-+	return IRQ_HANDLED;
-+}
-+
-+int hts221_allocate_triggers(struct hts221_hw *hw)
-+{
-+	struct iio_dev *iio_dev = iio_priv_to_dev(hw);
-+	unsigned long irq_type;
-+	int err;
-+
-+	irq_type = irqd_get_trigger_type(irq_get_irq_data(hw->irq));
-+
-+	switch (irq_type) {
-+	case IRQF_TRIGGER_HIGH:
-+	case IRQF_TRIGGER_RISING:
-+		break;
-+	default:
-+		dev_info(hw->dev,
-+			 "mode %lx unsupported, using IRQF_TRIGGER_RISING\n",
-+			 irq_type);
-+		irq_type = IRQF_TRIGGER_RISING;
-+		break;
-+	}
-+
-+	err = devm_request_threaded_irq(hw->dev, hw->irq, NULL,
-+					hts221_trigger_handler_thread,
-+					irq_type | IRQF_ONESHOT,
-+					hw->name, hw);
-+	if (err) {
-+		dev_err(hw->dev, "failed to request trigger irq %d\n",
-+			hw->irq);
-+		return err;
-+	}
-+
-+	hw->trig = devm_iio_trigger_alloc(hw->dev, "%s-trigger",
-+					  iio_dev->name);
-+	if (!hw->trig)
-+		return -ENOMEM;
-+
-+	iio_trigger_set_drvdata(hw->trig, iio_dev);
-+	hw->trig->ops = &hts221_trigger_ops;
-+	hw->trig->dev.parent = hw->dev;
-+	iio_dev->trig = iio_trigger_get(hw->trig);
-+
-+	return devm_iio_trigger_register(hw->dev, hw->trig);
-+}
-+
-+static int hts221_buffer_preenable(struct iio_dev *iio_dev)
-+{
-+	return hts221_power_on(iio_priv(iio_dev));
-+}
-+
-+static int hts221_buffer_postdisable(struct iio_dev *iio_dev)
-+{
-+	return hts221_power_off(iio_priv(iio_dev));
-+}
-+
-+static const struct iio_buffer_setup_ops hts221_buffer_ops = {
-+	.preenable = hts221_buffer_preenable,
-+	.postenable = iio_triggered_buffer_postenable,
-+	.predisable = iio_triggered_buffer_predisable,
-+	.postdisable = hts221_buffer_postdisable,
-+};
-+
-+static irqreturn_t hts221_buffer_handler_thread(int irq, void *p)
-+{
-+	u8 buffer[ALIGN(2 * HTS221_DATA_SIZE, sizeof(s64)) + sizeof(s64)];
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *iio_dev = pf->indio_dev;
-+	struct hts221_hw *hw = iio_priv(iio_dev);
-+	struct iio_chan_spec const *ch;
-+	int err;
-+
-+	/* humidity data */
-+	ch = &iio_dev->channels[HTS221_SENSOR_H];
-+	err = hw->tf->read(hw->dev, ch->address, HTS221_DATA_SIZE,
-+			   buffer);
-+	if (err < 0)
-+		goto out;
-+
-+	/* temperature data */
-+	ch = &iio_dev->channels[HTS221_SENSOR_T];
-+	err = hw->tf->read(hw->dev, ch->address, HTS221_DATA_SIZE,
-+			   buffer + HTS221_DATA_SIZE);
-+	if (err < 0)
-+		goto out;
-+
-+	iio_push_to_buffers_with_timestamp(iio_dev, buffer,
-+					   iio_get_time_ns(iio_dev));
-+
-+out:
-+	iio_trigger_notify_done(hw->trig);
++	evt->event_handler(evt);
 +
 +	return IRQ_HANDLED;
 +}
 +
-+int hts221_allocate_buffers(struct hts221_hw *hw)
++static int nps_timer_cpu_notify(struct notifier_block *self,
++				unsigned long action, void *hcpu)
 +{
-+	return devm_iio_triggered_buffer_setup(hw->dev, iio_priv_to_dev(hw),
-+					NULL, hts221_buffer_handler_thread,
-+					&hts221_buffer_ops);
-+}
-+
-+MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
-+MODULE_DESCRIPTION("STMicroelectronics hts221 buffer driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
-new file mode 100644
-index 0000000..5a099dd
---- /dev/null
-+++ b/drivers/iio/humidity/hts221_core.c
-@@ -0,0 +1,687 @@
-+/*
-+ * STMicroelectronics hts221 sensor driver
-+ *
-+ * Copyright 2016 STMicroelectronics Inc.
-+ *
-+ * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-+ *
-+ * Licensed under the GPL-2.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/delay.h>
-+#include <asm/unaligned.h>
-+
-+#include "hts221.h"
-+
-+#define HTS221_REG_WHOAMI_ADDR		0x0f
-+#define HTS221_REG_WHOAMI_VAL		0xbc
-+
-+#define HTS221_REG_CNTRL1_ADDR		0x20
-+#define HTS221_REG_CNTRL2_ADDR		0x21
-+#define HTS221_REG_CNTRL3_ADDR		0x22
-+
-+#define HTS221_REG_AVG_ADDR		0x10
-+#define HTS221_REG_H_OUT_L		0x28
-+#define HTS221_REG_T_OUT_L		0x2a
-+
-+#define HTS221_HUMIDITY_AVG_MASK	0x07
-+#define HTS221_TEMP_AVG_MASK		0x38
-+
-+#define HTS221_ODR_MASK			0x87
-+#define HTS221_BDU_MASK			BIT(2)
-+
-+#define HTS221_DRDY_MASK		BIT(2)
-+
-+#define HTS221_ENABLE_SENSOR		BIT(7)
-+
-+#define HTS221_HUMIDITY_AVG_4		0x00 /* 0.4 %RH */
-+#define HTS221_HUMIDITY_AVG_8		0x01 /* 0.3 %RH */
-+#define HTS221_HUMIDITY_AVG_16		0x02 /* 0.2 %RH */
-+#define HTS221_HUMIDITY_AVG_32		0x03 /* 0.15 %RH */
-+#define HTS221_HUMIDITY_AVG_64		0x04 /* 0.1 %RH */
-+#define HTS221_HUMIDITY_AVG_128		0x05 /* 0.07 %RH */
-+#define HTS221_HUMIDITY_AVG_256		0x06 /* 0.05 %RH */
-+#define HTS221_HUMIDITY_AVG_512		0x07 /* 0.03 %RH */
-+
-+#define HTS221_TEMP_AVG_2		0x00 /* 0.08 degC */
-+#define HTS221_TEMP_AVG_4		0x08 /* 0.05 degC */
-+#define HTS221_TEMP_AVG_8		0x10 /* 0.04 degC */
-+#define HTS221_TEMP_AVG_16		0x18 /* 0.03 degC */
-+#define HTS221_TEMP_AVG_32		0x20 /* 0.02 degC */
-+#define HTS221_TEMP_AVG_64		0x28 /* 0.015 degC */
-+#define HTS221_TEMP_AVG_128		0x30 /* 0.01 degC */
-+#define HTS221_TEMP_AVG_256		0x38 /* 0.007 degC */
-+
-+/* calibration registers */
-+#define HTS221_REG_0RH_CAL_X_H		0x36
-+#define HTS221_REG_1RH_CAL_X_H		0x3a
-+#define HTS221_REG_0RH_CAL_Y_H		0x30
-+#define HTS221_REG_1RH_CAL_Y_H		0x31
-+#define HTS221_REG_0T_CAL_X_L		0x3c
-+#define HTS221_REG_1T_CAL_X_L		0x3e
-+#define HTS221_REG_0T_CAL_Y_H		0x32
-+#define HTS221_REG_1T_CAL_Y_H		0x33
-+#define HTS221_REG_T1_T0_CAL_Y_H	0x35
-+
-+struct hts221_odr {
-+	u8 hz;
-+	u8 val;
-+};
-+
-+struct hts221_avg {
-+	u8 addr;
-+	u8 mask;
-+	struct hts221_avg_avl avg_avl[HTS221_AVG_DEPTH];
-+};
-+
-+static const struct hts221_odr hts221_odr_table[] = {
-+	{  1, 0x01 },	/* 1Hz */
-+	{  7, 0x02 },	/* 7Hz */
-+	{ 13, 0x03 },	/* 12.5Hz */
-+};
-+
-+static const struct hts221_avg hts221_avg_list[] = {
-+	{
-+		.addr = HTS221_REG_AVG_ADDR,
-+		.mask = HTS221_HUMIDITY_AVG_MASK,
-+		.avg_avl = {
-+			{ 4, HTS221_HUMIDITY_AVG_4 },
-+			{ 8, HTS221_HUMIDITY_AVG_8 },
-+			{ 16, HTS221_HUMIDITY_AVG_16 },
-+			{ 32, HTS221_HUMIDITY_AVG_32 },
-+			{ 64, HTS221_HUMIDITY_AVG_64 },
-+			{ 128, HTS221_HUMIDITY_AVG_128 },
-+			{ 256, HTS221_HUMIDITY_AVG_256 },
-+			{ 512, HTS221_HUMIDITY_AVG_512 },
-+		},
-+	},
-+	{
-+		.addr = HTS221_REG_AVG_ADDR,
-+		.mask = HTS221_TEMP_AVG_MASK,
-+		.avg_avl = {
-+			{ 2, HTS221_TEMP_AVG_2 },
-+			{ 4, HTS221_TEMP_AVG_4 },
-+			{ 8, HTS221_TEMP_AVG_8 },
-+			{ 16, HTS221_TEMP_AVG_16 },
-+			{ 32, HTS221_TEMP_AVG_32 },
-+			{ 64, HTS221_TEMP_AVG_64 },
-+			{ 128, HTS221_TEMP_AVG_128 },
-+			{ 256, HTS221_TEMP_AVG_256 },
-+		},
-+	},
-+};
-+
-+static const struct iio_chan_spec hts221_channels[] = {
-+	{
-+		.type = IIO_HUMIDITYRELATIVE,
-+		.address = HTS221_REG_H_OUT_L,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_OFFSET) |
-+				      BIT(IIO_CHAN_INFO_SCALE) |
-+				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.scan_index = 0,
-+		.scan_type = {
-+			.sign = 's',
-+			.realbits = 16,
-+			.storagebits = 16,
-+			.endianness = IIO_LE,
-+		},
-+	},
-+	{
-+		.type = IIO_TEMP,
-+		.address = HTS221_REG_T_OUT_L,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_OFFSET) |
-+				      BIT(IIO_CHAN_INFO_SCALE) |
-+				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.scan_index = 1,
-+		.scan_type = {
-+			.sign = 's',
-+			.realbits = 16,
-+			.storagebits = 16,
-+			.endianness = IIO_LE,
-+		},
-+	},
-+	IIO_CHAN_SOFT_TIMESTAMP(2),
-+};
-+
-+static int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask,
-+				  u8 val)
-+{
-+	u8 data;
-+	int err;
-+
-+	mutex_lock(&hw->lock);
-+
-+	err = hw->tf->read(hw->dev, addr, sizeof(data), &data);
-+	if (err < 0) {
-+		dev_err(hw->dev, "failed to read %02x register\n", addr);
-+		goto unlock;
-+	}
-+
-+	data = (data & ~mask) | (val & mask);
-+
-+	err = hw->tf->write(hw->dev, addr, sizeof(data), &data);
-+	if (err < 0)
-+		dev_err(hw->dev, "failed to write %02x register\n", addr);
-+
-+unlock:
-+	mutex_unlock(&hw->lock);
-+
-+	return err;
-+}
-+
-+static int hts221_check_whoami(struct hts221_hw *hw)
-+{
-+	u8 data;
-+	int err;
-+
-+	err = hw->tf->read(hw->dev, HTS221_REG_WHOAMI_ADDR, sizeof(data),
-+			   &data);
-+	if (err < 0) {
-+		dev_err(hw->dev, "failed to read whoami register\n");
-+		return err;
-+	}
-+
-+	if (data != HTS221_REG_WHOAMI_VAL) {
-+		dev_err(hw->dev, "wrong whoami {%02x vs %02x}\n",
-+			data, HTS221_REG_WHOAMI_VAL);
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+int hts221_config_drdy(struct hts221_hw *hw, bool enable)
-+{
-+	u8 val = enable ? BIT(2) : 0;
-+	int err;
-+
-+	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL3_ADDR,
-+				     HTS221_DRDY_MASK, val);
-+
-+	return err < 0 ? err : 0;
-+}
-+
-+static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
-+{
-+	int i, err;
-+	u8 val;
-+
-+	for (i = 0; i < ARRAY_SIZE(hts221_odr_table); i++)
-+		if (hts221_odr_table[i].hz == odr)
-+			break;
-+
-+	if (i == ARRAY_SIZE(hts221_odr_table))
-+		return -EINVAL;
-+
-+	val = HTS221_ENABLE_SENSOR | HTS221_BDU_MASK | hts221_odr_table[i].val;
-+	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
-+				     HTS221_ODR_MASK, val);
-+	if (err < 0)
-+		return err;
-+
-+	hw->odr = odr;
-+
-+	return 0;
-+}
-+
-+static int hts221_update_avg(struct hts221_hw *hw,
-+			     enum hts221_sensor_type type,
-+			     u16 val)
-+{
-+	int i, err;
-+	const struct hts221_avg *avg = &hts221_avg_list[type];
-+
-+	for (i = 0; i < HTS221_AVG_DEPTH; i++)
-+		if (avg->avg_avl[i].avg == val)
-+			break;
-+
-+	if (i == HTS221_AVG_DEPTH)
-+		return -EINVAL;
-+
-+	err = hts221_write_with_mask(hw, avg->addr, avg->mask,
-+				     avg->avg_avl[i].val);
-+	if (err < 0)
-+		return err;
-+
-+	hw->sensors[type].cur_avg_idx = i;
-+
-+	return 0;
-+}
-+
-+static ssize_t hts221_sysfs_sampling_freq(struct device *dev,
-+					  struct device_attribute *attr,
-+					  char *buf)
-+{
-+	int i;
-+	ssize_t len = 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(hts221_odr_table); i++)
-+		len += scnprintf(buf + len, PAGE_SIZE - len, "%d ",
-+				 hts221_odr_table[i].hz);
-+	buf[len - 1] = '\n';
-+
-+	return len;
-+}
-+
-+static ssize_t
-+hts221_sysfs_rh_oversampling_avail(struct device *dev,
-+				   struct device_attribute *attr,
-+				   char *buf)
-+{
-+	const struct hts221_avg *avg = &hts221_avg_list[HTS221_SENSOR_H];
-+	ssize_t len = 0;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(avg->avg_avl); i++)
-+		len += scnprintf(buf + len, PAGE_SIZE - len, "%d ",
-+				 avg->avg_avl[i].avg);
-+	buf[len - 1] = '\n';
-+
-+	return len;
-+}
-+
-+static ssize_t
-+hts221_sysfs_temp_oversampling_avail(struct device *dev,
-+				     struct device_attribute *attr,
-+				     char *buf)
-+{
-+	const struct hts221_avg *avg = &hts221_avg_list[HTS221_SENSOR_T];
-+	ssize_t len = 0;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(avg->avg_avl); i++)
-+		len += scnprintf(buf + len, PAGE_SIZE - len, "%d ",
-+				 avg->avg_avl[i].avg);
-+	buf[len - 1] = '\n';
-+
-+	return len;
-+}
-+
-+int hts221_power_on(struct hts221_hw *hw)
-+{
-+	return hts221_update_odr(hw, hw->odr);
-+}
-+
-+int hts221_power_off(struct hts221_hw *hw)
-+{
-+	u8 data[] = {0x00, 0x00};
-+
-+	return hw->tf->write(hw->dev, HTS221_REG_CNTRL1_ADDR, sizeof(data),
-+			     data);
-+}
-+
-+static int hts221_parse_temp_caldata(struct hts221_hw *hw)
-+{
-+	int err, *slope, *b_gen;
-+	s16 cal_x0, cal_x1, cal_y0, cal_y1;
-+	u8 cal0, cal1;
-+
-+	err = hw->tf->read(hw->dev, HTS221_REG_0T_CAL_Y_H,
-+			   sizeof(cal0), &cal0);
-+	if (err < 0)
-+		return err;
-+
-+	err = hw->tf->read(hw->dev, HTS221_REG_T1_T0_CAL_Y_H,
-+			   sizeof(cal1), &cal1);
-+	if (err < 0)
-+		return err;
-+	cal_y0 = (le16_to_cpu(cal1 & 0x3) << 8) | cal0;
-+
-+	err = hw->tf->read(hw->dev, HTS221_REG_1T_CAL_Y_H,
-+			   sizeof(cal0), &cal0);
-+	if (err < 0)
-+		return err;
-+	cal_y1 = (((cal1 & 0xc) >> 2) << 8) | cal0;
-+
-+	err = hw->tf->read(hw->dev, HTS221_REG_0T_CAL_X_L, sizeof(cal_x0),
-+			   (u8 *)&cal_x0);
-+	if (err < 0)
-+		return err;
-+	cal_x0 = le16_to_cpu(cal_x0);
-+
-+	err = hw->tf->read(hw->dev, HTS221_REG_1T_CAL_X_L, sizeof(cal_x1),
-+			   (u8 *)&cal_x1);
-+	if (err < 0)
-+		return err;
-+	cal_x1 = le16_to_cpu(cal_x1);
-+
-+	slope = &hw->sensors[HTS221_SENSOR_T].slope;
-+	b_gen = &hw->sensors[HTS221_SENSOR_T].b_gen;
-+
-+	*slope = ((cal_y1 - cal_y0) * 8000) / (cal_x1 - cal_x0);
-+	*b_gen = (((s32)cal_x1 * cal_y0 - (s32)cal_x0 * cal_y1) * 1000) /
-+		 (cal_x1 - cal_x0);
-+	*b_gen *= 8;
-+
-+	return 0;
-+}
-+
-+static int hts221_parse_rh_caldata(struct hts221_hw *hw)
-+{
-+	int err, *slope, *b_gen;
-+	s16 cal_x0, cal_x1, cal_y0, cal_y1;
-+	u8 data;
-+
-+	err = hw->tf->read(hw->dev, HTS221_REG_0RH_CAL_Y_H, sizeof(data),
-+			   &data);
-+	if (err < 0)
-+		return err;
-+	cal_y0 = data;
-+
-+	err = hw->tf->read(hw->dev, HTS221_REG_1RH_CAL_Y_H, sizeof(data),
-+			   &data);
-+	if (err < 0)
-+		return err;
-+	cal_y1 = data;
-+
-+	err = hw->tf->read(hw->dev, HTS221_REG_0RH_CAL_X_H, sizeof(cal_x0),
-+			   (u8 *)&cal_x0);
-+	if (err < 0)
-+		return err;
-+	cal_x0 = le16_to_cpu(cal_x0);
-+
-+	err = hw->tf->read(hw->dev, HTS221_REG_1RH_CAL_X_H, sizeof(cal_x1),
-+			   (u8 *)&cal_x1);
-+	if (err < 0)
-+		return err;
-+	cal_x1 = le16_to_cpu(cal_x1);
-+
-+	slope = &hw->sensors[HTS221_SENSOR_H].slope;
-+	b_gen = &hw->sensors[HTS221_SENSOR_H].b_gen;
-+
-+	*slope = ((cal_y1 - cal_y0) * 8000) / (cal_x1 - cal_x0);
-+	*b_gen = (((s32)cal_x1 * cal_y0 - (s32)cal_x0 * cal_y1) * 1000) /
-+		 (cal_x1 - cal_x0);
-+	*b_gen *= 8;
-+
-+	return 0;
-+}
-+
-+static int hts221_get_sensor_scale(struct hts221_hw *hw,
-+				   enum iio_chan_type ch_type,
-+				   int *val, int *val2)
-+{
-+	s64 tmp;
-+	s32 rem, div, data;
-+
-+	switch (ch_type) {
-+	case IIO_HUMIDITYRELATIVE:
-+		data = hw->sensors[HTS221_SENSOR_H].slope;
-+		div = (1 << 4) * 1000;
++	struct clock_event_device *evt = this_cpu_ptr(&nps_clockevent_device);
++
++	evt->cpumask = cpumask_of(smp_processor_id());
++
++	switch (action & ~CPU_TASKS_FROZEN) {
++	case CPU_STARTING:
++		clockevents_config_and_register(evt, nps_timer0_freq,
++						0, ULONG_MAX);
++		enable_percpu_irq(nps_timer0_irq, 0);
 +		break;
-+	case IIO_TEMP:
-+		data = hw->sensors[HTS221_SENSOR_T].slope;
-+		div = (1 << 6) * 1000;
++	case CPU_DYING:
++		disable_percpu_irq(nps_timer0_irq);
 +		break;
-+	default:
-+		return -EINVAL;
 +	}
 +
-+	tmp = div_s64(data * 1000000000LL, div);
-+	tmp = div_s64_rem(tmp, 1000000000LL, &rem);
-+
-+	*val = tmp;
-+	*val2 = rem;
-+
-+	return IIO_VAL_INT_PLUS_NANO;
++	return NOTIFY_OK;
 +}
 +
-+static int hts221_get_sensor_offset(struct hts221_hw *hw,
-+				    enum iio_chan_type ch_type,
-+				    int *val, int *val2)
++static struct notifier_block nps_timer_cpu_nb = {
++	.notifier_call = nps_timer_cpu_notify,
++};
++
++static void __init nps_setup_clockevent(struct device_node *node)
 +{
-+	s64 tmp;
-+	s32 rem, div, data;
-+
-+	switch (ch_type) {
-+	case IIO_HUMIDITYRELATIVE:
-+		data = hw->sensors[HTS221_SENSOR_H].b_gen;
-+		div = hw->sensors[HTS221_SENSOR_H].slope;
-+		break;
-+	case IIO_TEMP:
-+		data = hw->sensors[HTS221_SENSOR_T].b_gen;
-+		div = hw->sensors[HTS221_SENSOR_T].slope;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	tmp = div_s64(data * 1000000000LL, div);
-+	tmp = div_s64_rem(tmp, 1000000000LL, &rem);
-+
-+	*val = tmp;
-+	*val2 = rem;
-+
-+	return IIO_VAL_INT_PLUS_NANO;
-+}
-+
-+static int hts221_read_oneshot(struct hts221_hw *hw, u8 addr, int *val)
-+{
-+	u8 data[HTS221_DATA_SIZE];
-+	int err;
-+
-+	err = hts221_power_on(hw);
-+	if (err < 0)
-+		return err;
-+
-+	msleep(50);
-+
-+	err = hw->tf->read(hw->dev, addr, sizeof(data), data);
-+	if (err < 0)
-+		return err;
-+
-+	hts221_power_off(hw);
-+
-+	*val = (s16)get_unaligned_le16(data);
-+
-+	return IIO_VAL_INT;
-+}
-+
-+static int hts221_read_raw(struct iio_dev *iio_dev,
-+			   struct iio_chan_spec const *ch,
-+			   int *val, int *val2, long mask)
-+{
-+	struct hts221_hw *hw = iio_priv(iio_dev);
++	struct clock_event_device *evt = this_cpu_ptr(&nps_clockevent_device);
+ 	struct clk *clk;
 +	int ret;
 +
-+	ret = iio_device_claim_direct_mode(iio_dev);
-+	if (ret)
-+		return ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = hts221_read_oneshot(hw, ch->address, val);
-+		break;
-+	case IIO_CHAN_INFO_SCALE:
-+		ret = hts221_get_sensor_scale(hw, ch->type, val, val2);
-+		break;
-+	case IIO_CHAN_INFO_OFFSET:
-+		ret = hts221_get_sensor_offset(hw, ch->type, val, val2);
-+		break;
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		*val = hw->odr;
-+		ret = IIO_VAL_INT;
-+		break;
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO: {
-+		u8 idx;
-+		const struct hts221_avg *avg;
-+
-+		switch (ch->type) {
-+		case IIO_HUMIDITYRELATIVE:
-+			avg = &hts221_avg_list[HTS221_SENSOR_H];
-+			idx = hw->sensors[HTS221_SENSOR_H].cur_avg_idx;
-+			*val = avg->avg_avl[idx].avg;
-+			ret = IIO_VAL_INT;
-+			break;
-+		case IIO_TEMP:
-+			avg = &hts221_avg_list[HTS221_SENSOR_T];
-+			idx = hw->sensors[HTS221_SENSOR_T].cur_avg_idx;
-+			*val = avg->avg_avl[idx].avg;
-+			ret = IIO_VAL_INT;
-+			break;
-+		default:
-+			ret = -EINVAL;
-+			break;
-+		}
-+		break;
++	nps_timer0_irq = irq_of_parse_and_map(node, 0);
++	if (nps_timer0_irq <= 0) {
++		pr_err("Can't parse IRQ");
++		return;
 +	}
-+	default:
-+		ret = -EINVAL;
-+		break;
+ 
+ 	clk = of_clk_get(node, 0);
+ 	if (IS_ERR(clk)) {
+@@ -93,8 +289,31 @@ static int __init nps_timer_init(struct device_node *node)
+ 		return PTR_ERR(clk);
+ 	}
+ 
+-	return nps_setup_clocksource(node, clk);
++	register_cpu_notifier(&nps_timer_cpu_nb);
++
++	ret = clk_prepare_enable(clk);
++	if (ret) {
++		pr_err("Couldn't enable parent clock\n");
++		return;
 +	}
 +
-+	iio_device_release_direct_mode(iio_dev);
++	nps_timer0_freq = clk_get_rate(clk);
++	evt->irq = nps_timer0_irq;
++	evt->cpumask = cpumask_of(smp_processor_id());
++	clockevents_config_and_register(evt, nps_timer0_freq,
++					0, NPS_TIMER_MAX);
 +
-+	return ret;
-+}
-+
-+static int hts221_write_raw(struct iio_dev *iio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int val, int val2, long mask)
-+{
-+	struct hts221_hw *hw = iio_priv(iio_dev);
-+	int ret;
-+
-+	ret = iio_device_claim_direct_mode(iio_dev);
-+	if (ret)
-+		return ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		ret = hts221_update_odr(hw, val);
-+		break;
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+		switch (chan->type) {
-+		case IIO_HUMIDITYRELATIVE:
-+			ret = hts221_update_avg(hw, HTS221_SENSOR_H, val);
-+			break;
-+		case IIO_TEMP:
-+			ret = hts221_update_avg(hw, HTS221_SENSOR_T, val);
-+			break;
-+		default:
-+			ret = -EINVAL;
-+			break;
-+		}
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
++	/* Needs apriori irq_set_percpu_devid() done in intc map function */
++	ret = request_percpu_irq(nps_timer0_irq, timer_irq_handler,
++				 "Timer0 (per-cpu-tick)", evt);
++	if (ret) {
++		pr_err("Couldn't request irq\n");
++		clk_disable_unprepare(clk);
 +	}
 +
-+	iio_device_release_direct_mode(iio_dev);
-+
-+	return ret;
-+}
-+
-+static int hts221_validate_trigger(struct iio_dev *iio_dev,
-+				   struct iio_trigger *trig)
-+{
-+	struct hts221_hw *hw = iio_priv(iio_dev);
-+
-+	return hw->trig == trig ? 0 : -EINVAL;
-+}
-+
-+static IIO_DEVICE_ATTR(in_humidity_oversampling_ratio_available, S_IRUGO,
-+		       hts221_sysfs_rh_oversampling_avail, NULL, 0);
-+static IIO_DEVICE_ATTR(in_temp_oversampling_ratio_available, S_IRUGO,
-+		       hts221_sysfs_temp_oversampling_avail, NULL, 0);
-+static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(hts221_sysfs_sampling_freq);
-+
-+static struct attribute *hts221_attributes[] = {
-+	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
-+	&iio_dev_attr_in_humidity_oversampling_ratio_available.dev_attr.attr,
-+	&iio_dev_attr_in_temp_oversampling_ratio_available.dev_attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group hts221_attribute_group = {
-+	.attrs = hts221_attributes,
-+};
-+
-+static const struct iio_info hts221_info = {
-+	.driver_module = THIS_MODULE,
-+	.attrs = &hts221_attribute_group,
-+	.read_raw = hts221_read_raw,
-+	.write_raw = hts221_write_raw,
-+	.validate_trigger = hts221_validate_trigger,
-+};
-+
-+static const unsigned long hts221_scan_masks[] = {0x3, 0x0};
-+
-+int hts221_probe(struct iio_dev *iio_dev)
-+{
-+	struct hts221_hw *hw = iio_priv(iio_dev);
-+	int err;
-+	u8 data;
-+
-+	mutex_init(&hw->lock);
-+
-+	err = hts221_check_whoami(hw);
-+	if (err < 0)
-+		return err;
-+
-+	hw->odr = hts221_odr_table[0].hz;
-+
-+	iio_dev->modes = INDIO_DIRECT_MODE;
-+	iio_dev->dev.parent = hw->dev;
-+	iio_dev->available_scan_masks = hts221_scan_masks;
-+	iio_dev->channels = hts221_channels;
-+	iio_dev->num_channels = ARRAY_SIZE(hts221_channels);
-+	iio_dev->name = HTS221_DEV_NAME;
-+	iio_dev->info = &hts221_info;
-+
-+	/* configure humidity sensor */
-+	err = hts221_parse_rh_caldata(hw);
-+	if (err < 0) {
-+		dev_err(hw->dev, "failed to get rh calibration data\n");
-+		return err;
-+	}
-+
-+	data = hts221_avg_list[HTS221_SENSOR_H].avg_avl[3].avg;
-+	err = hts221_update_avg(hw, HTS221_SENSOR_H, data);
-+	if (err < 0) {
-+		dev_err(hw->dev, "failed to set rh oversampling ratio\n");
-+		return err;
-+	}
-+
-+	/* configure temperature sensor */
-+	err = hts221_parse_temp_caldata(hw);
-+	if (err < 0) {
-+		dev_err(hw->dev,
-+			"failed to get temperature calibration data\n");
-+		return err;
-+	}
-+
-+	data = hts221_avg_list[HTS221_SENSOR_T].avg_avl[3].avg;
-+	err = hts221_update_avg(hw, HTS221_SENSOR_T, data);
-+	if (err < 0) {
-+		dev_err(hw->dev,
-+			"failed to set temperature oversampling ratio\n");
-+		return err;
-+	}
-+
-+	if (hw->irq > 0) {
-+		err = hts221_allocate_buffers(hw);
-+		if (err < 0)
-+			return err;
-+
-+		err = hts221_allocate_triggers(hw);
-+		if (err)
-+			return err;
-+	}
-+
-+	return devm_iio_device_register(hw->dev, iio_dev);
-+}
-+EXPORT_SYMBOL(hts221_probe);
-+
-+MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
-+MODULE_DESCRIPTION("STMicroelectronics hts221 sensor driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/iio/humidity/hts221_i2c.c b/drivers/iio/humidity/hts221_i2c.c
-new file mode 100644
-index 0000000..367ecd5
---- /dev/null
-+++ b/drivers/iio/humidity/hts221_i2c.c
-@@ -0,0 +1,110 @@
-+/*
-+ * STMicroelectronics hts221 i2c driver
-+ *
-+ * Copyright 2016 STMicroelectronics Inc.
-+ *
-+ * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-+ *
-+ * Licensed under the GPL-2.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/slab.h>
-+#include "hts221.h"
-+
-+#define I2C_AUTO_INCREMENT	0x80
-+
-+static int hts221_i2c_read(struct device *dev, u8 addr, int len, u8 *data)
-+{
-+	struct i2c_msg msg[2];
-+	struct i2c_client *client = to_i2c_client(dev);
-+
-+	if (len > 1)
-+		addr |= I2C_AUTO_INCREMENT;
-+
-+	msg[0].addr = client->addr;
-+	msg[0].flags = client->flags;
-+	msg[0].len = 1;
-+	msg[0].buf = &addr;
-+
-+	msg[1].addr = client->addr;
-+	msg[1].flags = client->flags | I2C_M_RD;
-+	msg[1].len = len;
-+	msg[1].buf = data;
-+
-+	return i2c_transfer(client->adapter, msg, 2);
-+}
-+
-+static int hts221_i2c_write(struct device *dev, u8 addr, int len, u8 *data)
-+{
-+	u8 send[len + 1];
-+	struct i2c_msg msg;
-+	struct i2c_client *client = to_i2c_client(dev);
-+
-+	if (len > 1)
-+		addr |= I2C_AUTO_INCREMENT;
-+
-+	send[0] = addr;
-+	memcpy(&send[1], data, len * sizeof(u8));
-+
-+	msg.addr = client->addr;
-+	msg.flags = client->flags;
-+	msg.len = len + 1;
-+	msg.buf = send;
-+
-+	return i2c_transfer(client->adapter, &msg, 1);
-+}
-+
-+static const struct hts221_transfer_function hts221_transfer_fn = {
-+	.read = hts221_i2c_read,
-+	.write = hts221_i2c_write,
-+};
-+
-+static int hts221_i2c_probe(struct i2c_client *client,
-+			    const struct i2c_device_id *id)
-+{
-+	struct hts221_hw *hw;
-+	struct iio_dev *iio_dev;
-+
-+	iio_dev = devm_iio_device_alloc(&client->dev, sizeof(*hw));
-+	if (!iio_dev)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(client, iio_dev);
-+
-+	hw = iio_priv(iio_dev);
-+	hw->name = client->name;
-+	hw->dev = &client->dev;
-+	hw->irq = client->irq;
-+	hw->tf = &hts221_transfer_fn;
-+
-+	return hts221_probe(iio_dev);
-+}
-+
-+static const struct of_device_id hts221_i2c_of_match[] = {
-+	{ .compatible = "st,hts221", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, hts221_i2c_of_match);
-+
-+static const struct i2c_device_id hts221_i2c_id_table[] = {
-+	{ HTS221_DEV_NAME },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(i2c, hts221_i2c_id_table);
-+
-+static struct i2c_driver hts221_driver = {
-+	.driver = {
-+		.name = "hts221_i2c",
-+		.of_match_table = of_match_ptr(hts221_i2c_of_match),
-+	},
-+	.probe = hts221_i2c_probe,
-+	.id_table = hts221_i2c_id_table,
-+};
-+module_i2c_driver(hts221_driver);
-+
-+MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
-+MODULE_DESCRIPTION("STMicroelectronics hts221 i2c driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/iio/humidity/hts221_spi.c b/drivers/iio/humidity/hts221_spi.c
-new file mode 100644
-index 0000000..70df5e7
---- /dev/null
-+++ b/drivers/iio/humidity/hts221_spi.c
-@@ -0,0 +1,125 @@
-+/*
-+ * STMicroelectronics hts221 spi driver
-+ *
-+ * Copyright 2016 STMicroelectronics Inc.
-+ *
-+ * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-+ *
-+ * Licensed under the GPL-2.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/spi/spi.h>
-+#include <linux/slab.h>
-+#include "hts221.h"
-+
-+#define SENSORS_SPI_READ	0x80
-+#define SPI_AUTO_INCREMENT	0x40
-+
-+static int hts221_spi_read(struct device *dev, u8 addr, int len, u8 *data)
-+{
-+	int err;
-+	struct spi_device *spi = to_spi_device(dev);
-+	struct iio_dev *iio_dev = spi_get_drvdata(spi);
-+	struct hts221_hw *hw = iio_priv(iio_dev);
-+
-+	struct spi_transfer xfers[] = {
-+		{
-+			.tx_buf = hw->tb.tx_buf,
-+			.bits_per_word = 8,
-+			.len = 1,
-+		},
-+		{
-+			.rx_buf = hw->tb.rx_buf,
-+			.bits_per_word = 8,
-+			.len = len,
-+		}
-+	};
-+
-+	if (len > 1)
-+		addr |= SPI_AUTO_INCREMENT;
-+	hw->tb.tx_buf[0] = addr | SENSORS_SPI_READ;
-+
-+	err = spi_sync_transfer(spi, xfers,  ARRAY_SIZE(xfers));
-+	if (err < 0)
-+		return err;
-+
-+	memcpy(data, hw->tb.rx_buf, len * sizeof(u8));
-+
-+	return len;
-+}
-+
-+static int hts221_spi_write(struct device *dev, u8 addr, int len, u8 *data)
-+{
-+	struct spi_device *spi = to_spi_device(dev);
-+	struct iio_dev *iio_dev = spi_get_drvdata(spi);
-+	struct hts221_hw *hw = iio_priv(iio_dev);
-+
-+	struct spi_transfer xfers = {
-+		.tx_buf = hw->tb.tx_buf,
-+		.bits_per_word = 8,
-+		.len = len + 1,
-+	};
-+
-+	if (len >= HTS221_TX_MAX_LENGTH)
-+		return -ENOMEM;
-+
-+	if (len > 1)
-+		addr |= SPI_AUTO_INCREMENT;
-+	hw->tb.tx_buf[0] = addr;
-+	memcpy(&hw->tb.tx_buf[1], data, len);
-+
-+	return spi_sync_transfer(spi, &xfers, 1);
-+}
-+
-+static const struct hts221_transfer_function hts221_transfer_fn = {
-+	.read = hts221_spi_read,
-+	.write = hts221_spi_write,
-+};
-+
-+static int hts221_spi_probe(struct spi_device *spi)
-+{
-+	struct hts221_hw *hw;
-+	struct iio_dev *iio_dev;
-+
-+	iio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*hw));
-+	if (!iio_dev)
-+		return -ENOMEM;
-+
-+	spi_set_drvdata(spi, iio_dev);
-+
-+	hw = iio_priv(iio_dev);
-+	hw->name = spi->modalias;
-+	hw->dev = &spi->dev;
-+	hw->irq = spi->irq;
-+	hw->tf = &hts221_transfer_fn;
-+
-+	return hts221_probe(iio_dev);
-+}
-+
-+static const struct of_device_id hts221_spi_of_match[] = {
-+	{ .compatible = "st,hts221", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, hts221_spi_of_match);
-+
-+static const struct spi_device_id hts221_spi_id_table[] = {
-+	{ HTS221_DEV_NAME },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(spi, hts221_spi_id_table);
-+
-+static struct spi_driver hts221_driver = {
-+	.driver = {
-+		.name = "hts221_spi",
-+		.of_match_table = of_match_ptr(hts221_spi_of_match),
-+	},
-+	.probe = hts221_spi_probe,
-+	.id_table = hts221_spi_id_table,
-+};
-+module_spi_driver(hts221_driver);
-+
-+MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
-+MODULE_DESCRIPTION("STMicroelectronics hts221 spi driver");
-+MODULE_LICENSE("GPL v2");
++	enable_percpu_irq(nps_timer0_irq, 0);
+ }
+ 
+-CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clksrc, "ezchip,nps400-timer",
+-		       nps_timer_init);
++CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clkevt, "ezchip,nps400-timer0",
++		       nps_setup_clockevent);
++#endif /* CONFIG_EZNPS_MTM_EXT */
 -- 
-2.7.4
+1.7.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
