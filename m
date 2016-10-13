@@ -1,63 +1,49 @@
 From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 0/2] add support to STM HTS221 humidity + temperature sensor
-Date: Thu, 13 Oct 2016 22:06:03 +0200
-Message-ID: <1476389165-13542-1-git-send-email-lorenzo.bianconi@st.com>
+Subject: [PATCH v4 2/2] Documentation: dt: iio: humidity: add hts221 sensor device binding
+Date: Thu, 13 Oct 2016 22:06:05 +0200
+Message-ID: <1476389165-13542-3-git-send-email-lorenzo.bianconi@st.com>
+References: <1476389165-13542-1-git-send-email-lorenzo.bianconi@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476389165-13542-1-git-send-email-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Changes since v3:
-- fix trigger management according to how humidity and temperature samples
-  are computed by the device
-- define two separate calibration routines to improve code readability
-- fix device tree binding
-- move driver in humidity folder
-- rename hts221_dev in hts221_hw
-- code style fixes
-
-Changes since v2:
-- fix endianness issue in hts221_parse_caldata()
-- make dev->buffer large enough to avoid the memcpy() in
-  hts221_buffer_handler_thread()
-- remove trigger top half routine and move timestamp sampling in
-  hts221_buffer_handler_thread()
-- use devm_iio_* routines to register iio_device/trigger and setup
-  iio_triggered_buffer
-- reduce spi max read/write size
-- cosmetics
-
-Changes since v1:
-- use single iio_device for both humidity and temperature sensors
-- use iio_claim_direct_mode() routine instead of grabbing the mutex directly
-- use more unique prefix for all defines
-- remove useless dev_info()
-- use of_match_ptr instead of access directly to of_match_table
-- use devm_iio_* routines
-- use info_mask_shared_by_all element for sampling_frequency
-- use oversampling ABI for humidityrelative_avg_sample and temp_avg_sample
-
-Lorenzo Bianconi (2):
-  iio: humidity: add support to hts221 rh/temp combo device
-  Documentation: dt: iio: humidity: add hts221 sensor device binding
-
- .../devicetree/bindings/iio/humidity/hts221.txt    |  22 +
- drivers/iio/humidity/Kconfig                       |  22 +
- drivers/iio/humidity/Makefile                      |   7 +
- drivers/iio/humidity/hts221.h                      |  73 +++
- drivers/iio/humidity/hts221_buffer.c               | 168 +++++
- drivers/iio/humidity/hts221_core.c                 | 687 +++++++++++++++++++++
- drivers/iio/humidity/hts221_i2c.c                  | 110 ++++
- drivers/iio/humidity/hts221_spi.c                  | 125 ++++
- 8 files changed, 1214 insertions(+)
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+---
+ .../devicetree/bindings/iio/humidity/hts221.txt    | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/iio/humidity/hts221.txt
- create mode 100644 drivers/iio/humidity/hts221.h
- create mode 100644 drivers/iio/humidity/hts221_buffer.c
- create mode 100644 drivers/iio/humidity/hts221_core.c
- create mode 100644 drivers/iio/humidity/hts221_i2c.c
- create mode 100644 drivers/iio/humidity/hts221_spi.c
 
+diff --git a/Documentation/devicetree/bindings/iio/humidity/hts221.txt b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+new file mode 100644
+index 0000000..b20ab9c1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+@@ -0,0 +1,22 @@
++* HTS221 STM humidity + temperature sensor
++
++Required properties:
++- compatible: should be "st,hts221"
++- reg: i2c address of the sensor / spi cs line
++
++Optional properties:
++- interrupt-parent: should be the phandle for the interrupt controller
++- interrupts: interrupt mapping for IRQ. It should be configured with
++  flags IRQ_TYPE_LEVEL_HIGH or IRQ_TYPE_EDGE_RISING.
++
++  Refer to interrupt-controller/interrupts.txt for generic interrupt
++  client node bindings.
++
++Example:
++
++hts221@5f {
++	compatible = "st,hts221";
++	reg = <0x5f>;
++	interrupt-parent = <&gpio0>;
++	interrupts = <0 IRQ_TYPE_EDGE_RISING>;
++};
 -- 
 2.7.4
 
