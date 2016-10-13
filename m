@@ -1,40 +1,49 @@
-From: Noam Camus <noamca@mellanox.com>
-Subject: [PATCH 2/3] ARC: [plat-eznps] remove macros for timer0 TSI
-Date: Thu, 13 Oct 2016 17:52:29 +0300
-Message-ID: <1476370350-3853-3-git-send-email-noamca@mellanox.com>
-References: <1476370350-3853-1-git-send-email-noamca@mellanox.com>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v8 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Thu, 13 Oct 2016 15:25:42 -0400
+Message-ID: <20161013192542.GW19318@brightrain.aerifal.cx>
+References: <cover.1475990489.git.dalias@libc.org>
+ <588ea0a3175fcf5d409ca32249f24760f2f6f839.1475990489.git.dalias@libc.org>
+ <20161011181812.GA1697@mai>
+ <20161011202850.GK19318@brightrain.aerifal.cx>
+ <20161012092711.GC1697@mai>
+ <20161012170236.GP19318@brightrain.aerifal.cx>
+ <20161012213126.GA1508@mai>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1476370350-3853-1-git-send-email-noamca@mellanox.com>
+Content-Disposition: inline
+In-Reply-To: <20161012213126.GA1508@mai>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: daniel.lezcano@linaro.org, tglx@linutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Noam Camus <noamca@mellanox.com>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Noam Camus <noamca@mellanox.com>
+On Wed, Oct 12, 2016 at 11:31:26PM +0200, Daniel Lezcano wrote:
+> > > --> System Type
+> > > 
+> > > That is what you are looking for, a SUPERH config option selecting all the
+> > > common options and then a JCORE config option adding the different missing
+> > > bits, namely the CLKSRC_JCORE_PIT.
+> > 
+> > We do have something like "system type" in arch/sh, and it's what I'm
+> > trying to deprecate since it's the switch to select between all the
+> > hard-coded board files, _or_ device tree.
+> > 
+> > Since part of the goal of my DT overhaul is to be able (but not
+> > forced) to produce kernels that run on a wide range of hardware,
+> > rather than having a "system type (select one)" option, what about
+> > individual boolean options like:
+> > 
+> > config JCORE_SOC
+> > 	bool "Support for J-Core SoCs"
+> > 	select CLKSRC_JCORE_PIT
+> > 	select JCORE_AIC
+> > 	...
+> 
+> I'm perfectly fine with this.
 
-Now it is defined at include/soc/nps/mtm.h
-It will be used by module from driver/clocksource/
+Does this adequately ensure that dependencies for the clocksource and
+irq driver are met? If not, what else do I need to do?
 
-Signed-off-by: Noam Camus <noamca@mellanox.com>
----
- arch/arc/plat-eznps/include/plat/ctop.h |    2 --
- 1 files changed, 0 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arc/plat-eznps/include/plat/ctop.h b/arch/arc/plat-eznps/include/plat/ctop.h
-index 9d6718c..ee2e32d 100644
---- a/arch/arc/plat-eznps/include/plat/ctop.h
-+++ b/arch/arc/plat-eznps/include/plat/ctop.h
-@@ -46,9 +46,7 @@
- #define CTOP_AUX_UDMC				(CTOP_AUX_BASE + 0x300)
- 
- /* EZchip core instructions */
--#define CTOP_INST_HWSCHD_OFF_R3			0x3B6F00BF
- #define CTOP_INST_HWSCHD_OFF_R4			0x3C6F00BF
--#define CTOP_INST_HWSCHD_RESTORE_R3		0x3E6F70C3
- #define CTOP_INST_HWSCHD_RESTORE_R4		0x3E6F7103
- #define CTOP_INST_SCHD_RW			0x3E6F7004
- #define CTOP_INST_SCHD_RD			0x3E6F7084
--- 
-1.7.1
+Rich
