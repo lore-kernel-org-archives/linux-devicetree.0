@@ -1,105 +1,78 @@
-From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] leds: leds-pca963x: workaround group blink scaling issue
-Date: Thu, 13 Oct 2016 06:16:12 -0700
-Message-ID: <1476364572-26849-1-git-send-email-matt@ranostay.consulting>
+From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 03/10] ARM: sun8i: dt: Add DT bindings documentation
+ for Allwinner sun8i-emac
+Date: Thu, 13 Oct 2016 15:39:13 +0200
+Message-ID: <20161013133913.GA23079@Red>
+References: <1475828757-926-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1475828757-926-4-git-send-email-clabbe.montjoie@gmail.com>
+ <20161010151335.GA3111@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161010151335.GA3111@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PCA9632TK part seems to incorrectly blink at ~1.3x of the programmed
-rate. This patchset add a nxp,period-scale devicetree property to
-adjust for this misconfiguration.
+On Mon, Oct 10, 2016 at 10:13:35AM -0500, Rob Herring wrote:
+> On Fri, Oct 07, 2016 at 10:25:50AM +0200, Corentin Labbe wrote:
+> > This patch adds documentation for Device-Tree bindings for the
+> > Allwinner sun8i-emac driver.
+> > 
+> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  .../bindings/net/allwinner,sun8i-emac.txt          | 70 ++++++++++++++++++++++
+> >  1 file changed, 70 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
+> > new file mode 100644
+> > index 0000000..92e4ef3b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
+> > @@ -0,0 +1,70 @@
+> > +* Allwinner sun8i EMAC ethernet controller
+> > +
+> > +Required properties:
+> > +- compatible: should be one of the following string:
+> > +		"allwinner,sun8i-a83t-emac"
+> > +		"allwinner,sun8i-h3-emac"
+> > +		"allwinner,sun50i-a64-emac"
+> > +- reg: address and length of the register for the device.
+> > +- syscon: A phandle to the syscon of the SoC
+> > +- interrupts: interrupt for the device
+> > +- clocks: A phandle to the reference clock for this device
+> > +- clock-names: should be "ahb"
+> > +- resets: A phandle to the reset control for this device
+> > +- reset-names: should be "ahb"
+> > +- phy-mode: See ethernet.txt
+> > +- phy-handle: See ethernet.txt
+> > +- #address-cells: shall be 1
+> > +- #size-cells: shall be 0
+> > +
+> > +Optional properties:
+> > +- allwinner,tx-delay: TX clock delay chain value. Range value is 0-0x07. Default is 0)
+> > +- allwinner,rx-delay: RX clock delay chain value. Range value is 0-0x1F. Default is 0)
+> > +Both delay properties does not have units, there are arbitrary value.
+> 
+> They have to have some sort of units. Some number of clocks perhaps. Or 
+> just say what register field they correspond to.
+> 
 
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
----
- Documentation/devicetree/bindings/leds/pca963x.txt |  3 +++
- drivers/leds/leds-pca963x.c                        | 18 +++++++++++++++---
- 2 files changed, 18 insertions(+), 3 deletions(-)
+I have re-read all 3 datasheets (A64/H3/A83T) and made string search for finding any information.
+But still found nothing, no unit, no more informations than I already wrote in this file.
 
-diff --git a/Documentation/devicetree/bindings/leds/pca963x.txt b/Documentation/devicetree/bindings/leds/pca963x.txt
-index dafbe9931c2b..dfbdb123a9bf 100644
---- a/Documentation/devicetree/bindings/leds/pca963x.txt
-+++ b/Documentation/devicetree/bindings/leds/pca963x.txt
-@@ -7,6 +7,9 @@ Optional properties:
- - nxp,totem-pole : use totem pole (push-pull) instead of open-drain (pca9632 defaults
-   to open-drain, newer chips to totem pole)
- - nxp,hw-blink : use hardware blinking instead of software blinking
-+- nxp,period-scale : In some configurations, the chip blinks faster than expected.
-+		     This parameter provides a scaling ratio (fixed point, decimal divided
-+		     by 1000) to compensate, e.g. 1300=1.3x and 750=0.75x.
- 
- Each led is represented as a sub-node of the nxp,pca963x device.
- 
-diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
-index 407eba11e187..b6ce1f2ec33e 100644
---- a/drivers/leds/leds-pca963x.c
-+++ b/drivers/leds/leds-pca963x.c
-@@ -59,6 +59,7 @@ struct pca963x_chipdef {
- 	u8			grpfreq;
- 	u8			ledout_base;
- 	int			n_leds;
-+	unsigned int		scaling;
- };
- 
- static struct pca963x_chipdef pca963x_chipdefs[] = {
-@@ -189,6 +190,14 @@ static int pca963x_led_set(struct led_classdev *led_cdev,
- 	return pca963x_brightness(pca963x, value);
- }
- 
-+static unsigned int pca963x_period_scale(struct pca963x_led *pca963x,
-+	unsigned int val)
-+{
-+	unsigned int scaling = pca963x->chip->chipdef->scaling;
-+
-+	return scaling ? DIV_ROUND_CLOSEST(val * scaling, 1000) : val;
-+}
-+
- static int pca963x_blink_set(struct led_classdev *led_cdev,
- 		unsigned long *delay_on, unsigned long *delay_off)
- {
-@@ -207,14 +216,14 @@ static int pca963x_blink_set(struct led_classdev *led_cdev,
- 		time_off = 500;
- 	}
- 
--	period = time_on + time_off;
-+	period = pca963x_period_scale(pca963x, time_on + time_off);
- 
- 	/* If period not supported by hardware, default to someting sane. */
- 	if ((period < PCA963X_BLINK_PERIOD_MIN) ||
- 	    (period > PCA963X_BLINK_PERIOD_MAX)) {
- 		time_on = 500;
- 		time_off = 500;
--		period = time_on + time_off;
-+		period = pca963x_period_scale(pca963x, 1000);
- 	}
- 
- 	/*
-@@ -222,7 +231,7 @@ static int pca963x_blink_set(struct led_classdev *led_cdev,
- 	 *	(time_on / period) = (GDC / 256) ->
- 	 *		GDC = ((time_on * 256) / period)
- 	 */
--	gdc = (time_on * 256) / period;
-+	gdc = (pca963x_period_scale(pca963x, time_on) * 256) / period;
- 
- 	/*
- 	 * From manual: period = ((GFRQ + 1) / 24) in seconds.
-@@ -294,6 +303,9 @@ pca963x_dt_init(struct i2c_client *client, struct pca963x_chipdef *chip)
- 	else
- 		pdata->blink_type = PCA963X_SW_BLINK;
- 
-+	if (of_property_read_u32(np, "nxp,period-scale", &chip->scaling))
-+		chip->scaling = 1000;
-+
- 	return pdata;
- }
- 
--- 
-2.7.4
+For the register field, just saying that it is used in the syscon register EMAC_CLK_REG is sufficient ?
 
+> > +The TX/RX clock delay chain settings are board specific and could be found
+> > +in vendor FEX files.
+> > +
+
+Regards
+
+Corentin Labbe
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
