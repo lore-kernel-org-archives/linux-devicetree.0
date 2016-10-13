@@ -1,67 +1,73 @@
 From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC V3 PATCH 5/7] arm64: dts: msm8994 SoC and Huawei Angler
- (Nexus 6P) support
-Date: Wed, 12 Oct 2016 17:42:38 -0700
-Message-ID: <3e641d25-8ca6-3594-5d3e-038d6f7a9eba@redhat.com>
-References: <1476265054-22511-1-git-send-email-jeremymc@redhat.com>
- <1476265054-22511-6-git-send-email-jeremymc@redhat.com>
- <20161012133450.GC21050@remoulade>
- <CAL_JsqLMs3cE6qne_GN-3E7c1ub_6U0y5UF0aLkxUD=k5fiOTw@mail.gmail.com>
+Subject: Re: [RFC V2 PATCH 10/12] arm64: dts: msm8994 issolate non standard
+ bootloader/LK entries
+Date: Wed, 12 Oct 2016 17:59:41 -0700
+Message-ID: <17447be1-4357-0eca-a242-69576d3e2799@redhat.com>
+References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
+ <1475375919-618-11-git-send-email-jmcnicol@redhat.com>
+ <CAL_Jsq+ew7p6OYPzdTDmB9LAoGOOKasioYzmU=R+jLza2hWQFw@mail.gmail.com>
+ <2149904.D2eaQZN3bA@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLMs3cE6qne_GN-3E7c1ub_6U0y5UF0aLkxUD=k5fiOTw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <2149904.D2eaQZN3bA@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, git-LJ92rlH3Dns@public.gmane.org, jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-12 7:20 AM, Rob Herring wrote:
-> On Wed, Oct 12, 2016 at 8:34 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> On Wed, Oct 12, 2016 at 02:37:32AM -0700, Jeremy McNicoll wrote:
->>> +/ {
->>> +     model = "HUAWEI MSM8994 ANGLER rev-1.01";
->>> +     compatible = "qcom,msm8994";
->>> +     qcom,board-id= <8026 0>;
->>> +};
+On 2016-10-12 3:39 AM, Arnd Bergmann wrote:
+> On Tuesday, October 11, 2016 7:41:22 PM CEST Rob Herring wrote:
+>> On Sat, Oct 1, 2016 at 9:38 PM, Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>> These non standard DT entries need to be cast aside as to not
+>>> pollute the main device tree bindings.  Without these essential
+>>> DT items the bootloader/LK will not pass control over to the kernel
+>>> and thus never boot.
 >>
->> This last property is undocumented, and unused.
+>> I discussed this with Stephen recently. I'm okay with leaving these on
+>> boards that have no chance of getting updated bootloaders to use the
+>> compatible string instead. Having to use dtbTool is far worse than a
+>> couple of extra properties IMO. I reserve the right to complain if new
+>> stuff continues to use these though.
+>>
+>>> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>  .../arm64/boot/dts/qcom/msm8994-angler-rev-101.dts |  1 -
+>>>  arch/arm64/boot/dts/qcom/msm8994.dtsi              |  3 +--
+>>>  .../boot/dts/qcom/nexus6p_bootloader_bits.dtsi     | 24 ++++++++++++++++++++++
+>>
+>> Just put this into the board file rather than yet another include.
 >
-> They are required by the bootloader which AIUI can't/won't be updated
-> to use the mainline compatible string. The alternative is leave them
-
-That is my understanding as well after talking to some QC people over
-beer the other night.
-
-> out and then you have to run the dtb thru QC's dtbTool to add them
-> which is worse IMO.
->
-
-If there is an expectation that one has to run the dtbTool as a post
-compilation thing, in my opinion its not a good idea.  But if that is
-the path that is decided (not my personal favourite) then we should
-at least let people know somehow that they have to run this tool in
-order to boot their kernel.   (dont like that either)
-
-
-Its already hard enough to get debug serial going, or figuring out how 
-to get serial debug out.  We should make it as easy as possible for 
-people that want to contribute and help.   Google did _NOT_ lock down 
-these phones on purpose so that people can do what they want with them 
-(within reason).  The fewer barriers to entry the better.
-
-
-
-> I'd also leave them undocumented as we want to minimize their usage.
+> The suggestion that I had was to have two .dts files: the normal
+> one without these properties, and another .dts file including the
+> first but adding these three for compatibility with the legacy
+> bootloaders.
 >
 
-I agree with this and will leave policing of their usage to RobH ;-)
+So I did it backwards from what you had suggested?
+Based on my discussion with, (cant seem to recall) my understanding
+was that we simply wanted to have these 3 bootloader specific entries
+in another file.
+
+> That way we could have a 'clean' .dtb file once the bootloaders
+> get fixed, and can name the other one appropriately to discourage
+> copying the method for new machines.
+>
+
+Did you miss the part about Ebola or Bubonic plague ?
+
+> Having the bootloader files included from the main .dts files
+> would serve no purpose.
+>
+
+Well, not really.  What about?
+
+$ git revert <commit that introduced nexus6p_bootloader_bits.dtsi>
 
 -jeremy
 
-
-> Rob
+> 	Arnd
 > --
 > To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
 > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
