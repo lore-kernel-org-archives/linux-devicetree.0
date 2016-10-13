@@ -1,58 +1,66 @@
-From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Subject: Re: [PATCH v8 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Thu, 13 Oct 2016 15:48:47 -0400
-Message-ID: <20161013194847.GX19318@brightrain.aerifal.cx>
-References: <cover.1475990489.git.dalias@libc.org>
- <588ea0a3175fcf5d409ca32249f24760f2f6f839.1475990489.git.dalias@libc.org>
- <20161011181812.GA1697@mai>
- <20161011202850.GK19318@brightrain.aerifal.cx>
- <20161012092711.GC1697@mai>
- <20161012170236.GP19318@brightrain.aerifal.cx>
- <20161012213126.GA1508@mai>
- <20161013192542.GW19318@brightrain.aerifal.cx>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 0/2] add support to STM HTS221 humidity + temperature sensor
+Date: Thu, 13 Oct 2016 22:06:03 +0200
+Message-ID: <1476389165-13542-1-git-send-email-lorenzo.bianconi@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161013192542.GW19318-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "Paul E. McKenney" <paulmck-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 13, 2016 at 03:25:42PM -0400, Rich Felker wrote:
-> On Wed, Oct 12, 2016 at 11:31:26PM +0200, Daniel Lezcano wrote:
-> > > > --> System Type
-> > > > 
-> > > > That is what you are looking for, a SUPERH config option selecting all the
-> > > > common options and then a JCORE config option adding the different missing
-> > > > bits, namely the CLKSRC_JCORE_PIT.
-> > > 
-> > > We do have something like "system type" in arch/sh, and it's what I'm
-> > > trying to deprecate since it's the switch to select between all the
-> > > hard-coded board files, _or_ device tree.
-> > > 
-> > > Since part of the goal of my DT overhaul is to be able (but not
-> > > forced) to produce kernels that run on a wide range of hardware,
-> > > rather than having a "system type (select one)" option, what about
-> > > individual boolean options like:
-> > > 
-> > > config JCORE_SOC
-> > > 	bool "Support for J-Core SoCs"
-> > > 	select CLKSRC_JCORE_PIT
-> > > 	select JCORE_AIC
-> > > 	...
-> > 
-> > I'm perfectly fine with this.
-> 
-> Does this adequately ensure that dependencies for the clocksource and
-> irq driver are met? If not, what else do I need to do?
+Changes since v3:
+- fix trigger management according to how humidity and temperature samples
+  are computed by the device
+- define two separate calibration routines to improve code readability
+- fix device tree binding
+- move driver in humidity folder
+- rename hts221_dev in hts221_hw
+- code style fixes
 
-I've checked and it seems the dependencies are always met for arch/sh,
-at least with device tree enabled (on which JCORE_SOC will depend), so
-it shouldn't matter.
+Changes since v2:
+- fix endianness issue in hts221_parse_caldata()
+- make dev->buffer large enough to avoid the memcpy() in
+  hts221_buffer_handler_thread()
+- remove trigger top half routine and move timestamp sampling in
+  hts221_buffer_handler_thread()
+- use devm_iio_* routines to register iio_device/trigger and setup
+  iio_triggered_buffer
+- reduce spi max read/write size
+- cosmetics
 
-Rich
+Changes since v1:
+- use single iio_device for both humidity and temperature sensors
+- use iio_claim_direct_mode() routine instead of grabbing the mutex directly
+- use more unique prefix for all defines
+- remove useless dev_info()
+- use of_match_ptr instead of access directly to of_match_table
+- use devm_iio_* routines
+- use info_mask_shared_by_all element for sampling_frequency
+- use oversampling ABI for humidityrelative_avg_sample and temp_avg_sample
+
+Lorenzo Bianconi (2):
+  iio: humidity: add support to hts221 rh/temp combo device
+  Documentation: dt: iio: humidity: add hts221 sensor device binding
+
+ .../devicetree/bindings/iio/humidity/hts221.txt    |  22 +
+ drivers/iio/humidity/Kconfig                       |  22 +
+ drivers/iio/humidity/Makefile                      |   7 +
+ drivers/iio/humidity/hts221.h                      |  73 +++
+ drivers/iio/humidity/hts221_buffer.c               | 168 +++++
+ drivers/iio/humidity/hts221_core.c                 | 687 +++++++++++++++++++++
+ drivers/iio/humidity/hts221_i2c.c                  | 110 ++++
+ drivers/iio/humidity/hts221_spi.c                  | 125 ++++
+ 8 files changed, 1214 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/humidity/hts221.txt
+ create mode 100644 drivers/iio/humidity/hts221.h
+ create mode 100644 drivers/iio/humidity/hts221_buffer.c
+ create mode 100644 drivers/iio/humidity/hts221_core.c
+ create mode 100644 drivers/iio/humidity/hts221_i2c.c
+ create mode 100644 drivers/iio/humidity/hts221_spi.c
+
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
