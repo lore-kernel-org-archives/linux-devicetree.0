@@ -1,79 +1,87 @@
-From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 03/10] ARM: sun8i: dt: Add DT bindings documentation
- for Allwinner sun8i-emac
-Date: Thu, 13 Oct 2016 15:39:13 +0200
-Message-ID: <20161013133913.GA23079@Red>
-References: <1475828757-926-1-git-send-email-clabbe.montjoie@gmail.com>
- <1475828757-926-4-git-send-email-clabbe.montjoie@gmail.com>
- <20161010151335.GA3111@rob-hp-laptop>
+From: James Hartley <James.Hartley@imgtec.com>
+Subject: RE: [PATCH 2/2] MIPS: DTS: img: add device tree for Marduk board
+Date: Thu, 13 Oct 2016 13:49:01 +0000
+Message-ID: <72BC0C8BD7BB6F45988A99382E5FBAE5889EDBE5@HHMAIL01.hh.imgtec.org>
+References: <1475757094-31089-1-git-send-email-rahul.bedarkar@imgtec.com>
+ <1475757094-31089-2-git-send-email-rahul.bedarkar@imgtec.com>
+ <20161010142152.GA7920@rob-hp-laptop> <57FF3172.4010709@imgtec.com>
+ <72BC0C8BD7BB6F45988A99382E5FBAE5889ED617@HHMAIL01.hh.imgtec.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161010151335.GA3111@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <72BC0C8BD7BB6F45988A99382E5FBAE5889ED617@HHMAIL01.hh.imgtec.org>
+Content-Language: en-US
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: James Hartley <James.Hartley@imgtec.com>, Rahul Bedarkar <Rahul.Bedarkar@imgtec.com>, Rob Herring <robh@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Mark Rutland <mark.rutland@arm.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 10, 2016 at 10:13:35AM -0500, Rob Herring wrote:
-> On Fri, Oct 07, 2016 at 10:25:50AM +0200, Corentin Labbe wrote:
-> > This patch adds documentation for Device-Tree bindings for the
-> > Allwinner sun8i-emac driver.
-> > 
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  .../bindings/net/allwinner,sun8i-emac.txt          | 70 ++++++++++++++++++++++
-> >  1 file changed, 70 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
-> > new file mode 100644
-> > index 0000000..92e4ef3b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
-> > @@ -0,0 +1,70 @@
-> > +* Allwinner sun8i EMAC ethernet controller
-> > +
-> > +Required properties:
-> > +- compatible: should be one of the following string:
-> > +		"allwinner,sun8i-a83t-emac"
-> > +		"allwinner,sun8i-h3-emac"
-> > +		"allwinner,sun50i-a64-emac"
-> > +- reg: address and length of the register for the device.
-> > +- syscon: A phandle to the syscon of the SoC
-> > +- interrupts: interrupt for the device
-> > +- clocks: A phandle to the reference clock for this device
-> > +- clock-names: should be "ahb"
-> > +- resets: A phandle to the reset control for this device
-> > +- reset-names: should be "ahb"
-> > +- phy-mode: See ethernet.txt
-> > +- phy-handle: See ethernet.txt
-> > +- #address-cells: shall be 1
-> > +- #size-cells: shall be 0
-> > +
-> > +Optional properties:
-> > +- allwinner,tx-delay: TX clock delay chain value. Range value is 0-0x07. Default is 0)
-> > +- allwinner,rx-delay: RX clock delay chain value. Range value is 0-0x1F. Default is 0)
-> > +Both delay properties does not have units, there are arbitrary value.
+Hi Rahul,
+
+> -----Original Message-----
+> From: linux-mips-bounce@linux-mips.org [mailto:linux-mips-bounce@linux-
+> mips.org] On Behalf Of James Hartley
+> Sent: 13 October 2016 09:50
+> To: Rahul Bedarkar; Rob Herring
+> Cc: Ralf Baechle; Mark Rutland; linux-mips@linux-mips.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: RE: [PATCH 2/2] MIPS: DTS: img: add device tree for Marduk board
 > 
-> They have to have some sort of units. Some number of clocks perhaps. Or 
-> just say what register field they correspond to.
+> Hi Rahul,
 > 
+> > -----Original Message-----
+> > From: Rahul Bedarkar
+> > Sent: 13 October 2016 08:02
+> > To: Rob Herring
+> > Cc: Ralf Baechle; Mark Rutland; James Hartley;
+> > linux-mips@linux-mips.org; devicetree@vger.kernel.org;
+> > linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH 2/2] MIPS: DTS: img: add device tree for Marduk
+> > board
+> >
+> > Hi,
+> >
+> > On Monday 10 October 2016 07:51 PM, Rob Herring wrote:
+> > >> +
+> > >> +	memory {
+> > >
+> > > Is 0 the actual base, or that gets filled in by bootloader? If the
+> > > formet, add unit address.
+> > >
+> >
+> > Bootloader (uboot) can override or fixup memory node. But with version
+> > of bootloader I tested with, base address is hardcoded to 0 and only
+> > size may get changed. But since booloader can override or fixup memory
+> > node, I assume we don't add unit address in this case.
+> >
+> > >> +		device_type = "memory";
+> > >> +		reg =  <0x00000000 0x08000000>;
+> >
+> > I now realized that size is incorrectly specified in memory node. It
+> > should be 256MB and not 128MB. I will fix this in v2.
+> 
+> This is board dependent, and since you have already explained that the boot
+> loader is expected to configure this, I would recommend leaving it at 128MB
+> (which I believe is the size of the smallest DDR part in use on existing boards).
+> This would mean that if for some reason the boot loader did not adjust the
+> settings, it would still boot on all currently known boards.
 
-I have re-read all 3 datasheets (A64/H3/A83T) and made string search for finding any information.
-But still found nothing, no unit, no more informations than I already wrote in this file.
+So it seems the 128MB boards are not CI40 based, so since this dts is CI40 specific, it's fine to have 256MB.
 
-For the register field, just saying that it is used in the syscon register EMAC_CLK_REG is sufficient ?
+James.
 
-> > +The TX/RX clock delay chain settings are board specific and could be found
-> > +in vendor FEX files.
-> > +
-
-Regards
-
-Corentin Labbe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> James.
+> 
+> >
+> > Thanks,
+> > Rahul
