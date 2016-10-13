@@ -1,80 +1,86 @@
-From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC V2 PATCH 10/12] arm64: dts: msm8994 issolate non standard
- bootloader/LK entries
-Date: Wed, 12 Oct 2016 17:59:41 -0700
-Message-ID: <17447be1-4357-0eca-a242-69576d3e2799@redhat.com>
-References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
- <1475375919-618-11-git-send-email-jmcnicol@redhat.com>
- <CAL_Jsq+ew7p6OYPzdTDmB9LAoGOOKasioYzmU=R+jLza2hWQFw@mail.gmail.com>
- <2149904.D2eaQZN3bA@wuerfel>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v7 2/8] power: add power sequence library
+Date: Thu, 13 Oct 2016 09:22:16 +0800
+Message-ID: <20161013012216.GA8114@b29397-desktop>
+References: <1474342607-27512-1-git-send-email-peter.chen@nxp.com>
+ <1474342607-27512-3-git-send-email-peter.chen@nxp.com>
+ <4691591.qnCGxrEkrZ@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2149904.D2eaQZN3bA@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, git-LJ92rlH3Dns@public.gmane.org, jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4691591.qnCGxrEkrZ@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, dbaryshkov@gmail.com, dwmw3@infradead.org, k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org, stillcompiling@gmail.com, linux-kernel@vger.kernel.org, mka@chromium.org, vaibhav.hiremath@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-12 3:39 AM, Arnd Bergmann wrote:
-> On Tuesday, October 11, 2016 7:41:22 PM CEST Rob Herring wrote:
->> On Sat, Oct 1, 2016 at 9:38 PM, Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>> These non standard DT entries need to be cast aside as to not
->>> pollute the main device tree bindings.  Without these essential
->>> DT items the bootloader/LK will not pass control over to the kernel
->>> and thus never boot.
->>
->> I discussed this with Stephen recently. I'm okay with leaving these on
->> boards that have no chance of getting updated bootloaders to use the
->> compatible string instead. Having to use dtbTool is far worse than a
->> couple of extra properties IMO. I reserve the right to complain if new
->> stuff continues to use these though.
->>
->>> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>  .../arm64/boot/dts/qcom/msm8994-angler-rev-101.dts |  1 -
->>>  arch/arm64/boot/dts/qcom/msm8994.dtsi              |  3 +--
->>>  .../boot/dts/qcom/nexus6p_bootloader_bits.dtsi     | 24 ++++++++++++++++++++++
->>
->> Just put this into the board file rather than yet another include.
->
-> The suggestion that I had was to have two .dts files: the normal
-> one without these properties, and another .dts file including the
-> first but adding these three for compatibility with the legacy
-> bootloaders.
->
+On Wed, Oct 12, 2016 at 12:30:29PM +0200, Heiko Stuebner wrote:
+> Hi,
+> 
+> Am Dienstag, 20. September 2016, 11:36:41 CEST schrieb Peter Chen:
+> > We have an well-known problem that the device needs to do some power
+> > sequence before it can be recognized by related host, the typical
+> > example like hard-wired mmc devices and usb devices.
+> > 
+> > This power sequence is hard to be described at device tree and handled by
+> > related host driver, so we have created a common power sequence
+> > library to cover this requirement. The core code has supplied
+> > some common helpers for host driver, and individual power sequence
+> > libraries handle kinds of power sequence for devices.
+> > 
+> > pwrseq_generic is intended for general purpose of power sequence, which
+> > handles gpios and clocks currently, and can cover regulator and pinctrl
+> > in future. The host driver just needs to call of_pwrseq_on/of_pwrseq_off
+> > if only one power sequence is needed, else call of_pwrseq_on_list
+> > /of_pwrseq_off_list instead (eg, USB hub driver).
+> >
+> > Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> > Tested-by Joshua Clayton <stillcompiling@gmail.com>
+> > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> > Tested-by: Matthias Kaehlcke <mka@chromium.org>
+> 
+> first of all, glad to see this move forward. I've only some qualms with the 
+> static number of allocated power sequences below.
+> 
 
-So I did it backwards from what you had suggested?
-Based on my discussion with, (cant seem to recall) my understanding
-was that we simply wanted to have these 3 bootloader specific entries
-in another file.
+Thanks for commenting it, the preallocate way is not a good way, but I
+can't find suitable way. See below comments.
 
-> That way we could have a 'clean' .dtb file once the bootloaders
-> get fixed, and can name the other one appropriately to discourage
-> copying the method for new machines.
->
+> > +static int __init pwrseq_generic_register(void)
+> > +{
+> > +	struct pwrseq_generic *pwrseq_gen;
+> > +	int i;
+> > +
+> > +	for (i = 0; i < CONFIG_PWRSEQ_GENERIC_INSTANCE_NUMBER; i++) {
+> > +		pwrseq_gen = kzalloc(sizeof(*pwrseq_gen), GFP_KERNEL);
+> > +		if (!pwrseq_gen)
+> > +			return -ENOMEM;
+> > +
+> > +		pwrseq_gen->pwrseq.pwrseq_of_match_table = generic_id_table;
+> > +		pwrseq_gen->pwrseq.get = pwrseq_generic_get;
+> > +		pwrseq_gen->pwrseq.on = pwrseq_generic_on;
+> > +		pwrseq_gen->pwrseq.off = pwrseq_generic_off;
+> > +		pwrseq_gen->pwrseq.put = pwrseq_generic_put;
+> > +		pwrseq_gen->pwrseq.free = pwrseq_generic_free;
+> > +
+> > +		pwrseq_register(&pwrseq_gen->pwrseq);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +postcore_initcall(pwrseq_generic_register)
+> 
+> I see that you need to have it preallocated for the compatible matching, but 
+> wouldn't it also work to either just register the type and allocate 
+> dynamically or otherwise just allocate a new spare everytime 
+> pwrseq_generic_get() picks up the previous spare?
 
-Did you miss the part about Ebola or Bubonic plague ?
+Before compatible matching, the host driver doesn't know which pwrseq type
+for its child node, then doesn't know which pwrseq instance needs to be
+allocated. From dts, we don't know which pwrseq type for the node.
 
-> Having the bootloader files included from the main .dts files
-> would serve no purpose.
->
+-- 
 
-Well, not really.  What about?
-
-$ git revert <commit that introduced nexus6p_bootloader_bits.dtsi>
-
--jeremy
-
-> 	Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Peter Chen
