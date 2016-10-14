@@ -1,120 +1,992 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: drm/bridge: adv7511: Add regulator
- bindings
-Date: Fri, 14 Oct 2016 11:10:28 +0530
-Message-ID: <e3d74745-fd14-63f1-e93f-f57e886e26ed@codeaurora.org>
-References: <1472640730-24326-1-git-send-email-architt@codeaurora.org>
- <737415023.GKbfqYIf4s@avalon> <57E8C2CB.9000806@codeaurora.org>
- <1527982.jPo8JkVTxZ@avalon>
+From: Rahul Bedarkar <rahul.bedarkar@imgtec.com>
+Subject: [PATCH v2 1/2] MIPS: DTS: add base device tree for Pistachio SoC
+Date: Fri, 14 Oct 2016 11:25:54 +0530
+Message-ID: <1476424555-22629-1-git-send-email-rahul.bedarkar@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1527982.jPo8JkVTxZ@avalon>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, robh@kernel.org
-Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, James Hartley <james.hartley@imgtec.com>
+Cc: linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rahul Bedarkar <rahul.bedarkar@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Add support for the base Device Tree for Imagination Technologies'
+Pistachio SoC.
 
-On 09/26/2016 01:42 PM, Laurent Pinchart wrote:
-> Hi Archit,
->
-> On Monday 26 Sep 2016 12:10:11 Archit Taneja wrote:
->> On 9/25/2016 10:58 PM, Laurent Pinchart wrote:
->>> On Friday 23 Sep 2016 14:50:27 Archit Taneja wrote:
->>>> Add the regulator supply properties needed by ADV7511 and ADV7533. The
->>>> regulator names are named after the pin names, except for DVDD_3V on
->>>> ADV7511, which is left v3p3 to have the same name as it's on ADV7533.
->>>>
->>>> ADV7511 has a BGVDD pin for which the voltage to be configured isn't
->>>> clear. This needs to be updated in the document later.
->>>>
->>>> The regulators are specified as optional properties since there can
->>>> be boards which have a fixed supply directly routed to the pins, and
->>>> these may not be modelled as regulator supplies.
->>>>
->>>> Cc: Rob Herring <robh@kernel.org>
->>>> Cc: devicetree@vger.kernel.org
->>>> Signed-off-by: Archit Taneja <architt@codeaurora.org>
->>>> ---
->>>> v2:
->>>> - Specify regulator supplies for ADV7511 too.
->>>> - Have separate supply entries for AVDD, DVDD, PVDD, A2VDD pins.
->>>> - Add additional BGVDD supply for ADV7511.
->>>>
->>>>   .../devicetree/bindings/display/bridge/adi,adv7511.txt     | 14 +++++++
->>>>   1 file changed, 14 insertions(+)
->>>>
->>>> diff --git
->>>> a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
->>>> b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt index
->>>> 6532a59..66e6bae 100644
->>>> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
->>>> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
->>>>
->>>> @@ -56,6 +56,20 @@ Optional properties:
->>>>   - adi,disable-timing-generator: Only for ADV7533. Disables the internal
->>>>
->>>> timing generator. The chip will rely on the sync signals in the DSI data
->>>> lanes, rather than generate its own timings for HDMI output.
->>>> +- avdd-supply: A 1.8V supply that powers up the AVDD pin on the chip.
->>>> +- dvdd-supply: A 1.8V supply that powers up the DVDD pin on the chip.
->>>> +- pvdd-supply: A 1.8V supply that powers up the PVDD pin on the chip.
->>>> +- v3p3-supply: A 3.3V supply that powers up the pin called DVDD_3V on
->>>> +  ADV7511 and V3P3 on ADV7533.
->>>> +
->>>> +ADV7511 specific supplies:
->>>> +- bgvdd-supply: Powers the BGVDD pin. The voltage isn't clear from
->>>> +  available datasheets.
->>>
->>> It's a 1.8V supply. The ADV7511 hardware user's guide recommends tying it
->>> to the PVDD supply, so I'm not sure we need a separate supply in DT.
->>
->> Thanks for providing the info. I'll update it in the doc.
->>
->>> Similarly, the user's guide recommends supplying the AVDD, DVDD and PVDD
->>> pins with a single 1.8V LDO and three independent filters. We could thus
->>> possibly combine them into a single 1.8V supply.
->>
->> I'd originally specified only one AVDD supply for all the 1.8 V
->> supplies, but Rob had recommended using separate supplies for each pin.
->>
->> I guess it doesn't do much harm specifying separate supplies, a
->> board can just provide avdd-supply, and the rest would be assumed dummy.
->
-> DT should use the same regulator phandle for all power supplies in that case,
-> not specify a single one.
->
->> It could also help describe boards which may not have followed the
->> user guide's recommendation, but I agree that's probably a rare
->> scenario.
->>
->> Is it okay if we stick with multiple supplies as it is in this version?
->
-> It seems overkill to me but I can live with that. I'd remove the bgvdd supply
-> though.
->
-> Rob, what's your opinion on this ? Is there a specific reason why you prefer
-> splitting the 1.8V supply in one supply per pin, when the hardware user's
-> guide recommend powering them from the same LDO ?
+This commit supports the following peripherals:
 
-Could you suggest us which way to go?
+ * Clocks
+ * Pinctrl and GPIO
+ * UART
+ * SPI
+ * I2C
+ * PWM
+ * ADC
+ * Watchdog
+ * Ethernet
+ * MMC
+ * DMA engine
+ * Crypto
+ * I2S
+ * SPDIF
+ * Internal DAC
+ * Timer
+ * USB
+ * IR
+ * Interrupt Controller
 
-Thanks,
-Archit
+Signed-off-by: Rahul Bedarkar <rahul.bedarkar@imgtec.com>
+---
+Changes in v2:
+  - No change
+---
+ MAINTAINERS                           |   2 +-
+ arch/mips/boot/dts/img/pistachio.dtsi | 924 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 925 insertions(+), 1 deletion(-)
+ create mode 100644 arch/mips/boot/dts/img/pistachio.dtsi
 
->
->>>> +ADV7533 specific supplies:
->>>> +- a2vdd-supply: 1.8V supply that powers up the A2VDD pin on the chip.
->>>> +- v1p2-supply: A supply that powers up the V1P2 pin on the chip. It can
->>>> be
->>>> +  either 1.2V or 1.8V.
->>>>
->>>>   Required nodes:
->
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 207eaef..98bcf06 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9509,7 +9509,7 @@ L:      linux-mips@linux-mips.org
+ S:      Maintained
+ F:      arch/mips/pistachio/
+ F:      arch/mips/include/asm/mach-pistachio/
+-F:      arch/mips/boot/dts/pistachio/
++F:      arch/mips/boot/dts/img/pistachio*
+ F:      arch/mips/configs/pistachio*_defconfig
+ 
+ PKTCDVD DRIVER
+diff --git a/arch/mips/boot/dts/img/pistachio.dtsi b/arch/mips/boot/dts/img/pistachio.dtsi
+new file mode 100644
+index 0000000..57809f6
+--- /dev/null
++++ b/arch/mips/boot/dts/img/pistachio.dtsi
+@@ -0,0 +1,924 @@
++/*
++ * Copyright (C) 2015, 2016 Imagination Technologies Ltd.
++ * Copyright (C) 2015 Google, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <dt-bindings/clock/pistachio-clk.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/mips-gic.h>
++#include <dt-bindings/reset/pistachio-resets.h>
++
++/ {
++	compatible = "img,pistachio";
++
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	interrupt-parent = <&gic>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "mti,interaptiv";
++			reg = <0>;
++			clocks = <&clk_core CLK_MIPS_PLL>;
++			clock-names = "cpu";
++			clock-latency = <1000>;
++			operating-points = <
++				/* kHz    uV(dummy) */
++				546000 1150000
++				520000 1100000
++				494000 1000000
++				468000 950000
++				442000 900000
++				416000 800000
++			>;
++		};
++	};
++
++	i2c0: i2c@18100000 {
++		compatible = "img,scb-i2c";
++		reg = <0x18100000 0x200>;
++		interrupts = <GIC_SHARED 2 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_periph PERIPH_CLK_I2C0>,
++			 <&cr_periph SYS_CLK_I2C0>;
++		clock-names = "scb", "sys";
++		assigned-clocks = <&clk_periph PERIPH_CLK_I2C0_PRE_DIV>,
++				  <&clk_periph PERIPH_CLK_I2C0_DIV>;
++		assigned-clock-rates = <100000000>, <33333334>;
++		status = "disabled";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c0_pins>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	i2c1: i2c@18100200 {
++		compatible = "img,scb-i2c";
++		reg = <0x18100200 0x200>;
++		interrupts = <GIC_SHARED 3 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_periph PERIPH_CLK_I2C1>,
++			 <&cr_periph SYS_CLK_I2C1>;
++		clock-names = "scb", "sys";
++		assigned-clocks = <&clk_periph PERIPH_CLK_I2C1_PRE_DIV>,
++				  <&clk_periph PERIPH_CLK_I2C1_DIV>;
++		assigned-clock-rates = <100000000>, <33333334>;
++		status = "disabled";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c1_pins>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	i2c2: i2c@18100400 {
++		compatible = "img,scb-i2c";
++		reg = <0x18100400 0x200>;
++		interrupts = <GIC_SHARED 4 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_periph PERIPH_CLK_I2C2>,
++			 <&cr_periph SYS_CLK_I2C2>;
++		clock-names = "scb", "sys";
++		assigned-clocks = <&clk_periph PERIPH_CLK_I2C2_PRE_DIV>,
++				  <&clk_periph PERIPH_CLK_I2C2_DIV>;
++		assigned-clock-rates = <100000000>, <33333334>;
++		status = "disabled";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c2_pins>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	i2c3: i2c@18100600 {
++		compatible = "img,scb-i2c";
++		reg = <0x18100600 0x200>;
++		interrupts = <GIC_SHARED 5 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_periph PERIPH_CLK_I2C3>,
++			 <&cr_periph SYS_CLK_I2C3>;
++		clock-names = "scb", "sys";
++		assigned-clocks = <&clk_periph PERIPH_CLK_I2C3_PRE_DIV>,
++				  <&clk_periph PERIPH_CLK_I2C3_DIV>;
++		assigned-clock-rates = <100000000>, <33333334>;
++		status = "disabled";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c3_pins>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	i2s_in: i2s-in@18100800 {
++		compatible = "img,i2s-in";
++		reg = <0x18100800 0x200>;
++		interrupts = <GIC_SHARED 7 IRQ_TYPE_LEVEL_HIGH>;
++		dmas = <&mdc 30 0xffffffff 0>;
++		dma-names = "rx";
++		clocks = <&cr_periph SYS_CLK_I2S_IN>;
++		clock-names = "sys";
++		img,i2s-channels = <6>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2s_in_pins>;
++		status = "disabled";
++
++		#sound-dai-cells = <0>;
++	};
++
++	i2s_out: i2s-out@18100a00 {
++		compatible = "img,i2s-out";
++		reg = <0x18100a00 0x200>;
++		interrupts = <GIC_SHARED 13 IRQ_TYPE_LEVEL_HIGH>;
++		dmas = <&mdc 23 0xffffffff 0>;
++		dma-names = "tx";
++		clocks = <&cr_periph SYS_CLK_I2S_OUT>,
++			 <&clk_core CLK_I2S>;
++		clock-names = "sys", "ref";
++		assigned-clocks = <&clk_core CLK_I2S_DIV>;
++		assigned-clock-rates = <12288000>;
++		img,i2s-channels = <6>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2s_out_pins>;
++		status = "disabled";
++		resets = <&pistachio_reset PISTACHIO_RESET_I2S_OUT>;
++		reset-names = "rst";
++		#sound-dai-cells = <0>;
++	};
++
++	parallel_out: parallel-audio-out@18100c00 {
++		compatible = "img,parallel-out";
++		reg = <0x18100c00 0x100>;
++		interrupts = <GIC_SHARED 19 IRQ_TYPE_LEVEL_HIGH>;
++		dmas = <&mdc 16 0xffffffff 0>;
++		dma-names = "tx";
++		clocks = <&cr_periph SYS_CLK_PAUD_OUT>,
++			 <&clk_core CLK_AUDIO_DAC>;
++		clock-names = "sys", "ref";
++		assigned-clocks = <&clk_core CLK_AUDIO_DAC_DIV>;
++		assigned-clock-rates = <12288000>;
++		status = "disabled";
++		resets = <&pistachio_reset PISTACHIO_RESET_PRL_OUT>;
++		reset-names = "rst";
++		#sound-dai-cells = <0>;
++	};
++
++	spdif_out: spdif-out@18100d00 {
++		compatible = "img,spdif-out";
++		reg = <0x18100d00 0x100>;
++		interrupts = <GIC_SHARED 21 IRQ_TYPE_LEVEL_HIGH>;
++		dmas = <&mdc 14 0xffffffff 0>;
++		dma-names = "tx";
++		clocks = <&cr_periph SYS_CLK_SPDIF_OUT>,
++			 <&clk_core CLK_SPDIF>;
++		clock-names = "sys", "ref";
++		assigned-clocks = <&clk_core CLK_SPDIF_DIV>;
++		assigned-clock-rates = <12288000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&spdif_out_pin>;
++		status = "disabled";
++		resets = <&pistachio_reset PISTACHIO_RESET_SPDIF_OUT>;
++		reset-names = "rst";
++		#sound-dai-cells = <0>;
++	};
++
++	spdif_in: spdif-in@18100e00 {
++		compatible = "img,spdif-in";
++		reg = <0x18100e00 0x100>;
++		interrupts = <GIC_SHARED 20 IRQ_TYPE_LEVEL_HIGH>;
++		dmas = <&mdc 15 0xffffffff 0>;
++		dma-names = "rx";
++		clocks = <&cr_periph SYS_CLK_SPDIF_IN>;
++		clock-names = "sys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&spdif_in_pin>;
++		status = "disabled";
++
++		#sound-dai-cells = <0>;
++	};
++
++	internal_dac: internal-dac {
++		compatible = "img,pistachio-internal-dac";
++		img,cr-top = <&cr_top>;
++		img,voltage-select = <1>;
++
++		#sound-dai-cells = <0>;
++	};
++
++	spfi0: spi@18100f00 {
++		compatible = "img,spfi";
++		reg = <0x18100f00 0x100>;
++		interrupts = <GIC_SHARED 22 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_core CLK_SPI0>, <&cr_periph SYS_CLK_SPI0_MASTER>;
++		clock-names = "sys", "spfi";
++		dmas = <&mdc 9 0xffffffff 0>, <&mdc 10 0xffffffff 0>;
++		dma-names = "rx", "tx";
++		spfi-max-frequency = <50000000>;
++		status = "disabled";
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	spfi1: spi@18101000 {
++		compatible = "img,spfi";
++		reg = <0x18101000 0x100>;
++		interrupts = <GIC_SHARED 26 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_core CLK_SPI1>, <&cr_periph SYS_CLK_SPI1>;
++		clock-names = "sys", "spfi";
++		dmas = <&mdc 1 0xffffffff 0>, <&mdc 2 0xffffffff 0>;
++		dma-names = "rx", "tx";
++		img,supports-quad-mode;
++		spfi-max-frequency = <50000000>;
++		status = "disabled";
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	pwm: pwm@18101300 {
++		compatible = "img,pistachio-pwm";
++		reg = <0x18101300 0x100>;
++		clocks = <&clk_periph PERIPH_CLK_PWM>,
++			 <&cr_periph SYS_CLK_PWM>;
++		clock-names = "pwm", "sys";
++		img,cr-periph = <&cr_periph>;
++		#pwm-cells = <2>;
++		status = "disabled";
++	};
++
++	uart0: uart@18101400 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x18101400 0x100>;
++		interrupts = <GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_core CLK_UART0>, <&cr_periph SYS_CLK_UART0>;
++		clock-names = "baudclk", "apb_pclk";
++		assigned-clocks = <&clk_core CLK_UART0_INTERNAL_DIV>,
++				  <&clk_core CLK_UART0_DIV>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		pinctrl-0 = <&uart0_pins>, <&uart0_rts_cts_pins>;
++		pinctrl-names = "default";
++		status = "disabled";
++	};
++
++	uart1: uart@18101500 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x18101500 0x100>;
++		interrupts = <GIC_SHARED 25 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_core CLK_UART1>, <&cr_periph SYS_CLK_UART1>;
++		clock-names = "baudclk", "apb_pclk";
++		assigned-clocks = <&clk_core CLK_UART1_INTERNAL_DIV>,
++				  <&clk_core CLK_UART1_DIV>;
++		assigned-clock-rates = <114278400>, <1843200>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		pinctrl-0 = <&uart1_pins>;
++		pinctrl-names = "default";
++		status = "disabled";
++	};
++
++	adc: adc@18101600 {
++		compatible = "cosmic,10001-adc";
++		reg = <0x18101600 0x24>;
++		adc-reserved-channels = <0x30>;
++		clocks = <&clk_core CLK_AUX_ADC>;
++		clock-names = "adc";
++		assigned-clocks = <&clk_core CLK_AUX_ADC_INTERNAL_DIV>,
++				  <&clk_core CLK_AUX_ADC_DIV>;
++		assigned-clock-rates = <100000000>, <1000000>;
++		status = "disabled";
++
++		#io-channel-cells = <1>;
++	};
++
++	pinctrl: pinctrl@18101c00 {
++		compatible = "img,pistachio-system-pinctrl";
++		reg = <0x18101c00 0x400>;
++
++		gpio0: gpio0 {
++			interrupts = <GIC_SHARED 71 IRQ_TYPE_LEVEL_HIGH>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl 0 0 16>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		gpio1: gpio1 {
++			interrupts = <GIC_SHARED 72 IRQ_TYPE_LEVEL_HIGH>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl 0 16 16>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		gpio2: gpio2 {
++			interrupts = <GIC_SHARED 73 IRQ_TYPE_LEVEL_HIGH>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl 0 32 16>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		gpio3: gpio3 {
++			interrupts = <GIC_SHARED 74 IRQ_TYPE_LEVEL_HIGH>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl 0 48 16>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		gpio4: gpio4 {
++			interrupts = <GIC_SHARED 75 IRQ_TYPE_LEVEL_HIGH>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl 0 64 16>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		gpio5: gpio5 {
++			interrupts = <GIC_SHARED 76 IRQ_TYPE_LEVEL_HIGH>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl 0 80 10>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		i2c0_pins: i2c0-pins {
++			pin_i2c0: i2c0 {
++				pins = "mfio28", "mfio29";
++				function = "i2c0";
++				drive-strength = <4>;
++			};
++		};
++
++		i2c1_pins: i2c1-pins {
++			pin_i2c1: i2c1 {
++				pins = "mfio30", "mfio31";
++				function = "i2c1";
++				drive-strength = <4>;
++			};
++		};
++
++		i2c2_pins: i2c2-pins {
++			pin_i2c2: i2c2 {
++				pins = "mfio32", "mfio33";
++				function = "i2c2";
++				drive-strength = <4>;
++			};
++		};
++
++		i2c3_pins: i2c3-pins {
++			pin_i2c3: i2c3 {
++				pins = "mfio34", "mfio35";
++				function = "i2c3";
++				drive-strength = <4>;
++			};
++		};
++
++		spim0_pins: spim0-pins {
++			pin_spim0: spim0 {
++				pins = "mfio9", "mfio10";
++				function = "spim0";
++				drive-strength = <4>;
++			};
++			spim0_clk: spim0-clk {
++				pins = "mfio8";
++				function = "spim0";
++				drive-strength = <4>;
++			};
++		};
++
++		spim0_cs0_alt_pin: spim0-cs0-alt-pin {
++			spim0-cs0 {
++				pins = "mfio2";
++				drive-strength = <2>;
++			};
++		};
++
++		spim0_cs1_pin: spim0-cs1-pin {
++			spim0-cs1 {
++				pins = "mfio1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim0_cs2_pin: spim0-cs2-pin {
++			spim0-cs2 {
++				pins = "mfio55";
++				drive-strength = <2>;
++			};
++		};
++
++		spim0_cs2_alt_pin: spim0-cs2-alt-pin {
++			spim0-cs2 {
++				pins = "mfio28";
++				drive-strength = <2>;
++			};
++		};
++
++		spim0_cs3_pin: spim0-cs3-pin {
++			spim0-cs3 {
++				pins = "mfio56";
++				drive-strength = <2>;
++			};
++		};
++
++		spim0_cs3_alt_pin: spim0-cs3-alt-pin {
++			spim0-cs3 {
++				pins = "mfio29";
++				drive-strength = <2>;
++			};
++		};
++
++		spim0_cs4_pin: spim0-cs4-pin {
++			spim0-cs4 {
++				pins = "mfio57";
++				drive-strength = <2>;
++			};
++		};
++
++		spim0_cs4_alt_pin: spim0-cs4-alt-pin {
++			spim0-cs4 {
++				pins = "mfio30";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_pins: spim1-pins {
++			spim1 {
++				pins = "mfio3", "mfio4", "mfio5";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_quad_pins: spim1-quad-pins {
++			spim1-quad {
++				pins = "mfio6", "mfio7";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs0_pin: spim1-cs0-pins {
++			spim1-cs0 {
++				pins = "mfio0";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs1_pin: spim1-cs1-pin {
++			spim1-cs1 {
++				pins = "mfio1";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs1_alt_pin: spim1-cs1-alt-pin {
++			spim1-cs1 {
++				pins = "mfio58";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs2_pin: spim1-cs2-pin {
++			spim1-cs2 {
++				pins = "mfio2";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs2_alt0_pin: spim1-cs2-alt0-pin {
++			spim1-cs2 {
++				pins = "mfio31";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs2_alt1_pin: spim1-cs2-alt1-pin {
++			spim1-cs2 {
++				pins = "mfio55";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs3_pin: spim1-cs3-pin {
++			spim1-cs3 {
++				pins = "mfio56";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		spim1_cs4_pin: spim1-cs4-pin {
++			spim1-cs4 {
++				pins = "mfio57";
++				function = "spim1";
++				drive-strength = <2>;
++			};
++		};
++
++		uart0_pins: uart0-pins {
++			uart0 {
++				pins = "mfio55", "mfio56";
++				function = "uart0";
++				drive-strength = <2>;
++			};
++		};
++
++		uart0_rts_cts_pins: uart0-rts-cts-pins {
++			uart0-rts-cts {
++				pins = "mfio57", "mfio58";
++				function = "uart0";
++				drive-strength = <2>;
++			};
++		};
++
++		uart1_pins: uart1-pins {
++			uart1 {
++				pins = "mfio59", "mfio60";
++				function = "uart1";
++				drive-strength = <2>;
++			};
++		};
++
++		uart1_rts_cts_pins: uart1-rts-cts-pins {
++			uart1-rts-cts {
++				  pins = "mfio1", "mfio2";
++				  function = "uart1";
++				  drive-strength = <2>;
++			};
++		};
++
++		enet_pins: enet-pins {
++			pin_enet: enet {
++				pins = "mfio63", "mfio64", "mfio65", "mfio66",
++				       "mfio67", "mfio68", "mfio69", "mfio70";
++				function = "eth";
++				slew-rate = <1>;
++				drive-strength = <4>;
++			};
++			pin_enet_phy_clk: enet-phy-clk {
++				pins = "mfio71";
++				function = "eth";
++				slew-rate = <1>;
++				drive-strength = <8>;
++			};
++		};
++
++		sdhost_pins: sdhost-pins {
++			pin_sdhost_clk: sdhost-clk {
++				pins = "mfio15";
++				function = "sdhost";
++				slew-rate = <1>;
++				drive-strength = <4>;
++			};
++			pin_sdhost_cmd: sdhost-cmd {
++				pins = "mfio16";
++				function = "sdhost";
++				slew-rate = <1>;
++				drive-strength = <4>;
++			};
++			pin_sdhost_data: sdhost-data {
++				pins = "mfio17", "mfio18", "mfio19", "mfio20",
++				       "mfio21", "mfio22", "mfio23", "mfio24";
++				function = "sdhost";
++				slew-rate = <1>;
++				drive-strength = <4>;
++			};
++			pin_sdhost_power_select: sdhost-power-select {
++				pins = "mfio25";
++				function = "sdhost";
++				slew-rate = <1>;
++				drive-strength = <2>;
++			};
++			pin_sdhost_card_detect: sdhost-card-detect {
++				pins = "mfio26";
++				function = "sdhost";
++				drive-strength = <2>;
++			};
++			pin_sdhost_write_protect: sdhost-write-protect {
++				pins = "mfio27";
++				function = "sdhost";
++				drive-strength = <2>;
++			};
++		};
++
++		ir_pin: ir-pin {
++			ir-data {
++				pins = "mfio72";
++				function = "ir";
++				drive-strength = <2>;
++			};
++		};
++
++		pwmpdm0_pin: pwmpdm0-pin {
++			pwmpdm0 {
++				pins = "mfio73";
++				function = "pwmpdm";
++				drive-strength = <2>;
++			};
++		};
++
++		pwmpdm1_pin: pwmpdm1-pin {
++			pwmpdm1 {
++				pins = "mfio74";
++				function = "pwmpdm";
++				drive-strength = <2>;
++			};
++		};
++
++		pwmpdm2_pin: pwmpdm2-pin {
++			pwmpdm2 {
++				pins = "mfio75";
++				function = "pwmpdm";
++				drive-strength = <2>;
++			};
++		};
++
++		pwmpdm3_pin: pwmpdm3-pin {
++			pwmpdm3 {
++				pins = "mfio76";
++				function = "pwmpdm";
++				drive-strength = <2>;
++			};
++		};
++
++		dac_clk_pin: dac-clk-pin {
++			pin_dac_clk: dac-clk {
++				pins = "mfio45";
++				function = "i2s_dac_clk";
++				drive-strength = <4>;
++			};
++		};
++
++		i2s_mclk_pin: i2s-mclk-pin {
++			pin_i2s_mclk: i2s-mclk {
++				pins = "mfio36";
++				function = "i2s_out";
++				drive-strength = <4>;
++			};
++		};
++
++		spdif_out_pin: spdif-out-pin {
++			spdif-out {
++				pins = "mfio61";
++				function = "spdif_out";
++				slew-rate = <1>;
++				drive-strength = <2>;
++			};
++		};
++
++		spdif_in_pin: spdif-in-pin {
++			spdif-in {
++				pins = "mfio62";
++				function = "spdif_in";
++				drive-strength = <2>;
++			};
++		};
++
++		i2s_out_pins: i2s-out-pins {
++			pins_i2s_out_clk: i2s-out-clk {
++				pins = "mfio37", "mfio38";
++				function = "i2s_out";
++				drive-strength = <4>;
++			};
++			pins_i2s_out: i2s-out {
++				pins = "mfio39", "mfio40",
++				       "mfio41", "mfio42",
++				       "mfio43", "mfio44";
++				function = "i2s_out";
++				drive-strength = <2>;
++			};
++		};
++
++		i2s_in_pins: i2s-in-pins {
++			i2s-in {
++				pins = "mfio47", "mfio48", "mfio49",
++				       "mfio50", "mfio51", "mfio52",
++				       "mfio53", "mfio54";
++				function = "i2s_in";
++				drive-strength = <2>;
++			};
++		};
++	};
++
++	timer: timer@18102000 {
++		compatible = "img,pistachio-gptimer";
++		reg = <0x18102000 0x100>;
++		interrupts = <GIC_SHARED 60 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_periph PERIPH_CLK_COUNTER_FAST>,
++			 <&cr_periph SYS_CLK_TIMER>;
++		clock-names = "fast", "sys";
++		img,cr-periph = <&cr_periph>;
++	};
++
++	wdt: watchdog@18102100 {
++		compatible = "img,pdc-wdt";
++		reg = <0x18102100 0x100>;
++		interrupts = <GIC_SHARED 52 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_periph PERIPH_CLK_WD>, <&cr_periph SYS_CLK_WD>;
++		clock-names = "wdt", "sys";
++		assigned-clocks = <&clk_periph PERIPH_CLK_WD_PRE_DIV>,
++				  <&clk_periph PERIPH_CLK_WD_DIV>;
++		assigned-clock-rates = <4000000>, <32768>;
++	};
++
++	ir: ir@18102200 {
++		compatible = "img,ir-rev1";
++		reg = <0x18102200 0x100>;
++		interrupts = <GIC_SHARED 51 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_periph PERIPH_CLK_IR>, <&cr_periph SYS_CLK_IR>;
++		clock-names = "core", "sys";
++		assigned-clocks = <&clk_periph PERIPH_CLK_IR_PRE_DIV>,
++				  <&clk_periph PERIPH_CLK_IR_DIV>;
++		assigned-clock-rates = <4000000>, <32768>;
++		pinctrl-0 = <&ir_pin>;
++		pinctrl-names = "default";
++		status = "disabled";
++	};
++
++	usb: usb@18120000 {
++		compatible = "snps,dwc2";
++		reg = <0x18120000 0x1c000>;
++		interrupts = <GIC_SHARED 49 IRQ_TYPE_LEVEL_HIGH>;
++		phys = <&usb_phy>;
++		phy-names = "usb2-phy";
++		g-tx-fifo-size = <256 256 256 256>;
++		status = "disabled";
++	};
++
++	enet: ethernet@18140000 {
++		compatible = "snps,dwmac";
++		reg = <0x18140000 0x2000>;
++		interrupts = <GIC_SHARED 50 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "macirq";
++		clocks = <&clk_core CLK_ENET>, <&cr_periph SYS_CLK_ENET>;
++		clock-names = "stmmaceth", "pclk";
++		assigned-clocks = <&clk_core CLK_ENET_MUX>,
++				  <&clk_core CLK_ENET_DIV>;
++		assigned-clock-parents = <&clk_core CLK_SYS_INTERNAL_DIV>;
++		assigned-clock-rates = <0>, <50000000>;
++		pinctrl-0 = <&enet_pins>;
++		pinctrl-names = "default";
++		phy-mode = "rmii";
++		status = "disabled";
++	};
++
++	sdhost: mmc@18142000 {
++		compatible = "img,pistachio-dw-mshc";
++		reg = <0x18142000 0x400>;
++		interrupts = <GIC_SHARED 39 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_core CLK_SD_HOST>, <&cr_periph SYS_CLK_SD_HOST>;
++		clock-names = "ciu", "biu";
++		pinctrl-0 = <&sdhost_pins>;
++		pinctrl-names = "default";
++		fifo-depth = <0x20>;
++		num-slots = <1>;
++		clock-frequency = <50000000>;
++		bus-width = <8>;
++		cap-mmc-highspeed;
++		cap-sd-highspeed;
++		status = "disabled";
++	};
++
++	sram: sram@1b000000 {
++		compatible = "mmio-sram";
++		reg = <0x1b000000 0x10000>;
++	};
++
++	mdc: dma-controller@18143000 {
++		compatible = "img,pistachio-mdc-dma";
++		reg = <0x18143000 0x1000>;
++		interrupts = <GIC_SHARED 27 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 28 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 29 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 30 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 31 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 32 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 33 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 34 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 35 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 36 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 37 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 38 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cr_periph SYS_CLK_MDC>;
++		clock-names = "sys";
++
++		img,max-burst-multiplier = <16>;
++		img,cr-periph = <&cr_periph>;
++
++		#dma-cells = <3>;
++	};
++
++	clk_core: clk@18144000 {
++		compatible = "img,pistachio-clk", "syscon";
++		clocks = <&xtal>, <&cr_top EXT_CLK_AUDIO_IN>,
++			 <&cr_top EXT_CLK_ENET_IN>;
++		clock-names = "xtal", "audio_refclk_ext_gate",
++			      "ext_enet_in_gate";
++		reg = <0x18144000 0x800>;
++		#clock-cells = <1>;
++	};
++
++	clk_periph: clk@18144800 {
++		compatible = "img,pistachio-clk-periph";
++		reg = <0x18144800 0x1000>;
++		clocks = <&clk_core CLK_PERIPH_SYS>;
++		clock-names = "periph_sys_core";
++		#clock-cells = <1>;
++	};
++
++	cr_periph: clk@18148000 {
++		compatible = "img,pistachio-cr-periph", "syscon", "simple-bus";
++		reg = <0x18148000 0x1000>;
++		clocks = <&clk_periph PERIPH_CLK_SYS>;
++		clock-names = "sys";
++		#clock-cells = <1>;
++
++		pistachio_reset: reset-controller {
++			compatible = "img,pistachio-reset";
++			#reset-cells = <1>;
++		};
++	};
++
++	cr_top: clk@18149000 {
++		compatible = "img,pistachio-cr-top", "syscon";
++		reg = <0x18149000 0x200>;
++		#clock-cells = <1>;
++	};
++
++	hash: hash@18149600 {
++		compatible = "img,hash-accelerator";
++		reg = <0x18149600 0x100>, <0x18101100 0x4>;
++		interrupts = <GIC_SHARED 59 IRQ_TYPE_LEVEL_HIGH>;
++		dmas = <&mdc 8 0xffffffff 0>;
++		dma-names = "tx";
++		clocks = <&cr_periph SYS_CLK_HASH>,
++			 <&clk_periph PERIPH_CLK_ROM>;
++		clock-names = "sys", "hash";
++	};
++
++	gic: interrupt-controller@1bdc0000 {
++		compatible = "mti,gic";
++		reg = <0x1bdc0000 0x20000>;
++
++		interrupt-controller;
++		#interrupt-cells = <3>;
++
++		timer {
++			compatible = "mti,gic-timer";
++			interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
++			clocks = <&clk_core CLK_MIPS>;
++		};
++	};
++
++	usb_phy: usb-phy {
++		compatible = "img,pistachio-usb-phy";
++		clocks = <&clk_core CLK_USB_PHY>;
++		clock-names = "usb_phy";
++		assigned-clocks = <&clk_core CLK_USB_PHY_DIV>;
++		assigned-clock-rates = <50000000>;
++		img,refclk = <0x2>;
++		img,cr-top = <&cr_top>;
++		#phy-cells = <0>;
++	};
++
++	xtal: xtal {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <52000000>;
++		clock-output-names = "xtal";
++	};
++};
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.6.2
