@@ -1,28 +1,114 @@
-From: "Bob" <alu_casting-9Onoh4P/yGk@public.gmane.org>
-Subject: RE:FW : Gravity die casting with A356-T6
-Date: Fri, 14 Oct 2016 13:56:26 +0800
-Message-ID: <201610141356262819258@a.qihu360.org>
-Reply-To: alu_casting-9Onoh4P/yGk@public.gmane.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 1/8] dt-bindings: mfd: Add Altera Arria10 System
+ Resource Chip bindings
+Date: Fri, 14 Oct 2016 11:36:51 +0100
+Message-ID: <20161014103651.GC3304@dell>
+References: <1464889948-28793-1-git-send-email-tthayer@opensource.altera.com>
+ <1464889948-28793-2-git-send-email-tthayer@opensource.altera.com>
+ <20160610144748.GG1537@dell>
+ <282f05ff-05d8-2f93-88bb-84808812e603@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="GB2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <282f05ff-05d8-2f93-88bb-84808812e603-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sDQoNCg0KSGVyZSBpcyB0aGUgZXhwZXJpZW5jZWQgbWFudWZhY3R1ZXIgb2YgYWx1bWlu
-dW0gY2FzdGluZ3MuDQoNCk91ciBjYXN0aW5nIHBhcnRzIGluIGdlYXIgYm94LCBoZWF0IHRyYW5z
-ZmVycyBhbmQgYXV0b21hdGlvbnMgIGhhdmUgc3VwcGxpZWQgY2xpZW50cyBpbiBVU0EsIENhbmFk
-YSwgR2VybWFueSBhbmQgc28gb24gZm9yIG1vcmUgdGhlbiAxMCB5ZWFycy4gYW5kIGhhdmUgZ290
-IHBlcmZlY3QgcmVwdXRhdGlvbiBmcm9tIHRoZW0uIFdlIGFyZSBhYmxlIHRvIG9mZmVyIGZyb20g
-Y2FzdGluZywgc2FuZCBibGFzdGluZywgaGVhdCB0cmVhdG1lbnQgYW5kIG1hY2hpbmluZyB0aGUg
-d2hvbGUgcHJvY2Vzcy4NCg0KU2hhbGwgeW91IGhhdmUgYW55IGludGVyZXN0aW5nLCBwbHMgZG9u
-J3QgaGVzaXRhdGUgYW5kIGxldCB1cyBrbm93Lg0KDQpiLnJnZHMgDQpCb2IgSHUgDQpOaW5nYm8g
-WWluemhvdSBYdXNoZW5nIE1hY2hpbmVyeSBGYWN0b3J5IA0KU2t5cGU6IGJvYmh1MQ0KQ2VsbDog
-MDA4Ni0xMzk1ODMyIDc3NzQgDQpUZWw6IDAwODYtNTc0LTg4MTI4NjAzIA0KYm9iQHhzLWFsdW1p
-bnVtY2FzdGluZy5jb20gDQp3d3cueHMtYWx1bWludW1jYXN0aW5nLmNvbQ==
+On Mon, 10 Oct 2016, Thor Thayer wrote:
+
+> Hi Lee,
+> 
+> On 06/10/2016 09:47 AM, Lee Jones wrote:
+> > On Thu, 02 Jun 2016, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> > 
+> > > From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > > 
+> > > The Altera Arria10 Devkit System Resource chip is a Multi-Function
+> > > Device with a GPIO expander.
+> > > 
+> > > This patch adds documentation for the Altera A10-SR DT bindings.
+> > > 
+> > > Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > > ---
+> > > v2  Addition of IRQ controller bindings.
+> > >     Removal of hw_mon sub-device.
+> > > ---
+> > >  .../devicetree/bindings/mfd/altera-a10sr.txt       |   46 ++++++++++++++++++++
+> > >  1 file changed, 46 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> > 
+> > Applied, thanks.
+> 
+> For some reason, I'm not seeing this in the 4.8 tree with the other mfd
+> additions. Do I need to submit it to a different tree?
+
+No, it looks like this one was dropped for some reason.
+
+Reapplying now.
+
+> > > diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> > > new file mode 100644
+> > > index 0000000..ea151f2
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> > > @@ -0,0 +1,46 @@
+> > > +* Altera Arria10 Development Kit System Resource Chip
+> > > +
+> > > +Required parent device properties:
+> > > +- compatible		: "altr,a10sr"
+> > > +- spi-max-frequency	: Maximum SPI frequency.
+> > > +- reg			: The SPI Chip Select address for the Arria10
+> > > +			  System Resource chip
+> > > +- interrupt-parent	: The parent interrupt controller.
+> > > +- interrupts		: The interrupt line the device is connected to.
+> > > +- interrupt-controller	: Marks the device node as an interrupt controller.
+> > > +- #interrupt-cells	: The number of cells to describe an IRQ, should be 2.
+> > > +			    The first cell is the IRQ number.
+> > > +			    The second cell is the flags, encoded as trigger
+> > > +			    masks from ../interrupt-controller/interrupts.txt.
+> > > +
+> > > +The A10SR consists of these sub-devices:
+> > > +
+> > > +Device                   Description
+> > > +------                   ----------
+> > > +a10sr_gpio               GPIO Controller
+> > > +
+> > > +Arria10 GPIO
+> > > +Required Properties:
+> > > +- compatible        : Should be "altr,a10sr-gpio"
+> > > +- gpio-controller   : Marks the device node as a GPIO Controller.
+> > > +- #gpio-cells       : Should be two.  The first cell is the pin number and
+> > > +                      the second cell is used to specify flags.
+> > > +                      See ../gpio/gpio.txt for more information.
+> > > +
+> > > +Example:
+> > > +
+> > > +        resource-manager@0 {
+> > > +		compatible = "altr,a10sr";
+> > > +		reg = <0>;
+> > > +		spi-max-frequency = <100000>;
+> > > +		interrupt-parent = <&portb>;
+> > > +		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
+> > > +		interrupt-controller;
+> > > +		#interrupt-cells = <2>;
+> > > +
+> > > +		a10sr_gpio: gpio-controller {
+> > > +			compatible = "altr,a10sr-gpio";
+> > > +			gpio-controller;
+> > > +			#gpio-cells = <2>;
+> > > +		};
+> > > +	};
+> > 
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
