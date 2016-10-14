@@ -1,58 +1,93 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: RE: [PATCH V1 05/10] thermal: da9062/61: Thermal junction
- temperature monitoring driver
-Date: Fri, 14 Oct 2016 13:07:59 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CCE3443@SW-EX-MBX02.diasemi.com>
-References: <cover.1475743411.git.stwiss.opensource@diasemi.com>
- <b5ce58ca00f7ab30a025d24083549241f135b0e9.1475743411.git.stwiss.opensource@diasemi.com>
- <3bc9fd76-2885-b07a-9df8-7802b7535da2@ti.com>
- <6ED8E3B22081A4459DAC7699F3695FB7018CCE2815@SW-EX-MBX02.diasemi.com>
+From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+Subject: [RESEND PATCH 3/3] ARM: dts: artpec: add pcie support
+Date: Fri, 14 Oct 2016 15:09:13 +0200
+Message-ID: <1476450553-4652-1-git-send-email-niklass@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7018CCE2815@SW-EX-MBX02.diasemi.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <a0393675@ti.com>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jespern-VrBV9hrLPhE@public.gmane.org, larper-VrBV9hrLPhE@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-An update.
+From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
 
-On: 07 October 2016 18:49, Steve Twiss wrote:
-> On 07 October 2016 06:29, Keerthy [mailto:a0393675@ti.com] wrote:
-> > On Thursday 06 October 2016 02:13 PM, Steve Twiss wrote:
-> > > From: Steve Twiss <stwiss.opensource@diasemi.com>
-[...]
-> > > +static const struct da9062_thermal_config da9062_config = {
-> > > +	.name = "da9062-thermal",
-> > > +};
-> > > +
-> > > +static const struct da9062_thermal_config da9061_config = {
-> > > +	.name = "da9061-thermal",
-> > > +};
-> > > +
-> > > +static const struct of_device_id da9062_compatible_reg_id_table[] = {
-> > > +	{ .compatible = "dlg,da9062-thermal", .data = &da9062_config },
-> > > +	{ .compatible = "dlg,da9061-thermal", .data = &da9061_config },
-> >
-> > Two separate compatible values. Do you have anything different apart
-> > from the name? Why use 2 compatibles when there is absolutely no
-> > difference?
-> 
-> Yes.
-> This was a comment for the watchdog device driver as well. My concern was having
-> multiple devices (61 and 62) in the same system -- and allowing the driver to report
-> the hardware difference.
-> 
-> There is discussion going on about this in other threads. Not certain of the
-> final outcome yet, apart from my existing proposal should be changed.
+Add PCIe support to the ARTPEC-6 SoC. This uses the existing
+pcie-artpec6 driver.
+So, all that is needed is device tree entries in the DTS.
 
-An answer to this came from comments by Dmitry Torokhov and Guenter Roeck, who
-suggested this: https://lkml.org/lkml/2016/10/7/641
+Signed-off-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+---
+ arch/arm/boot/dts/artpec6-devboard.dts |  4 ++++
+ arch/arm/boot/dts/artpec6.dtsi         | 29 ++++++++++++++++++++++++++++-
+ 2 files changed, 32 insertions(+), 1 deletion(-)
 
-I will take a look at this for V2.
+diff --git a/arch/arm/boot/dts/artpec6-devboard.dts b/arch/arm/boot/dts/artpec6-devboard.dts
+index f823ed3..9dfe845 100644
+--- a/arch/arm/boot/dts/artpec6-devboard.dts
++++ b/arch/arm/boot/dts/artpec6-devboard.dts
+@@ -46,6 +46,10 @@
+ 	status = "okay";
+ };
+ 
++&pcie {
++	status = "okay";
++};
++
+ &ethernet {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6.dtsi
+index 3fac4c4..effaa4a 100644
+--- a/arch/arm/boot/dts/artpec6.dtsi
++++ b/arch/arm/boot/dts/artpec6.dtsi
+@@ -66,7 +66,7 @@
+ 		};
+ 	};
+ 
+-	syscon {
++	syscon: syscon@f8000000 {
+ 		compatible = "axis,artpec6-syscon", "syscon";
+ 		reg = <0xf8000000 0x48>;
+ 	};
+@@ -145,6 +145,33 @@
+ 		interrupt-parent = <&intc>;
+ 	};
+ 
++	pcie: pcie@f8050000 {
++		compatible = "axis,artpec6-pcie", "snps,dw-pcie";
++		reg = <0xf8050000 0x2000
++		       0xf8040000 0x1000
++		       0xc0000000 0x2000>;
++		reg-names = "dbi", "phy", "config";
++		#address-cells = <3>;
++		#size-cells = <2>;
++		device_type = "pci";
++			  /* downstream I/O */
++		ranges = <0x81000000 0 0 0xc0002000 0 0x00010000
++			  /* non-prefetchable memory */
++			  0x82000000 0 0xc0012000 0xc0012000 0 0x1ffee000>;
++		num-lanes = <2>;
++		bus-range = <0x00 0xff>;
++		interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "msi";
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 0x7>;
++		interrupt-map = <0 0 0 1 &intc GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 0 2 &intc GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 0 3 &intc GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 0 4 &intc GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
++		axis,syscon-pcie = <&syscon>;
++		status = "disabled";
++	};
++
+ 	amba@0 {
+ 		compatible = "simple-bus";
+ 		#address-cells = <0x1>;
+-- 
+2.1.4
 
-Regards,
-Steve
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
