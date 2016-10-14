@@ -1,163 +1,115 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] leds: leds-pca963x: workaround group blink scaling issue
-Date: Fri, 14 Oct 2016 08:36:23 +0200
-Message-ID: <924a896d-b3f2-5fed-62ba-a731e79e1567@samsung.com>
-References: <CGME20161013131622eucas1p2e419c58b25f2c61da22d390f2adfacfd@eucas1p2.samsung.com>
- <1476364572-26849-1-git-send-email-matt@ranostay.consulting>
- <ac8bb319-8ad2-65fe-e8bb-6fd9af61f046@samsung.com>
- <CAKzfze_d5rQ-MaNL1BbGXrdHG+UDNa=us68eoH_AJ-EKLnzCvw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/6] dt: bindings: Add Allwinner Q8 tablets hardware manager bindings
+Date: Fri, 14 Oct 2016 09:53:32 +0200
+Message-ID: <20161014075337.10452-2-hdegoede@redhat.com>
+References: <20161014075337.10452-1-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAKzfze_d5rQ-MaNL1BbGXrdHG+UDNa=us68eoH_AJ-EKLnzCvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20161014075337.10452-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/13/2016 04:20 PM, Matt Ranostay wrote:
-> On Thu, Oct 13, 2016 at 4:05 PM, Jacek Anaszewski
-> <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> Hi Matt,
->>
->> On 10/13/2016 03:16 PM, Matt Ranostay wrote:
->>>
->>> PCA9632TK part seems to incorrectly blink at ~1.3x of the programmed
->>> rate. This patchset add a nxp,period-scale devicetree property to
->>> adjust for this misconfiguration.
->>>
->>> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
->>> Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/leds/pca963x.txt |  3 +++
->>>  drivers/leds/leds-pca963x.c                        | 18
->>> +++++++++++++++---
->>>  2 files changed, 18 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/leds/pca963x.txt
->>> b/Documentation/devicetree/bindings/leds/pca963x.txt
->>> index dafbe9931c2b..dfbdb123a9bf 100644
->>> --- a/Documentation/devicetree/bindings/leds/pca963x.txt
->>> +++ b/Documentation/devicetree/bindings/leds/pca963x.txt
->>> @@ -7,6 +7,9 @@ Optional properties:
->>>  - nxp,totem-pole : use totem pole (push-pull) instead of open-drain
->>> (pca9632 defaults
->>>    to open-drain, newer chips to totem pole)
->>>  - nxp,hw-blink : use hardware blinking instead of software blinking
->>> +- nxp,period-scale : In some configurations, the chip blinks faster than
->>> expected.
->>> +                    This parameter provides a scaling ratio (fixed point,
->>> decimal divided
->>> +                    by 1000) to compensate, e.g. 1300=1.3x and 750=0.75x.
->>
->>
->> Why DT property? Is it somehow dependent on the board configuration?
->> How this period-scale value is calculated? Is it inferred empirically?
->>
->
-> We empirically discovered and verified this with an logic analyzer on
-> multiple batches of this part.
-> Reason for the DT entry is we aren't 100% sure that it is always going
-> to be the same with different board revs.
->
-> Could be that parts clock acts differently with supply voltage.   This
-> has been calculated by setting it an expected value, and measuring the
-> actual result with the logic analyzer.
+Allwinnner A13 / A23 / A33 based Q8 tablets are popular cheap 7" tablets
+of which a new batch is produced every few weeks. Each batch uses a
+different mix of touchscreen, accelerometer and wifi peripherals.
 
-I'd like to have DT maintainer's ack for this.
+Given that each batch is different creating a devicetree for each variant
+is not desirable, work is being done on a Q8 tablet hardware manager which
+auto-detects the touchscreen and accelerometer and will update the dt with
+what it has found, so that a single generic dt can be used for these tablets.
 
-Cc Rob and Mark.
+This commit adds dt-bindings for this hardware manager.
 
->>>  Each led is represented as a sub-node of the nxp,pca963x device.
->>>
->>> diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
->>> index 407eba11e187..b6ce1f2ec33e 100644
->>> --- a/drivers/leds/leds-pca963x.c
->>> +++ b/drivers/leds/leds-pca963x.c
->>> @@ -59,6 +59,7 @@ struct pca963x_chipdef {
->>>         u8                      grpfreq;
->>>         u8                      ledout_base;
->>>         int                     n_leds;
->>> +       unsigned int            scaling;
->>>  };
->>>
->>>  static struct pca963x_chipdef pca963x_chipdefs[] = {
->>> @@ -189,6 +190,14 @@ static int pca963x_led_set(struct led_classdev
->>> *led_cdev,
->>>         return pca963x_brightness(pca963x, value);
->>>  }
->>>
->>> +static unsigned int pca963x_period_scale(struct pca963x_led *pca963x,
->>> +       unsigned int val)
->>> +{
->>> +       unsigned int scaling = pca963x->chip->chipdef->scaling;
->>> +
->>> +       return scaling ? DIV_ROUND_CLOSEST(val * scaling, 1000) : val;
->>> +}
->>> +
->>>  static int pca963x_blink_set(struct led_classdev *led_cdev,
->>>                 unsigned long *delay_on, unsigned long *delay_off)
->>>  {
->>> @@ -207,14 +216,14 @@ static int pca963x_blink_set(struct led_classdev
->>> *led_cdev,
->>>                 time_off = 500;
->>>         }
->>>
->>> -       period = time_on + time_off;
->>> +       period = pca963x_period_scale(pca963x, time_on + time_off);
->>>
->>>         /* If period not supported by hardware, default to someting sane.
->>> */
->>>         if ((period < PCA963X_BLINK_PERIOD_MIN) ||
->>>             (period > PCA963X_BLINK_PERIOD_MAX)) {
->>>                 time_on = 500;
->>>                 time_off = 500;
->>> -               period = time_on + time_off;
->>> +               period = pca963x_period_scale(pca963x, 1000);
->>>         }
->>>
->>>         /*
->>> @@ -222,7 +231,7 @@ static int pca963x_blink_set(struct led_classdev
->>> *led_cdev,
->>>          *      (time_on / period) = (GDC / 256) ->
->>>          *              GDC = ((time_on * 256) / period)
->>>          */
->>> -       gdc = (time_on * 256) / period;
->>> +       gdc = (pca963x_period_scale(pca963x, time_on) * 256) / period;
->>>
->>>         /*
->>>          * From manual: period = ((GFRQ + 1) / 24) in seconds.
->>> @@ -294,6 +303,9 @@ pca963x_dt_init(struct i2c_client *client, struct
->>> pca963x_chipdef *chip)
->>>         else
->>>                 pdata->blink_type = PCA963X_SW_BLINK;
->>>
->>> +       if (of_property_read_u32(np, "nxp,period-scale", &chip->scaling))
->>> +               chip->scaling = 1000;
->>> +
->>>         return pdata;
->>>  }
->>>
->>>
->>
->>
->> --
->> Best regards,
->> Jacek Anaszewski
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->
->
+Note the wifi is connected to a discoverable bus (sdio or usb) and will be
+autodetected by the mmc resp. usb subsystems.
 
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ .../misc/allwinner,sunxi-q8-hardwaremgr.txt        | 71 ++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/allwinner,sunxi-q8-hardwaremgr.txt
 
+diff --git a/Documentation/devicetree/bindings/misc/allwinner,sunxi-q8-hardwaremgr.txt b/Documentation/devicetree/bindings/misc/allwinner,sunxi-q8-hardwaremgr.txt
+new file mode 100644
+index 0000000..a81b258
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/allwinner,sunxi-q8-hardwaremgr.txt
+@@ -0,0 +1,71 @@
++Q8 tablet hardware manager
++--------------------------
++
++Allwinnner A13 / A23 / A33 based Q8 tablets are popular cheap 7" tablets of
++which a new batch is produced every few weeks. Each batch uses a different
++mix of touchscreen, accelerometer and wifi peripherals.
++
++Given that each batch is different creating a devicetree for each variant is
++not desirable. The Q8 tablet hardware manager bindings are bindings for an os
++module which auto-detects the touchscreen and accelerometer so that a single
++generic dts can be used for these tablets.
++
++The wifi is connected to a discoverable bus and will be autodetected by the os.
++
++Required properties:
++ - toplevel / machine compatible, one of:
++	"allwinner,q8-a13"
++	"allwinner,q8-a23"
++	"allwinner,q8-a33"
++ - touchscreen node   : There must be a template touchscreen node named
++			"touchscreen", this must be a child node of the
++			touchscreen i2c bus
++ - accelerometer node : There must be a template accelerometer node named
++			"accelerometer", this must be a child node of the
++			accelerometer i2c bus
++
++touchscreen node required properties:
++ - interrupt-parent   : phandle pointing to the interrupt controller
++			serving the touchscreen interrupt
++ - interrupts         : interrupt specification for the touchscreen interrupt
++ - power-gpios        : Specification for the pin connected to the touchscreen's
++			enable / wake pin. This needs to be driven high to
++			enable the touchscreen controller
++
++touchscreen node optional properties:
++ - vddio-supply       : regulator phandle for the touchscreen vddio supply
++
++accelerometer node optional properties:
++ - interrupt-parent   : phandle pointing to the interrupt controller
++			serving the accelerometer interrupt
++ - interrupts         : interrupt specification for the accelerometer interrupt
++
++Example:
++
++/ {
++	compatible = "allwinner,q8-a23", "allwinner,sun8i-a23";
++};
++
++&i2c0 {
++	touchscreen: touchscreen@0 {
++		interrupt-parent = <&pio>;
++		interrupts = <1 5 IRQ_TYPE_EDGE_FALLING>; /* PB5 */
++		power-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
++		vddio-supply = <&reg_ldo_io1>;
++		/*
++		 * Enabled by sunxi-q8-hardwaremgr if it detects a
++		 * known model touchscreen.
++		 */
++		status = "disabled";
++	};
++};
++
++&i2c1 {
++	accelerometer: accelerometer@0 {
++		/*
++		 * Enabled by sunxi-q8-hardwaremgr if it detects a
++		 * known model accelerometer.
++		 */
++		status = "disabled";
++	};
++};
 -- 
-Best regards,
-Jacek Anaszewski
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
