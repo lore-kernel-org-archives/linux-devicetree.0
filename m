@@ -1,44 +1,59 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: RE: [PATCH V1 09/10] Documentation: dt: mfd: da9062/61 MFD binding
-Date: Fri, 14 Oct 2016 12:26:07 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CCE342A@SW-EX-MBX02.diasemi.com>
-References: <cover.1475743411.git.stwiss.opensource@diasemi.com>
- <7a21f22bd62817b63ba64e11eecadfb78338ee46.1475743411.git.stwiss.opensource@diasemi.com>
- <20161010134235.GA20577@rob-hp-laptop>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] dt/bindings: Add milivolt, milliamps, and
+ nanohenry units
+Date: Fri, 14 Oct 2016 07:35:22 -0500
+Message-ID: <CAL_JsqKdV7133oo5jECZn2SwVjMM3E_ZNr+JS=9Wtkx8BZVuEQ@mail.gmail.com>
+References: <1476298410-1157-1-git-send-email-Paul.Handrigan@cirrus.com> <e4a605af-3b2d-4e29-a5c4-991e34f1205f@EX3.ad.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161010134235.GA20577@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e4a605af-3b2d-4e29-a5c4-991e34f1205f-XU/xxMRwCJnfk+Ne4bZl5AC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, Oct 12, 2016 at 1:53 PM,  <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org> wrote:
+> From: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+>
+> Add millivolt, milliamp, and nanohenry units to the Electricity
+> category.
+>
+> Signed-off-by: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/property-units.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
+> index 12278d7..92d6793 100644
+> --- a/Documentation/devicetree/bindings/property-units.txt
+> +++ b/Documentation/devicetree/bindings/property-units.txt
+> @@ -25,9 +25,12 @@ Distance
+>  Electricity
+>  ----------------------------------------
+>  -microamp      : micro amps
+> +-milliamp      : milli amps
 
-On 10 October 2016 14:43, Rob Herring wrote:
-> On Thu, Oct 06, 2016 at 09:43:31AM +0100, Steve Twiss wrote:
-[...]
-> > @@ -64,10 +89,6 @@ Example:
-> >  			compatible = "dlg,da9062-rtc";
-> >  		};
-> >
-> > -		watchdog {
-> > -			compatible = "dlg,da9062-watchdog";
-> > -		};
-> > -
-> 
-> I don't understand why this is removed?
+Please explain why you need need this. Is 2^32 uA not enough range for
+you? While we do have multiple units for some, that's because people
+picked arbitrary units for their properties before this doc existed.
+Ideally, we only have 1 unit to prevent that problem.
 
-This MFD binding file now contains a link to a separate watchdog binding file.
-I moved the example and the binding information into this new watchdog binding
-document. I also updated it for DA9061.
+>  -ohms          : Ohms
+>  -micro-ohms    : micro Ohms
+>  -microvolt     : micro volts
+> +-millivolt     : micro volts
 
-+- watchdog: See ../watchdog/da9062-watchdog.txt
+Same question.
 
-I will add this information into the patch description for V2 to make things clearer.
-
-Regards,
-Steve
+> +-nanohenry     : nano henries
+>
+>  Temperature
+>  ----------------------------------------
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
