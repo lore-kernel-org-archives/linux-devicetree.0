@@ -1,44 +1,40 @@
-From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
-Subject: [PATCH net-next 0/2] net: phy: Add Downshift, FLF2 drivers for Microsemi
-Date: Fri, 14 Oct 2016 17:10:31 +0530
-Message-ID: <1476445233-26524-1-git-send-email-Raju.Lakkaraju@microsemi.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] iio: dac: mcp4725: use regulator framework
+Date: Fri, 14 Oct 2016 13:58:24 +0200
+Message-ID: <87088906-8986-cca0-c29a-747610bae982@metafoo.de>
+References: <1476194263-12015-1-git-send-email-tomas@novotny.cz>
+ <1476194263-12015-2-git-send-email-tomas@novotny.cz>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: f.fainelli@gmail.com, Allan.Nielsen@microsemi.com, andrew@lunn.ch, Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476194263-12015-2-git-send-email-tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yong Li <sdliyong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/11/2016 03:57 PM, Tomas Novotny wrote:
 
-From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+Hi,
 
-This series adds support to the Speed downshift, Fast Link Failure 2,
-set drivers for Microsemi PHYs.
+Looks mostly good. One small thing that should be addressed.
 
-Patch 1/4: Link Speed downshift:
-        For operation in cabling environments that are incompatible with
-        1000BAST-T, VSC8531 device provides an automatic link speed
-        downshift operation. When enabled, the device automatically changes
-        its 1000BAST-T auto-negotiation to the next slower speed after
-        a set number of failed attempts at 1000BAST-T.
-        This feature is useful in setting up in networks using older cable
-        installations that include only pairs A and B, and not pairs C and D.
+> diff --git a/include/linux/iio/dac/mcp4725.h b/include/linux/iio/dac/mcp4725.h
+> index 91530e6..7c062e8 100644
+> --- a/include/linux/iio/dac/mcp4725.h
+> +++ b/include/linux/iio/dac/mcp4725.h
+> @@ -10,7 +10,6 @@
+>  #define IIO_DAC_MCP4725_H_
+>  
+>  struct mcp4725_platform_data {
+> -	u16 vref_mv;
+>  };
 
-Patch 2/4: Fast Link Failure 2:
-        VSC8531 Fast Link Failure 2 feature enables the PHY to indicate the
-        onset of a potential link failure in < 100 usec for 100BASE-TX
-        operation. FLF2 is supported through the MDINT (active low) pin.
-
-All these features tested on Beaglebone Black with VSC 8531 PHY.
-
-Raju Lakkaraju (2):
-  net: phy: Add Speed downshift set driver for Microsemi PHYs.
-  net: phy: Add Fast Link Failure - 2 set driver for Microsemi PHYs.
-
- .../devicetree/bindings/net/mscc-phy-vsc8531.txt   |  12 +++
- drivers/net/phy/mscc.c                             | 120 ++++++++++++++++++++-
- 2 files changed, 131 insertions(+), 1 deletion(-)
-
--- 
-2.7.4
+Might as well remove the whole struct and file and drop the if (!pdata)
+check in the driver probe function. Having to declare a empty platform_data
+for the driver to work is not that sensible.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
