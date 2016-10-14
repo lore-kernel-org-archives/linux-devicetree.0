@@ -1,63 +1,44 @@
-From: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] iio: dac: mcp4725: use regulator framework
-Date: Fri, 14 Oct 2016 14:24:23 +0200
-Message-ID: <20161014142423.005b3108@tomas>
-References: <1476194263-12015-1-git-send-email-tomas@novotny.cz>
-        <1476194263-12015-2-git-send-email-tomas@novotny.cz>
-        <87088906-8986-cca0-c29a-747610bae982@metafoo.de>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH V1 09/10] Documentation: dt: mfd: da9062/61 MFD binding
+Date: Fri, 14 Oct 2016 12:26:07 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CCE342A@SW-EX-MBX02.diasemi.com>
+References: <cover.1475743411.git.stwiss.opensource@diasemi.com>
+ <7a21f22bd62817b63ba64e11eecadfb78338ee46.1475743411.git.stwiss.opensource@diasemi.com>
+ <20161010134235.GA20577@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87088906-8986-cca0-c29a-747610bae982-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yong Li <sdliyong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161010134235.GA20577@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-On Fri, 14 Oct 2016 13:58:24 +0200
-Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
-
-> On 10/11/2016 03:57 PM, Tomas Novotny wrote:
+On 10 October 2016 14:43, Rob Herring wrote:
+> On Thu, Oct 06, 2016 at 09:43:31AM +0100, Steve Twiss wrote:
+[...]
+> > @@ -64,10 +89,6 @@ Example:
+> >  			compatible = "dlg,da9062-rtc";
+> >  		};
+> >
+> > -		watchdog {
+> > -			compatible = "dlg,da9062-watchdog";
+> > -		};
+> > -
 > 
-> Hi,
-> 
-> Looks mostly good. One small thing that should be addressed.
-> 
-> > diff --git a/include/linux/iio/dac/mcp4725.h
-> > b/include/linux/iio/dac/mcp4725.h index 91530e6..7c062e8 100644
-> > --- a/include/linux/iio/dac/mcp4725.h
-> > +++ b/include/linux/iio/dac/mcp4725.h
-> > @@ -10,7 +10,6 @@
-> >  #define IIO_DAC_MCP4725_H_
-> >  
-> >  struct mcp4725_platform_data {
-> > -	u16 vref_mv;
-> >  };
-> 
-> Might as well remove the whole struct and file and drop the if (!pdata)
-> check in the driver probe function. Having to declare a empty platform_data
-> for the driver to work is not that sensible.
+> I don't understand why this is removed?
 
-Yes, I was thinking of it but I left the empty structure in the driver
-finally (I briefly comment it also in the commit message of this patch). The
-reason is that the structure is used again in the next commit. So removing
-the file and associated checks and putting it back again would make
-unnecessary noise in the patches. Anyway, if you think that it is really
-needed I will do it.
+This MFD binding file now contains a link to a separate watchdog binding file.
+I moved the example and the binding information into this new watchdog binding
+document. I also updated it for DA9061.
 
-Thanks,
++- watchdog: See ../watchdog/da9062-watchdog.txt
 
-Tomas
+I will add this information into the patch description for V2 to make things clearer.
 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Steve
