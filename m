@@ -1,64 +1,104 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] Device bindings documentation updated
- ACPI-enabled platforms not currently supported
-Date: Fri, 14 Oct 2016 20:20:45 +0200
-Message-ID: <20161014182045.GA1509@katana>
-References: <cover.1476462204.git.lolivei@synopsys.com>
- <36f4b1736e36b039af15b13645df0de492f1b6e1.1476462204.git.lolivei@synopsys.com>
- <20161014173014.GA26269@leverpostej>
+From: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC V3 PATCH 5/7] arm64: dts: msm8994 SoC and Huawei Angler
+ (Nexus 6P) support
+Date: Fri, 14 Oct 2016 15:06:45 -0700
+Message-ID: <6be08daf-0ad7-7913-ee63-854d52eb6ba1@linaro.org>
+References: <1476265054-22511-1-git-send-email-jeremymc@redhat.com>
+ <1476265054-22511-6-git-send-email-jeremymc@redhat.com>
+ <20161012133450.GC21050@remoulade>
+ <CAL_JsqLMs3cE6qne_GN-3E7c1ub_6U0y5UF0aLkxUD=k5fiOTw@mail.gmail.com>
+ <3e641d25-8ca6-3594-5d3e-038d6f7a9eba@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161014173014.GA26269@leverpostej>
+In-Reply-To: <3e641d25-8ca6-3594-5d3e-038d6f7a9eba-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+To: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---IJpNTDwzlM2Ie8A6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 14, 2016 at 06:30:15PM +0100, Mark Rutland wrote:
-> On Fri, Oct 14, 2016 at 05:52:50PM +0100, Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org wrot=
-e:
-> > -		is_slave =3D device_property_read_bool(&pdev->dev, "isslave");
->=20
-> Which tree is this based on? I cant see the existing isslave property in
-> mainline HEAD (commit 29fbff8698fc0ac1).
+On 10/12/2016 05:42 PM, Jeremy McNicoll wrote:
+> On 2016-10-12 7:20 AM, Rob Herring wrote:
+>> On Wed, Oct 12, 2016 at 8:34 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> 
+>> wrote:
+>>> On Wed, Oct 12, 2016 at 02:37:32AM -0700, Jeremy McNicoll wrote:
+>>>> +/ {
+>>>> +     model = "HUAWEI MSM8994 ANGLER rev-1.01";
+>>>> +     compatible = "qcom,msm8994";
+>>>> +     qcom,board-id= <8026 0>;
 
-Same surprise here. Because I likely would have NAKed the binding.
+Hello Jeremy,
 
-Why is it needed? Doesn't the driver allow to be master/slave on the
-same bus?
+When I tested these patches on linux-next, the bootloader on my Nexus 6P 
+wasn't finding the dtb until I adjusted the board-id value to <8023 0>.
 
+Apparently, my hardware matches "Huawei Technologies, Inc. MSM8994 
+Angler VN2" in the original kernel sources:
+https://android.googlesource.com/kernel/msm/+/android-msm-angler-3.10-nougat/arch/arm64/boot/dts/huawei/huawei_angler_vn2.dts
 
---IJpNTDwzlM2Ie8A6
-Content-Type: application/pgp-signature; name="signature.asc"
+I'm not sure what the most common hardware is out in the wild, but the 
+board-id for your dts comes from this commit, which seems to indicate 
+it's a DVT model (as opposed to a PVT model):
+https://android.googlesource.com/kernel/msm/+/e9a476191862cfe8e5e30e2babc04052f9ab936b
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+We should definitely get a sample size of > 1
 
-iQIcBAEBAgAGBQJYASH8AAoJEBQN5MwUoCm2s/4P/RCzhVR/d3oNeEBshuOomATt
-N2FEaR0NS6w/cul5Hb2XB49tGojckoUgmu0a9O/v9mWyavwANIQMQ3YfCSCnPTuu
-Mx9YLBfB10VtuMBhGCaSG+TEEu7Aq6fYS1Jirs9bPYEv9F4zvFNB/hV4BQ6D7anS
-0p/62cvtFiQmEMAKd3TEauWj6f3qnosZOhDc/4jkd7mrYGaXsz+edAuxA2Gg6n9r
-jGlC8BvWSTMf/w+j++q+6A8/xjNYBRfMJ9YOmwdGFSYil2Ll0N1Z05U3nVMWsSqP
-qhU0hWdpHM87vdTHIRln21bWmKq+t+KCF6NUYcqsRKi2PagzajtkcPcSAXixfL7N
-FPWtnQJayffD+IwJoL0GTbK/3ihdb87YyE8fhFaLBIdprzgR9czj3AatGqn77x0l
-xlfD65czke5q20Riacluqk8nEdF2ulkYO1nhgFYXd10161lBOk6lxzMxMAUNKjGH
-0E7lMvsMfhoW7kyD7rEoeE7HXGb2+GVWwRVWq/XRZLU8mJ173sN1h17NqoRS+SwS
-Tm2LR5lf2nFxclKYwUjKImSSdIkHnbBqo3XHoJcRFqTlB3kFVnhuJqkCHvgJhh0H
-wSOhF8uHEEJvQop6zarxQbkZBQnPXNujK2RlvXqyLwKFGo4BpT61qpP7YFE7GFt4
-ZO/otbgt32asZQ5jS9uX
-=JA8r
------END PGP SIGNATURE-----
+- Mike
 
---IJpNTDwzlM2Ie8A6--
+>>>> +};
+>>>
+>>> This last property is undocumented, and unused.
+>>
+>> They are required by the bootloader which AIUI can't/won't be updated
+>> to use the mainline compatible string. The alternative is leave them
+>
+> That is my understanding as well after talking to some QC people over
+> beer the other night.
+>
+>> out and then you have to run the dtb thru QC's dtbTool to add them
+>> which is worse IMO.
+>>
+>
+> If there is an expectation that one has to run the dtbTool as a post
+> compilation thing, in my opinion its not a good idea.  But if that is
+> the path that is decided (not my personal favourite) then we should
+> at least let people know somehow that they have to run this tool in
+> order to boot their kernel.   (dont like that either)
+>
+>
+> Its already hard enough to get debug serial going, or figuring out how 
+> to get serial debug out.  We should make it as easy as possible for 
+> people that want to contribute and help.   Google did _NOT_ lock down 
+> these phones on purpose so that people can do what they want with them 
+> (within reason).  The fewer barriers to entry the better.
+>
+>
+>
+>> I'd also leave them undocumented as we want to minimize their usage.
+>>
+>
+> I agree with this and will leave policing of their usage to RobH ;-)
+>
+> -jeremy
+>
+>
+>> Rob
+>> -- 
+>> To unsubscribe from this list: send the line "unsubscribe 
+>> linux-arm-msm" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at http://vger.kernel.org/majordomo-info.html
+>>
+>
+> -- 
+> To unsubscribe from this list: send the line "unsubscribe 
+> linux-arm-msm" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
