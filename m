@@ -1,53 +1,41 @@
-From: Rich Felker <dalias@libc.org>
-Subject: [PATCH v9 1/2] of: add J-Core timer bindings
-Date: Thu, 13 Oct 2016 21:51:06 +0000
-Message-ID: <8b107c292ed8cf8eed0fa283071fc8a930098628.1476393790.git.dalias@libc.org>
-References: <cover.1476393790.git.dalias@libc.org>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <cover.1476393790.git.dalias@libc.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
+From: Xiaogang Cui <xiaogang@codeaurora.org>
+Subject: [PATCH 2/2] arm64: dts: add msm8996 reboot mode support
+Date: Fri, 14 Oct 2016 10:09:32 +0800
+Message-ID: <1476411017-21040-1-git-send-email-xiaogang@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.gross@linaro.org
+Cc: Xiaogang Cui <xiaogang@codeaurora.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT
+        AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rich Felker <dalias@libc.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Add reboot mode entry for MSM8996 platform.
+
+Signed-off-by: Xiaogang Cui <xiaogang@codeaurora.org>
 ---
- .../devicetree/bindings/timer/jcore,pit.txt        | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/jcore,pit.txt
+ arch/arm64/boot/dts/qcom/pm8994.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/jcore,pit.txt b/Documentation/devicetree/bindings/timer/jcore,pit.txt
-new file mode 100644
-index 0000000..af5dd35
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/jcore,pit.txt
-@@ -0,0 +1,24 @@
-+J-Core Programmable Interval Timer and Clocksource
+diff --git a/arch/arm64/boot/dts/qcom/pm8994.dtsi b/arch/arm64/boot/dts/qcom/pm8994.dtsi
+index 1222d2e..c9b14ab 100644
+--- a/arch/arm64/boot/dts/qcom/pm8994.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8994.dtsi
+@@ -51,6 +51,14 @@
+ 				     <0 0xa6 0 IRQ_TYPE_NONE>,
+ 				     <0 0xa7 0 IRQ_TYPE_NONE>;
+ 		};
 +
-+Required properties:
-+
-+- compatible: Must be "jcore,pit".
-+
-+- reg: Memory region(s) for timer/clocksource registers. For SMP,
-+  there should be one region per cpu, indexed by the sequential,
-+  zero-based hardware cpu number.
-+
-+- interrupts: An interrupt to assign for the timer. The actual pit
-+  core is integrated with the aic and allows the timer interrupt
-+  assignment to be programmed by software, but this property is
-+  required in order to reserve an interrupt number that doesn't
-+  conflict with other devices.
-+
-+
-+Example:
-+
-+timer@200 {
-+	compatible = "jcore,pit";
-+	reg = < 0x200 0x30 0x500 0x30 >;
-+	interrupts = < 0x48 >;
-+};
++		qcom,reboot-mode@88f {
++			compatible = "qcom,reboot-mode";
++			offset = <0x88f>;
++			mode-normal = <0x00>;
++			mode-recovery = <0x04>;
++			mode-bootloader = <0x08>;
++		};
+ 	};
+ 
+ 	pmic@1 {
 -- 
-2.10.0
-
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
