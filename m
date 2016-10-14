@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/6] dt: bindings: Add Allwinner Q8 tablets hardware manager bindings
-Date: Fri, 14 Oct 2016 09:53:32 +0200
-Message-ID: <20161014075337.10452-2-hdegoede@redhat.com>
+Subject: [PATCH 3/6] misc: q8-hardwaremgr: Add accelerometer detection
+Date: Fri, 14 Oct 2016 09:53:34 +0200
+Message-ID: <20161014075337.10452-4-hdegoede@redhat.com>
 References: <20161014075337.10452-1-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161014075337.10452-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
@@ -10,103 +10,279 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland 
 Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinnner A13 / A23 / A33 based Q8 tablets are popular cheap 7" tablets
-of which a new batch is produced every few weeks. Each batch uses a
-different mix of touchscreen, accelerometer and wifi peripherals.
-
-Given that each batch is different creating a devicetree for each variant
-is not desirable, work is being done on a Q8 tablet hardware manager which
-auto-detects the touchscreen and accelerometer and will update the dt with
-what it has found, so that a single generic dt can be used for these tablets.
-
-This commit adds dt-bindings for this hardware manager.
-
-Note the wifi is connected to a discoverable bus (sdio or usb) and will be
-autodetected by the mmc resp. usb subsystems.
+Extend the q8-hardwaremgr with accelerometer detection.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- .../misc/allwinner,sunxi-q8-hardwaremgr.txt        | 71 ++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/allwinner,sunxi-q8-hardwaremgr.txt
+ drivers/misc/Kconfig          |   2 +-
+ drivers/misc/q8-hardwaremgr.c | 219 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 220 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/misc/allwinner,sunxi-q8-hardwaremgr.txt b/Documentation/devicetree/bindings/misc/allwinner,sunxi-q8-hardwaremgr.txt
-new file mode 100644
-index 0000000..a81b258
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/allwinner,sunxi-q8-hardwaremgr.txt
-@@ -0,0 +1,71 @@
-+Q8 tablet hardware manager
-+--------------------------
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index d6c1529..11b05b0 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -801,7 +801,7 @@ config Q8_HARDWAREMGR
+ 	default	n
+ 	help
+ 	  This option enables support for autodetecting the touchscreen
+-	  on Allwinner Q8 tablets.
++	  and accelerometer on Allwinner Q8 tablets.
+ 
+ 	  If unsure, say N.
+ 
+diff --git a/drivers/misc/q8-hardwaremgr.c b/drivers/misc/q8-hardwaremgr.c
+index 346102d..8ed71a9 100644
+--- a/drivers/misc/q8-hardwaremgr.c
++++ b/drivers/misc/q8-hardwaremgr.c
+@@ -83,6 +83,48 @@ enum {
+ 	zet6251,
+ };
+ 
++#define DA280_REG_CHIP_ID		0x01
++#define DA280_CHIP_ID			0x13
++#define DA311_REG_CHIP_ID		0x0f
++#define DA311_CHIP_ID			0x13
 +
-+Allwinnner A13 / A23 / A33 based Q8 tablets are popular cheap 7" tablets of
-+which a new batch is produced every few weeks. Each batch uses a different
-+mix of touchscreen, accelerometer and wifi peripherals.
++#define DMARD06_CHIP_ID_REG		0x0f
++#define DMARD05_CHIP_ID			0x05
++#define DMARD06_CHIP_ID			0x06
++#define DMARD07_CHIP_ID			0x07
++#define DMARD09_REG_CHIPID		0x18
++#define DMARD09_CHIPID			0x95
++#define DMARD10_REG_STADR		0x12
++#define DMARD10_REG_STAINT		0x1c
++#define DMARD10_VALUE_STADR		0x55
++#define DMARD10_VALUE_STAINT		0xaa
 +
-+Given that each batch is different creating a devicetree for each variant is
-+not desirable. The Q8 tablet hardware manager bindings are bindings for an os
-+module which auto-detects the touchscreen and accelerometer so that a single
-+generic dts can be used for these tablets.
++#define MC3230_REG_CHIP_ID		0x18
++#define MC3230_CHIP_ID			0x01
++#define MMA7660_CHIP_ID			0x00 /* Factory reserved on MMA7660 */
++#define MC3230_REG_PRODUCT_CODE		0x3b
++#define MMA7660_PRODUCT_CODE		0x00 /* Factory reserved on MMA7660 */
++#define MC3210_PRODUCT_CODE		0x90
++#define MC3230_PRODUCT_CODE		0x19
 +
-+The wifi is connected to a discoverable bus and will be autodetected by the os.
++#define MXC6225_REG_CHIP_ID		0x08
++#define MXC6225_CHIP_ID			0x05
 +
-+Required properties:
-+ - toplevel / machine compatible, one of:
-+	"allwinner,q8-a13"
-+	"allwinner,q8-a23"
-+	"allwinner,q8-a33"
-+ - touchscreen node   : There must be a template touchscreen node named
-+			"touchscreen", this must be a child node of the
-+			touchscreen i2c bus
-+ - accelerometer node : There must be a template accelerometer node named
-+			"accelerometer", this must be a child node of the
-+			accelerometer i2c bus
-+
-+touchscreen node required properties:
-+ - interrupt-parent   : phandle pointing to the interrupt controller
-+			serving the touchscreen interrupt
-+ - interrupts         : interrupt specification for the touchscreen interrupt
-+ - power-gpios        : Specification for the pin connected to the touchscreen's
-+			enable / wake pin. This needs to be driven high to
-+			enable the touchscreen controller
-+
-+touchscreen node optional properties:
-+ - vddio-supply       : regulator phandle for the touchscreen vddio supply
-+
-+accelerometer node optional properties:
-+ - interrupt-parent   : phandle pointing to the interrupt controller
-+			serving the accelerometer interrupt
-+ - interrupts         : interrupt specification for the accelerometer interrupt
-+
-+Example:
-+
-+/ {
-+	compatible = "allwinner,q8-a23", "allwinner,sun8i-a23";
++enum {
++	accel_unknown,
++	da280,
++	da311,
++	dmard05,
++	dmard06,
++	dmard07,
++	dmard09,
++	dmard10,
++	mc3210,
++	mc3230,
++	mma7660,
++	mxc6225,
 +};
 +
-+&i2c0 {
-+	touchscreen: touchscreen@0 {
-+		interrupt-parent = <&pio>;
-+		interrupts = <1 5 IRQ_TYPE_EDGE_FALLING>; /* PB5 */
-+		power-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-+		vddio-supply = <&reg_ldo_io1>;
-+		/*
-+		 * Enabled by sunxi-q8-hardwaremgr if it detects a
-+		 * known model touchscreen.
-+		 */
-+		status = "disabled";
-+	};
-+};
+ struct q8_hardwaremgr_device {
+ 	int model;
+ 	int addr;
+@@ -94,6 +136,7 @@ struct q8_hardwaremgr_data {
+ 	struct device *dev;
+ 	enum soc soc;
+ 	struct q8_hardwaremgr_device touchscreen;
++	struct q8_hardwaremgr_device accelerometer;
+ 	int touchscreen_variant;
+ 	int touchscreen_width;
+ 	int touchscreen_height;
+@@ -411,6 +454,175 @@ static void q8_hardwaremgr_apply_touchscreen(struct q8_hardwaremgr_data *data)
+ 	of_node_put(np);
+ }
+ 
++static int q8_hardwaremgr_probe_mxc6225(struct q8_hardwaremgr_data *data,
++					struct i2c_client *client)
++{
++	int id;
 +
-+&i2c1 {
-+	accelerometer: accelerometer@0 {
-+		/*
-+		 * Enabled by sunxi-q8-hardwaremgr if it detects a
-+		 * known model accelerometer.
-+		 */
-+		status = "disabled";
-+	};
-+};
++	id = i2c_smbus_read_byte_data(client, MXC6225_REG_CHIP_ID);
++	/* Bits 7 - 5 of the chip-id register are undefined */
++	if (id >= 0 && (id & 0x1f) == MXC6225_CHIP_ID) {
++		data->accelerometer.compatible = "memsic,mxc6225";
++		data->accelerometer.model = mxc6225;
++		return 0;
++	}
++
++	return id == -ETIMEDOUT ? -ETIMEDOUT : -ENODEV;
++}
++
++static int q8_hardwaremgr_probe_mc3230(struct q8_hardwaremgr_data *data,
++				       struct i2c_client *client)
++{
++	int id, pc = 0;
++
++	/* First check chip-id, then product-id */
++	id = i2c_smbus_read_byte_data(client, MC3230_REG_CHIP_ID);
++	if (id == MC3230_CHIP_ID || id == MMA7660_CHIP_ID) {
++		pc = i2c_smbus_read_byte_data(client, MC3230_REG_PRODUCT_CODE);
++		switch (pc) {
++		case MMA7660_PRODUCT_CODE:
++			data->accelerometer.compatible = "fsl,mma7660";
++			data->accelerometer.model = mma7660;
++			return 0;
++		case MC3210_PRODUCT_CODE:
++			data->accelerometer.compatible = "mcube,mc3210";
++			data->accelerometer.model = mc3210;
++			return 0;
++		case MC3230_PRODUCT_CODE:
++			data->accelerometer.compatible = "mcube,mc3230";
++			data->accelerometer.model = mc3230;
++			return 0;
++		case -ETIMEDOUT:
++			return -ETIMEDOUT; /* Bus stuck bail immediately */
++		}
++	}
++
++	return id == -ETIMEDOUT ? -ETIMEDOUT : -ENODEV;
++}
++
++static int q8_hardwaremgr_probe_dmard06(struct q8_hardwaremgr_data *data,
++					struct i2c_client *client)
++{
++	int id;
++
++	id = i2c_smbus_read_byte_data(client, DMARD06_CHIP_ID_REG);
++	switch (id) {
++	case DMARD05_CHIP_ID:
++		data->accelerometer.compatible = "domintech,dmard05";
++		data->accelerometer.model = dmard05;
++		return 0;
++	case DMARD06_CHIP_ID:
++		data->accelerometer.compatible = "domintech,dmard06";
++		data->accelerometer.model = dmard06;
++		return 0;
++	case DMARD07_CHIP_ID:
++		data->accelerometer.compatible = "domintech,dmard07";
++		data->accelerometer.model = dmard07;
++		return 0;
++	}
++
++	return id == -ETIMEDOUT ? -ETIMEDOUT : -ENODEV;
++}
++
++static int q8_hardwaremgr_probe_dmard09(struct q8_hardwaremgr_data *data,
++					struct i2c_client *client)
++{
++	int id;
++
++	id = i2c_smbus_read_byte_data(client, DMARD09_REG_CHIPID);
++	if (id == DMARD09_CHIPID) {
++		data->accelerometer.compatible = "domintech,dmard09";
++		data->accelerometer.model = dmard09;
++		return 0;
++	}
++
++	return id == -ETIMEDOUT ? -ETIMEDOUT : -ENODEV;
++}
++
++static int q8_hardwaremgr_probe_dmard10(struct q8_hardwaremgr_data *data,
++					struct i2c_client *client)
++{
++	int stadr, staint = 0;
++
++	/* These 2 registers have special POR reset values used for id */
++	stadr = i2c_smbus_read_byte_data(client, DMARD10_REG_STADR);
++	if (stadr == DMARD10_VALUE_STADR) {
++		staint = i2c_smbus_read_byte_data(client, DMARD10_REG_STAINT);
++		switch (staint) {
++		case DMARD10_VALUE_STAINT:
++			data->accelerometer.compatible = "domintech,dmard10";
++			data->accelerometer.model = dmard10;
++			return 0;
++		case -ETIMEDOUT:
++			return -ETIMEDOUT; /* Bus stuck bail immediately */
++		}
++	}
++
++	return stadr == -ETIMEDOUT ? -ETIMEDOUT : -ENODEV;
++}
++
++static int q8_hardwaremgr_probe_da280(struct q8_hardwaremgr_data *data,
++				      struct i2c_client *client)
++{
++	int id;
++
++	id = i2c_smbus_read_byte_data(client, DA280_REG_CHIP_ID);
++	if (id == DA280_CHIP_ID) {
++		data->accelerometer.compatible = "miramems,da280";
++		data->accelerometer.model = da280;
++		return 0;
++	}
++
++	return id == -ETIMEDOUT ? -ETIMEDOUT : -ENODEV;
++}
++
++static int q8_hardwaremgr_probe_da311(struct q8_hardwaremgr_data *data,
++				      struct i2c_client *client)
++{
++	int id;
++
++	id = i2c_smbus_read_byte_data(client, DA311_REG_CHIP_ID);
++	if (id == DA311_CHIP_ID) {
++		data->accelerometer.compatible = "miramems,da311";
++		data->accelerometer.model = da311;
++		return 0;
++	}
++
++	return id == -ETIMEDOUT ? -ETIMEDOUT : -ENODEV;
++}
++
++static int q8_hardwaremgr_probe_accelerometer(struct q8_hardwaremgr_data *data,
++					      struct i2c_adapter *adap)
++{
++	PROBE_CLIENT(&data->accelerometer, 0x15, q8_hardwaremgr_probe_mxc6225);
++	PROBE_CLIENT(&data->accelerometer, 0x4c, q8_hardwaremgr_probe_mc3230);
++	PROBE_CLIENT(&data->accelerometer, 0x1c, q8_hardwaremgr_probe_dmard06);
++	PROBE_CLIENT(&data->accelerometer, 0x1d, q8_hardwaremgr_probe_dmard09);
++	PROBE_CLIENT(&data->accelerometer, 0x18, q8_hardwaremgr_probe_dmard10);
++	PROBE_CLIENT(&data->accelerometer, 0x26, q8_hardwaremgr_probe_da280);
++	PROBE_CLIENT(&data->accelerometer, 0x27, q8_hardwaremgr_probe_da311);
++
++	return -ENODEV;
++}
++
++static void q8_hardwaremgr_apply_accelerometer(struct q8_hardwaremgr_data *data)
++{
++	struct of_changeset cset;
++	struct device_node *np;
++
++	if (data->accelerometer.model == accel_unknown)
++		return;
++
++	np = q8_hardware_mgr_apply_common(&data->accelerometer, &cset,
++					  "accelerometer");
++	if (!np)
++		return;
++
++	of_changeset_apply(&cset);
++
++	of_node_put(np);
++}
++
+ static int q8_hardwaremgr_do_probe(struct q8_hardwaremgr_data *data,
+ 				   struct q8_hardwaremgr_device *dev,
+ 				   const char *prefix, bus_probe_func func)
+@@ -531,7 +743,14 @@ static int q8_hardwaremgr_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto error;
+ 
++	ret = q8_hardwaremgr_do_probe(data, &data->accelerometer,
++				      "accelerometer",
++				      q8_hardwaremgr_probe_accelerometer);
++	if (ret)
++		goto error;
++
+ 	q8_hardwaremgr_apply_touchscreen(data);
++	q8_hardwaremgr_apply_accelerometer(data);
+ 
+ error:
+ 	kfree(data);
 -- 
 2.9.3
 
