@@ -1,81 +1,120 @@
-From: xiaogang-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [PATCH 1/2] power: reset: Add qcom reboot mode driver
-Date: Fri, 14 Oct 2016 11:40:50 +0800
-Message-ID: <ab76bb8e9a3eb417ea2fbfb0363bdc7e@codeaurora.org>
-References: <1476410823-8912-1-git-send-email-xiaogang@codeaurora.org>
- <CALAqxLXL+AHwchp8Ja2NAXt-=0xd87ojA4AGzT-n0oQFbwcCzw@mail.gmail.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: drm/bridge: adv7511: Add regulator
+ bindings
+Date: Fri, 14 Oct 2016 11:10:28 +0530
+Message-ID: <e3d74745-fd14-63f1-e93f-f57e886e26ed@codeaurora.org>
+References: <1472640730-24326-1-git-send-email-architt@codeaurora.org>
+ <737415023.GKbfqYIf4s@avalon> <57E8C2CB.9000806@codeaurora.org>
+ <1527982.jPo8JkVTxZ@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALAqxLXL+AHwchp8Ja2NAXt-=0xd87ojA4AGzT-n0oQFbwcCzw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Chris Brand <chris.brand-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:POWER SUPPLY CLASS/SUBSYSTEM and DRIVERS" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>open list <li>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1527982.jPo8JkVTxZ@avalon>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, robh@kernel.org
+Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-在 2016-10-14 11:25，John Stultz 写道：
-> On Thu, Oct 13, 2016 at 7:02 PM, Xiaogang Cui <xiaogang-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> 
-> wrote:
->> This is a initial version so it's very similar with syscon
->> reboot mode driver. We will add more functionalities in the
->> further after dependency is ready.
->> 
->> Signed-off-by: Xiaogang Cui <xiaogang-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  .../bindings/power_supply/qcom-reboot-mode.txt     |  23 +++++
->>  drivers/power/reset/Kconfig                        |  10 ++
->>  drivers/power/reset/Makefile                       |   1 +
->>  drivers/power/reset/qcom-reboot-mode.c             | 109 
->> +++++++++++++++++++++
->>  4 files changed, 143 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/power_supply/qcom-reboot-mode.txt
->>  create mode 100644 drivers/power/reset/qcom-reboot-mode.c
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/power_supply/qcom-reboot-mode.txt 
->> b/Documentation/devicetree/bindings/power_supply/qcom-reboot-mode.txt
->> new file mode 100644
->> index 0000000..8b33592
->> --- /dev/null
->> +++ 
->> b/Documentation/devicetree/bindings/power_supply/qcom-reboot-mode.txt
->> @@ -0,0 +1,23 @@
->> +Qualcomm Reboot Mode Driver
->> +
->> +Qualcomm reboot mode driver based on reboot mode framework to update
->> +SPMI specific bits.
->> +
->> +Required Properties:
->> +-compatible: "qcom,reboot-mode"
->> +-offset: offset of the SPMI reboot mode register
->> +
->> +Optional Properties:
->> +-mask: mask of reboot mode
->> +-mode-xxx: magic of reboot mode
->> +
->> +Example:
->> +       qcom,reboot-mode@88f {
->> +               compatible = "qcom,reboot-mode";
->> +               offset = <0x88f>;
->> +               mode-normal = <0x00>;
->> +               mode-recovery = <0x04>;
->> +               mode-bootloader = <0x08>;
->> +               mode-rtc = <0x0C>;
-> 
-> So I don't think we've had a "rtc" mode before. This needs to be very
-> clearly documented (or maybe just skipped) so we don't start fraying
-> with all the various vendor specific modes.
-> 
+Hi Rob,
 
-Thanks for the comments, I will skip this specific mode in next version 
-of this patch.
+On 09/26/2016 01:42 PM, Laurent Pinchart wrote:
+> Hi Archit,
+>
+> On Monday 26 Sep 2016 12:10:11 Archit Taneja wrote:
+>> On 9/25/2016 10:58 PM, Laurent Pinchart wrote:
+>>> On Friday 23 Sep 2016 14:50:27 Archit Taneja wrote:
+>>>> Add the regulator supply properties needed by ADV7511 and ADV7533. The
+>>>> regulator names are named after the pin names, except for DVDD_3V on
+>>>> ADV7511, which is left v3p3 to have the same name as it's on ADV7533.
+>>>>
+>>>> ADV7511 has a BGVDD pin for which the voltage to be configured isn't
+>>>> clear. This needs to be updated in the document later.
+>>>>
+>>>> The regulators are specified as optional properties since there can
+>>>> be boards which have a fixed supply directly routed to the pins, and
+>>>> these may not be modelled as regulator supplies.
+>>>>
+>>>> Cc: Rob Herring <robh@kernel.org>
+>>>> Cc: devicetree@vger.kernel.org
+>>>> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+>>>> ---
+>>>> v2:
+>>>> - Specify regulator supplies for ADV7511 too.
+>>>> - Have separate supply entries for AVDD, DVDD, PVDD, A2VDD pins.
+>>>> - Add additional BGVDD supply for ADV7511.
+>>>>
+>>>>   .../devicetree/bindings/display/bridge/adi,adv7511.txt     | 14 +++++++
+>>>>   1 file changed, 14 insertions(+)
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>>>> b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt index
+>>>> 6532a59..66e6bae 100644
+>>>> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>>>> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>>>>
+>>>> @@ -56,6 +56,20 @@ Optional properties:
+>>>>   - adi,disable-timing-generator: Only for ADV7533. Disables the internal
+>>>>
+>>>> timing generator. The chip will rely on the sync signals in the DSI data
+>>>> lanes, rather than generate its own timings for HDMI output.
+>>>> +- avdd-supply: A 1.8V supply that powers up the AVDD pin on the chip.
+>>>> +- dvdd-supply: A 1.8V supply that powers up the DVDD pin on the chip.
+>>>> +- pvdd-supply: A 1.8V supply that powers up the PVDD pin on the chip.
+>>>> +- v3p3-supply: A 3.3V supply that powers up the pin called DVDD_3V on
+>>>> +  ADV7511 and V3P3 on ADV7533.
+>>>> +
+>>>> +ADV7511 specific supplies:
+>>>> +- bgvdd-supply: Powers the BGVDD pin. The voltage isn't clear from
+>>>> +  available datasheets.
+>>>
+>>> It's a 1.8V supply. The ADV7511 hardware user's guide recommends tying it
+>>> to the PVDD supply, so I'm not sure we need a separate supply in DT.
+>>
+>> Thanks for providing the info. I'll update it in the doc.
+>>
+>>> Similarly, the user's guide recommends supplying the AVDD, DVDD and PVDD
+>>> pins with a single 1.8V LDO and three independent filters. We could thus
+>>> possibly combine them into a single 1.8V supply.
+>>
+>> I'd originally specified only one AVDD supply for all the 1.8 V
+>> supplies, but Rob had recommended using separate supplies for each pin.
+>>
+>> I guess it doesn't do much harm specifying separate supplies, a
+>> board can just provide avdd-supply, and the rest would be assumed dummy.
+>
+> DT should use the same regulator phandle for all power supplies in that case,
+> not specify a single one.
+>
+>> It could also help describe boards which may not have followed the
+>> user guide's recommendation, but I agree that's probably a rare
+>> scenario.
+>>
+>> Is it okay if we stick with multiple supplies as it is in this version?
+>
+> It seems overkill to me but I can live with that. I'd remove the bgvdd supply
+> though.
+>
+> Rob, what's your opinion on this ? Is there a specific reason why you prefer
+> splitting the 1.8V supply in one supply per pin, when the hardware user's
+> guide recommend powering them from the same LDO ?
 
-> thanks
-> -john
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Could you suggest us which way to go?
+
+Thanks,
+Archit
+
+>
+>>>> +ADV7533 specific supplies:
+>>>> +- a2vdd-supply: 1.8V supply that powers up the A2VDD pin on the chip.
+>>>> +- v1p2-supply: A supply that powers up the V1P2 pin on the chip. It can
+>>>> be
+>>>> +  either 1.2V or 1.8V.
+>>>>
+>>>>   Required nodes:
+>
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
