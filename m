@@ -1,291 +1,123 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/6] misc: q8-hardwaremgr: Add accelerometer detection
-Date: Fri, 14 Oct 2016 09:53:34 +0200
-Message-ID: <20161014075337.10452-4-hdegoede@redhat.com>
-References: <20161014075337.10452-1-hdegoede@redhat.com>
+Subject: Add Allwinner Q8 tablets hardware manager
+Date: Fri, 14 Oct 2016 09:53:31 +0200
+Message-ID: <20161014075337.10452-1-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161014075337.10452-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Extend the q8-hardwaremgr with accelerometer detection.
+Hi Rob, Mark, et al.,
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- drivers/misc/Kconfig          |   2 +-
- drivers/misc/q8-hardwaremgr.c | 219 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 220 insertions(+), 1 deletion(-)
+Here is a first non RFC posting of my q8 tablet hardwaremanager work,
+both the bindings as well as the in kernel implementation of it.
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index d6c1529..11b05b0 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -801,7 +801,7 @@ config Q8_HARDWAREMGR
- 	default	n
- 	help
- 	  This option enables support for autodetecting the touchscreen
--	  on Allwinner Q8 tablets.
-+	  and accelerometer on Allwinner Q8 tablets.
- 
- 	  If unsure, say N.
- 
-diff --git a/drivers/misc/q8-hardwaremgr.c b/drivers/misc/q8-hardwaremgr.c
-index 346102d..8ed71a9 100644
---- a/drivers/misc/q8-hardwaremgr.c
-+++ b/drivers/misc/q8-hardwaremgr.c
-@@ -83,6 +83,48 @@ enum {
- 	zet6251,
- };
- 
-+#define DA280_REG_CHIP_ID		0x01
-+#define DA280_CHIP_ID			0x13
-+#define DA311_REG_CHIP_ID		0x0f
-+#define DA311_CHIP_ID			0x13
-+
-+#define DMARD06_CHIP_ID_REG		0x0f
-+#define DMARD05_CHIP_ID			0x05
-+#define DMARD06_CHIP_ID			0x06
-+#define DMARD07_CHIP_ID			0x07
-+#define DMARD09_REG_CHIPID		0x18
-+#define DMARD09_CHIPID			0x95
-+#define DMARD10_REG_STADR		0x12
-+#define DMARD10_REG_STAINT		0x1c
-+#define DMARD10_VALUE_STADR		0x55
-+#define DMARD10_VALUE_STAINT		0xaa
-+
-+#define MC3230_REG_CHIP_ID		0x18
-+#define MC3230_CHIP_ID			0x01
-+#define MMA7660_CHIP_ID			0x00 /* Factory reserved on MMA7660 */
-+#define MC3230_REG_PRODUCT_CODE		0x3b
-+#define MMA7660_PRODUCT_CODE		0x00 /* Factory reserved on MMA7660 */
-+#define MC3210_PRODUCT_CODE		0x90
-+#define MC3230_PRODUCT_CODE		0x19
-+
-+#define MXC6225_REG_CHIP_ID		0x08
-+#define MXC6225_CHIP_ID			0x05
-+
-+enum {
-+	accel_unknown,
-+	da280,
-+	da311,
-+	dmard05,
-+	dmard06,
-+	dmard07,
-+	dmard09,
-+	dmard10,
-+	mc3210,
-+	mc3230,
-+	mma7660,
-+	mxc6225,
-+};
-+
- struct q8_hardwaremgr_device {
- 	int model;
- 	int addr;
-@@ -94,6 +136,7 @@ struct q8_hardwaremgr_data {
- 	struct device *dev;
- 	enum soc soc;
- 	struct q8_hardwaremgr_device touchscreen;
-+	struct q8_hardwaremgr_device accelerometer;
- 	int touchscreen_variant;
- 	int touchscreen_width;
- 	int touchscreen_height;
-@@ -411,6 +454,175 @@ static void q8_hardwaremgr_apply_touchscreen(struct q8_hardwaremgr_data *data)
- 	of_node_put(np);
- }
- 
-+static int q8_hardwaremgr_probe_mxc6225(struct q8_hardwaremgr_data *data,
-+					struct i2c_client *client)
-+{
-+	int id;
-+
-+	id = i2c_smbus_read_byte_data(client, MXC6225_REG_CHIP_ID);
-+	/* Bits 7 - 5 of the chip-id register are undefined */
-+	if (id >= 0 && (id & 0x1f) == MXC6225_CHIP_ID) {
-+		data->accelerometer.compatible = "memsic,mxc6225";
-+		data->accelerometer.model = mxc6225;
-+		return 0;
-+	}
-+
-+	return id == -ETIMEDOUT ? -ETIMEDOUT : -ENODEV;
-+}
-+
-+static int q8_hardwaremgr_probe_mc3230(struct q8_hardwaremgr_data *data,
-+				       struct i2c_client *client)
-+{
-+	int id, pc = 0;
-+
-+	/* First check chip-id, then product-id */
-+	id = i2c_smbus_read_byte_data(client, MC3230_REG_CHIP_ID);
-+	if (id == MC3230_CHIP_ID || id == MMA7660_CHIP_ID) {
-+		pc = i2c_smbus_read_byte_data(client, MC3230_REG_PRODUCT_CODE);
-+		switch (pc) {
-+		case MMA7660_PRODUCT_CODE:
-+			data->accelerometer.compatible = "fsl,mma7660";
-+			data->accelerometer.model = mma7660;
-+			return 0;
-+		case MC3210_PRODUCT_CODE:
-+			data->accelerometer.compatible = "mcube,mc3210";
-+			data->accelerometer.model = mc3210;
-+			return 0;
-+		case MC3230_PRODUCT_CODE:
-+			data->accelerometer.compatible = "mcube,mc3230";
-+			data->accelerometer.model = mc3230;
-+			return 0;
-+		case -ETIMEDOUT:
-+			return -ETIMEDOUT; /* Bus stuck bail immediately */
-+		}
-+	}
-+
-+	return id == -ETIMEDOUT ? -ETIMEDOUT : -ENODEV;
-+}
-+
-+static int q8_hardwaremgr_probe_dmard06(struct q8_hardwaremgr_data *data,
-+					struct i2c_client *client)
-+{
-+	int id;
-+
-+	id = i2c_smbus_read_byte_data(client, DMARD06_CHIP_ID_REG);
-+	switch (id) {
-+	case DMARD05_CHIP_ID:
-+		data->accelerometer.compatible = "domintech,dmard05";
-+		data->accelerometer.model = dmard05;
-+		return 0;
-+	case DMARD06_CHIP_ID:
-+		data->accelerometer.compatible = "domintech,dmard06";
-+		data->accelerometer.model = dmard06;
-+		return 0;
-+	case DMARD07_CHIP_ID:
-+		data->accelerometer.compatible = "domintech,dmard07";
-+		data->accelerometer.model = dmard07;
-+		return 0;
-+	}
-+
-+	return id == -ETIMEDOUT ? -ETIMEDOUT : -ENODEV;
-+}
-+
-+static int q8_hardwaremgr_probe_dmard09(struct q8_hardwaremgr_data *data,
-+					struct i2c_client *client)
-+{
-+	int id;
-+
-+	id = i2c_smbus_read_byte_data(client, DMARD09_REG_CHIPID);
-+	if (id == DMARD09_CHIPID) {
-+		data->accelerometer.compatible = "domintech,dmard09";
-+		data->accelerometer.model = dmard09;
-+		return 0;
-+	}
-+
-+	return id == -ETIMEDOUT ? -ETIMEDOUT : -ENODEV;
-+}
-+
-+static int q8_hardwaremgr_probe_dmard10(struct q8_hardwaremgr_data *data,
-+					struct i2c_client *client)
-+{
-+	int stadr, staint = 0;
-+
-+	/* These 2 registers have special POR reset values used for id */
-+	stadr = i2c_smbus_read_byte_data(client, DMARD10_REG_STADR);
-+	if (stadr == DMARD10_VALUE_STADR) {
-+		staint = i2c_smbus_read_byte_data(client, DMARD10_REG_STAINT);
-+		switch (staint) {
-+		case DMARD10_VALUE_STAINT:
-+			data->accelerometer.compatible = "domintech,dmard10";
-+			data->accelerometer.model = dmard10;
-+			return 0;
-+		case -ETIMEDOUT:
-+			return -ETIMEDOUT; /* Bus stuck bail immediately */
-+		}
-+	}
-+
-+	return stadr == -ETIMEDOUT ? -ETIMEDOUT : -ENODEV;
-+}
-+
-+static int q8_hardwaremgr_probe_da280(struct q8_hardwaremgr_data *data,
-+				      struct i2c_client *client)
-+{
-+	int id;
-+
-+	id = i2c_smbus_read_byte_data(client, DA280_REG_CHIP_ID);
-+	if (id == DA280_CHIP_ID) {
-+		data->accelerometer.compatible = "miramems,da280";
-+		data->accelerometer.model = da280;
-+		return 0;
-+	}
-+
-+	return id == -ETIMEDOUT ? -ETIMEDOUT : -ENODEV;
-+}
-+
-+static int q8_hardwaremgr_probe_da311(struct q8_hardwaremgr_data *data,
-+				      struct i2c_client *client)
-+{
-+	int id;
-+
-+	id = i2c_smbus_read_byte_data(client, DA311_REG_CHIP_ID);
-+	if (id == DA311_CHIP_ID) {
-+		data->accelerometer.compatible = "miramems,da311";
-+		data->accelerometer.model = da311;
-+		return 0;
-+	}
-+
-+	return id == -ETIMEDOUT ? -ETIMEDOUT : -ENODEV;
-+}
-+
-+static int q8_hardwaremgr_probe_accelerometer(struct q8_hardwaremgr_data *data,
-+					      struct i2c_adapter *adap)
-+{
-+	PROBE_CLIENT(&data->accelerometer, 0x15, q8_hardwaremgr_probe_mxc6225);
-+	PROBE_CLIENT(&data->accelerometer, 0x4c, q8_hardwaremgr_probe_mc3230);
-+	PROBE_CLIENT(&data->accelerometer, 0x1c, q8_hardwaremgr_probe_dmard06);
-+	PROBE_CLIENT(&data->accelerometer, 0x1d, q8_hardwaremgr_probe_dmard09);
-+	PROBE_CLIENT(&data->accelerometer, 0x18, q8_hardwaremgr_probe_dmard10);
-+	PROBE_CLIENT(&data->accelerometer, 0x26, q8_hardwaremgr_probe_da280);
-+	PROBE_CLIENT(&data->accelerometer, 0x27, q8_hardwaremgr_probe_da311);
-+
-+	return -ENODEV;
-+}
-+
-+static void q8_hardwaremgr_apply_accelerometer(struct q8_hardwaremgr_data *data)
-+{
-+	struct of_changeset cset;
-+	struct device_node *np;
-+
-+	if (data->accelerometer.model == accel_unknown)
-+		return;
-+
-+	np = q8_hardware_mgr_apply_common(&data->accelerometer, &cset,
-+					  "accelerometer");
-+	if (!np)
-+		return;
-+
-+	of_changeset_apply(&cset);
-+
-+	of_node_put(np);
-+}
-+
- static int q8_hardwaremgr_do_probe(struct q8_hardwaremgr_data *data,
- 				   struct q8_hardwaremgr_device *dev,
- 				   const char *prefix, bus_probe_func func)
-@@ -531,7 +743,14 @@ static int q8_hardwaremgr_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto error;
- 
-+	ret = q8_hardwaremgr_do_probe(data, &data->accelerometer,
-+				      "accelerometer",
-+				      q8_hardwaremgr_probe_accelerometer);
-+	if (ret)
-+		goto error;
-+
- 	q8_hardwaremgr_apply_touchscreen(data);
-+	q8_hardwaremgr_apply_accelerometer(data);
- 
- error:
- 	kfree(data);
--- 
-2.9.3
+Mark, I know that we discussed this at ELCE and you clearly indicated
+that according to you this does not belong in the kernel. I was a bit
+surprised by this part of the discussion.
 
+I had posted a RFC earlier and Rob had indicated that given that the q8
+tablets are a special case, as my code uses actual probing rather then some
+pre-arranged id mechanism with say an eeprom, that doing this in a
+non-generic manner would be ok for my special case.
+
+So at ELCE I did not have all the arguments I had to do this in the kernel
+ready. I did actually make a concious choice for the kernel before starting
+work on this, thinking about this more I remembered most of the arguments I
+had when making my u-boot vs kernel decision. I still believe the kernel is
+the right place for this. See the list of reasons below.
+
+Regardless of where the implementation should go, please do review the
+bindings (the first patch in the set), as we need those regardless of where
+the actual code dealing with this is going to live.
+
+So on to why I believe that the kernel is the best place to do this, at least
+for my special use-case:
+
+1. Configurability
+
+Since the q8 tablets do not have any id mechanism I'm probing i2c busses to
+generate i2c client dt nodes with the right address and compatible.
+Some info in these nodes (e.g. touchscreen firmware-name) is not probable at
+all and gets set by heuristics. This heuristics may get things wrong.
+So my current implementation offers kernel cmdline options to override this.
+
+Although having to specify kernel cmdline options is not the plug and play
+experience I want to give end-users most distros do have documentation on
+how to do this and doing this is relatively easy for end-users. Moving this
+to the bootloader means moving to some bootloader specific config mechanism
+which is going to be quite hard (and possibly dangerous) for users to use.
+
+This alone to me is the reason to post the kernel implentation of my work
+for upstream inclusion despite of Mark's objections.
+
+2. Upgradability
+
+Most users treat the bootloader like they treat an x86 machine BIOS/EFI,
+they will never upgrade it unless they really have to. This means that it
+will be very difficult to get users to actual benefit from bug-fixes /
+improvements done to the probing code. Where as the kernel on boards running
+e.g. Debian or Fedora gets regular updates together with the rest of the
+system.
+
+3. Infrastructure
+
+The kernel simply has better infrastructure for doing these kind of things.
+Yes we could improve the bootloader, but the kernel is also improving and
+likely at a faster rate. Besides that the purpose of the bootloader is
+mostly to be simple and small, load the kernel and get out of the way, not
+to be a general purpose os kernel. So it will simply always have less
+infrastructure and that is a good thing, otherwise we will be writing
+another general purpose os which is a waste of effort.
+
+4. This is not a new board file
+
+Mark, at ELCE I got the feeling that your biggest worry / objection is
+that this will bring back board files, but that is not the case, if you
+look at the actual code it is nothing like a board-file at all. Where a
+board file was instantiating device after device after device from c-code,
+with maybe a few if-s in there to deal with board revisions. This code is
+all about figuring out which accelerometer and touchscreen there are,
+to then add nodes to the dt for this 2 devices, almost all the code is
+probing, the actual dt modifying code is tiny and no direct device
+instantiation is done at all.
+
+5. This is an exception, not the rule
+
+Yes this is introducing board (family of boards) specific c-code into the
+kernel, so in a way it is reminiscent of board files. But sometimes this is
+necessary, just look at all the vendor / platform specific code in the kernel
+in drivers/platform/x86, or all the places where DMI strings are used to
+uniquely identify a x86 board and adjust behavior.
+
+But this really is the exception, not the rule. I've written/upstreamed a
+number of drivers for q8 tablets hardware and if you look at e.g. the
+silead touchscreen driver then in linux-next this is already used for 5
+ARM dts files where no board specific C-code is involved at all.
+
+So this again is very different from the board file era, where C-code
+had to be used to fill device specific platform-data structs, here all
+necessary info is contained in the dt-binding and there are many users
+who do not need any board specific C-code in the kernel at all.
+
+So dt is working as it should and is avoiding board specific C-code for
+the majority of the cases. But sometimes hardware is not as we ideally
+would like it to be; and for those *exceptions* we are sometimes going
+to need C-code in the kernel, just like there is "board" specific C-code
+in the x86 code.
+
+Regards,
+
+Hans
+
+p.s.
+
+Note that the patches actually implementing the q8 hardware manager depend
+on Pantelis' "of: changesets" patches which are not upstream yet, so if we
+can agree on doing this in the kernel then this cannot be merged until those
+are merged. If we get a concensus on doing this in kernel being ok, then
+I'll post a new version of those patches unless Pantelis' beats me to it.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
