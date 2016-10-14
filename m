@@ -1,37 +1,53 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: rockchip: temporarily remove emmc hs200 speed from rk3288-veyron-speedy.
-Date: Fri, 14 Oct 2016 16:18:06 +0200
-Message-ID: <1556360.cZVpdmzNha@phil>
-References: <87twd1vzc5.fsf@aikidev.net>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] leds: leds-pca963x: workaround group blink scaling issue
+Date: Fri, 14 Oct 2016 07:20:47 -0700
+Message-ID: <20161014142047.imm4idfetphlp5od@atomide.com>
+References: <CGME20161013131622eucas1p2e419c58b25f2c61da22d390f2adfacfd@eucas1p2.samsung.com>
+ <1476364572-26849-1-git-send-email-matt@ranostay.consulting>
+ <ac8bb319-8ad2-65fe-e8bb-6fd9af61f046@samsung.com>
+ <CAKzfze_d5rQ-MaNL1BbGXrdHG+UDNa=us68eoH_AJ-EKLnzCvw@mail.gmail.com>
+ <924a896d-b3f2-5fed-62ba-a731e79e1567@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87twd1vzc5.fsf-LkDtOWtB3X7R7s880joybQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <924a896d-b3f2-5fed-62ba-a731e79e1567-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vagrant Cascadian <vagrantc-LkDtOWtB3X7R7s880joybQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 27. September 2016, 13:53:46 CEST schrieb Vagrant Cascadian:
-> This essentially mimics what was done with rk3288-veyron-minnie in
-> commit 984926781122f034d5bc9962815d135b6c4a8e1d.
+* Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> [161013 23:37]:
+> On 10/13/2016 04:20 PM, Matt Ranostay wrote:
+> > On Thu, Oct 13, 2016 at 4:05 PM, Jacek Anaszewski
+> > <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > Why DT property? Is it somehow dependent on the board configuration?
+> > > How this period-scale value is calculated? Is it inferred empirically?
+> > > 
+> > 
+> > We empirically discovered and verified this with an logic analyzer on
+> > multiple batches of this part.
+> > Reason for the DT entry is we aren't 100% sure that it is always going
+> > to be the same with different board revs.
+> > 
+> > Could be that parts clock acts differently with supply voltage.   This
+> > has been calculated by setting it an expected value, and measuring the
+> > actual result with the logic analyzer.
 > 
-> The eMMC of the speedy Chromebook also appears to need the same tuning
-> workaround, as it frequently fails to recognize the eMMC without it.
+> I'd like to have DT maintainer's ack for this.
 > 
-> Signed-off-by: Vagrant Cascadian <vagrantc-LkDtOWtB3X7R7s880joybQ@public.gmane.org>
+> Cc Rob and Mark.
 
-applied as fix for 4.9.
+How about do this based on the compatible property instead? If there
+are multiple manufacturers for this part and only a certain
+parts have this issue we should have multiple compatible properties.
 
-Your mail client mangled that patch a lot (tabs etc), so it didn't apply 
-cleanly. As it is a quite small one, I fixed that up myself, but please try to 
-make your mail client send correct patches in the future or use git send-email 
-:-)
+Then if it turns out all of them need this scaling there's no need
+to update the binding.
 
+Regards,
 
-Thanks
-Heiko
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
