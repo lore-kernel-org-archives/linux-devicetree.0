@@ -1,96 +1,64 @@
-From: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 5/8] dt/bindings: Update binding for PM domain idle states
-Date: Fri, 14 Oct 2016 10:47:53 -0700
-Message-ID: <1476467276-75094-6-git-send-email-lina.iyer@linaro.org>
-References: <1476467276-75094-1-git-send-email-lina.iyer@linaro.org>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] Device bindings documentation updated
+ ACPI-enabled platforms not currently supported
+Date: Fri, 14 Oct 2016 20:20:45 +0200
+Message-ID: <20161014182045.GA1509@katana>
+References: <cover.1476462204.git.lolivei@synopsys.com>
+ <36f4b1736e36b039af15b13645df0de492f1b6e1.1476462204.git.lolivei@synopsys.com>
+ <20161014173014.GA26269@leverpostej>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476467276-75094-1-git-send-email-lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161014173014.GA26269@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brendan.jackman-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, Juri.Lelli-5wv7dgnIgG8@public.gmane.org, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Update DT bindings to describe idle states of PM domains.
 
-This patch is based on the original patch by Marc Titinger.
+--IJpNTDwzlM2Ie8A6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Signed-off-by: Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/power/power_domain.txt     | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+On Fri, Oct 14, 2016 at 06:30:15PM +0100, Mark Rutland wrote:
+> On Fri, Oct 14, 2016 at 05:52:50PM +0100, Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org wrot=
+e:
+> > -		is_slave =3D device_property_read_bool(&pdev->dev, "isslave");
+>=20
+> Which tree is this based on? I cant see the existing isslave property in
+> mainline HEAD (commit 29fbff8698fc0ac1).
 
-diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-index 025b5e7..e165036 100644
---- a/Documentation/devicetree/bindings/power/power_domain.txt
-+++ b/Documentation/devicetree/bindings/power/power_domain.txt
-@@ -29,6 +29,15 @@ Optional properties:
-    specified by this binding. More details about power domain specifier are
-    available in the next section.
- 
-+- domain-idle-states : A phandle of an idle-state that shall be soaked into a
-+                generic domain power state. The idle state definitions are
-+                compatible with arm,idle-state specified in [1].
-+  The domain-idle-state property reflects the idle state of this PM domain and
-+  not the idle states of the devices or sub-domains in the PM domain. Devices
-+  and sub-domains have their own idle-states independent of the parent
-+  domain's idle states. In the absence of this property, the domain would be
-+  considered as capable of being powered-on or powered-off.
-+
- Example:
- 
- 	power: power-controller@12340000 {
-@@ -59,6 +68,38 @@ The nodes above define two power controllers: 'parent' and 'child'.
- Domains created by the 'child' power controller are subdomains of '0' power
- domain provided by the 'parent' power controller.
- 
-+Example 3:
-+	parent: power-controller@12340000 {
-+		compatible = "foo,power-controller";
-+		reg = <0x12340000 0x1000>;
-+		#power-domain-cells = <0>;
-+		domain-idle-states = <&DOMAIN_RET>, <&DOMAIN_PWR_DN>;
-+	};
-+
-+	child: power-controller@12341000 {
-+		compatible = "foo,power-controller";
-+		reg = <0x12341000 0x1000>;
-+		power-domains = <&parent 0>;
-+		#power-domain-cells = <0>;
-+		domain-idle-states = <&DOMAIN_PWR_DN>;
-+	};
-+
-+	DOMAIN_RET: state@0 {
-+		compatible = "arm,idle-state";
-+		reg = <0x0>;
-+		entry-latency-us = <1000>;
-+		exit-latency-us = <2000>;
-+		min-residency-us = <10000>;
-+	};
-+
-+	DOMAIN_PWR_DN: state@1 {
-+		compatible = "arm,idle-state";
-+		reg = <0x1>;
-+		entry-latency-us = <5000>;
-+		exit-latency-us = <8000>;
-+		min-residency-us = <7000>;
-+	};
-+
- ==PM domain consumers==
- 
- Required properties:
-@@ -76,3 +117,5 @@ Example:
- The node above defines a typical PM domain consumer device, which is located
- inside a PM domain with index 0 of a power controller represented by a node
- with the label "power".
-+
-+[1]. Documentation/devicetree/bindings/arm/idle-states.txt
--- 
-2.7.4
+Same surprise here. Because I likely would have NAKed the binding.
 
+Why is it needed? Doesn't the driver allow to be master/slave on the
+same bus?
+
+
+--IJpNTDwzlM2Ie8A6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJYASH8AAoJEBQN5MwUoCm2s/4P/RCzhVR/d3oNeEBshuOomATt
+N2FEaR0NS6w/cul5Hb2XB49tGojckoUgmu0a9O/v9mWyavwANIQMQ3YfCSCnPTuu
+Mx9YLBfB10VtuMBhGCaSG+TEEu7Aq6fYS1Jirs9bPYEv9F4zvFNB/hV4BQ6D7anS
+0p/62cvtFiQmEMAKd3TEauWj6f3qnosZOhDc/4jkd7mrYGaXsz+edAuxA2Gg6n9r
+jGlC8BvWSTMf/w+j++q+6A8/xjNYBRfMJ9YOmwdGFSYil2Ll0N1Z05U3nVMWsSqP
+qhU0hWdpHM87vdTHIRln21bWmKq+t+KCF6NUYcqsRKi2PagzajtkcPcSAXixfL7N
+FPWtnQJayffD+IwJoL0GTbK/3ihdb87YyE8fhFaLBIdprzgR9czj3AatGqn77x0l
+xlfD65czke5q20Riacluqk8nEdF2ulkYO1nhgFYXd10161lBOk6lxzMxMAUNKjGH
+0E7lMvsMfhoW7kyD7rEoeE7HXGb2+GVWwRVWq/XRZLU8mJ173sN1h17NqoRS+SwS
+Tm2LR5lf2nFxclKYwUjKImSSdIkHnbBqo3XHoJcRFqTlB3kFVnhuJqkCHvgJhh0H
+wSOhF8uHEEJvQop6zarxQbkZBQnPXNujK2RlvXqyLwKFGo4BpT61qpP7YFE7GFt4
+ZO/otbgt32asZQ5jS9uX
+=JA8r
+-----END PGP SIGNATURE-----
+
+--IJpNTDwzlM2Ie8A6--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
