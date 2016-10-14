@@ -1,65 +1,72 @@
-From: Youlin Pei <youlin.pei@mediatek.com>
-Subject: Re: [PATCH 1/3] binding: irqchip: mtk-cirq: Add binding document
-Date: Fri, 14 Oct 2016 16:23:29 +0800
-Message-ID: <1476433409.5408.37.camel@mtksdaap41>
-References: <1476335194-26604-1-git-send-email-youlin.pei@mediatek.com>
-         <1476335194-26604-2-git-send-email-youlin.pei@mediatek.com>
-         <58b24238-659c-c7da-d93c-65db63990930@gmail.com>
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH v2 2/6] ARM: dts: stm32f429: add LSI and LSE clocks
+Date: Fri, 14 Oct 2016 11:18:15 +0200
+Message-ID: <1476436699-21879-3-git-send-email-gabriel.fernandez@st.com>
+References: <1476436699-21879-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <58b24238-659c-c7da-d93c-65db63990930@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, hongkun.cao@mediatek.com, yong.wu@mediatek.com, erin.lo@mediatek.com
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1476436699-21879-1-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-Thanks for your review.
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-On Thu, 2016-10-13 at 15:00 +0200, Matthias Brugger wrote:
-> 
-> On 10/13/2016 07:06 AM, Youlin Pei wrote:
-> > This commit adds the device tree binding document for
-> > the mediatek cirq.
-> >
-> > Signed-off-by: Youlin Pei <youlin.pei@mediatek.com>
-> >
-> > ---
-> > base on v4.8-rc1
-> > ---
-> >  .../interrupt-controller/mediatek,cirq.txt         |   30 ++++++++++++++++++++
-> >  1 file changed, 30 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
-> > new file mode 100644
-> > index 0000000..ad16953
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
-> > @@ -0,0 +1,30 @@
-> > +* Mediatek 27xx cirq
-> > +
-> > +In Mediatek SOCs, the CIRQ is a low power interrupt controller designed to
-> > +works outside MCUSYS which comprises with Cortex-Ax cores,CCI and GIC.
-> > +The external interrupts (outside MCUSYS) will feed through CIRQ and connect
-> > +to GIC in MCUSYS. When CIRQ is enabled, it will record the edge-sensitive
-> > +interrupts and generated a pulse signal to parent interrupt controller when
-> > +flush command is executed. With CIRQ, MCUSYS can be completely turned off
-> > +to improve the system power consumption without losing interrupts.
-> > +
-> > +Required properties:
-> > +- compatible: should be: "mediatek,mt2701-cirq".
-> 
-> The cirq is present in several SoCs. I suppose it is the same core in 
-> all of them. So we can name it mediatek,mtk-cirq and add a 
-> mediatek,mtXXXX-cirq for every SoC, just in case we will need it.
+This patch adds lsi / lse oscillators. These clocks can be use by
+RTC clocks.
+The clock drivers needs to disable the power domain write protection using
+syscon / regmap to enable these clocks.
 
-Okay, will change it in next version. Thanks.
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+---
+ arch/arm/boot/dts/stm32f429.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-> 
-> Thanks,
-> Matthias
-Thanks.
-Youlin
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index 336ee4f..2700449 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -56,6 +56,18 @@
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <0>;
+ 		};
++
++		clk-lse {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <32768>;
++		};
++
++		clk-lsi {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <32000>;
++		};
+ 	};
+ 
+ 	soc {
+@@ -185,6 +197,11 @@
+ 			interrupts = <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <42>, <62>, <76>;
+ 		};
+ 
++		pwrcfg: power-config@40007000 {
++			compatible = "syscon";
++			reg = <0x40007000 0x400>;
++		};
++
+ 		pin-controller {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+@@ -340,6 +357,7 @@
+ 			compatible = "st,stm32f42xx-rcc", "st,stm32-rcc";
+ 			reg = <0x40023800 0x400>;
+ 			clocks = <&clk_hse>;
++			st,syscfg = <&pwrcfg>;
+ 		};
+ 
+ 		dma1: dma-controller@40026000 {
+-- 
+1.9.1
+
