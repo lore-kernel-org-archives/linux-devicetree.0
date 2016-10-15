@@ -1,72 +1,51 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: da850: add a node for the LCD controller
-Date: Sat, 15 Oct 2016 21:40:14 +0200
-Message-ID: <CAMpxmJW8oiJq2s+OiGGS8Nbhpc2--KfapYcBbivnZCTEz-kxHA@mail.gmail.com>
-References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
- <1475672732-17111-3-git-send-email-bgolaszewski@baylibre.com> <2d276e51-9d37-8648-4aad-283bb2b23626@ti.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH v2 1/4] cpufreq: pxa: use generic platdev driver for
+ device-tree
+Date: Sat, 15 Oct 2016 21:57:27 +0200
+Message-ID: <1476561450-28407-2-git-send-email-robert.jarzmik@free.fr>
+References: <1476561450-28407-1-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2d276e51-9d37-8648-4aad-283bb2b23626-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Karl Beldan <karl.beldan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1476561450-28407-1-git-send-email-robert.jarzmik@free.fr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2016-10-15 19:42 GMT+02:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
-> On Wednesday 05 October 2016 06:35 PM, Bartosz Golaszewski wrote:
->> From: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>
->> Add pins used by the LCD controller and a disabled LCDC node to be
->> reused in device trees including da850.dtsi.
->>
->> Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> [Bartosz:
->>   - added the commit description
->>   - changed the dt node name to a generic one
->>   - added a da850-specific compatible string
->>   - removed the tilcdc,panel node
->>   - moved the pins definitions to da850.dtsi as suggested by
->>     Sekhar Nori (was in: da850-lcdk.dts)]
->> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/da850.dtsi | 29 +++++++++++++++++++++++++++++
->>  1 file changed, 29 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
->> index f79e1b9..32908ae 100644
->> --- a/arch/arm/boot/dts/da850.dtsi
->> +++ b/arch/arm/boot/dts/da850.dtsi
->
->> @@ -399,6 +420,14 @@
->>                               <&edma0 0 1>;
->>                       dma-names = "tx", "rx";
->>               };
->> +
->> +             display: display@213000 {
->> +                     compatible = "ti,am33xx-tilcdc", "ti,da850-tilcdc";
->
-> This should instead be:
->
-> compatible = "ti,da850-tilcdc", "ti,am33xx-tilcdc";
->
-> as the closest match should appear first in the list.
->
->> +                     reg = <0x213000 0x1000>;
->> +                     interrupt-parent = <&intc>
->
-> No need of specifying the interrupt-parent as it is assumed to be that
-> from the parent node (soc) if left unspecified.
->
-> I made these two fixes locally and pushed the two patches in this series
-> to v4.10/dt branch of my tree (for URL see MAINTAINERS). Can you take a
-> look and make sure I did not mess anything up?
->
+For device-tree based pxa25x and pxa27x platforms, cpufreq-dt driver is
+doing the job as well as pxa2xx-cpufreq, so add these platforms to the
+compatibility list.
 
-Looks good, thanks!
+This won't work for legacy non device-tree platforms where
+pxa2xx-cpufreq is still required.
 
-Bartosz Golaszewski
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+---
+ drivers/cpufreq/cpufreq-dt-platdev.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+index 0bb44d5b5df4..356825b5c9b8 100644
+--- a/drivers/cpufreq/cpufreq-dt-platdev.c
++++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+@@ -32,6 +32,8 @@ static const struct of_device_id machines[] __initconst = {
+ 	{ .compatible = "fsl,imx7d", },
+ 
+ 	{ .compatible = "marvell,berlin", },
++	{ .compatible = "marvell,pxa250", },
++	{ .compatible = "marvell,pxa270", },
+ 
+ 	{ .compatible = "samsung,exynos3250", },
+ 	{ .compatible = "samsung,exynos4210", },
+-- 
+2.1.4
