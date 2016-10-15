@@ -1,122 +1,89 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] iio: dac: mcp4725: add devicetree support
-Date: Sat, 15 Oct 2016 15:14:19 +0100
-Message-ID: <a710bc16-24e9-8b30-5db0-8eff371a012b@kernel.org>
-References: <1476194263-12015-1-git-send-email-tomas@novotny.cz>
- <1476194263-12015-5-git-send-email-tomas@novotny.cz>
+From: =?UTF-8?B?6ZmI6LGq?= <jacobchen110-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 2/3] usb: dwc2: assert phy reset when waking up in
+ rk3288 platform
+Date: Sat, 15 Oct 2016 23:07:36 +0800
+Message-ID: <CAFLEztRLJbMj-ttGBsCWCMW=+0N3bbMQ0c4YcgDyvUDYs1SSkA@mail.gmail.com>
+References: <1474743019-1050-1-git-send-email-ayaka@soulik.info> <1474743019-1050-3-git-send-email-ayaka@soulik.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476194263-12015-5-git-send-email-tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yong Li <sdliyong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1474743019-1050-3-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/10/16 14:57, Tomas Novotny wrote:
-> Signed-off-by: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
-Few small bits inline.
-
-Jonathan
+2016-09-25 2:50 GMT+08:00 Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>:
+> On the rk3288 USB host-only port (the one that's not the OTG-enabled
+> port) the PHY can get into a bad state when a wakeup is asserted (not
+> just a wakeup from full system suspend but also a wakeup from
+> autosuspend).
+>
+> We can get the PHY out of its bad state by asserting its "port reset",
+> but unfortunately that seems to assert a reset onto the USB bus so it
+> could confuse things if we don't actually deenumerate / reenumerate the
+> device.
+>
+> We can also get the PHY out of its bad state by fully resetting it using
+> the reset from the CRU (clock reset unit) in chip, which does a more full
+> reset.  The CRU-based reset appears to actually cause devices on the bus
+> to be removed and reinserted, which fixes the problem (albeit in a hacky
+> way).
+>
+> It's unfortunate that we need to do a full re-enumeration of devices at
+> wakeup time, but this is better than alternative of letting the bus get
+> wedged.
+>
+> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 > ---
->  drivers/iio/dac/mcp4725.c | 46 +++++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 41 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iio/dac/mcp4725.c b/drivers/iio/dac/mcp4725.c
-> index 29cf85d..b8954f2 100644
-> --- a/drivers/iio/dac/mcp4725.c
-> +++ b/drivers/iio/dac/mcp4725.c
-> @@ -19,6 +19,7 @@
->  #include <linux/err.h>
->  #include <linux/delay.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/of.h>
->  
->  #include <linux/iio/iio.h>
->  #include <linux/iio/sysfs.h>
-> @@ -364,6 +365,30 @@ static const struct iio_info mcp4725_info = {
->  	.driver_module = THIS_MODULE,
->  };
->  
-> +#ifdef CONFIG_OF
-> +static int mcp4725_probe_dt(struct device *dev,
-> +			    struct mcp4725_platform_data *pdata)
-> +{
-> +	struct device_node *np = dev->of_node;
-> +
-> +	if (!np)
-> +		return -ENODEV;
-> +
-> +	/* check if is the vref-supply defined */
-> +	pdata->use_vref = of_property_read_bool(np, "vref-supply");
-> +	pdata->vref_buffered =
-> +		of_property_read_bool(np, "microchip,vref-buffered");
-> +
-> +	return 0;
-> +}
-> +#else
-> +static int mcp4725_probe_dt(struct device *dev,
-> +			    struct mcp4725_platform_data *platform_data)
-> +{
-> +	return -ENODEV;
-> +}
-> +#endif
-> +
->  static int mcp4725_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *id)
+>  drivers/usb/dwc2/core_intr.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
+> index d85c5c9..af27edc 100644
+> --- a/drivers/usb/dwc2/core_intr.c
+> +++ b/drivers/usb/dwc2/core_intr.c
+> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_=
+hsotg *hsotg)
+>  static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
 >  {
-> @@ -375,11 +400,6 @@ static int mcp4725_probe(struct i2c_client *client,
->  	u8 ref;
->  	int err;
->  
-> -	if (!pdata) {
-> -		dev_err(&client->dev, "invalid platform data");
-> -		return -EINVAL;
-> -	}
-> -
->  	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
->  	if (indio_dev == NULL)
->  		return -ENOMEM;
-> @@ -388,6 +408,19 @@ static int mcp4725_probe(struct i2c_client *client,
->  	data->client = client;
->  	data->id = id->driver_data;
->  
-> +	if (!pdata) {
-May seem an odd way to do it, but I would use
-if (!dev_get_platdata(&client->dev)) so it's obvious what it matches
-against when it comes to unwinding this down below.
+>         int ret;
+> +       struct device_node *np =3D hsotg->dev->of_node;
+>
+>         /* Clear interrupt */
+>         dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
+> @@ -379,6 +380,16 @@ static void dwc2_handle_wakeup_detected_intr(struct =
+dwc2_hsotg *hsotg)
+>                         /* Restart the Phy Clock */
+>                         pcgcctl &=3D ~PCGCTL_STOPPCLK;
+>                         dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
+> +
+> +                       /*
+> +                        * It is a quirk in Rockchip RK3288, causing by
+> +                        * a hardware bug. This will propagate out and
+> +                        * eventually we'll re-enumerate the device.
+> +                        * Not great but the best we can do.
+> +                        */
+> +                       if (of_device_is_compatible(np, "rockchip,rk3288-=
+usb"))
+> +                               phy_reset(hsotg->phy);
 
-> +		pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
-> +		if (!pdata)
-> +			return -ENOMEM;
-> +
-> +		err = mcp4725_probe_dt(&client->dev, pdata);
-> +		if (err) {
-> +			dev_err(&client->dev,
-> +				"invalid platform or devicetree data");
-> +			return err;
-> +		}
-> +	}
-> +
->  	if (data->id == MCP4725 && pdata->use_vref) {
->  		dev_warn(&client->dev,
->  			"ignoring unavailable external reference on MCP4725");
-> @@ -460,6 +493,9 @@ static int mcp4725_probe(struct i2c_client *client,
->  	if (err)
->  		goto err_disable_vref_reg;
->  
-> +	if (!dev_get_platdata(&client->dev))
-> +		devm_kfree(&client->dev, pdata);
-Hmm. I wonder if it's worth freeing this explicitly rather than just letting
-it clear up on driver remove.  It seems odd to use devm allocations for
-what is a short term termporary variable.
+It will call mutex_lock in phy_reset.
 
-Actually why not just use a local variable on the stack and set
-pdata to point to that?  Then your cleanup is all nice an automatic
-without having to do this slightly odd devm usage.
+
 > +
->  	return 0;
->  
->  err_disable_vref_reg:
-> 
+>                         mod_timer(&hsotg->wkp_timer,
+>                                   jiffies + msecs_to_jiffies(71));
+>                 } else {
+> --
+> 2.7.4
+>
+
+What is the status of this patch=EF=BC=9F
+Sleeping calls(phy_reset =3D=3D> mutex) shouldn't be used in irq handler.
+Randy will correct that=EF=BC=9F
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
