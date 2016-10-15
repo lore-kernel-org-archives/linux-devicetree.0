@@ -1,308 +1,72 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH v2 1/3] net: smc91x: isolate u16 writes alignment workaround
-Date: Sat, 15 Oct 2016 21:27:48 +0200
-Message-ID: <1476559670-25056-2-git-send-email-robert.jarzmik@free.fr>
-References: <1476559670-25056-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1476559670-25056-1-git-send-email-robert.jarzmik@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Pitre <nico@fluxnic.net>, Russell King - ARM Linux <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: da850: add a node for the LCD controller
+Date: Sat, 15 Oct 2016 21:40:14 +0200
+Message-ID: <CAMpxmJW8oiJq2s+OiGGS8Nbhpc2--KfapYcBbivnZCTEz-kxHA@mail.gmail.com>
+References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
+ <1475672732-17111-3-git-send-email-bgolaszewski@baylibre.com> <2d276e51-9d37-8648-4aad-283bb2b23626@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2d276e51-9d37-8648-4aad-283bb2b23626-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Karl Beldan <karl.beldan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Writes to u16 has a special handling on 3 PXA platforms, where the
-hardware wiring forces these writes to be u32 aligned.
+2016-10-15 19:42 GMT+02:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
+> On Wednesday 05 October 2016 06:35 PM, Bartosz Golaszewski wrote:
+>> From: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>
+>> Add pins used by the LCD controller and a disabled LCDC node to be
+>> reused in device trees including da850.dtsi.
+>>
+>> Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> [Bartosz:
+>>   - added the commit description
+>>   - changed the dt node name to a generic one
+>>   - added a da850-specific compatible string
+>>   - removed the tilcdc,panel node
+>>   - moved the pins definitions to da850.dtsi as suggested by
+>>     Sekhar Nori (was in: da850-lcdk.dts)]
+>> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/da850.dtsi | 29 +++++++++++++++++++++++++++++
+>>  1 file changed, 29 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+>> index f79e1b9..32908ae 100644
+>> --- a/arch/arm/boot/dts/da850.dtsi
+>> +++ b/arch/arm/boot/dts/da850.dtsi
+>
+>> @@ -399,6 +420,14 @@
+>>                               <&edma0 0 1>;
+>>                       dma-names = "tx", "rx";
+>>               };
+>> +
+>> +             display: display@213000 {
+>> +                     compatible = "ti,am33xx-tilcdc", "ti,da850-tilcdc";
+>
+> This should instead be:
+>
+> compatible = "ti,da850-tilcdc", "ti,am33xx-tilcdc";
+>
+> as the closest match should appear first in the list.
+>
+>> +                     reg = <0x213000 0x1000>;
+>> +                     interrupt-parent = <&intc>
+>
+> No need of specifying the interrupt-parent as it is assumed to be that
+> from the parent node (soc) if left unspecified.
+>
+> I made these two fixes locally and pushed the two patches in this series
+> to v4.10/dt branch of my tree (for URL see MAINTAINERS). Can you take a
+> look and make sure I did not mess anything up?
+>
 
-This patch isolates this handling for PXA platforms as before, but
-enables this "workaround" to be set up dynamically, which will be the
-case in device-tree build types.
+Looks good, thanks!
 
-This patch was tested on 2 PXA platforms : mainstone, which relies on
-the workaround, and lubbock, which doesn't.
-
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
----
- drivers/net/ethernet/smsc/smc91x.c |  6 ++-
- drivers/net/ethernet/smsc/smc91x.h | 78 +++++++++++++++++++++-----------------
- 2 files changed, 48 insertions(+), 36 deletions(-)
-
-diff --git a/drivers/net/ethernet/smsc/smc91x.c b/drivers/net/ethernet/smsc/smc91x.c
-index 9b4780f87863..5658c2b28ec8 100644
---- a/drivers/net/ethernet/smsc/smc91x.c
-+++ b/drivers/net/ethernet/smsc/smc91x.c
-@@ -602,7 +602,8 @@ static void smc_hardware_send_pkt(unsigned long data)
- 	SMC_PUSH_DATA(lp, buf, len & ~1);
- 
- 	/* Send final ctl word with the last byte if there is one */
--	SMC_outw(((len & 1) ? (0x2000 | buf[len-1]) : 0), ioaddr, DATA_REG(lp));
-+	SMC_outw(lp, ((len & 1) ? (0x2000 | buf[len-1]) : 0), ioaddr,
-+		 DATA_REG(lp));
- 
- 	/*
- 	 * If THROTTLE_TX_PKTS is set, we stop the queue here. This will
-@@ -2282,6 +2283,9 @@ static int smc_drv_probe(struct platform_device *pdev)
- 			goto out_free_netdev;
- 		}
- 	}
-+	lp->half_word_align4 =
-+		machine_is_mainstone() || machine_is_stargate2() ||
-+		machine_is_pxa_idp();
- 
- #if IS_BUILTIN(CONFIG_OF)
- 	match = of_match_device(of_match_ptr(smc91x_match), &pdev->dev);
-diff --git a/drivers/net/ethernet/smsc/smc91x.h b/drivers/net/ethernet/smsc/smc91x.h
-index ea8465467469..dff165ed106d 100644
---- a/drivers/net/ethernet/smsc/smc91x.h
-+++ b/drivers/net/ethernet/smsc/smc91x.h
-@@ -86,11 +86,11 @@
- 
- #define SMC_inl(a, r)		readl((a) + (r))
- #define SMC_outb(v, a, r)	writeb(v, (a) + (r))
--#define SMC_outw(v, a, r)						\
-+#define SMC_outw(lp, v, a, r)						\
- 	do {								\
- 		unsigned int __v = v, __smc_r = r;			\
- 		if (SMC_16BIT(lp))					\
--			__SMC_outw(__v, a, __smc_r);			\
-+			__SMC_outw(lp, __v, a, __smc_r);		\
- 		else if (SMC_8BIT(lp))					\
- 			SMC_outw_b(__v, a, __smc_r);			\
- 		else							\
-@@ -107,10 +107,10 @@
- #define SMC_IRQ_FLAGS		(-1)	/* from resource */
- 
- /* We actually can't write halfwords properly if not word aligned */
--static inline void __SMC_outw(u16 val, void __iomem *ioaddr, int reg)
-+static inline void _SMC_outw_align4(u16 val, void __iomem *ioaddr, int reg,
-+				    bool use_align4_workaround)
- {
--	if ((machine_is_mainstone() || machine_is_stargate2() ||
--	     machine_is_pxa_idp()) && reg & 2) {
-+	if (use_align4_workaround) {
- 		unsigned int v = val << 16;
- 		v |= readl(ioaddr + (reg & ~2)) & 0xffff;
- 		writel(v, ioaddr + (reg & ~2));
-@@ -119,6 +119,12 @@ static inline void __SMC_outw(u16 val, void __iomem *ioaddr, int reg)
- 	}
- }
- 
-+#define __SMC_outw(lp, v, a, r)						\
-+	_SMC_outw_align4((v), (a), (r),					\
-+			 IS_BUILTIN(CONFIG_ARCH_PXA) && ((r) & 2) &&	\
-+			 lp->half_word_align4)
-+
-+
- #elif	defined(CONFIG_SH_SH4202_MICRODEV)
- 
- #define SMC_CAN_USE_8BIT	0
-@@ -129,7 +135,7 @@ static inline void __SMC_outw(u16 val, void __iomem *ioaddr, int reg)
- #define SMC_inw(a, r)		inw((a) + (r) - 0xa0000000)
- #define SMC_inl(a, r)		inl((a) + (r) - 0xa0000000)
- #define SMC_outb(v, a, r)	outb(v, (a) + (r) - 0xa0000000)
--#define SMC_outw(v, a, r)	outw(v, (a) + (r) - 0xa0000000)
-+#define SMC_outw(lp, v, a, r)	outw(v, (a) + (r) - 0xa0000000)
- #define SMC_outl(v, a, r)	outl(v, (a) + (r) - 0xa0000000)
- #define SMC_insl(a, r, p, l)	insl((a) + (r) - 0xa0000000, p, l)
- #define SMC_outsl(a, r, p, l)	outsl((a) + (r) - 0xa0000000, p, l)
-@@ -147,7 +153,7 @@ static inline void __SMC_outw(u16 val, void __iomem *ioaddr, int reg)
- #define SMC_inb(a, r)		inb(((u32)a) + (r))
- #define SMC_inw(a, r)		inw(((u32)a) + (r))
- #define SMC_outb(v, a, r)	outb(v, ((u32)a) + (r))
--#define SMC_outw(v, a, r)	outw(v, ((u32)a) + (r))
-+#define SMC_outw(lp, v, a, r)	outw(v, ((u32)a) + (r))
- #define SMC_insw(a, r, p, l)	insw(((u32)a) + (r), p, l)
- #define SMC_outsw(a, r, p, l)	outsw(((u32)a) + (r), p, l)
- 
-@@ -175,7 +181,7 @@ static inline void __SMC_outw(u16 val, void __iomem *ioaddr, int reg)
- #define SMC_inw(a, r)           readw((a) + (r))
- #define SMC_inl(a, r)           readl((a) + (r))
- #define SMC_outb(v, a, r)       writeb(v, (a) + (r))
--#define SMC_outw(v, a, r)       writew(v, (a) + (r))
-+#define SMC_outw(lp, v, a, r)   writew(v, (a) + (r))
- #define SMC_outl(v, a, r)       writel(v, (a) + (r))
- #define SMC_insw(a, r, p, l)    readsw((a) + (r), p, l)
- #define SMC_outsw(a, r, p, l)   writesw((a) + (r), p, l)
-@@ -207,7 +213,7 @@ static inline void mcf_outsw(void *a, unsigned char *p, int l)
- }
- 
- #define SMC_inw(a, r)		_swapw(readw((a) + (r)))
--#define SMC_outw(v, a, r)	writew(_swapw(v), (a) + (r))
-+#define SMC_outw(lp, v, a, r)	writew(_swapw(v), (a) + (r))
- #define SMC_insw(a, r, p, l)	mcf_insw(a + r, p, l)
- #define SMC_outsw(a, r, p, l)	mcf_outsw(a + r, p, l)
- 
-@@ -241,7 +247,7 @@ static inline void mcf_outsw(void *a, unsigned char *p, int l)
- #define SMC_inw(a, r)		ioread16((a) + (r))
- #define SMC_inl(a, r)		ioread32((a) + (r))
- #define SMC_outb(v, a, r)	iowrite8(v, (a) + (r))
--#define SMC_outw(v, a, r)	iowrite16(v, (a) + (r))
-+#define SMC_outw(lp, v, a, r)	iowrite16(v, (a) + (r))
- #define SMC_outl(v, a, r)	iowrite32(v, (a) + (r))
- #define SMC_insw(a, r, p, l)	ioread16_rep((a) + (r), p, l)
- #define SMC_outsw(a, r, p, l)	iowrite16_rep((a) + (r), p, l)
-@@ -303,6 +309,8 @@ struct smc_local {
- 
- 	/* the low address lines on some platforms aren't connected... */
- 	int	io_shift;
-+	/* on some platforms a u16 write must be 4-bytes aligned */
-+	bool	half_word_align4;
- 
- 	struct smc91x_platdata cfg;
- };
-@@ -457,7 +465,7 @@ smc_pxa_dma_insw(void __iomem *ioaddr, struct smc_local *lp, int reg, int dma,
- 
- #if ! SMC_CAN_USE_16BIT
- 
--#define SMC_outw(x, ioaddr, reg)	SMC_outw_b(x, ioaddr, reg)
-+#define SMC_outw(lp, x, ioaddr, reg)	SMC_outw_b(x, ioaddr, reg)
- #define SMC_inw(ioaddr, reg)		SMC_inw_b(ioaddr, reg)
- #define SMC_insw(a, r, p, l)		BUG()
- #define SMC_outsw(a, r, p, l)		BUG()
-@@ -909,7 +917,7 @@ static const char * chip_ids[ 16 ] =  {
- 		else if (SMC_8BIT(lp))				\
- 			SMC_outb(x, ioaddr, PN_REG(lp));		\
- 		else							\
--			SMC_outw(x, ioaddr, PN_REG(lp));		\
-+			SMC_outw(lp, x, ioaddr, PN_REG(lp));		\
- 	} while (0)
- 
- #define SMC_GET_AR(lp)						\
-@@ -937,7 +945,7 @@ static const char * chip_ids[ 16 ] =  {
- 			int __mask;					\
- 			local_irq_save(__flags);			\
- 			__mask = SMC_inw(ioaddr, INT_REG(lp)) & ~0xff; \
--			SMC_outw(__mask | (x), ioaddr, INT_REG(lp));	\
-+			SMC_outw(lp, __mask | (x), ioaddr, INT_REG(lp)); \
- 			local_irq_restore(__flags);			\
- 		}							\
- 	} while (0)
-@@ -951,7 +959,7 @@ static const char * chip_ids[ 16 ] =  {
- 		if (SMC_8BIT(lp))					\
- 			SMC_outb(x, ioaddr, IM_REG(lp));		\
- 		else							\
--			SMC_outw((x) << 8, ioaddr, INT_REG(lp));	\
-+			SMC_outw(lp, (x) << 8, ioaddr, INT_REG(lp));	\
- 	} while (0)
- 
- #define SMC_CURRENT_BANK(lp)	SMC_inw(ioaddr, BANK_SELECT)
-@@ -961,22 +969,22 @@ static const char * chip_ids[ 16 ] =  {
- 		if (SMC_MUST_ALIGN_WRITE(lp))				\
- 			SMC_outl((x)<<16, ioaddr, 12<<SMC_IO_SHIFT);	\
- 		else							\
--			SMC_outw(x, ioaddr, BANK_SELECT);		\
-+			SMC_outw(lp, x, ioaddr, BANK_SELECT);		\
- 	} while (0)
- 
- #define SMC_GET_BASE(lp)		SMC_inw(ioaddr, BASE_REG(lp))
- 
--#define SMC_SET_BASE(lp, x)		SMC_outw(x, ioaddr, BASE_REG(lp))
-+#define SMC_SET_BASE(lp, x)		SMC_outw(lp, x, ioaddr, BASE_REG(lp))
- 
- #define SMC_GET_CONFIG(lp)	SMC_inw(ioaddr, CONFIG_REG(lp))
- 
--#define SMC_SET_CONFIG(lp, x)	SMC_outw(x, ioaddr, CONFIG_REG(lp))
-+#define SMC_SET_CONFIG(lp, x)	SMC_outw(lp, x, ioaddr, CONFIG_REG(lp))
- 
- #define SMC_GET_COUNTER(lp)	SMC_inw(ioaddr, COUNTER_REG(lp))
- 
- #define SMC_GET_CTL(lp)		SMC_inw(ioaddr, CTL_REG(lp))
- 
--#define SMC_SET_CTL(lp, x)		SMC_outw(x, ioaddr, CTL_REG(lp))
-+#define SMC_SET_CTL(lp, x)		SMC_outw(lp, x, ioaddr, CTL_REG(lp))
- 
- #define SMC_GET_MII(lp)		SMC_inw(ioaddr, MII_REG(lp))
- 
-@@ -987,18 +995,18 @@ static const char * chip_ids[ 16 ] =  {
- 		if (SMC_MUST_ALIGN_WRITE(lp))				\
- 			SMC_outl((x)<<16, ioaddr, SMC_REG(lp, 8, 1));	\
- 		else							\
--			SMC_outw(x, ioaddr, GP_REG(lp));		\
-+			SMC_outw(lp, x, ioaddr, GP_REG(lp));		\
- 	} while (0)
- 
--#define SMC_SET_MII(lp, x)		SMC_outw(x, ioaddr, MII_REG(lp))
-+#define SMC_SET_MII(lp, x)		SMC_outw(lp, x, ioaddr, MII_REG(lp))
- 
- #define SMC_GET_MIR(lp)		SMC_inw(ioaddr, MIR_REG(lp))
- 
--#define SMC_SET_MIR(lp, x)		SMC_outw(x, ioaddr, MIR_REG(lp))
-+#define SMC_SET_MIR(lp, x)		SMC_outw(lp, x, ioaddr, MIR_REG(lp))
- 
- #define SMC_GET_MMU_CMD(lp)	SMC_inw(ioaddr, MMU_CMD_REG(lp))
- 
--#define SMC_SET_MMU_CMD(lp, x)	SMC_outw(x, ioaddr, MMU_CMD_REG(lp))
-+#define SMC_SET_MMU_CMD(lp, x)	SMC_outw(lp, x, ioaddr, MMU_CMD_REG(lp))
- 
- #define SMC_GET_FIFO(lp)		SMC_inw(ioaddr, FIFO_REG(lp))
- 
-@@ -1009,14 +1017,14 @@ static const char * chip_ids[ 16 ] =  {
- 		if (SMC_MUST_ALIGN_WRITE(lp))				\
- 			SMC_outl((x)<<16, ioaddr, SMC_REG(lp, 4, 2));	\
- 		else							\
--			SMC_outw(x, ioaddr, PTR_REG(lp));		\
-+			SMC_outw(lp, x, ioaddr, PTR_REG(lp));		\
- 	} while (0)
- 
- #define SMC_GET_EPH_STATUS(lp)	SMC_inw(ioaddr, EPH_STATUS_REG(lp))
- 
- #define SMC_GET_RCR(lp)		SMC_inw(ioaddr, RCR_REG(lp))
- 
--#define SMC_SET_RCR(lp, x)		SMC_outw(x, ioaddr, RCR_REG(lp))
-+#define SMC_SET_RCR(lp, x)		SMC_outw(lp, x, ioaddr, RCR_REG(lp))
- 
- #define SMC_GET_REV(lp)		SMC_inw(ioaddr, REV_REG(lp))
- 
-@@ -1027,12 +1035,12 @@ static const char * chip_ids[ 16 ] =  {
- 		if (SMC_MUST_ALIGN_WRITE(lp))				\
- 			SMC_outl((x)<<16, ioaddr, SMC_REG(lp, 8, 0));	\
- 		else							\
--			SMC_outw(x, ioaddr, RPC_REG(lp));		\
-+			SMC_outw(lp, x, ioaddr, RPC_REG(lp));		\
- 	} while (0)
- 
- #define SMC_GET_TCR(lp)		SMC_inw(ioaddr, TCR_REG(lp))
- 
--#define SMC_SET_TCR(lp, x)		SMC_outw(x, ioaddr, TCR_REG(lp))
-+#define SMC_SET_TCR(lp, x)		SMC_outw(lp, x, ioaddr, TCR_REG(lp))
- 
- #ifndef SMC_GET_MAC_ADDR
- #define SMC_GET_MAC_ADDR(lp, addr)					\
-@@ -1049,18 +1057,18 @@ static const char * chip_ids[ 16 ] =  {
- 
- #define SMC_SET_MAC_ADDR(lp, addr)					\
- 	do {								\
--		SMC_outw(addr[0]|(addr[1] << 8), ioaddr, ADDR0_REG(lp)); \
--		SMC_outw(addr[2]|(addr[3] << 8), ioaddr, ADDR1_REG(lp)); \
--		SMC_outw(addr[4]|(addr[5] << 8), ioaddr, ADDR2_REG(lp)); \
-+		SMC_outw(lp, addr[0]|(addr[1] << 8), ioaddr, ADDR0_REG(lp)); \
-+		SMC_outw(lp, addr[2]|(addr[3] << 8), ioaddr, ADDR1_REG(lp)); \
-+		SMC_outw(lp, addr[4]|(addr[5] << 8), ioaddr, ADDR2_REG(lp)); \
- 	} while (0)
- 
- #define SMC_SET_MCAST(lp, x)						\
- 	do {								\
- 		const unsigned char *mt = (x);				\
--		SMC_outw(mt[0] | (mt[1] << 8), ioaddr, MCAST_REG1(lp)); \
--		SMC_outw(mt[2] | (mt[3] << 8), ioaddr, MCAST_REG2(lp)); \
--		SMC_outw(mt[4] | (mt[5] << 8), ioaddr, MCAST_REG3(lp)); \
--		SMC_outw(mt[6] | (mt[7] << 8), ioaddr, MCAST_REG4(lp)); \
-+		SMC_outw(lp, mt[0] | (mt[1] << 8), ioaddr, MCAST_REG1(lp)); \
-+		SMC_outw(lp, mt[2] | (mt[3] << 8), ioaddr, MCAST_REG2(lp)); \
-+		SMC_outw(lp, mt[4] | (mt[5] << 8), ioaddr, MCAST_REG3(lp)); \
-+		SMC_outw(lp, mt[6] | (mt[7] << 8), ioaddr, MCAST_REG4(lp)); \
- 	} while (0)
- 
- #define SMC_PUT_PKT_HDR(lp, status, length)				\
-@@ -1069,8 +1077,8 @@ static const char * chip_ids[ 16 ] =  {
- 			SMC_outl((status) | (length)<<16, ioaddr,	\
- 				 DATA_REG(lp));			\
- 		else {							\
--			SMC_outw(status, ioaddr, DATA_REG(lp));	\
--			SMC_outw(length, ioaddr, DATA_REG(lp));	\
-+			SMC_outw(lp, status, ioaddr, DATA_REG(lp));	\
-+			SMC_outw(lp, length, ioaddr, DATA_REG(lp));	\
- 		}							\
- 	} while (0)
- 
--- 
-2.1.4
+Bartosz Golaszewski
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
