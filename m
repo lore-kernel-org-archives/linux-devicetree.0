@@ -1,47 +1,39 @@
-From: Sylvain Rochet <sylvain.rochet@finsecur.com>
-Subject: Re: [PATCH] ARM: at91/dt: pullup dbgu rx instead of tx
-Date: Sun, 16 Oct 2016 18:43:26 +0200
-Message-ID: <20161016164326.ep4gjpbeubyfgsjq@finsecur.com>
-References: <1443105855-15738-1-git-send-email-peda@lysator.liu.se>
- <20150924144753.GY4287@piout.net>
- <6d2d5aba-cca3-93c6-0c59-3acbbd7b6169@lysator.liu.se>
+From: Andreas Schwab <schwab-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2] console: Don't prefer first registered if DT specifies stdout-path
+Date: Sun, 16 Oct 2016 20:07:18 +0200
+Message-ID: <87bmyk88x5.fsf@linux-m68k.org>
+References: <20160809125010.14150-1-paul.burton@imgtec.com>
+        <20160809151937.26118-1-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <6d2d5aba-cca3-93c6-0c59-3acbbd7b6169@lysator.liu.se>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Rosin <peda@lysator.liu.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Peter Rosin <peda@axentia.se>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160809151937.26118-1-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> (Paul Burton's
+        message of "Tue, 9 Aug 2016 16:19:37 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Ivan Delalande <colona-nzgTgzXrdUbQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Jan Kara <jack-IBi9RG/b67k@public.gmane.org>, Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+On Aug 09 2016, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
 
-On Sun, Oct 16, 2016 at 12:57:09PM +0200, Peter Rosin wrote:
-> Hi again,
-> 
-> I forgot about this, and it's been a year. But isn't it time to
-> upstream those pull-up fixes that Sylvain provided?
+> Fix this by not automatically preferring the first registered console if
+> one is specified by the device tree. This allows consoles to be
+> registered but not enabled, and once the driver for the console selected
+> by stdout-path calls of_console_check() the driver will be added to the
+> list of preferred consoles before any other console has been enabled.
+> When that console is then registered via register_console() it will be
+> enabled as expected.
 
-Thank you for your reminder, actually I waited an answer on this nice 
-subject: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-September/368643.html
+This breaks the console on PowerMac.  There is no output and it panics
+eventually.
 
-But this is not relevant for this change anyway, if we should set a 
-pull-(up|down) on all push-pull pads to reduce power consumption it 
-should be enforced in the pinctrl driver, the dt must stay logical.
+Andreas.
 
-I just sent a v2 with all useless comments removed as suggested by 
-Alexandre and without the explanation about the removed extra power 
-consumption when removing a pull-(up|down) on a push-pull output because 
-it does even seem to be the contrary on Atmel SoCs.
-
-Sylvain
+-- 
+Andreas Schwab, schwab-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+GPG Key fingerprint = 58CA 54C7 6D53 942B 1756  01D3 44D5 214B 8276 4ED5
+"And now for something completely different."
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
