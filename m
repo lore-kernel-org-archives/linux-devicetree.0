@@ -1,76 +1,32 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: WARNING: SOMEONE RECEIVING THIS HAS BEEN HACKED (was: Re: [PATCH v2
- 0/4] PXA cpufreq conversion to clock API)
-Date: Sat, 15 Oct 2016 22:38:36 +0100
-Message-ID: <20161015213836.GH1041@n2100.armlinux.org.uk>
-References: <1476561450-28407-1-git-send-email-robert.jarzmik@free.fr>
- <20161015203421.GG1041@n2100.armlinux.org.uk>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH v2 1/3] net: smc91x: isolate u16 writes alignment workaround
+Date: Sun, 16 Oct 2016 12:05:19 +0200
+Message-ID: <87k2d8623k.fsf@belgarion.home>
+References: <1476559670-25056-1-git-send-email-robert.jarzmik@free.fr>
+        <1476559670-25056-2-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161015203421.GG1041@n2100.armlinux.org.uk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Daniel Mack <daniel@zonque.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1476559670-25056-2-git-send-email-robert.jarzmik@free.fr>
+        (Robert Jarzmik's message of "Sat, 15 Oct 2016 21:27:48 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: robert.jarzmik@free.fr
+Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Pitre <nico@fluxnic.net>, Russell King - ARM Linux <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Guys,
+Robert Jarzmik <robert.jarzmik@free.fr> writes:
 
-Looks like gmail's been hacked (or something).  Within 50 minutes of
-sending the reply below, I've received at least 10 replies with the
-following headers:
+> diff --git a/drivers/net/ethernet/smsc/smc91x.h b/drivers/net/ethernet/smsc/smc91x.h
+> index ea8465467469..dff165ed106d 100644
+> --- a/drivers/net/ethernet/smsc/smc91x.h
+> +++ b/drivers/net/ethernet/smsc/smc91x.h
 
-In-Reply-To: <20161015203421.GG1041@n2100.armlinux.org.uk>
-References: <1476561450-28407-1-git-send-email-robert.jarzmik@free.fr> <20161015203421.GG1041@n2100.armlinux.org.uk>
+And there is also the specific case of ARCH=MN10300, where I didn't see :
+#include <unit/smc91111.h>
 
-from various gmail.com addresses, each and every one containing some kind
-of spam.  Each reply is from a victim of spam - the replies themselves are
-people replying to the spam that they have received.  The quoted message
-is allegedly from me, and even includes the line:
+In which SMC_outw() is also defined ... sic.
 
- "On 15 Oct 2016, at 21:34, Russell King - ARM Linux <linux@armlinux.org.uk>
- wrote:"
+So this is also to be fixed, thanks to kbuild test robot.
 
-which is the time I sent the original message.
-
-It's either that gmail has been hacked, or one of the mailing lists in
-the recipients of this message has been hacked.
-
-On Sat, Oct 15, 2016 at 09:34:21PM +0100, Russell King - ARM Linux wrote:
-> On Sat, Oct 15, 2016 at 09:57:26PM +0200, Robert Jarzmik wrote:
-> > Hi,
-> > 
-> > This serie is a preparation to shift the cpufreq of pxa2xx platforms to clocks
-> > API.
-> > 
-> > The first 3 patches are review and merge material :
-> >  - patch 1/4 for Viresh and Rafael
-> >  - patches 2/4 and 3/4 for me
-> > 
-> > The 4th on is for review but not merge, as the clock changes must be fully
-> > reviewed and go in first as a prequisite
-> 
-> Have you tested whether this patch set results in functional cpufreq
-> support - looking at drivers/clk/pxa, the CPU clock is read-only -
-> it can't be used to change the clock rate.  So, I very much doubt this
-> has been functionally tested.
-> 
-> Don't forget that changing the CPU clock rate needs other changes
-> (like the memory clock rate) so all that code you're removing in
-> patch 4 (which does the actual clock change) needs to go somewhere.
-> 
-> -- 
-> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-> according to speedtest.net.
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+--
+Robert
