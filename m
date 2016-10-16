@@ -1,59 +1,96 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v8 2/3] ath9k: add a helper to get the string representation of ath_bus_type
-Date: Sun, 16 Oct 2016 22:59:06 +0200
-Message-ID: <20161016205907.19927-3-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v8 3/3] ath9k: parse the device configuration from an OF node
+Date: Sun, 16 Oct 2016 22:59:07 +0200
+Message-ID: <20161016205907.19927-4-martin.blumenstingl@googlemail.com>
 References: <20161002214743.2263-1-martin.blumenstingl@googlemail.com>
  <20161016205907.19927-1-martin.blumenstingl@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161016205907.19927-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn-yOkvZcmFvRU@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This can be used when the ath_bus_type has to be presented in a log
-message or firmware filename.
+This allows setting the MAC address and specifying that the firmware
+will be requested from userspace (because there might not be a hardware
+EEPROM connected to the chip) for ath9k based PCI devices using
+the device tree.
+
+There is some out-of-tree code to "convert devicetree to
+ath9k_platform_data" (for example in OpenWrt and LEDE) which becomes
+obsolete with this patch.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- drivers/net/wireless/ath/ath.h  | 6 ++++++
- drivers/net/wireless/ath/main.c | 7 +++++++
- 2 files changed, 13 insertions(+)
+ drivers/net/wireless/ath/ath9k/init.c | 42 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath.h b/drivers/net/wireless/ath/ath.h
-index da7a7c8..f3f2784 100644
---- a/drivers/net/wireless/ath/ath.h
-+++ b/drivers/net/wireless/ath/ath.h
-@@ -327,4 +327,10 @@ static inline const char *ath_opmode_to_string(enum nl80211_iftype opmode)
- }
- #endif
+diff --git a/drivers/net/wireless/ath/ath9k/init.c b/drivers/net/wireless/ath/ath9k/init.c
+index cfa3fe8..b7c8ff9 100644
+--- a/drivers/net/wireless/ath/ath9k/init.c
++++ b/drivers/net/wireless/ath/ath9k/init.c
+@@ -20,6 +20,8 @@
+ #include <linux/slab.h>
+ #include <linux/ath9k_platform.h>
+ #include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_net.h>
+ #include <linux/relay.h>
+ #include <net/ieee80211_radiotap.h>
  
-+extern const char *ath_bus_type_strings[];
-+static inline const char *ath_bus_type_to_string(enum ath_bus_type bustype)
+@@ -555,6 +557,42 @@ static int ath9k_init_platform(struct ath_softc *sc)
+ 	return 0;
+ }
+ 
++static int ath9k_of_init(struct ath_softc *sc)
 +{
-+	return ath_bus_type_strings[bustype];
++	struct device_node *np = sc->dev->of_node;
++	struct ath_hw *ah = sc->sc_ah;
++	struct ath_common *common = ath9k_hw_common(ah);
++	enum ath_bus_type bus_type = common->bus_ops->ath_bus_type;
++	const char *mac;
++	char eeprom_name[100];
++	int ret;
++
++	if (!of_device_is_available(np))
++		return 0;
++
++	ath_dbg(common, CONFIG, "parsing configuration from OF node\n");
++
++	if (of_property_read_bool(np, "qca,no-eeprom")) {
++		/* ath9k-eeprom-<bus>-<id>.bin */
++		scnprintf(eeprom_name, sizeof(eeprom_name),
++			  "ath9k-eeprom-%s-%s.bin",
++			  ath_bus_type_to_string(bus_type), dev_name(ah->dev));
++
++		ret = ath9k_eeprom_request(sc, eeprom_name);
++		if (ret)
++			return ret;
++	}
++
++	mac = of_get_mac_address(np);
++	if (mac)
++		ether_addr_copy(common->macaddr, mac);
++
++	ah->ah_flags &= ~AH_USE_EEPROM;
++	ah->ah_flags |= AH_NO_EEP_SWAP;
++
++	return 0;
 +}
 +
- #endif /* ATH_H */
-diff --git a/drivers/net/wireless/ath/main.c b/drivers/net/wireless/ath/main.c
-index 338d723..89f4b05 100644
---- a/drivers/net/wireless/ath/main.c
-+++ b/drivers/net/wireless/ath/main.c
-@@ -90,3 +90,10 @@ void ath_printk(const char *level, const struct ath_common* common,
- 	va_end(args);
- }
- EXPORT_SYMBOL(ath_printk);
+ static int ath9k_init_softc(u16 devid, struct ath_softc *sc,
+ 			    const struct ath_bus_ops *bus_ops)
+ {
+@@ -611,6 +649,10 @@ static int ath9k_init_softc(u16 devid, struct ath_softc *sc,
+ 	if (ret)
+ 		return ret;
+ 
++	ret = ath9k_of_init(sc);
++	if (ret)
++		return ret;
 +
-+const char *ath_bus_type_strings[] = {
-+	[ATH_PCI] = "pci",
-+	[ATH_AHB] = "ahb",
-+	[ATH_USB] = "usb",
-+};
-+EXPORT_SYMBOL(ath_bus_type_strings);
+ 	if (ath9k_led_active_high != -1)
+ 		ah->config.led_active_high = ath9k_led_active_high == 1;
+ 
 -- 
 2.10.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
