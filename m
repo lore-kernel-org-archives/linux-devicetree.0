@@ -1,78 +1,63 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v8 1/3] Documentation: dt: net: add ath9k wireless device binding
-Date: Sun, 16 Oct 2016 22:59:05 +0200
-Message-ID: <20161016205907.19927-2-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v8 0/3] add devicetree support to ath9k
+Date: Sun, 16 Oct 2016 22:59:04 +0200
+Message-ID: <20161016205907.19927-1-martin.blumenstingl@googlemail.com>
 References: <20161002214743.2263-1-martin.blumenstingl@googlemail.com>
- <20161016205907.19927-1-martin.blumenstingl@googlemail.com>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161016205907.19927-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161002214743.2263-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn-yOkvZcmFvRU@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation how devicetree can be used to configure ath9k based
-devices.
+This series adds support for configuring ath9k based devices via
+devicetree. This was tested on PCI(e) based devices. This should work
+for AHB based devices as well (adding more AHB specific properties may
+still be needed) as soon as the ath79 platform is ready to populate the
+ath9k wmac via devicetree.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
+Changes since v7:
+- renamed node in the example (use wifi@... instead of ath9k@...), thanks
+  Rob Herring for the hint
+- added the QCA PCI vendor ID and a list of PCI IDs with the corresponding
+  chipsets. This documents all known PCI IDs, but some device IDs are used
+  by multiple chipsets the list of chipset(s) per device ID may be
+  incomplete. Also some chipsets seem to use multiple PCI device IDs, such
+  as AR9485 as documented here: https://wiki.debian.org/ath9k
+
+
+Changes since v6:
+- updated documentation to reflect that "reg" is a mandatory attribute
+- dropped "qca,clk-25mhz" as it is only useful for AHB devices. OF
+  support for AHB devices needs more work, so we can still introduce it
+  later
+- removed qca,disable-2ghz and qca,disable-5ghz as these will be
+  introduced as generic bindings in a separate series
+
+
+Changes since v5:
+- updated the example in the documentation (keeping it at a bare
+  minimum: removed the PCI bridge, use a better real-world example with
+  less-confusing device/fn numbers, added the actual size of the config
+  space to the reg property)
+
+
+Martin Blumenstingl (3):
+  Documentation: dt: net: add ath9k wireless device binding
+  ath9k: add a helper to get the string representation of ath_bus_type
+  ath9k: parse the device configuration from an OF node
+
  .../devicetree/bindings/net/wireless/qca,ath9k.txt | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ drivers/net/wireless/ath/ath.h                     |  6 +++
+ drivers/net/wireless/ath/ath9k/init.c              | 42 +++++++++++++++++++
+ drivers/net/wireless/ath/main.c                    |  7 ++++
+ 4 files changed, 103 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
-new file mode 100644
-index 0000000..b7396c8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
-@@ -0,0 +1,48 @@
-+* Qualcomm Atheros ath9k wireless devices
-+
-+This node provides properties for configuring the ath9k wireless device. The
-+node is expected to be specified as a child node of the PCI controller to
-+which the wireless chip is connected.
-+
-+Required properties:
-+- compatible: For PCI and PCIe devices this should be an identifier following
-+		the format as defined in "PCI Bus Binding to Open Firmware"
-+		Revision 2.1. One of the possible formats is "pciVVVV,DDDD"
-+		where VVVV is the PCI vendor ID and DDDD is PCI device ID.
-+		Typically QCA's PCI vendor ID 168c is used while the PCI device
-+		ID depends on the chipset - see the following (possibly
-+		incomplete) list:
-+			- 0023 for AR5416
-+			- 0024 for AR5418
-+			- 0027 for AR9160
-+			- 0029 for AR9220 and AR9223
-+			- 002a for AR9280 and AR9283
-+			- 002b for AR9285
-+			- 002c for AR2427
-+			- 002d for AR9227
-+			- 002e for AR9287
-+			- 0030 for AR9380, AR9381 and AR9382
-+			- 0032 for AR9485
-+			- 0033 for AR9580 and AR9590
-+			- 0034 for AR9462
-+			- 0036 for AR9565
-+			- 0037 for AR9485
-+- reg: Address and length of the register set for the device.
-+
-+Optional properties:
-+- qca,no-eeprom: Indicates that there is no physical EEPROM connected to the
-+			ath9k wireless chip (in this case the calibration /
-+			EEPROM data will be loaded from userspace using the
-+			kernel firmware loader).
-+- mac-address: See ethernet.txt in the parent directory
-+- local-mac-address: See ethernet.txt in the parent directory
-+
-+
-+In this example, the node is defined as child node of the PCI controller:
-+&pci0 {
-+	wifi@168c,002d {
-+		compatible = "pci168c,002d";
-+		reg = <0x7000 0 0 0 0x1000>;
-+		qca,no-eeprom;
-+	};
-+};
 -- 
 2.10.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
