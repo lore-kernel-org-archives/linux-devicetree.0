@@ -1,59 +1,55 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v8 0/3] add devicetree support to ath9k
-Date: Sun, 16 Oct 2016 22:59:04 +0200
-Message-ID: <20161016205907.19927-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v8 2/3] ath9k: add a helper to get the string representation of ath_bus_type
+Date: Sun, 16 Oct 2016 22:59:06 +0200
+Message-ID: <20161016205907.19927-3-martin.blumenstingl@googlemail.com>
 References: <20161002214743.2263-1-martin.blumenstingl@googlemail.com>
+ <20161016205907.19927-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161002214743.2263-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20161016205907.19927-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn-yOkvZcmFvRU@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for configuring ath9k based devices via
-devicetree. This was tested on PCI(e) based devices. This should work
-for AHB based devices as well (adding more AHB specific properties may
-still be needed) as soon as the ath79 platform is ready to populate the
-ath9k wmac via devicetree.
+This can be used when the ath_bus_type has to be presented in a log
+message or firmware filename.
 
-Changes since v7:
-- renamed node in the example (use wifi@... instead of ath9k@...), thanks
-  Rob Herring for the hint
-- added the QCA PCI vendor ID and a list of PCI IDs with the corresponding
-  chipsets. This documents all known PCI IDs, but some device IDs are used
-  by multiple chipsets the list of chipset(s) per device ID may be
-  incomplete. Also some chipsets seem to use multiple PCI device IDs, such
-  as AR9485 as documented here: https://wiki.debian.org/ath9k
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ drivers/net/wireless/ath/ath.h  | 6 ++++++
+ drivers/net/wireless/ath/main.c | 7 +++++++
+ 2 files changed, 13 insertions(+)
 
-
-Changes since v6:
-- updated documentation to reflect that "reg" is a mandatory attribute
-- dropped "qca,clk-25mhz" as it is only useful for AHB devices. OF
-  support for AHB devices needs more work, so we can still introduce it
-  later
-- removed qca,disable-2ghz and qca,disable-5ghz as these will be
-  introduced as generic bindings in a separate series
-
-
-Changes since v5:
-- updated the example in the documentation (keeping it at a bare
-  minimum: removed the PCI bridge, use a better real-world example with
-  less-confusing device/fn numbers, added the actual size of the config
-  space to the reg property)
-
-
-Martin Blumenstingl (3):
-  Documentation: dt: net: add ath9k wireless device binding
-  ath9k: add a helper to get the string representation of ath_bus_type
-  ath9k: parse the device configuration from an OF node
-
- .../devicetree/bindings/net/wireless/qca,ath9k.txt | 48 ++++++++++++++++++++++
- drivers/net/wireless/ath/ath.h                     |  6 +++
- drivers/net/wireless/ath/ath9k/init.c              | 42 +++++++++++++++++++
- drivers/net/wireless/ath/main.c                    |  7 ++++
- 4 files changed, 103 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
-
+diff --git a/drivers/net/wireless/ath/ath.h b/drivers/net/wireless/ath/ath.h
+index da7a7c8..f3f2784 100644
+--- a/drivers/net/wireless/ath/ath.h
++++ b/drivers/net/wireless/ath/ath.h
+@@ -327,4 +327,10 @@ static inline const char *ath_opmode_to_string(enum nl80211_iftype opmode)
+ }
+ #endif
+ 
++extern const char *ath_bus_type_strings[];
++static inline const char *ath_bus_type_to_string(enum ath_bus_type bustype)
++{
++	return ath_bus_type_strings[bustype];
++}
++
+ #endif /* ATH_H */
+diff --git a/drivers/net/wireless/ath/main.c b/drivers/net/wireless/ath/main.c
+index 338d723..89f4b05 100644
+--- a/drivers/net/wireless/ath/main.c
++++ b/drivers/net/wireless/ath/main.c
+@@ -90,3 +90,10 @@ void ath_printk(const char *level, const struct ath_common* common,
+ 	va_end(args);
+ }
+ EXPORT_SYMBOL(ath_printk);
++
++const char *ath_bus_type_strings[] = {
++	[ATH_PCI] = "pci",
++	[ATH_AHB] = "ahb",
++	[ATH_USB] = "usb",
++};
++EXPORT_SYMBOL(ath_bus_type_strings);
 -- 
 2.10.0
 
