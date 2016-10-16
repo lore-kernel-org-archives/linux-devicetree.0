@@ -1,70 +1,109 @@
-From: Peter Rosin <peda@lysator.liu.se>
-Subject: Re: [PATCH] ARM: at91/dt: pullup dbgu rx instead of tx
-Date: Sun, 16 Oct 2016 12:57:09 +0200
-Message-ID: <6d2d5aba-cca3-93c6-0c59-3acbbd7b6169@lysator.liu.se>
-References: <1443105855-15738-1-git-send-email-peda@lysator.liu.se>
- <20150924144753.GY4287@piout.net>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: [PATCH 2/5] pwm: sun4i: Add support for PWM
+ controller on sun6i SoCs
+Date: Sun, 16 Oct 2016 22:29:17 +0800
+Message-ID: <4823581476628157@web22j.yandex.ru>
+References: <20161012042059.40015-1-icenowy@aosc.xyz>
+	 <20161012042059.40015-2-icenowy@aosc.xyz>
+	 <CAGb2v65P7SQyEv+b0mU_FA=CQxy7qX9h7HE4NivqjZ-ZBh94ww@mail.gmail.com>
+	 <1476259803.2317.2.camel@Nokia-N900> <20161014125743.ykgeiqr4tynq7cmg@lukather>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150924144753.GY4287@piout.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Peter Rosin <peda@axentia.se>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBQE5R3AAKGQEW6PKCGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161014125743.ykgeiqr4tynq7cmg@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi again,
+Hi,
 
-I forgot about this, and it's been a year. But isn't it time to
-upstream those pull-up fixes that Sylvain provided?
+14.10.2016, 20:58, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> Hi,
+>
+> On Wed, Oct 12, 2016 at 04:10:03PM +0800, Icenowy Zheng wrote:
+>> =C2=A0> On Wed, Oct 12, 2016 at 12:20 PM, Icenowy Zheng <icenowy-87fMjt6guo8@public.gmane.org=
+z> wrote:
+>> =C2=A0> > The PWM controller in A31 is different with other Allwinner So=
+Cs, with
+>> =C2=A0> > a control register per channel (in other SoCs the control regi=
+ster is
+>> =C2=A0> > shared), and each channel are allocated 16 bytes of address (b=
+ut only 8
+>> =C2=A0> > bytes are used.). The register map in one channel is just like=
+ a
+>> =C2=A0> > single-channel A10 PWM controller, however, A31 have a differe=
+nt
+>> =C2=A0> > prescaler table than other SoCs.
+>> =C2=A0> >
+>> =C2=A0> > In order to use the driver for all 4 channels, device nodes sh=
+ould be
+>> =C2=A0> > created per channel.
+>> =C2=A0>
+>> =C2=A0> I think Maxime wants you to support the different register offse=
+ts
+>> =C2=A0> in this driver, and have all 4 channels in the same device (node=
+).
+>>
+>> =C2=A0I think that will make the code much more complex... And in
+>> =C2=A0hardware there may also be 4 controllers... as the register is
+>> =C2=A0aligned at 0x10.
+>
+> You also have to think about it the other way around. This is exposed
+> everywhere as a single device. There may be some undocumented
+> registers hidden somewhere in the memory space of that device. How
+> would you deal with that without touching the device tree?
 
-Cheers,
-Peter
+Is the reason only they're listed in the one chapter of user manual?
 
+>
+> Exposing this as a single device is the best solution both from the
+> philosophical point of view, but also from a maintainance aspect.
 
-On 2015-09-24 16:47, Alexandre Belloni wrote:
-> Hi Peter,
-> 
-> Thanks for the patch but you actually got beaten by Sylvain:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-September/368426.html
-> 
-> On 24/09/2015 at 16:44:15 +0200, Peter Rosin wrote :
->> From: Peter Rosin <peda@axentia.se>
->>
->> It seems pointless to pullup the tx line, but there is value in pulling
->> up the rx line.
->>
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Peter Rosin <peda@axentia.se>
->> ---
->>  arch/arm/boot/dts/sama5d3.dtsi |    4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
->> index 9e2444b07bce..304a40c5552a 100644
->> --- a/arch/arm/boot/dts/sama5d3.dtsi
->> +++ b/arch/arm/boot/dts/sama5d3.dtsi
->> @@ -545,8 +545,8 @@
->>  				dbgu {
->>  					pinctrl_dbgu: dbgu-0 {
->>  						atmel,pins =
->> -							<AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB30 periph A */
->> -							 AT91_PIOB 31 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;	/* PB31 periph A with pullup */
->> +							<AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_PULL_UP	/* PB30 periph A with pullup */
->> +							 AT91_PIOB 31 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PB31 periph A */
->>  					};
->>  				};
->>  
->> -- 
->> 1.7.10.4
->>
-> 
+If we really do so, I will go back to the original patch (pwm-sun6i)
+and merge 4 channels.
+
+No other PWM block of Allwinner devices uses 4 control registers, and it's
+a significant difference to make it a dedicated driver.
+
+However, I still think we should have 4 nodes, since the 4 channels can wor=
+k
+very dedicatedly, with different control register... This can be a reason t=
+o see
+them as 4 dedicated controllers.
+
+(And as PWM uses only oscXX, we cannot judge it according to the clock tree=
+,
+and Occam's Razor will apply to think it's 4 A10-like PWM controller...)
+
+If we just think it's because it's a whole part, why don't we combine ehci =
+and ohci
+to one driver? Just because we can reuse {e,o}hci-platform...
+
+It's the same reason to see it as 4 controllers.
+
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+
+Regards,
+Icenowy
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
