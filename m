@@ -1,99 +1,55 @@
-From: Juri Lelli <juri.lelli@arm.com>
-Subject: [PATCH v7 REPOST 5/9] arm64, dts: add Juno cpu capacity-dmips-mhz information
-Date: Mon, 17 Oct 2016 16:46:46 +0100
-Message-ID: <20161017154650.18779-6-juri.lelli@arm.com>
-References: <20161017154650.18779-1-juri.lelli@arm.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20161017154650.18779-1-juri.lelli@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, juri.lelli@arm.com, broonie@kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>, Jon Medhurst <tixy@linaro.org>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH] make of_device_make_bus_id() static
+Date: Mon, 17 Oct 2016 08:50:26 -0700
+Message-ID: <1476719426-12549-1-git-send-email-frowand.list@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add Juno cpu capacity-dmips-mhz information.
+From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jon Medhurst <tixy@linaro.org>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Juri Lelli <juri.lelli@arm.com>
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+of_device_make_bus_id() was changed to non-static by commit c66012253800
+("of/device: Make of_device_make_bus_id() usable by other code") more than
+6 years ago, but there are no users of it outside of platform.c.  Make the
+function static again.
+
+Signed-off-by: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
 ---
+ drivers/of/platform.c     | 2 +-
+ include/linux/of_device.h | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-Changes from v1:
-  - capacity-scale removed
-
-Changes from v4:
-  - binding changed to capacity-dmips-mhz
-
-Changes from v6:
-  - s/bindings// in changelog
----
- arch/arm64/boot/dts/arm/juno.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
-index a7270eff6939..6b4135e9cfe5 100644
---- a/arch/arm64/boot/dts/arm/juno.dts
-+++ b/arch/arm64/boot/dts/arm/juno.dts
-@@ -90,6 +90,7 @@
- 			next-level-cache = <&A57_L2>;
- 			clocks = <&scpi_dvfs 0>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-+			capacity-dmips-mhz = <1024>;
- 		};
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index e4bf07d20f9b..b232063174cc 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -73,7 +73,7 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
+  * derive a unique name. If it cannot, then it will prepend names from
+  * parent nodes until a unique name can be derived.
+  */
+-void of_device_make_bus_id(struct device *dev)
++static void of_device_make_bus_id(struct device *dev)
+ {
+ 	struct device_node *node = dev->of_node;
+ 	const __be32 *reg;
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index cc7dd687a89d..5c2aeed17dd4 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -13,7 +13,6 @@
+ #ifdef CONFIG_OF
+ extern const struct of_device_id *of_match_device(
+ 	const struct of_device_id *matches, const struct device *dev);
+-extern void of_device_make_bus_id(struct device *dev);
  
- 		A57_1: cpu@1 {
-@@ -100,6 +101,7 @@
- 			next-level-cache = <&A57_L2>;
- 			clocks = <&scpi_dvfs 0>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-+			capacity-dmips-mhz = <1024>;
- 		};
- 
- 		A53_0: cpu@100 {
-@@ -110,6 +112,7 @@
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-+			capacity-dmips-mhz = <578>;
- 		};
- 
- 		A53_1: cpu@101 {
-@@ -120,6 +123,7 @@
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-+			capacity-dmips-mhz = <578>;
- 		};
- 
- 		A53_2: cpu@102 {
-@@ -130,6 +134,7 @@
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-+			capacity-dmips-mhz = <578>;
- 		};
- 
- 		A53_3: cpu@103 {
-@@ -140,6 +145,7 @@
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-+			capacity-dmips-mhz = <578>;
- 		};
- 
- 		A57_L2: l2-cache0 {
+ /**
+  * of_driver_match_device - Tell if a driver's of_match_table matches a device.
 -- 
-2.10.0
+1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
