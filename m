@@ -1,146 +1,285 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: da850: add a node for the LCD controller
-Date: Mon, 17 Oct 2016 10:33:58 +0300
-Message-ID: <7a2ffcd0-fe1d-c887-53b7-7cb5e1e61222@ti.com>
-References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
- <1475672732-17111-3-git-send-email-bgolaszewski@baylibre.com>
- <2d276e51-9d37-8648-4aad-283bb2b23626@ti.com>
- <1e23c3e9-d34b-1d8f-8565-c9932a60fd32@ti.com>
- <65fde145-0820-794d-d345-621f66cdacc0@ti.com>
+From: Franck Jullien <franck.jullien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] x86: bzImage: Allow the appending of a device tree binary
+Date: Mon, 17 Oct 2016 09:45:08 +0200
+Message-ID: <CAJfOKBwKrSmJkpbxap4f5dA=czSZzC33Rn7P+DFqvc2Pw9XPbw@mail.gmail.com>
+References: <1476512960-22406-1-git-send-email-franck.jullien@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1993245879=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <65fde145-0820-794d-d345-621f66cdacc0@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>, Karl Beldan <karl.beldan@gmail.com>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Karl Beldan <kbeldan@baylibre.com>, Jyri Sarha <jsarha@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476512960-22406-1-git-send-email-franck.jullien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jose Abreu <jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Franck Jullien <franck.jullien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============1993245879==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="8CV4ldK6TAC8usDh094u6c9uRENcaHT6v"
+2016-10-15 8:29 GMT+02:00 Franck Jullien <franck.jullien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> This patch provides the ability to boot using a device tree that is appended
+> to the raw binary bzImage (e.g. cat bzImage <filename>.dtb > bzImage_w_dtb).
+>
+> Based on Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> work on x86
+> builtin dtb support.
+>
+> Signed-off-by: Franck Jullien <franck.jullien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/x86/Kconfig                   | 19 ++++++++++++
+>  arch/x86/boot/compressed/head_32.S | 61 ++++++++++++++++++++++++++++++++++++++
+>  arch/x86/boot/compressed/head_64.S | 53 +++++++++++++++++++++++++++++++++
+>  arch/x86/boot/compressed/misc.c    | 40 +++++++++++++++++++++++++
+>  4 files changed, 173 insertions(+)
+>
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index bada636..722d846 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2222,6 +2222,25 @@ config MODIFY_LDT_SYSCALL
+>
+>           Saying 'N' here may make sense for embedded or server kernels.
+>
+> +config X86_APPENDED_DTB
+> +       bool "Use appended device tree blob to bzImage"
+> +       depends on OF
+> +       select OF_EARLY_FLATTREE
+> +       help
+> +         With this option, the boot code will look for a device tree binary
+> +         (DTB) appended to bzImage
+> +         (e.g. cat bzImage <filename>.dtb > bzImage_w_dtb).
+> +
+> +         This is meant as a backward compatibility convenience for those
+> +         systems with a bootloader that can't be upgraded to accommodate
+> +         the documented boot protocol using a device tree.
+> +
+> +         Beware that there is very little in terms of protection against
+> +         this option being confused by leftover garbage in memory that might
+> +         look like a DTB header after a reboot if no actual DTB is appended
+> +         to bzImage.  Do not leave this option active in a production kernel
+> +         if you don't intend to always append a DTB.
+> +
+>  source "kernel/livepatch/Kconfig"
+>
+>  endmenu
+> diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+> index fd0b6a2..e28a586 100644
+> --- a/arch/x86/boot/compressed/head_32.S
+> +++ b/arch/x86/boot/compressed/head_32.S
+> @@ -201,6 +201,40 @@ preferred_addr:
+>         cld
+>         popl    %esi
+>
+> +#if CONFIG_X86_APPENDED_DTB
+> +/*
+> + * Check if an appended device tree blob is present.
+> + */
+> +
+> +       movl    $0, dtb_sz(%ebp)
+> +
+> +       movl    $(_edata - startup_32), %ecx
+> +       leal    startup_32(%ebp), %edx
+> +
+> +       /* Calculate the appended DTB address. We need to add 4 bytes for
+> +        * CRC and padding to the next 16-byte paragraph (see ../tools/build.c)
+> +        */
+> +       addl    $19, %ecx
+> +       andl    $0xfffffff0, %ecx
+> +       addl    %edx, %ecx
+> +
+> +       movl    (%ecx), %eax
+> +
+> +       /* DTB sig is 0xd00dfeed big endian */
+> +       movl    $0xedfe0dd0, %edx
+> +
+> +       cmpl    %eax, %edx
+> +       jne     2f
+> +
+> +       /* Get DTB size */
+> +       movl    4(%ecx), %edx
+> +       bswap   %edx
+> +
+> +       movl    %edx, dtb_sz(%ebp)
+> +       movl    %ecx, dtb_address(%ebp)
+> +2:
+> +#endif
+> +
+>  /*
+>   * Jump to the relocated address.
+>   */
+> @@ -234,6 +268,7 @@ relocated:
+>         jmp     1b
+>  2:
+>
+> +       pushl   %ebp
+>  /*
+>   * Do the extraction, and jump to the new kernel..
+>   */
+> @@ -255,12 +290,38 @@ relocated:
+>         call    extract_kernel  /* returns kernel location in %eax */
+>         addl    $24, %esp
+>
+> +
+> +       popl    %ebp
+> +
+> +#if CONFIG_X86_APPENDED_DTB
+> +       pushl   %eax
+> +
+> +       movl    dtb_sz(%ebp), %edi              /* dtb size */
+> +       cmpl    $0, %edi
+> +       je      1f
+> +       movl    dtb_address(%ebp), %eax         /* dtb start */
+> +
+> +       pushl   %edi                            /* dtb_size */
+> +       pushl   %eax                            /* dtb_start */
+> +       pushl   %esi                            /* real mode pointer */
+> +       call    relocate_dtb
+> +       addl    $12,%esp
+> +1:
+> +       popl    %eax
+> +#endif
+> +
+>  /*
+>   * Jump to the extracted kernel.
+>   */
+>         xorl    %ebx, %ebx
+>         jmp     *%eax
+>
+> +       .data
+> +dtb_address:
+> +       .long 0
+> +dtb_sz:
+> +       .long 0
+> +
+>  #ifdef CONFIG_EFI_STUB
+>         .data
+>  efi32_config:
+> diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+> index efdfba2..3ad2086 100644
+> --- a/arch/x86/boot/compressed/head_64.S
+> +++ b/arch/x86/boot/compressed/head_64.S
+> @@ -365,6 +365,45 @@ preferred_addr:
+>         cld
+>         popq    %rsi
+>
+> +#ifdef CONFIG_X86_APPENDED_DTB
+> +/*
+> + * Check if an appended device tree blob is present.
+> + * r13 = appended dtb size (0 if not present)
+> + * r12 = address of the appended dtb
+> + */
+> +       pushq   %rax
+> +       pushq   %rdx
+> +
+> +       xorq    %r13, %r13
+> +
+> +       movq    $(_edata - startup_32), %rcx
+> +       leaq    startup_32(%rip), %rdx
+> +
+> +       /* Calculate the appended DTB address. We need to add 4 bytes for
+> +        * CRC and padding to the next 16-byte paragraph (see ../tools/build.c)
+> +        */
+> +       addq    $19, %rcx
+> +       andq    $0xfffffffffffffff0, %rcx
+> +       addq    %rdx, %rcx
+> +       movq    %rcx, %r12
+> +
+> +       movq    (%rcx), %rax
+> +
+> +       /* DTB sig is 0xd00dfeed big endian */
+> +       movl    $0xedfe0dd0, %edx
+> +
+> +       cmpl    %eax, %edx
+> +       jne     1f
+> +
+> +       /* Get DTB size */
+> +       movl    4(%rcx), %edx
+> +       bswap   %edx
+> +       movq    %rdx, %r13
+> +1:
+> +       popq    %rdx
+> +       popq    %rax
+> +#endif
+> +
+>  /*
+>   * Jump to the relocated address.
+>   */
+> @@ -424,6 +463,20 @@ relocated:
+>         call    extract_kernel          /* returns kernel location in %rax */
+>         popq    %rsi
+>
+> +#ifdef CONFIG_X86_APPENDED_DTB
+> +       cmpq    $0,%r13
+> +       je      2f
+> +       pushq   %rsi
+> +       pushq   %rax                    /* save address */
+> +       movq    %rsi, %rdi              /* real mode address */
+> +       movq    %r12, %rsi              /* dtb start */
+> +       movq    %r13, %rdx              /* dtb size */
+> +       call    relocate_dtb
+> +       popq    %rax
+> +       popq    %rsi
+> +2:
+> +#endif
+> +
+>  /*
+>   * Jump to the decompressed kernel.
+>   */
+> diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+> index b3c5a5f0..1b66a74 100644
+> --- a/arch/x86/boot/compressed/misc.c
+> +++ b/arch/x86/boot/compressed/misc.c
+> @@ -409,3 +409,43 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+>         debug_putstr("done.\nBooting the kernel.\n");
+>         return output;
+>  }
+> +
+> +#ifdef CONFIG_X86_APPENDED_DTB
+> +asmlinkage __visible void relocate_dtb(void *rmode,
+> +                       unsigned char *dtb_data,
+> +                       unsigned long dtb_size)
+> +{
+> +
+> +       struct boot_params *boot_params = rmode;
+> +       struct setup_data *data;
+> +       u32 pa_data, pa_next;
+> +       u32 data_len, data_type;
+> +
+> +       /* first iterate over the setup data to find a DTB if it exists */
+> +       pa_data = boot_params->hdr.setup_data;
+> +       while (pa_data) {
+> +               data = (void *)(unsigned long)pa_data;
+> +               data_len = data->len + sizeof(struct setup_data);
+> +               data_type = data->type;
+> +               pa_next = data->next;
+> +
+> +               if (data_type == SETUP_DTB) {
+> +                       debug_putstr("Using bootloader DTB\n");
+> +                       return;
+> +               }
+> +
+> +               pa_data = pa_next;
+> +       }
+> +
+> +       /* insert the DTB in the beginning */
+> +       data = malloc(sizeof(*data) + dtb_size);
+> +       data->type = SETUP_DTB;
+> +       data->next = boot_params->hdr.setup_data;
+> +       data->len = dtb_size;
+> +       memcpy(&data->data[0], dtb_data, dtb_size);
+> +       boot_params->hdr.setup_data = (uintptr_t)data;
+> +
+> +       debug_putstr("Using appended DTB\n");
+> +
+> +}
+> +#endif
+> --
+> 2.7.4
+>
 
---8CV4ldK6TAC8usDh094u6c9uRENcaHT6v
-Content-Type: multipart/mixed; boundary="riLT71sAEA3UwnuCWSu7iGsjxChdInGcO";
- protected-headers="v1"
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-To: Sekhar Nori <nsekhar@ti.com>,
- Bartosz Golaszewski <bgolaszewski@baylibre.com>,
- Kevin Hilman <khilman@baylibre.com>,
- Michael Turquette <mturquette@baylibre.com>, Rob Herring
- <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
- Russell King <linux@armlinux.org.uk>, Karl Beldan <karl.beldan@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- arm-soc <linux-arm-kernel@lists.infradead.org>,
- linux-drm <dri-devel@lists.freedesktop.org>,
- linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>,
- David Airlie <airlied@linux.ie>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Maxime Ripard <maxime.ripard@free-electrons.com>,
- Karl Beldan <kbeldan@baylibre.com>
-Message-ID: <7a2ffcd0-fe1d-c887-53b7-7cb5e1e61222@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: da850: add a node for the LCD controller
-References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
- <1475672732-17111-3-git-send-email-bgolaszewski@baylibre.com>
- <2d276e51-9d37-8648-4aad-283bb2b23626@ti.com>
- <1e23c3e9-d34b-1d8f-8565-c9932a60fd32@ti.com>
- <65fde145-0820-794d-d345-621f66cdacc0@ti.com>
-In-Reply-To: <65fde145-0820-794d-d345-621f66cdacc0@ti.com>
+This patch result of a previous discussion [1] where the suggestion of
+an appended DTB
+would be better than the proposed empty builtin device tree.
 
---riLT71sAEA3UwnuCWSu7iGsjxChdInGcO
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Franck.
 
-On 17/10/16 10:12, Sekhar Nori wrote:
-> On Monday 17 October 2016 11:26 AM, Tomi Valkeinen wrote:
->> On 15/10/16 20:42, Sekhar Nori wrote:
->>
->>>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.=
-dtsi
->>>> index f79e1b9..32908ae 100644
->>>> --- a/arch/arm/boot/dts/da850.dtsi
->>>> +++ b/arch/arm/boot/dts/da850.dtsi
->>>
->>>> @@ -399,6 +420,14 @@
->>>>  				<&edma0 0 1>;
->>>>  			dma-names =3D "tx", "rx";
->>>>  		};
->>>> +
->>>> +		display: display@213000 {
->>>> +			compatible =3D "ti,am33xx-tilcdc", "ti,da850-tilcdc";
->>>
->>> This should instead be:
->>>
->>> compatible =3D "ti,da850-tilcdc", "ti,am33xx-tilcdc";
->>>
->>> as the closest match should appear first in the list.
->>
->> Actually I don't think that's correct. The LCDC on da850 is not
->> compatible with the LCDC on AM335x. I think it should be just
->> "ti,da850-tilcdc".
->=20
-> So if "ti,am33xx-tilcdc" is used, the display wont work at all? If that=
-s
-> the case, I wonder how the patch passed testing. Bartosz?
-
-AM3 has "version 2" of LCDC, whereas DA850 is v1. They are quite
-similar, but different.
-
-The driver gets the version number from LCDC's register, and acts based
-on that, so afaik the compatible string doesn't really affect the
-functionality (as long as it matches).
-
-But even if it works with the current driver, I don't think
-"ti,am33xx-tilcdc" and "ti,da850-tilcdc" are compatible in the HW level.
-
- Tomi
-
-
---riLT71sAEA3UwnuCWSu7iGsjxChdInGcO--
-
---8CV4ldK6TAC8usDh094u6c9uRENcaHT6v
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJYBH7mAAoJEPo9qoy8lh71aPoP/R7taU+qck1ai7zVBzi2SCh5
-Mz4JRUe7JN54wnyl4q4FXOI17+RzuXFA5KYa6z05uJXMYkGjMUT1t5Q2fbteV8FN
-QWFv0+zFK0dkuNf/Hy22wVGmbKfvCezimX718kcwnke1uJ6q+SljPRjIS3GTptPe
-Zf/0JLv8/LTMQpctF7/ZrL59sN5EaLpIvvnuZb7qgFuxd+AS+DxwRxmsXql0rFrM
-i/UM4HbfTIJSmwfJtu45bf2C/RN+0y25FhGolJPTmGhSPBLRu4YxaxOu/C7xqTcB
-bj2ZL2HCcjmVsw3HFWjqIQihqMxAfDZzPQg6U2ujvEuD/dUVI5fbVNny42wX/gu4
-W+uVuKsXQCTI2SQbQksikxPT9F7jKup+7zLPi+Mdyg6CkgTKrihHVr7Mb2Yrn1kk
-DCggabsDtZxndocC1Gfc03hhBBMI/1v3pXojpj0gC0DcH8rxJX98lJKhJu1ypbJn
-Xgj+pjbYXHy7w30oFdIY6vT4pP89bYI1V1kDlu8awZsYVwZpVSUYa5bdqlzipMWx
-3djcTYSsEdigZdRUhy7xTWt9kot27OWjO29wTNeI/RsmWK00hIWhoLhmbNZ6isch
-Lavj76CKvf1IzgkxbsJqRSjbzewGLyO/lYQefxcORS0C8Eqv9QP9hEtTbnWIlgPu
-E/tw+I/qajn6G/aWpsV9
-=t/RY
------END PGP SIGNATURE-----
-
---8CV4ldK6TAC8usDh094u6c9uRENcaHT6v--
-
---===============1993245879==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1993245879==--
+[1] http://comments.gmane.org/gmane.linux.drivers.devicetree/174636
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
