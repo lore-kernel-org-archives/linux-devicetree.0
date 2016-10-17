@@ -1,41 +1,59 @@
-From: Andreas Schwab <schwab-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2] console: Don't prefer first registered if DT specifies stdout-path
-Date: Mon, 17 Oct 2016 19:39:57 +0200
-Message-ID: <87oa2ij2mq.fsf@linux-m68k.org>
-References: <20160809125010.14150-1-paul.burton@imgtec.com>
-        <20160809151937.26118-1-paul.burton@imgtec.com>
-        <87bmyk88x5.fsf@linux-m68k.org> <4033254.tBrl4yKcsP@np-p-burton>
+From: ayaka <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Subject: Re: [PATCH v8 1/2] ARM: dts: Add TOPEET itop core board SCP package
+ version
+Date: Tue, 18 Oct 2016 01:57:47 +0800
+Message-ID: <0326b619-3af5-e4ef-2251-16e60105ef67@soulik.info>
+References: <1474300103-26659-1-git-send-email-ayaka@soulik.info>
+ <1474300103-26659-2-git-send-email-ayaka@soulik.info>
+ <20161017162759.GA25818@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4033254.tBrl4yKcsP@np-p-burton> (Paul Burton's message of "Mon,
-        17 Oct 2016 11:33:55 +0100")
+In-Reply-To: <20161017162759.GA25818@kozik-lap>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Ivan Delalande <colona-nzgTgzXrdUbQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Jan Kara <jack-IBi9RG/b67k@public.gmane.org>, Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Okt 17 2016, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
 
-> Could you share the device tree from your system?
 
-This is the contents of chosen/linux,stdout-path on the systems I have:
+On 10/18/2016 12:27 AM, Krzysztof Kozlowski wrote:
+> On Mon, Sep 19, 2016 at 11:48:22PM +0800, Randy Li wrote:
+>> The TOPEET itop is a samsung exnynos 4412 core board, which have
+>> two package versions. This patch add the support for SCP version.
+>>
+>> Currently supported are USB3503A HSIC, USB OTG, eMMC, rtc and
+>> PMIC. The future features are in the based board. Also MFC and
+>> watchdog have been enabled.
+>>
+>> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi | 501 ++++++++++++++++++++++++
+>>   1 file changed, 501 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
+> I wanted to apply it... but then I saw a bunch of checkpatch trivial issues.
+> Really, after v8? The code must compile (v6 did not compile...), there
+> should be no warnings from smatch, sparse and checkpatch (only the last
+> one is applicable for DTS). Unless of course checkpatch would be
+> wrong... but in this case it is correct. You did not follow coding
+> style:
+>
+> WARNING: please, no spaces at the start of a line
+> #134: FILE: arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi:109:
+> +        devfreq = <&bus_leftbus>;$
+>
+> ERROR: code indent should use tabs where possible
+> #135: FILE: arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi:110:
+> +        status = "okay";$
+Oh, it is a copy mistake, the copy operation makes the original tab 
+becomes spaces.
+Should I send a new version to correct them?
+>
+>
+> Best regards,
+> Krzysztof
 
-chosen/linux,stdout-path
-                 "/pci@f0000000/ATY,SnowyParent@10/ATY,Snowy_A@0"
-
-chosen/linux,stdout-path                                                        
-                 "/pci@0,f0000000/NVDA,Parent@10/NVDA,Display-B@1"
-
-Is that what you need?  There is also chosen/stdout, but no
-aliases/stdout.
-
-Andreas.
-
--- 
-Andreas Schwab, schwab-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-GPG Key fingerprint = 58CA 54C7 6D53 942B 1756  01D3 44D5 214B 8276 4ED5
-"And now for something completely different."
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
