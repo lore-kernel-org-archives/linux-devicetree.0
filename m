@@ -1,98 +1,126 @@
-From: Nayna <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] Documentation: tpm: add the
- Physical TPM device tree binding documentation
-Date: Mon, 17 Oct 2016 07:44:31 +0530
-Message-ID: <58043407.9070601@linux.vnet.ibm.com>
-References: <1475051441-23008-1-git-send-email-nayna@linux.vnet.ibm.com>
-	<1475051441-23008-2-git-send-email-nayna@linux.vnet.ibm.com>
-	<20161008210522.GB22112@rob-hp-laptop>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: da850: add a node for the LCD controller
+Date: Mon, 17 Oct 2016 08:56:16 +0300
+Message-ID: <1e23c3e9-d34b-1d8f-8565-c9932a60fd32@ti.com>
+References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
+ <1475672732-17111-3-git-send-email-bgolaszewski@baylibre.com>
+ <2d276e51-9d37-8648-4aad-283bb2b23626@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20161008210522.GB22112@rob-hp-laptop>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, honclo-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cclaudio-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0266706477=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2d276e51-9d37-8648-4aad-283bb2b23626@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>, Karl Beldan <karl.beldan@gmail.com>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Karl Beldan <kbeldan@baylibre.com>, Jyri Sarha <jsarha@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
+--===============0266706477==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="r5xkqjl6GgfEiPEQko1vgGrPfBciXsM4A"
 
+--r5xkqjl6GgfEiPEQko1vgGrPfBciXsM4A
+Content-Type: multipart/mixed; boundary="1UvQnqg5gNLv4C6hk3CkR9dDeWDefE9HH";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Sekhar Nori <nsekhar@ti.com>,
+ Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Michael Turquette <mturquette@baylibre.com>, Rob Herring
+ <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+ Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+ Russell King <linux@armlinux.org.uk>, Karl Beldan <karl.beldan@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ arm-soc <linux-arm-kernel@lists.infradead.org>,
+ linux-drm <dri-devel@lists.freedesktop.org>,
+ linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>,
+ David Airlie <airlied@linux.ie>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Maxime Ripard <maxime.ripard@free-electrons.com>,
+ Karl Beldan <kbeldan@baylibre.com>
+Message-ID: <1e23c3e9-d34b-1d8f-8565-c9932a60fd32@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: da850: add a node for the LCD controller
+References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
+ <1475672732-17111-3-git-send-email-bgolaszewski@baylibre.com>
+ <2d276e51-9d37-8648-4aad-283bb2b23626@ti.com>
+In-Reply-To: <2d276e51-9d37-8648-4aad-283bb2b23626@ti.com>
 
-On 10/09/2016 02:35 AM, Rob Herring wrote:
-> On Wed, Sep 28, 2016 at 04:30:41AM -0400, Nayna Jain wrote:
->> Newly added support of TPM 2.0 eventlog securityfs pseudo files in tpm
->> device driver consumes device tree bindings representing I2C based
->> Physical TPM. This patch adds the documentation for corresponding device
->> tree bindings of I2C based Physical TPM. These bindings are similar to
->> vtpm device tree bindings being used on IBM Power7+ and Power8 Systems
->> running PowerVM.
->>
->> Suggested-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
->> Signed-off-by: Nayna Jain <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
->> ---
->> Changelog v2:
->>
->> - Include review feedbacks.
->>    - Move the doc within bindings/security/tpm.
->>    - Add example for compatible property in description.
->>    - Delete implicit properties like status, label from description.
->>    - Redefine linux,sml-base description.
->>
->>   .../devicetree/bindings/security/tpm/tpm-i2c.txt     | 20 ++++++++++++++++++++
->>   1 file changed, 20 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
->>
->> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
->> new file mode 100644
->> index 0000000..16df8bb
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
->> @@ -0,0 +1,20 @@
->> +* Device Tree Bindings for I2C based Trusted Platform Module(TPM)
+--1UvQnqg5gNLv4C6hk3CkR9dDeWDefE9HH
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+On 15/10/16 20:42, Sekhar Nori wrote:
+
+>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dt=
+si
+>> index f79e1b9..32908ae 100644
+>> --- a/arch/arm/boot/dts/da850.dtsi
+>> +++ b/arch/arm/boot/dts/da850.dtsi
+>=20
+>> @@ -399,6 +420,14 @@
+>>  				<&edma0 0 1>;
+>>  			dma-names =3D "tx", "rx";
+>>  		};
 >> +
->> +Required properties:
->> +
->> +- compatible     : 'manufacturer,model', eg. nuvoton,npct650
->> +- linux,sml-base : 64-bit base address of the reserved memory allocated for
->> +                   the firmware event log
->> +- linux,sml-size : size of the memory allocated for the firmware event log
->> +
->> +Example (for OpenPower Systems with Nuvoton TPM 2.0 on I2C)
->> +----------------------------------------------------------
->> +
->> +tpm@57 {
->> +	reg = <0x57>;
->> +	label = "tpm";
->
-> Not documented, but why? label is really only useful when you have
-> multiple items that humans need to identify like ports on ethernet
-> switch or LEDs.
+>> +		display: display@213000 {
+>> +			compatible =3D "ti,am33xx-tilcdc", "ti,da850-tilcdc";
+>=20
+> This should instead be:
+>=20
+> compatible =3D "ti,da850-tilcdc", "ti,am33xx-tilcdc";
+>=20
+> as the closest match should appear first in the list.
 
-Sorry, I think I misinterpreted one of the earliar feedback. I will 
-document it again.
+Actually I don't think that's correct. The LCDC on da850 is not
+compatible with the LCDC on AM335x. I think it should be just
+"ti,da850-tilcdc".
 
-Thanks & Regards,
-    - Nayna
-
->
->> +	compatible = "nuvoton,npct650", "nuvoton,npct601";
->> +	linux,sml-base = <0x7f 0xfd450000>;
->> +	linux,sml-size = <0x10000>;
->> +	status = "okay";
->> +};
->> --
->> 2.5.0
->>
->
+ Tomi
 
 
-------------------------------------------------------------------------------
-Check out the vibrant tech community on one of the world's most 
-engaging tech sites, SlashDot.org! http://sdm.link/slashdot
+--1UvQnqg5gNLv4C6hk3CkR9dDeWDefE9HH--
+
+--r5xkqjl6GgfEiPEQko1vgGrPfBciXsM4A
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYBGgAAAoJEPo9qoy8lh71XTAP/Av1WgGRk9oEsEGN3KCYHALp
+2AxBwfwD/2mZsyYJCdH6Gklxb+vYOE+ePMkCEi6SMj1NKox8OJtAZxQR1cHxSqjP
+Mlu3ABifQHQsw/kiYl5Tz+OJbJOSRj3wUYeIEtqzotCktrqatWeRi5vWvnEkfZCV
+t4yuyT7EW122qhrSW1tDSN9drQvjtJoqobbqEVfgZXoc1fMiIjRA8NbILHSqT+A9
+d5vpmkgfwBJgvEywuuGk7FkKR7hpX89YUDFm1KBmBonxd+TDiYjiFjSTMclmfm0x
+KP+8V7wEzxyZAZRWTwzbXWXucZok7ymqV6h1RVs7iDGI65AGDvX4OUp9a1zu9+LK
+m/50LmDo7g5bpTpn5tqNxbnXvF0WQujTI+Rh/+8rIq6cyJyoezPCpk26TX0DTpPB
+aTtf/rbmDf5NCA54PqP4Em/ORu89ut91ENqrYBqm+iBxOdo+hGHlfh/V/OAVbrtJ
+hOWcupUbaB+h5cjcZEm5QzUhHuP0dt93KnEMqmQABcJOA+b2qhgaJpu6NE2xZaFg
+IbB3fA3L/wpE10uFTt6pUV9jCBUv0shZ0tp/Kobvx7L6DyriXPreaonLsg+8zH04
+zGjYUBKNpyKT99Jf5HevsfDrNkJJwCZOBlailIq2TWZsrpYIL9PiI3+wu+GLlerT
+VFD9ewvYgGbZxZLAagWI
+=FR00
+-----END PGP SIGNATURE-----
+
+--r5xkqjl6GgfEiPEQko1vgGrPfBciXsM4A--
+
+--===============0266706477==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0266706477==--
