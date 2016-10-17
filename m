@@ -1,68 +1,35 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH net-next 2/2] net: phy: Add Fast Link Failure - 2 set driver for Microsemi PHYs.
-Date: Mon, 17 Oct 2016 05:51:11 -0700
-Message-ID: <838C6202-9B7D-4AFA-B163-55515044FA4F@gmail.com>
-References: <1476445233-26524-1-git-send-email-Raju.Lakkaraju@microsemi.com> <1476445233-26524-3-git-send-email-Raju.Lakkaraju@microsemi.com> <20161014120228.GF5822@lunn.ch> <20161017081312.GB2365@microsemi.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 0/2] mmc: sdhci-iproc: Add byte register access support
+Date: Mon, 17 Oct 2016 15:49:29 +0200
+Message-ID: <CAPDyKFpsTNKCC3dTJUipRVhALh2=4YJ5k6Ofp9TUu0RjKO6FaA@mail.gmail.com>
+References: <1476297352-7812-1-git-send-email-scott.branden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161017081312.GB2365-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1476297352-7812-1-git-send-email-scott.branden@broadcom.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Scott Branden <scott.branden@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Adrian Hunter <adrian.hunter@intel.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On October 17, 2016 1:13:14 AM PDT, Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org> wrote:
->Hi Andrew,
+On 12 October 2016 at 20:35, Scott Branden <scott.branden@broadcom.com> wrote:
+> Add brcm,sdhci-iproc compat string and code for support of newer versions of
+> sdhci-iproc controller that allow byte-wise register accesses.
 >
->Thank you for code review and comments.
+> Scott Branden (2):
+>   mmc: sdhci-iproc: Add brcm,sdhci-iproc compat string in bindings
+>     document
+>   mmc: sdhci-iproc: support standard byte register accesses
 >
->On Fri, Oct 14, 2016 at 02:02:28PM +0200, Andrew Lunn wrote:
->> EXTERNAL EMAIL
->> 
->> 
->> > On Fri, Oct 14, 2016 at 05:10:33PM +0530, Raju Lakkaraju wrote:
->> > From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
->> >
->> > VSC8531 Fast Link Failure 2 feature enables the PHY to indicate the
->> > onset of a potential link failure in < 100 usec for 100BASE-TX
->> > operation. FLF2 is supported through the MDINT (active low) pin.
->> 
->> Is the MDINT pin specific to this feature, or a general interrupt
->pin?
->> 
+>  .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |  1 +
+>  drivers/mmc/host/sdhci-iproc.c                     | 35 ++++++++++++++++++++--
+>  2 files changed, 34 insertions(+), 2 deletions(-)
 >
->MDINT pin is general interrupt. MDINT pin share the interrupt with
->FLF2 along with another 13 interrupts.
+> --
+> 2.5.0
 >
->> Device tree is used to describe the hardware. It should not really
->> describe software or configuration. But the borders are a bit
->> fluffly. Signal edge rates is near to hardware. This is a lot more
->> towards configuration. So i'm not sure a device tree property is the
->> correct way to describe this.
->> 
->> This is also a feature i know other PHYs support. The Marvell PHY has
->> a "Metro Ethernet" extension which allows it to report link failures
->> for 1000BASE-T in 10, 20 or 40ms, instead of the usual 750ms. So we
->> need a generic solution other PHYs can implement.
->> 
->> As with cable testing, i think it should be an ethtool option.
->
->I agree with you.
->I thought this is one time initialization either enable or disable.
->if customer need this feature, they can enable in DT.
->Do you want me to implement through IOCTL instead of Device tree?
->Do you have any other suggestions?
 
-As indicated in the other email about speed downshift, we may want to utilize ethtool's ability to modify tunable parameters (small integer, boolean, values) and extend it to cover features offered by PHYs in a way that an user can dynamically turn these features on or off.
+Thanks, applied for next!
 
-In fact, this looks a lot like netdev features (e.g: checksum offload), and there seems to be some commonality here between at least Marvell and Microsemi (for the faster link down reporting), so maybe we should start adding PHY features similar to netdev features?
-
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
