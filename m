@@ -1,82 +1,60 @@
 From: Alan Tull <atull@opensource.altera.com>
-Subject: [PATCH v20 00/10] Device Tree support for FPGA Programming
-Date: Mon, 17 Oct 2016 11:09:31 -0500
-Message-ID: <20161017160941.4205-1-atull@opensource.altera.com>
+Subject: [PATCH v20 03/10] add bindings document for altera freeze bridge
+Date: Mon, 17 Oct 2016 11:09:34 -0500
+Message-ID: <20161017160941.4205-4-atull@opensource.altera.com>
+References: <20161017160941.4205-1-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161017160941.4205-1-atull@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>
 Cc: Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Moritz Fischer <moritz.fischer@ettus.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jon Masters <jcm@redhat.com>, Michal Simek <michal.simek@xilinx.com>, Jonathan Corbet <corbet@lwn.net>, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, Matthew Gerlach <mgerlach@opensource.altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, Alan Tull <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset supports FPGA programming under the control
-of Device Tree overlays.
+Add bindings document for the Altera Freeze Bridge.  A Freeze
+Bridge is used to gate traffic to/from a region of a FPGA
+such that that region can be reprogrammed.  The Freeze Bridge
+exist in FPGA fabric that is not currently being reconfigured.
 
-Changes from v19:
- * One line fix in FPGA Freeze Bridge DT binding doc (s/_/-/).
- * Squashed patches that add FPGA image info struct so they
-   won't break bisect.
- * Minor changes as suggested for the SoCFPGA Arria10 support.
- * Added Rob's reviewed-by for the FPGA Regions binding doc.
- * Added Moritz' ack for the sysfs document patch.
-
-The following were acked so they are no longer in this patch set:
- * bindings for Altera SOCFPGA bridges
-   https://patchwork.kernel.org/patch/9226093/
- * bindings for Arria 10 FPGA Mgr
-   https://patchwork.kernel.org/patch/9226111/
- * "[PATCH v3] of/overlay: add of overlay notifications"
-   https://lkml.org/lkml/2016/4/19/704
-
-The patchset is dependent on:
- * Pantelis Antonious's dtc changes for dynamic device tree.
-    https://github.com/pantoniou/dtc.git
- * Pantelis' configfs interface patches and fixes
-    https://github.com/pantoniou/linux-beagle-track-mainline
-
-Alan
-
-Alan Tull (10):
-  fpga: add bindings document for fpga region
-  doc: fpga-mgr: add fpga image info to api
-  add bindings document for altera freeze bridge
-  add sysfs document for fpga bridge class
-  fpga-mgr: add fpga image information struct
-  fpga: add fpga bridge framework
-  fpga: fpga-region: device tree control for FPGA
-  ARM: socfpga: fpga bridge driver support
-  fpga: add altera freeze bridge support
-  fpga-manager: Add Socfpga Arria10 support
-
- Documentation/ABI/testing/sysfs-class-fpga-bridge  |  11 +
- .../bindings/fpga/altera-freeze-bridge.txt         |  23 +
- .../devicetree/bindings/fpga/fpga-region.txt       | 494 +++++++++++++++++
- Documentation/fpga/fpga-mgr.txt                    |  32 +-
- drivers/fpga/Kconfig                               |  36 ++
- drivers/fpga/Makefile                              |   9 +
- drivers/fpga/altera-fpga2sdram.c                   | 180 ++++++
- drivers/fpga/altera-freeze-bridge.c                | 273 ++++++++++
- drivers/fpga/altera-hps2fpga.c                     | 221 ++++++++
- drivers/fpga/fpga-bridge.c                         | 398 ++++++++++++++
- drivers/fpga/fpga-mgr.c                            |  17 +-
- drivers/fpga/fpga-region.c                         | 603 +++++++++++++++++++++
- drivers/fpga/socfpga-a10.c                         | 556 +++++++++++++++++++
- drivers/fpga/socfpga.c                             |   7 +-
- drivers/fpga/zynq-fpga.c                           |  10 +-
- include/linux/fpga/fpga-bridge.h                   |  60 ++
- include/linux/fpga/fpga-mgr.h                      |  25 +-
- 17 files changed, 2925 insertions(+), 30 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+Signed-off-by: Matthew Gerlach <mgerlach@opensource.altera.com>
+---
+v19: Added in v19 of patchset, uses fpga image info struct
+v20: fix one underscore to hyphen
+---
+ .../bindings/fpga/altera-freeze-bridge.txt         | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt
- create mode 100644 Documentation/devicetree/bindings/fpga/fpga-region.txt
- create mode 100644 drivers/fpga/altera-fpga2sdram.c
- create mode 100644 drivers/fpga/altera-freeze-bridge.c
- create mode 100644 drivers/fpga/altera-hps2fpga.c
- create mode 100644 drivers/fpga/fpga-bridge.c
- create mode 100644 drivers/fpga/fpga-region.c
- create mode 100644 drivers/fpga/socfpga-a10.c
- create mode 100644 include/linux/fpga/fpga-bridge.h
 
+diff --git a/Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt
+new file mode 100644
+index 0000000..f8e288c7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt
+@@ -0,0 +1,23 @@
++Altera Freeze Bridge Controller Driver
++
++The Altera Freeze Bridge Controller manages one or more freeze bridges.
++The controller can freeze/disable the bridges which prevents signal
++changes from passing through the bridge.  The controller can also
++unfreeze/enable the bridges which allows traffic to pass through the
++bridge normally.
++
++Required properties:
++- compatible		: Should contain "altr,freeze-bridge-controller"
++- regs			: base address and size for freeze bridge module
++
++Optional properties:
++- bridge-enable		: 0 if driver should disable bridge at startup
++			  1 if driver should enable bridge at startup
++			  Default is to leave bridge in current state.
++
++Example:
++	freeze-controller@100000450 {
++		compatible = "altr,freeze-bridge-controller";
++		regs = <0x1000 0x10>;
++		bridge-enable = <0>;
++	};
 -- 
 2.10.1
