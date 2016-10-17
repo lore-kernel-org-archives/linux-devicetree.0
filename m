@@ -1,83 +1,154 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [RFC 0/3] of: add common bindings to (de)activate IEEE 802.11 bands
-Date: Sun, 16 Oct 2016 23:20:38 +0200
-Message-ID: <CAFBinCDs-qC4KWy4ZiW5DNLfixCdYYc=x3FCScHA0jh590pz_A@mail.gmail.com>
-References: <20161002225059.16757-1-martin.blumenstingl@googlemail.com>
- <CAL_Jsq+cie=enhUYBF-OSrMdQ5S_048JF31ghEjtBNAmkGbB9Q@mail.gmail.com>
- <CAFBinCCDjZs6szRw0D1rwB89tUo+-RNFH2_g=K+Xj2iRJuUZDQ@mail.gmail.com>
- <23f49efe-ddef-ea16-00de-7477e4872d82@nbd.name> <CAL_JsqJfxEZCtdNi-wRgrtdmkPsGw0-ZMGhdbcoQ=seyij5LiQ@mail.gmail.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 0/8] power: add power sequence library
+Date: Mon, 17 Oct 2016 09:30:59 +0800
+Message-ID: <20161017013058.GA1301@b29397-desktop>
+References: <1476413995-20361-1-git-send-email-peter.chen@nxp.com>
+ <5097336.earU4jV2qd@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJfxEZCtdNi-wRgrtdmkPsGw0-ZMGhdbcoQ=seyij5LiQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5097336.earU4jV2qd-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 5, 2016 at 10:31 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Oct 5, 2016 at 1:36 PM, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org> wrote:
->> On 2016-10-05 20:25, Martin Blumenstingl wrote:
->>> On Mon, Oct 3, 2016 at 5:22 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>> On Sun, Oct 2, 2016 at 5:50 PM, Martin Blumenstingl
->>>> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
->>>>> There are at least two drivers (ath9k and mt76) out there, where
->>>>> devicetree authors need to override the enabled bands.
->>>>>
->>>>> For ath9k there is only one use-case: disabling a band which has been
->>>>> incorrectly enabled by the vendor in the EEPROM (enabling a band is not
->>>>> possible because the calibration data would be missing in the EEPROM).
->>>>> The mt76 driver (currently pending for review) however allows enabling
->>>>> and disabling the 2.4GHz and 5GHz band, see [0].
->>>>>
->>>>> Based on the discussion of (earlier versions of) my ath9k devicetree
->>>>> patch it was suggested [1] that we use enable- and disable- properties.
->>>>> The current patch implements:
->>>>> - bands can be enabled or disabled with the corresponding property
->>>>> - if both (disable and enable) properties are given and a driver asks
->>>>>   whether the band is enabled then the logic will return false (= not
->>>>>   enabled, preferring the disabled flag)
->>>>> - if both (disable and enable) properties are given and a driver asks
->>>>>   whether the band is disabled then the logic will return true (again,
->>>>>   preferring the disabled flag over the enabled flag)
->>>>>
->>>>> We can still change the logic to do what the mt76 driver does (I am
->>>>> fine with both solutions):
->>>>> - property not available: driver decides which bands to enable
->>>>> - property set to 0: disable the band
->>>>> - property set to 1: enable the band
->>>>
->>>> I prefer this way. Really, I'd prefer just a boolean disable property.
->>>> I'm not sure why you need the enable. We usually have these tri-state
->>>> properties when you want not present to mean use the bootloader or
->>>> default setting. Try to make not present the most common case.
->>> Felix: could you please give a few details why mt76 can not only
->>> disable but also enable a specific band?
->>> There is no specific comment in the sources [0] why this is needed.
->>> All other drivers that I am aware of (ath9k, rt2x00) only allow
->>> disabling a specific band, they never enable it (this has to be done
->>> explicitly by the EEPROM).
->> None of the devices use it at the moment, I probably added it when I
->> played with a device that had broken EEPROM data. I guess I decided to
->> do it this way because on many devices the band capability field simply
->> cannot be trusted.
->> I guess I would be okay with just having a disable property and adding
->> an enable property later only if we end up actually needing it.
->
-> If EEPROM is commonly wrong or missing, then seems like you want to
-> plan ahead and support both enable and disable.
-if we want to plan ahead we could use two properties "ieee80211-2ghz"
-and "ieee80211-5ghz", each of them allows the values: 0 = disabled, 1
-= enabled, absent = auto-detect (for example based on the card's
-EEPROM), any other value is invalid
+On Fri, Oct 14, 2016 at 02:09:31PM +0200, Rafael J. Wysocki wrote:
+> On Friday, October 14, 2016 10:59:47 AM Peter Chen wrote:
+> > Hi all,
+> > 
+> > This is a follow-up for my last power sequence framework patch set [1].
+> > According to Rob Herring and Ulf Hansson's comments[2]. The kinds of
+> > power sequence instances will be added at postcore_initcall, the match
+> > criteria is compatible string first, if the compatible string is not
+> > matched between dts and library, it will try to use generic power sequence.
+> > 	 
+> > The host driver just needs to call of_pwrseq_on/of_pwrseq_off
+> > if only one power sequence instance is needed, for more power sequences
+> > are used, using of_pwrseq_on_list/of_pwrseq_off_list instead (eg, USB hub driver).
+> > 
+> > In future, if there are special power sequence requirements, the special
+> > power sequence library can be created.
+> > 
+> > This patch set is tested on i.mx6 sabresx evk using a dts change, I use
+> > two hot-plug devices to simulate this use case, the related binding
+> > change is updated at patch [1/6], The udoo board changes were tested
+> > using my last power sequence patch set.[3]
+> > 
+> > Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
+> > need to power on itself before it can be found by ULPI bus.
+> > 
+> > [1] http://www.spinics.net/lists/linux-usb/msg142755.html
+> > [2] http://www.spinics.net/lists/linux-usb/msg143106.html
+> > [3] http://www.spinics.net/lists/linux-usb/msg142815.html
+> > 
+> > Changes for v8:
+> > - Allocate one extra pwrseq instance if pwrseq_get has succeed, it can avoid
+> >   preallocate instances problem which the number of instance is decided at
+> >   compile time, thanks for Heiko Stuebner's suggestion [Patch 2/8]
+> > - Delete pwrseq_compatible_sample.c which is the demo purpose to show compatible
+> >   match method. [Patch 2/8]
+> > - Add Maciej S. Szmigiero's tested-by. [Patch 7/8]
+> > 
+> > Changes for v7:
+> > - Create kinds of power sequence instance at postcore_initcall, and match
+> >   the instance with node using compatible string, the beneit of this is
+> >   the host driver doesn't need to consider which pwrseq instance needs
+> >   to be used, and pwrseq core will match it, however, it eats some memories
+> >   if less power sequence instances are used. [Patch 2/8]
+> > - Add pwrseq_compatible_sample.c to test match pwrseq using device_id. [Patch 2/8]
+> > - Fix the comments Vaibhav Hiremath adds for error path for clock and do not
+> >   use device_node for parameters at pwrseq_on. [Patch 2/8]
+> > - Simplify the caller to use power sequence, follows Alan's commnets [Patch 4/8]
+> > - Tested three pwrseq instances together using both specific compatible string and
+> >   generic libraries.
+> > 
+> > Changes for v6:
+> > - Add Matthias Kaehlcke's Reviewed-by and Tested-by. (patch [2/6])
+> > - Change chipidea core of_node assignment for coming user. (patch [5/6])
+> > - Applies Joshua Clayton's three dts changes for two boards,
+> >   the USB device's reg has only #address-cells, but without #size-cells.
+> > 
+> > Changes for v5:
+> > - Delete pwrseq_register/pwrseq_unregister, which is useless currently
+> > - Fix the linker error when the pwrseq user is compiled as module
+> > 
+> > Changes for v4:
+> > - Create the patch on next-20160722 
+> > - Fix the of_node is not NULL after chipidea driver is unbinded [Patch 5/6]
+> > - Using more friendly wait method for reset gpio [Patch 2/6]
+> > - Support multiple input clocks [Patch 2/6]
+> > - Add Rob Herring's ack for DT changes
+> > - Add Joshua Clayton's Tested-by
+> > 
+> > Changes for v3:
+> > - Delete "power-sequence" property at binding-doc, and change related code
+> >   at both library and user code.
+> > - Change binding-doc example node name with Rob's comments
+> > - of_get_named_gpio_flags only gets the gpio, but without setting gpio flags,
+> >   add additional code request gpio with proper gpio flags
+> > - Add Philipp Zabel's Ack and MAINTAINER's entry
+> > 
+> > Changes for v2:
+> > - Delete "pwrseq" prefix and clock-names for properties at dt binding
+> > - Should use structure not but its pointer for kzalloc
+> > - Since chipidea core has no of_node, let core's of_node equals glue
+> >   layer's at core's probe
+> > 
+> > Joshua Clayton (2):
+> >   ARM: dts: imx6qdl: Enable usb node children with <reg>
+> >   ARM: dts: imx6q-evi: Fix onboard hub reset line
+> > 
+> > Peter Chen (6):
+> >   binding-doc: power: pwrseq-generic: add binding doc for generic power
+> >     sequence library
+> >   power: add power sequence library
+> >   binding-doc: usb: usb-device: add optional properties for power
+> >     sequence
+> >   usb: core: add power sequence handling for USB devices
+> >   usb: chipidea: let chipidea core device of_node equal's glue layer
+> >     device of_node
+> >   ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB property
+> > 
+> >  .../bindings/power/pwrseq/pwrseq-generic.txt       |  48 ++++++
+> >  .../devicetree/bindings/usb/usb-device.txt         |  10 +-
+> >  MAINTAINERS                                        |   9 +
+> >  arch/arm/boot/dts/imx6q-evi.dts                    |  25 +--
+> >  arch/arm/boot/dts/imx6qdl-udoo.dtsi                |  26 ++-
+> >  arch/arm/boot/dts/imx6qdl.dtsi                     |   6 +
+> >  drivers/power/Kconfig                              |   1 +
+> >  drivers/power/Makefile                             |   1 +
+> >  drivers/power/pwrseq/Kconfig                       |  19 ++
+> >  drivers/power/pwrseq/Makefile                      |   2 +
+> >  drivers/power/pwrseq/core.c                        | 191 +++++++++++++++++++++
+> >  drivers/power/pwrseq/pwrseq_generic.c              | 183 ++++++++++++++++++++
+> >  drivers/usb/chipidea/core.c                        |  27 ++-
+> >  drivers/usb/core/hub.c                             |  41 ++++-
+> >  drivers/usb/core/hub.h                             |   1 +
+> >  include/linux/power/pwrseq.h                       |  72 ++++++++
+> >  16 files changed, 621 insertions(+), 41 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+> >  create mode 100644 drivers/power/pwrseq/Kconfig
+> >  create mode 100644 drivers/power/pwrseq/Makefile
+> >  create mode 100644 drivers/power/pwrseq/core.c
+> >  create mode 100644 drivers/power/pwrseq/pwrseq_generic.c
+> >  create mode 100644 include/linux/power/pwrseq.h
+> 
+> Meta question: Who's the maintainer you are targetting this at?
+> 
 
-How should our API look in this case?
-Would we still have bool ..._enabled() and bool ..._disabled() - what
-if the property is absent (would we add another boolean
-ieee80211_is_[2,5]ghz_configured(np) to handle that)?
-We could also introduce int ieee80211_get_[2,5]ghz_enabled(struct
-device_node *np, bool *enabled) and leave it up to the caller?
+Sebastian Reichel mentioned it is better through your tree.
+I could be the maintainer for it, and send "GIT PULL" for you
+through my git
+(https://git.kernel.org/cgit/linux/kernel/git/peter.chen/usb.git/)
+Is it ok for you?
 
+-- 
 
-Regards,
-Martin
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
