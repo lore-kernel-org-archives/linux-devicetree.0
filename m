@@ -1,35 +1,32 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 0/2] mmc: sdhci-iproc: Add byte register access support
-Date: Mon, 17 Oct 2016 15:49:29 +0200
-Message-ID: <CAPDyKFpsTNKCC3dTJUipRVhALh2=4YJ5k6Ofp9TUu0RjKO6FaA@mail.gmail.com>
-References: <1476297352-7812-1-git-send-email-scott.branden@broadcom.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm: hisi: add ARCH_MULTI_V5 support
+Date: Mon, 17 Oct 2016 15:48:49 +0200
+Message-ID: <5893354.6MrIxqzRoI@wuerfel>
+References: <20161017120705.3726-1-wenpan@hisilicon.com> <20161017120705.3726-2-wenpan@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1476297352-7812-1-git-send-email-scott.branden@broadcom.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Scott Branden <scott.branden@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Adrian Hunter <adrian.hunter@intel.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161017120705.3726-2-wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pan Wen <wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, jalen.hsu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lvkuanliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kevin.lixu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Marty Plummer <netz.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12 October 2016 at 20:35, Scott Branden <scott.branden@broadcom.com> wrote:
-> Add brcm,sdhci-iproc compat string and code for support of newer versions of
-> sdhci-iproc controller that allow byte-wise register accesses.
->
-> Scott Branden (2):
->   mmc: sdhci-iproc: Add brcm,sdhci-iproc compat string in bindings
->     document
->   mmc: sdhci-iproc: support standard byte register accesses
->
->  .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |  1 +
->  drivers/mmc/host/sdhci-iproc.c                     | 35 ++++++++++++++++++++--
->  2 files changed, 34 insertions(+), 2 deletions(-)
->
-> --
-> 2.5.0
->
+On Monday, October 17, 2016 8:07:03 PM CEST Pan Wen wrote:
+> Add support for some HiSilicon SoCs which depend on ARCH_MULTI_V5.
+> 
+> Signed-off-by: Pan Wen <wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> 
 
-Thanks, applied for next!
+Looks ok. I've added Marty Plummer to Cc, he was recently proposing
+patches for Hi3520, which I think is closely related to this one.
+Please try to work together so the patches don't conflict. It should
+be fairly straightforward since you are basically doing the same
+change here.
 
-Kind regards
-Uffe
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
