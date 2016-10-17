@@ -1,399 +1,168 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC PATCH 1/3] ARM: dts: Add support for OX820 and Pogoplug V3
-Date: Mon, 17 Oct 2016 14:39:59 +0200
-Message-ID: <20161017124001.23820-2-narmstrong@baylibre.com>
-References: <20161017124001.23820-1-narmstrong@baylibre.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2] devicetree/bindings: display: Add bindings for LVDS
+ panels
+Date: Mon, 17 Oct 2016 15:42:56 +0300
+Message-ID: <1488637.i0jADhlNmg@avalon>
+References: <1475598210-26857-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1645400.RKG9rcP36z@avalon>
+ <CAL_JsqKPWifCvwSxOa-m7WB-f13Y4n96Q895fDMx78YhBxWo_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161017124001.23820-1-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-oxnas@lists.tuxfamily.org, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqKPWifCvwSxOa-m7WB-f13Y4n96Q895fDMx78YhBxWo_g@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree for the Oxford Seminconductor OX820 SoC and the
-Cloud Engines PogoPlug v3 board.
-Add the SoC and board compatible strings to oxnas bindings.
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- Documentation/devicetree/bindings/arm/oxnas.txt    |   5 +
- arch/arm/boot/dts/Makefile                         |   3 +-
- .../boot/dts/cloudengines-pogoplug-series-3.dts    |  60 +++++
- arch/arm/boot/dts/ox820.dtsi                       | 259 +++++++++++++++++++++
- 4 files changed, 326 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts
- create mode 100644 arch/arm/boot/dts/ox820.dtsi
-
-diff --git a/Documentation/devicetree/bindings/arm/oxnas.txt b/Documentation/devicetree/bindings/arm/oxnas.txt
-index b9e4971..ac64e60 100644
---- a/Documentation/devicetree/bindings/arm/oxnas.txt
-+++ b/Documentation/devicetree/bindings/arm/oxnas.txt
-@@ -5,5 +5,10 @@ Boards with the OX810SE SoC shall have the following properties:
-   Required root node property:
-     compatible: "oxsemi,ox810se"
- 
-+Boards with the OX820 SoC shall have the following properties:
-+  Required root node property:
-+    compatible: "oxsemi,ox820"
-+
- Board compatible values:
-   - "wd,mbwe" (OX810SE)
-+  - "cloudengines,pogoplugv3" (OX820)
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index faacd52..5d9e8d5 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -588,7 +588,8 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
- dtb-$(CONFIG_ARCH_PRIMA2) += \
- 	prima2-evb.dtb
- dtb-$(CONFIG_ARCH_OXNAS) += \
--	wd-mbwe.dtb
-+	wd-mbwe.dtb \
-+	cloudengines-pogoplug-series-3.dtb
- dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-apq8060-dragonboard.dtb \
- 	qcom-apq8064-arrow-sd-600eval.dtb \
-diff --git a/arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts b/arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts
-new file mode 100644
-index 0000000..78d9149
---- /dev/null
-+++ b/arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts
-@@ -0,0 +1,60 @@
-+/*
-+ * cloudengines-pogoplug-series-3.dtsi - Device tree file for Cloud Engines PogoPlug Series 3
-+ *
-+ * Copyright (C) 2016 Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * Licensed under GPLv2 or later
-+ */
-+
-+/dts-v1/;
-+#include "ox820.dtsi"
-+
-+/ {
-+	model = "Cloud Engines PogoPlug Series 3";
-+
-+	compatible = "cloudengines,pogoplugv3", "oxsemi,ox820";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200n8 earlyprintk=serial";
-+	};
-+
-+	memory {
-+		/* 128Mbytes DDR */
-+		reg = <0x60000000 0x8000000>;
-+	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+		gpio0 = &gpio0;
-+		gpio1 = &gpio1;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		blue {
-+			label = "pogoplug:blue";
-+			gpios = <&gpio0 2 0>;
-+			default-state = "keep";
-+		};
-+
-+		orange {
-+			label = "pogoplug:orange";
-+			gpios = <&gpio1 16 1>;
-+			default-state = "keep";
-+		};
-+
-+		green {
-+			label = "pogoplug:green";
-+			gpios = <&gpio1 17 1>;
-+			default-state = "keep";
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart0>;
-+};
-diff --git a/arch/arm/boot/dts/ox820.dtsi b/arch/arm/boot/dts/ox820.dtsi
-new file mode 100644
-index 0000000..fe251f180
---- /dev/null
-+++ b/arch/arm/boot/dts/ox820.dtsi
-@@ -0,0 +1,259 @@
-+/*
-+ * ox820.dtsi - Device tree file for Oxford Semiconductor OX820 SoC
-+ *
-+ * Copyright (C) 2016 Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * Licensed under GPLv2 or later
-+ */
-+
-+/include/ "skeleton.dtsi"
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/oxsemi,ox820.h>
-+#include <dt-bindings/reset/oxsemi,ox820.h>
-+
-+/ {
-+	compatible = "oxsemi,ox820";
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		enable-method = "oxsemi,ox820-smp";
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,arm11mpcore";
-+			clocks = <&armclk>;
-+			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,arm11mpcore";
-+			clocks = <&armclk>;
-+			reg = <1>;
-+		};
-+	};
-+
-+	memory {
-+		/* Max 512MB @ 0x60000000 */
-+		reg = <0x60000000 0x20000000>;
-+	};
-+
-+	clocks {
-+		osc: oscillator {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <25000000>;
-+		};
-+
-+		gmacclk: gmacclk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <125000000>;
-+		};
-+
-+		sysclk: sysclk {
-+			compatible = "fixed-factor-clock";
-+			#clock-cells = <0>;
-+			clock-div = <4>;
-+			clock-mult = <1>;
-+			clocks = <&osc>;
-+		};
-+
-+		plla: plla {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <850000000>;
-+		};
-+
-+		armclk: armclk {
-+			compatible = "fixed-factor-clock";
-+			#clock-cells = <0>;
-+			clock-div = <2>;
-+			clock-mult = <1>;
-+			clocks = <&plla>;
-+		};
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges;
-+		interrupt-parent = <&gic>;
-+
-+		apb-bridge@44000000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "simple-bus";
-+			ranges = <0 0x44000000 0x1000000>;
-+
-+			pinctrl: pinctrl {
-+				compatible = "oxsemi,ox820-pinctrl";
-+
-+				/* Regmap for sys registers */
-+				oxsemi,sys-ctrl = <&sys>;
-+
-+				pinctrl_uart0: uart0 {
-+					uart0 {
-+						pins = "gpio30", "gpio31";
-+						function = "fct5";
-+					};
-+				};
-+
-+				pinctrl_uart0_modem: uart0_modem {
-+					uart0_modem_a {
-+						pins = "gpio24", "gpio24", "gpio26", "gpio27";
-+						function = "fct4";
-+					};
-+					uart0_modem_b {
-+						pins = "gpio28", "gpio29";
-+						function = "fct5";
-+					};
-+				};
-+
-+				pinctrl_uart1: uart1 {
-+					uart1 {
-+						pins = "gpio7", "gpio8";
-+						function = "fct4";
-+					};
-+				};
-+
-+				pinctrl_uart1_modem: uart1_modem {
-+					uart1_modem {
-+						pins = "gpio5", "gpio6", "gpio40", "gpio41", "gpio42", "gpio43";
-+						function = "fct4";
-+					};
-+				};
-+
-+				pinctrl_etha_mdio: etha_mdio {
-+					etha_mdio {
-+						pins = "gpio3", "gpio4";
-+						function = "fct1";
-+					};
-+				};
-+			};
-+
-+			gpio0: gpio@000000 {
-+				compatible = "oxsemi,ox820-gpio";
-+				reg = <0x000000 0x100000>;
-+				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				ngpios = <32>;
-+				oxsemi,gpio-bank = <0>;
-+				gpio-ranges = <&pinctrl 0 0 32>;
-+			};
-+
-+			gpio1: gpio@100000 {
-+				compatible = "oxsemi,ox820-gpio";
-+				reg = <0x100000 0x100000>;
-+				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				ngpios = <18>;
-+				oxsemi,gpio-bank = <1>;
-+				gpio-ranges = <&pinctrl 0 32 18>;
-+			};
-+
-+			uart0: serial@200000 {
-+			       compatible = "ns16550a";
-+			       reg = <0x200000 0x100000>;
-+			       interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       clocks = <&sysclk>;
-+			       resets = <&reset RESET_UART1>;
-+			};
-+
-+			uart1: serial@300000 {
-+			       compatible = "ns16550a";
-+			       reg = <0x200000 0x100000>;
-+			       interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       clocks = <&sysclk>;
-+			       resets = <&reset RESET_UART2>;
-+			};
-+
-+			rps@400000 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				compatible = "simple-bus";
-+				ranges = <0 0x400000 0x100000>;
-+
-+				intc: interrupt-controller@0 {
-+					compatible = "oxsemi,ox820-rps-irq", "oxsemi,ox810se-rps-irq";
-+					interrupt-controller;
-+					reg = <0 0x200>;
-+					interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+					#interrupt-cells = <1>;
-+					valid-mask = <0xFFFFFFFF>;
-+					clear-mask = <0>;
-+				};
-+
-+				timer0: timer@200 {
-+					compatible = "oxsemi,ox820-rps-timer";
-+					reg = <0x200 0x40>;
-+					clocks = <&sysclk>;
-+					interrupt-parent = <&intc>;
-+					interrupts = <4>;
-+				};
-+			};
-+
-+			sys: sys-ctrl@e00000 {
-+				compatible = "oxsemi,ox820-sys-ctrl", "syscon", "simple-mfd";
-+				reg = <0xe00000 0x200000>;
-+
-+				reset: reset-controller {
-+					compatible = "oxsemi,ox820-reset", "oxsemi,ox810se-reset";
-+					#reset-cells = <1>;
-+				};
-+
-+				stdclk: stdclk {
-+					compatible = "oxsemi,ox820-stdclk", "oxsemi,ox810se-stdclk";
-+					#clock-cells = <1>;
-+				};
-+			};
-+		};
-+
-+		apb-bridge@47000000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "simple-bus";
-+			ranges = <0 0x47000000 0x1000000>;
-+
-+			scu: scu@0 {
-+				compatible = "arm,arm11mp-scu";
-+				reg = <0x0 0x100>;
-+			};
-+
-+			local-timer@600 {
-+				compatible = "arm,arm11mp-twd-timer";
-+				reg = <0x600 0x20>;
-+				interrupts = <GIC_PPI 13 (GIC_CPU_MASK_RAW(3)|IRQ_TYPE_LEVEL_HIGH)>;
-+				clocks = <&armclk>;
-+			};
-+
-+			gic: gic@1000 {
-+				compatible = "arm,arm11mp-gic";
-+				interrupt-controller;
-+				#interrupt-cells = <3>;
-+				reg = <0x1000 0x1000>,
-+				      <0x100 0x500>;
-+			};
-+		};
-+	};
-+};
--- 
-2.7.0
+SGkgUm9iLAoKT24gRnJpZGF5IDE0IE9jdCAyMDE2IDA3OjQwOjE0IFJvYiBIZXJyaW5nIHdyb3Rl
+Ogo+IE9uIFN1biwgT2N0IDksIDIwMTYgYXQgMTE6MzMgQU0sIExhdXJlbnQgUGluY2hhcnQgd3Jv
+dGU6Cj4gPiBPbiBTYXR1cmRheSAwOCBPY3QgMjAxNiAyMDoyOTozOSBSb2IgSGVycmluZyB3cm90
+ZToKPiA+PiBPbiBUdWUsIE9jdCAwNCwgMjAxNiBhdCAwNzoyMzoyOVBNICswMzAwLCBMYXVyZW50
+IFBpbmNoYXJ0IHdyb3RlOgo+ID4+PiBMVkRTIGlzIGEgcGh5c2ljYWwgbGF5ZXIgc3BlY2lmaWNh
+dGlvbiBkZWZpbmVkIGluIEFOU0kvVElBL0VJQS02NDQtQS4KPiA+Pj4gTXVsdGlwbGUgaW5jb21w
+YXRpYmxlIGRhdGEgbGluayBsYXllcnMgaGF2ZSBiZWVuIHVzZWQgb3ZlciB0aW1lIHRvCj4gPj4+
+IHRyYW5zbWl0IGltYWdlIGRhdGEgdG8gTFZEUyBwYW5lbHMuIFRoaXMgYmluZGluZyBzdXBwb3J0
+cyBkaXNwbGF5Cj4gPj4+IHBhbmVscyBjb21wYXRpYmxlIHdpdGggdGhlIEpFSURBLTU5LTE5OTks
+IE9wZW4tTERJIGFuZCBWRVNBIFNXUEcKPiA+Pj4gc3BlY2lmaWNhdGlvbnMuCj4gPj4+IAo+ID4+
+PiBTaWduZWQtb2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0Cj4gPj4+IDxsYXVyZW50LnBpbmNoYXJ0
+K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiA+Pj4gLS0tCj4gPj4+IAo+ID4+PiAgLi4uL2Jp
+bmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtbHZkcy50eHQgICAgICAgICAgfCAxMTkgKysrKysr
+KysrKysrKysKPiA+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAxMTkgaW5zZXJ0aW9ucygrKQo+ID4+PiAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0Cj4gPj4+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9wYW5lbC9wYW5lbC1sdmRzLnR4dD4KPiA+Pj4gCj4gPj4+IGRpZmYgLS1naXQK
+PiA+Pj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9w
+YW5lbC1sdmRzLnR4dAo+ID4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL3BhbmVsLWx2ZHMudHh0Cj4gPj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4g
+Pj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uMjUwODYxZjI2NzNlCj4gPj4+IC0tLSAvZGV2L251bGwK
+PiA+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
+ZWwvcGFuZWwtbHZkcy50eHQKPiA+Pj4gQEAgLTAsMCArMSwxMTkgQEAKPiA+Pj4gK0dlbmVyaWMg
+TFZEUyBQYW5lbAo+ID4+PiArPT09PT09PT09PT09PT09PT09Cj4gPj4+ICsKPiA+Pj4gK0xWRFMg
+aXMgYSBwaHlzaWNhbCBsYXllciBzcGVjaWZpY2F0aW9uIGRlZmluZWQgaW4gQU5TSS9USUEvRUlB
+LTY0NC1BLgo+ID4+PiBNdWx0aXBsZQo+ID4+PiAraW5jb21wYXRpYmxlIGRhdGEgbGluayBsYXll
+cnMgaGF2ZSBiZWVuIHVzZWQgb3ZlciB0aW1lIHRvIHRyYW5zbWl0Cj4gPj4+IGltYWdlIGRhdGEK
+PiA+Pj4gK3RvIExWRFMgcGFuZWxzLiBUaGlzIGJpbmRpbmdzIHN1cHBvcnRzIGRpc3BsYXkgcGFu
+ZWxzIGNvbXBhdGlibGUgd2l0aAo+ID4+PiB0aGUKPiA+Pj4gK2ZvbGxvd2luZyBzcGVjaWZpY2F0
+aW9ucy4KPiA+Pj4gKwo+ID4+PiArW0pFSURBXSAiRGlnaXRhbCBJbnRlcmZhY2UgU3RhbmRhcmRz
+IGZvciBNb25pdG9yIiwgSkVJREEtNTktMTk5OSwKPiA+Pj4gRmVicnVhcnkKPiA+Pj4gKzE5OTkg
+KFZlcnNpb24gMS4wKSwgSmFwYW4gRWxlY3Ryb25pYyBJbmR1c3RyeSBEZXZlbG9wbWVudCBBc3Nv
+Y2lhdGlvbgo+ID4+PiAoSkVJREEpCj4gPj4+ICtbTERJXSAiT3BlbiBMVkRTIERpc3BsYXkgSW50
+ZXJmYWNlIiwgTWF5IDE5OTkgKFZlcnNpb24gMC45NSksIE5hdGlvbmFsCj4gPj4+ICtTZW1pY29u
+ZHVjdG9yCj4gPj4+ICtbVkVTQV0gIlZFU0EgTm90ZWJvb2sgUGFuZWwgU3RhbmRhcmQiLCBPY3Rv
+YmVyIDIwMDcgKFZlcnNpb24gMS4wKSwKPiA+Pj4gVmlkZW8KPiA+Pj4gK0VsZWN0cm9uaWNzIFN0
+YW5kYXJkcyBBc3NvY2lhdGlvbiAoVkVTQSkKPiA+Pj4gKwo+ID4+PiArRGV2aWNlIGNvbXBhdGli
+bGUgd2l0aCB0aG9zZSBzcGVjaWZpY2F0aW9ucyBoYXZlIGJlZW4gbWFya2V0ZWQgdW5kZXIKPiA+
+Pj4gdGhlCj4gPj4+ICtGUEQtTGluayBhbmQgRmxhdExpbmsgYnJhbmRzLgo+ID4+PiArCj4gPj4+
+ICsKPiA+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPj4+ICstIGNvbXBhdGlibGU6IHNoYWxs
+IGNvbnRhaW4gInBhbmVsLWx2ZHMiCj4gPj4gCj4gPj4gTWF5YmUgYXMgYSBmYWxsYmFjaywgYnV0
+IG9uIGl0cyBvd24sIG5vIHdheS4KPiA+IAo+ID4gV2hpY2ggYnJpbmdzIGFuIGludGVyZXN0aW5n
+IHF1ZXN0aW9uOiB3aGVuIGRlc2lnbmluZyBnZW5lcmljIERUIGJpbmRpbmdzLAo+ID4gd2hhdCdz
+IHRoZSBydWxlIHJlZ2FyZGluZwoKTG9va3MgbGlrZSBJIGZvcmdvdCBwYXJ0IG9mIHRoZSBxdWVz
+dGlvbi4gSSBtZWFudCB0byBhc2sgd2hhdCBpcyB0aGUgcnVsZSAKcmVnYXJkaW5nIHVzYWdlIG9m
+IG1vcmUgcHJlY2lzZSBjb21wYXRpYmxlIHN0cmluZ3MgPwoKRm9yIGluc3RhbmNlIChidXQgcGVy
+aGFwcyBub3QgdGhlIGJlc3QgZXhhbXBsZSksIHRoZSBpbnB1dC9yb3RhcnktZW5jb2Rlci50eHQg
+CmJpbmRpbmdzIGRlZmluZSBhICJyb3RhcnktZW5jb2RlciIgY29tcGF0aWJsZSBzdHJpbmcsIHdp
+dGggbm8gb3RoZXIgYmluZGluZ3MgCmRlZmluaW5nIG1vcmUgcHJlY2lzZSBjb21wYXRpYmxlIHN0
+cmluZ3MgZm9yIHRoZSBleGFjdCByb3RhcnkgZW5jb2RlciBtb2RlbC4gCldoZW4gaXQgY29tZXMg
+dG8gcGFuZWxzIEkgYmVsaWV2ZSBpdCBtYWtlcyBzZW5zZSB0byBkZWZpbmUgbW9kZWwtc3BlY2lm
+aWMgCmNvbXBhdGlibGUgc3RyaW5ncyBldmVuIGlmIHRoZXkncmUgdW51c2VkIGJ5IGRyaXZlcnMu
+IEknbSBob3dldmVyIHdvbmRlcmluZyAKd2hhdCB0aGUgcnVsZSBpcyB0aGVyZSwgYW5kIHdoZXJl
+IHRob3NlIGRldmljZS1zcGVjaWZpYyBjb21wYXRpYmxlIHN0cmluZ3MgCnNob3VsZCBiZSBkZWZp
+bmVkLiBJJ2QgbGlrZSB0byBhdm9pZCB1c2luZyBvbmUgZmlsZSBwZXIgcGFuZWwgbW9kZWwgYXMg
+ZG9uZSAKdG9kYXkgZm9yIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZ3MuCgo+IENhbGwgaXQgInNp
+bXBsZSIgc28gSSBjYW4gZWFzaWx5IE5BSyBpdC4gOikKPiAKPiBEZWZpbmUgYSBnZW5lcmljIHN0
+cnVjdHVyZSwgbm90IGEgc2luZ2xlIGJpbmRpbmcgdHJ5aW5nIHRvIHNlcnZlIGFsbC4KPiAKPiA+
+PiA+ICstIHdpZHRoLW1tOiBwYW5lbCBkaXNwbGF5IHdpZHRoIGluIG1pbGxpbWV0ZXJzCj4gPj4g
+PiArLSBoZWlnaHQtbW06IHBhbmVsIGRpc3BsYXkgaGVpZ2h0IGluIG1pbGxpbWV0ZXJzCj4gPj4g
+Cj4gPj4gVGhpcyBpcyBhbHJlYWR5IGRvY3VtZW50ZWQgZm9yIGFsbCBwYW5lbHMgSUlSQy4KPiA+
+IAo+ID4gTm90ZSB0aGF0IHRoaXMgRFQgYmluZGluZyBoYXMgbm90aGluZyB0byBkbyB3aXRoIHRo
+ZSBzaW1wbGUtcGFuZWwgYmluZGluZy4KPiA+IEl0IGlzIGluc3RlYWQgc2ltaWxhciB0byB0aGUg
+cGFuZWwtZHBpIGFuZCBwYW5lbC1kc2ktY20gYmluZGluZ3MgKHdoaWNoCj4gPiBjdXJyZW50bHkg
+ZG9uJ3QgYnV0IHNob3VsZCBzcGVjaWZ5IHRoZSBwYW5lbCBzaXplIGluIERUKS4gVGhlIExWRFMg
+cGFuZWwKPiA+IGRyaXZlciB3aWxsICpub3QqIGluY2x1ZGUgYW55IHBhbmVsLXNwZWNpZmljIGlu
+Zm9ybWF0aW9uIHN1Y2ggYXMgc2l6ZSBvcgo+ID4gdGltaW5ncywgdGhlc2UgYXJlIHNwZWNpZmll
+ZCBpbiBEVC4KPiAKPiBUaGUgcGFuZWwgYmluZGluZ3MgYXJlbid0IHJlYWxseSBkaWZmZXJlbnQu
+IFRoZSBiaWdnZXN0IGRpZmZlcmVuY2Ugd2FzCj4gbG9jYXRpb24gaW4gdGhlIHRyZWUsIGJ1dCB3
+ZSBub3cgZ2VuZXJhbGx5IGFsbG93IHBhbmVscyB0byBiZSBlaXRoZXIgYQo+IGNoaWxkIG9mIHRo
+ZSBMQ0QgY29udHJvbGxlciBvciBjb25uZWN0ZWQgd2l0aCBPRiBncmFwaC4gV2UgcHJvYmFibHkK
+PiBuZWVkIHRvIHdvcmsgb24gcmVzdHJ1Y3R1cmluZyB0aGUgcGFuZWwgYmluZGluZ3MgYSBiaXQu
+IFdlIHNob3VsZCBoYXZlCj4gYW4gaW5oZXJpdGFuY2Ugd2l0aCBhIGJhc2UgcGFuZWwgYmluZGlu
+ZyBvZiB0aGluZ3MgbGlrZSBzaXplLCBsYWJlbCwKPiBncmFwaCwgYmFja2xpZ2h0LCBldGMsIHRo
+ZW4gcGVyaGFwcyBhbiBpbnRlcmZhY2Ugc3BlY2lmaWMgYmluZGluZ3MgZm9yCj4gTFZEUywgRFNJ
+LCBhbmQgcGFyYWxsZWwsIHRoZW4gYSBwYW5lbCBzcGVjaWZpYyBiaW5kaW5nLiBXaXRoIHRoaXMg
+dGhlCj4gcGFuZWwgc3BlY2lmaWMgYmluZGluZyBpcyB0eXBpY2FsbHkganVzdCBhIGNvbXBhdGli
+bGUgc3RyaW5nIGFuZCB3aGljaAo+IGluaGVyaXRlZCBwcm9wZXJ0aWVzIGFwcGx5IHRvIGl0LgoK
+VGhhdCBzb3VuZHMgZ29vZCB0byBtZSwgYnV0IHdlIGhhdmUgbXVsdGlwbGUgbW9kZWxzIGZvciBw
+YW5lbCBiaW5kaW5ncy4KCkFzIHlvdSBtZW50aW9uZWQgcGFuZWxzIGNhbiBiZSByZWZlcmVuY2Vk
+IHRocm91Z2ggYW4gTENEIGNvbnRyb2xsZXIgbm9kZSAKcHJvcGVydHkgY29udGFpbmluZyBhIHBo
+YW5kbGUgdG8gdGhlIHBhbmVsIG5vZGUsIG9yIHRocm91Z2ggT0YgZ3JhcGguIFRoYXQncyBhIApz
+aXR1YXRpb24gd2UgaGF2ZSB0b2RheSwgYW5kIHdlIG5lZWQgdG8ga2VlcCBzdXBwb3J0aW5nIGJv
+dGggKGF0IGxlYXN0IGZvciAKZXhpc3RpbmcgcGFuZWxzLCBwZXJoYXBzIG5vdCBmb3IgdGhlIG5l
+dyBvbmVzKS4KCkFub3RoZXIgZGlmZmVyZW5jZSBpcyBob3cgdG8gZXhwcmVzcyBwYW5lbCBkYXRh
+IHN1Y2ggYXMgc2l6ZSBhbmQgdGltaW5ncy4gVGhlIApzaW1wbGUtcGFuZWwgRFQgYmluZGluZ3Mg
+ZG9uJ3QgY29udGFpbiBzdWNoIGRhdGEgYW5kIGV4cGVjdHMgdGhlIGRyaXZlcnMgdG8gCmNvbnRh
+aW4gYSB0YWJsZSBvZiBwYW5lbCBkYXRhIGZvciBhbGwgbW9kZWxzIHN1cHBvcnRlZCwgd2hpbGUg
+dGhlIERQSSwgRFNJIGFuZCAKbm93IHRoZSBwcm9wb3NlZCBMVkRTIHBhbmVsIGJpbmRpbmdzIGNv
+bnRhaW4gcHJvcGVydGllcyBmb3IgcGFuZWwgZGF0YS4KCkhvdyB3b3VsZCB5b3UgbGlrZSB0byBy
+ZWNvbmNpbGUgYWxsIHRoYXQgPwoKPiA+Pj4gKy0gZGF0YS1tYXBwaW5nOiB0aGUgY29sb3Igc2ln
+bmFscyBtYXBwaW5nIG9yZGVyLCAiamVpZGEtMTgiLAo+ID4+PiAiamVpZGEtMjQiCj4gPj4+ICsg
+IG9yICJ2ZXNhLTI0Igo+ID4+IAo+ID4+IE1heWJlIHRoaXMgc2hvdWxkIGJlIHBhcnQgb2YgdGhl
+IGNvbXBhdGlibGUuCj4gPiAKPiA+IEkndmUgdGhvdWdodCBhYm91dCBpdCwgYnV0IGdpdmVuIHRo
+YXQgc29tZSBwYW5lbHMgc3VwcG9ydCBzZWxlY3RpbmcKPiA+IGJldHdlZW4gbXVsdGlwbGUgbW9k
+ZXMgKHRocm91Z2ggYSBtb2RlIHBpbiB0aGF0IGlzIHVzdWFsbHkgaGFyZHdpcmVkKSwgSQo+ID4g
+YmVsaWV2ZSBhIHNlcGFyYXRlIERUIHByb3BlcnR5IG1ha2VzIHNlbnNlLgo+IAo+IE9rYXkuCj4g
+Cj4gPiBGdXJ0aGVybW9yZSwgTFZEUyBkYXRhIG9yZ2FuaXphdGlvbiBpcyBjb250cm9sbGVkIGJ5
+IHRoZSBjb21iaW5hdGlvbiBvZgo+ID4gYm90aCBkYXRhLW1hcHBpbmcgYW5kIGRhdGEtbWlycm9y
+LiBJdCBtYWtlcyBsaXR0bGUgc2Vuc2UgZnJvbSBteSBwb2ludCBvZgo+ID4gdmlldyB0byBoYW5k
+bGUgb25lIGFzIHBhcnQgb2YgdGhlIGNvbXBhdGlibGUgc3RyaW5nIGFuZCB0aGUgb3RoZXIgb25l
+IGFzCj4gPiBhIHNlcGFyYXRlIHByb3BlcnR5Lgo+ID4gCj4gPj4gPiArT3B0aW9uYWwgcHJvcGVy
+dGllczoKPiA+PiA+ICstIGxhYmVsOiBhIHN5bWJvbGljIG5hbWUgZm9yIHRoZSBwYW5lbAo+ID4+
+IAo+ID4+IENvdWxkIGJlIGZvciBhbnkgcGFuZWwgb3IgZGlzcGxheSBjb25uZWN0b3IuCj4gPiAK
+PiA+IFllcywgYnV0IEknbSBub3Qgc3VyZSB0byB1bmRlcnN0YW5kIGhvdyB0aGF0J3MgcmVsZXZh
+bnQgOi0pCj4gCj4gTWVhbmluZyBpdCBzaG91bGQgYmUgYSBjb21tb24gcHJvcGVydHkuCgpTdXJl
+LiBTbyB5b3UgZXhwZWN0IG1lIHRvIHJlb3JnYW5pemUgYWxsIHRoZSBwYW5lbHMgYW5kIGNvbm5l
+Y3RvcnMgRFQgYmluZGluZ3MgCmluIG9yZGVyIHRvIGdldCB0aGlzIG9uZSBtZXJnZWQgPyA6LSkK
+Cj4gPj4+ICstIGF2ZGQtc3VwcGx5OiByZWZlcmVuY2UgdG8gdGhlIHJlZ3VsYXRvciB0aGF0IHBv
+d2VycyB0aGUgcGFuZWwKPiA+Pj4gYW5hbG9nIHN1cHBseQo+ID4+PiArLSBkdmRkLXN1cHBseTog
+cmVmZXJlbmNlIHRvIHRoZSByZWd1bGF0b3IgdGhhdCBwb3dlcnMgdGhlIHBhbmVsCj4gPj4+IGRp
+Z2l0YWwgc3VwcGx5Cj4gPj4gCj4gPj4gV2hpY2ggb25lIGhhcyB0byBiZSBwb3dlcmVkIG9uIGZp
+cnN0LCB3aGF0IHZvbHRhZ2UsIGFuZCB3aXRoIHdoYXQgdGltZQo+ID4+IGluIGJldHdlZW4/IFRo
+aXMgaXMgd2h5ICJnZW5lcmljIiBvciAic2ltcGxlIiBiaW5kaW5ncyBkb24ndCB3b3JrLgo+ID4g
+Cj4gPiBUaGUgYWJvdmUtbWVudGlvbmVkIHNwZWNpZmljYXRpb25zIGFsc28gZGVmaW5lIGNvbm5l
+Y3RvcnMsIHBpbm91dHMgYW5kCj4gPiBwb3dlciBzdXBwbGllcywgYnV0IG1hbnkgTFZEUyBwYW5l
+bHMgY29tcGF0aWJsZSB3aXRoIHRoZSBMVkRTIHBoeXNpY2FsCj4gPiBhbmQgZGF0YSBsYXllcnMg
+dXNlIGEgZGlmZmVyZW50IGNvbm5lY3RvciB3aXRoIHNtYWxsIGRpZmZlcmVuY2VzIGluIHBvd2Vy
+Cj4gPiBzdXBwbGllcy4KPiA+IAo+ID4gSSBiZWxpZXZlIHRoZSB2b2x0YWdlIGlzIGlycmVsZXZh
+bnQgaGVyZSwgaXQgZG9lc24ndCBuZWVkIHRvIGJlIGNvbnRyb2xsZWQKPiA+IGJ5IHRoZSBvcGVy
+YXRpbmcgc3lzdGVtLiBQb3dlciBzdXBwbGllcyBvcmRlciBhbmQgdGltaW5nIGlzIHJlbGV2YW50
+LAo+ID4gSSdsbCBpbnZlc3RpZ2F0ZSB0aGUgbGV2ZWwgb2YgZGlmZmVyZW5jZXMgYmV0d2VlbiBw
+YW5lbHMuIEknbSBhbHNvIGZpbmUKPiA+IHdpdGggZHJvcHBpbmcgdGhvc2UgcHJvcGVydGllcyBm
+b3Igbm93Lgo+IAo+IFdoZXRoZXIgeW91IGhhdmUgY29udHJvbCBvZiB0aGUgc3VwcGxpZXMgaXMg
+ZGVwZW5kZW50IG9uIHRoZSBib2FyZC4KPiBEcm9wcGluZyB0aGVtIGlzIGp1c3QgcHV0cyB1cyBp
+biB0aGUgc2ltcGxlIGJpbmRpbmcgdHJhcC4gVGhlIHNpbXBsZQo+IGJpbmRpbmdzIHN0YXJ0IG91
+dCB0aGF0IHdheSBhbmQgdGhlbiBwZW9wbGUga2VlcCBhZGRpbmcgdG8gdGhlbS4KCkRhbW4sIHlv
+dSBjYW4ndCBiZSBmb29sZWQgZWFzaWx5IDstKQoKT24gYSBtb3JlIHNlcmlvdXMgbm90ZSwgSSdk
+IGxpa2UgdG8gZGVzaWduIHRoZSBiaW5kaW5ncyBpbiBhIHdheSB0aGF0IHdvdWxkbid0IApyZXF1
+aXJlIGFkZGluZyBkZXZpY2Utc3BlY2lmaWMgY29kZSBpbiB0aGUgZHJpdmVyIGZvciBlYWNoIHBh
+bmVsIG1vZGVsLCBnaXZlbiAKdGhhdCBpbiBtb3N0IGNhc2VzIHBvd2VyIHN1cHBseSBoYW5kbGlu
+ZyB3aWxsIGJlIGdlbmVyaWMuIFdoYXQncyB5b3VyIG9waW5pb24gCmFib3V0IGEgZ2VuZXJpYyBw
+b3dlciBzdXBwbHkgbW9kZWwgdGhhdCB3b3VsZCBiZSB1c2VkIGluIHRoZSBkZWZhdWx0IGNhc2Us
+IAp3aXRoIHRoZSBvcHRpb24gdG8gb3ZlcnJpZGUgaXQgd2l0aCBkZXZpY2Utc3BlY2lmaWMgY29k
+ZSB3aGVuIG5lZWRlZCA/Cgo+ID4+PiArLSBkYXRhLW1pcnJvcjogaWYgc2V0LCByZXZlcnNlIHRo
+ZSBiaXQgb3JkZXIgb24gYWxsIGRhdGEgbGFuZXMgKDYgdG8gMAo+ID4+PiBpbnN0ZWFkCj4gPj4+
+ICsgIG9mIDAgdG8gNikKPiAKPiBPbiB0aGlzIG9uZSwgbWFrZSB0aGUgbmFtZSBkZXNjcmliZSB0
+aGUgb3JkZXIuICJtaXJyb3IiIHJlcXVpcmVzIHRoYXQKPiBJIGtub3cgd2hhdCBpcyBub3JtYWwg
+b3JkZXJpbmcuIFBlcmhhcHMgImRhdGEtbXNiLWZpcnN0Ii4KClNvdW5kcyBnb29kIHRvIG1lLCBJ
+J2xsIHVzZSB0aGF0LgoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
