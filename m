@@ -1,96 +1,167 @@
-From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH v20 06/10] fpga: add fpga bridge framework
-Date: Mon, 17 Oct 2016 15:25:15 -0500
-Message-ID: <alpine.DEB.2.02.1610171513080.8724@linuxheads99>
-References: <20161017160941.4205-1-atull@opensource.altera.com> <20161017160941.4205-7-atull@opensource.altera.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V2] usb: xhci: add support for performing fake doorbell
+Date: Mon, 17 Oct 2016 22:30:36 +0200
+Message-ID: <20161017203036.23399-1-zajec5@gmail.com>
+References: <20161001215817.25384-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161017160941.4205-7-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+In-Reply-To: <20161001215817.25384-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Cyril Chemparathy <cyril.chemparathy-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Matthew Gerlach <mgerlach-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Oct 2016, Alan Tull wrote:
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-> +/**
-> + * of_fpga_bridge_get - get an exclusive reference to a fpga bridge
-> + *
-> + * @np: node pointer of a FPGA bridge
-> + * @info: fpga image specific information
-> + *
-> + * Return fpga_bridge struct if successful.
-> + * Return -EBUSY if someone already has a reference to the bridge.
-> + * Return -ENODEV if @np is not a FPGA Bridge.
-> + */
-> +struct fpga_bridge *of_fpga_bridge_get(struct device_node *np,
-> +				       struct fpga_image_info *info)
-> +
-> +{
-> +	struct device *dev;
-> +	struct fpga_bridge *bridge;
-> +	int ret = -ENODEV;
-> +
-> +	of_node_get(np);
+Broadcom's Northstar XHCI controllers seem to need a special start
+procedure to work correctly. There isn't any official documentation of
+this, the problem is that controller doesn't detect any connected
+devices with default setup. Moreover connecting USB device to controller
+that doesn't run properly can cause SoC's watchdog issues.
 
-I thought I had fixed this.  This of_node_get is unmatched,
-never called in fpga_bridge_put.  And it's not necessary
-since class_find_device will do kobject_get on the child
-device anyway.  So I should remove this of_node_get
-and the of_node_put below.
+A workaround that was successfully tested on multiple devices is to
+perform a fake doorbell. This patch adds code for doing this and enables
+it on BCM4708 family.
 
-> +
-> +	dev = class_find_device(fpga_bridge_class, NULL, np,
-> +				fpga_bridge_of_node_match);
-> +	if (!dev)
-> +		goto err_dev;
-> +
-> +	bridge = to_fpga_bridge(dev);
-> +	if (!bridge)
-> +		goto err_dev;
-> +
-> +	bridge->info = info;
-> +
-> +	if (!mutex_trylock(&bridge->mutex)) {
-> +		ret = -EBUSY;
-> +		goto err_dev;
-> +	}
-> +
-> +	if (!try_module_get(dev->parent->driver->owner))
-> +		goto err_ll_mod;
-> +
-> +	dev_dbg(&bridge->dev, "get\n");
-> +
-> +	return bridge;
-> +
-> +err_ll_mod:
-> +	mutex_unlock(&bridge->mutex);
-> +err_dev:
-> +	put_device(dev);
-> +	of_node_put(np);
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+V2: Enable quirk for brcm,bcm4708 machines instead of adding separated binding
+    for it. Thanks Rob for your comment on this.
+---
+ drivers/usb/host/xhci-plat.c |  6 +++++
+ drivers/usb/host/xhci.c      | 63 +++++++++++++++++++++++++++++++++++++++++---
+ drivers/usb/host/xhci.h      |  1 +
+ 3 files changed, 67 insertions(+), 3 deletions(-)
 
-Remove of_node_put.
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index ed56bf9..b01a3be 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -56,12 +56,18 @@ static int xhci_priv_init_quirk(struct usb_hcd *hcd)
+ 
+ static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
+ {
++	struct platform_device	*pdev = to_platform_device(dev);
++	struct device_node	*node = pdev->dev.of_node;
++
+ 	/*
+ 	 * As of now platform drivers don't provide MSI support so we ensure
+ 	 * here that the generic code does not try to make a pci_dev from our
+ 	 * dev struct in order to setup MSI
+ 	 */
+ 	xhci->quirks |= XHCI_PLAT;
++
++	if (node && of_machine_is_compatible("brcm,bcm4708"))
++		xhci->quirks |= XHCI_FAKE_DOORBELL;
+ }
+ 
+ /* called during probe() after chip reset completes */
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 1a4ca02..c77035e9b 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -153,6 +153,49 @@ static int xhci_start(struct xhci_hcd *xhci)
+ 	return ret;
+ }
+ 
++/**
++ * xhci_fake_doorbell - Perform a fake doorbell on a specified slot
++ *
++ * Some controllers require a fake doorbell to start correctly. Without that
++ * they simply don't detect any devices.
++ */
++static int xhci_fake_doorbell(struct xhci_hcd *xhci, int slot_id)
++{
++	u32 temp;
++
++	/* Alloc a virt device for that slot */
++	if (!xhci_alloc_virt_device(xhci, slot_id, NULL, GFP_NOIO)) {
++		xhci_warn(xhci, "Could not allocate xHCI USB device data structures\n");
++		return -ENOMEM;
++	}
++
++	/* Ring fake doorbell for slot_id ep 0 */
++	xhci_ring_ep_doorbell(xhci, slot_id, 0, 0);
++	usleep_range(1000, 1500);
++
++	/* Read the status to check if HSE is set or not */
++	temp = readl(&xhci->op_regs->status);
++
++	/* Clear HSE if set */
++	if (temp & STS_FATAL) {
++		xhci_dbg(xhci, "HSE problem detected, status: 0x%08x\n", temp);
++		temp &= ~0x1fff;
++		temp |= STS_FATAL;
++		writel(temp, &xhci->op_regs->status);
++		usleep_range(1000, 1500);
++		readl(&xhci->op_regs->status);
++	}
++
++	/* Free virt device */
++	xhci_free_virt_device(xhci, slot_id);
++
++	/* We're done if controller is already running */
++	if (readl(&xhci->op_regs->command) & CMD_RUN)
++		return 0;
++
++	return xhci_start(xhci);
++}
++
+ /*
+  * Reset a halted HC.
+  *
+@@ -565,10 +608,20 @@ int xhci_init(struct usb_hcd *hcd)
+ 
+ static int xhci_run_finished(struct xhci_hcd *xhci)
+ {
+-	if (xhci_start(xhci)) {
+-		xhci_halt(xhci);
+-		return -ENODEV;
++	int err;
++
++	err = xhci_start(xhci);
++	if (err) {
++		err = -ENODEV;
++		goto err_halt;
++	}
++
++	if (xhci->quirks & XHCI_FAKE_DOORBELL) {
++		err = xhci_fake_doorbell(xhci, 1);
++		if (err)
++			goto err_halt;
+ 	}
++
+ 	xhci->shared_hcd->state = HC_STATE_RUNNING;
+ 	xhci->cmd_ring_state = CMD_RING_STATE_RUNNING;
+ 
+@@ -578,6 +631,10 @@ static int xhci_run_finished(struct xhci_hcd *xhci)
+ 	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
+ 			"Finished xhci_run for USB3 roothub");
+ 	return 0;
++
++err_halt:
++	xhci_halt(xhci);
++	return err;
+ }
+ 
+ /*
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index b2c1dc5..52d7498 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1653,6 +1653,7 @@ struct xhci_hcd {
+ #define XHCI_MTK_HOST		(1 << 21)
+ #define XHCI_SSIC_PORT_UNUSED	(1 << 22)
+ #define XHCI_NO_64BIT_SUPPORT	(1 << 23)
++#define XHCI_FAKE_DOORBELL	(1 << 24)
+ 	unsigned int		num_active_eps;
+ 	unsigned int		limit_active_eps;
+ 	/* There are two roothubs to keep track of bus suspend info for */
+-- 
+2.9.3
 
-> +	return ERR_PTR(ret);
-> +}
-> +EXPORT_SYMBOL_GPL(of_fpga_bridge_get);
-> +
-> +/**
-> + * fpga_bridge_put - release a reference to a bridge
-> + *
-> + * @bridge: FPGA bridge
-> + */
-> +void fpga_bridge_put(struct fpga_bridge *bridge)
-> +{
-> +	dev_dbg(&bridge->dev, "put\n");
-> +
-> +	bridge->info = NULL;
-> +	module_put(bridge->dev.parent->driver->owner);
-> +	mutex_unlock(&bridge->mutex);
-> +	put_device(&bridge->dev);
-> +}
-> +EXPORT_SYMBOL_GPL(fpga_bridge_put);
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
