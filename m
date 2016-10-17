@@ -1,74 +1,49 @@
-From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Subject: [PATCH v4 5/8] DT:omap3+tsc2007: use new common touchscreen bindings
-Date: Mon, 17 Oct 2016 15:57:53 +0200
-Message-ID: <298d5a221eb4e1e9d5579a83e2ba78f58fd190eb.1476712675.git.hns@goldelico.com>
-References: <cover.1476712675.git.hns@goldelico.com>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 00/13] Revamp Semtech SX150x driver
+Date: Mon, 17 Oct 2016 07:26:55 -0700
+Message-ID: <1476714428-11264-1-git-send-email-andrew.smirnov@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1476712675.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-In-Reply-To: <cover.1476712675.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-References: <cover.1476712675.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, =?UTF-8?q?Mika=20Penttil=C3=A4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org
+To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-While we fix the GTA04 we add proper pinmux for the
-penirq gpio.
+Hello,
 
-Tested on: GTA04A4 and Pyra-Handheld
+I am working with a hardware design utilizing SX1506 GPIO expander
+(actually it uses 1503, but they seem to be the same from SW's point
+of view) and following are the pathches I had to make in order to be
+able to succesfully use part's driver from upstream kernel.
 
-Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
----
- arch/arm/boot/dts/omap3-gta04.dtsi | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+I am pretty certain I did not do any of the DT bindings in a proper
+way, so I am more than happy to change all of that, or, due to the
+fact I don't use any of those bindings in my usecase, drop them
+alltogether.
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index b3a8b1f..64d6ee3 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -273,6 +273,13 @@
- 			OMAP3_CORE1_IOPAD(0x2134, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio112 */
- 		>;
- 	};
-+
-+	penirq_pins: pinmux_penirq_pins {
-+		pinctrl-single,pins = <
-+			/* here we could enable to wakeup the cpu from suspend by a pen touch */
-+			OMAP3_CORE1_IOPAD(0x2194, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio160 */
-+		>;
-+	};
- };
- 
- &omap3_pmx_core2 {
-@@ -410,10 +417,24 @@
- 	tsc2007@48 {
- 		compatible = "ti,tsc2007";
- 		reg = <0x48>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&penirq_pins>;
- 		interrupt-parent = <&gpio6>;
- 		interrupts = <0 IRQ_TYPE_EDGE_FALLING>; /* GPIO_160 */
--		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;
--		ti,x-plate-ohms = <600>;
-+		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;	/* GPIO_160 */
-+		touchscreen-size-x = <480>;
-+		touchscreen-size-y = <640>;
-+		touchscreen-max-pressure = <1000>;
-+		touchscreen-fuzz-x = <3>;
-+		touchscreen-fuzz-y = <8>;
-+		touchscreen-fuzz-pressure = <10>;
-+		touchscreen-inverted-y;
-+		ti,min-x = <0x100>;
-+		ti,max-x = <0xf00>;
-+		ti,min-y = <0x100>;
-+		ti,max-y = <0xf00>;
-+		ti,max-rt = <4096>;
-+		ti,x-plate-ohms = <550>;
- 	};
- 
- 	/* RFID EEPROM */
+Thank you,
+Andrey Smirnov
+
+Andrey Smirnov (13):
+  gpio-sx150x: Remove 'gpio_base' from pdata
+  gpio-sx150x: Remove 'irq_summary' parameter
+  gpio-sx150x: Remove 'irq_base' parameter
+  gpio-sx150x: Replace 'io_polarity' with DT binding
+  bindings: gpio-sx150x: Document "semtech,io-polarity" binding
+  gpio-sx150x: Replace "io_pull*_ena" with DT bindings
+  bindings: gpio-sx150x: Document "semtech,io-pull*" bindings
+  gpio-sx150x: Replace 'reset_during_probe" with DT binding
+  bindings: gpio-sx150x: Document "semtech,reset-during-probe" bindings
+  gpio-sx150x: Replace 'oscio_is_gpio' with DT binding
+  bindings: gpio-sx150x: Document "semtech,oscio-is-gpo" binding
+  gpio-sx150x: Remove struct sx150x_platform_data
+  gpio-sx150x: Pass device type in DT match table
+
+ .../devicetree/bindings/gpio/gpio-sx150x.txt       |  29 ++++
+ drivers/gpio/gpio-sx150x.c                         | 184 +++++++++------------
+ 2 files changed, 105 insertions(+), 108 deletions(-)
+
 -- 
-2.7.3
+2.5.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
