@@ -1,55 +1,54 @@
-From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH] make of_device_make_bus_id() static
-Date: Mon, 17 Oct 2016 08:50:26 -0700
-Message-ID: <1476719426-12549-1-git-send-email-frowand.list@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v4 7/8] drivers:input:ads7846(+tsc2046): fix spi module
+ table
+Date: Mon, 17 Oct 2016 10:54:03 -0500
+Message-ID: <acdf452f-01f2-27df-11c5-bb8db002394a@ti.com>
+References: <cover.1476712675.git.hns@goldelico.com>
+ <70cc986f3cf98dd89f0460b5042083aad58a7366.1476712675.git.hns@goldelico.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <70cc986f3cf98dd89f0460b5042083aad58a7366.1476712675.git.hns@goldelico.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?UTF-8?Q?Mika_Penttil=c3=a4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, Sebastian Reichel <sre@kernel.org>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, linux-iio@vger.kernel.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+On 10/17/2016 08:57 AM, H. Nikolaus Schaller wrote:
+> Fix module table so that the driver is loaded if compiled
+> as module and requested by DT.
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  drivers/input/touchscreen/ads7846.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
+> index 400e421..9a5d84d 100644
+> --- a/drivers/input/touchscreen/ads7846.c
+> +++ b/drivers/input/touchscreen/ads7846.c
+> @@ -1532,6 +1532,17 @@ static int ads7846_remove(struct spi_device *spi)
+>  	return 0;
+>  }
+>  
+> +static const struct spi_device_id ads7846_idtable[] = {
+> +	{ "tsc2046", 0 },
+> +	{ "ads7843", 0 },
+> +	{ "ads7845", 0 },
+> +	{ "ads7846", 0 },
+> +	{ "ads7873", 0 },
+> +	{ }
+> +};
+> +
 
-of_device_make_bus_id() was changed to non-static by commit c66012253800
-("of/device: Make of_device_make_bus_id() usable by other code") more than
-6 years ago, but there are no users of it outside of platform.c.  Make the
-function static again.
+no space needed
 
-Signed-off-by: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
----
- drivers/of/platform.c     | 2 +-
- include/linux/of_device.h | 1 -
- 2 files changed, 1 insertion(+), 2 deletions(-)
+> +MODULE_DEVICE_TABLE(spi, ads7846_idtable);
+> +
+>  static struct spi_driver ads7846_driver = {
+>  	.driver = {
+>  		.name	= "ads7846",
+> 
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index e4bf07d20f9b..b232063174cc 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -73,7 +73,7 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
-  * derive a unique name. If it cannot, then it will prepend names from
-  * parent nodes until a unique name can be derived.
-  */
--void of_device_make_bus_id(struct device *dev)
-+static void of_device_make_bus_id(struct device *dev)
- {
- 	struct device_node *node = dev->of_node;
- 	const __be32 *reg;
-diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-index cc7dd687a89d..5c2aeed17dd4 100644
---- a/include/linux/of_device.h
-+++ b/include/linux/of_device.h
-@@ -13,7 +13,6 @@
- #ifdef CONFIG_OF
- extern const struct of_device_id *of_match_device(
- 	const struct of_device_id *matches, const struct device *dev);
--extern void of_device_make_bus_id(struct device *dev);
- 
- /**
-  * of_driver_match_device - Tell if a driver's of_match_table matches a device.
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+the MODULE_ALIAS below can now also be removed with this patch.
