@@ -1,516 +1,574 @@
 From: Alan Tull <atull@opensource.altera.com>
-Subject: [PATCH v20 08/10] ARM: socfpga: fpga bridge driver support
-Date: Mon, 17 Oct 2016 11:09:39 -0500
-Message-ID: <20161017160941.4205-9-atull@opensource.altera.com>
+Subject: [PATCH v20 01/10] fpga: add bindings document for fpga region
+Date: Mon, 17 Oct 2016 11:09:32 -0500
+Message-ID: <20161017160941.4205-2-atull@opensource.altera.com>
 References: <20161017160941.4205-1-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20161017160941.4205-1-atull@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Moritz Fischer <moritz.fischer@ettus.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jon Masters <jcm@redhat.com>, Michal Simek <michal.simek@xilinx.com>, Jonathan Corbet <corbet@lwn.net>, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, Matthew Gerlach <mgerlach@opensource.altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, Alan Tull <atull@opensource.altera.com>, Matthew Gerlach <mgerlach@altera.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, delicious.quinoa@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alan Tull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, devicetree@vger.kernel.org, Jon Masters <jcm@redhat.com>, Matthew Gerlach <mgerlach@opensource.altera.com>, Frank Rowand <frowand.list@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Supports Altera SOCFPGA bridges:
- * fpga2sdram
- * fpga2hps
- * hps2fpga
- * lwhps2fpga
-
-Allows enabling/disabling the bridges through the FPGA
-Bridge Framework API functions.
-
-The fpga2sdram driver only supports enabling and disabling
-of the ports that been configured early on.  This is due to
-a hardware limitation where the read, write, and command
-ports on the fpga2sdram bridge can only be reconfigured
-while there are no transactions to the sdram, i.e. when
-running out of OCRAM before the kernel boots.
-
-Device tree property 'init-val' configures the driver to
-enable or disable the bridge during probe.  If the property
-does not exist, the driver will leave the bridge in its
-current state.
+New bindings document for FPGA Region to support programming
+FPGA's under Device Tree control
 
 Signed-off-by: Alan Tull <atull@opensource.altera.com>
-Signed-off-by: Matthew Gerlach <mgerlach@altera.com>
-Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-v2:  Use resets instead of directly writing reset registers
-v12: Bump version to align with simple-fpga-bus version
-     Get rid of the sysfs interface
-     fpga2sdram: get configuration stored in handoff register
-v13: Remove unneeded WARN_ON
-     Change property from init-val to bridge-enable
-     Checkpatch cleanup
-     Fix email address
-v14: use module_platform_driver
-     remove unused struct field and some #defines
-     don't really need exclamation points on error msgs
-     *const* struct fpga_bridge_ops
-v15: No change in this patch for v15 of this patch set
-v16: No change in this patch for v16 of this patch set
-v17: No change to this patch for v17 of this patch set
-v18: Eliminate need to specify reset names since only one reset
-v19: Set bridge state before registering driver with framework
-     Include fix for drivers sharing the l3_remap_value reg
-     use devm_clk_get
-     make tristate in Kconfig
-     documentation of handoff registers
-v20: No change for this patch in v20 of patchset
+v9:  initial version added to this patchset
+v10: s/fpga/FPGA/g
+     replace DT overlay example with slightly more complicated example
+     move to staging/simple-fpga-bus
+v11: No change in this patch for v11 of the patch set
+v12: Moved out of staging.
+     Changed to use FPGA bridges framework instead of resets
+     for bridges.
+v13: bridge@0xff20000 -> bridge@ff200000, etc
+     Leave out directly talking about overlays
+     Remove regs and clocks directly under simple-fpga-bus in example
+     Use common "firmware-name" binding instead of "fpga-firmware"
+v14: Use firmware-name in bindings description
+     Call it FPGA Area
+     Remove bindings that specify FPGA Manager and FPGA Bridges
+v15: Cleanup as per Rob's comments
+     Combine usage doc with bindings document
+     Document as being Altera specific
+     Additions and changes to add FPGA Bus
+v16: Reworked to document FPGA Regions
+     rename altera-fpga-bus-fpga-area.txt -> fpga-region.txt
+     Remove references that made it sound exclusive to Altera
+     Remove altr, prefix from fpga-bus and fpga-area compatible strings
+     Added Moritz' usage example with Xilinx
+     Cleaned up unit addresses
+v17: Lots of rewrites to try to make things clearer
+     Clarify that overlay can be rejected if FPGA isn't programmed
+     Add external-fpga-config binding already used in u-boot
+     Change partial-reconfig binding to partial-fpga-config to align
+       with existing u-boot binding format *-fpga-config
+     Add a document from Xilinx' website
+v18: Fix node names underscores to be hyphens
+     Fix copy/pasted duplicate nodes in diagram
+v19: Fix more underscores
+     Make FPGA regions to be children of bridges
+     General cleanup and clarification
+v20: Add Rob's reviewed-by
 ---
- drivers/fpga/Kconfig             |   7 ++
- drivers/fpga/Makefile            |   1 +
- drivers/fpga/altera-fpga2sdram.c | 180 +++++++++++++++++++++++++++++++
- drivers/fpga/altera-hps2fpga.c   | 221 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 409 insertions(+)
- create mode 100644 drivers/fpga/altera-fpga2sdram.c
- create mode 100644 drivers/fpga/altera-hps2fpga.c
+ .../devicetree/bindings/fpga/fpga-region.txt       | 494 +++++++++++++++++++++
+ 1 file changed, 494 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/fpga-region.txt
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index e0e1257..5605ad6 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -40,6 +40,13 @@ config FPGA_BRIDGE
- 	  Say Y here if you want to support bridges connected between host
- 	  processors and FPGAs or between FPGAs.
- 
-+config SOCFPGA_FPGA_BRIDGE
-+	tristate "Altera SoCFPGA FPGA Bridges"
-+	depends on ARCH_SOCFPGA && FPGA_BRIDGE
-+	help
-+	  Say Y to enable drivers for FPGA bridges for Altera SOCFPGA
-+	  devices.
-+
- endif # FPGA
- 
- endmenu
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index 8d746c3..e658436 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
- 
- # FPGA Bridge Drivers
- obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
-+obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)	+= altera-hps2fpga.o altera-fpga2sdram.o
- 
- # High Level Interfaces
- obj-$(CONFIG_FPGA_REGION)		+= fpga-region.o
-diff --git a/drivers/fpga/altera-fpga2sdram.c b/drivers/fpga/altera-fpga2sdram.c
+diff --git a/Documentation/devicetree/bindings/fpga/fpga-region.txt b/Documentation/devicetree/bindings/fpga/fpga-region.txt
 new file mode 100644
-index 0000000..7ab358e
+index 0000000..3b32ba1
 --- /dev/null
-+++ b/drivers/fpga/altera-fpga2sdram.c
-@@ -0,0 +1,180 @@
-+/*
-+ * FPGA to SDRAM Bridge Driver for Altera SoCFPGA Devices
-+ *
-+ *  Copyright (C) 2013-2016 Altera Corporation, All Rights Reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
++++ b/Documentation/devicetree/bindings/fpga/fpga-region.txt
+@@ -0,0 +1,494 @@
++FPGA Region Device Tree Binding
 +
-+/*
-+ * This driver manages a bridge between an FPGA and the SDRAM used by the ARM
-+ * host processor system (HPS).
-+ *
-+ * The bridge contains 4 read ports, 4 write ports, and 6 command ports.
-+ * Reconfiguring these ports requires that no SDRAM transactions occur during
-+ * reconfiguration.  The code reconfiguring the ports cannot run out of SDRAM
-+ * nor can the FPGA access the SDRAM during reconfiguration.  This driver does
-+ * not support reconfiguring the ports.  The ports are configured by code
-+ * running out of on chip ram before Linux is started and the configuration
-+ * is passed in a handoff register in the system manager.
-+ *
-+ * This driver supports enabling and disabling of the configured ports, which
-+ * allows for safe reprogramming of the FPGA, assuming that the new FPGA image
-+ * uses the same port configuration.  Bridges must be disabled before
-+ * reprogramming the FPGA and re-enabled after the FPGA has been programmed.
-+ */
++Alan Tull 2016
 +
-+#include <linux/fpga/fpga-bridge.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/regmap.h>
++ CONTENTS
++ - Introduction
++ - Terminology
++ - Sequence
++ - FPGA Region
++ - Supported Use Models
++ - Device Tree Examples
++ - Constraints
 +
-+#define ALT_SDR_CTL_FPGAPORTRST_OFST		0x80
-+#define ALT_SDR_CTL_FPGAPORTRST_PORTRSTN_MSK	0x00003fff
-+#define ALT_SDR_CTL_FPGAPORTRST_RD_SHIFT	0
-+#define ALT_SDR_CTL_FPGAPORTRST_WR_SHIFT	4
-+#define ALT_SDR_CTL_FPGAPORTRST_CTRL_SHIFT	8
 +
-+/*
-+ * From the Cyclone V HPS Memory Map document:
-+ *   These registers are used to store handoff information between the
-+ *   preloader and the OS. These 8 registers can be used to store any
-+ *   information. The contents of these registers have no impact on
-+ *   the state of the HPS hardware.
-+ */
-+#define SYSMGR_ISWGRP_HANDOFF3          (0x8C)
++Introduction
++============
 +
-+#define F2S_BRIDGE_NAME "fpga2sdram"
++FPGA Regions represent FPGA's and partial reconfiguration regions of FPGA's in
++the Device Tree.  FPGA Regions provide a way to program FPGAs under device tree
++control.
 +
-+struct alt_fpga2sdram_data {
-+	struct device *dev;
-+	struct regmap *sdrctl;
-+	int mask;
++This device tree binding document hits some of the high points of FPGA usage and
++attempts to include terminology used by both major FPGA manufacturers.  This
++document isn't a replacement for any manufacturers specifications for FPGA
++usage.
++
++
++Terminology
++===========
++
++Full Reconfiguration
++ * The entire FPGA is programmed.
++
++Partial Reconfiguration (PR)
++ * A section of an FPGA is reprogrammed while the rest of the FPGA is not
++   affected.
++ * Not all FPGA's support PR.
++
++Partial Reconfiguration Region (PRR)
++ * Also called a "reconfigurable partition"
++ * A PRR is a specific section of a FPGA reserved for reconfiguration.
++ * A base (or static) FPGA image may create a set of PRR's that later may
++   be independently reprogrammed many times.
++ * The size and specific location of each PRR is fixed.
++ * The connections at the edge of each PRR are fixed.  The image that is loaded
++   into a PRR must fit and must use a subset of the region's connections.
++ * The busses within the FPGA are split such that each region gets its own
++   branch that may be gated independently.
++
++Persona
++ * Also called a "partial bit stream"
++ * An FPGA image that is designed to be loaded into a PRR.  There may be
++   any number of personas designed to fit into a PRR, but only one at at time
++   may be loaded.
++ * A persona may create more regions.
++
++FPGA Bridge
++ * FPGA Bridges gate bus signals between a host and FPGA.
++ * FPGA Bridges should be disabled while the FPGA is being programmed to
++   prevent spurious signals on the cpu bus and to the soft logic.
++ * FPGA bridges may be actual hardware or soft logic on an FPGA.
++ * During Full Reconfiguration, hardware bridges between the host and FPGA
++   will be disabled.
++ * During Partial Reconfiguration of a specific region, that region's bridge
++   will be used to gate the busses.  Traffic to other regions is not affected.
++ * In some implementations, the FPGA Manager transparantly handles gating the
++   buses, eliminating the need to show the hardware FPGA bridges in the
++   device tree.
++ * An FPGA image may create a set of reprogrammable regions, each having its
++   own bridge and its own split of the busses in the FPGA.
++
++FPGA Manager
++ * An FPGA Manager is a hardware block that programs an FPGA under the control
++   of a host processor.
++
++Base Image
++ * Also called the "static image"
++ * An FPGA image that is designed to do full reconfiguration of the FPGA.
++ * A base image may set up a set of partial reconfiguration regions that may
++   later be reprogrammed.
++
++    ----------------       ----------------------------------
++    |  Host CPU    |       |             FPGA               |
++    |              |       |                                |
++    |          ----|       |       -----------    --------  |
++    |          | H |       |   |==>| Bridge0 |<==>| PRR0 |  |
++    |          | W |       |   |   -----------    --------  |
++    |          |   |       |   |                            |
++    |          | B |<=====>|<==|   -----------    --------  |
++    |          | R |       |   |==>| Bridge1 |<==>| PRR1 |  |
++    |          | I |       |   |   -----------    --------  |
++    |          | D |       |   |                            |
++    |          | G |       |   |   -----------    --------  |
++    |          | E |       |   |==>| Bridge2 |<==>| PRR2 |  |
++    |          ----|       |       -----------    --------  |
++    |              |       |                                |
++    ----------------       ----------------------------------
++
++Figure 1: An FPGA set up with a base image that created three regions.  Each
++region (PRR0-2) gets its own split of the busses that is independently gated by
++a soft logic bridge (Bridge0-2) in the FPGA.  The contents of each PRR can be
++reprogrammed independently while the rest of the system continues to function.
++
++
++Sequence
++========
++
++When a DT overlay that targets a FPGA Region is applied, the FPGA Region will
++do the following:
++
++ 1. Disable appropriate FPGA bridges.
++ 2. Program the FPGA using the FPGA manager.
++ 3. Enable the FPGA bridges.
++ 4. The Device Tree overlay is accepted into the live tree.
++ 5. Child devices are populated.
++
++When the overlay is removed, the child nodes will be removed and the FPGA Region
++will disable the bridges.
++
++
++FPGA Region
++===========
++
++FPGA Regions represent FPGA's and FPGA PR regions in the device tree.  An FPGA
++Region brings together the elements needed to program on a running system and
++add the child devices:
++
++ * FPGA Manager
++ * FPGA Bridges
++ * image-specific information needed to to the programming.
++ * child nodes
++
++The intended use is that a Device Tree overlay (DTO) can be used to reprogram an
++FPGA while an operating system is running.
++
++An FPGA Region that exists in the live Device Tree reflects the current state.
++If the live tree shows a "firmware-name" property or child nodes under a FPGA
++Region, the FPGA already has been programmed.  A DTO that targets a FPGA Region
++and adds the "firmware-name" property is taken as a request to reprogram the
++FPGA.  After reprogramming is successful, the overlay is accepted into the live
++tree.
++
++The base FPGA Region in the device tree represents the FPGA and supports full
++reconfiguration.  It must include a phandle to an FPGA Manager.  The base
++FPGA region will be the child of one of the hardware bridges (the bridge that
++allows register access) between the cpu and the FPGA.  If there are more than
++one bridge to control during FPGA programming, the region will also contain a
++list of phandles to the additional hardware FPGA Bridges.
++
++For partial reconfiguration (PR), each PR region will have an FPGA Region.
++These FPGA regions are children of FPGA bridges which are then children of the
++base FPGA region.  The "Full Reconfiguration to add PRR's" example below shows
++this.
++
++If an FPGA Region does not specify a FPGA Manager, it will inherit the FPGA
++Manager specified by its ancestor FPGA Region.  This supports both the case
++where the same FPGA Manager is used for all of a FPGA as well the case where
++a different FPGA Manager is used for each region.
++
++FPGA Regions do not inherit their ancestor FPGA regions' bridges.  This prevents
++shutting down bridges that are upstream from the other active regions while one
++region is getting reconfigured (see Figure 1 above).  During PR, the FPGA's
++hardware bridges remain enabled.  The PR regions' bridges will be FPGA bridges
++within the static image of the FPGA.
++
++Required properties:
++- compatible : should contain "fpga-region"
++- fpga-mgr : should contain a phandle to an FPGA Manager.  Child FPGA Regions
++	inherit this property from their ancestor regions.  A fpga-mgr property
++	in a region will override any inherited FPGA manager.
++- #address-cells, #size-cells, ranges : must be present to handle address space
++	mapping for child nodes.
++
++Optional properties:
++- firmware-name : should contain the name of an FPGA image file located on the
++	firmware search path.  If this property shows up in a live device tree
++	it indicates that the FPGA has already been programmed with this image.
++	If this property is in an overlay targeting a FPGA region, it is a
++	request to program the FPGA with that image.
++- fpga-bridges : should contain a list of phandles to FPGA Bridges that must be
++	controlled during FPGA programming along with the parent FPGA bridge.
++	This property is optional if the FPGA Manager handles the bridges.
++        If the fpga-region is  the child of a fpga-bridge, the list should not
++        contain the parent bridge.
++- partial-fpga-config : boolean, set if partial reconfiguration is to be done,
++	otherwise full reconfiguration is done.
++- external-fpga-config : boolean, set if the FPGA has already been configured
++	prior to OS boot up.
++- region-unfreeze-timeout-us : The maximum time in microseconds to wait for
++	bridges to successfully become enabled after the region has been
++	programmed.
++- region-freeze-timeout-us : The maximum time in microseconds to wait for
++	bridges to successfully become disabled before the region has been
++	programmed.
++- child nodes : devices in the FPGA after programming.
++
++In the example below, when an overlay is applied targeting fpga-region0,
++fpga_mgr is used to program the FPGA.  Two bridges are controlled during
++programming: the parent fpga_bridge0 and fpga_bridge1.  Because the region is
++the child of fpga_bridge0, only fpga_bridge1 needs to be specified in the
++fpga-bridges property.  During programming, these bridges are disabled, the
++firmware specified in the overlay is loaded to the FPGA using the FPGA manager
++specified in the region.  If FPGA programming succeeds, the bridges are
++reenabled and the overlay makes it into the live device tree.  The child devices
++are then populated.  If FPGA programming fails, the bridges are left disabled
++and the overlay is rejected.  The overlay's ranges property maps the lwhps
++bridge's region (0xff200000) and the hps bridge's region (0xc0000000) for use by
++the two child devices.
++
++Example:
++Base tree contains:
++
++	fpga_mgr: fpga-mgr@ff706000 {
++		compatible = "altr,socfpga-fpga-mgr";
++		reg = <0xff706000 0x1000
++		       0xffb90000 0x20>;
++		interrupts = <0 175 4>;
++	};
++
++	fpga_bridge0: fpga-bridge@ff400000 {
++		compatible = "altr,socfpga-lwhps2fpga-bridge";
++		reg = <0xff400000 0x100000>;
++		resets = <&rst LWHPS2FPGA_RESET>;
++		clocks = <&l4_main_clk>;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		fpga_region0: fpga-region0 {
++			compatible = "fpga-region";
++			fpga-mgr = <&fpga_mgr>;
++		};
++	};
++
++	fpga_bridge1: fpga-bridge@ff500000 {
++		compatible = "altr,socfpga-hps2fpga-bridge";
++		reg = <0xff500000 0x10000>;
++		resets = <&rst HPS2FPGA_RESET>;
++		clocks = <&l4_main_clk>;
++	};
++
++Overlay contains:
++
++/dts-v1/ /plugin/;
++/ {
++	fragment@0 {
++		target = <&fpga_region0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		__overlay__ {
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			firmware-name = "soc_system.rbf";
++			fpga-bridges = <&fpga_bridge1>;
++			ranges = <0x20000 0xff200000 0x100000>,
++				 <0x0 0xc0000000 0x20000000>;
++
++			gpio@10040 {
++				compatible = "altr,pio-1.0";
++				reg = <0x10040 0x20>;
++				altr,gpio-bank-width = <4>;
++				#gpio-cells = <2>;
++				clocks = <2>;
++				gpio-controller;
++			};
++
++			onchip-memory {
++				device_type = "memory";
++				compatible = "altr,onchipmem-15.1";
++				reg = <0x0 0x10000>;
++			};
++		};
++	};
 +};
 +
-+static int alt_fpga2sdram_enable_show(struct fpga_bridge *bridge)
-+{
-+	struct alt_fpga2sdram_data *priv = bridge->priv;
-+	int value;
 +
-+	regmap_read(priv->sdrctl, ALT_SDR_CTL_FPGAPORTRST_OFST, &value);
++Supported Use Models
++====================
 +
-+	return (value & priv->mask) == priv->mask;
-+}
++In all cases the live DT must have the FPGA Manager, FPGA Bridges (if any), and
++a FPGA Region.  The target of the Device Tree Overlay is the FPGA Region.  Some
++uses are specific to a FPGA device.
 +
-+static inline int _alt_fpga2sdram_enable_set(struct alt_fpga2sdram_data *priv,
-+					     bool enable)
-+{
-+	return regmap_update_bits(priv->sdrctl, ALT_SDR_CTL_FPGAPORTRST_OFST,
-+				  priv->mask, enable ? priv->mask : 0);
-+}
++ * No FPGA Bridges
++   In this case, the FPGA Manager which programs the FPGA also handles the
++   bridges behind the scenes.  No FPGA Bridge devices are needed for full
++   reconfiguration.
 +
-+static int alt_fpga2sdram_enable_set(struct fpga_bridge *bridge, bool enable)
-+{
-+	return _alt_fpga2sdram_enable_set(bridge->priv, enable);
-+}
++ * Full reconfiguration with hardware bridges
++   In this case, there are hardware bridges between the processor and FPGA that
++   need to be controlled during full reconfiguration.  Before the overlay is
++   applied, the live DT must include the FPGA Manager, FPGA Bridges, and a
++   FPGA Region.  The FPGA Region is the child of the bridge that allows
++   register access to the FPGA.  Additional bridges may be listed in a
++   fpga-bridges property in the FPGA region or in the device tree overlay.
 +
-+struct prop_map {
-+	char *prop_name;
-+	u32 *prop_value;
-+	u32 prop_max;
++ * Partial reconfiguration with bridges in the FPGA
++   In this case, the FPGA will have one or more PRR's that may be programmed
++   separately while the rest of the FPGA can remain active.  To manage this,
++   bridges need to exist in the FPGA that can gate the buses going to each FPGA
++   region while the buses are enabled for other sections.  Before any partial
++   reconfiguration can be done, a base FPGA image must be loaded which includes
++   PRR's with FPGA bridges.  The device tree should have a FPGA region for each
++   PRR.
++
++Device Tree Examples
++====================
++
++The intention of this section is to give some simple examples, focusing on
++the placement of the elements detailed above, especially:
++ * FPGA Manager
++ * FPGA Bridges
++ * FPGA Region
++ * ranges
++ * target-path or target
++
++For the purposes of this section, I'm dividing the Device Tree into two parts,
++each with its own requirements.  The two parts are:
++ * The live DT prior to the overlay being added
++ * The DT overlay
++
++The live Device Tree must contain an FPGA Region, an FPGA Manager, and any FPGA
++Bridges.  The FPGA Region's "fpga-mgr" property specifies the manager by phandle
++to handle programming the FPGA.  If the FPGA Region is the child of another FPGA
++Region, the parent's FPGA Manager is used.  If FPGA Bridges need to be involved,
++they are specified in the FPGA Region by the "fpga-bridges" property.  During
++FPGA programming, the FPGA Region will disable the bridges that are in its
++"fpga-bridges" list and will re-enable them after FPGA programming has
++succeeded.
++
++The Device Tree Overlay will contain:
++ * "target-path" or "target"
++   The insertion point where the the contents of the overlay will go into the
++   live tree.  target-path is a full path, while target is a phandle.
++ * "ranges"
++    The address space mapping from processor to FPGA bus(ses).
++ * "firmware-name"
++   Specifies the name of the FPGA image file on the firmware search
++   path.  The search path is described in the firmware class documentation.
++ * "partial-fpga-config"
++   This binding is a boolean and should be present if partial reconfiguration
++   is to be done.
++ * child nodes corresponding to hardware that will be loaded in this region of
++   the FPGA.
++
++Device Tree Example: Full Reconfiguration without Bridges
++=========================================================
++
++Live Device Tree contains:
++	fpga_mgr0: fpga-mgr@f8007000 {
++		compatible = "xlnx,zynq-devcfg-1.0";
++		reg = <0xf8007000 0x100>;
++		interrupt-parent = <&intc>;
++		interrupts = <0 8 4>;
++		clocks = <&clkc 12>;
++		clock-names = "ref_clk";
++		syscon = <&slcr>;
++	};
++
++	fpga_region0: fpga-region0 {
++		compatible = "fpga-region";
++		fpga-mgr = <&fpga_mgr0>;
++		#address-cells = <0x1>;
++		#size-cells = <0x1>;
++		ranges;
++	};
++
++DT Overlay contains:
++/dts-v1/ /plugin/;
++/ {
++fragment@0 {
++	target = <&fpga_region0>;
++	#address-cells = <1>;
++	#size-cells = <1>;
++	__overlay__ {
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		firmware-name = "zynq-gpio.bin";
++
++		gpio1: gpio@40000000 {
++			compatible = "xlnx,xps-gpio-1.00.a";
++			reg = <0x40000000 0x10000>;
++			gpio-controller;
++			#gpio-cells = <0x2>;
++			xlnx,gpio-width= <0x6>;
++		};
++	};
 +};
 +
-+static const struct fpga_bridge_ops altera_fpga2sdram_br_ops = {
-+	.enable_set = alt_fpga2sdram_enable_set,
-+	.enable_show = alt_fpga2sdram_enable_show,
++Device Tree Example: Full Reconfiguration to add PRR's
++======================================================
++
++The base FPGA Region is specified similar to the first example above.
++
++This example programs the FPGA to have two regions that can later be partially
++configured.  Each region has its own bridge in the FPGA fabric.
++
++DT Overlay contains:
++/dts-v1/ /plugin/;
++/ {
++	fragment@0 {
++		target = <&fpga_region0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		__overlay__ {
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			firmware-name = "base.rbf";
++
++			fpga-bridge@4400 {
++				compatible = "altr,freeze-bridge";
++				reg = <0x4400 0x10>;
++
++				fpga_region1: fpga-region1 {
++					compatible = "fpga-region";
++					#address-cells = <0x1>;
++					#size-cells = <0x1>;
++					ranges;
++				};
++			};
++
++			fpga-bridge@4420 {
++				compatible = "altr,freeze-bridge";
++				reg = <0x4420 0x10>;
++
++				fpga_region2: fpga-region2 {
++					compatible = "fpga-region";
++					#address-cells = <0x1>;
++					#size-cells = <0x1>;
++					ranges;
++				};
++			};
++		};
++	};
 +};
 +
-+static const struct of_device_id altera_fpga_of_match[] = {
-+	{ .compatible = "altr,socfpga-fpga2sdram-bridge" },
-+	{},
++Device Tree Example: Partial Reconfiguration
++============================================
++
++This example reprograms one of the PRR's set up in the previous example.
++
++The sequence that occurs when this overlay is similar to the above, the only
++differences are that the FPGA is partially reconfigured due to the
++"partial-fpga-config" boolean and the only bridge that is controlled during
++programming is the FPGA based bridge of fpga_region1.
++
++/dts-v1/ /plugin/;
++/ {
++	fragment@0 {
++		target = <&fpga_region1>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		__overlay__ {
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			firmware-name = "soc_image2.rbf";
++			partial-fpga-config;
++
++			gpio@10040 {
++				compatible = "altr,pio-1.0";
++				reg = <0x10040 0x20>;
++				clocks = <0x2>;
++				altr,gpio-bank-width = <0x4>;
++				resetvalue = <0x0>;
++				#gpio-cells = <0x2>;
++				gpio-controller;
++			};
++		};
++	};
 +};
 +
-+static int alt_fpga_bridge_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct alt_fpga2sdram_data *priv;
-+	u32 enable;
-+	struct regmap *sysmgr;
-+	int ret = 0;
++Constraints
++===========
 +
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
++It is beyond the scope of this document to fully describe all the FPGA design
++constraints required to make partial reconfiguration work[1] [2] [3], but a few
++deserve quick mention.
 +
-+	priv->dev = dev;
++A persona must have boundary connections that line up with those of the partion
++or region it is designed to go into.
 +
-+	priv->sdrctl = syscon_regmap_lookup_by_compatible("altr,sdr-ctl");
-+	if (IS_ERR(priv->sdrctl)) {
-+		dev_err(dev, "regmap for altr,sdr-ctl lookup failed.\n");
-+		return PTR_ERR(priv->sdrctl);
-+	}
++During programming, transactions through those connections must be stopped and
++the connections must be held at a fixed logic level.  This can be achieved by
++FPGA Bridges that exist on the FPGA fabric prior to the partial reconfiguration.
 +
-+	sysmgr = syscon_regmap_lookup_by_compatible("altr,sys-mgr");
-+	if (IS_ERR(priv->sdrctl)) {
-+		dev_err(dev, "regmap for altr,sys-mgr lookup failed.\n");
-+		return PTR_ERR(sysmgr);
-+	}
-+
-+	/* Get f2s bridge configuration saved in handoff register */
-+	regmap_read(sysmgr, SYSMGR_ISWGRP_HANDOFF3, &priv->mask);
-+
-+	ret = fpga_bridge_register(dev, F2S_BRIDGE_NAME,
-+				   &altera_fpga2sdram_br_ops, priv);
-+	if (ret)
-+		return ret;
-+
-+	dev_info(dev, "driver initialized with handoff %08x\n", priv->mask);
-+
-+	if (!of_property_read_u32(dev->of_node, "bridge-enable", &enable)) {
-+		if (enable > 1) {
-+			dev_warn(dev, "invalid bridge-enable %u > 1\n", enable);
-+		} else {
-+			dev_info(dev, "%s bridge\n",
-+				 (enable ? "enabling" : "disabling"));
-+			ret = _alt_fpga2sdram_enable_set(priv, enable);
-+			if (ret) {
-+				fpga_bridge_unregister(&pdev->dev);
-+				return ret;
-+			}
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static int alt_fpga_bridge_remove(struct platform_device *pdev)
-+{
-+	fpga_bridge_unregister(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+MODULE_DEVICE_TABLE(of, altera_fpga_of_match);
-+
-+static struct platform_driver altera_fpga_driver = {
-+	.probe = alt_fpga_bridge_probe,
-+	.remove = alt_fpga_bridge_remove,
-+	.driver = {
-+		.name	= "altera_fpga2sdram_bridge",
-+		.of_match_table = of_match_ptr(altera_fpga_of_match),
-+	},
-+};
-+
-+module_platform_driver(altera_fpga_driver);
-+
-+MODULE_DESCRIPTION("Altera SoCFPGA FPGA to SDRAM Bridge");
-+MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/fpga/altera-hps2fpga.c b/drivers/fpga/altera-hps2fpga.c
-new file mode 100644
-index 0000000..63ff0e3
---- /dev/null
-+++ b/drivers/fpga/altera-hps2fpga.c
-@@ -0,0 +1,221 @@
-+/*
-+ * FPGA to/from HPS Bridge Driver for Altera SoCFPGA Devices
-+ *
-+ *  Copyright (C) 2013-2016 Altera Corporation, All Rights Reserved.
-+ *
-+ * Includes this patch from the mailing list:
-+ *   fpga: altera-hps2fpga: fix HPS2FPGA bridge visibility to L3 masters
-+ *   Signed-off-by: Anatolij Gustschin <agust@denx.de>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+/*
-+ * This driver manages bridges on a Altera SOCFPGA between the ARM host
-+ * processor system (HPS) and the embedded FPGA.
-+ *
-+ * This driver supports enabling and disabling of the configured ports, which
-+ * allows for safe reprogramming of the FPGA, assuming that the new FPGA image
-+ * uses the same port configuration.  Bridges must be disabled before
-+ * reprogramming the FPGA and re-enabled after the FPGA has been programmed.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/fpga/fpga-bridge.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <linux/spinlock.h>
-+
-+#define ALT_L3_REMAP_OFST			0x0
-+#define ALT_L3_REMAP_MPUZERO_MSK		0x00000001
-+#define ALT_L3_REMAP_H2F_MSK			0x00000008
-+#define ALT_L3_REMAP_LWH2F_MSK			0x00000010
-+
-+#define HPS2FPGA_BRIDGE_NAME			"hps2fpga"
-+#define LWHPS2FPGA_BRIDGE_NAME			"lwhps2fpga"
-+#define FPGA2HPS_BRIDGE_NAME			"fpga2hps"
-+
-+struct altera_hps2fpga_data {
-+	const char *name;
-+	struct reset_control *bridge_reset;
-+	struct regmap *l3reg;
-+	unsigned int remap_mask;
-+	struct clk *clk;
-+};
-+
-+static int alt_hps2fpga_enable_show(struct fpga_bridge *bridge)
-+{
-+	struct altera_hps2fpga_data *priv = bridge->priv;
-+
-+	return reset_control_status(priv->bridge_reset);
-+}
-+
-+/* The L3 REMAP register is write only, so keep a cached value. */
-+static unsigned int l3_remap_shadow;
-+static spinlock_t l3_remap_lock;
-+
-+static int _alt_hps2fpga_enable_set(struct altera_hps2fpga_data *priv,
-+				    bool enable)
-+{
-+	unsigned long flags;
-+	int ret;
-+
-+	/* bring bridge out of reset */
-+	if (enable)
-+		ret = reset_control_deassert(priv->bridge_reset);
-+	else
-+		ret = reset_control_assert(priv->bridge_reset);
-+	if (ret)
-+		return ret;
-+
-+	/* Allow bridge to be visible to L3 masters or not */
-+	if (priv->remap_mask) {
-+		spin_lock_irqsave(&l3_remap_lock, flags);
-+		l3_remap_shadow |= ALT_L3_REMAP_MPUZERO_MSK;
-+
-+		if (enable)
-+			l3_remap_shadow |= priv->remap_mask;
-+		else
-+			l3_remap_shadow &= ~priv->remap_mask;
-+
-+		ret = regmap_write(priv->l3reg, ALT_L3_REMAP_OFST,
-+				   l3_remap_shadow);
-+		spin_unlock_irqrestore(&l3_remap_lock, flags);
-+	}
-+
-+	return ret;
-+}
-+
-+static int alt_hps2fpga_enable_set(struct fpga_bridge *bridge, bool enable)
-+{
-+	return _alt_hps2fpga_enable_set(bridge->priv, enable);
-+}
-+
-+static const struct fpga_bridge_ops altera_hps2fpga_br_ops = {
-+	.enable_set = alt_hps2fpga_enable_set,
-+	.enable_show = alt_hps2fpga_enable_show,
-+};
-+
-+static struct altera_hps2fpga_data hps2fpga_data  = {
-+	.name = HPS2FPGA_BRIDGE_NAME,
-+	.remap_mask = ALT_L3_REMAP_H2F_MSK,
-+};
-+
-+static struct altera_hps2fpga_data lwhps2fpga_data  = {
-+	.name = LWHPS2FPGA_BRIDGE_NAME,
-+	.remap_mask = ALT_L3_REMAP_LWH2F_MSK,
-+};
-+
-+static struct altera_hps2fpga_data fpga2hps_data  = {
-+	.name = FPGA2HPS_BRIDGE_NAME,
-+};
-+
-+static const struct of_device_id altera_fpga_of_match[] = {
-+	{ .compatible = "altr,socfpga-hps2fpga-bridge",
-+	  .data = &hps2fpga_data },
-+	{ .compatible = "altr,socfpga-lwhps2fpga-bridge",
-+	  .data = &lwhps2fpga_data },
-+	{ .compatible = "altr,socfpga-fpga2hps-bridge",
-+	  .data = &fpga2hps_data },
-+	{},
-+};
-+
-+static int alt_fpga_bridge_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct altera_hps2fpga_data *priv;
-+	const struct of_device_id *of_id;
-+	u32 enable;
-+	int ret;
-+
-+	of_id = of_match_device(altera_fpga_of_match, dev);
-+	priv = (struct altera_hps2fpga_data *)of_id->data;
-+
-+	priv->bridge_reset = of_reset_control_get_by_index(dev->of_node, 0);
-+	if (IS_ERR(priv->bridge_reset)) {
-+		dev_err(dev, "Could not get %s reset control\n", priv->name);
-+		return PTR_ERR(priv->bridge_reset);
-+	}
-+
-+	priv->l3reg = syscon_regmap_lookup_by_compatible("altr,l3regs");
-+	if (IS_ERR(priv->l3reg)) {
-+		dev_err(dev, "regmap for altr,l3regs lookup failed\n");
-+		return PTR_ERR(priv->l3reg);
-+	}
-+
-+	priv->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(priv->clk)) {
-+		dev_err(dev, "no clock specified\n");
-+		return PTR_ERR(priv->clk);
-+	}
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret) {
-+		dev_err(dev, "could not enable clock\n");
-+		return -EBUSY;
-+	}
-+
-+	spin_lock_init(&l3_remap_lock);
-+
-+	if (!of_property_read_u32(dev->of_node, "bridge-enable", &enable)) {
-+		if (enable > 1) {
-+			dev_warn(dev, "invalid bridge-enable %u > 1\n", enable);
-+		} else {
-+			dev_info(dev, "%s bridge\n",
-+				 (enable ? "enabling" : "disabling"));
-+
-+			ret = _alt_hps2fpga_enable_set(priv, enable);
-+			if (ret) {
-+				fpga_bridge_unregister(&pdev->dev);
-+				return ret;
-+			}
-+		}
-+	}
-+
-+	return fpga_bridge_register(dev, priv->name, &altera_hps2fpga_br_ops,
-+				    priv);
-+}
-+
-+static int alt_fpga_bridge_remove(struct platform_device *pdev)
-+{
-+	struct fpga_bridge *bridge = platform_get_drvdata(pdev);
-+	struct altera_hps2fpga_data *priv = bridge->priv;
-+
-+	fpga_bridge_unregister(&pdev->dev);
-+
-+	clk_disable_unprepare(priv->clk);
-+	clk_put(priv->clk);
-+
-+	return 0;
-+}
-+
-+MODULE_DEVICE_TABLE(of, altera_fpga_of_match);
-+
-+static struct platform_driver alt_fpga_bridge_driver = {
-+	.probe = alt_fpga_bridge_probe,
-+	.remove = alt_fpga_bridge_remove,
-+	.driver = {
-+		.name	= "altera_hps2fpga_bridge",
-+		.of_match_table = of_match_ptr(altera_fpga_of_match),
-+	},
-+};
-+
-+module_platform_driver(alt_fpga_bridge_driver);
-+
-+MODULE_DESCRIPTION("Altera SoCFPGA HPS to FPGA Bridge");
-+MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
-+MODULE_LICENSE("GPL v2");
++--
++[1] www.altera.com/content/dam/altera-www/global/en_US/pdfs/literature/ug/ug_partrecon.pdf
++[2] tspace.library.utoronto.ca/bitstream/1807/67932/1/Byma_Stuart_A_201411_MAS_thesis.pdf
++[3] http://www.xilinx.com/support/documentation/sw_manuals/xilinx14_1/ug702.pdf
 -- 
 2.10.1
-
