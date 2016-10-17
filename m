@@ -1,199 +1,65 @@
-From: "linshunquan (A)" <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH] mfd: Add HiSilicon Flash Memory Controller(FMC) driver
-Date: Mon, 17 Oct 2016 16:03:17 +0800
-Message-ID: <95d79627-11a2-3236-3cff-7c294772cc51@hisilicon.com>
-References: <1473130643-12310-1-git-send-email-linshunquan1@hisilicon.com>
- <20160913145607.GA11998@rob-hp-laptop>
- <6b522be0-dcec-a84b-f161-69b8805bef62@hisilicon.com>
- <CAL_Jsq+8qPYfiA_bojPP2vm6PGPr9B=ntct=OyhoJTervMZMuA@mail.gmail.com>
- <6108fbb9-e82b-f56e-cf41-18d8859fbdfd@hisilicon.com>
+From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+Subject: Re: [PATCH net-next 2/2] net: phy: Add Fast Link Failure - 2 set
+ driver for Microsemi PHYs.
+Date: Mon, 17 Oct 2016 13:43:14 +0530
+Message-ID: <20161017081312.GB2365@microsemi.com>
+References: <1476445233-26524-1-git-send-email-Raju.Lakkaraju@microsemi.com>
+ <1476445233-26524-3-git-send-email-Raju.Lakkaraju@microsemi.com>
+ <20161014120228.GF5822@lunn.ch>
+Reply-To: <Raju.Lakkaraju@microsemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6108fbb9-e82b-f56e-cf41-18d8859fbdfd-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "jalen.hsu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <jalen.hsu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, lvkuanliang 00222834 <lvkuanliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "kevin.lixu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <kevin.lixu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, quqi-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161014120228.GF5822@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, Allan.Nielsen@microsemi.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Andrew,
 
+Thank you for code review and comments.
 
-On 2016/10/10 11:19, linshunquan (A) wrote:
+On Fri, Oct 14, 2016 at 02:02:28PM +0200, Andrew Lunn wrote:
+> EXTERNAL EMAIL
 > 
 > 
-> On 2016/9/15 5:56, Rob Herring wrote:
->> On Wed, Sep 14, 2016 at 4:12 AM, linshunquan (A)
->> <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
->>>
->>>
->>> On 2016/9/13 22:56, Rob Herring wrote:
->>>> On Tue, Sep 06, 2016 at 10:57:22AM +0800, linshunquan 00354166 wrote:
->>>>> From: Shunquan Lin <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->>>>>
->>>>> This patch adds driver support for HiSilicon Flash Memory
->>>>> Controller(FMC). HiSilicon FMC is a multi-functions device which
->>>>> supports SPI Nor flash controller, SPI nand Flash controller and
->>>>> parallel nand flash controller.
->>>>>
->>>>> Signed-off-by: Shunquan Lin <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->>>>> +    - spi-nor:
->>>>> +    Required properties:
->>>>> +            - compatible : "hisilicon,fmc-spi-nor"
->>>>> +    see "Documentation/devicetree/bindings/mtd/hisilicon,fmc-spi-nor.txt
->>>>> +
->>>>> +    - spi-nand:
->>>>> +    Required properties:
->>>>> +            - compatible : "hisilicon,fmc-spi-nand"
->>>>> +            - reg : The chipselect for spi-nand devices
->>>>> +            - address-cells : Should be 1.
->>>>> +            - size-cells : Should be 0.
->>>>> +
->>>>> +    - nand:
->>>>> +    Required properties:
->>>>> +            - compatible : "hisilicon,fmc-nand"
->>>>> +            - reg : The chipselect for nand devices
->>>>> +            - address-cells : Should be 1.
->>>>> +            - size-cells : Should be 0.
->>>>> +
->>>>> +Example:
->>>>> +fmc: spi-nor-controller@10000000 {
->>>>> +             compatible = "hisilicon,hisi-fmc";
->>>>> +             reg = <0x10000000 0x1000>, <0x14000000 0x1000000>;
->>>>> +             reg-names = "control", "memory";
->>>>> +             clocks = <&crg FMC_CLK>;
->>>>> +             #address-cells = <1>;
->>>>> +             #size-cells = <0>;
->>>>> +
->>>>> +             hisfc:spi-nor@0 {
->>>>> +                               compatible = "hisilicon,fmc-spi-nor";
->>>>
->>>> Is this an actual h/w sub-block? If not remove this node and make the
->>>> spi-nor the immediate child.
->>>>
->>>
->>> Hi Herring,
->>> Thanks for your reply. Firstly I must correct a mistake here:
->>>          fmc: spi-nor-controller@10000000 {
->>>                  compatible = "hisilicon,hisi-fmc";
->>>                 ...
->>>   correct to:
->>>          fmc: flash-memory-controller@10000000 {
->>>                  compatible = "hisilicon,hisi-fmc";
->>>                 ...
->>>
->>> Spi-nor is a sub block of HiSilicon Flash Memory Controller(FMC), HiSilicon FMC
->>> is a multi-functions device, besides it also supports SPI Nand and Parallel Nand.
->>
->> I understand that, but then were are the registers for the sub-blocks?
->> If there is only a single set of chipselects for all devices (i.e. 0
->> to N) and no separate register blocks for the sub-blocks, then you
->> don't need this intermediate node.
->>
+> > On Fri, Oct 14, 2016 at 05:10:33PM +0530, Raju Lakkaraju wrote:
+> > From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+> >
+> > VSC8531 Fast Link Failure 2 feature enables the PHY to indicate the
+> > onset of a potential link failure in < 100 usec for 100BASE-TX
+> > operation. FLF2 is supported through the MDINT (active low) pin.
 > 
-> Hi Rob，
-> I'm sorry it's taken me so long to get back to you.
-> 
-> To the HiSilicon FMC, different devices have different chipselect, and you are right,
-> the register blocks are no separate, but spi nor, spi nand and nand may require
-> different initial configuration of default sublock clocks and clock frequencies, so
-> I think this node is necessary.
-> 
-> Here is a sample about the soc Hi3519:
-> 
-> in arch/arm/boot/dts/hi3519.dtsi defined:
-> 
-> fmc: flash-memory-controller@10000000 {
->     compatible = "hisilicon,hisi-fmc";
->     reg = <0x10000000 0x1000>, <0x14000000 0x1000000>;
->     reg-names = "control", "memory";
->     clocks = <&crg HI3519_FMC_CLK>;
->     #address-cells = <1>;
->     #size-cells = <0>;
-> 
->     hisfc:spi-nor {
->         compatible = "hisilicon,hisi-sfc";
->         assigned-clocks = <&crg HI3519_FMC_CLK>;
->         assigned-clock-rates = <24000000>;
->         #address-cells = <1>;
->         #size-cells = <0>;
->     };
-> 
->     hisnfc:spi-nand {
->         compatible = "hisilicon,fmc-spi-nand";
->         assigned-clocks = <&crg HI3519_FMC_CLK>;
->         assigned-clock-rates = <3000000>;
->         #address-cells = <1>;
->         #size-cells = <0>;
->     };
-> };
-> 
-> in arch/arm/boot/dts/hi3519-demb.dts, which include hi3519.disi, defined:
-> 
-> &hisfc {
->     hi_sfc@0 {
->         compatible = "jedec,spi-nor";
->         reg = <0>;
->         spi-max-frequency = <160000000>;
->         m25p,fast-read;
->     };
-> };
-> 
-> &hisnfc {
->     hinand@0 {
->         compatible = "jedec,spi-nand";
->         reg = <0>;
->         spi-max-frequency = <200000000>;
->     };
-> };
-> 
-> Maybe I have not well understood on DTS, I hope I can get some suggestions from Rob.
-> 
-> Best regards
-> /Shunquan Lin
+> Is the MDINT pin specific to this feature, or a general interrupt pin?
 > 
 
-Hi Rob,
-I think seriously about your question again.
-It is really not necessary to set so many nodes, I have a new solution as blew:
+MDINT pin is general interrupt. MDINT pin share the interrupt with
+FLF2 along with another 13 interrupts.
 
-fmc: flash-memory-controller@10000000 {
-     compatible = "hisilicon,hisi-fmc";
-     reg = <0x10000000 0x1000>, <0x14000000 0x1000000>;
-     reg-names = "control", "memory";
-     clocks = <&crg FMC_CLK>;
-     #address-cells = <1>;
-     #size-cells = <0>;
+> Device tree is used to describe the hardware. It should not really
+> describe software or configuration. But the borders are a bit
+> fluffly. Signal edge rates is near to hardware. This is a lot more
+> towards configuration. So i'm not sure a device tree property is the
+> correct way to describe this.
+> 
+> This is also a feature i know other PHYs support. The Marvell PHY has
+> a "Metro Ethernet" extension which allows it to report link failures
+> for 1000BASE-T in 10, 20 or 40ms, instead of the usual 750ms. So we
+> need a generic solution other PHYs can implement.
+> 
+> As with cable testing, i think it should be an ethtool option.
 
-     spi-nor@0 {
-        compatible = "jedec,spi-nor";
-	reg = <0>;
-	spi-max-frequency = <160000000>;
+I agree with you.
+I thought this is one time initialization either enable or disable.
+if customer need this feature, they can enable in DT.
+Do you want me to implement through IOCTL instead of Device tree?
+Do you have any other suggestions?
 
-    };
+> 
+>    Andrew
 
-Perhaps, if there are some sub-block to add, we can define:
-    spi-nor@1{
-        compatible = "jedec,spi-nor";
-	reg = <1>;
-	spi-max-frequency = <160000000>;
-    }
-    spi-nand@0{
-	compatible = "jedec,spi-nand";
-	reg = <2>;
-	spi-max-frequency = <200000000>;
-    }
-    ...
-
-}
-
-It is so nice to get any reply and suggestion from you.
-
-Best regards
-/Shunquan Lin
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
+Thanks,
+Raju.
