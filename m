@@ -1,66 +1,177 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: da850: add a node for the LCD controller
-Date: Mon, 17 Oct 2016 14:40 +0300
-Message-ID: <4975084.EGQPv58AK6@avalon>
-References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com> <65fde145-0820-794d-d345-621f66cdacc0@ti.com> <7a2ffcd0-fe1d-c887-53b7-7cb5e1e61222@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 1/3] arm64/dts: Add SMMUs to Juno
+Date: Mon, 17 Oct 2016 13:13:34 +0100
+Message-ID: <acf4f770eab43fec8c5b6e9cddb6dd0defc52138.1476706244.git.robin.murphy@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7a2ffcd0-fe1d-c887-53b7-7cb5e1e61222-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Karl Beldan <karl.beldan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Juno has seperate MMU-401 instances in front of the DMA-330, both HDLCD
+controllers, the USB host controller, the PCIe root complex, and the
+CoreSight ETR. Since there is still work to do to make all the relevant
+subsystems interact nicely with the presence of an IOMMU, add the nodes
+to aid develompent and testing but leave them disabled by default to
+avoid nasty surprises.
 
-On Monday 17 Oct 2016 10:33:58 Tomi Valkeinen wrote:
-> On 17/10/16 10:12, Sekhar Nori wrote:
->> On Monday 17 October 2016 11:26 AM, Tomi Valkeinen wrote:
->>> On 15/10/16 20:42, Sekhar Nori wrote:
->>>>> diff --git a/arch/arm/boot/dts/da850.dtsi
->>>>> b/arch/arm/boot/dts/da850.dtsi
->>>>> index f79e1b9..32908ae 100644
->>>>> --- a/arch/arm/boot/dts/da850.dtsi
->>>>> +++ b/arch/arm/boot/dts/da850.dtsi
->>>>> @@ -399,6 +420,14 @@
->>>>>  				<&edma0 0 1>;
->>>>>  			dma-names = "tx", "rx";
->>>>>  		};
->>>>> +
->>>>> +		display: display@213000 {
->>>>> +			compatible = "ti,am33xx-tilcdc", "ti,da850-tilcdc";
->>>> 
->>>> This should instead be:
->>>> 
->>>> compatible = "ti,da850-tilcdc", "ti,am33xx-tilcdc";
->>>> 
->>>> as the closest match should appear first in the list.
->>> 
->>> Actually I don't think that's correct. The LCDC on da850 is not
->>> compatible with the LCDC on AM335x. I think it should be just
->>> "ti,da850-tilcdc".
->> 
->> So if "ti,am33xx-tilcdc" is used, the display wont work at all? If thats
->> the case, I wonder how the patch passed testing. Bartosz?
-> 
-> AM3 has "version 2" of LCDC, whereas DA850 is v1. They are quite
-> similar, but different.
-> 
-> The driver gets the version number from LCDC's register, and acts based
-> on that, so afaik the compatible string doesn't really affect the
-> functionality (as long as it matches).
-> 
-> But even if it works with the current driver, I don't think
-> "ti,am33xx-tilcdc" and "ti,da850-tilcdc" are compatible in the HW level.
+CC: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+CC: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+CC: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm64/boot/dts/arm/juno-base.dtsi | 80 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
 
-If the hardware provides IP revision information, how about just "ti,lcdc" ?
-
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+index 334271a25f70..100810a8b929 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -29,6 +29,28 @@
+ 		clock-names = "apb_pclk";
+ 	};
+ 
++	smmu_pcie: iommu@2b500000 {
++		compatible = "arm,mmu-401", "arm,smmu-v1";
++		reg = <0x0 0x2b500000 0x0 0x10000>;
++		interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
++		#iommu-cells = <1>;
++		#global-interrupts = <1>;
++		dma-coherent;
++		status = "disabled";
++	};
++
++	smmu_etr: iommu@2b600000 {
++		compatible = "arm,mmu-401", "arm,smmu-v1";
++		reg = <0x0 0x2b600000 0x0 0x10000>;
++		interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
++		#iommu-cells = <1>;
++		#global-interrupts = <1>;
++		dma-coherent;
++		status = "disabled";
++	};
++
+ 	gic: interrupt-controller@2c010000 {
+ 		compatible = "arm,gic-400", "arm,cortex-a15-gic";
+ 		reg = <0x0 0x2c010000 0 0x1000>,
+@@ -146,6 +168,7 @@
+ 	etr@20070000 {
+ 		compatible = "arm,coresight-tmc", "arm,primecell";
+ 		reg = <0 0x20070000 0 0x1000>;
++		iommus = <&smmu_etr 0>;
+ 
+ 		clocks = <&soc_smc50mhz>;
+ 		clock-names = "apb_pclk";
+@@ -404,6 +427,8 @@
+ 				<0 0 0 4 &gic 0 0 0 139 4>;
+ 		msi-parent = <&v2m_0>;
+ 		status = "disabled";
++		iommu-map-mask = <0x0>;	/* RC has no means to output PCI RID */
++		iommu-map = <0x0 &smmu_pcie 0x0 0x1>;
+ 	};
+ 
+ 	scpi {
+@@ -484,6 +509,48 @@
+ 
+ 	/include/ "juno-clocks.dtsi"
+ 
++	smmu_dma: iommu@7fb00000 {
++		compatible = "arm,mmu-401", "arm,smmu-v1";
++		reg = <0x0 0x7fb00000 0x0 0x10000>;
++		interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
++		#iommu-cells = <1>;
++		#global-interrupts = <1>;
++		dma-coherent;
++		status = "disabled";
++	};
++
++	smmu_hdlcd1: iommu@7fb10000 {
++		compatible = "arm,mmu-401", "arm,smmu-v1";
++		reg = <0x0 0x7fb10000 0x0 0x10000>;
++		interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
++		#iommu-cells = <1>;
++		#global-interrupts = <1>;
++		status = "disabled";
++	};
++
++	smmu_hdlcd0: iommu@7fb20000 {
++		compatible = "arm,mmu-401", "arm,smmu-v1";
++		reg = <0x0 0x7fb20000 0x0 0x10000>;
++		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
++		#iommu-cells = <1>;
++		#global-interrupts = <1>;
++		status = "disabled";
++	};
++
++	smmu_usb: iommu@7fb30000 {
++		compatible = "arm,mmu-401", "arm,smmu-v1";
++		reg = <0x0 0x7fb30000 0x0 0x10000>;
++		interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
++		#iommu-cells = <1>;
++		#global-interrupts = <1>;
++		dma-coherent;
++		status = "disabled";
++	};
++
+ 	dma@7ff00000 {
+ 		compatible = "arm,pl330", "arm,primecell";
+ 		reg = <0x0 0x7ff00000 0 0x1000>;
+@@ -499,6 +566,15 @@
+ 			     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
++		iommus = <&smmu_dma 0>,
++			 <&smmu_dma 1>,
++			 <&smmu_dma 2>,
++			 <&smmu_dma 3>,
++			 <&smmu_dma 4>,
++			 <&smmu_dma 5>,
++			 <&smmu_dma 6>,
++			 <&smmu_dma 7>,
++			 <&smmu_dma 8>;
+ 		clocks = <&soc_faxiclk>;
+ 		clock-names = "apb_pclk";
+ 	};
+@@ -507,6 +583,7 @@
+ 		compatible = "arm,hdlcd";
+ 		reg = <0 0x7ff50000 0 0x1000>;
+ 		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
++		iommus = <&smmu_hdlcd1 0>;
+ 		clocks = <&scpi_clk 3>;
+ 		clock-names = "pxlclk";
+ 
+@@ -521,6 +598,7 @@
+ 		compatible = "arm,hdlcd";
+ 		reg = <0 0x7ff60000 0 0x1000>;
+ 		interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
++		iommus = <&smmu_hdlcd0 0>;
+ 		clocks = <&scpi_clk 3>;
+ 		clock-names = "pxlclk";
+ 
+@@ -574,6 +652,7 @@
+ 		compatible = "generic-ohci";
+ 		reg = <0x0 0x7ffb0000 0x0 0x10000>;
+ 		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
++		iommus = <&smmu_usb 0>;
+ 		clocks = <&soc_usb48mhz>;
+ 	};
+ 
+@@ -581,6 +660,7 @@
+ 		compatible = "generic-ehci";
+ 		reg = <0x0 0x7ffc0000 0x0 0x10000>;
+ 		interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++		iommus = <&smmu_usb 0>;
+ 		clocks = <&soc_usb48mhz>;
+ 	};
+ 
 -- 
-Regards,
-
-Laurent Pinchart
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
