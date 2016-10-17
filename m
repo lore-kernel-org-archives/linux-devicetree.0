@@ -1,53 +1,49 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next 1/2] net: phy: Add Speed downshift set driver for Microsemi PHYs.
-Date: Mon, 17 Oct 2016 05:38:46 -0700
-Message-ID: <A80DFF63-2C6B-4113-AA7D-AEEC0150EAF2@gmail.com>
-References: <1476445233-26524-1-git-send-email-Raju.Lakkaraju@microsemi.com> <1476445233-26524-2-git-send-email-Raju.Lakkaraju@microsemi.com> <20161014121232.GH5822@lunn.ch> <20161017073152.GA2365@microsemi.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RFC PATCH 0/3] ARM: dts: oxnas: Update support for OX820 and use
+ dt-bindings
+Date: Mon, 17 Oct 2016 14:39:58 +0200
+Message-ID: <20161017124001.23820-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20161017073152.GA2365@microsemi.com>
-Sender: netdev-owner@vger.kernel.org
-To: Raju.Lakkaraju@microsemi.com, Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Allan.Nielsen@microsemi.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-oxnas@lists.tuxfamily.org, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On October 17, 2016 12:31:54 AM PDT, Raju Lakkaraju <Raju.Lakkaraju@microsemi.com> wrote:
->Hi Andrew,
->
->Thank you for code review and comments.
->
->On Fri, Oct 14, 2016 at 02:12:32PM +0200, Andrew Lunn wrote:
->> EXTERNAL EMAIL
->> 
->> 
->> On Fri, Oct 14, 2016 at 05:10:32PM +0530, Raju Lakkaraju wrote:
->> > From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
->> >
->> > For operation in cabling environments that are incompatible with
->> > 1000BAST-T, VSC8531 device provides an automatic link speed
->> > downshift operation. When enabled, the device automatically changes
->> > its 1000BAST-T auto-negotiation to the next slower speed after
->> > a configured number of failed attempts at 1000BAST-T.
->> > This feature is useful in setting up in networks using older cable
->> > installations that include only pairs A and B, and not pairs C and
->D.
->> 
->> Any reason not to just turn this on by default when auto-neg is
->> enabled?
->> 
->Downshift can enable by default when auto-neg enabled. This is good
->idea.
->But we would like to provide option to customer can choose whether this
->feature need to enable or disable and also configure failure attempts.
->
->Do you have any other suggestion how to configure failure attempts?
+This patchset updates the ARM DTS for the Oxnas platform by :
+- Add support for the Oxford Semicondutor OX820 and the PogoPlug V3
+- Update the OX810SE to use the dt-bindings includes files introduced in [1] and [2]
+- Fix the MAINTAINERS entry and add the PogoPlug V3 file maintainance
 
-Is the speed downshift feature similar to what Intel and Broadcom refer to as wirespeed? I have seen cases with Broadcom PHYs where we had to turn such a feature on to allow auto-negotiation to complete with 4-wire cables, but this had the downside of impacting normal autoneg, so it is left disabled.
+This patchset remains RFC until dependent patches [1] and [2] are merged.
 
-I would expect the number of customers using this feature to be fairly limited, so having a tunable to turn this downshift on/off may be acceptable. Ethtool supports a number of tunable parameters now (such as rx_copybreak), there may be room for using something similar for boolean flags like these.
+[1] https://listengine.tuxfamily.org/lists.tuxfamily.org/linux-oxnas/2016/10/msg00008.html
+[2] https://listengine.tuxfamily.org/lists.tuxfamily.org/linux-oxnas/2016/10/msg00007.html
+
+Neil Armstrong (3):
+  ARM: dts: Add support for OX820 and Pogoplug V3
+  ARM: dts: OX810: Update with dt-bindings includes
+  MAINTAINERS: oxnas: Add new files definitions
+
+ Documentation/devicetree/bindings/arm/oxnas.txt    |   5 +
+ MAINTAINERS                                        |   3 +-
+ arch/arm/boot/dts/Makefile                         |   3 +-
+ .../boot/dts/cloudengines-pogoplug-series-3.dts    |  60 +++++
+ arch/arm/boot/dts/ox810se.dtsi                     |  10 +-
+ arch/arm/boot/dts/ox820.dtsi                       | 259 +++++++++++++++++++++
+ 6 files changed, 334 insertions(+), 6 deletions(-)
+ create mode 100644 arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts
+ create mode 100644 arch/arm/boot/dts/ox820.dtsi
 
 -- 
-Florian
+2.7.0
