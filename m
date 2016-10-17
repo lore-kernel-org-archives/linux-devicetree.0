@@ -1,62 +1,55 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v4 2/7] ARM: dts: bcm283x: Define standard pinctrl groups in the gpio node.
-Date: Mon, 17 Oct 2016 09:58:39 -0700
-Message-ID: <87shrukj40.fsf@eliezer.anholt.net>
-References: <1474274603-24215-1-git-send-email-kraxel@redhat.com> <1474274603-24215-3-git-send-email-kraxel@redhat.com>
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] Add missing space at end of pr_fmt().
+Date: Mon, 17 Oct 2016 10:04:21 -0700
+Message-ID: <1476723861.4414.1.camel@perches.com>
+References: <1476717010-3580-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1474274603-24215-3-git-send-email-kraxel@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: swarren@wwwdotorg.org, bcm-kernel-feedback-list@broadcom.com, Gerd Hoffmann <kraxel@redhat.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476717010-3580-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On Mon, 2016-10-17 at 08:10 -0700, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+> 
+> Make pr_fmt() in fdt.c consistent with all other files in drivers/of/
 
-Gerd Hoffmann <kraxel@redhat.com> writes:
+Hi Frank.
 
-> From: Eric Anholt <eric@anholt.net>
->
-> The BCM2835-ARM-Peripherals.pdf documentation specifies what the
-> function selects do for the pins, and there are a bunch of obvious
-> groupings to be made.  With these created, we'll be able to replace
-> bcm2835-rpi.dtsi's main "set all of these pins to alt0" with
-> references to specific groups we want enabled.
->
-> Also add pinctrl groups for emmc and sdhost.
->
-> Based on patches by Eric Anholt <eric@anholt.net>
+Patches should use the subsystem as a subject prefix to make
+the subsystem more obvious when using "git log".
 
-I amended this line to "Based on patches by Eric Anholt, with fixups by
-Gerd Hoffmann." to explain why it had me as author but you in signoff.
+This email subject could be something like:
 
-I had to resolve some conflicts on the way in because apparently you had
-built this against a tree with 14 and 15 already dropped from alt0.  I
-think those resolutions were sufficiently mechanical that it didn't
-merit a respin.
+"Subject: [PATCH] of: fdt: Add missing space at end of pr_fmt()"
 
-Merged the series to bcm2835-dt-next.  Thanks for getting this done!
+Please check the git log to see examples for drivers/of/fdt.c
+and pick the prefix style you think appropriate.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCgAGBQJYBQM/AAoJELXWKTbR/J7oQmcP/Ai3EDisLEjOaM6iJae5pe8/
-S4VCNzIGFJuojbNsEpoLu7mpeoB7kL2w5DI2YUd+IoZgsESagwg3z3VkI9UXguK9
-hwdanTQcDnwwJiekAZ4290Pl2jT89cgZLNXipmCmOZ3sr5V4huiOAqiUK2tCxRQ3
-8Pnl0qFixpvfo/WszyrenHT4BMoJhx53Yog/8cSkRluQI/QRLtfJtiQ3tJLvt2vp
-RwxpxUYq0hYoBqTzidl/VXYT3Wth5JkTvO3y0ljbDQdD4HanR8qBiieMMMr+/2UF
-rBhimL40SPAQz+9cpVxQbwvJwEsJ9tZ4xKyJZNV5vSBcJFDnpf3DKdDNQfDgoClY
-PXSvDUMvNyA+d5Ds/Fx6F8Vs/+6R9fDqWU5BqYK3yVH0RomZ9Oxi5LiZNgYGXwm5
-fp0dN8uWR5dKfjvN0d//lvr+tQTE1s6DwEY0weZYHwUbN4oDVEze3MB4lr9ZrISx
-eSEhTSIuNMZwB+/BV169zmWI/aZabkVZtX5hc8/aa0lYRnDAWlPV9YKxYtvNOGc8
-0ABKhaNb+HwAQ7PTputCCRLCy1BkhHUpELdU2voUOWkTf7aDgzpGzmDcN+H6EJb6
-hKXU2O17ApiWW1SYTk0onC4AzYraNtHFLCBEdkEqvpVjosiiSDCbRX4N+ae91G9j
-udxA500rqppopM9YTmcO
-=1Vlp
------END PGP SIGNATURE-----
---=-=-=--
+> Signed-off-by: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/of/fdt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index c89d5d231a0e..9f98e437e1f1 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -9,7 +9,7 @@
+>   * version 2 as published by the Free Software Foundation.
+>   */
+>  
+> -#define pr_fmt(fmt)	"OF: fdt:" fmt
+> +#define pr_fmt(fmt)	"OF: fdt: " fmt
+>  
+>  #include <linux/crc32.h>
+>  #include <linux/kernel.h>
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
