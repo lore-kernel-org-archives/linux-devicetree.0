@@ -1,59 +1,79 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [RFC V3 PATCH 5/7] arm64: dts: msm8994 SoC and Huawei Angler
- (Nexus 6P) support
-Date: Mon, 17 Oct 2016 17:15:35 -0500
-Message-ID: <20161017221535.GA3145@hector.attlocal.net>
-References: <1476265054-22511-1-git-send-email-jeremymc@redhat.com>
- <1476265054-22511-6-git-send-email-jeremymc@redhat.com>
- <20161012133450.GC21050@remoulade>
- <CAL_JsqLMs3cE6qne_GN-3E7c1ub_6U0y5UF0aLkxUD=k5fiOTw@mail.gmail.com>
- <3e641d25-8ca6-3594-5d3e-038d6f7a9eba@redhat.com>
- <6be08daf-0ad7-7913-ee63-854d52eb6ba1@linaro.org>
+From: Zach Brown <zach.brown@ni.com>
+Subject: Re: [RFC 1/2] sdhci: Add device tree property sd-broken-highspeed
+Date: Mon, 17 Oct 2016 16:49:05 -0500
+Message-ID: <20161017214904.GA3445@zach-desktop>
+References: <1474660869-15532-1-git-send-email-zach.brown@ni.com>
+ <1474660869-15532-2-git-send-email-zach.brown@ni.com>
+ <CAPDyKFogDKM86XKo1iQE1KU5HpEic23FD5YQGF9QjSFYBDJn4Q@mail.gmail.com>
+ <CAL_JsqLjtn2-FaO_h9JWOsZqttQ35yV6KOnQz2Z-cMr=0GHJCg@mail.gmail.com>
+ <CAPDyKFqw7mcvW=HTnZ9AoDFEk4TTBsecphaYxMGrEneDoKOevw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6be08daf-0ad7-7913-ee63-854d52eb6ba1@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Michael Scott <michael.scott@linaro.org>
-Cc: Jeremy McNicoll <jmcnicol@redhat.com>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Bjorn Andersson <bjorn.andersson@linaro.org>
+In-Reply-To: <CAPDyKFqw7mcvW=HTnZ9AoDFEk4TTBsecphaYxMGrEneDoKOevw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Mark Rutland <mark.rutland@arm.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 14, 2016 at 03:06:45PM -0700, Michael Scott wrote:
-> 
-> 
-> On 10/12/2016 05:42 PM, Jeremy McNicoll wrote:
-> >On 2016-10-12 7:20 AM, Rob Herring wrote:
-> >>On Wed, Oct 12, 2016 at 8:34 AM, Mark Rutland <mark.rutland@arm.com>
-> >>wrote:
-> >>>On Wed, Oct 12, 2016 at 02:37:32AM -0700, Jeremy McNicoll wrote:
-> >>>>+/ {
-> >>>>+     model = "HUAWEI MSM8994 ANGLER rev-1.01";
-> >>>>+     compatible = "qcom,msm8994";
-> >>>>+     qcom,board-id= <8026 0>;
-> 
-> Hello Jeremy,
-> 
-> When I tested these patches on linux-next, the bootloader on my Nexus 6P
-> wasn't finding the dtb until I adjusted the board-id value to <8023 0>.
-> 
-> Apparently, my hardware matches "Huawei Technologies, Inc. MSM8994 Angler
-> VN2" in the original kernel sources:
-> https://android.googlesource.com/kernel/msm/+/android-msm-angler-3.10-nougat/arch/arm64/boot/dts/huawei/huawei_angler_vn2.dts
+On Thu, Oct 06, 2016 at 10:03:56AM +0200, Ulf Hansson wrote:
+> On 5 October 2016 at 22:03, Rob Herring <robh+dt@kernel.org> wrote:
+> > On Wed, Oct 5, 2016 at 1:33 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >> On 23 September 2016 at 22:01, Zach Brown <zach.brown@ni.com> wrote:
+> >>> Certain board configurations can make highspeed malfunction due to
+> >>> timing issues. In these cases a way is needed to force the controller
+> >>> and card into standard speed even if they otherwise appear to be capable
+> >>> of highspeed.
+> >>>
+> >>> The sd-broken-highspeed property will let the sdhci driver know that
+> >>> highspeed will not work.
+> >>>
+> >>> Signed-off-by: Zach Brown <zach.brown@ni.com>
+> >>> ---
+> >>>  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+> >>>  1 file changed, 2 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> >>> index 8a37782..59332ea 100644
+> >>> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> >>> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> >>> @@ -52,6 +52,8 @@ Optional properties:
+> >>>  - no-sdio: controller is limited to send sdio cmd during initialization
+> >>>  - no-sd: controller is limited to send sd cmd during initialization
+> >>>  - no-mmc: controller is limited to send mmc cmd during initialization
+> >>> +- sd-broken-highspeed: Highspeed is broken, even if the controller and card
+> >>> +  themselves claim they support highspeed.
+> >>
+> >> Regarding a broken card, that is managed via the card quirks and not in DT.
+> >>
+> >> If this is about a controller limitation, we already have the option
+> >> to describe what it supports, so we don't need an option to tell what
+> >> it *not* supports.
+> >>
+> >> For example "cap-sd-highspeed" tells whether the controller supports
+> >> SD high-speed, please use that instead.
+> >
+> > If a controller has a capability register and it lies (perhaps the
+> > board has limitations that the SoC does not), then you may need to
+> > disable a feature.
+>
+> I understand, although the SDHCI capabilities register is broken for
+> most SDHCI variants. In principle, we would more or less have to add a
+> *-broken binding for each bit in that register. I don't like that!
+>
+> Maybe a better option is to add a "sdhci-cap-broken" or perhaps
+> "sdhci-cap-speed-modes-broken", which tells the driver to not rely on
+> the capabilities register and instead find out what *is* supported by
+> looking at the other mmc generic DT bindings.
+>
+> What do you think of that?
+>
+> Kind regards
+> Uffe
 
-Sounds like we need another board file that at least covers the main msm-id for
-this.
+"sdhci-cap-broken" seems too aggressive. There might only be one capability
+that the register incorrectly advertises.
 
-> 
-> I'm not sure what the most common hardware is out in the wild, but the
-> board-id for your dts comes from this commit, which seems to indicate it's a
-> DVT model (as opposed to a PVT model):
-> https://android.googlesource.com/kernel/msm/+/e9a476191862cfe8e5e30e2babc04052f9ab936b
-> 
-> We should definitely get a sample size of > 1
-
-Too bad those phones are somewhat expensive.
-
-
-
-Andy
+"sdhci-cap-speed-modes-broken" makes more sense and I will re-create this patch
+set using that idea.
