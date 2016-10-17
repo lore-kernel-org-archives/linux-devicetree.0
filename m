@@ -1,62 +1,53 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [RFC v2 2/2] sdhci: Prevent SD from doing high-speed timing when
- broken-highspeed property is set
-Date: Mon, 17 Oct 2016 09:56:19 +0300
-Message-ID: <58380ee1-15d0-9eb6-fe89-f1bb9ec24af2@intel.com>
-References: <1476297656-7019-1-git-send-email-zach.brown@ni.com>
- <1476297656-7019-3-git-send-email-zach.brown@ni.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: da850: add a node for the LCD controller
+Date: Mon, 17 Oct 2016 12:42:32 +0530
+Message-ID: <65fde145-0820-794d-d345-621f66cdacc0@ti.com>
+References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
+ <1475672732-17111-3-git-send-email-bgolaszewski@baylibre.com>
+ <2d276e51-9d37-8648-4aad-283bb2b23626@ti.com>
+ <1e23c3e9-d34b-1d8f-8565-c9932a60fd32@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1476297656-7019-3-git-send-email-zach.brown@ni.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Zach Brown <zach.brown@ni.com>, ulf.hansson@linaro.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1e23c3e9-d34b-1d8f-8565-c9932a60fd32-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Karl Beldan <karl.beldan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/16 21:40, Zach Brown wrote:
-> When the broken-highspeed property is set the sdhci driver will not
-> go into highspeed mode even if the controller and card appear to
-> otherwise support highspeed mode.
+On Monday 17 October 2016 11:26 AM, Tomi Valkeinen wrote:
+> On 15/10/16 20:42, Sekhar Nori wrote:
 > 
-> This is useful in cases where the controller and card support highspeed,
-> but the board configuration or some other issue make highspeed
-> impossible. For example, we send the SDIO lines through a fpga so we
-> need the data to change on the falling edge of the clock or there will
-> be issues with hold time.
+>>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+>>> index f79e1b9..32908ae 100644
+>>> --- a/arch/arm/boot/dts/da850.dtsi
+>>> +++ b/arch/arm/boot/dts/da850.dtsi
+>>
+>>> @@ -399,6 +420,14 @@
+>>>  				<&edma0 0 1>;
+>>>  			dma-names = "tx", "rx";
+>>>  		};
+>>> +
+>>> +		display: display@213000 {
+>>> +			compatible = "ti,am33xx-tilcdc", "ti,da850-tilcdc";
+>>
+>> This should instead be:
+>>
+>> compatible = "ti,da850-tilcdc", "ti,am33xx-tilcdc";
+>>
+>> as the closest match should appear first in the list.
 > 
-> Signed-off-by: Zach Brown <zach.brown@ni.com>
+> Actually I don't think that's correct. The LCDC on da850 is not
+> compatible with the LCDC on AM335x. I think it should be just
+> "ti,da850-tilcdc".
 
-Assuming the DT property is accepted:
+So if "ti,am33xx-tilcdc" is used, the display wont work at all? If thats
+the case, I wonder how the patch passed testing. Bartosz?
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  drivers/mmc/host/sdhci.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 4805566..17e6c50 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -22,6 +22,7 @@
->  #include <linux/scatterlist.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/of.h>
->  
->  #include <linux/leds.h>
->  
-> @@ -3274,7 +3275,8 @@ int sdhci_setup_host(struct sdhci_host *host)
->  	if (host->quirks2 & SDHCI_QUIRK2_HOST_NO_CMD23)
->  		mmc->caps &= ~MMC_CAP_CMD23;
->  
-> -	if (host->caps & SDHCI_CAN_DO_HISPD)
-> +	if ((host->caps & SDHCI_CAN_DO_HISPD) &&
-> +	    !(of_property_read_bool(mmc_dev(mmc)->of_node, "broken-highspeed")))
->  		mmc->caps |= MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED;
->  
->  	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) &&
-> 
-
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
