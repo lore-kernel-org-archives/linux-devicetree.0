@@ -1,168 +1,49 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2] usb: xhci: add support for performing fake doorbell
-Date: Mon, 17 Oct 2016 22:30:36 +0200
-Message-ID: <20161017203036.23399-1-zajec5@gmail.com>
-References: <20161001215817.25384-1-zajec5@gmail.com>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [PATCH v20 02/10] doc: fpga-mgr: add fpga image info to api
+Date: Mon, 17 Oct 2016 23:00:19 +0200
+Message-ID: <CAAtXAHcpwmW_7f2F9vk49hAHpOTs4rk9fFvLzn5zNdPZCy_O7A@mail.gmail.com>
+References: <20161017160941.4205-1-atull@opensource.altera.com> <20161017160941.4205-3-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161001215817.25384-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161017160941.4205-3-atull@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Tull <atull@opensource.altera.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jon Masters <jcm@redhat.com>, Michal Simek <michal.simek@xilinx.com>, Jonathan Corbet <corbet@lwn.net>, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, Matthew Gerlach <mgerlach@opensource.altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Devicetree List <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alan Tull <delicious.quinoa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Hi Alan,
 
-Broadcom's Northstar XHCI controllers seem to need a special start
-procedure to work correctly. There isn't any official documentation of
-this, the problem is that controller doesn't detect any connected
-devices with default setup. Moreover connecting USB device to controller
-that doesn't run properly can cause SoC's watchdog issues.
+couple of nits inline and some comments on ordering the patches ;-)
 
-A workaround that was successfully tested on multiple devices is to
-perform a fake doorbell. This patch adds code for doing this and enables
-it on BCM4708 family.
+On Mon, Oct 17, 2016 at 6:09 PM, Alan Tull <atull@opensource.altera.com> wrote:
+> This patch adds a minor change in the FPGA Mangager API
 
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
-V2: Enable quirk for brcm,bcm4708 machines instead of adding separated binding
-    for it. Thanks Rob for your comment on this.
----
- drivers/usb/host/xhci-plat.c |  6 +++++
- drivers/usb/host/xhci.c      | 63 +++++++++++++++++++++++++++++++++++++++++---
- drivers/usb/host/xhci.h      |  1 +
- 3 files changed, 67 insertions(+), 3 deletions(-)
+s/Mangager/Manager/
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index ed56bf9..b01a3be 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -56,12 +56,18 @@ static int xhci_priv_init_quirk(struct usb_hcd *hcd)
- 
- static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
- {
-+	struct platform_device	*pdev = to_platform_device(dev);
-+	struct device_node	*node = pdev->dev.of_node;
-+
- 	/*
- 	 * As of now platform drivers don't provide MSI support so we ensure
- 	 * here that the generic code does not try to make a pci_dev from our
- 	 * dev struct in order to setup MSI
- 	 */
- 	xhci->quirks |= XHCI_PLAT;
-+
-+	if (node && of_machine_is_compatible("brcm,bcm4708"))
-+		xhci->quirks |= XHCI_FAKE_DOORBELL;
- }
- 
- /* called during probe() after chip reset completes */
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 1a4ca02..c77035e9b 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -153,6 +153,49 @@ static int xhci_start(struct xhci_hcd *xhci)
- 	return ret;
- }
- 
-+/**
-+ * xhci_fake_doorbell - Perform a fake doorbell on a specified slot
-+ *
-+ * Some controllers require a fake doorbell to start correctly. Without that
-+ * they simply don't detect any devices.
-+ */
-+static int xhci_fake_doorbell(struct xhci_hcd *xhci, int slot_id)
-+{
-+	u32 temp;
-+
-+	/* Alloc a virt device for that slot */
-+	if (!xhci_alloc_virt_device(xhci, slot_id, NULL, GFP_NOIO)) {
-+		xhci_warn(xhci, "Could not allocate xHCI USB device data structures\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* Ring fake doorbell for slot_id ep 0 */
-+	xhci_ring_ep_doorbell(xhci, slot_id, 0, 0);
-+	usleep_range(1000, 1500);
-+
-+	/* Read the status to check if HSE is set or not */
-+	temp = readl(&xhci->op_regs->status);
-+
-+	/* Clear HSE if set */
-+	if (temp & STS_FATAL) {
-+		xhci_dbg(xhci, "HSE problem detected, status: 0x%08x\n", temp);
-+		temp &= ~0x1fff;
-+		temp |= STS_FATAL;
-+		writel(temp, &xhci->op_regs->status);
-+		usleep_range(1000, 1500);
-+		readl(&xhci->op_regs->status);
-+	}
-+
-+	/* Free virt device */
-+	xhci_free_virt_device(xhci, slot_id);
-+
-+	/* We're done if controller is already running */
-+	if (readl(&xhci->op_regs->command) & CMD_RUN)
-+		return 0;
-+
-+	return xhci_start(xhci);
-+}
-+
- /*
-  * Reset a halted HC.
-  *
-@@ -565,10 +608,20 @@ int xhci_init(struct usb_hcd *hcd)
- 
- static int xhci_run_finished(struct xhci_hcd *xhci)
- {
--	if (xhci_start(xhci)) {
--		xhci_halt(xhci);
--		return -ENODEV;
-+	int err;
-+
-+	err = xhci_start(xhci);
-+	if (err) {
-+		err = -ENODEV;
-+		goto err_halt;
-+	}
-+
-+	if (xhci->quirks & XHCI_FAKE_DOORBELL) {
-+		err = xhci_fake_doorbell(xhci, 1);
-+		if (err)
-+			goto err_halt;
- 	}
-+
- 	xhci->shared_hcd->state = HC_STATE_RUNNING;
- 	xhci->cmd_ring_state = CMD_RING_STATE_RUNNING;
- 
-@@ -578,6 +631,10 @@ static int xhci_run_finished(struct xhci_hcd *xhci)
- 	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
- 			"Finished xhci_run for USB3 roothub");
- 	return 0;
-+
-+err_halt:
-+	xhci_halt(xhci);
-+	return err;
- }
- 
- /*
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index b2c1dc5..52d7498 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1653,6 +1653,7 @@ struct xhci_hcd {
- #define XHCI_MTK_HOST		(1 << 21)
- #define XHCI_SSIC_PORT_UNUSED	(1 << 22)
- #define XHCI_NO_64BIT_SUPPORT	(1 << 23)
-+#define XHCI_FAKE_DOORBELL	(1 << 24)
- 	unsigned int		num_active_eps;
- 	unsigned int		limit_active_eps;
- 	/* There are two roothubs to keep track of bus suspend info for */
--- 
-2.9.3
+> to hold information that is specific to an FPGA image
+> file.  This change is expected to bring little, if any,
+> pain.
+>
+> An FPGA image file will have particulars that affect how the
+> image is programmed to the FPGA.  One example is that
+> current 'flags' currently has one bit which shows whether the
+> FPGA image was built for full reconfiguration or partial
+> reconfiguration.  Another example is timeout values for
+> enabling or disabling the bridges in the FPGA.  As the
+> complexity of the FPGA design increases, the bridges in the
+> FPGA may take longer times to enable or disable.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+According for the current ordering bridges are not yet defined if we
+merge patches in this order?
+Not terrible imho, but I thought I'd point it out. Would swapping the
+order make sense?
+
+I also think [5/10] should be squashed together with this commit to
+make it an atomic change.
+
+Apart from my comments above feel free to add my Acked-by
+
+Thanks for keeping this going,
+
+Moritz
