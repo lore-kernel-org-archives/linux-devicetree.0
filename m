@@ -1,72 +1,48 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH 2/3] dt-bindings: it6251: add bindings for IT6251 LVDS-to-eDP bridge
-Date: Mon, 17 Oct 2016 18:33:28 +0200
-Message-ID: <20161017163329.11821-2-marex@denx.de>
-References: <20161017163329.11821-1-marex@denx.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161017163329.11821-1-marex-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v7 REPOST 0/9] CPUs capacity information for heterogeneous
+ systems
+Date: Mon, 17 Oct 2016 17:39:22 +0100
+Message-ID: <66c7bbfd-ec3f-ff43-9a06-ae644d9ee9d9@arm.com>
+References: <20161017154650.18779-1-juri.lelli@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20161017154650.18779-1-juri.lelli@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Juri Lelli <juri.lelli@arm.com>, linux-kernel@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for ITE IT6251 LVDS-to-eDP bridge.
 
-Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
----
- .../bindings/display/bridge/ite,it6251.txt         | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6251.txt
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6251.txt b/Documentation/devicetree/bindings/display/bridge/ite,it6251.txt
-new file mode 100644
-index 0000000..c5db82c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ite,it6251.txt
-@@ -0,0 +1,35 @@
-+ITE IT6251 LVDS-to-eDP bridge bindings
-+
-+Required properties:
-+- compatible:		Should be "ite,it6251"
-+- reg:			i2c address of the bridge, i2c address of the LVDS part
-+- reg-names:		Should be "bridge", "lvds"
-+- power-supply:		Regulator to provide the supply voltage
-+- video interfaces:	Device node can contain video interface port nodes
-+			for panel according to [1].
-+
-+[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+Example:
-+
-+	it6251@5c {
-+		compatible = "ite,it6251";
-+		reg = <0x5c>, <0x5e>;
-+		reg-names = "bridge", "lvds";
-+		power-supply = <&reg_display>;
-+
-+		ports {
-+			port@0 {
-+				bridge_out_edp0: endpoint {
-+					remote-endpoint = <&panel_in_edp0>;
-+				};
-+			};
-+
-+			port@1 {
-+				bridge_in_lvds0: endpoint {
-+					remote-endpoint = <&lvds0_out>;
-+				};
-+			};
-+		};
-+	};
-+
+On 17/10/16 16:46, Juri Lelli wrote:
+> Hi all,
+>
+> this is a repost of version 7 of "CPUs capacity information for heterogeneous
+> systems" patchset [1] (please refer to previous postings to get some context).
+> I only added Juno r1 dts, as discussed off-line with Sudeep meanwhile (no code
+> changes at all, so that's why I'm saying this is a repost).
+>
+> I'm reposting as I didn't receive any comment (despite pinging people) on the
+> original v7 posting (apart from Vincent acking patches 2 and 4, thanks!). I
+> then waited until merge window for 4.9 was closed.
+>
+> I'm thus now assuming that everybody is OK with the patches and that they can
+> be queued for 4.10 (we certainly need this plumbing at this point). Please
+> speak if my assumption is wrong (and provide feedback! :).
+> Otherwise I'm going to:
+>
+>  - use Russell's patching system for patches 2 and 8
+>  - ask Sudeep to pull patches 3,5,6 and 7
+
+I have applied 3 to [1] and 5,6,7 to [2]. Let me know if things change
+and you want me to drop them with some cosmetic subject change and
+updated changelog.
+
 -- 
-2.9.3
+Regards,
+Sudeep
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] git.kernel.org/sudeep.holla/linux/h/vexpress-dt/for-next
+[2] git.kernel.org/sudeep.holla/linux/h/juno-dt/for-next
