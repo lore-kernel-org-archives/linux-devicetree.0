@@ -1,12 +1,13 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC PATCH 0/3] ARM: dts: oxnas: Update support for OX820 and use
- dt-bindings
-Date: Mon, 17 Oct 2016 14:39:58 +0200
-Message-ID: <20161017124001.23820-1-narmstrong@baylibre.com>
+Subject: [RFC PATCH 2/3] ARM: dts: OX810: Update with dt-bindings includes
+Date: Mon, 17 Oct 2016 14:40:00 +0200
+Message-ID: <20161017124001.23820-3-narmstrong@baylibre.com>
+References: <20161017124001.23820-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161017124001.23820-1-narmstrong@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,30 +21,62 @@ To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ox
 Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset updates the ARM DTS for the Oxnas platform by :
-- Add support for the Oxford Semicondutor OX820 and the PogoPlug V3
-- Update the OX810SE to use the dt-bindings includes files introduced in [1] and [2]
-- Fix the MAINTAINERS entry and add the PogoPlug V3 file maintainance
+Add OX810SE dt-bindings includes files for clocks and resets, replace
+resets numbers by human readable defines.
 
-This patchset remains RFC until dependent patches [1] and [2] are merged.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm/boot/dts/ox810se.dtsi | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-[1] https://listengine.tuxfamily.org/lists.tuxfamily.org/linux-oxnas/2016/10/msg00008.html
-[2] https://listengine.tuxfamily.org/lists.tuxfamily.org/linux-oxnas/2016/10/msg00007.html
-
-Neil Armstrong (3):
-  ARM: dts: Add support for OX820 and Pogoplug V3
-  ARM: dts: OX810: Update with dt-bindings includes
-  MAINTAINERS: oxnas: Add new files definitions
-
- Documentation/devicetree/bindings/arm/oxnas.txt    |   5 +
- MAINTAINERS                                        |   3 +-
- arch/arm/boot/dts/Makefile                         |   3 +-
- .../boot/dts/cloudengines-pogoplug-series-3.dts    |  60 +++++
- arch/arm/boot/dts/ox810se.dtsi                     |  10 +-
- arch/arm/boot/dts/ox820.dtsi                       | 259 +++++++++++++++++++++
- 6 files changed, 334 insertions(+), 6 deletions(-)
- create mode 100644 arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts
- create mode 100644 arch/arm/boot/dts/ox820.dtsi
-
+diff --git a/arch/arm/boot/dts/ox810se.dtsi b/arch/arm/boot/dts/ox810se.dtsi
+index ce13705..46aa6db 100644
+--- a/arch/arm/boot/dts/ox810se.dtsi
++++ b/arch/arm/boot/dts/ox810se.dtsi
+@@ -7,6 +7,8 @@
+  */
+ 
+ /include/ "skeleton.dtsi"
++#include <dt-bindings/clock/oxsemi,ox810se.h>
++#include <dt-bindings/reset/oxsemi,ox810se.h>
+ 
+ / {
+ 	compatible = "oxsemi,ox810se";
+@@ -242,7 +244,7 @@
+ 			       current-speed = <115200>;
+ 			       no-loopback-test;
+ 			       status = "disabled";
+-			       resets = <&reset 17>;
++			       resets = <&reset RESET_UART1>;
+ 			};
+ 
+ 			uart1: serial@300000 {
+@@ -256,7 +258,7 @@
+ 			       current-speed = <115200>;
+ 			       no-loopback-test;
+ 			       status = "disabled";
+-			       resets = <&reset 18>;
++			       resets = <&reset RESET_UART2>;
+ 			};
+ 
+ 			uart2: serial@900000 {
+@@ -270,7 +272,7 @@
+ 			       current-speed = <115200>;
+ 			       no-loopback-test;
+ 			       status = "disabled";
+-			       resets = <&reset 22>;
++			       resets = <&reset RESET_UART3>;
+ 			};
+ 
+ 			uart3: serial@a00000 {
+@@ -284,7 +286,7 @@
+ 			       current-speed = <115200>;
+ 			       no-loopback-test;
+ 			       status = "disabled";
+-			       resets = <&reset 23>;
++			       resets = <&reset RESET_UART4>;
+ 			};
+ 		};
+ 
 -- 
 2.7.0
