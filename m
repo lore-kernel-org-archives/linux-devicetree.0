@@ -1,134 +1,66 @@
-From: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RESEND][PATCH] crypto: caam: add support for iMX6UL
-Date: Mon, 17 Oct 2016 13:28:00 +0200
-Message-ID: <1476703680-22676-1-git-send-email-marcus.folkesson@gmail.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: da850: add a node for the LCD controller
+Date: Mon, 17 Oct 2016 14:40 +0300
+Message-ID: <4975084.EGQPv58AK6@avalon>
+References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com> <65fde145-0820-794d-d345-621f66cdacc0@ti.com> <7a2ffcd0-fe1d-c887-53b7-7cb5e1e61222@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7a2ffcd0-fe1d-c887-53b7-7cb5e1e61222-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Horia Geanta <horia.geanta-3arQi8VN3Tc@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alex Porosanu <alexandru.porosanu-3arQi8VN3Tc@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Karl Beldan <karl.beldan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-i.MX6UL does only require three clocks to enable CAAM module.
+Hello,
 
-Signed-off-by: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Horia Geantă <horia.geanta-3arQi8VN3Tc@public.gmane.org>
----
- .../devicetree/bindings/crypto/fsl-sec4.txt        | 20 +++++++++++++
- drivers/crypto/caam/ctrl.c                         | 35 ++++++++++++----------
- 2 files changed, 40 insertions(+), 15 deletions(-)
+On Monday 17 Oct 2016 10:33:58 Tomi Valkeinen wrote:
+> On 17/10/16 10:12, Sekhar Nori wrote:
+>> On Monday 17 October 2016 11:26 AM, Tomi Valkeinen wrote:
+>>> On 15/10/16 20:42, Sekhar Nori wrote:
+>>>>> diff --git a/arch/arm/boot/dts/da850.dtsi
+>>>>> b/arch/arm/boot/dts/da850.dtsi
+>>>>> index f79e1b9..32908ae 100644
+>>>>> --- a/arch/arm/boot/dts/da850.dtsi
+>>>>> +++ b/arch/arm/boot/dts/da850.dtsi
+>>>>> @@ -399,6 +420,14 @@
+>>>>>  				<&edma0 0 1>;
+>>>>>  			dma-names = "tx", "rx";
+>>>>>  		};
+>>>>> +
+>>>>> +		display: display@213000 {
+>>>>> +			compatible = "ti,am33xx-tilcdc", "ti,da850-tilcdc";
+>>>> 
+>>>> This should instead be:
+>>>> 
+>>>> compatible = "ti,da850-tilcdc", "ti,am33xx-tilcdc";
+>>>> 
+>>>> as the closest match should appear first in the list.
+>>> 
+>>> Actually I don't think that's correct. The LCDC on da850 is not
+>>> compatible with the LCDC on AM335x. I think it should be just
+>>> "ti,da850-tilcdc".
+>> 
+>> So if "ti,am33xx-tilcdc" is used, the display wont work at all? If thats
+>> the case, I wonder how the patch passed testing. Bartosz?
+> 
+> AM3 has "version 2" of LCDC, whereas DA850 is v1. They are quite
+> similar, but different.
+> 
+> The driver gets the version number from LCDC's register, and acts based
+> on that, so afaik the compatible string doesn't really affect the
+> functionality (as long as it matches).
+> 
+> But even if it works with the current driver, I don't think
+> "ti,am33xx-tilcdc" and "ti,da850-tilcdc" are compatible in the HW level.
 
-diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-index adeca34..10a425f 100644
---- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-+++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-@@ -123,6 +123,9 @@ PROPERTIES
- 
- 
- EXAMPLE
-+
-+iMX6QDL/SX requires four clocks
-+
- 	crypto@300000 {
- 		compatible = "fsl,sec-v4.0";
- 		fsl,sec-era = <2>;
-@@ -139,6 +142,23 @@ EXAMPLE
- 		clock-names = "mem", "aclk", "ipg", "emi_slow";
- 	};
- 
-+
-+iMX6UL does only require three clocks
-+
-+	crypto: caam@2140000 {
-+		compatible = "fsl,sec-v4.0";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x2140000 0x3c000>;
-+		ranges = <0 0x2140000 0x3c000>;
-+		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		clocks = <&clks IMX6UL_CLK_CAAM_MEM>,
-+			 <&clks IMX6UL_CLK_CAAM_ACLK>,
-+			 <&clks IMX6UL_CLK_CAAM_IPG>;
-+		clock-names = "mem", "aclk", "ipg";
-+	};
-+
- =====================================================================
- Job Ring (JR) Node
- 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index 0ec112e..5abaf37 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -329,8 +329,8 @@ static int caam_remove(struct platform_device *pdev)
- 	clk_disable_unprepare(ctrlpriv->caam_ipg);
- 	clk_disable_unprepare(ctrlpriv->caam_mem);
- 	clk_disable_unprepare(ctrlpriv->caam_aclk);
--	clk_disable_unprepare(ctrlpriv->caam_emi_slow);
--
-+	if (!of_machine_is_compatible("fsl,imx6ul"))
-+		clk_disable_unprepare(ctrlpriv->caam_emi_slow);
- 	return 0;
- }
- 
-@@ -481,14 +481,16 @@ static int caam_probe(struct platform_device *pdev)
- 	}
- 	ctrlpriv->caam_aclk = clk;
- 
--	clk = caam_drv_identify_clk(&pdev->dev, "emi_slow");
--	if (IS_ERR(clk)) {
--		ret = PTR_ERR(clk);
--		dev_err(&pdev->dev,
--			"can't identify CAAM emi_slow clk: %d\n", ret);
--		return ret;
-+	if (!of_machine_is_compatible("fsl,imx6ul")) {
-+		clk = caam_drv_identify_clk(&pdev->dev, "emi_slow");
-+		if (IS_ERR(clk)) {
-+			ret = PTR_ERR(clk);
-+			dev_err(&pdev->dev,
-+				"can't identify CAAM emi_slow clk: %d\n", ret);
-+			return ret;
-+		}
-+		ctrlpriv->caam_emi_slow = clk;
- 	}
--	ctrlpriv->caam_emi_slow = clk;
- 
- 	ret = clk_prepare_enable(ctrlpriv->caam_ipg);
- 	if (ret < 0) {
-@@ -509,11 +511,13 @@ static int caam_probe(struct platform_device *pdev)
- 		goto disable_caam_mem;
- 	}
- 
--	ret = clk_prepare_enable(ctrlpriv->caam_emi_slow);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "can't enable CAAM emi slow clock: %d\n",
--			ret);
--		goto disable_caam_aclk;
-+	if (!of_machine_is_compatible("fsl,imx6ul")) {
-+		ret = clk_prepare_enable(ctrlpriv->caam_emi_slow);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "can't enable CAAM emi slow clock: %d\n",
-+				ret);
-+			goto disable_caam_aclk;
-+		}
- 	}
- 
- 	/* Get configuration properties from device tree */
-@@ -829,7 +833,8 @@ caam_remove:
- iounmap_ctrl:
- 	iounmap(ctrl);
- disable_caam_emi_slow:
--	clk_disable_unprepare(ctrlpriv->caam_emi_slow);
-+	if (!of_machine_is_compatible("fsl,imx6ul"))
-+		clk_disable_unprepare(ctrlpriv->caam_emi_slow);
- disable_caam_aclk:
- 	clk_disable_unprepare(ctrlpriv->caam_aclk);
- disable_caam_mem:
+If the hardware provides IP revision information, how about just "ti,lcdc" ?
+
 -- 
-2.8.0
+Regards,
+
+Laurent Pinchart
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
