@@ -1,71 +1,68 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/2] ARM: dts: da850: add a node for the LCD controller
-Date: Mon, 17 Oct 2016 15:44:48 +0300
-Message-ID: <1615142.iysWriV8vb@avalon>
-References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
- <4975084.EGQPv58AK6@avalon> <daf49046-ad0a-d9e2-d744-1e06085c6585@ti.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH net-next 2/2] net: phy: Add Fast Link Failure - 2 set driver for Microsemi PHYs.
+Date: Mon, 17 Oct 2016 05:51:11 -0700
+Message-ID: <838C6202-9B7D-4AFA-B163-55515044FA4F@gmail.com>
+References: <1476445233-26524-1-git-send-email-Raju.Lakkaraju@microsemi.com> <1476445233-26524-3-git-send-email-Raju.Lakkaraju@microsemi.com> <20161014120228.GF5822@lunn.ch> <20161017081312.GB2365@microsemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <daf49046-ad0a-d9e2-d744-1e06085c6585@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Karl Beldan <karl.beldan@gmail.com>, linux-devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Karl Beldan <kbeldan@baylibre.com>, Jyri Sarha <jsarha@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161017081312.GB2365-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVG9taSwKCk9uIE1vbmRheSAxNyBPY3QgMjAxNiAxNToyOToyMyBUb21pIFZhbGtlaW5lbiB3
-cm90ZToKPiBPbiAxNy8xMC8xNiAxNDo0MCwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiA+IE9u
-IE1vbmRheSAxNyBPY3QgMjAxNiAxMDozMzo1OCBUb21pIFZhbGtlaW5lbiB3cm90ZToKPiA+PiBP
-biAxNy8xMC8xNiAxMDoxMiwgU2VraGFyIE5vcmkgd3JvdGU6Cj4gPj4+IE9uIE1vbmRheSAxNyBP
-Y3RvYmVyIDIwMTYgMTE6MjYgQU0sIFRvbWkgVmFsa2VpbmVuIHdyb3RlOgo+ID4+Pj4gT24gMTUv
-MTAvMTYgMjA6NDIsIFNla2hhciBOb3JpIHdyb3RlOgo+ID4+Pj4+PiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQo+ID4+Pj4+PiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2Rh
-ODUwLmR0c2kKPiA+Pj4+Pj4gaW5kZXggZjc5ZTFiOS4uMzI5MDhhZSAxMDA2NDQKPiA+Pj4+Pj4g
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQo+ID4+Pj4+PiArKysgYi9hcmNoL2Fy
-bS9ib290L2R0cy9kYTg1MC5kdHNpCj4gPj4+Pj4+IEBAIC0zOTksNiArNDIwLDE0IEBACj4gPj4+
-Pj4+ICAJCQkJPCZlZG1hMCAwIDE+Owo+ID4+Pj4+PiAgCQkJZG1hLW5hbWVzID0gInR4IiwgInJ4
-IjsKPiA+Pj4+Pj4gIAkJfTsKPiA+Pj4+Pj4gKwo+ID4+Pj4+PiArCQlkaXNwbGF5OiBkaXNwbGF5
-QDIxMzAwMCB7Cj4gPj4+Pj4+ICsJCQljb21wYXRpYmxlID0gInRpLGFtMzN4eC10aWxjZGMiLCAi
-dGksZGE4NTAtCnRpbGNkYyI7Cj4gPj4+Pj4gCj4gPj4+Pj4gVGhpcyBzaG91bGQgaW5zdGVhZCBi
-ZToKPiA+Pj4+PiAKPiA+Pj4+PiBjb21wYXRpYmxlID0gInRpLGRhODUwLXRpbGNkYyIsICJ0aSxh
-bTMzeHgtdGlsY2RjIjsKPiA+Pj4+PiAKPiA+Pj4+PiBhcyB0aGUgY2xvc2VzdCBtYXRjaCBzaG91
-bGQgYXBwZWFyIGZpcnN0IGluIHRoZSBsaXN0Lgo+ID4+Pj4gCj4gPj4+PiBBY3R1YWxseSBJIGRv
-bid0IHRoaW5rIHRoYXQncyBjb3JyZWN0LiBUaGUgTENEQyBvbiBkYTg1MCBpcyBub3QKPiA+Pj4+
-IGNvbXBhdGlibGUgd2l0aCB0aGUgTENEQyBvbiBBTTMzNXguIEkgdGhpbmsgaXQgc2hvdWxkIGJl
-IGp1c3QKPiA+Pj4+ICJ0aSxkYTg1MC10aWxjZGMiLgo+ID4+PiAKPiA+Pj4gU28gaWYgInRpLGFt
-MzN4eC10aWxjZGMiIGlzIHVzZWQsIHRoZSBkaXNwbGF5IHdvbnQgd29yayBhdCBhbGw/IElmIHRo
-YXRzCj4gPj4+IHRoZSBjYXNlLCBJIHdvbmRlciBob3cgdGhlIHBhdGNoIHBhc3NlZCB0ZXN0aW5n
-LiBCYXJ0b3N6Pwo+ID4+IAo+ID4+IEFNMyBoYXMgInZlcnNpb24gMiIgb2YgTENEQywgd2hlcmVh
-cyBEQTg1MCBpcyB2MS4gVGhleSBhcmUgcXVpdGUKPiA+PiBzaW1pbGFyLCBidXQgZGlmZmVyZW50
-Lgo+ID4+IAo+ID4+IFRoZSBkcml2ZXIgZ2V0cyB0aGUgdmVyc2lvbiBudW1iZXIgZnJvbSBMQ0RD
-J3MgcmVnaXN0ZXIsIGFuZCBhY3RzIGJhc2VkCj4gPj4gb24gdGhhdCwgc28gYWZhaWsgdGhlIGNv
-bXBhdGlibGUgc3RyaW5nIGRvZXNuJ3QgcmVhbGx5IGFmZmVjdCB0aGUKPiA+PiBmdW5jdGlvbmFs
-aXR5IChhcyBsb25nIGFzIGl0IG1hdGNoZXMpLgo+ID4+IAo+ID4+IEJ1dCBldmVuIGlmIGl0IHdv
-cmtzIHdpdGggdGhlIGN1cnJlbnQgZHJpdmVyLCBJIGRvbid0IHRoaW5rCj4gPj4gInRpLGFtMzN4
-eC10aWxjZGMiIGFuZCAidGksZGE4NTAtdGlsY2RjIiBhcmUgY29tcGF0aWJsZSBpbiB0aGUgSFcg
-bGV2ZWwuCj4gPiAKPiA+IElmIHRoZSBoYXJkd2FyZSBwcm92aWRlcyBJUCByZXZpc2lvbiBpbmZv
-cm1hdGlvbiwgaG93IGFib3V0IGp1c3QgInRpLGxjZGMiCj4gPiA/Cj4KPiBNYXliZSwgYW5kIEkg
-YWdyZWUgdGhhdCdzIHRoZSAiY29ycmVjdCIgd2F5LCBidXQgbG9va2luZyBhdCB0aGUgaGlzdG9y
-eSwKPiBpdCdzIG5vdCBqdXN0IG9uY2Ugb3IgdHdpY2Ugd2hlbiB3ZSd2ZSBzdWRkZW5seSBmb3Vu
-ZCBvdXQgc29tZQo+IGRpZmZlcmVuY2Ugb3IgYnVnIG9yIHN1Y2ggaW4gYW4gSVAgcmV2aXNpb24s
-IG9yIHRoZSBpbnRlZ3JhdGlvbiB0byBhCj4gU29DLCB0aGF0IGNhbid0IGJlIGZvdW5kIGJhc2Vk
-IG9uIHRoZSBJUCByZXZpc2lvbi4KPiAKPiBUaGF0J3Mgd2h5IEkgZmVlbCBpdCdzIHVzdWFsbHkg
-c2FmZXIgdG8gaGF2ZSB0aGUgU29DIHJldmlzaW9uIHRoZXJlIGluCj4gdGhlIGNvbXBhdGlibGUg
-c3RyaW5nLgo+IAo+IFRoYXQgc2FpZCwgd2UgaGF2ZSBvbmx5IGEgZmV3IGRpZmZlcmVudCBvbGQg
-U29DcyB3aXRoIExDREMgKGNvbXBhcmVkIHRvLAo+IHNheSwgT01BUCBEU1MpIHNvIGluIHRoaXMg
-Y2FzZSBwZXJoYXBzIGp1c3QgInRpLGxjZGMiIHdvdWxkIGJlIGZpbmUuCgpZb3Ugb2J2aW91c2x5
-IGtub3cgbW9yZSB0aGFuIEkgZG8gb24gdGhpcyB0b3BpYyBzbyBJJ2xsIHRydXN0IHlvdXIgb3Bp
-bmlvbi4gSWYgCnRoZSB2ZXJzaW9uIHJlZ2lzdGVyIGlzbid0IGVub3VnaCBJJ20gZmluZSB3aXRo
-IG11bHRpcGxlIGNvbXBhdGlibGUgc3RyaW5ncy4KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5j
-aGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On October 17, 2016 1:13:14 AM PDT, Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org> wrote:
+>Hi Andrew,
+>
+>Thank you for code review and comments.
+>
+>On Fri, Oct 14, 2016 at 02:02:28PM +0200, Andrew Lunn wrote:
+>> EXTERNAL EMAIL
+>> 
+>> 
+>> > On Fri, Oct 14, 2016 at 05:10:33PM +0530, Raju Lakkaraju wrote:
+>> > From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+>> >
+>> > VSC8531 Fast Link Failure 2 feature enables the PHY to indicate the
+>> > onset of a potential link failure in < 100 usec for 100BASE-TX
+>> > operation. FLF2 is supported through the MDINT (active low) pin.
+>> 
+>> Is the MDINT pin specific to this feature, or a general interrupt
+>pin?
+>> 
+>
+>MDINT pin is general interrupt. MDINT pin share the interrupt with
+>FLF2 along with another 13 interrupts.
+>
+>> Device tree is used to describe the hardware. It should not really
+>> describe software or configuration. But the borders are a bit
+>> fluffly. Signal edge rates is near to hardware. This is a lot more
+>> towards configuration. So i'm not sure a device tree property is the
+>> correct way to describe this.
+>> 
+>> This is also a feature i know other PHYs support. The Marvell PHY has
+>> a "Metro Ethernet" extension which allows it to report link failures
+>> for 1000BASE-T in 10, 20 or 40ms, instead of the usual 750ms. So we
+>> need a generic solution other PHYs can implement.
+>> 
+>> As with cable testing, i think it should be an ethtool option.
+>
+>I agree with you.
+>I thought this is one time initialization either enable or disable.
+>if customer need this feature, they can enable in DT.
+>Do you want me to implement through IOCTL instead of Device tree?
+>Do you have any other suggestions?
+
+As indicated in the other email about speed downshift, we may want to utilize ethtool's ability to modify tunable parameters (small integer, boolean, values) and extend it to cover features offered by PHYs in a way that an user can dynamically turn these features on or off.
+
+In fact, this looks a lot like netdev features (e.g: checksum offload), and there seems to be some commonality here between at least Marvell and Microsemi (for the faster link down reporting), so maybe we should start adding PHY features similar to netdev features?
+
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
