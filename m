@@ -1,64 +1,82 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [RESEND PATCH v8 4/5] mfd: tps65218: Use mfd_add_devices instead of of_platform_populate
-Date: Mon, 17 Oct 2016 21:29:37 +0530
-Message-ID: <1476719978-16332-5-git-send-email-j-keerthy@ti.com>
-References: <1476719978-16332-1-git-send-email-j-keerthy@ti.com>
+From: Alan Tull <atull@opensource.altera.com>
+Subject: [PATCH v20 00/10] Device Tree support for FPGA Programming
+Date: Mon, 17 Oct 2016 11:09:31 -0500
+Message-ID: <20161017160941.4205-1-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1476719978-16332-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, tony@atomide.com, dmitry.torokhov@gmail.com, linus.walleij@linaro.org, broonie@kernel.org, j-keerthy@ti.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Moritz Fischer <moritz.fischer@ettus.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jon Masters <jcm@redhat.com>, Michal Simek <michal.simek@xilinx.com>, Jonathan Corbet <corbet@lwn.net>, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, Matthew Gerlach <mgerlach@opensource.altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, Alan Tull <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-mfd_add_devices enables parsing device tree nodes without compatibles
-for regulators and gpio modules. Replace of_platform_populate with
-mfd_add_devices. mfd_cell currently is populated with regulators,
-gpio and powerbutton.
+This patchset supports FPGA programming under the control
+of Device Tree overlays.
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/mfd/tps65218.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+Changes from v19:
+ * One line fix in FPGA Freeze Bridge DT binding doc (s/_/-/).
+ * Squashed patches that add FPGA image info struct so they
+   won't break bisect.
+ * Minor changes as suggested for the SoCFPGA Arria10 support.
+ * Added Rob's reviewed-by for the FPGA Regions binding doc.
+ * Added Moritz' ack for the sysfs document patch.
 
-diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
-index 9bca1b1..13834a0 100644
---- a/drivers/mfd/tps65218.c
-+++ b/drivers/mfd/tps65218.c
-@@ -33,6 +33,18 @@
- 
- #define TPS65218_PASSWORD_REGS_UNLOCK   0x7D
- 
-+static const struct mfd_cell tps65218_cells[] = {
-+	{
-+		.name = "tps65218-pwrbutton",
-+		.of_compatible = "ti,tps65218-pwrbutton",
-+	},
-+	{
-+		.name = "tps65218-gpio",
-+		.of_compatible = "ti,tps65218-gpio",
-+	},
-+	{ .name = "tps65218-regulator", },
-+};
-+
- /**
-  * tps65218_reg_write: Write a single tps65218 register.
-  *
-@@ -245,8 +257,10 @@ static int tps65218_probe(struct i2c_client *client,
- 
- 	tps->rev = chipid & TPS65218_CHIPID_REV_MASK;
- 
--	ret = of_platform_populate(client->dev.of_node, NULL, NULL,
--				   &client->dev);
-+	ret = mfd_add_devices(tps->dev, PLATFORM_DEVID_AUTO, tps65218_cells,
-+			      ARRAY_SIZE(tps65218_cells), NULL, 0,
-+			      regmap_irq_get_domain(tps->irq_data));
-+
- 	if (ret < 0)
- 		goto err_irq;
- 
+The following were acked so they are no longer in this patch set:
+ * bindings for Altera SOCFPGA bridges
+   https://patchwork.kernel.org/patch/9226093/
+ * bindings for Arria 10 FPGA Mgr
+   https://patchwork.kernel.org/patch/9226111/
+ * "[PATCH v3] of/overlay: add of overlay notifications"
+   https://lkml.org/lkml/2016/4/19/704
+
+The patchset is dependent on:
+ * Pantelis Antonious's dtc changes for dynamic device tree.
+    https://github.com/pantoniou/dtc.git
+ * Pantelis' configfs interface patches and fixes
+    https://github.com/pantoniou/linux-beagle-track-mainline
+
+Alan
+
+Alan Tull (10):
+  fpga: add bindings document for fpga region
+  doc: fpga-mgr: add fpga image info to api
+  add bindings document for altera freeze bridge
+  add sysfs document for fpga bridge class
+  fpga-mgr: add fpga image information struct
+  fpga: add fpga bridge framework
+  fpga: fpga-region: device tree control for FPGA
+  ARM: socfpga: fpga bridge driver support
+  fpga: add altera freeze bridge support
+  fpga-manager: Add Socfpga Arria10 support
+
+ Documentation/ABI/testing/sysfs-class-fpga-bridge  |  11 +
+ .../bindings/fpga/altera-freeze-bridge.txt         |  23 +
+ .../devicetree/bindings/fpga/fpga-region.txt       | 494 +++++++++++++++++
+ Documentation/fpga/fpga-mgr.txt                    |  32 +-
+ drivers/fpga/Kconfig                               |  36 ++
+ drivers/fpga/Makefile                              |   9 +
+ drivers/fpga/altera-fpga2sdram.c                   | 180 ++++++
+ drivers/fpga/altera-freeze-bridge.c                | 273 ++++++++++
+ drivers/fpga/altera-hps2fpga.c                     | 221 ++++++++
+ drivers/fpga/fpga-bridge.c                         | 398 ++++++++++++++
+ drivers/fpga/fpga-mgr.c                            |  17 +-
+ drivers/fpga/fpga-region.c                         | 603 +++++++++++++++++++++
+ drivers/fpga/socfpga-a10.c                         | 556 +++++++++++++++++++
+ drivers/fpga/socfpga.c                             |   7 +-
+ drivers/fpga/zynq-fpga.c                           |  10 +-
+ include/linux/fpga/fpga-bridge.h                   |  60 ++
+ include/linux/fpga/fpga-mgr.h                      |  25 +-
+ 17 files changed, 2925 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
+ create mode 100644 Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt
+ create mode 100644 Documentation/devicetree/bindings/fpga/fpga-region.txt
+ create mode 100644 drivers/fpga/altera-fpga2sdram.c
+ create mode 100644 drivers/fpga/altera-freeze-bridge.c
+ create mode 100644 drivers/fpga/altera-hps2fpga.c
+ create mode 100644 drivers/fpga/fpga-bridge.c
+ create mode 100644 drivers/fpga/fpga-region.c
+ create mode 100644 drivers/fpga/socfpga-a10.c
+ create mode 100644 include/linux/fpga/fpga-bridge.h
+
 -- 
-1.9.1
-
+2.10.1
