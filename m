@@ -1,39 +1,64 @@
-From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH] of: Add missing space at end of pr_fmt().
-Date: Mon, 17 Oct 2016 12:21:23 -0700
-Message-ID: <1476732083-13975-1-git-send-email-frowand.list@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v8 1/2] ARM: dts: Add TOPEET itop core board SCP package
+ version
+Date: Mon, 17 Oct 2016 22:42:10 +0300
+Message-ID: <20161017194210.GA26723@kozik-lap>
+References: <1474300103-26659-1-git-send-email-ayaka@soulik.info>
+ <1474300103-26659-2-git-send-email-ayaka@soulik.info>
+ <20161017162759.GA25818@kozik-lap>
+ <0326b619-3af5-e4ef-2251-16e60105ef67@soulik.info>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <0326b619-3af5-e4ef-2251-16e60105ef67@soulik.info>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ayaka <ayaka@soulik.info>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+On Tue, Oct 18, 2016 at 01:57:47AM +0800, ayaka wrote:
+> 
+> 
+> On 10/18/2016 12:27 AM, Krzysztof Kozlowski wrote:
+> >On Mon, Sep 19, 2016 at 11:48:22PM +0800, Randy Li wrote:
+> >>The TOPEET itop is a samsung exnynos 4412 core board, which have
+> >>two package versions. This patch add the support for SCP version.
+> >>
+> >>Currently supported are USB3503A HSIC, USB OTG, eMMC, rtc and
+> >>PMIC. The future features are in the based board. Also MFC and
+> >>watchdog have been enabled.
+> >>
+> >>Signed-off-by: Randy Li <ayaka@soulik.info>
+> >>---
+> >>  arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi | 501 ++++++++++++++++++++++++
+> >>  1 file changed, 501 insertions(+)
+> >>  create mode 100644 arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
+> >I wanted to apply it... but then I saw a bunch of checkpatch trivial issues.
+> >Really, after v8? The code must compile (v6 did not compile...), there
+> >should be no warnings from smatch, sparse and checkpatch (only the last
+> >one is applicable for DTS). Unless of course checkpatch would be
+> >wrong... but in this case it is correct. You did not follow coding
+> >style:
+> >
+> >WARNING: please, no spaces at the start of a line
+> >#134: FILE: arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi:109:
+> >+        devfreq = <&bus_leftbus>;$
+> >
+> >ERROR: code indent should use tabs where possible
+> >#135: FILE: arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi:110:
+> >+        status = "okay";$
+> Oh, it is a copy mistake, the copy operation makes the original tab becomes
+> spaces.
+> Should I send a new version to correct them?
 
-Make pr_fmt() in fdt.c consistent with all other files in drivers/of/
+Yes, please send new version. The DTS (code) itself looked fine, so only
+the checkpatch issues are remaining.
 
-Signed-off-by: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
----
- drivers/of/fdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+BTW, why are you copying the files? Even if you have multiple trees
+(like product/vendor kernel and mainline) then you can easily move
+patches with cherry-pick, apply or am commands. Then finally just 'git
+format-patch -2 -v9' and 'git send-email'.
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index c89d5d231a0e..9f98e437e1f1 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -9,7 +9,7 @@
-  * version 2 as published by the Free Software Foundation.
-  */
- 
--#define pr_fmt(fmt)	"OF: fdt:" fmt
-+#define pr_fmt(fmt)	"OF: fdt: " fmt
- 
- #include <linux/crc32.h>
- #include <linux/kernel.h>
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
