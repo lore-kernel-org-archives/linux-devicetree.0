@@ -1,53 +1,53 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Subject: Re: [PATCH 2/2] ARM: dts: da850: add a node for the LCD controller
-Date: Mon, 17 Oct 2016 12:42:32 +0530
-Message-ID: <65fde145-0820-794d-d345-621f66cdacc0@ti.com>
+Date: Mon, 17 Oct 2016 09:28:39 +0200
+Message-ID: <CAMpxmJXTRZg-BLyT7TBCrfySSaCDVrkEArPpD8cVrAZ4qX0ULQ@mail.gmail.com>
 References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
  <1475672732-17111-3-git-send-email-bgolaszewski@baylibre.com>
  <2d276e51-9d37-8648-4aad-283bb2b23626@ti.com>
  <1e23c3e9-d34b-1d8f-8565-c9932a60fd32@ti.com>
+ <65fde145-0820-794d-d345-621f66cdacc0@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1e23c3e9-d34b-1d8f-8565-c9932a60fd32-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Karl Beldan <karl.beldan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <65fde145-0820-794d-d345-621f66cdacc0@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Karl Beldan <karl.beldan@gmail.com>, linux-devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Jyri Sarha <jsarha@ti.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Karl Beldan <kbeldan@baylibre.com>, linux-drm <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 17 October 2016 11:26 AM, Tomi Valkeinen wrote:
-> On 15/10/16 20:42, Sekhar Nori wrote:
-> 
->>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
->>> index f79e1b9..32908ae 100644
->>> --- a/arch/arm/boot/dts/da850.dtsi
->>> +++ b/arch/arm/boot/dts/da850.dtsi
->>
->>> @@ -399,6 +420,14 @@
->>>  				<&edma0 0 1>;
->>>  			dma-names = "tx", "rx";
->>>  		};
->>> +
->>> +		display: display@213000 {
->>> +			compatible = "ti,am33xx-tilcdc", "ti,da850-tilcdc";
->>
->> This should instead be:
->>
->> compatible = "ti,da850-tilcdc", "ti,am33xx-tilcdc";
->>
->> as the closest match should appear first in the list.
-> 
-> Actually I don't think that's correct. The LCDC on da850 is not
-> compatible with the LCDC on AM335x. I think it should be just
-> "ti,da850-tilcdc".
-
-So if "ti,am33xx-tilcdc" is used, the display wont work at all? If thats
-the case, I wonder how the patch passed testing. Bartosz?
-
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MjAxNi0xMC0xNyA5OjEyIEdNVCswMjowMCBTZWtoYXIgTm9yaSA8bnNla2hhckB0aS5jb20+Ogo+
+IE9uIE1vbmRheSAxNyBPY3RvYmVyIDIwMTYgMTE6MjYgQU0sIFRvbWkgVmFsa2VpbmVuIHdyb3Rl
+Ogo+PiBPbiAxNS8xMC8xNiAyMDo0MiwgU2VraGFyIE5vcmkgd3JvdGU6Cj4+Cj4+Pj4gZGlmZiAt
+LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9k
+YTg1MC5kdHNpCj4+Pj4gaW5kZXggZjc5ZTFiOS4uMzI5MDhhZSAxMDA2NDQKPj4+PiAtLS0gYS9h
+cmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpCj4+Pj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
+ZGE4NTAuZHRzaQo+Pj4KPj4+PiBAQCAtMzk5LDYgKzQyMCwxNCBAQAo+Pj4+ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICA8JmVkbWEwIDAgMT47Cj4+Pj4gICAgICAgICAgICAgICAgICAgICBk
+bWEtbmFtZXMgPSAidHgiLCAicngiOwo+Pj4+ICAgICAgICAgICAgIH07Cj4+Pj4gKwo+Pj4+ICsg
+ICAgICAgICAgIGRpc3BsYXk6IGRpc3BsYXlAMjEzMDAwIHsKPj4+PiArICAgICAgICAgICAgICAg
+ICAgIGNvbXBhdGlibGUgPSAidGksYW0zM3h4LXRpbGNkYyIsICJ0aSxkYTg1MC10aWxjZGMiOwo+
+Pj4KPj4+IFRoaXMgc2hvdWxkIGluc3RlYWQgYmU6Cj4+Pgo+Pj4gY29tcGF0aWJsZSA9ICJ0aSxk
+YTg1MC10aWxjZGMiLCAidGksYW0zM3h4LXRpbGNkYyI7Cj4+Pgo+Pj4gYXMgdGhlIGNsb3Nlc3Qg
+bWF0Y2ggc2hvdWxkIGFwcGVhciBmaXJzdCBpbiB0aGUgbGlzdC4KPj4KPj4gQWN0dWFsbHkgSSBk
+b24ndCB0aGluayB0aGF0J3MgY29ycmVjdC4gVGhlIExDREMgb24gZGE4NTAgaXMgbm90Cj4+IGNv
+bXBhdGlibGUgd2l0aCB0aGUgTENEQyBvbiBBTTMzNXguIEkgdGhpbmsgaXQgc2hvdWxkIGJlIGp1
+c3QKPj4gInRpLGRhODUwLXRpbGNkYyIuCj4KPiBTbyBpZiAidGksYW0zM3h4LXRpbGNkYyIgaXMg
+dXNlZCwgdGhlIGRpc3BsYXkgd29udCB3b3JrIGF0IGFsbD8gSWYgdGhhdHMKPiB0aGUgY2FzZSwg
+SSB3b25kZXIgaG93IHRoZSBwYXRjaCBwYXNzZWQgdGVzdGluZy4gQmFydG9zej8KPgoKREE4NTAg
+dXNlcyByZXZpc2lvbiAxIG9mIHRoZSBJUCB3aGlsZSBhbTMzeHggaXMgZXF1aXBwZWQgd2l0aCBy
+ZXYgMi4KVGhlIGRyaXZlciByZWFkcyB0aGUgYXBwcm9wcmlhdGUgcmVnaXN0ZXIsIGRldGVjdHMg
+dGhlIHJldmlzaW9uIGFuZApzZXRzIHRoZSBjb3JyZXNwb25kaW5nIGZpZWxkIGluIHN0cnVjdCB0
+aWxjZGNfZHJtX3ByaXZhdGUgaW4KdGlsY2RjX2xvYWQoKS4KClRoYW5rcywKQmFydG9zegpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
