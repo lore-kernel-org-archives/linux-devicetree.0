@@ -1,597 +1,160 @@
-From: Pan Wen <wenpan@hisilicon.com>
-Subject: [PATCH 3/3] dts: hisi: add dts files for Hi3516CV300 demo board
-Date: Mon, 17 Oct 2016 20:07:05 +0800
-Message-ID: <20161017120705.3726-4-wenpan@hisilicon.com>
-References: <20161017120705.3726-1-wenpan@hisilicon.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: da850: add a node for the LCD controller
+Date: Mon, 17 Oct 2016 15:29:23 +0300
+Message-ID: <daf49046-ad0a-d9e2-d744-1e06085c6585@ti.com>
+References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
+ <65fde145-0820-794d-d345-621f66cdacc0@ti.com>
+ <7a2ffcd0-fe1d-c887-53b7-7cb5e1e61222@ti.com> <4975084.EGQPv58AK6@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20161017120705.3726-1-wenpan@hisilicon.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, xuwei5@hisilicon.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, howell.yang@hisilicon.com, xuejiancheng@hisilicon.com, jalen.hsu@hisilicon.com, lvkuanliang@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, kevin.lixu@hisilicon.com, wenpan@hisilicon.com
+Content-Type: multipart/mixed; boundary="===============1530075966=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <4975084.EGQPv58AK6@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Karl Beldan <karl.beldan@gmail.com>, linux-devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Karl Beldan <kbeldan@baylibre.com>, Jyri Sarha <jsarha@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add dts files for Hi3516CV300 demo board.
+--===============1530075966==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="l6bSklRD2LiOxRSLtCQjIH3TSIMxR933q"
 
-Signed-off-by: Pan Wen <wenpan@hisilicon.com>
----
- arch/arm/boot/dts/Makefile             |   1 +
- arch/arm/boot/dts/hi3516cv300-demb.dts | 148 ++++++++++++
- arch/arm/boot/dts/hi3516cv300.dtsi     | 397 +++++++++++++++++++++++++++++++++
- 3 files changed, 546 insertions(+)
- create mode 100644 arch/arm/boot/dts/hi3516cv300-demb.dts
- create mode 100644 arch/arm/boot/dts/hi3516cv300.dtsi
+--l6bSklRD2LiOxRSLtCQjIH3TSIMxR933q
+Content-Type: multipart/mixed; boundary="qJh569mBsJEcvuhkT5OprdgUlUGd5FrL9";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sekhar Nori <nsekhar@ti.com>,
+ Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Michael Turquette <mturquette@baylibre.com>, Rob Herring
+ <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+ Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+ Russell King <linux@armlinux.org.uk>, Karl Beldan <karl.beldan@gmail.com>,
+ LKML <linux-kernel@vger.kernel.org>,
+ arm-soc <linux-arm-kernel@lists.infradead.org>,
+ linux-drm <dri-devel@lists.freedesktop.org>,
+ linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>,
+ David Airlie <airlied@linux.ie>,
+ Maxime Ripard <maxime.ripard@free-electrons.com>,
+ Karl Beldan <kbeldan@baylibre.com>
+Message-ID: <daf49046-ad0a-d9e2-d744-1e06085c6585@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: da850: add a node for the LCD controller
+References: <1475672732-17111-1-git-send-email-bgolaszewski@baylibre.com>
+ <65fde145-0820-794d-d345-621f66cdacc0@ti.com>
+ <7a2ffcd0-fe1d-c887-53b7-7cb5e1e61222@ti.com> <4975084.EGQPv58AK6@avalon>
+In-Reply-To: <4975084.EGQPv58AK6@avalon>
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index befcd26..1f25530 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -171,6 +171,7 @@ dtb-$(CONFIG_ARCH_HIP01) += \
- dtb-$(CONFIG_ARCH_HIP04) += \
- 	hip04-d01.dtb
- dtb-$(CONFIG_ARCH_HISI) += \
-+	hi3516cv300-demb.dtb \
- 	hi3519-demb.dtb
- dtb-$(CONFIG_ARCH_HIX5HD2) += \
- 	hisi-x5hd2-dkb.dtb
-diff --git a/arch/arm/boot/dts/hi3516cv300-demb.dts b/arch/arm/boot/dts/hi3516cv300-demb.dts
-new file mode 100644
-index 0000000..6a75cd6
---- /dev/null
-+++ b/arch/arm/boot/dts/hi3516cv300-demb.dts
-@@ -0,0 +1,148 @@
-+/*
-+ * Copyright (c) 2016 HiSilicon Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ */
-+
-+
-+/dts-v1/;
-+#include "hi3516cv300.dtsi"
-+
-+/ {
-+	model = "Hisilicon Hi3516CV300 DEMO Board";
-+	compatible = "hisilicon,hi3516cv300";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+		i2c0 = &i2c_bus0;
-+		i2c1 = &i2c_bus1;
-+		spi0 = &spi_bus0;
-+		spi1 = &spi_bus1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x10000000>;
-+	};
-+};
-+
-+&dual_timer0 {
-+	status = "okay";
-+};
-+
-+&watchdog {
-+	status = "okay";
-+};
-+
-+&pwm {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&i2c_bus0 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pmux>;
-+};
-+
-+&i2c_bus1 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pmux>;
-+};
-+
-+&spi_bus0{
-+	status = "disabled";
-+	num-cs = <1>;
-+	cs-gpios = <&gpio_chip0 6 0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_pmux>;
-+};
-+
-+&spi_bus1{
-+	status = "okay";
-+	num-cs = <2>;
-+	cs-gpios = <&gpio_chip5 3 0>, <&gpio_chip5 4 0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi1_pmux>;
-+};
-+
-+&fmc {
-+	spi-nor@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <160000000>;
-+		m25p,fast-read;
-+	};
-+};
-+
-+&mdio {
-+	phy0: phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
-+&hisi_femac {
-+	mac-address = [00 00 00 00 00 00];
-+	phy-mode = "rmii";
-+	phy-handle = <&phy0>;
-+	hisilicon,phy-reset-delays-us = <10000 10000 150000>;
-+};
-+
-+&dmac {
-+	status = "okay";
-+};
-+
-+&pmux {
-+	i2c0_pmux: i2c0_pmux {
-+		pinctrl-single,pins = <
-+			0x2c 0x3
-+			0x30 0x3>;
-+	};
-+
-+	i2c1_pmux: i2c1_pmux {
-+		pinctrl-single,pins = <
-+			0x20 0x1
-+			0x24 0x1>;
-+	};
-+
-+	spi0_pmux: spi0_pmux {
-+		pinctrl-single,pins = <
-+			0x28 0x1
-+			0x2c 0x1
-+			0x30 0x1
-+			0x34 0x1>;
-+	};
-+
-+	spi1_pmux: spi1_pmux {
-+		pinctrl-single,pins = <
-+			0xc4 0x1
-+			0xc8 0x1
-+			0xcc 0x1
-+			0xd0 0x1
-+			0xd4 0x1>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/hi3516cv300.dtsi b/arch/arm/boot/dts/hi3516cv300.dtsi
-new file mode 100644
-index 0000000..1da41ab
---- /dev/null
-+++ b/arch/arm/boot/dts/hi3516cv300.dtsi
-@@ -0,0 +1,397 @@
-+/*
-+ * Copyright (c) 2016 HiSilicon Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ */
-+
-+#include "skeleton.dtsi"
-+#include <dt-bindings/clock/hi3516cv300-clock.h>
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,arm926ej-s";
-+			reg = <0>;
-+		};
-+	};
-+
-+	vic: interrupt-controller@10040000 {
-+		compatible = "arm,pl190-vic";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		reg = <0x10040000 0x1000>;
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		interrupt-parent = <&vic>;
-+		ranges;
-+
-+		clk_3m: clk_3m {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <3000000>;
-+		};
-+
-+		clk_apb: clk_apb {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <50000000>;
-+		};
-+
-+		crg: clock-reset-controller@12010000 {
-+			compatible = "hisilicon,hi3516cv300-crg";
-+			reg = <0x12010000 0x1000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <2>;
-+		};
-+
-+		sysctrl: system-controller@12020000 {
-+			compatible = "hisilicon,hi3516cv300-sysctrl", "syscon";
-+			reg = <0x12020000 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		reboot {
-+			compatible = "syscon-reboot";
-+			regmap = <&sysctrl>;
-+			offset = <0x4>;
-+			mask = <0xdeadbeef>;
-+		};
-+
-+		dual_timer0: dual_timer@12000000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			reg = <0x12000000 0x1000>;
-+			interrupts = <3>;
-+			clocks = <&clk_3m>, <&clk_3m>, <&clk_apb>;
-+			clock-names = "timer0", "timer1", "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		dual_timer1: dual_timer@12001000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			reg = <0x12001000 0x1000>;
-+			interrupts = <4>;
-+			clocks = <&clk_3m>, <&clk_3m>, <&clk_apb>;
-+			clock-names = "timer0", "timer1", "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		watchdog: watchdog@12080000 {
-+			compatible = "arm,sp805-wdt", "arm,primecell";
-+			arm,primecell-periphid = <0x00141805>;
-+			reg = <0x12080000 0x1000>;
-+			clocks = <&sysctrl HI3516CV300_WDT_CLK>,
-+				<&crg HI3516CV300_APB_CLK>;
-+			clock-names = "wdog_clk", "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		pwm: pwm@12130000 {
-+			compatible = "hisilicon,hi3516cv300-pwm",
-+				"hisilicon,hibvt-pwm";
-+			reg = <0x12130000 0x10000>;
-+			clocks = <&crg HI3516CV300_PWM_CLK>;
-+			resets = <&crg 0x38 0>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		uart0: uart@12100000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x12100000 0x1000>;
-+			interrupts = <5>;
-+			clocks = <&crg HI3516CV300_UART0_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		uart1: uart@12101000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x12101000 0x1000>;
-+			interrupts = <30>;
-+			clocks = <&crg HI3516CV300_UART1_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		uart2: uart@12102000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x12102000 0x1000>;
-+			interrupts = <25>;
-+			clocks = <&crg HI3516CV300_UART2_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		i2c_bus0: i2c@12110000 {
-+			compatible = "hisilicon,hi3516cv300-i2c",
-+				"hisilicon,hibvt-i2c";
-+			reg = <0x12110000 0x1000>;
-+			clocks = <&crg HI3516CV300_APB_CLK>;
-+			status = "disabled";
-+		};
-+
-+		i2c_bus1: i2c@12112000 {
-+			compatible = "hisilicon,hi3516cv300-i2c",
-+				"hisilicon,hibvt-i2c";
-+			reg = <0x12112000 0x1000>;
-+			clocks = <&crg HI3516CV300_APB_CLK>;
-+			status = "disabled";
-+		};
-+
-+		spi_bus0: spi@12120000 {
-+			compatible = "arm,pl022", "arm,primecell";
-+			reg = <0x12120000 0x1000>;
-+			interrupts = <6>;
-+			clocks = <&crg HI3516CV300_SPI0_CLK>;
-+			clock-names = "apb_pclk";
-+			dmas = <&dmac 12 1>, <&dmac 13 2>;
-+			dma-names = "rx", "tx";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		spi_bus1: spi@12121000 {
-+			compatible = "arm,pl022", "arm,primecell";
-+			reg = <0x12121000 0x1000>, <0x12030000 0x4>;
-+			interrupts = <7>;
-+			clocks = <&crg HI3516CV300_SPI1_CLK>;
-+			clock-names = "apb_pclk";
-+			dmas = <&dmac 14 1>, <&dmac 15 2>;
-+			dma-names = "rx", "tx";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		fmc: spi-nor-controller@10000000 {
-+			compatible = "hisilicon,fmc-spi-nor";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x10000000 0x1000>, <0x14000000 0x1000000>;
-+			reg-names = "control", "memory";
-+			clocks = <&crg HI3516CV300_FMC_CLK>;
-+			assigned-clocks = <&crg HI3516CV300_FMC_CLK>;
-+			assigned-clock-rates = <24000000>;
-+		};
-+
-+		mdio: mdio@10051100 {
-+			compatible = "hisilicon,hisi-femac-mdio";
-+			reg = <0x10051100 0x10>;
-+			clocks = <&crg HI3516CV300_ETH_CLK>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		hisi_femac: ethernet@10090000 {
-+			compatible = "hisilicon,hi3516cv300-femac",
-+				"hisilicon,hisi-femac-v2";
-+			reg = <0x10050000 0x1000>,<0x10051300 0x200>;
-+			interrupts = <12>;
-+			clocks = <&crg HI3516CV300_ETH_CLK>;
-+			resets = <&crg 0xec 0>, <&crg 0xec 3>;
-+			reset-names = "mac","phy";
-+		};
-+
-+		dmac: dma-controller@10030000 {
-+			compatible = "arm,pl080", "arm,primecell";
-+			reg = <0x10030000 0x1000>;
-+			interrupts = <14>;
-+			clocks = <&crg HI3516CV300_DMAC_CLK>;
-+			clock-names = "apb_pclk";
-+			lli-bus-interface-ahb1;
-+			lli-bus-interface-ahb2;
-+			mem-bus-interface-ahb1;
-+			mem-bus-interface-ahb2;
-+			memcpy-burst-size = <256>;
-+			memcpy-bus-width = <32>;
-+			#dma-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		gpio_chip0: gpio@12140000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x12140000 0x1000>;
-+			interrupts = <31>;
-+			clocks = <&crg HI3516CV300_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmux 0 61 2>,
-+				<&pmux 4 11 1>,
-+				<&pmux 5 10 1>,
-+				<&pmux 6 13 2>;
-+
-+			status = "disabled";
-+		};
-+
-+		gpio_chip1: gpio@12141000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x12141000 0x1000>;
-+			interrupts = <31>;
-+			clocks = <&crg HI3516CV300_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmux 0 16 7>,
-+				<&pmux 7 0 1>;
-+			status = "disabled";
-+		};
-+
-+		gpio_chip2: gpio@12142000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x12142000 0x1000>;
-+			interrupts = <31>;
-+			clocks = <&crg HI3516CV300_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmux 0 46 1>,
-+				<&pmux 1 45 1>,
-+				<&pmux 2 44 1>,
-+				<&pmux 3 43 1>,
-+				<&pmux 4 39 1>,
-+				<&pmux 5 38 1>,
-+				<&pmux 6 40 1>,
-+				<&pmux 7 48 1>;
-+			status = "disabled";
-+		};
-+
-+		gpio_chip3: gpio@12143000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x12143000 0x1000>;
-+			interrupts = <31>;
-+			clocks = <&crg HI3516CV300_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmux 0 37 1>,
-+				<&pmux 1 36 1>,
-+				<&pmux 2 35 1>,
-+				<&pmux 3 34 1>,
-+				<&pmux 4 23 2>,
-+				<&pmux 6 8 2>;
-+			status = "disabled";
-+		};
-+
-+		gpio_chip4: gpio@12144000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x12144000 0x1000>;
-+			interrupts = <31>;
-+			clocks = <&crg HI3516CV300_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmux 0 27 1>,
-+				<&pmux 1 26 1>,
-+				<&pmux 2 31 1>,
-+				<&pmux 3 30 1>,
-+				<&pmux 4 28 2>,
-+				<&pmux 6 33 1>,
-+				<&pmux 7 32 1>;
-+			status = "disabled";
-+		};
-+
-+		gpio_chip5: gpio@12145000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x12145000 0x1000>;
-+			interrupts = <31>;
-+			clocks = <&crg HI3516CV300_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmux 0 53 1>,
-+				<&pmux 1 51 2>,
-+				<&pmux 3 50 1>,
-+				<&pmux 4 49 1>,
-+				<&pmux 5 47 1>,
-+				<&pmux 6 40 2>;
-+			status = "disabled";
-+		};
-+
-+		gpio_chip6: gpio@12146000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x12146000 0x1000>;
-+			interrupts = <31>;
-+			clocks = <&crg HI3516CV300_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmux 0 7 1>,
-+				<&pmux 1 6 1>,
-+				<&pmux 2 4 1>,
-+				<&pmux 3 5 1>,
-+				<&pmux 4 15 1>,
-+				<&pmux 5 1 3>;
-+			status = "disabled";
-+		};
-+
-+		gpio_chip7: gpio@12147000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x12147000 0x1000>;
-+			interrupts = <31>;
-+			clocks = <&crg HI3516CV300_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmux 1 55 6>,
-+				<&pmux 7 25 1>;
-+			status = "disabled";
-+		};
-+
-+		gpio_chip8: gpio@12148000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x12148000 0x1000>;
-+			interrupts = <31>;
-+			clocks = <&crg HI3516CV300_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmux 0 63 3>,
-+				<&pmux 3 12 1>;
-+			status = "disabled";
-+		};
-+
-+		pmux: pinmux@12040000 {
-+			compatible = "pinctrl-single";
-+			reg = <0x12040000 0x108>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			#gpio-range-cells = <3>;
-+			ranges;
-+
-+			pinctrl-single,register-width = <32>;
-+			pinctrl-single,function-mask = <7>;
-+			/* pin base, nr pins & gpio function */
-+			pinctrl-single,gpio-range = <&range 0 54 0
-+				&range 55 6 1 &range 61 5 0>;
-+
-+			range: gpio-range {
-+				#pinctrl-single,gpio-range-cells = <3>;
-+			};
-+		};
-+
-+		pconf: pinconf@12040800 {
-+			compatible = "pinconf-single";
-+			reg = <0x12040800 0x130>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			pinctrl-single,register-width = <32>;
-+		};
-+	};
-+};
--- 
-2.9.3
+--qJh569mBsJEcvuhkT5OprdgUlUGd5FrL9
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+On 17/10/16 14:40, Laurent Pinchart wrote:
+> Hello,
+>=20
+> On Monday 17 Oct 2016 10:33:58 Tomi Valkeinen wrote:
+>> On 17/10/16 10:12, Sekhar Nori wrote:
+>>> On Monday 17 October 2016 11:26 AM, Tomi Valkeinen wrote:
+>>>> On 15/10/16 20:42, Sekhar Nori wrote:
+>>>>>> diff --git a/arch/arm/boot/dts/da850.dtsi
+>>>>>> b/arch/arm/boot/dts/da850.dtsi
+>>>>>> index f79e1b9..32908ae 100644
+>>>>>> --- a/arch/arm/boot/dts/da850.dtsi
+>>>>>> +++ b/arch/arm/boot/dts/da850.dtsi
+>>>>>> @@ -399,6 +420,14 @@
+>>>>>>  				<&edma0 0 1>;
+>>>>>>  			dma-names =3D "tx", "rx";
+>>>>>>  		};
+>>>>>> +
+>>>>>> +		display: display@213000 {
+>>>>>> +			compatible =3D "ti,am33xx-tilcdc", "ti,da850-tilcdc";
+>>>>>
+>>>>> This should instead be:
+>>>>>
+>>>>> compatible =3D "ti,da850-tilcdc", "ti,am33xx-tilcdc";
+>>>>>
+>>>>> as the closest match should appear first in the list.
+>>>>
+>>>> Actually I don't think that's correct. The LCDC on da850 is not
+>>>> compatible with the LCDC on AM335x. I think it should be just
+>>>> "ti,da850-tilcdc".
+>>>
+>>> So if "ti,am33xx-tilcdc" is used, the display wont work at all? If th=
+ats
+>>> the case, I wonder how the patch passed testing. Bartosz?
+>>
+>> AM3 has "version 2" of LCDC, whereas DA850 is v1. They are quite
+>> similar, but different.
+>>
+>> The driver gets the version number from LCDC's register, and acts base=
+d
+>> on that, so afaik the compatible string doesn't really affect the
+>> functionality (as long as it matches).
+>>
+>> But even if it works with the current driver, I don't think
+>> "ti,am33xx-tilcdc" and "ti,da850-tilcdc" are compatible in the HW leve=
+l.
+>=20
+> If the hardware provides IP revision information, how about just "ti,lc=
+dc" ?
+
+Maybe, and I agree that's the "correct" way, but looking at the history,
+it's not just once or twice when we've suddenly found out some
+difference or bug or such in an IP revision, or the integration to a
+SoC, that can't be found based on the IP revision.
+
+That's why I feel it's usually safer to have the SoC revision there in
+the compatible string.
+
+That said, we have only a few different old SoCs with LCDC (compared to,
+say, OMAP DSS) so in this case perhaps just "ti,lcdc" would be fine.
+
+ Tomi
+
+
+--qJh569mBsJEcvuhkT5OprdgUlUGd5FrL9--
+
+--l6bSklRD2LiOxRSLtCQjIH3TSIMxR933q
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYBMQjAAoJEPo9qoy8lh71X2AP+gPWYfHK5yATUCODohFwpTeZ
+9b2bm4rcvetJkd4AMK+kz5dxOtpGbvbICxlWRYiWiydaISUEQs4uZusR9bXiFdvy
+U8tbsyxP2/D9VdLQiEJi8Yn+X74H56VgPji1Ar6Sm1daNvqNW9ESKev0lINSUs0H
+tg34+txYm1YFr0fbBPoWQGZyROEafmRIDBDhSpIbxCa9uh6nwvHTXaftBZngLhH4
+PEUzThaaORK0aXU9cUa5XKpkD0wTq9kE5IRwDkxPh+vF3TY4EpodnsPLIRMjjK7L
+9lnwJZma/N1FQ2X7q+/y+QnnOdbm3cl2jxDAzZTpV7qaKOKArq9462yX7wncfX6Z
+vV3J6j3FJxwliHYsB3vY55INeiIKBIVYOjMmt0rv12S9WvHinIL6JfTEn29fXKpg
+scPMN4jM+9EW+IJ//jJcIx77hopmutBdsgOqRlYcN/Pc0f3z6+9jNveCp2kuUml4
+WCNk3bW8mDAaanFU+K9Ev9DH19tXE0eRiv/PjKCUWKPRDB1694Yt6fE5T6lGvEBx
+X4EBpoZX8RaiN9M7FYmbvG5uy37pnB2tc8tEYN2lUQQaL7lVk4BV1fM0xm5VI2TP
+2ttvREugavWkezF/7x4Ga2ri+cNdvTrSOJyLmXrFTzR0Y1EiQUUOCWUwT6Voa+lq
+Mu+bL3bP7QH++BOTmj8T
+=YCm/
+-----END PGP SIGNATURE-----
+
+--l6bSklRD2LiOxRSLtCQjIH3TSIMxR933q--
+
+--===============1530075966==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1530075966==--
