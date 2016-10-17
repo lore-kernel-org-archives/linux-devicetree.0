@@ -1,63 +1,136 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: Re: [PATCH v2] console: Don't prefer first registered if DT specifies stdout-path
-Date: Mon, 17 Oct 2016 11:33:55 +0100
-Message-ID: <4033254.tBrl4yKcsP@np-p-burton>
-References: <20160809125010.14150-1-paul.burton@imgtec.com> <20160809151937.26118-1-paul.burton@imgtec.com> <87bmyk88x5.fsf@linux-m68k.org>
+From: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RESEND][PATCH] crypto: caam: add support for iMX6UL
+Date: Mon, 17 Oct 2016 13:28:00 +0200
+Message-ID: <1476703680-22676-1-git-send-email-marcus.folkesson@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3065225.SPOVmq47Dl";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87bmyk88x5.fsf@linux-m68k.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Schwab <schwab@linux-m68k.org>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Tejun Heo <tj@kernel.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Jiri Slaby <jslaby@suse.cz>, Daniel Vetter <daniel.vetter@ffwll.ch>, Ivan Delalande <colona@arista.com>, Thierry Reding <treding@nvidia.com>, Borislav Petkov <bp@suse.de>, Jan Kara <jack@suse.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Horia Geanta <horia.geanta-3arQi8VN3Tc@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alex Porosanu <alexandru.porosanu-3arQi8VN3Tc@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---nextPart3065225.SPOVmq47Dl
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+i.MX6UL does only require three clocks to enable CAAM module.
 
-On Sunday, 16 October 2016 20:07:18 BST Andreas Schwab wrote:
-> On Aug 09 2016, Paul Burton <paul.burton@imgtec.com> wrote:
-> > Fix this by not automatically preferring the first registered console if
-> > one is specified by the device tree. This allows consoles to be
-> > registered but not enabled, and once the driver for the console selected
-> > by stdout-path calls of_console_check() the driver will be added to the
-> > list of preferred consoles before any other console has been enabled.
-> > When that console is then registered via register_console() it will be
-> > enabled as expected.
-> 
-> This breaks the console on PowerMac.  There is no output and it panics
-> eventually.
-> 
-> Andreas.
+Signed-off-by: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Horia Geantă <horia.geanta-3arQi8VN3Tc@public.gmane.org>
+---
+ .../devicetree/bindings/crypto/fsl-sec4.txt        | 20 +++++++++++++
+ drivers/crypto/caam/ctrl.c                         | 35 ++++++++++++----------
+ 2 files changed, 40 insertions(+), 15 deletions(-)
 
-Hi Andreas,
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+index adeca34..10a425f 100644
+--- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
++++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+@@ -123,6 +123,9 @@ PROPERTIES
+ 
+ 
+ EXAMPLE
++
++iMX6QDL/SX requires four clocks
++
+ 	crypto@300000 {
+ 		compatible = "fsl,sec-v4.0";
+ 		fsl,sec-era = <2>;
+@@ -139,6 +142,23 @@ EXAMPLE
+ 		clock-names = "mem", "aclk", "ipg", "emi_slow";
+ 	};
+ 
++
++iMX6UL does only require three clocks
++
++	crypto: caam@2140000 {
++		compatible = "fsl,sec-v4.0";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0x2140000 0x3c000>;
++		ranges = <0 0x2140000 0x3c000>;
++		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++
++		clocks = <&clks IMX6UL_CLK_CAAM_MEM>,
++			 <&clks IMX6UL_CLK_CAAM_ACLK>,
++			 <&clks IMX6UL_CLK_CAAM_IPG>;
++		clock-names = "mem", "aclk", "ipg";
++	};
++
+ =====================================================================
+ Job Ring (JR) Node
+ 
+diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+index 0ec112e..5abaf37 100644
+--- a/drivers/crypto/caam/ctrl.c
++++ b/drivers/crypto/caam/ctrl.c
+@@ -329,8 +329,8 @@ static int caam_remove(struct platform_device *pdev)
+ 	clk_disable_unprepare(ctrlpriv->caam_ipg);
+ 	clk_disable_unprepare(ctrlpriv->caam_mem);
+ 	clk_disable_unprepare(ctrlpriv->caam_aclk);
+-	clk_disable_unprepare(ctrlpriv->caam_emi_slow);
+-
++	if (!of_machine_is_compatible("fsl,imx6ul"))
++		clk_disable_unprepare(ctrlpriv->caam_emi_slow);
+ 	return 0;
+ }
+ 
+@@ -481,14 +481,16 @@ static int caam_probe(struct platform_device *pdev)
+ 	}
+ 	ctrlpriv->caam_aclk = clk;
+ 
+-	clk = caam_drv_identify_clk(&pdev->dev, "emi_slow");
+-	if (IS_ERR(clk)) {
+-		ret = PTR_ERR(clk);
+-		dev_err(&pdev->dev,
+-			"can't identify CAAM emi_slow clk: %d\n", ret);
+-		return ret;
++	if (!of_machine_is_compatible("fsl,imx6ul")) {
++		clk = caam_drv_identify_clk(&pdev->dev, "emi_slow");
++		if (IS_ERR(clk)) {
++			ret = PTR_ERR(clk);
++			dev_err(&pdev->dev,
++				"can't identify CAAM emi_slow clk: %d\n", ret);
++			return ret;
++		}
++		ctrlpriv->caam_emi_slow = clk;
+ 	}
+-	ctrlpriv->caam_emi_slow = clk;
+ 
+ 	ret = clk_prepare_enable(ctrlpriv->caam_ipg);
+ 	if (ret < 0) {
+@@ -509,11 +511,13 @@ static int caam_probe(struct platform_device *pdev)
+ 		goto disable_caam_mem;
+ 	}
+ 
+-	ret = clk_prepare_enable(ctrlpriv->caam_emi_slow);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "can't enable CAAM emi slow clock: %d\n",
+-			ret);
+-		goto disable_caam_aclk;
++	if (!of_machine_is_compatible("fsl,imx6ul")) {
++		ret = clk_prepare_enable(ctrlpriv->caam_emi_slow);
++		if (ret < 0) {
++			dev_err(&pdev->dev, "can't enable CAAM emi slow clock: %d\n",
++				ret);
++			goto disable_caam_aclk;
++		}
+ 	}
+ 
+ 	/* Get configuration properties from device tree */
+@@ -829,7 +833,8 @@ caam_remove:
+ iounmap_ctrl:
+ 	iounmap(ctrl);
+ disable_caam_emi_slow:
+-	clk_disable_unprepare(ctrlpriv->caam_emi_slow);
++	if (!of_machine_is_compatible("fsl,imx6ul"))
++		clk_disable_unprepare(ctrlpriv->caam_emi_slow);
+ disable_caam_aclk:
+ 	clk_disable_unprepare(ctrlpriv->caam_aclk);
+ disable_caam_mem:
+-- 
+2.8.0
 
-Could you share the device tree from your system?
-
-Thanks,
-    Paul
---nextPart3065225.SPOVmq47Dl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJYBKkTAAoJEIIg2fppPBxl1oAP/RAIYEhMTK2tf/pX7/5z4Y4m
-x2cl84qdY844A2UNXEP89g3CuqMaEefDBSU/8HKitoCl+Cu+bR2RKQPYBiiVNTnv
-77tgOCK1J4IYwqZi0xT+QcmUwAGvJ69+HdiXorIgzPWzXqgAPBql75mOtQMoTXZy
-XVdpHnW2GVwV5kRdEG0HalLjMvNTh6hLAMK2YDVdyuV0+Ox8XPPTXskmMqHb092m
-ATVfilJ5x8AHQIA7EHuYA72lPLEFE8aokeO317EH3k0GL2cUDTh1/IqXYvrS2g/f
-BMcAzkXujR53jp/8PGztyEWEzjToc7p2dapQ8dmqWId965D3CUdO9y279EdUUUmV
-MvI2HLzX1joW5W6MMBH3ts1QZVrtHkb8cSoudSgbyhY5+TR3GCJ6li5e4FIduLFp
-Ttl5YoNWHZdylSEXA6vY2ZKdzcAONz481tJIwaabEtbktPiTWrl95Vc+X+ejC7up
-3/50FdPlpt31NuGaqNMiu2AOB2NIxRMazxDhrlf7ee3UEve0xsRy9UjJrl3lP1iQ
-6sJhRUhaqBk92cvP/HV5HCWhRUcQmyicUMJB5JTYv0zELxJQSGtq9eXAgv7q+E5J
-3jRTAIZ3chWxUona9nMiu5Q1jgyhDcmBKJatFGilcTzHi0fLijdOTMgq4woC+biW
-Yr7i8EOdJDRYShgWsxKz
-=hh/A
------END PGP SIGNATURE-----
-
---nextPart3065225.SPOVmq47Dl--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
