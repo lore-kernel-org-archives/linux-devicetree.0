@@ -1,89 +1,37 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH 2/4] mfd: ptxpmb-ext-cpld: Add documentation for PTXPMB extended CPLD
-Date: Mon, 17 Oct 2016 22:08:54 +0300
-Message-ID: <96110C7A-A2F6-44A6-A72E-2B2E2A800AD6@konsulko.com>
-References: <1475853574-22339-1-git-send-email-pantelis.antoniou@konsulko.com> <1475853574-22339-3-git-send-email-pantelis.antoniou@konsulko.com> <20161010201031.GA31318@rob-hp-laptop>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20161010201031.GA31318@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Georgi Vlaev <gvlaev@juniper.net>, Guenter Roeck <linux@roeck-us.net>, JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, linux-mtd@lists.infradead.org, linux-watchdog@vger.kernel.org, netdev@vger.kernel.org
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] make of_device_make_bus_id() static
+Date: Mon, 17 Oct 2016 12:08:51 -0700
+Message-ID: <580521C3.20108@gmail.com>
+References: <1476719426-12549-1-git-send-email-frowand.list@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476719426-12549-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 10/17/16 08:50, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+> 
+> of_device_make_bus_id() was changed to non-static by commit c66012253800
+> ("of/device: Make of_device_make_bus_id() usable by other code") more than
+> 6 years ago, but there are no users of it outside of platform.c.  Make the
+> function static again.
+> 
+> Signed-off-by: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
 
-> On Oct 10, 2016, at 23:10 , Rob Herring <robh@kernel.org> wrote:
->=20
-> On Fri, Oct 07, 2016 at 06:19:32PM +0300, Pantelis Antoniou wrote:
->> From: Georgi Vlaev <gvlaev@juniper.net>
->>=20
->> Add DT bindings document for the PTXPMB extended CPLD device.
->>=20
->> Signed-off-by: Georgi Vlaev <gvlaev@juniper.net>
->> [Ported from Juniper kernel]
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
->> ---
->> .../bindings/mfd/jnx-ptxpmb-ext-cpld.txt           | 35 =
-++++++++++++++++++++++
->> 1 file changed, 35 insertions(+)
->> create mode 100644 =
-Documentation/devicetree/bindings/mfd/jnx-ptxpmb-ext-cpld.txt
->>=20
->> diff --git =
-a/Documentation/devicetree/bindings/mfd/jnx-ptxpmb-ext-cpld.txt =
-b/Documentation/devicetree/bindings/mfd/jnx-ptxpmb-ext-cpld.txt
->> new file mode 100644
->> index 0000000..098a548a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/jnx-ptxpmb-ext-cpld.txt
->> @@ -0,0 +1,35 @@
->> +* Device tree bindings for Juniper's PTXPMB Extended CPLD FPGA MFD =
-driver
->> +
->> +The device supports a gpio block which is described in the
->> +jnx-gpio-ptxpmb-ext-cpld document.
->> +
->> +Required properties:
->> +
->> +- compatible:		"jnx,ptxpmb-ext-cpld"
->> +
->> +- reg:			contains offset/length value for device =
-state control
->> +			registers space.
->> +
->> +Optional properties:
->> +
->> +- interrupts:		The interrupt line(s) the /IRQ signal(s) =
-for the device is
->> +			connected to.
->> +
->> +- interrupt-parent:	The parent interrupt controller.
->> +
->> +Example:
->> +
->> +ext-cpld@1,0 {
->> +	compatible =3D "jnx,ptxpmb-ext-cpld";
->> +	reg =3D <0x1 0 0x1000>;
->=20
-> What's the bus type here? Unit address is probably wrong.
->=20
 
-localbus on a gpmc memory controller.
+Rob,
 
->> +	interrupt-parent =3D <&mpic>;
->> +	interrupts =3D <7 2>, <8 2>;
->> +
->> +	gpio_ext_cpld: cpld-ext-gpio {
->> +		compatible =3D "jnx,gpio-ptxpmb-ext-cpld";
->> +		#gpio-cells =3D <2>;
->> +		#interrupt-cells =3D <2>;
->> +		gpio-controller;
->> +		interrupt-controller;
->> +	};
->> +};
->> --=20
->> 1.9.1
+Please ignore due to bad subject. I will resend
+with proper subject.
 
+-Frank
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
