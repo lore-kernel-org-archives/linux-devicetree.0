@@ -1,7 +1,7 @@
 From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 02/13] gpio-sx150x: Remove 'irq_summary' parameter
-Date: Mon, 17 Oct 2016 07:26:57 -0700
-Message-ID: <1476714428-11264-3-git-send-email-andrew.smirnov@gmail.com>
+Subject: [PATCH 13/13] gpio-sx150x: Pass device type in DT match table
+Date: Mon, 17 Oct 2016 07:27:08 -0700
+Message-ID: <1476714428-11264-14-git-send-email-andrew.smirnov@gmail.com>
 References: <1476714428-11264-1-git-send-email-andrew.smirnov@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1476714428-11264-1-git-send-email-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,94 +10,127 @@ To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Information conveyed by 'irq_summary' paramter can be obtained from
-struct i2c_client's irq field. Remove any uses of the former and replace
-it with the latter.
+Pass the same device type information in DT match table as the one being
+passed via i2c_device_id
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/gpio/gpio-sx150x.c | 19 +++----------------
- 1 file changed, 3 insertions(+), 16 deletions(-)
+ drivers/gpio/gpio-sx150x.c | 48 ++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 34 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/gpio/gpio-sx150x.c b/drivers/gpio/gpio-sx150x.c
-index f9d6bec..e80c115 100644
+index bfb1ec3..9263d25 100644
 --- a/drivers/gpio/gpio-sx150x.c
 +++ b/drivers/gpio/gpio-sx150x.c
-@@ -105,12 +105,6 @@ struct sx150x_device_data {
-  *               the polarity of that IO line, while clearing it results
-  *               in normal polarity. For chips with fewer than 16 IO pins,
-  *               high-end bits are ignored.
-- * @irq_summary: The 'summary IRQ' line to which the GPIO expander's INT line
-- *               is connected, via which it reports interrupt events
-- *               across all GPIO lines.  This must be a real,
-- *               pre-existing IRQ line.
-- *               Setting this value < 0 disables the irq_chip functionality
-- *               of the driver.
-  * @irq_base: The first 'virtual IRQ' line at which our block of GPIO-based
-  *            IRQ lines will appear.  Similarly to gpio_base, the expander
-  *            will create a block of irqs beginning at this number.
-@@ -124,7 +118,6 @@ struct sx150x_platform_data {
- 	u16      io_pullup_ena;
- 	u16      io_pulldn_ena;
- 	u16      io_polarity;
--	int      irq_summary;
- 	unsigned irq_base;
- 	bool     reset_during_probe;
+@@ -97,8 +97,15 @@ struct sx150x_chip {
+ 	struct mutex                     lock;
  };
-@@ -133,7 +126,6 @@ struct sx150x_chip {
- 	struct gpio_chip                 gpio_chip;
- 	struct i2c_client               *client;
- 	const struct sx150x_device_data *dev_cfg;
--	int                              irq_summary;
- 	int                              irq_base;
- 	int				 irq_update;
- 	u32                              irq_sense;
-@@ -598,7 +590,6 @@ static void sx150x_init_chip(struct sx150x_chip *chip,
- 	chip->irq_chip.irq_set_type        = sx150x_irq_set_type;
- 	chip->irq_chip.irq_bus_lock        = sx150x_irq_bus_lock;
- 	chip->irq_chip.irq_bus_sync_unlock = sx150x_irq_bus_sync_unlock;
--	chip->irq_summary                  = -1;
- 	chip->irq_base                     = -1;
- 	chip->irq_masked                   = ~0;
- 	chip->irq_sense                    = 0;
-@@ -699,12 +690,10 @@ static int sx150x_init_hw(struct sx150x_chip *chip,
+ 
++enum sx150x_type {
++	SX1508Q = 0,
++	SX1509Q,
++	SX1506Q,
++	SX1502Q,
++};
++
+ static const struct sx150x_device_data sx150x_devices[] = {
+-	[0] = { /* sx1508q */
++	[SX1508Q] = {
+ 		.model = SX150X_789,
+ 		.reg_pullup	= 0x03,
+ 		.reg_pulldn	= 0x04,
+@@ -116,7 +123,7 @@ static const struct sx150x_device_data sx150x_devices[] = {
+ 		},
+ 		.ngpios = 8,
+ 	},
+-	[1] = { /* sx1509q */
++	[SX1509Q] = {
+ 		.model = SX150X_789,
+ 		.reg_pullup	= 0x07,
+ 		.reg_pulldn	= 0x09,
+@@ -134,7 +141,7 @@ static const struct sx150x_device_data sx150x_devices[] = {
+ 		},
+ 		.ngpios	= 16
+ 	},
+-	[2] = { /* sx1506q */
++	[SX1506Q] = {
+ 		.model = SX150X_456,
+ 		.reg_pullup	= 0x05,
+ 		.reg_pulldn	= 0x07,
+@@ -154,7 +161,7 @@ static const struct sx150x_device_data sx150x_devices[] = {
+ 		},
+ 		.ngpios	= 16
+ 	},
+-	[3] = { /* sx1502q */
++	[SX1502Q] = {
+ 		.model = SX150X_123,
+ 		.reg_pullup	= 0x02,
+ 		.reg_pulldn	= 0x03,
+@@ -177,19 +184,19 @@ static const struct sx150x_device_data sx150x_devices[] = {
+ };
+ 
+ static const struct i2c_device_id sx150x_id[] = {
+-	{"sx1508q", 0},
+-	{"sx1509q", 1},
+-	{"sx1506q", 2},
+-	{"sx1502q", 3},
++	{ "sx1508q", SX1508Q },
++	{ "sx1509q", SX1509Q },
++	{ "sx1506q", SX1506Q },
++	{ "sx1502q", SX1502Q },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(i2c, sx150x_id);
+ 
+ static const struct of_device_id sx150x_of_match[] = {
+-	{ .compatible = "semtech,sx1508q" },
+-	{ .compatible = "semtech,sx1509q" },
+-	{ .compatible = "semtech,sx1506q" },
+-	{ .compatible = "semtech,sx1502q" },
++	{ .compatible = "semtech,sx1508q", .data = (void *)SX1508Q },
++	{ .compatible = "semtech,sx1509q", .data = (void *)SX1509Q },
++	{ .compatible = "semtech,sx1506q", .data = (void *)SX1506Q },
++	{ .compatible = "semtech,sx1502q", .data = (void *)SX1502Q },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, sx150x_of_match);
+@@ -680,13 +687,14 @@ static int sx150x_install_irq_chip(struct sx150x_chip *chip)
  }
  
- static int sx150x_install_irq_chip(struct sx150x_chip *chip,
--				int irq_summary,
--				int irq_base)
-+				   int irq_base)
+ static int sx150x_probe(struct i2c_client *client,
+-				const struct i2c_device_id *id)
++			const struct i2c_device_id *id)
  {
- 	int err;
+ 	static const u32 i2c_funcs = I2C_FUNC_SMBUS_BYTE_DATA |
+ 				     I2C_FUNC_SMBUS_WRITE_WORD_DATA;
+ 	struct sx150x_chip *chip;
+ 	int rc;
+ 	bool oscio_is_gpo;
++	kernel_ulong_t driver_data;
  
--	chip->irq_summary = irq_summary;
- 	chip->irq_base    = irq_base;
+ 	if (!i2c_check_functionality(client->adapter, i2c_funcs))
+ 		return -ENOSYS;
+@@ -699,7 +707,19 @@ static int sx150x_probe(struct i2c_client *client,
+ 	oscio_is_gpo = of_property_read_bool(client->dev.of_node,
+ 					     "semtech,oscio-is-gpo");
  
- 	/* Add gpio chip to irq subsystem */
-@@ -718,11 +707,10 @@ static int sx150x_install_irq_chip(struct sx150x_chip *chip,
- 	}
+-	sx150x_init_chip(chip, client, id->driver_data);
++	if (id) {
++		driver_data = id->driver_data;
++	} else {
++		const struct of_device_id *match;
++
++		match = of_match_device(sx150x_of_match, &client->dev);
++		if (!match)
++			return -ENODEV;
++
++		driver_data = (kernel_ulong_t)match->data;
++	}
++
++	sx150x_init_chip(chip, client, driver_data);
  
- 	err = devm_request_threaded_irq(&chip->client->dev,
--			irq_summary, NULL, sx150x_irq_thread_fn,
-+			chip->client->irq, NULL, sx150x_irq_thread_fn,
- 			IRQF_ONESHOT | IRQF_SHARED | IRQF_TRIGGER_FALLING,
- 			chip->irq_chip.name, chip);
- 	if (err < 0) {
--		chip->irq_summary = -1;
- 		chip->irq_base    = -1;
- 	}
- 
-@@ -759,9 +747,8 @@ static int sx150x_probe(struct i2c_client *client,
- 	if (rc)
- 		return rc;
- 
--	if (pdata->irq_summary >= 0) {
-+	if (client->irq) {
- 		rc = sx150x_install_irq_chip(chip,
--					pdata->irq_summary,
- 					pdata->irq_base);
- 		if (rc < 0)
- 			return rc;
+ 	if (oscio_is_gpo)
+ 		chip->gpio_chip.ngpio++;
 -- 
 2.5.5
 
