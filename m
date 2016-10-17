@@ -1,54 +1,52 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] Add missing space at end of pr_fmt().
-Date: Mon, 17 Oct 2016 10:04:21 -0700
-Message-ID: <1476723861.4414.1.camel@perches.com>
-References: <1476717010-3580-1-git-send-email-frowand.list@gmail.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH V3 RFT 3/5] ARM64: dts: bcm283x: Use dtsi for USB host mode
+Date: Mon, 17 Oct 2016 10:29:18 -0700
+Message-ID: <87lgxmkhox.fsf@eliezer.anholt.net>
+References: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com> <1471792204-21908-4-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476717010-3580-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1471792204-21908-4-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-10-17 at 08:10 -0700, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
-> 
-> Make pr_fmt() in fdt.c consistent with all other files in drivers/of/
+--=-=-=
+Content-Type: text/plain
 
-Hi Frank.
+Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
 
-Patches should use the subsystem as a subject prefix to make
-the subsystem more obvious when using "git log".
+> In case dr_mode isn't passed via DT, the dwc2 driver defaults
+> to OTG mode. But the Raspberry Pi 3 is designed only for host mode.
+> So fix this issue by linking to the dtsi file which set the dr_mode
+> to host.
+>
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 
-This email subject could be something like:
+Applied Gerd's Tested-by and merged to bcm2835-dt-64-next.
 
-"Subject: [PATCH] of: fdt: Add missing space at end of pr_fmt()"
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Please check the git log to see examples for drivers/of/fdt.c
-and pick the prefix style you think appropriate.
+-----BEGIN PGP SIGNATURE-----
 
-> Signed-off-by: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/of/fdt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index c89d5d231a0e..9f98e437e1f1 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -9,7 +9,7 @@
->   * version 2 as published by the Free Software Foundation.
->   */
->  
-> -#define pr_fmt(fmt)	"OF: fdt:" fmt
-> +#define pr_fmt(fmt)	"OF: fdt: " fmt
->  
->  #include <linux/crc32.h>
->  #include <linux/kernel.h>
-> 
+iQIcBAEBCgAGBQJYBQpuAAoJELXWKTbR/J7o8iEQAKpHnoSlaz1OvIF8gy2SNBVa
+dkM33RFkzNvXGmL0ZsyHTMK9Epj9KMUZaojZZUMg1Y5Tuw1ZVqm27IyoIhm4IDcn
+xaoKrgB8MVV9ARG+v0dRrNGIKDNSrOTqXKSYJmkCfKdgZLXsCEh8Zp7eck8S2fLY
+XbeT+40FIsX2rNGS0/C4hx9jElQKQB4nptJba9Qh6VyZYiVofehemEeB9h9uHoZu
+Tby0OEMMf9e4RKWcZylE7Ura2qGeLuedk8Teu3gOFQ194UxSwsBRltuVXng/QKLj
+YCoUqE9ocLcEno+SbUdKY1fnh+iMf5QHqwO8EAwzsA5DIXTeZnw6z1OHBpxlF8rE
+WOy9WqWzcrtitZ9mwfKIoVwrU2gMklyUKToVMAuCx0OZmJdQzRUQGlQEp1+s2xOT
+TpYNt2f/uSHAgm5gFY0ge9KO3bX23wRp+M8O0hy1SKNTfrVF5lXRmh+7a7AWjvV1
+qPhK6lJ64M5Db9PgLzFglCRdxA9Za11SIqrwe+Zd1O+B8c7hwj28Yi6K35P46Nxo
+M1neJ3uFEcJFJODK2bM2d2r7rnQC86wbZcFOE9yrSnw7zn9jRTndI53gcRVyMJJ6
+bVSPVd/E4ePWVpSNYakonkeL9jJiy7Xywsr+F5ggI9h87LgbzwizETgESa9kHurq
+/Unc+BWcdCYfNw5UbPUY
+=m0RM
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
