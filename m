@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/3] ARM: bus: da8xx-syscfg: new driver
-Date: Mon, 17 Oct 2016 18:30:49 +0200
-Message-ID: <1476721850-454-3-git-send-email-bgolaszewski@baylibre.com>
+Subject: [PATCH 1/3] ARM: memory: da8xx-ddrctl: new driver
+Date: Mon, 17 Oct 2016 18:30:48 +0200
+Message-ID: <1476721850-454-2-git-send-email-bgolaszewski@baylibre.com>
 References: <1476721850-454-1-git-send-email-bgolaszewski@baylibre.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1476721850-454-1-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
@@ -10,128 +10,94 @@ To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turq
 Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Create the driver for the da8xx System Configuration and implement
-support for writing to the three Master Priority registers.
+Create a new driver for the da8xx DDR2/mDDR controller and implement
+support for writing to the Peripheral Bus Burst Priority Register.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- .../devicetree/bindings/bus/ti,da850-syscfg.txt    |  63 +++++++
- drivers/bus/Kconfig                                |   8 +
- drivers/bus/Makefile                               |   2 +
- drivers/bus/da8xx-syscfg.c                         | 206 +++++++++++++++++++++
- 4 files changed, 279 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/ti,da850-syscfg.txt
- create mode 100644 drivers/bus/da8xx-syscfg.c
+ .../memory-controllers/ti-da8xx-ddrctl.txt         | 25 +++++++
+ drivers/memory/Kconfig                             |  8 +++
+ drivers/memory/Makefile                            |  1 +
+ drivers/memory/da8xx-ddrctl.c                      | 77 ++++++++++++++++++++++
+ 4 files changed, 111 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
+ create mode 100644 drivers/memory/da8xx-ddrctl.c
 
-diff --git a/Documentation/devicetree/bindings/bus/ti,da850-syscfg.txt b/Documentation/devicetree/bindings/bus/ti,da850-syscfg.txt
+diff --git a/Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt b/Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
 new file mode 100644
-index 0000000..07e5c38
+index 0000000..e340404
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/ti,da850-syscfg.txt
-@@ -0,0 +1,63 @@
-+* Device tree bindings for Texas Instruments da8xx system configuration driver
++++ b/Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
+@@ -0,0 +1,25 @@
++* Device tree bindings for Texas Instruments da8xx DDR2/mDDR memory controller
 +
-+The system configuration (SYSCFG) module is a system-level module containing
-+status and top level control logic required by the device. The system
-+configuration module consists of a set of memory-mapped status and control
-+registers, accessible by the CPU, supporting all of the following system
-+features, and miscellaneous functions and operations.
++The DDR2/mDDR memory controller present on Texas Instruments da8xx SoCs memory
++maps a set of registers which allow to tweak the controller's behavior.
 +
 +Documentation:
 +OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh82c/spruh82c.pdf
 +
 +Required properties:
 +
-+- compatible:		"ti,da850-syscfg"
++- compatible:		"ti,da850-ddrctl"
 +
 +Optional properties:
 +
-+The below properties are used to specify the priority of master peripherals.
-+They must be between 0-7 where 0 is the highest priority and 7 is the lowest.
++- ti,pr-old-count:	Priority raise old counter. Specifies the number of
++			memory transfers after which the DDR2/mDDR memory
++			controller will elevate the priority of the oldest
++			command in the command FIFO. Must be between 0-255.
 +
-+- ti,pri-arm-i:		ARM_I port priority.
++Example for da850 shown below.
 +
-+- ti,pri-arm-d:		ARM_D port priority.
-+
-+- ti,pri-upp:		uPP port priority.
-+
-+- ti,pri-sata:		SATA port priority.
-+
-+- ti,pri-pru0:		PRU0 port priority.
-+
-+- ti,pri-pru1:		PRU1 port priority.
-+
-+- ti,pri-edma30tc0:	EDMA3_0_TC0 port priority.
-+
-+- ti,pri-edma30tc1:	EDMA3_0_TC1 port priority.
-+
-+- ti,pri-edma31tc0:	EDMA3_1_TC0 port priority.
-+
-+- ti,pri-vpif-dma-0:	VPIF DMA0 port priority.
-+
-+- ti,pri-vpif-dma-1:	VPIF DMA1 port priority.
-+
-+- ti,pri-emac:		EMAC port priority.
-+
-+- ti,pri-usb0cfg:	USB0 CFG port priority.
-+
-+- ti,pri-usb0cdma:	USB0 CDMA port priority.
-+
-+- ti,pri-uhpi:		HPI port priority.
-+
-+- ti,pri-usb1:		USB1 port priority.
-+
-+- ti,pri-lcdc:		LCDC port priority.
-+
-+If any of the above properties is absent, the default value will be used as
-+defined in the documentation.
-+
-+Example for da850-lcdk is shown below.
-+
-+mstpri {
-+	compatible = "ti,da850-mstpri";
-+	ti,pri-lcdc = 0;
++ddrctl {
++	compatible = "ti,da850-ddrctl";
++	ti,pr-old-count = <0x20>;
 +};
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 5a2d47c..6276132 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -165,4 +165,12 @@ config VEXPRESS_CONFIG
- 	help
- 	  Platform configuration infrastructure for the ARM Ltd.
- 	  Versatile Express.
-+
-+config DA8XX_SYSCFG
-+	bool "TI da8xx system configuration driver"
+diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
+index 4b4c0c3..ec80e35 100644
+--- a/drivers/memory/Kconfig
++++ b/drivers/memory/Kconfig
+@@ -134,6 +134,14 @@ config MTK_SMI
+ 	  mainly help enable/disable iommu and control the power domain and
+ 	  clocks for each local arbiter.
+ 
++config DA8XX_DDRCTL
++	bool "Texas Instruments da8xx DDR2/mDDR driver"
 +	depends on ARCH_DAVINCI_DA8XX
 +	help
-+	  Driver for Texas Instruments da8xx system configuration. Allows to
-+	  adjust various SoC configuration options.
++	  This driver is for the DDR2/mDDR Memory Controller present on
++	  Texas Instruments da8xx SoCs. It's used to tweak various memory
++	  controller configuration options.
 +
- endmenu
-diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
-index c6cfa6b..3cba66a 100644
---- a/drivers/bus/Makefile
-+++ b/drivers/bus/Makefile
-@@ -21,3 +21,5 @@ obj-$(CONFIG_SIMPLE_PM_BUS)	+= simple-pm-bus.o
- obj-$(CONFIG_TEGRA_ACONNECT)	+= tegra-aconnect.o
- obj-$(CONFIG_UNIPHIER_SYSTEM_BUS)	+= uniphier-system-bus.o
- obj-$(CONFIG_VEXPRESS_CONFIG)	+= vexpress-config.o
-+
-+obj-$(CONFIG_DA8XX_SYSCFG)	+= da8xx-syscfg.o
-diff --git a/drivers/bus/da8xx-syscfg.c b/drivers/bus/da8xx-syscfg.c
+ source "drivers/memory/samsung/Kconfig"
+ source "drivers/memory/tegra/Kconfig"
+ 
+diff --git a/drivers/memory/Makefile b/drivers/memory/Makefile
+index b20ae38..e88097fb 100644
+--- a/drivers/memory/Makefile
++++ b/drivers/memory/Makefile
+@@ -17,6 +17,7 @@ obj-$(CONFIG_MVEBU_DEVBUS)	+= mvebu-devbus.o
+ obj-$(CONFIG_TEGRA20_MC)	+= tegra20-mc.o
+ obj-$(CONFIG_JZ4780_NEMC)	+= jz4780-nemc.o
+ obj-$(CONFIG_MTK_SMI)		+= mtk-smi.o
++obj-$(CONFIG_DA8XX_DDRCTL)	+= da8xx-ddrctl.o
+ 
+ obj-$(CONFIG_SAMSUNG_MC)	+= samsung/
+ obj-$(CONFIG_TEGRA_MC)		+= tegra/
+diff --git a/drivers/memory/da8xx-ddrctl.c b/drivers/memory/da8xx-ddrctl.c
 new file mode 100644
-index 0000000..8a2cb4f
+index 0000000..dcd0a61
 --- /dev/null
-+++ b/drivers/bus/da8xx-syscfg.c
-@@ -0,0 +1,206 @@
++++ b/drivers/memory/da8xx-ddrctl.c
+@@ -0,0 +1,77 @@
 +/*
-+ * TI da8xx System Configuration driver
++ * TI da8xx DDR2/mDDR controller driver
 + *
 + * Copyright (C) 2016 BayLibre SAS
 + *
 + * Author:
-+ *   Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBpdZSXdFL2CA@public.gmane.org>
++ *   Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -143,193 +109,64 @@ index 0000000..8a2cb4f
 +#include <linux/platform_device.h>
 +#include <linux/io.h>
 +
-+#define DA8XX_IO_PHYS			0x01c00000ul
-+#define DA8XX_SYSCFG0_BASE		(DA8XX_IO_PHYS + 0x14000)
++#define DA8XX_DDR_CTL_BASE	0xB0000000
++#define DA8XX_PBBPR_OFFSET	0x00000020
++#define DA8XX_PBBPR_REG(p)	((p) + DA8XX_PBBPR_OFFSET)
 +
-+#define DA8XX_MSTPRI0_REG		0x110
-+#define DA8XX_MSTPRI1_REG		0x114
-+#define DA8XX_MSTPRI2_REG		0x118
++#define DA8XX_PBBPR_MAX		0xff
 +
-+#define DA8XX_MSTPRI_MAX		7
-+
-+struct da8xx_mstpri_descr {
-+	const char *property;
-+	int reg;
-+	int shift;
-+	int mask;
-+};
-+
-+static const struct da8xx_mstpri_descr priorities[] = {
-+	{
-+		.property = "ti,pri-arm-i",
-+		.reg = DA8XX_MSTPRI0_REG,
-+		.shift = 0,
-+		.mask = 0xfffffff0,
-+	},
-+	{
-+		.property = "ti,pri-arm-d",
-+		.reg = DA8XX_MSTPRI0_REG,
-+		.shift = 4,
-+		.mask = 0xffffff0f,
-+	},
-+	{
-+		.property = "ti,pri-upp",
-+		.reg = DA8XX_MSTPRI0_REG,
-+		.shift = 16,
-+		.mask = 0xfff0ffff,
-+	},
-+	{
-+		.property = "ti,pri-sata",
-+		.reg = DA8XX_MSTPRI0_REG,
-+		.shift = 20,
-+		.mask = 0xff0fffff,
-+	},
-+	{
-+		.property = "ti,pri-pru0",
-+		.reg = DA8XX_MSTPRI1_REG,
-+		.shift = 0,
-+		.mask = 0xfffffff0,
-+	},
-+	{
-+		.property = "ti,pri-pru1",
-+		.reg = DA8XX_MSTPRI1_REG,
-+		.shift = 4,
-+		.mask = 0xffffff0f,
-+	},
-+	{
-+		.property = "ti,pri-edma30tc0",
-+		.reg = DA8XX_MSTPRI1_REG,
-+		.shift = 8,
-+		.mask = 0xfffff0ff,
-+	},
-+	{
-+		.property = "ti,pri-edma30tc1",
-+		.reg = DA8XX_MSTPRI1_REG,
-+		.shift = 12,
-+		.mask = 0xffff0fff,
-+	},
-+	{
-+		.property = "ti,pri-edma31tc0",
-+		.reg = DA8XX_MSTPRI1_REG,
-+		.shift = 16,
-+		.mask = 0xfff0ffff,
-+	},
-+	{
-+		.property = "ti,pri-vpif-dma-0",
-+		.reg = DA8XX_MSTPRI1_REG,
-+		.shift = 24,
-+		.mask = 0xf0ffffff,
-+	},
-+	{
-+		.property = "ti,pri-vpif-dma-1",
-+		.reg = DA8XX_MSTPRI1_REG,
-+		.shift = 28,
-+		.mask = 0x0fffffff,
-+	},
-+	{
-+		.property = "ti,pri-emac",
-+		.reg = DA8XX_MSTPRI2_REG,
-+		.shift = 0,
-+		.mask = 0xfffffff0,
-+	},
-+	{
-+		.property = "ti,pri-usb0cfg",
-+		.reg = DA8XX_MSTPRI2_REG,
-+		.shift = 8,
-+		.mask = 0xfffff0ff,
-+	},
-+	{
-+		.property = "ti,pri-usb0cdma",
-+		.reg = DA8XX_MSTPRI2_REG,
-+		.shift = 12,
-+		.mask = 0xffff0fff,
-+	},
-+	{
-+		.property = "ti,pri-uhpi",
-+		.reg = DA8XX_MSTPRI2_REG,
-+		.shift = 20,
-+		.mask = 0xff0fffff,
-+	},
-+	{
-+		.property = "ti,pri-usb1",
-+		.reg = DA8XX_MSTPRI2_REG,
-+		.shift = 24,
-+		.mask = 0xf0ffffff,
-+	},
-+	{
-+		.property = "ti,pri-lcdc",
-+		.reg = DA8XX_MSTPRI2_REG,
-+		.shift = 28,
-+		.mask = 0x0fffffff,
-+	},
-+};
-+
-+static void da8xx_syscfg_set_mstpri(void __iomem *syscfg0, struct device *dev)
++static void da8xx_ddrctl_set_pbbpr(void __iomem *ddrctl, struct device *dev)
 +{
-+	const struct da8xx_mstpri_descr *pri_descr;
 +	struct device_node *node = dev->of_node;
-+	void __iomem *mstpri;
-+	u32 old_pri, new_pri;
-+	int ret, i;
++	u32 pr_old_count;
++	int ret;
 +
-+	for (i = 0; i < ARRAY_SIZE(priorities); i++) {
-+		pri_descr = &priorities[i];
++	ret = of_property_read_u32(node, "ti,pr-old-count", &pr_old_count);
++	if (ret)
++		return;
 +
-+		ret = of_property_read_u32(node, pri_descr->property, &new_pri);
-+		if (ret)
-+			continue;
-+
-+		if (new_pri > DA8XX_MSTPRI_MAX) {
-+			dev_warn(dev,
-+				 "omitting property '%s' - value too high\n",
-+				 pri_descr->property);
-+			continue;
-+		}
-+
-+		mstpri = syscfg0 + pri_descr->reg;
-+		old_pri = __raw_readl(mstpri);
-+		old_pri &= pri_descr->mask;
-+		new_pri <<= pri_descr->shift;
-+		new_pri |= old_pri;
-+
-+		__raw_writel(new_pri, mstpri);
++	if (pr_old_count > DA8XX_PBBPR_MAX) {
++		dev_warn(dev, "priority raise old counter value too high\n");
++		return;
 +	}
++
++	__raw_writel(pr_old_count, DA8XX_PBBPR_REG(ddrctl));
 +}
 +
-+static int da8xx_syscfg_probe(struct platform_device *pdev)
++static int da8xx_ddrctl_probe(struct platform_device *pdev)
 +{
 +	struct device *dev = &pdev->dev;
-+	void __iomem *syscfg0;
++	void __iomem *ddrctl;
 +
-+	syscfg0 = ioremap(DA8XX_SYSCFG0_BASE, SZ_4K);
-+	if (!syscfg0) {
-+		dev_err(dev, "unable to map syscfg0\n");
++	ddrctl = ioremap(DA8XX_DDR_CTL_BASE, SZ_256);
++	if (!ddrctl) {
++		dev_err(dev, "unable to map memory controller registers\n");
 +		return -EIO;
 +	}
 +
-+	da8xx_syscfg_set_mstpri(syscfg0, dev);
++	da8xx_ddrctl_set_pbbpr(ddrctl, dev);
 +
-+	iounmap(syscfg0);
++	iounmap(ddrctl);
 +
 +	return 0;
 +}
 +
-+static const struct of_device_id da8xx_syscfg_of_match[] = {
-+	{ .compatible = "ti,da850-syscfg", },
++static const struct of_device_id da8xx_ddrctl_of_match[] = {
++	{ .compatible = "ti,da850-ddrctl", },
 +	{ },
 +};
 +
-+static struct platform_driver da8xx_syscfg_driver = {
-+	.probe = da8xx_syscfg_probe,
++static struct platform_driver da8xx_ddrctl_driver = {
++	.probe = da8xx_ddrctl_probe,
 +	.driver = {
-+		.name = "da8xx-syscfg",
-+		.of_match_table = da8xx_syscfg_of_match,
++		.name = "da8xx-ddrctl",
++		.of_match_table = da8xx_ddrctl_of_match,
 +	},
 +};
-+module_platform_driver(da8xx_syscfg_driver);
++module_platform_driver(da8xx_ddrctl_driver);
 +
 +MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>");
-+MODULE_DESCRIPTION("TI da8xx System Configuration driver");
++MODULE_DESCRIPTION("TI da8xx DDR2/mDDR controller driver");
 +MODULE_LICENSE("GPL v2");
 -- 
 2.9.3
