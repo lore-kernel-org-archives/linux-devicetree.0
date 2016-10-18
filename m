@@ -1,97 +1,142 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: [PATCH v4 2/4] net: phy: dp83867: add support for MAC impedance
- configuration
-Date: Tue, 18 Oct 2016 16:50:18 +0530
-Message-ID: <20161018112020.30273-3-mugunthanvnm@ti.com>
-References: <20161018112020.30273-1-mugunthanvnm@ti.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC PATCH] mtd: nand: Add OX820 NAND Support
+Date: Tue, 18 Oct 2016 13:24:22 +0200
+Message-ID: <c377cb60-a359-62c1-dc6b-7b0be8b8e228@baylibre.com>
+References: <20161018090927.1990-1-narmstrong@baylibre.com>
+ <20161018110807.GD1641@makrotopia.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161018112020.30273-1-mugunthanvnm@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: netdev@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Mugunthan V N <mugunthanvnm@ti.com>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, David Miller <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161018110807.GD1641-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for programmable MAC impedance configuration
+On 10/18/2016 01:08 PM, Daniel Golle wrote:
+> Hi Neil,
+> 
+> great to see progress towards supporting OX820!
+> The NAND driver I hacked up for Kernel 4.1 and 4.4 in OpenWrt/LEDE
+> looks very similar, see
+> 
+> https://git.lede-project.org/?p=lede/dangole/staging.git;a=blob;f=target/linux/oxnas/files/drivers/mtd/nand/oxnas_nand.c;h=f5a142950e32227fee304de731e619278350a91b;hb=refs/heads/oxnas-nand
+> 
+> To me therefore this looks quite good, just one small question below.
 
-Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
----
- drivers/net/phy/dp83867.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+Hi Daniel,
 
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index 91177a4..1b63924 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -33,6 +33,7 @@
- /* Extended Registers */
- #define DP83867_RGMIICTL	0x0032
- #define DP83867_RGMIIDCTL	0x0086
-+#define DP83867_IO_MUX_CFG	0x0170
- 
- #define DP83867_SW_RESET	BIT(15)
- #define DP83867_SW_RESTART	BIT(14)
-@@ -62,10 +63,17 @@
- /* RGMIIDCTL bits */
- #define DP83867_RGMII_TX_CLK_DELAY_SHIFT	4
- 
-+/* IO_MUX_CFG bits */
-+#define DP83867_IO_MUX_CFG_IO_IMPEDANCE_CTRL	0x1f
-+
-+#define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MAX	0x0
-+#define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MIN	0x1f
-+
- struct dp83867_private {
- 	int rx_id_delay;
- 	int tx_id_delay;
- 	int fifo_depth;
-+	int io_impedance;
- };
- 
- static int dp83867_ack_interrupt(struct phy_device *phydev)
-@@ -111,6 +119,14 @@ static int dp83867_of_init(struct phy_device *phydev)
- 	if (!of_node)
- 		return -ENODEV;
- 
-+	dp83867->io_impedance = -EINVAL;
-+
-+	/* Optional configuration */
-+	if (of_property_read_bool(of_node, "ti,max-output-impedance"))
-+		dp83867->io_impedance = DP83867_IO_MUX_CFG_IO_IMPEDANCE_MAX;
-+	else if (of_property_read_bool(of_node, "ti,min-output-impedance"))
-+		dp83867->io_impedance = DP83867_IO_MUX_CFG_IO_IMPEDANCE_MIN;
-+
- 	ret = of_property_read_u32(of_node, "ti,rx-internal-delay",
- 				   &dp83867->rx_id_delay);
- 	if (ret)
-@@ -184,6 +200,18 @@ static int dp83867_config_init(struct phy_device *phydev)
- 
- 		phy_write_mmd_indirect(phydev, DP83867_RGMIIDCTL,
- 				       DP83867_DEVADDR, delay);
-+
-+		if (dp83867->io_impedance >= 0) {
-+			val = phy_read_mmd_indirect(phydev, DP83867_IO_MUX_CFG,
-+						    DP83867_DEVADDR);
-+
-+			val &= ~DP83867_IO_MUX_CFG_IO_IMPEDANCE_CTRL;
-+			val |= dp83867->io_impedance &
-+			       DP83867_IO_MUX_CFG_IO_IMPEDANCE_CTRL;
-+
-+			phy_write_mmd_indirect(phydev, DP83867_IO_MUX_CFG,
-+					       DP83867_DEVADDR, val);
-+		}
- 	}
- 
- 	return 0;
--- 
-2.10.1.445.g3cdd5d1
+Yes, I work step by step, I hope to have something booting for 4.10 !
+
+Indeed, they look identical except the part_probes[] stuff, are they necessary ?
+
+My primary source of code was Ma Haiju's tree and OPenWRT's tree, but would some people like to push some of the openwrt driver upstream somehow ?
+
+Thanks,
+Neil
+
+> 
+> Cheers
+> 
+> Daniel
+> 
+> 
+> On Tue, Oct 18, 2016 at 11:09:27AM +0200, Neil Armstrong wrote:
+>> Add NAND driver to support the Oxford Semiconductor OX820 NAND Controller.
+>> This is a simple memory mapped NAND controller with single chip select and
+>> software ECC.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/mtd/oxnas-nand.txt         |  24 ++++
+>>  drivers/mtd/nand/Kconfig                           |   5 +
+>>  drivers/mtd/nand/Makefile                          |   1 +
+>>  drivers/mtd/nand/oxnas_nand.c                      | 144 +++++++++++++++++++++
+>>  4 files changed, 174 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mtd/oxnas-nand.txt
+>>  create mode 100644 drivers/mtd/nand/oxnas_nand.c
+>>
+
+[...]
+
+>> diff --git a/drivers/mtd/nand/oxnas_nand.c b/drivers/mtd/nand/oxnas_nand.c
+>> new file mode 100644
+>> index 0000000..ee402ab
+>> --- /dev/null
+>> +++ b/drivers/mtd/nand/oxnas_nand.c
+>> @@ -0,0 +1,144 @@
+>> +/*
+>> + * Oxford Semiconductor OXNAS NAND driver
+>> + *
+>> + * Heavily based on plat_nand.c :
+>> + * Author: Vitaly Wool <vitalywool-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Hmm, I forgot the OpenWRT and Ma Haijun copyrights here...
+
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + */
+>> +
+>> +#include <linux/err.h>
+>> +#include <linux/io.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/reset.h>
+>> +#include <linux/mtd/mtd.h>
+>> +#include <linux/mtd/nand.h>
+>> +#include <linux/mtd/partitions.h>
+>> +
+>> +/* nand commands */
+>> +#define NAND_CMD_ALE		BIT(18)
+>> +#define NAND_CMD_CLE		BIT(19)
+>> +#define NAND_CMD_CS		0
+>> +#define NAND_CMD_RESET		0xff
+>> +#define NAND_CMD		(NAND_CMD_CS | NAND_CMD_CLE)
+>> +#define NAND_ADDR		(NAND_CMD_CS | NAND_CMD_ALE)
+>> +#define NAND_DATA		(NAND_CMD_CS)
+>> +
+>> +struct oxnas_nand_data {
+>> +	struct nand_chip	chip;
+>> +	void __iomem		*io_base;
+> 
+> Why do you redundantly keep io_base in platform data rather than
+> just using chip.IO_ADDR_R and >chip.IO_ADDR_W?
+
+For no reason since it's not used in oxnas_nand_cmd_ctrl...
+Will remove !
+
+> 
+> 
+>> +	struct clk		*clk;
+>> +};
+>> +
+>> +static void oxnas_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
+>> +				unsigned int ctrl)
+>> +{
+>> +	struct nand_chip *this = mtd->priv;
+>> +	unsigned long nandaddr = (unsigned long) this->IO_ADDR_W;
+>> +
+>> +	if (ctrl & NAND_CTRL_CHANGE) {
+>> +		nandaddr &= ~(NAND_CMD | NAND_ADDR);
+>> +		if (ctrl & NAND_CLE)
+>> +			nandaddr |= NAND_CMD;
+>> +		else if (ctrl & NAND_ALE)
+>> +			nandaddr |= NAND_ADDR;
+>> +		this->IO_ADDR_W = (void __iomem *) nandaddr;
+>> +	}
+>> +
+>> +	if (cmd != NAND_CMD_NONE)
+>> +		writeb(cmd, (void __iomem *) nandaddr);
+>> +}
+[...]
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
