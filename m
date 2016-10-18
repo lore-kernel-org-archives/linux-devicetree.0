@@ -1,60 +1,79 @@
-From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Subject: Re: [PATCH v3 1/2] Add OV5647 device tree documentation
-Date: Tue, 18 Oct 2016 14:38:20 +0100
-Message-ID: <7a228213-bbd1-8eb4-6d8b-123b3b6e215f@synopsys.com>
-References: <cover.1476286687.git.roliveir@synopsys.com>
- <0f85bdabe4951533e6fe7a842cc5dfa0f2cd8a6c.1476286687.git.roliveir@synopsys.com>
- <20161018131434.2bbk2evxkv7mutfo@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] leds: leds-pca963x: workaround group blink scaling issue
+Date: Tue, 18 Oct 2016 08:49:15 -0500
+Message-ID: <20161018134915.hbeiorftge56xrih@rob-hp-laptop>
+References: <CGME20161013131622eucas1p2e419c58b25f2c61da22d390f2adfacfd@eucas1p2.samsung.com>
+ <1476364572-26849-1-git-send-email-matt@ranostay.consulting>
+ <ac8bb319-8ad2-65fe-e8bb-6fd9af61f046@samsung.com>
+ <CAKzfze_d5rQ-MaNL1BbGXrdHG+UDNa=us68eoH_AJ-EKLnzCvw@mail.gmail.com>
+ <924a896d-b3f2-5fed-62ba-a731e79e1567@samsung.com>
+ <20161014142047.imm4idfetphlp5od@atomide.com>
+ <CAKzfze8s4E4x70bAoXd8_cctUeih4dwareM7=dpc7GsQq3agWQ@mail.gmail.com>
+ <5d9476b8-b552-f745-e06d-9894fa2e542a@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20161018131434.2bbk2evxkv7mutfo@rob-hp-laptop>
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, geert@linux-m68k.org, akpm@linux-foundation.org, kvalo@codeaurora.org, linux@roeck-us.net, hverkuil@xs4all.nl, lars@metafoo.de, pavel@ucw.cz, robert.jarzmik@free.fr, slongerbeam@gmail.com, dheitmueller@kernellabs.com, pali.rohar@gmail.com, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5d9476b8-b552-f745-e06d-9894fa2e542a-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/18/2016 2:14 PM, Rob Herring wrote:
-> On Wed, Oct 12, 2016 at 05:02:21PM +0100, Ramiro Oliveira wrote:
->> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
->> ---
->>  .../devicetree/bindings/media/i2c/ov5647.txt          | 19 +++++++++++++++++++
->>  1 file changed, 19 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
->> new file mode 100644
->> index 0000000..4c91b3b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
->> @@ -0,0 +1,19 @@
->> +Omnivision OV5647 raw image sensor
->> +---------------------------------
->> +
->> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
->> +and CCI (I2C compatible) control bus.
->> +
->> +Required properties:
->> +
->> +- compatible	: "ovti,ov5647";
->> +- reg		: I2C slave address of the sensor;
->> +
->> +The common video interfaces bindings (see video-interfaces.txt) should be
->> +used to specify link to the image data receiver. The OV5647 device
->> +node should contain one 'port' child node with an 'endpoint' subnode.
->> +
->> +Following properties are valid for the endpoint node:
->> +
->> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
->> +  video-interfaces.txt.  The sensor supports only two data lanes.
-> What's the default if not present?
+On Mon, Oct 17, 2016 at 09:58:26AM +0200, Jacek Anaszewski wrote:
+> On 10/15/2016 02:00 PM, Matt Ranostay wrote:
+> > On Fri, Oct 14, 2016 at 7:20 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > * Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> [161013 23:37]:
+> > > > On 10/13/2016 04:20 PM, Matt Ranostay wrote:
+> > > > > On Thu, Oct 13, 2016 at 4:05 PM, Jacek Anaszewski
+> > > > > <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > > > > Why DT property? Is it somehow dependent on the board configuration?
+> > > > > > How this period-scale value is calculated? Is it inferred empirically?
+> > > > > > 
+> > > > > 
+> > > > > We empirically discovered and verified this with an logic analyzer on
+> > > > > multiple batches of this part.
+> > > > > Reason for the DT entry is we aren't 100% sure that it is always going
+> > > > > to be the same with different board revs.
+> > > > > 
+> > > > > Could be that parts clock acts differently with supply voltage.   This
+> > > > > has been calculated by setting it an expected value, and measuring the
+> > > > > actual result with the logic analyzer.
+> > > > 
+> > > > I'd like to have DT maintainer's ack for this.
+> > > > 
+> > > > Cc Rob and Mark.
+> > > 
+> > > How about do this based on the compatible property instead? If there
+> > > are multiple manufacturers for this part and only a certain
+> > > parts have this issue we should have multiple compatible properties.
+> > > 
+> > 
+> > I could only find that NXP as the manufacturer of that part. It is
+> > possible since the clock is internal to the chipset that the vdd of
+> > 2.5V is doing something undefined.
+> > 
+> > > Then if it turns out all of them need this scaling there's no need
+> > > to update the binding.
+> > 
+> > Understandable.
+> 
+> Since at present we can't guarantee that all produced devices
+> are affected, then we should strive to avoid breaking any existing
+> users of the possible non-affected devices.
+> 
+> In view of that the addition of a new "compatible" proposed by Tony
+> seems most reasonable.
+> 
+> Still, DT maintainer's opinion is required.
 
-Since the sensor only supports 2 data lanes, this information will not be used,
-even if it is available in the DT. So the default will be 2.
+Seems like a quirk of this board, so I think the added property is fine.
 
->
->> -- 
->> 2.9.3
->>
->>
+It could be existing users just didn't notice the rate being off. 30% is 
+probably not all that noticeable to the human eye.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
