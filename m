@@ -1,114 +1,192 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 20/23] ASoC: add simple-graph-card document
-Date: Tue, 18 Oct 2016 10:53:31 -0500
-Message-ID: <CAL_JsqJY-KtoR7C-vKBP1p3XRKkiVHBM9mzCdV3_P2DSp-xw9A@mail.gmail.com>
-References: <87shrv4c8x.wl%kuninori.morimoto.gx@renesas.com> <87zim32xbo.wl%kuninori.morimoto.gx@renesas.com>
+From: Kieran Bingham <kieran-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH 1/2] scripts/gdb: add lx-fdtdump command
+Date: Tue, 18 Oct 2016 16:56:39 +0100
+Message-ID: <a440581a-e28c-2f9f-8110-26203e0b3809@bingham.xyz>
+References: <1476803249-23328-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87zim32xbo.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1476803249-23328-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Laurent <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Guennadi <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, jan.kiszka-kv7WeFo6aLtBDgjK7y7TUQ@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 17, 2016 at 3:38 AM, Kuninori Morimoto
-<kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Hi Pete,
+
+Thanks for your patch.
+
+On 18/10/16 16:07, Peter Griffin wrote:
+> lx-fdtdump dumps the flatenned device tree passed to the kernel
+
+s/flatenned/flattened/
+
+> from the bootloader to a file called fdtdump.dtb to allow further
+> post processing on the machine running GDB. The fdt header is also
+> also printed in the GDB console. For example:
+> 
+
+Excellent - I've been looking forward to this
+
+General comment: It would be good to see the output filename
+configurable as a parameter, defaulting to fdtdump.dtb if none provided.
+
+Is this something you have time to add?
+
+> (gdb) lx-fdtdump
+> fdt_magic:         0xD00DFEED
+> fdt_totalsize:     0xC108
+> off_dt_struct:     0x38
+> off_dt_strings:    0x3804
+> off_mem_rsvmap:    0x28
+> version:           17
+> last_comp_version: 16
+> Dumped fdt to fdtdump.dtb
+> 
+>> fdtdump fdtdump.dtb | less
+> 
+> This command is useful as the bootloader can often re-write parts
+> of the device tree, and this can sometimes cause the kernel to not
+> boot.
+> 
+> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  .../bindings/sound/simple-graph-card.txt           | 65 ++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/simple-graph-card.txt
->
-> diff --git a/Documentation/devicetree/bindings/sound/simple-graph-card.txt b/Documentation/devicetree/bindings/sound/simple-graph-card.txt
-> new file mode 100644
-> index 0000000..c191c0d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/simple-graph-card.txt
-> @@ -0,0 +1,65 @@
-> +Simple-Graph-Card:
+>  scripts/gdb/linux/constants.py.in |  8 +++++
+>  scripts/gdb/linux/proc.py         | 70 ++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 77 insertions(+), 1 deletion(-)
+> 
+> diff --git a/scripts/gdb/linux/constants.py.in b/scripts/gdb/linux/constants.py.in
+> index 7986f4e..43c6241 100644
+> --- a/scripts/gdb/linux/constants.py.in
+> +++ b/scripts/gdb/linux/constants.py.in
+> @@ -14,6 +14,7 @@
+>  
+>  #include <linux/fs.h>
+>  #include <linux/mount.h>
+> +#include <linux/of_fdt.h>
+>  
+>  /* We need to stringify expanded macros so that they can be parsed */
+>  
+> @@ -50,3 +51,10 @@ LX_VALUE(MNT_NOEXEC)
+>  LX_VALUE(MNT_NOATIME)
+>  LX_VALUE(MNT_NODIRATIME)
+>  LX_VALUE(MNT_RELATIME)
 > +
-> +Simple-Graph-Card specifies audio DAI connections of SoC <-> codec.
-> +It is based on common bindings for device graphs.
-> +see ${LINUX}/Documentation/devicetree/bindings/graph.txt
+> +/* linux/of_fdt.h> */
+> +LX_VALUE(OF_DT_HEADER)
 > +
-> +Basically, Simple-Graph-Card is same as Simple-Card, but using graph style.
-> +see ${LINUX}/Documentation/devicetree/bindings/sound/simple-card.txt
+> +/* Kernel Configs */
+> +LX_CONFIG(CONFIG_OF)
 > +
-> +Below are same as Simple-Card.
+> diff --git a/scripts/gdb/linux/proc.py b/scripts/gdb/linux/proc.py
+> index 38b1f09..f20fcfa 100644
+> --- a/scripts/gdb/linux/proc.py
+> +++ b/scripts/gdb/linux/proc.py
+> @@ -16,7 +16,7 @@ from linux import constants
+>  from linux import utils
+>  from linux import tasks
+>  from linux import lists
+> -
+> +from struct import *
+>  
+>  class LxCmdLine(gdb.Command):
+>      """ Report the Linux Commandline used in the current kernel.
+> @@ -195,3 +195,71 @@ values of that process namespace"""
+>                          info_opts(MNT_INFO, m_flags)))
+>  
+>  LxMounts()
 > +
-> +- simple-audio-card,name
-> +- simple-audio-card,widgets
-> +- simple-audio-card,routing
-> +- simple-audio-card,mclk-fs
-> +- simple-audio-card,hp-det-gpio
-> +- simple-audio-card,mic-det-gpio
-> +- simple-audio-card,format
-> +- simple-audio-card,frame-master
-> +- simple-audio-card,bitclock-master
-> +- simple-audio-card,bitclock-inversion
-> +- simple-audio-card,frame-inversion
-> +- simple-audio-card,mclk-fs
-> +- simple-audio-card,dai-tdm-slot-num
-> +- simple-audio-card,dai-tdm-slot-width
-> +- clocks / system-clock-frequency
+> +class LxFdtDump(gdb.Command):
+> +    """Output Flattened Device Tree header and dump FDT blob to a file
+> +       Equivalent to 'cat /proc/fdt > fdtdump.dtb' on a running target"""
 > +
-> +This Simple-Graph-Card should be located as CPU driver's port[s].
-> +And then, CPU driver need to probe it by itself.
+> +    def __init__(self):
+> +        super(LxFdtDump, self).__init__("lx-fdtdump", gdb.COMMAND_DATA)
 > +
-> +Required properties:
+> +    def fdthdr_to_cpu(self, fdt_header):
 > +
-> +- compatible                           : "asoc-simple-graph-card";
-> +- type                                 : "sound";
+> +            fdt_header_be = ">IIIIIII"
+> +            fdt_header_le = "<IIIIIII"
 > +
-> +Example
+> +            if utils.get_target_endianness() == 1:
+> +                output_fmt = fdt_header_le
+> +            else:
+> +                output_fmt = fdt_header_be
 > +
-> +ak4643: codec@12 {
-> +       compatible = "asahi-kasei,ak4643";
-> +       ...
-> +       port {
-> +               type = "sound";
-> +               ak4643_port: endpoint {
-> +                       remote-endpoint = <&rcar_ak4643_port>;
-> +                       clocks = <&audio_clock>;
+> +            return unpack(output_fmt, pack(fdt_header_be,
+> +                                           fdt_header['magic'],
+> +                                           fdt_header['totalsize'],
+> +                                           fdt_header['off_dt_struct'],
+> +                                           fdt_header['off_dt_strings'],
+> +                                           fdt_header['off_mem_rsvmap'],
+> +                                           fdt_header['version'],
+> +                                           fdt_header['last_comp_version']))
+> +
+> +    def invoke(self, arg, from_tty):
+> +
+> +        if constants.LX_CONFIG_OF:
+> +
+> +            filename = "fdtdump.dtb"
+> +
 
-This belongs in the codec node.
+You could parse the arguments here to allow users to write to their own
+file / path ... arg is just a string, so you can either parse it as such
+or convert to argv with
+	argv = gdb.string_to_argv(arg)
 
-> +               };
-> +       };
-> +};
+
+Aha - I see Jan beat me to it :)
+
+
+> +            py_fdt_header_ptr = gdb.parse_and_eval(
+> +                "(const struct fdt_header *) initial_boot_params")
+> +            py_fdt_header = py_fdt_header_ptr.dereference()
 > +
-> +rcar_sound {
-> +       ...
-> +       port {
-> +               compatible = "asoc-simple-graph-card";
+> +            fdt_header = self.fdthdr_to_cpu(py_fdt_header)
 > +
-> +               simple-audio-card,format = "left_j";
-> +               simple-audio-card,bitclock-master = <&ak4643_port>;
-> +               simple-audio-card,frame-master = <&ak4643_port>;
+> +            if fdt_header[0] != constants.LX_OF_DT_HEADER:
+> +                raise gdb.GdbError("No flattened device tree magic found\n")
+> +
+> +            gdb.write("fdt_magic:         0x{:02X}\n".format(fdt_header[0]))
+> +            gdb.write("fdt_totalsize:     0x{:02X}\n".format(fdt_header[1]))
+> +            gdb.write("off_dt_struct:     0x{:02X}\n".format(fdt_header[2]))
+> +            gdb.write("off_dt_strings:    0x{:02X}\n".format(fdt_header[3]))
+> +            gdb.write("off_mem_rsvmap:    0x{:02X}\n".format(fdt_header[4]))
+> +            gdb.write("version:           {}\n".format(fdt_header[5]))
+> +            gdb.write("last_comp_version: {}\n".format(fdt_header[6]))
+> +
+> +            inf = gdb.inferiors()[0]
+> +            fdt_buf = utils.read_memoryview(inf, py_fdt_header_ptr,
+> +                                            fdt_header[1]).tobytes()
+> +
+> +            try:
+> +                f = open(filename, 'wb')
+> +            except:
+> +                raise gdb.GdbError("Could not open file to dump fdt")
+> +
+> +            f.write(fdt_buf)
+> +            f.close()
+> +
+> +            gdb.write("Dumped fdt to " + filename + "\n")
+> +
+> +        else:
+> +            gdb.write("Kernel not compiled with CONFIG_OF\n")
 
-Don't add a bunch of properties with in port and endpoint nodes. The
-purpose is to describe the graph. Put these in the parent node or
-perhaps the codec node.
+Would it be cleaner to write
+  if not constants.LX_CONFIG_OF:
+      raise gdb.GdbError("Kernel not compiled with CONFIG_OF\n")
 
-> +               type = "sound";
+at the beginning, and reduce the indentation level required ?
 
-I'm still not convinced this is necessary. This is implied either by
-the fact there is only one port or perhaps the compatible string.
+> +
+> +LxFdtDump()
+> 
 
-> +               rcar_ak4643_port: endpoint {
-> +                       remote-endpoint = <&ak4643_port>;
-> +                       playback = <&ssi0 &src2 &dvc0>;
-> +                       capture  = <&ssi1 &src3 &dvc1>;
-> +               };
-> +       };
-> +};
-> --
-> 1.9.1
->
+-- 
+Regards
+
+Kieran Bingham
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
