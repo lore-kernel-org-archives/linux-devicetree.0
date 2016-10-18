@@ -1,80 +1,200 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: it6251: add bindings for IT6251
- LVDS-to-eDP bridge
-Date: Tue, 18 Oct 2016 11:30:37 -0500
-Message-ID: <20161018163037.wl6ceend32epp6k6@rob-hp-laptop>
-References: <20161017163329.11821-1-marex@denx.de>
- <20161017163329.11821-2-marex@denx.de>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] scripts/gdb: add lx-fdtdump command
+Date: Tue, 18 Oct 2016 17:31:42 +0100
+Message-ID: <20161018163142.GB28359@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1476803249-23328-1-git-send-email-peter.griffin@linaro.org>
+ <a440581a-e28c-2f9f-8110-26203e0b3809@bingham.xyz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161017163329.11821-2-marex-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <a440581a-e28c-2f9f-8110-26203e0b3809-SI8QzZ7I9JUn3X9lZQuFcg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+To: Kieran Bingham <kieran-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, jan.kiszka-kv7WeFo6aLtBDgjK7y7TUQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 17, 2016 at 06:33:28PM +0200, Marek Vasut wrote:
-> Add DT bindings for ITE IT6251 LVDS-to-eDP bridge.
-> 
-> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../bindings/display/bridge/ite,it6251.txt         | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6251.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6251.txt b/Documentation/devicetree/bindings/display/bridge/ite,it6251.txt
-> new file mode 100644
-> index 0000000..c5db82c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6251.txt
-> @@ -0,0 +1,35 @@
-> +ITE IT6251 LVDS-to-eDP bridge bindings
-> +
-> +Required properties:
-> +- compatible:		Should be "ite,it6251"
-> +- reg:			i2c address of the bridge, i2c address of the LVDS part
-> +- reg-names:		Should be "bridge", "lvds"
-> +- power-supply:		Regulator to provide the supply voltage
+Hi Kieran,
 
-The input pin is called "power"?
+Thanks for reviewing.
 
-> +- video interfaces:	Device node can contain video interface port nodes
-> +			for panel according to [1].
-> +
-> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Example:
-> +
-> +	it6251@5c {
-> +		compatible = "ite,it6251";
-> +		reg = <0x5c>, <0x5e>;
-> +		reg-names = "bridge", "lvds";
-> +		power-supply = <&reg_display>;
-> +
-> +		ports {
-> +			port@0 {
-> +				bridge_out_edp0: endpoint {
-> +					remote-endpoint = <&panel_in_edp0>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				bridge_in_lvds0: endpoint {
-> +					remote-endpoint = <&lvds0_out>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> -- 
-> 2.9.3
+On Tue, 18 Oct 2016, Kieran Bingham wrote:
+
+> Hi Pete,
 > 
+> Thanks for your patch.
+> 
+> On 18/10/16 16:07, Peter Griffin wrote:
+> > lx-fdtdump dumps the flatenned device tree passed to the kernel
+> 
+> s/flatenned/flattened/
+> 
+> > from the bootloader to a file called fdtdump.dtb to allow further
+> > post processing on the machine running GDB. The fdt header is also
+> > also printed in the GDB console. For example:
+> > 
+> 
+> Excellent - I've been looking forward to this
+> 
+> General comment: It would be good to see the output filename
+> configurable as a parameter, defaulting to fdtdump.dtb if none provided.
+> 
+> Is this something you have time to add?
+
+Have added this in v2 :)
+
+> 
+> > (gdb) lx-fdtdump
+> > fdt_magic:         0xD00DFEED
+> > fdt_totalsize:     0xC108
+> > off_dt_struct:     0x38
+> > off_dt_strings:    0x3804
+> > off_mem_rsvmap:    0x28
+> > version:           17
+> > last_comp_version: 16
+> > Dumped fdt to fdtdump.dtb
+> > 
+> >> fdtdump fdtdump.dtb | less
+> > 
+> > This command is useful as the bootloader can often re-write parts
+> > of the device tree, and this can sometimes cause the kernel to not
+> > boot.
+> > 
+> > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  scripts/gdb/linux/constants.py.in |  8 +++++
+> >  scripts/gdb/linux/proc.py         | 70 ++++++++++++++++++++++++++++++++++++++-
+> >  2 files changed, 77 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/scripts/gdb/linux/constants.py.in b/scripts/gdb/linux/constants.py.in
+> > index 7986f4e..43c6241 100644
+> > --- a/scripts/gdb/linux/constants.py.in
+> > +++ b/scripts/gdb/linux/constants.py.in
+> > @@ -14,6 +14,7 @@
+> >  
+> >  #include <linux/fs.h>
+> >  #include <linux/mount.h>
+> > +#include <linux/of_fdt.h>
+> >  
+> >  /* We need to stringify expanded macros so that they can be parsed */
+> >  
+> > @@ -50,3 +51,10 @@ LX_VALUE(MNT_NOEXEC)
+> >  LX_VALUE(MNT_NOATIME)
+> >  LX_VALUE(MNT_NODIRATIME)
+> >  LX_VALUE(MNT_RELATIME)
+> > +
+> > +/* linux/of_fdt.h> */
+> > +LX_VALUE(OF_DT_HEADER)
+> > +
+> > +/* Kernel Configs */
+> > +LX_CONFIG(CONFIG_OF)
+> > +
+> > diff --git a/scripts/gdb/linux/proc.py b/scripts/gdb/linux/proc.py
+> > index 38b1f09..f20fcfa 100644
+> > --- a/scripts/gdb/linux/proc.py
+> > +++ b/scripts/gdb/linux/proc.py
+> > @@ -16,7 +16,7 @@ from linux import constants
+> >  from linux import utils
+> >  from linux import tasks
+> >  from linux import lists
+> > -
+> > +from struct import *
+> >  
+> >  class LxCmdLine(gdb.Command):
+> >      """ Report the Linux Commandline used in the current kernel.
+> > @@ -195,3 +195,71 @@ values of that process namespace"""
+> >                          info_opts(MNT_INFO, m_flags)))
+> >  
+> >  LxMounts()
+> > +
+> > +class LxFdtDump(gdb.Command):
+> > +    """Output Flattened Device Tree header and dump FDT blob to a file
+> > +       Equivalent to 'cat /proc/fdt > fdtdump.dtb' on a running target"""
+> > +
+> > +    def __init__(self):
+> > +        super(LxFdtDump, self).__init__("lx-fdtdump", gdb.COMMAND_DATA)
+> > +
+> > +    def fdthdr_to_cpu(self, fdt_header):
+> > +
+> > +            fdt_header_be = ">IIIIIII"
+> > +            fdt_header_le = "<IIIIIII"
+> > +
+> > +            if utils.get_target_endianness() == 1:
+> > +                output_fmt = fdt_header_le
+> > +            else:
+> > +                output_fmt = fdt_header_be
+> > +
+> > +            return unpack(output_fmt, pack(fdt_header_be,
+> > +                                           fdt_header['magic'],
+> > +                                           fdt_header['totalsize'],
+> > +                                           fdt_header['off_dt_struct'],
+> > +                                           fdt_header['off_dt_strings'],
+> > +                                           fdt_header['off_mem_rsvmap'],
+> > +                                           fdt_header['version'],
+> > +                                           fdt_header['last_comp_version']))
+> > +
+> > +    def invoke(self, arg, from_tty):
+> > +
+> > +        if constants.LX_CONFIG_OF:
+> > +
+> > +            filename = "fdtdump.dtb"
+> > +
+> 
+> You could parse the arguments here to allow users to write to their own
+> file / path ... arg is just a string, so you can either parse it as such
+> or convert to argv with
+> 	argv = gdb.string_to_argv(arg)
+> 
+> 
+> Aha - I see Jan beat me to it :)
+> 
+> 
+> > +            py_fdt_header_ptr = gdb.parse_and_eval(
+> > +                "(const struct fdt_header *) initial_boot_params")
+> > +            py_fdt_header = py_fdt_header_ptr.dereference()
+> > +
+> > +            fdt_header = self.fdthdr_to_cpu(py_fdt_header)
+> > +
+> > +            if fdt_header[0] != constants.LX_OF_DT_HEADER:
+> > +                raise gdb.GdbError("No flattened device tree magic found\n")
+> > +
+> > +            gdb.write("fdt_magic:         0x{:02X}\n".format(fdt_header[0]))
+> > +            gdb.write("fdt_totalsize:     0x{:02X}\n".format(fdt_header[1]))
+> > +            gdb.write("off_dt_struct:     0x{:02X}\n".format(fdt_header[2]))
+> > +            gdb.write("off_dt_strings:    0x{:02X}\n".format(fdt_header[3]))
+> > +            gdb.write("off_mem_rsvmap:    0x{:02X}\n".format(fdt_header[4]))
+> > +            gdb.write("version:           {}\n".format(fdt_header[5]))
+> > +            gdb.write("last_comp_version: {}\n".format(fdt_header[6]))
+> > +
+> > +            inf = gdb.inferiors()[0]
+> > +            fdt_buf = utils.read_memoryview(inf, py_fdt_header_ptr,
+> > +                                            fdt_header[1]).tobytes()
+> > +
+> > +            try:
+> > +                f = open(filename, 'wb')
+> > +            except:
+> > +                raise gdb.GdbError("Could not open file to dump fdt")
+> > +
+> > +            f.write(fdt_buf)
+> > +            f.close()
+> > +
+> > +            gdb.write("Dumped fdt to " + filename + "\n")
+> > +
+> > +        else:
+> > +            gdb.write("Kernel not compiled with CONFIG_OF\n")
+> 
+> Would it be cleaner to write
+>   if not constants.LX_CONFIG_OF:
+>       raise gdb.GdbError("Kernel not compiled with CONFIG_OF\n")
+> 
+> at the beginning, and reduce the indentation level required ?
+
+Good idea, have updated like you suggest in V2 and reduced the
+indentation.
+
+regards,
+
+Peter
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
