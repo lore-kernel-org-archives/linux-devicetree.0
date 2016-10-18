@@ -1,36 +1,45 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v3 0/4] support smc91x on mainstone and devicetree
-Date: Tue, 18 Oct 2016 14:14:37 -0400 (EDT)
-Message-ID: <20161018.141437.2029098820682032692.davem@davemloft.net>
-References: <1476733532-29716-1-git-send-email-robert.jarzmik@free.fr>
+From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: RE: [PATCH 3/3] clocksource: Add clockevent support to NPS400 driver
+Date: Tue, 18 Oct 2016 14:51:05 +0000
+Message-ID: <DB6PR0501MB251897240ABCBAFAA50CD925AAD30@DB6PR0501MB2518.eurprd05.prod.outlook.com>
+References: <1476370350-3853-1-git-send-email-noamca@mellanox.com>
+ <1476370350-3853-4-git-send-email-noamca@mellanox.com>
+ <20161018135722.oflcjm5hfy6eugiy@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1476733532-29716-1-git-send-email-robert.jarzmik@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robert.jarzmik@free.fr
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, daniel@zonque.org, haojian.zhuang@gmail.com, jic23@cam.ac.uk, dhowells@redhat.com, nico@fluxnic.net, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-am33-list@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Date: Mon, 17 Oct 2016 21:45:28 +0200
+>From: Noam Camus=20
+>Sent: Tuesday, October 18, 2016 5:33 PM
 
-> This serie aims at bringing support to mainstone board on a device-tree based
-> build, as what is already in place for legacy mainstone.
-> 
-> The bulk of the mainstone "specific" behavior is that a u16 write doesn't work
-> on a address of the form 4*n + 2, while it works on 4*n.
-> 
-> The legacy workaround was in SMC_outw(), with calls to
-> machine_is_mainstone(). These calls don't work with a pxa27x-dt machine type,
-> which is used when a generic device-tree pxa27x machine is used to boot the
-> mainstone board.
-> 
-> Therefore, this serie enables the smc91c111 adapter of the mainstone board to
-> work on a device-tree build, exaclty as it's been working for years with the
-> legacy arch/arm/mach-pxa/mainstone.c definition.
-> 
-> As a sum up, this extends an existing mechanism to device-tree based pxa platforms.
 
-Series applied, thanks.
+>>You're letting Linux details define the binding. Are these blocks differe=
+nt (the block itself, not connections to >the block like interrupts)?
+
+
+>>If you need a particular timer instance to be used, then describe whateve=
+r is the difference in the h/w.  For >example, the clockevent timer has to =
+be the timer with an interrupt.
+
+>Yes, blocks are different.
+>The difference is that only second timer instance are actually producing t=
+imer interrupt served by Linux for the clockevent framework.
+>Please note that the numbering used here for timer (i.e. 0 or 1) are deriv=
+ed from HW blocks and are not any Linux detail I used for binding definitio=
+n (It is a note at this patch set cover letter).
+
+The timers actually are: first instance (timer 0) for clockevents and secon=
+d instance (timer 1) for clocksource.
+Sorry for the confusion.
+
+Noam
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
