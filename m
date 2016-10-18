@@ -1,38 +1,25 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: rockchip-thermal: fix the misleading
- description
-Date: Tue, 18 Oct 2016 07:41:20 -0500
-Message-ID: <20161018124120.vgbamfjsgvf6ntxg@rob-hp-laptop>
-References: <1476151655-18415-1-git-send-email-shawn.lin@rock-chips.com>
- <1476151655-18415-2-git-send-email-shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v2 3/4] Documentation: dt: iio: add mcp4725/6 dac device
+ binding
+Date: Tue, 18 Oct 2016 07:43:09 -0500
+Message-ID: <20161018124309.wru2pwpefx6h3v5e@rob-hp-laptop>
+References: <1476194263-12015-1-git-send-email-tomas@novotny.cz>
+ <1476194263-12015-4-git-send-email-tomas@novotny.cz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1476151655-18415-2-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <1476194263-12015-4-git-send-email-tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yong Li <sdliyong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 11, 2016 at 10:07:35AM +0800, Shawn Lin wrote:
-> "rockchip,hw-tshut-temp", "rockchip,hw-tshut-mode" and
-> "rockchip,hw-tshut-polarity" are not a required properties
-> actually as the code could also work by loading the default
-> settings there. So it is apprently misleading, although we
-> prefer to get these from DT. And it seems we miss the 'rockchip,grf'
-> here which should also be an optional property.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On Tue, Oct 11, 2016 at 03:57:42PM +0200, Tomas Novotny wrote:
+> Signed-off-by: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
 > ---
-> 
-> Changes in v2: None
-> 
->  Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../devicetree/bindings/iio/dac/mcp4725.txt        | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/mcp4725.txt
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
