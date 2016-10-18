@@ -1,67 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 1/3] Documentation/devicetree: Add new property to
- specify the max link speed
-Date: Tue, 18 Oct 2016 11:41:39 -0500
-Message-ID: <20161018164139.z52uo7eda5xgwkzu@rob-hp-laptop>
-References: <1476755110-22647-1-git-send-email-shawn.lin@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 03/23] usb: ulpi: Support device discovery via DT
+Date: Tue, 18 Oct 2016 11:44:23 -0500
+Message-ID: <20161018164423.tex3norsrdnvc5oz@rob-hp-laptop>
+References: <20161018015636.11701-1-stephen.boyd@linaro.org>
+ <20161018015636.11701-4-stephen.boyd@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1476755110-22647-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20161018015636.11701-4-stephen.boyd@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 18, 2016 at 09:45:08AM +0800, Shawn Lin wrote:
-> Some of the host drivers have the requirement of knowing whether the
-> EP would never train at some link speed at all. For instance, on some
-> boards, the link won't train at 5 GT/s but the host driver still sacrifice
-> some cycle to wait for the resule of training at 5 GT/s as the host could
-> actually support 5 GT/s. So we could parse this new property and make the
-> host drivers be aware of these cases.
+On Mon, Oct 17, 2016 at 06:56:16PM -0700, Stephen Boyd wrote:
+> The qcom HSIC ULPI phy doesn't have any bits set in the vendor or
+> product ID registers. This makes it impossible to make a ULPI
+> driver match against the ID registers. Add support to discover
+> the ULPI phys via DT help alleviate this problem. In the DT case,
+> we'll look for a ULPI bus node underneath the device registering
+> the ULPI viewport (or the parent of that device to support
+> chipidea's device layout) and then match up the phy node
+> underneath that with the ULPI device that's created.
 > 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> The side benefit of this is that we can use standard properties
+> in the phy node like clks, regulators, gpios, etc. because we
+> don't have firmware like ACPI to turn these things on for us. And
+> we can use the DT phy binding to point our phy consumer to the
+> phy provider.
+> 
+> The ULPI bus code supports native enumeration by reading the
+> vendor ID and product ID registers at device creation time, but
+> we can't be certain that those register reads will succeed if the
+> phy is not powered up. To avoid any problems with reading the ID
+> registers before the phy is powered we fallback to DT matching
+> when the ID reads fail.
+> 
+> If the ULPI spec had some generic power sequencing for these
+> registers we could put that into the ULPI bus layer and power up
+> the device before reading the ID registers. Unfortunately this
+> doesn't exist and the power sequence is usually device specific.
+> By having the device matched up with DT we can avoid this
+> problem.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: <devicetree@vger.kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
 > ---
-> 
-> Changes in v8: None
-> Changes in v7: None
-> Changes in v6: None
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
+>  Documentation/devicetree/bindings/usb/ulpi.txt | 20 +++++++
+>  drivers/usb/common/ulpi.c                      | 79 ++++++++++++++++++++++++--
+>  2 files changed, 93 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ulpi.txt
 
-Humm, either you are respinning versions too quickly or failed to copy 
-the DT list.
-
-> 
->  Documentation/devicetree/bindings/pci/pci.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-> index 08dcfad..e7d97a3 100644
-> --- a/Documentation/devicetree/bindings/pci/pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> @@ -18,3 +18,9 @@ driver implementation may support the following properties:
->     host bridges in the system, otherwise potentially conflicting domain numbers
->     may be assigned to root buses behind different host bridges.  The domain
->     number for each host bridge in the system must be unique.
-> +- max-link-speed:
-> +   If present this property specifies PCI gen for link capability. The host drivers
-> +   could add this as a strategy to avoid unnecessary operation for unsupported
-> +   link speed, for instance, trying to do training for unsupported link speed, etc.
-> +   Must be '4' for gen4, '3' for gen3, '2' for gen2, and '1' for gen1. Any other
-> +   values are invalid.
-> -- 
-> 2.3.7
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
