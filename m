@@ -1,45 +1,40 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] drm/panel: simple: Add support for AUO t215hvn01
-Date: Tue, 18 Oct 2016 08:00:32 -0500
-Message-ID: <20161018130032.hmdsyjnmkehhaz2u@rob-hp-laptop>
-References: <1476141557-4613-1-git-send-email-hshi@chromium.org>
- <1476223156-6163-1-git-send-email-hshi@chromium.org>
+Subject: Re: [PATCH v6 2/2] devicetree: bindings: uart: Add new compatible
+ string for ZynqMP
+Date: Tue, 18 Oct 2016 08:04:22 -0500
+Message-ID: <20161018130422.2zjasatazwmmbsss@rob-hp-laptop>
+References: <1476258448-20483-1-git-send-email-navam@xilinx.com>
+ <1476258448-20483-2-git-send-email-navam@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1476223156-6163-1-git-send-email-hshi@chromium.org>
+In-Reply-To: <1476258448-20483-2-git-send-email-navam@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Haixia Shi <hshi@chromium.org>
-Cc: dri-devel@lists.freedesktop.org, Emil Velikov <emil.l.velikov@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Nava kishore Manne <nava.manne@xilinx.com>
+Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, jslaby@suse.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, punnaia@xilinx.com, Nava kishore Manne <navam@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 11, 2016 at 02:59:16PM -0700, Haixia Shi wrote:
-> The AUO t215hvn01 is a 21.5" FHD (1920x1080) color TFT LCD panel.
+On Wed, Oct 12, 2016 at 01:17:28PM +0530, Nava kishore Manne wrote:
+> From: Nava kishore Manne <nava.manne@xilinx.com>
 > 
-> This panel is used on the Acer Chromebase 21.5-inch All-in-One (DC221HQ).
+> This patch Adds the new compatible string for ZynqMP SoC.
 > 
-> Link to spec: http://www.udmgroup.com/ftp/T215HVN01.0.pdf
-> 
-> v2: fix alphabetical order
-> v3: remove minor revision suffix ".0" and add link to spec
-> v4: add dt-binding documentation
-> 
-> Signed-off-by: Haixia Shi <hshi@chromium.org>
-> Tested-by: Haixia Shi <hshi@chromium.org>
-> Reviewed-by: Stéphane Marchesin <marcheu@chromium.org>
-> Cc: Emil Velikov <emil.l.velikov@gmail.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Nava kishore Manne <navam@xilinx.com>
 > ---
->  .../bindings/display/panel/auo,t215hvn01.txt       |  7 +++++
->  drivers/gpu/drm/panel/panel-simple.c               | 30 ++++++++++++++++++++++
->  2 files changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/auo,t215hvn01.txt
+> Changes for v6:
+> 		-Added New compatiable string for ZynqMP SoC as
+> 		 suggested by Rob Herring.
+> Changes for v5:
+> 		-Mofified the compatible session.
+> Changes for v4:
+>                 -Modified the ChangeLog comment.
+> Changes for v3:
+>                 -Added changeLog comment.
+> Changes for v2:
+>                 -None
+> 
+>  Documentation/devicetree/bindings/serial/cdns,uart.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
