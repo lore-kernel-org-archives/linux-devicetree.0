@@ -1,69 +1,66 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: Re: [PATCH v2] console: Don't prefer first registered if DT specifies stdout-path
-Date: Tue, 18 Oct 2016 10:21:36 +0100
-Message-ID: <2401691.yKn6kY81q4@np-p-burton>
-References: <20160809125010.14150-1-paul.burton@imgtec.com> <4033254.tBrl4yKcsP@np-p-burton> <87oa2ij2mq.fsf@linux-m68k.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: rockchip: temporarily remove emmc hs200 speed from rk3288-veyron-speedy.
+Date: Tue, 18 Oct 2016 11:21:59 +0200
+Message-ID: <12872023.2LumKfgYDl@diego>
+References: <87twd1vzc5.fsf@aikidev.net> <1476647383.3885.3.camel@paulk.fr>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1491817.ehho7IUxQd";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87oa2ij2mq.fsf@linux-m68k.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Schwab <schwab@linux-m68k.org>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Tejun Heo <tj@kernel.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Jiri Slaby <jslaby@suse.cz>, Daniel Vetter <daniel.vetter@ffwll.ch>, Ivan Delalande <colona@arista.com>, Thierry Reding <treding@nvidia.com>, Borislav Petkov <bp@suse.de>, Jan Kara <jack@suse.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476647383.3885.3.camel-W9ppeneeCTY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Cc: Vagrant Cascadian <vagrantc-LkDtOWtB3X7R7s880joybQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---nextPart1491817.ehho7IUxQd
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-
-On Monday, 17 October 2016 19:39:57 BST Andreas Schwab wrote:
-> On Okt 17 2016, Paul Burton <paul.burton@imgtec.com> wrote:
-> > Could you share the device tree from your system?
+Am Sonntag, 16. Oktober 2016, 21:49:43 schrieb Paul Kocialkowski:
+> Hi,
 > 
-> This is the contents of chosen/linux,stdout-path on the systems I have:
+> Le mardi 27 septembre 2016 à 13:53 -0700, Vagrant Cascadian a écrit :
+> > This essentially mimics what was done with rk3288-veyron-minnie in
+> > commit 984926781122f034d5bc9962815d135b6c4a8e1d.
+> > 
+> > The eMMC of the speedy Chromebook also appears to need the same tuning
+> > workaround, as it frequently fails to recognize the eMMC without it.
 > 
-> chosen/linux,stdout-path
->                  "/pci@f0000000/ATY,SnowyParent@10/ATY,Snowy_A@0"
+> I have a device where (without this patch) eMMC sometimes fails, with:
+> [    3.561010] dwmmc_rockchip ff0f0000.dwmmc: Successfully tuned phase to
+> 175 [    3.571742] mmc2: new HS200 MMC card at address 0001
+> [    3.571943] mmcblk2: mmc2:0001 HAG2e 14.7 GiB 
+> [    3.572026] mmcblk2boot0: mmc2:0001 HAG2e partition 1 4.00 MiB
+> [    3.572107] mmcblk2boot1: mmc2:0001 HAG2e partition 2 4.00 MiB
+> [    3.572181] mmcblk2rpmb: mmc2:0001 HAG2e partition 3 4.00 MiB
+> [    3.685647] mmcblk2: error -110 transferring data, sector 0, nr 8, cmd
+> response 0x900, card status 0x0
 > 
-> chosen/linux,stdout-path
->                  "/pci@0,f0000000/NVDA,Parent@10/NVDA,Display-B@1"
+> And sometimes works, with:
+> [    3.451058] dwmmc_rockchip ff0f0000.dwmmc: Successfully tuned phase to
+> 176 [    3.491093] mmc2: new HS200 MMC card at address 0001
+> [    3.491277] mmcblk2: mmc2:0001 HAG2e 14.7 GiB 
+> [    3.491345] mmcblk2boot0: mmc2:0001 HAG2e partition 1 4.00 MiB
+> [    3.491409] mmcblk2boot1: mmc2:0001 HAG2e partition 2 4.00 MiB
+> [    3.491474] mmcblk2rpmb: mmc2:0001 HAG2e partition 3 4.00 MiB
+> [    3.493548]  mmcblk2: p1 p2
 > 
-> Is that what you need?  There is also chosen/stdout, but no
-> aliases/stdout.
+> However, with this change, it always fails, with:
+> [    3.322129] mmc_host mmc2: Bus speed (slot 0) = 50000000Hz (slot req
+> 52000000Hz, actual 50000000HZ div = 0) [    3.333174] mmc2: error -110
+> whilst initialising MMC card
 > 
-> Andreas.
+> I don't have so much time to investigate this issue, but it's clear that
+> this patch doesn't fix the issue (and actually worsens it) for my device.
 
-Hi Andreas,
+thanks for the heads up.
 
-I think I see the problem & I'm hoping this patch will fix it:
+As discussed on IRC we now have varying reports of the emmc working or not 
+working with and without that patch applied. So it's not really a bandaid fix 
+and I've thus dropped this patch again.
 
-https://lkml.org/lkml/2016/10/18/142
+Still hoping someone will find the source of the problem somewhere :-)
 
-Could you give it a try & let me know?
 
-Thanks,
-    Paul
---nextPart1491817.ehho7IUxQd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJYBemgAAoJEIIg2fppPBxl/ocP/RsSGhUJsbbXOzHH0zhvW5/0
-lmP447zgfYfSB63uNeLJ/uZwmyYVy5/6by9+88bPp+pnw5IvbH2oWOcClRXBopP2
-a03Yn/sGYx1nybguqE0CIMql9keWdudPQB2W3008pg7jMRx7DeOnWLLJqgDK2eRH
-/0dqLH8ISm7olbbfbJOmSZhKI/cip2mB3utR0/wln/f89bXbFKDkyf/S9m2p0+/o
-agKLZNbxlT8ApQIgTdy2wYYJej3DIwNe7jofxKVlQ/hjvVBq4T80kbEuLeBYVn9L
-7bUoIplFzLHidsNYCXUm+uuaC8ogtu0kV9akIHzx1yTtwsEiKP59I/N7IjvcvNDU
-AygRucuIiYL6OzXFwktChzqLmG07deHNPSxBS+Tsx82Gt5IO984nFLuOZwYmQFSY
-yWCsTZS/R74GQBth1vhH1hBtMViHPqW6UFvQ5xhUGV/dLsevO+azgSlcYnDFr2GE
-TfZJ/laYn3mh2zSlGmJX5KU8eiqIUuF47eAx29twD3W/6XSMWDj/mJe4LnW9/zqb
-G3WSOoLrv2gYvNaaCGGyAfJMshQqlod9QCCifsXPAnB3jge2VW3AJT47KeBeNzJV
-WtQR5w5PK2iPE05lbcOoLICopg0Utlb005M6UYGzzVSaKD4xkNrDWaOAaTlCfkn8
-SNxS0sVuI8lxwzZNdr3V
-=dSrA
------END PGP SIGNATURE-----
-
---nextPart1491817.ehho7IUxQd--
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
