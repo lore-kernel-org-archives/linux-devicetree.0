@@ -1,160 +1,158 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2] scripts/gdb: add lx-fdtdump command
-Date: Tue, 18 Oct 2016 17:33:20 +0100
-Message-ID: <1476808400-28407-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, jan.kiszka@siemens.com, kieran@ksquared.org.uk
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] mtd/spi-nor: Add SPI memory controllers for Aspeed SoCs
+Date: Tue, 18 Oct 2016 11:39:13 -0500
+Message-ID: <20161018163913.7z337iyc53atp4yd@rob-hp-laptop>
+References: <1476723427-13243-1-git-send-email-clg@kaod.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1476723427-13243-1-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?iso-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Milton Miller <miltonm-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-lx-fdtdump dumps the flattened device tree passed to the kernel
-from the bootloader to the filename specified as the command
-argument. If no argument is provided it defaults to fdtdump.dtb.
-This then allows further post processing on the machine running GDB.
-The fdt header is also also printed in the GDB console. For example:
+On Mon, Oct 17, 2016 at 06:57:07PM +0200, Cédric Le Goater wrote:
+> This driver adds mtd support for spi-nor attached to either or both of
+> the Firmware Memory Controller or the SPI Flash Controller (AST2400
+> only).
+> 
+> The SMC controllers on the Aspeed AST2500 SoC are very similar to the
+> ones found on the AST2400. The differences are on the number of
+> supported flash modules and their default mappings in the SoC address
+> space.
+> 
+> The Aspeed AST2500 has one SPI controller for the BMC firmware and two
+> for the host firmware. All controllers have now the same set of
+> registers compatible with the AST2400 FMC controller and the legacy
+> 'SMC' controller is fully gone.
+> 
+> Based on previous work from Milton D. Miller II <miltonm-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+> 
+> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mtd/aspeed-smc.txt         |  86 +++
+>  drivers/mtd/spi-nor/Kconfig                        |  12 +
+>  drivers/mtd/spi-nor/Makefile                       |   1 +
+>  drivers/mtd/spi-nor/aspeed-smc.c                   | 746 +++++++++++++++++++++
+>  4 files changed, 845 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/aspeed-smc.txt
+>  create mode 100644 drivers/mtd/spi-nor/aspeed-smc.c
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/aspeed-smc.txt b/Documentation/devicetree/bindings/mtd/aspeed-smc.txt
+> new file mode 100644
+> index 000000000000..f6bfa7761205
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/aspeed-smc.txt
+> @@ -0,0 +1,86 @@
+> +* Aspeed Static Memory controller
+> +* Aspeed SPI Flash Controller
+> +
+> +The Static memory controller in the ast2400 supports 5 chip selects each
+> +can be attached to NAND, parallel NOR, or SPI NOR attached flash.  The
+> +Firmware Memory Controller in the ast2500 supports 3 chip selects, two of
+> +which are always in SPI-NOR mode and the third can be SPI-NOR or parallel
+> +flash.  The SPI flash controller in the ast2400 supports one of 2 chip
+> +selects selected by pinmux.  The two SPI flash controllers in the ast2500
+> +each support two chip selects.
+> +
+> +Required properties:
+> +  - compatible : Should be one of
+> +	"aspeed,ast2400-fmc" for the AST2400 Static Memory Controller
+> +	"aspeed,ast2400-smc" for the AST2400 SPI Flash Controller
+> +	"aspeed,ast2500-fmc" for the AST2500 Firmware SPI Memory Controller
+> +	"aspeed,ast2500-smc" for the AST2500 SPI Flash Controllers
+> +  - reg : the first contains the control register location and length,
+> +          the second contains the memory window mapping address and length
+> +  - clocks : The APB clock input to the controller
+> +  - #address-cells : must be 1 corresponding to chip select child binding
+> +  - #size-cells : must be 0 corresponding to chip select child binding
+> +
+> +Optional properties:
+> +  - aspeed,fmc-has-dma : controller supports DMA transfers
 
-(gdb) lx-fdtdump
-fdt_magic:         0xD00DFEED
-fdt_totalsize:     0xC108
-off_dt_struct:     0x38
-off_dt_strings:    0x3804
-off_mem_rsvmap:    0x28
-version:           17
-last_comp_version: 16
-Dumped fdt to fdtdump.dtb
+The compatible should imply this.
 
->fdtdump fdtdump.dtb | less
+> +  - interrupts : Should contain the interrupt for the dma device if an fmc
+> +
+> +Child node required properties:
 
-This command is useful as the bootloader can often re-write parts
-of the device tree, and this can sometimes cause the kernel to not
-boot.
+Need to say what the child nodes are.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> +  - reg : must contain chip select number in first cell of address, must
+> +	  be 1 tuple long
+> +  - compatible : may contain "vendor,part", must include "jedec,spi-nor"
+> +		when attached to SPI flash (see spi-nor.txt binding).
+> +
+> +Child node optional properties:
+> +  - label           - (optional) name to assign to mtd, default os assigned
+> +
+> +Child node optional properties for SPI mode (may be ignored):
+> +  - spi-max-frequency - (optional) max frequency of spi bus
+> +  - spi-cpol        - (optional) Empty property indicating device requires
+> +			inverse clock polarity (CPOL) mode (boolean)
+> +  - spi-cpha        - (optional) Empty property indicating device requires
+> +			shifted clock phase (CPHA) mode (boolean)
+> +  - spi-tx-bus-width - (optional) The bus width(number of data wires) that
+> +                        used for MOSI. Defaults to 1 if not present.
+> +  - spi-rx-bus-width - (optional) The bus width(number of data wires) that
+> +                        used for MOSI. Defaults to 1 if not present.
+> +
+> +Grandchild node optional properties:
+> + - see mtd/partiton.txt for partitioning bindings and mtd naming
+> +
+> +
+> +Example:
+> +
+> +fmc: fmc@1e620000 {
+> +	compatible = "aspeed,ast2400-fmc";
+> +	reg = < 0x1e620000 0x94
+> +		0x20000000 0x02000000
+> +		0x22000000 0x02000000 >;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	flash@0 {
+> +		reg = < 0 >;
+> +		compatible = "jedec,spi-nor" ;
+> +		label = "bmc";
 
----
+label isn't really a defined property here. Belongs in jedec,spi-nor 
+binding if you want to add it.
 
-Changes since v1
- - s/flatenned/flattened/ (Kieran)
- - Add filename as argument to command (Jan / Kieran)
- - Check LX_CONFIG_OF early to reduce indendation (Kieran)
- - Add gdb.COMPLETE_FILENAME to get auto completion (Jan)
- - Squash pep8 fixup patch (Kieran)
----
- scripts/gdb/linux/constants.py.in |  8 +++++
- scripts/gdb/linux/proc.py         | 73 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 81 insertions(+)
+> +		/* spi-max-frequency = <>; */
+> +		/* m25p,fast-read; */
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		boot@0 {
 
-diff --git a/scripts/gdb/linux/constants.py.in b/scripts/gdb/linux/constants.py.in
-index 7986f4e..43c6241 100644
---- a/scripts/gdb/linux/constants.py.in
-+++ b/scripts/gdb/linux/constants.py.in
-@@ -14,6 +14,7 @@
- 
- #include <linux/fs.h>
- #include <linux/mount.h>
-+#include <linux/of_fdt.h>
- 
- /* We need to stringify expanded macros so that they can be parsed */
- 
-@@ -50,3 +51,10 @@ LX_VALUE(MNT_NOEXEC)
- LX_VALUE(MNT_NOATIME)
- LX_VALUE(MNT_NODIRATIME)
- LX_VALUE(MNT_RELATIME)
-+
-+/* linux/of_fdt.h> */
-+LX_VALUE(OF_DT_HEADER)
-+
-+/* Kernel Configs */
-+LX_CONFIG(CONFIG_OF)
-+
-diff --git a/scripts/gdb/linux/proc.py b/scripts/gdb/linux/proc.py
-index 38b1f09..086d272 100644
---- a/scripts/gdb/linux/proc.py
-+++ b/scripts/gdb/linux/proc.py
-@@ -16,6 +16,7 @@ from linux import constants
- from linux import utils
- from linux import tasks
- from linux import lists
-+from struct import *
- 
- 
- class LxCmdLine(gdb.Command):
-@@ -195,3 +196,75 @@ values of that process namespace"""
-                         info_opts(MNT_INFO, m_flags)))
- 
- LxMounts()
-+
-+
-+class LxFdtDump(gdb.Command):
-+    """Output Flattened Device Tree header and dump FDT blob to the filename
-+       specified as the command argument. Equivalent to
-+       'cat /proc/fdt > fdtdump.dtb' on a running target"""
-+
-+    def __init__(self):
-+        super(LxFdtDump, self).__init__("lx-fdtdump", gdb.COMMAND_DATA,
-+                                        gdb.COMPLETE_FILENAME)
-+
-+    def fdthdr_to_cpu(self, fdt_header):
-+
-+        fdt_header_be = ">IIIIIII"
-+        fdt_header_le = "<IIIIIII"
-+
-+        if utils.get_target_endianness() == 1:
-+            output_fmt = fdt_header_le
-+        else:
-+            output_fmt = fdt_header_be
-+
-+        return unpack(output_fmt, pack(fdt_header_be,
-+                                       fdt_header['magic'],
-+                                       fdt_header['totalsize'],
-+                                       fdt_header['off_dt_struct'],
-+                                       fdt_header['off_dt_strings'],
-+                                       fdt_header['off_mem_rsvmap'],
-+                                       fdt_header['version'],
-+                                       fdt_header['last_comp_version']))
-+
-+    def invoke(self, arg, from_tty):
-+
-+        if not constants.LX_CONFIG_OF:
-+            raise gdb.GdbError("Kernel not compiled with CONFIG_OF\n")
-+
-+        if len(arg) == 0:
-+            filename = "fdtdump.dtb"
-+        else:
-+            filename = arg
-+
-+        py_fdt_header_ptr = gdb.parse_and_eval(
-+            "(const struct fdt_header *) initial_boot_params")
-+        py_fdt_header = py_fdt_header_ptr.dereference()
-+
-+        fdt_header = self.fdthdr_to_cpu(py_fdt_header)
-+
-+        if fdt_header[0] != constants.LX_OF_DT_HEADER:
-+            raise gdb.GdbError("No flattened device tree magic found\n")
-+
-+        gdb.write("fdt_magic:         0x{:02X}\n".format(fdt_header[0]))
-+        gdb.write("fdt_totalsize:     0x{:02X}\n".format(fdt_header[1]))
-+        gdb.write("off_dt_struct:     0x{:02X}\n".format(fdt_header[2]))
-+        gdb.write("off_dt_strings:    0x{:02X}\n".format(fdt_header[3]))
-+        gdb.write("off_mem_rsvmap:    0x{:02X}\n".format(fdt_header[4]))
-+        gdb.write("version:           {}\n".format(fdt_header[5]))
-+        gdb.write("last_comp_version: {}\n".format(fdt_header[6]))
-+
-+        inf = gdb.inferiors()[0]
-+        fdt_buf = utils.read_memoryview(inf, py_fdt_header_ptr,
-+                                        fdt_header[1]).tobytes()
-+
-+        try:
-+            f = open(filename, 'wb')
-+        except:
-+            raise gdb.GdbError("Could not open file to dump fdt")
-+
-+        f.write(fdt_buf)
-+        f.close()
-+
-+        gdb.write("Dumped fdt blob to " + filename + "\n")
-+
-+LxFdtDump()
--- 
-1.9.1
+Use the newer style with all partitions under a 'partitions' node.
+
+> +			label = "boot-loader";
+> +			reg = < 0 0x8000 >
+
+Missing ';'
+
+> +		}
+> +		image@8000 {
+> +			label = "kernel-image";
+> +			reg = < 0x8000 0x1f8000 >
+
+ditto
+
+> +		}
+> +	};
+> +	flash@1 {
+> +		reg = < 1 >;
+> +		compatible = "jedec,spi-nor" ;
+> +		label = "alt";
+> +		/* spi-max-frequency = <>; */
+> +		status = "fail";
+> +		/* m25p,fast-read; */
+> +	};
+> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
