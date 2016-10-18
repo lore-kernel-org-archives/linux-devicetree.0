@@ -1,130 +1,60 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] dt: cpufreq: brcm: New binding document for
- brcmstb-avs-cpufreq
-Date: Tue, 18 Oct 2016 08:38:16 -0500
-Message-ID: <20161018133816.hcrvy52a67ig4oco@rob-hp-laptop>
-References: <1476310376-32699-1-git-send-email-mmayer@broadcom.com>
- <1476310376-32699-2-git-send-email-mmayer@broadcom.com>
+From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Subject: Re: [PATCH v3 1/2] Add OV5647 device tree documentation
+Date: Tue, 18 Oct 2016 14:38:20 +0100
+Message-ID: <7a228213-bbd1-8eb4-6d8b-123b3b6e215f@synopsys.com>
+References: <cover.1476286687.git.roliveir@synopsys.com>
+ <0f85bdabe4951533e6fe7a842cc5dfa0f2cd8a6c.1476286687.git.roliveir@synopsys.com>
+ <20161018131434.2bbk2evxkv7mutfo@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1476310376-32699-2-git-send-email-mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20161018131434.2bbk2evxkv7mutfo@rob-hp-laptop>
+Sender: linux-media-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, geert@linux-m68k.org, akpm@linux-foundation.org, kvalo@codeaurora.org, linux@roeck-us.net, hverkuil@xs4all.nl, lars@metafoo.de, pavel@ucw.cz, robert.jarzmik@free.fr, slongerbeam@gmail.com, dheitmueller@kernellabs.com, pali.rohar@gmail.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 12, 2016 at 03:12:54PM -0700, Markus Mayer wrote:
-> Add the binding document for the new brcmstb-avs-cpufreq driver.
-> 
-> Signed-off-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../bindings/cpufreq/brcm,stb-avs-cpu-freq.txt     | 76 ++++++++++++++++++++++
->  MAINTAINERS                                        |  7 ++
->  2 files changed, 83 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt b/Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
-> new file mode 100644
-> index 0000000..23a2c3d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
-> @@ -0,0 +1,76 @@
-> +Broadcom STB AVS CPUfreq driver bindings
+On 10/18/2016 2:14 PM, Rob Herring wrote:
+> On Wed, Oct 12, 2016 at 05:02:21PM +0100, Ramiro Oliveira wrote:
+>> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
+>> ---
+>>  .../devicetree/bindings/media/i2c/ov5647.txt          | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>> new file mode 100644
+>> index 0000000..4c91b3b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>> @@ -0,0 +1,19 @@
+>> +Omnivision OV5647 raw image sensor
+>> +---------------------------------
+>> +
+>> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
+>> +and CCI (I2C compatible) control bus.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible	: "ovti,ov5647";
+>> +- reg		: I2C slave address of the sensor;
+>> +
+>> +The common video interfaces bindings (see video-interfaces.txt) should be
+>> +used to specify link to the image data receiver. The OV5647 device
+>> +node should contain one 'port' child node with an 'endpoint' subnode.
+>> +
+>> +Following properties are valid for the endpoint node:
+>> +
+>> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
+>> +  video-interfaces.txt.  The sensor supports only two data lanes.
+> What's the default if not present?
 
-Bindings describe h/w, not drivers or Linux subsystems.
+Since the sensor only supports 2 data lanes, this information will not be used,
+even if it is available in the DT. So the default will be 2.
 
-> +========================================
-> +
-> +A total of three DT nodes are required. One node (brcm,avs-cpu-data-mem)
-> +references the mailbox register used to communicate with the AVS CPU[1]. The
-> +second node (brcm,avs-cpu-l2-intr) is required to trigger an interrupt on
-> +the AVS CPU. The interrupt tells the AVS CPU that it needs to process a
-> +command sent to it by a driver. Interrupting the AVS CPU is mandatory for
-> +commands to be processed.
-> +
-> +The interface also requires a reference to the AVS host interrupt controller,
-> +so a driver can react to interrupts generated by the AVS CPU whenever a command
-> +has been processed. See [2] for more information on the brcm,l2-intc node.
-> +
-> +[1] The AVS CPU is an independent co-processor that runs proprietary
-> +firmware. On some SoCs, this firmware supports DFS and DVFS in addition to
-> +Adaptive Voltage Scaling.
-> +
-> +[2] Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt
-> +
-> +
-> +Node brcm,avs-cpu-data-mem
-> +--------------------------
-> +
-> +Required properties:
-> +- compatible: Sould be one of: brcm,avs-cpu-data-mem,
-> +              brcm,bcm7271-avs-cpu-data-mem or brcm,bcm7268-avs-cpu-data-mem
-
-This does not match the example. Need to clarify valid combinations and 
-ordering.
-
-> +- reg: Specifies base physical address and size of the registers.
-> +- interrupts: The interrupt that the AVS CPU will use to interrupt the host
-> +              when a command completed.
-> +- interrupt-parent: The interrupt controller the above interrupt is routed
-> +                    through.
-> +- interrupt-names: The name of the interrupt used to interrupt the host.
-> +
-> +Optional properties:
-> +- None
-> +
-> +Node brcm,avs-cpu-l2-intr
-> +-------------------------
-> +
-> +Required properties:
-> +- compatible: Sould be one of: brcm,avs-cpu-l2-intr,
-> +              brcm,bcm7271-avs-cpu-l2-intr or brcm,bcm7268-avs-cpu-l2-intr
-
-ditto.
-
-> +- reg: Specifies base physical address and size of the registers.
-> +
-> +Optional properties:
-> +- None
-> +
-> +
-> +Example
-> +=======
-> +
-> +	avs_host_l2_intc: interrupt-controller@f04d1200 {
-> +		#interrupt-cells = <1>;
-> +		compatible = "brcm,l2-intc";
-> +		interrupt-parent = <&intc>;
-> +		reg = <0xf04d1200 0x48>;
-> +		interrupt-controller;
-> +		interrupts = <0x0 0x19 0x0>;
-> +		interrupt-names = "avs";
-> +	};
-> +
-> +	avs-cpu-data-mem@f04c4000 {
-> +		compatible = "brcm,bcm7271-avs-cpu-data-mem",
-> +				"brcm,avs-cpu-data-mem";
-> +		reg = <0xf04c4000 0x60>;
-> +		interrupts = <0x1a>;
-> +		interrupt-parent = <&avs_host_l2_intc>;
-> +		interrupt-names = "sw_intr";
-> +	};
-> +
-> +	avs-cpu-l2-intr@f04d1100 {
-> +		compatible = "brcm,bcm7271-avs-cpu-l2-intr",
-> +				"brcm,avs-cpu-l2-intr";
-> +		reg = <0xf04d1100 0x10>;
-> +	};
-
-I'm wondering if this would be better described as just 1 node for the 
-AVS cpu? Are there any other functions or resources tied to the cpu 
-beyond your current usage?
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> -- 
+>> 2.9.3
+>>
+>>
