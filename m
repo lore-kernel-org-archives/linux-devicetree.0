@@ -1,91 +1,76 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: it6251: add bindings for IT6251
- LVDS-to-eDP bridge
-Date: Tue, 18 Oct 2016 18:35:47 +0200
-Message-ID: <871394da-988b-b177-79e0-72a02e80b258@denx.de>
-References: <20161017163329.11821-1-marex@denx.de>
- <20161017163329.11821-2-marex@denx.de>
- <20161018163037.wl6ceend32epp6k6@rob-hp-laptop>
+From: Albert ARIBAUD <albert.aribaud-iEu9NFBzPZE@public.gmane.org>
+Subject: Re: [PATCH 2/2] fsl-quadspi: introduce per-bus spi-bus-width
+ property
+Date: Tue, 18 Oct 2016 22:03:34 +0200
+Message-ID: <20161018220334.6452fc5b.albert.aribaud@3adev.fr>
+References: <20160927055957.427-1-albert.aribaud@3adev.fr>
+        <20160927055957.427-2-albert.aribaud@3adev.fr>
+        <20161003185143.GA27634@rob-hp-laptop>
+        <CAMuHMdW6WJBj3TiXU0mmwKJmcwp28HEVUSD17-7RH7-UXFtX1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161018163037.wl6ceend32epp6k6@rob-hp-laptop>
+In-Reply-To: <CAMuHMdW6WJBj3TiXU0mmwKJmcwp28HEVUSD17-7RH7-UXFtX1g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/18/2016 06:30 PM, Rob Herring wrote:
-> On Mon, Oct 17, 2016 at 06:33:28PM +0200, Marek Vasut wrote:
->> Add DT bindings for ITE IT6251 LVDS-to-eDP bridge.
->>
->> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
->> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../bindings/display/bridge/ite,it6251.txt         | 35 ++++++++++++++++++++++
->>  1 file changed, 35 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6251.txt
->>
->> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6251.txt b/Documentation/devicetree/bindings/display/bridge/ite,it6251.txt
->> new file mode 100644
->> index 0000000..c5db82c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6251.txt
->> @@ -0,0 +1,35 @@
->> +ITE IT6251 LVDS-to-eDP bridge bindings
->> +
->> +Required properties:
->> +- compatible:		Should be "ite,it6251"
->> +- reg:			i2c address of the bridge, i2c address of the LVDS part
->> +- reg-names:		Should be "bridge", "lvds"
->> +- power-supply:		Regulator to provide the supply voltage
+Hi Rob and Geert,
+
+Le Mon, 3 Oct 2016 21:57:58 +0200, Geert Uytterhoeven
+<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> a écrit :
+
+> On Mon, Oct 3, 2016 at 8:51 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > On Tue, Sep 27, 2016 at 07:59:57AM +0200, Albert ARIBAUD (3ADEV) wrote:  
+> >> Introduce spi-bus-width property for bus subnodes, to
+> >> specify per-bus capability to use NORMAL, FAST, DUAL,
+> >> and/or QUAD reads.
+> >>
+> >> Signed-off-by: Albert ARIBAUD (3ADEV) <albert.aribaud-iEu9NFBzPZE@public.gmane.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/mtd/fsl-quadspi.txt | 18 ++++++++++++++++++
+> >>  1 file changed, 18 insertions(+)  
+> >
+> > Make this a common property.  
+
+@Rob: do you mean common to all slaves, i.e. described
+in ./Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt?
+
+> They already exist:
 > 
-> The input pin is called "power"?
+> Documentation/devicetree/bindings/spi/spi-bus.txt:
+> - spi-tx-bus-width - (optional) The bus width (number of data wires)
+> that is used for MOSI. Defaults to 1 if not present.
+> - spi-rx-bus-width - (optional) The bus width (number of data wires)
+> that is used for MISO. Defaults to 1 if not present.
+> 
+> The above are for normal/dual/quad.
+> 
+> "Fast" is not a property of the bus, but of the SPI slave, right? Cfr.
+> 
+> Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt:
+> - m25p,fast-read : Use the "fast read" opcode to read data from the
+> chip instead of the usual "read" opcode. This opcode is not supported
+> by all chips and support for it can not be detected at runtime.
+>                    Refer to your chips' datasheet to check if this is
+> supported by your chip.
+> 
+> Gr{oetje,eeting}s,
 
-The chip has about 7 power rails, but the design I have only has an
-upstream regulator which toggles them all. I wonder, shall we model
-all the rails ?
+@Geert: the problem here is that on the board for which I wrote this
+patch, only one of the two NOR slaves can do quad SPI; the other one
+can do dual at best. Setting a bus property would prevent the
+quad-capable device from doing actual quad reads.
 
->> +- video interfaces:	Device node can contain video interface port nodes
->> +			for panel according to [1].
->> +
->> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
->> +
->> +Example:
->> +
->> +	it6251@5c {
->> +		compatible = "ite,it6251";
->> +		reg = <0x5c>, <0x5e>;
->> +		reg-names = "bridge", "lvds";
->> +		power-supply = <&reg_display>;
->> +
->> +		ports {
->> +			port@0 {
->> +				bridge_out_edp0: endpoint {
->> +					remote-endpoint = <&panel_in_edp0>;
->> +				};
->> +			};
->> +
->> +			port@1 {
->> +				bridge_in_lvds0: endpoint {
->> +					remote-endpoint = <&lvds0_out>;
->> +				};
->> +			};
->> +		};
->> +	};
->> +
->> -- 
->> 2.9.3
->>
+The fsl-quadspi driver already supports per-NOR read and erase commands
+to support heterogeneous NOR setups. A per-NOR bus width property would
+make sense in this light.
 
-
--- 
-Best regards,
-Marek Vasut
+Cordialement,
+Albert ARIBAUD
+3ADEV
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
