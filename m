@@ -1,55 +1,127 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v10 02/11] MAINTAINERS: Add st slim core rproc driver to STi
- section.
-Date: Tue, 18 Oct 2016 10:39:07 +0100
-Message-ID: <1476783556-2501-3-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v10 03/11] remoteproc: Update Kconfig setup to 'depends on REMOTEPROC'
+Date: Tue, 18 Oct 2016 10:39:08 +0100
+Message-ID: <1476783556-2501-4-git-send-email-peter.griffin@linaro.org>
 References: <1476783556-2501-1-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1476783556-2501-1-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, ohad@wizery.com, bjorn.andersson@linaro.org, patrice.chotard@st.com
-Cc: peter.griffin@linaro.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476783556-2501-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the slim core rproc driver to the STi section
-of the MAINTAINERS file.
+Make REMOTEPROC core a selectable kconfig option, and update
+remoteproc client drivers to 'depends on' the core. This avoids
+some nasty Kconfig recursive dependency issues. Also when using
+menuconfig client drivers will be hidden until the core has been
+enabled.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Documentation/kbuild/kconfig-language.txt:
+
+  Note:
+        select should be used with care. select will force
+        a symbol to a value without visiting the dependencies.
+        By abusing select you are able to select a symbol FOO even
+        if FOO depends on BAR that is not set.
+        In general use select only for non-visible symbols
+        (no prompts anywhere) and for symbols with no dependencies.
+        That will limit the usefulness but on the other hand avoid
+        the illegal configurations all over.
+
+Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/remoteproc/Kconfig | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1cd38a7..78b7f8b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1784,6 +1784,7 @@ F:	drivers/phy/phy-stih407-usb.c
- F:	drivers/phy/phy-stih41x-usb.c
- F:	drivers/pinctrl/pinctrl-st.c
- F:	drivers/remoteproc/st_remoteproc.c
-+F:	drivers/remoteproc/st_slim_rproc.c
- F:	drivers/reset/sti/
- F:	drivers/rtc/rtc-st-lpc.c
- F:	drivers/tty/serial/st-asc.c
-@@ -1792,6 +1793,7 @@ F:	drivers/usb/host/ehci-st.c
- F:	drivers/usb/host/ohci-st.c
- F:	drivers/watchdog/st_lpc_wdt.c
- F:	drivers/ata/ahci_st.c
-+F:	include/linux/remoteproc/st_slim_rproc.h
+diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+index 9270c8e..14d5d2d 100644
+--- a/drivers/remoteproc/Kconfig
++++ b/drivers/remoteproc/Kconfig
+@@ -1,20 +1,21 @@
+ menu "Remoteproc drivers"
  
- ARM/STM32 ARCHITECTURE
- M:	Maxime Coquelin <mcoquelin.stm32@gmail.com>
+-# REMOTEPROC gets selected by whoever wants it
+ config REMOTEPROC
+-	tristate
++	tristate "Support for Remote Processor subsystem"
+ 	depends on HAS_DMA
+ 	select CRC32
+ 	select FW_LOADER
+ 	select VIRTIO
+ 	select VIRTUALIZATION
+ 
++if REMOTEPROC
++
+ config OMAP_REMOTEPROC
+ 	tristate "OMAP remoteproc support"
+ 	depends on HAS_DMA
+ 	depends on ARCH_OMAP4 || SOC_OMAP5
+ 	depends on OMAP_IOMMU
+-	select REMOTEPROC
++	depends on REMOTEPROC
+ 	select MAILBOX
+ 	select OMAP2PLUS_MBOX
+ 	select RPMSG_VIRTIO
+@@ -34,7 +35,7 @@ config OMAP_REMOTEPROC
+ config STE_MODEM_RPROC
+ 	tristate "STE-Modem remoteproc support"
+ 	depends on HAS_DMA
+-	select REMOTEPROC
++	depends on REMOTEPROC
+ 	default n
+ 	help
+ 	  Say y or m here to support STE-Modem shared memory driver.
+@@ -44,7 +45,7 @@ config STE_MODEM_RPROC
+ config WKUP_M3_RPROC
+ 	tristate "AMx3xx Wakeup M3 remoteproc support"
+ 	depends on SOC_AM33XX || SOC_AM43XX
+-	select REMOTEPROC
++	depends on REMOTEPROC
+ 	help
+ 	  Say y here to support Wakeup M3 remote processor on TI AM33xx
+ 	  and AM43xx family of SoCs.
+@@ -57,6 +58,7 @@ config WKUP_M3_RPROC
+ config DA8XX_REMOTEPROC
+ 	tristate "DA8xx/OMAP-L13x remoteproc support"
+ 	depends on ARCH_DAVINCI_DA8XX
++	depends on REMOTEPROC
+ 	select CMA if MMU
+ 	select RPMSG_VIRTIO
+ 	help
+@@ -83,9 +85,9 @@ config QCOM_Q6V5_PIL
+ 	tristate "Qualcomm Hexagon V5 Peripherial Image Loader"
+ 	depends on OF && ARCH_QCOM
+ 	depends on QCOM_SMEM
++	depends on REMOTEPROC
+ 	select MFD_SYSCON
+ 	select QCOM_MDT_LOADER
+-	select REMOTEPROC
+ 	help
+ 	  Say y here to support the Qualcomm Peripherial Image Loader for the
+ 	  Hexagon V5 based remote processors.
+@@ -109,7 +111,7 @@ config QCOM_WCNSS_PIL
+ config ST_REMOTEPROC
+ 	tristate "ST remoteproc support"
+ 	depends on ARCH_STI
+-	select REMOTEPROC
++	depends on REMOTEPROC
+ 	help
+ 	  Say y here to support ST's adjunct processors via the remote
+ 	  processor framework.
+@@ -117,6 +119,8 @@ config ST_REMOTEPROC
+ 
+ config ST_SLIM_REMOTEPROC
+ 	tristate
+-	select REMOTEPROC
++	depends on REMOTEPROC
++
++endif # REMOTEPROC
+ 
+ endmenu
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
