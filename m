@@ -1,40 +1,54 @@
-Return-Path: <mbrugger@kernel.org>
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH] arm64: dts: mt8173: Fix auxadc node
-Date: Wed, 26 Oct 2016 16:15:00 +0200
-Message-Id: <20161026141500.27105-1-matthias.bgg@gmail.com>
-To: robh+dt@kernel.org, mark.rutland@arm.com, will.deacon@arm.com, zhiyong.tao@mediatek.com, s.hauer@pengutronix.de
-Cc: djkurtz@chromium.org, p.zabel@pengutronix.de, hans.verkuil@cisco.com, andrew-ct.chen@mediatek.com, ck.hu@mediatek.com, bayi.cheng@mediatek.com, yong.wu@mediatek.com, dawei.chien@mediatek.com, chunfeng.yun@mediatek.com, tiffany.lin@mediatek.com, fan.chen@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <871394da-988b-b177-79e0-72a02e80b258@denx.de>
+References: <20161017163329.11821-1-marex@denx.de>
+	<20161017163329.11821-2-marex@denx.de>
+	<20161018163037.wl6ceend32epp6k6@rob-hp-laptop>
+	<871394da-988b-b177-79e0-72a02e80b258@denx.de>
+Date: Tue, 18 Oct 2016 14:58:49 -0500
+Message-ID: <CAL_JsqKiLSV_x4P3BEk6X34_+hS3iqBThizppqybVVv-cA4qYg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: it6251: add bindings for IT6251
+ LVDS-to-eDP bridge
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+To: Marek Vasut <marex@denx.de>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Cross <xobs@kosagi.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The devicetree node for mt8173-auxadc lacks the clock and
-io-channel-cells property. This leads to a non-working driver.
+On Tue, Oct 18, 2016 at 11:35 AM, Marek Vasut <marex@denx.de> wrote:
+> On 10/18/2016 06:30 PM, Rob Herring wrote:
+>> On Mon, Oct 17, 2016 at 06:33:28PM +0200, Marek Vasut wrote:
+>>> Add DT bindings for ITE IT6251 LVDS-to-eDP bridge.
+>>>
+>>> Signed-off-by: Marek Vasut <marex@denx.de>
+>>> Cc: devicetree@vger.kernel.org
+>>> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+>>> Cc: Rob Herring <robh@kernel.org>
+>>> Cc: Sean Cross <xobs@kosagi.com>
+>>> ---
+>>>  .../bindings/display/bridge/ite,it6251.txt         | 35 ++++++++++++++++++++++
+>>>  1 file changed, 35 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6251.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6251.txt b/Documentation/devicetree/bindings/display/bridge/ite,it6251.txt
+>>> new file mode 100644
+>>> index 0000000..c5db82c
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6251.txt
+>>> @@ -0,0 +1,35 @@
+>>> +ITE IT6251 LVDS-to-eDP bridge bindings
+>>> +
+>>> +Required properties:
+>>> +- compatible:               Should be "ite,it6251"
+>>> +- reg:                      i2c address of the bridge, i2c address of the LVDS part
+>>> +- reg-names:                Should be "bridge", "lvds"
+>>> +- power-supply:             Regulator to provide the supply voltage
+>>
+>> The input pin is called "power"?
+>
+> The chip has about 7 power rails, but the design I have only has an
+> upstream regulator which toggles them all. I wonder, shall we model
+> all the rails ?
 
-	mt6577-auxadc 11001000.auxadc: failed to get auxadc clock
-	mt6577-auxadc: probe of 11001000.auxadc failed with error -2
+Yes, because others may have a different design.
 
-Fix these fields to get the device up and running.
-
-Fixes: 748c7d4de46a ("ARM64: dts: mt8173: Add thermal/auxadc device
-nodes")
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 1c71e25..6c03c17 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -450,6 +450,9 @@
- 		auxadc: auxadc@11001000 {
- 			compatible = "mediatek,mt8173-auxadc";
- 			reg = <0 0x11001000 0 0x1000>;
-+			clocks = <&pericfg CLK_PERI_AUXADC>;
-+			clock-names = "main";
-+			#io-channel-cells = <1>;
- 		};
- 
- 		uart0: serial@11002000 {
--- 
-2.10.1
+Rob
