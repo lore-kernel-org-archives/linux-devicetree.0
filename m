@@ -1,78 +1,126 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/9] ARM: OMAP2+: board-generic: add support for DRA71x
- family
-Date: Tue, 18 Oct 2016 09:30:37 -0500
-Message-ID: <20161018143037.xlmwmjzgtpu5dmbc@rob-hp-laptop>
-References: <20161014130033.14172-1-lokeshvutla@ti.com>
- <20161014130033.14172-6-lokeshvutla@ti.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [RFC 3/5] media: platform: rcar_drif: Add DRIF support
+Date: Tue, 18 Oct 2016 16:29:24 +0200
+Message-ID: <CAMuHMdXvGEm3bdNOsa6Q1FLB9yMSTAzO4nHcCb-pnYYwg6f6Cg@mail.gmail.com>
+References: <1476281429-27603-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1476281429-27603-4-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161014130033.14172-6-lokeshvutla-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1476281429-27603-4-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, Antti Palosaari <crope@iki.fi>, Chris Paterson <chris.paterson2@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 14, 2016 at 06:30:29PM +0530, Lokesh Vutla wrote:
-> DRA71x processor family is a derivative of DRA722 ES2.0 targeted for
-> infotainment systems.
-> 
-> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/omap/omap.txt | 6 ++++++
->  arch/arm/mach-omap2/board-generic.c                 | 1 +
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
-> index f53e2ee..454b1be 100644
-> --- a/Documentation/devicetree/bindings/arm/omap/omap.txt
-> +++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
-> @@ -86,6 +86,9 @@ SoCs:
->  - DRA722
->    compatible = "ti,dra722", "ti,dra72", "ti,dra7"
->  
-> +- DRA718
-> +  compatible = "ti,dra718", "ti,dra722", "ti,dra72", "ti,dra7"
+Hi Ramesh,
 
-Are dra72 and dra7 really useful? Your list is a bit long. Perhaps it is 
-time to drop those on new parts at least.
+On Wed, Oct 12, 2016 at 4:10 PM, Ramesh Shanmugasundaram
+<ramesh.shanmugasundaram@bp.renesas.com> wrote:
+> This patch adds Digital Radio Interface (DRIF) support to R-Car Gen3 SoCs.
+> The driver exposes each instance of DRIF as a V4L2 SDR device. A DRIF
+> device represents a channel and each channel can have one or two
+> sub-channels respectively depending on the target board.
+>
+> DRIF supports only Rx functionality. It receives samples from a RF
+> frontend tuner chip it is interfaced with. The combination of DRIF and the
+> tuner device, which is registered as a sub-device, determines the receive
+> sample rate and format.
+>
+> In order to be compliant as a V4L2 SDR device, DRIF needs to bind with
+> the tuner device, which can be provided by a third party vendor. DRIF acts
+> as a slave device and the tuner device acts as a master transmitting the
+> samples. The driver allows asynchronous binding of a tuner device that
+> is registered as a v4l2 sub-device. The driver can learn about the tuner
+> it is interfaced with based on port endpoint properties of the device in
+> device tree. The V4L2 SDR device inherits the controls exposed by the
+> tuner device.
+>
+> The device can also be configured to use either one or both of the data
+> pins at runtime based on the master (tuner) configuration.
 
-Either way:
+Thanks for your patch!
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
+> @@ -0,0 +1,109 @@
+> +Renesas R-Car Gen3 DRIF controller (DRIF)
+> +-----------------------------------------
 > +
->  - AM5728
->    compatible = "ti,am5728", "ti,dra742", "ti,dra74", "ti,dra7"
->  
-> @@ -181,6 +184,9 @@ Boards:
->  - DRA722 EVM: Software Development Board for DRA722
->    compatible = "ti,dra72-evm", "ti,dra722", "ti,dra72", "ti,dra7"
->  
-> +- DRA718 EVM: Software Development Board for DRA718
-> +  compatible = "ti,dra718-evm", "ti,dra718", "ti,dra722", "ti,dra72", "ti,dra7"
+> +Required properties:
+> +--------------------
+> +- compatible: "renesas,drif-r8a7795" if DRIF controller is a part of R8A7795 SoC.
+
+"renesas,r8a7795-drif", as Rob already pointed out.
+
+> +             "renesas,rcar-gen3-drif" for a generic R-Car Gen3 compatible device.
+> +             When compatible with the generic version, nodes must list the
+> +             SoC-specific version corresponding to the platform first
+> +             followed by the generic version.
 > +
->  - DM3730 Logic PD Torpedo + Wireless: Commercial System on Module with WiFi and Bluetooth
->    compatible = "logicpd,dm3730-torpedo-devkit", "ti,omap3630", "ti,omap3"
->  
-> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-> index bab814d..981b23a 100644
-> --- a/arch/arm/mach-omap2/board-generic.c
-> +++ b/arch/arm/mach-omap2/board-generic.c
-> @@ -341,6 +341,7 @@ static const char *const dra72x_boards_compat[] __initconst = {
->  	"ti,am5718",
->  	"ti,am5716",
->  	"ti,dra722",
-> +	"ti,dra718",
->  	NULL,
->  };
->  
-> -- 
-> 2.9.3
-> 
+> +- reg: offset and length of each sub-channel.
+> +- interrupts: associated with each sub-channel.
+> +- clocks: phandles and clock specifiers for each sub-channel.
+> +- clock-names: clock input name strings: "fck0", "fck1".
+> +- pinctrl-0: pin control group to be used for this controller.
+> +- pinctrl-names: must be "default".
+> +- dmas: phandles to the DMA channels for each sub-channel.
+> +- dma-names: names for the DMA channels: "rx0", "rx1".
+> +
+> +Required child nodes:
+> +---------------------
+> +- Each DRIF channel can have one or both of the sub-channels enabled in a
+> +  setup. The sub-channels are represented as a child node. The name of the
+> +  child nodes are "sub-channel0" and "sub-channel1" respectively. Each child
+> +  node supports the "status" property only, which is used to enable/disable
+> +  the respective sub-channel.
+
+> +Example
+> +--------
+> +
+> +SoC common dtsi file
+> +
+> +drif0: rif@e6f40000 {
+> +       compatible = "renesas,drif-r8a7795",
+> +                  "renesas,rcar-gen3-drif";
+> +       reg = <0 0xe6f40000 0 0x64>, <0 0xe6f50000 0 0x64>;
+> +       interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
+> +                  <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+> +       clocks = <&cpg CPG_MOD 515>, <&cpg CPG_MOD 514>;
+> +       clock-names = "fck0", "fck1";
+> +       dmas = <&dmac1 0x20>, <&dmac1 0x22>;
+> +       dma-names = "rx0", "rx1";
+
+I could not find the DMAC channels in the datasheet?
+Most modules are either tied to dmac0, or two both dmac1 and dmac2.
+In the latter case, you want to list two sets of dmas, one for each DMAC.
+
+> +       power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> +       status = "disabled";
+> +
+> +       sub-channel0 {
+> +               status = "disabled";
+> +       };
+> +
+> +       sub-channel1 {
+> +               status = "disabled";
+> +       };
+> +
+> +};
+
+As you're modelling this in DT under a single device node, this means you
+cannot use runtime PM to manage the module clocks of the individual channels.
+
+An alternative could be to have two separate nodes for each channel,
+and tie them together using a phandle.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
