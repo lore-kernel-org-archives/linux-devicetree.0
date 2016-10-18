@@ -1,35 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 23/23] phy: Add support for Qualcomm's USB HS phy
-Date: Tue, 18 Oct 2016 11:47:05 -0500
-Message-ID: <20161018164705.viqrzpn3bnwns2mc@rob-hp-laptop>
-References: <20161018015636.11701-1-stephen.boyd@linaro.org>
- <20161018015636.11701-24-stephen.boyd@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161018015636.11701-24-stephen.boyd@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Peter Chen <peter.chen@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org
+From: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Subject: [PATCH v9 0/2] Add a new board TOPEET iTOP for Exynos 4412
+Date: Wed, 19 Oct 2016 01:18:47 +0800
+Message-ID: <1476811129-4450-1-git-send-email-ayaka@soulik.info>
+References: <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 17, 2016 at 06:56:36PM -0700, Stephen Boyd wrote:
-> The high-speed phy on qcom SoCs is controlled via the ULPI
-> viewport.
-> 
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: <devicetree@vger.kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> ---
->  .../devicetree/bindings/phy/qcom,usb-hs-phy.txt    |  86 +++++++
+Changelog:
+ - v9:
+   - fix some warnings.
+   - use the new pin defined for pinctrl.
+ - v8:
+   - add the missing LDOs for PMIC, the pins for LDOs are not avaiabled in core
+     board.
+   - re-order the header files in core board.
+   - skip the vendor prefix file
+ - v7:
+   - add a missing header file
+   - add a rootdelay to bootargs or it can't mount root filesystem
+   - fix the memory node
+ - v6:
+   - move pwms pinctrl to pwms node
+   - fix the order of the dtb file in Makefile
+ - v5:
+   - correct the mail format
+ - v4:
+   - re-order some nodes in alphabetical order
+   - fix some minor bugs
+   - add a entry in vendor list
+ - v3:
+   - fixing the rtc clock, using clock source from PMIC
+   - enable the tmu
+   - enable the fimc for elite board
+   - suuport the audio codec at elite board, but the audio sound a little 
+     distortion
+   - fixing minor bugs in the last commit
+ - v2:
+   - removing rtc node
+     the clock source driver is not done yet.
+   - adding exynos-bus
+   - fixing the MFC
 
-Acked-by: Rob Herring <robh@kernel.org>
+Randy Li (2):
+  ARM: dts: Add TOPEET itop core board SCP package version
+  ARM: dts: add TOPEET itop elite based board
 
->  drivers/phy/Kconfig                                |   8 +
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/phy-qcom-usb-hs.c                      | 286 +++++++++++++++++++++
->  4 files changed, 381 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
->  create mode 100644 drivers/phy/phy-qcom-usb-hs.c
+ .../bindings/arm/samsung/samsung-boards.txt        |   3 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/exynos4412-itop-elite.dts        | 240 ++++++++++
+ arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi    | 501 +++++++++++++++++++++
+ 4 files changed, 745 insertions(+)
+ create mode 100644 arch/arm/boot/dts/exynos4412-itop-elite.dts
+ create mode 100644 arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
