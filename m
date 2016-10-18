@@ -1,7 +1,7 @@
 From: Rob Herring <robh@kernel.org>
 Subject: Re: [PATCH v5 23/23] phy: Add support for Qualcomm's USB HS phy
-Date: Tue, 18 Oct 2016 11:46:09 -0500
-Message-ID: <20161018164609.g4lfe4zgxviwgr3n@rob-hp-laptop>
+Date: Tue, 18 Oct 2016 11:47:05 -0500
+Message-ID: <20161018164705.viqrzpn3bnwns2mc@rob-hp-laptop>
 References: <20161018015636.11701-1-stephen.boyd@linaro.org>
  <20161018015636.11701-24-stephen.boyd@linaro.org>
 Mime-Version: 1.0
