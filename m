@@ -1,66 +1,48 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: rockchip: temporarily remove emmc hs200 speed from rk3288-veyron-speedy.
-Date: Tue, 18 Oct 2016 11:21:59 +0200
-Message-ID: <12872023.2LumKfgYDl@diego>
-References: <87twd1vzc5.fsf@aikidev.net> <1476647383.3885.3.camel@paulk.fr>
+From: Patrice Chotard <patrice.chotard@st.com>
+Subject: Re: [PATCH 05/19] ARM: multi_v7_defconfig: Remove miphy365 phy.
+Date: Tue, 18 Oct 2016 11:22:06 +0200
+Message-ID: <91306f3f-1dc9-fe8c-1a08-5e47d20c5f70@st.com>
+References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
+ <1473859677-9231-6-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476647383.3885.3.camel-W9ppeneeCTY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Cc: Vagrant Cascadian <vagrantc-LkDtOWtB3X7R7s880joybQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473859677-9231-6-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, devicetree@vger.kernel.org
+Cc: lee.jones@linaro.org, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Am Sonntag, 16. Oktober 2016, 21:49:43 schrieb Paul Kocialkowski:
-> Hi,
-> 
-> Le mardi 27 septembre 2016 à 13:53 -0700, Vagrant Cascadian a écrit :
-> > This essentially mimics what was done with rk3288-veyron-minnie in
-> > commit 984926781122f034d5bc9962815d135b6c4a8e1d.
-> > 
-> > The eMMC of the speedy Chromebook also appears to need the same tuning
-> > workaround, as it frequently fails to recognize the eMMC without it.
-> 
-> I have a device where (without this patch) eMMC sometimes fails, with:
-> [    3.561010] dwmmc_rockchip ff0f0000.dwmmc: Successfully tuned phase to
-> 175 [    3.571742] mmc2: new HS200 MMC card at address 0001
-> [    3.571943] mmcblk2: mmc2:0001 HAG2e 14.7 GiB 
-> [    3.572026] mmcblk2boot0: mmc2:0001 HAG2e partition 1 4.00 MiB
-> [    3.572107] mmcblk2boot1: mmc2:0001 HAG2e partition 2 4.00 MiB
-> [    3.572181] mmcblk2rpmb: mmc2:0001 HAG2e partition 3 4.00 MiB
-> [    3.685647] mmcblk2: error -110 transferring data, sector 0, nr 8, cmd
-> response 0x900, card status 0x0
-> 
-> And sometimes works, with:
-> [    3.451058] dwmmc_rockchip ff0f0000.dwmmc: Successfully tuned phase to
-> 176 [    3.491093] mmc2: new HS200 MMC card at address 0001
-> [    3.491277] mmcblk2: mmc2:0001 HAG2e 14.7 GiB 
-> [    3.491345] mmcblk2boot0: mmc2:0001 HAG2e partition 1 4.00 MiB
-> [    3.491409] mmcblk2boot1: mmc2:0001 HAG2e partition 2 4.00 MiB
-> [    3.491474] mmcblk2rpmb: mmc2:0001 HAG2e partition 3 4.00 MiB
-> [    3.493548]  mmcblk2: p1 p2
-> 
-> However, with this change, it always fails, with:
-> [    3.322129] mmc_host mmc2: Bus speed (slot 0) = 50000000Hz (slot req
-> 52000000Hz, actual 50000000HZ div = 0) [    3.333174] mmc2: error -110
-> whilst initialising MMC card
-> 
-> I don't have so much time to investigate this issue, but it's clear that
-> this patch doesn't fix the issue (and actually worsens it) for my device.
+Hi
 
-thanks for the heads up.
+On 09/14/2016 03:27 PM, Peter Griffin wrote:
+> This IP is only found on STiH415/6 silicon and support
+> for these SoCs is being removed from the kernel.
+> 
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Cc: <kishon@ti.com>
 
-As discussed on IRC we now have varying reports of the emmc working or not 
-working with and without that patch applied. So it's not really a bandaid fix 
-and I've thus dropped this patch again.
+Acked-by: Patrice Chotard <patrice.chotard@st.com>
 
-Still hoping someone will find the source of the problem somewhere :-)
+Applied on STi-defconfig-for-4.10 branch
 
+Thanks
 
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  arch/arm/configs/multi_v7_defconfig | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+> index 2c8665c..949ab7f 100644
+> --- a/arch/arm/configs/multi_v7_defconfig
+> +++ b/arch/arm/configs/multi_v7_defconfig
+> @@ -854,7 +854,6 @@ CONFIG_PHY_ROCKCHIP_DP=m
+>  CONFIG_PHY_ROCKCHIP_USB=m
+>  CONFIG_PHY_QCOM_APQ8064_SATA=m
+>  CONFIG_PHY_MIPHY28LP=y
+> -CONFIG_PHY_MIPHY365X=y
+>  CONFIG_PHY_RCAR_GEN2=m
+>  CONFIG_PHY_STIH41X_USB=y
+>  CONFIG_PHY_STIH407_USB=y
+> 
