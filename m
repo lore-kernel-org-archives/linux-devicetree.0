@@ -1,140 +1,115 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 3/3] ARM: dts: gose: add composite video input
-Date: Tue, 18 Oct 2016 18:50:39 +0300
-Message-ID: <2343930.U8AiEBNJBl@avalon>
-References: <1476802943-5189-1-git-send-email-ulrich.hecht+renesas@gmail.com> <1476802943-5189-4-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 20/23] ASoC: add simple-graph-card document
+Date: Tue, 18 Oct 2016 10:53:31 -0500
+Message-ID: <CAL_JsqJY-KtoR7C-vKBP1p3XRKkiVHBM9mzCdV3_P2DSp-xw9A@mail.gmail.com>
+References: <87shrv4c8x.wl%kuninori.morimoto.gx@renesas.com> <87zim32xbo.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1476802943-5189-4-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: horms@verge.net.au, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, magnus.damm@gmail.com, hans.verkuil@cisco.com, niklas.soderlund@ragnatech.se, geert@linux-m68k.org, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87zim32xbo.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Laurent <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Guennadi <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulrich,
-
-(CC'ing the device tree mailing list - for real this time)
-
-Thank you for the patch.
-
-On Tuesday 18 Oct 2016 17:02:23 Ulrich Hecht wrote:
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+On Mon, Oct 17, 2016 at 3:38 AM, Kuninori Morimoto
+<kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+>
+> From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 > ---
->  arch/arm/boot/dts/r8a7793-gose.dts | 36 ++++++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/r8a7793-gose.dts
-> b/arch/arm/boot/dts/r8a7793-gose.dts index a47ea4b..2606021 100644
-> --- a/arch/arm/boot/dts/r8a7793-gose.dts
-> +++ b/arch/arm/boot/dts/r8a7793-gose.dts
-> @@ -390,6 +390,11 @@
->  		groups = "vin0_data24", "vin0_sync", "vin0_clkenb", 
-"vin0_clk";
->  		function = "vin0";
->  	};
+>  .../bindings/sound/simple-graph-card.txt           | 65 ++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/simple-graph-card.txt
+>
+> diff --git a/Documentation/devicetree/bindings/sound/simple-graph-card.txt b/Documentation/devicetree/bindings/sound/simple-graph-card.txt
+> new file mode 100644
+> index 0000000..c191c0d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/simple-graph-card.txt
+> @@ -0,0 +1,65 @@
+> +Simple-Graph-Card:
 > +
-> +	vin1_pins: vin1 {
-> +		groups = "vin1_data8", "vin1_clk";
-> +		function = "vin1";
-> +	};
->  };
-> 
->  &ether {
-> @@ -515,6 +520,19 @@
->  		reg = <0x12>;
->  	};
-> 
-> +	composite-in@20 {
-> +		compatible = "adi,adv7180";
-> +		reg = <0x20>;
-> +		remote = <&vin1>;
+> +Simple-Graph-Card specifies audio DAI connections of SoC <-> codec.
+> +It is based on common bindings for device graphs.
+> +see ${LINUX}/Documentation/devicetree/bindings/graph.txt
 > +
-> +		port {
-> +			adv7180: endpoint {
-> +				bus-width = <8>;
-> +				remote-endpoint = <&vin1ep>;
-> +			};
-> +		};
-
-As explained before, you need to update the ADV7180 DT bindings first to 
-document ports. I've discussed this with Hans last week, and we agreed that DT 
-should model physical ports. Unfortunately the ADV7180 comes in four different 
-packages with different feature sets that affect ports.
-
-ADV7180  K CP32 Z               32-Lead Lead Frame Chip Scale Package
-ADV7180  B CP32 Z               32-Lead Lead Frame Chip Scale Package
-ADV7180 WB CP32 Z               32-Lead Lead Frame Chip Scale Package
-
-ADV7180  B CP   Z               40-Lead Lead Frame Chip Scale Package
-ADV7180 WB CP   Z               40-Lead Lead Frame Chip Scale Package
-
-ADV7180  K ST48 Z               48-Lead Low Profile Quad Flat Package
-ADV7180  B ST48 Z               48-Lead Low Profile Quad Flat Package
-ADV7180 WB ST48 Z               48-Lead Low Profile Quad Flat Package
-
-ADV7180  B ST   Z               64-Lead Low Profile Quad Flat Package
-ADV7180 WB ST   Z               64-Lead Low Profile Quad Flat Package
-
-W tells whether the part is qualified for automotive applications. It has no 
-impact from a software point of view. K and B indicate the temperature range, 
-and also have no software impact. The Z suffix indicates that the part is RoHS 
-compliant (they all are) and also has no impact.
-
-Unfortunately the W and K/B qualifiers come before the package qualifier. I'm 
-not sure whether we could simply drop W, K/B and W and specify the following 
-compatible strings
-
-- adv7180cp32
-- adv7180cp
-- adv7180st48
-- adv7180st
-
-or if we need more compatible strings that would match the full chip name. 
-Feedback on that from the device tree maintainers would be appreciated.
-
-Regardless of what compatible strings end up being used, the bindings should 
-document 3 or 6 input ports depending on the model, and one output port. You 
-can number the input ports from 0 to 2 or 0 to 5 depending on the model and 
-the output port 3 or 6. Another option would be to number the output port 0 
-and the input ports 1 to 3 or 1 to 6 depending on the model. That would give a 
-fixed number for the output port across all models, but might be a bit 
-consuming as most bindings number input ports before output ports.
-
-For the Gose board you should then add one composite connector to the device 
-tree ("composite-video-connector") and connect it to port 0 of the 
-ADV7180WBCP32.
-
-> +	};
+> +Basically, Simple-Graph-Card is same as Simple-Card, but using graph style.
+> +see ${LINUX}/Documentation/devicetree/bindings/sound/simple-card.txt
 > +
->  	hdmi@39 {
->  		compatible = "adi,adv7511w";
->  		reg = <0x39>;
-> @@ -622,3 +640,21 @@
->  		};
->  	};
->  };
+> +Below are same as Simple-Card.
 > +
-> +/* composite video input */
-> +&vin1 {
-> +	pinctrl-0 = <&vin1_pins>;
-> +	pinctrl-names = "default";
+> +- simple-audio-card,name
+> +- simple-audio-card,widgets
+> +- simple-audio-card,routing
+> +- simple-audio-card,mclk-fs
+> +- simple-audio-card,hp-det-gpio
+> +- simple-audio-card,mic-det-gpio
+> +- simple-audio-card,format
+> +- simple-audio-card,frame-master
+> +- simple-audio-card,bitclock-master
+> +- simple-audio-card,bitclock-inversion
+> +- simple-audio-card,frame-inversion
+> +- simple-audio-card,mclk-fs
+> +- simple-audio-card,dai-tdm-slot-num
+> +- simple-audio-card,dai-tdm-slot-width
+> +- clocks / system-clock-frequency
 > +
-> +	status = "okay";
+> +This Simple-Graph-Card should be located as CPU driver's port[s].
+> +And then, CPU driver need to probe it by itself.
 > +
-> +	port {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+> +Required properties:
 > +
-> +		vin1ep: endpoint {
-> +			remote-endpoint = <&adv7180>;
-> +			bus-width = <8>;
-> +		};
-> +	};
+> +- compatible                           : "asoc-simple-graph-card";
+> +- type                                 : "sound";
+> +
+> +Example
+> +
+> +ak4643: codec@12 {
+> +       compatible = "asahi-kasei,ak4643";
+> +       ...
+> +       port {
+> +               type = "sound";
+> +               ak4643_port: endpoint {
+> +                       remote-endpoint = <&rcar_ak4643_port>;
+> +                       clocks = <&audio_clock>;
+
+This belongs in the codec node.
+
+> +               };
+> +       };
 > +};
+> +
+> +rcar_sound {
+> +       ...
+> +       port {
+> +               compatible = "asoc-simple-graph-card";
+> +
+> +               simple-audio-card,format = "left_j";
+> +               simple-audio-card,bitclock-master = <&ak4643_port>;
+> +               simple-audio-card,frame-master = <&ak4643_port>;
 
--- 
-Regards,
+Don't add a bunch of properties with in port and endpoint nodes. The
+purpose is to describe the graph. Put these in the parent node or
+perhaps the codec node.
 
-Laurent Pinchart
+> +               type = "sound";
+
+I'm still not convinced this is necessary. This is implied either by
+the fact there is only one port or perhaps the compatible string.
+
+> +               rcar_ak4643_port: endpoint {
+> +                       remote-endpoint = <&ak4643_port>;
+> +                       playback = <&ssi0 &src2 &dvc0>;
+> +                       capture  = <&ssi1 &src3 &dvc1>;
+> +               };
+> +       };
+> +};
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
