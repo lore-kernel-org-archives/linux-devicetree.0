@@ -1,98 +1,90 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] clk: hisilicon: add CRG driver for Hi3516CV300 SoC
-Date: Tue, 18 Oct 2016 10:58:35 -0500
-Message-ID: <20161018155835.qyoffwznacdac46y@rob-hp-laptop>
-References: <20161017120705.3726-1-wenpan@hisilicon.com>
- <20161017120705.3726-3-wenpan@hisilicon.com>
+Subject: Re: [RFC PATCH 1/3] ARM: dts: Add support for OX820 and Pogoplug V3
+Date: Tue, 18 Oct 2016 11:03:17 -0500
+Message-ID: <20161018160317.dscfcbhkywmy3c37@rob-hp-laptop>
+References: <20161017124001.23820-1-narmstrong@baylibre.com>
+ <20161017124001.23820-2-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161017120705.3726-3-wenpan@hisilicon.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Pan Wen <wenpan@hisilicon.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, linux@armlinux.org.uk, xuwei5@hisilicon.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, howell.yang@hisilicon.com, xuejiancheng@hisilicon.com, jalen.hsu@hisilicon.com, lvkuanliang@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, kevin.lixu@hisilicon.com
+In-Reply-To: <20161017124001.23820-2-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-oxnas@lists.tuxfamily.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 17, 2016 at 08:07:04PM +0800, Pan Wen wrote:
-> Add CRG driver for Hi3516CV300 SoC. CRG(Clock and Reset
-> Generator) module generates clock and reset signals used
-> by other module blocks on SoC.
+On Mon, Oct 17, 2016 at 02:39:59PM +0200, Neil Armstrong wrote:
+> Add device tree for the Oxford Seminconductor OX820 SoC and the
+> Cloud Engines PogoPlug v3 board.
+> Add the SoC and board compatible strings to oxnas bindings.
 > 
-> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  .../devicetree/bindings/clock/hisi-crg.txt         |  50 ++++
->  drivers/clk/hisilicon/Kconfig                      |   8 +
->  drivers/clk/hisilicon/Makefile                     |   1 +
->  drivers/clk/hisilicon/crg-hi3516cv300.c            | 330 +++++++++++++++++++++
->  drivers/clk/hisilicon/crg.h                        |  34 +++
->  include/dt-bindings/clock/hi3516cv300-clock.h      |  48 +++
->  6 files changed, 471 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/hisi-crg.txt
->  create mode 100644 drivers/clk/hisilicon/crg-hi3516cv300.c
->  create mode 100644 drivers/clk/hisilicon/crg.h
->  create mode 100644 include/dt-bindings/clock/hi3516cv300-clock.h
+>  Documentation/devicetree/bindings/arm/oxnas.txt    |   5 +
+>  arch/arm/boot/dts/Makefile                         |   3 +-
+>  .../boot/dts/cloudengines-pogoplug-series-3.dts    |  60 +++++
+>  arch/arm/boot/dts/ox820.dtsi                       | 259 +++++++++++++++++++++
+>  4 files changed, 326 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts
+>  create mode 100644 arch/arm/boot/dts/ox820.dtsi
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/hisi-crg.txt b/Documentation/devicetree/bindings/clock/hisi-crg.txt
+> diff --git a/Documentation/devicetree/bindings/arm/oxnas.txt b/Documentation/devicetree/bindings/arm/oxnas.txt
+> index b9e4971..ac64e60 100644
+> --- a/Documentation/devicetree/bindings/arm/oxnas.txt
+> +++ b/Documentation/devicetree/bindings/arm/oxnas.txt
+> @@ -5,5 +5,10 @@ Boards with the OX810SE SoC shall have the following properties:
+>    Required root node property:
+>      compatible: "oxsemi,ox810se"
+>  
+> +Boards with the OX820 SoC shall have the following properties:
+> +  Required root node property:
+> +    compatible: "oxsemi,ox820"
+> +
+>  Board compatible values:
+>    - "wd,mbwe" (OX810SE)
+> +  - "cloudengines,pogoplugv3" (OX820)
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index faacd52..5d9e8d5 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -588,7 +588,8 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
+>  dtb-$(CONFIG_ARCH_PRIMA2) += \
+>  	prima2-evb.dtb
+>  dtb-$(CONFIG_ARCH_OXNAS) += \
+> -	wd-mbwe.dtb
+> +	wd-mbwe.dtb \
+> +	cloudengines-pogoplug-series-3.dtb
+>  dtb-$(CONFIG_ARCH_QCOM) += \
+>  	qcom-apq8060-dragonboard.dtb \
+>  	qcom-apq8064-arrow-sd-600eval.dtb \
+> diff --git a/arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts b/arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts
 > new file mode 100644
-> index 0000000..cc60b3d
+> index 0000000..78d9149
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/hisi-crg.txt
-> @@ -0,0 +1,50 @@
-> +* HiSilicon Clock and Reset Generator(CRG)
+> +++ b/arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts
+> @@ -0,0 +1,60 @@
+> +/*
+> + * cloudengines-pogoplug-series-3.dtsi - Device tree file for Cloud Engines PogoPlug Series 3
+> + *
+> + * Copyright (C) 2016 Neil Armstrong <narmstrong@baylibre.com>
+> + *
+> + * Licensed under GPLv2 or later
+> + */
+> +
+> +/dts-v1/;
+> +#include "ox820.dtsi"
+> +
+> +/ {
+> +	model = "Cloud Engines PogoPlug Series 3";
+> +
+> +	compatible = "cloudengines,pogoplugv3", "oxsemi,ox820";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200n8 earlyprintk=serial";
 
-Seems kind of generic given there's already various HiSi clock bindings 
-documented.
+Use stdout-path and I don't think "earlyprintk=serial" is valid.
 
-> +
-> +The CRG module provides clock and reset signals to various
-> +modules within the SoC.
-> +
-> +This binding uses the following bindings:
-> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +    Documentation/devicetree/bindings/reset/reset.txt
-> +
-> +Required Properties:
-> +
-> +- compatible: should be one of the following.
-> +  - "hisilicon,hi3516cv300-crg"
-> +  - "hisilicon,hi3516cv300-sysctrl"
-> +  - "hisilicon,hi3519-crg"
+With that,
 
-There is already a binding for this. Please merge them.
-
-> +  - "hisilicon,hi3798cv200-crg"
-> +  - "hisilicon,hi3798cv200-sysctrl"
-> +
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +
-> +- #clock-cells: should be 1.
-> +
-> +Each clock is assigned an identifier and client nodes use this identifier
-> +to specify the clock which they consume.
-> +
-> +All these identifier could be found in <dt-bindings/clock/hi3519-clock.h>.
-> +
-> +- #reset-cells: should be 2.
-> +
-> +A reset signal can be controlled by writing a bit register in the CRG module.
-> +The reset specifier consists of two cells. The first cell represents the
-> +register offset relative to the base address. The second cell represents the
-> +bit index in the register.
-> +
-> +Example: CRG nodes
-> +CRG: clock-reset-controller@12010000 {
-> +	compatible = "hisilicon,hi3519-crg";
-> +	reg = <0x12010000 0x10000>;
-> +	#clock-cells = <1>;
-> +	#reset-cells = <2>;
-> +};
-> +
-> +Example: consumer nodes
-> +i2c0: i2c@12110000 {
-> +	compatible = "hisilicon,hi3519-i2c";
-> +	reg = <0x12110000 0x1000>;
-> +	clocks = <&CRG HI3519_I2C0_RST>;
-> +	resets = <&CRG 0xe4 0>;
-> +};
+Acked-by: Rob Herring <robh@kernel.org>
