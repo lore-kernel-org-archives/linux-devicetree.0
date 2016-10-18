@@ -1,44 +1,43 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] ARM: sti: stih410-clocks: Add PROC_STFE as a critical clock
-Date: Tue, 18 Oct 2016 16:35:57 +0100
-Message-ID: <1476804957-24000-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Zach Brown <zach.brown@ni.com>
+Subject: [PATCH 1/2] sdhci: Add device tree property broken-highspeed
+Date: Tue, 18 Oct 2016 10:37:05 -0500
+Message-ID: <1476805026-677-2-git-send-email-zach.brown@ni.com>
+References: <1476805026-677-1-git-send-email-zach.brown@ni.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1476805026-677-1-git-send-email-zach.brown@ni.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ulf.hansson@linaro.org
+Cc: adrian.hunter@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zach.brown@ni.com
 List-Id: devicetree@vger.kernel.org
 
-Once the ST frontend demux HW IP has been enabled, the clock can't
-be disabled otherwise the system will hang and the board will
-be unserviceable.
+Certain board configurations can make highspeed malfuction due to timing
+issues. In these cases a way is needed to force the controller and card
+into standard speed even if they otherwise appear to be capable of
+highspeed.
 
-To allow balanced clock enable/disable calls in the driver we use
-the critical clock infrastructure to take an extra reference on the
-clock so the clock will never actually be disabled.
+The broken-highspeed property will let the sdhci driver know that
+highspeed will not work.
 
-Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Zach Brown <zach.brown@ni.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/stih410-clock.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stih410-clock.dtsi b/arch/arm/boot/dts/stih410-clock.dtsi
-index 8598eff..07c8ef9 100644
---- a/arch/arm/boot/dts/stih410-clock.dtsi
-+++ b/arch/arm/boot/dts/stih410-clock.dtsi
-@@ -208,7 +208,8 @@
- 						     "clk-clust-hades",
- 						     "clk-hwpe-hades",
- 						     "clk-fc-hades";
--				clock-critical = <CLK_ICN_CPU>,
-+				clock-critical = <CLK_PROC_STFE>,
-+						 <CLK_ICN_CPU>,
- 						 <CLK_TX_ICN_DMU>,
- 						 <CLK_EXT2F_A9>,
- 						 <CLK_ICN_LMI>,
+diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+index 8a37782..a2b298c 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+@@ -52,6 +52,8 @@ Optional properties:
+ - no-sdio: controller is limited to send sdio cmd during initialization
+ - no-sd: controller is limited to send sd cmd during initialization
+ - no-mmc: controller is limited to send mmc cmd during initialization
++- broken-highspeed: Highspeed is broken, even if the controller and card
++  themselves claim they support highspeed.
+ 
+ *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+ polarity properties, we have to fix the meaning of the "normal" and "inverted"
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
