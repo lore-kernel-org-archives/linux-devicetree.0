@@ -1,79 +1,38 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] Documentation: dtb: lm87: Add hwmon binding
- documentation.
-Date: Tue, 18 Oct 2016 07:39:28 -0500
-Message-ID: <20161018123928.xlyqde3ziuyofxv2@rob-hp-laptop>
-References: <20161010224017.23362-1-mahoda.ratnayaka@alliedtelesis.co.nz>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: rockchip-thermal: fix the misleading
+ description
+Date: Tue, 18 Oct 2016 07:41:20 -0500
+Message-ID: <20161018124120.vgbamfjsgvf6ntxg@rob-hp-laptop>
+References: <1476151655-18415-1-git-send-email-shawn.lin@rock-chips.com>
+ <1476151655-18415-2-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161010224017.23362-1-mahoda.ratnayaka@alliedtelesis.co.nz>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>
-Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <1476151655-18415-2-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 11, 2016 at 11:40:17AM +1300, Mahoda Ratnayaka wrote:
-> This patch adds lm87 hwmon device tree node documentation.
+On Tue, Oct 11, 2016 at 10:07:35AM +0800, Shawn Lin wrote:
+> "rockchip,hw-tshut-temp", "rockchip,hw-tshut-mode" and
+> "rockchip,hw-tshut-polarity" are not a required properties
+> actually as the code could also work by loading the default
+> settings there. So it is apprently misleading, although we
+> prefer to get these from DT. And it seems we miss the 'rockchip,grf'
+> here which should also be an optional property.
 > 
-> Signed-off-by: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
 > 
-> Notes:
->     Changes since v1:
->      As suggested include all the changes are moved in
->      to the same patch and the all the optional properties
->      are now defined instead of using a single variable to
->      indicate those properties.
->     
->     Changes since v2:
->      Changed has-vcc-5v to use regulator binding and fixed
->      a minor copy paste mistake.
+> Changes in v2: None
 > 
->  Documentation/devicetree/bindings/hwmon/lm87.txt | 30 ++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/lm87.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/lm87.txt b/Documentation/devicetree/bindings/hwmon/lm87.txt
-> new file mode 100644
-> index 0000000..ce93d45
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/lm87.txt
-> @@ -0,0 +1,30 @@
-> +*LM87 hwmon sensor.
-> +
-> +Required properties:
-> +- compatible: Should be
-> +	"ti,lm87"
-> +
-> +- reg: I2C address
-> +
-> +optional properties:
-> +- has-temp3: This configures pins 18 and 19 to be used as a second
-> +             remote temperature sensing channel. By default the pins
-> +             are configured as voltage input pins in0 and in5.
-> +
-> +- has-in6: When set, pin 5 is configured to be used as voltage input
-> +           in6. Otherwise the pin is set as FAN1 input.
-> +
-> +- has-in7: When set, pin 6 is configured to be used as voltage input
-> +           in7. Otherwise the pin is set as FAN2 input.
-> +
-> +- vcc-supply: sets the nominal voltage for internal VCC measurement to 5V.
-> +              Default is 3.3V.
+>  Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
-The description here needs updating.
-
-> +
-> +Example:
-> +
-> +lm87@2e {
-> +	compatible = "ti,lm87";
-> +	reg = <0x2e>;
-> +	has-temp3;
-> +	vcc-supply = <&reg_5v0>;
-> +};
-> -- 
-> 2.10.1
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
