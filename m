@@ -1,323 +1,197 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH] mtd: nand: Add OX820 NAND Support
-Date: Tue, 18 Oct 2016 22:17:44 +0200
-Message-ID: <20161018221744.5e574e82@bbrezillon>
-References: <20161018090927.1990-1-narmstrong@baylibre.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: memory: da8xx-ddrctl: new driver
+Date: Tue, 18 Oct 2016 23:45:39 +0300
+Message-ID: <5932848.mWNUo4iXtK@avalon>
+References: <1476721850-454-1-git-send-email-bgolaszewski@baylibre.com> <1476721850-454-2-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161018090927.1990-1-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1476721850-454-2-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
+Hi Bartosz,
 
-On Tue, 18 Oct 2016 11:09:27 +0200
-Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+Thank you for the patch.
 
-> Add NAND driver to support the Oxford Semiconductor OX820 NAND Controller.
-> This is a simple memory mapped NAND controller with single chip select and
-> software ECC.
+On Monday 17 Oct 2016 18:30:48 Bartosz Golaszewski wrote:
+> Create a new driver for the da8xx DDR2/mDDR controller and implement
+> support for writing to the Peripheral Bus Burst Priority Register.
 > 
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 > ---
->  .../devicetree/bindings/mtd/oxnas-nand.txt         |  24 ++++
->  drivers/mtd/nand/Kconfig                           |   5 +
->  drivers/mtd/nand/Makefile                          |   1 +
->  drivers/mtd/nand/oxnas_nand.c                      | 144 +++++++++++++++++++++
->  4 files changed, 174 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/oxnas-nand.txt
->  create mode 100644 drivers/mtd/nand/oxnas_nand.c
+>  .../memory-controllers/ti-da8xx-ddrctl.txt         | 25 +++++++
+>  drivers/memory/Kconfig                             |  8 +++
+>  drivers/memory/Makefile                            |  1 +
+>  drivers/memory/da8xx-ddrctl.c                      | 77 +++++++++++++++++++
+>  4 files changed, 111 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
+> create mode 100644 drivers/memory/da8xx-ddrctl.c
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/oxnas-nand.txt b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
+> diff --git
+> a/Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
+> b/Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
 > new file mode 100644
-> index 0000000..83b684d
+> index 0000000..e340404
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
-> @@ -0,0 +1,24 @@
-> +* Oxford Semiconductor OXNAS NAND Controller
+> +++
+> b/Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
+> @@ -0,0 +1,25 @@
+> +* Device tree bindings for Texas Instruments da8xx DDR2/mDDR memory
+> controller
 > +
-> +Please refer to nand.txt for generic information regarding MTD NAND bindings.
+> +The DDR2/mDDR memory controller present on Texas Instruments da8xx SoCs
+> memory
+> +maps a set of registers which allow to tweak the controller's behavior.
+> +
+> +Documentation:
+> +OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh82c/spruh82c.pdf
 > +
 > +Required properties:
-> + - compatible: "oxsemi,ox820-nand"
-> + - reg: Base address and length for NAND mapped memory.
 > +
-> +Optional Properties:
-> + - clocks: phandle to the NAND gate clock if needed.
-> + - resets: phandle to the NAND reset control if needed.
+> +- compatible:		"ti,da850-ddrctl"
+
+Don't you need a reg property ?
+
+> +Optional properties:
 > +
-> +Example:
+> +- ti,pr-old-count:	Priority raise old counter. Specifies the number of
+> +			memory transfers after which the DDR2/mDDR memory
+> +			controller will elevate the priority of the oldest
+> +			command in the command FIFO. Must be between 0-255.
+
+Isn't this a system configuration more than a hardware description ?
+
+> +Example for da850 shown below.
 > +
-> +nand: nand@41000000 {
-> +	compatible = "oxsemi,ox820-nand";
-> +	reg = <0x41000000 0x100000>;
-> +	nand-ecc-mode = "soft";
-> +	clocks = <&stdclk CLK_820_NAND>;
-> +	resets = <&reset RESET_NAND>;
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	status = "disabled";
+> +ddrctl {
+> +	compatible = "ti,da850-ddrctl";
+> +	ti,pr-old-count = <0x20>;
 > +};
-
-Can you switch to new DT representation for NAND controllers, with one
-node for the NAND controller and NAND devices connected to this NAND
-controller defined as sub-nodes of this NAND controller [1]?
-
-> diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
-> index 7b7a887..c023125 100644
-> --- a/drivers/mtd/nand/Kconfig
-> +++ b/drivers/mtd/nand/Kconfig
-> @@ -426,6 +426,11 @@ config MTD_NAND_ORION
->  	  No board specific support is done by this driver, each board
->  	  must advertise a platform_device for the driver to attach.
->  
-> +config MTD_NAND_OXNAS
-> +	tristate "NAND Flash support for Oxford Semiconductor SoC"
+> diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
+> index 4b4c0c3..ec80e35 100644
+> --- a/drivers/memory/Kconfig
+> +++ b/drivers/memory/Kconfig
+> @@ -134,6 +134,14 @@ config MTK_SMI
+>  	  mainly help enable/disable iommu and control the power domain and
+>  	  clocks for each local arbiter.
+> 
+> +config DA8XX_DDRCTL
+> +	bool "Texas Instruments da8xx DDR2/mDDR driver"
+> +	depends on ARCH_DAVINCI_DA8XX
 > +	help
-> +	  This enables the NAND flash controller on Oxford Semiconductor SoCs.
+> +	  This driver is for the DDR2/mDDR Memory Controller present on
+> +	  Texas Instruments da8xx SoCs. It's used to tweak various memory
+> +	  controller configuration options.
 > +
->  config MTD_NAND_FSL_ELBC
->  	tristate "NAND support for Freescale eLBC controllers"
->  	depends on FSL_SOC
-> diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
-> index cafde6f..05fc054 100644
-> --- a/drivers/mtd/nand/Makefile
-> +++ b/drivers/mtd/nand/Makefile
-> @@ -35,6 +35,7 @@ obj-$(CONFIG_MTD_NAND_TMIO)		+= tmio_nand.o
->  obj-$(CONFIG_MTD_NAND_PLATFORM)		+= plat_nand.o
->  obj-$(CONFIG_MTD_NAND_PASEMI)		+= pasemi_nand.o
->  obj-$(CONFIG_MTD_NAND_ORION)		+= orion_nand.o
-> +obj-$(CONFIG_MTD_NAND_OXNAS)		+= oxnas_nand.o
->  obj-$(CONFIG_MTD_NAND_FSL_ELBC)		+= fsl_elbc_nand.o
->  obj-$(CONFIG_MTD_NAND_FSL_IFC)		+= fsl_ifc_nand.o
->  obj-$(CONFIG_MTD_NAND_FSL_UPM)		+= fsl_upm.o
-> diff --git a/drivers/mtd/nand/oxnas_nand.c b/drivers/mtd/nand/oxnas_nand.c
+>  source "drivers/memory/samsung/Kconfig"
+>  source "drivers/memory/tegra/Kconfig"
+> 
+> diff --git a/drivers/memory/Makefile b/drivers/memory/Makefile
+> index b20ae38..e88097fb 100644
+> --- a/drivers/memory/Makefile
+> +++ b/drivers/memory/Makefile
+> @@ -17,6 +17,7 @@ obj-$(CONFIG_MVEBU_DEVBUS)	+= mvebu-devbus.o
+>  obj-$(CONFIG_TEGRA20_MC)	+= tegra20-mc.o
+>  obj-$(CONFIG_JZ4780_NEMC)	+= jz4780-nemc.o
+>  obj-$(CONFIG_MTK_SMI)		+= mtk-smi.o
+> +obj-$(CONFIG_DA8XX_DDRCTL)	+= da8xx-ddrctl.o
+> 
+>  obj-$(CONFIG_SAMSUNG_MC)	+= samsung/
+>  obj-$(CONFIG_TEGRA_MC)		+= tegra/
+> diff --git a/drivers/memory/da8xx-ddrctl.c b/drivers/memory/da8xx-ddrctl.c
 > new file mode 100644
-> index 0000000..ee402ab
+> index 0000000..dcd0a61
 > --- /dev/null
-> +++ b/drivers/mtd/nand/oxnas_nand.c
-> @@ -0,0 +1,144 @@
+> +++ b/drivers/memory/da8xx-ddrctl.c
+> @@ -0,0 +1,77 @@
 > +/*
-> + * Oxford Semiconductor OXNAS NAND driver
+> + * TI da8xx DDR2/mDDR controller driver
 > + *
-> + * Heavily based on plat_nand.c :
-> + * Author: Vitaly Wool <vitalywool-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + * Copyright (C) 2016 BayLibre SAS
+> + *
+> + * Author:
+> + *   Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 > + *
 > + * This program is free software; you can redistribute it and/or modify
 > + * it under the terms of the GNU General Public License version 2 as
 > + * published by the Free Software Foundation.
-> + *
 > + */
 > +
-> +#include <linux/err.h>
-> +#include <linux/io.h>
 > +#include <linux/module.h>
+> +#include <linux/of.h>
 > +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/clk.h>
-> +#include <linux/reset.h>
-> +#include <linux/mtd/mtd.h>
-> +#include <linux/mtd/nand.h>
-> +#include <linux/mtd/partitions.h>
+> +#include <linux/io.h>
 > +
-> +/* nand commands */
-> +#define NAND_CMD_ALE		BIT(18)
-> +#define NAND_CMD_CLE		BIT(19)
-> +#define NAND_CMD_CS		0
-
-I guess this is zero here because you only support connecting a NAND to
-CS0.
-It's probably something like
-
-OX820_NAND_CS(x)		((x) << CS_FIELD_SHIFT)
-
-> +#define NAND_CMD_RESET		0xff
-
-Why do you have to redefine it? it's already defined here [2].
-
-> +#define NAND_CMD		(NAND_CMD_CS | NAND_CMD_CLE)
-> +#define NAND_ADDR		(NAND_CMD_CS | NAND_CMD_ALE)
-> +#define NAND_DATA		(NAND_CMD_CS)
-
-Please prefix those macros with OX820, has stated above, this can
-conflict with generic definitions.
-Also, I'm not sure you should pass the CS information here.
-
+> +#define DA8XX_DDR_CTL_BASE	0xB0000000
+> +#define DA8XX_PBBPR_OFFSET	0x00000020
+> +#define DA8XX_PBBPR_REG(p)	((p) + DA8XX_PBBPR_OFFSET)
 > +
-> +struct oxnas_nand_data {
-> +	struct nand_chip	chip;
-> +	void __iomem		*io_base;
-> +	struct clk		*clk;
-> +};
-
-Even if your driver does not seem to support connecting several chips
-to the same controller, I'd like you to clearly separate the NAND
-controller and NAND chip objects:
-
-#define OXNAS_NAND_MAX_CHIPS	1
-
-struct oxnas_nand_controller {
-	struct nand_hw_control base;
-	void __iomem *io_base;
-	struct clk *clk;
-	struct nand_chip *chips[OXNAS_NAND_MAX_CHIPS];
-}
-
+> +#define DA8XX_PBBPR_MAX		0xff
 > +
-> +static void oxnas_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
-> +				unsigned int ctrl)
-> +{
-> +	struct nand_chip *this = mtd->priv;
-> +	unsigned long nandaddr = (unsigned long) this->IO_ADDR_W;
-
-Please use the ->io_base field directly, and do not use ->IO_ADDR_W/R
-(I'd like to get rid of them at some point).
-
-Also, declare the nandaddr as a void __iomem *, and use the '+'
-operator instead of '|'.
-
+> +static void da8xx_ddrctl_set_pbbpr(void __iomem *ddrctl, struct device
+> *dev) +{
+> +	struct device_node *node = dev->of_node;
+> +	u32 pr_old_count;
+> +	int ret;
 > +
-> +	if (ctrl & NAND_CTRL_CHANGE) {
-> +		nandaddr &= ~(NAND_CMD | NAND_ADDR);
-
-This is not needed.
-
-> +		if (ctrl & NAND_CLE)
-> +			nandaddr |= NAND_CMD;
-> +		else if (ctrl & NAND_ALE)
-> +			nandaddr |= NAND_ADDR;
-> +		this->IO_ADDR_W = (void __iomem *) nandaddr;
-
-This is not needed, is it?
-
+> +	ret = of_property_read_u32(node, "ti,pr-old-count", &pr_old_count);
+> +	if (ret)
+> +		return;
+> +
+> +	if (pr_old_count > DA8XX_PBBPR_MAX) {
+> +		dev_warn(dev, "priority raise old counter value too high\n");
+> +		return;
 > +	}
 > +
-> +	if (cmd != NAND_CMD_NONE)
-> +		writeb(cmd, (void __iomem *) nandaddr);
+> +	__raw_writel(pr_old_count, DA8XX_PBBPR_REG(ddrctl));
 > +}
 > +
-> +/*
-> + * Probe for the NAND device.
-> + */
-> +static int oxnas_nand_probe(struct platform_device *pdev)
+> +static int da8xx_ddrctl_probe(struct platform_device *pdev)
 > +{
-> +	struct oxnas_nand_data *data;
-> +	struct mtd_info *mtd;
-> +	struct resource *res;
-> +	int err = 0;
+> +	struct device *dev = &pdev->dev;
+> +	void __iomem *ddrctl;
 > +
-> +	/* Allocate memory for the device structure (and zero it) */
-> +	data = devm_kzalloc(&pdev->dev, sizeof(struct oxnas_nand_data),
-> +			    GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	data->io_base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(data->io_base))
-> +		return PTR_ERR(data->io_base);
-> +
-> +	data->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(data->clk))
-> +		data->clk = NULL;
-> +
-> +	nand_set_flash_node(&data->chip, pdev->dev.of_node);
-> +	mtd = nand_to_mtd(&data->chip);
-> +	mtd->dev.parent = &pdev->dev;
-> +	mtd->priv = &data->chip;
-> +
-> +	data->chip.IO_ADDR_R = data->io_base;
-> +	data->chip.IO_ADDR_W = data->io_base;
-
-As I said above, don't use these fields.
-
-> +	data->chip.cmd_ctrl = oxnas_nand_cmd_ctrl;
-> +	data->chip.chip_delay = 30;
-> +	data->chip.ecc.mode = NAND_ECC_SOFT;
-> +	data->chip.ecc.algo = NAND_ECC_HAMMING;
-
-Probably a good idea to support soft ECC as well...
-
-> +
-> +	platform_set_drvdata(pdev, data);
-> +
-> +	clk_prepare_enable(data->clk);
-> +	device_reset_optional(&pdev->dev);
-> +
-> +	/* Scan to find existence of the device */
-> +	if (nand_scan(mtd, 1)) {
-
-Why not returning nand_scan() error code?
-
-> +		err = -ENXIO;
-> +		goto out;
-
-Return directly here.
-
+> +	ddrctl = ioremap(DA8XX_DDR_CTL_BASE, SZ_256);
+> +	if (!ddrctl) {
+> +		dev_err(dev, "unable to map memory controller registers\n");
+> +		return -EIO;
 > +	}
 > +
-> +	err = mtd_device_parse_register(mtd, NULL, NULL, NULL, 0);
-
-Use mtd_device_register() here.
-
-> +	if (!err)
-> +		return err;
+> +	da8xx_ddrctl_set_pbbpr(ddrctl, dev);
 > +
-> +	nand_release(mtd);
-
-Why not
-
-	if (err)
-		nand_release(mtd);
-
-> +out:
-
-Drop this label.
-
-> +	return err;
-> +}
-> +
-> +static int oxnas_nand_remove(struct platform_device *pdev)
-> +{
-> +	struct oxnas_nand_data *data = platform_get_drvdata(pdev);
-> +
-> +	nand_release(nand_to_mtd(&data->chip));
+> +	iounmap(ddrctl);
 > +
 > +	return 0;
 > +}
 > +
-> +static const struct of_device_id oxnas_nand_match[] = {
-> +	{ .compatible = "oxsemi,ox820-nand" },
-> +	{},
+> +static const struct of_device_id da8xx_ddrctl_of_match[] = {
+> +	{ .compatible = "ti,da850-ddrctl", },
+> +	{ },
 > +};
-> +MODULE_DEVICE_TABLE(of, oxnas_nand_match);
 > +
-> +static struct platform_driver oxnas_nand_driver = {
-> +	.probe	= oxnas_nand_probe,
-> +	.remove	= oxnas_nand_remove,
-> +	.driver	= {
-> +		.name		= "oxnas_nand",
-> +		.of_match_table = oxnas_nand_match,
+> +static struct platform_driver da8xx_ddrctl_driver = {
+> +	.probe = da8xx_ddrctl_probe,
+> +	.driver = {
+> +		.name = "da8xx-ddrctl",
+> +		.of_match_table = da8xx_ddrctl_of_match,
 > +	},
 > +};
+> +module_platform_driver(da8xx_ddrctl_driver);
 > +
-> +module_platform_driver(oxnas_nand_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Vitaly Wool");
-> +MODULE_DESCRIPTION("Oxnas NAND driver");
-> +MODULE_ALIAS("platform:oxnas_nand");
+> +MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>");
+> +MODULE_DESCRIPTION("TI da8xx DDR2/mDDR controller driver");
+> +MODULE_LICENSE("GPL v2");
 
-Thanks,
+-- 
+Regards,
 
-Boris
+Laurent Pinchart
 
-[1]https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/mtd/nand.txt?id=refs/tags/v4.9-rc1#n57
-[2]http://lxr.free-electrons.com/source/include/linux/mtd/nand.h#L90
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
