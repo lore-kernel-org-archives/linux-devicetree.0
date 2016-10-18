@@ -1,112 +1,130 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 5/10] dt: bindings: Add bindings for Marvell Xenon SD Host Controller
-Date: Tue, 18 Oct 2016 15:29:54 +0200
-Message-ID: <87k2d5eqel.fsf@free-electrons.com>
-References: <cover.990e3503c30c18ecf50dd48bce3d52811f03ca22.1475853198.git-series.gregory.clement@free-electrons.com>
-        <fc0ca2b3140287cbccf5c176a12b7dce25d06a47.1475853198.git-series.gregory.clement@free-electrons.com>
-        <20161010213417.GA11795@rob-hp-laptop>
-        <d95c3035-e3cd-a93c-d408-27f4c8dba589@marvell.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] dt: cpufreq: brcm: New binding document for
+ brcmstb-avs-cpufreq
+Date: Tue, 18 Oct 2016 08:38:16 -0500
+Message-ID: <20161018133816.hcrvy52a67ig4oco@rob-hp-laptop>
+References: <1476310376-32699-1-git-send-email-mmayer@broadcom.com>
+ <1476310376-32699-2-git-send-email-mmayer@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <d95c3035-e3cd-a93c-d408-27f4c8dba589@marvell.com> (Ziji Hu's
-        message of "Tue, 11 Oct 2016 18:03:47 +0800")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Ziji Hu <huziji@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, "Jack(SH) Zhu" <jmzhu@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Shiwu Zhang <zhangshw@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.com>Xu
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1476310376-32699-2-git-send-email-mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
- 
- On mar., oct. 11 2016, Ziji Hu <huziji@marvell.com> wrote:
-[...]
+On Wed, Oct 12, 2016 at 03:12:54PM -0700, Markus Mayer wrote:
+> Add the binding document for the new brcmstb-avs-cpufreq driver.
+> 
+> Signed-off-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/cpufreq/brcm,stb-avs-cpu-freq.txt     | 76 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  7 ++
+>  2 files changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt b/Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
+> new file mode 100644
+> index 0000000..23a2c3d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
+> @@ -0,0 +1,76 @@
+> +Broadcom STB AVS CPUfreq driver bindings
 
->>> +  Different Xenon SDHC release has different register set size.
->>> +  The specific size should also refer to the SOC implementation.
->>> +
->>> +Optional Properties:
->>> +- Slot Index
->>> +  A single Xenon IP can support multiple slots.
->>> +  During initialization, each slot should set corresponding setting bit in
->>> +  some Xenon-specific registers. The corresponding bit is determined by
->>> +  this property.
->>> +  - xenon,slotno = <slot_index>;
->> 
->> Slots should probably be represented as child nodes with the reg 
->> property being the slot number.
->
-> 	Since each SDHC slot is independent, I find it is more
-> convenient to implement each one as independent SD host/MMC host
-> instant.
-> 	Otherwise, a main function should loop and initialize each
-> slot, like sdhci-pci. I prefer to avoiding such a unnecessary main
-> function.
->
-> 	It is very hard to determine the slot number by reg property.
-> 	Xenon slots are likely to be different types. 1st slot might
-> be eMMC and 2nd one might be SD. They might have different register
-> size.
-> 	The register size might also varies in different Xenon versions.
->
+Bindings describe h/w, not drivers or Linux subsystems.
 
-Something that took me a while to figure out is that even it is the same
-hardware block which handle multiple SoCs.
+> +========================================
+> +
+> +A total of three DT nodes are required. One node (brcm,avs-cpu-data-mem)
+> +references the mailbox register used to communicate with the AVS CPU[1]. The
+> +second node (brcm,avs-cpu-l2-intr) is required to trigger an interrupt on
+> +the AVS CPU. The interrupt tells the AVS CPU that it needs to process a
+> +command sent to it by a driver. Interrupting the AVS CPU is mandatory for
+> +commands to be processed.
+> +
+> +The interface also requires a reference to the AVS host interrupt controller,
+> +so a driver can react to interrupts generated by the AVS CPU whenever a command
+> +has been processed. See [2] for more information on the brcm,l2-intc node.
+> +
+> +[1] The AVS CPU is an independent co-processor that runs proprietary
+> +firmware. On some SoCs, this firmware supports DFS and DVFS in addition to
+> +Adaptive Voltage Scaling.
+> +
+> +[2] Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt
+> +
+> +
+> +Node brcm,avs-cpu-data-mem
+> +--------------------------
+> +
+> +Required properties:
+> +- compatible: Sould be one of: brcm,avs-cpu-data-mem,
+> +              brcm,bcm7271-avs-cpu-data-mem or brcm,bcm7268-avs-cpu-data-mem
 
-Each slots is managed by its own set of register. From the point of view
-of the OS, it is as if we have an independent controller for each
-slot.
+This does not match the example. Need to clarify valid combinations and 
+ordering.
 
-But for an obscure reason, some command need to know which slot is
-used. That's why we ended with this property.
+> +- reg: Specifies base physical address and size of the registers.
+> +- interrupts: The interrupt that the AVS CPU will use to interrupt the host
+> +              when a command completed.
+> +- interrupt-parent: The interrupt controller the above interrupt is routed
+> +                    through.
+> +- interrupt-names: The name of the interrupt used to interrupt the host.
+> +
+> +Optional properties:
+> +- None
+> +
+> +Node brcm,avs-cpu-l2-intr
+> +-------------------------
+> +
+> +Required properties:
+> +- compatible: Sould be one of: brcm,avs-cpu-l2-intr,
+> +              brcm,bcm7271-avs-cpu-l2-intr or brcm,bcm7268-avs-cpu-l2-intr
 
-With some example what you had in mind was something like that:
-sdhci@aa0000 {
-		compatible = "marvell,armada-3700-sdhci";
-		reg = <0xaa0000 0x1000>;
-[...]
-                slot0 {
-                      /* slot0 is an eMMC */
-                      reg = <0>;
-                      bus-width = <8>;
-                      xenon,pad-type = "fixed-1-8v";
+ditto.
 
-                }
-                slot1 {
-                      /* slot1 is an SD Card */
-                      reg = <1>;
-                      bus-width = <4>;
-                      xenon,pad-type = "fixed-1-8v";
+> +- reg: Specifies base physical address and size of the registers.
+> +
+> +Optional properties:
+> +- None
+> +
+> +
+> +Example
+> +=======
+> +
+> +	avs_host_l2_intc: interrupt-controller@f04d1200 {
+> +		#interrupt-cells = <1>;
+> +		compatible = "brcm,l2-intc";
+> +		interrupt-parent = <&intc>;
+> +		reg = <0xf04d1200 0x48>;
+> +		interrupt-controller;
+> +		interrupts = <0x0 0x19 0x0>;
+> +		interrupt-names = "avs";
+> +	};
+> +
+> +	avs-cpu-data-mem@f04c4000 {
+> +		compatible = "brcm,bcm7271-avs-cpu-data-mem",
+> +				"brcm,avs-cpu-data-mem";
+> +		reg = <0xf04c4000 0x60>;
+> +		interrupts = <0x1a>;
+> +		interrupt-parent = <&avs_host_l2_intc>;
+> +		interrupt-names = "sw_intr";
+> +	};
+> +
+> +	avs-cpu-l2-intr@f04d1100 {
+> +		compatible = "brcm,bcm7271-avs-cpu-l2-intr",
+> +				"brcm,avs-cpu-l2-intr";
+> +		reg = <0xf04d1100 0x10>;
+> +	};
 
-                }
-	};
+I'm wondering if this would be better described as just 1 node for the 
+AVS cpu? Are there any other functions or resources tied to the cpu 
+beyond your current usage?
 
-But it won't work as each slot uses its own address registers, that why we
-ended with this:
-sdhci@aa0000 {
-                /* slot0 is an eMMC */
-		compatible = "marvell,armada-3700-sdhci";
-		reg = <0xaa0000 0x1000>;
-[...]
-                xenon,slotno = <0>;
-                bus-width = <8>;
-                xenon,pad-type = "fixed-1-8v";
-	};
-sdhci@bb0000 {
-                /* slot1 is an SD Card */
-		compatible = "marvell,armada-3700-sdhci";
-		reg = <0xbb0000 0x1000>;
-[...]
-                xenon,slotno = <1>;
-                bus-width = <4>;
-                xenon,pad-type = "fixed-1-8v";
-	};
-
-I hope it is more clear now.
-
-Gregory
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
