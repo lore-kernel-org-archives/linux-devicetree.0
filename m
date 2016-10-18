@@ -1,60 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] Device bindings documentation updated
- ACPI-enabled platforms not currently supported
-Date: Tue, 18 Oct 2016 09:33:01 -0500
-Message-ID: <20161018143301.vkfsjzytvwqxmsvj@rob-hp-laptop>
-References: <cover.1476462204.git.lolivei@synopsys.com>
- <36f4b1736e36b039af15b13645df0de492f1b6e1.1476462204.git.lolivei@synopsys.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [RESEND PATCH v10 00/11] Add support for FDMA DMA controller and
+ slim core rproc found on STi chipsets
+Date: Tue, 18 Oct 2016 20:13:06 +0530
+Message-ID: <20161018144306.GX2467@localhost>
+References: <1476783556-2501-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <36f4b1736e36b039af15b13645df0de492f1b6e1.1476462204.git.lolivei@synopsys.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Luis.Oliveira@synopsys.com
-Cc: jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, CARLOS.PALMINHA@synopsys.com, Ramiro.Oliveira@synopsys.com
+In-Reply-To: <1476783556-2501-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, ohad@wizery.com, bjorn.andersson@linaro.org, patrice.chotard@st.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 14, 2016 at 05:52:50PM +0100, Luis.Oliveira@synopsys.com wrote:
-> From: Luis Oliveira <lolivei@synopsys.com>
+On Tue, Oct 18, 2016 at 10:39:05AM +0100, Peter Griffin wrote:
+> Hi Vinod and Bjorn,
 > 
-> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-designware.txt | 5 ++++-
->  drivers/i2c/busses/i2c-designware-platdrv.c              | 4 +++-
->  2 files changed, 7 insertions(+), 2 deletions(-)
+> This patchset adds support for the Flexible Direct Memory Access (FDMA) core
+> found on STi chipsets from STMicroelectronics. The FDMA is a slim core CPU
+> with a dedicated firmware. It is a general purpose DMA controller supporting
+> 16 independent channels and data can be moved from memory to memory or between
+> memory and paced latency critical real time targets.
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> index fee26dc..d3d163c 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> @@ -19,6 +19,8 @@ Optional properties :
->  
->   - i2c-sda-falling-time-ns : should contain the SDA falling time in nanoseconds.
->     This value which is by default 300ns is used to compute the tHIGH period.
-> +   
-> + - is-slave : indicates if the block is a I2C slave device.
+> [..]
+> 
+> V10 series updates remoteproc kconfig subsystem to use 'depends on' rather
+> than select for the remoteproc core. Remoteproc client drivers now need to
+> 'depends on' for the core part.
+> 
+> This avoids the Kconfig recursive dependency errors and reliance on the DRM
+> patch included with the v9 series. Patches are also included for enabling the
+> remoteproc core in the multi_v7 defconfig. All patches for DRM subsystem have
+> been removed.
+> 
+> Note there is no longer a depedency with the DRM_VIRTIO_GPU driver in this series,
+> only remoteproc and dmaengine subsystems.
 
-This should be documented as a generic property.
+That is a better approach and I have applied this now...
 
->  
->  Example :
->  
-> @@ -30,7 +32,7 @@ Example :
->  		interrupts = <11>;
->  		clock-frequency = <400000>;
->  	};
-> -
-> +	
-
-Adding trailing whitespace...
-
->  	i2c@1120000 {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> @@ -42,4 +44,5 @@ Example :
->  		i2c-sda-hold-time-ns = <300>;
->  		i2c-sda-falling-time-ns = <300>;
->  		i2c-scl-falling-time-ns = <300>;
-> +		is-slave;
->  	};
+-- 
+~Vinod
