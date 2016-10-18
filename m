@@ -1,60 +1,62 @@
-From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
-Subject: Re: [PATCH net-next 2/2] net: phy: Add Fast Link Failure - 2 set
- driver for Microsemi PHYs.
-Date: Tue, 18 Oct 2016 17:01:03 +0530
-Message-ID: <20161018113043.GA19357@microsemi.com>
-References: <1476445233-26524-1-git-send-email-Raju.Lakkaraju@microsemi.com>
- <1476445233-26524-3-git-send-email-Raju.Lakkaraju@microsemi.com>
- <20161014120228.GF5822@lunn.ch>
- <20161017081312.GB2365@microsemi.com>
- <838C6202-9B7D-4AFA-B163-55515044FA4F@gmail.com>
- <20161018103413.GA31087@microsemi.com>
- <20161018105820.GM26778@lunn.ch>
-Reply-To: <Raju.Lakkaraju@microsemi.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH] dt-bindings: usb: atmel: fix a couple of copy-paste style typos
+Date: Tue, 18 Oct 2016 13:05:18 +0200
+Message-ID: <1476788718-21143-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161018105820.GM26778@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Allan.Nielsen@microsemi.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
-
-On Tue, Oct 18, 2016 at 12:58:20PM +0200, Andrew Lunn wrote:
-> EXTERNAL EMAIL
-> 
-> 
-> > > In fact, this looks a lot like netdev features (e.g: checksum
-> > > offload), and there seems to be some commonality here between at
-> > > least Marvell and Microsemi (for the faster link down reporting),
-> > > so maybe we should start adding PHY features similar to netdev
-> > > features?
-> 
-> > Sure.
-> >
-> > I would like add one flag in phy_device structure:
-> > u64 phy_features;
-> >
-> > In phy_driver structure, i would like to add 2 function pointer as
-> >
-> > int (*phy_featues_set)(struct phy_device *phydev);
-> > int (*phy_featues_get)(struct phy_device *phydev);
-> >
-> > All the PHY specific features i.e. Fast link failure -2, Downshift, Loopback etc
-> > are the case in feature_set/feature_get functions.
-> 
-> Please follow how the ethertool features are implemented. So you need
-> to extend net/core/ethtool.c to pass these call down, etc.
-> 
-
-Sure. I will do.
-Do i need to change Ethtool application and submit along with 
-downshift driver patch (i.e. ethtool.c, phy.c, cpsw.c and mscc.c changes) ? 
->        Andrew
-
+Signed-off-by: Peter Rosin <peda@axentia.se>
 ---
-Thanks,
-Raju.
+ Documentation/devicetree/bindings/usb/atmel-usb.txt | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/atmel-usb.txt b/Documentation/devicetree/bindings/usb/atmel-usb.txt
+index f4262ed60582..ad8ea56a9ed3 100644
+--- a/Documentation/devicetree/bindings/usb/atmel-usb.txt
++++ b/Documentation/devicetree/bindings/usb/atmel-usb.txt
+@@ -6,9 +6,9 @@ Required properties:
+  - compatible: Should be "atmel,at91rm9200-ohci" for USB controllers
+    used in host mode.
+  - reg: Address and length of the register set for the device
+- - interrupts: Should contain ehci interrupt
++ - interrupts: Should contain ohci interrupt
+  - clocks: Should reference the peripheral, host and system clocks
+- - clock-names: Should contains two strings
++ - clock-names: Should contain three strings
+ 		"ohci_clk" for the peripheral clock
+ 		"hclk" for the host clock
+ 		"uhpck" for the system clock
+@@ -35,7 +35,7 @@ Required properties:
+  - reg: Address and length of the register set for the device
+  - interrupts: Should contain ehci interrupt
+  - clocks: Should reference the peripheral and the UTMI clocks
+- - clock-names: Should contains two strings
++ - clock-names: Should contain two strings
+ 		"ehci_clk" for the peripheral clock
+ 		"usb_clk" for the UTMI clock
+ 
+@@ -58,7 +58,7 @@ Required properties:
+  - reg: Address and length of the register set for the device
+  - interrupts: Should contain macb interrupt
+  - clocks: Should reference the peripheral and the AHB clocks
+- - clock-names: Should contains two strings
++ - clock-names: Should contain two strings
+ 		"pclk" for the peripheral clock
+ 		"hclk" for the AHB clock
+ 
+@@ -85,7 +85,7 @@ Required properties:
+  - reg: Address and length of the register set for the device
+  - interrupts: Should contain usba interrupt
+  - clocks: Should reference the peripheral and host clocks
+- - clock-names: Should contains two strings
++ - clock-names: Should contain two strings
+ 		"pclk" for the peripheral clock
+ 		"hclk" for the host clock
+  - ep childnode: To specify the number of endpoints and their properties.
+-- 
+2.1.4
