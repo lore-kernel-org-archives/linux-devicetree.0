@@ -1,51 +1,36 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v9 2/2] ARM: dts: add TOPEET itop elite based board
-Date: Tue, 18 Oct 2016 20:57:18 +0300
-Message-ID: <CAJKOXPdBfp6ot16PCN9fmx3KYrt1DHK7Ong9OBZ_P+y4rD1bWg@mail.gmail.com>
-References: <devicetree@vger.kernel.org> <1476811129-4450-1-git-send-email-ayaka@soulik.info>
- <1476811129-4450-3-git-send-email-ayaka@soulik.info> <20161018173748.GB30003@kozik-lap>
- <20161018174732.GC30003@kozik-lap>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v3 0/4] support smc91x on mainstone and devicetree
+Date: Tue, 18 Oct 2016 14:14:37 -0400 (EDT)
+Message-ID: <20161018.141437.2029098820682032692.davem@davemloft.net>
+References: <1476733532-29716-1-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20161018174732.GC30003@kozik-lap>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Randy Li <ayaka@soulik.info>, devicetree@vger.kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1476733532-29716-1-git-send-email-robert.jarzmik@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robert.jarzmik@free.fr
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, daniel@zonque.org, haojian.zhuang@gmail.com, jic23@cam.ac.uk, dhowells@redhat.com, nico@fluxnic.net, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-am33-list@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 18, 2016 at 8:47 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Tue, Oct 18, 2016 at 08:37:48PM +0300, Krzysztof Kozlowski wrote:
->> On Wed, Oct 19, 2016 at 01:18:49AM +0800, Randy Li wrote:
->> > The TOPEET itop exynos 4412 have three versions base board. The
->> > Elite version is the cheap one without too much peripheral devices
->> > on it.
->> >
->> > Currently supported are serial console, wired networking(USB),
->> > USB OTG in peripheral mode, USB host, SD storage, GPIO buttons,
->> > PWM beeper, ADC and LEDs. The WM8960 analog audio codec is also
->> > enabled.
->> >
->> > The FIMC is not used for camera currently, I enabled it just for a
->> > colorspace converter.
->> >
->> > Signed-off-by: Randy Li <ayaka@soulik.info>
->> > Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
->>
->> Thanks, applied, with missing Rob's ack, minor changes in commit msg and
->> fix in pin function (you used macro for pull up/down instead of
->> function).
->
-> I also changed your name in commit message from "ayaka" to "Randy Li".
-> The author of a patch (equal to "From:" in email) should match the
-> Signed-off-by. For the future, please fix your gitconfig and/or mail
-> transfer program.
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Date: Mon, 17 Oct 2016 21:45:28 +0200
 
-Ahhh, it is not your fault but patchwork's. Damn it. Patchwork stores
-the first username he encounters and uses it further even if From is
-different.
+> This serie aims at bringing support to mainstone board on a device-tree based
+> build, as what is already in place for legacy mainstone.
+> 
+> The bulk of the mainstone "specific" behavior is that a u16 write doesn't work
+> on a address of the form 4*n + 2, while it works on 4*n.
+> 
+> The legacy workaround was in SMC_outw(), with calls to
+> machine_is_mainstone(). These calls don't work with a pxa27x-dt machine type,
+> which is used when a generic device-tree pxa27x machine is used to boot the
+> mainstone board.
+> 
+> Therefore, this serie enables the smc91c111 adapter of the mainstone board to
+> work on a device-tree build, exaclty as it's been working for years with the
+> legacy arch/arm/mach-pxa/mainstone.c definition.
+> 
+> As a sum up, this extends an existing mechanism to device-tree based pxa platforms.
 
-I will send an email to kernel.org Patchwork admin about this.
-
-Best regards,
-Krzysztof
+Series applied, thanks.
