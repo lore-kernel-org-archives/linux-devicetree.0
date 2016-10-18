@@ -1,75 +1,69 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [STLinux Kernel] [PATCH 01/19] phy: phy-miphy365x: Remove
- miphy365 driver and dt binding documentation.
-Date: Tue, 18 Oct 2016 14:48:04 +0530
-Message-ID: <5805E8CC.9070702@ti.com>
-References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
- <1473859677-9231-2-git-send-email-peter.griffin@linaro.org>
- <20160923150636.GA9176@rob-hp-laptop>
- <12506413-515f-1a33-a642-ede60287ca3b@st.com>
- <75b370f3-a1cd-ac6e-ce8a-b77e4c0c3847@st.com>
+From: Paul Burton <paul.burton@imgtec.com>
+Subject: Re: [PATCH v2] console: Don't prefer first registered if DT specifies stdout-path
+Date: Tue, 18 Oct 2016 10:21:36 +0100
+Message-ID: <2401691.yKn6kY81q4@np-p-burton>
+References: <20160809125010.14150-1-paul.burton@imgtec.com> <4033254.tBrl4yKcsP@np-p-burton> <87oa2ij2mq.fsf@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <75b370f3-a1cd-ac6e-ce8a-b77e4c0c3847-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; boundary="nextPart1491817.ehho7IUxQd";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87oa2ij2mq.fsf@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Schwab <schwab@linux-m68k.org>
+Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Tejun Heo <tj@kernel.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Jiri Slaby <jslaby@suse.cz>, Daniel Vetter <daniel.vetter@ffwll.ch>, Ivan Delalande <colona@arista.com>, Thierry Reding <treding@nvidia.com>, Borislav Petkov <bp@suse.de>, Jan Kara <jack@suse.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+--nextPart1491817.ehho7IUxQd
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
+On Monday, 17 October 2016 19:39:57 BST Andreas Schwab wrote:
+> On Okt 17 2016, Paul Burton <paul.burton@imgtec.com> wrote:
+> > Could you share the device tree from your system?
+> 
+> This is the contents of chosen/linux,stdout-path on the systems I have:
+> 
+> chosen/linux,stdout-path
+>                  "/pci@f0000000/ATY,SnowyParent@10/ATY,Snowy_A@0"
+> 
+> chosen/linux,stdout-path
+>                  "/pci@0,f0000000/NVDA,Parent@10/NVDA,Display-B@1"
+> 
+> Is that what you need?  There is also chosen/stdout, but no
+> aliases/stdout.
+> 
+> Andreas.
 
-On Tuesday 18 October 2016 02:15 PM, Patrice Chotard wrote:
-> 
-> 
-> On 10/18/2016 09:47 AM, Patrice Chotard wrote:
->> Hi
->>
->> On 09/23/2016 05:06 PM, Rob Herring wrote:
->>> On Wed, Sep 14, 2016 at 02:27:39PM +0100, Peter Griffin wrote:
->>>> This phy is only used on STiH415/6 based silicon, and support for
->>>> these SoC's is being removed from the kernel.
->>>>
->>>> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> Cc: <kishon-l0cyMroinI0@public.gmane.org>
->>>> ---
->>>>  .../devicetree/bindings/phy/phy-miphy365x.txt      |  77 ---
->>>
->>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>
->> Applied on sti-dt-for-4.10 branch
-> 
-> 
-> Sorry, i did a mistake, these patch should go in linux-phy tree.
-> Kishon will you take care of it ?
+Hi Andreas,
 
-yes, I will.
+I think I see the problem & I'm hoping this patch will fix it:
 
-Thanks
-Kishon
+https://lkml.org/lkml/2016/10/18/142
 
-> 
-> Thanks
-> 
->>
->> Thanks 
->>
->>>
->>>>  drivers/phy/Kconfig                                |  10 -
->>>>  drivers/phy/Makefile                               |   1 -
->>>>  drivers/phy/phy-miphy365x.c                        | 625 ---------------------
->>>>  4 files changed, 713 deletions(-)
->>>>  delete mode 100644 Documentation/devicetree/bindings/phy/phy-miphy365x.txt
->>>>  delete mode 100644 drivers/phy/phy-miphy365x.c
->>
->>
->> _______________________________________________
->> Kernel mailing list
->> Kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
->> http://www.stlinux.com/mailman/listinfo/kernel
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Could you give it a try & let me know?
+
+Thanks,
+    Paul
+--nextPart1491817.ehho7IUxQd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCAAGBQJYBemgAAoJEIIg2fppPBxl/ocP/RsSGhUJsbbXOzHH0zhvW5/0
+lmP447zgfYfSB63uNeLJ/uZwmyYVy5/6by9+88bPp+pnw5IvbH2oWOcClRXBopP2
+a03Yn/sGYx1nybguqE0CIMql9keWdudPQB2W3008pg7jMRx7DeOnWLLJqgDK2eRH
+/0dqLH8ISm7olbbfbJOmSZhKI/cip2mB3utR0/wln/f89bXbFKDkyf/S9m2p0+/o
+agKLZNbxlT8ApQIgTdy2wYYJej3DIwNe7jofxKVlQ/hjvVBq4T80kbEuLeBYVn9L
+7bUoIplFzLHidsNYCXUm+uuaC8ogtu0kV9akIHzx1yTtwsEiKP59I/N7IjvcvNDU
+AygRucuIiYL6OzXFwktChzqLmG07deHNPSxBS+Tsx82Gt5IO984nFLuOZwYmQFSY
+yWCsTZS/R74GQBth1vhH1hBtMViHPqW6UFvQ5xhUGV/dLsevO+azgSlcYnDFr2GE
+TfZJ/laYn3mh2zSlGmJX5KU8eiqIUuF47eAx29twD3W/6XSMWDj/mJe4LnW9/zqb
+G3WSOoLrv2gYvNaaCGGyAfJMshQqlod9QCCifsXPAnB3jge2VW3AJT47KeBeNzJV
+WtQR5w5PK2iPE05lbcOoLICopg0Utlb005M6UYGzzVSaKD4xkNrDWaOAaTlCfkn8
+SNxS0sVuI8lxwzZNdr3V
+=dSrA
+-----END PGP SIGNATURE-----
+
+--nextPart1491817.ehho7IUxQd--
