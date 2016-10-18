@@ -1,21 +1,21 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Subject: Re: [PATCH v2 3/3] ARM: dts: gose: add composite video input
-Date: Tue, 18 Oct 2016 18:49:44 +0300
-Message-ID: <2915584.0t40ytsv7y@avalon>
+Date: Tue, 18 Oct 2016 18:50:39 +0300
+Message-ID: <2343930.U8AiEBNJBl@avalon>
 References: <1476802943-5189-1-git-send-email-ulrich.hecht+renesas@gmail.com> <1476802943-5189-4-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1476802943-5189-4-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: horms@verge.net.au, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, magnus.damm@gmail.com, hans.verkuil@cisco.com, niklas.soderlund@ragnatech.se, geert@linux-m68k.org, sergei.shtylyov@cogentembedded.com, devicetree@kernel.org
+Cc: horms@verge.net.au, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, magnus.damm@gmail.com, hans.verkuil@cisco.com, niklas.soderlund@ragnatech.se, geert@linux-m68k.org, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Ulrich,
 
-(CC'ing the device tree mailing list)
+(CC'ing the device tree mailing list - for real this time)
 
 Thank you for the patch.
 
