@@ -1,47 +1,60 @@
-From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: RE: [PATCH 3/3] clocksource: Add clockevent support to NPS400 driver
-Date: Tue, 18 Oct 2016 14:32:35 +0000
-Message-ID: <DB6PR0501MB2518A9D069CA95DE52F4A698AAD30@DB6PR0501MB2518.eurprd05.prod.outlook.com>
-References: <1476370350-3853-1-git-send-email-noamca@mellanox.com>
- <1476370350-3853-4-git-send-email-noamca@mellanox.com>
- <20161018135722.oflcjm5hfy6eugiy@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/4] Device bindings documentation updated
+ ACPI-enabled platforms not currently supported
+Date: Tue, 18 Oct 2016 09:33:01 -0500
+Message-ID: <20161018143301.vkfsjzytvwqxmsvj@rob-hp-laptop>
+References: <cover.1476462204.git.lolivei@synopsys.com>
+ <36f4b1736e36b039af15b13645df0de492f1b6e1.1476462204.git.lolivei@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161018135722.oflcjm5hfy6eugiy@rob-hp-laptop>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <36f4b1736e36b039af15b13645df0de492f1b6e1.1476462204.git.lolivei@synopsys.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Luis.Oliveira@synopsys.com
+Cc: jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, CARLOS.PALMINHA@synopsys.com, Ramiro.Oliveira@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]=20
-> Sent: Tuesday, October 18, 2016 4:57 PM
+On Fri, Oct 14, 2016 at 05:52:50PM +0100, Luis.Oliveira@synopsys.com wrote:
+> From: Luis Oliveira <lolivei@synopsys.com>
+> 
+> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-designware.txt | 5 ++++-
+>  drivers/i2c/busses/i2c-designware-platdrv.c              | 4 +++-
+>  2 files changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> index fee26dc..d3d163c 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> @@ -19,6 +19,8 @@ Optional properties :
+>  
+>   - i2c-sda-falling-time-ns : should contain the SDA falling time in nanoseconds.
+>     This value which is by default 300ns is used to compute the tHIGH period.
+> +   
+> + - is-slave : indicates if the block is a I2C slave device.
 
->>=20
->> Driver can be used from device tree by:
->> compatible =3D "ezchip,nps400-timer0" <-- for clocksource compatible =3D=
-=20
->> "ezchip,nps400-timer1" <-- for clockevent
+This should be documented as a generic property.
 
->You're letting Linux details define the binding. Are these blocks differen=
-t (the block itself, not connections to >the block like interrupts)?
+>  
+>  Example :
+>  
+> @@ -30,7 +32,7 @@ Example :
+>  		interrupts = <11>;
+>  		clock-frequency = <400000>;
+>  	};
+> -
+> +	
 
+Adding trailing whitespace...
 
->If you need a particular timer instance to be used, then describe whatever=
- is the difference in the h/w.  For >example, the clockevent timer has to b=
-e the timer with an interrupt.
-
-Yes, blocks are different.
-The difference is that only second timer instance are actually producing ti=
-mer interrupt served by Linux for the clockevent framework.
-Please note that the numbering used here for timer (i.e. 0 or 1) are derive=
-d from HW blocks and are not any Linux detail I used for binding definition=
- (It is a note at this patch set cover letter).
-
-Noam
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  	i2c@1120000 {
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> @@ -42,4 +44,5 @@ Example :
+>  		i2c-sda-hold-time-ns = <300>;
+>  		i2c-sda-falling-time-ns = <300>;
+>  		i2c-scl-falling-time-ns = <300>;
+> +		is-slave;
+>  	};
