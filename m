@@ -1,37 +1,66 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt-bindings: mfd: Add Altera Arria10 SR Monitor
-Date: Tue, 18 Oct 2016 09:05:48 -0500
-Message-ID: <20161018140548.su5ffrjqrxlk4cyf@rob-hp-laptop>
-References: <1476394329-31696-1-git-send-email-tthayer@opensource.altera.com>
- <1476394329-31696-2-git-send-email-tthayer@opensource.altera.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] power: reset: Add qcom reboot mode driver
+Date: Tue, 18 Oct 2016 09:12:15 -0500
+Message-ID: <20161018141215.5qop6ow3qque5d33@rob-hp-laptop>
+References: <1476410823-8912-1-git-send-email-xiaogang@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1476394329-31696-2-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, inux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1476410823-8912-1-git-send-email-xiaogang@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Xiaogang Cui <xiaogang@codeaurora.org>
+Cc: andy.gross@linaro.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Andy Yan <andy.yan@rock-chips.com>, John Stultz <john.stultz@linaro.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Chris Brand <chris.brand@broadcom.com>, Richard Weinberger <richard@nod.at>, Moritz Fischer <moritz.fischer@ettus.com>, Florian Fainelli <f.fainelli@gmail.com>, "open list:POWER SUPPLY CLASS/SUBSYSTEM and DRIVERS" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.k>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 13, 2016 at 04:32:06PM -0500, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Fri, Oct 14, 2016 at 10:02:27AM +0800, Xiaogang Cui wrote:
+> This is a initial version so it's very similar with syscon
+> reboot mode driver. We will add more functionalities in the
+> further after dependency is ready.
 > 
-> Add the Arria10 DevKit System Resource Chip register and state
-> monitoring module to the MFD.
+> Signed-off-by: Xiaogang Cui <xiaogang@codeaurora.org>
+> ---
+>  .../bindings/power_supply/qcom-reboot-mode.txt     |  23 +++++
+>  drivers/power/reset/Kconfig                        |  10 ++
+>  drivers/power/reset/Makefile                       |   1 +
+>  drivers/power/reset/qcom-reboot-mode.c             | 109 +++++++++++++++++++++
+>  4 files changed, 143 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power_supply/qcom-reboot-mode.txt
+>  create mode 100644 drivers/power/reset/qcom-reboot-mode.c
 > 
-> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> ---
-> Note: This needs to be applied to the bindings document that
-> was Acked & Applied but didn't reach the for-next branch.
-> See https://patchwork.ozlabs.org/patch/629397/
-> ---
-> ---
->  .../devicetree/bindings/mfd/altera-a10sr.txt       |    9 +++++++++
->  1 file changed, 9 insertions(+)
+> diff --git a/Documentation/devicetree/bindings/power_supply/qcom-reboot-mode.txt b/Documentation/devicetree/bindings/power_supply/qcom-reboot-mode.txt
+> new file mode 100644
+> index 0000000..8b33592
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power_supply/qcom-reboot-mode.txt
+> @@ -0,0 +1,23 @@
+> +Qualcomm Reboot Mode Driver
+> +
+> +Qualcomm reboot mode driver based on reboot mode framework to update
+> +SPMI specific bits.
+> +
+> +Required Properties:
+> +-compatible: "qcom,reboot-mode"
+> +-offset: offset of the SPMI reboot mode register
+> +
+> +Optional Properties:
+> +-mask: mask of reboot mode
+> +-mode-xxx: magic of reboot mode
+> +
+> +Example:
+> +	qcom,reboot-mode@88f {
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Node names should be generic. Just reboot-mode@...
+
+> +		compatible = "qcom,reboot-mode";
+> +		offset = <0x88f>;
+> +		mode-normal = <0x00>;
+> +		mode-recovery = <0x04>;
+> +		mode-bootloader = <0x08>;
+> +		mode-rtc = <0x0C>;
+
+In addition to what John said, I think vendor specfic modes should 
+have a vendor prefix (e.g. qcom,mode-rtc). That will complicate parsing 
+a bit though.
+
+Rob
