@@ -1,83 +1,26 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 08/23] ASoC: soc-core:
- snd_soc_get_dai_name() become non static
-Date: Tue, 18 Oct 2016 09:27:15 +0200
-Message-ID: <20161018092715.16e0943b481f9bc6885eb4f4@free.fr>
-References: <87shrv4c8x.wl%kuninori.morimoto.gx@renesas.com>
-        <87h98b4c30.wl%kuninori.morimoto.gx@renesas.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 6/9] dt-bindings: pinctrl: Deprecate sunxi pinctrl bindings
+Date: Tue, 18 Oct 2016 15:37:08 +0800
+Message-ID: <CAGb2v64ZbXC+xm+GWQdnmZGO-g7744-wPnq3PeDu9WH3t0YxrQ@mail.gmail.com>
+References: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
+ <ee6d214a14ed31689c5f70fc6ee5736c3d26737b.1476200742.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87h98b4c30.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <ee6d214a14ed31689c5f70fc6ee5736c3d26737b.1476200742.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Laurent <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guennadi <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Oct 2016 08:34:19 +0000
-Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+On Tue, Oct 11, 2016 at 11:46 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> The generic pin configuration and multiplexing should be preferred now,
+> even though we still support the old one.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-> From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> 
-> snd_soc_get_dai_name() is used from snd_soc_of_get_dai_name(),
-> and it is assuming that DT is using "sound-dai" / "#sound-dai-cells".
-> But graph base DT is using "remote-endpoint". This patch makes
-> snd_soc_get_dai_name() non static for graph support.
-> 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
->  include/sound/soc.h  | 2 ++
->  sound/soc/soc-core.c | 3 ++-
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/sound/soc.h b/include/sound/soc.h
-> index fd63d23..77b01c4 100644
-> --- a/include/sound/soc.h
-> +++ b/include/sound/soc.h
-> @@ -1677,6 +1677,8 @@ unsigned int snd_soc_of_parse_daifmt(struct device_node *np,
->  				     const char *prefix,
->  				     struct device_node **bitclkmaster,
->  				     struct device_node **framemaster);
-> +int snd_soc_get_dai_name(struct of_phandle_args *args,
-> +			 const char **dai_name);
->  int snd_soc_of_get_dai_name(struct device_node *of_node,
->  			    const char **dai_name);
->  int snd_soc_of_get_dai_link_codecs(struct device *dev,
-> diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-> index 8371488..6f911f4 100644
-> --- a/sound/soc/soc-core.c
-> +++ b/sound/soc/soc-core.c
-> @@ -3794,7 +3794,7 @@ unsigned int snd_soc_of_parse_daifmt(struct device_node *np,
->  }
->  EXPORT_SYMBOL_GPL(snd_soc_of_parse_daifmt);
->  
-> -static int snd_soc_get_dai_name(struct of_phandle_args *args,
-> +int snd_soc_get_dai_name(struct of_phandle_args *args,
->  				const char **dai_name)
->  {
->  	struct snd_soc_component *pos;
-> @@ -3846,6 +3846,7 @@ static int snd_soc_get_dai_name(struct of_phandle_args *args,
->  	mutex_unlock(&client_mutex);
->  	return ret;
->  }
-> +EXPORT_SYMBOL_GPL(snd_soc_get_dai_name);
->  
->  int snd_soc_of_get_dai_name(struct device_node *of_node,
->  			    const char **dai_name)
-> -- 
-> 1.9.1
-
-I already proposed this patch
- http://mailman.alsa-project.org/pipermail/alsa-devel/2015-January/086870.html
-but it seems people were not interested.
-I hope now is the right time.
-
-Acked-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-
--- 
-Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
