@@ -1,274 +1,53 @@
-From: Daniel Golle <daniel@makrotopia.org>
-Subject: Re: [RFC PATCH] mtd: nand: Add OX820 NAND Support
-Date: Tue, 18 Oct 2016 13:08:07 +0200
-Message-ID: <20161018110807.GD1641@makrotopia.org>
-References: <20161018090927.1990-1-narmstrong@baylibre.com>
+From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v4 1/4] net: phy: dp83867: Add documentation for optional impedance control
+Date: Tue, 18 Oct 2016 16:50:17 +0530
+Message-ID: <20161018112020.30273-2-mugunthanvnm@ti.com>
+References: <20161018112020.30273-1-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20161018090927.1990-1-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: boris.brezillon@free-electrons.com, devicetree@vger.kernel.org, linux-oxnas@lists.tuxfamily.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, richard@nod.at, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161018112020.30273-1-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
+Add documention of ti,min-output-impedance and ti,max-output-impedance
+which can be used to correct MAC impedance mismatch using phy extended
+registers.
 
-great to see progress towards supporting OX820!
-The NAND driver I hacked up for Kernel 4.1 and 4.4 in OpenWrt/LEDE
-looks very similar, see
+Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/ti,dp83867.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-https://git.lede-project.org/?p=lede/dangole/staging.git;a=blob;f=target/linux/oxnas/files/drivers/mtd/nand/oxnas_nand.c;h=f5a142950e32227fee304de731e619278350a91b;hb=refs/heads/oxnas-nand
+diff --git a/Documentation/devicetree/bindings/net/ti,dp83867.txt b/Documentation/devicetree/bindings/net/ti,dp83867.txt
+index 5d21141..85bf945 100644
+--- a/Documentation/devicetree/bindings/net/ti,dp83867.txt
++++ b/Documentation/devicetree/bindings/net/ti,dp83867.txt
+@@ -9,6 +9,18 @@ Required properties:
+ 	- ti,fifo-depth - Transmitt FIFO depth- see dt-bindings/net/ti-dp83867.h
+ 		for applicable values
+ 
++Optional property:
++	- ti,min-output-impedance - MAC Interface Impedance control to set
++				    the programmable output impedance to
++				    minimum value (35 ohms).
++	- ti,max-output-impedance - MAC Interface Impedance control to set
++				    the programmable output impedance to
++				    maximum value (70 ohms).
++
++Note: ti,min-output-impedance and ti,max-output-impedance are mutually
++      exclusive. When both properties are present ti,max-output-impedance
++      takes precedence.
++
+ Default child nodes are standard Ethernet PHY device
+ nodes as described in Documentation/devicetree/bindings/net/phy.txt
+ 
+-- 
+2.10.1.445.g3cdd5d1
 
-To me therefore this looks quite good, just one small question below.
-
-Cheers
-
-Daniel
-
-
-On Tue, Oct 18, 2016 at 11:09:27AM +0200, Neil Armstrong wrote:
-> Add NAND driver to support the Oxford Semiconductor OX820 NAND Controller.
-> This is a simple memory mapped NAND controller with single chip select and
-> software ECC.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../devicetree/bindings/mtd/oxnas-nand.txt         |  24 ++++
->  drivers/mtd/nand/Kconfig                           |   5 +
->  drivers/mtd/nand/Makefile                          |   1 +
->  drivers/mtd/nand/oxnas_nand.c                      | 144 +++++++++++++++++++++
->  4 files changed, 174 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/oxnas-nand.txt
->  create mode 100644 drivers/mtd/nand/oxnas_nand.c
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/oxnas-nand.txt b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
-> new file mode 100644
-> index 0000000..83b684d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
-> @@ -0,0 +1,24 @@
-> +* Oxford Semiconductor OXNAS NAND Controller
-> +
-> +Please refer to nand.txt for generic information regarding MTD NAND bindings.
-> +
-> +Required properties:
-> + - compatible: "oxsemi,ox820-nand"
-> + - reg: Base address and length for NAND mapped memory.
-> +
-> +Optional Properties:
-> + - clocks: phandle to the NAND gate clock if needed.
-> + - resets: phandle to the NAND reset control if needed.
-> +
-> +Example:
-> +
-> +nand: nand@41000000 {
-> +	compatible = "oxsemi,ox820-nand";
-> +	reg = <0x41000000 0x100000>;
-> +	nand-ecc-mode = "soft";
-> +	clocks = <&stdclk CLK_820_NAND>;
-> +	resets = <&reset RESET_NAND>;
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	status = "disabled";
-> +};
-> diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
-> index 7b7a887..c023125 100644
-> --- a/drivers/mtd/nand/Kconfig
-> +++ b/drivers/mtd/nand/Kconfig
-> @@ -426,6 +426,11 @@ config MTD_NAND_ORION
->  	  No board specific support is done by this driver, each board
->  	  must advertise a platform_device for the driver to attach.
->  
-> +config MTD_NAND_OXNAS
-> +	tristate "NAND Flash support for Oxford Semiconductor SoC"
-> +	help
-> +	  This enables the NAND flash controller on Oxford Semiconductor SoCs.
-> +
->  config MTD_NAND_FSL_ELBC
->  	tristate "NAND support for Freescale eLBC controllers"
->  	depends on FSL_SOC
-> diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
-> index cafde6f..05fc054 100644
-> --- a/drivers/mtd/nand/Makefile
-> +++ b/drivers/mtd/nand/Makefile
-> @@ -35,6 +35,7 @@ obj-$(CONFIG_MTD_NAND_TMIO)		+= tmio_nand.o
->  obj-$(CONFIG_MTD_NAND_PLATFORM)		+= plat_nand.o
->  obj-$(CONFIG_MTD_NAND_PASEMI)		+= pasemi_nand.o
->  obj-$(CONFIG_MTD_NAND_ORION)		+= orion_nand.o
-> +obj-$(CONFIG_MTD_NAND_OXNAS)		+= oxnas_nand.o
->  obj-$(CONFIG_MTD_NAND_FSL_ELBC)		+= fsl_elbc_nand.o
->  obj-$(CONFIG_MTD_NAND_FSL_IFC)		+= fsl_ifc_nand.o
->  obj-$(CONFIG_MTD_NAND_FSL_UPM)		+= fsl_upm.o
-> diff --git a/drivers/mtd/nand/oxnas_nand.c b/drivers/mtd/nand/oxnas_nand.c
-> new file mode 100644
-> index 0000000..ee402ab
-> --- /dev/null
-> +++ b/drivers/mtd/nand/oxnas_nand.c
-> @@ -0,0 +1,144 @@
-> +/*
-> + * Oxford Semiconductor OXNAS NAND driver
-> + *
-> + * Heavily based on plat_nand.c :
-> + * Author: Vitaly Wool <vitalywool@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/clk.h>
-> +#include <linux/reset.h>
-> +#include <linux/mtd/mtd.h>
-> +#include <linux/mtd/nand.h>
-> +#include <linux/mtd/partitions.h>
-> +
-> +/* nand commands */
-> +#define NAND_CMD_ALE		BIT(18)
-> +#define NAND_CMD_CLE		BIT(19)
-> +#define NAND_CMD_CS		0
-> +#define NAND_CMD_RESET		0xff
-> +#define NAND_CMD		(NAND_CMD_CS | NAND_CMD_CLE)
-> +#define NAND_ADDR		(NAND_CMD_CS | NAND_CMD_ALE)
-> +#define NAND_DATA		(NAND_CMD_CS)
-> +
-> +struct oxnas_nand_data {
-> +	struct nand_chip	chip;
-> +	void __iomem		*io_base;
-
-Why do you redundantly keep io_base in platform data rather than
-just using chip.IO_ADDR_R and >chip.IO_ADDR_W?
-
-
-> +	struct clk		*clk;
-> +};
-> +
-> +static void oxnas_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
-> +				unsigned int ctrl)
-> +{
-> +	struct nand_chip *this = mtd->priv;
-> +	unsigned long nandaddr = (unsigned long) this->IO_ADDR_W;
-> +
-> +	if (ctrl & NAND_CTRL_CHANGE) {
-> +		nandaddr &= ~(NAND_CMD | NAND_ADDR);
-> +		if (ctrl & NAND_CLE)
-> +			nandaddr |= NAND_CMD;
-> +		else if (ctrl & NAND_ALE)
-> +			nandaddr |= NAND_ADDR;
-> +		this->IO_ADDR_W = (void __iomem *) nandaddr;
-> +	}
-> +
-> +	if (cmd != NAND_CMD_NONE)
-> +		writeb(cmd, (void __iomem *) nandaddr);
-> +}
-> +
-> +/*
-> + * Probe for the NAND device.
-> + */
-> +static int oxnas_nand_probe(struct platform_device *pdev)
-> +{
-> +	struct oxnas_nand_data *data;
-> +	struct mtd_info *mtd;
-> +	struct resource *res;
-> +	int err = 0;
-> +
-> +	/* Allocate memory for the device structure (and zero it) */
-> +	data = devm_kzalloc(&pdev->dev, sizeof(struct oxnas_nand_data),
-> +			    GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	data->io_base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(data->io_base))
-> +		return PTR_ERR(data->io_base);
-> +
-> +	data->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(data->clk))
-> +		data->clk = NULL;
-> +
-> +	nand_set_flash_node(&data->chip, pdev->dev.of_node);
-> +	mtd = nand_to_mtd(&data->chip);
-> +	mtd->dev.parent = &pdev->dev;
-> +	mtd->priv = &data->chip;
-> +
-> +	data->chip.IO_ADDR_R = data->io_base;
-> +	data->chip.IO_ADDR_W = data->io_base;
-> +	data->chip.cmd_ctrl = oxnas_nand_cmd_ctrl;
-> +	data->chip.chip_delay = 30;
-> +	data->chip.ecc.mode = NAND_ECC_SOFT;
-> +	data->chip.ecc.algo = NAND_ECC_HAMMING;
-> +
-> +	platform_set_drvdata(pdev, data);
-> +
-> +	clk_prepare_enable(data->clk);
-> +	device_reset_optional(&pdev->dev);
-> +
-> +	/* Scan to find existence of the device */
-> +	if (nand_scan(mtd, 1)) {
-> +		err = -ENXIO;
-> +		goto out;
-> +	}
-> +
-> +	err = mtd_device_parse_register(mtd, NULL, NULL, NULL, 0);
-> +	if (!err)
-> +		return err;
-> +
-> +	nand_release(mtd);
-> +out:
-> +	return err;
-> +}
-> +
-> +static int oxnas_nand_remove(struct platform_device *pdev)
-> +{
-> +	struct oxnas_nand_data *data = platform_get_drvdata(pdev);
-> +
-> +	nand_release(nand_to_mtd(&data->chip));
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id oxnas_nand_match[] = {
-> +	{ .compatible = "oxsemi,ox820-nand" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, oxnas_nand_match);
-> +
-> +static struct platform_driver oxnas_nand_driver = {
-> +	.probe	= oxnas_nand_probe,
-> +	.remove	= oxnas_nand_remove,
-> +	.driver	= {
-> +		.name		= "oxnas_nand",
-> +		.of_match_table = oxnas_nand_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(oxnas_nand_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Vitaly Wool");
-> +MODULE_DESCRIPTION("Oxnas NAND driver");
-> +MODULE_ALIAS("platform:oxnas_nand");
-> -- 
-> 2.7.0
-> 
-> 
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
