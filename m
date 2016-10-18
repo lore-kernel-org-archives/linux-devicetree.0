@@ -1,34 +1,189 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH net-next 2/2] net: phy: Add Fast Link Failure - 2 set
- driver for Microsemi PHYs.
-Date: Tue, 18 Oct 2016 13:49:29 +0200
-Message-ID: <20161018114929.GO26778@lunn.ch>
-References: <1476445233-26524-1-git-send-email-Raju.Lakkaraju@microsemi.com>
- <1476445233-26524-3-git-send-email-Raju.Lakkaraju@microsemi.com>
- <20161014120228.GF5822@lunn.ch>
- <20161017081312.GB2365@microsemi.com>
- <838C6202-9B7D-4AFA-B163-55515044FA4F@gmail.com>
- <20161018103413.GA31087@microsemi.com>
- <20161018105820.GM26778@lunn.ch>
- <20161018113043.GA19357@microsemi.com>
+From: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+Subject: Re: [RFC PATCH] mtd: nand: Add OX820 NAND Support
+Date: Tue, 18 Oct 2016 13:51:15 +0200
+Message-ID: <20161018115115.GF1641@makrotopia.org>
+References: <20161018090927.1990-1-narmstrong@baylibre.com>
+ <20161018110807.GD1641@makrotopia.org>
+ <c377cb60-a359-62c1-dc6b-7b0be8b8e228@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161018113043.GA19357-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+In-Reply-To: <c377cb60-a359-62c1-dc6b-7b0be8b8e228-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell Senior <russell-LS+HbC+WUqwFvAYqzeGVJV6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Do i need to change Ethtool application and submit along with 
-> downshift driver patch (i.e. ethtool.c, phy.c, cpsw.c and mscc.c changes) ? 
+Hi Neil,
 
-Yes, please submit two patchset. One patchset for ethtool and its man
-page and a second patchset for all the kernel changes.
+On Tue, Oct 18, 2016 at 01:24:22PM +0200, Neil Armstrong wrote:
+> On 10/18/2016 01:08 PM, Daniel Golle wrote:
+> > Hi Neil,
+> > 
+> > great to see progress towards supporting OX820!
+> > The NAND driver I hacked up for Kernel 4.1 and 4.4 in OpenWrt/LEDE
+> > looks very similar, see
+> > 
+> > https://git.lede-project.org/?p=lede/dangole/staging.git;a=blob;f=target/linux/oxnas/files/drivers/mtd/nand/oxnas_nand.c;h=f5a142950e32227fee304de731e619278350a91b;hb=refs/heads/oxnas-nand
+> > 
+> > To me therefore this looks quite good, just one small question below.
+> 
+> Hi Daniel,
+> 
+> Yes, I work step by step, I hope to have something booting for 4.10 !
+> 
+> Indeed, they look identical except the part_probes[] stuff, are they necessary ?
 
-     Thanks
-	Andrew
+Nah, this was dropped around kernel 4.7 from most drivers in favour of
+using the default partition probes (ie. cmdline and dt) afaik.
+
+> 
+> My primary source of code was Ma Haiju's tree and OPenWRT's tree, but would some people like to push some of the openwrt driver upstream somehow ?
+
+I was planning this somehow, but lack the resources to seriously move
+forward. I've mostly been focussing on cleaning up Ma Haiju's code and
+improving support for the SATA driver (ie. adding support for both
+ports) and re-factoring the stmmac-based Ethernet driver to match the
+current kernel driver's style.
+However, I'm still using platform-specific includes (hardware.h) and
+thus look forward to rebase SATA and Ethernet support on top of your
+tree, as that would unluck ox820 support in multi-v6 instead of having
+a platform-specific kernel.
+
+Currently there are problems with the NAND driver failing to detect the
+chip on non-PCIe platform like the PogoPlug V3 (non-Pro), MitraStar
+STG-212 and probably other non-PCIe boards which I didn't check yet.
+This magically happened when switching from kernel 4.1 to 4.4, I'm
+bisecting this since, but the problem seems to be hidden somewhere
+between the lines (ie. probe-order-related or such)...
+Did you test your NAND driver on any non-PCIe boards and did it work?
+
+
+For a more or less complete history of the changes I made since
+branching of Ma Haijun's tree, see
+
+https://git.lede-project.org/?p=lede/dangole/staging.git;a=history;f=target/linux/oxnas;hb=refs/heads/oxnas-nand
+
+and for the very early history, prior to the merge into the official
+OpenWrt tree, see
+
+http://gitorious.org/openwrt-oxnas/openwrt-oxnas.git
+
+
+Cheers
+
+
+Daniel
+
+> 
+> Thanks,
+> Neil
+> 
+> > 
+> > Cheers
+> > 
+> > Daniel
+> > 
+> > 
+> > On Tue, Oct 18, 2016 at 11:09:27AM +0200, Neil Armstrong wrote:
+> >> Add NAND driver to support the Oxford Semiconductor OX820 NAND Controller.
+> >> This is a simple memory mapped NAND controller with single chip select and
+> >> software ECC.
+> >>
+> >> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> >> ---
+> >>  .../devicetree/bindings/mtd/oxnas-nand.txt         |  24 ++++
+> >>  drivers/mtd/nand/Kconfig                           |   5 +
+> >>  drivers/mtd/nand/Makefile                          |   1 +
+> >>  drivers/mtd/nand/oxnas_nand.c                      | 144 +++++++++++++++++++++
+> >>  4 files changed, 174 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/mtd/oxnas-nand.txt
+> >>  create mode 100644 drivers/mtd/nand/oxnas_nand.c
+> >>
+> 
+> [...]
+> 
+> >> diff --git a/drivers/mtd/nand/oxnas_nand.c b/drivers/mtd/nand/oxnas_nand.c
+> >> new file mode 100644
+> >> index 0000000..ee402ab
+> >> --- /dev/null
+> >> +++ b/drivers/mtd/nand/oxnas_nand.c
+> >> @@ -0,0 +1,144 @@
+> >> +/*
+> >> + * Oxford Semiconductor OXNAS NAND driver
+> >> + *
+> >> + * Heavily based on plat_nand.c :
+> >> + * Author: Vitaly Wool <vitalywool-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Hmm, I forgot the OpenWRT and Ma Haijun copyrights here...
+> 
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or modify
+> >> + * it under the terms of the GNU General Public License version 2 as
+> >> + * published by the Free Software Foundation.
+> >> + *
+> >> + */
+> >> +
+> >> +#include <linux/err.h>
+> >> +#include <linux/io.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/platform_device.h>
+> >> +#include <linux/slab.h>
+> >> +#include <linux/clk.h>
+> >> +#include <linux/reset.h>
+> >> +#include <linux/mtd/mtd.h>
+> >> +#include <linux/mtd/nand.h>
+> >> +#include <linux/mtd/partitions.h>
+> >> +
+> >> +/* nand commands */
+> >> +#define NAND_CMD_ALE		BIT(18)
+> >> +#define NAND_CMD_CLE		BIT(19)
+> >> +#define NAND_CMD_CS		0
+> >> +#define NAND_CMD_RESET		0xff
+> >> +#define NAND_CMD		(NAND_CMD_CS | NAND_CMD_CLE)
+> >> +#define NAND_ADDR		(NAND_CMD_CS | NAND_CMD_ALE)
+> >> +#define NAND_DATA		(NAND_CMD_CS)
+> >> +
+> >> +struct oxnas_nand_data {
+> >> +	struct nand_chip	chip;
+> >> +	void __iomem		*io_base;
+> > 
+> > Why do you redundantly keep io_base in platform data rather than
+> > just using chip.IO_ADDR_R and >chip.IO_ADDR_W?
+> 
+> For no reason since it's not used in oxnas_nand_cmd_ctrl...
+> Will remove !
+> 
+> > 
+> > 
+> >> +	struct clk		*clk;
+> >> +};
+> >> +
+> >> +static void oxnas_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
+> >> +				unsigned int ctrl)
+> >> +{
+> >> +	struct nand_chip *this = mtd->priv;
+> >> +	unsigned long nandaddr = (unsigned long) this->IO_ADDR_W;
+> >> +
+> >> +	if (ctrl & NAND_CTRL_CHANGE) {
+> >> +		nandaddr &= ~(NAND_CMD | NAND_ADDR);
+> >> +		if (ctrl & NAND_CLE)
+> >> +			nandaddr |= NAND_CMD;
+> >> +		else if (ctrl & NAND_ALE)
+> >> +			nandaddr |= NAND_ADDR;
+> >> +		this->IO_ADDR_W = (void __iomem *) nandaddr;
+> >> +	}
+> >> +
+> >> +	if (cmd != NAND_CMD_NONE)
+> >> +		writeb(cmd, (void __iomem *) nandaddr);
+> >> +}
+> [...]
+> 
+> 
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
