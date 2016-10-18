@@ -1,55 +1,144 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] Add OV5647 device tree documentation
-Date: Tue, 18 Oct 2016 08:14:34 -0500
-Message-ID: <20161018131434.2bbk2evxkv7mutfo@rob-hp-laptop>
-References: <cover.1476286687.git.roliveir@synopsys.com>
- <0f85bdabe4951533e6fe7a842cc5dfa0f2cd8a6c.1476286687.git.roliveir@synopsys.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 7/10] mmc: sdhci-xenon: Add support to PHYs of Marvell
+ Xenon SDHC
+Date: Tue, 18 Oct 2016 16:09:14 +0300
+Message-ID: <d63c5272-9085-d54f-e827-ca6b9b324aab@intel.com>
+References: <cover.990e3503c30c18ecf50dd48bce3d52811f03ca22.1475853198.git-series.gregory.clement@free-electrons.com>
+ <e08ffb085d02a784b28456ac47fa4dc6540a9139.1475853198.git-series.gregory.clement@free-electrons.com>
+ <bfe30317-bb3b-b3dc-e9df-87b6ba100307@intel.com>
+ <bcf4abca-9f2e-6d1b-6690-d672766e18cb@marvell.com>
+ <63e2bacf-6ad9-5e20-2c49-e77eb362ccfc@intel.com>
+ <d6e1c702-1dfe-3993-da28-01cf01f24b4a@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0f85bdabe4951533e6fe7a842cc5dfa0f2cd8a6c.1476286687.git.roliveir@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, geert@linux-m68k.org, akpm@linux-foundation.org, kvalo@codeaurora.org, linux@roeck-us.net, hverkuil@xs4all.nl, lars@metafoo.de, pavel@ucw.cz, robert.jarzmik@free.fr, slongerbeam@gmail.com, dheitmueller@kernellabs.com, pali.rohar@gmail.com, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <d6e1c702-1dfe-3993-da28-01cf01f24b4a@marvell.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ziji Hu <huziji@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, "Jack(SH) Zhu" <jmzhu@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Shiwu Zhang <zhangshw@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.com>, Xueping Liu <xpliu@marvell.com>, Hilbert Zhang <zzhang@marvell.com>, Liuliu Zhao <zhaoliul@marvell.com>, Peng Zhu <zhupeng@marvell.com>, Yu Cao <yucao@ma>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 12, 2016 at 05:02:21PM +0100, Ramiro Oliveira wrote:
-> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
-> ---
->  .../devicetree/bindings/media/i2c/ov5647.txt          | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+On 18/10/16 15:04, Ziji Hu wrote:
+> Hi Adrian,
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> new file mode 100644
-> index 0000000..4c91b3b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> @@ -0,0 +1,19 @@
-> +Omnivision OV5647 raw image sensor
-> +---------------------------------
-> +
-> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
-> +and CCI (I2C compatible) control bus.
-> +
-> +Required properties:
-> +
-> +- compatible	: "ovti,ov5647";
-> +- reg		: I2C slave address of the sensor;
-> +
-> +The common video interfaces bindings (see video-interfaces.txt) should be
-> +used to specify link to the image data receiver. The OV5647 device
-> +node should contain one 'port' child node with an 'endpoint' subnode.
-> +
-> +Following properties are valid for the endpoint node:
-> +
-> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
-> +  video-interfaces.txt.  The sensor supports only two data lanes.
+> On 2016/10/17 15:55, Adrian Hunter wrote:
+>> On 12/10/16 15:17, Ziji Hu wrote:
+>>> Hi Adrian,
+>>>
+>>> On 2016/10/11 20:39, Adrian Hunter wrote:
+> <snip>
+>>>>> +static int __xenon_emmc_delay_adj_test(struct mmc_card *card)
+>>>>> +{
+>>>>> +	int err;
+>>>>> +	u8 *ext_csd = NULL;
+>>>>> +
+>>>>> +	err = mmc_get_ext_csd(card, &ext_csd);
+>>>>> +	kfree(ext_csd);
+>>>>> +
+>>>>> +	return err;
+>>>>> +}
+>>>>> +
+>>>>> +static int __xenon_sdio_delay_adj_test(struct mmc_card *card)
+>>>>> +{
+>>>>> +	struct mmc_command cmd = {0};
+>>>>> +	int err;
+>>>>> +
+>>>>> +	cmd.opcode = SD_IO_RW_DIRECT;
+>>>>> +	cmd.flags = MMC_RSP_R5 | MMC_CMD_AC;
+>>>>> +
+>>>>> +	err = mmc_wait_for_cmd(card->host, &cmd, 0);
+>>>>> +	if (err)
+>>>>> +		return err;
+>>>>> +
+>>>>> +	if (cmd.resp[0] & R5_ERROR)
+>>>>> +		return -EIO;
+>>>>> +	if (cmd.resp[0] & R5_FUNCTION_NUMBER)
+>>>>> +		return -EINVAL;
+>>>>> +	if (cmd.resp[0] & R5_OUT_OF_RANGE)
+>>>>> +		return -ERANGE;
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int __xenon_sd_delay_adj_test(struct mmc_card *card)
+>>>>> +{
+>>>>> +	struct mmc_command cmd = {0};
+>>>>> +	int err;
+>>>>> +
+>>>>> +	cmd.opcode = MMC_SEND_STATUS;
+>>>>> +	cmd.arg = card->rca << 16;
+>>>>> +	cmd.flags = MMC_RSP_R1 | MMC_CMD_AC;
+>>>>> +
+>>>>> +	err = mmc_wait_for_cmd(card->host, &cmd, 0);
+>>>>> +	return err;
+>>>>> +}
+>>>>> +
+>>>>> +static int xenon_delay_adj_test(struct mmc_card *card)
+>>>>> +{
+>>>>> +	WARN_ON(!card);
+>>>>> +	WARN_ON(!card->host);
+>>>>> +
+>>>>> +	if (mmc_card_mmc(card))
+>>>>> +		return __xenon_emmc_delay_adj_test(card);
+>>>>> +	else if (mmc_card_sd(card))
+>>>>> +		return __xenon_sd_delay_adj_test(card);
+>>>>> +	else if (mmc_card_sdio(card))
+>>>>> +		return __xenon_sdio_delay_adj_test(card);
+>>>>> +	else
+>>>>> +		return -EINVAL;
+>>>>> +}
+>>>>
+>>>> So you are issuing commands from the ->set_ios() callback.  I would want to
+>>>> get Ulf's OK for that before going further.
+>>>>
+>>> 	Yes, you are correct.
+>>> 	In some speed mode, Xenon SDHC has to send a series of transfers to search for a perfect sampling point in PHY delay line.
+>>> 	It is like tuning process.
+>>>
+>>>> One thing: you will need to ensure you don't trigger get HS400 re-tuning
+>>>> because it will call back into ->set_ios().
+>>>>
+>>> 	Could you please make the term "HS400 re-tuning" more detailed?
+>>> 	In current MMC driver, "HS400 re-tuning" will go back to HS200, execute HS200 tuning and come back to HS400.
+>>> 	I'm sure our Xenon SDHC will not execute it.
+>>
+>> Currently, re-tuning is automatically enabled whenever tuning is executed,
+>> and then re-tuning will be done periodically or after CRC errors.  The
+>> function to disable re-tuning mmc_retune_disable() is not exported, however
+>> if you have you are determining the sampling point your own way, you could
+>> simply not implement ->execute_tuning() and then there would be no tuning
+>> and no re-tuning.
+>>
+> 
+> 	It is a little complex in our Xenon SDHC.
+> 	For the speed mode which requests tuning, such as SDR104 and HS200, our driver will execute standard tuning as spec requires.
+> 	However, for those speed mode in which tuning is not requested in spec, our driver has to issues commands to search for the best sampling point.
+> 	
+> 	It seems that HS400 re-tuning/tuning is disabled by default. Is it correct?
 
-What's the default if not present?
+No, it is enabled by default - there is currently no periodic re-tuning  for
+HS400 but CRC errors or runtime suspend / resume will cause re-tuning.
 
-> -- 
-> 2.9.3
 > 
+>>>
+>>> 	However, in coming eMMC 5.2, there is a real HS400 re-tuning, in which tuning can be directly executed in HS400 mode.
+>>> 	Our Xenon SDHC will neither trigger this HS400 re-tuning.
+>>> 	But since so far there is no such feature in MMC driver, I cannot give you a 100% guarantee now.
+>>>
+>>>> And you have the problem that you need to get a reference to the card before
+>>>> the card device has been added.  As I wrote in response to the previous
+>>>> patch, you should get Ulf's help with that too.
+>>>>
+>>> 	Sure.
+>>> 	I will get card_candidate solved at first.
+>>> 	Thank you again for your review and help.
+>>>
+>>> 	Thank you.
+>>>
+>>> Best regards,
+>>> Hu Ziji
+>>>>
+>>>
+>>
 > 
+
