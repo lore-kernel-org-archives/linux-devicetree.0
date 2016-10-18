@@ -1,36 +1,51 @@
-From: Zach Brown <zach.brown@ni.com>
-Subject: [PATCH 0/2] Add device tree property and quirk for supporting sdhci
-Date: Tue, 18 Oct 2016 10:37:04 -0500
-Message-ID: <1476805026-677-1-git-send-email-zach.brown@ni.com>
+From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 0/5] ARM: DT: STI: update audio part
+Date: Tue, 18 Oct 2016 17:44:46 +0200
+Message-ID: <0acb6071-d5a3-8be9-180b-8a44c734c753@st.com>
+References: <1475597517-14225-1-git-send-email-arnaud.pouliquen@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: ulf.hansson@linaro.org
-Cc: adrian.hunter@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zach.brown@ni.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475597517-14225-1-git-send-email-arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Moise Gergaud <moise.gergaud-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some board configurations can not support sd highspeed mode due to the distance
-between the card slot and the controller. The card and controller report that
-they are capable of highspeed however, so we need a mechanism for specifying
-that the setup is incapable of supporting highspeed mode.
+Hi Arnaud
 
-The first patch adds documentation about a new devicetree property
-broken-highspeed.
+On 10/04/2016 06:11 PM, Arnaud Pouliquen wrote:
+> - DT part associated to following ASoC patchset: 
+>   http://www.spinics.net/lists/alsa-devel/msg54782.html
+> - Enable hdmi audio card on b2120 board
+> - Fix some DT declarations 
+> 
+> Arnaud Pouliquen (5):
+>   ARM: DT: STiH407-family: sti sound card field cleaning
+>   ARM: DT: STiH407: Add label for sti-hdmi node
+>   ARM: DT: STiH410: Add label for sti-hdmi node
+>   ARM: DT: STiHxxx-b2120: Add support of HDMI audio
+>   ARM: DT: STiH410-B2260: clean unnecessary hdmi node overlay
+> 
+>  arch/arm/boot/dts/stih407-family.dtsi | 32 ++++++--------------------------
+>  arch/arm/boot/dts/stih407.dtsi        |  2 +-
+>  arch/arm/boot/dts/stih410-b2260.dts   |  6 ------
+>  arch/arm/boot/dts/stih410.dtsi        |  2 +-
+>  arch/arm/boot/dts/stihxxx-b2120.dtsi  | 19 ++++++++++++++++++-
+>  5 files changed, 26 insertions(+), 35 deletions(-)
+> 
 
-The second patch keeps the sd controller and card from going into highspeed
-mode when the property is set.
+For the series 
+
+Acked-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+
+Applied on sti-dt-for-4.10 branch
+
+Thanks
 
 
-Zach Brown (2):
-  sdhci: Add device tree property broken-highspeed
-  sdhci: Prevent SD from doing high-speed timing when broken-highspeed
-    property is set
-
- Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
- drivers/mmc/host/sdhci.c                      | 4 +++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
--- 
-2.7.4
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
