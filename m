@@ -1,163 +1,175 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 0/8] power: add power sequence library
-Date: Tue, 18 Oct 2016 09:16:15 +0800
-Message-ID: <20161018011615.GC1689@b29397-desktop>
-References: <1476413995-20361-1-git-send-email-peter.chen@nxp.com>
- <5097336.earU4jV2qd@vostro.rjw.lan>
- <20161017013058.GA1301@b29397-desktop>
- <5513671.XlE8bb9pVt@vostro.rjw.lan>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v8 3/3] PCI: rockchip: Specify the link capability
+Date: Tue, 18 Oct 2016 09:45:10 +0800
+Message-ID: <1476755110-22647-3-git-send-email-shawn.lin@rock-chips.com>
+References: <1476755110-22647-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5513671.XlE8bb9pVt-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1476755110-22647-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 18, 2016 at 02:35:38AM +0200, Rafael J. Wysocki wrote:
-> On Monday, October 17, 2016 09:30:59 AM Peter Chen wrote:
-> > On Fri, Oct 14, 2016 at 02:09:31PM +0200, Rafael J. Wysocki wrote:
-> > > On Friday, October 14, 2016 10:59:47 AM Peter Chen wrote:
-> > > > Hi all,
-> > > > 
-> > > > This is a follow-up for my last power sequence framework patch set [1].
-> > > > According to Rob Herring and Ulf Hansson's comments[2]. The kinds of
-> > > > power sequence instances will be added at postcore_initcall, the match
-> > > > criteria is compatible string first, if the compatible string is not
-> > > > matched between dts and library, it will try to use generic power sequence.
-> > > > 	 
-> > > > The host driver just needs to call of_pwrseq_on/of_pwrseq_off
-> > > > if only one power sequence instance is needed, for more power sequences
-> > > > are used, using of_pwrseq_on_list/of_pwrseq_off_list instead (eg, USB hub driver).
-> > > > 
-> > > > In future, if there are special power sequence requirements, the special
-> > > > power sequence library can be created.
-> > > > 
-> > > > This patch set is tested on i.mx6 sabresx evk using a dts change, I use
-> > > > two hot-plug devices to simulate this use case, the related binding
-> > > > change is updated at patch [1/6], The udoo board changes were tested
-> > > > using my last power sequence patch set.[3]
-> > > > 
-> > > > Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
-> > > > need to power on itself before it can be found by ULPI bus.
-> > > > 
-> > > > [1] http://www.spinics.net/lists/linux-usb/msg142755.html
-> > > > [2] http://www.spinics.net/lists/linux-usb/msg143106.html
-> > > > [3] http://www.spinics.net/lists/linux-usb/msg142815.html
-> > > > 
-> > > > Changes for v8:
-> > > > - Allocate one extra pwrseq instance if pwrseq_get has succeed, it can avoid
-> > > >   preallocate instances problem which the number of instance is decided at
-> > > >   compile time, thanks for Heiko Stuebner's suggestion [Patch 2/8]
-> > > > - Delete pwrseq_compatible_sample.c which is the demo purpose to show compatible
-> > > >   match method. [Patch 2/8]
-> > > > - Add Maciej S. Szmigiero's tested-by. [Patch 7/8]
-> > > > 
-> > > > Changes for v7:
-> > > > - Create kinds of power sequence instance at postcore_initcall, and match
-> > > >   the instance with node using compatible string, the beneit of this is
-> > > >   the host driver doesn't need to consider which pwrseq instance needs
-> > > >   to be used, and pwrseq core will match it, however, it eats some memories
-> > > >   if less power sequence instances are used. [Patch 2/8]
-> > > > - Add pwrseq_compatible_sample.c to test match pwrseq using device_id. [Patch 2/8]
-> > > > - Fix the comments Vaibhav Hiremath adds for error path for clock and do not
-> > > >   use device_node for parameters at pwrseq_on. [Patch 2/8]
-> > > > - Simplify the caller to use power sequence, follows Alan's commnets [Patch 4/8]
-> > > > - Tested three pwrseq instances together using both specific compatible string and
-> > > >   generic libraries.
-> > > > 
-> > > > Changes for v6:
-> > > > - Add Matthias Kaehlcke's Reviewed-by and Tested-by. (patch [2/6])
-> > > > - Change chipidea core of_node assignment for coming user. (patch [5/6])
-> > > > - Applies Joshua Clayton's three dts changes for two boards,
-> > > >   the USB device's reg has only #address-cells, but without #size-cells.
-> > > > 
-> > > > Changes for v5:
-> > > > - Delete pwrseq_register/pwrseq_unregister, which is useless currently
-> > > > - Fix the linker error when the pwrseq user is compiled as module
-> > > > 
-> > > > Changes for v4:
-> > > > - Create the patch on next-20160722 
-> > > > - Fix the of_node is not NULL after chipidea driver is unbinded [Patch 5/6]
-> > > > - Using more friendly wait method for reset gpio [Patch 2/6]
-> > > > - Support multiple input clocks [Patch 2/6]
-> > > > - Add Rob Herring's ack for DT changes
-> > > > - Add Joshua Clayton's Tested-by
-> > > > 
-> > > > Changes for v3:
-> > > > - Delete "power-sequence" property at binding-doc, and change related code
-> > > >   at both library and user code.
-> > > > - Change binding-doc example node name with Rob's comments
-> > > > - of_get_named_gpio_flags only gets the gpio, but without setting gpio flags,
-> > > >   add additional code request gpio with proper gpio flags
-> > > > - Add Philipp Zabel's Ack and MAINTAINER's entry
-> > > > 
-> > > > Changes for v2:
-> > > > - Delete "pwrseq" prefix and clock-names for properties at dt binding
-> > > > - Should use structure not but its pointer for kzalloc
-> > > > - Since chipidea core has no of_node, let core's of_node equals glue
-> > > >   layer's at core's probe
-> > > > 
-> > > > Joshua Clayton (2):
-> > > >   ARM: dts: imx6qdl: Enable usb node children with <reg>
-> > > >   ARM: dts: imx6q-evi: Fix onboard hub reset line
-> > > > 
-> > > > Peter Chen (6):
-> > > >   binding-doc: power: pwrseq-generic: add binding doc for generic power
-> > > >     sequence library
-> > > >   power: add power sequence library
-> > > >   binding-doc: usb: usb-device: add optional properties for power
-> > > >     sequence
-> > > >   usb: core: add power sequence handling for USB devices
-> > > >   usb: chipidea: let chipidea core device of_node equal's glue layer
-> > > >     device of_node
-> > > >   ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB property
-> > > > 
-> > > >  .../bindings/power/pwrseq/pwrseq-generic.txt       |  48 ++++++
-> > > >  .../devicetree/bindings/usb/usb-device.txt         |  10 +-
-> > > >  MAINTAINERS                                        |   9 +
-> > > >  arch/arm/boot/dts/imx6q-evi.dts                    |  25 +--
-> > > >  arch/arm/boot/dts/imx6qdl-udoo.dtsi                |  26 ++-
-> > > >  arch/arm/boot/dts/imx6qdl.dtsi                     |   6 +
-> > > >  drivers/power/Kconfig                              |   1 +
-> > > >  drivers/power/Makefile                             |   1 +
-> > > >  drivers/power/pwrseq/Kconfig                       |  19 ++
-> > > >  drivers/power/pwrseq/Makefile                      |   2 +
-> > > >  drivers/power/pwrseq/core.c                        | 191 +++++++++++++++++++++
-> > > >  drivers/power/pwrseq/pwrseq_generic.c              | 183 ++++++++++++++++++++
-> > > >  drivers/usb/chipidea/core.c                        |  27 ++-
-> > > >  drivers/usb/core/hub.c                             |  41 ++++-
-> > > >  drivers/usb/core/hub.h                             |   1 +
-> > > >  include/linux/power/pwrseq.h                       |  72 ++++++++
-> > > >  16 files changed, 621 insertions(+), 41 deletions(-)
-> > > >  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
-> > > >  create mode 100644 drivers/power/pwrseq/Kconfig
-> > > >  create mode 100644 drivers/power/pwrseq/Makefile
-> > > >  create mode 100644 drivers/power/pwrseq/core.c
-> > > >  create mode 100644 drivers/power/pwrseq/pwrseq_generic.c
-> > > >  create mode 100644 include/linux/power/pwrseq.h
-> > > 
-> > > Meta question: Who's the maintainer you are targetting this at?
-> > > 
-> > 
-> > Sebastian Reichel mentioned it is better through your tree.
-> > I could be the maintainer for it, and send "GIT PULL" for you
-> > through my git
-> > (https://git.kernel.org/cgit/linux/kernel/git/peter.chen/usb.git/)
-> > Is it ok for you?
-> 
-> Let me review the series first. :-)
-> 
+rk3399 supports PCIe 2.x link speeds marginally at best, and on some
+boards, the link won't train at 5 GT/s at all. Rather than sacrifice
+500ms waiting for training that will never happen, let's use the helper
+function, of_pci_get_max_link_speed, to get the max link speed from DT
+and specify link capability.
 
-Thanks, Rafael.
+Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
+---
+
+Changes in v8:
+- rebase on next branch
+
+Changes in v7:
+- rebase on Bjorn's host-rockcip branch again since it isn't applied
+  cleanly after the cleanup
+- call new function, of_pci_get_max_link_speed.
+
+Changes in v6:
+- user helper function of_get_pci_max_link_speed and use gen2 by default
+  if finding any errors from of_get_pci_max_link_speed. It could be
+  backward compatibe to the old dtb. (Suggested by Rob)
+
+Changes in v5:
+- rebase the code since it isn't cleanly applied after Bjorn's cleanup
+
+Changes in v4:
+- define link_gen as u32
+- elaborate more for rockchip,max-link-speed on doc
+
+Changes in v3:
+- Cast a warning for invalid max link speed and use gen1 for it.
+  That looks better than v2. (Suggested by Brian)
+
+Changes in v2:
+- rename the property to rockchip,max-link-speed according to
+  Bjorn's recommendation and take some bits from imx6q-pcie to
+  make this requirement more consisent.
+
+ drivers/pci/host/pcie-rockchip.c | 60 +++++++++++++++++++++++++---------------
+ 1 file changed, 37 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
+index e0b22da..1ba676f 100644
+--- a/drivers/pci/host/pcie-rockchip.c
++++ b/drivers/pci/host/pcie-rockchip.c
+@@ -53,6 +53,7 @@
+ #define   PCIE_CLIENT_ARI_ENABLE	  HIWORD_UPDATE_BIT(0x0008)
+ #define   PCIE_CLIENT_CONF_LANE_NUM(x)	  HIWORD_UPDATE(0x0030, ENCODE_LANES(x))
+ #define   PCIE_CLIENT_MODE_RC		  HIWORD_UPDATE_BIT(0x0040)
++#define   PCIE_CLIENT_GEN_SEL_1		  HIWORD_UPDATE(0x0080, 0)
+ #define   PCIE_CLIENT_GEN_SEL_2		  HIWORD_UPDATE_BIT(0x0080)
+ #define PCIE_CLIENT_BASIC_STATUS1	(PCIE_CLIENT_BASE + 0x48)
+ #define   PCIE_CLIENT_LINK_STATUS_UP		0x00300000
+@@ -200,6 +201,7 @@ struct rockchip_pcie {
+ 	struct	gpio_desc *ep_gpio;
+ 	u32	lanes;
+ 	u8	root_bus_nr;
++	int	link_gen;
+ 	struct	device *dev;
+ 	struct	irq_domain *irq_domain;
+ };
+@@ -438,14 +440,20 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ 		return err;
+ 	}
+ 
++	if (rockchip->link_gen == 2)
++		rockchip_pcie_write(rockchip, PCIE_CLIENT_GEN_SEL_2,
++				    PCIE_CLIENT_CONFIG);
++	else
++		rockchip_pcie_write(rockchip, PCIE_CLIENT_GEN_SEL_1,
++				    PCIE_CLIENT_CONFIG);
++
+ 	rockchip_pcie_write(rockchip,
+ 			    PCIE_CLIENT_CONF_ENABLE |
+ 			    PCIE_CLIENT_LINK_TRAIN_ENABLE |
+ 			    PCIE_CLIENT_ARI_ENABLE |
+ 			    PCIE_CLIENT_CONF_LANE_NUM(rockchip->lanes) |
+-			    PCIE_CLIENT_MODE_RC |
+-			    PCIE_CLIENT_GEN_SEL_2,
+-				PCIE_CLIENT_CONFIG);
++			    PCIE_CLIENT_MODE_RC,
++			    PCIE_CLIENT_CONFIG);
+ 
+ 	err = phy_power_on(rockchip->phy);
+ 	if (err) {
+@@ -522,29 +530,31 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ 		msleep(20);
+ 	}
+ 
+-	/*
+-	 * Enable retrain for gen2. This should be configured only after
+-	 * gen1 finished.
+-	 */
+-	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
+-	status |= PCIE_RC_CONFIG_LCS_RETRAIN_LINK;
+-	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
++	if (rockchip->link_gen == 2) {
++		/*
++		 * Enable retrain for gen2. This should be configured only after
++		 * gen1 finished.
++		 */
++		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
++		status |= PCIE_RC_CONFIG_LCS_RETRAIN_LINK;
++		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
++
++		timeout = jiffies + msecs_to_jiffies(500);
++		for (;;) {
++			status = rockchip_pcie_read(rockchip, PCIE_CORE_CTRL);
++			if ((status & PCIE_CORE_PL_CONF_SPEED_MASK) ==
++			    PCIE_CORE_PL_CONF_SPEED_5G) {
++				dev_dbg(dev, "PCIe link training gen2 pass!\n");
++				break;
++			}
+ 
+-	timeout = jiffies + msecs_to_jiffies(500);
+-	for (;;) {
+-		status = rockchip_pcie_read(rockchip, PCIE_CORE_CTRL);
+-		if ((status & PCIE_CORE_PL_CONF_SPEED_MASK) ==
+-		    PCIE_CORE_PL_CONF_SPEED_5G) {
+-			dev_dbg(dev, "PCIe link training gen2 pass!\n");
+-			break;
+-		}
++			if (time_after(jiffies, timeout)) {
++				dev_dbg(dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
++				break;
++			}
+ 
+-		if (time_after(jiffies, timeout)) {
+-			dev_dbg(dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
+-			break;
++			msleep(20);
+ 		}
+-
+-		msleep(20);
+ 	}
+ 
+ 	/* Check the final link width from negotiated lane counter from MGMT */
+@@ -753,6 +763,10 @@ static int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+ 		rockchip->lanes = 1;
+ 	}
+ 
++	rockchip->link_gen = of_pci_get_max_link_speed(node);
++	if (rockchip->link_gen < 0 || rockchip->link_gen > 2)
++		rockchip->link_gen = 2;
++
+ 	rockchip->core_rst = devm_reset_control_get(dev, "core");
+ 	if (IS_ERR(rockchip->core_rst)) {
+ 		if (PTR_ERR(rockchip->core_rst) != -EPROBE_DEFER)
 -- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.3.7
