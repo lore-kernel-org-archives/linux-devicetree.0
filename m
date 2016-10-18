@@ -1,163 +1,140 @@
-From: Jan Kiszka <jan.kiszka@siemens.com>
-Subject: Re: [PATCH 1/2] scripts/gdb: add lx-fdtdump command
-Date: Tue, 18 Oct 2016 17:47:22 +0200
-Message-ID: <c8a1898e-e60f-b25a-f4d2-7384f04b6f3f@siemens.com>
-References: <1476803249-23328-1-git-send-email-peter.griffin@linaro.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 3/3] ARM: dts: gose: add composite video input
+Date: Tue, 18 Oct 2016 18:49:44 +0300
+Message-ID: <2915584.0t40ytsv7y@avalon>
+References: <1476802943-5189-1-git-send-email-ulrich.hecht+renesas@gmail.com> <1476802943-5189-4-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1476803249-23328-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, kieran@ksquared.org.uk
-Cc: lee.jones@linaro.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1476802943-5189-4-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: horms@verge.net.au, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, magnus.damm@gmail.com, hans.verkuil@cisco.com, niklas.soderlund@ragnatech.se, geert@linux-m68k.org, sergei.shtylyov@cogentembedded.com, devicetree@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-18 17:07, Peter Griffin wrote:
-> lx-fdtdump dumps the flatenned device tree passed to the kernel
-> from the bootloader to a file called fdtdump.dtb to allow further
-> post processing on the machine running GDB. The fdt header is also
-> also printed in the GDB console. For example:
-> 
-> (gdb) lx-fdtdump
-> fdt_magic:         0xD00DFEED
-> fdt_totalsize:     0xC108
-> off_dt_struct:     0x38
-> off_dt_strings:    0x3804
-> off_mem_rsvmap:    0x28
-> version:           17
-> last_comp_version: 16
-> Dumped fdt to fdtdump.dtb
-> 
->> fdtdump fdtdump.dtb | less
-> 
-> This command is useful as the bootloader can often re-write parts
-> of the device tree, and this can sometimes cause the kernel to not
-> boot.
-> 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Hi Ulrich,
+
+(CC'ing the device tree mailing list)
+
+Thank you for the patch.
+
+On Tuesday 18 Oct 2016 17:02:23 Ulrich Hecht wrote:
+> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 > ---
->  scripts/gdb/linux/constants.py.in |  8 +++++
->  scripts/gdb/linux/proc.py         | 70 ++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 77 insertions(+), 1 deletion(-)
+>  arch/arm/boot/dts/r8a7793-gose.dts | 36 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
 > 
-> diff --git a/scripts/gdb/linux/constants.py.in b/scripts/gdb/linux/constants.py.in
-> index 7986f4e..43c6241 100644
-> --- a/scripts/gdb/linux/constants.py.in
-> +++ b/scripts/gdb/linux/constants.py.in
-> @@ -14,6 +14,7 @@
->  
->  #include <linux/fs.h>
->  #include <linux/mount.h>
-> +#include <linux/of_fdt.h>
->  
->  /* We need to stringify expanded macros so that they can be parsed */
->  
-> @@ -50,3 +51,10 @@ LX_VALUE(MNT_NOEXEC)
->  LX_VALUE(MNT_NOATIME)
->  LX_VALUE(MNT_NODIRATIME)
->  LX_VALUE(MNT_RELATIME)
+> diff --git a/arch/arm/boot/dts/r8a7793-gose.dts
+> b/arch/arm/boot/dts/r8a7793-gose.dts index a47ea4b..2606021 100644
+> --- a/arch/arm/boot/dts/r8a7793-gose.dts
+> +++ b/arch/arm/boot/dts/r8a7793-gose.dts
+> @@ -390,6 +390,11 @@
+>  		groups = "vin0_data24", "vin0_sync", "vin0_clkenb", 
+"vin0_clk";
+>  		function = "vin0";
+>  	};
 > +
-> +/* linux/of_fdt.h> */
-> +LX_VALUE(OF_DT_HEADER)
-> +
-> +/* Kernel Configs */
-> +LX_CONFIG(CONFIG_OF)
-> +
-> diff --git a/scripts/gdb/linux/proc.py b/scripts/gdb/linux/proc.py
-> index 38b1f09..f20fcfa 100644
-> --- a/scripts/gdb/linux/proc.py
-> +++ b/scripts/gdb/linux/proc.py
-> @@ -16,7 +16,7 @@ from linux import constants
->  from linux import utils
->  from linux import tasks
->  from linux import lists
-> -
-> +from struct import *
->  
->  class LxCmdLine(gdb.Command):
->      """ Report the Linux Commandline used in the current kernel.
-> @@ -195,3 +195,71 @@ values of that process namespace"""
->                          info_opts(MNT_INFO, m_flags)))
->  
->  LxMounts()
-> +
-> +class LxFdtDump(gdb.Command):
-> +    """Output Flattened Device Tree header and dump FDT blob to a file
-> +       Equivalent to 'cat /proc/fdt > fdtdump.dtb' on a running target"""
-> +
-> +    def __init__(self):
-> +        super(LxFdtDump, self).__init__("lx-fdtdump", gdb.COMMAND_DATA)
-> +
-> +    def fdthdr_to_cpu(self, fdt_header):
-> +
-> +            fdt_header_be = ">IIIIIII"
-> +            fdt_header_le = "<IIIIIII"
-> +
-> +            if utils.get_target_endianness() == 1:
-> +                output_fmt = fdt_header_le
-> +            else:
-> +                output_fmt = fdt_header_be
-> +
-> +            return unpack(output_fmt, pack(fdt_header_be,
-> +                                           fdt_header['magic'],
-> +                                           fdt_header['totalsize'],
-> +                                           fdt_header['off_dt_struct'],
-> +                                           fdt_header['off_dt_strings'],
-> +                                           fdt_header['off_mem_rsvmap'],
-> +                                           fdt_header['version'],
-> +                                           fdt_header['last_comp_version']))
-> +
-> +    def invoke(self, arg, from_tty):
-> +
-> +        if constants.LX_CONFIG_OF:
-> +
-> +            filename = "fdtdump.dtb"
-
-Why not specifying the file name as argument? Safer than silently
-overwriting potentially pre-existing files or failing without
-alternatives if the current directory is not writable.
-
-> +
-> +            py_fdt_header_ptr = gdb.parse_and_eval(
-> +                "(const struct fdt_header *) initial_boot_params")
-> +            py_fdt_header = py_fdt_header_ptr.dereference()
-> +
-> +            fdt_header = self.fdthdr_to_cpu(py_fdt_header)
-> +
-> +            if fdt_header[0] != constants.LX_OF_DT_HEADER:
-> +                raise gdb.GdbError("No flattened device tree magic found\n")
-> +
-> +            gdb.write("fdt_magic:         0x{:02X}\n".format(fdt_header[0]))
-> +            gdb.write("fdt_totalsize:     0x{:02X}\n".format(fdt_header[1]))
-> +            gdb.write("off_dt_struct:     0x{:02X}\n".format(fdt_header[2]))
-> +            gdb.write("off_dt_strings:    0x{:02X}\n".format(fdt_header[3]))
-> +            gdb.write("off_mem_rsvmap:    0x{:02X}\n".format(fdt_header[4]))
-> +            gdb.write("version:           {}\n".format(fdt_header[5]))
-> +            gdb.write("last_comp_version: {}\n".format(fdt_header[6]))
-> +
-> +            inf = gdb.inferiors()[0]
-> +            fdt_buf = utils.read_memoryview(inf, py_fdt_header_ptr,
-> +                                            fdt_header[1]).tobytes()
-> +
-> +            try:
-> +                f = open(filename, 'wb')
-> +            except:
-> +                raise gdb.GdbError("Could not open file to dump fdt")
-> +
-> +            f.write(fdt_buf)
-> +            f.close()
-> +
-> +            gdb.write("Dumped fdt to " + filename + "\n")
-> +
-> +        else:
-> +            gdb.write("Kernel not compiled with CONFIG_OF\n")
-> +
-> +LxFdtDump()
+> +	vin1_pins: vin1 {
+> +		groups = "vin1_data8", "vin1_clk";
+> +		function = "vin1";
+> +	};
+>  };
 > 
+>  &ether {
+> @@ -515,6 +520,19 @@
+>  		reg = <0x12>;
+>  	};
+> 
+> +	composite-in@20 {
+> +		compatible = "adi,adv7180";
+> +		reg = <0x20>;
+> +		remote = <&vin1>;
+> +
+> +		port {
+> +			adv7180: endpoint {
+> +				bus-width = <8>;
+> +				remote-endpoint = <&vin1ep>;
+> +			};
+> +		};
 
-Jan
+As explained before, you need to update the ADV7180 DT bindings first to 
+document ports. I've discussed this with Hans last week, and we agreed that DT 
+should model physical ports. Unfortunately the ADV7180 comes in four different 
+packages with different feature sets that affect ports.
+
+ADV7180  K CP32 Z               32-Lead Lead Frame Chip Scale Package
+ADV7180  B CP32 Z               32-Lead Lead Frame Chip Scale Package
+ADV7180 WB CP32 Z               32-Lead Lead Frame Chip Scale Package
+
+ADV7180  B CP   Z               40-Lead Lead Frame Chip Scale Package
+ADV7180 WB CP   Z               40-Lead Lead Frame Chip Scale Package
+
+ADV7180  K ST48 Z               48-Lead Low Profile Quad Flat Package
+ADV7180  B ST48 Z               48-Lead Low Profile Quad Flat Package
+ADV7180 WB ST48 Z               48-Lead Low Profile Quad Flat Package
+
+ADV7180  B ST   Z               64-Lead Low Profile Quad Flat Package
+ADV7180 WB ST   Z               64-Lead Low Profile Quad Flat Package
+
+W tells whether the part is qualified for automotive applications. It has no 
+impact from a software point of view. K and B indicate the temperature range, 
+and also have no software impact. The Z suffix indicates that the part is RoHS 
+compliant (they all are) and also has no impact.
+
+Unfortunately the W and K/B qualifiers come before the package qualifier. I'm 
+not sure whether we could simply drop W, K/B and W and specify the following 
+compatible strings
+
+- adv7180cp32
+- adv7180cp
+- adv7180st48
+- adv7180st
+
+or if we need more compatible strings that would match the full chip name. 
+Feedback on that from the device tree maintainers would be appreciated.
+
+Regardless of what compatible strings end up being used, the bindings should 
+document 3 or 6 input ports depending on the model, and one output port. You 
+can number the input ports from 0 to 2 or 0 to 5 depending on the model and 
+the output port 3 or 6. Another option would be to number the output port 0 
+and the input ports 1 to 3 or 1 to 6 depending on the model. That would give a 
+fixed number for the output port across all models, but might be a bit 
+consuming as most bindings number input ports before output ports.
+
+For the Gose board you should then add one composite connector to the device 
+tree ("composite-video-connector") and connect it to port 0 of the 
+ADV7180WBCP32.
+
+> +	};
+> +
+>  	hdmi@39 {
+>  		compatible = "adi,adv7511w";
+>  		reg = <0x39>;
+> @@ -622,3 +640,21 @@
+>  		};
+>  	};
+>  };
+> +
+> +/* composite video input */
+> +&vin1 {
+> +	pinctrl-0 = <&vin1_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	status = "okay";
+> +
+> +	port {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		vin1ep: endpoint {
+> +			remote-endpoint = <&adv7180>;
+> +			bus-width = <8>;
+> +		};
+> +	};
+> +};
 
 -- 
-Siemens AG, Corporate Technology, CT RDA ITP SES-DE
-Corporate Competence Center Embedded Linux
+Regards,
+
+Laurent Pinchart
