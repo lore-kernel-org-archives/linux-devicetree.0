@@ -1,34 +1,56 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC v2 1/2] sdhci: Add device tree property broken-highspeed
-Date: Tue, 18 Oct 2016 08:17:56 -0500
-Message-ID: <20161018131756.ghnehvr2e2hsqznd@rob-hp-laptop>
-References: <1476297656-7019-1-git-send-email-zach.brown@ni.com>
- <1476297656-7019-2-git-send-email-zach.brown@ni.com>
+Subject: Re: [PATCH v2 3/3] dt/bindings: Add milivolt, milliamps, and
+ nanohenry units
+Date: Tue, 18 Oct 2016 08:28:47 -0500
+Message-ID: <20161018132847.hwaij5j5ohyvwoed@rob-hp-laptop>
+References: <CAL_JsqKdV7133oo5jECZn2SwVjMM3E_ZNr+JS=9Wtkx8BZVuEQ@mail.gmail.com>
+ <6ca3d940-4822-42d5-8606-cfc4c815c7ad@EX4.ad.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1476297656-7019-2-git-send-email-zach.brown-acOepvfBmUk@public.gmane.org>
+In-Reply-To: <6ca3d940-4822-42d5-8606-cfc4c815c7ad-k7YZYYsDncjfk+Ne4bZl5AC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
-Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Handrigan, Paul" <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Austin, Brian" <Brian.Austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 12, 2016 at 01:40:55PM -0500, Zach Brown wrote:
-> Certain board configurations can make highspeed malfuction due to timing
-> issues. In these cases a way is needed to force the controller and card
-> into standard speed even if they otherwise appear to be capable of
-> highspeed.
+On Tue, Oct 18, 2016 at 12:43:48AM +0000, Handrigan, Paul wrote:
 > 
-> The broken-highspeed property will let the sdhci driver know that
-> highspeed will not work.
 > 
-> Signed-off-by: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> 
+> >>  Electricity
+> >>  ----------------------------------------
+> >>  -microamp      : micro amps
+> >> +-milliamp      : milli amps
+> >
+> >Please explain why you need need this. Is 2^32 uA not enough range for
+> >you? While we do have multiple units for some, that's because people
+> >picked arbitrary units for their properties before this doc existed.
+> >Ideally, we only have 1 unit to prevent that problem.
+> 
+> 2^32 would be enough, however, microamps would not be a good
+> representation for
+> this particular entry. For example, if the current limit is 2.1A the
+> entry will have to be 2100000.  Micro amps will not be the best
+> representation for this value from a scientific notation perspective.
+> Since the scale is in miiliamps as it is defined in the data sheet of
+> this device, it will be best to stay consistent since an error in
+> conversion
+> could cause serious problems.
+> 
+> Also, I really don¹t see why adding milliamps and millivolts as being a
+> major
+> problems since both of them are commonly used.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+As I explained, we want to have some uniformity in properties especially 
+across different bindings. That's not something I want to check in every
+review. Telling people to add units is enough.
+
+I don't see how adding '000' is a problem.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
