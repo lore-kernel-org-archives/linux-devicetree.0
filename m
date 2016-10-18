@@ -1,52 +1,98 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH 2/2] scripts/gdb: fixup some pep8 errors in proc.py
-Date: Tue, 18 Oct 2016 16:57:57 +0100
-Message-ID: <20161018155757.GA24274@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1476803249-23328-1-git-send-email-peter.griffin@linaro.org>
- <1476803249-23328-2-git-send-email-peter.griffin@linaro.org>
- <477b66cc-05dc-57fa-38fb-f80510935c2e@bingham.xyz>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] clk: hisilicon: add CRG driver for Hi3516CV300 SoC
+Date: Tue, 18 Oct 2016 10:58:35 -0500
+Message-ID: <20161018155835.qyoffwznacdac46y@rob-hp-laptop>
+References: <20161017120705.3726-1-wenpan@hisilicon.com>
+ <20161017120705.3726-3-wenpan@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <477b66cc-05dc-57fa-38fb-f80510935c2e@bingham.xyz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kieran Bingham <kieran@ksquared.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, jan.kiszka@siemens.com, lee.jones@linaro.org, devicetree@vger.kernel.org
+In-Reply-To: <20161017120705.3726-3-wenpan@hisilicon.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Pan Wen <wenpan@hisilicon.com>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, linux@armlinux.org.uk, xuwei5@hisilicon.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, howell.yang@hisilicon.com, xuejiancheng@hisilicon.com, jalen.hsu@hisilicon.com, lvkuanliang@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, kevin.lixu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Kieran,
-
-On Tue, 18 Oct 2016, Kieran Bingham wrote:
-
-> Hi Pete,
+On Mon, Oct 17, 2016 at 08:07:04PM +0800, Pan Wen wrote:
+> Add CRG driver for Hi3516CV300 SoC. CRG(Clock and Reset
+> Generator) module generates clock and reset signals used
+> by other module blocks on SoC.
 > 
-> On 18/10/16 16:07, Peter Griffin wrote:
-> > proc.py:22:1: E302 expected 2 blank lines, found 1
-> > proc.py:200:1: E302 expected 2 blank lines, found 1
-> > 
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > ---
-> >  scripts/gdb/linux/proc.py | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/scripts/gdb/linux/proc.py b/scripts/gdb/linux/proc.py
-> > index f20fcfa..2d6f74e 100644
-> > --- a/scripts/gdb/linux/proc.py
-> > +++ b/scripts/gdb/linux/proc.py
-> > @@ -18,6 +18,7 @@ from linux import tasks
-> >  from linux import lists
-> >  from struct import *
-> >  
-> > +
+> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
+> ---
+>  .../devicetree/bindings/clock/hisi-crg.txt         |  50 ++++
+>  drivers/clk/hisilicon/Kconfig                      |   8 +
+>  drivers/clk/hisilicon/Makefile                     |   1 +
+>  drivers/clk/hisilicon/crg-hi3516cv300.c            | 330 +++++++++++++++++++++
+>  drivers/clk/hisilicon/crg.h                        |  34 +++
+>  include/dt-bindings/clock/hi3516cv300-clock.h      |  48 +++
+>  6 files changed, 471 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/hisi-crg.txt
+>  create mode 100644 drivers/clk/hisilicon/crg-hi3516cv300.c
+>  create mode 100644 drivers/clk/hisilicon/crg.h
+>  create mode 100644 include/dt-bindings/clock/hi3516cv300-clock.h
 > 
-> This was added by patch 1, and can be squashed there.
+> diff --git a/Documentation/devicetree/bindings/clock/hisi-crg.txt b/Documentation/devicetree/bindings/clock/hisi-crg.txt
+> new file mode 100644
+> index 0000000..cc60b3d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/hisi-crg.txt
+> @@ -0,0 +1,50 @@
+> +* HiSilicon Clock and Reset Generator(CRG)
 
-Doh, I had deliberately done it as a separate commit, as I thought it was
-a pre-existing pep8 error.
+Seems kind of generic given there's already various HiSi clock bindings 
+documented.
 
-Will squash in v2.
+> +
+> +The CRG module provides clock and reset signals to various
+> +modules within the SoC.
+> +
+> +This binding uses the following bindings:
+> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +    Documentation/devicetree/bindings/reset/reset.txt
+> +
+> +Required Properties:
+> +
+> +- compatible: should be one of the following.
+> +  - "hisilicon,hi3516cv300-crg"
+> +  - "hisilicon,hi3516cv300-sysctrl"
+> +  - "hisilicon,hi3519-crg"
 
-regards,
+There is already a binding for this. Please merge them.
 
-Peter.
+> +  - "hisilicon,hi3798cv200-crg"
+> +  - "hisilicon,hi3798cv200-sysctrl"
+> +
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +
+> +- #clock-cells: should be 1.
+> +
+> +Each clock is assigned an identifier and client nodes use this identifier
+> +to specify the clock which they consume.
+> +
+> +All these identifier could be found in <dt-bindings/clock/hi3519-clock.h>.
+> +
+> +- #reset-cells: should be 2.
+> +
+> +A reset signal can be controlled by writing a bit register in the CRG module.
+> +The reset specifier consists of two cells. The first cell represents the
+> +register offset relative to the base address. The second cell represents the
+> +bit index in the register.
+> +
+> +Example: CRG nodes
+> +CRG: clock-reset-controller@12010000 {
+> +	compatible = "hisilicon,hi3519-crg";
+> +	reg = <0x12010000 0x10000>;
+> +	#clock-cells = <1>;
+> +	#reset-cells = <2>;
+> +};
+> +
+> +Example: consumer nodes
+> +i2c0: i2c@12110000 {
+> +	compatible = "hisilicon,hi3519-i2c";
+> +	reg = <0x12110000 0x1000>;
+> +	clocks = <&CRG HI3519_I2C0_RST>;
+> +	resets = <&CRG 0xe4 0>;
+> +};
