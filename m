@@ -1,57 +1,57 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v9 2/2] ARM: dts: add TOPEET itop elite based board
-Date: Tue, 18 Oct 2016 20:47:32 +0300
-Message-ID: <20161018174732.GC30003@kozik-lap>
-References: <devicetree@vger.kernel.org>
- <1476811129-4450-1-git-send-email-ayaka@soulik.info>
- <1476811129-4450-3-git-send-email-ayaka@soulik.info>
- <20161018173748.GB30003@kozik-lap>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161018173748.GB30003@kozik-lap>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Randy Li <ayaka@soulik.info>, devicetree@vger.kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org
+From: Tomas Novotny <tomas.novotny-MzfF5RY65ECbtNqbA8UwFdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 0/5] iio: dac: mcp4725: use regulator framework, add vref and dt support
+Date: Tue, 18 Oct 2016 19:43:04 +0200
+Message-ID: <1476812589-18333-1-git-send-email-tomas.novotny@tbs-biometrics.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yong Li <sdliyong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 18, 2016 at 08:37:48PM +0300, Krzysztof Kozlowski wrote:
-> On Wed, Oct 19, 2016 at 01:18:49AM +0800, Randy Li wrote:
-> > The TOPEET itop exynos 4412 have three versions base board. The
-> > Elite version is the cheap one without too much peripheral devices
-> > on it.
-> > 
-> > Currently supported are serial console, wired networking(USB),
-> > USB OTG in peripheral mode, USB host, SD storage, GPIO buttons,
-> > PWM beeper, ADC and LEDs. The WM8960 analog audio codec is also
-> > enabled.
-> > 
-> > The FIMC is not used for camera currently, I enabled it just for a
-> > colorspace converter.
-> > 
-> > Signed-off-by: Randy Li <ayaka@soulik.info>
-> > Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> Thanks, applied, with missing Rob's ack, minor changes in commit msg and
-> fix in pin function (you used macro for pull up/down instead of
-> function).
+From: Tomas Novotny <tomas-P46umIhNmdHrBKCeMvbIDA@public.gmane.org>
 
-I also changed your name in commit message from "ayaka" to "Randy Li".
-The author of a patch (equal to "From:" in email) should match the
-Signed-off-by. For the future, please fix your gitconfig and/or mail
-transfer program.
+Hi all,
 
-Sample gitconfig regarding this:
-[user]
-	name = Mr Foo Bar
-	email = foobar@gmail.com
-[sendemail]
-	smtpencryption = tls
-	smtpserver = smtp.gmail.com
-	smtpuser = foobar@gmail.com
-	smtpserverport = 587
-	confirm = auto
+here is a third version of a series to use regulator framework, add an
+option to set external reference and to add devicetree support for
+mcp4725/6.
 
-Best regards,
-Krzysztof
+Third version fixes mainly small bits found in the previous version.
+
+Series is tested on MCP4726 on device tree platform.
+
+Changes since v2:
+- whitespace fix of two consecutive lines between patches (it affects
+  already applied patch)
+- abort probe instead of recovery in case of invalid configuration
+- use local variable instead of allocation for platform data
+- move unrelated comment fix to the new patch
+- add ack from Rob
+- fix doubled space in an assignment
+- add documentation for the struct mcp4725_platform_data
+- move the documentation patch forward because it is referenced in struct
+  mcp4725_platform_data now
+ 
+Changes since v1:
+- add the first patch
+- use regulator framework
+- fix printf argument (%u instead of %d)
+- add parenthesis to make expression more clear
+- fix typo in documentation (Microchpip)
+- move vref configuration from probe function to new mcp4726_set_cfg
+
+Tomas Novotny (5):
+  iio: dac: mcp4725: use regulator framework
+  iio: dac: mcp4725: fix incorrect comment
+  Documentation: dt: iio: add mcp4725/6 dac device binding
+  iio: dac: mcp4725: support voltage reference selection
+  iio: dac: mcp4725: add devicetree support
+
+ .../devicetree/bindings/iio/dac/mcp4725.txt        |  35 ++++
+ drivers/iio/dac/mcp4725.c                          | 177 +++++++++++++++++++--
+ include/linux/iio/dac/mcp4725.h                    |  12 +-
+ 3 files changed, 206 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/mcp4725.txt
+
+-- 
+2.1.4
