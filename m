@@ -1,81 +1,55 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: usb: atmel: fix a couple of copy-paste style
- typos
-Date: Tue, 18 Oct 2016 13:58:44 +0200
-Message-ID: <52ad1387-49fe-1b20-435f-9c77e460b69f@atmel.com>
-References: <1476788718-21143-1-git-send-email-peda@axentia.se>
+From: Jagan Teki <jagan@openedev.com>
+Subject: Re: [PATCH v7 0/5] ARM: dts: imx6q: Add Engicam i.CoreM6 dts
+Date: Tue, 18 Oct 2016 17:30:28 +0530
+Message-ID: <CAD6G_RQyLtgJw=djPTmY5t7UVwzuZpj0xM0HjchLQjq7P5hMOg@mail.gmail.com>
+References: <1476437243-13297-1-git-send-email-jteki@openedev.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476788718-21143-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1476437243-13297-1-git-send-email-jteki@openedev.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jagan Teki <jteki@openedev.com>, Michael Trimarchi <michael@amarulasolutions.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 18/10/2016 à 13:05, Peter Rosin a écrit :
-> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Hi Shawn,
 
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+On Fri, Oct 14, 2016 at 2:57 PM, Jagan Teki <jteki@openedev.com> wrote:
+> This is series add dts support for Engicam I.Core M6 qdl modules. just
+> rebased on top of linux-next of previous set[1].
+>
+> [1] http://www.spinics.net/lists/kernel/msg2358233.html
+>
+> Jagan Teki (5):
+>   ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual initial support
+>   ARM: dts: imx6q: Add Engicam i.CoreM6 DualLite/Solo initial support
+>   ARM: dts: imx6qdl-icore: Add usbhost support
+>   ARM: dts: imx6qdl-icore: Add usbotg support
+>   ARM: dts: imx6qdl-icore: Add FEC support
+>
+>  arch/arm/boot/dts/Makefile           |   2 +
+>  arch/arm/boot/dts/imx6dl-icore.dts   |  59 ++++++++
+>  arch/arm/boot/dts/imx6q-icore.dts    |  59 ++++++++
+>  arch/arm/boot/dts/imx6qdl-icore.dtsi | 271 +++++++++++++++++++++++++++++++++++
+>  4 files changed, 391 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6dl-icore.dts
+>  create mode 100644 arch/arm/boot/dts/imx6q-icore.dts
+>  create mode 100644 arch/arm/boot/dts/imx6qdl-icore.dtsi
 
-We may take it in a future at91-x.y-dt branch which will go through arm-soc.
+Can you pick this series?
 
-Thanks
-
-> ---
->  Documentation/devicetree/bindings/usb/atmel-usb.txt | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/atmel-usb.txt b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-> index f4262ed60582..ad8ea56a9ed3 100644
-> --- a/Documentation/devicetree/bindings/usb/atmel-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-> @@ -6,9 +6,9 @@ Required properties:
->   - compatible: Should be "atmel,at91rm9200-ohci" for USB controllers
->     used in host mode.
->   - reg: Address and length of the register set for the device
-> - - interrupts: Should contain ehci interrupt
-> + - interrupts: Should contain ohci interrupt
->   - clocks: Should reference the peripheral, host and system clocks
-> - - clock-names: Should contains two strings
-> + - clock-names: Should contain three strings
->  		"ohci_clk" for the peripheral clock
->  		"hclk" for the host clock
->  		"uhpck" for the system clock
-> @@ -35,7 +35,7 @@ Required properties:
->   - reg: Address and length of the register set for the device
->   - interrupts: Should contain ehci interrupt
->   - clocks: Should reference the peripheral and the UTMI clocks
-> - - clock-names: Should contains two strings
-> + - clock-names: Should contain two strings
->  		"ehci_clk" for the peripheral clock
->  		"usb_clk" for the UTMI clock
->  
-> @@ -58,7 +58,7 @@ Required properties:
->   - reg: Address and length of the register set for the device
->   - interrupts: Should contain macb interrupt
->   - clocks: Should reference the peripheral and the AHB clocks
-> - - clock-names: Should contains two strings
-> + - clock-names: Should contain two strings
->  		"pclk" for the peripheral clock
->  		"hclk" for the AHB clock
->  
-> @@ -85,7 +85,7 @@ Required properties:
->   - reg: Address and length of the register set for the device
->   - interrupts: Should contain usba interrupt
->   - clocks: Should reference the peripheral and host clocks
-> - - clock-names: Should contains two strings
-> + - clock-names: Should contain two strings
->  		"pclk" for the peripheral clock
->  		"hclk" for the host clock
->   - ep childnode: To specify the number of endpoints and their properties.
-> 
-
-
+thanks!
 -- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jagan Teki
+Free Software Engineer | www.openedev.com
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
