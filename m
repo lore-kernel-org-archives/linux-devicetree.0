@@ -1,60 +1,63 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2 3/4] Device bindings documentation updated
- ACPI-enabled platforms not currently supported
-Date: Tue, 18 Oct 2016 17:17:06 +0200
-Message-ID: <20161018151706.GA1433@katana>
-References: <cover.1476462204.git.lolivei@synopsys.com>
- <36f4b1736e36b039af15b13645df0de492f1b6e1.1476462204.git.lolivei@synopsys.com>
- <20161014173014.GA26269@leverpostej>
- <20161014182045.GA1509@katana>
- <55cc91af-8d24-8aea-f74f-2ef40cd8ea5a@synopsys.com>
+From: Kieran Bingham <kieran-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH 2/2] scripts/gdb: fixup some pep8 errors in proc.py
+Date: Tue, 18 Oct 2016 16:27:48 +0100
+Message-ID: <477b66cc-05dc-57fa-38fb-f80510935c2e@bingham.xyz>
+References: <1476803249-23328-1-git-send-email-peter.griffin@linaro.org>
+ <1476803249-23328-2-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55cc91af-8d24-8aea-f74f-2ef40cd8ea5a@synopsys.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Luis.Oliveira@synopsys.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476803249-23328-2-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, jan.kiszka-kv7WeFo6aLtBDgjK7y7TUQ@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Pete,
 
---Qxx1br4bt0+wmkIi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 18/10/16 16:07, Peter Griffin wrote:
+> proc.py:22:1: E302 expected 2 blank lines, found 1
+> proc.py:200:1: E302 expected 2 blank lines, found 1
+> 
+> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  scripts/gdb/linux/proc.py | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/scripts/gdb/linux/proc.py b/scripts/gdb/linux/proc.py
+> index f20fcfa..2d6f74e 100644
+> --- a/scripts/gdb/linux/proc.py
+> +++ b/scripts/gdb/linux/proc.py
+> @@ -18,6 +18,7 @@ from linux import tasks
+>  from linux import lists
+>  from struct import *
+>  
+> +
 
+This was added by patch 1, and can be squashed there.
 
-> This is needed because the configuration is different and the i2c-designware
-> cannot be master/slave without a reset. To resolve that I added this property
-> to bind it as a slave when needed.
+>  class LxCmdLine(gdb.Command):
+>      """ Report the Linux Commandline used in the current kernel.
+>          Equivalent to cat /proc/cmdline on a running target"""
+> @@ -196,6 +197,7 @@ values of that process namespace"""
+>  
+>  LxMounts()
+>  
+> +
 
-Aww, pity that the HW can't do that. Do you have details why?
+Likewise...
 
-If that is really a HW limitation, then I'd suggest having a seperate
-driver for slave-only mode so we can differentiate by compatible
-strings.
+>  class LxFdtDump(gdb.Command):
+>      """Output Flattened Device Tree header and dump FDT blob to a file
+>         Equivalent to 'cat /proc/fdt > fdtdump.dtb' on a running target"""
+> 
 
+-- 
+Regards
 
---Qxx1br4bt0+wmkIi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJYBjzyAAoJEBQN5MwUoCm2+sgQAJL5LBxfbRgPY79LZF3I5mEh
-0oMe+WB0IAdkO1clgwCe/MONSo6JTDSEWHXvjbR4ZSPiIK61u88Y1pJqX1jES6+H
-68oRaQHaOEP8DCTFoItqI/O5xpo54PkXOJbDzBjPq9CV/7dOdaBROSiLinJIQudH
-uKYqer3xuQUeEsKU0su04bZKMAmRhGtr2PinGw1+RJJoXwGWACVNemeJg63f3EN5
-7yb6SdL2z8y3ZoZCJO7RTSYgs93JrKvNiH35yJgABG4ro8wSxixg6LuKc5oStVtv
-NX8c6uckKZkaKavY0ZuCOCGYAgZWvvwDY+AQWhZFe3f/BeamZm1ze7cHPQVYuUos
-0S1jRoAo2FY8/MJaxzdmY4HxmwM8vsrFcz4ob2mGshWMFpdKm0lTP/g7/X4zp218
-JV2Np5WeYjfmTktcYHvj9oDIQTMzStu942REwa8TrvKc4JzpYhOMpAK48D2wE/Oy
-M1uPBjKWpE9/43F5Vt7ZJG9UmgyAuBMQzpXmZRzGflyS9BgPc6HRm9/gPgRfEglG
-R6GeEmKsNLyQ/L0RawrRwJAgbO0aGc8c25g+iB20cwA2xrGVl0tokWQRVGVr+ary
-iFMk8bDYeUrwqGuie3kXylUmceYDa1RibaW+TzDV4xdELI2KXKA2Mg6EZLZ/P7GB
-0EexhhFV9jApBxLW13YI
-=4Ps5
------END PGP SIGNATURE-----
-
---Qxx1br4bt0+wmkIi--
+Kieran Bingham
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
