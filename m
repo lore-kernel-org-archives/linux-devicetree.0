@@ -1,85 +1,70 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] leds: leds-pca963x: workaround group blink scaling issue
-Date: Tue, 18 Oct 2016 16:17:18 +0200
-Message-ID: <f677d333-2128-8777-d02b-2bd2c85c76a2@samsung.com>
-References: <CGME20161013131622eucas1p2e419c58b25f2c61da22d390f2adfacfd@eucas1p2.samsung.com>
- <1476364572-26849-1-git-send-email-matt@ranostay.consulting>
- <ac8bb319-8ad2-65fe-e8bb-6fd9af61f046@samsung.com>
- <CAKzfze_d5rQ-MaNL1BbGXrdHG+UDNa=us68eoH_AJ-EKLnzCvw@mail.gmail.com>
- <924a896d-b3f2-5fed-62ba-a731e79e1567@samsung.com>
- <20161014142047.imm4idfetphlp5od@atomide.com>
- <CAKzfze8s4E4x70bAoXd8_cctUeih4dwareM7=dpc7GsQq3agWQ@mail.gmail.com>
- <5d9476b8-b552-f745-e06d-9894fa2e542a@samsung.com>
- <20161018134915.hbeiorftge56xrih@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH net-next 1/2] net: phy: Add Speed downshift set driver
+ for Microsemi PHYs.
+Date: Tue, 18 Oct 2016 09:24:45 -0500
+Message-ID: <20161018142445.vzpkebnmqv6y5zqa@rob-hp-laptop>
+References: <1476445233-26524-1-git-send-email-Raju.Lakkaraju@microsemi.com>
+ <1476445233-26524-2-git-send-email-Raju.Lakkaraju@microsemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20161018134915.hbeiorftge56xrih@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <1476445233-26524-2-git-send-email-Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
+To: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/18/2016 03:49 PM, Rob Herring wrote:
-> On Mon, Oct 17, 2016 at 09:58:26AM +0200, Jacek Anaszewski wrote:
->> On 10/15/2016 02:00 PM, Matt Ranostay wrote:
->>> On Fri, Oct 14, 2016 at 7:20 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
->>>> * Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> [161013 23:37]:
->>>>> On 10/13/2016 04:20 PM, Matt Ranostay wrote:
->>>>>> On Thu, Oct 13, 2016 at 4:05 PM, Jacek Anaszewski
->>>>>> <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>>>>>> Why DT property? Is it somehow dependent on the board configuration?
->>>>>>> How this period-scale value is calculated? Is it inferred empirically?
->>>>>>>
->>>>>>
->>>>>> We empirically discovered and verified this with an logic analyzer on
->>>>>> multiple batches of this part.
->>>>>> Reason for the DT entry is we aren't 100% sure that it is always going
->>>>>> to be the same with different board revs.
->>>>>>
->>>>>> Could be that parts clock acts differently with supply voltage.   This
->>>>>> has been calculated by setting it an expected value, and measuring the
->>>>>> actual result with the logic analyzer.
->>>>>
->>>>> I'd like to have DT maintainer's ack for this.
->>>>>
->>>>> Cc Rob and Mark.
->>>>
->>>> How about do this based on the compatible property instead? If there
->>>> are multiple manufacturers for this part and only a certain
->>>> parts have this issue we should have multiple compatible properties.
->>>>
->>>
->>> I could only find that NXP as the manufacturer of that part. It is
->>> possible since the clock is internal to the chipset that the vdd of
->>> 2.5V is doing something undefined.
->>>
->>>> Then if it turns out all of them need this scaling there's no need
->>>> to update the binding.
->>>
->>> Understandable.
->>
->> Since at present we can't guarantee that all produced devices
->> are affected, then we should strive to avoid breaking any existing
->> users of the possible non-affected devices.
->>
->> In view of that the addition of a new "compatible" proposed by Tony
->> seems most reasonable.
->>
->> Still, DT maintainer's opinion is required.
->
-> Seems like a quirk of this board, so I think the added property is fine.
->
-> It could be existing users just didn't notice the rate being off. 30% is
-> probably not all that noticeable to the human eye.
+On Fri, Oct 14, 2016 at 05:10:32PM +0530, Raju Lakkaraju wrote:
+> From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+> 
+> For operation in cabling environments that are incompatible with
+> 1000BAST-T, VSC8531 device provides an automatic link speed
+> downshift operation. When enabled, the device automatically changes
+> its 1000BAST-T auto-negotiation to the next slower speed after
+> a configured number of failed attempts at 1000BAST-T.
+> This feature is useful in setting up in networks using older cable
+> installations that include only pairs A and B, and not pairs C and D.
+> 
+> Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+> Signed-off-by: Allan W. Nielsen <allan.nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/mscc-phy-vsc8531.txt   |  6 ++
+>  drivers/net/phy/mscc.c                             | 75 +++++++++++++++++++++-
+>  2 files changed, 80 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> index bdefefc6..062d115 100644
+> --- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> +++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> @@ -27,6 +27,11 @@ Optional properties:
+>  			  'vddmac'.
+>  			  Default value is 0%.
+>  			  Ref: Table:1 - Edge rate change (below).
+> +- downshift-cnt		: When enabled, the device automatically changes its
+> +			  1000BAST-T auto-negotiation to the next slower speed
+> +			  after a 'downshift-cnt' of failed attempts at
+> +			  1000BAST-T. Allowed values: 0, 2, 3, 4, 5.
+> +			  0 is default and will disable downshifting.
 
-Thanks for the feedback. I infer that you wouldn't mind if
-I added your ack to this commit then?
+Not sure if you are dropping this based on the discussion. Is this 
+end-user controlled or a board property? Only the latter should be in 
+DT.
 
--- 
-Best regards,
-Jacek Anaszewski
+>  
+>  Table: 1 - Edge rate change
+>  ----------------------------------------------------------------|
+> @@ -60,4 +65,5 @@ Example:
+>                  compatible = "ethernet-phy-id0007.0570";
+>                  vsc8531,vddmac		= <3300>;
+>                  vsc8531,edge-slowdown	= <7>;
+> +                vsc8531,downshift-cnt   = <3>;
+
+This doesn't match the above. Also, 'vsc8531' should be the vendor 
+prefix, not a part number. The existing properties are fine, but fix new 
+ones.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
