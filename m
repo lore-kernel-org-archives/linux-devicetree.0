@@ -1,40 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 2/2] devicetree: bindings: uart: Add new compatible
- string for ZynqMP
-Date: Tue, 18 Oct 2016 08:04:22 -0500
-Message-ID: <20161018130422.2zjasatazwmmbsss@rob-hp-laptop>
-References: <1476258448-20483-1-git-send-email-navam@xilinx.com>
- <1476258448-20483-2-git-send-email-navam@xilinx.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC V3 PATCH 3/7] dt-bindings: qcom: Add msm899(2/4) bindings
+Date: Tue, 18 Oct 2016 08:06:42 -0500
+Message-ID: <20161018130642.bnxnvce4aphhzutt@rob-hp-laptop>
+References: <1476265054-22511-1-git-send-email-jeremymc@redhat.com>
+ <1476265054-22511-4-git-send-email-jeremymc@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1476258448-20483-2-git-send-email-navam@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nava kishore Manne <nava.manne@xilinx.com>
-Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, jslaby@suse.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, punnaia@xilinx.com, Nava kishore Manne <navam@xilinx.com>
+In-Reply-To: <1476265054-22511-4-git-send-email-jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 12, 2016 at 01:17:28PM +0530, Nava kishore Manne wrote:
-> From: Nava kishore Manne <nava.manne@xilinx.com>
+On Wed, Oct 12, 2016 at 02:37:30AM -0700, Jeremy McNicoll wrote:
+> From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 > 
-> This patch Adds the new compatible string for ZynqMP SoC.
-> 
-> Signed-off-by: Nava kishore Manne <navam@xilinx.com>
+> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 > ---
-> Changes for v6:
-> 		-Added New compatiable string for ZynqMP SoC as
-> 		 suggested by Rob Herring.
-> Changes for v5:
-> 		-Mofified the compatible session.
-> Changes for v4:
->                 -Modified the ChangeLog comment.
-> Changes for v3:
->                 -Added changeLog comment.
-> Changes for v2:
->                 -None
-> 
->  Documentation/devicetree/bindings/serial/cdns,uart.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/arm/qcom.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
