@@ -1,26 +1,18 @@
-From: Patrice Chotard <patrice.chotard@st.com>
-Subject: Re: [PATCH 03/19] MAINTAINERS: Remove phy-miphy365x.c entry from STi
- arch
-Date: Tue, 18 Oct 2016 09:48:19 +0200
-Message-ID: <aab225f3-2482-4a08-1149-4220327f81d7@st.com>
+From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 04/19] MAINTAINERS: Remove phy-stih41x-usb.c entry from
+ STi arch
+Date: Tue, 18 Oct 2016 09:50:13 +0200
+Message-ID: <4108140b-ac27-42e6-8c25-d65caff70e12@st.com>
 References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
- <1473859677-9231-4-git-send-email-peter.griffin@linaro.org>
+ <1473859677-9231-5-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1473859677-9231-4-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, devicetree@vger.kernel.org
-Cc: lee.jones@linaro.org, kishon@ti.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473859677-9231-5-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi
@@ -30,10 +22,10 @@ On 09/14/2016 03:27 PM, Peter Griffin wrote:
 > silicon, and support for these SoC's is being removed
 > from the kernel.
 > 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> Cc: <kishon@ti.com>
+> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: <kishon-l0cyMroinI0@public.gmane.org>
 
-Acked-by: Patrice Chotard <patrice.chotard@st.com>
+Acked-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
 
 Applied on sti-dt-for-4.10 branch
 
@@ -44,15 +36,19 @@ Thanks
 >  1 file changed, 1 deletion(-)
 > 
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index db814a8..12c271c 100644
+> index 12c271c..6a278b9 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -1754,7 +1754,6 @@ F:	drivers/media/rc/st_rc.c
->  F:	drivers/media/platform/sti/c8sectpfe/
+> @@ -1755,7 +1755,6 @@ F:	drivers/media/platform/sti/c8sectpfe/
 >  F:	drivers/mmc/host/sdhci-st.c
 >  F:	drivers/phy/phy-miphy28lp.c
-> -F:	drivers/phy/phy-miphy365x.c
 >  F:	drivers/phy/phy-stih407-usb.c
->  F:	drivers/phy/phy-stih41x-usb.c
+> -F:	drivers/phy/phy-stih41x-usb.c
 >  F:	drivers/pinctrl/pinctrl-st.c
+>  F:	drivers/remoteproc/st_remoteproc.c
+>  F:	drivers/reset/sti/
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
