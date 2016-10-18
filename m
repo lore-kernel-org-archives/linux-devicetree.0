@@ -1,67 +1,60 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm64: dts: uniphier: add CPU clock and OPP table
- for LD11 SoC
-Date: Tue, 18 Oct 2016 16:55:48 +0530
-Message-ID: <20161018112548.GA11471@vireshk-i7>
-References: <1476629958-25368-1-git-send-email-yamada.masahiro@socionext.com>
- <1476629958-25368-3-git-send-email-yamada.masahiro@socionext.com>
+From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+Subject: Re: [PATCH net-next 2/2] net: phy: Add Fast Link Failure - 2 set
+ driver for Microsemi PHYs.
+Date: Tue, 18 Oct 2016 17:01:03 +0530
+Message-ID: <20161018113043.GA19357@microsemi.com>
+References: <1476445233-26524-1-git-send-email-Raju.Lakkaraju@microsemi.com>
+ <1476445233-26524-3-git-send-email-Raju.Lakkaraju@microsemi.com>
+ <20161014120228.GF5822@lunn.ch>
+ <20161017081312.GB2365@microsemi.com>
+ <838C6202-9B7D-4AFA-B163-55515044FA4F@gmail.com>
+ <20161018103413.GA31087@microsemi.com>
+ <20161018105820.GM26778@lunn.ch>
+Reply-To: <Raju.Lakkaraju@microsemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1476629958-25368-3-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20161018105820.GM26778@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Allan.Nielsen@microsemi.com
 List-Id: devicetree@vger.kernel.org
 
-On 16-10-16, 23:59, Masahiro Yamada wrote:
-> +	cluster0_opp: opp_table {
-> +		compatible = "operating-points-v2";
-> +		opp-shared;
-> +
-> +		opp@245000000 {
-> +			opp-hz = /bits/ 64 <245000000>;
-> +			clock-latency-ns = <300>;
-> +		};
-> +		opp@250000000 {
-> +			opp-hz = /bits/ 64 <250000000>;
-> +			clock-latency-ns = <300>;
-> +		};
-> +		opp@490000000 {
-> +			opp-hz = /bits/ 64 <490000000>;
-> +			clock-latency-ns = <300>;
-> +		};
-> +		opp@500000000 {
-> +			opp-hz = /bits/ 64 <500000000>;
-> +			clock-latency-ns = <300>;
-> +		};
-> +		opp@653333333 {
+Hi Andrew,
 
-Why isn't ^^ matching with below values ? Same in next patch as well.
+On Tue, Oct 18, 2016 at 12:58:20PM +0200, Andrew Lunn wrote:
+> EXTERNAL EMAIL
+> 
+> 
+> > > In fact, this looks a lot like netdev features (e.g: checksum
+> > > offload), and there seems to be some commonality here between at
+> > > least Marvell and Microsemi (for the faster link down reporting),
+> > > so maybe we should start adding PHY features similar to netdev
+> > > features?
+> 
+> > Sure.
+> >
+> > I would like add one flag in phy_device structure:
+> > u64 phy_features;
+> >
+> > In phy_driver structure, i would like to add 2 function pointer as
+> >
+> > int (*phy_featues_set)(struct phy_device *phydev);
+> > int (*phy_featues_get)(struct phy_device *phydev);
+> >
+> > All the PHY specific features i.e. Fast link failure -2, Downshift, Loopback etc
+> > are the case in feature_set/feature_get functions.
+> 
+> Please follow how the ethertool features are implemented. So you need
+> to extend net/core/ethtool.c to pass these call down, etc.
+> 
 
-> +			opp-hz = /bits/ 64 <653334000>;
-> +			clock-latency-ns = <300>;
-> +		};
-> +		opp@666666666 {
-> +			opp-hz = /bits/ 64 <666667000>;
-> +			clock-latency-ns = <300>;
-> +		};
-> +		opp@980000000 {
-> +			opp-hz = /bits/ 64 <980000000>;
-> +			clock-latency-ns = <300>;
-> +		};
-> +	};
-> +
->  	clocks {
->  		refclk: ref {
->  			compatible = "fixed-clock";
-> -- 
-> 1.9.1
+Sure. I will do.
+Do i need to change Ethtool application and submit along with 
+downshift driver patch (i.e. ethtool.c, phy.c, cpsw.c and mscc.c changes) ? 
+>        Andrew
 
--- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
+Thanks,
+Raju.
