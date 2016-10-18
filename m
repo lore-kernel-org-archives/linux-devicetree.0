@@ -1,141 +1,60 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC PATCH] mtd: nand: Add OX820 NAND Support
-Date: Tue, 18 Oct 2016 13:24:22 +0200
-Message-ID: <c377cb60-a359-62c1-dc6b-7b0be8b8e228@baylibre.com>
-References: <20161018090927.1990-1-narmstrong@baylibre.com>
- <20161018110807.GD1641@makrotopia.org>
+From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: usb: dwc2: Revert incorrect FIFO changes
+Date: Tue, 18 Oct 2016 14:25:21 +0300
+Message-ID: <87bmyhrja6.fsf@linux.intel.com>
+References: <cover.1476750819.git.johnyoun@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161018110807.GD1641-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+In-Reply-To: <cover.1476750819.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/18/2016 01:08 PM, Daniel Golle wrote:
-> Hi Neil,
-> 
-> great to see progress towards supporting OX820!
-> The NAND driver I hacked up for Kernel 4.1 and 4.4 in OpenWrt/LEDE
-> looks very similar, see
-> 
-> https://git.lede-project.org/?p=lede/dangole/staging.git;a=blob;f=target/linux/oxnas/files/drivers/mtd/nand/oxnas_nand.c;h=f5a142950e32227fee304de731e619278350a91b;hb=refs/heads/oxnas-nand
-> 
-> To me therefore this looks quite good, just one small question below.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Hi Daniel,
 
-Yes, I work step by step, I hope to have something booting for 4.10 !
+Hi,
 
-Indeed, they look identical except the part_probes[] stuff, are they necessary ?
+John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
+> This series reverts patches that incorrectly removed some FIFO
+> programming.
+>
+> Hi Felipe,
+>
+> This fixes a regression on 4.9-rc1, could you queue them in your fixes
+> tree?
 
-My primary source of code was Ma Haiju's tree and OPenWRT's tree, but would some people like to push some of the openwrt driver upstream somehow ?
+added to testing/fixes. I'll be sending a pull request tomorrow if I
+manage to get my tests done by the end of tomorrow ;-)
 
-Thanks,
-Neil
+=2D-=20
+balbi
 
-> 
-> Cheers
-> 
-> Daniel
-> 
-> 
-> On Tue, Oct 18, 2016 at 11:09:27AM +0200, Neil Armstrong wrote:
->> Add NAND driver to support the Oxford Semiconductor OX820 NAND Controller.
->> This is a simple memory mapped NAND controller with single chip select and
->> software ECC.
->>
->> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/mtd/oxnas-nand.txt         |  24 ++++
->>  drivers/mtd/nand/Kconfig                           |   5 +
->>  drivers/mtd/nand/Makefile                          |   1 +
->>  drivers/mtd/nand/oxnas_nand.c                      | 144 +++++++++++++++++++++
->>  4 files changed, 174 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mtd/oxnas-nand.txt
->>  create mode 100644 drivers/mtd/nand/oxnas_nand.c
->>
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[...]
+-----BEGIN PGP SIGNATURE-----
 
->> diff --git a/drivers/mtd/nand/oxnas_nand.c b/drivers/mtd/nand/oxnas_nand.c
->> new file mode 100644
->> index 0000000..ee402ab
->> --- /dev/null
->> +++ b/drivers/mtd/nand/oxnas_nand.c
->> @@ -0,0 +1,144 @@
->> +/*
->> + * Oxford Semiconductor OXNAS NAND driver
->> + *
->> + * Heavily based on plat_nand.c :
->> + * Author: Vitaly Wool <vitalywool-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Hmm, I forgot the OpenWRT and Ma Haijun copyrights here...
-
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/slab.h>
->> +#include <linux/clk.h>
->> +#include <linux/reset.h>
->> +#include <linux/mtd/mtd.h>
->> +#include <linux/mtd/nand.h>
->> +#include <linux/mtd/partitions.h>
->> +
->> +/* nand commands */
->> +#define NAND_CMD_ALE		BIT(18)
->> +#define NAND_CMD_CLE		BIT(19)
->> +#define NAND_CMD_CS		0
->> +#define NAND_CMD_RESET		0xff
->> +#define NAND_CMD		(NAND_CMD_CS | NAND_CMD_CLE)
->> +#define NAND_ADDR		(NAND_CMD_CS | NAND_CMD_ALE)
->> +#define NAND_DATA		(NAND_CMD_CS)
->> +
->> +struct oxnas_nand_data {
->> +	struct nand_chip	chip;
->> +	void __iomem		*io_base;
-> 
-> Why do you redundantly keep io_base in platform data rather than
-> just using chip.IO_ADDR_R and >chip.IO_ADDR_W?
-
-For no reason since it's not used in oxnas_nand_cmd_ctrl...
-Will remove !
-
-> 
-> 
->> +	struct clk		*clk;
->> +};
->> +
->> +static void oxnas_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
->> +				unsigned int ctrl)
->> +{
->> +	struct nand_chip *this = mtd->priv;
->> +	unsigned long nandaddr = (unsigned long) this->IO_ADDR_W;
->> +
->> +	if (ctrl & NAND_CTRL_CHANGE) {
->> +		nandaddr &= ~(NAND_CMD | NAND_ADDR);
->> +		if (ctrl & NAND_CLE)
->> +			nandaddr |= NAND_CMD;
->> +		else if (ctrl & NAND_ALE)
->> +			nandaddr |= NAND_ADDR;
->> +		this->IO_ADDR_W = (void __iomem *) nandaddr;
->> +	}
->> +
->> +	if (cmd != NAND_CMD_NONE)
->> +		writeb(cmd, (void __iomem *) nandaddr);
->> +}
-[...]
-
+iQIcBAEBCAAGBQJYBgahAAoJEMy+uJnhGpkG2uYP/jK0hz9Cm7U5/FYFM4f4GMhu
+nPxB49luRN4jtZjc4A6kg9xMFlDjFVncGwEEErWwSf9pxSvykB6gvKfZwOITMjYX
+MKPdKK2JC/re/xdJWj75LBWD+xiGkdXonwAmMRqJIz+8fOpVTX7VNyHgv3BlSp1z
+AQB24wZugx/Yl6C+R1Hwbnc+yg1sJ+DHz4L7e4ZJd4XOZH5JOVdlhSTFTbtJXtVP
+qQ/UB1ty4OCvDrpLKVvIZIZGZNcmsIse/n4F1l6mu+Saa0PuSi5k7cshOOpW+nC9
+UBKzgYU4HjoSkcTu/jeFxiRkZSL0W0Mf7pGBFIl8XjGfLq2U8cnySTDB/trI1eGo
+v71UzyhvPsf0PXtQn5lKm+ujoAMq9BCvURDGq9GkdC6ELkvmdSrqHh8PWA+ju4EF
+rssmANM12U73i34FIAFa8894EAK3atvTsvBwzvDZPwfzNcVfubClDnXsiPJbNBwf
+tdNM6SJqKoC8ynTzAMlqPGAwRxaQxn3hcj6YXb6tK950em6h6/h0zaxr58GSh/zL
+zBFJrtg4xnL+7w0b0QB9NbiW+DMm3C1cufCbZqdhV+h+ktj7+YSRkT5QagKYR6IM
+wQkUaQNPEjG/Kw+EJNUzcHkeIxofKfwHBf5zYVZ4v08yROmV8noqKmZdWyvm7qgS
+LOxzsgQ0oovwRkonElsc
+=Irgk
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
