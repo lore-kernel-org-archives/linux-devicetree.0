@@ -1,57 +1,112 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] dt/bindings: Add milivolt, milliamps, and
- nanohenry units
-Date: Tue, 18 Oct 2016 08:28:47 -0500
-Message-ID: <20161018132847.hwaij5j5ohyvwoed@rob-hp-laptop>
-References: <CAL_JsqKdV7133oo5jECZn2SwVjMM3E_ZNr+JS=9Wtkx8BZVuEQ@mail.gmail.com>
- <6ca3d940-4822-42d5-8606-cfc4c815c7ad@EX4.ad.cirrus.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 5/10] dt: bindings: Add bindings for Marvell Xenon SD Host Controller
+Date: Tue, 18 Oct 2016 15:29:54 +0200
+Message-ID: <87k2d5eqel.fsf@free-electrons.com>
+References: <cover.990e3503c30c18ecf50dd48bce3d52811f03ca22.1475853198.git-series.gregory.clement@free-electrons.com>
+        <fc0ca2b3140287cbccf5c176a12b7dce25d06a47.1475853198.git-series.gregory.clement@free-electrons.com>
+        <20161010213417.GA11795@rob-hp-laptop>
+        <d95c3035-e3cd-a93c-d408-27f4c8dba589@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6ca3d940-4822-42d5-8606-cfc4c815c7ad-k7YZYYsDncjfk+Ne4bZl5AC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Handrigan, Paul" <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Austin, Brian" <Brian.Austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <d95c3035-e3cd-a93c-d408-27f4c8dba589@marvell.com> (Ziji Hu's
+        message of "Tue, 11 Oct 2016 18:03:47 +0800")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Ziji Hu <huziji@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, "Jack(SH) Zhu" <jmzhu@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Shiwu Zhang <zhangshw@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.com>Xu
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 18, 2016 at 12:43:48AM +0000, Handrigan, Paul wrote:
-> 
-> 
-> 
-> >>  Electricity
-> >>  ----------------------------------------
-> >>  -microamp      : micro amps
-> >> +-milliamp      : milli amps
-> >
-> >Please explain why you need need this. Is 2^32 uA not enough range for
-> >you? While we do have multiple units for some, that's because people
-> >picked arbitrary units for their properties before this doc existed.
-> >Ideally, we only have 1 unit to prevent that problem.
-> 
-> 2^32 would be enough, however, microamps would not be a good
-> representation for
-> this particular entry. For example, if the current limit is 2.1A the
-> entry will have to be 2100000.  Micro amps will not be the best
-> representation for this value from a scientific notation perspective.
-> Since the scale is in miiliamps as it is defined in the data sheet of
-> this device, it will be best to stay consistent since an error in
-> conversion
-> could cause serious problems.
-> 
-> Also, I really don¹t see why adding milliamps and millivolts as being a
-> major
-> problems since both of them are commonly used.
+Hi Rob,
+ 
+ On mar., oct. 11 2016, Ziji Hu <huziji@marvell.com> wrote:
+[...]
 
-As I explained, we want to have some uniformity in properties especially 
-across different bindings. That's not something I want to check in every
-review. Telling people to add units is enough.
+>>> +  Different Xenon SDHC release has different register set size.
+>>> +  The specific size should also refer to the SOC implementation.
+>>> +
+>>> +Optional Properties:
+>>> +- Slot Index
+>>> +  A single Xenon IP can support multiple slots.
+>>> +  During initialization, each slot should set corresponding setting bit in
+>>> +  some Xenon-specific registers. The corresponding bit is determined by
+>>> +  this property.
+>>> +  - xenon,slotno = <slot_index>;
+>> 
+>> Slots should probably be represented as child nodes with the reg 
+>> property being the slot number.
+>
+> 	Since each SDHC slot is independent, I find it is more
+> convenient to implement each one as independent SD host/MMC host
+> instant.
+> 	Otherwise, a main function should loop and initialize each
+> slot, like sdhci-pci. I prefer to avoiding such a unnecessary main
+> function.
+>
+> 	It is very hard to determine the slot number by reg property.
+> 	Xenon slots are likely to be different types. 1st slot might
+> be eMMC and 2nd one might be SD. They might have different register
+> size.
+> 	The register size might also varies in different Xenon versions.
+>
 
-I don't see how adding '000' is a problem.
+Something that took me a while to figure out is that even it is the same
+hardware block which handle multiple SoCs.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Each slots is managed by its own set of register. From the point of view
+of the OS, it is as if we have an independent controller for each
+slot.
+
+But for an obscure reason, some command need to know which slot is
+used. That's why we ended with this property.
+
+With some example what you had in mind was something like that:
+sdhci@aa0000 {
+		compatible = "marvell,armada-3700-sdhci";
+		reg = <0xaa0000 0x1000>;
+[...]
+                slot0 {
+                      /* slot0 is an eMMC */
+                      reg = <0>;
+                      bus-width = <8>;
+                      xenon,pad-type = "fixed-1-8v";
+
+                }
+                slot1 {
+                      /* slot1 is an SD Card */
+                      reg = <1>;
+                      bus-width = <4>;
+                      xenon,pad-type = "fixed-1-8v";
+
+                }
+	};
+
+But it won't work as each slot uses its own address registers, that why we
+ended with this:
+sdhci@aa0000 {
+                /* slot0 is an eMMC */
+		compatible = "marvell,armada-3700-sdhci";
+		reg = <0xaa0000 0x1000>;
+[...]
+                xenon,slotno = <0>;
+                bus-width = <8>;
+                xenon,pad-type = "fixed-1-8v";
+	};
+sdhci@bb0000 {
+                /* slot1 is an SD Card */
+		compatible = "marvell,armada-3700-sdhci";
+		reg = <0xbb0000 0x1000>;
+[...]
+                xenon,slotno = <1>;
+                bus-width = <4>;
+                xenon,pad-type = "fixed-1-8v";
+	};
+
+I hope it is more clear now.
+
+Gregory
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
