@@ -1,53 +1,57 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v20 10/10] fpga-manager: Add Socfpga Arria10 support
-Date: Wed, 19 Oct 2016 10:49:53 -0500
-Message-ID: <alpine.DEB.2.02.1610191049120.22251@linuxheads99>
-References: <20161017160941.4205-1-atull@opensource.altera.com>
- <20161017160941.4205-11-atull@opensource.altera.com>
- <20161018210159.GA1916@live.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH] mtd: nand: Add OX820 NAND Support
+Date: Wed, 19 Oct 2016 17:54:28 +0200
+Message-ID: <20161019175428.6ea3998d@bbrezillon>
+References: <20161019145523.6763-1-narmstrong@baylibre.com>
+        <20161019173704.75592f52@bbrezillon>
+        <0f5398bb-52f1-d5bb-834c-dead4f708fd3@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161018210159.GA1916@live.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, delicious.quinoa@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Jon Masters <jcm@redhat.com>, Matthew Gerlach <mgerlach@opensource.altera.com>, Frank Rowand <frowand.list@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0f5398bb-52f1-d5bb-834c-dead4f708fd3@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, richard@nod.at, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-oxnas@lists.tuxfamily.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, daniel@makrotopia.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Oct 2016, Moritz Fischer wrote:
+On Wed, 19 Oct 2016 17:46:01 +0200
+Neil Armstrong <narmstrong@baylibre.com> wrote:
 
-> On Mon, Oct 17, 2016 at 11:09:41AM -0500, Alan Tull wrote:
-> > Add low level driver to support reprogramming FPGAs for Altera
-> > SoCFPGA Arria10.
+> >> +/* Single CS command control */
+> >> +static void oxnas_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
+> >> +				unsigned int ctrl)
+> >> +{
+> >> +	struct nand_chip *chip = mtd_to_nand(mtd);
+> >> +	struct oxnas_nand *oxnas = nand_get_controller_data(chip);
+> >> +
+> >> +	if (ctrl & NAND_CTRL_CHANGE) {
+> >> +		if (ctrl & NAND_CLE)
+> >> +			oxnas->ctrl = OXNAS_NAND_CMD_CLE;
+> >> +		else if (ctrl & NAND_ALE)
+> >> +			oxnas->ctrl = OXNAS_NAND_CMD_ALE;
+> >> +		else
+> >> +			oxnas->ctrl = 0;
+> >> +	}
+> >> +
+> >> +	if (cmd != NAND_CMD_NONE)
+> >> +		writeb(cmd, oxnas->io_base + oxnas->ctrl);  
 > > 
-> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> 
-> Reviewed-by: Moritz Fischer <moritz.fischer@ettus.com>
-
-> > +
-> > +MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
-> > +MODULE_DESCRIPTION("SoCFPGA Arria10 FPGA Manager");
-> > +MODULE_LICENSE("GPL v2");
-> > -- 
-> > 2.10.1
+> > There's no need to test the NAND_CTRL_CHANGE here, and I don't think
+> > the CLE or ALE flag is ever set when cmd == CMD_NONE. So, you can kill
+> > the ->ctrl field and simply do:
 > > 
+> > 	if (ctrl & NAND_CLE)
+> > 		writeb(cmd, oxnas->io_base + OXNAS_NAND_CMD_CLE);
+> > 	else if (ctrl & NAND_ALE)
+> > 		writeb(cmd, oxnas->io_base + OXNAS_NAND_CMD_ALE);
+> >   
+> >> +}  
 > 
-> Looking good,
-> 
-> Moritz
-> 
+> Hmm, except it's needed back in the oxnas_nand_write_buf() call (don't ask me why)
+> so I don't see how to simplify more this function.
 
-Hi Moritz,
-
-Thanks!
-
-Alan
+Are you sure? Can you add a WARN(oxnas->ctrl) in oxnas_nand_write_buf()
+to check if it's ever the case? I'm almost sure there is a call to
+->cmd_ctrl() with none of the CLE and ALE flags set before the
+->write_buf() call.
