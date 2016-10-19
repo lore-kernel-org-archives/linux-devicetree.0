@@ -1,14 +1,12 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [RFC PATCH] mtd: nand: Add OX820 NAND Support
-Date: Wed, 19 Oct 2016 11:29:59 +0200
-Message-ID: <37a5b543-e564-a496-d5cf-c215e798839f@baylibre.com>
-References: <20161018090927.1990-1-narmstrong@baylibre.com>
- <20161018221744.5e574e82@bbrezillon>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/9] irqchip: meson: add support for the gpio interrupt
+ controller
+Date: Wed, 19 Oct 2016 12:08:20 +0200
+Message-ID: <1476871709-8359-1-git-send-email-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161018221744.5e574e82@bbrezillon>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,345 +16,74 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: devicetree@vger.kernel.org, richard@nod.at, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-oxnas@lists.tuxfamily.org, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
+To: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
-
-On 10/18/2016 10:17 PM, Boris Brezillon wrote:
-> Hi Neil,
-> 
-> On Tue, 18 Oct 2016 11:09:27 +0200
-> Neil Armstrong <narmstrong@baylibre.com> wrote:
-> 
->> Add NAND driver to support the Oxford Semiconductor OX820 NAND Controller.
->> This is a simple memory mapped NAND controller with single chip select and
->> software ECC.
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  .../devicetree/bindings/mtd/oxnas-nand.txt         |  24 ++++
->>  drivers/mtd/nand/Kconfig                           |   5 +
->>  drivers/mtd/nand/Makefile                          |   1 +
->>  drivers/mtd/nand/oxnas_nand.c                      | 144 +++++++++++++++++++++
->>  4 files changed, 174 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mtd/oxnas-nand.txt
->>  create mode 100644 drivers/mtd/nand/oxnas_nand.c
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/oxnas-nand.txt b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
->> new file mode 100644
->> index 0000000..83b684d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
->> @@ -0,0 +1,24 @@
->> +* Oxford Semiconductor OXNAS NAND Controller
->> +
->> +Please refer to nand.txt for generic information regarding MTD NAND bindings.
->> +
->> +Required properties:
->> + - compatible: "oxsemi,ox820-nand"
->> + - reg: Base address and length for NAND mapped memory.
->> +
->> +Optional Properties:
->> + - clocks: phandle to the NAND gate clock if needed.
->> + - resets: phandle to the NAND reset control if needed.
->> +
->> +Example:
->> +
->> +nand: nand@41000000 {
->> +	compatible = "oxsemi,ox820-nand";
->> +	reg = <0x41000000 0x100000>;
->> +	nand-ecc-mode = "soft";
->> +	clocks = <&stdclk CLK_820_NAND>;
->> +	resets = <&reset RESET_NAND>;
->> +	#address-cells = <1>;
->> +	#size-cells = <1>;
->> +	status = "disabled";
->> +};
-> 
-> Can you switch to new DT representation for NAND controllers, with one
-> node for the NAND controller and NAND devices connected to this NAND
-> controller defined as sub-nodes of this NAND controller [1]?
-
-Yes, I was wondering if this existed... my bad, next time I will search further.
-
-> 
->> diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
->> index 7b7a887..c023125 100644
->> --- a/drivers/mtd/nand/Kconfig
->> +++ b/drivers/mtd/nand/Kconfig
->> @@ -426,6 +426,11 @@ config MTD_NAND_ORION
->>  	  No board specific support is done by this driver, each board
->>  	  must advertise a platform_device for the driver to attach.
->>  
->> +config MTD_NAND_OXNAS
->> +	tristate "NAND Flash support for Oxford Semiconductor SoC"
->> +	help
->> +	  This enables the NAND flash controller on Oxford Semiconductor SoCs.
->> +
->>  config MTD_NAND_FSL_ELBC
->>  	tristate "NAND support for Freescale eLBC controllers"
->>  	depends on FSL_SOC
->> diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
->> index cafde6f..05fc054 100644
->> --- a/drivers/mtd/nand/Makefile
->> +++ b/drivers/mtd/nand/Makefile
->> @@ -35,6 +35,7 @@ obj-$(CONFIG_MTD_NAND_TMIO)		+= tmio_nand.o
->>  obj-$(CONFIG_MTD_NAND_PLATFORM)		+= plat_nand.o
->>  obj-$(CONFIG_MTD_NAND_PASEMI)		+= pasemi_nand.o
->>  obj-$(CONFIG_MTD_NAND_ORION)		+= orion_nand.o
->> +obj-$(CONFIG_MTD_NAND_OXNAS)		+= oxnas_nand.o
->>  obj-$(CONFIG_MTD_NAND_FSL_ELBC)		+= fsl_elbc_nand.o
->>  obj-$(CONFIG_MTD_NAND_FSL_IFC)		+= fsl_ifc_nand.o
->>  obj-$(CONFIG_MTD_NAND_FSL_UPM)		+= fsl_upm.o
->> diff --git a/drivers/mtd/nand/oxnas_nand.c b/drivers/mtd/nand/oxnas_nand.c
->> new file mode 100644
->> index 0000000..ee402ab
->> --- /dev/null
->> +++ b/drivers/mtd/nand/oxnas_nand.c
->> @@ -0,0 +1,144 @@
->> +/*
->> + * Oxford Semiconductor OXNAS NAND driver
->> + *
->> + * Heavily based on plat_nand.c :
->> + * Author: Vitaly Wool <vitalywool@gmail.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/slab.h>
->> +#include <linux/clk.h>
->> +#include <linux/reset.h>
->> +#include <linux/mtd/mtd.h>
->> +#include <linux/mtd/nand.h>
->> +#include <linux/mtd/partitions.h>
->> +
->> +/* nand commands */
->> +#define NAND_CMD_ALE		BIT(18)
->> +#define NAND_CMD_CLE		BIT(19)
->> +#define NAND_CMD_CS		0
-> 
-> I guess this is zero here because you only support connecting a NAND to
-> CS0.
-> It's probably something like
-> 
-> OX820_NAND_CS(x)		((x) << CS_FIELD_SHIFT)
-
-The hardware seems to be able to drive multiple chip selects, but no implementation does this.
-We will stick to CS0 only here for test reasons.
-
-> 
->> +#define NAND_CMD_RESET		0xff
-> 
-> Why do you have to redefine it? it's already defined here [2].
-> 
->> +#define NAND_CMD		(NAND_CMD_CS | NAND_CMD_CLE)
->> +#define NAND_ADDR		(NAND_CMD_CS | NAND_CMD_ALE)
->> +#define NAND_DATA		(NAND_CMD_CS)
-> 
-> Please prefix those macros with OX820, has stated above, this can
-> conflict with generic definitions.
-> Also, I'm not sure you should pass the CS information here.
-> 
->> +
->> +struct oxnas_nand_data {
->> +	struct nand_chip	chip;
->> +	void __iomem		*io_base;
->> +	struct clk		*clk;
->> +};
-> 
-> Even if your driver does not seem to support connecting several chips
-> to the same controller, I'd like you to clearly separate the NAND
-> controller and NAND chip objects:
-> 
-> #define OXNAS_NAND_MAX_CHIPS	1
-> 
-> struct oxnas_nand_controller {
-> 	struct nand_hw_control base;
-> 	void __iomem *io_base;
-> 	struct clk *clk;
-> 	struct nand_chip *chips[OXNAS_NAND_MAX_CHIPS];
-> }
-
-Ok.
-
-> 
->> +
->> +static void oxnas_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
->> +				unsigned int ctrl)
->> +{
->> +	struct nand_chip *this = mtd->priv;
->> +	unsigned long nandaddr = (unsigned long) this->IO_ADDR_W;
-> 
-> Please use the ->io_base field directly, and do not use ->IO_ADDR_W/R
-> (I'd like to get rid of them at some point).
-
-Yes, it seems cleaner.
-
-> 
-> Also, declare the nandaddr as a void __iomem *, and use the '+'
-> operator instead of '|'.
-> 
->> +
->> +	if (ctrl & NAND_CTRL_CHANGE) {
->> +		nandaddr &= ~(NAND_CMD | NAND_ADDR);
-> 
-> This is not needed.
-> 
->> +		if (ctrl & NAND_CLE)
->> +			nandaddr |= NAND_CMD;
->> +		else if (ctrl & NAND_ALE)
->> +			nandaddr |= NAND_ADDR;
->> +		this->IO_ADDR_W = (void __iomem *) nandaddr;
-> 
-> This is not needed, is it?
-
-No more if we stick to ->io_base
-
-> 
->> +	}
->> +
->> +	if (cmd != NAND_CMD_NONE)
->> +		writeb(cmd, (void __iomem *) nandaddr);
->> +}
->> +
->> +/*
->> + * Probe for the NAND device.
->> + */
->> +static int oxnas_nand_probe(struct platform_device *pdev)
->> +{
->> +	struct oxnas_nand_data *data;
->> +	struct mtd_info *mtd;
->> +	struct resource *res;
->> +	int err = 0;
->> +
->> +	/* Allocate memory for the device structure (and zero it) */
->> +	data = devm_kzalloc(&pdev->dev, sizeof(struct oxnas_nand_data),
->> +			    GFP_KERNEL);
->> +	if (!data)
->> +		return -ENOMEM;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	data->io_base = devm_ioremap_resource(&pdev->dev, res);
->> +	if (IS_ERR(data->io_base))
->> +		return PTR_ERR(data->io_base);
->> +
->> +	data->clk = devm_clk_get(&pdev->dev, NULL);
->> +	if (IS_ERR(data->clk))
->> +		data->clk = NULL;
->> +
->> +	nand_set_flash_node(&data->chip, pdev->dev.of_node);
->> +	mtd = nand_to_mtd(&data->chip);
->> +	mtd->dev.parent = &pdev->dev;
->> +	mtd->priv = &data->chip;
->> +
->> +	data->chip.IO_ADDR_R = data->io_base;
->> +	data->chip.IO_ADDR_W = data->io_base;
-> 
-> As I said above, don't use these fields.
-> 
->> +	data->chip.cmd_ctrl = oxnas_nand_cmd_ctrl;
->> +	data->chip.chip_delay = 30;
->> +	data->chip.ecc.mode = NAND_ECC_SOFT;
->> +	data->chip.ecc.algo = NAND_ECC_HAMMING;
-> 
-> Probably a good idea to support soft ECC as well...
-
-This was taken from plat_nand.c, I was not sure if it was necessary, will remove this and rely on DT attributes.
-
-> 
->> +
->> +	platform_set_drvdata(pdev, data);
->> +
->> +	clk_prepare_enable(data->clk);
->> +	device_reset_optional(&pdev->dev);
->> +
->> +	/* Scan to find existence of the device */
->> +	if (nand_scan(mtd, 1)) {
-> 
-> Why not returning nand_scan() error code?
-
-Same, bad plat_nand.c copy/paste.
-
-> 
->> +		err = -ENXIO;
->> +		goto out;
-> 
-> Return directly here.
-> 
->> +	}
->> +
->> +	err = mtd_device_parse_register(mtd, NULL, NULL, NULL, 0);
-> 
-> Use mtd_device_register() here.
-> 
->> +	if (!err)
->> +		return err;
->> +
->> +	nand_release(mtd);
-> 
-> Why not
-> 
-> 	if (err)
-> 		nand_release(mtd);
-> 
->> +out:
-> 
-> Drop this label.
-
-Will refactor this error management.
-
-> 
->> +	return err;
->> +}
->> +
->> +static int oxnas_nand_remove(struct platform_device *pdev)
->> +{
->> +	struct oxnas_nand_data *data = platform_get_drvdata(pdev);
->> +
->> +	nand_release(nand_to_mtd(&data->chip));
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id oxnas_nand_match[] = {
->> +	{ .compatible = "oxsemi,ox820-nand" },
->> +	{},
->> +};
->> +MODULE_DEVICE_TABLE(of, oxnas_nand_match);
->> +
->> +static struct platform_driver oxnas_nand_driver = {
->> +	.probe	= oxnas_nand_probe,
->> +	.remove	= oxnas_nand_remove,
->> +	.driver	= {
->> +		.name		= "oxnas_nand",
->> +		.of_match_table = oxnas_nand_match,
->> +	},
->> +};
->> +
->> +module_platform_driver(oxnas_nand_driver);
->> +
->> +MODULE_LICENSE("GPL");
->> +MODULE_AUTHOR("Vitaly Wool");
->> +MODULE_DESCRIPTION("Oxnas NAND driver");
->> +MODULE_ALIAS("platform:oxnas_nand");
-> 
-> Thanks,
-> 
-> Boris
-
-Thanks,
-Neil
-
-> 
-> [1]https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/mtd/nand.txt?id=refs/tags/v4.9-rc1#n57
-> [2]http://lxr.free-electrons.com/source/include/linux/mtd/nand.h#L90
-> 
+VGhpcyBwYXRjaCBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciB0aGUgR1BJTyBpbnRlcnJ1cHQgY29u
+dHJvbGxlciBmb3VuZApvbiBBbWxvZ2ljJ3MgbWVzb24gU29DIGZhbWlsaWVzLgoKVW5saWtlIHdo
+YXQgdGhlIG5hbWUgc3VnZ2VzdHMsIHRoaXMgY29udHJvbGxlciBpcyBub3QgcGFydCBvZiB0aGUg
+U29DIEdQSU8Kc3Vic3lzdGVtLiBJdCdzIGFuIGluZGVwZWRlbnQgY29udHJvbGxlciB3aGljaCBj
+YW4gd2F0Y2ggYWxtb3N0IGFsbCBwYWQgb2YKdGhlIFNvQyBhbmQgZ2VuZXJhdGUgYW5kIGludGVy
+cnVwdCBmcm9tIGl0LiBTb21lIHBpbnMsIHdoaWNoIGFyZSBub3QgcGFydApvZiB0aGUgcHVibGlj
+IGRhdGFzaGVldCwgZG9uJ3Qgc2VlbSB0byBoYXZlIHRoaXMgY2FwYWJpbGl0eSB0aG91Z2guCgpI
+YXJkd2FyZSB3aXNlLCB0aGUgY29udHJvbGxlciBpcyBhIDI1NiB0byA4IG11bHRpcGxleGVyLiBJ
+dCBjYW4gdGFrZSB1cAp0byAyNTYgaW5wdXQgcGFkcyBhbmQgcm91dGUgdGhlbSB0byBhbnkgb2Yg
+OCBHSUMncyBpbnRlcnJ1cHRzLiBUaGVyZSBpcwphbHNvIGEgZmlsdGVyIGJsb2NrIGluIHRoZSBt
+aWRkbGUgdG8gc2VsZWN0IHRoZSBhcHByb3ByaWF0ZSBlZGdlIG9yIGxldmVsLgoKVGhlIG51bWJl
+ciBvZiBpbnRlcnJ1cHQgZGVjbGFyZWQgYnkgdGhlIGlycWNoaXAgaXMgbG93ZXJlZCBmcm9tIDI1
+NiB0byB0aGUKYWN0dWFsIG51bWJlciBvZiBzaWduYWwgcm91dGVkIHRvIHRoZSBjb250cm9sbGVy
+IG9uIGVhY2ggU29DIGZhbWlseS4gQXMgd2UKaGF2ZSBhY2Nlc3MgdG8gb25seSA4IEdJQ+KAmXMg
+aW50ZXJydXB0cywgdGhlc2UgYXJlIGFsbG9jYXRlZCB3aGVuIGFuCmludGVycnVwdCBpcyByZXF1
+ZXN0ZWQgZnJvbSB0aGUgY29udHJvbGxlciwgb24gYSBmaXJzdCBjb21lLCBmaXJzdCBzZXJ2ZWQK
+YmFzaXMuCgpUaGlzIHNlcmllcyBoYXMgYmVlbiB0ZXN0ZWQgb24gQW1sb2dpYyBTOTA1LVAyMDAg
+Ym9hcmQgd2l0aCB0aGUgZnJvbnQKcGFuZWwgcG93ZXIgYnV0dG9uLiBEaXJlY3RseSBwYXNzaW5n
+IGFuIElSUSBvciB1c2luZyBncGlvX3RvX2lycSBib3RoIHdvcmsKd2l0aCB0aGlzIGRyaXZlci4K
+ClRoaXMgd29yayBpcyBkZXJpdmVkIGZyb20gdGhlIHByZXZpb3VzIHdvcmsgb2YgQ2FybG8gQ2Fp
+b25lIFsxXS4KCkNoYW5nZXMgc2luY2UgUkZDIDogWzJdCiAqIFJlbW92ZSBpbnRlcnJ1cHQgcHJv
+cGVydHkgaW4gZGV2aWNlIHRyZWU6IHRoZSBjb250cm9sbGVyIGNhbm5vdCBnZW5lcmF0ZQogICBp
+bnRlcnJ1cHRzIG9uIGl0cyBvd24gYW5kIGlzIG1lcmVseSByb3V0aW5nIHRoZSBpbnRlcnJ1cHQg
+dG8gdGhlIEdJQywKICAgdGhlcmVmb3JlIGl0IHNob3VsZCBub3QgdXNlIHRoZSBpbnRlcnJ1cHQg
+cHJvcGVydHkuIFRoaXMgZGF0YSBpcyBub3cKICAgc3RvcmVkIGRpcmVjdGx5IGluIHRoZSBkcml2
+ZXIsIHNhbWUgYXMgdGhlIHBpbmN0cmwgZGF0YS4KCiAqIEltcHJvdmUgY29tcGF0aWJpbGl0eSBj
+aGVja2luZyBvZiBtZXNvbiBwaW5jdHJsIG9uIGl0cyBpbnRlcnJ1cHQgcGFyZW50CiAgIHRvIGFj
+dGl2YXRlIGdwaW9fdG9faXJxIGNhbGxiYWNrCgogKiBEcm9wIElSUV9CT1RIIGhhY2suIE5lZWQg
+bW9yZSB3b3JrIHRvIGhhdmUgYW4gYWNjZXB0YWJsZSBzb2x1dGlvbiBmb3IKICAgdGhpcwoKWzFd
+IDogaHR0cDovL2xrbWwua2VybmVsLm9yZy9yLzE0NDg5ODcwNjItMzEyMjUtMS1naXQtc2VuZC1l
+bWFpbC1jYXJsb0BjYWlvbmUub3JnClsyXSA6IGh0dHA6Ly9sa21sLmtlcm5lbC5vcmcvci8xNDc1
+NTkzNzA4LTEwNTI2LTEtZ2l0LXNlbmQtZW1haWwtamJydW5ldEBiYXlsaWJyZS5jb20KCkplcm9t
+ZSBCcnVuZXQgKDkpOgogIGlycWNoaXA6IG1lc29uOiBhZGQgc3VwcG9ydCBmb3IgZ3BpbyBpbnRl
+cnJ1cHQgY29udHJvbGxlcgogIGR0LWJpbmRpbmdzOiBpbnRlcnJ1cHQtY29udHJvbGxlcjogYWRk
+IERUIGJpbmRpbmcgZm9yIG1lc29uIEdQSU8KICAgIGludGVycnVwdCBjb250cm9sbGVyCiAgcGlu
+Y3RybDogbWVzb246IHVwZGF0ZSBwaW5jdHJsIGRhdGEgd2l0aCBncGlvIGlycSBkYXRhCiAgcGlu
+Y3RybDogbWVzb246IGFsbG93IGdwaW8gdG8gcmVxdWVzdCBpcnEKICBkdC1iaW5kaW5nczogcGlu
+Y3RybDogbWVzb246IHVwZGF0ZSBncGlvIGR0LWJpbmRpbmdzCiAgQVJNNjQ6IG1lc29uOiBlbmFi
+bGUgTUVTT05fSVJRX0dQSU8gaW4gS2NvbmZpZwogIEFSTTogbWVzb246IGVuYWJsZSBNRVNPTl9J
+UlFfR1BJTyBpbiBLY29uZmlnIGZvciBtZXNvbjgKICBBUk02NDogZHRzOiBhbWxvZ2ljOiBlbmFi
+bGUgZ3BpbyBpbnRlcnJ1cHQgY29udHJvbGxlciBvbiBneGJiCiAgQVJNOiBkdHM6IGFtbG9naWM6
+IGVuYWJsZSBncGlvIGludGVycnVwdCBjb250cm9sbGVyIG9uIG1lc29uOAoKIC4uLi9hbWxvZ2lj
+LG1lc29uLWdwaW8taW50Yy50eHQgICAgICAgICAgICAgICAgICAgIHwgIDMxICsrCiAuLi4vZGV2
+aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lc29uLHBpbmN0cmwudHh0ICB8ICAgNCArCiBhcmNo
+L2FybS9ib290L2R0cy9tZXNvbjguZHRzaSAgICAgICAgICAgICAgICAgICAgICB8ICAxMSArCiBh
+cmNoL2FybS9ib290L2R0cy9tZXNvbjhiLmR0c2kgICAgICAgICAgICAgICAgICAgICB8ICAxMSAr
+CiBhcmNoL2FybS9tYWNoLW1lc29uL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+MiArCiBhcmNoL2FybTY0L0tjb25maWcucGxhdGZvcm1zICAgICAgICAgICAgICAgICAgICAgICB8
+ICAgMSArCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hiYi5kdHNpICAgICAg
+ICB8ICAgOSArCiBkcml2ZXJzL2lycWNoaXAvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB8ICAgOSArCiBkcml2ZXJzL2lycWNoaXAvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2lycWNoaXAvaXJxLW1lc29uLWdwaW8uYyAgICAgICAg
+ICAgICAgICAgICB8IDQyMyArKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvcGluY3RybC9L
+Y29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKIGRyaXZlcnMvcGluY3Ry
+bC9tZXNvbi9waW5jdHJsLW1lc29uLWd4YmIuYyAgICAgICAgIHwgIDI0ICstCiBkcml2ZXJzL3Bp
+bmN0cmwvbWVzb24vcGluY3RybC1tZXNvbi5jICAgICAgICAgICAgICB8ICA3NyArKystCiBkcml2
+ZXJzL3BpbmN0cmwvbWVzb24vcGluY3RybC1tZXNvbi5oICAgICAgICAgICAgICB8ICAxNyArLQog
+ZHJpdmVycy9waW5jdHJsL21lc29uL3BpbmN0cmwtbWVzb244LmMgICAgICAgICAgICAgfCAgMjIg
+Ky0KIGRyaXZlcnMvcGluY3RybC9tZXNvbi9waW5jdHJsLW1lc29uOGIuYyAgICAgICAgICAgIHwg
+IDM0ICstCiAxNiBmaWxlcyBjaGFuZ2VkLCA2NDEgaW5zZXJ0aW9ucygrKSwgMzcgZGVsZXRpb25z
+KC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2ludGVycnVwdC1jb250cm9sbGVyL2FtbG9naWMsbWVzb24tZ3Bpby1pbnRjLnR4dAogY3JlYXRl
+IG1vZGUgMTAwNjQ0IGRyaXZlcnMvaXJxY2hpcC9pcnEtbWVzb24tZ3Bpby5jCgotLSAKMi43LjQK
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVsCg==
