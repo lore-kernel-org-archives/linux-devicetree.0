@@ -1,83 +1,97 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC V2 PATCH 10/12] arm64: dts: msm8994 issolate non standard
- bootloader/LK entries
-Date: Wed, 19 Oct 2016 16:46:43 -0500
-Message-ID: <20161019214643.GC3145@hector.attlocal.net>
-References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
- <2149904.D2eaQZN3bA@wuerfel>
- <17447be1-4357-0eca-a242-69576d3e2799@redhat.com>
- <4976066.k14mpQt0HJ@wuerfel>
+From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v8 2/3] usb: dwc2: assert phy reset when waking up in
+ rk3288 platform
+Date: Wed, 19 Oct 2016 15:58:27 -0700
+Message-ID: <d8f43ae4-bfca-ce37-772d-a61b77f5493a@synopsys.com>
+References: <1474743019-1050-1-git-send-email-ayaka@soulik.info>
+ <1474743019-1050-3-git-send-email-ayaka@soulik.info>
+ <CAFLEztRLJbMj-ttGBsCWCMW=+0N3bbMQ0c4YcgDyvUDYs1SSkA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4976066.k14mpQt0HJ@wuerfel>
+In-Reply-To: <CAFLEztRLJbMj-ttGBsCWCMW=+0N3bbMQ0c4YcgDyvUDYs1SSkA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, git-LJ92rlH3Dns@public.gmane.org, jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: =?UTF-8?B?6ZmI6LGq?= <jacobchen110-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2016 at 04:56:20PM +0200, Arnd Bergmann wrote:
-> On Wednesday, October 12, 2016 5:59:41 PM CEST Jeremy McNicoll wrote:
-> > On 2016-10-12 3:39 AM, Arnd Bergmann wrote:
-> > > On Tuesday, October 11, 2016 7:41:22 PM CEST Rob Herring wrote:
-> > >> On Sat, Oct 1, 2016 at 9:38 PM, Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> > >>> These non standard DT entries need to be cast aside as to not
-> > >>> pollute the main device tree bindings.  Without these essential
-> > >>> DT items the bootloader/LK will not pass control over to the kernel
-> > >>> and thus never boot.
-> > >>
-> > >> I discussed this with Stephen recently. I'm okay with leaving these on
-> > >> boards that have no chance of getting updated bootloaders to use the
-> > >> compatible string instead. Having to use dtbTool is far worse than a
-> > >> couple of extra properties IMO. I reserve the right to complain if new
-> > >> stuff continues to use these though.
-> > >>
-> > >>> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> > >>> ---
-> > >>>  .../arm64/boot/dts/qcom/msm8994-angler-rev-101.dts |  1 -
-> > >>>  arch/arm64/boot/dts/qcom/msm8994.dtsi              |  3 +--
-> > >>>  .../boot/dts/qcom/nexus6p_bootloader_bits.dtsi     | 24 ++++++++++++++++++++++
-> > >>
-> > >> Just put this into the board file rather than yet another include.
-> > >
-> > > The suggestion that I had was to have two .dts files: the normal
-> > > one without these properties, and another .dts file including the
-> > > first but adding these three for compatibility with the legacy
-> > > bootloaders.
-> > >
-> > 
-> (sorry for the late reply, I thought I had replied already but
-> couldn't find that in the archives when I saw I still had this
-> reply open)
+On 10/15/2016 8:07 AM, 陈豪 wrote:
+> 2016-09-25 2:50 GMT+08:00 Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>:
+>> On the rk3288 USB host-only port (the one that's not the OTG-enabled
+>> port) the PHY can get into a bad state when a wakeup is asserted (not
+>> just a wakeup from full system suspend but also a wakeup from
+>> autosuspend).
+>>
+>> We can get the PHY out of its bad state by asserting its "port reset",
+>> but unfortunately that seems to assert a reset onto the USB bus so it
+>> could confuse things if we don't actually deenumerate / reenumerate the
+>> device.
+>>
+>> We can also get the PHY out of its bad state by fully resetting it using
+>> the reset from the CRU (clock reset unit) in chip, which does a more full
+>> reset.  The CRU-based reset appears to actually cause devices on the bus
+>> to be removed and reinserted, which fixes the problem (albeit in a hacky
+>> way).
+>>
+>> It's unfortunate that we need to do a full re-enumeration of devices at
+>> wakeup time, but this is better than alternative of letting the bus get
+>> wedged.
+>>
+>> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+>> ---
+>>  drivers/usb/dwc2/core_intr.c | 11 +++++++++++
+>>  1 file changed, 11 insertions(+)
+>>
+>> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
+>> index d85c5c9..af27edc 100644
+>> --- a/drivers/usb/dwc2/core_intr.c
+>> +++ b/drivers/usb/dwc2/core_intr.c
+>> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
+>>  static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>>  {
+>>         int ret;
+>> +       struct device_node *np = hsotg->dev->of_node;
+>>
+>>         /* Clear interrupt */
+>>         dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
+>> @@ -379,6 +380,16 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>>                         /* Restart the Phy Clock */
+>>                         pcgcctl &= ~PCGCTL_STOPPCLK;
+>>                         dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
+>> +
+>> +                       /*
+>> +                        * It is a quirk in Rockchip RK3288, causing by
+>> +                        * a hardware bug. This will propagate out and
+>> +                        * eventually we'll re-enumerate the device.
+>> +                        * Not great but the best we can do.
+>> +                        */
+>> +                       if (of_device_is_compatible(np, "rockchip,rk3288-usb"))
+>> +                               phy_reset(hsotg->phy);
 > 
-> > So I did it backwards from what you had suggested?
-> > Based on my discussion with, (cant seem to recall) my understanding
-> > was that we simply wanted to have these 3 bootloader specific entries
-> > in another file.
+> It will call mutex_lock in phy_reset.
 > 
-> Right
 > 
-> What I would like to see here is two separate .dtb files, one
-> with the hack and one without it, so we have a migration path
-> for the machines that eventually get a boot loader with proper
-> DT support.
+>> +
+>>                         mod_timer(&hsotg->wkp_timer,
+>>                                   jiffies + msecs_to_jiffies(71));
+>>                 } else {
+>> --
+>> 2.7.4
+>>
+> 
+> What is the status of this patch？
+> Sleeping calls(phy_reset ==> mutex) shouldn't be used in irq handler.
+> Randy will correct that？
+> 
 
-So my main beef with this is that it is kind of onerous.  The machines that
-require this will never get a bootloader change.  So we'll be adding 2 dtb
-targets and only ever use one.
+Yes, that's right, I missed that.
 
-It's much simpler in my opinion to just add the msm-id to the files that need it
-right now..... comment it with something like 'this is because of the Qualcomm
-braindead bootloader requirements' and move on.
-
-If there was any hope of a new bootloader for non-bleeding edge boards, I'd
-wholeheartedly agree with you Arnd.  But there isn't, and there won't be.
-
+It will have to be fixed.
 
 Regards,
+John
 
-Andy
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
