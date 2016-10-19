@@ -1,142 +1,122 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v7, 3/8] usb: xhci-mtk: make IPPC register optional
-Date: Wed, 19 Oct 2016 10:28:22 +0800
-Message-ID: <1476844107-31087-4-git-send-email-chunfeng.yun@mediatek.com>
-References: <1476844107-31087-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH 2/3] clk: hisilicon: add CRG driver for Hi3516CV300 SoC
+Date: Wed, 19 Oct 2016 10:38:20 +0800
+Message-ID: <7ce2e35b-19e1-9493-90a7-15b321fee2cc@hisilicon.com>
+References: <20161017120705.3726-1-wenpan@hisilicon.com>
+ <20161017120705.3726-3-wenpan@hisilicon.com>
+ <20161018155835.qyoffwznacdac46y@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1476844107-31087-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Oliver Neukum <oneukum-IBi9RG/b67k@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161018155835.qyoffwznacdac46y@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pan Wen <wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, jalen.hsu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lvkuanliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kevin.lixu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Make IPPC register optional to support host side of dual-role mode,
-due to it is moved into common glue layer for simplification.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/usb/host/xhci-mtk.c |   38 +++++++++++++++++++++++++++++++-------
- drivers/usb/host/xhci-mtk.h |    1 +
- 2 files changed, 32 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-index 79959f1..1094ebd 100644
---- a/drivers/usb/host/xhci-mtk.c
-+++ b/drivers/usb/host/xhci-mtk.c
-@@ -94,6 +94,9 @@ static int xhci_mtk_host_enable(struct xhci_hcd_mtk *mtk)
- 	int ret;
- 	int i;
- 
-+	if (!mtk->has_ippc)
-+		return 0;
-+
- 	/* power on host ip */
- 	value = readl(&ippc->ip_pw_ctr1);
- 	value &= ~CTRL1_IP_HOST_PDN;
-@@ -139,6 +142,9 @@ static int xhci_mtk_host_disable(struct xhci_hcd_mtk *mtk)
- 	int ret;
- 	int i;
- 
-+	if (!mtk->has_ippc)
-+		return 0;
-+
- 	/* power down all u3 ports */
- 	for (i = 0; i < mtk->num_u3_ports; i++) {
- 		value = readl(&ippc->u3_ctrl_p[i]);
-@@ -173,6 +179,9 @@ static int xhci_mtk_ssusb_config(struct xhci_hcd_mtk *mtk)
- 	struct mu3c_ippc_regs __iomem *ippc = mtk->ippc_regs;
- 	u32 value;
- 
-+	if (!mtk->has_ippc)
-+		return 0;
-+
- 	/* reset whole ip */
- 	value = readl(&ippc->ip_pw_ctr0);
- 	value |= CTRL0_IP_SW_RST;
-@@ -475,6 +484,7 @@ static void xhci_mtk_quirks(struct device *dev, struct xhci_hcd *xhci)
- /* called during probe() after chip reset completes */
- static int xhci_mtk_setup(struct usb_hcd *hcd)
- {
-+	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
- 	struct xhci_hcd_mtk *mtk = hcd_to_mtk(hcd);
- 	int ret;
- 
-@@ -482,12 +492,21 @@ static int xhci_mtk_setup(struct usb_hcd *hcd)
- 		ret = xhci_mtk_ssusb_config(mtk);
- 		if (ret)
- 			return ret;
-+	}
-+
-+	ret = xhci_gen_setup(hcd, xhci_mtk_quirks);
-+	if (ret)
-+		return ret;
-+
-+	if (usb_hcd_is_primary_hcd(hcd)) {
-+		mtk->num_u3_ports = xhci->num_usb3_ports;
-+		mtk->num_u2_ports = xhci->num_usb2_ports;
- 		ret = xhci_mtk_sch_init(mtk);
- 		if (ret)
- 			return ret;
- 	}
- 
--	return xhci_gen_setup(hcd, xhci_mtk_quirks);
-+	return ret;
- }
- 
- static int xhci_mtk_probe(struct platform_device *pdev)
-@@ -586,7 +605,7 @@ static int xhci_mtk_probe(struct platform_device *pdev)
- 	mtk->hcd = platform_get_drvdata(pdev);
- 	platform_set_drvdata(pdev, mtk);
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mac");
- 	hcd->regs = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(hcd->regs)) {
- 		ret = PTR_ERR(hcd->regs);
-@@ -595,11 +614,16 @@ static int xhci_mtk_probe(struct platform_device *pdev)
- 	hcd->rsrc_start = res->start;
- 	hcd->rsrc_len = resource_size(res);
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	mtk->ippc_regs = devm_ioremap_resource(dev, res);
--	if (IS_ERR(mtk->ippc_regs)) {
--		ret = PTR_ERR(mtk->ippc_regs);
--		goto put_usb2_hcd;
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ippc");
-+	if (res) {	/* ippc register is optional */
-+		mtk->ippc_regs = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(mtk->ippc_regs)) {
-+			ret = PTR_ERR(mtk->ippc_regs);
-+			goto put_usb2_hcd;
-+		}
-+		mtk->has_ippc = true;
-+	} else {
-+		mtk->has_ippc = false;
- 	}
- 
- 	for (phy_num = 0; phy_num < mtk->num_phys; phy_num++) {
-diff --git a/drivers/usb/host/xhci-mtk.h b/drivers/usb/host/xhci-mtk.h
-index 7da677c..2845c49 100644
---- a/drivers/usb/host/xhci-mtk.h
-+++ b/drivers/usb/host/xhci-mtk.h
-@@ -118,6 +118,7 @@ struct xhci_hcd_mtk {
- 	struct usb_hcd *hcd;
- 	struct mu3h_sch_bw_info *sch_array;
- 	struct mu3c_ippc_regs __iomem *ippc_regs;
-+	bool has_ippc;
- 	int num_u2_ports;
- 	int num_u3_ports;
- 	struct regulator *vusb33;
--- 
-1.7.9.5
+在 2016/10/18 23:58, Rob Herring 写道:
+> On Mon, Oct 17, 2016 at 08:07:04PM +0800, Pan Wen wrote:
+>> Add CRG driver for Hi3516CV300 SoC. CRG(Clock and Reset
+>> Generator) module generates clock and reset signals used
+>> by other module blocks on SoC.
+>>
+>> Signed-off-by: Pan Wen <wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/clock/hisi-crg.txt         |  50 ++++
+>>  drivers/clk/hisilicon/Kconfig                      |   8 +
+>>  drivers/clk/hisilicon/Makefile                     |   1 +
+>>  drivers/clk/hisilicon/crg-hi3516cv300.c            | 330 +++++++++++++++++++++
+>>  drivers/clk/hisilicon/crg.h                        |  34 +++
+>>  include/dt-bindings/clock/hi3516cv300-clock.h      |  48 +++
+>>  6 files changed, 471 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/hisi-crg.txt
+>>  create mode 100644 drivers/clk/hisilicon/crg-hi3516cv300.c
+>>  create mode 100644 drivers/clk/hisilicon/crg.h
+>>  create mode 100644 include/dt-bindings/clock/hi3516cv300-clock.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/hisi-crg.txt b/Documentation/devicetree/bindings/clock/hisi-crg.txt
+>> new file mode 100644
+>> index 0000000..cc60b3d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/hisi-crg.txt
+>> @@ -0,0 +1,50 @@
+>> +* HiSilicon Clock and Reset Generator(CRG)
+> 
+> Seems kind of generic given there's already various HiSi clock bindings 
+> documented.
+> 
+>> +
+>> +The CRG module provides clock and reset signals to various
+>> +modules within the SoC.
+>> +
+>> +This binding uses the following bindings:
+>> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +    Documentation/devicetree/bindings/reset/reset.txt
+>> +
+>> +Required Properties:
+>> +
+>> +- compatible: should be one of the following.
+>> +  - "hisilicon,hi3516cv300-crg"
+>> +  - "hisilicon,hi3516cv300-sysctrl"
+>> +  - "hisilicon,hi3519-crg"
+> 
+> There is already a binding for this. Please merge them.
+> 
+Hi Rob,
+
+Pan Wen and I work together. There's really a same file included in the patch
+https://lkml.org/lkml/2016/9/18/42 ([PATCH v2] clk: hisilicon: add CRG driver for Hi3798CV200 SoC).
+But that patch has not been acked. This binding file will be merged if that
+patch is accepted first. Could you give me more comments on that patch or
+help me to ack it?  Thank you very much.
+
+Regards,
+Jiancheng
+
+
+>> +  - "hisilicon,hi3798cv200-crg"
+>> +  - "hisilicon,hi3798cv200-sysctrl"
+>> +
+>> +- reg: physical base address of the controller and length of memory mapped
+>> +  region.
+>> +
+>> +- #clock-cells: should be 1.
+>> +
+>> +Each clock is assigned an identifier and client nodes use this identifier
+>> +to specify the clock which they consume.
+>> +
+>> +All these identifier could be found in <dt-bindings/clock/hi3519-clock.h>.
+>> +
+>> +- #reset-cells: should be 2.
+>> +
+>> +A reset signal can be controlled by writing a bit register in the CRG module.
+>> +The reset specifier consists of two cells. The first cell represents the
+>> +register offset relative to the base address. The second cell represents the
+>> +bit index in the register.
+>> +
+>> +Example: CRG nodes
+>> +CRG: clock-reset-controller@12010000 {
+>> +	compatible = "hisilicon,hi3519-crg";
+>> +	reg = <0x12010000 0x10000>;
+>> +	#clock-cells = <1>;
+>> +	#reset-cells = <2>;
+>> +};
+>> +
+>> +Example: consumer nodes
+>> +i2c0: i2c@12110000 {
+>> +	compatible = "hisilicon,hi3519-i2c";
+>> +	reg = <0x12110000 0x1000>;
+>> +	clocks = <&CRG HI3519_I2C0_RST>;
+>> +	resets = <&CRG 0xe4 0>;
+>> +};
+> 
+> .
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
