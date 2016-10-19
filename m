@@ -1,43 +1,62 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V6 09/10] dmaengine: qcom_hidma: break completion processing on error
-Date: Wed, 19 Oct 2016 13:51:51 -0400
-Message-ID: <1476899512-20431-10-git-send-email-okaya@codeaurora.org>
-References: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH v6 2/2] Documentation: DT: MMC: meson-gx: new bindings doc
+Date: Wed, 19 Oct 2016 11:18:25 -0700
+Message-ID: <20161019181825.2186-2-khilman@baylibre.com>
+References: <20161019181825.2186-1-khilman@baylibre.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20161019181825.2186-1-khilman@baylibre.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
+Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-We try to consume as much successful transfers as possible. Now that we
-support MSI interrupts, an error interrupt might be observed by another
-processor while we are finishing the successful ones.
-
-Try to abort successful processing if this is the case.
-
-Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 ---
- drivers/dma/qcom/hidma_ll.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../devicetree/bindings/mmc/amlogic,meson-gx.txt   | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
 
-diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
-index 62cdd42..999abda 100644
---- a/drivers/dma/qcom/hidma_ll.c
-+++ b/drivers/dma/qcom/hidma_ll.c
-@@ -291,6 +291,13 @@ static int hidma_handle_tre_completion(struct hidma_lldev *lldev)
- 		evre_write_off =
- 		    readl_relaxed(lldev->evca + HIDMA_EVCA_WRITE_PTR_REG);
- 		num_completed++;
+diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+new file mode 100644
+index 000000000000..a2fa9a1c26ae
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+@@ -0,0 +1,33 @@
++Amlogic SD / eMMC controller for S905/GXBB family SoCs
 +
-+		/*
-+		 * An error interrupt might have arrived while we are processing
-+		 * the completed interrupt.
-+		 */
-+		if (!hidma_ll_isenabled(lldev))
-+			break;
- 	}
- 
- 	if (num_completed) {
++The MMC 5.1 compliant host controller on Amlogic provides the
++interface for SD, eMMC and SDIO devices.
++
++This file documents the properties in addition to those available in
++the MMC core bindings, documented by mmc.txt.
++
++Required properties:
++- compatible : contains one of:
++  - "amlogic,meson-gx-mmc"
++  - "amlogic,meson-gxbb-mmc"
++  - "amlogic,meson-gxl-mmc"
++  - "amlogic,meson-gxm-mmc"
++- clocks     : A list of phandle + clock-specifier pairs for the clocks listed in clock-names.
++- clock-names: Should contain the following:
++	"core" - Main peripheral bus clock
++	"clkin0" - Parent clock of internal mux
++	"clkin1" - Other parent clock of internal mux
++  The driver has an interal mux clock which switches between clkin0 and clkin1 depending on the
++  clock rate requested by the MMC core.
++
++Example:
++
++	sd_emmc_a: mmc@70000 {
++        	compatible = "amlogic,meson-gxbb-mmc";
++		reg = <0x0 0x70000 0x0 0x2000>;
++                interrupts = < GIC_SPI 216 IRQ_TYPE_EDGE_RISING>;
++		clocks = <&clkc CLKID_SD_EMMC_A>, <&xtal>, <&clkc CLKID_FCLK_DIV2>;
++		clock-names = "core", "clkin0", "clkin1";
++		pinctrl-0 = <&emmc_pins>;
++	};
++
 -- 
-1.9.1
+2.9.3
+
