@@ -1,763 +1,1071 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v7, 5/8] usb: mtu3: Super-Speed Peripheral mode support
-Date: Wed, 19 Oct 2016 10:28:24 +0800
-Message-ID: <1476844107-31087-6-git-send-email-chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v7, 6/8] usb: mtu3: host only mode support
+Date: Wed, 19 Oct 2016 10:28:25 +0800
+Message-ID: <1476844107-31087-7-git-send-email-chunfeng.yun@mediatek.com>
 References: <1476844107-31087-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1476844107-31087-1-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Oliver Neukum <oneukum@suse.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Alan Cooper <alcooperx@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476844107-31087-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Oliver Neukum <oneukum-IBi9RG/b67k@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-add super-speed funtion for peripheral mode
+supports host only mode and the code is ported from
+host/xhci-mtk.c
+IPPC register shared between host and device is moved
+into common glue layer.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/usb/mtu3/mtu3.h            |   13 ++-
- drivers/usb/mtu3/mtu3_core.c       |  202 ++++++++++++++++++++++++++++++++----
- drivers/usb/mtu3/mtu3_gadget.c     |   45 +++++---
- drivers/usb/mtu3/mtu3_gadget_ep0.c |   90 ++++++++++++++++
- drivers/usb/mtu3/mtu3_hw_regs.h    |   33 ++++++
- 5 files changed, 346 insertions(+), 37 deletions(-)
+ drivers/usb/mtu3/Kconfig     |    9 ++
+ drivers/usb/mtu3/Makefile    |   11 +-
+ drivers/usb/mtu3/mtu3.h      |   47 ++++++-
+ drivers/usb/mtu3/mtu3_core.c |   42 +++++-
+ drivers/usb/mtu3/mtu3_dr.h   |   85 +++++++++++++
+ drivers/usb/mtu3/mtu3_host.c |  288 +++++++++++++++++++++++++++++++++++++++++
+ drivers/usb/mtu3/mtu3_plat.c |  289 ++++++++++++++++++++++++++++++++----------
+ 7 files changed, 691 insertions(+), 80 deletions(-)
+ create mode 100644 drivers/usb/mtu3/mtu3_dr.h
+ create mode 100644 drivers/usb/mtu3/mtu3_host.c
 
+diff --git a/drivers/usb/mtu3/Kconfig b/drivers/usb/mtu3/Kconfig
+index 54dadee..59e3f6f 100644
+--- a/drivers/usb/mtu3/Kconfig
++++ b/drivers/usb/mtu3/Kconfig
+@@ -4,6 +4,7 @@ config USB_MTU3
+ 	tristate "MediaTek USB3 Dual Role controller"
+ 	depends on (USB || USB_GADGET) && HAS_DMA
+ 	depends on ARCH_MEDIATEK || COMPILE_TEST
++	select USB_XHCI_MTK if USB_SUPPORT && USB_XHCI_HCD
+ 	help
+ 	  Say Y or M here if your system runs on MediaTek SoCs with
+ 	  Dual Role SuperSpeed USB controller. You can select usb
+@@ -18,8 +19,16 @@ config USB_MTU3
+ if USB_MTU3
+ choice
+ 	bool "MTU3 Mode Selection"
++	default USB_MTU3_HOST if (USB && !USB_GADGET)
+ 	default USB_MTU3_GADGET if (!USB && USB_GADGET)
+ 
++config USB_MTU3_HOST
++	bool "Host only mode"
++	depends on USB=y || USB=USB_MTU3
++	help
++	  Select this when you want to use MTU3 in host mode only,
++	  thereby the gadget feature will be regressed.
++
+ config USB_MTU3_GADGET
+ 	bool "Gadget only mode"
+ 	depends on USB_GADGET=y || USB_GADGET=USB_MTU3
+diff --git a/drivers/usb/mtu3/Makefile b/drivers/usb/mtu3/Makefile
+index 532c257..41e45e9 100644
+--- a/drivers/usb/mtu3/Makefile
++++ b/drivers/usb/mtu3/Makefile
+@@ -1,2 +1,11 @@
+ obj-$(CONFIG_USB_MTU3)	+= mtu3.o
+-mtu3-y	:= mtu3_plat.o mtu3_core.o mtu3_gadget_ep0.o mtu3_gadget.o mtu3_qmu.o
++
++mtu3-y	:= mtu3_plat.o
++
++ifneq ($(filter y,$(CONFIG_USB_MTU3_HOST)),)
++	mtu3-y	+= mtu3_host.o
++endif
++
++ifneq ($(filter y,$(CONFIG_USB_MTU3_GADGET)),)
++	mtu3-y	+= mtu3_core.o mtu3_gadget_ep0.o mtu3_gadget.o mtu3_qmu.o
++endif
 diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
-index ad1a133..41a0473 100644
+index 41a0473..a7c0ce8 100644
 --- a/drivers/usb/mtu3/mtu3.h
 +++ b/drivers/usb/mtu3/mtu3.h
-@@ -53,6 +53,7 @@
- #define USB_QMU_TQSAR(epnum)	(U3D_TXQSAR1 + (((epnum) - 1) * 0x10))
- #define USB_QMU_TQCPR(epnum)	(U3D_TXQCPR1 + (((epnum) - 1) * 0x10))
- 
-+#define SSUSB_U3_CTRL(p)	(U3D_SSUSB_U3_CTRL_0P + ((p) * 0x08))
- #define SSUSB_U2_CTRL(p)	(U3D_SSUSB_U2_CTRL_0P + ((p) * 0x08))
- 
- #define MTU3_DRIVER_NAME	"mtu3"
-@@ -63,6 +64,7 @@
- #define MTU3_EP_WEDGE		BIT(2)
- #define MTU3_EP_BUSY		BIT(3)
- 
-+#define MTU3_U3_IP_SLOT_DEFAULT 2
- #define MTU3_U2_IP_SLOT_DEFAULT 1
+@@ -172,6 +172,40 @@ struct mtu3_gpd_ring {
+ 	struct qmu_gpd *enqueue;
+ 	struct qmu_gpd *dequeue;
+ };
++/**
++ * @mac_base: register base address of device MAC, exclude xHCI's
++ * @ippc_base: register base address of ip port controller interface (IPPC)
++ * @vusb33: usb3.3V shared by device/host IP
++ * @sys_clk: system clock of mtu3, shared by device/host IP
++ * @dr_mode: works in which mode:
++ *		host only, device only or dual-role mode
++ * @u2_ports: number of usb2.0 host ports
++ * @u3_ports: number of usb3.0 host ports
++ * @wakeup_en: it's true when supports remote wakeup in host mode
++ * @wk_deb_p0: port0's wakeup debounce clock
++ * @wk_deb_p1: it's optional, and depends on port1 is supported or not
++ */
++struct ssusb_mtk {
++	struct device *dev;
++	struct mtu3 *u3d;
++	void __iomem *mac_base;
++	void __iomem *ippc_base;
++	struct phy **phys;
++	int num_phys;
++	/* common power & clock */
++	struct regulator *vusb33;
++	struct clk *sys_clk;
++	/* otg */
++	enum usb_dr_mode dr_mode;
++	bool is_host;
++	int u2_ports;
++	int u3_ports;
++	/* usb wakeup for host mode */
++	bool wakeup_en;
++	struct clk *wk_deb_p0;
++	struct clk *wk_deb_p1;
++	struct regmap *pericfg;
++};
  
  /**
-@@ -87,6 +89,7 @@ enum mtu3_speed {
- 	MTU3_SPEED_INACTIVE = 0,
- 	MTU3_SPEED_FULL = 1,
- 	MTU3_SPEED_HIGH = 3,
-+	MTU3_SPEED_SUPER = 4,
+  * @fifo_size: it is (@slot + 1) * @fifo_seg_size
+@@ -210,6 +244,11 @@ struct mtu3_request {
+ 	int epnum;
  };
  
- /**
-@@ -190,6 +193,7 @@ struct mtu3_ep {
- 
- 	struct list_head req_list;
- 	struct mtu3_gpd_ring gpd_ring;
-+	const struct usb_ss_ep_comp_descriptor *comp_desc;
- 	const struct usb_endpoint_descriptor *desc;
- 
- 	int flags;
-@@ -208,7 +212,8 @@ struct mtu3_request {
- 
++static inline struct ssusb_mtk *dev_to_ssusb(struct device *dev)
++{
++	return dev_get_drvdata(dev);
++}
++
  /**
   * struct mtu3 - device driver instance data.
-- * @slot: MTU3_U2_IP_SLOT_DEFAULT for U2 IP
-+ * @slot: MTU3_U2_IP_SLOT_DEFAULT for U2 IP only,
-+ *		MTU3_U3_IP_SLOT_DEFAULT for U3 IP
-  * @may_wakeup: means device's remote wakeup is enabled
-  * @is_self_powered: is reported in device status and the config descriptor
-  * @ep0_req: dummy request used while handling standard USB requests
-@@ -242,12 +247,16 @@ struct mtu3 {
- 	struct usb_gadget_driver *gadget_driver;
- 	struct mtu3_request ep0_req;
- 	u8 setup_buf[EP0_RESPONSE_BUF];
-+	u32 max_speed;
+  * @slot: MTU3_U2_IP_SLOT_DEFAULT for U2 IP only,
+@@ -222,12 +261,10 @@ struct mtu3_request {
+  */
+ struct mtu3 {
+ 	spinlock_t lock;
++	struct ssusb_mtk *ssusb;
+ 	struct device *dev;
+ 	void __iomem *mac_base;
+ 	void __iomem *ippc_base;
+-	struct phy *phy;
+-	struct regulator *vusb33;
+-	struct clk *sys_clk;
+ 	int irq;
  
- 	unsigned is_active:1;
- 	unsigned may_wakeup:1;
- 	unsigned is_self_powered:1;
- 	unsigned test_mode:1;
- 	unsigned softconnect:1;
-+	unsigned u1_enable:1;
-+	unsigned u2_enable:1;
-+	unsigned is_u3_ip:1;
+ 	struct mtu3_fifo_info tx_fifo;
+@@ -320,7 +357,7 @@ static inline void mtu3_clrbits(void __iomem *base, u32 offset, u32 bits)
+ 	writel((tmp & ~(bits)), addr);
+ }
  
- 	u8 address;
- 	u8 test_mode_nr;
-@@ -324,7 +333,7 @@ int mtu3_config_ep(struct mtu3 *mtu, struct mtu3_ep *mep,
- void mtu3_ep0_setup(struct mtu3 *mtu);
- void mtu3_start(struct mtu3 *mtu);
- void mtu3_stop(struct mtu3 *mtu);
--void mtu3_hs_softconn_set(struct mtu3 *mtu, bool enable);
-+void mtu3_dev_on_off(struct mtu3 *mtu, int is_on);
+-int ssusb_check_clocks(struct mtu3 *mtu, u32 ex_clks);
++int ssusb_check_clocks(struct ssusb_mtk *ssusb, u32 ex_clks);
+ struct usb_request *mtu3_alloc_request(struct usb_ep *ep, gfp_t gfp_flags);
+ void mtu3_free_request(struct usb_ep *ep, struct usb_request *req);
+ void mtu3_req_complete(struct mtu3_ep *mep,
+@@ -341,8 +378,6 @@ int mtu3_config_ep(struct mtu3 *mtu, struct mtu3_ep *mep,
+ void mtu3_gadget_suspend(struct mtu3 *mtu);
+ void mtu3_gadget_resume(struct mtu3 *mtu);
+ void mtu3_gadget_disconnect(struct mtu3 *mtu);
+-int ssusb_gadget_init(struct mtu3 *mtu);
+-void ssusb_gadget_exit(struct mtu3 *mtu);
  
- int mtu3_gadget_setup(struct mtu3 *mtu);
- void mtu3_gadget_cleanup(struct mtu3 *mtu);
+ irqreturn_t mtu3_ep0_isr(struct mtu3 *mtu);
+ extern const struct usb_ep_ops mtu3_ep0_ops;
 diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
-index 33d21dd..f9817ad 100644
+index f9817ad..2eef972 100644
 --- a/drivers/usb/mtu3/mtu3_core.c
 +++ b/drivers/usb/mtu3/mtu3_core.c
-@@ -72,8 +72,20 @@ static void ep_fifo_free(struct mtu3_ep *mep)
- 		__func__, mep->fifo_seg_size, mep->fifo_size, start_bit);
- }
- 
-+/* enable/disable U3D SS function */
-+static inline void mtu3_ss_func_set(struct mtu3 *mtu, bool enable)
-+{
-+	/* If usb3_en==0, LTSSM will go to SS.Disable state */
-+	if (enable)
-+		mtu3_setbits(mtu->mac_base, U3D_USB3_CONFIG, USB3_EN);
-+	else
-+		mtu3_clrbits(mtu->mac_base, U3D_USB3_CONFIG, USB3_EN);
-+
-+	dev_dbg(mtu->dev, "USB3_EN = %d\n", !!enable);
-+}
-+
- /* set/clear U3D HS device soft connect */
--void mtu3_hs_softconn_set(struct mtu3 *mtu, bool enable)
-+static inline void mtu3_hs_softconn_set(struct mtu3 *mtu, bool enable)
- {
- 	if (enable) {
- 		mtu3_setbits(mtu->mac_base, U3D_POWER_MANAGEMENT,
-@@ -92,6 +104,13 @@ static int mtu3_device_enable(struct mtu3 *mtu)
- 	u32 check_clk = 0;
- 
- 	mtu3_clrbits(ibase, U3D_SSUSB_IP_PW_CTRL2, SSUSB_IP_DEV_PDN);
-+
-+	if (mtu->is_u3_ip) {
-+		check_clk = SSUSB_U3_MAC_RST_B_STS;
-+		mtu3_clrbits(ibase, SSUSB_U3_CTRL(0),
-+			(SSUSB_U3_PORT_DIS | SSUSB_U3_PORT_PDN |
-+			SSUSB_U3_PORT_HOST_SEL));
-+	}
- 	mtu3_clrbits(ibase, SSUSB_U2_CTRL(0),
- 		(SSUSB_U2_PORT_DIS | SSUSB_U2_PORT_PDN |
+@@ -116,7 +116,7 @@ static int mtu3_device_enable(struct mtu3 *mtu)
  		SSUSB_U2_PORT_HOST_SEL));
-@@ -104,6 +123,10 @@ static void mtu3_device_disable(struct mtu3 *mtu)
- {
- 	void __iomem *ibase = mtu->ippc_base;
+ 	mtu3_setbits(ibase, SSUSB_U2_CTRL(0), SSUSB_U2_PORT_OTG_SEL);
  
-+	if (mtu->is_u3_ip)
-+		mtu3_setbits(ibase, SSUSB_U3_CTRL(0),
-+			(SSUSB_U3_PORT_DIS | SSUSB_U3_PORT_PDN));
-+
- 	mtu3_setbits(ibase, SSUSB_U2_CTRL(0),
- 		SSUSB_U2_PORT_DIS | SSUSB_U2_PORT_PDN);
- 	mtu3_clrbits(ibase, SSUSB_U2_CTRL(0), SSUSB_U2_PORT_OTG_SEL);
-@@ -142,6 +165,9 @@ static void mtu3_intr_status_clear(struct mtu3 *mtu)
- 	/* Clear U2 USB common interrupts status */
- 	mtu3_writel(mbase, U3D_COMMON_USB_INTR, ~0x0);
- 
-+	/* Clear U3 LTSSM interrupts status */
-+	mtu3_writel(mbase, U3D_LTSSM_INTR, ~0x0);
-+
- 	/* Clear speed change interrupt status */
- 	mtu3_writel(mbase, U3D_DEV_LINK_INTR, ~0x0);
+-	return ssusb_check_clocks(mtu, check_clk);
++	return ssusb_check_clocks(mtu->ssusb, check_clk);
  }
-@@ -153,13 +179,20 @@ static void mtu3_intr_enable(struct mtu3 *mtu)
- 	u32 value;
  
- 	/*Enable level 1 interrupts (BMU, QMU, MAC3, DMA, MAC2, EPCTL) */
--	value = BMU_INTR | QMU_INTR | MAC2_INTR | EP_CTRL_INTR;
-+	value = BMU_INTR | QMU_INTR | MAC3_INTR | MAC2_INTR | EP_CTRL_INTR;
- 	mtu3_writel(mbase, U3D_LV1IESR, value);
+ static void mtu3_device_disable(struct mtu3 *mtu)
+@@ -765,11 +765,38 @@ static void mtu3_hw_exit(struct mtu3 *mtu)
  
- 	/* Enable U2 common USB interrupts */
- 	value = SUSPEND_INTR | RESUME_INTR | RESET_INTR;
- 	mtu3_writel(mbase, U3D_COMMON_USB_INTR_ENABLE, value);
+ /*-------------------------------------------------------------------------*/
  
-+	if (mtu->is_u3_ip) {
-+		/* Enable U3 LTSSM interrupts */
-+		value = HOT_RST_INTR | WARM_RST_INTR | VBUS_RISE_INTR |
-+		    VBUS_FALL_INTR | ENTER_U3_INTR | EXIT_U3_INTR;
-+		mtu3_writel(mbase, U3D_LTSSM_INTR_ENABLE, value);
+-int ssusb_gadget_init(struct mtu3 *mtu)
++int ssusb_gadget_init(struct ssusb_mtk *ssusb)
+ {
+-	struct device *dev = mtu->dev;
+-	int ret;
++	struct device *dev = ssusb->dev;
++	struct platform_device *pdev = to_platform_device(dev);
++	struct mtu3 *mtu = NULL;
++	struct resource *res;
++	int ret = -ENOMEM;
++
++	mtu = devm_kzalloc(dev, sizeof(struct mtu3), GFP_KERNEL);
++	if (mtu == NULL)
++		return -ENOMEM;
++
++	mtu->irq = platform_get_irq(pdev, 0);
++	if (mtu->irq <= 0) {
++		dev_err(dev, "fail to get irq number\n");
++		return -ENODEV;
++	}
++	dev_info(dev, "irq %d\n", mtu->irq);
+ 
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mac");
++	mtu->mac_base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(mtu->mac_base)) {
++		dev_err(dev, "error mapping memory for dev mac\n");
++		return PTR_ERR(mtu->mac_base);
 +	}
 +
- 	/* Enable QMU interrupts. */
- 	value = TXQ_CSERR_INT | TXQ_LENERR_INT | RXQ_CSERR_INT |
- 			RXQ_LENERR_INT | RXQ_ZLPERR_INT;
-@@ -205,6 +238,17 @@ void mtu3_ep_stall_set(struct mtu3_ep *mep, bool set)
- 		set ? "SEND STALL" : "CLEAR STALL, with EP RESET");
++	spin_lock_init(&mtu->lock);
++	mtu->dev = dev;
++	mtu->ippc_base = ssusb->ippc_base;
++	ssusb->mac_base	= mtu->mac_base;
++	ssusb->u3d = mtu;
++	mtu->ssusb = ssusb;
+ 	mtu->max_speed = usb_get_maximum_speed(dev);
+ 
+ 	/* check the max_speed parameter */
+@@ -820,14 +847,17 @@ int ssusb_gadget_init(struct mtu3 *mtu)
+ 
+ irq_err:
+ 	mtu3_hw_exit(mtu);
++	ssusb->u3d = NULL;
+ 	dev_err(dev, " %s() fail...\n", __func__);
+ 
+ 	return ret;
  }
  
-+void mtu3_dev_on_off(struct mtu3 *mtu, int is_on)
-+{
-+	if (mtu->is_u3_ip && (mtu->max_speed == USB_SPEED_SUPER))
-+		mtu3_ss_func_set(mtu, is_on);
-+	else
-+		mtu3_hs_softconn_set(mtu, is_on);
+-void ssusb_gadget_exit(struct mtu3 *mtu)
++void ssusb_gadget_exit(struct ssusb_mtk *ssusb)
+ {
++	struct mtu3 *mtu = ssusb->u3d;
 +
-+	dev_info(mtu->dev, "gadget (%s) pullup D%s\n",
-+		usb_speed_string(mtu->max_speed), is_on ? "+" : "-");
+ 	mtu3_gadget_cleanup(mtu);
+-	device_init_wakeup(mtu->dev, false);
++	device_init_wakeup(ssusb->dev, false);
+ 	mtu3_hw_exit(mtu);
+ }
+diff --git a/drivers/usb/mtu3/mtu3_dr.h b/drivers/usb/mtu3/mtu3_dr.h
+new file mode 100644
+index 0000000..07066f4
+--- /dev/null
++++ b/drivers/usb/mtu3/mtu3_dr.h
+@@ -0,0 +1,85 @@
++/*
++ * mtu3_dr.h - dual role switch and host glue layer header
++ *
++ * Copyright (C) 2016 MediaTek Inc.
++ *
++ * Author: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ */
++
++#ifndef _MTU3_DR_H_
++#define _MTU3_DR_H_
++
++#if IS_ENABLED(CONFIG_USB_MTU3_HOST)
++
++int ssusb_host_init(struct ssusb_mtk *ssusb, struct device_node *parent_dn);
++void ssusb_host_exit(struct ssusb_mtk *ssusb);
++int ssusb_wakeup_of_property_parse(struct ssusb_mtk *ssusb,
++				struct device_node *dn);
++int ssusb_host_enable(struct ssusb_mtk *ssusb);
++int ssusb_host_disable(struct ssusb_mtk *ssusb, bool suspend);
++int ssusb_wakeup_enable(struct ssusb_mtk *ssusb);
++void ssusb_wakeup_disable(struct ssusb_mtk *ssusb);
++
++#else
++
++static inline int ssusb_host_init(struct ssusb_mtk *ssusb,
++
++	struct device_node *parent_dn)
++{
++	return 0;
 +}
 +
- void mtu3_start(struct mtu3 *mtu)
- {
- 	void __iomem *mbase = mtu->mac_base;
-@@ -214,13 +258,21 @@ void mtu3_start(struct mtu3 *mtu)
- 
- 	mtu3_clrbits(mtu->ippc_base, U3D_SSUSB_IP_PW_CTRL2, SSUSB_IP_DEV_PDN);
- 
++static inline void ssusb_host_exit(struct ssusb_mtk *ssusb)
++{}
++
++static inline int ssusb_wakeup_of_property_parse(
++	struct ssusb_mtk *ssusb, struct device_node *dn)
++{
++	return 0;
++}
++
++static inline int ssusb_host_enable(struct ssusb_mtk *ssusb)
++{
++	return 0;
++}
++
++static inline int ssusb_host_disable(struct ssusb_mtk *ssusb, bool suspend)
++{
++	return 0;
++}
++
++static inline int ssusb_wakeup_enable(struct ssusb_mtk *ssusb)
++{
++	return 0;
++}
++
++static inline void ssusb_wakeup_disable(struct ssusb_mtk *ssusb)
++{}
++
++#endif
++
++
++#if IS_ENABLED(CONFIG_USB_MTU3_GADGET)
++int ssusb_gadget_init(struct ssusb_mtk *ssusb);
++void ssusb_gadget_exit(struct ssusb_mtk *ssusb);
++#else
++static inline int ssusb_gadget_init(struct ssusb_mtk *ssusb)
++{
++	return 0;
++}
++
++static inline void ssusb_gadget_exit(struct ssusb_mtk *ssusb)
++{}
++#endif
++
++#endif		/* _MTU3_DR_H_ */
+diff --git a/drivers/usb/mtu3/mtu3_host.c b/drivers/usb/mtu3/mtu3_host.c
+new file mode 100644
+index 0000000..361d6d8
+--- /dev/null
++++ b/drivers/usb/mtu3/mtu3_host.c
+@@ -0,0 +1,288 @@
++/*
++ * mtu3_dr.c - dual role switch and host glue layer
++ *
++ * Copyright (C) 2016 MediaTek Inc.
++ *
++ * Author: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ */
++
++#include <linux/clk.h>
++#include <linux/iopoll.h>
++#include <linux/irq.h>
++#include <linux/kernel.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of_device.h>
++#include <linux/regmap.h>
++
++#include "mtu3.h"
++#include "mtu3_dr.h"
++
++#define PERI_WK_CTRL1		0x404
++#define UWK_CTL1_IS_C(x)	(((x) & 0xf) << 26)
++#define UWK_CTL1_IS_E		BIT(25)
++#define UWK_CTL1_IDDIG_C(x)	(((x) & 0xf) << 11)  /* cycle debounce */
++#define UWK_CTL1_IDDIG_E	BIT(10) /* enable debounce */
++#define UWK_CTL1_IDDIG_P	BIT(9)  /* polarity */
++#define UWK_CTL1_IS_P		BIT(6)  /* polarity for ip sleep */
++
++/*
++ * ip-sleep wakeup mode:
++ * all clocks can be turn off, but power domain should be kept on
++ */
++static void ssusb_wakeup_ip_sleep_en(struct ssusb_mtk *ssusb)
++{
++	u32 tmp;
++	struct regmap *pericfg = ssusb->pericfg;
++
++	regmap_read(pericfg, PERI_WK_CTRL1, &tmp);
++	tmp &= ~UWK_CTL1_IS_P;
++	tmp &= ~(UWK_CTL1_IS_C(0xf));
++	tmp |= UWK_CTL1_IS_C(0x8);
++	regmap_write(pericfg, PERI_WK_CTRL1, tmp);
++	regmap_write(pericfg, PERI_WK_CTRL1, tmp | UWK_CTL1_IS_E);
++
++	regmap_read(pericfg, PERI_WK_CTRL1, &tmp);
++	dev_dbg(ssusb->dev, "%s(): WK_CTRL1[P6,E25,C26:29]=%#x\n",
++		__func__, tmp);
++}
++
++static void ssusb_wakeup_ip_sleep_dis(struct ssusb_mtk *ssusb)
++{
++	u32 tmp;
++
++	regmap_read(ssusb->pericfg, PERI_WK_CTRL1, &tmp);
++	tmp &= ~UWK_CTL1_IS_E;
++	regmap_write(ssusb->pericfg, PERI_WK_CTRL1, tmp);
++}
++
++int ssusb_wakeup_of_property_parse(struct ssusb_mtk *ssusb,
++				struct device_node *dn)
++{
++	struct device *dev = ssusb->dev;
++
 +	/*
-+	 * When disable U2 port, USB2_CSR's register will be reset to
-+	 * default value after re-enable it again(HS is enabled by default).
-+	 * So if force mac to work as FS, disable HS function.
++	 * Wakeup function is optional, so it is not an error if this property
++	 * does not exist, and in such case, no need to get relative
++	 * properties anymore.
 +	 */
-+	if (mtu->max_speed == USB_SPEED_FULL)
-+		mtu3_clrbits(mbase, U3D_POWER_MANAGEMENT, HS_ENABLE);
++	ssusb->wakeup_en = of_property_read_bool(dn, "mediatek,enable-wakeup");
++	if (!ssusb->wakeup_en)
++		return 0;
 +
- 	/* Initialize the default interrupts */
- 	mtu3_intr_enable(mtu);
- 
- 	mtu->is_active = 1;
- 
- 	if (mtu->softconnect)
--		mtu3_hs_softconn_set(mtu, 1);
-+		mtu3_dev_on_off(mtu, 1);
- }
- 
- void mtu3_stop(struct mtu3 *mtu)
-@@ -231,7 +283,7 @@ void mtu3_stop(struct mtu3 *mtu)
- 	mtu3_intr_status_clear(mtu);
- 
- 	if (mtu->softconnect)
--		mtu3_hs_softconn_set(mtu, 0);
-+		mtu3_dev_on_off(mtu, 0);
- 
- 	mtu->is_active = 0;
- 	mtu3_setbits(mtu->ippc_base, U3D_SSUSB_IP_PW_CTRL2, SSUSB_IP_DEV_PDN);
-@@ -362,7 +414,10 @@ void mtu3_deconfig_ep(struct mtu3 *mtu, struct mtu3_ep *mep)
- }
- 
- /*
-- * 1. when supports only HS, the fifo is shared for all EPs, and
-+ * Two scenarios:
-+ * 1. when device IP supports SS, the fifo of EP0, TX EPs, RX EPs
-+ *	are separated;
-+ * 2. when supports only HS, the fifo is shared for all EPs, and
-  *	the capability registers of @EPNTXFFSZ or @EPNRXFFSZ indicate
-  *	the total fifo size of non-ep0, and ep0's is fixed to 64B,
-  *	so the total fifo size is 64B + @EPNTXFFSZ;
-@@ -376,18 +431,33 @@ static void get_ep_fifo_config(struct mtu3 *mtu)
- 	struct mtu3_fifo_info *rx_fifo;
- 	u32 fifosize;
- 
--	fifosize = mtu3_readl(mtu->mac_base, U3D_CAP_EPNTXFFSZ);
--	tx_fifo = &mtu->tx_fifo;
--	tx_fifo->base = MTU3_U2_IP_EP0_FIFO_SIZE;
--	tx_fifo->limit = (fifosize / MTU3_EP_FIFO_UNIT) >> 1;
--	bitmap_zero(tx_fifo->bitmap, MTU3_FIFO_BIT_SIZE);
--
--	rx_fifo = &mtu->rx_fifo;
--	rx_fifo->base =
--		tx_fifo->base + tx_fifo->limit * MTU3_EP_FIFO_UNIT;
--	rx_fifo->limit = tx_fifo->limit;
--	bitmap_zero(rx_fifo->bitmap, MTU3_FIFO_BIT_SIZE);
--	mtu->slot = MTU3_U2_IP_SLOT_DEFAULT;
-+	if (mtu->is_u3_ip) {
-+		fifosize = mtu3_readl(mtu->mac_base, U3D_CAP_EPNTXFFSZ);
-+		tx_fifo = &mtu->tx_fifo;
-+		tx_fifo->base = 0;
-+		tx_fifo->limit = fifosize / MTU3_EP_FIFO_UNIT;
-+		bitmap_zero(tx_fifo->bitmap, MTU3_FIFO_BIT_SIZE);
-+
-+		fifosize = mtu3_readl(mtu->mac_base, U3D_CAP_EPNRXFFSZ);
-+		rx_fifo = &mtu->rx_fifo;
-+		rx_fifo->base = 0;
-+		rx_fifo->limit = fifosize / MTU3_EP_FIFO_UNIT;
-+		bitmap_zero(rx_fifo->bitmap, MTU3_FIFO_BIT_SIZE);
-+		mtu->slot = MTU3_U3_IP_SLOT_DEFAULT;
-+	} else {
-+		fifosize = mtu3_readl(mtu->mac_base, U3D_CAP_EPNTXFFSZ);
-+		tx_fifo = &mtu->tx_fifo;
-+		tx_fifo->base = MTU3_U2_IP_EP0_FIFO_SIZE;
-+		tx_fifo->limit = (fifosize / MTU3_EP_FIFO_UNIT) >> 1;
-+		bitmap_zero(tx_fifo->bitmap, MTU3_FIFO_BIT_SIZE);
-+
-+		rx_fifo = &mtu->rx_fifo;
-+		rx_fifo->base =
-+			tx_fifo->base + tx_fifo->limit * MTU3_EP_FIFO_UNIT;
-+		rx_fifo->limit = tx_fifo->limit;
-+		bitmap_zero(rx_fifo->bitmap, MTU3_FIFO_BIT_SIZE);
-+		mtu->slot = MTU3_U2_IP_SLOT_DEFAULT;
-+	}
- 
- 	dev_dbg(mtu->dev, "%s, TX: base-%d, limit-%d; RX: base-%d, limit-%d\n",
- 		__func__, tx_fifo->base, tx_fifo->limit,
-@@ -416,17 +486,21 @@ static int mtu3_mem_alloc(struct mtu3 *mtu)
- 	void __iomem *mbase = mtu->mac_base;
- 	struct mtu3_ep *ep_array;
- 	int in_ep_num, out_ep_num;
--	u32 cap_epinfo;
-+	u32 cap_epinfo, cap_dev;
- 	int ret;
- 	int i;
- 
- 	mtu->hw_version = mtu3_readl(mtu->ippc_base, U3D_SSUSB_HW_ID);
- 
-+	cap_dev = mtu3_readl(mtu->ippc_base, U3D_SSUSB_IP_DEV_CAP);
-+	mtu->is_u3_ip = !!SSUSB_IP_DEV_U3_PORT_NUM(cap_dev);
-+
- 	cap_epinfo = mtu3_readl(mbase, U3D_CAP_EPINFO);
- 	in_ep_num = CAP_TX_EP_NUM(cap_epinfo);
- 	out_ep_num = CAP_RX_EP_NUM(cap_epinfo);
- 
--	dev_info(mtu->dev, "IP version 0x%x\n", mtu->hw_version);
-+	dev_info(mtu->dev, "IP version 0x%x(%s IP)\n", mtu->hw_version,
-+		mtu->is_u3_ip ? "U3" : "U2");
- 	dev_info(mtu->dev, "fifosz/epnum: Tx=%#x/%d, Rx=%#x/%d\n",
- 		 mtu3_readl(mbase, U3D_CAP_EPNTXFFSZ), in_ep_num,
- 		 mtu3_readl(mbase, U3D_CAP_EPNRXFFSZ), out_ep_num);
-@@ -469,6 +543,27 @@ static void mtu3_mem_free(struct mtu3 *mtu)
- 	kfree(mtu->ep_array);
- }
- 
-+static void mtu3_set_speed(struct mtu3 *mtu)
-+{
-+	void __iomem *mbase = mtu->mac_base;
-+
-+	if (!mtu->is_u3_ip && (mtu->max_speed > USB_SPEED_HIGH))
-+		mtu->max_speed = USB_SPEED_HIGH;
-+
-+	if (mtu->max_speed == USB_SPEED_FULL) {
-+		/* disable U3 SS function */
-+		mtu3_clrbits(mbase, U3D_USB3_CONFIG, USB3_EN);
-+		/* disable HS function */
-+		mtu3_clrbits(mbase, U3D_POWER_MANAGEMENT, HS_ENABLE);
-+	} else if (mtu->max_speed == USB_SPEED_HIGH) {
-+		mtu3_clrbits(mbase, U3D_USB3_CONFIG, USB3_EN);
-+		/* HS/FS detected by HW */
-+		mtu3_setbits(mbase, U3D_POWER_MANAGEMENT, HS_ENABLE);
-+	}
-+	dev_info(mtu->dev, "max_speed: %s\n",
-+		usb_speed_string(mtu->max_speed));
-+}
-+
- static void mtu3_regs_init(struct mtu3 *mtu)
- {
- 
-@@ -478,9 +573,16 @@ static void mtu3_regs_init(struct mtu3 *mtu)
- 	mtu3_intr_disable(mtu);
- 	mtu3_intr_status_clear(mtu);
- 
--	mtu3_clrbits(mbase, U3D_USB3_CONFIG, USB3_EN);
--	/* HS/FS detected by HW */
--	mtu3_setbits(mbase, U3D_POWER_MANAGEMENT, HS_ENABLE);
-+	if (mtu->is_u3_ip) {
-+		/* disable LGO_U1/U2 by default */
-+		mtu3_clrbits(mbase, U3D_LINK_POWER_CONTROL,
-+				SW_U1_ACCEPT_ENABLE | SW_U2_ACCEPT_ENABLE |
-+				SW_U1_REQUEST_ENABLE | SW_U2_REQUEST_ENABLE);
-+		/* device responses to u3_exit from host automatically */
-+		mtu3_clrbits(mbase, U3D_LTSSM_CTRL, SOFT_U3_EXIT_EN);
++	ssusb->wk_deb_p0 = devm_clk_get(dev, "wakeup_deb_p0");
++	if (IS_ERR(ssusb->wk_deb_p0)) {
++		dev_err(dev, "fail to get wakeup_deb_p0\n");
++		return PTR_ERR(ssusb->wk_deb_p0);
 +	}
 +
-+	mtu3_set_speed(mtu);
- 
- 	/* delay about 0.1us from detecting reset to send chirp-K */
- 	mtu3_clrbits(mbase, U3D_LINK_RESET_INFO, WTCHRP_MSK);
-@@ -530,6 +632,10 @@ static irqreturn_t mtu3_link_isr(struct mtu3 *mtu)
- 		mtu3_setbits(mbase, U3D_POWER_MANAGEMENT,
- 				LPM_BESL_STALL | LPM_BESLD_STALL);
- 		break;
-+	case MTU3_SPEED_SUPER:
-+		udev_speed = USB_SPEED_SUPER;
-+		maxpkt = 512;
-+		break;
- 	default:
- 		udev_speed = USB_SPEED_UNKNOWN;
- 		break;
-@@ -548,6 +654,34 @@ static irqreturn_t mtu3_link_isr(struct mtu3 *mtu)
- 	return IRQ_HANDLED;
- }
- 
-+static irqreturn_t mtu3_u3_ltssm_isr(struct mtu3 *mtu)
-+{
-+	void __iomem *mbase = mtu->mac_base;
-+	u32 ltssm;
-+
-+	ltssm = mtu3_readl(mbase, U3D_LTSSM_INTR);
-+	ltssm &= mtu3_readl(mbase, U3D_LTSSM_INTR_ENABLE);
-+	mtu3_writel(mbase, U3D_LTSSM_INTR, ltssm); /* W1C */
-+	dev_dbg(mtu->dev, "=== LTSSM[%x] ===\n", ltssm);
-+
-+	if (ltssm & (HOT_RST_INTR | WARM_RST_INTR))
-+		mtu3_gadget_reset(mtu);
-+
-+	if (ltssm & VBUS_FALL_INTR)
-+		mtu3_ss_func_set(mtu, false);
-+
-+	if (ltssm & VBUS_RISE_INTR)
-+		mtu3_ss_func_set(mtu, true);
-+
-+	if (ltssm & EXIT_U3_INTR)
-+		mtu3_gadget_resume(mtu);
-+
-+	if (ltssm & ENTER_U3_INTR)
-+		mtu3_gadget_suspend(mtu);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static irqreturn_t mtu3_u2_common_isr(struct mtu3 *mtu)
- {
- 	void __iomem *mbase = mtu->mac_base;
-@@ -588,6 +722,9 @@ irqreturn_t mtu3_irq(int irq, void *data)
- 	if (level1 & MAC2_INTR)
- 		mtu3_u2_common_isr(mtu);
- 
-+	if (level1 & MAC3_INTR)
-+		mtu3_u3_ltssm_isr(mtu);
-+
- 	if (level1 & BMU_INTR)
- 		mtu3_ep0_isr(mtu);
- 
-@@ -633,6 +770,27 @@ int ssusb_gadget_init(struct mtu3 *mtu)
- 	struct device *dev = mtu->dev;
- 	int ret;
- 
-+	mtu->max_speed = usb_get_maximum_speed(dev);
-+
-+	/* check the max_speed parameter */
-+	switch (mtu->max_speed) {
-+	case USB_SPEED_FULL:
-+	case USB_SPEED_HIGH:
-+	case USB_SPEED_SUPER:
-+		break;
-+	default:
-+		dev_err(dev, "invalid max_speed: %s\n",
-+			usb_speed_string(mtu->max_speed));
-+		/* fall through */
-+	case USB_SPEED_UNKNOWN:
-+		/* default as SS */
-+		mtu->max_speed = USB_SPEED_SUPER;
-+		break;
-+	}
-+
-+	dev_dbg(dev, "mac_base=0x%p, ippc_base=0x%p\n",
-+		mtu->mac_base, mtu->ippc_base);
-+
- 	ret = mtu3_hw_init(mtu);
- 	if (ret) {
- 		dev_err(dev, "mtu3 hw init failed:%d\n", ret);
-diff --git a/drivers/usb/mtu3/mtu3_gadget.c b/drivers/usb/mtu3/mtu3_gadget.c
-index 0e25e0f..84f3fe1 100644
---- a/drivers/usb/mtu3/mtu3_gadget.c
-+++ b/drivers/usb/mtu3/mtu3_gadget.c
-@@ -73,6 +73,7 @@ static void nuke(struct mtu3_ep *mep, const int status)
- static int mtu3_ep_enable(struct mtu3_ep *mep)
- {
- 	const struct usb_endpoint_descriptor *desc;
-+	const struct usb_ss_ep_comp_descriptor *comp_desc;
- 	struct mtu3 *mtu = mep->mtu;
- 	u32 interval = 0;
- 	u32 mult = 0;
-@@ -81,11 +82,24 @@ static int mtu3_ep_enable(struct mtu3_ep *mep)
- 	int ret;
- 
- 	desc = mep->desc;
-+	comp_desc = mep->comp_desc;
- 	mep->type = usb_endpoint_type(desc);
- 	max_packet = usb_endpoint_maxp(desc);
- 	mep->maxp = max_packet & GENMASK(10, 0);
- 
- 	switch (mtu->g.speed) {
-+	case USB_SPEED_SUPER:
-+		if (usb_endpoint_xfer_int(desc) ||
-+				usb_endpoint_xfer_isoc(desc)) {
-+			interval = desc->bInterval;
-+			interval = clamp_val(interval, 1, 16) - 1;
-+			if (usb_endpoint_xfer_isoc(desc) && comp_desc)
-+				mult = comp_desc->bmAttributes;
++	if (of_property_read_bool(dn, "wakeup_deb_p1")) {
++		ssusb->wk_deb_p1 = devm_clk_get(dev, "wakeup_deb_p1");
++		if (IS_ERR(ssusb->wk_deb_p1)) {
++			dev_err(dev, "fail to get wakeup_deb_p1\n");
++			return PTR_ERR(ssusb->wk_deb_p1);
 +		}
-+		if (comp_desc)
-+			burst = comp_desc->bMaxBurst;
-+
-+		break;
- 	case USB_SPEED_HIGH:
- 		if (usb_endpoint_xfer_isoc(desc) ||
- 				usb_endpoint_xfer_int(desc)) {
-@@ -103,6 +117,7 @@ static int mtu3_ep_enable(struct mtu3_ep *mep)
- 
- 	mep->ep.maxpacket = mep->maxp;
- 	mep->ep.desc = desc;
-+	mep->ep.comp_desc = comp_desc;
- 
- 	/* slot mainly affects bulk/isoc transfer, so ignore int */
- 	mep->slot = usb_endpoint_xfer_int(desc) ? 0 : mtu->slot;
-@@ -135,6 +150,7 @@ static int mtu3_ep_disable(struct mtu3_ep *mep)
- 
- 	mep->desc = NULL;
- 	mep->ep.desc = NULL;
-+	mep->comp_desc = NULL;
- 	mep->type = 0;
- 	mep->flags = 0;
- 
-@@ -178,6 +194,7 @@ static int mtu3_gadget_ep_enable(struct usb_ep *ep,
- 
- 	spin_lock_irqsave(&mtu->lock, flags);
- 	mep->desc = desc;
-+	mep->comp_desc = ep->comp_desc;
- 
- 	ret = mtu3_ep_enable(mep);
- 	if (ret)
-@@ -439,13 +456,15 @@ static int mtu3_gadget_wakeup(struct usb_gadget *gadget)
- 		return  -EOPNOTSUPP;
- 
- 	spin_lock_irqsave(&mtu->lock, flags);
--
--	mtu3_setbits(mtu->mac_base, U3D_POWER_MANAGEMENT, RESUME);
--	spin_unlock_irqrestore(&mtu->lock, flags);
--	usleep_range(10000, 11000);
--	spin_lock_irqsave(&mtu->lock, flags);
--	mtu3_clrbits(mtu->mac_base, U3D_POWER_MANAGEMENT, RESUME);
--
-+	if (mtu->g.speed == USB_SPEED_SUPER) {
-+		mtu3_setbits(mtu->mac_base, U3D_LINK_POWER_CONTROL, UX_EXIT);
-+	} else {
-+		mtu3_setbits(mtu->mac_base, U3D_POWER_MANAGEMENT, RESUME);
-+		spin_unlock_irqrestore(&mtu->lock, flags);
-+		usleep_range(10000, 11000);
-+		spin_lock_irqsave(&mtu->lock, flags);
-+		mtu3_clrbits(mtu->mac_base, U3D_POWER_MANAGEMENT, RESUME);
 +	}
- 	spin_unlock_irqrestore(&mtu->lock, flags);
- 	return 0;
- }
-@@ -476,7 +495,7 @@ static int mtu3_gadget_pullup(struct usb_gadget *gadget, int is_on)
- 		mtu->softconnect = is_on;
- 	} else if (is_on != mtu->softconnect) {
- 		mtu->softconnect = is_on;
--		mtu3_hs_softconn_set(mtu, is_on);
-+		mtu3_dev_on_off(mtu, is_on);
- 	}
- 
- 	spin_unlock_irqrestore(&mtu->lock, flags);
-@@ -524,7 +543,7 @@ static void stop_activity(struct mtu3 *mtu)
- 	/* deactivate the hardware */
- 	if (mtu->softconnect) {
- 		mtu->softconnect = 0;
--		mtu3_hs_softconn_set(mtu, 0);
-+		mtu3_dev_on_off(mtu, 0);
- 	}
- 
- 	/*
-@@ -587,14 +606,14 @@ static void init_hw_ep(struct mtu3 *mtu, struct mtu3_ep *mep,
- 	mep->ep.name = mep->name;
- 	INIT_LIST_HEAD(&mep->ep.ep_list);
- 
--	/* initialize maxpacket as HS */
-+	/* initialize maxpacket as SS */
- 	if (!epnum) {
--		usb_ep_set_maxpacket_limit(&mep->ep, 64);
-+		usb_ep_set_maxpacket_limit(&mep->ep, 512);
- 		mep->ep.caps.type_control = true;
- 		mep->ep.ops = &mtu3_ep0_ops;
- 		mtu->g.ep0 = &mep->ep;
- 	} else {
--		usb_ep_set_maxpacket_limit(&mep->ep, 512);
-+		usb_ep_set_maxpacket_limit(&mep->ep, 1024);
- 		mep->ep.caps.type_iso = true;
- 		mep->ep.caps.type_bulk = true;
- 		mep->ep.caps.type_int = true;
-@@ -637,7 +656,7 @@ int mtu3_gadget_setup(struct mtu3 *mtu)
- 	int ret;
- 
- 	mtu->g.ops = &mtu3_gadget_ops;
--	mtu->g.max_speed = USB_SPEED_HIGH;
-+	mtu->g.max_speed = mtu->max_speed;
- 	mtu->g.speed = USB_SPEED_UNKNOWN;
- 	mtu->g.sg_supported = 0;
- 	mtu->g.name = MTU3_DRIVER_NAME;
-diff --git a/drivers/usb/mtu3/mtu3_gadget_ep0.c b/drivers/usb/mtu3/mtu3_gadget_ep0.c
-index 4e2c2bab..2d7427b 100644
---- a/drivers/usb/mtu3/mtu3_gadget_ep0.c
-+++ b/drivers/usb/mtu3/mtu3_gadget_ep0.c
-@@ -161,6 +161,41 @@ static void ep0_stall_set(struct mtu3_ep *mep0, bool set, u32 pktrdy)
- static void ep0_dummy_complete(struct usb_ep *ep, struct usb_request *req)
- {}
- 
-+static void ep0_set_sel_complete(struct usb_ep *ep, struct usb_request *req)
-+{
-+	struct mtu3_request *mreq;
-+	struct mtu3 *mtu;
-+	struct usb_set_sel_req sel;
 +
-+	memcpy(&sel, req->buf, sizeof(sel));
++	ssusb->pericfg = syscon_regmap_lookup_by_phandle(dn,
++						"mediatek,syscon-wakeup");
++	if (IS_ERR(ssusb->pericfg)) {
++		dev_err(dev, "fail to get pericfg regs\n");
++		return PTR_ERR(ssusb->pericfg);
++	}
 +
-+	mreq = to_mtu3_request(req);
-+	mtu = mreq->mtu;
-+	dev_dbg(mtu->dev, "u1sel:%d, u1pel:%d, u2sel:%d, u2pel:%d\n",
-+		sel.u1_sel, sel.u1_pel, sel.u2_sel, sel.u2_pel);
++	return 0;
 +}
 +
-+/* queue data stage to handle 6 byte SET_SEL request */
-+static int ep0_set_sel(struct mtu3 *mtu, struct usb_ctrlrequest *setup)
++static int ssusb_wakeup_clks_enable(struct ssusb_mtk *ssusb)
 +{
 +	int ret;
-+	u16 length = le16_to_cpu(setup->wLength);
 +
-+	if (unlikely(length != 6)) {
-+		dev_err(mtu->dev, "%s wrong wLength:%d\n",
-+			__func__, length);
-+		return -EINVAL;
++	ret = clk_prepare_enable(ssusb->wk_deb_p0);
++	if (ret) {
++		dev_err(ssusb->dev, "failed to enable wk_deb_p0\n");
++		goto usb_p0_err;
 +	}
 +
-+	mtu->ep0_req.mep = mtu->ep0;
-+	mtu->ep0_req.request.length = 6;
-+	mtu->ep0_req.request.buf = mtu->setup_buf;
-+	mtu->ep0_req.request.complete = ep0_set_sel_complete;
-+	ret = ep0_queue(mtu->ep0, &mtu->ep0_req);
++	ret = clk_prepare_enable(ssusb->wk_deb_p1);
++	if (ret) {
++		dev_err(ssusb->dev, "failed to enable wk_deb_p1\n");
++		goto usb_p1_err;
++	}
 +
-+	return ret < 0 ? ret : 1;
++	return 0;
++
++usb_p1_err:
++	clk_disable_unprepare(ssusb->wk_deb_p0);
++usb_p0_err:
++	return -EINVAL;
 +}
 +
- static int
- ep0_get_status(struct mtu3 *mtu, const struct usb_ctrlrequest *setup)
++static void ssusb_wakeup_clks_disable(struct ssusb_mtk *ssusb)
++{
++	clk_disable_unprepare(ssusb->wk_deb_p1);
++	clk_disable_unprepare(ssusb->wk_deb_p0);
++}
++
++static void host_ports_num_get(struct ssusb_mtk *ssusb)
++{
++	u32 xhci_cap;
++
++	xhci_cap = mtu3_readl(ssusb->ippc_base, U3D_SSUSB_IP_XHCI_CAP);
++	ssusb->u2_ports = SSUSB_IP_XHCI_U2_PORT_NUM(xhci_cap);
++	ssusb->u3_ports = SSUSB_IP_XHCI_U3_PORT_NUM(xhci_cap);
++
++	dev_dbg(ssusb->dev, "host - u2_ports:%d, u3_ports:%d\n",
++		 ssusb->u2_ports, ssusb->u3_ports);
++}
++
++/* only configure ports will be used later */
++int ssusb_host_enable(struct ssusb_mtk *ssusb)
++{
++	void __iomem *ibase = ssusb->ippc_base;
++	int num_u3p = ssusb->u3_ports;
++	int num_u2p = ssusb->u2_ports;
++	u32 check_clk;
++	u32 value;
++	int i;
++
++	/* power on host ip */
++	mtu3_clrbits(ibase, U3D_SSUSB_IP_PW_CTRL1, SSUSB_IP_HOST_PDN);
++
++	/* power on and enable all u3 ports */
++	for (i = 0; i < num_u3p; i++) {
++		value = mtu3_readl(ibase, SSUSB_U3_CTRL(i));
++		value &= ~(SSUSB_U3_PORT_PDN | SSUSB_U3_PORT_DIS);
++		value |= SSUSB_U3_PORT_HOST_SEL;
++		mtu3_writel(ibase, SSUSB_U3_CTRL(i), value);
++	}
++
++	/* power on and enable all u2 ports */
++	for (i = 0; i < num_u2p; i++) {
++		value = mtu3_readl(ibase, SSUSB_U2_CTRL(i));
++		value &= ~(SSUSB_U2_PORT_PDN | SSUSB_U2_PORT_DIS);
++		value |= SSUSB_U2_PORT_HOST_SEL;
++		mtu3_writel(ibase, SSUSB_U2_CTRL(i), value);
++	}
++
++	check_clk = SSUSB_XHCI_RST_B_STS;
++	if (num_u3p)
++		check_clk = SSUSB_U3_MAC_RST_B_STS;
++
++	return ssusb_check_clocks(ssusb, check_clk);
++}
++
++int ssusb_host_disable(struct ssusb_mtk *ssusb, bool suspend)
++{
++	void __iomem *ibase = ssusb->ippc_base;
++	int num_u3p = ssusb->u3_ports;
++	int num_u2p = ssusb->u2_ports;
++	u32 value;
++	int ret;
++	int i;
++
++	/* power down and disable all u3 ports */
++	for (i = 0; i < num_u3p; i++) {
++		value = mtu3_readl(ibase, SSUSB_U3_CTRL(i));
++		value |= SSUSB_U3_PORT_PDN;
++		value |= suspend ? 0 : SSUSB_U3_PORT_DIS;
++		mtu3_writel(ibase, SSUSB_U3_CTRL(i), value);
++	}
++
++	/* power down and disable all u2 ports */
++	for (i = 0; i < num_u2p; i++) {
++		value = mtu3_readl(ibase, SSUSB_U2_CTRL(i));
++		value |= SSUSB_U2_PORT_PDN;
++		value |= suspend ? 0 : SSUSB_U2_PORT_DIS;
++		mtu3_writel(ibase, SSUSB_U2_CTRL(i), value);
++	}
++
++	/* power down host ip */
++	mtu3_setbits(ibase, U3D_SSUSB_IP_PW_CTRL1, SSUSB_IP_HOST_PDN);
++
++	if (!suspend)
++		return 0;
++
++	/* wait for host ip to sleep */
++	ret = readl_poll_timeout(ibase + U3D_SSUSB_IP_PW_STS1, value,
++			  (value & SSUSB_IP_SLEEP_STS), 100, 100000);
++	if (ret)
++		dev_err(ssusb->dev, "ip sleep failed!!!\n");
++
++	return ret;
++}
++
++static void ssusb_host_setup(struct ssusb_mtk *ssusb)
++{
++	host_ports_num_get(ssusb);
++
++	/*
++	 * power on host and power on/enable all ports
++	 * if support OTG, gadget driver will switch port0 to device mode
++	 */
++	ssusb_host_enable(ssusb);
++}
++
++static void ssusb_host_cleanup(struct ssusb_mtk *ssusb)
++{
++	ssusb_host_disable(ssusb, false);
++}
++
++/*
++ * If host supports multiple ports, the VBUSes(5V) of ports except port0
++ * which supports OTG are better to be enabled by default in DTS.
++ * Because the host driver will keep link with devices attached when system
++ * enters suspend mode, so no need to control VBUSes after initialization.
++ */
++int ssusb_host_init(struct ssusb_mtk *ssusb, struct device_node *parent_dn)
++{
++	struct device *parent_dev = ssusb->dev;
++	int ret;
++
++	ssusb_host_setup(ssusb);
++
++	ret = of_platform_populate(parent_dn, NULL, NULL, parent_dev);
++	if (ret) {
++		dev_dbg(parent_dev, "failed to create child devices at %s\n",
++				parent_dn->full_name);
++		return ret;
++	}
++
++	dev_info(parent_dev, "xHCI platform device register success...\n");
++
++	return 0;
++}
++
++void ssusb_host_exit(struct ssusb_mtk *ssusb)
++{
++	of_platform_depopulate(ssusb->dev);
++	ssusb_host_cleanup(ssusb);
++}
++
++int ssusb_wakeup_enable(struct ssusb_mtk *ssusb)
++{
++	int ret = 0;
++
++	if (ssusb->wakeup_en) {
++		ret = ssusb_wakeup_clks_enable(ssusb);
++		ssusb_wakeup_ip_sleep_en(ssusb);
++	}
++	return ret;
++}
++
++void ssusb_wakeup_disable(struct ssusb_mtk *ssusb)
++{
++	if (ssusb->wakeup_en) {
++		ssusb_wakeup_ip_sleep_dis(ssusb);
++		ssusb_wakeup_clks_disable(ssusb);
++	}
++}
+diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
+index 52fc0ed..facb76c 100644
+--- a/drivers/usb/mtu3/mtu3_plat.c
++++ b/drivers/usb/mtu3/mtu3_plat.c
+@@ -21,14 +21,16 @@
+ #include <linux/module.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+ 
+ #include "mtu3.h"
++#include "mtu3_dr.h"
+ 
+ /* u2-port0 should be powered on and enabled; */
+-int ssusb_check_clocks(struct mtu3 *mtu, u32 ex_clks)
++int ssusb_check_clocks(struct ssusb_mtk *ssusb, u32 ex_clks)
  {
-@@ -174,6 +209,15 @@ static void ep0_dummy_complete(struct usb_ep *ep, struct usb_request *req)
- 	case USB_RECIP_DEVICE:
- 		result[0] = mtu->is_self_powered << USB_DEVICE_SELF_POWERED;
- 		result[0] |= mtu->may_wakeup << USB_DEVICE_REMOTE_WAKEUP;
-+		/* superspeed only */
-+		if (mtu->g.speed == USB_SPEED_SUPER) {
-+			result[0] |= mtu->u1_enable << USB_DEV_STAT_U1_ENABLED;
-+			result[0] |= mtu->u2_enable << USB_DEV_STAT_U2_ENABLED;
-+		}
+-	void __iomem *ibase = mtu->ippc_base;
++	void __iomem *ibase = ssusb->ippc_base;
+ 	u32 value, check_val;
+ 	int ret;
+ 
+@@ -38,136 +40,209 @@ int ssusb_check_clocks(struct mtu3 *mtu, u32 ex_clks)
+ 	ret = readl_poll_timeout(ibase + U3D_SSUSB_IP_PW_STS1, value,
+ 			(check_val == (value & check_val)), 100, 20000);
+ 	if (ret) {
+-		dev_err(mtu->dev, "clks of sts1 are not stable!\n");
++		dev_err(ssusb->dev, "clks of sts1 are not stable!\n");
+ 		return ret;
+ 	}
+ 
+ 	ret = readl_poll_timeout(ibase + U3D_SSUSB_IP_PW_STS2, value,
+ 			(value & SSUSB_U2_MAC_SYS_RST_B_STS), 100, 10000);
+ 	if (ret) {
+-		dev_err(mtu->dev, "mac2 clock is not stable\n");
++		dev_err(ssusb->dev, "mac2 clock is not stable\n");
+ 		return ret;
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-static int ssusb_rscs_init(struct mtu3 *mtu)
++static int ssusb_phy_init(struct ssusb_mtk *ssusb)
++{
++	int i;
++	int ret;
 +
-+		dev_dbg(mtu->dev, "%s result=%x, U1=%x, U2=%x\n", __func__,
-+			result[0], mtu->u1_enable, mtu->u2_enable);
++	for (i = 0; i < ssusb->num_phys; i++) {
++		ret = phy_init(ssusb->phys[i]);
++		if (ret)
++			goto exit_phy;
++	}
++	return 0;
 +
- 		break;
- 	case USB_RECIP_INTERFACE:
- 		break;
-@@ -265,7 +309,9 @@ static int handle_test_mode(struct mtu3 *mtu, struct usb_ctrlrequest *setup)
- static int ep0_handle_feature_dev(struct mtu3 *mtu,
- 		struct usb_ctrlrequest *setup, bool set)
++exit_phy:
++	for (; i > 0; i--)
++		phy_exit(ssusb->phys[i - 1]);
++
++	return ret;
++}
++
++static int ssusb_phy_exit(struct ssusb_mtk *ssusb)
++{
++	int i;
++
++	for (i = 0; i < ssusb->num_phys; i++)
++		phy_exit(ssusb->phys[i]);
++
++	return 0;
++}
++
++static int ssusb_phy_power_on(struct ssusb_mtk *ssusb)
++{
++	int i;
++	int ret;
++
++	for (i = 0; i < ssusb->num_phys; i++) {
++		ret = phy_power_on(ssusb->phys[i]);
++		if (ret)
++			goto power_off_phy;
++	}
++	return 0;
++
++power_off_phy:
++	for (; i > 0; i--)
++		phy_power_off(ssusb->phys[i - 1]);
++
++	return ret;
++}
++
++static void ssusb_phy_power_off(struct ssusb_mtk *ssusb)
++{
++	unsigned int i;
++
++	for (i = 0; i < ssusb->num_phys; i++)
++		phy_power_off(ssusb->phys[i]);
++}
++
++static int ssusb_rscs_init(struct ssusb_mtk *ssusb)
  {
-+	void __iomem *mbase = mtu->mac_base;
- 	int handled = -EINVAL;
-+	u32 lpc;
+ 	int ret = 0;
  
- 	switch (le16_to_cpu(setup->wValue)) {
- 	case USB_DEVICE_REMOTE_WAKEUP:
-@@ -279,6 +325,36 @@ static int ep0_handle_feature_dev(struct mtu3 *mtu,
+-	ret = regulator_enable(mtu->vusb33);
++	ret = regulator_enable(ssusb->vusb33);
+ 	if (ret) {
+-		dev_err(mtu->dev, "failed to enable vusb33\n");
++		dev_err(ssusb->dev, "failed to enable vusb33\n");
+ 		goto vusb33_err;
+ 	}
  
- 		handled = handle_test_mode(mtu, setup);
- 		break;
-+	case USB_DEVICE_U1_ENABLE:
-+		if (mtu->g.speed != USB_SPEED_SUPER ||
-+			mtu->g.state != USB_STATE_CONFIGURED)
-+			break;
+-	ret = clk_prepare_enable(mtu->sys_clk);
++	ret = clk_prepare_enable(ssusb->sys_clk);
+ 	if (ret) {
+-		dev_err(mtu->dev, "failed to enable sys_clk\n");
++		dev_err(ssusb->dev, "failed to enable sys_clk\n");
+ 		goto clk_err;
+ 	}
+ 
+-	ret = phy_init(mtu->phy);
++	ret = ssusb_phy_init(ssusb);
+ 	if (ret) {
+-		dev_err(mtu->dev, "failed to init phy\n");
++		dev_err(ssusb->dev, "failed to init phy\n");
+ 		goto phy_init_err;
+ 	}
+ 
+-	ret = phy_power_on(mtu->phy);
++	ret = ssusb_phy_power_on(ssusb);
+ 	if (ret) {
+-		dev_err(mtu->dev, "failed to power on phy\n");
++		dev_err(ssusb->dev, "failed to power on phy\n");
+ 		goto phy_err;
+ 	}
+ 
+ 	return 0;
+ 
+ phy_err:
+-	phy_exit(mtu->phy);
++	ssusb_phy_exit(ssusb);
+ 
+ phy_init_err:
+-	clk_disable_unprepare(mtu->sys_clk);
++	clk_disable_unprepare(ssusb->sys_clk);
+ 
+ clk_err:
+-	regulator_disable(mtu->vusb33);
++	regulator_disable(ssusb->vusb33);
+ 
+ vusb33_err:
+ 
+ 	return ret;
+ }
+ 
+-static void ssusb_rscs_exit(struct mtu3 *mtu)
++static void ssusb_rscs_exit(struct ssusb_mtk *ssusb)
+ {
+-	clk_disable_unprepare(mtu->sys_clk);
+-	regulator_disable(mtu->vusb33);
+-	phy_power_off(mtu->phy);
+-	phy_exit(mtu->phy);
++	clk_disable_unprepare(ssusb->sys_clk);
++	regulator_disable(ssusb->vusb33);
++	ssusb_phy_power_off(ssusb);
++	ssusb_phy_exit(ssusb);
+ }
+ 
+-static void ssusb_ip_sw_reset(struct mtu3 *mtu)
++static void ssusb_ip_sw_reset(struct ssusb_mtk *ssusb)
+ {
+-	mtu3_setbits(mtu->ippc_base, U3D_SSUSB_IP_PW_CTRL0, SSUSB_IP_SW_RST);
++	/* reset whole ip (xhci & u3d) */
++	mtu3_setbits(ssusb->ippc_base, U3D_SSUSB_IP_PW_CTRL0, SSUSB_IP_SW_RST);
+ 	udelay(1);
+-	mtu3_clrbits(mtu->ippc_base, U3D_SSUSB_IP_PW_CTRL0, SSUSB_IP_SW_RST);
++	mtu3_clrbits(ssusb->ippc_base, U3D_SSUSB_IP_PW_CTRL0, SSUSB_IP_SW_RST);
+ }
+ 
+-static int get_ssusb_rscs(struct platform_device *pdev, struct mtu3 *mtu)
++static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ {
+ 	struct device_node *node = pdev->dev.of_node;
+ 	struct device *dev = &pdev->dev;
+ 	struct resource *res;
++	int i;
++	int ret;
+ 
+-	mtu->phy = devm_of_phy_get_by_index(dev, node, 0);
+-	if (IS_ERR(mtu->phy)) {
+-		dev_err(dev, "failed to get phy\n");
+-		return PTR_ERR(mtu->phy);
+-	}
+-
+-	mtu->irq = platform_get_irq(pdev, 0);
+-	if (mtu->irq <= 0) {
+-		dev_err(dev, "fail to get irq number\n");
+-		return -ENODEV;
++	ssusb->num_phys = of_count_phandle_with_args(node,
++			"phys", "#phy-cells");
++	if (ssusb->num_phys > 0) {
++		ssusb->phys = devm_kcalloc(dev, ssusb->num_phys,
++					sizeof(*ssusb->phys), GFP_KERNEL);
++		if (!ssusb->phys)
++			return -ENOMEM;
++	} else {
++		ssusb->num_phys = 0;
+ 	}
+-	dev_info(dev, "irq %d\n", mtu->irq);
+ 
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mac");
+-	mtu->mac_base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(mtu->mac_base)) {
+-		dev_err(dev, "error mapping memory for dev mac\n");
+-		return PTR_ERR(mtu->mac_base);
++	for (i = 0; i < ssusb->num_phys; i++) {
++		ssusb->phys[i] = devm_of_phy_get_by_index(dev, node, i);
++		if (IS_ERR(ssusb->phys[i])) {
++			dev_err(dev, "failed to get phy-%d\n", i);
++			return PTR_ERR(ssusb->phys[i]);
++		}
+ 	}
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ippc");
+-	mtu->ippc_base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(mtu->ippc_base)) {
++	ssusb->ippc_base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(ssusb->ippc_base)) {
+ 		dev_err(dev, "failed to map memory for ippc\n");
+-		return PTR_ERR(mtu->ippc_base);
++		return PTR_ERR(ssusb->ippc_base);
+ 	}
+ 
+-	mtu->vusb33 = devm_regulator_get(&pdev->dev, "vusb33");
+-	if (IS_ERR(mtu->vusb33)) {
++	ssusb->vusb33 = devm_regulator_get(&pdev->dev, "vusb33");
++	if (IS_ERR(ssusb->vusb33)) {
+ 		dev_err(dev, "failed to get vusb33\n");
+-		return PTR_ERR(mtu->vusb33);
++		return PTR_ERR(ssusb->vusb33);
+ 	}
+ 
+-	mtu->sys_clk = devm_clk_get(dev, "sys_ck");
+-	if (IS_ERR(mtu->sys_clk)) {
++	ssusb->sys_clk = devm_clk_get(dev, "sys_ck");
++	if (IS_ERR(ssusb->sys_clk)) {
+ 		dev_err(dev, "failed to get sys clock\n");
+-		return PTR_ERR(mtu->sys_clk);
++		return PTR_ERR(ssusb->sys_clk);
++	}
 +
-+		lpc = mtu3_readl(mbase, U3D_LINK_POWER_CONTROL);
-+		if (set)
-+			lpc |= SW_U1_ACCEPT_ENABLE;
-+		else
-+			lpc &= ~SW_U1_ACCEPT_ENABLE;
-+		mtu3_writel(mbase, U3D_LINK_POWER_CONTROL, lpc);
++	ssusb->dr_mode = usb_get_dr_mode(dev);
++	if (ssusb->dr_mode == USB_DR_MODE_UNKNOWN) {
++		dev_err(dev, "dr_mode is error\n");
++		return -EINVAL;
+ 	}
+ 
++	if (ssusb->dr_mode == USB_DR_MODE_PERIPHERAL)
++		return 0;
 +
-+		mtu->u1_enable = !!set;
-+		handled = 1;
-+		break;
-+	case USB_DEVICE_U2_ENABLE:
-+		if (mtu->g.speed != USB_SPEED_SUPER ||
-+			mtu->g.state != USB_STATE_CONFIGURED)
-+			break;
++	/* if host role is supported */
++	ret = ssusb_wakeup_of_property_parse(ssusb, node);
++	if (ret)
++		return ret;
 +
-+		lpc = mtu3_readl(mbase, U3D_LINK_POWER_CONTROL);
-+		if (set)
-+			lpc |= SW_U2_ACCEPT_ENABLE;
-+		else
-+			lpc &= ~SW_U2_ACCEPT_ENABLE;
-+		mtu3_writel(mbase, U3D_LINK_POWER_CONTROL, lpc);
+ 	return 0;
+ }
+ 
+ static int mtu3_probe(struct platform_device *pdev)
+ {
++	struct device_node *node = pdev->dev.of_node;
+ 	struct device *dev = &pdev->dev;
+-	struct mtu3 *mtu;
++	struct ssusb_mtk *ssusb;
+ 	int ret = -ENOMEM;
+ 
+ 	/* all elements are set to ZERO as default value */
+-	mtu = devm_kzalloc(dev, sizeof(struct mtu3), GFP_KERNEL);
+-	if (!mtu)
++	ssusb = devm_kzalloc(dev, sizeof(*ssusb), GFP_KERNEL);
++	if (!ssusb)
+ 		return -ENOMEM;
+ 
+ 	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+@@ -176,11 +251,10 @@ static int mtu3_probe(struct platform_device *pdev)
+ 		return -ENOTSUPP;
+ 	}
+ 
+-	platform_set_drvdata(pdev, mtu);
+-	mtu->dev = dev;
+-	spin_lock_init(&mtu->lock);
++	platform_set_drvdata(pdev, ssusb);
++	ssusb->dev = dev;
+ 
+-	ret = get_ssusb_rscs(pdev, mtu);
++	ret = get_ssusb_rscs(pdev, ssusb);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -189,22 +263,45 @@ static int mtu3_probe(struct platform_device *pdev)
+ 	pm_runtime_get_sync(dev);
+ 	device_enable_async_suspend(dev);
+ 
+-	ret = ssusb_rscs_init(mtu);
++	ret = ssusb_rscs_init(ssusb);
+ 	if (ret)
+ 		goto comm_init_err;
+ 
+-	ssusb_ip_sw_reset(mtu);
+-
+-	ret = ssusb_gadget_init(mtu);
+-	if (ret) {
+-		dev_err(dev, "failed to initialize gadget\n");
++	ssusb_ip_sw_reset(ssusb);
 +
-+		mtu->u2_enable = !!set;
-+		handled = 1;
-+		break;
- 	default:
- 		handled = -EINVAL;
- 		break;
-@@ -303,6 +379,17 @@ static int ep0_handle_feature(struct mtu3 *mtu,
- 	case USB_RECIP_DEVICE:
- 		handled = ep0_handle_feature_dev(mtu, setup, set);
- 		break;
-+	case USB_RECIP_INTERFACE:
-+		/* superspeed only */
-+		if ((value == USB_INTRF_FUNC_SUSPEND)
-+			&& (mtu->g.speed == USB_SPEED_SUPER)) {
-+			/*
-+			 * forward the request because function drivers
-+			 * should handle it
-+			 */
-+			handled = 0;
++	if (IS_ENABLED(CONFIG_USB_MTU3_HOST))
++		ssusb->dr_mode = USB_DR_MODE_HOST;
++	else if (IS_ENABLED(CONFIG_USB_MTU3_GADGET))
++		ssusb->dr_mode = USB_DR_MODE_PERIPHERAL;
++
++	/* default as host */
++	ssusb->is_host = !(ssusb->dr_mode == USB_DR_MODE_PERIPHERAL);
++
++	switch (ssusb->dr_mode) {
++	case USB_DR_MODE_PERIPHERAL:
++		ret = ssusb_gadget_init(ssusb);
++		if (ret) {
++			dev_err(dev, "failed to initialize gadget\n");
++			goto comm_exit;
 +		}
 +		break;
- 	case USB_RECIP_ENDPOINT:
- 		epnum = index & USB_ENDPOINT_NUMBER_MASK;
- 		if (epnum == 0 || epnum >= mtu->num_eps ||
-@@ -390,6 +477,9 @@ static int handle_standard_request(struct mtu3 *mtu,
- 	case USB_REQ_GET_STATUS:
- 		handled = ep0_get_status(mtu, setup);
- 		break;
-+	case USB_REQ_SET_SEL:
-+		handled = ep0_set_sel(mtu, setup);
++	case USB_DR_MODE_HOST:
++		ret = ssusb_host_init(ssusb, node);
++		if (ret) {
++			dev_err(dev, "failed to initialize host\n");
++			goto comm_exit;
++		}
 +		break;
- 	case USB_REQ_SET_ISOCH_DELAY:
- 		handled = 1;
- 		break;
-diff --git a/drivers/usb/mtu3/mtu3_hw_regs.h b/drivers/usb/mtu3/mtu3_hw_regs.h
-index 08c83c5..2123672 100644
---- a/drivers/usb/mtu3/mtu3_hw_regs.h
-+++ b/drivers/usb/mtu3/mtu3_hw_regs.h
-@@ -260,13 +260,46 @@
++	default:
++		dev_err(dev, "unsupported mode: %d\n", ssusb->dr_mode);
++		ret = -EINVAL;
+ 		goto comm_exit;
+ 	}
  
- /*---------------- SSUSB_USB3_MAC_CSR REGISTER DEFINITION ----------------*/
+ 	return 0;
  
-+#define U3D_LTSSM_CTRL		(SSUSB_USB3_MAC_CSR_BASE + 0x0010)
- #define U3D_USB3_CONFIG		(SSUSB_USB3_MAC_CSR_BASE + 0x001C)
+ comm_exit:
+-	ssusb_rscs_exit(mtu);
++	ssusb_rscs_exit(ssusb);
  
-+#define U3D_LTSSM_INTR_ENABLE	(SSUSB_USB3_MAC_CSR_BASE + 0x013C)
-+#define U3D_LTSSM_INTR		(SSUSB_USB3_MAC_CSR_BASE + 0x0140)
+ comm_init_err:
+ 	pm_runtime_put_sync(dev);
+@@ -215,16 +312,73 @@ static int mtu3_probe(struct platform_device *pdev)
+ 
+ static int mtu3_remove(struct platform_device *pdev)
+ {
+-	struct mtu3 *mtu = platform_get_drvdata(pdev);
++	struct ssusb_mtk *ssusb = platform_get_drvdata(pdev);
 +
- /*---------------- SSUSB_USB3_MAC_CSR FIELD DEFINITION ----------------*/
++	switch (ssusb->dr_mode) {
++	case USB_DR_MODE_PERIPHERAL:
++		ssusb_gadget_exit(ssusb);
++		break;
++	case USB_DR_MODE_HOST:
++		ssusb_host_exit(ssusb);
++		break;
++	default:
++		return -EINVAL;
++	}
  
-+/* U3D_LTSSM_CTRL */
-+#define FORCE_POLLING_FAIL	BIT(4)
-+#define FORCE_RXDETECT_FAIL	BIT(3)
-+#define SOFT_U3_EXIT_EN		BIT(2)
-+#define COMPLIANCE_EN		BIT(1)
-+#define U1_GO_U2_EN		BIT(0)
+-	ssusb_gadget_exit(mtu);
+-	ssusb_rscs_exit(mtu);
++	ssusb_rscs_exit(ssusb);
+ 	pm_runtime_put_sync(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ 
+ 	return 0;
+ }
+ 
++/*
++ * when support dual-role mode, we reject suspend when
++ * it works as device mode;
++ */
++static int __maybe_unused mtu3_suspend(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct ssusb_mtk *ssusb = platform_get_drvdata(pdev);
 +
- /* U3D_USB3_CONFIG */
- #define USB3_EN			BIT(0)
- 
-+/* U3D_LTSSM_INTR_ENABLE */
-+/* U3D_LTSSM_INTR */
-+#define U3_RESUME_INTR		BIT(18)
-+#define U3_LFPS_TMOUT_INTR	BIT(17)
-+#define VBUS_FALL_INTR		BIT(16)
-+#define VBUS_RISE_INTR		BIT(15)
-+#define RXDET_SUCCESS_INTR	BIT(14)
-+#define EXIT_U3_INTR		BIT(13)
-+#define EXIT_U2_INTR		BIT(12)
-+#define EXIT_U1_INTR		BIT(11)
-+#define ENTER_U3_INTR		BIT(10)
-+#define ENTER_U2_INTR		BIT(9)
-+#define ENTER_U1_INTR		BIT(8)
-+#define ENTER_U0_INTR		BIT(7)
-+#define RECOVERY_INTR		BIT(6)
-+#define WARM_RST_INTR		BIT(5)
-+#define HOT_RST_INTR		BIT(4)
-+#define LOOPBACK_INTR		BIT(3)
-+#define COMPLIANCE_INTR		BIT(2)
-+#define SS_DISABLE_INTR		BIT(1)
-+#define SS_INACTIVE_INTR	BIT(0)
++	dev_dbg(dev, "%s\n", __func__);
 +
- /*---------------- SSUSB_USB3_SYS_CSR REGISTER DEFINITION ----------------*/
++	/* REVISIT: disconnect it for only device mode? */
++	if (!ssusb->is_host)
++		return 0;
++
++	ssusb_host_disable(ssusb, true);
++	ssusb_phy_power_off(ssusb);
++	clk_disable_unprepare(ssusb->sys_clk);
++	ssusb_wakeup_enable(ssusb);
++
++	return 0;
++}
++
++static int __maybe_unused mtu3_resume(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct ssusb_mtk *ssusb = platform_get_drvdata(pdev);
++
++	dev_dbg(dev, "%s\n", __func__);
++
++	if (!ssusb->is_host)
++		return 0;
++
++	ssusb_wakeup_disable(ssusb);
++	clk_prepare_enable(ssusb->sys_clk);
++	ssusb_phy_power_on(ssusb);
++	ssusb_host_enable(ssusb);
++
++	return 0;
++}
++
++static const struct dev_pm_ops mtu3_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(mtu3_suspend, mtu3_resume)
++};
++
++#define DEV_PM_OPS (IS_ENABLED(CONFIG_PM) ? &mtu3_pm_ops : NULL)
++
+ #ifdef CONFIG_OF
  
- #define U3D_LINK_UX_INACT_TIMER	(SSUSB_USB3_SYS_CSR_BASE + 0x020C)
+ static const struct of_device_id mtu3_of_match[] = {
+@@ -241,6 +395,7 @@ static int mtu3_remove(struct platform_device *pdev)
+ 	.remove = mtu3_remove,
+ 	.driver = {
+ 		.name = MTU3_DRIVER_NAME,
++		.pm = DEV_PM_OPS,
+ 		.of_match_table = of_match_ptr(mtu3_of_match),
+ 	},
+ };
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
