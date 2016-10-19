@@ -1,45 +1,55 @@
-From: Ayaka <ayaka@soulik.info>
-Subject: Re: [PATCH v9 2/2] ARM: dts: add TOPEET itop elite based board
-Date: Wed, 19 Oct 2016 09:15:06 +0800
-Message-ID: <58DB0A67-6C74-409B-80B2-9F02492D3A55@soulik.info>
-References: <devicetree@vger.kernel.org> <1476811129-4450-1-git-send-email-ayaka@soulik.info> <1476811129-4450-3-git-send-email-ayaka@soulik.info> <20161018173748.GB30003@kozik-lap>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-        charset=big5
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20161018173748.GB30003@kozik-lap>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH] mcp3021: rework for DT support of reference-voltage
+Date: Tue, 18 Oct 2016 18:24:42 -0700
+Message-ID: <20161019012442.GA30552@roeck-us.net>
+References: <20161018224444.11225-1-clemens.gruber@pqgruber.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161018224444.11225-1-clemens.gruber-lZxf/j91sTNWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Clemens Gruber <clemens.gruber-lZxf/j91sTNWk0Htik3J/w@public.gmane.org>
+Cc: linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-從我的 iPad 傳送
-
-> Krzysztof Kozlowski <krzk@kernel.org> 於 2016年10月19日 上午1:37 寫道：
+On Wed, Oct 19, 2016 at 12:44:44AM +0200, Clemens Gruber wrote:
+> Support setting the reference voltage in the device tree.
+> Rework of driver structure, put chip specific data in a separate
+> structure and assign it depending on device id from platform data or
+> DT match.
+> Extend the device documentation and add new documentation for the
+> devicetree bindings.
+> Also change S_IRUGO to the better readable 0444, which fixes a
+> checkpatch warning.
 > 
->> On Wed, Oct 19, 2016 at 01:18:49AM +0800, Randy Li wrote:
->> The TOPEET itop exynos 4412 have three versions base board. The
->> Elite version is the cheap one without too much peripheral devices
->> on it.
->> 
->> Currently supported are serial console, wired networking(USB),
->> USB OTG in peripheral mode, USB host, SD storage, GPIO buttons,
->> PWM beeper, ADC and LEDs. The WM8960 analog audio codec is also
->> enabled.
->> 
->> The FIMC is not used for camera currently, I enabled it just for a
->> colorspace converter.
->> 
->> Signed-off-by: Randy Li <ayaka@soulik.info>
->> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> Thanks, applied, with missing Rob's ack, minor changes in commit msg and
-> fix in pin function (you used macro for pull up/down instead of
-> function).
-The last time I saw the other dts have applied that, but they are not now. A header file is also missed reported by kbuild, but I didn't meet that.
-> 
-> Best regards,
-> Krzysztof
+> Signed-off-by: Clemens Gruber <clemens.gruber-lZxf/j91sTNWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/hwmon/mcp3021.txt          |  21 +++
+
+This needs to be a separate patch.
+
+...
+
+> +static int mcp3021_probe(struct i2c_client *client,
+> +	const struct i2c_device_id *id);
+> +static int mcp3021_remove(struct i2c_client *client);
+>  
+
+We are trying hard to get rid of functions declarations like this.
+Adding it means that the code is rearranged for no good reason.
+Please limit the changes to nececessary changes, and please refrain
+from rearranging it and from introducing your personal style.
+
+> -enum chips {
+> +enum {
+
+Another indication that you are making changes for no good reason.
+You may not like named enums, others do. That doesn't mean you can
+change the code to your liking. Please don't do that.
+
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
