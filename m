@@ -1,475 +1,145 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] fsl-quadspi: fix QUAD read, add NORMAL, DUAL and FAST
- reads
-Date: Wed, 19 Oct 2016 18:42:36 +0200
-Message-ID: <69a5b0d7-6b89-7edc-738d-c9e25802ba31@atmel.com>
-References: <20160927055957.427-1-albert.aribaud@3adev.fr>
+From: Markus Mayer <markus.mayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] dt: cpufreq: brcm: New binding document for brcmstb-avs-cpufreq
+Date: Wed, 19 Oct 2016 10:32:47 -0700
+Message-ID: <CAGt4E5seZgCo8MOqTYbFUWO=bsHz6e=EF7-+fqBK-to1MC=ugw@mail.gmail.com>
+References: <1476310376-32699-1-git-send-email-mmayer@broadcom.com>
+ <1476310376-32699-2-git-send-email-mmayer@broadcom.com> <20161018133816.hcrvy52a67ig4oco@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160927055957.427-1-albert.aribaud-iEu9NFBzPZE@public.gmane.org>
+In-Reply-To: <20161018133816.hcrvy52a67ig4oco@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Albert ARIBAUD (3ADEV)" <albert.aribaud-iEu9NFBzPZE@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yunhui.cui-3arQi8VN3Tc@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Albert,
+On 18 October 2016 at 06:38, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Oct 12, 2016 at 03:12:54PM -0700, Markus Mayer wrote:
+>> Add the binding document for the new brcmstb-avs-cpufreq driver.
+>>
+>> Signed-off-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  .../bindings/cpufreq/brcm,stb-avs-cpu-freq.txt     | 76 ++++++++++++++++++++++
+>>  MAINTAINERS                                        |  7 ++
+>>  2 files changed, 83 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt b/Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
+>> new file mode 100644
+>> index 0000000..23a2c3d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
+>> @@ -0,0 +1,76 @@
+>> +Broadcom STB AVS CPUfreq driver bindings
+>
+> Bindings describe h/w, not drivers or Linux subsystems.
 
-+Yunhui
+I can call this "AVS mail box and interrupt register bindings". Would that work?
 
-Le 27/09/2016 à 07:59, Albert ARIBAUD (3ADEV) a écrit :
-> Fix QUAD read LUT sequence missing JMP_ON_CS which caused
-> read corruptions with non-1K-size reads on BK4R1 machine.
-> 
-> Add NORMAL, DUAL and FAST read sequences.
-> 
-> Introduce spi-bus-width property for bus subnodes, to
-> specify per-bus capability to use NORMAL, FAST, DUAL,
-> and/or QUAD reads.
-> 
-> Also:
-> 
-> Simplify ioremap/memcpy usage.
-> 
-> Make controller clock frequency equal to the lowest of
-> subnode max frequencies instead of the last one.
-> 
-> Limit Vybrid to use only half its RX fifo, using more will
-> cause corrupt reads.
-> 
-> Signed-off-by: Albert ARIBAUD (3ADEV) <albert.aribaud-iEu9NFBzPZE@public.gmane.org>
-> ---
->  drivers/mtd/spi-nor/fsl-quadspi.c | 204 ++++++++++++++++++++++++++++----------
->  1 file changed, 152 insertions(+), 52 deletions(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/fsl-quadspi.c b/drivers/mtd/spi-nor/fsl-quadspi.c
-> index 5c82e4e..9811cf2 100644
-> --- a/drivers/mtd/spi-nor/fsl-quadspi.c
-> +++ b/drivers/mtd/spi-nor/fsl-quadspi.c
-> @@ -41,6 +41,8 @@
->  #define QUADSPI_QUIRK_TKT253890		(1 << 2)
->  /* Controller cannot wake up from wait mode, TKT245618 */
->  #define QUADSPI_QUIRK_TKT245618         (1 << 3)
-> +/* Controller can only read half a rx fifo through AHB */
-> +#define QUADSPI_QUIRK_AHB_READ_HALF_FIFO  (1 << 4)
->  
->  /* The registers */
->  #define QUADSPI_MCR			0x00
-> @@ -117,6 +119,10 @@
->  #define QUADSPI_FR			0x160
->  #define QUADSPI_FR_TFF_MASK		0x1
->  
-> +#define QUADSPI_SPTRCLR			0x15c
-> +#define QUADSPI_SPTRCLR_BFPTRC_SHIFT		0
-> +#define QUADSPI_SPTRCLR_BFPTRC_MASK		(0x1 << QUADSPI_SPTRCLR_BFPTRC_SHIFT)
-> +
->  #define QUADSPI_SFA1AD			0x180
->  #define QUADSPI_SFA2AD			0x184
->  #define QUADSPI_SFB1AD			0x188
-> @@ -193,7 +199,7 @@
->  #define QUADSPI_LUT_NUM		64
->  
->  /* SEQID -- we can have 16 seqids at most. */
-> -#define SEQID_QUAD_READ		0
-> +#define SEQID_READ		0
->  #define SEQID_WREN		1
->  #define SEQID_WRDI		2
->  #define SEQID_RDSR		3
-> @@ -205,6 +211,9 @@
->  #define SEQID_RDCR		9
->  #define SEQID_EN4B		10
->  #define SEQID_BRWR		11
-> +#define SEQID_FAST_READ		12
-> +#define SEQID_DUAL_READ		13
-> +#define SEQID_QUAD_READ		14
->  
->  #define QUADSPI_MIN_IOMAP SZ_4M
->  
-> @@ -229,7 +238,8 @@ static struct fsl_qspi_devtype_data vybrid_data = {
->  	.rxfifo = 128,
->  	.txfifo = 64,
->  	.ahb_buf_size = 1024,
-> -	.driver_data = QUADSPI_QUIRK_SWAP_ENDIAN,
-> +	.driver_data = QUADSPI_QUIRK_SWAP_ENDIAN
-> +		       | QUADSPI_QUIRK_AHB_READ_HALF_FIFO,
->  };
->  
->  static struct fsl_qspi_devtype_data imx6sx_data = {
-> @@ -309,6 +319,11 @@ static inline int needs_wakeup_wait_mode(struct fsl_qspi *q)
->  	return q->devtype_data->driver_data & QUADSPI_QUIRK_TKT245618;
->  }
->  
-> +static inline int needs_half_fifo(struct fsl_qspi *q)
-> +{
-> +	return q->devtype_data->driver_data & QUADSPI_QUIRK_AHB_READ_HALF_FIFO;
-> +}
-> +
->  /*
->   * R/W functions for big- or little-endian registers:
->   * The qSPI controller's endian is independent of the CPU core's endian.
-> @@ -373,8 +388,20 @@ static void fsl_qspi_init_lut(struct fsl_qspi *q)
->  	void __iomem *base = q->iobase;
->  	int rxfifo = q->devtype_data->rxfifo;
->  	u32 lut_base;
-> -	u8 cmd, addrlen, dummy;
-> +	u8 cmd, addrlen;
->  	int i;
-> +	/* use 8 dummy cycles for all fast operations */
-> +	const int dummy = 8;
-> +
-> +	/* use only half fifo if controller needs that */
-> +	if (needs_half_fifo(q))
-> +		rxfifo /= 2;
-> +
-> +    /* use 24-bit addresses for up to 16MB, 32-bit above 16MB */
-> +	if (q->nor_size <= SZ_16M)
-> +		addrlen = ADDR24BIT;
-> +	else
-> +		addrlen = ADDR32BIT;
->  
->  	fsl_qspi_unlock_lut(q);
->  
-> @@ -382,24 +409,12 @@ static void fsl_qspi_init_lut(struct fsl_qspi *q)
->  	for (i = 0; i < QUADSPI_LUT_NUM; i++)
->  		qspi_writel(q, 0, base + QUADSPI_LUT_BASE + i * 4);
->  
-> -	/* Quad Read */
-> -	lut_base = SEQID_QUAD_READ * 4;
-> -
-> -	if (q->nor_size <= SZ_16M) {
-> -		cmd = SPINOR_OP_READ_1_1_4;
-> -		addrlen = ADDR24BIT;
-> -		dummy = 8;
-> -	} else {
-> -		/* use the 4-byte address */
-> -		cmd = SPINOR_OP_READ_1_1_4;
-> -		addrlen = ADDR32BIT;
-> -		dummy = 8;
-> -	}
-> -
-> -	qspi_writel(q, LUT0(CMD, PAD1, cmd) | LUT1(ADDR, PAD1, addrlen),
-> -			base + QUADSPI_LUT(lut_base));
-> -	qspi_writel(q, LUT0(DUMMY, PAD1, dummy) | LUT1(FSL_READ, PAD4, rxfifo),
-> -			base + QUADSPI_LUT(lut_base + 1));
-> +	/* Read */
-> +	lut_base = SEQID_READ * 4;
-> +	qspi_writel(q, LUT0(CMD, PAD1, SPINOR_OP_READ) | LUT1(ADDR, PAD1, addrlen),
-> +		base + QUADSPI_LUT(lut_base));
-> +	qspi_writel(q, LUT0(FSL_READ, PAD1, rxfifo) | LUT1(JMP_ON_CS, PAD1, SEQID_READ * 8),
-> +		base + QUADSPI_LUT(lut_base + 1));
+>> +========================================
+>> +
+>> +A total of three DT nodes are required. One node (brcm,avs-cpu-data-mem)
+>> +references the mailbox register used to communicate with the AVS CPU[1]. The
+>> +second node (brcm,avs-cpu-l2-intr) is required to trigger an interrupt on
+>> +the AVS CPU. The interrupt tells the AVS CPU that it needs to process a
+>> +command sent to it by a driver. Interrupting the AVS CPU is mandatory for
+>> +commands to be processed.
+>> +
+>> +The interface also requires a reference to the AVS host interrupt controller,
+>> +so a driver can react to interrupts generated by the AVS CPU whenever a command
+>> +has been processed. See [2] for more information on the brcm,l2-intc node.
+>> +
+>> +[1] The AVS CPU is an independent co-processor that runs proprietary
+>> +firmware. On some SoCs, this firmware supports DFS and DVFS in addition to
+>> +Adaptive Voltage Scaling.
+>> +
+>> +[2] Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt
+>> +
+>> +
+>> +Node brcm,avs-cpu-data-mem
+>> +--------------------------
+>> +
+>> +Required properties:
+>> +- compatible: Sould be one of: brcm,avs-cpu-data-mem,
+>> +              brcm,bcm7271-avs-cpu-data-mem or brcm,bcm7268-avs-cpu-data-mem
+>
+> This does not match the example. Need to clarify valid combinations and
+> ordering.
 
-It seems that both Yunhui and you work on the same topic, maybe you can
-synchronize?
-https://patchwork.ozlabs.org/patch/660356/
+If I say "must include brcm,avs-cpu-data-mem and should also include
+either brcm,bcm7271-avs-cpu-data-mem or
+brcm,bcm7268-avs-cpu-data-mem", would that be acceptable? Same for the
+other binding below.
 
->  
->  	/* Write enable */
->  	lut_base = SEQID_WREN * 4;
-> @@ -409,16 +424,7 @@ static void fsl_qspi_init_lut(struct fsl_qspi *q)
->  	/* Page Program */
->  	lut_base = SEQID_PP * 4;
->  
-> -	if (q->nor_size <= SZ_16M) {
-> -		cmd = SPINOR_OP_PP;
-> -		addrlen = ADDR24BIT;
-> -	} else {
-> -		/* use the 4-byte address */
-> -		cmd = SPINOR_OP_PP;
-> -		addrlen = ADDR32BIT;
-> -	}
-> -
-> -	qspi_writel(q, LUT0(CMD, PAD1, cmd) | LUT1(ADDR, PAD1, addrlen),
-> +	qspi_writel(q, LUT0(CMD, PAD1, SPINOR_OP_PP) | LUT1(ADDR, PAD1, addrlen),
->  			base + QUADSPI_LUT(lut_base));
->  	qspi_writel(q, LUT0(FSL_WRITE, PAD1, 0),
->  			base + QUADSPI_LUT(lut_base + 1));
-> @@ -431,7 +437,6 @@ static void fsl_qspi_init_lut(struct fsl_qspi *q)
->  
->  	/* Erase a sector */
->  	lut_base = SEQID_SE * 4;
-> -
->  	cmd = q->nor[0].erase_opcode;
->  	addrlen = q->nor_size <= SZ_16M ? ADDR24BIT : ADDR32BIT;
->  
-> @@ -476,6 +481,33 @@ static void fsl_qspi_init_lut(struct fsl_qspi *q)
->  	qspi_writel(q, LUT0(CMD, PAD1, SPINOR_OP_BRWR),
->  			base + QUADSPI_LUT(lut_base));
->  
-> +	/* Fast Read */
-> +	lut_base = SEQID_FAST_READ * 4;
-> +	qspi_writel(q, LUT0(CMD, PAD1, SPINOR_OP_READ_FAST) | LUT1(ADDR, PAD1, addrlen),
-> +		base + QUADSPI_LUT(lut_base));
-> +	qspi_writel(q, LUT0(DUMMY, PAD1, dummy) | LUT1(FSL_READ, PAD1, rxfifo),
-> +		base + QUADSPI_LUT(lut_base + 1));
-> +	qspi_writel(q, LUT0(JMP_ON_CS, PAD1, SEQID_FAST_READ * 8),
-> +		base + QUADSPI_LUT(lut_base + 2));
-> +
-> +	/* Dual Read */
-> +	lut_base = SEQID_DUAL_READ * 4;
-> +	qspi_writel(q, LUT0(CMD, PAD1, SPINOR_OP_READ_1_1_2) | LUT1(ADDR, PAD1, addrlen),
-> +		base + QUADSPI_LUT(lut_base));
-> +	qspi_writel(q, LUT0(DUMMY, PAD1, dummy) | LUT1(FSL_READ, PAD2, rxfifo),
-> +		base + QUADSPI_LUT(lut_base + 1));
-> +	qspi_writel(q, LUT0(JMP_ON_CS, PAD1, SEQID_DUAL_READ * 8),
-> +		base + QUADSPI_LUT(lut_base + 2));
-> +
-> +	/* Quad Read */
-> +	lut_base = SEQID_QUAD_READ * 4;
-> +	qspi_writel(q, LUT0(CMD, PAD1, SPINOR_OP_READ_1_1_4) | LUT1(ADDR, PAD1, addrlen),
-> +		base + QUADSPI_LUT(lut_base));
-> +	qspi_writel(q, LUT0(DUMMY, PAD1, dummy) | LUT1(FSL_READ, PAD4, rxfifo),
-> +		base + QUADSPI_LUT(lut_base + 1));
-> +	qspi_writel(q, LUT0(JMP_ON_CS, PAD1, SEQID_QUAD_READ * 8),
-> +		base + QUADSPI_LUT(lut_base + 2));
-> +
->  	fsl_qspi_lock_lut(q);
->  }
->  
-> @@ -483,8 +515,8 @@ static void fsl_qspi_init_lut(struct fsl_qspi *q)
->  static int fsl_qspi_get_seqid(struct fsl_qspi *q, u8 cmd)
->  {
->  	switch (cmd) {
-> -	case SPINOR_OP_READ_1_1_4:
-> -		return SEQID_QUAD_READ;
-> +	case SPINOR_OP_READ:
-> +		return SEQID_READ;
->  	case SPINOR_OP_WREN:
->  		return SEQID_WREN;
->  	case SPINOR_OP_WRDI:
-> @@ -507,6 +539,12 @@ static int fsl_qspi_get_seqid(struct fsl_qspi *q, u8 cmd)
->  		return SEQID_EN4B;
->  	case SPINOR_OP_BRWR:
->  		return SEQID_BRWR;
-> +	case SPINOR_OP_READ_FAST:
-> +		return SEQID_FAST_READ;
-> +	case SPINOR_OP_READ_1_1_2:
-> +		return SEQID_DUAL_READ;
-> +	case SPINOR_OP_READ_1_1_4:
-> +		return SEQID_QUAD_READ;
+>> +- reg: Specifies base physical address and size of the registers.
+>> +- interrupts: The interrupt that the AVS CPU will use to interrupt the host
+>> +              when a command completed.
+>> +- interrupt-parent: The interrupt controller the above interrupt is routed
+>> +                    through.
+>> +- interrupt-names: The name of the interrupt used to interrupt the host.
+>> +
+>> +Optional properties:
+>> +- None
+>> +
+>> +Node brcm,avs-cpu-l2-intr
+>> +-------------------------
+>> +
+>> +Required properties:
+>> +- compatible: Sould be one of: brcm,avs-cpu-l2-intr,
+>> +              brcm,bcm7271-avs-cpu-l2-intr or brcm,bcm7268-avs-cpu-l2-intr
+>
+> ditto.
+>
+>> +- reg: Specifies base physical address and size of the registers.
+>> +
+>> +Optional properties:
+>> +- None
+>> +
+>> +
+>> +Example
+>> +=======
+>> +
+>> +     avs_host_l2_intc: interrupt-controller@f04d1200 {
+>> +             #interrupt-cells = <1>;
+>> +             compatible = "brcm,l2-intc";
+>> +             interrupt-parent = <&intc>;
+>> +             reg = <0xf04d1200 0x48>;
+>> +             interrupt-controller;
+>> +             interrupts = <0x0 0x19 0x0>;
+>> +             interrupt-names = "avs";
+>> +     };
+>> +
+>> +     avs-cpu-data-mem@f04c4000 {
+>> +             compatible = "brcm,bcm7271-avs-cpu-data-mem",
+>> +                             "brcm,avs-cpu-data-mem";
+>> +             reg = <0xf04c4000 0x60>;
+>> +             interrupts = <0x1a>;
+>> +             interrupt-parent = <&avs_host_l2_intc>;
+>> +             interrupt-names = "sw_intr";
+>> +     };
+>> +
+>> +     avs-cpu-l2-intr@f04d1100 {
+>> +             compatible = "brcm,bcm7271-avs-cpu-l2-intr",
+>> +                             "brcm,avs-cpu-l2-intr";
+>> +             reg = <0xf04d1100 0x10>;
+>> +     };
+>
+> I'm wondering if this would be better described as just 1 node for the
+> AVS cpu? Are there any other functions or resources tied to the cpu
+> beyond your current usage?
 
-I don't think it is a good thing to select the relevant "READ" LUT entry
-according to the command op code. What if spi-nor.c introduces new op codes?
+Hm. I thought about this one a bit. brcm,l2-intc is also used
+elsewhere. And all three nodes have different, non-adjacent memory
+addresses (not hugely so, but still). Mapping the entire area covering
+all three registers in one go doesn't seem like a good idea and would
+lead to very odd offsets. Also, while it is not likely for some of the
+registers to get moved around in newer SoCs, I suppose it is possible
+(provided the HW guys have a compelling reason for it). I am by no
+means a DT expert, so if there is a way to cleanly represent this as
+one node, by all means, please let me know.
 
-Maybe you could index the LUT entries by functions:
-- READ_REG: the LUT op code would be dynamically updated by your
-            .read_reg(nor, opcode, ...) implementation according to opcode.
-- WRITE_REG: the same as above with the .write_reg(nor, opcode, ...) hook.
-- READ_SLAVE1: read memory from the first SPI-NOR memory.
-- WRITE_SLAVE1: write into the first SPI-NOR memory.
-- READ_SLAVE2: read memory form the 2nd SPI-NOR memory.
-...
-- WRITE_SLAVEN: write into the N-th SPI-NOR memory.
-
-Also be aware even for the .read() hook the nor->read_opcode might changes
-between calls!
-
-I don't know whether those comments fit your actual needs and the Freescale SPI
-controller hardware constraints but I'm always worried about the ease to maintain
-SPI-NOR controller drivers when they are not "op code agnostic".
-
-Best regards,
-
-Cyrille
-
->  	default:
->  		if (cmd == q->nor[0].erase_opcode)
->  			return SEQID_SE;
-> @@ -676,11 +714,16 @@ static void fsl_qspi_set_map_addr(struct fsl_qspi *q)
->   * the memcpy to read the data directly. A "missed" access to the buffer
->   * causes the controller to clear the buffer, and use the sequence pointed
->   * by the QUADSPI_BFGENCR[SEQID] to initiate a read from the flash.
-> + *
-> + * When using two ports, the SEQID to use for one port might differ from
-> + * the one to use for the other (e.g., if one port can do 4-pad reads but
-> + * the other cannot). So we set up a basic mode here (SEQID_READ) and we
-> + * will set up the proper SEQID for the port right before doing the AHB
-> + * access(es).
->   */
->  static void fsl_qspi_init_abh_read(struct fsl_qspi *q)
->  {
->  	void __iomem *base = q->iobase;
-> -	int seqid;
->  
->  	/* AHB configuration for access buffer 0/1/2 .*/
->  	qspi_writel(q, QUADSPI_BUFXCR_INVALID_MSTRID, base + QUADSPI_BUF0CR);
-> @@ -688,11 +731,13 @@ static void fsl_qspi_init_abh_read(struct fsl_qspi *q)
->  	qspi_writel(q, QUADSPI_BUFXCR_INVALID_MSTRID, base + QUADSPI_BUF2CR);
->  	/*
->  	 * Set ADATSZ with the maximum AHB buffer size to improve the
-> -	 * read performance.
-> +	 * read performance, except when the controller should not use
-> +	 * more than half its RX fifo in AHB reads, in which case read
-> +	 * size is given in the LUT FSL_READ instructions.
->  	 */
->  	qspi_writel(q, QUADSPI_BUF3CR_ALLMST_MASK |
-> -			((q->devtype_data->ahb_buf_size / 8)
-> -			<< QUADSPI_BUF3CR_ADATSZ_SHIFT),
-> +			(needs_half_fifo(q)? 0 : q->devtype_data->ahb_buf_size / 8)
-> +	        << QUADSPI_BUF3CR_ADATSZ_SHIFT,
->  			base + QUADSPI_BUF3CR);
->  
->  	/* We only use the buffer3 */
-> @@ -700,9 +745,8 @@ static void fsl_qspi_init_abh_read(struct fsl_qspi *q)
->  	qspi_writel(q, 0, base + QUADSPI_BUF1IND);
->  	qspi_writel(q, 0, base + QUADSPI_BUF2IND);
->  
-> -	/* Set the default lut sequence for AHB Read. */
-> -	seqid = fsl_qspi_get_seqid(q, q->nor[0].read_opcode);
-> -	qspi_writel(q, seqid << QUADSPI_BFGENCR_SEQID_SHIFT,
-> +	/* Set the default lut sequence for AHB Read to READ. */
-> +	qspi_writel(q, SEQID_READ << QUADSPI_BFGENCR_SEQID_SHIFT,
->  		q->iobase + QUADSPI_BFGENCR);
->  }
->  
-> @@ -841,6 +885,7 @@ static int fsl_qspi_read_reg(struct spi_nor *nor, u8 opcode, u8 *buf, int len)
->  		return ret;
->  
->  	fsl_qspi_read_data(q, len, buf);
-> +
->  	return 0;
->  }
->  
-> @@ -887,11 +932,27 @@ static ssize_t fsl_qspi_read(struct spi_nor *nor, loff_t from,
->  {
->  	struct fsl_qspi *q = nor->priv;
->  	u8 cmd = nor->read_opcode;
-> +	uint32_t seqid;
-> +	size_t qlen = q->nor_size * 4;
-> +	int nor_idx = nor - q->nor;
-> +	size_t nor_ofs = q->nor_size * nor_idx;
-> +
-> +	/* Set the actual lut sequence for AHB Read from the considered nor. */
-> +	seqid = fsl_qspi_get_seqid(q, nor->read_opcode);
-> +	qspi_writel(q, seqid << QUADSPI_BFGENCR_SEQID_SHIFT,
-> +		q->iobase + QUADSPI_BFGENCR);
-> +	/* Reset the AHB sequence pointer */
-> +	qspi_writel(q, QUADSPI_SPTRCLR_BFPTRC_MASK, q->iobase + QUADSPI_SPTRCLR);
-> +    /* make sure the Rx buffer is read through AHB, not IP */
-> +	qspi_writel(q, QUADSPI_RBCT_WMRK_MASK, q->iobase + QUADSPI_RBCT);
-> +
-> +	/* set the chip address for READID */
-> +	fsl_qspi_set_base_addr(q, q->nor);
->  
->  	/* if necessary,ioremap buffer before AHB read, */
->  	if (!q->ahb_addr) {
-> -		q->memmap_offs = q->chip_base_addr + from;
-> -		q->memmap_len = len > QUADSPI_MIN_IOMAP ? len : QUADSPI_MIN_IOMAP;
-> +		q->memmap_offs = q->chip_base_addr;
-> +		q->memmap_len = qlen > QUADSPI_MIN_IOMAP ? qlen : QUADSPI_MIN_IOMAP;
->  
->  		q->ahb_addr = ioremap_nocache(
->  				q->memmap_phy + q->memmap_offs,
-> @@ -906,8 +967,8 @@ static ssize_t fsl_qspi_read(struct spi_nor *nor, loff_t from,
->  			q->memmap_offs + q->memmap_len) {
->  		iounmap(q->ahb_addr);
->  
-> -		q->memmap_offs = q->chip_base_addr + from;
-> -		q->memmap_len = len > QUADSPI_MIN_IOMAP ? len : QUADSPI_MIN_IOMAP;
-> +		q->memmap_offs = q->chip_base_addr;
-> +		q->memmap_len = qlen > QUADSPI_MIN_IOMAP ? qlen : QUADSPI_MIN_IOMAP;
->  		q->ahb_addr = ioremap_nocache(
->  				q->memmap_phy + q->memmap_offs,
->  				q->memmap_len);
-> @@ -917,13 +978,11 @@ static ssize_t fsl_qspi_read(struct spi_nor *nor, loff_t from,
->  		}
->  	}
->  
-> -	dev_dbg(q->dev, "cmd [%x],read from %p, len:%zd\n",
-> -		cmd, q->ahb_addr + q->chip_base_addr + from - q->memmap_offs,
-> -		len);
-> +	dev_dbg(q->dev, "cmd [%x], read from %p, len:%zd\n",
-> +		cmd, q->ahb_addr + nor_ofs + from, len);
->  
->  	/* Read out the data directly from the AHB buffer.*/
-> -	memcpy(buf, q->ahb_addr + q->chip_base_addr + from - q->memmap_offs,
-> -		len);
-> +	memcpy(buf, q->ahb_addr + nor_ofs + from, len);
->  
->  	return len;
->  }
-> @@ -980,6 +1039,11 @@ static int fsl_qspi_probe(struct platform_device *pdev)
->  	struct spi_nor *nor;
->  	struct mtd_info *mtd;
->  	int ret, i = 0;
-> +	const struct of_device_id *of_id =
-> +			of_match_device(fsl_qspi_dt_ids, &pdev->dev);
-> +	enum read_mode readmode;
-> +	unsigned int buswidth;
-> +	u32 qspimaxfreq, spimaxfreq;
->  
->  	q = devm_kzalloc(dev, sizeof(*q), GFP_KERNEL);
->  	if (!q)
-> @@ -1050,6 +1114,9 @@ static int fsl_qspi_probe(struct platform_device *pdev)
->  
->  	mutex_init(&q->lock);
->  
-> +	/* Running MIN of all "spi-max-frequency' values present in subnodes */
-> +	qspimaxfreq = INT_MAX;
-> +
->  	/* iterate the subnodes. */
->  	for_each_available_child_of_node(dev->of_node, np) {
->  		/* skip the holes */
-> @@ -1073,15 +1140,44 @@ static int fsl_qspi_probe(struct platform_device *pdev)
->  		nor->prepare = fsl_qspi_prep;
->  		nor->unprepare = fsl_qspi_unprep;
->  
-> +		/* Update running MIN of subnode max frequencies */
->  		ret = of_property_read_u32(np, "spi-max-frequency",
-> -				&q->clk_rate);
-> +				&spimaxfreq);
->  		if (ret < 0)
->  			goto mutex_failed;
-> +		qspimaxfreq = (qspimaxfreq > spimaxfreq) ? spimaxfreq: qspimaxfreq;
->  
->  		/* set the chip address for READID */
->  		fsl_qspi_set_base_addr(q, nor);
->  
-> -		ret = spi_nor_scan(nor, NULL, SPI_NOR_QUAD);
-> +		/* scan using the proper read mode for this subnode */
-> +		if (of_property_read_u32(np, "spi-bus-width", &buswidth)<0) {
-> +			nor->read_opcode = SPINOR_OP_READ;
-> +			readmode = SPI_NOR_NORMAL;
-> +		} else {
-> +			switch (buswidth) {
-> +			case 4:
-> +				nor->read_opcode = SPINOR_OP_READ_1_1_4;
-> +				readmode = SPI_NOR_QUAD;
-> +				break;
-> +			case 2:
-> +				nor->read_opcode = SPINOR_OP_READ_1_1_2;
-> +				readmode = SPI_NOR_DUAL;
-> +				break;
-> +			case 1:
-> +				nor->read_opcode = SPINOR_OP_READ_FAST;
-> +				readmode = SPI_NOR_FAST;
-> +				break;
-> +			default:
-> +				dev_warn(q->dev,
-> +					"ignoring spi-bus-width=%d (should be 1, 2 or 4)",
-> +					buswidth);
-> +				nor->read_opcode = SPINOR_OP_READ;
-> +				readmode = SPI_NOR_NORMAL;
-> +			}
-> +		}
-> +
-> +		ret = spi_nor_scan(nor, NULL, readmode);
->  		if (ret)
->  			goto mutex_failed;
->  
-> @@ -1112,6 +1208,10 @@ static int fsl_qspi_probe(struct platform_device *pdev)
->  		i++;
->  	}
->  
-> +	/* If we know the lowest subnode frequency, override driver default. */
-> +	if (qspimaxfreq<INT_MAX)
-> +		q->clk_rate = qspimaxfreq;
-> +
->  	/* finish the rest init. */
->  	ret = fsl_qspi_nor_setup_last(q);
->  	if (ret)
-> 
-
+> Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
