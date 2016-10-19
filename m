@@ -1,102 +1,53 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v2 03/10] gpio-sx150x: Remove 'irq_base' parameter
-Date: Wed, 19 Oct 2016 07:03:59 -0700
-Message-ID: <1476885846-16469-4-git-send-email-andrew.smirnov@gmail.com>
-References: <1476885846-16469-1-git-send-email-andrew.smirnov@gmail.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1476885846-16469-1-git-send-email-andrew.smirnov@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cphealy@gmail.com, Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 0/2] phy: USB and PCIe phy drivers for Qcom chipsets
+Date: Wed, 19 Oct 2016 16:13:45 +0530
+Message-ID: <1476873827-7191-1-git-send-email-vivek.gautam@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove 'irq_base' parameter and call 'gpiochip_irqchip_add' with '0' as
-irq base to automatically assign it.
+This patch series adds couple of PHY drivers for Qualcomm chipsets.
+a) qcom-qusb2 phy driver: that provides High Speed USB functionality.
+b) qcom-qmp phy driver: that is a combo phy providing support for
+   USB3, PCIe and UFS controllers.[1]
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- drivers/gpio/gpio-sx150x.c | 21 +++------------------
- 1 file changed, 3 insertions(+), 18 deletions(-)
+These drivers are based on the work for msm that is available in
+codeaurora[2].
 
-diff --git a/drivers/gpio/gpio-sx150x.c b/drivers/gpio/gpio-sx150x.c
-index e80c115..e01afd8 100644
---- a/drivers/gpio/gpio-sx150x.c
-+++ b/drivers/gpio/gpio-sx150x.c
-@@ -105,10 +105,6 @@ struct sx150x_device_data {
-  *               the polarity of that IO line, while clearing it results
-  *               in normal polarity. For chips with fewer than 16 IO pins,
-  *               high-end bits are ignored.
-- * @irq_base: The first 'virtual IRQ' line at which our block of GPIO-based
-- *            IRQ lines will appear.  Similarly to gpio_base, the expander
-- *            will create a block of irqs beginning at this number.
-- *            This value is ignored if irq_summary is < 0.
-  * @reset_during_probe: If set to true, the driver will trigger a full
-  *                      reset of the chip at the beginning of the probe
-  *                      in order to place it in a known state.
-@@ -118,7 +114,6 @@ struct sx150x_platform_data {
- 	u16      io_pullup_ena;
- 	u16      io_pulldn_ena;
- 	u16      io_polarity;
--	unsigned irq_base;
- 	bool     reset_during_probe;
- };
- 
-@@ -126,7 +121,6 @@ struct sx150x_chip {
- 	struct gpio_chip                 gpio_chip;
- 	struct i2c_client               *client;
- 	const struct sx150x_device_data *dev_cfg;
--	int                              irq_base;
- 	int				 irq_update;
- 	u32                              irq_sense;
- 	u32				 irq_masked;
-@@ -590,7 +584,6 @@ static void sx150x_init_chip(struct sx150x_chip *chip,
- 	chip->irq_chip.irq_set_type        = sx150x_irq_set_type;
- 	chip->irq_chip.irq_bus_lock        = sx150x_irq_bus_lock;
- 	chip->irq_chip.irq_bus_sync_unlock = sx150x_irq_bus_sync_unlock;
--	chip->irq_base                     = -1;
- 	chip->irq_masked                   = ~0;
- 	chip->irq_sense                    = 0;
- 	chip->dev_masked                   = ~0;
-@@ -689,16 +682,13 @@ static int sx150x_init_hw(struct sx150x_chip *chip,
- 	return err;
- }
- 
--static int sx150x_install_irq_chip(struct sx150x_chip *chip,
--				   int irq_base)
-+static int sx150x_install_irq_chip(struct sx150x_chip *chip)
- {
- 	int err;
- 
--	chip->irq_base    = irq_base;
--
- 	/* Add gpio chip to irq subsystem */
- 	err = gpiochip_irqchip_add(&chip->gpio_chip,
--		&chip->irq_chip, chip->irq_base,
-+		&chip->irq_chip, 0,
- 		handle_edge_irq, IRQ_TYPE_EDGE_BOTH);
- 	if (err) {
- 		dev_err(&chip->client->dev,
-@@ -710,10 +700,6 @@ static int sx150x_install_irq_chip(struct sx150x_chip *chip,
- 			chip->client->irq, NULL, sx150x_irq_thread_fn,
- 			IRQF_ONESHOT | IRQF_SHARED | IRQF_TRIGGER_FALLING,
- 			chip->irq_chip.name, chip);
--	if (err < 0) {
--		chip->irq_base    = -1;
--	}
--
- 	return err;
- }
- 
-@@ -748,8 +734,7 @@ static int sx150x_probe(struct i2c_client *client,
- 		return rc;
- 
- 	if (client->irq) {
--		rc = sx150x_install_irq_chip(chip,
--					pdata->irq_base);
-+		rc = sx150x_install_irq_chip(chip);
- 		if (rc < 0)
- 			return rc;
- 	}
+The patches are based on next branch of linux-phy tree.
+
+These have been tested on Dragon board db820c hardware with
+required set of patches on integration tree maintained by
+Linaro landing team for Qualcomm [3].
+
+[1] Currently the qcom-qmp phy driver supports only USB3 and PCIe
+controllers. Later, we plan to add the UFS phy support as well to this.
+[2] https://source.codeaurora.org/quic/la/kernel/msm-4.4/log/?h=caf/3.18/msm-3.18
+[3] https://git.linaro.org/?p=landing-teams/working/qualcomm/kernel.git;a=shortlog;h=refs/heads/integration-linux-qcomlt
+
+Vivek Gautam (2):
+  phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
+  phy: qcom-qmp: new qmp phy driver for qcom-chipsets
+
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   61 ++
+ .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |   37 +
+ drivers/phy/Kconfig                                |   18 +
+ drivers/phy/Makefile                               |    2 +
+ drivers/phy/phy-qcom-qmp.c                         | 1154 ++++++++++++++++++++
+ drivers/phy/phy-qcom-qusb2.c                       |  577 ++++++++++
+ 6 files changed, 1849 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+ create mode 100644 drivers/phy/phy-qcom-qmp.c
+ create mode 100644 drivers/phy/phy-qcom-qusb2.c
+
 -- 
-2.5.5
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
