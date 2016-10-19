@@ -1,57 +1,102 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH] mtd: nand: Add OX820 NAND Support
-Date: Wed, 19 Oct 2016 17:54:28 +0200
-Message-ID: <20161019175428.6ea3998d@bbrezillon>
-References: <20161019145523.6763-1-narmstrong@baylibre.com>
-        <20161019173704.75592f52@bbrezillon>
-        <0f5398bb-52f1-d5bb-834c-dead4f708fd3@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0f5398bb-52f1-d5bb-834c-dead4f708fd3@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, richard@nod.at, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-oxnas@lists.tuxfamily.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, daniel@makrotopia.org
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v2 03/10] gpio-sx150x: Remove 'irq_base' parameter
+Date: Wed, 19 Oct 2016 07:03:59 -0700
+Message-ID: <1476885846-16469-4-git-send-email-andrew.smirnov@gmail.com>
+References: <1476885846-16469-1-git-send-email-andrew.smirnov@gmail.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1476885846-16469-1-git-send-email-andrew.smirnov@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cphealy@gmail.com, Andrey Smirnov <andrew.smirnov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Oct 2016 17:46:01 +0200
-Neil Armstrong <narmstrong@baylibre.com> wrote:
+Remove 'irq_base' parameter and call 'gpiochip_irqchip_add' with '0' as
+irq base to automatically assign it.
 
-> >> +/* Single CS command control */
-> >> +static void oxnas_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
-> >> +				unsigned int ctrl)
-> >> +{
-> >> +	struct nand_chip *chip = mtd_to_nand(mtd);
-> >> +	struct oxnas_nand *oxnas = nand_get_controller_data(chip);
-> >> +
-> >> +	if (ctrl & NAND_CTRL_CHANGE) {
-> >> +		if (ctrl & NAND_CLE)
-> >> +			oxnas->ctrl = OXNAS_NAND_CMD_CLE;
-> >> +		else if (ctrl & NAND_ALE)
-> >> +			oxnas->ctrl = OXNAS_NAND_CMD_ALE;
-> >> +		else
-> >> +			oxnas->ctrl = 0;
-> >> +	}
-> >> +
-> >> +	if (cmd != NAND_CMD_NONE)
-> >> +		writeb(cmd, oxnas->io_base + oxnas->ctrl);  
-> > 
-> > There's no need to test the NAND_CTRL_CHANGE here, and I don't think
-> > the CLE or ALE flag is ever set when cmd == CMD_NONE. So, you can kill
-> > the ->ctrl field and simply do:
-> > 
-> > 	if (ctrl & NAND_CLE)
-> > 		writeb(cmd, oxnas->io_base + OXNAS_NAND_CMD_CLE);
-> > 	else if (ctrl & NAND_ALE)
-> > 		writeb(cmd, oxnas->io_base + OXNAS_NAND_CMD_ALE);
-> >   
-> >> +}  
-> 
-> Hmm, except it's needed back in the oxnas_nand_write_buf() call (don't ask me why)
-> so I don't see how to simplify more this function.
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+---
+ drivers/gpio/gpio-sx150x.c | 21 +++------------------
+ 1 file changed, 3 insertions(+), 18 deletions(-)
 
-Are you sure? Can you add a WARN(oxnas->ctrl) in oxnas_nand_write_buf()
-to check if it's ever the case? I'm almost sure there is a call to
-->cmd_ctrl() with none of the CLE and ALE flags set before the
-->write_buf() call.
+diff --git a/drivers/gpio/gpio-sx150x.c b/drivers/gpio/gpio-sx150x.c
+index e80c115..e01afd8 100644
+--- a/drivers/gpio/gpio-sx150x.c
++++ b/drivers/gpio/gpio-sx150x.c
+@@ -105,10 +105,6 @@ struct sx150x_device_data {
+  *               the polarity of that IO line, while clearing it results
+  *               in normal polarity. For chips with fewer than 16 IO pins,
+  *               high-end bits are ignored.
+- * @irq_base: The first 'virtual IRQ' line at which our block of GPIO-based
+- *            IRQ lines will appear.  Similarly to gpio_base, the expander
+- *            will create a block of irqs beginning at this number.
+- *            This value is ignored if irq_summary is < 0.
+  * @reset_during_probe: If set to true, the driver will trigger a full
+  *                      reset of the chip at the beginning of the probe
+  *                      in order to place it in a known state.
+@@ -118,7 +114,6 @@ struct sx150x_platform_data {
+ 	u16      io_pullup_ena;
+ 	u16      io_pulldn_ena;
+ 	u16      io_polarity;
+-	unsigned irq_base;
+ 	bool     reset_during_probe;
+ };
+ 
+@@ -126,7 +121,6 @@ struct sx150x_chip {
+ 	struct gpio_chip                 gpio_chip;
+ 	struct i2c_client               *client;
+ 	const struct sx150x_device_data *dev_cfg;
+-	int                              irq_base;
+ 	int				 irq_update;
+ 	u32                              irq_sense;
+ 	u32				 irq_masked;
+@@ -590,7 +584,6 @@ static void sx150x_init_chip(struct sx150x_chip *chip,
+ 	chip->irq_chip.irq_set_type        = sx150x_irq_set_type;
+ 	chip->irq_chip.irq_bus_lock        = sx150x_irq_bus_lock;
+ 	chip->irq_chip.irq_bus_sync_unlock = sx150x_irq_bus_sync_unlock;
+-	chip->irq_base                     = -1;
+ 	chip->irq_masked                   = ~0;
+ 	chip->irq_sense                    = 0;
+ 	chip->dev_masked                   = ~0;
+@@ -689,16 +682,13 @@ static int sx150x_init_hw(struct sx150x_chip *chip,
+ 	return err;
+ }
+ 
+-static int sx150x_install_irq_chip(struct sx150x_chip *chip,
+-				   int irq_base)
++static int sx150x_install_irq_chip(struct sx150x_chip *chip)
+ {
+ 	int err;
+ 
+-	chip->irq_base    = irq_base;
+-
+ 	/* Add gpio chip to irq subsystem */
+ 	err = gpiochip_irqchip_add(&chip->gpio_chip,
+-		&chip->irq_chip, chip->irq_base,
++		&chip->irq_chip, 0,
+ 		handle_edge_irq, IRQ_TYPE_EDGE_BOTH);
+ 	if (err) {
+ 		dev_err(&chip->client->dev,
+@@ -710,10 +700,6 @@ static int sx150x_install_irq_chip(struct sx150x_chip *chip,
+ 			chip->client->irq, NULL, sx150x_irq_thread_fn,
+ 			IRQF_ONESHOT | IRQF_SHARED | IRQF_TRIGGER_FALLING,
+ 			chip->irq_chip.name, chip);
+-	if (err < 0) {
+-		chip->irq_base    = -1;
+-	}
+-
+ 	return err;
+ }
+ 
+@@ -748,8 +734,7 @@ static int sx150x_probe(struct i2c_client *client,
+ 		return rc;
+ 
+ 	if (client->irq) {
+-		rc = sx150x_install_irq_chip(chip,
+-					pdata->irq_base);
++		rc = sx150x_install_irq_chip(chip);
+ 		if (rc < 0)
+ 			return rc;
+ 	}
+-- 
+2.5.5
+
