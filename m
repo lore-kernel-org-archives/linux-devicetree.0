@@ -1,40 +1,73 @@
-From: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [v12, 0/8] Fix eSDHC host version register bug
-Date: Wed, 19 Oct 2016 10:27:15 +0200
-Message-ID: <20161019082715.GA6140@kroah.com>
-References: <1474441040-11946-1-git-send-email-yangbo.lu@nxp.com>
-	<CAPDyKFoit0sTPpfi2=AHcdZsDwOJxbBX68O-1jBFL=5JN0m6_w@mail.gmail.com>
-	<AM5PR0401MB2529BA70C6E7AF7C71631A47F8D20@AM5PR0401MB2529.eurprd04.prod.outlook.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 2/3] ARM: bus: da8xx-syscfg: new driver
+Date: Wed, 19 Oct 2016 10:26:57 +0200
+Message-ID: <CAMpxmJXwZ8pQ58OgV4w88yNuG1Fd8++1yP-Frd2QJFO9uJJueQ@mail.gmail.com>
+References: <1476721850-454-1-git-send-email-bgolaszewski@baylibre.com>
+ <1476721850-454-3-git-send-email-bgolaszewski@baylibre.com>
+ <4369153.vCOQzI7OET@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <AM5PR0401MB2529BA70C6E7AF7C71631A47F8D20-oQ3wXcTHOqqGPub0A97BiI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "Y.B. Lu" <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "X.B. Xie" <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "M.H. Lian" <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>Leo Li <l>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <4369153.vCOQzI7OET@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2016 at 02:47:07AM +0000, Y.B. Lu wrote:
-> + Greg
-> 
-> Hi Greg,
-> 
-> I submitted this patchset for a MMC bug fix, and introduce the below patch which needs your ACK.
-> > > Arnd Bergmann (1):
-> > >   base: soc: introduce soc_device_match() interface
-> https://patchwork.kernel.org/patch/9342913/
-> 
-> Could you help to review it and give some comments or ACK.
-> Thank you very much.
-
-Now acked.
+MjAxNi0xMC0xOCAyMjo0OSBHTVQrMDI6MDAgTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5j
+aGFydEBpZGVhc29uYm9hcmQuY29tPjoKPiBIaSBCYXJ0b3N6LAo+Cj4gVGhhbmsgeW91IGZvciB0
+aGUgcGF0Y2guCj4KPiBPbiBNb25kYXkgMTcgT2N0IDIwMTYgMTg6MzA6NDkgQmFydG9zeiBHb2xh
+c3pld3NraSB3cm90ZToKPj4gQ3JlYXRlIHRoZSBkcml2ZXIgZm9yIHRoZSBkYTh4eCBTeXN0ZW0g
+Q29uZmlndXJhdGlvbiBhbmQgaW1wbGVtZW50Cj4+IHN1cHBvcnQgZm9yIHdyaXRpbmcgdG8gdGhl
+IHRocmVlIE1hc3RlciBQcmlvcml0eSByZWdpc3RlcnMuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEJh
+cnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pld3NraUBiYXlsaWJyZS5jb20+Cgpbc25pcF0KCj4+
+ICsKPj4gK0RvY3VtZW50YXRpb246Cj4+ICtPTUFQLUwxMzggKERBODUwKSAtIGh0dHA6Ly93d3cu
+dGkuY29tL2xpdC91Zy9zcHJ1aDgyYy9zcHJ1aDgyYy5wZGYKPj4gKwo+PiArUmVxdWlyZWQgcHJv
+cGVydGllczoKPj4gKwo+PiArLSBjb21wYXRpYmxlOiAgICAgICAgICAgICAgICAidGksZGE4NTAt
+c3lzY2ZnIgo+Cj4gRG9uJ3QgeW91IG5lZWQgYSByZWcgcHJvcGVydHkgPwo+CgpZZXMsIEtldmlu
+IGFscmVhZHkgcG9pbnRlZCB0aGF0IG91dC4gSSdsbCBhZGQgaXQgaW4gdjIuIFNhbWUgZm9yIFsx
+LzNdLgoKPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4+ICsKPj4gK1RoZSBiZWxvdyBwcm9wZXJ0
+aWVzIGFyZSB1c2VkIHRvIHNwZWNpZnkgdGhlIHByaW9yaXR5IG9mIG1hc3Rlcgo+PiBwZXJpcGhl
+cmFscy4KPj4gK1RoZXkgbXVzdCBiZSBiZXR3ZWVuIDAtNyB3aGVyZSAwIGlzIHRoZSBoaWdoZXN0
+IHByaW9yaXR5IGFuZCA3IGlzIHRoZQo+PiBsb3dlc3QuCj4+ICsKPj4gKy0gdGkscHJpLWFybS1p
+OiAgICAgICAgICAgICAgQVJNX0kgcG9ydCBwcmlvcml0eS4KPj4gKwo+PiArLSB0aSxwcmktYXJt
+LWQ6ICAgICAgICAgICAgICBBUk1fRCBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHByaS11
+cHA6ICAgICAgICAgICAgICAgIHVQUCBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHByaS1z
+YXRhOiAgICAgICAgICAgICAgIFNBVEEgcG9ydCBwcmlvcml0eS4KPj4gKwo+PiArLSB0aSxwcmkt
+cHJ1MDogICAgICAgICAgICAgICBQUlUwIHBvcnQgcHJpb3JpdHkuCj4+ICsKPj4gKy0gdGkscHJp
+LXBydTE6ICAgICAgICAgICAgICAgUFJVMSBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHBy
+aS1lZG1hMzB0YzA6ICBFRE1BM18wX1RDMCBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHBy
+aS1lZG1hMzB0YzE6ICBFRE1BM18wX1RDMSBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHBy
+aS1lZG1hMzF0YzA6ICBFRE1BM18xX1RDMCBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHBy
+aS12cGlmLWRtYS0wOiBWUElGIERNQTAgcG9ydCBwcmlvcml0eS4KPj4gKwo+PiArLSB0aSxwcmkt
+dnBpZi1kbWEtMTogVlBJRiBETUExIHBvcnQgcHJpb3JpdHkuCj4+ICsKPj4gKy0gdGkscHJpLWVt
+YWM6ICAgICAgICAgICAgICAgRU1BQyBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHByaS11
+c2IwY2ZnOiAgICBVU0IwIENGRyBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHByaS11c2Iw
+Y2RtYTogICBVU0IwIENETUEgcG9ydCBwcmlvcml0eS4KPj4gKwo+PiArLSB0aSxwcmktdWhwaTog
+ICAgICAgICAgICAgICBIUEkgcG9ydCBwcmlvcml0eS4KPj4gKwo+PiArLSB0aSxwcmktdXNiMTog
+ICAgICAgICAgICAgICBVU0IxIHBvcnQgcHJpb3JpdHkuCj4+ICsKPj4gKy0gdGkscHJpLWxjZGM6
+ICAgICAgICAgICAgICAgTENEQyBwb3J0IHByaW9yaXR5Lgo+Cj4gSSdtIGFmcmFpZCB0aGlzIGxv
+b2tzIG1vcmUgbGlrZSBzeXN0ZW0gY29uZmlndXJhdGlvbiB0aGFuIGhhcmR3YXJlIGRlc2NyaXB0
+aW9uCj4gdG8gbWUuCj4KCldoaWxlIHlvdSdyZSBjZXJ0YWlubHkgcmlnaHQsIHRoaXMgYXBwcm9h
+Y2ggaXMgYWxyZWFkeSBpbXBsZW1lbnRlZCBpbgpzZXZlcmFsIG90aGVyIG1lbW9yeSBhbmQgYnVz
+IGRyaXZlcnMgYW5kIGl0IHdhcyBhbHNvIHN1Z2dlc3RlZCBieQpTZWtoYXIgaW4gb25lIG9mIHRo
+ZSB0aWxjZGMgcmV2MSB0aHJlYWRzLiBUaGVyZSdzIGFsc28gbm8gcmVhbAphbHRlcm5hdGl2ZSB0
+aGF0IEkga25vdyBvZi4KCj4gVGhlcmUgd2FzIGEgQm9GIHNlc3Npb24gYWJvdXQgaG93IHRvIHN1
+cHBvcnQgdGhpcyBraW5kIG9mIHBlcmZvcm1hbmNlIGtub2JzIGF0Cj4gRUxDRSBsYXN0IHdlZWs6
+IGh0dHBzOi8vb3BlbmlvdGVsY2V1cm9wZTIwMTYuc2NoZWQub3JnL2V2ZW50Lzdyc3MvYm9mLWxp
+bnV4LWRldmljZS1wZXJmb3JtYW5jZS1mcmFtZXdvcmstbWljaGFlbC10dXJxdWV0dGUtYmF5bGli
+cmUgOi0pCj4KCkkga25vdywgSSB3YXMgdGhlcmUuIDspCgpVbmZvcnR1bmF0ZWx5IGl0IHdhcyBq
+dXN0IGEgZGlzY3Vzc2lvbiBhYm91dCBwb3RlbnRpYWwgYXBwcm9hY2hlcyAtCnRoZXJlJ3Mgbm8g
+Y29kZSB5ZXQuCgpUaGFua3MsCkJhcnRvc3oKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
