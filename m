@@ -1,46 +1,112 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V6 01/10] Documentation: DT: qcom_hidma: update binding for MSI
-Date: Wed, 19 Oct 2016 13:51:43 -0400
-Message-ID: <1476899512-20431-2-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V6 05/10] dmaengine: qcom_hidma: make pending_tre_count atomic
+Date: Wed, 19 Oct 2016 13:51:47 -0400
+Message-ID: <1476899512-20431-6-git-send-email-okaya@codeaurora.org>
 References: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adding a new binding for qcom,hidma-1.1 to distinguish HW supporting
-MSI interrupts from the older revision.
+Getting ready for the MSI interrupts. The pending_tre_count is used
+in the interrupt handler to make sure all outstanding requests are
+serviced.
+
+The driver will allocate 11 MSI interrupts. Each MSI interrupt can be
+assigned to a different CPU. Then, we have a race condition for common
+variables as they share the same interrupt handler with a different
+cause bit and they can potentially be executed in parallel. Making this
+variable atomic so that it can be updated from multiple processor
+contexts.
 
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 ---
- Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/dma/qcom/hidma.h     |  2 +-
+ drivers/dma/qcom/hidma_dbg.c |  3 ++-
+ drivers/dma/qcom/hidma_ll.c  | 13 ++++++-------
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-index fd5618b..2c5e4b8 100644
---- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-+++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-@@ -47,12 +47,18 @@ When the OS is not in control of the management interface (i.e. it's a guest),
- the channel nodes appear on their own, not under a management node.
+diff --git a/drivers/dma/qcom/hidma.h b/drivers/dma/qcom/hidma.h
+index b4a512f..8318de7 100644
+--- a/drivers/dma/qcom/hidma.h
++++ b/drivers/dma/qcom/hidma.h
+@@ -58,7 +58,7 @@ struct hidma_lldev {
+ 	void __iomem *evca;		/* Event Channel address          */
+ 	struct hidma_tre
+ 		**pending_tre_list;	/* Pointers to pending TREs	  */
+-	s32 pending_tre_count;		/* Number of TREs pending	  */
++	atomic_t pending_tre_count;	/* Number of TREs pending	  */
  
- Required properties:
--- compatible: must contain "qcom,hidma-1.0"
-+- compatible: must contain "qcom,hidma-1.0" for initial HW or "qcom,hidma-1.1"
-+for MSI capable HW.
- - reg: Addresses for the transfer and event channel
- - interrupts: Should contain the event interrupt
- - desc-count: Number of asynchronous requests this channel can handle
- - iommus: required a iommu node
+ 	void *tre_ring;			/* TRE ring			  */
+ 	dma_addr_t tre_dma;		/* TRE ring to be shared with HW  */
+diff --git a/drivers/dma/qcom/hidma_dbg.c b/drivers/dma/qcom/hidma_dbg.c
+index 3d83b99..3bdcb80 100644
+--- a/drivers/dma/qcom/hidma_dbg.c
++++ b/drivers/dma/qcom/hidma_dbg.c
+@@ -74,7 +74,8 @@ static void hidma_ll_devstats(struct seq_file *s, void *llhndl)
+ 	seq_printf(s, "tre_ring_handle=%pap\n", &lldev->tre_dma);
+ 	seq_printf(s, "tre_ring_size = 0x%x\n", lldev->tre_ring_size);
+ 	seq_printf(s, "tre_processed_off = 0x%x\n", lldev->tre_processed_off);
+-	seq_printf(s, "pending_tre_count=%d\n", lldev->pending_tre_count);
++	seq_printf(s, "pending_tre_count=%d\n",
++			atomic_read(&lldev->pending_tre_count));
+ 	seq_printf(s, "evca=%p\n", lldev->evca);
+ 	seq_printf(s, "evre_ring=%p\n", lldev->evre_ring);
+ 	seq_printf(s, "evre_ring_handle=%pap\n", &lldev->evre_dma);
+diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
+index 3224f24..29fef4f 100644
+--- a/drivers/dma/qcom/hidma_ll.c
++++ b/drivers/dma/qcom/hidma_ll.c
+@@ -218,10 +218,9 @@ static int hidma_post_completed(struct hidma_lldev *lldev, int tre_iterator,
+ 	 * Keep track of pending TREs that SW is expecting to receive
+ 	 * from HW. We got one now. Decrement our counter.
+ 	 */
+-	lldev->pending_tre_count--;
+-	if (lldev->pending_tre_count < 0) {
++	if (atomic_dec_return(&lldev->pending_tre_count) < 0) {
+ 		dev_warn(lldev->dev, "tre count mismatch on completion");
+-		lldev->pending_tre_count = 0;
++		atomic_set(&lldev->pending_tre_count, 0);
+ 	}
  
-+Optional properties for MSI:
-+- msi-parent : See the generic MSI binding described in
-+ devicetree/bindings/interrupt-controller/msi.txt for a description of the
-+ msi-parent property.
-+
- Example:
+ 	spin_unlock_irqrestore(&lldev->lock, flags);
+@@ -321,7 +320,7 @@ void hidma_cleanup_pending_tre(struct hidma_lldev *lldev, u8 err_info,
+ 	u32 tre_read_off;
  
- Hypervisor OS configuration:
+ 	tre_iterator = lldev->tre_processed_off;
+-	while (lldev->pending_tre_count) {
++	while (atomic_read(&lldev->pending_tre_count)) {
+ 		if (hidma_post_completed(lldev, tre_iterator, err_info,
+ 					 err_code))
+ 			break;
+@@ -548,7 +547,7 @@ void hidma_ll_queue_request(struct hidma_lldev *lldev, u32 tre_ch)
+ 	tre->err_code = 0;
+ 	tre->err_info = 0;
+ 	tre->queued = 1;
+-	lldev->pending_tre_count++;
++	atomic_inc(&lldev->pending_tre_count);
+ 	lldev->tre_write_offset = (lldev->tre_write_offset + HIDMA_TRE_SIZE)
+ 					% lldev->tre_ring_size;
+ 	spin_unlock_irqrestore(&lldev->lock, flags);
+@@ -654,7 +653,7 @@ int hidma_ll_setup(struct hidma_lldev *lldev)
+ 	u32 val;
+ 	u32 nr_tres = lldev->nr_tres;
+ 
+-	lldev->pending_tre_count = 0;
++	atomic_set(&lldev->pending_tre_count, 0);
+ 	lldev->tre_processed_off = 0;
+ 	lldev->evre_processed_off = 0;
+ 	lldev->tre_write_offset = 0;
+@@ -816,7 +815,7 @@ int hidma_ll_uninit(struct hidma_lldev *lldev)
+ 	tasklet_kill(&lldev->task);
+ 	memset(lldev->trepool, 0, required_bytes);
+ 	lldev->trepool = NULL;
+-	lldev->pending_tre_count = 0;
++	atomic_set(&lldev->pending_tre_count, 0);
+ 	lldev->tre_write_offset = 0;
+ 
+ 	rc = hidma_ll_reset(lldev);
 -- 
 1.9.1
