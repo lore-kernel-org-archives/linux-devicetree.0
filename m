@@ -1,14 +1,14 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 06/11] ARM: dts: r8a7743: add [H]SCIF{A|B} support
-Date: Wed, 19 Oct 2016 10:34:41 +0200
-Message-ID: <CAMuHMdUaCKh-WFth9q3-1fM+4_Wpi0T2kSEkexo8aZNQoe3pzw@mail.gmail.com>
-References: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com>
- <14213508.lp3q5ZvmbF@wasted.cogentembedded.com>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Subject: Re: [PATCH v2 0/6] STM32F4 Add RTC & QSPI clocks
+Date: Wed, 19 Oct 2016 10:34:38 +0200
+Message-ID: <d878b846-556d-180b-8ebf-2d06646efb58@st.com>
+References: <1476436699-21879-1-git-send-email-gabriel.fernandez@st.com>
+ <20161018235108.GP8871@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <14213508.lp3q5ZvmbF@wasted.cogentembedded.com>
+In-Reply-To: <20161018235108.GP8871@codeaurora.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,60 +18,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, daniel.thompson@linaro.org, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@linaro.org>, Michael Turquette <mturquette@baylibre.com>, olivier.bideau@st.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, ludovic.barre@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, amelie.delaunay@st.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 5, 2016 at 11:41 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Describe [H]SCIF[AB] ports in the R8A7743 device tree.
+Hi Stephen,
+
+
+On 10/19/2016 01:51 AM, Stephen Boyd wrote:
+> On 10/14, gabriel.fernandez@st.com wrote:
+>> Gabriel Fernandez (6):
+>>    clk: stm32f4: Add LSI & LSE clocks
+>>    ARM: dts: stm32f429: add LSI and LSE clocks
+>>    arm: stmf32: Enable SYSCON
+>>    clk: stm32f4: Add RTC clock
+>>    clk: stm32f469: Add QSPI clock
+>>    ARM: dts: stm32f429: Add QSPI clock
+> Can the clk patches be picked without causing problems for
+> existing dt changes? Do you want an ack from clk maintainers
+> instead of us picking the clk patches up? The series has
+> intermingled clk and dts changes so I'm confused.
 >
-> Based on the original (and large) patch by Dmitry Shifrin
-> <dmitry.shifrin@cogentembedded.com>.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-With the modifications indicated below:
+Thanks for reviewing.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Normally DT patches will be taken by STM32 maintainer, but yes there is 
+a dependency between patch 1 & 2, so if you push the patch 1 into 
+clk-next tree you have to take also patch 2.
 
-> --- renesas.orig/arch/arm/boot/dts/r8a7743.dtsi
-> +++ renesas/arch/arm/boot/dts/r8a7743.dtsi
-> @@ -162,6 +162,267 @@
->                         #dma-cells = <1>;
->                         dma-channels = <15>;
->                 };
-> +
-> +               scifa0: serial@e6c40000 {
-> +                       compatible = "renesas,scifa-r8a7743",
-> +                                    "renesas,rzg-scifa", "renesas,scifa";
+You have to be synchronized with Alexandre Torgue.
 
-Please use "renesas,rcar-gen2-scifa" instead of "renesas,rzg-scifa".
+Best Regards
 
-> +               scifb0: serial@e6c20000 {
-> +                       compatible = "renesas,scifb-r8a7743",
-> +                                    "renesas,rzg-scifb", "renesas,scifb";
-
-"renesas,rcar-gen2-scifb"
-
-> +               scif0: serial@e6e60000 {
-> +                       compatible = "renesas,scif-r8a7743", "renesas,rzg-scif",
-
-"renesas,rcar-gen2-scif"
-
-> +               hscif0: serial@e62c0000 {
-> +                       compatible = "renesas,hscif-r8a7743",
-> +                                    "renesas,rzg-hscif", "renesas,hscif";
-
-"renesas,rcar-gen2-hscif"
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Gabriel
