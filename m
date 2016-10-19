@@ -1,14 +1,14 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 04/11] ARM: dts: r8a7743: initial SoC device tree
-Date: Wed, 19 Oct 2016 10:16:05 +0200
-Message-ID: <CAMuHMdUjqagddSnhGOTGRYUwtF=-g+j3Kydu+iJKtV23RrPKWQ@mail.gmail.com>
+Subject: Re: [PATCH v3 11/11] ARM: dts: sk-rzg1m: add Ether support
+Date: Wed, 19 Oct 2016 10:17:26 +0200
+Message-ID: <CAMuHMdWizcwvThbOih=C=TqTMReCAhSkWsNNeYPp5c4k9ypkLw@mail.gmail.com>
 References: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com>
- <2883940.Oo8sg10L7m@wasted.cogentembedded.com>
+ <1764267.cmIUehPqzi@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2883940.Oo8sg10L7m@wasted.cogentembedded.com>
+In-Reply-To: <1764267.cmIUehPqzi@wasted.cogentembedded.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,10 +22,10 @@ To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 5, 2016 at 11:38 PM, Sergei Shtylyov
+On Wed, Oct 5, 2016 at 11:48 PM, Sergei Shtylyov
 <sergei.shtylyov@cogentembedded.com> wrote:
-> The  initial R8A7743 SoC device tree including CPU cores, GIC, timer, SYSC,
-> CPG, and the required clock descriptions.
+> Define the SK-RZG1M board dependent part of the Ether device node.
+> Enable DHCP and NFS root  for the kernel booting.
 >
 > Based on the original (and large) patch by Dmitry Shifrin
 > <dmitry.shifrin@cogentembedded.com>.
