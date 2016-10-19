@@ -1,122 +1,47 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] mtd: nand: Add OX820 NAND Support
-Date: Wed, 19 Oct 2016 17:46:01 +0200
-Message-ID: <0f5398bb-52f1-d5bb-834c-dead4f708fd3@baylibre.com>
-References: <20161019145523.6763-1-narmstrong@baylibre.com>
- <20161019173704.75592f52@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161019173704.75592f52@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org
+From: Clemens Gruber <clemens.gruber@pqgruber.com>
+Subject: [PATCH 2/2] hwmon: (mcp3021) add devicetree bindings documentation
+Date: Wed, 19 Oct 2016 11:40:56 +0200
+Message-ID: <20161019094056.24508-1-clemens.gruber@pqgruber.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-hwmon@vger.kernel.org
+Cc: Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Clemens Gruber <clemens.gruber@pqgruber.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/19/2016 05:37 PM, Boris Brezillon wrote:
-> On Wed, 19 Oct 2016 16:55:23 +0200
-> Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+Documents the devicetree bindings for the Microchip MCP3021/3221.
 
-[...]
+Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+---
+ Documentation/devicetree/bindings/hwmon/mcp3021.txt | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/mcp3021.txt
 
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
->> @@ -0,0 +1,24 @@
->> +* Oxford Semiconductor OXNAS NAND Controller
->> +
->> +Please refer to nand.txt for generic information regarding MTD NAND bindings.
->> +
->> +Required properties:
->> + - compatible: "oxsemi,ox820-nand"
->> + - reg: Base address and length for NAND mapped memory.
->> +
->> +Optional Properties:
->> + - clocks: phandle to the NAND gate clock if needed.
->> + - resets: phandle to the NAND reset control if needed.
->> +
->> +Example:
->> +
->> +nand: nand@41000000 {
-> 
-> nandc: nand-controller@41000000 {
-> 
->> +	compatible = "oxsemi,ox820-nand";
->> +	reg = <0x41000000 0x100000>;
->> +	nand-ecc-mode = "soft";
->> +	clocks = <&stdclk CLK_820_NAND>;
->> +	resets = <&reset RESET_NAND>;
->> +	#address-cells = <1>;
->> +	#size-cells = <1>;
->> +	status = "disabled";
->> +};
-> 
-> You should probably provide an example where the NAND controller is
-> enabled and at least one nand chip is connected to the NAND bus.
-
-Indeed, I forgot that.
-
-[...]
-
->> +
->> +static uint8_t oxnas_nand_read_byte(struct mtd_info *mtd)
->> +{
->> +	struct nand_chip *chip = mtd_to_nand(mtd);
->> +	struct oxnas_nand *oxnas = nand_get_controller_data(chip);
->> +
->> +	return readb(oxnas->io_base);
->> +}
->> +
->> +static void oxnas_nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
->> +{
->> +	struct nand_chip *chip = mtd_to_nand(mtd);
->> +	struct oxnas_nand *oxnas = nand_get_controller_data(chip);
->> +
->> +	ioread8_rep(oxnas->io_base, buf, len);
->> +}
->> +
->> +static void oxnas_nand_write_buf(struct mtd_info *mtd,
->> +				 const uint8_t *buf, int len)
->> +{
->> +	struct nand_chip *chip = mtd_to_nand(mtd);
->> +	struct oxnas_nand *oxnas = nand_get_controller_data(chip);
->> +
->> +	iowrite8_rep(oxnas->io_base + oxnas->ctrl, buf, len);
->> +}
->> +
->> +/* Single CS command control */
->> +static void oxnas_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
->> +				unsigned int ctrl)
->> +{
->> +	struct nand_chip *chip = mtd_to_nand(mtd);
->> +	struct oxnas_nand *oxnas = nand_get_controller_data(chip);
->> +
->> +	if (ctrl & NAND_CTRL_CHANGE) {
->> +		if (ctrl & NAND_CLE)
->> +			oxnas->ctrl = OXNAS_NAND_CMD_CLE;
->> +		else if (ctrl & NAND_ALE)
->> +			oxnas->ctrl = OXNAS_NAND_CMD_ALE;
->> +		else
->> +			oxnas->ctrl = 0;
->> +	}
->> +
->> +	if (cmd != NAND_CMD_NONE)
->> +		writeb(cmd, oxnas->io_base + oxnas->ctrl);
-> 
-> There's no need to test the NAND_CTRL_CHANGE here, and I don't think
-> the CLE or ALE flag is ever set when cmd == CMD_NONE. So, you can kill
-> the ->ctrl field and simply do:
-> 
-> 	if (ctrl & NAND_CLE)
-> 		writeb(cmd, oxnas->io_base + OXNAS_NAND_CMD_CLE);
-> 	else if (ctrl & NAND_ALE)
-> 		writeb(cmd, oxnas->io_base + OXNAS_NAND_CMD_ALE);
-> 
->> +}
-
-Hmm, except it's needed back in the oxnas_nand_write_buf() call (don't ask me why)
-so I don't see how to simplify more this function.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/hwmon/mcp3021.txt b/Documentation/devicetree/bindings/hwmon/mcp3021.txt
+new file mode 100644
+index 0000000..e1d1e62
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/mcp3021.txt
+@@ -0,0 +1,21 @@
++mcp3021 properties
++
++Required properties:
++- compatible: Must be one of the following:
++	- "microchip,mcp3021" for mcp3021
++	- "microchip,mcp3221" for mcp3221
++- reg: I2C address
++
++Optional properties:
++
++- reference-voltage
++	Reference voltage in millivolt (mV)
++
++Example:
++
++mcp3021@4d {
++	compatible = "microchip,mcp3021";
++	reg = <0x4d>;
++
++	reference-voltage = <4500>; /* 4.5 V */
++};
+-- 
+2.10.0
