@@ -1,39 +1,68 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 7/9] ARM: meson: enable MESON_IRQ_GPIO in Kconfig for meson8
-Date: Wed, 19 Oct 2016 17:21:18 +0200
-Message-ID: <1476890480-8884-8-git-send-email-jbrunet@baylibre.com>
+Subject: [PATCH v2 2/9] dt-bindings: interrupt-controller: add DT binding for meson GPIO interrupt controller
+Date: Wed, 19 Oct 2016 17:21:13 +0200
+Message-ID: <1476890480-8884-3-git-send-email-jbrunet@baylibre.com>
 References: <1476890480-8884-1-git-send-email-jbrunet@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1476890480-8884-1-git-send-email-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Russell King <linux@armlinux.org.uk>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linus Walleij <linus.walleij@linaro.org>
+To: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Add select MESON_IRQ_GPIO in Kconfig for Amlogic's meson8 and meson8b SoC
+
+This commit adds the device tree bindings description for Amlogic's GPIO
+interrupt controller available on the meson8, meson8b and gxbb SoC families
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm/mach-meson/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Rob, I did not include the Ack you gave for the RFC as bindings have slightly
+changed. Only the interrupt property has be removed following a discussion I
+had with Marc
 
-diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
-index b6e3acc63e14..63157295cd9d 100644
---- a/arch/arm/mach-meson/Kconfig
-+++ b/arch/arm/mach-meson/Kconfig
-@@ -21,11 +21,13 @@ config MACH_MESON8
- 	bool "Amlogic Meson8 SoCs support"
- 	default ARCH_MESON
- 	select MESON6_TIMER
-+	select MESON_IRQ_GPIO
- 
- config MACH_MESON8B
- 	bool "Amlogic Meson8b SoCs support"
- 	default ARCH_MESON
- 	select MESON6_TIMER
- 	select COMMON_CLK_MESON8B
-+	select MESON_IRQ_GPIO
- 
- endif
+ .../amlogic,meson-gpio-intc.txt                    | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+new file mode 100644
+index 000000000000..2464d9a0865d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+@@ -0,0 +1,31 @@
++Amlogic meson GPIO interrupt controller
++
++Meson SoCs contains an interrupt controller which is able watch the SoC pads
++and generate an interrupt on edges or level. The controller is essentially a
++256 pads to 8 GIC interrupt multiplexer, with a filter block to select edge
++or level and polarity. We don’t expose all 256 mux inputs because the
++documentation shows that upper part is not mapped to any pad. The actual number
++of interrupt exposed depends on the SoC.
++
++Required properties:
++
++- compatible : should be either
++   "amlogic,meson8-gpio-intc” for meson8 SoCs (AML7826MX) or
++   “amlogic,meson8b-gpio-intc” for meson8b SoCs (S805) or
++   “amlogic,meson-gxbb-gpio-intc” for GXBB SoCs (S905)
++- interrupt-parent : a phandle to the GIC the interrupts are routed to.
++   Usually this is provided at the root level of the device tree as it is
++   common to most of the SoC
++- reg : Specifies base physical address and size of the registers.
++- interrupt-controller : Identifies the node as an interrupt controller.
++- #interrupt-cells : Specifies the number of cells needed to encode an
++   interrupt source. The value must be 2.
++
++Example:
++
++gpio_interrupt: interrupt-controller@9880 {
++	compatible = "amlogic,meson-gxbb-gpio-intc";
++	reg = <0x0 0x9880 0x0 0x10>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++};
 -- 
 2.7.4
