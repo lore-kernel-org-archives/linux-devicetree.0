@@ -1,12 +1,11 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/9] dt-bindings: interrupt-controller: add DT binding for
- meson GPIO interrupt controller
-Date: Wed, 19 Oct 2016 12:08:22 +0200
-Message-ID: <1476871709-8359-3-git-send-email-jbrunet@baylibre.com>
+Subject: [PATCH 4/9] pinctrl: meson: allow gpio to request irq
+Date: Wed, 19 Oct 2016 12:08:24 +0200
+Message-ID: <1476871709-8359-5-git-send-email-jbrunet@baylibre.com>
 References: <1476871709-8359-1-git-send-email-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1476871709-8359-1-git-send-email-jbrunet@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
@@ -18,51 +17,163 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+To: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-ClRoaXMgY29tbWl0IGFkZHMgdGhlIGRldmljZSB0cmVlIGJpbmRpbmdzIGRlc2NyaXB0aW9uIGZv
-ciBBbWxvZ2ljJ3MgR1BJTwppbnRlcnJ1cHQgY29udHJvbGxlciBhdmFpbGFibGUgb24gdGhlIG1l
-c29uOCwgbWVzb244YiBhbmQgZ3hiYiBTb0MgZmFtaWxpZXMKClNpZ25lZC1vZmYtYnk6IEplcm9t
-ZSBCcnVuZXQgPGpicnVuZXRAYmF5bGlicmUuY29tPgotLS0KClJvYiwgSSBkaWQgbm90IGluY2x1
-ZGUgdGhlIEFjayB5b3UgZ2F2ZSBmb3IgdGhlIFJGQyBhcyBiaW5kaW5ncyBoYXZlIHNsaWdodGx5
-CmNoYW5nZWQuIE9ubHkgdGhlIGludGVycnVwdCBwcm9wZXJ0eSBoYXMgYmUgcmVtb3ZlZCBmb2xs
-b3dpbmcgYSBkaXNjdXNzaW9uIEkKaGFkIHdpdGggTWFyYy4KCiAuLi4vYW1sb2dpYyxtZXNvbi1n
-cGlvLWludGMudHh0ICAgICAgICAgICAgICAgICAgICB8IDMxICsrKysrKysrKysrKysrKysrKysr
-KysKIDEgZmlsZSBjaGFuZ2VkLCAzMSBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2Ft
-bG9naWMsbWVzb24tZ3Bpby1pbnRjLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hbWxvZ2ljLG1lc29uLWdwaW8t
-aW50Yy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNv
-bnRyb2xsZXIvYW1sb2dpYyxtZXNvbi1ncGlvLWludGMudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0
-CmluZGV4IDAwMDAwMDAwMDAwMC4uMjQ2NGQ5YTA4NjVkCi0tLSAvZGV2L251bGwKKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2FtbG9n
-aWMsbWVzb24tZ3Bpby1pbnRjLnR4dApAQCAtMCwwICsxLDMxIEBACitBbWxvZ2ljIG1lc29uIEdQ
-SU8gaW50ZXJydXB0IGNvbnRyb2xsZXIKKworTWVzb24gU29DcyBjb250YWlucyBhbiBpbnRlcnJ1
-cHQgY29udHJvbGxlciB3aGljaCBpcyBhYmxlIHdhdGNoIHRoZSBTb0MgcGFkcworYW5kIGdlbmVy
-YXRlIGFuIGludGVycnVwdCBvbiBlZGdlcyBvciBsZXZlbC4gVGhlIGNvbnRyb2xsZXIgaXMgZXNz
-ZW50aWFsbHkgYQorMjU2IHBhZHMgdG8gOCBHSUMgaW50ZXJydXB0IG11bHRpcGxleGVyLCB3aXRo
-IGEgZmlsdGVyIGJsb2NrIHRvIHNlbGVjdCBlZGdlCitvciBsZXZlbCBhbmQgcG9sYXJpdHkuIFdl
-IGRvbuKAmXQgZXhwb3NlIGFsbCAyNTYgbXV4IGlucHV0cyBiZWNhdXNlIHRoZQorZG9jdW1lbnRh
-dGlvbiBzaG93cyB0aGF0IHVwcGVyIHBhcnQgaXMgbm90IG1hcHBlZCB0byBhbnkgcGFkLiBUaGUg
-YWN0dWFsIG51bWJlcgorb2YgaW50ZXJydXB0IGV4cG9zZWQgZGVwZW5kcyBvbiB0aGUgU29DLgor
-CitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorCistIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgZWl0aGVy
-CisgICAiYW1sb2dpYyxtZXNvbjgtZ3Bpby1pbnRj4oCdIGZvciBtZXNvbjggU29DcyAoQU1MNzgy
-Nk1YKSBvcgorICAg4oCcYW1sb2dpYyxtZXNvbjhiLWdwaW8taW50Y+KAnSBmb3IgbWVzb244YiBT
-b0NzIChTODA1KSBvcgorICAg4oCcYW1sb2dpYyxtZXNvbi1neGJiLWdwaW8taW50Y+KAnSBmb3Ig
-R1hCQiBTb0NzIChTOTA1KQorLSBpbnRlcnJ1cHQtcGFyZW50IDogYSBwaGFuZGxlIHRvIHRoZSBH
-SUMgdGhlIGludGVycnVwdHMgYXJlIHJvdXRlZCB0by4KKyAgIFVzdWFsbHkgdGhpcyBpcyBwcm92
-aWRlZCBhdCB0aGUgcm9vdCBsZXZlbCBvZiB0aGUgZGV2aWNlIHRyZWUgYXMgaXQgaXMKKyAgIGNv
-bW1vbiB0byBtb3N0IG9mIHRoZSBTb0MKKy0gcmVnIDogU3BlY2lmaWVzIGJhc2UgcGh5c2ljYWwg
-YWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgcmVnaXN0ZXJzLgorLSBpbnRlcnJ1cHQtY29udHJvbGxl
-ciA6IElkZW50aWZpZXMgdGhlIG5vZGUgYXMgYW4gaW50ZXJydXB0IGNvbnRyb2xsZXIuCistICNp
-bnRlcnJ1cHQtY2VsbHMgOiBTcGVjaWZpZXMgdGhlIG51bWJlciBvZiBjZWxscyBuZWVkZWQgdG8g
-ZW5jb2RlIGFuCisgICBpbnRlcnJ1cHQgc291cmNlLiBUaGUgdmFsdWUgbXVzdCBiZSAyLgorCitF
-eGFtcGxlOgorCitncGlvX2ludGVycnVwdDogaW50ZXJydXB0LWNvbnRyb2xsZXJAOTg4MCB7CisJ
-Y29tcGF0aWJsZSA9ICJhbWxvZ2ljLG1lc29uLWd4YmItZ3Bpby1pbnRjIjsKKwlyZWcgPSA8MHgw
-IDB4OTg4MCAweDAgMHgxMD47CisJaW50ZXJydXB0LWNvbnRyb2xsZXI7CisJI2ludGVycnVwdC1j
-ZWxscyA9IDwyPjsKK307Ci0tIAoyLjcuNAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Add the ability for gpio to request irq from the gpio interrupt controller
+if present. We have to specificaly that the parent interrupt controller is
+the gpio interrupt controller because gpio on meson SoCs can't generate
+interrupt directly on the GIC.
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ drivers/pinctrl/Kconfig               |  2 +
+ drivers/pinctrl/meson/pinctrl-meson.c | 77 ++++++++++++++++++++++++++++++++++-
+ drivers/pinctrl/meson/pinctrl-meson.h |  1 +
+ 3 files changed, 79 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 0e75d94972ba..d5bfbfcddab0 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -126,7 +126,9 @@ config PINCTRL_MESON
+ 	select PINCONF
+ 	select GENERIC_PINCONF
+ 	select GPIOLIB
++	select IRQ_DOMAIN
+ 	select OF_GPIO
++	select OF_IRQ
+ 	select REGMAP_MMIO
+ 
+ config PINCTRL_OXNAS
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+index 57122eda155a..fd3c1d44978b 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.c
++++ b/drivers/pinctrl/meson/pinctrl-meson.c
+@@ -50,6 +50,7 @@
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/of_irq.h>
+ #include <linux/pinctrl/pinconf-generic.h>
+ #include <linux/pinctrl/pinconf.h>
+ #include <linux/pinctrl/pinctrl.h>
+@@ -481,6 +482,58 @@ static void meson_gpio_set(struct gpio_chip *chip, unsigned gpio, int value)
+ 			   value ? BIT(bit) : 0);
+ }
+ 
++static int meson_gpio_to_hwirq(struct meson_bank *bank, unsigned int offset)
++{
++	unsigned int hwirq;
++
++	if (bank->irq_first < 0)
++		/* this bank cannot generate irqs */
++		return -1;
++
++	hwirq = offset - bank->first + bank->irq_first;
++
++	if (hwirq > bank->irq_last)
++		/* this pin cannot generate irqs */
++		return -1;
++
++	return hwirq;
++}
++
++static int meson_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
++{
++	struct meson_pinctrl *pc = gpiochip_get_data(chip);
++	struct meson_bank *bank;
++	struct irq_fwspec fwspec;
++	unsigned int hwirq;
++	int ret;
++
++	ret = meson_get_bank(pc, offset, &bank);
++	if (ret)
++		return ret;
++
++	/*
++	 * The interrupt controller might be missing, in such case we can't
++	 * provide an interrupt for a pin
++	 */
++	if (is_fwnode_irqchip(pc->fwnode)) {
++		dev_info(pc->dev, "interrupt controller not found\n");
++		return 0;
++	}
++
++	hwirq = meson_gpio_to_hwirq(bank, offset);
++	if (hwirq < 0) {
++		dev_dbg(pc->dev, "no interrupt for pin %u\n", offset);
++		return 0;
++	}
++
++	fwspec.fwnode = pc->fwnode;
++	fwspec.param_count = 2;
++	fwspec.param[0] = hwirq;
++	fwspec.param[1] = IRQ_TYPE_NONE;
++
++	return irq_create_fwspec_mapping(&fwspec);
++}
++
+ static int meson_gpio_get(struct gpio_chip *chip, unsigned gpio)
+ {
+ 	struct meson_pinctrl *pc = gpiochip_get_data(chip);
+@@ -539,6 +592,7 @@ static int meson_gpiolib_register(struct meson_pinctrl *pc)
+ 	pc->chip.direction_output = meson_gpio_direction_output;
+ 	pc->chip.get = meson_gpio_get;
+ 	pc->chip.set = meson_gpio_set;
++	pc->chip.to_irq = meson_gpio_to_irq;
+ 	pc->chip.base = pc->data->pin_base;
+ 	pc->chip.ngpio = pc->data->num_pins;
+ 	pc->chip.can_sleep = false;
+@@ -598,6 +652,27 @@ static struct regmap *meson_map_resource(struct meson_pinctrl *pc,
+ 	return devm_regmap_init_mmio(pc->dev, base, &meson_regmap_config);
+ }
+ 
++static int meson_pinctrl_get_irq_gpio_intc(struct meson_pinctrl *pc,
++					   struct device_node *node)
++{
++	struct device_node *np;
++
++	np = of_irq_find_parent(node);
++	if (unlikely(!np)) {
++		dev_err(pc->dev, "interrupt parent not found\n");
++		return -EINVAL;
++	}
++
++	if (!of_device_is_compatible(np, pc->data->irq_compat)) {
++		dev_info(pc->dev, "gpio interrupt disabled\n");
++		pc->fwnode = NULL;
++	}
++
++	pc->fwnode = of_node_to_fwnode(np);
++
++	return 0;
++}
++
+ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+ 				  struct device_node *node)
+ {
+@@ -643,7 +718,7 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+ 		return PTR_ERR(pc->reg_gpio);
+ 	}
+ 
+-	return 0;
++	return meson_pinctrl_get_irq_gpio_intc(pc, gpio_np);
+ }
+ 
+ static int meson_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
+index b90d69e366df..2e6c83adbd1f 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.h
++++ b/drivers/pinctrl/meson/pinctrl-meson.h
+@@ -123,6 +123,7 @@ struct meson_pinctrl {
+ 	struct regmap *reg_gpio;
+ 	struct gpio_chip chip;
+ 	struct device_node *of_node;
++	struct fwnode_handle *fwnode;
+ };
+ 
+ #define PIN(x, b)	(b + x)
+-- 
+2.7.4
