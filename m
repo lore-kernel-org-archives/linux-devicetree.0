@@ -1,98 +1,56 @@
-From: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Subject: Re: [PATCH 2/3] clk: hisilicon: add CRG driver for Hi3516CV300 SoC
-Date: Wed, 19 Oct 2016 11:54:17 +0800
-Message-ID: <5dc55eef-808e-fa78-a5a0-4fccb31e5ceb@hisilicon.com>
-References: <20161017120705.3726-1-wenpan@hisilicon.com>
- <20161017120705.3726-3-wenpan@hisilicon.com>
- <20161018155835.qyoffwznacdac46y@rob-hp-laptop>
- <7ce2e35b-19e1-9493-90a7-15b321fee2cc@hisilicon.com>
- <CAL_JsqK18RHFhDSWA_j+v_pJL6vk+a=GD7oo6O3JJaV4hHHEBg@mail.gmail.com>
+From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 4/9] regulator: lp873x: Add support for populating input
+ supply
+Date: Wed, 19 Oct 2016 10:20:59 +0530
+Message-ID: <57988545-4319-0bcf-df1a-55c78111aa5b@ti.com>
+References: <20161014130033.14172-1-lokeshvutla@ti.com>
+ <20161014130033.14172-5-lokeshvutla@ti.com>
+ <20161018142743.xfgjuaw4wlssmoxq@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqK18RHFhDSWA_j+v_pJL6vk+a=GD7oo6O3JJaV4hHHEBg@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pan Wen <wenpan@hisilicon.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Wei Xu <xuwei5@hisilicon.com>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, howell.yang@hisilicon.com, jalen.hsu@hisilicon.com, lvkuanliang 00222834 <lvkuanliang@hisilicon.com>, suwenping@hisilicon.com, raojun@hisilicon.com, kevin.lixu@hisilicon.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161018142743.xfgjuaw4wlssmoxq@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-在 2016/10/19 10:45, Rob Herring 写道:
-> On Tue, Oct 18, 2016 at 9:38 PM, Jiancheng Xue
-> <xuejiancheng@hisilicon.com> wrote:
+On Tuesday 18 October 2016 07:57 PM, Rob Herring wrote:
+> On Fri, Oct 14, 2016 at 06:30:28PM +0530, Lokesh Vutla wrote:
+>> In order to have a proper topology of regulators for a platform, each
+>> registering regulator needs to populate supply_name field for identifying
+>> its supply's name. Add supply_name field for lp873x regulators.
 >>
+>> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/mfd/lp873x.txt | 8 ++++++++
+>>  drivers/regulator/lp873x-regulator.c             | 1 +
+>>  2 files changed, 9 insertions(+)
 >>
->> 在 2016/10/18 23:58, Rob Herring 写道:
->>> On Mon, Oct 17, 2016 at 08:07:04PM +0800, Pan Wen wrote:
->>>> Add CRG driver for Hi3516CV300 SoC. CRG(Clock and Reset
->>>> Generator) module generates clock and reset signals used
->>>> by other module blocks on SoC.
->>>>
->>>> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
->>>> ---
->>>>  .../devicetree/bindings/clock/hisi-crg.txt         |  50 ++++
->>>>  drivers/clk/hisilicon/Kconfig                      |   8 +
->>>>  drivers/clk/hisilicon/Makefile                     |   1 +
->>>>  drivers/clk/hisilicon/crg-hi3516cv300.c            | 330 +++++++++++++++++++++
->>>>  drivers/clk/hisilicon/crg.h                        |  34 +++
->>>>  include/dt-bindings/clock/hi3516cv300-clock.h      |  48 +++
->>>>  6 files changed, 471 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/clock/hisi-crg.txt
->>>>  create mode 100644 drivers/clk/hisilicon/crg-hi3516cv300.c
->>>>  create mode 100644 drivers/clk/hisilicon/crg.h
->>>>  create mode 100644 include/dt-bindings/clock/hi3516cv300-clock.h
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/clock/hisi-crg.txt b/Documentation/devicetree/bindings/clock/hisi-crg.txt
->>>> new file mode 100644
->>>> index 0000000..cc60b3d
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/clock/hisi-crg.txt
->>>> @@ -0,0 +1,50 @@
->>>> +* HiSilicon Clock and Reset Generator(CRG)
->>>
->>> Seems kind of generic given there's already various HiSi clock bindings
->>> documented.
->>>
->>>> +
->>>> +The CRG module provides clock and reset signals to various
->>>> +modules within the SoC.
->>>> +
->>>> +This binding uses the following bindings:
->>>> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
->>>> +    Documentation/devicetree/bindings/reset/reset.txt
->>>> +
->>>> +Required Properties:
->>>> +
->>>> +- compatible: should be one of the following.
->>>> +  - "hisilicon,hi3516cv300-crg"
->>>> +  - "hisilicon,hi3516cv300-sysctrl"
->>>> +  - "hisilicon,hi3519-crg"
->>>
->>> There is already a binding for this. Please merge them.
->>>
->> Hi Rob,
->>
->> Pan Wen and I work together. There's really a same file included in the patch
->> https://lkml.org/lkml/2016/9/18/42 ([PATCH v2] clk: hisilicon: add CRG driver for Hi3798CV200 SoC).
->> But that patch has not been acked. This binding file will be merged if that
->> patch is accepted first. Could you give me more comments on that patch or
->> help me to ack it?  Thank you very much.
+>> diff --git a/Documentation/devicetree/bindings/mfd/lp873x.txt b/Documentation/devicetree/bindings/mfd/lp873x.txt
+>> index 52766c2..936cba3 100644
+>> --- a/Documentation/devicetree/bindings/mfd/lp873x.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/lp873x.txt
+>> @@ -7,6 +7,9 @@ Required properties:
+>>    - #gpio-cells:	Should be two.  The first cell is the pin number and
+>>  			the second cell is used to specify flags.
+>>  			See ../gpio/gpio.txt for more information.
+>> +  - xxx-supply:		Phandle to parent supply node of each regulator
+>> +			populated under regulators node. xxx should match
+>> +			the supply_name populated in driver.
 > 
-> If I haven't commented, then likely it was not sent to the DT list.
-Hi,
+> xxx-in-supply?
 
-I'm pretty sure that the patch was sent to the DT list devicetree@vger.kernel.org.
-You had asked a question about "hi3798cv200-sysctrl" and I replied (https://lkml.org/lkml/2016/10/10/517).
-I'm waiting for your new comments. If there's some misunderstatnding, please let me know.
+Oops. Right. Ill update it and repost.
 
-Thanks,
-Jiancheng
-
-> 
-> Rob
-> 
-> .
-> 
-
+Thanks and regards,
+Lokesh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
