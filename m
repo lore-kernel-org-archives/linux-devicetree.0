@@ -1,73 +1,82 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 2/3] ARM: bus: da8xx-syscfg: new driver
-Date: Wed, 19 Oct 2016 10:26:57 +0200
-Message-ID: <CAMpxmJXwZ8pQ58OgV4w88yNuG1Fd8++1yP-Frd2QJFO9uJJueQ@mail.gmail.com>
-References: <1476721850-454-1-git-send-email-bgolaszewski@baylibre.com>
- <1476721850-454-3-git-send-email-bgolaszewski@baylibre.com>
- <4369153.vCOQzI7OET@avalon>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 2/3] arm64: dts: uniphier: add CPU clock and OPP table for
+ LD11 SoC
+Date: Wed, 19 Oct 2016 17:33:00 +0900
+Message-ID: <CAK7LNATc2XxAZf-rvMkRjGn3q_18yB=9aycAE1j9+n0==xzaHQ@mail.gmail.com>
+References: <1476629958-25368-1-git-send-email-yamada.masahiro@socionext.com>
+ <1476629958-25368-3-git-send-email-yamada.masahiro@socionext.com>
+ <20161018112548.GA11471@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <4369153.vCOQzI7OET@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161018112548.GA11471@vireshk-i7>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-MjAxNi0xMC0xOCAyMjo0OSBHTVQrMDI6MDAgTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5j
-aGFydEBpZGVhc29uYm9hcmQuY29tPjoKPiBIaSBCYXJ0b3N6LAo+Cj4gVGhhbmsgeW91IGZvciB0
-aGUgcGF0Y2guCj4KPiBPbiBNb25kYXkgMTcgT2N0IDIwMTYgMTg6MzA6NDkgQmFydG9zeiBHb2xh
-c3pld3NraSB3cm90ZToKPj4gQ3JlYXRlIHRoZSBkcml2ZXIgZm9yIHRoZSBkYTh4eCBTeXN0ZW0g
-Q29uZmlndXJhdGlvbiBhbmQgaW1wbGVtZW50Cj4+IHN1cHBvcnQgZm9yIHdyaXRpbmcgdG8gdGhl
-IHRocmVlIE1hc3RlciBQcmlvcml0eSByZWdpc3RlcnMuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEJh
-cnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pld3NraUBiYXlsaWJyZS5jb20+Cgpbc25pcF0KCj4+
-ICsKPj4gK0RvY3VtZW50YXRpb246Cj4+ICtPTUFQLUwxMzggKERBODUwKSAtIGh0dHA6Ly93d3cu
-dGkuY29tL2xpdC91Zy9zcHJ1aDgyYy9zcHJ1aDgyYy5wZGYKPj4gKwo+PiArUmVxdWlyZWQgcHJv
-cGVydGllczoKPj4gKwo+PiArLSBjb21wYXRpYmxlOiAgICAgICAgICAgICAgICAidGksZGE4NTAt
-c3lzY2ZnIgo+Cj4gRG9uJ3QgeW91IG5lZWQgYSByZWcgcHJvcGVydHkgPwo+CgpZZXMsIEtldmlu
-IGFscmVhZHkgcG9pbnRlZCB0aGF0IG91dC4gSSdsbCBhZGQgaXQgaW4gdjIuIFNhbWUgZm9yIFsx
-LzNdLgoKPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4+ICsKPj4gK1RoZSBiZWxvdyBwcm9wZXJ0
-aWVzIGFyZSB1c2VkIHRvIHNwZWNpZnkgdGhlIHByaW9yaXR5IG9mIG1hc3Rlcgo+PiBwZXJpcGhl
-cmFscy4KPj4gK1RoZXkgbXVzdCBiZSBiZXR3ZWVuIDAtNyB3aGVyZSAwIGlzIHRoZSBoaWdoZXN0
-IHByaW9yaXR5IGFuZCA3IGlzIHRoZQo+PiBsb3dlc3QuCj4+ICsKPj4gKy0gdGkscHJpLWFybS1p
-OiAgICAgICAgICAgICAgQVJNX0kgcG9ydCBwcmlvcml0eS4KPj4gKwo+PiArLSB0aSxwcmktYXJt
-LWQ6ICAgICAgICAgICAgICBBUk1fRCBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHByaS11
-cHA6ICAgICAgICAgICAgICAgIHVQUCBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHByaS1z
-YXRhOiAgICAgICAgICAgICAgIFNBVEEgcG9ydCBwcmlvcml0eS4KPj4gKwo+PiArLSB0aSxwcmkt
-cHJ1MDogICAgICAgICAgICAgICBQUlUwIHBvcnQgcHJpb3JpdHkuCj4+ICsKPj4gKy0gdGkscHJp
-LXBydTE6ICAgICAgICAgICAgICAgUFJVMSBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHBy
-aS1lZG1hMzB0YzA6ICBFRE1BM18wX1RDMCBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHBy
-aS1lZG1hMzB0YzE6ICBFRE1BM18wX1RDMSBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHBy
-aS1lZG1hMzF0YzA6ICBFRE1BM18xX1RDMCBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHBy
-aS12cGlmLWRtYS0wOiBWUElGIERNQTAgcG9ydCBwcmlvcml0eS4KPj4gKwo+PiArLSB0aSxwcmkt
-dnBpZi1kbWEtMTogVlBJRiBETUExIHBvcnQgcHJpb3JpdHkuCj4+ICsKPj4gKy0gdGkscHJpLWVt
-YWM6ICAgICAgICAgICAgICAgRU1BQyBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHByaS11
-c2IwY2ZnOiAgICBVU0IwIENGRyBwb3J0IHByaW9yaXR5Lgo+PiArCj4+ICstIHRpLHByaS11c2Iw
-Y2RtYTogICBVU0IwIENETUEgcG9ydCBwcmlvcml0eS4KPj4gKwo+PiArLSB0aSxwcmktdWhwaTog
-ICAgICAgICAgICAgICBIUEkgcG9ydCBwcmlvcml0eS4KPj4gKwo+PiArLSB0aSxwcmktdXNiMTog
-ICAgICAgICAgICAgICBVU0IxIHBvcnQgcHJpb3JpdHkuCj4+ICsKPj4gKy0gdGkscHJpLWxjZGM6
-ICAgICAgICAgICAgICAgTENEQyBwb3J0IHByaW9yaXR5Lgo+Cj4gSSdtIGFmcmFpZCB0aGlzIGxv
-b2tzIG1vcmUgbGlrZSBzeXN0ZW0gY29uZmlndXJhdGlvbiB0aGFuIGhhcmR3YXJlIGRlc2NyaXB0
-aW9uCj4gdG8gbWUuCj4KCldoaWxlIHlvdSdyZSBjZXJ0YWlubHkgcmlnaHQsIHRoaXMgYXBwcm9h
-Y2ggaXMgYWxyZWFkeSBpbXBsZW1lbnRlZCBpbgpzZXZlcmFsIG90aGVyIG1lbW9yeSBhbmQgYnVz
-IGRyaXZlcnMgYW5kIGl0IHdhcyBhbHNvIHN1Z2dlc3RlZCBieQpTZWtoYXIgaW4gb25lIG9mIHRo
-ZSB0aWxjZGMgcmV2MSB0aHJlYWRzLiBUaGVyZSdzIGFsc28gbm8gcmVhbAphbHRlcm5hdGl2ZSB0
-aGF0IEkga25vdyBvZi4KCj4gVGhlcmUgd2FzIGEgQm9GIHNlc3Npb24gYWJvdXQgaG93IHRvIHN1
-cHBvcnQgdGhpcyBraW5kIG9mIHBlcmZvcm1hbmNlIGtub2JzIGF0Cj4gRUxDRSBsYXN0IHdlZWs6
-IGh0dHBzOi8vb3BlbmlvdGVsY2V1cm9wZTIwMTYuc2NoZWQub3JnL2V2ZW50Lzdyc3MvYm9mLWxp
-bnV4LWRldmljZS1wZXJmb3JtYW5jZS1mcmFtZXdvcmstbWljaGFlbC10dXJxdWV0dGUtYmF5bGli
-cmUgOi0pCj4KCkkga25vdywgSSB3YXMgdGhlcmUuIDspCgpVbmZvcnR1bmF0ZWx5IGl0IHdhcyBq
-dXN0IGEgZGlzY3Vzc2lvbiBhYm91dCBwb3RlbnRpYWwgYXBwcm9hY2hlcyAtCnRoZXJlJ3Mgbm8g
-Y29kZSB5ZXQuCgpUaGFua3MsCkJhcnRvc3oKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+Hi Viresh,
+
+
+2016-10-18 20:25 GMT+09:00 Viresh Kumar <viresh.kumar@linaro.org>:
+> On 16-10-16, 23:59, Masahiro Yamada wrote:
+>> +     cluster0_opp: opp_table {
+>> +             compatible = "operating-points-v2";
+>> +             opp-shared;
+>> +
+>> +             opp@245000000 {
+>> +                     opp-hz = /bits/ 64 <245000000>;
+>> +                     clock-latency-ns = <300>;
+>> +             };
+>> +             opp@250000000 {
+>> +                     opp-hz = /bits/ 64 <250000000>;
+>> +                     clock-latency-ns = <300>;
+>> +             };
+>> +             opp@490000000 {
+>> +                     opp-hz = /bits/ 64 <490000000>;
+>> +                     clock-latency-ns = <300>;
+>> +             };
+>> +             opp@500000000 {
+>> +                     opp-hz = /bits/ 64 <500000000>;
+>> +                     clock-latency-ns = <300>;
+>> +             };
+>> +             opp@653333333 {
+>
+> Why isn't ^^ matching with below values ? Same in next patch as well.
+
+
+
+When I try to update /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq,
+it did not work as I had expected.
+
+
+scaling_max_freq is specified by kHz unit,
+on the other hand, clock frequency in the clk driver is specified by Hz.
+
+
+
+If the operating point is 653333kHz, the cpufreq requests
+the clk driver to set 653333000, but it is lower than
+the exact clock, 653333333.
+So, the next lower frequency, 500000000 is selected.
+As a result, the operating point 653333kHz is never enabled.
+
+
+So, the operating point must be equal or a little bit bigger.
+
+
+Do you know a better way to solve this distortion?
+
+
+-- 
+Best Regards
+Masahiro Yamada
