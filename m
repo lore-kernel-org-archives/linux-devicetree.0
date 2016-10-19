@@ -1,15 +1,15 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 0/3] usb/phy: Add Amlogic Meson8b and GXBB USB support
-Date: Wed, 19 Oct 2016 16:22:54 +0530
-Message-ID: <58075086.3040105@ti.com>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
- <20161001121900.1168-1-martin.blumenstingl@googlemail.com>
- <CAFBinCCoVOxyVYdNxeNyUhAK+T1+gBW0d1oDUgVpOZZHBjN9Wg@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [RFC PATCH] mtd: nand: Add OX820 NAND Support
+Date: Wed, 19 Oct 2016 13:13:01 +0200
+Message-ID: <20161019131301.19c7a64d@bbrezillon>
+References: <20161018090927.1990-1-narmstrong@baylibre.com>
+ <20161018221744.5e574e82@bbrezillon>
+ <37a5b543-e564-a496-d5cf-c215e798839f@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFBinCCoVOxyVYdNxeNyUhAK+T1+gBW0d1oDUgVpOZZHBjN9Wg@mail.gmail.com>
+In-Reply-To: <37a5b543-e564-a496-d5cf-c215e798839f@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,32 +19,112 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, khilman@baylibre.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, johnyoun@synopsys.com, robh+dt@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, richard@nod.at, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-oxnas@lists.tuxfamily.org, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, 19 Oct 2016 11:29:59 +0200
+Neil Armstrong <narmstrong@baylibre.com> wrote:
 
-On Friday 14 October 2016 01:57 AM, Martin Blumenstingl wrote:
-> Hi Kishon,
+> Hi Boris,
 > 
-> On Sat, Oct 1, 2016 at 2:18 PM, Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
->> Martin Blumenstingl (3):
->>   Documentation: dt-bindings: update the meson-usb2-phy example
->>   Documentation: dt-bindings: rename meson-usb2-phy to meson8b-usb2-phy
-> these two already got an ACK by the devicetree maintainers
+> On 10/18/2016 10:17 PM, Boris Brezillon wrote:
+> > Hi Neil,
+> > 
+> > On Tue, 18 Oct 2016 11:09:27 +0200
+> > Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >   
+> >> Add NAND driver to support the Oxford Semiconductor OX820 NAND Controller.
+> >> This is a simple memory mapped NAND controller with single chip select and
+> >> software ECC.
+> >>
+> >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> >> ---
+> >>  .../devicetree/bindings/mtd/oxnas-nand.txt         |  24 ++++
+> >>  drivers/mtd/nand/Kconfig                           |   5 +
+> >>  drivers/mtd/nand/Makefile                          |   1 +
+> >>  drivers/mtd/nand/oxnas_nand.c                      | 144 +++++++++++++++++++++
+> >>  4 files changed, 174 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/mtd/oxnas-nand.txt
+> >>  create mode 100644 drivers/mtd/nand/oxnas_nand.c
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mtd/oxnas-nand.txt b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
+> >> new file mode 100644
+> >> index 0000000..83b684d
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
+> >> @@ -0,0 +1,24 @@
+> >> +* Oxford Semiconductor OXNAS NAND Controller
+> >> +
+> >> +Please refer to nand.txt for generic information regarding MTD NAND bindings.
+> >> +
+> >> +Required properties:
+> >> + - compatible: "oxsemi,ox820-nand"
+> >> + - reg: Base address and length for NAND mapped memory.
+> >> +
+> >> +Optional Properties:
+> >> + - clocks: phandle to the NAND gate clock if needed.
+> >> + - resets: phandle to the NAND reset control if needed.
+> >> +
+> >> +Example:
+> >> +
+> >> +nand: nand@41000000 {
+> >> +	compatible = "oxsemi,ox820-nand";
+> >> +	reg = <0x41000000 0x100000>;
+> >> +	nand-ecc-mode = "soft";
+> >> +	clocks = <&stdclk CLK_820_NAND>;
+> >> +	resets = <&reset RESET_NAND>;
+> >> +	#address-cells = <1>;
+> >> +	#size-cells = <1>;
+> >> +	status = "disabled";
+> >> +};  
+> > 
+> > Can you switch to new DT representation for NAND controllers, with one
+> > node for the NAND controller and NAND devices connected to this NAND
+> > controller defined as sub-nodes of this NAND controller [1]?  
 > 
->>   phy: meson: add USB2 PHY support for Meson8b and GXBB
-> did you already have time to review the USB2 PHY driver from patch 3/3?
-> please let me know if there's something we have to change, then I'll
-> take care of it
-> 
-> would you like to get all patches through the PHY tree or should Kevin
-> take some of these?
+> Yes, I was wondering if this existed... my bad, next time I will search further.
 
-while I have merged the patches to linux-phy -next, please update the
-MAINTAINER for meson phy driver.
+No problem. That's what reviews are here for ;-).
 
-Thanks
-Kishon
+[...]
+> >> diff --git a/drivers/mtd/nand/oxnas_nand.c b/drivers/mtd/nand/oxnas_nand.c
+
+[...]
+
+> >> +
+> >> +/* nand commands */
+> >> +#define NAND_CMD_ALE		BIT(18)
+> >> +#define NAND_CMD_CLE		BIT(19)
+> >> +#define NAND_CMD_CS		0  
+> > 
+> > I guess this is zero here because you only support connecting a NAND to
+> > CS0.
+> > It's probably something like
+> > 
+> > OX820_NAND_CS(x)		((x) << CS_FIELD_SHIFT)  
+> 
+> The hardware seems to be able to drive multiple chip selects, but no implementation does this.
+> We will stick to CS0 only here for test reasons.
+
+Then no need to define this _CS flag.
+
+[...]
+
+> >> +	data->chip.cmd_ctrl = oxnas_nand_cmd_ctrl;
+> >> +	data->chip.chip_delay = 30;
+> >> +	data->chip.ecc.mode = NAND_ECC_SOFT;
+> >> +	data->chip.ecc.algo = NAND_ECC_HAMMING;  
+> > 
+> > Probably a good idea to support soft ECC as well...  
+
+I meant BCH, not soft :-).
+
+> 
+> This was taken from plat_nand.c, I was not sure if it was necessary, will remove this and rely on DT attributes.
+
+Yes, that's probably the best solution.
+
+Regards,
+
+Boris
