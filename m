@@ -1,131 +1,95 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 2/2] ARM: sunxi: Add the missing clocks to the pinctrl nodes
-Date: Wed, 19 Oct 2016 11:15:27 +0200
-Message-ID: <8e58bedc1d25f7fe94497d6ac123f3d4bbfd4c69.1476868462.git-series.maxime.ripard@free-electrons.com>
-References: <cover.ed6c19bdf01ae70096f3d96af4805f59ef16f94a.1476868462.git-series.maxime.ripard@free-electrons.com>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/9] irqchip: meson: add support for the gpio interrupt controller
+Date: Wed, 19 Oct 2016 17:21:11 +0200
+Message-ID: <1476890480-8884-1-git-send-email-jbrunet@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.ed6c19bdf01ae70096f3d96af4805f59ef16f94a.1476868462.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.ed6c19bdf01ae70096f3d96af4805f59ef16f94a.1476868462.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.ed6c19bdf01ae70096f3d96af4805f59ef16f94a.1476868462.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The pin controllers also use the two oscillators for debouncing. Add them
-to the DTs.
+This patch series adds support for the GPIO interrupt controller found
+on Amlogic's meson SoC families.
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/sun4i-a10.dtsi     | 3 ++-
- arch/arm/boot/dts/sun5i.dtsi         | 3 ++-
- arch/arm/boot/dts/sun6i-a31.dtsi     | 3 ++-
- arch/arm/boot/dts/sun7i-a20.dtsi     | 3 ++-
- arch/arm/boot/dts/sun8i-a23-a33.dtsi | 3 ++-
- arch/arm/boot/dts/sun8i-h3.dtsi      | 3 ++-
- arch/arm/boot/dts/sun9i-a80.dtsi     | 3 ++-
- 7 files changed, 14 insertions(+), 7 deletions(-)
+Unlike what the name suggests, this controller is not part of the SoC GPIO
+subsystem. It's an indepedent controller which can watch almost all pad of
+the SoC and generate and interrupt from it. Some pins, which are not part
+of the public datasheet, don't seem to have this capability though.
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index 7e7dfc2b43db..b14a4281058d 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -967,7 +967,8 @@
- 			compatible = "allwinner,sun4i-a10-pinctrl";
- 			reg = <0x01c20800 0x400>;
- 			interrupts = <28>;
--			clocks = <&apb0_gates 5>;
-+			clocks = <&apb0_gates 5>, <&osc24M>, <&osc32k>;
-+			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
-diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
-index e374f4fc8073..485cdbae2b68 100644
---- a/arch/arm/boot/dts/sun5i.dtsi
-+++ b/arch/arm/boot/dts/sun5i.dtsi
-@@ -547,7 +547,8 @@
- 		pio: pinctrl@01c20800 {
- 			reg = <0x01c20800 0x400>;
- 			interrupts = <28>;
--			clocks = <&apb0_gates 5>;
-+			clocks = <&apb0_gates 5>, <&osc24M>, <&osc32k>;
-+			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index c1b891e75f18..efd61c65fd19 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -428,7 +428,8 @@
- 				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu CLK_APB1_PIO>;
-+			clocks = <&ccu CLK_APB1_PIO>, <&osc24M>, <&osc32k>;
-+			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 94cf5a1c7172..f7db067b0de0 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -1085,7 +1085,8 @@
- 			compatible = "allwinner,sun7i-a20-pinctrl";
- 			reg = <0x01c20800 0x400>;
- 			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&apb0_gates 5>;
-+			clocks = <&apb0_gates 5>, <&osc24M>, <&osc32k>;
-+			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index 48fc24f36fcb..b0b6e9ba2501 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -266,7 +266,8 @@
- 			/* compatible gets set in SoC specific dtsi file */
- 			reg = <0x01c20800 0x400>;
- 			/* interrupts get set in SoC specific dtsi file */
--			clocks = <&ccu CLK_BUS_PIO>;
-+			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&osc32k>;
-+			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 75a865406d3e..afca4da26167 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -321,7 +321,8 @@
- 			reg = <0x01c20800 0x400>;
- 			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu CLK_BUS_PIO>;
-+			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&osc32k>;
-+			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			#gpio-cells = <3>;
- 			interrupt-controller;
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index 3c5214cbe4e6..6f8fea2d4808 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -678,7 +678,8 @@
- 				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&apb0_gates 5>;
-+			clocks = <&apb0_gates 5>, <&osc24M>, <&osc32k>;
-+			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
+Hardware wise, the controller is a 256 to 8 multiplexer. It can take up
+to 256 input pads and route them to any of 8 GIC's interrupts. There is
+also a filter block in the middle to select the appropriate edge or level.
+
+The number of interrupt declared by the irqchip is lowered from 256 to the
+actual number of signal routed to the controller on each SoC family. As we
+have access to only 8 GIC’s interrupts, these are allocated when an
+interrupt is requested from the controller, on a first come, first served
+basis.
+
+This series has been tested on Amlogic S905-P200 board with the front
+panel power button. Directly passing an IRQ or using gpio_to_irq both work
+with this driver.
+
+This work is derived from the previous work of Carlo Caione [1].
+
+Changes since RFC : [2]
+ * Remove interrupt property in device tree: the controller cannot generate
+   interrupts on its own and is merely routing the interrupt to the GIC,
+   therefore it should not use the interrupt property. This data is now
+   stored directly in the driver, same as the pinctrl data.
+
+ * Improve compatibility checking of meson pinctrl on its interrupt parent
+   to activate gpio_to_irq callback
+
+ * Drop IRQ_BOTH hack. Need more work to have an acceptable solution for
+   this
+
+Changes since v1 : [3]
+ * Correct mistake in patch 4 when no compatible controller is found. Sorry
+   for the inconvenience.
+
+[1] : http://lkml.kernel.org/r/1448987062-31225-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+[2] : http://lkml.kernel.org/r/1475593708-10526-1-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+[3] : http://lkml.kernel.org/r/1476871709-8359-1-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+
+Jerome Brunet (9):
+  irqchip: meson: add support for gpio interrupt controller
+  dt-bindings: interrupt-controller: add DT binding for meson GPIO
+    interrupt controller
+  pinctrl: meson: update pinctrl data with gpio irq data
+  pinctrl: meson: allow gpio to request irq
+  dt-bindings: pinctrl: meson: update gpio dt-bindings
+  ARM64: meson: enable MESON_IRQ_GPIO in Kconfig
+  ARM: meson: enable MESON_IRQ_GPIO in Kconfig for meson8
+  ARM64: dts: amlogic: enable gpio interrupt controller on gxbb
+  ARM: dts: amlogic: enable gpio interrupt controller on meson8
+
+ .../amlogic,meson-gpio-intc.txt                    |  31 ++
+ .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   4 +
+ arch/arm/boot/dts/meson8.dtsi                      |  11 +
+ arch/arm/boot/dts/meson8b.dtsi                     |  11 +
+ arch/arm/mach-meson/Kconfig                        |   2 +
+ arch/arm64/Kconfig.platforms                       |   1 +
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |   9 +
+ drivers/irqchip/Kconfig                            |   9 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-meson-gpio.c                   | 423 +++++++++++++++++++++
+ drivers/pinctrl/Kconfig                            |   2 +
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c         |  24 +-
+ drivers/pinctrl/meson/pinctrl-meson.c              |  77 +++-
+ drivers/pinctrl/meson/pinctrl-meson.h              |  17 +-
+ drivers/pinctrl/meson/pinctrl-meson8.c             |  22 +-
+ drivers/pinctrl/meson/pinctrl-meson8b.c            |  34 +-
+ 16 files changed, 641 insertions(+), 37 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+ create mode 100644 drivers/irqchip/irq-meson-gpio.c
+
 -- 
-git-series 0.8.10
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
