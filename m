@@ -1,7 +1,7 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V6 05/10] dmaengine: qcom_hidma: make pending_tre_count atomic
-Date: Wed, 19 Oct 2016 13:51:47 -0400
-Message-ID: <1476899512-20431-6-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V6 07/10] dmaengine: qcom_hidma: add a common API to setup the interrupt
+Date: Wed, 19 Oct 2016 13:51:49 -0400
+Message-ID: <1476899512-20431-8-git-send-email-okaya@codeaurora.org>
 References: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
@@ -10,103 +10,79 @@ To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org,
 Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Getting ready for the MSI interrupts. The pending_tre_count is used
-in the interrupt handler to make sure all outstanding requests are
-serviced.
-
-The driver will allocate 11 MSI interrupts. Each MSI interrupt can be
-assigned to a different CPU. Then, we have a race condition for common
-variables as they share the same interrupt handler with a different
-cause bit and they can potentially be executed in parallel. Making this
-variable atomic so that it can be updated from multiple processor
-contexts.
+Introducing the hidma_ll_setup_irq function to set up the interrupt
+type externally from the OS interface.
 
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 ---
- drivers/dma/qcom/hidma.h     |  2 +-
- drivers/dma/qcom/hidma_dbg.c |  3 ++-
- drivers/dma/qcom/hidma_ll.c  | 13 ++++++-------
- 3 files changed, 9 insertions(+), 9 deletions(-)
+ drivers/dma/qcom/hidma.h    |  2 ++
+ drivers/dma/qcom/hidma_ll.c | 27 +++++++++++++++++++++++----
+ 2 files changed, 25 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/dma/qcom/hidma.h b/drivers/dma/qcom/hidma.h
-index b4a512f..8318de7 100644
+index 8318de7..7b40014 100644
 --- a/drivers/dma/qcom/hidma.h
 +++ b/drivers/dma/qcom/hidma.h
-@@ -58,7 +58,7 @@ struct hidma_lldev {
- 	void __iomem *evca;		/* Event Channel address          */
- 	struct hidma_tre
- 		**pending_tre_list;	/* Pointers to pending TREs	  */
--	s32 pending_tre_count;		/* Number of TREs pending	  */
-+	atomic_t pending_tre_count;	/* Number of TREs pending	  */
+@@ -46,6 +46,7 @@ struct hidma_tre {
+ };
  
- 	void *tre_ring;			/* TRE ring			  */
- 	dma_addr_t tre_dma;		/* TRE ring to be shared with HW  */
-diff --git a/drivers/dma/qcom/hidma_dbg.c b/drivers/dma/qcom/hidma_dbg.c
-index 3d83b99..3bdcb80 100644
---- a/drivers/dma/qcom/hidma_dbg.c
-+++ b/drivers/dma/qcom/hidma_dbg.c
-@@ -74,7 +74,8 @@ static void hidma_ll_devstats(struct seq_file *s, void *llhndl)
- 	seq_printf(s, "tre_ring_handle=%pap\n", &lldev->tre_dma);
- 	seq_printf(s, "tre_ring_size = 0x%x\n", lldev->tre_ring_size);
- 	seq_printf(s, "tre_processed_off = 0x%x\n", lldev->tre_processed_off);
--	seq_printf(s, "pending_tre_count=%d\n", lldev->pending_tre_count);
-+	seq_printf(s, "pending_tre_count=%d\n",
-+			atomic_read(&lldev->pending_tre_count));
- 	seq_printf(s, "evca=%p\n", lldev->evca);
- 	seq_printf(s, "evre_ring=%p\n", lldev->evre_ring);
- 	seq_printf(s, "evre_ring_handle=%pap\n", &lldev->evre_dma);
+ struct hidma_lldev {
++	bool msi_support;		/* flag indicating MSI support    */
+ 	bool initialized;		/* initialized flag               */
+ 	u8 trch_state;			/* trch_state of the device	  */
+ 	u8 evch_state;			/* evch_state of the device	  */
+@@ -148,6 +149,7 @@ int hidma_ll_request(struct hidma_lldev *llhndl, u32 dev_id,
+ int hidma_ll_enable(struct hidma_lldev *llhndl);
+ void hidma_ll_set_transfer_params(struct hidma_lldev *llhndl, u32 tre_ch,
+ 	dma_addr_t src, dma_addr_t dest, u32 len, u32 flags);
++void hidma_ll_setup_irq(struct hidma_lldev *lldev, bool msi);
+ int hidma_ll_setup(struct hidma_lldev *lldev);
+ struct hidma_lldev *hidma_ll_init(struct device *dev, u32 max_channels,
+ 			void __iomem *trca, void __iomem *evca,
 diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
-index 3224f24..29fef4f 100644
+index 6bdea90..3168687 100644
 --- a/drivers/dma/qcom/hidma_ll.c
 +++ b/drivers/dma/qcom/hidma_ll.c
-@@ -218,10 +218,9 @@ static int hidma_post_completed(struct hidma_lldev *lldev, int tre_iterator,
- 	 * Keep track of pending TREs that SW is expecting to receive
- 	 * from HW. We got one now. Decrement our counter.
- 	 */
--	lldev->pending_tre_count--;
--	if (lldev->pending_tre_count < 0) {
-+	if (atomic_dec_return(&lldev->pending_tre_count) < 0) {
- 		dev_warn(lldev->dev, "tre count mismatch on completion");
--		lldev->pending_tre_count = 0;
-+		atomic_set(&lldev->pending_tre_count, 0);
- 	}
+@@ -694,17 +694,36 @@ int hidma_ll_setup(struct hidma_lldev *lldev)
+ 	writel(HIDMA_EVRE_SIZE * nr_tres,
+ 			lldev->evca + HIDMA_EVCA_RING_LEN_REG);
  
- 	spin_unlock_irqrestore(&lldev->lock, flags);
-@@ -321,7 +320,7 @@ void hidma_cleanup_pending_tre(struct hidma_lldev *lldev, u8 err_info,
- 	u32 tre_read_off;
+-	/* support IRQ only for now */
++	/* configure interrupts */
++	hidma_ll_setup_irq(lldev, lldev->msi_support);
++
++	rc = hidma_ll_enable(lldev);
++	if (rc)
++		return rc;
++
++	return rc;
++}
++
++void hidma_ll_setup_irq(struct hidma_lldev *lldev, bool msi)
++{
++	u32 val;
++
++	lldev->msi_support = msi;
++
++	/* disable interrupts again after reset */
++	writel(0, lldev->evca + HIDMA_EVCA_IRQ_CLR_REG);
++	writel(0, lldev->evca + HIDMA_EVCA_IRQ_EN_REG);
++
++	/* support IRQ by default */
+ 	val = readl(lldev->evca + HIDMA_EVCA_INTCTRL_REG);
+ 	val &= ~0xF;
+-	val |= 0x1;
++	if (!lldev->msi_support)
++		val = val | 0x1;
+ 	writel(val, lldev->evca + HIDMA_EVCA_INTCTRL_REG);
  
- 	tre_iterator = lldev->tre_processed_off;
--	while (lldev->pending_tre_count) {
-+	while (atomic_read(&lldev->pending_tre_count)) {
- 		if (hidma_post_completed(lldev, tre_iterator, err_info,
- 					 err_code))
- 			break;
-@@ -548,7 +547,7 @@ void hidma_ll_queue_request(struct hidma_lldev *lldev, u32 tre_ch)
- 	tre->err_code = 0;
- 	tre->err_info = 0;
- 	tre->queued = 1;
--	lldev->pending_tre_count++;
-+	atomic_inc(&lldev->pending_tre_count);
- 	lldev->tre_write_offset = (lldev->tre_write_offset + HIDMA_TRE_SIZE)
- 					% lldev->tre_ring_size;
- 	spin_unlock_irqrestore(&lldev->lock, flags);
-@@ -654,7 +653,7 @@ int hidma_ll_setup(struct hidma_lldev *lldev)
- 	u32 val;
- 	u32 nr_tres = lldev->nr_tres;
+ 	/* clear all pending interrupts and enable them */
+ 	writel(ENABLE_IRQS, lldev->evca + HIDMA_EVCA_IRQ_CLR_REG);
+ 	writel(ENABLE_IRQS, lldev->evca + HIDMA_EVCA_IRQ_EN_REG);
+-
+-	return hidma_ll_enable(lldev);
+ }
  
--	lldev->pending_tre_count = 0;
-+	atomic_set(&lldev->pending_tre_count, 0);
- 	lldev->tre_processed_off = 0;
- 	lldev->evre_processed_off = 0;
- 	lldev->tre_write_offset = 0;
-@@ -816,7 +815,7 @@ int hidma_ll_uninit(struct hidma_lldev *lldev)
- 	tasklet_kill(&lldev->task);
- 	memset(lldev->trepool, 0, required_bytes);
- 	lldev->trepool = NULL;
--	lldev->pending_tre_count = 0;
-+	atomic_set(&lldev->pending_tre_count, 0);
- 	lldev->tre_write_offset = 0;
- 
- 	rc = hidma_ll_reset(lldev);
+ struct hidma_lldev *hidma_ll_init(struct device *dev, u32 nr_tres,
 -- 
 1.9.1
