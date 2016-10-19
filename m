@@ -1,15 +1,14 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [RFC PATCH] mtd: nand: Add OX820 NAND Support
-Date: Wed, 19 Oct 2016 13:13:01 +0200
-Message-ID: <20161019131301.19c7a64d@bbrezillon>
-References: <20161018090927.1990-1-narmstrong@baylibre.com>
- <20161018221744.5e574e82@bbrezillon>
- <37a5b543-e564-a496-d5cf-c215e798839f@baylibre.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 4/9] pinctrl: sunxi: Deal with configless pins
+Date: Wed, 19 Oct 2016 14:16:14 +0200
+Message-ID: <20161019121614.3crr76qyexhamjiy@lukather>
+References: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
+ <d707c657502b87a7f8e70c7b44492bc95939f9f6.1476200742.git-series.maxime.ripard@free-electrons.com>
+ <CAGb2v64gBi71W=+Tu2vz94xFDtuRNHUyVWK3ken8CSOWvK5t0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============6832654095309314143=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <37a5b543-e564-a496-d5cf-c215e798839f@baylibre.com>
+In-Reply-To: <CAGb2v64gBi71W=+Tu2vz94xFDtuRNHUyVWK3ken8CSOWvK5t0g@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,112 +18,75 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, richard@nod.at, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-oxnas@lists.tuxfamily.org, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Oct 2016 11:29:59 +0200
-Neil Armstrong <narmstrong@baylibre.com> wrote:
 
-> Hi Boris,
-> 
-> On 10/18/2016 10:17 PM, Boris Brezillon wrote:
-> > Hi Neil,
-> > 
-> > On Tue, 18 Oct 2016 11:09:27 +0200
-> > Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >   
-> >> Add NAND driver to support the Oxford Semiconductor OX820 NAND Controller.
-> >> This is a simple memory mapped NAND controller with single chip select and
-> >> software ECC.
-> >>
-> >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> >> ---
-> >>  .../devicetree/bindings/mtd/oxnas-nand.txt         |  24 ++++
-> >>  drivers/mtd/nand/Kconfig                           |   5 +
-> >>  drivers/mtd/nand/Makefile                          |   1 +
-> >>  drivers/mtd/nand/oxnas_nand.c                      | 144 +++++++++++++++++++++
-> >>  4 files changed, 174 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mtd/oxnas-nand.txt
-> >>  create mode 100644 drivers/mtd/nand/oxnas_nand.c
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/mtd/oxnas-nand.txt b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
-> >> new file mode 100644
-> >> index 0000000..83b684d
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
-> >> @@ -0,0 +1,24 @@
-> >> +* Oxford Semiconductor OXNAS NAND Controller
-> >> +
-> >> +Please refer to nand.txt for generic information regarding MTD NAND bindings.
-> >> +
-> >> +Required properties:
-> >> + - compatible: "oxsemi,ox820-nand"
-> >> + - reg: Base address and length for NAND mapped memory.
-> >> +
-> >> +Optional Properties:
-> >> + - clocks: phandle to the NAND gate clock if needed.
-> >> + - resets: phandle to the NAND reset control if needed.
-> >> +
-> >> +Example:
-> >> +
-> >> +nand: nand@41000000 {
-> >> +	compatible = "oxsemi,ox820-nand";
-> >> +	reg = <0x41000000 0x100000>;
-> >> +	nand-ecc-mode = "soft";
-> >> +	clocks = <&stdclk CLK_820_NAND>;
-> >> +	resets = <&reset RESET_NAND>;
-> >> +	#address-cells = <1>;
-> >> +	#size-cells = <1>;
-> >> +	status = "disabled";
-> >> +};  
-> > 
-> > Can you switch to new DT representation for NAND controllers, with one
-> > node for the NAND controller and NAND devices connected to this NAND
-> > controller defined as sub-nodes of this NAND controller [1]?  
-> 
-> Yes, I was wondering if this existed... my bad, next time I will search further.
+--===============6832654095309314143==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2556onq4pmzpow7e"
+Content-Disposition: inline
 
-No problem. That's what reviews are here for ;-).
 
-[...]
-> >> diff --git a/drivers/mtd/nand/oxnas_nand.c b/drivers/mtd/nand/oxnas_nand.c
+--2556onq4pmzpow7e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[...]
+On Tue, Oct 18, 2016 at 03:47:03PM +0800, Chen-Yu Tsai wrote:
+> > @@ -342,6 +365,8 @@ static void sunxi_pctrl_dt_free_map(struct pinctrl_=
+dev *pctldev,
+> >                                     struct pinctrl_map *map,
+> >                                     unsigned num_maps)
+> >  {
+> > +       unsigned long *pinconfig;
+>=20
+> This looks out of place and context?
 
-> >> +
-> >> +/* nand commands */
-> >> +#define NAND_CMD_ALE		BIT(18)
-> >> +#define NAND_CMD_CLE		BIT(19)
-> >> +#define NAND_CMD_CS		0  
-> > 
-> > I guess this is zero here because you only support connecting a NAND to
-> > CS0.
-> > It's probably something like
-> > 
-> > OX820_NAND_CS(x)		((x) << CS_FIELD_SHIFT)  
-> 
-> The hardware seems to be able to drive multiple chip selects, but no implementation does this.
-> We will stick to CS0 only here for test reasons.
+Yeah, sorry, it's just a leftover from the previous version. This has
+been removed.
 
-Then no need to define this _CS flag.
+Thanks!
+Maxime
 
-[...]
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-> >> +	data->chip.cmd_ctrl = oxnas_nand_cmd_ctrl;
-> >> +	data->chip.chip_delay = 30;
-> >> +	data->chip.ecc.mode = NAND_ECC_SOFT;
-> >> +	data->chip.ecc.algo = NAND_ECC_HAMMING;  
-> > 
-> > Probably a good idea to support soft ECC as well...  
+--2556onq4pmzpow7e
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I meant BCH, not soft :-).
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> This was taken from plat_nand.c, I was not sure if it was necessary, will remove this and rely on DT attributes.
+iQIcBAEBCAAGBQJYB2QJAAoJEBx+YmzsjxAgtyIP/iY0W6eJa/97OCT7TR7+qtKZ
+CM3dR7WswN60XWi2bhkb4Z5evpKPHJ3C5JupSD9qVPKdEicl1M1gEIm2TMUy+R/I
+SkX9di5s6EvZH7J+y6EhaURd2DkS/kP/O3nsl4020fOUau7xoY7cwTRHdE0EIqmL
+195jTr7a7LBHFruJbkqYVEHKV04PN6OxTHr8fR05Xl+egy9H9cOW+I+v+jNtT/tc
+qFGjUj9KvWK70RTCmLKd4dz7Rd+q4EjcbRQZTOYHJLZFYSZXCenpwrD8vXNOtfl9
+sTfC5WTJwPgGwMBjnt9Og5IOVnVaJBQ87IC4arsSPlr2lAK0vjTjQcnVLsj98GzG
+c7+egysx56WJVBUw0wrGIwDSFAa7u6a3Iw33X8c+2WlKMNf51Sv3vSyLSWwoxYC5
+O6qsg+BEVTBEhfV80SxAyKP9aCnBROxyEGkfzfQLiEzRGmfaHKzD61Kqmw57uzqU
+RtMddLF3eVgHd/PKyDb+nCkgtUyXEabFAeXGPleMVNHSNDkLx2BYAa6OsuY58KAk
+X96mFN8/TQ8Y6qDIhKdEX9aTJJoDTL8jEsHWj8woWsedHCLBVROkzlwtq1Qnwvl6
+GZhZm+UpVULfr1tY2+wzaN+cm1pCYa/seGzbjImuz9cuqOm5NAb1/1RNbwQJGX4p
+2ROPyAiINGCDdnuZsgLV
+=Rt36
+-----END PGP SIGNATURE-----
 
-Yes, that's probably the best solution.
+--2556onq4pmzpow7e--
 
-Regards,
 
-Boris
+--===============6832654095309314143==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6832654095309314143==--
