@@ -1,42 +1,46 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V6 04/10] dmaengine: qcom_hidma: configure DMA and MSI for OF
-Date: Wed, 19 Oct 2016 13:51:46 -0400
-Message-ID: <1476899512-20431-5-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V6 01/10] Documentation: DT: qcom_hidma: update binding for MSI
+Date: Wed, 19 Oct 2016 13:51:43 -0400
+Message-ID: <1476899512-20431-2-git-send-email-okaya@codeaurora.org>
 References: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
+Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Configure the DMA bindings for the device tree based firmware.
+Adding a new binding for qcom,hidma-1.1 to distinguish HW supporting
+MSI interrupts from the older revision.
 
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 ---
- drivers/dma/qcom/hidma_mgmt.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/qcom/hidma_mgmt.c b/drivers/dma/qcom/hidma_mgmt.c
-index 82f36e4..185d29c 100644
---- a/drivers/dma/qcom/hidma_mgmt.c
-+++ b/drivers/dma/qcom/hidma_mgmt.c
-@@ -375,8 +375,15 @@ static int __init hidma_mgmt_of_populate_channels(struct device_node *np)
- 			ret = PTR_ERR(new_pdev);
- 			goto out;
- 		}
-+		of_node_get(child);
-+		new_pdev->dev.of_node = child;
- 		of_dma_configure(&new_pdev->dev, child);
--
-+		/*
-+		 * It is assumed that calling of_msi_configure is safe on
-+		 * platforms with or without MSI support.
-+		 */
-+		of_msi_configure(&new_pdev->dev, child);
-+		of_node_put(child);
- 		kfree(res);
- 		res = NULL;
- 	}
+diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+index fd5618b..2c5e4b8 100644
+--- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
++++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+@@ -47,12 +47,18 @@ When the OS is not in control of the management interface (i.e. it's a guest),
+ the channel nodes appear on their own, not under a management node.
+ 
+ Required properties:
+-- compatible: must contain "qcom,hidma-1.0"
++- compatible: must contain "qcom,hidma-1.0" for initial HW or "qcom,hidma-1.1"
++for MSI capable HW.
+ - reg: Addresses for the transfer and event channel
+ - interrupts: Should contain the event interrupt
+ - desc-count: Number of asynchronous requests this channel can handle
+ - iommus: required a iommu node
+ 
++Optional properties for MSI:
++- msi-parent : See the generic MSI binding described in
++ devicetree/bindings/interrupt-controller/msi.txt for a description of the
++ msi-parent property.
++
+ Example:
+ 
+ Hypervisor OS configuration:
 -- 
 1.9.1
