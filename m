@@ -1,140 +1,76 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 4/6] clk: stm32f4: Add RTC clock
-Date: Wed, 19 Oct 2016 13:45:37 -0700
-Message-ID: <20161019204537.GD8871@codeaurora.org>
-References: <1476436699-21879-1-git-send-email-gabriel.fernandez@st.com>
- <1476436699-21879-5-git-send-email-gabriel.fernandez@st.com>
+From: <dinguyen@opensource.altera.com>
+Subject: [PATCH] ARM: dts: socfpga: Enable QSPI on the Arria5 devkit
+Date: Wed, 19 Oct 2016 15:52:30 -0500
+Message-ID: <1476910350-15442-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1476436699-21879-5-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gabriel.fernandez@st.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: dinguyen@kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>, grmoore@opensource.altera.com, dinh.linux@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/14, gabriel.fernandez@st.com wrote:
-> @@ -310,6 +310,15 @@ static inline void enable_power_domain_write_protection(void)
->  	regmap_update_bits(pdrm, 0x00, (1 << 8), (0 << 8));
->  }
->  
-> +static inline void sofware_reset_backup_domain(void)
-> +{
-> +	unsigned long val;
-> +
-> +	val = readl(base + STM32F4_RCC_BDCR);
-> +	writel(val |= (1 << 16), base + STM32F4_RCC_BDCR);
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
 
-Interesting C style here! Why set the bit in val that will then
-be cleared in the next function call? Please just don't do it. It
-would be better to do writel(val | BIT(16), ...)
+Enable the QSPI node and add the flash chip.
 
-> +	writel(val & ~(1 << 16), base + STM32F4_RCC_BDCR);
-> +}
-> +
->  struct stm32_rgate {
->  	struct	clk_hw hw;
->  	struct	clk_gate gate;
-> @@ -396,6 +405,113 @@ static struct clk_hw *clk_register_rgate(struct device *dev, const char *name,
->  	return hw;
->  }
->  
-> +static int cclk_gate_enable(struct clk_hw *hw)
-> +{
-> +	int ret;
-> +
-> +	disable_power_domain_write_protection();
-> +
-> +	ret = clk_gate_ops.enable(hw);
-> +
-> +	enable_power_domain_write_protection();
-> +
-> +	return ret;
-> +}
-> +
-> +static void cclk_gate_disable(struct clk_hw *hw)
-> +{
-> +	disable_power_domain_write_protection();
-> +
-> +	clk_gate_ops.disable(hw);
-> +
-> +	enable_power_domain_write_protection();
-> +}
-> +
-> +static int cclk_gate_is_enabled(struct clk_hw *hw)
-> +{
-> +	return clk_gate_ops.is_enabled(hw);
-> +}
-> +
-> +static const struct clk_ops cclk_gate_ops = {
-> +	.enable		= cclk_gate_enable,
-> +	.disable	= cclk_gate_disable,
-> +	.is_enabled	= cclk_gate_is_enabled,
-> +};
-> +
-> +static u8 cclk_mux_get_parent(struct clk_hw *hw)
-> +{
-> +	return clk_mux_ops.get_parent(hw);
-> +}
-> +
-> +
+Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+---
+ arch/arm/boot/dts/socfpga_arria5_socdk.dts |   33 ++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-Weird double newline here. Please remove one.
-
-> +static int cclk_mux_set_parent(struct clk_hw *hw, u8 index)
-> +{
-> +	int ret;
-> +
-> +	disable_power_domain_write_protection();
-> +
-> +	sofware_reset_backup_domain();
-> +
-> +	ret = clk_mux_ops.set_parent(hw, index);
-> +
-> +	enable_power_domain_write_protection();
-> +
-> +	return ret;
-> +}
-> +
-> +
-
-Same.
-
-> +static const struct clk_ops cclk_mux_ops = {
-> +	.get_parent = cclk_mux_get_parent,
-> +	.set_parent = cclk_mux_set_parent,
-> +};
-> +
-> +static struct clk_hw *stm32_register_cclk(struct device *dev, const char *name,
-> +		const char * const *parent_names, int num_parents,
-> +		void __iomem *reg, u8 bit_idx, u8 shift, unsigned long flags,
-> +		spinlock_t *lock)
-> +{
-> +	struct clk_hw *hw;
-> +	struct clk_gate *gate;
-> +	struct clk_mux *mux;
-> +
-> +	gate = kzalloc(sizeof(struct clk_gate), GFP_KERNEL);
-
-sizeof(*gate) please.
-
-> +	if (!gate) {
-> +		hw = ERR_PTR(-EINVAL);
-> +		goto fail;
-> +	}
-> +
-> +	mux = kzalloc(sizeof(struct clk_mux), GFP_KERNEL);
-
-sizeof(*mux) please.
-
-> +	if (!mux) {
-> +		kfree(gate);
-> +		hw = ERR_PTR(-EINVAL);
-> +		goto fail;
-> +	}
-> +
-
+diff --git a/arch/arm/boot/dts/socfpga_arria5_socdk.dts b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
+index 3c88678..f739ead 100644
+--- a/arch/arm/boot/dts/socfpga_arria5_socdk.dts
++++ b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
+@@ -82,6 +82,39 @@
+ 	status = "okay";
+ };
+ 
++&qspi {
++	status = "okay";
++
++	flash: flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "n25q256a";
++		reg = <0>;
++		spi-max-frequency = <100000000>;
++
++		m25p,fast-read;
++		cdns,page-size = <256>;
++		cdns,block-size = <16>;
++		cdns,read-delay = <4>;
++		cdns,tshsl-ns = <50>;
++		cdns,tsd2d-ns = <50>;
++		cdns,tchsh-ns = <4>;
++		cdns,tslch-ns = <4>;
++
++		partition@qspi-boot {
++			/* 8MB for raw data. */
++			label = "Flash 0 Raw Data";
++			reg = <0x0 0x800000>;
++		};
++
++		partition@qspi-rootfs {
++			/* 120MB for jffs2 data. */
++			label = "Flash 0 jffs2 Filesystem";
++			reg = <0x800000 0x7800000>;
++		};
++	};
++};
++
+ &usb1 {
+ 	status = "okay";
+ };
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.7.9.5
