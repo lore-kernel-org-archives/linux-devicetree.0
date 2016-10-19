@@ -1,66 +1,40 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 2/2] Documentation: DT: MMC: meson-gx: new bindings doc
-Date: Wed, 19 Oct 2016 09:12:05 -0700
-Message-ID: <20161019161205.28565-2-khilman@baylibre.com>
-References: <20161019161205.28565-1-khilman@baylibre.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161019161205.28565-1-khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v2 00/10] Revamp Semtech SX150x driver
+Date: Wed, 19 Oct 2016 07:03:56 -0700
+Message-ID: <1476885846-16469-1-git-send-email-andrew.smirnov@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cphealy@gmail.com, Andrey Smirnov <andrew.smirnov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/mmc/amlogic,meson-gx.txt   | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+Hello everyone,
 
-diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-new file mode 100644
-index 000000000000..a2fa9a1c26ae
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-@@ -0,0 +1,33 @@
-+Amlogic SD / eMMC controller for S905/GXBB family SoCs
-+
-+The MMC 5.1 compliant host controller on Amlogic provides the
-+interface for SD, eMMC and SDIO devices.
-+
-+This file documents the properties in addition to those available in
-+the MMC core bindings, documented by mmc.txt.
-+
-+Required properties:
-+- compatible : contains one of:
-+  - "amlogic,meson-gx-mmc"
-+  - "amlogic,meson-gxbb-mmc"
-+  - "amlogic,meson-gxl-mmc"
-+  - "amlogic,meson-gxm-mmc"
-+- clocks     : A list of phandle + clock-specifier pairs for the clocks listed in clock-names.
-+- clock-names: Should contain the following:
-+	"core" - Main peripheral bus clock
-+	"clkin0" - Parent clock of internal mux
-+	"clkin1" - Other parent clock of internal mux
-+  The driver has an interal mux clock which switches between clkin0 and clkin1 depending on the
-+  clock rate requested by the MMC core.
-+
-+Example:
-+
-+	sd_emmc_a: mmc@70000 {
-+        	compatible = "amlogic,meson-gxbb-mmc";
-+		reg = <0x0 0x70000 0x0 0x2000>;
-+                interrupts = < GIC_SPI 216 IRQ_TYPE_EDGE_RISING>;
-+		clocks = <&clkc CLKID_SD_EMMC_A>, <&xtal>, <&clkc CLKID_FCLK_DIV2>;
-+		clock-names = "core", "clkin0", "clkin1";
-+		pinctrl-0 = <&emmc_pins>;
-+	};
-+
+This is the second version of the patchset originally submitted here:
+
+http://www.spinics.net/lists/devicetree/msg146176.html
+
+The only change since v1 is that, per Rob Herring's recommendation, all
+of the changes to bindings documentation were coalesced into a single patch.
+
+Thank you,
+Andrey Smirnov
+
+Andrey Smirnov (10):
+  gpio-sx150x: Remove 'gpio_base' from pdata
+  gpio-sx150x: Remove 'irq_summary' parameter
+  gpio-sx150x: Remove 'irq_base' parameter
+  gpio-sx150x: Replace 'io_polarity' with DT binding
+  gpio-sx150x: Replace "io_pull*_ena" with DT bindings
+  gpio-sx150x: Replace 'reset_during_probe" with DT binding
+  gpio-sx150x: Replace 'oscio_is_gpio' with DT binding
+  gpio-sx150x: Remove struct sx150x_platform_data
+  gpio-sx150x: Pass device type in DT match table
+  bindings: gpio-sx150x: Document new bindings
+
+ .../devicetree/bindings/gpio/gpio-sx150x.txt       |  29 ++++
+ drivers/gpio/gpio-sx150x.c                         | 184 +++++++++------------
+ 2 files changed, 105 insertions(+), 108 deletions(-)
+
 -- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.5.5
