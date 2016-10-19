@@ -1,68 +1,169 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 2/9] dt-bindings: interrupt-controller: add DT binding for meson GPIO interrupt controller
-Date: Wed, 19 Oct 2016 17:21:13 +0200
-Message-ID: <1476890480-8884-3-git-send-email-jbrunet@baylibre.com>
+Subject: [PATCH v2 4/9] pinctrl: meson: allow gpio to request irq
+Date: Wed, 19 Oct 2016 17:21:15 +0200
+Message-ID: <1476890480-8884-5-git-send-email-jbrunet@baylibre.com>
 References: <1476890480-8884-1-git-send-email-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <1476890480-8884-1-git-send-email-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-
-This commit adds the device tree bindings description for Amlogic's GPIO
-interrupt controller available on the meson8, meson8b and gxbb SoC families
+Add the ability for gpio to request irq from the gpio interrupt controller
+if present. We have to specificaly that the parent interrupt controller is
+the gpio interrupt controller because gpio on meson SoCs can't generate
+interrupt directly on the GIC.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
-Rob, I did not include the Ack you gave for the RFC as bindings have slightly
-changed. Only the interrupt property has be removed following a discussion I
-had with Marc
+ drivers/pinctrl/Kconfig               |  2 +
+ drivers/pinctrl/meson/pinctrl-meson.c | 77 ++++++++++++++++++++++++++++++++++-
+ drivers/pinctrl/meson/pinctrl-meson.h |  1 +
+ 3 files changed, 79 insertions(+), 1 deletion(-)
 
- .../amlogic,meson-gpio-intc.txt                    | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
-new file mode 100644
-index 000000000000..2464d9a0865d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
-@@ -0,0 +1,31 @@
-+Amlogic meson GPIO interrupt controller
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 0e75d94972ba..d5bfbfcddab0 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -126,7 +126,9 @@ config PINCTRL_MESON
+ 	select PINCONF
+ 	select GENERIC_PINCONF
+ 	select GPIOLIB
++	select IRQ_DOMAIN
+ 	select OF_GPIO
++	select OF_IRQ
+ 	select REGMAP_MMIO
+ 
+ config PINCTRL_OXNAS
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+index 57122eda155a..fd3c1d44978b 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.c
++++ b/drivers/pinctrl/meson/pinctrl-meson.c
+@@ -50,6 +50,7 @@
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/of_irq.h>
+ #include <linux/pinctrl/pinconf-generic.h>
+ #include <linux/pinctrl/pinconf.h>
+ #include <linux/pinctrl/pinctrl.h>
+@@ -481,6 +482,58 @@ static void meson_gpio_set(struct gpio_chip *chip, unsigned gpio, int value)
+ 			   value ? BIT(bit) : 0);
+ }
+ 
++static int meson_gpio_to_hwirq(struct meson_bank *bank, unsigned int offset)
++{
++	unsigned int hwirq;
 +
-+Meson SoCs contains an interrupt controller which is able watch the SoC pads
-+and generate an interrupt on edges or level. The controller is essentially a
-+256 pads to 8 GIC interrupt multiplexer, with a filter block to select edge
-+or level and polarity. We don’t expose all 256 mux inputs because the
-+documentation shows that upper part is not mapped to any pad. The actual number
-+of interrupt exposed depends on the SoC.
++	if (bank->irq_first < 0)
++		/* this bank cannot generate irqs */
++		return -1;
 +
-+Required properties:
++	hwirq = offset - bank->first + bank->irq_first;
 +
-+- compatible : should be either
-+   "amlogic,meson8-gpio-intc” for meson8 SoCs (AML7826MX) or
-+   “amlogic,meson8b-gpio-intc” for meson8b SoCs (S805) or
-+   “amlogic,meson-gxbb-gpio-intc” for GXBB SoCs (S905)
-+- interrupt-parent : a phandle to the GIC the interrupts are routed to.
-+   Usually this is provided at the root level of the device tree as it is
-+   common to most of the SoC
-+- reg : Specifies base physical address and size of the registers.
-+- interrupt-controller : Identifies the node as an interrupt controller.
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+   interrupt source. The value must be 2.
++	if (hwirq > bank->irq_last)
++		/* this pin cannot generate irqs */
++		return -1;
 +
-+Example:
++	return hwirq;
++}
 +
-+gpio_interrupt: interrupt-controller@9880 {
-+	compatible = "amlogic,meson-gxbb-gpio-intc";
-+	reg = <0x0 0x9880 0x0 0x10>;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+};
++static int meson_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
++{
++	struct meson_pinctrl *pc = gpiochip_get_data(chip);
++	struct meson_bank *bank;
++	struct irq_fwspec fwspec;
++	unsigned int hwirq;
++	int ret;
++
++	ret = meson_get_bank(pc, offset, &bank);
++	if (ret)
++		return ret;
++
++	/*
++	 * The interrupt controller might be missing, in such case we can't
++	 * provide an interrupt for a pin
++	 */
++	if (is_fwnode_irqchip(pc->fwnode)) {
++		dev_info(pc->dev, "interrupt controller not found\n");
++		return 0;
++	}
++
++	hwirq = meson_gpio_to_hwirq(bank, offset);
++	if (hwirq < 0) {
++		dev_dbg(pc->dev, "no interrupt for pin %u\n", offset);
++		return 0;
++	}
++
++	fwspec.fwnode = pc->fwnode;
++	fwspec.param_count = 2;
++	fwspec.param[0] = hwirq;
++	fwspec.param[1] = IRQ_TYPE_NONE;
++
++	return irq_create_fwspec_mapping(&fwspec);
++}
++
+ static int meson_gpio_get(struct gpio_chip *chip, unsigned gpio)
+ {
+ 	struct meson_pinctrl *pc = gpiochip_get_data(chip);
+@@ -539,6 +592,7 @@ static int meson_gpiolib_register(struct meson_pinctrl *pc)
+ 	pc->chip.direction_output = meson_gpio_direction_output;
+ 	pc->chip.get = meson_gpio_get;
+ 	pc->chip.set = meson_gpio_set;
++	pc->chip.to_irq = meson_gpio_to_irq;
+ 	pc->chip.base = pc->data->pin_base;
+ 	pc->chip.ngpio = pc->data->num_pins;
+ 	pc->chip.can_sleep = false;
+@@ -598,6 +652,27 @@ static struct regmap *meson_map_resource(struct meson_pinctrl *pc,
+ 	return devm_regmap_init_mmio(pc->dev, base, &meson_regmap_config);
+ }
+ 
++static int meson_pinctrl_get_irq_gpio_intc(struct meson_pinctrl *pc,
++					   struct device_node *node)
++{
++	struct device_node *np;
++
++	np = of_irq_find_parent(node);
++	if (unlikely(!np)) {
++		dev_err(pc->dev, "interrupt parent not found\n");
++		return -EINVAL;
++	}
++
++	if (!of_device_is_compatible(np, pc->data->irq_compat)) {
++		dev_info(pc->dev, "gpio interrupt disabled\n");
++		pc->fwnode = NULL;
++	}
++
++	pc->fwnode = of_node_to_fwnode(np);
++
++	return 0;
++}
++
+ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+ 				  struct device_node *node)
+ {
+@@ -643,7 +718,7 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+ 		return PTR_ERR(pc->reg_gpio);
+ 	}
+ 
+-	return 0;
++	return meson_pinctrl_get_irq_gpio_intc(pc, gpio_np);
+ }
+ 
+ static int meson_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
+index b90d69e366df..2e6c83adbd1f 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.h
++++ b/drivers/pinctrl/meson/pinctrl-meson.h
+@@ -123,6 +123,7 @@ struct meson_pinctrl {
+ 	struct regmap *reg_gpio;
+ 	struct gpio_chip chip;
+ 	struct device_node *of_node;
++	struct fwnode_handle *fwnode;
+ };
+ 
+ #define PIN(x, b)	(b + x)
 -- 
 2.7.4
+
