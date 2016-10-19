@@ -1,91 +1,59 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 2/2] fsl-quadspi: introduce per-bus spi-bus-width property
-Date: Wed, 19 Oct 2016 08:57:27 +0200
-Message-ID: <CAMuHMdW-L=Wc7mcs6s_N+joEZ8hX7DLHoY_YU0wuvnM=3DN8ug@mail.gmail.com>
-References: <20160927055957.427-1-albert.aribaud@3adev.fr> <20160927055957.427-2-albert.aribaud@3adev.fr>
- <20161003185143.GA27634@rob-hp-laptop> <CAMuHMdW6WJBj3TiXU0mmwKJmcwp28HEVUSD17-7RH7-UXFtX1g@mail.gmail.com>
- <20161018220334.6452fc5b.albert.aribaud@3adev.fr>
+From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dt: sun8i-h3: Add sunxi-sid to dts for sun8i-h3
+Date: Wed, 19 Oct 2016 09:40:16 +0200
+Message-ID: <20161019074016.GA31440@Red>
+References: <1475660904-7959-1-git-send-email-clabbe.montjoie@gmail.com>
+ <20161005122130.8cc229ff5d4990149956b49c@free.fr>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161018220334.6452fc5b.albert.aribaud-iEu9NFBzPZE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Albert ARIBAUD <albert.aribaud-iEu9NFBzPZE@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBY6GTTAAKGQEEFC5Q5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20161005122130.8cc229ff5d4990149956b49c-GANU6spQydw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 18, 2016 at 10:03 PM, Albert ARIBAUD
-<albert.aribaud-iEu9NFBzPZE@public.gmane.org> wrote:
-> Le Mon, 3 Oct 2016 21:57:58 +0200, Geert Uytterhoeven
-> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> a =C3=A9crit :
->
->> On Mon, Oct 3, 2016 at 8:51 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> > On Tue, Sep 27, 2016 at 07:59:57AM +0200, Albert ARIBAUD (3ADEV) wrote=
-:
->> >> Introduce spi-bus-width property for bus subnodes, to
->> >> specify per-bus capability to use NORMAL, FAST, DUAL,
->> >> and/or QUAD reads.
->> >>
->> >> Signed-off-by: Albert ARIBAUD (3ADEV) <albert.aribaud-iEu9NFBzPZE@public.gmane.org>
->> >> ---
->> >>  Documentation/devicetree/bindings/mtd/fsl-quadspi.txt | 18 +++++++++=
-+++++++++
->> >>  1 file changed, 18 insertions(+)
->> >
->> > Make this a common property.
->
-> @Rob: do you mean common to all slaves, i.e. described
-> in ./Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt?
->
->> They already exist:
->>
->> Documentation/devicetree/bindings/spi/spi-bus.txt:
->> - spi-tx-bus-width - (optional) The bus width (number of data wires)
->> that is used for MOSI. Defaults to 1 if not present.
->> - spi-rx-bus-width - (optional) The bus width (number of data wires)
->> that is used for MISO. Defaults to 1 if not present.
->>
->> The above are for normal/dual/quad.
->>
->> "Fast" is not a property of the bus, but of the SPI slave, right? Cfr.
->>
->> Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt:
->> - m25p,fast-read : Use the "fast read" opcode to read data from the
->> chip instead of the usual "read" opcode. This opcode is not supported
->> by all chips and support for it can not be detected at runtime.
->>                    Refer to your chips' datasheet to check if this is
->> supported by your chip.
->>
->> Gr{oetje,eeting}s,
->
-> @Geert: the problem here is that on the board for which I wrote this
-> patch, only one of the two NOR slaves can do quad SPI; the other one
-> can do dual at best. Setting a bus property would prevent the
-> quad-capable device from doing actual quad reads.
->
-> The fsl-quadspi driver already supports per-NOR read and erase commands
-> to support heterogeneous NOR setups. A per-NOR bus width property would
-> make sense in this light.
+On Wed, Oct 05, 2016 at 12:21:30PM +0200, Jean-Francois Moine wrote:
+> On Wed,  5 Oct 2016 11:48:24 +0200
+> Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+> > This patch add support for the sunxi-sid driver to the device tree for sun8i-h3.
+> > 
+> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/sun8i-h3.dtsi | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+> > index 9f58bb4..abfd29c 100644
+> > --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+> > +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+> > @@ -211,6 +211,11 @@
+> >  			#size-cells = <0>;
+> >  		};
+> >  
+> > +		sid: eeprom@01c14200 {
+> > +			compatible = "allwinner,sun7i-a20-sid";
+> > +			reg = <0x01c14200 0x200>;
+> 
+> The datasheet says 1Kb starting at 0x01c14000.
+> Is there any reason to reduce the area and to shift the offset?
+> 
 
-spi-[tx]x-bus-width is already a property for the SPI slave, not for
-the whole bus.
-So you can use 4 for the quad-capable device, and 1 or 2 for the other.
+According to http://linux-sunxi.org/SID_Register_Guide "For Allwinner A83T and H3 the SID address space starts at 0x01c14000, and the e-fuses are at offset 0x200".
+So I use this offset, since the sunxi_sid driver need the base address of e-fuses.
 
-Gr{oetje,eeting}s,
+The easiest solution is to use 0x01c14200 since the other part of sid is not used and not known (A83T/H3 user manual doesnt give any information on all sid space, worse for A64 which reference SID only in memory map).
 
-                        Geert
+So probably for H3/A64/A83T, there will never any usage of the rest of the SID address space.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Corentin Labbe
