@@ -1,168 +1,121 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [RESEND PATCH v2 4/9] pinctrl: meson: allow gpio to request irq
-Date: Wed, 19 Oct 2016 17:37:44 +0200
-Message-ID: <1476891464-11564-1-git-send-email-jbrunet@baylibre.com>
-References: <1476890480-8884-5-git-send-email-jbrunet@baylibre.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] mtd: nand: Add OX820 NAND Support
+Date: Wed, 19 Oct 2016 17:46:01 +0200
+Message-ID: <0f5398bb-52f1-d5bb-834c-dead4f708fd3@baylibre.com>
+References: <20161019145523.6763-1-narmstrong@baylibre.com>
+ <20161019173704.75592f52@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476890480-8884-5-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20161019173704.75592f52@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the ability for gpio to request irq from the gpio interrupt controller
-if present. We have to specificaly that the parent interrupt controller is
-the gpio interrupt controller because gpio on meson SoCs can't generate
-interrupt directly on the GIC.
+On 10/19/2016 05:37 PM, Boris Brezillon wrote:
+> On Wed, 19 Oct 2016 16:55:23 +0200
+> Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
 
-Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
+[...]
 
-I messed up in v2 and actually sent the v1 again. Here is the actual v2
-with the fix. Again, sorry for the inconvenience.
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
+>> @@ -0,0 +1,24 @@
+>> +* Oxford Semiconductor OXNAS NAND Controller
+>> +
+>> +Please refer to nand.txt for generic information regarding MTD NAND bindings.
+>> +
+>> +Required properties:
+>> + - compatible: "oxsemi,ox820-nand"
+>> + - reg: Base address and length for NAND mapped memory.
+>> +
+>> +Optional Properties:
+>> + - clocks: phandle to the NAND gate clock if needed.
+>> + - resets: phandle to the NAND reset control if needed.
+>> +
+>> +Example:
+>> +
+>> +nand: nand@41000000 {
+> 
+> nandc: nand-controller@41000000 {
+> 
+>> +	compatible = "oxsemi,ox820-nand";
+>> +	reg = <0x41000000 0x100000>;
+>> +	nand-ecc-mode = "soft";
+>> +	clocks = <&stdclk CLK_820_NAND>;
+>> +	resets = <&reset RESET_NAND>;
+>> +	#address-cells = <1>;
+>> +	#size-cells = <1>;
+>> +	status = "disabled";
+>> +};
+> 
+> You should probably provide an example where the NAND controller is
+> enabled and at least one nand chip is connected to the NAND bus.
 
- drivers/pinctrl/Kconfig               |  2 +
- drivers/pinctrl/meson/pinctrl-meson.c | 69 +++++++++++++++++++++++++++++++++++
- drivers/pinctrl/meson/pinctrl-meson.h |  1 +
- 3 files changed, 72 insertions(+)
+Indeed, I forgot that.
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 0e75d94972ba..d5bfbfcddab0 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -126,7 +126,9 @@ config PINCTRL_MESON
- 	select PINCONF
- 	select GENERIC_PINCONF
- 	select GPIOLIB
-+	select IRQ_DOMAIN
- 	select OF_GPIO
-+	select OF_IRQ
- 	select REGMAP_MMIO
- 
- config PINCTRL_OXNAS
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-index 57122eda155a..e3f5241f337f 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson.c
-@@ -50,6 +50,7 @@
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/of_irq.h>
- #include <linux/pinctrl/pinconf-generic.h>
- #include <linux/pinctrl/pinconf.h>
- #include <linux/pinctrl/pinctrl.h>
-@@ -481,6 +482,58 @@ static void meson_gpio_set(struct gpio_chip *chip, unsigned gpio, int value)
- 			   value ? BIT(bit) : 0);
- }
- 
-+static int meson_gpio_to_hwirq(struct meson_bank *bank, unsigned int offset)
-+{
-+	unsigned int hwirq;
-+
-+	if (bank->irq_first < 0)
-+		/* this bank cannot generate irqs */
-+		return -1;
-+
-+	hwirq = offset - bank->first + bank->irq_first;
-+
-+	if (hwirq > bank->irq_last)
-+		/* this pin cannot generate irqs */
-+		return -1;
-+
-+	return hwirq;
-+}
-+
-+static int meson_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct meson_pinctrl *pc = gpiochip_get_data(chip);
-+	struct meson_bank *bank;
-+	struct irq_fwspec fwspec;
-+	unsigned int hwirq;
-+	int ret;
-+
-+	ret = meson_get_bank(pc, offset, &bank);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * The interrupt controller might be missing, in such case we can't
-+	 * provide an interrupt for a pin
-+	 */
-+	if (is_fwnode_irqchip(pc->fwnode)) {
-+		dev_info(pc->dev, "interrupt controller not found\n");
-+		return 0;
-+	}
-+
-+	hwirq = meson_gpio_to_hwirq(bank, offset);
-+	if (hwirq < 0) {
-+		dev_dbg(pc->dev, "no interrupt for pin %u\n", offset);
-+		return 0;
-+	}
-+
-+	fwspec.fwnode = pc->fwnode;
-+	fwspec.param_count = 2;
-+	fwspec.param[0] = hwirq;
-+	fwspec.param[1] = IRQ_TYPE_NONE;
-+
-+	return irq_create_fwspec_mapping(&fwspec);
-+}
-+
- static int meson_gpio_get(struct gpio_chip *chip, unsigned gpio)
- {
- 	struct meson_pinctrl *pc = gpiochip_get_data(chip);
-@@ -539,6 +592,7 @@ static int meson_gpiolib_register(struct meson_pinctrl *pc)
- 	pc->chip.direction_output = meson_gpio_direction_output;
- 	pc->chip.get = meson_gpio_get;
- 	pc->chip.set = meson_gpio_set;
-+	pc->chip.to_irq = meson_gpio_to_irq;
- 	pc->chip.base = pc->data->pin_base;
- 	pc->chip.ngpio = pc->data->num_pins;
- 	pc->chip.can_sleep = false;
-@@ -598,6 +652,19 @@ static struct regmap *meson_map_resource(struct meson_pinctrl *pc,
- 	return devm_regmap_init_mmio(pc->dev, base, &meson_regmap_config);
- }
- 
-+static void meson_pinctrl_get_irq_gpio_intc(struct meson_pinctrl *pc,
-+					    struct device_node *node)
-+{
-+	struct device_node *np = of_irq_find_parent(node);
-+
-+	if (!np || !of_device_is_compatible(np, pc->data->irq_compat)) {
-+		dev_info(pc->dev, "gpio interrupt disabled\n");
-+		pc->fwnode = NULL;
-+	} else {
-+		pc->fwnode = of_node_to_fwnode(np);
-+	}
-+}
-+
- static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
- 				  struct device_node *node)
- {
-@@ -643,6 +710,8 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
- 		return PTR_ERR(pc->reg_gpio);
- 	}
- 
-+	meson_pinctrl_get_irq_gpio_intc(pc, gpio_np);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
-index b90d69e366df..2e6c83adbd1f 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.h
-+++ b/drivers/pinctrl/meson/pinctrl-meson.h
-@@ -123,6 +123,7 @@ struct meson_pinctrl {
- 	struct regmap *reg_gpio;
- 	struct gpio_chip chip;
- 	struct device_node *of_node;
-+	struct fwnode_handle *fwnode;
- };
- 
- #define PIN(x, b)	(b + x)
--- 
-2.7.4
+[...]
 
+>> +
+>> +static uint8_t oxnas_nand_read_byte(struct mtd_info *mtd)
+>> +{
+>> +	struct nand_chip *chip = mtd_to_nand(mtd);
+>> +	struct oxnas_nand *oxnas = nand_get_controller_data(chip);
+>> +
+>> +	return readb(oxnas->io_base);
+>> +}
+>> +
+>> +static void oxnas_nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
+>> +{
+>> +	struct nand_chip *chip = mtd_to_nand(mtd);
+>> +	struct oxnas_nand *oxnas = nand_get_controller_data(chip);
+>> +
+>> +	ioread8_rep(oxnas->io_base, buf, len);
+>> +}
+>> +
+>> +static void oxnas_nand_write_buf(struct mtd_info *mtd,
+>> +				 const uint8_t *buf, int len)
+>> +{
+>> +	struct nand_chip *chip = mtd_to_nand(mtd);
+>> +	struct oxnas_nand *oxnas = nand_get_controller_data(chip);
+>> +
+>> +	iowrite8_rep(oxnas->io_base + oxnas->ctrl, buf, len);
+>> +}
+>> +
+>> +/* Single CS command control */
+>> +static void oxnas_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
+>> +				unsigned int ctrl)
+>> +{
+>> +	struct nand_chip *chip = mtd_to_nand(mtd);
+>> +	struct oxnas_nand *oxnas = nand_get_controller_data(chip);
+>> +
+>> +	if (ctrl & NAND_CTRL_CHANGE) {
+>> +		if (ctrl & NAND_CLE)
+>> +			oxnas->ctrl = OXNAS_NAND_CMD_CLE;
+>> +		else if (ctrl & NAND_ALE)
+>> +			oxnas->ctrl = OXNAS_NAND_CMD_ALE;
+>> +		else
+>> +			oxnas->ctrl = 0;
+>> +	}
+>> +
+>> +	if (cmd != NAND_CMD_NONE)
+>> +		writeb(cmd, oxnas->io_base + oxnas->ctrl);
+> 
+> There's no need to test the NAND_CTRL_CHANGE here, and I don't think
+> the CLE or ALE flag is ever set when cmd == CMD_NONE. So, you can kill
+> the ->ctrl field and simply do:
+> 
+> 	if (ctrl & NAND_CLE)
+> 		writeb(cmd, oxnas->io_base + OXNAS_NAND_CMD_CLE);
+> 	else if (ctrl & NAND_ALE)
+> 		writeb(cmd, oxnas->io_base + OXNAS_NAND_CMD_ALE);
+> 
+>> +}
+
+Hmm, except it's needed back in the oxnas_nand_write_buf() call (don't ask me why)
+so I don't see how to simplify more this function.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
