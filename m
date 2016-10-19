@@ -1,140 +1,54 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V6 08/10] dmaengine: qcom_hidma: protect common data structures
-Date: Wed, 19 Oct 2016 13:51:50 -0400
-Message-ID: <1476899512-20431-9-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V6 02/10] Documentation: DT: qcom_hidma: correct spelling
+ mistakes
+Date: Wed, 19 Oct 2016 13:51:44 -0400
+Message-ID: <1476899512-20431-3-git-send-email-okaya@codeaurora.org>
 References: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, agross@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-When MSI interrupts are supported, error and the transfer interrupt can
-come from multiple processor contexts.
+Fix the spelling mistakes and extra and statements in the sentences.
 
-Each error interrupt is an MSI interrupt. If the channel is disabled by
-the first error interrupt, the remaining error interrupts will gracefully
-return in the interrupt handler.
-
-If an error is observed while servicing the completions in success case,
-the posting of the completions will be aborted as soon as channel disabled
-state is observed. The error interrupt handler will take it from there and
-finish the remaining completions. We don't want to create multiple success
-and error messages to be delivered to the client in mixed order.
-
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 ---
- drivers/dma/qcom/hidma_ll.c | 44 +++++++++++---------------------------------
- 1 file changed, 11 insertions(+), 33 deletions(-)
+ Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
-index 3168687..62cdd42 100644
---- a/drivers/dma/qcom/hidma_ll.c
-+++ b/drivers/dma/qcom/hidma_ll.c
-@@ -198,13 +198,16 @@ static void hidma_ll_tre_complete(unsigned long arg)
- 	}
- }
+diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+index 2c5e4b8..55492c2 100644
+--- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
++++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+@@ -5,13 +5,13 @@ memcpy and memset capabilities. It has been designed for virtualized
+ environments.
  
--static int hidma_post_completed(struct hidma_lldev *lldev, int tre_iterator,
--				u8 err_info, u8 err_code)
-+static int hidma_post_completed(struct hidma_lldev *lldev, u8 err_info,
-+				u8 err_code)
- {
- 	struct hidma_tre *tre;
- 	unsigned long flags;
-+	u32 tre_iterator;
+ Each HIDMA HW instance consists of multiple DMA channels. These channels
+-share the same bandwidth. The bandwidth utilization can be parititioned
++share the same bandwidth. The bandwidth utilization can be partitioned
+ among channels based on the priority and weight assignments.
  
- 	spin_lock_irqsave(&lldev->lock, flags);
-+
-+	tre_iterator = lldev->tre_processed_off;
- 	tre = lldev->pending_tre_list[tre_iterator / HIDMA_TRE_SIZE];
- 	if (!tre) {
- 		spin_unlock_irqrestore(&lldev->lock, flags);
-@@ -223,6 +226,9 @@ static int hidma_post_completed(struct hidma_lldev *lldev, int tre_iterator,
- 		atomic_set(&lldev->pending_tre_count, 0);
- 	}
+ There are only two priority levels and 15 weigh assignments possible.
  
-+	HIDMA_INCREMENT_ITERATOR(tre_iterator, HIDMA_TRE_SIZE,
-+				 lldev->tre_ring_size);
-+	lldev->tre_processed_off = tre_iterator;
- 	spin_unlock_irqrestore(&lldev->lock, flags);
+ Other parameters here determine how much of the system bus this HIDMA
+-instance can use like maximum read/write request and and number of bytes to
++instance can use like maximum read/write request and number of bytes to
+ read/write in a single burst.
  
- 	tre->err_info = err_info;
-@@ -244,13 +250,11 @@ static int hidma_post_completed(struct hidma_lldev *lldev, int tre_iterator,
- static int hidma_handle_tre_completion(struct hidma_lldev *lldev)
- {
- 	u32 evre_ring_size = lldev->evre_ring_size;
--	u32 tre_ring_size = lldev->tre_ring_size;
- 	u32 err_info, err_code, evre_write_off;
--	u32 tre_iterator, evre_iterator;
-+	u32 evre_iterator;
- 	u32 num_completed = 0;
- 
- 	evre_write_off = readl_relaxed(lldev->evca + HIDMA_EVCA_WRITE_PTR_REG);
--	tre_iterator = lldev->tre_processed_off;
- 	evre_iterator = lldev->evre_processed_off;
- 
- 	if ((evre_write_off > evre_ring_size) ||
-@@ -273,12 +277,9 @@ static int hidma_handle_tre_completion(struct hidma_lldev *lldev)
- 		err_code =
- 		    (cfg >> HIDMA_EVRE_CODE_BIT_POS) & HIDMA_EVRE_CODE_MASK;
- 
--		if (hidma_post_completed(lldev, tre_iterator, err_info,
--					 err_code))
-+		if (hidma_post_completed(lldev, err_info, err_code))
- 			break;
- 
--		HIDMA_INCREMENT_ITERATOR(tre_iterator, HIDMA_TRE_SIZE,
--					 tre_ring_size);
- 		HIDMA_INCREMENT_ITERATOR(evre_iterator, HIDMA_EVRE_SIZE,
- 					 evre_ring_size);
- 
-@@ -295,16 +296,10 @@ static int hidma_handle_tre_completion(struct hidma_lldev *lldev)
- 	if (num_completed) {
- 		u32 evre_read_off = (lldev->evre_processed_off +
- 				     HIDMA_EVRE_SIZE * num_completed);
--		u32 tre_read_off = (lldev->tre_processed_off +
--				    HIDMA_TRE_SIZE * num_completed);
--
- 		evre_read_off = evre_read_off % evre_ring_size;
--		tre_read_off = tre_read_off % tre_ring_size;
--
- 		writel(evre_read_off, lldev->evca + HIDMA_EVCA_DOORBELL_REG);
- 
- 		/* record the last processed tre offset */
--		lldev->tre_processed_off = tre_read_off;
- 		lldev->evre_processed_off = evre_read_off;
- 	}
- 
-@@ -314,27 +309,10 @@ static int hidma_handle_tre_completion(struct hidma_lldev *lldev)
- void hidma_cleanup_pending_tre(struct hidma_lldev *lldev, u8 err_info,
- 			       u8 err_code)
- {
--	u32 tre_iterator;
--	u32 tre_ring_size = lldev->tre_ring_size;
--	int num_completed = 0;
--	u32 tre_read_off;
--
--	tre_iterator = lldev->tre_processed_off;
- 	while (atomic_read(&lldev->pending_tre_count)) {
--		if (hidma_post_completed(lldev, tre_iterator, err_info,
--					 err_code))
-+		if (hidma_post_completed(lldev, err_info, err_code))
- 			break;
--		HIDMA_INCREMENT_ITERATOR(tre_iterator, HIDMA_TRE_SIZE,
--					 tre_ring_size);
--		num_completed++;
- 	}
--	tre_read_off = (lldev->tre_processed_off +
--			HIDMA_TRE_SIZE * num_completed);
--
--	tre_read_off = tre_read_off % tre_ring_size;
--
--	/* record the last processed tre offset */
--	lldev->tre_processed_off = tre_read_off;
- }
- 
- static int hidma_ll_reset(struct hidma_lldev *lldev)
+ Main node required properties:
 -- 
 1.9.1
