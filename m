@@ -1,694 +1,937 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [PATCH 1/2] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
-Date: Wed, 19 Oct 2016 16:13:46 +0530
-Message-ID: <1476873827-7191-2-git-send-email-vivek.gautam@codeaurora.org>
-References: <1476873827-7191-1-git-send-email-vivek.gautam@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1476873827-7191-1-git-send-email-vivek.gautam@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 1/2] MMC: meson: initial support for GX platforms
+Date: Wed, 19 Oct 2016 09:12:04 -0700
+Message-ID: <20161019161205.28565-1-khilman@baylibre.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PHY transceiver driver for QUSB2 phy controller that provides
-HighSpeed functionality for DWC3 controller present on
-Qualcomm chipsets.
+Initial support for the SD/eMMC controller in the Amlogic S905/GX*
+family of SoCs.
 
-This driver is based on phy-msm-qusb driver available in
-msm-4.4 kernel @codeaurora[1]
-
-[1] https://source.codeaurora.org/quic/la/kernel/msm-4.4/log/?h=caf/3.18/msm-3.18
-
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  37 ++
- drivers/phy/Kconfig                                |  10 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-qcom-qusb2.c                       | 577 +++++++++++++++++++++
- 4 files changed, 625 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
- create mode 100644 drivers/phy/phy-qcom-qusb2.c
+Changes since v4: put DT documentation into a separate patch
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-new file mode 100644
-index 0000000..97c9ce7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-@@ -0,0 +1,37 @@
-+Qualcomm QUSB2 phy controller
-+=============================
-+
-+QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
-+
-+Required properties:
-+ - compatible: compatible list, contains "qcom,msm8996-qusb2-phy".
-+ - reg: offset and length of the PHY register set.
-+ - #phy-cells: must be 0.
-+
-+ - clocks: a list of phandles and clock-specifier pairs,
-+	   one for each entry in clock-names.
-+ - clock-names: must be "cfg_ahb" for phy config clock,
-+			"ref_clk" for 19.2 MHz ref clk,
-+			"ref_clk_src" reference clock source.
-+			"iface" for phy interface clock (Optional).
-+
-+ - vdd-phy-supply: Phandle to a regulator supply to PHY core block.
-+ - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
-+ - vdda-phy-dpdm: Phandle to 3.1V regulator supply to Dp/Dm port signals.
-+
-+ - resets: a list of phandles and reset controller specifier pairs,
-+	   one for each entry in reset-names.
-+ - reset-names: must be "phy" for reset of phy block.
-+
-+Optional properties:
-+ - nvmem-cells: a list of phandles to nvmem cells that contain fused
-+		tuning parameters for qusb2 phy, one for each entry
-+		in nvmem-cell-names.
-+ - nvmem-cell-names: must be "tune2_hstx_trim_efuse" for cell containing
-+		     HS Tx trim value.
-+ - qcom,hstx-trim-bit-offset: bit offset within nvmem cell for
-+			      HS Tx trim value.
-+ - qcom,hstx-trim-bit-len: bit length of HS Tx trim value within nvmem cell.
-+
-+ - qcom,tcsr-syscon: Phandle to TCSR syscon register region.
-+ - qcom,phy-clk-scheme: Offset to TCSR_PHY_CLK_SCHEME_SEL register.
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index fe00f91..5547984 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -446,6 +446,16 @@ config PHY_STIH41X_USB
- 	  Enable this to support the USB transceiver that is part of
- 	  STMicroelectronics STiH41x SoC series.
+ MAINTAINERS                 |   1 +
+ drivers/mmc/host/Kconfig    |  10 +
+ drivers/mmc/host/Makefile   |   1 +
+ drivers/mmc/host/meson-gx.c | 853 ++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 865 insertions(+)
+ create mode 100644 drivers/mmc/host/meson-gx.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1cd38a7e0064..73e8d64ec28c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1036,6 +1036,7 @@ F:	arch/arm/mach-meson/
+ F:	arch/arm/boot/dts/meson*
+ F:	arch/arm64/boot/dts/amlogic/
+ F: 	drivers/pinctrl/meson/
++F:	drivers/mmc/host/meson*
+ N:	meson
  
-+config PHY_QCOM_QUSB2
-+	tristate "Qualcomm QUSB2 PHY Driver"
-+	depends on OF && (ARCH_QCOM || COMPILE_TEST)
-+	select GENERIC_PHY
+ ARM/Annapurna Labs ALPINE ARCHITECTURE
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index 5274f503a39a..5cf7ebaf1e8b 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -322,6 +322,16 @@ config MMC_SDHCI_IPROC
+ 
+ 	  If unsure, say N.
+ 
++config MMC_MESON_GX
++	tristate "Amlogic S905/GX* SD/MMC Host Controller support"
++	depends on ARCH_MESON && MMC
 +	help
-+	  Enable this to support the HighSpeed QUSB2 PHY transceiver for USB
-+	  controllers on Qualcomm chips. This driver supports the high-speed
-+	  PHY which is usually paired with either the ChipIdea or Synopsys DWC3
-+	  USB IPs on MSM SOCs.
++	  This selects support for the Amlogic SD/MMC Host Controller
++	  found on the S905/GX* family of SoCs.  This controller is
++	  MMC 5.1 compliant and supports SD, eMMC and SDIO interfaces.
 +
- config PHY_QCOM_UFS
- 	tristate "Qualcomm UFS PHY driver"
- 	depends on OF && ARCH_QCOM
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index a534cf5..848489d 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -51,6 +51,7 @@ obj-$(CONFIG_PHY_ST_SPEAR1340_MIPHY)	+= phy-spear1340-miphy.o
- obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
- obj-$(CONFIG_PHY_STIH407_USB)		+= phy-stih407-usb.o
- obj-$(CONFIG_PHY_STIH41X_USB)		+= phy-stih41x-usb.o
-+obj-$(CONFIG_PHY_QCOM_QUSB2) 	+= phy-qcom-qusb2.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-20nm.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-14nm.o
-diff --git a/drivers/phy/phy-qcom-qusb2.c b/drivers/phy/phy-qcom-qusb2.c
++	  If you have a controller with this interface, say Y here.
++
+ config MMC_MOXART
+ 	tristate "MOXART SD/MMC Host Controller support"
+ 	depends on ARCH_MOXART && MMC
+diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+index e2bdaaf43184..1c4852999ae4 100644
+--- a/drivers/mmc/host/Makefile
++++ b/drivers/mmc/host/Makefile
+@@ -53,6 +53,7 @@ obj-$(CONFIG_MMC_JZ4740)	+= jz4740_mmc.o
+ obj-$(CONFIG_MMC_VUB300)	+= vub300.o
+ obj-$(CONFIG_MMC_USHC)		+= ushc.o
+ obj-$(CONFIG_MMC_WMT)		+= wmt-sdmmc.o
++obj-$(CONFIG_MMC_MESON_GX)	+= meson-gx.o
+ obj-$(CONFIG_MMC_MOXART)	+= moxart-mmc.o
+ obj-$(CONFIG_MMC_SUNXI)		+= sunxi-mmc.o
+ obj-$(CONFIG_MMC_USDHI6ROL0)	+= usdhi6rol0.o
+diff --git a/drivers/mmc/host/meson-gx.c b/drivers/mmc/host/meson-gx.c
 new file mode 100644
-index 0000000..058f661
+index 000000000000..fd3c40322b2d
 --- /dev/null
-+++ b/drivers/phy/phy-qcom-qusb2.c
-@@ -0,0 +1,577 @@
++++ b/drivers/mmc/host/meson-gx.c
+@@ -0,0 +1,853 @@
 +/*
-+ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
++ * Amlogic SD/eMMC driver for the GX/S905 family SoCs
++ *
++ * Copyright (c) 2016 BayLibre, SAS.
++ * Author: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 + *
 + * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
++ * it under the terms of version 2 of the GNU General Public License as
++ * published by the Free Software Foundation.
 + *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see <http://www.gnu.org/licenses/>.
++ * The full GNU General Public License is included in this distribution
++ * in the file called COPYING.
 + */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
 +#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/nvmem-consumer.h>
-+#include <linux/of.h>
-+#include <linux/phy/phy.h>
++#include <linux/init.h>
++#include <linux/device.h>
++#include <linux/of_device.h>
 +#include <linux/platform_device.h>
++#include <linux/ioport.h>
++#include <linux/spinlock.h>
++#include <linux/dma-mapping.h>
++#include <linux/mmc/host.h>
++#include <linux/mmc/mmc.h>
++#include <linux/mmc/sdio.h>
++#include <linux/mmc/slot-gpio.h>
++#include <linux/io.h>
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
 +#include <linux/regulator/consumer.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <linux/slab.h>
 +
-+#define QUSB2PHY_PLL_TEST		0x04
-+#define CLK_REF_SEL			BIT(7)
++#define DRIVER_NAME "meson-gxbb-mmc"
 +
-+#define QUSB2PHY_PLL_TUNE		0x08
-+#define QUSB2PHY_PLL_USER_CTL1		0x0c
-+#define QUSB2PHY_PLL_USER_CTL2		0x10
-+#define QUSB2PHY_PLL_AUTOPGM_CTL1	0x1c
-+#define QUSB2PHY_PLL_PWR_CTRL		0x18
++#define SD_EMMC_CLOCK 0x0
++#define   CLK_DIV_SHIFT 0
++#define   CLK_DIV_WIDTH 6
++#define   CLK_DIV_MASK 0x3f
++#define   CLK_DIV_MAX 63
++#define   CLK_SRC_SHIFT 6
++#define   CLK_SRC_WIDTH 2
++#define   CLK_SRC_MASK 0x3
++#define   CLK_SRC_XTAL 0   /* external crystal */
++#define   CLK_SRC_XTAL_RATE 24000000
++#define   CLK_SRC_PLL 1    /* FCLK_DIV2 */
++#define   CLK_SRC_PLL_RATE 1000000000
++#define   CLK_PHASE_SHIFT 8
++#define   CLK_PHASE_MASK 0x3
++#define   CLK_PHASE_0 0
++#define   CLK_PHASE_90 1
++#define   CLK_PHASE_180 2
++#define   CLK_PHASE_270 3
++#define   CLK_ALWAYS_ON BIT(24)
 +
-+#define QUSB2PHY_PLL_STATUS		0x38
-+#define PLL_LOCKED			BIT(5)
++#define SD_EMMC_DElAY 0x4
++#define SD_EMMC_ADJUST 0x8
++#define SD_EMMC_CALOUT 0x10
++#define SD_EMMC_START 0x40
++#define   START_DESC_INIT BIT(0)
++#define   START_DESC_BUSY BIT(1)
++#define   START_DESC_ADDR_SHIFT 2
++#define   START_DESC_ADDR_MASK (~0x3)
 +
-+#define QUSB2PHY_PORT_TUNE1             0x80
++#define SD_EMMC_CFG 0x44
++#define   CFG_BUS_WIDTH_SHIFT 0
++#define   CFG_BUS_WIDTH_MASK 0x3
++#define   CFG_BUS_WIDTH_1 0x0
++#define   CFG_BUS_WIDTH_4 0x1
++#define   CFG_BUS_WIDTH_8 0x2
++#define   CFG_DDR BIT(2)
++#define   CFG_BLK_LEN_SHIFT 4
++#define   CFG_BLK_LEN_MASK 0xf
++#define   CFG_RESP_TIMEOUT_SHIFT 8
++#define   CFG_RESP_TIMEOUT_MASK 0xf
++#define   CFG_RC_CC_SHIFT 12
++#define   CFG_RC_CC_MASK 0xf
++#define   CFG_STOP_CLOCK BIT(22)
++#define   CFG_CLK_ALWAYS_ON BIT(18)
++#define   CFG_AUTO_CLK BIT(23)
 +
-+#define QUSB2PHY_PORT_TUNE2             0x84
-+/* TUNE2's high nibble value read from efuse */
-+#define TUNE2_HIGH_NIBBLE_VAL(val, pos, mask)	((val >> pos) & mask)
++#define SD_EMMC_STATUS 0x48
++#define   STATUS_BUSY BIT(31)
 +
-+#define QUSB2PHY_PORT_TUNE3             0x88
-+#define QUSB2PHY_PORT_TUNE4             0x8C
-+#define QUSB2PHY_PORT_TUNE5		0x90
-+#define QUSB2PHY_PORT_TEST2		0x9c
++#define SD_EMMC_IRQ_EN 0x4c
++#define   IRQ_EN_MASK 0x3fff
++#define   IRQ_RXD_ERR_SHIFT 0
++#define   IRQ_RXD_ERR_MASK 0xff
++#define   IRQ_TXD_ERR BIT(8)
++#define   IRQ_DESC_ERR BIT(9)
++#define   IRQ_RESP_ERR BIT(10)
++#define   IRQ_RESP_TIMEOUT BIT(11)
++#define   IRQ_DESC_TIMEOUT BIT(12)
++#define   IRQ_END_OF_CHAIN BIT(13)
++#define   IRQ_RESP_STATUS BIT(14)
++#define   IRQ_SDIO BIT(15)
 +
-+#define QUSB2PHY_PORT_POWERDOWN		0xB4
-+#define CLAMP_N_EN			BIT(5)
-+#define FREEZIO_N			BIT(1)
-+#define POWER_DOWN			BIT(0)
++#define SD_EMMC_CMD_CFG 0x50
++#define SD_EMMC_CMD_ARG 0x54
++#define SD_EMMC_CMD_DAT 0x58
++#define SD_EMMC_CMD_RSP 0x5c
++#define SD_EMMC_CMD_RSP1 0x60
++#define SD_EMMC_CMD_RSP2 0x64
++#define SD_EMMC_CMD_RSP3 0x68
 +
-+#define QUSB2PHY_REFCLK_ENABLE		BIT(0)
++#define SD_EMMC_RXD 0x94
++#define SD_EMMC_TXD 0x94
++#define SD_EMMC_LAST_REG SD_EMMC_TXD
 +
-+#define PHY_CLK_SCHEME_SEL		BIT(0)
++#define SD_EMMC_CFG_BLK_SIZE 512 /* internal buffer max: 512 bytes */
++#define SD_EMMC_CFG_RESP_TIMEOUT 256 /* in clock cycles */
++#define SD_EMMC_CFG_CMD_GAP 16 /* in clock cycles */
++#define MUX_CLK_NUM_PARENTS 2
 +
-+struct qusb2_phy_init_tbl {
-+	unsigned int reg_offset;
-+	unsigned int cfg_val;
-+};
-+#define QCOM_QUSB2_PHY_INIT_CFG(reg, val) \
-+	{				\
-+		.reg_offset = reg,	\
-+		.cfg_val = val,		\
-+	}
++struct meson_host {
++	struct	device		*dev;
++	struct	mmc_host	*mmc;
++	struct	mmc_request	*mrq;
++	struct	mmc_command	*cmd;
 +
-+static struct qusb2_phy_init_tbl msm8996_phy_init_tbl[] = {
-+	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE1, 0xF8),
-+	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE2, 0xB3),
-+	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE3, 0x83),
-+	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE4, 0xC0),
-+	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_TUNE, 0x30),
-+	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_USER_CTL1, 0x79),
-+	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_USER_CTL2, 0x21),
-+	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TEST2, 0x14),
-+	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_AUTOPGM_CTL1, 0x9F),
-+	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_PWR_CTRL, 0x00),
-+};
++	spinlock_t lock;
++	void __iomem *regs;
++	int irq;
++	u32 ocr_mask;
++	struct clk *core_clk;
++	struct clk_mux mux;
++	struct clk *mux_clk;
++	struct clk *mux_parent[MUX_CLK_NUM_PARENTS];
++	unsigned long mux_parent_rate[MUX_CLK_NUM_PARENTS];
 +
-+struct qusb2_phy_init_cfg {
-+	struct qusb2_phy_init_tbl *phy_init_tbl;
-+	int phy_init_tbl_sz;
-+};
++	struct clk_divider cfg_div;
++	struct clk *cfg_div_clk;
 +
-+const struct qusb2_phy_init_cfg msm8996_phy_init_cfg = {
-+	.phy_init_tbl = msm8996_phy_init_tbl,
-+	.phy_init_tbl_sz = ARRAY_SIZE(msm8996_phy_init_tbl),
-+};
++	unsigned int bounce_buf_size;
++	void *bounce_buf;
++	dma_addr_t bounce_dma_addr;
 +
-+/**
-+ * struct qusb2_phy: Structure holding qusb2 phy attributes.
-+ *
-+ * @phy: pointer to generic phy.
-+ * @base: pointer to iomapped memory space for qubs2 phy.
-+ *
-+ * @cfg_ahb_clk: pointer to AHB2PHY interface clock.
-+ * @ref_clk: pointer to reference clock.
-+ * @ref_clk_src: pointer to source to reference clock.
-+ * @iface_src: pointer to phy interface clock.
-+ * @clk_enabled: check if clocks are enabled.
-+ *
-+ * @phy_reset: Pointer to phy reset control
-+ *
-+ * @vdda_phy: vdd supply to the phy core block.
-+ * @vdda_pll: 1.8V vdd supply to ref_clk block.
-+ * @vdda_phy_dpdm: 3.1V vdd supply to Dp/Dm port signals.
-+ * @pwr_enabled: check if the regulators are enabled.
-+ * @tcsr: pointer to TCSR syscon register map.
-+ * @clk_scheme_offset: offset to PHY_CLK_SCHEME register in TCSR map.
-+ * @cfg: phy initialization config data
-+ */
-+struct qusb2_phy {
-+	struct phy *phy;
-+	void __iomem *base;
-+
-+	struct clk *cfg_ahb_clk;
-+	struct clk *ref_clk;
-+	struct clk *ref_clk_src;
-+	struct clk *iface_clk;
-+	bool clk_enabled;
-+
-+	struct reset_control *phy_reset;
-+
-+	struct regulator *vdd_phy;
-+	struct regulator *vdda_pll;
-+	struct regulator *vdda_phy_dpdm;
-+	bool pwr_enabled;
-+
-+	struct regmap *tcsr;
-+	unsigned int clk_scheme_offset;
-+
-+	const struct qusb2_phy_init_cfg *cfg;
++	bool vqmmc_enabled;
 +};
 +
-+static inline void qusb2_set_bits(void __iomem *reg, u32 mask)
++struct sd_emmc_desc {
++	u32 cmd_cfg;
++	u32 cmd_arg;
++	u32 cmd_data;
++	u32 cmd_resp;
++};
++#define CMD_CFG_LENGTH_SHIFT 0
++#define CMD_CFG_LENGTH_MASK 0x1ff
++#define CMD_CFG_BLOCK_MODE BIT(9)
++#define CMD_CFG_R1B BIT(10)
++#define CMD_CFG_END_OF_CHAIN BIT(11)
++#define CMD_CFG_TIMEOUT_SHIFT 12
++#define CMD_CFG_TIMEOUT_MASK 0xf
++#define CMD_CFG_NO_RESP BIT(16)
++#define CMD_CFG_NO_CMD BIT(17)
++#define CMD_CFG_DATA_IO BIT(18)
++#define CMD_CFG_DATA_WR BIT(19)
++#define CMD_CFG_RESP_NOCRC BIT(20)
++#define CMD_CFG_RESP_128 BIT(21)
++#define CMD_CFG_RESP_NUM BIT(22)
++#define CMD_CFG_DATA_NUM BIT(23)
++#define CMD_CFG_CMD_INDEX_SHIFT 24
++#define CMD_CFG_CMD_INDEX_MASK 0x3f
++#define CMD_CFG_ERROR BIT(30)
++#define CMD_CFG_OWNER BIT(31)
++
++#define CMD_DATA_MASK (~0x3)
++#define CMD_DATA_BIG_ENDIAN BIT(1)
++#define CMD_DATA_SRAM BIT(0)
++#define CMD_RESP_MASK (~0x1)
++#define CMD_RESP_SRAM BIT(0)
++
++static int meson_mmc_clk_set(struct meson_host *host, unsigned long clk_rate)
 +{
-+	u32 val;
-+
-+	val = readl_relaxed(reg);
-+	val |= mask;
-+	writel_relaxed(val, reg);
-+
-+	/* Ensure above write is completed */
-+	mb();
-+}
-+
-+static inline void qusb2_clr_bits(void __iomem *reg, u32 mask)
-+{
-+	u32 val;
-+
-+	val = readl_relaxed(reg);
-+	val &= ~mask;
-+	writel_relaxed(val, reg);
-+
-+	/* Ensure above write is completed */
-+	mb();
-+}
-+
-+static void qcom_qusb2_phy_configure(void __iomem *base,
-+				struct qusb2_phy_init_tbl init_tbl[],
-+				int init_tbl_sz)
-+{
-+	int i;
-+
-+	for (i = 0; i < init_tbl_sz; i++) {
-+		writel_relaxed(init_tbl[i].cfg_val,
-+				base + init_tbl[i].reg_offset);
-+	}
-+
-+	/* flush buffered writes */
-+	mb();
-+}
-+
-+static void qusb2_phy_enable_clocks(struct qusb2_phy *qphy, bool on)
-+{
-+	dev_dbg(&qphy->phy->dev, "%s(): clocks_enabled:%d on:%d\n",
-+			__func__, qphy->clk_enabled, on);
-+
-+	if (!qphy->clk_enabled && on) {
-+		clk_prepare_enable(qphy->cfg_ahb_clk);
-+		if (qphy->iface_clk)
-+			clk_prepare_enable(qphy->iface_clk);
-+		clk_prepare_enable(qphy->ref_clk_src);
-+		qphy->clk_enabled = true;
-+	}
-+
-+	if (qphy->clk_enabled && !on) {
-+		clk_disable_unprepare(qphy->ref_clk_src);
-+		if (qphy->iface_clk)
-+			clk_disable_unprepare(qphy->iface_clk);
-+		clk_disable_unprepare(qphy->cfg_ahb_clk);
-+		qphy->clk_enabled = false;
-+	}
-+
-+	dev_dbg(&qphy->phy->dev, "%s(): clocks_enabled:%d\n", __func__,
-+						qphy->clk_enabled);
-+}
-+
-+static int qusb2_phy_enable_power(struct qusb2_phy *qphy, bool on)
-+{
++	struct mmc_host *mmc = host->mmc;
 +	int ret = 0;
-+	struct device *dev = &qphy->phy->dev;
++	u32 cfg;
 +
-+	dev_dbg(dev, "%s(): turn %s regulators. power_enabled:%d\n",
-+			__func__, on ? "on" : "off", qphy->pwr_enabled);
++	if (clk_rate) {
++		if (WARN_ON(clk_rate > mmc->f_max))
++			clk_rate = mmc->f_max;
++		else if (WARN_ON(clk_rate < mmc->f_min))
++			clk_rate = mmc->f_min;
++	}
 +
-+	if (qphy->pwr_enabled == on)
++	if (clk_rate == mmc->actual_clock)
 +		return 0;
 +
-+	if (!on)
-+		goto disable_vdda_phy_dpdm;
-+
-+	ret = regulator_enable(qphy->vdd_phy);
-+	if (ret) {
-+		dev_err(dev, "Unable to enable vdd-phy:%d\n", ret);
-+		goto err_vdd_phy;
++	/* stop clock */
++	cfg = readl(host->regs + SD_EMMC_CFG);
++	if (!(cfg & CFG_STOP_CLOCK)) {
++		cfg |= CFG_STOP_CLOCK;
++		writel(cfg, host->regs + SD_EMMC_CFG);
 +	}
 +
-+	ret = regulator_enable(qphy->vdda_pll);
-+	if (ret) {
-+		dev_err(dev, "Unable to enable vdda-pll:%d\n", ret);
-+		goto disable_vdd_phy;
++	dev_dbg(host->dev, "change clock rate %u -> %lu\n",
++		mmc->actual_clock, clk_rate);
++
++	if (clk_rate == 0) {
++		mmc->actual_clock = 0;
++		return 0;
 +	}
 +
-+	ret = regulator_enable(qphy->vdda_phy_dpdm);
-+	if (ret) {
-+		dev_err(dev, "Unable to enable vdda-phy-dpdm:%d\n", ret);
-+		goto disable_vdda_pll;
++	ret = clk_set_rate(host->cfg_div_clk, clk_rate);
++	if (ret)
++		dev_warn(host->dev, "Unable to set cfg_div_clk to %lu. ret=%d\n",
++			 clk_rate, ret);
++	else if (clk_rate && clk_rate != clk_get_rate(host->cfg_div_clk))
++		dev_warn(host->dev, "divider requested rate %lu != actual rate %lu: ret=%d\n",
++			 clk_rate, clk_get_rate(host->cfg_div_clk), ret);
++	else
++		mmc->actual_clock = clk_rate;
++
++	/* (re)start clock, if non-zero */
++	if (!ret && clk_rate) {
++		cfg = readl(host->regs + SD_EMMC_CFG);
++		cfg &= ~CFG_STOP_CLOCK;
++		writel(cfg, host->regs + SD_EMMC_CFG);
 +	}
 +
-+	qphy->pwr_enabled = true;
-+	dev_dbg(dev, "%s() regulators are turned on.\n", __func__);
-+
-+	return ret;
-+
-+disable_vdda_phy_dpdm:
-+	regulator_disable(qphy->vdda_phy_dpdm);
-+disable_vdda_pll:
-+	regulator_disable(qphy->vdda_pll);
-+disable_vdd_phy:
-+	regulator_disable(qphy->vdd_phy);
-+err_vdd_phy:
-+	qphy->pwr_enabled = false;
-+	dev_dbg(dev, "%s() regulators are turned off.\n", __func__);
 +	return ret;
 +}
 +
 +/*
-+ * Fetches HS Tx tuning value from e-fuse and sets QUSB2PHY_PORT_TUNE2
-+ * register.
-+ * For any error case, skip setting the value and use the default value.
++ * The SD/eMMC IP block has an internal mux and divider used for
++ * generating the MMC clock.  Use the clock framework to create and
++ * manage these clocks.
 + */
-+static int qusb2_phy_set_tune2_param(struct qusb2_phy *qphy)
++static int meson_mmc_clk_init(struct meson_host *host)
 +{
-+	struct device *dev = &qphy->phy->dev;
-+	struct nvmem_cell *cell;
-+	unsigned int bit_mask;
-+	u32 tune2_val;
-+	int bit_offset = 0;
-+	int bit_len = 0;
-+	ssize_t len;
-+	u32 *val;
-+	int ret;
++	struct clk_init_data init;
++	char clk_name[32];
++	int i, ret = 0;
++	const char *mux_parent_names[MUX_CLK_NUM_PARENTS];
++	unsigned int mux_parent_count = 0;
++	const char *clk_div_parents[1];
++	unsigned int f_min = UINT_MAX;
++	u32 clk_reg, cfg;
 +
-+	/*
-+	 * Read EFUSE register having TUNE2 parameter's high nibble.
-+	 * If efuse register shows value as 0x0, or if we fail to find
-+	 * a valid efuse register settings, then use default value
-+	 * as 0xB for high nibble that we have already set while
-+	 * configuring phy.
-+	 */
-+	cell = devm_nvmem_cell_get(dev, "tune2_hstx_trim_efuse");
-+	if (IS_ERR(cell)) {
-+		if (PTR_ERR(cell) == -EPROBE_DEFER)
-+			return PTR_ERR(cell);
-+		goto skip;
-+	}
++	/* get the mux parents */
++	for (i = 0; i < MUX_CLK_NUM_PARENTS; i++) {
++		char name[16];
 +
-+	val = (u32 *)nvmem_cell_read(cell, &len);
-+	if (!IS_ERR(val)) {
-+		ret = of_property_read_u32(dev->of_node,
-+						"qcom,hstx-trim-bit-offset",
-+						&bit_offset);
-+		if (ret) {
-+			dev_dbg(dev, "hstx-trim bit offset is invalid.\n");
-+			goto skip;
-+		}
-+
-+		ret = of_property_read_u32(dev->of_node,
-+						"qcom,hstx-trim-bit-len",
-+						&bit_len);
-+		if (ret) {
-+			dev_dbg(dev, "hstx-trim bit length is invalid.\n");
-+			goto skip;
-+		}
-+
-+		bit_mask = (1 << bit_len) - 1;
-+		dev_dbg(dev,
-+			"%s(): efuse value:%x, bit_mask:%x, bit_offset: %d\n",
-+			__func__, val[0], bit_mask, bit_offset);
-+		tune2_val = TUNE2_HIGH_NIBBLE_VAL(val[0], bit_offset, bit_mask);
-+		if (!tune2_val) {
-+			dev_dbg(dev, "hstx-trim bit length is invalid.\n");
-+			goto skip;
-+		}
-+
-+		/* Fused TUNE2 value is the higher nibble only */
-+		tune2_val = tune2_val << 0x4;
-+		qusb2_set_bits(qphy->base + QUSB2PHY_PORT_TUNE2, tune2_val);
-+	} else {
-+		dev_dbg(dev, "failed reading hs-tx trim value: %d\n", ret);
-+	}
-+
-+skip:
-+	return 0;
-+}
-+
-+static int qusb2_phy_init(struct phy *phy)
-+{
-+	struct qusb2_phy *qphy = phy_get_drvdata(phy);
-+	unsigned int reset_val;
-+	unsigned int clk_scheme;
-+	bool is_se_clk = false;
-+	int ret;
-+
-+	dev_info(&phy->dev, "Initializing QUSB2 phy\n");
-+
-+	ret = qusb2_phy_enable_power(qphy, true);
-+	if (ret)
-+		return ret;
-+
-+	qusb2_phy_enable_clocks(qphy, true);
-+
-+	/* Perform phy reset */
-+	ret = reset_control_assert(qphy->phy_reset);
-+	if (ret) {
-+		dev_err(&phy->dev, "Failed to assert phy_reset\n");
-+		return ret;
-+	}
-+	usleep_range(100, 150);
-+	ret = reset_control_deassert(qphy->phy_reset);
-+	if (ret) {
-+		dev_err(&phy->dev, "Failed to de-assert phy_reset\n");
-+		return ret;
-+	}
-+
-+	/* Disable the PHY */
-+	qusb2_set_bits(qphy->base + QUSB2PHY_PORT_POWERDOWN,
-+			CLAMP_N_EN | FREEZIO_N | POWER_DOWN);
-+
-+	/* save reset value to override based on clk scheme */
-+	reset_val = readl_relaxed(qphy->base + QUSB2PHY_PLL_TEST);
-+
-+	qcom_qusb2_phy_configure(qphy->base, qphy->cfg->phy_init_tbl,
-+				qphy->cfg->phy_init_tbl_sz);
-+
-+	/* Check for efuse value for tuning the PHY */
-+	ret = qusb2_phy_set_tune2_param(qphy);
-+	if (ret)
-+		return ret;
-+
-+	/* Enable the PHY */
-+	qusb2_clr_bits(qphy->base + QUSB2PHY_PORT_POWERDOWN, POWER_DOWN);
-+
-+	/* Require to get phy pll lock successfully */
-+	usleep_range(150, 160);
-+
-+	/*
-+	 * Use differential clk by default; later we read TCSR_PHY_CLK_SCHEME
-+	 * register to check if Single-ended clock scheme is selected. If yes,
-+	 * then disable differential ref_clk and use single-ended clock.
-+	 */
-+
-+	if (qphy->tcsr) {
-+		ret = regmap_read(qphy->tcsr, qphy->clk_scheme_offset,
-+							&clk_scheme);
-+		/* is SE-clk available ? */
-+		if (clk_scheme & PHY_CLK_SCHEME_SEL) {
-+			dev_dbg(&phy->dev, "%s: select single-ended clk src\n",
-+								__func__);
-+			is_se_clk = true;
-+		}
-+	}
-+
-+	if (is_se_clk) {
-+		reset_val |= CLK_REF_SEL;
-+		clk_disable_unprepare(qphy->ref_clk);
-+	} else {
-+		reset_val &= ~CLK_REF_SEL;
-+		clk_prepare_enable(qphy->ref_clk);
-+	}
-+
-+	writel_relaxed(reset_val, qphy->base + QUSB2PHY_PLL_TEST);
-+
-+	/* Make sure that above write is completed to get PLL source clock */
-+	wmb();
-+
-+	/* Required to get PHY PLL lock successfully */
-+	usleep_range(100, 110);
-+
-+	if (!(readb_relaxed(qphy->base + QUSB2PHY_PLL_STATUS) &
-+					PLL_LOCKED)) {
-+		dev_err(&phy->dev, "QUSB PHY PLL LOCK fails:%x\n",
-+			readb_relaxed(qphy->base + QUSB2PHY_PLL_STATUS));
-+		return -EBUSY;
-+	}
-+
-+	return 0;
-+}
-+
-+static int qusb2_phy_exit(struct phy *phy)
-+{
-+	struct qusb2_phy *qphy = phy_get_drvdata(phy);
-+
-+	/* Disable the PHY */
-+	qusb2_set_bits(qphy->base + QUSB2PHY_PORT_POWERDOWN,
-+			CLAMP_N_EN | FREEZIO_N | POWER_DOWN);
-+
-+	qusb2_phy_enable_clocks(qphy, false);
-+	qusb2_phy_enable_power(qphy, false);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops qusb2_phy_gen_ops = {
-+	.init		= qusb2_phy_init,
-+	.exit		= qusb2_phy_exit,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct of_device_id qusb2_phy_of_match_table[] = {
-+	{
-+		.compatible	= "qcom,msm8996-qusb2-phy",
-+		.data		= &msm8996_phy_init_cfg,
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, qusb2_phy_of_match_table);
-+
-+static int qusb2_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct qusb2_phy *qphy;
-+	struct phy_provider *phy_provider;
-+	struct phy *generic_phy;
-+	const struct of_device_id *match;
-+	struct resource *res;
-+	int ret = 0;
-+
-+	qphy = devm_kzalloc(dev, sizeof(*qphy), GFP_KERNEL);
-+	if (!qphy)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -ENODEV;
-+	qphy->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(qphy->base))
-+		return PTR_ERR(qphy->base);
-+
-+	qphy->cfg_ahb_clk = devm_clk_get(dev, "cfg_ahb_clk");
-+	if (IS_ERR(qphy->cfg_ahb_clk)) {
-+		ret = PTR_ERR(qphy->cfg_ahb_clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get cfg_ahb_clk\n");
-+		return ret;
-+	}
-+
-+	qphy->ref_clk_src = devm_clk_get(dev, "ref_clk_src");
-+	if (IS_ERR(qphy->ref_clk_src)) {
-+		qphy->ref_clk_src = NULL;
-+		ret = PTR_ERR(qphy->ref_clk_src);
-+		if (ret != -EPROBE_DEFER)
-+			dev_dbg(dev, "clk get failed for ref_clk_src\n");
-+	}
-+
-+	qphy->ref_clk = devm_clk_get(dev, "ref_clk");
-+	if (IS_ERR(qphy->ref_clk)) {
-+		qphy->ref_clk = NULL;
-+		ret = PTR_ERR(qphy->ref_clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_dbg(dev, "clk get failed for ref_clk\n");
-+	} else {
-+		clk_set_rate(qphy->ref_clk, 19200000);
-+	}
-+
-+	qphy->iface_clk = devm_clk_get(dev, "iface_clk");
-+	if (IS_ERR(qphy->iface_clk)) {
-+		qphy->iface_clk = NULL;
-+		ret = PTR_ERR(qphy->iface_clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_dbg(dev, "clk get failed for iface_clk\n");
-+	}
-+
-+	qphy->phy_reset = devm_reset_control_get(&pdev->dev, "phy");
-+	if (IS_ERR(qphy->phy_reset)) {
-+		dev_err(dev, "failed to get phy core reset\n");
-+		return PTR_ERR(qphy->phy_reset);
-+	}
-+
-+	qphy->vdd_phy = devm_regulator_get(dev, "vdd-phy");
-+	if (IS_ERR(qphy->vdd_phy)) {
-+		dev_err(dev, "unable to get vdd-phy supply\n");
-+		return PTR_ERR(qphy->vdd_phy);
-+	}
-+
-+	qphy->vdda_pll = devm_regulator_get(dev, "vdda-pll");
-+	if (IS_ERR(qphy->vdda_pll)) {
-+		dev_err(dev, "unable to get vdda-pll supply\n");
-+		return PTR_ERR(qphy->vdda_pll);
-+	}
-+
-+	qphy->vdda_phy_dpdm = devm_regulator_get(dev, "vdda-phy-dpdm");
-+	if (IS_ERR(qphy->vdda_phy_dpdm)) {
-+		dev_err(dev, "unable to get vdda-phy-dpdm supply\n");
-+		return PTR_ERR(qphy->vdda_phy_dpdm);
-+	}
-+
-+	/* Get the specific init parameters of QMP phy */
-+	match = of_match_node(qusb2_phy_of_match_table, dev->of_node);
-+	qphy->cfg = match->data;
-+
-+	qphy->tcsr = syscon_regmap_lookup_by_phandle(dev->of_node,
-+							"qcom,tcsr-syscon");
-+	if (!IS_ERR(qphy->tcsr)) {
-+		ret = of_property_read_u32(dev->of_node, "qcom,phy-clk-scheme",
-+						&qphy->clk_scheme_offset);
-+		if (ret) {
-+			dev_err(dev, "phy-clk-scheme reg offset is invalid\n");
-+			qphy->tcsr = NULL;
++		snprintf(name, sizeof(name), "clkin%d", i);
++		host->mux_parent[i] = devm_clk_get(host->dev, name);
++		if (IS_ERR(host->mux_parent[i])) {
++			ret = PTR_ERR(host->mux_parent[i]);
++			if (PTR_ERR(host->mux_parent[i]) != -EPROBE_DEFER)
++				dev_err(host->dev, "Missing clock %s\n", name);
++			host->mux_parent[i] = NULL;
 +			return ret;
 +		}
-+	} else {
-+		dev_dbg(dev, "Failed to lookup TCSR regmap\n");
-+		qphy->tcsr = NULL;
++
++		host->mux_parent_rate[i] = clk_get_rate(host->mux_parent[i]);
++		mux_parent_names[i] = __clk_get_name(host->mux_parent[i]);
++		mux_parent_count++;
++		if (host->mux_parent_rate[i] < f_min)
++			f_min = host->mux_parent_rate[i];
 +	}
 +
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	if (IS_ERR(phy_provider)) {
-+		ret = PTR_ERR(phy_provider);
-+		dev_err(dev, "%s: failed to register phy %d\n", __func__, ret);
-+		return ret;
-+	}
++	/* cacluate f_min based on input clocks, and max divider value */
++	if (f_min != UINT_MAX)
++		f_min = DIV_ROUND_UP(CLK_SRC_XTAL_RATE, CLK_DIV_MAX);
++	else
++		f_min = 4000000;  /* default min: 400 MHz */
++	host->mmc->f_min = f_min;
 +
-+	generic_phy = devm_phy_create(dev, NULL, &qusb2_phy_gen_ops);
-+	if (IS_ERR(generic_phy)) {
-+		ret = PTR_ERR(generic_phy);
-+		dev_err(dev, "%s: failed to create phy %d\n", __func__, ret);
-+		generic_phy = NULL;
-+		return ret;
-+	}
-+	qphy->phy = generic_phy;
++	/* create the mux */
++	snprintf(clk_name, sizeof(clk_name), "%s#mux", dev_name(host->dev));
++	init.name = clk_name;
++	init.ops = &clk_mux_ops;
++	init.flags = 0;
++	init.parent_names = mux_parent_names;
++	init.num_parents = mux_parent_count;
 +
-+	dev_set_drvdata(dev, qphy);
-+	phy_set_drvdata(generic_phy, qphy);
++	host->mux.reg = host->regs + SD_EMMC_CLOCK;
++	host->mux.shift = CLK_SRC_SHIFT;
++	host->mux.mask = CLK_SRC_MASK;
++	host->mux.flags = 0;
++	host->mux.table = NULL;
++	host->mux.hw.init = &init;
++
++	host->mux_clk = devm_clk_register(host->dev, &host->mux.hw);
++	if (WARN_ON(IS_ERR(host->mux_clk)))
++		return PTR_ERR(host->mux_clk);
++
++	/* create the divider */
++	snprintf(clk_name, sizeof(clk_name), "%s#div", dev_name(host->dev));
++	init.name = devm_kstrdup(host->dev, clk_name, GFP_KERNEL);
++	init.ops = &clk_divider_ops;
++	init.flags = CLK_SET_RATE_PARENT;
++	clk_div_parents[0] = __clk_get_name(host->mux_clk);
++	init.parent_names = clk_div_parents;
++	init.num_parents = ARRAY_SIZE(clk_div_parents);
++
++	host->cfg_div.reg = host->regs + SD_EMMC_CLOCK;
++	host->cfg_div.shift = CLK_DIV_SHIFT;
++	host->cfg_div.width = CLK_DIV_WIDTH;
++	host->cfg_div.hw.init = &init;
++	host->cfg_div.flags = CLK_DIVIDER_ONE_BASED |
++		CLK_DIVIDER_ROUND_CLOSEST | CLK_DIVIDER_ALLOW_ZERO;
++
++	host->cfg_div_clk = devm_clk_register(host->dev, &host->cfg_div.hw);
++	if (WARN_ON(PTR_ERR_OR_ZERO(host->cfg_div_clk)))
++		return PTR_ERR(host->cfg_div_clk);
++
++	/* init SD_EMMC_CLOCK to sane defaults w/min clock rate */
++	clk_reg = 0;
++	clk_reg |= CLK_PHASE_180 << CLK_PHASE_SHIFT;
++	clk_reg |= CLK_SRC_XTAL << CLK_SRC_SHIFT;
++	clk_reg |= CLK_DIV_MAX << CLK_DIV_SHIFT;
++	clk_reg &= ~CLK_ALWAYS_ON;
++	writel(clk_reg, host->regs + SD_EMMC_CLOCK);
++
++	/* Ensure clock starts in "auto" mode, not "always on" */
++	cfg = readl(host->regs + SD_EMMC_CFG);
++	cfg &= ~CFG_CLK_ALWAYS_ON;
++	cfg |= CFG_AUTO_CLK;
++	writel(cfg, host->regs + SD_EMMC_CFG);
++
++	ret = clk_prepare_enable(host->cfg_div_clk);
++	if (!ret)
++		ret = meson_mmc_clk_set(host, f_min);
++
++	if (!ret)
++		clk_disable_unprepare(host->cfg_div_clk);
 +
 +	return ret;
 +}
 +
-+static struct platform_driver qusb2_phy_driver = {
-+	.probe		= qusb2_phy_probe,
-+	.driver = {
-+		.name	= "qcom-qusb2-phy",
-+		.of_match_table = of_match_ptr(qusb2_phy_of_match_table),
++static void meson_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
++{
++	struct meson_host *host = mmc_priv(mmc);
++	u32 bus_width;
++	u32 val, orig;
++
++	/*
++	 * GPIO regulator, only controls switching between 1v8 and
++	 * 3v3, doesn't support MMC_POWER_OFF, MMC_POWER_ON.
++	 */
++	switch (ios->power_mode) {
++	case MMC_POWER_OFF:
++		if (!IS_ERR(mmc->supply.vmmc))
++			mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, 0);
++
++		if (!IS_ERR(mmc->supply.vqmmc) && host->vqmmc_enabled) {
++			regulator_disable(mmc->supply.vqmmc);
++			host->vqmmc_enabled = false;
++		}
++
++		break;
++
++	case MMC_POWER_UP:
++		if (!IS_ERR(mmc->supply.vmmc))
++			mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, ios->vdd);
++		break;
++
++	case MMC_POWER_ON:
++		if (!IS_ERR(mmc->supply.vqmmc) && !host->vqmmc_enabled) {
++			int ret = regulator_enable(mmc->supply.vqmmc);
++
++			if (ret < 0)
++				dev_err(mmc_dev(mmc),
++					"failed to enable vqmmc regulator\n");
++			else
++				host->vqmmc_enabled = true;
++		}
++
++		break;
++	}
++
++
++	meson_mmc_clk_set(host, ios->clock);
++
++	/* Bus width */
++	val = readl(host->regs + SD_EMMC_CFG);
++	switch (ios->bus_width) {
++	case MMC_BUS_WIDTH_1:
++		bus_width = CFG_BUS_WIDTH_1;
++		break;
++	case MMC_BUS_WIDTH_4:
++		bus_width = CFG_BUS_WIDTH_4;
++		break;
++	case MMC_BUS_WIDTH_8:
++		bus_width = CFG_BUS_WIDTH_8;
++		break;
++	default:
++		dev_err(host->dev, "Invalid ios->bus_width: %u.  Setting to 4.\n",
++			ios->bus_width);
++		bus_width = CFG_BUS_WIDTH_4;
++		return;
++	}
++
++	val = readl(host->regs + SD_EMMC_CFG);
++	orig = val;
++
++	val &= ~(CFG_BUS_WIDTH_MASK << CFG_BUS_WIDTH_SHIFT);
++	val |= bus_width << CFG_BUS_WIDTH_SHIFT;
++
++	val &= ~(CFG_BLK_LEN_MASK << CFG_BLK_LEN_SHIFT);
++	val |= ilog2(SD_EMMC_CFG_BLK_SIZE) << CFG_BLK_LEN_SHIFT;
++
++	val &= ~(CFG_RESP_TIMEOUT_MASK << CFG_RESP_TIMEOUT_SHIFT);
++	val |= ilog2(SD_EMMC_CFG_RESP_TIMEOUT) << CFG_RESP_TIMEOUT_SHIFT;
++
++	val &= ~(CFG_RC_CC_MASK << CFG_RC_CC_SHIFT);
++	val |= ilog2(SD_EMMC_CFG_CMD_GAP) << CFG_RC_CC_SHIFT;
++
++	writel(val, host->regs + SD_EMMC_CFG);
++
++	if (val != orig)
++		dev_dbg(host->dev, "%s: SD_EMMC_CFG: 0x%08x -> 0x%08x\n",
++			__func__, orig, val);
++}
++
++static int meson_mmc_request_done(struct mmc_host *mmc, struct mmc_request *mrq)
++{
++	struct meson_host *host = mmc_priv(mmc);
++
++	WARN_ON(host->mrq != mrq);
++
++	host->mrq = NULL;
++	host->cmd = NULL;
++	mmc_request_done(host->mmc, mrq);
++
++	return 0;
++}
++
++static void meson_mmc_start_cmd(struct mmc_host *mmc, struct mmc_command *cmd)
++{
++	struct meson_host *host = mmc_priv(mmc);
++	struct sd_emmc_desc *desc, desc_tmp;
++	u32 cfg;
++	u8 blk_len, cmd_cfg_timeout;
++	unsigned int xfer_bytes = 0;
++
++	/* Setup descriptors */
++	dma_rmb();
++	desc = &desc_tmp;
++	memset(desc, 0, sizeof(struct sd_emmc_desc));
++
++	desc->cmd_cfg |= (cmd->opcode & CMD_CFG_CMD_INDEX_MASK)	<<
++		CMD_CFG_CMD_INDEX_SHIFT;
++	desc->cmd_cfg |= CMD_CFG_OWNER;  /* owned by CPU */
++	desc->cmd_arg = cmd->arg;
++
++	/* Response */
++	if (cmd->flags & MMC_RSP_PRESENT) {
++		desc->cmd_cfg &= ~CMD_CFG_NO_RESP;
++		if (cmd->flags & MMC_RSP_136)
++			desc->cmd_cfg |= CMD_CFG_RESP_128;
++		desc->cmd_cfg |= CMD_CFG_RESP_NUM;
++		desc->cmd_resp = 0;
++
++		if (!(cmd->flags & MMC_RSP_CRC))
++			desc->cmd_cfg |= CMD_CFG_RESP_NOCRC;
++
++		if (cmd->flags & MMC_RSP_BUSY)
++			desc->cmd_cfg |= CMD_CFG_R1B;
++	} else {
++		desc->cmd_cfg |= CMD_CFG_NO_RESP;
++	}
++
++	/* data? */
++	if (cmd->data) {
++		desc->cmd_cfg |= CMD_CFG_DATA_IO;
++		if (cmd->data->blocks > 1) {
++			desc->cmd_cfg |= CMD_CFG_BLOCK_MODE;
++			desc->cmd_cfg |=
++				(cmd->data->blocks & CMD_CFG_LENGTH_MASK) <<
++				CMD_CFG_LENGTH_SHIFT;
++
++			/* check if block-size matches, if not update */
++			cfg = readl(host->regs + SD_EMMC_CFG);
++			blk_len = cfg & (CFG_BLK_LEN_MASK << CFG_BLK_LEN_SHIFT);
++			blk_len >>= CFG_BLK_LEN_SHIFT;
++			if (blk_len != ilog2(cmd->data->blksz)) {
++				dev_warn(host->dev, "%s: update blk_len %d -> %d\n",
++					__func__, blk_len,
++					 ilog2(cmd->data->blksz));
++				blk_len = ilog2(cmd->data->blksz);
++				cfg &= ~(CFG_BLK_LEN_MASK << CFG_BLK_LEN_SHIFT);
++				cfg |= blk_len << CFG_BLK_LEN_SHIFT;
++				writel(cfg, host->regs + SD_EMMC_CFG);
++			}
++		} else {
++			desc->cmd_cfg &= ~CMD_CFG_BLOCK_MODE;
++			desc->cmd_cfg |=
++				(cmd->data->blksz & CMD_CFG_LENGTH_MASK) <<
++				CMD_CFG_LENGTH_SHIFT;
++		}
++
++		cmd->data->bytes_xfered = 0;
++		xfer_bytes = cmd->data->blksz * cmd->data->blocks;
++		if (cmd->data->flags & MMC_DATA_WRITE) {
++			desc->cmd_cfg |= CMD_CFG_DATA_WR;
++			WARN_ON(xfer_bytes > host->bounce_buf_size);
++			sg_copy_to_buffer(cmd->data->sg, cmd->data->sg_len,
++					  host->bounce_buf, xfer_bytes);
++			cmd->data->bytes_xfered = xfer_bytes;
++			dma_wmb();
++		} else {
++			desc->cmd_cfg &= ~CMD_CFG_DATA_WR;
++		}
++
++		if (xfer_bytes > 0) {
++			desc->cmd_cfg &= ~CMD_CFG_DATA_NUM;
++			desc->cmd_data = host->bounce_dma_addr & CMD_DATA_MASK;
++		} else {
++			/* write data to data_addr */
++			desc->cmd_cfg |= CMD_CFG_DATA_NUM;
++			desc->cmd_data = 0;
++		}
++
++		cmd_cfg_timeout = 12;
++	} else {
++		desc->cmd_cfg &= ~CMD_CFG_DATA_IO;
++		cmd_cfg_timeout = 10;
++	}
++	desc->cmd_cfg |= (cmd_cfg_timeout & CMD_CFG_TIMEOUT_MASK) <<
++		CMD_CFG_TIMEOUT_SHIFT;
++
++	host->cmd = cmd;
++
++	/* Last descriptor */
++	desc->cmd_cfg |= CMD_CFG_END_OF_CHAIN;
++	writel(desc->cmd_cfg, host->regs + SD_EMMC_CMD_CFG);
++	writel(desc->cmd_data, host->regs + SD_EMMC_CMD_DAT);
++	writel(desc->cmd_resp, host->regs + SD_EMMC_CMD_RSP);
++	wmb(); /* ensure descriptor is written before kicked */
++	writel(desc->cmd_arg, host->regs + SD_EMMC_CMD_ARG);
++}
++
++static void meson_mmc_request(struct mmc_host *mmc, struct mmc_request *mrq)
++{
++	struct meson_host *host = mmc_priv(mmc);
++
++	WARN_ON(host->mrq != NULL);
++
++	/* Stop execution */
++	writel(0, host->regs + SD_EMMC_START);
++
++	/* clear, ack, enable all interrupts */
++	writel(0, host->regs + SD_EMMC_IRQ_EN);
++	writel(IRQ_EN_MASK, host->regs + SD_EMMC_STATUS);
++	writel(IRQ_EN_MASK, host->regs + SD_EMMC_IRQ_EN);
++
++	host->mrq = mrq;
++
++	if (mrq->sbc)
++		meson_mmc_start_cmd(mmc, mrq->sbc);
++	else
++		meson_mmc_start_cmd(mmc, mrq->cmd);
++}
++
++static int meson_mmc_read_resp(struct mmc_host *mmc, struct mmc_command *cmd)
++{
++	struct meson_host *host = mmc_priv(mmc);
++
++	if (cmd->flags & MMC_RSP_136) {
++		cmd->resp[0] = readl(host->regs + SD_EMMC_CMD_RSP3);
++		cmd->resp[1] = readl(host->regs + SD_EMMC_CMD_RSP2);
++		cmd->resp[2] = readl(host->regs + SD_EMMC_CMD_RSP1);
++		cmd->resp[3] = readl(host->regs + SD_EMMC_CMD_RSP);
++	} else if (cmd->flags & MMC_RSP_PRESENT) {
++		cmd->resp[0] = readl(host->regs + SD_EMMC_CMD_RSP);
++	}
++
++	return 0;
++}
++
++static irqreturn_t meson_mmc_irq(int irq, void *dev_id)
++{
++	struct meson_host *host = dev_id;
++	struct mmc_request *mrq;
++	struct mmc_command *cmd = host->cmd;
++	u32 irq_en, status, raw_status;
++	irqreturn_t ret = IRQ_HANDLED;
++
++	if (WARN_ON(!host))
++		return IRQ_NONE;
++
++	mrq = host->mrq;
++
++	if (WARN_ON(!mrq))
++		return IRQ_NONE;
++
++	if (WARN_ON(!cmd))
++		return IRQ_NONE;
++
++	spin_lock(&host->lock);
++	irq_en = readl(host->regs + SD_EMMC_IRQ_EN);
++	raw_status = readl(host->regs + SD_EMMC_STATUS);
++	status = raw_status & irq_en;
++
++	if (!status) {
++		dev_warn(host->dev, "Spurious IRQ! status=0x%08x, irq_en=0x%08x\n",
++			 raw_status, irq_en);
++		ret = IRQ_NONE;
++		goto out;
++	}
++
++	cmd->error = 0;
++	if (status & IRQ_RXD_ERR_MASK) {
++		dev_dbg(host->dev, "Unhandled IRQ: RXD error\n");
++		cmd->error = -EILSEQ;
++	}
++	if (status & IRQ_TXD_ERR) {
++		dev_dbg(host->dev, "Unhandled IRQ: TXD error\n");
++		cmd->error = -EILSEQ;
++	}
++	if (status & IRQ_DESC_ERR)
++		dev_dbg(host->dev, "Unhandled IRQ: Descriptor error\n");
++	if (status & IRQ_RESP_ERR) {
++		dev_dbg(host->dev, "Unhandled IRQ: Response error\n");
++		cmd->error = -EILSEQ;
++	}
++	if (status & IRQ_RESP_TIMEOUT) {
++		dev_dbg(host->dev, "Unhandled IRQ: Response timeout\n");
++		cmd->error = -ETIMEDOUT;
++	}
++	if (status & IRQ_DESC_TIMEOUT) {
++		dev_dbg(host->dev, "Unhandled IRQ: Descriptor timeout\n");
++		cmd->error = -ETIMEDOUT;
++	}
++	if (status & IRQ_SDIO)
++		dev_dbg(host->dev, "Unhandled IRQ: SDIO.\n");
++
++	if (status & (IRQ_END_OF_CHAIN | IRQ_RESP_STATUS))
++		ret = IRQ_WAKE_THREAD;
++	else  {
++		dev_warn(host->dev, "Unknown IRQ! status=0x%04x: MMC CMD%u arg=0x%08x flags=0x%08x stop=%d\n",
++			 status, cmd->opcode, cmd->arg,
++			 cmd->flags, mrq->stop ? 1 : 0);
++		if (cmd->data) {
++			struct mmc_data *data = cmd->data;
++
++			dev_warn(host->dev, "\tblksz %u blocks %u flags 0x%08x (%s%s)",
++				 data->blksz, data->blocks, data->flags,
++				 data->flags & MMC_DATA_WRITE ? "write" : "",
++				 data->flags & MMC_DATA_READ ? "read" : "");
++		}
++	}
++
++out:
++	/* ack all (enabled) interrupts */
++	writel(status, host->regs + SD_EMMC_STATUS);
++
++	if (ret == IRQ_HANDLED) {
++		meson_mmc_read_resp(host->mmc, cmd);
++		meson_mmc_request_done(host->mmc, cmd->mrq);
++	}
++
++	spin_unlock(&host->lock);
++	return ret;
++}
++
++static irqreturn_t meson_mmc_irq_thread(int irq, void *dev_id)
++{
++	struct meson_host *host = dev_id;
++	struct mmc_request *mrq = host->mrq;
++	struct mmc_command *cmd = host->cmd;
++	struct mmc_data *data;
++	unsigned int xfer_bytes;
++	int ret = IRQ_HANDLED;
++
++	if (WARN_ON(!mrq))
++		ret = IRQ_NONE;
++
++	if (WARN_ON(!cmd))
++		ret = IRQ_NONE;
++
++	data = cmd->data;
++	if (data) {
++		xfer_bytes = data->blksz * data->blocks;
++		if (data->flags & MMC_DATA_READ) {
++			WARN_ON(xfer_bytes > host->bounce_buf_size);
++			sg_copy_from_buffer(data->sg, data->sg_len,
++					    host->bounce_buf, xfer_bytes);
++			data->bytes_xfered = xfer_bytes;
++		}
++	}
++
++	meson_mmc_read_resp(host->mmc, cmd);
++	if (!data || !data->stop || mrq->sbc)
++		meson_mmc_request_done(host->mmc, mrq);
++	else
++		meson_mmc_start_cmd(host->mmc, data->stop);
++
++	return ret;
++}
++
++/*
++ * NOTE: we only need this until the GPIO/pinctrl driver can handle
++ * interrupts.  For now, the MMC core will use this for polling.
++ */
++static int meson_mmc_get_cd(struct mmc_host *mmc)
++{
++	int status = mmc_gpio_get_cd(mmc);
++
++	if (status == -ENOSYS)
++		return 1; /* assume present */
++
++	return status;
++}
++
++static const struct mmc_host_ops meson_mmc_ops = {
++	.request	= meson_mmc_request,
++	.set_ios	= meson_mmc_set_ios,
++	.get_cd         = meson_mmc_get_cd,
++};
++
++static int meson_mmc_probe(struct platform_device *pdev)
++{
++	struct resource *res;
++	struct meson_host *host;
++	struct mmc_host *mmc;
++	int ret;
++
++	mmc = mmc_alloc_host(sizeof(struct meson_host), &pdev->dev);
++	if (!mmc)
++		return -ENOMEM;
++	host = mmc_priv(mmc);
++	host->mmc = mmc;
++	host->dev = &pdev->dev;
++	dev_set_drvdata(&pdev->dev, host);
++
++	spin_lock_init(&host->lock);
++
++	/* Get regulators and the supported OCR mask */
++	host->vqmmc_enabled = false;
++	ret = mmc_regulator_get_supply(mmc);
++	if (ret == -EPROBE_DEFER)
++		goto free_host;
++
++	ret = mmc_of_parse(mmc);
++	if (ret) {
++		dev_warn(&pdev->dev, "error parsing DT: %d\n", ret);
++		goto free_host;
++	}
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	host->regs = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(host->regs)) {
++		ret = PTR_ERR(host->regs);
++		goto free_host;
++	}
++
++	host->irq = platform_get_irq(pdev, 0);
++	if (host->irq == 0) {
++		dev_err(&pdev->dev, "failed to get interrupt resource.\n");
++		ret = -EINVAL;
++		goto free_host;
++	}
++
++	host->core_clk = devm_clk_get(&pdev->dev, "core");
++	if (IS_ERR(host->core_clk)) {
++		ret = PTR_ERR(host->core_clk);
++		goto free_host;
++	}
++
++	ret = clk_prepare_enable(host->core_clk);
++	if (ret)
++		goto free_host;
++
++	ret = meson_mmc_clk_init(host);
++	if (ret)
++		goto free_host;
++
++	/* Stop execution */
++	writel(0, host->regs + SD_EMMC_START);
++
++	/* clear, ack, enable all interrupts */
++	writel(0, host->regs + SD_EMMC_IRQ_EN);
++	writel(IRQ_EN_MASK, host->regs + SD_EMMC_STATUS);
++
++	ret = devm_request_threaded_irq(&pdev->dev, host->irq,
++					meson_mmc_irq, meson_mmc_irq_thread,
++					IRQF_SHARED, DRIVER_NAME, host);
++	if (ret)
++		goto free_host;
++
++	/* data bounce buffer */
++	host->bounce_buf_size = SZ_512K;
++	host->bounce_buf =
++		dma_alloc_coherent(host->dev, host->bounce_buf_size,
++				   &host->bounce_dma_addr, GFP_KERNEL);
++	if (host->bounce_buf == NULL) {
++		dev_err(host->dev, "Unable to map allocate DMA bounce buffer.\n");
++		ret = -ENOMEM;
++		goto free_host;
++	}
++
++	mmc->ops = &meson_mmc_ops;
++	mmc_add_host(mmc);
++
++	return 0;
++
++free_host:
++	clk_disable_unprepare(host->cfg_div_clk);
++	clk_disable_unprepare(host->core_clk);
++	mmc_free_host(mmc);
++	return ret;
++}
++
++static int meson_mmc_remove(struct platform_device *pdev)
++{
++	struct meson_host *host = dev_get_drvdata(&pdev->dev);
++
++	if (WARN_ON(!host))
++		return 0;
++
++	if (host->bounce_buf)
++		dma_free_coherent(host->dev, host->bounce_buf_size,
++				  host->bounce_buf, host->bounce_dma_addr);
++
++	clk_disable_unprepare(host->cfg_div_clk);
++	clk_disable_unprepare(host->core_clk);
++
++	mmc_free_host(host->mmc);
++	return 0;
++}
++
++static const struct of_device_id meson_mmc_of_match[] = {
++	{ .compatible = "amlogic,meson-gx-mmc", },
++	{ .compatible = "amlogic,meson-gxbb-mmc", },
++	{ .compatible = "amlogic,meson-gxl-mmc", },
++	{ .compatible = "amlogic,meson-gxm-mmc", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, meson_mmc_of_match);
++
++static struct platform_driver meson_mmc_driver = {
++	.probe		= meson_mmc_probe,
++	.remove		= meson_mmc_remove,
++	.driver		= {
++		.name = DRIVER_NAME,
++		.of_match_table = of_match_ptr(meson_mmc_of_match),
 +	},
 +};
 +
-+module_platform_driver(qusb2_phy_driver);
++module_platform_driver(meson_mmc_driver);
 +
-+MODULE_AUTHOR("Vivek Gautam <vivek.gautam@codeaurora.org>");
-+MODULE_DESCRIPTION("Qualcomm QUSB2 PHY driver");
++MODULE_ALIAS("platform:" DRIVER_NAME);
++MODULE_DESCRIPTION("Amlogic S905/GXBB SD/eMMC driver");
++MODULE_AUTHOR("Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>");
 +MODULE_LICENSE("GPL v2");
++
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
