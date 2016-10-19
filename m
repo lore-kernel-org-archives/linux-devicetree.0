@@ -1,306 +1,73 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] mtd: nand: Add OX820 NAND Support
-Date: Wed, 19 Oct 2016 16:55:23 +0200
-Message-ID: <20161019145523.6763-1-narmstrong@baylibre.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC V2 PATCH 10/12] arm64: dts: msm8994 issolate non standard bootloader/LK entries
+Date: Wed, 19 Oct 2016 16:56:20 +0200
+Message-ID: <4976066.k14mpQt0HJ@wuerfel>
+References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com> <2149904.D2eaQZN3bA@wuerfel> <17447be1-4357-0eca-a242-69576d3e2799@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <17447be1-4357-0eca-a242-69576d3e2799-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org
+To: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, git-LJ92rlH3Dns@public.gmane.org, jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add NAND driver to support the Oxford Semiconductor OX820 NAND Controller.
-This is a simple memory mapped NAND controller with single chip select and
-software ECC.
+On Wednesday, October 12, 2016 5:59:41 PM CEST Jeremy McNicoll wrote:
+> On 2016-10-12 3:39 AM, Arnd Bergmann wrote:
+> > On Tuesday, October 11, 2016 7:41:22 PM CEST Rob Herring wrote:
+> >> On Sat, Oct 1, 2016 at 9:38 PM, Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> >>> These non standard DT entries need to be cast aside as to not
+> >>> pollute the main device tree bindings.  Without these essential
+> >>> DT items the bootloader/LK will not pass control over to the kernel
+> >>> and thus never boot.
+> >>
+> >> I discussed this with Stephen recently. I'm okay with leaving these on
+> >> boards that have no chance of getting updated bootloaders to use the
+> >> compatible string instead. Having to use dtbTool is far worse than a
+> >> couple of extra properties IMO. I reserve the right to complain if new
+> >> stuff continues to use these though.
+> >>
+> >>> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>> ---
+> >>>  .../arm64/boot/dts/qcom/msm8994-angler-rev-101.dts |  1 -
+> >>>  arch/arm64/boot/dts/qcom/msm8994.dtsi              |  3 +--
+> >>>  .../boot/dts/qcom/nexus6p_bootloader_bits.dtsi     | 24 ++++++++++++++++++++++
+> >>
+> >> Just put this into the board file rather than yet another include.
+> >
+> > The suggestion that I had was to have two .dts files: the normal
+> > one without these properties, and another .dts file including the
+> > first but adding these three for compatibility with the legacy
+> > bootloaders.
+> >
+> 
+(sorry for the late reply, I thought I had replied already but
+couldn't find that in the archives when I saw I still had this
+reply open)
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/mtd/oxnas-nand.txt         |  24 +++
- drivers/mtd/nand/Kconfig                           |   5 +
- drivers/mtd/nand/Makefile                          |   1 +
- drivers/mtd/nand/oxnas_nand.c                      | 204 +++++++++++++++++++++
- 4 files changed, 234 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/oxnas-nand.txt
- create mode 100644 drivers/mtd/nand/oxnas_nand.c
+> So I did it backwards from what you had suggested?
+> Based on my discussion with, (cant seem to recall) my understanding
+> was that we simply wanted to have these 3 bootloader specific entries
+> in another file.
 
-Changes since RFC http://lkml.kernel.org/r/20161018090927.1990-1-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org :
- - Avoid using chip->IO_ADDR*
- - Use new DT structure
- - Assign a chip for the subnode
- - Use the nand_hw_control structure
- - Cleanup probe
- - Cleanup cmd_ctrl by using a context ctrl offset used in write_bytes
+Right
 
-diff --git a/Documentation/devicetree/bindings/mtd/oxnas-nand.txt b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
-new file mode 100644
-index 0000000..83b684d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
-@@ -0,0 +1,24 @@
-+* Oxford Semiconductor OXNAS NAND Controller
-+
-+Please refer to nand.txt for generic information regarding MTD NAND bindings.
-+
-+Required properties:
-+ - compatible: "oxsemi,ox820-nand"
-+ - reg: Base address and length for NAND mapped memory.
-+
-+Optional Properties:
-+ - clocks: phandle to the NAND gate clock if needed.
-+ - resets: phandle to the NAND reset control if needed.
-+
-+Example:
-+
-+nand: nand@41000000 {
-+	compatible = "oxsemi,ox820-nand";
-+	reg = <0x41000000 0x100000>;
-+	nand-ecc-mode = "soft";
-+	clocks = <&stdclk CLK_820_NAND>;
-+	resets = <&reset RESET_NAND>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	status = "disabled";
-+};
-diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
-index 7b7a887..c023125 100644
---- a/drivers/mtd/nand/Kconfig
-+++ b/drivers/mtd/nand/Kconfig
-@@ -426,6 +426,11 @@ config MTD_NAND_ORION
- 	  No board specific support is done by this driver, each board
- 	  must advertise a platform_device for the driver to attach.
- 
-+config MTD_NAND_OXNAS
-+	tristate "NAND Flash support for Oxford Semiconductor SoC"
-+	help
-+	  This enables the NAND flash controller on Oxford Semiconductor SoCs.
-+
- config MTD_NAND_FSL_ELBC
- 	tristate "NAND support for Freescale eLBC controllers"
- 	depends on FSL_SOC
-diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
-index cafde6f..05fc054 100644
---- a/drivers/mtd/nand/Makefile
-+++ b/drivers/mtd/nand/Makefile
-@@ -35,6 +35,7 @@ obj-$(CONFIG_MTD_NAND_TMIO)		+= tmio_nand.o
- obj-$(CONFIG_MTD_NAND_PLATFORM)		+= plat_nand.o
- obj-$(CONFIG_MTD_NAND_PASEMI)		+= pasemi_nand.o
- obj-$(CONFIG_MTD_NAND_ORION)		+= orion_nand.o
-+obj-$(CONFIG_MTD_NAND_OXNAS)		+= oxnas_nand.o
- obj-$(CONFIG_MTD_NAND_FSL_ELBC)		+= fsl_elbc_nand.o
- obj-$(CONFIG_MTD_NAND_FSL_IFC)		+= fsl_ifc_nand.o
- obj-$(CONFIG_MTD_NAND_FSL_UPM)		+= fsl_upm.o
-diff --git a/drivers/mtd/nand/oxnas_nand.c b/drivers/mtd/nand/oxnas_nand.c
-new file mode 100644
-index 0000000..a9fe1ac
---- /dev/null
-+++ b/drivers/mtd/nand/oxnas_nand.c
-@@ -0,0 +1,204 @@
-+/*
-+ * Oxford Semiconductor OXNAS NAND driver
-+
-+ * Copyright (C) 2016 Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-+ * Heavily based on plat_nand.c :
-+ * Author: Vitaly Wool <vitalywool-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ * Copyright (C) 2013 Ma Haijun <mahaijuns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ * Copyright (C) 2012 John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/clk.h>
-+#include <linux/reset.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/mtd/nand.h>
-+#include <linux/mtd/partitions.h>
-+#include <linux/of.h>
-+
-+/* Nand commands */
-+#define OXNAS_NAND_CMD_ALE		BIT(18)
-+#define OXNAS_NAND_CMD_CLE		BIT(19)
-+
-+#define OXNAS_NAND_MAX_CHIPS	1
-+
-+struct oxnas_nand {
-+	struct nand_hw_control base;
-+	void __iomem *io_base;
-+	struct clk *clk;
-+	struct nand_chip *chips[OXNAS_NAND_MAX_CHIPS];
-+	unsigned long ctrl;
-+};
-+
-+static uint8_t oxnas_nand_read_byte(struct mtd_info *mtd)
-+{
-+	struct nand_chip *chip = mtd_to_nand(mtd);
-+	struct oxnas_nand *oxnas = nand_get_controller_data(chip);
-+
-+	return readb(oxnas->io_base);
-+}
-+
-+static void oxnas_nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
-+{
-+	struct nand_chip *chip = mtd_to_nand(mtd);
-+	struct oxnas_nand *oxnas = nand_get_controller_data(chip);
-+
-+	ioread8_rep(oxnas->io_base, buf, len);
-+}
-+
-+static void oxnas_nand_write_buf(struct mtd_info *mtd,
-+				 const uint8_t *buf, int len)
-+{
-+	struct nand_chip *chip = mtd_to_nand(mtd);
-+	struct oxnas_nand *oxnas = nand_get_controller_data(chip);
-+
-+	iowrite8_rep(oxnas->io_base + oxnas->ctrl, buf, len);
-+}
-+
-+/* Single CS command control */
-+static void oxnas_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
-+				unsigned int ctrl)
-+{
-+	struct nand_chip *chip = mtd_to_nand(mtd);
-+	struct oxnas_nand *oxnas = nand_get_controller_data(chip);
-+
-+	if (ctrl & NAND_CTRL_CHANGE) {
-+		if (ctrl & NAND_CLE)
-+			oxnas->ctrl = OXNAS_NAND_CMD_CLE;
-+		else if (ctrl & NAND_ALE)
-+			oxnas->ctrl = OXNAS_NAND_CMD_ALE;
-+		else
-+			oxnas->ctrl = 0;
-+	}
-+
-+	if (cmd != NAND_CMD_NONE)
-+		writeb(cmd, oxnas->io_base + oxnas->ctrl);
-+}
-+
-+/*
-+ * Probe for the NAND device.
-+ */
-+static int oxnas_nand_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *nand_np;
-+	struct oxnas_nand *oxnas;
-+	struct nand_chip *chip;
-+	struct mtd_info *mtd;
-+	struct resource *res;
-+	int nchips = 0;
-+	int count = 0;
-+	int err = 0;
-+
-+	/* Allocate memory for the device structure (and zero it) */
-+	oxnas = devm_kzalloc(&pdev->dev, sizeof(struct nand_chip),
-+			    GFP_KERNEL);
-+	if (!oxnas)
-+		return -ENOMEM;
-+
-+	nand_hw_control_init(&oxnas->base);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	oxnas->io_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(oxnas->io_base))
-+		return PTR_ERR(oxnas->io_base);
-+
-+	oxnas->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(oxnas->clk))
-+		oxnas->clk = NULL;
-+
-+	/* Only a single chip node is supported */
-+	count = of_get_child_count(np);
-+	if (count > 1)
-+		return -EINVAL;
-+
-+	clk_prepare_enable(oxnas->clk);
-+	device_reset_optional(&pdev->dev);
-+
-+	for_each_child_of_node(np, nand_np) {
-+		chip = devm_kzalloc(&pdev->dev, sizeof(struct nand_chip),
-+				    GFP_KERNEL);
-+		if (!chip)
-+			return -ENOMEM;
-+
-+		chip->controller = &oxnas->base;
-+
-+		nand_set_flash_node(chip, nand_np);
-+		nand_set_controller_data(chip, oxnas);
-+
-+		mtd = nand_to_mtd(chip);
-+		mtd->dev.parent = &pdev->dev;
-+		mtd->priv = chip;
-+
-+		chip->cmd_ctrl = oxnas_nand_cmd_ctrl;
-+		chip->read_buf = oxnas_nand_read_buf;
-+		chip->read_byte = oxnas_nand_read_byte;
-+		chip->write_buf = oxnas_nand_write_buf;
-+		chip->chip_delay = 30;
-+
-+		/* Scan to find existence of the device */
-+		err = nand_scan(mtd, 1);
-+		if (err)
-+			return err;
-+
-+		err = mtd_device_register(mtd, NULL, 0);
-+		if (err) {
-+			nand_release(mtd);
-+			return err;
-+		}
-+
-+		oxnas->chips[nchips] = chip;
-+		++nchips;
-+	}
-+
-+	/* Exit if no chips found */
-+	if (!nchips)
-+		return -ENODEV;
-+
-+	platform_set_drvdata(pdev, oxnas);
-+
-+	return 0;
-+}
-+
-+static int oxnas_nand_remove(struct platform_device *pdev)
-+{
-+	struct oxnas_nand *oxnas = platform_get_drvdata(pdev);
-+
-+	if (oxnas->chips[0])
-+		nand_release(nand_to_mtd(oxnas->chips[0]));
-+
-+	clk_disable_unprepare(oxnas->clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id oxnas_nand_match[] = {
-+	{ .compatible = "oxsemi,ox820-nand" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, oxnas_nand_match);
-+
-+static struct platform_driver oxnas_nand_driver = {
-+	.probe	= oxnas_nand_probe,
-+	.remove	= oxnas_nand_remove,
-+	.driver	= {
-+		.name		= "oxnas_nand",
-+		.of_match_table = oxnas_nand_match,
-+	},
-+};
-+
-+module_platform_driver(oxnas_nand_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>");
-+MODULE_DESCRIPTION("Oxnas NAND driver");
-+MODULE_ALIAS("platform:oxnas_nand");
--- 
-2.7.0
+What I would like to see here is two separate .dtb files, one
+with the hack and one without it, so we have a migration path
+for the machines that eventually get a boot loader with proper
+DT support.
 
+> > That way we could have a 'clean' .dtb file once the bootloaders
+> > get fixed, and can name the other one appropriately to discourage
+> > copying the method for new machines.
+> >
+> 
+> Did you miss the part about Ebola or Bubonic plague ?
+
+I did, which means others are likely to miss it as well ;-)
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
