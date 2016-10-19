@@ -1,78 +1,317 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/3] ARM: bus: da8xx-syscfg: new driver
-Date: Wed, 19 Oct 2016 11:53:30 +0300
-Message-ID: <2278105.geKhb8xoNC@avalon>
-References: <1476721850-454-1-git-send-email-bgolaszewski@baylibre.com>
- <4369153.vCOQzI7OET@avalon>
- <CAMpxmJXwZ8pQ58OgV4w88yNuG1Fd8++1yP-Frd2QJFO9uJJueQ@mail.gmail.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [PATCH v3 2/4] drivers: iio: ti_am335x_adc: add dma support
+Date: Wed, 19 Oct 2016 14:22:20 +0530
+Message-ID: <d7dd9a21-51d9-e8f5-a6fe-34653afc9240@ti.com>
+References: <20161005090443.24576-1-mugunthanvnm@ti.com>
+ <20161005090443.24576-3-mugunthanvnm@ti.com>
+ <d0105217-a8ee-cd8e-221d-34c19257765e@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAMpxmJXwZ8pQ58OgV4w88yNuG1Fd8++1yP-Frd2QJFO9uJJueQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <d0105217-a8ee-cd8e-221d-34c19257765e@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, "Andrew F . Davis" <afd@ti.com>, John Syne <john3909@gmail.com>, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmFydG9zeiwKCk9uIFdlZG5lc2RheSAxOSBPY3QgMjAxNiAxMDoyNjo1NyBCYXJ0b3N6IEdv
-bGFzemV3c2tpIHdyb3RlOgo+IDIwMTYtMTAtMTggMjI6NDkgR01UKzAyOjAwIExhdXJlbnQgUGlu
-Y2hhcnQ6Cj4gPiBPbiBNb25kYXkgMTcgT2N0IDIwMTYgMTg6MzA6NDkgQmFydG9zeiBHb2xhc3pl
-d3NraSB3cm90ZToKPiA+PiBDcmVhdGUgdGhlIGRyaXZlciBmb3IgdGhlIGRhOHh4IFN5c3RlbSBD
-b25maWd1cmF0aW9uIGFuZCBpbXBsZW1lbnQKPiA+PiBzdXBwb3J0IGZvciB3cml0aW5nIHRvIHRo
-ZSB0aHJlZSBNYXN0ZXIgUHJpb3JpdHkgcmVnaXN0ZXJzLgo+ID4+IAo+ID4+IFNpZ25lZC1vZmYt
-Ynk6IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pld3NraUBiYXlsaWJyZS5jb20+Cj4gCj4g
-W3NuaXBdCj4gCj4gPj4gKwo+ID4+ICtEb2N1bWVudGF0aW9uOgo+ID4+ICtPTUFQLUwxMzggKERB
-ODUwKSAtIGh0dHA6Ly93d3cudGkuY29tL2xpdC91Zy9zcHJ1aDgyYy9zcHJ1aDgyYy5wZGYKPiA+
-PiArCj4gPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPj4gKwo+ID4+ICstIGNvbXBhdGlibGU6
-ICAgICAgICAgICAgICAgICJ0aSxkYTg1MC1zeXNjZmciCj4gPiAKPiA+IERvbid0IHlvdSBuZWVk
-IGEgcmVnIHByb3BlcnR5ID8KPiAKPiBZZXMsIEtldmluIGFscmVhZHkgcG9pbnRlZCB0aGF0IG91
-dC4gSSdsbCBhZGQgaXQgaW4gdjIuIFNhbWUgZm9yIFsxLzNdLgo+IAo+ID4+ICtPcHRpb25hbCBw
-cm9wZXJ0aWVzOgo+ID4+ICsKPiA+PiArVGhlIGJlbG93IHByb3BlcnRpZXMgYXJlIHVzZWQgdG8g
-c3BlY2lmeSB0aGUgcHJpb3JpdHkgb2YgbWFzdGVyCj4gPj4gcGVyaXBoZXJhbHMuCj4gPj4gK1Ro
-ZXkgbXVzdCBiZSBiZXR3ZWVuIDAtNyB3aGVyZSAwIGlzIHRoZSBoaWdoZXN0IHByaW9yaXR5IGFu
-ZCA3IGlzIHRoZQo+ID4+IGxvd2VzdC4KPiA+PiArCj4gPj4gKy0gdGkscHJpLWFybS1pOiAgICAg
-ICAgICAgICAgQVJNX0kgcG9ydCBwcmlvcml0eS4KPiA+PiArCj4gPj4gKy0gdGkscHJpLWFybS1k
-OiAgICAgICAgICAgICAgQVJNX0QgcG9ydCBwcmlvcml0eS4KPiA+PiArCj4gPj4gKy0gdGkscHJp
-LXVwcDogICAgICAgICAgICAgICAgdVBQIHBvcnQgcHJpb3JpdHkuCj4gPj4gKwo+ID4+ICstIHRp
-LHByaS1zYXRhOiAgICAgICAgICAgICAgIFNBVEEgcG9ydCBwcmlvcml0eS4KPiA+PiArCj4gPj4g
-Ky0gdGkscHJpLXBydTA6ICAgICAgICAgICAgICAgUFJVMCBwb3J0IHByaW9yaXR5Lgo+ID4+ICsK
-PiA+PiArLSB0aSxwcmktcHJ1MTogICAgICAgICAgICAgICBQUlUxIHBvcnQgcHJpb3JpdHkuCj4g
-Pj4gKwo+ID4+ICstIHRpLHByaS1lZG1hMzB0YzA6ICBFRE1BM18wX1RDMCBwb3J0IHByaW9yaXR5
-Lgo+ID4+ICsKPiA+PiArLSB0aSxwcmktZWRtYTMwdGMxOiAgRURNQTNfMF9UQzEgcG9ydCBwcmlv
-cml0eS4KPiA+PiArCj4gPj4gKy0gdGkscHJpLWVkbWEzMXRjMDogIEVETUEzXzFfVEMwIHBvcnQg
-cHJpb3JpdHkuCj4gPj4gKwo+ID4+ICstIHRpLHByaS12cGlmLWRtYS0wOiBWUElGIERNQTAgcG9y
-dCBwcmlvcml0eS4KPiA+PiArCj4gPj4gKy0gdGkscHJpLXZwaWYtZG1hLTE6IFZQSUYgRE1BMSBw
-b3J0IHByaW9yaXR5Lgo+ID4+ICsKPiA+PiArLSB0aSxwcmktZW1hYzogICAgICAgICAgICAgICBF
-TUFDIHBvcnQgcHJpb3JpdHkuCj4gPj4gKwo+ID4+ICstIHRpLHByaS11c2IwY2ZnOiAgICBVU0Iw
-IENGRyBwb3J0IHByaW9yaXR5Lgo+ID4+ICsKPiA+PiArLSB0aSxwcmktdXNiMGNkbWE6ICAgVVNC
-MCBDRE1BIHBvcnQgcHJpb3JpdHkuCj4gPj4gKwo+ID4+ICstIHRpLHByaS11aHBpOiAgICAgICAg
-ICAgICAgIEhQSSBwb3J0IHByaW9yaXR5Lgo+ID4+ICsKPiA+PiArLSB0aSxwcmktdXNiMTogICAg
-ICAgICAgICAgICBVU0IxIHBvcnQgcHJpb3JpdHkuCj4gPj4gKwo+ID4+ICstIHRpLHByaS1sY2Rj
-OiAgICAgICAgICAgICAgIExDREMgcG9ydCBwcmlvcml0eS4KPiA+IAo+ID4gSSdtIGFmcmFpZCB0
-aGlzIGxvb2tzIG1vcmUgbGlrZSBzeXN0ZW0gY29uZmlndXJhdGlvbiB0aGFuIGhhcmR3YXJlCj4g
-PiBkZXNjcmlwdGlvbiB0byBtZS4KPiAKPiBXaGlsZSB5b3UncmUgY2VydGFpbmx5IHJpZ2h0LCB0
-aGlzIGFwcHJvYWNoIGlzIGFscmVhZHkgaW1wbGVtZW50ZWQgaW4KPiBzZXZlcmFsIG90aGVyIG1l
-bW9yeSBhbmQgYnVzIGRyaXZlcnMgYW5kIGl0IHdhcyBhbHNvIHN1Z2dlc3RlZCBieQo+IFNla2hh
-ciBpbiBvbmUgb2YgdGhlIHRpbGNkYyByZXYxIHRocmVhZHMuIFRoZXJlJ3MgYWxzbyBubyByZWFs
-Cj4gYWx0ZXJuYXRpdmUgdGhhdCBJIGtub3cgb2YuCgpUaGUgZmFjdCB0aGF0IG90aGVyIGRyaXZl
-cnMgZ2V0IGl0IHdyb25nIGlzIG5vIGV4Y3VzZSBmb3IgY29weWluZyB0aGVtIDotKQoKPiA+IFRo
-ZXJlIHdhcyBhIEJvRiBzZXNzaW9uIGFib3V0IGhvdyB0byBzdXBwb3J0IHRoaXMga2luZCBvZiBw
-ZXJmb3JtYW5jZQo+ID4ga25vYnMgYXQgRUxDRSBsYXN0IHdlZWs6Cj4gPiBodHRwczovL29wZW5p
-b3RlbGNldXJvcGUyMDE2LnNjaGVkLm9yZy9ldmVudC83cnNzL2JvZi1saW51eC1kZXZpY2UtcGVy
-Zm9yCj4gPiBtYW5jZS1mcmFtZXdvcmstbWljaGFlbC10dXJxdWV0dGUtYmF5bGlicmUgOi0pCj4K
-PiBJIGtub3csIEkgd2FzIHRoZXJlLiA7KQoKVGhhdCdzIHdoeSBJIG1lbnRpb25lZCBpdCA6LSkK
-Cj4gVW5mb3J0dW5hdGVseSBpdCB3YXMganVzdCBhIGRpc2N1c3Npb24gYWJvdXQgcG90ZW50aWFs
-IGFwcHJvYWNoZXMgLQo+IHRoZXJlJ3Mgbm8gY29kZSB5ZXQuCgpQYXRjaGVzIGFyZSB3ZWxjb21l
-IDstKQoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Sunday 09 October 2016 02:00 PM, Jonathan Cameron wrote:
+> On 05/10/16 10:04, Mugunthan V N wrote:
+>> This patch adds the required pieces to ti_am335x_adc driver for
+>> DMA support
+>>
+>> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+> Hi,
+> 
+> Just the one question inline.  I'll also need an Ack from Lee as
+> this touches code in mfd (as does the previous patch).
+> We have obviously missed this merge window, so no particular rush.
+> 
+> Otherwise, looking very nice indeed.  Got to get my BBB out and play
+> with this now ;)
+> 
+> Jonathan
+>> ---
+>>  drivers/iio/adc/ti_am335x_adc.c      | 148 ++++++++++++++++++++++++++++++++++-
+>>  include/linux/mfd/ti_am335x_tscadc.h |   7 ++
+>>  2 files changed, 152 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/iio/adc/ti_am335x_adc.c b/drivers/iio/adc/ti_am335x_adc.c
+>> index c3cfacca..ad9dec3 100644
+>> --- a/drivers/iio/adc/ti_am335x_adc.c
+>> +++ b/drivers/iio/adc/ti_am335x_adc.c
+>> @@ -30,10 +30,28 @@
+>>  #include <linux/iio/buffer.h>
+>>  #include <linux/iio/kfifo_buf.h>
+>>  
+>> +#include <linux/dmaengine.h>
+>> +#include <linux/dma-mapping.h>
+>> +
+>> +#define DMA_BUFFER_SIZE		SZ_2K
+>> +
+>> +struct tiadc_dma {
+>> +	struct dma_slave_config	conf;
+>> +	struct dma_chan		*chan;
+>> +	dma_addr_t		addr;
+>> +	dma_cookie_t		cookie;
+>> +	u8			*buf;
+>> +	int			current_period;
+>> +	int			period_size;
+>> +	u8			fifo_thresh;
+>> +};
+>> +
+>>  struct tiadc_device {
+>>  	struct ti_tscadc_dev *mfd_tscadc;
+>> +	struct tiadc_dma dma;
+>>  	struct mutex fifo1_lock; /* to protect fifo access */
+>>  	int channels;
+>> +	int total_ch_enabled;
+>>  	u8 channel_line[8];
+>>  	u8 channel_step[8];
+>>  	int buffer_en_ch_steps;
+>> @@ -198,6 +216,67 @@ static irqreturn_t tiadc_worker_h(int irq, void *private)
+>>  	return IRQ_HANDLED;
+>>  }
+>>  
+>> +static void tiadc_dma_rx_complete(void *param)
+>> +{
+>> +	struct iio_dev *indio_dev = param;
+>> +	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+>> +	struct tiadc_dma *dma = &adc_dev->dma;
+>> +	u8 *data;
+>> +	int i;
+>> +
+>> +	data = dma->buf + dma->current_period * dma->period_size;
+>> +	dma->current_period = 1 - dma->current_period; /* swap the buffer ID */
+>> +
+>> +	for (i = 0; i < dma->period_size; i += indio_dev->scan_bytes) {
+>> +		iio_push_to_buffers(indio_dev, data);
+>> +		data += indio_dev->scan_bytes;
+>> +	}
+> Hmm. Another case for the mooted iio_push_to_buffers_multi. Guess
+> we should move on with that one ;)
+>> +}
+>> +
+>> +static int tiadc_start_dma(struct iio_dev *indio_dev)
+>> +{
+>> +	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+>> +	struct tiadc_dma *dma = &adc_dev->dma;
+>> +	struct dma_async_tx_descriptor *desc;
+>> +
+>> +	dma->current_period = 0; /* We start to fill period 0 */
+>> +	/*
+>> +	 * Make the fifo thresh as the multiple of total number of
+>> +	 * channels enabled, so make sure that cyclic DMA period
+>> +	 * length is also a multiple of total number of channels
+>> +	 * enabled. This ensures that no invalid data is reported
+>> +	 * to the stack via iio_push_to_buffers().
+>> +	 */
+>> +	dma->fifo_thresh = rounddown(FIFO1_THRESHOLD + 1,
+>> +				     adc_dev->total_ch_enabled) - 1;
+>> +	/* Make sure that period length is multiple of fifo thresh level */
+>> +	dma->period_size = rounddown(DMA_BUFFER_SIZE / 2,
+>> +				    (dma->fifo_thresh + 1) * sizeof(u16));
+>> +
+>> +	dma->conf.src_maxburst = dma->fifo_thresh + 1;
+>> +	dmaengine_slave_config(dma->chan, &dma->conf);
+>> +
+>> +	desc = dmaengine_prep_dma_cyclic(dma->chan, dma->addr,
+>> +					 dma->period_size * 2,
+>> +					 dma->period_size, DMA_DEV_TO_MEM,
+>> +					 DMA_PREP_INTERRUPT);
+>> +	if (!desc)
+>> +		return -EBUSY;
+>> +
+>> +	desc->callback = tiadc_dma_rx_complete;
+>> +	desc->callback_param = indio_dev;
+>> +
+>> +	dma->cookie = dmaengine_submit(desc);
+>> +
+>> +	dma_async_issue_pending(dma->chan);
+>> +
+>> +	tiadc_writel(adc_dev, REG_FIFO1THR, dma->fifo_thresh);
+>> +	tiadc_writel(adc_dev, REG_DMA1REQ, dma->fifo_thresh);
+>> +	tiadc_writel(adc_dev, REG_DMAENABLE_SET, DMA_FIFO1);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static int tiadc_buffer_preenable(struct iio_dev *indio_dev)
+>>  {
+>>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+>> @@ -218,20 +297,30 @@ static int tiadc_buffer_preenable(struct iio_dev *indio_dev)
+>>  static int tiadc_buffer_postenable(struct iio_dev *indio_dev)
+>>  {
+>>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+>> +	struct tiadc_dma *dma = &adc_dev->dma;
+>> +	unsigned int irq_enable;
+>>  	unsigned int enb = 0;
+>>  	u8 bit;
+>>  
+>>  	tiadc_step_config(indio_dev);
+>> -	for_each_set_bit(bit, indio_dev->active_scan_mask, adc_dev->channels)
+>> +	for_each_set_bit(bit, indio_dev->active_scan_mask, adc_dev->channels) {
+>>  		enb |= (get_adc_step_bit(adc_dev, bit) << 1);
+>> +		adc_dev->total_ch_enabled++;
+>> +	}
+>>  	adc_dev->buffer_en_ch_steps = enb;
+>>  
+>> +	if (dma->chan)
+>> +		tiadc_start_dma(indio_dev);
+>> +
+>>  	am335x_tsc_se_set_cache(adc_dev->mfd_tscadc, enb);
+>>  
+>>  	tiadc_writel(adc_dev,  REG_IRQSTATUS, IRQENB_FIFO1THRES
+>>  				| IRQENB_FIFO1OVRRUN | IRQENB_FIFO1UNDRFLW);
+>> -	tiadc_writel(adc_dev,  REG_IRQENABLE, IRQENB_FIFO1THRES
+>> -				| IRQENB_FIFO1OVRRUN);
+>> +
+>> +	irq_enable = IRQENB_FIFO1OVRRUN;
+>> +	if (!dma->chan)
+>> +		irq_enable |= IRQENB_FIFO1THRES;
+> This changes the non dma behaviour as we no longer set IRQENB_FIFO1THRES.
+> Why?  Was it wrong before?
+
+In non DMA case, dms->chan will be NULL and IRQENB_FIFO1THRES interrupt
+will be enabled to pop the ADC samples.
+
+Regards
+Mugunthan V N
+
+>> +	tiadc_writel(adc_dev,  REG_IRQENABLE, irq_enable);
+>>  
+>>  	return 0;
+>>  }
+>> @@ -239,12 +328,18 @@ static int tiadc_buffer_postenable(struct iio_dev *indio_dev)
+>>  static int tiadc_buffer_predisable(struct iio_dev *indio_dev)
+>>  {
+>>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+>> +	struct tiadc_dma *dma = &adc_dev->dma;
+>>  	int fifo1count, i, read;
+>>  
+>>  	tiadc_writel(adc_dev, REG_IRQCLR, (IRQENB_FIFO1THRES |
+>>  				IRQENB_FIFO1OVRRUN | IRQENB_FIFO1UNDRFLW));
+>>  	am335x_tsc_se_clr(adc_dev->mfd_tscadc, adc_dev->buffer_en_ch_steps);
+>>  	adc_dev->buffer_en_ch_steps = 0;
+>> +	adc_dev->total_ch_enabled = 0;
+>> +	if (dma->chan) {
+>> +		tiadc_writel(adc_dev, REG_DMAENABLE_CLEAR, 0x2);
+>> +		dmaengine_terminate_async(dma->chan);
+>> +	}
+>>  
+>>  	/* Flush FIFO of leftover data in the time it takes to disable adc */
+>>  	fifo1count = tiadc_readl(adc_dev, REG_FIFO1CNT);
+>> @@ -430,6 +525,41 @@ static const struct iio_info tiadc_info = {
+>>  	.driver_module = THIS_MODULE,
+>>  };
+>>  
+>> +static int tiadc_request_dma(struct platform_device *pdev,
+>> +			     struct tiadc_device *adc_dev)
+>> +{
+>> +	struct tiadc_dma	*dma = &adc_dev->dma;
+>> +	dma_cap_mask_t		mask;
+>> +
+>> +	/* Default slave configuration parameters */
+>> +	dma->conf.direction = DMA_DEV_TO_MEM;
+>> +	dma->conf.src_addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
+>> +	dma->conf.src_addr = adc_dev->mfd_tscadc->tscadc_phys_base + REG_FIFO1;
+>> +
+>> +	dma_cap_zero(mask);
+>> +	dma_cap_set(DMA_CYCLIC, mask);
+>> +
+>> +	/* Get a channel for RX */
+>> +	dma->chan = dma_request_chan(adc_dev->mfd_tscadc->dev, "fifo1");
+>> +	if (IS_ERR(dma->chan)) {
+>> +		int ret = PTR_ERR(dma->chan);
+>> +
+>> +		dma->chan = NULL;
+>> +		return ret;
+>> +	}
+>> +
+>> +	/* RX buffer */
+>> +	dma->buf = dma_alloc_coherent(dma->chan->device->dev, DMA_BUFFER_SIZE,
+>> +				      &dma->addr, GFP_KERNEL);
+>> +	if (!dma->buf)
+>> +		goto err;
+>> +
+>> +	return 0;
+>> +err:
+>> +	dma_release_channel(dma->chan);
+>> +	return -ENOMEM;
+>> +}
+>> +
+>>  static int tiadc_parse_dt(struct platform_device *pdev,
+>>  			  struct tiadc_device *adc_dev)
+>>  {
+>> @@ -512,8 +642,14 @@ static int tiadc_probe(struct platform_device *pdev)
+>>  
+>>  	platform_set_drvdata(pdev, indio_dev);
+>>  
+>> +	err = tiadc_request_dma(pdev, adc_dev);
+>> +	if (err && err == -EPROBE_DEFER)
+>> +		goto err_dma;
+>> +
+>>  	return 0;
+>>  
+>> +err_dma:
+>> +	iio_device_unregister(indio_dev);
+>>  err_buffer_unregister:
+>>  	tiadc_iio_buffered_hardware_remove(indio_dev);
+>>  err_free_channels:
+>> @@ -525,8 +661,14 @@ static int tiadc_remove(struct platform_device *pdev)
+>>  {
+>>  	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+>>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+>> +	struct tiadc_dma *dma = &adc_dev->dma;
+>>  	u32 step_en;
+>>  
+>> +	if (dma->chan) {
+>> +		dma_free_coherent(dma->chan->device->dev, DMA_BUFFER_SIZE,
+>> +				  dma->buf, dma->addr);
+>> +		dma_release_channel(dma->chan);
+>> +	}
+>>  	iio_device_unregister(indio_dev);
+>>  	tiadc_iio_buffered_hardware_remove(indio_dev);
+>>  	tiadc_channels_remove(indio_dev);
+>> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd/ti_am335x_tscadc.h
+>> index e45a208..b9a53e0 100644
+>> --- a/include/linux/mfd/ti_am335x_tscadc.h
+>> +++ b/include/linux/mfd/ti_am335x_tscadc.h
+>> @@ -23,6 +23,8 @@
+>>  #define REG_IRQENABLE		0x02C
+>>  #define REG_IRQCLR		0x030
+>>  #define REG_IRQWAKEUP		0x034
+>> +#define REG_DMAENABLE_SET	0x038
+>> +#define REG_DMAENABLE_CLEAR	0x03c
+>>  #define REG_CTRL		0x040
+>>  #define REG_ADCFSM		0x044
+>>  #define REG_CLKDIV		0x04C
+>> @@ -36,6 +38,7 @@
+>>  #define REG_FIFO0THR		0xE8
+>>  #define REG_FIFO1CNT		0xF0
+>>  #define REG_FIFO1THR		0xF4
+>> +#define REG_DMA1REQ		0xF8
+>>  #define REG_FIFO0		0x100
+>>  #define REG_FIFO1		0x200
+>>  
+>> @@ -126,6 +129,10 @@
+>>  #define FIFOREAD_DATA_MASK (0xfff << 0)
+>>  #define FIFOREAD_CHNLID_MASK (0xf << 16)
+>>  
+>> +/* DMA ENABLE/CLEAR Register */
+>> +#define DMA_FIFO0		BIT(0)
+>> +#define DMA_FIFO1		BIT(1)
+>> +
+>>  /* Sequencer Status */
+>>  #define SEQ_STATUS BIT(5)
+>>  #define CHARGE_STEP		0x11
+>>
+> 
