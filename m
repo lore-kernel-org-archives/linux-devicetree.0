@@ -1,53 +1,78 @@
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
-Subject: Re: [PATCH v2 0/6] STM32F4 Add RTC & QSPI clocks
-Date: Wed, 19 Oct 2016 10:34:38 +0200
-Message-ID: <d878b846-556d-180b-8ebf-2d06646efb58@st.com>
-References: <1476436699-21879-1-git-send-email-gabriel.fernandez@st.com>
- <20161018235108.GP8871@codeaurora.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/3] ARM: bus: da8xx-syscfg: new driver
+Date: Wed, 19 Oct 2016 11:53:30 +0300
+Message-ID: <2278105.geKhb8xoNC@avalon>
+References: <1476721850-454-1-git-send-email-bgolaszewski@baylibre.com>
+ <4369153.vCOQzI7OET@avalon>
+ <CAMpxmJXwZ8pQ58OgV4w88yNuG1Fd8++1yP-Frd2QJFO9uJJueQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161018235108.GP8871@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, daniel.thompson@linaro.org, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@linaro.org>, Michael Turquette <mturquette@baylibre.com>, olivier.bideau@st.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, ludovic.barre@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, amelie.delaunay@st.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAMpxmJXwZ8pQ58OgV4w88yNuG1Fd8++1yP-Frd2QJFO9uJJueQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-
-On 10/19/2016 01:51 AM, Stephen Boyd wrote:
-> On 10/14, gabriel.fernandez@st.com wrote:
->> Gabriel Fernandez (6):
->>    clk: stm32f4: Add LSI & LSE clocks
->>    ARM: dts: stm32f429: add LSI and LSE clocks
->>    arm: stmf32: Enable SYSCON
->>    clk: stm32f4: Add RTC clock
->>    clk: stm32f469: Add QSPI clock
->>    ARM: dts: stm32f429: Add QSPI clock
-> Can the clk patches be picked without causing problems for
-> existing dt changes? Do you want an ack from clk maintainers
-> instead of us picking the clk patches up? The series has
-> intermingled clk and dts changes so I'm confused.
->
-
-Thanks for reviewing.
-
-Normally DT patches will be taken by STM32 maintainer, but yes there is 
-a dependency between patch 1 & 2, so if you push the patch 1 into 
-clk-next tree you have to take also patch 2.
-
-You have to be synchronized with Alexandre Torgue.
-
-Best Regards
-
-Gabriel
+SGkgQmFydG9zeiwKCk9uIFdlZG5lc2RheSAxOSBPY3QgMjAxNiAxMDoyNjo1NyBCYXJ0b3N6IEdv
+bGFzemV3c2tpIHdyb3RlOgo+IDIwMTYtMTAtMTggMjI6NDkgR01UKzAyOjAwIExhdXJlbnQgUGlu
+Y2hhcnQ6Cj4gPiBPbiBNb25kYXkgMTcgT2N0IDIwMTYgMTg6MzA6NDkgQmFydG9zeiBHb2xhc3pl
+d3NraSB3cm90ZToKPiA+PiBDcmVhdGUgdGhlIGRyaXZlciBmb3IgdGhlIGRhOHh4IFN5c3RlbSBD
+b25maWd1cmF0aW9uIGFuZCBpbXBsZW1lbnQKPiA+PiBzdXBwb3J0IGZvciB3cml0aW5nIHRvIHRo
+ZSB0aHJlZSBNYXN0ZXIgUHJpb3JpdHkgcmVnaXN0ZXJzLgo+ID4+IAo+ID4+IFNpZ25lZC1vZmYt
+Ynk6IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pld3NraUBiYXlsaWJyZS5jb20+Cj4gCj4g
+W3NuaXBdCj4gCj4gPj4gKwo+ID4+ICtEb2N1bWVudGF0aW9uOgo+ID4+ICtPTUFQLUwxMzggKERB
+ODUwKSAtIGh0dHA6Ly93d3cudGkuY29tL2xpdC91Zy9zcHJ1aDgyYy9zcHJ1aDgyYy5wZGYKPiA+
+PiArCj4gPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPj4gKwo+ID4+ICstIGNvbXBhdGlibGU6
+ICAgICAgICAgICAgICAgICJ0aSxkYTg1MC1zeXNjZmciCj4gPiAKPiA+IERvbid0IHlvdSBuZWVk
+IGEgcmVnIHByb3BlcnR5ID8KPiAKPiBZZXMsIEtldmluIGFscmVhZHkgcG9pbnRlZCB0aGF0IG91
+dC4gSSdsbCBhZGQgaXQgaW4gdjIuIFNhbWUgZm9yIFsxLzNdLgo+IAo+ID4+ICtPcHRpb25hbCBw
+cm9wZXJ0aWVzOgo+ID4+ICsKPiA+PiArVGhlIGJlbG93IHByb3BlcnRpZXMgYXJlIHVzZWQgdG8g
+c3BlY2lmeSB0aGUgcHJpb3JpdHkgb2YgbWFzdGVyCj4gPj4gcGVyaXBoZXJhbHMuCj4gPj4gK1Ro
+ZXkgbXVzdCBiZSBiZXR3ZWVuIDAtNyB3aGVyZSAwIGlzIHRoZSBoaWdoZXN0IHByaW9yaXR5IGFu
+ZCA3IGlzIHRoZQo+ID4+IGxvd2VzdC4KPiA+PiArCj4gPj4gKy0gdGkscHJpLWFybS1pOiAgICAg
+ICAgICAgICAgQVJNX0kgcG9ydCBwcmlvcml0eS4KPiA+PiArCj4gPj4gKy0gdGkscHJpLWFybS1k
+OiAgICAgICAgICAgICAgQVJNX0QgcG9ydCBwcmlvcml0eS4KPiA+PiArCj4gPj4gKy0gdGkscHJp
+LXVwcDogICAgICAgICAgICAgICAgdVBQIHBvcnQgcHJpb3JpdHkuCj4gPj4gKwo+ID4+ICstIHRp
+LHByaS1zYXRhOiAgICAgICAgICAgICAgIFNBVEEgcG9ydCBwcmlvcml0eS4KPiA+PiArCj4gPj4g
+Ky0gdGkscHJpLXBydTA6ICAgICAgICAgICAgICAgUFJVMCBwb3J0IHByaW9yaXR5Lgo+ID4+ICsK
+PiA+PiArLSB0aSxwcmktcHJ1MTogICAgICAgICAgICAgICBQUlUxIHBvcnQgcHJpb3JpdHkuCj4g
+Pj4gKwo+ID4+ICstIHRpLHByaS1lZG1hMzB0YzA6ICBFRE1BM18wX1RDMCBwb3J0IHByaW9yaXR5
+Lgo+ID4+ICsKPiA+PiArLSB0aSxwcmktZWRtYTMwdGMxOiAgRURNQTNfMF9UQzEgcG9ydCBwcmlv
+cml0eS4KPiA+PiArCj4gPj4gKy0gdGkscHJpLWVkbWEzMXRjMDogIEVETUEzXzFfVEMwIHBvcnQg
+cHJpb3JpdHkuCj4gPj4gKwo+ID4+ICstIHRpLHByaS12cGlmLWRtYS0wOiBWUElGIERNQTAgcG9y
+dCBwcmlvcml0eS4KPiA+PiArCj4gPj4gKy0gdGkscHJpLXZwaWYtZG1hLTE6IFZQSUYgRE1BMSBw
+b3J0IHByaW9yaXR5Lgo+ID4+ICsKPiA+PiArLSB0aSxwcmktZW1hYzogICAgICAgICAgICAgICBF
+TUFDIHBvcnQgcHJpb3JpdHkuCj4gPj4gKwo+ID4+ICstIHRpLHByaS11c2IwY2ZnOiAgICBVU0Iw
+IENGRyBwb3J0IHByaW9yaXR5Lgo+ID4+ICsKPiA+PiArLSB0aSxwcmktdXNiMGNkbWE6ICAgVVNC
+MCBDRE1BIHBvcnQgcHJpb3JpdHkuCj4gPj4gKwo+ID4+ICstIHRpLHByaS11aHBpOiAgICAgICAg
+ICAgICAgIEhQSSBwb3J0IHByaW9yaXR5Lgo+ID4+ICsKPiA+PiArLSB0aSxwcmktdXNiMTogICAg
+ICAgICAgICAgICBVU0IxIHBvcnQgcHJpb3JpdHkuCj4gPj4gKwo+ID4+ICstIHRpLHByaS1sY2Rj
+OiAgICAgICAgICAgICAgIExDREMgcG9ydCBwcmlvcml0eS4KPiA+IAo+ID4gSSdtIGFmcmFpZCB0
+aGlzIGxvb2tzIG1vcmUgbGlrZSBzeXN0ZW0gY29uZmlndXJhdGlvbiB0aGFuIGhhcmR3YXJlCj4g
+PiBkZXNjcmlwdGlvbiB0byBtZS4KPiAKPiBXaGlsZSB5b3UncmUgY2VydGFpbmx5IHJpZ2h0LCB0
+aGlzIGFwcHJvYWNoIGlzIGFscmVhZHkgaW1wbGVtZW50ZWQgaW4KPiBzZXZlcmFsIG90aGVyIG1l
+bW9yeSBhbmQgYnVzIGRyaXZlcnMgYW5kIGl0IHdhcyBhbHNvIHN1Z2dlc3RlZCBieQo+IFNla2hh
+ciBpbiBvbmUgb2YgdGhlIHRpbGNkYyByZXYxIHRocmVhZHMuIFRoZXJlJ3MgYWxzbyBubyByZWFs
+Cj4gYWx0ZXJuYXRpdmUgdGhhdCBJIGtub3cgb2YuCgpUaGUgZmFjdCB0aGF0IG90aGVyIGRyaXZl
+cnMgZ2V0IGl0IHdyb25nIGlzIG5vIGV4Y3VzZSBmb3IgY29weWluZyB0aGVtIDotKQoKPiA+IFRo
+ZXJlIHdhcyBhIEJvRiBzZXNzaW9uIGFib3V0IGhvdyB0byBzdXBwb3J0IHRoaXMga2luZCBvZiBw
+ZXJmb3JtYW5jZQo+ID4ga25vYnMgYXQgRUxDRSBsYXN0IHdlZWs6Cj4gPiBodHRwczovL29wZW5p
+b3RlbGNldXJvcGUyMDE2LnNjaGVkLm9yZy9ldmVudC83cnNzL2JvZi1saW51eC1kZXZpY2UtcGVy
+Zm9yCj4gPiBtYW5jZS1mcmFtZXdvcmstbWljaGFlbC10dXJxdWV0dGUtYmF5bGlicmUgOi0pCj4K
+PiBJIGtub3csIEkgd2FzIHRoZXJlLiA7KQoKVGhhdCdzIHdoeSBJIG1lbnRpb25lZCBpdCA6LSkK
+Cj4gVW5mb3J0dW5hdGVseSBpdCB3YXMganVzdCBhIGRpc2N1c3Npb24gYWJvdXQgcG90ZW50aWFs
+IGFwcHJvYWNoZXMgLQo+IHRoZXJlJ3Mgbm8gY29kZSB5ZXQuCgpQYXRjaGVzIGFyZSB3ZWxjb21l
+IDstKQoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
