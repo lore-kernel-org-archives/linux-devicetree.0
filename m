@@ -1,17 +1,18 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 1/4] cpufreq: pxa: use generic platdev driver for
- device-tree
-Date: Wed, 19 Oct 2016 19:22:08 +0530
-Message-ID: <20161019135208.GG11471@vireshk-i7>
-References: <1476561450-28407-1-git-send-email-robert.jarzmik@free.fr>
- <1476561450-28407-2-git-send-email-robert.jarzmik@free.fr>
- <20161018113835.GB11471@vireshk-i7> <87r37d4qlw.fsf@belgarion.home>
+Subject: Re: [PATCH 2/3] arm64: dts: uniphier: add CPU clock and OPP table
+ for LD11 SoC
+Date: Wed, 19 Oct 2016 19:25:22 +0530
+Message-ID: <20161019135522.GH11471@vireshk-i7>
+References: <1476629958-25368-1-git-send-email-yamada.masahiro@socionext.com>
+ <1476629958-25368-3-git-send-email-yamada.masahiro@socionext.com>
+ <20161018112548.GA11471@vireshk-i7>
+ <CAK7LNATc2XxAZf-rvMkRjGn3q_18yB=9aycAE1j9+n0==xzaHQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <87r37d4qlw.fsf@belgarion.home>
+In-Reply-To: <CAK7LNATc2XxAZf-rvMkRjGn3q_18yB=9aycAE1j9+n0==xzaHQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,50 +22,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Daniel Mack <daniel@zonque.org>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18-10-16, 17:35, Robert Jarzmik wrote:
-> Viresh Kumar <viresh.kumar@linaro.org> writes:
+On 19-10-16, 17:33, Masahiro Yamada wrote:
+> Hi Viresh,
 > 
-> > On 15-10-16, 21:57, Robert Jarzmik wrote:
-> >> For device-tree based pxa25x and pxa27x platforms, cpufreq-dt driver is
-> >> doing the job as well as pxa2xx-cpufreq, so add these platforms to the
-> >> compatibility list.
-> >> 
-> >> This won't work for legacy non device-tree platforms where
-> >> pxa2xx-cpufreq is still required.
-> >> 
-> >> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-> >> ---
-> >>  drivers/cpufreq/cpufreq-dt-platdev.c | 2 ++
-> >>  1 file changed, 2 insertions(+)
-> >> 
-> >> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-> >> index 0bb44d5b5df4..356825b5c9b8 100644
-> >> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
-> >> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-> >> @@ -32,6 +32,8 @@ static const struct of_device_id machines[] __initconst = {
-> >>  	{ .compatible = "fsl,imx7d", },
-> >>  
-> >>  	{ .compatible = "marvell,berlin", },
-> >> +	{ .compatible = "marvell,pxa250", },
-> >> +	{ .compatible = "marvell,pxa270", },
-> >>  
-> >>  	{ .compatible = "samsung,exynos3250", },
-> >>  	{ .compatible = "samsung,exynos4210", },
+> 
+> 2016-10-18 20:25 GMT+09:00 Viresh Kumar <viresh.kumar@linaro.org>:
+> > On 16-10-16, 23:59, Masahiro Yamada wrote:
+> >> +     cluster0_opp: opp_table {
+> >> +             compatible = "operating-points-v2";
+> >> +             opp-shared;
+> >> +
+> >> +             opp@245000000 {
+> >> +                     opp-hz = /bits/ 64 <245000000>;
+> >> +                     clock-latency-ns = <300>;
+> >> +             };
+> >> +             opp@250000000 {
+> >> +                     opp-hz = /bits/ 64 <250000000>;
+> >> +                     clock-latency-ns = <300>;
+> >> +             };
+> >> +             opp@490000000 {
+> >> +                     opp-hz = /bits/ 64 <490000000>;
+> >> +                     clock-latency-ns = <300>;
+> >> +             };
+> >> +             opp@500000000 {
+> >> +                     opp-hz = /bits/ 64 <500000000>;
+> >> +                     clock-latency-ns = <300>;
+> >> +             };
+> >> +             opp@653333333 {
 > >
-> > Isn't there a race between cpufreq-dt and the platform driver to
-> > register first ?
-> Ah, could you be more specific about the race you're talking of ?
+> > Why isn't ^^ matching with below values ? Same in next patch as well.
 > 
-> My understanding was that cpufreq-dt-platdev does create the device, and
-> cpufreq-dt is a driver for it, so there is no race but a direct relationship
-> AFAIU.
+> 
+> 
+> When I try to update /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq,
+> it did not work as I had expected.
+> 
+> 
+> scaling_max_freq is specified by kHz unit,
+> on the other hand, clock frequency in the clk driver is specified by Hz.
+> 
+> 
+> 
+> If the operating point is 653333kHz, the cpufreq requests
+> the clk driver to set 653333000, but it is lower than
+> the exact clock, 653333333.
+> So, the next lower frequency, 500000000 is selected.
+> As a result, the operating point 653333kHz is never enabled.
+> 
+> 
+> So, the operating point must be equal or a little bit bigger.
+> 
+> 
+> Do you know a better way to solve this distortion?
 
-I mean that both the driver may try to register to the cpufreq core if
-they are both compiled in a single image.
+I am not sure about how to fix that problem but there is no reason to
+have the exact frequency in opp@*** name. Just use what you have used
+in opp-hz line and you will have the exact same behavior.
+
+Right now, its a bit confusing if we read the DT.
 
 -- 
 viresh
