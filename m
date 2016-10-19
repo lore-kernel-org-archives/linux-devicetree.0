@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 5/9] dt-bindings: pinctrl: meson: update gpio dt-bindings
-Date: Wed, 19 Oct 2016 12:08:25 +0200
-Message-ID: <1476871709-8359-6-git-send-email-jbrunet@baylibre.com>
+Subject: [PATCH 6/9] ARM64: meson: enable MESON_IRQ_GPIO in Kconfig
+Date: Wed, 19 Oct 2016 12:08:26 +0200
+Message-ID: <1476871709-8359-7-git-send-email-jbrunet@baylibre.com>
 References: <1476871709-8359-1-git-send-email-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -17,35 +17,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+To: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add description for the interrupt-parent property of the gpio sub-node
-If provided here, this property must be a phandle to an interrupt
-controller suitable for meson pinctrl, like the meson gpio interrupt
-controller.
+Add select MESON_IRQ_GPIO in Kconfig for Amlogic's meson SoC family
 
-Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/Kconfig.platforms | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-index fe7fe0b03cfb..39932c4dfb32 100644
---- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-@@ -23,6 +23,10 @@ Required properties for sub-nodes are:
-  - gpio-controller: identifies the node as a gpio controller
-  - #gpio-cells: must be 2
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index cfbdf02ef566..846479d4492d 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -95,6 +95,7 @@ config ARCH_MESON
+ 	select PINCTRL_MESON
+ 	select COMMON_CLK_AMLOGIC
+ 	select COMMON_CLK_GXBB
++	select MESON_GPIO_IRQ
+ 	help
+ 	  This enables support for the Amlogic S905 SoCs.
  
-+Optional property for sub-nodes is:
-+ - interrupt-parent: must be a phandle to the meson gpio interrupt controller.
-+   if this property is provided, enables gpio ability to generate interrupts
-+
- === Other sub-nodes ===
- 
- Child nodes without the "gpio-controller" represent some desired
 -- 
 2.7.4
