@@ -1,97 +1,105 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 2/3] ARM: bus: da8xx-syscfg: new driver
-Date: Thu, 20 Oct 2016 12:39:34 -0700
-Message-ID: <7h8tti6c95.fsf@baylibre.com>
-References: <1476721850-454-1-git-send-email-bgolaszewski@baylibre.com>
- <2278105.geKhb8xoNC@avalon> <7h8ttj6jqo.fsf@baylibre.com>
- <1867292.F3aGJTmS2t@avalon>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] clk: renesas: cpg-mssr: add R8A7743 support
+Date: Thu, 20 Oct 2016 22:47:23 +0300
+Message-ID: <e8461bb6-6136-f589-4475-37c690ca4704@cogentembedded.com>
+References: <9246696.7P1aOyyQt4@wasted.cogentembedded.com>
+ <2357731.SxJodxn1PJ@wasted.cogentembedded.com>
+ <CAMuHMdW_XSCfy+Kv6uz1pX7q-XFPp=nkaXSehbZJYAeOt6Rf4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1867292.F3aGJTmS2t@avalon> (Laurent Pinchart's message of "Thu,
- 20 Oct 2016 21:05:50 +0300")
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdW_XSCfy+Kv6uz1pX7q-XFPp=nkaXSehbZJYAeOt6Rf4w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKCkxhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJv
-YXJkLmNvbT4gd3JpdGVzOgoKPiBPbiBUaHVyc2RheSAyMCBPY3QgMjAxNiAwOTo1Nzo1MSBLZXZp
-biBIaWxtYW4gd3JvdGU6Cj4+IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRl
-YXNvbmJvYXJkLmNvbT4gd3JpdGVzOgo+PiA+IE9uIFdlZG5lc2RheSAxOSBPY3QgMjAxNiAxMDoy
-Njo1NyBCYXJ0b3N6IEdvbGFzemV3c2tpIHdyb3RlOgo+PiA+PiAyMDE2LTEwLTE4IDIyOjQ5IEdN
-VCswMjowMCBMYXVyZW50IFBpbmNoYXJ0Ogo+PiA+Pj4gT24gTW9uZGF5IDE3IE9jdCAyMDE2IDE4
-OjMwOjQ5IEJhcnRvc3ogR29sYXN6ZXdza2kgd3JvdGU6Cj4+ID4+Pj4gQ3JlYXRlIHRoZSBkcml2
-ZXIgZm9yIHRoZSBkYTh4eCBTeXN0ZW0gQ29uZmlndXJhdGlvbiBhbmQgaW1wbGVtZW50Cj4+ID4+
-Pj4gc3VwcG9ydCBmb3Igd3JpdGluZyB0byB0aGUgdGhyZWUgTWFzdGVyIFByaW9yaXR5IHJlZ2lz
-dGVycy4KPj4gPj4+PiAKPj4gPj4+PiBTaWduZWQtb2ZmLWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tp
-IDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgo+PiA+PiAKPj4gPj4gW3NuaXBdCj4+ID4+IAo+
-PiA+Pj4+ICsKPj4gPj4+PiArRG9jdW1lbnRhdGlvbjoKPj4gPj4+PiArT01BUC1MMTM4IChEQTg1
-MCkgLSBodHRwOi8vd3d3LnRpLmNvbS9saXQvdWcvc3BydWg4MmMvc3BydWg4MmMucGRmCj4+ID4+
-Pj4gKwo+PiA+Pj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiA+Pj4+ICsKPj4gPj4+PiArLSBj
-b21wYXRpYmxlOiAgICAgICAgICAgICAgICAidGksZGE4NTAtc3lzY2ZnIgo+PiA+Pj4gCj4+ID4+
-PiBEb24ndCB5b3UgbmVlZCBhIHJlZyBwcm9wZXJ0eSA/Cj4+ID4+IAo+PiA+PiBZZXMsIEtldmlu
-IGFscmVhZHkgcG9pbnRlZCB0aGF0IG91dC4gSSdsbCBhZGQgaXQgaW4gdjIuIFNhbWUgZm9yIFsx
-LzNdLgo+PiA+PiAKPj4gPj4+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPj4gPj4+PiArCj4+ID4+
-Pj4gK1RoZSBiZWxvdyBwcm9wZXJ0aWVzIGFyZSB1c2VkIHRvIHNwZWNpZnkgdGhlIHByaW9yaXR5
-IG9mIG1hc3Rlcgo+PiA+Pj4+IHBlcmlwaGVyYWxzLgo+PiA+Pj4+ICtUaGV5IG11c3QgYmUgYmV0
-d2VlbiAwLTcgd2hlcmUgMCBpcyB0aGUgaGlnaGVzdCBwcmlvcml0eSBhbmQgNyBpcyB0aGUKPj4g
-Pj4+PiBsb3dlc3QuCj4+ID4+Pj4gKwo+PiA+Pj4+ICstIHRpLHByaS1hcm0taTogICAgICAgICAg
-ICAgIEFSTV9JIHBvcnQgcHJpb3JpdHkuCj4+ID4+Pj4gKwo+PiA+Pj4+ICstIHRpLHByaS1hcm0t
-ZDogICAgICAgICAgICAgIEFSTV9EIHBvcnQgcHJpb3JpdHkuCj4+ID4+Pj4gKwo+PiA+Pj4+ICst
-IHRpLHByaS11cHA6ICAgICAgICAgICAgICAgIHVQUCBwb3J0IHByaW9yaXR5Lgo+PiA+Pj4+ICsK
-Pj4gPj4+PiArLSB0aSxwcmktc2F0YTogICAgICAgICAgICAgICBTQVRBIHBvcnQgcHJpb3JpdHku
-Cj4+ID4+Pj4gKwo+PiA+Pj4+ICstIHRpLHByaS1wcnUwOiAgICAgICAgICAgICAgIFBSVTAgcG9y
-dCBwcmlvcml0eS4KPj4gPj4+PiArCj4+ID4+Pj4gKy0gdGkscHJpLXBydTE6ICAgICAgICAgICAg
-ICAgUFJVMSBwb3J0IHByaW9yaXR5Lgo+PiA+Pj4+ICsKPj4gPj4+PiArLSB0aSxwcmktZWRtYTMw
-dGMwOiAgRURNQTNfMF9UQzAgcG9ydCBwcmlvcml0eS4KPj4gPj4+PiArCj4+ID4+Pj4gKy0gdGks
-cHJpLWVkbWEzMHRjMTogIEVETUEzXzBfVEMxIHBvcnQgcHJpb3JpdHkuCj4+ID4+Pj4gKwo+PiA+
-Pj4+ICstIHRpLHByaS1lZG1hMzF0YzA6ICBFRE1BM18xX1RDMCBwb3J0IHByaW9yaXR5Lgo+PiA+
-Pj4+ICsKPj4gPj4+PiArLSB0aSxwcmktdnBpZi1kbWEtMDogVlBJRiBETUEwIHBvcnQgcHJpb3Jp
-dHkuCj4+ID4+Pj4gKwo+PiA+Pj4+ICstIHRpLHByaS12cGlmLWRtYS0xOiBWUElGIERNQTEgcG9y
-dCBwcmlvcml0eS4KPj4gPj4+PiArCj4+ID4+Pj4gKy0gdGkscHJpLWVtYWM6ICAgICAgICAgICAg
-ICAgRU1BQyBwb3J0IHByaW9yaXR5Lgo+PiA+Pj4+ICsKPj4gPj4+PiArLSB0aSxwcmktdXNiMGNm
-ZzogICAgVVNCMCBDRkcgcG9ydCBwcmlvcml0eS4KPj4gPj4+PiArCj4+ID4+Pj4gKy0gdGkscHJp
-LXVzYjBjZG1hOiAgIFVTQjAgQ0RNQSBwb3J0IHByaW9yaXR5Lgo+PiA+Pj4+ICsKPj4gPj4+PiAr
-LSB0aSxwcmktdWhwaTogICAgICAgICAgICAgICBIUEkgcG9ydCBwcmlvcml0eS4KPj4gPj4+PiAr
-Cj4+ID4+Pj4gKy0gdGkscHJpLXVzYjE6ICAgICAgICAgICAgICAgVVNCMSBwb3J0IHByaW9yaXR5
-Lgo+PiA+Pj4+ICsKPj4gPj4+PiArLSB0aSxwcmktbGNkYzogICAgICAgICAgICAgICBMQ0RDIHBv
-cnQgcHJpb3JpdHkuCj4+ID4+PiAKPj4gPj4+IEknbSBhZnJhaWQgdGhpcyBsb29rcyBtb3JlIGxp
-a2Ugc3lzdGVtIGNvbmZpZ3VyYXRpb24gdGhhbiBoYXJkd2FyZQo+PiA+Pj4gZGVzY3JpcHRpb24g
-dG8gbWUuCj4+ID4+IAo+PiA+PiBXaGlsZSB5b3UncmUgY2VydGFpbmx5IHJpZ2h0LCB0aGlzIGFw
-cHJvYWNoIGlzIGFscmVhZHkgaW1wbGVtZW50ZWQgaW4KPj4gPj4gc2V2ZXJhbCBvdGhlciBtZW1v
-cnkgYW5kIGJ1cyBkcml2ZXJzIGFuZCBpdCB3YXMgYWxzbyBzdWdnZXN0ZWQgYnkKPj4gPj4gU2Vr
-aGFyIGluIG9uZSBvZiB0aGUgdGlsY2RjIHJldjEgdGhyZWFkcy4gVGhlcmUncyBhbHNvIG5vIHJl
-YWwKPj4gPj4gYWx0ZXJuYXRpdmUgdGhhdCBJIGtub3cgb2YuCj4+ID4gCj4+ID4gVGhlIGZhY3Qg
-dGhhdCBvdGhlciBkcml2ZXJzIGdldCBpdCB3cm9uZyBpcyBubyBleGN1c2UgZm9yIGNvcHlpbmcg
-dGhlbSA6LSkKPj4gCj4+IFdoYXQgZXhhY3RseSBpcyAid3JvbmciIHdpdGggdGhlIHdheSBvdGhl
-ciBkcml2ZXJzIGFyZSBkb2luZyBpdD8KPj4gCj4+IEknbSBzdXJlIHRoZXJlIG1heSBiZSBvdGhl
-ciBpZGVhcywgYW5kIHBvc3NpYmx5IHNvbWUgYmV0dGVyIG9uZXMsIGJ1dAo+PiB0aGF0IGRvZXNu
-J3QgbWFrZSBpdCB3cm9uZywgYW5kIGRvZXNuJ3QgY2hhbmdlIGhlIGZhY3QgdGhhdCB0aGUga2Vy
-bmVsCj4+IGhhcyBleGlzdGluZyBkcml2ZXJzIFNvQy1idXMtc3BlY2lmaWMgc3lzdGVtIHBlcmZv
-cm1hbmNlIGtub2JzIGxpa2UKPj4gdGhpcy4KPgo+IEl0J3Mgbm90IHRoZSBkcml2ZXJzIEknbSBj
-b25jZXJuZWQgYWJvdXQsIGJ1dCB0aGUgRFQgYmluZGluZ3MuCgpJIHNlZSwgdGhhbmtzIGZvciB0
-aGUgY2xhcmlmaWNhdGlvbi4KCj4gVGhlIHByb3Bvc2VkIERUIGJpbmRpbmcgY29udGFpbnMgYSBs
-YXJnZSBudW1iZXIgb2YgcHJvcGVydGllcyB0aGF0Cj4gZG9uJ3QgZGVzY3JpYmUgdGhlIGhhcmR3
-YXJlIGJ1dCBjb250YWluIGNvbmZpZ3VyYXRpb24gZGF0YS4KCkkgYWdyZWUgdGhhdCB0aGVyZSBv
-dWdodCB0byBiZSBzb21lIG1vcmUgZ2VuZXJpYyB3YXkgZm9yIGRldmljZXMgdG8KcmVxdWVzdCBw
-ZXJmb3JtYW5jZSBjb25zdHJhaW50cyBmcm9tIHRoZWlyIGJ1c3NlcyBhdCBydW50aW1lIGJhc2Vk
-IG9uCnRoZWlyIGN1cnJlbnQgb3BlcmF0aW5nIGNyaXRlcmEsIGJ1dCB1bmZvcnR1bmF0ZWx5IHRo
-YXQgZG9lc24ndCBleGlzdAp5ZXQuCgpIb3dldmVyLCBhZnRlciBvdXIgZGlzY3Vzc2lvbiBvbiBJ
-UkMsIHdlJ2xsIHJlc3BpbiB0aGlzIHdpdGhvdXQgdGhlIERUCmJpbmRpbmdzIGF0IGFsbC4gIE5l
-eHQgdmVyc2lvbiB3aWxsIGp1c3QgdXNlIHN0YXRpYyBjb25maWd1cmF0aW9uIGRhdGEKaW4gdGhl
-IGRyaXZlcnMvYnVzIGRyaXZlciBiYXNlZCBvbiBTb0MgY29tcGF0aWJsZSBzdHJpbmcsIHNpbmNl
-IGZvciB0aGUKdXNlLWNhc2VzIEknbSBhd2FyZSBvZiwgdGhlIHNldHRpbmdzIGFyZSBib290LXRp
-bWUgb25seS4KClRoYW5rcyBhZ2FpbiBmb3IgdGhlIHJldmlldywKCktldmluCgoKCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hello.
+
+On 10/19/2016 12:06 PM, Geert Uytterhoeven wrote:
+
+>> Add RZ/G1M (R8A7743) Clock  Pulse Generator / Module Standby and Software
+>> Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
+>> (and RZ/G) code.
+>>
+>> Based on the proof-of-concept R8A7791 CPG/MSSR patch by Geert Uytterhoeven
+>> <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>
+> Thanks a lot!
+>
+> With the few minor nits below fixed:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>
+>> --- /dev/null
+>> +++ renesas/drivers/clk/renesas/r8a7743-cpg-mssr.c
+>
+>> +static const struct mssr_mod_clk r8a7743_mod_clks[] __initconst = {
+>
+>> +       DEF_MOD("mmcif0",         315,  R8A7743_CLK_MMC0),
+>
+> "mmc0"
+
+    There's also "mmc0" CPG clock, so I thought I'd rename this one.
+
+>> +       DEF_MOD("audio-dmac0",    502,  R8A7743_CLK_HP),
+>> +       DEF_MOD("audio-dmac1",    501,  R8A7743_CLK_HP),
+>
+> Please sort by numerical clock ID.
+
+    Oops, will do.
+
+>> +       DEF_MOD("i2c6",           926,  R8A7743_CLK_CP),
+>
+> "iicdvfs"
+
+    Not sure how I missed that...
+
+>> +static const unsigned int r8a7743_crit_mod_clks[] __initconst = {
+>> +       MOD_CLK_ID(408),        /* INTC-AP (GIC) */
+>
+> INTC-SYS
+
+    OK.
+
+[...]
+>> +static const struct rcar_gen2_cpg_pll_config cpg_pll_configs[8] __initconst = {
+>> +       /* EXTAL div    PLL1 mult       PLL3 mult */
+>> +       { 1,            208,            106,    },
+>> +       { 1,            208,            88,     },
+>> +       { 1,            156,            80,     },
+>> +       { 1,            156,            66,     },
+>> +       { 2,            240,            122,    },
+>> +       { 2,            240,            102,    },
+>> +       { 2,            208,            106,    },
+>> +       { 2,            208,            88,     },
+>> +};
+>> +
+>> +static int __init r8a7743_cpg_mssr_init(struct device *dev)
+>> +{
+>> +       const struct rcar_gen2_cpg_pll_config *cpg_pll_config;
+>> +       u32 cpg_mode = rcar_gen2_read_modemr();
+>> +
+>> +       cpg_pll_config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
+>> +       if (!cpg_pll_config->extal_div) {
+>
+> This check is not needed, as extal_div is never zero in the above table.
+
+    Indeed, will fix.
+
+>> +               dev_err(dev, "Prohibited setting (cpg_mode=0x%x)\n", cpg_mode);
+>> +               return -EINVAL;
+>> +       }
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
