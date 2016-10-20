@@ -1,41 +1,92 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 0/11] Add R8A7743/SK-RZG1M board support
-Date: Thu, 20 Oct 2016 11:24:59 +0200
-Message-ID: <20161020092459.GM4612@verge.net.au>
-References: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com>
- <5be99d76-a082-129b-1aa6-b6f7402ae79b@cogentembedded.com>
- <20161012080905.GD31183@verge.net.au>
- <cea44556-a578-fb54-11b8-f21f5b991caa@cogentembedded.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH 0/4] IIO wrapper drivers, dpot-dac and envelope-detector
+Date: Thu, 20 Oct 2016 11:25:58 +0200
+Message-ID: <1476955562-13673-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cea44556-a578-fb54-11b8-f21f5b991caa@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 12, 2016 at 11:29:56AM +0300, Sergei Shtylyov wrote:
-> On 10/12/2016 11:09 AM, Simon Horman wrote:
-> 
-> >>>  Here's the set of 11 patches against Simon Horman's 'renesas.git' repo's
-> >>>'renesas-devel-20161003-v4.8' tag. I'm adding the device tree support for
-> >>>the R8A7743-based SK-RZG1M board. The SoC is close to R8A7791 and the board
-> >>>seems identical to the R8A7791/Porter board. The device tree patches depend on
-> >>>the R8A7743 CPG/MSSR driver series just posted in order to compile and work.
-> >>
-> >>   Forgot to mention that this version causes a regression with the sh_eth
-> >>driver (well, actually with phylib): since IRQC now gets a deferred probing,
-> >>PHY IRQ doesn't work anymore -- phylib falls back to polling.
-> >
-> >Is there a resolution to that problem?
-> 
->    Geert has posted his IRQC driver patch recently. Not sure if it was
-> intended for merging but it solves the issue.
+Hi!
 
-Ok. I think it is ok to merge support for a new board even if there are
-problems as its not regressing (can't break something that previously
-didn't exist imho). But of course it would be best if things did work.
+These two drivers share the fact that they wrap another iio channel,
+and I use the first in combination with the second, which is why I'm
+submitting them as a pair.
 
-Geert, do you have any comments on the relevance of your IRQC driver patch?
+The first driver is a simple wrapper converting an iio dpot into an
+iio dac. It only changes the unit and scale. It also does not add any
+fancy iio buffer support that I don't need. I suppose that can be
+added. By someone else :-)
+
+Please look over the scale conversion, notably for the fractional log2
+case that I don't need myself, so is untested. Maybe I should just
+remove it?
+
+Also, is there some agreed-upon way to dig out the maximum value from
+an iio channel? If so, "dpot-dac,max-ohms" can be eliminated from the
+dt bindings, which would have been nice...
+
+I'm also wondering if I'm somehow abusing the regulator? I only added
+it to get rid of a "dpot-dac,max-voltage" thing from the dt bindings.
+It feels right though, but maybe I should do more with it than check
+its voltage? What?
+
+The second driver (the envelope detector) is more involved. It also
+explains why I need the dpot-dac driver. I wanted the envelope
+detector to be generic and work with any dac, but I had a dpot...
+
+The envelope detector was previously discussed late last year [1],
+and this is what I came up with instead of that mess.
+
+There are a couple of things to be said about the envelope detector,
+one question is where it should live? I placed it in the adc directory,
+but maybe it deserves an iio directory of its own? I'm also a bit
+worried that the name is a wee bit too generic. But what is a good
+name? I don't want it to be too long like dac-comp-envelope-detector
+and something like dac-comp-env-det is just unreadable. Naming is
+difficult... And suggestions?
+
+Another thing is that I'm not 100% satisfied with the fact that you
+have to decide at instantiation if you are going to invert the search
+or not (search from below). But in order for that to be selectable
+at runtime with a channel attribute of some sort, I need to be able
+to rebind the interrupt to the other edge and I want to do that
+without releasing the irq and grabbing it again (someone might
+otherwise steal the irq, making the driver lose the irq all together).
+I don't see any API to change the irq trigger condition. Is there
+such a thing?
+
+Anyway, despite all the above questions and remarks, this works for
+me. Please consider applying.
+
+Cheers,
+Peter
+
+[1] http://www.gossamer-threads.com/lists/linux/kernel/2320755
+
+Peter Rosin (4):
+  dt-bindings: iio: document dpot-dac bindings
+  iio: dpot-dac: DAC driver based on a digital potentiometer
+  dt-bindings: iio: document envelope-detector bindings
+  iio: envelope-detector: ADC driver based on a DAC and a comparator
+
+ .../bindings/iio/adc/envelope-detector.txt         |  65 +++++
+ .../devicetree/bindings/iio/dac/dpot-dac.txt       |  43 +++
+ MAINTAINERS                                        |  14 +
+ drivers/iio/adc/Kconfig                            |  10 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/envelope-detector.c                | 305 +++++++++++++++++++++
+ drivers/iio/dac/Kconfig                            |  10 +
+ drivers/iio/dac/Makefile                           |   1 +
+ drivers/iio/dac/dpot-dac.c                         | 219 +++++++++++++++
+ 9 files changed, 668 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
+ create mode 100644 drivers/iio/adc/envelope-detector.c
+ create mode 100644 drivers/iio/dac/dpot-dac.c
+
+-- 
+2.1.4
