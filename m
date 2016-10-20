@@ -1,29 +1,36 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 7/9] ARM: sunxi: Remove useless allwinner,drive property
-Date: Thu, 20 Oct 2016 14:55:58 +0200
-Message-ID: <CACRpkdaRVWggr2UhFmXHCtNcyu6ghVAT-oM0RdNbWvxraXOwXQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 8/9] ARM: sunxi: Remove useless allwinner,pull property
+Date: Thu, 20 Oct 2016 14:57:57 +0200
+Message-ID: <CACRpkdbNVPobGYK5xpj9RMLS6goQo5+SHsPRNOGnsHNmWiv9ww@mail.gmail.com>
 References: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
- <076406072c137a50df41c4acb0c582a688792976.1476200742.git-series.maxime.ripard@free-electrons.com>
+ <b643d1e525835365a6ae63bcd065cb3650a839d6.1476200742.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <076406072c137a50df41c4acb0c582a688792976.1476200742.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b643d1e525835365a6ae63bcd065cb3650a839d6.1476200742.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On Tue, Oct 11, 2016 at 5:46 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-> The allwinner,drive property set to 10mA was really considered as our
-> default. Remove all those properties entirely to make that obvious.
+> The allwinner,pull property set to NO_PULL was really considered our
+> default (and wasn't even changing the default value in the code).
 >
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Remove these properties to make it obvious that we do not set anything in
+> such a case.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 Please merge this through the ARM SoC tree.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
