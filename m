@@ -1,127 +1,109 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: bus: da8xx-syscfg: new driver
-Date: Thu, 20 Oct 2016 09:57:51 -0700
-Message-ID: <7h8ttj6jqo.fsf@baylibre.com>
-References: <1476721850-454-1-git-send-email-bgolaszewski@baylibre.com>
-        <4369153.vCOQzI7OET@avalon>
-        <CAMpxmJXwZ8pQ58OgV4w88yNuG1Fd8++1yP-Frd2QJFO9uJJueQ@mail.gmail.com>
-        <2278105.geKhb8xoNC@avalon>
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH 0/4] IIO wrapper drivers, dpot-dac and envelope-detector
+Date: Thu, 20 Oct 2016 18:30:19 +0100
+Message-ID: <8B9238AE-D53C-4A22-84CF-EC42FDA2DFB2@jic23.retrosnub.co.uk>
+References: <1476955562-13673-1-git-send-email-peda@axentia.se> <9b8c0789-566d-67a3-b4f5-dbe4c69f6932@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2278105.geKhb8xoNC@avalon> (Laurent Pinchart's message of "Wed,
-        19 Oct 2016 11:53:30 +0300")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9b8c0789-566d-67a3-b4f5-dbe4c69f6932@metafoo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>, Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-+Arnd, Olof
 
-Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> writes:
 
-> Hi Bartosz,
+On 20 October 2016 13:55:12 BST, Lars-Peter Clausen <lars@metafoo.de> wrote:
+>On 10/20/2016 11:25 AM, Peter Rosin wrote:
+>> Hi!
+>> 
+>> These two drivers share the fact that they wrap another iio channel,
+>> and I use the first in combination with the second, which is why I'm
+>> submitting them as a pair.
+>> 
+>> The first driver is a simple wrapper converting an iio dpot into an
+>> iio dac. It only changes the unit and scale. It also does not add any
+>> fancy iio buffer support that I don't need. I suppose that can be
+>> added. By someone else :-)
+>> 
+>> Please look over the scale conversion, notably for the fractional
+>log2
+>> case that I don't need myself, so is untested. Maybe I should just
+>> remove it?
+>> 
+>> Also, is there some agreed-upon way to dig out the maximum value from
+>> an iio channel? If so, "dpot-dac,max-ohms" can be eliminated from the
+>> dt bindings, which would have been nice...
 >
-> On Wednesday 19 Oct 2016 10:26:57 Bartosz Golaszewski wrote:
->> 2016-10-18 22:49 GMT+02:00 Laurent Pinchart:
->> > On Monday 17 Oct 2016 18:30:49 Bartosz Golaszewski wrote:
->> >> Create the driver for the da8xx System Configuration and implement
->> >> support for writing to the three Master Priority registers.
->> >> 
->> >> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> 
->> [snip]
->> 
->> >> +
->> >> +Documentation:
->> >> +OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh82c/spruh82c.pdf
->> >> +
->> >> +Required properties:
->> >> +
->> >> +- compatible:                "ti,da850-syscfg"
->> > 
->> > Don't you need a reg property ?
->> 
->> Yes, Kevin already pointed that out. I'll add it in v2. Same for [1/3].
->> 
->> >> +Optional properties:
->> >> +
->> >> +The below properties are used to specify the priority of master
->> >> peripherals.
->> >> +They must be between 0-7 where 0 is the highest priority and 7 is the
->> >> lowest.
->> >> +
->> >> +- ti,pri-arm-i:              ARM_I port priority.
->> >> +
->> >> +- ti,pri-arm-d:              ARM_D port priority.
->> >> +
->> >> +- ti,pri-upp:                uPP port priority.
->> >> +
->> >> +- ti,pri-sata:               SATA port priority.
->> >> +
->> >> +- ti,pri-pru0:               PRU0 port priority.
->> >> +
->> >> +- ti,pri-pru1:               PRU1 port priority.
->> >> +
->> >> +- ti,pri-edma30tc0:  EDMA3_0_TC0 port priority.
->> >> +
->> >> +- ti,pri-edma30tc1:  EDMA3_0_TC1 port priority.
->> >> +
->> >> +- ti,pri-edma31tc0:  EDMA3_1_TC0 port priority.
->> >> +
->> >> +- ti,pri-vpif-dma-0: VPIF DMA0 port priority.
->> >> +
->> >> +- ti,pri-vpif-dma-1: VPIF DMA1 port priority.
->> >> +
->> >> +- ti,pri-emac:               EMAC port priority.
->> >> +
->> >> +- ti,pri-usb0cfg:    USB0 CFG port priority.
->> >> +
->> >> +- ti,pri-usb0cdma:   USB0 CDMA port priority.
->> >> +
->> >> +- ti,pri-uhpi:               HPI port priority.
->> >> +
->> >> +- ti,pri-usb1:               USB1 port priority.
->> >> +
->> >> +- ti,pri-lcdc:               LCDC port priority.
->> > 
->> > I'm afraid this looks more like system configuration than hardware
->> > description to me.
->> 
->> While you're certainly right, this approach is already implemented in
->> several other memory and bus drivers and it was also suggested by
->> Sekhar in one of the tilcdc rev1 threads. There's also no real
->> alternative that I know of.
+>Yes, this is something we could really use. In a sense it exists for
+>the
+>devices with buffer-capable channels where there is the real_bits field
+>which tells us the data width of the channel. But a dedicated mechanism
+>for
+>querying the maximum (and minimum) valid code seems like a useful
+>feature.
+>Not only for in-kernel clients, but also for userspace.
+This was something that was addressed by the rather ancient patch series i posted that added 
+an available call back which provided info on range and values for all info mask elements.
+Series got buried by there being a lot of precursors but quite a few of those have merged since.
+
+Hmm Google won't let me find it on my phone. Was a while back now. Will try to get on pc with
+ decent email archive later and dig out a reference.
+
 >
-> The fact that other drivers get it wrong is no excuse for copying them :-)
-
-What exactly is "wrong" with the way other drivers are doing it?
-
-I'm sure there may be other ideas, and possibly some better ones, but
-that doesn't make it wrong, and doesn't change he fact that the kernel
-has existing drivers SoC-bus-specific system performance knobs like
-this.
-
->> > There was a BoF session about how to support this kind of performance
->> > knobs at ELCE last week:
->> > https://openiotelceurope2016.sched.org/event/7rss/bof-linux-device-perfor
->> > mance-framework-michael-turquette-baylibre :-)
->>
->> Unfortunately it was just a discussion about potential approaches -
->> there's no code yet.
+>> 
+>> I'm also wondering if I'm somehow abusing the regulator? I only added
+>> it to get rid of a "dpot-dac,max-voltage" thing from the dt bindings.
+>> It feels right though, but maybe I should do more with it than check
+>> its voltage? What?
 >
-> Patches are welcome ;-)
+>Enable the regulator when it is in use?
+>
+>> 
+>> The second driver (the envelope detector) is more involved. It also
+>> explains why I need the dpot-dac driver. I wanted the envelope
+>> detector to be generic and work with any dac, but I had a dpot...
+>> 
+>> The envelope detector was previously discussed late last year [1],
+>> and this is what I came up with instead of that mess.
+>> 
+>> There are a couple of things to be said about the envelope detector,
+>> one question is where it should live? I placed it in the adc
+>directory,
+>> but maybe it deserves an iio directory of its own? I'm also a bit
+>> worried that the name is a wee bit too generic. But what is a good
+>> name? I don't want it to be too long like dac-comp-envelope-detector
+>> and something like dac-comp-env-det is just unreadable. Naming is
+>> difficult... And suggestions?
+>
+>Yeah, it is a bit tricky. It is a envelope detector built from discrete
+>components, but of course there are many more ways to build one. If you
+>have
+>a codename for your platform you could use this for the DT compatible
+>string, like 'vendor,foobar-envelope-detector'.
+>
+>> 
+>> Another thing is that I'm not 100% satisfied with the fact that you
+>> have to decide at instantiation if you are going to invert the search
+>> or not (search from below). But in order for that to be selectable
+>> at runtime with a channel attribute of some sort, I need to be able
+>> to rebind the interrupt to the other edge and I want to do that
+>> without releasing the irq and grabbing it again (someone might
+>> otherwise steal the irq, making the driver lose the irq all
+>together).
+>> I don't see any API to change the irq trigger condition. Is there
+>> such a thing?
+>> 
+>> Anyway, despite all the above questions and remarks, this works for
+>> me. Please consider applying.
+>
+>In general this series looks really good, good and clear implementation
+>as
+>well as documentation. A few minor bits here and there, but that is
+>normal.
 
-Any generic perf framework will have to build on the HW-specifics of
-individual busses, so IMO, the lack of a generic performance
-framework/knobs should not be a reason to block the inclusion of any
-bus-specific knobs.
-
-I guess this ultimately would go though arm-soc, so I've added Arnd &
-Olof to the thread.
-
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
