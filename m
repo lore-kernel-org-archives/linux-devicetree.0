@@ -1,45 +1,50 @@
-From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 1/2] pinctrl: stm32: remove dependency with interrupt controller
-Date: Thu, 20 Oct 2016 15:26:51 +0200
-Message-ID: <1476970012-7838-2-git-send-email-alexandre.torgue@st.com>
+From: Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: [PATCH 2/2] pinctrl: stm32: move gpio irqs binding to optional
+Date: Thu, 20 Oct 2016 15:26:52 +0200
+Message-ID: <1476970012-7838-3-git-send-email-alexandre.torgue@st.com>
 References: <1476970012-7838-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476970012-7838-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1476970012-7838-1-git-send-email-alexandre.torgue@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch allows to probe stm32 pinctrl driver even if no interrupt
-controller is defined to manage gpio irqs.
+stm32 pinctrl driver could be probed even if no interrupt controller
+is defined to manage gpio irqs. Entries related to gpio irq management
+are moved to optional.
 
-Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index 200667f..efc4371 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -1092,9 +1092,11 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+index f9753c4..b24583a 100644
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+@@ -14,11 +14,6 @@ Required properies:
+  - #size-cells	: The value of this property must be 1
+  - ranges	: defines mapping between pin controller node (parent) to
+    gpio-bank node (children).
+- - interrupt-parent: phandle of the interrupt parent to which the external
+-   GPIO interrupts are forwarded to.
+- - st,syscfg: Should be phandle/offset pair. The phandle to the syscon node
+-   which includes IRQ mux selection register, and the offset of the IRQ mux
+-   selection register.
+  - pins-are-numbered: Specify the subnodes are using numbered pinmux to
+    specify pins.
  
--	ret = stm32_pctrl_dt_setup_irq(pdev, pctl);
--	if (ret)
--		return ret;
-+	if (of_find_property(np, "interrupt-parent", NULL)) {
-+		ret = stm32_pctrl_dt_setup_irq(pdev, pctl);
-+		if (ret)
-+			return ret;
-+	}
+@@ -37,6 +32,11 @@ Required properties:
  
- 	for_each_child_of_node(np, child)
- 		if (of_property_read_bool(child, "gpio-controller"))
+ Optional properties:
+  - reset:	  : Reference to the reset controller
++ - interrupt-parent: phandle of the interrupt parent to which the external
++   GPIO interrupts are forwarded to.
++ - st,syscfg: Should be phandle/offset pair. The phandle to the syscon node
++   which includes IRQ mux selection register, and the offset of the IRQ mux
++   selection register.
+ 
+ Example:
+ #include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
