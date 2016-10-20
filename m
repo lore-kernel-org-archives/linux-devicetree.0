@@ -1,111 +1,56 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 1/8] drm/bridge: rgb-to-vga: Support an
- enable GPIO
-Date: Thu, 20 Oct 2016 11:43:37 +0800
-Message-ID: <20161020034344.14154-2-wens@csie.org>
+Subject: [PATCH v2 2/8] drm/sun4i: sun6i-drc: Support DRC on A31 and A31s
+Date: Thu, 20 Oct 2016 11:43:38 +0800
+Message-ID: <20161020034344.14154-3-wens@csie.org>
 References: <20161020034344.14154-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB5X2UDAAKGQEUUVYM3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161020034344.14154-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some rgb-to-vga bridges have an enable GPIO, either directly tied to
-an enable pin on the bridge IC, or indirectly controlling a power
-switch.
-
-Add support for it.
+The A31 and A31s also have the DRC as part of the display pipeline.
+As we know virtually nothing about them, just add compatible strings
+for both SoCs to the stub driver.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- .../bindings/display/bridge/dumb-vga-dac.txt       |  2 ++
- drivers/gpu/drm/bridge/dumb-vga-dac.c              | 28 ++++++++++++++++++++++
- 2 files changed, 30 insertions(+)
+ Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 2 ++
+ drivers/gpu/drm/sun4i/sun6i_drc.c                             | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
-index 003bc246a270..d3484822bf77 100644
---- a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
-+++ b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
-@@ -16,6 +16,8 @@ graph bindings specified in Documentation/devicetree/bindings/graph.txt.
- - Video port 0 for RGB input
- - Video port 1 for VGA output
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index b95696d748c7..5368961cd727 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -64,6 +64,8 @@ adaptive backlight control.
  
-+Optional properties:
-+- enable-gpios: GPIO pin to enable or disable the bridge
- 
- Example
- -------
-diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c b/drivers/gpu/drm/bridge/dumb-vga-dac.c
-index afec232185a7..b487e5e9b56d 100644
---- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
-+++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
-@@ -10,6 +10,7 @@
-  * the License, or (at your option) any later version.
-  */
- 
-+#include <linux/gpio/consumer.h>
- #include <linux/module.h>
- #include <linux/of_graph.h>
- 
-@@ -23,6 +24,7 @@ struct dumb_vga {
- 	struct drm_connector	connector;
- 
- 	struct i2c_adapter	*ddc;
-+	struct gpio_desc	*enable_gpio;
- };
- 
- static inline struct dumb_vga *
-@@ -124,8 +126,26 @@ static int dumb_vga_attach(struct drm_bridge *bridge)
- 	return 0;
+ Required properties:
+   - compatible: value must be one of:
++    * allwinner,sun6i-a31-drc
++    * allwinner,sun6i-a31s-drc
+     * allwinner,sun8i-a33-drc
+   - reg: base address and size of the memory-mapped region.
+   - interrupts: interrupt associated to this IP
+diff --git a/drivers/gpu/drm/sun4i/sun6i_drc.c b/drivers/gpu/drm/sun4i/sun6i_drc.c
+index bf6d846d8132..6ef707c5a719 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_drc.c
++++ b/drivers/gpu/drm/sun4i/sun6i_drc.c
+@@ -98,6 +98,8 @@ static int sun6i_drc_remove(struct platform_device *pdev)
  }
  
-+static void dumb_vga_enable(struct drm_bridge *bridge)
-+{
-+	struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
-+
-+	if (vga->enable_gpio)
-+		gpiod_set_value_cansleep(vga->enable_gpio, 1);
-+}
-+
-+static void dumb_vga_disable(struct drm_bridge *bridge)
-+{
-+	struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
-+
-+	if (vga->enable_gpio)
-+		gpiod_set_value_cansleep(vga->enable_gpio, 0);
-+}
-+
- static const struct drm_bridge_funcs dumb_vga_bridge_funcs = {
- 	.attach		= dumb_vga_attach,
-+	.enable		= dumb_vga_enable,
-+	.disable	= dumb_vga_disable,
+ static const struct of_device_id sun6i_drc_of_table[] = {
++	{ .compatible = "allwinner,sun6i-a31-drc" },
++	{ .compatible = "allwinner,sun6i-a31s-drc" },
+ 	{ .compatible = "allwinner,sun8i-a33-drc" },
+ 	{ }
  };
- 
- static struct i2c_adapter *dumb_vga_retrieve_ddc(struct device *dev)
-@@ -169,6 +189,14 @@ static int dumb_vga_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	platform_set_drvdata(pdev, vga);
- 
-+	vga->enable_gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
-+						   GPIOD_OUT_LOW);
-+	if (IS_ERR(vga->enable_gpio)) {
-+		ret = PTR_ERR(vga->enable_gpio);
-+		dev_err(&pdev->dev, "failed to request GPIO: %d\n", ret);
-+		return ret;
-+	}
-+
- 	vga->ddc = dumb_vga_retrieve_ddc(&pdev->dev);
- 	if (IS_ERR(vga->ddc)) {
- 		if (PTR_ERR(vga->ddc) == -ENODEV) {
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
