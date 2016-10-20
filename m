@@ -1,127 +1,69 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH v3 5/6] ARM: sunxi: Remove useless allwinner,pull
- property
-Date: Thu, 20 Oct 2016 17:38:48 +0200
-Message-ID: <20161020173848.be9cf97854f8933b3ce90d55@free.fr>
-References: <cover.f893b02a9f816dad8fad3986672b05c4b211e2b1.1476971126.git-series.maxime.ripard@free-electrons.com>
-        <42e249454ccf6b14e9ec266cb8d42a24f6d71d7b.1476971126.git-series.maxime.ripard@free-electrons.com>
+From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] of/platform: dynamic: Use of_platform_bus_create() to create
+ devices
+Date: Thu, 20 Oct 2016 13:02:46 +0200
+Message-ID: <b317f693-98b5-ba1e-1184-83735a68db9b@nokia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <42e249454ccf6b14e9ec266cb8d42a24f6d71d7b.1476971126.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 20 Oct 2016 15:49:06 +0200
-Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
+of_platform_notify() requires parents to have OF_POPULATED_BUS to be set
+(which is correct way to verify healthy platform bus), but uses
+of_platform_device_create() to create devices, which never sets the above
+flag. Therefore it's not possible to add platform buses via overlays.
 
-> The allwinner,pull property set to NO_PULL was really considered our
-> default (and wasn't even changing the default value in the code).
-> 
-> Remove these properties to make it obvious that we do not set anything in
-> such a case.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  arch/arm/boot/dts/ntc-gr8-evb.dts                     |  4 +-
->  arch/arm/boot/dts/ntc-gr8.dtsi                        | 14 +-----
->  arch/arm/boot/dts/sun4i-a10-a1000.dts                 |  2 +-
->  arch/arm/boot/dts/sun4i-a10-cubieboard.dts            |  1 +-
->  arch/arm/boot/dts/sun4i-a10-dserve-dsrv9703c.dts      |  4 +-
->  arch/arm/boot/dts/sun4i-a10-gemei-g9.dts              |  1 +-
->  arch/arm/boot/dts/sun4i-a10-hackberry.dts             |  2 +-
->  arch/arm/boot/dts/sun4i-a10-inet1.dts                 |  2 +-
->  arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts            |  2 +-
->  arch/arm/boot/dts/sun4i-a10-marsboard.dts             |  1 +-
->  arch/arm/boot/dts/sun4i-a10-mk802.dts                 |  3 +-
->  arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts        |  2 +-
->  arch/arm/boot/dts/sun4i-a10-pcduino.dts               |  2 +-
->  arch/arm/boot/dts/sun4i-a10-pcduino2.dts              |  1 +-
->  arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts      |  3 +-
->  arch/arm/boot/dts/sun4i-a10.dtsi                      | 24 +--------
->  arch/arm/boot/dts/sun5i-a10s-auxtek-t003.dts          |  1 +-
->  arch/arm/boot/dts/sun5i-a10s-auxtek-t004.dts          |  2 +-
->  arch/arm/boot/dts/sun5i-a10s-mk802.dts                |  2 +-
->  arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts      |  2 +-
->  arch/arm/boot/dts/sun5i-a10s-r7-tv-dongle.dts         |  2 +-
->  arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts              |  2 +-
->  arch/arm/boot/dts/sun5i-a10s.dtsi                     |  7 +--
->  arch/arm/boot/dts/sun5i-a13-hsg-h702.dts              |  1 +-
->  arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts       |  3 +-
->  arch/arm/boot/dts/sun5i-a13-olinuxino.dts             |  2 +-
->  arch/arm/boot/dts/sun5i-a13-utoo-p66.dts              |  1 +-
->  arch/arm/boot/dts/sun5i-a13.dtsi                      |  3 +-
->  arch/arm/boot/dts/sun5i-r8-chip.dts                   |  2 +-
->  arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi  |  2 +-
->  arch/arm/boot/dts/sun5i.dtsi                          |  7 +--
->  arch/arm/boot/dts/sun6i-a31-app4-evb1.dts             |  1 +-
->  arch/arm/boot/dts/sun6i-a31-colombus.dts              |  1 +-
->  arch/arm/boot/dts/sun6i-a31-hummingbird.dts           |  2 +-
->  arch/arm/boot/dts/sun6i-a31-i7.dts                    |  2 +-
->  arch/arm/boot/dts/sun6i-a31-m9.dts                    |  2 +-
->  arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts      |  2 +-
->  arch/arm/boot/dts/sun6i-a31.dtsi                      | 13 +----
->  arch/arm/boot/dts/sun6i-a31s-primo81.dts              |  1 +-
->  arch/arm/boot/dts/sun6i-a31s-sina31s.dts              |  1 +-
->  arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts      |  3 +-
->  arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts      |  3 +-
->  arch/arm/boot/dts/sun7i-a20-bananapi.dts              |  2 +-
->  arch/arm/boot/dts/sun7i-a20-bananapro.dts             |  5 +--
->  arch/arm/boot/dts/sun7i-a20-cubieboard2.dts           |  1 +-
->  arch/arm/boot/dts/sun7i-a20-cubietruck.dts            |  6 +--
->  arch/arm/boot/dts/sun7i-a20-hummingbird.dts           |  4 +-
->  arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts             |  4 +-
->  arch/arm/boot/dts/sun7i-a20-itead-ibox.dts            |  1 +-
->  arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts             |  2 +-
->  arch/arm/boot/dts/sun7i-a20-m3.dts                    |  1 +-
->  arch/arm/boot/dts/sun7i-a20-mk808c.dts                |  2 +-
->  arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts        |  4 +-
->  arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts        |  2 +-
->  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts  |  1 +-
->  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts       |  3 +-
->  arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts       |  1 +-
->  arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts         |  4 +-
->  arch/arm/boot/dts/sun7i-a20-orangepi.dts              |  4 +-
->  arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts         |  3 +-
->  arch/arm/boot/dts/sun7i-a20-pcduino3.dts              |  2 +-
->  arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts        |  3 +-
->  arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts      |  1 +-
->  arch/arm/boot/dts/sun7i-a20.dtsi                      | 37 +------------
->  arch/arm/boot/dts/sun8i-a23-a33.dtsi                  | 10 +---
->  arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts |  1 +-
->  arch/arm/boot/dts/sun8i-a23-polaroid-mid2809pxe04.dts |  1 +-
->  arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts        |  1 +-
->  arch/arm/boot/dts/sun8i-a33-olinuxino.dts             |  3 +-
->  arch/arm/boot/dts/sun8i-a33.dtsi                      |  1 +-
->  arch/arm/boot/dts/sun8i-a83t.dtsi                     |  3 +-
->  arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts       |  3 +-
->  arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts             |  2 +-
->  arch/arm/boot/dts/sun8i-h3-orangepi-2.dts             |  4 +-
->  arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts          |  3 +-
->  arch/arm/boot/dts/sun8i-h3-orangepi-one.dts           |  3 +-
->  arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts            |  3 +-
->  arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts          |  1 +-
->  arch/arm/boot/dts/sun8i-h3.dtsi                       | 12 +----
->  arch/arm/boot/dts/sun8i-r16-parrot.dts                |  3 +-
->  arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi  |  2 +-
->  arch/arm/boot/dts/sun9i-a80-cubieboard4.dts           |  1 +-
->  arch/arm/boot/dts/sun9i-a80-optimus.dts               |  4 +-
->  arch/arm/boot/dts/sun9i-a80.dtsi                      |  6 +--
->  arch/arm/boot/dts/sunxi-common-regulators.dtsi        |  4 +-
->  85 files changed, 0 insertions(+), 302 deletions(-)
-	[snip]
+Use of_platform_bus_create(), which is used in non-overlay case to populate
+both buses and devices.
 
-Is it really usefull to change all these files while in a previous
-patch you were writing:
-> The generic pin configuration and multiplexing should be preferred now,
-> even though we still support the old one.
-?
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
--- 
-Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+---
+ drivers/of/platform.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index af98343..d2d6e74 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -521,6 +521,7 @@ static int of_platform_notify(struct notifier_block *nb,
+ 	struct of_reconfig_data *rd = arg;
+ 	struct platform_device *pdev_parent, *pdev;
+ 	bool children_left;
++	int ret;
+ 
+ 	switch (of_reconfig_get_state_change(action, rd)) {
+ 	case OF_RECONFIG_CHANGE_ADD:
+@@ -534,15 +535,15 @@ static int of_platform_notify(struct notifier_block *nb,
+ 
+ 		/* pdev_parent may be NULL when no bus platform device */
+ 		pdev_parent = of_find_device_by_node(rd->dn->parent);
+-		pdev = of_platform_device_create(rd->dn, NULL,
+-				pdev_parent ? &pdev_parent->dev : NULL);
++		ret = of_platform_bus_create(rd->dn, of_default_bus_match_table,
++					     NULL, pdev_parent ?
++					     &pdev_parent->dev : NULL, true);
+ 		of_dev_put(pdev_parent);
+ 
+-		if (pdev == NULL) {
++		if (ret) {
+ 			pr_err("%s: failed to create for '%s'\n",
+ 					__func__, rd->dn->full_name);
+-			/* of_platform_device_create tosses the error code */
+-			return notifier_from_errno(-EINVAL);
++			return notifier_from_errno(ret);
+ 		}
+ 		break;
+ 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
