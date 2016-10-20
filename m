@@ -1,98 +1,78 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC V2 PATCH 10/12] arm64: dts: msm8994 issolate non standard
- bootloader/LK entries
-Date: Wed, 19 Oct 2016 22:17:12 -0500
-Message-ID: <20161020031712.GD3145@hector.attlocal.net>
-References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
- <2149904.D2eaQZN3bA@wuerfel>
- <17447be1-4357-0eca-a242-69576d3e2799@redhat.com>
- <4976066.k14mpQt0HJ@wuerfel>
- <20161019214643.GC3145@hector.attlocal.net>
- <CAL_Jsq+wjnEByg2vgx-P+bLJaQm+s=UX7nj=KwviagnQDG_3hQ@mail.gmail.com>
+From: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] powerpc/mm: allow memory hotplug into a memoryless
+ node
+Date: Thu, 20 Oct 2016 14:30:42 +1100
+Message-ID: <872f253d-8a55-246c-2be0-636a588e2dd0@gmail.com>
+References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
+ <1475778995-1420-4-git-send-email-arbab@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+wjnEByg2vgx-P+bLJaQm+s=UX7nj=KwviagnQDG_3hQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1475778995-1420-4-git-send-email-arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, git-LJ92rlH3Dns@public.gmane.org, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Bharata B Rao <bharata-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Alistair Popple <apopple-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, "Aneesh Kumar K.V" <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Tang Chen <tangchen-BthXqXjhjHXQFUHtdCDX3A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2016 at 08:07:25PM -0500, Rob Herring wrote:
-> On Wed, Oct 19, 2016 at 4:46 PM, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Wed, Oct 19, 2016 at 04:56:20PM +0200, Arnd Bergmann wrote:
-> >> On Wednesday, October 12, 2016 5:59:41 PM CEST Jeremy McNicoll wrote:
-> >> > On 2016-10-12 3:39 AM, Arnd Bergmann wrote:
-> >> > > On Tuesday, October 11, 2016 7:41:22 PM CEST Rob Herring wrote:
-> >> > >> On Sat, Oct 1, 2016 at 9:38 PM, Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> >> > >>> These non standard DT entries need to be cast aside as to not
-> >> > >>> pollute the main device tree bindings.  Without these essential
-> >> > >>> DT items the bootloader/LK will not pass control over to the kernel
-> >> > >>> and thus never boot.
-> >> > >>
-> >> > >> I discussed this with Stephen recently. I'm okay with leaving these on
-> >> > >> boards that have no chance of getting updated bootloaders to use the
-> >> > >> compatible string instead. Having to use dtbTool is far worse than a
-> >> > >> couple of extra properties IMO. I reserve the right to complain if new
-> >> > >> stuff continues to use these though.
-> >> > >>
-> >> > >>> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >> > >>> ---
-> >> > >>>  .../arm64/boot/dts/qcom/msm8994-angler-rev-101.dts |  1 -
-> >> > >>>  arch/arm64/boot/dts/qcom/msm8994.dtsi              |  3 +--
-> >> > >>>  .../boot/dts/qcom/nexus6p_bootloader_bits.dtsi     | 24 ++++++++++++++++++++++
-> >> > >>
-> >> > >> Just put this into the board file rather than yet another include.
-> >> > >
-> >> > > The suggestion that I had was to have two .dts files: the normal
-> >> > > one without these properties, and another .dts file including the
-> >> > > first but adding these three for compatibility with the legacy
-> >> > > bootloaders.
-> >> > >
-> >> >
-> >> (sorry for the late reply, I thought I had replied already but
-> >> couldn't find that in the archives when I saw I still had this
-> >> reply open)
-> >>
-> >> > So I did it backwards from what you had suggested?
-> >> > Based on my discussion with, (cant seem to recall) my understanding
-> >> > was that we simply wanted to have these 3 bootloader specific entries
-> >> > in another file.
-> >>
-> >> Right
-> >>
-> >> What I would like to see here is two separate .dtb files, one
-> >> with the hack and one without it, so we have a migration path
-> >> for the machines that eventually get a boot loader with proper
-> >> DT support.
-> >
-> > So my main beef with this is that it is kind of onerous.  The machines that
-> > require this will never get a bootloader change.  So we'll be adding 2 dtb
-> > targets and only ever use one.
-> >
-> > It's much simpler in my opinion to just add the msm-id to the files that need it
-> > right now..... comment it with something like 'this is because of the Qualcomm
-> > braindead bootloader requirements' and move on.
-> >
-> > If there was any hope of a new bootloader for non-bleeding edge boards, I'd
-> > wholeheartedly agree with you Arnd.  But there isn't, and there won't be.
+
+
+On 07/10/16 05:36, Reza Arbab wrote:
+> Remove the check which prevents us from hotplugging into an empty node.
 > 
-> Makes sense to me for things like Nexus phones here. What about DB410
-> for example? Is there hope for a fix there? My bootloader is only a
-> couple of months old and needs the properties still.
+> This limitation has been questioned before [1], and judging by the
+> response, there doesn't seem to be a reason we can't remove it. No issues
+> have been found in light testing.
+> 
+> [1] http://lkml.kernel.org/r/CAGZKiBrmkSa1yyhbf5hwGxubcjsE5SmkSMY4tpANERMe2UG4bg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org
+>     http://lkml.kernel.org/r/20160511215051.GF22115-qNY8G7rN0TWMBe/gKFfDyNwqlRwYtuWJQQ4Iyu8u01E@public.gmane.org
+> 
+> Signed-off-by: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> Acked-by: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> Cc: Bharata B Rao <bharata-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/powerpc/mm/numa.c | 13 +------------
+>  1 file changed, 1 insertion(+), 12 deletions(-)
+> 
+> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+> index 75b9cd6..d7ac419 100644
+> --- a/arch/powerpc/mm/numa.c
+> +++ b/arch/powerpc/mm/numa.c
+> @@ -1121,7 +1121,7 @@ static int hot_add_node_scn_to_nid(unsigned long scn_addr)
+>  int hot_add_scn_to_nid(unsigned long scn_addr)
+>  {
+>  	struct device_node *memory = NULL;
+> -	int nid, found = 0;
+> +	int nid;
+>  
+>  	if (!numa_enabled || (min_common_depth < 0))
+>  		return first_online_node;
+> @@ -1137,17 +1137,6 @@ int hot_add_scn_to_nid(unsigned long scn_addr)
+>  	if (nid < 0 || !node_online(nid))
+>  		nid = first_online_node;
+>  
+> -	if (NODE_DATA(nid)->node_spanned_pages)
+> -		return nid;
+> -
+> -	for_each_online_node(nid) {
+> -		if (NODE_DATA(nid)->node_spanned_pages) {
+> -			found = 1;
+> -			break;
+> -		}
+> -	}
+> -
+> -	BUG_ON(!found);
+>  	return nid;
 
-There won't be a fix for the 410c.  We barely got them to respin to use PSCI.
-Stephen can correct me if I am wrong on this.
+FYI, these checks were temporary to begin with
 
-If this is fixed, it would be 8996+.  If..........
+I found this in git history
 
-So this means introducing the msm-id's for the boards that currently require it,
-and for the boards that will require it in the future.  And this would stay in
-effect until the bootloader is able to parse the compatible strings or figure
-this out without the msm-ids.
+b226e462124522f2f23153daff31c311729dfa2f (powerpc: don't add memory to empty node/zone)
 
-Andy
+Balbir Singh.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
