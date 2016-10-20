@@ -1,38 +1,62 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 0/2] Add new resets for pcie-rockchip
-Date: Fri, 21 Oct 2016 10:43:54 +0800
-Message-ID: <1477017836-19317-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Brian Norris <briannorris@chromium.org>, linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH 2/4] iio: dpot-dac: DAC driver based on a digital
+ potentiometer
+Date: Thu, 20 Oct 2016 16:51:23 +0200
+Message-ID: <430867e6-478d-420a-f2ae-5474a4ebfa0d@axentia.se>
+References: <1476955562-13673-1-git-send-email-peda@axentia.se>
+ <1476955562-13673-3-git-send-email-peda@axentia.se>
+ <alpine.DEB.2.02.1610201254370.19919@pmeerw.net>
+ <22d07498-860d-29f8-07ef-ae2f5df6ab25@axentia.se>
+ <alpine.DEB.2.02.1610201604280.22512@pmeerw.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1610201604280.22512-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 2016-10-20 16:08, Peter Meerwald-Stadler wrote:
+>>>> +	u32 max_ohms;
+>>>> +};
+>>>> +
+>>>> +static const struct iio_chan_spec dpot_dac_iio_channel = {
+>>>> +	.type = IIO_VOLTAGE,
+>>>> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
+>>>> +			    | BIT(IIO_CHAN_INFO_SCALE),
+>>>> +	.output = 1,
+>>>> +};
+>>>> +
+>>>> +static int dpot_dac_read_raw(struct iio_dev *indio_dev,
+>>>> +			     struct iio_chan_spec const *chan,
+>>>> +			     int *val, int *val2, long mask)
+>>>> +{
+>>>> +	struct dpot_dac *dac = iio_priv(indio_dev);
+>>>> +	int ret;
+>>>> +	unsigned long long tmp;
+>>>
+>>> s64 (which is used to cast below)
+>>
+>> I assume that what you really want is to get rid of the cast, and
+>> that you aren't really bothered if tmp is ull or s32, right? Given
+>> that assumption, I'm just dropping the cast instead. The LL specifier
+>> on the constant should promote *val anyway.
+> 
+> what I meant to pick upon was mixing
+> s64 with unsigned long long with LL in the code that follows
+> 
+> anything simpler and more consistent would be good
 
-Hi Bjorn and Heiko,
+Right, I should however note that I copied the pattern from the
+industrialio-core.c:iio_format_value function. So, in my defense
+I was consistent with that...
 
-Sorry for updating pcie-rockchip so frequently under this development
-cycle. This patch is going to fix a urgent issue of missing control for
-pm_rst, aclk_rst and pclk_rst. These three resets was controlled by rom code
-but now the driver will take over it in order to solve some weird issues
-found by MP test. Thanks to that it is still under MP test internally, so
-the backward compatibility of dtb won't be a big deal.
+Cheers,
+Peter
 
-And there are still some on-going patches for pcie-rockchip on linux-pci
-wasn't merged. All of them was also rebased on your next branch, so hope there
-is no conflict if you wish to pick them(including this patch 1), otherwise I could
-rebase all of them again. :)
-
-
-
-Shawn Lin (2):
-  PCI: rockchip: Add three new resets as required properties
-  arm64: dts: rockchip: add three new resets for rk3399 PCIe controller
-
- .../devicetree/bindings/pci/rockchip-pcie.txt      | 11 ++--
- arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  7 ++-
- drivers/pci/host/pcie-rockchip.c                   | 62 ++++++++++++++++++++++
- 3 files changed, 75 insertions(+), 5 deletions(-)
-
--- 
-2.3.7
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
