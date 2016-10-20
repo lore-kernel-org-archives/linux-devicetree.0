@@ -1,31 +1,38 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 3/9] pinctrl: sunxi: Handle bias disable
-Date: Thu, 20 Oct 2016 14:51:11 +0200
-Message-ID: <CACRpkdYq4betoUSJK8NtdMt6WJi1UREeOja0kZoFyyuCTvhBJA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/9] pinctrl: sunxi: Deal with configless pins
+Date: Thu, 20 Oct 2016 14:52:54 +0200
+Message-ID: <CACRpkdY3+OnQ6Oo_nx+BrWebeTa=kYhHWSzirk1MxfWWJ--0Sg@mail.gmail.com>
 References: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
- <6f9d91647b9f05a1df5d655a49965b671ba04b71.1476200742.git-series.maxime.ripard@free-electrons.com>
+ <d707c657502b87a7f8e70c7b44492bc95939f9f6.1476200742.git-series.maxime.ripard@free-electrons.com>
+ <CAGb2v64gBi71W=+Tu2vz94xFDtuRNHUyVWK3ken8CSOWvK5t0g@mail.gmail.com> <20161019121614.3crr76qyexhamjiy@lukather>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6f9d91647b9f05a1df5d655a49965b671ba04b71.1476200742.git-series.maxime.ripard@free-electrons.com>
+In-Reply-To: <20161019121614.3crr76qyexhamjiy@lukather>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 11, 2016 at 5:46 PM, Maxime Ripard
+On Wed, Oct 19, 2016 at 2:16 PM, Maxime Ripard
 <maxime.ripard@free-electrons.com> wrote:
-
-> So far, putting NO_PULL in allwinner,pull was ignored, behaving like if
-> that property was not there at all.
+> On Tue, Oct 18, 2016 at 03:47:03PM +0800, Chen-Yu Tsai wrote:
+>> > @@ -342,6 +365,8 @@ static void sunxi_pctrl_dt_free_map(struct pinctrl_dev *pctldev,
+>> >                                     struct pinctrl_map *map,
+>> >                                     unsigned num_maps)
+>> >  {
+>> > +       unsigned long *pinconfig;
+>>
+>> This looks out of place and context?
 >
-> Obviously, this is not the right thing to do, and in that case, we really
-> need to just disable the bias.
->
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Yeah, sorry, it's just a leftover from the previous version. This has
+> been removed.
 
-Patch applied.
+Do you mean you will send a v3 of this series?
+
+OK stopping to apply then.
+
+But I have already applied patches 1, 2 and 3 so just resend the rest :)
 
 Yours,
 Linus Walleij
