@@ -1,84 +1,56 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dt: sun8i-h3: Add sunxi-sid to dts for sun8i-h3
-Date: Thu, 20 Oct 2016 22:36:54 +0200
-Message-ID: <20161020203654.2erph2mr73yzksla@lukather>
-References: <1475660904-7959-1-git-send-email-clabbe.montjoie@gmail.com>
- <20161005122130.8cc229ff5d4990149956b49c@free.fr>
- <20161019074016.GA31440@Red>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH 0/4] IIO wrapper drivers, dpot-dac and envelope-detector
+Date: Thu, 20 Oct 2016 20:17:03 +0200
+Message-ID: <ba941bcd-c542-b699-638f-3b3003e8af00@axentia.se>
+References: <1476955562-13673-1-git-send-email-peda@axentia.se>
+ <9b8c0789-566d-67a3-b4f5-dbe4c69f6932@metafoo.de>
+ <8B9238AE-D53C-4A22-84CF-EC42FDA2DFB2@jic23.retrosnub.co.uk>
+ <DB170A5C-B172-4B86-80D5-58FD53752ED4@jic23.retrosnub.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="uodovxcj3qappxtk"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2GVUTAAKGQECJXAKKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20161019074016.GA31440@Red>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <DB170A5C-B172-4B86-80D5-58FD53752ED4-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 2016-10-20 19:37, Jonathan Cameron wrote:
+> On 20 October 2016 18:30:19 BST, Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org> wrote:
+>> On 20 October 2016 13:55:12 BST, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+>>> On 10/20/2016 11:25 AM, Peter Rosin wrote:
+>>>> Also, is there some agreed-upon way to dig out the maximum value from
+>>>> an iio channel? If so, "dpot-dac,max-ohms" can be eliminated from the
+>>>> dt bindings, which would have been nice...
+>>>
+>>> Yes, this is something we could really use. In a sense it exists for
+>>> the
+>>> devices with buffer-capable channels where there is the real_bits field
+>>> which tells us the data width of the channel. But a dedicated mechanism
+>>> for
+>>> querying the maximum (and minimum) valid code seems like a useful
+>>> feature.
+>>> Not only for in-kernel clients, but also for userspace.
+>>
+>> This was something that was addressed by the rather ancient patch
+>> series i posted that added 
+>> an available call back which provided info on range and values for all
+>> info mask elements.
+>> Series got buried by there being a lot of precursors but quite a few of
+>> those have merged since.
+>>
+>> Hmm Google won't let me find it on my phone. Was a while back now. Will
+>> try to get on pc with
+>> decent email archive later and dig out a reference.
+> http://marc.info/?l=linux-iio&m=138469765309868&w=2 I think...
 
---uodovxcj3qappxtk
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Interesting, one issue with that is that it is all in real world
+units, while I'd rather have the raw value. So, I would need to
+convert back to the raw value using the scale, which sounds boring
+but doable. However, I wonder if calibration may also be involved
+with that conversion back to raw for some channels? That sounds a
+bit more driver specific and potentially troublesome...
 
-On Wed, Oct 19, 2016 at 09:40:16AM +0200, LABBE Corentin wrote:
-> On Wed, Oct 05, 2016 at 12:21:30PM +0200, Jean-Francois Moine wrote:
-> > On Wed,  5 Oct 2016 11:48:24 +0200
-> > Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > 
-> > > This patch add support for the sunxi-sid driver to the device tree for sun8i-h3.
-> > > 
-> > > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > ---
-> > >  arch/arm/boot/dts/sun8i-h3.dtsi | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-> > > index 9f58bb4..abfd29c 100644
-> > > --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> > > +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> > > @@ -211,6 +211,11 @@
-> > >  			#size-cells = <0>;
-> > >  		};
-> > >  
-> > > +		sid: eeprom@01c14200 {
-> > > +			compatible = "allwinner,sun7i-a20-sid";
-> > > +			reg = <0x01c14200 0x200>;
-> > 
-> > The datasheet says 1Kb starting at 0x01c14000.
-> > Is there any reason to reduce the area and to shift the offset?
-> > 
-> 
-> According to http://linux-sunxi.org/SID_Register_Guide "For
-> Allwinner A83T and H3 the SID address space starts at 0x01c14000,
-> and the e-fuses are at offset 0x200".
->
-> So I use this offset, since the sunxi_sid driver need the base
-> address of e-fuses.
-> 
-> The easiest solution is to use 0x01c14200 since the other part of
-> sid is not used and not known (A83T/H3 user manual doesnt give any
-> information on all sid space, worse for A64 which reference SID only
-> in memory map).
-> 
-> So probably for H3/A64/A83T, there will never any usage of the rest
-> of the SID address space.
-
-And since we can't know that, and we have to maintain the DT ABI,
-using the whole address map and an offset, with a new compatible, is
-definetely the safest thing to do.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---uodovxcj3qappxtk--
+Cheers,
+Peter
