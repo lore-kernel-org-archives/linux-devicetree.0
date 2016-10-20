@@ -1,84 +1,77 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 4/9] pinctrl: sunxi: Deal with configless pins
-Date: Thu, 20 Oct 2016 15:46:30 +0200
-Message-ID: <20161020134630.xzkqvm7rokqiecg6@lukather>
-References: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
- <d707c657502b87a7f8e70c7b44492bc95939f9f6.1476200742.git-series.maxime.ripard@free-electrons.com>
- <CAGb2v64gBi71W=+Tu2vz94xFDtuRNHUyVWK3ken8CSOWvK5t0g@mail.gmail.com>
- <20161019121614.3crr76qyexhamjiy@lukather>
- <CACRpkdY3+OnQ6Oo_nx+BrWebeTa=kYhHWSzirk1MxfWWJ--0Sg@mail.gmail.com>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH] ARM: dts: rockchip: add i2c-bus subnode to edp
+Date: Thu, 20 Oct 2016 15:47:56 +0200
+Message-ID: <6083453f-08e1-643a-9638-1db38c704aa5@collabora.com>
+References: <1476950845-28242-1-git-send-email-tomeu.vizoso@collabora.com>
+ <7604646.6yosK0XMNL@diego>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="b4egem5rihojcdpj"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdY3+OnQ6Oo_nx+BrWebeTa=kYhHWSzirk1MxfWWJ--0Sg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7604646.6yosK0XMNL@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, Randy Li <randy.li@rock-chips.com>, Jon Hunter <jonathanh@nvidia.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/20/2016 03:45 PM, Heiko Stübner wrote:
+> Am Donnerstag, 20. Oktober 2016, 10:07:25 schrieb Tomeu Vizoso:
+>> Add an empty 'i2c-bus' subnode to the edp node just so that the I2C core
+>> doesn't attemp to parse the 'ports' subnode as containing i2c devices.
+>>
+>> This is to avoid spurious failure messages such as:
+>>
+>> i2c i2c-6: of_i2c: modalias failure on /dp@ff970000/ports
+> 
+> On the one hand, the edp really has an i2c bus - with its only client the EDID 
+> listening at 0x50 (and maybe 0x30).
+> 
+> On the other hand, adding an empty bus to the (implementation independent) 
+> devicetree just to make the Linux i2c subsystem happy sounds heavily like a 
+> implementation-specific hack, as the edp i2c bus doesn't leak into the outside 
+> world otherwise.
+> 
+> I guess this empty i2c bus not being part of the binding document points 
+> heavily into the implementation-specific corner :-) .
+> 
+> My short search on other patches touching this didn't reveal anything but 
+> maybe this was already discussed somewhere and found to be ok?
 
---b4egem5rihojcdpj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Here it is:
 
-Hi Linus,
+http://www.spinics.net/lists/linux-tegra/msg27862.html
 
-On Thu, Oct 20, 2016 at 02:52:54PM +0200, Linus Walleij wrote:
-> On Wed, Oct 19, 2016 at 2:16 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > On Tue, Oct 18, 2016 at 03:47:03PM +0800, Chen-Yu Tsai wrote:
-> >> > @@ -342,6 +365,8 @@ static void sunxi_pctrl_dt_free_map(struct pinct=
-rl_dev *pctldev,
-> >> >                                     struct pinctrl_map *map,
-> >> >                                     unsigned num_maps)
-> >> >  {
-> >> > +       unsigned long *pinconfig;
-> >>
-> >> This looks out of place and context?
-> >
-> > Yeah, sorry, it's just a leftover from the previous version. This has
-> > been removed.
->=20
-> Do you mean you will send a v3 of this series?
+Regards,
 
-Yes, I was waiting for your input to do that, but I guess you're ok
-with it :)
+Tomeu
 
-> OK stopping to apply then.
->
-> But I have already applied patches 1, 2 and 3 so just resend the rest :)
-
-Ack, I'll send it in a moment.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---b4egem5rihojcdpj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYCMqxAAoJEBx+YmzsjxAgHUQQAKo6VQf+kpksR9WudHhP6u4/
-5bwnqTcGNQer9tir3Mk/35gxpaRPcWAmPYpxIoJEZlckM4hBudO/vIAUEJZVoOZM
-wS5ugQlbFehBY+mT/Wo4xv886CvjYbi3rFHCyA1wpsLUp6w4QsALsOe/FQEhUWEe
-mpNuD6fEFTj88TTfcASAr+gku1uhHNKzK9+uR+flabNrlWBA4rogBNJMkvjoh+v4
-T5mc/3/aaEgTv3sa2QRa+MNjobuo1cOlG/nfsfpKI5abhQEsRXTsatUx3AcFhVlq
-GAqQK8pZwpUrL8tJzJZs/NEmidl+su46OvGvGSb1aG2Q/7fk7Y+F8tVq5cU8gQCN
-iKwi/+eE5W5HtHAWfedoxfGMNcnksdj4mLQiqptV9n/7wIkdxVtuIj27ICBu6qbn
-KYN3gx4wkajARq7IQvlgL5ztOj9cFNBLA1qOwdCcg1Vd70PJnZUu9EgLPOf27mzq
-f73xFUCZ89x8YogGlB3w6+XGJN3gaKgUUvUw8yVqMrzsVVJxMlusUWjxeCgDYro+
-9dOTckXT9YBXD1vAOpuNs8bbbt4cJ6JRV67NvyGc3AS+SwUAMYdme7Xg5vdoFnsg
-b0w/mPQ1fDLk0sGSIFoAGjBV0yAGjqm2BsLN1asZixO3yogWnzR7AtJa64nW+ohU
-JUXmlqfWb6++GoVLzFuo
-=4AFk
------END PGP SIGNATURE-----
-
---b4egem5rihojcdpj--
+> Another option could be to just make of_i2c_register_device silent if 
+> of_modalias_node returns -ENODEV?
+> 
+> 
+> Heiko
+> 
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>> Cc: Randy Li <randy.li@rock-chips.com>
+>> Cc: Jon Hunter <jonathanh@nvidia.com>
+>> ---
+>>  arch/arm/boot/dts/rk3288.dtsi | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+>> index 2f814ffeb605..94f4b7eecca2 100644
+>> --- a/arch/arm/boot/dts/rk3288.dtsi
+>> +++ b/arch/arm/boot/dts/rk3288.dtsi
+>> @@ -1075,6 +1075,11 @@
+>>  				};
+>>  			};
+>>  		};
+>> +
+>> +		i2c-bus {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>>  	};
+>>
+>>  	hdmi: hdmi@ff980000 {
+> 
