@@ -1,253 +1,96 @@
-From: "zhichang.yuan" <yuanzhichang@hisilicon.com>
-Subject: [PATCH V4 1/3] ARM64 LPC: Indirect ISA port IO introduced
-Date: Thu, 20 Oct 2016 17:15:38 +0800
-Message-ID: <1476954940-242159-2-git-send-email-yuanzhichang@hisilicon.com>
-References: <1476954940-242159-1-git-send-email-yuanzhichang@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V2 1/8] PM / OPP: Reword binding supporting multiple regulators per device
+Date: Thu, 20 Oct 2016 14:14:55 +0530
+Message-ID: <891ef8705e13dff331a3135647f4c18f88402a12.1476952750.git.viresh.kumar@linaro.org>
+References: <cover.1476952750.git.viresh.kumar@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1476954940-242159-1-git-send-email-yuanzhichang@hisilicon.com>
+In-Reply-To: <cover.1476952750.git.viresh.kumar@linaro.org>
+In-Reply-To: <cover.1476952750.git.viresh.kumar@linaro.org>
+References: <cover.1476952750.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, bhelgaas@google.com, mark.rutland@arm.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org
-Cc: lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, minyard@acm.org, benh@kernel.crashing.org, liviu.dudau@arm.com, zourongrong@gmail.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, zhichang.yuan02@gmail.com, kantyzc@163.com, xuwei5@hisilicon.com, "zhichang.yuan" <yuanzhichang@hisilicon.com>
+To: Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, sboyd@codeaurora.org, Viresh Kumar <vireshk@kernel.org>
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh@kernel.org, d-gerlach@ti.com, broonie@kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-For arm64, there is no I/O space as other architectural platforms, such as
-X86. Most I/O accesses are achieved based on MMIO. But for some arm64 SoCs,
-such as Hip06, when accessing some legacy ISA devices connected to LPC, those
-known port addresses are used to control the corresponding target devices, for
-example, 0x2f8 is for UART, 0xe4 is for ipmi-bt. It is different from the
-normal MMIO mode in using.
+On certain platforms (like TI), DVFS for a single device (CPU) requires
+configuring multiple power supplies.
 
-To drive these devices, this patch introduces a method named indirect-IO.
-In this method the in/out pair in arch/arm64/include/asm/io.h will be
-redefined. When upper layer drivers call in/out with those known legacy port
-addresses to access the peripherals, the hooking functions corrresponding to
-those target peripherals will be called. Through this way, those upper layer
-drivers which depend on in/out can run on Hip06 without any changes.
+The OPP bindings already contains binding and example to explain this
+case, but it isn't sufficient. For example, there is no way for the code
+parsing these bindings to know which voltage values belong to which
+power supply. Also its not possible to know the order in which the
+supplies need to be configured while switching OPPs.
 
-Signed-off-by: zhichang.yuan <yuanzhichang@hisilicon.com>
-Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+This patch tries to clarify on those details and does some minor changes
+as well.
+
+Note that the bindings do not specify the order in which the regulators
+need to be programmed and the order in which the entries are added for
+the supplies.
+
+The user of the bindings (like the kernel) shall know these details
+already and the DT is responsible to supply only the readings for the
+regulators.
+
+Cc: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/Kconfig             |  6 +++
- arch/arm64/include/asm/extio.h | 94 ++++++++++++++++++++++++++++++++++++++++++
- arch/arm64/include/asm/io.h    | 29 +++++++++++++
- arch/arm64/kernel/Makefile     |  1 +
- arch/arm64/kernel/extio.c      | 29 +++++++++++++
- 5 files changed, 159 insertions(+)
- create mode 100644 arch/arm64/include/asm/extio.h
- create mode 100644 arch/arm64/kernel/extio.c
+ Documentation/devicetree/bindings/opp/opp.txt | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 30398db..103dbea 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -163,6 +163,12 @@ config ARCH_MMAP_RND_COMPAT_BITS_MIN
- config ARCH_MMAP_RND_COMPAT_BITS_MAX
-        default 16
+diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+index ee91cbdd95ee..af476df510f1 100644
+--- a/Documentation/devicetree/bindings/opp/opp.txt
++++ b/Documentation/devicetree/bindings/opp/opp.txt
+@@ -86,8 +86,13 @@ properties.
+   Single entry is for target voltage and three entries are for <target min max>
+   voltages.
  
-+config ARM64_INDIRECT_PIO
-+	bool "access peripherals with legacy I/O port"
-+	help
-+	  Support special accessors for ISA I/O devices. This is needed for
-+	  SoCs that do not support standard read/write for the ISA range.
+-  Entries for multiple regulators must be present in the same order as
+-  regulators are specified in device's DT node.
++  Entries for multiple regulators shall be provided in the same field separated
++  by angular brackets <>. The OPP binding doesn't provide any provisions to
++  relate the values to their power supplies or the order in which the supplies
++  need to be configured.
 +
- config NO_IOPORT_MAP
- 	def_bool y if !PCI
++  Entries for all regulators shall be of the same size, i.e. either all use a
++  single value or triplets.
  
-diff --git a/arch/arm64/include/asm/extio.h b/arch/arm64/include/asm/extio.h
-new file mode 100644
-index 0000000..6ae0787
---- /dev/null
-+++ b/arch/arm64/include/asm/extio.h
-@@ -0,0 +1,94 @@
-+/*
-+ * Copyright (C) 2016 Hisilicon Limited, All Rights Reserved.
-+ * Author: Zhichang Yuan <yuanzhichang@hisilicon.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef __LINUX_EXTIO_H
-+#define __LINUX_EXTIO_H
-+
-+struct extio_ops {
-+	unsigned long start;/* inclusive, sys io addr */
-+	unsigned long end;/* inclusive, sys io addr */
-+
-+	u64 (*pfin)(void *devobj, unsigned long ptaddr,	size_t dlen);
-+	void (*pfout)(void *devobj, unsigned long ptaddr, u32 outval,
-+					size_t dlen);
-+	u64 (*pfins)(void *devobj, unsigned long ptaddr, void *inbuf,
-+				size_t dlen, unsigned int count);
-+	void (*pfouts)(void *devobj, unsigned long ptaddr,
-+				const void *outbuf, size_t dlen,
-+				unsigned int count);
-+	void *devpara;
-+};
-+
-+extern struct extio_ops *arm64_extio_ops;
-+
-+#define DECLARE_EXTIO(bw, type)						\
-+extern type in##bw(unsigned long addr);					\
-+extern void out##bw(type value, unsigned long addr);			\
-+extern void ins##bw(unsigned long addr, void *buffer, unsigned int count);\
-+extern void outs##bw(unsigned long addr, const void *buffer, unsigned int count);
-+
-+#define BUILD_EXTIO(bw, type)						\
-+type in##bw(unsigned long addr)						\
-+{									\
-+	if (!arm64_extio_ops || arm64_extio_ops->start > addr ||	\
-+			arm64_extio_ops->end < addr)			\
-+		return read##bw(PCI_IOBASE + addr);			\
-+	return arm64_extio_ops->pfin ?					\
-+		arm64_extio_ops->pfin(arm64_extio_ops->devpara,		\
-+			addr, sizeof(type)) : -1;			\
-+}									\
-+									\
-+void out##bw(type value, unsigned long addr)				\
-+{									\
-+	if (!arm64_extio_ops || arm64_extio_ops->start > addr ||	\
-+			arm64_extio_ops->end < addr)			\
-+		write##bw(value, PCI_IOBASE + addr);			\
-+	else								\
-+		if (arm64_extio_ops->pfout)				\
-+			arm64_extio_ops->pfout(arm64_extio_ops->devpara,\
-+				addr, value, sizeof(type));		\
-+}									\
-+									\
-+void ins##bw(unsigned long addr, void *buffer, unsigned int count)	\
-+{									\
-+	if (!arm64_extio_ops || arm64_extio_ops->start > addr ||	\
-+			arm64_extio_ops->end < addr)			\
-+		reads##bw(PCI_IOBASE + addr, buffer, count);		\
-+	else								\
-+		if (arm64_extio_ops->pfins)				\
-+			arm64_extio_ops->pfins(arm64_extio_ops->devpara,\
-+				addr, buffer, sizeof(type), count);	\
-+}									\
-+									\
-+void outs##bw(unsigned long addr, const void *buffer, unsigned int count)	\
-+{									\
-+	if (!arm64_extio_ops || arm64_extio_ops->start > addr ||	\
-+			arm64_extio_ops->end < addr)			\
-+		writes##bw(PCI_IOBASE + addr, buffer, count);		\
-+	else								\
-+		if (arm64_extio_ops->pfouts)				\
-+			arm64_extio_ops->pfouts(arm64_extio_ops->devpara,\
-+				addr, buffer, sizeof(type), count);	\
-+}
-+
-+static inline void arm64_set_extops(struct extio_ops *ops)
-+{
-+	if (ops)
-+		WRITE_ONCE(arm64_extio_ops, ops);
-+}
-+
-+#endif /* __LINUX_EXTIO_H*/
-diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
-index 0bba427..136735d 100644
---- a/arch/arm64/include/asm/io.h
-+++ b/arch/arm64/include/asm/io.h
-@@ -31,6 +31,7 @@
- #include <asm/early_ioremap.h>
- #include <asm/alternative.h>
- #include <asm/cpufeature.h>
-+#include <asm/extio.h>
+ - opp-microvolt-<name>: Named opp-microvolt property. This is exactly similar to
+   the above opp-microvolt property, but allows multiple voltage ranges to be
+@@ -104,10 +109,12 @@ properties.
  
- #include <xen/xen.h>
+   Should only be set if opp-microvolt is set for the OPP.
  
-@@ -149,6 +150,34 @@ static inline u64 __raw_readq(const volatile void __iomem *addr)
- #define IO_SPACE_LIMIT		(PCI_IO_SIZE - 1)
- #define PCI_IOBASE		((void __iomem *)PCI_IO_START)
+-  Entries for multiple regulators must be present in the same order as
+-  regulators are specified in device's DT node. If this property isn't required
+-  for few regulators, then this should be marked as zero for them. If it isn't
+-  required for any regulator, then this property need not be present.
++  Entries for multiple regulators shall be provided in the same field separated
++  by angular brackets <>. If current values aren't required for a regulator,
++  then it shall be filled with 0. If current values aren't required for any of
++  the regulators, then this field is not required. The OPP binding doesn't
++  provide any provisions to relate the values to their power supplies or the
++  order in which the supplies need to be configured.
  
-+
-+/*
-+ * redefine the in(s)b/out(s)b for indirect-IO.
-+ */
-+#ifdef CONFIG_ARM64_INDIRECT_PIO
-+#define inb inb
-+#define outb outb
-+#define insb insb
-+#define outsb outsb
-+/* external declaration */
-+DECLARE_EXTIO(b, u8)
-+
-+#define inw inw
-+#define outw outw
-+#define insw insw
-+#define outsw outsw
-+
-+DECLARE_EXTIO(w, u16)
-+
-+#define inl inl
-+#define outl outl
-+#define insl insl
-+#define outsl outsl
-+
-+DECLARE_EXTIO(l, u32)
-+#endif
-+
-+
- /*
-  * String version of I/O memory access operations.
-  */
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 7d66bba..60e0482 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -31,6 +31,7 @@ arm64-obj-$(CONFIG_COMPAT)		+= sys32.o kuser32.o signal32.o 	\
- 					   sys_compat.o entry32.o
- arm64-obj-$(CONFIG_FUNCTION_TRACER)	+= ftrace.o entry-ftrace.o
- arm64-obj-$(CONFIG_MODULES)		+= arm64ksyms.o module.o
-+arm64-obj-$(CONFIG_ARM64_INDIRECT_PIO)	+= extio.o
- arm64-obj-$(CONFIG_ARM64_MODULE_PLTS)	+= module-plts.o
- arm64-obj-$(CONFIG_PERF_EVENTS)		+= perf_regs.o perf_callchain.o
- arm64-obj-$(CONFIG_HW_PERF_EVENTS)	+= perf_event.o
-diff --git a/arch/arm64/kernel/extio.c b/arch/arm64/kernel/extio.c
-new file mode 100644
-index 0000000..80cafd5
---- /dev/null
-+++ b/arch/arm64/kernel/extio.c
-@@ -0,0 +1,29 @@
-+/*
-+ * Copyright (C) 2016 Hisilicon Limited, All Rights Reserved.
-+ * Author: Zhichang Yuan <yuanzhichang@hisilicon.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/io.h>
-+
-+struct extio_ops *arm64_extio_ops;
-+
-+
-+BUILD_EXTIO(b, u8)
-+
-+BUILD_EXTIO(w, u16)
-+
-+BUILD_EXTIO(l, u32)
-+
-+#endif
+ - opp-microamp-<name>: Named opp-microamp property. Similar to
+   opp-microvolt-<name> property, but for microamp instead.
+@@ -386,10 +393,12 @@ Example 4: Handling multiple regulators
+ / {
+ 	cpus {
+ 		cpu@0 {
+-			compatible = "arm,cortex-a7";
++			compatible = "vendor,cpu-type";
+ 			...
+ 
+-			cpu-supply = <&cpu_supply0>, <&cpu_supply1>, <&cpu_supply2>;
++			vcc0-supply = <&cpu_supply0>;
++			vcc1-supply = <&cpu_supply1>;
++			vcc2-supply = <&cpu_supply2>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+ 		};
+ 	};
 -- 
-1.9.1
+2.7.1.410.g6faf27b
