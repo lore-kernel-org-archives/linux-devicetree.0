@@ -1,8 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 3/8] drm/sun4i: tcon: Move SoC specific
- quirks to a DT matched data structure
-Date: Thu, 20 Oct 2016 11:43:39 +0800
-Message-ID: <20161020034344.14154-4-wens@csie.org>
+Subject: [PATCH v2 8/8] ARM: dts: sun6i: hummingbird-a31: Enable
+ display output through VGA bridge
+Date: Thu, 20 Oct 2016 11:43:44 +0800
+Message-ID: <20161020034344.14154-9-wens@csie.org>
 References: <20161020034344.14154-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -20,141 +20,89 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We already have some differences between the 2 supported SoCs.
-More will be added as we support other SoCs. To avoid bloating
-the probe function with even more conditionals, move the quirks
-to a separate data structure that's tied to the compatible string.
+The Hummingbird A31 board has a RGB-to-VGA bridge which converts RGB
+output from the LCD interface to VGA signals.
+
+Enable this part of the display pipeline.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 33 ++++++++++++++++++---------------
- drivers/gpu/drm/sun4i/sun4i_tcon.h | 11 +++++++----
- 2 files changed, 25 insertions(+), 19 deletions(-)
+ arch/arm/boot/dts/sun6i-a31-hummingbird.dts | 56 +++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index cadacb517f95..7658f0337e0b 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -20,6 +20,7 @@
- #include <linux/component.h>
- #include <linux/ioport.h>
- #include <linux/of_address.h>
-+#include <linux/of_device.h>
- #include <linux/of_graph.h>
- #include <linux/of_irq.h>
- #include <linux/regmap.h>
-@@ -62,7 +63,7 @@ void sun4i_tcon_channel_disable(struct sun4i_tcon *tcon, int channel)
- 		return;
- 	}
+diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+index 9a74637f677f..05a49b2147f1 100644
+--- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
++++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+@@ -63,6 +63,49 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
--	WARN_ON(!tcon->has_channel_1);
-+	WARN_ON(!tcon->quirks->has_channel_1);
- 	regmap_update_bits(tcon->regs, SUN4I_TCON1_CTL_REG,
- 			   SUN4I_TCON1_CTL_TCON_ENABLE, 0);
- 	clk_disable_unprepare(tcon->sclk1);
-@@ -80,7 +81,7 @@ void sun4i_tcon_channel_enable(struct sun4i_tcon *tcon, int channel)
- 		return;
- 	}
- 
--	WARN_ON(!tcon->has_channel_1);
-+	WARN_ON(!tcon->quirks->has_channel_1);
- 	regmap_update_bits(tcon->regs, SUN4I_TCON1_CTL_REG,
- 			   SUN4I_TCON1_CTL_TCON_ENABLE,
- 			   SUN4I_TCON1_CTL_TCON_ENABLE);
-@@ -202,7 +203,7 @@ void sun4i_tcon1_mode_set(struct sun4i_tcon *tcon,
- 	u8 clk_delay;
- 	u32 val;
- 
--	WARN_ON(!tcon->has_channel_1);
-+	WARN_ON(!tcon->quirks->has_channel_1);
- 
- 	/* Adjust clock delay */
- 	clk_delay = sun4i_tcon_get_clk_delay(mode, 1);
-@@ -266,7 +267,7 @@ void sun4i_tcon1_mode_set(struct sun4i_tcon *tcon,
- 	/*
- 	 * FIXME: Undocumented bits
- 	 */
--	if (tcon->has_mux)
-+	if (tcon->quirks->has_unknown_mux)
- 		regmap_write(tcon->regs, SUN4I_TCON_MUX_CTRL_REG, 1);
- }
- EXPORT_SYMBOL(sun4i_tcon1_mode_set);
-@@ -327,7 +328,7 @@ static int sun4i_tcon_init_clocks(struct device *dev,
- 		return PTR_ERR(tcon->sclk0);
- 	}
- 
--	if (tcon->has_channel_1) {
-+	if (tcon->quirks->has_channel_1) {
- 		tcon->sclk1 = devm_clk_get(dev, "tcon-ch1");
- 		if (IS_ERR(tcon->sclk1)) {
- 			dev_err(dev, "Couldn't get the TCON channel 1 clock\n");
-@@ -487,14 +488,7 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
- 	drv->tcon = tcon;
- 	tcon->drm = drm;
- 	tcon->dev = dev;
--
--	if (of_device_is_compatible(dev->of_node, "allwinner,sun5i-a13-tcon")) {
--		tcon->has_mux = true;
--		tcon->has_channel_1 = true;
--	} else {
--		tcon->has_mux = false;
--		tcon->has_channel_1 = false;
--	}
-+	tcon->quirks = of_device_get_match_data(dev);
- 
- 	tcon->lcd_rst = devm_reset_control_get(dev, "lcd");
- 	if (IS_ERR(tcon->lcd_rst)) {
-@@ -588,9 +582,18 @@ static int sun4i_tcon_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct sun4i_tcon_quirks sun5i_a13_quirks = {
-+	.has_unknown_mux = true,
-+	.has_channel_1	= true,
-+};
++	bridge {
++		compatible = "dumb-vga-dac";
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
-+	/* nothing is supported */
-+};
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
- static const struct of_device_id sun4i_tcon_of_table[] = {
--	{ .compatible = "allwinner,sun5i-a13-tcon" },
--	{ .compatible = "allwinner,sun8i-a33-tcon" },
-+	{ .compatible = "allwinner,sun5i-a13-tcon", .data = &sun5i_a13_quirks },
-+	{ .compatible = "allwinner,sun8i-a33-tcon", .data = &sun8i_a33_quirks },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, sun4i_tcon_of_table);
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-index 12bd48925f4d..166064bafe2e 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-@@ -142,6 +142,11 @@
- 
- #define SUN4I_TCON_MAX_CHANNELS		2
- 
-+struct sun4i_tcon_quirks {
-+	bool	has_unknown_mux; /* sun5i has undocumented mux */
-+	bool	has_channel_1;	/* a33 does not have channel 1 */
-+};
++			port@0 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0>;
 +
- struct sun4i_tcon {
- 	struct device			*dev;
- 	struct drm_device		*drm;
-@@ -160,12 +165,10 @@ struct sun4i_tcon {
- 	/* Reset control */
- 	struct reset_control		*lcd_rst;
- 
--	/* Platform adjustments */
--	bool				has_mux;
--
- 	struct drm_panel		*panel;
- 
--	bool				has_channel_1;
-+	/* Platform adjustments */
-+	const struct sun4i_tcon_quirks	*quirks;
++				vga_bridge_in: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&tcon0_out_vga>;
++				};
++			};
++
++			port@1 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <1>;
++
++				vga_bridge_out: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&vga_con_in>;
++				};
++			};
++		};
++	};
++
++	vga {
++		compatible = "vga-connector";
++
++		port {
++			vga_con_in: endpoint {
++				remote-endpoint = <&vga_bridge_out>;
++			};
++		};
++	};
++
+ 	wifi_pwrseq: wifi_pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 */
+@@ -245,6 +288,19 @@
+ 	status = "okay";
  };
  
- struct drm_bridge *sun4i_tcon_find_bridge(struct device_node *node);
++&tcon0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&lcd0_rgb888_pins>;
++	status = "okay";
++};
++
++&tcon0_out {
++	tcon0_out_vga: endpoint@0 {
++		reg = <0>;
++		remote-endpoint = <&vga_bridge_in>;
++	};
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
 -- 
 2.9.3
