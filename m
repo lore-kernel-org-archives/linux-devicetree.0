@@ -1,48 +1,31 @@
-From: Randy Li <ayaka@soulik.info>
-Subject: [PATCH v9 0/2] the fixup for the USB HOST1 at rk3288 platform
-Date: Fri, 21 Oct 2016 02:37:05 +0800
-Message-ID: <1476988627-14953-1-git-send-email-ayaka@soulik.info>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org
-Cc: John.Youn@synopsys.com, kishon@ti.com, felipe.balbi@linux.intel.com, mark.rutland@arm.com, devicetree@vger.kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, randy.li@rock-chips.com, Randy Li <ayaka@soulik.info>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH 0/4] STM32F429: Add Ethernet fixes
+Date: Thu, 20 Oct 2016 14:41:40 -0400 (EDT)
+Message-ID: <20161020.144140.1794871934594140769.davem@davemloft.net>
+References: <1476976886-23781-1-git-send-email-alexandre.torgue@st.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476976886-23781-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alexandre.torgue-qxv4g6HH51o@public.gmane.org
+Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-changelog:
-v9
- use a work_queue to reset usb phy to prevent access mutex lock at interrupter
- runtime.
-v8
-  minior fixup
-v7
-  add the forgot dummy phy_reset() for the generic phy is disabled.
-v7
-  Some minor fixup
-v6
-  Send the last two patches
-v5
-  A few modification at style, add the missing doc in the last 
-  commit.
-v4
-  1. Adding the reset callback in struct phy_ops.
-  2. Moving the reset into phy rockchip usb.
-  3. Trying to call a reset when dwc2 wakeup in rk3288.
-v3
- Rebased from previous commit
-v2
- Rebased from previous commit
-v1
- orignal from google
+From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Date: Thu, 20 Oct 2016 17:21:22 +0200
 
-Randy Li (2):
-  usb: dwc2: assert phy reset when waking up in rk3288 platform
-  ARM: dts: rockchip: Point rk3288 dwc2 usb at the full PHY reset
+> This series adds several fixes for Ethernet for stm32f429 MCU.
+> First 2 patches have already been reviewed some months ago when 
+> stm32 Ethernet glue has been pushed (I added in this series to keep
+> history). Fixes are:
+>  -Change DT to be compliant to stm32 ethernet glue binding
+>  -Add phy-handle to correctly use mdio subnode
+>  -Remove WoL support
 
- arch/arm/boot/dts/rk3288.dtsi |  4 ++++
- drivers/usb/dwc2/core.h       |  1 +
- drivers/usb/dwc2/core_intr.c  | 11 +++++++++++
- drivers/usb/dwc2/platform.c   |  9 +++++++++
- 4 files changed, 25 insertions(+)
-
--- 
-2.7.4
+I'm assuming this will be merged via the ARM tree.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
