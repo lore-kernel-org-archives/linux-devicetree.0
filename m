@@ -1,64 +1,127 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM: boot: mxs: Add On-Chip RAM
-Date: Thu, 20 Oct 2016 17:33:22 +0200
-Message-ID: <3bc7e80d-da05-42c0-7b1b-3e7dd832e668@i2se.com>
-References: <1473789066-8955-1-git-send-email-stefan.wahren@i2se.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v3 5/6] ARM: sunxi: Remove useless allwinner,pull
+ property
+Date: Thu, 20 Oct 2016 17:38:48 +0200
+Message-ID: <20161020173848.be9cf97854f8933b3ce90d55@free.fr>
+References: <cover.f893b02a9f816dad8fad3986672b05c4b211e2b1.1476971126.git-series.maxime.ripard@free-electrons.com>
+        <42e249454ccf6b14e9ec266cb8d42a24f6d71d7b.1476971126.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473789066-8955-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, =?UTF-8?Q?Lothar_Wa=c3=9fmann?= <lw-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?J=c3=b6rg_Krause?= <joerg.krause-L1vi/lXTdtsfGbAt6QbQcg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <42e249454ccf6b14e9ec266cb8d42a24f6d71d7b.1476971126.git-series.maxime.ripard@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 13.09.2016 um 19:51 schrieb Stefan Wahren:
-> The i.MX23 / i.MX28 have a small amount of On-Chip RAM which is also necessary
-> for suspend to RAM and standby mode. But before we need to remove the fake reg
-> properties of all internal bus nodes as discussed in this thread [1].
->
-> This patch series requires Fabio Estevam's recent series "ARM: dts: imx23:
-> Remove skeleton.dtsi inclusion" [2].
->
-> [1] - https://marc.info/?l=devicetree&m=146139948426520&w=2
-> [2] - http://www.spinics.net/lists/arm-kernel/msg528974.html
->
-> Stefan Wahren (4):
->   ARM: dts: imx23: Remove fake "reg" properties from bus nodes
->   ARM: dts: imx28: Remove fake "reg" properties from bus nodes
->   ARM: dts: imx23: add On-Chip RAM
->   ARM: dts: imx28: add On-Chip RAM
->
->  arch/arm/boot/dts/imx23-evk.dts           |    8 ++++----
->  arch/arm/boot/dts/imx23-olinuxino.dts     |    8 ++++----
->  arch/arm/boot/dts/imx23-sansa.dts         |    8 ++++----
->  arch/arm/boot/dts/imx23-stmp378x_devb.dts |    6 +++---
->  arch/arm/boot/dts/imx23-xfi3.dts          |    8 ++++----
->  arch/arm/boot/dts/imx23.dtsi              |   15 +++++++++------
->  arch/arm/boot/dts/imx28-apf28.dts         |    8 ++++----
->  arch/arm/boot/dts/imx28-apf28dev.dts      |    8 ++++----
->  arch/arm/boot/dts/imx28-apx4devkit.dts    |    8 ++++----
->  arch/arm/boot/dts/imx28-cfa10036.dts      |    8 ++++----
->  arch/arm/boot/dts/imx28-cfa10037.dts      |    8 ++++----
->  arch/arm/boot/dts/imx28-cfa10049.dts      |   10 +++++-----
->  arch/arm/boot/dts/imx28-cfa10055.dts      |    6 +++---
->  arch/arm/boot/dts/imx28-cfa10056.dts      |    4 ++--
->  arch/arm/boot/dts/imx28-cfa10057.dts      |   10 +++++-----
->  arch/arm/boot/dts/imx28-cfa10058.dts      |   10 +++++-----
->  arch/arm/boot/dts/imx28-duckbill.dts      |    8 ++++----
->  arch/arm/boot/dts/imx28-evk.dts           |    8 ++++----
->  arch/arm/boot/dts/imx28-m28.dtsi          |    6 +++---
->  arch/arm/boot/dts/imx28-m28cu3.dts        |    8 ++++----
->  arch/arm/boot/dts/imx28-m28evk.dts        |    8 ++++----
->  arch/arm/boot/dts/imx28-sps1.dts          |    8 ++++----
->  arch/arm/boot/dts/imx28.dtsi              |   17 +++++++++--------
->  23 files changed, 100 insertions(+), 96 deletions(-)
->
+On Thu, 20 Oct 2016 15:49:06 +0200
+Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
 
-Any comments about this series or should i resend it without Fabio's
-patch series applied?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The allwinner,pull property set to NO_PULL was really considered our
+> default (and wasn't even changing the default value in the code).
+> 
+> Remove these properties to make it obvious that we do not set anything in
+> such a case.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  arch/arm/boot/dts/ntc-gr8-evb.dts                     |  4 +-
+>  arch/arm/boot/dts/ntc-gr8.dtsi                        | 14 +-----
+>  arch/arm/boot/dts/sun4i-a10-a1000.dts                 |  2 +-
+>  arch/arm/boot/dts/sun4i-a10-cubieboard.dts            |  1 +-
+>  arch/arm/boot/dts/sun4i-a10-dserve-dsrv9703c.dts      |  4 +-
+>  arch/arm/boot/dts/sun4i-a10-gemei-g9.dts              |  1 +-
+>  arch/arm/boot/dts/sun4i-a10-hackberry.dts             |  2 +-
+>  arch/arm/boot/dts/sun4i-a10-inet1.dts                 |  2 +-
+>  arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts            |  2 +-
+>  arch/arm/boot/dts/sun4i-a10-marsboard.dts             |  1 +-
+>  arch/arm/boot/dts/sun4i-a10-mk802.dts                 |  3 +-
+>  arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts        |  2 +-
+>  arch/arm/boot/dts/sun4i-a10-pcduino.dts               |  2 +-
+>  arch/arm/boot/dts/sun4i-a10-pcduino2.dts              |  1 +-
+>  arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts      |  3 +-
+>  arch/arm/boot/dts/sun4i-a10.dtsi                      | 24 +--------
+>  arch/arm/boot/dts/sun5i-a10s-auxtek-t003.dts          |  1 +-
+>  arch/arm/boot/dts/sun5i-a10s-auxtek-t004.dts          |  2 +-
+>  arch/arm/boot/dts/sun5i-a10s-mk802.dts                |  2 +-
+>  arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts      |  2 +-
+>  arch/arm/boot/dts/sun5i-a10s-r7-tv-dongle.dts         |  2 +-
+>  arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts              |  2 +-
+>  arch/arm/boot/dts/sun5i-a10s.dtsi                     |  7 +--
+>  arch/arm/boot/dts/sun5i-a13-hsg-h702.dts              |  1 +-
+>  arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts       |  3 +-
+>  arch/arm/boot/dts/sun5i-a13-olinuxino.dts             |  2 +-
+>  arch/arm/boot/dts/sun5i-a13-utoo-p66.dts              |  1 +-
+>  arch/arm/boot/dts/sun5i-a13.dtsi                      |  3 +-
+>  arch/arm/boot/dts/sun5i-r8-chip.dts                   |  2 +-
+>  arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi  |  2 +-
+>  arch/arm/boot/dts/sun5i.dtsi                          |  7 +--
+>  arch/arm/boot/dts/sun6i-a31-app4-evb1.dts             |  1 +-
+>  arch/arm/boot/dts/sun6i-a31-colombus.dts              |  1 +-
+>  arch/arm/boot/dts/sun6i-a31-hummingbird.dts           |  2 +-
+>  arch/arm/boot/dts/sun6i-a31-i7.dts                    |  2 +-
+>  arch/arm/boot/dts/sun6i-a31-m9.dts                    |  2 +-
+>  arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts      |  2 +-
+>  arch/arm/boot/dts/sun6i-a31.dtsi                      | 13 +----
+>  arch/arm/boot/dts/sun6i-a31s-primo81.dts              |  1 +-
+>  arch/arm/boot/dts/sun6i-a31s-sina31s.dts              |  1 +-
+>  arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts      |  3 +-
+>  arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts      |  3 +-
+>  arch/arm/boot/dts/sun7i-a20-bananapi.dts              |  2 +-
+>  arch/arm/boot/dts/sun7i-a20-bananapro.dts             |  5 +--
+>  arch/arm/boot/dts/sun7i-a20-cubieboard2.dts           |  1 +-
+>  arch/arm/boot/dts/sun7i-a20-cubietruck.dts            |  6 +--
+>  arch/arm/boot/dts/sun7i-a20-hummingbird.dts           |  4 +-
+>  arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts             |  4 +-
+>  arch/arm/boot/dts/sun7i-a20-itead-ibox.dts            |  1 +-
+>  arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts             |  2 +-
+>  arch/arm/boot/dts/sun7i-a20-m3.dts                    |  1 +-
+>  arch/arm/boot/dts/sun7i-a20-mk808c.dts                |  2 +-
+>  arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts        |  4 +-
+>  arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts        |  2 +-
+>  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts  |  1 +-
+>  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts       |  3 +-
+>  arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts       |  1 +-
+>  arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts         |  4 +-
+>  arch/arm/boot/dts/sun7i-a20-orangepi.dts              |  4 +-
+>  arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts         |  3 +-
+>  arch/arm/boot/dts/sun7i-a20-pcduino3.dts              |  2 +-
+>  arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts        |  3 +-
+>  arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts      |  1 +-
+>  arch/arm/boot/dts/sun7i-a20.dtsi                      | 37 +------------
+>  arch/arm/boot/dts/sun8i-a23-a33.dtsi                  | 10 +---
+>  arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts |  1 +-
+>  arch/arm/boot/dts/sun8i-a23-polaroid-mid2809pxe04.dts |  1 +-
+>  arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts        |  1 +-
+>  arch/arm/boot/dts/sun8i-a33-olinuxino.dts             |  3 +-
+>  arch/arm/boot/dts/sun8i-a33.dtsi                      |  1 +-
+>  arch/arm/boot/dts/sun8i-a83t.dtsi                     |  3 +-
+>  arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts       |  3 +-
+>  arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts             |  2 +-
+>  arch/arm/boot/dts/sun8i-h3-orangepi-2.dts             |  4 +-
+>  arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts          |  3 +-
+>  arch/arm/boot/dts/sun8i-h3-orangepi-one.dts           |  3 +-
+>  arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts            |  3 +-
+>  arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts          |  1 +-
+>  arch/arm/boot/dts/sun8i-h3.dtsi                       | 12 +----
+>  arch/arm/boot/dts/sun8i-r16-parrot.dts                |  3 +-
+>  arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi  |  2 +-
+>  arch/arm/boot/dts/sun9i-a80-cubieboard4.dts           |  1 +-
+>  arch/arm/boot/dts/sun9i-a80-optimus.dts               |  4 +-
+>  arch/arm/boot/dts/sun9i-a80.dtsi                      |  6 +--
+>  arch/arm/boot/dts/sunxi-common-regulators.dtsi        |  4 +-
+>  85 files changed, 0 insertions(+), 302 deletions(-)
+	[snip]
+
+Is it really usefull to change all these files while in a previous
+patch you were writing:
+> The generic pin configuration and multiplexing should be preferred now,
+> even though we still support the old one.
+?
+
+-- 
+Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
