@@ -1,116 +1,87 @@
-From: Sarangdhar Joshi <spjoshi@codeaurora.org>
-Subject: Re: [PATCH 4/4] arm64: dts: msm8996: Add SMP2P and APCS nodes
-Date: Thu, 20 Oct 2016 14:22:30 -0700
-Message-ID: <d3ace2c3-b681-3c0e-d4d3-3e77396f65af@codeaurora.org>
-References: <1476989765-7524-1-git-send-email-spjoshi@codeaurora.org>
- <1476989765-7524-4-git-send-email-spjoshi@codeaurora.org>
- <20161020200304.GP7509@tuxbot>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH 0/4] IIO wrapper drivers, dpot-dac and envelope-detector
+Date: Thu, 20 Oct 2016 16:53:45 +0200
+Message-ID: <7472292a-a509-c791-4eff-5a5037ead837@axentia.se>
+References: <1476955562-13673-1-git-send-email-peda@axentia.se>
+ <9b8c0789-566d-67a3-b4f5-dbe4c69f6932@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161020200304.GP7509@tuxbot>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Trilok Soni <tsoni@codeaurora.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9b8c0789-566d-67a3-b4f5-dbe4c69f6932-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/2016 01:03 PM, Bjorn Andersson wrote:
-> On Thu 20 Oct 11:56 PDT 2016, Sarangdhar Joshi wrote:
->
->> Add SMP2P and APCS DT nodes required for Qualcomm ADSP
->> Peripheral Image Loader.
->>
->
-> Nice, two (very) small nits below. But other than that
->
-> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->
-> Regards,
-> Bjorn
->
->> Signed-off-by: Sarangdhar Joshi <spjoshi@codeaurora.org>
->> ---
->>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 30 ++++++++++++++++++++++++++++++
->>  1 file changed, 30 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
->> index 0a810f5..3edb56b 100644
->> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
->> @@ -169,6 +169,31 @@
->>  		method = "smc";
->>  	};
->>
->> +	smp2p-adsp {
->
-> Sorry for bikeshedding, but on msm8916 I named these {subsystem}-smp2p,
-> so I would prefer this was naemd adsp-smp2p...
+On 2016-10-20 14:55, Lars-Peter Clausen wrote:
+> On 10/20/2016 11:25 AM, Peter Rosin wrote:
+>> Also, is there some agreed-upon way to dig out the maximum value from
+>> an iio channel? If so, "dpot-dac,max-ohms" can be eliminated from the
+>> dt bindings, which would have been nice...
+> 
+> Yes, this is something we could really use. In a sense it exists for the
+> devices with buffer-capable channels where there is the real_bits field
+> which tells us the data width of the channel. But a dedicated mechanism for
+> querying the maximum (and minimum) valid code seems like a useful feature.
+> Not only for in-kernel clients, but also for userspace.
 
-Sure. Will do.
+For the dpot I have, real_bits (if provided) would not be too great since
+the maximum value is 256 (i.e. 257 possible wiper positions). I doesn't
+feel like I'm the most qualified person to add these new min/max attributes
+though, as I'm not familiar with most parts of the iio code. I'll happily
+jump on board if they are somehow magically available, of course :-)
 
->
->> +		compatible = "qcom,smp2p";
->> +		qcom,smem = <443>, <429>;
->> +
->> +		interrupt-parent = <&intc>;
->
-> I believe this node inherit intc as interrupt-parent from the root
-> already, is there are reason why you need to specify it.
->
+>> I'm also wondering if I'm somehow abusing the regulator? I only added
+>> it to get rid of a "dpot-dac,max-voltage" thing from the dt bindings.
+>> It feels right though, but maybe I should do more with it than check
+>> its voltage? What?
+> 
+> Enable the regulator when it is in use?
 
-Good catch. I will remove it.
+Right, I didn't express myself all that clearly, I do in fact already
+enable the regulator in ->probe and disable it in ->remove. Anything
+else?
 
->> +		interrupts = <0 158 IRQ_TYPE_EDGE_RISING>;
->> +
->> +		qcom,ipc = <&apcs 16 10>;
->> +
->> +		qcom,local-pid = <0>;
->> +		qcom,remote-pid = <2>;
->> +
->> +		adsp_smp2p_out: master-kernel {
->> +			qcom,entry-name = "master-kernel";
->> +			#qcom,state-cells = <1>;
->> +		};
->> +
->> +		adsp_smp2p_in: slave-kernel {
->> +			qcom,entry-name = "slave-kernel";
->> +
->> +			interrupt-controller;
->> +			#interrupt-cells = <2>;
->> +		};
->> +	};
->> +
->>  	smem {
->>  		compatible = "qcom,smem";
->>
->> @@ -205,6 +230,11 @@
->>  			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
->>  		};
->>
->> +		apcs: syscon@9820000 {
->> +			compatible = "syscon";
->> +			reg = <0x9820000 0x1000>;
->> +		};
->> +
->>  		gcc: clock-controller@300000 {
->>  			compatible = "qcom,gcc-msm8996";
->>  			#clock-cells = <1>;
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+>> There are a couple of things to be said about the envelope detector,
+>> one question is where it should live? I placed it in the adc directory,
+>> but maybe it deserves an iio directory of its own? I'm also a bit
+>> worried that the name is a wee bit too generic. But what is a good
+>> name? I don't want it to be too long like dac-comp-envelope-detector
+>> and something like dac-comp-env-det is just unreadable. Naming is
+>> difficult... And suggestions?
+> 
+> Yeah, it is a bit tricky. It is a envelope detector built from discrete
+> components, but of course there are many more ways to build one. If you have
+> a codename for your platform you could use this for the DT compatible
+> string, like 'vendor,foobar-envelope-detector'.
 
-Thanks for reviewing the patch.
+Good idea! Then the "envelope-detector,inverted" bool can go, and be
+implied by the compatible string. If some way to rebind the irq trigger
+is later discovered that can be added as a channel attr without
+deprecating any dt bindings stuff. While at it, the other properties
+("envelope-detector,dac-max" and "envelope-detector,comp-interval-ms")
+could also be implied from the compatible string. Would that be better?
+I think so.
 
-Regards,
-Sarang
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+But, the compatible string is one thing and the driver name is another.
+"axentia,tse850-envelope-detector" doesn't seem like the best of driver
+names...
+
+Are there any existing examples of drivers for (generic) things built
+with discrete components like this that could perhaps provide guidance?
+
+>> Anyway, despite all the above questions and remarks, this works for
+>> me. Please consider applying.
+> 
+> In general this series looks really good, good and clear implementation as
+> well as documentation. A few minor bits here and there, but that is normal.
+
+Thanks, appreciated!
+
+Cheers,
+Peter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
