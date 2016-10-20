@@ -1,34 +1,45 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V6 00/10] dmaengine: qcom_hidma: add MSI interrupt support
-Date: Thu, 20 Oct 2016 14:59:51 -0700
-Message-ID: <ccb669c9-581e-490e-b20c-6da2a8077c22@codeaurora.org>
-References: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
- <20161020094838.GY2467@localhost>
- <e3cbd6a2-7fac-98ec-74ea-0be88075663c@codeaurora.org>
- <20161020164321.GZ2467@localhost>
- <a4c95bd6-d760-1f02-bbb1-89538037d41e@codeaurora.org>
- <37baf7db-1e14-4027-9397-70649e8fa946@codeaurora.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] pinctrl: Add SX150X GPIO Extender Pinctrl Driver
+Date: Fri, 21 Oct 2016 00:08:01 +0200
+Message-ID: <CACRpkdbZfLMGndsMvueXA6jvsX62tyKjikz1FzpKW+yL=weoXA@mail.gmail.com>
+References: <1474991325-1754-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <37baf7db-1e14-4027-9397-70649e8fa946@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1474991325-1754-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Peter Rosin <peda@axentia.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Wei Chen <Wei.Chen@csr.com>, Roland Stigge <stigge@antcom.de>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/2016 2:55 PM, Sinan Kaya wrote:
-> I also looked at the binary contents of the patches in topic/dma with what I posted
-> on v6. They match excluding your Signed off lines.
+On Tue, Sep 27, 2016 at 5:48 PM, Neil Armstrong <narmstrong@baylibre.com> wrote:
 
-Correction.
+> Since the I2C sx150x GPIO expander driver uses platform_data to manage
+> the pins configurations, rewrite the driver as a pinctrl driver using
+> pinconf to get/set pin configurations from DT or debugfs.
+>
+> The pinctrl driver is functionnally equivalent as the gpio-only driver
+> and can use DT for pinconf. The platform_data confirmation is dropped.
+>
+> This patchset removed the gpio-only driver and selects the Pinctrl driver
+> config instead. This patchset also migrates the gpio dt-bindings to pinctrl
+> and add the pinctrl optional properties.
+>
+> The driver was tested with a SX1509 device on a BeagleBone black with
+> interrupt support and on an X86_64 machine over an I2C to USB converter.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-I checkout out topic/qcom not topic/dma from
+I think we're ready to apply this to the GPIO and pinctrl trees.
+Could you:
 
-git://git.infradead.org/users/vkoul/slave-dma.git
+- Rebase on top of v4.9-rc1 (fails to apply for me)
+- Add the collected ACKs
+- See if Andrey can provide an additional Test tag
+- Resend
 
--- 
-Sinan Kaya
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+Also please look at Andreys patches to see if there is some good
+inspiration for further cleanups.
+
+Yours,
+Linus Walleij
