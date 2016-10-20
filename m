@@ -1,45 +1,62 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: uniphier: add CPU clocks and OPP
- tables for LD20 SoC
-Date: Thu, 20 Oct 2016 12:59:29 +0900
-Message-ID: <CAK7LNAQj-mHoGvQ4KxoHSJa=JUAh5Bt0H8GF9SnLwZfw70_U_g@mail.gmail.com>
-References: <1476926126-6079-1-git-send-email-yamada.masahiro@socionext.com>
- <1476926126-6079-2-git-send-email-yamada.masahiro@socionext.com> <20161020035542.GG11766@vireshk-i7>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH 1/2] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
+Date: Thu, 20 Oct 2016 09:43:40 +0530
+Message-ID: <CAFp+6iFzUQsNjoVohDDvrgNm_DJdUTOyeUx28r0c_3g3Uz8Nyw@mail.gmail.com>
+References: <1476873827-7191-1-git-send-email-vivek.gautam@codeaurora.org> <1476873827-7191-2-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161020035542.GG11766@vireshk-i7>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1476873827-7191-2-git-send-email-vivek.gautam@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: kishon <kishon@ti.com>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>, fengguang.wu@intel.com, kbuild-all@01.org
 List-Id: devicetree@vger.kernel.org
 
-2016-10-20 12:55 GMT+09:00 Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> On 20-10-16, 10:15, Masahiro Yamada wrote:
->> +             opp@666666666 {
->> +                     opp-hz = /bits/ 64 <666667000>;
->> +                     clock-latency-ns = <300>;
->> +             };
->> +             opp@733333333 {
->> +                     opp-hz = /bits/ 64 <733334000>;
->> +                     clock-latency-ns = <300>;
->> +             };
+On Wed, Oct 19, 2016 at 4:13 PM, Vivek Gautam
+<vivek.gautam@codeaurora.org> wrote:
+> PHY transceiver driver for QUSB2 phy controller that provides
+> HighSpeed functionality for DWC3 controller present on
+> Qualcomm chipsets.
 >
-> Forgot changing these ? Please make sure to update all of them.
+> This driver is based on phy-msm-qusb driver available in
+> msm-4.4 kernel @codeaurora[1]
 >
+> [1] https://source.codeaurora.org/quic/la/kernel/msm-4.4/log/?h=caf/3.18/msm-3.18
+>
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
 
-Oops, I missed that.
+[snip]
 
-Will fix soon.
+> +       qphy->ref_clk_src = devm_clk_get(dev, "ref_clk_src");
+> +       if (IS_ERR(qphy->ref_clk_src)) {
+> +               qphy->ref_clk_src = NULL;
+> +               ret = PTR_ERR(qphy->ref_clk_src);
 
-Thanks!
+Pointed out by Kbuild test: ERROR: PTR_ERR applied after
+initialization to constant on line
 
+Will correct this in the next patch version.
+
+Same for ref_clk and iface_clk.
+
+> +               if (ret != -EPROBE_DEFER)
+> +                       dev_dbg(dev, "clk get failed for ref_clk_src\n");
+> +       }
+> +
+> +       qphy->ref_clk = devm_clk_get(dev, "ref_clk");
+> +       if (IS_ERR(qphy->ref_clk)) {
+> +               qphy->ref_clk = NULL;
+> +               ret = PTR_ERR(qphy->ref_clk);
+
+[snip]
+
+
+Thanks
+Vivek
 
 
 -- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
