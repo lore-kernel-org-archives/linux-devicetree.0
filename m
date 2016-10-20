@@ -1,31 +1,42 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH 0/4] STM32F429: Add Ethernet fixes
-Date: Thu, 20 Oct 2016 14:41:40 -0400 (EDT)
-Message-ID: <20161020.144140.1794871934594140769.davem@davemloft.net>
-References: <1476976886-23781-1-git-send-email-alexandre.torgue@st.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476976886-23781-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alexandre.torgue-qxv4g6HH51o@public.gmane.org
-Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sarangdhar Joshi <spjoshi@codeaurora.org>
+Subject: [PATCH 1/4] arm64: dts: msm8996: Add SMEM reserve-memory node
+Date: Thu, 20 Oct 2016 11:56:02 -0700
+Message-ID: <1476989765-7524-1-git-send-email-spjoshi@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Sarangdhar Joshi <spjoshi@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Trilok Soni <tsoni@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Date: Thu, 20 Oct 2016 17:21:22 +0200
+Add DT node to carveout memory for shared memory region.
 
-> This series adds several fixes for Ethernet for stm32f429 MCU.
-> First 2 patches have already been reviewed some months ago when 
-> stm32 Ethernet glue has been pushed (I added in this series to keep
-> history). Fixes are:
->  -Change DT to be compliant to stm32 ethernet glue binding
->  -Add phy-handle to correctly use mdio subnode
->  -Remove WoL support
+Signed-off-by: Sarangdhar Joshi <spjoshi@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-I'm assuming this will be merged via the ARM tree.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index d6da223..36216ae 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -31,6 +31,17 @@
+ 		reg = <0 0 0 0>;
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		smem_mem: smem-mem@86000000 {
++			reg = <0x0 0x86000000 0x0 0x200000>;
++			no-map;
++		};
++	};
++
+ 	cpus {
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
