@@ -1,89 +1,83 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: socfpga: Enable QSPI on the Cyclone5 sockit
-Date: Thu, 20 Oct 2016 09:19:13 +0200
-Message-ID: <20161020071913.rlka3or4c7fzjpyv@pengutronix.de>
-References: <1476908324-12313-1-git-send-email-dinguyen@opensource.altera.com>
- <1476908324-12313-3-git-send-email-dinguyen@opensource.altera.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH v3 0/3] Add initial ZTE VOU DRM/KMS driver
+Date: Thu, 20 Oct 2016 15:30:22 +0800
+Message-ID: <1476948625-8521-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1476908324-12313-3-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel.vetter@ffwll.ch>, David Airlie <airlied@linux.ie>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Baoyou Xie <xie.baoyou@zte.com.cn>, Emil Velikov <emil.l.velikov@gmail.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Jun Nie <jun.nie@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-On Wed, Oct 19, 2016 at 03:18:44PM -0500, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> 
-> Enable the QSPI node and add the flash chip.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> ---
->  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |   33 +++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
-> index 02e22f5..2f75e0f 100644
-> --- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
-> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
-> @@ -175,6 +175,39 @@
->  	status = "okay";
->  };
->  
-> +&qspi {
-> +	status = "okay";
-> +
-> +	flash: flash@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "n25q256a";
-> +		reg = <0>;
-> +		spi-max-frequency = <100000000>;
-> +
-> +		m25p,fast-read;
-> +		cdns,page-size = <256>;
-> +		cdns,block-size = <16>;
-> +		cdns,read-delay = <4>;
-> +		cdns,tshsl-ns = <50>;
-> +		cdns,tsd2d-ns = <50>;
-> +		cdns,tchsh-ns = <4>;
-> +		cdns,tslch-ns = <4>;
-> +
-> +		partition@qspi-boot {
-> +			/* 8MB for raw data. */
-> +			label = "Flash 0 Raw Data";
-> +			reg = <0x0 0x800000>;
-> +		};
-> +
-> +		partition@qspi-rootfs {
-> +			/* 120MB for jffs2 data. */
-> +			label = "Flash 0 jffs2 Filesystem";
-> +			reg = <0x800000 0x7800000>;
-> +		};
-> +	};
-> +};
-> +
-
-What is the current preferred way of handling the partitions?
-This doesn't fit my Sockit configuration for example. So I would always
-have to patch the devicetree.
-
-On the Socrates I didn't specify the partitions, because I did not
-want to force a specific configuration.
-
-Regards,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIHNlcmllcyBhZGRzIHRoZSBpbml0aWFsIFpURSBWT1UgZGlzcGxheSBjb250cm9sbGVyIERS
+TS9LTVMgZHJpdmVyLgpUaGVyZSBhcmUgc3RpbGwgc29tZSBmZWF0dXJlcyB0byBiZSBhZGRlZCwg
+bGlrZSBvdmVybGF5IHBsYW5lLCBzY2FsaW5nLAphbmQgbW9yZSBvdXRwdXQgZGV2aWNlcyBzdXBw
+b3J0LiAgQnV0IGl0J3MgYWxyZWFkeSB1c2VmdWwgd2l0aCBkdWFsCkNSVENzIGFuZCBIRE1JIGRp
+c3BsYXkgd29ya2luZy4KCkNoYW5nZXMgZm9yIHYzOgogLSBSZWJhc2UgdG8gdjQuOS1yYzEKIC0g
+VXBkYXRlIGJpbmRpbmdzIGRvYyB0byB1c2UgJ3JhbmdlcycgZm9yIGFkZHJlc3MgdHJhbnNsYXRp
+b24gYmV0d2VlbgogICBwYXJlbnQgYW5kIGNoaWxkIGRldmljZXMuCiAtIENhbGwgZHJtX2Rldl9y
+ZWdpc3RlcigpIGxhc3QgaW4gYmluZCBmdW5jdGlvbiBhbmQgZHJtX2Rldl91bnJlZ2lzdGVyKCkK
+ICAgZmlyc3QgaW4gdW5iaW5kLCBzbyB0aGF0IGRybV9jb25uZWN0b3JfcmVnaXNlcigpIGNhbiBi
+ZSBzYXZlZCBmcm9tCiAgIEhETUkgZHJpdmVyLgogLSBJbnN0ZWFkIG9mIHVzaW5nIG9wZW4tY29k
+ZWQgZHJtX2RvX2dldF9lZGlkKCksIGFkZCBhbiBJMkMgYWRhcHRlciBmb3IKICAgSERNSSBEREMg
+cmVhZCBhbmQgdXNlIGRybV9nZXRfZWRpZCgpLgogLSBJbXByb3ZlIHRoZSBwbGFuZSAuYXRvbWlj
+X2NoZWNrIGltcGxlbWVudGF0aW9uIGJ5IGNhbGxpbmcgaGVscGVyCiAgIGZ1bmN0aW9uIGRybV9w
+bGFuZV9oZWxwZXJfY2hlY2tfc3RhdGUoKS4KIC0gUmVuYW1lIHp4X2NydGMuYyB0byB6eF92b3Uu
+YyB0byBhdm9pZCB0aGUgY29uZnVzaW9uIHRoYXQgdGhlIGZpbGUKICAgaW1wbGVtZW50cyBjcnRj
+IGluc3RhbmNlLgogLSBTdG9yZSB2b3UgcG9pbnRlciBpbiB6eF9jcnRjLCBzbyB0aGF0IHdlIGRv
+IG5vdCBuZWVkIHRvIGVtYmVkIHRoZQogICBwb2ludGVyIGluIHp4X2RybV9wcml2YXRlLgogLSBD
+cmVhdGUgenhfcmVhZGwvenhfd3JpdGVsL3p4X3dyaXRlbF9tYXNrIGZvciByZWdpc3RlciBhY2Nl
+c3MuCiAtIERlZmluZSBhIGZldyBtYWNybyBoZWxwZXJzIHRvIGVhc2UgdGhlIHJlZ2lzdGVyIGJp
+dCBzZXR0aW5nLCBsaWtlCiAgIFNZTkNfV0lERSwgQkFDS19QT1JDSCBhbmQgRlJPTlRfUE9SQ0gu
+CiAtIERlZmluZSBtYWluL2F1eCBjaGFubmVsIHNwZWNpZmljIHJlZ2lzdGVyIG9mZnNldCBhbmQg
+Yml0cyBpbiB6eF9jcnRjCiAgIHRvIHNhdmUgdGhlIHVzZSBvZiBpc19tYWluIGNoZWNrCiAtIFNv
+cnQgaW5jbHVkZSBoZWFkZXJzIGFscGhhYmV0aWNhbGx5CiAtIFJlbW92aW5nIGVuY29kZXIgcG9p
+bnRlciBvdXQgb2YgdGhlIHN0cnVjdHVyZSBhbmQgY29uc3RpZnkgc3RydWN0CiAgIHZvdV9pbmYK
+IC0gQWRkIGxvZyBtZXNzYWdlIGZvciBlcnJvciBjb25kaXRpb25zCiAtIE1ha2UgdGhlIGZ1bmN0
+aW9uIGNhbGxzIGluIHRlYXJkb3duIHBhdGggYXN5bW1ldHJpY2FsCiAtIEEgZmV3IGNvZGluZyBz
+dHlsZSBpbXByb3ZlbWVudHMgbGlrZSBkZWZpbmluZyBtYWNybyBmb3Igc3ViLW1vZHVsZQogICBh
+ZGRyZXNzIGFuZCBjaGFuZ2luZyBjb2RlIHRvIHNhdmUgaW5kZW50YXRpb24gbGV2ZWwKIC0gQWRk
+IGEgTUFJTlRBSU5FUlMgZW50cnkgZm9yIFpURSBaWCBEUk0gZHJpdmVyCgpDaGFuZ2VzIGZvciB2
+MjoKIC0gQ2hhbmdlIGRldmljZSB0cmVlIGJpbmRpbmdzIHRvIGtpbGwgdGhlIHZpcnR1YWwgZGlz
+cGxheS1zdWJzeXN0ZW0KICAgbm9kZSBtYWtlIFZPVSB0aGUgcGFyZW50IG5vZGUuCgpTaGF3biBH
+dW8gKDMpOgogIGR0LWJpbmRpbmdzOiBhZGQgYmluZGluZ3MgZG9jIGZvciBaVEUgVk9VIGRpc3Bs
+YXkgY29udHJvbGxlcgogIGRybTogenRlOiBhZGQgaW5pdGlhbCB2b3UgZHJtIGRyaXZlcgogIE1B
+SU5UQUlORVJTOiBhZGQgYW4gZW50cnkgZm9yIFpURSBaWCBEUk0gZHJpdmVyCgogLi4uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS96dGUsdm91LnR4dCAgICAgICAgfCAgODQgKysrCiBNQUlO
+VEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNyArCiBk
+cml2ZXJzL2dwdS9kcm0vS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiAr
+CiBkcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+MSArCiBkcml2ZXJzL2dwdS9kcm0venRlL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8
+ICAgOCArCiBkcml2ZXJzL2dwdS9kcm0venRlL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAg
+ICB8ICAgNyArCiBkcml2ZXJzL2dwdS9kcm0venRlL3p4X2RybV9kcnYuYyAgICAgICAgICAgICAg
+ICAgICB8IDI2NyArKysrKysrCiBkcml2ZXJzL2dwdS9kcm0venRlL3p4X2RybV9kcnYuaCAgICAg
+ICAgICAgICAgICAgICB8ICAzNiArCiBkcml2ZXJzL2dwdS9kcm0venRlL3p4X2hkbWkuYyAgICAg
+ICAgICAgICAgICAgICAgICB8IDY3OCArKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJt
+L3p0ZS96eF9wbGFuZS5jICAgICAgICAgICAgICAgICAgICAgfCAzNzUgKysrKysrKysrKwogZHJp
+dmVycy9ncHUvZHJtL3p0ZS96eF9wbGFuZS5oICAgICAgICAgICAgICAgICAgICAgfCAgMjYgKwog
+ZHJpdmVycy9ncHUvZHJtL3p0ZS96eF92b3UuYyAgICAgICAgICAgICAgICAgICAgICAgfCA3OTkg
+KysrKysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0venRlL3p4X3ZvdS5oICAgICAg
+ICAgICAgICAgICAgICAgICB8ICA0NiArKwogMTMgZmlsZXMgY2hhbmdlZCwgMjMzNiBpbnNlcnRp
+b25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvenRlLHZvdS50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
+cm0venRlL0tjb25maWcKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0venRlL01h
+a2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3p0ZS96eF9kcm1fZHJ2
+LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0venRlL3p4X2RybV9kcnYuaAog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS96dGUvenhfaGRtaS5jCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3p0ZS96eF9wbGFuZS5jCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy9ncHUvZHJtL3p0ZS96eF9wbGFuZS5oCiBjcmVhdGUgbW9kZSAxMDA2NDQg
+ZHJpdmVycy9ncHUvZHJtL3p0ZS96eF92b3UuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS96dGUvenhfdm91LmgKCi0tIAoxLjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
