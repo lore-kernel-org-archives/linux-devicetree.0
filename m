@@ -1,85 +1,76 @@
-From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: berlin2q-marvell-dmp: fix typo in chosen node
-Date: Thu, 20 Oct 2016 08:32:34 +0200
-Message-ID: <20161020063234.a4q7qquftwn5kvup@kwain>
-References: <1476924731-14975-1-git-send-email-yamada.masahiro@socionext.com>
+From: Albert ARIBAUD <albert.aribaud-iEu9NFBzPZE@public.gmane.org>
+Subject: Re: [PATCH 1/2] fsl-quadspi: fix QUAD read, add NORMAL, DUAL and
+ FAST reads
+Date: Thu, 20 Oct 2016 09:16:30 +0200
+Message-ID: <20161020091630.3477efab.albert.aribaud@3adev.fr>
+References: <20160927055957.427-1-albert.aribaud@3adev.fr>
+        <69a5b0d7-6b89-7edc-738d-c9e25802ba31@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6xta2xqq3mexnku2"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1476924731-14975-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+In-Reply-To: <69a5b0d7-6b89-7edc-738d-c9e25802ba31-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yunhui.cui-3arQi8VN3Tc@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Cyrille,
 
---6xta2xqq3mexnku2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Le Wed, 19 Oct 2016 18:42:36 +0200, Cyrille Pitchen
+<cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> a écrit :
 
-Hello,
+> Hi Albert,
+> 
+> +Yunhui
 
-On Thu, Oct 20, 2016 at 09:52:11AM +0900, Masahiro Yamada wrote:
-> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 
-Acked-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> It seems that both Yunhui and you work on the same topic, maybe you can
+> synchronize?
+> https://patchwork.ozlabs.org/patch/660356/
 
-Thanks!
+I am already preparing a v2 based over Yunhui's series. :)
 
-Antoine
+> I don't think it is a good thing to select the relevant "READ" LUT entry
+> according to the command op code. What if spi-nor.c introduces new op codes?
+> 
+> Maybe you could index the LUT entries by functions:
+> - READ_REG: the LUT op code would be dynamically updated by your
+>             .read_reg(nor, opcode, ...) implementation according to opcode.
+> - WRITE_REG: the same as above with the .write_reg(nor, opcode, ...) hook.
+> - READ_SLAVE1: read memory from the first SPI-NOR memory.
+> - WRITE_SLAVE1: write into the first SPI-NOR memory.
+> - READ_SLAVE2: read memory form the 2nd SPI-NOR memory.
+> ...
+> - WRITE_SLAVEN: write into the N-th SPI-NOR memory.
 
-> ---
->=20
->  arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot/d=
-ts/berlin2q-marvell-dmp.dts
-> index f485308..d57d675 100644
-> --- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-> +++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-> @@ -48,7 +48,7 @@
->  		reg =3D <0x00000000 0x80000000>;
->  	};
-> =20
-> -	choosen {
-> +	chosen {
->  		bootargs =3D "earlyprintk";
->  		stdout-path =3D "serial0:115200n8";
->  	};
-> --=20
-> 1.9.1
->=20
+Actually, my needs could be met using Han Xu's dynamic LUT entries
+without the need to introduce 'virtual' opcodes (and without having
+to 'leak back' those new opcodes into other kernel code portions).
 
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+The per-slave differences (in my case, bus width essentially) can be
+managed though DT entries and corresponding per-nor flags in the driver.
 
---6xta2xqq3mexnku2
-Content-Type: application/pgp-signature; name="signature.asc"
+> Also be aware even for the .read() hook the nor->read_opcode might changes
+> between calls!
 
------BEGIN PGP SIGNATURE-----
+Noted -- I'll check that the driver always use the current NOR codes.
 
-iQIcBAEBCgAGBQJYCGTzAAoJEFxNi8it27zYP6IP/jDFCA6zlza1YzdhxskS52KC
-akmAEUYQ3OYisWs7bt35Nb6C+YG9HFXM3b7y1T61Bj7p8PuPiqOx8W50FMNLMYrp
-/sTX/ey2BkibQ7WRXJ5Nycmsx6GTL+znVkinbTIocIhBttLcPKn/PaKdTmTUfUDQ
-sm0cpz9GoF7py/OEnAxqeiXpbZrpP40dqyTlspJg3Hb9B74RsdAmP04QqrHhD6Pl
-eBpQdree8A77Ql29TsEXLPk/nzwKgutynq+x7loNzZDv+ugBi+bVRwLeArx8bnvH
-22zQnUNRdii/sbY34zuYdqr9lwceiCVbTAuXlHL+SDh0hVaGe/+LUdsil/qsMj5E
-k9ba6pD5RmP+MbwNaDT+AGfnsMJpa6Y3ZJv/7p3+19UKojVNptkwf7/k9ITndrgC
-rfw2IIrAgO+znnUXDBPzz48laxol9B9TVdJh8gEgLhFZkq79dJSWC/JeZ4XEl1K2
-E/eBcZh5+IlumPPFlYHJK3CiUzM0j3oiMrCR2BNiJv6TbhQqEaEFh5sNiD/oPOrd
-GSLHgudG2xNew3xGwcY2bleCVls1sYbmAa8j5mbgdyomn4vsO+k4q/Ss5TMTGWZj
-yqzfDtYpAnQbl0eVdPOsUdMSxUbrL59WsGVBuIbEOyK5rjQp/GQbH9OtKqdUsGQw
-iauTEPZGlcPuT6DCE2Nm
-=P1Lq
------END PGP SIGNATURE-----
+> I don't know whether those comments fit your actual needs and the Freescale SPI
+> controller hardware constraints but I'm always worried about the ease to maintain
+> SPI-NOR controller drivers when they are not "op code agnostic".
 
---6xta2xqq3mexnku2--
+Understood and agreed.
+
+Thanks for yuor feedback!
+ 
+> Best regards,
+> 
+> Cyrille
+
+Cordialement,
+Albert ARIBAUD
+3ADEV
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
