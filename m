@@ -1,54 +1,127 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH V6 00/10] dmaengine: qcom_hidma: add MSI interrupt support
-Date: Thu, 20 Oct 2016 22:13:21 +0530
-Message-ID: <20161020164321.GZ2467@localhost>
-References: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
- <20161020094838.GY2467@localhost>
- <e3cbd6a2-7fac-98ec-74ea-0be88075663c@codeaurora.org>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: bus: da8xx-syscfg: new driver
+Date: Thu, 20 Oct 2016 09:57:51 -0700
+Message-ID: <7h8ttj6jqo.fsf@baylibre.com>
+References: <1476721850-454-1-git-send-email-bgolaszewski@baylibre.com>
+        <4369153.vCOQzI7OET@avalon>
+        <CAMpxmJXwZ8pQ58OgV4w88yNuG1Fd8++1yP-Frd2QJFO9uJJueQ@mail.gmail.com>
+        <2278105.geKhb8xoNC@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e3cbd6a2-7fac-98ec-74ea-0be88075663c@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2278105.geKhb8xoNC@avalon> (Laurent Pinchart's message of "Wed,
+        19 Oct 2016 11:53:30 +0300")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 20, 2016 at 07:06:08AM -0700, Sinan Kaya wrote:
-> Hi Vinod,
-> 
-> On 10/20/2016 2:48 AM, Vinod Koul wrote:
-> >> 6:
-> >> > * rebase 4.9 kernel
-> > Why???
-> > 
-> 
-> This is more for me. There is nothing special about 4.9 that impacts hidma.
-> It just means that I retested the code against 4.9-rc1 kernel.
-> 
-> > 
-> > I already told you that I have applied 6 in the last version, please dont
-> > send me stuff which is already applied :(
-> 
-> I couldn't find your applied branch on git yesterday. That's why, I sent you
-> the whole thing so that you can pick the last 4 ones. You don't need to reapply
-> the first 6. Better to have everything than missing code.
-> 
-> slave-dma       git://git.infradead.org/users/vkoul/slave-dma.git (fetch)
-> slave-dma       git://git.infradead.org/users/vkoul/slave-dma.git (push)
++Arnd, Olof
 
-You seem to have missed topic/qcom which I pushed last night. next would have worked too!!
+Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> writes:
 
-> If you prefer a reduced list, please make your current changelist available on
-> one of the branches on git, I can reapply, test and send only the remaining ones.
-> 
-> Sinan
-> 
-> -- 
-> Sinan Kaya
-> Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
-> Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+> Hi Bartosz,
+>
+> On Wednesday 19 Oct 2016 10:26:57 Bartosz Golaszewski wrote:
+>> 2016-10-18 22:49 GMT+02:00 Laurent Pinchart:
+>> > On Monday 17 Oct 2016 18:30:49 Bartosz Golaszewski wrote:
+>> >> Create the driver for the da8xx System Configuration and implement
+>> >> support for writing to the three Master Priority registers.
+>> >> 
+>> >> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> 
+>> [snip]
+>> 
+>> >> +
+>> >> +Documentation:
+>> >> +OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh82c/spruh82c.pdf
+>> >> +
+>> >> +Required properties:
+>> >> +
+>> >> +- compatible:                "ti,da850-syscfg"
+>> > 
+>> > Don't you need a reg property ?
+>> 
+>> Yes, Kevin already pointed that out. I'll add it in v2. Same for [1/3].
+>> 
+>> >> +Optional properties:
+>> >> +
+>> >> +The below properties are used to specify the priority of master
+>> >> peripherals.
+>> >> +They must be between 0-7 where 0 is the highest priority and 7 is the
+>> >> lowest.
+>> >> +
+>> >> +- ti,pri-arm-i:              ARM_I port priority.
+>> >> +
+>> >> +- ti,pri-arm-d:              ARM_D port priority.
+>> >> +
+>> >> +- ti,pri-upp:                uPP port priority.
+>> >> +
+>> >> +- ti,pri-sata:               SATA port priority.
+>> >> +
+>> >> +- ti,pri-pru0:               PRU0 port priority.
+>> >> +
+>> >> +- ti,pri-pru1:               PRU1 port priority.
+>> >> +
+>> >> +- ti,pri-edma30tc0:  EDMA3_0_TC0 port priority.
+>> >> +
+>> >> +- ti,pri-edma30tc1:  EDMA3_0_TC1 port priority.
+>> >> +
+>> >> +- ti,pri-edma31tc0:  EDMA3_1_TC0 port priority.
+>> >> +
+>> >> +- ti,pri-vpif-dma-0: VPIF DMA0 port priority.
+>> >> +
+>> >> +- ti,pri-vpif-dma-1: VPIF DMA1 port priority.
+>> >> +
+>> >> +- ti,pri-emac:               EMAC port priority.
+>> >> +
+>> >> +- ti,pri-usb0cfg:    USB0 CFG port priority.
+>> >> +
+>> >> +- ti,pri-usb0cdma:   USB0 CDMA port priority.
+>> >> +
+>> >> +- ti,pri-uhpi:               HPI port priority.
+>> >> +
+>> >> +- ti,pri-usb1:               USB1 port priority.
+>> >> +
+>> >> +- ti,pri-lcdc:               LCDC port priority.
+>> > 
+>> > I'm afraid this looks more like system configuration than hardware
+>> > description to me.
+>> 
+>> While you're certainly right, this approach is already implemented in
+>> several other memory and bus drivers and it was also suggested by
+>> Sekhar in one of the tilcdc rev1 threads. There's also no real
+>> alternative that I know of.
+>
+> The fact that other drivers get it wrong is no excuse for copying them :-)
 
--- 
-~Vinod
+What exactly is "wrong" with the way other drivers are doing it?
+
+I'm sure there may be other ideas, and possibly some better ones, but
+that doesn't make it wrong, and doesn't change he fact that the kernel
+has existing drivers SoC-bus-specific system performance knobs like
+this.
+
+>> > There was a BoF session about how to support this kind of performance
+>> > knobs at ELCE last week:
+>> > https://openiotelceurope2016.sched.org/event/7rss/bof-linux-device-perfor
+>> > mance-framework-michael-turquette-baylibre :-)
+>>
+>> Unfortunately it was just a discussion about potential approaches -
+>> there's no code yet.
+>
+> Patches are welcome ;-)
+
+Any generic perf framework will have to build on the HW-specifics of
+individual busses, so IMO, the lack of a generic performance
+framework/knobs should not be a reason to block the inclusion of any
+bus-specific knobs.
+
+I guess this ultimately would go though arm-soc, so I've added Arnd &
+Olof to the thread.
+
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
