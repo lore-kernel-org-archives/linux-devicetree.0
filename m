@@ -1,102 +1,345 @@
-From: Rameshwar Prasad Sahu <rsahu@apm.com>
-Subject: [PATCH] ata: xgene: Enable NCQ support for APM X-Gene SATA controller
- hardware v1.1
-Date: Thu, 20 Oct 2016 16:44:24 +0530
-Message-ID: <1476962064-8775-1-git-send-email-rsahu@apm.com>
+From: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: Re: [PATCH 2/4] iio: dpot-dac: DAC driver based on a digital
+ potentiometer
+Date: Thu, 20 Oct 2016 13:29:01 +0200 (CEST)
+Message-ID: <alpine.DEB.2.02.1610201254370.19919@pmeerw.net>
+References: <1476955562-13673-1-git-send-email-peda@axentia.se> <1476955562-13673-3-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, mlangsdo@redhat.com, linux-scsi@vger.kernel.org, jcm@redhat.com, Rameshwar Prasad Sahu <rsahu@apm.com>, patches@apm.com, linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1476955562-13673-3-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables NCQ support for APM X-Gene SATA controller
-hardware v1.1 that was broken with hardware v1.0.
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
----
- drivers/ata/ahci_xgene.c |   14 ++++++++------
- 1 files changed, 8 insertions(+), 6 deletions(-)
+> It is assumed the that the dpot is used as a voltage divider between the
+> current dpot wiper setting and the maximum resistance of the dpot. The
+> divided voltage is provided by a vref regulator.
+> 
+>                   .------.
+>    .-----------.  |      |
+>    | Vref      |--'    .---.
+>    | regulator |--.    |   |
+>    '-----------'  |    | d |
+>                   |    | p |
+>                   |    | o |  wiper
+>                   |    | t |<---------+
+>                   |    |   |
+>                   |    '---'       dac output voltage
+>                   |      |
+>                   '------+------------+
 
-diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-index 73b19b2..8b88be9 100644
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -87,6 +87,7 @@
+nice ASCII art :)
+comments below, just nitpicking
 
- enum xgene_ahci_version {
- 	XGENE_AHCI_V1 = 1,
-+	XGENE_AHCI_V1_1,
- 	XGENE_AHCI_V2,
- };
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  MAINTAINERS                |   1 +
+>  drivers/iio/dac/Kconfig    |  10 +++
+>  drivers/iio/dac/Makefile   |   1 +
+>  drivers/iio/dac/dpot-dac.c | 219 +++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 231 insertions(+)
+>  create mode 100644 drivers/iio/dac/dpot-dac.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c68b72088945..8c8aae24b96b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6116,6 +6116,7 @@ M:	Peter Rosin <peda@axentia.se>
+>  L:	linux-iio@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
+> +F:	drivers/iio/dac/dpot-dac.c
+>  
+>  IIO SUBSYSTEM AND DRIVERS
+>  M:	Jonathan Cameron <jic23@kernel.org>
+> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+> index 120b24478469..934d4138fcdb 100644
+> --- a/drivers/iio/dac/Kconfig
+> +++ b/drivers/iio/dac/Kconfig
+> @@ -200,6 +200,16 @@ config AD8801
+>  	  To compile this driver as a module choose M here: the module will be called
+>  	  ad8801.
+>  
+> +config DPOT_DAC
+> +	tristate "DAC emulation using a DPOT"
+> +	depends on OF
+> +	help
+> +	  Say yes here to build support for DAC emulation using a digital
+> +	  potentiometer.
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called iio-dpot-dac.
 
-@@ -734,6 +735,7 @@ static struct scsi_host_template ahci_platform_sht = {
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id xgene_ahci_acpi_match[] = {
- 	{ "APMC0D0D", XGENE_AHCI_V1},
-+	{ "APMC0D67", XGENE_AHCI_V1_1},
- 	{ "APMC0D32", XGENE_AHCI_V2},
- 	{},
- };
-@@ -742,6 +744,7 @@ MODULE_DEVICE_TABLE(acpi, xgene_ahci_acpi_match);
+I guess the name will be dpot-dac?
 
- static const struct of_device_id xgene_ahci_of_match[] = {
- 	{.compatible = "apm,xgene-ahci", .data = (void *) XGENE_AHCI_V1},
-+	{.compatible = "apm,xgene-ahci-v1-1", .data = (void *) XGENE_AHCI_V1_1},
- 	{.compatible = "apm,xgene-ahci-v2", .data = (void *) XGENE_AHCI_V2},
- 	{},
- };
-@@ -755,8 +758,7 @@ static int xgene_ahci_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	const struct of_device_id *of_devid;
- 	enum xgene_ahci_version version = XGENE_AHCI_V1;
--	const struct ata_port_info *ppi[] = { &xgene_ahci_v1_port_info,
--					      &xgene_ahci_v2_port_info };
-+	const struct ata_port_info *ppi;
- 	int rc;
+> +
+>  config LPC18XX_DAC
+>  	tristate "NXP LPC18xx DAC driver"
+>  	depends on ARCH_LPC18XX || COMPILE_TEST
+> diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
+> index 27642bbf75f2..f01bf4a99867 100644
+> --- a/drivers/iio/dac/Makefile
+> +++ b/drivers/iio/dac/Makefile
+> @@ -22,6 +22,7 @@ obj-$(CONFIG_AD5686) += ad5686.o
+>  obj-$(CONFIG_AD7303) += ad7303.o
+>  obj-$(CONFIG_AD8801) += ad8801.o
+>  obj-$(CONFIG_CIO_DAC) += cio-dac.o
+> +obj-$(CONFIG_DPOT_DAC) += dpot-dac.o
+>  obj-$(CONFIG_LPC18XX_DAC) += lpc18xx_dac.o
+>  obj-$(CONFIG_M62332) += m62332.o
+>  obj-$(CONFIG_MAX517) += max517.o
+> diff --git a/drivers/iio/dac/dpot-dac.c b/drivers/iio/dac/dpot-dac.c
+> new file mode 100644
+> index 000000000000..94fbb4b27287
+> --- /dev/null
+> +++ b/drivers/iio/dac/dpot-dac.c
+> @@ -0,0 +1,219 @@
+> +/*
+> + * IIO DAC emulation driver using a digital potentiometer
+> + *
+> + * Copyright (C) 2016 Axentia Technologies AB
+> + *
+> + * Author: Peter Rosin <peda@axentia.se>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +/*
+> + * It is assumed the that the dpot is used as a voltage divider between the
 
- 	hpriv = ahci_platform_get_resources(pdev);
-@@ -821,8 +823,6 @@ static int xgene_ahci_probe(struct platform_device *pdev)
- 				dev_warn(&pdev->dev, "%s: Error reading device info. Assume version1\n",
- 					__func__);
- 				version = XGENE_AHCI_V1;
--			} else if (info->valid & ACPI_VALID_CID) {
--				version = XGENE_AHCI_V2;
- 			}
- 		}
- 	}
-@@ -858,18 +858,20 @@ skip_clk_phy:
+delete first 'the'
 
- 	switch (version) {
- 	case XGENE_AHCI_V1:
-+		ppi = &xgene_ahci_v1_port_info;
- 		hpriv->flags = AHCI_HFLAG_NO_NCQ;
- 		break;
- 	case XGENE_AHCI_V2:
-+		ppi = &xgene_ahci_v2_port_info;
- 		hpriv->flags |= AHCI_HFLAG_YES_FBS;
- 		hpriv->irq_handler = xgene_ahci_irq_intr;
- 		break;
- 	default:
-+		ppi = &xgene_ahci_v1_port_info;
- 		break;
- 	}
+> + * current dpot wiper setting and the maximum resistance of the dpot. The
+> + * divided voltage is provided by a vref regulator.
+> + *
+> + *                   .------.
+> + *    .-----------.  |      |
+> + *    | Vref      |--'    .---.
 
--	rc = ahci_platform_init_host(pdev, hpriv, ppi[version - 1],
--				     &ahci_platform_sht);
-+	rc = ahci_platform_init_host(pdev, hpriv, ppi, &ahci_platform_sht);
- 	if (rc)
- 		goto disable_resources;
+vref maybe lowercase
 
---
-1.7.1
+> + *    | regulator |--.    |   |
+> + *    '-----------'  |    | d |
+> + *                   |    | p |
+> + *                   |    | o |  wiper
+> + *                   |    | t |<---------+
+> + *                   |    |   |
+> + *                   |    '---'       dac output voltage
+> + *                   |      |
+> + *                   '------+------------+
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/iio/consumer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +struct dpot_dac {
+> +	struct regulator *vref;
+> +	struct iio_channel *dpot;
+
+const
+
+> +	u32 max_ohms;
+> +};
+> +
+> +static const struct iio_chan_spec dpot_dac_iio_channel = {
+> +	.type = IIO_VOLTAGE,
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
+> +			    | BIT(IIO_CHAN_INFO_SCALE),
+> +	.output = 1,
+> +};
+> +
+> +static int dpot_dac_read_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     int *val, int *val2, long mask)
+> +{
+> +	struct dpot_dac *dac = iio_priv(indio_dev);
+> +	int ret;
+> +	unsigned long long tmp;
+
+s64 (which is used to cast below)
+
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		return iio_read_channel_raw(dac->dpot, val);
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		ret = iio_read_channel_scale(dac->dpot, val, val2);
+> +		switch (ret) {
+> +		case IIO_VAL_FRACTIONAL_LOG2:
+> +			tmp = (s64)*val * 1000000000LL;
+> +			do_div(tmp, dac->max_ohms);
+> +			tmp *= regulator_get_voltage(dac->vref) / 1000;
+> +			do_div(tmp, 1000000000LL);
+> +			*val = tmp;
+> +			return ret;
+> +		case IIO_VAL_INT:
+> +			*val2 = 1;
+
+I think this needs a comment to clarify what's going on...
+
+> +			ret = IIO_VAL_FRACTIONAL;
+> +			break;
+> +		}
+> +		*val *= regulator_get_voltage(dac->vref) / 1000;
+> +		*val2 *= dac->max_ohms;
+> +
+> +		return ret;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int dpot_dac_write_raw(struct iio_dev *indio_dev,
+> +			      struct iio_chan_spec const *chan,
+> +			      int val, int val2, long mask)
+> +{
+> +	struct dpot_dac *dac = iio_priv(indio_dev);
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		return iio_write_channel_raw(dac->dpot, val);
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct iio_info dpot_dac_info = {
+> +	.read_raw = dpot_dac_read_raw,
+> +	.write_raw = dpot_dac_write_raw,
+> +	.driver_module = THIS_MODULE,
+> +};
+> +
+> +static int dpot_dac_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct dpot_dac *dac;
+> +	enum iio_chan_type type;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*dac));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, indio_dev);
+> +	dac = iio_priv(indio_dev);
+> +
+> +	indio_dev->name = dev_name(dev);
+> +	indio_dev->dev.parent = dev;
+> +	indio_dev->info = &dpot_dac_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = &dpot_dac_iio_channel;
+> +	indio_dev->num_channels = 1;
+
+maybe ARRAY_SIZE(dpot_dac_iio_channel) to future-proof it
+
+> +
+> +	dac->vref = devm_regulator_get(dev, "vref");
+> +	if (IS_ERR(dac->vref)) {
+> +		if (PTR_ERR(dac->dpot) != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "failed to get vref regulator\n");
+> +		return PTR_ERR(dac->vref);
+> +	}
+> +
+> +	dac->dpot = devm_iio_channel_get(dev, "dpot");
+> +	if (IS_ERR(dac->dpot)) {
+> +		if (PTR_ERR(dac->dpot) != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get dpot input channel\n");
+> +		return PTR_ERR(dac->dpot);
+> +	}
+> +
+> +	switch (iio_read_channel_scale(dac->dpot, &ret, NULL)) {
+> +	case IIO_VAL_INT:
+> +	case IIO_VAL_FRACTIONAL:
+> +	case IIO_VAL_FRACTIONAL_LOG2:
+> +		break;
+> +	default:
+> +		dev_err(dev, "dpot has a scale that is too weird\n");
+
+:-)
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = iio_get_channel_type(dac->dpot, &type);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (type != IIO_RESISTANCE) {
+> +		dev_err(dev, "dpot is of the wrong type\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = of_property_read_u32(dev->of_node, "dpot-dac,max-ohms",
+> +				   &dac->max_ohms);
+> +	if (ret) {
+> +		dev_err(dev, "the dpot-dac,max-ohms property is missing\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = regulator_enable(dac->vref);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable the vref regulator\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = iio_device_register(indio_dev);
+> +	if (ret) {
+> +		dev_err(dev, "failed to register iio device\n");
+> +		goto disable_reg;
+> +	}
+> +
+> +	return 0;
+> +
+> +disable_reg:
+> +	regulator_disable(dac->vref);
+> +	return ret;
+> +}
+> +
+> +static int dpot_dac_remove(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> +	struct dpot_dac *dac = iio_priv(indio_dev);
+> +
+> +	iio_device_unregister(indio_dev);
+> +	regulator_disable(dac->vref);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id dpot_dac_match[] = {
+> +	{ .compatible = "dpot-dac" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, dpot_dac_match);
+> +
+> +static struct platform_driver dpot_dac_driver = {
+> +	.probe = dpot_dac_probe,
+> +	.remove = dpot_dac_remove,
+> +	.driver = {
+> +		.name = "iio-dpot-dac",
+> +		.of_match_table = dpot_dac_match,
+> +	},
+> +};
+> +module_platform_driver(dpot_dac_driver);
+> +
+> +MODULE_DESCRIPTION("DAC emulation driver using a digital potentiometer");
+> +MODULE_AUTHOR("Peter Rosin <peda@axentia.se>");
+> +MODULE_LICENSE("GPL v2");
+> 
+
+-- 
+
+Peter Meerwald-Stadler
++43-664-2444418 (mobile)
