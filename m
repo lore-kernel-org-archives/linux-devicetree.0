@@ -1,41 +1,64 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V6 00/10] dmaengine: qcom_hidma: add MSI interrupt support
-Date: Thu, 20 Oct 2016 15:18:38 +0530
-Message-ID: <20161020094838.GY2467@localhost>
-References: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 0/11] Add R8A7743/SK-RZG1M board support
+Date: Thu, 20 Oct 2016 11:56:57 +0200
+Message-ID: <CAMuHMdW7fwhwKejne6p7E8FNjhSFCPui0T7qLqMCs4DZ4BaxZg@mail.gmail.com>
+References: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com> <5be99d76-a082-129b-1aa6-b6f7402ae79b@cogentembedded.com>
+ <20161012080905.GD31183@verge.net.au> <cea44556-a578-fb54-11b8-f21f5b991caa@cogentembedded.com>
+ <20161020092459.GM4612@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1476899512-20431-1-git-send-email-okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20161020092459.GM4612@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2016 at 01:51:42PM -0400, Sinan Kaya wrote:
-> The new version of the HW supports MSI interrupts instead of wired
-> interrupts. The MSI interrupts are especially useful for the guest machine
-> execution. The wired interrupts usually trap to the hypervisor and then are
-> relayed to the actual interrupt.
-> 
-> The MSI interrupts can be directly fed into the interrupt controller.
-> 
-> Adding a new OF compat string (qcom,hidma-1.1) and ACPI string (QCOM8062)
-> to distinguish newer HW from the older ones.
-> 
-> v6:
-> * rebase 4.9 kernel
+Hi Simon,
 
-Why???
+On Thu, Oct 20, 2016 at 11:24 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Wed, Oct 12, 2016 at 11:29:56AM +0300, Sergei Shtylyov wrote:
+>> On 10/12/2016 11:09 AM, Simon Horman wrote:
+>> >>>  Here's the set of 11 patches against Simon Horman's 'renesas.git' repo's
+>> >>>'renesas-devel-20161003-v4.8' tag. I'm adding the device tree support for
+>> >>>the R8A7743-based SK-RZG1M board. The SoC is close to R8A7791 and the board
+>> >>>seems identical to the R8A7791/Porter board. The device tree patches depend on
+>> >>>the R8A7743 CPG/MSSR driver series just posted in order to compile and work.
+>> >>
+>> >>   Forgot to mention that this version causes a regression with the sh_eth
+>> >>driver (well, actually with phylib): since IRQC now gets a deferred probing,
+>> >>PHY IRQ doesn't work anymore -- phylib falls back to polling.
+>> >
+>> >Is there a resolution to that problem?
+>>
+>>    Geert has posted his IRQC driver patch recently. Not sure if it was
+>> intended for merging but it solves the issue.
+>
+> Ok. I think it is ok to merge support for a new board even if there are
+> problems as its not regressing (can't break something that previously
+> didn't exist imho). But of course it would be best if things did work.
+>
+> Geert, do you have any comments on the relevance of your IRQC driver patch?
 
+That patch is relevant, until the MDIO framework is fixed.
+It will start to matter more when migrating more (R-Car Gen2) SoCs to the new
+CPG/MSSR driver.
 
-I already told you that I have applied 6 in the last version, please dont
-send me stuff which is already applied :(
+It would be good to give that patch some testing on more R-Car Gen2 boards
+with NFS root (difficult for me with remote access and network latencies).
 
--- 
-~Vinod
+After that I can submit it to the irqchip maintainers, as I don't believe MDIO
+will be fixed soonish...
+
+Thanks for testing ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
