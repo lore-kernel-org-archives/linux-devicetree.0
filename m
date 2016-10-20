@@ -1,87 +1,34 @@
-From: Sarangdhar Joshi <spjoshi@codeaurora.org>
-Subject: Re: [PATCH 3/4] arm64: dts: msm8996: Add SMEM DT nodes
-Date: Thu, 20 Oct 2016 14:59:49 -0700
-Message-ID: <be72dfec-b502-1888-4495-9a476f91d6b6@codeaurora.org>
-References: <1476989765-7524-1-git-send-email-spjoshi@codeaurora.org>
- <1476989765-7524-3-git-send-email-spjoshi@codeaurora.org>
- <20161020195629.GM7509@tuxbot>
- <1c7504f2-48ca-bcae-3eef-16589513d1aa@codeaurora.org>
- <20161020215137.GF3145@hector.attlocal.net>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V6 00/10] dmaengine: qcom_hidma: add MSI interrupt support
+Date: Thu, 20 Oct 2016 14:59:51 -0700
+Message-ID: <ccb669c9-581e-490e-b20c-6da2a8077c22@codeaurora.org>
+References: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
+ <20161020094838.GY2467@localhost>
+ <e3cbd6a2-7fac-98ec-74ea-0be88075663c@codeaurora.org>
+ <20161020164321.GZ2467@localhost>
+ <a4c95bd6-d760-1f02-bbb1-89538037d41e@codeaurora.org>
+ <37baf7db-1e14-4027-9397-70649e8fa946@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161020215137.GF3145@hector.attlocal.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Trilok Soni <tsoni@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <37baf7db-1e14-4027-9397-70649e8fa946@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/2016 02:51 PM, Andy Gross wrote:
-> On Thu, Oct 20, 2016 at 02:18:33PM -0700, Sarangdhar Joshi wrote:
->> On 10/20/2016 12:56 PM, Bjorn Andersson wrote:
->>> On Thu 20 Oct 11:56 PDT 2016, Sarangdhar Joshi wrote:
->>>
->>>> From: Bjorn Andersson <bjorn.andersson@linaro.org>
->>>>
->>>> Add SMEM and TCSR DT nodes on MSM8996.
->>>>
->>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>>> Signed-off-by: Sarangdhar Joshi <spjoshi@codeaurora.org>
->>>> ---
->>>> arch/arm64/boot/dts/qcom/msm8996.dtsi | 19 +++++++++++++++++++
->>>> 1 file changed, 19 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
->>>> index 949b096..0a810f5 100644
->>>> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
->>>> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
->>>> @@ -169,12 +169,31 @@
->>>> 		method = "smc";
->>>> 	};
->>>>
->>>> +	smem {
->>>> +		compatible = "qcom,smem";
->>>> +
->>>> +		memory-region = <&smem_mem>;
->>>> +
->>>> +		hwlocks = <&tcsr_mutex 3>;
->>>> +	};
->>>> +
->>>> 	soc: soc {
->>>> 		#address-cells = <1>;
->>>> 		#size-cells = <1>;
->>>> 		ranges = <0 0 0 0xffffffff>;
->>>> 		compatible = "simple-bus";
->>>>
->>>> +		tcsr_mutex_regs: syscon@740000 {
->>>> +			compatible = "syscon";
->>>> +			reg = <0x740000 0x20000>;
->>>> +		};
->>>> +
->>>> +		tcsr_mutex: hwlock {
->>>> +			compatible = "qcom,tcsr-mutex";
->>>> +			syscon = <&tcsr_mutex_regs 0 0x1000>;
->>>> +			#hwlock-cells = <1>;
->>>> +		};
->>>
->>> Sorry, I got this in the wrong place, the hwlock node should sit outside
->>> of soc {} - looks like we got this wrong in msm8916 as well.
->>
->> Thanks for reviewing the patch. Do you mean to move it under / {}; (i.e.
->> root)?
->
-> Yes.  Any node that doesn't have reg properties should go under the root.
->
+On 10/20/2016 2:55 PM, Sinan Kaya wrote:
+> I also looked at the binary contents of the patches in topic/dma with what I posted
+> on v6. They match excluding your Signed off lines.
 
-Got it. Will update the patch(es) and add cover letter. Thanks.
+Correction.
 
->
-> Andy
->
+I checkout out topic/qcom not topic/dma from
 
-Regards,
-Sarang
+git://git.infradead.org/users/vkoul/slave-dma.git
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Sinan Kaya
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
