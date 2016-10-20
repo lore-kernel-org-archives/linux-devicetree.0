@@ -1,123 +1,42 @@
-From: Milo Kim <woogyom.kim@gmail.com>
-Subject: [PATCH 2/3] ARM: dts: sun8i: Use the common file in NanoPi NEO SBC
-Date: Thu, 20 Oct 2016 17:07:00 +0900
-Message-ID: <20161020080701.15993-3-woogyom.kim@gmail.com>
-References: <20161020080701.15993-1-woogyom.kim@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161020080701.15993-1-woogyom.kim@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: Milo Kim <woogyom.kim@gmail.com>, devicetree@vger.kernel.org, James Pettigrew <james@innovum.com.au>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH] ARM: dts: rockchip: add i2c-bus subnode to edp
+Date: Thu, 20 Oct 2016 10:07:25 +0200
+Message-ID: <1476950845-28242-1-git-send-email-tomeu.vizoso@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Randy Li <randy.li@rock-chips.com>, Jon Hunter <jonathanh@nvidia.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: James Pettigrew <james@innovum.com.au>
-Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
----
- arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts | 79 +------------------------------
- 1 file changed, 1 insertion(+), 78 deletions(-)
+Add an empty 'i2c-bus' subnode to the edp node just so that the I2C core
+doesn't attemp to parse the 'ports' subnode as containing i2c devices.
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-index 3d64caf..8d2cc6e 100644
---- a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-@@ -40,86 +40,9 @@
-  *     OTHER DEALINGS IN THE SOFTWARE.
-  */
+This is to avoid spurious failure messages such as:
+
+i2c i2c-6: of_i2c: modalias failure on /dp@ff970000/ports
+
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: Randy Li <randy.li@rock-chips.com>
+Cc: Jon Hunter <jonathanh@nvidia.com>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 2f814ffeb605..94f4b7eecca2 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -1075,6 +1075,11 @@
+ 				};
+ 			};
+ 		};
++
++		i2c-bus {
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
+ 	};
  
--/dts-v1/;
--#include "sun8i-h3.dtsi"
--#include "sunxi-common-regulators.dtsi"
--
--#include <dt-bindings/gpio/gpio.h>
--#include <dt-bindings/pinctrl/sun4i-a10.h>
-+#include "sun8i-h3-nanopi.dtsi"
- 
- / {
- 	model = "FriendlyARM NanoPi NEO";
- 	compatible = "friendlyarm,nanopi-neo", "allwinner,sun8i-h3";
--
--	aliases {
--		serial0 = &uart0;
--	};
--
--	chosen {
--		stdout-path = "serial0:115200n8";
--	};
--
--	leds {
--		compatible = "gpio-leds";
--		pinctrl-names = "default";
--		pinctrl-0 = <&leds_opc>, <&leds_r_opc>;
--
--		pwr {
--			label = "nanopi:green:pwr";
--			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
--			default-state = "on";
--		};
--
--		status {
--			label = "nanopi:blue:status";
--			gpios = <&pio 0 10 GPIO_ACTIVE_HIGH>; /* PA10 */
--		};
--	};
--};
--
--&ehci3 {
--	status = "okay";
--};
--
--&mmc0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
--	vmmc-supply = <&reg_vcc3v3>;
--	bus-width = <4>;
--	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
--	cd-inverted;
--	status = "okay";
--};
--
--&ohci3 {
--	status = "okay";
--};
--
--&pio {
--	leds_opc: led-pins {
--		allwinner,pins = "PA10";
--		allwinner,function = "gpio_out";
--		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
--	};
--};
--
--&r_pio {
--	leds_r_opc: led-pins {
--		allwinner,pins = "PL10";
--		allwinner,function = "gpio_out";
--		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
--	};
--};
--
--&uart0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_pins_a>;
--	status = "okay";
--};
--
--&usbphy {
--	/* USB VBUS is always on */
--	status = "okay";
- };
+ 	hdmi: hdmi@ff980000 {
 -- 
-2.9.3
+2.7.4
