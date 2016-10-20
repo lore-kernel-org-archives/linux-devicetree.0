@@ -1,90 +1,29 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH 0/4] IIO wrapper drivers, dpot-dac and envelope-detector
-Date: Thu, 20 Oct 2016 14:55:12 +0200
-Message-ID: <9b8c0789-566d-67a3-b4f5-dbe4c69f6932@metafoo.de>
-References: <1476955562-13673-1-git-send-email-peda@axentia.se>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 7/9] ARM: sunxi: Remove useless allwinner,drive property
+Date: Thu, 20 Oct 2016 14:55:58 +0200
+Message-ID: <CACRpkdaRVWggr2UhFmXHCtNcyu6ghVAT-oM0RdNbWvxraXOwXQ@mail.gmail.com>
+References: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
+ <076406072c137a50df41c4acb0c582a688792976.1476200742.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476955562-13673-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <076406072c137a50df41c4acb0c582a688792976.1476200742.git-series.maxime.ripard@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/2016 11:25 AM, Peter Rosin wrote:
-> Hi!
-> 
-> These two drivers share the fact that they wrap another iio channel,
-> and I use the first in combination with the second, which is why I'm
-> submitting them as a pair.
-> 
-> The first driver is a simple wrapper converting an iio dpot into an
-> iio dac. It only changes the unit and scale. It also does not add any
-> fancy iio buffer support that I don't need. I suppose that can be
-> added. By someone else :-)
-> 
-> Please look over the scale conversion, notably for the fractional log2
-> case that I don't need myself, so is untested. Maybe I should just
-> remove it?
-> 
-> Also, is there some agreed-upon way to dig out the maximum value from
-> an iio channel? If so, "dpot-dac,max-ohms" can be eliminated from the
-> dt bindings, which would have been nice...
+On Tue, Oct 11, 2016 at 5:46 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
 
-Yes, this is something we could really use. In a sense it exists for the
-devices with buffer-capable channels where there is the real_bits field
-which tells us the data width of the channel. But a dedicated mechanism for
-querying the maximum (and minimum) valid code seems like a useful feature.
-Not only for in-kernel clients, but also for userspace.
+> The allwinner,drive property set to 10mA was really considered as our
+> default. Remove all those properties entirely to make that obvious.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-> 
-> I'm also wondering if I'm somehow abusing the regulator? I only added
-> it to get rid of a "dpot-dac,max-voltage" thing from the dt bindings.
-> It feels right though, but maybe I should do more with it than check
-> its voltage? What?
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Enable the regulator when it is in use?
+Please merge this through the ARM SoC tree.
 
-> 
-> The second driver (the envelope detector) is more involved. It also
-> explains why I need the dpot-dac driver. I wanted the envelope
-> detector to be generic and work with any dac, but I had a dpot...
-> 
-> The envelope detector was previously discussed late last year [1],
-> and this is what I came up with instead of that mess.
-> 
-> There are a couple of things to be said about the envelope detector,
-> one question is where it should live? I placed it in the adc directory,
-> but maybe it deserves an iio directory of its own? I'm also a bit
-> worried that the name is a wee bit too generic. But what is a good
-> name? I don't want it to be too long like dac-comp-envelope-detector
-> and something like dac-comp-env-det is just unreadable. Naming is
-> difficult... And suggestions?
-
-Yeah, it is a bit tricky. It is a envelope detector built from discrete
-components, but of course there are many more ways to build one. If you have
-a codename for your platform you could use this for the DT compatible
-string, like 'vendor,foobar-envelope-detector'.
-
-> 
-> Another thing is that I'm not 100% satisfied with the fact that you
-> have to decide at instantiation if you are going to invert the search
-> or not (search from below). But in order for that to be selectable
-> at runtime with a channel attribute of some sort, I need to be able
-> to rebind the interrupt to the other edge and I want to do that
-> without releasing the irq and grabbing it again (someone might
-> otherwise steal the irq, making the driver lose the irq all together).
-> I don't see any API to change the irq trigger condition. Is there
-> such a thing?
-> 
-> Anyway, despite all the above questions and remarks, this works for
-> me. Please consider applying.
-
-In general this series looks really good, good and clear implementation as
-well as documentation. A few minor bits here and there, but that is normal.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
