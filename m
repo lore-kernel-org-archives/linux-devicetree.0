@@ -1,84 +1,113 @@
 From: Sarangdhar Joshi <spjoshi@codeaurora.org>
-Subject: Re: [PATCH 3/4] arm64: dts: msm8996: Add SMEM DT nodes
-Date: Thu, 20 Oct 2016 14:18:33 -0700
-Message-ID: <1c7504f2-48ca-bcae-3eef-16589513d1aa@codeaurora.org>
+Subject: Re: [PATCH 4/4] arm64: dts: msm8996: Add SMP2P and APCS nodes
+Date: Thu, 20 Oct 2016 14:22:30 -0700
+Message-ID: <d3ace2c3-b681-3c0e-d4d3-3e77396f65af@codeaurora.org>
 References: <1476989765-7524-1-git-send-email-spjoshi@codeaurora.org>
- <1476989765-7524-3-git-send-email-spjoshi@codeaurora.org>
- <20161020195629.GM7509@tuxbot>
+ <1476989765-7524-4-git-send-email-spjoshi@codeaurora.org>
+ <20161020200304.GP7509@tuxbot>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161020195629.GM7509@tuxbot>
+In-Reply-To: <20161020200304.GP7509@tuxbot>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Trilok Soni <tsoni@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Trilok Soni <tsoni@codeaurora.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/2016 12:56 PM, Bjorn Andersson wrote:
+On 10/20/2016 01:03 PM, Bjorn Andersson wrote:
 > On Thu 20 Oct 11:56 PDT 2016, Sarangdhar Joshi wrote:
 >
->> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> Add SMP2P and APCS DT nodes required for Qualcomm ADSP
+>> Peripheral Image Loader.
 >>
->> Add SMEM and TCSR DT nodes on MSM8996.
->>
->> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> Signed-off-by: Sarangdhar Joshi <spjoshi@codeaurora.org>
->> ---
->>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 19 +++++++++++++++++++
->>  1 file changed, 19 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
->> index 949b096..0a810f5 100644
->> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
->> @@ -169,12 +169,31 @@
->>  		method = "smc";
->>  	};
->>
->> +	smem {
->> +		compatible = "qcom,smem";
->> +
->> +		memory-region = <&smem_mem>;
->> +
->> +		hwlocks = <&tcsr_mutex 3>;
->> +	};
->> +
->>  	soc: soc {
->>  		#address-cells = <1>;
->>  		#size-cells = <1>;
->>  		ranges = <0 0 0 0xffffffff>;
->>  		compatible = "simple-bus";
->>
->> +		tcsr_mutex_regs: syscon@740000 {
->> +			compatible = "syscon";
->> +			reg = <0x740000 0x20000>;
->> +		};
->> +
->> +		tcsr_mutex: hwlock {
->> +			compatible = "qcom,tcsr-mutex";
->> +			syscon = <&tcsr_mutex_regs 0 0x1000>;
->> +			#hwlock-cells = <1>;
->> +		};
 >
-> Sorry, I got this in the wrong place, the hwlock node should sit outside
-> of soc {} - looks like we got this wrong in msm8916 as well.
-
-Thanks for reviewing the patch. Do you mean to move it under / {}; (i.e. 
-root)?
-
+> Nice, two (very) small nits below. But other than that
+>
+> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 >
 > Regards,
 > Bjorn
 >
+>> Signed-off-by: Sarangdhar Joshi <spjoshi@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 30 ++++++++++++++++++++++++++++++
+>>  1 file changed, 30 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+>> index 0a810f5..3edb56b 100644
+>> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+>> @@ -169,6 +169,31 @@
+>>  		method = "smc";
+>>  	};
+>>
+>> +	smp2p-adsp {
+>
+> Sorry for bikeshedding, but on msm8916 I named these {subsystem}-smp2p,
+> so I would prefer this was naemd adsp-smp2p...
+
+Sure. Will do.
+
+>
+>> +		compatible = "qcom,smp2p";
+>> +		qcom,smem = <443>, <429>;
 >> +
->>  		intc: interrupt-controller@9bc0000 {
->>  			compatible = "arm,gic-v3";
->>  			#interrupt-cells = <3>;
+>> +		interrupt-parent = <&intc>;
+>
+> I believe this node inherit intc as interrupt-parent from the root
+> already, is there are reason why you need to specify it.
+>
+
+Good catch. I will remove it.
+
+>> +		interrupts = <0 158 IRQ_TYPE_EDGE_RISING>;
+>> +
+>> +		qcom,ipc = <&apcs 16 10>;
+>> +
+>> +		qcom,local-pid = <0>;
+>> +		qcom,remote-pid = <2>;
+>> +
+>> +		adsp_smp2p_out: master-kernel {
+>> +			qcom,entry-name = "master-kernel";
+>> +			#qcom,state-cells = <1>;
+>> +		};
+>> +
+>> +		adsp_smp2p_in: slave-kernel {
+>> +			qcom,entry-name = "slave-kernel";
+>> +
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <2>;
+>> +		};
+>> +	};
+>> +
+>>  	smem {
+>>  		compatible = "qcom,smem";
+>>
+>> @@ -205,6 +230,11 @@
+>>  			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>>  		};
+>>
+>> +		apcs: syscon@9820000 {
+>> +			compatible = "syscon";
+>> +			reg = <0x9820000 0x1000>;
+>> +		};
+>> +
+>>  		gcc: clock-controller@300000 {
+>>  			compatible = "qcom,gcc-msm8996";
+>>  			#clock-cells = <1>;
 >> --
 >> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 >> a Linux Foundation Collaborative Project
 >>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+
+Thanks for reviewing the patch.
 
 Regards,
 Sarang
