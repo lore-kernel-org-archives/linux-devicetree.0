@@ -1,39 +1,97 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH v2 00/10] Revamp Semtech SX150x driver
-Date: Thu, 20 Oct 2016 12:34:17 -0700
-Message-ID: <CAHQ1cqH-fyPV_Z1ARwiAVHX2LO9yd_vGXcX_uMWg2ToXfsqB2g@mail.gmail.com>
-References: <1476885846-16469-1-git-send-email-andrew.smirnov@gmail.com> <CACRpkdbW=fdDn2uOchNHRYvhorGseNDyV_Kx11oeCTS+X9XHcQ@mail.gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/3] ARM: bus: da8xx-syscfg: new driver
+Date: Thu, 20 Oct 2016 12:39:34 -0700
+Message-ID: <7h8tti6c95.fsf@baylibre.com>
+References: <1476721850-454-1-git-send-email-bgolaszewski@baylibre.com>
+ <2278105.geKhb8xoNC@avalon> <7h8ttj6jqo.fsf@baylibre.com>
+ <1867292.F3aGJTmS2t@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbW=fdDn2uOchNHRYvhorGseNDyV_Kx11oeCTS+X9XHcQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Healy <cphealy@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1867292.F3aGJTmS2t@avalon> (Laurent Pinchart's message of "Thu,
+ 20 Oct 2016 21:05:50 +0300")
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 20, 2016 at 12:08 PM, Linus Walleij
-<linus.walleij@linaro.org> wrote:
-> On Wed, Oct 19, 2016 at 4:03 PM, Andrey Smirnov
-> <andrew.smirnov@gmail.com> wrote:
->
->> Hello everyone,
->>
->> This is the second version of the patchset originally submitted here:
->>
->> http://www.spinics.net/lists/devicetree/msg146176.html
->
-> I'm sorry about your efforts, and sorry for not having had time to
-> comment earlier, but this driver will be removed and replaced by
-> a pin control driver by Neil Armstrong:
-> http://marc.info/?l=linux-gpio&m=147499137422454&w=2
->
-> As you can see it arrived some weeks before.
->
-> Can you please review Neils patch and make sure it satisfies
-> your usecases?
-
-Sure, I'll grab those patches and provide comments, Tested-by's, etc.
-
-Thanks,
-Andrey Smirnov
+SGkgTGF1cmVudCwKCkxhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJv
+YXJkLmNvbT4gd3JpdGVzOgoKPiBPbiBUaHVyc2RheSAyMCBPY3QgMjAxNiAwOTo1Nzo1MSBLZXZp
+biBIaWxtYW4gd3JvdGU6Cj4+IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRl
+YXNvbmJvYXJkLmNvbT4gd3JpdGVzOgo+PiA+IE9uIFdlZG5lc2RheSAxOSBPY3QgMjAxNiAxMDoy
+Njo1NyBCYXJ0b3N6IEdvbGFzemV3c2tpIHdyb3RlOgo+PiA+PiAyMDE2LTEwLTE4IDIyOjQ5IEdN
+VCswMjowMCBMYXVyZW50IFBpbmNoYXJ0Ogo+PiA+Pj4gT24gTW9uZGF5IDE3IE9jdCAyMDE2IDE4
+OjMwOjQ5IEJhcnRvc3ogR29sYXN6ZXdza2kgd3JvdGU6Cj4+ID4+Pj4gQ3JlYXRlIHRoZSBkcml2
+ZXIgZm9yIHRoZSBkYTh4eCBTeXN0ZW0gQ29uZmlndXJhdGlvbiBhbmQgaW1wbGVtZW50Cj4+ID4+
+Pj4gc3VwcG9ydCBmb3Igd3JpdGluZyB0byB0aGUgdGhyZWUgTWFzdGVyIFByaW9yaXR5IHJlZ2lz
+dGVycy4KPj4gPj4+PiAKPj4gPj4+PiBTaWduZWQtb2ZmLWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tp
+IDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgo+PiA+PiAKPj4gPj4gW3NuaXBdCj4+ID4+IAo+
+PiA+Pj4+ICsKPj4gPj4+PiArRG9jdW1lbnRhdGlvbjoKPj4gPj4+PiArT01BUC1MMTM4IChEQTg1
+MCkgLSBodHRwOi8vd3d3LnRpLmNvbS9saXQvdWcvc3BydWg4MmMvc3BydWg4MmMucGRmCj4+ID4+
+Pj4gKwo+PiA+Pj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiA+Pj4+ICsKPj4gPj4+PiArLSBj
+b21wYXRpYmxlOiAgICAgICAgICAgICAgICAidGksZGE4NTAtc3lzY2ZnIgo+PiA+Pj4gCj4+ID4+
+PiBEb24ndCB5b3UgbmVlZCBhIHJlZyBwcm9wZXJ0eSA/Cj4+ID4+IAo+PiA+PiBZZXMsIEtldmlu
+IGFscmVhZHkgcG9pbnRlZCB0aGF0IG91dC4gSSdsbCBhZGQgaXQgaW4gdjIuIFNhbWUgZm9yIFsx
+LzNdLgo+PiA+PiAKPj4gPj4+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPj4gPj4+PiArCj4+ID4+
+Pj4gK1RoZSBiZWxvdyBwcm9wZXJ0aWVzIGFyZSB1c2VkIHRvIHNwZWNpZnkgdGhlIHByaW9yaXR5
+IG9mIG1hc3Rlcgo+PiA+Pj4+IHBlcmlwaGVyYWxzLgo+PiA+Pj4+ICtUaGV5IG11c3QgYmUgYmV0
+d2VlbiAwLTcgd2hlcmUgMCBpcyB0aGUgaGlnaGVzdCBwcmlvcml0eSBhbmQgNyBpcyB0aGUKPj4g
+Pj4+PiBsb3dlc3QuCj4+ID4+Pj4gKwo+PiA+Pj4+ICstIHRpLHByaS1hcm0taTogICAgICAgICAg
+ICAgIEFSTV9JIHBvcnQgcHJpb3JpdHkuCj4+ID4+Pj4gKwo+PiA+Pj4+ICstIHRpLHByaS1hcm0t
+ZDogICAgICAgICAgICAgIEFSTV9EIHBvcnQgcHJpb3JpdHkuCj4+ID4+Pj4gKwo+PiA+Pj4+ICst
+IHRpLHByaS11cHA6ICAgICAgICAgICAgICAgIHVQUCBwb3J0IHByaW9yaXR5Lgo+PiA+Pj4+ICsK
+Pj4gPj4+PiArLSB0aSxwcmktc2F0YTogICAgICAgICAgICAgICBTQVRBIHBvcnQgcHJpb3JpdHku
+Cj4+ID4+Pj4gKwo+PiA+Pj4+ICstIHRpLHByaS1wcnUwOiAgICAgICAgICAgICAgIFBSVTAgcG9y
+dCBwcmlvcml0eS4KPj4gPj4+PiArCj4+ID4+Pj4gKy0gdGkscHJpLXBydTE6ICAgICAgICAgICAg
+ICAgUFJVMSBwb3J0IHByaW9yaXR5Lgo+PiA+Pj4+ICsKPj4gPj4+PiArLSB0aSxwcmktZWRtYTMw
+dGMwOiAgRURNQTNfMF9UQzAgcG9ydCBwcmlvcml0eS4KPj4gPj4+PiArCj4+ID4+Pj4gKy0gdGks
+cHJpLWVkbWEzMHRjMTogIEVETUEzXzBfVEMxIHBvcnQgcHJpb3JpdHkuCj4+ID4+Pj4gKwo+PiA+
+Pj4+ICstIHRpLHByaS1lZG1hMzF0YzA6ICBFRE1BM18xX1RDMCBwb3J0IHByaW9yaXR5Lgo+PiA+
+Pj4+ICsKPj4gPj4+PiArLSB0aSxwcmktdnBpZi1kbWEtMDogVlBJRiBETUEwIHBvcnQgcHJpb3Jp
+dHkuCj4+ID4+Pj4gKwo+PiA+Pj4+ICstIHRpLHByaS12cGlmLWRtYS0xOiBWUElGIERNQTEgcG9y
+dCBwcmlvcml0eS4KPj4gPj4+PiArCj4+ID4+Pj4gKy0gdGkscHJpLWVtYWM6ICAgICAgICAgICAg
+ICAgRU1BQyBwb3J0IHByaW9yaXR5Lgo+PiA+Pj4+ICsKPj4gPj4+PiArLSB0aSxwcmktdXNiMGNm
+ZzogICAgVVNCMCBDRkcgcG9ydCBwcmlvcml0eS4KPj4gPj4+PiArCj4+ID4+Pj4gKy0gdGkscHJp
+LXVzYjBjZG1hOiAgIFVTQjAgQ0RNQSBwb3J0IHByaW9yaXR5Lgo+PiA+Pj4+ICsKPj4gPj4+PiAr
+LSB0aSxwcmktdWhwaTogICAgICAgICAgICAgICBIUEkgcG9ydCBwcmlvcml0eS4KPj4gPj4+PiAr
+Cj4+ID4+Pj4gKy0gdGkscHJpLXVzYjE6ICAgICAgICAgICAgICAgVVNCMSBwb3J0IHByaW9yaXR5
+Lgo+PiA+Pj4+ICsKPj4gPj4+PiArLSB0aSxwcmktbGNkYzogICAgICAgICAgICAgICBMQ0RDIHBv
+cnQgcHJpb3JpdHkuCj4+ID4+PiAKPj4gPj4+IEknbSBhZnJhaWQgdGhpcyBsb29rcyBtb3JlIGxp
+a2Ugc3lzdGVtIGNvbmZpZ3VyYXRpb24gdGhhbiBoYXJkd2FyZQo+PiA+Pj4gZGVzY3JpcHRpb24g
+dG8gbWUuCj4+ID4+IAo+PiA+PiBXaGlsZSB5b3UncmUgY2VydGFpbmx5IHJpZ2h0LCB0aGlzIGFw
+cHJvYWNoIGlzIGFscmVhZHkgaW1wbGVtZW50ZWQgaW4KPj4gPj4gc2V2ZXJhbCBvdGhlciBtZW1v
+cnkgYW5kIGJ1cyBkcml2ZXJzIGFuZCBpdCB3YXMgYWxzbyBzdWdnZXN0ZWQgYnkKPj4gPj4gU2Vr
+aGFyIGluIG9uZSBvZiB0aGUgdGlsY2RjIHJldjEgdGhyZWFkcy4gVGhlcmUncyBhbHNvIG5vIHJl
+YWwKPj4gPj4gYWx0ZXJuYXRpdmUgdGhhdCBJIGtub3cgb2YuCj4+ID4gCj4+ID4gVGhlIGZhY3Qg
+dGhhdCBvdGhlciBkcml2ZXJzIGdldCBpdCB3cm9uZyBpcyBubyBleGN1c2UgZm9yIGNvcHlpbmcg
+dGhlbSA6LSkKPj4gCj4+IFdoYXQgZXhhY3RseSBpcyAid3JvbmciIHdpdGggdGhlIHdheSBvdGhl
+ciBkcml2ZXJzIGFyZSBkb2luZyBpdD8KPj4gCj4+IEknbSBzdXJlIHRoZXJlIG1heSBiZSBvdGhl
+ciBpZGVhcywgYW5kIHBvc3NpYmx5IHNvbWUgYmV0dGVyIG9uZXMsIGJ1dAo+PiB0aGF0IGRvZXNu
+J3QgbWFrZSBpdCB3cm9uZywgYW5kIGRvZXNuJ3QgY2hhbmdlIGhlIGZhY3QgdGhhdCB0aGUga2Vy
+bmVsCj4+IGhhcyBleGlzdGluZyBkcml2ZXJzIFNvQy1idXMtc3BlY2lmaWMgc3lzdGVtIHBlcmZv
+cm1hbmNlIGtub2JzIGxpa2UKPj4gdGhpcy4KPgo+IEl0J3Mgbm90IHRoZSBkcml2ZXJzIEknbSBj
+b25jZXJuZWQgYWJvdXQsIGJ1dCB0aGUgRFQgYmluZGluZ3MuCgpJIHNlZSwgdGhhbmtzIGZvciB0
+aGUgY2xhcmlmaWNhdGlvbi4KCj4gVGhlIHByb3Bvc2VkIERUIGJpbmRpbmcgY29udGFpbnMgYSBs
+YXJnZSBudW1iZXIgb2YgcHJvcGVydGllcyB0aGF0Cj4gZG9uJ3QgZGVzY3JpYmUgdGhlIGhhcmR3
+YXJlIGJ1dCBjb250YWluIGNvbmZpZ3VyYXRpb24gZGF0YS4KCkkgYWdyZWUgdGhhdCB0aGVyZSBv
+dWdodCB0byBiZSBzb21lIG1vcmUgZ2VuZXJpYyB3YXkgZm9yIGRldmljZXMgdG8KcmVxdWVzdCBw
+ZXJmb3JtYW5jZSBjb25zdHJhaW50cyBmcm9tIHRoZWlyIGJ1c3NlcyBhdCBydW50aW1lIGJhc2Vk
+IG9uCnRoZWlyIGN1cnJlbnQgb3BlcmF0aW5nIGNyaXRlcmEsIGJ1dCB1bmZvcnR1bmF0ZWx5IHRo
+YXQgZG9lc24ndCBleGlzdAp5ZXQuCgpIb3dldmVyLCBhZnRlciBvdXIgZGlzY3Vzc2lvbiBvbiBJ
+UkMsIHdlJ2xsIHJlc3BpbiB0aGlzIHdpdGhvdXQgdGhlIERUCmJpbmRpbmdzIGF0IGFsbC4gIE5l
+eHQgdmVyc2lvbiB3aWxsIGp1c3QgdXNlIHN0YXRpYyBjb25maWd1cmF0aW9uIGRhdGEKaW4gdGhl
+IGRyaXZlcnMvYnVzIGRyaXZlciBiYXNlZCBvbiBTb0MgY29tcGF0aWJsZSBzdHJpbmcsIHNpbmNl
+IGZvciB0aGUKdXNlLWNhc2VzIEknbSBhd2FyZSBvZiwgdGhlIHNldHRpbmdzIGFyZSBib290LXRp
+bWUgb25seS4KClRoYW5rcyBhZ2FpbiBmb3IgdGhlIHJldmlldywKCktldmluCgoKCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
