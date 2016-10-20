@@ -1,34 +1,63 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 9/9] ARM: sunxi: Convert pinctrl nodes to generic bindings
-Date: Thu, 20 Oct 2016 15:01:01 +0200
-Message-ID: <CACRpkda9-GJ2Sit9JNJ5Ocjgyno4VhPv6EJKrz8DaHM_6wsXcw@mail.gmail.com>
-References: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
- <e32d044d2d967f24f12d83eea50e7f14f2ae1073.1476200742.git-series.maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 1/8] drm/bridge: rgb-to-vga: Support an enable GPIO
+Date: Thu, 20 Oct 2016 15:00:56 +0200
+Message-ID: <20161020130056.6tf4uuqsxiphqzx4@lukather>
+References: <20161020034344.14154-1-wens@csie.org>
+ <20161020034344.14154-2-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e32d044d2d967f24f12d83eea50e7f14f2ae1073.1476200742.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="egmwreqrenan6oqn"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161020034344.14154-2-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 11, 2016 at 5:46 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-> Now that we can handle the generic pinctrl bindings, convert our DT to it.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+--egmwreqrenan6oqn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Awesome work.
+On Thu, Oct 20, 2016 at 11:43:37AM +0800, Chen-Yu Tsai wrote:
+> Some rgb-to-vga bridges have an enable GPIO, either directly tied to
+> an enable pin on the bridge IC, or indirectly controlling a power
+> switch.
+>=20
+> Add support for it.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-Please merge this through the ARM SoC tree.
+Thanks!
+Maxime
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--egmwreqrenan6oqn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYCMAIAAoJEBx+YmzsjxAg7RsQAJ0VkkducTjuCJsByzmW2opx
+qVxub4KPFYhduA/eiK48Snzlsmfzql5pZUSfAL1c3olxLmO4IJOeMrIrREOZOE1m
+mI7YJhuuecgzE2/WVwHeeFbnNJtUZ/EoSPLv9MJMDmTzuxgtAU/HfCyUoMiBXwnQ
+5up1x1/D4f6egTSe8vlpDJ7vOBWwOGg6B1lossuhPzO5LlpRP73/hKmxRy5wq/oN
+p+LEA4s59PMLp1GTc2xQME4BTkFbeIMMjqyA7HK/+UHZldOm8bIIYvQcQklg54+x
+ZDQB0k1lSgPDNf/aziAdiTktH9OY1eol5JZRsovot9sbrQs9b4/seoU53YwdcI/u
+bGjZAg/92b48+8ReE/92F0gKlauGtQJop0Dnf2nJWGfqGv4Q25Cy45NdoKmmSitj
+PEqSj/RLXeCGuIwcXi8pakQDUvyvtmD2GJN54BWor5aPxlBKUKQPMypBtS1dI5qD
+qTqP5NsBSVTFrbTIHB4Gr1odK8xb0TDuDauvslCIKT3W2Mb6xvOfScRVzCtdeKKR
++agpKAPPs7EpOMCB+yfbL/7ncUaAOZZDp6+DN1HVHUK5hkIaYEvd6q0FGlr8r/OD
+U02S3zHdIDP1AwGl2pMdSwvB7C+TiIA9GRaZITyoSJh4CZDdUQuf+7KgQqSM2IUS
+NsVd5l1ir+qwj7wNLYx2
+=ScbW
+-----END PGP SIGNATURE-----
+
+--egmwreqrenan6oqn--
