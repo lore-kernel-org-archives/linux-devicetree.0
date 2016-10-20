@@ -1,93 +1,97 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v2 1/2] arm64: dts: uniphier: add CPU clock and OPP table for LD11 SoC
-Date: Thu, 20 Oct 2016 10:15:25 +0900
-Message-ID: <1476926126-6079-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 00/15] usb: dwc2: Fix up, consolidate, and simplify driver parameters
+Date: Wed, 19 Oct 2016 18:22:20 -0700
+Message-ID: <cover.1476926069.git.johnyoun@synopsys.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Vahram Aharonyan <vahrama-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a CPU clock to every CPU node and a CPU OPP table to use the
-generic cpufreq driver.
+Currently there are multiple methods of setting parameters in the dwc2
+driver.
 
-Note:
-clock-latency-ns (300ns) was calculated based on the CPU-gear switch
-sequencer spec; it takes 12 clock cycles on the sequencer running
-at 50 MHz, plus a bit additional latency.
+And PCI drivers have no way of setting any paramters. For our IP
+validation environment, which uses a PCIe FPGA platform, we need a way
+to override hardware detected values in order to fully cover hardware
+functionality. Also, on the gadget side, due to inheriting the legacy
+s3c driver behavior, several important parameters are not
+auto-detected at all so they must be explicitly set to fully utilize
+the hardware.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+This patch series cleans up and simplifies the parameter handling in
+the dwc2 driver so that it is easier to set these parameters and
+easier to maintain the driver and support more platforms in the long
+run.
 
-Changes in v2:
-  - Match the node name to the opp-hz property.
+All code should rely on one source for parameters, the hsotg->params
+structure. This structure will be populated on driver probe, with
+values being pulled in from all other sources, while resolving any
+discrepancies and HW incompatibilities.
 
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 38 ++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+The long-term goal is to remove all static and legacy parameters in
+favor of devicetree properties.
 
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-index 73e0acf..bb05f0a 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-@@ -70,14 +70,18 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53", "arm,armv8";
- 			reg = <0 0x000>;
-+			clocks = <&sys_clk 33>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 
- 		cpu1: cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53", "arm,armv8";
- 			reg = <0 0x001>;
-+			clocks = <&sys_clk 33>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 	};
- 
-@@ -86,6 +90,40 @@
- 		method = "smc";
- 	};
- 
-+	cluster0_opp: opp_table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp@245000000 {
-+			opp-hz = /bits/ 64 <245000000>;
-+			clock-latency-ns = <300>;
-+		};
-+		opp@250000000 {
-+			opp-hz = /bits/ 64 <250000000>;
-+			clock-latency-ns = <300>;
-+		};
-+		opp@490000000 {
-+			opp-hz = /bits/ 64 <490000000>;
-+			clock-latency-ns = <300>;
-+		};
-+		opp@500000000 {
-+			opp-hz = /bits/ 64 <500000000>;
-+			clock-latency-ns = <300>;
-+		};
-+		opp@653334000 {
-+			opp-hz = /bits/ 64 <653334000>;
-+			clock-latency-ns = <300>;
-+		};
-+		opp@666667000 {
-+			opp-hz = /bits/ 64 <666667000>;
-+			clock-latency-ns = <300>;
-+		};
-+		opp@980000000 {
-+			opp-hz = /bits/ 64 <980000000>;
-+			clock-latency-ns = <300>;
-+		};
-+	};
-+
- 	clocks {
- 		refclk: ref {
- 			compatible = "fixed-clock";
+However, this patch series is mostly a cleanup and refactoring to
+allow for this. Then, it adds the current gadget-specific parameters
+into the internal params structure. And for host-mode, it adds the DMA
+parameters to the devicetree. Finally, it adds the ability to set
+these properties in the PCI driver.
+
+Later patch series will push more parameters into devicetree and also
+allow for them to be set by the PCI driver via debugfs.
+
+For now, we will maintain backward compatibility with the static
+structures while giving priority to the devicetree bindings. For those
+parameters that were not previously set via the static structures
+(gadget ones, plus any new ones), they can *only* be set through
+devicetree.
+
+Tested on DWC_hsotg IP version 3.30a on Synopsys HAPS platform.
+
+Regards,
+John
+
+
+John Youn (14):
+  usb: dwc2: Remove unnecessary kfree
+  usb: dwc2: Remove unused hardware parameter
+  usb: dwc2: Add params.c file
+  usb: dwc2: Declare the core params struct statically
+  usb: dwc2: Move parameter initialization into params.c
+  usb: dwc2: Remove dwc2_set_all_params function
+  usb: dwc2: Remove unnecessary prototypes
+  usb: dwc2: Rename host_rx_fifo_size hardware parameter
+  usb: dwc2: Move gadget settings into core_params
+  usb: dwc2: Rename the dma_enable parameter to host_dma
+  usb: dwc2: Rename the dma_desc_enable parameter
+  usb: dwc2: Rename the dma_desc_enable_fs parameter
+  Documentation: devicetree: dwc2: Add host DMA binding
+  usb: dwc2: Read host DMA device properties
+
+Vahram Aharonyan (1):
+  usb: dwc2: Add PCI properties
+
+ Documentation/devicetree/bindings/usb/dwc2.txt |    1 +
+ drivers/usb/dwc2/Makefile                      |    1 +
+ drivers/usb/dwc2/core.c                        |  930 +---------------
+ drivers/usb/dwc2/core.h                        |  288 ++---
+ drivers/usb/dwc2/core_intr.c                   |    6 +-
+ drivers/usb/dwc2/gadget.c                      |   95 +-
+ drivers/usb/dwc2/hcd.c                         |  193 ++--
+ drivers/usb/dwc2/hcd_ddma.c                    |    4 +-
+ drivers/usb/dwc2/hcd_intr.c                    |   48 +-
+ drivers/usb/dwc2/hcd_queue.c                   |   18 +-
+ drivers/usb/dwc2/params.c                      | 1376 ++++++++++++++++++++++++
+ drivers/usb/dwc2/pci.c                         |   19 +
+ drivers/usb/dwc2/platform.c                    |  207 +---
+ 13 files changed, 1621 insertions(+), 1565 deletions(-)
+ create mode 100644 drivers/usb/dwc2/params.c
+
 -- 
-1.9.1
+2.10.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
