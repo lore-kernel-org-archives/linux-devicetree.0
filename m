@@ -1,129 +1,37 @@
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH 0/4] IIO wrapper drivers, dpot-dac and envelope-detector
-Date: Thu, 20 Oct 2016 18:37:56 +0100
-Message-ID: <DB170A5C-B172-4B86-80D5-58FD53752ED4@jic23.retrosnub.co.uk>
-References: <1476955562-13673-1-git-send-email-peda@axentia.se> <9b8c0789-566d-67a3-b4f5-dbe4c69f6932@metafoo.de> <8B9238AE-D53C-4A22-84CF-EC42FDA2DFB2@jic23.retrosnub.co.uk>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 1/4] ARM64: dts: meson-gxbb: add MMC support
+Date: Thu, 20 Oct 2016 10:40:53 -0700
+Message-ID: <7h4m467wbe.fsf@baylibre.com>
+References: <1476963777-1804-1-git-send-email-narmstrong@baylibre.com>
+        <1476963777-1804-2-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8B9238AE-D53C-4A22-84CF-EC42FDA2DFB2@jic23.retrosnub.co.uk>
+In-Reply-To: <1476963777-1804-2-git-send-email-narmstrong@baylibre.com> (Neil
+        Armstrong's message of "Thu, 20 Oct 2016 13:42:54 +0200")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>, Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
+> From: Kevin Hilman <khilman@baylibre.com>
+>
+> Add binding and basic support for the SD/eMMC controller on Amlogic
+> S905/GXBB devices.
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 
-On 20 October 2016 18:30:19 BST, Jonathan Cameron <jic23@jic23.retrosnub.co.uk> wrote:
->
->
->On 20 October 2016 13:55:12 BST, Lars-Peter Clausen <lars@metafoo.de>
->wrote:
->>On 10/20/2016 11:25 AM, Peter Rosin wrote:
->>> Hi!
->>> 
->>> These two drivers share the fact that they wrap another iio channel,
->>> and I use the first in combination with the second, which is why I'm
->>> submitting them as a pair.
->>> 
->>> The first driver is a simple wrapper converting an iio dpot into an
->>> iio dac. It only changes the unit and scale. It also does not add
->any
->>> fancy iio buffer support that I don't need. I suppose that can be
->>> added. By someone else :-)
->>> 
->>> Please look over the scale conversion, notably for the fractional
->>log2
->>> case that I don't need myself, so is untested. Maybe I should just
->>> remove it?
->>> 
->>> Also, is there some agreed-upon way to dig out the maximum value
->from
->>> an iio channel? If so, "dpot-dac,max-ohms" can be eliminated from
->the
->>> dt bindings, which would have been nice...
->>
->>Yes, this is something we could really use. In a sense it exists for
->>the
->>devices with buffer-capable channels where there is the real_bits
->field
->>which tells us the data width of the channel. But a dedicated
->mechanism
->>for
->>querying the maximum (and minimum) valid code seems like a useful
->>feature.
->>Not only for in-kernel clients, but also for userspace.
->This was something that was addressed by the rather ancient patch
->series i posted that added 
->an available call back which provided info on range and values for all
->info mask elements.
->Series got buried by there being a lot of precursors but quite a few of
->those have merged since.
->
->Hmm Google won't let me find it on my phone. Was a while back now. Will
->try to get on pc with
-> decent email archive later and dig out a reference.
-http://marc.info/?l=linux-iio&m=138469765309868&w=2 I think...
->
->>
->>> 
->>> I'm also wondering if I'm somehow abusing the regulator? I only
->added
->>> it to get rid of a "dpot-dac,max-voltage" thing from the dt
->bindings.
->>> It feels right though, but maybe I should do more with it than check
->>> its voltage? What?
->>
->>Enable the regulator when it is in use?
->>
->>> 
->>> The second driver (the envelope detector) is more involved. It also
->>> explains why I need the dpot-dac driver. I wanted the envelope
->>> detector to be generic and work with any dac, but I had a dpot...
->>> 
->>> The envelope detector was previously discussed late last year [1],
->>> and this is what I came up with instead of that mess.
->>> 
->>> There are a couple of things to be said about the envelope detector,
->>> one question is where it should live? I placed it in the adc
->>directory,
->>> but maybe it deserves an iio directory of its own? I'm also a bit
->>> worried that the name is a wee bit too generic. But what is a good
->>> name? I don't want it to be too long like dac-comp-envelope-detector
->>> and something like dac-comp-env-det is just unreadable. Naming is
->>> difficult... And suggestions?
->>
->>Yeah, it is a bit tricky. It is a envelope detector built from
->discrete
->>components, but of course there are many more ways to build one. If
->you
->>have
->>a codename for your platform you could use this for the DT compatible
->>string, like 'vendor,foobar-envelope-detector'.
->>
->>> 
->>> Another thing is that I'm not 100% satisfied with the fact that you
->>> have to decide at instantiation if you are going to invert the
->search
->>> or not (search from below). But in order for that to be selectable
->>> at runtime with a channel attribute of some sort, I need to be able
->>> to rebind the interrupt to the other edge and I want to do that
->>> without releasing the irq and grabbing it again (someone might
->>> otherwise steal the irq, making the driver lose the irq all
->>together).
->>> I don't see any API to change the irq trigger condition. Is there
->>> such a thing?
->>> 
->>> Anyway, despite all the above questions and remarks, this works for
->>> me. Please consider applying.
->>
->>In general this series looks really good, good and clear
->implementation
->>as
->>well as documentation. A few minor bits here and there, but that is
->>normal.
+nit: you added a couple things from my original patch, and it's
+customary to make a summary note of changes in the changelog, so before
+applying, I added a line here:
 
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+[narmstrong: added nodes for GX, enabled SDIO on P20x]
+
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+
+Applied to v4.10/dt64
+
+Kevin
