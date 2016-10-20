@@ -1,44 +1,61 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 3/3] MAINTAINERS: add an entry for ZTE ZX DRM driver
-Date: Thu, 20 Oct 2016 15:30:25 +0800
-Message-ID: <1476948625-8521-4-git-send-email-shawn.guo@linaro.org>
-References: <1476948625-8521-1-git-send-email-shawn.guo@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476948625-8521-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Baoyou Xie <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v9 0/2] J-Core timer support
+Date: Thu, 20 Oct 2016 09:32:40 +0200
+Message-ID: <20161020073240.GF1703@mai>
+References: <cover.1476393790.git.dalias@libc.org>
+ <20161017093013.GA1703@mai>
+ <20161020012225.GK19318@brightrain.aerifal.cx>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161020012225.GK19318@brightrain.aerifal.cx>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Add myself as the maintainer of ZTE ZX DRM driver.
+On Wed, Oct 19, 2016 at 09:22:25PM -0400, Rich Felker wrote:
+> On Mon, Oct 17, 2016 at 11:30:13AM +0200, Daniel Lezcano wrote:
+> > On Thu, Oct 13, 2016 at 09:51:06PM +0000, Rich Felker wrote:
+> > > This version of the patch makes the changes requested by Daniel
+> > > Lezcano in review of v8.
+> > > 
+> > > Rich Felker (2):
+> > >   of: add J-Core timer bindings
+> > >   clocksource: add J-Core timer/clocksource driver
+> > > 
+> > >  .../devicetree/bindings/timer/jcore,pit.txt        |  24 ++
+> > >  drivers/clocksource/Kconfig                        |  10 +
+> > >  drivers/clocksource/Makefile                       |   1 +
+> > >  drivers/clocksource/jcore-pit.c                    | 249 +++++++++++++++++++++
+> > >  include/linux/cpuhotplug.h                         |   1 +
+> > >  5 files changed, 285 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/timer/jcore,pit.txt
+> > >  create mode 100644 drivers/clocksource/jcore-pit.c
+> > 
+> > Hi Rich,
+> > 
+> > I applied your patches on my tree.
+> > 
+> > Thanks !
+> 
+> Thanks! Which is your current tree? 
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+http://git.linaro.org/people/daniel.lezcano/linux.git clockevents/4.10
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1cd38a7e0064..907dbd3261c5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4281,6 +4281,13 @@ S:	Maintained
- F:	drivers/gpu/drm/tilcdc/
- F:	Documentation/devicetree/bindings/display/tilcdc/
- 
-+DRM DRIVERS FOR ZTE ZX
-+M:	Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-+L:	dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-+S:	Maintained
-+F:	drivers/gpu/drm/zte/
-+F:	Documentation/devicetree/bindings/display/zte,vou.txt
-+
- DSBR100 USB FM RADIO DRIVER
- M:	Alexey Klimov <klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
--- 
-1.9.1
+> I was looking and couldn't find
+> it. This is the one thing (and it's a boot blocker) keeping Linux on
+> J2 from working out of the box and I'd really love to see it go in
+> 4.9.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Unfortunately it won't happen. v4.9-rc1 is already out. The driver will be
+in v4.10.
+
+If you wanted patches merged for v4.9, they should have been merged in the
+downstream tree before v4.8-rc5, so they hit the upstream tree for v4.9's merge
+window.
+
+  -- Daniel
+
+
