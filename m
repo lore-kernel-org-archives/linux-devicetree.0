@@ -1,18 +1,24 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+From: Rich Felker <dalias@libc.org>
 Subject: Re: [PATCH v9 0/2] J-Core timer support
-Date: Thu, 20 Oct 2016 20:07:12 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1610202005150.4938@nanos>
-References: <cover.1476393790.git.dalias@libc.org> <20161017093013.GA1703@mai> <20161020012225.GK19318@brightrain.aerifal.cx> <20161020073240.GF1703@mai> <20161020151552.GQ19318@brightrain.aerifal.cx> <alpine.DEB.2.20.1610201955230.4938@nanos>
+Date: Thu, 20 Oct 2016 14:29:13 -0400
+Message-ID: <20161020182913.GS19318@brightrain.aerifal.cx>
+References: <cover.1476393790.git.dalias@libc.org>
+ <20161017093013.GA1703@mai>
+ <20161020012225.GK19318@brightrain.aerifal.cx>
+ <20161020073240.GF1703@mai>
+ <20161020151552.GQ19318@brightrain.aerifal.cx>
+ <alpine.DEB.2.20.1610201955230.4938@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <alpine.DEB.2.20.1610201955230.4938@nanos>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 20 Oct 2016, Thomas Gleixner wrote:
+On Thu, Oct 20, 2016 at 07:56:09PM +0200, Thomas Gleixner wrote:
 > Daniel,
 > 
 > On Thu, 20 Oct 2016, Rich Felker wrote:
@@ -35,13 +41,7 @@ On Thu, 20 Oct 2016, Thomas Gleixner wrote:
 > It's hardware enablement and not a new feature, so it's fine to merge it
 > now. I'll pick it up later tonight.
 
-Daniel, it's the top two commits in your 4.10 branch. So it's not a big
-deal to zap them.
+Thanks Thomas. Daniel, sorry if my above reply was harsh and thanks
+again for all your help reviewing and getting this upstream.
 
-Thanks,
-
-	tglx
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rich
