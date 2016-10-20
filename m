@@ -1,74 +1,87 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V6 00/10] dmaengine: qcom_hidma: add MSI interrupt support
-Date: Thu, 20 Oct 2016 14:55:23 -0700
-Message-ID: <37baf7db-1e14-4027-9397-70649e8fa946@codeaurora.org>
-References: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
- <20161020094838.GY2467@localhost>
- <e3cbd6a2-7fac-98ec-74ea-0be88075663c@codeaurora.org>
- <20161020164321.GZ2467@localhost>
- <a4c95bd6-d760-1f02-bbb1-89538037d41e@codeaurora.org>
+From: Sarangdhar Joshi <spjoshi@codeaurora.org>
+Subject: Re: [PATCH 3/4] arm64: dts: msm8996: Add SMEM DT nodes
+Date: Thu, 20 Oct 2016 14:59:49 -0700
+Message-ID: <be72dfec-b502-1888-4495-9a476f91d6b6@codeaurora.org>
+References: <1476989765-7524-1-git-send-email-spjoshi@codeaurora.org>
+ <1476989765-7524-3-git-send-email-spjoshi@codeaurora.org>
+ <20161020195629.GM7509@tuxbot>
+ <1c7504f2-48ca-bcae-3eef-16589513d1aa@codeaurora.org>
+ <20161020215137.GF3145@hector.attlocal.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <a4c95bd6-d760-1f02-bbb1-89538037d41e@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161020215137.GF3145@hector.attlocal.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Trilok Soni <tsoni@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
-
-On 10/20/2016 10:34 AM, Sinan Kaya wrote:
-> On 10/20/2016 9:43 AM, Vinod Koul wrote:
->>> slave-dma       git://git.infradead.org/users/vkoul/slave-dma.git (fetch)
->>>> slave-dma       git://git.infradead.org/users/vkoul/slave-dma.git (push)
->> You seem to have missed topic/qcom which I pushed last night. next would have worked too!!
+On 10/20/2016 02:51 PM, Andy Gross wrote:
+> On Thu, Oct 20, 2016 at 02:18:33PM -0700, Sarangdhar Joshi wrote:
+>> On 10/20/2016 12:56 PM, Bjorn Andersson wrote:
+>>> On Thu 20 Oct 11:56 PDT 2016, Sarangdhar Joshi wrote:
+>>>
+>>>> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>>>
+>>>> Add SMEM and TCSR DT nodes on MSM8996.
+>>>>
+>>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>>> Signed-off-by: Sarangdhar Joshi <spjoshi@codeaurora.org>
+>>>> ---
+>>>> arch/arm64/boot/dts/qcom/msm8996.dtsi | 19 +++++++++++++++++++
+>>>> 1 file changed, 19 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+>>>> index 949b096..0a810f5 100644
+>>>> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+>>>> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+>>>> @@ -169,12 +169,31 @@
+>>>> 		method = "smc";
+>>>> 	};
+>>>>
+>>>> +	smem {
+>>>> +		compatible = "qcom,smem";
+>>>> +
+>>>> +		memory-region = <&smem_mem>;
+>>>> +
+>>>> +		hwlocks = <&tcsr_mutex 3>;
+>>>> +	};
+>>>> +
+>>>> 	soc: soc {
+>>>> 		#address-cells = <1>;
+>>>> 		#size-cells = <1>;
+>>>> 		ranges = <0 0 0 0xffffffff>;
+>>>> 		compatible = "simple-bus";
+>>>>
+>>>> +		tcsr_mutex_regs: syscon@740000 {
+>>>> +			compatible = "syscon";
+>>>> +			reg = <0x740000 0x20000>;
+>>>> +		};
+>>>> +
+>>>> +		tcsr_mutex: hwlock {
+>>>> +			compatible = "qcom,tcsr-mutex";
+>>>> +			syscon = <&tcsr_mutex_regs 0 0x1000>;
+>>>> +			#hwlock-cells = <1>;
+>>>> +		};
+>>>
+>>> Sorry, I got this in the wrong place, the hwlock node should sit outside
+>>> of soc {} - looks like we got this wrong in msm8916 as well.
 >>
-> 
-> OK. Let me pick that up and test.
-> 
+>> Thanks for reviewing the patch. Do you mean to move it under / {}; (i.e.
+>> root)?
+>
+> Yes.  Any node that doesn't have reg properties should go under the root.
+>
 
-It looks like patches were applied out of order.
+Got it. Will update the patch(es) and add cover letter. Thanks.
 
-This is the post order
+>
+> Andy
+>
 
--rw-rw-r-- 1 okaya users 8176 Oct 20 17:44 0010-dmaengine-qcom_hidma-add-MSI-support-for-interrupts.patch
--rw-rw-r-- 1 okaya users 1175 Oct 20 17:44 0009-dmaengine-qcom_hidma-break-completion-processing-on-.patch
--rw-rw-r-- 1 okaya users 4773 Oct 20 17:44 0008-dmaengine-qcom_hidma-protect-common-data-structures.patch
--rw-rw-r-- 1 okaya users 2752 Oct 20 17:44 0007-dmaengine-qcom_hidma-add-a-common-API-to-setup-the-i.patch
--rw-rw-r-- 1 okaya users 3225 Oct 20 17:44 0006-dmaengine-qcom_hidma-bring-out-interrupt-cause.patch
--rw-rw-r-- 1 okaya users 4284 Oct 20 17:44 0005-dmaengine-qcom_hidma-make-pending_tre_count-atomic.patch
--rw-rw-r-- 1 okaya users 1090 Oct 20 17:44 0004-dmaengine-qcom_hidma-configure-DMA-and-MSI-for-OF.patch
--rw-rw-r-- 1 okaya users  959 Oct 20 17:44 0003-of-irq-make-of_msi_configure-accessible-from-modules.patch
--rw-rw-r-- 1 okaya users 1558 Oct 20 17:44 0002-Documentation-DT-qcom_hidma-correct-spelling-mistake.patch
--rw-rw-r-- 1 okaya users 1588 Oct 20 17:44 0001-Documentation-DT-qcom_hidma-update-binding-for-MSI.patch
-
-This is the commit order in topic/dma branch. I added <<< for the patches missing below.
-
-<<< 0010-dmaengine-qcom_hidma-add-MSI-support-for-interrupts.patch
-<<< 0009-dmaengine-qcom_hidma-break-completion-processing-on-.patch
-
-fc73796 dmaengine: qcom_hidma: break completion processing on error
-
-<<< 0008-dmaengine-qcom_hidma-protect-common-data-structures.patch
-
-d3eab50 dmaengine: qcom_hidma: add a common API to setup the interrupt
-
-<<< 0006-dmaengine-qcom_hidma-bring-out-interrupt-cause.patch
-<<< 0005-dmaengine-qcom_hidma-make-pending_tre_count-atomic.patch
-
-9da0be8 dmaengine: qcom_hidma: configure DMA and MSI for OF
-5282c18 of: irq: make of_msi_configure accessible from modules
-13af1c8 Documentation: DT: qcom_hidma: correct spelling mistakes
-ef6661b Documentation: DT: qcom_hidma: update binding for MSI
-
-I also looked at the binary contents of the patches in topic/dma with what I posted
-on v6. They match excluding your Signed off lines.
-
-Sinan
-
+Regards,
+Sarang
 -- 
-Sinan Kaya
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
