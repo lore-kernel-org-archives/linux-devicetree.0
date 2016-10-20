@@ -1,38 +1,38 @@
-From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 13/15] Documentation: devicetree: dwc2: Add host DMA binding
-Date: Wed, 19 Oct 2016 18:22:52 -0700
-Message-ID: <1846cc28dd77ab35cd21994bb746f7685422cfb2.1476926070.git.johnyoun@synopsys.com>
-References: <cover.1476926069.git.johnyoun@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1476926069.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] dt-binding: soc: qcom: smd: Add label property
+Date: Wed, 19 Oct 2016 19:38:10 -0700
+Message-ID: <1476931090-1616-1-git-send-email-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the host-dma property to devicetree. This controls whether to use
-DMA in host mode.
+The label property can be used to specify a name of the edge, for
+consistent naming purposes.
 
-Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index 2c30a54..17f7624 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -25,6 +25,7 @@ Optional properties:
- Refer to phy/phy-bindings.txt for generic phy consumer properties
- - dr_mode: shall be one of "host", "peripheral" and "otg"
-   Refer to usb/generic.txt
-+- host-dma: turn on or off host buffer DMA (1 or 0).
- - g-use-dma: enable dma usage in gadget driver.
- - g-rx-fifo-size: size of rx fifo size in gadget mode.
- - g-np-tx-fifo-size: size of non-periodic tx fifo size in gadget mode.
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
+index 97d9b3e1bf39..ea1dc75ec9ea 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
+@@ -43,6 +43,13 @@ The edge is described by the following properties:
+ 	Definition: the identifier for the remote processor as known by the rest
+ 		    of the system.
+ 
++- label:
++	Usage: optional
++	Value type: <string>
++	Definition: name of the edge, used for debugging and identification
++		    purposes. The node name will be used if this is not
++		    present.
++
+ = SMD DEVICES
+ 
+ In turn, subnodes of the "edges" represent devices tied to SMD channels on that
 -- 
-2.10.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.5.0
