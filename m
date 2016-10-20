@@ -1,51 +1,48 @@
 From: Randy Li <ayaka@soulik.info>
-Subject: [PATCH v9 2/2] ARM: dts: rockchip: Point rk3288 dwc2 usb at the full PHY reset
-Date: Fri, 21 Oct 2016 02:37:07 +0800
-Message-ID: <1476988627-14953-3-git-send-email-ayaka@soulik.info>
-References: <1476988627-14953-1-git-send-email-ayaka@soulik.info>
+Subject: [PATCH v9 0/2] the fixup for the USB HOST1 at rk3288 platform
+Date: Fri, 21 Oct 2016 02:37:05 +0800
+Message-ID: <1476988627-14953-1-git-send-email-ayaka@soulik.info>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1476988627-14953-1-git-send-email-ayaka@soulik.info>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-usb@vger.kernel.org
 Cc: John.Youn@synopsys.com, kishon@ti.com, felipe.balbi@linux.intel.com, mark.rutland@arm.com, devicetree@vger.kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, randy.li@rock-chips.com, Randy Li <ayaka@soulik.info>
 List-Id: devicetree@vger.kernel.org
 
-The "host1" port (AKA the dwc2 port that isn't the OTG port) on rk3288
-has a hardware errata that causes everything to get confused when we get
-a remote wakeup.  We'll use the reset that's in the CRU to reset the
-port when it's in a bad state.
+changelog:
+v9
+ use a work_queue to reset usb phy to prevent access mutex lock at interrupter
+ runtime.
+v8
+  minior fixup
+v7
+  add the forgot dummy phy_reset() for the generic phy is disabled.
+v7
+  Some minor fixup
+v6
+  Send the last two patches
+v5
+  A few modification at style, add the missing doc in the last 
+  commit.
+v4
+  1. Adding the reset callback in struct phy_ops.
+  2. Moving the reset into phy rockchip usb.
+  3. Trying to call a reset when dwc2 wakeup in rk3288.
+v3
+ Rebased from previous commit
+v2
+ Rebased from previous commit
+v1
+ orignal from google
 
-Note that we add the reset to both dwc2 controllers even though only one
-has the errata in case we find some other use for this reset that's
-unrelated to the current hardware errata.  Only the host port gets the
-quirk property, though.
+Randy Li (2):
+  usb: dwc2: assert phy reset when waking up in rk3288 platform
+  ARM: dts: rockchip: Point rk3288 dwc2 usb at the full PHY reset
 
-Signed-off-by: Randy Li <ayaka@soulik.info>
----
- arch/arm/boot/dts/rk3288.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/rk3288.dtsi |  4 ++++
+ drivers/usb/dwc2/core.h       |  1 +
+ drivers/usb/dwc2/core_intr.c  | 11 +++++++++++
+ drivers/usb/dwc2/platform.c   |  9 +++++++++
+ 4 files changed, 25 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 2f814ff..4ef058c 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -859,6 +859,8 @@
- 				clocks = <&cru SCLK_OTGPHY0>;
- 				clock-names = "phyclk";
- 				#clock-cells = <0>;
-+				resets = <&cru SRST_USBOTG_PHY>;
-+				reset-names = "phy-reset";
- 			};
- 
- 			usbphy1: usb-phy@334 {
-@@ -875,6 +877,8 @@
- 				clocks = <&cru SCLK_OTGPHY2>;
- 				clock-names = "phyclk";
- 				#clock-cells = <0>;
-+				resets = <&cru SRST_USBHOST1_PHY>;
-+				reset-names = "phy-reset";
- 			};
- 		};
- 	};
 -- 
 2.7.4
