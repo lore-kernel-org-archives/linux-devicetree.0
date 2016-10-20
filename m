@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 4/4] ARM64: dts: meson-gxbb: Add MMC nodes to Nexbox A95x
-Date: Thu, 20 Oct 2016 13:42:57 +0200
-Message-ID: <1476963777-1804-5-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH 1/4] ARM64: dts: meson-gxbb: add MMC support
+Date: Thu, 20 Oct 2016 13:42:54 +0200
+Message-ID: <1476963777-1804-2-git-send-email-narmstrong@baylibre.com>
 References: <1476963777-1804-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1476963777-1804-1-git-send-email-narmstrong@baylibre.com>
@@ -10,20 +10,163 @@ To: carlo@caione.org, khilman@baylibre.com
 Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for eMMC/SD/SDIO on the Nexbox A95x.
+From: Kevin Hilman <khilman@baylibre.com>
 
+Add binding and basic support for the SD/eMMC controller on Amlogic
+S905/GXBB devices.
+
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 122 +++++++++++++++++++++
- 1 file changed, 122 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi          | 21 +++++
+ .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 88 +++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   | 98 ++++++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 24 +++++-
+ 4 files changed, 230 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-index 399d85f..9696820 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -87,6 +87,61 @@
- 			gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_LOW>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index a6cd953..fd1d0de 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -203,6 +203,27 @@
+ 			#address-cells = <2>;
+ 			#size-cells = <2>;
+ 			ranges = <0x0 0x0 0x0 0xd0000000 0x0 0x200000>;
++
++			sd_emmc_a: mmc@70000 {
++				compatible = "amlogic,meson-gx-mmc", "amlogic,meson-gxbb-mmc";
++				reg = <0x0 0x70000 0x0 0x2000>;
++				interrupts = <GIC_SPI 216 IRQ_TYPE_EDGE_RISING>;
++				status = "disabled";
++			};
++
++			sd_emmc_b: mmc@72000 {
++				compatible = "amlogic,meson-gx-mmc", "amlogic,meson-gxbb-mmc";
++				reg = <0x0 0x72000 0x0 0x2000>;
++				interrupts = <GIC_SPI 217 IRQ_TYPE_EDGE_RISING>;
++				status = "disabled";
++			};
++
++			sd_emmc_c: mmc@74000 {
++				compatible = "amlogic,meson-gx-mmc", "amlogic,meson-gxbb-mmc";
++				reg = <0x0 0x74000 0x0 0x2000>;
++				interrupts = <GIC_SPI 218 IRQ_TYPE_EDGE_RISING>;
++				status = "disabled";
++			};
  		};
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index a45d101..238fbea 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -85,6 +85,56 @@
+ 			default-state = "off";
+ 		};
+ 	};
++
++	tflash_vdd: regulator-tflash_vdd {
++		/*
++		 * signal name from schematics: TFLASH_VDD_EN
++		 */
++		compatible = "regulator-fixed";
++
++		regulator-name = "TFLASH_VDD";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&gpio_ao GPIOAO_12 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	tf_io: gpio-regulator-tf_io {
++		compatible = "regulator-gpio";
++
++		regulator-name = "TF_IO";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++
++		/*
++		 * signal name from schematics: TF_3V3N_1V8_EN
++		 */
++		gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_HIGH>;
++		gpios-states = <0>;
++
++		states = <3300000 0
++			  1800000 1>;
++	};
++
++	vcc1v8: regulator-vcc1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	vcc3v3: regulator-vcc3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
++	};
+ };
+ 
+ &uart_AO {
+@@ -127,3 +177,41 @@
+ &usb1 {
+ 	status = "okay";
+ };
++
++/* SD */
++&sd_emmc_b {
++	status = "okay";
++	pinctrl-0 = <&sdcard_pins>;
++	pinctrl-names = "default";
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <100000000>;
++	disable-wp;
++
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
++
++	vmmc-supply = <&tflash_vdd>;
++	vqmmc-supply = <&tf_io>;
++};
++
++/* eMMC */
++&sd_emmc_c {
++	status = "okay";
++	pinctrl-0 = <&emmc_pins>;
++	pinctrl-names = "default";
++
++	bus-width = <8>;
++	cap-sd-highspeed;
++	max-frequency = <200000000>;
++	non-removable;
++	disable-wp;
++	cap-mmc-highspeed;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
++
++	mmc-pwrseq = <&emmc_pwrseq>;
++	vmmc-supply = <&vcc3v3>;
++	vqmmc-supply = <&vcc1v8>;
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+index 031d69b..86e740f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+@@ -70,6 +70,47 @@
+ 		gpio = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
  	};
 +
 +	vddio_card: gpio-regulator {
@@ -66,26 +209,12 @@ index 399d85f..9696820 100644
 +		compatible = "mmc-pwrseq-emmc";
 +		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
 +	};
-+
-+	wifi32k: wifi32k {
-+		compatible = "pwm-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-+		clocks = <&wifi32k>;
-+		clock-names = "ext_clock";
-+	};
  };
  
- &uart_AO {
-@@ -107,3 +162,70 @@
- 	pinctrl-0 = <&remote_input_ao_pins>;
- 	pinctrl-names = "default";
+ /* This UART is brought out to the DB9 connector */
+@@ -107,3 +148,60 @@
+ &usb1 {
+ 	status = "okay";
  };
 +
 +/* Wireless SDIO Module */
@@ -102,8 +231,6 @@ index 399d85f..9696820 100644
 +
 +	non-removable;
 +	disable-wp;
-+
-+	mmc-pwrseq = <&sdio_pwrseq>;
 +
 +	vmmc-supply = <&vddao_3v3>;
 +	vqmmc-supply = <&vddio_boot>;
@@ -146,13 +273,44 @@ index 399d85f..9696820 100644
 +	vmmc-supply = <&vcc_3v3>;
 +	vqmmc-supply = <&vddio_boot>;
 +};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index aad639a..22940bb 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -349,7 +349,8 @@
+ 			mux {
+ 				groups = "emmc_nand_d07",
+ 				       "emmc_cmd",
+-				       "emmc_clk";
++				       "emmc_clk",
++				       "emmc_ds";
+ 				function = "emmc";
+ 			};
+ 		};
+@@ -545,3 +546,24 @@
+ 		#mbox-cells = <1>;
+ 	};
+ };
 +
-+&pwm_ef {
-+	status = "okay";
-+	pinctrl-0 = <&pwm_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&clkc CLKID_FCLK_DIV4>;
-+	clock-names = "clkin0";
++&sd_emmc_a {
++	clocks = <&clkc CLKID_SD_EMMC_A>,
++		 <&xtal>,
++		 <&clkc CLKID_FCLK_DIV2>;
++	clock-names = "core", "clkin0", "clkin1";
++};
++
++&sd_emmc_b {
++	clocks = <&clkc CLKID_SD_EMMC_B>,
++		 <&xtal>,
++		 <&clkc CLKID_FCLK_DIV2>;
++	clock-names = "core", "clkin0", "clkin1";
++};
++
++&sd_emmc_c {
++	clocks = <&clkc CLKID_SD_EMMC_C>,
++		 <&xtal>,
++		 <&clkc CLKID_FCLK_DIV2>;
++	clock-names = "core", "clkin0", "clkin1";
 +};
 -- 
 1.9.1
