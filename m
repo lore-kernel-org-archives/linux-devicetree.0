@@ -1,129 +1,57 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v3 2/6] pinctrl: sunxi: Support generic binding
-Date: Thu, 20 Oct 2016 15:49:03 +0200
-Message-ID: <519ec867509f8033d9235a61f7979bd698906ab5.1476971126.git-series.maxime.ripard@free-electrons.com>
-References: <cover.f893b02a9f816dad8fad3986672b05c4b211e2b1.1476971126.git-series.maxime.ripard@free-electrons.com>
+From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH] ARM: sti: stih410-clocks: Add PROC_STFE as a critical
+ clock
+Date: Thu, 20 Oct 2016 15:50:10 +0200
+Message-ID: <5d44e490-f6c2-79d4-98da-1d3c7543b1a2@st.com>
+References: <1476804957-24000-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.f893b02a9f816dad8fad3986672b05c4b211e2b1.1476971126.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.f893b02a9f816dad8fad3986672b05c4b211e2b1.1476971126.git-series.maxime.ripard@free-electrons.com>
-References: <cover.f893b02a9f816dad8fad3986672b05c4b211e2b1.1476971126.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476804957-24000-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Our bindings are mostly irrelevant now that we have generic pinctrl
-bindings that cover exactly the same uses cases.
 
-Add support for the new ones, and obviously keep our old binding support in
-order to keep the ABI stable.
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- drivers/pinctrl/sunxi/pinctrl-sunxi.c | 48 ++++++++++++++++++++++++++--
- 1 file changed, 46 insertions(+), 2 deletions(-)
+On 10/18/2016 05:35 PM, Peter Griffin wrote:
+> Once the ST frontend demux HW IP has been enabled, the clock can't
+> be disabled otherwise the system will hang and the board will
+> be unserviceable.
+> 
+> To allow balanced clock enable/disable calls in the driver we use
+> the critical clock infrastructure to take an extra reference on the
+> clock so the clock will never actually be disabled.
+> 
+> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/stih410-clock.dtsi | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/stih410-clock.dtsi b/arch/arm/boot/dts/stih410-clock.dtsi
+> index 8598eff..07c8ef9 100644
+> --- a/arch/arm/boot/dts/stih410-clock.dtsi
+> +++ b/arch/arm/boot/dts/stih410-clock.dtsi
+> @@ -208,7 +208,8 @@
+>  						     "clk-clust-hades",
+>  						     "clk-hwpe-hades",
+>  						     "clk-fc-hades";
+> -				clock-critical = <CLK_ICN_CPU>,
+> +				clock-critical = <CLK_PROC_STFE>,
+> +						 <CLK_ICN_CPU>,
+>  						 <CLK_TX_ICN_DMU>,
+>  						 <CLK_EXT2F_A9>,
+>  						 <CLK_ICN_LMI>,
+> 
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 12650904bd96..ebe2c73d211e 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -149,18 +149,33 @@ static int sunxi_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
- 
- static bool sunxi_pctrl_has_bias_prop(struct device_node *node)
- {
--	return of_find_property(node, "allwinner,pull", NULL);
-+	return of_find_property(node, "bias-pull-up", NULL) ||
-+		of_find_property(node, "bias-pull-down", NULL) ||
-+		of_find_property(node, "bias-disable", NULL) ||
-+		of_find_property(node, "allwinner,pull", NULL);
- }
- 
- static bool sunxi_pctrl_has_drive_prop(struct device_node *node)
- {
--	return of_find_property(node, "allwinner,drive", NULL);
-+	return of_find_property(node, "drive-strength", NULL) ||
-+		of_find_property(node, "allwinner,drive", NULL);
- }
- 
- static int sunxi_pctrl_parse_bias_prop(struct device_node *node)
- {
- 	u32 val;
- 
-+	/* Try the new style binding */
-+	if (of_find_property(node, "bias-pull-up", NULL))
-+		return PIN_CONFIG_BIAS_PULL_UP;
-+
-+	if (of_find_property(node, "bias-pull-down", NULL))
-+		return PIN_CONFIG_BIAS_PULL_DOWN;
-+
-+	if (of_find_property(node, "bias-disable", NULL))
-+		return PIN_CONFIG_BIAS_DISABLE;
-+
-+	/* And fall back to the old binding */
- 	if (of_property_read_u32(node, "allwinner,pull", &val))
- 		return -EINVAL;
- 
-@@ -180,6 +195,21 @@ static int sunxi_pctrl_parse_drive_prop(struct device_node *node)
- {
- 	u32 val;
- 
-+	/* Try the new style binding */
-+	if (!of_property_read_u32(node, "drive-strength", &val)) {
-+		/* We can't go below 10mA ... */
-+		if (val < 10)
-+			return -EINVAL;
-+
-+		/* ... and only up to 40 mA ... */
-+		if (val > 40)
-+			val = 40;
-+
-+		/* by steps of 10 mA */
-+		return rounddown(val, 10);
-+	}
-+
-+	/* And then fall back to the old binding */
- 	if (of_property_read_u32(node, "allwinner,drive", &val))
- 		return -EINVAL;
- 
-@@ -191,6 +221,12 @@ static const char *sunxi_pctrl_parse_function_prop(struct device_node *node)
- 	const char *function;
- 	int ret;
- 
-+	/* Try the generic binding */
-+	ret = of_property_read_string(node, "function", &function);
-+	if (!ret)
-+		return function;
-+
-+	/* And fall back to our legacy one */
- 	ret = of_property_read_string(node, "allwinner,function", &function);
- 	if (!ret)
- 		return function;
-@@ -203,6 +239,14 @@ static const char *sunxi_pctrl_find_pins_prop(struct device_node *node,
- {
- 	int count;
- 
-+	/* Try the generic binding */
-+	count = of_property_count_strings(node, "pins");
-+	if (count > 0) {
-+		*npins = count;
-+		return "pins";
-+	}
-+
-+	/* And fall back to our legacy one */
- 	count = of_property_count_strings(node, "allwinner,pins");
- 	if (count > 0) {
- 		*npins = count;
--- 
-git-series 0.8.10
+Acked-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+
+Applied on sti-dt-for-4.10 branch
+
+Thanks
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
