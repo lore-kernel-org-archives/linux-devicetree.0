@@ -1,109 +1,34 @@
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH 0/4] IIO wrapper drivers, dpot-dac and envelope-detector
-Date: Thu, 20 Oct 2016 18:30:19 +0100
-Message-ID: <8B9238AE-D53C-4A22-84CF-EC42FDA2DFB2@jic23.retrosnub.co.uk>
-References: <1476955562-13673-1-git-send-email-peda@axentia.se> <9b8c0789-566d-67a3-b4f5-dbe4c69f6932@metafoo.de>
+From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V6 00/10] dmaengine: qcom_hidma: add MSI interrupt support
+Date: Thu, 20 Oct 2016 10:34:49 -0700
+Message-ID: <a4c95bd6-d760-1f02-bbb1-89538037d41e@codeaurora.org>
+References: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
+ <20161020094838.GY2467@localhost>
+ <e3cbd6a2-7fac-98ec-74ea-0be88075663c@codeaurora.org>
+ <20161020164321.GZ2467@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9b8c0789-566d-67a3-b4f5-dbe4c69f6932@metafoo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>, Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161020164321.GZ2467@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/20/2016 9:43 AM, Vinod Koul wrote:
+>> slave-dma       git://git.infradead.org/users/vkoul/slave-dma.git (fetch)
+>> > slave-dma       git://git.infradead.org/users/vkoul/slave-dma.git (push)
+> You seem to have missed topic/qcom which I pushed last night. next would have worked too!!
+> 
 
-
-On 20 October 2016 13:55:12 BST, Lars-Peter Clausen <lars@metafoo.de> wrote:
->On 10/20/2016 11:25 AM, Peter Rosin wrote:
->> Hi!
->> 
->> These two drivers share the fact that they wrap another iio channel,
->> and I use the first in combination with the second, which is why I'm
->> submitting them as a pair.
->> 
->> The first driver is a simple wrapper converting an iio dpot into an
->> iio dac. It only changes the unit and scale. It also does not add any
->> fancy iio buffer support that I don't need. I suppose that can be
->> added. By someone else :-)
->> 
->> Please look over the scale conversion, notably for the fractional
->log2
->> case that I don't need myself, so is untested. Maybe I should just
->> remove it?
->> 
->> Also, is there some agreed-upon way to dig out the maximum value from
->> an iio channel? If so, "dpot-dac,max-ohms" can be eliminated from the
->> dt bindings, which would have been nice...
->
->Yes, this is something we could really use. In a sense it exists for
->the
->devices with buffer-capable channels where there is the real_bits field
->which tells us the data width of the channel. But a dedicated mechanism
->for
->querying the maximum (and minimum) valid code seems like a useful
->feature.
->Not only for in-kernel clients, but also for userspace.
-This was something that was addressed by the rather ancient patch series i posted that added 
-an available call back which provided info on range and values for all info mask elements.
-Series got buried by there being a lot of precursors but quite a few of those have merged since.
-
-Hmm Google won't let me find it on my phone. Was a while back now. Will try to get on pc with
- decent email archive later and dig out a reference.
-
->
->> 
->> I'm also wondering if I'm somehow abusing the regulator? I only added
->> it to get rid of a "dpot-dac,max-voltage" thing from the dt bindings.
->> It feels right though, but maybe I should do more with it than check
->> its voltage? What?
->
->Enable the regulator when it is in use?
->
->> 
->> The second driver (the envelope detector) is more involved. It also
->> explains why I need the dpot-dac driver. I wanted the envelope
->> detector to be generic and work with any dac, but I had a dpot...
->> 
->> The envelope detector was previously discussed late last year [1],
->> and this is what I came up with instead of that mess.
->> 
->> There are a couple of things to be said about the envelope detector,
->> one question is where it should live? I placed it in the adc
->directory,
->> but maybe it deserves an iio directory of its own? I'm also a bit
->> worried that the name is a wee bit too generic. But what is a good
->> name? I don't want it to be too long like dac-comp-envelope-detector
->> and something like dac-comp-env-det is just unreadable. Naming is
->> difficult... And suggestions?
->
->Yeah, it is a bit tricky. It is a envelope detector built from discrete
->components, but of course there are many more ways to build one. If you
->have
->a codename for your platform you could use this for the DT compatible
->string, like 'vendor,foobar-envelope-detector'.
->
->> 
->> Another thing is that I'm not 100% satisfied with the fact that you
->> have to decide at instantiation if you are going to invert the search
->> or not (search from below). But in order for that to be selectable
->> at runtime with a channel attribute of some sort, I need to be able
->> to rebind the interrupt to the other edge and I want to do that
->> without releasing the irq and grabbing it again (someone might
->> otherwise steal the irq, making the driver lose the irq all
->together).
->> I don't see any API to change the irq trigger condition. Is there
->> such a thing?
->> 
->> Anyway, despite all the above questions and remarks, this works for
->> me. Please consider applying.
->
->In general this series looks really good, good and clear implementation
->as
->well as documentation. A few minor bits here and there, but that is
->normal.
+OK. Let me pick that up and test.
 
 -- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+Sinan Kaya
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
