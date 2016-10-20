@@ -1,96 +1,48 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2] mtd: nand: Add OX820 NAND Support
-Date: Thu, 20 Oct 2016 11:04:29 +0200
-Message-ID: <d64d3ed6-b02f-2ad8-3df2-91b3e6d22626@baylibre.com>
-References: <20161020084901.6486-1-narmstrong@baylibre.com>
- <20161020110025.11b06090@bbrezillon>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH v3 2/2] ARM: dts: imx6ul: Add DTS for liteBoard
+Date: Thu, 20 Oct 2016 17:04:46 +0800
+Message-ID: <CAJBJ56K53ua4htobTUQN2eQgvdqwtCjpmEXOWEr1YDn-BUmmSw@mail.gmail.com>
+References: <20160930093626.3843-1-m.niestroj@grinn-global.com> <20160930093626.3843-2-m.niestroj@grinn-global.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161020110025.11b06090@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, richard@nod.at, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-oxnas@lists.tuxfamily.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, daniel@makrotopia.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160930093626.3843-2-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/2016 11:00 AM, Boris Brezillon wrote:
-> On Thu, 20 Oct 2016 10:49:01 +0200
-> Neil Armstrong <narmstrong@baylibre.com> wrote:
-> 
->> Add NAND driver to support the Oxford Semiconductor OX820 NAND Controller.
->> This is a simple memory mapped NAND controller with single chip select and
->> software ECC.
->>
->> Acked-by: Rob Herring <robh@kernel.org>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  .../devicetree/bindings/mtd/oxnas-nand.txt         |  41 +++++
->>  drivers/mtd/nand/Kconfig                           |   5 +
->>  drivers/mtd/nand/Makefile                          |   1 +
->>  drivers/mtd/nand/oxnas_nand.c                      | 196 +++++++++++++++++++++
->>  4 files changed, 243 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mtd/oxnas-nand.txt
->>  create mode 100644 drivers/mtd/nand/oxnas_nand.c
->>
->> Changes since v1 http://lkml.kernel.org/r/20161019145523.6763-1-narmstrong@baylibre.com :
->>  - Simplify cmd_ctrl command and drop the ctrl address offset
->>  - Change oxnas_nand struct name to oxnas_nand_ctrl
->>  - Update DT-Bindings example to reflect the ctrl->chip->partitions hierarchy
->>
->> Changes since RFC http://lkml.kernel.org/r/20161018090927.1990-1-narmstrong@baylibre.com :
->>  - Avoid using chip->IO_ADDR*
->>  - Use new DT structure
->>  - Assign a chip for the subnode
->>  - Use the nand_hw_control structure
->>  - Cleanup probe
->>  - Cleanup cmd_ctrl by using a context ctrl offset used in write_bytes
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/oxnas-nand.txt b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
->> new file mode 100644
->> index 0000000..33a77b8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/oxnas-nand.txt
->> @@ -0,0 +1,41 @@
->> +* Oxford Semiconductor OXNAS NAND Controller
->> +
->> +Please refer to nand.txt for generic information regarding MTD NAND bindings.
->> +
->> +Required properties:
->> + - compatible: "oxsemi,ox820-nand"
->> + - reg: Base address and length for NAND mapped memory.
->> +
->> +Optional Properties:
->> + - clocks: phandle to the NAND gate clock if needed.
->> + - resets: phandle to the NAND reset control if needed.
->> +
->> +Example:
->> +
->> +nand: nand-controller@41000000 {
-> 
-> 'nandc:' or 'nand_ctrl:'
-> 
-> Otherwise it may conflict with a NAND chip alias.
-> The rest looks good, so no need to send a new version (I can fix it when
-> applying the patch).
+On Fri, Sep 30, 2016 at 5:36 PM, Marcin Niestroj
+<m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org> wrote:
+> +       regulators {
+> +               compatible = "simple-bus";
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               reg_usb_otg1_vbus: usb_otg1_regulator {
+> +                       compatible = "regulator-fixed";
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&pinctrl_usb_otg1_vbus>;
+> +                       regulator-name = "usb_otg1_vbus";
+> +                       regulator-min-microvolt = <5000000>;
+> +                       regulator-max-microvolt = <5000000>;
+> +                       gpio = <&gpio2 8 GPIO_ACTIVE_LOW>;
+> +               };
+> +       };
 
-OK, thanks, I will fix in the dtsi accordingly.
+Please put it directly under root in the following naming schema to
+save that fake simple-bus container node.
 
-> 
-> One last thing, I saw there was other people owning boards with this
-> controller. Can I get one or two Tested-by?
+        reg_xxx: regulator-xxx {
+                ...
+        }
 
-I would like too, but it seems I'm the only one working upstream for now....
-I hope it will change in near future once there is enough upstream for booting the platform.
+Note: underscore is in label name, while hyphen is in node name.
 
-> 
-> Thanks taking my reviews into account.
+Shawn
 
-Thanks for reviewing !
-
-Neil
-> 
-> Regards,
-> 
-> Boris
-> 
+> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
