@@ -1,17 +1,18 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 7/8] ARM: dts: sun6i: Add A31 LCD0 RGB888 pins
-Date: Thu, 20 Oct 2016 18:01:48 +0200
-Message-ID: <20161020160148.xjcd4b2537stdo4z@lukather>
+Subject: Re: [PATCH v2 6/8] ARM: dts: sun6i: Add device nodes
+ for first display pipeline
+Date: Thu, 20 Oct 2016 18:02:02 +0200
+Message-ID: <20161020160202.kayd4scznbxmtabj@lukather>
 References: <20161020034344.14154-1-wens@csie.org>
- <20161020034344.14154-8-wens@csie.org>
+ <20161020034344.14154-7-wens@csie.org>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="wgp32mxeaalmq3hf"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB56UUPAAKGQE544TT3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="yrdtw53453kaelqj"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBWVUPAAKGQEY5L3I2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20161020034344.14154-8-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <20161020034344.14154-7-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,13 +24,13 @@ Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-Dg
 List-Id: devicetree@vger.kernel.org
 
 
---wgp32mxeaalmq3hf
+--yrdtw53453kaelqj
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Thu, Oct 20, 2016 at 11:43:43AM +0800, Chen-Yu Tsai wrote:
-> The LCD0 controller on the A31 can do RGB output up to 8 bits per
-> channel. Add the pins for RGB888 output.
+On Thu, Oct 20, 2016 at 11:43:42AM +0800, Chen-Yu Tsai wrote:
+> The A31 has 2 parallel display pipelines, which can be intermixed.
+> However the driver currently only supports one of them.
 > 
 > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
@@ -40,4 +41,4 @@ Maxime
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---wgp32mxeaalmq3hf--
+--yrdtw53453kaelqj--
