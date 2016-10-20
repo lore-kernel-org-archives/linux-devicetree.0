@@ -1,46 +1,96 @@
-From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 23/23] phy: Add support for Qualcomm's USB HS phy
-Date: Thu, 20 Oct 2016 16:20:38 -0700
-Message-ID: <147700563857.2550.16732518381302920183@sboyd-linaro>
-References: <20161018015636.11701-1-stephen.boyd@linaro.org>
- <20161018015636.11701-24-stephen.boyd@linaro.org>
+From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC] of: platform: Drop OF_POPULATED_BUS check from
+ of_platform_notify()
+Date: Thu, 20 Oct 2016 12:52:52 +0200
+Message-ID: <be2ad3ad-00be-d50d-e158-299b144b25b3@nokia.com>
+References: <11c8a7bd-142c-d016-e24b-34d1edbdb8cf@nokia.com>
+ <CAL_JsqJWBXqs44vHu4XHAiZhOEghg9X=Q0fvUKHaCVCPnd7kVw@mail.gmail.com>
+ <2e40cd48-35f0-1efa-ee17-566aa728e857@nokia.com>
+ <CAL_Jsq+FedCOU_w4p+ouqjdDmxJ6dzW4Gq=8vnCx3TUk77-zwA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161018015636.11701-24-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+FedCOU_w4p+ouqjdDmxJ6dzW4Gq=8vnCx3TUk77-zwA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Stephen Boyd (2016-10-17 18:56:36)
-> +
-> +static int
-> +qcom_usb_hs_phy_vbus_notifier(struct notifier_block *nb, unsigned long e=
-vent,
-> +                             void *ptr)
-> +{
-> +       struct qcom_usb_hs_phy *uphy;
-> +       int is_host;
-> +       u8 addr;
-> +
-> +       uphy =3D container_of(nb, struct qcom_usb_hs_phy, vbus_notify);
-> +       is_host =3D extcon_get_cable_state_(uphy->id_edev, EXTCON_USB_HOS=
-T);
+Hello Rob!
 
-Please don't apply this patch. This call now deadlocks on v4.9-rc1
-because of how extcon_get_cable_state_() now grabs a lock that is
-already held here when we're inside the notifier. It's not really
-required that we grab the lock in extcon there, but this has exposed a
-flaw in the logic anyway. We don't know if the id pin is going to toggle
-before or after this function is called, so we should really keep track
-of both vbus and id state in this driver and then do the same ulpi
-writes from two different notifiers for both vbus and id pin. We would
-be duplicating work sometimes, but that's pretty much the best solution
-I can come up with. Otherwise it's racy.
+On 08/09/16 17:28, Rob Herring wrote:
+>> On 08/09/16 16:17, Rob Herring wrote:
+>>>> >>> The comment to OF_POPULATED_BUS says "of_platform_populate recursed to children
+>>>>> >>> > of this node". Consider the following structure:
+>>>>> >>> >
+>>>>> >>> >         ocp {
+>>>>> >>> >                 compatible = "simple-bus";
+>>>>> >>> >                 ranges;
+>>>>> >>> >                 ...
+>>>>> >>> >                 l4_wkup: l4_wkup@44c00000 {
+>>>>> >>> >                         compatible = "ti,am3-l4-wkup", "simple-bus";
+>>>>> >>> >                         ranges = <0 0x44c00000 0x280000>;
+>>>>> >>> >                         ...
+>>>>> >>> >                         wkup_m3: wkup_m3@100000 {
+>>>>> >>> >                                 compatible = "ti,am3352-wkup-m3";
+>>>>> >>> >                                 ...
+>>>>> >>> >                         }
+>>>>> >>> >                 }
+>>>>> >>> >         }
+>>>>> >>> >
+>>>>> >>> > If one DT overlay adds "ocp" node without children then of_platform_notify()
+>>>>> >>> > creates a platform device, but doesn't set OF_POPULATED_BUS. If second overlay
+>>>>> >>> > tries to populate children of "ocp" node, corresponding platform devices are
+>>>>> >>> > not instantiated because of check for OF_POPULATED_BUS flag. If the above
+>>>>> >>> > example structure is built of several overlays, of_platform_populate() is not
+>>>>> >>> > involved here at all, so maybe OF_POPULATED_BUS requirement is wrong.
+>>> >> Your example seems a bit made up. While you can craft base DTs and
+>>> >> overlays with any random split between them, I don't necessarily think
+>>> >> we want to support that. There will likely be cases which we say can
+>>> >> only be applied early in boot or we limit which nodes can be overlay
+>>> >> targets for overlays applied from userspace.
+>> >
+>> > Yes, I had to construct an example out of the well-known Beaglebone DT pieces,
+>> > the real use case will only confuse the public.
+>> >
+>> > In general I don't understand why my example is so bizarre, it basically shows, you
+>> > cannot apply an overlay above overlay: the devices will not be registered and actually
+>> > because of the bogus check. Imagine the well known Beagle: you can construct a bone with
+>> > whatever SPI/I2C bus controller. On top of it you can sandwich a board with I2C-driven
+>> > GPIO extenders. Is it absolute unrealistic?
+> That sounds like a valid example, but that was not the example you
+> gave. I would expect that adding an I2C slave device is a working
+> usecase.
+> 
+>> > There is full support of multilevel overlays. And just one bug preventing it from working
+>> > properly. Do we really want it?
+> You're only asking if the hunk should be removed. The short answer is
+> I don't know just looking at this patch. Show me a real overlay that
+> is broken and this change fixes things. Or add a unit test that
+> demonstrates the problem. And I also need to know the change wouldn't
+> break other users.
 
+Now I see that dropping this hunk caused more problems (I2C and SPI devices are happily registered
+as platform, because their callbacks are called first). It's actually the right thing to do, to
+check for the parent to be healthy platform bus, but the problem is the creation of the devices
+from overlays, it's not possible to create platform buses, only devices. 
+
+I'm going to send another patch addressing this problem in a minute.
+
+> I think there may be bigger problems here. The point of this flag is
+> to make depopulate calls only act on nodes that a prior populate call
+> acted on. If we populate the base tree, add an overlay, populate the
+> overlay nodes, we have no way to ensure that of_platform_depopulate
+> called on a parent node in the base DT would not descend into nodes
+> from an overlay. We probably need something better like an owner
+> (distinct from the struct device) assigned to each node and only the
+> owner can depopulate nodes.
+
+-- 
+Best regards,
+Alexander Sverdlin.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
