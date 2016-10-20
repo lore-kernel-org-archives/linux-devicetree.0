@@ -1,126 +1,47 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/3] ARM: bus: da8xx-syscfg: new driver
-Date: Thu, 20 Oct 2016 21:05:50 +0300
-Message-ID: <1867292.F3aGJTmS2t@avalon>
-References: <1476721850-454-1-git-send-email-bgolaszewski@baylibre.com> <2278105.geKhb8xoNC@avalon> <7h8ttj6jqo.fsf@baylibre.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH v9 0/2] J-Core timer support
+Date: Thu, 20 Oct 2016 20:07:12 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1610202005150.4938@nanos>
+References: <cover.1476393790.git.dalias@libc.org> <20161017093013.GA1703@mai> <20161020012225.GK19318@brightrain.aerifal.cx> <20161020073240.GF1703@mai> <20161020151552.GQ19318@brightrain.aerifal.cx> <alpine.DEB.2.20.1610201955230.4938@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7h8ttj6jqo.fsf@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.20.1610201955230.4938@nanos>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
-
-On Thursday 20 Oct 2016 09:57:51 Kevin Hilman wrote:
-> Laurent Pinchart <laurent.pinchart@ideasonboard.com> writes:
-> > On Wednesday 19 Oct 2016 10:26:57 Bartosz Golaszewski wrote:
-> >> 2016-10-18 22:49 GMT+02:00 Laurent Pinchart:
-> >>> On Monday 17 Oct 2016 18:30:49 Bartosz Golaszewski wrote:
-> >>>> Create the driver for the da8xx System Configuration and implement
-> >>>> support for writing to the three Master Priority registers.
-> >>>> 
-> >>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >> 
-> >> [snip]
-> >> 
-> >>>> +
-> >>>> +Documentation:
-> >>>> +OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh82c/spruh82c.pdf
-> >>>> +
-> >>>> +Required properties:
-> >>>> +
-> >>>> +- compatible:                "ti,da850-syscfg"
-> >>> 
-> >>> Don't you need a reg property ?
-> >> 
-> >> Yes, Kevin already pointed that out. I'll add it in v2. Same for [1/3].
-> >> 
-> >>>> +Optional properties:
-> >>>> +
-> >>>> +The below properties are used to specify the priority of master
-> >>>> peripherals.
-> >>>> +They must be between 0-7 where 0 is the highest priority and 7 is the
-> >>>> lowest.
-> >>>> +
-> >>>> +- ti,pri-arm-i:              ARM_I port priority.
-> >>>> +
-> >>>> +- ti,pri-arm-d:              ARM_D port priority.
-> >>>> +
-> >>>> +- ti,pri-upp:                uPP port priority.
-> >>>> +
-> >>>> +- ti,pri-sata:               SATA port priority.
-> >>>> +
-> >>>> +- ti,pri-pru0:               PRU0 port priority.
-> >>>> +
-> >>>> +- ti,pri-pru1:               PRU1 port priority.
-> >>>> +
-> >>>> +- ti,pri-edma30tc0:  EDMA3_0_TC0 port priority.
-> >>>> +
-> >>>> +- ti,pri-edma30tc1:  EDMA3_0_TC1 port priority.
-> >>>> +
-> >>>> +- ti,pri-edma31tc0:  EDMA3_1_TC0 port priority.
-> >>>> +
-> >>>> +- ti,pri-vpif-dma-0: VPIF DMA0 port priority.
-> >>>> +
-> >>>> +- ti,pri-vpif-dma-1: VPIF DMA1 port priority.
-> >>>> +
-> >>>> +- ti,pri-emac:               EMAC port priority.
-> >>>> +
-> >>>> +- ti,pri-usb0cfg:    USB0 CFG port priority.
-> >>>> +
-> >>>> +- ti,pri-usb0cdma:   USB0 CDMA port priority.
-> >>>> +
-> >>>> +- ti,pri-uhpi:               HPI port priority.
-> >>>> +
-> >>>> +- ti,pri-usb1:               USB1 port priority.
-> >>>> +
-> >>>> +- ti,pri-lcdc:               LCDC port priority.
-> >>> 
-> >>> I'm afraid this looks more like system configuration than hardware
-> >>> description to me.
-> >> 
-> >> While you're certainly right, this approach is already implemented in
-> >> several other memory and bus drivers and it was also suggested by
-> >> Sekhar in one of the tilcdc rev1 threads. There's also no real
-> >> alternative that I know of.
+On Thu, 20 Oct 2016, Thomas Gleixner wrote:
+> Daniel,
+> 
+> On Thu, 20 Oct 2016, Rich Felker wrote:
+> > On Thu, Oct 20, 2016 at 09:32:40AM +0200, Daniel Lezcano wrote:
+> > > Unfortunately it won't happen. v4.9-rc1 is already out. The driver will be
+> > > in v4.10.
+> > > 
+> > > If you wanted patches merged for v4.9, they should have been merged in the
+> > > downstream tree before v4.8-rc5, so they hit the upstream tree for v4.9's merge
+> > > window.
 > > 
-> > The fact that other drivers get it wrong is no excuse for copying them :-)
+> > I've been trying to get what's essentially the same patch merged since
+> > before the 4.8 merge window. I would be more understanding if this
+> > were something new that's not upstream, but broken support for the
+> > hardware (that, from a user perspective, is a bug, since they can
+> > select the target but then it doesn't boot) has already been in one
+> > release due to missing core drivers, and the irq patches have already
+> > been merged in this release (post-rc1 even).
 > 
-> What exactly is "wrong" with the way other drivers are doing it?
-> 
-> I'm sure there may be other ideas, and possibly some better ones, but
-> that doesn't make it wrong, and doesn't change he fact that the kernel
-> has existing drivers SoC-bus-specific system performance knobs like
-> this.
+> It's hardware enablement and not a new feature, so it's fine to merge it
+> now. I'll pick it up later tonight.
 
-It's not the drivers I'm concerned about, but the DT bindings. The proposed DT 
-binding contains a large number of properties that don't describe the hardware 
-but contain configuration data. If they're accepted you'll have to carry them 
-forward forever, while they should be controlled in a more flexible way.
+Daniel, it's the top two commits in your 4.10 branch. So it's not a big
+deal to zap them.
 
-> >>> There was a BoF session about how to support this kind of performance
-> >>> knobs at ELCE last week:
-> >>> https://openiotelceurope2016.sched.org/event/7rss/bof-linux-device-perf
-> >>> ormance-framework-michael-turquette-baylibre :-)
-> >> 
-> >> Unfortunately it was just a discussion about potential approaches -
-> >> there's no code yet.
-> > 
-> > Patches are welcome ;-)
-> 
-> Any generic perf framework will have to build on the HW-specifics of
-> individual busses, so IMO, the lack of a generic performance
-> framework/knobs should not be a reason to block the inclusion of any
-> bus-specific knobs.
-> 
-> I guess this ultimately would go though arm-soc, so I've added Arnd &
-> Olof to the thread.
+Thanks,
 
--- 
-Regards,
-
-Laurent Pinchart
+	tglx
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
