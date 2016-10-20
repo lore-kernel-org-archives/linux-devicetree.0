@@ -1,66 +1,68 @@
-From: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 2/4] iio: dpot-dac: DAC driver based on a digital
- potentiometer
-Date: Thu, 20 Oct 2016 16:08:55 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1610201604280.22512@pmeerw.net>
-References: <1476955562-13673-1-git-send-email-peda@axentia.se> <1476955562-13673-3-git-send-email-peda@axentia.se> <alpine.DEB.2.02.1610201254370.19919@pmeerw.net> <22d07498-860d-29f8-07ef-ae2f5df6ab25@axentia.se>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] soc: qcom: Add SoC info driver
+Date: Thu, 20 Oct 2016 15:09:11 +0100
+Message-ID: <20161020140911.GH10234@leverpostej>
+References: <1476972386-28655-1-git-send-email-kimran@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <22d07498-860d-29f8-07ef-ae2f5df6ab25-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1476972386-28655-1-git-send-email-kimran-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Imran Khan <kimran-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-> >> +struct dpot_dac {
-> >> +	struct regulator *vref;
-> >> +	struct iio_channel *dpot;
-> > 
-> > const
+On Thu, Oct 20, 2016 at 07:36:22PM +0530, Imran Khan wrote:
+> The SoC info driver provides information such as Chip ID,
+> Chip family, serial number and other such details about
+> Qualcomm SoCs.
 > 
-> const? devm_iio_channel_get doesn't return a const iio_channel. What
-> am I missing?
-
-ah, I mixed this up with iio_chan_spec
- 
-> >> +	u32 max_ohms;
-> >> +};
-> >> +
-> >> +static const struct iio_chan_spec dpot_dac_iio_channel = {
-> >> +	.type = IIO_VOLTAGE,
-> >> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
-> >> +			    | BIT(IIO_CHAN_INFO_SCALE),
-> >> +	.output = 1,
-> >> +};
-> >> +
-> >> +static int dpot_dac_read_raw(struct iio_dev *indio_dev,
-> >> +			     struct iio_chan_spec const *chan,
-> >> +			     int *val, int *val2, long mask)
-> >> +{
-> >> +	struct dpot_dac *dac = iio_priv(indio_dev);
-> >> +	int ret;
-> >> +	unsigned long long tmp;
-> > 
-> > s64 (which is used to cast below)
+> Signed-off-by: Imran Khan <kimran-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/soc/qcom/qcom,socinfo.txt  |   18 +
+>  drivers/soc/qcom/socinfo.c                         | 1173 ++++++++++++++++++++
+>  include/linux/soc/qcom/socinfo.h                   |  198 ++++
+>  3 files changed, 1389 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,socinfo.txt
+>  create mode 100644 drivers/soc/qcom/socinfo.c
+>  create mode 100644 include/linux/soc/qcom/socinfo.h
 > 
-> I assume that what you really want is to get rid of the cast, and
-> that you aren't really bothered if tmp is ull or s32, right? Given
-> that assumption, I'm just dropping the cast instead. The LL specifier
-> on the constant should promote *val anyway.
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,socinfo.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,socinfo.txt
+> new file mode 100644
+> index 0000000..1f26299
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,socinfo.txt
+> @@ -0,0 +1,18 @@
+> +Qualcomm SoC Information (socinfo) Driver binding
+> +
+> +This binding describes the Qualcomm SoC Information Driver, which provides
+> +information such as chip id, chip family, serial number and other such
+> +details about Qualcomm SoCs.
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be "qcom,socinfo"
+> +
+> += EXAMPLE
+> +
+> +The following example represents a socinfo node.
+> +
+> +	socinfo {
+> +		compatible = "qcom,socinfo";
+> +	};
 
-what I meant to pick upon was mixing
-s64 with unsigned long long with LL in the code that follows
+Binding should describe *hardware*, not *drivers*.
 
-anything simpler and more consistent would be good
+This clearly does not describe a paerticular piece of hardware, and as
+such does not make sense.
 
-thanks, p.
+If this is trying to describe some paritcular hardware, please describe
+that in the binding explicitly.
 
--- 
-
-Peter Meerwald-Stadler
-+43-664-2444418 (mobile)
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
