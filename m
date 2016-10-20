@@ -1,77 +1,99 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 04/11] dt-binding: remoteproc: wcnss: Allow describing smd edge
-Date: Wed, 19 Oct 2016 19:40:05 -0700
-Message-ID: <1476931212-1806-5-git-send-email-bjorn.andersson@linaro.org>
-References: <1476931212-1806-1-git-send-email-bjorn.andersson@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1476931212-1806-1-git-send-email-bjorn.andersson@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Sarangdhar Joshi <spjoshi@codeaurora.org>, linux-arm-msm@vger.kernel.org
+From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC V2 PATCH 10/12] arm64: dts: msm8994 issolate non standard
+ bootloader/LK entries
+Date: Wed, 19 Oct 2016 22:17:12 -0500
+Message-ID: <20161020031712.GD3145@hector.attlocal.net>
+References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
+ <2149904.D2eaQZN3bA@wuerfel>
+ <17447be1-4357-0eca-a242-69576d3e2799@redhat.com>
+ <4976066.k14mpQt0HJ@wuerfel>
+ <20161019214643.GC3145@hector.attlocal.net>
+ <CAL_Jsq+wjnEByg2vgx-P+bLJaQm+s=UX7nj=KwviagnQDG_3hQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+wjnEByg2vgx-P+bLJaQm+s=UX7nj=KwviagnQDG_3hQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, git-LJ92rlH3Dns@public.gmane.org, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allow the associated smd edge to be described within the wcnss
-remoteproc node. This creates a bond between the remoteproc and the
-associated smd channels and devices, showing the interaction between the
-two parts and provides both a natural reference to the other.
+On Wed, Oct 19, 2016 at 08:07:25PM -0500, Rob Herring wrote:
+> On Wed, Oct 19, 2016 at 4:46 PM, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Wed, Oct 19, 2016 at 04:56:20PM +0200, Arnd Bergmann wrote:
+> >> On Wednesday, October 12, 2016 5:59:41 PM CEST Jeremy McNicoll wrote:
+> >> > On 2016-10-12 3:39 AM, Arnd Bergmann wrote:
+> >> > > On Tuesday, October 11, 2016 7:41:22 PM CEST Rob Herring wrote:
+> >> > >> On Sat, Oct 1, 2016 at 9:38 PM, Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> >> > >>> These non standard DT entries need to be cast aside as to not
+> >> > >>> pollute the main device tree bindings.  Without these essential
+> >> > >>> DT items the bootloader/LK will not pass control over to the kernel
+> >> > >>> and thus never boot.
+> >> > >>
+> >> > >> I discussed this with Stephen recently. I'm okay with leaving these on
+> >> > >> boards that have no chance of getting updated bootloaders to use the
+> >> > >> compatible string instead. Having to use dtbTool is far worse than a
+> >> > >> couple of extra properties IMO. I reserve the right to complain if new
+> >> > >> stuff continues to use these though.
+> >> > >>
+> >> > >>> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >> > >>> ---
+> >> > >>>  .../arm64/boot/dts/qcom/msm8994-angler-rev-101.dts |  1 -
+> >> > >>>  arch/arm64/boot/dts/qcom/msm8994.dtsi              |  3 +--
+> >> > >>>  .../boot/dts/qcom/nexus6p_bootloader_bits.dtsi     | 24 ++++++++++++++++++++++
+> >> > >>
+> >> > >> Just put this into the board file rather than yet another include.
+> >> > >
+> >> > > The suggestion that I had was to have two .dts files: the normal
+> >> > > one without these properties, and another .dts file including the
+> >> > > first but adding these three for compatibility with the legacy
+> >> > > bootloaders.
+> >> > >
+> >> >
+> >> (sorry for the late reply, I thought I had replied already but
+> >> couldn't find that in the archives when I saw I still had this
+> >> reply open)
+> >>
+> >> > So I did it backwards from what you had suggested?
+> >> > Based on my discussion with, (cant seem to recall) my understanding
+> >> > was that we simply wanted to have these 3 bootloader specific entries
+> >> > in another file.
+> >>
+> >> Right
+> >>
+> >> What I would like to see here is two separate .dtb files, one
+> >> with the hack and one without it, so we have a migration path
+> >> for the machines that eventually get a boot loader with proper
+> >> DT support.
+> >
+> > So my main beef with this is that it is kind of onerous.  The machines that
+> > require this will never get a bootloader change.  So we'll be adding 2 dtb
+> > targets and only ever use one.
+> >
+> > It's much simpler in my opinion to just add the msm-id to the files that need it
+> > right now..... comment it with something like 'this is because of the Qualcomm
+> > braindead bootloader requirements' and move on.
+> >
+> > If there was any hope of a new bootloader for non-bleeding edge boards, I'd
+> > wholeheartedly agree with you Arnd.  But there isn't, and there won't be.
+> 
+> Makes sense to me for things like Nexus phones here. What about DB410
+> for example? Is there hope for a fix there? My bootloader is only a
+> couple of months old and needs the properties still.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- .../bindings/remoteproc/qcom,wcnss-pil.txt         | 30 ++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+There won't be a fix for the 410c.  We barely got them to respin to use PSCI.
+Stephen can correct me if I am wrong on this.
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
-index 0d2361ebe3d7..d420f84ddfb0 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
-@@ -60,8 +60,8 @@ on the Qualcomm WCNSS core.
- 		    see ../reserved-memory/reserved-memory.txt
- 
- = SUBNODES
--A single subnode of the WCNSS PIL describes the attached rf module and its
--resource dependencies.
-+A required subnode of the WCNSS PIL is used to describe the attached rf module
-+and its resource dependencies. It is described by the following properties:
- 
- - compatible:
- 	Usage: required
-@@ -90,6 +90,11 @@ resource dependencies.
- 	Definition: reference to the regulators to be held on behalf of the
- 		    booting of the WCNSS core
- 
-+
-+The wcnss node can also have an subnode named "smd-edge" that describes the SMD
-+edge, channels and devices related to the WCNSS.
-+See ../soc/qcom/qcom,smd.txt for details on how to describe the SMD edge.
-+
- = EXAMPLE
- The following example describes the resources needed to boot control the WCNSS,
- with attached WCN3680, as it is commonly found on MSM8974 boards.
-@@ -129,4 +134,25 @@ pronto@fb204000 {
- 		vddpa-supply = <&pm8941_l19>;
- 		vdddig-supply = <&pm8941_s3>;
- 	};
-+
-+	smd-edge {
-+		interrupts = <0 142 1>;
-+
-+		qcom,ipc = <&apcs 8 17>;
-+		qcom,smd-edge = <6>;
-+		qcom,remote-pid = <4>;
-+
-+		label = "pronto";
-+
-+		wcnss {
-+			compatible = "qcom,wcnss";
-+			qcom,smd-channels = "WCNSS_CTRL";
-+
-+			qcom,mmio = <&pronto>;
-+
-+			bt {
-+				compatible = "qcom,wcnss-bt";
-+			};
-+		};
-+	};
- };
--- 
-2.5.0
+If this is fixed, it would be 8996+.  If..........
+
+So this means introducing the msm-id's for the boards that currently require it,
+and for the boards that will require it in the future.  And this would stay in
+effect until the bootloader is able to parse the compatible strings or figure
+this out without the msm-ids.
+
+Andy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
