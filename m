@@ -1,64 +1,111 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 0/11] Add R8A7743/SK-RZG1M board support
-Date: Thu, 20 Oct 2016 11:56:57 +0200
-Message-ID: <CAMuHMdW7fwhwKejne6p7E8FNjhSFCPui0T7qLqMCs4DZ4BaxZg@mail.gmail.com>
-References: <2056698.ncAHq8vRQ3@wasted.cogentembedded.com> <5be99d76-a082-129b-1aa6-b6f7402ae79b@cogentembedded.com>
- <20161012080905.GD31183@verge.net.au> <cea44556-a578-fb54-11b8-f21f5b991caa@cogentembedded.com>
- <20161020092459.GM4612@verge.net.au>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: [PATCH 3/4] dt-bindings: iio: document envelope-detector bindings
+Date: Thu, 20 Oct 2016 11:26:01 +0200
+Message-ID: <1476955562-13673-4-git-send-email-peda@axentia.se>
+References: <1476955562-13673-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20161020092459.GM4612@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476955562-13673-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+---
+ .../bindings/iio/adc/envelope-detector.txt         | 65 ++++++++++++++++++++++
+ MAINTAINERS                                        |  6 ++
+ 2 files changed, 71 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
 
-On Thu, Oct 20, 2016 at 11:24 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Wed, Oct 12, 2016 at 11:29:56AM +0300, Sergei Shtylyov wrote:
->> On 10/12/2016 11:09 AM, Simon Horman wrote:
->> >>>  Here's the set of 11 patches against Simon Horman's 'renesas.git' repo's
->> >>>'renesas-devel-20161003-v4.8' tag. I'm adding the device tree support for
->> >>>the R8A7743-based SK-RZG1M board. The SoC is close to R8A7791 and the board
->> >>>seems identical to the R8A7791/Porter board. The device tree patches depend on
->> >>>the R8A7743 CPG/MSSR driver series just posted in order to compile and work.
->> >>
->> >>   Forgot to mention that this version causes a regression with the sh_eth
->> >>driver (well, actually with phylib): since IRQC now gets a deferred probing,
->> >>PHY IRQ doesn't work anymore -- phylib falls back to polling.
->> >
->> >Is there a resolution to that problem?
->>
->>    Geert has posted his IRQC driver patch recently. Not sure if it was
->> intended for merging but it solves the issue.
->
-> Ok. I think it is ok to merge support for a new board even if there are
-> problems as its not regressing (can't break something that previously
-> didn't exist imho). But of course it would be best if things did work.
->
-> Geert, do you have any comments on the relevance of your IRQC driver patch?
-
-That patch is relevant, until the MDIO framework is fixed.
-It will start to matter more when migrating more (R-Car Gen2) SoCs to the new
-CPG/MSSR driver.
-
-It would be good to give that patch some testing on more R-Car Gen2 boards
-with NFS root (difficult for me with remote access and network latencies).
-
-After that I can submit it to the irqchip maintainers, as I don't believe MDIO
-will be fixed soonish...
-
-Thanks for testing ;-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/Documentation/devicetree/bindings/iio/adc/envelope-detector.txt b/Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
+new file mode 100644
+index 000000000000..0e26299516fd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
+@@ -0,0 +1,65 @@
++Bindings for ADC envelope detector using a DAC and a comparator
++
++The DAC is used to find the peak level of an alternating voltage input
++signal by a binary search using the output of a comparator wired to
++an interrupt pin. Like so:
++                          _
++                         | \
++    input +------>-------|+ \
++                         |   \
++           .-------.     |    }---.
++           |       |     |   /    |
++           |    dac|-->--|- /     |
++           |       |     |_/      |
++           |       |              |
++           |       |              |
++           |    irq|------<-------'
++           |       |
++           '-------'
++
++Required properties:
++- compatible: Should be "envelope-detector"
++- io-channels: Channel node of the dac to be used for comparator input.
++- io-channel-names: Should be "dac".
++- interrupt specification for one client interrupt,
++  see ../../interrupt-controller/interrupts.txt for details.
++- interrupt-names: Should be "comp".
++- envelope-detector,dac-max: The maximum raw input value for the dac.
++- envelope-detector,comp-interval-ms: How long to wait for the comparator
++  to trigger before moving on to another DAC level. This interval needs to
++  relate to the lowest possible frequency of the above input signal.
++
++Optional properties:
++- envelope-detector,inverted: If the input signal is centered around the
++  dac-max voltage (instead of zero), this property causes the detector to
++  search for the lowest DAC value that does not triggers the comparator
++  (instead of the highest). The result is also inverted so that a lower DAC
++  reading yields a higher voltage value.
++
++
++Example:
++
++	&spi {
++		dac: ad7303@4 {
++			compatible = "adi,ad7303";
++			reg = <4>;
++			spi-max-frequency = <10000000>;
++			Vdd-supply = <&vdd_supply>;
++			adi,use-external-reference;
++			REF-supply = <&vref_supply>;
++			#io-channel-cells = <1>;
++		};
++	};
++
++	envelope-detector {
++		compatible = "envelope-detector";
++		io-channels = <&dac 0>;
++		io-channel-names = "dac";
++
++		interrupt-parent = <&gpio>;
++		interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-names = "comp";
++
++		envelope-detector,dac-max = <255>;
++		envelope-detector,comp-interval-ms = <50>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8c8aae24b96b..4b6f6ec1b703 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6118,6 +6118,12 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
+ F:	drivers/iio/dac/dpot-dac.c
+ 
++IIO ENVELOPE DETECTOR
++M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
++L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
++
+ IIO SUBSYSTEM AND DRIVERS
+ M:	Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+ R:	Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+-- 
+2.1.4
