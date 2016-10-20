@@ -1,38 +1,39 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] mtd: s3c2410: parse the device configuration from
- OF node
-Date: Thu, 20 Oct 2016 20:57:45 +0300
-Message-ID: <20161020175745.GC7119@kozik-lap>
-References: <1476906725-22613-1-git-send-email-sergio.prado@e-labworks.com>
- <1476906725-22613-4-git-send-email-sergio.prado@e-labworks.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v9 0/2] J-Core timer support
+Date: Thu, 20 Oct 2016 19:56:09 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1610201955230.4938@nanos>
+References: <cover.1476393790.git.dalias@libc.org> <20161017093013.GA1703@mai> <20161020012225.GK19318@brightrain.aerifal.cx> <20161020073240.GF1703@mai> <20161020151552.GQ19318@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1476906725-22613-4-git-send-email-sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
-Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161020151552.GQ19318@brightrain.aerifal.cx>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2016 at 05:52:05PM -0200, Sergio Prado wrote:
-> Allows configuring Samsung's s3c2410 memory controller using a
-> devicetree.
+Daniel,
+
+On Thu, 20 Oct 2016, Rich Felker wrote:
+> On Thu, Oct 20, 2016 at 09:32:40AM +0200, Daniel Lezcano wrote:
+> > Unfortunately it won't happen. v4.9-rc1 is already out. The driver will be
+> > in v4.10.
+> > 
+> > If you wanted patches merged for v4.9, they should have been merged in the
+> > downstream tree before v4.8-rc5, so they hit the upstream tree for v4.9's merge
+> > window.
 > 
-> Signed-off-by: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
-> ---
->  drivers/mtd/nand/s3c2410.c                     | 155 ++++++++++++++++++++++---
->  include/linux/platform_data/mtd-nand-s3c2410.h |   1 +
->  2 files changed, 140 insertions(+), 16 deletions(-)
->
+> I've been trying to get what's essentially the same patch merged since
+> before the 4.8 merge window. I would be more understanding if this
+> were something new that's not upstream, but broken support for the
+> hardware (that, from a user perspective, is a bug, since they can
+> select the target but then it doesn't boot) has already been in one
+> release due to missing core drivers, and the irq patches have already
+> been merged in this release (post-rc1 even).
 
+It's hardware enablement and not a new feature, so it's fine to merge it
+now. I'll pick it up later tonight.
 
-Acked-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Thanks,
 
-Best regards,
-Krzysztof
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	tglx
