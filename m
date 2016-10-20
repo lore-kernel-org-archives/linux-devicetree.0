@@ -1,62 +1,39 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 4/9] pinctrl: meson: allow gpio to request irq
-Date: Thu, 20 Oct 2016 21:21:04 +0200
-Message-ID: <CACRpkdaCZPS45t3eTcjJExOu=YT_YkjNkdpg09jQqvLQOJH=Qw@mail.gmail.com>
-References: <1476871709-8359-1-git-send-email-jbrunet@baylibre.com> <1476871709-8359-5-git-send-email-jbrunet@baylibre.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v2 00/10] Revamp Semtech SX150x driver
+Date: Thu, 20 Oct 2016 12:34:17 -0700
+Message-ID: <CAHQ1cqH-fyPV_Z1ARwiAVHX2LO9yd_vGXcX_uMWg2ToXfsqB2g@mail.gmail.com>
+References: <1476885846-16469-1-git-send-email-andrew.smirnov@gmail.com> <CACRpkdbW=fdDn2uOchNHRYvhorGseNDyV_Kx11oeCTS+X9XHcQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1476871709-8359-5-git-send-email-jbrunet@baylibre.com>
+In-Reply-To: <CACRpkdbW=fdDn2uOchNHRYvhorGseNDyV_Kx11oeCTS+X9XHcQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Healy <cphealy@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2016 at 12:08 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
-
-> Add the ability for gpio to request irq from the gpio interrupt controller
-> if present. We have to specificaly that the parent interrupt controller is
-> the gpio interrupt controller because gpio on meson SoCs can't generate
-> interrupt directly on the GIC.
+On Thu, Oct 20, 2016 at 12:08 PM, Linus Walleij
+<linus.walleij@linaro.org> wrote:
+> On Wed, Oct 19, 2016 at 4:03 PM, Andrey Smirnov
+> <andrew.smirnov@gmail.com> wrote:
 >
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-(...)
-> +       select IRQ_DOMAIN
->         select OF_GPIO
-> +       select OF_IRQ
-(...)
-> +static int meson_gpio_to_hwirq(struct meson_bank *bank, unsigned int offset)
-> +{
-> +       unsigned int hwirq;
-> +
-> +       if (bank->irq_first < 0)
-> +               /* this bank cannot generate irqs */
-> +               return -1;
-> +
-> +       hwirq = offset - bank->first + bank->irq_first;
-> +
-> +       if (hwirq > bank->irq_last)
-> +               /* this pin cannot generate irqs */
-> +               return -1;
-> +
-> +       return hwirq;
-> +}
+>> Hello everyone,
+>>
+>> This is the second version of the patchset originally submitted here:
+>>
+>> http://www.spinics.net/lists/devicetree/msg146176.html
+>
+> I'm sorry about your efforts, and sorry for not having had time to
+> comment earlier, but this driver will be removed and replaced by
+> a pin control driver by Neil Armstrong:
+> http://marc.info/?l=linux-gpio&m=147499137422454&w=2
+>
+> As you can see it arrived some weeks before.
+>
+> Can you please review Neils patch and make sure it satisfies
+> your usecases?
 
-This is reimplementing irqdomain.
+Sure, I'll grab those patches and provide comments, Tested-by's, etc.
 
-> +static int meson_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
-> +{
-(...)
-> +       hwirq = meson_gpio_to_hwirq(bank, offset);
-> +       if (hwirq < 0) {
-> +               dev_dbg(pc->dev, "no interrupt for pin %u\n", offset);
-> +               return 0;
-> +       }
-
-Isn't this usecase (also as described in the cover letter) a textbook
-example of when you should be using hierarchical irqdomain?
-
-Please check with Marc et al on hierarchical irqdomains.
-
-Yours,
-Linus Walleij
+Thanks,
+Andrey Smirnov
