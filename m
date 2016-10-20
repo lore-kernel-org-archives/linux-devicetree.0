@@ -1,94 +1,94 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH 3/4] Input: goodix - Tweak configuration to use passed in touchscreen resolution
-Date: Thu, 20 Oct 2016 14:59:16 -0500
-Message-ID: <20161020195917.20051-4-fcooper@ti.com>
-References: <20161020195917.20051-1-fcooper@ti.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 4/4] arm64: dts: msm8996: Add SMP2P and APCS nodes
+Date: Thu, 20 Oct 2016 13:03:04 -0700
+Message-ID: <20161020200304.GP7509@tuxbot>
+References: <1476989765-7524-1-git-send-email-spjoshi@codeaurora.org>
+ <1476989765-7524-4-git-send-email-spjoshi@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161020195917.20051-1-fcooper@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1476989765-7524-4-git-send-email-spjoshi@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, hadess@hadess.net, octavian.purdila@intel.com, irina.tirdea@intel.com, merker@debian.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, nm@ti.com
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+To: Sarangdhar Joshi <spjoshi@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Trilok Soni <tsoni@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Some goodix touchscreen controllers aren't programed properly to match the
-display panel it is used on. Although the defaults may largely work it is
-also likely that the screen resolution will be incorrect. Therefore,
-add support to allow via DT for the touchscreen resolution to be set and
-reprogram the controller to use this updated resolution.
+On Thu 20 Oct 11:56 PDT 2016, Sarangdhar Joshi wrote:
 
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
----
- .../bindings/input/touchscreen/goodix.txt          |  2 ++
- drivers/input/touchscreen/goodix.c                 | 26 +++++++++++++++++++++-
- 2 files changed, 27 insertions(+), 1 deletion(-)
+> Add SMP2P and APCS DT nodes required for Qualcomm ADSP
+> Peripheral Image Loader.
+> 
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-index c98757a..ebc7cb7 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-@@ -19,6 +19,8 @@ Optional properties:
- 			  interrupt gpio pin as output to reset the device.
-  - reset-gpios		: GPIO pin used for reset
- 
-+ - touchscreen-size-x      : horizontal resolution of touchscreen (in pixels)
-+ - touchscreen-size-y      : vertical resolution of touchscreen (in pixels)
-  - touchscreen-inverted-x  : X axis is inverted (boolean)
-  - touchscreen-inverted-y  : Y axis is inverted (boolean)
-  - touchscreen-swapped-x-y : X and Y axis are swapped (boolean)
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index 01e12f8..c2428e1 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -496,6 +496,10 @@ static void goodix_tweak_config(struct goodix_ts_data *ts)
- 		return;
- 	}
- 
-+	/* Setting X and Y Resolution */
-+	put_unaligned_le16(ts->abs_x_max, &config[RESOLUTION_LOC]);
-+	put_unaligned_le16(ts->abs_y_max, &config[RESOLUTION_LOC + 2]);
-+
- 	check_sum = goodix_calculate_checksum(ts->cfg_len, config);
- 
- 	config[raw_cfg_len] = check_sum;
-@@ -669,6 +673,8 @@ static int goodix_request_input_dev(struct goodix_ts_data *ts)
- static int goodix_configure_dev(struct goodix_ts_data *ts)
- {
- 	int error;
-+	bool alter_config = false;
-+	u32 max_x, max_y;
- 
- 	ts->swapped_x_y = device_property_read_bool(&ts->client->dev,
- 						    "touchscreen-swapped-x-y");
-@@ -676,9 +682,27 @@ static int goodix_configure_dev(struct goodix_ts_data *ts)
- 						   "touchscreen-inverted-x");
- 	ts->inverted_y = device_property_read_bool(&ts->client->dev,
- 						   "touchscreen-inverted-y");
--
- 	goodix_read_config(ts);
- 
-+	if (device_property_present(&ts->client->dev, "touchscreen-size-x") &&
-+	    device_property_present(&ts->client->dev, "touchscreen-size-y")) {
-+
-+		device_property_read_u32(&ts->client->dev, "touchscreen-size-x",
-+				&max_x);
-+
-+		device_property_read_u32(&ts->client->dev, "touchscreen-size-y",
-+				&max_y);
-+
-+		if (max_x > 0 && max_y > 0) {
-+			ts->abs_x_max = max_x;
-+			ts->abs_y_max = max_y;
-+			alter_config = true;
-+		}
-+	}
-+
-+	if (alter_config)
-+		goodix_tweak_config(ts);
-+
- 	error = goodix_request_input_dev(ts);
- 	if (error)
- 		return error;
--- 
-2.10.0
+Nice, two (very) small nits below. But other than that
+
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> Signed-off-by: Sarangdhar Joshi <spjoshi@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index 0a810f5..3edb56b 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -169,6 +169,31 @@
+>  		method = "smc";
+>  	};
+>  
+> +	smp2p-adsp {
+
+Sorry for bikeshedding, but on msm8916 I named these {subsystem}-smp2p,
+so I would prefer this was naemd adsp-smp2p...
+
+> +		compatible = "qcom,smp2p";
+> +		qcom,smem = <443>, <429>;
+> +
+> +		interrupt-parent = <&intc>;
+
+I believe this node inherit intc as interrupt-parent from the root
+already, is there are reason why you need to specify it.
+
+> +		interrupts = <0 158 IRQ_TYPE_EDGE_RISING>;
+> +
+> +		qcom,ipc = <&apcs 16 10>;
+> +
+> +		qcom,local-pid = <0>;
+> +		qcom,remote-pid = <2>;
+> +
+> +		adsp_smp2p_out: master-kernel {
+> +			qcom,entry-name = "master-kernel";
+> +			#qcom,state-cells = <1>;
+> +		};
+> +
+> +		adsp_smp2p_in: slave-kernel {
+> +			qcom,entry-name = "slave-kernel";
+> +
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +	};
+> +
+>  	smem {
+>  		compatible = "qcom,smem";
+>  
+> @@ -205,6 +230,11 @@
+>  			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
+>  
+> +		apcs: syscon@9820000 {
+> +			compatible = "syscon";
+> +			reg = <0x9820000 0x1000>;
+> +		};
+> +
+>  		gcc: clock-controller@300000 {
+>  			compatible = "qcom,gcc-msm8996";
+>  			#clock-cells = <1>;
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
