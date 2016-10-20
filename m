@@ -1,84 +1,156 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC V2 PATCH 10/12] arm64: dts: msm8994 issolate non standard
- bootloader/LK entries
-Date: Wed, 19 Oct 2016 20:07:25 -0500
-Message-ID: <CAL_Jsq+wjnEByg2vgx-P+bLJaQm+s=UX7nj=KwviagnQDG_3hQ@mail.gmail.com>
-References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
- <2149904.D2eaQZN3bA@wuerfel> <17447be1-4357-0eca-a242-69576d3e2799@redhat.com>
- <4976066.k14mpQt0HJ@wuerfel> <20161019214643.GC3145@hector.attlocal.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161019214643.GC3145-3KkwrOJo9xYlRp7syxWybdHuzzzSOjJt@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, git-LJ92rlH3Dns@public.gmane.org, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v2 2/2] arm64: dts: uniphier: add CPU clocks and OPP tables for LD20 SoC
+Date: Thu, 20 Oct 2016 10:15:26 +0900
+Message-ID: <1476926126-6079-2-git-send-email-yamada.masahiro@socionext.com>
+References: <1476926126-6079-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1476926126-6079-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2016 at 4:46 PM, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Oct 19, 2016 at 04:56:20PM +0200, Arnd Bergmann wrote:
->> On Wednesday, October 12, 2016 5:59:41 PM CEST Jeremy McNicoll wrote:
->> > On 2016-10-12 3:39 AM, Arnd Bergmann wrote:
->> > > On Tuesday, October 11, 2016 7:41:22 PM CEST Rob Herring wrote:
->> > >> On Sat, Oct 1, 2016 at 9:38 PM, Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> > >>> These non standard DT entries need to be cast aside as to not
->> > >>> pollute the main device tree bindings.  Without these essential
->> > >>> DT items the bootloader/LK will not pass control over to the kernel
->> > >>> and thus never boot.
->> > >>
->> > >> I discussed this with Stephen recently. I'm okay with leaving these on
->> > >> boards that have no chance of getting updated bootloaders to use the
->> > >> compatible string instead. Having to use dtbTool is far worse than a
->> > >> couple of extra properties IMO. I reserve the right to complain if new
->> > >> stuff continues to use these though.
->> > >>
->> > >>> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> > >>> ---
->> > >>>  .../arm64/boot/dts/qcom/msm8994-angler-rev-101.dts |  1 -
->> > >>>  arch/arm64/boot/dts/qcom/msm8994.dtsi              |  3 +--
->> > >>>  .../boot/dts/qcom/nexus6p_bootloader_bits.dtsi     | 24 ++++++++++++++++++++++
->> > >>
->> > >> Just put this into the board file rather than yet another include.
->> > >
->> > > The suggestion that I had was to have two .dts files: the normal
->> > > one without these properties, and another .dts file including the
->> > > first but adding these three for compatibility with the legacy
->> > > bootloaders.
->> > >
->> >
->> (sorry for the late reply, I thought I had replied already but
->> couldn't find that in the archives when I saw I still had this
->> reply open)
->>
->> > So I did it backwards from what you had suggested?
->> > Based on my discussion with, (cant seem to recall) my understanding
->> > was that we simply wanted to have these 3 bootloader specific entries
->> > in another file.
->>
->> Right
->>
->> What I would like to see here is two separate .dtb files, one
->> with the hack and one without it, so we have a migration path
->> for the machines that eventually get a boot loader with proper
->> DT support.
->
-> So my main beef with this is that it is kind of onerous.  The machines that
-> require this will never get a bootloader change.  So we'll be adding 2 dtb
-> targets and only ever use one.
->
-> It's much simpler in my opinion to just add the msm-id to the files that need it
-> right now..... comment it with something like 'this is because of the Qualcomm
-> braindead bootloader requirements' and move on.
->
-> If there was any hope of a new bootloader for non-bleeding edge boards, I'd
-> wholeheartedly agree with you Arnd.  But there isn't, and there won't be.
+Add a CPU clock to every CPU node and CPU OPP tables to use the
+generic cpufreq driver.  All the CPUs in each cluster share the
+same OPP table.
 
-Makes sense to me for things like Nexus phones here. What about DB410
-for example? Is there hope for a fix there? My bootloader is only a
-couple of months old and needs the properties still.
+Note:
+clock-latency-ns (300ns) was calculated based on the CPU-gear switch
+sequencer spec; it takes 12 clock cycles on the sequencer running
+at 50 MHz, plus a bit additional latency.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+Changes in v2:
+  - Match the node name to the opp-hz property.
+
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 84 ++++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+index 6f48e82..7404678 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+@@ -79,28 +79,36 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72", "arm,armv8";
+ 			reg = <0 0x000>;
++			clocks = <&sys_clk 32>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cluster0_opp>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72", "arm,armv8";
+ 			reg = <0 0x001>;
++			clocks = <&sys_clk 32>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cluster0_opp>;
+ 		};
+ 
+ 		cpu2: cpu@100 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0 0x100>;
++			clocks = <&sys_clk 33>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cluster1_opp>;
+ 		};
+ 
+ 		cpu3: cpu@101 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0 0x101>;
++			clocks = <&sys_clk 33>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cluster1_opp>;
+ 		};
+ 	};
+ 
+@@ -109,6 +117,82 @@
+ 		method = "smc";
+ 	};
+ 
++	cluster0_opp: opp_table0 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp@250000000 {
++			opp-hz = /bits/ 64 <250000000>;
++			clock-latency-ns = <300>;
++		};
++		opp@275000000 {
++			opp-hz = /bits/ 64 <275000000>;
++			clock-latency-ns = <300>;
++		};
++		opp@500000000 {
++			opp-hz = /bits/ 64 <500000000>;
++			clock-latency-ns = <300>;
++		};
++		opp@550000000 {
++			opp-hz = /bits/ 64 <550000000>;
++			clock-latency-ns = <300>;
++		};
++		opp@666667000 {
++			opp-hz = /bits/ 64 <666667000>;
++			clock-latency-ns = <300>;
++		};
++		opp@733334000 {
++			opp-hz = /bits/ 64 <733334000>;
++			clock-latency-ns = <300>;
++		};
++		opp@1000000000 {
++			opp-hz = /bits/ 64 <1000000000>;
++			clock-latency-ns = <300>;
++		};
++		opp@1100000000 {
++			opp-hz = /bits/ 64 <1100000000>;
++			clock-latency-ns = <300>;
++		};
++	};
++
++	cluster1_opp: opp_table1 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp@250000000 {
++			opp-hz = /bits/ 64 <250000000>;
++			clock-latency-ns = <300>;
++		};
++		opp@275000000 {
++			opp-hz = /bits/ 64 <275000000>;
++			clock-latency-ns = <300>;
++		};
++		opp@500000000 {
++			opp-hz = /bits/ 64 <500000000>;
++			clock-latency-ns = <300>;
++		};
++		opp@550000000 {
++			opp-hz = /bits/ 64 <550000000>;
++			clock-latency-ns = <300>;
++		};
++		opp@666666666 {
++			opp-hz = /bits/ 64 <666667000>;
++			clock-latency-ns = <300>;
++		};
++		opp@733333333 {
++			opp-hz = /bits/ 64 <733334000>;
++			clock-latency-ns = <300>;
++		};
++		opp@1000000000 {
++			opp-hz = /bits/ 64 <1000000000>;
++			clock-latency-ns = <300>;
++		};
++		opp@1100000000 {
++			opp-hz = /bits/ 64 <1100000000>;
++			clock-latency-ns = <300>;
++		};
++	};
++
+ 	clocks {
+ 		refclk: ref {
+ 			compatible = "fixed-clock";
+-- 
+1.9.1
