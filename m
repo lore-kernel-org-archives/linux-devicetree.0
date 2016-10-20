@@ -1,59 +1,146 @@
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
-Subject: Re: [PATCH v2 0/6] STM32F4 Add RTC & QSPI clocks
-Date: Thu, 20 Oct 2016 09:52:54 +0200
-Message-ID: <36f11be6-0706-6fdb-681c-5d11d5989e28@st.com>
+From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] clk: stm32f4: Add RTC clock
+Date: Thu, 20 Oct 2016 09:55:26 +0200
+Message-ID: <b5c25849-e62b-2266-7c01-41a38dedf5eb@st.com>
 References: <1476436699-21879-1-git-send-email-gabriel.fernandez@st.com>
- <20161018235108.GP8871@codeaurora.org>
- <d878b846-556d-180b-8ebf-2d06646efb58@st.com>
- <20161019202904.GB8871@codeaurora.org>
+ <1476436699-21879-5-git-send-email-gabriel.fernandez@st.com>
+ <20161019204537.GD8871@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161019202904.GB8871@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161019204537.GD8871-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Stephen,
 
 
-On 10/19/2016 10:29 PM, Stephen Boyd wrote:
-> On 10/19, Gabriel Fernandez wrote:
->> Hi Stephen,
->>
->>
->> On 10/19/2016 01:51 AM, Stephen Boyd wrote:
->>> On 10/14, gabriel.fernandez@st.com wrote:
->>>> Gabriel Fernandez (6):
->>>>    clk: stm32f4: Add LSI & LSE clocks
->>>>    ARM: dts: stm32f429: add LSI and LSE clocks
->>>>    arm: stmf32: Enable SYSCON
->>>>    clk: stm32f4: Add RTC clock
->>>>    clk: stm32f469: Add QSPI clock
->>>>    ARM: dts: stm32f429: Add QSPI clock
->>> Can the clk patches be picked without causing problems for
->>> existing dt changes? Do you want an ack from clk maintainers
->>> instead of us picking the clk patches up? The series has
->>> intermingled clk and dts changes so I'm confused.
->>>
->> Thanks for reviewing.
->>
->> Normally DT patches will be taken by STM32 maintainer, but yes there
->> is a dependency between patch 1 & 2, so if you push the patch 1 into
->> clk-next tree you have to take also patch 2.
-> Let's break the dependency by making the required property
-> optional or key off a different compatible string. As it stands
-> right now applying patch 1 will cause things to break until the
-> second patch lands which is not great.
->
->> You have to be synchronized with Alexandre Torgue.
->>
->>
-> I'd prefer zero synchronization. Please just send the clk patches
-> the next time and leave the stuff for arm-soc out of the patch
-> series. Thanks.
-Ok
+On 10/19/2016 10:45 PM, Stephen Boyd wrote:
+> On 10/14, gabriel.fernandez-qxv4g6HH51o@public.gmane.org wrote:
+>> @@ -310,6 +310,15 @@ static inline void enable_power_domain_write_protection(void)
+>>   	regmap_update_bits(pdrm, 0x00, (1 << 8), (0 << 8));
+>>   }
+>>   
+>> +static inline void sofware_reset_backup_domain(void)
+>> +{
+>> +	unsigned long val;
+>> +
+>> +	val = readl(base + STM32F4_RCC_BDCR);
+>> +	writel(val |= (1 << 16), base + STM32F4_RCC_BDCR);
+> Interesting C style here! Why set the bit in val that will then
+> be cleared in the next function call? Please just don't do it. It
+> would be better to do writel(val | BIT(16), ...)
+To reset the backup domain, i have to generate a pulse on this bit.
 
-Many Thanks.
+BR
+Gabriel.
+
+>
+>> +	writel(val & ~(1 << 16), base + STM32F4_RCC_BDCR);
+>> +}
+>> +
+>>   struct stm32_rgate {
+>>   	struct	clk_hw hw;
+>>   	struct	clk_gate gate;
+>> @@ -396,6 +405,113 @@ static struct clk_hw *clk_register_rgate(struct device *dev, const char *name,
+>>   	return hw;
+>>   }
+>>   
+>> +static int cclk_gate_enable(struct clk_hw *hw)
+>> +{
+>> +	int ret;
+>> +
+>> +	disable_power_domain_write_protection();
+>> +
+>> +	ret = clk_gate_ops.enable(hw);
+>> +
+>> +	enable_power_domain_write_protection();
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static void cclk_gate_disable(struct clk_hw *hw)
+>> +{
+>> +	disable_power_domain_write_protection();
+>> +
+>> +	clk_gate_ops.disable(hw);
+>> +
+>> +	enable_power_domain_write_protection();
+>> +}
+>> +
+>> +static int cclk_gate_is_enabled(struct clk_hw *hw)
+>> +{
+>> +	return clk_gate_ops.is_enabled(hw);
+>> +}
+>> +
+>> +static const struct clk_ops cclk_gate_ops = {
+>> +	.enable		= cclk_gate_enable,
+>> +	.disable	= cclk_gate_disable,
+>> +	.is_enabled	= cclk_gate_is_enabled,
+>> +};
+>> +
+>> +static u8 cclk_mux_get_parent(struct clk_hw *hw)
+>> +{
+>> +	return clk_mux_ops.get_parent(hw);
+>> +}
+>> +
+>> +
+> Weird double newline here. Please remove one.
+>
+>> +static int cclk_mux_set_parent(struct clk_hw *hw, u8 index)
+>> +{
+>> +	int ret;
+>> +
+>> +	disable_power_domain_write_protection();
+>> +
+>> +	sofware_reset_backup_domain();
+>> +
+>> +	ret = clk_mux_ops.set_parent(hw, index);
+>> +
+>> +	enable_power_domain_write_protection();
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +
+> Same.
+>
+>> +static const struct clk_ops cclk_mux_ops = {
+>> +	.get_parent = cclk_mux_get_parent,
+>> +	.set_parent = cclk_mux_set_parent,
+>> +};
+>> +
+>> +static struct clk_hw *stm32_register_cclk(struct device *dev, const char *name,
+>> +		const char * const *parent_names, int num_parents,
+>> +		void __iomem *reg, u8 bit_idx, u8 shift, unsigned long flags,
+>> +		spinlock_t *lock)
+>> +{
+>> +	struct clk_hw *hw;
+>> +	struct clk_gate *gate;
+>> +	struct clk_mux *mux;
+>> +
+>> +	gate = kzalloc(sizeof(struct clk_gate), GFP_KERNEL);
+> sizeof(*gate) please.
+>
+>> +	if (!gate) {
+>> +		hw = ERR_PTR(-EINVAL);
+>> +		goto fail;
+>> +	}
+>> +
+>> +	mux = kzalloc(sizeof(struct clk_mux), GFP_KERNEL);
+> sizeof(*mux) please.
+>
+>> +	if (!mux) {
+>> +		kfree(gate);
+>> +		hw = ERR_PTR(-EINVAL);
+>> +		goto fail;
+>> +	}
+>> +
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
