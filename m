@@ -1,53 +1,111 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [PATCH 0/3] clk: keystone: add sci clock support
-Date: Fri, 21 Oct 2016 15:45:58 +0300
-Message-ID: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
+From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Subject: Re: [PATCH v5 3/9] vcodec: mediatek: Add Mediatek V4L2 Video
+ Decoder Driver
+Date: Fri, 21 Oct 2016 11:01:04 -0200
+Message-ID: <20161021110104.5733240e@vento.lan>
+References: <1472818800-22558-1-git-send-email-tiffany.lin@mediatek.com>
+        <1472818800-22558-2-git-send-email-tiffany.lin@mediatek.com>
+        <1472818800-22558-3-git-send-email-tiffany.lin@mediatek.com>
+        <1472818800-22558-4-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, ssantosh@kernel.org
-Cc: nm@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1472818800-22558-4-git-send-email-tiffany.lin@mediatek.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Tiffany Lin <tiffany.lin@mediatek.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Em Fri, 2 Sep 2016 20:19:54 +0800
+Tiffany Lin <tiffany.lin@mediatek.com> escreveu:
 
-Version 3 has following changes compared to v2 [1]:
-- rebased on top of 4.9-rc1
-- dropped some of the controversial DT properties like ti,ssc-clocks etc.
-- driver now registers all the SCI clocks during probe time, for this,
-  there is an array built-in to the driver with knowledge of valid clocks
-  for the device
-- xlate only picks up the clocks registered during probe
+> Add v4l2 layer decoder driver for MT8173
+> 
+> Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
 
-This series depends on the base SCI protocol support series [2]
-and the TI-SCI generic PM domain support series for the device
-ID include file [3].
+> +int vdec_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
+> +{
+> +	int ret = 0;
+> +
+> +	switch (fourcc) {
+> +	case V4L2_PIX_FMT_H264:
+> +	case V4L2_PIX_FMT_VP8:
+> +	default:
+> +		return -EINVAL;
+> +	}
 
-Quick boot test seems to be fine.
+Did you ever test this driver? The above code will *always* return
+-EINVAL, with will cause vidioc_vdec_s_fmt() to always fail!
 
--Tero
+I suspect that what you wanted to do, instead, is:
 
-[1] http://www.spinics.net/lists/devicetree/msg141319.html
-[2] http://www.spinics.net/lists/devicetree/msg146621.html
-[3] http://www.spinics.net/lists/arm-kernel/msg536851.html
+	switch (fourcc) {
+	case V4L2_PIX_FMT_H264:
+	case V4L2_PIX_FMT_VP8:
+		break;
+	default:
+		return -EINVAL;
 
-Tero Kristo (3):
-  Documentation: dt: Add TI SCI clock driver
-  dt-binding: clock: Add k2g clock definitions
-  clk: keystone: Add sci-clk driver support
+Btw, this patch series has also several issues that were pointed by
+checkpatch. Please *always* run checkpatch when submitting your work.
 
- .../devicetree/bindings/clock/ti,sci-clk.txt       |  37 ++
- MAINTAINERS                                        |   3 +
- drivers/clk/Kconfig                                |   9 +
- drivers/clk/keystone/Makefile                      |   1 +
- drivers/clk/keystone/sci-clk.c                     | 589 +++++++++++++++++++++
- include/dt-bindings/clock/k2g.h                    | 234 ++++++++
- 6 files changed, 873 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/ti,sci-clk.txt
- create mode 100644 drivers/clk/keystone/sci-clk.c
- create mode 100644 include/dt-bindings/clock/k2g.h
+You should take a look at the Kernel documentation about how to
+submit patches, at:
+	https://mchehab.fedorapeople.org/kernel_docs/process/index.html
+
+PS.: this time, I fixed the checkpatch issues for you. So, let me know
+if the patch below is OK, and I'll merge it at media upstream,
+assuming that the other patches in this series are ok.
 
 -- 
-1.9.1
+Thanks,
+Mauro
 
+[PATCH] mtk-vcodec: fix some smatch warnings
+
+Fix this bug:
+	drivers/media/platform/mtk-vcodec/vdec_drv_if.c:38 vdec_if_init() info: ignoring unreachable code.
+
+With is indeed a real problem that prevents the driver to work!
+
+While here, also remove an used var, as reported by smatch:
+
+	drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c: In function 'mtk_vcodec_init_dec_pm':
+	drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c:29:17: warning: variable 'dev' set but not used [-Wunused-but-set-variable]
+	  struct device *dev;
+	                 ^~~
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c
+index 18182f5676d8..79ca03ac449c 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c
+@@ -26,14 +26,12 @@ int mtk_vcodec_init_dec_pm(struct mtk_vcodec_dev *mtkdev)
+ {
+ 	struct device_node *node;
+ 	struct platform_device *pdev;
+-	struct device *dev;
+ 	struct mtk_vcodec_pm *pm;
+ 	int ret = 0;
+ 
+ 	pdev = mtkdev->plat_dev;
+ 	pm = &mtkdev->pm;
+ 	pm->mtkdev = mtkdev;
+-	dev = &pdev->dev;
+ 	node = of_parse_phandle(pdev->dev.of_node, "mediatek,larb", 0);
+ 	if (!node) {
+ 		mtk_v4l2_err("of_parse_phandle mediatek,larb fail!");
+diff --git a/drivers/media/platform/mtk-vcodec/vdec_drv_if.c b/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
+index 3cb04ef45144..9813b2ffd5fa 100644
+--- a/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
++++ b/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
+@@ -31,6 +31,7 @@ int vdec_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
+ 	switch (fourcc) {
+ 	case V4L2_PIX_FMT_H264:
+ 	case V4L2_PIX_FMT_VP8:
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
