@@ -1,40 +1,45 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH 3/5] ARM: davinci: enable gpio poweroff in default config
-Date: Fri, 21 Oct 2016 13:36:55 -0500
-Message-ID: <1477075018-20176-4-git-send-email-david@lechnology.com>
+From: lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
+Subject: Re: [PATCH 0/5] Support for LEGO MINDSTORTMS EV3
+Date: Fri, 21 Oct 2016 14:45:33 -0400
+Message-ID: <20161021184533.GA20430@csclub.uwaterloo.ca>
 References: <1477075018-20176-1-git-send-email-david@lechnology.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477075018-20176-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1477075018-20176-1-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The gpio-poweroff driver is needed by LEGO MINDSTORMS EV3 (AM1808 based
-board).
+On Fri, Oct 21, 2016 at 01:36:52PM -0500, David Lechner wrote:
+> This patch series adds support for LEGO MINDSTORTMS EV3[1]. This is a TI AM1808
+> based board.
+> 
+> This patch series has been tested working (along with some hacks to fix the
+> GPIOs) on an EV3.
+> 
+> There are still quite a few additional new drivers that need to be submitted
+> to get everything working. This patch series just adds support for the parts
+> that already have mainline kernel drivers.
+> 
+> I have a plan/driver in progress for many of the components[2], but I could use
+> some advice on a few particulars.
+> 
+> Bluetooth: This needs a driver to sequence a GPIO to take the Bluetooth chip
+> out of shutdown *after* the Bluetooth clock has been configured and started.
+> Is there a generic driver that can do this sort of thing? Or, if not, which
+> subsystem should the new driver go in?
+> 
+> Input and output ports: These ports are capable of hotplugging various devices,
+> such as sensors and motors. I have written a driver for these that can detect
+> most devices. I created a new subsystem for this called `lego-port`. However,
+> I am wondering if the existing phy or extcon subsystems might be a good fit for
+> this sort of thing.
 
-Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
----
- arch/arm/configs/davinci_all_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Both this cover and patch 5/5 has MINDSTORTMS instead of MINDSTORMS in
+a few places (including the subject line).
 
-diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-index 9254609..9d7f0bc 100644
---- a/arch/arm/configs/davinci_all_defconfig
-+++ b/arch/arm/configs/davinci_all_defconfig
-@@ -117,6 +117,8 @@ CONFIG_SPI_DAVINCI=m
- CONFIG_PINCTRL_SINGLE=y
- CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_PCA953X=y
-+CONFIG_POWER_RESET=y
-+CONFIG_POWER_RESET_GPIO=y
- CONFIG_WATCHDOG=y
- CONFIG_DAVINCI_WATCHDOG=m
- CONFIG_MFD_DM355EVM_MSP=y
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Len Sorensen
