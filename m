@@ -1,72 +1,38 @@
-From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC V3 PATCH 6/7] arm64: dts: msm8994 default serial config
-Date: Fri, 21 Oct 2016 01:42:01 -0700
-Message-ID: <3e68d7be-07b9-05c6-2419-3a4579898a72@redhat.com>
-References: <1476265054-22511-1-git-send-email-jeremymc@redhat.com>
- <1476265054-22511-7-git-send-email-jeremymc@redhat.com>
- <20161012132806.GA21050@remoulade>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/6] gpio: Add support for PTX1K CBC FPGA spare GPIOs
+Date: Fri, 21 Oct 2016 10:44:05 +0200
+Message-ID: <CACRpkdY9obGN1gLHcf5KWKjL_y7tQ4krbc1XihV_rKe_BPSRgA@mail.gmail.com>
+References: <1475853614-22409-1-git-send-email-pantelis.antoniou@konsulko.com> <1475853614-22409-3-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161012132806.GA21050@remoulade>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1475853614-22409-3-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Debjit Ghosh <dghosh@juniper.net>, Georgi Vlaev <gvlaev@juniper.net>, Guenter Roeck <linux@roeck-us.net>, JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>, Mohammad Kamil <mkamil@juniper.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-12 6:28 AM, Mark Rutland wrote:
-> On Wed, Oct 12, 2016 at 02:37:33AM -0700, Jeremy McNicoll wrote:
->> From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>
->> As per Documentation/devicetree/bindings/chosen.txt so that we
->> are not relying on implicit defaults.
->
-> Please fold this patch into the patch introducing the dts file.
->
-> There's no need for this to be separate.
+On Fri, Oct 7, 2016 at 5:20 PM, Pantelis Antoniou
+<pantelis.antoniou@konsulko.com> wrote:
 
-agreed.
-
--jeremy
-
+> From: Georgi Vlaev <gvlaev@juniper.net>
 >
-> Thanks,
-> Mark.
+> Add support for the GPIO block in Juniper's CBC FPGA.
 >
->> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
->> index 5cff29f..799aec0 100644
->> --- a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
->> +++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
->> @@ -27,7 +27,7 @@
->>  	};
->>
->>  	chosen {
->> -		stdout-path = "serial0";
->> +		stdout-path = "serial0:115200n8";
->>  	};
->>
->>  	soc {
->> --
->> 2.6.1
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> A number of GPIOs exported by different kind of boards
+> is supported.
 >
+> Signed-off-by: Georgi Vlaev <gvlaev@juniper.net>
+> Signed-off-by: Guenter Roeck <groeck@juniper.net>
+> [Ported from Juniper kernel]
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Again pretty much the same comments.
+
+The drivers not supporting IRQ will be pretty quick and
+easy to fix up I guess, the IRQ drivers will require some
+effort. An approach is to split these in two: one for the basic
+GPIO and a separate add-on patch for the IRQ functionality.
+
+Yours,
+Linus Walleij
