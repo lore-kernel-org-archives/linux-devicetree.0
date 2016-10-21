@@ -1,45 +1,108 @@
-From: lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
-Subject: Re: [PATCH 0/5] Support for LEGO MINDSTORTMS EV3
-Date: Fri, 21 Oct 2016 14:45:33 -0400
-Message-ID: <20161021184533.GA20430@csclub.uwaterloo.ca>
-References: <1477075018-20176-1-git-send-email-david@lechnology.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: Add TI SCI PM Domains
+Date: Fri, 21 Oct 2016 11:48:52 -0700
+Message-ID: <7heg39pmgb.fsf@baylibre.com>
+References: <20161019203347.17893-1-d-gerlach@ti.com>
+        <20161019203347.17893-3-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1477075018-20176-1-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20161019203347.17893-3-d-gerlach@ti.com> (Dave Gerlach's message
+        of "Wed, 19 Oct 2016 15:33:45 -0500")
+Sender: linux-pm-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>, Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 01:36:52PM -0500, David Lechner wrote:
-> This patch series adds support for LEGO MINDSTORTMS EV3[1]. This is a TI AM1808
-> based board.
-> 
-> This patch series has been tested working (along with some hacks to fix the
-> GPIOs) on an EV3.
-> 
-> There are still quite a few additional new drivers that need to be submitted
-> to get everything working. This patch series just adds support for the parts
-> that already have mainline kernel drivers.
-> 
-> I have a plan/driver in progress for many of the components[2], but I could use
-> some advice on a few particulars.
-> 
-> Bluetooth: This needs a driver to sequence a GPIO to take the Bluetooth chip
-> out of shutdown *after* the Bluetooth clock has been configured and started.
-> Is there a generic driver that can do this sort of thing? Or, if not, which
-> subsystem should the new driver go in?
-> 
-> Input and output ports: These ports are capable of hotplugging various devices,
-> such as sensors and motors. I have written a driver for these that can detect
-> most devices. I created a new subsystem for this called `lego-port`. However,
-> I am wondering if the existing phy or extcon subsystems might be a good fit for
-> this sort of thing.
+Dave Gerlach <d-gerlach@ti.com> writes:
 
-Both this cover and patch 5/5 has MINDSTORTMS instead of MINDSTORMS in
-a few places (including the subject line).
+> Add a generic power domain implementation, TI SCI PM Domains, that
+> will hook into the genpd framework and allow the TI SCI protocol to
+> control device power states.
+>
+> Also, provide macros representing each device index as understood
+> by TI SCI to be used in the device node power-domain references.
+> These are identifiers for the K2G devices managed by the PMMC.
+>
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+> ---
+>  .../devicetree/bindings/soc/ti/sci-pm-domain.txt   | 54 +++++++++++++
+>  MAINTAINERS                                        |  2 +
+>  include/dt-bindings/genpd/k2g.h                    | 90 ++++++++++++++++++++++
+>  3 files changed, 146 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>  create mode 100644 include/dt-bindings/genpd/k2g.h
+>
+> diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+> new file mode 100644
+> index 000000000000..32f38a349656
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+> @@ -0,0 +1,54 @@
+> +Texas Instruments TI-SCI Generic Power Domain
+> +---------------------------------------------
+> +
+> +Some TI SoCs contain a system controller (like the PMMC, etc...) that is
+> +responsible for controlling the state of the IPs that are present.
+> +Communication between the host processor running an OS and the system
+> +controller happens through a protocol known as TI-SCI [1]. This pm domain
+> +implementation plugs into the generic pm domain framework and makes use of
+> +the TI SCI protocol power on and off each device when needed.
+> +
+> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+> +
+> +PM Domain Node
+> +==============
+> +The PM domain node represents the global PM domain managed by the PMMC,
+> +which in this case is the single implementation as documented by the generic
+> +PM domain bindings in Documentation/devicetree/bindings/power/power_domain.txt.
+> +
+> +Required Properties:
+> +--------------------
+> +- compatible: should be "ti,sci-pm-domain"
+> +- #power-domain-cells: Must be 0.
+> +- ti,sci: Phandle to the TI SCI device to use for managing the devices.
+>
+> +Example:
+> +--------------------
+> +k2g_pds: k2g_pds {
 
--- 
-Len Sorensen
+should use generic name like "power-contoller", e.g. k2g_pds: power-controller
+
+> +        compatible = "ti,sci-pm-domain";
+> +        #power-domain-cells = <0>;
+> +        ti,sci = <&pmmc>;
+> +};
+> +
+> +PM Domain Consumers
+> +===================
+> +Hardware blocks that require SCI control over their state must provide
+> +a reference to the sci-pm-domain they are part of and a unique device
+> +specific ID that identifies the device.
+> +
+> +Required Properties:
+> +--------------------
+> +- power-domains: phandle pointing to the corresponding PM domain node.
+> +- ti,sci-id: index representing the device id to be passed oevr SCI to
+> +	     be used for device control.
+
+This ID doesn't look right.
+
+Why not use #power-domain-cells = <1> and pass the index in the DT? ...
+
+> +See dt-bindings/genpd/k2g.h for the list of valid identifiers for k2g.
+> +
+> +Example:
+> +--------------------
+> +uart0: serial@02530c00 {
+> +	compatible = "ns16550a";
+> +	...
+> +	power-domains = <&k2g_pds>;
+> +	ti,sci-id = <K2G_DEV_UART0>;
+
+... like this:
+
+	power-domains = <&k2g_pds K2G_DEV_UART0>;
+
+Kevin
