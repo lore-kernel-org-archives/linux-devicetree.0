@@ -1,103 +1,85 @@
-From: ayaka <ayaka@soulik.info>
-Subject: Re: [PATCH] ARM: dts: rockchip: add i2c-bus subnode to edp
-Date: Sat, 22 Oct 2016 11:52:45 +0800
-Message-ID: <1026cfe7-836f-7e78-af71-54c858b6a95e@soulik.info>
-References: <1476950845-28242-1-git-send-email-tomeu.vizoso@collabora.com>
- <7604646.6yosK0XMNL@diego>
- <6083453f-08e1-643a-9638-1db38c704aa5@collabora.com>
- <1681294.eoXpQL8f8l@phil>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH 0/4] IIO wrapper drivers, dpot-dac and envelope-detector
+Date: Sat, 22 Oct 2016 00:58:27 +0200
+Message-ID: <58b9c20d-6c3c-4693-b073-e5a8f9c4cb94@axentia.se>
+References: <1476955562-13673-1-git-send-email-peda@axentia.se>
+ <9b8c0789-566d-67a3-b4f5-dbe4c69f6932@metafoo.de>
+ <8B9238AE-D53C-4A22-84CF-EC42FDA2DFB2@jic23.retrosnub.co.uk>
+ <DB170A5C-B172-4B86-80D5-58FD53752ED4@jic23.retrosnub.co.uk>
+ <ba941bcd-c542-b699-638f-3b3003e8af00@axentia.se>
+ <736c146284d93633a4692b1102eaadaf@jic23.retrosnub.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1681294.eoXpQL8f8l@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Jon Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <736c146284d93633a4692b1102eaadaf-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 10/21/2016 04:25 PM, Heiko Stuebner wrote:
-> Am Donnerstag, 20. Oktober 2016, 15:47:56 CEST schrieb Tomeu Vizoso:
->> On 10/20/2016 03:45 PM, Heiko Stübner wrote:
->>> Am Donnerstag, 20. Oktober 2016, 10:07:25 schrieb Tomeu Vizoso:
->>>> Add an empty 'i2c-bus' subnode to the edp node just so that the I2C core
->>>> doesn't attemp to parse the 'ports' subnode as containing i2c devices.
+On 2016-10-21 09:17, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org wrote:
+> On 20.10.2016 19:17, Peter Rosin wrote:
+>> On 2016-10-20 19:37, Jonathan Cameron wrote:
+>>> On 20 October 2016 18:30:19 BST, Jonathan Cameron 
+>>> <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org> wrote:
+>>>> On 20 October 2016 13:55:12 BST, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> 
+>>>> wrote:
+>>>>> On 10/20/2016 11:25 AM, Peter Rosin wrote:
+>>>>>> Also, is there some agreed-upon way to dig out the maximum value 
+>>>>>> from
+>>>>>> an iio channel? If so, "dpot-dac,max-ohms" can be eliminated from 
+>>>>>> the
+>>>>>> dt bindings, which would have been nice...
+>>>>>
+>>>>> Yes, this is something we could really use. In a sense it exists for
+>>>>> the
+>>>>> devices with buffer-capable channels where there is the real_bits 
+>>>>> field
+>>>>> which tells us the data width of the channel. But a dedicated 
+>>>>> mechanism
+>>>>> for
+>>>>> querying the maximum (and minimum) valid code seems like a useful
+>>>>> feature.
+>>>>> Not only for in-kernel clients, but also for userspace.
 >>>>
->>>> This is to avoid spurious failure messages such as:
+>>>> This was something that was addressed by the rather ancient patch
+>>>> series i posted that added
+>>>> an available call back which provided info on range and values for 
+>>>> all info mask elements.
+>>>> Series got buried by there being a lot of precursors but quite a few of
+>>>> those have merged since.
 >>>>
->>>> i2c i2c-6: of_i2c: modalias failure on /dp@ff970000/ports
->>> On the one hand, the edp really has an i2c bus - with its only client the
->>> EDID listening at 0x50 (and maybe 0x30).
->>>
->>> On the other hand, adding an empty bus to the (implementation independent)
->>> devicetree just to make the Linux i2c subsystem happy sounds heavily like
->>> a
->>> implementation-specific hack, as the edp i2c bus doesn't leak into the
->>> outside world otherwise.
->>>
->>> I guess this empty i2c bus not being part of the binding document points
->>> heavily into the implementation-specific corner :-) .
->>>
->>> My short search on other patches touching this didn't reveal anything but
->>> maybe this was already discussed somewhere and found to be ok?
->> Here it is:
+>>>> Hmm Google won't let me find it on my phone. Was a while back now. 
+>>>> Will
+>>>> try to get on pc with
+>>>> decent email archive later and dig out a reference.
+>>> http://marc.info/?l=linux-iio&m=138469765309868&w=2 I think...
 >>
->> http://www.spinics.net/lists/linux-tegra/msg27862.html
-> thanks ... I'm still not sure about the placeholder though, aka needing an
-> undocumented subnode to make a Linux error message silent.
-Sorry, I report the error result, it would work.
+>> Interesting, one issue with that is that it is all in real world
+>> units, while I'd rather have the raw value.
+> Um.. It's been a while, but the principle was (IIRC) that every
+> _available would match the units fo the associated info mask element.
+> Thus if you have a _raw element it would be in adc counts (most likely).
+> 
+> _input would be in relevant real world units, scale etc in the whatever
+> units the value itself is in.
 
-And about the problem at this thread beginning, I found I have to use 
-something like Xserver to access DRM or the panel would not be power on. 
-The legacy fbdev won't help.
-But there is still problem to be solved, so the eDP panel for firefly is 
-not ready yet.
->
-> In the thread you pointed to I also did not see any dt-maintainer involvement
-> pointing one way or another, but spinics is often not easy to navigate
-> threads, so I may have missed that.
->
->
->>> Another option could be to just make of_i2c_register_device silent if
->>> of_modalias_node returns -ENODEV?
->
-> Heiko
->
->>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->>>> Cc: Randy Li <randy.li@rock-chips.com>
->>>> Cc: Jon Hunter <jonathanh@nvidia.com>
->>>> ---
->>>>
->>>>   arch/arm/boot/dts/rk3288.dtsi | 5 +++++
->>>>   1 file changed, 5 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/rk3288.dtsi
->>>> b/arch/arm/boot/dts/rk3288.dtsi
->>>> index 2f814ffeb605..94f4b7eecca2 100644
->>>> --- a/arch/arm/boot/dts/rk3288.dtsi
->>>> +++ b/arch/arm/boot/dts/rk3288.dtsi
->>>> @@ -1075,6 +1075,11 @@
->>>>
->>>>   				};
->>>>   			
->>>>   			};
->>>>   		
->>>>   		};
->>>>
->>>> +
->>>> +		i2c-bus {
->>>> +			#address-cells = <1>;
->>>> +			#size-cells = <0>;
->>>> +		};
->>>>
->>>>   	};
->>>>   	
->>>>   	hdmi: hdmi@ff980000 {
->
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->
+Ok, so I forward ported that patch and added code so that the relevant
+channels provide what is available. I also added code to turn the
+rest of the parameter style devicetree properties into iio device/channel
+attributes. So, it is now much neater from a bindings point of view.
+
+Before I post the updated patches, I'm wondering what the status is
+on that ancient patch? It didn't forward port without issues, but there
+were no real difficulties that I noticed. Should I just start off my v2
+series with that patch? I tend to think that that's the best option,
+because I suspect that adding a "max-ohms" devicetree property as a
+stop-gap pending some new infrastructure is pretty unrealistic...
+
+Basically, my question is if that ancient patch as any chance of living
+at all in a form close to what it is, or if should start looking for
+an alternative right away?
+
+Cheers,
+Peter
