@@ -1,65 +1,64 @@
-From: Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH 5/7] ARM: dts: am335x: Add the charger interrupt
-Date: Fri, 21 Oct 2016 15:47:58 -0500
-Message-ID: <CAOCHtYgBTq0a1FAMQJb5VoLPWBHYkF3rH_Km6U9u6ep=8ApZuQ@mail.gmail.com>
-References: <20161021140106.21531-1-woogyom.kim@gmail.com> <20161021140106.21531-6-woogyom.kim@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v4 7/7] ARM: dts: sk-rzg1m: add Ether support
+Date: Fri, 21 Oct 2016 23:48:58 +0300
+Message-ID: <1646335.vYatMAFDPt@wasted.cogentembedded.com>
+References: <2719479.geOc9vqcRS@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161021140106.21531-6-woogyom.kim@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <woogyom.kim@gmail.com>
-Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux kernel <linux-kernel@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <2719479.geOc9vqcRS@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 9:01 AM, Milo Kim <woogyom.kim@gmail.com> wrote:
-> This enables the charger driver gets corresponding IRQ number by using
-> platform_get_irq_byname() helper.
->
-> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
-> ---
->  arch/arm/boot/dts/am335x-bone-common.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> index 25303d9..cec9d91 100644
-> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> @@ -6,6 +6,8 @@
->   * published by the Free Software Foundation.
->   */
->
-> +#include <dt-bindings/mfd/tps65217.h>
+Define the SK-RZG1M board dependent part of the Ether device node.
+Enable DHCP and NFS root  for the kernel booting.
 
-^ this hasn't been posted nor pushed to mainline yet.. ;)
+Based on the original (and large) patch by Dmitry Shifrin
+<dmitry.shifrin@cogentembedded.com>.
 
-> +
->  / {
->         cpus {
->                 cpu@0 {
-> @@ -316,6 +318,12 @@
->
->         ti,pmic-shutdown-controller;
->
-> +       charger {
-> +               interrupts = <TPS65217_IRQ_AC>, <TPS65217_IRQ_USB>;
-> +               interrupts-names = "AC", "USB";
-> +               status = "okay";
-> +       };
-> +
->         regulators {
->                 dcdc1_reg: regulator@0 {
->                         regulator-name = "vdds_dpr";
-> --
-> 2.9.3
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+---
+Changes in version 4:
+- added Geert's tag.
 
+Changes in version 2:
+- new patch.
 
--- 
-Robert Nelson
-https://rcn-ee.com/
+ arch/arm/boot/dts/r8a7743-sk-rzg1m.dts |   15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+Index: renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
++++ renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
+@@ -20,7 +20,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "ignore_loglevel";
++		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+@@ -42,3 +42,16 @@
+ &scif0 {
+ 	status = "okay";
+ };
++
++&ether {
++	phy-handle = <&phy1>;
++	renesas,ether-link-active-low;
++	status = "okay";
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++		interrupt-parent = <&irqc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		micrel,led-mode = <1>;
++	};
++};
