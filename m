@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 18/23] ARM: shmobile: r8a7778: Stop passing mode pins state to clock driver
-Date: Fri, 21 Oct 2016 15:17:32 +0200
-Message-ID: <1477055857-17936-19-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v4 15/23] clk: renesas: r8a7795: Obtain mode pin values from R-Car RST driver
+Date: Fri, 21 Oct 2016 15:17:29 +0200
+Message-ID: <1477055857-17936-16-git-send-email-geert+renesas@glider.be>
 References: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
@@ -10,61 +10,47 @@ To: Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylib
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Now the R-Car M1A CPG clock driver obtains the state of the mode pins
-from the R-Car RST driver, there's no longer a need to pass this state
-explicitly. Hence we can just remove the .init_time() callback, the
-generic ARM code will take care of calling of_clk_init().
+Obtain the values of the mode pins from the R-Car RST driver, which
+relies on the presence in DT of a device node for the RST module.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Acked-by: Dirk Behme <dirk.behme@de.bosch.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
 v4:
-  - Add Acked-by,
+  - Add Acked-by, Reviewed-by,
 
 v3:
   - New.
 ---
- arch/arm/mach-shmobile/setup-r8a7778.c | 15 ---------------
- 1 file changed, 15 deletions(-)
+ drivers/clk/renesas/r8a7795-cpg-mssr.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-shmobile/setup-r8a7778.c b/arch/arm/mach-shmobile/setup-r8a7778.c
-index cf236db686a9dd47..7fa4a0b5f6549287 100644
---- a/arch/arm/mach-shmobile/setup-r8a7778.c
-+++ b/arch/arm/mach-shmobile/setup-r8a7778.c
-@@ -15,7 +15,6 @@
-  * GNU General Public License for more details.
-  */
+diff --git a/drivers/clk/renesas/r8a7795-cpg-mssr.c b/drivers/clk/renesas/r8a7795-cpg-mssr.c
+index f255e451e8cafbbf..726c3d7940b491b9 100644
+--- a/drivers/clk/renesas/r8a7795-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a7795-cpg-mssr.c
+@@ -15,6 +15,7 @@
+ #include <linux/device.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
++#include <linux/soc/renesas/rcar-rst.h>
  
--#include <linux/clk/renesas.h>
- #include <linux/io.h>
- #include <linux/irqchip.h>
+ #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
  
-@@ -23,19 +22,6 @@
+@@ -311,7 +312,12 @@ enum clk_ids {
+ static int __init r8a7795_cpg_mssr_init(struct device *dev)
+ {
+ 	const struct rcar_gen3_cpg_pll_config *cpg_pll_config;
+-	u32 cpg_mode = rcar_gen3_read_mode_pins();
++	u32 cpg_mode;
++	int error;
++
++	error = rcar_rst_read_mode_pins(&cpg_mode);
++	if (error)
++		return error;
  
- #include "common.h"
- 
--#define MODEMR 0xffcc0020
--
--static void __init r8a7778_timer_init(void)
--{
--	u32 mode;
--	void __iomem *modemr = ioremap_nocache(MODEMR, 4);
--
--	BUG_ON(!modemr);
--	mode = ioread32(modemr);
--	iounmap(modemr);
--	r8a7778_clocks_init(mode);
--}
--
- #define INT2SMSKCR0	0x82288 /* 0xfe782288 */
- #define INT2SMSKCR1	0x8228c /* 0xfe78228c */
- 
-@@ -70,6 +56,5 @@ static void __init r8a7778_init_irq_dt(void)
- 	.init_early	= shmobile_init_delay,
- 	.init_irq	= r8a7778_init_irq_dt,
- 	.init_late	= shmobile_init_late,
--	.init_time	= r8a7778_timer_init,
- 	.dt_compat	= r8a7778_compat_dt,
- MACHINE_END
+ 	cpg_pll_config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
+ 	if (!cpg_pll_config->extal_div) {
 -- 
 1.9.1
