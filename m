@@ -1,56 +1,43 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v4 09/23] ARM: dts: r8a7794: Add device node for RST module
-Date: Fri, 21 Oct 2016 15:17:23 +0200
-Message-ID: <1477055857-17936-10-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v4 04/23] ARM: dts: r8a7779: Add device node for RESET/WDT module
+Date: Fri, 21 Oct 2016 15:17:18 +0200
+Message-ID: <1477055857-17936-5-git-send-email-geert+renesas@glider.be>
 References: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477055857-17936-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add a device node for the RST module, which provides a.o. reset control
-and mode pin monitoring.
+Add a device node for the RESET/WDT module, which provides a.o. reset
+control, mode pin monitoring, and watchdog control.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Acked-by: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Dirk Behme <dirk.behme@de.bosch.com>
 ---
 v4:
   - Add Acked-by,
 
 v3:
-  - Use "renesas,<soctype>-rst" instead of "renesas,rst-<soctype>",
-  - Drop "syscon" compatible value,
-
-v2:
-  - Correct unit address,
-  - Drop RFC status and TODO,
-  - Change one-line summary prefix to match current arm-soc practices.
+  - New.
 ---
- arch/arm/boot/dts/r8a7794.dtsi | 5 +++++
+ arch/arm/boot/dts/r8a7779.dtsi | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
-index 9365580a194facc7..69e4f4fad89b2323 100644
---- a/arch/arm/boot/dts/r8a7794.dtsi
-+++ b/arch/arm/boot/dts/r8a7794.dtsi
-@@ -1375,6 +1375,11 @@
- 		};
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index b9bbcce69dfbd5b9..4a30b232624e1d24 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -595,4 +595,9 @@
+ 		reg = <0xffd85000 0x0200>;
+ 		#power-domain-cells = <1>;
  	};
- 
-+	rst: reset-controller@e6160000 {
-+		compatible = "renesas,r8a7794-rst";
-+		reg = <0 0xe6160000 0 0x0100>;
-+	};
 +
- 	sysc: system-controller@e6180000 {
- 		compatible = "renesas,r8a7794-sysc";
- 		reg = <0 0xe6180000 0 0x0200>;
++	rst: reset-controller@ffcc0000 {
++		compatible = "renesas,r8a7779-reset-wdt";
++		reg = <0xffcc0000 0x48>;
++	};
+ };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
