@@ -1,81 +1,88 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V6 00/10] dmaengine: qcom_hidma: add MSI interrupt support
-Date: Fri, 21 Oct 2016 12:27:23 +0530
-Message-ID: <20161021065723.GA2467@localhost>
-References: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
- <20161020094838.GY2467@localhost>
- <e3cbd6a2-7fac-98ec-74ea-0be88075663c@codeaurora.org>
- <20161020164321.GZ2467@localhost>
- <a4c95bd6-d760-1f02-bbb1-89538037d41e@codeaurora.org>
- <37baf7db-1e14-4027-9397-70649e8fa946@codeaurora.org>
+From: jic23@kernel.org
+Subject: Re: [PATCH 0/4] IIO wrapper drivers, dpot-dac and envelope-detector
+Date: Fri, 21 Oct 2016 08:17:00 +0100
+Message-ID: <736c146284d93633a4692b1102eaadaf@jic23.retrosnub.co.uk>
+References: <1476955562-13673-1-git-send-email-peda@axentia.se>
+ <9b8c0789-566d-67a3-b4f5-dbe4c69f6932@metafoo.de>
+ <8B9238AE-D53C-4A22-84CF-EC42FDA2DFB2@jic23.retrosnub.co.uk>
+ <DB170A5C-B172-4B86-80D5-58FD53752ED4@jic23.retrosnub.co.uk>
+ <ba941bcd-c542-b699-638f-3b3003e8af00@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <37baf7db-1e14-4027-9397-70649e8fa946-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ba941bcd-c542-b699-638f-3b3003e8af00@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-iio-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 20, 2016 at 02:55:23PM -0700, Sinan Kaya wrote:
-> Hi Vinod,
+On 20.10.2016 19:17, Peter Rosin wrote:
+> On 2016-10-20 19:37, Jonathan Cameron wrote:
+>> On 20 October 2016 18:30:19 BST, Jonathan Cameron 
+>> <jic23@jic23.retrosnub.co.uk> wrote:
+>>> On 20 October 2016 13:55:12 BST, Lars-Peter Clausen <lars@metafoo.de> 
+>>> wrote:
+>>>> On 10/20/2016 11:25 AM, Peter Rosin wrote:
+>>>>> Also, is there some agreed-upon way to dig out the maximum value 
+>>>>> from
+>>>>> an iio channel? If so, "dpot-dac,max-ohms" can be eliminated from 
+>>>>> the
+>>>>> dt bindings, which would have been nice...
+>>>> 
+>>>> Yes, this is something we could really use. In a sense it exists for
+>>>> the
+>>>> devices with buffer-capable channels where there is the real_bits 
+>>>> field
+>>>> which tells us the data width of the channel. But a dedicated 
+>>>> mechanism
+>>>> for
+>>>> querying the maximum (and minimum) valid code seems like a useful
+>>>> feature.
+>>>> Not only for in-kernel clients, but also for userspace.
+>>> 
+>>> This was something that was addressed by the rather ancient patch
+>>> series i posted that added
+>>> an available call back which provided info on range and values for 
+>>> all
+>>> info mask elements.
+>>> Series got buried by there being a lot of precursors but quite a few 
+>>> of
+>>> those have merged since.
+>>> 
+>>> Hmm Google won't let me find it on my phone. Was a while back now. 
+>>> Will
+>>> try to get on pc with
+>>> decent email archive later and dig out a reference.
+>> http://marc.info/?l=linux-iio&m=138469765309868&w=2 I think...
 > 
-> On 10/20/2016 10:34 AM, Sinan Kaya wrote:
-> > On 10/20/2016 9:43 AM, Vinod Koul wrote:
-> >>> slave-dma       git://git.infradead.org/users/vkoul/slave-dma.git (fetch)
-> >>>> slave-dma       git://git.infradead.org/users/vkoul/slave-dma.git (push)
-> >> You seem to have missed topic/qcom which I pushed last night. next would have worked too!!
-> >>
-> > 
-> > OK. Let me pick that up and test.
-> > 
-> 
-> It looks like patches were applied out of order.
+> Interesting, one issue with that is that it is all in real world
+> units, while I'd rather have the raw value.
+Um.. It's been a while, but the principle was (IIRC) that every
+_available would match the units fo the associated info mask element.
+Thus if you have a _raw element it would be in adc counts (most likely).
 
-When applying, if I get a conflict I try to skip them. Typically subsequent
-patches fail, sometimes they apply. I think couple of them did in this case
+_input would be in relevant real world units, scale etc in the whatever
+units the value itself is in.
 
-It built for me, 0day also gave me success report, so unless we have bisect
-regression, I would like rest of the patches on top of this please..
+> So, I would need to
+> convert back to the raw value using the scale, which sounds boring
+> but doable. However, I wonder if calibration may also be involved
+> with that conversion back to raw for some channels? That sounds a
+> bit more driver specific and potentially troublesome...
+I've not had a chance to look at your code (only picked up on this as
+there was a fair length thread developing), but I wouldn't have thought 
+we'd
+need to deal with calibrations.   Might need them to move to real world
+units from raw but that's always the case anyway (unfortunately).
 
-> -rw-rw-r-- 1 okaya users 8176 Oct 20 17:44 0010-dmaengine-qcom_hidma-add-MSI-support-for-interrupts.patch
-> -rw-rw-r-- 1 okaya users 1175 Oct 20 17:44 0009-dmaengine-qcom_hidma-break-completion-processing-on-.patch
-> -rw-rw-r-- 1 okaya users 4773 Oct 20 17:44 0008-dmaengine-qcom_hidma-protect-common-data-structures.patch
-> -rw-rw-r-- 1 okaya users 2752 Oct 20 17:44 0007-dmaengine-qcom_hidma-add-a-common-API-to-setup-the-i.patch
-> -rw-rw-r-- 1 okaya users 3225 Oct 20 17:44 0006-dmaengine-qcom_hidma-bring-out-interrupt-cause.patch
-> -rw-rw-r-- 1 okaya users 4284 Oct 20 17:44 0005-dmaengine-qcom_hidma-make-pending_tre_count-atomic.patch
-> -rw-rw-r-- 1 okaya users 1090 Oct 20 17:44 0004-dmaengine-qcom_hidma-configure-DMA-and-MSI-for-OF.patch
-> -rw-rw-r-- 1 okaya users  959 Oct 20 17:44 0003-of-irq-make-of_msi_configure-accessible-from-modules.patch
-> -rw-rw-r-- 1 okaya users 1558 Oct 20 17:44 0002-Documentation-DT-qcom_hidma-correct-spelling-mistake.patch
-> -rw-rw-r-- 1 okaya users 1588 Oct 20 17:44 0001-Documentation-DT-qcom_hidma-update-binding-for-MSI.patch
+Jonathan
 > 
-> This is the commit order in topic/dma branch. I added <<< for the patches missing below.
+> Cheers,
+> Peter
 > 
-> <<< 0010-dmaengine-qcom_hidma-add-MSI-support-for-interrupts.patch
-> <<< 0009-dmaengine-qcom_hidma-break-completion-processing-on-.patch
-> 
-> fc73796 dmaengine: qcom_hidma: break completion processing on error
-> 
-> <<< 0008-dmaengine-qcom_hidma-protect-common-data-structures.patch
-> 
-> d3eab50 dmaengine: qcom_hidma: add a common API to setup the interrupt
-> 
-> <<< 0006-dmaengine-qcom_hidma-bring-out-interrupt-cause.patch
-> <<< 0005-dmaengine-qcom_hidma-make-pending_tre_count-atomic.patch
-> 
-> 9da0be8 dmaengine: qcom_hidma: configure DMA and MSI for OF
-> 5282c18 of: irq: make of_msi_configure accessible from modules
-> 13af1c8 Documentation: DT: qcom_hidma: correct spelling mistakes
-> ef6661b Documentation: DT: qcom_hidma: update binding for MSI
-> 
-> I also looked at the binary contents of the patches in topic/dma with what I posted
-> on v6. They match excluding your Signed off lines.
-
-
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
