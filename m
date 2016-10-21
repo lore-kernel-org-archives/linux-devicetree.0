@@ -1,51 +1,41 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v5 23/23] phy: Add support for Qualcomm's USB HS phy
-Date: Fri, 21 Oct 2016 10:20:30 +0800
-Message-ID: <20161021022030.GB16461@b29397-desktop>
-References: <20161018015636.11701-1-stephen.boyd@linaro.org>
- <20161018015636.11701-24-stephen.boyd@linaro.org>
- <147700563857.2550.16732518381302920183@sboyd-linaro>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <147700563857.2550.16732518381302920183@sboyd-linaro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: linux-usb@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Chen <peter.chen@nxp.com>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH 2/2] arm64: dts: rockchip: add three new resets for rk3399 PCIe controller
+Date: Fri, 21 Oct 2016 10:43:56 +0800
+Message-ID: <1477017836-19317-3-git-send-email-shawn.lin@rock-chips.com>
+References: <1477017836-19317-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1477017836-19317-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Brian Norris <briannorris@chromium.org>, linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 20, 2016 at 04:20:38PM -0700, Stephen Boyd wrote:
-> Quoting Stephen Boyd (2016-10-17 18:56:36)
-> > +
-> > +static int
-> > +qcom_usb_hs_phy_vbus_notifier(struct notifier_block *nb, unsigned long event,
-> > +                             void *ptr)
-> > +{
-> > +       struct qcom_usb_hs_phy *uphy;
-> > +       int is_host;
-> > +       u8 addr;
-> > +
-> > +       uphy = container_of(nb, struct qcom_usb_hs_phy, vbus_notify);
-> > +       is_host = extcon_get_cable_state_(uphy->id_edev, EXTCON_USB_HOST);
-> 
-> Please don't apply this patch. This call now deadlocks on v4.9-rc1
-> because of how extcon_get_cable_state_() now grabs a lock that is
-> already held here when we're inside the notifier. It's not really
-> required that we grab the lock in extcon there, but this has exposed a
-> flaw in the logic anyway. We don't know if the id pin is going to toggle
-> before or after this function is called, so we should really keep track
-> of both vbus and id state in this driver and then do the same ulpi
-> writes from two different notifiers for both vbus and id pin. We would
-> be duplicating work sometimes, but that's pretty much the best solution
-> I can come up with. Otherwise it's racy.
-> 
+pm_rst, aclk_rst and pclk_rst should be controlled by driver, so we
+need to add these three resets for PCIe controller.
 
-Why you need to care id status? If EXTCON_USB event has happened, and
-event is true, you can set, otherwise, it is clear operation, that's
-to say you may not need have id extcon phandle, do you think so?
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+---
 
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 76b2864..5191cfd 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -300,8 +300,11 @@
+ 		ranges = <0x83000000 0x0 0xfa000000 0x0 0xfa000000 0x0 0x600000
+ 			  0x81000000 0x0 0xfa600000 0x0 0xfa600000 0x0 0x100000>;
+ 		resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
+-			 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>;
+-		reset-names = "core", "mgmt", "mgmt-sticky", "pipe";
++			 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>,
++			 <&cru SRST_PCIE_PM>, <&cru SRST_P_PCIE>,
++			 <&cru SRST_A_PCIE>;
++		reset-names = "core", "mgmt", "mgmt-sticky", "pipe",
++			      "pm", "pclk", "aclk";
+ 		status = "disabled";
+ 
+ 		pcie0_intc: interrupt-controller {
 -- 
-
-Best Regards,
-Peter Chen
+2.3.7
