@@ -1,392 +1,79 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v3 2/2] clk: renesas: cpg-mssr: add R8A7743 support
-Date: Fri, 21 Oct 2016 23:17:09 +0300
-Message-ID: <5038285.9DcXKlHSpF@wasted.cogentembedded.com>
-References: <1582226.1VeLLfmmeJ@wasted.cogentembedded.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC V2 PATCH 10/12] arm64: dts: msm8994 issolate non standard bootloader/LK entries
+Date: Fri, 21 Oct 2016 22:25:21 +0200
+Message-ID: <3979420.yzJRfAtfpN@wuerfel>
+References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com> <20161021194437.GA7509@tuxbot> <20161021200409.GN26139@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1582226.1VeLLfmmeJ@wasted.cogentembedded.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: mturquette@baylibre.com, linux-clk@vger.kernel.org, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, horms+renesas@verge.net.au
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20161021200409.GN26139@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jeremy McNicoll <jmcnicol@redhat.com>, git@kchr.de, Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add RZ/G1M (R8A7743) Clock  Pulse Generator / Module Standby and Software
-Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
-(and RZ/G) code.
+On Friday, October 21, 2016 1:04:09 PM CEST Stephen Boyd wrote:
+> On 10/21, Bjorn Andersson wrote:
+> > On Wed 19 Oct 20:17 PDT 2016, Andy Gross wrote:
+> > 
+> > > On Wed, Oct 19, 2016 at 08:07:25PM -0500, Rob Herring wrote:
+> > [..]
+> > > > Makes sense to me for things like Nexus phones here. What about DB410
+> > > > for example? Is there hope for a fix there? My bootloader is only a
+> > > > couple of months old and needs the properties still.
+> > > 
+> > > There won't be a fix for the 410c.  We barely got them to respin to use PSCI.
+> > > Stephen can correct me if I am wrong on this.
+> > > 
+> > > If this is fixed, it would be 8996+.  If..........
+> > > 
+> > > So this means introducing the msm-id's for the boards that currently require it,
+> > > and for the boards that will require it in the future.  And this would stay in
+> > > effect until the bootloader is able to parse the compatible strings or figure
+> > > this out without the msm-ids.
+> > > 
+> > 
+> > But if the bootloader at any point in the future would support picking a
+> > dtb by compatible strings instead of {msm,board,pmic}-id we wouldn't we
+> > just be back to the ridiculous compatible strings that tipped over into
+> > acceptance to these ids in the first place.
+> > 
+> > Or do we expect the boot loader to do a deep scan of the dtb to match on
+> > multiple nodes from the tree?
+> 
+> I'm pushing the bootloader team to do the deep scan of the dtb to
+> match up board compatible and pmic compatible strings so that we
+> don't have to keep these numbers around. Basically put what
+> dtbtool is doing into the bootloader so we don't have to post
+> process the dtb anymore. We're currently discussing how to
+> implement it and how to move the internal codebase to the new
+> scheme.
+> 
+> At least for 96boards I think we can update the lk bootloaders on
+> there to adopt this code. For other platforms like nexus though I
+> don't see a way we can update those bootloaders, and those
+> bootloaders require these properties exist in the dtbs, so we
+> should just throw the numbers into the dts files there and be
+> done with post processing. For bootloaders that require the QCDT
+> header, we'll have to keep running dtbtool there to generate the
+> header. Having the ids in the dts file or not doesn't really
+> matter there.
 
-Based on the proof-of-concept R8A7791 CPG/MSSR patch by Geert Uytterhoeven
-<geert+renesas@glider.be>.
+I think part of the problem here is the way that the bootloader
+expects multiple dtbs to be appended to the kernel binary, and
+then pick one of them based on its contents. That doesn't really
+change at all when changing the parser from looking at nonstandard
+properties to looking at the compatible strings.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+It still breaks the last-resort workaround for broken bootloaders
+that we have in the form of appending the DT to the kernel
+with CONFIG_ARM_APPENDED_DTB.
 
----
-Changes in version 3:
-- exchanged  Audio-DMAC0/1  entries in r8a7743_mod_clks[];
-- renamed the I2C6 entry to IICDVFS;
-- fixed the comment to the INTC-SYS entry in r8a7743_crit_mod_clks[];
-- removed the useless EXTAL divisor check from r8a7743_cpg_mssr_init();
-- added Rob's ACK and Geert's tag.
+I think a better long-term strategy would be to make the bootloader
+load the dtb separately from the kernel and finding the right file
+using some information outside of the dtb. Ideally this is done
+by storing all files on a file system that can also be mounted
+to /boot, but there are probably other options that work equally well.
 
-Changes in version 2:
-- documented the R8A7743 device tree binding;
-- fixed whitespace errors/warnings reported by checkpatch.pl;
-- used  tabs instead of spaces for indentation;
-- fixed the PLL3 column name in the PLL table.
-
- Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt |    4 
- drivers/clk/renesas/Kconfig                                  |    1 
- drivers/clk/renesas/Makefile                                 |    1 
- drivers/clk/renesas/r8a7743-cpg-mssr.c                       |  264 +++++++++++
- drivers/clk/renesas/renesas-cpg-mssr.c                       |    6 
- drivers/clk/renesas/renesas-cpg-mssr.h                       |    1 
- 6 files changed, 276 insertions(+), 1 deletion(-)
-
-Index: linux/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-===================================================================
---- linux.orig/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-+++ linux/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-@@ -13,6 +13,7 @@ They provide the following functionaliti
- 
- Required Properties:
-   - compatible: Must be one of:
-+      - "renesas,r8a7743-cpg-mssr" for the r8a7743 SoC (RZ/G1M)
-       - "renesas,r8a7795-cpg-mssr" for the r8a7795 SoC (R-Car H3)
-       - "renesas,r8a7796-cpg-mssr" for the r8a7796 SoC (R-Car M3-W)
- 
-@@ -22,7 +23,8 @@ Required Properties:
-   - clocks: References to external parent clocks, one entry for each entry in
-     clock-names
-   - clock-names: List of external parent clock names. Valid names are:
--      - "extal" (r8a7795, r8a7796)
-+      - "extal" (r8a7743, r8a7795, r8a7796)
-+      - "usb_extal" (r8a7743)
-       - "extalr" (r8a7795, r8a7796)
- 
-   - #clock-cells: Must be 2
-Index: linux/drivers/clk/renesas/Kconfig
-===================================================================
---- linux.orig/drivers/clk/renesas/Kconfig
-+++ linux/drivers/clk/renesas/Kconfig
-@@ -1,5 +1,6 @@
- config CLK_RENESAS_CPG_MSSR
- 	bool
-+	default y if ARCH_R8A7743
- 	default y if ARCH_R8A7795
- 	default y if ARCH_R8A7796
- 
-Index: linux/drivers/clk/renesas/Makefile
-===================================================================
---- linux.orig/drivers/clk/renesas/Makefile
-+++ linux/drivers/clk/renesas/Makefile
-@@ -2,6 +2,7 @@ obj-$(CONFIG_ARCH_EMEV2)		+= clk-emev2.o
- obj-$(CONFIG_ARCH_R7S72100)		+= clk-rz.o
- obj-$(CONFIG_ARCH_R8A73A4)		+= clk-r8a73a4.o clk-div6.o
- obj-$(CONFIG_ARCH_R8A7740)		+= clk-r8a7740.o clk-div6.o
-+obj-$(CONFIG_ARCH_R8A7743)		+= r8a7743-cpg-mssr.o rcar-gen2-cpg.o
- obj-$(CONFIG_ARCH_R8A7778)		+= clk-r8a7778.o
- obj-$(CONFIG_ARCH_R8A7779)		+= clk-r8a7779.o
- obj-$(CONFIG_ARCH_R8A7790)		+= clk-rcar-gen2.o clk-div6.o
-Index: linux/drivers/clk/renesas/r8a7743-cpg-mssr.c
-===================================================================
---- /dev/null
-+++ linux/drivers/clk/renesas/r8a7743-cpg-mssr.c
-@@ -0,0 +1,264 @@
-+/*
-+ * r8a7743 Clock Pulse Generator / Module Standby and Software Reset
-+ *
-+ * Copyright (C) 2016 Cogent Embedded Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published
-+ * by the Free Software Foundation; of the License.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+
-+#include <dt-bindings/clock/r8a7743-cpg-mssr.h>
-+
-+#include "renesas-cpg-mssr.h"
-+#include "rcar-gen2-cpg.h"
-+
-+enum clk_ids {
-+	/* Core Clock Outputs exported to DT */
-+	LAST_DT_CORE_CLK = R8A7743_CLK_OSC,
-+
-+	/* External Input Clocks */
-+	CLK_EXTAL,
-+	CLK_USB_EXTAL,
-+
-+	/* Internal Core Clocks */
-+	CLK_MAIN,
-+	CLK_PLL0,
-+	CLK_PLL1,
-+	CLK_PLL3,
-+	CLK_PLL1_DIV2,
-+
-+	/* Module Clocks */
-+	MOD_CLK_BASE
-+};
-+
-+static const struct cpg_core_clk r8a7743_core_clks[] __initconst = {
-+	/* External Clock Inputs */
-+	DEF_INPUT("extal",	CLK_EXTAL),
-+	DEF_INPUT("usb_extal",	CLK_USB_EXTAL),
-+
-+	/* Internal Core Clocks */
-+	DEF_BASE(".main",	CLK_MAIN, CLK_TYPE_GEN2_MAIN, CLK_EXTAL),
-+	DEF_BASE(".pll0",	CLK_PLL0, CLK_TYPE_GEN2_PLL0, CLK_MAIN),
-+	DEF_BASE(".pll1",	CLK_PLL1, CLK_TYPE_GEN2_PLL1, CLK_MAIN),
-+	DEF_BASE(".pll3",	CLK_PLL3, CLK_TYPE_GEN2_PLL3, CLK_MAIN),
-+
-+	DEF_FIXED(".pll1_div2", CLK_PLL1_DIV2, CLK_PLL1, 2, 1),
-+
-+	/* Core Clock Outputs */
-+	DEF_BASE("z",	 R8A7743_CLK_Z,    CLK_TYPE_GEN2_Z,	CLK_PLL0),
-+	DEF_BASE("lb",	 R8A7743_CLK_LB,   CLK_TYPE_GEN2_LB,	CLK_PLL1),
-+	DEF_BASE("sdh",  R8A7743_CLK_SDH,  CLK_TYPE_GEN2_SDH,	CLK_PLL1),
-+	DEF_BASE("sd0",  R8A7743_CLK_SD0,  CLK_TYPE_GEN2_SD0,	CLK_PLL1),
-+	DEF_BASE("qspi", R8A7743_CLK_QSPI, CLK_TYPE_GEN2_QSPI,	CLK_PLL1_DIV2),
-+	DEF_BASE("rcan", R8A7743_CLK_RCAN, CLK_TYPE_GEN2_RCAN,	CLK_USB_EXTAL),
-+
-+	DEF_FIXED("zg",    R8A7743_CLK_ZG,	CLK_PLL1,	    3, 1),
-+	DEF_FIXED("zx",    R8A7743_CLK_ZX,	CLK_PLL1,	    3, 1),
-+	DEF_FIXED("zs",    R8A7743_CLK_ZS,	CLK_PLL1,	    6, 1),
-+	DEF_FIXED("hp",    R8A7743_CLK_HP,	CLK_PLL1,	   12, 1),
-+	DEF_FIXED("b",     R8A7743_CLK_B,	CLK_PLL1,	   12, 1),
-+	DEF_FIXED("p",     R8A7743_CLK_P,	CLK_PLL1,	   24, 1),
-+	DEF_FIXED("cl",    R8A7743_CLK_CL,	CLK_PLL1,	   48, 1),
-+	DEF_FIXED("m2",    R8A7743_CLK_M2,	CLK_PLL1,	    8, 1),
-+	DEF_FIXED("zb3",   R8A7743_CLK_ZB3,	CLK_PLL3,	    4, 1),
-+	DEF_FIXED("zb3d2", R8A7743_CLK_ZB3D2,	CLK_PLL3,	    8, 1),
-+	DEF_FIXED("ddr",   R8A7743_CLK_DDR,	CLK_PLL3,	    8, 1),
-+	DEF_FIXED("mp",    R8A7743_CLK_MP,	CLK_PLL1_DIV2,     15, 1),
-+	DEF_FIXED("cp",    R8A7743_CLK_CP,	CLK_EXTAL,	    2, 1),
-+	DEF_FIXED("r",     R8A7743_CLK_R,	CLK_PLL1,	49152, 1),
-+	DEF_FIXED("osc",   R8A7743_CLK_OSC,	CLK_PLL1,	12288, 1),
-+
-+	DEF_DIV6P1("sd2",  R8A7743_CLK_SD2,	CLK_PLL1_DIV2,	0x078),
-+	DEF_DIV6P1("sd3",  R8A7743_CLK_SD3,	CLK_PLL1_DIV2,	0x26c),
-+	DEF_DIV6P1("mmc0", R8A7743_CLK_MMC0,	CLK_PLL1_DIV2,	0x240),
-+};
-+
-+static const struct mssr_mod_clk r8a7743_mod_clks[] __initconst = {
-+	DEF_MOD("msiof0",	    0,	R8A7743_CLK_MP),
-+	DEF_MOD("vcp0",		  101,	R8A7743_CLK_ZS),
-+	DEF_MOD("vpc0",		  103,	R8A7743_CLK_ZS),
-+	DEF_MOD("tmu1",		  111,	R8A7743_CLK_P),
-+	DEF_MOD("3dg",		  112,	R8A7743_CLK_ZG),
-+	DEF_MOD("2d-dmac",	  115,	R8A7743_CLK_ZS),
-+	DEF_MOD("fdp1-1",	  118,	R8A7743_CLK_ZS),
-+	DEF_MOD("fdp1-0",	  119,	R8A7743_CLK_ZS),
-+	DEF_MOD("tmu3",		  121,	R8A7743_CLK_P),
-+	DEF_MOD("tmu2",		  122,	R8A7743_CLK_P),
-+	DEF_MOD("cmt0",		  124,	R8A7743_CLK_R),
-+	DEF_MOD("tmu0",		  125,	R8A7743_CLK_CP),
-+	DEF_MOD("vsp1du1",	  127,	R8A7743_CLK_ZS),
-+	DEF_MOD("vsp1du0",	  128,	R8A7743_CLK_ZS),
-+	DEF_MOD("vsp1-sy",	  131,	R8A7743_CLK_ZS),
-+	DEF_MOD("scifa2",	  202,	R8A7743_CLK_MP),
-+	DEF_MOD("scifa1",	  203,	R8A7743_CLK_MP),
-+	DEF_MOD("scifa0",	  204,	R8A7743_CLK_MP),
-+	DEF_MOD("msiof2",	  205,	R8A7743_CLK_MP),
-+	DEF_MOD("scifb0",	  206,	R8A7743_CLK_MP),
-+	DEF_MOD("scifb1",	  207,	R8A7743_CLK_MP),
-+	DEF_MOD("msiof1",	  208,	R8A7743_CLK_MP),
-+	DEF_MOD("scifb2",	  216,	R8A7743_CLK_MP),
-+	DEF_MOD("sys-dmac1",	  218,	R8A7743_CLK_ZS),
-+	DEF_MOD("sys-dmac0",	  219,	R8A7743_CLK_ZS),
-+	DEF_MOD("tpu0",		  304,	R8A7743_CLK_CP),
-+	DEF_MOD("sdhi3",	  311,	R8A7743_CLK_SD3),
-+	DEF_MOD("sdhi2",	  312,	R8A7743_CLK_SD2),
-+	DEF_MOD("sdhi0",	  314,	R8A7743_CLK_SD0),
-+	DEF_MOD("mmcif0",	  315,	R8A7743_CLK_MMC0),
-+	DEF_MOD("iic0",		  318,	R8A7743_CLK_HP),
-+	DEF_MOD("pciec",	  319,	R8A7743_CLK_MP),
-+	DEF_MOD("iic1",		  323,	R8A7743_CLK_HP),
-+	DEF_MOD("usb3.0",	  328,	R8A7743_CLK_MP),
-+	DEF_MOD("cmt1",		  329,	R8A7743_CLK_R),
-+	DEF_MOD("usbhs-dmac0",	  330,	R8A7743_CLK_HP),
-+	DEF_MOD("usbhs-dmac1",	  331,	R8A7743_CLK_HP),
-+	DEF_MOD("irqc",		  407,	R8A7743_CLK_CP),
-+	DEF_MOD("intc-sys",	  408,	R8A7743_CLK_ZS),
-+	DEF_MOD("audio-dmac1",	  501,	R8A7743_CLK_HP),
-+	DEF_MOD("audio-dmac0",	  502,	R8A7743_CLK_HP),
-+	DEF_MOD("thermal",	  522,	CLK_EXTAL),
-+	DEF_MOD("pwm",		  523,	R8A7743_CLK_P),
-+	DEF_MOD("usb-ehci",	  703,	R8A7743_CLK_MP),
-+	DEF_MOD("usbhs",	  704,	R8A7743_CLK_HP),
-+	DEF_MOD("hscif2",	  713,	R8A7743_CLK_ZS),
-+	DEF_MOD("scif5",	  714,	R8A7743_CLK_P),
-+	DEF_MOD("scif4",	  715,	R8A7743_CLK_P),
-+	DEF_MOD("hscif1",	  716,	R8A7743_CLK_ZS),
-+	DEF_MOD("hscif0",	  717,	R8A7743_CLK_ZS),
-+	DEF_MOD("scif3",	  718,	R8A7743_CLK_P),
-+	DEF_MOD("scif2",	  719,	R8A7743_CLK_P),
-+	DEF_MOD("scif1",	  720,	R8A7743_CLK_P),
-+	DEF_MOD("scif0",	  721,	R8A7743_CLK_P),
-+	DEF_MOD("du1",		  723,	R8A7743_CLK_ZX),
-+	DEF_MOD("du0",		  724,	R8A7743_CLK_ZX),
-+	DEF_MOD("lvds0",	  726,	R8A7743_CLK_ZX),
-+	DEF_MOD("ipmmu-sgx",	  800,	R8A7743_CLK_ZX),
-+	DEF_MOD("vin2",		  809,	R8A7743_CLK_ZG),
-+	DEF_MOD("vin1",		  810,	R8A7743_CLK_ZG),
-+	DEF_MOD("vin0",		  811,	R8A7743_CLK_ZG),
-+	DEF_MOD("etheravb",	  812,	R8A7743_CLK_HP),
-+	DEF_MOD("ether",	  813,	R8A7743_CLK_P),
-+	DEF_MOD("sata1",	  814,	R8A7743_CLK_ZS),
-+	DEF_MOD("sata0",	  815,	R8A7743_CLK_ZS),
-+	DEF_MOD("gpio7",	  904,	R8A7743_CLK_CP),
-+	DEF_MOD("gpio6",	  905,	R8A7743_CLK_CP),
-+	DEF_MOD("gpio5",	  907,	R8A7743_CLK_CP),
-+	DEF_MOD("gpio4",	  908,	R8A7743_CLK_CP),
-+	DEF_MOD("gpio3",	  909,	R8A7743_CLK_CP),
-+	DEF_MOD("gpio2",	  910,	R8A7743_CLK_CP),
-+	DEF_MOD("gpio1",	  911,	R8A7743_CLK_CP),
-+	DEF_MOD("gpio0",	  912,	R8A7743_CLK_CP),
-+	DEF_MOD("can1",		  915,	R8A7743_CLK_P),
-+	DEF_MOD("can0",		  916,	R8A7743_CLK_P),
-+	DEF_MOD("qspi_mod",	  917,	R8A7743_CLK_QSPI),
-+	DEF_MOD("i2c5",		  925,	R8A7743_CLK_HP),
-+	DEF_MOD("iicdvfs",	  926,	R8A7743_CLK_CP),
-+	DEF_MOD("i2c4",		  927,	R8A7743_CLK_HP),
-+	DEF_MOD("i2c3",		  928,	R8A7743_CLK_HP),
-+	DEF_MOD("i2c2",		  929,	R8A7743_CLK_HP),
-+	DEF_MOD("i2c1",		  930,	R8A7743_CLK_HP),
-+	DEF_MOD("i2c0",		  931,	R8A7743_CLK_HP),
-+	DEF_MOD("ssi-all",	 1005,	R8A7743_CLK_P),
-+	DEF_MOD("ssi9",		 1006,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi8",		 1007,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi7",		 1008,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi6",		 1009,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi5",		 1010,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi4",		 1011,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi3",		 1012,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi2",		 1013,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi1",		 1014,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi0",		 1015,	MOD_CLK_ID(1005)),
-+	DEF_MOD("scu-all",	 1017,	R8A7743_CLK_P),
-+	DEF_MOD("scu-dvc1",	 1018,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-dvc0",	 1019,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-ctu1-mix1", 1020,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-ctu0-mix0", 1021,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src9",	 1022,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src8",	 1023,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src7",	 1024,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src6",	 1025,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src5",	 1026,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src4",	 1027,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src3",	 1028,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src2",	 1029,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src1",	 1030,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src0",	 1031,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scifa3",	 1106,	R8A7743_CLK_MP),
-+	DEF_MOD("scifa4",	 1107,	R8A7743_CLK_MP),
-+	DEF_MOD("scifa5",	 1108,	R8A7743_CLK_MP),
-+};
-+
-+static const unsigned int r8a7743_crit_mod_clks[] __initconst = {
-+	MOD_CLK_ID(408),	/* INTC-SYS (GIC) */
-+};
-+
-+/*
-+ * CPG Clock Data
-+ */
-+
-+/*
-+ *   MD		EXTAL		PLL0	PLL1	PLL3
-+ * 14 13 19	(MHz)		*1	*1
-+ *---------------------------------------------------
-+ * 0  0  0	15 x 1		x172/2	x208/2	x106
-+ * 0  0  1	15 x 1		x172/2	x208/2	x88
-+ * 0  1  0	20 x 1		x130/2	x156/2	x80
-+ * 0  1  1	20 x 1		x130/2	x156/2	x66
-+ * 1  0  0	26 / 2		x200/2	x240/2	x122
-+ * 1  0  1	26 / 2		x200/2	x240/2	x102
-+ * 1  1  0	30 / 2		x172/2	x208/2	x106
-+ * 1  1  1	30 / 2		x172/2	x208/2	x88
-+ *
-+ * *1 :	Table 7.6 indicates VCO output (PLLx = VCO/2)
-+ */
-+#define CPG_PLL_CONFIG_INDEX(md)	((((md) & BIT(14)) >> 12) | \
-+					 (((md) & BIT(13)) >> 12) | \
-+					 (((md) & BIT(19)) >> 19))
-+
-+static const struct rcar_gen2_cpg_pll_config cpg_pll_configs[8] __initconst = {
-+	/* EXTAL div	PLL1 mult	PLL3 mult */
-+	{ 1,		208,		106,	},
-+	{ 1,		208,		88,	},
-+	{ 1,		156,		80,	},
-+	{ 1,		156,		66,	},
-+	{ 2,		240,		122,	},
-+	{ 2,		240,		102,	},
-+	{ 2,		208,		106,	},
-+	{ 2,		208,		88,	},
-+};
-+
-+static int __init r8a7743_cpg_mssr_init(struct device *dev)
-+{
-+	const struct rcar_gen2_cpg_pll_config *cpg_pll_config;
-+	u32 cpg_mode = rcar_gen2_read_modemr();
-+
-+	cpg_pll_config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
-+
-+	return rcar_gen2_cpg_init(cpg_pll_config);
-+}
-+
-+const struct cpg_mssr_info r8a7743_cpg_mssr_info __initconst = {
-+	/* Core Clocks */
-+	.core_clks = r8a7743_core_clks,
-+	.num_core_clks = ARRAY_SIZE(r8a7743_core_clks),
-+	.last_dt_core_clk = LAST_DT_CORE_CLK,
-+	.num_total_core_clks = MOD_CLK_BASE,
-+
-+	/* Module Clocks */
-+	.mod_clks = r8a7743_mod_clks,
-+	.num_mod_clks = ARRAY_SIZE(r8a7743_mod_clks),
-+	.num_hw_mod_clks = 12 * 32,
-+
-+	/* Critical Module Clocks */
-+	.crit_mod_clks = r8a7743_crit_mod_clks,
-+	.num_crit_mod_clks = ARRAY_SIZE(r8a7743_crit_mod_clks),
-+
-+	/* Callbacks */
-+	.init = r8a7743_cpg_mssr_init,
-+	.cpg_clk_register = rcar_gen2_cpg_clk_register,
-+};
-Index: linux/drivers/clk/renesas/renesas-cpg-mssr.c
-===================================================================
---- linux.orig/drivers/clk/renesas/renesas-cpg-mssr.c
-+++ linux/drivers/clk/renesas/renesas-cpg-mssr.c
-@@ -503,6 +503,12 @@ static int __init cpg_mssr_add_clk_domai
- }
- 
- static const struct of_device_id cpg_mssr_match[] = {
-+#ifdef CONFIG_ARCH_R8A7743
-+	{
-+		.compatible = "renesas,r8a7743-cpg-mssr",
-+		.data = &r8a7743_cpg_mssr_info,
-+	},
-+#endif
- #ifdef CONFIG_ARCH_R8A7795
- 	{
- 		.compatible = "renesas,r8a7795-cpg-mssr",
-Index: linux/drivers/clk/renesas/renesas-cpg-mssr.h
-===================================================================
---- linux.orig/drivers/clk/renesas/renesas-cpg-mssr.h
-+++ linux/drivers/clk/renesas/renesas-cpg-mssr.h
-@@ -130,6 +130,7 @@ struct cpg_mssr_info {
- 					struct clk **clks, void __iomem *base);
- };
- 
-+extern const struct cpg_mssr_info r8a7743_cpg_mssr_info;
- extern const struct cpg_mssr_info r8a7795_cpg_mssr_info;
- extern const struct cpg_mssr_info r8a7796_cpg_mssr_info;
- #endif
-
+	Arnd 
