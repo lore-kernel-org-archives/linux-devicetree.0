@@ -1,56 +1,363 @@
 From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 2/8] drm: bridge: vga-dac: Add adi,adv7123 compatible
- string
-Date: Fri, 21 Oct 2016 10:43:34 +0530
-Message-ID: <2e22947f-1c8c-710a-cb60-bd6b52f219eb@codeaurora.org>
+Subject: Re: [PATCH 1/8] drm: bridge: Add LVDS encoder driver
+Date: Fri, 21 Oct 2016 10:51:59 +0530
+Message-ID: <92a46ca2-2138-bb3d-ee19-4cb297c85bab@codeaurora.org>
 References: <1476887143-24831-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1476887143-24831-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1476887143-24831-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1476887143-24831-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1476887143-24831-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org
 Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxMC8xOS8yMDE2IDA3OjU1IFBNLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+IFRoZSBB
-RFY3MTIzIGlzIGEgdHJhbnNwYXJlbnQgVkdBIERBQy4gVW5saWtlIGR1bWIgVkdBIERBQ3MgaXQg
-Y2FuIGJlCj4gY29udHJvbGxlZCB0aHJvdWdoIGEgcG93ZXIgc2F2ZSBwaW4sIGFuZCByZXF1aXJl
-cyBhIHBvd2VyIHN1cHBseS4KPiBIb3dldmVyLCBvbiBtb3N0IGJvYXJkcyB3aGVyZSB0aGUgZGV2
-aWNlIGlzIHVzZWQgbmVpdGhlciB0aGUgcG93ZXIgc2F2ZQo+IHNpZ25hbCBub3IgdGhlIHBvd2Vy
-IHN1cHBseSBhcmUgY29udHJvbGxhYmxlLgo+Cj4gVG8gYXZvaWQgZGV2ZWxvcGluZyBhIHNlcGFy
-YXRlIGRldmljZS1zcGVjaWZpYyBkcml2ZXIgYWRkIGFuCj4gImFkaSxhZHY3MTIzIiBjb21wYXRp
-YmxlIGVudHJ5IHRvIHRoZSBkdW1iLXZnYS1kYWMgZHJpdmVyLiBUaGlzIHdpbGwKPiBhbGxvdyBz
-dXBwb3J0aW5nIG1vc3QgQURWNzEyMy1iYXNlZCBib2FyZHMgZWFzaWx5LCB3aGlsZSBhbGxvd2lu
-ZyBmdXR1cmUKPiBkZXZlbG9wbWVudCBvZiBhbiBhZHY3MTIzIGRyaXZlciB3aGVuIG5lZWRlZCB3
-aXRob3V0IGJyZWFraW5nIGJhY2t3YXJkCj4gY29tcGF0aWJpbGl0eS4KClNob3VsZG4ndCB3ZSBo
-YXZlIGEgRFQgYmluZGluZyBkb2MgZm9yIEFEVjcxMjMsIGV2ZW4gaWYgaXQncyBzaGFyaW5nCnRo
-ZSBkdW1iIHZnYSBkcml2ZXIgZm9yIG5vdz8KClNhbWUgcXVlcnkgZm9yIHRoZSBUaGluZSBMVkRT
-IGVuY29kZXIuCgpUaGFua3MsCkFyY2hpdAoKPgo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZwo+IFNpZ25lZC1vZmYtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnQr
-cmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdl
-L2R1bWItdmdhLWRhYy5jIHwgMSArCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHVtYi12Z2EtZGFjLmMgYi9k
-cml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdhLWRhYy5jCj4gaW5kZXggYWZlYzIzMjE4NWE3
-Li5iMzNlM2Y4MjllNGYgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdW1i
-LXZnYS1kYWMuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHVtYi12Z2EtZGFjLmMK
-PiBAQCAtMjA0LDYgKzIwNCw3IEBAIHN0YXRpYyBpbnQgZHVtYl92Z2FfcmVtb3ZlKHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2Vf
-aWQgZHVtYl92Z2FfbWF0Y2hbXSA9IHsKPiAgCXsgLmNvbXBhdGlibGUgPSAiZHVtYi12Z2EtZGFj
-IiB9LAo+ICsJeyAuY29tcGF0aWJsZSA9ICJhZGksYWR2NzEyMyIgfSwKPiAgCXt9LAo+ICB9Owo+
-ICBNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBkdW1iX3ZnYV9tYXRjaCk7Cj4KCi0tIApRdWFsY29t
-bSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1
-bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+
+On 10/19/2016 07:55 PM, Laurent Pinchart wrote:
+> The LVDS encoder driver is a DRM bridge driver that supports the
+> parallel to LVDS encoders that don't require any configuration. The
+> driver thus doesn't interact with the device, but creates an LVDS
+> connector for the panel and exposes its size and timing based on
+> information retrieved from DT.
+>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> ---
+>  .../bindings/display/bridge/lvds-transmitter.txt   |  64 +++++++
+>  drivers/gpu/drm/bridge/Kconfig                     |   8 +
+>  drivers/gpu/drm/bridge/Makefile                    |   1 +
+>  drivers/gpu/drm/bridge/lvds-encoder.c              | 203 +++++++++++++++++++++
+>  4 files changed, 276 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+>  create mode 100644 drivers/gpu/drm/bridge/lvds-encoder.c
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+> new file mode 100644
+> index 000000000000..fd39ad34c383
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+> @@ -0,0 +1,64 @@
+> +Parallel to LVDS Encoder
+> +------------------------
+> +
+> +This binding supports the parallel to LVDS encoders that don't require any
+> +configuration.
+> +
+> +LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Multiple
+> +incompatible data link layers have been used over time to transmit image data
+> +to LVDS panels. This binding targets devices compatible with the following
+> +specifications only.
+> +
+> +[JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999, February
+> +1999 (Version 1.0), Japan Electronic Industry Development Association (JEIDA)
+> +[LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
+> +Semiconductor
+> +[VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
+> +Electronics Standards Association (VESA)
+> +
+> +Those devices have been marketed under the FPD-Link and FlatLink brand names
+> +among others.
+> +
+> +
+> +Required properties:
+> +
+> +- compatible: Must be "lvds-encoder"
+> +
+> +Required nodes:
+> +
+> +This device has two video ports. Their connections are modeled using the OF
+> +graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+> +
+> +- Video port 0 for parallel input
+> +- Video port 1 for LVDS output
+> +
+> +
+> +Example
+> +-------
+> +
+> +lvds-encoder {
+> +	compatible = "lvds-encoder";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			lvds_enc_in: endpoint {
+> +				remote-endpoint = <&display_out_rgb>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			lvds_enc_out: endpoint {
+> +				remote-endpoint = <&lvds_panel_in>;
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index 10e12e74fc9f..5dafad7817ad 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -24,6 +24,14 @@ config DRM_DUMB_VGA_DAC
+>  	help
+>  	  Support for RGB to VGA DAC based bridges
+>
+> +config DRM_LVDS_ENCODER
+> +	tristate "Transparent parallel to LVDS encoder support"
+> +	depends on OF
+> +	select DRM_KMS_HELPER
+> +	help
+> +	  Support for transparent parallel to LVDS encoders that don't require
+> +	  any configuration.
+> +
+>  config DRM_DW_HDMI
+>  	tristate
+>  	select DRM_KMS_HELPER
+> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> index cdf3a3cf765d..bbaf583581ac 100644
+> --- a/drivers/gpu/drm/bridge/Makefile
+> +++ b/drivers/gpu/drm/bridge/Makefile
+> @@ -2,6 +2,7 @@ ccflags-y := -Iinclude/drm
+>
+>  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+>  obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
+> +obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
+>  obj-$(CONFIG_DRM_DW_HDMI) += dw-hdmi.o
+>  obj-$(CONFIG_DRM_DW_HDMI_AHB_AUDIO) += dw-hdmi-ahb-audio.o
+>  obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
+> diff --git a/drivers/gpu/drm/bridge/lvds-encoder.c b/drivers/gpu/drm/bridge/lvds-encoder.c
+> new file mode 100644
+> index 000000000000..33e8025c8a6d
+> --- /dev/null
+> +++ b/drivers/gpu/drm/bridge/lvds-encoder.c
+> @@ -0,0 +1,203 @@
+> +/*
+> + * Copyright (C) 2016 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of
+> + * the License, or (at your option) any later version.
+> + */
+> +
+> +#include <drm/drmP.h>
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_connector.h>
+> +#include <drm/drm_crtc_helper.h>
+> +#include <drm/drm_encoder.h>
+> +#include <drm/drm_modeset_helper_vtables.h>
+> +
+> +#include <linux/of_graph.h>
+> +
+> +#include <video/display_timing.h>
+> +#include <video/of_display_timing.h>
+> +#include <video/videomode.h>
+> +
+> +struct lvds_encoder {
+> +	struct device *dev;
+> +
+> +	struct drm_bridge bridge;
+> +	struct drm_connector connector;
+> +
+> +	struct {
+> +		unsigned int width_mm;
+> +		unsigned int height_mm;
+> +		struct videomode mode;
+> +	} panel;
+
+I don't see why we need create our own panel instance
+in the encoder driver. We should use the drm_panel
+API here rather than managing panel specific stuff in
+this driver.
+
+The parade-ps8622 and nxp-ptn3460 bridge drivers already
+do this.
+
+Thanks,
+Archit
+
+> +};
+> +
+> +static inline struct lvds_encoder *
+> +drm_bridge_to_lvds_encoder(struct drm_bridge *bridge)
+> +{
+> +	return container_of(bridge, struct lvds_encoder, bridge);
+> +}
+> +
+> +static inline struct lvds_encoder *
+> +drm_connector_to_lvds_encoder(struct drm_connector *connector)
+> +{
+> +	return container_of(connector, struct lvds_encoder, connector);
+> +}
+> +
+> +static int lvds_connector_get_modes(struct drm_connector *connector)
+> +{
+> +	struct lvds_encoder *lvds = drm_connector_to_lvds_encoder(connector);
+> +	struct drm_display_mode *mode;
+> +
+> +	mode = drm_mode_create(connector->dev);
+> +	if (mode == NULL)
+> +		return 0;
+> +
+> +	mode->type = DRM_MODE_TYPE_PREFERRED | DRM_MODE_TYPE_DRIVER;
+> +
+> +	drm_display_mode_from_videomode(&lvds->panel.mode, mode);
+> +
+> +	drm_mode_probed_add(connector, mode);
+> +
+> +	return 1;
+> +}
+> +
+> +static const struct drm_connector_helper_funcs lvds_connector_helper_funcs = {
+> +	.get_modes = lvds_connector_get_modes,
+> +};
+> +
+> +static enum drm_connector_status
+> +lvds_connector_detect(struct drm_connector *connector, bool force)
+> +{
+> +	return connector_status_connected;
+> +}
+> +
+> +static const struct drm_connector_funcs lvds_connector_funcs = {
+> +	.dpms = drm_atomic_helper_connector_dpms,
+> +	.reset = drm_atomic_helper_connector_reset,
+> +	.detect = lvds_connector_detect,
+> +	.fill_modes = drm_helper_probe_single_connector_modes,
+> +	.destroy = drm_connector_cleanup,
+> +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+> +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+> +};
+> +
+> +static int lvds_encoder_attach(struct drm_bridge *bridge)
+> +{
+> +	struct lvds_encoder *lvds = drm_bridge_to_lvds_encoder(bridge);
+> +	struct drm_connector *connector = &lvds->connector;
+> +	int ret;
+> +
+> +	if (!bridge->encoder) {
+> +		DRM_ERROR("Missing encoder\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	connector->display_info.width_mm = lvds->panel.width_mm;
+> +	connector->display_info.height_mm = lvds->panel.height_mm;
+> +
+> +	drm_connector_helper_add(connector, &lvds_connector_helper_funcs);
+> +
+> +	ret = drm_connector_init(bridge->dev, connector, &lvds_connector_funcs,
+> +				 DRM_MODE_CONNECTOR_LVDS);
+> +	if (ret) {
+> +		DRM_ERROR("Failed to initialize connector\n");
+> +		return ret;
+> +	}
+> +
+> +	drm_mode_connector_attach_encoder(&lvds->connector, bridge->encoder);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct drm_bridge_funcs lvds_encoder_bridge_funcs = {
+> +	.attach = lvds_encoder_attach,
+> +};
+> +
+> +static int lvds_encoder_probe(struct platform_device *pdev)
+> +{
+> +	struct lvds_encoder *lvds;
+> +	struct display_timing timing;
+> +	struct device_node *port;
+> +	struct device_node *endpoint;
+> +	struct device_node *panel;
+> +	int ret;
+> +
+> +	lvds = devm_kzalloc(&pdev->dev, sizeof(*lvds), GFP_KERNEL);
+> +	if (!lvds)
+> +		return -ENOMEM;
+> +
+> +	lvds->dev = &pdev->dev;
+> +	platform_set_drvdata(pdev, lvds);
+> +
+> +	lvds->bridge.funcs = &lvds_encoder_bridge_funcs;
+> +	lvds->bridge.of_node = pdev->dev.of_node;
+> +	lvds->bridge.encoder_type = DRM_MODE_ENCODER_LVDS;
+> +
+> +	/* Locate the panel DT node. */
+> +	port = of_graph_get_port_by_id(pdev->dev.of_node, 1);
+> +	if (!port) {
+> +		dev_dbg(&pdev->dev, "port 1 not found\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	endpoint = of_get_child_by_name(port, "endpoint");
+> +	of_node_put(port);
+> +	if (!endpoint) {
+> +		dev_dbg(&pdev->dev, "no endpoint for port 1\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	panel = of_graph_get_remote_port_parent(endpoint);
+> +	of_node_put(endpoint);
+> +	if (!panel) {
+> +		dev_dbg(&pdev->dev, "no remote endpoint for port 1\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	/* Parse and store panel information. */
+> +	ret = of_get_display_timing(panel, "panel-timing", &timing);
+> +	of_node_put(panel);
+> +	if (ret < 0) {
+> +		dev_dbg(&pdev->dev, "unable to parse panel timings\n");
+> +		return ret;
+> +	}
+> +
+> +	videomode_from_timing(&timing, &lvds->panel.mode);
+> +
+> +	of_property_read_u32(panel, "width-mm", &lvds->panel.width_mm);
+> +	of_property_read_u32(panel, "height-mm", &lvds->panel.height_mm);
+> +
+> +	/* Register the bridge. */
+> +	return drm_bridge_add(&lvds->bridge);
+> +}
+> +
+> +static int lvds_encoder_remove(struct platform_device *pdev)
+> +{
+> +	struct lvds_encoder *encoder = platform_get_drvdata(pdev);
+> +
+> +	drm_bridge_remove(&encoder->bridge);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id lvds_encoder_match[] = {
+> +	{ .compatible = "lvds-encoder" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, lvds_encoder_match);
+> +
+> +struct platform_driver lvds_encoder_driver = {
+> +	.probe	= lvds_encoder_probe,
+> +	.remove	= lvds_encoder_remove,
+> +	.driver		= {
+> +		.name		= "lvds-encoder",
+> +		.of_match_table	= lvds_encoder_match,
+> +	},
+> +};
+> +module_platform_driver(lvds_encoder_driver);
+> +
+> +MODULE_AUTHOR("Laurent Pinchart <laurent.pinchart@ideasonboard.com>");
+> +MODULE_DESCRIPTION("Transparent parallel to LVDS encoder");
+> +MODULE_LICENSE("GPL");
+>
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
