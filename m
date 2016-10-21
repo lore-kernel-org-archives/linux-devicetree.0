@@ -1,73 +1,26 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] mtd: s3c2410: make ecc mode configurable via
- platform data
-Date: Fri, 21 Oct 2016 23:06:25 +0300
-Message-ID: <20161021200625.GA20847@kozik-lap>
-References: <1476999766-32526-1-git-send-email-sergio.prado@e-labworks.com>
- <1476999766-32526-2-git-send-email-sergio.prado@e-labworks.com>
- <20161021182710.GA17279@kozik-lap>
- <5a626833-d4bf-a991-65ea-2849f2250dce@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3 0/2] Renesas R8A7743 CPG/MSSR clock support
+Date: Fri, 21 Oct 2016 23:12:42 +0300
+Message-ID: <1582226.1VeLLfmmeJ@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5a626833-d4bf-a991-65ea-2849f2250dce-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: mturquette@baylibre.com, linux-clk@vger.kernel.org, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, horms+renesas@verge.net.au
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 08:51:51PM +0200, Marek Vasut wrote:
-> On 10/21/2016 08:27 PM, Krzysztof Kozlowski wrote:
-> > On Thu, Oct 20, 2016 at 07:42:44PM -0200, Sergio Prado wrote:
-> >> Removing CONFIG_MTD_NAND_S3C2410_HWECC option and adding a ecc_mode
-> >> field in the drivers's platform data structure so it can be selectable
-> >> via platform data.
-> >>
-> >> Also setting this field to NAND_ECC_SOFT in all boards using this
-> >> driver since none of them had CONFIG_MTD_NAND_S3C2410_HWECC enabled.
-> >>
-> >> Signed-off-by: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
-> >> ---
-> >>  arch/arm/mach-s3c24xx/common-smdk.c            |   1 +
-> >>  arch/arm/mach-s3c24xx/mach-anubis.c            |   1 +
-> >>  arch/arm/mach-s3c24xx/mach-at2440evb.c         |   1 +
-> >>  arch/arm/mach-s3c24xx/mach-bast.c              |   1 +
-> >>  arch/arm/mach-s3c24xx/mach-gta02.c             |   1 +
-> >>  arch/arm/mach-s3c24xx/mach-jive.c              |   1 +
-> >>  arch/arm/mach-s3c24xx/mach-mini2440.c          |   1 +
-> >>  arch/arm/mach-s3c24xx/mach-osiris.c            |   1 +
-> >>  arch/arm/mach-s3c24xx/mach-qt2410.c            |   1 +
-> >>  arch/arm/mach-s3c24xx/mach-rx1950.c            |   1 +
-> >>  arch/arm/mach-s3c24xx/mach-rx3715.c            |   1 +
-> >>  arch/arm/mach-s3c24xx/mach-vstms.c             |   1 +
-> >>  arch/arm/mach-s3c64xx/mach-hmt.c               |   1 +
-> >>  arch/arm/mach-s3c64xx/mach-mini6410.c          |   1 +
-> >>  arch/arm/mach-s3c64xx/mach-real6410.c          |   1 +
-> >>  drivers/mtd/nand/Kconfig                       |   9 --
-> >>  drivers/mtd/nand/s3c2410.c                     | 119 +++++++++++++------------
-> >>  include/linux/platform_data/mtd-nand-s3c2410.h |   6 +-
-> >>  18 files changed, 79 insertions(+), 70 deletions(-)
-> >>
-> > 
-> > I acked this twice (v1 and v2)... and still you are ignoring them. I am
-> > sorry, I am not gonna to ack this third time!
-> 
-> Hi, um, I am kinda new to this mess, what's going on ? You ACKed
-> previous patches, next revision was submitted, so you need to ACK
-> the next revision too (due to the changes).
->
+Hello.
 
-Some of the patches (1/3 and 2/3) were not changed. The resubmission of
-a patch should contain the ack. Otherwise one would have to ack
-indefinitely...
+   Here's the set of 2 patches against the 'clk-next' branch of CLK group's
+'linux.git' repo. I've splitted them from the R-Car gen2 common support patch.
+As the DT patches in the R8A7743/SK-RZG1M board support series depend on the
+patch #1 of this series, it might make sense to merge this patch to the
+'renesas.git' repo as well...
 
-The changes in 2/3 were quite irrelevant to my ack, so the ack could
-stay.
+[1/2] ARM: shmobile: r8a7743: add CPG clock index macros
+[2/2] clk: renesas: cpg-mssr: add R8A7743 support
 
-BR,
-Krzysztof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MBR, Sergei
+
