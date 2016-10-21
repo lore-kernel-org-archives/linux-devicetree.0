@@ -1,38 +1,72 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 05/10] gpio: i2cs: Juniper I2CS to GPIO pin mapping driver
-Date: Fri, 21 Oct 2016 10:41:56 +0200
-Message-ID: <CACRpkdbBECP=39sdVEfHmcFv70bzdgpN90-sVHqRyCZifAYRUg@mail.gmail.com>
-References: <1475853669-22480-1-git-send-email-pantelis.antoniou@konsulko.com> <1475853669-22480-6-git-send-email-pantelis.antoniou@konsulko.com>
+From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC V3 PATCH 6/7] arm64: dts: msm8994 default serial config
+Date: Fri, 21 Oct 2016 01:42:01 -0700
+Message-ID: <3e68d7be-07b9-05c6-2419-3a4579898a72@redhat.com>
+References: <1476265054-22511-1-git-send-email-jeremymc@redhat.com>
+ <1476265054-22511-7-git-send-email-jeremymc@redhat.com>
+ <20161012132806.GA21050@remoulade>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <1475853669-22480-6-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Jean Delvare <jdelvare@suse.com>, Peter Rosin <peda@axentia.se>, Avirup Banerjee <abanerjee@juniper.net>, Georgi Vlaev <gvlaev@juniper.net>, Guenter Roeck <linux@roeck-us.net>, JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.o>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161012132806.GA21050@remoulade>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 7, 2016 at 5:21 PM, Pantelis Antoniou
-<pantelis.antoniou@konsulko.com> wrote:
-
-> From: Guenter Roeck <groeck@juniper.net>
+On 2016-10-12 6:28 AM, Mark Rutland wrote:
+> On Wed, Oct 12, 2016 at 02:37:33AM -0700, Jeremy McNicoll wrote:
+>> From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>
+>> As per Documentation/devicetree/bindings/chosen.txt so that we
+>> are not relying on implicit defaults.
 >
-> This driver maps I2C slave register bits to GPIO pins. Registers
-> are supposed to be 8 bit wide. Interrupt support is optional.
+> Please fold this patch into the patch introducing the dts file.
 >
-> The driver is implemented as client of the I2CS MFD driver.
+> There's no need for this to be separate.
+
+agreed.
+
+-jeremy
+
 >
-> Signed-off-by: Georgi Vlaev <gvlaev@juniper.net>
-> Signed-off-by: Guenter Roeck <groeck@juniper.net>
-> Signed-off-by: JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>
-> [Ported from Juniper kernel]
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> Thanks,
+> Mark.
+>
+>> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+>> index 5cff29f..799aec0 100644
+>> --- a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+>> +++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+>> @@ -27,7 +27,7 @@
+>>  	};
+>>
+>>  	chosen {
+>> -		stdout-path = "serial0";
+>> +		stdout-path = "serial0:115200n8";
+>>  	};
+>>
+>>  	soc {
+>> --
+>> 2.6.1
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
 
-This driver again has the same review comments as the two first
-ones, GPIOLIB_IRQCHIP etc. Revise accordingly and repost
-and I will look at it again.
-
-(Interestingly this one uses BIT() properly.)
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
