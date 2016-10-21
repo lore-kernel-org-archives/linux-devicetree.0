@@ -1,99 +1,53 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC PATCH] net: stmmac: Add OXNAS Glue Driver
-Date: Fri, 21 Oct 2016 10:28:23 +0200
-Message-ID: <872a84c9-6ec3-695b-0c37-c58719e0a034@baylibre.com>
-References: <20161020155406.27172-1-narmstrong@baylibre.com>
- <CAGhQ9VxJ-gQTX1xjMOJ4spiL_RnhryyQ0=gUEQCHm3sHecTVuA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: mbox-name vs. mbox-names (was: Re: [PATCH v4 1/5] mailbox: dt: Supply
+ bindings for ST's Mailbox IP)
+Date: Fri, 21 Oct 2016 10:30:47 +0200
+Message-ID: <CAMuHMdXqOZ=eKJ=SkY4TM=fu8qnZ2gLmh-2iH0jB2pAu_v2vNg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGhQ9VxJ-gQTX1xjMOJ4spiL_RnhryyQ0=gUEQCHm3sHecTVuA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "peppe.cavallaro" <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Maxime Coquelin <maxime.coquelin@st.com>, Jassi Brar <jassisinghbrar@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/2016 06:26 PM, Joachim Eastwood wrote:
-> Hi Neil,
-> 
-> On 20 October 2016 at 17:54, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->> Add Synopsys Designware MAC Glue layer for the Oxford Semiconductor OX820.
->>
->> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/net/oxnas-dwmac.txt        |  44 ++++++
->>  drivers/net/ethernet/stmicro/stmmac/Kconfig        |  11 ++
->>  drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
->>  drivers/net/ethernet/stmicro/stmmac/dwmac-oxnas.c  | 173 +++++++++++++++++++++
->>  4 files changed, 229 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/net/oxnas-dwmac.txt
->>  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-oxnas.c
-> <snip>
->> +
->> +static int oxnas_dwmac_probe(struct platform_device *pdev)
->> +{
->> +       struct plat_stmmacenet_data *plat_dat;
->> +       struct stmmac_resources stmmac_res;
->> +       struct device_node *sysctrl;
->> +       struct oxnas_dwmac *dwmac;
->> +       int ret;
->> +
->> +       sysctrl = of_parse_phandle(pdev->dev.of_node, "oxsemi,sys-ctrl", 0);
->> +       if (!sysctrl) {
->> +               dev_err(&pdev->dev, "failed to get sys-ctrl node\n");
->> +               return -EINVAL;
->> +       }
->> +
->> +       ret = stmmac_get_platform_resources(pdev, &stmmac_res);
->> +       if (ret)
->> +               return ret;
->> +
->> +       plat_dat = stmmac_probe_config_dt(pdev, &stmmac_res.mac);
->> +       if (IS_ERR(plat_dat))
->> +               return PTR_ERR(plat_dat);
->> +
->> +       dwmac = devm_kzalloc(&pdev->dev, sizeof(*dwmac), GFP_KERNEL);
->> +       if (!dwmac)
->> +               return -ENOMEM;
->> +
->> +       dwmac->regmap = syscon_node_to_regmap(sysctrl);
->> +       if (IS_ERR(dwmac->regmap)) {
->> +               dev_err(&pdev->dev, "failed to have sysctrl regmap\n");
->> +               return PTR_ERR(dwmac->regmap);
->> +       }
->> +
->> +       dwmac->clk = devm_clk_get(&pdev->dev, "gmac");
->> +       if (IS_ERR(dwmac->clk))
->> +               return PTR_ERR(dwmac->clk);
->> +
->> +       plat_dat->bsp_priv = dwmac;
->> +       plat_dat->init = oxnas_dwmac_init;
->> +       plat_dat->exit = oxnas_dwmac_exit;
-> 
-> Please do not use the init/exit callbacks. Implement proper driver
-> callbacks instead. I.e: PM resume/suspend and driver remove.
-> 
-> Shouldn't you call oxnas_dwmac_init() from probe as well?
-> As it is now it will only be called during PM resume and that can't be right.
-> 
-> 
->> +
->> +       return stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
-> 
-> If stmmac_dvr_probe() fails you should disable your clocks.
-> 
-> 
-> regards,
-> Joachim Eastwood
-> 
+On Fri, Oct 16, 2015 at 9:21 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  .../devicetree/bindings/mailbox/sti-mailbox.txt    | 51 ++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt b/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
+> new file mode 100644
+> index 0000000..b61eec9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
+> @@ -0,0 +1,51 @@
+> +ST Microelectronics Mailbox Driver
+> +
+> +Each ST Mailbox IP currently consists of 4 instances of 32 channels.  Messages
+> +are passed between Application and Remote processors using shared memory.
+> +
+> +Controller
+> +----------
+> +
+> +Required properties:
+> +- compatible           : Should be "st,stih407-mailbox"
+> +- reg                  : Offset and length of the device's register set
+> +- mbox-name            : Name of the mailbox
 
-Hi Joachim,
+All other mailbox drivers use "mbox-names". Oops, it's in v4.9-rc1...
 
-Thanks for the hints, stm32 glue does that and I will sync on it.
+Can we still fix that?
 
-Neil
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
