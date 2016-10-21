@@ -1,42 +1,45 @@
-From: Sarangdhar Joshi <spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v3 0/4] MSM8996 DT Support for ADSP PIL
-Date: Fri, 21 Oct 2016 16:19:15 -0700
-Message-ID: <1477091959-19580-1-git-send-email-spjoshi@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sarangdhar Joshi <spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Trilok Soni <tsoni-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Sarangdhar Joshi <spjoshi@codeaurora.org>
+Subject: [PATCH v3 1/4] arm64: dts: msm8996: Add SMEM reserve-memory node
+Date: Fri, 21 Oct 2016 16:19:16 -0700
+Message-ID: <1477091959-19580-2-git-send-email-spjoshi@codeaurora.org>
+References: <1477091959-19580-1-git-send-email-spjoshi@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477091959-19580-1-git-send-email-spjoshi@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Sarangdhar Joshi <spjoshi@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Trilok Soni <tsoni@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add various device tree nodes to lay the groundwork for
-Qualcomm ADSP Peripheral Image Loader.
+Add DT node to carveout memory for shared memory region.
 
-Sorry, I didn't send any cover letter for v1.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sarangdhar Joshi <spjoshi@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Changes since v2:
-- Remove empty lines from smem DT node (Stephen)
-
-Changes since v1:
-- Move hwlock DT node under root (/) (Bjorn and Andy)
-- Rename smp2p-adsp to adsp-smp2p (Bjorn)
-- Remove interrupt-parent property from node (Bjorn)
-
-Bjorn Andersson (1):
-  arm64: dts: msm8996: Add SMEM DT nodes
-
-Sarangdhar Joshi (3):
-  arm64: dts: msm8996: Add SMEM reserve-memory node
-  arm64: dts: msm8996: Add reserve-memory nodes
-  arm64: dts: msm8996: Add SMP2P and APCS nodes
-
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 82 +++++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index d6da223..36216ae 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -31,6 +31,17 @@
+ 		reg = <0 0 0 0>;
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		smem_mem: smem-mem@86000000 {
++			reg = <0x0 0x86000000 0x0 0x200000>;
++			no-map;
++		};
++	};
++
+ 	cpus {
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
