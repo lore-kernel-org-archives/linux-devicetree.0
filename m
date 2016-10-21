@@ -1,72 +1,51 @@
-From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC V3 PATCH 7/7] arm64: configs: enable configs for msm899(2/4)
- basic support
-Date: Fri, 21 Oct 2016 01:59:05 -0700
-Message-ID: <550f1620-00f4-7963-4c2e-5bed7e304dfc@redhat.com>
-References: <1476265054-22511-1-git-send-email-jeremymc@redhat.com>
- <1476265054-22511-8-git-send-email-jeremymc@redhat.com>
- <20161012133710.GD21050@remoulade>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 06/10] gpio: gpio-i2cs: Document bindings of I2CS FPGA
+ GPIO block
+Date: Fri, 21 Oct 2016 10:59:25 +0200
+Message-ID: <CACRpkdZ=mWYJpBV_WmxYcAwA5TdHM4qv9k17Jb6TnoOL4YAPHA@mail.gmail.com>
+References: <1475853669-22480-1-git-send-email-pantelis.antoniou@konsulko.com> <1475853669-22480-7-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161012133710.GD21050@remoulade>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1475853669-22480-7-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Jean Delvare <jdelvare@suse.com>, Peter Rosin <peda@axentia.se>, Avirup Banerjee <abanerjee@juniper.net>, Georgi Vlaev <gvlaev@juniper.net>, Guenter Roeck <linux@roeck-us.net>, JawaharBalaji Thirumalaisamy <jawaharb@juniper.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.o>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-12 6:37 AM, Mark Rutland wrote:
-> On Wed, Oct 12, 2016 at 02:37:34AM -0700, Jeremy McNicoll wrote:
->> From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>
->> Given the mimimal hardware support for msm899(2/4) currently.
->> A few config options are needed to allow for continued
->> development and booting.
->>
->> The following are needed for continued development and
->> booting:
->>   -InitRD support
->>   -8x74 pinctrl for serial support
->>   -Enable Global Glock Controller (gcc)
->>
->> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  arch/arm64/configs/defconfig | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
->> index fd2d74d..8601388 100644
->> --- a/arch/arm64/configs/defconfig
->> +++ b/arch/arm64/configs/defconfig
->> @@ -21,6 +21,7 @@ CONFIG_CGROUP_HUGETLB=y
->>  # CONFIG_NET_NS is not set
->>  CONFIG_SCHED_AUTOGROUP=y
->>  CONFIG_BLK_DEV_INITRD=y
->> +CONFIG_BLK_DEV_RAM=y
->
-> We already had BLK_DEV_INITRD, which I presume was sufficient.
->
-> Why do we need BLK_DEV_RAM, too?
->
+On Fri, Oct 7, 2016 at 5:21 PM, Pantelis Antoniou
+<pantelis.antoniou@konsulko.com> wrote:
 
-BLK_DEV_RAM , has been removed as it turns out my buildroot ramdisk was 
-the cause of this dependancy, it has been since updated.  Everything 
-works as expected with a slight change to my kernel cmdline,
+> +This is virtual gpio driver, that maps each bit of the I2CS FPGA to
+> +a gpio. It's used as a compatibility replacement for FRUs that use
+> +I2CS FPGA to report presence, control and report power status in
+> +the Juniper's driver infra that uses gpios. Compatible with any I2CS.
 
-   'console=ttyMSM0,115200,n8 earlycon=msm_serial_dm,0xf991e000 
-loglevel=15 ddebug_query debug console=ttyMSM0,115200,n8'
+What does "virtual" mean?
 
+I regularly NACK patches that try to shoehorn stuff into
+GPIO not because they are actually GPIO hardware drivers or
+general purpose at all, but because it is convenient. Don't do this.
 
+> +- i2c-gpio-map: Map of "I2CS register" and "direction". The registers
+> +       are 8 bit wide, each bit of the register is mapped to either
+> +       input or output depending on the bits of the "direction". If
+> +       the bit in the direction is 1, then that bit from the I2CS
+> +       register is mapped to gpio input, otherwise to gpio output.
 
--jeremy
+Does this mean that the hardware is synthesized so that some lines
+are hardwired as input and some hardwired as output?
 
+That again does not sound like "general purpose" at all.
 
-> Thanks,
-> Mark
->
+I think this happens in other hardware and should be a generic
+binding like
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+gpio-lines-input-only = <0>, <4>;
+gpio-lines-output-only = <7>, <8>;
+
+And no bitmasking, use the local offset, parse and construct the
+mask.
+
+Yours,
+Linus Walleij
