@@ -1,122 +1,73 @@
-From: John Youn <John.Youn@synopsys.com>
-Subject: Re: [PATCH v9 1/2] usb: dwc2: assert phy reset when waking up in
- rk3288 platform
-Date: Fri, 21 Oct 2016 12:27:32 -0700
-Message-ID: <4ee5817d-0076-9974-8b0e-182a0241e1f5@synopsys.com>
-References: <1476988627-14953-1-git-send-email-ayaka@soulik.info>
- <1476988627-14953-2-git-send-email-ayaka@soulik.info>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH v5 23/23] phy: Add support for Qualcomm's USB HS phy
+Date: Fri, 21 Oct 2016 12:33:43 -0700
+Message-ID: <147707842313.25848.12479294741874867656@sboyd-linaro>
+References: <20161018015636.11701-1-stephen.boyd@linaro.org>
+ <20161018015636.11701-24-stephen.boyd@linaro.org>
+ <147700563857.2550.16732518381302920183@sboyd-linaro>
+ <20161021022030.GB16461@b29397-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1476988627-14953-2-git-send-email-ayaka@soulik.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Li <ayaka@soulik.info>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: "John.Youn@synopsys.com" <John.Youn@synopsys.com>, "kishon@ti.com" <kishon@ti.com>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "heiko@sntech.de" <heiko@sntech.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "randy.li@rock-chips.com" <randy.li@rock-chips.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161021022030.GB16461@b29397-desktop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Chen <peter.chen@nxp.com>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/2016 11:38 AM, Randy Li wrote:
-> On the rk3288 USB host-only port (the one that's not the OTG-enabled
-> port) the PHY can get into a bad state when a wakeup is asserted (not
-> just a wakeup from full system suspend but also a wakeup from
-> autosuspend).
+Quoting Peter Chen (2016-10-20 19:20:30)
+> On Thu, Oct 20, 2016 at 04:20:38PM -0700, Stephen Boyd wrote:
+> > Quoting Stephen Boyd (2016-10-17 18:56:36)
+> > > +
+> > > +static int
+> > > +qcom_usb_hs_phy_vbus_notifier(struct notifier_block *nb, unsigned long event,
+> > > +                             void *ptr)
+> > > +{
+> > > +       struct qcom_usb_hs_phy *uphy;
+> > > +       int is_host;
+> > > +       u8 addr;
+> > > +
+> > > +       uphy = container_of(nb, struct qcom_usb_hs_phy, vbus_notify);
+> > > +       is_host = extcon_get_cable_state_(uphy->id_edev, EXTCON_USB_HOST);
+> > 
+> > Please don't apply this patch. This call now deadlocks on v4.9-rc1
+> > because of how extcon_get_cable_state_() now grabs a lock that is
+> > already held here when we're inside the notifier. It's not really
+> > required that we grab the lock in extcon there, but this has exposed a
+> > flaw in the logic anyway. We don't know if the id pin is going to toggle
+> > before or after this function is called, so we should really keep track
+> > of both vbus and id state in this driver and then do the same ulpi
+> > writes from two different notifiers for both vbus and id pin. We would
+> > be duplicating work sometimes, but that's pretty much the best solution
+> > I can come up with. Otherwise it's racy.
+> > 
 > 
-> We can get the PHY out of its bad state by asserting its "port reset",
-> but unfortunately that seems to assert a reset onto the USB bus so it
-> could confuse things if we don't actually deenumerate / reenumerate the
-> device.
-> 
-> We can also get the PHY out of its bad state by fully resetting it using
-> the reset from the CRU (clock reset unit) in chip, which does a more full
-> reset.  The CRU-based reset appears to actually cause devices on the bus
-> to be removed and reinserted, which fixes the problem (albeit in a hacky
-> way).
-> 
-> It's unfortunate that we need to do a full re-enumeration of devices at
-> wakeup time, but this is better than alternative of letting the bus get
-> wedged.
-> 
-> Signed-off-by: Randy Li <ayaka@soulik.info>
-> ---
->  drivers/usb/dwc2/core.h      |  1 +
->  drivers/usb/dwc2/core_intr.c | 11 +++++++++++
->  drivers/usb/dwc2/platform.c  |  9 +++++++++
->  3 files changed, 21 insertions(+)
-> 
-> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-> index 2a21a04..e91ddbc 100644
-> --- a/drivers/usb/dwc2/core.h
-> +++ b/drivers/usb/dwc2/core.h
-> @@ -859,6 +859,7 @@ struct dwc2_hsotg {
->  	unsigned int ll_hw_enabled:1;
->  
->  	struct phy *phy;
-> +	struct work_struct phy_rst_work;
->  	struct usb_phy *uphy;
->  	struct dwc2_hsotg_plat *plat;
->  	struct regulator_bulk_data supplies[ARRAY_SIZE(dwc2_hsotg_supply_names)];
-> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
-> index d85c5c9..c3d2168 100644
-> --- a/drivers/usb/dwc2/core_intr.c
-> +++ b/drivers/usb/dwc2/core_intr.c
-> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
->  static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->  {
->  	int ret;
-> +	struct device_node *np = hsotg->dev->of_node;
->  
->  	/* Clear interrupt */
->  	dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
-> @@ -379,6 +380,16 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->  			/* Restart the Phy Clock */
->  			pcgcctl &= ~PCGCTL_STOPPCLK;
->  			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
-> +
-> +			/*
-> +			 * It is a quirk in Rockchip RK3288, causing by
-> +			 * a hardware bug. This will propagate out and
-> +			 * eventually we'll re-enumerate the device. 
-> +			 * Not great but the best we can do 
-> +			 */
-> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb"))
-> +				schedule_work(&hsotg->phy_rst_work);
-> +
->  			mod_timer(&hsotg->wkp_timer,
->  				  jiffies + msecs_to_jiffies(71));
->  		} else {
-> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-> index 8e1728b..65953cf 100644
-> --- a/drivers/usb/dwc2/platform.c
-> +++ b/drivers/usb/dwc2/platform.c
-> @@ -366,6 +366,14 @@ int dwc2_lowlevel_hw_disable(struct dwc2_hsotg *hsotg)
->  	return ret;
->  }
->  
-> +/* Only used to reset usb phy at interrupter runtime */
-> +static void dwc2_reset_phy_work(struct work_struct *data)
-> +{
-> +	struct dwc2_hsotg *hsotg = container_of(data, struct dwc2_hsotg,
-> +			phy_rst_work);
-> +	phy_reset(hsotg->phy);
-> +}
-> +
->  static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
->  {
->  	int i, ret;
-> @@ -410,6 +418,7 @@ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
->  			return ret;
->  		}
->  	}
-> +	INIT_WORK(&hsotg->phy_rst_work, dwc2_reset_phy_work);
->  
->  	if (!hsotg->phy) {
->  		hsotg->uphy = devm_usb_get_phy(hsotg->dev, USB_PHY_TYPE_USB2);
+> Why you need to care id status? If EXTCON_USB event has happened, and
+> event is true, you can set, otherwise, it is clear operation, that's
+> to say you may not need have id extcon phandle, do you think so?
 > 
 
-Hi Randy,
+I need to add a comment to the code here because I forgot what was going
+on.
 
-This fails compile if CONFIG_GENERIC_PHY is disabled. I think you need
-to make a fix to your phy_reset patch first.
+Either way, this code is pulling D+ up when we're in device mode. We
+don't want to do the pullup if we're a host, and vbus extcon only tells
+us if the cable is attached so we can't just rely on that one bit of
+information.
 
-Regards,
-John
+I suppose that's not really appropriate to do via extcon though in the
+phy driver though, so I'm thinking that it should be rewritten to use
+the phy_set_mode() feature of the phy framework. Basically,
+ci_udc_pullup() will call phy_set_mode() with PHY_MODE_USB_DEVICE or
+PHY_MODE_USB_HOST and then we can set or clear these bits in the ulpi
+register space. I think that will make things simpler here and things
+like soft-connect will work better. Sound good?
