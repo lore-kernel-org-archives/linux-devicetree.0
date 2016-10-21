@@ -1,520 +1,589 @@
-From: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Subject: [RESEND PATCH v2] clk: hisilicon: add CRG driver for Hi3798CV200 SoC
-Date: Fri, 21 Oct 2016 09:37:10 +0800
-Message-ID: <1477013830-11481-1-git-send-email-xuejiancheng@hisilicon.com>
+From: Ruqiang Ju <juruqiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] PCI: hisi: add PCIe driver support for HiSilicon STB SoCs
+Date: Fri, 21 Oct 2016 09:45:36 +0800
+Message-ID: <1477014336-12385-1-git-send-email-juruqiang@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bin.chen@linaro.org, elder@linaro.org, hermit.wangheming@hisilicon.com, yanhaifeng@hisilicon.com, wenpan@hisilicon.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bin.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hermit.wangheming-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Ruqiang Ju <juruqiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add CRG driver for Hi3798CV200 SoC. CRG(Clock and Reset
-Generator) module generates clock and reset signals used
-by other module blocks on SoC.
+Add PCIe controller drvier for HiSilicon STB SoCs,
+the controller is based on the DesignWare's PCIe core.
 
-Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Signed-off-by: Ruqiang Ju <juruqiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 ---
-change log
-v2:
-- Fixed compiling error when compiled as a module.
-- Fixed issues pointed by Stephen Boyd.
-- Added prefix HISTB for clock index macro definitions.
+ .../bindings/pci/hisilicon-histb-pcie.txt          |  66 +++
+ drivers/pci/host/Kconfig                           |   8 +
+ drivers/pci/host/Makefile                          |   1 +
+ drivers/pci/host/pcie-histb.c                      | 448 +++++++++++++++++++++
+ 4 files changed, 523 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-histb.c
 
- .../clock/{hi3519-crg.txt => hisi-crg.txt}         |  11 +-
- drivers/clk/hisilicon/Kconfig                      |   8 +
- drivers/clk/hisilicon/Makefile                     |   1 +
- drivers/clk/hisilicon/crg-hi3798cv200.c            | 305 +++++++++++++++++++++
- drivers/clk/hisilicon/crg.h                        |  34 +++
- include/dt-bindings/clock/histb-clock.h            |  64 +++++
- 6 files changed, 419 insertions(+), 4 deletions(-)
- rename Documentation/devicetree/bindings/clock/{hi3519-crg.txt => hisi-crg.txt} (82%)
- create mode 100644 drivers/clk/hisilicon/crg-hi3798cv200.c
- create mode 100644 drivers/clk/hisilicon/crg.h
- create mode 100644 include/dt-bindings/clock/histb-clock.h
-
-diff --git a/Documentation/devicetree/bindings/clock/hi3519-crg.txt b/Documentation/devicetree/bindings/clock/hisi-crg.txt
-similarity index 82%
-rename from Documentation/devicetree/bindings/clock/hi3519-crg.txt
-rename to Documentation/devicetree/bindings/clock/hisi-crg.txt
-index acd1f23..e3919b6 100644
---- a/Documentation/devicetree/bindings/clock/hi3519-crg.txt
-+++ b/Documentation/devicetree/bindings/clock/hisi-crg.txt
-@@ -1,7 +1,7 @@
--* Hisilicon Hi3519 Clock and Reset Generator(CRG)
-+* HiSilicon Clock and Reset Generator(CRG)
- 
--The Hi3519 CRG module provides clock and reset signals to various
--controllers within the SoC.
-+The CRG module provides clock and reset signals to various
-+modules within the SoC.
- 
- This binding uses the following bindings:
-     Documentation/devicetree/bindings/clock/clock-bindings.txt
-@@ -10,7 +10,10 @@ This binding uses the following bindings:
- Required Properties:
- 
- - compatible: should be one of the following.
--  - "hisilicon,hi3519-crg" - controller compatible with Hi3519 SoC.
-+  - "hisilicon,hi3516cv300-crg"
-+  - "hisilicon,hi3519-crg"
-+  - "hisilicon,hi3798cv200-crg"
-+  - "hisilicon,hi3798cv200-sysctrl"
- 
- - reg: physical base address of the controller and length of memory mapped
-   region.
-diff --git a/drivers/clk/hisilicon/Kconfig b/drivers/clk/hisilicon/Kconfig
-index 3f537a0..c41b6d2 100644
---- a/drivers/clk/hisilicon/Kconfig
-+++ b/drivers/clk/hisilicon/Kconfig
-@@ -6,6 +6,14 @@ config COMMON_CLK_HI3519
- 	help
- 	  Build the clock driver for hi3519.
- 
-+config COMMON_CLK_HI3798CV200
-+	tristate "Hi3798CV200 Clock Driver"
-+	depends on ARCH_HISI || COMPILE_TEST
-+	select RESET_HISI
-+	default ARCH_HISI
-+	help
-+	  Build the clock driver for hi3798cv200.
-+
- config COMMON_CLK_HI6220
- 	bool "Hi6220 Clock Driver"
- 	depends on ARCH_HISI || COMPILE_TEST
-diff --git a/drivers/clk/hisilicon/Makefile b/drivers/clk/hisilicon/Makefile
-index e169ec7..5819891 100644
---- a/drivers/clk/hisilicon/Makefile
-+++ b/drivers/clk/hisilicon/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_ARCH_HI3xxx)	+= clk-hi3620.o
- obj-$(CONFIG_ARCH_HIP04)	+= clk-hip04.o
- obj-$(CONFIG_ARCH_HIX5HD2)	+= clk-hix5hd2.o
- obj-$(CONFIG_COMMON_CLK_HI3519)	+= clk-hi3519.o
-+obj-$(CONFIG_COMMON_CLK_HI3798CV200)	+= crg-hi3798cv200.o
- obj-$(CONFIG_COMMON_CLK_HI6220)	+= clk-hi6220.o
- obj-$(CONFIG_RESET_HISI)	+= reset.o
- obj-$(CONFIG_STUB_CLK_HI6220)	+= clk-hi6220-stub.o
-diff --git a/drivers/clk/hisilicon/crg-hi3798cv200.c b/drivers/clk/hisilicon/crg-hi3798cv200.c
+diff --git a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
 new file mode 100644
-index 0000000..f8534bb
+index 0000000..952f1db
 --- /dev/null
-+++ b/drivers/clk/hisilicon/crg-hi3798cv200.c
-@@ -0,0 +1,305 @@
++++ b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+@@ -0,0 +1,66 @@
++HiSilicon STB PCIe host bridge DT description
++
++HiSilicon PCIe host controller is based on Designware PCI core.
++It shares common functions with PCIe Designware core driver and inherits
++common properties defined in
++Documentation/devicetree/bindings/pci/designware-pci.txt.
++
++Additional properties are described here:
++
++Required properties
++- compatible: Should be one of the following strings
++		 "hisilicon,histb-pcie",
++		 "hisilicon,hi3798cv200-pcie"
++- reg: Should contain sysctl, rc_dbi, config registers location and length.
++- reg-names: Must include the following entries:
++  "sysctrl": system control registers of PCIe controller;
++  "rc_dbi": configuration space of PCIe controller;
++  "config": configuration transaction space of PCIe controller.
++- interrupts: MSI interrupt.
++- interrupt-names: Must include "msi" entries.
++- clocks: List of phandle and clock specifier pairs as listed
++		in clock-names property.
++- clock-name: Must include the following entries:
++  "aux_clk": auxiliary gate clock;
++  "pipe_clk": pipe gate clock;
++  "sys_clk": sys gate clock;
++  "bus_clk": bus gate clock.
++- resets: List of phandle and reset specifier pairs as listed
++			in reset-names property
++- reset-names: Must include the following entries:
++  "soft_reset": soft reset;
++  "sys_reset": sys reset;
++  "bus_rest": bus reset.
++
++Optional properties:
++- power-gpios: pcie device power control gpio if needed;
++- power-gpios-active-high: must include this propty
++		if active level is high.
++- status: Either "ok" or "disabled".
++
++Example:
++	pcie@f9860000 {
++		compatible = "hisilicon,histb-pcie", "snps,dw-pcie";
++		reg = <0xf9860000 0x1000>,
++			<0xf0000000 0x2000>,
++			<0xf2000000 0x01000000>;
++		reg-names = "sysctrl", "rc_dbi", "config";
++		#address-cells = <3>;
++		#size-cells = <2>;
++		device_type = "pci";
++		num-lanes = <1>;
++		ranges=<0x81000000 0 0 0xf4000000 0 0x00010000
++			0x82000000 0 0xf3000000 0xf3000000 0 0x01000000>;
++		interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "msi";
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 7>;
++		interrupt-map = <0x0 0 0 1 &gic 0 131 4>;
++		clocks = <&crg PCIE_AUX_CLK>,
++			 <&crg PCIE_PIPE_CLK>,
++			 <&crg PCIE_SYS_CLK>,
++			 <&crg PCIE_BUS_CLK>;
++		clock-names = "aux_clk", "pipe_clk", "sys_clk", "bus_clk";
++		resets = <&crg 0x18c 6>, <&crg 0x18c 5>, <&crg 0x18c 4>;
++		reset-names = "soft_reset", "sys_reset", "bus_reset";
++	};
+diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+index d7e7c0a..57ce4df 100644
+--- a/drivers/pci/host/Kconfig
++++ b/drivers/pci/host/Kconfig
+@@ -227,6 +227,14 @@ config PCI_HISI
+ 	  Say Y here if you want PCIe controller support on HiSilicon
+ 	  Hip05 and Hip06 SoCs
+ 
++config PCIE_HISI_STB
++	depends on OF
++	bool "HiSilicon STB SoCs PCIe controllers"
++	select PCIEPORTBUS
++	select PCIE_DW
++	help
++	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
++
+ config PCIE_QCOM
+ 	bool "Qualcomm PCIe controller"
+ 	depends on ARCH_QCOM && OF
+diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+index 084cb49..55f4fe7 100644
+--- a/drivers/pci/host/Makefile
++++ b/drivers/pci/host/Makefile
+@@ -26,6 +26,7 @@ obj-$(CONFIG_PCIE_IPROC_BCMA) += pcie-iproc-bcma.o
+ obj-$(CONFIG_PCIE_ALTERA) += pcie-altera.o
+ obj-$(CONFIG_PCIE_ALTERA_MSI) += pcie-altera-msi.o
+ obj-$(CONFIG_PCI_HISI) += pcie-hisi.o
++obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
+ obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
+ obj-$(CONFIG_PCI_HOST_THUNDER_ECAM) += pci-thunder-ecam.o
+ obj-$(CONFIG_PCI_HOST_THUNDER_PEM) += pci-thunder-pem.o
+diff --git a/drivers/pci/host/pcie-histb.c b/drivers/pci/host/pcie-histb.c
+new file mode 100644
+index 0000000..71e344f
+--- /dev/null
++++ b/drivers/pci/host/pcie-histb.c
+@@ -0,0 +1,448 @@
 +/*
-+ * Hi3798CV200 Clock and Reset Generator Driver
++ * PCIe host controller driver for HiSilicon STB SoCs
 + *
-+ * Copyright (c) 2016 HiSilicon Technologies Co., Ltd.
++ * Copyright (C) 2016 HiSilicon Co., Ltd. http://www.hisilicon.com
++ *
++ * Authors: RuQiang Ju <juruqiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 + *
 + * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + */
-+
-+#include <dt-bindings/clock/histb-clock.h>
-+#include <linux/clk-provider.h>
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/of_device.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/pci.h>
 +#include <linux/platform_device.h>
-+#include "clk.h"
-+#include "crg.h"
-+#include "reset.h"
++#include <linux/resource.h>
++#include <linux/reset.h>
 +
-+/* hi3798CV200 core CRG */
-+#define HI3798CV200_INNER_CLK_OFFSET	64
-+#define HI3798CV200_FIXED_24M	65
-+#define HI3798CV200_FIXED_25M	66
-+#define HI3798CV200_FIXED_50M	67
-+#define HI3798CV200_FIXED_75M	68
-+#define HI3798CV200_FIXED_100M	69
-+#define HI3798CV200_FIXED_150M	70
-+#define HI3798CV200_FIXED_200M	71
-+#define HI3798CV200_FIXED_250M	72
-+#define HI3798CV200_FIXED_300M	73
-+#define HI3798CV200_FIXED_400M	74
-+#define HI3798CV200_MMC_MUX	75
++#include "pcie-designware.h"
 +
-+#define HI3798CV200_CRG_NR_CLKS		128
++#define PCIE_SYS_CTRL0			0x0000
++#define PCIE_SYS_CTRL1			0x0004
++#define PCIE_SYS_CTRL7			0x001C
++#define PCIE_SYS_CTRL13			0x0034
++#define PCIE_SYS_CTRL15			0x003c
++#define PCIE_SYS_CTRL16			0x0040
++#define PCIE_SYS_CTRL17			0x0044
 +
-+static const struct hisi_fixed_rate_clock hi3798cv200_fixed_rate_clks[] = {
-+	{ HISTB_OSC_CLK, "clk_osc", NULL, 0, 24000000, },
-+	{ HISTB_APB_CLK, "clk_apb", NULL, 0, 100000000, },
-+	{ HISTB_AHB_CLK, "clk_ahb", NULL, 0, 200000000, },
-+	{ HI3798CV200_FIXED_24M, "24m", NULL, 0, 24000000, },
-+	{ HI3798CV200_FIXED_25M, "25m", NULL, 0, 25000000, },
-+	{ HI3798CV200_FIXED_50M, "50m", NULL, 0, 50000000, },
-+	{ HI3798CV200_FIXED_75M, "75m", NULL, 0, 75000000, },
-+	{ HI3798CV200_FIXED_100M, "100m", NULL, 0, 100000000, },
-+	{ HI3798CV200_FIXED_150M, "150m", NULL, 0, 150000000, },
-+	{ HI3798CV200_FIXED_200M, "200m", NULL, 0, 200000000, },
-+	{ HI3798CV200_FIXED_250M, "250m", NULL, 0, 250000000, },
++#define PCIE_SYS_STAT0			0x0100
++#define PCIE_SYS_STAT4			0x0110
++
++#define PCIE_RDLH_LINK_UP		BIT(5)
++#define PCIE_XMLH_LINK_UP		BIT(15)
++#define PCIE_ELBI_SLV_DBI_ENABLE	BIT(21)
++#define PCIE_APP_LTSSM_ENABLE		BIT(11)
++
++#define PCIE_DEVICE_TYPE_MASK		GENMASK(31, 28)
++#define PCIE_WM_EP			0
++#define PCIE_WM_LEGACY			BIT(1)
++#define PCIE_WM_RC			BIT(30)
++
++#define PCIE_LTSSM_STATE_MASK		GENMASK(5, 0)
++#define PCIE_LTSSM_STATE_ACTIVE		0x11
++
++struct histb_pcie_host {
++	void __iomem *sysctrl;
++	int power_gpio;
++	bool gpio_active_high;
++	struct clk *aux_clk;
++	struct clk *pipe_clk;
++	struct clk *sys_clk;
++	struct clk *bus_clk;
++	struct reset_control *soft_reset;
++	struct reset_control *sys_reset;
++	struct reset_control *bus_reset;
++	struct pcie_port pp;
 +};
 +
-+static const char *const mmc_mux_p[] = {
-+		"100m", "50m", "25m", "200m", "150m" };
-+static u32 mmc_mux_table[] = {0, 1, 2, 3, 6};
++#define to_histb_pcie(x) container_of(x, struct histb_pcie_host, pp)
 +
-+static struct hisi_mux_clock hi3798cv200_mux_clks[] = {
-+	{ HI3798CV200_MMC_MUX, "mmc_mux", mmc_mux_p, ARRAY_SIZE(mmc_mux_p),
-+		CLK_SET_RATE_PARENT, 0xa0, 8, 3, 0, mmc_mux_table, },
-+};
-+
-+static const struct hisi_gate_clock hi3798cv200_gate_clks[] = {
-+	/* UART */
-+	{ HISTB_UART2_CLK, "clk_uart2", "75m",
-+		CLK_SET_RATE_PARENT, 0x68, 4, 0, },
-+	/* I2C */
-+	{ HISTB_I2C0_CLK, "clk_i2c0", "clk_apb",
-+		CLK_SET_RATE_PARENT, 0x6C, 4, 0, },
-+	{ HISTB_I2C1_CLK, "clk_i2c1", "clk_apb",
-+		CLK_SET_RATE_PARENT, 0x6C, 8, 0, },
-+	{ HISTB_I2C2_CLK, "clk_i2c2", "clk_apb",
-+		CLK_SET_RATE_PARENT, 0x6C, 12, 0, },
-+	{ HISTB_I2C3_CLK, "clk_i2c3", "clk_apb",
-+		CLK_SET_RATE_PARENT, 0x6C, 16, 0, },
-+	{ HISTB_I2C4_CLK, "clk_i2c4", "clk_apb",
-+		CLK_SET_RATE_PARENT, 0x6C, 20, 0, },
-+	/* SPI */
-+	{ HISTB_SPI0_CLK, "clk_spi0", "clk_apb",
-+		CLK_SET_RATE_PARENT, 0x70, 0, 0, },
-+	/* SDIO */
-+	{ HISTB_SDIO0_BIU_CLK, "clk_sdio0_biu", "200m",
-+			CLK_SET_RATE_PARENT, 0x9c, 0, 0, },
-+	{ HISTB_SDIO0_CIU_CLK, "clk_sdio0_ciu", "mmc_mux",
-+		CLK_SET_RATE_PARENT, 0x9c, 1, 0, },
-+	/* EMMC */
-+	{ HISTB_MMC_BIU_CLK, "clk_mmc_biu", "200m",
-+		CLK_SET_RATE_PARENT, 0xa0, 0, 0, },
-+	{ HISTB_MMC_CIU_CLK, "clk_mmc_ciu", "mmc_mux",
-+		CLK_SET_RATE_PARENT, 0xa0, 1, 0, },
-+	/* PCIE*/
-+	{ HISTB_PCIE_BUS_CLK, "clk_pcie_bus", "200m",
-+		CLK_SET_RATE_PARENT, 0x18c, 0, 0, },
-+	{ HISTB_PCIE_SYS_CLK, "clk_pcie_sys", "100m",
-+		CLK_SET_RATE_PARENT, 0x18c, 1, 0, },
-+	{ HISTB_PCIE_PIPE_CLK, "clk_pcie_pipe", "250m",
-+		CLK_SET_RATE_PARENT, 0x18c, 2, 0, },
-+	{ HISTB_PCIE_AUX_CLK, "clk_pcie_aux", "24m",
-+		CLK_SET_RATE_PARENT, 0x18c, 3, 0, },
-+};
-+
-+static struct hisi_clock_data *hi3798cv200_clk_register(
-+				struct platform_device *pdev)
++static void histb_pcie_dbi_w_mode(struct pcie_port *pp, bool enable)
 +{
-+	struct hisi_clock_data *clk_data;
++	struct histb_pcie_host *hipcie = to_histb_pcie(pp);
++	u32 val;
++
++	if (enable) {
++		val = readl(hipcie->sysctrl + PCIE_SYS_CTRL0);
++		val |= PCIE_ELBI_SLV_DBI_ENABLE;
++		writel(val, hipcie->sysctrl + PCIE_SYS_CTRL0);
++	} else {
++		val = readl(hipcie->sysctrl + PCIE_SYS_CTRL0);
++		val &= ~PCIE_ELBI_SLV_DBI_ENABLE;
++		writel(val, hipcie->sysctrl + PCIE_SYS_CTRL0);
++	}
++}
++
++static void histb_pcie_dbi_r_mode(struct pcie_port *pp, bool enable)
++{
++	struct histb_pcie_host *hipcie = to_histb_pcie(pp);
++	u32 val;
++
++	if (enable) {
++		val = readl(hipcie->sysctrl + PCIE_SYS_CTRL1);
++		val |= PCIE_ELBI_SLV_DBI_ENABLE;
++		writel(val, hipcie->sysctrl + PCIE_SYS_CTRL1);
++	} else {
++		val = readl(hipcie->sysctrl + PCIE_SYS_CTRL1);
++		val &= ~PCIE_ELBI_SLV_DBI_ENABLE;
++		writel(val, hipcie->sysctrl + PCIE_SYS_CTRL1);
++	}
++}
++
++static inline u32 histb_pcie_readl_rc(struct pcie_port *pp, u32 reg)
++{
++	u32 val;
++
++	histb_pcie_dbi_r_mode(pp, true);
++	val = readl(pp->dbi_base + reg);
++	histb_pcie_dbi_r_mode(pp, false);
++
++	return val;
++}
++
++static inline void histb_pcie_writel_rc(struct pcie_port *pp,
++					u32 reg, u32 val)
++{
++	histb_pcie_dbi_w_mode(pp, true);
++	writel(val, pp->dbi_base + reg);
++	histb_pcie_dbi_w_mode(pp, false);
++}
++
++static int histb_pcie_rd_own_conf(struct pcie_port *pp,
++	int where, int size, u32 *val)
++{
 +	int ret;
 +
-+	clk_data = hisi_clk_alloc(pdev, HI3798CV200_CRG_NR_CLKS);
-+	if (!clk_data)
-+		return ERR_PTR(-ENOMEM);
++	histb_pcie_dbi_r_mode(pp, true);
++	ret = dw_pcie_cfg_read(pp->dbi_base + where, size, val);
++	histb_pcie_dbi_r_mode(pp, false);
 +
-+	ret = hisi_clk_register_fixed_rate(hi3798cv200_fixed_rate_clks,
-+				     ARRAY_SIZE(hi3798cv200_fixed_rate_clks),
-+				     clk_data);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	ret = hisi_clk_register_mux(hi3798cv200_mux_clks,
-+				ARRAY_SIZE(hi3798cv200_mux_clks),
-+				clk_data);
-+	if (ret)
-+		goto unregister_fixed_rate;
-+
-+	ret = hisi_clk_register_gate(hi3798cv200_gate_clks,
-+				ARRAY_SIZE(hi3798cv200_gate_clks),
-+				clk_data);
-+	if (ret)
-+		goto unregister_mux;
-+
-+	ret = of_clk_add_provider(pdev->dev.of_node,
-+			of_clk_src_onecell_get, &clk_data->clk_data);
-+	if (ret)
-+		goto unregister_gate;
-+
-+	return clk_data;
-+
-+unregister_fixed_rate:
-+	hisi_clk_unregister_fixed_rate(hi3798cv200_fixed_rate_clks,
-+				ARRAY_SIZE(hi3798cv200_fixed_rate_clks),
-+				clk_data);
-+
-+unregister_mux:
-+	hisi_clk_unregister_mux(hi3798cv200_mux_clks,
-+				ARRAY_SIZE(hi3798cv200_mux_clks),
-+				clk_data);
-+unregister_gate:
-+	hisi_clk_unregister_gate(hi3798cv200_gate_clks,
-+				ARRAY_SIZE(hi3798cv200_gate_clks),
-+				clk_data);
-+	return ERR_PTR(ret);
++	return ret;
 +}
 +
-+static void hi3798cv200_clk_unregister(struct platform_device *pdev)
++static int histb_pcie_wr_own_conf(struct pcie_port *pp,
++	int where, int size, u32 val)
 +{
-+	struct hisi_crg_dev *crg = platform_get_drvdata(pdev);
-+
-+	of_clk_del_provider(pdev->dev.of_node);
-+
-+	hisi_clk_unregister_gate(hi3798cv200_gate_clks,
-+				ARRAY_SIZE(hi3798cv200_gate_clks),
-+				crg->clk_data);
-+	hisi_clk_unregister_mux(hi3798cv200_mux_clks,
-+				ARRAY_SIZE(hi3798cv200_mux_clks),
-+				crg->clk_data);
-+	hisi_clk_unregister_fixed_rate(hi3798cv200_fixed_rate_clks,
-+				ARRAY_SIZE(hi3798cv200_fixed_rate_clks),
-+				crg->clk_data);
-+}
-+
-+static const struct hisi_crg_funcs hi3798cv200_crg_funcs = {
-+	.register_clks = hi3798cv200_clk_register,
-+	.unregister_clks = hi3798cv200_clk_unregister,
-+};
-+
-+/* hi3798CV200 sysctrl CRG */
-+
-+#define HI3798CV200_SYSCTRL_NR_CLKS 16
-+
-+static const struct hisi_gate_clock hi3798cv200_sysctrl_gate_clks[] = {
-+	{ HISTB_IR_CLK, "clk_ir", "100m",
-+		CLK_SET_RATE_PARENT, 0x48, 4, 0, },
-+	{ HISTB_TIMER01_CLK, "clk_timer01", "24m",
-+		CLK_SET_RATE_PARENT, 0x48, 6, 0, },
-+	{ HISTB_UART0_CLK, "clk_uart0", "75m",
-+		CLK_SET_RATE_PARENT, 0x48, 10, 0, },
-+};
-+
-+static struct hisi_clock_data *hi3798cv200_sysctrl_clk_register(
-+					struct platform_device *pdev)
-+{
-+	struct hisi_clock_data *clk_data;
 +	int ret;
 +
-+	clk_data = hisi_clk_alloc(pdev, HI3798CV200_SYSCTRL_NR_CLKS);
-+	if (!clk_data)
-+		return ERR_PTR(-ENOMEM);
++	histb_pcie_dbi_w_mode(pp, true);
++	ret = dw_pcie_cfg_write(pp->dbi_base + where, size, val);
++	histb_pcie_dbi_w_mode(pp, false);
 +
-+	ret = hisi_clk_register_gate(hi3798cv200_sysctrl_gate_clks,
-+				ARRAY_SIZE(hi3798cv200_sysctrl_gate_clks),
-+				clk_data);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	ret = of_clk_add_provider(pdev->dev.of_node,
-+			of_clk_src_onecell_get, &clk_data->clk_data);
-+	if (ret)
-+		goto unregister_gate;
-+
-+	return clk_data;
-+
-+unregister_gate:
-+	hisi_clk_unregister_gate(hi3798cv200_sysctrl_gate_clks,
-+				ARRAY_SIZE(hi3798cv200_sysctrl_gate_clks),
-+				clk_data);
-+	return ERR_PTR(ret);
++	return ret;
 +}
 +
-+static void hi3798cv200_sysctrl_clk_unregister(struct platform_device *pdev)
++static int histb_pcie_link_up(struct pcie_port *pp)
 +{
-+	struct hisi_crg_dev *crg = platform_get_drvdata(pdev);
++	struct histb_pcie_host *hipcie = to_histb_pcie(pp);
++	u32 regval;
++	u32 status;
 +
-+	of_clk_del_provider(pdev->dev.of_node);
++	regval = readl(hipcie->sysctrl + PCIE_SYS_STAT0);
++	status = readl(hipcie->sysctrl + PCIE_SYS_STAT4);
++	status &= PCIE_LTSSM_STATE_MASK;
++	if ((regval & PCIE_XMLH_LINK_UP) &&
++		(regval & PCIE_RDLH_LINK_UP) &&
++		(status == PCIE_LTSSM_STATE_ACTIVE))
++		return 1;
 +
-+	hisi_clk_unregister_gate(hi3798cv200_sysctrl_gate_clks,
-+				ARRAY_SIZE(hi3798cv200_sysctrl_gate_clks),
-+				crg->clk_data);
++	return 0;
 +}
 +
-+static const struct hisi_crg_funcs hi3798cv200_sysctrl_funcs = {
-+	.register_clks = hi3798cv200_sysctrl_clk_register,
-+	.unregister_clks = hi3798cv200_sysctrl_clk_unregister,
-+};
-+
-+static const struct of_device_id hi3798cv200_crg_match_table[] = {
-+	{ .compatible = "hisilicon,hi3798cv200-crg",
-+		.data = &hi3798cv200_crg_funcs },
-+	{ .compatible = "hisilicon,hi3798cv200-sysctrl",
-+		.data = &hi3798cv200_sysctrl_funcs },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, hi3798cv200_crg_match_table);
-+
-+static int hi3798cv200_crg_probe(struct platform_device *pdev)
++static int histb_pcie_establish_link(struct pcie_port *pp)
 +{
-+	struct hisi_crg_dev *crg;
++	struct histb_pcie_host *hipcie = to_histb_pcie(pp);
++	u32 regval;
++	int count = 0;
 +
-+	crg = devm_kmalloc(&pdev->dev, sizeof(*crg), GFP_KERNEL);
-+	if (!crg)
-+		return -ENOMEM;
-+
-+	crg->funcs = of_device_get_match_data(&pdev->dev);
-+	if (!crg->funcs)
-+		return -ENOENT;
-+
-+	crg->rstc = hisi_reset_init(pdev);
-+	if (!crg->rstc)
-+		return -ENOMEM;
-+
-+	crg->clk_data = crg->funcs->register_clks(pdev);
-+	if (IS_ERR(crg->clk_data)) {
-+		hisi_reset_exit(crg->rstc);
-+		return PTR_ERR(crg->clk_data);
++	if (dw_pcie_link_up(pp)) {
++		dev_err(pp->dev, "Link already up\n");
++		return 0;
 +	}
 +
-+	platform_set_drvdata(pdev, crg);
++	/* PCIe RC work mode */
++	regval = readl(hipcie->sysctrl + PCIE_SYS_CTRL0);
++	regval &= ~PCIE_DEVICE_TYPE_MASK;
++	regval |= PCIE_WM_RC;
++	writel(regval, hipcie->sysctrl + PCIE_SYS_CTRL0);
++
++	/* setup root complex */
++	dw_pcie_setup_rc(pp);
++
++	/* assert LTSSM enable */
++	regval = readl(hipcie->sysctrl + PCIE_SYS_CTRL7);
++	regval |= PCIE_APP_LTSSM_ENABLE;
++	writel(regval,  hipcie->sysctrl + PCIE_SYS_CTRL7);
++
++	/* check if the link is up or not */
++	while (!dw_pcie_link_up(pp)) {
++		mdelay(10);
++		count++;
++		if (count == 50) {
++			dev_err(pp->dev, "PCIe Link Fail\n");
++			return -EINVAL;
++		}
++	}
++
++	dev_info(pp->dev, "Link up\n");
++
 +	return 0;
 +}
 +
-+static int hi3798cv200_crg_remove(struct platform_device *pdev)
++static void histb_pcie_host_init(struct pcie_port *pp)
 +{
-+	struct hisi_crg_dev *crg = platform_get_drvdata(pdev);
++	histb_pcie_establish_link(pp);
 +
-+	hisi_reset_exit(crg->rstc);
-+	crg->funcs->unregister_clks(pdev);
++	if (IS_ENABLED(CONFIG_PCI_MSI))
++		dw_pcie_msi_init(pp);
++}
++
++static struct pcie_host_ops histb_pcie_host_ops = {
++	.readl_rc = histb_pcie_readl_rc,
++	.writel_rc = histb_pcie_writel_rc,
++	.rd_own_conf = histb_pcie_rd_own_conf,
++	.wr_own_conf = histb_pcie_wr_own_conf,
++	.link_up = histb_pcie_link_up,
++	.host_init = histb_pcie_host_init,
++};
++
++#ifdef CONFIG_PCI_MSI
++static irqreturn_t histb_pcie_msi_irq_handler(int irq, void *arg)
++{
++	struct pcie_port *pp = arg;
++
++	return dw_handle_msi_irq(pp);
++}
++#endif
++
++static void histb_pcie_host_disable(struct histb_pcie_host *hipcie)
++{
++	reset_control_assert(hipcie->soft_reset);
++	reset_control_assert(hipcie->sys_reset);
++	reset_control_assert(hipcie->bus_reset);
++
++	clk_disable_unprepare(hipcie->aux_clk);
++	clk_disable_unprepare(hipcie->pipe_clk);
++	clk_disable_unprepare(hipcie->sys_clk);
++	clk_disable_unprepare(hipcie->bus_clk);
++
++	if (gpio_is_valid(hipcie->power_gpio))
++		gpio_set_value_cansleep(hipcie->power_gpio,
++					!hipcie->gpio_active_high);
++}
++
++static int histb_pcie_host_enable(struct pcie_port *pp)
++{
++	struct histb_pcie_host *hipcie = to_histb_pcie(pp);
++	struct device *dev = pp->dev;
++	int ret;
++
++	/* power on pcie device if have */
++	if (gpio_is_valid(hipcie->power_gpio))
++		gpio_set_value_cansleep(hipcie->power_gpio,
++					hipcie->gpio_active_high);
++
++	ret = clk_prepare_enable(hipcie->bus_clk);
++	if (ret) {
++		dev_err(dev, "cannot prepare/enable bus_clk\n");
++		goto err_bus_clk;
++	}
++	ret = clk_prepare_enable(hipcie->sys_clk);
++	if (ret) {
++		dev_err(dev, "cannot prepare/enable sys_clk\n");
++		goto err_sys_clk;
++	}
++	ret = clk_prepare_enable(hipcie->pipe_clk);
++	if (ret) {
++		dev_err(dev, "cannot prepare/enable pipe_clk\n");
++		goto err_pipe_clk;
++	}
++	ret = clk_prepare_enable(hipcie->aux_clk);
++	if (ret) {
++		dev_err(dev, "cannot prepare/enable aux_clk\n");
++		goto err_aux_clk;
++	}
++
++	reset_control_assert(hipcie->soft_reset);
++	reset_control_deassert(hipcie->soft_reset);
++
++	reset_control_assert(hipcie->sys_reset);
++	reset_control_deassert(hipcie->sys_reset);
++
++	reset_control_assert(hipcie->bus_reset);
++	reset_control_deassert(hipcie->bus_reset);
++
++	return 0;
++
++err_aux_clk:
++	clk_disable_unprepare(hipcie->aux_clk);
++err_pipe_clk:
++	clk_disable_unprepare(hipcie->pipe_clk);
++err_sys_clk:
++	clk_disable_unprepare(hipcie->sys_clk);
++err_bus_clk:
++	clk_disable_unprepare(hipcie->bus_clk);
++
++	return ret;
++}
++
++
++static int histb_pcie_probe(struct platform_device *pdev)
++{
++	struct histb_pcie_host *hipcie;
++	struct pcie_port *pp;
++	struct resource *res;
++	struct device_node *np = pdev->dev.of_node;
++	struct device *dev = &pdev->dev;
++	int ret;
++
++	hipcie = devm_kzalloc(dev, sizeof(*hipcie), GFP_KERNEL);
++	if (!hipcie)
++		return -ENOMEM;
++
++	pp = &hipcie->pp;
++	pp->dev = dev;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "sysctrl");
++	hipcie->sysctrl = devm_ioremap_resource(dev, res);
++	if (IS_ERR(hipcie->sysctrl)) {
++		dev_err(dev, "cannot get sysctrl base\n");
++		return PTR_ERR(hipcie->sysctrl);
++	}
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc_dbi");
++	pp->dbi_base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(pp->dbi_base)) {
++		dev_err(dev, "cannot get rc_dbi base\n");
++		return PTR_ERR(pp->dbi_base);
++	}
++
++	hipcie->power_gpio = of_get_named_gpio(np, "power-gpios", 0);
++	hipcie->gpio_active_high = of_property_read_bool(np,
++						"power-gpios-active-high");
++	if (gpio_is_valid(hipcie->power_gpio)) {
++		ret = devm_gpio_request_one(dev, hipcie->power_gpio,
++				hipcie->gpio_active_high ?
++					GPIOF_OUT_INIT_HIGH :
++					GPIOF_OUT_INIT_LOW,
++					"PCIe Dev power");
++		if (ret) {
++			dev_err(dev, "unable to request gpio\n");
++			return ret;
++		}
++	}
++
++	hipcie->aux_clk = devm_clk_get(dev, "aux_clk");
++	if (IS_ERR(hipcie->aux_clk)) {
++		dev_err(dev, "Failed to get pcie aux_clk clock\n");
++		return PTR_ERR(hipcie->aux_clk);
++	}
++
++	hipcie->pipe_clk = devm_clk_get(dev, "pipe_clk");
++	if (IS_ERR(hipcie->pipe_clk)) {
++		dev_err(dev, "Failed to get pcie pipe_clk clock\n");
++		return PTR_ERR(hipcie->pipe_clk);
++	}
++
++	hipcie->sys_clk = devm_clk_get(dev, "sys_clk");
++	if (IS_ERR(hipcie->sys_clk)) {
++		dev_err(dev, "Failed to get pcie sys_clk clock\n");
++		return PTR_ERR(hipcie->sys_clk);
++	}
++
++	hipcie->bus_clk = devm_clk_get(dev, "bus_clk");
++	if (IS_ERR(hipcie->bus_clk)) {
++		dev_err(dev, "Failed to get pcie bus_clk clock\n");
++		return PTR_ERR(hipcie->bus_clk);
++	}
++
++	hipcie->soft_reset = devm_reset_control_get(dev, "soft_reset");
++	if (IS_ERR(hipcie->soft_reset)) {
++		dev_err(dev, "couldn't get soft_reset\n");
++		return PTR_ERR(hipcie->soft_reset);
++	}
++
++	hipcie->sys_reset = devm_reset_control_get(dev, "sys_reset");
++	if (IS_ERR(hipcie->sys_reset)) {
++		dev_err(dev, "couldn't get sys_reset\n");
++		return PTR_ERR(hipcie->sys_reset);
++	}
++
++	hipcie->bus_reset = devm_reset_control_get(dev, "bus_reset");
++	if (IS_ERR(hipcie->bus_reset)) {
++		dev_err(dev, "couldn't get bus_reset\n");
++		return PTR_ERR(hipcie->bus_reset);
++	}
++
++	if (IS_ENABLED(CONFIG_PCI_MSI)) {
++		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
++		if (pp->msi_irq < 0) {
++			dev_err(dev, "Failed to get msi irq\n");
++			return pp->msi_irq;
++		}
++		ret = devm_request_irq(dev, pp->msi_irq,
++				       histb_pcie_msi_irq_handler,
++				       IRQF_SHARED, "histb-pcie-msi", pp);
++		if (ret) {
++			dev_err(dev, "cannot request msi irq\n");
++			return ret;
++		}
++	}
++
++	pp->root_bus_nr = -1;
++	pp->ops = &histb_pcie_host_ops;
++
++	ret = histb_pcie_host_enable(pp);
++	if (ret) {
++		dev_err(dev, "failed to enable host\n");
++		return ret;
++	}
++
++	ret = dw_pcie_host_init(pp);
++	if (ret) {
++		dev_err(dev, "failed to initialize host\n");
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, hipcie);
++
 +	return 0;
 +}
 +
-+static struct platform_driver hi3798cv200_crg_driver = {
-+	.probe          = hi3798cv200_crg_probe,
-+	.remove		= hi3798cv200_crg_remove,
-+	.driver         = {
-+		.name   = "hi3798cv200-crg",
-+		.of_match_table = hi3798cv200_crg_match_table,
++static int histb_pcie_remove(struct platform_device *pdev)
++{
++	struct histb_pcie_host *hipcie = platform_get_drvdata(pdev);
++
++	histb_pcie_host_disable(hipcie);
++
++	return 0;
++}
++
++static const struct of_device_id histb_pcie_of_match[] = {
++	{ .compatible = "hisilicon,histb-pcie", },
++	{ .compatible = "hisilicon,hi3798cv200-pcie", },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, histb_pcie_of_match);
++
++static struct platform_driver histb_pcie_platform_driver = {
++	.probe	= histb_pcie_probe,
++	.remove	= histb_pcie_remove,
++	.driver = {
++		.name = "histb-pcie",
++		.of_match_table = of_match_ptr(histb_pcie_of_match),
 +	},
 +};
 +
-+static int __init hi3798cv200_crg_init(void)
-+{
-+	return platform_driver_register(&hi3798cv200_crg_driver);
-+}
-+core_initcall(hi3798cv200_crg_init);
++module_platform_driver(histb_pcie_platform_driver);
 +
-+static void __exit hi3798cv200_crg_exit(void)
-+{
-+	platform_driver_unregister(&hi3798cv200_crg_driver);
-+}
-+module_exit(hi3798cv200_crg_exit);
-+
++MODULE_AUTHOR("RuQiang Ju <juruqiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>");
++MODULE_DESCRIPTION("HiSilicon STB PCIe host controller driver");
 +MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("HiSilicon Hi3798CV200 CRG Driver");
-diff --git a/drivers/clk/hisilicon/crg.h b/drivers/clk/hisilicon/crg.h
-new file mode 100644
-index 0000000..e073971
---- /dev/null
-+++ b/drivers/clk/hisilicon/crg.h
-@@ -0,0 +1,34 @@
-+/*
-+ * HiSilicon Clock and Reset Driver Header
-+ *
-+ * Copyright (c) 2016 HiSilicon Limited.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __HISI_CRG_H
-+#define __HISI_CRG_H
-+
-+struct hisi_clock_data;
-+struct hisi_reset_controller;
-+
-+struct hisi_crg_funcs {
-+	struct hisi_clock_data*	(*register_clks)(struct platform_device *pdev);
-+	void (*unregister_clks)(struct platform_device *pdev);
-+};
-+
-+struct hisi_crg_dev {
-+	struct hisi_clock_data *clk_data;
-+	struct hisi_reset_controller *rstc;
-+	const struct hisi_crg_funcs *funcs;
-+};
-+
-+#endif	/* __HISI_CRG_H */
-diff --git a/include/dt-bindings/clock/histb-clock.h b/include/dt-bindings/clock/histb-clock.h
-new file mode 100644
-index 0000000..b06d115
---- /dev/null
-+++ b/include/dt-bindings/clock/histb-clock.h
-@@ -0,0 +1,64 @@
-+/*
-+ * Copyright (c) 2016 HiSilicon Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef __DTS_HISTB_CLOCK_H
-+#define __DTS_HISTB_CLOCK_H
-+
-+/* clocks provided by core CRG */
-+#define HISTB_OSC_CLK			0
-+#define HISTB_APB_CLK			1
-+#define HISTB_AHB_CLK			2
-+#define HISTB_UART1_CLK		3
-+#define HISTB_UART2_CLK		4
-+#define HISTB_UART3_CLK		5
-+#define HISTB_I2C0_CLK		6
-+#define HISTB_I2C1_CLK		7
-+#define HISTB_I2C2_CLK		8
-+#define HISTB_I2C3_CLK		9
-+#define HISTB_I2C4_CLK		10
-+#define HISTB_I2C5_CLK		11
-+#define HISTB_SPI0_CLK		12
-+#define HISTB_SPI1_CLK		13
-+#define HISTB_SPI2_CLK		14
-+#define HISTB_SCI_CLK			15
-+#define HISTB_FMC_CLK			16
-+#define HISTB_MMC_BIU_CLK		17
-+#define HISTB_MMC_CIU_CLK		18
-+#define HISTB_MMC_DRV_CLK		19
-+#define HISTB_MMC_SAMPLE_CLK		20
-+#define HISTB_SDIO0_BIU_CLK		21
-+#define HISTB_SDIO0_CIU_CLK		22
-+#define HISTB_SDIO0_DRV_CLK		23
-+#define HISTB_SDIO0_SAMPLE_CLK	24
-+#define HISTB_PCIE_AUX_CLK		25
-+#define HISTB_PCIE_PIPE_CLK		26
-+#define HISTB_PCIE_SYS_CLK		27
-+#define HISTB_PCIE_BUS_CLK		28
-+#define HISTB_ETH0_MAC_CLK		29
-+#define HISTB_ETH0_MACIF_CLK		30
-+#define HISTB_ETH1_MAC_CLK		31
-+#define HISTB_ETH1_MACIF_CLK		32
-+
-+/* clocks provided by mcu CRG */
-+#define HISTB_MCE_CLK	1
-+#define HISTB_IR_CLK	2
-+#define HISTB_TIMER01_CLK	3
-+#define HISTB_LEDC_CLK	4
-+#define HISTB_UART0_CLK	5
-+#define HISTB_LSADC_CLK	6
-+
-+#endif	/* __DTS_HISTB_CLOCK_H */
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
