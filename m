@@ -1,61 +1,41 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 5/5] ARM: dts: Add LEGO MINDSTORTMS EV3 dts
-Date: Fri, 21 Oct 2016 12:13:48 -0700
-Message-ID: <7htwc51pn7.fsf@baylibre.com>
-References: <1477075018-20176-1-git-send-email-david@lechnology.com>
-        <1477075018-20176-6-git-send-email-david@lechnology.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH v2 3/4] soc: ti: Add ti_sci_pm_domains driver
+Date: Fri, 21 Oct 2016 14:15:56 -0500
+Message-ID: <86252d63-d7c6-3c4e-a21e-b48d600738ab@ti.com>
+References: <20161019203347.17893-1-d-gerlach@ti.com>
+ <20161019203347.17893-4-d-gerlach@ti.com> <7h4m45plxr.fsf@baylibre.com>
+ <e13cd925-a62d-457d-cc99-fadd4d123256@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477075018-20176-6-git-send-email-david@lechnology.com> (David
-        Lechner's message of "Fri, 21 Oct 2016 13:36:57 -0500")
+In-Reply-To: <e13cd925-a62d-457d-cc99-fadd4d123256@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>, Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-David Lechner <david@lechnology.com> writes:
+On 10/21/2016 02:02 PM, Santosh Shilimkar wrote:
+> On 10/21/2016 12:00 PM, Kevin Hilman wrote:
+>> Dave Gerlach <d-gerlach@ti.com> writes:
+>>
+> [...]
+>
+>>
+>> BTW, what is the the status of the TI-SCI protocol drivers themselves?
+>> This can't be merged until that is or this won't even compile.
+>>
+> I was just about to ask the same question.
 
-> This adds a device tree definition file for LEGO MINDSTORMS EV3.
->
-> What is working:
->
-> * Pin muxing
-> * MicroSD card reader
-> * UART on input port 1
->
-> What is partially working:
->
-> * Buttons - working after GPIO fix
-> * LEDs - working after GPIO fix
-> * Poweroff/reset - working after GPIO fix
-> * Flash memory - driver loads but can't read the block devices - this is
->   probably due to the fact that we are not able to configure the SPI to
->   use DMA via device tree
-> * EEPROM - there seems to be a hardware bug that causes the first byte
->   read to be corrupted - this can be worked around by adding an I2C stop
->   between writing the register and reading the data, but the at24 driver
->   does not have an option to do this
->
-> What is not working/to be added later:
->
-> * Display - waiting for "tiny DRM" to be mainlined
-> * Speaker - needs new PWM sound driver
-> * USB - waiting for OHCI and MUSB device tree support to be mainlined
-> * ADC - needs new iio driver
-> * GPIOs - broken because of recent changes to core gpio driver
-> * Bluetooth - needs new driver for sequencing power/enable/clock
-> * Input and output ports - need some sort of new phy or extcon driver
-> * Battery - needs new power supply driver (depends on ADC iio driver)
->
-> Signed-off-by: David Lechner <david@lechnology.com>
-> ---
->  arch/arm/boot/dts/Makefile     |   3 +-
->  arch/arm/boot/dts/lego-ev3.dts | 454 +++++++++++++++++++++++++++++++++++++++++
+v4 was sent here which was just a rebase of v3 on v4.9-rc1 with no 
+changes: http://www.spinics.net/lists/arm-kernel/msg536851.html
 
-nit: can you name this da850-lego-ev3.dts
+Should be ready to merge, just was too late during v4.8 cycle.
 
-Though it's not very strictly enforced, we *try* to use the form
-<soc>-<board>.dts.
+Regards,
+Dave
 
-Kevin
+>
+> Regards,
+> Santosh
+>
