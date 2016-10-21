@@ -1,84 +1,112 @@
-From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH V7 0/4] dmaengine: qcom_hidma: add MSI interrupt support
-Date: Fri, 21 Oct 2016 12:37:55 -0400
-Message-ID: <1477067879-23750-1-git-send-email-okaya@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-Cc: agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: [PATCH V7 1/4] dmaengine: qcom_hidma: make pending_tre_count atomic
+Date: Fri, 21 Oct 2016 12:37:56 -0400
+Message-ID: <1477067879-23750-2-git-send-email-okaya@codeaurora.org>
+References: <1477067879-23750-1-git-send-email-okaya@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477067879-23750-1-git-send-email-okaya@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
+Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The new version of the HW supports MSI interrupts instead of wired
-interrupts. The MSI interrupts are especially useful for the guest machine
-execution. The wired interrupts usually trap to the hypervisor and then are
-relayed to the actual interrupt.
+Getting ready for the MSI interrupts. The pending_tre_count is used
+in the interrupt handler to make sure all outstanding requests are
+serviced.
 
-The MSI interrupts can be directly fed into the interrupt controller.
+The driver will allocate 11 MSI interrupts. Each MSI interrupt can be
+assigned to a different CPU. Then, we have a race condition for common
+variables as they share the same interrupt handler with a different
+cause bit and they can potentially be executed in parallel. Making this
+variable atomic so that it can be updated from multiple processor
+contexts.
 
-Adding a new OF compat string (qcom,hidma-1.1) and ACPI string (QCOM8062)
-to distinguish newer HW from the older ones.
+Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+---
+ drivers/dma/qcom/hidma.h     |  2 +-
+ drivers/dma/qcom/hidma_dbg.c |  3 ++-
+ drivers/dma/qcom/hidma_ll.c  | 13 ++++++-------
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-v7:
-* rebase on top of Vinod's topic/qcom
-* drop first 6 patches as they are already applied
-
-v6:
-http://www.spinics.net/lists/devicetree/msg146700.html
-* rebase 4.9 kernel
-
-v5:
-http://www.spinics.net/lists/arm-kernel/msg537014.html
-* dmaengine: qcom_hidma: add MSI support for interrupts
-** Return MSI interrupts before calling platform_msi_domain_free_irqs.
-Also cleanup MSI interrupts on the error path.
-** Free the legacy IRQ only if MSI is disabled
-* add dmaengine: qcom_hidma: break completion processing on error
-in order to break the completions if an error is observed while servicing
-completed work.
-* drop dmaengine: qcom_hidma: make error and success path common
-as the success path assumes that we'll get the number of notifications for
-the
-jobs queued. This is not true under error conditions.
-* simplify dmaengine: qcom_hidma: protect common data structures. We just
-need to protect the TRE processed offset. It is the variable that keeps
-track
-of outstanding requests.
-
-v4:
-http://www.spinics.net/lists/devicetree/msg144563.html
-* device tree binding update to refer to msi.txt
-
-v3:
-* day 0 fix for when ACPI is not compiled in
-* https://www.spinics.net/lists/arm-kernel/msg532179.html
-
-v2:
-https://patchwork.kernel.org/patch/9326399/
-* Documentation update for DT bindings
-* Rebased to slave-next
-* Dropped dmaengine: qcom_hidma: eliminate processed variables. Replaced it
-  with dmaengine: qcom_hidma: protect common data structures
-
-v1:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/444167.html
-* initial implementation
-
-Sinan Kaya (4):
-  dmaengine: qcom_hidma: make pending_tre_count atomic
-  dmaengine: qcom_hidma: bring out interrupt cause
-  dmaengine: qcom_hidma: protect common data structures
-  dmaengine: qcom_hidma: add MSI support for interrupts
-
- drivers/dma/qcom/hidma.c     | 143 +++++++++++++++++++++++++++++++++++++++++--
- drivers/dma/qcom/hidma.h     |   4 +-
- drivers/dma/qcom/hidma_dbg.c |   3 +-
- drivers/dma/qcom/hidma_ll.c  | 127 ++++++++++++++++++--------------------
- 4 files changed, 200 insertions(+), 77 deletions(-)
-
+diff --git a/drivers/dma/qcom/hidma.h b/drivers/dma/qcom/hidma.h
+index de61764..181f7e0 100644
+--- a/drivers/dma/qcom/hidma.h
++++ b/drivers/dma/qcom/hidma.h
+@@ -59,7 +59,7 @@ struct hidma_lldev {
+ 	void __iomem *evca;		/* Event Channel address          */
+ 	struct hidma_tre
+ 		**pending_tre_list;	/* Pointers to pending TREs	  */
+-	s32 pending_tre_count;		/* Number of TREs pending	  */
++	atomic_t pending_tre_count;	/* Number of TREs pending	  */
+ 
+ 	void *tre_ring;			/* TRE ring			  */
+ 	dma_addr_t tre_dma;		/* TRE ring to be shared with HW  */
+diff --git a/drivers/dma/qcom/hidma_dbg.c b/drivers/dma/qcom/hidma_dbg.c
+index 3d83b99..3bdcb80 100644
+--- a/drivers/dma/qcom/hidma_dbg.c
++++ b/drivers/dma/qcom/hidma_dbg.c
+@@ -74,7 +74,8 @@ static void hidma_ll_devstats(struct seq_file *s, void *llhndl)
+ 	seq_printf(s, "tre_ring_handle=%pap\n", &lldev->tre_dma);
+ 	seq_printf(s, "tre_ring_size = 0x%x\n", lldev->tre_ring_size);
+ 	seq_printf(s, "tre_processed_off = 0x%x\n", lldev->tre_processed_off);
+-	seq_printf(s, "pending_tre_count=%d\n", lldev->pending_tre_count);
++	seq_printf(s, "pending_tre_count=%d\n",
++			atomic_read(&lldev->pending_tre_count));
+ 	seq_printf(s, "evca=%p\n", lldev->evca);
+ 	seq_printf(s, "evre_ring=%p\n", lldev->evre_ring);
+ 	seq_printf(s, "evre_ring_handle=%pap\n", &lldev->evre_dma);
+diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
+index e605c90..114409e 100644
+--- a/drivers/dma/qcom/hidma_ll.c
++++ b/drivers/dma/qcom/hidma_ll.c
+@@ -218,10 +218,9 @@ static int hidma_post_completed(struct hidma_lldev *lldev, int tre_iterator,
+ 	 * Keep track of pending TREs that SW is expecting to receive
+ 	 * from HW. We got one now. Decrement our counter.
+ 	 */
+-	lldev->pending_tre_count--;
+-	if (lldev->pending_tre_count < 0) {
++	if (atomic_dec_return(&lldev->pending_tre_count) < 0) {
+ 		dev_warn(lldev->dev, "tre count mismatch on completion");
+-		lldev->pending_tre_count = 0;
++		atomic_set(&lldev->pending_tre_count, 0);
+ 	}
+ 
+ 	spin_unlock_irqrestore(&lldev->lock, flags);
+@@ -328,7 +327,7 @@ void hidma_cleanup_pending_tre(struct hidma_lldev *lldev, u8 err_info,
+ 	u32 tre_read_off;
+ 
+ 	tre_iterator = lldev->tre_processed_off;
+-	while (lldev->pending_tre_count) {
++	while (atomic_read(&lldev->pending_tre_count)) {
+ 		if (hidma_post_completed(lldev, tre_iterator, err_info,
+ 					 err_code))
+ 			break;
+@@ -555,7 +554,7 @@ void hidma_ll_queue_request(struct hidma_lldev *lldev, u32 tre_ch)
+ 	tre->err_code = 0;
+ 	tre->err_info = 0;
+ 	tre->queued = 1;
+-	lldev->pending_tre_count++;
++	atomic_inc(&lldev->pending_tre_count);
+ 	lldev->tre_write_offset = (lldev->tre_write_offset + HIDMA_TRE_SIZE)
+ 					% lldev->tre_ring_size;
+ 	spin_unlock_irqrestore(&lldev->lock, flags);
+@@ -650,7 +649,7 @@ int hidma_ll_setup(struct hidma_lldev *lldev)
+ 	u32 val;
+ 	u32 nr_tres = lldev->nr_tres;
+ 
+-	lldev->pending_tre_count = 0;
++	atomic_set(&lldev->pending_tre_count, 0);
+ 	lldev->tre_processed_off = 0;
+ 	lldev->evre_processed_off = 0;
+ 	lldev->tre_write_offset = 0;
+@@ -831,7 +830,7 @@ int hidma_ll_uninit(struct hidma_lldev *lldev)
+ 	tasklet_kill(&lldev->task);
+ 	memset(lldev->trepool, 0, required_bytes);
+ 	lldev->trepool = NULL;
+-	lldev->pending_tre_count = 0;
++	atomic_set(&lldev->pending_tre_count, 0);
+ 	lldev->tre_write_offset = 0;
+ 
+ 	rc = hidma_ll_reset(lldev);
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
