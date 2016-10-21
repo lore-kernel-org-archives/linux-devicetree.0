@@ -1,108 +1,52 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [RFC V2 PATCH 10/12] arm64: dts: msm8994 issolate non standard
- bootloader/LK entries
-Date: Fri, 21 Oct 2016 14:52:52 -0700
-Message-ID: <20161021215252.GB7509@tuxbot>
-References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
- <20161021194437.GA7509@tuxbot>
- <20161021200409.GN26139@codeaurora.org>
- <3979420.yzJRfAtfpN@wuerfel>
+From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC V4 PATCH 6/6] arm64: configs: enable configs for msm899(2/4)
+ basic support
+Date: Fri, 21 Oct 2016 15:32:08 -0700
+Message-ID: <ba4e8128-40c1-e2ff-8eda-130cbb62e71e@redhat.com>
+References: <1477048273-32451-1-git-send-email-jeremymc@redhat.com>
+ <1477048273-32451-7-git-send-email-jeremymc@redhat.com>
+ <20161021182713.GY7509@tuxbot>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3979420.yzJRfAtfpN@wuerfel>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jeremy McNicoll <jmcnicol@redhat.com>, git@kchr.de, Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161021182713.GY7509@tuxbot>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 21 Oct 13:25 PDT 2016, Arnd Bergmann wrote:
+On 2016-10-21 11:27 AM, Bjorn Andersson wrote:
+> On Fri 21 Oct 04:11 PDT 2016, Jeremy McNicoll wrote:
+>
+>> From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>
+>> Given the mimimal hardware support for msm899(2/4) currently.
+>> A few config options are needed to allow for continued
+>> development and booting.
+>>
+>> The following are needed for continued development and
+>> booting:
+>>   -8x74 pinctrl for serial support
+>
+> I don't have the datasheet for 899[24], but I don't think this is a good
+> idea. We need a 899[24] pinctrl driver for this.
+>
 
-> On Friday, October 21, 2016 1:04:09 PM CEST Stephen Boyd wrote:
-> > On 10/21, Bjorn Andersson wrote:
-> > > On Wed 19 Oct 20:17 PDT 2016, Andy Gross wrote:
-> > > 
-> > > > On Wed, Oct 19, 2016 at 08:07:25PM -0500, Rob Herring wrote:
-> > > [..]
-> > > > > Makes sense to me for things like Nexus phones here. What about DB410
-> > > > > for example? Is there hope for a fix there? My bootloader is only a
-> > > > > couple of months old and needs the properties still.
-> > > > 
-> > > > There won't be a fix for the 410c.  We barely got them to respin to use PSCI.
-> > > > Stephen can correct me if I am wrong on this.
-> > > > 
-> > > > If this is fixed, it would be 8996+.  If..........
-> > > > 
-> > > > So this means introducing the msm-id's for the boards that currently require it,
-> > > > and for the boards that will require it in the future.  And this would stay in
-> > > > effect until the bootloader is able to parse the compatible strings or figure
-> > > > this out without the msm-ids.
-> > > > 
-> > > 
-> > > But if the bootloader at any point in the future would support picking a
-> > > dtb by compatible strings instead of {msm,board,pmic}-id we wouldn't we
-> > > just be back to the ridiculous compatible strings that tipped over into
-> > > acceptance to these ids in the first place.
-> > > 
-> > > Or do we expect the boot loader to do a deep scan of the dtb to match on
-> > > multiple nodes from the tree?
-> > 
-> > I'm pushing the bootloader team to do the deep scan of the dtb to
-> > match up board compatible and pmic compatible strings so that we
-> > don't have to keep these numbers around. Basically put what
-> > dtbtool is doing into the bootloader so we don't have to post
-> > process the dtb anymore. We're currently discussing how to
-> > implement it and how to move the internal codebase to the new
-> > scheme.
-> > 
-> > At least for 96boards I think we can update the lk bootloaders on
-> > there to adopt this code. For other platforms like nexus though I
-> > don't see a way we can update those bootloaders, and those
-> > bootloaders require these properties exist in the dtbs, so we
-> > should just throw the numbers into the dts files there and be
-> > done with post processing. For bootloaders that require the QCDT
-> > header, we'll have to keep running dtbtool there to generate the
-> > header. Having the ids in the dts file or not doesn't really
-> > matter there.
-> 
-> I think part of the problem here is the way that the bootloader
-> expects multiple dtbs to be appended to the kernel binary, and
-> then pick one of them based on its contents. That doesn't really
-> change at all when changing the parser from looking at nonstandard
-> properties to looking at the compatible strings.
-> 
+Based on the downstream code, for serial it was sufficient.
 
-This is unrelated to appending images to the zImage. Qualcomm already
-supports (their original approach) of storing the multiple DTBs in a
-QCDT blob; which contains a header of {msm,board,pmic}-id and offsets to
-each blob.
+There is a 8994 pinctrl driver on its away.
 
-So in this case it's not the boot that parses the dtb, but rather the
-tool packaging the factory images.
+-jeremy
 
-> It still breaks the last-resort workaround for broken bootloaders
-> that we have in the form of appending the DT to the kernel
-> with CONFIG_ARM_APPENDED_DTB.
-> 
+>>   -Enable Global Glock Controller (gcc)
+>>
+>
+> Regards,
+> Bjorn
+>
 
-Yes, this is a likely reason to why Qualcomm didn't take that route,
-until it showed up in Nexus 6 (and 5?).
-
-> I think a better long-term strategy would be to make the bootloader
-> load the dtb separately from the kernel and finding the right file
-> using some information outside of the dtb. Ideally this is done
-> by storing all files on a file system that can also be mounted
-> to /boot, but there are probably other options that work equally well.
-> 
-
-This scheme exists so that you can have a single software image running
-on multiple revisions of a SoC and PMIC, something that is essential for
-both production and upgrade schemes.
-
-No matter how you package your multiple dtbs there needs to be some sort
-of identifier associated that the boot can use to pick the appropriate
-image from the bunch.
-
-Regards,
-Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
