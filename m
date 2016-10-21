@@ -1,43 +1,45 @@
-From: <patrice.chotard@st.com>
-Subject: [PATCH 0/5] Remove STiH415/416 SoC platform support remaining parts
-Date: Fri, 21 Oct 2016 17:57:18 +0200
-Message-ID: <1477065443-10668-1-git-send-email-patrice.chotard@st.com>
+From: <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 2/5] ARM: multi_v7_defconfig: Remove ST_THERMAL_SYSCFG Kconfig symbol
+Date: Fri, 21 Oct 2016 17:57:20 +0200
+Message-ID: <1477065443-10668-3-git-send-email-patrice.chotard@st.com>
+References: <1477065443-10668-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, kernel@stlinux.com, patrice.chotard@st.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477065443-10668-1-git-send-email-patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
 
-ST have sent patches which remove clock support for these SoCs [1]
-which once applied mean the platform will no longer boot.
+STiH415/6 SoC support is being removed from the kernel and
+was the only platform using this Kconfig symbol
 
-This series cleans up remaining STi drivers which have
-support for these SoC's, by removing code, and updating the DT
-documentation accordingly. Some drivers such as st_thermal_syscfg
-can be removed completely because the IP is only found on these 
-legacy SoC's.
+Signed-off-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Cc: <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/configs/multi_v7_defconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-Patrice Chotard (5):
-  thermal: st_thermal_syscfg: Remove obsolete STiH415/416 platform
-    support.
-  ARM: multi_v7_defconfig: Remove ST_THERMAL_SYSCFG Kconfig symbol
-  ARM: multi_v7_defconfig: Remove CONFIG_ST_THERMAL_MEMMAP Kconfig
-    symbol
-  irqchip: st: remove STiH415/416 irqchip support
-  irqchip: st: Remove obsolete platforms from dt binding doc
-
- .../interrupt-controller/st,sti-irq-syscfg.txt     |   6 +-
- arch/arm/configs/multi_v7_defconfig                |   2 -
- drivers/irqchip/irq-st.c                           |  10 --
- drivers/thermal/st/Kconfig                         |   4 -
- drivers/thermal/st/Makefile                        |   1 -
- drivers/thermal/st/st_thermal_syscfg.c             | 178 ---------------------
- 6 files changed, 2 insertions(+), 199 deletions(-)
- delete mode 100644 drivers/thermal/st/st_thermal_syscfg.c
-
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 437d074..15b2f99 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -450,7 +450,6 @@ CONFIG_RCAR_THERMAL=y
+ CONFIG_ARMADA_THERMAL=y
+ CONFIG_DAVINCI_WATCHDOG=m
+ CONFIG_EXYNOS_THERMAL=m
+-CONFIG_ST_THERMAL_SYSCFG=y
+ CONFIG_ST_THERMAL_MEMMAP=y
+ CONFIG_WATCHDOG=y
+ CONFIG_DA9063_WATCHDOG=m
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
