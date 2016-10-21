@@ -1,137 +1,72 @@
-From: Jeremy McNicoll <jmcnicol@redhat.com>
-Subject: Re: [RFC V3 PATCH 1/7] arm64: dts: msm8992 SoC and LG Bullhead (Nexus
- 5X) support
-Date: Fri, 21 Oct 2016 01:55:18 -0700
-Message-ID: <bd5c03b3-1532-ec6a-b0ce-e85068d711e9@redhat.com>
+From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC V3 PATCH 7/7] arm64: configs: enable configs for msm899(2/4)
+ basic support
+Date: Fri, 21 Oct 2016 01:59:05 -0700
+Message-ID: <550f1620-00f4-7963-4c2e-5bed7e304dfc@redhat.com>
 References: <1476265054-22511-1-git-send-email-jeremymc@redhat.com>
- <1476265054-22511-2-git-send-email-jeremymc@redhat.com>
- <20161012103001.GB19509@remoulade>
+ <1476265054-22511-8-git-send-email-jeremymc@redhat.com>
+ <20161012133710.GD21050@remoulade>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20161012103001.GB19509@remoulade>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Jeremy McNicoll <jeremymc@redhat.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, arnd@arndb.de, bjorn.andersson@linaro.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161012133710.GD21050@remoulade>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-12 3:30 AM, Mark Rutland wrote:
-> On Wed, Oct 12, 2016 at 02:37:28AM -0700, Jeremy McNicoll wrote:
->> +/ {
->> +	model = "LGE MSM8992 BULLHEAD rev-1.01";
->> +	compatible = "qcom,msm8992";
->> +	qcom,board-id = <0xb64 0>;
->> +};
+On 2016-10-12 6:37 AM, Mark Rutland wrote:
+> On Wed, Oct 12, 2016 at 02:37:34AM -0700, Jeremy McNicoll wrote:
+>> From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>
+>> Given the mimimal hardware support for msm899(2/4) currently.
+>> A few config options are needed to allow for continued
+>> development and booting.
+>>
+>> The following are needed for continued development and
+>> booting:
+>>   -InitRD support
+>>   -8x74 pinctrl for serial support
+>>   -Enable Global Glock Controller (gcc)
+>>
+>> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm64/configs/defconfig | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+>> index fd2d74d..8601388 100644
+>> --- a/arch/arm64/configs/defconfig
+>> +++ b/arch/arm64/configs/defconfig
+>> @@ -21,6 +21,7 @@ CONFIG_CGROUP_HUGETLB=y
+>>  # CONFIG_NET_NS is not set
+>>  CONFIG_SCHED_AUTOGROUP=y
+>>  CONFIG_BLK_DEV_INITRD=y
+>> +CONFIG_BLK_DEV_RAM=y
 >
-> This last property doesn't seem to be documented or used in mainline.
+> We already had BLK_DEV_INITRD, which I presume was sufficient.
 >
-> What is it for?
-
-Its required by the bootloader to select the correct blob.
-
->
->> +/ {
->> +	aliases {
->> +		serial0 = &blsp1_uart2;
->> +	};
->> +
->> +	chosen {
->> +		stdout-path = "serial0";
->> +	};
->
-> I'd recommend describing the configured rate, per
-> Documentation/devicetree/bindings/chosen.txt
->
-
-Updated default serial settings have been changed as per V3
-6/7 and the associated patch dropped. (6/7)
-
-
-> [...]
->
->> +/ {
->> +	model = "Qualcomm Technologies, Inc. MSM 8992";
->> +	compatible = "qcom,msm8992";
->> +	qcom,msm-id = <251 0>, <252 0>;
->> +	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
->
-> These last two are not documented, and not used in mainline.
->
-> What are they for?
-
-They are explicitly needed by the bootloader.
-
-
->
->> +	memory {
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +
->> +		device_type = "memory";
->> +		reg = <0 0 0 0>;
->
-> If this is filled in by the bootloader, please havea coment to that effect.
+> Why do we need BLK_DEV_RAM, too?
 >
 
-added comment
+BLK_DEV_RAM , has been removed as it turns out my buildroot ramdisk was 
+the cause of this dependancy, it has been since updated.  Everything 
+works as expected with a slight change to my kernel cmdline,
+
+   'console=ttyMSM0,115200,n8 earlycon=msm_serial_dm,0xf991e000 
+loglevel=15 ddebug_query debug console=ttyMSM0,115200,n8'
 
 
->> +		peripheral_mem: peripheral_region@0 {
->> +			linux,reserve-contiguous-region;
->> +			linux,reserve-region;
->> +			linux,remove-completely;
->> +			reg = <0 0x07400000 0 0x1c00000>;
->> +			label = "peripheral_mem";
->> +		};
->> +	};
->
-> What is this?
->
-> There aren't any sub-nodes of memory (iirc reserved-memory is a separate node),
-> an none of these 'liux,' prefixed properties exist in mainline.
-
-dropped as its a relic of the past. (3.10)
-
->
-> [...]
->
->> +	timer {
->> +		compatible = "arm,armv8-timer";
->> +		interrupts = <1 2 0xf08>,
->> +				<1 3 0xf08>,
->> +				<1 4 0xf08>,
->> +				<1 1 0xf08>;
->> +		clock-frequency = <19200000>;
->> +	};
->
-> Why is the FW not programming the frequency register?
->
-
-Not sure what the FW is doing as I don't have access to it.
-
-
->> +	clocks {
->> +		xo_board: xo_board {
->> +			compatible = "fixed-clock";
->> +			#clock-cells = <0>;
->> +			clock-frequency = <19200000>;
->> +		};
->> +
->> +		sleep_clk: sleep_clk {
->> +			compatible = "fixed-clock";
->> +			#clock-cells = <0>;
->> +			clock-frequency = <32768>;
->> +		};
->> +	};
->
-> Get rid of the clocks container node, and places these directly under the root node.
->
-
-moved up, waaay up!
 
 -jeremy
 
+
 > Thanks,
-> Mark.
+> Mark
 >
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
