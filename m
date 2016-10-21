@@ -1,72 +1,73 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [RFC V2 PATCH 10/12] arm64: dts: msm8994 issolate non standard
- bootloader/LK entries
-Date: Fri, 21 Oct 2016 13:04:09 -0700
-Message-ID: <20161021200409.GN26139@codeaurora.org>
-References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
- <2149904.D2eaQZN3bA@wuerfel>
- <17447be1-4357-0eca-a242-69576d3e2799@redhat.com>
- <4976066.k14mpQt0HJ@wuerfel>
- <20161019214643.GC3145@hector.attlocal.net>
- <CAL_Jsq+wjnEByg2vgx-P+bLJaQm+s=UX7nj=KwviagnQDG_3hQ@mail.gmail.com>
- <20161020031712.GD3145@hector.attlocal.net>
- <20161021194437.GA7509@tuxbot>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] mtd: s3c2410: make ecc mode configurable via
+ platform data
+Date: Fri, 21 Oct 2016 23:06:25 +0300
+Message-ID: <20161021200625.GA20847@kozik-lap>
+References: <1476999766-32526-1-git-send-email-sergio.prado@e-labworks.com>
+ <1476999766-32526-2-git-send-email-sergio.prado@e-labworks.com>
+ <20161021182710.GA17279@kozik-lap>
+ <5a626833-d4bf-a991-65ea-2849f2250dce@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161021194437.GA7509@tuxbot>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Jeremy McNicoll <jmcnicol@redhat.com>, git@kchr.de, Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <5a626833-d4bf-a991-65ea-2849f2250dce-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/21, Bjorn Andersson wrote:
-> On Wed 19 Oct 20:17 PDT 2016, Andy Gross wrote:
+On Fri, Oct 21, 2016 at 08:51:51PM +0200, Marek Vasut wrote:
+> On 10/21/2016 08:27 PM, Krzysztof Kozlowski wrote:
+> > On Thu, Oct 20, 2016 at 07:42:44PM -0200, Sergio Prado wrote:
+> >> Removing CONFIG_MTD_NAND_S3C2410_HWECC option and adding a ecc_mode
+> >> field in the drivers's platform data structure so it can be selectable
+> >> via platform data.
+> >>
+> >> Also setting this field to NAND_ECC_SOFT in all boards using this
+> >> driver since none of them had CONFIG_MTD_NAND_S3C2410_HWECC enabled.
+> >>
+> >> Signed-off-by: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
+> >> ---
+> >>  arch/arm/mach-s3c24xx/common-smdk.c            |   1 +
+> >>  arch/arm/mach-s3c24xx/mach-anubis.c            |   1 +
+> >>  arch/arm/mach-s3c24xx/mach-at2440evb.c         |   1 +
+> >>  arch/arm/mach-s3c24xx/mach-bast.c              |   1 +
+> >>  arch/arm/mach-s3c24xx/mach-gta02.c             |   1 +
+> >>  arch/arm/mach-s3c24xx/mach-jive.c              |   1 +
+> >>  arch/arm/mach-s3c24xx/mach-mini2440.c          |   1 +
+> >>  arch/arm/mach-s3c24xx/mach-osiris.c            |   1 +
+> >>  arch/arm/mach-s3c24xx/mach-qt2410.c            |   1 +
+> >>  arch/arm/mach-s3c24xx/mach-rx1950.c            |   1 +
+> >>  arch/arm/mach-s3c24xx/mach-rx3715.c            |   1 +
+> >>  arch/arm/mach-s3c24xx/mach-vstms.c             |   1 +
+> >>  arch/arm/mach-s3c64xx/mach-hmt.c               |   1 +
+> >>  arch/arm/mach-s3c64xx/mach-mini6410.c          |   1 +
+> >>  arch/arm/mach-s3c64xx/mach-real6410.c          |   1 +
+> >>  drivers/mtd/nand/Kconfig                       |   9 --
+> >>  drivers/mtd/nand/s3c2410.c                     | 119 +++++++++++++------------
+> >>  include/linux/platform_data/mtd-nand-s3c2410.h |   6 +-
+> >>  18 files changed, 79 insertions(+), 70 deletions(-)
+> >>
+> > 
+> > I acked this twice (v1 and v2)... and still you are ignoring them. I am
+> > sorry, I am not gonna to ack this third time!
 > 
-> > On Wed, Oct 19, 2016 at 08:07:25PM -0500, Rob Herring wrote:
-> [..]
-> > > Makes sense to me for things like Nexus phones here. What about DB410
-> > > for example? Is there hope for a fix there? My bootloader is only a
-> > > couple of months old and needs the properties still.
-> > 
-> > There won't be a fix for the 410c.  We barely got them to respin to use PSCI.
-> > Stephen can correct me if I am wrong on this.
-> > 
-> > If this is fixed, it would be 8996+.  If..........
-> > 
-> > So this means introducing the msm-id's for the boards that currently require it,
-> > and for the boards that will require it in the future.  And this would stay in
-> > effect until the bootloader is able to parse the compatible strings or figure
-> > this out without the msm-ids.
-> > 
-> 
-> But if the bootloader at any point in the future would support picking a
-> dtb by compatible strings instead of {msm,board,pmic}-id we wouldn't we
-> just be back to the ridiculous compatible strings that tipped over into
-> acceptance to these ids in the first place.
-> 
-> Or do we expect the boot loader to do a deep scan of the dtb to match on
-> multiple nodes from the tree?
+> Hi, um, I am kinda new to this mess, what's going on ? You ACKed
+> previous patches, next revision was submitted, so you need to ACK
+> the next revision too (due to the changes).
+>
 
-I'm pushing the bootloader team to do the deep scan of the dtb to
-match up board compatible and pmic compatible strings so that we
-don't have to keep these numbers around. Basically put what
-dtbtool is doing into the bootloader so we don't have to post
-process the dtb anymore. We're currently discussing how to
-implement it and how to move the internal codebase to the new
-scheme.
+Some of the patches (1/3 and 2/3) were not changed. The resubmission of
+a patch should contain the ack. Otherwise one would have to ack
+indefinitely...
 
-At least for 96boards I think we can update the lk bootloaders on
-there to adopt this code. For other platforms like nexus though I
-don't see a way we can update those bootloaders, and those
-bootloaders require these properties exist in the dtbs, so we
-should just throw the numbers into the dts files there and be
-done with post processing. For bootloaders that require the QCDT
-header, we'll have to keep running dtbtool there to generate the
-header. Having the ids in the dts file or not doesn't really
-matter there.
+The changes in 2/3 were quite irrelevant to my ack, so the ack could
+stay.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+BR,
+Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
