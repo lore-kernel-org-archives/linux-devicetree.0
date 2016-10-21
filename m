@@ -1,150 +1,73 @@
-From: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5] mwifiex: parse device tree node for PCIe
-Date: Fri, 21 Oct 2016 10:15:56 -0700
-Message-ID: <1477070156-109965-1-git-send-email-rajatja@google.com>
-References: <20161021020609.GA18359@localhost>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161021020609.GA18359@localhost>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: rajatxjain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] x86: bzImage: Allow the appending of a device tree binary
+Date: Fri, 21 Oct 2016 18:38:56 +0100
+Message-ID: <20161021173855.GE17287@leverpostej>
+References: <1476512960-22406-1-git-send-email-franck.jullien@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1476512960-22406-1-git-send-email-franck.jullien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Franck Jullien <franck.jullien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+On Sat, Oct 15, 2016 at 08:29:20AM +0200, Franck Jullien wrote:
+> This patch provides the ability to boot using a device tree that is appended
+> to the raw binary bzImage (e.g. cat bzImage <filename>.dtb > bzImage_w_dtb).
+> 
+> Based on Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> work on x86
+> builtin dtb support.
+> 
+> Signed-off-by: Franck Jullien <franck.jullien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-This patch derives device tree node from pcie bus layer framework, and
-fixes a minor memory leak in mwifiex_pcie_probe() (in failure path).
-Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
-marvell-8xxx.txt) to accomodate PCIe changes.
+I understand that the rationale for this is to describe devices
+instantiated dynamically on an FPGA (or to provide a base for overlays
+to be applied when they are later instantiated).
 
-Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-v2: Included vendor and product IDs in compatible strings for PCIe
-chipsets(Rob Herring)
-v3: Patch is created using -M option so that it will only include diff of
-original and renamed files(Rob Herring)
-Resend v3: Resending the patch because I missed to include device tree mailing
-while sending v3.
-v4: Fix error handling, also move-on even if no device tree node is present.
-v5: Update commit log to include memory leak, return -EINVAL instead of -1.
+I don't think that this, as it stands, is a good idea.
 
- .../{marvell-sd8xxx.txt => marvell-8xxx.txt}       |  8 +++--
- drivers/net/wireless/marvell/mwifiex/pcie.c        | 39 +++++++++++++++++++---
- drivers/net/wireless/marvell/mwifiex/sta_cmd.c     |  3 +-
- 3 files changed, 42 insertions(+), 8 deletions(-)
- rename Documentation/devicetree/bindings/net/wireless/{marvell-sd8xxx.txt => marvell-8xxx.txt} (91%)
+For one thing, this provides us with no notion of topology (i.e. where
+the FPGA device falls in the interconnect hierarchy), as there's no
+"nexus" defined where the DT bridges onto the existing ACPI topology.
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-similarity index 91%
-rename from Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
-rename to Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-index c421aba..dfe5f8e 100644
---- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-@@ -1,8 +1,8 @@
--Marvell 8897/8997 (sd8897/sd8997) SDIO devices
-+Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
- ------
- 
--This node provides properties for controlling the marvell sdio wireless device.
--The node is expected to be specified as a child node to the SDIO controller that
-+This node provides properties for controlling the marvell sdio/pcie wireless device.
-+The node is expected to be specified as a child node to the SDIO/PCIE controller that
- connects the device to the system.
- 
- Required properties:
-@@ -10,6 +10,8 @@ Required properties:
-   - compatible : should be one of the following:
- 	* "marvell,sd8897"
- 	* "marvell,sd8997"
-+	* "pci11ab,2b42"
-+	* "pci1b4b,2b42"
- 
- Optional properties:
- 
-diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
-index 3c3c4f1..7c44f88 100644
---- a/drivers/net/wireless/marvell/mwifiex/pcie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
-@@ -37,6 +37,22 @@ static struct mwifiex_if_ops pcie_ops;
- 
- static struct semaphore add_remove_card_sem;
- 
-+static const struct of_device_id mwifiex_pcie_of_match_table[] = {
-+	{ .compatible = "pci11ab,2b42" },
-+	{ .compatible = "pci1b4b,2b42" },
-+	{ }
-+};
-+
-+static int mwifiex_pcie_probe_of(struct device *dev)
-+{
-+	if (!of_match_node(mwifiex_pcie_of_match_table, dev->of_node)) {
-+		pr_err("pcie device node not available");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int
- mwifiex_map_pci_memory(struct mwifiex_adapter *adapter, struct sk_buff *skb,
- 		       size_t size, int flags)
-@@ -178,6 +194,7 @@ static int mwifiex_pcie_probe(struct pci_dev *pdev,
- 					const struct pci_device_id *ent)
- {
- 	struct pcie_service_card *card;
-+	int ret;
- 
- 	pr_debug("info: vendor=0x%4.04X device=0x%4.04X rev=%d\n",
- 		 pdev->vendor, pdev->device, pdev->revision);
-@@ -199,13 +216,27 @@ static int mwifiex_pcie_probe(struct pci_dev *pdev,
- 		card->pcie.can_ext_scan = data->can_ext_scan;
- 	}
- 
--	if (mwifiex_add_card(card, &add_remove_card_sem, &pcie_ops,
--			     MWIFIEX_PCIE)) {
--		pr_err("%s failed\n", __func__);
--		return -1;
-+	/* device tree node parsing and platform specific configuration*/
-+	if (pdev->dev.of_node) {
-+		ret = mwifiex_pcie_probe_of(&pdev->dev);
-+		if (ret) {
-+			dev_err(&pdev->dev,
-+				"required compatible string missing\n");
-+			goto err_free;
-+		}
- 	}
- 
-+	ret = mwifiex_add_card(card, &add_remove_card_sem, &pcie_ops,
-+			       MWIFIEX_PCIE);
-+	if (ret) {
-+		pr_err("%s failed\n", __func__);
-+		goto err_free;
-+	}
- 	return 0;
-+
-+err_free:
-+	kfree(card);
-+	return ret;
- }
- 
- /*
-diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-index 2a162c3..c8dccf5 100644
---- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-@@ -2218,7 +2218,8 @@ int mwifiex_sta_init_cmd(struct mwifiex_private *priv, u8 first_sta, bool init)
- 		 * The cal-data can be read from device tree and/or
- 		 * a configuration file and downloaded to firmware.
- 		 */
--		if (priv->adapter->iface_type == MWIFIEX_SDIO &&
-+		if ((priv->adapter->iface_type == MWIFIEX_SDIO ||
-+		    priv->adapter->iface_type == MWIFIEX_PCIE) &&
- 		    adapter->dev->of_node) {
- 			adapter->dt_node = adapter->dev->of_node;
- 			if (of_property_read_u32(adapter->dt_node,
--- 
-2.8.0.rc3.226.g39d4020
+Worse, even if that were present, we have no way of mapping things like
+interrupts across the ACPI/DT boundary, and more complex things like
+IOMMU mastering (where ACPI and DT differ quite substantially).
+
+Generally, I do not think that mixing ACPI and DT is a good idea, as
+there are a number of conceptual differences, and there is no trivial
+mapping between them generally.
+
+If you need to work atop of ACPI, I think that you need extensions to
+ACPI, rather than attempting to graft DT atop.
+
+> +config X86_APPENDED_DTB
+> +	bool "Use appended device tree blob to bzImage"
+> +	depends on OF
+> +	select OF_EARLY_FLATTREE
+> +	help
+> +	  With this option, the boot code will look for a device tree binary
+> +	  (DTB) appended to bzImage
+> +	  (e.g. cat bzImage <filename>.dtb > bzImage_w_dtb).
+> +
+> +	  This is meant as a backward compatibility convenience for those
+> +	  systems with a bootloader that can't be upgraded to accommodate
+> +	  the documented boot protocol using a device tree.
+> +
+> +	  Beware that there is very little in terms of protection against
+> +	  this option being confused by leftover garbage in memory that might
+> +	  look like a DTB header after a reboot if no actual DTB is appended
+> +	  to bzImage.  Do not leave this option active in a production kernel
+> +	  if you don't intend to always append a DTB.
+
+I would advise that you reword this, as the existing wording is clearly
+not applicable.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
