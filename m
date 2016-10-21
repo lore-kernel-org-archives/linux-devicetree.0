@@ -1,7 +1,7 @@
 From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 5/7] ARM: dts: r8a7743: add IRQC support
-Date: Fri, 21 Oct 2016 23:46:17 +0300
-Message-ID: <3782268.ZMDRHAEM2B@wasted.cogentembedded.com>
+Subject: [PATCH v4 6/7] ARM: dts: sk-rzg1m: initial device tree
+Date: Fri, 21 Oct 2016 23:47:48 +0300
+Message-ID: <6067818.PNWHquUYTU@wasted.cogentembedded.com>
 References: <2719479.geOc9vqcRS@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -13,55 +13,88 @@ To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY
 Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Describe the IRQC interrupt controller in the R8A7743 device tree.
+Add the initial device  tree for the R8A7743 SoC based SK-RZG1M board.
+The board has one debug serial port (SCIF0); include support for it, so
+that  the serial  console  can work.
+
+Based on the original (and large) patch by Dmitry Shifrin
+<dmitry.shifrin-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
 
 Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
 ---
 Changes in version 4:
-- refreshed the patch;
-- added Geert's tag.
+- refreshed the patch.
 
 Changes in version 3:
-- updated the "clocks" property for the CPG/MSSR driver.
+- added Geert's tag.
 
-Changes in version 2:
-- new patch.
+ arch/arm/boot/dts/Makefile             |    1 
+ arch/arm/boot/dts/r8a7743-sk-rzg1m.dts |   44 +++++++++++++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
 
- arch/arm/boot/dts/r8a7743.dtsi |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7743.dtsi
+Index: renesas/arch/arm/boot/dts/Makefile
 ===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7743.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7743.dtsi
-@@ -62,6 +62,25 @@
- 						 IRQ_TYPE_LEVEL_HIGH)>;
- 		};
- 
-+		irqc: interrupt-controller@e61c0000 {
-+			compatible = "renesas,irqc-r8a7743", "renesas,irqc";
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			reg = <0 0xe61c0000 0 0x200>;
-+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 407>;
-+			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+		};
+--- renesas.orig/arch/arm/boot/dts/Makefile
++++ renesas/arch/arm/boot/dts/Makefile
+@@ -677,6 +677,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
+ 	r7s72100-rskrza1.dtb \
+ 	r8a73a4-ape6evm.dtb \
+ 	r8a7740-armadillo800eva.dtb \
++	r8a7743-sk-rzg1m.dtb \
+ 	r8a7778-bockw.dtb \
+ 	r8a7779-marzen.dtb \
+ 	r8a7790-lager.dtb \
+Index: renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
+===================================================================
+--- /dev/null
++++ renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
+@@ -0,0 +1,44 @@
++/*
++ * Device Tree Source for the SK-RZG1M board
++ *
++ * Copyright (C) 2016 Cogent Embedded, Inc.
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2. This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
 +
- 		timer {
- 			compatible = "arm,armv7-timer";
- 			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
++/dts-v1/;
++#include "r8a7743.dtsi"
++
++/ {
++	model = "SK-RZG1M";
++	compatible = "renesas,sk-rzg1m", "renesas,r8a7743";
++
++	aliases {
++		serial0 = &scif0;
++	};
++
++	chosen {
++		bootargs = "ignore_loglevel";
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0 0x40000000 0 0x40000000>;
++	};
++
++	memory@200000000 {
++		device_type = "memory";
++		reg = <2 0x00000000 0 0x40000000>;
++	};
++};
++
++&extal_clk {
++	clock-frequency = <20000000>;
++};
++
++&scif0 {
++	status = "okay";
++};
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
