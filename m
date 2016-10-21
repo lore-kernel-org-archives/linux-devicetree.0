@@ -1,74 +1,36 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM: boot: mxs: Add On-Chip RAM
-Date: Fri, 21 Oct 2016 21:53:43 +0800
-Message-ID: <20161021135343.GI30578@tiger>
-References: <1473789066-8955-1-git-send-email-stefan.wahren@i2se.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/7] Support TPS65217 PMIC interrupt in DT
+Date: Fri, 21 Oct 2016 23:00:59 +0900
+Message-ID: <20161021140106.21531-1-woogyom.kim@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1473789066-8955-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?J=F6rg?= Krause <joerg.krause-L1vi/lXTdtsfGbAt6QbQcg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lothar =?iso-8859-1?Q?Wa=DFmann?= <lw-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+To: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 13, 2016 at 05:51:02PM +0000, Stefan Wahren wrote:
-> The i.MX23 / i.MX28 have a small amount of On-Chip RAM which is also necessary
-> for suspend to RAM and standby mode. But before we need to remove the fake reg
-> properties of all internal bus nodes as discussed in this thread [1].
-> 
-> This patch series requires Fabio Estevam's recent series "ARM: dts: imx23:
-> Remove skeleton.dtsi inclusion" [2].
-> 
-> [1] - https://marc.info/?l=devicetree&m=146139948426520&w=2
+TPS65217 interrupt events include push button pressed/released, USB and AC 
+voltage status change. AM335x bone based boards (like BB, BBB, BBG) have 
+common PMIC interrupt pin (named NMI) of AM335x core.
 
-The page cannot be reached.  I would like to understand the
-background for this change.
+This patchset support interrupts in device tree file.
 
-Shawn
+Milo Kim (7):
+  ARM: dts: tps65217: Specify the interrupt controller
+  ARM: dts: tps65217: Add the charger device
+  ARM: dts: tps65217: Add the power button device
+  ARM: dts: am335x: Support the PMIC interrupt
+  ARM: dts: am335x: Add the charger interrupt
+  ARM: dts: am335x: Add the power button interrupt
+  mfd: tps65217: Fix mismatched interrupt number
 
-> [2] - http://www.spinics.net/lists/arm-kernel/msg528974.html
-> 
-> Stefan Wahren (4):
->   ARM: dts: imx23: Remove fake "reg" properties from bus nodes
->   ARM: dts: imx28: Remove fake "reg" properties from bus nodes
->   ARM: dts: imx23: add On-Chip RAM
->   ARM: dts: imx28: add On-Chip RAM
-> 
->  arch/arm/boot/dts/imx23-evk.dts           |    8 ++++----
->  arch/arm/boot/dts/imx23-olinuxino.dts     |    8 ++++----
->  arch/arm/boot/dts/imx23-sansa.dts         |    8 ++++----
->  arch/arm/boot/dts/imx23-stmp378x_devb.dts |    6 +++---
->  arch/arm/boot/dts/imx23-xfi3.dts          |    8 ++++----
->  arch/arm/boot/dts/imx23.dtsi              |   15 +++++++++------
->  arch/arm/boot/dts/imx28-apf28.dts         |    8 ++++----
->  arch/arm/boot/dts/imx28-apf28dev.dts      |    8 ++++----
->  arch/arm/boot/dts/imx28-apx4devkit.dts    |    8 ++++----
->  arch/arm/boot/dts/imx28-cfa10036.dts      |    8 ++++----
->  arch/arm/boot/dts/imx28-cfa10037.dts      |    8 ++++----
->  arch/arm/boot/dts/imx28-cfa10049.dts      |   10 +++++-----
->  arch/arm/boot/dts/imx28-cfa10055.dts      |    6 +++---
->  arch/arm/boot/dts/imx28-cfa10056.dts      |    4 ++--
->  arch/arm/boot/dts/imx28-cfa10057.dts      |   10 +++++-----
->  arch/arm/boot/dts/imx28-cfa10058.dts      |   10 +++++-----
->  arch/arm/boot/dts/imx28-duckbill.dts      |    8 ++++----
->  arch/arm/boot/dts/imx28-evk.dts           |    8 ++++----
->  arch/arm/boot/dts/imx28-m28.dtsi          |    6 +++---
->  arch/arm/boot/dts/imx28-m28cu3.dts        |    8 ++++----
->  arch/arm/boot/dts/imx28-m28evk.dts        |    8 ++++----
->  arch/arm/boot/dts/imx28-sps1.dts          |    8 ++++----
->  arch/arm/boot/dts/imx28.dtsi              |   17 +++++++++--------
->  23 files changed, 100 insertions(+), 96 deletions(-)
-> 
-> -- 
-> 1.7.9.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+ arch/arm/boot/dts/am335x-bone-common.dtsi | 17 +++++++++++++++++
+ arch/arm/boot/dts/tps65217.dtsi           | 12 ++++++++++++
+ include/linux/mfd/tps65217.h              |  4 ++--
+ 3 files changed, 31 insertions(+), 2 deletions(-)
+
+-- 
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
