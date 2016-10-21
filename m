@@ -1,80 +1,42 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM: boot: mxs: Add On-Chip RAM
-Date: Fri, 21 Oct 2016 17:24:36 +0200
-Message-ID: <e472fb62-00d2-359d-2126-ce2727fe3bed@i2se.com>
-References: <1473789066-8955-1-git-send-email-stefan.wahren@i2se.com>
- <20161021135343.GI30578@tiger>
- <9bf7c925-bdc2-d0b8-9886-70d46383d1e0@i2se.com>
- <20161021150336.GJ30578@tiger>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [RFC] ARM: dts: exynos: Remove exynos4415.dtsi
+Date: Fri, 21 Oct 2016 12:28:14 -0300
+Message-ID: <465ede6d-32db-7c2b-622d-2e655e8f9ae2@osg.samsung.com>
+References: <CGME20161021141653eucas1p11801729a8cea77169d2639bbae6f0d6c@eucas1p1.samsung.com>
+ <1477059331-14586-1-git-send-email-krzk@kernel.org>
+ <c8576159-347c-42df-6a8d-8620ba4be8a1@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161021150336.GJ30578@tiger>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?J=c3=b6rg_Krause?= <joerg.krause-L1vi/lXTdtsfGbAt6QbQcg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?Q?Lothar_Wa=c3=9fmann?= <lw-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c8576159-347c-42df-6a8d-8620ba4be8a1@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 21.10.2016 um 17:03 schrieb Shawn Guo:
-> On Fri, Oct 21, 2016 at 04:05:59PM +0200, Stefan Wahren wrote:
->> Am 21.10.2016 um 15:53 schrieb Shawn Guo:
->>> On Tue, Sep 13, 2016 at 05:51:02PM +0000, Stefan Wahren wrote:
->>>> The i.MX23 / i.MX28 have a small amount of On-Chip RAM which is also necessary
->>>> for suspend to RAM and standby mode. But before we need to remove the fake reg
->>>> properties of all internal bus nodes as discussed in this thread [1].
->>>>
->>>> This patch series requires Fabio Estevam's recent series "ARM: dts: imx23:
->>>> Remove skeleton.dtsi inclusion" [2].
->>>>
->>>> [1] - https://marc.info/?l=devicetree&m=146139948426520&w=2
->>> The page cannot be reached.  I would like to understand the
->>> background for this change.
->> Strange, because i don't have any problems while clicking on the URL.
+
+On 10/21/2016 11:33 AM, Sylwester Nawrocki wrote:
+> On 10/21/2016 04:15 PM, Krzysztof Kozlowski wrote:
+>> There are no boards in mainline using exynos4415.dtsi.  This is DTS
+>> was not tested for long.  I am also not aware of any popular out-of-tree
+>> boards using this (except consumer devices released by Samsung but those
+>> cannot use mainline).
 >>
->> It's an older discussion on the devicetree / kernel newbie mailing list
->> with subject "strange dtc errors after adding sram node". Arnd suggested
->> in the discussion to remove the reg property from the ahb node.
+>> Keeping Exynos4415 costs some useless effort so remove it.
 >>
->> Please try this one: http://www.spinics.net/lists/newbies/msg57652.html
-> If you go through 'Table 4-1. Address Map for i.MX28' of MCIMX28RM, you
-> should be able to find there are 3 AHB buses: ahb@0, ahb@80080000 and
-> ahb@c0000000.  The ocram goes to ahb@0.  The following change should be
-> the right one for ocram addition.
+>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> It seems a sane thing to do, I don't know of any active platform that
+> uses Exynos4415.
+> 
+> Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> 
 
-Correct me if i'm wrong, but there is only one AHB bus and only the
-connected peripheral devices like ocram or USB controller have a memory
-mapped start address not the bus itself.
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
->
-> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-> index 0ad893bf5f43..8e5718df06b2 100644
-> --- a/arch/arm/boot/dts/imx28.dtsi
-> +++ b/arch/arm/boot/dts/imx28.dtsi
-> @@ -47,6 +47,19 @@
->                 };
->         };
->  
-> +       ahb@0 {
-> +               compatible = "simple-bus";
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               reg = <0x0 0x80000000>;
-> +               ranges;
-> +
-> +               ocram: sram@0 {
-> +                       compatible = "mmio-sram";
-> +                       reg = <0x0 0x20000>;
-> +               };
-> +       };
-> +
->         apb@80000000 {
->                 compatible = "simple-bus";
->                 #address-cells = <1>;
->
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
