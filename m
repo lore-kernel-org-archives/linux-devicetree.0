@@ -1,31 +1,50 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [RFC PATCH 08/13] dwmac-meson8b: add support for phy selection
-Date: Fri, 21 Oct 2016 17:46:34 +0200
-Message-ID: <20161021154634.GQ16974@lunn.ch>
-References: <1477060838-14164-1-git-send-email-narmstrong@baylibre.com>
- <1477060838-14164-9-git-send-email-narmstrong@baylibre.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4 00/23] soc: renesas: Add R-Car RST driver for
+ obtaining mode pin state
+Date: Fri, 21 Oct 2016 17:47:43 +0200
+Message-ID: <1477064863.2508.26.camel@pengutronix.de>
+References: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
+         <1477064730.2508.24.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1477060838-14164-9-git-send-email-narmstrong@baylibre.com>
-Sender: netdev-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: khilman@baylibre.com, carlo@caione.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477064730.2508.24.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 04:40:33PM +0200, Neil Armstrong wrote:
-> The Meson GXL dwmac Glue Layer also provides switching between an external PHY
-> and an internal RMII 10/100 PHY.
-> Add a way to setup the correct PHY switching from a device tree attribute.
+Am Freitag, den 21.10.2016, 17:45 +0200 schrieb Philipp Zabel:
+>      A. Hi Geert,
+> 
+> Am Freitag, den 21.10.2016, 15:17 +0200 schrieb Geert Uytterhoeven:
+> >         Hi Philipp, Mike, Stephen, Simon, Magnus,
+> > 	(see questions *** below!)
+> > 
+> > Currently the R-Car Clock Pulse Generator (CPG) drivers obtains the
+> > state of the mode pins either by a call from the platform code, or
+> > directly by using a hardcoded register access. This is a bit messy, and
+> > creates a dependency between driver and platform code.
+> > 
+> > This patch series converts the various Renesas R-Car clock drivers
+> > and support code from reading the mode pin states using a hardcoded
+> > register access to using a new minimalistic R-Car RST driver.
+> > 
+> > All R-Car clock drivers will rely on the presence in DT of a device node
+> > for the RST module.  Backwards compatibility with old DTBs is retained
+> > only for R-Car Gen2, which has fallback code using its own private copy
+> > of rcar_gen2_read_mode_pins().
+> 
+> I think you should add a binding doc even though the DT bindings are
+> still trivial.
 
-Hi Neil
+Disregard that, I literally sent this mail and a second later noticed
+patch 1 for the first time.
 
-Can this be made automatic?
-
-The internal PHY appears to be on address 8. Can there also be an
-external PHY on address 8? Could you follow the phy-handle link to the
-phy node, check the address, and if it is 8, configure for an internal
-PHY?
-
-	Andrew
+regards
+Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
