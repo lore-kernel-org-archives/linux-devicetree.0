@@ -1,84 +1,68 @@
-From: Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH 5/7] ARM: dts: am335x: Add the charger interrupt
-Date: Fri, 21 Oct 2016 16:01:09 -0500
-Message-ID: <CAOCHtYhQ6_Ttr6j-JD6tHZNfs+amAs2qqKPYE_9DnuC_0v5ptg@mail.gmail.com>
-References: <20161021140106.21531-1-woogyom.kim@gmail.com> <20161021140106.21531-6-woogyom.kim@gmail.com>
- <CAOCHtYgBTq0a1FAMQJb5VoLPWBHYkF3rH_Km6U9u6ep=8ApZuQ@mail.gmail.com>
+From: Sarangdhar Joshi <spjoshi@codeaurora.org>
+Subject: Re: [PATCH v2 3/4] arm64: dts: msm8996: Add SMEM DT nodes
+Date: Fri, 21 Oct 2016 14:10:41 -0700
+Message-ID: <52a996ef-a97c-3d6c-0a95-f9e3ebbd2790@codeaurora.org>
+References: <1477005139-15564-1-git-send-email-spjoshi@codeaurora.org>
+ <1477005139-15564-4-git-send-email-spjoshi@codeaurora.org>
+ <20161021000408.GI26139@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOCHtYgBTq0a1FAMQJb5VoLPWBHYkF3rH_Km6U9u6ep=8ApZuQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <woogyom.kim@gmail.com>
-Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux kernel <linux-kernel@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Keerthy <j-keerthy@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20161021000408.GI26139@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Trilok Soni <tsoni@codeaurora.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 3:47 PM, Robert Nelson <robertcnelson@gmail.com> wrote:
-> On Fri, Oct 21, 2016 at 9:01 AM, Milo Kim <woogyom.kim@gmail.com> wrote:
->> This enables the charger driver gets corresponding IRQ number by using
->> platform_get_irq_byname() helper.
+On 10/20/2016 05:04 PM, Stephen Boyd wrote:
+> On 10/20, Sarangdhar Joshi wrote:
+>> From: Bjorn Andersson <bjorn.andersson@linaro.org>
 >>
->> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
+>> Add SMEM and TCSR DT nodes on MSM8996.
+>>
+>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> Signed-off-by: Sarangdhar Joshi <spjoshi@codeaurora.org>
 >> ---
->>  arch/arm/boot/dts/am335x-bone-common.dtsi | 8 ++++++++
->>  1 file changed, 8 insertions(+)
+>>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
 >>
->> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
->> index 25303d9..cec9d91 100644
->> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
->> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
->> @@ -6,6 +6,8 @@
->>   * published by the Free Software Foundation.
->>   */
+>> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+>> index 949b096..abc1089 100644
+>> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+>> @@ -164,17 +164,36 @@
 >>
->> +#include <dt-bindings/mfd/tps65217.h>
+>>  	};
+>>
+>> +	tcsr_mutex: hwlock {
+>> +		compatible = "qcom,tcsr-mutex";
+>> +		syscon = <&tcsr_mutex_regs 0 0x1000>;
+>> +		#hwlock-cells = <1>;
+>> +	};
+>> +
+>>  	psci {
+>>  		compatible = "arm,psci-1.0";
+>>  		method = "smc";
+>>  	};
+>>
+>> +	smem {
+>> +		compatible = "qcom,smem";
+>> +
+>> +		memory-region = <&smem_mem>;
+>> +
+>> +		hwlocks = <&tcsr_mutex 3>;
 >
-> ^ this hasn't been posted nor pushed to mainline yet.. ;)
+> Super nitpick: Is there a reason we have newlines between
+> everything in this node? This node is the only one that isn't
+> consistent.
 
-So, with this patchset + Keerthy's [RESEND PATCH v8 0/5] mfd:
-tps65218: Clean ups:
+Thanks, will do that. I think I just missed updating this node from 
+original patchset.
 
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1250918.html
+>
 
-and this patch, as systemd is looking for "tps65217_pwr_but"..
-
-https://github.com/systemd/systemd/blob/master/src/login/70-power-switch.rules#L13
-
-Shutdown is working on my BBB/BBG/BBGW/BBBW's...
-
-diff --git a/drivers/input/misc/tps65218-pwrbutton.c
-b/drivers/input/misc/tps65218-pwrbutton.c
-index cc74a41..f7e5492 100644
---- a/drivers/input/misc/tps65218-pwrbutton.c
-+++ b/drivers/input/misc/tps65218-pwrbutton.c
-@@ -36,7 +36,7 @@ struct tps6521x_data {
- static const struct tps6521x_data tps65217_data = {
-  .reg_status = TPS65217_REG_STATUS,
-  .pb_mask = TPS65217_STATUS_PB,
-- .name = "tps65217_pwrbutton",
-+ .name = "tps65217_pwr_but",
- };
-
- static const struct tps6521x_data tps65218_data = {
-diff --git a/include/dt-bindings/mfd/tps65217.h
-b/include/dt-bindings/mfd/tps65217.h
-new file mode 100644
-index 0000000..26b2ba8
---- /dev/null
-+++ b/include/dt-bindings/mfd/tps65217.h
-@@ -0,0 +1,9 @@
-+#ifndef __DT_BINDINGS_TPS65217_H
-+#define __DT_BINDINGS_TPS65217_H
-+
-+#define TPS65217_IRQ_USB 0
-+#define TPS65217_IRQ_AC 1
-+#define TPS65217_IRQ_PB 2
-+#define TPS65217_NUM_IRQ 3
-+
-+#endif /* __DT_BINDINGS_TPS65217_H */
-
-Regards,
 
 -- 
-Robert Nelson
-https://rcn-ee.com/
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
