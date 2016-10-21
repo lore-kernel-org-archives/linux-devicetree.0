@@ -1,58 +1,79 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] cpufreq: pxa: use generic platdev driver for device-tree
-Date: Fri, 21 Oct 2016 17:17:49 +0200
-Message-ID: <87insl3f4y.fsf@belgarion.home>
-References: <1476561450-28407-1-git-send-email-robert.jarzmik@free.fr>
-        <1476561450-28407-2-git-send-email-robert.jarzmik@free.fr>
-        <20161018113835.GB11471@vireshk-i7> <87r37d4qlw.fsf@belgarion.home>
-        <20161019135208.GG11471@vireshk-i7> <87bmyg3xzh.fsf@belgarion.home>
-        <20161020033435.GD11766@vireshk-i7>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 0/4] ARM: boot: mxs: Add On-Chip RAM
+Date: Fri, 21 Oct 2016 17:24:36 +0200
+Message-ID: <e472fb62-00d2-359d-2126-ce2727fe3bed@i2se.com>
+References: <1473789066-8955-1-git-send-email-stefan.wahren@i2se.com>
+ <20161021135343.GI30578@tiger>
+ <9bf7c925-bdc2-d0b8-9886-70d46383d1e0@i2se.com>
+ <20161021150336.GJ30578@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161020033435.GD11766@vireshk-i7> (Viresh Kumar's message of
-        "Thu, 20 Oct 2016 09:04:35 +0530")
+In-Reply-To: <20161021150336.GJ30578@tiger>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?J=c3=b6rg_Krause?= <joerg.krause-L1vi/lXTdtsfGbAt6QbQcg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?Q?Lothar_Wa=c3=9fmann?= <lw-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+Am 21.10.2016 um 17:03 schrieb Shawn Guo:
+> On Fri, Oct 21, 2016 at 04:05:59PM +0200, Stefan Wahren wrote:
+>> Am 21.10.2016 um 15:53 schrieb Shawn Guo:
+>>> On Tue, Sep 13, 2016 at 05:51:02PM +0000, Stefan Wahren wrote:
+>>>> The i.MX23 / i.MX28 have a small amount of On-Chip RAM which is also necessary
+>>>> for suspend to RAM and standby mode. But before we need to remove the fake reg
+>>>> properties of all internal bus nodes as discussed in this thread [1].
+>>>>
+>>>> This patch series requires Fabio Estevam's recent series "ARM: dts: imx23:
+>>>> Remove skeleton.dtsi inclusion" [2].
+>>>>
+>>>> [1] - https://marc.info/?l=devicetree&m=146139948426520&w=2
+>>> The page cannot be reached.  I would like to understand the
+>>> background for this change.
+>> Strange, because i don't have any problems while clicking on the URL.
+>>
+>> It's an older discussion on the devicetree / kernel newbie mailing list
+>> with subject "strange dtc errors after adding sram node". Arnd suggested
+>> in the discussion to remove the reg property from the ahb node.
+>>
+>> Please try this one: http://www.spinics.net/lists/newbies/msg57652.html
+> If you go through 'Table 4-1. Address Map for i.MX28' of MCIMX28RM, you
+> should be able to find there are 3 AHB buses: ahb@0, ahb@80080000 and
+> ahb@c0000000.  The ocram goes to ahb@0.  The following change should be
+> the right one for ocram addition.
 
-> On 19-10-16, 22:06, Robert Jarzmik wrote:
->> Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
->> 
->> >> >> +	{ .compatible = "marvell,pxa250", },
->> >> >> +	{ .compatible = "marvell,pxa270", },
->> >> >>  
->> >> >>  	{ .compatible = "samsung,exynos3250", },
->> >> >>  	{ .compatible = "samsung,exynos4210", },
->> >> >
->> >> > Isn't there a race between cpufreq-dt and the platform driver to
->> >> > register first ?
->> >> Ah, could you be more specific about the race you're talking of ?
->> >> 
->> >> My understanding was that cpufreq-dt-platdev does create the device, and
->> >> cpufreq-dt is a driver for it, so there is no race but a direct relationship
->> >> AFAIU.
->> >
->> > I mean that both the driver may try to register to the cpufreq core if
->> > they are both compiled in a single image.
->> Euh I still don't follow you. The only driver that can register to the cpufreq
->> core is cpufreq-dt.
+Correct me if i'm wrong, but there is only one AHB bus and only the
+connected peripheral devices like ocram or USB controller have a memory
+mapped start address not the bus itself.
+
 >
-> I was wondering on what will happen if both cpufreq-dt and your pxa2xx-cpufreq
-> driver are present in the same kernel image. In that case the init routines of
-> both of them will try to call cpufreq_register_driver().
-Right.
+> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+> index 0ad893bf5f43..8e5718df06b2 100644
+> --- a/arch/arm/boot/dts/imx28.dtsi
+> +++ b/arch/arm/boot/dts/imx28.dtsi
+> @@ -47,6 +47,19 @@
+>                 };
+>         };
+>  
+> +       ahb@0 {
+> +               compatible = "simple-bus";
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               reg = <0x0 0x80000000>;
+> +               ranges;
+> +
+> +               ocram: sram@0 {
+> +                       compatible = "mmio-sram";
+> +                       reg = <0x0 0x20000>;
+> +               };
+> +       };
+> +
+>         apb@80000000 {
+>                 compatible = "simple-bus";
+>                 #address-cells = <1>;
+>
 
-In my case, cpufreq-dt comes first, and wins.
-pxa_cpu_init() calls cpufreq_register_driver() and returns -EEXIST.
 
-Cheers.
-
--- 
-Robert
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
