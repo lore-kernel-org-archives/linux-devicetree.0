@@ -1,26 +1,43 @@
-From: Milo Kim <woogyom.kim@gmail.com>
-Subject: Re: [PATCH 1/3] ARM: dts: sun8i: Add common dtsi file for NanoPi SBCs
-Date: Fri, 21 Oct 2016 22:33:22 +0900
-Message-ID: <2b1a6f5f-e7c0-83ee-0e18-74056f352f5f@gmail.com>
-References: <20161020080701.15993-1-woogyom.kim@gmail.com>
- <20161020080701.15993-2-woogyom.kim@gmail.com>
- <20161020160443.kbdtp626kvibgte4@lukather>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 00/10] [v3] arm64: dts: add QorIQ LS1046A SoC and boards
+ support
+Date: Fri, 21 Oct 2016 21:38:41 +0800
+Message-ID: <20161021133707.GH30578@tiger>
+References: <1473754203-22970-1-git-send-email-shh.xie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161020160443.kbdtp626kvibgte4@lukather>
+Content-Disposition: inline
+In-Reply-To: <1473754203-22970-1-git-send-email-shh.xie@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, James Pettigrew <james@innovum.com.au>
-Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: shh.xie@gmail.com
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, Shaohui Xie <Shaohui.Xie@nxp.com>, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2016 01:04 AM, Maxime Ripard wrote:
->> + * Copyright (C) 2016 Milo Kim <woogyom.kim@gmail.com>
-> This looks like a copy of James' DT. Keeping him as the copyright
-> holder seems like the right thing to do.
+On Tue, Sep 13, 2016 at 04:09:53PM +0800, shh.xie@gmail.com wrote:
+> From: Shaohui Xie <Shaohui.Xie@nxp.com>
+> 
+> This patchest adds support for QorIQ LS1046A SoC which is based on ARMv8
+> architecture, also adds LS1046A-RDB and LS1046A-QDS board support.
+> 
+> Also, updates bindings for SoC-specific devices SCFG and DCFG,
+> I2C devices, qoriq-clock and ahci-fsl-qoriq.
+> 
+> Mingkai Hu (2):
+>   arm64: dts: add QorIQ LS1046A SoC support
+>   arm64: dts: add LS1046A-RDB board support
+> 
+> Shaohui Xie (8):
+>   dt-bindings: fsl: update for more SoCs
+>   dt-bindings: fsl: updates bindings for some SoC-specific devices
+>   dt-bindings: i2c: adds two more nxp devices
+>   dt-bindings: qoriq-clock: update for more SoCs
+>   dt-bindings: ahci-fsl-qoriq: updated for SoC ls1046a
+>   Documentation: DT: Add entry for QorIQ LS1046A-RDB board
+>   Documentation: DT: Add entry for QorIQ LS1046A-QDS board
+>   arm64: dts: add LS1046A-QDS board support
 
-Oh... thanks for catching this. Sorry to James.
+I updated dt-bindings patch subject per Rob's comment, and then applied
+the series.
 
-Best regards,
-Milo
+Shawn
