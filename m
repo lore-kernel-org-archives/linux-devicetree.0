@@ -1,87 +1,40 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 4/9] pinctrl: meson: allow gpio to request irq
-Date: Fri, 21 Oct 2016 11:06:38 +0200
-Message-ID: <1477040798.15560.96.camel@baylibre.com>
-References: <1476871709-8359-1-git-send-email-jbrunet@baylibre.com>
-         <1476871709-8359-5-git-send-email-jbrunet@baylibre.com>
-         <CACRpkdaCZPS45t3eTcjJExOu=YT_YkjNkdpg09jQqvLQOJH=Qw@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 4/8] gpio: altera-a10sr: Add A10 System Resource Chip
+ GPIO support.
+Date: Fri, 21 Oct 2016 11:08:17 +0200
+Message-ID: <CACRpkdZJVbyBgnt1x5uMr3yKm5RYYrkKETeDga30+eEpw6dU+w@mail.gmail.com>
+References: <1464889948-28793-1-git-send-email-tthayer@opensource.altera.com> <1464889948-28793-5-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaCZPS45t3eTcjJExOu=YT_YkjNkdpg09jQqvLQOJH=Qw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464889948-28793-5-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-10-20 at 21:21 +0200, Linus Walleij wrote:
-> On Wed, Oct 19, 2016 at 12:08 PM, Jerome Brunet <jbrunet@baylibre.com
-> > wrote:
-> 
-> > 
-> > Add the ability for gpio to request irq from the gpio interrupt
-> > controller
-> > if present. We have to specificaly that the parent interrupt
-> > controller is
-> > the gpio interrupt controller because gpio on meson SoCs can't
-> > generate
-> > interrupt directly on the GIC.
-> > 
-> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> (...)
-> > 
-> > +       select IRQ_DOMAIN
-> >         select OF_GPIO
-> > +       select OF_IRQ
-> (...)
-> > 
-> > +static int meson_gpio_to_hwirq(struct meson_bank *bank, unsigned
-> > int offset)
-> > +{
-> > +       unsigned int hwirq;
-> > +
-> > +       if (bank->irq_first < 0)
-> > +               /* this bank cannot generate irqs */
-> > +               return -1;
-> > +
-> > +       hwirq = offset - bank->first + bank->irq_first;
-> > +
-> > +       if (hwirq > bank->irq_last)
-> > +               /* this pin cannot generate irqs */
-> > +               return -1;
-> > +
-> > +       return hwirq;
-> > +}
-> 
-> This is reimplementing irqdomain.
-> 
-> > 
-> > +static int meson_gpio_to_irq(struct gpio_chip *chip, unsigned int
-> > offset)
-> > +{
-> (...)
-> > 
-> > +       hwirq = meson_gpio_to_hwirq(bank, offset);
-> > +       if (hwirq < 0) {
-> > +               dev_dbg(pc->dev, "no interrupt for pin %u\n",
-> > offset);
-> > +               return 0;
-> > +       }
-> 
-> Isn't this usecase (also as described in the cover letter) a textbook
-> example of when you should be using hierarchical irqdomain?
-> 
-> Please check with Marc et al on hierarchical irqdomains.
+On Thu, Jun 2, 2016 at 7:52 PM,  <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
 
-Linus,
-Do you mean I should create a new hierarchical irqdomains in each of
-the two pinctrl instances we have in these SoC, these domains being
-stacked on the one I just added for controller in irqchip ?
+> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>
+> Add the GPIO functionality for the Altera Arria10 MAX5 System Resource
+> Chip. The A10 MAX5 has 12 bits of GPIO assigned to switches, buttons,
+> and LEDs as a GPIO extender on the SPI bus.
+>
+> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>i
+> ---
+> v2      Change Altera to Intel in copyright header
 
-I did not understand this is what you meant when I asked you the
-question at ELCE.
+Patch applied!
 
-> 
-> Yours,
-> Linus Walleij
+Hey it just worked despite being months old.
+
+Let's see if it builds fine & all.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
