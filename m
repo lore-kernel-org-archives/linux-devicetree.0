@@ -1,73 +1,71 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] x86: bzImage: Allow the appending of a device tree binary
-Date: Fri, 21 Oct 2016 18:38:56 +0100
-Message-ID: <20161021173855.GE17287@leverpostej>
-References: <1476512960-22406-1-git-send-email-franck.jullien@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [RFC V4 PATCH 1/6] arm64: dts: msm8992 SoC and LG Bullhead
+ (Nexus 5X) support
+Date: Fri, 21 Oct 2016 11:20:04 -0700
+Message-ID: <20161021182004.GW7509@tuxbot>
+References: <1477048273-32451-1-git-send-email-jeremymc@redhat.com>
+ <1477048273-32451-2-git-send-email-jeremymc@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1476512960-22406-1-git-send-email-franck.jullien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Franck Jullien <franck.jullien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
+In-Reply-To: <1477048273-32451-2-git-send-email-jeremymc@redhat.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jeremy McNicoll <jeremymc@redhat.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, arnd@arndb.de, mark.rutland@arm.com, michael.scott@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 15, 2016 at 08:29:20AM +0200, Franck Jullien wrote:
-> This patch provides the ability to boot using a device tree that is appended
-> to the raw binary bzImage (e.g. cat bzImage <filename>.dtb > bzImage_w_dtb).
+On Fri 21 Oct 04:11 PDT 2016, Jeremy McNicoll wrote:
+
+> From: Jeremy McNicoll <jmcnicol@redhat.com>
 > 
-> Based on Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> work on x86
-> builtin dtb support.
+> Initial device tree support for Qualcomm MSM8992 SoC and
+> LG Bullhead / Google Nexus 5X support.
 > 
-> Signed-off-by: Franck Jullien <franck.jullien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I understand that the rationale for this is to describe devices
-instantiated dynamically on an FPGA (or to provide a base for overlays
-to be applied when they are later instantiated).
+Looks reasonable, just two small nits below.
 
-I don't think that this, as it stands, is a good idea.
+> Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile                  |   4 +-
+>  .../boot/dts/qcom/msm8992-bullhead-rev-101.dts     |  42 ++++
+>  arch/arm64/boot/dts/qcom/msm8992-pins.dtsi         |  38 ++++
+>  arch/arm64/boot/dts/qcom/msm8992.dtsi              | 214 +++++++++++++++++++++
+>  4 files changed, 296 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/msm8992.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 5dd05de..abb366e 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -1,6 +1,6 @@
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
+> -dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+> -dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb apq8096-db820c.dtb
 
-For one thing, this provides us with no notion of topology (i.e. where
-the FPGA device falls in the interconnect hierarchy), as there's no
-"nexus" defined where the DT bridges onto the existing ACPI topology.
+Don't change these, just add yours.
 
-Worse, even if that were present, we have no way of mapping things like
-interrupts across the ACPI/DT boundary, and more complex things like
-IOMMU mastering (where ACPI and DT differ quite substantially).
-
-Generally, I do not think that mixing ACPI and DT is a good idea, as
-there are a number of conceptual differences, and there is no trivial
-mapping between them generally.
-
-If you need to work atop of ACPI, I think that you need extensions to
-ACPI, rather than attempting to graft DT atop.
-
-> +config X86_APPENDED_DTB
-> +	bool "Use appended device tree blob to bzImage"
-> +	depends on OF
-> +	select OF_EARLY_FLATTREE
-> +	help
-> +	  With this option, the boot code will look for a device tree binary
-> +	  (DTB) appended to bzImage
-> +	  (e.g. cat bzImage <filename>.dtb > bzImage_w_dtb).
+[..]
+> diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+[..]
 > +
-> +	  This is meant as a backward compatibility convenience for those
-> +	  systems with a bootloader that can't be upgraded to accommodate
-> +	  the documented boot protocol using a device tree.
+> +	msmgpio: pinctrl@fd510000 {
+> +		compatible = "qcom,msm8994-pinctrl", "qcom,msm8974-pinctrl";
+
+This device is not compatible with the msm8974 TLMM, so please drop the
+second compatible.
+
+> +		reg = <0xfd510000 0x4000>;
+> +		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
 > +
-> +	  Beware that there is very little in terms of protection against
-> +	  this option being confused by leftover garbage in memory that might
-> +	  look like a DTB header after a reboot if no actual DTB is appended
-> +	  to bzImage.  Do not leave this option active in a production kernel
-> +	  if you don't intend to always append a DTB.
 
-I would advise that you reword this, as the existing wording is clearly
-not applicable.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bjorn
