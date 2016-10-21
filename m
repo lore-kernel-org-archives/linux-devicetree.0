@@ -1,7 +1,7 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH 1/5] ARM: davinci: Compile MMC in kernel
-Date: Fri, 21 Oct 2016 13:36:53 -0500
-Message-ID: <1477075018-20176-2-git-send-email-david@lechnology.com>
+Subject: [PATCH 4/5] ARM: davinci: enable LEDs default-on trigger in default config
+Date: Fri, 21 Oct 2016 13:36:56 -0500
+Message-ID: <1477075018-20176-5-git-send-email-david@lechnology.com>
 References: <1477075018-20176-1-git-send-email-david@lechnology.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1477075018-20176-1-git-send-email-david@lechnology.com>
@@ -10,30 +10,25 @@ To: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>
 Cc: David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This changes the davinci default configuration to compile the davinci
-MMC driver into the kernel. This allows booting from an SD card without
-requiring an initrd containing the kernel module.
+The LEDs default-on trigger is nice to have. For example, it can be used
+to configure a LED as a power indicator.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
- arch/arm/configs/davinci_all_defconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/configs/davinci_all_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-index 58d04f1..a2f89a3 100644
+index 9d7f0bc..e380743 100644
 --- a/arch/arm/configs/davinci_all_defconfig
 +++ b/arch/arm/configs/davinci_all_defconfig
-@@ -169,9 +169,9 @@ CONFIG_USB_MASS_STORAGE=m
- CONFIG_USB_G_SERIAL=m
- CONFIG_USB_G_PRINTER=m
- CONFIG_USB_CDC_COMPOSITE=m
--CONFIG_MMC=m
-+CONFIG_MMC=y
- # CONFIG_MMC_BLOCK_BOUNCE is not set
--CONFIG_MMC_DAVINCI=m
-+CONFIG_MMC_DAVINCI=y
- CONFIG_NEW_LEDS=y
- CONFIG_LEDS_CLASS=m
- CONFIG_LEDS_GPIO=m
+@@ -181,6 +181,7 @@ CONFIG_LEDS_GPIO=m
+ CONFIG_LEDS_TRIGGERS=y
+ CONFIG_LEDS_TRIGGER_TIMER=m
+ CONFIG_LEDS_TRIGGER_HEARTBEAT=m
++CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
+ CONFIG_RTC_CLASS=y
+ CONFIG_RTC_DRV_OMAP=m
+ CONFIG_DMADEVICES=y
 -- 
 2.7.4
