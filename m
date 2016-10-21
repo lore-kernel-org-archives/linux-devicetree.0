@@ -1,7 +1,7 @@
 From: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [RFC V4 PATCH 4/6] dt-bindings: qcom: Add msm899(2/4) bindings
-Date: Fri, 21 Oct 2016 04:11:11 -0700
-Message-ID: <1477048273-32451-5-git-send-email-jeremymc@redhat.com>
+Subject: [RFC V4 PATCH 1/6] arm64: dts: msm8992 SoC and LG Bullhead (Nexus 5X) support
+Date: Fri, 21 Oct 2016 04:11:08 -0700
+Message-ID: <1477048273-32451-2-git-send-email-jeremymc@redhat.com>
 References: <1477048273-32451-1-git-send-email-jeremymc@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1477048273-32451-1-git-send-email-jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
@@ -12,24 +12,345 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
+Initial device tree support for Qualcomm MSM8992 SoC and
+LG Bullhead / Google Nexus 5X support.
+
 Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/qcom.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/qcom/Makefile                  |   4 +-
+ .../boot/dts/qcom/msm8992-bullhead-rev-101.dts     |  42 ++++
+ arch/arm64/boot/dts/qcom/msm8992-pins.dtsi         |  38 ++++
+ arch/arm64/boot/dts/qcom/msm8992.dtsi              | 214 +++++++++++++++++++++
+ 4 files changed, 296 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8992.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
-index 3e24518..eb4057e 100644
---- a/Documentation/devicetree/bindings/arm/qcom.txt
-+++ b/Documentation/devicetree/bindings/arm/qcom.txt
-@@ -21,6 +21,8 @@ The 'SoC' element must be one of the following strings:
- 	apq8096
- 	msm8916
- 	msm8974
-+	msm8992
-+	msm8994
- 	msm8996
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 5dd05de..abb366e 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -1,6 +1,6 @@
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
+-dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+-dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb apq8096-db820c.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
  
- The 'board' element must be one of the following strings:
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+new file mode 100644
+index 0000000..63fa3b0
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+@@ -0,0 +1,42 @@
++/* Copyright (c) 2015, LGE Inc. All rights reserved.
++ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++/dts-v1/;
++
++#include "msm8992.dtsi"
++
++/ {
++	model = "LGE MSM8992 BULLHEAD rev-1.01";
++	compatible = "qcom,msm8992";
++	/* required for bootloader to select correct board */
++	qcom,board-id = <0xb64 0>;
++};
++
++/ {
++	aliases {
++		serial0 = &blsp1_uart2;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	soc {
++		serial@f991e000 {
++			status = "okay";
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&blsp1_uart2_default>;
++			pinctrl-1 = <&blsp1_uart2_sleep>;
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
+new file mode 100644
+index 0000000..d2a26f0
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
+@@ -0,0 +1,38 @@
++/*
++ * Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++&msmgpio {
++	blsp1_uart2_default: blsp1_uart2_default {
++		pinmux {
++			function = "blsp_uart2";
++			pins = "gpio4", "gpio5";
++		};
++		pinconf {
++			pins = "gpio4", "gpio5";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart2_sleep: blsp1_uart2_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio4", "gpio5";
++		};
++		pinconf {
++			pins = "gpio4", "gpio5";
++			drive-strength = <2>;
++			bias-pull-down;
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+new file mode 100644
+index 0000000..5d69a6b
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+@@ -0,0 +1,214 @@
++/* Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/qcom,gcc-msm8994.h>
++
++/ {
++	model = "Qualcomm Technologies, Inc. MSM 8992";
++	compatible = "qcom,msm8992";
++	// msm-id and pmic-id are needed by bootloader for
++	// selecting correct blob
++	qcom,msm-id = <251 0>, <252 0>;
++	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
++	interrupt-parent = <&intc>;
++
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	chosen { };
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++		cpu-map {
++			cluster0 {
++				core0 {
++					cpu = <&CPU0>;
++				};
++			};
++		};
++
++		CPU0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x0 0x0>;
++			next-level-cache = <&L2_0>;
++			// The currents(uA) correspond to the frequencies in the
++			// frequency table.
++			current = < 18250 //384000 kHZ
++				24330 //460800 kHZ
++				26920 //600000 kHZ
++				34600 //672000 kHz
++				38150 //787200 kHZ
++				46880 //864000 kHZ
++				55940 //960000 kHZ
++				81740 //1248000 kHZ
++				105870>; //1440000 kHZ
++			L2_0: l2-cache {
++				compatible = "cache";
++				cache-level = <2>;
++			};
++		};
++	};
++
++	soc: soc { };
++
++	memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++
++		device_type = "memory";
++		reg = <0 0 0 0>; // bootloader will update
++	};
++
++	clocks {
++		xo_board: xo_board {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <19200000>;
++		};
++
++		sleep_clk: sleep_clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <32768>;
++		};
++	};
++};
++
++&soc {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges = <0 0 0 0xffffffff>;
++	compatible = "simple-bus";
++
++	intc: interrupt-controller@f9000000 {
++		compatible = "qcom,msm-qgic2";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		reg = <0xf9000000 0x1000>,
++			<0xf9002000 0x1000>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <1 2 0xf08>,
++				<1 3 0xf08>,
++				<1 4 0xf08>,
++				<1 1 0xf08>;
++		clock-frequency = <19200000>;
++	};
++
++	timer@f9020000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++		compatible = "arm,armv7-timer-mem";
++		reg = <0xf9020000 0x1000>;
++		clock-frequency = <19200000>;
++
++		frame@f9021000 {
++			frame-number = <0>;
++			interrupts = <0 9 0x4>,
++					<0 8 0x4>;
++			reg = <0xf9021000 0x1000>,
++				<0xf9022000 0x1000>;
++		};
++
++		frame@f9023000 {
++			frame-number = <1>;
++			interrupts = <0 10 0x4>;
++			reg = <0xf9023000 0x1000>;
++			status = "disabled";
++		};
++
++		frame@f9024000 {
++			frame-number = <2>;
++			interrupts = <0 11 0x4>;
++			reg = <0xf9024000 0x1000>;
++			status = "disabled";
++		};
++
++		frame@f9025000 {
++			frame-number = <3>;
++			interrupts = <0 12 0x4>;
++			reg = <0xf9025000 0x1000>;
++			status = "disabled";
++		};
++
++		frame@f9026000 {
++			frame-number = <4>;
++			interrupts = <0 13 0x4>;
++			reg = <0xf9026000 0x1000>;
++			status = "disabled";
++		};
++
++		frame@f9027000 {
++			frame-number = <5>;
++			interrupts = <0 14 0x4>;
++			reg = <0xf9027000 0x1000>;
++			status = "disabled";
++		};
++
++		frame@f9028000 {
++			frame-number = <6>;
++			interrupts = <0 15 0x4>;
++			reg = <0xf9028000 0x1000>;
++			status = "disabled";
++		};
++	};
++
++	restart@fc4ab000 {
++		compatible = "qcom,pshold";
++		reg = <0xfc4ab000 0x4>;
++	};
++
++	msmgpio: pinctrl@fd510000 {
++		compatible = "qcom,msm8994-pinctrl", "qcom,msm8974-pinctrl";
++		reg = <0xfd510000 0x4000>;
++		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	blsp1_uart2: serial@f991e000 {
++		compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++		reg = <0xf991e000 0x1000>;
++		interrupts = <0 108 0>;
++		status = "disabled";
++		clock-names = "core", "iface";
++		clocks = <&clock_gcc GCC_BLSP1_UART2_APPS_CLK>,
++			<&clock_gcc GCC_BLSP1_AHB_CLK>;
++	};
++
++	clock_gcc: qcom,gcc@fc400000 {
++		compatible = "qcom,gcc-8994";
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++		#power-domain-cells = <1>;
++		reg = <0xfc400000 0x2000>;
++		clock-names = "xo", "xo_a_clk";
++	};
++
++	clock_rpm: qcom,rpmcc@fc401880 {
++		compatible = "qcom,rpmcc";
++		reg = <0xfc401880 0x4>;
++		reg-names = "cc_base";
++		#clock-cells = <1>;
++	};
++
++};
++
++#include "msm8992-pins.dtsi"
 -- 
 2.6.1
 
