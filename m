@@ -1,127 +1,50 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v7 5/5] ARM: dts: imx6qdl-icore: Add FEC support
-Date: Fri, 21 Oct 2016 09:31:28 +0800
-Message-ID: <20161021013128.GE30578@tiger>
+Subject: Re: [PATCH v7 0/5] ARM: dts: imx6q: Add Engicam i.CoreM6 dts
+Date: Fri, 21 Oct 2016 09:35:46 +0800
+Message-ID: <20161021013546.GF30578@tiger>
 References: <1476437243-13297-1-git-send-email-jteki@openedev.com>
- <1476437243-13297-6-git-send-email-jteki@openedev.com>
+ <CAD6G_RQyLtgJw=djPTmY5t7UVwzuZpj0xM0HjchLQjq7P5hMOg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1476437243-13297-6-git-send-email-jteki@openedev.com>
+In-Reply-To: <CAD6G_RQyLtgJw=djPTmY5t7UVwzuZpj0xM0HjchLQjq7P5hMOg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jteki@openedev.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+To: Jagan Teki <jagan@openedev.com>
+Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jagan Teki <jteki@openedev.com>, Michael Trimarchi <michael@amarulasolutions.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 14, 2016 at 02:57:23PM +0530, Jagan Teki wrote:
-> From: Jagan Teki <jagan@amarulasolutions.com>
+On Tue, Oct 18, 2016 at 05:30:28PM +0530, Jagan Teki wrote:
+> Hi Shawn,
 > 
-> Add FEC support for Engicam i.CoreM6 dql modules.
+> On Fri, Oct 14, 2016 at 2:57 PM, Jagan Teki <jteki@openedev.com> wrote:
+> > This is series add dts support for Engicam I.Core M6 qdl modules. just
+> > rebased on top of linux-next of previous set[1].
+> >
+> > [1] http://www.spinics.net/lists/kernel/msg2358233.html
+> >
+> > Jagan Teki (5):
+> >   ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual initial support
+> >   ARM: dts: imx6q: Add Engicam i.CoreM6 DualLite/Solo initial support
+> >   ARM: dts: imx6qdl-icore: Add usbhost support
+> >   ARM: dts: imx6qdl-icore: Add usbotg support
+> >   ARM: dts: imx6qdl-icore: Add FEC support
+> >
+> >  arch/arm/boot/dts/Makefile           |   2 +
+> >  arch/arm/boot/dts/imx6dl-icore.dts   |  59 ++++++++
+> >  arch/arm/boot/dts/imx6q-icore.dts    |  59 ++++++++
+> >  arch/arm/boot/dts/imx6qdl-icore.dtsi | 271 +++++++++++++++++++++++++++++++++++
+> >  4 files changed, 391 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/imx6dl-icore.dts
+> >  create mode 100644 arch/arm/boot/dts/imx6q-icore.dts
+> >  create mode 100644 arch/arm/boot/dts/imx6qdl-icore.dtsi
 > 
-> Observed similar 'eth0: link is not ready' issue which was
-> discussed in [1] due rmii mode with external ref_clk, so added
-> clock node along with the properties mentioned by Shawn in [2]
-> 
-> FEC link log:
-> ------------
-> $ ifconfig eth0 up
-> [   27.905187] SMSC LAN8710/LAN8720 2188000.ethernet:00: attached PHY driver
->                [SMSC LAN8710/LAN8720] (mii_bus:phy_addr=2188000.ethernet:00, irq=-1)
-> [   27.918982] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
-> 
-> [1] https://patchwork.kernel.org/patch/3491061/
-> [2] https://patchwork.kernel.org/patch/3490511/
-> 
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Matteo Lisi <matteo.lisi@engicam.com>
-> Cc: Michael Trimarchi <michael@amarulasolutions.com>
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
-> Changes for v7:
->         - none
-> Changes for v6:
->         - none
-> Changes for v5:
->         - new patch
-> 
->  arch/arm/boot/dts/imx6qdl-icore.dtsi | 37 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-> index 4e79858..972f48f 100644
-> --- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-> @@ -48,6 +48,18 @@
->  		reg = <0x10000000 0x80000000>;
->  	};
->  
-> +	clocks {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+> Can you pick this series?
 
-DT maintainers do not like this container node.  So please, just like
-fix regulator node, put the fixed clock directly under root and give the
-node an unique name like clock-xxx.
-
-> +
-> +		rmii_clk: clock@0 {
-> +			compatible = "fixed-clock";
-> +			reg = <0>;
-> +			#clock-cells = <0>;
-> +			clock-frequency = <25000000>;  /* 25MHz for example */
-> +		};
-> +	};
-> +
->  	reg_3p3v: regulator-3p3v {
->  		compatible = "regulator-fixed";
->  		regulator-name = "3P3V";
-> @@ -93,6 +105,15 @@
->  	assigned-clock-parents = <&clks IMX6QDL_CLK_OSC>;
->  };
->  
-> +&fec {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_enet>;
-> +	phy-reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
-> +	clocks = <&clks 117>, <&clks 117>, <&rmii_clk>;
-
-s/117/IMX6QDL_CLK_ENET
+Sorry for the delay.  The first two patches look good, and I had a
+couple of small comments on the other 3.  Also, for the initial board
+support submission like this, you do not need to split it per device
+support.  That said, please squash the series into one patch when
+resending.
 
 Shawn
-
-> +	phy-mode = "rmii";
-> +	status = "okay";
-> +};
-> +
->  &gpmi {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_gpmi_nand>;
-> @@ -150,6 +171,22 @@
->  };
->  
->  &iomuxc {
-> +	pinctrl_enet: enetgrp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_ENET_CRS_DV__ENET_RX_EN	0x1b0b0
-> +			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x1b0b1
-> +			MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN	0x1b0b0
-> +			MX6QDL_PAD_ENET_RXD1__ENET_RX_DATA1	0x1b0b0
-> +			MX6QDL_PAD_ENET_RXD0__ENET_RX_DATA0	0x1b0b0
-> +			MX6QDL_PAD_ENET_TXD1__ENET_TX_DATA1	0x1b0b0
-> +			MX6QDL_PAD_ENET_TXD0__ENET_TX_DATA0	0x1b0b0
-> +			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
-> +			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
-> +			MX6QDL_PAD_ENET_REF_CLK__GPIO1_IO23	0x1b0b0
-> +			MX6QDL_PAD_GPIO_17__GPIO7_IO12		0x1b0b0
-> +		>;
-> +	};
-> +
->  	pinctrl_flexcan1: flexcan1grp {
->  		fsl,pins = <
->  			MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX 0x1b020
-> -- 
-> 2.7.4
-> 
