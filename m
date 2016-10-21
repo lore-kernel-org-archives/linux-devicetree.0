@@ -1,73 +1,57 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH v5 23/23] phy: Add support for Qualcomm's USB HS phy
-Date: Fri, 21 Oct 2016 12:33:43 -0700
-Message-ID: <147707842313.25848.12479294741874867656@sboyd-linaro>
-References: <20161018015636.11701-1-stephen.boyd@linaro.org>
- <20161018015636.11701-24-stephen.boyd@linaro.org>
- <147700563857.2550.16732518381302920183@sboyd-linaro>
- <20161021022030.GB16461@b29397-desktop>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC V2 PATCH 10/12] arm64: dts: msm8994 issolate non standard
+ bootloader/LK entries
+Date: Fri, 21 Oct 2016 12:44:37 -0700
+Message-ID: <20161021194437.GA7509@tuxbot>
+References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
+ <2149904.D2eaQZN3bA@wuerfel>
+ <17447be1-4357-0eca-a242-69576d3e2799@redhat.com>
+ <4976066.k14mpQt0HJ@wuerfel>
+ <20161019214643.GC3145@hector.attlocal.net>
+ <CAL_Jsq+wjnEByg2vgx-P+bLJaQm+s=UX7nj=KwviagnQDG_3hQ@mail.gmail.com>
+ <20161020031712.GD3145@hector.attlocal.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161021022030.GB16461@b29397-desktop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Chen <hzpeterchen@gmail.com>
-Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Chen <peter.chen@nxp.com>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161020031712.GD3145-3KkwrOJo9xYlRp7syxWybdHuzzzSOjJt@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, git-LJ92rlH3Dns@public.gmane.org, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Peter Chen (2016-10-20 19:20:30)
-> On Thu, Oct 20, 2016 at 04:20:38PM -0700, Stephen Boyd wrote:
-> > Quoting Stephen Boyd (2016-10-17 18:56:36)
-> > > +
-> > > +static int
-> > > +qcom_usb_hs_phy_vbus_notifier(struct notifier_block *nb, unsigned long event,
-> > > +                             void *ptr)
-> > > +{
-> > > +       struct qcom_usb_hs_phy *uphy;
-> > > +       int is_host;
-> > > +       u8 addr;
-> > > +
-> > > +       uphy = container_of(nb, struct qcom_usb_hs_phy, vbus_notify);
-> > > +       is_host = extcon_get_cable_state_(uphy->id_edev, EXTCON_USB_HOST);
-> > 
-> > Please don't apply this patch. This call now deadlocks on v4.9-rc1
-> > because of how extcon_get_cable_state_() now grabs a lock that is
-> > already held here when we're inside the notifier. It's not really
-> > required that we grab the lock in extcon there, but this has exposed a
-> > flaw in the logic anyway. We don't know if the id pin is going to toggle
-> > before or after this function is called, so we should really keep track
-> > of both vbus and id state in this driver and then do the same ulpi
-> > writes from two different notifiers for both vbus and id pin. We would
-> > be duplicating work sometimes, but that's pretty much the best solution
-> > I can come up with. Otherwise it's racy.
-> > 
+On Wed 19 Oct 20:17 PDT 2016, Andy Gross wrote:
+
+> On Wed, Oct 19, 2016 at 08:07:25PM -0500, Rob Herring wrote:
+[..]
+> > Makes sense to me for things like Nexus phones here. What about DB410
+> > for example? Is there hope for a fix there? My bootloader is only a
+> > couple of months old and needs the properties still.
 > 
-> Why you need to care id status? If EXTCON_USB event has happened, and
-> event is true, you can set, otherwise, it is clear operation, that's
-> to say you may not need have id extcon phandle, do you think so?
+> There won't be a fix for the 410c.  We barely got them to respin to use PSCI.
+> Stephen can correct me if I am wrong on this.
+> 
+> If this is fixed, it would be 8996+.  If..........
+> 
+> So this means introducing the msm-id's for the boards that currently require it,
+> and for the boards that will require it in the future.  And this would stay in
+> effect until the bootloader is able to parse the compatible strings or figure
+> this out without the msm-ids.
 > 
 
-I need to add a comment to the code here because I forgot what was going
-on.
+But if the bootloader at any point in the future would support picking a
+dtb by compatible strings instead of {msm,board,pmic}-id we wouldn't we
+just be back to the ridiculous compatible strings that tipped over into
+acceptance to these ids in the first place.
 
-Either way, this code is pulling D+ up when we're in device mode. We
-don't want to do the pullup if we're a host, and vbus extcon only tells
-us if the cable is attached so we can't just rely on that one bit of
-information.
+Or do we expect the boot loader to do a deep scan of the dtb to match on
+multiple nodes from the tree?
 
-I suppose that's not really appropriate to do via extcon though in the
-phy driver though, so I'm thinking that it should be rewritten to use
-the phy_set_mode() feature of the phy framework. Basically,
-ci_udc_pullup() will call phy_set_mode() with PHY_MODE_USB_DEVICE or
-PHY_MODE_USB_HOST and then we can set or clear these bits in the ulpi
-register space. I think that will make things simpler here and things
-like soft-connect will work better. Sound good?
+Am I missing something here?
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
