@@ -1,128 +1,261 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 1/9] irqchip: meson: add support for gpio interrupt
- controller
-Date: Fri, 21 Oct 2016 12:17:17 +0200
-Message-ID: <1477045037.15560.99.camel@baylibre.com>
-References: <1476890480-8884-1-git-send-email-jbrunet@baylibre.com>
-         <1476890480-8884-2-git-send-email-jbrunet@baylibre.com>
-         <ec297647-1ab7-7e6b-5945-be8360f92421@arm.com>
-         <1477039751.15560.88.camel@baylibre.com>
-         <20161021101029.GD15372@leverpostej>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] net: stmmac: Add OXNAS Glue Driver
+Date: Fri, 21 Oct 2016 12:20:52 +0200
+Message-ID: <CAGhQ9Vxe8fe8kfF_WY40xdh6YX9TuxQ3-Dd6pBG=AHpLtrHnMA@mail.gmail.com>
+References: <20161021084445.24989-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161021101029.GD15372@leverpostej>
+In-Reply-To: <20161021084445.24989-1-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: "peppe.cavallaro" <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-10-21 at 11:10 +0100, Mark Rutland wrote:
-> On Fri, Oct 21, 2016 at 10:49:11AM +0200, Jerome Brunet wrote:
-> > 
-> > On Thu, 2016-10-20 at 17:33 +0100, Marc Zyngier wrote:
-> > > 
-> > > On 19/10/16 16:21, Jerome Brunet wrote:
-> > > > 
-> > > > +struct meson_gpio_irq_chip_data {
-> > > > +	void __iomem *base;
-> > > > +	int index;
-> > > > +};
-> > > > +
-> > > > +static irq_hw_number_t meson_parent_hwirqs[] = {
-> > > > +	64, 65, 66, 67, 68, 69, 70, 71,
-> > > > +};
-> > > 
-> > > If that a guarantee that these numbers will always represent the
-> > > parent interrupt?
-> > 
-> > At the moment, the 3 supported SoC use these parent interrupts, but
-> > we
-> > have absolutely no idea (or guarantee) that is will remain the
-> > same, or
-> > even contiguous, in the upcoming SoC (like the GXM or GXL)
-> > 
-> > I reckon, it is likely that manufacturer will keep on using these
-> > parent irqs for a while but I would prefer not make an assumption
-> > about
-> > it in the driver.
-> > 
-> > If a SoC get a different set of interrupts I would have added a new
-> > table like this and passed it to the appropriate params :
-> > 
-> > static irq_hw_number_t meson_new_parent_hwirqs[] = {
-> > 	143, 144, 150, 151, 152, 173, 178, 179,
-> > };
-> > 
-> > > 
-> > > It feels a bit odd not to get that information directly from
-> > > the device tree, in the form of a device specific property.
-> > > Something
-> > > like:
-> > > 
-> > > 	upstream-interrupts = <64 65 66 ... >;
-> > > 
-> > 
-> > I wondered about putting this information in DT or in the driver
-> > for a
-> > while. Maybe DT would be a more suitable place holder for these
-> > data
-> > (parent irq and number of provided hwirq) but I was under the
-> > understanding that we should now put these information in the
-> > driver
-> > and use the compatible property to get the appropriate parameters.
-> > 
-> > I'd love to get the view of the DT guys on this.
-> 
-> Please describe inter-device relationships in DT when you are aware
-> of
-> them. The SoC-specific compatible string is more of a future-proofing
-> thing / last restort for things we realise too late.
-> 
-> To be clear, we should *also* have an soc-specific compatible string,
-> but for differences we already know about, we should use DT
-> properties.
-> 
-> > 
-> > > 
-> > > > 
-> > > > +static const struct meson_gpio_irq_params meson8b_params = {
-> > > > +	.nhwirq  = 119,
-> > > > +	.source  = meson_parent_hwirqs,
-> > > > +	.nsource = ARRAY_SIZE(meson_parent_hwirqs),
-> > > > +};
-> > > > +
-> > > > +static const struct meson_gpio_irq_params meson_gxbb_params =
-> > > > {
-> > > > +	.nhwirq  = 133,
-> > > > +	.source  = meson_parent_hwirqs,
-> > > > +	.nsource = ARRAY_SIZE(meson_parent_hwirqs),
-> > > > +};
-> > > 
-> > > Same thing. How big is the variability of these structures? Are
-> > > we
-> > > going to see more of those? or is that now set into stone?
-> > 
-> > The number of pad mapped to the controller seems to change with
-> > every
-> > SoC version. The parent irqs have not changed so far, but as
-> > explained
-> > above, there is no guarantee it will keep on being this way.
-> > 
-> > So i'd say probably more of those ...
-> > 
-> > > 
-> > > +Mark: what's the policy to describe this kind of things?
-> 
-> Generally, I'd prefer that we describe this in DT rather than
-> accumulating a set of string -> number mappings in the driver.
+Hi Neil,
 
-Thx Marc. I will change it.
+On 21 October 2016 at 10:44, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> Add Synopsys Designware MAC Glue layer for the Oxford Semiconductor OX820.
+>
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/oxnas-dwmac.txt        |  44 +++++
+>  drivers/net/ethernet/stmicro/stmmac/Kconfig        |  11 ++
+>  drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-oxnas.c  | 219 +++++++++++++++++++++
+>  4 files changed, 275 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/oxnas-dwmac.txt
+>  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-oxnas.c
+>
+> Changes since RFC at https://patchwork.kernel.org/patch/9387257 :
+>  - Drop init/exit callbacks
+>  - Implement proper remove and PM callback
+>  - Call init from probe
+>  - Disable/Unprepare clock if stmmac probe fails
 
-> 
-> Thanks,
-> Mark.
+<snip>
+
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-oxnas.c
+> @@ -0,0 +1,219 @@
+> +/*
+> + * Oxford Semiconductor OXNAS DWMAC glue layer
+> + *
+> + * Copyright (C) 2016 Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> + * Copyright (C) 2014 Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+> + * Copyright (C) 2013 Ma Haijun <mahaijuns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + * Copyright (C) 2012 John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/stmmac.h>
+> +
+> +#include "stmmac_platform.h"
+> +
+> +/* System Control regmap offsets */
+> +#define OXNAS_DWMAC_CTRL_REGOFFSET     0x78
+> +#define OXNAS_DWMAC_DELAY_REGOFFSET    0x100
+> +
+> +/* Control Register */
+> +#define DWMAC_CKEN_RX_IN        14
+> +#define DWMAC_CKEN_RXN_OUT      13
+> +#define DWMAC_CKEN_RX_OUT       12
+> +#define DWMAC_CKEN_TX_IN        10
+> +#define DWMAC_CKEN_TXN_OUT      9
+> +#define DWMAC_CKEN_TX_OUT       8
+> +#define DWMAC_RX_SOURCE         7
+> +#define DWMAC_TX_SOURCE         6
+> +#define DWMAC_LOW_TX_SOURCE     4
+> +#define DWMAC_AUTO_TX_SOURCE    3
+> +#define DWMAC_RGMII             2
+> +#define DWMAC_SIMPLE_MUX        1
+> +#define DWMAC_CKEN_GTX          0
+> +
+> +/* Delay register */
+> +#define DWMAC_TX_VARDELAY_SHIFT                0
+> +#define DWMAC_TXN_VARDELAY_SHIFT       8
+> +#define DWMAC_RX_VARDELAY_SHIFT                16
+> +#define DWMAC_RXN_VARDELAY_SHIFT       24
+> +#define DWMAC_TX_VARDELAY(d)           ((d) << DWMAC_TX_VARDELAY_SHIFT)
+> +#define DWMAC_TXN_VARDELAY(d)          ((d) << DWMAC_TXN_VARDELAY_SHIFT)
+> +#define DWMAC_RX_VARDELAY(d)           ((d) << DWMAC_RX_VARDELAY_SHIFT)
+> +#define DWMAC_RXN_VARDELAY(d)          ((d) << DWMAC_RXN_VARDELAY_SHIFT)
+> +
+> +struct oxnas_dwmac {
+> +       struct device   *dev;
+> +       struct clk      *clk;
+> +       struct regmap   *regmap;
+> +};
+> +
+> +static int oxnas_dwmac_init(struct oxnas_dwmac *dwmac)
+> +{
+> +       unsigned int value;
+> +       int ret;
+> +
+> +       /* Reset HW here before changing the glue configuration */
+> +       ret = device_reset(dwmac->dev);
+> +       if (ret)
+> +               return ret;
+> +
+> +       clk_prepare_enable(dwmac->clk);
+
+You might want to check the return value from clk_prepare_enable() as well.
+
+> +
+> +       ret = regmap_read(dwmac->regmap, OXNAS_DWMAC_CTRL_REGOFFSET, &value);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       /* Enable GMII_GTXCLK to follow GMII_REFCLK, required for gigabit PHY */
+> +       value |= BIT(DWMAC_CKEN_GTX);
+> +       /* Use simple mux for 25/125 Mhz clock switching */
+> +       value |= BIT(DWMAC_SIMPLE_MUX);
+> +       /* set auto switch tx clock source */
+> +       value |= BIT(DWMAC_AUTO_TX_SOURCE);
+> +       /* enable tx & rx vardelay */
+> +       value |= BIT(DWMAC_CKEN_TX_OUT);
+> +       value |= BIT(DWMAC_CKEN_TXN_OUT);
+> +       value |= BIT(DWMAC_CKEN_TX_IN);
+> +       value |= BIT(DWMAC_CKEN_RX_OUT);
+> +       value |= BIT(DWMAC_CKEN_RXN_OUT);
+> +       value |= BIT(DWMAC_CKEN_RX_IN);
+> +       regmap_write(dwmac->regmap, OXNAS_DWMAC_CTRL_REGOFFSET, value);
+> +
+> +       /* set tx & rx vardelay */
+> +       value = DWMAC_TX_VARDELAY(4);
+> +       value |= DWMAC_TXN_VARDELAY(2);
+> +       value |= DWMAC_RX_VARDELAY(10);
+> +       value |= DWMAC_RXN_VARDELAY(8);
+> +       regmap_write(dwmac->regmap, OXNAS_DWMAC_DELAY_REGOFFSET, value);
+> +
+> +       return 0;
+> +}
+> +
+> +static int oxnas_dwmac_probe(struct platform_device *pdev)
+> +{
+> +       struct plat_stmmacenet_data *plat_dat;
+> +       struct stmmac_resources stmmac_res;
+> +       struct device_node *sysctrl;
+> +       struct oxnas_dwmac *dwmac;
+> +       int ret;
+> +
+> +       sysctrl = of_parse_phandle(pdev->dev.of_node, "oxsemi,sys-ctrl", 0);
+> +       if (!sysctrl) {
+> +               dev_err(&pdev->dev, "failed to get sys-ctrl node\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       ret = stmmac_get_platform_resources(pdev, &stmmac_res);
+> +       if (ret)
+> +               return ret;
+> +
+> +       plat_dat = stmmac_probe_config_dt(pdev, &stmmac_res.mac);
+> +       if (IS_ERR(plat_dat))
+> +               return PTR_ERR(plat_dat);
+> +
+> +       dwmac = devm_kzalloc(&pdev->dev, sizeof(*dwmac), GFP_KERNEL);
+> +       if (!dwmac)
+> +               return -ENOMEM;
+> +
+> +       dwmac->dev = &pdev->dev;
+> +       plat_dat->bsp_priv = dwmac;
+> +
+> +       dwmac->regmap = syscon_node_to_regmap(sysctrl);
+> +       if (IS_ERR(dwmac->regmap)) {
+> +               dev_err(&pdev->dev, "failed to have sysctrl regmap\n");
+> +               return PTR_ERR(dwmac->regmap);
+> +       }
+> +
+> +       dwmac->clk = devm_clk_get(&pdev->dev, "gmac");
+> +       if (IS_ERR(dwmac->clk))
+> +               return PTR_ERR(dwmac->clk);
+> +
+> +       ret = oxnas_dwmac_init(dwmac);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
+> +       if (ret)
+> +               clk_disable_unprepare(dwmac->clk);
+> +
+> +       return ret;
+> +}
+> +
+> +static int oxnas_dwmac_remove(struct platform_device *pdev)
+> +{
+> +       struct net_device *ndev = platform_get_drvdata(pdev);
+> +       struct stmmac_priv *priv = netdev_priv(ndev);
+> +       struct oxnas_dwmac *dwmac = priv->plat->bsp_priv;
+
+Instead of this long dance of variables use the get_stmmac_bsp_priv()-helper.
+
+You can take a look at dwmac-meson8b.c for reference.
+
+
+> +       int ret = stmmac_dvr_remove(&pdev->dev);
+> +
+> +       clk_disable_unprepare(dwmac->clk);
+> +
+> +       return ret;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int oxnas_dwmac_suspend(struct device *dev)
+> +{
+> +       struct net_device *ndev = dev_get_drvdata(dev);
+> +       struct stmmac_priv *priv = netdev_priv(ndev);
+> +       struct oxnas_dwmac *dwmac = priv->plat->bsp_priv;
+
+get_stmmac_bsp_priv()
+
+
+> +       int ret;
+> +
+> +       ret = stmmac_suspend(dev);
+> +       clk_disable_unprepare(dwmac->clk);
+> +
+> +       return ret;
+> +}
+> +
+> +static int oxnas_dwmac_resume(struct device *dev)
+> +{
+> +       struct net_device *ndev = dev_get_drvdata(dev);
+> +       struct stmmac_priv *priv = netdev_priv(ndev);
+> +       struct oxnas_dwmac *dwmac = priv->plat->bsp_priv;
+
+get_stmmac_bsp_priv()
+
+
+> +       int ret;
+> +
+> +       ret = oxnas_dwmac_init(dwmac);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = stmmac_resume(dev);
+> +
+> +       return ret;
+> +}
+> +#endif /* CONFIG_PM_SLEEP */
+
+With these changes:
+Acked-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+
+best regards,
+Joachim Eastwood
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
