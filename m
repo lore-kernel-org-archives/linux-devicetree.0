@@ -1,41 +1,40 @@
-From: <patrice.chotard@st.com>
-Subject: [PATCH 3/5] ARM: multi_v7_defconfig: Remove CONFIG_ST_THERMAL_MEMMAP Kconfig symbol
-Date: Fri, 21 Oct 2016 17:57:21 +0200
-Message-ID: <1477065443-10668-4-git-send-email-patrice.chotard@st.com>
-References: <1477065443-10668-1-git-send-email-patrice.chotard@st.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [RFC PATCH 08/13] dwmac-meson8b: add support for phy selection
+Date: Fri, 21 Oct 2016 17:59:57 +0200
+Message-ID: <dc810494-6ece-c4ae-d412-ed9af3fac9c2@baylibre.com>
+References: <1477060838-14164-1-git-send-email-narmstrong@baylibre.com>
+ <1477060838-14164-9-git-send-email-narmstrong@baylibre.com>
+ <20161021155408.GR16974@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477065443-10668-1-git-send-email-patrice.chotard@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, kernel@stlinux.com, patrice.chotard@st.com, rui.zhang@intel.com, edubezval@gmail.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20161021155408.GR16974@lunn.ch>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: khilman@baylibre.com, carlo@caione.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+On 10/21/2016 05:54 PM, Andrew Lunn wrote:
+> On Fri, Oct 21, 2016 at 04:40:33PM +0200, Neil Armstrong wrote:
+>> The Meson GXL dwmac Glue Layer also provides switching between an external PHY
+>> and an internal RMII 10/100 PHY.
+>> Add a way to setup the correct PHY switching from a device tree attribute.
+> 
+> Humm, actually. Maybe PHY_IS_INTERNAL in the phydrv->flags is the
+> better solution. The MAC can then use phy_is_internal(ndev->phydev) to
+> decide if this register needs programming.
+> 
+>        Andrew
+> 
 
-Driver code has been already removed, see
-http://www.spinics.net/lists/devicetree/msg143322.html
-Remove the multi_v7_defconfig part
+Hi Andrew,
 
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
-Cc: <rui.zhang@intel.com>
-Cc: <edubezval@gmail.com>
----
- arch/arm/configs/multi_v7_defconfig | 1 -
- 1 file changed, 1 deletion(-)
+Yes this would be a good idea if we were able to scan the internal and external PHYs at the same time,
+but with our limited knowledge the values we write in the register seems to switch a mux for the whole RMII
+and MDIO signals to either interface.
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 15b2f99..45e252b 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -450,7 +450,6 @@ CONFIG_RCAR_THERMAL=y
- CONFIG_ARMADA_THERMAL=y
- CONFIG_DAVINCI_WATCHDOG=m
- CONFIG_EXYNOS_THERMAL=m
--CONFIG_ST_THERMAL_MEMMAP=y
- CONFIG_WATCHDOG=y
- CONFIG_DA9063_WATCHDOG=m
- CONFIG_XILINX_WATCHDOG=y
--- 
-1.9.1
+Do you have knowledge if this case is already handled upstream ?
+
+Thanks for your help,
+Neil
