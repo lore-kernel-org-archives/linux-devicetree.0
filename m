@@ -1,210 +1,78 @@
-From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Subject: [PATCH v4 2/2] ARM: dts: imx6ul: Add DTS for liteBoard
-Date: Fri, 21 Oct 2016 17:07:17 +0200
-Message-ID: <20161021150717.27573-2-m.niestroj@grinn-global.com>
-References: <20161021150717.27573-1-m.niestroj@grinn-global.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] clocksource: Add clockevent support to NPS400 driver
+Date: Fri, 21 Oct 2016 17:08:59 +0200
+Message-ID: <20161021150859.GB5553@mai>
+References: <1476370350-3853-1-git-send-email-noamca@mellanox.com>
+ <1476370350-3853-4-git-send-email-noamca@mellanox.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161021150717.27573-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1476370350-3853-4-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+To: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-liteBoard is a development board which uses liteSOM as its base.
+On Thu, Oct 13, 2016 at 05:52:30PM +0300, Noam Camus wrote:
+> From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> 
+> Till now we used clockevent from generic ARC driver.
+> This was enough as long as we worked with simple multicore SoC.
+> When we are working with multithread SoC each HW thread can be
+> scheduled to receive timer interrupt using timer mask register
+> (TSI1).
+> 
+> This patch will provide a way to control clock events per
+> HW thread.
 
-Hardware specification:
- * liteSOM (i.MX6UL, DRAM, eMMC)
- * Ethernet PHY (id 0)
- * USB host (usb_otg1)
- * MicroSD slot (uSDHC1)
+The description is not very clear. Can you elaborate ?
+ 
+> Driver can be used from device tree by:
+> compatible = "ezchip,nps400-timer0" <-- for clocksource
+> compatible = "ezchip,nps400-timer1" <-- for clockevent
+> 
+> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+> Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> ---
 
-Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
----
-Changes v3 -> v4:
- * Put usb otg regulator directly under root, use hyphens in node name
-   (suggested by Shawn)
- * Rename node name: usb_otg1_vbus -> usb-otg1-vbus
+[ ... ]
 
-Changes v2 -> v3: none
+> -static int __init nps_setup_clocksource(struct device_node *node,
+> -					struct clk *clk)
+> +static void __init nps_setup_clocksource(struct device_node *node)
 
-Changes v1 -> v2:
- * Use dual license
- * Fix typo "defaullt" -> "default"
+CLOCKSOURCE_OF_DECLARE is expecting an int __init (*func)(struct device_node *)
 
- arch/arm/boot/dts/Makefile             |   1 +
- arch/arm/boot/dts/imx6ul-liteboard.dts | 147 +++++++++++++++++++++++++++++++++
- 2 files changed, 148 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ul-liteboard.dts
+This function returns void at the beginning then it is not changed and returns
+an error value.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index befcd26..c1ce5f4 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -420,6 +420,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
- dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-14x14-evk.dtb \
- 	imx6ul-geam-kit.dtb \
-+	imx6ul-liteboard.dtb \
- 	imx6ul-pico-hobbit.dtb \
- 	imx6ul-tx6ul-0010.dtb \
- 	imx6ul-tx6ul-0011.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-liteboard.dts b/arch/arm/boot/dts/imx6ul-liteboard.dts
-new file mode 100644
-index 0000000..6e04cb9
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-liteboard.dts
-@@ -0,0 +1,147 @@
-+/*
-+ * Copyright 2016 Grinn
-+ *
-+ * Author: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6ul-litesom.dtsi"
-+
-+/ {
-+	model = "Grinn i.MX6UL liteBoard";
-+	compatible = "grinn,imx6ul-liteboard", "grinn,imx6ul-litesom",
-+		     "fsl,imx6ul";
-+
-+	chosen {
-+		stdout-path = &uart1;
-+	};
-+
-+	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usb_otg1_vbus>;
-+		regulator-name = "usb_otg1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio2 8 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl_enet1: enet1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO07__ENET1_MDC		0x1b0b0
-+			MX6UL_PAD_GPIO1_IO06__ENET1_MDIO	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00 0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01 0x1b0b0
-+			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00 0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01 0x1b0b0
-+			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
-+			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x17059
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x10071
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usb_otg1_vbus: usb-otg1-vbus {
-+		fsl,pins = <
-+			MX6UL_PAD_ENET2_RX_DATA0__GPIO2_IO08	0x79
-+		>;
-+	};
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ethphy0>;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	vbus-supply = <&reg_usb_otg1_vbus>;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	cd-gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
-+	no-1-8-v;
-+	keep-power-in-suspend;
-+	wakeup-source;
-+	status = "okay";
-+};
--- 
-2.10.0
+linux/drivers/clocksource/timer-nps.c: In function ‘nps_setup_clocksource’:
+linux/drivers/clocksource/timer-nps.c:77:10: warning: ‘return’ with a value, in function returning void
+   return ret;
+          ^
+linux/drivers/clocksource/timer-nps.c:89:9: warning: ‘return’ with a value, in function returning void
+  return ret;
+         ^
+linux/drivers/clocksource/timer-nps.c: At top level:
+linux/drivers/clocksource/timer-nps.c:92:216: warning: comparison of distinct pointer types lacks a cast
 
+Don't submit changes which are not correctly compiled / tested, except you want to live
+dangerously and watch your karma collapse.
+
+I will let you fix this before reviewing the patches in details.
+
+BTW, have a look at the hotplug callbacks, they changed to a finite state machine [1] and their usage
+changed [2].
+
+  -- Daniel
+
+[1] https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=710d60cbf1b312a8075a2158cbfbbd9c66132dcc
+[2] https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=eb0a9d8c672dc01db41352afa646405d035ee7a4
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
