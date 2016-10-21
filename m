@@ -1,290 +1,110 @@
-From: <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v3 3/3] clk: stm32f469: Add QSPI clock
-Date: Fri, 21 Oct 2016 11:23:30 +0200
-Message-ID: <1477041810-12313-4-git-send-email-gabriel.fernandez@st.com>
-References: <1477041810-12313-1-git-send-email-gabriel.fernandez@st.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 2/3] ARM: bus: da8xx-syscfg: new driver
+Date: Fri, 21 Oct 2016 12:25:14 +0300
+Message-ID: <f6a0f61e-9d78-3df1-8e41-435eb47a1f00@ti.com>
+References: <1476721850-454-1-git-send-email-bgolaszewski@baylibre.com>
+ <2278105.geKhb8xoNC@avalon> <7h8ttj6jqo.fsf@baylibre.com>
+ <1867292.F3aGJTmS2t@avalon> <7h8tti6c95.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477041810-12313-1-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez-qxv4g6HH51o@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1747105353=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <7h8tti6c95.fsf@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kevin Hilman <khilman@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+--===============1747105353==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="sSxT0VGb61cRknTR0VKCgpCdpiTqhxbpf"
 
-This patch adds the QSPI clock for stm32f469 discovery board.
-The gate mapping is a little bit different from stm32f429 soc.
+--sSxT0VGb61cRknTR0VKCgpCdpiTqhxbpf
+Content-Type: multipart/mixed; boundary="kgAGrmGAHd3c8WqA1N4wqG3KTH8UGvviR";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Kevin Hilman <khilman@baylibre.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+ Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>,
+ Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+ Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+ Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>,
+ arm-soc <linux-arm-kernel@lists.infradead.org>,
+ linux-drm <dri-devel@lists.freedesktop.org>,
+ linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>,
+ David Airlie <airlied@linux.ie>, Arnd Bergmann <arnd@arndb.de>,
+ Olof Johansson <olof@lixom.net>
+Message-ID: <f6a0f61e-9d78-3df1-8e41-435eb47a1f00@ti.com>
+Subject: Re: [PATCH 2/3] ARM: bus: da8xx-syscfg: new driver
+References: <1476721850-454-1-git-send-email-bgolaszewski@baylibre.com>
+ <2278105.geKhb8xoNC@avalon> <7h8ttj6jqo.fsf@baylibre.com>
+ <1867292.F3aGJTmS2t@avalon> <7h8tti6c95.fsf@baylibre.com>
+In-Reply-To: <7h8tti6c95.fsf@baylibre.com>
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
----
- .../devicetree/bindings/clock/st,stm32-rcc.txt     |   4 +-
- drivers/clk/clk-stm32f4.c                          | 173 ++++++++++++++++++---
- 2 files changed, 158 insertions(+), 19 deletions(-)
+--kgAGrmGAHd3c8WqA1N4wqG3KTH8UGvviR
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
-index c209de6..0532d81 100644
---- a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
-+++ b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
-@@ -7,7 +7,9 @@ Please refer to clock-bindings.txt for common clock controller binding usage.
- Please also refer to reset.txt for common reset controller binding usage.
- 
- Required properties:
--- compatible: Should be "st,stm32f42xx-rcc"
-+- compatible: Should be:
-+  "st,stm32f42xx-rcc"
-+  "st,stm32f469-rcc"
- - reg: should be register base and length as documented in the
-   datasheet
- - #reset-cells: 1, see below
-diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
-index cbc8148..c2661e2 100644
---- a/drivers/clk/clk-stm32f4.c
-+++ b/drivers/clk/clk-stm32f4.c
-@@ -46,7 +46,7 @@ struct stm32f4_gate_data {
- 	unsigned long flags;
- };
- 
--static const struct stm32f4_gate_data stm32f4_gates[] __initconst = {
-+static const struct stm32f4_gate_data stm32f429_gates[] __initconst = {
- 	{ STM32F4_RCC_AHB1ENR,  0,	"gpioa",	"ahb_div" },
- 	{ STM32F4_RCC_AHB1ENR,  1,	"gpiob",	"ahb_div" },
- 	{ STM32F4_RCC_AHB1ENR,  2,	"gpioc",	"ahb_div" },
-@@ -126,22 +126,108 @@ struct stm32f4_gate_data {
- 	{ STM32F4_RCC_APB2ENR, 26,	"ltdc",		"apb2_div" },
- };
- 
-+static const struct stm32f4_gate_data stm32f469_gates[] __initconst = {
-+	{ STM32F4_RCC_AHB1ENR,  0,	"gpioa",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  1,	"gpiob",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  2,	"gpioc",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  3,	"gpiod",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  4,	"gpioe",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  5,	"gpiof",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  6,	"gpiog",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  7,	"gpioh",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  8,	"gpioi",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  9,	"gpioj",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 10,	"gpiok",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 12,	"crc",		"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 18,	"bkpsra",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 20,	"ccmdatam",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 21,	"dma1",		"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 22,	"dma2",		"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 23,	"dma2d",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 25,	"ethmac",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 26,	"ethmactx",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 27,	"ethmacrx",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 28,	"ethmacptp",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 29,	"otghs",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 30,	"otghsulpi",	"ahb_div" },
-+
-+	{ STM32F4_RCC_AHB2ENR,  0,	"dcmi",		"ahb_div" },
-+	{ STM32F4_RCC_AHB2ENR,  4,	"cryp",		"ahb_div" },
-+	{ STM32F4_RCC_AHB2ENR,  5,	"hash",		"ahb_div" },
-+	{ STM32F4_RCC_AHB2ENR,  6,	"rng",		"pll48" },
-+	{ STM32F4_RCC_AHB2ENR,  7,	"otgfs",	"pll48" },
-+
-+	{ STM32F4_RCC_AHB3ENR,  0,	"fmc",		"ahb_div",
-+		CLK_IGNORE_UNUSED },
-+	{ STM32F4_RCC_AHB3ENR,  1,	"qspi",		"ahb_div",
-+		CLK_IGNORE_UNUSED },
-+
-+	{ STM32F4_RCC_APB1ENR,  0,	"tim2",		"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  1,	"tim3",		"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  2,	"tim4",		"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  3,	"tim5",		"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  4,	"tim6",		"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  5,	"tim7",		"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  6,	"tim12",	"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  7,	"tim13",	"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  8,	"tim14",	"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR, 11,	"wwdg",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 14,	"spi2",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 15,	"spi3",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 17,	"uart2",	"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 18,	"uart3",	"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 19,	"uart4",	"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 20,	"uart5",	"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 21,	"i2c1",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 22,	"i2c2",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 23,	"i2c3",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 25,	"can1",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 26,	"can2",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 28,	"pwr",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 29,	"dac",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 30,	"uart7",	"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 31,	"uart8",	"apb1_div" },
-+
-+	{ STM32F4_RCC_APB2ENR,  0,	"tim1",		"apb2_mul" },
-+	{ STM32F4_RCC_APB2ENR,  1,	"tim8",		"apb2_mul" },
-+	{ STM32F4_RCC_APB2ENR,  4,	"usart1",	"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR,  5,	"usart6",	"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR,  8,	"adc1",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR,  9,	"adc2",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 10,	"adc3",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 11,	"sdio",		"pll48" },
-+	{ STM32F4_RCC_APB2ENR, 12,	"spi1",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 13,	"spi4",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 14,	"syscfg",	"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 16,	"tim9",		"apb2_mul" },
-+	{ STM32F4_RCC_APB2ENR, 17,	"tim10",	"apb2_mul" },
-+	{ STM32F4_RCC_APB2ENR, 18,	"tim11",	"apb2_mul" },
-+	{ STM32F4_RCC_APB2ENR, 20,	"spi5",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 21,	"spi6",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 22,	"sai1",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 26,	"ltdc",		"apb2_div" },
-+};
-+
- enum { SYSTICK, FCLK, CLK_LSI, CLK_LSE, CLK_HSE_RTC, CLK_RTC, END_PRIMARY_CLK };
--/*
-- * MAX_CLKS is the maximum value in the enumeration below plus the combined
-- * hweight of stm32f42xx_gate_map (plus one).
-- */
--#define MAX_CLKS (71 + END_PRIMARY_CLK + 1)
- 
- /*
-  * This bitmask tells us which bit offsets (0..192) on STM32F4[23]xxx
-  * have gate bits associated with them. Its combined hweight is 71.
-  */
--static const u64 stm32f42xx_gate_map[] = { 0x000000f17ef417ffull,
--					   0x0000000000000001ull,
--					   0x04777f33f6fec9ffull };
-+#define MAX_GATE_MAP 3
-+
-+static const u64 stm32f42xx_gate_map[MAX_GATE_MAP] = { 0x000000f17ef417ffull,
-+						       0x0000000000000001ull,
-+						       0x04777f33f6fec9ffull };
-+
-+static const u64 stm32f46xx_gate_map[MAX_GATE_MAP] = { 0x000000f17ef417ffull,
-+						       0x0000000000000003ull,
-+						       0x0c777f33f6fec9ffull };
-+
-+const u64 *stm32f4_gate_map;
-+
-+static struct clk_hw **clks;
- 
--static struct clk_hw *clks[MAX_CLKS];
- static DEFINE_SPINLOCK(stm32f4_clk_lock);
- static void __iomem *base;
- 
-@@ -263,7 +349,7 @@ static void stm32f4_rcc_register_pll(const char *hse_clk, const char *hsi_clk)
-  */
- static int stm32f4_rcc_lookup_clk_idx(u8 primary, u8 secondary)
- {
--	u64 table[ARRAY_SIZE(stm32f42xx_gate_map)];
-+	u64 table[MAX_GATE_MAP];
- 
- 	if (primary == 1) {
- 		if (WARN_ON(secondary >= END_PRIMARY_CLK))
-@@ -271,7 +357,7 @@ static int stm32f4_rcc_lookup_clk_idx(u8 primary, u8 secondary)
- 		return secondary;
- 	}
- 
--	memcpy(table, stm32f42xx_gate_map, sizeof(table));
-+	memcpy(table, stm32f4_gate_map, sizeof(table));
- 
- 	/* only bits set in table can be used as indices */
- 	if (WARN_ON(secondary >= BITS_PER_BYTE * sizeof(table) ||
-@@ -525,10 +611,42 @@ static struct clk_hw *stm32_register_cclk(struct device *dev, const char *name,
- 	"no-clock", "lse", "lsi", "hse-rtc"
- };
- 
-+struct stm32f4_clk_data {
-+	const struct stm32f4_gate_data *gates_data;
-+	const u64 *gates_map;
-+	int gates_num;
-+};
-+
-+static const struct stm32f4_clk_data stm32f429_clk_data = {
-+	.gates_data	= stm32f429_gates,
-+	.gates_map	= stm32f42xx_gate_map,
-+	.gates_num	= ARRAY_SIZE(stm32f429_gates),
-+};
-+
-+static const struct stm32f4_clk_data stm32f469_clk_data = {
-+	.gates_data	= stm32f469_gates,
-+	.gates_map	= stm32f46xx_gate_map,
-+	.gates_num	= ARRAY_SIZE(stm32f469_gates),
-+};
-+
-+static const struct of_device_id stm32f4_of_match[] = {
-+	{
-+		.compatible = "st,stm32f42xx-rcc",
-+		.data = &stm32f429_clk_data
-+	},
-+	{
-+		.compatible = "st,stm32f469-rcc",
-+		.data = &stm32f469_clk_data
-+	},
-+	{}
-+};
-+
- static void __init stm32f4_rcc_init(struct device_node *np)
- {
- 	const char *hse_clk;
- 	int n;
-+	const struct of_device_id *match;
-+	const struct stm32f4_clk_data *data;
- 
- 	base = of_iomap(np, 0);
- 	if (!base) {
-@@ -542,6 +660,19 @@ static void __init stm32f4_rcc_init(struct device_node *np)
- 		pr_warn("%s: Unable to get syscfg\n", __func__);
- 	}
- 
-+	match = of_match_node(stm32f4_of_match, np);
-+	if (WARN_ON(!match))
-+		return;
-+
-+	data = match->data;
-+
-+	clks = kmalloc_array(data->gates_num + END_PRIMARY_CLK,
-+			sizeof(*clks), GFP_KERNEL);
-+	if (!clks)
-+		goto fail;
-+
-+	stm32f4_gate_map = data->gates_map;
-+
- 	hse_clk = of_clk_get_parent_name(np, 0);
- 
- 	clk_register_fixed_rate_with_accuracy(NULL, "hsi", NULL, 0,
-@@ -574,11 +705,15 @@ static void __init stm32f4_rcc_init(struct device_node *np)
- 	clks[FCLK] = clk_hw_register_fixed_factor(NULL, "fclk", "ahb_div",
- 					       0, 1, 1);
- 
--	for (n = 0; n < ARRAY_SIZE(stm32f4_gates); n++) {
--		const struct stm32f4_gate_data *gd = &stm32f4_gates[n];
--		unsigned int secondary =
--		    8 * (gd->offset - STM32F4_RCC_AHB1ENR) + gd->bit_idx;
--		int idx = stm32f4_rcc_lookup_clk_idx(0, secondary);
-+	for (n = 0; n < data->gates_num; n++) {
-+		const struct stm32f4_gate_data *gd;
-+		unsigned int secondary;
-+		int idx;
-+
-+		gd = &data->gates_data[n];
-+		secondary = 8 * (gd->offset - STM32F4_RCC_AHB1ENR) +
-+			gd->bit_idx;
-+		idx = stm32f4_rcc_lookup_clk_idx(0, secondary);
- 
- 		if (idx < 0)
- 			goto fail;
-@@ -630,6 +765,8 @@ static void __init stm32f4_rcc_init(struct device_node *np)
- 	of_clk_add_hw_provider(np, stm32f4_rcc_lookup_clk, NULL);
- 	return;
- fail:
-+	kfree(clks);
- 	iounmap(base);
- }
--CLK_OF_DECLARE(stm32f4_rcc, "st,stm32f42xx-rcc", stm32f4_rcc_init);
-+CLK_OF_DECLARE(stm32f42xx_rcc, "st,stm32f42xx-rcc", stm32f4_rcc_init);
-+CLK_OF_DECLARE(stm32f46xx_rcc, "st,stm32f469-rcc", stm32f4_rcc_init);
--- 
-1.9.1
+On 20/10/16 22:39, Kevin Hilman wrote:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> However, after our discussion on IRC, we'll respin this without the DT
+> bindings at all.  Next version will just use static configuration data
+> in the drivers/bus driver based on SoC compatible string, since for the=
+
+> use-cases I'm aware of, the settings are boot-time only.
+
+If it's static boot time config, why not do it in the u-boot?
+
+I'm fine either way, but this sounds like quite low level memory bus conf=
+ig.
+
+ Tomi
+
+
+--kgAGrmGAHd3c8WqA1N4wqG3KTH8UGvviR--
+
+--sSxT0VGb61cRknTR0VKCgpCdpiTqhxbpf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYCd76AAoJEPo9qoy8lh71Yc0P/iOi36MUuESI+lkbyW2J2Cev
+q0FkOEyKZIj9RiUssIxL46argYh+4FUdZtRRBkj5VEe+CpMJ1n6cR6/OhPa64i3z
+sgQtAwbg0dpge/nQSwKbSEzWqbrR5L66EgaOWNKiI1rm5T5y0+b01SiXn3kCUGyP
+D++Z1HmZMgu5qt8r5Y1tYG+X+cuvwRiYRlVwnCpwimJBrshKGSi7kBNsVGOpoQdA
+uDQYbjrsQfBKMXj0d33sg3Mm94dds/OwFGzgwNPg1/05kpMkX+u9hLifSBkS3SMW
++NVyapKEaCaQkoFa6i+StoKIyk67Hfqb7vYXIwhvuBPr/fTu48UXyJE2qqhCjqCh
+uF4oH5yfVM9wyUD9jNyvge/FiHzUCbuU4gwP2HL9fh3nvailGNurxPPyp5NzHh+w
+52MInK9b83htN6kHdlNfurOh2Mbc3ozyz4H5AzFxc+HAh+IQvyHTDYTMYrIywHA1
+P0L6f8R44K5HFAiEL51bc8x/hj0aG78abrtXTearfQz1BOJcmGA6dmmoSiNAx1iM
+AY4/ymP878SVilIPUNEICQe72oFPOritZowWtjT16uw6gk2fexkI8esOjqU19Hfe
+Ood9jadiKjNu4jA9wKxCJhSqWe64gdSU3ylb2TI/cgkzQVnbcKHhcIvmvvr5nh1B
+NV2W266iKFik17wDxSHn
+=YBiu
+-----END PGP SIGNATURE-----
+
+--sSxT0VGb61cRknTR0VKCgpCdpiTqhxbpf--
+
+--===============1747105353==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1747105353==--
