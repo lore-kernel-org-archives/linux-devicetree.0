@@ -1,140 +1,150 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V7 3/4] dmaengine: qcom_hidma: protect common data structures
-Date: Fri, 21 Oct 2016 12:37:58 -0400
-Message-ID: <1477067879-23750-4-git-send-email-okaya@codeaurora.org>
-References: <1477067879-23750-1-git-send-email-okaya@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477067879-23750-1-git-send-email-okaya@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org
+From: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v5] mwifiex: parse device tree node for PCIe
+Date: Fri, 21 Oct 2016 10:15:56 -0700
+Message-ID: <1477070156-109965-1-git-send-email-rajatja@google.com>
+References: <20161021020609.GA18359@localhost>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161021020609.GA18359@localhost>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: rajatxjain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When MSI interrupts are supported, error and the transfer interrupt can
-come from multiple processor contexts.
+From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-Each error interrupt is an MSI interrupt. If the channel is disabled by
-the first error interrupt, the remaining error interrupts will gracefully
-return in the interrupt handler.
+This patch derives device tree node from pcie bus layer framework, and
+fixes a minor memory leak in mwifiex_pcie_probe() (in failure path).
+Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
+marvell-8xxx.txt) to accomodate PCIe changes.
 
-If an error is observed while servicing the completions in success case,
-the posting of the completions will be aborted as soon as channel disabled
-state is observed. The error interrupt handler will take it from there and
-finish the remaining completions. We don't want to create multiple success
-and error messages to be delivered to the client in mixed order.
-
-Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- drivers/dma/qcom/hidma_ll.c | 44 +++++++++++---------------------------------
- 1 file changed, 11 insertions(+), 33 deletions(-)
+v2: Included vendor and product IDs in compatible strings for PCIe
+chipsets(Rob Herring)
+v3: Patch is created using -M option so that it will only include diff of
+original and renamed files(Rob Herring)
+Resend v3: Resending the patch because I missed to include device tree mailing
+while sending v3.
+v4: Fix error handling, also move-on even if no device tree node is present.
+v5: Update commit log to include memory leak, return -EINVAL instead of -1.
 
-diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
-index 9193f46..7fe43af 100644
---- a/drivers/dma/qcom/hidma_ll.c
-+++ b/drivers/dma/qcom/hidma_ll.c
-@@ -198,13 +198,16 @@ static void hidma_ll_tre_complete(unsigned long arg)
- 	}
- }
+ .../{marvell-sd8xxx.txt => marvell-8xxx.txt}       |  8 +++--
+ drivers/net/wireless/marvell/mwifiex/pcie.c        | 39 +++++++++++++++++++---
+ drivers/net/wireless/marvell/mwifiex/sta_cmd.c     |  3 +-
+ 3 files changed, 42 insertions(+), 8 deletions(-)
+ rename Documentation/devicetree/bindings/net/wireless/{marvell-sd8xxx.txt => marvell-8xxx.txt} (91%)
+
+diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+similarity index 91%
+rename from Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+rename to Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+index c421aba..dfe5f8e 100644
+--- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
++++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+@@ -1,8 +1,8 @@
+-Marvell 8897/8997 (sd8897/sd8997) SDIO devices
++Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
+ ------
  
--static int hidma_post_completed(struct hidma_lldev *lldev, int tre_iterator,
--				u8 err_info, u8 err_code)
-+static int hidma_post_completed(struct hidma_lldev *lldev, u8 err_info,
-+				u8 err_code)
- {
- 	struct hidma_tre *tre;
- 	unsigned long flags;
-+	u32 tre_iterator;
+-This node provides properties for controlling the marvell sdio wireless device.
+-The node is expected to be specified as a child node to the SDIO controller that
++This node provides properties for controlling the marvell sdio/pcie wireless device.
++The node is expected to be specified as a child node to the SDIO/PCIE controller that
+ connects the device to the system.
  
- 	spin_lock_irqsave(&lldev->lock, flags);
+ Required properties:
+@@ -10,6 +10,8 @@ Required properties:
+   - compatible : should be one of the following:
+ 	* "marvell,sd8897"
+ 	* "marvell,sd8997"
++	* "pci11ab,2b42"
++	* "pci1b4b,2b42"
+ 
+ Optional properties:
+ 
+diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+index 3c3c4f1..7c44f88 100644
+--- a/drivers/net/wireless/marvell/mwifiex/pcie.c
++++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+@@ -37,6 +37,22 @@ static struct mwifiex_if_ops pcie_ops;
+ 
+ static struct semaphore add_remove_card_sem;
+ 
++static const struct of_device_id mwifiex_pcie_of_match_table[] = {
++	{ .compatible = "pci11ab,2b42" },
++	{ .compatible = "pci1b4b,2b42" },
++	{ }
++};
 +
-+	tre_iterator = lldev->tre_processed_off;
- 	tre = lldev->pending_tre_list[tre_iterator / HIDMA_TRE_SIZE];
- 	if (!tre) {
- 		spin_unlock_irqrestore(&lldev->lock, flags);
-@@ -223,6 +226,9 @@ static int hidma_post_completed(struct hidma_lldev *lldev, int tre_iterator,
- 		atomic_set(&lldev->pending_tre_count, 0);
- 	}
- 
-+	HIDMA_INCREMENT_ITERATOR(tre_iterator, HIDMA_TRE_SIZE,
-+				 lldev->tre_ring_size);
-+	lldev->tre_processed_off = tre_iterator;
- 	spin_unlock_irqrestore(&lldev->lock, flags);
- 
- 	tre->err_info = err_info;
-@@ -244,13 +250,11 @@ static int hidma_post_completed(struct hidma_lldev *lldev, int tre_iterator,
- static int hidma_handle_tre_completion(struct hidma_lldev *lldev)
++static int mwifiex_pcie_probe_of(struct device *dev)
++{
++	if (!of_match_node(mwifiex_pcie_of_match_table, dev->of_node)) {
++		pr_err("pcie device node not available");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static int
+ mwifiex_map_pci_memory(struct mwifiex_adapter *adapter, struct sk_buff *skb,
+ 		       size_t size, int flags)
+@@ -178,6 +194,7 @@ static int mwifiex_pcie_probe(struct pci_dev *pdev,
+ 					const struct pci_device_id *ent)
  {
- 	u32 evre_ring_size = lldev->evre_ring_size;
--	u32 tre_ring_size = lldev->tre_ring_size;
- 	u32 err_info, err_code, evre_write_off;
--	u32 tre_iterator, evre_iterator;
-+	u32 evre_iterator;
- 	u32 num_completed = 0;
+ 	struct pcie_service_card *card;
++	int ret;
  
- 	evre_write_off = readl_relaxed(lldev->evca + HIDMA_EVCA_WRITE_PTR_REG);
--	tre_iterator = lldev->tre_processed_off;
- 	evre_iterator = lldev->evre_processed_off;
- 
- 	if ((evre_write_off > evre_ring_size) ||
-@@ -273,12 +277,9 @@ static int hidma_handle_tre_completion(struct hidma_lldev *lldev)
- 		err_code =
- 		    (cfg >> HIDMA_EVRE_CODE_BIT_POS) & HIDMA_EVRE_CODE_MASK;
- 
--		if (hidma_post_completed(lldev, tre_iterator, err_info,
--					 err_code))
-+		if (hidma_post_completed(lldev, err_info, err_code))
- 			break;
- 
--		HIDMA_INCREMENT_ITERATOR(tre_iterator, HIDMA_TRE_SIZE,
--					 tre_ring_size);
- 		HIDMA_INCREMENT_ITERATOR(evre_iterator, HIDMA_EVRE_SIZE,
- 					 evre_ring_size);
- 
-@@ -302,16 +303,10 @@ static int hidma_handle_tre_completion(struct hidma_lldev *lldev)
- 	if (num_completed) {
- 		u32 evre_read_off = (lldev->evre_processed_off +
- 				     HIDMA_EVRE_SIZE * num_completed);
--		u32 tre_read_off = (lldev->tre_processed_off +
--				    HIDMA_TRE_SIZE * num_completed);
--
- 		evre_read_off = evre_read_off % evre_ring_size;
--		tre_read_off = tre_read_off % tre_ring_size;
--
- 		writel(evre_read_off, lldev->evca + HIDMA_EVCA_DOORBELL_REG);
- 
- 		/* record the last processed tre offset */
--		lldev->tre_processed_off = tre_read_off;
- 		lldev->evre_processed_off = evre_read_off;
+ 	pr_debug("info: vendor=0x%4.04X device=0x%4.04X rev=%d\n",
+ 		 pdev->vendor, pdev->device, pdev->revision);
+@@ -199,13 +216,27 @@ static int mwifiex_pcie_probe(struct pci_dev *pdev,
+ 		card->pcie.can_ext_scan = data->can_ext_scan;
  	}
  
-@@ -321,27 +316,10 @@ static int hidma_handle_tre_completion(struct hidma_lldev *lldev)
- void hidma_cleanup_pending_tre(struct hidma_lldev *lldev, u8 err_info,
- 			       u8 err_code)
- {
--	u32 tre_iterator;
--	u32 tre_ring_size = lldev->tre_ring_size;
--	int num_completed = 0;
--	u32 tre_read_off;
--
--	tre_iterator = lldev->tre_processed_off;
- 	while (atomic_read(&lldev->pending_tre_count)) {
--		if (hidma_post_completed(lldev, tre_iterator, err_info,
--					 err_code))
-+		if (hidma_post_completed(lldev, err_info, err_code))
- 			break;
--		HIDMA_INCREMENT_ITERATOR(tre_iterator, HIDMA_TRE_SIZE,
--					 tre_ring_size);
--		num_completed++;
+-	if (mwifiex_add_card(card, &add_remove_card_sem, &pcie_ops,
+-			     MWIFIEX_PCIE)) {
+-		pr_err("%s failed\n", __func__);
+-		return -1;
++	/* device tree node parsing and platform specific configuration*/
++	if (pdev->dev.of_node) {
++		ret = mwifiex_pcie_probe_of(&pdev->dev);
++		if (ret) {
++			dev_err(&pdev->dev,
++				"required compatible string missing\n");
++			goto err_free;
++		}
  	}
--	tre_read_off = (lldev->tre_processed_off +
--			HIDMA_TRE_SIZE * num_completed);
--
--	tre_read_off = tre_read_off % tre_ring_size;
--
--	/* record the last processed tre offset */
--	lldev->tre_processed_off = tre_read_off;
+ 
++	ret = mwifiex_add_card(card, &add_remove_card_sem, &pcie_ops,
++			       MWIFIEX_PCIE);
++	if (ret) {
++		pr_err("%s failed\n", __func__);
++		goto err_free;
++	}
+ 	return 0;
++
++err_free:
++	kfree(card);
++	return ret;
  }
  
- static int hidma_ll_reset(struct hidma_lldev *lldev)
+ /*
+diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+index 2a162c3..c8dccf5 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+@@ -2218,7 +2218,8 @@ int mwifiex_sta_init_cmd(struct mwifiex_private *priv, u8 first_sta, bool init)
+ 		 * The cal-data can be read from device tree and/or
+ 		 * a configuration file and downloaded to firmware.
+ 		 */
+-		if (priv->adapter->iface_type == MWIFIEX_SDIO &&
++		if ((priv->adapter->iface_type == MWIFIEX_SDIO ||
++		    priv->adapter->iface_type == MWIFIEX_PCIE) &&
+ 		    adapter->dev->of_node) {
+ 			adapter->dt_node = adapter->dev->of_node;
+ 			if (of_property_read_u32(adapter->dt_node,
 -- 
-1.9.1
+2.8.0.rc3.226.g39d4020
