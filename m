@@ -1,48 +1,38 @@
-From: Milo Kim <woogyom.kim@gmail.com>
-Subject: [PATCH 5/7] ARM: dts: am335x: Add the charger interrupt
-Date: Fri, 21 Oct 2016 23:01:04 +0900
-Message-ID: <20161021140106.21531-6-woogyom.kim@gmail.com>
-References: <20161021140106.21531-1-woogyom.kim@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161021140106.21531-1-woogyom.kim@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bcousson@baylibre.com, Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Milo Kim <woogyom.kim@gmail.com>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] dt-bindings: video: exynos7-decon: Remove obsolete samsung,power-domain property
+Date: Fri, 21 Oct 2016 17:05:54 +0300
+Message-ID: <1477058754-13866-1-git-send-email-krzk@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This enables the charger driver gets corresponding IRQ number by using
-platform_get_irq_byname() helper.
+The samsung,power-domain property is obsolete since commit 0da658704136
+("ARM: dts: convert to generic power domain bindings for exynos DT").
+Replace it with generic one.
 
-Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
+Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/am335x-bone-common.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-index 25303d9..cec9d91 100644
---- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-@@ -6,6 +6,8 @@
-  * published by the Free Software Foundation.
-  */
+diff --git a/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt b/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt
+index 3938caacf11c..8346fb18a358 100644
+--- a/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt
++++ b/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt
+@@ -33,7 +33,7 @@ Required properties:
+ - i80-if-timings: timing configuration for lcd i80 interface support.
  
-+#include <dt-bindings/mfd/tps65217.h>
-+
- / {
- 	cpus {
- 		cpu@0 {
-@@ -316,6 +318,12 @@
- 
- 	ti,pmic-shutdown-controller;
- 
-+	charger {
-+		interrupts = <TPS65217_IRQ_AC>, <TPS65217_IRQ_USB>;
-+		interrupts-names = "AC", "USB";
-+		status = "okay";
-+	};
-+
- 	regulators {
- 		dcdc1_reg: regulator@0 {
- 			regulator-name = "vdds_dpr";
+ Optional Properties:
+-- samsung,power-domain: a phandle to DECON power domain node.
++- power-domains: a phandle to DECON power domain node.
+ - display-timings: timing settings for DECON, as described in document [1].
+ 		Can be used in case timings cannot be provided otherwise
+ 		or to override timings provided by the panel.
 -- 
-2.9.3
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
