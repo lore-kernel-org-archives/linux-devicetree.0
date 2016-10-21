@@ -1,96 +1,60 @@
-From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RFC] of: platform: Drop OF_POPULATED_BUS check from
- of_platform_notify()
-Date: Thu, 20 Oct 2016 12:52:52 +0200
-Message-ID: <be2ad3ad-00be-d50d-e158-299b144b25b3@nokia.com>
-References: <11c8a7bd-142c-d016-e24b-34d1edbdb8cf@nokia.com>
- <CAL_JsqJWBXqs44vHu4XHAiZhOEghg9X=Q0fvUKHaCVCPnd7kVw@mail.gmail.com>
- <2e40cd48-35f0-1efa-ee17-566aa728e857@nokia.com>
- <CAL_Jsq+FedCOU_w4p+ouqjdDmxJ6dzW4Gq=8vnCx3TUk77-zwA@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 3/4] arm64: dts: msm8996: Add SMEM DT nodes
+Date: Thu, 20 Oct 2016 17:04:08 -0700
+Message-ID: <20161021000408.GI26139@codeaurora.org>
+References: <1477005139-15564-1-git-send-email-spjoshi@codeaurora.org>
+ <1477005139-15564-4-git-send-email-spjoshi@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+FedCOU_w4p+ouqjdDmxJ6dzW4Gq=8vnCx3TUk77-zwA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1477005139-15564-4-git-send-email-spjoshi@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sarangdhar Joshi <spjoshi@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Trilok Soni <tsoni@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob!
-
-On 08/09/16 17:28, Rob Herring wrote:
->> On 08/09/16 16:17, Rob Herring wrote:
->>>> >>> The comment to OF_POPULATED_BUS says "of_platform_populate recursed to children
->>>>> >>> > of this node". Consider the following structure:
->>>>> >>> >
->>>>> >>> >         ocp {
->>>>> >>> >                 compatible = "simple-bus";
->>>>> >>> >                 ranges;
->>>>> >>> >                 ...
->>>>> >>> >                 l4_wkup: l4_wkup@44c00000 {
->>>>> >>> >                         compatible = "ti,am3-l4-wkup", "simple-bus";
->>>>> >>> >                         ranges = <0 0x44c00000 0x280000>;
->>>>> >>> >                         ...
->>>>> >>> >                         wkup_m3: wkup_m3@100000 {
->>>>> >>> >                                 compatible = "ti,am3352-wkup-m3";
->>>>> >>> >                                 ...
->>>>> >>> >                         }
->>>>> >>> >                 }
->>>>> >>> >         }
->>>>> >>> >
->>>>> >>> > If one DT overlay adds "ocp" node without children then of_platform_notify()
->>>>> >>> > creates a platform device, but doesn't set OF_POPULATED_BUS. If second overlay
->>>>> >>> > tries to populate children of "ocp" node, corresponding platform devices are
->>>>> >>> > not instantiated because of check for OF_POPULATED_BUS flag. If the above
->>>>> >>> > example structure is built of several overlays, of_platform_populate() is not
->>>>> >>> > involved here at all, so maybe OF_POPULATED_BUS requirement is wrong.
->>> >> Your example seems a bit made up. While you can craft base DTs and
->>> >> overlays with any random split between them, I don't necessarily think
->>> >> we want to support that. There will likely be cases which we say can
->>> >> only be applied early in boot or we limit which nodes can be overlay
->>> >> targets for overlays applied from userspace.
->> >
->> > Yes, I had to construct an example out of the well-known Beaglebone DT pieces,
->> > the real use case will only confuse the public.
->> >
->> > In general I don't understand why my example is so bizarre, it basically shows, you
->> > cannot apply an overlay above overlay: the devices will not be registered and actually
->> > because of the bogus check. Imagine the well known Beagle: you can construct a bone with
->> > whatever SPI/I2C bus controller. On top of it you can sandwich a board with I2C-driven
->> > GPIO extenders. Is it absolute unrealistic?
-> That sounds like a valid example, but that was not the example you
-> gave. I would expect that adding an I2C slave device is a working
-> usecase.
+On 10/20, Sarangdhar Joshi wrote:
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
 > 
->> > There is full support of multilevel overlays. And just one bug preventing it from working
->> > properly. Do we really want it?
-> You're only asking if the hunk should be removed. The short answer is
-> I don't know just looking at this patch. Show me a real overlay that
-> is broken and this change fixes things. Or add a unit test that
-> demonstrates the problem. And I also need to know the change wouldn't
-> break other users.
+> Add SMEM and TCSR DT nodes on MSM8996.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Sarangdhar Joshi <spjoshi@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index 949b096..abc1089 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -164,17 +164,36 @@
+>  
+>  	};
+>  
+> +	tcsr_mutex: hwlock {
+> +		compatible = "qcom,tcsr-mutex";
+> +		syscon = <&tcsr_mutex_regs 0 0x1000>;
+> +		#hwlock-cells = <1>;
+> +	};
+> +
+>  	psci {
+>  		compatible = "arm,psci-1.0";
+>  		method = "smc";
+>  	};
+>  
+> +	smem {
+> +		compatible = "qcom,smem";
+> +
+> +		memory-region = <&smem_mem>;
+> +
+> +		hwlocks = <&tcsr_mutex 3>;
 
-Now I see that dropping this hunk caused more problems (I2C and SPI devices are happily registered
-as platform, because their callbacks are called first). It's actually the right thing to do, to
-check for the parent to be healthy platform bus, but the problem is the creation of the devices
-from overlays, it's not possible to create platform buses, only devices. 
-
-I'm going to send another patch addressing this problem in a minute.
-
-> I think there may be bigger problems here. The point of this flag is
-> to make depopulate calls only act on nodes that a prior populate call
-> acted on. If we populate the base tree, add an overlay, populate the
-> overlay nodes, we have no way to ensure that of_platform_depopulate
-> called on a parent node in the base DT would not descend into nodes
-> from an overlay. We probably need something better like an owner
-> (distinct from the struct device) assigned to each node and only the
-> owner can depopulate nodes.
+Super nitpick: Is there a reason we have newlines between
+everything in this node? This node is the only one that isn't
+consistent.
 
 -- 
-Best regards,
-Alexander Sverdlin.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
