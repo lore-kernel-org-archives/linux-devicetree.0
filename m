@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 08/23] ARM: dts: r8a7793: Add device node for RST module
-Date: Fri, 21 Oct 2016 15:17:22 +0200
-Message-ID: <1477055857-17936-9-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v4 01/23] reset: Add renesas,rst DT bindings
+Date: Fri, 21 Oct 2016 15:17:15 +0200
+Message-ID: <1477055857-17936-2-git-send-email-geert+renesas@glider.be>
 References: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
@@ -10,42 +10,82 @@ To: Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylib
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add a device node for the RST module, which provides a.o. reset control
-and mode pin monitoring.
+Add DT bindings for the Renesas R-Car Reset Controller (R-Car Gen1
+RESET/WDT and R-Car Gen2/Gen3 and RZ/G RST).
+
+As the features provided by the hardware module differ a lot across the
+various SoC families and members, only SoC-specific compatible values
+are defined.
+
+For now we use the RST only for providing access to the state of the
+mode pins, which is needed by the clock driver.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Magnus Damm <damm+renesas@opensource.se>
 Acked-by: Dirk Behme <dirk.behme@de.bosch.com>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
 v4:
   - Add Acked-by,
+  - Fix comma and period in list,
+  - Add RZ/G1M and RZ/G1E,
 
 v3:
+  - Clarify current usage,
   - Use "renesas,<soctype>-rst" instead of "renesas,rst-<soctype>",
   - Drop "syscon" compatible value,
+  - Add R-Car M3-W,
+  - Add R-Car Gen1,
 
 v2:
-  - Correct unit address,
-  - Drop RFC status and TODO,
-  - Change one-line summary prefix to match current arm-soc practices.
+  - Add Acked-by.
 ---
- arch/arm/boot/dts/r8a7793.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../devicetree/bindings/reset/renesas,rst.txt      | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/renesas,rst.txt
 
-diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793.dtsi
-index 8d02aacf28926271..e4b385eccf74e95e 100644
---- a/arch/arm/boot/dts/r8a7793.dtsi
-+++ b/arch/arm/boot/dts/r8a7793.dtsi
-@@ -1279,6 +1279,11 @@
- 		};
- 	};
- 
-+	rst: reset-controller@e6160000 {
-+		compatible = "renesas,r8a7793-rst";
-+		reg = <0 0xe6160000 0 0x0100>;
-+	};
+diff --git a/Documentation/devicetree/bindings/reset/renesas,rst.txt b/Documentation/devicetree/bindings/reset/renesas,rst.txt
+new file mode 100644
+index 0000000000000000..fe5e0f37b3c93579
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/renesas,rst.txt
+@@ -0,0 +1,37 @@
++DT bindings for the Renesas R-Car and RZ/G Reset Controllers
 +
- 	sysc: system-controller@e6180000 {
- 		compatible = "renesas,r8a7793-sysc";
- 		reg = <0 0xe6180000 0 0x0200>;
++The R-Car and RZ/G Reset Controllers provide reset control, and implement the
++following functions:
++  - Latching of the levels on mode pins when PRESET# is negated,
++  - Mode monitoring register,
++  - Reset control of peripheral devices (on R-Car Gen1),
++  - Watchdog timer (on R-Car Gen1),
++  - Register-based reset control and boot address registers for the various CPU
++    cores (on R-Car Gen2 and Gen3, and on RZ/G).
++
++
++Required properties:
++  - compatible: Should be
++		  - "renesas,<soctype>-reset-wdt" for R-Car Gen1,
++		  - "renesas,<soctype>-rst" for R-Car Gen2 and Gen3, and RZ/G
++		Examples with soctypes are:
++		  - "renesas,r8a7743-rst" (RZ/G1M)
++		  - "renesas,r8a7745-rst" (RZ/G1E)
++		  - "renesas,r8a7778-reset-wdt" (R-Car M1A)
++		  - "renesas,r8a7779-reset-wdt" (R-Car H1)
++		  - "renesas,r8a7790-rst" (R-Car H2)
++		  - "renesas,r8a7791-rst" (R-Car M2-W)
++		  - "renesas,r8a7792-rst" (R-Car V2H
++		  - "renesas,r8a7793-rst" (R-Car M2-N)
++		  - "renesas,r8a7794-rst" (R-Car E2)
++		  - "renesas,r8a7795-rst" (R-Car H3)
++		  - "renesas,r8a7796-rst" (R-Car M3-W)
++  - reg: Address start and address range for the device.
++
++
++Example:
++
++	rst: reset-controller@e6160000 {
++		compatible = "renesas,r8a7795-rst";
++		reg = <0 0xe6160000 0 0x0200>;
++	};
 -- 
 1.9.1
