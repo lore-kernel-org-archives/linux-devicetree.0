@@ -1,54 +1,39 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH 0/4] IIO wrapper drivers, dpot-dac and envelope-detector
-Date: Fri, 21 Oct 2016 10:24:24 +0200
-Message-ID: <28861d1d-7f50-7ea2-f8cb-5a9d359f74c0@axentia.se>
-References: <1476955562-13673-1-git-send-email-peda@axentia.se>
- <9b8c0789-566d-67a3-b4f5-dbe4c69f6932@metafoo.de>
- <8B9238AE-D53C-4A22-84CF-EC42FDA2DFB2@jic23.retrosnub.co.uk>
- <DB170A5C-B172-4B86-80D5-58FD53752ED4@jic23.retrosnub.co.uk>
- <ba941bcd-c542-b699-638f-3b3003e8af00@axentia.se>
- <736c146284d93633a4692b1102eaadaf@jic23.retrosnub.co.uk>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] gpio: ptxpmb-ext-cpld: Add driver for Juniper's
+ PTXPMB extended CPLD
+Date: Fri, 21 Oct 2016 10:39:43 +0200
+Message-ID: <CACRpkdY681yE+zo51BSrBjvhFPQV3KkhM9QH600uiqLfP8G=fw@mail.gmail.com>
+References: <1475853574-22339-1-git-send-email-pantelis.antoniou@konsulko.com> <1475853574-22339-4-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <736c146284d93633a4692b1102eaadaf-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475853574-22339-4-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Georgi Vlaev <gvlaev-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, JawaharBalaji Thirumalaisamy <jawaharb-3r7Miqu9kMnR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-21 09:17, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org wrote:
-> On 20.10.2016 19:17, Peter Rosin wrote:
->> On 2016-10-20 19:37, Jonathan Cameron wrote:
->>> http://marc.info/?l=linux-iio&m=138469765309868&w=2 I think...
->>
->> Interesting, one issue with that is that it is all in real world
->> units, while I'd rather have the raw value.
-> Um.. It's been a while, but the principle was (IIRC) that every
-> _available would match the units fo the associated info mask element.
-> Thus if you have a _raw element it would be in adc counts (most likely).
-> 
-> _input would be in relevant real world units, scale etc in the whatever
-> units the value itself is in.
+On Fri, Oct 7, 2016 at 5:19 PM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
 
-Ah, that was just me totally misreading the patch. I didn't realize
-that the iio_format_value function is also used for raw values and
-assumed it was all about real world units when that function was
-used. Feel rather silly ATM...
+> From: Guenter Roeck <groeck-3r7Miqu9kMnR7s880joybQ@public.gmane.org>
+>
+> This IP block is present in the PTXPMB extended CPLD present on
+> Junipers PTX series of routers and provides SIB connector status pins
+> as GPIO pins for use with other drivers.
+>
+> Signed-off-by: Guenter Roeck <groeck-3r7Miqu9kMnR7s880joybQ@public.gmane.org>
+> Signed-off-by: JawaharBalaji Thirumalaisamy <jawaharb-3r7Miqu9kMnR7s880joybQ@public.gmane.org>
+> [Ported from Juniper kernel]
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 
->> So, I would need to
->> convert back to the raw value using the scale, which sounds boring
->> but doable. However, I wonder if calibration may also be involved
->> with that conversion back to raw for some channels? That sounds a
->> bit more driver specific and potentially troublesome...
-> I've not had a chance to look at your code (only picked up on this as
-> there was a fair length thread developing), but I wouldn't have thought 
-> we'd
-> need to deal with calibrations.   Might need them to move to real world
-> units from raw but that's always the case anyway (unfortunately).
+This driver has pretty much the same issues as the two others
+I reviewed yesterday. Please address the same comments
+and repost and I will look at it again!
 
-Right.
-
-Cheers,
-Peter
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
