@@ -1,41 +1,53 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM: boot: mxs: Add On-Chip RAM
-Date: Fri, 21 Oct 2016 16:05:59 +0200
-Message-ID: <9bf7c925-bdc2-d0b8-9886-70d46383d1e0@i2se.com>
-References: <1473789066-8955-1-git-send-email-stefan.wahren@i2se.com>
- <20161021135343.GI30578@tiger>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARC: [plat-eznps] remove macros for timer0 TSI
+Date: Fri, 21 Oct 2016 16:12:17 +0200
+Message-ID: <20161021141217.GA5553@mai>
+References: <1476370350-3853-1-git-send-email-noamca@mellanox.com>
+ <1476370350-3853-3-git-send-email-noamca@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161021135343.GI30578@tiger>
+Content-Disposition: inline
+In-Reply-To: <1476370350-3853-3-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?J=c3=b6rg_Krause?= <joerg.krause-L1vi/lXTdtsfGbAt6QbQcg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?Q?Lothar_Wa=c3=9fmann?= <lw-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+To: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 21.10.2016 um 15:53 schrieb Shawn Guo:
-> On Tue, Sep 13, 2016 at 05:51:02PM +0000, Stefan Wahren wrote:
->> The i.MX23 / i.MX28 have a small amount of On-Chip RAM which is also necessary
->> for suspend to RAM and standby mode. But before we need to remove the fake reg
->> properties of all internal bus nodes as discussed in this thread [1].
->>
->> This patch series requires Fabio Estevam's recent series "ARM: dts: imx23:
->> Remove skeleton.dtsi inclusion" [2].
->>
->> [1] - https://marc.info/?l=devicetree&m=146139948426520&w=2
-> The page cannot be reached.  I would like to understand the
-> background for this change.
+On Thu, Oct 13, 2016 at 05:52:29PM +0300, Noam Camus wrote:
+> From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> 
+> Now it is defined at include/soc/nps/mtm.h
+> It will be used by module from driver/clocksource/
+> 
 
-Strange, because i don't have any problems while clicking on the URL.
+This patch should be folded with the previous one in order to prevent
+to break the git bisecting, otherwise there will be duplicate macros
+at some point, leading to a compilation failure.
 
-It's an older discussion on the devicetree / kernel newbie mailing list
-with subject "strange dtc errors after adding sram node". Arnd suggested
-in the discussion to remove the reg property from the ahb node.
 
-Please try this one: http://www.spinics.net/lists/newbies/msg57652.html
-
-Stefan
+> Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arc/plat-eznps/include/plat/ctop.h |    2 --
+>  1 files changed, 0 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arc/plat-eznps/include/plat/ctop.h b/arch/arc/plat-eznps/include/plat/ctop.h
+> index 9d6718c..ee2e32d 100644
+> --- a/arch/arc/plat-eznps/include/plat/ctop.h
+> +++ b/arch/arc/plat-eznps/include/plat/ctop.h
+> @@ -46,9 +46,7 @@
+>  #define CTOP_AUX_UDMC				(CTOP_AUX_BASE + 0x300)
+>  
+>  /* EZchip core instructions */
+> -#define CTOP_INST_HWSCHD_OFF_R3			0x3B6F00BF
+>  #define CTOP_INST_HWSCHD_OFF_R4			0x3C6F00BF
+> -#define CTOP_INST_HWSCHD_RESTORE_R3		0x3E6F70C3
+>  #define CTOP_INST_HWSCHD_RESTORE_R4		0x3E6F7103
+>  #define CTOP_INST_SCHD_RW			0x3E6F7004
+>  #define CTOP_INST_SCHD_RD			0x3E6F7084
+> -- 
+> 1.7.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
