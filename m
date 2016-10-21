@@ -1,40 +1,58 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [RFC PATCH 08/13] dwmac-meson8b: add support for phy selection
-Date: Fri, 21 Oct 2016 17:59:57 +0200
-Message-ID: <dc810494-6ece-c4ae-d412-ed9af3fac9c2@baylibre.com>
-References: <1477060838-14164-1-git-send-email-narmstrong@baylibre.com>
- <1477060838-14164-9-git-send-email-narmstrong@baylibre.com>
- <20161021155408.GR16974@lunn.ch>
+From: <patrice.chotard@st.com>
+Subject: [PATCH 4/5] irqchip: st: remove STiH415/416 irqchip support
+Date: Fri, 21 Oct 2016 17:57:22 +0200
+Message-ID: <1477065443-10668-5-git-send-email-patrice.chotard@st.com>
+References: <1477065443-10668-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20161021155408.GR16974@lunn.ch>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: khilman@baylibre.com, carlo@caione.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477065443-10668-1-git-send-email-patrice.chotard@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, kernel@stlinux.com, patrice.chotard@st.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2016 05:54 PM, Andrew Lunn wrote:
-> On Fri, Oct 21, 2016 at 04:40:33PM +0200, Neil Armstrong wrote:
->> The Meson GXL dwmac Glue Layer also provides switching between an external PHY
->> and an internal RMII 10/100 PHY.
->> Add a way to setup the correct PHY switching from a device tree attribute.
-> 
-> Humm, actually. Maybe PHY_IS_INTERNAL in the phydrv->flags is the
-> better solution. The MAC can then use phy_is_internal(ndev->phydev) to
-> decide if this register needs programming.
-> 
->        Andrew
-> 
+From: Patrice Chotard <patrice.chotard@st.com>
 
-Hi Andrew,
+Support for STiH415/6 SoCs is being removed from the
+kernel because the platforms are obsolete. This patch removes
+the irqchip for these SoC's.
 
-Yes this would be a good idea if we were able to scan the internal and external PHYs at the same time,
-but with our limited knowledge the values we write in the register seems to switch a mux for the whole RMII
-and MDIO signals to either interface.
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+Cc: <tglx@linutronix.de>
+Cc: <jason@lakedaemon.net>
+Cc: <marc.zyngier@arm.com>
+---
+ drivers/irqchip/irq-st.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-Do you have knowledge if this case is already handled upstream ?
-
-Thanks for your help,
-Neil
+diff --git a/drivers/irqchip/irq-st.c b/drivers/irqchip/irq-st.c
+index 9af48a8..3ac9226 100644
+--- a/drivers/irqchip/irq-st.c
++++ b/drivers/irqchip/irq-st.c
+@@ -18,8 +18,6 @@
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+ 
+-#define STIH415_SYSCFG_642		0x0a8
+-#define STIH416_SYSCFG_7543		0x87c
+ #define STIH407_SYSCFG_5102		0x198
+ #define STID127_SYSCFG_734		0x088
+ 
+@@ -48,14 +46,6 @@ struct st_irq_syscfg {
+ 
+ static const struct of_device_id st_irq_syscfg_match[] = {
+ 	{
+-		.compatible = "st,stih415-irq-syscfg",
+-		.data = (void *)STIH415_SYSCFG_642,
+-	},
+-	{
+-		.compatible = "st,stih416-irq-syscfg",
+-		.data = (void *)STIH416_SYSCFG_7543,
+-	},
+-	{
+ 		.compatible = "st,stih407-irq-syscfg",
+ 		.data = (void *)STIH407_SYSCFG_5102,
+ 	},
+-- 
+1.9.1
