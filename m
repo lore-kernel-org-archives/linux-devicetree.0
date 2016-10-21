@@ -1,57 +1,42 @@
-From: Jeremy McNicoll <jmcnicol@redhat.com>
-Subject: Re: [PATCH] pinctrl: qcom: Add msm8994 pinctrl driver
-Date: Fri, 21 Oct 2016 16:07:58 -0700
-Message-ID: <20161021230757.GA8076@mini-rhel.redhat.com>
-References: <20161021224250.32232-1-michael.scott@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161021224250.32232-1-michael.scott@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Michael Scott <michael.scott@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Joonwoo Park <joonwoop@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Jeremy McNicoll <jeremymc@redhat.com>
+From: Sarangdhar Joshi <spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v3 0/4] MSM8996 DT Support for ADSP PIL
+Date: Fri, 21 Oct 2016 16:19:15 -0700
+Message-ID: <1477091959-19580-1-git-send-email-spjoshi@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sarangdhar Joshi <spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Trilok Soni <tsoni-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 03:42:50PM -0700, Michael Scott wrote:
-> Initial pinctrl driver for QCOM msm8994 platforms.
-> 
-> In order to continue the initial board support for QCOM msm8994/msm8992
-> presented in patches from Jeremy McNicoll <jeremymc@redhat.com>, let's put
-> a proper pinctrl driver in place.
-> 
-> Currently, the DT for these platforms uses the msm8x74 pinctrl driver to enable
-> basic UART.  Beyond the first few pins the rest are different enough to justify
-> it's own driver.
-> 
-> Note: This driver is also be used by QCOM's msm8992 platform as it's TLM block
-> is the same.
-> 
-> - Initial formatting and style was taken from the msm8x74 pinctrl driver added
->   by Björn Andersson <bjorn.andersson@linaro.org>
-> - Data was then adjusted per QCOM MSM8994 documentation for Top Level Multiplexing
-> - Bindings documentation was based on qcom,msm8996-pinctrl.txt by
->   Joonwoo Park <joonwoop@codeaurora.org> and then modified for msm8994 content
-> 
-> Signed-off-by: Michael Scott <michael.scott@linaro.org>
-> ---
->  .../bindings/pinctrl/qcom,msm8994-pinctrl.txt      |  175 +++
->  drivers/pinctrl/qcom/Kconfig                       |    9 +
->  drivers/pinctrl/qcom/Makefile                      |    1 +
->  drivers/pinctrl/qcom/pinctrl-msm8994.c             | 1402 ++++++++++++++++++++
->  4 files changed, 1587 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt
->  create mode 100644 drivers/pinctrl/qcom/pinctrl-msm8994.c
->
+Add various device tree nodes to lay the groundwork for
+Qualcomm ADSP Peripheral Image Loader.
 
-This works fine on my msm8992 which currently only supports basic
-serial.
+Sorry, I didn't send any cover letter for v1.
 
-Having already compared it to downstream it looks like things
-line up pretty good. (from a msm8992 perspective)
+Changes since v2:
+- Remove empty lines from smem DT node (Stephen)
 
-Reviewed-by: Jeremy McNicoll <jeremymc@redhat.com>
+Changes since v1:
+- Move hwlock DT node under root (/) (Bjorn and Andy)
+- Rename smp2p-adsp to adsp-smp2p (Bjorn)
+- Remove interrupt-parent property from node (Bjorn)
 
+Bjorn Andersson (1):
+  arm64: dts: msm8996: Add SMEM DT nodes
 
--jeremy
+Sarangdhar Joshi (3):
+  arm64: dts: msm8996: Add SMEM reserve-memory node
+  arm64: dts: msm8996: Add reserve-memory nodes
+  arm64: dts: msm8996: Add SMP2P and APCS nodes
+
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 82 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
