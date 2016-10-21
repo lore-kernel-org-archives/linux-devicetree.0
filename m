@@ -1,50 +1,72 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2] sh-sci: document R8A7743/5 support
-Date: Fri, 21 Oct 2016 23:00:43 +0300
-Message-ID: <4258682.UW6HhKP1CC@wasted.cogentembedded.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [RFC V2 PATCH 10/12] arm64: dts: msm8994 issolate non standard
+ bootloader/LK entries
+Date: Fri, 21 Oct 2016 13:04:09 -0700
+Message-ID: <20161021200409.GN26139@codeaurora.org>
+References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
+ <2149904.D2eaQZN3bA@wuerfel>
+ <17447be1-4357-0eca-a242-69576d3e2799@redhat.com>
+ <4976066.k14mpQt0HJ@wuerfel>
+ <20161019214643.GC3145@hector.attlocal.net>
+ <CAL_Jsq+wjnEByg2vgx-P+bLJaQm+s=UX7nj=KwviagnQDG_3hQ@mail.gmail.com>
+ <20161020031712.GD3145@hector.attlocal.net>
+ <20161021194437.GA7509@tuxbot>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161021194437.GA7509@tuxbot>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Jeremy McNicoll <jmcnicol@redhat.com>, git@kchr.de, Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Renesas RZ/G SoC also have the SCIF, SCIFA, SCIFB, and HSCIF ports and
-they  seem compatible with the R-Car gen2 SoC  in this respect...
-Document RZ/G1[ME] (also known as R8A774[35]) SoC bindings.
+On 10/21, Bjorn Andersson wrote:
+> On Wed 19 Oct 20:17 PDT 2016, Andy Gross wrote:
+> 
+> > On Wed, Oct 19, 2016 at 08:07:25PM -0500, Rob Herring wrote:
+> [..]
+> > > Makes sense to me for things like Nexus phones here. What about DB410
+> > > for example? Is there hope for a fix there? My bootloader is only a
+> > > couple of months old and needs the properties still.
+> > 
+> > There won't be a fix for the 410c.  We barely got them to respin to use PSCI.
+> > Stephen can correct me if I am wrong on this.
+> > 
+> > If this is fixed, it would be 8996+.  If..........
+> > 
+> > So this means introducing the msm-id's for the boards that currently require it,
+> > and for the boards that will require it in the future.  And this would stay in
+> > effect until the bootloader is able to parse the compatible strings or figure
+> > this out without the msm-ids.
+> > 
+> 
+> But if the bootloader at any point in the future would support picking a
+> dtb by compatible strings instead of {msm,board,pmic}-id we wouldn't we
+> just be back to the ridiculous compatible strings that tipped over into
+> acceptance to these ids in the first place.
+> 
+> Or do we expect the boot loader to do a deep scan of the dtb to match on
+> multiple nodes from the tree?
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I'm pushing the bootloader team to do the deep scan of the dtb to
+match up board compatible and pmic compatible strings so that we
+don't have to keep these numbers around. Basically put what
+dtbtool is doing into the bootloader so we don't have to post
+process the dtb anymore. We're currently discussing how to
+implement it and how to move the internal codebase to the new
+scheme.
 
----
-This patch is against the 'tty-next' branch of GregKH's 'tty.git' repo.
+At least for 96boards I think we can update the lk bootloaders on
+there to adopt this code. For other platforms like nexus though I
+don't see a way we can update those bootloaders, and those
+bootloaders require these properties exist in the dtbs, so we
+should just throw the numbers into the dts files there and be
+done with post processing. For bootloaders that require the QCDT
+header, we'll have to keep running dtbtool there to generate the
+header. Having the ids in the dts file or not doesn't really
+matter there.
 
-Changes in version 2:
-- removed the RZ/G  family specific bindings, renamed the patch;
-- added Simon's and Geert's ACKs.
-
- Documentation/devicetree/bindings/serial/renesas,sci-serial.txt |    8 ++++++++
- 1 file changed, 8 insertions(+)
-
-Index: tty/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-===================================================================
---- tty.orig/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-+++ tty/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-@@ -9,6 +9,14 @@ Required properties:
-     - "renesas,scifb-r8a73a4" for R8A73A4 (R-Mobile APE6) SCIFB compatible UART.
-     - "renesas,scifa-r8a7740" for R8A7740 (R-Mobile A1) SCIFA compatible UART.
-     - "renesas,scifb-r8a7740" for R8A7740 (R-Mobile A1) SCIFB compatible UART.
-+    - "renesas,scif-r8a7743" for R8A7743 (RZ/G1M) SCIF compatible UART.
-+    - "renesas,scifa-r8a7743" for R8A7743 (RZ/G1M) SCIFA compatible UART.
-+    - "renesas,scifb-r8a7743" for R8A7743 (RZ/G1M) SCIFB compatible UART.
-+    - "renesas,hscif-r8a7743" for R8A7743 (RZ/G1M) HSCIF compatible UART.
-+    - "renesas,scif-r8a7745" for R8A7745 (RZ/G1E) SCIF compatible UART.
-+    - "renesas,scifa-r8a7745" for R8A7745 (RZ/G1E) SCIFA compatible UART.
-+    - "renesas,scifb-r8a7745" for R8A7745 (RZ/G1E) SCIFB compatible UART.
-+    - "renesas,hscif-r8a7745" for R8A7745 (RZ/G1E) HSCIF compatible UART.
-     - "renesas,scif-r8a7778" for R8A7778 (R-Car M1) SCIF compatible UART.
-     - "renesas,scif-r8a7779" for R8A7779 (R-Car H1) SCIF compatible UART.
-     - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
