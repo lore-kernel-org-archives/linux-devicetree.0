@@ -1,53 +1,36 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [v7, 1/3] nand: pl353: Add basic driver for arm pl353 smc nand
- interface
-Date: Fri, 21 Oct 2016 14:33:22 -0600
-Message-ID: <20161021203322.GA28655@obsidianresearch.com>
-References: <1433786918-21500-2-git-send-email-punnaia@xilinx.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 0/7] Add R8A7743/SK-RZG1M board support
+Date: Fri, 21 Oct 2016 23:39:14 +0300
+Message-ID: <2719479.geOc9vqcRS@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1433786918-21500-2-git-send-email-punnaia@xilinx.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, computersforpeace@gmail.com, artem.bityutskiy@linux.intel.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, punnaia@xilinx.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 08, 2015 at 11:38:36PM +0530, Punnaiah Choudary Kalluri wrote:
-> Add driver for arm pl353 static memory controller nand interface with
-> HW ECC support. This controller is used in xilinx zynq soc for interfacing
-> the nand flash memory.
-> 
-> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-> Changes in v7:
->  - Currently not implemented the memclk rate adjustments. I will
->    look into this later and once the basic driver is accepted.
->  - Fixed GPL licence ident
-> Changes in v6:
->  - Fixed the checkpatch.pl reported warnings
->  - Using the address cycles information from the onfi param page
->    earlier it is hardcoded to 5 in driver
-> Changes in v5:
->  - Configure the nand timing parameters as per the onfi spec
-> Changes in v4:
->  - Updated the driver to sync with pl353_smc driver APIs
-> Changes in v3:
->  - implemented the proper error codes
->  - further breakdown this patch to multiple sets
->  - added the controller and driver details to Documentation section
->  - updated the licenece to GPLv2
->  - reorganized the pl353_nand_ecc_init function
-> Changes in v2:
->  - use "depends on" rather than "select" option in kconfig
->  - remove unused variable parts
->  - remove dummy helper and use writel_relaxed directly
+Hello.
 
-What is the status of getting this driver merged? I am interested in
-this driver and can provide some help if there are still TODO items.
+   Here's the set of 8 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20161021-v4.9-rc1' tag. I'm adding the device tree support for
+the R8A7743-based SK-RZG1M board. The SoC is close to R8A7791 and the board
+seems identical to the R8A7791/Porter board. The device tree patches depend on
+the R8A7743 CPG/MSSR driver series just posted in order to compile and work.
+Already merged patches from this series won't be re-posted.
 
-At the very least I will test it, is there something newer than v7 out
-there?
+[1/7] ARM: dts: r8a7743: initial SoC device tree
+[2/7] ARM: dts: r8a7743: add SYS-DMAC support
+[3/7] ARM: dts: r8a7743: add [H]SCIF{A|B} support
+[4/7] ARM: dts: r8a7743: add Ether support
+[5/7] ARM: dts: r8a7743: add IRQC support
+[6/7] ARM: dts: sk-rzg1m: initial device tree
+[7/7] ARM: dts: sk-rzg1m: add Ether support
 
-Regards,
-Jason
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
