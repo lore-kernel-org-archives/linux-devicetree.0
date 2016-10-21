@@ -1,76 +1,40 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/3] ARM: dts: OX810: Update with dt-bindings includes
-Date: Fri, 21 Oct 2016 17:10:36 +0200
-Message-ID: <20161021151037.20112-3-narmstrong@baylibre.com>
-References: <20161021151037.20112-1-narmstrong@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161021151037.20112-1-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 0/3] ARM: dts: oxnas: Update support for OX820 and use dt-bindings
+Date: Fri, 21 Oct 2016 17:10:34 +0200
+Message-ID: <20161021151037.20112-1-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-oxnas@lists.tuxfamily.org, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add OX810SE dt-bindings includes files for clocks and resets, replace
-resets numbers by human readable defines.
+This patchset updates the ARM DTS for the Oxnas platform by :
+- Add support for the Oxford Semicondutor OX820 and the PogoPlug V3
+- Update the OX810SE to use the dt-bindings includes files introduced in [1] and [2]
+- Fix the MAINTAINERS entry and add the PogoPlug V3 file maintainance
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/ox810se.dtsi | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+This patchset depends on dt-bindings include headers posted at [1] and [2],
+that were accepted/merged in the subsystem trees.
 
-diff --git a/arch/arm/boot/dts/ox810se.dtsi b/arch/arm/boot/dts/ox810se.dtsi
-index ce13705..46aa6db 100644
---- a/arch/arm/boot/dts/ox810se.dtsi
-+++ b/arch/arm/boot/dts/ox810se.dtsi
-@@ -7,6 +7,8 @@
-  */
- 
- /include/ "skeleton.dtsi"
-+#include <dt-bindings/clock/oxsemi,ox810se.h>
-+#include <dt-bindings/reset/oxsemi,ox810se.h>
- 
- / {
- 	compatible = "oxsemi,ox810se";
-@@ -242,7 +244,7 @@
- 			       current-speed = <115200>;
- 			       no-loopback-test;
- 			       status = "disabled";
--			       resets = <&reset 17>;
-+			       resets = <&reset RESET_UART1>;
- 			};
- 
- 			uart1: serial@300000 {
-@@ -256,7 +258,7 @@
- 			       current-speed = <115200>;
- 			       no-loopback-test;
- 			       status = "disabled";
--			       resets = <&reset 18>;
-+			       resets = <&reset RESET_UART2>;
- 			};
- 
- 			uart2: serial@900000 {
-@@ -270,7 +272,7 @@
- 			       current-speed = <115200>;
- 			       no-loopback-test;
- 			       status = "disabled";
--			       resets = <&reset 22>;
-+			       resets = <&reset RESET_UART3>;
- 			};
- 
- 			uart3: serial@a00000 {
-@@ -284,7 +286,7 @@
- 			       current-speed = <115200>;
- 			       no-loopback-test;
- 			       status = "disabled";
--			       resets = <&reset 23>;
-+			       resets = <&reset RESET_UART4>;
- 			};
- 		};
- 
+How could I manage this dependency for 4.10 ?
+
+[1] https://listengine.tuxfamily.org/lists.tuxfamily.org/linux-oxnas/2016/10/msg00008.html
+[2] https://listengine.tuxfamily.org/lists.tuxfamily.org/linux-oxnas/2016/10/msg00007.html
+
+Neil Armstrong (3):
+  ARM: dts: Add support for OX820 and Pogoplug V3
+  ARM: dts: OX810: Update with dt-bindings includes
+  MAINTAINERS: oxnas: Add new files definitions
+
+ Documentation/devicetree/bindings/arm/oxnas.txt    |   5 +
+ MAINTAINERS                                        |   3 +-
+ arch/arm/boot/dts/Makefile                         |   3 +-
+ .../boot/dts/cloudengines-pogoplug-series-3.dts    |  94 +++++++
+ arch/arm/boot/dts/ox810se.dtsi                     |  10 +-
+ arch/arm/boot/dts/ox820.dtsi                       | 298 +++++++++++++++++++++
+ 6 files changed, 407 insertions(+), 6 deletions(-)
+ create mode 100644 arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts
+ create mode 100644 arch/arm/boot/dts/ox820.dtsi
+
 -- 
 2.7.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
