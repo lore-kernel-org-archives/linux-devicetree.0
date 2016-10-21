@@ -1,93 +1,98 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: add i2c-bus subnode to edp
-Date: Fri, 21 Oct 2016 10:25:29 +0200
-Message-ID: <1681294.eoXpQL8f8l@phil>
-References: <1476950845-28242-1-git-send-email-tomeu.vizoso@collabora.com> <7604646.6yosK0XMNL@diego> <6083453f-08e1-643a-9638-1db38c704aa5@collabora.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC PATCH] net: stmmac: Add OXNAS Glue Driver
+Date: Fri, 21 Oct 2016 10:28:23 +0200
+Message-ID: <872a84c9-6ec3-695b-0c37-c58719e0a034@baylibre.com>
+References: <20161020155406.27172-1-narmstrong@baylibre.com>
+ <CAGhQ9VxJ-gQTX1xjMOJ4spiL_RnhryyQ0=gUEQCHm3sHecTVuA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6083453f-08e1-643a-9638-1db38c704aa5-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+In-Reply-To: <CAGhQ9VxJ-gQTX1xjMOJ4spiL_RnhryyQ0=gUEQCHm3sHecTVuA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Li <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "peppe.cavallaro" <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 20. Oktober 2016, 15:47:56 CEST schrieb Tomeu Vizoso:
-> On 10/20/2016 03:45 PM, Heiko Stübner wrote:
-> > Am Donnerstag, 20. Oktober 2016, 10:07:25 schrieb Tomeu Vizoso:
-> >> Add an empty 'i2c-bus' subnode to the edp node just so that the I2C core
-> >> doesn't attemp to parse the 'ports' subnode as containing i2c devices.
-> >> 
-> >> This is to avoid spurious failure messages such as:
-> >> 
-> >> i2c i2c-6: of_i2c: modalias failure on /dp@ff970000/ports
-> > 
-> > On the one hand, the edp really has an i2c bus - with its only client the
-> > EDID listening at 0x50 (and maybe 0x30).
-> > 
-> > On the other hand, adding an empty bus to the (implementation independent)
-> > devicetree just to make the Linux i2c subsystem happy sounds heavily like
-> > a
-> > implementation-specific hack, as the edp i2c bus doesn't leak into the
-> > outside world otherwise.
-> > 
-> > I guess this empty i2c bus not being part of the binding document points
-> > heavily into the implementation-specific corner :-) .
-> > 
-> > My short search on other patches touching this didn't reveal anything but
-> > maybe this was already discussed somewhere and found to be ok?
+On 10/20/2016 06:26 PM, Joachim Eastwood wrote:
+> Hi Neil,
 > 
-> Here it is:
+> On 20 October 2016 at 17:54, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+>> Add Synopsys Designware MAC Glue layer for the Oxford Semiconductor OX820.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/net/oxnas-dwmac.txt        |  44 ++++++
+>>  drivers/net/ethernet/stmicro/stmmac/Kconfig        |  11 ++
+>>  drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
+>>  drivers/net/ethernet/stmicro/stmmac/dwmac-oxnas.c  | 173 +++++++++++++++++++++
+>>  4 files changed, 229 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/oxnas-dwmac.txt
+>>  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-oxnas.c
+> <snip>
+>> +
+>> +static int oxnas_dwmac_probe(struct platform_device *pdev)
+>> +{
+>> +       struct plat_stmmacenet_data *plat_dat;
+>> +       struct stmmac_resources stmmac_res;
+>> +       struct device_node *sysctrl;
+>> +       struct oxnas_dwmac *dwmac;
+>> +       int ret;
+>> +
+>> +       sysctrl = of_parse_phandle(pdev->dev.of_node, "oxsemi,sys-ctrl", 0);
+>> +       if (!sysctrl) {
+>> +               dev_err(&pdev->dev, "failed to get sys-ctrl node\n");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       ret = stmmac_get_platform_resources(pdev, &stmmac_res);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       plat_dat = stmmac_probe_config_dt(pdev, &stmmac_res.mac);
+>> +       if (IS_ERR(plat_dat))
+>> +               return PTR_ERR(plat_dat);
+>> +
+>> +       dwmac = devm_kzalloc(&pdev->dev, sizeof(*dwmac), GFP_KERNEL);
+>> +       if (!dwmac)
+>> +               return -ENOMEM;
+>> +
+>> +       dwmac->regmap = syscon_node_to_regmap(sysctrl);
+>> +       if (IS_ERR(dwmac->regmap)) {
+>> +               dev_err(&pdev->dev, "failed to have sysctrl regmap\n");
+>> +               return PTR_ERR(dwmac->regmap);
+>> +       }
+>> +
+>> +       dwmac->clk = devm_clk_get(&pdev->dev, "gmac");
+>> +       if (IS_ERR(dwmac->clk))
+>> +               return PTR_ERR(dwmac->clk);
+>> +
+>> +       plat_dat->bsp_priv = dwmac;
+>> +       plat_dat->init = oxnas_dwmac_init;
+>> +       plat_dat->exit = oxnas_dwmac_exit;
 > 
-> http://www.spinics.net/lists/linux-tegra/msg27862.html
+> Please do not use the init/exit callbacks. Implement proper driver
+> callbacks instead. I.e: PM resume/suspend and driver remove.
+> 
+> Shouldn't you call oxnas_dwmac_init() from probe as well?
+> As it is now it will only be called during PM resume and that can't be right.
+> 
+> 
+>> +
+>> +       return stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
+> 
+> If stmmac_dvr_probe() fails you should disable your clocks.
+> 
+> 
+> regards,
+> Joachim Eastwood
+> 
 
-thanks ... I'm still not sure about the placeholder though, aka needing an 
-undocumented subnode to make a Linux error message silent.
+Hi Joachim,
 
-In the thread you pointed to I also did not see any dt-maintainer involvement 
-pointing one way or another, but spinics is often not easy to navigate 
-threads, so I may have missed that.
+Thanks for the hints, stm32 glue does that and I will sync on it.
 
-
-> > Another option could be to just make of_i2c_register_device silent if
-> > of_modalias_node returns -ENODEV?
-
-
-Heiko
-
-> >> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> >> Cc: Randy Li <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> >> Cc: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >> 
-> >>  arch/arm/boot/dts/rk3288.dtsi | 5 +++++
-> >>  1 file changed, 5 insertions(+)
-> >> 
-> >> diff --git a/arch/arm/boot/dts/rk3288.dtsi
-> >> b/arch/arm/boot/dts/rk3288.dtsi
-> >> index 2f814ffeb605..94f4b7eecca2 100644
-> >> --- a/arch/arm/boot/dts/rk3288.dtsi
-> >> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> >> @@ -1075,6 +1075,11 @@
-> >> 
-> >>  				};
-> >>  			
-> >>  			};
-> >>  		
-> >>  		};
-> >> 
-> >> +
-> >> +		i2c-bus {
-> >> +			#address-cells = <1>;
-> >> +			#size-cells = <0>;
-> >> +		};
-> >> 
-> >>  	};
-> >>  	
-> >>  	hdmi: hdmi@ff980000 {
-
-
+Neil
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
