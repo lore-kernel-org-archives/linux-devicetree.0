@@ -1,173 +1,56 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 02/23] soc: renesas: Add R-Car RST driver
-Date: Fri, 21 Oct 2016 15:17:16 +0200
-Message-ID: <1477055857-17936-3-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v4 05/23] ARM: dts: r8a7790: Add device node for RST module
+Date: Fri, 21 Oct 2016 15:17:19 +0200
+Message-ID: <1477055857-17936-6-git-send-email-geert+renesas@glider.be>
 References: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477055857-17936-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for the Renesas R-Car Gen1 RESET/WDT and R-Car Gen2/Gen3
-and RZ/G RST module.
+Add a device node for the RST module, which provides a.o. reset control
+and mode pin monitoring.
 
-For now this driver just provides an API to obtain the state of the mode
-pins, as latched at reset time.  As this is typically called from the
-probe function of a clock driver, which can run much earlier than any
-initcall, calling rcar_rst_read_mode_pins() just forces an early
-initialization of the driver.
-
-Despite the current simple and almost identical handling for all
-supported SoCs, the driver matches against SoC-specific compatible
-values, as the features provided by the hardware module differ a lot
-across the various SoC families and members.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Dirk Behme <dirk.behme@de.bosch.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Acked-by: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 ---
 v4:
   - Add Acked-by,
-  - Remove the initcall and the rcar_rst_base check in rcar_rst_init(),
-    as rcar_rst_init() is only used as a support function for
-    rcar_rst_read_mode_pins(),
-  - Refer to rcar_rst_gen2 for R-Car Gen3 instead of providing an
-    identical copy,
-  - Add RZ/G1M and RZ/G1E,
 
 v3:
-  - New.
----
- drivers/soc/renesas/Makefile         |  5 ++
- drivers/soc/renesas/rcar-rst.c       | 92 ++++++++++++++++++++++++++++++++++++
- include/linux/soc/renesas/rcar-rst.h |  6 +++
- 3 files changed, 103 insertions(+)
- create mode 100644 drivers/soc/renesas/rcar-rst.c
- create mode 100644 include/linux/soc/renesas/rcar-rst.h
+  - Use "renesas,<soctype>-rst" instead of "renesas,rst-<soctype>",
+  - Drop "syscon" compatible value,
 
-diff --git a/drivers/soc/renesas/Makefile b/drivers/soc/renesas/Makefile
-index 623039c3514cdc34..86cc78cd1962701a 100644
---- a/drivers/soc/renesas/Makefile
-+++ b/drivers/soc/renesas/Makefile
-@@ -1,3 +1,8 @@
-+obj-$(CONFIG_ARCH_RCAR_GEN1)	+= rcar-rst.o
-+obj-$(CONFIG_ARCH_RCAR_GEN2)	+= rcar-rst.o
-+obj-$(CONFIG_ARCH_R8A7795)	+= rcar-rst.o
-+obj-$(CONFIG_ARCH_R8A7796)	+= rcar-rst.o
+v2:
+  - Correct unit address,
+  - Drop RFC status and TODO,
+  - Change one-line summary prefix to match current arm-soc practices.
+---
+ arch/arm/boot/dts/r8a7790.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 351fcc2f87df6b28..3f10b0bf1b08fa89 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -1471,6 +1471,11 @@
+ 		};
+ 	};
+ 
++	rst: reset-controller@e6160000 {
++		compatible = "renesas,r8a7790-rst";
++		reg = <0 0xe6160000 0 0x0100>;
++	};
 +
- obj-$(CONFIG_ARCH_R8A7779)	+= rcar-sysc.o r8a7779-sysc.o
- obj-$(CONFIG_ARCH_R8A7790)	+= rcar-sysc.o r8a7790-sysc.o
- obj-$(CONFIG_ARCH_R8A7791)	+= rcar-sysc.o r8a7791-sysc.o
-diff --git a/drivers/soc/renesas/rcar-rst.c b/drivers/soc/renesas/rcar-rst.c
-new file mode 100644
-index 0000000000000000..a6d1c26d31675cf3
---- /dev/null
-+++ b/drivers/soc/renesas/rcar-rst.c
-@@ -0,0 +1,92 @@
-+/*
-+ * R-Car Gen1 RESET/WDT, R-Car Gen2, Gen3, and RZ/G RST Driver
-+ *
-+ * Copyright (C) 2016 Glider bvba
-+ *
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/of_address.h>
-+#include <linux/soc/renesas/rcar-rst.h>
-+
-+struct rst_config {
-+	unsigned int modemr;	/* Mode Monitoring Register Offset */
-+};
-+
-+static const struct rst_config rcar_rst_gen1 __initconst = {
-+	.modemr = 0x20,
-+};
-+
-+static const struct rst_config rcar_rst_gen2 __initconst = {
-+	.modemr = 0x60,
-+};
-+
-+static const struct of_device_id rcar_rst_matches[] __initconst = {
-+	/* RZ/G is handled like R-Car Gen2 */
-+	{ .compatible = "renesas,r8a7743-rst", .data = &rcar_rst_gen2 },
-+	{ .compatible = "renesas,r8a7745-rst", .data = &rcar_rst_gen2 },
-+	/* R-Car Gen1 */
-+	{ .compatible = "renesas,r8a7778-reset-wdt", .data = &rcar_rst_gen1 },
-+	{ .compatible = "renesas,r8a7779-reset-wdt", .data = &rcar_rst_gen1 },
-+	/* R-Car Gen2 */
-+	{ .compatible = "renesas,r8a7790-rst", .data = &rcar_rst_gen2 },
-+	{ .compatible = "renesas,r8a7791-rst", .data = &rcar_rst_gen2 },
-+	{ .compatible = "renesas,r8a7792-rst", .data = &rcar_rst_gen2 },
-+	{ .compatible = "renesas,r8a7793-rst", .data = &rcar_rst_gen2 },
-+	{ .compatible = "renesas,r8a7794-rst", .data = &rcar_rst_gen2 },
-+	/* R-Car Gen3 is handled like R-Car Gen2 */
-+	{ .compatible = "renesas,r8a7795-rst", .data = &rcar_rst_gen2 },
-+	{ .compatible = "renesas,r8a7796-rst", .data = &rcar_rst_gen2 },
-+	{ /* sentinel */ }
-+};
-+
-+static void __iomem *rcar_rst_base __initdata;
-+static u32 saved_mode __initdata;
-+
-+static int __init rcar_rst_init(void)
-+{
-+	const struct of_device_id *match;
-+	const struct rst_config *cfg;
-+	struct device_node *np;
-+	void __iomem *base;
-+	int error = 0;
-+
-+	np = of_find_matching_node_and_match(NULL, rcar_rst_matches, &match);
-+	if (!np)
-+		return -ENODEV;
-+
-+	base = of_iomap(np, 0);
-+	if (!base) {
-+		pr_warn("%s: Cannot map regs\n", np->full_name);
-+		error = -ENOMEM;
-+		goto out_put;
-+	}
-+
-+	rcar_rst_base = base;
-+	cfg = match->data;
-+	saved_mode = ioread32(base + cfg->modemr);
-+
-+	pr_debug("%s: MODE = 0x%08x\n", np->full_name, saved_mode);
-+
-+out_put:
-+	of_node_put(np);
-+	return error;
-+}
-+
-+int __init rcar_rst_read_mode_pins(u32 *mode)
-+{
-+	int error;
-+
-+	if (!rcar_rst_base) {
-+		error = rcar_rst_init();
-+		if (error)
-+			return error;
-+	}
-+
-+	*mode = saved_mode;
-+	return 0;
-+}
-diff --git a/include/linux/soc/renesas/rcar-rst.h b/include/linux/soc/renesas/rcar-rst.h
-new file mode 100644
-index 0000000000000000..a18e0783946b66ec
---- /dev/null
-+++ b/include/linux/soc/renesas/rcar-rst.h
-@@ -0,0 +1,6 @@
-+#ifndef __LINUX_SOC_RENESAS_RCAR_RST_H__
-+#define __LINUX_SOC_RENESAS_RCAR_RST_H__
-+
-+int rcar_rst_read_mode_pins(u32 *mode);
-+
-+#endif /* __LINUX_SOC_RENESAS_RCAR_RST_H__ */
+ 	sysc: system-controller@e6180000 {
+ 		compatible = "renesas,r8a7790-sysc";
+ 		reg = <0 0xe6180000 0 0x0200>;
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
