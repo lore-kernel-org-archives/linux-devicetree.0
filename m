@@ -1,588 +1,172 @@
-From: Ruqiang Ju <juruqiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/2] PCI: hisi: add PCIe driver support for HiSilicon STB SoCs
-Date: Fri, 21 Oct 2016 09:45:36 +0800
-Message-ID: <1477014336-12385-1-git-send-email-juruqiang@huawei.com>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4] mwifiex: parse device tree node for PCIe
+Date: Thu, 20 Oct 2016 19:06:10 -0700
+Message-ID: <20161021020609.GA18359@localhost>
+References: <20161005194827.GA14626@localhost>
+ <1477009812-95032-1-git-send-email-rajatja@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1477009812-95032-1-git-send-email-rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bin.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hermit.wangheming-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Ruqiang Ju <juruqiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rajatxjain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add PCIe controller drvier for HiSilicon STB SoCs,
-the controller is based on the DesignWare's PCIe core.
+On Thu, Oct 20, 2016 at 05:30:12PM -0700, Rajat Jain wrote:
+> From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> 
+> This patch derives device tree node from pcie bus layer framework.
+> Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
+> marvell-8xxx.txt) to accomodate PCIe changes.
+> 
+> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> ---
+> Since I need this patch and haven't seen updates, I thought I'll take a stab.
+> 
+> v2: Included vendor and product IDs in compatible strings for PCIe
+> chipsets(Rob Herring)
+> v3: Patch is created using -M option so that it will only include diff of
+> original and renamed files(Rob Herring)
+> Resend v3: Resending the patch because I missed to include device tree mailing
+> while sending v3.
+> v4: Fix error handling, also move-on even if no device tree node is present.
+> 
+>  .../{marvell-sd8xxx.txt => marvell-8xxx.txt}       |  8 +++--
+>  drivers/net/wireless/marvell/mwifiex/pcie.c        | 39 +++++++++++++++++++---
+>  drivers/net/wireless/marvell/mwifiex/sta_cmd.c     |  3 +-
+>  3 files changed, 42 insertions(+), 8 deletions(-)
+>  rename Documentation/devicetree/bindings/net/wireless/{marvell-sd8xxx.txt => marvell-8xxx.txt} (91%)
 
-Signed-off-by: Ruqiang Ju <juruqiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
----
- .../bindings/pci/hisilicon-histb-pcie.txt          |  66 +++
- drivers/pci/host/Kconfig                           |   8 +
- drivers/pci/host/Makefile                          |   1 +
- drivers/pci/host/pcie-histb.c                      | 448 +++++++++++++++++++++
- 4 files changed, 523 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
- create mode 100644 drivers/pci/host/pcie-histb.c
+Patch looks better to me (esp. the error handling):
 
-diff --git a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
-new file mode 100644
-index 0000000..952f1db
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
-@@ -0,0 +1,66 @@
-+HiSilicon STB PCIe host bridge DT description
-+
-+HiSilicon PCIe host controller is based on Designware PCI core.
-+It shares common functions with PCIe Designware core driver and inherits
-+common properties defined in
-+Documentation/devicetree/bindings/pci/designware-pci.txt.
-+
-+Additional properties are described here:
-+
-+Required properties
-+- compatible: Should be one of the following strings
-+		 "hisilicon,histb-pcie",
-+		 "hisilicon,hi3798cv200-pcie"
-+- reg: Should contain sysctl, rc_dbi, config registers location and length.
-+- reg-names: Must include the following entries:
-+  "sysctrl": system control registers of PCIe controller;
-+  "rc_dbi": configuration space of PCIe controller;
-+  "config": configuration transaction space of PCIe controller.
-+- interrupts: MSI interrupt.
-+- interrupt-names: Must include "msi" entries.
-+- clocks: List of phandle and clock specifier pairs as listed
-+		in clock-names property.
-+- clock-name: Must include the following entries:
-+  "aux_clk": auxiliary gate clock;
-+  "pipe_clk": pipe gate clock;
-+  "sys_clk": sys gate clock;
-+  "bus_clk": bus gate clock.
-+- resets: List of phandle and reset specifier pairs as listed
-+			in reset-names property
-+- reset-names: Must include the following entries:
-+  "soft_reset": soft reset;
-+  "sys_reset": sys reset;
-+  "bus_rest": bus reset.
-+
-+Optional properties:
-+- power-gpios: pcie device power control gpio if needed;
-+- power-gpios-active-high: must include this propty
-+		if active level is high.
-+- status: Either "ok" or "disabled".
-+
-+Example:
-+	pcie@f9860000 {
-+		compatible = "hisilicon,histb-pcie", "snps,dw-pcie";
-+		reg = <0xf9860000 0x1000>,
-+			<0xf0000000 0x2000>,
-+			<0xf2000000 0x01000000>;
-+		reg-names = "sysctrl", "rc_dbi", "config";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		device_type = "pci";
-+		num-lanes = <1>;
-+		ranges=<0x81000000 0 0 0xf4000000 0 0x00010000
-+			0x82000000 0 0xf3000000 0xf3000000 0 0x01000000>;
-+		interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "msi";
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0x0 0 0 1 &gic 0 131 4>;
-+		clocks = <&crg PCIE_AUX_CLK>,
-+			 <&crg PCIE_PIPE_CLK>,
-+			 <&crg PCIE_SYS_CLK>,
-+			 <&crg PCIE_BUS_CLK>;
-+		clock-names = "aux_clk", "pipe_clk", "sys_clk", "bus_clk";
-+		resets = <&crg 0x18c 6>, <&crg 0x18c 5>, <&crg 0x18c 4>;
-+		reset-names = "soft_reset", "sys_reset", "bus_reset";
-+	};
-diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-index d7e7c0a..57ce4df 100644
---- a/drivers/pci/host/Kconfig
-+++ b/drivers/pci/host/Kconfig
-@@ -227,6 +227,14 @@ config PCI_HISI
- 	  Say Y here if you want PCIe controller support on HiSilicon
- 	  Hip05 and Hip06 SoCs
- 
-+config PCIE_HISI_STB
-+	depends on OF
-+	bool "HiSilicon STB SoCs PCIe controllers"
-+	select PCIEPORTBUS
-+	select PCIE_DW
-+	help
-+	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
-+
- config PCIE_QCOM
- 	bool "Qualcomm PCIe controller"
- 	depends on ARCH_QCOM && OF
-diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
-index 084cb49..55f4fe7 100644
---- a/drivers/pci/host/Makefile
-+++ b/drivers/pci/host/Makefile
-@@ -26,6 +26,7 @@ obj-$(CONFIG_PCIE_IPROC_BCMA) += pcie-iproc-bcma.o
- obj-$(CONFIG_PCIE_ALTERA) += pcie-altera.o
- obj-$(CONFIG_PCIE_ALTERA_MSI) += pcie-altera-msi.o
- obj-$(CONFIG_PCI_HISI) += pcie-hisi.o
-+obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
- obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCI_HOST_THUNDER_ECAM) += pci-thunder-ecam.o
- obj-$(CONFIG_PCI_HOST_THUNDER_PEM) += pci-thunder-pem.o
-diff --git a/drivers/pci/host/pcie-histb.c b/drivers/pci/host/pcie-histb.c
-new file mode 100644
-index 0000000..71e344f
---- /dev/null
-+++ b/drivers/pci/host/pcie-histb.c
-@@ -0,0 +1,448 @@
-+/*
-+ * PCIe host controller driver for HiSilicon STB SoCs
-+ *
-+ * Copyright (C) 2016 HiSilicon Co., Ltd. http://www.hisilicon.com
-+ *
-+ * Authors: RuQiang Ju <juruqiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/resource.h>
-+#include <linux/reset.h>
-+
-+#include "pcie-designware.h"
-+
-+#define PCIE_SYS_CTRL0			0x0000
-+#define PCIE_SYS_CTRL1			0x0004
-+#define PCIE_SYS_CTRL7			0x001C
-+#define PCIE_SYS_CTRL13			0x0034
-+#define PCIE_SYS_CTRL15			0x003c
-+#define PCIE_SYS_CTRL16			0x0040
-+#define PCIE_SYS_CTRL17			0x0044
-+
-+#define PCIE_SYS_STAT0			0x0100
-+#define PCIE_SYS_STAT4			0x0110
-+
-+#define PCIE_RDLH_LINK_UP		BIT(5)
-+#define PCIE_XMLH_LINK_UP		BIT(15)
-+#define PCIE_ELBI_SLV_DBI_ENABLE	BIT(21)
-+#define PCIE_APP_LTSSM_ENABLE		BIT(11)
-+
-+#define PCIE_DEVICE_TYPE_MASK		GENMASK(31, 28)
-+#define PCIE_WM_EP			0
-+#define PCIE_WM_LEGACY			BIT(1)
-+#define PCIE_WM_RC			BIT(30)
-+
-+#define PCIE_LTSSM_STATE_MASK		GENMASK(5, 0)
-+#define PCIE_LTSSM_STATE_ACTIVE		0x11
-+
-+struct histb_pcie_host {
-+	void __iomem *sysctrl;
-+	int power_gpio;
-+	bool gpio_active_high;
-+	struct clk *aux_clk;
-+	struct clk *pipe_clk;
-+	struct clk *sys_clk;
-+	struct clk *bus_clk;
-+	struct reset_control *soft_reset;
-+	struct reset_control *sys_reset;
-+	struct reset_control *bus_reset;
-+	struct pcie_port pp;
-+};
-+
-+#define to_histb_pcie(x) container_of(x, struct histb_pcie_host, pp)
-+
-+static void histb_pcie_dbi_w_mode(struct pcie_port *pp, bool enable)
-+{
-+	struct histb_pcie_host *hipcie = to_histb_pcie(pp);
-+	u32 val;
-+
-+	if (enable) {
-+		val = readl(hipcie->sysctrl + PCIE_SYS_CTRL0);
-+		val |= PCIE_ELBI_SLV_DBI_ENABLE;
-+		writel(val, hipcie->sysctrl + PCIE_SYS_CTRL0);
-+	} else {
-+		val = readl(hipcie->sysctrl + PCIE_SYS_CTRL0);
-+		val &= ~PCIE_ELBI_SLV_DBI_ENABLE;
-+		writel(val, hipcie->sysctrl + PCIE_SYS_CTRL0);
-+	}
-+}
-+
-+static void histb_pcie_dbi_r_mode(struct pcie_port *pp, bool enable)
-+{
-+	struct histb_pcie_host *hipcie = to_histb_pcie(pp);
-+	u32 val;
-+
-+	if (enable) {
-+		val = readl(hipcie->sysctrl + PCIE_SYS_CTRL1);
-+		val |= PCIE_ELBI_SLV_DBI_ENABLE;
-+		writel(val, hipcie->sysctrl + PCIE_SYS_CTRL1);
-+	} else {
-+		val = readl(hipcie->sysctrl + PCIE_SYS_CTRL1);
-+		val &= ~PCIE_ELBI_SLV_DBI_ENABLE;
-+		writel(val, hipcie->sysctrl + PCIE_SYS_CTRL1);
-+	}
-+}
-+
-+static inline u32 histb_pcie_readl_rc(struct pcie_port *pp, u32 reg)
-+{
-+	u32 val;
-+
-+	histb_pcie_dbi_r_mode(pp, true);
-+	val = readl(pp->dbi_base + reg);
-+	histb_pcie_dbi_r_mode(pp, false);
-+
-+	return val;
-+}
-+
-+static inline void histb_pcie_writel_rc(struct pcie_port *pp,
-+					u32 reg, u32 val)
-+{
-+	histb_pcie_dbi_w_mode(pp, true);
-+	writel(val, pp->dbi_base + reg);
-+	histb_pcie_dbi_w_mode(pp, false);
-+}
-+
-+static int histb_pcie_rd_own_conf(struct pcie_port *pp,
-+	int where, int size, u32 *val)
-+{
-+	int ret;
-+
-+	histb_pcie_dbi_r_mode(pp, true);
-+	ret = dw_pcie_cfg_read(pp->dbi_base + where, size, val);
-+	histb_pcie_dbi_r_mode(pp, false);
-+
-+	return ret;
-+}
-+
-+static int histb_pcie_wr_own_conf(struct pcie_port *pp,
-+	int where, int size, u32 val)
-+{
-+	int ret;
-+
-+	histb_pcie_dbi_w_mode(pp, true);
-+	ret = dw_pcie_cfg_write(pp->dbi_base + where, size, val);
-+	histb_pcie_dbi_w_mode(pp, false);
-+
-+	return ret;
-+}
-+
-+static int histb_pcie_link_up(struct pcie_port *pp)
-+{
-+	struct histb_pcie_host *hipcie = to_histb_pcie(pp);
-+	u32 regval;
-+	u32 status;
-+
-+	regval = readl(hipcie->sysctrl + PCIE_SYS_STAT0);
-+	status = readl(hipcie->sysctrl + PCIE_SYS_STAT4);
-+	status &= PCIE_LTSSM_STATE_MASK;
-+	if ((regval & PCIE_XMLH_LINK_UP) &&
-+		(regval & PCIE_RDLH_LINK_UP) &&
-+		(status == PCIE_LTSSM_STATE_ACTIVE))
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static int histb_pcie_establish_link(struct pcie_port *pp)
-+{
-+	struct histb_pcie_host *hipcie = to_histb_pcie(pp);
-+	u32 regval;
-+	int count = 0;
-+
-+	if (dw_pcie_link_up(pp)) {
-+		dev_err(pp->dev, "Link already up\n");
-+		return 0;
-+	}
-+
-+	/* PCIe RC work mode */
-+	regval = readl(hipcie->sysctrl + PCIE_SYS_CTRL0);
-+	regval &= ~PCIE_DEVICE_TYPE_MASK;
-+	regval |= PCIE_WM_RC;
-+	writel(regval, hipcie->sysctrl + PCIE_SYS_CTRL0);
-+
-+	/* setup root complex */
-+	dw_pcie_setup_rc(pp);
-+
-+	/* assert LTSSM enable */
-+	regval = readl(hipcie->sysctrl + PCIE_SYS_CTRL7);
-+	regval |= PCIE_APP_LTSSM_ENABLE;
-+	writel(regval,  hipcie->sysctrl + PCIE_SYS_CTRL7);
-+
-+	/* check if the link is up or not */
-+	while (!dw_pcie_link_up(pp)) {
-+		mdelay(10);
-+		count++;
-+		if (count == 50) {
-+			dev_err(pp->dev, "PCIe Link Fail\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	dev_info(pp->dev, "Link up\n");
-+
-+	return 0;
-+}
-+
-+static void histb_pcie_host_init(struct pcie_port *pp)
-+{
-+	histb_pcie_establish_link(pp);
-+
-+	if (IS_ENABLED(CONFIG_PCI_MSI))
-+		dw_pcie_msi_init(pp);
-+}
-+
-+static struct pcie_host_ops histb_pcie_host_ops = {
-+	.readl_rc = histb_pcie_readl_rc,
-+	.writel_rc = histb_pcie_writel_rc,
-+	.rd_own_conf = histb_pcie_rd_own_conf,
-+	.wr_own_conf = histb_pcie_wr_own_conf,
-+	.link_up = histb_pcie_link_up,
-+	.host_init = histb_pcie_host_init,
-+};
-+
-+#ifdef CONFIG_PCI_MSI
-+static irqreturn_t histb_pcie_msi_irq_handler(int irq, void *arg)
-+{
-+	struct pcie_port *pp = arg;
-+
-+	return dw_handle_msi_irq(pp);
-+}
-+#endif
-+
-+static void histb_pcie_host_disable(struct histb_pcie_host *hipcie)
-+{
-+	reset_control_assert(hipcie->soft_reset);
-+	reset_control_assert(hipcie->sys_reset);
-+	reset_control_assert(hipcie->bus_reset);
-+
-+	clk_disable_unprepare(hipcie->aux_clk);
-+	clk_disable_unprepare(hipcie->pipe_clk);
-+	clk_disable_unprepare(hipcie->sys_clk);
-+	clk_disable_unprepare(hipcie->bus_clk);
-+
-+	if (gpio_is_valid(hipcie->power_gpio))
-+		gpio_set_value_cansleep(hipcie->power_gpio,
-+					!hipcie->gpio_active_high);
-+}
-+
-+static int histb_pcie_host_enable(struct pcie_port *pp)
-+{
-+	struct histb_pcie_host *hipcie = to_histb_pcie(pp);
-+	struct device *dev = pp->dev;
-+	int ret;
-+
-+	/* power on pcie device if have */
-+	if (gpio_is_valid(hipcie->power_gpio))
-+		gpio_set_value_cansleep(hipcie->power_gpio,
-+					hipcie->gpio_active_high);
-+
-+	ret = clk_prepare_enable(hipcie->bus_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable bus_clk\n");
-+		goto err_bus_clk;
-+	}
-+	ret = clk_prepare_enable(hipcie->sys_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable sys_clk\n");
-+		goto err_sys_clk;
-+	}
-+	ret = clk_prepare_enable(hipcie->pipe_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable pipe_clk\n");
-+		goto err_pipe_clk;
-+	}
-+	ret = clk_prepare_enable(hipcie->aux_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable aux_clk\n");
-+		goto err_aux_clk;
-+	}
-+
-+	reset_control_assert(hipcie->soft_reset);
-+	reset_control_deassert(hipcie->soft_reset);
-+
-+	reset_control_assert(hipcie->sys_reset);
-+	reset_control_deassert(hipcie->sys_reset);
-+
-+	reset_control_assert(hipcie->bus_reset);
-+	reset_control_deassert(hipcie->bus_reset);
-+
-+	return 0;
-+
-+err_aux_clk:
-+	clk_disable_unprepare(hipcie->aux_clk);
-+err_pipe_clk:
-+	clk_disable_unprepare(hipcie->pipe_clk);
-+err_sys_clk:
-+	clk_disable_unprepare(hipcie->sys_clk);
-+err_bus_clk:
-+	clk_disable_unprepare(hipcie->bus_clk);
-+
-+	return ret;
-+}
-+
-+
-+static int histb_pcie_probe(struct platform_device *pdev)
-+{
-+	struct histb_pcie_host *hipcie;
-+	struct pcie_port *pp;
-+	struct resource *res;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	hipcie = devm_kzalloc(dev, sizeof(*hipcie), GFP_KERNEL);
-+	if (!hipcie)
-+		return -ENOMEM;
-+
-+	pp = &hipcie->pp;
-+	pp->dev = dev;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "sysctrl");
-+	hipcie->sysctrl = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(hipcie->sysctrl)) {
-+		dev_err(dev, "cannot get sysctrl base\n");
-+		return PTR_ERR(hipcie->sysctrl);
-+	}
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc_dbi");
-+	pp->dbi_base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(pp->dbi_base)) {
-+		dev_err(dev, "cannot get rc_dbi base\n");
-+		return PTR_ERR(pp->dbi_base);
-+	}
-+
-+	hipcie->power_gpio = of_get_named_gpio(np, "power-gpios", 0);
-+	hipcie->gpio_active_high = of_property_read_bool(np,
-+						"power-gpios-active-high");
-+	if (gpio_is_valid(hipcie->power_gpio)) {
-+		ret = devm_gpio_request_one(dev, hipcie->power_gpio,
-+				hipcie->gpio_active_high ?
-+					GPIOF_OUT_INIT_HIGH :
-+					GPIOF_OUT_INIT_LOW,
-+					"PCIe Dev power");
-+		if (ret) {
-+			dev_err(dev, "unable to request gpio\n");
-+			return ret;
-+		}
-+	}
-+
-+	hipcie->aux_clk = devm_clk_get(dev, "aux_clk");
-+	if (IS_ERR(hipcie->aux_clk)) {
-+		dev_err(dev, "Failed to get pcie aux_clk clock\n");
-+		return PTR_ERR(hipcie->aux_clk);
-+	}
-+
-+	hipcie->pipe_clk = devm_clk_get(dev, "pipe_clk");
-+	if (IS_ERR(hipcie->pipe_clk)) {
-+		dev_err(dev, "Failed to get pcie pipe_clk clock\n");
-+		return PTR_ERR(hipcie->pipe_clk);
-+	}
-+
-+	hipcie->sys_clk = devm_clk_get(dev, "sys_clk");
-+	if (IS_ERR(hipcie->sys_clk)) {
-+		dev_err(dev, "Failed to get pcie sys_clk clock\n");
-+		return PTR_ERR(hipcie->sys_clk);
-+	}
-+
-+	hipcie->bus_clk = devm_clk_get(dev, "bus_clk");
-+	if (IS_ERR(hipcie->bus_clk)) {
-+		dev_err(dev, "Failed to get pcie bus_clk clock\n");
-+		return PTR_ERR(hipcie->bus_clk);
-+	}
-+
-+	hipcie->soft_reset = devm_reset_control_get(dev, "soft_reset");
-+	if (IS_ERR(hipcie->soft_reset)) {
-+		dev_err(dev, "couldn't get soft_reset\n");
-+		return PTR_ERR(hipcie->soft_reset);
-+	}
-+
-+	hipcie->sys_reset = devm_reset_control_get(dev, "sys_reset");
-+	if (IS_ERR(hipcie->sys_reset)) {
-+		dev_err(dev, "couldn't get sys_reset\n");
-+		return PTR_ERR(hipcie->sys_reset);
-+	}
-+
-+	hipcie->bus_reset = devm_reset_control_get(dev, "bus_reset");
-+	if (IS_ERR(hipcie->bus_reset)) {
-+		dev_err(dev, "couldn't get bus_reset\n");
-+		return PTR_ERR(hipcie->bus_reset);
-+	}
-+
-+	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-+		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
-+		if (pp->msi_irq < 0) {
-+			dev_err(dev, "Failed to get msi irq\n");
-+			return pp->msi_irq;
-+		}
-+		ret = devm_request_irq(dev, pp->msi_irq,
-+				       histb_pcie_msi_irq_handler,
-+				       IRQF_SHARED, "histb-pcie-msi", pp);
-+		if (ret) {
-+			dev_err(dev, "cannot request msi irq\n");
-+			return ret;
-+		}
-+	}
-+
-+	pp->root_bus_nr = -1;
-+	pp->ops = &histb_pcie_host_ops;
-+
-+	ret = histb_pcie_host_enable(pp);
-+	if (ret) {
-+		dev_err(dev, "failed to enable host\n");
-+		return ret;
-+	}
-+
-+	ret = dw_pcie_host_init(pp);
-+	if (ret) {
-+		dev_err(dev, "failed to initialize host\n");
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, hipcie);
-+
-+	return 0;
-+}
-+
-+static int histb_pcie_remove(struct platform_device *pdev)
-+{
-+	struct histb_pcie_host *hipcie = platform_get_drvdata(pdev);
-+
-+	histb_pcie_host_disable(hipcie);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id histb_pcie_of_match[] = {
-+	{ .compatible = "hisilicon,histb-pcie", },
-+	{ .compatible = "hisilicon,hi3798cv200-pcie", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, histb_pcie_of_match);
-+
-+static struct platform_driver histb_pcie_platform_driver = {
-+	.probe	= histb_pcie_probe,
-+	.remove	= histb_pcie_remove,
-+	.driver = {
-+		.name = "histb-pcie",
-+		.of_match_table = of_match_ptr(histb_pcie_of_match),
-+	},
-+};
-+
-+module_platform_driver(histb_pcie_platform_driver);
-+
-+MODULE_AUTHOR("RuQiang Ju <juruqiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>");
-+MODULE_DESCRIPTION("HiSilicon STB PCIe host controller driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+> similarity index 91%
+> rename from Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+> rename to Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+> index c421aba..dfe5f8e 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+> @@ -1,8 +1,8 @@
+> -Marvell 8897/8997 (sd8897/sd8997) SDIO devices
+> +Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
+>  ------
+>  
+> -This node provides properties for controlling the marvell sdio wireless device.
+> -The node is expected to be specified as a child node to the SDIO controller that
+> +This node provides properties for controlling the marvell sdio/pcie wireless device.
+> +The node is expected to be specified as a child node to the SDIO/PCIE controller that
+>  connects the device to the system.
+>  
+>  Required properties:
+> @@ -10,6 +10,8 @@ Required properties:
+>    - compatible : should be one of the following:
+>  	* "marvell,sd8897"
+>  	* "marvell,sd8997"
+> +	* "pci11ab,2b42"
+> +	* "pci1b4b,2b42"
+>  
+>  Optional properties:
+>  
+> diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+> index 3c3c4f1..b3e6f06 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/pcie.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+> @@ -37,6 +37,22 @@ static struct mwifiex_if_ops pcie_ops;
+>  
+>  static struct semaphore add_remove_card_sem;
+>  
+> +static const struct of_device_id mwifiex_pcie_of_match_table[] = {
+> +	{ .compatible = "pci11ab,2b42" },
+> +	{ .compatible = "pci1b4b,2b42" },
+> +	{ }
+> +};
+> +
+> +static int mwifiex_pcie_probe_of(struct device *dev)
+> +{
+> +	if (!of_match_node(mwifiex_pcie_of_match_table, dev->of_node)) {
+> +		pr_err("pcie device node not available");
+> +		return -1;
+
+Not a big fan of these '-1' error codes, instead or proper error codes.
+But that's preexisting. (Or at least, this matches the sdio.c version.)
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int
+>  mwifiex_map_pci_memory(struct mwifiex_adapter *adapter, struct sk_buff *skb,
+>  		       size_t size, int flags)
+> @@ -178,6 +194,7 @@ static int mwifiex_pcie_probe(struct pci_dev *pdev,
+>  					const struct pci_device_id *ent)
+>  {
+>  	struct pcie_service_card *card;
+> +	int ret;
+>  
+>  	pr_debug("info: vendor=0x%4.04X device=0x%4.04X rev=%d\n",
+>  		 pdev->vendor, pdev->device, pdev->revision);
+> @@ -199,13 +216,27 @@ static int mwifiex_pcie_probe(struct pci_dev *pdev,
+>  		card->pcie.can_ext_scan = data->can_ext_scan;
+>  	}
+>  
+> -	if (mwifiex_add_card(card, &add_remove_card_sem, &pcie_ops,
+> -			     MWIFIEX_PCIE)) {
+> -		pr_err("%s failed\n", __func__);
+> -		return -1;
+> +	/* device tree node parsing and platform specific configuration*/
+> +	if (pdev->dev.of_node) {
+> +		ret = mwifiex_pcie_probe_of(&pdev->dev);
+> +		if (ret) {
+> +			dev_err(&pdev->dev,
+> +				"required compatible string missing\n");
+> +			goto err_free;
+> +		}
+>  	}
+>  
+> +	ret = mwifiex_add_card(card, &add_remove_card_sem, &pcie_ops,
+> +			       MWIFIEX_PCIE);
+> +	if (ret) {
+> +		pr_err("%s failed\n", __func__);
+> +		goto err_free;
+> +	}
+>  	return 0;
+> +
+> +err_free:
+> +	kfree(card);
+
+Is it just me, or does this fix a memory leak too? Not a big deal IMO,
+but maybe worth noting.
+
+Brian
+
+> +	return ret;
+>  }
+>  
+>  /*
+> diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+> index 2a162c3..c8dccf5 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+> @@ -2218,7 +2218,8 @@ int mwifiex_sta_init_cmd(struct mwifiex_private *priv, u8 first_sta, bool init)
+>  		 * The cal-data can be read from device tree and/or
+>  		 * a configuration file and downloaded to firmware.
+>  		 */
+> -		if (priv->adapter->iface_type == MWIFIEX_SDIO &&
+> +		if ((priv->adapter->iface_type == MWIFIEX_SDIO ||
+> +		    priv->adapter->iface_type == MWIFIEX_PCIE) &&
+>  		    adapter->dev->of_node) {
+>  			adapter->dt_node = adapter->dev->of_node;
+>  			if (of_property_read_u32(adapter->dt_node,
+> -- 
+> 2.8.0.rc3.226.g39d4020
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
