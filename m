@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 17/23] clk: renesas: rcar-gen3-cpg: Remove obsolete rcar_gen3_read_mode_pins()
-Date: Fri, 21 Oct 2016 15:17:31 +0200
-Message-ID: <1477055857-17936-18-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v4 07/23] ARM: dts: r8a7792: Add device node for RST module
+Date: Fri, 21 Oct 2016 15:17:21 +0200
+Message-ID: <1477055857-17936-8-git-send-email-geert+renesas@glider.be>
 References: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
@@ -10,62 +10,32 @@ To: Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylib
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-All R-Car Gen3 clock drivers now obtain the values of the mode pins from
-the R-Car RST driver.
+Add a device node for the RST module, which provides a.o. reset control
+and mode pin monitoring.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Dirk Behme <dirk.behme@de.bosch.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
 v4:
-  - Add Acked-by, Reviewed-by,
-
-v3:
   - New.
 ---
- drivers/clk/renesas/rcar-gen3-cpg.c | 17 -----------------
- drivers/clk/renesas/rcar-gen3-cpg.h |  1 -
- 2 files changed, 18 deletions(-)
+ arch/arm/boot/dts/r8a7792.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/clk/renesas/rcar-gen3-cpg.c b/drivers/clk/renesas/rcar-gen3-cpg.c
-index bb4f2f9a8c2f5ba8..9d76076da4948fc4 100644
---- a/drivers/clk/renesas/rcar-gen3-cpg.c
-+++ b/drivers/clk/renesas/rcar-gen3-cpg.c
-@@ -333,23 +333,6 @@ struct clk * __init rcar_gen3_cpg_clk_register(struct device *dev,
- 					 __clk_get_name(parent), 0, mult, div);
- }
+diff --git a/arch/arm/boot/dts/r8a7792.dtsi b/arch/arm/boot/dts/r8a7792.dtsi
+index 713141d38b3ea960..6e1f61f65d292b0b 100644
+--- a/arch/arm/boot/dts/r8a7792.dtsi
++++ b/arch/arm/boot/dts/r8a7792.dtsi
+@@ -118,6 +118,11 @@
+ 				      IRQ_TYPE_LEVEL_LOW)>;
+ 		};
  
--/*
-- * Reset register definitions.
-- */
--#define MODEMR	0xe6160060
--
--u32 __init rcar_gen3_read_mode_pins(void)
--{
--	void __iomem *modemr = ioremap_nocache(MODEMR, 4);
--	u32 mode;
--
--	BUG_ON(!modemr);
--	mode = ioread32(modemr);
--	iounmap(modemr);
--
--	return mode;
--}
--
- int __init rcar_gen3_cpg_init(const struct rcar_gen3_cpg_pll_config *config,
- 			      unsigned int clk_extalr)
- {
-diff --git a/drivers/clk/renesas/rcar-gen3-cpg.h b/drivers/clk/renesas/rcar-gen3-cpg.h
-index f699085147d1aece..f788f481dd42cdf6 100644
---- a/drivers/clk/renesas/rcar-gen3-cpg.h
-+++ b/drivers/clk/renesas/rcar-gen3-cpg.h
-@@ -33,7 +33,6 @@ struct rcar_gen3_cpg_pll_config {
- 
- #define CPG_RCKCR	0x240
- 
--u32 rcar_gen3_read_mode_pins(void);
- struct clk *rcar_gen3_cpg_clk_register(struct device *dev,
- 	const struct cpg_core_clk *core, const struct cpg_mssr_info *info,
- 	struct clk **clks, void __iomem *base);
++		rst: reset-controller@e6160000 {
++			compatible = "renesas,r8a7792-rst";
++			reg = <0 0xe6160000 0 0x0100>;
++		};
++
+ 		sysc: system-controller@e6180000 {
+ 			compatible = "renesas,r8a7792-sysc";
+ 			reg = <0 0xe6180000 0 0x0200>;
 -- 
 1.9.1
