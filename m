@@ -1,118 +1,65 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v4] pwm: add pwm driver for HiSilicon BVT SOCs
-Date: Fri, 21 Oct 2016 09:34:57 +0200
-Message-ID: <20161021073457.GF2670@ulmo.ba.sec>
-References: <1476097516-164577-1-git-send-email-yuanjian12@hisilicon.com>
- <20161010215339.GA21660@rob-hp-laptop>
- <20161021072236.GD2670@ulmo.ba.sec>
+From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v7 0/5] ARM: dts: imx6q: Add Engicam i.CoreM6 dts
+Date: Fri, 21 Oct 2016 13:25:49 +0530
+Message-ID: <CAD6G_RRGt19v4wnPOgarjEbJtMbsSOev4boAaoYZMpLp5uqejQ@mail.gmail.com>
+References: <1476437243-13297-1-git-send-email-jteki@openedev.com>
+ <CAD6G_RQyLtgJw=djPTmY5t7UVwzuZpj0xM0HjchLQjq7P5hMOg@mail.gmail.com> <20161021013546.GF30578@tiger>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Ls2Gy6y7jbHLe9Od"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161021072236.GD2670@ulmo.ba.sec>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jian Yuan <yuanjian12@hisilicon.com>, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xuejiancheng@hisilicon.com, kevin.lixu@hisilicon.com, jalen.hsu@hisilicon.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161021013546.GF30578@tiger>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 21, 2016 at 7:05 AM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Oct 18, 2016 at 05:30:28PM +0530, Jagan Teki wrote:
+>> Hi Shawn,
+>>
+>> On Fri, Oct 14, 2016 at 2:57 PM, Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org> wrote:
+>> > This is series add dts support for Engicam I.Core M6 qdl modules. just
+>> > rebased on top of linux-next of previous set[1].
+>> >
+>> > [1] http://www.spinics.net/lists/kernel/msg2358233.html
+>> >
+>> > Jagan Teki (5):
+>> >   ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual initial support
+>> >   ARM: dts: imx6q: Add Engicam i.CoreM6 DualLite/Solo initial support
+>> >   ARM: dts: imx6qdl-icore: Add usbhost support
+>> >   ARM: dts: imx6qdl-icore: Add usbotg support
+>> >   ARM: dts: imx6qdl-icore: Add FEC support
+>> >
+>> >  arch/arm/boot/dts/Makefile           |   2 +
+>> >  arch/arm/boot/dts/imx6dl-icore.dts   |  59 ++++++++
+>> >  arch/arm/boot/dts/imx6q-icore.dts    |  59 ++++++++
+>> >  arch/arm/boot/dts/imx6qdl-icore.dtsi | 271 +++++++++++++++++++++++++++++++++++
+>> >  4 files changed, 391 insertions(+)
+>> >  create mode 100644 arch/arm/boot/dts/imx6dl-icore.dts
+>> >  create mode 100644 arch/arm/boot/dts/imx6q-icore.dts
+>> >  create mode 100644 arch/arm/boot/dts/imx6qdl-icore.dtsi
+>>
+>> Can you pick this series?
+>
+> Sorry for the delay.  The first two patches look good, and I had a
+> couple of small comments on the other 3.  Also, for the initial board
+> support submission like this, you do not need to split it per device
+> support.  That said, please squash the series into one patch when
+> resending.
 
---Ls2Gy6y7jbHLe9Od
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sent v8 by squash the usb host and otg with first patch and second and
+third one keep separated as one is new board dts and other one though
+it is FEC support it also have a rmii_clk addition which is kind of
+new compared to other qdl dtsi files. So please let me know if have
+any more comments.
 
-On Fri, Oct 21, 2016 at 09:22:36AM +0200, Thierry Reding wrote:
-> On Mon, Oct 10, 2016 at 04:53:39PM -0500, Rob Herring wrote:
-> > On Mon, Oct 10, 2016 at 07:05:16PM +0800, Jian Yuan wrote:
-> > > From: yuanjian <yuanjian12@hisilicon.com>
-> > >=20
-> > > Add PWM driver for the PWM controller found on HiSilicon BVT SOCs, li=
-ke Hi3519V100, Hi3516CV300, etc.
-> > > The PWM controller is primarily in charge of controlling P-Iris lens.
-> > >=20
-> > > Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-> > > Signed-off-by: Jian Yuan <yuanjian12@hisilicon.com>
-> > > ---
-> > > Change Log:
-> > > v4:
-> > > Add #pwm-cells in the bindings document.
-> > > v3:
-> > > fixed issues pointed by thierry.
-> > > Add PWM compatible string for Hi3519V100.
-> > > Implement .apply() function which support atomic, instead of .enable(=
-)/.disable()/.config().
-> > > v2:
-> > > The number of PWMs is change to be probeable based on the compatible =
-string.
-> > >=20
-> > >  .../devicetree/bindings/pwm/pwm-hibvt.txt          |  23 ++
-> > >  drivers/pwm/Kconfig                                |   9 +
-> > >  drivers/pwm/Makefile                               |   1 +
-> > >  drivers/pwm/pwm-hibvt.c                            | 270 +++++++++++=
-++++++++++
-> > >  4 files changed, 303 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-hibvt.t=
-xt
-> > >  create mode 100644 drivers/pwm/pwm-hibvt.c
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt b/Do=
-cumentation/devicetree/bindings/pwm/pwm-hibvt.txt
-> > > new file mode 100644
-> > > index 0000000..609284f
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
-> > > @@ -0,0 +1,23 @@
-> > > +Hisilicon PWM controller
-> > > +
-> > > +Required properties:
-> > > +-compatible: should contain one SoC specific compatible string and o=
-ne generic compatible
-> > > +string "hisilicon, hibvt-pwm". The SoC specific strings supported in=
-cluding:
-> >=20
-> > Extra space          ^
-> >=20
-> > With that, for the binding:
-> >=20
-> > Acked-by: Rob Herring <robh@kernel.org>
->=20
-> I'm wondering what the use is of the generic compatible string? Not only
-> is the driver not listing it, nor is it in any way useful since there is
-> nothing the driver could do based on the generic compatible string (each
-> version of the IP currently supported has a different number of PWM
-> channels).
-
-Actually it's worse. The driver does have an entry for the generic
-compatible string but it doesn't assign .data in that case (which is
-really what I was saying above). Now according to the bindings it is
-disallowed to have only the generic compatible string, which is good
-because doing so would crash the driver on probe.
-
-So, if it's not allowed to have only the generic compatible string,
-why even have one at all? We always have an SoC-specific compatible
-string as well, so the generic one is completely redundant.
-
-Thierry
-
---Ls2Gy6y7jbHLe9Od
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJYCcUhAAoJEN0jrNd/PrOhMzgP/3gryYcYX1siXC5za2+ABQBg
-3poIWY1L/YvjcXHfQm6UNE97JKByKmewWfaTbxAAHqNyfx8drnRV9YLMp+nhuOaV
-ornh52CRQI7cfkmxPJSMuUwYP6oHNKZZI1NtZGBd+vjumpjLGDDMx8m0/jmKOcGX
-lR9yQ8CYTEoFjzxIKa7I4mjt5j3iymtSfTpnGIpttjHdf3PE4LdQ1N/3MIp0Hsd7
-Cr04wZ8TrRmpinkABKhtwuCAZRL1QVFJbMIP2gl065iOAYlzN+kQbKTIQSCe5EPe
-2Jji1J4QdEOetZ9R8a2xk6NQNjwNb7v6jHpgAlKFWbVHMUCThtbsAkIyKADlEPMz
-y0wHz90PepeYI/ehaF0eByAbQH6dzRsb86ZhtDfNe0vLYYX3X7PhMV93csX6P3wm
-OVMwzMXY9bKB1kTwOkbXXLSTgUIJQ0qbiO66RRRcK9MPreXW3rgNi7m3tk8c81oV
-HOQtqIRKv/sLMyKTRiH2TBQyY4BiYtJEwoMC+5NWZC8IGT/Nc6QOxGrCqFkAxRUs
-1aCCVDSkg6YC5HDKIUqEefM4yBvPcrh6Yzeir11+bWGmd0WfWd7isQh+xA/Y78jw
-ugQ1R98+VnbbdIa5NOLvsy/6gUywl2GXMnacE8PJkMa2tqKKk7VU5IzS6cjM5zCo
-ICh/p8EhXMoasaw7RBUw
-=i8yz
------END PGP SIGNATURE-----
-
---Ls2Gy6y7jbHLe9Od--
+thanks!
+-- 
+Jagan Teki
+Free Software Engineer | www.openedev.com
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
