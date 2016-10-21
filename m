@@ -1,101 +1,87 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM: boot: mxs: Add On-Chip RAM
-Date: Fri, 21 Oct 2016 17:30:18 +0200
-Message-ID: <e3773542-1b87-70e8-15f1-86ebf5ce7907@i2se.com>
-References: <1473789066-8955-1-git-send-email-stefan.wahren@i2se.com>
- <20161021135343.GI30578@tiger>
- <9bf7c925-bdc2-d0b8-9886-70d46383d1e0@i2se.com>
- <20161021150336.GJ30578@tiger>
- <e472fb62-00d2-359d-2126-ce2727fe3bed@i2se.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4 00/23] soc: renesas: Add R-Car RST driver for
+ obtaining mode pin state
+Date: Fri, 21 Oct 2016 17:45:30 +0200
+Message-ID: <1477064730.2508.24.camel@pengutronix.de>
+References: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e472fb62-00d2-359d-2126-ce2727fe3bed-eS4NqCHxEME@public.gmane.org>
+In-Reply-To: <1477055857-17936-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?J=c3=b6rg_Krause?= <joerg.krause-L1vi/lXTdtsfGbAt6QbQcg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?Q?Lothar_Wa=c3=9fmann?= <lw-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 21.10.2016 um 17:24 schrieb Stefan Wahren:
-> Am 21.10.2016 um 17:03 schrieb Shawn Guo:
->> On Fri, Oct 21, 2016 at 04:05:59PM +0200, Stefan Wahren wrote:
->>> Am 21.10.2016 um 15:53 schrieb Shawn Guo:
->>>> On Tue, Sep 13, 2016 at 05:51:02PM +0000, Stefan Wahren wrote:
->>>>> The i.MX23 / i.MX28 have a small amount of On-Chip RAM which is also necessary
->>>>> for suspend to RAM and standby mode. But before we need to remove the fake reg
->>>>> properties of all internal bus nodes as discussed in this thread [1].
->>>>>
->>>>> This patch series requires Fabio Estevam's recent series "ARM: dts: imx23:
->>>>> Remove skeleton.dtsi inclusion" [2].
->>>>>
->>>>> [1] - https://marc.info/?l=devicetree&m=146139948426520&w=2
->>>> The page cannot be reached.  I would like to understand the
->>>> background for this change.
->>> Strange, because i don't have any problems while clicking on the URL.
->>>
->>> It's an older discussion on the devicetree / kernel newbie mailing list
->>> with subject "strange dtc errors after adding sram node". Arnd suggested
->>> in the discussion to remove the reg property from the ahb node.
->>>
->>> Please try this one: http://www.spinics.net/lists/newbies/msg57652.html
->> If you go through 'Table 4-1. Address Map for i.MX28' of MCIMX28RM, you
->> should be able to find there are 3 AHB buses: ahb@0, ahb@80080000 and
->> ahb@c0000000.  The ocram goes to ahb@0.  The following change should be
->> the right one for ocram addition.
-> Correct me if i'm wrong, but there is only one AHB bus and only the
-> connected peripheral devices like ocram or USB controller have a memory
-> mapped start address not the bus itself.
+     A. Hi Geert,
 
-Please forget about that. According to the reference manual there are 3
-AHB bus layers.
+Am Freitag, den 21.10.2016, 15:17 +0200 schrieb Geert Uytterhoeven:
+>         Hi Philipp, Mike, Stephen, Simon, Magnus,
+> 	(see questions *** below!)
+> 
+> Currently the R-Car Clock Pulse Generator (CPG) drivers obtains the
+> state of the mode pins either by a call from the platform code, or
+> directly by using a hardcoded register access. This is a bit messy, and
+> creates a dependency between driver and platform code.
+> 
+> This patch series converts the various Renesas R-Car clock drivers
+> and support code from reading the mode pin states using a hardcoded
+> register access to using a new minimalistic R-Car RST driver.
+> 
+> All R-Car clock drivers will rely on the presence in DT of a device node
+> for the RST module.  Backwards compatibility with old DTBs is retained
+> only for R-Car Gen2, which has fallback code using its own private copy
+> of rcar_gen2_read_mode_pins().
 
->
->> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
->> index 0ad893bf5f43..8e5718df06b2 100644
->> --- a/arch/arm/boot/dts/imx28.dtsi
->> +++ b/arch/arm/boot/dts/imx28.dtsi
->> @@ -47,6 +47,19 @@
->>                 };
->>         };
->>  
->> +       ahb@0 {
->> +               compatible = "simple-bus";
->> +               #address-cells = <1>;
->> +               #size-cells = <1>;
->> +               reg = <0x0 0x80000000>;
->> +               ranges;
->> +
->> +               ocram: sram@0 {
->> +                       compatible = "mmio-sram";
->> +                       reg = <0x0 0x20000>;
->> +               };
->> +       };
->> +
->>         apb@80000000 {
->>                 compatible = "simple-bus";
->>                 #address-cells = <1>;
->>
->
+I think you should add a binding doc even though the DT bindings are
+still trivial.
 
+> After this, there is still one remaining user of
+> rcar_gen2_read_mode_pins() left in platform code. A patch series to
+> remove that user has already been posted, though ("[PATCH/RFT 0/4] ARM:
+> shmobile: R-Car Gen2: Allow booting secondary CPU cores in debug mode").
+> Since v3, the other user has been removed in commit 9f5ce39ddb8f68b3
+> ("ARM: shmobile: rcar-gen2: Obtain extal frequency from DT").
+> 
+> This series consists of 5 parts:
+>   A. Patches 1 and 2 add DT bindings and driver code for the R-Car RST
+>      driver,
+>   B. Patches 3-11 add device nodes for the RST modules to the R-Car DTS
+>      files,
+>   C. Patches 12-17 convert the clock drivers to call into the new R-Car
+>      RST driver,
+>   D. Patches 18-20 remove passing mode pin state to the clock drivers
+>      from the platform code,
+>   E. Patches 21-23 remove dead code from the clock drivers.
+> 
+> As is usually the case with moving functionality from platform code to
+> DT, there are lots of hard dependencies:
+>   - The DT updates in Part B can be merged as soon as the DT bindings in
+>     Part A have been approved,
+>   - The clock driver updates in Part C depend functionally on the driver
+>     code in Part A, and on the DT updates in Part B,
+>   - The board code cleanups in Part D depend on the clock driver updates
+>     in Part C,
+>   - The block driver cleanups in part E depend on the board code
+>     cleanups in part D.
+> 
+> Hence to maintain the required lockstep between SoC driver, clock
+> drivers, shmobile platform code, and shmobile DT, I propose to queue up
+> all patches in a single branch against v4.9-rc1, and send pull requests
+> to both Mike/Stephen (clock) and Simon (rest).
+> 
+> ***
+> 
+>   - Philip: While this is a driver for a reset-controller, currently it
+>     doesn't provide any reset-controller functionality. Hence I added it
+>     to drivers/soc/renesas/. Is that OK for you?
 
--- 
-Software-Entwickler / software developer
+Absolutely, as long as the driver isn't even a reset controller
+provider, this is the right place.
 
-I2SE GmbH                           Tel: +49 (0) 341 355667-00
-Friedrich-Ebert-Str. 61             Fax: +49 (0) 341 355667-02
-04109 Leipzig
-Germany
-Web: http://www.i2se.com/           Mail: info-eS4NqCHxEME@public.gmane.org
-VAT No.: DE 811528334
-Amtsgericht Leipzig HRB 23784
-Geschäftsführer/CEO: Carsten Ziermann
-
-*** Diese E-Mail ist allein für den bezeichneten Adressaten bestimmt. Sie kann rechtlich vertrauliche Informationen enthalten. Wenn Sie diese E-Mail irrtümlich erhalten haben, informieren Sie bitte unverzüglich den Absender per E-Mail und löschen Sie diese E-Mail von Ihrem Computer, ohne Kopien anzufertigen.
-Vielen Dank. ***
-
-*** This email is for the exclusive use of the addressee. It may contain legally privileged information. If you have received this message in error, please notify the sender by email immediately and delete the message from your computer without making any copies.
-Thank you. ***
+regards
+Philipp
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
