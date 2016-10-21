@@ -1,79 +1,53 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC V2 PATCH 10/12] arm64: dts: msm8994 issolate non standard bootloader/LK entries
-Date: Fri, 21 Oct 2016 22:25:21 +0200
-Message-ID: <3979420.yzJRfAtfpN@wuerfel>
-References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com> <20161021194437.GA7509@tuxbot> <20161021200409.GN26139@codeaurora.org>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [v7, 1/3] nand: pl353: Add basic driver for arm pl353 smc nand
+ interface
+Date: Fri, 21 Oct 2016 14:33:22 -0600
+Message-ID: <20161021203322.GA28655@obsidianresearch.com>
+References: <1433786918-21500-2-git-send-email-punnaia@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20161021200409.GN26139@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jeremy McNicoll <jmcnicol@redhat.com>, git@kchr.de, Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1433786918-21500-2-git-send-email-punnaia@xilinx.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, computersforpeace@gmail.com, artem.bityutskiy@linux.intel.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, punnaia@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday, October 21, 2016 1:04:09 PM CEST Stephen Boyd wrote:
-> On 10/21, Bjorn Andersson wrote:
-> > On Wed 19 Oct 20:17 PDT 2016, Andy Gross wrote:
-> > 
-> > > On Wed, Oct 19, 2016 at 08:07:25PM -0500, Rob Herring wrote:
-> > [..]
-> > > > Makes sense to me for things like Nexus phones here. What about DB410
-> > > > for example? Is there hope for a fix there? My bootloader is only a
-> > > > couple of months old and needs the properties still.
-> > > 
-> > > There won't be a fix for the 410c.  We barely got them to respin to use PSCI.
-> > > Stephen can correct me if I am wrong on this.
-> > > 
-> > > If this is fixed, it would be 8996+.  If..........
-> > > 
-> > > So this means introducing the msm-id's for the boards that currently require it,
-> > > and for the boards that will require it in the future.  And this would stay in
-> > > effect until the bootloader is able to parse the compatible strings or figure
-> > > this out without the msm-ids.
-> > > 
-> > 
-> > But if the bootloader at any point in the future would support picking a
-> > dtb by compatible strings instead of {msm,board,pmic}-id we wouldn't we
-> > just be back to the ridiculous compatible strings that tipped over into
-> > acceptance to these ids in the first place.
-> > 
-> > Or do we expect the boot loader to do a deep scan of the dtb to match on
-> > multiple nodes from the tree?
+On Mon, Jun 08, 2015 at 11:38:36PM +0530, Punnaiah Choudary Kalluri wrote:
+> Add driver for arm pl353 static memory controller nand interface with
+> HW ECC support. This controller is used in xilinx zynq soc for interfacing
+> the nand flash memory.
 > 
-> I'm pushing the bootloader team to do the deep scan of the dtb to
-> match up board compatible and pmic compatible strings so that we
-> don't have to keep these numbers around. Basically put what
-> dtbtool is doing into the bootloader so we don't have to post
-> process the dtb anymore. We're currently discussing how to
-> implement it and how to move the internal codebase to the new
-> scheme.
-> 
-> At least for 96boards I think we can update the lk bootloaders on
-> there to adopt this code. For other platforms like nexus though I
-> don't see a way we can update those bootloaders, and those
-> bootloaders require these properties exist in the dtbs, so we
-> should just throw the numbers into the dts files there and be
-> done with post processing. For bootloaders that require the QCDT
-> header, we'll have to keep running dtbtool there to generate the
-> header. Having the ids in the dts file or not doesn't really
-> matter there.
+> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+> Changes in v7:
+>  - Currently not implemented the memclk rate adjustments. I will
+>    look into this later and once the basic driver is accepted.
+>  - Fixed GPL licence ident
+> Changes in v6:
+>  - Fixed the checkpatch.pl reported warnings
+>  - Using the address cycles information from the onfi param page
+>    earlier it is hardcoded to 5 in driver
+> Changes in v5:
+>  - Configure the nand timing parameters as per the onfi spec
+> Changes in v4:
+>  - Updated the driver to sync with pl353_smc driver APIs
+> Changes in v3:
+>  - implemented the proper error codes
+>  - further breakdown this patch to multiple sets
+>  - added the controller and driver details to Documentation section
+>  - updated the licenece to GPLv2
+>  - reorganized the pl353_nand_ecc_init function
+> Changes in v2:
+>  - use "depends on" rather than "select" option in kconfig
+>  - remove unused variable parts
+>  - remove dummy helper and use writel_relaxed directly
 
-I think part of the problem here is the way that the bootloader
-expects multiple dtbs to be appended to the kernel binary, and
-then pick one of them based on its contents. That doesn't really
-change at all when changing the parser from looking at nonstandard
-properties to looking at the compatible strings.
+What is the status of getting this driver merged? I am interested in
+this driver and can provide some help if there are still TODO items.
 
-It still breaks the last-resort workaround for broken bootloaders
-that we have in the form of appending the DT to the kernel
-with CONFIG_ARM_APPENDED_DTB.
+At the very least I will test it, is there something newer than v7 out
+there?
 
-I think a better long-term strategy would be to make the bootloader
-load the dtb separately from the kernel and finding the right file
-using some information outside of the dtb. Ideally this is done
-by storing all files on a file system that can also be mounted
-to /boot, but there are probably other options that work equally well.
-
-	Arnd 
+Regards,
+Jason
