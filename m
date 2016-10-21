@@ -1,154 +1,79 @@
-From: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4] mwifiex: parse device tree node for PCIe
-Date: Thu, 20 Oct 2016 17:30:12 -0700
-Message-ID: <1477009812-95032-1-git-send-email-rajatja@google.com>
-References: <20161005194827.GA14626@localhost>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161005194827.GA14626@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: rajatxjain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [PATCH 6/8] pinctrl: aspeed-g4: Capture SuperIO pinmux
+ dependency
+Date: Fri, 21 Oct 2016 11:03:31 +1030
+Message-ID: <1477010011.8917.20.camel@aj.id.au>
+References: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
+         <b5f67ba76018314d08e240f95951751896687d37.1474986045.git-series.andrew@aj.id.au>
+         <CACRpkdYLDesENtq2cQBrWQeL6NH+mO_N5Z=e9=gsoZSCE85Jag@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-oPinsIUqauI0jUa3FU3U"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYLDesENtq2cQBrWQeL6NH+mO_N5Z=e9=gsoZSCE85Jag@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-This patch derives device tree node from pcie bus layer framework.
-Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
-marvell-8xxx.txt) to accomodate PCIe changes.
+--=-oPinsIUqauI0jUa3FU3U
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
----
-Since I need this patch and haven't seen updates, I thought I'll take a stab.
+Hi Linus,
 
-v2: Included vendor and product IDs in compatible strings for PCIe
-chipsets(Rob Herring)
-v3: Patch is created using -M option so that it will only include diff of
-original and renamed files(Rob Herring)
-Resend v3: Resending the patch because I missed to include device tree mailing
-while sending v3.
-v4: Fix error handling, also move-on even if no device tree node is present.
+On Thu, 2016-10-20 at 13:53 +0200, Linus Walleij wrote:
+> On Tue, Sep 27, 2016 at 4:50 PM, Andrew Jeffery <andrew@aj.id.au>
+> wrote:
+>=20
+> >=20
+> > Two LPC-related signals in the AST2400 depend on state in the
+> > SuperIO IP
+> > block. Use the recently added infrastructure to capture this
+> > relationship.
+> >=20
+> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Patch applied for v4.10.
+> (Tell me if I'm applying patches in wrong order or something, and
+> I hope this doesn't clash with the fixes.)
 
- .../{marvell-sd8xxx.txt => marvell-8xxx.txt}       |  8 +++--
- drivers/net/wireless/marvell/mwifiex/pcie.c        | 39 +++++++++++++++++++---
- drivers/net/wireless/marvell/mwifiex/sta_cmd.c     |  3 +-
- 3 files changed, 42 insertions(+), 8 deletions(-)
- rename Documentation/devicetree/bindings/net/wireless/{marvell-sd8xxx.txt => marvell-8xxx.txt} (91%)
+Both this patch and 8/8 functionally depend on 5/8. I fetched the
+pinctrl tree to poke around but this patch didn't appear in any of the
+updated branches, so I'm not sure whether we have the right ordering.
+Without it we should hit build failures from missing macro definitions.
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-similarity index 91%
-rename from Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
-rename to Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-index c421aba..dfe5f8e 100644
---- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-@@ -1,8 +1,8 @@
--Marvell 8897/8997 (sd8897/sd8997) SDIO devices
-+Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
- ------
- 
--This node provides properties for controlling the marvell sdio wireless device.
--The node is expected to be specified as a child node to the SDIO controller that
-+This node provides properties for controlling the marvell sdio/pcie wireless device.
-+The node is expected to be specified as a child node to the SDIO/PCIE controller that
- connects the device to the system.
- 
- Required properties:
-@@ -10,6 +10,8 @@ Required properties:
-   - compatible : should be one of the following:
- 	* "marvell,sd8897"
- 	* "marvell,sd8997"
-+	* "pci11ab,2b42"
-+	* "pci1b4b,2b42"
- 
- Optional properties:
- 
-diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
-index 3c3c4f1..b3e6f06 100644
---- a/drivers/net/wireless/marvell/mwifiex/pcie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
-@@ -37,6 +37,22 @@ static struct mwifiex_if_ops pcie_ops;
- 
- static struct semaphore add_remove_card_sem;
- 
-+static const struct of_device_id mwifiex_pcie_of_match_table[] = {
-+	{ .compatible = "pci11ab,2b42" },
-+	{ .compatible = "pci1b4b,2b42" },
-+	{ }
-+};
-+
-+static int mwifiex_pcie_probe_of(struct device *dev)
-+{
-+	if (!of_match_node(mwifiex_pcie_of_match_table, dev->of_node)) {
-+		pr_err("pcie device node not available");
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
- static int
- mwifiex_map_pci_memory(struct mwifiex_adapter *adapter, struct sk_buff *skb,
- 		       size_t size, int flags)
-@@ -178,6 +194,7 @@ static int mwifiex_pcie_probe(struct pci_dev *pdev,
- 					const struct pci_device_id *ent)
- {
- 	struct pcie_service_card *card;
-+	int ret;
- 
- 	pr_debug("info: vendor=0x%4.04X device=0x%4.04X rev=%d\n",
- 		 pdev->vendor, pdev->device, pdev->revision);
-@@ -199,13 +216,27 @@ static int mwifiex_pcie_probe(struct pci_dev *pdev,
- 		card->pcie.can_ext_scan = data->can_ext_scan;
- 	}
- 
--	if (mwifiex_add_card(card, &add_remove_card_sem, &pcie_ops,
--			     MWIFIEX_PCIE)) {
--		pr_err("%s failed\n", __func__);
--		return -1;
-+	/* device tree node parsing and platform specific configuration*/
-+	if (pdev->dev.of_node) {
-+		ret = mwifiex_pcie_probe_of(&pdev->dev);
-+		if (ret) {
-+			dev_err(&pdev->dev,
-+				"required compatible string missing\n");
-+			goto err_free;
-+		}
- 	}
- 
-+	ret = mwifiex_add_card(card, &add_remove_card_sem, &pcie_ops,
-+			       MWIFIEX_PCIE);
-+	if (ret) {
-+		pr_err("%s failed\n", __func__);
-+		goto err_free;
-+	}
- 	return 0;
-+
-+err_free:
-+	kfree(card);
-+	return ret;
- }
- 
- /*
-diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-index 2a162c3..c8dccf5 100644
---- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-@@ -2218,7 +2218,8 @@ int mwifiex_sta_init_cmd(struct mwifiex_private *priv, u8 first_sta, bool init)
- 		 * The cal-data can be read from device tree and/or
- 		 * a configuration file and downloaded to firmware.
- 		 */
--		if (priv->adapter->iface_type == MWIFIEX_SDIO &&
-+		if ((priv->adapter->iface_type == MWIFIEX_SDIO ||
-+		    priv->adapter->iface_type == MWIFIEX_PCIE) &&
- 		    adapter->dev->of_node) {
- 			adapter->dt_node = adapter->dev->of_node;
- 			if (of_property_read_u32(adapter->dt_node,
--- 
-2.8.0.rc3.226.g39d4020
+Have you had a chance to look over patch 5/8? Joel wasn't keen on its
+current form, so I would appreciate your input.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+
+Andrew
+
+>=20
+> Yours,
+> Linus Walleij
+--=-oPinsIUqauI0jUa3FU3U
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCgAGBQJYCWJbAAoJEJ0dnzgO5LT55JIQAK2eix0Pvp1JBTEIZwRO8nRh
+20y6FgW1A42yyaBrEzdLDA8XqOA7qWxvyw3ZQo/AK/6bKZVvHwtF2/xKbONENJ1y
+mjhTsbYeJ7d32EAOzn+Qy0/3UFke3oZfxqRmPBL/O/qzKkMjQCl8C0YEP48T+WG1
+vl517qskOW5x5aVdyyRQVHs8IeznLsLzHAPwnvIULycJYmp+7U/49DYiFvaDpwht
+Dw3gep8zdwvmMScsHGCaGJHAchIjQzVCX4fNHEGO0RyFoOwHZkBU/++NjnQlz4Ou
+wxzPgK3bZe7RwARVMwz0uBrQ0zxaSjiHA6RtwJWjpJWtnN5W6rY+CS7yS2Rp7XCW
+gnb/Q5kUIGtgiFcXnfPQGFiAcEGUbSiDIIT0iZAxUqk/zTlWnzFoJu90FZ/In1G/
++4RNgngzMU9taJm7F0rJ1RNcEScRjSdpqf4IBEGojE6X8shraydmnI3pAR0/aKHa
+DmS8bt5cTJmw6C0HD5Rwyq9fqgkdG09ZwsiNGhStIlwrUY8uYinpBPuue343ce0Z
+3F/lBHSL3rSLUX8a8NqrFYA7iH4d0zWK/MLzQi5kGIIkY58W87NW1KTWFCpttK+n
+B7HEgoL0LCCY9Flpa9F3XE4q+WX0SC8TgdBpdEHG4gVYkLNqto3VdIttLxE6xffY
+n8hHPig+lH0tcuxOfBfz
+=r6q5
+-----END PGP SIGNATURE-----
+
+--=-oPinsIUqauI0jUa3FU3U--
