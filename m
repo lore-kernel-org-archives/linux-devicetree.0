@@ -1,66 +1,62 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/8] drm: bridge: vga-dac: Add adi,adv7123 compatible string
-Date: Fri, 21 Oct 2016 13:22:25 +0300
-Message-ID: <295438587.dQSmbaFSXR@avalon>
-References: <1476887143-24831-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1476887143-24831-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <2e22947f-1c8c-710a-cb60-bd6b52f219eb@codeaurora.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] dt/bindings: arm-boards: Remove skeleton.dtsi inclusion
+ from example
+Date: Fri, 21 Oct 2016 12:26:40 +0200
+Message-ID: <CAMuHMdX6Gn7x09nup776VabkFXzWDfbqLaUPruLHgVVyT2Fgcg@mail.gmail.com>
+References: <1477041629-23341-1-git-send-email-geert+renesas@glider.be>
+ <20161021094938.GB15372@leverpostej> <CAMuHMdVS3-xm+7gMkO59VtuN_pLAXSCNRBT1JekFE2cVbwngAQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <2e22947f-1c8c-710a-cb60-bd6b52f219eb@codeaurora.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdVS3-xm+7gMkO59VtuN_pLAXSCNRBT1JekFE2cVbwngAQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Archit,
+On Fri, Oct 21, 2016 at 12:16 PM, Geert Uytterhoeven
+<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> On Fri, Oct 21, 2016 at 11:50 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On Fri, Oct 21, 2016 at 11:20:29AM +0200, Geert Uytterhoeven wrote:
+>>> --- a/Documentation/devicetree/bindings/arm/arm-boards
+>>> +++ b/Documentation/devicetree/bindings/arm/arm-boards
+>>> @@ -148,15 +148,14 @@ Example:
+>>>
+>>>  /dts-v1/;
+>>>  #include <dt-bindings/interrupt-controller/irq.h>
+>>> -#include "skeleton.dtsi"
+>>>
+>>>  / {
+>>>       model = "ARM RealView PB1176 with device tree";
+>>>       compatible = "arm,realview-pb1176";
+>>> +     #address-cells = <0>;
 
-On Friday 21 Oct 2016 10:43:34 Archit Taneja wrote:
-> On 10/19/2016 07:55 PM, Laurent Pinchart wrote:
-> > The ADV7123 is a transparent VGA DAC. Unlike dumb VGA DACs it can be
-> > controlled through a power save pin, and requires a power supply.
-> > However, on most boards where the device is used neither the power save
-> > signal nor the power supply are controllable.
-> > 
-> > To avoid developing a separate device-specific driver add an
-> > "adi,adv7123" compatible entry to the dumb-vga-dac driver. This will
-> > allow supporting most ADV7123-based boards easily, while allowing future
-> > development of an adv7123 driver when needed without breaking backward
-> > compatibility.
-> 
-> Shouldn't we have a DT binding doc for ADV7123, even if it's sharing
-> the dumb vga driver for now?
+How did I manage to turn the <1> into a <0> by moving and reindenting
+two lines?!? Will fix, too.
 
-Documentation/devicetree/bindings/display/bridge/adi,adv7123.txt
+>>> +     #size-cells = <1>;
+>>>
+>>>       soc {
+>>> -             #address-cells = <1>;
+>>> -             #size-cells = <1>;
+>>
+>> Strictly speaking, these two are still necessary for the ranges
+>> property. They're *not* inherited per the spec, no matter what Linux
+>> happens to do today.
+>
+> I wasn't sure about that part of the change. OK, will fix.
 
-> Same query for the Thine LVDS encoder.
+Gr{oetje,eeting}s,
 
-Documentation/devicetree/bindings/display/bridge/thine,thc63lvdm83d.txt
+                        Geert
 
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> > ---
-> > 
-> >  drivers/gpu/drm/bridge/dumb-vga-dac.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> > b/drivers/gpu/drm/bridge/dumb-vga-dac.c index afec232185a7..b33e3f829e4f
-> > 100644
-> > --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> > +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> > @@ -204,6 +204,7 @@ static int dumb_vga_remove(struct platform_device
-> > *pdev)> 
-> >  static const struct of_device_id dumb_vga_match[] = {
-> >  
-> >  	{ .compatible = "dumb-vga-dac" },
-> > +	{ .compatible = "adi,adv7123" },
-> >  	{},
-> >  };
-> >  MODULE_DEVICE_TABLE(of, dumb_vga_match);
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
--- 
-Regards,
-
-Laurent Pinchart
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
