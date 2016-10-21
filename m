@@ -1,59 +1,54 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 3/5] ARM: dts: r8a7779: Remove skeleton.dtsi inclusion
-Date: Fri, 21 Oct 2016 11:16:08 +0200
-Message-ID: <1477041370-22778-4-git-send-email-geert+renesas@glider.be>
-References: <1477041370-22778-1-git-send-email-geert+renesas@glider.be>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 00/10] Revamp Semtech SX150x driver
+Date: Fri, 21 Oct 2016 11:17:50 +0200
+Message-ID: <c5e42986-5b7f-a95f-da63-ab10dc84ddee@baylibre.com>
+References: <1476885846-16469-1-git-send-email-andrew.smirnov@gmail.com>
+ <CACRpkdbW=fdDn2uOchNHRYvhorGseNDyV_Kx11oeCTS+X9XHcQ@mail.gmail.com>
+ <CAHQ1cqH-fyPV_Z1ARwiAVHX2LO9yd_vGXcX_uMWg2ToXfsqB2g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1477041370-22778-1-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHQ1cqH-fyPV_Z1ARwiAVHX2LO9yd_vGXcX_uMWg2ToXfsqB2g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Healy <cphealy@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-As of commit 9c0da3cc61f1233c ("ARM: dts: explicitly mark skeleton.dtsi
-as deprecated"), including skeleton.dtsi is deprecated.
+On 10/20/2016 09:34 PM, Andrey Smirnov wrote:
+> On Thu, Oct 20, 2016 at 12:08 PM, Linus Walleij
+> <linus.walleij@linaro.org> wrote:
+>> On Wed, Oct 19, 2016 at 4:03 PM, Andrey Smirnov
+>> <andrew.smirnov@gmail.com> wrote:
+>>
+>>> Hello everyone,
+>>>
+>>> This is the second version of the patchset originally submitted here:
+>>>
+>>> http://www.spinics.net/lists/devicetree/msg146176.html
+>>
+>> I'm sorry about your efforts, and sorry for not having had time to
+>> comment earlier, but this driver will be removed and replaced by
+>> a pin control driver by Neil Armstrong:
+>> http://marc.info/?l=linux-gpio&m=147499137422454&w=2
+>>
+>> As you can see it arrived some weeks before.
+>>
+>> Can you please review Neils patch and make sure it satisfies
+>> your usecases?
+> 
+> Sure, I'll grab those patches and provide comments, Tested-by's, etc.
+> 
+> Thanks,
+> Andrey Smirnov
+> 
 
-This fixes the following warning with W=1:
+Hi Andrey,
 
-    Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
+Please find the v3 patch at https://marc.info/?l=linux-gpio&m=147704101505236&w=2
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm/boot/dts/r8a7779.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Maybe it could better to actually add the 1503 support even if it's using the sx1506q_device_data.
 
-diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-index b9bbcce69dfbd5b9..cd8c52d5cb850766 100644
---- a/arch/arm/boot/dts/r8a7779.dtsi
-+++ b/arch/arm/boot/dts/r8a7779.dtsi
-@@ -9,8 +9,6 @@
-  * kind, whether express or implied.
-  */
- 
--/include/ "skeleton.dtsi"
--
- #include <dt-bindings/clock/r8a7779-clock.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-@@ -19,6 +17,8 @@
- / {
- 	compatible = "renesas,r8a7779";
- 	interrupt-parent = <&gic>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
- 
- 	cpus {
- 		#address-cells = <1>;
--- 
-1.9.1
+Could you try out this driver and report a Tested-by if successful ?
+
+Neil
