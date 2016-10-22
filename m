@@ -1,54 +1,422 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] cpufreq: pxa: convert to clock API
-Date: Sat, 22 Oct 2016 23:37:09 +0200
-Message-ID: <877f902hh6.fsf@belgarion.home>
-References: <1476561450-28407-1-git-send-email-robert.jarzmik@free.fr>
-        <1476561450-28407-5-git-send-email-robert.jarzmik@free.fr>
-        <20161018114025.GD11471@vireshk-i7>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v2 1/7] iio:core: add a callback to allow drivers to provide _available attributes
+Date: Sun, 23 Oct 2016 00:43:40 +0200
+Message-ID: <1477176226-10566-2-git-send-email-peda@axentia.se>
+References: <1477176226-10566-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161018114025.GD11471@vireshk-i7> (Viresh Kumar's message of
-        "Tue, 18 Oct 2016 17:10:25 +0530")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477176226-10566-1-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Peter Rosin <peda@axentia.se>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+From: Jonathan Cameron <jic23@kernel.org>
 
-> On 15-10-16, 21:57, Robert Jarzmik wrote:
->> As the clock settings have been introduced into the clock pxa drivers,
->> which are now available to change the CPU clock by themselves, remove
->> the clock handling from this driver, and rely on pxa clock drivers.
->> 
->> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
->> ---
->> Since v1: added !OF Kconfig dependency
->> ---
->>  drivers/cpufreq/Kconfig.arm      |   2 +-
->>  drivers/cpufreq/pxa2xx-cpufreq.c | 191 ++++++++-------------------------------
->>  2 files changed, 40 insertions(+), 153 deletions(-)
->
-> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+A large number of attributes can only take a limited range of values.
+Currently in IIO this is handled by directly registering additional
+*_available attributes thus providing this information to userspace.
 
-Okay, after some more testing, I'd like to remove the !OF for next iteration.
-The reason is that I have a usecase where I have a single kernel image with
-devictree support (ie CONFIG_OF=y), but with support for both devicetree and
-legacy platforms. In this case, a platform such as lubbock can boot :
- - with devicetree
- - with legacy arch/arm/mach-pxa/lubbock.c
+It is desirable to provide this information via the core for much the same
+reason this was done for the actual channel information attributes in the
+first place.  If it isn't there, then it can only really be accessed from
+userspace.  Other in kernel IIO consumers have no access to what valid
+parameters are.
 
-In this kernel, the !OF Kconfig prevents the legacy version from working, as
-pxa2xx-cpufreq is descarded even if it is needed in the legacy version.
+Two forms are currently supported:
+* list of values in one particular IIO_VAL_* format.
+	e.g. 1.300000 1.500000 1.730000
+* range specification with a step size:
+	e.g. [1.000000 0.500000 2.500000]
+	equivalent to 1.000000 1.5000000 2.000000 2.500000
 
-Therefore, I'd like to respin without this !OF.
+An addition set of masks are used to allow different sharing rules for the
+*_available attributes generated.
 
-Cheers.
+This allows for example:
 
+in_accel_x_offset
+in_accel_y_offset
+in_accel_offset_available.
+
+We could have gone with having a specification for each and every
+info_mask element but that would have meant changing the existing userspace
+ABI.  This approach does not.
+
+Signed-off-by: Jonathan Cameron <jic23@kernel.org>
+[rather mindlessly forward ported from approx 3 years ago /peda]
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ drivers/iio/industrialio-core.c | 232 +++++++++++++++++++++++++++++++++++-----
+ include/linux/iio/iio.h         |  11 ++
+ include/linux/iio/types.h       |   5 +
+ 3 files changed, 223 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index fc340ed3dca1..93c69ebeda1e 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -575,51 +575,41 @@ int of_iio_read_mount_matrix(const struct device *dev,
+ #endif
+ EXPORT_SYMBOL(of_iio_read_mount_matrix);
+ 
+-/**
+- * iio_format_value() - Formats a IIO value into its string representation
+- * @buf:	The buffer to which the formatted value gets written
+- * @type:	One of the IIO_VAL_... constants. This decides how the val
+- *		and val2 parameters are formatted.
+- * @size:	Number of IIO value entries contained in vals
+- * @vals:	Pointer to the values, exact meaning depends on the
+- *		type parameter.
+- *
+- * Return: 0 by default, a negative number on failure or the
+- *	   total number of characters written for a type that belongs
+- *	   to the IIO_VAL_... constant.
+- */
+-ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals)
++static ssize_t __iio_format_value(char *buf, unsigned int type,
++				  int size, const int *vals)
+ {
+ 	unsigned long long tmp;
++	int tmp0, tmp1;
+ 	bool scale_db = false;
+ 
+ 	switch (type) {
+ 	case IIO_VAL_INT:
+-		return sprintf(buf, "%d\n", vals[0]);
++		return sprintf(buf, "%d", vals[0]);
+ 	case IIO_VAL_INT_PLUS_MICRO_DB:
+ 		scale_db = true;
+ 	case IIO_VAL_INT_PLUS_MICRO:
+ 		if (vals[1] < 0)
+-			return sprintf(buf, "-%d.%06u%s\n", abs(vals[0]),
++			return sprintf(buf, "-%d.%06u%s", abs(vals[0]),
+ 				       -vals[1], scale_db ? " dB" : "");
+ 		else
+-			return sprintf(buf, "%d.%06u%s\n", vals[0], vals[1],
++			return sprintf(buf, "%d.%06u%s", vals[0], vals[1],
+ 				scale_db ? " dB" : "");
+ 	case IIO_VAL_INT_PLUS_NANO:
+ 		if (vals[1] < 0)
+-			return sprintf(buf, "-%d.%09u\n", abs(vals[0]),
++			return sprintf(buf, "-%d.%09u", abs(vals[0]),
+ 				       -vals[1]);
+ 		else
+-			return sprintf(buf, "%d.%09u\n", vals[0], vals[1]);
++			return sprintf(buf, "%d.%09u", vals[0], vals[1]);
+ 	case IIO_VAL_FRACTIONAL:
+ 		tmp = div_s64((s64)vals[0] * 1000000000LL, vals[1]);
+-		vals[0] = (int)div_s64_rem(tmp, 1000000000, &vals[1]);
+-		return sprintf(buf, "%d.%09u\n", vals[0], abs(vals[1]));
++		tmp1 = vals[1];
++		tmp0 = (int)div_s64_rem(tmp, 1000000000, &tmp1);
++		return sprintf(buf, "%d.%09u", tmp0, abs(tmp1));
+ 	case IIO_VAL_FRACTIONAL_LOG2:
+ 		tmp = (s64)vals[0] * 1000000000LL >> vals[1];
+-		vals[1] = do_div(tmp, 1000000000LL);
+-		vals[0] = tmp;
+-		return sprintf(buf, "%d.%09u\n", vals[0], vals[1]);
++		tmp1 = do_div(tmp, 1000000000LL);
++		tmp0 = tmp;
++		return sprintf(buf, "%d.%09u", tmp0, tmp1);
+ 	case IIO_VAL_INT_MULTIPLE:
+ 	{
+ 		int i;
+@@ -628,13 +618,34 @@ ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals)
+ 		for (i = 0; i < size; ++i)
+ 			len += snprintf(&buf[len], PAGE_SIZE - len, "%d ",
+ 								vals[i]);
+-		len += snprintf(&buf[len], PAGE_SIZE - len, "\n");
+ 		return len;
+ 	}
+ 	default:
+ 		return 0;
+ 	}
+ }
++
++/**
++ * iio_format_value() - Formats a IIO value into its string representation
++ * @buf:	The buffer to which the formatted value gets written
++ * @type:	One of the IIO_VAL_... constants. This decides how the val
++ *		and val2 parameters are formatted.
++ * @size:	Number of IIO value entries contained in vals
++ * @vals:	Pointer to the values, exact meaning depends on the
++ *		type parameter.
++ *
++ * Return: 0 by default, a negative number on failure or the
++ *	   total number of characters written for a type that belongs
++ *	   to the IIO_VAL_... constant.
++ */
++ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals)
++{
++	ssize_t len;
++
++	len = __iio_format_value(buf, type, size, vals);
++
++	return len + sprintf(buf + len, "\n");
++}
+ EXPORT_SYMBOL_GPL(iio_format_value);
+ 
+ static ssize_t iio_read_channel_info(struct device *dev,
+@@ -662,6 +673,113 @@ static ssize_t iio_read_channel_info(struct device *dev,
+ 	return iio_format_value(buf, ret, val_len, vals);
+ }
+ 
++static ssize_t iio_format_avail_list(char *buf, const int *vals,
++				     int type, int length)
++{
++	int i;
++	ssize_t len = 0;
++
++	switch (type) {
++	case IIO_VAL_INT:
++		for (i = 0; i < length; i++) {
++			len += __iio_format_value(buf + len, type, 1, &vals[i]);
++			if (i < length - 1)
++				len += snprintf(buf + len,
++						PAGE_SIZE - len,
++						" ");
++			else
++				len += snprintf(buf + len,
++						PAGE_SIZE - len,
++						"\n");
++		}
++		break;
++	default:
++		for (i = 0; i < length / 2; i++) {
++			len += __iio_format_value(buf + len,
++						  type,
++						  2,
++						  &vals[i * 2]);
++			if (i < length / 2 - 1)
++				len += snprintf(buf + len,
++						PAGE_SIZE - len,
++						" ");
++			else
++				len += snprintf(buf + len,
++						PAGE_SIZE - len,
++						"\n");
++		}
++	};
++
++	return len;
++}
++
++static ssize_t iio_format_avail_range(char *buf, const int *vals, int type)
++{
++	int i;
++	ssize_t len;
++
++	len = snprintf(buf, PAGE_SIZE, "[");
++	switch (type) {
++	case IIO_VAL_INT:
++		for (i = 0; i < 3; i++) {
++			len += __iio_format_value(buf + len, type, 1, &vals[i]);
++			if (i < 2)
++				len += snprintf(buf + len,
++						PAGE_SIZE - len,
++						" ");
++			else
++				len += snprintf(buf + len,
++						PAGE_SIZE - len,
++						"]\n");
++		}
++		break;
++	default:
++		for (i = 0; i < 3; i++) {
++			len += __iio_format_value(buf + len,
++						  type,
++						  2,
++						  &vals[i * 2]);
++			if (i < 2)
++				len += snprintf(buf + len,
++						PAGE_SIZE - len,
++						" ");
++			else
++				len += snprintf(buf + len,
++						PAGE_SIZE - len,
++						"]\n");
++		}
++	};
++
++	return len;
++}
++
++static ssize_t iio_read_channel_info_avail(struct device *dev,
++					   struct device_attribute *attr,
++					   char *buf)
++{
++	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct iio_dev_attr *this_attr = to_iio_dev_attr(attr);
++	const int *vals;
++	int ret;
++	int length;
++	int type;
++
++	ret = indio_dev->info->read_avail(indio_dev, this_attr->c,
++					  &vals, &type, &length,
++					  this_attr->address);
++
++	if (ret < 0)
++		return ret;
++	switch (ret) {
++	case IIO_AVAIL_LIST:
++		return iio_format_avail_list(buf, vals, type, length);
++	case IIO_AVAIL_RANGE:
++		return iio_format_avail_range(buf, vals, type);
++	default:
++		return -EINVAL;
++	}
++}
++
+ /**
+  * iio_str_to_fixpoint() - Parse a fixed-point number from a string
+  * @str: The string to parse
+@@ -978,6 +1096,40 @@ static int iio_device_add_info_mask_type(struct iio_dev *indio_dev,
+ 	return attrcount;
+ }
+ 
++static int iio_device_add_info_mask_type_avail(struct iio_dev *indio_dev,
++					       struct iio_chan_spec const *chan,
++					       enum iio_shared_by shared_by,
++					       const long *infomask)
++{
++	int i, ret, attrcount = 0;
++	char *avail_postfix;
++
++	for_each_set_bit(i, infomask, sizeof(infomask) * 8) {
++		avail_postfix = kasprintf(GFP_KERNEL,
++					  "%s_available",
++					  iio_chan_info_postfix[i]);
++		if (!avail_postfix)
++			return -ENOMEM;
++
++		ret = __iio_add_chan_devattr(avail_postfix,
++					     chan,
++					     &iio_read_channel_info_avail,
++					     NULL,
++					     i,
++					     shared_by,
++					     &indio_dev->dev,
++					     &indio_dev->channel_attr_list);
++		kfree(avail_postfix);
++		if ((ret == -EBUSY) && (shared_by != IIO_SEPARATE))
++			continue;
++		else if (ret < 0)
++			return ret;
++		attrcount++;
++	}
++
++	return attrcount;
++}
++
+ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
+ 					struct iio_chan_spec const *chan)
+ {
+@@ -993,6 +1145,14 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
+ 		return ret;
+ 	attrcount += ret;
+ 
++	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
++						  IIO_SEPARATE,
++						  &chan->
++						  info_mask_separate_available);
++	if (ret < 0)
++		return ret;
++	attrcount += ret;
++
+ 	ret = iio_device_add_info_mask_type(indio_dev, chan,
+ 					    IIO_SHARED_BY_TYPE,
+ 					    &chan->info_mask_shared_by_type);
+@@ -1000,6 +1160,14 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
+ 		return ret;
+ 	attrcount += ret;
+ 
++	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
++						  IIO_SHARED_BY_TYPE,
++						  &chan->
++						  info_mask_shared_by_type_available);
++	if (ret < 0)
++		return ret;
++	attrcount += ret;
++
+ 	ret = iio_device_add_info_mask_type(indio_dev, chan,
+ 					    IIO_SHARED_BY_DIR,
+ 					    &chan->info_mask_shared_by_dir);
+@@ -1007,6 +1175,13 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
+ 		return ret;
+ 	attrcount += ret;
+ 
++	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
++						  IIO_SHARED_BY_DIR,
++						  &chan->info_mask_shared_by_dir_available);
++	if (ret < 0)
++		return ret;
++	attrcount += ret;
++
+ 	ret = iio_device_add_info_mask_type(indio_dev, chan,
+ 					    IIO_SHARED_BY_ALL,
+ 					    &chan->info_mask_shared_by_all);
+@@ -1014,6 +1189,13 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
+ 		return ret;
+ 	attrcount += ret;
+ 
++	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
++						  IIO_SHARED_BY_ALL,
++						  &chan->info_mask_shared_by_all_available);
++	if (ret < 0)
++		return ret;
++	attrcount += ret;
++
+ 	if (chan->ext_info) {
+ 		unsigned int i = 0;
+ 		for (ext_info = chan->ext_info; ext_info->name; ext_info++) {
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index b4a0679e4a49..c0f897084620 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -269,9 +269,13 @@ struct iio_chan_spec {
+ 		enum iio_endian endianness;
+ 	} scan_type;
+ 	long			info_mask_separate;
++	long			info_mask_separate_available;
+ 	long			info_mask_shared_by_type;
++	long			info_mask_shared_by_type_available;
+ 	long			info_mask_shared_by_dir;
++	long			info_mask_shared_by_dir_available;
+ 	long			info_mask_shared_by_all;
++	long			info_mask_shared_by_all_available;
+ 	const struct iio_event_spec *event_spec;
+ 	unsigned int		num_event_specs;
+ 	const struct iio_chan_spec_ext_info *ext_info;
+@@ -397,6 +401,13 @@ struct iio_info {
+ 			int *val_len,
+ 			long mask);
+ 
++	int (*read_avail)(struct iio_dev *indio_dev,
++			  struct iio_chan_spec const *chan,
++			  const int **vals,
++			  int *type,
++			  int *length,
++			  long mask_el);
++
+ 	int (*write_raw)(struct iio_dev *indio_dev,
+ 			 struct iio_chan_spec const *chan,
+ 			 int val,
+diff --git a/include/linux/iio/types.h b/include/linux/iio/types.h
+index 32b579525004..2aa7b6384d64 100644
+--- a/include/linux/iio/types.h
++++ b/include/linux/iio/types.h
+@@ -29,4 +29,9 @@ enum iio_event_info {
+ #define IIO_VAL_FRACTIONAL 10
+ #define IIO_VAL_FRACTIONAL_LOG2 11
+ 
++enum iio_available_type {
++	IIO_AVAIL_LIST,
++	IIO_AVAIL_RANGE,
++};
++
+ #endif /* _IIO_TYPES_H_ */
 -- 
-Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
