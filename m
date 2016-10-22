@@ -1,85 +1,25 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC V2 PATCH 10/12] arm64: dts: msm8994 issolate non standard
- bootloader/LK entries
-Date: Fri, 21 Oct 2016 18:14:56 -0700
-Message-ID: <20161022011456.GD7509@tuxbot>
-References: <1475375919-618-1-git-send-email-jmcnicol@redhat.com>
- <20161021194437.GA7509@tuxbot>
- <20161021200409.GN26139@codeaurora.org>
- <3979420.yzJRfAtfpN@wuerfel>
- <20161022000733.GO26139@codeaurora.org>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6: Add support for Toradex Colibri iMX6
+ module
+Date: Sat, 22 Oct 2016 11:18:01 +0800
+Message-ID: <20161022031801.GK30578@tiger>
+References: <20160921112438.8661-1-maitysanchayan@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161022000733.GO26139-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20160921112438.8661-1-maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, git-LJ92rlH3Dns@public.gmane.org, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 21 Oct 17:07 PDT 2016, Stephen Boyd wrote:
-
-> On 10/21, Arnd Bergmann wrote:
-> > On Friday, October 21, 2016 1:04:09 PM CEST Stephen Boyd wrote:
-> > > I'm pushing the bootloader team to do the deep scan of the dtb to
-> > > match up board compatible and pmic compatible strings so that we
-> > > don't have to keep these numbers around. Basically put what
-> > > dtbtool is doing into the bootloader so we don't have to post
-> > > process the dtb anymore. We're currently discussing how to
-> > > implement it and how to move the internal codebase to the new
-> > > scheme.
-> > > 
-> > > At least for 96boards I think we can update the lk bootloaders on
-> > > there to adopt this code. For other platforms like nexus though I
-> > > don't see a way we can update those bootloaders, and those
-> > > bootloaders require these properties exist in the dtbs, so we
-> > > should just throw the numbers into the dts files there and be
-> > > done with post processing. For bootloaders that require the QCDT
-> > > header, we'll have to keep running dtbtool there to generate the
-> > > header. Having the ids in the dts file or not doesn't really
-> > > matter there.
-> > 
-> > I think part of the problem here is the way that the bootloader
-> > expects multiple dtbs to be appended to the kernel binary, and
-> > then pick one of them based on its contents. That doesn't really
-> > change at all when changing the parser from looking at nonstandard
-> > properties to looking at the compatible strings.
-> > 
-> > It still breaks the last-resort workaround for broken bootloaders
-> > that we have in the form of appending the DT to the kernel
-> > with CONFIG_ARM_APPENDED_DTB.
+On Wed, Sep 21, 2016 at 04:54:38PM +0530, Sanchayan Maity wrote:
+> Add support for Toradex Colibri iMX6 module.
 > 
-> That can be "fixed" by having the bootloader use the single
-> appended DTB regardless of the properties existing or not. That's
-> a few lines of code to count the number of appended blobs and
-> then special case there being one.
-> 
+> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-This is already the case on at least 8974; if the ids are present they
-must be the right ones, otherwise it will just pick the dtb that's
-there.
-
-[..]
-> > Ideally this is done
-> > by storing all files on a file system that can also be mounted
-> > to /boot, but there are probably other options that work equally well.
-> > 
-> 
-> Some bootloaders *cough* LK *cough* aren't always able to read
-> filesystems. All they can do is read raw data from partitions.
-> That's probably why nobody has thought about reading files from
-> some place like /boot (which doesn't even exist in android)
-> because these bootloaders don't have filesystem support.
-> 
-
-Well, your version of LK has ext2 support - just not in the code path
-that loads the kernel. But that's still only a different way to
-represent what we today have in QCDT, it doesn't change anything related
-to these ids.
-
-Regards,
-Bjorn
+Applied, thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
