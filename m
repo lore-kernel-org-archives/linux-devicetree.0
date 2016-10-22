@@ -1,85 +1,48 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH 0/4] IIO wrapper drivers, dpot-dac and envelope-detector
-Date: Sat, 22 Oct 2016 00:58:27 +0200
-Message-ID: <58b9c20d-6c3c-4693-b073-e5a8f9c4cb94@axentia.se>
-References: <1476955562-13673-1-git-send-email-peda@axentia.se>
- <9b8c0789-566d-67a3-b4f5-dbe4c69f6932@metafoo.de>
- <8B9238AE-D53C-4A22-84CF-EC42FDA2DFB2@jic23.retrosnub.co.uk>
- <DB170A5C-B172-4B86-80D5-58FD53752ED4@jic23.retrosnub.co.uk>
- <ba941bcd-c542-b699-638f-3b3003e8af00@axentia.se>
- <736c146284d93633a4692b1102eaadaf@jic23.retrosnub.co.uk>
+From: Jason Liu <jason.hui.liu@nxp.com>
+Subject: [PATCH 1/1] arm: dts: imx6ul: 14x14-evk: add the optee node
+Date: Sat, 22 Oct 2016 22:57:09 +0800
+Message-ID: <1477148229-6940-1-git-send-email-jason.hui.liu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <736c146284d93633a4692b1102eaadaf-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, shawnguo@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-21 09:17, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org wrote:
-> On 20.10.2016 19:17, Peter Rosin wrote:
->> On 2016-10-20 19:37, Jonathan Cameron wrote:
->>> On 20 October 2016 18:30:19 BST, Jonathan Cameron 
->>> <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org> wrote:
->>>> On 20 October 2016 13:55:12 BST, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> 
->>>> wrote:
->>>>> On 10/20/2016 11:25 AM, Peter Rosin wrote:
->>>>>> Also, is there some agreed-upon way to dig out the maximum value 
->>>>>> from
->>>>>> an iio channel? If so, "dpot-dac,max-ohms" can be eliminated from 
->>>>>> the
->>>>>> dt bindings, which would have been nice...
->>>>>
->>>>> Yes, this is something we could really use. In a sense it exists for
->>>>> the
->>>>> devices with buffer-capable channels where there is the real_bits 
->>>>> field
->>>>> which tells us the data width of the channel. But a dedicated 
->>>>> mechanism
->>>>> for
->>>>> querying the maximum (and minimum) valid code seems like a useful
->>>>> feature.
->>>>> Not only for in-kernel clients, but also for userspace.
->>>>
->>>> This was something that was addressed by the rather ancient patch
->>>> series i posted that added
->>>> an available call back which provided info on range and values for 
->>>> all info mask elements.
->>>> Series got buried by there being a lot of precursors but quite a few of
->>>> those have merged since.
->>>>
->>>> Hmm Google won't let me find it on my phone. Was a while back now. 
->>>> Will
->>>> try to get on pc with
->>>> decent email archive later and dig out a reference.
->>> http://marc.info/?l=linux-iio&m=138469765309868&w=2 I think...
->>
->> Interesting, one issue with that is that it is all in real world
->> units, while I'd rather have the raw value.
-> Um.. It's been a while, but the principle was (IIRC) that every
-> _available would match the units fo the associated info mask element.
-> Thus if you have a _raw element it would be in adc counts (most likely).
-> 
-> _input would be in relevant real world units, scale etc in the whatever
-> units the value itself is in.
+This patch adds the optee node for the i.MX6UL 14x14 evk board
 
-Ok, so I forward ported that patch and added code so that the relevant
-channels provide what is available. I also added code to turn the
-rest of the parameter style devicetree properties into iio device/channel
-attributes. So, it is now much neater from a bindings point of view.
+Signed-off-by: Jason Liu <jason.hui.liu@nxp.com>
+---
+ arch/arm/boot/dts/imx6ul-14x14-evk.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Before I post the updated patches, I'm wondering what the status is
-on that ancient patch? It didn't forward port without issues, but there
-were no real difficulties that I noticed. Should I just start off my v2
-series with that patch? I tend to think that that's the best option,
-because I suspect that adding a "max-ohms" devicetree property as a
-stop-gap pending some new infrastructure is pretty unrealistic...
-
-Basically, my question is if that ancient patch as any chance of living
-at all in a form close to what it is, or if should start looking for
-an alternative right away?
-
-Cheers,
-Peter
+diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dts b/arch/arm/boot/dts/imx6ul-14x14-evk.dts
+index e281d50..e68dc19 100644
+--- a/arch/arm/boot/dts/imx6ul-14x14-evk.dts
++++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dts
+@@ -30,6 +30,13 @@
+ 		status = "okay";
+ 	};
+ 
++	firmware {
++		optee {
++			compatible = "linaro,optee-tz";
++			method = "smc";
++		};
++	};
++
+ 	regulators {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+-- 
+1.9.1
