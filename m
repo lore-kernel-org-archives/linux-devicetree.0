@@ -1,101 +1,32 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt-bindings: iio: document dpot-dac bindings
-Date: Sat, 22 Oct 2016 15:36:19 +0100
-Message-ID: <704ce511-e82f-6881-ed1f-24ac77ba473e@kernel.org>
-References: <1476955562-13673-1-git-send-email-peda@axentia.se>
- <1476955562-13673-2-git-send-email-peda@axentia.se>
+Subject: Re: [PATCH v4 2/2] Documentation: dt: iio: humidity: add hts221
+ sensor device binding
+Date: Sat, 22 Oct 2016 15:37:34 +0100
+Message-ID: <7252df45-9e93-decc-19bb-f663aa01db8c@kernel.org>
+References: <1476389165-13542-1-git-send-email-lorenzo.bianconi@st.com>
+ <1476389165-13542-3-git-send-email-lorenzo.bianconi@st.com>
+ <20161018140000.mecaaavnvveme6ba@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476955562-13673-2-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+In-Reply-To: <20161018140000.mecaaavnvveme6ba@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/10/16 10:25, Peter Rosin wrote:
-> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> ---
-I like this, but will need some device tree maintainer input on it.
-
-To my mind we are explicitly describing hardware connectivity here so it should
-be fine.  No where near as controversial as a certain other IIO binding ;)
-
-
->  .../devicetree/bindings/iio/dac/dpot-dac.txt       | 43 ++++++++++++++++++++++
->  MAINTAINERS                                        |  6 +++
->  2 files changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
+On 18/10/16 15:00, Rob Herring wrote:
+> On Thu, Oct 13, 2016 at 10:06:05PM +0200, Lorenzo Bianconi wrote:
+>> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/iio/humidity/hts221.txt    | 22 ++++++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/humidity/hts221.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/dac/dpot-dac.txt b/Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
-> new file mode 100644
-> index 000000000000..a381188676c3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
-> @@ -0,0 +1,43 @@
-> +Bindings for DAC emulation using a digital potentiometer
-> +
-> +It is assumed the that the dpot is used as a voltage divider between the
-> +current dpot wiper setting and the maximum resistance of the dpot. The
-> +divided voltage is provided by a vref regulator.
-> +
-> +                  .------.
-> +   .-----------.  |      |
-> +   | Vref      |--'    .---.
-> +   | regulator |--.    |   |
-> +   '-----------'  |    | d |
-> +                  |    | p |
-> +                  |    | o |  wiper
-> +                  |    | t |<---------+
-> +                  |    |   |
-> +                  |    '---'       dac output voltage
-> +                  |      |
-> +                  '------+------------+
-> +
-> +Required properties:
-> +- compatible: Should be "dpot-dac"
-> +- vref-supply: The regulator supplying the voltage divider.
-> +- io-channels: Channel node of the dpot to be used for the voltage division.
-> +- io-channel-names: Should be "dpot".
-> +- dpot-dac,max-ohms: The maximum resistance of the dpot.
-> +
-> +Example:
-> +
-> +	&i2c {
-> +		dpot: mcp4651-503@28 {
-> +			compatible = "microchip,mcp4651-503";
-> +			reg = <0x28>;
-> +			#io-channel-cells = <1>;
-> +		};
-> +	};
-> +
-> +	dac {
-> +		compatible = "dpot-dac";
-> +		vref-supply = <&reg_3v3>;
-> +		io-channels = <&dpot 0>;
-> +		io-channel-names = "dpot";
-> +		dpot-dac,max-ohms = <50000>;
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 1cd38a7e0064..c68b72088945 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6111,6 +6111,12 @@ L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->  S:	Maintained
->  F:	drivers/media/rc/iguanair.c
->  
-> +IIO DIGITAL POTENTIOMETER DAC
-> +M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> +L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
-> +
->  IIO SUBSYSTEM AND DRIVERS
->  M:	Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->  R:	Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > 
-
+Applied. Thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
