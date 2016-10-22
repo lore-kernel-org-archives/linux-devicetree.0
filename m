@@ -1,310 +1,117 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 2/2] ARM64: dts: rockchip: use pin constants to describe gpios
-Date: Sat, 22 Oct 2016 20:59:04 +0800
-Message-ID: <1477141144-6989-1-git-send-email-andy.yan@rock-chips.com>
-References: <1477140706-6886-1-git-send-email-andy.yan@rock-chips.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/4] IIO wrapper drivers, dpot-dac and envelope-detector
+Date: Sat, 22 Oct 2016 15:26:45 +0100
+Message-ID: <6831bef2-78f6-d5dd-ee62-ffa50ad7a757@kernel.org>
+References: <1476955562-13673-1-git-send-email-peda@axentia.se>
+ <9b8c0789-566d-67a3-b4f5-dbe4c69f6932@metafoo.de>
+ <8B9238AE-D53C-4A22-84CF-EC42FDA2DFB2@jic23.retrosnub.co.uk>
+ <DB170A5C-B172-4B86-80D5-58FD53752ED4@jic23.retrosnub.co.uk>
+ <ba941bcd-c542-b699-638f-3b3003e8af00@axentia.se>
+ <736c146284d93633a4692b1102eaadaf@jic23.retrosnub.co.uk>
+ <58b9c20d-6c3c-4693-b073-e5a8f9c4cb94@axentia.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477140706-6886-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <58b9c20d-6c3c-4693-b073-e5a8f9c4cb94-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use macros to describe gpios will make the dts easier to
-read and write.
+On 21/10/16 23:58, Peter Rosin wrote:
+> On 2016-10-21 09:17, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org wrote:
+>> On 20.10.2016 19:17, Peter Rosin wrote:
+>>> On 2016-10-20 19:37, Jonathan Cameron wrote:
+>>>> On 20 October 2016 18:30:19 BST, Jonathan Cameron 
+>>>> <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org> wrote:
+>>>>> On 20 October 2016 13:55:12 BST, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> 
+>>>>> wrote:
+>>>>>> On 10/20/2016 11:25 AM, Peter Rosin wrote:
+>>>>>>> Also, is there some agreed-upon way to dig out the maximum value 
+>>>>>>> from
+>>>>>>> an iio channel? If so, "dpot-dac,max-ohms" can be eliminated from 
+>>>>>>> the
+>>>>>>> dt bindings, which would have been nice...
+>>>>>>
+>>>>>> Yes, this is something we could really use. In a sense it exists for
+>>>>>> the
+>>>>>> devices with buffer-capable channels where there is the real_bits 
+>>>>>> field
+>>>>>> which tells us the data width of the channel. But a dedicated 
+>>>>>> mechanism
+>>>>>> for
+>>>>>> querying the maximum (and minimum) valid code seems like a useful
+>>>>>> feature.
+>>>>>> Not only for in-kernel clients, but also for userspace.
+>>>>>
+>>>>> This was something that was addressed by the rather ancient patch
+>>>>> series i posted that added
+>>>>> an available call back which provided info on range and values for 
+>>>>> all info mask elements.
+>>>>> Series got buried by there being a lot of precursors but quite a few of
+>>>>> those have merged since.
+>>>>>
+>>>>> Hmm Google won't let me find it on my phone. Was a while back now. 
+>>>>> Will
+>>>>> try to get on pc with
+>>>>> decent email archive later and dig out a reference.
+>>>> http://marc.info/?l=linux-iio&m=138469765309868&w=2 I think...
+>>>
+>>> Interesting, one issue with that is that it is all in real world
+>>> units, while I'd rather have the raw value.
+>> Um.. It's been a while, but the principle was (IIRC) that every
+>> _available would match the units fo the associated info mask element.
+>> Thus if you have a _raw element it would be in adc counts (most likely).
+>>
+>> _input would be in relevant real world units, scale etc in the whatever
+>> units the value itself is in.
+> 
+> Ok, so I forward ported that patch and added code so that the relevant
+> channels provide what is available. I also added code to turn the
+> rest of the parameter style devicetree properties into iio device/channel
+> attributes. So, it is now much neater from a bindings point of view.
+> 
+> Before I post the updated patches, I'm wondering what the status is
+> on that ancient patch? It didn't forward port without issues, but there
+> were no real difficulties that I noticed. Should I just start off my v2
+> series with that patch? I tend to think that that's the best option,
+> because I suspect that adding a "max-ohms" devicetree property as a
+> stop-gap pending some new infrastructure is pretty unrealistic...
+> 
+> Basically, my question is if that ancient patch as any chance of living
+> at all in a form close to what it is, or if should start looking for
+> an alternative right away?
+The stoppers (IIRC) were that at the time we had a lot of drivers not
+making full use off the info_mask stuff so there were a whole load
+of precursor patches.  A lot of those have been done since, so we are
+probably much more ready for it.
 
-Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+The controversial bit was the question of how to describe ranges, but
+I don't think that got all that much attention back then.
 
- arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi           | 10 +++++-----
- arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts        |  8 ++++----
- arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts | 14 +++++++-------
- arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts        |  4 ++--
- arch/arm64/boot/dts/rockchip/rk3368-r88.dts            | 16 ++++++++--------
- arch/arm64/boot/dts/rockchip/rk3399-evb.dts            |  6 +++---
- 6 files changed, 29 insertions(+), 29 deletions(-)
+If you are happy to take on looking after that series I'd certainly
+be very happy!   3 years kind of implies I'm not going to get to
+it particularly soon myself :(
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi b/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
-index fff8b19..4772917 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
-@@ -90,7 +90,7 @@
- 			240 241 242 243 244 245 246 247
- 			248 249 250 251 252 253 254 255>;
- 		default-brightness-level = <128>;
--		enable-gpios = <&gpio0 20 GPIO_ACTIVE_HIGH>;
-+		enable-gpios = <&gpio0 RK_PC4 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&bl_en>;
- 		pwms = <&pwm0 0 1000000 PWM_POLARITY_INVERTED>;
-@@ -101,7 +101,7 @@
- 		compatible = "mmc-pwrseq-emmc";
- 		pinctrl-0 = <&emmc_reset>;
- 		pinctrl-names = "default";
--		reset-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio2 RK_PA3 GPIO_ACTIVE_HIGH>;
- 	};
- 
- 	keys: gpio-keys {
-@@ -111,7 +111,7 @@
- 
- 		power {
- 			wakeup-source;
--			gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
-+			gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
- 			label = "GPIO Power";
- 			linux,code = <KEY_POWER>;
- 		};
-@@ -121,7 +121,7 @@
- 	vcc_host: vcc-host-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
--		gpio = <&gpio0 4 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&host_vbus_drv>;
- 		regulator-name = "vcc_host";
-@@ -166,7 +166,7 @@
- 	phy-supply = <&vcc_lan>;
- 	phy-mode = "rmii";
- 	clock_in_out = "output";
--	snps,reset-gpio = <&gpio3 12 0>;
-+	snps,reset-gpio = <&gpio3 RK_PB4 GPIO_ACTIVE_HIGH>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 1000000>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-index e5eeca2..e5b92d2 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-@@ -66,7 +66,7 @@
- 
- 	ir: ir-receiver {
- 		compatible = "gpio-ir-receiver";
--		gpios = <&gpio3 30 GPIO_ACTIVE_LOW>;
-+		gpios = <&gpio3 RK_PD6 GPIO_ACTIVE_LOW>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&ir_int>;
- 	};
-@@ -77,7 +77,7 @@
- 		pinctrl-0 = <&pwr_key>;
- 
- 		power {
--			gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
-+			gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
- 			label = "GPIO Power";
- 			linux,code = <KEY_POWER>;
- 			wakeup-source;
-@@ -88,13 +88,13 @@
- 		compatible = "gpio-leds";
- 
- 		blue {
--			gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>;
-+			gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
- 			label = "geekbox:blue:led";
- 			default-state = "on";
- 		};
- 
- 		red {
--			gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
-+			gpios = <&gpio2 RK_PA3 GPIO_ACTIVE_HIGH>;
- 			label = "geekbox:red:led";
- 			default-state = "off";
- 		};
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
-index ea0a8ec..2e431f13 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
-@@ -61,7 +61,7 @@
- 		compatible = "mmc-pwrseq-emmc";
- 		pinctrl-0 = <&emmc_reset>;
- 		pinctrl-names = "default";
--		reset-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio2 RK_PA3 GPIO_ACTIVE_HIGH>;
- 	};
- 
- 	ext_gmac: external-gmac-clock {
-@@ -78,7 +78,7 @@
- 
- 		power {
- 			wakeup-source;
--			gpios = <&gpio0 5 GPIO_ACTIVE_HIGH>;
-+			gpios = <&gpio0 RK_PA5 GPIO_ACTIVE_HIGH>;
- 			label = "GPIO Power";
- 			linux,code = <KEY_POWER>;
- 		};
-@@ -88,7 +88,7 @@
- 		compatible = "gpio-leds";
- 
- 		red {
--			gpios = <&gpio3 29 GPIO_ACTIVE_HIGH>;
-+			gpios = <&gpio3 RK_PD5 GPIO_ACTIVE_HIGH>;
- 			label = "orion:red:led";
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&led_ctl>;
-@@ -96,7 +96,7 @@
- 		};
- 
- 		blue {
--			gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;
-+			gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
- 			label = "orion:blue:led";
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&stby_pwren>;
-@@ -117,7 +117,7 @@
- 	/* supplies both host and otg */
- 	vcc_host: vcc-host-regulator {
- 		compatible = "regulator-fixed";
--		gpio = <&gpio0 4 GPIO_ACTIVE_LOW>;
-+		gpio = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&host_vbus_drv>;
- 		regulator-name = "vcc_host";
-@@ -149,7 +149,7 @@
- 	vcc_sd: vcc-sd-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc_sd";
--		gpio = <&gpio3 11 GPIO_ACTIVE_LOW>;
-+		gpio = <&gpio3 RK_PB3 GPIO_ACTIVE_LOW>;
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <3300000>;
- 		vin-supply = <&vcc_io>;
-@@ -217,7 +217,7 @@
- 	phy-mode = "rgmii";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&rgmii_pins>;
--	snps,reset-gpio = <&gpio3 12 0>;
-+	snps,reset-gpio = <&gpio3 RK_PB4 GPIO_ACTIVE_HIGH>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 1000000>;
- 	tx_delay = <0x30>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts b/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts
-index 85f7a24..62919c4 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts
-@@ -63,7 +63,7 @@
- 		pinctrl-0 = <&pwr_key>;
- 
- 		power {
--			gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
-+			gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
- 			label = "GPIO Power";
- 			linux,code = <KEY_POWER>;
- 			wakeup-source;
-@@ -248,7 +248,7 @@
- 		reg = <0x40>;
- 		interrupt-parent = <&gpio3>;
- 		interrupts = <28 IRQ_TYPE_EDGE_FALLING>;
--		power-gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
-+		power-gpios = <&gpio3 RK_PB7 GPIO_ACTIVE_HIGH>;
- 		touchscreen-size-x = <800>;
- 		touchscreen-size-y = <1280>;
- 		silead,max-fingers = <5>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
-index eed1ef6..7134181 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
-@@ -61,7 +61,7 @@
- 		compatible = "mmc-pwrseq-emmc";
- 		pinctrl-0 = <&emmc_reset>;
- 		pinctrl-names = "default";
--		reset-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio2 RK_PA3 GPIO_ACTIVE_HIGH>;
- 	};
- 
- 	keys: gpio-keys {
-@@ -71,7 +71,7 @@
- 
- 		power {
- 			wakeup-source;
--			gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
-+			gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
- 			label = "GPIO Power";
- 			linux,code = <KEY_POWER>;
- 		};
-@@ -81,7 +81,7 @@
- 		compatible = "gpio-leds";
- 
- 		work {
--			gpios = <&gpio3 29 GPIO_ACTIVE_HIGH>;
-+			gpios = <&gpio3 RK_PD5 GPIO_ACTIVE_HIGH>;
- 			label = "r88:green:led";
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&led_ctl>;
-@@ -90,7 +90,7 @@
- 
- 	ir: ir-receiver {
- 		compatible = "gpio-ir-receiver";
--		gpios = <&gpio3 30 GPIO_ACTIVE_LOW>;
-+		gpios = <&gpio3 RK_PD6 GPIO_ACTIVE_LOW>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&ir_int>;
- 	};
-@@ -104,10 +104,10 @@
- 
- 		reset-gpios =
- 			/* BT_RST_N */
--			<&gpio3 5 GPIO_ACTIVE_LOW>,
-+			<&gpio3 RK_PA5 GPIO_ACTIVE_LOW>,
- 
- 			/* WL_REG_ON */
--			<&gpio3 4 GPIO_ACTIVE_LOW>;
-+			<&gpio3 RK_PA4 GPIO_ACTIVE_LOW>;
- 	};
- 
- 	vcc_18: vcc18-regulator {
-@@ -124,7 +124,7 @@
- 	vcc_host: vcc-host-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
--		gpio = <&gpio0 4 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&host_vbus_drv>;
- 		regulator-name = "vcc_host";
-@@ -199,7 +199,7 @@
- 	phy-supply = <&vcc_lan>;
- 	phy-mode = "rmii";
- 	clock_in_out = "output";
--	snps,reset-gpio = <&gpio3 12 0>;
-+	snps,reset-gpio = <&gpio3 RK_PB4 GPIO_ACTIVE_HIGH>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 1000000>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-index 8e82497..f00e0d5 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-@@ -88,7 +88,7 @@
- 	vcc5v0_host: vcc5v0-host-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
--		gpio = <&gpio4 25 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&vcc5v0_host_en>;
- 		regulator-name = "vcc5v0_host";
-@@ -123,7 +123,7 @@
- 	phy-mode = "rgmii";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&rgmii_pins>;
--	snps,reset-gpio = <&gpio3 15 GPIO_ACTIVE_LOW>;
-+	snps,reset-gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 50000>;
- 	tx_delay = <0x28>;
-@@ -156,7 +156,7 @@
- };
- 
- &pcie0 {
--	ep-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
-+	ep-gpios = <&gpio3 RK_PB5 GPIO_ACTIVE_HIGH>;
- 	num-lanes = <4>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pcie_clkreqn>;
--- 
-2.7.4
+Will be interesting to see what reviews we get of it when you post it
+though.   Perhaps we deliberately push it into drivers only slowly
+initially so that if we decide it was a horrible mistake (or that we
+need to make changes to the ABI) we only end up supporting obsolete
+ABI in a few drivers...
 
+So a slowly but surely one perhaps rather than mass adoption.
+
+Jonathan
+> 
+> Cheers,
+> Peter
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
