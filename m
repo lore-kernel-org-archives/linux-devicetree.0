@@ -1,1630 +1,602 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] pinctrl: Add SX150X GPIO Extender Pinctrl Driver
-Date: Sat, 22 Oct 2016 19:50:29 -0700
-Message-ID: <CAHQ1cqESoRdeHyvP=m=8F_VwiaYL+wbjFoNa6KvWBGfijhcRjg@mail.gmail.com>
-References: <1477040998-2016-1-git-send-email-narmstrong@baylibre.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: [PATCH v2 7/7] iio: envelope-detector: ADC driver based on a DAC and a comparator
+Date: Sun, 23 Oct 2016 00:43:46 +0200
+Message-ID: <1477176226-10566-8-git-send-email-peda@axentia.se>
+References: <1477176226-10566-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477040998-2016-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org, vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477176226-10566-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 2:09 AM, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> Since the I2C sx150x GPIO expander driver uses platform_data to manage
-> the pins configurations, rewrite the driver as a pinctrl driver using
-> pinconf to get/set pin configurations from DT or debugfs.
->
-> The pinctrl driver is functionnally equivalent as the gpio-only driver
-> and can use DT for pinconf. The platform_data confirmation is dropped.
->
-> This patchset removed the gpio-only driver and selects the Pinctrl driver
-> config instead. This patchset also migrates the gpio dt-bindings to pinctrl
-> and add the pinctrl optional properties.
->
-> The driver was tested with a SX1509 device on a BeagleBone black with
-> interrupt support and on an X86_64 machine over an I2C to USB converter.
->
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
-> This is a fixed version that builds and runs on non-OF platforms and on
-> arm based OF. The GPIO version is removed and the bindings are also moved
-> to the pinctrl bindings.
->
-> Changes since v2 at http://lkml.kernel.org/r/1474991325-1754-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org:
->  - rebased on v4.9-rc1
->  - removed MODULE_DEVICE_TABLE as in upstream bb411e771b0e [1]
->
-> Changes since v1 at http://lkml.kernel.org/r/1473166599-29266-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org:
->  - Fix Kconfig descriptions on pinctrl and gpio
->  - Fix Kconfig dependency
->  - Remove oscio support for non-789 devices
->  - correct typo in dt bindings
->  - remove probe reset for non-789 devices
->
-> Changes since RFC at http://lkml.kernel.org/r/1472130692-14404-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org:
->  - Put #ifdef CONFIG_OF/CONFIG_OF_GPIO to remove OF code for non-of platforms
->  - No more rely on OF_GPIO config
->  - Moved and enhanced bindings to pinctrl bindings
->  - Removed gpio-sx150x.c
->  - Temporary select PINCTRL_SX150X when GPIO_SX150X
->  - Temporary mark GPIO_SX150X as deprecated
->
-> [1] gpio: sx150x: fix implicit assumption module.h is present
->
->  .../gpio-sx150x.txt => pinctrl/pinctrl-sx150x.txt} |   46 +-
->  drivers/gpio/Kconfig                               |   13 +-
->  drivers/gpio/Makefile                              |    1 -
->  drivers/pinctrl/Kconfig                            |   14 +
->  drivers/pinctrl/Makefile                           |    1 +
->  .../gpio-sx150x.c => pinctrl/pinctrl-sx150x.c}     | 1174 ++++++++++++--------
->  6 files changed, 779 insertions(+), 470 deletions(-)
->  rename Documentation/devicetree/bindings/{gpio/gpio-sx150x.txt => pinctrl/pinctrl-sx150x.txt} (40%)
->  rename drivers/{gpio/gpio-sx150x.c => pinctrl/pinctrl-sx150x.c} (23%)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-sx150x.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
-> similarity index 40%
-> rename from Documentation/devicetree/bindings/gpio/gpio-sx150x.txt
-> rename to Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
-> index c809acb..c293c8a 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-sx150x.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
-> @@ -1,34 +1,54 @@
->  SEMTECH SX150x GPIO expander bindings
->
-> +Please refer to pinctrl-bindings.txt, ../gpio/gpio.txt, and
-> +../interrupt-controller/interrupts.txt for generic information regarding
-> +pin controller, GPIO, and interrupt bindings.
->
->  Required properties:
-> -
-> -- compatible: should be "semtech,sx1506q",
-> +- compatible: should be one of :
-> +                       "semtech,sx1506q",
->                         "semtech,sx1508q",
->                         "semtech,sx1509q",
->                         "semtech,sx1502q".
->
->  - reg: The I2C slave address for this device.
->
-> -- interrupt-parent: phandle of the parent interrupt controller.
-> -
-> -- interrupts: Interrupt specifier for the controllers interrupt.
-> -
->  - #gpio-cells: Should be 2. The first cell is the GPIO number and the
->                 second cell is used to specify optional parameters:
->                 bit 0: polarity (0: normal, 1: inverted)
->
->  - gpio-controller: Marks the device as a GPIO controller.
->
-> +Optional properties :
-> +- interrupt-parent: phandle of the parent interrupt controller.
-> +
-> +- interrupts: Interrupt specifier for the controllers interrupt.
-> +
->  - interrupt-controller: Marks the device as a interrupt controller.
->
-> +- semtech,probe-reset: Will trigger a reset of the GPIO expander on probe,
-> +               only for sx1508q and sx1509q
-> +
->  The GPIO expander can optionally be used as an interrupt controller, in
-> -which case it uses the default two cell specifier as described in
-> -Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
-> +which case it uses the default two cell specifier.
-> +
-> +Required properties for pin configuration sub-nodes:
-> + - pins: List of pins to which the configuration applies.
-> +
-> +Optional properties for pin configuration sub-nodes:
-> +----------------------------------------------------
-> + - bias-disable: disable any pin bias, except the OSCIO pin
-> + - bias-pull-up: pull up the pin, except the OSCIO pin
-> + - bias-pull-down: pull down the pin, except the OSCIO pin
-> + - bias-pull-pin-default: use pin-default pull state, except the OSCIO pin
-> + - drive-push-pull: drive actively high and low
-> + - drive-open-drain: drive with open drain only for sx1508q and sx1509q and except the OSCIO pin
-> + - output-low: set the pin to output mode with low level
-> + - output-high: set the pin to output mode with high level
->
->  Example:
->
-> -       i2c_gpio_expander@20{
-> +       i2c0gpio-expander@20{
->                 #gpio-cells = <2>;
->                 #interrupt-cells = <2>;
->                 compatible = "semtech,sx1506q";
-> @@ -38,4 +58,12 @@ Example:
->
->                 gpio-controller;
->                 interrupt-controller;
-> +
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&gpio1_cfg_pins>;
-> +
-> +               gpio1_cfg_pins: gpio1-cfg {
-> +                       pins = "gpio1";
-> +                       bias-pull-up;
-> +               };
->         };
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 26ee00f..db3f7aa 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -781,16 +781,13 @@ config GPIO_PCF857X
->           platform-neutral GPIO calls.
->
->  config GPIO_SX150X
-> -       bool "Semtech SX150x I2C GPIO expander"
-> -       depends on I2C=y
-> -       select GPIOLIB_IRQCHIP
-> +       bool "Semtech SX150x I2C GPIO expander (deprecated)"
-> +       depends on PINCTRL && I2C=y
-> +       select PINCTRL_SX150X
->         default n
->         help
-> -         Say yes here to provide support for Semtech SX150-series I2C
-> -         GPIO expanders. Compatible models include:
-> -
-> -         8 bits:  sx1508q
-> -         16 bits: sx1509q
-> +         Say yes here to provide support for Semtech SX150x-series I2C
-> +         GPIO expanders. The GPIO driver was replaced by a Pinctrl version.
->
->  config GPIO_TPIC2810
->         tristate "TPIC2810 8-Bit I2C GPO expander"
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index ab28a2d..76c7af6 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -102,7 +102,6 @@ obj-$(CONFIG_GPIO_SPEAR_SPICS)      += gpio-spear-spics.o
->  obj-$(CONFIG_GPIO_STA2X11)     += gpio-sta2x11.o
->  obj-$(CONFIG_GPIO_STMPE)       += gpio-stmpe.o
->  obj-$(CONFIG_GPIO_STP_XWAY)    += gpio-stp-xway.o
-> -obj-$(CONFIG_GPIO_SX150X)      += gpio-sx150x.o
->  obj-$(CONFIG_GPIO_SYSCON)      += gpio-syscon.o
->  obj-$(CONFIG_GPIO_TB10X)       += gpio-tb10x.o
->  obj-$(CONFIG_GPIO_TC3589X)     += gpio-tc3589x.o
-> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> index 0e75d94..801fa8b 100644
-> --- a/drivers/pinctrl/Kconfig
-> +++ b/drivers/pinctrl/Kconfig
-> @@ -164,6 +164,20 @@ config PINCTRL_SIRF
->         select GENERIC_PINCONF
->         select GPIOLIB_IRQCHIP
->
-> +config PINCTRL_SX150X
-> +       bool "Semtech SX150x I2C GPIO expander pinctrl driver"
-> +       depends on GPIOLIB && I2C=y
-> +       select PINMUX
-> +       select PINCONF
-> +       select GENERIC_PINCONF
-> +       select GPIOLIB_IRQCHIP
-> +       help
-> +         Say yes here to provide support for Semtech SX150x-series I2C
-> +         GPIO expanders as pinctrl module.
-> +         Compatible models include:
-> +         - 8 bits:  sx1508q, sx1502q
-> +         - 16 bits: sx1509q, sx1506q
-> +
->  config PINCTRL_PISTACHIO
->         def_bool y if MACH_PISTACHIO
->         depends on GPIOLIB
-> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-> index 11bad37..3b8e6f7 100644
-> --- a/drivers/pinctrl/Makefile
-> +++ b/drivers/pinctrl/Makefile
-> @@ -25,6 +25,7 @@ obj-$(CONFIG_PINCTRL_PISTACHIO)       += pinctrl-pistachio.o
->  obj-$(CONFIG_PINCTRL_ROCKCHIP) += pinctrl-rockchip.o
->  obj-$(CONFIG_PINCTRL_SINGLE)   += pinctrl-single.o
->  obj-$(CONFIG_PINCTRL_SIRF)     += sirf/
-> +obj-$(CONFIG_PINCTRL_SX150X)   += pinctrl-sx150x.o
->  obj-$(CONFIG_ARCH_TEGRA)       += tegra/
->  obj-$(CONFIG_PINCTRL_TZ1090)   += pinctrl-tz1090.o
->  obj-$(CONFIG_PINCTRL_TZ1090_PDC)       += pinctrl-tz1090-pdc.o
-> diff --git a/drivers/gpio/gpio-sx150x.c b/drivers/pinctrl/pinctrl-sx150x.c
-> similarity index 23%
-> rename from drivers/gpio/gpio-sx150x.c
-> rename to drivers/pinctrl/pinctrl-sx150x.c
-> index af95de8..e985471 100644
-> --- a/drivers/gpio/gpio-sx150x.c
-> +++ b/drivers/pinctrl/pinctrl-sx150x.c
-> @@ -1,4 +1,8 @@
-> -/* Copyright (c) 2010, Code Aurora Forum. All rights reserved.
-> +/*
-> + * Copyright (c) 2016, BayLibre, SAS. All rights reserved.
-> + * Author: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> + *
-> + * Copyright (c) 2010, Code Aurora Forum. All rights reserved.
->   *
->   * Driver for Semtech SX150X I2C GPIO Expanders
->   *
-> @@ -12,13 +16,8 @@
->   * but WITHOUT ANY WARRANTY; without even the implied warranty of
->   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->   * GNU General Public License for more details.
-> - *
-> - * You should have received a copy of the GNU General Public License
-> - * along with this program; if not, write to the Free Software
-> - * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-> - * 02110-1301, USA.
->   */
-> -#include <linux/gpio.h>
-> +
->  #include <linux/i2c.h>
->  #include <linux/init.h>
->  #include <linux/interrupt.h>
-> @@ -26,17 +25,23 @@
->  #include <linux/mutex.h>
->  #include <linux/slab.h>
->  #include <linux/of.h>
-> -#include <linux/of_address.h>
-> -#include <linux/of_irq.h>
-> -#include <linux/of_gpio.h>
-> -#include <linux/of_device.h>
-> +#include <linux/gpio.h>
-> +#include <linux/pinctrl/machine.h>
-> +#include <linux/pinctrl/pinconf.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include <linux/pinctrl/pinmux.h>
-> +#include <linux/pinctrl/pinconf-generic.h>
->
-> -#define NO_UPDATE_PENDING      -1
-> +#include "core.h"
-> +#include "pinconf.h"
-> +#include "pinctrl-utils.h"
->
->  /* The chip models of sx150x */
-> -#define SX150X_123 0
-> -#define SX150X_456 1
-> -#define SX150X_789 2
-> +enum {
-> +       SX150X_123 = 0,
-> +       SX150X_456,
-> +       SX150X_789,
-> +};
->
->  struct sx150x_123_pri {
->         u8 reg_pld_mode;
-> @@ -82,167 +87,146 @@ struct sx150x_device_data {
->                 struct sx150x_456_pri x456;
->                 struct sx150x_789_pri x789;
->         } pri;
-> +       const struct pinctrl_pin_desc *pins;
-> +       unsigned int npins;
->  };
->
-> -/**
-> - * struct sx150x_platform_data - config data for SX150x driver
-> - * @gpio_base: The index number of the first GPIO assigned to this
-> - *             GPIO expander.  The expander will create a block of
-> - *             consecutively numbered gpios beginning at the given base,
-> - *             with the size of the block depending on the model of the
-> - *             expander chip.
-> - * @oscio_is_gpo: If set to true, the driver will configure OSCIO as a GPO
-> - *                instead of as an oscillator, increasing the size of the
-> - *                GP(I)O pool created by this expander by one.  The
-> - *                output-only GPO pin will be added at the end of the block.
-> - * @io_pullup_ena: A bit-mask which enables or disables the pull-up resistor
-> - *                 for each IO line in the expander.  Setting the bit at
-> - *                 position n will enable the pull-up for the IO at
-> - *                 the corresponding offset.  For chips with fewer than
-> - *                 16 IO pins, high-end bits are ignored.
-> - * @io_pulldn_ena: A bit-mask which enables-or disables the pull-down
-> - *                 resistor for each IO line in the expander. Setting the
-> - *                 bit at position n will enable the pull-down for the IO at
-> - *                 the corresponding offset.  For chips with fewer than
-> - *                 16 IO pins, high-end bits are ignored.
-> - * @io_polarity: A bit-mask which enables polarity inversion for each IO line
-> - *               in the expander.  Setting the bit at position n inverts
-> - *               the polarity of that IO line, while clearing it results
-> - *               in normal polarity. For chips with fewer than 16 IO pins,
-> - *               high-end bits are ignored.
-> - * @irq_summary: The 'summary IRQ' line to which the GPIO expander's INT line
-> - *               is connected, via which it reports interrupt events
-> - *               across all GPIO lines.  This must be a real,
-> - *               pre-existing IRQ line.
-> - *               Setting this value < 0 disables the irq_chip functionality
-> - *               of the driver.
-> - * @irq_base: The first 'virtual IRQ' line at which our block of GPIO-based
-> - *            IRQ lines will appear.  Similarly to gpio_base, the expander
-> - *            will create a block of irqs beginning at this number.
-> - *            This value is ignored if irq_summary is < 0.
-> - * @reset_during_probe: If set to true, the driver will trigger a full
-> - *                      reset of the chip at the beginning of the probe
-> - *                      in order to place it in a known state.
-> - */
-> -struct sx150x_platform_data {
-> -       unsigned gpio_base;
-> -       bool     oscio_is_gpo;
-> -       u16      io_pullup_ena;
-> -       u16      io_pulldn_ena;
-> -       u16      io_polarity;
-> -       int      irq_summary;
-> -       unsigned irq_base;
-> -       bool     reset_during_probe;
-> +struct sx150x_pinctrl {
-> +       struct device *dev;
-> +       struct i2c_client *client;
-> +       struct pinctrl_dev *pctldev;
-> +       struct pinctrl_desc pinctrl_desc;
-> +       struct gpio_chip gpio;
-> +       struct irq_chip irq_chip;
-> +       struct {
-> +               int update;
-> +               u32 sense;
-> +               u32 masked;
-> +               u32 dev_sense;
-> +               u32 dev_masked;
-> +       } irq;
-> +       struct mutex lock;
-> +       const struct sx150x_device_data *data;
->  };
->
-> -struct sx150x_chip {
-> -       struct gpio_chip                 gpio_chip;
-> -       struct i2c_client               *client;
-> -       const struct sx150x_device_data *dev_cfg;
-> -       int                              irq_summary;
-> -       int                              irq_base;
-> -       int                              irq_update;
-> -       u32                              irq_sense;
-> -       u32                              irq_masked;
-> -       u32                              dev_sense;
-> -       u32                              dev_masked;
-> -       struct irq_chip                  irq_chip;
-> -       struct mutex                     lock;
-> +static const struct pinctrl_pin_desc sx150x_8_pins[] = {
-> +       PINCTRL_PIN(0, "gpio0"),
-> +       PINCTRL_PIN(1, "gpio1"),
-> +       PINCTRL_PIN(2, "gpio2"),
-> +       PINCTRL_PIN(3, "gpio3"),
-> +       PINCTRL_PIN(4, "gpio4"),
-> +       PINCTRL_PIN(5, "gpio5"),
-> +       PINCTRL_PIN(6, "gpio6"),
-> +       PINCTRL_PIN(7, "gpio7"),
-> +       PINCTRL_PIN(8, "oscio"),
->  };
->
-> -static const struct sx150x_device_data sx150x_devices[] = {
-> -       [0] = { /* sx1508q */
-> -               .model = SX150X_789,
-> -               .reg_pullup     = 0x03,
-> -               .reg_pulldn     = 0x04,
-> -               .reg_dir        = 0x07,
-> -               .reg_data       = 0x08,
-> -               .reg_irq_mask   = 0x09,
-> -               .reg_irq_src    = 0x0c,
-> -               .reg_sense      = 0x0b,
-> -               .pri.x789 = {
-> -                       .reg_drain      = 0x05,
-> -                       .reg_polarity   = 0x06,
-> -                       .reg_clock      = 0x0f,
-> -                       .reg_misc       = 0x10,
-> -                       .reg_reset      = 0x7d,
-> -               },
-> -               .ngpios = 8,
-> -       },
-> -       [1] = { /* sx1509q */
-> -               .model = SX150X_789,
-> -               .reg_pullup     = 0x07,
-> -               .reg_pulldn     = 0x09,
-> -               .reg_dir        = 0x0f,
-> -               .reg_data       = 0x11,
-> -               .reg_irq_mask   = 0x13,
-> -               .reg_irq_src    = 0x19,
-> -               .reg_sense      = 0x17,
-> -               .pri.x789 = {
-> -                       .reg_drain      = 0x0b,
-> -                       .reg_polarity   = 0x0d,
-> -                       .reg_clock      = 0x1e,
-> -                       .reg_misc       = 0x1f,
-> -                       .reg_reset      = 0x7d,
-> -               },
-> -               .ngpios = 16
-> -       },
-> -       [2] = { /* sx1506q */
-> -               .model = SX150X_456,
-> -               .reg_pullup     = 0x05,
-> -               .reg_pulldn     = 0x07,
-> -               .reg_dir        = 0x03,
-> -               .reg_data       = 0x01,
-> -               .reg_irq_mask   = 0x09,
-> -               .reg_irq_src    = 0x0f,
-> -               .reg_sense      = 0x0d,
-> -               .pri.x456 = {
-> -                       .reg_pld_mode   = 0x21,
-> -                       .reg_pld_table0 = 0x23,
-> -                       .reg_pld_table1 = 0x25,
-> -                       .reg_pld_table2 = 0x27,
-> -                       .reg_pld_table3 = 0x29,
-> -                       .reg_pld_table4 = 0x2b,
-> -                       .reg_advance    = 0xad,
-> -               },
-> -               .ngpios = 16
-> +static const struct pinctrl_pin_desc sx150x_16_pins[] = {
-> +       PINCTRL_PIN(0, "gpio0"),
-> +       PINCTRL_PIN(1, "gpio1"),
-> +       PINCTRL_PIN(2, "gpio2"),
-> +       PINCTRL_PIN(3, "gpio3"),
-> +       PINCTRL_PIN(4, "gpio4"),
-> +       PINCTRL_PIN(5, "gpio5"),
-> +       PINCTRL_PIN(6, "gpio6"),
-> +       PINCTRL_PIN(7, "gpio7"),
-> +       PINCTRL_PIN(8, "gpio8"),
-> +       PINCTRL_PIN(9, "gpio9"),
-> +       PINCTRL_PIN(10, "gpio10"),
-> +       PINCTRL_PIN(11, "gpio11"),
-> +       PINCTRL_PIN(12, "gpio12"),
-> +       PINCTRL_PIN(13, "gpio13"),
-> +       PINCTRL_PIN(14, "gpio14"),
-> +       PINCTRL_PIN(15, "gpio15"),
-> +       PINCTRL_PIN(16, "oscio"),
-> +};
-> +
-> +static const struct sx150x_device_data sx1508q_device_data = {
-> +       .model = SX150X_789,
-> +       .reg_pullup     = 0x03,
-> +       .reg_pulldn     = 0x04,
-> +       .reg_dir        = 0x07,
-> +       .reg_data       = 0x08,
-> +       .reg_irq_mask   = 0x09,
-> +       .reg_irq_src    = 0x0c,
-> +       .reg_sense      = 0x0b,
-> +       .pri.x789 = {
-> +               .reg_drain      = 0x05,
-> +               .reg_polarity   = 0x06,
-> +               .reg_clock      = 0x0f,
-> +               .reg_misc       = 0x10,
-> +               .reg_reset      = 0x7d,
->         },
-> -       [3] = { /* sx1502q */
-> -               .model = SX150X_123,
-> -               .reg_pullup     = 0x02,
-> -               .reg_pulldn     = 0x03,
-> -               .reg_dir        = 0x01,
-> -               .reg_data       = 0x00,
-> -               .reg_irq_mask   = 0x05,
-> -               .reg_irq_src    = 0x08,
-> -               .reg_sense      = 0x07,
-> -               .pri.x123 = {
-> -                       .reg_pld_mode   = 0x10,
-> -                       .reg_pld_table0 = 0x11,
-> -                       .reg_pld_table1 = 0x12,
-> -                       .reg_pld_table2 = 0x13,
-> -                       .reg_pld_table3 = 0x14,
-> -                       .reg_pld_table4 = 0x15,
-> -                       .reg_advance    = 0xad,
-> -               },
-> -               .ngpios = 8,
-> +       .ngpios = 8,
-> +       .pins = sx150x_8_pins,
-> +       .npins = ARRAY_SIZE(sx150x_8_pins),
-> +};
-> +
-> +static const struct sx150x_device_data sx1509q_device_data = {
-> +       .model = SX150X_789,
-> +       .reg_pullup     = 0x07,
-> +       .reg_pulldn     = 0x09,
-> +       .reg_dir        = 0x0f,
-> +       .reg_data       = 0x11,
-> +       .reg_irq_mask   = 0x13,
-> +       .reg_irq_src    = 0x19,
-> +       .reg_sense      = 0x17,
-> +       .pri.x789 = {
-> +               .reg_drain      = 0x0b,
-> +               .reg_polarity   = 0x0d,
-> +               .reg_clock      = 0x1e,
-> +               .reg_misc       = 0x1f,
-> +               .reg_reset      = 0x7d,
->         },
-> +       .ngpios = 16,
-> +       .pins = sx150x_16_pins,
-> +       .npins = ARRAY_SIZE(sx150x_16_pins),
->  };
->
-> -static const struct i2c_device_id sx150x_id[] = {
-> -       {"sx1508q", 0},
-> -       {"sx1509q", 1},
-> -       {"sx1506q", 2},
-> -       {"sx1502q", 3},
-> -       {}
-> +static const struct sx150x_device_data sx1506q_device_data = {
-> +       .model = SX150X_456,
-> +       .reg_pullup     = 0x05,
-> +       .reg_pulldn     = 0x07,
-> +       .reg_dir        = 0x03,
-> +       .reg_data       = 0x01,
-> +       .reg_irq_mask   = 0x09,
-> +       .reg_irq_src    = 0x0f,
-> +       .reg_sense      = 0x0d,
-> +       .pri.x456 = {
-> +               .reg_pld_mode   = 0x21,
-> +               .reg_pld_table0 = 0x23,
-> +               .reg_pld_table1 = 0x25,
-> +               .reg_pld_table2 = 0x27,
-> +               .reg_pld_table3 = 0x29,
-> +               .reg_pld_table4 = 0x2b,
-> +               .reg_advance    = 0xad,
-> +       },
-> +       .ngpios = 16,
-> +       .pins = sx150x_16_pins,
-> +       .npins = 16, /* oscio not available */
->  };
->
-> -static const struct of_device_id sx150x_of_match[] = {
-> -       { .compatible = "semtech,sx1508q" },
-> -       { .compatible = "semtech,sx1509q" },
-> -       { .compatible = "semtech,sx1506q" },
-> -       { .compatible = "semtech,sx1502q" },
-> -       {},
-> +static const struct sx150x_device_data sx1502q_device_data = {
-> +       .model = SX150X_123,
-> +       .reg_pullup     = 0x02,
-> +       .reg_pulldn     = 0x03,
-> +       .reg_dir        = 0x01,
-> +       .reg_data       = 0x00,
-> +       .reg_irq_mask   = 0x05,
-> +       .reg_irq_src    = 0x08,
-> +       .reg_sense      = 0x07,
-> +       .pri.x123 = {
-> +               .reg_pld_mode   = 0x10,
-> +               .reg_pld_table0 = 0x11,
-> +               .reg_pld_table1 = 0x12,
-> +               .reg_pld_table2 = 0x13,
-> +               .reg_pld_table3 = 0x14,
-> +               .reg_pld_table4 = 0x15,
-> +               .reg_advance    = 0xad,
-> +       },
-> +       .ngpios = 8,
-> +       .pins = sx150x_8_pins,
-> +       .npins = 8, /* oscio not available */
->  };
->
->  static s32 sx150x_i2c_write(struct i2c_client *client, u8 reg, u8 val)
-> @@ -269,11 +253,6 @@ static s32 sx150x_i2c_read(struct i2c_client *client, u8 reg, u8 *val)
->         return err;
->  }
->
-> -static inline bool offset_is_oscio(struct sx150x_chip *chip, unsigned offset)
-> -{
-> -       return (chip->dev_cfg->ngpios == offset);
-> -}
-> -
->  /*
->   * These utility functions solve the common problem of locating and setting
->   * configuration bits.  Configuration bits are grouped into registers
-> @@ -294,7 +273,7 @@ static inline bool offset_is_oscio(struct sx150x_chip *chip, unsigned offset)
->   * register and mask the correct bits.
->   */
->  static inline void sx150x_find_cfg(u8 offset, u8 width,
-> -                               u8 *reg, u8 *mask, u8 *shift)
-> +                                  u8 *reg, u8 *mask, u8 *shift)
->  {
->         *reg   -= offset * width / 8;
->         *mask   = (1 << width) - 1;
-> @@ -302,185 +281,241 @@ static inline void sx150x_find_cfg(u8 offset, u8 width,
->         *mask <<= *shift;
->  }
->
-> -static s32 sx150x_write_cfg(struct sx150x_chip *chip,
-> -                       u8 offset, u8 width, u8 reg, u8 val)
-> +static int sx150x_write_cfg(struct i2c_client *client,
-> +                           u8 offset, u8 width, u8 reg, u8 val)
->  {
->         u8  mask;
->         u8  data;
->         u8  shift;
-> -       s32 err;
-> +       int err;
->
->         sx150x_find_cfg(offset, width, &reg, &mask, &shift);
-> -       err = sx150x_i2c_read(chip->client, reg, &data);
-> +       err = sx150x_i2c_read(client, reg, &data);
->         if (err < 0)
->                 return err;
->
->         data &= ~mask;
->         data |= (val << shift) & mask;
-> -       return sx150x_i2c_write(chip->client, reg, data);
-> +       return sx150x_i2c_write(client, reg, data);
->  }
->
-> -static int sx150x_get_io(struct sx150x_chip *chip, unsigned offset)
-> +static int sx150x_read_cfg(struct i2c_client *client,
-> +                          u8 offset, u8 width, u8 reg)
->  {
-> -       u8  reg = chip->dev_cfg->reg_data;
->         u8  mask;
->         u8  data;
->         u8  shift;
-> -       s32 err;
-> +       int err;
->
-> -       sx150x_find_cfg(offset, 1, &reg, &mask, &shift);
-> -       err = sx150x_i2c_read(chip->client, reg, &data);
-> -       if (err >= 0)
-> -               err = (data & mask) != 0 ? 1 : 0;
-> +       sx150x_find_cfg(offset, width, &reg, &mask, &shift);
-> +       err = sx150x_i2c_read(client, reg, &data);
-> +       if (err < 0)
-> +               return err;
->
-> -       return err;
-> +       return (data & mask);
->  }
->
-> -static void sx150x_set_oscio(struct sx150x_chip *chip, int val)
-> +static int sx150x_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
->  {
-> -       sx150x_i2c_write(chip->client,
-> -                       chip->dev_cfg->pri.x789.reg_clock,
-> -                       (val ? 0x1f : 0x10));
-> +       return 0;
->  }
->
-> -static void sx150x_set_io(struct sx150x_chip *chip, unsigned offset, int val)
-> +static const char *sx150x_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
-> +                                               unsigned int group)
->  {
-> -       sx150x_write_cfg(chip,
-> -                       offset,
-> -                       1,
-> -                       chip->dev_cfg->reg_data,
-> -                       (val ? 1 : 0));
-> +       return NULL;
->  }
->
-> -static int sx150x_io_input(struct sx150x_chip *chip, unsigned offset)
-> +static int sx150x_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
-> +                                       unsigned int group,
-> +                                       const unsigned int **pins,
-> +                                       unsigned int *num_pins)
->  {
-> -       return sx150x_write_cfg(chip,
-> -                               offset,
-> -                               1,
-> -                               chip->dev_cfg->reg_dir,
-> -                               1);
-> +       return -ENOTSUPP;
->  }
->
-> -static int sx150x_io_output(struct sx150x_chip *chip, unsigned offset, int val)
-> +static const struct pinctrl_ops sx150x_pinctrl_ops = {
-> +       .get_groups_count = sx150x_pinctrl_get_groups_count,
-> +       .get_group_name = sx150x_pinctrl_get_group_name,
-> +       .get_group_pins = sx150x_pinctrl_get_group_pins,
-> +#ifdef CONFIG_OF
-> +       .dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
-> +       .dt_free_map = pinctrl_utils_free_map,
-> +#endif
-> +};
-> +
-> +static bool sx150x_pin_is_oscio(struct sx150x_pinctrl *pctl, unsigned int pin)
->  {
-> -       int err;
-> +       if (pin >= pctl->data->npins)
-> +               return false;
->
-> -       err = sx150x_write_cfg(chip,
-> -                       offset,
-> -                       1,
-> -                       chip->dev_cfg->reg_data,
-> -                       (val ? 1 : 0));
-> -       if (err >= 0)
-> -               err = sx150x_write_cfg(chip,
-> -                               offset,
-> -                               1,
-> -                               chip->dev_cfg->reg_dir,
-> -                               0);
-> -       return err;
-> +       /* OSCIO pin is only present in 789 devices */
-> +       if (pctl->data->model != SX150X_789)
-> +               return false;
-> +
-> +       return !strcmp(pctl->data->pins[pin].name, "oscio");
->  }
->
-> -static int sx150x_gpio_get(struct gpio_chip *gc, unsigned offset)
-> +static int sx150x_gpio_get_direction(struct gpio_chip *chip,
-> +                                     unsigned int offset)
->  {
-> -       struct sx150x_chip *chip = gpiochip_get_data(gc);
-> -       int status = -EINVAL;
-> +       struct sx150x_pinctrl *pctl = gpiochip_get_data(chip);
-> +       int status;
->
-> -       if (!offset_is_oscio(chip, offset)) {
-> -               mutex_lock(&chip->lock);
-> -               status = sx150x_get_io(chip, offset);
-> -               mutex_unlock(&chip->lock);
-> -       }
-> +       if (sx150x_pin_is_oscio(pctl, offset))
-> +               return false;
-> +
-> +       status = sx150x_read_cfg(pctl->client, offset, 1, pctl->data->reg_dir);
-> +       if (status >= 0)
-> +               status = !!status;
->
-> -       return (status < 0) ? status : !!status;
-> +       return status;
->  }
->
-> -static void sx150x_gpio_set(struct gpio_chip *gc, unsigned offset, int val)
-> +static int sx150x_gpio_get(struct gpio_chip *chip, unsigned int offset)
->  {
-> -       struct sx150x_chip *chip = gpiochip_get_data(gc);
-> +       struct sx150x_pinctrl *pctl = gpiochip_get_data(chip);
-> +       int status;
->
-> -       mutex_lock(&chip->lock);
-> -       if (offset_is_oscio(chip, offset))
-> -               sx150x_set_oscio(chip, val);
-> -       else
-> -               sx150x_set_io(chip, offset, val);
-> -       mutex_unlock(&chip->lock);
-> +       if (sx150x_pin_is_oscio(pctl, offset))
-> +               return -EINVAL;
-> +
-> +       status = sx150x_read_cfg(pctl->client, offset, 1, pctl->data->reg_data);
-> +       if (status >= 0)
-> +               status = !!status;
-> +
-> +       return status;
->  }
->
-> -static int sx150x_gpio_set_single_ended(struct gpio_chip *gc,
-> -                                       unsigned offset,
-> -                                        enum single_ended_mode mode)
-> +static int sx150x_gpio_set_single_ended(struct gpio_chip *chip,
-> +                                       unsigned int offset,
-> +                                       enum single_ended_mode mode)
->  {
-> -       struct sx150x_chip *chip = gpiochip_get_data(gc);
-> -
-> -       /* On the SX160X 789 we can set open drain */
-> -       if (chip->dev_cfg->model != SX150X_789)
-> +       struct sx150x_pinctrl *pctl = gpiochip_get_data(chip);
-> +       int ret;
-> +
-> +       switch (mode) {
-> +       case LINE_MODE_PUSH_PULL:
-> +               if (pctl->data->model != SX150X_789 ||
-> +                   sx150x_pin_is_oscio(pctl, offset))
-> +                       return 0;
-> +
-> +               mutex_lock(&pctl->lock);
-> +               ret = sx150x_write_cfg(pctl->client, offset, 1,
-> +                                      pctl->data->pri.x789.reg_drain,
-> +                                      0);
-> +               mutex_unlock(&pctl->lock);
-> +               if (ret < 0)
-> +                       return ret;
-> +               break;
-> +
-> +       case LINE_MODE_OPEN_DRAIN:
-> +               if (pctl->data->model != SX150X_789 ||
-> +                   sx150x_pin_is_oscio(pctl, offset))
-> +                       return -ENOTSUPP;
-> +
-> +               mutex_lock(&pctl->lock);
-> +               ret = sx150x_write_cfg(pctl->client, offset, 1,
-> +                                      pctl->data->pri.x789.reg_drain,
-> +                                      1);
-> +               mutex_unlock(&pctl->lock);
-> +               if (ret < 0)
-> +                       return ret;
-> +               break;
-> +
-> +       default:
->                 return -ENOTSUPP;
-> +       }
->
-> -       if (mode == LINE_MODE_PUSH_PULL)
-> -               return sx150x_write_cfg(chip,
-> -                                       offset,
-> -                                       1,
-> -                                       chip->dev_cfg->pri.x789.reg_drain,
-> -                                       0);
-> -
-> -       if (mode == LINE_MODE_OPEN_DRAIN)
-> -               return sx150x_write_cfg(chip,
-> -                                       offset,
-> -                                       1,
-> -                                       chip->dev_cfg->pri.x789.reg_drain,
-> -                                       1);
-> -       return -ENOTSUPP;
-> +       return 0;
->  }
->
-> -static int sx150x_gpio_direction_input(struct gpio_chip *gc, unsigned offset)
-> +static void sx150x_gpio_set(struct gpio_chip *chip, unsigned int offset,
-> +                              int value)
->  {
-> -       struct sx150x_chip *chip = gpiochip_get_data(gc);
-> -       int status = -EINVAL;
-> +       struct sx150x_pinctrl *pctl = gpiochip_get_data(chip);
-> +
-> +       if (sx150x_pin_is_oscio(pctl, offset)) {
->
-> -       if (!offset_is_oscio(chip, offset)) {
-> -               mutex_lock(&chip->lock);
-> -               status = sx150x_io_input(chip, offset);
-> -               mutex_unlock(&chip->lock);
-> +               mutex_lock(&pctl->lock);
-> +               sx150x_i2c_write(pctl->client,
-> +                                      pctl->data->pri.x789.reg_clock,
-> +                                      (value ? 0x1f : 0x10));
-> +               mutex_unlock(&pctl->lock);
-> +       } else {
-> +               mutex_lock(&pctl->lock);
-> +               sx150x_write_cfg(pctl->client, offset, 1,
-> +                                      pctl->data->reg_data,
-> +                                      (value ? 1 : 0));
-> +               mutex_unlock(&pctl->lock);
->         }
-> -       return status;
->  }
->
-> -static int sx150x_gpio_direction_output(struct gpio_chip *gc,
-> -                                       unsigned offset,
-> -                                       int val)
-> +static int sx150x_gpio_direction_input(struct gpio_chip *chip,
-> +                                     unsigned int offset)
->  {
-> -       struct sx150x_chip *chip = gpiochip_get_data(gc);
-> -       int status = 0;
-> +       struct sx150x_pinctrl *pctl = gpiochip_get_data(chip);
-> +       int ret;
->
-> -       if (!offset_is_oscio(chip, offset)) {
-> -               mutex_lock(&chip->lock);
-> -               status = sx150x_io_output(chip, offset, val);
-> -               mutex_unlock(&chip->lock);
-> +       if (sx150x_pin_is_oscio(pctl, offset))
-> +               return -EINVAL;
-> +
-> +       mutex_lock(&pctl->lock);
-> +       ret = sx150x_write_cfg(pctl->client, offset, 1,
-> +                               pctl->data->reg_dir, 1);
-> +       mutex_unlock(&pctl->lock);
-> +
-> +       return ret;
-> +}
-> +
-> +static int sx150x_gpio_direction_output(struct gpio_chip *chip,
-> +                                      unsigned int offset, int value)
-> +{
-> +       struct sx150x_pinctrl *pctl = gpiochip_get_data(chip);
-> +       int status;
-> +
-> +       if (sx150x_pin_is_oscio(pctl, offset)) {
-> +               sx150x_gpio_set(chip, offset, value);
-> +               return 0;
->         }
-> +
-> +       mutex_lock(&pctl->lock);
-> +       status = sx150x_write_cfg(pctl->client, offset, 1,
-> +                                 pctl->data->reg_data,
-> +                                 (value ? 1 : 0));
-> +       if (status >= 0)
-> +               status = sx150x_write_cfg(pctl->client, offset, 1,
-> +                                         pctl->data->reg_dir, 0);
-> +       mutex_unlock(&pctl->lock);
-> +
->         return status;
->  }
->
->  static void sx150x_irq_mask(struct irq_data *d)
->  {
-> -       struct sx150x_chip *chip = gpiochip_get_data(irq_data_get_irq_chip_data(d));
-> -       unsigned n = d->hwirq;
-> +       struct sx150x_pinctrl *pctl =
-> +                       gpiochip_get_data(irq_data_get_irq_chip_data(d));
-> +       unsigned int n = d->hwirq;
->
-> -       chip->irq_masked |= (1 << n);
-> -       chip->irq_update = n;
-> +       pctl->irq.masked |= (1 << n);
-> +       pctl->irq.update = n;
->  }
->
->  static void sx150x_irq_unmask(struct irq_data *d)
->  {
-> -       struct sx150x_chip *chip = gpiochip_get_data(irq_data_get_irq_chip_data(d));
-> -       unsigned n = d->hwirq;
-> +       struct sx150x_pinctrl *pctl =
-> +                       gpiochip_get_data(irq_data_get_irq_chip_data(d));
-> +       unsigned int n = d->hwirq;
->
-> -       chip->irq_masked &= ~(1 << n);
-> -       chip->irq_update = n;
-> +       pctl->irq.masked &= ~(1 << n);
-> +       pctl->irq.update = n;
->  }
->
->  static int sx150x_irq_set_type(struct irq_data *d, unsigned int flow_type)
->  {
-> -       struct sx150x_chip *chip = gpiochip_get_data(irq_data_get_irq_chip_data(d));
-> -       unsigned n, val = 0;
-> +       struct sx150x_pinctrl *pctl =
-> +                       gpiochip_get_data(irq_data_get_irq_chip_data(d));
-> +       unsigned int n, val = 0;
->
->         if (flow_type & (IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
->                 return -EINVAL;
-> @@ -492,37 +527,40 @@ static int sx150x_irq_set_type(struct irq_data *d, unsigned int flow_type)
->         if (flow_type & IRQ_TYPE_EDGE_FALLING)
->                 val |= 0x2;
->
-> -       chip->irq_sense &= ~(3UL << (n * 2));
-> -       chip->irq_sense |= val << (n * 2);
-> -       chip->irq_update = n;
-> +       pctl->irq.sense &= ~(3UL << (n * 2));
-> +       pctl->irq.sense |= val << (n * 2);
-> +       pctl->irq.update = n;
->         return 0;
->  }
->
->  static irqreturn_t sx150x_irq_thread_fn(int irq, void *dev_id)
->  {
-> -       struct sx150x_chip *chip = (struct sx150x_chip *)dev_id;
-> -       unsigned nhandled = 0;
-> -       unsigned sub_irq;
-> -       unsigned n;
-> +       struct sx150x_pinctrl *pctl = (struct sx150x_pinctrl *)dev_id;
-> +       unsigned int nhandled = 0;
-> +       unsigned int sub_irq;
-> +       unsigned int n;
->         s32 err;
->         u8 val;
->         int i;
->
-> -       for (i = (chip->dev_cfg->ngpios / 8) - 1; i >= 0; --i) {
-> -               err = sx150x_i2c_read(chip->client,
-> -                                     chip->dev_cfg->reg_irq_src - i,
-> +       for (i = (pctl->data->ngpios / 8) - 1; i >= 0; --i) {
-> +               err = sx150x_i2c_read(pctl->client,
-> +                                     pctl->data->reg_irq_src - i,
->                                       &val);
->                 if (err < 0)
->                         continue;
->
-> -               sx150x_i2c_write(chip->client,
-> -                               chip->dev_cfg->reg_irq_src - i,
-> -                               val);
-> +               err = sx150x_i2c_write(pctl->client,
-> +                                      pctl->data->reg_irq_src - i,
-> +                                      val);
-> +               if (err < 0)
-> +                       continue;
-> +
->                 for (n = 0; n < 8; ++n) {
->                         if (val & (1 << n)) {
->                                 sub_irq = irq_find_mapping(
-> -                                       chip->gpio_chip.irqdomain,
-> -                                       (i * 8) + n);
-> +                                               pctl->gpio.irqdomain,
-> +                                               (i * 8) + n);
->                                 handle_nested_irq(sub_irq);
->                                 ++nhandled;
->                         }
-> @@ -534,251 +572,483 @@ static irqreturn_t sx150x_irq_thread_fn(int irq, void *dev_id)
->
->  static void sx150x_irq_bus_lock(struct irq_data *d)
->  {
-> -       struct sx150x_chip *chip = gpiochip_get_data(irq_data_get_irq_chip_data(d));
-> +       struct sx150x_pinctrl *pctl =
-> +                       gpiochip_get_data(irq_data_get_irq_chip_data(d));
->
-> -       mutex_lock(&chip->lock);
-> +       mutex_lock(&pctl->lock);
->  }
->
->  static void sx150x_irq_bus_sync_unlock(struct irq_data *d)
->  {
-> -       struct sx150x_chip *chip = gpiochip_get_data(irq_data_get_irq_chip_data(d));
-> -       unsigned n;
-> +       struct sx150x_pinctrl *pctl =
-> +                       gpiochip_get_data(irq_data_get_irq_chip_data(d));
-> +       unsigned int n;
->
-> -       if (chip->irq_update == NO_UPDATE_PENDING)
-> +       if (pctl->irq.update < 0)
->                 goto out;
->
-> -       n = chip->irq_update;
-> -       chip->irq_update = NO_UPDATE_PENDING;
-> +       n = pctl->irq.update;
-> +       pctl->irq.update = -1;
->
->         /* Avoid updates if nothing changed */
-> -       if (chip->dev_sense == chip->irq_sense &&
-> -           chip->dev_masked == chip->irq_masked)
-> +       if (pctl->irq.dev_sense == pctl->irq.sense &&
-> +           pctl->irq.dev_masked == pctl->irq.masked)
->                 goto out;
->
-> -       chip->dev_sense = chip->irq_sense;
-> -       chip->dev_masked = chip->irq_masked;
-> +       pctl->irq.dev_sense = pctl->irq.sense;
-> +       pctl->irq.dev_masked = pctl->irq.masked;
->
-> -       if (chip->irq_masked & (1 << n)) {
-> -               sx150x_write_cfg(chip, n, 1, chip->dev_cfg->reg_irq_mask, 1);
-> -               sx150x_write_cfg(chip, n, 2, chip->dev_cfg->reg_sense, 0);
-> +       if (pctl->irq.masked & (1 << n)) {
-> +               sx150x_write_cfg(pctl->client, n, 1,
-> +                                pctl->data->reg_irq_mask, 1);
-> +               sx150x_write_cfg(pctl->client, n, 2,
-> +                                pctl->data->reg_sense, 0);
->         } else {
-> -               sx150x_write_cfg(chip, n, 1, chip->dev_cfg->reg_irq_mask, 0);
-> -               sx150x_write_cfg(chip, n, 2, chip->dev_cfg->reg_sense,
-> -                                chip->irq_sense >> (n * 2));
-> +               sx150x_write_cfg(pctl->client, n, 1,
-> +                                pctl->data->reg_irq_mask, 0);
-> +               sx150x_write_cfg(pctl->client, n, 2,
-> +                                pctl->data->reg_sense,
-> +                                pctl->irq.sense >> (n * 2));
->         }
->  out:
-> -       mutex_unlock(&chip->lock);
-> +       mutex_unlock(&pctl->lock);
->  }
->
-> -static void sx150x_init_chip(struct sx150x_chip *chip,
-> -                       struct i2c_client *client,
-> -                       kernel_ulong_t driver_data,
-> -                       struct sx150x_platform_data *pdata)
-> +static int sx150x_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
-> +                             unsigned long *config)
->  {
-> -       mutex_init(&chip->lock);
-> -
-> -       chip->client                     = client;
-> -       chip->dev_cfg                    = &sx150x_devices[driver_data];
-> -       chip->gpio_chip.parent              = &client->dev;
-> -       chip->gpio_chip.label            = client->name;
-> -       chip->gpio_chip.direction_input  = sx150x_gpio_direction_input;
-> -       chip->gpio_chip.direction_output = sx150x_gpio_direction_output;
-> -       chip->gpio_chip.get              = sx150x_gpio_get;
-> -       chip->gpio_chip.set              = sx150x_gpio_set;
-> -       chip->gpio_chip.set_single_ended = sx150x_gpio_set_single_ended;
-> -       chip->gpio_chip.base             = pdata->gpio_base;
-> -       chip->gpio_chip.can_sleep        = true;
-> -       chip->gpio_chip.ngpio            = chip->dev_cfg->ngpios;
-> -#ifdef CONFIG_OF_GPIO
-> -       chip->gpio_chip.of_node          = client->dev.of_node;
-> -       chip->gpio_chip.of_gpio_n_cells  = 2;
-> -#endif
-> -       if (pdata->oscio_is_gpo)
-> -               ++chip->gpio_chip.ngpio;
-> -
-> -       chip->irq_chip.name                = client->name;
-> -       chip->irq_chip.irq_mask            = sx150x_irq_mask;
-> -       chip->irq_chip.irq_unmask          = sx150x_irq_unmask;
-> -       chip->irq_chip.irq_set_type        = sx150x_irq_set_type;
-> -       chip->irq_chip.irq_bus_lock        = sx150x_irq_bus_lock;
-> -       chip->irq_chip.irq_bus_sync_unlock = sx150x_irq_bus_sync_unlock;
-> -       chip->irq_summary                  = -1;
-> -       chip->irq_base                     = -1;
-> -       chip->irq_masked                   = ~0;
-> -       chip->irq_sense                    = 0;
-> -       chip->dev_masked                   = ~0;
-> -       chip->dev_sense                    = 0;
-> -       chip->irq_update                   = NO_UPDATE_PENDING;
-> +       struct sx150x_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
-> +       unsigned int param = pinconf_to_config_param(*config);
-> +       int ret;
-> +       u32 arg;
-> +
-> +       if (sx150x_pin_is_oscio(pctl, pin)) {
-> +               u8 data;
-> +
-> +               switch (param) {
-> +               case PIN_CONFIG_DRIVE_PUSH_PULL:
-> +               case PIN_CONFIG_OUTPUT:
-> +                       mutex_lock(&pctl->lock);
-> +                       ret = sx150x_i2c_read(pctl->client,
-> +                                       pctl->data->pri.x789.reg_clock,
-> +                                       &data);
-> +                       mutex_unlock(&pctl->lock);
-> +
-> +                       if (ret < 0)
-> +                               return ret;
-> +
-> +                       if (param == PIN_CONFIG_DRIVE_PUSH_PULL)
-> +                               arg = (data & 0x1f) ? 1 : 0;
-> +                       else {
-> +                               if ((data & 0x1f) == 0x1f)
-> +                                       arg = 1;
-> +                               else if ((data & 0x1f) == 0x10)
-> +                                       arg = 0;
-> +                               else
-> +                                       return -EINVAL;
-> +                       }
-> +
-> +                       break;
-> +               default:
-> +                       return -ENOTSUPP;
-> +               }
-> +
-> +               goto out;
-> +       }
-> +
-> +       switch (param) {
-> +       case PIN_CONFIG_BIAS_PULL_DOWN:
-> +               mutex_lock(&pctl->lock);
-> +               ret = sx150x_read_cfg(pctl->client, pin, 1,
-> +                                     pctl->data->reg_pulldn);
-> +               mutex_unlock(&pctl->lock);
-> +
-> +               if (ret < 0)
-> +                       return ret;
-> +
-> +               if (!ret)
-> +                       return -EINVAL;
-> +
-> +               arg = 1;
-> +               break;
-> +
-> +       case PIN_CONFIG_BIAS_PULL_UP:
-> +               mutex_lock(&pctl->lock);
-> +               ret = sx150x_read_cfg(pctl->client, pin, 1,
-> +                                     pctl->data->reg_pullup);
-> +               mutex_unlock(&pctl->lock);
-> +
-> +               if (ret < 0)
-> +                       return ret;
-> +
-> +               if (!ret)
-> +                       return -EINVAL;
-> +
-> +               arg = 1;
-> +               break;
-> +
-> +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> +               if (pctl->data->model != SX150X_789)
-> +                       return -ENOTSUPP;
-> +
-> +               mutex_lock(&pctl->lock);
-> +               ret = sx150x_read_cfg(pctl->client, pin, 1,
-> +                                     pctl->data->pri.x789.reg_drain);
-> +               mutex_unlock(&pctl->lock);
-> +
-> +               if (ret < 0)
-> +                       return ret;
-> +
-> +               if (!ret)
-> +                       return -EINVAL;
-> +
-> +               arg = 1;
-> +               break;
-> +
-> +       case PIN_CONFIG_DRIVE_PUSH_PULL:
-> +               if (pctl->data->model != SX150X_789)
-> +                       arg = true;
-> +               else {
-> +                       mutex_lock(&pctl->lock);
-> +                       ret = sx150x_read_cfg(pctl->client, pin, 1,
-> +                                             pctl->data->pri.x789.reg_drain);
-> +                       mutex_unlock(&pctl->lock);
-> +
-> +                       if (ret < 0)
-> +                               return ret;
-> +
-> +                       if (ret)
-> +                               return -EINVAL;
-> +
-> +                       arg = 1;
-> +               }
-> +               break;
-> +
-> +       case PIN_CONFIG_OUTPUT:
-> +               ret = sx150x_gpio_get_direction(&pctl->gpio, pin);
-> +               if (ret < 0)
-> +                       return ret;
-> +
-> +               if (ret)
-> +                       return -EINVAL;
-> +
-> +               ret = sx150x_gpio_get(&pctl->gpio, pin);
-> +               if (ret < 0)
-> +                       return ret;
-> +
-> +               arg = ret;
-> +               break;
-> +
-> +       default:
-> +               return -ENOTSUPP;
-> +       }
-> +
-> +out:
-> +       *config = pinconf_to_config_packed(param, arg);
-> +
-> +       return 0;
-> +}
-> +
-> +static int sx150x_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
-> +                             unsigned long *configs, unsigned int num_configs)
-> +{
-> +       struct sx150x_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
-> +       enum pin_config_param param;
-> +       u32 arg;
-> +       int i;
-> +       int ret;
-> +
-> +       for (i = 0; i < num_configs; i++) {
-> +               param = pinconf_to_config_param(configs[i]);
-> +               arg = pinconf_to_config_argument(configs[i]);
-> +
-> +               if (sx150x_pin_is_oscio(pctl, pin)) {
-> +                       if (param == PIN_CONFIG_OUTPUT) {
-> +                               ret = sx150x_gpio_direction_output(&pctl->gpio,
-> +                                                                  pin, arg);
-> +                               if (ret < 0)
-> +                                       return ret;
-> +
-> +                               continue;
-> +                       } else
-> +                               return -ENOTSUPP;
-> +               }
-> +
-> +               switch (param) {
-> +               case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
-> +               case PIN_CONFIG_BIAS_DISABLE:
-> +                       mutex_lock(&pctl->lock);
-> +                       ret = sx150x_write_cfg(pctl->client, pin, 1,
-> +                                              pctl->data->reg_pulldn, 0);
-> +                       mutex_unlock(&pctl->lock);
-> +                       if (ret < 0)
-> +                               return ret;
-> +
-> +                       mutex_lock(&pctl->lock);
-> +                       ret = sx150x_write_cfg(pctl->client, pin, 1,
-> +                                              pctl->data->reg_pullup, 0);
-> +                       mutex_unlock(&pctl->lock);
-> +                       if (ret < 0)
-> +                               return ret;
-> +
-> +                       break;
-> +
-> +               case PIN_CONFIG_BIAS_PULL_UP:
-> +                       mutex_lock(&pctl->lock);
-> +                       ret = sx150x_write_cfg(pctl->client, pin, 1,
-> +                                              pctl->data->reg_pullup,
-> +                                              1);
-> +                       mutex_unlock(&pctl->lock);
-> +                       if (ret < 0)
-> +                               return ret;
-> +
-> +                       break;
-> +
-> +               case PIN_CONFIG_BIAS_PULL_DOWN:
-> +                       mutex_lock(&pctl->lock);
-> +                       ret = sx150x_write_cfg(pctl->client, pin, 1,
-> +                                              pctl->data->reg_pulldn,
-> +                                              1);
-> +                       mutex_unlock(&pctl->lock);
-> +                       if (ret < 0)
-> +                               return ret;
-> +
-> +                       break;
-> +
-> +               case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> +                       ret = sx150x_gpio_set_single_ended(&pctl->gpio,
-> +                                               pin, LINE_MODE_OPEN_DRAIN);
-> +                       if (ret < 0)
-> +                               return ret;
-> +
-> +                       break;
-> +
-> +               case PIN_CONFIG_DRIVE_PUSH_PULL:
-> +                       ret = sx150x_gpio_set_single_ended(&pctl->gpio,
-> +                                               pin, LINE_MODE_PUSH_PULL);
-> +                       if (ret < 0)
-> +                               return ret;
-> +
-> +                       break;
-> +
-> +               case PIN_CONFIG_OUTPUT:
-> +                       ret = sx150x_gpio_direction_output(&pctl->gpio,
-> +                                                          pin, arg);
-> +                       if (ret < 0)
-> +                               return ret;
-> +
-> +                       break;
-> +
-> +               default:
-> +                       return -ENOTSUPP;
-> +               }
-> +       } /* for each config */
-> +
-> +       return 0;
->  }
->
-> -static int sx150x_init_io(struct sx150x_chip *chip, u8 base, u16 cfg)
-> +static const struct pinconf_ops sx150x_pinconf_ops = {
-> +       .pin_config_get = sx150x_pinconf_get,
-> +       .pin_config_set = sx150x_pinconf_set,
-> +       .is_generic = true,
-> +};
-> +
-> +static const struct i2c_device_id sx150x_id[] = {
-> +       {"sx1508q", (kernel_ulong_t) &sx1508q_device_data },
-> +       {"sx1509q", (kernel_ulong_t) &sx1509q_device_data },
-> +       {"sx1506q", (kernel_ulong_t) &sx1506q_device_data },
-> +       {"sx1502q", (kernel_ulong_t) &sx1502q_device_data },
-> +       {}
-> +};
-> +
-> +static const struct of_device_id sx150x_of_match[] = {
-> +       { .compatible = "semtech,sx1508q" },
-> +       { .compatible = "semtech,sx1509q" },
-> +       { .compatible = "semtech,sx1506q" },
-> +       { .compatible = "semtech,sx1502q" },
-> +       {},
-> +};
-> +
-> +static int sx150x_init_io(struct sx150x_pinctrl *pctl, u8 base, u16 cfg)
->  {
->         int err = 0;
-> -       unsigned n;
-> +       unsigned int n;
->
-> -       for (n = 0; err >= 0 && n < (chip->dev_cfg->ngpios / 8); ++n)
-> -               err = sx150x_i2c_write(chip->client, base - n, cfg >> (n * 8));
-> +       for (n = 0; err >= 0 && n < (pctl->data->ngpios / 8); ++n)
-> +               err = sx150x_i2c_write(pctl->client, base - n, cfg >> (n * 8));
->         return err;
->  }
->
-> -static int sx150x_reset(struct sx150x_chip *chip)
-> +static int sx150x_reset(struct sx150x_pinctrl *pctl)
->  {
->         int err;
->
-> -       err = i2c_smbus_write_byte_data(chip->client,
-> -                                       chip->dev_cfg->pri.x789.reg_reset,
-> +       err = i2c_smbus_write_byte_data(pctl->client,
-> +                                       pctl->data->pri.x789.reg_reset,
->                                         0x12);
->         if (err < 0)
->                 return err;
->
-> -       err = i2c_smbus_write_byte_data(chip->client,
-> -                                       chip->dev_cfg->pri.x789.reg_reset,
-> +       err = i2c_smbus_write_byte_data(pctl->client,
-> +                                       pctl->data->pri.x789.reg_reset,
->                                         0x34);
->         return err;
->  }
->
-> -static int sx150x_init_hw(struct sx150x_chip *chip,
-> -                       struct sx150x_platform_data *pdata)
-> +static int sx150x_init_hw(struct sx150x_pinctrl *pctl)
->  {
-> -       int err = 0;
-> +       int err;
->
-> -       if (pdata->reset_during_probe) {
-> -               err = sx150x_reset(chip);
-> +       if (pctl->data->model == SX150X_789 &&
-> +           of_property_read_bool(pctl->dev->of_node, "semtech,probe-reset")) {
-> +               err = sx150x_reset(pctl);
->                 if (err < 0)
->                         return err;
->         }
->
-> -       if (chip->dev_cfg->model == SX150X_789)
-> -               err = sx150x_i2c_write(chip->client,
-> -                               chip->dev_cfg->pri.x789.reg_misc,
-> +       if (pctl->data->model == SX150X_789)
-> +               err = sx150x_i2c_write(pctl->client,
-> +                               pctl->data->pri.x789.reg_misc,
->                                 0x01);
-> -       else if (chip->dev_cfg->model == SX150X_456)
-> -               err = sx150x_i2c_write(chip->client,
-> -                               chip->dev_cfg->pri.x456.reg_advance,
-> +       else if (pctl->data->model == SX150X_456)
-> +               err = sx150x_i2c_write(pctl->client,
-> +                               pctl->data->pri.x456.reg_advance,
->                                 0x04);
->         else
-> -               err = sx150x_i2c_write(chip->client,
-> -                               chip->dev_cfg->pri.x123.reg_advance,
-> +               err = sx150x_i2c_write(pctl->client,
-> +                               pctl->data->pri.x123.reg_advance,
->                                 0x00);
->         if (err < 0)
->                 return err;
->
-> -       err = sx150x_init_io(chip, chip->dev_cfg->reg_pullup,
-> -                       pdata->io_pullup_ena);
-> -       if (err < 0)
-> -               return err;
-> -
-> -       err = sx150x_init_io(chip, chip->dev_cfg->reg_pulldn,
-> -                       pdata->io_pulldn_ena);
-> -       if (err < 0)
-> -               return err;
-> -
-> -       if (chip->dev_cfg->model == SX150X_789) {
-> -               err = sx150x_init_io(chip,
-> -                               chip->dev_cfg->pri.x789.reg_polarity,
-> -                               pdata->io_polarity);
-> +       /* Set all pins to work in normal mode */
-> +       if (pctl->data->model == SX150X_789) {
-> +               err = sx150x_init_io(pctl,
-> +                               pctl->data->pri.x789.reg_polarity,
-> +                               0);
->                 if (err < 0)
->                         return err;
-> -       } else if (chip->dev_cfg->model == SX150X_456) {
-> +       } else if (pctl->data->model == SX150X_456) {
->                 /* Set all pins to work in normal mode */
-> -               err = sx150x_init_io(chip,
-> -                               chip->dev_cfg->pri.x456.reg_pld_mode,
-> +               err = sx150x_init_io(pctl,
-> +                               pctl->data->pri.x456.reg_pld_mode,
->                                 0);
->                 if (err < 0)
->                         return err;
->         } else {
->                 /* Set all pins to work in normal mode */
-> -               err = sx150x_init_io(chip,
-> -                               chip->dev_cfg->pri.x123.reg_pld_mode,
-> +               err = sx150x_init_io(pctl,
-> +                               pctl->data->pri.x123.reg_pld_mode,
->                                 0);
->                 if (err < 0)
->                         return err;
->         }
->
-> -
-> -       if (pdata->oscio_is_gpo)
-> -               sx150x_set_oscio(chip, 0);
-> -
-> -       return err;
-> -}
-> -
-> -static int sx150x_install_irq_chip(struct sx150x_chip *chip,
-> -                               int irq_summary,
-> -                               int irq_base)
-> -{
-> -       int err;
-> -
-> -       chip->irq_summary = irq_summary;
-> -       chip->irq_base    = irq_base;
-> -
-> -       /* Add gpio chip to irq subsystem */
-> -       err = gpiochip_irqchip_add(&chip->gpio_chip,
-> -               &chip->irq_chip, chip->irq_base,
-> -               handle_edge_irq, IRQ_TYPE_EDGE_BOTH);
-> -       if (err) {
-> -               dev_err(&chip->client->dev,
-> -                       "could not connect irqchip to gpiochip\n");
-> -               return  err;
-> -       }
-> -
-> -       err = devm_request_threaded_irq(&chip->client->dev,
-> -                       irq_summary, NULL, sx150x_irq_thread_fn,
-> -                       IRQF_ONESHOT | IRQF_SHARED | IRQF_TRIGGER_FALLING,
-> -                       chip->irq_chip.name, chip);
-> -       if (err < 0) {
-> -               chip->irq_summary = -1;
-> -               chip->irq_base    = -1;
-> -       }
-> -
-> -       return err;
-> +       return 0;
->  }
->
->  static int sx150x_probe(struct i2c_client *client,
-> -                               const struct i2c_device_id *id)
-> +                       const struct i2c_device_id *id)
->  {
->         static const u32 i2c_funcs = I2C_FUNC_SMBUS_BYTE_DATA |
->                                      I2C_FUNC_SMBUS_WRITE_WORD_DATA;
-> -       struct sx150x_platform_data *pdata;
-> -       struct sx150x_chip *chip;
-> -       int rc;
-> +       struct device *dev = &client->dev;
-> +       struct sx150x_pinctrl *pctl;
-> +       int ret;
->
-> -       pdata = dev_get_platdata(&client->dev);
-> -       if (!pdata)
-> +       if (!id->driver_data)
->                 return -EINVAL;
->
->         if (!i2c_check_functionality(client->adapter, i2c_funcs))
->                 return -ENOSYS;
->
-> -       chip = devm_kzalloc(&client->dev,
-> -               sizeof(struct sx150x_chip), GFP_KERNEL);
-> -       if (!chip)
-> +       pctl = devm_kzalloc(dev, sizeof(*pctl), GFP_KERNEL);
-> +       if (!pctl)
->                 return -ENOMEM;
->
-> -       sx150x_init_chip(chip, client, id->driver_data, pdata);
-> -       rc = sx150x_init_hw(chip, pdata);
-> -       if (rc < 0)
-> -               return rc;
-> -
-> -       rc = devm_gpiochip_add_data(&client->dev, &chip->gpio_chip, chip);
-> -       if (rc)
-> -               return rc;
-> -
-> -       if (pdata->irq_summary >= 0) {
-> -               rc = sx150x_install_irq_chip(chip,
-> -                                       pdata->irq_summary,
-> -                                       pdata->irq_base);
-> -               if (rc < 0)
-> -                       return rc;
-> +       pctl->dev = dev;
-> +       pctl->client = client;
-> +       pctl->data = (void *)id->driver_data;
-> +
-> +       mutex_init(&pctl->lock);
-> +
-> +       ret = sx150x_init_hw(pctl);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* Register GPIO controller */
-> +       pctl->gpio.label = devm_kstrdup(dev, client->name, GFP_KERNEL);
-> +       pctl->gpio.base = -1;
-> +       pctl->gpio.ngpio = pctl->data->npins;
-> +       pctl->gpio.get_direction = sx150x_gpio_get_direction;
-> +       pctl->gpio.direction_input = sx150x_gpio_direction_input;
-> +       pctl->gpio.direction_output = sx150x_gpio_direction_output;
-> +       pctl->gpio.get = sx150x_gpio_get;
-> +       pctl->gpio.set = sx150x_gpio_set;
-> +       pctl->gpio.set_single_ended = sx150x_gpio_set_single_ended;
-> +       pctl->gpio.parent = dev;
-> +#ifdef CONFIG_OF_GPIO
-> +       pctl->gpio.of_node = dev->of_node;
-> +#endif
-> +       pctl->gpio.can_sleep = true;
-> +
-> +       ret = devm_gpiochip_add_data(dev, &pctl->gpio, pctl);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* Add Interrupt support if an irq is specified */
-> +       if (client->irq > 0) {
-> +               pctl->irq_chip.name = devm_kstrdup(dev, client->name,
-> +                                                  GFP_KERNEL);
-> +               pctl->irq_chip.irq_mask = sx150x_irq_mask;
-> +               pctl->irq_chip.irq_unmask = sx150x_irq_unmask;
-> +               pctl->irq_chip.irq_set_type = sx150x_irq_set_type;
-> +               pctl->irq_chip.irq_bus_lock = sx150x_irq_bus_lock;
-> +               pctl->irq_chip.irq_bus_sync_unlock = sx150x_irq_bus_sync_unlock;
-> +
-> +               pctl->irq.masked = ~0;
-> +               pctl->irq.sense = 0;
-> +               pctl->irq.dev_masked = ~0;
-> +               pctl->irq.dev_sense = 0;
-> +               pctl->irq.update = -1;
-> +
-> +               ret = gpiochip_irqchip_add(&pctl->gpio,
-> +                                          &pctl->irq_chip, 0,
-> +                                          handle_edge_irq, IRQ_TYPE_EDGE_BOTH);
+The DAC is used to find the peak level of an alternating voltage input
+signal by a binary search using the output of a comparator wired to
+an interrupt pin. Like so:
+                          _
+                         | \
+    input +------>-------|+ \
+                         |   \
+           .-------.     |    }---.
+           |       |     |   /    |
+           |    dac|-->--|- /     |
+           |       |     |_/      |
+           |       |              |
+           |       |              |
+           |    irq|------<-------'
+           |       |
+           '-------'
 
-Adding irqchip with IRQ_TYPE_EDGE_BOTH triggers a WARN in
-drivers/gpio/gpiolib.c:1671, on a custom Vybrid board that I have with
-the chip, so maybe it should be replaced with IRQ_TYPE_NONE? That's
-what I did for my testing and with that change
+Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+---
+ .../testing/sysfs-bus-iio-adc-envelope-detector    |  36 ++
+ MAINTAINERS                                        |   2 +
+ drivers/iio/adc/Kconfig                            |  10 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/envelope-detector.c                | 463 +++++++++++++++++++++
+ 5 files changed, 512 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector
+ create mode 100644 drivers/iio/adc/envelope-detector.c
 
-Tested-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Thanks,
-Andrey Smirnov
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector b/Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector
+new file mode 100644
+index 000000000000..8d890028a649
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector
+@@ -0,0 +1,36 @@
++What:		/sys/bus/iio/devices/iio:deviceX/invert
++Date:		October 2016
++KernelVersion:	4.9
++Contact:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
++Description:
++		The DAC is used to find the peak level of an alternating
++		voltage input signal by a binary search using the output
++		of a comparator wired to an interrupt pin. Like so:
++		                           _
++		                          | \
++		     input +------>-------|+ \
++		                          |   \
++		            .-------.     |    }---.
++		            |       |     |   /    |
++		            |    dac|-->--|- /     |
++		            |       |     |_/      |
++		            |       |              |
++		            |       |              |
++		            |    irq|------<-------'
++		            |       |
++		            '-------'
++		The boolean invert attribute (0/1) should be set when the
++		input signal is centered around the maximum value of the
++		dac instead of zero. The envelope detector will search
++		from below in this case and will also invert the result.
++		The edge/level of the interrupt is also switched to its
++		opposite value.
++
++What:		/sys/bus/iio/devices/iio:deviceX/compare_interval_ms
++Date:		October 2016
++KernelVersion:	4.9
++Contact:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
++Description:
++		Number of milliseconds to wait for the comparator in each
++		step of the binary search for the input peak level. Needs
++		to relate to the frequency of the input signal.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4b6f6ec1b703..0d20f3561700 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6122,7 +6122,9 @@ IIO ENVELOPE DETECTOR
+ M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+ L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ S:	Maintained
++F:	Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector
+ F:	Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
++F:	drivers/iio/adc/envelope-detector.c
+ 
+ IIO SUBSYSTEM AND DRIVERS
+ M:	Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 7edcf3238620..d5c4a95855c2 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -195,6 +195,16 @@ config DA9150_GPADC
+ 	  To compile this driver as a module, choose M here: the module will be
+ 	  called berlin2-adc.
+ 
++config ENVELOPE_DETECTOR
++	tristate "Envelope detector using a DAC and a comparator"
++	depends on OF
++	help
++	  Say yes here to build support for an envelope detector using a DAC
++	  and a comparator.
++
++	  To compile this driver as a module, choose M here: the module will be
++	  called iio-envelope-detector.
++
+ config EXYNOS_ADC
+ 	tristate "Exynos ADC driver support"
+ 	depends on ARCH_EXYNOS || ARCH_S3C24XX || ARCH_S3C64XX || (OF && COMPILE_TEST)
+diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+index 7a40c04c311f..0d773c6a0578 100644
+--- a/drivers/iio/adc/Makefile
++++ b/drivers/iio/adc/Makefile
+@@ -20,6 +20,7 @@ obj-$(CONFIG_BCM_IPROC_ADC) += bcm_iproc_adc.o
+ obj-$(CONFIG_BERLIN2_ADC) += berlin2-adc.o
+ obj-$(CONFIG_CC10001_ADC) += cc10001_adc.o
+ obj-$(CONFIG_DA9150_GPADC) += da9150-gpadc.o
++obj-$(CONFIG_ENVELOPE_DETECTOR) += envelope-detector.o
+ obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
+ obj-$(CONFIG_FSL_MX25_ADC) += fsl-imx25-gcq.o
+ obj-$(CONFIG_HI8435) += hi8435.o
+diff --git a/drivers/iio/adc/envelope-detector.c b/drivers/iio/adc/envelope-detector.c
+new file mode 100644
+index 000000000000..3842d1a72023
+--- /dev/null
++++ b/drivers/iio/adc/envelope-detector.c
+@@ -0,0 +1,463 @@
++/*
++ * Driver for an envelope detector using a DAC and a comparator
++ *
++ * Copyright (C) 2016 Axentia Technologies AB
++ *
++ * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++/*
++ * The DAC is used to find the peak level of an alternating voltage input
++ * signal by a binary search using the output of a comparator wired to
++ * an interrupt pin. Like so:
++ *                           _
++ *                          | \
++ *     input +------>-------|+ \
++ *                          |   \
++ *            .-------.     |    }---.
++ *            |       |     |   /    |
++ *            |    dac|-->--|- /     |
++ *            |       |     |_/      |
++ *            |       |              |
++ *            |       |              |
++ *            |    irq|------<-------'
++ *            |       |
++ *            '-------'
++ */
++
++#include <linux/completion.h>
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/iio/consumer.h>
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/spinlock.h>
++#include <linux/workqueue.h>
++
++struct envelope {
++	spinlock_t comp_lock; /* protects comp */
++	int comp;
++
++	struct mutex read_lock; /* protects everything else */
++
++	int comp_irq;
++	u32 comp_irq_trigger;
++	u32 comp_irq_trigger_inv;
++
++	struct iio_channel *dac;
++	struct delayed_work comp_timeout;
++
++	unsigned int comp_interval;
++	bool invert;
++	u32 dac_max;
++
++	int high;
++	int level;
++	int low;
++
++	struct completion done;
++};
++
++/*
++ * The envelope_detector_comp_latch function works together with the compare
++ * interrupt service routine below (envelope_detector_comp_isr) as a latch
++ * (one-bit memory) for if the interrupt has triggered since last calling
++ * this function.
++ * The ..._comp_isr function disables the interrupt so that the cpu does not
++ * need to service a possible interrupt flood from the comparator when no-one
++ * cares anyway, and this ..._comp_latch function reenables them again if
++ * needed.
++ */
++static int envelope_detector_comp_latch(struct envelope *env)
++{
++	int comp;
++
++	spin_lock_irq(&env->comp_lock);
++	comp = env->comp;
++	env->comp = 0;
++	spin_unlock_irq(&env->comp_lock);
++
++	if (!comp)
++		return 0;
++
++	/*
++	 * The irq was disabled, and is reenabled just now.
++	 * But there might have been a pending irq that
++	 * happened while the irq was disabled that fires
++	 * just as the irq is reenabled. That is not what
++	 * is desired.
++	 */
++	enable_irq(env->comp_irq);
++
++	/* So, synchronize this possibly pending irq... */
++	synchronize_irq(env->comp_irq);
++
++	/* ...and redo the whole dance. */
++	spin_lock_irq(&env->comp_lock);
++	comp = env->comp;
++	env->comp = 0;
++	spin_unlock_irq(&env->comp_lock);
++
++	if (comp)
++		enable_irq(env->comp_irq);
++
++	return 1;
++}
++
++static irqreturn_t envelope_detector_comp_isr(int irq, void *ctx)
++{
++	struct envelope *env = ctx;
++
++	spin_lock(&env->comp_lock);
++	env->comp = 1;
++	disable_irq_nosync(env->comp_irq);
++	spin_unlock(&env->comp_lock);
++
++	return IRQ_HANDLED;
++}
++
++static void envelope_detector_setup_compare(struct envelope *env)
++{
++	int ret;
++
++	/*
++	 * Do a binary search for the peak input level, and stop
++	 * when that level is "trapped" between two adjacent DAC
++	 * values.
++	 * When invert is active, use the midpoint floor so that
++	 * env->level ends up as env->low when the termination
++	 * criteria below is fulfilled, and use the midpoint
++	 * ceiling when invert is not active so that env->level
++	 * ends up as env->high in that case.
++	 */
++	env->level = (env->high + env->low + !env->invert) / 2;
++
++	if (env->high == env->low + 1) {
++		complete(&env->done);
++		return;
++	}
++
++	/* Set a "safe" DAC level (if there is such a thing)... */
++	ret = iio_write_channel_raw(env->dac, env->invert ? 0 : env->dac_max);
++	if (ret < 0)
++		goto err;
++
++	/* ...clear the comparison result... */
++	envelope_detector_comp_latch(env);
++
++	/* ...set the real DAC level... */
++	ret = iio_write_channel_raw(env->dac, env->level);
++	if (ret < 0)
++		goto err;
++
++	/* ...and wait for a bit to see if the latch catches anything. */
++	schedule_delayed_work(&env->comp_timeout,
++			      msecs_to_jiffies(env->comp_interval));
++	return;
++
++err:
++	env->level = ret;
++	complete(&env->done);
++}
++
++static void envelope_detector_timeout(struct work_struct *work)
++{
++	struct envelope *env = container_of(work, struct envelope,
++					    comp_timeout.work);
++
++	/* Adjust low/high depending on the latch content... */
++	if (!envelope_detector_comp_latch(env) ^ !env->invert)
++		env->low = env->level;
++	else
++		env->high = env->level;
++
++	/* ...and continue the search. */
++	envelope_detector_setup_compare(env);
++}
++
++static int envelope_detector_read_raw(struct iio_dev *indio_dev,
++				      struct iio_chan_spec const *chan,
++				      int *val, int *val2, long mask)
++{
++	struct envelope *env = iio_priv(indio_dev);
++	int ret;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		/*
++		 * When invert is active, start with high=max+1 and low=0
++		 * since we will end up with the low value when the
++		 * termination criteria is fulfilled (rounding down). And
++		 * start with high=max and low=-1 when invert is not active
++		 * since we will end up with the high value in that case.
++		 * This ensures that the returned value in both cases are
++		 * in the same range as the DAC and is a value that has not
++		 * triggered the comparator.
++		 */
++		mutex_lock(&env->read_lock);
++		env->high = env->dac_max + env->invert;
++		env->low = -1 + env->invert;
++		envelope_detector_setup_compare(env);
++		wait_for_completion(&env->done);
++		if (env->level < 0) {
++			ret = env->level;
++			goto err_unlock;
++		}
++		*val = env->invert ? env->dac_max - env->level : env->level;
++		mutex_unlock(&env->read_lock);
++
++		return IIO_VAL_INT;
++
++	case IIO_CHAN_INFO_SCALE:
++		return iio_read_channel_scale(env->dac, val, val2);
++	}
++
++	return -EINVAL;
++
++err_unlock:
++	mutex_unlock(&env->read_lock);
++	return ret;
++}
++
++static int envelope_detector_channel_raw_max(struct iio_channel *ch)
++{
++	struct iio_dev *indio_dev = ch->indio_dev;
++	const int *vals;
++	int type;
++	int len;
++	int ret;
++
++	if (!ch->indio_dev->info->read_avail)
++		return -EINVAL;
++
++	ret = ch->indio_dev->info->read_avail(indio_dev, ch->channel,
++					      &vals, &type, &len,
++					      IIO_CHAN_INFO_RAW);
++
++	if (ret < 0)
++		return ret;
++	if (type != IIO_VAL_INT)
++		return -EINVAL;
++
++	switch (ret) {
++	case IIO_AVAIL_RANGE:
++		if (len != 3)
++			return -EINVAL;
++		return vals[2];
++	}
++	return -EINVAL;
++}
++
++static const struct iio_chan_spec envelope_detector_iio_channel = {
++	.type = IIO_ALTVOLTAGE,
++	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
++			    | BIT(IIO_CHAN_INFO_SCALE),
++	.indexed = 1,
++};
++
++static ssize_t envelope_show_invert(struct device *dev,
++				    struct device_attribute *attr,
++				    char *buf)
++{
++	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct envelope *env = iio_priv(indio_dev);
++
++	return sprintf(buf, "%u\n", env->invert);
++}
++
++static ssize_t envelope_store_invert(struct device *dev,
++				     struct device_attribute *attr,
++				     const char *buf,
++				     size_t len)
++{
++	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct envelope *env = iio_priv(indio_dev);
++	unsigned long invert;
++	int ret;
++	u32 trigger;
++
++	ret = kstrtoul(buf, 0, &invert);
++	if (ret < 0)
++		return ret;
++	if (invert > 1)
++		return -EINVAL;
++
++	trigger = invert ? env->comp_irq_trigger_inv : env->comp_irq_trigger;
++
++	mutex_lock(&env->read_lock);
++	if (invert != env->invert)
++		ret = irq_set_irq_type(env->comp_irq, trigger);
++	if (!ret) {
++		env->invert = invert;
++		ret = len;
++	}
++	mutex_unlock(&env->read_lock);
++
++	return ret;
++}
++
++static IIO_DEVICE_ATTR(invert, 0644,
++		       envelope_show_invert,
++		       envelope_store_invert, 0);
++
++static ssize_t envelope_show_comp_interval(struct device *dev,
++					   struct device_attribute *attr,
++					   char *buf)
++{
++	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct envelope *env = iio_priv(indio_dev);
++
++	return sprintf(buf, "%u\n", env->comp_interval);
++}
++
++static ssize_t envelope_store_comp_interval(struct device *dev,
++					    struct device_attribute *attr,
++					    const char *buf,
++					    size_t len)
++{
++	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct envelope *env = iio_priv(indio_dev);
++	unsigned long interval;
++	int ret;
++
++	ret = kstrtoul(buf, 0, &interval);
++	if (ret < 0)
++		return ret;
++	if (interval > 1000)
++		return -EINVAL;
++
++	mutex_lock(&env->read_lock);
++	env->comp_interval = interval;
++	mutex_unlock(&env->read_lock);
++
++	return len;
++}
++
++static IIO_DEVICE_ATTR(compare_interval_ms, 0644,
++		       envelope_show_comp_interval,
++		       envelope_store_comp_interval, 0);
++
++static struct attribute *envelope_detector_attributes[] = {
++	&iio_dev_attr_invert.dev_attr.attr,
++	&iio_dev_attr_compare_interval_ms.dev_attr.attr,
++	NULL,
++};
++
++static const struct attribute_group envelope_detector_attribute_group = {
++	.attrs = envelope_detector_attributes,
++};
++
++static const struct iio_info envelope_detector_info = {
++	.read_raw = &envelope_detector_read_raw,
++	.driver_module = THIS_MODULE,
++	.attrs = &envelope_detector_attribute_group,
++};
++
++static int envelope_detector_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct iio_dev *indio_dev;
++	struct envelope *env;
++	enum iio_chan_type type;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(dev, sizeof(*env));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, indio_dev);
++	env = iio_priv(indio_dev);
++	env->comp_interval = 50; /* some sensible default? */
++
++	spin_lock_init(&env->comp_lock);
++	mutex_init(&env->read_lock);
++	init_completion(&env->done);
++	INIT_DELAYED_WORK(&env->comp_timeout, envelope_detector_timeout);
++
++	indio_dev->name = dev_name(dev);
++	indio_dev->dev.parent = dev;
++	indio_dev->dev.of_node = dev->of_node;
++	indio_dev->info = &envelope_detector_info;
++	indio_dev->channels = &envelope_detector_iio_channel;
++	indio_dev->num_channels = 1;
++
++	env->dac = devm_iio_channel_get(dev, "dac");
++	if (IS_ERR(env->dac)) {
++		if (PTR_ERR(env->dac) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get dac input channel\n");
++		return PTR_ERR(env->dac);
++	}
++
++	env->comp_irq = platform_get_irq_byname(pdev, "comp");
++	if (env->comp_irq < 0) {
++		if (env->comp_irq != -EPROBE_DEFER)
++			dev_err(dev, "failed to get compare interrupt\n");
++		return env->comp_irq;
++	}
++
++	ret = devm_request_irq(dev, env->comp_irq, envelope_detector_comp_isr,
++			       0, "envelope-detector", env);
++	if (ret) {
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "failed to request interrupt\n");
++		return ret;
++	}
++	env->comp_irq_trigger = irq_get_trigger_type(env->comp_irq);
++	if (env->comp_irq_trigger & IRQF_TRIGGER_RISING)
++		env->comp_irq_trigger_inv |= IRQF_TRIGGER_FALLING;
++	if (env->comp_irq_trigger & IRQF_TRIGGER_FALLING)
++		env->comp_irq_trigger_inv |= IRQF_TRIGGER_RISING;
++	if (env->comp_irq_trigger & IRQF_TRIGGER_HIGH)
++		env->comp_irq_trigger_inv |= IRQF_TRIGGER_LOW;
++	if (env->comp_irq_trigger & IRQF_TRIGGER_LOW)
++		env->comp_irq_trigger_inv |= IRQF_TRIGGER_HIGH;
++
++	ret = iio_get_channel_type(env->dac, &type);
++	if (ret < 0)
++		return ret;
++
++	if (type != IIO_VOLTAGE) {
++		dev_err(dev, "dac is of the wrong type\n");
++		return -EINVAL;
++	}
++
++	ret = envelope_detector_channel_raw_max(env->dac);
++	if (ret < 0) {
++		dev_err(dev, "dac does not indicate its raw maximum value\n");
++		return ret;
++	}
++	env->dac_max = ret;
++
++	return devm_iio_device_register(dev, indio_dev);
++}
++
++static const struct of_device_id envelope_detector_match[] = {
++	{ .compatible = "axentia,tse850-envelope-detector", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, envelope_detector_match);
++
++static struct platform_driver envelope_detector_driver = {
++	.probe = envelope_detector_probe,
++	.driver = {
++		.name = "iio-envelope-detector",
++		.of_match_table = envelope_detector_match,
++	},
++};
++module_platform_driver(envelope_detector_driver);
++
++MODULE_DESCRIPTION("Envelope detector using a DAC and a comparator");
++MODULE_AUTHOR("Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>");
++MODULE_LICENSE("GPL v2");
+-- 
+2.1.4
