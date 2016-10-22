@@ -1,422 +1,396 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v2 1/7] iio:core: add a callback to allow drivers to provide _available attributes
-Date: Sun, 23 Oct 2016 00:43:40 +0200
-Message-ID: <1477176226-10566-2-git-send-email-peda@axentia.se>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: [PATCH v2 5/7] iio: dpot-dac: DAC driver based on a digital potentiometer
+Date: Sun, 23 Oct 2016 00:43:44 +0200
+Message-ID: <1477176226-10566-6-git-send-email-peda@axentia.se>
 References: <1477176226-10566-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477176226-10566-1-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Peter Rosin <peda@axentia.se>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477176226-10566-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jonathan Cameron <jic23@kernel.org>
+It is assumed the that the dpot is used as a voltage divider between the
+current dpot wiper setting and the maximum resistance of the dpot. The
+divided voltage is provided by a vref regulator.
 
-A large number of attributes can only take a limited range of values.
-Currently in IIO this is handled by directly registering additional
-*_available attributes thus providing this information to userspace.
+                  .------.
+   .-----------.  |      |
+   | vref      |--'    .---.
+   | regulator |--.    |   |
+   '-----------'  |    | d |
+                  |    | p |
+                  |    | o |  wiper
+                  |    | t |<---------+
+                  |    |   |
+                  |    '---'       dac output voltage
+                  |      |
+                  '------+------------+
 
-It is desirable to provide this information via the core for much the same
-reason this was done for the actual channel information attributes in the
-first place.  If it isn't there, then it can only really be accessed from
-userspace.  Other in kernel IIO consumers have no access to what valid
-parameters are.
-
-Two forms are currently supported:
-* list of values in one particular IIO_VAL_* format.
-	e.g. 1.300000 1.500000 1.730000
-* range specification with a step size:
-	e.g. [1.000000 0.500000 2.500000]
-	equivalent to 1.000000 1.5000000 2.000000 2.500000
-
-An addition set of masks are used to allow different sharing rules for the
-*_available attributes generated.
-
-This allows for example:
-
-in_accel_x_offset
-in_accel_y_offset
-in_accel_offset_available.
-
-We could have gone with having a specification for each and every
-info_mask element but that would have meant changing the existing userspace
-ABI.  This approach does not.
-
-Signed-off-by: Jonathan Cameron <jic23@kernel.org>
-[rather mindlessly forward ported from approx 3 years ago /peda]
-Signed-off-by: Peter Rosin <peda@axentia.se>
+Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 ---
- drivers/iio/industrialio-core.c | 232 +++++++++++++++++++++++++++++++++++-----
- include/linux/iio/iio.h         |  11 ++
- include/linux/iio/types.h       |   5 +
- 3 files changed, 223 insertions(+), 25 deletions(-)
+ MAINTAINERS                |   1 +
+ drivers/iio/dac/Kconfig    |  10 ++
+ drivers/iio/dac/Makefile   |   1 +
+ drivers/iio/dac/dpot-dac.c | 298 +++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 310 insertions(+)
+ create mode 100644 drivers/iio/dac/dpot-dac.c
 
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index fc340ed3dca1..93c69ebeda1e 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -575,51 +575,41 @@ int of_iio_read_mount_matrix(const struct device *dev,
- #endif
- EXPORT_SYMBOL(of_iio_read_mount_matrix);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c68b72088945..8c8aae24b96b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6116,6 +6116,7 @@ M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+ L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
++F:	drivers/iio/dac/dpot-dac.c
  
--/**
-- * iio_format_value() - Formats a IIO value into its string representation
-- * @buf:	The buffer to which the formatted value gets written
-- * @type:	One of the IIO_VAL_... constants. This decides how the val
-- *		and val2 parameters are formatted.
-- * @size:	Number of IIO value entries contained in vals
-- * @vals:	Pointer to the values, exact meaning depends on the
-- *		type parameter.
-- *
-- * Return: 0 by default, a negative number on failure or the
-- *	   total number of characters written for a type that belongs
-- *	   to the IIO_VAL_... constant.
-- */
--ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals)
-+static ssize_t __iio_format_value(char *buf, unsigned int type,
-+				  int size, const int *vals)
- {
- 	unsigned long long tmp;
-+	int tmp0, tmp1;
- 	bool scale_db = false;
+ IIO SUBSYSTEM AND DRIVERS
+ M:	Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+index 120b24478469..d3084028905b 100644
+--- a/drivers/iio/dac/Kconfig
++++ b/drivers/iio/dac/Kconfig
+@@ -200,6 +200,16 @@ config AD8801
+ 	  To compile this driver as a module choose M here: the module will be called
+ 	  ad8801.
  
- 	switch (type) {
- 	case IIO_VAL_INT:
--		return sprintf(buf, "%d\n", vals[0]);
-+		return sprintf(buf, "%d", vals[0]);
- 	case IIO_VAL_INT_PLUS_MICRO_DB:
- 		scale_db = true;
- 	case IIO_VAL_INT_PLUS_MICRO:
- 		if (vals[1] < 0)
--			return sprintf(buf, "-%d.%06u%s\n", abs(vals[0]),
-+			return sprintf(buf, "-%d.%06u%s", abs(vals[0]),
- 				       -vals[1], scale_db ? " dB" : "");
- 		else
--			return sprintf(buf, "%d.%06u%s\n", vals[0], vals[1],
-+			return sprintf(buf, "%d.%06u%s", vals[0], vals[1],
- 				scale_db ? " dB" : "");
- 	case IIO_VAL_INT_PLUS_NANO:
- 		if (vals[1] < 0)
--			return sprintf(buf, "-%d.%09u\n", abs(vals[0]),
-+			return sprintf(buf, "-%d.%09u", abs(vals[0]),
- 				       -vals[1]);
- 		else
--			return sprintf(buf, "%d.%09u\n", vals[0], vals[1]);
-+			return sprintf(buf, "%d.%09u", vals[0], vals[1]);
- 	case IIO_VAL_FRACTIONAL:
- 		tmp = div_s64((s64)vals[0] * 1000000000LL, vals[1]);
--		vals[0] = (int)div_s64_rem(tmp, 1000000000, &vals[1]);
--		return sprintf(buf, "%d.%09u\n", vals[0], abs(vals[1]));
-+		tmp1 = vals[1];
-+		tmp0 = (int)div_s64_rem(tmp, 1000000000, &tmp1);
-+		return sprintf(buf, "%d.%09u", tmp0, abs(tmp1));
- 	case IIO_VAL_FRACTIONAL_LOG2:
- 		tmp = (s64)vals[0] * 1000000000LL >> vals[1];
--		vals[1] = do_div(tmp, 1000000000LL);
--		vals[0] = tmp;
--		return sprintf(buf, "%d.%09u\n", vals[0], vals[1]);
-+		tmp1 = do_div(tmp, 1000000000LL);
-+		tmp0 = tmp;
-+		return sprintf(buf, "%d.%09u", tmp0, tmp1);
- 	case IIO_VAL_INT_MULTIPLE:
- 	{
- 		int i;
-@@ -628,13 +618,34 @@ ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals)
- 		for (i = 0; i < size; ++i)
- 			len += snprintf(&buf[len], PAGE_SIZE - len, "%d ",
- 								vals[i]);
--		len += snprintf(&buf[len], PAGE_SIZE - len, "\n");
- 		return len;
- 	}
- 	default:
- 		return 0;
- 	}
- }
++config DPOT_DAC
++	tristate "DAC emulation using a DPOT"
++	depends on OF
++	help
++	  Say yes here to build support for DAC emulation using a digital
++	  potentiometer.
 +
-+/**
-+ * iio_format_value() - Formats a IIO value into its string representation
-+ * @buf:	The buffer to which the formatted value gets written
-+ * @type:	One of the IIO_VAL_... constants. This decides how the val
-+ *		and val2 parameters are formatted.
-+ * @size:	Number of IIO value entries contained in vals
-+ * @vals:	Pointer to the values, exact meaning depends on the
-+ *		type parameter.
++	  To compile this driver as a module, choose M here: the module will be
++	  called dpot-dac.
++
+ config LPC18XX_DAC
+ 	tristate "NXP LPC18xx DAC driver"
+ 	depends on ARCH_LPC18XX || COMPILE_TEST
+diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
+index 27642bbf75f2..f01bf4a99867 100644
+--- a/drivers/iio/dac/Makefile
++++ b/drivers/iio/dac/Makefile
+@@ -22,6 +22,7 @@ obj-$(CONFIG_AD5686) += ad5686.o
+ obj-$(CONFIG_AD7303) += ad7303.o
+ obj-$(CONFIG_AD8801) += ad8801.o
+ obj-$(CONFIG_CIO_DAC) += cio-dac.o
++obj-$(CONFIG_DPOT_DAC) += dpot-dac.o
+ obj-$(CONFIG_LPC18XX_DAC) += lpc18xx_dac.o
+ obj-$(CONFIG_M62332) += m62332.o
+ obj-$(CONFIG_MAX517) += max517.o
+diff --git a/drivers/iio/dac/dpot-dac.c b/drivers/iio/dac/dpot-dac.c
+new file mode 100644
+index 000000000000..5613eae32347
+--- /dev/null
++++ b/drivers/iio/dac/dpot-dac.c
+@@ -0,0 +1,298 @@
++/*
++ * IIO DAC emulation driver using a digital potentiometer
 + *
-+ * Return: 0 by default, a negative number on failure or the
-+ *	   total number of characters written for a type that belongs
-+ *	   to the IIO_VAL_... constant.
++ * Copyright (C) 2016 Axentia Technologies AB
++ *
++ * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + */
-+ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals)
-+{
-+	ssize_t len;
 +
-+	len = __iio_format_value(buf, type, size, vals);
++/*
++ * It is assumed that the dpot is used as a voltage divider between the
++ * current dpot wiper setting and the maximum resistance of the dpot. The
++ * divided voltage is provided by a vref regulator.
++ *
++ *                   .------.
++ *    .-----------.  |      |
++ *    | vref      |--'    .---.
++ *    | regulator |--.    |   |
++ *    '-----------'  |    | d |
++ *                   |    | p |
++ *                   |    | o |  wiper
++ *                   |    | t |<---------+
++ *                   |    |   |
++ *                   |    '---'       dac output voltage
++ *                   |      |
++ *                   '------+------------+
++ */
 +
-+	return len + sprintf(buf + len, "\n");
-+}
- EXPORT_SYMBOL_GPL(iio_format_value);
- 
- static ssize_t iio_read_channel_info(struct device *dev,
-@@ -662,6 +673,113 @@ static ssize_t iio_read_channel_info(struct device *dev,
- 	return iio_format_value(buf, ret, val_len, vals);
- }
- 
-+static ssize_t iio_format_avail_list(char *buf, const int *vals,
-+				     int type, int length)
-+{
-+	int i;
-+	ssize_t len = 0;
++#include <linux/err.h>
++#include <linux/iio/consumer.h>
++#include <linux/iio/iio.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
 +
-+	switch (type) {
-+	case IIO_VAL_INT:
-+		for (i = 0; i < length; i++) {
-+			len += __iio_format_value(buf + len, type, 1, &vals[i]);
-+			if (i < length - 1)
-+				len += snprintf(buf + len,
-+						PAGE_SIZE - len,
-+						" ");
-+			else
-+				len += snprintf(buf + len,
-+						PAGE_SIZE - len,
-+						"\n");
-+		}
-+		break;
-+	default:
-+		for (i = 0; i < length / 2; i++) {
-+			len += __iio_format_value(buf + len,
-+						  type,
-+						  2,
-+						  &vals[i * 2]);
-+			if (i < length / 2 - 1)
-+				len += snprintf(buf + len,
-+						PAGE_SIZE - len,
-+						" ");
-+			else
-+				len += snprintf(buf + len,
-+						PAGE_SIZE - len,
-+						"\n");
-+		}
-+	};
-+
-+	return len;
-+}
-+
-+static ssize_t iio_format_avail_range(char *buf, const int *vals, int type)
-+{
-+	int i;
-+	ssize_t len;
-+
-+	len = snprintf(buf, PAGE_SIZE, "[");
-+	switch (type) {
-+	case IIO_VAL_INT:
-+		for (i = 0; i < 3; i++) {
-+			len += __iio_format_value(buf + len, type, 1, &vals[i]);
-+			if (i < 2)
-+				len += snprintf(buf + len,
-+						PAGE_SIZE - len,
-+						" ");
-+			else
-+				len += snprintf(buf + len,
-+						PAGE_SIZE - len,
-+						"]\n");
-+		}
-+		break;
-+	default:
-+		for (i = 0; i < 3; i++) {
-+			len += __iio_format_value(buf + len,
-+						  type,
-+						  2,
-+						  &vals[i * 2]);
-+			if (i < 2)
-+				len += snprintf(buf + len,
-+						PAGE_SIZE - len,
-+						" ");
-+			else
-+				len += snprintf(buf + len,
-+						PAGE_SIZE - len,
-+						"]\n");
-+		}
-+	};
-+
-+	return len;
-+}
-+
-+static ssize_t iio_read_channel_info_avail(struct device *dev,
-+					   struct device_attribute *attr,
-+					   char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct iio_dev_attr *this_attr = to_iio_dev_attr(attr);
-+	const int *vals;
-+	int ret;
-+	int length;
-+	int type;
-+
-+	ret = indio_dev->info->read_avail(indio_dev, this_attr->c,
-+					  &vals, &type, &length,
-+					  this_attr->address);
-+
-+	if (ret < 0)
-+		return ret;
-+	switch (ret) {
-+	case IIO_AVAIL_LIST:
-+		return iio_format_avail_list(buf, vals, type, length);
-+	case IIO_AVAIL_RANGE:
-+		return iio_format_avail_range(buf, vals, type);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
- /**
-  * iio_str_to_fixpoint() - Parse a fixed-point number from a string
-  * @str: The string to parse
-@@ -978,6 +1096,40 @@ static int iio_device_add_info_mask_type(struct iio_dev *indio_dev,
- 	return attrcount;
- }
- 
-+static int iio_device_add_info_mask_type_avail(struct iio_dev *indio_dev,
-+					       struct iio_chan_spec const *chan,
-+					       enum iio_shared_by shared_by,
-+					       const long *infomask)
-+{
-+	int i, ret, attrcount = 0;
-+	char *avail_postfix;
-+
-+	for_each_set_bit(i, infomask, sizeof(infomask) * 8) {
-+		avail_postfix = kasprintf(GFP_KERNEL,
-+					  "%s_available",
-+					  iio_chan_info_postfix[i]);
-+		if (!avail_postfix)
-+			return -ENOMEM;
-+
-+		ret = __iio_add_chan_devattr(avail_postfix,
-+					     chan,
-+					     &iio_read_channel_info_avail,
-+					     NULL,
-+					     i,
-+					     shared_by,
-+					     &indio_dev->dev,
-+					     &indio_dev->channel_attr_list);
-+		kfree(avail_postfix);
-+		if ((ret == -EBUSY) && (shared_by != IIO_SEPARATE))
-+			continue;
-+		else if (ret < 0)
-+			return ret;
-+		attrcount++;
-+	}
-+
-+	return attrcount;
-+}
-+
- static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
- 					struct iio_chan_spec const *chan)
- {
-@@ -993,6 +1145,14 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
- 		return ret;
- 	attrcount += ret;
- 
-+	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
-+						  IIO_SEPARATE,
-+						  &chan->
-+						  info_mask_separate_available);
-+	if (ret < 0)
-+		return ret;
-+	attrcount += ret;
-+
- 	ret = iio_device_add_info_mask_type(indio_dev, chan,
- 					    IIO_SHARED_BY_TYPE,
- 					    &chan->info_mask_shared_by_type);
-@@ -1000,6 +1160,14 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
- 		return ret;
- 	attrcount += ret;
- 
-+	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
-+						  IIO_SHARED_BY_TYPE,
-+						  &chan->
-+						  info_mask_shared_by_type_available);
-+	if (ret < 0)
-+		return ret;
-+	attrcount += ret;
-+
- 	ret = iio_device_add_info_mask_type(indio_dev, chan,
- 					    IIO_SHARED_BY_DIR,
- 					    &chan->info_mask_shared_by_dir);
-@@ -1007,6 +1175,13 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
- 		return ret;
- 	attrcount += ret;
- 
-+	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
-+						  IIO_SHARED_BY_DIR,
-+						  &chan->info_mask_shared_by_dir_available);
-+	if (ret < 0)
-+		return ret;
-+	attrcount += ret;
-+
- 	ret = iio_device_add_info_mask_type(indio_dev, chan,
- 					    IIO_SHARED_BY_ALL,
- 					    &chan->info_mask_shared_by_all);
-@@ -1014,6 +1189,13 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
- 		return ret;
- 	attrcount += ret;
- 
-+	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
-+						  IIO_SHARED_BY_ALL,
-+						  &chan->info_mask_shared_by_all_available);
-+	if (ret < 0)
-+		return ret;
-+	attrcount += ret;
-+
- 	if (chan->ext_info) {
- 		unsigned int i = 0;
- 		for (ext_info = chan->ext_info; ext_info->name; ext_info++) {
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index b4a0679e4a49..c0f897084620 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -269,9 +269,13 @@ struct iio_chan_spec {
- 		enum iio_endian endianness;
- 	} scan_type;
- 	long			info_mask_separate;
-+	long			info_mask_separate_available;
- 	long			info_mask_shared_by_type;
-+	long			info_mask_shared_by_type_available;
- 	long			info_mask_shared_by_dir;
-+	long			info_mask_shared_by_dir_available;
- 	long			info_mask_shared_by_all;
-+	long			info_mask_shared_by_all_available;
- 	const struct iio_event_spec *event_spec;
- 	unsigned int		num_event_specs;
- 	const struct iio_chan_spec_ext_info *ext_info;
-@@ -397,6 +401,13 @@ struct iio_info {
- 			int *val_len,
- 			long mask);
- 
-+	int (*read_avail)(struct iio_dev *indio_dev,
-+			  struct iio_chan_spec const *chan,
-+			  const int **vals,
-+			  int *type,
-+			  int *length,
-+			  long mask_el);
-+
- 	int (*write_raw)(struct iio_dev *indio_dev,
- 			 struct iio_chan_spec const *chan,
- 			 int val,
-diff --git a/include/linux/iio/types.h b/include/linux/iio/types.h
-index 32b579525004..2aa7b6384d64 100644
---- a/include/linux/iio/types.h
-+++ b/include/linux/iio/types.h
-@@ -29,4 +29,9 @@ enum iio_event_info {
- #define IIO_VAL_FRACTIONAL 10
- #define IIO_VAL_FRACTIONAL_LOG2 11
- 
-+enum iio_available_type {
-+	IIO_AVAIL_LIST,
-+	IIO_AVAIL_RANGE,
++struct dpot_dac {
++	struct regulator *vref;
++	struct iio_channel *dpot;
++	u32 max_ohms;
 +};
 +
- #endif /* _IIO_TYPES_H_ */
++static const struct iio_chan_spec dpot_dac_iio_channel = {
++	.type = IIO_VOLTAGE,
++	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
++			    | BIT(IIO_CHAN_INFO_SCALE),
++	.info_mask_separate_available = BIT(IIO_CHAN_INFO_RAW),
++	.output = 1,
++	.indexed = 1,
++};
++
++static int dpot_dac_read_raw(struct iio_dev *indio_dev,
++			     struct iio_chan_spec const *chan,
++			     int *val, int *val2, long mask)
++{
++	struct dpot_dac *dac = iio_priv(indio_dev);
++	int ret;
++	unsigned long long tmp;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		return iio_read_channel_raw(dac->dpot, val);
++
++	case IIO_CHAN_INFO_SCALE:
++		ret = iio_read_channel_scale(dac->dpot, val, val2);
++		switch (ret) {
++		case IIO_VAL_FRACTIONAL_LOG2:
++			tmp = *val * 1000000000LL;
++			do_div(tmp, dac->max_ohms);
++			tmp *= regulator_get_voltage(dac->vref) / 1000;
++			do_div(tmp, 1000000000LL);
++			*val = tmp;
++			return ret;
++		case IIO_VAL_INT:
++			/*
++			 * Convert integer scale to fractional scale by
++			 * setting the denominator (val2) to one...
++			 */
++			*val2 = 1;
++			ret = IIO_VAL_FRACTIONAL;
++			/* ...and fall through. */
++		case IIO_VAL_FRACTIONAL:
++			*val *= regulator_get_voltage(dac->vref) / 1000;
++			*val2 *= dac->max_ohms;
++			break;
++		}
++
++		return ret;
++	}
++
++	return -EINVAL;
++}
++
++static int dpot_dac_read_avail(struct iio_dev *indio_dev,
++			       struct iio_chan_spec const *chan,
++			       const int **vals, int *type, int *length,
++			       long mask)
++{
++	struct dpot_dac *dac = iio_priv(indio_dev);
++	struct iio_dev *dpot_dev = dac->dpot->indio_dev;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		return dpot_dev->info->read_avail(dpot_dev, dac->dpot->channel,
++						  vals, type, length, mask);
++	}
++
++	return -EINVAL;
++}
++
++static int dpot_dac_write_raw(struct iio_dev *indio_dev,
++			      struct iio_chan_spec const *chan,
++			      int val, int val2, long mask)
++{
++	struct dpot_dac *dac = iio_priv(indio_dev);
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		return iio_write_channel_raw(dac->dpot, val);
++	}
++
++	return -EINVAL;
++}
++
++static const struct iio_info dpot_dac_info = {
++	.read_raw = dpot_dac_read_raw,
++	.read_avail = dpot_dac_read_avail,
++	.write_raw = dpot_dac_write_raw,
++	.driver_module = THIS_MODULE,
++};
++
++static int dpot_dac_channel_max_ohms(struct iio_dev *indio_dev)
++{
++	struct device *dev = &indio_dev->dev;
++	struct dpot_dac *dac = iio_priv(indio_dev);
++	struct iio_channel *ch = dac->dpot;
++	struct iio_dev *iio_ch_dev = ch->indio_dev;
++	const int *vals;
++	unsigned long long tmp;
++	int type;
++	int len;
++	int ret;
++	int val1;
++	int val2;
++	int max;
++
++	if (!iio_ch_dev->info->read_avail) {
++		dev_err(dev, "dpot does not provide available raw values\n");
++		return -EINVAL;
++	}
++
++	ret = iio_ch_dev->info->read_avail(iio_ch_dev, ch->channel,
++					   &vals, &type, &len,
++					   IIO_CHAN_INFO_RAW);
++
++	if (ret < 0) {
++		dev_err(dev, "dpot failed to provide available raw values\n");
++		return ret;
++	}
++	if (type != IIO_VAL_INT) {
++		dev_err(dev, "dpot provides strange raw values\n");
++		return -EINVAL;
++	}
++
++	switch (ret) {
++	case IIO_AVAIL_RANGE:
++		if (len != 3) {
++			dev_err(dev, "need a range of available values\n");
++			return -EINVAL;
++		}
++		max = vals[2];
++		break;
++	default:
++		dev_err(dev, "dpot doesn't provide range of available values\n");
++		return -EINVAL;
++	}
++
++	switch (iio_read_channel_scale(dac->dpot, &val1, &val2)) {
++	case IIO_VAL_INT:
++		return max * val1;
++	case IIO_VAL_FRACTIONAL:
++		tmp = (unsigned long long)max * val1;
++		do_div(tmp, val2);
++		return tmp;
++	case IIO_VAL_FRACTIONAL_LOG2:
++		tmp = (s64)vals[0] * 1000000000LL * max >> vals[1];
++		do_div(tmp, 1000000000LL);
++		return tmp;
++	default:
++		dev_err(dev, "dpot has a scale that is too weird\n");
++	}
++
++	return -EINVAL;
++}
++
++static int dpot_dac_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct iio_dev *indio_dev;
++	struct dpot_dac *dac;
++	enum iio_chan_type type;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(dev, sizeof(*dac));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, indio_dev);
++	dac = iio_priv(indio_dev);
++
++	indio_dev->name = dev_name(dev);
++	indio_dev->dev.parent = dev;
++	indio_dev->info = &dpot_dac_info;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++	indio_dev->channels = &dpot_dac_iio_channel;
++	indio_dev->num_channels = 1;
++
++	dac->vref = devm_regulator_get(dev, "vref");
++	if (IS_ERR(dac->vref)) {
++		if (PTR_ERR(dac->dpot) != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "failed to get vref regulator\n");
++		return PTR_ERR(dac->vref);
++	}
++
++	dac->dpot = devm_iio_channel_get(dev, "dpot");
++	if (IS_ERR(dac->dpot)) {
++		if (PTR_ERR(dac->dpot) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get dpot input channel\n");
++		return PTR_ERR(dac->dpot);
++	}
++
++	ret = iio_get_channel_type(dac->dpot, &type);
++	if (ret < 0)
++		return ret;
++
++	if (type != IIO_RESISTANCE) {
++		dev_err(dev, "dpot is of the wrong type\n");
++		return -EINVAL;
++	}
++
++	ret = dpot_dac_channel_max_ohms(indio_dev);
++	if (ret < 0)
++		return ret;
++	dac->max_ohms = ret;
++	dev_info(dev, "dpot max is %d\n", dac->max_ohms);
++
++	ret = regulator_enable(dac->vref);
++	if (ret) {
++		dev_err(dev, "failed to enable the vref regulator\n");
++		return ret;
++	}
++
++	ret = iio_device_register(indio_dev);
++	if (ret) {
++		dev_err(dev, "failed to register iio device\n");
++		goto disable_reg;
++	}
++
++	return 0;
++
++disable_reg:
++	regulator_disable(dac->vref);
++	return ret;
++}
++
++static int dpot_dac_remove(struct platform_device *pdev)
++{
++	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
++	struct dpot_dac *dac = iio_priv(indio_dev);
++
++	iio_device_unregister(indio_dev);
++	regulator_disable(dac->vref);
++
++	return 0;
++}
++
++static const struct of_device_id dpot_dac_match[] = {
++	{ .compatible = "dpot-dac" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, dpot_dac_match);
++
++static struct platform_driver dpot_dac_driver = {
++	.probe = dpot_dac_probe,
++	.remove = dpot_dac_remove,
++	.driver = {
++		.name = "iio-dpot-dac",
++		.of_match_table = dpot_dac_match,
++	},
++};
++module_platform_driver(dpot_dac_driver);
++
++MODULE_DESCRIPTION("DAC emulation driver using a digital potentiometer");
++MODULE_AUTHOR("Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>");
++MODULE_LICENSE("GPL v2");
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
