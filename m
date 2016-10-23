@@ -1,153 +1,218 @@
 From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [PATCH v3 0/8] IIO wrapper drivers, dpot-dac and envelope-detector
-Date: Mon, 24 Oct 2016 00:39:33 +0200
-Message-ID: <1477262381-7800-1-git-send-email-peda@axentia.se>
+Subject: [PATCH v3 3/8] iio: mcp4531: provide range of available raw values
+Date: Mon, 24 Oct 2016 00:39:36 +0200
+Message-ID: <1477262381-7800-4-git-send-email-peda@axentia.se>
+References: <1477262381-7800-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477262381-7800-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Example:
 
-These two drivers share the fact that they wrap another iio channel,
-and I use the first in combination with the second, which is why I'm
-submitting them as a pair.
+$ cat '/sys/bus/iio/devices/iio:device0/out_resistance_raw_available'
+[0 1 256]
 
-The first driver is a simple wrapper converting an iio dpot into an
-iio dac. It only changes the unit and scale. It also does not add any
-fancy iio buffer support that I don't need. I suppose that can be
-added. By someone else :-)
+Meaning: min 0, step 1 and max 256.
 
-The second driver (the envelope detector) is more involved. It also
-explains why I need the dpot-dac driver. I wanted the envelope
-detector to be generic and work with any dac, but I had a dpot...
-
-But before those two new drivers, there is some infrastructure added
-to provide available values for a channel.
-
-Ok, so the devicetree compatible string for the envelope-detector gained
-the "axentia,tse850-" prefix in v2, but at the same time the driver also
-gained generality that in my mind puts it in about the same position as the
-dpot-dac driver. The driver really has very little to do with the specifics
-of the TSE-850. But at the same time there are more ways to build an
-envelope detector compared to the obviousness of building a dac from a dpot...
-
-One thing I still don't like is that the irq needs to be changed for cases
-where it is only ever interesting with the 'invert' variant, and it may not
-work to set up the irq the wrong way first. For the TSE-850, this does not
-matter, since we have a mux on the envelope detector input and can make use
-of both 'invert' and 'normal' for different signals (we could have gotten
-by with only 'invert' since the only signals we are measuring that are
-'normal' are also DC signals and can thus be detected both from below and
-from above), but it is nice to have it both ways. The only way out of this
-is a devicetree thing. I suppose it will have to be added by whomever needs
-it whenever that is...
-
-I also wonder if the "new" *_available ABI should perhaps be documented
-for all variants directly in sysfs-bus-iio instead of doing it ina driver
-specific maner that I did? But that can be fixed later by someone more
-capable than me :-)
-
-v2 -> v3
-- add some missing @foo comments in iio.h in the initial forward ported patch
-- killed some buffer overflow problems in the initial forward ported patch
-- add inkern.c helpers for the new available attributes to avoid viral
-  boilerplating in the future (also add support for finding max of
-  IIO_AVAIL_LISTs of IIO_VAL_INTs)
-- add ABI docs for new ABI of mcp4531 (out_resistance_raw_available)
-  and an example in the commit message
-
-dpot-dac:
-- two more counts of s/assumed the that the/assumed that the/   *blush*
-- add ABI docs for new ABI (out_voltageY_raw_available)
-
-envelope detector:
-- move device attributes 'compare_interval_ms' and 'invert' to extended
-  channel attributes (out_altvoltage0_compare_interval and
-  out_altvoltage0_invert) as they really are about the channel and not
-  the device
-- kill "dpot-dac,max-ohms = <100000>;" in the devicetree example
-
-
-v1 -> v2
-- provide out_resistanceX_raw_available channel attribute in mcp4531 dpot
-
-dpot-dac:
-- change Vref to vref
-- the module will be called dpot-dac (in Kconfig help)
-- removed a 'the'
-- removed (s64) cast
-- make the channel indexed, makes libiio find the channel (tested with 0.5)
-- add a comment on how integer scale is converted to fractional scale
-  and clarify the code a bit
-- dig out max-ohms by looking at scale and maximum available raw value
-  from the dpot channel and drop the 'dpot-dac,max-ohms' devicetree property
-- provide out_voltageX_raw_available channel attribute
-
-envelope-detector:
-- change compatible from envelope-detector to axentia,tse850-envelope-detector
-- remove envelope-detector,invert and envelope-detector,comp-interval-ms from
-  devicetree and add them as iio device attributes instead
-- make the channel indexed, makes libiio find the channel (tested with 0.5)
-- reorder struct envelope to better indicate what is covered by read_lock
-- add comment on interaction between envelope_detector_comp_latch (renamed
-  from envelope_detector_latch) and envelope_detector_comp_isr (renamed
-  from envelope_detector_isr)
-- fixup a problem in envelope_detector_comp_latch where interrupts pending
-  from when the interrupt has been disabled interferes with expected
-  operation
-- slight rewrite of the initial high/low assignments
-- use a better name when requesting the interrupt
-- dig out dac_max by looking at scale and maximum available raw value
-  from the dac channel and drop the 'envelope-detector,dac-max' devicetree
-  property
-
-Cheers,
-Peter
-
-Jonathan Cameron (1):
-  iio:core: add a callback to allow drivers to provide _available
-    attributes
-
-Peter Rosin (7):
-  iio: inkern: add helpers to query available values from channels
-  iio: mcp4531: provide range of available raw values
-  dt-bindings: add axentia to vendor-prefixes
-  dt-bindings: iio: document dpot-dac bindings
-  iio: dpot-dac: DAC driver based on a digital potentiometer
-  dt-bindings: iio: document envelope-detector bindings
-  iio: envelope-detector: ADC driver based on a DAC and a comparator
-
- .../testing/sysfs-bus-iio-adc-envelope-detector    |  36 ++
- .../ABI/testing/sysfs-bus-iio-dac-dpot-dac         |   8 +
- .../testing/sysfs-bus-iio-potentiometer-mcp4531    |   8 +
- .../bindings/iio/adc/envelope-detector.txt         |  54 +++
- .../devicetree/bindings/iio/dac/dpot-dac.txt       |  41 ++
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- MAINTAINERS                                        |  17 +
- drivers/iio/adc/Kconfig                            |  10 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/envelope-detector.c                | 422 +++++++++++++++++++++
- drivers/iio/dac/Kconfig                            |  10 +
- drivers/iio/dac/Makefile                           |   1 +
- drivers/iio/dac/dpot-dac.c                         | 267 +++++++++++++
- drivers/iio/industrialio-core.c                    | 259 +++++++++++--
- drivers/iio/inkern.c                               |  97 +++++
- drivers/iio/potentiometer/mcp4531.c                | 104 +++--
- include/linux/iio/consumer.h                       |  29 ++
- include/linux/iio/iio.h                            |  46 +++
- include/linux/iio/types.h                          |   5 +
- 19 files changed, 1341 insertions(+), 75 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
+Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+---
+ .../testing/sysfs-bus-iio-potentiometer-mcp4531    |   8 ++
+ MAINTAINERS                                        |   1 +
+ drivers/iio/potentiometer/mcp4531.c                | 104 ++++++++++++---------
+ 3 files changed, 71 insertions(+), 42 deletions(-)
  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-potentiometer-mcp4531
- create mode 100644 Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
- create mode 100644 Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
- create mode 100644 drivers/iio/adc/envelope-detector.c
- create mode 100644 drivers/iio/dac/dpot-dac.c
 
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio-potentiometer-mcp4531 b/Documentation/ABI/testing/sysfs-bus-iio-potentiometer-mcp4531
+new file mode 100644
+index 000000000000..2a91fbe394fc
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-bus-iio-potentiometer-mcp4531
+@@ -0,0 +1,8 @@
++What:		/sys/bus/iio/devices/iio:deviceX/out_resistance_raw_available
++Date:		October 2016
++KernelVersion:	4.9
++Contact:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
++Description:
++		The range of available values represented as the minimum value,
++		the step and the maximum value, all enclosed in square brackets.
++		Example: [0 1 256]
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1cd38a7e0064..7c65585e1230 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7694,6 +7694,7 @@ MCP4531 MICROCHIP DIGITAL POTENTIOMETER DRIVER
+ M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+ L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ S:	Maintained
++F:	Documentation/ABI/testing/sysfs-bus-iio-potentiometer-mcp4531
+ F:	drivers/iio/potentiometer/mcp4531.c
+ 
+ MEASUREMENT COMPUTING CIO-DAC IIO DRIVER
+diff --git a/drivers/iio/potentiometer/mcp4531.c b/drivers/iio/potentiometer/mcp4531.c
+index 13b6ae2fcf7b..0d1bcf89ae17 100644
+--- a/drivers/iio/potentiometer/mcp4531.c
++++ b/drivers/iio/potentiometer/mcp4531.c
+@@ -38,7 +38,7 @@
+ 
+ struct mcp4531_cfg {
+ 	int wipers;
+-	int max_pos;
++	int avail[3];
+ 	int kohms;
+ };
+ 
+@@ -78,38 +78,38 @@ enum mcp4531_type {
+ };
+ 
+ static const struct mcp4531_cfg mcp4531_cfg[] = {
+-	[MCP453x_502] = { .wipers = 1, .max_pos = 128, .kohms =   5, },
+-	[MCP453x_103] = { .wipers = 1, .max_pos = 128, .kohms =  10, },
+-	[MCP453x_503] = { .wipers = 1, .max_pos = 128, .kohms =  50, },
+-	[MCP453x_104] = { .wipers = 1, .max_pos = 128, .kohms = 100, },
+-	[MCP454x_502] = { .wipers = 1, .max_pos = 128, .kohms =   5, },
+-	[MCP454x_103] = { .wipers = 1, .max_pos = 128, .kohms =  10, },
+-	[MCP454x_503] = { .wipers = 1, .max_pos = 128, .kohms =  50, },
+-	[MCP454x_104] = { .wipers = 1, .max_pos = 128, .kohms = 100, },
+-	[MCP455x_502] = { .wipers = 1, .max_pos = 256, .kohms =   5, },
+-	[MCP455x_103] = { .wipers = 1, .max_pos = 256, .kohms =  10, },
+-	[MCP455x_503] = { .wipers = 1, .max_pos = 256, .kohms =  50, },
+-	[MCP455x_104] = { .wipers = 1, .max_pos = 256, .kohms = 100, },
+-	[MCP456x_502] = { .wipers = 1, .max_pos = 256, .kohms =   5, },
+-	[MCP456x_103] = { .wipers = 1, .max_pos = 256, .kohms =  10, },
+-	[MCP456x_503] = { .wipers = 1, .max_pos = 256, .kohms =  50, },
+-	[MCP456x_104] = { .wipers = 1, .max_pos = 256, .kohms = 100, },
+-	[MCP463x_502] = { .wipers = 2, .max_pos = 128, .kohms =   5, },
+-	[MCP463x_103] = { .wipers = 2, .max_pos = 128, .kohms =  10, },
+-	[MCP463x_503] = { .wipers = 2, .max_pos = 128, .kohms =  50, },
+-	[MCP463x_104] = { .wipers = 2, .max_pos = 128, .kohms = 100, },
+-	[MCP464x_502] = { .wipers = 2, .max_pos = 128, .kohms =   5, },
+-	[MCP464x_103] = { .wipers = 2, .max_pos = 128, .kohms =  10, },
+-	[MCP464x_503] = { .wipers = 2, .max_pos = 128, .kohms =  50, },
+-	[MCP464x_104] = { .wipers = 2, .max_pos = 128, .kohms = 100, },
+-	[MCP465x_502] = { .wipers = 2, .max_pos = 256, .kohms =   5, },
+-	[MCP465x_103] = { .wipers = 2, .max_pos = 256, .kohms =  10, },
+-	[MCP465x_503] = { .wipers = 2, .max_pos = 256, .kohms =  50, },
+-	[MCP465x_104] = { .wipers = 2, .max_pos = 256, .kohms = 100, },
+-	[MCP466x_502] = { .wipers = 2, .max_pos = 256, .kohms =   5, },
+-	[MCP466x_103] = { .wipers = 2, .max_pos = 256, .kohms =  10, },
+-	[MCP466x_503] = { .wipers = 2, .max_pos = 256, .kohms =  50, },
+-	[MCP466x_104] = { .wipers = 2, .max_pos = 256, .kohms = 100, },
++	[MCP453x_502] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms =   5, },
++	[MCP453x_103] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms =  10, },
++	[MCP453x_503] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms =  50, },
++	[MCP453x_104] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms = 100, },
++	[MCP454x_502] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms =   5, },
++	[MCP454x_103] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms =  10, },
++	[MCP454x_503] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms =  50, },
++	[MCP454x_104] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms = 100, },
++	[MCP455x_502] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms =   5, },
++	[MCP455x_103] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms =  10, },
++	[MCP455x_503] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms =  50, },
++	[MCP455x_104] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms = 100, },
++	[MCP456x_502] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms =   5, },
++	[MCP456x_103] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms =  10, },
++	[MCP456x_503] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms =  50, },
++	[MCP456x_104] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms = 100, },
++	[MCP463x_502] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms =   5, },
++	[MCP463x_103] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms =  10, },
++	[MCP463x_503] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms =  50, },
++	[MCP463x_104] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms = 100, },
++	[MCP464x_502] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms =   5, },
++	[MCP464x_103] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms =  10, },
++	[MCP464x_503] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms =  50, },
++	[MCP464x_104] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms = 100, },
++	[MCP465x_502] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms =   5, },
++	[MCP465x_103] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms =  10, },
++	[MCP465x_503] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms =  50, },
++	[MCP465x_104] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms = 100, },
++	[MCP466x_502] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms =   5, },
++	[MCP466x_103] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms =  10, },
++	[MCP466x_503] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms =  50, },
++	[MCP466x_104] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms = 100, },
+ };
+ 
+ #define MCP4531_WRITE (0 << 2)
+@@ -124,13 +124,14 @@ struct mcp4531_data {
+ 	const struct mcp4531_cfg *cfg;
+ };
+ 
+-#define MCP4531_CHANNEL(ch) {					\
+-	.type = IIO_RESISTANCE,					\
+-	.indexed = 1,						\
+-	.output = 1,						\
+-	.channel = (ch),					\
+-	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+-	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
++#define MCP4531_CHANNEL(ch) {						\
++	.type = IIO_RESISTANCE,						\
++	.indexed = 1,							\
++	.output = 1,							\
++	.channel = (ch),						\
++	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),			\
++	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),		\
++	.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_RAW),	\
+ }
+ 
+ static const struct iio_chan_spec mcp4531_channels[] = {
+@@ -156,13 +157,31 @@ static int mcp4531_read_raw(struct iio_dev *indio_dev,
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SCALE:
+ 		*val = 1000 * data->cfg->kohms;
+-		*val2 = data->cfg->max_pos;
++		*val2 = data->cfg->avail[2];
+ 		return IIO_VAL_FRACTIONAL;
+ 	}
+ 
+ 	return -EINVAL;
+ }
+ 
++static int mcp4531_read_avail(struct iio_dev *indio_dev,
++			      struct iio_chan_spec const *chan,
++			      const int **vals, int *type, int *length,
++			      long mask)
++{
++	struct mcp4531_data *data = iio_priv(indio_dev);
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		*length = ARRAY_SIZE(data->cfg->avail);
++		*vals = data->cfg->avail;
++		*type = IIO_VAL_INT;
++		return IIO_AVAIL_RANGE;
++	}
++
++	return -EINVAL;
++}
++
+ static int mcp4531_write_raw(struct iio_dev *indio_dev,
+ 			     struct iio_chan_spec const *chan,
+ 			     int val, int val2, long mask)
+@@ -172,7 +191,7 @@ static int mcp4531_write_raw(struct iio_dev *indio_dev,
+ 
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_RAW:
+-		if (val > data->cfg->max_pos || val < 0)
++		if (val > data->cfg->avail[2] || val < 0)
+ 			return -EINVAL;
+ 		break;
+ 	default:
+@@ -186,6 +205,7 @@ static int mcp4531_write_raw(struct iio_dev *indio_dev,
+ 
+ static const struct iio_info mcp4531_info = {
+ 	.read_raw = mcp4531_read_raw,
++	.read_avail = mcp4531_read_avail,
+ 	.write_raw = mcp4531_write_raw,
+ 	.driver_module = THIS_MODULE,
+ };
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
