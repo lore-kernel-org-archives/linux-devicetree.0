@@ -1,105 +1,118 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [PATCH v2 6/7] dt-bindings: iio: document envelope-detector bindings
-Date: Sun, 23 Oct 2016 00:43:45 +0200
-Message-ID: <1477176226-10566-7-git-send-email-peda@axentia.se>
-References: <1477176226-10566-1-git-send-email-peda@axentia.se>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [linux-sunxi] [PATCH v5 4/7] ASoC: sunxi: Add sun8i I2S driver
+Date: Sun, 23 Oct 2016 09:33:16 +0800
+Message-ID: <CAGb2v67gDd650TJk_-oHOehnzdH2qor=36HXdPt339Ji=ToAMg@mail.gmail.com>
+References: <cover.1477142934.git.moinejf@free.fr> <bee315efb909c1ee8b5fe7d3aeb9a33d713cb562.1477142934.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477176226-10566-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+In-Reply-To: <bee315efb909c1ee8b5fe7d3aeb9a33d713cb562.1477142934.git.moinejf-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
----
- .../bindings/iio/adc/envelope-detector.txt         | 55 ++++++++++++++++++++++
- MAINTAINERS                                        |  6 +++
- 2 files changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/envelope-detector.txt b/Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
-new file mode 100644
-index 000000000000..9099531cffff
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
-@@ -0,0 +1,55 @@
-+Bindings for ADC envelope detector using a DAC and a comparator
-+
-+The DAC is used to find the peak level of an alternating voltage input
-+signal by a binary search using the output of a comparator wired to
-+an interrupt pin. Like so:
-+                          _
-+                         | \
-+    input +------>-------|+ \
-+                         |   \
-+           .-------.     |    }---.
-+           |       |     |   /    |
-+           |    dac|-->--|- /     |
-+           |       |     |_/      |
-+           |       |              |
-+           |       |              |
-+           |    irq|------<-------'
-+           |       |
-+           '-------'
-+
-+Required properties:
-+- compatible: Should be "axentia,tse850-envelope-detector"
-+- io-channels: Channel node of the dac to be used for comparator input.
-+- io-channel-names: Should be "dac".
-+- interrupt specification for one client interrupt,
-+  see ../../interrupt-controller/interrupts.txt for details.
-+- interrupt-names: Should be "comp".
-+
-+Example:
-+
-+	&i2c {
-+		dpot: mcp4651-104@28 {
-+			compatible = "microchip,mcp4651-104";
-+			reg = <0x28>;
-+			#io-channel-cells = <1>;
-+		};
-+	};
-+
-+	dac: dac {
-+		compatible = "dpot-dac";
-+		vref-supply = <&reg_3v3>;
-+		io-channels = <&dpot 0>;
-+		io-channel-names = "dpot";
-+		dpot-dac,max-ohms = <100000>;
-+		#io-channel-cells = <1>;
-+	};
-+
-+	envelope-detector {
-+		compatible = "axentia,tse850-envelope-detector";
-+		io-channels = <&dac 0>;
-+		io-channel-names = "dac";
-+
-+		interrupt-parent = <&gpio>;
-+		interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-names = "comp";
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8c8aae24b96b..4b6f6ec1b703 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6118,6 +6118,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
- F:	drivers/iio/dac/dpot-dac.c
- 
-+IIO ENVELOPE DETECTOR
-+M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-+L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
-+
- IIO SUBSYSTEM AND DRIVERS
- M:	Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
- R:	Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
--- 
-2.1.4
+On Fri, Oct 21, 2016 at 4:36 PM, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org> wrote:
+> This patch adds I2S support to sun8i SoCs as the A83T and H3.
+>
+> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+> ---
+> Note: This driver is closed to the sun4i-i2s except that:
+> - it handles the H3
 
+If it's close to sun4i-i2s, you should probably rework that one to support
+the newer SoCs.
+
+> - it creates the sound card (with sun4i-i2s, the sound card is created
+>   by the CODECs)
+
+I think this is wrong. I2S is only the DAI. You typically have a separate
+platform driver for the whole card, or just use simple-card.
+
+> ---
+>  .../devicetree/bindings/sound/sun4i-i2s.txt        |  38 +-
+>  sound/soc/sunxi/Kconfig                            |   8 +
+>  sound/soc/sunxi/Makefile                           |   3 +
+>  sound/soc/sunxi/sun8i-i2s.c                        | 700 +++++++++++++++++++++
+>  4 files changed, 744 insertions(+), 5 deletions(-)
+>  create mode 100644 sound/soc/sunxi/sun8i-i2s.c
+>
+> diff --git a/Documentation/devicetree/bindings/sound/sun4i-i2s.txt b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
+> index 7b526ec..2fb0a7a 100644
+> --- a/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
+> +++ b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
+> @@ -1,4 +1,4 @@
+> -* Allwinner A10 I2S controller
+> +* Allwinner A10/A38T/H3 I2S controller
+>
+>  The I2S bus (Inter-IC sound bus) is a serial link for digital
+>  audio data transfer between devices in the system.
+> @@ -6,20 +6,30 @@ audio data transfer between devices in the system.
+>  Required properties:
+>
+>  - compatible: should be one of the followings
+> -   - "allwinner,sun4i-a10-i2s"
+> +  - "allwinner,sun4i-a10-i2s"
+> +       "allwinner,sun8i-a83t-i2s"
+> +       "allwinner,sun8i-h3-i2s"
+>  - reg: physical base address of the controller and length of memory mapped
+>    region.
+> -- interrupts: should contain the I2S interrupt.
+>  - dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
+>         Documentation/devicetree/bindings/dma/dma.txt
+> -- dma-names: should include "tx" and "rx".
+> +- dma-names: must include "tx" and/or "rx".
+>  - clocks: a list of phandle + clock-specifer pairs, one for each entry in clock-names.
+>  - clock-names: should contain followings:
+>     - "apb" : clock for the I2S bus interface
+>     - "mod" : module clock for the I2S controller
+>  - #sound-dai-cells : Must be equal to 0
+>
+> -Example:
+> +Optional properties:
+> +
+> +- interrupts: I2S interrupt
+> +- resets: phandle to the reset of the device
+> +
+> +Required nodes:
+> +
+> + - port: link to the associated CODEC (DAC, HDMI...)
+
+Note here you are changing an existing binding, adding a required node.
+If it were truely different, you probably should've started a new binding.
+
+Regards
+ChenYu
+
+> +
+> +Example 1:
+>
+>  i2s0: i2s@01c22400 {
+>         #sound-dai-cells = <0>;
+> @@ -32,3 +42,21 @@ i2s0: i2s@01c22400 {
+>                <&dma SUN4I_DMA_NORMAL 3>;
+>         dma-names = "rx", "tx";
+>  };
+> +
+> +Example 2:
+> +
+> +i2s2: i2s@1c22800 {
+> +       compatible = "allwinner,sun8i-a83t-i2s";
+> +       reg = <0x01c22800 0x60>;
+> +       clocks = <&ccu CLK_BUS_I2S2>, <&ccu CLK_I2S2>;
+> +       clock-names = "apb", "mod";
+> +       resets = <&ccu RST_I2S2>;
+> +       dmas = <&dma 27>;
+> +       dma-names = "tx";
+> +       status = "disabled";
+> +       port {
+> +               i2s2_hdmi: endpoint {
+> +                       remote-endpoint = <&hdmi_i2s2>;
+> +               };
+> +       };
+> +};
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
