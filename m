@@ -1,62 +1,78 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm64: arch_timer: Add device tree binding for
- hisilicon-161x01 erratum
-Date: Sun, 23 Oct 2016 20:04:23 +0800
-Message-ID: <20161023120423.GO30578@tiger>
-References: <962ea92f-870b-e1d0-5bb7-1a6d66c35122@huawei.com>
+From: punnaiah choudary kalluri <punnaia@xilinx.com>
+Subject: Re: [v7, 1/3] nand: pl353: Add basic driver for arm pl353 smc nand interface
+Date: Sun, 23 Oct 2016 17:37:42 +0530
+Message-ID: <CAGnW=Bb-pnJ9-xjcw-1dR-y+oKjNs53bgD+dh1LwsMTCmzdRmQ@mail.gmail.com>
+References: <1433786918-21500-2-git-send-email-punnaia@xilinx.com>
+ <20161021203322.GA28655@obsidianresearch.com> <20161021234611.1f737144@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <962ea92f-870b-e1d0-5bb7-1a6d66c35122-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20161021234611.1f737144@bbrezillon>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jussi.kivilinna@iki.fi" <jussi.kivilinna@iki.fi>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "pawel.moll@arm.com" <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 23, 2016 at 11:21:10AM +0800, Ding Tianhong wrote:
-> This erratum describes a bug in logic outside the core, so MIDR can't be
-> used to identify its presence, and reading an SoC-specific revision
-> register from common arch timer code would be awkward.  So, describe it
-> in the device tree.
-> 
-> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/arch_timer.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> index ef5fbe9..26bc837 100644
-> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> @@ -31,6 +31,12 @@ to deliver its interrupts via SPIs.
->    This also affects writes to the tval register, due to the implicit
->    counter read.
-> 
-> +- hisilicon,erratum-161x01 : A boolean property. Indicates the presence of
-> +  QorIQ erratum 161201, which says that reading the counter is
+Hi Boris and Jason,
 
-QorIQ is a Freescale/NXP specific name, and shouldn't be there.
+ I am doing rework on these patches to accommodate recent changes with
+ respect to ooblayout. Also some of the comments that i have received
+from Boris as part of the arasan nand controller upstream patches will
+apply to this driver. So, i will be releasing the next set of patches for this
+driver soon and request your time for reviewing those patches.
 
-Shawn
+for now, please ignore these patches.
 
-> +  unreliable unless the small range of value is returned by back-to-back reads.
-> +  This also affects writes to the tval register, due to the implicit
-> +  counter read.
-> +
->  ** Optional properties:
-> 
->  - arm,cpu-registers-not-fw-configured : Firmware does not initialize
-> -- 
-> 1.9.0
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Punnaiah
+
+On Sat, Oct 22, 2016 at 3:16 AM, Boris Brezillon
+<boris.brezillon@free-electrons.com> wrote:
+> On Fri, 21 Oct 2016 14:33:22 -0600
+> Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
+>
+>> On Mon, Jun 08, 2015 at 11:38:36PM +0530, Punnaiah Choudary Kalluri wrote:
+>> > Add driver for arm pl353 static memory controller nand interface with
+>> > HW ECC support. This controller is used in xilinx zynq soc for interfacing
+>> > the nand flash memory.
+>> >
+>> > Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+>> > Changes in v7:
+>> >  - Currently not implemented the memclk rate adjustments. I will
+>> >    look into this later and once the basic driver is accepted.
+>> >  - Fixed GPL licence ident
+>> > Changes in v6:
+>> >  - Fixed the checkpatch.pl reported warnings
+>> >  - Using the address cycles information from the onfi param page
+>> >    earlier it is hardcoded to 5 in driver
+>> > Changes in v5:
+>> >  - Configure the nand timing parameters as per the onfi spec
+>> > Changes in v4:
+>> >  - Updated the driver to sync with pl353_smc driver APIs
+>> > Changes in v3:
+>> >  - implemented the proper error codes
+>> >  - further breakdown this patch to multiple sets
+>> >  - added the controller and driver details to Documentation section
+>> >  - updated the licenece to GPLv2
+>> >  - reorganized the pl353_nand_ecc_init function
+>> > Changes in v2:
+>> >  - use "depends on" rather than "select" option in kconfig
+>> >  - remove unused variable parts
+>> >  - remove dummy helper and use writel_relaxed directly
+>>
+>> What is the status of getting this driver merged? I am interested in
+>> this driver and can provide some help if there are still TODO items.
+>
+> I'll try to review it next week.
+>
+>>
+>> At the very least I will test it, is there something newer than v7 out
+>> there?
+>>
+>> Regards,
+>> Jason
+>>
+>> ______________________________________________________
+>> Linux MTD discussion mailing list
+>> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+>
