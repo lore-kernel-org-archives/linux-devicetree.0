@@ -1,96 +1,485 @@
-From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Subject: Re: [PATCH v5 3/9] vcodec: mediatek: Add Mediatek V4L2 Video
- Decoder Driver
-Date: Mon, 24 Oct 2016 07:05:42 -0200
-Message-ID: <20161024070542.65e11e37@vento.lan>
-References: <1472818800-22558-1-git-send-email-tiffany.lin@mediatek.com>
-        <1472818800-22558-2-git-send-email-tiffany.lin@mediatek.com>
-        <1472818800-22558-3-git-send-email-tiffany.lin@mediatek.com>
-        <1472818800-22558-4-git-send-email-tiffany.lin@mediatek.com>
-        <20161021110104.5733240e@vento.lan>
-        <1477279328.10501.10.camel@mtksdaap41>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: [PATCH v3 1/8] iio:core: add a callback to allow drivers to provide _available attributes
+Date: Mon, 24 Oct 2016 00:39:34 +0200
+Message-ID: <1477262381-7800-2-git-send-email-peda@axentia.se>
+References: <1477262381-7800-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477279328.10501.10.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tiffany Lin <tiffany.lin@mediatek.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477262381-7800-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Em Mon, 24 Oct 2016 11:22:08 +0800
-Tiffany Lin <tiffany.lin@mediatek.com> escreveu:
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> Hi Mauro,
-> 
-> On Fri, 2016-10-21 at 11:01 -0200, Mauro Carvalho Chehab wrote:
-> > Em Fri, 2 Sep 2016 20:19:54 +0800
-> > Tiffany Lin <tiffany.lin@mediatek.com> escreveu:
-> >   
-> > > Add v4l2 layer decoder driver for MT8173
-> > > 
-> > > Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>  
-> >   
-> > > +int vdec_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
-> > > +{
-> > > +	int ret = 0;
-> > > +
-> > > +	switch (fourcc) {
-> > > +	case V4L2_PIX_FMT_H264:
-> > > +	case V4L2_PIX_FMT_VP8:
-> > > +	default:
-> > > +		return -EINVAL;
-> > > +	}  
-> > 
-> > Did you ever test this driver? The above code will *always* return
-> > -EINVAL, with will cause vidioc_vdec_s_fmt() to always fail!
-> > 
-> > I suspect that what you wanted to do, instead, is:
-> > 
-> > 	switch (fourcc) {
-> > 	case V4L2_PIX_FMT_H264:
-> > 	case V4L2_PIX_FMT_VP8:
-> > 		break;
-> > 	default:
-> > 		return -EINVAL;
-> >   
-> 
-> The original idea here is that vp8 and h264 are added in later patches.
-> If get this patch without later patches, it should return -EINVAL.
+A large number of attributes can only take a limited range of values.
+Currently in IIO this is handled by directly registering additional
+*_available attributes thus providing this information to userspace.
 
-I noticed your idea, but next time, don't add dead code like that.
-Reviewers check patch by patch at the order they're present at the
-patch series.
+It is desirable to provide this information via the core for much the same
+reason this was done for the actual channel information attributes in the
+first place.  If it isn't there, then it can only really be accessed from
+userspace.  Other in kernel IIO consumers have no access to what valid
+parameters are.
 
-So, don't add something broken by purpose, assuming that it would
-be fixed later.
+Two forms are currently supported:
+* list of values in one particular IIO_VAL_* format.
+	e.g. 1.300000 1.500000 1.730000
+* range specification with a step size:
+	e.g. [1.000000 0.500000 2.500000]
+	equivalent to 1.000000 1.5000000 2.000000 2.500000
 
-> 
-> 
-> > Btw, this patch series has also several issues that were pointed by
-> > checkpatch. Please *always* run checkpatch when submitting your work.
-> > 
-> > You should take a look at the Kernel documentation about how to
-> > submit patches, at:
-> > 	https://mchehab.fedorapeople.org/kernel_docs/process/index.html
-> > 
-> > PS.: this time, I fixed the checkpatch issues for you. So, let me know
-> > if the patch below is OK, and I'll merge it at media upstream,
-> > assuming that the other patches in this series are ok.
-> >   
-> 
-> I did run checkpatch, but I don't know why these issues missed.
-> probably I run checkpatch for all files not for patches.
-> I will take a look at the documentation and keep this in mind for future
-> upstream.
-> Appreciated for your help.
+An addition set of masks are used to allow different sharing rules for the
+*_available attributes generated.
 
-Checkpatch should be run patch by patch, as we expect that all patches
-will follow the coding style and will compile fine, without introducing
-warnings.
+This allows for example:
 
-I do compile the Kernel for every single patch I merge.
+in_accel_x_offset
+in_accel_y_offset
+in_accel_offset_available.
 
-Regards,
-Mauro
+We could have gone with having a specification for each and every
+info_mask element but that would have meant changing the existing userspace
+ABI.  This approach does not.
+
+Signed-off-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+[forward ported, added some docs and fixed buffer overflows /peda]
+Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+---
+ drivers/iio/industrialio-core.c | 259 +++++++++++++++++++++++++++++++++++-----
+ include/linux/iio/iio.h         |  29 +++++
+ include/linux/iio/types.h       |   5 +
+ 3 files changed, 260 insertions(+), 33 deletions(-)
+
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index fc340ed3dca1..b35c61a31fa6 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -575,66 +575,82 @@ int of_iio_read_mount_matrix(const struct device *dev,
+ #endif
+ EXPORT_SYMBOL(of_iio_read_mount_matrix);
+ 
+-/**
+- * iio_format_value() - Formats a IIO value into its string representation
+- * @buf:	The buffer to which the formatted value gets written
+- * @type:	One of the IIO_VAL_... constants. This decides how the val
+- *		and val2 parameters are formatted.
+- * @size:	Number of IIO value entries contained in vals
+- * @vals:	Pointer to the values, exact meaning depends on the
+- *		type parameter.
+- *
+- * Return: 0 by default, a negative number on failure or the
+- *	   total number of characters written for a type that belongs
+- *	   to the IIO_VAL_... constant.
+- */
+-ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals)
++static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
++				  int size, const int *vals)
+ {
+ 	unsigned long long tmp;
++	int tmp0, tmp1;
+ 	bool scale_db = false;
+ 
+ 	switch (type) {
+ 	case IIO_VAL_INT:
+-		return sprintf(buf, "%d\n", vals[0]);
++		return snprintf(buf, len, "%d", vals[0]);
+ 	case IIO_VAL_INT_PLUS_MICRO_DB:
+ 		scale_db = true;
+ 	case IIO_VAL_INT_PLUS_MICRO:
+ 		if (vals[1] < 0)
+-			return sprintf(buf, "-%d.%06u%s\n", abs(vals[0]),
+-				       -vals[1], scale_db ? " dB" : "");
++			return snprintf(buf, len, "-%d.%06u%s", abs(vals[0]),
++					-vals[1], scale_db ? " dB" : "");
+ 		else
+-			return sprintf(buf, "%d.%06u%s\n", vals[0], vals[1],
+-				scale_db ? " dB" : "");
++			return snprintf(buf, len, "%d.%06u%s", vals[0], vals[1],
++					scale_db ? " dB" : "");
+ 	case IIO_VAL_INT_PLUS_NANO:
+ 		if (vals[1] < 0)
+-			return sprintf(buf, "-%d.%09u\n", abs(vals[0]),
+-				       -vals[1]);
++			return snprintf(buf, len, "-%d.%09u", abs(vals[0]),
++					-vals[1]);
+ 		else
+-			return sprintf(buf, "%d.%09u\n", vals[0], vals[1]);
++			return snprintf(buf, len, "%d.%09u", vals[0], vals[1]);
+ 	case IIO_VAL_FRACTIONAL:
+ 		tmp = div_s64((s64)vals[0] * 1000000000LL, vals[1]);
+-		vals[0] = (int)div_s64_rem(tmp, 1000000000, &vals[1]);
+-		return sprintf(buf, "%d.%09u\n", vals[0], abs(vals[1]));
++		tmp1 = vals[1];
++		tmp0 = (int)div_s64_rem(tmp, 1000000000, &tmp1);
++		return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
+ 	case IIO_VAL_FRACTIONAL_LOG2:
+ 		tmp = (s64)vals[0] * 1000000000LL >> vals[1];
+-		vals[1] = do_div(tmp, 1000000000LL);
+-		vals[0] = tmp;
+-		return sprintf(buf, "%d.%09u\n", vals[0], vals[1]);
++		tmp1 = do_div(tmp, 1000000000LL);
++		tmp0 = tmp;
++		return snprintf(buf, len, "%d.%09u", tmp0, tmp1);
+ 	case IIO_VAL_INT_MULTIPLE:
+ 	{
+ 		int i;
+-		int len = 0;
++		int l = 0;
+ 
+-		for (i = 0; i < size; ++i)
+-			len += snprintf(&buf[len], PAGE_SIZE - len, "%d ",
+-								vals[i]);
+-		len += snprintf(&buf[len], PAGE_SIZE - len, "\n");
+-		return len;
++		for (i = 0; i < size; ++i) {
++			l += snprintf(&buf[l], len - l, "%d ", vals[i]);
++			if (l >= len)
++				break;
++		}
++		return l;
+ 	}
+ 	default:
+ 		return 0;
+ 	}
+ }
++
++/**
++ * iio_format_value() - Formats a IIO value into its string representation
++ * @buf:	The buffer to which the formatted value gets written
++ *		which is assumed to be big enough (i.e. PAGE_SIZE).
++ * @type:	One of the IIO_VAL_... constants. This decides how the val
++ *		and val2 parameters are formatted.
++ * @size:	Number of IIO value entries contained in vals
++ * @vals:	Pointer to the values, exact meaning depends on the
++ *		type parameter.
++ *
++ * Return: 0 by default, a negative number on failure or the
++ *	   total number of characters written for a type that belongs
++ *	   to the IIO_VAL_... constant.
++ */
++ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals)
++{
++	ssize_t len;
++
++	len = __iio_format_value(buf, PAGE_SIZE, type, size, vals);
++	if (len >= PAGE_SIZE - 1)
++		return -EFBIG;
++
++	return len + sprintf(buf + len, "\n");
++}
+ EXPORT_SYMBOL_GPL(iio_format_value);
+ 
+ static ssize_t iio_read_channel_info(struct device *dev,
+@@ -662,6 +678,119 @@ static ssize_t iio_read_channel_info(struct device *dev,
+ 	return iio_format_value(buf, ret, val_len, vals);
+ }
+ 
++static ssize_t iio_format_avail_list(char *buf, const int *vals,
++				     int type, int length)
++{
++	int i;
++	ssize_t len = 0;
++
++	switch (type) {
++	case IIO_VAL_INT:
++		for (i = 0; i < length; i++) {
++			len += __iio_format_value(buf + len, PAGE_SIZE - len,
++						  type, 1, &vals[i]);
++			if (len >= PAGE_SIZE)
++				return -EFBIG;
++			if (i < length - 1)
++				len += snprintf(buf + len, PAGE_SIZE - len,
++						" ");
++			else
++				len += snprintf(buf + len, PAGE_SIZE - len,
++						"\n");
++			if (len >= PAGE_SIZE)
++				return -EFBIG;
++		}
++		break;
++	default:
++		for (i = 0; i < length / 2; i++) {
++			len += __iio_format_value(buf + len, PAGE_SIZE - len,
++						  type, 2, &vals[i * 2]);
++			if (len >= PAGE_SIZE)
++				return -EFBIG;
++			if (i < length / 2 - 1)
++				len += snprintf(buf + len, PAGE_SIZE - len,
++						" ");
++			else
++				len += snprintf(buf + len, PAGE_SIZE - len,
++						"\n");
++			if (len >= PAGE_SIZE)
++				return -EFBIG;
++		}
++	};
++
++	return len;
++}
++
++static ssize_t iio_format_avail_range(char *buf, const int *vals, int type)
++{
++	int i;
++	ssize_t len;
++
++	len = snprintf(buf, PAGE_SIZE, "[");
++	switch (type) {
++	case IIO_VAL_INT:
++		for (i = 0; i < 3; i++) {
++			len += __iio_format_value(buf + len, PAGE_SIZE - len,
++						  type, 1, &vals[i]);
++			if (len >= PAGE_SIZE)
++				return -EFBIG;
++			if (i < 2)
++				len += snprintf(buf + len, PAGE_SIZE - len,
++						" ");
++			else
++				len += snprintf(buf + len, PAGE_SIZE - len,
++						"]\n");
++			if (len >= PAGE_SIZE)
++				return -EFBIG;
++		}
++		break;
++	default:
++		for (i = 0; i < 3; i++) {
++			len += __iio_format_value(buf + len, PAGE_SIZE - len,
++						  type, 2, &vals[i * 2]);
++			if (len >= PAGE_SIZE)
++				return -EFBIG;
++			if (i < 2)
++				len += snprintf(buf + len, PAGE_SIZE - len,
++						" ");
++			else
++				len += snprintf(buf + len, PAGE_SIZE - len,
++						"]\n");
++			if (len >= PAGE_SIZE)
++				return -EFBIG;
++		}
++	};
++
++	return len;
++}
++
++static ssize_t iio_read_channel_info_avail(struct device *dev,
++					   struct device_attribute *attr,
++					   char *buf)
++{
++	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct iio_dev_attr *this_attr = to_iio_dev_attr(attr);
++	const int *vals;
++	int ret;
++	int length;
++	int type;
++
++	ret = indio_dev->info->read_avail(indio_dev, this_attr->c,
++					  &vals, &type, &length,
++					  this_attr->address);
++
++	if (ret < 0)
++		return ret;
++	switch (ret) {
++	case IIO_AVAIL_LIST:
++		return iio_format_avail_list(buf, vals, type, length);
++	case IIO_AVAIL_RANGE:
++		return iio_format_avail_range(buf, vals, type);
++	default:
++		return -EINVAL;
++	}
++}
++
+ /**
+  * iio_str_to_fixpoint() - Parse a fixed-point number from a string
+  * @str: The string to parse
+@@ -978,6 +1107,40 @@ static int iio_device_add_info_mask_type(struct iio_dev *indio_dev,
+ 	return attrcount;
+ }
+ 
++static int iio_device_add_info_mask_type_avail(struct iio_dev *indio_dev,
++					       struct iio_chan_spec const *chan,
++					       enum iio_shared_by shared_by,
++					       const long *infomask)
++{
++	int i, ret, attrcount = 0;
++	char *avail_postfix;
++
++	for_each_set_bit(i, infomask, sizeof(infomask) * 8) {
++		avail_postfix = kasprintf(GFP_KERNEL,
++					  "%s_available",
++					  iio_chan_info_postfix[i]);
++		if (!avail_postfix)
++			return -ENOMEM;
++
++		ret = __iio_add_chan_devattr(avail_postfix,
++					     chan,
++					     &iio_read_channel_info_avail,
++					     NULL,
++					     i,
++					     shared_by,
++					     &indio_dev->dev,
++					     &indio_dev->channel_attr_list);
++		kfree(avail_postfix);
++		if ((ret == -EBUSY) && (shared_by != IIO_SEPARATE))
++			continue;
++		else if (ret < 0)
++			return ret;
++		attrcount++;
++	}
++
++	return attrcount;
++}
++
+ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
+ 					struct iio_chan_spec const *chan)
+ {
+@@ -993,6 +1156,14 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
+ 		return ret;
+ 	attrcount += ret;
+ 
++	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
++						  IIO_SEPARATE,
++						  &chan->
++						  info_mask_separate_available);
++	if (ret < 0)
++		return ret;
++	attrcount += ret;
++
+ 	ret = iio_device_add_info_mask_type(indio_dev, chan,
+ 					    IIO_SHARED_BY_TYPE,
+ 					    &chan->info_mask_shared_by_type);
+@@ -1000,6 +1171,14 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
+ 		return ret;
+ 	attrcount += ret;
+ 
++	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
++						  IIO_SHARED_BY_TYPE,
++						  &chan->
++						  info_mask_shared_by_type_available);
++	if (ret < 0)
++		return ret;
++	attrcount += ret;
++
+ 	ret = iio_device_add_info_mask_type(indio_dev, chan,
+ 					    IIO_SHARED_BY_DIR,
+ 					    &chan->info_mask_shared_by_dir);
+@@ -1007,6 +1186,13 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
+ 		return ret;
+ 	attrcount += ret;
+ 
++	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
++						  IIO_SHARED_BY_DIR,
++						  &chan->info_mask_shared_by_dir_available);
++	if (ret < 0)
++		return ret;
++	attrcount += ret;
++
+ 	ret = iio_device_add_info_mask_type(indio_dev, chan,
+ 					    IIO_SHARED_BY_ALL,
+ 					    &chan->info_mask_shared_by_all);
+@@ -1014,6 +1200,13 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
+ 		return ret;
+ 	attrcount += ret;
+ 
++	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
++						  IIO_SHARED_BY_ALL,
++						  &chan->info_mask_shared_by_all_available);
++	if (ret < 0)
++		return ret;
++	attrcount += ret;
++
+ 	if (chan->ext_info) {
+ 		unsigned int i = 0;
+ 		for (ext_info = chan->ext_info; ext_info->name; ext_info++) {
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index b4a0679e4a49..45b781084a4b 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -225,12 +225,22 @@ struct iio_event_spec {
+  *			endianness:	little or big endian
+  * @info_mask_separate: What information is to be exported that is specific to
+  *			this channel.
++ * @info_mask_separate_available: What availability information is to be
++ *			exported that is specific to this channel.
+  * @info_mask_shared_by_type: What information is to be exported that is shared
+  *			by all channels of the same type.
++ * @info_mask_shared_by_type_available: What availability information is to be
++ *			exported that is shared by all channels of the same
++ *			type.
+  * @info_mask_shared_by_dir: What information is to be exported that is shared
+  *			by all channels of the same direction.
++ * @info_mask_shared_by_dir_available: What availability information is to be
++ *			exported that is shared by all channels of the same
++ *			direction.
+  * @info_mask_shared_by_all: What information is to be exported that is shared
+  *			by all channels.
++ * @info_mask_shared_by_all_available: What availability information is to be
++ *			exported that is shared by all channels.
+  * @event_spec:		Array of events which should be registered for this
+  *			channel.
+  * @num_event_specs:	Size of the event_spec array.
+@@ -269,9 +279,13 @@ struct iio_chan_spec {
+ 		enum iio_endian endianness;
+ 	} scan_type;
+ 	long			info_mask_separate;
++	long			info_mask_separate_available;
+ 	long			info_mask_shared_by_type;
++	long			info_mask_shared_by_type_available;
+ 	long			info_mask_shared_by_dir;
++	long			info_mask_shared_by_dir_available;
+ 	long			info_mask_shared_by_all;
++	long			info_mask_shared_by_all_available;
+ 	const struct iio_event_spec *event_spec;
+ 	unsigned int		num_event_specs;
+ 	const struct iio_chan_spec_ext_info *ext_info;
+@@ -349,6 +363,14 @@ struct iio_dev;
+  *			max_len specifies maximum number of elements
+  *			vals pointer can contain. val_len is used to return
+  *			length of valid elements in vals.
++ * @read_avail:		function to return the available values from the device.
++ *			mask specifies which value. Note 0 means the available
++ *			values for the channel in question.  Return value
++ *			specifies if a IIO_AVAIL_LIST or a IIO_AVAIL_RANGE is
++ *			returned in vals. The type of the vals are returned in
++ *			type and the number of vals is returned in length. For
++ *			ranges, there are always three vals returned; min, step
++ *			and max. For lists, all possible values are enumerated.
+  * @write_raw:		function to write a value to the device.
+  *			Parameters are the same as for read_raw.
+  * @write_raw_get_fmt:	callback function to query the expected
+@@ -397,6 +419,13 @@ struct iio_info {
+ 			int *val_len,
+ 			long mask);
+ 
++	int (*read_avail)(struct iio_dev *indio_dev,
++			  struct iio_chan_spec const *chan,
++			  const int **vals,
++			  int *type,
++			  int *length,
++			  long mask);
++
+ 	int (*write_raw)(struct iio_dev *indio_dev,
+ 			 struct iio_chan_spec const *chan,
+ 			 int val,
+diff --git a/include/linux/iio/types.h b/include/linux/iio/types.h
+index 32b579525004..2aa7b6384d64 100644
+--- a/include/linux/iio/types.h
++++ b/include/linux/iio/types.h
+@@ -29,4 +29,9 @@ enum iio_event_info {
+ #define IIO_VAL_FRACTIONAL 10
+ #define IIO_VAL_FRACTIONAL_LOG2 11
+ 
++enum iio_available_type {
++	IIO_AVAIL_LIST,
++	IIO_AVAIL_RANGE,
++};
++
+ #endif /* _IIO_TYPES_H_ */
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
