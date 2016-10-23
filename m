@@ -1,114 +1,61 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] dt-bindings: iio: document envelope-detector
- bindings
-Date: Sun, 23 Oct 2016 11:01:16 +0200
-Message-ID: <f743f779-84e2-ca8f-ec04-dc2e360e934f@axentia.se>
-References: <1477176226-10566-1-git-send-email-peda@axentia.se>
- <1477176226-10566-7-git-send-email-peda@axentia.se>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm64: arch_timer: Add device tree binding for
+ hisilicon-161x01 erratum
+Date: Sun, 23 Oct 2016 20:04:23 +0800
+Message-ID: <20161023120423.GO30578@tiger>
+References: <962ea92f-870b-e1d0-5bb7-1a6d66c35122@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477176226-10566-7-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <962ea92f-870b-e1d0-5bb7-1a6d66c35122-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-23 00:43, Peter Rosin wrote:
-> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+On Sun, Oct 23, 2016 at 11:21:10AM +0800, Ding Tianhong wrote:
+> This erratum describes a bug in logic outside the core, so MIDR can't be
+> used to identify its presence, and reading an SoC-specific revision
+> register from common arch timer code would be awkward.  So, describe it
+> in the device tree.
+> 
+> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 > ---
->  .../bindings/iio/adc/envelope-detector.txt         | 55 ++++++++++++++++++++++
->  MAINTAINERS                                        |  6 +++
->  2 files changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
+>  Documentation/devicetree/bindings/arm/arch_timer.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/envelope-detector.txt b/Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
-> new file mode 100644
-> index 000000000000..9099531cffff
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
-> @@ -0,0 +1,55 @@
-> +Bindings for ADC envelope detector using a DAC and a comparator
-> +
-> +The DAC is used to find the peak level of an alternating voltage input
-> +signal by a binary search using the output of a comparator wired to
-> +an interrupt pin. Like so:
-> +                          _
-> +                         | \
-> +    input +------>-------|+ \
-> +                         |   \
-> +           .-------.     |    }---.
-> +           |       |     |   /    |
-> +           |    dac|-->--|- /     |
-> +           |       |     |_/      |
-> +           |       |              |
-> +           |       |              |
-> +           |    irq|------<-------'
-> +           |       |
-> +           '-------'
-> +
-> +Required properties:
-> +- compatible: Should be "axentia,tse850-envelope-detector"
-> +- io-channels: Channel node of the dac to be used for comparator input.
-> +- io-channel-names: Should be "dac".
-> +- interrupt specification for one client interrupt,
-> +  see ../../interrupt-controller/interrupts.txt for details.
-> +- interrupt-names: Should be "comp".
-> +
-> +Example:
-> +
-> +	&i2c {
-> +		dpot: mcp4651-104@28 {
-> +			compatible = "microchip,mcp4651-104";
-> +			reg = <0x28>;
-> +			#io-channel-cells = <1>;
-> +		};
-> +	};
-> +
-> +	dac: dac {
-> +		compatible = "dpot-dac";
-> +		vref-supply = <&reg_3v3>;
-> +		io-channels = <&dpot 0>;
-> +		io-channel-names = "dpot";
-> +		dpot-dac,max-ohms = <100000>;
-
-Just noticed that this line isn't needed anymore. I'll kill it for v3.
-
-Cheers,
-Peter
-
-> +		#io-channel-cells = <1>;
-> +	};
-> +
-> +	envelope-detector {
-> +		compatible = "axentia,tse850-envelope-detector";
-> +		io-channels = <&dac 0>;
-> +		io-channel-names = "dac";
-> +
-> +		interrupt-parent = <&gpio>;
-> +		interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
-> +		interrupt-names = "comp";
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8c8aae24b96b..4b6f6ec1b703 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6118,6 +6118,12 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
->  F:	drivers/iio/dac/dpot-dac.c
->  
-> +IIO ENVELOPE DETECTOR
-> +M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> +L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
-> +
->  IIO SUBSYSTEM AND DRIVERS
->  M:	Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->  R:	Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+> index ef5fbe9..26bc837 100644
+> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
+> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+> @@ -31,6 +31,12 @@ to deliver its interrupts via SPIs.
+>    This also affects writes to the tval register, due to the implicit
+>    counter read.
 > 
+> +- hisilicon,erratum-161x01 : A boolean property. Indicates the presence of
+> +  QorIQ erratum 161201, which says that reading the counter is
 
+QorIQ is a Freescale/NXP specific name, and shouldn't be there.
+
+Shawn
+
+> +  unreliable unless the small range of value is returned by back-to-back reads.
+> +  This also affects writes to the tval register, due to the implicit
+> +  counter read.
+> +
+>  ** Optional properties:
+> 
+>  - arm,cpu-registers-not-fw-configured : Firmware does not initialize
+> -- 
+> 1.9.0
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
