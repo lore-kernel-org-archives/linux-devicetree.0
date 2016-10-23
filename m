@@ -1,377 +1,136 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 4/8] drivers:input:tsc2007: add iio interface to read
- external ADC input and temperature
-Date: Sun, 23 Oct 2016 10:24:21 +0100
-Message-ID: <1dd251db-7f45-78bf-c9dd-4ae29b0ed757@kernel.org>
-References: <cover.1476712675.git.hns@goldelico.com>
- <4d3c600bf0a6b75a74212a103bf31525505290a0.1476712675.git.hns@goldelico.com>
- <07bb4d52-a439-f9a9-8593-ddde8e93e6ee@kernel.org>
- <7A0E332C-4930-4F1A-8320-F87F864B53AE@goldelico.com>
+From: ayaka <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Subject: Re: [PATCH v9 1/2] usb: dwc2: assert phy reset when waking up in
+ rk3288 platform
+Date: Sun, 23 Oct 2016 17:33:23 +0800
+Message-ID: <922d7f12-a520-7c07-bc4c-887321177c6d@soulik.info>
+References: <1476988627-14953-1-git-send-email-ayaka@soulik.info>
+ <1476988627-14953-2-git-send-email-ayaka@soulik.info>
+ <4ee5817d-0076-9974-8b0e-182a0241e1f5@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <7A0E332C-4930-4F1A-8320-F87F864B53AE@goldelico.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?UTF-8?Q?Mika_Penttil=c3=a4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, Sebastian Reichel <sre@kernel.org>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, linux-iio@vger.kernel.org, kernel@pyra-handheld.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4ee5817d-0076-9974-8b0e-182a0241e1f5-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22/10/16 21:46, H. Nikolaus Schaller wrote:
-> Hi Jonathan,
-> 
->> Am 22.10.2016 um 20:33 schrieb Jonathan Cameron <jic23@kernel.org>:
+
+
+On 10/22/2016 03:27 AM, John Youn wrote:
+> On 10/20/2016 11:38 AM, Randy Li wrote:
+>> On the rk3288 USB host-only port (the one that's not the OTG-enabled
+>> port) the PHY can get into a bad state when a wakeup is asserted (not
+>> just a wakeup from full system suspend but also a wakeup from
+>> autosuspend).
 >>
->> On 17/10/16 14:57, H. Nikolaus Schaller wrote:
->>> The tsc2007 chip not only has a resistive touch screen controller but
->>> also an external AUX adc imput which can be used for an ambient
->>> light sensor, battery voltage monitoring or any general purpose.
->>>
->>> Additionally it can measure the chip temperature.
->>>
->>> This extension provides an iio interface for these adc channels.
->>>
->>> Since it is not wasting much resources and is very straightforward,
->>> we simply provide all other adc channels as optional iio interfaces
->>> as weel. This can be used for debugging or special applications.
->> well
->>>
->>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> This could be cleaner done perhaps by factoring out the IIO stuff into a separate
->> file and using a header with stubs to deal with the no available case.
+>> We can get the PHY out of its bad state by asserting its "port reset",
+>> but unfortunately that seems to assert a reset onto the USB bus so it
+>> could confuse things if we don't actually deenumerate / reenumerate the
+>> device.
 >>
->> There will only be a handful of stubs and it'll give you a lot cleaner code
->> in here.
+>> We can also get the PHY out of its bad state by fully resetting it using
+>> the reset from the CRU (clock reset unit) in chip, which does a more full
+>> reset.  The CRU-based reset appears to actually cause devices on the bus
+>> to be removed and reinserted, which fixes the problem (albeit in a hacky
+>> way).
 >>
->> If def fun in .c files is always harder to deal with than in a header
->> where stubs are really obvious.
-> 
-> Yes, it became a lot of #ifdefs spread over the source file.
-> 
-> The easiest thing would be to require IIO to be enabled :)
-> 
-> With your proposal to consider refactoring, I think the crucial part
-> is the conditional allocation either through devm_iio_device_alloc()
-> or devm_kzalloc(). This can be refactored into some conditional
-> tsc2007_alloc().
-> 
-> I have tried some draft (not tested and not tidied up) to check if the
-> direction is good.
-> 
-> This reduces the number of #ifdef CONFIG_IIO from 7 to 2 without introducing
-> new files or includes. There are also 2 other #ifdef CONFIG_OF so it doesn't
-> seem to be very complex now in comparison. And the patch itself has only a
-> handful of hunks (8).
-> 
-> Moving tsc2007_alloc into a separate file tsc2007_iio.c would only move around
-> one #ifdef CONFIG_OF from tsc2007.c but IMHO makes it more difficult to understand
-> because it is not really iio specific and one has to switch between two source
-> files. And I would have to touch the Makefile as well.
-> 
-> What do you think?
-I'd still split it.  The only bit of the IIO block that isn't specific is
-a tiny chunk of the allocation code (as you've highlighted).
+>> It's unfortunate that we need to do a full re-enumeration of devices at
+>> wakeup time, but this is better than alternative of letting the bus get
+>> wedged.
+>>
+>> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+>> ---
+>>   drivers/usb/dwc2/core.h      |  1 +
+>>   drivers/usb/dwc2/core_intr.c | 11 +++++++++++
+>>   drivers/usb/dwc2/platform.c  |  9 +++++++++
+>>   3 files changed, 21 insertions(+)
+>>
+>> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
+>> index 2a21a04..e91ddbc 100644
+>> --- a/drivers/usb/dwc2/core.h
+>> +++ b/drivers/usb/dwc2/core.h
+>> @@ -859,6 +859,7 @@ struct dwc2_hsotg {
+>>   	unsigned int ll_hw_enabled:1;
+>>   
+>>   	struct phy *phy;
+>> +	struct work_struct phy_rst_work;
+>>   	struct usb_phy *uphy;
+>>   	struct dwc2_hsotg_plat *plat;
+>>   	struct regulator_bulk_data supplies[ARRAY_SIZE(dwc2_hsotg_supply_names)];
+>> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
+>> index d85c5c9..c3d2168 100644
+>> --- a/drivers/usb/dwc2/core_intr.c
+>> +++ b/drivers/usb/dwc2/core_intr.c
+>> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
+>>   static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>>   {
+>>   	int ret;
+>> +	struct device_node *np = hsotg->dev->of_node;
+>>   
+>>   	/* Clear interrupt */
+>>   	dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
+>> @@ -379,6 +380,16 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>>   			/* Restart the Phy Clock */
+>>   			pcgcctl &= ~PCGCTL_STOPPCLK;
+>>   			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
+>> +
+>> +			/*
+>> +			 * It is a quirk in Rockchip RK3288, causing by
+>> +			 * a hardware bug. This will propagate out and
+>> +			 * eventually we'll re-enumerate the device.
+>> +			 * Not great but the best we can do
+>> +			 */
+>> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb"))
+>> +				schedule_work(&hsotg->phy_rst_work);
+>> +
+>>   			mod_timer(&hsotg->wkp_timer,
+>>   				  jiffies + msecs_to_jiffies(71));
+>>   		} else {
+>> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+>> index 8e1728b..65953cf 100644
+>> --- a/drivers/usb/dwc2/platform.c
+>> +++ b/drivers/usb/dwc2/platform.c
+>> @@ -366,6 +366,14 @@ int dwc2_lowlevel_hw_disable(struct dwc2_hsotg *hsotg)
+>>   	return ret;
+>>   }
+>>   
+>> +/* Only used to reset usb phy at interrupter runtime */
+>> +static void dwc2_reset_phy_work(struct work_struct *data)
+>> +{
+>> +	struct dwc2_hsotg *hsotg = container_of(data, struct dwc2_hsotg,
+>> +			phy_rst_work);
+>> +	phy_reset(hsotg->phy);
+>> +}
+>> +
+>>   static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
+>>   {
+>>   	int i, ret;
+>> @@ -410,6 +418,7 @@ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
+>>   			return ret;
+>>   		}
+>>   	}
+>> +	INIT_WORK(&hsotg->phy_rst_work, dwc2_reset_phy_work);
+>>   
+>>   	if (!hsotg->phy) {
+>>   		hsotg->uphy = devm_usb_get_phy(hsotg->dev, USB_PHY_TYPE_USB2);
+>>
+> Hi Randy,
+>
+> This fails compile if CONFIG_GENERIC_PHY is disabled. I think you need
+> to make a fix to your phy_reset patch first.
+In the last time, cac18ecb6f44b11bc303d7afbae3887b27938fa4 have not been 
+merged, I though the
+[PATCH v8 1/3] phy: Add reset callback for not generic phy have been 
+merged before that. when the rebase abandon it.
+Should re-send that patch? As the mainline have not been affected, could 
+you arrange a squash for it?
+>
+> Regards,
+> John
 
-Even that can be avoided by adding a tiny bit more indirection than would
-otherwise be needed (it's not pretty but it would give a clean separation).
-
-It's pretty much the way this sort of optional functionality should always
-be done - means that if you don't care (i.e. it's not enabled) you don't
-even have to see the code.
-
-Jonathan
-> 
-> If generally ok, I can include that in [PATCH v5].
-> 
-> BR and thanks,
-> Nikolaus
-> 
-> 
-> diff --git a/drivers/input/touchscreen/tsc2007.c b/drivers/input/touchscreen/tsc2007.c
-> index 5e3c4bf..691e79f 100644
-> --- a/drivers/input/touchscreen/tsc2007.c
-> +++ b/drivers/input/touchscreen/tsc2007.c
-> @@ -30,6 +30,7 @@
->  #include <linux/of.h>
->  #include <linux/of_gpio.h>
->  #include <linux/input/touchscreen.h>
-> +#include <linux/iio/iio.h>
->  
->  #define TSC2007_MEASURE_TEMP0          (0x0 << 4)
->  #define TSC2007_MEASURE_AUX            (0x2 << 4)
-> @@ -69,9 +70,13 @@ struct ts_event {
->  
->  struct tsc2007 {
->         struct input_dev        *input;
-> +#ifdef CONFIG_IIO
-> +       struct iio_dev          *indio;
-> +#endif
-I wouldn't bother with this one.  Just have 
-struct iio_dev; before this and it'll waste a whole
-one pointer (+ you shouldn't need to have iio.h included
-in here once you have spit the files).
->         char                    phys[32];
->  
->         struct i2c_client       *client;
-> +       struct mutex            mlock;
->  
->         u16                     model;
->         u16                     x_plate_ohms;
-> @@ -192,7 +197,10 @@ static irqreturn_t tsc2007_soft_irq(int irq, void *handle)
->         while (!ts->stopped && tsc2007_is_pen_down(ts)) {
->  
->                 /* pen is down, continue with the measurement */
-> +
-> +               mutex_lock(&ts->mlock);
->                 tsc2007_read_values(ts, &tc);
-> +               mutex_unlock(&ts->mlock);
->  
->                 rt = tsc2007_calculate_resistance(ts, &tc);
->  
-> @@ -319,6 +327,162 @@ static void tsc2007_close(struct input_dev *input_dev)
->         tsc2007_stop(ts);
->  }
->  
-> +#ifdef CONFIG_IIO
-> +
-> +#define TSC2007_CHAN_IIO(_chan, _name, _type, _chan_info) \
-> +{ \
-> +       .datasheet_name = _name, \
-> +       .type = _type, \
-> +       .info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |  \
-> +                       BIT(_chan_info), \
-> +       .indexed = 1, \
-> +       .channel = _chan, \
-> +}
-> +
-> +static const struct iio_chan_spec tsc2007_iio_channel[] = {
-> +       TSC2007_CHAN_IIO(0, "x", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
-> +       TSC2007_CHAN_IIO(1, "y", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
-> +       TSC2007_CHAN_IIO(2, "z1", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
-> +       TSC2007_CHAN_IIO(3, "z2", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
-> +       TSC2007_CHAN_IIO(4, "adc", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
-> +       TSC2007_CHAN_IIO(5, "rt", IIO_VOLTAGE, IIO_CHAN_INFO_RAW), /* Ohms? */
-> +       TSC2007_CHAN_IIO(6, "pen", IIO_PRESSURE, IIO_CHAN_INFO_RAW),
-> +       TSC2007_CHAN_IIO(7, "temp0", IIO_TEMP, IIO_CHAN_INFO_RAW),
-> +       TSC2007_CHAN_IIO(8, "temp1", IIO_TEMP, IIO_CHAN_INFO_RAW),
-> +};
-> +
-> +static int tsc2007_read_raw(struct iio_dev *indio_dev,
-> +       struct iio_chan_spec const *chan, int *val, int *val2, long mask)
-> +{
-> +       struct  tsc2007 *tsc = iio_priv(indio_dev);
-> +       int adc_chan = chan->channel;
-> +       int ret = 0;
-> +
-> +       if (adc_chan >= ARRAY_SIZE(tsc2007_iio_channel))
-> +               return -EINVAL;
-> +
-> +       if (mask != IIO_CHAN_INFO_RAW)
-> +               return -EINVAL;
-> +
-> +       mutex_lock(&tsc->mlock);
-> +
-> +       switch (chan->channel) {
-> +       case 0:
-> +               *val = tsc2007_xfer(tsc, READ_X);
-> +               break;
-> +       case 1:
-> +               *val = tsc2007_xfer(tsc, READ_Y);
-> +               break;
-> +       case 2:
-> +               *val = tsc2007_xfer(tsc, READ_Z1);
-> +               break;
-> +       case 3:
-> +               *val = tsc2007_xfer(tsc, READ_Z2);
-> +               break;
-> +       case 4:
-> +               *val = tsc2007_xfer(tsc, (ADC_ON_12BIT | TSC2007_MEASURE_AUX));
-> +               break;
-> +       case 5: {
-> +               struct ts_event tc;
-> +
-> +               tc.x = tsc2007_xfer(tsc, READ_X);
-> +               tc.z1 = tsc2007_xfer(tsc, READ_Z1);
-> +               tc.z2 = tsc2007_xfer(tsc, READ_Z2);
-> +               *val = tsc2007_calculate_resistance(tsc, &tc);
-> +               break;
-> +       }
-> +       case 6:
-> +               *val = tsc2007_is_pen_down(tsc);
-> +               break;
-> +       case 7:
-> +               *val = tsc2007_xfer(tsc,
-> +                                   (ADC_ON_12BIT | TSC2007_MEASURE_TEMP0));
-> +               break;
-> +       case 8:
-> +               *val = tsc2007_xfer(tsc,
-> +                                   (ADC_ON_12BIT | TSC2007_MEASURE_TEMP1));
-> +               break;
-> +       }
-> +
-> +       /* Prepare for next touch reading - power down ADC, enable PENIRQ */
-> +       tsc2007_xfer(tsc, PWRDOWN);
-> +
-> +       mutex_unlock(&tsc->mlock);
-> +
-> +       ret = IIO_VAL_INT;
-> +
-> +       return ret;
-> +}
-> +
-> +static const struct iio_info tsc2007_iio_info = {
-> +       .read_raw = tsc2007_read_raw,
-> +       .driver_module = THIS_MODULE,
-> +};
-> +
-> +static int tsc2007_alloc(struct i2c_client *client, struct tsc2007 **ts,
-> +                          struct input_dev **input_dev)
-> +{
-> +       int err;
-> +       struct iio_dev *indio_dev;
-> +
-> +       indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*ts));
-Instead of doing this to reduce the delta between versions make 
-iio_priv a struct tsc2007 **
-
-That is have a single pointer in there and do your allocation of struct
-tsc2007 separately.
-
-Having doing that, you can have this CONFIG_IIO block as just
-doing the iio stuff with the input elements pulled back into the main
-probe function.
-
-Then define something like
-
-iio_configure (stubbed to nothing if no IIO)
-and
-iio_unconfigure (also stubbed to nothing if no IIO).
-
-A couple of additions in the header to make it all work
-(the struct tsc2007 and tsc2007_xfer() + a few of the
-register defines..
-
-Nothing big and gets all the CONFIG_IIO into some really
-obvious stubbing out in the header.
-
-
-> +       if (!indio_dev) {
-> +               dev_err(&client->dev, "iio_device_alloc failed\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       *ts = iio_priv(indio_dev);
-> +
-> +       *input_dev = devm_input_allocate_device(&client->dev);
-> +       if (!*input_dev)
-> +               return -ENOMEM;
-> +
-> +       i2c_set_clientdata(client, *ts);
-> +       (*ts)->indio = indio_dev;
-> +
-> +       indio_dev->name = "tsc2007";
-> +       indio_dev->dev.parent = &client->dev;
-> +       indio_dev->info = &tsc2007_iio_info;
-> +       indio_dev->modes = INDIO_DIRECT_MODE;
-> +       indio_dev->channels = tsc2007_iio_channel;
-> +       indio_dev->num_channels = ARRAY_SIZE(tsc2007_iio_channel);
-> +
-> +       err = iio_device_register(indio_dev);
-> +       if (err < 0) {
-> +               dev_err(&client->dev, "iio_device_register() failed: %d\n",
-> +                       err);
-> +               return err;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +#define tsc2007_iio_device_unregister(ts) iio_device_unregister(ts->indio)
-> +
-> +#else /* CONFIG_IIO */
-> +
-> +static int tsc2007_alloc(struct i2c_client *client, struct tsc2007 **ts,
-> +                          struct input_dev **input_dev)
-> +{
-> +       int err;
-> +
-> +       *ts = devm_kzalloc(&client->dev, sizeof(struct tsc2007), GFP_KERNEL);
-> +       if (!*ts)
-> +               return -ENOMEM;
-> +
-> +       *input_dev = devm_input_allocate_device(&client->dev);
-> +       if (!*input_dev)
-> +               return -ENOMEM;
-> +
-> +       i2c_set_clientdata(client, *ts);
-> +
-> +       return 0;
-> +}
-> +
-> +#define tsc2007_iio_device_unregister(ts) /* not needed */
-That's rather ugly and fragile.  I'd stub it out as an actual function
-with no content and let the compiler drop it.
-> +
-> +#endif /* CONFIG_IIO */
-> +
->  #ifdef CONFIG_OF
->  static int tsc2007_get_pendown_state_gpio(struct device *dev)
->  {
-> @@ -459,20 +623,15 @@ static int tsc2007_probe(struct i2c_client *client,
->                                      I2C_FUNC_SMBUS_READ_WORD_DATA))
->                 return -EIO;
->  
-> -       ts = devm_kzalloc(&client->dev, sizeof(struct tsc2007), GFP_KERNEL);
-> -       if (!ts)
-> -               return -ENOMEM;
-> -
-> -       input_dev = devm_input_allocate_device(&client->dev);
-> -       if (!input_dev)
-> -               return -ENOMEM;
-> -
-> -       i2c_set_clientdata(client, ts);
-> +       err = tsc2007_alloc(client, &ts, &input_dev);
-> +       if (err < 0)
-> +               return err;
->  
->         ts->client = client;
->         ts->irq = client->irq;
->         ts->input = input_dev;
->         init_waitqueue_head(&ts->wait);
-> +       mutex_init(&ts->mlock);
->  
->         snprintf(ts->phys, sizeof(ts->phys),
->                  "%s/input0", dev_name(&client->dev));
-> @@ -543,6 +702,7 @@ static int tsc2007_probe(struct i2c_client *client,
->         if (err < 0) {
->                 dev_err(&client->dev,
->                         "Failed to setup chip: %d\n", err);
-> +               tsc2007_iio_device_unregister(ts);
->                 return err;     /* usually, chip does not respond */
->         }
->  
-> @@ -556,6 +716,14 @@ static int tsc2007_probe(struct i2c_client *client,
->         return 0;
->  }
->  
-> +static int tsc2007_remove(struct i2c_client *client)
-> +{
-> +       struct tsc2007 *ts = i2c_get_clientdata(client);
-> +       input_unregister_device(ts->input);
-> +       tsc2007_iio_device_unregister(ts);
-> +       return 0;
-> +}
-> +
->  static const struct i2c_device_id tsc2007_idtable[] = {
->         { "tsc2007", 0 },
->         { }
-> @@ -578,6 +746,7 @@ static struct i2c_driver tsc2007_driver = {
->         },
->         .id_table       = tsc2007_idtable,
->         .probe          = tsc2007_probe,
-> +       .remove         = tsc2007_remove,
->  };
->  
->  module_i2c_driver(tsc2007_driver);
-> 
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
