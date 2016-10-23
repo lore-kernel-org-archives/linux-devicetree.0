@@ -1,136 +1,446 @@
-From: ayaka <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Subject: Re: [PATCH v9 1/2] usb: dwc2: assert phy reset when waking up in
- rk3288 platform
-Date: Sun, 23 Oct 2016 17:33:23 +0800
-Message-ID: <922d7f12-a520-7c07-bc4c-887321177c6d@soulik.info>
-References: <1476988627-14953-1-git-send-email-ayaka@soulik.info>
- <1476988627-14953-2-git-send-email-ayaka@soulik.info>
- <4ee5817d-0076-9974-8b0e-182a0241e1f5@synopsys.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 1/7] iio:core: add a callback to allow drivers to
+ provide _available attributes
+Date: Sun, 23 Oct 2016 10:33:44 +0100
+Message-ID: <74746223-a1aa-e9c6-622c-854526d0722d@kernel.org>
+References: <1477176226-10566-1-git-send-email-peda@axentia.se>
+ <1477176226-10566-2-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4ee5817d-0076-9974-8b0e-182a0241e1f5-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477176226-10566-2-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 22/10/16 23:43, Peter Rosin wrote:
+> From: Jonathan Cameron <jic23@kernel.org>
+> 
+> A large number of attributes can only take a limited range of values.
+> Currently in IIO this is handled by directly registering additional
+> *_available attributes thus providing this information to userspace.
+> 
+> It is desirable to provide this information via the core for much the same
+> reason this was done for the actual channel information attributes in the
+> first place.  If it isn't there, then it can only really be accessed from
+> userspace.  Other in kernel IIO consumers have no access to what valid
+> parameters are.
+> 
+> Two forms are currently supported:
+> * list of values in one particular IIO_VAL_* format.
+> 	e.g. 1.300000 1.500000 1.730000
+> * range specification with a step size:
+> 	e.g. [1.000000 0.500000 2.500000]
+> 	equivalent to 1.000000 1.5000000 2.000000 2.500000
+> 
+> An addition set of masks are used to allow different sharing rules for the
+> *_available attributes generated.
+> 
+> This allows for example:
+> 
+> in_accel_x_offset
+> in_accel_y_offset
+> in_accel_offset_available.
+> 
+> We could have gone with having a specification for each and every
+> info_mask element but that would have meant changing the existing userspace
+> ABI.  This approach does not.
+I'm wondering what I meant by this... where does it cause use ABI issues?
+Do you have any idea?
+
+I'd forgotten I'd even done it like this rather than just insisting on 
+available for everything (which is more logical to me as we should know
+the range of everything).
+
+It's pretty low cost though and gives a way of adding this to drivers
+piecemeal which is probably a good idea!
+> 
+> Signed-off-by: Jonathan Cameron <jic23@kernel.org>
+> [rather mindlessly forward ported from approx 3 years ago /peda]
+More importantly shepherding it through review!
+
+Naturally it's perfect code so not comments inline ;)
+
+Thanks again for picking this up!
+
+So... I want to see lots of comments on this. If people are happy with
+it (unlikely ;) then please say so.  It's at least a bit controversial
+and adds a 'lot' of new ABI.
 
 
-On 10/22/2016 03:27 AM, John Youn wrote:
-> On 10/20/2016 11:38 AM, Randy Li wrote:
->> On the rk3288 USB host-only port (the one that's not the OTG-enabled
->> port) the PHY can get into a bad state when a wakeup is asserted (not
->> just a wakeup from full system suspend but also a wakeup from
->> autosuspend).
->>
->> We can get the PHY out of its bad state by asserting its "port reset",
->> but unfortunately that seems to assert a reset onto the USB bus so it
->> could confuse things if we don't actually deenumerate / reenumerate the
->> device.
->>
->> We can also get the PHY out of its bad state by fully resetting it using
->> the reset from the CRU (clock reset unit) in chip, which does a more full
->> reset.  The CRU-based reset appears to actually cause devices on the bus
->> to be removed and reinserted, which fixes the problem (albeit in a hacky
->> way).
->>
->> It's unfortunate that we need to do a full re-enumeration of devices at
->> wakeup time, but this is better than alternative of letting the bus get
->> wedged.
->>
->> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
->> ---
->>   drivers/usb/dwc2/core.h      |  1 +
->>   drivers/usb/dwc2/core_intr.c | 11 +++++++++++
->>   drivers/usb/dwc2/platform.c  |  9 +++++++++
->>   3 files changed, 21 insertions(+)
->>
->> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
->> index 2a21a04..e91ddbc 100644
->> --- a/drivers/usb/dwc2/core.h
->> +++ b/drivers/usb/dwc2/core.h
->> @@ -859,6 +859,7 @@ struct dwc2_hsotg {
->>   	unsigned int ll_hw_enabled:1;
->>   
->>   	struct phy *phy;
->> +	struct work_struct phy_rst_work;
->>   	struct usb_phy *uphy;
->>   	struct dwc2_hsotg_plat *plat;
->>   	struct regulator_bulk_data supplies[ARRAY_SIZE(dwc2_hsotg_supply_names)];
->> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
->> index d85c5c9..c3d2168 100644
->> --- a/drivers/usb/dwc2/core_intr.c
->> +++ b/drivers/usb/dwc2/core_intr.c
->> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
->>   static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->>   {
->>   	int ret;
->> +	struct device_node *np = hsotg->dev->of_node;
->>   
->>   	/* Clear interrupt */
->>   	dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
->> @@ -379,6 +380,16 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->>   			/* Restart the Phy Clock */
->>   			pcgcctl &= ~PCGCTL_STOPPCLK;
->>   			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
->> +
->> +			/*
->> +			 * It is a quirk in Rockchip RK3288, causing by
->> +			 * a hardware bug. This will propagate out and
->> +			 * eventually we'll re-enumerate the device.
->> +			 * Not great but the best we can do
->> +			 */
->> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb"))
->> +				schedule_work(&hsotg->phy_rst_work);
->> +
->>   			mod_timer(&hsotg->wkp_timer,
->>   				  jiffies + msecs_to_jiffies(71));
->>   		} else {
->> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
->> index 8e1728b..65953cf 100644
->> --- a/drivers/usb/dwc2/platform.c
->> +++ b/drivers/usb/dwc2/platform.c
->> @@ -366,6 +366,14 @@ int dwc2_lowlevel_hw_disable(struct dwc2_hsotg *hsotg)
->>   	return ret;
->>   }
->>   
->> +/* Only used to reset usb phy at interrupter runtime */
->> +static void dwc2_reset_phy_work(struct work_struct *data)
->> +{
->> +	struct dwc2_hsotg *hsotg = container_of(data, struct dwc2_hsotg,
->> +			phy_rst_work);
->> +	phy_reset(hsotg->phy);
->> +}
->> +
->>   static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
->>   {
->>   	int i, ret;
->> @@ -410,6 +418,7 @@ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
->>   			return ret;
->>   		}
->>   	}
->> +	INIT_WORK(&hsotg->phy_rst_work, dwc2_reset_phy_work);
->>   
->>   	if (!hsotg->phy) {
->>   		hsotg->uphy = devm_usb_get_phy(hsotg->dev, USB_PHY_TYPE_USB2);
->>
-> Hi Randy,
->
-> This fails compile if CONFIG_GENERIC_PHY is disabled. I think you need
-> to make a fix to your phy_reset patch first.
-In the last time, cac18ecb6f44b11bc303d7afbae3887b27938fa4 have not been 
-merged, I though the
-[PATCH v8 1/3] phy: Add reset callback for not generic phy have been 
-merged before that. when the rebase abandon it.
-Should re-send that patch? As the mainline have not been affected, could 
-you arrange a squash for it?
->
-> Regards,
-> John
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  drivers/iio/industrialio-core.c | 232 +++++++++++++++++++++++++++++++++++-----
+>  include/linux/iio/iio.h         |  11 ++
+>  include/linux/iio/types.h       |   5 +
+>  3 files changed, 223 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index fc340ed3dca1..93c69ebeda1e 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -575,51 +575,41 @@ int of_iio_read_mount_matrix(const struct device *dev,
+>  #endif
+>  EXPORT_SYMBOL(of_iio_read_mount_matrix);
+>  
+> -/**
+> - * iio_format_value() - Formats a IIO value into its string representation
+> - * @buf:	The buffer to which the formatted value gets written
+> - * @type:	One of the IIO_VAL_... constants. This decides how the val
+> - *		and val2 parameters are formatted.
+> - * @size:	Number of IIO value entries contained in vals
+> - * @vals:	Pointer to the values, exact meaning depends on the
+> - *		type parameter.
+> - *
+> - * Return: 0 by default, a negative number on failure or the
+> - *	   total number of characters written for a type that belongs
+> - *	   to the IIO_VAL_... constant.
+> - */
+> -ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals)
+> +static ssize_t __iio_format_value(char *buf, unsigned int type,
+> +				  int size, const int *vals)
+>  {
+>  	unsigned long long tmp;
+> +	int tmp0, tmp1;
+>  	bool scale_db = false;
+>  
+>  	switch (type) {
+>  	case IIO_VAL_INT:
+> -		return sprintf(buf, "%d\n", vals[0]);
+> +		return sprintf(buf, "%d", vals[0]);
+>  	case IIO_VAL_INT_PLUS_MICRO_DB:
+>  		scale_db = true;
+>  	case IIO_VAL_INT_PLUS_MICRO:
+>  		if (vals[1] < 0)
+> -			return sprintf(buf, "-%d.%06u%s\n", abs(vals[0]),
+> +			return sprintf(buf, "-%d.%06u%s", abs(vals[0]),
+>  				       -vals[1], scale_db ? " dB" : "");
+>  		else
+> -			return sprintf(buf, "%d.%06u%s\n", vals[0], vals[1],
+> +			return sprintf(buf, "%d.%06u%s", vals[0], vals[1],
+>  				scale_db ? " dB" : "");
+>  	case IIO_VAL_INT_PLUS_NANO:
+>  		if (vals[1] < 0)
+> -			return sprintf(buf, "-%d.%09u\n", abs(vals[0]),
+> +			return sprintf(buf, "-%d.%09u", abs(vals[0]),
+>  				       -vals[1]);
+>  		else
+> -			return sprintf(buf, "%d.%09u\n", vals[0], vals[1]);
+> +			return sprintf(buf, "%d.%09u", vals[0], vals[1]);
+>  	case IIO_VAL_FRACTIONAL:
+>  		tmp = div_s64((s64)vals[0] * 1000000000LL, vals[1]);
+> -		vals[0] = (int)div_s64_rem(tmp, 1000000000, &vals[1]);
+> -		return sprintf(buf, "%d.%09u\n", vals[0], abs(vals[1]));
+> +		tmp1 = vals[1];
+> +		tmp0 = (int)div_s64_rem(tmp, 1000000000, &tmp1);
+> +		return sprintf(buf, "%d.%09u", tmp0, abs(tmp1));
+>  	case IIO_VAL_FRACTIONAL_LOG2:
+>  		tmp = (s64)vals[0] * 1000000000LL >> vals[1];
+> -		vals[1] = do_div(tmp, 1000000000LL);
+> -		vals[0] = tmp;
+> -		return sprintf(buf, "%d.%09u\n", vals[0], vals[1]);
+> +		tmp1 = do_div(tmp, 1000000000LL);
+> +		tmp0 = tmp;
+> +		return sprintf(buf, "%d.%09u", tmp0, tmp1);
+>  	case IIO_VAL_INT_MULTIPLE:
+>  	{
+>  		int i;
+> @@ -628,13 +618,34 @@ ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals)
+>  		for (i = 0; i < size; ++i)
+>  			len += snprintf(&buf[len], PAGE_SIZE - len, "%d ",
+>  								vals[i]);
+> -		len += snprintf(&buf[len], PAGE_SIZE - len, "\n");
+>  		return len;
+>  	}
+>  	default:
+>  		return 0;
+>  	}
+>  }
+> +
+> +/**
+> + * iio_format_value() - Formats a IIO value into its string representation
+> + * @buf:	The buffer to which the formatted value gets written
+> + * @type:	One of the IIO_VAL_... constants. This decides how the val
+> + *		and val2 parameters are formatted.
+> + * @size:	Number of IIO value entries contained in vals
+> + * @vals:	Pointer to the values, exact meaning depends on the
+> + *		type parameter.
+> + *
+> + * Return: 0 by default, a negative number on failure or the
+> + *	   total number of characters written for a type that belongs
+> + *	   to the IIO_VAL_... constant.
+> + */
+> +ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals)
+> +{
+> +	ssize_t len;
+> +
+> +	len = __iio_format_value(buf, type, size, vals);
+> +
+> +	return len + sprintf(buf + len, "\n");
+> +}
+>  EXPORT_SYMBOL_GPL(iio_format_value);
+>  
+>  static ssize_t iio_read_channel_info(struct device *dev,
+> @@ -662,6 +673,113 @@ static ssize_t iio_read_channel_info(struct device *dev,
+>  	return iio_format_value(buf, ret, val_len, vals);
+>  }
+>  
+> +static ssize_t iio_format_avail_list(char *buf, const int *vals,
+> +				     int type, int length)
+> +{
+> +	int i;
+> +	ssize_t len = 0;
+> +
+> +	switch (type) {
+> +	case IIO_VAL_INT:
+> +		for (i = 0; i < length; i++) {
+> +			len += __iio_format_value(buf + len, type, 1, &vals[i]);
+> +			if (i < length - 1)
+> +				len += snprintf(buf + len,
+> +						PAGE_SIZE - len,
+> +						" ");
+> +			else
+> +				len += snprintf(buf + len,
+> +						PAGE_SIZE - len,
+> +						"\n");
+> +		}
+> +		break;
+> +	default:
+> +		for (i = 0; i < length / 2; i++) {
+> +			len += __iio_format_value(buf + len,
+> +						  type,
+> +						  2,
+> +						  &vals[i * 2]);
+> +			if (i < length / 2 - 1)
+> +				len += snprintf(buf + len,
+> +						PAGE_SIZE - len,
+> +						" ");
+> +			else
+> +				len += snprintf(buf + len,
+> +						PAGE_SIZE - len,
+> +						"\n");
+> +		}
+> +	};
+> +
+> +	return len;
+> +}
+> +
+> +static ssize_t iio_format_avail_range(char *buf, const int *vals, int type)
+> +{
+> +	int i;
+> +	ssize_t len;
+> +
+> +	len = snprintf(buf, PAGE_SIZE, "[");
+> +	switch (type) {
+> +	case IIO_VAL_INT:
+> +		for (i = 0; i < 3; i++) {
+> +			len += __iio_format_value(buf + len, type, 1, &vals[i]);
+> +			if (i < 2)
+> +				len += snprintf(buf + len,
+> +						PAGE_SIZE - len,
+> +						" ");
+> +			else
+> +				len += snprintf(buf + len,
+> +						PAGE_SIZE - len,
+> +						"]\n");
+> +		}
+> +		break;
+> +	default:
+> +		for (i = 0; i < 3; i++) {
+> +			len += __iio_format_value(buf + len,
+> +						  type,
+> +						  2,
+> +						  &vals[i * 2]);
+> +			if (i < 2)
+> +				len += snprintf(buf + len,
+> +						PAGE_SIZE - len,
+> +						" ");
+> +			else
+> +				len += snprintf(buf + len,
+> +						PAGE_SIZE - len,
+> +						"]\n");
+> +		}
+> +	};
+> +
+> +	return len;
+> +}
+> +
+> +static ssize_t iio_read_channel_info_avail(struct device *dev,
+> +					   struct device_attribute *attr,
+> +					   char *buf)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct iio_dev_attr *this_attr = to_iio_dev_attr(attr);
+> +	const int *vals;
+> +	int ret;
+> +	int length;
+> +	int type;
+> +
+> +	ret = indio_dev->info->read_avail(indio_dev, this_attr->c,
+> +					  &vals, &type, &length,
+> +					  this_attr->address);
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +	switch (ret) {
+> +	case IIO_AVAIL_LIST:
+> +		return iio_format_avail_list(buf, vals, type, length);
+> +	case IIO_AVAIL_RANGE:
+> +		return iio_format_avail_range(buf, vals, type);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+>  /**
+>   * iio_str_to_fixpoint() - Parse a fixed-point number from a string
+>   * @str: The string to parse
+> @@ -978,6 +1096,40 @@ static int iio_device_add_info_mask_type(struct iio_dev *indio_dev,
+>  	return attrcount;
+>  }
+>  
+> +static int iio_device_add_info_mask_type_avail(struct iio_dev *indio_dev,
+> +					       struct iio_chan_spec const *chan,
+> +					       enum iio_shared_by shared_by,
+> +					       const long *infomask)
+> +{
+> +	int i, ret, attrcount = 0;
+> +	char *avail_postfix;
+> +
+> +	for_each_set_bit(i, infomask, sizeof(infomask) * 8) {
+> +		avail_postfix = kasprintf(GFP_KERNEL,
+> +					  "%s_available",
+> +					  iio_chan_info_postfix[i]);
+> +		if (!avail_postfix)
+> +			return -ENOMEM;
+> +
+> +		ret = __iio_add_chan_devattr(avail_postfix,
+> +					     chan,
+> +					     &iio_read_channel_info_avail,
+> +					     NULL,
+> +					     i,
+> +					     shared_by,
+> +					     &indio_dev->dev,
+> +					     &indio_dev->channel_attr_list);
+> +		kfree(avail_postfix);
+> +		if ((ret == -EBUSY) && (shared_by != IIO_SEPARATE))
+> +			continue;
+> +		else if (ret < 0)
+> +			return ret;
+> +		attrcount++;
+> +	}
+> +
+> +	return attrcount;
+> +}
+> +
+>  static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
+>  					struct iio_chan_spec const *chan)
+>  {
+> @@ -993,6 +1145,14 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
+>  		return ret;
+>  	attrcount += ret;
+>  
+> +	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
+> +						  IIO_SEPARATE,
+> +						  &chan->
+> +						  info_mask_separate_available);
+> +	if (ret < 0)
+> +		return ret;
+> +	attrcount += ret;
+> +
+>  	ret = iio_device_add_info_mask_type(indio_dev, chan,
+>  					    IIO_SHARED_BY_TYPE,
+>  					    &chan->info_mask_shared_by_type);
+> @@ -1000,6 +1160,14 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
+>  		return ret;
+>  	attrcount += ret;
+>  
+> +	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
+> +						  IIO_SHARED_BY_TYPE,
+> +						  &chan->
+> +						  info_mask_shared_by_type_available);
+> +	if (ret < 0)
+> +		return ret;
+> +	attrcount += ret;
+> +
+>  	ret = iio_device_add_info_mask_type(indio_dev, chan,
+>  					    IIO_SHARED_BY_DIR,
+>  					    &chan->info_mask_shared_by_dir);
+> @@ -1007,6 +1175,13 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
+>  		return ret;
+>  	attrcount += ret;
+>  
+> +	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
+> +						  IIO_SHARED_BY_DIR,
+> +						  &chan->info_mask_shared_by_dir_available);
+> +	if (ret < 0)
+> +		return ret;
+> +	attrcount += ret;
+> +
+>  	ret = iio_device_add_info_mask_type(indio_dev, chan,
+>  					    IIO_SHARED_BY_ALL,
+>  					    &chan->info_mask_shared_by_all);
+> @@ -1014,6 +1189,13 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
+>  		return ret;
+>  	attrcount += ret;
+>  
+> +	ret = iio_device_add_info_mask_type_avail(indio_dev, chan,
+> +						  IIO_SHARED_BY_ALL,
+> +						  &chan->info_mask_shared_by_all_available);
+> +	if (ret < 0)
+> +		return ret;
+> +	attrcount += ret;
+> +
+>  	if (chan->ext_info) {
+>  		unsigned int i = 0;
+>  		for (ext_info = chan->ext_info; ext_info->name; ext_info++) {
+> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> index b4a0679e4a49..c0f897084620 100644
+> --- a/include/linux/iio/iio.h
+> +++ b/include/linux/iio/iio.h
+> @@ -269,9 +269,13 @@ struct iio_chan_spec {
+>  		enum iio_endian endianness;
+>  	} scan_type;
+>  	long			info_mask_separate;
+> +	long			info_mask_separate_available;
+>  	long			info_mask_shared_by_type;
+> +	long			info_mask_shared_by_type_available;
+>  	long			info_mask_shared_by_dir;
+> +	long			info_mask_shared_by_dir_available;
+>  	long			info_mask_shared_by_all;
+> +	long			info_mask_shared_by_all_available;
+>  	const struct iio_event_spec *event_spec;
+>  	unsigned int		num_event_specs;
+>  	const struct iio_chan_spec_ext_info *ext_info;
+> @@ -397,6 +401,13 @@ struct iio_info {
+>  			int *val_len,
+>  			long mask);
+>  
+> +	int (*read_avail)(struct iio_dev *indio_dev,
+> +			  struct iio_chan_spec const *chan,
+> +			  const int **vals,
+> +			  int *type,
+> +			  int *length,
+> +			  long mask_el);
+> +
+>  	int (*write_raw)(struct iio_dev *indio_dev,
+>  			 struct iio_chan_spec const *chan,
+>  			 int val,
+> diff --git a/include/linux/iio/types.h b/include/linux/iio/types.h
+> index 32b579525004..2aa7b6384d64 100644
+> --- a/include/linux/iio/types.h
+> +++ b/include/linux/iio/types.h
+> @@ -29,4 +29,9 @@ enum iio_event_info {
+>  #define IIO_VAL_FRACTIONAL 10
+>  #define IIO_VAL_FRACTIONAL_LOG2 11
+>  
+> +enum iio_available_type {
+> +	IIO_AVAIL_LIST,
+> +	IIO_AVAIL_RANGE,
+> +};
+> +
+>  #endif /* _IIO_TYPES_H_ */
+> 
