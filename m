@@ -1,80 +1,71 @@
-From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dt: sun8i-h3: Add sunxi-sid to dts for sun8i-h3
-Date: Sun, 23 Oct 2016 10:26:31 +0200
-Message-ID: <20161023082631.GA28485@Red>
-References: <1475660904-7959-1-git-send-email-clabbe.montjoie@gmail.com>
- <20161005122130.8cc229ff5d4990149956b49c@free.fr>
- <20161019074016.GA31440@Red>
- <20161020203654.2erph2mr73yzksla@lukather>
+From: LABBE Corentin <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH v4 01/10] ethernet: add sun8i-emac driver
+Date: Sun, 23 Oct 2016 10:55:39 +0200
+Message-ID: <20161023085539.GB9001@Red>
+References: <1475828757-926-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1475828757-926-2-git-send-email-clabbe.montjoie@gmail.com>
+ <1475852559.1945.2.camel@perches.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161020203654.2erph2mr73yzksla@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1475852559.1945.2.camel@perches.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, davem@davemloft.net, f.fainelli@gmail.com, andrew@lunn.ch, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 20, 2016 at 10:36:54PM +0200, Maxime Ripard wrote:
-> On Wed, Oct 19, 2016 at 09:40:16AM +0200, LABBE Corentin wrote:
-> > On Wed, Oct 05, 2016 at 12:21:30PM +0200, Jean-Francois Moine wrote:
-> > > On Wed,  5 Oct 2016 11:48:24 +0200
-> > > Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > 
-> > > > This patch add support for the sunxi-sid driver to the device tree for sun8i-h3.
-> > > > 
-> > > > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > > ---
-> > > >  arch/arm/boot/dts/sun8i-h3.dtsi | 5 +++++
-> > > >  1 file changed, 5 insertions(+)
-> > > > 
-> > > > diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-> > > > index 9f58bb4..abfd29c 100644
-> > > > --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> > > > +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> > > > @@ -211,6 +211,11 @@
-> > > >  			#size-cells = <0>;
-> > > >  		};
-> > > >  
-> > > > +		sid: eeprom@01c14200 {
-> > > > +			compatible = "allwinner,sun7i-a20-sid";
-> > > > +			reg = <0x01c14200 0x200>;
-> > > 
-> > > The datasheet says 1Kb starting at 0x01c14000.
-> > > Is there any reason to reduce the area and to shift the offset?
-> > > 
-> > 
-> > According to http://linux-sunxi.org/SID_Register_Guide "For
-> > Allwinner A83T and H3 the SID address space starts at 0x01c14000,
-> > and the e-fuses are at offset 0x200".
-> >
-> > So I use this offset, since the sunxi_sid driver need the base
-> > address of e-fuses.
-> > 
-> > The easiest solution is to use 0x01c14200 since the other part of
-> > sid is not used and not known (A83T/H3 user manual doesnt give any
-> > information on all sid space, worse for A64 which reference SID only
-> > in memory map).
-> > 
-> > So probably for H3/A64/A83T, there will never any usage of the rest
-> > of the SID address space.
+On Fri, Oct 07, 2016 at 08:02:39AM -0700, Joe Perches wrote:
+> On Fri, 2016-10-07 at 10:25 +0200, Corentin Labbe wrote:
+> > This patch add support for sun8i-emac ethernet MAC hardware.
+> > It could be found in Allwinner H3/A83T/A64 SoCs.
 > 
-> And since we can't know that, and we have to maintain the DT ABI,
-> using the whole address map and an offset, with a new compatible, is
-> definetely the safest thing to do.
+> trivial notes:
 > 
+> > diff --git a/drivers/net/ethernet/allwinner/sun8i-emac.c b/drivers/net/ethernet/allwinner/sun8i-emac.c
+> []
+> > +static const char const estats_str[][ETH_GSTRING_LEN] = {
+> 
+> one too many const
+> 
+> > +/* MAGIC value for knowing if a descriptor is available or not */
+> > +#define DCLEAN cpu_to_le32(BIT(16) | BIT(14) | BIT(12) | BIT(10) | BIT(9))
+> 
+> Aren't there #defines for these bits?
+> 
+> > +static void sun8i_emac_flow_ctrl(struct sun8i_emac_priv *priv, int duplex,
+> > +				 int fc)
+> > +{
+> > +	u32 flow = 0;
+> > +
+> > +	flow = readl(priv->base + EMAC_RX_CTL0);
+> > +	if (fc & EMAC_FLOW_RX)
+> > +		flow |= BIT(16);
+> > +	else
+> > +		flow &= ~BIT(16);
+> > +	writel(flow, priv->base + EMAC_RX_CTL0);
+> > +
+> > +	flow = readl(priv->base + EMAC_TX_FLOW_CTL);
+> > +	if (fc & EMAC_FLOW_TX)
+> > +		flow |= BIT(0);
+> > +	else
+> > +		flow &= ~BIT(0);
+> 
+> more magic bits that could be #defines
+> 
+> > +static int sun8i_emac_rx_from_ddesc(struct net_device *ndev, int i)
+> > +{
+> > []
+> > +	/* the checksum or length of received frame's payload is wrong*/
+> > +	if (dstatus & BIT(0)) {
+> []
+> > +	if (dstatus & BIT(1)) {
+> []
+> > +	if ((dstatus & BIT(3))) {
+> 
+> etc...
 
-I have two way of doing it, which one do you prefer ?
-
-- Adding two optionnal properties: efuses-offset and efuses-size defaulting to 0 and resourcesize.
-- Adding a subnode called efuses with its own reg=<>
-
-The first one is easy and didnt need any work on previous DT entries.
+Thanks for the review, I will fix all thoses issue.
 
 Regards
 Corentin Labbe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
