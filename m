@@ -1,105 +1,26 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [PATCH v3 7/8] dt-bindings: iio: document envelope-detector bindings
-Date: Mon, 24 Oct 2016 00:39:40 +0200
-Message-ID: <1477262381-7800-8-git-send-email-peda@axentia.se>
-References: <1477262381-7800-1-git-send-email-peda@axentia.se>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] pinctrl: stm32: remove dependency with interrupt controller
+Date: Mon, 24 Oct 2016 01:55:23 +0200
+Message-ID: <CACRpkdZVDod=FVnNa1+Kqre8QdrmPwM8mM2YcioSgJDR5AT=Ng@mail.gmail.com>
+References: <1476970012-7838-1-git-send-email-alexandre.torgue@st.com> <1476970012-7838-2-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477262381-7800-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1476970012-7838-2-git-send-email-alexandre.torgue@st.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre TORGUE <alexandre.torgue@st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
----
- .../bindings/iio/adc/envelope-detector.txt         | 54 ++++++++++++++++++++++
- MAINTAINERS                                        |  6 +++
- 2 files changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
+On Thu, Oct 20, 2016 at 3:26 PM, Alexandre TORGUE
+<alexandre.torgue@st.com> wrote:
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/envelope-detector.txt b/Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
-new file mode 100644
-index 000000000000..27544bdd4478
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
-@@ -0,0 +1,54 @@
-+Bindings for ADC envelope detector using a DAC and a comparator
-+
-+The DAC is used to find the peak level of an alternating voltage input
-+signal by a binary search using the output of a comparator wired to
-+an interrupt pin. Like so:
-+                          _
-+                         | \
-+    input +------>-------|+ \
-+                         |   \
-+           .-------.     |    }---.
-+           |       |     |   /    |
-+           |    dac|-->--|- /     |
-+           |       |     |_/      |
-+           |       |              |
-+           |       |              |
-+           |    irq|------<-------'
-+           |       |
-+           '-------'
-+
-+Required properties:
-+- compatible: Should be "axentia,tse850-envelope-detector"
-+- io-channels: Channel node of the dac to be used for comparator input.
-+- io-channel-names: Should be "dac".
-+- interrupt specification for one client interrupt,
-+  see ../../interrupt-controller/interrupts.txt for details.
-+- interrupt-names: Should be "comp".
-+
-+Example:
-+
-+	&i2c {
-+		dpot: mcp4651-104@28 {
-+			compatible = "microchip,mcp4651-104";
-+			reg = <0x28>;
-+			#io-channel-cells = <1>;
-+		};
-+	};
-+
-+	dac: dac {
-+		compatible = "dpot-dac";
-+		vref-supply = <&reg_3v3>;
-+		io-channels = <&dpot 0>;
-+		io-channel-names = "dpot";
-+		#io-channel-cells = <1>;
-+	};
-+
-+	envelope-detector {
-+		compatible = "axentia,tse850-envelope-detector";
-+		io-channels = <&dac 0>;
-+		io-channel-names = "dac";
-+
-+		interrupt-parent = <&gpio>;
-+		interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-names = "comp";
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d7375f45ff0f..fca35d16037d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6119,6 +6119,12 @@ F:	Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
- F:	Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
- F:	drivers/iio/dac/dpot-dac.c
- 
-+IIO ENVELOPE DETECTOR
-+M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-+L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
-+
- IIO SUBSYSTEM AND DRIVERS
- M:	Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
- R:	Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
--- 
-2.1.4
+> This patch allows to probe stm32 pinctrl driver even if no interrupt
+> controller is defined to manage gpio irqs.
+>
+> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patch applied for fixes.
+
+Yours,
+Linus Walleij
