@@ -1,21 +1,119 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: vfxxx: Add node corresponding to OCOTP
-Date: Sun, 23 Oct 2016 21:57:05 +0800
-Message-ID: <20161023135705.GV30578@tiger>
-References: <1475371822-28879-1-git-send-email-andrew.smirnov@gmail.com>
+From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 2/3] clocksource: update "fn" at CLOCKSOURCE_OF_DECLARE() of nps400 timer
+Date: Sun, 23 Oct 2016 15:12:27 +0300
+Message-ID: <1477224748-25223-3-git-send-email-noamca@mellanox.com>
+References: <1477224748-25223-1-git-send-email-noamca@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1475371822-28879-1-git-send-email-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477224748-25223-1-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 01, 2016 at 06:30:22PM -0700, Andrey Smirnov wrote:
-> Add node corresponding to OCOTP IP block.
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 
-Applied, thanks.
+nps_setup_clocksource() should take node as only argument i.e.:
+replace
+int __init nps_setup_clocksource(struct device_node *node, struct clk *clk)
+with
+int __init nps_setup_clocksource(struct device_node *node)
+
+This is also serve as preperation for next patch which adds support
+for clockevents to nps400.
+Specifically we add new function nps_get_timer_clk() to serve clocksource
+and later clockevent registration.
+
+Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+---
+ drivers/clocksource/timer-nps.c |   49 ++++++++++++++++++++------------------
+ 1 files changed, 26 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/clocksource/timer-nps.c b/drivers/clocksource/timer-nps.c
+index 70c149a..6156e54 100644
+--- a/drivers/clocksource/timer-nps.c
++++ b/drivers/clocksource/timer-nps.c
+@@ -47,6 +47,28 @@
+ static void *nps_msu_reg_low_addr[NPS_CLUSTER_NUM] __read_mostly;
+ 
+ static unsigned long nps_timer_rate;
++static int nps_get_timer_clk(struct device_node *node,
++			     unsigned long *timer_freq,
++			     struct clk *clk)
++{
++	int ret;
++
++	clk = of_clk_get(node, 0);
++	if (IS_ERR(clk)) {
++		pr_err("timer missing clk");
++		return PTR_ERR(clk);
++	}
++
++	ret = clk_prepare_enable(clk);
++	if (ret) {
++		pr_err("Couldn't enable parent clk\n");
++		return ret;
++	}
++
++	*timer_freq = clk_get_rate(clk);
++
++	return 0;
++}
+ 
+ static cycle_t nps_clksrc_read(struct clocksource *clksrc)
+ {
+@@ -55,23 +77,17 @@ static cycle_t nps_clksrc_read(struct clocksource *clksrc)
+ 	return (cycle_t)ioread32be(nps_msu_reg_low_addr[cluster]);
+ }
+ 
+-static int __init nps_setup_clocksource(struct device_node *node,
+-					struct clk *clk)
++static int __init nps_setup_clocksource(struct device_node *node)
+ {
+ 	int ret, cluster;
++	struct clk *clk;
+ 
+ 	for (cluster = 0; cluster < NPS_CLUSTER_NUM; cluster++)
+ 		nps_msu_reg_low_addr[cluster] =
+ 			nps_host_reg((cluster << NPS_CLUSTER_OFFSET),
+ 				 NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
+ 
+-	ret = clk_prepare_enable(clk);
+-	if (ret) {
+-		pr_err("Couldn't enable parent clock\n");
+-		return ret;
+-	}
+-
+-	nps_timer_rate = clk_get_rate(clk);
++	nps_get_timer_clk(node, &nps_timer_rate, clk);
+ 
+ 	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "EZnps-tick",
+ 				    nps_timer_rate, 301, 32, nps_clksrc_read);
+@@ -83,18 +99,5 @@ static int __init nps_setup_clocksource(struct device_node *node,
+ 	return ret;
+ }
+ 
+-static int __init nps_timer_init(struct device_node *node)
+-{
+-	struct clk *clk;
+-
+-	clk = of_clk_get(node, 0);
+-	if (IS_ERR(clk)) {
+-		pr_err("Can't get timer clock.\n");
+-		return PTR_ERR(clk);
+-	}
+-
+-	return nps_setup_clocksource(node, clk);
+-}
+-
+ CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clksrc, "ezchip,nps400-timer",
+-		       nps_timer_init);
++		       nps_setup_clocksource);
+-- 
+1.7.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
