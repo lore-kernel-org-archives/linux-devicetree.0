@@ -1,43 +1,77 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/8] pinctrl: aspeed-g4: Capture SuperIO pinmux dependency
-Date: Mon, 24 Oct 2016 00:09:32 +0200
-Message-ID: <CACRpkdYZPcjGuRKVL6qwof1p7ZXT4EvwzAuz59oTgp9Z5Dzixw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 5/8] pinctrl: aspeed: Enable capture of off-SCU pinmux state
+Date: Mon, 24 Oct 2016 00:20:59 +0200
+Message-ID: <CACRpkdazJzE=Oa-0-FEYTvUk=-kPLojHY3afZKX5cpmzrUZHGQ@mail.gmail.com>
 References: <cover.115463f791b69859c5ce9dafd61a5755ea039f4b.1474986045.git-series.andrew@aj.id.au>
- <b5f67ba76018314d08e240f95951751896687d37.1474986045.git-series.andrew@aj.id.au>
- <CACRpkdYLDesENtq2cQBrWQeL6NH+mO_N5Z=e9=gsoZSCE85Jag@mail.gmail.com> <1477010011.8917.20.camel@aj.id.au>
+ <a266046d34009e6e92c4c76699c550c2ba44bd5c.1474986045.git-series.andrew@aj.id.au>
+ <CACPK8Xc7y3GtcJCVYYs-JKTqBZvqVeZaz5MUk=UX151SX1xEFw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477010011.8917.20.camel-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Cc: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACPK8Xc7y3GtcJCVYYs-JKTqBZvqVeZaz5MUk=UX151SX1xEFw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: Andrew Jeffery <andrew@aj.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 2:33 AM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
+On Thu, Sep 29, 2016 at 8:45 AM, Joel Stanley <joel@jms.id.au> wrote:
+> On Wed, Sep 28, 2016 at 12:20 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
 
->> Patch applied for v4.10.
->> (Tell me if I'm applying patches in wrong order or something, and
->> I hope this doesn't clash with the fixes.)
+>> On the AST2400 and AST2500 a number of pins depend on state in one of
+>> the SIO, LPC or GFX IP blocks, so add support to at least capture what
+>> that state is. The pinctrl engine for the Aspeed SoCs doesn't try to
+>> inspect or modify the state of the off-SCU IP blocks. Instead, it logs
+>> the state requirement with the expectation that the platform
+>> designer/maintainer arranges for the appropriate configuration to be
+>> applied through the associated drivers.
+(...)
 >
-> Both this patch and 8/8 functionally depend on 5/8. I fetched the
-> pinctrl tree to poke around but this patch didn't appear in any of the
-> updated branches, so I'm not sure whether we have the right ordering.
-> Without it we should hit build failures from missing macro definitions.
+> This is unfortunate.
 >
-> Have you had a chance to look over patch 5/8? Joel wasn't keen on its
-> current form, so I would appreciate your input.
+> This patch kicks the can down the road, but doesn't solve the problem
+> for a user who wants to configure some functionality that depends on
+> the non-SCU bits. Because of this I'm not sure if we want to put it in
+> the tree.
+>
+> However, I'm not sure what a proper solution would look like. Perhaps
+> Linus can point out another SoC that has a similar problem?
 
-Oops backed this patch out.
+If I could only understand it.
 
-Will look at 5/8.
+Don't you actually want to go and read a few registers on another
+IO range?
 
-Appreciate if you repost the remaining patches in the series based on
-v4.9-rc2 once it's out, and I'll rebase the pinctrl tree onto that.
+What we generally do when pin control is spread out in a system is try
+to consolidate it, meaning expose the necessary registers on the remote
+end using syscon (drivers/mfd/syscon) so that we can easily get a handle
+on these registers withe regmap MMIO.
+
+Since regmap handles atomic access to the registers, that way we
+protect from disasters and keep the state in the hardware.
+
+I don't know if this is helpful. For a normal peripheral you may not want
+to put a regmap over all its registers but you prefer to ioremap it, and then
+we get the spaghetti of accessor functions to peek and poke into another
+peripherals I/O space, and that is undesireable.
+
+Maybe this is completely not understanding what you want to do, so
+sorry, please elaborate. I am afraid the two of you are the only people on
+the planet who actually understand what is going on here.
+
+Also the hardware engineer who wrote the Aspeed pin controller, I would
+like to read this persons design specification, I am pretty sure it is very
+interesting.
+
+>> -  * @reg: The register offset from base in bytes
+>> +  * @reg: Split into three fields:
+>> +  *       31:24: IP selector
+>> +  *       23:12: Reserved
+>> +  *       11:0: Register offset
+
+That seems like unnecessary shoehorning. Is it reflecting the register layout
+of the hardware or are you trying to save bits? For the latter, let it
+go and instead
+have one member for offset and one member for selector.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
