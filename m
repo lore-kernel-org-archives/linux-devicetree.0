@@ -1,73 +1,133 @@
-From: ahaslam@baylibre.com
-Subject: [PATCH/RFT v2 08/17] ARM: davinci: hawk: add full constraints for ohci plat boot
-Date: Mon, 24 Oct 2016 18:46:25 +0200
-Message-ID: <20161024164634.4330-9-ahaslam@baylibre.com>
-References: <20161024164634.4330-1-ahaslam@baylibre.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: Add TI SCI PM Domains
+Date: Mon, 24 Oct 2016 10:00:10 -0700
+Message-ID: <7h1sz51y3p.fsf@baylibre.com>
+References: <20161019203347.17893-1-d-gerlach@ti.com>
+        <20161019203347.17893-3-d-gerlach@ti.com>
+        <7heg39pmgb.fsf@baylibre.com>
+        <7f4754bb-7ded-6ce3-9558-a45b0d2b3888@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161024164634.4330-1-ahaslam@baylibre.com>
+In-Reply-To: <7f4754bb-7ded-6ce3-9558-a45b0d2b3888@ti.com> (Dave Gerlach's
+        message of "Fri, 21 Oct 2016 14:49:41 -0500")
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, johan@kernel.org, robh+dt@kernel.org, nsekhar@ti.com, stern@rowland.harvard.edu, khilman@baylibre.com, sshtylyov@ru.mvista.com, david@lechnology.com, manjunath.goudar@linaro.org, broonie@kernel.org, abailon@baylibre.com
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Axel Haslam <ahaslam@baylibre.com>
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>, Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Axel Haslam <ahaslam@baylibre.com>
+Dave Gerlach <d-gerlach@ti.com> writes:
 
-The phy framework requests an optional "phy" regulator. If it does
-not find one, it returns -EPROBE_DEFER. In the case of non-DT based boot
-for the omap138-lcdk board, this would prevent the usb11 phy to probe
-correctly and ohci would not enumerate.
+> Hi,
+> On 10/21/2016 01:48 PM, Kevin Hilman wrote:
+>> Dave Gerlach <d-gerlach@ti.com> writes:
+>>
+>>> Add a generic power domain implementation, TI SCI PM Domains, that
+>>> will hook into the genpd framework and allow the TI SCI protocol to
+>>> control device power states.
+>>>
+>>> Also, provide macros representing each device index as understood
+>>> by TI SCI to be used in the device node power-domain references.
+>>> These are identifiers for the K2G devices managed by the PMMC.
+>>>
+>>> Signed-off-by: Nishanth Menon <nm@ti.com>
+>>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+>>> ---
+>>>  .../devicetree/bindings/soc/ti/sci-pm-domain.txt   | 54 +++++++++++++
+>>>  MAINTAINERS                                        |  2 +
+>>>  include/dt-bindings/genpd/k2g.h                    | 90 ++++++++++++++++++++++
+>>>  3 files changed, 146 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>>>  create mode 100644 include/dt-bindings/genpd/k2g.h
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>>> new file mode 100644
+>>> index 000000000000..32f38a349656
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>>> @@ -0,0 +1,54 @@
+>>> +Texas Instruments TI-SCI Generic Power Domain
+>>> +---------------------------------------------
+>>> +
+>>> +Some TI SoCs contain a system controller (like the PMMC, etc...) that is
+>>> +responsible for controlling the state of the IPs that are present.
+>>> +Communication between the host processor running an OS and the system
+>>> +controller happens through a protocol known as TI-SCI [1]. This pm domain
+>>> +implementation plugs into the generic pm domain framework and makes use of
+>>> +the TI SCI protocol power on and off each device when needed.
+>>> +
+>>> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+>>> +
+>>> +PM Domain Node
+>>> +==============
+>>> +The PM domain node represents the global PM domain managed by the PMMC,
+>>> +which in this case is the single implementation as documented by the generic
+>>> +PM domain bindings in Documentation/devicetree/bindings/power/power_domain.txt.
+>>> +
+>>> +Required Properties:
+>>> +--------------------
+>>> +- compatible: should be "ti,sci-pm-domain"
+>>> +- #power-domain-cells: Must be 0.
+>>> +- ti,sci: Phandle to the TI SCI device to use for managing the devices.
+>>>
+>>> +Example:
+>>> +--------------------
+>>> +k2g_pds: k2g_pds {
+>>
+>> should use generic name like "power-contoller", e.g. k2g_pds: power-controller
+>
+> Ok, that makes more sense.
+>
+>>
+>>> +        compatible = "ti,sci-pm-domain";
+>>> +        #power-domain-cells = <0>;
+>>> +        ti,sci = <&pmmc>;
+>>> +};
+>>> +
+>>> +PM Domain Consumers
+>>> +===================
+>>> +Hardware blocks that require SCI control over their state must provide
+>>> +a reference to the sci-pm-domain they are part of and a unique device
+>>> +specific ID that identifies the device.
+>>> +
+>>> +Required Properties:
+>>> +--------------------
+>>> +- power-domains: phandle pointing to the corresponding PM domain node.
+>>> +- ti,sci-id: index representing the device id to be passed oevr SCI to
+>>> +	     be used for device control.
+>>
+>> This ID doesn't look right.
+>>
+>> Why not use #power-domain-cells = <1> and pass the index in the DT? ...
+>>
+>>> +See dt-bindings/genpd/k2g.h for the list of valid identifiers for k2g.
+>>> +
+>>> +Example:
+>>> +--------------------
+>>> +uart0: serial@02530c00 {
+>>> +	compatible = "ns16550a";
+>>> +	...
+>>> +	power-domains = <&k2g_pds>;
+>>> +	ti,sci-id = <K2G_DEV_UART0>;
+>>
+>> ... like this:
+>>
+>> 	power-domains = <&k2g_pds K2G_DEV_UART0>;
+>
+> That's how I did it in version one actually. I was able to define my
+> own xlate function to parse the phandle and get that index, but Ulf
+> pointed me to this series by Jon Hunter [1] that simplified genpd
+> providers and dropped the concept of adding your own xlate. This locks
+> the onecell approach to using a fixed static array of genpds that get
+> indexed into (without passing the index to the provider, just the
+> genpd that's looked up), which doesn't fit our usecase, as we don't
+> want a 1 to 1 genpd to device mapping based on the comments provided
+> in v1. Now we just use the genpd device attach/detach hooks to parse
+> the sci-id and then use it in the genpd device start/stop hooks.
 
-By calling "regulator_has_full_constraints", An error would be returned
-instead of DEFER for the "optional" regulator, and the probe of
-the phy driver can continue normally without a regulator.
+Ah, right.  I remember now.  This approach allows you to use a single
+genpd as discussed earlier.
 
-Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
----
- arch/arm/mach-davinci/board-da830-evm.c     | 3 +++
- arch/arm/mach-davinci/board-omapl138-hawk.c | 3 +++
- 2 files changed, 6 insertions(+)
+Makes sense now, suggestion retracted.
 
-diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
-index c62766e..b33fc6b 100644
---- a/arch/arm/mach-davinci/board-da830-evm.c
-+++ b/arch/arm/mach-davinci/board-da830-evm.c
-@@ -26,6 +26,7 @@
- #include <linux/platform_data/mtd-davinci.h>
- #include <linux/platform_data/mtd-davinci-aemif.h>
- #include <linux/platform_data/spi-davinci.h>
-+#include <linux/regulator/machine.h>
- 
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
-@@ -631,6 +632,8 @@ static __init void da830_evm_init(void)
- 	ret = da8xx_register_spi_bus(0, ARRAY_SIZE(da830evm_spi_info));
- 	if (ret)
- 		pr_warn("%s: spi 0 registration failed: %d\n", __func__, ret);
-+
-+	regulator_has_full_constraints();
- }
- 
- #ifdef CONFIG_SERIAL_8250_CONSOLE
-diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
-index c5cb8d9..c3ab7ea 100644
---- a/arch/arm/mach-davinci/board-omapl138-hawk.c
-+++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
-@@ -14,6 +14,7 @@
- #include <linux/console.h>
- #include <linux/gpio.h>
- #include <linux/platform_data/gpio-davinci.h>
-+#include <linux/regulator/machine.h>
- 
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
-@@ -328,6 +329,8 @@ static __init void omapl138_hawk_init(void)
- 	if (ret)
- 		pr_warn("%s: dsp/rproc registration failed: %d\n",
- 			__func__, ret);
-+
-+	regulator_has_full_constraints();
- }
- 
- #ifdef CONFIG_SERIAL_8250_CONSOLE
--- 
-1.9.1
+Kevin
