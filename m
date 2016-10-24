@@ -1,38 +1,32 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: mcp23s08: Add option to configure pullups.
-Date: Mon, 24 Oct 2016 02:53:31 +0200
-Message-ID: <CACRpkdY15Hv_ydHyOXRM6G0ewVTHkVa1w3Z89AdvSDR=eyi7sQ@mail.gmail.com>
-References: <1477062035-30825-1-git-send-email-enric.balletbo@collabora.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 01/13] pinctrl: meson: Add GXL pinctrl definitions
+Date: Mon, 24 Oct 2016 03:03:27 +0200
+Message-ID: <CACRpkdZ5VG2NGRh5CmYcYzwCp0LYSsgxHogCFa+6W7BDDBXOYg@mail.gmail.com>
+References: <1477060838-14164-1-git-send-email-narmstrong@baylibre.com> <1477060838-14164-2-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1477062035-30825-1-git-send-email-enric.balletbo@collabora.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477060838-14164-2-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 5:00 PM, Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
+On Fri, Oct 21, 2016 at 4:40 PM, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
 
-> Default is without pullups, but if property is specified in DT and the bit
-> is set, set a pullup on GPIO-n.
+> Add support for the Amlogic Meson GXL SoC, this is a partially complete
+> definition only based on the Amlogic Vendor tree.
 >
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> This definition differs a lot from the GXBB and needs a separate entry.
+>
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-I don't generally like this.
-
-In device tree it is the consumer that specifies how the line is used,
-not the producer (gpiochip).
-
-We currently only specify polarity, open drain and open source
-for consumers though.
-
-And the entire pin control system came into being *exactly* because
-Grant didn't like me adding these things to the GPIO drivers.
-
-So how many other things does the MCP support? Drive strength?
-Schmitt trigger? Is there a datasheet?
+Looks good to me. Tell me when I may apply it, it looks orthogonal
+to the rest of the patches.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
