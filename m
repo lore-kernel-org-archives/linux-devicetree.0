@@ -1,30 +1,49 @@
 From: Jonathan Richardson <jonathan.richardson@broadcom.com>
-Subject: [PATCH v1 0/3] Add support for Broadcom OTP controller
-Date: Mon, 24 Oct 2016 12:12:01 -0700
-Message-ID: <1477336324-10543-1-git-send-email-jonathan.richardson@broadcom.com>
+Subject: [PATCH v1 1/3] dt-bindings: Document Broadcom OTP controller driver
+Date: Mon, 24 Oct 2016 12:12:02 -0700
+Message-ID: <1477336324-10543-2-git-send-email-jonathan.richardson@broadcom.com>
+References: <1477336324-10543-1-git-send-email-jonathan.richardson@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477336324-10543-1-git-send-email-jonathan.richardson@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Jonathan Richardson <jonathan.richardson@broadcom.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Jonathan Richardson <jonathan.richardson@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <scott.branden@broadcom.com>, Oza Pawandeep <oza@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds support for Broadcom's OTP controller found on chips such
-as Cygnus and Stingray. A node has been added to the Cygnus dts.
+From: Jonathan Richardson <jonathar@broadcom.com>
 
-
-Jonathan Richardson (3):
-  dt-bindings: Document Broadcom OTP controller driver
-  nvmem: Add the Broadcom OTP controller driver
-  ARM: dts: Add node for Broadcom OTP controller driver
-
- .../devicetree/bindings/nvmem/brcm,ocotp.txt       |  17 ++
- arch/arm/boot/dts/bcm-cygnus.dtsi                  |   7 +
- drivers/nvmem/Kconfig                              |  12 +
- drivers/nvmem/Makefile                             |   2 +
- drivers/nvmem/bcm-ocotp.c                          | 335 +++++++++++++++++++++
- 5 files changed, 373 insertions(+)
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Tested-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Signed-off-by: Oza Pawandeep <oza@broadcom.com>
+Signed-off-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
+---
+ Documentation/devicetree/bindings/nvmem/brcm,ocotp.txt | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/nvmem/brcm,ocotp.txt
- create mode 100644 drivers/nvmem/bcm-ocotp.c
 
+diff --git a/Documentation/devicetree/bindings/nvmem/brcm,ocotp.txt b/Documentation/devicetree/bindings/nvmem/brcm,ocotp.txt
+new file mode 100644
+index 0000000..6462e12
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/brcm,ocotp.txt
+@@ -0,0 +1,17 @@
++Broadcom OTP memory controller
++
++Required Properties:
++- compatible: "brcm,ocotp" for the first generation Broadcom OTPC which is used
++  in Cygnus and supports 32 bit read/write. Use "brcm,ocotp-v2" for the second
++  generation Broadcom OTPC which is used in SoC's such as Stingray and supports
++  64-bit read/write.
++- reg: Base address of the OTP controller.
++- brcm,ocotp-size: Amount of memory available, in 32 bit words
++
++Example:
++
++otp: otp@0301c800 {
++	compatible = "brcm,ocotp";
++	reg = <0x0301c800 0x2c>;
++	brcm,ocotp-size = <2048>;
++};
 -- 
 1.9.1
