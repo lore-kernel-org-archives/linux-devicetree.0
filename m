@@ -1,54 +1,44 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH/RFT v2 09/17] regulator: fixed: Add over current event
-Date: Mon, 24 Oct 2016 19:19:37 +0100
-Message-ID: <20161024181937.GP17252@sirena.org.uk>
-References: <20161024164634.4330-1-ahaslam@baylibre.com>
- <20161024164634.4330-10-ahaslam@baylibre.com>
- <20161024175320.GO17252@sirena.org.uk>
- <CAKXjFTNZhWTZSXtLZo8EieBtAPn_J-MM+-g8yCRJiV6UBspB9Q@mail.gmail.com>
+From: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 2/5] drivers/of: do not add memory for unavailable
+ nodes
+Date: Mon, 24 Oct 2016 13:20:00 -0500
+Message-ID: <20161024182000.5g2f3w3x3oqrohqs@arbab-laptop.austin.ibm.com>
+References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
+ <1475778995-1420-3-git-send-email-arbab@linux.vnet.ibm.com>
+ <2344394.NlaWgtFOqB@new-mexico>
+ <87vawixcxn.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ncX6roZrNNHXnAbh"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAKXjFTNZhWTZSXtLZo8EieBtAPn_J-MM+-g8yCRJiV6UBspB9Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Axel Haslam <ahaslam@baylibre.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, robh+dt@kernel.org, Sekhar Nori <nsekhar@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Kevin Hilman <khilman@baylibre.com>, Sergei Shtylyov <sshtylyov@ru.mvista.com>, David Lechner <david@lechnology.com>, manjunath.goudar@linaro.org, Alexandre Bailon <abailon@baylibre.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <87vawixcxn.fsf-W0DJWXSxmBNbyGPkN3NxC2scP1bn1w/D@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Alistair Popple <apopple-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tang Chen <tangchen-BthXqXjhjHXQFUHtdCDX3A@public.gmane.org>, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org, "Aneesh Kumar K.V" <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Bharata B Rao <bharata-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 24, 2016 at 09:24:04PM +1100, Michael Ellerman wrote:
+>The code already looks for "linux,usable-memory" in preference to 
+>"reg". Can you use that instead?
 
---ncX6roZrNNHXnAbh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, we could set the size of "linux,usable-memory" to zero instead of 
+setting status to "disabled".
 
-On Mon, Oct 24, 2016 at 08:11:40PM +0200, Axel Haslam wrote:
-> On Mon, Oct 24, 2016 at 7:53 PM, Mark Brown <broonie@kernel.org> wrote:
+I'll send a v5 of this set which drops 1/5 and 2/5. That would be the 
+only difference here.
 
-> > does it make sense to report this as a mode, we don't report other error
-> > conditions as modes but instead use REGULATOR_STATUS_ with the
-> > get_status() operation?
+>That would have the advantage that existing kernels already understand
+>it.
+>
+>Another problem with using "status" is we could have device trees out
+>there that have status = disabled and we don't know about it, and by
+>changing the kernel to use that property we break people's systems.
+>Though for memory nodes my guess is that's not true, but you never know ...
 
-> I used mode, because when the regulator toggles the overcurrent
-> line, it means that it has entered a current limited mode, at least the
-> regulator im looking at. ill change to STATUS
+-- 
+Reza Arbab
 
-That's not what regulator modes are - please look at the documentation
-for the defines here.  They're about the quality of regulation.
-
---ncX6roZrNNHXnAbh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJYDlC4AAoJECTWi3JdVIfQmdUH/RuucFM9xqc+08wBouDQgC8s
-iSTRAq2UbaNAREQCLvxqRSeqzBISXdet55SDHo7kAhIYke8guFj9uUledjpjoIrQ
-eIpoYg2YFajqB5Zpr7lDFRu8mWeJC0+xl4e9ywU9smJBBXCsQDJotNqOvpVF0PJW
-eWa2mWNRLdcVCx7wvuDHFrzJ6sNp4lZkfDedMPdrfipkqMCGgpDsjLlyua2efHnI
-Md4cODQBziV+g/haCl/O89Wch9pA80EOtwSRgFo9psUYSK8QGRi3zJa5sKs3gKan
-xVo2KeaLuYWJRvSOlFdGK+36kKSzaXeug013Eo5AuoBMSxO2VaGGU9UVIVKouy8=
-=h4df
------END PGP SIGNATURE-----
-
---ncX6roZrNNHXnAbh--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
