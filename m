@@ -1,75 +1,88 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: Re: [PATCH v2 11/14] MIPS: Malta: Use syscon-reboot driver to reboot
-Date: Mon, 24 Oct 2016 14:42:47 +0100
-Message-ID: <2861325.0K2k6plxiD@np-p-burton>
-References: <20160919212132.28893-1-paul.burton@imgtec.com> <20160919212132.28893-12-paul.burton@imgtec.com> <alpine.DEB.2.00.1610220956020.31859@tp.orcam.me.uk>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: sti: stih410-clocks: Add PROC_STFE as a critical
+ clock
+Date: Mon, 24 Oct 2016 14:44:16 +0100
+Message-ID: <20161024134416.GB10440@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1476804957-24000-1-git-send-email-peter.griffin@linaro.org>
+ <20161024085304.GE14477@dell>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2122299.b1UfvaGdkL";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.00.1610220956020.31859@tp.orcam.me.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Maciej W. Rozycki" <macro@imgtec.com>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org, Stephan Linz <linz@li-pro.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161024085304.GE14477@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---nextPart2122299.b1UfvaGdkL
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Hi Lee,
 
-Hi Maciej,
+On Mon, 24 Oct 2016, Lee Jones wrote:
 
-On Saturday, 22 October 2016 10:08:57 BST Maciej W. Rozycki wrote:
-> On Mon, 19 Sep 2016, Paul Burton wrote:
-> > Make use of the generic syscon-reboot driver to reboot the Malta board,
-> > reducing the amount of platform code it requires.
+> On Tue, 18 Oct 2016, Peter Griffin wrote:
+> 
+> > Once the ST frontend demux HW IP has been enabled, the clock can't
+> > be disabled otherwise the system will hang and the board will
+> > be unserviceable.
 > > 
-> > Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-> > ---
+> > To allow balanced clock enable/disable calls in the driver we use
+> > the critical clock infrastructure to take an extra reference on the
+> > clock so the clock will never actually be disabled.
 > 
->  This has broken reboot support, all I get now is:
+> This is an abuse of the critical-clocks framework, and is exactly the
+> type of hack I promised the clk guys I'd try to prevent.
+
+I expect the best way to do this would be to write some documentation on the
+clock-critical DT binding and/or CRITICAL_CLK flag. The only documentation I can
+find currently is with the initial patch series [1] and the comment in
+clk-provider.h of
+
+ #define CLK_IS_CRITICAL         BIT(11) /* do not gate, ever */
+
+Or the patch decription
+
+"Critical clocks are those which must not be gated, else undefined
+or catastrophic failure would occur.  Here we have chosen to
+ensure the prepare/enable counts are correctly incremented, so as
+not to confuse users with enabled clocks with no visible users."
+
+Which is the functionality I want for this clock.
+
+> If this, or
+> any other IP has some quirks (i.e. once enabled, if this clock is
+> subsequently disabled it will have a catastrophic effect on the
+> platform), then they should be worked around in the driver.
 > 
-> reboot: Restarting system
-> Unable to restart system
-> Reboot failed -- System halted
-> 
-> at which point I need to issue a serial BREAK to regain control of the
-> board and get back to YAMON; fortunately the board is wired for that.
+> The correct thing to do here is craft a clk-keep-on flag and ensure it
+> is set to true for the effected platform(s)' platform data.
 
-This was already reported over here:
+I'm always wary of creating a driver specific flag, especially when its
+purpose is to do the same thing as an existing mechanism provided by the
+subsystem of not gating the clock.
 
-https://www.linux-mips.org/archives/linux-mips/2016-10/msg00120.html 
+I can see a couple of problems with what you propose:
 
-These 2 patches fix it:
+1) You have to put the clk-keep-on flag in every driver which consumes the
+clock. IMO it is much better to have this knowledge in the SoC's
+clock driver so every consumer of the clock automatically benefits.
 
-https://patchwork.linux-mips.org/patch/14395/ 
-https://patchwork.linux-mips.org/patch/14396/ 
+2) You don't benefit from the CLK_IS_CRITICAL reference counting logic in
+clk.c. So then each driver has to also work around that to get sensible reference
+counts. e.g.
 
-I've asked Ralf if we can get those, along with a few others, in ASAP - 
-preferrably for -rc3.
+if (!__clk_is_enabled(clk) && pdata->clk-keep-on)
+   clk_enable(clk)
 
-Thanks,
-    Paul
---nextPart2122299.b1UfvaGdkL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+Which seems to me to be fighting against the subsystem. Given that the only use of
+ _clk_is_enabled() outside drivers/clk is in an old arch/arm/mach-omap2/pm24xx.c
+driver I suspect its use is frowned upon, and it shouldn't really be an EXPORTED_SYMBOL.
 
------BEGIN PGP SIGNATURE-----
+regards,
 
-iQIcBAABCAAGBQJYDg/XAAoJEIIg2fppPBxljywQAKU1k+r1rWK1SAEHi91zUbWP
-Fqozc3hh3zpoD27/NMMgePhq5kykNfz22qCpJcn2vy2Tp7mUXyt2Ei2jbqcSN7QJ
-AuEbgkz9HOzLeX6uApIM5LuDsH4elOjor9+nTF+RHUec6LPDG5GEDa+4IArWdRAy
-3KeCA9NBHgoxESopcOI8QqeWx/qfVuhjNnN6cJ4TJIS7D4MAa1TbYbx8OFEKbrwm
-7JUyQMAtFYtrPZcEpwqy9HhiB7iiQ4luThVOqo7WXwH219blMYl8k6MhEI/VdWuK
-6sUX/gu8G62w8ZARDdUSQBVlma1kHMscRWVmbr7GeuwtJP7TiylxoksiaTJXKveu
-1BrG3VOaaNyCCmk1o6K30lAbxUA6eZxpx9AQWloHOEKGCHn3jJtbcUXgsocCJhTL
-oe0csnI2U4vX/k/Dx0ISnn/5cEQV0u3vFJr2AP3J0Qo1GVTbVg2cKDk8H//Kx5B0
-WE6ubQVTZuADcpVb5OAFk7JJ4BNYFDp/5I0kup7N8cOvhxkM4w/u+VciyjWiT32K
-PJctBry8VFYR2Nz3n6PomciJE2EDFH2bFk3Zsf8JQ01lnYWx4PnIdSA2hbZwf+Bf
-MMN7OIo4NMfEZ8FayQUZY4Lyi/yX9DOB4c02WAozPT/QRSJTqricF2/J/6SXHyTP
-sATNafTu7TsG8547sOxq
-=Ck9L
------END PGP SIGNATURE-----
+Peter.
 
---nextPart2122299.b1UfvaGdkL--
+[1] https://lkml.org/lkml/2016/1/18/272
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
