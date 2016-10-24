@@ -1,39 +1,56 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [v7, 1/3] nand: pl353: Add basic driver for arm pl353 smc nand
- interface
-Date: Mon, 24 Oct 2016 14:27:14 +0200
-Message-ID: <20161024142714.10902cf2@bbrezillon>
-References: <1433786918-21500-2-git-send-email-punnaia@xilinx.com>
-        <20161021203322.GA28655@obsidianresearch.com>
-        <20161021234611.1f737144@bbrezillon>
-        <CAGnW=Bb-pnJ9-xjcw-1dR-y+oKjNs53bgD+dh1LwsMTCmzdRmQ@mail.gmail.com>
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: Re: [PATCH 1/3] arm64: arch_timer: Add device tree binding for
+ hisilicon-161x01 erratum
+Date: Mon, 24 Oct 2016 20:40:01 +0800
+Message-ID: <7e839df8-f8f7-3b16-8321-4ff45b6c5884@huawei.com>
+References: <962ea92f-870b-e1d0-5bb7-1a6d66c35122@huawei.com>
+ <20161024111608.GG15620@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGnW=Bb-pnJ9-xjcw-1dR-y+oKjNs53bgD+dh1LwsMTCmzdRmQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: punnaiah choudary kalluri <punnaia@xilinx.com>
-Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jussi.kivilinna@iki.fi" <jussi.kivilinna@iki.fi>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "pawel.moll@arm.com" <pawel.moll@arm.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161024111608.GG15620@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, stuart.yoder@nxp.com, Scott Wood <oss@buserror.net>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Punnaih,
 
-On Sun, 23 Oct 2016 17:37:42 +0530
-punnaiah choudary kalluri <punnaia@xilinx.com> wrote:
 
-> Hi Boris and Jason,
+On 2016/10/24 19:16, Mark Rutland wrote:
+> On Sun, Oct 23, 2016 at 11:21:10AM +0800, Ding Tianhong wrote:
+>> +- hisilicon,erratum-161x01 : A boolean property. Indicates the presence of
+>> +  QorIQ erratum 161201, which says that reading the counter is
+>> +  unreliable unless the small range of value is returned by back-to-back reads.
+>> +  This also affects writes to the tval register, due to the implicit
+>> +  counter read.
 > 
->  I am doing rework on these patches to accommodate recent changes with
->  respect to ooblayout. Also some of the comments that i have received
-> from Boris as part of the arasan nand controller upstream patches will
-> apply to this driver. So, i will be releasing the next set of patches for this
-> driver soon and request your time for reviewing those patches.
+> Is "161x01" the *exact* erratum number, or is the 'x' a wildcard? Please
+> use the *exact* erratum number, even if that means we have to list
+> several.
 > 
-> for now, please ignore these patches.
 
-OK. Thanks for the heads up. I'll wait for your new version.
+Hi Mark:
 
-Regards,
+The 'x' is a wildcard, it will cover 161001 to 161601 several numbers, I will discuss to
+the chip develop and get a exact erratum number.
 
-Boris
+Thanks.
+Ding
+
+> Is "161x01" an *erratum* number, or the *part* number of affected
+> devices?
+> 
+> Thanks,
+> Mark.
+> 
+> .
+> 
