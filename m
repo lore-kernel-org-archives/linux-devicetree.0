@@ -1,33 +1,33 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: vf610: fix IRQ flag of global timer
-Date: Mon, 24 Oct 2016 20:06:21 +0800
-Message-ID: <20161024120621.GI30578@tiger>
-References: <20161018015127.16981-1-stefan@agner.ch>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] ARM: dts: imx6ul: Add DTS for liteSOM module
+Date: Mon, 24 Oct 2016 20:15:46 +0800
+Message-ID: <20161024121546.GJ30578@tiger>
+References: <20161021150717.27573-1-m.niestroj@grinn-global.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161018015127.16981-1-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20161021150717.27573-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 17, 2016 at 06:51:27PM -0700, Stefan Agner wrote:
-> The global timer IRQ (PPI[0], PPI 11 in device tree terms) is a
-> rising edge interrupt. The ARM Cortex-A5 MPCore TRM in Chapter
-> 10.1.2. Interrupt types and sources says:
-> "Interrupt is rising-edge sensitive."
+On Fri, Oct 21, 2016 at 05:07:16PM +0200, Marcin Niestroj wrote:
+> This is a SOM (System on Module), so it will be part of another boards.
+> Hence, this is a "dtsi" file that will be included from another device
+> tree files.
 > 
-> The bits seem to be read-only, hence this missconfiguration had
-> no negative effect. However, with commit 992345a58e0c
-> ("irqchip/gic: WARN if setting the interrupt type for a PPI fails")
-> warnings such as this get printed:
-> GIC: PPI11 is secure or misconfigured
+> Hardware specification:
+>  * Freescale i.MX6UL SoC
+>  * up to 512 MB RAM
+>  * eMMC on uSDHC2
 > 
-> With this change the new configuration matches the default
-> configuration and no warning is printed anymore.
-> 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+> Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
-Applied, thanks.
+Applied both, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
