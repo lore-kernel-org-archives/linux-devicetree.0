@@ -1,57 +1,60 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARM: multi_v7_defconfig: Remove
- CONFIG_ST_THERMAL_MEMMAP Kconfig symbol
-Date: Mon, 24 Oct 2016 11:14:08 +0100
-Message-ID: <20161024101408.GA10440@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1477065443-10668-1-git-send-email-patrice.chotard@st.com>
- <1477065443-10668-4-git-send-email-patrice.chotard@st.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm64: arch timer: Add timer erratum property for
+ Hip05-d02 and Hip06-d03
+Date: Mon, 24 Oct 2016 11:14:21 +0100
+Message-ID: <7b7687c0-b1b1-074e-a7c7-de377c43c855@arm.com>
+References: <bf391642-82f7-2a3e-3118-1a8384a133e5@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1477065443-10668-4-git-send-email-patrice.chotard-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <bf391642-82f7-2a3e-3118-1a8384a133e5-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: patrice.chotard-qxv4g6HH51o@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Patrice,
+Please write a proper commit message, no matter how trivial the patch is.
 
-On Fri, 21 Oct 2016, patrice.chotard-qxv4g6HH51o@public.gmane.org wrote:
+Thanks,
 
-> From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
-> 
-> Driver code has been already removed, see
-> http://www.spinics.net/lists/devicetree/msg143322.html
-> Remove the multi_v7_defconfig part
-> 
-> Signed-off-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
-> Cc: <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+	M.
+
+On 23/10/16 04:21, Ding Tianhong wrote:
+> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 > ---
->  arch/arm/configs/multi_v7_defconfig | 1 -
->  1 file changed, 1 deletion(-)
+>  arch/arm64/boot/dts/hisilicon/hip05.dtsi | 1 +
+>  arch/arm64/boot/dts/hisilicon/hip06.dtsi | 1 +
+>  2 files changed, 2 insertions(+)
 > 
-> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> index 15b2f99..45e252b 100644
-> --- a/arch/arm/configs/multi_v7_defconfig
-> +++ b/arch/arm/configs/multi_v7_defconfig
-> @@ -450,7 +450,6 @@ CONFIG_RCAR_THERMAL=y
->  CONFIG_ARMADA_THERMAL=y
->  CONFIG_DAVINCI_WATCHDOG=m
->  CONFIG_EXYNOS_THERMAL=m
-> -CONFIG_ST_THERMAL_MEMMAP=y
+> diff --git a/arch/arm64/boot/dts/hisilicon/hip05.dtsi b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
+> index bf322ed..9d18875 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hip05.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
+> @@ -281,6 +281,7 @@
+>  			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+>  			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+>  			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+> +		hisilicon,erratum-161x01;
+>  	};
+> 
+>  	pmu {
+> diff --git a/arch/arm64/boot/dts/hisilicon/hip06.dtsi b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
+> index 5927bc4..c38c658 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hip06.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
+> @@ -260,6 +260,7 @@
+>  			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+>  			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+>  			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+> +		hisilicon,erratum-161x01;
+>  	};
+> 
+>  	pmu {
+> 
 
-Are you sure you want to remove this?
 
-This Kconfig symbol is still used for the stih407 family
-thermal parts in drivers/thermal/st/st_thermal_memmap.c?
-
-My patch only removed the stih415/6 parts from the driver.
-
-regards,
-
-Peter.
+-- 
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
