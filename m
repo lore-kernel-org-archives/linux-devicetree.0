@@ -1,415 +1,55 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [v2 2/2] fpga: Add support for Lattice iCE40 FPGAs
-Date: Mon, 24 Oct 2016 15:28:05 -0700
-Message-ID: <20161024222805.GA5754@live.com>
-References: <1477283989-21947-1-git-send-email-joel@airwebreathe.org.uk>
- <1477283989-21947-2-git-send-email-joel@airwebreathe.org.uk>
- <alpine.DEB.2.02.1610241615280.14525@linuxheads99>
+From: Markus Mayer <markus.mayer@broadcom.com>
+Subject: Re: [PATCH v1 0/3] Add support for Broadcom OTP controller
+Date: Mon, 24 Oct 2016 15:45:04 -0700
+Message-ID: <CAGt4E5vyEXgxbuCgzjmE0LxwNM-A7BQ4_wMBv3G350TY=zyLtA@mail.gmail.com>
+References: <1477336324-10543-1-git-send-email-jonathan.richardson@broadcom.com>
+ <CAADWXX-43-k2K2T1V5MQMd0z0V502wf1syNHERPfvNstOJw-3A@mail.gmail.com>
+ <e34f01b6-a059-9988-0f93-e5adb82a5436@gmail.com> <CA+55aFwAZPJ+o0qkYjJziHofYvvsocHuWr1YUmVnzj6VTv_sgA@mail.gmail.com>
+ <82ad10b1-32ab-3962-d5ab-e787e2c70130@gmail.com> <CA+55aFxeu9YKb=zAba8MVRgxmJoQJ8W6u3NNJv7rP6mwxj+nVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1610241615280.14525@linuxheads99>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+55aFxeu9YKb=zAba8MVRgxmJoQJ8W6u3NNJv7rP6mwxj+nVA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Jonathan Richardson <jonathan.richardson@broadcom.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joel,
+FWIW, this thread ends up in the spam folder for me also on my private
+e-mail account. And it's not the only Broadcom thread. Quite a few
+Broadcom e-mails end up there. The thread was sent to me via
+infradead.org. My private e-mail is also hosted by Gmail.
 
-Ha, finally someone beat me to submitting my driver,
-I had an ugly hack to bitbang the SPI since I couldn't figure
-out a good way to assert the creset after the CS.
+I get this:
 
-Thanks!
+SPF: PASS with IP 2001:1868:205:0:0:0:0:9 Learn more
+DKIM: NEUTRAL with domain null Learn more
+DMARC: FAIL Learn more
 
-On Mon, Oct 24, 2016 at 04:55:43PM -0500, atull wrote:
-> On Mon, 24 Oct 2016, Joel Holdsworth wrote:
-> 
-> > The Lattice iCE40 is a family of FPGAs with a minimalistic architecture
-> > and very regular structure, designed for low-cost, high-volume consumer
-> > and system applications.
-> > 
-> > This patch adds support to the FPGA manager for configuring the SRAM of
-> > iCE40LM, iCE40LP, iCE40HX, iCE40 Ultra, iCE40 UltraLite and iCE40
-> > UltraPlus devices, through slave SPI.
-> > 
-> > The iCE40 family is notable because it is the first FPGA family to have
-> > complete reverse engineered bit-stream documentation for the iCE40LP and
-> > iCE40HX devices. Furthermore, there is now a Free Software Verilog
-> > synthesis tool-chain: the "IceStorm" tool-chain.
-> > 
-> > This project is the work of Clifford Wolf, who is the maintainer of
-> > Yosys Verilog RTL synthesis framework, and Mathias Lasser, with notable
-> > contributions from "Cotton Seed", the main author of "arachne-pnr"; a
-> > place-and-route tool for iCE40 FPGAs.
-> > 
-> > Having a Free Software synthesis tool-chain offers interesting
-> > opportunities for embedded devices that are able reconfigure themselves
-> > with open firmware that is generated on the device itself. For example
-> > a mobile device might have an application processer with an iCE40 FPGA
-processer ? :)
-> > attached, which implements slave devices, or through which the processor
-> > communicates with other devices through the FPGA fabric.
-> > 
-> > A kernel driver for the iCE40 is useful, because in some cases, the FPGA
-> > may need to be configured before other devices can be accessed.
-> > 
-> > An example of such a device is the icoBOARD; a RaspberryPI HAT which
-> > features an iCE40HX8K with a 1 or 8 MBit SRAM and ports for
-> > Digilent-compatible PMOD modules. A PMOD module may contain a device
-> > with which the kernel communicates, via the FPGA.
-> > ---
-> >  .../bindings/fpga/lattice-ice40-fpga-mgr.txt       |  23 +++
-> >  drivers/fpga/Kconfig                               |   6 +
-> >  drivers/fpga/Makefile                              |   1 +
-> >  drivers/fpga/ice40spi.c                            | 212 +++++++++++++++++++++
-> >  4 files changed, 242 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/fpga/lattice-ice40-fpga-mgr.txt
-> >  create mode 100644 drivers/fpga/ice40spi.c
-> > 
-> 
-> Hi Joel,
-> 
-> Thanks for submitting your driver!
-> 
-> I didn't see any huge problems, just minor things below...
-> 
-> Alan
-> 
-> > diff --git a/Documentation/devicetree/bindings/fpga/lattice-ice40-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/lattice-ice40-fpga-mgr.txt
-> > new file mode 100644
-> > index 0000000..b253ac8
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/fpga/lattice-ice40-fpga-mgr.txt
-> > @@ -0,0 +1,23 @@
-> > +Lattice iCE40 FPGA Manager
-> > +
-> > +Required properties:
-> > +- compatible:		should contain "lattice,ice40-fpga-mgr"
-> > +- reg:			SPI chip select
-> > +- spi-max-frequency:	Maximum SPI frequency (>=1000000, <=25000000)
-> > +- cdone-gpios:		GPIO connected to CDONE pin
-> > +- creset_b-gpios:	GPIO connected to CRESET_B pin. Note that CRESET_B is
-> > +			treated as an active-low output because the signal is
-> > +			treated as an enable signal, rather than a reset. This
-> > +			is necessary because the FPGA will enter Master SPI
-> > +			mode and drive SCK with a clock signal, potentially
-> > +			jamming other devices on the bus, unless CRESET_B is
-> > +			held high until the firmware is loaded.
-> 
-> Both could be singular ...-gpio since only one gpio should be specified.
-> 
-> > +
-> > +Example:
-> > +	ice40: ice40@0 {
-> > +		compatible = "lattice,ice40-fpga-mgr";
-> > +		reg = <0>;
-> > +		spi-max-frequency = <1000000>;
-> > +		cdone-gpios = <&gpio 24 GPIO_ACTIVE_HIGH>;
-> > +		creset_b-gpios = <&gpio 22 GPIO_ACTIVE_LOW>;
-> > +	};
-> > diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-> > index d614102..85ff429 100644
-> > --- a/drivers/fpga/Kconfig
-> > +++ b/drivers/fpga/Kconfig
-> > @@ -13,6 +13,12 @@ config FPGA
-> >  
-> >  if FPGA
-> >  
-> > +config FPGA_MGR_ICE40_SPI
-> > +	tristate "Lattice iCE40 SPI"
-> > +	depends on SPI
-> > +	help
-> > +	  FPGA manager driver support for Lattice iCE40 FPGAs over SPI.
-> > +
-> >  config FPGA_MGR_SOCFPGA
-> >  	tristate "Altera SOCFPGA FPGA Manager"
-> >  	depends on ARCH_SOCFPGA
-> > diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-> > index 8d83fc6..6c809cc 100644
-> > --- a/drivers/fpga/Makefile
-> > +++ b/drivers/fpga/Makefile
-> > @@ -6,5 +6,6 @@
-> >  obj-$(CONFIG_FPGA)			+= fpga-mgr.o
-> >  
-> >  # FPGA Manager Drivers
-> > +obj-$(CONFIG_FPGA_MGR_ICE40_SPI)	+= ice40spi.o
-> 
-> Could this be ice40-spi.c?
-> 
-> >  obj-$(CONFIG_FPGA_MGR_SOCFPGA)		+= socfpga.o
-> >  obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
-> > diff --git a/drivers/fpga/ice40spi.c b/drivers/fpga/ice40spi.c
-> > new file mode 100644
-> > index 0000000..ab5ee86
-> > --- /dev/null
-> > +++ b/drivers/fpga/ice40spi.c
-> > @@ -0,0 +1,212 @@
-> > +/*
-> > + * FPGA Manager Driver for Lattice iCE40.
-> > + *
-> > + *  Copyright (c) 2016 Joel Holdsworth
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation; version 2 of the License.
-> > + *
-> > + * This driver adds support to the FPGA manager for configuring the SRAM of
-> > + * Lattice iCE40 FPGAs through slave SPI.
-> > + */
-> > +
-> > +#include <linux/delay.h>
-> > +#include <linux/fpga/fpga-mgr.h>
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/of_gpio.h>
-> > +#include <linux/spi/spi.h>
-> > +
-> > +struct ice40_fpga_priv {
-> > +	struct spi_device *dev;
-> > +	struct gpio_desc *creset_b;
-> > +	struct gpio_desc *cdone;
-> > +	enum fpga_mgr_states state;
-> 
-> state is never used. You could just remove it.
-> 
-> > +};
-> > +
-> > +static enum fpga_mgr_states ice40_fpga_ops_state(struct fpga_manager *mgr)
-> > +{
-> > +	return mgr->state;
-> 
-> fpga_mgr_register will call your ice40_fpga_ops_state() function to
-> get its initial state.  That's the only time this gets called.  So
-> you could return one of the enum fpga_mgr_states here.  I'm guessing
-> FPGA_MGR_STATE_UNKNOWN.  I'm realizing that there will be devices
-> that don't really know what initial state they are in; I could have
-> removed the absolute requirement for the state in the fpga_manager_ops
-> and assumed FPGA_MGR_STATE_UNKNOWN unless a low level driver provided
-> a state function.  But for now, just return FPGA_MGR_STATE_UNKNOWN
-> here unless you have a way of knowing what state you are in when
-> the driver is probed.
+So, it's not DKIM for me, but DMARC that's failing.
 
-You could potentially also just look at the CDONE GPIO.
+The actual headers:
 
-> 
-> > +}
-> > +
-> > +static void set_cs(struct spi_device *spi, bool enable)
-> > +{
-> > +	if (gpio_is_valid(spi->cs_gpio))
-> > +		gpio_set_value(spi->cs_gpio, !enable);
-> > +	else if (spi->master->set_cs)
-> > +		spi->master->set_cs(spi, !enable);
-> > +}
-> > +
-> > +static int ice40_fpga_ops_write_init(struct fpga_manager *mgr, u32 flags,
-> > +	const char *buf, size_t count)
-> 
-> Checkpatch complains about alignment here.
-> 
-> > +{
-> > +	struct ice40_fpga_priv *priv = mgr->priv;
-> > +	struct spi_device *dev = priv->dev;
-> > +	int ret;
-> > +
-> > +	if ((flags & FPGA_MGR_PARTIAL_RECONFIG)) {
-> > +		dev_err(&dev->dev,
-> > +			"Partial reconfiguration is not supported\n");
-> > +		return -EINVAL;
+Received: from bombadil.infradead.org (bombadil.infradead.org.
+[2001:1868:205::9])
+        by mx.google.com with ESMTPS id
+r127si16944054pgr.251.2016.10.24.12.13.37
+        for <mmayer at mmayer.net>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Oct 2016 12:13:37 -0700 (PDT)
+Received-SPF: pass (google.com: best guess record for domain of
+linux-arm-kernel-bounces+mmayer=mmayer.net@lists.infradead.org
+designates 2001:1868:205::9 as permitted sender)
+client-ip=2001:1868:205::9;
+Authentication-Results: mx.google.com;
+       dkim=neutral (body hash did not verify) header.i=@broadcom.com;
+       spf=pass (google.com: best guess record for domain of
+linux-arm-kernel-bounces+mmayer=mmayer.net@lists.infradead.org
+designates 2001:1868:205::9 as permitted sender)
+smtp.mailfrom=linux-arm-kernel-bounces+mmayer=mmayer.net@lists.infradead.org;
+       dmarc=fail (p=QUARANTINE dis=NONE) header.from=broadcom.com
+Received: from localhost ([127.0.0.1] helo=bombadil.infradead.org) by
+bombadil.infradead.org
 
-Maybe -ENOTSUPP ?
-> > +	}
-> > +
-> > +	/* Lock the bus, assert SS_B and CRESET_B */
-> > +	ret = spi_bus_lock(dev->master);
-> > +	if (ret) {
-> > +		dev_err(&dev->dev, "Failed to lock SPI bus, ret: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	set_cs(dev, 1);
-> > +	gpiod_set_value(priv->creset_b, 1);
-> > +
-> > +	/* Delay for >200ns */
-> > +	udelay(1);
-
-Named constant?
-> > +
-> > +	/* Come out of reset */
-> > +	gpiod_set_value(priv->creset_b, 0);
-> > +
-> > +	/* Check CDONE is de-asserted i.e. the FPGA is reset */
-> > +	if (gpiod_get_value(priv->cdone)) {
-> > +		dev_err(&dev->dev, "Device reset failed, CDONE is asserted\n");
-> > +		ret = -EIO;
-> > +	}
-> > +
-> > +	/* Wait for the housekeeping to complete */
-> > +	if (!ret)
-> > +		udelay(1200);
-
-Named constant?
-> 
-> Would usleep_range work for you since it's more than 10uSec
-> (Documentation/timers/timers-howto.txt)?
-> 
-> > +
-> > +	/* Release the SS_B */
-> > +	set_cs(dev, 0);
-> > +	spi_bus_unlock(dev->master);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int ice40_fpga_ops_write(struct fpga_manager *mgr,
-> > +	const char *buf, size_t count)
-> 
-> Checkpatch complains about alignment here also.
-> 
-> > +{
-> > +	struct ice40_fpga_priv *priv = mgr->priv;
-> > +	struct spi_device *dev = priv->dev;
-> > +	int ret;
-> > +
-> > +	ret = spi_write(dev, buf, count);
-> > +	if (ret)
-> > +		dev_err(&dev->dev, "Error sending SPI data, ret: %d\n", ret);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int ice40_fpga_ops_write_complete(struct fpga_manager *mgr, u32 flags)
-> > +{
-> > +	struct ice40_fpga_priv *priv = mgr->priv;
-> > +	struct spi_device *dev = priv->dev;
-> > +	int ret = 0;
-> > +
-> > +	/* Check CDONE is asserted */
-> > +	if (!gpiod_get_value(priv->cdone)) {
-> > +		dev_err(&dev->dev,
-> > +			"CDONE was not asserted after firmware transfer\n");
-> > +		return -EIO;
-> > +	}
-> > +
-> > +	/* Send >49-bits of zero-padding to activate the firmware */
-> > +	ret = spi_write(dev, NULL, 7);
-
-Could make that a named constant ...
-> > +	if (ret) {
-> > +		dev_err(&dev->dev, "Error sending zero padding, ret: %d\n",
-> > +			ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	/* Success */
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct fpga_manager_ops ice40_fpga_ops = {
-> > +	.state = ice40_fpga_ops_state,
-> > +	.write_init = ice40_fpga_ops_write_init,
-> > +	.write = ice40_fpga_ops_write,
-> > +	.write_complete = ice40_fpga_ops_write_complete,
-> > +};
-> > +
-> > +static int ice40_fpga_probe(struct spi_device *spi)
-> > +{
-> > +	struct device *dev = &spi->dev;
-> > +	struct device_node *np = spi->dev.of_node;
-> > +	struct ice40_fpga_priv *priv;
-> > +	int ret;
-> > +
-> > +	if (!np) {
-> > +		dev_err(dev, "No Device Tree entry\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	priv = devm_kzalloc(&spi->dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	priv->dev = spi;
-> > +
-> > +	/* Check board setup data. */
-> > +	if (spi->max_speed_hz > 25000000) {
-> > +		dev_err(dev, "speed is too high\n");
-> > +		return -EINVAL;
-> > +	} else if (spi->mode & SPI_CPHA) {
-> > +		dev_err(dev, "bad mode\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	/* Set up the GPIOs */
-> > +	priv->cdone = devm_gpiod_get(dev, "cdone", GPIOD_IN);
-> > +	if (IS_ERR(priv->cdone)) {
-> > +		dev_err(dev, "Failed to get CDONE GPIO: %ld\n",
-> > +			PTR_ERR(priv->cdone));
-> > +		return ret;
-> > +	}
-> > +
-> > +	priv->creset_b = devm_gpiod_get(dev, "creset_b", GPIOD_OUT_HIGH);
-> > +	if (IS_ERR(priv->creset_b)) {
-> > +		dev_err(dev, "Failed to get CRESET_B GPIO: %ld\n",
-> > +			PTR_ERR(priv->creset_b));
-> > +		return ret;
-> > +	}
-> > +
-> > +	/* Register with the FPGA manager */
-> > +	ret = fpga_mgr_register(dev, "Lattice iCE40 FPGA Manager",
-> > +				&ice40_fpga_ops, priv);
-> > +	if (ret) {
-> > +		dev_err(dev, "unable to register FPGA manager");
-> > +		return ret;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int ice40_fpga_remove(struct spi_device *spi)
-> > +{
-> > +	fpga_mgr_unregister(&spi->dev);
-> > +	return 0;
-> > +}
-> > +
-> 
-> #ifdef CONFIG_OF
-> > +static const struct of_device_id ice40_fpga_of_match[] = {
-> > +	{ .compatible = "lattice,ice40-fpga-mgr", },
-> > +	{},
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(of, ice40_fpga_of_match);
-> #endif
-> 
-> > +
-> > +static struct spi_driver ice40_fpga_driver = {
-> > +	.probe = ice40_fpga_probe,
-> > +	.remove = ice40_fpga_remove,
-> > +	.driver = {
-> > +		.name = "ice40spi",
-> > +		.owner = THIS_MODULE,
-> 
-> It's not necessary to specify .owner anymore.
-> 
-> > +		.of_match_table = of_match_ptr(ice40_fpga_of_match),
-> > +	},
-> > +};
-> > +
-> > +module_spi_driver(ice40_fpga_driver);
-> > +
-> > +MODULE_AUTHOR("Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>");
-> > +MODULE_DESCRIPTION("Lattice iCE40 FPGA Manager");
-> > +MODULE_LICENSE("GPL v2");
-> > -- 
-> > 2.7.4
-> > 
-> > 
-
-Cheers,
-
-Moritz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+-Markus
