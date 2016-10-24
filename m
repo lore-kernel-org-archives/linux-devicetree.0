@@ -1,73 +1,60 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm64: arch_timer: Add device tree binding for
- hisilicon-161x01 erratum
-Date: Mon, 24 Oct 2016 16:43:25 +0800
-Message-ID: <6697f1a4-3c22-d0ef-e2c2-41f0ff36fbf0@huawei.com>
-References: <962ea92f-870b-e1d0-5bb7-1a6d66c35122@huawei.com>
- <3a29c03a-2da1-7bfe-28ff-21dada50ee8d@arm.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] dt-bindings: Add Renesas R-Car FDP1 bindings
+Date: Mon, 24 Oct 2016 12:46:46 +0300
+Message-ID: <1923730.zaykC4sXJR@avalon>
+References: <1477299818-31935-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1477299818-31935-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <CAMuHMdUGy0+bv-t=8HXeQf0BpoMJMNP85cd2tubQzD4Zj8X9Gw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3a29c03a-2da1-7bfe-28ff-21dada50ee8d-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <CAMuHMdUGy0+bv-t=8HXeQf0BpoMJMNP85cd2tubQzD4Zj8X9Gw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kieran Bingham <kieran-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Geert,
 
+On Monday 24 Oct 2016 11:14:11 Geert Uytterhoeven wrote:
+> On Mon, Oct 24, 2016 at 11:03 AM, Laurent Pinchart wrote:
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/renesas,fdp1.txt
+> > @@ -0,0 +1,33 @@
+> > +Renesas R-Car Fine Display Processor (FDP1)
+> > +-------------------------------------------
+> > +
+> > +The FDP1 is a de-interlacing module which converts interlaced video to
+> > +progressive video. It is capable of performing pixel format conversion
+> > between +YCbCr/YUV formats and RGB formats. Only YCbCr/YUV formats are
+> > supported as +an input to the module.
+> > +
+> > + - compatible: Must be the following
+> > +
+> > +   - "renesas,fdp1" for generic compatible
+> > +
+> > + - reg: the register base and size for the device registers
+> > + - interrupts : interrupt specifier for the FDP1 instance
+> > + - clocks: reference to the functional clock
+> > + - renesas,fcp: reference to the FCPF connected to the FDP1
+> > +
+> > +Optional properties:
+> > + - power-domains : power-domain property defined with a power domain
+> > specifier
+>                       "power domain"?
+> 
+> > +                            to respective power domain.
+> 
+> Still, too many power domains in one sentence?
 
-On 2016/10/24 16:36, Marc Zyngier wrote:
-> On 23/10/16 04:21, Ding Tianhong wrote:
->> This erratum describes a bug in logic outside the core, so MIDR can't be
->> used to identify its presence, and reading an SoC-specific revision
->> register from common arch timer code would be awkward.  So, describe it
->> in the device tree.
->>
->> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/arch_timer.txt | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
->> index ef5fbe9..26bc837 100644
->> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
->> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
->> @@ -31,6 +31,12 @@ to deliver its interrupts via SPIs.
->>    This also affects writes to the tval register, due to the implicit
->>    counter read.
->>
->> +- hisilicon,erratum-161x01 : A boolean property. Indicates the presence of
->> +  QorIQ erratum 161201, which says that reading the counter is
-> 
-> Other than the copy/paste of the FSL erratum, please document the actual
-> erratum number. Is that 161x01 or 161201?
-> 
+How about
 
-Sorry for the lazy behavior.
+ - power-domains : reference to the power domain that the FDP1 belongs to, if
+   any.
 
->> +  unreliable unless the small range of value is returned by back-to-back reads.
-> 
-> That's a detail that doesn't belong in the DT, but that would be much
-> better next to the code doing the actual handling.
-> 
-Got it.
+-- 
+Regards,
 
-Thanks
-Ding
-
->> +  This also affects writes to the tval register, due to the implicit
->> +  counter read.
->> +
->>  ** Optional properties:
->>
->>  - arm,cpu-registers-not-fw-configured : Firmware does not initialize
->>
-> 
-> Thanks,
-> 
-> 	M.
-> 
+Laurent Pinchart
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
