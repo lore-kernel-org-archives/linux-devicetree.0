@@ -1,88 +1,34 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: sti: stih410-clocks: Add PROC_STFE as a critical
- clock
-Date: Mon, 24 Oct 2016 14:44:16 +0100
-Message-ID: <20161024134416.GB10440@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1476804957-24000-1-git-send-email-peter.griffin@linaro.org>
- <20161024085304.GE14477@dell>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3] pinctrl: Add SX150X GPIO Extender Pinctrl Driver
+Date: Mon, 24 Oct 2016 16:39:17 +0200
+Message-ID: <CACRpkdY7vLU4yVP7M-O4rGt_L5cqL57ApmMQJ4aRGgzh3Nat6Q@mail.gmail.com>
+References: <1477040998-2016-1-git-send-email-narmstrong@baylibre.com>
+ <CAHQ1cqESoRdeHyvP=m=8F_VwiaYL+wbjFoNa6KvWBGfijhcRjg@mail.gmail.com>
+ <CACRpkdbwqFRtFN1gx1G7BuFe44mvPyCSeoQ5g9_FR11j_ZO4ug@mail.gmail.com> <CAHQ1cqGLQ=DdhXg1ebkgBbLN8P2P8BEDrGGTx9_r+6=Wy3uUWA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161024085304.GE14477@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHQ1cqGLQ=DdhXg1ebkgBbLN8P2P8BEDrGGTx9_r+6=Wy3uUWA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Peter Rosin <peda@axentia.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Roland Stigge <stigge@antcom.de>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+On Mon, Oct 24, 2016 at 6:51 AM, Andrey Smirnov
+<andrew.smirnov@gmail.com> wrote:
 
-On Mon, 24 Oct 2016, Lee Jones wrote:
+> It seem strange to me that the driver uses "handle_edge_irq", given
+> how none of the individual interrupts seem to require any ACKing,
+> since it is all handled in sx150x_irq_thread_fn(), line 533. More so,
+> I had trouble finding who/where sets .irq_ack() callback, which AFAIU
+> is mandatory for handle_edge_irq().
 
-> On Tue, 18 Oct 2016, Peter Griffin wrote:
-> 
-> > Once the ST frontend demux HW IP has been enabled, the clock can't
-> > be disabled otherwise the system will hang and the board will
-> > be unserviceable.
-> > 
-> > To allow balanced clock enable/disable calls in the driver we use
-> > the critical clock infrastructure to take an extra reference on the
-> > clock so the clock will never actually be disabled.
-> 
-> This is an abuse of the critical-clocks framework, and is exactly the
-> type of hack I promised the clk guys I'd try to prevent.
+Yes that looks strange.
 
-I expect the best way to do this would be to write some documentation on the
-clock-critical DT binding and/or CRITICAL_CLK flag. The only documentation I can
-find currently is with the initial patch series [1] and the comment in
-clk-provider.h of
+Neil have you tested IRQs with this code?
 
- #define CLK_IS_CRITICAL         BIT(11) /* do not gate, ever */
+If there is trouble, please follow up with a fix for the edge handler.
+Maybe it should just be handle_simple_irq().
 
-Or the patch decription
-
-"Critical clocks are those which must not be gated, else undefined
-or catastrophic failure would occur.  Here we have chosen to
-ensure the prepare/enable counts are correctly incremented, so as
-not to confuse users with enabled clocks with no visible users."
-
-Which is the functionality I want for this clock.
-
-> If this, or
-> any other IP has some quirks (i.e. once enabled, if this clock is
-> subsequently disabled it will have a catastrophic effect on the
-> platform), then they should be worked around in the driver.
-> 
-> The correct thing to do here is craft a clk-keep-on flag and ensure it
-> is set to true for the effected platform(s)' platform data.
-
-I'm always wary of creating a driver specific flag, especially when its
-purpose is to do the same thing as an existing mechanism provided by the
-subsystem of not gating the clock.
-
-I can see a couple of problems with what you propose:
-
-1) You have to put the clk-keep-on flag in every driver which consumes the
-clock. IMO it is much better to have this knowledge in the SoC's
-clock driver so every consumer of the clock automatically benefits.
-
-2) You don't benefit from the CLK_IS_CRITICAL reference counting logic in
-clk.c. So then each driver has to also work around that to get sensible reference
-counts. e.g.
-
-if (!__clk_is_enabled(clk) && pdata->clk-keep-on)
-   clk_enable(clk)
-
-Which seems to me to be fighting against the subsystem. Given that the only use of
- _clk_is_enabled() outside drivers/clk is in an old arch/arm/mach-omap2/pm24xx.c
-driver I suspect its use is frowned upon, and it shouldn't really be an EXPORTED_SYMBOL.
-
-regards,
-
-Peter.
-
-[1] https://lkml.org/lkml/2016/1/18/272
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
