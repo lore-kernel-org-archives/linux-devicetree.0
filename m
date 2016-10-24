@@ -1,39 +1,79 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V7 4/4] dmaengine: qcom_hidma: add MSI support for
- interrupts
-Date: Sun, 23 Oct 2016 19:55:29 -0700
-Message-ID: <36163853-ac4a-e146-0c1b-eaf42e8b234d@codeaurora.org>
-References: <1477067879-23750-1-git-send-email-okaya@codeaurora.org>
- <1477067879-23750-5-git-send-email-okaya@codeaurora.org>
- <CAHp75Vd+u5va3kyqcapeF9JATUfv5gBnoEM_W+frDmMXs5f2Uw@mail.gmail.com>
+From: Tiffany Lin <tiffany.lin@mediatek.com>
+Subject: Re: [PATCH v5 3/9] vcodec: mediatek: Add Mediatek V4L2 Video
+ Decoder Driver
+Date: Mon, 24 Oct 2016 11:22:08 +0800
+Message-ID: <1477279328.10501.10.camel@mtksdaap41>
+References: <1472818800-22558-1-git-send-email-tiffany.lin@mediatek.com>
+         <1472818800-22558-2-git-send-email-tiffany.lin@mediatek.com>
+         <1472818800-22558-3-git-send-email-tiffany.lin@mediatek.com>
+         <1472818800-22558-4-git-send-email-tiffany.lin@mediatek.com>
+         <20161021110104.5733240e@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vd+u5va3kyqcapeF9JATUfv5gBnoEM_W+frDmMXs5f2Uw@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: dmaengine <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, Christopher Covington <cov@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, Lars-Peter Clausen <lars@metafoo.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161021110104.5733240e@vento.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2016 12:11 PM, Andy Shevchenko wrote:
->> +static void hidma_free_msis(struct hidma_dev *dmadev)
->> > +{
->> > +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
-> Perhaps one #ifdef and two definitions of functions?
+Hi Mauro,
 
-I don't think it will make a difference. I'll have to move
-#ifdef around the caller of hidma_free_msis instead which
-I think is uglier.
+On Fri, 2016-10-21 at 11:01 -0200, Mauro Carvalho Chehab wrote:
+> Em Fri, 2 Sep 2016 20:19:54 +0800
+> Tiffany Lin <tiffany.lin@mediatek.com> escreveu:
+> 
+> > Add v4l2 layer decoder driver for MT8173
+> > 
+> > Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
+> 
+> > +int vdec_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
+> > +{
+> > +	int ret = 0;
+> > +
+> > +	switch (fourcc) {
+> > +	case V4L2_PIX_FMT_H264:
+> > +	case V4L2_PIX_FMT_VP8:
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> 
+> Did you ever test this driver? The above code will *always* return
+> -EINVAL, with will cause vidioc_vdec_s_fmt() to always fail!
+> 
+> I suspect that what you wanted to do, instead, is:
+> 
+> 	switch (fourcc) {
+> 	case V4L2_PIX_FMT_H264:
+> 	case V4L2_PIX_FMT_VP8:
+> 		break;
+> 	default:
+> 		return -EINVAL;
+> 
 
-The hidma_write_msi_msg function gets called only when 
-CONFIG_GENERIC_MSI_IRQ_DOMAIN is defined. If I don't put 
-this around the function definition, I get unused function
-warning from the compiler. This is the reason why preprocessor
-definition is outside of the function definition.
+The original idea here is that vp8 and h264 are added in later patches.
+If get this patch without later patches, it should return -EINVAL.
 
 
--- 
-Sinan Kaya
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+> Btw, this patch series has also several issues that were pointed by
+> checkpatch. Please *always* run checkpatch when submitting your work.
+> 
+> You should take a look at the Kernel documentation about how to
+> submit patches, at:
+> 	https://mchehab.fedorapeople.org/kernel_docs/process/index.html
+> 
+> PS.: this time, I fixed the checkpatch issues for you. So, let me know
+> if the patch below is OK, and I'll merge it at media upstream,
+> assuming that the other patches in this series are ok.
+> 
+
+I did run checkpatch, but I don't know why these issues missed.
+probably I run checkpatch for all files not for patches.
+I will take a look at the documentation and keep this in mind for future
+upstream.
+Appreciated for your help.
+
+
+best regards,
+Tiffany
