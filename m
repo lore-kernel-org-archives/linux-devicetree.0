@@ -1,153 +1,217 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [RFC] ARM: memory: da8xx-ddrctl: new driver
-Date: Mon, 24 Oct 2016 18:46:36 +0200
-Message-ID: <1477327596-16060-2-git-send-email-bgolaszewski@baylibre.com>
-References: <1477327596-16060-1-git-send-email-bgolaszewski@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1477327596-16060-1-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Subject: [PATCH/RFT v2 10/17] USB: da8xx: use flag instead of bitmask for over current change
+Date: Mon, 24 Oct 2016 18:46:27 +0200
+Message-ID: <20161024164634.4330-11-ahaslam@baylibre.com>
+References: <20161024164634.4330-1-ahaslam@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161024164634.4330-1-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, manjunath.goudar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Q3JlYXRlIGEgbmV3IGRyaXZlciBmb3IgdGhlIGRhOHh4IEREUjIvbUREUiBjb250cm9sbGVyIGFu
-ZCBpbXBsZW1lbnQKc3VwcG9ydCBmb3Igd3JpdGluZyB0byB0aGUgUGVyaXBoZXJhbCBCdXMgQnVy
-c3QgUHJpb3JpdHkgUmVnaXN0ZXIuCgpTaWduZWQtb2ZmLWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tp
-IDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgotLS0KIC4uLi9tZW1vcnktY29udHJvbGxlcnMv
-dGktZGE4eHgtZGRyY3RsLnR4dCAgICAgICAgIHwgIDIwICsrKwogZHJpdmVycy9tZW1vcnkvS2Nv
-bmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDggKwogZHJpdmVycy9tZW1vcnkv
-TWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9tZW1v
-cnkvZGE4eHgtZGRyY3RsLmMgICAgICAgICAgICAgICAgICAgICAgfCAxODcgKysrKysrKysrKysr
-KysrKysrKysrCiA0IGZpbGVzIGNoYW5nZWQsIDIxNiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9k
-ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lbW9yeS1jb250cm9s
-bGVycy90aS1kYTh4eC1kZHJjdGwudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tZW1v
-cnkvZGE4eHgtZGRyY3RsLmMKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL3RpLWRhOHh4LWRkcmN0bC50eHQgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL3RpLWRhOHh4LWRk
-cmN0bC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uZjBlZGE1OQotLS0g
-L2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnkt
-Y29udHJvbGxlcnMvdGktZGE4eHgtZGRyY3RsLnR4dApAQCAtMCwwICsxLDIwIEBACisqIERldmlj
-ZSB0cmVlIGJpbmRpbmdzIGZvciBUZXhhcyBJbnN0cnVtZW50cyBkYTh4eCBERFIyL21ERFIgbWVt
-b3J5IGNvbnRyb2xsZXIKKworVGhlIEREUjIvbUREUiBtZW1vcnkgY29udHJvbGxlciBwcmVzZW50
-IG9uIFRleGFzIEluc3RydW1lbnRzIGRhOHh4IFNvQ3MgbWVtb3J5CittYXBzIGEgc2V0IG9mIHJl
-Z2lzdGVycyB3aGljaCBhbGxvdyB0byB0d2VhayB0aGUgY29udHJvbGxlcidzIGJlaGF2aW9yLgor
-CitEb2N1bWVudGF0aW9uOgorT01BUC1MMTM4IChEQTg1MCkgLSBodHRwOi8vd3d3LnRpLmNvbS9s
-aXQvdWcvc3BydWg4MmMvc3BydWg4MmMucGRmCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CisKKy0g
-Y29tcGF0aWJsZToJCSJ0aSxkYTg1MC1kZHJjdGwiIC0gZm9yIGRhODUwIFNvQyBiYXNlZCBib2Fy
-ZHMKKy0gcmVnOgkJCWEgdHVwbGUgY29udGFpbmluZyB0aGUgYmFzZSBhZGRyZXNzIG9mIHRoZSBt
-ZW1vcnkKKwkJCWNvbnRyb2xsZXIgYW5kIHRoZSBzaXplIG9mIHRoZSBtZW1vcnkgYXJlYSB0byBt
-YXAKKworRXhhbXBsZSBmb3IgZGE4NTAgc2hvd24gYmVsb3cuCisKK2RkcmN0bCB7CisJY29tcGF0
-aWJsZSA9ICJ0aSxkYTg1MC1kZHJjdGwiOworCXJlZyA9IDwweEIwMDAwMDAwIDB4MTAwPjsKK307
-CmRpZmYgLS1naXQgYS9kcml2ZXJzL21lbW9yeS9LY29uZmlnIGIvZHJpdmVycy9tZW1vcnkvS2Nv
-bmZpZwppbmRleCA0YjRjMGMzLi5lYzgwZTM1IDEwMDY0NAotLS0gYS9kcml2ZXJzL21lbW9yeS9L
-Y29uZmlnCisrKyBiL2RyaXZlcnMvbWVtb3J5L0tjb25maWcKQEAgLTEzNCw2ICsxMzQsMTQgQEAg
-Y29uZmlnIE1US19TTUkKIAkgIG1haW5seSBoZWxwIGVuYWJsZS9kaXNhYmxlIGlvbW11IGFuZCBj
-b250cm9sIHRoZSBwb3dlciBkb21haW4gYW5kCiAJICBjbG9ja3MgZm9yIGVhY2ggbG9jYWwgYXJi
-aXRlci4KIAorY29uZmlnIERBOFhYX0REUkNUTAorCWJvb2wgIlRleGFzIEluc3RydW1lbnRzIGRh
-OHh4IEREUjIvbUREUiBkcml2ZXIiCisJZGVwZW5kcyBvbiBBUkNIX0RBVklOQ0lfREE4WFgKKwlo
-ZWxwCisJICBUaGlzIGRyaXZlciBpcyBmb3IgdGhlIEREUjIvbUREUiBNZW1vcnkgQ29udHJvbGxl
-ciBwcmVzZW50IG9uCisJICBUZXhhcyBJbnN0cnVtZW50cyBkYTh4eCBTb0NzLiBJdCdzIHVzZWQg
-dG8gdHdlYWsgdmFyaW91cyBtZW1vcnkKKwkgIGNvbnRyb2xsZXIgY29uZmlndXJhdGlvbiBvcHRp
-b25zLgorCiBzb3VyY2UgImRyaXZlcnMvbWVtb3J5L3NhbXN1bmcvS2NvbmZpZyIKIHNvdXJjZSAi
-ZHJpdmVycy9tZW1vcnkvdGVncmEvS2NvbmZpZyIKIApkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZW1v
-cnkvTWFrZWZpbGUgYi9kcml2ZXJzL21lbW9yeS9NYWtlZmlsZQppbmRleCBiMjBhZTM4Li5lODgw
-OTdmYiAxMDA2NDQKLS0tIGEvZHJpdmVycy9tZW1vcnkvTWFrZWZpbGUKKysrIGIvZHJpdmVycy9t
-ZW1vcnkvTWFrZWZpbGUKQEAgLTE3LDYgKzE3LDcgQEAgb2JqLSQoQ09ORklHX01WRUJVX0RFVkJV
-UykJKz0gbXZlYnUtZGV2YnVzLm8KIG9iai0kKENPTkZJR19URUdSQTIwX01DKQkrPSB0ZWdyYTIw
-LW1jLm8KIG9iai0kKENPTkZJR19KWjQ3ODBfTkVNQykJKz0gano0NzgwLW5lbWMubwogb2JqLSQo
-Q09ORklHX01US19TTUkpCQkrPSBtdGstc21pLm8KK29iai0kKENPTkZJR19EQThYWF9ERFJDVEwp
-CSs9IGRhOHh4LWRkcmN0bC5vCiAKIG9iai0kKENPTkZJR19TQU1TVU5HX01DKQkrPSBzYW1zdW5n
-Lwogb2JqLSQoQ09ORklHX1RFR1JBX01DKQkJKz0gdGVncmEvCmRpZmYgLS1naXQgYS9kcml2ZXJz
-L21lbW9yeS9kYTh4eC1kZHJjdGwuYyBiL2RyaXZlcnMvbWVtb3J5L2RhOHh4LWRkcmN0bC5jCm5l
-dyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjc1NmE2ZjMKLS0tIC9kZXYvbnVsbAor
-KysgYi9kcml2ZXJzL21lbW9yeS9kYTh4eC1kZHJjdGwuYwpAQCAtMCwwICsxLDE4NyBAQAorLyoK
-KyAqIFRJIGRhOHh4IEREUjIvbUREUiBjb250cm9sbGVyIGRyaXZlcgorICoKKyAqIENvcHlyaWdo
-dCAoQykgMjAxNiBCYXlMaWJyZSBTQVMKKyAqCisgKiBBdXRob3I6CisgKiAgIEJhcnRvc3ogR29s
-YXN6ZXdza2kgPGJnb2xhc3pld3NraUBiYXlsaWJyZS5jb20+CisgKgorICogVGhpcyBwcm9ncmFt
-IGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkK
-KyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2Ug
-dmVyc2lvbiAyIGFzCisgKiBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlv
-bi4KKyAqLworCisjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+CisjaW5jbHVkZSA8bGludXgvb2Yu
-aD4KKyNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4KKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9y
-bV9kZXZpY2UuaD4KKyNpbmNsdWRlIDxsaW51eC9pby5oPgorCitzdHJ1Y3QgZGE4eHhfZGRyY3Rs
-X2NvbmZpZ19rbm9iIHsKKwljb25zdCBjaGFyICpuYW1lOworCXUzMiByZWc7CisJdTMyIG1hc2s7
-CisJdTMyIG9mZnNldDsKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZGE4eHhfZGRyY3RsX2Nv
-bmZpZ19rbm9iIGRhOHh4X2RkcmN0bF9rbm9ic1tdID0geworCXsKKwkJLm5hbWUgPSAiZGE4NTAt
-cGJicHIiLAorCQkucmVnID0gMHgyMCwKKwkJLm1hc2sgPSAweGZmZmZmZjAwLAorCQkub2Zmc2V0
-ID0gMCwKKwl9LAorfTsKKworc3RydWN0IGRhOHh4X2RkcmN0bF9zZXR0aW5nIHsKKwljb25zdCBj
-aGFyICpuYW1lOworCXUzMiB2YWw7Cit9OworCitzdHJ1Y3QgZGE4eHhfZGRyY3RsX2JvYXJkX3Nl
-dHRpbmdzIHsKKwljb25zdCBjaGFyICpib2FyZDsKKwljb25zdCBzdHJ1Y3QgZGE4eHhfZGRyY3Rs
-X3NldHRpbmcgKnNldHRpbmdzOworfTsKKworc3RhdGljIGNvbnN0IHN0cnVjdCBkYTh4eF9kZHJj
-dGxfc2V0dGluZyBkYTg1MF9sY2RrX2RkcmN0bF9zZXR0aW5nc1tdID0geworCXsKKwkJLm5hbWUg
-PSAiZGE4NTAtcGJicHIiLAorCQkudmFsID0gMHgyMCwKKwl9LAorCXsgfQorfTsKKworc3RhdGlj
-IGNvbnN0IHN0cnVjdCBkYTh4eF9kZHJjdGxfYm9hcmRfc2V0dGluZ3MgZGE4eHhfZGRyY3RsX2Jv
-YXJkX2NvbmZzW10gPSB7CisJeworCQkuYm9hcmQgPSAidGksZGE4NTAtbGNkayIsCisJCS5zZXR0
-aW5ncyA9IGRhODUwX2xjZGtfZGRyY3RsX3NldHRpbmdzLAorCX0sCit9OworCitzdGF0aWMgY29u
-c3Qgc3RydWN0IGRhOHh4X2RkcmN0bF9jb25maWdfa25vYiAqCitkYTh4eF9kZHJjdGxfbWF0Y2hf
-a25vYihjb25zdCBzdHJ1Y3QgZGE4eHhfZGRyY3RsX3NldHRpbmcgKnNldHRpbmcpCit7CisJY29u
-c3Qgc3RydWN0IGRhOHh4X2RkcmN0bF9jb25maWdfa25vYiAqa25vYjsKKwlpbnQgaTsKKworCWZv
-ciAoaSA9IDA7IGkgPCBBUlJBWV9TSVpFKGRhOHh4X2RkcmN0bF9rbm9icyk7IGkrKykgeworCQlr
-bm9iID0gJmRhOHh4X2RkcmN0bF9rbm9ic1tpXTsKKworCQlpZiAoc3RyY21wKGtub2ItPm5hbWUs
-IHNldHRpbmctPm5hbWUpID09IDApIHsKKwkJCXJldHVybiBrbm9iOworCQl9CisJfQorCisJcmV0
-dXJuIE5VTEw7Cit9CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZGE4eHhfZGRyY3RsX3NldHRpbmcg
-KgorZGE4eHhfZGRyY3RsX21hdGNoX2JvYXJkKGNvbnN0IGNoYXIgKmJvYXJkKQoreworCWNvbnN0
-IHN0cnVjdCBkYTh4eF9kZHJjdGxfYm9hcmRfc2V0dGluZ3MgKmJvYXJkX3NldHRpbmdzOworCWlu
-dCBpOworCisJZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUoZGE4eHhfZGRyY3RsX2JvYXJkX2Nv
-bmZzKTsgaSsrKSB7CisJCWJvYXJkX3NldHRpbmdzID0gJmRhOHh4X2RkcmN0bF9ib2FyZF9jb25m
-c1swXTsKKworCQlpZiAoc3RyY21wKGJvYXJkLCBib2FyZF9zZXR0aW5ncy0+Ym9hcmQpID09IDAp
-CisJCQlyZXR1cm4gYm9hcmRfc2V0dGluZ3MtPnNldHRpbmdzOworCX0KKworCXJldHVybiBOVUxM
-OworfQorCitzdGF0aWMgaW50IGRhOHh4X2RkcmN0bF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlICpwZGV2KQoreworCWNvbnN0IHN0cnVjdCBkYTh4eF9kZHJjdGxfY29uZmlnX2tub2IgKmtu
-b2I7CisJY29uc3Qgc3RydWN0IGRhOHh4X2RkcmN0bF9zZXR0aW5nICpzZXR0aW5nOworCXUzMiBy
-ZWdwcm9wWzJdLCBiYXNlLCBtZW1zaXplLCByZWc7CisJc3RydWN0IGRldmljZV9ub2RlICpub2Rl
-LCAqcGFyZW50OworCXZvaWQgX19pb21lbSAqZGRyY3RsOworCWNvbnN0IGNoYXIgKmJvYXJkOwor
-CXN0cnVjdCBkZXZpY2UgKmRldjsKKwlpbnQgcmV0OworCisJZGV2ID0gJnBkZXYtPmRldjsKKwlu
-b2RlID0gZGV2LT5vZl9ub2RlOworCisJLyogRmluZCB0aGUgYm9hcmQgbmFtZS4gKi8KKwlmb3Ig
-KHBhcmVudCA9IG5vZGU7CisJICAgICAhb2Zfbm9kZV9pc19yb290KHBhcmVudCk7CisJICAgICBw
-YXJlbnQgPSBvZl9nZXRfcGFyZW50KHBhcmVudCkpOworCisJcmV0ID0gb2ZfcHJvcGVydHlfcmVh
-ZF9zdHJpbmcocGFyZW50LCAiY29tcGF0aWJsZSIsICZib2FyZCk7CisJaWYgKHJldCkgeworCQlk
-ZXZfZXJyKGRldiwgInVuYWJsZSB0byByZWFkIHRoZSBzb2MgbW9kZWxcbiIpOworCQlyZXR1cm4g
-cmV0OworCX0KKworCS8qIENoZWNrIGlmIHdlIGhhdmUgc2V0dGluZ3MgZm9yIHRoaXMgYm9hcmQu
-ICovCisJc2V0dGluZyA9IGRhOHh4X2RkcmN0bF9tYXRjaF9ib2FyZChib2FyZCk7CisJaWYgKCFz
-ZXR0aW5nKSB7CisJCWRldl9lcnIoZGV2LCAibm8gc2V0dGluZ3MgZm9yIGJvYXJkICclcydcbiIs
-IGJvYXJkKTsKKwkJcmV0dXJuIC1FSU5WQUw7CisJfQorCisJLyogRmlndXJlIG91dCBob3cgdG8g
-bWFwIHRoZSBtZW1vcnkgZm9yIHRoZSBjb250cm9sbGVyLiAqLworCXJldCA9IG9mX3Byb3BlcnR5
-X3JlYWRfdTMyX2FycmF5KG5vZGUsICJyZWciLCByZWdwcm9wLCAyKTsKKwlpZiAocmV0KSB7CisJ
-CWRldl9lcnIoZGV2LCAidW5hYmxlIHRvIHBhcnNlICdyZWcnIHByb3BlcnR5XG4iKTsKKwkJcmV0
-dXJuIHJldDsKKwl9CisKKwliYXNlID0gcmVncHJvcFswXTsKKwltZW1zaXplID0gcmVncHJvcFsx
-XTsKKworCWRkcmN0bCA9IGlvcmVtYXAoYmFzZSwgbWVtc2l6ZSk7CisJaWYgKCFkZHJjdGwpIHsK
-KwkJZGV2X2VycihkZXYsICJ1bmFibGUgdG8gbWFwIG1lbW9yeSBjb250cm9sbGVyIHJlZ2lzdGVy
-c1xuIik7CisJCXJldHVybiAtRUlPOworCX0KKworCWZvciAoOyBzZXR0aW5nLT5uYW1lOyBzZXR0
-aW5nKyspIHsKKwkJa25vYiA9IGRhOHh4X2RkcmN0bF9tYXRjaF9rbm9iKHNldHRpbmcpOworCQlp
-ZiAoIWtub2IpIHsKKwkJCWRldl93YXJuKGRldiwKKwkJCQkgIm5vIHN1Y2ggY29uZmlnIG9wdGlv
-bjogJXNcbiIsIHNldHRpbmctPm5hbWUpOworCQkJY29udGludWU7CisJCX0KKworCQlpZiAoa25v
-Yi0+cmVnID4gKG1lbXNpemUgLSBzaXplb2YodTMyKSkpIHsKKwkJCWRldl93YXJuKGRldiwKKwkJ
-CQkgInJlZ2lzdGVyIG9mZnNldCBvZiAnJXMnIGV4Y2VlZHMgbWFwcGVkIG1lbW9yeSBzaXplXG4i
-LAorCQkJCSBrbm9iLT5uYW1lKTsKKwkJCWNvbnRpbnVlOworCQl9CisKKwkJcmVnID0gX19yYXdf
-cmVhZGwoZGRyY3RsICsga25vYi0+cmVnKTsKKwkJcmVnICY9IGtub2ItPm1hc2s7CisJCXJlZyB8
-PSBzZXR0aW5nLT52YWwgPDwga25vYi0+b2Zmc2V0OworCisJCWRldl9kYmcoZGV2LCAid3JpdGlu
-ZyAweCUwOHggdG8gJXNcbiIsIHJlZywgc2V0dGluZy0+bmFtZSk7CisKKwkJX19yYXdfd3JpdGVs
-KHJlZywgZGRyY3RsICsga25vYi0+cmVnKTsKKwl9CisKKwlpb3VubWFwKGRkcmN0bCk7CisKKwly
-ZXR1cm4gMDsKK30KKworc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgZGE4eHhfZGRy
-Y3RsX29mX21hdGNoW10gPSB7CisJeyAuY29tcGF0aWJsZSA9ICJ0aSxkYTg1MC1kZHJjdGwiLCB9
-LAorCXsgfSwKK307CisKK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGRhOHh4X2RkcmN0
-bF9kcml2ZXIgPSB7CisJLnByb2JlID0gZGE4eHhfZGRyY3RsX3Byb2JlLAorCS5kcml2ZXIgPSB7
-CisJCS5uYW1lID0gImRhOHh4LWRkcmN0bCIsCisJCS5vZl9tYXRjaF90YWJsZSA9IGRhOHh4X2Rk
-cmN0bF9vZl9tYXRjaCwKKwl9LAorfTsKK21vZHVsZV9wbGF0Zm9ybV9kcml2ZXIoZGE4eHhfZGRy
-Y3RsX2RyaXZlcik7CisKK01PRFVMRV9BVVRIT1IoIkJhcnRvc3ogR29sYXN6ZXdza2kgPGJnb2xh
-c3pld3NraUBiYXlsaWJyZS5jb20+Iik7CitNT0RVTEVfREVTQ1JJUFRJT04oIlRJIGRhOHh4IERE
-UjIvbUREUiBjb250cm9sbGVyIGRyaXZlciIpOworTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOwot
-LSAKMi45LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+
+The da8xx ohci has only one port connected. In hub_control we
+check that the port is 1, or else we bail out early. There is no point
+in passing as argument the port number, if we know, and check that it
+will always be 1.
+
+Simplify functions and callbacks, by removing the port parameter, and
+converting the over current indicatior change form a mask to a flag.
+
+Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/mach-davinci/board-da830-evm.c     |  8 ++++----
+ arch/arm/mach-davinci/board-omapl138-hawk.c |  8 ++++----
+ drivers/usb/host/ohci-da8xx.c               | 29 ++++++++++++++---------------
+ include/linux/platform_data/usb-davinci.h   |  9 ++++-----
+ 4 files changed, 26 insertions(+), 28 deletions(-)
+
+diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
+index b33fc6b..d12fcf5 100644
+--- a/arch/arm/mach-davinci/board-da830-evm.c
++++ b/arch/arm/mach-davinci/board-da830-evm.c
+@@ -50,18 +50,18 @@
+ 
+ static da8xx_ocic_handler_t da830_evm_usb_ocic_handler;
+ 
+-static int da830_evm_usb_set_power(unsigned port, int on)
++static int da830_evm_usb_set_power(int on)
+ {
+ 	gpio_set_value(ON_BD_USB_DRV, on);
+ 	return 0;
+ }
+ 
+-static int da830_evm_usb_get_power(unsigned port)
++static int da830_evm_usb_get_power(void)
+ {
+ 	return gpio_get_value(ON_BD_USB_DRV);
+ }
+ 
+-static int da830_evm_usb_get_oci(unsigned port)
++static int da830_evm_usb_get_oci(void)
+ {
+ 	return !gpio_get_value(ON_BD_USB_OVC);
+ }
+@@ -100,7 +100,7 @@ static int da830_evm_usb_ocic_notify(da8xx_ocic_handler_t handler)
+ 
+ static irqreturn_t da830_evm_usb_ocic_irq(int irq, void *dev_id)
+ {
+-	da830_evm_usb_ocic_handler(&da830_evm_usb11_pdata, 1);
++	da830_evm_usb_ocic_handler(&da830_evm_usb11_pdata);
+ 	return IRQ_HANDLED;
+ }
+ 
+diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
+index c3ab7ea..1d31f45 100644
+--- a/arch/arm/mach-davinci/board-omapl138-hawk.c
++++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
+@@ -189,18 +189,18 @@ static __init void omapl138_hawk_mmc_init(void)
+ 	-1
+ };
+ 
+-static int hawk_usb_set_power(unsigned port, int on)
++static int hawk_usb_set_power(int on)
+ {
+ 	gpio_set_value(DA850_USB1_VBUS_PIN, on);
+ 	return 0;
+ }
+ 
+-static int hawk_usb_get_power(unsigned port)
++static int hawk_usb_get_power(void)
+ {
+ 	return gpio_get_value(DA850_USB1_VBUS_PIN);
+ }
+ 
+-static int hawk_usb_get_oci(unsigned port)
++static int hawk_usb_get_oci(void)
+ {
+ 	return !gpio_get_value(DA850_USB1_OC_PIN);
+ }
+@@ -237,7 +237,7 @@ static int hawk_usb_ocic_notify(da8xx_ocic_handler_t handler)
+ 
+ static irqreturn_t omapl138_hawk_usb_ocic_irq(int irq, void *dev_id)
+ {
+-	hawk_usb_ocic_handler(&omapl138_hawk_usb11_pdata, 1);
++	hawk_usb_ocic_handler(&omapl138_hawk_usb11_pdata);
+ 	return IRQ_HANDLED;
+ }
+ 
+diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
+index 3656d7c..e98066d 100644
+--- a/drivers/usb/host/ohci-da8xx.c
++++ b/drivers/usb/host/ohci-da8xx.c
+@@ -25,8 +25,8 @@
+ static struct clk *usb11_clk;
+ static struct phy *usb11_phy;
+ 
+-/* Over-current indicator change bitmask */
+-static volatile u16 ocic_mask;
++/* Over-current indicator change flag */
++static int ocic_flag;
+ 
+ static int ohci_da8xx_enable(void)
+ {
+@@ -64,14 +64,13 @@ static void ohci_da8xx_disable(void)
+ /*
+  * Handle the port over-current indicator change.
+  */
+-static void ohci_da8xx_ocic_handler(struct da8xx_ohci_root_hub *hub,
+-				    unsigned port)
++static void ohci_da8xx_ocic_handler(struct da8xx_ohci_root_hub *hub)
+ {
+-	ocic_mask |= 1 << port;
++	ocic_flag = 1;
+ 
+ 	/* Once over-current is detected, the port needs to be powered down */
+-	if (hub->get_oci(port) > 0)
+-		hub->set_power(port, 0);
++	if (hub->get_oci() > 0)
++		hub->set_power(0);
+ }
+ 
+ static int ohci_da8xx_init(struct usb_hcd *hcd)
+@@ -147,8 +146,8 @@ static int ohci_da8xx_hub_status_data(struct usb_hcd *hcd, char *buf)
+ {
+ 	int length		= ohci_hub_status_data(hcd, buf);
+ 
+-	/* See if we have OCIC bit set on port 1 */
+-	if (ocic_mask & (1 << 1)) {
++	/* See if we have OCIC flag set */
++	if (ocic_flag) {
+ 		dev_dbg(hcd->self.controller, "over-current indicator change "
+ 			"on port 1\n");
+ 
+@@ -181,15 +180,15 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 		temp = roothub_portstatus(hcd_to_ohci(hcd), wIndex - 1);
+ 
+ 		/* The port power status (PPS) bit defaults to 1 */
+-		if (hub->get_power && hub->get_power(wIndex) == 0)
++		if (hub->get_power && hub->get_power() == 0)
+ 			temp &= ~RH_PS_PPS;
+ 
+ 		/* The port over-current indicator (POCI) bit is always 0 */
+-		if (hub->get_oci && hub->get_oci(wIndex) > 0)
++		if (hub->get_oci && hub->get_oci() > 0)
+ 			temp |=  RH_PS_POCI;
+ 
+ 		/* The over-current indicator change (OCIC) bit is 0 too */
+-		if (ocic_mask & (1 << wIndex))
++		if (ocic_flag)
+ 			temp |=  RH_PS_OCIC;
+ 
+ 		put_unaligned(cpu_to_le32(temp), (__le32 *)buf);
+@@ -213,16 +212,16 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			if (!hub->set_power)
+ 				return -EPIPE;
+ 
+-			return hub->set_power(wIndex, temp) ? -EPIPE : 0;
++			return hub->set_power(temp) ? -EPIPE : 0;
+ 		case USB_PORT_FEAT_C_OVER_CURRENT:
+ 			dev_dbg(dev, "%sPortFeature(%u): %s\n",
+ 				temp ? "Set" : "Clear", wIndex,
+ 				"C_OVER_CURRENT");
+ 
+ 			if (temp)
+-				ocic_mask |= 1 << wIndex;
++				ocic_flag = 1;
+ 			else
+-				ocic_mask &= ~(1 << wIndex);
++				ocic_flag = 0;
+ 			return 0;
+ 		}
+ 	}
+diff --git a/include/linux/platform_data/usb-davinci.h b/include/linux/platform_data/usb-davinci.h
+index 0926e99..3217fbe 100644
+--- a/include/linux/platform_data/usb-davinci.h
++++ b/include/linux/platform_data/usb-davinci.h
+@@ -13,17 +13,16 @@
+ 
+ struct	da8xx_ohci_root_hub;
+ 
+-typedef void (*da8xx_ocic_handler_t)(struct da8xx_ohci_root_hub *hub,
+-				     unsigned port);
++typedef void (*da8xx_ocic_handler_t)(struct da8xx_ohci_root_hub *hub);
+ 
+ /* Passed as the platform data to the OHCI driver */
+ struct	da8xx_ohci_root_hub {
+ 	/* Switch the port power on/off */
+-	int	(*set_power)(unsigned port, int on);
++	int	(*set_power)(int on);
+ 	/* Read the port power status */
+-	int	(*get_power)(unsigned port);
++	int	(*get_power)(void);
+ 	/* Read the port over-current indicator */
+-	int	(*get_oci)(unsigned port);
++	int	(*get_oci)(void);
+ 	/* Over-current indicator change notification (pass NULL to disable) */
+ 	int	(*ocic_notify)(da8xx_ocic_handler_t handler);
+ 
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
