@@ -1,79 +1,54 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [RFC] ARM: memory: da8xx-ddrctl: new driver
-Date: Mon, 24 Oct 2016 11:52:39 -0700
-Message-ID: <CAOi56cXePjssk0AzMz27A_dOdLdJCWGMc86DH9nih5SHe-Eo=g@mail.gmail.com>
-References: <1477327596-16060-1-git-send-email-bgolaszewski@baylibre.com>
- <1477327596-16060-2-git-send-email-bgolaszewski@baylibre.com>
- <20161024170035.GO15620@leverpostej> <7hd1ipzm3h.fsf@baylibre.com>
- <20161024174249.GQ15620@leverpostej> <7hfunly4hn.fsf@baylibre.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 3/7] drm: sunxi: add DE2 HDMI support
+Date: Mon, 24 Oct 2016 15:17:03 +0200
+Message-ID: <20161024131703.exrqt5cqrepwuvkp@lukather>
+References: <cover.1477142934.git.moinejf@free.fr>
+ <36bd5454897c8ab77749e0294e4a4ecc2450dd12.1477142934.git.moinejf@free.fr>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <7hfunly4hn.fsf@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="j2ch3qfkybhcbhss"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4FVXHAAKGQEJZNKS6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <36bd5454897c8ab77749e0294e4a4ecc2450dd12.1477142934.git.moinejf-GANU6spQydw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBPY3QgMjQsIDIwMTYgYXQgMTE6NDEgQU0sIEtldmluIEhpbG1hbiA8a2hpbG1hbkBi
-YXlsaWJyZS5jb20+IHdyb3RlOgo+IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+
-IHdyaXRlczoKPgo+PiBPbiBNb24sIE9jdCAyNCwgMjAxNiBhdCAxMDozNTozMEFNIC0wNzAwLCBL
-ZXZpbiBIaWxtYW4gd3JvdGU6Cj4+PiBIaSBNYXJrLAo+Pj4KPj4+IE1hcmsgUnV0bGFuZCA8bWFy
-ay5ydXRsYW5kQGFybS5jb20+IHdyaXRlczoKPj4+ID4gT24gTW9uLCBPY3QgMjQsIDIwMTYgYXQg
-MDY6NDY6MzZQTSArMDIwMCwgQmFydG9zeiBHb2xhc3pld3NraSB3cm90ZToKPj4+ID4+ICtzdGF0
-aWMgaW50IGRhOHh4X2RkcmN0bF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+
-Pj4gPj4gK3sKPj4+ID4+ICsgY29uc3Qgc3RydWN0IGRhOHh4X2RkcmN0bF9jb25maWdfa25vYiAq
-a25vYjsKPj4+ID4+ICsgY29uc3Qgc3RydWN0IGRhOHh4X2RkcmN0bF9zZXR0aW5nICpzZXR0aW5n
-Owo+Pj4gPj4gKyB1MzIgcmVncHJvcFsyXSwgYmFzZSwgbWVtc2l6ZSwgcmVnOwo+Pj4gPj4gKyBz
-dHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsICpwYXJlbnQ7Cj4+PiA+PiArIHZvaWQgX19pb21lbSAq
-ZGRyY3RsOwo+Pj4gPj4gKyBjb25zdCBjaGFyICpib2FyZDsKPj4+ID4+ICsgc3RydWN0IGRldmlj
-ZSAqZGV2Owo+Pj4gPj4gKyBpbnQgcmV0Owo+Pj4gPj4gKwo+Pj4gPj4gKyBkZXYgPSAmcGRldi0+
-ZGV2Owo+Pj4gPj4gKyBub2RlID0gZGV2LT5vZl9ub2RlOwo+Pj4gPj4gKwo+Pj4gPj4gKyAvKiBG
-aW5kIHRoZSBib2FyZCBuYW1lLiAqLwo+Pj4gPj4gKyBmb3IgKHBhcmVudCA9IG5vZGU7Cj4+PiA+
-PiArICAgICAgIW9mX25vZGVfaXNfcm9vdChwYXJlbnQpOwo+Pj4gPj4gKyAgICAgIHBhcmVudCA9
-IG9mX2dldF9wYXJlbnQocGFyZW50KSk7Cj4+PiA+PiArCj4+PiA+PiArIHJldCA9IG9mX3Byb3Bl
-cnR5X3JlYWRfc3RyaW5nKHBhcmVudCwgImNvbXBhdGlibGUiLCAmYm9hcmQpOwo+Pj4gPj4gKyBp
-ZiAocmV0KSB7Cj4+PiA+PiArICAgICAgICAgZGV2X2VycihkZXYsICJ1bmFibGUgdG8gcmVhZCB0
-aGUgc29jIG1vZGVsXG4iKTsKPj4+ID4+ICsgICAgICAgICByZXR1cm4gcmV0Owo+Pj4gPj4gKyB9
-Cj4+PiA+Cj4+PiA+IEkgY2FuIHNlZSB0aGF0IHlvdSB3YW50IHRvIGV4cG9zZSBzeXNmcyBrbm9i
-cyBmb3IgdGhpcywgYnV0IGlzIGl0IHJlYWxseQo+Pj4gPiBuZWNlc3NhcnkgdG8gbWF0Y2ggYm9h
-cmRzIGxpa2UgdGhpcz8gSXQncyB2ZXJ5IGZyYWdpbGUsIGFuZCBjb21taXRzIHVzCj4+PiA+IHRv
-IG1haW50YWluaW5nIGEgZGF0YWJhc2Ugb2YgYm9hcmQgZGF0YSAoaS5lLiBhIGJvYXJkIGZpbGUp
-Lgo+Pj4gPgo+Pj4gPiBJIGFtIHZlcnkgbXVjaCBub3Qga2VlbiBvbiB0aGF0Lgo+Pj4KPj4+IFRo
-ZSBvcmlnaW5hbCBwcm9wb3NhbFsxXSB3YXMgdG8gY3JlYXRlIERUIHByb3BlcnRpZXMgcmVmbGVj
-dGluZyB0aGUKPj4+IHZhcmlvdXMga25vYnMgaW4gdGhlIEREUiBDb250cm9sbGVyLCBidXQgdGhh
-dCB3YXMgZnJvd25lZCB1cG9uIHNpbmNlCj4+PiB0aGF0IHdhcyBtb3JlIEhXIGNvbmZpZ3VyYXRp
-b24gdGhhbiBoYXJkd2FyZSBkZXNjcmlwdGlvbi4KPj4+Cj4+PiBUaGF0IHJlc3VsdGVkIGluIHRo
-aXMgYXBwcm9hY2ggd2hpY2gga2VlcHMgdGhlIEhXIGNvbmZpZ3VyYXRpb24gdmFsdWVzCj4+PiBp
-biB0aGUgZHJpdmVyLCBhbmQgc2VsZWN0YWJsZSBiYXNlZCBvbiBEVCBjb21wYXRpYmxlLgo+Pj4K
-Pj4+IElNTywgbmVpdGhlciBhcHJvYWNoIGlzIHByZXR0eS4gIEZyb20gYSBEVCBtYWludGFpbmVy
-IHBlcnNwZWN0aXZlLCBjYW4KPj4+IHlvdSBjb21tZW50IG9uIHlvdXIgcHJlZmVyZW5jZT8KPj4K
-Pj4gRnJvbSBteSBQb1YsIGl0IHJlYWxseSBkZXBlbmRzIG9uICp3aHkqIHdlIG5lZWQgdGhpcy4g
-V2hhdCBkb2VzIHRoZQo+PiB0dW5pbmcgZ2FpbiB1cywgYW5kIGlzIGl0IHNwZWNpZmljIHRvIGEg
-Z2l2ZW4gdXNlLWNhc2U/Cj4KPiBUaGlzIGlzIGVzc2VudGlhbGx5IGEgYnVzIGNvbnRyb2xsZXIg
-d2hpY2ggYWxsb3dzIHlvdSB0byBzZXQgcmVsYXRpdmUKPiBwcmlvcml0aWVzIG9mIHRoZSB2YXJp
-b3VzIGJ1cyBtYXN0ZXJzIChDUFUgZGF0YSwgQ1BVIGluc3RydWN0aW9ucywgRE1BCj4gY2hhbm5l
-bHMsIGV0aGVybmV0IE1BQywgU0FUQSwgZGlzcGxheSBjb250cm9sbGVyLCBldGMuIGV0Yy4pCgpT
-Y3JhdGNoIHRoYXQuLi4gSSBnb3QgdGhpcyBvbmUgY29uZnVzZWQgd2l0aCBhIGRpZmZlcmVudCBk
-cml2ZXJzL2J1cwpkcml2ZXIgQmFydG9zeiBpcyBhbHNvIHdvcmtpbmcgb24uIDooCgpUaGlzIG9u
-ZSBpcyBqdXN0IGZvciB0aGUgbWVjaGFuaXNtIHRoYXQgY29udHJvbHMgaG93IGxvbmcgb2xkCihs
-b3ctcHJpb3JpdHkpIHhmZXJzIGluIHRoZSBERFIgY29tbWFuZCBGSUZPIGFyZSBhbGxvd2VkIHRv
-IHNpdCBhcm91bmQKYmVmb3JlIHRoZXkgd2lsbCBiZSBmbHVzaGVkLgoKVGhlIHVzZS1jYXNlIGlz
-IHRoZSBzYW1lIHRob3VnaC4gIFRoZSBkaXNwbGF5IGNvbnRyb2xsZXIgZG9lc24ndCB3b3JrCmF0
-IGhpZ2hlciByZXNvbHV0aW9ucyB3aXRob3V0IHR3ZWFraW5nIHRoaXMgc2V0dGluZy4KClRoZSBx
-dWVzdGlvbiByZW1haW5zIHRob3VnaDogYXMgYSBzeXN0ZW0td2lkZSBzZXR0aW5nLCBzaG91bGQg
-dGhpcyBiZQpjb25maWd1cmVkIHZpYSBEVCAoZWl0aGVyIGJ5IGEgRFQgcHJvcGVydHksIG9yIGJh
-c2VkIG9uIGEgY29tcGF0aWJsZQpzdHJpbmcgaW4gdGhlIGRyaXZlcikgb3Igc2hvdWxkIHRoZSBk
-cml2ZXIgcHJvdmlkZSBhbiBBUEkgdG8gdHdlYWsgaXQuCgpLZXZpbgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--j2ch3qfkybhcbhss
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi,
+
+On Fri, Oct 21, 2016 at 10:08:06AM +0200, Jean-Francois Moine wrote:
+> This patch adds a HDMI driver to the DE2 based Allwinner's SoCs
+> as A83T and H3.
+> Audio and video are supported.
+> 
+> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+
+Output from checkpatch:
+total: 26 errors, 31 warnings, 70 checks, 1458 lines checked
+
+Please run checkpatch before sending your patches.
+
+Apart from that, this looks an awful lot like the designware HDMI
+controller, for which a driver already exists. Any reason to create a
+new driver from scratch?
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--j2ch3qfkybhcbhss--
