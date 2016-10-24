@@ -1,83 +1,55 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [RFC] ARM: memory: da8xx-ddrctl: new driver
-Date: Mon, 24 Oct 2016 11:41:08 -0700
-Message-ID: <7hfunly4hn.fsf@baylibre.com>
-References: <1477327596-16060-1-git-send-email-bgolaszewski@baylibre.com>
- <1477327596-16060-2-git-send-email-bgolaszewski@baylibre.com>
- <20161024170035.GO15620@leverpostej> <7hd1ipzm3h.fsf@baylibre.com>
- <20161024174249.GQ15620@leverpostej>
+From: Sergio Prado <sergio.prado@e-labworks.com>
+Subject: Re: [PATCH v3 3/3] mtd: s3c2410: parse the device configuration from
+ OF node
+Date: Mon, 24 Oct 2016 16:47:38 -0200
+Message-ID: <20161024184738.GA26671@sprado-desktop>
+References: <1476999766-32526-1-git-send-email-sergio.prado@e-labworks.com>
+ <1476999766-32526-4-git-send-email-sergio.prado@e-labworks.com>
+ <20161024150201.01952f67@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20161024174249.GQ15620@leverpostej> (Mark Rutland's message of
- "Mon, 24 Oct 2016 18:42:49 +0100")
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161024150201.01952f67@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: kgene@kernel.org, krzk@kernel.org, javier@osg.samsung.com, linux@armlinux.org.uk, linux@simtec.co.uk, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-TWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4gd3JpdGVzOgoKPiBPbiBNb24sIE9j
-dCAyNCwgMjAxNiBhdCAxMDozNTozMEFNIC0wNzAwLCBLZXZpbiBIaWxtYW4gd3JvdGU6Cj4+IEhp
-IE1hcmssCj4+IAo+PiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPiB3cml0ZXM6
-Cj4+ID4gT24gTW9uLCBPY3QgMjQsIDIwMTYgYXQgMDY6NDY6MzZQTSArMDIwMCwgQmFydG9zeiBH
-b2xhc3pld3NraSB3cm90ZToKPj4gPj4gK3N0YXRpYyBpbnQgZGE4eHhfZGRyY3RsX3Byb2JlKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4+ID4+ICt7Cj4+ID4+ICsJY29uc3Qgc3RydWN0
-IGRhOHh4X2RkcmN0bF9jb25maWdfa25vYiAqa25vYjsKPj4gPj4gKwljb25zdCBzdHJ1Y3QgZGE4
-eHhfZGRyY3RsX3NldHRpbmcgKnNldHRpbmc7Cj4+ID4+ICsJdTMyIHJlZ3Byb3BbMl0sIGJhc2Us
-IG1lbXNpemUsIHJlZzsKPj4gPj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsICpwYXJlbnQ7
-Cj4+ID4+ICsJdm9pZCBfX2lvbWVtICpkZHJjdGw7Cj4+ID4+ICsJY29uc3QgY2hhciAqYm9hcmQ7
-Cj4+ID4+ICsJc3RydWN0IGRldmljZSAqZGV2Owo+PiA+PiArCWludCByZXQ7Cj4+ID4+ICsKPj4g
-Pj4gKwlkZXYgPSAmcGRldi0+ZGV2Owo+PiA+PiArCW5vZGUgPSBkZXYtPm9mX25vZGU7Cj4+ID4+
-ICsKPj4gPj4gKwkvKiBGaW5kIHRoZSBib2FyZCBuYW1lLiAqLwo+PiA+PiArCWZvciAocGFyZW50
-ID0gbm9kZTsKPj4gPj4gKwkgICAgICFvZl9ub2RlX2lzX3Jvb3QocGFyZW50KTsKPj4gPj4gKwkg
-ICAgIHBhcmVudCA9IG9mX2dldF9wYXJlbnQocGFyZW50KSk7Cj4+ID4+ICsKPj4gPj4gKwlyZXQg
-PSBvZl9wcm9wZXJ0eV9yZWFkX3N0cmluZyhwYXJlbnQsICJjb21wYXRpYmxlIiwgJmJvYXJkKTsK
-Pj4gPj4gKwlpZiAocmV0KSB7Cj4+ID4+ICsJCWRldl9lcnIoZGV2LCAidW5hYmxlIHRvIHJlYWQg
-dGhlIHNvYyBtb2RlbFxuIik7Cj4+ID4+ICsJCXJldHVybiByZXQ7Cj4+ID4+ICsJfQo+PiA+Cj4+
-ID4gSSBjYW4gc2VlIHRoYXQgeW91IHdhbnQgdG8gZXhwb3NlIHN5c2ZzIGtub2JzIGZvciB0aGlz
-LCBidXQgaXMgaXQgcmVhbGx5Cj4+ID4gbmVjZXNzYXJ5IHRvIG1hdGNoIGJvYXJkcyBsaWtlIHRo
-aXM/IEl0J3MgdmVyeSBmcmFnaWxlLCBhbmQgY29tbWl0cyB1cwo+PiA+IHRvIG1haW50YWluaW5n
-IGEgZGF0YWJhc2Ugb2YgYm9hcmQgZGF0YSAoaS5lLiBhIGJvYXJkIGZpbGUpLgo+PiA+Cj4+ID4g
-SSBhbSB2ZXJ5IG11Y2ggbm90IGtlZW4gb24gdGhhdC4KPj4gCj4+IFRoZSBvcmlnaW5hbCBwcm9w
-b3NhbFsxXSB3YXMgdG8gY3JlYXRlIERUIHByb3BlcnRpZXMgcmVmbGVjdGluZyB0aGUKPj4gdmFy
-aW91cyBrbm9icyBpbiB0aGUgRERSIENvbnRyb2xsZXIsIGJ1dCB0aGF0IHdhcyBmcm93bmVkIHVw
-b24gc2luY2UKPj4gdGhhdCB3YXMgbW9yZSBIVyBjb25maWd1cmF0aW9uIHRoYW4gaGFyZHdhcmUg
-ZGVzY3JpcHRpb24uCj4+IAo+PiBUaGF0IHJlc3VsdGVkIGluIHRoaXMgYXBwcm9hY2ggd2hpY2gg
-a2VlcHMgdGhlIEhXIGNvbmZpZ3VyYXRpb24gdmFsdWVzCj4+IGluIHRoZSBkcml2ZXIsIGFuZCBz
-ZWxlY3RhYmxlIGJhc2VkIG9uIERUIGNvbXBhdGlibGUuCj4+IAo+PiBJTU8sIG5laXRoZXIgYXBy
-b2FjaCBpcyBwcmV0dHkuICBGcm9tIGEgRFQgbWFpbnRhaW5lciBwZXJzcGVjdGl2ZSwgY2FuCj4+
-IHlvdSBjb21tZW50IG9uIHlvdXIgcHJlZmVyZW5jZT8KPgo+IEZyb20gbXkgUG9WLCBpdCByZWFs
-bHkgZGVwZW5kcyBvbiAqd2h5KiB3ZSBuZWVkIHRoaXMuIFdoYXQgZG9lcyB0aGUKPiB0dW5pbmcg
-Z2FpbiB1cywgYW5kIGlzIGl0IHNwZWNpZmljIHRvIGEgZ2l2ZW4gdXNlLWNhc2U/CgpUaGlzIGlz
-IGVzc2VudGlhbGx5IGEgYnVzIGNvbnRyb2xsZXIgd2hpY2ggYWxsb3dzIHlvdSB0byBzZXQgcmVs
-YXRpdmUKcHJpb3JpdGllcyBvZiB0aGUgdmFyaW91cyBidXMgbWFzdGVycyAoQ1BVIGRhdGEsIENQ
-VSBpbnN0cnVjdGlvbnMsIERNQQpjaGFubmVscywgZXRoZXJuZXQgTUFDLCBTQVRBLCBkaXNwbGF5
-IGNvbnRyb2xsZXIsIGV0Yy4gZXRjLikKClRoZSByZWFzb24gYmVoaW5kIHRoaXMgd29yayBpbiB0
-aGUgZmlyc3QgcGxhY2UgaXMgYSBzcGVjaWZpYwp1c2UtY2FzZS4gTmFtZWx5LCBhIGRpc3BsYXkg
-Y29udHJvbGxlciBvbiB0aGlzIFNvQyBuZWVkcyBpdHMgYnVzCnByaW9yaXR5IHRvIGJlIGFkanVz
-dGVkIGluIG9yZGVyIHRvIHdvcmsgcmVsaWFibHkgYXQgY2VydGFpbgpyZXNvbHV0aW9ucwoKVGhl
-IHZlbmRvciBCU1BzIGZvciB0aGlzIGNoaXAganVzdCBzZXR1cCBoYXJkLWNvZGVkIHZhbHVlcyBp
-biB0aGUgYm9hcmQKZmlsZXMgKGRhdmluY2ksIHN0aWxsIGhhc24ndCBmdWxseSBtaWdyYXRlZCB0
-byBEVCkgYnV0IHdlJ3JlIHRyeWluZyB0bwpmaWd1cmUgb3V0IGEgYmV0dGVyIHdheS4KClRoZSBm
-aXJzdCBhcHByb2FjaCB3YXMgZXhwb3NpbmcgRFQga25vYnMgZm9yIGFsbCB0aGUgcHJpb3JpdGll
-cy4gIFRoZQpzZWNvbmQgYXBwcm9hY2ggd2FzIHRoZSBvdGhlciBleHRlcm1lbSBhbGxvd2luZyBT
-b0Mgb3IgYm9hcmQtc3BlY2lmaWMKaGFyZC1jb2RlZCB2YWx1ZXMuCgpBbm90aGVyIHBvc3NpYmxl
-IGFwcHJvYWNoIHdvdWxkIGJlIGdldHRpbmcgcmlkIG9mIHRoZSBoYXJkLWNvZGVkIHZhbHVlcwph
-bmQgZXhwb3J0aW5nIGFuIEFQSSBmcm9tIHRoZSBkcml2ZXIgdG8gc2V0IHRoZSBwcmlvcml0aWVz
-IG9mIHRoZQphdmFpbGFibGUgbWFzdGVycyBhdCBydW4tdGltZS4gIEknbSBub3QgYXdhcnllIGFu
-eSBjdXJyZW50IG5lZWQgb2YKY2hhbmdpbmcgdGhpbmdzIGF0IHJ1bi10aW1lLCBidXQgaXQgc2Vl
-bXMgcG90ZW50aWFsbHkgdXNlZnVsIGFzIHdlbGwuCgpCYXNlZCBvbiBhbGwgdGhpcyBkaXNjdXNz
-aW9uLCBJJ20gc3RhcnRpbmcgdG8gbGVhbiB0b3dhcmRzIHRoZSBydW50aW1lCkFQSSBhcHByb2Fj
-aCwgYnV0IGFtIGhvcGluZyBmb3Igc29tZSBzdWdnZXN0aW9ucy4KCktldmluCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, Oct 24, 2016 at 03:02:01PM +0200, Boris Brezillon wrote:
+> > +static int s3c2410_nand_setup_data_interface(struct mtd_info *mtd,
+> > +					     const struct nand_data_interface *conf,
+> > +					     bool check_only)
+> > +{
+> > +	struct s3c2410_nand_info *info = s3c2410_nand_mtd_toinfo(mtd);
+> > +	struct s3c2410_platform_nand *pdata = info->platform;
+> > +	const struct nand_sdr_timings *timings;
+> > +	int tacls;
+> > +
+> > +	timings = nand_get_sdr_timings(conf);
+> > +	if (IS_ERR(timings))
+> > +		return -ENOTSUPP;
+> > +
+> > +	tacls = timings->tCLS_min - timings->tWP_min;
+> > +	if (tacls < 0)
+> > +		tacls = 0;
+> > +
+> > +	pdata->tacls  = DIV_ROUND_UP(tacls, 1000);
+> > +	pdata->twrph0 = DIV_ROUND_UP(timings->tWP_min, 1000);
+> > +	pdata->twrph1 = DIV_ROUND_UP(timings->tCLH_min, 1000);
+> 
+> You seem to only apply the timings in s3c2410_nand_setrate(), which is
+> only called at probe time or on a cpufreq even, but the core can change
+> timings at runtime (this is what happens each time you reset the chip).
+> 
+> To support that you have 2 options:
+>  - apply the timings in ->select_chip()
+>  - apply the timings here
+
+Right. As far as I understood, ->setup_data_interface() will be called
+when MTD core change timings at runtime, so it is enough to apply the
+timings in the end of ->setup_data_interface()?
+
+Thanks,
+
+Sergio Prado
