@@ -1,62 +1,69 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm64: arch_timer: Add device tree binding for
- hisilicon-161x01 erratum
-Date: Mon, 24 Oct 2016 09:36:20 +0100
-Message-ID: <3a29c03a-2da1-7bfe-28ff-21dada50ee8d@arm.com>
-References: <962ea92f-870b-e1d0-5bb7-1a6d66c35122@huawei.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 1/5] powerpc/mpc85xx: Update TMU device tree node for
+ T1040/T1042
+Date: Mon, 24 Oct 2016 16:36:55 +0800
+Message-ID: <20161024083654.GB30578@tiger>
+References: <1475995626-14049-1-git-send-email-hongtao.jia@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <962ea92f-870b-e1d0-5bb7-1a6d66c35122-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1475995626-14049-1-git-send-email-hongtao.jia-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jia Hongtao <hongtao.jia-3arQi8VN3Tc@public.gmane.org>
+Cc: rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/10/16 04:21, Ding Tianhong wrote:
-> This erratum describes a bug in logic outside the core, so MIDR can't be
-> used to identify its presence, and reading an SoC-specific revision
-> register from common arch timer code would be awkward.  So, describe it
-> in the device tree.
+On Sun, Oct 09, 2016 at 02:47:02PM +0800, Jia Hongtao wrote:
+> From: Hongtao Jia <hongtao.jia-3arQi8VN3Tc@public.gmane.org>
 > 
-> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> SoC compatible string and endianness property are added according to the
+> new bindings.
+
+The commit log doesn't seem to match the actual changes.  Same for patch
+2/5.
+
+Shawn
+
+> 
+> Signed-off-by: Jia Hongtao <hongtao.jia-3arQi8VN3Tc@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/arch_timer.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+> Changes for V2:
+> * Rebase on latest linux-next tree (next-20161006).
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> index ef5fbe9..26bc837 100644
-> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> @@ -31,6 +31,12 @@ to deliver its interrupts via SPIs.
->    This also affects writes to the tval register, due to the implicit
->    counter read.
+>  arch/powerpc/boot/dts/fsl/t1040si-post.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> +- hisilicon,erratum-161x01 : A boolean property. Indicates the presence of
-> +  QorIQ erratum 161201, which says that reading the counter is
-
-Other than the copy/paste of the FSL erratum, please document the actual
-erratum number. Is that 161x01 or 161201?
-
-> +  unreliable unless the small range of value is returned by back-to-back reads.
-
-That's a detail that doesn't belong in the DT, but that would be much
-better next to the code doing the actual handling.
-
-> +  This also affects writes to the tval register, due to the implicit
-> +  counter read.
-> +
->  ** Optional properties:
+> diff --git a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
+> index 44e399b..145c7f4 100644
+> --- a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
+> @@ -526,7 +526,7 @@
+>  
+>  				       0x00030000 0x00000012
+>  				       0x00030001 0x0000001d>;
+> -		#thermal-sensor-cells = <0>;
+> +		#thermal-sensor-cells = <1>;
+>  	};
+>  
+>  	thermal-zones {
+> @@ -534,7 +534,7 @@
+>  			polling-delay-passive = <1000>;
+>  			polling-delay = <5000>;
+>  
+> -			thermal-sensors = <&tmu>;
+> +			thermal-sensors = <&tmu 2>;
+>  
+>  			trips {
+>  				cpu_alert: cpu-alert {
+> -- 
+> 2.1.0.27.g96db324
 > 
->  - arm,cpu-registers-not-fw-configured : Firmware does not initialize
 > 
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
