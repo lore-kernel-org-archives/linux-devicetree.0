@@ -1,27 +1,31 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2] pinctrl: stm32: move gpio irqs binding to optional
-Date: Mon, 24 Oct 2016 01:56:25 +0200
-Message-ID: <CACRpkdYne7Kjk_Bw-j6E6SPvx4z7G_5AzfHwYJi70F=DvguAxw@mail.gmail.com>
-References: <1476970012-7838-1-git-send-email-alexandre.torgue@st.com> <1476970012-7838-3-git-send-email-alexandre.torgue@st.com>
+Subject: Re: [PATCH v3 2/6] pinctrl: sunxi: Support generic binding
+Date: Mon, 24 Oct 2016 02:02:51 +0200
+Message-ID: <CACRpkdbCiVzAuW=zmkr4MmjyA0___58VcrLp2WQmYV88Eq15mA@mail.gmail.com>
+References: <cover.f893b02a9f816dad8fad3986672b05c4b211e2b1.1476971126.git-series.maxime.ripard@free-electrons.com>
+ <519ec867509f8033d9235a61f7979bd698906ab5.1476971126.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1476970012-7838-3-git-send-email-alexandre.torgue@st.com>
+In-Reply-To: <519ec867509f8033d9235a61f7979bd698906ab5.1476971126.git-series.maxime.ripard@free-electrons.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre TORGUE <alexandre.torgue@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 20, 2016 at 3:26 PM, Alexandre TORGUE
-<alexandre.torgue@st.com> wrote:
+On Thu, Oct 20, 2016 at 3:49 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
 
-> stm32 pinctrl driver could be probed even if no interrupt controller
-> is defined to manage gpio irqs. Entries related to gpio irq management
-> are moved to optional.
+> Our bindings are mostly irrelevant now that we have generic pinctrl
+> bindings that cover exactly the same uses cases.
 >
-> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+> Add support for the new ones, and obviously keep our old binding support in
+> order to keep the ABI stable.
+>
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-Patch applied for fixes.
+Patch applied.
 
 Yours,
 Linus Walleij
