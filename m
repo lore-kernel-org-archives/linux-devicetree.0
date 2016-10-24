@@ -1,78 +1,77 @@
-From: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: FW: [PATCH] mtk-vcodec: fix some smatch warnings
-Date: Mon, 24 Oct 2016 11:49:35 +0800
-Message-ID: <1477280975.10501.16.camel@mtksdaap41>
-References: <066110a3574ef835ba47a0996343474288da72cc.1477058315.git.mchehab@s-opensource.com>
-         <6D1A1B40F9E1B64689A7C1952F8B336792FED2F0@mtkmbs08n1>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v3] pinctrl: Add SX150X GPIO Extender Pinctrl Driver
+Date: Sun, 23 Oct 2016 21:51:09 -0700
+Message-ID: <CAHQ1cqGLQ=DdhXg1ebkgBbLN8P2P8BEDrGGTx9_r+6=Wy3uUWA@mail.gmail.com>
+References: <1477040998-2016-1-git-send-email-narmstrong@baylibre.com>
+ <CAHQ1cqESoRdeHyvP=m=8F_VwiaYL+wbjFoNa6KvWBGfijhcRjg@mail.gmail.com> <CACRpkdbwqFRtFN1gx1G7BuFe44mvPyCSeoQ5g9_FR11j_ZO4ug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6D1A1B40F9E1B64689A7C1952F8B336792FED2F0@mtkmbs08n1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Cc: daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbwqFRtFN1gx1G7BuFe44mvPyCSeoQ5g9_FR11j_ZO4ug@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Peter Rosin <peda@axentia.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Roland Stigge <stigge@antcom.de>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Oct 23, 2016 at 3:47 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Sun, Oct 23, 2016 at 4:50 AM, Andrey Smirnov
+> <andrew.smirnov@gmail.com> wrote:
+>> On Fri, Oct 21, 2016 at 2:09 AM, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>> Since the I2C sx150x GPIO expander driver uses platform_data to manage
+>>> the pins configurations, rewrite the driver as a pinctrl driver using
+>>> pinconf to get/set pin configurations from DT or debugfs.
+>>>
+>>> The pinctrl driver is functionnally equivalent as the gpio-only driver
+>>> and can use DT for pinconf. The platform_data confirmation is dropped.
+>>>
+>>> This patchset removed the gpio-only driver and selects the Pinctrl driver
+>>> config instead. This patchset also migrates the gpio dt-bindings to pinctrl
+>>> and add the pinctrl optional properties.
+>>>
+>>> The driver was tested with a SX1509 device on a BeagleBone black with
+>>> interrupt support and on an X86_64 machine over an I2C to USB converter.
+>>>
+>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> (...)
+>
+>>> +               ret = gpiochip_irqchip_add(&pctl->gpio,
+>>> +                                          &pctl->irq_chip, 0,
+>>> +                                          handle_edge_irq, IRQ_TYPE_EDGE_BOTH);
+>>
+>> Adding irqchip with IRQ_TYPE_EDGE_BOTH triggers a WARN in
+>> drivers/gpio/gpiolib.c:1671, on a custom Vybrid board that I have with
+>> the chip, so maybe it should be replaced with IRQ_TYPE_NONE? That's
+>> what I did for my testing and with that change
+>
+> I fixed this up when applying. It is corect, it should always be IRQ_TYPE_NONE
+> unless it is a very old driver using boardfiles. The proper type is set up
+> when the driver using it requests the IRQ.
+>
+> Some drivers also need to set the default handler to handle_bad_irq
+> and then also set that up in the irqchip .set_type() callback, especially
+> those hardwares that have an ACK register for edge IRQs so that a second
+> edge irq can come in when handling a first edge IRQ. Level IRQs don't
+> have this problem for obvious reasons, so we need to select between
+> handle_edge_irq() or handle_level_irq() on these hardwares.
+>
+> Could you or Neil or both check if this applies to sx150x?
 
+These chips only support edge triggered interrupts, so I doesn't seem
+to me that it does. However, trying to answer that question lead me to
+read IRQ related code of the driver, some of which didn't make as much
+sense as I'd like it to. It may be due to my ignorance of how some of
+the irqchip internals work, but I'll mention it anyway just in case.
 
-> Fix this bug:
-> 	drivers/media/platform/mtk-vcodec/vdec_drv_if.c:38 vdec_if_init() info: ignoring unreachable code.
-> 
-> With is indeed a real problem that prevents the driver to work!
-> 
-> While here, also remove an used var, as reported by smatch:
-> 
-> 	drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c: In function 'mtk_vcodec_init_dec_pm':
-> 	drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c:29:17: warning: variable 'dev' set but not used [-Wunused-but-set-variable]
-> 	  struct device *dev;
-> 	                 ^~~
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+It seem strange to me that the driver uses "handle_edge_irq", given
+how none of the individual interrupts seem to require any ACKing,
+since it is all handled in sx150x_irq_thread_fn(), line 533. More so,
+I had trouble finding who/where sets .irq_ack() callback, which AFAIU
+is mandatory for handle_edge_irq().
 
-Acked-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c | 2 --
->  drivers/media/platform/mtk-vcodec/vdec_drv_if.c       | 1 +
->  2 files changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c
-> index 18182f5676d8..79ca03ac449c 100644
-> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c
-> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c
-> @@ -26,14 +26,12 @@ int mtk_vcodec_init_dec_pm(struct mtk_vcodec_dev *mtkdev)  {
->  	struct device_node *node;
->  	struct platform_device *pdev;
-> -	struct device *dev;
->  	struct mtk_vcodec_pm *pm;
->  	int ret = 0;
->  
->  	pdev = mtkdev->plat_dev;
->  	pm = &mtkdev->pm;
->  	pm->mtkdev = mtkdev;
-> -	dev = &pdev->dev;
->  	node = of_parse_phandle(pdev->dev.of_node, "mediatek,larb", 0);
->  	if (!node) {
->  		mtk_v4l2_err("of_parse_phandle mediatek,larb fail!"); diff --git a/drivers/media/platform/mtk-vcodec/vdec_drv_if.c b/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
-> index 3cb04ef45144..9813b2ffd5fa 100644
-> --- a/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
-> +++ b/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
-> @@ -31,6 +31,7 @@ int vdec_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
->  	switch (fourcc) {
->  	case V4L2_PIX_FMT_H264:
->  	case V4L2_PIX_FMT_VP8:
-> +		break;
->  	default:
->  		return -EINVAL;
->  	}
-> --
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-media" in the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Unfortunately sx150x HW setup that I have doesn't permit to do any
+testing of IRQ functionality (the chip is mostly used as GPO), so I
+wasn't able to experiment with any of the code in question and shed
+any light on my confusion. Apologies if it is just a false alarm.
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Andrey Smirnov
