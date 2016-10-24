@@ -1,86 +1,409 @@
-From: Zach Brown <zach.brown@ni.com>
-Subject: [RFC v3 2/2] mmc: sdhci: Ignore capability register when it comes to speeds and use DT binding instead when sdhci-cap-speed-modes-broken is set.
-Date: Mon, 24 Oct 2016 14:04:10 -0500
-Message-ID: <1477335850-14945-3-git-send-email-zach.brown@ni.com>
-References: <1477335850-14945-1-git-send-email-zach.brown@ni.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1477335850-14945-1-git-send-email-zach.brown@ni.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: ulf.hansson@linaro.org
-Cc: adrian.hunter@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zach.brown@ni.com
+From: Jonathan Richardson <jonathan.richardson@broadcom.com>
+Subject: [PATCH v1 2/3] nvmem: Add the Broadcom OTP controller driver
+Date: Mon, 24 Oct 2016 12:12:03 -0700
+Message-ID: <1477336324-10543-3-git-send-email-jonathan.richardson@broadcom.com>
+References: <1477336324-10543-1-git-send-email-jonathan.richardson@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477336324-10543-1-git-send-email-jonathan.richardson@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Jonathan Richardson <jonathan.richardson@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <scott.branden@broadcom.com>, Oza Pawandeep <oza@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-When the sdhci-cap-speed-modes-broken DT property is set, the driver
-will ignore the bits of the capability registers that correspond to
-speed modes.
+From: Jonathan Richardson <jonathar@broadcom.com>
 
-Signed-off-by: Zach Brown <zach.brown@ni.com>
+Add support for 32 and 64-bit versions of Broadcom's On-Chip OTP
+controller. These controllers are used on SoC's such as Cygnus and
+Stingray.
+
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Tested-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Signed-off-by: Oza Pawandeep <oza@broadcom.com>
+Signed-off-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
 ---
- drivers/mmc/host/sdhci.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ drivers/nvmem/Kconfig     |  12 ++
+ drivers/nvmem/Makefile    |   2 +
+ drivers/nvmem/bcm-ocotp.c | 335 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 349 insertions(+)
+ create mode 100644 drivers/nvmem/bcm-ocotp.c
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 1e25b01..a17c47e 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -22,6 +22,7 @@
- #include <linux/scatterlist.h>
- #include <linux/regulator/consumer.h>
- #include <linux/pm_runtime.h>
-+#include <linux/of.h>
+diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+index ba140ea..06935a7 100644
+--- a/drivers/nvmem/Kconfig
++++ b/drivers/nvmem/Kconfig
+@@ -80,6 +80,18 @@ config ROCKCHIP_EFUSE
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called nvmem_rockchip_efuse.
  
- #include <linux/leds.h>
- 
-@@ -2991,6 +2992,7 @@ static int sdhci_set_dma_mask(struct sdhci_host *host)
- void __sdhci_read_caps(struct sdhci_host *host, u16 *ver, u32 *caps, u32 *caps1)
- {
- 	u16 v;
-+	unsigned int speed_cap_broken = false;
- 
- 	if (host->read_caps)
- 		return;
-@@ -3005,18 +3007,37 @@ void __sdhci_read_caps(struct sdhci_host *host, u16 *ver, u32 *caps, u32 *caps1)
- 
- 	sdhci_do_reset(host, SDHCI_RESET_ALL);
- 
-+	if (of_property_read_bool(mmc_dev(host->mmc)->of_node,
-+				  "sdhci-cap-speed-modes-broken"))
-+		speed_cap_broken = true;
++config NVMEM_BCM_OCOTP
++	tristate "Broadcom On-Chip OTP Controller support"
++	depends on ARCH_BCM_IPROC || COMPILE_TEST
++	depends on HAS_IOMEM
++	default ARCH_BCM_IPROC
++	help
++	  Say y here to enable read/write access to the Broadcom OTP
++	  controller.
 +
- 	v = ver ? *ver : sdhci_readw(host, SDHCI_HOST_VERSION);
- 	host->version = (v & SDHCI_SPEC_VER_MASK) >> SDHCI_SPEC_VER_SHIFT;
++	  This driver can also be built as a module. If so, the module
++	  will be called nvmem-bcm-ocotp.
++
+ config NVMEM_SUNXI_SID
+ 	tristate "Allwinner SoCs SID support"
+ 	depends on ARCH_SUNXI
+diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+index 8f942a0..71781ca 100644
+--- a/drivers/nvmem/Makefile
++++ b/drivers/nvmem/Makefile
+@@ -6,6 +6,8 @@ obj-$(CONFIG_NVMEM)		+= nvmem_core.o
+ nvmem_core-y			:= core.o
  
- 	if (host->quirks & SDHCI_QUIRK_MISSING_CAPS)
- 		return;
- 
--	host->caps = caps ? *caps : sdhci_readl(host, SDHCI_CAPABILITIES);
-+	if (caps)
-+		host->caps = *caps;
-+	else {
-+		host->caps = sdhci_readl(host, SDHCI_CAPABILITIES);
-+		if (speed_cap_broken)
-+			host->caps &= ~SDHCI_CAN_DO_HISPD;
+ # Devices
++obj-$(CONFIG_NVMEM_BCM_OCOTP)	+= nvmem-bcm-ocotp.o
++nvmem-bcm-ocotp-y		:= bcm-ocotp.o
+ obj-$(CONFIG_NVMEM_IMX_OCOTP)	+= nvmem-imx-ocotp.o
+ nvmem-imx-ocotp-y		:= imx-ocotp.o
+ obj-$(CONFIG_NVMEM_LPC18XX_EEPROM)	+= nvmem_lpc18xx_eeprom.o
+diff --git a/drivers/nvmem/bcm-ocotp.c b/drivers/nvmem/bcm-ocotp.c
+new file mode 100644
+index 0000000..646cadb
+--- /dev/null
++++ b/drivers/nvmem/bcm-ocotp.c
+@@ -0,0 +1,335 @@
++/*
++ * Copyright (C) 2016 Broadcom
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/nvmem-provider.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++
++/*
++ * # of tries for OTP Status. The time to execute a command varies. The slowest
++ * commands are writes which also vary based on the # of bits turned on. Writing
++ * 0xffffffff takes ~3800 us.
++ */
++#define OTPC_RETRIES                 5000
++
++/* Sequence to enable OTP program */
++#define OTPC_PROG_EN_SEQ             { 0xf, 0x4, 0x8, 0xd }
++
++/* OTPC Commands */
++#define OTPC_CMD_READ                0x0
++#define OTPC_CMD_OTP_PROG_ENABLE     0x2
++#define OTPC_CMD_OTP_PROG_DISABLE    0x3
++#define OTPC_CMD_PROGRAM             0xA
++
++/* OTPC Status Bits */
++#define OTPC_STAT_CMD_DONE           BIT(1)
++#define OTPC_STAT_PROG_OK            BIT(2)
++
++/* OTPC register definition */
++#define OTPC_MODE_REG_OFFSET         0x0
++#define OTPC_MODE_REG_OTPC_MODE      0
++#define OTPC_COMMAND_OFFSET          0x4
++#define OTPC_COMMAND_COMMAND_WIDTH   6
++#define OTPC_CMD_START_OFFSET        0x8
++#define OTPC_CMD_START_START         0
++#define OTPC_CPU_STATUS_OFFSET       0xc
++#define OTPC_CPUADDR_REG_OFFSET      0x28
++#define OTPC_CPUADDR_REG_OTPC_CPU_ADDRESS_WIDTH 16
++#define OTPC_CPU_WRITE_REG_OFFSET    0x2c
++
++#define OTPC_CMD_MASK  (BIT(OTPC_COMMAND_COMMAND_WIDTH) - 1)
++#define OTPC_ADDR_MASK (BIT(OTPC_CPUADDR_REG_OTPC_CPU_ADDRESS_WIDTH) - 1)
++
++
++struct otpc_map {
++	/* in words. */
++	u32 otpc_row_size;
++	/* 128 bit row / 4 words support. */
++	u16 data_r_offset[4];
++	/* 128 bit row / 4 words support. */
++	u16 data_w_offset[4];
++};
++
++static struct otpc_map otp_map = {
++	.otpc_row_size = 1,
++	.data_r_offset = {0x10},
++	.data_w_offset = {0x2c},
++};
++
++static struct otpc_map otp_map_v2 = {
++	.otpc_row_size = 2,
++	.data_r_offset = {0x10, 0x5c},
++	.data_w_offset = {0x2c, 0x64},
++};
++
++struct otpc_priv {
++	struct device       *dev;
++	void __iomem        *base;
++	struct otpc_map     *map;
++	struct nvmem_config *config;
++};
++
++static inline void set_command(void __iomem *base, u32 command)
++{
++	writel(command & OTPC_CMD_MASK, base + OTPC_COMMAND_OFFSET);
++}
++
++static inline void set_cpu_address(void __iomem *base, u32 addr)
++{
++	writel(addr & OTPC_ADDR_MASK, base + OTPC_CPUADDR_REG_OFFSET);
++}
++
++static inline void set_start_bit(void __iomem *base)
++{
++	writel(1 << OTPC_CMD_START_START, base + OTPC_CMD_START_OFFSET);
++}
++
++static inline void reset_start_bit(void __iomem *base)
++{
++	writel(0, base + OTPC_CMD_START_OFFSET);
++}
++
++static inline void write_cpu_data(void __iomem *base, u32 value)
++{
++	writel(value, base + OTPC_CPU_WRITE_REG_OFFSET);
++}
++
++static int poll_cpu_status(void __iomem *base, u32 value)
++{
++	u32 status;
++	u32 retries;
++
++	for (retries = 0; retries < OTPC_RETRIES; retries++) {
++		status = readl(base + OTPC_CPU_STATUS_OFFSET);
++		if (status & value)
++			break;
++		udelay(1);
 +	}
- 
- 	if (host->version < SDHCI_SPEC_300)
- 		return;
- 
--	host->caps1 = caps1 ? *caps1 : sdhci_readl(host, SDHCI_CAPABILITIES_1);
-+	if (caps1)
-+		host->caps1 = *caps1;
-+	else {
-+		host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
-+		if (speed_cap_broken)
-+			host->caps1 &= ~(SDHCI_SUPPORT_SDR50 |
-+					 SDHCI_SUPPORT_SDR104 |
-+					 SDHCI_SUPPORT_DDR50 |
-+					 SDHCI_SUPPORT_HS400);
++	if (retries == OTPC_RETRIES)
++		return -EAGAIN;
++
++	return 0;
++}
++
++static int enable_ocotp_program(void __iomem *base)
++{
++	static const u32 vals[] = OTPC_PROG_EN_SEQ;
++	int i;
++	int ret;
++
++	/* Write the magic sequence to enable programming */
++	set_command(base, OTPC_CMD_OTP_PROG_ENABLE);
++	for (i = 0; i < ARRAY_SIZE(vals); i++) {
++		write_cpu_data(base, vals[i]);
++		set_start_bit(base);
++		ret = poll_cpu_status(base, OTPC_STAT_CMD_DONE);
++		reset_start_bit(base);
++		if (ret)
++			return ret;
 +	}
- }
- EXPORT_SYMBOL_GPL(__sdhci_read_caps);
- 
++
++	return poll_cpu_status(base, OTPC_STAT_PROG_OK);
++}
++
++static int disable_ocotp_program(void __iomem *base)
++{
++	int ret;
++
++	set_command(base, OTPC_CMD_OTP_PROG_DISABLE);
++	set_start_bit(base);
++	ret = poll_cpu_status(base, OTPC_STAT_PROG_OK);
++	reset_start_bit(base);
++
++	return ret;
++}
++
++static int bcm_otpc_read(void *context, unsigned int offset, void *val,
++	size_t bytes)
++{
++	struct otpc_priv *priv = context;
++	u32 *buf = val;
++	u32 bytes_read;
++	u32 address = offset / priv->config->word_size;
++	int i, ret;
++
++	for (bytes_read = 0; bytes_read < bytes;) {
++		set_command(priv->base, OTPC_CMD_READ);
++		set_cpu_address(priv->base, address++);
++		set_start_bit(priv->base);
++		ret = poll_cpu_status(priv->base, OTPC_STAT_CMD_DONE);
++		if (ret) {
++			dev_err(priv->dev, "otp read error: 0x%x", ret);
++			return -EIO;
++		}
++
++		for (i = 0; i < priv->map->otpc_row_size; i++) {
++			*buf++ = readl(priv->base +
++					priv->map->data_r_offset[i]);
++			bytes_read += sizeof(*buf);
++		}
++
++		reset_start_bit(priv->base);
++	}
++
++	return 0;
++}
++
++static int bcm_otpc_write(void *context, unsigned int offset, void *val,
++	size_t bytes)
++{
++	struct otpc_priv *priv = context;
++	u32 *buf = val;
++	u32 bytes_written;
++	u32 address = offset / priv->config->word_size;
++	int i, ret;
++
++	if (offset % priv->config->word_size)
++		return -EINVAL;
++
++	ret = enable_ocotp_program(priv->base);
++	if (ret)
++		return -EIO;
++
++	for (bytes_written = 0; bytes_written < bytes;) {
++		set_command(priv->base, OTPC_CMD_PROGRAM);
++		set_cpu_address(priv->base, address++);
++		for (i = 0; i < priv->map->otpc_row_size; i++) {
++			writel(*buf, priv->base + priv->map->data_r_offset[i]);
++			buf++;
++			bytes_written += sizeof(*buf);
++		}
++		set_start_bit(priv->base);
++		ret = poll_cpu_status(priv->base, OTPC_STAT_CMD_DONE);
++		reset_start_bit(priv->base);
++		if (ret) {
++			dev_err(priv->dev, "otp write error: 0x%x", ret);
++			return -EIO;
++		}
++	}
++
++	disable_ocotp_program(priv->base);
++
++	return 0;
++}
++
++static struct nvmem_config bcm_otpc_nvmem_config = {
++	.name = "bcm-ocotp",
++	.read_only = false,
++	.word_size = 4,
++	.stride = 4,
++	.owner = THIS_MODULE,
++	.reg_read = bcm_otpc_read,
++	.reg_write = bcm_otpc_write,
++};
++
++static const struct of_device_id bcm_otpc_dt_ids[] = {
++	{ .compatible = "brcm,ocotp" },
++	{ .compatible = "brcm,ocotp-v2" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, bcm_otpc_dt_ids);
++
++static int bcm_otpc_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *dn = dev->of_node;
++	struct resource *res;
++	struct otpc_priv *priv;
++	struct nvmem_device *nvmem;
++	int err;
++	u32 num_words;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	if (of_device_is_compatible(dev->of_node, "brcm,ocotp"))
++		priv->map = &otp_map;
++	else if (of_device_is_compatible(dev->of_node, "brcm,ocotp-v2"))
++		priv->map = &otp_map_v2;
++	else {
++		dev_err(&pdev->dev,
++			"%s otpc config map not defined\n", __func__);
++		return -EINVAL;
++	}
++
++	/* Get OTP base address register. */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	priv->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(priv->base)) {
++		dev_err(dev, "unable to map I/O memory\n");
++		return PTR_ERR(priv->base);
++	}
++
++	/* Enable CPU access to OTPC. */
++	writel(readl(priv->base + OTPC_MODE_REG_OFFSET) |
++		BIT(OTPC_MODE_REG_OTPC_MODE),
++		priv->base + OTPC_MODE_REG_OFFSET);
++	reset_start_bit(priv->base);
++
++	/* Read size of memory in words. */
++	err = of_property_read_u32(dn, "brcm,ocotp-size", &num_words);
++	if (err) {
++		dev_err(dev, "size parameter not specified\n");
++		return -EINVAL;
++	} else if (num_words == 0) {
++		dev_err(dev, "size must be > 0\n");
++		return -EINVAL;
++	}
++
++	bcm_otpc_nvmem_config.size = 4 * num_words;
++	bcm_otpc_nvmem_config.dev = dev;
++	bcm_otpc_nvmem_config.priv = priv;
++
++	if (of_device_is_compatible(dev->of_node, "brcm,ocotp-v2")) {
++		bcm_otpc_nvmem_config.word_size = 8;
++		bcm_otpc_nvmem_config.stride = 8;
++	}
++
++	priv->config = &bcm_otpc_nvmem_config;
++
++	nvmem = nvmem_register(&bcm_otpc_nvmem_config);
++	if (IS_ERR(nvmem)) {
++		dev_err(dev, "error registering nvmem config\n");
++		return PTR_ERR(nvmem);
++	}
++
++	platform_set_drvdata(pdev, nvmem);
++
++	return 0;
++}
++
++static int bcm_otpc_remove(struct platform_device *pdev)
++{
++	struct nvmem_device *nvmem = platform_get_drvdata(pdev);
++
++	return nvmem_unregister(nvmem);
++}
++
++static struct platform_driver bcm_otpc_driver = {
++	.probe	= bcm_otpc_probe,
++	.remove	= bcm_otpc_remove,
++	.driver = {
++		.name	= "brcm-otpc",
++		.of_match_table = bcm_otpc_dt_ids,
++	},
++};
++module_platform_driver(bcm_otpc_driver);
++
++MODULE_DESCRIPTION("Broadcom OTPC driver");
++MODULE_LICENSE("GPL v2");
 -- 
-2.7.4
-
+1.9.1
