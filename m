@@ -1,58 +1,36 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V7 4/4] dmaengine: qcom_hidma: add MSI support for interrupts
-Date: Mon, 24 Oct 2016 10:30:12 +0300
-Message-ID: <CAHp75VettN=-S+iqKQbqixRe2BM=AiS26VGM+8yLophbkc+Z8g@mail.gmail.com>
-References: <1477067879-23750-1-git-send-email-okaya@codeaurora.org>
- <1477067879-23750-5-git-send-email-okaya@codeaurora.org> <CAHp75Vd+u5va3kyqcapeF9JATUfv5gBnoEM_W+frDmMXs5f2Uw@mail.gmail.com>
- <36163853-ac4a-e146-0c1b-eaf42e8b234d@codeaurora.org>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 0/4] STM32F429: Add Ethernet fixes
+Date: Mon, 24 Oct 2016 09:30:52 +0200
+Message-ID: <81886512-4fb9-8a4d-f469-521a76410943@st.com>
+References: <1476976886-23781-1-git-send-email-alexandre.torgue@st.com>
+ <20161020.144140.1794871934594140769.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <36163853-ac4a-e146-0c1b-eaf42e8b234d-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20161020.144140.1794871934594140769.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dave Jiang <dave.jiang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 24, 2016 at 5:55 AM, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On 10/21/2016 12:11 PM, Andy Shevchenko wrote:
->>> +static void hidma_free_msis(struct hidma_dev *dmadev)
->>> > +{
->>> > +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
->> Perhaps one #ifdef and two definitions of functions?
+Hi David,
+
+On 10/20/2016 08:41 PM, David Miller wrote:
+> From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+> Date: Thu, 20 Oct 2016 17:21:22 +0200
 >
-> I don't think it will make a difference. I'll have to move
-> #ifdef around the caller of hidma_free_msis instead which
-> I think is uglier.
+>> This series adds several fixes for Ethernet for stm32f429 MCU.
+>> First 2 patches have already been reviewed some months ago when
+>> stm32 Ethernet glue has been pushed (I added in this series to keep
+>> history). Fixes are:
+>>  -Change DT to be compliant to stm32 ethernet glue binding
+>>  -Add phy-handle to correctly use mdio subnode
+>>  -Remove WoL support
 >
-> The hidma_write_msi_msg function gets called only when
-> CONFIG_GENERIC_MSI_IRQ_DOMAIN is defined. If I don't put
-> this around the function definition, I get unused function
-> warning from the compiler. This is the reason why preprocessor
-> definition is outside of the function definition.
+> I'm assuming this will be merged via the ARM tree.
 
-I am talking about something like below:
-
-#ifdef UGLY_DEFINE
-myfunc_a()
-{
-}
-
-myfunc_b()
-{
-}
-#else
-static inline myfunc_a() {}
-static inline myfunc_b() {}
-#endif
-
-
-There is another way as well, namely use of IS_ENABLED(), IS_BUILTIN()
-macros (I don't remember how exactly second one is spelt).
-
--- 
-With Best Regards,
-Andy Shevchenko
+Yes, I will take it in my next pull request (if no issues).
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
