@@ -1,80 +1,341 @@
-From: ahaslam@baylibre.com
-Subject: [PATCH/RFT v2 07/17] ARM: davinci: da8xx: Enable the usb20 "per" clk
- on phy_clk_enable
-Date: Mon, 24 Oct 2016 18:46:24 +0200
-Message-ID: <20161024164634.4330-8-ahaslam@baylibre.com>
+From: ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Subject: [PATCH/RFT v2 13/17] USB: da8xx: use ohci priv data instead of globals
+Date: Mon, 24 Oct 2016 18:46:30 +0200
+Message-ID: <20161024164634.4330-14-ahaslam@baylibre.com>
 References: <20161024164634.4330-1-ahaslam@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161024164634.4330-1-ahaslam@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregkh@linuxfoundation.org, johan@kernel.org, robh+dt@kernel.org, nsekhar@ti.com, stern@rowland.harvard.edu, khilman@baylibre.com, sshtylyov@ru.mvista.com, david@lechnology.com, manjunath.goudar@linaro.org, broonie@kernel.org, abailon@baylibre.com
-Cc: devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161024164634.4330-1-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, manjunath.goudar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Axel Haslam <ahaslam@baylibre.com>
+From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-While probing ochi phy with usb20 phy as a parent clock for usb11_phy,
-the usb20_phy clock enable would time out. This is because the usb20
-module clock needs to enabled while trying to lock the usb20_phy PLL.
+Instead of global variables, use the extra_priv_size of the ohci driver
+to add a reference to driver private data.
 
-Call clk enable and get for the usb20 peripheral before trying to
-enable the phy PLL.
-
-Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
+Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/mach-davinci/usb-da8xx.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/usb/host/ohci-da8xx.c | 135 ++++++++++++++++++++++++------------------
+ 1 file changed, 79 insertions(+), 56 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/usb-da8xx.c b/arch/arm/mach-davinci/usb-da8xx.c
-index 9e41a7f..982e105 100644
---- a/arch/arm/mach-davinci/usb-da8xx.c
-+++ b/arch/arm/mach-davinci/usb-da8xx.c
-@@ -53,11 +53,19 @@ int __init da8xx_register_usb_refclkin(int rate)
+diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
+index f4bda4d..bebc3f0 100644
+--- a/drivers/usb/host/ohci-da8xx.c
++++ b/drivers/usb/host/ohci-da8xx.c
+@@ -37,60 +37,66 @@ static int (*orig_ohci_hub_control)(struct usb_hcd  *hcd, u16 typeReq,
+ 			u16 wValue, u16 wIndex, char *buf, u16 wLength);
+ static int (*orig_ohci_hub_status_data)(struct usb_hcd *hcd, char *buf);
  
- static void usb20_phy_clk_enable(struct clk *clk)
+-static struct clk *usb11_clk;
+-static struct phy *usb11_phy;
+-static struct regulator *vbus_reg;
+-struct notifier_block nb;
+-
+-/* Over-current indicator change flag */
+-static int ocic_flag;
++struct da8xx_ohci_hcd {
++	struct usb_hcd *hcd;
++	struct clk *usb11_clk;
++	struct phy *usb11_phy;
++	struct regulator *vbus_reg;
++	struct notifier_block nb;
++	int ocic_flag;
++};
++#define to_da8xx_ohci(hcd) (struct da8xx_ohci_hcd *)(hcd_to_ohci(hcd)->priv)
+ 
+-static int ohci_da8xx_enable(void)
++static int ohci_da8xx_enable(struct usb_hcd *hcd)
  {
-+	struct clk *usb20_clk;
- 	u32 val;
- 	u32 timeout = 500000; /* 500 msec */
++	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
+ 	int ret;
  
- 	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
+-	ret = clk_prepare_enable(usb11_clk);
++	ret = clk_prepare_enable(da8xx_ohci->usb11_clk);
+ 	if (ret)
+ 		return ret;
  
-+	usb20_clk = clk_get(NULL, "usb20");
-+	if (IS_ERR(usb20_clk)) {
-+		pr_err("could not get usb20 clk\n");
-+		return;
-+	}
-+
-+	clk_prepare_enable(usb20_clk);
- 	/*
- 	 * Turn on the USB 2.0 PHY, but just the PLL, and not OTG. The USB 1.1
- 	 * host may use the PLL clock without USB 2.0 OTG being used.
-@@ -70,11 +78,14 @@ static void usb20_phy_clk_enable(struct clk *clk)
- 	while (--timeout) {
- 		val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
- 		if (val & CFGCHIP2_PHYCLKGD)
--			return;
-+			goto done;
- 		udelay(1);
- 	}
+-	ret = phy_init(usb11_phy);
++	ret = phy_init(da8xx_ohci->usb11_phy);
+ 	if (ret)
+ 		goto err_phy_init;
  
- 	pr_err("Timeout waiting for USB 2.0 PHY clock good.\n");
-+done:
-+	clk_disable_unprepare(usb20_clk);
-+	clk_put(usb20_clk);
+-	ret = phy_power_on(usb11_phy);
++	ret = phy_power_on(da8xx_ohci->usb11_phy);
+ 	if (ret)
+ 		goto err_phy_power_on;
+ 
+ 	return 0;
+ 
+ err_phy_power_on:
+-	phy_exit(usb11_phy);
++	phy_exit(da8xx_ohci->usb11_phy);
+ err_phy_init:
+-	clk_disable_unprepare(usb11_clk);
++	clk_disable_unprepare(da8xx_ohci->usb11_clk);
+ 
+ 	return ret;
  }
  
- static void usb20_phy_clk_disable(struct clk *clk)
+-static void ohci_da8xx_disable(void)
++static void ohci_da8xx_disable(struct usb_hcd *hcd)
+ {
+-	phy_power_off(usb11_phy);
+-	phy_exit(usb11_phy);
+-	clk_disable_unprepare(usb11_clk);
++	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
++
++	phy_power_off(da8xx_ohci->usb11_phy);
++	phy_exit(da8xx_ohci->usb11_phy);
++	clk_disable_unprepare(da8xx_ohci->usb11_clk);
+ }
+ 
+-static int ohci_da8xx_set_power(int on)
++static int ohci_da8xx_set_power(struct usb_hcd *hcd, int on)
+ {
++	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
+ 	int ret = 0;
+ 
+-	if (!vbus_reg)
++	if (!da8xx_ohci->vbus_reg)
+ 		return 0;
+ 
+ 	if (on) {
+-		ret = regulator_enable(vbus_reg);
++		ret = regulator_enable(da8xx_ohci->vbus_reg);
+ 		if (ret)
+ 			pr_err("fail to enable regulator: %d\n", ret);
+ 	} else {
+-		ret = regulator_disable(vbus_reg);
++		ret = regulator_disable(da8xx_ohci->vbus_reg);
+ 		if (ret)
+ 			pr_err("fail to disable regulator: %d\n", ret);
+ 	}
+@@ -98,17 +104,22 @@ static int ohci_da8xx_set_power(int on)
+ 	return ret;
+ }
+ 
+-static int ohci_da8xx_get_power(void)
++static int ohci_da8xx_get_power(struct usb_hcd *hcd)
+ {
+-	if (!vbus_reg)
++	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
++
++	if (!da8xx_ohci->vbus_reg)
+ 		return 1;
+ 
+-	return regulator_is_enabled(vbus_reg);
++	return regulator_is_enabled(da8xx_ohci->vbus_reg);
+ }
+ 
+-static int ohci_da8xx_get_oci(void)
++static int ohci_da8xx_get_oci(struct usb_hcd *hcd)
+ {
+-	if (regulator_get_mode(vbus_reg) == REGULATOR_MODE_OVERCURRENT)
++	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
++
++	if (regulator_get_mode(da8xx_ohci->vbus_reg) ==
++			REGULATOR_MODE_OVERCURRENT)
+ 		return 1;
+ 
+ 	return 0;
+@@ -117,10 +128,13 @@ static int ohci_da8xx_get_oci(void)
+ static int ohci_da8xx_regulator_event(struct notifier_block *nb,
+ 				unsigned long event, void *data)
+ {
++	struct da8xx_ohci_hcd *da8xx_ohci =
++			container_of(nb, struct da8xx_ohci_hcd, nb);
++
+ 	if (event & REGULATOR_EVENT_OVER_CURRENT) {
+-		ocic_flag = 1;
+-		if (ohci_da8xx_get_oci())
+-			ohci_da8xx_set_power(0);
++		da8xx_ohci->ocic_flag = 1;
++		if (ohci_da8xx_get_oci(da8xx_ohci->hcd))
++			ohci_da8xx_set_power(da8xx_ohci->hcd, 0);
+ 	}
+ 
+ 	return 0;
+@@ -130,12 +144,13 @@ static int ohci_da8xx_reset(struct usb_hcd *hcd)
+ {
+ 	struct device *dev		= hcd->self.controller;
+ 	struct ohci_hcd	*ohci		= hcd_to_ohci(hcd);
++	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
+ 	int result;
+ 	u32 rh_a;
+ 
+ 	dev_dbg(dev, "starting USB controller\n");
+ 
+-	result = ohci_da8xx_enable();
++	result = ohci_da8xx_enable(hcd);
+ 	if (result < 0)
+ 		return result;
+ 
+@@ -147,7 +162,7 @@ static int ohci_da8xx_reset(struct usb_hcd *hcd)
+ 
+ 	result = ohci_setup(hcd);
+ 	if (result < 0) {
+-		ohci_da8xx_disable();
++		ohci_da8xx_disable(hcd);
+ 		return result;
+ 	}
+ 
+@@ -159,7 +174,7 @@ static int ohci_da8xx_reset(struct usb_hcd *hcd)
+ 	 */
+ 	rh_a = ohci_readl(ohci, &ohci->regs->roothub.a);
+ 
+-	if (vbus_reg) {
++	if (da8xx_ohci->vbus_reg) {
+ 		rh_a &= ~RH_A_NPS;
+ 		rh_a |=  RH_A_PSM;
+ 		rh_a &= ~RH_A_NOCP;
+@@ -176,10 +191,11 @@ static int ohci_da8xx_reset(struct usb_hcd *hcd)
+  */
+ static int ohci_da8xx_hub_status_data(struct usb_hcd *hcd, char *buf)
+ {
++	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
+ 	int length		= orig_ohci_hub_status_data(hcd, buf);
+ 
+ 	/* See if we have OCIC flag set */
+-	if (ocic_flag) {
++	if (da8xx_ohci->ocic_flag) {
+ 		dev_dbg(hcd->self.controller, "over-current indicator change "
+ 			"on port 1\n");
+ 
+@@ -197,6 +213,7 @@ static int ohci_da8xx_hub_status_data(struct usb_hcd *hcd, char *buf)
+ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 				  u16 wIndex, char *buf, u16 wLength)
+ {
++	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
+ 	struct device *dev		= hcd->self.controller;
+ 	int temp;
+ 
+@@ -211,15 +228,15 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 		temp = roothub_portstatus(hcd_to_ohci(hcd), wIndex - 1);
+ 
+ 		/* The port power status (PPS) bit defaults to 1 */
+-		if (ohci_da8xx_get_power() == 0)
++		if (ohci_da8xx_get_power(hcd) == 0)
+ 			temp &= ~RH_PS_PPS;
+ 
+ 		/* The port over-current indicator (POCI) bit is always 0 */
+-		if (ohci_da8xx_get_oci() > 0)
++		if (ohci_da8xx_get_oci(hcd) > 0)
+ 			temp |=  RH_PS_POCI;
+ 
+ 		/* The over-current indicator change (OCIC) bit is 0 too */
+-		if (ocic_flag)
++		if (da8xx_ohci->ocic_flag)
+ 			temp |=  RH_PS_OCIC;
+ 
+ 		put_unaligned(cpu_to_le32(temp), (__le32 *)buf);
+@@ -240,13 +257,13 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			dev_dbg(dev, "%sPortFeature(%u): %s\n",
+ 				temp ? "Set" : "Clear", wIndex, "POWER");
+ 
+-			return ohci_da8xx_set_power(temp) ? -EPIPE : 0;
++			return ohci_da8xx_set_power(hcd, temp) ? -EPIPE : 0;
+ 		case USB_PORT_FEAT_C_OVER_CURRENT:
+ 			dev_dbg(dev, "%sPortFeature(%u): %s\n",
+ 				temp ? "Set" : "Clear", wIndex,
+ 				"C_OVER_CURRENT");
+ 
+-			ocic_flag = temp;
++			da8xx_ohci->ocic_flag = temp;
+ 			return 0;
+ 		}
+ 	}
+@@ -259,6 +276,7 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 
+ static int ohci_da8xx_probe(struct platform_device *pdev)
+ {
++	struct da8xx_ohci_hcd *da8xx_ohci;
+ 	struct usb_hcd	*hcd;
+ 	struct resource *mem;
+ 	int error, irq;
+@@ -268,30 +286,34 @@ static int ohci_da8xx_probe(struct platform_device *pdev)
+ 	if (!hcd)
+ 		return -ENOMEM;
+ 
+-	usb11_clk = devm_clk_get(&pdev->dev, "usb11");
+-	if (IS_ERR(usb11_clk)) {
+-		if (PTR_ERR(usb11_clk) != -EPROBE_DEFER)
++	da8xx_ohci = to_da8xx_ohci(hcd);
++	da8xx_ohci->hcd = hcd;
++
++	da8xx_ohci->usb11_clk = devm_clk_get(&pdev->dev, "usb11");
++	if (IS_ERR(da8xx_ohci->usb11_clk)) {
++		if (PTR_ERR(da8xx_ohci->usb11_clk) != -EPROBE_DEFER)
+ 			dev_err(&pdev->dev, "Failed to get clock.\n");
+-		return PTR_ERR(usb11_clk);
++		return PTR_ERR(da8xx_ohci->usb11_clk);
+ 	}
+ 
+-	usb11_phy = devm_phy_get(&pdev->dev, "usb-phy");
+-	if (IS_ERR(usb11_phy)) {
+-		if (PTR_ERR(usb11_phy) != -EPROBE_DEFER)
++	da8xx_ohci->usb11_phy = devm_phy_get(&pdev->dev, "usb-phy");
++	if (IS_ERR(da8xx_ohci->usb11_phy)) {
++		if (PTR_ERR(da8xx_ohci->usb11_phy) != -EPROBE_DEFER)
+ 			dev_err(&pdev->dev, "Failed to get phy.\n");
+-		return PTR_ERR(usb11_phy);
++		return PTR_ERR(da8xx_ohci->usb11_phy);
+ 	}
+ 
+-	vbus_reg = devm_regulator_get(&pdev->dev, "vbus");
+-	if (IS_ERR(vbus_reg)) {
+-		if (PTR_ERR(vbus_reg) != -EPROBE_DEFER)
++	da8xx_ohci->vbus_reg = devm_regulator_get(&pdev->dev, "vbus");
++	if (IS_ERR(da8xx_ohci->vbus_reg)) {
++		if (PTR_ERR(da8xx_ohci->vbus_reg) != -EPROBE_DEFER)
+ 			dev_err(&pdev->dev, "Failed to get regulator.\n");
+-		return PTR_ERR(vbus_reg);
++		return PTR_ERR(da8xx_ohci->vbus_reg);
+ 	}
+ 
+-	if (vbus_reg) {
+-		nb.notifier_call = ohci_da8xx_regulator_event;
+-		error = devm_regulator_register_notifier(vbus_reg, &nb);
++	if (da8xx_ohci->vbus_reg) {
++		da8xx_ohci->nb.notifier_call = ohci_da8xx_regulator_event;
++		error = devm_regulator_register_notifier(da8xx_ohci->vbus_reg,
++							 &da8xx_ohci->nb);
+ 		if (error) {
+ 			dev_err(&pdev->dev,
+ 				"Could not register regulator notifier\n");
+@@ -354,7 +376,7 @@ static int ohci_da8xx_suspend(struct platform_device *pdev,
+ 	if (ret)
+ 		return ret;
+ 
+-	ohci_da8xx_disable();
++	ohci_da8xx_disable(hcd);
+ 	hcd->state = HC_STATE_SUSPENDED;
+ 
+ 	return ret;
+@@ -370,7 +392,7 @@ static int ohci_da8xx_resume(struct platform_device *dev)
+ 		msleep(5);
+ 	ohci->next_statechange = jiffies;
+ 
+-	ret = ohci_da8xx_enable();
++	ret = ohci_da8xx_enable(hcd);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -382,7 +404,8 @@ static int ohci_da8xx_resume(struct platform_device *dev)
+ #endif
+ 
+ static const struct ohci_driver_overrides da8xx_overrides __initconst = {
+-	.reset		= ohci_da8xx_reset
++	.reset		= ohci_da8xx_reset,
++	.extra_priv_size = sizeof(struct da8xx_ohci_hcd),
+ };
+ 
+ /*
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
