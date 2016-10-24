@@ -1,50 +1,111 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v4 2/5] drivers/of: do not add memory for unavailable nodes
-Date: Mon, 24 Oct 2016 21:24:04 +1100
-Message-ID: <87vawixcxn.fsf@concordia.ellerman.id.au>
-References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com> <1475778995-1420-3-git-send-email-arbab@linux.vnet.ibm.com> <2344394.NlaWgtFOqB@new-mexico>
+From: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 3/9] vcodec: mediatek: Add Mediatek V4L2 Video
+ Decoder Driver
+Date: Mon, 24 Oct 2016 18:49:12 +0800
+Message-ID: <1477306152.2916.1.camel@mtksdaap41>
+References: <1472818800-22558-1-git-send-email-tiffany.lin@mediatek.com>
+         <1472818800-22558-2-git-send-email-tiffany.lin@mediatek.com>
+         <1472818800-22558-3-git-send-email-tiffany.lin@mediatek.com>
+         <1472818800-22558-4-git-send-email-tiffany.lin@mediatek.com>
+         <20161021110104.5733240e@vento.lan> <1477279328.10501.10.camel@mtksdaap41>
+         <20161024070542.65e11e37@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <2344394.NlaWgtFOqB@new-mexico>
-Sender: owner-linux-mm@kvack.org
-To: Alistair Popple <apopple@au1.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: Reza Arbab <arbab@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Stewart Smith <stewart@linux.vnet.ibm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tang Chen <tangchen@cn.fujitsu.com>, linux-mm@kvack.org, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161024070542.65e11e37-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Alistair Popple <apopple@au1.ibm.com> writes:
+Hi Mauro,
 
-> Hi Reza,
->
-> On Thu, 6 Oct 2016 01:36:32 PM Reza Arbab wrote:
->> Respect the standard dt "status" property when scanning memory nodes in
->> early_init_dt_scan_memory(), so that if the node is unavailable, no
->> memory will be added.
->
-> What happens if a kernel without this patch is booted on a system with some 
-> status="disabled" device-nodes? Do older kernels just ignore this memory or do 
-> they try to use it?
->
-> From what I can tell it seems that kernels without this patch will try and use 
-> this memory even if it is marked in the device-tree as status="disabled" which 
-> could lead to problems for older kernels when we start exporting this property 
-> from firmware.
+On Mon, 2016-10-24 at 07:05 -0200, Mauro Carvalho Chehab wrote:
+> Em Mon, 24 Oct 2016 11:22:08 +0800
+> Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> escreveu:
+> 
+> > Hi Mauro,
+> > 
+> > On Fri, 2016-10-21 at 11:01 -0200, Mauro Carvalho Chehab wrote:
+> > > Em Fri, 2 Sep 2016 20:19:54 +0800
+> > > Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> escreveu:
+> > >   
+> > > > Add v4l2 layer decoder driver for MT8173
+> > > > 
+> > > > Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>  
+> > >   
+> > > > +int vdec_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
+> > > > +{
+> > > > +	int ret = 0;
+> > > > +
+> > > > +	switch (fourcc) {
+> > > > +	case V4L2_PIX_FMT_H264:
+> > > > +	case V4L2_PIX_FMT_VP8:
+> > > > +	default:
+> > > > +		return -EINVAL;
+> > > > +	}  
+> > > 
+> > > Did you ever test this driver? The above code will *always* return
+> > > -EINVAL, with will cause vidioc_vdec_s_fmt() to always fail!
+> > > 
+> > > I suspect that what you wanted to do, instead, is:
+> > > 
+> > > 	switch (fourcc) {
+> > > 	case V4L2_PIX_FMT_H264:
+> > > 	case V4L2_PIX_FMT_VP8:
+> > > 		break;
+> > > 	default:
+> > > 		return -EINVAL;
+> > >   
+> > 
+> > The original idea here is that vp8 and h264 are added in later patches.
+> > If get this patch without later patches, it should return -EINVAL.
+> 
+> I noticed your idea, but next time, don't add dead code like that.
+> Reviewers check patch by patch at the order they're present at the
+> patch series.
+> 
+> So, don't add something broken by purpose, assuming that it would
+> be fixed later.
+> 
+Got it.
+> > 
+> > 
+> > > Btw, this patch series has also several issues that were pointed by
+> > > checkpatch. Please *always* run checkpatch when submitting your work.
+> > > 
+> > > You should take a look at the Kernel documentation about how to
+> > > submit patches, at:
+> > > 	https://mchehab.fedorapeople.org/kernel_docs/process/index.html
+> > > 
+> > > PS.: this time, I fixed the checkpatch issues for you. So, let me know
+> > > if the patch below is OK, and I'll merge it at media upstream,
+> > > assuming that the other patches in this series are ok.
+> > >   
+> > 
+> > I did run checkpatch, but I don't know why these issues missed.
+> > probably I run checkpatch for all files not for patches.
+> > I will take a look at the documentation and keep this in mind for future
+> > upstream.
+> > Appreciated for your help.
+> 
+> Checkpatch should be run patch by patch, as we expect that all patches
+> will follow the coding style and will compile fine, without introducing
+> warnings.
+> 
+> I do compile the Kernel for every single patch I merge.
+> 
+Got it. I will follow this.
 
-The code already looks for "linux,usable-memory" in preference to "reg".
-Can you use that instead?
+best regards,
+Tiffany
 
-That would have the advantage that existing kernels already understand
-it.
+> Regards,
+> Mauro
 
-Another problem with using "status" is we could have device trees out
-there that have status = disabled and we don't know about it, and by
-changing the kernel to use that property we break people's systems.
-Though for memory nodes my guess is that's not true, but you never know ...
-
-cheers
 
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
