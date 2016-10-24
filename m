@@ -1,62 +1,115 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH 5/5] ARM: dts: Add LEGO MINDSTORTMS EV3 dts
-Date: Mon, 24 Oct 2016 16:20:59 -0500
-Message-ID: <84648cb0-f1fa-d88b-bac2-79208af01ca6@lechnology.com>
-References: <1477075018-20176-1-git-send-email-david@lechnology.com>
- <1477075018-20176-6-git-send-email-david@lechnology.com>
- <b0022fad-a96e-86d4-71ba-2b803e5421fe@ti.com>
- <1593441f-d147-4c91-8aab-8622dd8ced19@lechnology.com>
- <b6cd3c47-0df8-266a-2b8d-13c82062b647@lechnology.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 0/3] Add support for Broadcom OTP controller
+Date: Mon, 24 Oct 2016 14:27:36 -0700
+Message-ID: <82ad10b1-32ab-3962-d5ab-e787e2c70130@gmail.com>
+References: <1477336324-10543-1-git-send-email-jonathan.richardson@broadcom.com>
+ <CAADWXX-43-k2K2T1V5MQMd0z0V502wf1syNHERPfvNstOJw-3A@mail.gmail.com>
+ <e34f01b6-a059-9988-0f93-e5adb82a5436@gmail.com>
+ <CA+55aFwAZPJ+o0qkYjJziHofYvvsocHuWr1YUmVnzj6VTv_sgA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b6cd3c47-0df8-266a-2b8d-13c82062b647-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+In-Reply-To: <CA+55aFwAZPJ+o0qkYjJziHofYvvsocHuWr1YUmVnzj6VTv_sgA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/24/2016 02:50 PM, David Lechner wrote:
-> On 10/24/2016 10:50 AM, David Lechner wrote:
->> On 10/24/2016 06:58 AM, Sekhar Nori wrote:
->>> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
->>>
->>>> +&ehrpwm1 {
->>>> +    status = "disabled";
->>>
->>> Hmm, disabled? Can you add this node when you actually use it?
+On 10/24/2016 01:14 PM, Linus Torvalds wrote:
+> On Mon, Oct 24, 2016 at 12:54 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 >>
->> Not sure why I have this disabled. Like the gpios, the pwms can be used
->> via sysfs, so I would like to leave them.
+>> The older setup was using smtphost.broadcom.com which we have now
+>> documented as being invalid, here Jonathan used gmail directly (since
+>> that's our mail provider now):
 >>
->
-> Now I remember why these are disabled. The clock matching is broken.
-> Only the first ehrpwm and the first ecap get clocks. The others fail.
->
-> I can change these to "okay". It will just result in a kernel error
-> message until the clocks are fixed.
->
+>> Received: from lbrmn-lnxub108.corp.ad.broadcom.com ([216.31.219.19])
+>>         by smtp.gmail.com with ESMTPSA id
+>> s89sm8325746qkl.44.2016.10.24.12.12.00
+>>         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+>>         Mon, 24 Oct 2016 12:12:03 -0700 (PDT)
+> 
+> Hmm. I get that too, so if that's the right thing for a broadcom.com
+> address, it's not the smtp server issue.
+> 
+> We had a few cases of the kernel mailing list itself messing up emails
+> sufficiently to fail dkim, but that shouldn't be an issue for the
+> relaxed/relaxed model that broadcom uses (the vger mailing list
+> software screws up whitespace, which "relaxed" ignores).
+> 
+>> Is there something else we need to check? Here is what I read for the
+>> cover-letter:
+>>
+>> Authentication-Results: mx.google.com;
+>>        dkim=pass header.i=@broadcom.com;
+>>        spf=pass (google.com: domain of ...
+> 
+> Hmm. I get:
+> 
+>   Authentication-Results: mx.google.com;
+>          dkim=fail header.i=@broadcom.com;
+> 
+> with the actual dkim signature looking like this:
+> 
+>   DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+>         d=broadcom.com; s=google;
+>         h=from:to:cc:subject:date:message-id;
+>         bh=9zStGnsZQDQqP6cm1CHPk7EYVtLvDsm2wN5qy5Mgx7M=;
+>         b=Z/1QD+FwJogJY9D8Qd197Q+VJt7Tr9+WoHFeKYRL00yhvxrMg0P8jKj1FbucJTluvM
+>          agC2eq9qCpZcNAfridjExDRDCuUPAIJIXTr9Npkpqlk6gEMq2FysrGer2D9Z4HQ/atTX
+>          67VirFsQK0gK7impYMn9kW5Q9BIIw5bOg7OdI=
+> 
+> and those fields that it protects look like this:
+> 
+>   From: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>   To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime
+> Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>   Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,
+> linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland
+> <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Scott
+> Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>,
+> bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Jonathan Richardson
+> <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>   Subject: [PATCH v1 0/3] Add support for Broadcom OTP controller
+>   Date: Mon, 24 Oct 2016 12:12:01 -0700
+>   Message-Id: <1477336324-10543-1-git-send-email-jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> 
+> and I don't see anything obviously wrong anywhere - except for that
+> "dkim=fail" thing, and the email being in my spam folder.
 
-correction: it is not the clocks that are broken. it is the device names.
+Should we compare the headers added by lists.infradead.org and see what
+could possibly go wrong here? I can see that by being delivered to
+lists.infradead.org and then back to my personal gmail.com (not my other
+broadcom.com account), there are a bunch of extra headers:
 
-In  arch/arm/mach-davinci/da8xx-dt.c, we have...
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3
+X-CRM114-CacheID: sfid-20161024_121226_013940_81319C20
+X-CRM114-Status: GOOD (  13.05  )
+X-Spam-Score: -2.7 (--)
+X-Spam-Report: SpamAssassin version 3.4.0 on bombadil.infradead.org summary:
+ Content analysis details:   (-2.7 points)
+ pts rule name              description
+ ---- ----------------------
+--------------------------------------------------
+ -0.7 RCVD_IN_DNSWL_LOW      RBL: Sender listed at
+http://www.dnswl.org/, low
+ trust [2607:f8b0:400d:c09:0:0:0:22f listed in] [list.dnswl.org]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ -1.9 BAYES_00               BODY: Bayes spam probability is 0 to 1%
+ [score: 0.0000]
+ -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+ -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from author's
+ domain
+ 0.1 DKIM_SIGNED            Message has a DKIM or DK signature,
+ not necessarily valid
+X-BeenThere: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+X-Mailman-Version: 2.1.20
+Precedence: list
 
-
-	OF_DEV_AUXDATA("ti,da850-ehrpwm", 0x01f00000, "ehrpwm", NULL),
-	OF_DEV_AUXDATA("ti,da850-ehrpwm", 0x01f02000, "ehrpwm", NULL),
-	OF_DEV_AUXDATA("ti,da850-ecap", 0x01f06000, "ecap", NULL),
-	OF_DEV_AUXDATA("ti,da850-ecap", 0x01f07000, "ecap", NULL),
-	OF_DEV_AUXDATA("ti,da850-ecap", 0x01f08000, "ecap", NULL),
-
-
-Which causes each device to have the same device node name. This causes 
-sysfs errors because it is trying to register a second device at the 
-same sysfs path.
-
-If you change the names here, then the device do not work because the 
-clock lookup fails.
-
+Would those be used by your mail client to put this mail in spam, or was
+that done by the linux-foundation.org (also gmail?) mail upon reception?
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
