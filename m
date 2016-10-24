@@ -1,133 +1,63 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: Add TI SCI PM Domains
-Date: Mon, 24 Oct 2016 10:00:10 -0700
-Message-ID: <7h1sz51y3p.fsf@baylibre.com>
-References: <20161019203347.17893-1-d-gerlach@ti.com>
-        <20161019203347.17893-3-d-gerlach@ti.com>
-        <7heg39pmgb.fsf@baylibre.com>
-        <7f4754bb-7ded-6ce3-9558-a45b0d2b3888@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 1/5] ASoC: codecs: Add msm8916-wcd analog codec
+Date: Mon, 24 Oct 2016 18:00:52 +0100
+Message-ID: <20161024170052.GD17252@sirena.org.uk>
+References: <1476973249-14547-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1476973249-14547-2-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7f4754bb-7ded-6ce3-9558-a45b0d2b3888@ti.com> (Dave Gerlach's
-        message of "Fri, 21 Oct 2016 14:49:41 -0500")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>, Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jousvV0MzM2p6OtC"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1476973249-14547-2-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dave Gerlach <d-gerlach@ti.com> writes:
 
-> Hi,
-> On 10/21/2016 01:48 PM, Kevin Hilman wrote:
->> Dave Gerlach <d-gerlach@ti.com> writes:
->>
->>> Add a generic power domain implementation, TI SCI PM Domains, that
->>> will hook into the genpd framework and allow the TI SCI protocol to
->>> control device power states.
->>>
->>> Also, provide macros representing each device index as understood
->>> by TI SCI to be used in the device node power-domain references.
->>> These are identifiers for the K2G devices managed by the PMMC.
->>>
->>> Signed-off-by: Nishanth Menon <nm@ti.com>
->>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
->>> ---
->>>  .../devicetree/bindings/soc/ti/sci-pm-domain.txt   | 54 +++++++++++++
->>>  MAINTAINERS                                        |  2 +
->>>  include/dt-bindings/genpd/k2g.h                    | 90 ++++++++++++++++++++++
->>>  3 files changed, 146 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>>  create mode 100644 include/dt-bindings/genpd/k2g.h
->>>
->>> diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>> new file mode 100644
->>> index 000000000000..32f38a349656
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>> @@ -0,0 +1,54 @@
->>> +Texas Instruments TI-SCI Generic Power Domain
->>> +---------------------------------------------
->>> +
->>> +Some TI SoCs contain a system controller (like the PMMC, etc...) that is
->>> +responsible for controlling the state of the IPs that are present.
->>> +Communication between the host processor running an OS and the system
->>> +controller happens through a protocol known as TI-SCI [1]. This pm domain
->>> +implementation plugs into the generic pm domain framework and makes use of
->>> +the TI SCI protocol power on and off each device when needed.
->>> +
->>> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->>> +
->>> +PM Domain Node
->>> +==============
->>> +The PM domain node represents the global PM domain managed by the PMMC,
->>> +which in this case is the single implementation as documented by the generic
->>> +PM domain bindings in Documentation/devicetree/bindings/power/power_domain.txt.
->>> +
->>> +Required Properties:
->>> +--------------------
->>> +- compatible: should be "ti,sci-pm-domain"
->>> +- #power-domain-cells: Must be 0.
->>> +- ti,sci: Phandle to the TI SCI device to use for managing the devices.
->>>
->>> +Example:
->>> +--------------------
->>> +k2g_pds: k2g_pds {
->>
->> should use generic name like "power-contoller", e.g. k2g_pds: power-controller
->
-> Ok, that makes more sense.
->
->>
->>> +        compatible = "ti,sci-pm-domain";
->>> +        #power-domain-cells = <0>;
->>> +        ti,sci = <&pmmc>;
->>> +};
->>> +
->>> +PM Domain Consumers
->>> +===================
->>> +Hardware blocks that require SCI control over their state must provide
->>> +a reference to the sci-pm-domain they are part of and a unique device
->>> +specific ID that identifies the device.
->>> +
->>> +Required Properties:
->>> +--------------------
->>> +- power-domains: phandle pointing to the corresponding PM domain node.
->>> +- ti,sci-id: index representing the device id to be passed oevr SCI to
->>> +	     be used for device control.
->>
->> This ID doesn't look right.
->>
->> Why not use #power-domain-cells = <1> and pass the index in the DT? ...
->>
->>> +See dt-bindings/genpd/k2g.h for the list of valid identifiers for k2g.
->>> +
->>> +Example:
->>> +--------------------
->>> +uart0: serial@02530c00 {
->>> +	compatible = "ns16550a";
->>> +	...
->>> +	power-domains = <&k2g_pds>;
->>> +	ti,sci-id = <K2G_DEV_UART0>;
->>
->> ... like this:
->>
->> 	power-domains = <&k2g_pds K2G_DEV_UART0>;
->
-> That's how I did it in version one actually. I was able to define my
-> own xlate function to parse the phandle and get that index, but Ulf
-> pointed me to this series by Jon Hunter [1] that simplified genpd
-> providers and dropped the concept of adding your own xlate. This locks
-> the onecell approach to using a fixed static array of genpds that get
-> indexed into (without passing the index to the provider, just the
-> genpd that's looked up), which doesn't fit our usecase, as we don't
-> want a 1 to 1 genpd to device mapping based on the comments provided
-> in v1. Now we just use the genpd device attach/detach hooks to parse
-> the sci-id and then use it in the genpd device start/stop hooks.
+--jousvV0MzM2p6OtC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Ah, right.  I remember now.  This approach allows you to use a single
-genpd as discussed earlier.
+On Thu, Oct 20, 2016 at 03:20:45PM +0100, Srinivas Kandagatla wrote:
 
-Makes sense now, suggestion retracted.
+> +static int pm8916_wcd_analog_parse_dt(struct device *dev,
+> +				       struct pm8916_wcd_analog_priv *priv)
+> +{
 
-Kevin
+> +	priv->mclk = devm_clk_get(dev, "mclk");
+> +	if (IS_ERR(priv->mclk)) {
+> +		dev_err(dev, "failed to get mclk\n");
+> +		return PTR_ERR(priv->mclk);
+> +	}
+> +	for (i = 0; i < ARRAY_SIZE(supply_names); i++)
+> +		priv->supplies[i].supply = supply_names[i];
+> +
+> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(priv->supplies),
+> +				    priv->supplies);
+
+The above isn't parsing the DT, it's just requesting resources - how
+those resources are mapped is hidden behind the clock and regulator
+APIs.  Please send a followup fixing this.
+
+--jousvV0MzM2p6OtC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJYDj5DAAoJECTWi3JdVIfQ2PkH/R/r0cT2Yn5nVCI17bn1529G
+pTyHOfL+LALn+Yz4Qq/v03SAWI5RM9skZIPQNw2e9Hf/a2AiURN0spdTDywULeri
+5RGPQ0fIDZnbvdjhvmSq31pXI7FyMEIaJY0tgsPC0C9xrMRaMCBltRmt9YXYSWGb
+bBNOoabVotmP6SP3MuRlI/n6tAF0Hv8Jhdt41U4hqGG+Dh6anmYxllTaRq5Xz3b5
+WDYMDgX083hz/6RjKWrLNW+EuQHUC1OTt3Qhm37d6EsRaU4OWmD1eSKdIkBY+isy
+Sz4umrnZ6FPIhwlMwEtj+ohtbTxFbYoRdizt9RjPyS9RvUVbHelTGapKf+jKa64=
+=btLn
+-----END PGP SIGNATURE-----
+
+--jousvV0MzM2p6OtC--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
