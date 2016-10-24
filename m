@@ -1,48 +1,33 @@
-From: Alexander Stein <alexander.stein@systec-electronic.com>
-Subject: Re: [PATCH] gpio: mcp23s08: Add option to configure pullups.
-Date: Mon, 24 Oct 2016 08:13:54 +0200
-Message-ID: <11644726.TmP4uu3h4l@ws-stein>
-References: <1477062035-30825-1-git-send-email-enric.balletbo@collabora.com> <CACRpkdY15Hv_ydHyOXRM6G0ewVTHkVa1w3Z89AdvSDR=eyi7sQ@mail.gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 0/5] ARM: dts: renesas: Remove skeleton.dtsi inclusion
+Date: Mon, 24 Oct 2016 09:03:53 +0200
+Message-ID: <20161024070350.GA13933@verge.net.au>
+References: <1477041370-22778-1-git-send-email-geert+renesas@glider.be>
+ <20161021095319.GC15372@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdY15Hv_ydHyOXRM6G0ewVTHkVa1w3Z89AdvSDR=eyi7sQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161021095319.GC15372@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 24 October 2016 02:53:31, Linus Walleij wrote:
-> On Fri, Oct 21, 2016 at 5:00 PM, Enric Balletbo i Serra
-> 
-> <enric.balletbo@collabora.com> wrote:
-> > Default is without pullups, but if property is specified in DT and the bit
-> > is set, set a pullup on GPIO-n.
+On Fri, Oct 21, 2016 at 10:53:19AM +0100, Mark Rutland wrote:
+> On Fri, Oct 21, 2016 at 11:16:05AM +0200, Geert Uytterhoeven wrote:
+> > 	Hi Simon, Magnus,
 > > 
-> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > As of commit 9c0da3cc61f1233c ("ARM: dts: explicitly mark skeleton.dtsi
+> > as deprecated"), including skeleton.dtsi is deprecated.
+> > Hence this series removes its use for all Renesas 32-bit ARM SoCs.
 > 
-> I don't generally like this.
+> Thanks for doing this! FWIW, for the series:
 > 
-> In device tree it is the consumer that specifies how the line is used,
-> not the producer (gpiochip).
-> 
-> We currently only specify polarity, open drain and open source
-> for consumers though.
-> 
-> And the entire pin control system came into being *exactly* because
-> Grant didn't like me adding these things to the GPIO drivers.
-> 
-> So how many other things does the MCP support? Drive strength?
-> Schmitt trigger? Is there a datasheet?
+> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 
-Some unsupported features (AFAIK):
-* Input polarity (IPOL register)
-* open-drain interrupt pin
-* pullup on pins (proposed patch)
-
-Datasheet is here: http://ww1.microchip.com/downloads/en/DeviceDoc/21919e.pdf
-
-Best regards,
-Alexander
-
+Thanks, I have queued these up.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
