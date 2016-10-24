@@ -1,65 +1,36 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH v5 02/23] of: device: Export of_device_{get_modalias,
- uvent_modalias} to modules
-Date: Mon, 24 Oct 2016 12:48:24 -0700
-Message-ID: <147733850401.29612.2343965740004706258@sboyd-linaro>
-References: <20161018015636.11701-1-stephen.boyd@linaro.org>
- <20161018015636.11701-3-stephen.boyd@linaro.org>
- <CAGb2v66t8t3o0PxzaaBKnRvNP=CWG5nYud7Wjp27Q1x2baM4hg@mail.gmail.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH 5/5] ARM: dts: Add LEGO MINDSTORTMS EV3 dts
+Date: Mon, 24 Oct 2016 14:50:39 -0500
+Message-ID: <b6cd3c47-0df8-266a-2b8d-13c82062b647@lechnology.com>
+References: <1477075018-20176-1-git-send-email-david@lechnology.com>
+ <1477075018-20176-6-git-send-email-david@lechnology.com>
+ <b0022fad-a96e-86d4-71ba-2b803e5421fe@ti.com>
+ <1593441f-d147-4c91-8aab-8622dd8ced19@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGb2v66t8t3o0PxzaaBKnRvNP=CWG5nYud7Wjp27Q1x2baM4hg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb <linux-usb@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1593441f-d147-4c91-8aab-8622dd8ced19@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Chen-Yu Tsai (2016-10-24 05:19:05)
-> Hi,
-> 
-> On Tue, Oct 18, 2016 at 9:56 AM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
-> > The ULPI bus can be built as a module, and it will soon be
-> > calling these functions when it supports probing devices from DT.
-> > Export them so they can be used by the ULPI module.
-> >
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > Cc: <devicetree@vger.kernel.org>
-> > Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> > ---
-> >  drivers/of/device.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/of/device.c b/drivers/of/device.c
-> > index 8a22a253a830..6719ab35b62e 100644
-> > --- a/drivers/of/device.c
-> > +++ b/drivers/of/device.c
-> > @@ -225,6 +225,7 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
-> >
-> >         return tsize;
-> >  }
-> > +EXPORT_SYMBOL_GPL(of_device_get_modalias);
-> >
-> >  int of_device_request_module(struct device *dev)
-> >  {
-> > @@ -290,6 +291,7 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
-> >         }
-> >         mutex_unlock(&of_mutex);
-> >  }
-> > +EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
-> 
-> This is trailing the wrong function.
-> 
+On 10/24/2016 10:50 AM, David Lechner wrote:
+> On 10/24/2016 06:58 AM, Sekhar Nori wrote:
+>> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
+>>
+>>> +&ehrpwm1 {
+>>> +    status = "disabled";
+>>
+>> Hmm, disabled? Can you add this node when you actually use it?
+>
+> Not sure why I have this disabled. Like the gpios, the pwms can be used
+> via sysfs, so I would like to leave them.
+>
 
-Good catch. Must have been some bad rebase.
+Now I remember why these are disabled. The clock matching is broken. 
+Only the first ehrpwm and the first ecap get clocks. The others fail.
 
-Peter, can you fix it while applying or should I resend this patch?
+I can change these to "okay". It will just result in a kernel error 
+message until the clocks are fixed.
