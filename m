@@ -1,79 +1,62 @@
-From: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Subject: Re: [PATCH v1 0/3] Add support for Broadcom OTP controller
-Date: Mon, 24 Oct 2016 13:14:53 -0700
-Message-ID: <CA+55aFwAZPJ+o0qkYjJziHofYvvsocHuWr1YUmVnzj6VTv_sgA@mail.gmail.com>
-References: <1477336324-10543-1-git-send-email-jonathan.richardson@broadcom.com>
- <CAADWXX-43-k2K2T1V5MQMd0z0V502wf1syNHERPfvNstOJw-3A@mail.gmail.com> <e34f01b6-a059-9988-0f93-e5adb82a5436@gmail.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: dts: Add LEGO MINDSTORTMS EV3 dts
+Date: Mon, 24 Oct 2016 16:20:59 -0500
+Message-ID: <84648cb0-f1fa-d88b-bac2-79208af01ca6@lechnology.com>
+References: <1477075018-20176-1-git-send-email-david@lechnology.com>
+ <1477075018-20176-6-git-send-email-david@lechnology.com>
+ <b0022fad-a96e-86d4-71ba-2b803e5421fe@ti.com>
+ <1593441f-d147-4c91-8aab-8622dd8ced19@lechnology.com>
+ <b6cd3c47-0df8-266a-2b8d-13c82062b647@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e34f01b6-a059-9988-0f93-e5adb82a5436-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <b6cd3c47-0df8-266a-2b8d-13c82062b647-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 24, 2016 at 12:54 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On 10/24/2016 02:50 PM, David Lechner wrote:
+> On 10/24/2016 10:50 AM, David Lechner wrote:
+>> On 10/24/2016 06:58 AM, Sekhar Nori wrote:
+>>> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
+>>>
+>>>> +&ehrpwm1 {
+>>>> +    status = "disabled";
+>>>
+>>> Hmm, disabled? Can you add this node when you actually use it?
+>>
+>> Not sure why I have this disabled. Like the gpios, the pwms can be used
+>> via sysfs, so I would like to leave them.
+>>
 >
-> The older setup was using smtphost.broadcom.com which we have now
-> documented as being invalid, here Jonathan used gmail directly (since
-> that's our mail provider now):
+> Now I remember why these are disabled. The clock matching is broken.
+> Only the first ehrpwm and the first ecap get clocks. The others fail.
 >
-> Received: from lbrmn-lnxub108.corp.ad.broadcom.com ([216.31.219.19])
->         by smtp.gmail.com with ESMTPSA id
-> s89sm8325746qkl.44.2016.10.24.12.12.00
->         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
->         Mon, 24 Oct 2016 12:12:03 -0700 (PDT)
-
-Hmm. I get that too, so if that's the right thing for a broadcom.com
-address, it's not the smtp server issue.
-
-We had a few cases of the kernel mailing list itself messing up emails
-sufficiently to fail dkim, but that shouldn't be an issue for the
-relaxed/relaxed model that broadcom uses (the vger mailing list
-software screws up whitespace, which "relaxed" ignores).
-
-> Is there something else we need to check? Here is what I read for the
-> cover-letter:
+> I can change these to "okay". It will just result in a kernel error
+> message until the clocks are fixed.
 >
-> Authentication-Results: mx.google.com;
->        dkim=pass header.i=@broadcom.com;
->        spf=pass (google.com: domain of ...
 
-Hmm. I get:
+correction: it is not the clocks that are broken. it is the device names.
 
-  Authentication-Results: mx.google.com;
-         dkim=fail header.i=@broadcom.com;
+In  arch/arm/mach-davinci/da8xx-dt.c, we have...
 
-with the actual dkim signature looking like this:
 
-  DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=9zStGnsZQDQqP6cm1CHPk7EYVtLvDsm2wN5qy5Mgx7M=;
-        b=Z/1QD+FwJogJY9D8Qd197Q+VJt7Tr9+WoHFeKYRL00yhvxrMg0P8jKj1FbucJTluvM
-         agC2eq9qCpZcNAfridjExDRDCuUPAIJIXTr9Npkpqlk6gEMq2FysrGer2D9Z4HQ/atTX
-         67VirFsQK0gK7impYMn9kW5Q9BIIw5bOg7OdI=
+	OF_DEV_AUXDATA("ti,da850-ehrpwm", 0x01f00000, "ehrpwm", NULL),
+	OF_DEV_AUXDATA("ti,da850-ehrpwm", 0x01f02000, "ehrpwm", NULL),
+	OF_DEV_AUXDATA("ti,da850-ecap", 0x01f06000, "ecap", NULL),
+	OF_DEV_AUXDATA("ti,da850-ecap", 0x01f07000, "ecap", NULL),
+	OF_DEV_AUXDATA("ti,da850-ecap", 0x01f08000, "ecap", NULL),
 
-and those fields that it protects look like this:
 
-  From: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-  To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime
-Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-  Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,
-linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland
-<mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Scott
-Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>,
-bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Jonathan Richardson
-<jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-  Subject: [PATCH v1 0/3] Add support for Broadcom OTP controller
-  Date: Mon, 24 Oct 2016 12:12:01 -0700
-  Message-Id: <1477336324-10543-1-git-send-email-jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Which causes each device to have the same device node name. This causes 
+sysfs errors because it is trying to register a second device at the 
+same sysfs path.
 
-and I don't see anything obviously wrong anywhere - except for that
-"dkim=fail" thing, and the email being in my spam folder.
+If you change the names here, then the device do not work because the 
+clock lookup fails.
 
-               Linus
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
