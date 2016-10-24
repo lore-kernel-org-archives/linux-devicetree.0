@@ -1,62 +1,39 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v5 02/23] of: device: Export of_device_{get_modalias,
- uvent_modalias} to modules
-Date: Mon, 24 Oct 2016 20:19:05 +0800
-Message-ID: <CAGb2v66t8t3o0PxzaaBKnRvNP=CWG5nYud7Wjp27Q1x2baM4hg@mail.gmail.com>
-References: <20161018015636.11701-1-stephen.boyd@linaro.org> <20161018015636.11701-3-stephen.boyd@linaro.org>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [v7, 1/3] nand: pl353: Add basic driver for arm pl353 smc nand
+ interface
+Date: Mon, 24 Oct 2016 14:27:14 +0200
+Message-ID: <20161024142714.10902cf2@bbrezillon>
+References: <1433786918-21500-2-git-send-email-punnaia@xilinx.com>
+        <20161021203322.GA28655@obsidianresearch.com>
+        <20161021234611.1f737144@bbrezillon>
+        <CAGnW=Bb-pnJ9-xjcw-1dR-y+oKjNs53bgD+dh1LwsMTCmzdRmQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20161018015636.11701-3-stephen.boyd@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: linux-usb <linux-usb@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGnW=Bb-pnJ9-xjcw-1dR-y+oKjNs53bgD+dh1LwsMTCmzdRmQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: punnaiah choudary kalluri <punnaia@xilinx.com>
+Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jussi.kivilinna@iki.fi" <jussi.kivilinna@iki.fi>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "pawel.moll@arm.com" <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Punnaih,
 
-On Tue, Oct 18, 2016 at 9:56 AM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
-> The ULPI bus can be built as a module, and it will soon be
-> calling these functions when it supports probing devices from DT.
-> Export them so they can be used by the ULPI module.
->
-> Acked-by: Rob Herring <robh@kernel.org>
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> ---
->  drivers/of/device.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 8a22a253a830..6719ab35b62e 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -225,6 +225,7 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
->
->         return tsize;
->  }
-> +EXPORT_SYMBOL_GPL(of_device_get_modalias);
->
->  int of_device_request_module(struct device *dev)
->  {
-> @@ -290,6 +291,7 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
->         }
->         mutex_unlock(&of_mutex);
->  }
-> +EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
+On Sun, 23 Oct 2016 17:37:42 +0530
+punnaiah choudary kalluri <punnaia@xilinx.com> wrote:
 
-This is trailing the wrong function.
+> Hi Boris and Jason,
+> 
+>  I am doing rework on these patches to accommodate recent changes with
+>  respect to ooblayout. Also some of the comments that i have received
+> from Boris as part of the arasan nand controller upstream patches will
+> apply to this driver. So, i will be releasing the next set of patches for this
+> driver soon and request your time for reviewing those patches.
+> 
+> for now, please ignore these patches.
 
-ChenYu
+OK. Thanks for the heads up. I'll wait for your new version.
 
->
->  int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
->  {
-> --
-> 2.10.0.297.gf6727b0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Regards,
+
+Boris
