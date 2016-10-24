@@ -1,75 +1,48 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm64: arch_timer: Add device tree binding for
- hisilicon-161x01 erratum
-Date: Mon, 24 Oct 2016 13:46:33 +0800
-Message-ID: <f1d3b4bb-e3ba-3cdf-69d5-46c8487a5a7f@huawei.com>
-References: <962ea92f-870b-e1d0-5bb7-1a6d66c35122@huawei.com>
- <20161023120423.GO30578@tiger>
+From: Alexander Stein <alexander.stein@systec-electronic.com>
+Subject: Re: [PATCH] gpio: mcp23s08: Add option to configure pullups.
+Date: Mon, 24 Oct 2016 08:13:54 +0200
+Message-ID: <11644726.TmP4uu3h4l@ws-stein>
+References: <1477062035-30825-1-git-send-email-enric.balletbo@collabora.com> <CACRpkdY15Hv_ydHyOXRM6G0ewVTHkVa1w3Z89AdvSDR=eyi7sQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161023120423.GO30578@tiger>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdY15Hv_ydHyOXRM6G0ewVTHkVa1w3Z89AdvSDR=eyi7sQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2016/10/23 20:04, Shawn Guo wrote:
-> On Sun, Oct 23, 2016 at 11:21:10AM +0800, Ding Tianhong wrote:
->> This erratum describes a bug in logic outside the core, so MIDR can't be
->> used to identify its presence, and reading an SoC-specific revision
->> register from common arch timer code would be awkward.  So, describe it
->> in the device tree.
->>
->> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/arch_timer.txt | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
->> index ef5fbe9..26bc837 100644
->> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
->> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
->> @@ -31,6 +31,12 @@ to deliver its interrupts via SPIs.
->>    This also affects writes to the tval register, due to the implicit
->>    counter read.
->>
->> +- hisilicon,erratum-161x01 : A boolean property. Indicates the presence of
->> +  QorIQ erratum 161201, which says that reading the counter is
+On Monday 24 October 2016 02:53:31, Linus Walleij wrote:
+> On Fri, Oct 21, 2016 at 5:00 PM, Enric Balletbo i Serra
 > 
-> QorIQ is a Freescale/NXP specific name, and shouldn't be there.
+> <enric.balletbo@collabora.com> wrote:
+> > Default is without pullups, but if property is specified in DT and the bit
+> > is set, set a pullup on GPIO-n.
+> > 
+> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > 
-> Shawn
+> I don't generally like this.
 > 
-
-Got it, will wait other feedback and fix them together, thanks.
-
-Ding
-
->> +  unreliable unless the small range of value is returned by back-to-back reads.
->> +  This also affects writes to the tval register, due to the implicit
->> +  counter read.
->> +
->>  ** Optional properties:
->>
->>  - arm,cpu-registers-not-fw-configured : Firmware does not initialize
->> -- 
->> 1.9.0
->>
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> In device tree it is the consumer that specifies how the line is used,
+> not the producer (gpiochip).
 > 
-> .
+> We currently only specify polarity, open drain and open source
+> for consumers though.
 > 
+> And the entire pin control system came into being *exactly* because
+> Grant didn't like me adding these things to the GPIO drivers.
+> 
+> So how many other things does the MCP support? Drive strength?
+> Schmitt trigger? Is there a datasheet?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Some unsupported features (AFAIK):
+* Input polarity (IPOL register)
+* open-drain interrupt pin
+* pullup on pins (proposed patch)
+
+Datasheet is here: http://ww1.microchip.com/downloads/en/DeviceDoc/21919e.pdf
+
+Best regards,
+Alexander
+
