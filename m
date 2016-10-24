@@ -1,50 +1,73 @@
 From: ahaslam@baylibre.com
-Subject: [PATCH/RFT v2 05/17] ARM: DTS: da850: Add usb phy node
-Date: Mon, 24 Oct 2016 18:46:22 +0200
-Message-ID: <20161024164634.4330-6-ahaslam@baylibre.com>
+Subject: [PATCH/RFT v2 08/17] ARM: davinci: hawk: add full constraints for ohci plat boot
+Date: Mon, 24 Oct 2016 18:46:25 +0200
+Message-ID: <20161024164634.4330-9-ahaslam@baylibre.com>
 References: <20161024164634.4330-1-ahaslam@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20161024164634.4330-1-ahaslam@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: gregkh@linuxfoundation.org, johan@kernel.org, robh+dt@kernel.org, nsekhar@ti.com, stern@rowland.harvard.edu, khilman@baylibre.com, sshtylyov@ru.mvista.com, david@lechnology.com, manjunath.goudar@linaro.org, broonie@kernel.org, abailon@baylibre.com
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Axel Haslam <ahaslam@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: David Lechner <david@lechnology.com>
+From: Axel Haslam <ahaslam@baylibre.com>
 
-Add a node for the new usb phy driver.
+The phy framework requests an optional "phy" regulator. If it does
+not find one, it returns -EPROBE_DEFER. In the case of non-DT based boot
+for the omap138-lcdk board, this would prevent the usb11 phy to probe
+correctly and ohci would not enumerate.
 
-Signed-off-by: David Lechner <david@lechnology.com>
+By calling "regulator_has_full_constraints", An error would be returned
+instead of DEFER for the "optional" regulator, and the probe of
+the phy driver can continue normally without a regulator.
+
+Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
 ---
- arch/arm/boot/dts/da850.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/mach-davinci/board-da830-evm.c     | 3 +++
+ arch/arm/mach-davinci/board-omapl138-hawk.c | 3 +++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 6bbf20d..33fcdce 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -376,6 +376,11 @@
- 					>;
- 			status = "disabled";
- 		};
-+		usb_phy: usb-phy {
-+			compatible = "ti,da830-usb-phy";
-+			#phy-cells = <1>;
-+			status = "disabled";
-+		};
- 		gpio: gpio@226000 {
- 			compatible = "ti,dm6441-gpio";
- 			gpio-controller;
+diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
+index c62766e..b33fc6b 100644
+--- a/arch/arm/mach-davinci/board-da830-evm.c
++++ b/arch/arm/mach-davinci/board-da830-evm.c
+@@ -26,6 +26,7 @@
+ #include <linux/platform_data/mtd-davinci.h>
+ #include <linux/platform_data/mtd-davinci-aemif.h>
+ #include <linux/platform_data/spi-davinci.h>
++#include <linux/regulator/machine.h>
+ 
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+@@ -631,6 +632,8 @@ static __init void da830_evm_init(void)
+ 	ret = da8xx_register_spi_bus(0, ARRAY_SIZE(da830evm_spi_info));
+ 	if (ret)
+ 		pr_warn("%s: spi 0 registration failed: %d\n", __func__, ret);
++
++	regulator_has_full_constraints();
+ }
+ 
+ #ifdef CONFIG_SERIAL_8250_CONSOLE
+diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
+index c5cb8d9..c3ab7ea 100644
+--- a/arch/arm/mach-davinci/board-omapl138-hawk.c
++++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
+@@ -14,6 +14,7 @@
+ #include <linux/console.h>
+ #include <linux/gpio.h>
+ #include <linux/platform_data/gpio-davinci.h>
++#include <linux/regulator/machine.h>
+ 
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+@@ -328,6 +329,8 @@ static __init void omapl138_hawk_init(void)
+ 	if (ret)
+ 		pr_warn("%s: dsp/rproc registration failed: %d\n",
+ 			__func__, ret);
++
++	regulator_has_full_constraints();
+ }
+ 
+ #ifdef CONFIG_SERIAL_8250_CONSOLE
 -- 
 1.9.1
