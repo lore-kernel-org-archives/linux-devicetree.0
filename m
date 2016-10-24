@@ -1,34 +1,39 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3] pinctrl: Add SX150X GPIO Extender Pinctrl Driver
-Date: Mon, 24 Oct 2016 16:39:17 +0200
-Message-ID: <CACRpkdY7vLU4yVP7M-O4rGt_L5cqL57ApmMQJ4aRGgzh3Nat6Q@mail.gmail.com>
-References: <1477040998-2016-1-git-send-email-narmstrong@baylibre.com>
- <CAHQ1cqESoRdeHyvP=m=8F_VwiaYL+wbjFoNa6KvWBGfijhcRjg@mail.gmail.com>
- <CACRpkdbwqFRtFN1gx1G7BuFe44mvPyCSeoQ5g9_FR11j_ZO4ug@mail.gmail.com> <CAHQ1cqGLQ=DdhXg1ebkgBbLN8P2P8BEDrGGTx9_r+6=Wy3uUWA@mail.gmail.com>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH] ARM64: dts: bcm2835: Fix bcm2837 compatible string
+Date: Mon, 24 Oct 2016 17:09:50 +0200
+Message-ID: <1477321791-7896-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHQ1cqGLQ=DdhXg1ebkgBbLN8P2P8BEDrGGTx9_r+6=Wy3uUWA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Peter Rosin <peda@axentia.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Roland Stigge <stigge@antcom.de>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+To: linux-rpi-kernel@lists.infradead.org
+Cc: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Eric Anholt <eric@anholt.net>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 24, 2016 at 6:51 AM, Andrey Smirnov
-<andrew.smirnov@gmail.com> wrote:
+bcm2837-rpi-3-b.dts, its only in-tree user, was overriding it as
+"brcm,bcm2837" already.
 
-> It seem strange to me that the driver uses "handle_edge_irq", given
-> how none of the individual interrupts seem to require any ACKing,
-> since it is all handled in sx150x_irq_thread_fn(), line 533. More so,
-> I had trouble finding who/where sets .irq_ack() callback, which AFAIU
-> is mandatory for handle_edge_irq().
+Fixes: 9d56c22a7861 ("ARM: bcm2835: Add devicetree for the Raspberry Pi 3.")
+Cc: Eric Anholt <eric@anholt.net>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ arch/arm64/boot/dts/broadcom/bcm2837.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yes that looks strange.
-
-Neil have you tested IRQs with this code?
-
-If there is trouble, please follow up with a fix for the edge handler.
-Maybe it should just be handle_simple_irq().
-
-Yours,
-Linus Walleij
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi b/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
+index 8216bbb29fe0..c1f719b7097a 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
++++ b/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
+@@ -1,7 +1,7 @@
+ #include "bcm283x.dtsi"
+ 
+ / {
+-	compatible = "brcm,bcm2836";
++	compatible = "brcm,bcm2837";
+ 
+ 	soc {
+ 		ranges = <0x7e000000 0x3f000000 0x1000000>,
+-- 
+2.6.6
