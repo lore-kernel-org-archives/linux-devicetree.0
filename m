@@ -1,55 +1,53 @@
-From: Markus Mayer <markus.mayer@broadcom.com>
-Subject: Re: [PATCH v1 0/3] Add support for Broadcom OTP controller
-Date: Mon, 24 Oct 2016 15:45:04 -0700
-Message-ID: <CAGt4E5vyEXgxbuCgzjmE0LxwNM-A7BQ4_wMBv3G350TY=zyLtA@mail.gmail.com>
-References: <1477336324-10543-1-git-send-email-jonathan.richardson@broadcom.com>
- <CAADWXX-43-k2K2T1V5MQMd0z0V502wf1syNHERPfvNstOJw-3A@mail.gmail.com>
- <e34f01b6-a059-9988-0f93-e5adb82a5436@gmail.com> <CA+55aFwAZPJ+o0qkYjJziHofYvvsocHuWr1YUmVnzj6VTv_sgA@mail.gmail.com>
- <82ad10b1-32ab-3962-d5ab-e787e2c70130@gmail.com> <CA+55aFxeu9YKb=zAba8MVRgxmJoQJ8W6u3NNJv7rP6mwxj+nVA@mail.gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V2 1/8] PM / OPP: Reword binding supporting multiple
+ regulators per device
+Date: Mon, 24 Oct 2016 15:48:52 -0700
+Message-ID: <20161024224852.GQ26139@codeaurora.org>
+References: <cover.1476952750.git.viresh.kumar@linaro.org>
+ <891ef8705e13dff331a3135647f4c18f88402a12.1476952750.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+55aFxeu9YKb=zAba8MVRgxmJoQJ8W6u3NNJv7rP6mwxj+nVA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Jonathan Richardson <jonathan.richardson@broadcom.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <891ef8705e13dff331a3135647f4c18f88402a12.1476952750.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, d-gerlach-l0cyMroinI0@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-FWIW, this thread ends up in the spam folder for me also on my private
-e-mail account. And it's not the only Broadcom thread. Quite a few
-Broadcom e-mails end up there. The thread was sent to me via
-infradead.org. My private e-mail is also hosted by Gmail.
+On 10/20, Viresh Kumar wrote:
+> On certain platforms (like TI), DVFS for a single device (CPU) requires
+> configuring multiple power supplies.
+> 
+> The OPP bindings already contains binding and example to explain this
+> case, but it isn't sufficient. For example, there is no way for the code
+> parsing these bindings to know which voltage values belong to which
+> power supply. Also its not possible to know the order in which the
+> supplies need to be configured while switching OPPs.
+> 
+> This patch tries to clarify on those details and does some minor changes
+> as well.
+> 
+> Note that the bindings do not specify the order in which the regulators
+> need to be programmed and the order in which the entries are added for
+> the supplies.
+> 
+> The user of the bindings (like the kernel) shall know these details
+> already and the DT is responsible to supply only the readings for the
+> regulators.
+> 
+> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
 
-I get this:
+Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-SPF: PASS with IP 2001:1868:205:0:0:0:0:9 Learn more
-DKIM: NEUTRAL with domain null Learn more
-DMARC: FAIL Learn more
-
-So, it's not DKIM for me, but DMARC that's failing.
-
-The actual headers:
-
-Received: from bombadil.infradead.org (bombadil.infradead.org.
-[2001:1868:205::9])
-        by mx.google.com with ESMTPS id
-r127si16944054pgr.251.2016.10.24.12.13.37
-        for <mmayer at mmayer.net>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Oct 2016 12:13:37 -0700 (PDT)
-Received-SPF: pass (google.com: best guess record for domain of
-linux-arm-kernel-bounces+mmayer=mmayer.net@lists.infradead.org
-designates 2001:1868:205::9 as permitted sender)
-client-ip=2001:1868:205::9;
-Authentication-Results: mx.google.com;
-       dkim=neutral (body hash did not verify) header.i=@broadcom.com;
-       spf=pass (google.com: best guess record for domain of
-linux-arm-kernel-bounces+mmayer=mmayer.net@lists.infradead.org
-designates 2001:1868:205::9 as permitted sender)
-smtp.mailfrom=linux-arm-kernel-bounces+mmayer=mmayer.net@lists.infradead.org;
-       dmarc=fail (p=QUARANTINE dis=NONE) header.from=broadcom.com
-Received: from localhost ([127.0.0.1] helo=bombadil.infradead.org) by
-bombadil.infradead.org
-
-Regards,
--Markus
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
