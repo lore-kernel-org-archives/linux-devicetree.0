@@ -1,39 +1,47 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH] ARM64: dts: bcm2835: Fix bcm2837 compatible string
-Date: Mon, 24 Oct 2016 17:09:50 +0200
-Message-ID: <1477321791-7896-1-git-send-email-afaerber@suse.de>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH 2/5] ARM: davinci: Don't append git rev to local version
+Date: Mon, 24 Oct 2016 10:15:40 -0500
+Message-ID: <bf8cac01-910d-5afa-e840-f0d7ee96d22a@lechnology.com>
+References: <1477075018-20176-1-git-send-email-david@lechnology.com>
+ <1477075018-20176-3-git-send-email-david@lechnology.com>
+ <20f3efba-4f79-3675-d2ce-09efe90fb692@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Eric Anholt <eric@anholt.net>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20f3efba-4f79-3675-d2ce-09efe90fb692-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-bcm2837-rpi-3-b.dts, its only in-tree user, was overriding it as
-"brcm,bcm2837" already.
+On 10/24/2016 06:35 AM, Sekhar Nori wrote:
+> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
+>> In the davinci default configuration, don't append the git revision to
+>> the local kernel version by. This seems like the more desirable default
+>> value.
+>
+> Why? To the contrary I actually quite like the fact that the git commit
+> is appended to version string. Makes it easy for me to cross-check that
+> I am booting the right image.
+>
+>>
+>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+>
+> Thanks,
+> Sekhar
+>
 
-Fixes: 9d56c22a7861 ("ARM: bcm2835: Add devicetree for the Raspberry Pi 3.")
-Cc: Eric Anholt <eric@anholt.net>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- arch/arm64/boot/dts/broadcom/bcm2837.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Each time you make a commit, you get a new version, which installs 
+another copy of the kernel modules on the device. This will fill up the 
+SD card if you are making many commits.
 
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi b/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
-index 8216bbb29fe0..c1f719b7097a 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
-@@ -1,7 +1,7 @@
- #include "bcm283x.dtsi"
- 
- / {
--	compatible = "brcm,bcm2836";
-+	compatible = "brcm,bcm2837";
- 
- 	soc {
- 		ranges = <0x7e000000 0x3f000000 0x1000000>,
--- 
-2.6.6
+Also, if someone wants to build the mainline kernel using the default 
+configuration, it seems odd to have a git revision tacked on to the end 
+even though you made no revisions.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
