@@ -1,65 +1,35 @@
-From: okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [PATCH V7 4/4] dmaengine: qcom_hidma: add MSI support for
- interrupts
-Date: Mon, 24 Oct 2016 07:07:19 -0400
-Message-ID: <12f6cc8ec2b83237b61965f8576cface@codeaurora.org>
-References: <1477067879-23750-1-git-send-email-okaya@codeaurora.org>
- <1477067879-23750-5-git-send-email-okaya@codeaurora.org>
- <CAHp75Vd+u5va3kyqcapeF9JATUfv5gBnoEM_W+frDmMXs5f2Uw@mail.gmail.com>
- <36163853-ac4a-e146-0c1b-eaf42e8b234d@codeaurora.org>
- <CAHp75VettN=-S+iqKQbqixRe2BM=AiS26VGM+8yLophbkc+Z8g@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm64: arch_timer: Add device tree binding for
+ hisilicon-161x01 erratum
+Date: Mon, 24 Oct 2016 12:16:08 +0100
+Message-ID: <20161024111608.GG15620@leverpostej>
+References: <962ea92f-870b-e1d0-5bb7-1a6d66c35122@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75VettN=-S+iqKQbqixRe2BM=AiS26VGM+8yLophbkc+Z8g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <962ea92f-870b-e1d0-5bb7-1a6d66c35122-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dave Jiang <dave.jiang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-24 03:30, Andy Shevchenko wrote:
-> On Mon, Oct 24, 2016 at 5:55 AM, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> 
-> wrote:
->> On 10/21/2016 12:11 PM, Andy Shevchenko wrote:
->>>> +static void hidma_free_msis(struct hidma_dev *dmadev)
->>>> > +{
->>>> > +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
->>> Perhaps one #ifdef and two definitions of functions?
->> 
->> I don't think it will make a difference. I'll have to move
->> #ifdef around the caller of hidma_free_msis instead which
->> I think is uglier.
->> 
->> The hidma_write_msi_msg function gets called only when
->> CONFIG_GENERIC_MSI_IRQ_DOMAIN is defined. If I don't put
->> this around the function definition, I get unused function
->> warning from the compiler. This is the reason why preprocessor
->> definition is outside of the function definition.
-> 
-> I am talking about something like below:
-> 
-> #ifdef UGLY_DEFINE
-> myfunc_a()
-> {
-> }
-> 
-> myfunc_b()
-> {
-> }
-> #else
-> static inline myfunc_a() {}
-> static inline myfunc_b() {}
-> #endif
-> 
-> 
-> There is another way as well, namely use of IS_ENABLED(), IS_BUILTIN()
-> macros (I don't remember how exactly second one is spelt).
+On Sun, Oct 23, 2016 at 11:21:10AM +0800, Ding Tianhong wrote:
+> +- hisilicon,erratum-161x01 : A boolean property. Indicates the presence of
+> +  QorIQ erratum 161201, which says that reading the counter is
+> +  unreliable unless the small range of value is returned by back-to-back reads.
+> +  This also affects writes to the tval register, due to the implicit
+> +  counter read.
 
+Is "161x01" the *exact* erratum number, or is the 'x' a wildcard? Please
+use the *exact* erratum number, even if that means we have to list
+several.
 
-This was my initial approach. I was asked to remove the stub functions. 
-So, I did it.
+Is "161x01" an *erratum* number, or the *part* number of affected
+devices?
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
