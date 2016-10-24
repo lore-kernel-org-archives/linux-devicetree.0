@@ -1,61 +1,113 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun8i: fix the pinmux for UART1
-Date: Tue, 25 Oct 2016 01:08:31 +0800
-Message-ID: <20161024170831.38819-1-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC] ARM: memory: da8xx-ddrctl: new driver
+Date: Mon, 24 Oct 2016 10:35:30 -0700
+Message-ID: <7hd1ipzm3h.fsf@baylibre.com>
+References: <1477327596-16060-1-git-send-email-bgolaszewski@baylibre.com>
+        <1477327596-16060-2-git-send-email-bgolaszewski@baylibre.com>
+        <20161024170035.GO15620@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBNMAXHAAKGQEG27IHGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161024170035.GO15620@leverpostej> (Mark Rutland's message of
+        "Mon, 24 Oct 2016 18:00:36 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-When the patch is applied, the allwinner,driver and allwinner,pull
-properties are removed.
+Hi Mark,
 
-Although they're described to be optional in the devicetree binding,
-without them, the pinmux cannot be initialized, and the uart cannot
-be used.
+Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
 
-Add them back to fix the problem, and makes the bluetooth on iNet D978
-Rev2 board work.
+> On Mon, Oct 24, 2016 at 06:46:36PM +0200, Bartosz Golaszewski wrote:
+>> Create a new driver for the da8xx DDR2/mDDR controller and implement
+>> support for writing to the Peripheral Bus Burst Priority Register.
+>> 
+>> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  .../memory-controllers/ti-da8xx-ddrctl.txt         |  20 +++
+>>  drivers/memory/Kconfig                             |   8 +
+>>  drivers/memory/Makefile                            |   1 +
+>>  drivers/memory/da8xx-ddrctl.c                      | 187 +++++++++++++++++++++
+>>  4 files changed, 216 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
+>>  create mode 100644 drivers/memory/da8xx-ddrctl.c
+>> 
+>> diff --git
+>> a/Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
+>> b/Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
+>> new file mode 100644
+>> index 0000000..f0eda59
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
+>> @@ -0,0 +1,20 @@
+>> +* Device tree bindings for Texas Instruments da8xx DDR2/mDDR memory controller
+>> +
+>> +The DDR2/mDDR memory controller present on Texas Instruments da8xx SoCs memory
+>> +maps a set of registers which allow to tweak the controller's behavior.
+>
+> This is a description of the *driver*. The device itself doesn't map
+> some registers, it features them. Please descrive the *device*.
+>
+>> +
+>> +Documentation:
+>> +OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh82c/spruh82c.pdf
+>> +
+>> +Required properties:
+>> +
+>> +- compatible:		"ti,da850-ddrctl" - for da850 SoC based boards
+>
+> Perhaps:
+>
+> 	"ti,da850-ddr-controller"
+>
+>> +static int da8xx_ddrctl_probe(struct platform_device *pdev)
+>> +{
+>> +	const struct da8xx_ddrctl_config_knob *knob;
+>> +	const struct da8xx_ddrctl_setting *setting;
+>> +	u32 regprop[2], base, memsize, reg;
+>> +	struct device_node *node, *parent;
+>> +	void __iomem *ddrctl;
+>> +	const char *board;
+>> +	struct device *dev;
+>> +	int ret;
+>> +
+>> +	dev = &pdev->dev;
+>> +	node = dev->of_node;
+>> +
+>> +	/* Find the board name. */
+>> +	for (parent = node;
+>> +	     !of_node_is_root(parent);
+>> +	     parent = of_get_parent(parent));
+>> +
+>> +	ret = of_property_read_string(parent, "compatible", &board);
+>> +	if (ret) {
+>> +		dev_err(dev, "unable to read the soc model\n");
+>> +		return ret;
+>> +	}
+>
+> I can see that you want to expose sysfs knobs for this, but is it really
+> necessary to match boards like this? It's very fragile, and commits us
+> to maintaining a database of board data (i.e. a board file).
+>
+> I am very much not keen on that.
 
-Fixes: 82eec384249f (ARM: dts: sun8i: add pinmux for UART1 at PG)
+The original proposal[1] was to create DT properties reflecting the
+various knobs in the DDR Controller, but that was frowned upon since
+that was more HW configuration than hardware description.
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
----
+That resulted in this approach which keeps the HW configuration values
+in the driver, and selectable based on DT compatible.
 
-This patch is targeted on 4.9.
+IMO, neither aproach is pretty.  From a DT maintainer perspective, can
+you comment on your preference?
 
- arch/arm/boot/dts/sun8i-a23-a33.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+Thanks,
 
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index 48fc24f..300a1bd 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -282,11 +282,15 @@
- 			uart1_pins_a: uart1@0 {
- 				allwinner,pins = "PG6", "PG7";
- 				allwinner,function = "uart1";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 			};
- 
- 			uart1_pins_cts_rts_a: uart1-cts-rts@0 {
- 				allwinner,pins = "PG8", "PG9";
- 				allwinner,function = "uart1";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 			};
- 
- 			mmc0_pins_a: mmc0@0 {
--- 
-2.10.1
+Kevin
+
+[1] https://marc.info/?l=linux-arm-kernel&m=147672200715076&w=2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
