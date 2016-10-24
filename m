@@ -1,12 +1,12 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH/RFT v2 09/17] regulator: fixed: Add over current event
-Date: Mon, 24 Oct 2016 18:43:22 +0100
-Message-ID: <20161024174322.GN17252@sirena.org.uk>
+Date: Mon, 24 Oct 2016 18:53:20 +0100
+Message-ID: <20161024175320.GO17252@sirena.org.uk>
 References: <20161024164634.4330-1-ahaslam@baylibre.com>
  <20161024164634.4330-10-ahaslam@baylibre.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="HL3CiL6n73+IAdG4"
+        protocol="application/pgp-signature"; boundary="fpolVoprVozDR81Y"
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
 In-Reply-To: <20161024164634.4330-10-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
@@ -16,40 +16,57 @@ Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johan-DgEjT+Ai2ygd
 List-Id: devicetree@vger.kernel.org
 
 
---HL3CiL6n73+IAdG4
+--fpolVoprVozDR81Y
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
 On Mon, Oct 24, 2016 at 06:46:26PM +0200, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
-> From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->=20
-> Some regulator supplies have an over-current pin that is
-> activated when the hw detects an over current condition.
-> When this happens, the hardware enters a current limited
-> mode.
 
-Please don't mix random enhancements like this into bigger system
-specific RFC serieses, send them separately so they're easier to spot
-and there's no confusion with dependencies and then reference them from
-the system specific series when you post that.
+> +		if (ret) {
+> +			pr_err("Failed to request irq: %d\n", ret);
 
---HL3CiL6n73+IAdG4
+dev_err()
+
+> +++ b/include/linux/regulator/consumer.h
+> @@ -74,6 +74,10 @@
+>   *             the most noisy and may not be able to handle fast load
+>   *             switching.
+>   *
+> + * OVERCURRENT Regulator has detected an overcurrent condition, and
+> + *             may be limiting the supply output.
+> + *
+> + *
+>   * NOTE: Most regulators will only support a subset of these modes. Some
+>   * will only just support NORMAL.
+>   *
+> @@ -84,6 +88,7 @@
+>  #define REGULATOR_MODE_NORMAL			0x2
+>  #define REGULATOR_MODE_IDLE			0x4
+>  #define REGULATOR_MODE_STANDBY			0x8
+> +#define REGULATOR_MODE_OVERCURRENT		0x10
+
+This is adding a new core feature with a new mode and should have been
+split out of the driver specific change with a spearate changelog.  Why
+does it make sense to report this as a mode, we don't report other error
+conditions as modes but instead use REGULATOR_STATUS_ with the
+get_status() operation?
+
+--fpolVoprVozDR81Y
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJYDkg5AAoJECTWi3JdVIfQlRUH/3twnLRIWMftcz2090Zn61Ei
-ismfoSvRVF1WQE5FWcvwiVqidRFD1gPih27Li73JzBYBcUhqEt/4dj6Fw0WtiZD/
-dc2GAnFMrXxh2wlmO1bFe+vDmbVrZQhOfhnduWKQeFab30LEIuOD+x/mJHRa++Kd
-banUNSEej7ijkPM4UEoHsNxoO365bau/Xo43xL1zXvSV6GDtUBnKewCnOfcuMoEo
-sNY9vmHfx22qcfLMab2tCGA5trXgDwGeuqsryClShnRJgO9l5pATyR/uLUm4+tLQ
-+d7/l8YIW7GWNfOZd0zcd5ZBefa8ygCyaYNquI/sf22C0cK8B+vX9dqJ5zXbN1c=
-=3/yd
+iQEcBAEBCAAGBQJYDkqOAAoJECTWi3JdVIfQrm4H/j8ppy9ICV8PbApuQVlmdQVy
+O0yrpQZ+MEqJb+pQqxnlwSlSWeWFysUIOPHdi80OIJ/9EfJfjavmSA+EyblLWJfh
+7gQ/+fy7KIaWACGORlLq8q1GVz4TvEVbLIC9oDpBIhzRp/Qs9mpK8NFqejFlLOoZ
+V5UIVGLngb+DezWW2W6CT57/arJmyi20C9Mj5Y7URfzpeqT7WMbPBVwP0D500iAk
+BysjGVZUzaFzNAKXypCXlnknJGespx67dvxAsWh4wp01n5BsoZvdCFv81xERrm7t
+KjXybzY3ZdsrBOja1MLNGUqWBPYpq3zcVowi7QPZ0XmrVjUyMFb78CQatdUtw/k=
+=fuoz
 -----END PGP SIGNATURE-----
 
---HL3CiL6n73+IAdG4--
+--fpolVoprVozDR81Y--
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
