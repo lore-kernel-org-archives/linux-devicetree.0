@@ -1,82 +1,65 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: pinctrl: Deprecate sunxi pinctrl
- bindings
-Date: Mon, 24 Oct 2016 21:49:17 +0200
-Message-ID: <20161024194917.g5oezqc4uacsyt24@lukather>
-References: <cover.f893b02a9f816dad8fad3986672b05c4b211e2b1.1476971126.git-series.maxime.ripard@free-electrons.com>
- <6aec73cd3b9d3dbf1085d042ec6c23f385a300de.1476971126.git-series.maxime.ripard@free-electrons.com>
- <CACRpkdb7zs7Nhs3i1o=WUt787vJCuePre3Tj3wLu++qwpO0atQ@mail.gmail.com>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH v5 02/23] of: device: Export of_device_{get_modalias,
+ uvent_modalias} to modules
+Date: Mon, 24 Oct 2016 12:48:24 -0700
+Message-ID: <147733850401.29612.2343965740004706258@sboyd-linaro>
+References: <20161018015636.11701-1-stephen.boyd@linaro.org>
+ <20161018015636.11701-3-stephen.boyd@linaro.org>
+ <CAGb2v66t8t3o0PxzaaBKnRvNP=CWG5nYud7Wjp27Q1x2baM4hg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="24z5hglkfpgu6hib"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdb7zs7Nhs3i1o=WUt787vJCuePre3Tj3wLu++qwpO0atQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAGb2v66t8t3o0PxzaaBKnRvNP=CWG5nYud7Wjp27Q1x2baM4hg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb <linux-usb@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---24z5hglkfpgu6hib
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Linus,
-
-On Mon, Oct 24, 2016 at 02:03:59AM +0200, Linus Walleij wrote:
-> On Thu, Oct 20, 2016 at 3:49 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->=20
-> > The generic pin configuration and multiplexing should be preferred now,
-> > even though we still support the old one.
+Quoting Chen-Yu Tsai (2016-10-24 05:19:05)
+> Hi,
+> 
+> On Tue, Oct 18, 2016 at 9:56 AM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
+> > The ULPI bus can be built as a module, and it will soon be
+> > calling these functions when it supports probing devices from DT.
+> > Export them so they can be used by the ULPI module.
 > >
-> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->=20
-> Patch applied.
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > Cc: <devicetree@vger.kernel.org>
+> > Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+> > ---
+> >  drivers/of/device.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/of/device.c b/drivers/of/device.c
+> > index 8a22a253a830..6719ab35b62e 100644
+> > --- a/drivers/of/device.c
+> > +++ b/drivers/of/device.c
+> > @@ -225,6 +225,7 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
+> >
+> >         return tsize;
+> >  }
+> > +EXPORT_SYMBOL_GPL(of_device_get_modalias);
+> >
+> >  int of_device_request_module(struct device *dev)
+> >  {
+> > @@ -290,6 +291,7 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+> >         }
+> >         mutex_unlock(&of_mutex);
+> >  }
+> > +EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
+> 
+> This is trailing the wrong function.
+> 
 
-Thanks a lot.
+Good catch. Must have been some bad rebase.
 
-However, it looks like the first patch from this serie is missing from
-your tree, is there a reason for that?
-
-Also, in order to preserve bisectability, could you create an
-immutable branch for those sunxi patches so that I can merge the DT
-bits?
-
-Thanks,
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---24z5hglkfpgu6hib
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYDmW0AAoJEBx+YmzsjxAgv24P/1ErGBnx2cRtwfc5xIbVhdph
-WwmJuq0N5P/pwFGBF1xrZ0n0qkIAfyZ0BVl/gnrAVg6ieBJ3Sp99/FVLuJ4HIV7P
-DcGuSgUVhjtQINc5SHFqu/kmn4rpPlid7uu336Hi76COc/aaeHZDHU1guvN33NvW
-MGCVESuNbd6ANx9CNPIw1RAHfE2DCdxp6NraApJvoEHeAtv40ttqrphb5yYUWNXn
-p4CPcaFziPblIB7Kli04jD7u9mNMcdg60IN/4zNXj91ni2vtbjy3/aacngrMBP9N
-p6+hdYJkzReZVZX2d32m6e32HWQ4TnRrNbWgCP83b0yLDkxwUhyl4R5zpwhdTy9M
-YAFLM6y85wuUJXk5LYjpun3azBHL6V+r86NbPTTs8Mj53LLfnA7QWJxZVtNEdbBs
-MJG3MT0V9kAjZ+3CPOvm36DvTiLuUcG04W1J2g4AUX+aCHClEYjYs6jvl8UeF0JS
-qJmgLfwRCPzQheS3IghL1nRVZXQhbmb5GsCYGFIHR1umFkVjJSXNxyr1Fx7azz/H
-yKAWVJpbK0J31LQGewQ5iHYV1Ge6sOMFa1sFtNczxvuJ8VOFCtyRqgr1bi/ijvy+
-rF1jsR9zoxoO79lPM0nHkWpKx3RE2guNJJ81G1hlRMsttQlKQMxa5NETrKkNeZLJ
-p/7JEfdB6xpwKjxWc4Km
-=M4hJ
------END PGP SIGNATURE-----
-
---24z5hglkfpgu6hib--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Peter, can you fix it while applying or should I resend this patch?
