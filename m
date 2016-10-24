@@ -1,65 +1,96 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: sti: stih410-clocks: Add PROC_STFE as a critical
- clock
-Date: Mon, 24 Oct 2016 09:53:04 +0100
-Message-ID: <20161024085304.GE14477@dell>
-References: <1476804957-24000-1-git-send-email-peter.griffin@linaro.org>
+From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Subject: Re: [PATCH v5 3/9] vcodec: mediatek: Add Mediatek V4L2 Video
+ Decoder Driver
+Date: Mon, 24 Oct 2016 07:05:42 -0200
+Message-ID: <20161024070542.65e11e37@vento.lan>
+References: <1472818800-22558-1-git-send-email-tiffany.lin@mediatek.com>
+        <1472818800-22558-2-git-send-email-tiffany.lin@mediatek.com>
+        <1472818800-22558-3-git-send-email-tiffany.lin@mediatek.com>
+        <1472818800-22558-4-git-send-email-tiffany.lin@mediatek.com>
+        <20161021110104.5733240e@vento.lan>
+        <1477279328.10501.10.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1476804957-24000-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477279328.10501.10.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tiffany Lin <tiffany.lin@mediatek.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Oct 2016, Peter Griffin wrote:
+Em Mon, 24 Oct 2016 11:22:08 +0800
+Tiffany Lin <tiffany.lin@mediatek.com> escreveu:
 
-> Once the ST frontend demux HW IP has been enabled, the clock can't
-> be disabled otherwise the system will hang and the board will
-> be unserviceable.
+> Hi Mauro,
 > 
-> To allow balanced clock enable/disable calls in the driver we use
-> the critical clock infrastructure to take an extra reference on the
-> clock so the clock will never actually be disabled.
-
-This is an abuse of the critical-clocks framework, and is exactly the
-type of hack I promised the clk guys I'd try to prevent.  If this, or
-any other IP has some quirks (i.e. once enabled, if this clock is
-subsequently disabled it will have a catastrophic effect on the
-platform), then they should be worked around in the driver.
-
-The correct thing to do here is craft a clk-keep-on flag and ensure it
-is set to true for the effected platform(s)' platform data.
-
-> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/stih410-clock.dtsi | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> On Fri, 2016-10-21 at 11:01 -0200, Mauro Carvalho Chehab wrote:
+> > Em Fri, 2 Sep 2016 20:19:54 +0800
+> > Tiffany Lin <tiffany.lin@mediatek.com> escreveu:
+> >   
+> > > Add v4l2 layer decoder driver for MT8173
+> > > 
+> > > Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>  
+> >   
+> > > +int vdec_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
+> > > +{
+> > > +	int ret = 0;
+> > > +
+> > > +	switch (fourcc) {
+> > > +	case V4L2_PIX_FMT_H264:
+> > > +	case V4L2_PIX_FMT_VP8:
+> > > +	default:
+> > > +		return -EINVAL;
+> > > +	}  
+> > 
+> > Did you ever test this driver? The above code will *always* return
+> > -EINVAL, with will cause vidioc_vdec_s_fmt() to always fail!
+> > 
+> > I suspect that what you wanted to do, instead, is:
+> > 
+> > 	switch (fourcc) {
+> > 	case V4L2_PIX_FMT_H264:
+> > 	case V4L2_PIX_FMT_VP8:
+> > 		break;
+> > 	default:
+> > 		return -EINVAL;
+> >   
 > 
-> diff --git a/arch/arm/boot/dts/stih410-clock.dtsi b/arch/arm/boot/dts/stih410-clock.dtsi
-> index 8598eff..07c8ef9 100644
-> --- a/arch/arm/boot/dts/stih410-clock.dtsi
-> +++ b/arch/arm/boot/dts/stih410-clock.dtsi
-> @@ -208,7 +208,8 @@
->  						     "clk-clust-hades",
->  						     "clk-hwpe-hades",
->  						     "clk-fc-hades";
-> -				clock-critical = <CLK_ICN_CPU>,
-> +				clock-critical = <CLK_PROC_STFE>,
-> +						 <CLK_ICN_CPU>,
->  						 <CLK_TX_ICN_DMU>,
->  						 <CLK_EXT2F_A9>,
->  						 <CLK_ICN_LMI>,
+> The original idea here is that vp8 and h264 are added in later patches.
+> If get this patch without later patches, it should return -EINVAL.
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I noticed your idea, but next time, don't add dead code like that.
+Reviewers check patch by patch at the order they're present at the
+patch series.
+
+So, don't add something broken by purpose, assuming that it would
+be fixed later.
+
+> 
+> 
+> > Btw, this patch series has also several issues that were pointed by
+> > checkpatch. Please *always* run checkpatch when submitting your work.
+> > 
+> > You should take a look at the Kernel documentation about how to
+> > submit patches, at:
+> > 	https://mchehab.fedorapeople.org/kernel_docs/process/index.html
+> > 
+> > PS.: this time, I fixed the checkpatch issues for you. So, let me know
+> > if the patch below is OK, and I'll merge it at media upstream,
+> > assuming that the other patches in this series are ok.
+> >   
+> 
+> I did run checkpatch, but I don't know why these issues missed.
+> probably I run checkpatch for all files not for patches.
+> I will take a look at the documentation and keep this in mind for future
+> upstream.
+> Appreciated for your help.
+
+Checkpatch should be run patch by patch, as we expect that all patches
+will follow the coding style and will compile fine, without introducing
+warnings.
+
+I do compile the Kernel for every single patch I merge.
+
+Regards,
+Mauro
