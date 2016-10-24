@@ -1,99 +1,42 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dt: sun8i-h3: Add sunxi-sid to dts for sun8i-h3
-Date: Mon, 24 Oct 2016 16:05:17 +0200
-Message-ID: <20161024140517.kv6wkzifgibyv7sl@lukather>
-References: <1475660904-7959-1-git-send-email-clabbe.montjoie@gmail.com>
- <20161005122130.8cc229ff5d4990149956b49c@free.fr>
- <20161019074016.GA31440@Red>
- <20161020203654.2erph2mr73yzksla@lukather>
- <20161023082631.GA28485@Red>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Zach Brown <zach.brown@ni.com>
+Subject: [RFC v3 1/2] mmc: sdhci: Add device tree property sdhci-cap-speed-modes-broken
+Date: Mon, 24 Oct 2016 14:04:09 -0500
+Message-ID: <1477335850-14945-2-git-send-email-zach.brown@ni.com>
+References: <1477335850-14945-1-git-send-email-zach.brown@ni.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dhjasci7bsrokpr2"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4NVXHAAKGQESLEZTFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20161023082631.GA28485@Red>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477335850-14945-1-git-send-email-zach.brown@ni.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ulf.hansson@linaro.org
+Cc: adrian.hunter@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zach.brown@ni.com
 List-Id: devicetree@vger.kernel.org
 
+On some systems the sdhci capabilty registers are incorrect for one
+reason or another.
 
---dhjasci7bsrokpr2
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+The sdhci-cap-speed-modes-broken property will let the driver know that
+the sdhci capability registers should not be relied on for speed modes.
+Instead the driver should check the mmc generic DT bindings.
 
-On Sun, Oct 23, 2016 at 10:26:31AM +0200, LABBE Corentin wrote:
-> On Thu, Oct 20, 2016 at 10:36:54PM +0200, Maxime Ripard wrote:
-> > On Wed, Oct 19, 2016 at 09:40:16AM +0200, LABBE Corentin wrote:
-> > > On Wed, Oct 05, 2016 at 12:21:30PM +0200, Jean-Francois Moine wrote:
-> > > > On Wed,  5 Oct 2016 11:48:24 +0200
-> > > > Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > > 
-> > > > > This patch add support for the sunxi-sid driver to the device tree for sun8i-h3.
-> > > > > 
-> > > > > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > > > ---
-> > > > >  arch/arm/boot/dts/sun8i-h3.dtsi | 5 +++++
-> > > > >  1 file changed, 5 insertions(+)
-> > > > > 
-> > > > > diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-> > > > > index 9f58bb4..abfd29c 100644
-> > > > > --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> > > > > +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> > > > > @@ -211,6 +211,11 @@
-> > > > >  			#size-cells = <0>;
-> > > > >  		};
-> > > > >  
-> > > > > +		sid: eeprom@01c14200 {
-> > > > > +			compatible = "allwinner,sun7i-a20-sid";
-> > > > > +			reg = <0x01c14200 0x200>;
-> > > > 
-> > > > The datasheet says 1Kb starting at 0x01c14000.
-> > > > Is there any reason to reduce the area and to shift the offset?
-> > > > 
-> > > 
-> > > According to http://linux-sunxi.org/SID_Register_Guide "For
-> > > Allwinner A83T and H3 the SID address space starts at 0x01c14000,
-> > > and the e-fuses are at offset 0x200".
-> > >
-> > > So I use this offset, since the sunxi_sid driver need the base
-> > > address of e-fuses.
-> > > 
-> > > The easiest solution is to use 0x01c14200 since the other part of
-> > > sid is not used and not known (A83T/H3 user manual doesnt give any
-> > > information on all sid space, worse for A64 which reference SID only
-> > > in memory map).
-> > > 
-> > > So probably for H3/A64/A83T, there will never any usage of the rest
-> > > of the SID address space.
-> > 
-> > And since we can't know that, and we have to maintain the DT ABI,
-> > using the whole address map and an offset, with a new compatible, is
-> > definetely the safest thing to do.
-> > 
-> 
-> I have two way of doing it, which one do you prefer ?
-> 
-> - Adding two optionnal properties: efuses-offset and efuses-size defaulting to 0 and resourcesize.
-> - Adding a subnode called efuses with its own reg=<>
-> 
-> The first one is easy and didnt need any work on previous DT entries.
+Signed-off-by: Zach Brown <zach.brown@ni.com>
+---
+ Documentation/devicetree/bindings/mmc/mmc.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-I'd prefer to have a compatible, and the size and/or offset of the
-efuses associated to it.
-
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+index 8a37782..671d6c0 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+@@ -52,6 +52,9 @@ Optional properties:
+ - no-sdio: controller is limited to send sdio cmd during initialization
+ - no-sd: controller is limited to send sd cmd during initialization
+ - no-mmc: controller is limited to send mmc cmd during initialization
++- sdhci-cap-speed-modes-broken: One or more of the bits in the sdhci
++  capabilities registers representing speed modes are incorrect. All the bits
++  representing speed modes should be ignored.
+ 
+ *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+ polarity properties, we have to fix the meaning of the "normal" and "inverted"
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---dhjasci7bsrokpr2--
+2.7.4
