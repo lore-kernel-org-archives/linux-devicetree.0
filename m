@@ -1,42 +1,132 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm64: arch_timer: Add device tree binding for
- hisilicon-161x01 erratum
-Date: Mon, 24 Oct 2016 21:23:10 +0800
-Message-ID: <1dcfb21a-7417-282e-f187-425d2c148672@huawei.com>
-References: <962ea92f-870b-e1d0-5bb7-1a6d66c35122@huawei.com>
- <20161024111608.GG15620@leverpostej>
- <7e839df8-f8f7-3b16-8321-4ff45b6c5884@huawei.com>
- <20161024131617.GJ15620@leverpostej>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: [PATCH] dmaengine: nbpfaxi: add optional max-burst property for memory reads/writes
+Date: Mon, 24 Oct 2016 15:29:15 +0200
+Message-ID: <1477315755-4783-1-git-send-email-niklass@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161024131617.GJ15620@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinod.koul@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, dan.j.williams@intel.com
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Niklas Cassel <niklass@axis.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Niklas Cassel <niklas.cassel@axis.com>
 
+Due to a hardware bug, reading memory (from the Accelerator Coherency Port)
+with a burst size equal to the maximum burst size allowed by the DMA
+hardware's buffer size will cause a hardware hang on the ARTPEC-6 SoC,
+where the only solution is a manual power cycle.
+On ARTPEC-6, this hardware bug does not trigger when writing memory (to the
+Accelerator Coherency Port) with a burst size equal to the maximum burst
+size allowed by the DMA hardware's buffer size.
 
-On 2016/10/24 21:16, Mark Rutland wrote:
-> On Mon, Oct 24, 2016 at 08:40:01PM +0800, Ding Tianhong wrote:
->> On 2016/10/24 19:16, Mark Rutland wrote:
->>> Is "161x01" the *exact* erratum number, or is the 'x' a wildcard?
->>
->> The 'x' is a wildcard, it will cover 161001 to 161601 several numbers,
-> 
-> Given you're using a wildcard, I take it that this is a *part* number?
-> 
-Yes, I was doubt how to fix this, should I choose a better erratum number?
+To avoid this hardware hang, introduce a new optional max-burst property
+for memory reads. For completeness, also introduce a max-burst property for
+memory writes.
 
-> Thanks,
-> Mark.
-> 
-> .
-> 
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+---
+ Documentation/devicetree/bindings/dma/nbpfaxi.txt |  8 +++++
+ drivers/dma/nbpfaxi.c                             | 38 ++++++++++++++++++++---
+ 2 files changed, 42 insertions(+), 4 deletions(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/dma/nbpfaxi.txt b/Documentation/devicetree/bindings/dma/nbpfaxi.txt
+index d5e2522b9ec1..d2e1e62e346a 100644
+--- a/Documentation/devicetree/bindings/dma/nbpfaxi.txt
++++ b/Documentation/devicetree/bindings/dma/nbpfaxi.txt
+@@ -23,6 +23,14 @@ Required properties
+ #define NBPF_SLAVE_RQ_LEVEL	4
+ 
+ Optional properties:
++- max-burst-mem-read:	limit burst size for memory reads
++  (DMA_MEM_TO_MEM/DMA_MEM_TO_DEV) to this value, specified in bytes, rather
++  than using the maximum burst size allowed by the hardware's buffer size.
++- max-burst-mem-write:	limit burst size for memory writes
++  (DMA_DEV_TO_MEM/DMA_MEM_TO_MEM) to this value, specified in bytes, rather
++  than using the maximum burst size allowed by the hardware's buffer size.
++  If both max-burst-mem-read and max-burst-mem-write are set, DMA_MEM_TO_MEM
++  will use the lower value.
+ 
+ You can use dma-channels and dma-requests as described in dma.txt, although they
+ won't be used, this information is derived from the compatibility string.
+diff --git a/drivers/dma/nbpfaxi.c b/drivers/dma/nbpfaxi.c
+index 09de71519d37..3f45b9bdf201 100644
+--- a/drivers/dma/nbpfaxi.c
++++ b/drivers/dma/nbpfaxi.c
+@@ -225,6 +225,8 @@ struct nbpf_channel {
+ struct nbpf_device {
+ 	struct dma_device dma_dev;
+ 	void __iomem *base;
++	u32 max_burst_mem_read;
++	u32 max_burst_mem_write;
+ 	struct clk *clk;
+ 	const struct nbpf_config *config;
+ 	unsigned int eirq;
+@@ -425,10 +427,33 @@ static void nbpf_chan_configure(struct nbpf_channel *chan)
+ 	nbpf_chan_write(chan, NBPF_CHAN_CFG, NBPF_CHAN_CFG_DMS | chan->dmarq_cfg);
+ }
+ 
+-static u32 nbpf_xfer_ds(struct nbpf_device *nbpf, size_t size)
++static u32 nbpf_xfer_ds(struct nbpf_device *nbpf, size_t size,
++			enum dma_transfer_direction direction)
+ {
++	int max_burst = nbpf->config->buffer_size * 8;
++
++	if (nbpf->max_burst_mem_read || nbpf->max_burst_mem_write) {
++		switch (direction) {
++		case DMA_MEM_TO_MEM:
++			max_burst = min_not_zero(nbpf->max_burst_mem_read,
++						 nbpf->max_burst_mem_write);
++			break;
++		case DMA_MEM_TO_DEV:
++			if (nbpf->max_burst_mem_read)
++				max_burst = nbpf->max_burst_mem_read;
++			break;
++		case DMA_DEV_TO_MEM:
++			if (nbpf->max_burst_mem_write)
++				max_burst = nbpf->max_burst_mem_write;
++			break;
++		case DMA_DEV_TO_DEV:
++		default:
++			break;
++		}
++	}
++
+ 	/* Maximum supported bursts depend on the buffer size */
+-	return min_t(int, __ffs(size), ilog2(nbpf->config->buffer_size * 8));
++	return min_t(int, __ffs(size), ilog2(max_burst));
+ }
+ 
+ static size_t nbpf_xfer_size(struct nbpf_device *nbpf,
+@@ -458,7 +483,7 @@ static size_t nbpf_xfer_size(struct nbpf_device *nbpf,
+ 		size = burst;
+ 	}
+ 
+-	return nbpf_xfer_ds(nbpf, size);
++	return nbpf_xfer_ds(nbpf, size, DMA_TRANS_NONE);
+ }
+ 
+ /*
+@@ -507,7 +532,7 @@ static int nbpf_prep_one(struct nbpf_link_desc *ldesc,
+ 	 * transfers we enable the SBE bit and terminate the transfer in our
+ 	 * .device_pause handler.
+ 	 */
+-	mem_xfer = nbpf_xfer_ds(chan->nbpf, size);
++	mem_xfer = nbpf_xfer_ds(chan->nbpf, size, direction);
+ 
+ 	switch (direction) {
+ 	case DMA_DEV_TO_MEM:
+@@ -1313,6 +1338,11 @@ static int nbpf_probe(struct platform_device *pdev)
+ 	if (IS_ERR(nbpf->clk))
+ 		return PTR_ERR(nbpf->clk);
+ 
++	of_property_read_u32(np, "max-burst-mem-read",
++			     &nbpf->max_burst_mem_read);
++	of_property_read_u32(np, "max-burst-mem-write",
++			     &nbpf->max_burst_mem_write);
++
+ 	nbpf->config = cfg;
+ 
+ 	for (i = 0; irqs < ARRAY_SIZE(irqbuf); i++) {
+-- 
+2.1.4
