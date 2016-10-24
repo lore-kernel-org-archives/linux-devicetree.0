@@ -1,62 +1,117 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/5] ASoC: codecs: Add msm8916-wcd analog codec
-Date: Mon, 24 Oct 2016 18:00:52 +0100
-Message-ID: <20161024170052.GD17252@sirena.org.uk>
-References: <1476973249-14547-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1476973249-14547-2-git-send-email-srinivas.kandagatla@linaro.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC] ARM: memory: da8xx-ddrctl: new driver
+Date: Mon, 24 Oct 2016 18:00:36 +0100
+Message-ID: <20161024170035.GO15620@leverpostej>
+References: <1477327596-16060-1-git-send-email-bgolaszewski@baylibre.com>
+ <1477327596-16060-2-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jousvV0MzM2p6OtC"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1476973249-14547-2-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1477327596-16060-2-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---jousvV0MzM2p6OtC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Oct 20, 2016 at 03:20:45PM +0100, Srinivas Kandagatla wrote:
-
-> +static int pm8916_wcd_analog_parse_dt(struct device *dev,
-> +				       struct pm8916_wcd_analog_priv *priv)
-> +{
-
-> +	priv->mclk = devm_clk_get(dev, "mclk");
-> +	if (IS_ERR(priv->mclk)) {
-> +		dev_err(dev, "failed to get mclk\n");
-> +		return PTR_ERR(priv->mclk);
-> +	}
-> +	for (i = 0; i < ARRAY_SIZE(supply_names); i++)
-> +		priv->supplies[i].supply = supply_names[i];
+On Mon, Oct 24, 2016 at 06:46:36PM +0200, Bartosz Golaszewski wrote:
+> Create a new driver for the da8xx DDR2/mDDR controller and implement
+> support for writing to the Peripheral Bus Burst Priority Register.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../memory-controllers/ti-da8xx-ddrctl.txt         |  20 +++
+>  drivers/memory/Kconfig                             |   8 +
+>  drivers/memory/Makefile                            |   1 +
+>  drivers/memory/da8xx-ddrctl.c                      | 187 +++++++++++++++++++++
+>  4 files changed, 216 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
+>  create mode 100644 drivers/memory/da8xx-ddrctl.c
+> 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt b/Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
+> new file mode 100644
+> index 0000000..f0eda59
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
+> @@ -0,0 +1,20 @@
+> +* Device tree bindings for Texas Instruments da8xx DDR2/mDDR memory controller
 > +
-> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(priv->supplies),
-> +				    priv->supplies);
+> +The DDR2/mDDR memory controller present on Texas Instruments da8xx SoCs memory
+> +maps a set of registers which allow to tweak the controller's behavior.
 
-The above isn't parsing the DT, it's just requesting resources - how
-those resources are mapped is hidden behind the clock and regulator
-APIs.  Please send a followup fixing this.
+This is a description of the *driver*. The device itself doesn't map
+some registers, it features them. Please descrive the *device*.
 
---jousvV0MzM2p6OtC
-Content-Type: application/pgp-signature; name="signature.asc"
+> +
+> +Documentation:
+> +OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh82c/spruh82c.pdf
+> +
+> +Required properties:
+> +
+> +- compatible:		"ti,da850-ddrctl" - for da850 SoC based boards
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Perhaps:
 
-iQEcBAEBCAAGBQJYDj5DAAoJECTWi3JdVIfQ2PkH/R/r0cT2Yn5nVCI17bn1529G
-pTyHOfL+LALn+Yz4Qq/v03SAWI5RM9skZIPQNw2e9Hf/a2AiURN0spdTDywULeri
-5RGPQ0fIDZnbvdjhvmSq31pXI7FyMEIaJY0tgsPC0C9xrMRaMCBltRmt9YXYSWGb
-bBNOoabVotmP6SP3MuRlI/n6tAF0Hv8Jhdt41U4hqGG+Dh6anmYxllTaRq5Xz3b5
-WDYMDgX083hz/6RjKWrLNW+EuQHUC1OTt3Qhm37d6EsRaU4OWmD1eSKdIkBY+isy
-Sz4umrnZ6FPIhwlMwEtj+ohtbTxFbYoRdizt9RjPyS9RvUVbHelTGapKf+jKa64=
-=btLn
------END PGP SIGNATURE-----
+	"ti,da850-ddr-controller"
 
---jousvV0MzM2p6OtC--
+> +static int da8xx_ddrctl_probe(struct platform_device *pdev)
+> +{
+> +	const struct da8xx_ddrctl_config_knob *knob;
+> +	const struct da8xx_ddrctl_setting *setting;
+> +	u32 regprop[2], base, memsize, reg;
+> +	struct device_node *node, *parent;
+> +	void __iomem *ddrctl;
+> +	const char *board;
+> +	struct device *dev;
+> +	int ret;
+> +
+> +	dev = &pdev->dev;
+> +	node = dev->of_node;
+> +
+> +	/* Find the board name. */
+> +	for (parent = node;
+> +	     !of_node_is_root(parent);
+> +	     parent = of_get_parent(parent));
+> +
+> +	ret = of_property_read_string(parent, "compatible", &board);
+> +	if (ret) {
+> +		dev_err(dev, "unable to read the soc model\n");
+> +		return ret;
+> +	}
+
+I can see that you want to expose sysfs knobs for this, but is it really
+necessary to match boards like this? It's very fragile, and commits us
+to maintaining a database of board data (i.e. a board file).
+
+I am very much not keen on that.
+
+> +
+> +	/* Check if we have settings for this board. */
+> +	setting = da8xx_ddrctl_match_board(board);
+> +	if (!setting) {
+> +		dev_err(dev, "no settings for board '%s'\n", board);
+> +		return -EINVAL;
+> +	}
+
+What's wrong with of_machine_is_compatible?
+
+> +
+> +	/* Figure out how to map the memory for the controller. */
+> +	ret = of_property_read_u32_array(node, "reg", regprop, 2);
+> +	if (ret) {
+> +		dev_err(dev, "unable to parse 'reg' property\n");
+> +		return ret;
+> +	}
+> +
+> +	base = regprop[0];
+> +	memsize = regprop[1];
+> +
+> +	ddrctl = ioremap(base, memsize);
+
+NAK. Use the proper accessors for handling reg entries.
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
