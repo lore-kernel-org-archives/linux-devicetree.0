@@ -1,36 +1,58 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 5/5] ARM: dts: Add LEGO MINDSTORTMS EV3 dts
-Date: Mon, 24 Oct 2016 14:50:39 -0500
-Message-ID: <b6cd3c47-0df8-266a-2b8d-13c82062b647@lechnology.com>
-References: <1477075018-20176-1-git-send-email-david@lechnology.com>
- <1477075018-20176-6-git-send-email-david@lechnology.com>
- <b0022fad-a96e-86d4-71ba-2b803e5421fe@ti.com>
- <1593441f-d147-4c91-8aab-8622dd8ced19@lechnology.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v1 0/3] Add support for Broadcom OTP controller
+Date: Mon, 24 Oct 2016 12:54:14 -0700
+Message-ID: <e34f01b6-a059-9988-0f93-e5adb82a5436@gmail.com>
+References: <1477336324-10543-1-git-send-email-jonathan.richardson@broadcom.com>
+ <CAADWXX-43-k2K2T1V5MQMd0z0V502wf1syNHERPfvNstOJw-3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1593441f-d147-4c91-8aab-8622dd8ced19@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAADWXX-43-k2K2T1V5MQMd0z0V502wf1syNHERPfvNstOJw-3A@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Torvalds <torvalds@linux-foundation.org>, Jonathan Richardson <jonathan.richardson@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, bcm-kernel-feedback-list@broadcom.com, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/24/2016 10:50 AM, David Lechner wrote:
-> On 10/24/2016 06:58 AM, Sekhar Nori wrote:
->> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
->>
->>> +&ehrpwm1 {
->>> +    status = "disabled";
->>
->> Hmm, disabled? Can you add this node when you actually use it?
->
-> Not sure why I have this disabled. Like the gpios, the pwms can be used
-> via sysfs, so I would like to leave them.
->
+On 10/24/2016 12:39 PM, Linus Torvalds wrote:
+> On Mon, Oct 24, 2016 at 12:12 PM, Jonathan Richardson
+> <jonathan.richardson@broadcom.com> wrote:
+>> This patch set adds support for Broadcom's OTP controller found on chips such
+>> as Cygnus and Stingray. A node has been added to the Cygnus dts.
+> 
+> These patches fail DKIM and will thus be marked as spam for a lot of people.
+> 
+> The usual reason tends to be that you use the wrong smtp server that
+> doesn't add the right signature. That's happened before with
+> broadcom.com addresses.
 
-Now I remember why these are disabled. The clock matching is broken. 
-Only the first ehrpwm and the first ecap get clocks. The others fail.
+The older setup was using smtphost.broadcom.com which we have now
+documented as being invalid, here Jonathan used gmail directly (since
+that's our mail provider now):
 
-I can change these to "okay". It will just result in a kernel error 
-message until the clocks are fixed.
+Received: from lbrmn-lnxub108.corp.ad.broadcom.com ([216.31.219.19])
+        by smtp.gmail.com with ESMTPSA id
+s89sm8325746qkl.44.2016.10.24.12.12.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 24 Oct 2016 12:12:03 -0700 (PDT)
+
+Is there something else we need to check? Here is what I read for the
+cover-letter:
+
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@broadcom.com;
+       spf=pass (google.com: domain of
+bcm-kernel-feedback-list.pdl+bncbdh5xfvr4ydrbbn2xhaakgqed7hz4rq@broadcom.com
+designates 2607:f8b0:400c:c08::247 as permitted sender)
+smtp.mailfrom=bcm-kernel-feedback-list.pdl+bncBDH5XFVR4YDRBBN2XHAAKGQED7HZ4RQ@broadcom.com;
+       dmarc=pass (p=QUARANTINE dis=NONE) header.from=broadcom.com
+-- 
+Florian
