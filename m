@@ -1,62 +1,79 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] mtd: s3c2410: parse the device configuration
- from OF node
-Date: Mon, 24 Oct 2016 20:50:56 +0200
-Message-ID: <20161024205056.1782f76e@bbrezillon>
-References: <1476999766-32526-1-git-send-email-sergio.prado@e-labworks.com>
-        <1476999766-32526-4-git-send-email-sergio.prado@e-labworks.com>
-        <20161024150201.01952f67@bbrezillon>
-        <20161024184738.GA26671@sprado-desktop>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [RFC] ARM: memory: da8xx-ddrctl: new driver
+Date: Mon, 24 Oct 2016 11:52:39 -0700
+Message-ID: <CAOi56cXePjssk0AzMz27A_dOdLdJCWGMc86DH9nih5SHe-Eo=g@mail.gmail.com>
+References: <1477327596-16060-1-git-send-email-bgolaszewski@baylibre.com>
+ <1477327596-16060-2-git-send-email-bgolaszewski@baylibre.com>
+ <20161024170035.GO15620@leverpostej> <7hd1ipzm3h.fsf@baylibre.com>
+ <20161024174249.GQ15620@leverpostej> <7hfunly4hn.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161024184738.GA26671@sprado-desktop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
-Cc: kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <7hfunly4hn.fsf@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 24 Oct 2016 16:47:38 -0200
-Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org> wrote:
-
-> On Mon, Oct 24, 2016 at 03:02:01PM +0200, Boris Brezillon wrote:
-> > > +static int s3c2410_nand_setup_data_interface(struct mtd_info *mtd,
-> > > +					     const struct nand_data_interface *conf,
-> > > +					     bool check_only)
-> > > +{
-> > > +	struct s3c2410_nand_info *info = s3c2410_nand_mtd_toinfo(mtd);
-> > > +	struct s3c2410_platform_nand *pdata = info->platform;
-> > > +	const struct nand_sdr_timings *timings;
-> > > +	int tacls;
-> > > +
-> > > +	timings = nand_get_sdr_timings(conf);
-> > > +	if (IS_ERR(timings))
-> > > +		return -ENOTSUPP;
-> > > +
-> > > +	tacls = timings->tCLS_min - timings->tWP_min;
-> > > +	if (tacls < 0)
-> > > +		tacls = 0;
-> > > +
-> > > +	pdata->tacls  = DIV_ROUND_UP(tacls, 1000);
-> > > +	pdata->twrph0 = DIV_ROUND_UP(timings->tWP_min, 1000);
-> > > +	pdata->twrph1 = DIV_ROUND_UP(timings->tCLH_min, 1000);  
-> > 
-> > You seem to only apply the timings in s3c2410_nand_setrate(), which is
-> > only called at probe time or on a cpufreq even, but the core can change
-> > timings at runtime (this is what happens each time you reset the chip).
-> > 
-> > To support that you have 2 options:
-> >  - apply the timings in ->select_chip()
-> >  - apply the timings here  
-> 
-> Right. As far as I understood, ->setup_data_interface() will be called
-> when MTD core change timings at runtime, so it is enough to apply the
-> timings in the end of ->setup_data_interface()?
-
-If your controller does not support interfacing with multiple chips,
-then yes, it should work.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBPY3QgMjQsIDIwMTYgYXQgMTE6NDEgQU0sIEtldmluIEhpbG1hbiA8a2hpbG1hbkBi
+YXlsaWJyZS5jb20+IHdyb3RlOgo+IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+
+IHdyaXRlczoKPgo+PiBPbiBNb24sIE9jdCAyNCwgMjAxNiBhdCAxMDozNTozMEFNIC0wNzAwLCBL
+ZXZpbiBIaWxtYW4gd3JvdGU6Cj4+PiBIaSBNYXJrLAo+Pj4KPj4+IE1hcmsgUnV0bGFuZCA8bWFy
+ay5ydXRsYW5kQGFybS5jb20+IHdyaXRlczoKPj4+ID4gT24gTW9uLCBPY3QgMjQsIDIwMTYgYXQg
+MDY6NDY6MzZQTSArMDIwMCwgQmFydG9zeiBHb2xhc3pld3NraSB3cm90ZToKPj4+ID4+ICtzdGF0
+aWMgaW50IGRhOHh4X2RkcmN0bF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+
+Pj4gPj4gK3sKPj4+ID4+ICsgY29uc3Qgc3RydWN0IGRhOHh4X2RkcmN0bF9jb25maWdfa25vYiAq
+a25vYjsKPj4+ID4+ICsgY29uc3Qgc3RydWN0IGRhOHh4X2RkcmN0bF9zZXR0aW5nICpzZXR0aW5n
+Owo+Pj4gPj4gKyB1MzIgcmVncHJvcFsyXSwgYmFzZSwgbWVtc2l6ZSwgcmVnOwo+Pj4gPj4gKyBz
+dHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsICpwYXJlbnQ7Cj4+PiA+PiArIHZvaWQgX19pb21lbSAq
+ZGRyY3RsOwo+Pj4gPj4gKyBjb25zdCBjaGFyICpib2FyZDsKPj4+ID4+ICsgc3RydWN0IGRldmlj
+ZSAqZGV2Owo+Pj4gPj4gKyBpbnQgcmV0Owo+Pj4gPj4gKwo+Pj4gPj4gKyBkZXYgPSAmcGRldi0+
+ZGV2Owo+Pj4gPj4gKyBub2RlID0gZGV2LT5vZl9ub2RlOwo+Pj4gPj4gKwo+Pj4gPj4gKyAvKiBG
+aW5kIHRoZSBib2FyZCBuYW1lLiAqLwo+Pj4gPj4gKyBmb3IgKHBhcmVudCA9IG5vZGU7Cj4+PiA+
+PiArICAgICAgIW9mX25vZGVfaXNfcm9vdChwYXJlbnQpOwo+Pj4gPj4gKyAgICAgIHBhcmVudCA9
+IG9mX2dldF9wYXJlbnQocGFyZW50KSk7Cj4+PiA+PiArCj4+PiA+PiArIHJldCA9IG9mX3Byb3Bl
+cnR5X3JlYWRfc3RyaW5nKHBhcmVudCwgImNvbXBhdGlibGUiLCAmYm9hcmQpOwo+Pj4gPj4gKyBp
+ZiAocmV0KSB7Cj4+PiA+PiArICAgICAgICAgZGV2X2VycihkZXYsICJ1bmFibGUgdG8gcmVhZCB0
+aGUgc29jIG1vZGVsXG4iKTsKPj4+ID4+ICsgICAgICAgICByZXR1cm4gcmV0Owo+Pj4gPj4gKyB9
+Cj4+PiA+Cj4+PiA+IEkgY2FuIHNlZSB0aGF0IHlvdSB3YW50IHRvIGV4cG9zZSBzeXNmcyBrbm9i
+cyBmb3IgdGhpcywgYnV0IGlzIGl0IHJlYWxseQo+Pj4gPiBuZWNlc3NhcnkgdG8gbWF0Y2ggYm9h
+cmRzIGxpa2UgdGhpcz8gSXQncyB2ZXJ5IGZyYWdpbGUsIGFuZCBjb21taXRzIHVzCj4+PiA+IHRv
+IG1haW50YWluaW5nIGEgZGF0YWJhc2Ugb2YgYm9hcmQgZGF0YSAoaS5lLiBhIGJvYXJkIGZpbGUp
+Lgo+Pj4gPgo+Pj4gPiBJIGFtIHZlcnkgbXVjaCBub3Qga2VlbiBvbiB0aGF0Lgo+Pj4KPj4+IFRo
+ZSBvcmlnaW5hbCBwcm9wb3NhbFsxXSB3YXMgdG8gY3JlYXRlIERUIHByb3BlcnRpZXMgcmVmbGVj
+dGluZyB0aGUKPj4+IHZhcmlvdXMga25vYnMgaW4gdGhlIEREUiBDb250cm9sbGVyLCBidXQgdGhh
+dCB3YXMgZnJvd25lZCB1cG9uIHNpbmNlCj4+PiB0aGF0IHdhcyBtb3JlIEhXIGNvbmZpZ3VyYXRp
+b24gdGhhbiBoYXJkd2FyZSBkZXNjcmlwdGlvbi4KPj4+Cj4+PiBUaGF0IHJlc3VsdGVkIGluIHRo
+aXMgYXBwcm9hY2ggd2hpY2gga2VlcHMgdGhlIEhXIGNvbmZpZ3VyYXRpb24gdmFsdWVzCj4+PiBp
+biB0aGUgZHJpdmVyLCBhbmQgc2VsZWN0YWJsZSBiYXNlZCBvbiBEVCBjb21wYXRpYmxlLgo+Pj4K
+Pj4+IElNTywgbmVpdGhlciBhcHJvYWNoIGlzIHByZXR0eS4gIEZyb20gYSBEVCBtYWludGFpbmVy
+IHBlcnNwZWN0aXZlLCBjYW4KPj4+IHlvdSBjb21tZW50IG9uIHlvdXIgcHJlZmVyZW5jZT8KPj4K
+Pj4gRnJvbSBteSBQb1YsIGl0IHJlYWxseSBkZXBlbmRzIG9uICp3aHkqIHdlIG5lZWQgdGhpcy4g
+V2hhdCBkb2VzIHRoZQo+PiB0dW5pbmcgZ2FpbiB1cywgYW5kIGlzIGl0IHNwZWNpZmljIHRvIGEg
+Z2l2ZW4gdXNlLWNhc2U/Cj4KPiBUaGlzIGlzIGVzc2VudGlhbGx5IGEgYnVzIGNvbnRyb2xsZXIg
+d2hpY2ggYWxsb3dzIHlvdSB0byBzZXQgcmVsYXRpdmUKPiBwcmlvcml0aWVzIG9mIHRoZSB2YXJp
+b3VzIGJ1cyBtYXN0ZXJzIChDUFUgZGF0YSwgQ1BVIGluc3RydWN0aW9ucywgRE1BCj4gY2hhbm5l
+bHMsIGV0aGVybmV0IE1BQywgU0FUQSwgZGlzcGxheSBjb250cm9sbGVyLCBldGMuIGV0Yy4pCgpT
+Y3JhdGNoIHRoYXQuLi4gSSBnb3QgdGhpcyBvbmUgY29uZnVzZWQgd2l0aCBhIGRpZmZlcmVudCBk
+cml2ZXJzL2J1cwpkcml2ZXIgQmFydG9zeiBpcyBhbHNvIHdvcmtpbmcgb24uIDooCgpUaGlzIG9u
+ZSBpcyBqdXN0IGZvciB0aGUgbWVjaGFuaXNtIHRoYXQgY29udHJvbHMgaG93IGxvbmcgb2xkCihs
+b3ctcHJpb3JpdHkpIHhmZXJzIGluIHRoZSBERFIgY29tbWFuZCBGSUZPIGFyZSBhbGxvd2VkIHRv
+IHNpdCBhcm91bmQKYmVmb3JlIHRoZXkgd2lsbCBiZSBmbHVzaGVkLgoKVGhlIHVzZS1jYXNlIGlz
+IHRoZSBzYW1lIHRob3VnaC4gIFRoZSBkaXNwbGF5IGNvbnRyb2xsZXIgZG9lc24ndCB3b3JrCmF0
+IGhpZ2hlciByZXNvbHV0aW9ucyB3aXRob3V0IHR3ZWFraW5nIHRoaXMgc2V0dGluZy4KClRoZSBx
+dWVzdGlvbiByZW1haW5zIHRob3VnaDogYXMgYSBzeXN0ZW0td2lkZSBzZXR0aW5nLCBzaG91bGQg
+dGhpcyBiZQpjb25maWd1cmVkIHZpYSBEVCAoZWl0aGVyIGJ5IGEgRFQgcHJvcGVydHksIG9yIGJh
+c2VkIG9uIGEgY29tcGF0aWJsZQpzdHJpbmcgaW4gdGhlIGRyaXZlcikgb3Igc2hvdWxkIHRoZSBk
+cml2ZXIgcHJvdmlkZSBhbiBBUEkgdG8gdHdlYWsgaXQuCgpLZXZpbgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
