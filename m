@@ -1,80 +1,49 @@
-From: Alan Tull <atull@opensource.altera.com>
-Subject: [PATCH v21 0/9] Device Tree support for FPGA Programming
-Date: Tue, 25 Oct 2016 09:55:31 -0500
-Message-ID: <20161025145540.3722-1-atull@opensource.altera.com>
+From: Axel Haslam <ahaslam@baylibre.com>
+Subject: Re: [PATCH/RFT v2 09/17] regulator: fixed: Add over current event
+Date: Tue, 25 Oct 2016 16:57:17 +0200
+Message-ID: <CAKXjFTOz=TGCiKic77JXdJMUoobLY4Ye9QnqajbG4JTh=VGUFg@mail.gmail.com>
+References: <20161024164634.4330-1-ahaslam@baylibre.com> <20161024164634.4330-10-ahaslam@baylibre.com>
+ <20161024175320.GO17252@sirena.org.uk> <CAKXjFTNZhWTZSXtLZo8EieBtAPn_J-MM+-g8yCRJiV6UBspB9Q@mail.gmail.com>
+ <20161024181937.GP17252@sirena.org.uk> <CAKXjFTOHcqRFtbXMXSTyUZ3P00eRMz1N3d62Y3NWVZJDGeScZA@mail.gmail.com>
+ <20161025143304.GW17252@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Moritz Fischer <moritz.fischer@ettus.com>, Joel Holdsworth <joel@airwebreathe.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jon Masters <jcm@redhat.com>, Julia Cartwright <julia@ni.com>, Michal Simek <michal.simek@xilinx.com>, Jonathan Corbet <corbet@lwn.net>, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, Matthew Gerlach <mgerlach@opensource.altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, Alan Tull <atull@opensource.altera.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161025143304.GW17252@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, robh+dt@kernel.org, Sekhar Nori <nsekhar@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Kevin Hilman <khilman@baylibre.com>, Sergei Shtylyov <sshtylyov@ru.mvista.com>, David Lechner <david@lechnology.com>, manjunath.goudar@linaro.org, Alexandre Bailon <abailon@baylibre.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset supports FPGA programming under the control
-of Device Tree overlays.
+On Tue, Oct 25, 2016 at 4:33 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Tue, Oct 25, 2016 at 02:55:48PM +0200, Axel Haslam wrote:
+>
+>> To be able to use regulator to handle the overcurrent pin, i need to be able
+>> to somehow retrieve the over current pin state from the regulator driver.
+>
+> What makes you say that, none of the existing users need this?
+>
+>> As i was trying your suggestion, i remembered why i thought i should use
+>> mode instead of status: Status seems to be for internal regulator driver use,
+>> there is no regulator_get_status, function and REGULATOR_STATUS_* are defined
+>> in driver.h and not in consumer.h as  REGULATOR_MODE_*
+>
+>> Would you be ok if i allow consumers to get the status via a new
+>> "regulator_get_status" call?
+>
+> What would they do with this information that they can't do with the
+> existing error notification?
 
-Changes since v20 are minor:
- * s/Mangager/Manager/
- * altera-hps2fpga bridge: remove a clk_put
- * altera-hps2fpga bridge: don't need to look up l3regs for f2h
-   bridge
+the usb core relies in two flags that need too be set properly, one is the
+over-current indicator RH_PS_POCI , and the other is the over current
+indicator "change" (RH_PS_OCIC).
 
-The following were acked so they are no longer in this patch set:
- * DT bindings for Altera Freeze Bridges
-    https://patchwork.kernel.org/patch/9379803/
- * DT bindings for Altera SOCFPGA bridges
-    https://patchwork.kernel.org/patch/9226093/
- * DT bindings for Arria 10 FPGA Mgr
-    https://patchwork.kernel.org/patch/9226111/
- * "[PATCH v3] of/overlay: add of overlay notifications"
-    https://patchwork.kernel.org/patch/8493481/
+The idea was to use the notification to set the over current indicator
+"change" flag,
+which will happen for both rising and falling edges. And to use
+get_status or get_mode
+to set the over-current indicator flag which should reflect the actual
+pin status.
 
-The patchset is dependent on:
- * Pantelis Antonious's dtc changes for dynamic device tree.
-    https://github.com/pantoniou/dtc.git
- * Pantelis' configfs interface patches and fixes
-    https://github.com/pantoniou/linux-beagle-track-mainline
 
-Alan
-
-Alan Tull (9):
-  fpga: add bindings document for fpga region
-  doc: fpga-mgr: add fpga image info to api
-  add sysfs document for fpga bridge class
-  fpga-mgr: add fpga image information struct
-  fpga: add fpga bridge framework
-  fpga: fpga-region: device tree control for FPGA
-  ARM: socfpga: fpga bridge driver support
-  fpga: add altera freeze bridge support
-  fpga-manager: Add Socfpga Arria10 support
-
- Documentation/ABI/testing/sysfs-class-fpga-bridge  |  11 +
- .../devicetree/bindings/fpga/fpga-region.txt       | 494 +++++++++++++++++
- Documentation/fpga/fpga-mgr.txt                    |  32 +-
- drivers/fpga/Kconfig                               |  36 ++
- drivers/fpga/Makefile                              |   9 +
- drivers/fpga/altera-fpga2sdram.c                   | 180 ++++++
- drivers/fpga/altera-freeze-bridge.c                | 273 ++++++++++
- drivers/fpga/altera-hps2fpga.c                     | 222 ++++++++
- drivers/fpga/fpga-bridge.c                         | 395 ++++++++++++++
- drivers/fpga/fpga-mgr.c                            |  17 +-
- drivers/fpga/fpga-region.c                         | 603 +++++++++++++++++++++
- drivers/fpga/socfpga-a10.c                         | 556 +++++++++++++++++++
- drivers/fpga/socfpga.c                             |   7 +-
- drivers/fpga/zynq-fpga.c                           |  10 +-
- include/linux/fpga/fpga-bridge.h                   |  60 ++
- include/linux/fpga/fpga-mgr.h                      |  25 +-
- 16 files changed, 2900 insertions(+), 30 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
- create mode 100644 Documentation/devicetree/bindings/fpga/fpga-region.txt
- create mode 100644 drivers/fpga/altera-fpga2sdram.c
- create mode 100644 drivers/fpga/altera-freeze-bridge.c
- create mode 100644 drivers/fpga/altera-hps2fpga.c
- create mode 100644 drivers/fpga/fpga-bridge.c
- create mode 100644 drivers/fpga/fpga-region.c
- create mode 100644 drivers/fpga/socfpga-a10.c
- create mode 100644 include/linux/fpga/fpga-bridge.h
-
--- 
-2.10.1
-
+-Axel.
