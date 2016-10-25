@@ -1,146 +1,99 @@
-From: Jeremy McNicoll <jmcnicol@redhat.com>
-Subject: Re: [RFC V4 PATCH 5/6] arm64: dts: msm8994 SoC and Huawei Angler
- (Nexus 6P) support
-Date: Tue, 25 Oct 2016 01:00:08 -0700
-Message-ID: <20161025080008.GC21964@mini-rhel.redhat.com>
-References: <1477048273-32451-1-git-send-email-jeremymc@redhat.com>
- <1477048273-32451-6-git-send-email-jeremymc@redhat.com>
- <20161021182533.GX7509@tuxbot>
+From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH/RFT v2 17/17] ARM: dts: da850: add usb device node
+Date: Tue, 25 Oct 2016 10:03:44 +0200
+Message-ID: <CAKXjFTNSX0-bWqdxH3JFmZRV5U_UHu3ma0iaPp0JWK0WNKDQdQ@mail.gmail.com>
+References: <20161024164634.4330-1-ahaslam@baylibre.com> <20161024164634.4330-18-ahaslam@baylibre.com>
+ <59ca6a1f-6db9-eed2-8e8a-77657c7febac@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161021182533.GX7509@tuxbot>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, arnd@arndb.de, mark.rutland@arm.com, michael.scott@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <59ca6a1f-6db9-eed2-8e8a-77657c7febac-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sergei Shtylyov <sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 11:25:33AM -0700, Bjorn Andersson wrote:
-> On Fri 21 Oct 04:11 PDT 2016, Jeremy McNicoll wrote:
-> 
-> > From: Bastian Köcher <mail@kchr.de>
-> > 
-> > Initial device tree support for Qualcomm MSM8994 SoC and
-> > Huawei Angler / Google Nexus 6P support.
-> > 
-> > The device tree is based on the Google 3.10 kernel tree.
-> > 
-> > The device can be booted into the initrd with only one CPU running.
-> > 
-> 
-> Looks reasonable as well, same two comments as the 8992 below.
-> 
-> > Signed-off-by: Bastian Köcher <mail@kchr.de>
-> > [jeremymc@redhat.com: removed Kconfig, defconfig, move from Huawei to qcom dir]
-> > Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
-> > ---
-> >  arch/arm64/boot/dts/qcom/Makefile                  |   2 +-
-> >  .../arm64/boot/dts/qcom/msm8994-angler-rev-101.dts |  42 ++++
-> >  arch/arm64/boot/dts/qcom/msm8994-pins.dtsi         |  38 ++++
-> >  arch/arm64/boot/dts/qcom/msm8994-v2.0.dtsi         |  32 +++
-> >  arch/arm64/boot/dts/qcom/msm8994.dtsi              | 236 +++++++++++++++++++++
-> >  5 files changed, 349 insertions(+), 1 deletion(-)
-> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8994-pins.dtsi
-> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8994-v2.0.dtsi
-> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8994.dtsi
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> > index abb366e..4040fc8 100644
-> > --- a/arch/arm64/boot/dts/qcom/Makefile
-> > +++ b/arch/arm64/boot/dts/qcom/Makefile
-> > @@ -1,6 +1,6 @@
-> >  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb apq8096-db820c.dtb
-> > -dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
-> > +dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb msm8994-angler-rev-101.dtb
-> 
-> This won't scale, use multiple lines instead.
+On Tue, Oct 25, 2016 at 2:48 AM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
+> On 10/24/2016 11:46 AM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
+>>
+>> From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>
+>> This adds the usb (ohci) device node for the da850 soc.
+>> Also it enables it for the lcdk board
+>>
+>> Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/da850-lcdk.dts | 8 ++++++++
+>>  arch/arm/boot/dts/da850.dtsi     | 8 ++++++++
+>>  2 files changed, 16 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/da850-lcdk.dts
+>> b/arch/arm/boot/dts/da850-lcdk.dts
+>> index 7b8ab21..fa91339 100644
+>> --- a/arch/arm/boot/dts/da850-lcdk.dts
+>> +++ b/arch/arm/boot/dts/da850-lcdk.dts
+>> @@ -86,6 +86,14 @@
+>>         };
+>>  };
+>>
+>> +&usb_phy {
+>> +       status = "okay";
+>> +};
+>> +
+>> +&usb {
+>> +       status = "okay";
 >
-
-Done, one entry per line.
-
-> >  
-> >  always		:= $(dtb-y)
-> >  subdir-y	:= $(dts-dirs)
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-> > new file mode 100644
-> > index 0000000..9684e6c
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-> > @@ -0,0 +1,42 @@
-> > +/* Copyright (c) 2015, Huawei Inc. All rights reserved.
-> > + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 and
-> > + * only version 2 as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "msm8994-v2.0.dtsi"
-> > +
-> > +/ {
-> > +	model = "HUAWEI MSM8994 ANGLER rev-1.01";
-> > +	compatible = "qcom,msm8994";
-> > +	/* required for bootloader to select correct board */
-> > +	qcom,board-id = <8026 0>;
-> > +};
-> > +
-> > +/ {
-> 
-> No need to close and reopen / {} here.
 >
+> Don't you need to specify a regulator here using the vbus-supply property?
 
-updated.
+its is not mandatory, the regulator framework is giving a dummy supply
+on regulator_get if it does not find a regulator on device tree. That is
+what i could understand from: _regulator_get in regulator/core.c
 
-> > +	aliases {
-> > +		serial0 = &blsp1_uart2;
-> > +	};
-> > +
-> > +	chosen {
-> > +		stdout-path = "serial0:115200n8";
-> > +	};
-> > +
-> > +	soc {
-> > +		serial@f991e000 {
-> > +			status = "okay";
-> > +			pinctrl-names = "default", "sleep";
-> > +			pinctrl-0 = <&blsp1_uart2_default>;
-> > +			pinctrl-1 = <&blsp1_uart2_sleep>;
-> > +		};
-> > +	};
-> > +};
-> [..]
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-> [..]
-> > +	msmgpio: pinctrl@fd510000 {
-> > +		compatible = "qcom,msm8994-pinctrl", "qcom,msm8974-pinctrl";
-> 
-> msm8974 TLMM won't work here either, so please drop that.
-> 
+Also, in the case of platform based boot, if the board init calls
+regulator_has_full_constraints which is anyways needed for the phy to probe
+correctly it will also return a dummy regulator.
 
-Dropped 8974 pinctrl now that Michael Scott has created a proper pinctrl
-driver for msm8994.  There was sufficient overlap between 8974 and 8994
-for initial dev work.  [https://patches.linaro.org/patch/78750/]
 
--jeremy
+>
+>> +};
+>> +
+>>  &serial2 {
+>>         pinctrl-names = "default";
+>>         pinctrl-0 = <&serial2_rxtx_pins>;
+>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+>> index 33fcdce..ec2cec3 100644
+>> --- a/arch/arm/boot/dts/da850.dtsi
+>> +++ b/arch/arm/boot/dts/da850.dtsi
+>> @@ -381,6 +381,14 @@
+>>                         #phy-cells = <1>;
+>>                         status = "disabled";
+>>                 };
+>> +               usb: usb@0225000 {
+>
+>
+> Don't need the leading 0 on usb@225000
+>
+> The alias (usb:) might need to be more specific since there is a second usb
+> device that will be added later for musb. (The comments in the previous
+> review only referred to the "usb" in "usb@", not the alias.)
 
-> > +		reg = <0xfd510000 0x4000>;
-> > +		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> > +		gpio-controller;
-> > +		#gpio-cells = <2>;
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <2>;
-> > +	};
-> 
-> Regards,
-> Bjorn
+ok.
+
+>
+>> +                       compatible = "ti,da830-ohci";
+>> +                       reg = <0x225000 0x1000>;
+>> +                       interrupts = <59>;
+>> +                       phys = <&usb_phy 1>;
+>> +                       phy-names = "usb-phy";
+>> +                       status = "disabled";
+>> +               };
+>>                 gpio: gpio@226000 {
+>>                         compatible = "ti,dm6441-gpio";
+>>                         gpio-controller;
+>>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
