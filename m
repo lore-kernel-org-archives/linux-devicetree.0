@@ -1,48 +1,63 @@
-From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: Re: [PATCH v4 4/5] mm: make processing of movable_node arch-specific
-Date: Tue, 25 Oct 2016 10:55:07 -0500
-Message-ID: <20161025155507.37kv5akdlgo6m2be@arbab-laptop.austin.ibm.com>
-References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
- <1475778995-1420-5-git-send-email-arbab@linux.vnet.ibm.com>
- <235f2d20-cf84-08df-1fb4-08ee258fdc52@gmail.com>
- <dcfc8ace-e59e-6b4b-0f2f-4eff9f08f3c1@gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 3/4] dt-bindings: Update domain-idle-state binding to use
+ correct compatibles
+Date: Tue, 25 Oct 2016 16:59:38 +0100
+Message-ID: <383a62dd-b4d7-f764-baf1-ff73691b3cbc@arm.com>
+References: <1477409199-52182-1-git-send-email-lina.iyer@linaro.org>
+ <1477409199-52182-4-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <dcfc8ace-e59e-6b4b-0f2f-4eff9f08f3c1@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Balbir Singh <bsingharora@gmail.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1477409199-52182-4-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>, ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, brendan.jackman@arm.com, lorenzo.pieralisi@arm.com, Juri.Lelli@arm.com, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 11:15:40PM +1100, Balbir Singh wrote:
->After the ack, I realized there were some more checks needed, IOW
->questions for you :)
 
-Hey! No takebacks!
 
-The short answer is that neither of these is a concern.
+On 25/10/16 16:26, Lina Iyer wrote:
+> Update domain-idle-state binding to use "domain-idle-state" compatible
+> from Documentation/devicetree/bindings/arm/idle-states.txt.
+>
+> Cc: <devicetree@vger.kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/power/power_domain.txt | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+> index e165036..6fb53a3 100644
+> --- a/Documentation/devicetree/bindings/power/power_domain.txt
+> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+> @@ -30,8 +30,9 @@ Optional properties:
+>     available in the next section.
+>
+>  - domain-idle-states : A phandle of an idle-state that shall be soaked into a
+> -                generic domain power state. The idle state definitions are
+> -                compatible with arm,idle-state specified in [1].
+> +                generic domain power state. The idle state definitions must be
+> +                compatible with "domain-idle-state"
 
-Longer; if you use "movable_node", x86 can identify these nodes at boot. 
-They call memblock_mark_hotplug() while parsing the SRAT. Then, when the 
-zones are initialized, those markings are used to determine ZONE_MOVABLE.
+I would reword the below a bit different so that it's flexible to be
+reused without "arm,idle-state".
 
-We have no analog of this SRAT information, so our movable nodes can 
-only be created post boot, by hotplugging and explicitly onlining with 
-online_movable.
+> as well as
+> +                "arm,idle-state" as defined in [1].
 
->1. Have you checked to see if our memblock allocations spill
->over to probably hotpluggable nodes?
+'Idle states that are "arm,idle-state" compatible are generally
+"domain-idle-state" compatible as well if it's a PM domain.'
 
-Since our nodes don't exist at boot, we don't have that short window 
-before the zones are drawn where the node has normal memory, and a 
-kernel allocation might occur within.
+or something like that in line with what's in patch 2/4.
 
->2. Shouldn't we be marking nodes discovered as movable via
->memblock_mark_hotplug()?
+That would give us the scope of reuse of "domain-idle-state" in device
+for future. Also it aligns with your patch 4/4.
 
-Again, this early boot marking mechanism only applies to movable_node.
+Otherwise, it looks good.
 
 -- 
-Reza Arbab
+Regards,
+Sudeep
