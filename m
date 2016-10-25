@@ -1,69 +1,57 @@
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: socfpga: Enable QSPI on the Cyclone5 sockit
-Date: Tue, 25 Oct 2016 13:57:51 -0500
-Message-ID: <580FAB2F.1050602@opensource.altera.com>
-References: <1476908324-12313-1-git-send-email-dinguyen@opensource.altera.com>
- <1476908324-12313-3-git-send-email-dinguyen@opensource.altera.com>
- <20161020071913.rlka3or4c7fzjpyv@pengutronix.de>
- <c62baad6-2528-a9df-6b09-3dba66785102@opensource.altera.com>
- <5e0adad1-8ef2-029f-cfcd-4a07c962fda2@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5e0adad1-8ef2-029f-cfcd-4a07c962fda2-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Paul Kocialkowski <contact@paulk.fr>
+Subject: [PATCH] iio: si7020: Add devicetree support and trivial bindings
+Date: Tue, 25 Oct 2016 21:20:10 +0200
+Message-ID: <20161025192010.11195-1-contact@paulk.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Paul Kocialkowski <contact@paulk.fr>
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2016 10:38 AM, Graham Moore wrote:
-> On 10/20/2016 09:12 AM, Dinh Nguyen wrote:
->>
->>
->> On 10/20/2016 02:19 AM, Steffen Trumtrar wrote:
->>
->>>> +        cdns,tslch-ns = <4>;
->>>> +
->>>> +        partition@qspi-boot {
->>>> +            /* 8MB for raw data. */
->>>> +            label = "Flash 0 Raw Data";
->>>> +            reg = <0x0 0x800000>;
->>>> +        };
->>>> +
->>>> +        partition@qspi-rootfs {
->>>> +            /* 120MB for jffs2 data. */
->>>> +            label = "Flash 0 jffs2 Filesystem";
->>>> +            reg = <0x800000 0x7800000>;
->>>> +        };
->>>> +    };
->>>> +};
->>>> +
->>>
->>> What is the current preferred way of handling the partitions?
->>> This doesn't fit my Sockit configuration for example. So I would always
->>> have to patch the devicetree.
->>
->> I'm not 100% sure on this. Graham, do you have any insight?
->>>
-> 
-> Well, strictly speaking, these partitions are only for the socdk, the
-> Altera dev kit.  Our sample designs and file systems expect this layout.
-> 
-> Therefore, these partitions are not required for any other dev kits, and
-> can probably be left out.
-> 
-> Or, Steffen, if you have a standard layout you'd like to see, then put
-> that in there.
-> 
-> I think some people will have to patch the layout regardless.
-> 
+This adds devicetree support for the si7020 iio driver. Since it works
+well without requiring any additional property, its compatible string is
+added to the trivial i2c devices bindings list.
 
-Ok, I'll remove the partitions from the none Altera boards.
+Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+---
+ Documentation/devicetree/bindings/i2c/trivial-devices.txt |  1 +
+ drivers/iio/humidity/si7020.c                             | 11 ++++++++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-Dinh
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index 5c70ce9..6afba26 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -145,6 +145,7 @@ ricoh,rv5c387a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+ samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
+ sgx,vz89x		SGX Sensortech VZ89X Sensors
+ sii,s35390a		2-wire CMOS real-time clock
++silabs,si7020		Relative Humidity and Temperature Sensors
+ skyworks,sky81452	Skyworks SKY81452: Six-Channel White LED Driver with Touch Panel Bias Supply
+ st,24c256		i2c serial eeprom  (24cxx)
+ st,m41t00		Serial real-time clock (RTC)
+diff --git a/drivers/iio/humidity/si7020.c b/drivers/iio/humidity/si7020.c
+index ffc2ccf..345a765 100644
+--- a/drivers/iio/humidity/si7020.c
++++ b/drivers/iio/humidity/si7020.c
+@@ -154,8 +154,17 @@ static const struct i2c_device_id si7020_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, si7020_id);
+ 
++static const struct of_device_id si7020_dt_ids[] = {
++	{ .compatible = "silabs,si7020" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, si7020_dt_ids);
++
+ static struct i2c_driver si7020_driver = {
+-	.driver.name	= "si7020",
++	.driver = {
++		.name = "si7020",
++		.of_match_table = of_match_ptr(si7020_dt_ids),
++	},
+ 	.probe		= si7020_probe,
+ 	.id_table	= si7020_id,
+ };
+-- 
+2.10.0
