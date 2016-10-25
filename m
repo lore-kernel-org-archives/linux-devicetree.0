@@ -1,135 +1,108 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 04/10] iio: adc: stm32: add optional support for exti gpios
-Date: Tue, 25 Oct 2016 18:25:16 +0200
-Message-ID: <1477412722-24061-5-git-send-email-fabrice.gasnier@st.com>
+From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 08/10] ARM: dts: stm32f429: Add adc support
+Date: Tue, 25 Oct 2016 18:25:20 +0200
+Message-ID: <1477412722-24061-9-git-send-email-fabrice.gasnier@st.com>
 References: <1477412722-24061-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1477412722-24061-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, lars@metafoo.de, alexandre.torgue@st.com, pmeerw@pmeerw.net, linux@armlinux.org.uk, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, jic23@kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477412722-24061-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-STM32 ADC may use EXTi signals routed internally as trigger source
-for conversions. Configure them as interrupt to configure this path
-in HW to adc.
-Note: interrupt handler isn't required here, and corresponding interrupt
-can be kept masked at exti controller level.
+Add adc support & pinctrl analog phandle (adc3_in8) to stm32f429.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/iio/adc/stm32/stm32-adc.c | 45 +++++++++++++++++++++++++++++++++++++++
- drivers/iio/adc/stm32/stm32-adc.h |  3 +++
- 2 files changed, 48 insertions(+)
+ arch/arm/boot/dts/stm32f429.dtsi | 62 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
-diff --git a/drivers/iio/adc/stm32/stm32-adc.c b/drivers/iio/adc/stm32/stm32-adc.c
-index 25d0307..1a13450 100644
---- a/drivers/iio/adc/stm32/stm32-adc.c
-+++ b/drivers/iio/adc/stm32/stm32-adc.c
-@@ -482,6 +482,12 @@ static irqreturn_t stm32_adc_common_isr(int irq, void *data)
- 	return ret;
- }
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index 336ee4f..3fcd941 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -172,6 +172,62 @@
+ 			status = "disabled";
+ 		};
  
-+static irqreturn_t stm32_adc_exti_handler(int irq, void *data)
-+{
-+	/* Exti handler should not be invoqued, and is not used */
-+	return IRQ_HANDLED;
-+}
++		adc: adc@40012000 {
++			compatible = "st,stm32f4-adc";
++			reg = <0x40012000 0x400>;
++			interrupts = <18>;
++			clocks = <&rcc 0 168>;
++			clock-names = "adc";
++			status = "disabled";
 +
- /**
-  * stm32_adc_validate_trigger() - validate trigger for stm32 adc
-  * @indio_dev: IIO device
-@@ -1051,6 +1057,41 @@ static void stm32_adc_unregister(struct stm32_adc *adc)
- 	}
- }
++			#address-cells = <1>;
++			#size-cells = <0>;
++			adc1: adc1-master@0 {
++				#io-channel-cells = <1>;
++				reg = <0x0>;
++				clocks = <&rcc 0 168>;
++				status = "disabled";
++			};
++
++			jadc1: adc1-injected@0 {
++				#io-channel-cells = <1>;
++				reg = <0x0>;
++				clocks = <&rcc 0 168>;
++				st,injected;
++				status = "disabled";
++			};
++
++			adc2: adc2-slave@100 {
++				#io-channel-cells = <1>;
++				reg = <0x100>;
++				clocks = <&rcc 0 169>;
++				status = "disabled";
++			};
++
++			jadc2: adc2-injected@100 {
++				#io-channel-cells = <1>;
++				reg = <0x100>;
++				clocks = <&rcc 0 169>;
++				st,injected;
++				status = "disabled";
++			};
++
++			adc3: adc3-slave@200 {
++				#io-channel-cells = <1>;
++				reg = <0x200>;
++				clocks = <&rcc 0 170>;
++				status = "disabled";
++			};
++
++			jadc3: adc3-injected@200 {
++				#io-channel-cells = <1>;
++				reg = <0x200>;
++				clocks = <&rcc 0 170>;
++				st,injected;
++				status = "disabled";
++			};
++		};
++
+ 		syscfg: system-config@40013800 {
+ 			compatible = "syscon";
+ 			reg = <0x40013800 0x400>;
+@@ -332,6 +388,12 @@
+ 					slew-rate = <2>;
+ 				};
+ 			};
++
++			adc3_in8_pin: adc@0 {
++				pins {
++					pinmux = <STM32F429_PF10_FUNC_ANALOG>;
++				};
++			};
+ 		};
  
-+static int stm32_adc_exti_probe(struct stm32_adc_common *common)
-+{
-+	int i, irq, ret;
-+
-+	common->gpios = devm_gpiod_get_array_optional(common->dev, NULL,
-+						      GPIOD_IN);
-+	if (!common->gpios)
-+		return 0;
-+
-+	for (i = 0; i < common->gpios->ndescs; i++) {
-+		irq = gpiod_to_irq(common->gpios->desc[i]);
-+		if (irq < 0) {
-+			dev_err(common->dev, "gpio %d to irq failed\n", i);
-+			return irq;
-+		}
-+
-+		ret = devm_request_irq(common->dev, irq, stm32_adc_exti_handler,
-+				       0, dev_name(common->dev), common);
-+		if (ret) {
-+			dev_err(common->dev, "request IRQ %d failed\n", irq);
-+			return ret;
-+		}
-+
-+		/*
-+		 * gpios are configured as interrupts, so exti trigger path is
-+		 * configured in HW. But getting interrupts when starting
-+		 * conversions is unused here, so mask it in on exti
-+		 * controller by default.
-+		 */
-+		disable_irq(irq);
-+	}
-+
-+	return 0;
-+}
-+
- int stm32_adc_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node, *child;
-@@ -1131,6 +1172,10 @@ int stm32_adc_probe(struct platform_device *pdev)
- 		goto err_clk_disable;
- 	}
- 
-+	ret = stm32_adc_exti_probe(common);
-+	if (ret)
-+		goto err_clk_disable;
-+
- 	/* Parse adc child nodes to retrieve master/slave instances data */
- 	for_each_available_child_of_node(np, child) {
- 		ret = stm32_adc_register(common, child);
-diff --git a/drivers/iio/adc/stm32/stm32-adc.h b/drivers/iio/adc/stm32/stm32-adc.h
-index 01a0dda..fe3568b 100644
---- a/drivers/iio/adc/stm32/stm32-adc.h
-+++ b/drivers/iio/adc/stm32/stm32-adc.h
-@@ -23,6 +23,7 @@
- #define __STM32_ADC_H
- 
- #include <linux/dmaengine.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/irq_work.h>
- 
- /*
-@@ -323,6 +324,7 @@ struct stm32_adc {
-  * @aclk:		common clock for the analog circuitry
-  * @vref:		regulator reference
-  * @vref_mv:		vref voltage (mv)
-+ * @gpio_descs:		gpio descriptor used to configure EXTi triggers
-  * @lock:		mutex
-  */
- struct stm32_adc_common {
-@@ -335,6 +337,7 @@ struct stm32_adc_common {
- 	struct clk			*aclk;
- 	struct regulator		*vref;
- 	int				vref_mv;
-+	struct gpio_descs		*gpios;
- 	struct mutex			lock;	/* read_raw lock */
- };
- 
+ 		rcc: rcc@40023810 {
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
