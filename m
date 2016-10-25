@@ -1,79 +1,169 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/4] dt/bindings: Add binding for the DA8xx MUSB driver
-Date: Tue, 25 Oct 2016 16:39:02 +0200
-Message-ID: <1477406345-27192-2-git-send-email-abailon@baylibre.com>
+From: Alexandre Bailon <abailon@baylibre.com>
+Subject: [PATCH 3/4] usb: musb: da8xx: Add DT support for the DA8xx driver
+Date: Tue, 25 Oct 2016 16:39:04 +0200
+Message-ID: <1477406345-27192-4-git-send-email-abailon@baylibre.com>
 References: <1477406345-27192-1-git-send-email-abailon@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477406345-27192-1-git-send-email-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477406345-27192-1-git-send-email-abailon@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: khilman@baylibre.com, robh+dt@kernel.org, b-liu@ti.com
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Petr Kulhavy <petr@barix.com>, Alexandre Bailon <abailon@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+From: Petr Kulhavy <petr@barix.com>
 
-DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
+This adds DT support for TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver
 
-Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Petr Kulhavy <petr@barix.com>
+Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
 ---
- .../devicetree/bindings/usb/da8xx-usb.txt          | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
+ drivers/usb/musb/da8xx.c | 76 ++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 67 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-new file mode 100644
-index 0000000..5663d79
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-@@ -0,0 +1,43 @@
-+TI DA8xx MUSB
-+~~~~~~~~~~~~~
-+For DA8xx/OMAP-L1x/AM17xx/AM18xx platforms.
+diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
+index 210b7e4..d465087 100644
+--- a/drivers/usb/musb/da8xx.c
++++ b/drivers/usb/musb/da8xx.c
+@@ -6,6 +6,9 @@
+  * Based on the DaVinci "glue layer" code.
+  * Copyright (C) 2005-2006 by Texas Instruments
+  *
++ * DT support
++ * Copyright (c) 2016 Petr Kulhavy <petr@barix.com>
++ *
+  * This file is part of the Inventra Controller Driver for Linux.
+  *
+  * The Inventra Controller Driver for Linux is free software; you
+@@ -433,6 +436,21 @@ static int da8xx_musb_exit(struct musb *musb)
+ 	return 0;
+ }
+ 
++static inline u8 get_vbus_power(struct device *dev)
++{
++	struct regulator *vbus_supply;
++	int current_uA;
 +
-+Required properties:
-+~~~~~~~~~~~~~~~~~~~~
-+ - compatible : Should be set to "ti,da830-musb".
++	vbus_supply = regulator_get_optional(dev, "vbus");
++	if (IS_ERR(vbus_supply))
++		return 255;
++	current_uA = regulator_get_current_limit(vbus_supply);
++	regulator_put(vbus_supply);
++	if (current_uA <= 0 || current_uA > 510000)
++		return 255;
++	return current_uA / 1000 / 2;
++}
 +
-+ - reg: Offset and length of the USB controller register set.
+ static const struct musb_platform_ops da8xx_ops = {
+ 	.quirks		= MUSB_DMA_CPPI | MUSB_INDEXED_EP,
+ 	.init		= da8xx_musb_init,
+@@ -458,6 +476,12 @@ static const struct platform_device_info da8xx_dev_info = {
+ 	.dma_mask	= DMA_BIT_MASK(32),
+ };
+ 
++static const struct musb_hdrc_config da8xx_config = {
++	.ram_bits = 10,
++	.num_eps = 5,
++	.multipoint = 1,
++};
 +
-+ - interrupts: The USB interrupt number.
+ static int da8xx_probe(struct platform_device *pdev)
+ {
+ 	struct resource musb_resources[2];
+@@ -465,7 +489,9 @@ static int da8xx_probe(struct platform_device *pdev)
+ 	struct da8xx_glue		*glue;
+ 	struct platform_device_info	pinfo;
+ 	struct clk			*clk;
++	struct device_node		*np = pdev->dev.of_node;
+ 	int				ret;
++	struct resource *res;
+ 
+ 	glue = devm_kzalloc(&pdev->dev, sizeof(*glue), GFP_KERNEL);
+ 	if (!glue)
+@@ -486,6 +512,18 @@ static int da8xx_probe(struct platform_device *pdev)
+ 	glue->dev			= &pdev->dev;
+ 	glue->clk			= clk;
+ 
++	if (IS_ENABLED(CONFIG_OF) && np) {
++		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++		if (!pdata) {
++			/* FIXME */
++			return -ENOMEM;
++		}
 +
-+ - interrupt-names: Should be set to "mc".
++		pdata->config	= &da8xx_config;
++		pdata->mode	= musb_get_mode(&pdev->dev);
++		pdata->power	= get_vbus_power(&pdev->dev);
++	}
 +
-+ - dr_mode: The USB operation mode. Should be one of "host", "peripheral" or "otg".
+ 	pdata->platform_ops		= &da8xx_ops;
+ 
+ 	glue->usb_phy = usb_phy_generic_register();
+@@ -499,15 +537,21 @@ static int da8xx_probe(struct platform_device *pdev)
+ 	memset(musb_resources, 0x00, sizeof(*musb_resources) *
+ 			ARRAY_SIZE(musb_resources));
+ 
+-	musb_resources[0].name = pdev->resource[0].name;
+-	musb_resources[0].start = pdev->resource[0].start;
+-	musb_resources[0].end = pdev->resource[0].end;
+-	musb_resources[0].flags = pdev->resource[0].flags;
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(&pdev->dev, "failed to get memory.\n");
++		ret = -EINVAL;
++		goto err_unregister_usb_phy;
++	}
++	musb_resources[0] = *res;
+ 
+-	musb_resources[1].name = pdev->resource[1].name;
+-	musb_resources[1].start = pdev->resource[1].start;
+-	musb_resources[1].end = pdev->resource[1].end;
+-	musb_resources[1].flags = pdev->resource[1].flags;
++	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
++	if (!res) {
++		dev_err(&pdev->dev, "failed to get irq.\n");
++		ret = -EINVAL;
++		goto err_unregister_usb_phy;
++	}
++	musb_resources[1] = *res;
+ 
+ 	pinfo = da8xx_dev_info;
+ 	pinfo.parent = &pdev->dev;
+@@ -520,9 +564,14 @@ static int da8xx_probe(struct platform_device *pdev)
+ 	ret = PTR_ERR_OR_ZERO(glue->musb);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to register musb device: %d\n", ret);
+-		usb_phy_generic_unregister(glue->usb_phy);
++		goto err_unregister_usb_phy;
+ 	}
+ 
++	return 0;
 +
-+ - phys: Phandle for the PHY device
++err_unregister_usb_phy:
++	usb_phy_generic_unregister(glue->usb_phy);
 +
-+ - phy-names: Should be "usb-phy"
+ 	return ret;
+ }
+ 
+@@ -536,11 +585,20 @@ static int da8xx_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id da8xx_id_table[] = {
++	{
++		.compatible = "ti,da830-musb",
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, da8xx_id_table);
 +
-+Optional properties:
-+~~~~~~~~~~~~~~~~~~~~
-+ - vbus-supply: Phandle to a regulator providing the USB bus power.
-+
-+Example:
-+	usb_phy: usb-phy {
-+		compatible = "ti,da830-usb-phy";
-+		#phy-cells = <0>;
-+		status = "okay";
-+	};
-+	usb20: usb@1e00000 {
-+		compatible = "ti,da830-musb";
-+		reg =   <0x00200000 0x10000>;
-+		interrupts = <58>;
-+		interrupt-names = "mc";
-+
-+		dr_mode = "host";
-+		vbus-supply = <&usb_vbus>;
-+		phys = <&usb_phy 0>;
-+		phy-names = "usb-phy";
-+
-+		status = "okay";
-+	};
+ static struct platform_driver da8xx_driver = {
+ 	.probe		= da8xx_probe,
+ 	.remove		= da8xx_remove,
+ 	.driver		= {
+ 		.name	= "musb-da8xx",
++		.of_match_table = of_match_ptr(da8xx_id_table),
+ 	},
+ };
+ 
 -- 
 2.7.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
