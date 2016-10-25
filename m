@@ -1,67 +1,78 @@
-From: Graham Moore <grmoore@opensource.altera.com>
-Subject: Re: [PATCH 3/3] ARM: dts: socfpga: Enable QSPI on the Cyclone5 sockit
-Date: Tue, 25 Oct 2016 10:38:10 -0500
-Message-ID: <5e0adad1-8ef2-029f-cfcd-4a07c962fda2@opensource.altera.com>
-References: <1476908324-12313-1-git-send-email-dinguyen@opensource.altera.com>
- <1476908324-12313-3-git-send-email-dinguyen@opensource.altera.com>
- <20161020071913.rlka3or4c7fzjpyv@pengutronix.de>
- <c62baad6-2528-a9df-6b09-3dba66785102@opensource.altera.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: dts: Add LEGO MINDSTORTMS EV3 dts
+Date: Tue, 25 Oct 2016 10:44:44 -0500
+Message-ID: <565013e4-efbe-df79-a52f-329be51289c5@lechnology.com>
+References: <1477075018-20176-1-git-send-email-david@lechnology.com>
+ <1477075018-20176-6-git-send-email-david@lechnology.com>
+ <b0022fad-a96e-86d4-71ba-2b803e5421fe@ti.com>
+ <1593441f-d147-4c91-8aab-8622dd8ced19@lechnology.com>
+ <b6cd3c47-0df8-266a-2b8d-13c82062b647@lechnology.com>
+ <84648cb0-f1fa-d88b-bac2-79208af01ca6@lechnology.com>
+ <0b7cf7a1-e234-2868-dfde-347c92c23829@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <c62baad6-2528-a9df-6b09-3dba66785102@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dinh Nguyen <dinguyen@opensource.altera.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: dinguyen@kernel.org, dinh.linux@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0b7cf7a1-e234-2868-dfde-347c92c23829-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/2016 09:12 AM, Dinh Nguyen wrote:
->
->
-> On 10/20/2016 02:19 AM, Steffen Trumtrar wrote:
->
->>> +		cdns,tslch-ns = <4>;
->>> +
->>> +		partition@qspi-boot {
->>> +			/* 8MB for raw data. */
->>> +			label = "Flash 0 Raw Data";
->>> +			reg = <0x0 0x800000>;
->>> +		};
->>> +
->>> +		partition@qspi-rootfs {
->>> +			/* 120MB for jffs2 data. */
->>> +			label = "Flash 0 jffs2 Filesystem";
->>> +			reg = <0x800000 0x7800000>;
->>> +		};
->>> +	};
->>> +};
->>> +
+On 10/25/2016 05:58 AM, Sekhar Nori wrote:
+> On Tuesday 25 October 2016 02:50 AM, David Lechner wrote:
+>> On 10/24/2016 02:50 PM, David Lechner wrote:
+>>> On 10/24/2016 10:50 AM, David Lechner wrote:
+>>>> On 10/24/2016 06:58 AM, Sekhar Nori wrote:
+>>>>> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
+>>>>>
+>>>>>> +&ehrpwm1 {
+>>>>>> +    status = "disabled";
+>>>>>
+>>>>> Hmm, disabled? Can you add this node when you actually use it?
+>>>>
+>>>> Not sure why I have this disabled. Like the gpios, the pwms can be used
+>>>> via sysfs, so I would like to leave them.
+>>>>
+>>>
+>>> Now I remember why these are disabled. The clock matching is broken.
+>>> Only the first ehrpwm and the first ecap get clocks. The others fail.
+>>>
+>>> I can change these to "okay". It will just result in a kernel error
+>>> message until the clocks are fixed.
+>>>
 >>
->> What is the current preferred way of handling the partitions?
->> This doesn't fit my Sockit configuration for example. So I would always
->> have to patch the devicetree.
->
-> I'm not 100% sure on this. Graham, do you have any insight?
+>> correction: it is not the clocks that are broken. it is the device names.
 >>
+>> In  arch/arm/mach-davinci/da8xx-dt.c, we have...
+>>
+>>
+>>     OF_DEV_AUXDATA("ti,da850-ehrpwm", 0x01f00000, "ehrpwm", NULL),
+>>     OF_DEV_AUXDATA("ti,da850-ehrpwm", 0x01f02000, "ehrpwm", NULL),
+>>     OF_DEV_AUXDATA("ti,da850-ecap", 0x01f06000, "ecap", NULL),
+>>     OF_DEV_AUXDATA("ti,da850-ecap", 0x01f07000, "ecap", NULL),
+>>     OF_DEV_AUXDATA("ti,da850-ecap", 0x01f08000, "ecap", NULL),
+>>
+>>
+>> Which causes each device to have the same device node name. This causes
+>> sysfs errors because it is trying to register a second device at the
+>> same sysfs path.
+>>
+>> If you change the names here, then the device do not work because the
+>> clock lookup fails.
+>
+> Yeah, this is incorrect (I should have caught it in review). The device
+> id should have been present in the lookup. Can you fix auxdata and clock
+> lookup too and send a separate patch? Its probably a v4.9-rc candidate.
+>
+> Thanks,
+> Sekhar
+>
 
-Well, strictly speaking, these partitions are only for the socdk, the 
-Altera dev kit.  Our sample designs and file systems expect this layout.
+Yes, I can do this.
 
-Therefore, these partitions are not required for any other dev kits, and 
-can probably be left out.
 
-Or, Steffen, if you have a standard layout you'd like to see, then put 
-that in there.
-
-I think some people will have to patch the layout regardless.
-
--Graham
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
