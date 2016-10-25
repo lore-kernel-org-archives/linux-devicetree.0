@@ -1,45 +1,51 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 13/15] Documentation: devicetree: dwc2: Add host DMA
- binding
-Date: Wed, 26 Oct 2016 17:07:18 -0500
-Message-ID: <20161026220718.2vqcpts6mw2vf7jh@rob-hp-laptop>
-References: <cover.1476926069.git.johnyoun@synopsys.com>
- <1846cc28dd77ab35cd21994bb746f7685422cfb2.1476926070.git.johnyoun@synopsys.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i: fix the pinmux for UART1
+Date: Tue, 25 Oct 2016 12:51:35 +0200
+Message-ID: <20161025105135.gg6cizedwmbuarqi@lukather>
+References: <20161024170831.38819-1-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xex5eqghxnwyjr4l"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBC6TYTAAKGQEMCJHZMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1846cc28dd77ab35cd21994bb746f7685422cfb2.1476926070.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20161024170831.38819-1-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2016 at 06:22:52PM -0700, John Youn wrote:
-> Add the host-dma property to devicetree. This controls whether to use
-> DMA in host mode.
-> 
-> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> index 2c30a54..17f7624 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> @@ -25,6 +25,7 @@ Optional properties:
->  Refer to phy/phy-bindings.txt for generic phy consumer properties
->  - dr_mode: shall be one of "host", "peripheral" and "otg"
->    Refer to usb/generic.txt
-> +- host-dma: turn on or off host buffer DMA (1 or 0).
 
-Why not boolean? Seems like disabling would be rare, so name the 
-property something like host-dma-disable. Also, it needs a vendor 
-prefix.
+--xex5eqghxnwyjr4l
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, Oct 25, 2016 at 01:08:31AM +0800, Icenowy Zheng wrote:
+> When the patch is applied, the allwinner,driver and allwinner,pull
+> properties are removed.
+> 
+> Although they're described to be optional in the devicetree binding,
+> without them, the pinmux cannot be initialized, and the uart cannot
+> be used.
+> 
+> Add them back to fix the problem, and makes the bluetooth on iNet D978
+> Rev2 board work.
+> 
+> Fixes: 82eec384249f (ARM: dts: sun8i: add pinmux for UART1 at PG)
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+
+Applied, thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--xex5eqghxnwyjr4l--
