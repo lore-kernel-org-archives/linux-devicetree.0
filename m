@@ -1,164 +1,146 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: sti: stih410-clocks: Add PROC_STFE as a critical
- clock
-Date: Tue, 25 Oct 2016 08:42:57 +0100
-Message-ID: <20161025074257.GF8574@dell>
-References: <1476804957-24000-1-git-send-email-peter.griffin@linaro.org>
- <20161024085304.GE14477@dell>
- <20161024134416.GB10440@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Jeremy McNicoll <jmcnicol@redhat.com>
+Subject: Re: [RFC V4 PATCH 5/6] arm64: dts: msm8994 SoC and Huawei Angler
+ (Nexus 6P) support
+Date: Tue, 25 Oct 2016 01:00:08 -0700
+Message-ID: <20161025080008.GC21964@mini-rhel.redhat.com>
+References: <1477048273-32451-1-git-send-email-jeremymc@redhat.com>
+ <1477048273-32451-6-git-send-email-jeremymc@redhat.com>
+ <20161021182533.GX7509@tuxbot>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161024134416.GB10440@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20161021182533.GX7509@tuxbot>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, arnd@arndb.de, mark.rutland@arm.com, michael.scott@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 24 Oct 2016, Peter Griffin wrote:
-
-> Hi Lee,
+On Fri, Oct 21, 2016 at 11:25:33AM -0700, Bjorn Andersson wrote:
+> On Fri 21 Oct 04:11 PDT 2016, Jeremy McNicoll wrote:
 > 
-> On Mon, 24 Oct 2016, Lee Jones wrote:
-> > On Tue, 18 Oct 2016, Peter Griffin wrote:
+> > From: Bastian Köcher <mail@kchr.de>
 > > 
-> > > Once the ST frontend demux HW IP has been enabled, the clock can't
-> > > be disabled otherwise the system will hang and the board will
-> > > be unserviceable.
-> > > 
-> > > To allow balanced clock enable/disable calls in the driver we use
-> > > the critical clock infrastructure to take an extra reference on the
-> > > clock so the clock will never actually be disabled.
+> > Initial device tree support for Qualcomm MSM8994 SoC and
+> > Huawei Angler / Google Nexus 6P support.
 > > 
-> > This is an abuse of the critical-clocks framework, and is exactly the
-> > type of hack I promised the clk guys I'd try to prevent.
-> 
-> I expect the best way to do this would be to write some documentation on the
-> clock-critical DT binding and/or CRITICAL_CLK flag. The only documentation I can
-> find currently is with the initial patch series [1] and the comment in
-> clk-provider.h of
-> 
->  #define CLK_IS_CRITICAL         BIT(11) /* do not gate, ever */
-> 
-> Or the patch decription
-> 
-> "Critical clocks are those which must not be gated, else undefined
-> or catastrophic failure would occur.  Here we have chosen to
-> ensure the prepare/enable counts are correctly incremented, so as
-> not to confuse users with enabled clocks with no visible users."
-> 
-> Which is the functionality I want for this clock.
-
-No, that's not the functionality you want.  You want for the clock not
-to be RE-gated (big difference).  Currently, the STFE clock will never
-be gated, even when a) it's not used and b) can actually be disabled.
-You're needlessly wasting power here.
-
-Also, in your use-case there is a visible user, and the prepare/enable
-counts will be correct.
-
-> > If this, or
-> > any other IP has some quirks (i.e. once enabled, if this clock is
-> > subsequently disabled it will have a catastrophic effect on the
-> > platform), then they should be worked around in the driver.
+> > The device tree is based on the Google 3.10 kernel tree.
 > > 
-> > The correct thing to do here is craft a clk-keep-on flag and ensure it
-> > is set to true for the effected platform(s)' platform data.
+> > The device can be booted into the initrd with only one CPU running.
+> > 
 > 
-> I'm always wary of creating a driver specific flag, especially when its
-> purpose is to do the same thing as an existing mechanism provided by the
-> subsystem of not gating the clock.
-
-Using existing sub-system supplied mechanisms in the way they were not
-intended is sub-optimal (read "hacky").
-
-> I can see a couple of problems with what you propose:
+> Looks reasonable as well, same two comments as the 8992 below.
 > 
-> 1) You have to put the clk-keep-on flag in every driver which consumes the
-> clock. IMO it is much better to have this knowledge in the SoC's
-> clock driver so every consumer of the clock automatically benefits.
-
-That would also be fine(ish).  The issue is that this problem is
-board specific, so the platform clock driver would have to contain
-board level knowledge.  Also, if you were to implement this, it would
-too mess up reference counting in the core.
-
-> 2) You don't benefit from the CLK_IS_CRITICAL reference counting logic in
-> clk.c. So then each driver has to also work around that to get sensible reference
-> counts. e.g.
+> > Signed-off-by: Bastian Köcher <mail@kchr.de>
+> > [jeremymc@redhat.com: removed Kconfig, defconfig, move from Huawei to qcom dir]
+> > Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
+> > ---
+> >  arch/arm64/boot/dts/qcom/Makefile                  |   2 +-
+> >  .../arm64/boot/dts/qcom/msm8994-angler-rev-101.dts |  42 ++++
+> >  arch/arm64/boot/dts/qcom/msm8994-pins.dtsi         |  38 ++++
+> >  arch/arm64/boot/dts/qcom/msm8994-v2.0.dtsi         |  32 +++
+> >  arch/arm64/boot/dts/qcom/msm8994.dtsi              | 236 +++++++++++++++++++++
+> >  5 files changed, 349 insertions(+), 1 deletion(-)
+> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8994-pins.dtsi
+> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8994-v2.0.dtsi
+> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8994.dtsi
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> > index abb366e..4040fc8 100644
+> > --- a/arch/arm64/boot/dts/qcom/Makefile
+> > +++ b/arch/arm64/boot/dts/qcom/Makefile
+> > @@ -1,6 +1,6 @@
+> >  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
+> >  dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb apq8096-db820c.dtb
+> > -dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+> > +dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb msm8994-angler-rev-101.dtb
 > 
-> if (!__clk_is_enabled(clk) && pdata->clk-keep-on)
->    clk_enable(clk)
+> This won't scale, use multiple lines instead.
+>
+
+Done, one entry per line.
+
+> >  
+> >  always		:= $(dtb-y)
+> >  subdir-y	:= $(dts-dirs)
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> > new file mode 100644
+> > index 0000000..9684e6c
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> > @@ -0,0 +1,42 @@
+> > +/* Copyright (c) 2015, Huawei Inc. All rights reserved.
+> > + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 and
+> > + * only version 2 as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "msm8994-v2.0.dtsi"
+> > +
+> > +/ {
+> > +	model = "HUAWEI MSM8994 ANGLER rev-1.01";
+> > +	compatible = "qcom,msm8994";
+> > +	/* required for bootloader to select correct board */
+> > +	qcom,board-id = <8026 0>;
+> > +};
+> > +
+> > +/ {
 > 
-> Which seems to me to be fighting against the subsystem. Given that the only use of
->  _clk_is_enabled() outside drivers/clk is in an old arch/arm/mach-omap2/pm24xx.c
-> driver I suspect its use is frowned upon, and it shouldn't really be an EXPORTED_SYMBOL.
+> No need to close and reopen / {} here.
+>
 
-In this instance, since the STFE clock is only used by this IP, I
-would choose to handle it in the driver.  This can be done using a
-single flag stored in pdata which should be fetched using
-of_match_device().  This way there is no need for any more API abuse;
-either by incorrectly identifying the STFE clock as critical OR
-invoking any internal __clk_*() calls.
+updated.
 
-Enable the clock once in .probe(), which you already do.
+> > +	aliases {
+> > +		serial0 = &blsp1_uart2;
+> > +	};
+> > +
+> > +	chosen {
+> > +		stdout-path = "serial0:115200n8";
+> > +	};
+> > +
+> > +	soc {
+> > +		serial@f991e000 {
+> > +			status = "okay";
+> > +			pinctrl-names = "default", "sleep";
+> > +			pinctrl-0 = <&blsp1_uart2_default>;
+> > +			pinctrl-1 = <&blsp1_uart2_sleep>;
+> > +		};
+> > +	};
+> > +};
+> [..]
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> [..]
+> > +	msmgpio: pinctrl@fd510000 {
+> > +		compatible = "qcom,msm8994-pinctrl", "qcom,msm8974-pinctrl";
+> 
+> msm8974 TLMM won't work here either, so please drop that.
+> 
 
-Then, whenever you do any power saving do:
+Dropped 8974 pinctrl now that Michael Scott has created a proper pinctrl
+driver for msm8994.  There was sufficient overlap between 8974 and 8994
+for initial dev work.  [https://patches.linaro.org/patch/78750/]
 
-suspend()
-{
-	if (!ddata->enable_clk_once)
-		clk_disable(clk);
-}
+-jeremy
 
-resume()
-{
-	if (!ddata->enable_clk_once)
-		clk_enable(clk);
-}
-
-However, looking at your driver, I think this point might even be
-moot, since you don't have any power saving.  The only time you
-disable the clock is in the error path.  Just replace that with a
-comment about the platform's unfortunate errata.
-
-> [1] https://lkml.org/lkml/2016/1/18/272
-
-I'm glad you mentioned this.  Let's take a look:
-
-> Some platforms contain clocks which if gated, will cause undefined or
-> catastrophic behaviours.  As such they are not to be turned off, ever.
-
-Not the case here.
-
-This clock *can* be gated and can be turned off *sometimes*.
-
-> Many of these such clocks do not have devices, thus device drivers
-> where clocks may be enabled and references taken to ensure they stay
-> enabled do not exist.  Therefore, we must handle these such cases in
-> the core.
-
-This clock *does* have a driver and correct references *can* be
-taken.
-
-[...]
-
-All I'm saying is, and it's the same thing I've said many times; these
-types of issues do not exhibit the same set of symptoms as a critical
-clock by definition.  Critical clocks are those which references can
-not be taken by any other means.  Think of the critical clock
-framework as a mechanism to circumvent the requirement of writing a
-special driver which would *only* handle clocks i.e. an interconnect
-driver in the ST case.
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org â”‚ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +		reg = <0xfd510000 0x4000>;
+> > +		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> > +		gpio-controller;
+> > +		#gpio-cells = <2>;
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <2>;
+> > +	};
+> 
+> Regards,
+> Bjorn
