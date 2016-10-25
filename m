@@ -1,68 +1,141 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v5 02/23] of: device: Export of_device_{get_modalias,
- uvent_modalias} to modules
-Date: Tue, 25 Oct 2016 09:16:32 +0800
-Message-ID: <20161025011632.GA23876@b29397-desktop>
-References: <20161018015636.11701-1-stephen.boyd@linaro.org>
- <20161018015636.11701-3-stephen.boyd@linaro.org>
- <CAGb2v66t8t3o0PxzaaBKnRvNP=CWG5nYud7Wjp27Q1x2baM4hg@mail.gmail.com>
- <147733850401.29612.2343965740004706258@sboyd-linaro>
+From: John Youn <John.Youn@synopsys.com>
+Subject: Re: [PATCH v9 1/2] usb: dwc2: assert phy reset when waking up in
+ rk3288 platform
+Date: Mon, 24 Oct 2016 18:30:57 -0700
+Message-ID: <9a5d53a8-6c64-804a-0b47-7d7f24e9aa88@synopsys.com>
+References: <1476988627-14953-1-git-send-email-ayaka@soulik.info>
+ <1476988627-14953-2-git-send-email-ayaka@soulik.info>
+ <4ee5817d-0076-9974-8b0e-182a0241e1f5@synopsys.com>
+ <922d7f12-a520-7c07-bc4c-887321177c6d@soulik.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <147733850401.29612.2343965740004706258@sboyd-linaro>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>, robh@kernel.org
-Cc: Chen-Yu Tsai <wens@csie.org>, Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb <linux-usb@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <922d7f12-a520-7c07-bc4c-887321177c6d@soulik.info>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ayaka <ayaka@soulik.info>, John Youn <John.Youn@synopsys.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "kishon@ti.com" <kishon@ti.com>
+Cc: "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "heiko@sntech.de" <heiko@sntech.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "randy.li@rock-chips.com" <randy.li@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 24, 2016 at 12:48:24PM -0700, Stephen Boyd wrote:
-> Quoting Chen-Yu Tsai (2016-10-24 05:19:05)
-> > Hi,
-> > 
-> > On Tue, Oct 18, 2016 at 9:56 AM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
-> > > The ULPI bus can be built as a module, and it will soon be
-> > > calling these functions when it supports probing devices from DT.
-> > > Export them so they can be used by the ULPI module.
-> > >
-> > > Acked-by: Rob Herring <robh@kernel.org>
-> > > Cc: <devicetree@vger.kernel.org>
-> > > Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> > > ---
-> > >  drivers/of/device.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/drivers/of/device.c b/drivers/of/device.c
-> > > index 8a22a253a830..6719ab35b62e 100644
-> > > --- a/drivers/of/device.c
-> > > +++ b/drivers/of/device.c
-> > > @@ -225,6 +225,7 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
-> > >
-> > >         return tsize;
-> > >  }
-> > > +EXPORT_SYMBOL_GPL(of_device_get_modalias);
-> > >
-> > >  int of_device_request_module(struct device *dev)
-> > >  {
-> > > @@ -290,6 +291,7 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
-> > >         }
-> > >         mutex_unlock(&of_mutex);
-> > >  }
-> > > +EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
-> > 
-> > This is trailing the wrong function.
-> > 
+On 10/23/2016 2:33 AM, ayaka wrote:
 > 
-> Good catch. Must have been some bad rebase.
 > 
-> Peter, can you fix it while applying or should I resend this patch?
-> 
+> On 10/22/2016 03:27 AM, John Youn wrote:
+>> On 10/20/2016 11:38 AM, Randy Li wrote:
+>>> On the rk3288 USB host-only port (the one that's not the OTG-enabled
+>>> port) the PHY can get into a bad state when a wakeup is asserted (not
+>>> just a wakeup from full system suspend but also a wakeup from
+>>> autosuspend).
+>>>
+>>> We can get the PHY out of its bad state by asserting its "port reset",
+>>> but unfortunately that seems to assert a reset onto the USB bus so it
+>>> could confuse things if we don't actually deenumerate / reenumerate the
+>>> device.
+>>>
+>>> We can also get the PHY out of its bad state by fully resetting it using
+>>> the reset from the CRU (clock reset unit) in chip, which does a more full
+>>> reset.  The CRU-based reset appears to actually cause devices on the bus
+>>> to be removed and reinserted, which fixes the problem (albeit in a hacky
+>>> way).
+>>>
+>>> It's unfortunate that we need to do a full re-enumeration of devices at
+>>> wakeup time, but this is better than alternative of letting the bus get
+>>> wedged.
+>>>
+>>> Signed-off-by: Randy Li <ayaka@soulik.info>
+>>> ---
+>>>   drivers/usb/dwc2/core.h      |  1 +
+>>>   drivers/usb/dwc2/core_intr.c | 11 +++++++++++
+>>>   drivers/usb/dwc2/platform.c  |  9 +++++++++
+>>>   3 files changed, 21 insertions(+)
+>>>
+>>> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
+>>> index 2a21a04..e91ddbc 100644
+>>> --- a/drivers/usb/dwc2/core.h
+>>> +++ b/drivers/usb/dwc2/core.h
+>>> @@ -859,6 +859,7 @@ struct dwc2_hsotg {
+>>>   	unsigned int ll_hw_enabled:1;
+>>>   
+>>>   	struct phy *phy;
+>>> +	struct work_struct phy_rst_work;
+>>>   	struct usb_phy *uphy;
+>>>   	struct dwc2_hsotg_plat *plat;
+>>>   	struct regulator_bulk_data supplies[ARRAY_SIZE(dwc2_hsotg_supply_names)];
+>>> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
+>>> index d85c5c9..c3d2168 100644
+>>> --- a/drivers/usb/dwc2/core_intr.c
+>>> +++ b/drivers/usb/dwc2/core_intr.c
+>>> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
+>>>   static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>>>   {
+>>>   	int ret;
+>>> +	struct device_node *np = hsotg->dev->of_node;
+>>>   
+>>>   	/* Clear interrupt */
+>>>   	dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
+>>> @@ -379,6 +380,16 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>>>   			/* Restart the Phy Clock */
+>>>   			pcgcctl &= ~PCGCTL_STOPPCLK;
+>>>   			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
+>>> +
+>>> +			/*
+>>> +			 * It is a quirk in Rockchip RK3288, causing by
+>>> +			 * a hardware bug. This will propagate out and
+>>> +			 * eventually we'll re-enumerate the device.
+>>> +			 * Not great but the best we can do
+>>> +			 */
+>>> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb"))
+>>> +				schedule_work(&hsotg->phy_rst_work);
+>>> +
+>>>   			mod_timer(&hsotg->wkp_timer,
+>>>   				  jiffies + msecs_to_jiffies(71));
+>>>   		} else {
+>>> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+>>> index 8e1728b..65953cf 100644
+>>> --- a/drivers/usb/dwc2/platform.c
+>>> +++ b/drivers/usb/dwc2/platform.c
+>>> @@ -366,6 +366,14 @@ int dwc2_lowlevel_hw_disable(struct dwc2_hsotg *hsotg)
+>>>   	return ret;
+>>>   }
+>>>   
+>>> +/* Only used to reset usb phy at interrupter runtime */
+>>> +static void dwc2_reset_phy_work(struct work_struct *data)
+>>> +{
+>>> +	struct dwc2_hsotg *hsotg = container_of(data, struct dwc2_hsotg,
+>>> +			phy_rst_work);
+>>> +	phy_reset(hsotg->phy);
+>>> +}
+>>> +
+>>>   static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
+>>>   {
+>>>   	int i, ret;
+>>> @@ -410,6 +418,7 @@ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
+>>>   			return ret;
+>>>   		}
+>>>   	}
+>>> +	INIT_WORK(&hsotg->phy_rst_work, dwc2_reset_phy_work);
+>>>   
+>>>   	if (!hsotg->phy) {
+>>>   		hsotg->uphy = devm_usb_get_phy(hsotg->dev, USB_PHY_TYPE_USB2);
+>>>
+>> Hi Randy,
+>>
+>> This fails compile if CONFIG_GENERIC_PHY is disabled. I think you need
+>> to make a fix to your phy_reset patch first.
+> In the last time, cac18ecb6f44b11bc303d7afbae3887b27938fa4 have not been 
+> merged, I though the
+> [PATCH v8 1/3] phy: Add reset callback for not generic phy have been 
+> merged before that. when the rebase abandon it.
+> Should re-send that patch? As the mainline have not been affected, could 
+> you arrange a squash for it?
 
-But, this is device tree patch. I can only get chipidea part and other
-USB patches if Greg agrees.
+Hi Randy,
 
--- 
+Can you resend the fix to Kishon?
 
-Best Regards,
-Peter Chen
+The phy_reset patch landed in 4.9-rc so I think he should take the fix
+for the next -rc. After that we can send the dwc2 change through
+Felipe.
+
+Regards,
+John
