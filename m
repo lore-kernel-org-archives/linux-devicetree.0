@@ -1,47 +1,88 @@
-From: Jeremy McNicoll <jmcnicol@redhat.com>
-Subject: Re: [RFC V4 PATCH 6/6] arm64: configs: enable configs for
- msm899(2/4) basic support
-Date: Tue, 25 Oct 2016 01:07:06 -0700
-Message-ID: <20161025080706.GD21964@mini-rhel.redhat.com>
-References: <1477048273-32451-1-git-send-email-jeremymc@redhat.com>
- <1477048273-32451-7-git-send-email-jeremymc@redhat.com>
- <20161021182713.GY7509@tuxbot>
- <ba4e8128-40c1-e2ff-8eda-130cbb62e71e@redhat.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 1/8] drm/bridge: rgb-to-vga: Support an enable GPIO
+Date: Tue, 25 Oct 2016 13:39:27 +0530
+Message-ID: <0b5fbe8e-e51b-c874-e1a3-0b88dc65e361@codeaurora.org>
+References: <20161020034344.14154-1-wens@csie.org>
+ <20161020034344.14154-2-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ba4e8128-40c1-e2ff-8eda-130cbb62e71e@redhat.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Jeremy McNicoll <jeremymc@redhat.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, arnd@arndb.de, mark.rutland@arm.com, michael.scott@linaro.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20161020034344.14154-2-wens@csie.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 03:32:08PM -0700, Jeremy McNicoll wrote:
-> On 2016-10-21 11:27 AM, Bjorn Andersson wrote:
-> >On Fri 21 Oct 04:11 PDT 2016, Jeremy McNicoll wrote:
-> >
-> >>From: Jeremy McNicoll <jmcnicol@redhat.com>
-> >>
-> >>Given the mimimal hardware support for msm899(2/4) currently.
-> >>A few config options are needed to allow for continued
-> >>development and booting.
-> >>
-> >>The following are needed for continued development and
-> >>booting:
-> >>  -8x74 pinctrl for serial support
-> >
-> >I don't have the datasheet for 899[24], but I don't think this is a good
-> >idea. We need a 899[24] pinctrl driver for this.
-> >
-> 
-> Based on the downstream code, for serial it was sufficient.
-> 
-> There is a 8994 pinctrl driver on its away.
->
-
-Here is a link to the 8994 pinctrl needed for 899(2/4).
-
- https://patches.linaro.org/patch/78750/
-
--jeremy
+SGksCgpPbiAxMC8yMC8yMDE2IDA5OjEzIEFNLCBDaGVuLVl1IFRzYWkgd3JvdGU6Cj4gU29tZSBy
+Z2ItdG8tdmdhIGJyaWRnZXMgaGF2ZSBhbiBlbmFibGUgR1BJTywgZWl0aGVyIGRpcmVjdGx5IHRp
+ZWQgdG8KPiBhbiBlbmFibGUgcGluIG9uIHRoZSBicmlkZ2UgSUMsIG9yIGluZGlyZWN0bHkgY29u
+dHJvbGxpbmcgYSBwb3dlcgo+IHN3aXRjaC4KPgo+IEFkZCBzdXBwb3J0IGZvciBpdC4KCkRvZXMg
+dGhlIGJyaWRnZSBvbiB5b3VyIHBsYXRmb3JtIGhhdmUgYW4gYWN0aXZlL3Bhc3NpdmUgREFDLCBv
+ciBpcyBpdCBhCnNtYXJ0ZXIgZW5jb2RlciBjaGlwIHRoYXQgaXMgY2FwYWJsZSBvZiBkb2luZyBt
+b3JlPyBJZiBzbywgaXQgbWlnaHQgYmUKZ29vZCB0byBoYXZlIGEgc2VwYXJhdGUgRFQgY29tcGF0
+aWJsZSBzdHJpbmcgdG8gaXQsIGxpa2Ugd2hhdCdzIGRvbmUKaW4gdGhlIHBhdGNoIHRpdGxlZDoK
+CmRybTogYnJpZGdlOiB2Z2EtZGFjOiBBZGQgYWRpLGFkdjcxMjMgY29tcGF0aWJsZSBzdHJpbmcK
+CnNvIHRoYXQgd2UgY2FuIHN3aXRjaCB0byBhIGRpZmZlcmVudCBkcml2ZXIgbGF0ZXIgaWYgbmVl
+ZGVkLgoKVGhhbmtzLApBcmNoaXQKCj4KPiBTaWduZWQtb2ZmLWJ5OiBDaGVuLVl1IFRzYWkgPHdl
+bnNAY3NpZS5vcmc+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9kdW1iLXZn
+YS1kYWMudHh0ICAgICAgIHwgIDIgKysKPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZn
+YS1kYWMuYyAgICAgICAgICAgICAgfCAyOCArKysrKysrKysrKysrKysrKysrKysrCj4gIDIgZmls
+ZXMgY2hhbmdlZCwgMzAgaW5zZXJ0aW9ucygrKQo+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9kdW1iLXZnYS1kYWMudHh0IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdh
+LWRhYy50eHQKPiBpbmRleCAwMDNiYzI0NmEyNzAuLmQzNDg0ODIyYmY3NyAxMDA2NDQKPiAtLS0g
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHVtYi12
+Z2EtZGFjLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2JyaWRnZS9kdW1iLXZnYS1kYWMudHh0Cj4gQEAgLTE2LDYgKzE2LDggQEAgZ3JhcGggYmlu
+ZGluZ3Mgc3BlY2lmaWVkIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFw
+aC50eHQuCj4gIC0gVmlkZW8gcG9ydCAwIGZvciBSR0IgaW5wdXQKPiAgLSBWaWRlbyBwb3J0IDEg
+Zm9yIFZHQSBvdXRwdXQKPgo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICstIGVuYWJsZS1ncGlv
+czogR1BJTyBwaW4gdG8gZW5hYmxlIG9yIGRpc2FibGUgdGhlIGJyaWRnZQo+Cj4gIEV4YW1wbGUK
+PiAgLS0tLS0tLQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdh
+LWRhYy5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1kYWMuYwo+IGluZGV4IGFm
+ZWMyMzIxODVhNy4uYjQ4N2U1ZTliNTZkIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9i
+cmlkZ2UvZHVtYi12Z2EtZGFjLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWIt
+dmdhLWRhYy5jCj4gQEAgLTEwLDYgKzEwLDcgQEAKPiAgICogdGhlIExpY2Vuc2UsIG9yIChhdCB5
+b3VyIG9wdGlvbikgYW55IGxhdGVyIHZlcnNpb24uCj4gICAqLwo+Cj4gKyNpbmNsdWRlIDxsaW51
+eC9ncGlvL2NvbnN1bWVyLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPiAgI2luY2x1
+ZGUgPGxpbnV4L29mX2dyYXBoLmg+Cj4KPiBAQCAtMjMsNiArMjQsNyBAQCBzdHJ1Y3QgZHVtYl92
+Z2Egewo+ICAJc3RydWN0IGRybV9jb25uZWN0b3IJY29ubmVjdG9yOwo+Cj4gIAlzdHJ1Y3QgaTJj
+X2FkYXB0ZXIJKmRkYzsKPiArCXN0cnVjdCBncGlvX2Rlc2MJKmVuYWJsZV9ncGlvOwo+ICB9Owo+
+Cj4gIHN0YXRpYyBpbmxpbmUgc3RydWN0IGR1bWJfdmdhICoKPiBAQCAtMTI0LDggKzEyNiwyNiBA
+QCBzdGF0aWMgaW50IGR1bWJfdmdhX2F0dGFjaChzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+
+ICAJcmV0dXJuIDA7Cj4gIH0KPgo+ICtzdGF0aWMgdm9pZCBkdW1iX3ZnYV9lbmFibGUoc3RydWN0
+IGRybV9icmlkZ2UgKmJyaWRnZSkKPiArewo+ICsJc3RydWN0IGR1bWJfdmdhICp2Z2EgPSBkcm1f
+YnJpZGdlX3RvX2R1bWJfdmdhKGJyaWRnZSk7Cj4gKwo+ICsJaWYgKHZnYS0+ZW5hYmxlX2dwaW8p
+Cj4gKwkJZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwKHZnYS0+ZW5hYmxlX2dwaW8sIDEpOwo+ICt9
+Cj4gKwo+ICtzdGF0aWMgdm9pZCBkdW1iX3ZnYV9kaXNhYmxlKHN0cnVjdCBkcm1fYnJpZGdlICpi
+cmlkZ2UpCj4gK3sKPiArCXN0cnVjdCBkdW1iX3ZnYSAqdmdhID0gZHJtX2JyaWRnZV90b19kdW1i
+X3ZnYShicmlkZ2UpOwo+ICsKPiArCWlmICh2Z2EtPmVuYWJsZV9ncGlvKQo+ICsJCWdwaW9kX3Nl
+dF92YWx1ZV9jYW5zbGVlcCh2Z2EtPmVuYWJsZV9ncGlvLCAwKTsKPiArfQo+ICsKPiAgc3RhdGlj
+IGNvbnN0IHN0cnVjdCBkcm1fYnJpZGdlX2Z1bmNzIGR1bWJfdmdhX2JyaWRnZV9mdW5jcyA9IHsK
+PiAgCS5hdHRhY2gJCT0gZHVtYl92Z2FfYXR0YWNoLAo+ICsJLmVuYWJsZQkJPSBkdW1iX3ZnYV9l
+bmFibGUsCj4gKwkuZGlzYWJsZQk9IGR1bWJfdmdhX2Rpc2FibGUsCj4gIH07Cj4KPiAgc3RhdGlj
+IHN0cnVjdCBpMmNfYWRhcHRlciAqZHVtYl92Z2FfcmV0cmlldmVfZGRjKHN0cnVjdCBkZXZpY2Ug
+KmRldikKPiBAQCAtMTY5LDYgKzE4OSwxNCBAQCBzdGF0aWMgaW50IGR1bWJfdmdhX3Byb2JlKHN0
+cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIAkJcmV0dXJuIC1FTk9NRU07Cj4gIAlwbGF0
+Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCB2Z2EpOwo+Cj4gKwl2Z2EtPmVuYWJsZV9ncGlvID0gZGV2
+bV9ncGlvZF9nZXRfb3B0aW9uYWwoJnBkZXYtPmRldiwgImVuYWJsZSIsCj4gKwkJCQkJCSAgIEdQ
+SU9EX09VVF9MT1cpOwo+ICsJaWYgKElTX0VSUih2Z2EtPmVuYWJsZV9ncGlvKSkgewo+ICsJCXJl
+dCA9IFBUUl9FUlIodmdhLT5lbmFibGVfZ3Bpbyk7Cj4gKwkJZGV2X2VycigmcGRldi0+ZGV2LCAi
+ZmFpbGVkIHRvIHJlcXVlc3QgR1BJTzogJWRcbiIsIHJldCk7Cj4gKwkJcmV0dXJuIHJldDsKPiAr
+CX0KPiArCj4gIAl2Z2EtPmRkYyA9IGR1bWJfdmdhX3JldHJpZXZlX2RkYygmcGRldi0+ZGV2KTsK
+PiAgCWlmIChJU19FUlIodmdhLT5kZGMpKSB7Cj4gIAkJaWYgKFBUUl9FUlIodmdhLT5kZGMpID09
+IC1FTk9ERVYpIHsKPgoKLS0gClF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEg
+bWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3Jh
+dGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
