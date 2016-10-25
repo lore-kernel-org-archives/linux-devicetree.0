@@ -1,48 +1,61 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH/RFT v2 06/17] ARM: davinci: da8xx: Fix some redefined
- symbol warnings
-Date: Tue, 25 Oct 2016 14:14:25 +0200
-Message-ID: <0d8e4d79-a8f4-9cad-cc52-7aa5ae49998e@baylibre.com>
-References: <20161024164634.4330-1-ahaslam@baylibre.com>
- <20161024164634.4330-7-ahaslam@baylibre.com>
- <9fa01842-cf8e-87e9-75ce-5d4b2841fdfe@ti.com>
+From: Balbir Singh <bsingharora@gmail.com>
+Subject: Re: [PATCH v4 4/5] mm: make processing of movable_node arch-specific
+Date: Tue, 25 Oct 2016 23:15:40 +1100
+Message-ID: <dcfc8ace-e59e-6b4b-0f2f-4eff9f08f3c1@gmail.com>
+References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
+ <1475778995-1420-5-git-send-email-arbab@linux.vnet.ibm.com>
+ <235f2d20-cf84-08df-1fb4-08ee258fdc52@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9fa01842-cf8e-87e9-75ce-5d4b2841fdfe-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, manjunath.goudar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <235f2d20-cf84-08df-1fb4-08ee258fdc52@gmail.com>
+Sender: owner-linux-mm@kvack.org
+To: Reza Arbab <arbab@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2016 12:03 PM, Sekhar Nori wrote:
-> On Monday 24 October 2016 10:16 PM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
->> From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+
+
+On 11/10/16 23:26, Balbir Singh wrote:
+> 
+> 
+> On 07/10/16 05:36, Reza Arbab wrote:
+>> Currently, CONFIG_MOVABLE_NODE depends on X86_64. In preparation to
+>> enable it for other arches, we need to factor a detail which is unique
+>> to x86 out of the generic mm code.
 >>
->> Some macro for DA8xx CFGCHIP are defined in usb-davinci.h,
->> but da8xx-cfgchip.h intend to replace them.
->> The usb-da8xx.c is using both headers, causing redefined symbol warnings.
->> Remove the old macros.
+>> Specifically, as documented in kernel-parameters.txt, the use of
+>> "movable_node" should remain restricted to x86:
 >>
->> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> movable_node    [KNL,X86] Boot-time switch to enable the effects
+>>                 of CONFIG_MOVABLE_NODE=y. See mm/Kconfig for details.
+>>
+>> This option tells x86 to find movable nodes identified by the ACPI SRAT.
+>> On other arches, it would have no benefit, only the undesired side
+>> effect of setting bottom-up memblock allocation.
+>>
+>> Since #ifdef CONFIG_MOVABLE_NODE will no longer be enough to restrict
+>> this option to x86, move it to an arch-specific compilation unit
+>> instead.
+>>
+>> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
 > 
-> This is a v4.9-rc bug fix. Can you please post it as a separate patch
-> for Greg to pick up?
+> Acked-by: Balbir Singh <bsingharora@gmail.com>
 > 
-Done
-> You can add:
-> 
-> Acked-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Actually, I didn't add it because I had to make few changes to
-submit as a separate patch. I hope I did it in right way.
-> 
-> Thanks,
-> Sekhar
-> 
-Thanks,
-Alexandre
+
+After the ack, I realized there were some more checks needed, IOW
+questions for you :)
+
+1. Have you checked to see if our memblock allocations spill
+over to probably hotpluggable nodes?
+2. Shouldn't we be marking nodes discovered as movable via
+memblock_mark_hotplug()?
+
+Balbir Singh.
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
