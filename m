@@ -1,63 +1,64 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 3/4] dt-bindings: Update domain-idle-state binding to use
- correct compatibles
-Date: Tue, 25 Oct 2016 16:59:38 +0100
-Message-ID: <383a62dd-b4d7-f764-baf1-ff73691b3cbc@arm.com>
-References: <1477409199-52182-1-git-send-email-lina.iyer@linaro.org>
- <1477409199-52182-4-git-send-email-lina.iyer@linaro.org>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH/RFT v2 07/17] ARM: davinci: da8xx: Enable the usb20 "per"
+ clk on phy_clk_enable
+Date: Tue, 25 Oct 2016 11:05:02 -0500
+Message-ID: <5abddbfe-0338-6406-9299-1d2d3fb957a3@lechnology.com>
+References: <20161024164634.4330-1-ahaslam@baylibre.com>
+ <20161024164634.4330-8-ahaslam@baylibre.com>
+ <833b6b60-4504-dac7-ccbb-bc08c985ad01@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1477409199-52182-4-git-send-email-lina.iyer@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>, ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, brendan.jackman@arm.com, lorenzo.pieralisi@arm.com, Juri.Lelli@arm.com, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <833b6b60-4504-dac7-ccbb-bc08c985ad01-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org, manjunath.goudar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 25/10/16 16:26, Lina Iyer wrote:
-> Update domain-idle-state binding to use "domain-idle-state" compatible
-> from Documentation/devicetree/bindings/arm/idle-states.txt.
+On 10/25/2016 05:12 AM, Sekhar Nori wrote:
+> On Monday 24 October 2016 10:16 PM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
+>> diff --git a/arch/arm/mach-davinci/usb-da8xx.c b/arch/arm/mach-davinci/usb-da8xx.c
+>> index 9e41a7f..982e105 100644
+>> --- a/arch/arm/mach-davinci/usb-da8xx.c
+>> +++ b/arch/arm/mach-davinci/usb-da8xx.c
+>> @@ -53,11 +53,19 @@ int __init da8xx_register_usb_refclkin(int rate)
+>>
+>>  static void usb20_phy_clk_enable(struct clk *clk)
+>>  {
+>> +	struct clk *usb20_clk;
+>>  	u32 val;
+>>  	u32 timeout = 500000; /* 500 msec */
+>>
+>>  	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
+>>
+>> +	usb20_clk = clk_get(NULL, "usb20");
 >
-> Cc: <devicetree@vger.kernel.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
-> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-> ---
->  Documentation/devicetree/bindings/power/power_domain.txt | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+> We should not be using a NULL device pointer here. Can you pass the musb
+> device pointer available in the same file? Also, da850_clks[] in da850.c
+> needs to be fixed to add the matching device name.
+
+This clock can be used for usb 1.1 PHY even when musb is not being used, 
+so I don't think we can depend on having a musb device here.
+
+Also, in a previous review, it was decided that the usb clocks should 
+*not* be added to da850_clks[] [1]. Instead, they are dynamically 
+registered elsewhere.
+
+
+[1]: http://www.gossamer-threads.com/lists/linux/kernel/2396533
+
 >
-> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-> index e165036..6fb53a3 100644
-> --- a/Documentation/devicetree/bindings/power/power_domain.txt
-> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
-> @@ -30,8 +30,9 @@ Optional properties:
->     available in the next section.
+>> +	if (IS_ERR(usb20_clk)) {
+>> +		pr_err("could not get usb20 clk\n");
+>> +		return;
+>> +	}
 >
->  - domain-idle-states : A phandle of an idle-state that shall be soaked into a
-> -                generic domain power state. The idle state definitions are
-> -                compatible with arm,idle-state specified in [1].
-> +                generic domain power state. The idle state definitions must be
-> +                compatible with "domain-idle-state"
+> Thanks,
+> Sekhar
+>
 
-I would reword the below a bit different so that it's flexible to be
-reused without "arm,idle-state".
-
-> as well as
-> +                "arm,idle-state" as defined in [1].
-
-'Idle states that are "arm,idle-state" compatible are generally
-"domain-idle-state" compatible as well if it's a PM domain.'
-
-or something like that in line with what's in patch 2/4.
-
-That would give us the scope of reuse of "domain-idle-state" in device
-for future. Also it aligns with your patch 4/4.
-
-Otherwise, it looks good.
-
--- 
-Regards,
-Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
