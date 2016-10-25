@@ -1,49 +1,45 @@
-From: Joel Holdsworth <joel@airwebreathe.org.uk>
+From: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
 Subject: Re: [v2 2/2] fpga: Add support for Lattice iCE40 FPGAs
-Date: Mon, 24 Oct 2016 22:51:48 -0600
-Message-ID: <331cd8da-f69a-b51a-ddbd-f18ee44cac8a@airwebreathe.org.uk>
+Date: Mon, 24 Oct 2016 23:05:28 -0600
+Message-ID: <c971d8f4-dbb4-8d6e-f8eb-028a0a95e6fb@airwebreathe.org.uk>
 References: <1477283989-21947-1-git-send-email-joel@airwebreathe.org.uk>
  <1477283989-21947-2-git-send-email-joel@airwebreathe.org.uk>
  <alpine.DEB.2.02.1610241615280.14525@linuxheads99>
- <20161024222805.GA5754@live.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161024222805.GA5754@live.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>, atull <atull@opensource.altera.com>
-Cc: ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1610241615280.14525@linuxheads99>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-
-On 10/24/2016 04:28 PM, Moritz Fischer wrote:
 > Hi Joel,
 >
-> Ha, finally someone beat me to submitting my driver,
-> I had an ugly hack to bitbang the SPI since I couldn't figure
-> out a good way to assert the creset after the CS.
+> Thanks for submitting your driver!
 >
-> Thanks!
+> I didn't see any huge problems, just minor things below...
+>
+> Alan
 >
 
-Hi Moritz - yeah I figured someone might have a driver in the works.
+Hi Alan, Thanks for your feedback. I've implemented all your suggestions 
+and I'll resubmit.
 
-I think my set_cs() function is ok-ish. It's copied from spi_set_cs() in 
-drivers/spi/spi.c . This function is a static internal helper, so I 
-copy/pasted the function into the ice40 driver. Given that it's only 
-4-lines of code, it didn't seem too bad - though I'm not exactly sure 
-why spi_set_cs() isn't a public API. It seems like quite a common-place 
-thing to need to do with certain devices.
+I had a question about the status of the fpga-manager framework. Is 
+there active work going on? I was wondering if there were any patches 
+for specifying a firmware file from device-tree? and/or if there were 
+any patches for loading firmware from userspace - something like this: 
+"cat firmware.bin > /dev/fpga0"?
 
-However, perhaps the function is internal because the authors of the SPI 
-framework foresaw how easy it would be to screw up a shared bus with 
-that function. I had to take care to make sure the SPI bus was locked 
-throughout.
+Only being able to load firmware from kernel C-code is rather a 
+limitation - though I suppose the framework is quite early in development.
 
-Do you agree that it's the right thing to copy the function in? Or do 
-you think it would be better to ask for spi_set_cs to be exposed publicly?
-
-Best Regards
+Thanks
 Joel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
