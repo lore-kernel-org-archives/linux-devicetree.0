@@ -1,14 +1,11 @@
 From: Gary Bisson <gary.bisson@boundarydevices.com>
-Subject: [PATCH 3/5] ARM: dts: imx6qdl-sabrelite: add missing USB PHY reset
- control
-Date: Tue, 25 Oct 2016 23:19:53 +0200
-Message-ID: <20161025211955.5345-4-gary.bisson@boundarydevices.com>
-References: <20161025211955.5345-1-gary.bisson@boundarydevices.com>
+Subject: [PATCH 0/5] ARM: dts: imx: update Boundary Devices boards support
+Date: Tue, 25 Oct 2016 23:19:50 +0200
+Message-ID: <20161025211955.5345-1-gary.bisson@boundarydevices.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161025211955.5345-1-gary.bisson@boundarydevices.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,61 +19,40 @@ To: devicetree@vger.kernel.org
 Cc: fabio.estevam@freescale.com, linux@arm.linux.org.uk, Gary Bisson <gary.bisson@boundarydevices.com>, robh+dt@kernel.org, kernel@pengutronix.de, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Declared as a regulator since the driver doesn't have a reset-gpios
-property for this.
+Hi all,
 
-This ensures that the PHY is woken up, not depending on the state the
-second stage bootloader leaves the pin.
+This series includes several patches to update the support for our platforms.
 
-Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
----
- arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Here are the main goals of this series:
+1- Adding support for our latest SOM (SOM2)
+2- Fix panel naming consistency across the boards
+  -> This way our U-Boot bootscript[1] can easily set the panel compatible.
+3- Fix USB PHY reset for some boards
+  -> U-Boot used to always set the reset pin whether usb was used or not.
+     Anyway, the kernel should not be dependent on the bootloader.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-index cebea8a..bf00267 100644
---- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-@@ -94,6 +94,19 @@
- 			pinctrl-0 = <&pinctrl_can_xcvr>;
- 			gpio = <&gpio1 2 GPIO_ACTIVE_LOW>;
- 		};
-+
-+		reg_usb_h1_vbus: regulator@4 {
-+			compatible = "regulator-fixed";
-+			reg = <4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usbh1>;
-+			regulator-name = "usb_h1_vbus";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			gpio = <&gpio7 12 GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+			regulator-always-on;
-+		};
- 	};
- 
- 	gpio-keys {
-@@ -481,6 +494,12 @@
- 			>;
- 		};
- 
-+		pinctrl_usbh1: usbh1grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_GPIO_17__GPIO7_IO12		0x030b0
-+			>;
-+		};
-+
- 		pinctrl_usbotg: usbotggrp {
- 			fsl,pins = <
- 				MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
-@@ -578,6 +597,7 @@
- };
- 
- &usbh1 {
-+	vbus-supply = <&reg_usb_h1_vbus>;
- 	status = "okay";
- };
- 
+Let me know if you have any question.
+
+Regards,
+Gary
+
+[1] https://github.com/boundarydevices/u-boot-imx6/blob/boundary-v2016.03/board/boundary/nitrogen6x/6x_bootscript-mainline.txt
+
+Gary Bisson (5):
+  ARM: dts: imx: add Boundary Devices Nitrogen6_SOM2 support
+  ARM: dts: imx6qdl-sabrelite: rename panel nodes
+  ARM: dts: imx6qdl-sabrelite: add missing USB PHY reset control
+  ARM: dts: imx6qdl-nitrogen6x: rename panel nodes
+  ARM: dts: imx6qdl-nitrogen6x: add missing USB PHY reset control
+
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/imx6q-nitrogen6_som2.dts    |  53 ++
+ arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi | 770 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi     |  24 +-
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi      |  24 +-
+ 5 files changed, 868 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6q-nitrogen6_som2.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi
+
 -- 
 2.9.3
