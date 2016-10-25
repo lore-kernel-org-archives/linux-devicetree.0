@@ -1,56 +1,70 @@
-From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [RFC PATCH 13/13] of: Remove unused variable overlay_symbols
-Date: Tue, 25 Oct 2016 13:59:06 -0700
-Message-ID: <1477429146-27039-14-git-send-email-frowand.list@gmail.com>
+From: frowand.list@gmail.com
+Subject: [RFC PATCH 06/13] of: Remove prefix "__of_" and prefix "__" from local function names
+Date: Tue, 25 Oct 2016 13:58:59 -0700
+Message-ID: <1477429146-27039-7-git-send-email-frowand.list@gmail.com>
 References: <1477429146-27039-1-git-send-email-frowand.list@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477429146-27039-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477429146-27039-1-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+From: Frank Rowand <frank.rowand@am.sony.com>
 
-This unused variable is a reminder that symbols in overlays are
-not available to subsequent overlays.  If such a feature is
-desired then there are several ways it could be implemented.
-
-Signed-off-by: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Frank Rowand <frank.rowand@am.sony.com>
 ---
- drivers/of/resolver.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/of/resolver.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index 3f7cf569c7ea..b48d16200ccd 100644
+index 3d123b612789..0ce38aa0ed3c 100644
 --- a/drivers/of/resolver.c
 +++ b/drivers/of/resolver.c
-@@ -272,7 +272,7 @@ static int adjust_local_phandle_references(struct device_node *local_fixups,
- int of_resolve_phandles(struct device_node *overlay)
+@@ -28,7 +28,7 @@
+  * Find a node with the give full name by recursively following any of
+  * the child node links.
+  */
+-static struct device_node *__of_find_node_by_full_name(struct device_node *node,
++static struct device_node *find_node_by_full_name(struct device_node *node,
+ 		const char *full_name)
  {
- 	struct device_node *child, *local_fixups, *refnode;
--	struct device_node *tree_symbols, *overlay_symbols, *overlay_fixups;
-+	struct device_node *tree_symbols, *overlay_fixups;
- 	struct property *prop;
- 	const char *refpath;
- 	phandle phandle, phandle_delta;
-@@ -302,12 +302,9 @@ int of_resolve_phandles(struct device_node *overlay)
- 	if (err)
- 		goto err_out;
+ 	struct device_node *child, *found;
+@@ -40,7 +40,7 @@ static struct device_node *__of_find_node_by_full_name(struct device_node *node,
+ 		return of_node_get(node);
  
--	overlay_symbols = NULL;
- 	overlay_fixups = NULL;
+ 	for_each_child_of_node(node, child) {
+-		found = __of_find_node_by_full_name(child, full_name);
++		found = find_node_by_full_name(child, full_name);
+ 		if (found != NULL) {
+ 			of_node_put(child);
+ 			return found;
+@@ -143,7 +143,7 @@ static int update_usages_of_a_phandle_reference(struct device_node *node,
+ 		if (err)
+ 			goto err_fail;
  
- 	for_each_child_of_node(overlay, child) {
--		if (!of_node_cmp(child->name, "__symbols__"))
--			overlay_symbols = child;
- 		if (!of_node_cmp(child->name, "__fixups__"))
- 			overlay_fixups = child;
- 	}
+-		refnode = __of_find_node_by_full_name(node, nodestr);
++		refnode = find_node_by_full_name(node, nodestr);
+ 		if (!refnode)
+ 			continue;
+ 
+@@ -168,7 +168,7 @@ static int update_usages_of_a_phandle_reference(struct device_node *node,
+ }
+ 
+ /* compare nodes taking into account that 'name' strips out the @ part */
+-static int __of_node_name_cmp(const struct device_node *dn1,
++static int node_name_cmp(const struct device_node *dn1,
+ 		const struct device_node *dn2)
+ {
+ 	const char *n1 = strrchr(dn1->full_name, '/') ? : "/";
+@@ -232,7 +232,7 @@ static int adjust_local_phandle_references(struct device_node *node,
+ 	for_each_child_of_node(node, child) {
+ 
+ 		for_each_child_of_node(target, childtarget)
+-			if (!__of_node_name_cmp(child, childtarget))
++			if (!node_name_cmp(child, childtarget))
+ 				break;
+ 
+ 		if (!childtarget)
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
