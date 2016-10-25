@@ -1,50 +1,69 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 4/9] pinctrl: meson: allow gpio to request irq
-Date: Tue, 25 Oct 2016 20:20:52 +0200
-Message-ID: <CACRpkdbGo4BJOdzkgBrE9jT-rKodd4zssCnOtOuGS+OqV-Uc6Q@mail.gmail.com>
-References: <1476871709-8359-1-git-send-email-jbrunet@baylibre.com>
- <1476871709-8359-5-git-send-email-jbrunet@baylibre.com> <CACRpkdaCZPS45t3eTcjJExOu=YT_YkjNkdpg09jQqvLQOJH=Qw@mail.gmail.com>
- <1477040798.15560.96.camel@baylibre.com> <CACRpkdYUVXny57AC9rKX3VRAyooEk_2XLvqe9jOuT3rOaE75rg@mail.gmail.com>
- <ec7c6cc5-cf9a-9c75-4b07-e337064c7d6e@arm.com> <1477400900.2482.51.camel@baylibre.com>
- <dee26f0b-e175-f8a0-2b73-08e8e324841c@arm.com> <1477405332.2482.87.camel@baylibre.com>
- <bbc268c8-35c3-206a-46b1-62cebef174b2@arm.com> <1477409478.2482.113.camel@baylibre.com>
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: socfpga: Enable QSPI on the Cyclone5 sockit
+Date: Tue, 25 Oct 2016 13:57:51 -0500
+Message-ID: <580FAB2F.1050602@opensource.altera.com>
+References: <1476908324-12313-1-git-send-email-dinguyen@opensource.altera.com>
+ <1476908324-12313-3-git-send-email-dinguyen@opensource.altera.com>
+ <20161020071913.rlka3or4c7fzjpyv@pengutronix.de>
+ <c62baad6-2528-a9df-6b09-3dba66785102@opensource.altera.com>
+ <5e0adad1-8ef2-029f-cfcd-4a07c962fda2@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477409478.2482.113.camel@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5e0adad1-8ef2-029f-cfcd-4a07c962fda2-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 5:31 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
-> On Tue, 2016-10-25 at 15:47 +0100, Marc Zyngier wrote:
+On 10/25/2016 10:38 AM, Graham Moore wrote:
+> On 10/20/2016 09:12 AM, Dinh Nguyen wrote:
+>>
+>>
+>> On 10/20/2016 02:19 AM, Steffen Trumtrar wrote:
+>>
+>>>> +        cdns,tslch-ns = <4>;
+>>>> +
+>>>> +        partition@qspi-boot {
+>>>> +            /* 8MB for raw data. */
+>>>> +            label = "Flash 0 Raw Data";
+>>>> +            reg = <0x0 0x800000>;
+>>>> +        };
+>>>> +
+>>>> +        partition@qspi-rootfs {
+>>>> +            /* 120MB for jffs2 data. */
+>>>> +            label = "Flash 0 jffs2 Filesystem";
+>>>> +            reg = <0x800000 0x7800000>;
+>>>> +        };
+>>>> +    };
+>>>> +};
+>>>> +
+>>>
+>>> What is the current preferred way of handling the partitions?
+>>> This doesn't fit my Sockit configuration for example. So I would always
+>>> have to patch the devicetree.
+>>
+>> I'm not 100% sure on this. Graham, do you have any insight?
+>>>
+> 
+> Well, strictly speaking, these partitions are only for the socdk, the
+> Altera dev kit.  Our sample designs and file systems expect this layout.
+> 
+> Therefore, these partitions are not required for any other dev kits, and
+> can probably be left out.
+> 
+> Or, Steffen, if you have a standard layout you'd like to see, then put
+> that in there.
+> 
+> I think some people will have to patch the layout regardless.
+> 
 
->> Is gpio_to_irq() supposed to allocate an interrupt? Or merely to
->> report the existence of a mapping?
+Ok, I'll remove the partitions from the none Altera boards.
 
-It should provide an IRQ corresponding to the gpio line, if possible.
+Dinh
 
-However the semantic is such, that it is not necessary to call to_irq()
-before using an IRQ: the irqchip and gpiochip abstractions should be
-orthogonal.
-
-This goes especially when using device tree or ACPI, where you
-may reference an IRQ from something modeled as irqchip, which
-is simultaneously a gpiochip.
-
-> Linus, please correct me if I'm wrong,
-> .to_irq gets the linux gpio number and returns the linux virtual irq
-> numbers, 0 if there is no interrupt.
-
-Yes. But it may *or may not* be called before using the IRQ.
-
-So it should look up or try to create a mapping on request, but not
-assume to have been called before using some line as IRQ.
-
-The only thing you should assume to be called before an interrupt
-is put to use is the stuff in irqchip. So you have to do your
-dynamic irqdomain mapping elsewhere than .to_irq().
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
