@@ -1,137 +1,209 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH/RFT v2 12/17] USB: ochi-da8xx: Use a regulator for
- vbus/overcurrent
-Date: Tue, 25 Oct 2016 11:53:58 -0500
-Message-ID: <09a4391e-63b6-1622-f964-4aff0ecae87c@lechnology.com>
-References: <20161024164634.4330-1-ahaslam@baylibre.com>
- <20161024164634.4330-13-ahaslam@baylibre.com>
- <672c1f1a-58b7-6947-7fb2-acd38fab8597@lechnology.com>
- <CAKXjFTOxQ58rThpPw9t73k-BBZ8YKGvMhWfAG1r+3kC=GJVxWg@mail.gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 4/8] drivers:input:tsc2007: add iio interface to read
+ external ADC input and temperature
+Date: Tue, 25 Oct 2016 17:54:12 +0100
+Message-ID: <f814b75d-4061-1479-15b8-347599bf0213@kernel.org>
+References: <cover.1476712675.git.hns@goldelico.com>
+ <4d3c600bf0a6b75a74212a103bf31525505290a0.1476712675.git.hns@goldelico.com>
+ <07bb4d52-a439-f9a9-8593-ddde8e93e6ee@kernel.org>
+ <7A0E332C-4930-4F1A-8320-F87F864B53AE@goldelico.com>
+ <1dd251db-7f45-78bf-c9dd-4ae29b0ed757@kernel.org>
+ <976C7328-A6AA-4CD5-AAAA-3B14BA3BD793@goldelico.com>
+ <F0CB8C7F-29FD-41DF-A652-9D1AF7824D5F@goldelico.com>
+ <4b6773d9-bc33-7471-ee29-01f51c5cfce2@kernel.org>
+ <4735A551-6E90-4D2B-8A37-671B2789ECE4@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKXjFTOxQ58rThpPw9t73k-BBZ8YKGvMhWfAG1r+3kC=GJVxWg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sergei Shtylyov <sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4735A551-6E90-4D2B-8A37-671B2789ECE4@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, kernel@pyra-handheld.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-iio@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Mika_Penttil=c3=a4?= <mika.penttila@nextfour.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, linux-input@vger.kernel.org, Michael Welling <mwelling@ieee.org>, letux-kernel@openphoenux.org, "Andrew F. Davis" <afd@ti.com>, Igor Grinberg <grinberg@compulab.co.il>
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2016 03:24 AM, Axel Haslam wrote:
-> On Tue, Oct 25, 2016 at 3:39 AM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
->> On 10/24/2016 11:46 AM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
->>>
->>> From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>>
->>> Currently, the da8xx ohci driver uses a set of gpios and callbacks in
->>> board files to handle vbus and overcurrent irqs form the power supply.
->>> However, this does not play nice when moving to a DT based boot were
->>> we wont have board files.
->>>
->>> Instead of requesting and handling the gpio, use the regulator framework
->>> to take care of enabling and disabling vbus power.
->>> This has the benefit
->>> that we dont need to pass any more platform data to the driver:
->>>
->>> These will be handled by the regulator framework:
->>> set_power   ->  regulator_enable/regulator_disable
->>> get_power   ->  regulator_is_enabled
->>> get_oci     ->  regulator_get_mode
->>> ocic_notify ->  regulator notification
->>>
->>> We can keep the default potpgt and use the regulator start delay instead:
->>> potpgt      -> regulator startup delay time
->>>
->>> The hawk board does not have a GPIO/OVERCURRENT gpio to control vbus,
->>> (they should not have been decleared/reserved) so, just remove those
->>> definitions from the hwk board file.
->>>
->>> Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>> ---
+On 24/10/16 20:14, H. Nikolaus Schaller wrote:
+> Hi Jonathan,
+> 
+>> Am 23.10.2016 um 21:00 schrieb Jonathan Cameron <jic23@kernel.org>:
 >>
+>> On 23/10/16 19:34, H. Nikolaus Schaller wrote:
+>>> Hi Jonathan,
+>>>
+>>>> Am 23.10.2016 um 11:57 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
+>>>>
+>>>> Hi,
+>>>>
+>>>>>> +static int tsc2007_alloc(struct i2c_client *client, struct tsc2007 **ts,
+>>>>>> +                          struct input_dev **input_dev)
+>>>>>> +{
+>>>>>> +       int err;
+>>>>>> +       struct iio_dev *indio_dev;
+>>>>>> +
+>>>>>> +       indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*ts));
+>>>>> Instead of doing this to reduce the delta between versions make 
+>>>>> iio_priv a struct tsc2007 **
+>>>>>
+>>>>> That is have a single pointer in there and do your allocation of struct
+>>>>> tsc2007 separately.
+>>>>
+>>>> Sorry, but I think I do not completely understand what you mean here.
+>>>>
+>>>> The problem is that we need to allocate some struct tsc2007 in both cases.
+>>>> But in one case managed directly by &client->dev and in the other managed
+>>>> indirectly. This is why I use the private area of struct iio_dev to store
+>>>> the full struct tsc2007 and not just a pointer.
+>>>
+>>> Ok, I think I finally did understand how you mean this and have started to
+>>> implement something.
+>>>
+>> oops. Didn't look on in my emails to get to this one!
+>>> The idea is to have one alloc function to return a struct tsc2007. This
+>>> can be part of the probe function, like it is in the unpatched driver.
+>>>
+>>> In case of iio this struct tsc2007 is also allocated explicitly so that
+>>> a pointer can be stored in iio_priv.
+>>>
+>>> This just means an additional iio_priv->ts = devm_kzalloc() in case of iio.
+>>>
+>>> I have added that approach to my inlined patch and it seems to work (attached).
+>>>
+>>> Sorry if I do not use the wording you would use and sometimes overlook
+>>> something you have said. I feel here like moving on thin ice and doing
+>>> guesswork about unspoken assumptions...
+>> That's fine.  Stuff that can appear obvious to one person is not
+>> necessarily obvious to another!
+>>>
+>>>>
+>>>>>
+>>>>> Having doing that, you can have this CONFIG_IIO block as just
+>>>>> doing the iio stuff with the input elements pulled back into the main
+>>>>> probe function.
+>>>>>
+>>>>> Then define something like
+>>>>>
+>>>>> iio_configure (stubbed to nothing if no IIO)
+>>>>> and
+>>>>> iio_unconfigure (also stubbed to nothing if no IIO).
+>>>
+>>> This seems to work (draft attached).
+>>>
+>>>>>
+>>>>> A couple of additions in the header
+>>>
+>>> I think you mean tsc2007.h?
+>> Nope. A local header alongside the driver is what you want for this stuff.
+>> driver/input/tsc2007.h 
+>>>
+>>> This currently contains only platform data and could IMHO be eliminated
+>>> if everything becomes DT.
+>>>
+>>>>> to make it all work
+>>>>> (the struct tsc2007 and tsc2007_xfer() + a few of the
+>>>>> register defines..
+>>>
+>>> Here it appears to me that I have to make a lot of so far private static
+>>> and even static inline functions public so that I can make them stubs and
+>>> call them from tsc2007_iio.c.
+>> There will be a few.
+>>>
+>>> And for having proper parameter types I have to make most private structs
+>>> also public.
+>> Yes a few of those as well.
+>>>
+>>> I really like the idea to have the optional iio feature in a separate source
+>>> file, but when really starting to write code, I get the impression that
+>>> it introduces more problems than it solves.
+>>>
+>>> And I wonder a little why it is not done for #ifdef CONFIG_OF in tsc2007.c
+>>> as well. There are also two static function in some #ifdef #else # endif
+>>> and not going through stubs.
+>> Usually it is only done once a certain volume of code exists.
+>>>
+>>> So is this intended to give up some static definitions?
+>> Yes, that happens the moment you have multiple source files.
 >>
+>> Some losses but generally end up with clean code separation. Always a trade
+>> off unfortunately.  Pity we can't just insist IIO is available! Rather large
+>> to pull in for what is probable a niche use case.
 >>
->> How do you recover after an overcurrent event?
+>> Below is definitely heading in the right direction. I remember vaguely being
+>> convinced of the worth of doing this when optional code is involved!
+>> (was a good while ago now)
 >>
->> I have configured a fixed-regulator using device-tree, but similar to the
->> configuration in the board files here. However, when I shorted out the VBUS
->> and caused an overcurrent event, I see nothing in the kernel log saying that
->> there was an overcurrent event and after I remove the short, the regulator
->> is never turned back on.
->>
->>
->
-> You should have the patch to fix gpiolib, and you should declare the
-> over current gpio on the regulator as such:
-> (if the pin is enabled high you should add oc-active-high);
->
->        vbus_fixed: fixed-regulator-vbus {
->                compatible = "regulator-fixed";
->                gpio = <&gpio 109 0>;
->                oc-gpio = <&gpio 36 0>;
->                regulator-boot-on;
->                enable-active-high;
->                regulator-name = "vbus";
->                regulator-min-microvolt = <5000000>;
->                regulator-max-microvolt = <5000000>;
->        };
->
->
-> Question: Do you see that the over current gpio was requested
-> in debugfs/gpio? and, do you see the interrupt in /proc/interrupts?
->
-> If you unplug and plug in back the usb device it should work again.
-> also you can unbind and bind it should also start to work:
-> something like:
->
-> echo usb1 >/sys/bus/usb/drivers/usb/unbind
-> echo usb1 >/sys/bus/usb/drivers/usb/bind
->
->
+>> Jonathan
+>>>
+>>> BR and thanks,
+>>> Nikolaus
+>>>
+>>> diff --git a/drivers/input/touchscreen/tsc2007.c b/drivers/input/touchscreen/tsc2007.c
+>>> index 5e3c4bf..92da8f6 100644
+>>> --- a/drivers/input/touchscreen/tsc2007.c
+>>> +++ b/drivers/input/touchscreen/tsc2007.c
+>>> @@ -30,6 +30,7 @@
+>>> #include <linux/of.h>
+>>> #include <linux/of_gpio.h>
+>>> #include <linux/input/touchscreen.h>
+>>> +#include <linux/iio/iio.h>
+>> Should not need this after introducing the new file.  Will only be
+>> needed in the iio specific .c file.
+>>>
+>>> #define TSC2007_MEASURE_TEMP0          (0x0 << 4)
+>>> #define TSC2007_MEASURE_AUX            (0x2 << 4)
+>>> @@ -98,6 +99,9 @@ struct tsc2007 {
+>> This will definitely need to go in the header though.
+> 
+> Now I have split the code into:
+> 
+> tsc2007.h (constants, structs and stubs)
+> tsc2007_iio.c (the iio stuff)
+> tsc2007.c (most parts of the original driver)
+> 
+> but I have a problem of correctly modifying the Makefile.
+> 
+> It currently looks like:
+> 
+> obj-$(CONFIG_TOUCHSCREEN_TSC2007)	+= tsc2007.o
+> obj-$(CONFIG_IIO)			+= tsc2007_iio.o
+> 
+> We have configured CONFIG_TOUCHSCREEN_TSC2007=m and CONFIG_IIO=y.
+> 
+> This obviously compiles tsc2007_iio.o into the kernel.
+> 
+> This means that tsc2007_iio.o references tsc2007_xfer which is part of
+> the module.
+> 
+> I would like to get both linked into the module, but the iio part
+> obviously only if CONFIG_IIO is defined (either -y or -m).
+> 
+> How can I define this?
+> 
+> Or can I define
+> 
+> obj-$(CONFIG_TOUCHSCREEN_TSC2007)	+= tsc2007.o tsc2007_iio.o
+This is a common problem with optional support. Various ways of 
+handling it.
 
-I have added oc-active-high and I get different results, but it is still 
-not quite right. When I short the VBUS, I can see that my overcurrent 
-gpio changes state. However, the driver does not turn of the VBUS. When 
-I remove the short, I get an overcurrent error in the kernel log. I 
-would expect this when I create the short, not when I remove it. I also 
-tried adding  GPIO_ACTIVE_LOW to the oc-gpio, but this did not change 
-the behavior. In either case, the oc_gpio shows as high under normal 
-conditions, so perhaps there is a problem with the gpio-davinci driver 
-not picking up GPIO_ACTIVE_LOW from the device tree.
+A simple one would be:
+#Define the stuff that always forms part of the .o file
+magic_tsc2007-y := tsc2007.o
+#Define the optional bit to build the resulting magic_tsc2007.o file
+magic_tsc2007-$(CONFIG_IIO) += tsc2007_iio.o
+#Use this magic combined file
+obj-$(CONFIG_TOUCHSCREEN_TSC2007) += magic_tsc2007.o
 
+With sensible naming of course ;)
 
-My regulator is basically the same. My device just uses different gpios.
-
-	vbus_reg: vbus-reg {
-		compatible = "regulator-fixed";
-		pinctrl-names = "default";
-		pinctrl-0 = <&usb11_pins>;
-		gpio = <&gpio 101 GPIO_ACTIVE_LOW>;
-		oc-gpio = <&gpio 99 0>;
-		enable-active-high;
-		oc-active-high;
-		regulator-name = "vbus";
-		regulator-min-microvolt = <5000000>;
-		regulator-max-microvolt = <5000000>;
-	}
-
-
-It seems to me though that I should not have oc-active-high since under 
-normal conditions, the oc_gpio is high and during an overcurrent event, 
-the oc_gpio is low. Double-checking the behavior without oc-active-high, 
-I see that the vbus gpio is turned off in response to the overcurrent 
-event, but I don't get the overcurrent message in the kernel log. 
-Perhaps this is because as soon as there is an overcurrent event the 
-vbus turns off and the oc_gpio returns to normal before the usb driver 
-has a chance to poll the overcurrent state?
-
-Also, unplugging the device and plugging it back in does nothing. 
-Unbinding and binding the driver does work, but that does not seem like 
-a very nice way to have to recover from an overcurrent event.
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
+> 
+> and embrace all code in tsc2007_iio with a big #ifdef CONFIG_IIO
+> so that it is compiled into an empty object file in the non-iio case?
+> 
+> BR and thanks,
+> Nikolaus
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
