@@ -1,37 +1,39 @@
 From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH] of: Add vendor prefix for Aries Embedded GmbH
-Date: Tue, 25 Oct 2016 02:46:52 +0200
-Message-ID: <20161025004652.5747-1-marex@denx.de>
+Subject: Re: [PATCH] of: Add vendor prefix for Aries Embedded GmbH
+Date: Tue, 25 Oct 2016 02:47:18 +0200
+Message-ID: <05393017-a014-85b4-8e60-a4080dfdf9cc@denx.de>
+References: <20160919213800.9498-1-marex@denx.de>
+ <ae228088-b8bc-7445-f621-52d20850d49e@denx.de>
+ <CAL_JsqL4NUoonJ+Lw0tbhyKk0xM4ke65BNQ1VNndfUrqLZsgLw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqL4NUoonJ+Lw0tbhyKk0xM4ke65BNQ1VNndfUrqLZsgLw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add vendor prefix for Aries Embedded GmbH
-http://www.aries-embedded.de/
+On 10/25/2016 02:14 AM, Rob Herring wrote:
+> On Mon, Oct 24, 2016 at 6:38 AM, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
+>> On 09/19/2016 11:38 PM, Marek Vasut wrote:
+>>> Add vendor prefix for Aries Embedded GmbH
+>>> http://www.aries-embedded.de/
+>>>
+>>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+>>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> Hi, bump ?
+> 
+> Looks fine, but please resend to the DT list so that patchwork picks
+> this up and it will be in my queue.
 
-Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+OK, done.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index e2fa9b3..3f1e7c8 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -27,6 +27,7 @@ analogix	Analogix Semiconductor, Inc.
- apm	Applied Micro Circuits Corporation (APM)
- aptina	Aptina Imaging
- arasan	Arasan Chip Systems
-+aries	Aries Embedded GmbH
- arm	ARM Ltd.
- armadeus	ARMadeus Systems SARL
- arrow	Arrow Electronics
 -- 
-2.9.3
-
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
