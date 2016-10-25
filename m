@@ -1,75 +1,157 @@
-From: Minghuan Lian <Minghuan.Lian@nxp.com>
-Subject: [PATCH 4/6] arm64: dts: ls1046a: add MSI dts node
-Date: Tue, 25 Oct 2016 20:35:43 +0800
-Message-ID: <1477398945-22774-4-git-send-email-Minghuan.Lian@nxp.com>
-References: <1477398945-22774-1-git-send-email-Minghuan.Lian@nxp.com>
+From: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Subject: Device tree nodes for devices behind a PCIe switch
+Date: Tue, 25 Oct 2016 14:32:33 +0200
+Message-ID: <90e305c7-be1f-8c37-f489-0701de697de4@keymile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1477398945-22774-1-git-send-email-Minghuan.Lian@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <Minghuan.Lian@nxp.com>, Scott Wood <scott.wood@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-LS1046a has three MSI controllers. each controller is assigned
-four SPI interrupts.
+Hello,
 
-Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 32 ++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+We have a board that embeds an FPGA with multiple functions (MFD driver) that is
+connected to the the PCIe bus with a PCIe switch (more precisely PLX/Avago's
+8714), since we have several PCIe devices on the board.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 38806ca..5509dca 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -511,5 +511,37 @@
- 			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clockgen 4 1>;
- 		};
-+
-+		msi: msi-controller {
-+			compatible = "fsl,ls-scfg-msi";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			msi-controller;
-+
-+			msi0@1580000 {
-+				reg = <0x0 0x1580000 0x0 0x10000>;
-+				interrupts = <0 116 0x4>,
-+					     <0 111 0x4>,
-+					     <0 112 0x4>,
-+					     <0 113 0x4>;
-+			};
-+
-+			msi1@1590000 {
-+				reg = <0x0 0x1590000 0x0 0x10000>;
-+				interrupts = <0 126 0x4>,
-+					     <0 121 0x4>,
-+					     <0 122 0x4>,
-+					     <0 123 0x4>;
-+			};
-+
-+			msi2@15a0000 {
-+				reg = <0x0 0x15a0000 0x0 0x10000>;
-+				interrupts = <0 160 0x4>,
-+					     <0 155 0x4>,
-+					     <0 156 0x4>,
-+					     <0 157 0x4>;
-+			};
-+		};
- 	};
- };
--- 
-1.9.1
+The MFD driver that I have written and tested on the development boards relies
+on a device tree node to configure the several "sub-devices" embedded in the
+FPGA. On the testing setup, this was pretty simple since the CPU dev board has
+no PCIe switch and when I connect the FPGA dev board on the PCI of the CPU dev
+board here is what I get:
+
+> root@192:~# lspci
+> 0000:00:00.0 PCI bridge: Freescale Semiconductor Inc Device 0820 (rev 11)
+> 0001:02:00.0 PCI bridge: Freescale Semiconductor Inc Device 0820 (rev 11)
+> 0001:03:00.0 Unassigned class [ff00]: Altera Corporation Device 006d (rev 01)
+> 0002:04:00.0 PCI bridge: Freescale Semiconductor Inc Device 0820 (rev 11)
+> 0003:06:00.0 PCI bridge: Freescale Semiconductor Inc Device 0820 (rev 11)
+> root@192:~# lspci -t
+> -+-[0003:06]---00.0-[07]--
+>  +-[0002:04]---00.0-[05]--
+>  +-[0001:02]---00.0-[03]----00.0
+>  \-[0000:00]---00.0-[01]--
+
+The Altera FPGA is "directly connected" to the root of the PCIe.
+
+With this device tree node for the corresponding PCIe bus, the pci_dev gets the
+femt of_node assigned and I can work with it in the MFD driver.
+
+> pci1: pcie@ffe250000 {
+> 		pcie@0 {
+> 			femt {
+> 				/* 0001:03:00.0 -> domain:bus:device.fn
+> 				 * reg must be npt000ss bbbbbbbb dddddfff rrrrrrrr
+> 				 * according to http://sametwice.com/of_pci_bus_address
+> 				 */
+> 				reg = <0x00030000 0 0 0 0>;
+> 				#address-cells = <1>;
+> 				#size-cells = <1>;
+> 				gpio@100 {
+> 					compatible = "keymile,femt-gpio";
+> 					reg = <0x100 20>;
+> 					gpio-controller;
+> 					#gpio-cells = <2>;
+> 				};
+> 				gpio@180 {
+> 					compatible = "keymile,femt-gpio";
+> 					reg = <0x180 20>;
+> 					gpio-controller;
+> 					#gpio-cells = <2>;
+> 				};
+> 			};
+> 		};
+> 	};
+
+On our board, the PCIe switch raises the complexity by a level and I cannot get
+the femt of_node to assigned to the corresponding pci_device. By debugging a
+little bit I have found out that the pci_set_of_node() call from
+pci_scan_device() directly returns because there is no of_node for the bus the
+FPGA is on.
+
+Based on this I have tried to add the busses created by the PLX bridge to my
+device tree.
+
+Here are my lspci outputs:
+
+> root@kmcent2:~# lspci -t
+> -[0000:00]---00.0-[01-06]----00.0-[02-06]--+-01.0-[03]----00.0
+>                                            +-02.0-[04]--
+>                                            +-03.0-[05]----00.0
+>                                            \-04.0-[06]----00.0
+> root@kmcent2:~# lspci
+> 00:00.0 PCI bridge: Freescale Semiconductor Inc Device 0821 (rev 11)
+> 01:00.0 PCI bridge: PLX Technology, Inc. Device 8714 (rev ab)
+> 02:01.0 PCI bridge: PLX Technology, Inc. Device 8714 (rev ab)
+> 02:02.0 PCI bridge: PLX Technology, Inc. Device 8714 (rev ab)
+> 02:03.0 PCI bridge: PLX Technology, Inc. Device 8714 (rev ab)
+> 02:04.0 PCI bridge: PLX Technology, Inc. Device 8714 (rev ab)
+> 03:00.0 Ethernet controller: Marvell Technology Group Ltd. Device fc00
+> 05:00.0 Unassigned class [ff00]: Altera Corporation Device 006d (rev 01)
+> 06:00.0 Bridge: PLX Technology, Inc. PEX 8732 32-lane, 8-Port PCI Express Gen 3 (8.0 GT/s) Switch (rev ab)
+
+And here is my attempt at describing it in the device tree:
+
+> 	pci0: pcie@ffe240000 {
+> 		reg = <0xf 0xfe240000 0 0x10000>;
+> 		ranges = <0x02000000 0 0xe0000000 0xc 0x00000000 0x0 0x20000000
+> 			  0x01000000 0 0x00000000 0xf 0xf8000000 0x0 0x00010000>;
+> 		pcie@0 {
+> 			/* 00:00.0 root fsl cpu */
+> 			ranges = <0x02000000 0 0xe0000000
+> 				  0x02000000 0 0xe0000000
+> 				  0 0x20000000
+> 
+> 				  0x01000000 0 0x00000000
+> 				  0x01000000 0 0x00000000
+> 				  0 0x00010000>;
+> 			bridge@2,3 {
+> 				/* 02:03.0 bridge PLX */
+> 				reg = <0x00021100 0 0 0 0>;
+> 				#address-cells = <3>;
+> 				#size-cells = <2>;
+> 				bridge@5,0 {
+> 					/* 05:00.0 bridge PLX */
+> 					reg = <0x00050000 0 0 0 0>;
+> 					#address-cells = <3>;
+> 					#size-cells = <2>;
+> 					femt {
+> 						/* 00:00.0 FPGA */
+> 						reg = <0x00000000 0 0 0 0>;
+> 						#address-cells = <1>;
+> 						#size-cells = <1>;
+> 						interrupts = <0>;
+> 						gpio@100 {
+> 							compatible = "keymile,femt-gpio";
+> 							reg = <0x100 20>;
+> 							gpio-controller;
+> 							#gpio-cells = <2>;
+> 						};
+> 						gpio@180 {
+> 							compatible = "keymile,femt-gpio";
+> 							reg = <0x180 20>;
+> 							gpio-controller;
+> 							#gpio-cells = <2>;
+> 						};
+> 					};
+> 				};
+> 			};
+> 		};
+> 	};
+
+Is it really necessary to rebuild all this hierarchy in the device tree or have
+I missed something that would allow me to get rid of this complex description of
+the whole PCIe bus in the device tree ? PCIe is dynamic and can be enumerated
+and it would be great to have an easier way to "link" an of_node to certain pci_dev.
+
+If there is no other way than the complete description in the device tree, any
+suggestion about what is wrong in my above device tree attempt ? Am I missing
+one "intermediate" bus level ?
+
+Valentin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
