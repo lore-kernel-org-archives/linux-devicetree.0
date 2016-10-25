@@ -1,72 +1,74 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH/RFT v2 11/17] USB: OHCI: make ohci-da8xx a separate driver
-Date: Tue, 25 Oct 2016 11:24:17 -0500
-Message-ID: <52b6439e-2bb8-a9d0-da8c-93646b6ee4b0@lechnology.com>
-References: <20161024164634.4330-1-ahaslam@baylibre.com>
- <20161024164634.4330-12-ahaslam@baylibre.com>
- <403743d8-dff2-3389-105b-1082b674b0b8@lechnology.com>
- <CAKXjFTPvEXPRyq0HZiF7mcHWFaFoH7MjFqEKnTyuSCUOB=U7Aw@mail.gmail.com>
- <21019d11-3b01-3e0e-60bc-c4873cf20237@lechnology.com>
- <CAKXjFTM8RwsAut8cD0n0foxueSjR4VB4k4WJizXo9SyaW3viOA@mail.gmail.com>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH 3/4] dt-bindings: Update domain-idle-state binding to use
+ correct compatibles
+Date: Tue, 25 Oct 2016 10:24:40 -0600
+Message-ID: <20161025162440.GA48977@linaro.org>
+References: <1477409199-52182-1-git-send-email-lina.iyer@linaro.org>
+ <1477409199-52182-4-git-send-email-lina.iyer@linaro.org>
+ <383a62dd-b4d7-f764-baf1-ff73691b3cbc@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKXjFTM8RwsAut8cD0n0foxueSjR4VB4k4WJizXo9SyaW3viOA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sergei Shtylyov <sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, manjunath.goudar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <383a62dd-b4d7-f764-baf1-ff73691b3cbc@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, brendan.jackman@arm.com, lorenzo.pieralisi@arm.com, Juri.Lelli@arm.com, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2016 11:21 AM, Axel Haslam wrote:
-> On Tue, Oct 25, 2016 at 6:12 PM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
->> On 10/25/2016 02:39 AM, Axel Haslam wrote:
->>>
->>> On Tue, Oct 25, 2016 at 2:38 AM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
->>> wrote:
->>>>
->>>> On 10/24/2016 11:46 AM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
->>>>>
->>>>>
->>>>> -#ifndef CONFIG_ARCH_DAVINCI_DA8XX
->>>>> -#error "This file is DA8xx bus glue.  Define
->>>>> CONFIG_ARCH_DAVINCI_DA8XX."
->>>>> -#endif
->>>>> +#include "ohci.h"
->>>>> +
->>>>> +#define DRIVER_DESC "OHCI DA8XX driver"
->>>>> +
->>>>> +static const char hcd_name[] = "ohci-da8xx";
->>>>
->>>>
->>>>
->>>> why static const char instead of #define? This is only used one time in a
->>>> pr_info, so it seems kind of pointless anyway.
->>>
->>>
->>> Other drivers are using static const for the same variable.
->>> i think static const is preferred over #define because #define doet give a
->>> type.
->>> If you dont mind ill keep it static const.
->>>
+On Tue, Oct 25 2016 at 09:59 -0600, Sudeep Holla wrote:
+>
+>
+>On 25/10/16 16:26, Lina Iyer wrote:
+>>Update domain-idle-state binding to use "domain-idle-state" compatible
+>>from Documentation/devicetree/bindings/arm/idle-states.txt.
 >>
->> If this string was used in this file more than one place, I would agree with
->> you, but currently it is only used as the argument of a pr_info(). The
->> string "ohci-da8xx" could just be included in the fmt string instead of
->> using "%s".
->
-> I think the purpose was to use it in the .name of the platform_driver
-> structure, too. only that not everybody is doing that, i looked at some bad
->  examples :(
->
-> would you agree to keep it if we use it in .name too?
->
-> -Axel
->
+>>Cc: <devicetree@vger.kernel.org>
+>>Cc: Rob Herring <robh@kernel.org>
+>>Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
+>>Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+>>---
+>> Documentation/devicetree/bindings/power/power_domain.txt | 9 +++++----
+>> 1 file changed, 5 insertions(+), 4 deletions(-)
 >>
+>>diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+>>index e165036..6fb53a3 100644
+>>--- a/Documentation/devicetree/bindings/power/power_domain.txt
+>>+++ b/Documentation/devicetree/bindings/power/power_domain.txt
+>>@@ -30,8 +30,9 @@ Optional properties:
+>>    available in the next section.
+>>
+>> - domain-idle-states : A phandle of an idle-state that shall be soaked into a
+>>-                generic domain power state. The idle state definitions are
+>>-                compatible with arm,idle-state specified in [1].
+>>+                generic domain power state. The idle state definitions must be
+>>+                compatible with "domain-idle-state"
+>
+>I would reword the below a bit different so that it's flexible to be
+>reused without "arm,idle-state".
+>
+>>as well as
+>>+                "arm,idle-state" as defined in [1].
+>
+>'Idle states that are "arm,idle-state" compatible are generally
+>"domain-idle-state" compatible as well if it's a PM domain.'
+>
+I believe we should have both compatible strings. Per [1], any CPU that
+follows the idle state compatible *must* have "arm,idle-state" as a
+compatible. Since we are re-using the same compatible, its only correct
+that we retain what is already spec'd up in [1] and in addition provide
+this new compatible.
 
-Yes, that will make more sense. ;-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Lina
+
+>or something like that in line with what's in patch 2/4.
+>
+>That would give us the scope of reuse of "domain-idle-state" in device
+>for future. Also it aligns with your patch 4/4.
+>
+>Otherwise, it looks good.
+>
+>-- 
+>Regards,
+>Sudeep
