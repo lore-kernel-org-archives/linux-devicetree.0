@@ -1,81 +1,45 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: da850: Add the usb otg device node
-Date: Tue, 25 Oct 2016 14:29:59 -0500
-Message-ID: <6768df59-153e-e841-6894-dbab337f71d8@lechnology.com>
-References: <1477406345-27192-1-git-send-email-abailon@baylibre.com>
- <1477406345-27192-5-git-send-email-abailon@baylibre.com>
+From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH] of: fdt: Add a space to the pr_fmt string
+Date: Tue, 25 Oct 2016 15:02:13 -0200
+Message-ID: <1477414933-24050-1-git-send-email-fabio.estevam@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477406345-27192-5-git-send-email-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2016 09:39 AM, Alexandre Bailon wrote:
-> This adds the device tree node for the usb otg
-> controller present in the da850 family of SoC's.
-> This also enables the otg usb controller for the lcdk board.
->
-> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/da850-lcdk.dts |  8 ++++++++
->  arch/arm/boot/dts/da850.dtsi     | 15 +++++++++++++++
->  2 files changed, 23 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-> index 7b8ab21..dca9735 100644
-> --- a/arch/arm/boot/dts/da850-lcdk.dts
-> +++ b/arch/arm/boot/dts/da850-lcdk.dts
-> @@ -158,6 +158,14 @@
->  	rx-num-evt = <32>;
->  };
->
-> +&usb_phy {
-> +	status = "okay";
-> +	};
-> +
-> +&usb20 {
-> +	status = "okay";
-> +};
-> +
->  &aemif {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&nand_pins>;
-> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-> index f79e1b9..b11d395 100644
-> --- a/arch/arm/boot/dts/da850.dtsi
-> +++ b/arch/arm/boot/dts/da850.dtsi
-> @@ -372,6 +372,21 @@
->  					>;
->  			status = "disabled";
->  		};
-> +		usb_phy: usb-phy {
-> +			compatible = "ti,da830-usb-phy";
-> +			#phy-cells = <1>;
-> +			status = "disabled";
-> +		};
-> +		usb20: usb20@200000 {
+Add a space to the fdt messages so they can look a bit better:
 
-This should be usb0: usb@200000
+OF: fdt: Machine model: Freescale i.MX28 Evaluation Kit
 
-> +			compatible = "ti,da830-musb";
-> +			reg = <0x200000 0x10000>;
-> +			interrupts = <58>;
-> +			interrupt-names = "mc";
-> +			dr_mode = "otg";
-> +			phys = <&usb_phy 0>;
-> +			phy-names = "usb-phy";
-> +			status = "disabled";
-> +		};
->  		gpio: gpio@226000 {
->  			compatible = "ti,dm6441-gpio";
->  			gpio-controller;
->
+instead of
+
+OF: fdt:Machine model: Freescale i.MX28 Evaluation Kit
+
+Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+---
+ drivers/of/fdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index c89d5d2..9f98e43 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -9,7 +9,7 @@
+  * version 2 as published by the Free Software Foundation.
+  */
+ 
+-#define pr_fmt(fmt)	"OF: fdt:" fmt
++#define pr_fmt(fmt)	"OF: fdt: " fmt
+ 
+ #include <linux/crc32.h>
+ #include <linux/kernel.h>
+-- 
+2.7.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
