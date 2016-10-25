@@ -1,82 +1,69 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/4] usb: musb: core: added helper function for parsing DT
-Date: Tue, 25 Oct 2016 16:39:03 +0200
-Message-ID: <1477406345-27192-3-git-send-email-abailon@baylibre.com>
+From: Alexandre Bailon <abailon@baylibre.com>
+Subject: [PATCH 4/4] ARM: dts: da850: Add the usb otg device node
+Date: Tue, 25 Oct 2016 16:39:05 +0200
+Message-ID: <1477406345-27192-5-git-send-email-abailon@baylibre.com>
 References: <1477406345-27192-1-git-send-email-abailon@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477406345-27192-1-git-send-email-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477406345-27192-1-git-send-email-abailon@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: khilman@baylibre.com, robh+dt@kernel.org, b-liu@ti.com
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alexandre Bailon <abailon@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+This adds the device tree node for the usb otg
+controller present in the da850 family of SoC's.
+This also enables the otg usb controller for the lcdk board.
 
-This adds the function musb_get_mode() to get the DT property "dr_mode"
-
-Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Acked-by: Sergei Shtylyov <sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
-Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
 ---
- drivers/usb/musb/musb_core.c | 19 +++++++++++++++++++
- drivers/usb/musb/musb_core.h |  5 +++++
- 2 files changed, 24 insertions(+)
+ arch/arm/boot/dts/da850-lcdk.dts |  8 ++++++++
+ arch/arm/boot/dts/da850.dtsi     | 15 +++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
-index 27dadc0..bba07e7 100644
---- a/drivers/usb/musb/musb_core.c
-+++ b/drivers/usb/musb/musb_core.c
-@@ -100,6 +100,7 @@
- #include <linux/io.h>
- #include <linux/dma-mapping.h>
- #include <linux/usb.h>
-+#include <linux/usb/of.h>
+diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+index 7b8ab21..dca9735 100644
+--- a/arch/arm/boot/dts/da850-lcdk.dts
++++ b/arch/arm/boot/dts/da850-lcdk.dts
+@@ -158,6 +158,14 @@
+ 	rx-num-evt = <32>;
+ };
  
- #include "musb_core.h"
- #include "musb_trace.h"
-@@ -130,6 +131,24 @@ static inline struct musb *dev_to_musb(struct device *dev)
- 	return dev_get_drvdata(dev);
- }
- 
-+enum musb_mode musb_get_mode(struct device *dev)
-+{
-+	enum usb_dr_mode mode;
++&usb_phy {
++	status = "okay";
++	};
 +
-+	mode = usb_get_dr_mode(dev);
-+	switch (mode) {
-+	case USB_DR_MODE_HOST:
-+		return MUSB_HOST;
-+	case USB_DR_MODE_PERIPHERAL:
-+		return MUSB_PERIPHERAL;
-+	case USB_DR_MODE_OTG:
-+	case USB_DR_MODE_UNKNOWN:
-+	default:
-+		return MUSB_OTG;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(musb_get_mode);
++&usb20 {
++	status = "okay";
++};
 +
- /*-------------------------------------------------------------------------*/
- 
- #ifndef CONFIG_BLACKFIN
-diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
-index 2cb88a49..a406468 100644
---- a/drivers/usb/musb/musb_core.h
-+++ b/drivers/usb/musb/musb_core.h
-@@ -617,4 +617,9 @@ static inline void musb_platform_post_root_reset_end(struct musb *musb)
- 		musb->ops->post_root_reset_end(musb);
- }
- 
-+/* gets the "dr_mode" property from DT and converts it into musb_mode
-+ * if the property is not found or not recognized returns MUSB_OTG
-+ */
-+extern enum musb_mode musb_get_mode(struct device *dev);
-+
- #endif	/* __MUSB_CORE_H__ */
+ &aemif {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&nand_pins>;
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index f79e1b9..b11d395 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -372,6 +372,21 @@
+ 					>;
+ 			status = "disabled";
+ 		};
++		usb_phy: usb-phy {
++			compatible = "ti,da830-usb-phy";
++			#phy-cells = <1>;
++			status = "disabled";
++		};
++		usb20: usb20@200000 {
++			compatible = "ti,da830-musb";
++			reg = <0x200000 0x10000>;
++			interrupts = <58>;
++			interrupt-names = "mc";
++			dr_mode = "otg";
++			phys = <&usb_phy 0>;
++			phy-names = "usb-phy";
++			status = "disabled";
++		};
+ 		gpio: gpio@226000 {
+ 			compatible = "ti,dm6441-gpio";
+ 			gpio-controller;
 -- 
 2.7.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
