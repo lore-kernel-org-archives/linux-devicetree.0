@@ -1,34 +1,67 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH/RFT v2 02/17] ARM: davinci: da8xx: Add CFGCHIP syscon
- platform declaration.
-Date: Tue, 25 Oct 2016 13:40:59 +0530
-Message-ID: <7f9efe9d-0912-e10a-3e45-24c5d2b455ab@ti.com>
-References: <20161024164634.4330-1-ahaslam@baylibre.com>
- <20161024164634.4330-3-ahaslam@baylibre.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 8/8] ARM: dts: sun6i: hummingbird-a31: Enable display
+ output through VGA bridge
+Date: Tue, 25 Oct 2016 13:43:33 +0530
+Message-ID: <bac9a59f-df97-245b-f349-bed57dec6aad@codeaurora.org>
+References: <20161020034344.14154-1-wens@csie.org>
+ <20161020034344.14154-9-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161024164634.4330-3-ahaslam@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ahaslam@baylibre.com, gregkh@linuxfoundation.org, johan@kernel.org, robh+dt@kernel.org, stern@rowland.harvard.edu, khilman@baylibre.com, sshtylyov@ru.mvista.com, david@lechnology.com, manjunath.goudar@linaro.org, broonie@kernel.org, abailon@baylibre.com
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20161020034344.14154-9-wens@csie.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 24 October 2016 10:16 PM, ahaslam@baylibre.com wrote:
-> From: David Lechner <david@lechnology.com>
-> 
-> The CFGCHIP registers are used by a number of devices, so using a syscon
-> device to share them. The first consumer of this will by the phy-da8xx-usb
-> driver.
-> 
-> Signed-off-by: David Lechner <david@lechnology.com>
-> [Axel: minor fix: change id to -1]
-
-Can you please clarify this change? There could be other syscon devices
-on the chip for other common registers. Why use the singular device-id?
-
-> Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
-
-Thanks,
-Sekhar
+CgpPbiAxMC8yMC8yMDE2IDA5OjEzIEFNLCBDaGVuLVl1IFRzYWkgd3JvdGU6Cj4gVGhlIEh1bW1p
+bmdiaXJkIEEzMSBib2FyZCBoYXMgYSBSR0ItdG8tVkdBIGJyaWRnZSB3aGljaCBjb252ZXJ0cyBS
+R0IKPiBvdXRwdXQgZnJvbSB0aGUgTENEIGludGVyZmFjZSB0byBWR0Egc2lnbmFscy4KPgo+IEVu
+YWJsZSB0aGlzIHBhcnQgb2YgdGhlIGRpc3BsYXkgcGlwZWxpbmUuCgpJIGNvdWxkbid0IGZpbmQg
+dGhlIGVuYWJsZS1ncGlvcyBiaW5kaW5nIGZvciB0aGUgYnJpZGdlIHRoYXQgeW91CmludHJvZHVj
+ZWQgaW4gdGhlIHByZXZpb3VzIHBhdGNoLiBJcyB0aGF0IGludGVudGlvbmFsPwoKVGhhbmtzLApB
+cmNoaXQKCj4KPiBTaWduZWQtb2ZmLWJ5OiBDaGVuLVl1IFRzYWkgPHdlbnNAY3NpZS5vcmc+Cj4g
+LS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjZpLWEzMS1odW1taW5nYmlyZC5kdHMgfCA1NiAr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNTYgaW5zZXJ0
+aW9ucygrKQo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjZpLWEzMS1odW1t
+aW5nYmlyZC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9zdW42aS1hMzEtaHVtbWluZ2JpcmQuZHRz
+Cj4gaW5kZXggOWE3NDYzN2Y2NzdmLi4wNWE0OWIyMTQ3ZjEgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9h
+cm0vYm9vdC9kdHMvc3VuNmktYTMxLWh1bW1pbmdiaXJkLmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jv
+b3QvZHRzL3N1bjZpLWEzMS1odW1taW5nYmlyZC5kdHMKPiBAQCAtNjMsNiArNjMsNDkgQEAKPiAg
+CQlzdGRvdXQtcGF0aCA9ICJzZXJpYWwwOjExNTIwMG44IjsKPiAgCX07Cj4KPiArCWJyaWRnZSB7
+Cj4gKwkJY29tcGF0aWJsZSA9ICJkdW1iLXZnYS1kYWMiOwo+ICsJCSNhZGRyZXNzLWNlbGxzID0g
+PDE+Owo+ICsJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArCQlwb3J0cyB7Cj4gKwkJCSNhZGRy
+ZXNzLWNlbGxzID0gPDE+Owo+ICsJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJCXBvcnRA
+MCB7Cj4gKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJCSNzaXplLWNlbGxzID0gPDA+
+Owo+ICsJCQkJcmVnID0gPDA+Owo+ICsKPiArCQkJCXZnYV9icmlkZ2VfaW46IGVuZHBvaW50QDAg
+ewo+ICsJCQkJCXJlZyA9IDwwPjsKPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnRjb24wX291
+dF92Z2E+Owo+ICsJCQkJfTsKPiArCQkJfTsKPiArCj4gKwkJCXBvcnRAMSB7Cj4gKwkJCQkjYWRk
+cmVzcy1jZWxscyA9IDwxPjsKPiArCQkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQkJcmVnID0g
+PDE+Owo+ICsKPiArCQkJCXZnYV9icmlkZ2Vfb3V0OiBlbmRwb2ludEAwIHsKPiArCQkJCQlyZWcg
+PSA8MD47Cj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2Z2FfY29uX2luPjsKPiArCQkJCX07
+Cj4gKwkJCX07Cj4gKwkJfTsKPiArCX07Cj4gKwo+ICsJdmdhIHsKPiArCQljb21wYXRpYmxlID0g
+InZnYS1jb25uZWN0b3IiOwo+ICsKPiArCQlwb3J0IHsKPiArCQkJdmdhX2Nvbl9pbjogZW5kcG9p
+bnQgewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2Z2FfYnJpZGdlX291dD47Cj4gKwkJCX07
+Cj4gKwkJfTsKPiArCX07Cj4gKwo+ICAJd2lmaV9wd3JzZXE6IHdpZmlfcHdyc2VxIHsKPiAgCQlj
+b21wYXRpYmxlID0gIm1tYy1wd3JzZXEtc2ltcGxlIjsKPiAgCQlyZXNldC1ncGlvcyA9IDwmcGlv
+IDYgMTAgR1BJT19BQ1RJVkVfTE9XPjsgLyogUEcxMCAqLwo+IEBAIC0yNDUsNiArMjg4LDE5IEBA
+Cj4gIAlzdGF0dXMgPSAib2theSI7Cj4gIH07Cj4KPiArJnRjb24wIHsKPiArCXBpbmN0cmwtbmFt
+ZXMgPSAiZGVmYXVsdCI7Cj4gKwlwaW5jdHJsLTAgPSA8JmxjZDBfcmdiODg4X3BpbnM+Owo+ICsJ
+c3RhdHVzID0gIm9rYXkiOwo+ICt9Owo+ICsKPiArJnRjb24wX291dCB7Cj4gKwl0Y29uMF9vdXRf
+dmdhOiBlbmRwb2ludEAwIHsKPiArCQlyZWcgPSA8MD47Cj4gKwkJcmVtb3RlLWVuZHBvaW50ID0g
+PCZ2Z2FfYnJpZGdlX2luPjsKPiArCX07Cj4gK307Cj4gKwo+ICAmdWFydDAgewo+ICAJcGluY3Ry
+bC1uYW1lcyA9ICJkZWZhdWx0IjsKPiAgCXBpbmN0cmwtMCA9IDwmdWFydDBfcGluc19hPjsKPgoK
+LS0gClF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUg
+QXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
