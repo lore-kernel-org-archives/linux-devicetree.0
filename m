@@ -1,64 +1,723 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH/RFT v2 07/17] ARM: davinci: da8xx: Enable the usb20 "per"
- clk on phy_clk_enable
-Date: Tue, 25 Oct 2016 11:05:02 -0500
-Message-ID: <5abddbfe-0338-6406-9299-1d2d3fb957a3@lechnology.com>
-References: <20161024164634.4330-1-ahaslam@baylibre.com>
- <20161024164634.4330-8-ahaslam@baylibre.com>
- <833b6b60-4504-dac7-ccbb-bc08c985ad01@ti.com>
+From: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+Subject: [PATCH v8] mtd: nand: add tango NAND flash controller support
+Date: Tue, 25 Oct 2016 18:10:47 +0200
+Message-ID: <580F8407.5070706@sigmadesigns.com>
+References: <580F5AD2.9020909@sigmadesigns.com>
+ <580F5B37.5090100@sigmadesigns.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <833b6b60-4504-dac7-ccbb-bc08c985ad01-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org, manjunath.goudar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <580F5B37.5090100-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
+Cc: DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2016 05:12 AM, Sekhar Nori wrote:
-> On Monday 24 October 2016 10:16 PM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
->> diff --git a/arch/arm/mach-davinci/usb-da8xx.c b/arch/arm/mach-davinci/usb-da8xx.c
->> index 9e41a7f..982e105 100644
->> --- a/arch/arm/mach-davinci/usb-da8xx.c
->> +++ b/arch/arm/mach-davinci/usb-da8xx.c
->> @@ -53,11 +53,19 @@ int __init da8xx_register_usb_refclkin(int rate)
->>
->>  static void usb20_phy_clk_enable(struct clk *clk)
->>  {
->> +	struct clk *usb20_clk;
->>  	u32 val;
->>  	u32 timeout = 500000; /* 500 msec */
->>
->>  	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
->>
->> +	usb20_clk = clk_get(NULL, "usb20");
->
-> We should not be using a NULL device pointer here. Can you pass the musb
-> device pointer available in the same file? Also, da850_clks[] in da850.c
-> needs to be fixed to add the matching device name.
+This driver supports the NAND Flash controller embedded in recent
+Tango chips, such as SMP8758 and SMP8759.
 
-This clock can be used for usb 1.1 PHY even when musb is not being used, 
-so I don't think we can depend on having a musb device here.
+Signed-off-by: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+---
+ drivers/mtd/nand/Kconfig      |   7 +
+ drivers/mtd/nand/Makefile     |   1 +
+ drivers/mtd/nand/tango_nand.c | 654 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 662 insertions(+)
+ create mode 100644 drivers/mtd/nand/tango_nand.c
 
-Also, in a previous review, it was decided that the usb clocks should 
-*not* be added to da850_clks[] [1]. Instead, they are dynamically 
-registered elsewhere.
-
-
-[1]: http://www.gossamer-threads.com/lists/linux/kernel/2396533
-
->
->> +	if (IS_ERR(usb20_clk)) {
->> +		pr_err("could not get usb20 clk\n");
->> +		return;
->> +	}
->
-> Thanks,
-> Sekhar
->
-
+diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+index 7b7a887b4709..84ce3fe6e5e2 100644
+--- a/drivers/mtd/nand/Kconfig
++++ b/drivers/mtd/nand/Kconfig
+@@ -205,6 +205,13 @@ config MTD_NAND_S3C2410_CLKSTOP
+ 	  when the is NAND chip selected or released, but will save
+ 	  approximately 5mA of power when there is nothing happening.
+ 
++config MTD_NAND_TANGO
++	tristate "NAND Flash support for Tango chips"
++	depends on ARCH_TANGO || COMPILE_TEST
++	depends on HAS_DMA
++	help
++	  Enables the NAND Flash controller on Tango chips.
++
+ config MTD_NAND_DISKONCHIP
+ 	tristate "DiskOnChip 2000, Millennium and Millennium Plus (NAND reimplementation)"
+ 	depends on HAS_IOMEM
+diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
+index cafde6f3d957..4904ad3614fb 100644
+--- a/drivers/mtd/nand/Makefile
++++ b/drivers/mtd/nand/Makefile
+@@ -16,6 +16,7 @@ obj-$(CONFIG_MTD_NAND_DENALI_DT)	+= denali_dt.o
+ obj-$(CONFIG_MTD_NAND_AU1550)		+= au1550nd.o
+ obj-$(CONFIG_MTD_NAND_BF5XX)		+= bf5xx_nand.o
+ obj-$(CONFIG_MTD_NAND_S3C2410)		+= s3c2410.o
++obj-$(CONFIG_MTD_NAND_TANGO)		+= tango_nand.o
+ obj-$(CONFIG_MTD_NAND_DAVINCI)		+= davinci_nand.o
+ obj-$(CONFIG_MTD_NAND_DISKONCHIP)	+= diskonchip.o
+ obj-$(CONFIG_MTD_NAND_DOCG4)		+= docg4.o
+diff --git a/drivers/mtd/nand/tango_nand.c b/drivers/mtd/nand/tango_nand.c
+new file mode 100644
+index 000000000000..74e39a92771c
+--- /dev/null
++++ b/drivers/mtd/nand/tango_nand.c
+@@ -0,0 +1,654 @@
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/clk.h>
++#include <linux/iopoll.h>
++#include <linux/module.h>
++#include <linux/mtd/nand.h>
++#include <linux/dmaengine.h>
++#include <linux/dma-mapping.h>
++#include <linux/platform_device.h>
++
++/* Offsets relative to chip->base */
++#define PBUS_CMD	0
++#define PBUS_ADDR	4
++#define PBUS_DATA	8
++
++/* Offsets relative to reg_base */
++#define NFC_STATUS	0x00
++#define NFC_FLASH_CMD	0x04
++#define NFC_DEVICE_CFG	0x08
++#define NFC_TIMING1	0x0c
++#define NFC_TIMING2	0x10
++#define NFC_XFER_CFG	0x14
++#define NFC_PKT_0_CFG	0x18
++#define NFC_PKT_N_CFG	0x1c
++#define NFC_BB_CFG	0x20
++#define NFC_ADDR_PAGE	0x24
++#define NFC_ADDR_OFFSET	0x28
++#define NFC_XFER_STATUS	0x2c
++
++/* NFC_STATUS values */
++#define CMD_READY	BIT(31)
++
++/* NFC_FLASH_CMD values */
++#define NFC_READ	1
++#define NFC_WRITE	2
++
++/* NFC_XFER_STATUS values */
++#define PAGE_IS_EMPTY	BIT(16)
++
++/* Offsets relative to mem_base */
++#define METADATA	0x000
++#define ERROR_REPORT	0x1c0
++
++/*
++ * Error reports are split in two bytes:
++ * byte 0 for the first packet in the page (PKT_0)
++ * byte 1 for other packets in the page (PKT_N, for N > 0)
++ * ERR_COUNT_PKT_N is the max error count over all but the first packet.
++ */
++#define DECODE_OK_PKT_0(v)	(v & BIT(7))
++#define DECODE_OK_PKT_N(v)	(v & BIT(15))
++#define ERR_COUNT_PKT_0(v)	((v >> 0) & 0x3f)
++#define ERR_COUNT_PKT_N(v)	((v >> 8) & 0x3f)
++
++/* Offsets relative to pbus_base */
++#define PBUS_CS_CTRL	0x83c
++#define PBUS_PAD_MODE	0x8f0
++
++/* PBUS_CS_CTRL values */
++#define PBUS_IORDY	BIT(31)
++
++/*
++ * PBUS_PAD_MODE values
++ * In raw mode, the driver communicates directly with the NAND chips.
++ * In NFC mode, the NAND Flash controller manages the communication.
++ * We use NFC mode for read and write; raw mode for everything else.
++ */
++#define MODE_RAW	0
++#define MODE_NFC	BIT(31)
++
++#define METADATA_SIZE	4
++#define BBM_SIZE	6
++#define FIELD_ORDER	15
++
++#define MAX_CS		4
++
++struct tango_nfc {
++	struct nand_hw_control hw;
++	void __iomem *reg_base;
++	void __iomem *mem_base;
++	void __iomem *pbus_base;
++	struct tango_chip *chips[MAX_CS];
++	struct dma_chan *chan;
++	int freq_kHz;
++};
++
++#define to_tango_nfc(ptr) container_of(ptr, struct tango_nfc, hw)
++
++struct tango_chip {
++	struct nand_chip nand_chip;
++	void __iomem *base;
++	u32 timing1;
++	u32 timing2;
++	u32 xfer_cfg;
++	u32 pkt_0_cfg;
++	u32 pkt_n_cfg;
++	u32 bb_cfg;
++};
++
++#define to_tango_chip(ptr) container_of(ptr, struct tango_chip, nand_chip)
++
++#define XFER_CFG(cs, page_count, steps, metadata_size)	\
++	((cs) << 24 | (page_count) << 16 | (steps) << 8 | (metadata_size))
++
++#define PKT_CFG(size, strength) ((size) << 16 | (strength))
++
++#define BB_CFG(bb_offset, bb_size) ((bb_offset) << 16 | (bb_size))
++
++#define TIMING(t0, t1, t2, t3) ((t0) << 24 | (t1) << 16 | (t2) << 8 | (t3))
++
++static void tango_cmd_ctrl(struct mtd_info *mtd, int dat, unsigned int ctrl)
++{
++	struct tango_chip *tchip = to_tango_chip(mtd_to_nand(mtd));
++
++	if (ctrl & NAND_CLE)
++		writeb_relaxed(dat, tchip->base + PBUS_CMD);
++
++	if (ctrl & NAND_ALE)
++		writeb_relaxed(dat, tchip->base + PBUS_ADDR);
++}
++
++static int tango_dev_ready(struct mtd_info *mtd)
++{
++	struct nand_chip *chip = mtd_to_nand(mtd);
++	struct tango_nfc *nfc = to_tango_nfc(chip->controller);
++
++	return readl_relaxed(nfc->pbus_base + PBUS_CS_CTRL) & PBUS_IORDY;
++}
++
++static uint8_t tango_read_byte(struct mtd_info *mtd)
++{
++	struct tango_chip *tchip = to_tango_chip(mtd_to_nand(mtd));
++
++	return readb_relaxed(tchip->base + PBUS_DATA);
++}
++
++static void tango_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
++{
++	struct tango_chip *tchip = to_tango_chip(mtd_to_nand(mtd));
++
++	ioread8_rep(tchip->base + PBUS_DATA, buf, len);
++}
++
++static void tango_write_buf(struct mtd_info *mtd, const uint8_t *buf, int len)
++{
++	struct tango_chip *tchip = to_tango_chip(mtd_to_nand(mtd));
++
++	iowrite8_rep(tchip->base + PBUS_DATA, buf, len);
++}
++
++static void tango_select_chip(struct mtd_info *mtd, int idx)
++{
++	struct nand_chip *chip = mtd_to_nand(mtd);
++	struct tango_nfc *nfc = to_tango_nfc(chip->controller);
++	struct tango_chip *tchip = to_tango_chip(chip);
++
++	if (idx < 0)
++		return; /* No "chip unselect" function */
++
++	writel_relaxed(tchip->timing1, nfc->reg_base + NFC_TIMING1);
++	writel_relaxed(tchip->timing2, nfc->reg_base + NFC_TIMING2);
++	writel_relaxed(tchip->xfer_cfg, nfc->reg_base + NFC_XFER_CFG);
++	writel_relaxed(tchip->pkt_0_cfg, nfc->reg_base + NFC_PKT_0_CFG);
++	writel_relaxed(tchip->pkt_n_cfg, nfc->reg_base + NFC_PKT_N_CFG);
++	writel_relaxed(tchip->bb_cfg, nfc->reg_base + NFC_BB_CFG);
++}
++
++/*
++ * The controller does not check for bitflips in erased pages,
++ * therefore software must check instead.
++ */
++static int check_erased_page(struct nand_chip *chip, u8 *buf)
++{
++	u8 *meta = chip->oob_poi + BBM_SIZE;
++	u8 *ecc = chip->oob_poi + BBM_SIZE + METADATA_SIZE;
++	const int ecc_size = chip->ecc.bytes;
++	const int pkt_size = chip->ecc.size;
++	int i, res, meta_len, bitflips = 0;
++
++	for (i = 0; i < chip->ecc.steps; ++i) {
++		meta_len = i ? 0 : METADATA_SIZE;
++		res = nand_check_erased_ecc_chunk(buf, pkt_size, ecc, ecc_size,
++				meta, meta_len, chip->ecc.strength);
++		if (res < 0)
++			chip->mtd.ecc_stats.failed++;
++
++		bitflips = max(res, bitflips);
++		buf += pkt_size;
++		ecc += ecc_size;
++	}
++
++	return bitflips;
++}
++
++static int decode_error_report(struct tango_nfc *nfc)
++{
++	u32 status, res;
++
++	status = readl_relaxed(nfc->reg_base + NFC_XFER_STATUS);
++	if (status & PAGE_IS_EMPTY)
++		return 0;
++
++	res = readl_relaxed(nfc->mem_base + ERROR_REPORT);
++
++	if (DECODE_OK_PKT_0(res) && DECODE_OK_PKT_N(res))
++		return max(ERR_COUNT_PKT_0(res), ERR_COUNT_PKT_N(res));
++
++	return -EBADMSG;
++}
++
++static void tango_dma_callback(void *arg)
++{
++	complete(arg);
++}
++
++static int do_dma(struct tango_nfc *nfc, int dir, int cmd,
++		const void *buf, int len, int page)
++{
++	void __iomem *addr = nfc->reg_base + NFC_STATUS;
++	struct dma_chan *chan = nfc->chan;
++	struct dma_async_tx_descriptor *desc;
++	struct scatterlist sg;
++	struct completion tx_done;
++	int err = -EIO;
++	u32 res, val;
++
++	sg_init_one(&sg, buf, len);
++	if (dma_map_sg(chan->device->dev, &sg, 1, dir) != 1)
++		return -EIO;
++
++	desc = dmaengine_prep_slave_sg(chan, &sg, 1, dir, DMA_PREP_INTERRUPT);
++	if (!desc)
++		goto dma_unmap;
++
++	desc->callback = tango_dma_callback;
++	desc->callback_param = &tx_done;
++	init_completion(&tx_done);
++
++	writel_relaxed(MODE_NFC, nfc->pbus_base + PBUS_PAD_MODE);
++
++	writel_relaxed(page, nfc->reg_base + NFC_ADDR_PAGE);
++	writel_relaxed(0, nfc->reg_base + NFC_ADDR_OFFSET);
++	writel_relaxed(cmd, nfc->reg_base + NFC_FLASH_CMD);
++
++	dmaengine_submit(desc);
++	dma_async_issue_pending(chan);
++
++	res = wait_for_completion_timeout(&tx_done, HZ);
++	if (res > 0)
++		err = readl_poll_timeout(addr, val, val & CMD_READY, 0, 1000);
++
++	writel_relaxed(MODE_RAW, nfc->pbus_base + PBUS_PAD_MODE);
++
++dma_unmap:
++	dma_unmap_sg(chan->device->dev, &sg, 1, dir);
++
++	return err;
++}
++
++static int tango_read_page(struct mtd_info *mtd, struct nand_chip *chip,
++		uint8_t *buf, int oob_required, int page)
++{
++	struct tango_nfc *nfc = to_tango_nfc(chip->controller);
++	int err, res, len = mtd->writesize;
++
++	if (oob_required)
++		chip->ecc.read_oob(mtd, chip, page);
++
++	err = do_dma(nfc, DMA_FROM_DEVICE, NFC_READ, buf, len, page);
++	if (err)
++		return err;
++
++	res = decode_error_report(nfc);
++	if (res < 0) {
++		chip->ecc.read_oob_raw(mtd, chip, page);
++		res = check_erased_page(chip, buf);
++	}
++
++	return res;
++}
++
++static int tango_write_page(struct mtd_info *mtd, struct nand_chip *chip,
++		const uint8_t *buf, int oob_required, int page)
++{
++	struct tango_nfc *nfc = to_tango_nfc(chip->controller);
++	int err, len = mtd->writesize;
++
++	/* Calling tango_write_oob() would send PAGEPROG twice */
++	if (oob_required)
++		return -ENOTSUPP;
++
++	writel_relaxed(0xffffffff, nfc->mem_base + METADATA);
++	err = do_dma(nfc, DMA_TO_DEVICE, NFC_WRITE, buf, len, page);
++	if (err)
++		return err;
++
++	return 0;
++}
++
++static void aux_read(struct nand_chip *chip, u8 **buf, int len, int *pos)
++{
++	*pos += len;
++
++	if (*buf == NULL) {
++		/* skip over "len" bytes */
++		chip->cmdfunc(&chip->mtd, NAND_CMD_RNDOUT, *pos, -1);
++	} else {
++		tango_read_buf(&chip->mtd, *buf, len);
++		*buf += len;
++	}
++}
++
++static void aux_write(struct nand_chip *chip, const u8 **buf, int len, int *pos)
++{
++	*pos += len;
++
++	if (*buf == NULL) {
++		/* skip over "len" bytes */
++		chip->cmdfunc(&chip->mtd, NAND_CMD_SEQIN, *pos, -1);
++	} else {
++		tango_write_buf(&chip->mtd, *buf, len);
++		*buf += len;
++	}
++}
++
++/*
++ * Physical page layout (not drawn to scale)
++ *
++ * NB: Bad Block Marker area splits PKT_N in two (N1, N2).
++ *
++ * +---+-----------------+-------+-----+-----------+-----+----+-------+
++ * | M |      PKT_0      | ECC_0 | ... |     N1    | BBM | N2 | ECC_N |
++ * +---+-----------------+-------+-----+-----------+-----+----+-------+
++ *
++ * Logical page layout:
++ *
++ *       +-----+---+-------+-----+-------+
++ * oob = | BBM | M | ECC_0 | ... | ECC_N |
++ *       +-----+---+-------+-----+-------+
++ *
++ *       +-----------------+-----+-----------------+
++ * buf = |      PKT_0      | ... |      PKT_N      |
++ *       +-----------------+-----+-----------------+
++ */
++static int raw_read(struct nand_chip *chip, u8 *buf, u8 *oob)
++{
++	u8 *oob_orig = oob;
++	const int page_size = chip->mtd.writesize;
++	const int ecc_size = chip->ecc.bytes;
++	const int pkt_size = chip->ecc.size;
++	int pos = 0; /* position within physical page */
++	int rem = page_size; /* bytes remaining until BBM area */
++
++	if (oob != NULL)
++		oob += BBM_SIZE;
++
++	aux_read(chip, &oob, METADATA_SIZE, &pos);
++
++	while (rem > pkt_size) {
++		aux_read(chip, &buf, pkt_size, &pos);
++		aux_read(chip, &oob, ecc_size, &pos);
++		rem = page_size - pos;
++	}
++
++	aux_read(chip, &buf, rem, &pos);
++	aux_read(chip, &oob_orig, BBM_SIZE, &pos);
++	aux_read(chip, &buf, pkt_size - rem, &pos);
++	aux_read(chip, &oob, ecc_size, &pos);
++
++	return 0;
++}
++
++static int raw_write(struct nand_chip *chip, const u8 *buf, const u8 *oob)
++{
++	const u8 *oob_orig = oob;
++	const int page_size = chip->mtd.writesize;
++	const int ecc_size = chip->ecc.bytes;
++	const int pkt_size = chip->ecc.size;
++	int pos = 0; /* position within physical page */
++	int rem = page_size; /* bytes remaining until BBM area */
++
++	if (oob != NULL)
++		oob += BBM_SIZE;
++
++	aux_write(chip, &oob, METADATA_SIZE, &pos);
++
++	while (rem > pkt_size) {
++		aux_write(chip, &buf, pkt_size, &pos);
++		aux_write(chip, &oob, ecc_size, &pos);
++		rem = page_size - pos;
++	}
++
++	aux_write(chip, &buf, rem, &pos);
++	aux_write(chip, &oob_orig, BBM_SIZE, &pos);
++	aux_write(chip, &buf, pkt_size - rem, &pos);
++	aux_write(chip, &oob, ecc_size, &pos);
++
++	return 0;
++}
++
++static int tango_read_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
++		uint8_t *buf, int oob_required, int page)
++{
++	return raw_read(chip, buf, chip->oob_poi);
++}
++
++static int tango_write_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
++		const uint8_t *buf, int oob_required, int page)
++{
++	return raw_write(chip, buf, chip->oob_poi);
++}
++
++static int tango_read_oob(struct mtd_info *mtd, struct nand_chip *chip, int page)
++{
++	chip->cmdfunc(mtd, NAND_CMD_READ0, 0, page);
++	return raw_read(chip, NULL, chip->oob_poi);
++}
++
++static int tango_write_oob(struct mtd_info *mtd, struct nand_chip *chip, int page)
++{
++	chip->cmdfunc(mtd, NAND_CMD_SEQIN, 0, page);
++	raw_write(chip, NULL, chip->oob_poi);
++	chip->cmdfunc(mtd, NAND_CMD_PAGEPROG, -1, -1);
++	chip->waitfunc(mtd, chip);
++	return 0;
++}
++
++static int oob_ecc(struct mtd_info *mtd, int idx, struct mtd_oob_region *res)
++{
++	struct nand_chip *chip = mtd_to_nand(mtd);
++	struct nand_ecc_ctrl *ecc = &chip->ecc;
++
++	if (idx >= ecc->steps)
++		return -ERANGE;
++
++	res->offset = BBM_SIZE + METADATA_SIZE + ecc->bytes * idx;
++	res->length = ecc->bytes;
++
++	return 0;
++}
++
++static int oob_free(struct mtd_info *mtd, int idx, struct mtd_oob_region *res)
++{
++	return -ERANGE; /* no free space in spare area */
++}
++
++static const struct mtd_ooblayout_ops tango_nand_ooblayout_ops = {
++	.ecc	= oob_ecc,
++	.free	= oob_free,
++};
++
++static u32 to_ticks(int kHz, int ps)
++{
++	return DIV_ROUND_UP_ULL((u64)kHz * ps, NSEC_PER_SEC);
++}
++
++static int tango_set_timings(struct mtd_info *mtd,
++		const struct nand_data_interface *conf, bool check_only)
++{
++	const struct nand_sdr_timings *sdr = nand_get_sdr_timings(conf);
++	struct nand_chip *chip = mtd_to_nand(mtd);
++	struct tango_nfc *nfc = to_tango_nfc(chip->controller);
++	struct tango_chip *tchip = to_tango_chip(chip);
++	u32 Trdy, Textw, Twc, Twpw, Tacc, Thold, Trpw, Textr;
++	int kHz = nfc->freq_kHz;
++
++	if (IS_ERR(sdr))
++		return PTR_ERR(sdr);
++
++	if (check_only)
++		return 0;
++
++	Trdy = to_ticks(kHz, sdr->tCEA_max - sdr->tREA_max);
++	Textw = to_ticks(kHz, sdr->tWB_max);
++	Twc = to_ticks(kHz, sdr->tWC_min);
++	Twpw = to_ticks(kHz, sdr->tWC_min - sdr->tWP_min);
++
++	Tacc = to_ticks(kHz, sdr->tREA_max);
++	Thold = to_ticks(kHz, sdr->tREH_min);
++	Trpw = to_ticks(kHz, sdr->tRC_min - sdr->tREH_min);
++	Textr = to_ticks(kHz, sdr->tRHZ_max);
++
++	tchip->timing1 = TIMING(Trdy, Textw, Twc, Twpw);
++	tchip->timing2 = TIMING(Tacc, Thold, Trpw, Textr);
++
++	return 0;
++}
++
++static int chip_init(struct device *dev, struct device_node *np)
++{
++	u32 cs;
++	int err, res;
++	struct mtd_info *mtd;
++	struct nand_chip *chip;
++	struct tango_chip *tchip;
++	struct nand_ecc_ctrl *ecc;
++	struct tango_nfc *nfc = dev_get_drvdata(dev);
++
++	tchip = devm_kzalloc(dev, sizeof(*tchip), GFP_KERNEL);
++	if (!tchip)
++		return -ENOMEM;
++
++	res = of_property_count_u32_elems(np, "reg");
++	if (res < 0)
++		return res;
++
++	if (res != 1)
++		return -ENOTSUPP; /* Multi-CS chips are not supported */
++
++	err = of_property_read_u32_index(np, "reg", 0, &cs);
++	if (err)
++		return err;
++
++	if (cs >= MAX_CS)
++		return -EINVAL;
++
++	chip = &tchip->nand_chip;
++	ecc = &chip->ecc;
++	mtd = &chip->mtd;
++
++	chip->read_byte = tango_read_byte;
++	chip->write_buf = tango_write_buf;
++	chip->read_buf = tango_read_buf;
++	chip->select_chip = tango_select_chip;
++	chip->cmd_ctrl = tango_cmd_ctrl;
++	chip->dev_ready = tango_dev_ready;
++	chip->setup_data_interface = tango_set_timings;
++	chip->options = NAND_USE_BOUNCE_BUFFER
++		| NAND_NO_SUBPAGE_WRITE
++		| NAND_WAIT_TCCS;
++	chip->controller = &nfc->hw;
++	tchip->base = nfc->pbus_base + (cs * 256);
++
++	nand_set_flash_node(chip, np);
++	mtd_set_ooblayout(mtd, &tango_nand_ooblayout_ops);
++	mtd->dev.parent = dev;
++
++	err = nand_scan_ident(mtd, 1, NULL);
++	if (err)
++		return err;
++
++	ecc->mode = NAND_ECC_HW;
++	ecc->algo = NAND_ECC_BCH;
++	ecc->bytes = DIV_ROUND_UP(ecc->strength * FIELD_ORDER, BITS_PER_BYTE);
++
++	ecc->read_page_raw = tango_read_page_raw;
++	ecc->write_page_raw = tango_write_page_raw;
++	ecc->read_page = tango_read_page;
++	ecc->write_page = tango_write_page;
++	ecc->read_oob = tango_read_oob;
++	ecc->write_oob = tango_write_oob;
++
++	err = nand_scan_tail(mtd);
++	if (err)
++		return err;
++
++	tchip->xfer_cfg = XFER_CFG(cs, 1, ecc->steps, METADATA_SIZE);
++	tchip->pkt_0_cfg = PKT_CFG(ecc->size + METADATA_SIZE, ecc->strength);
++	tchip->pkt_n_cfg = PKT_CFG(ecc->size, ecc->strength);
++	tchip->bb_cfg = BB_CFG(mtd->writesize, BBM_SIZE);
++
++	err = mtd_device_register(mtd, NULL, 0);
++	if (err)
++		return err;
++
++	nfc->chips[cs] = tchip;
++
++	return 0;
++}
++
++static int tango_nand_remove(struct platform_device *pdev)
++{
++	int cs;
++	struct tango_nfc *nfc = platform_get_drvdata(pdev);
++
++	dma_release_channel(nfc->chan);
++
++	for (cs = 0; cs < MAX_CS; ++cs) {
++		if (nfc->chips[cs] != NULL)
++			nand_release(&nfc->chips[cs]->nand_chip.mtd);
++	}
++
++	return 0;
++}
++
++static int tango_nand_probe(struct platform_device *pdev)
++{
++	int err;
++	struct clk *clk;
++	struct resource *res;
++	struct tango_nfc *nfc;
++	struct device_node *np;
++
++	nfc = devm_kzalloc(&pdev->dev, sizeof(*nfc), GFP_KERNEL);
++	if (!nfc)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	nfc->reg_base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(nfc->reg_base))
++		return PTR_ERR(nfc->reg_base);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	nfc->mem_base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(nfc->mem_base))
++		return PTR_ERR(nfc->mem_base);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
++	nfc->pbus_base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(nfc->pbus_base))
++		return PTR_ERR(nfc->pbus_base);
++
++	clk = clk_get(&pdev->dev, NULL);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	nfc->chan = dma_request_chan(&pdev->dev, "nfc_sbox");
++	if (IS_ERR(nfc->chan))
++		return PTR_ERR(nfc->chan);
++
++	platform_set_drvdata(pdev, nfc);
++	nand_hw_control_init(&nfc->hw);
++	nfc->freq_kHz = clk_get_rate(clk) / 1000;
++
++	for_each_child_of_node(pdev->dev.of_node, np) {
++		err = chip_init(&pdev->dev, np);
++		if (err) {
++			tango_nand_remove(pdev);
++			return err;
++		}
++	}
++
++	return 0;
++}
++
++static const struct of_device_id tango_nand_ids[] = {
++	{ .compatible = "sigma,smp8758-nand" },
++	{ /* sentinel */ }
++};
++
++static struct platform_driver tango_nand_driver = {
++	.probe	= tango_nand_probe,
++	.remove	= tango_nand_remove,
++	.driver	= {
++		.name		= "tango-nand",
++		.of_match_table	= tango_nand_ids,
++	},
++};
++
++module_platform_driver(tango_nand_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Sigma Designs");
++MODULE_DESCRIPTION("Tango4 NAND Flash controller driver");
+-- 
+2.9.0
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
