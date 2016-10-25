@@ -1,62 +1,50 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 01/12] dt: arm: shmobile: add H3ULCB board DT bindings
-Date: Tue, 25 Oct 2016 14:48:59 +0200
-Message-ID: <CAMuHMdWsxu0bBTFHZYh6+eowXkx=G-Uo06g7TOLE7Ek7vaHHYA@mail.gmail.com>
-References: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1472637741-14624-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: <colin.helliwell-ZqAGQOxBGgIxoycv7ERPSQ@public.gmane.org>
+Subject: Device driver - parsing GPIOs from tree
+Date: Tue, 25 Oct 2016 13:50:45 +0100
+Message-ID: <047d01d22ebe$6803f740$380be5c0$@ln-systems.com>
+Reply-To: <colin.helliwell-ZqAGQOxBGgIxoycv7ERPSQ@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1472637741-14624-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain;
+        charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+References: 
+In-Reply-To: 
+Content-Language: en-gb
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
+I'm writing my own device driver for some GPIOs on my hardware. I’ve
+successfully created the pins in the Device Tree, and in my driver I’ve been
+able to find the pins in the device tree using 'of_get_named_gpio_flags()'
+when they are at a top level (e.g. ‘test-name’ shown below).
+But for neatness I would prefer to group them hierarchically e.g.
 
-On Wed, Aug 31, 2016 at 12:02 PM, Vladimir Barinov
-<vladimir.barinov@cogentembedded.com> wrote:
-> Add H3ULCB Device tree bindings Documentation, listing it as a supported
-> board.
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Changes in version 2:
-> - none
-> Changes in version 3:
-> - none
->
->  Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-> index 5484c31d..2f0b716 100644
-> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
-> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-> @@ -49,6 +49,8 @@ Boards:
->      compatible = "renesas,genmai", "renesas,r7s72100"
->    - Gose
->      compatible = "renesas,gose", "renesas,r8a7793"
-> +  - H3ULCB (RTP0RC7795SKB00010S)
-> +    compatible = "renesas,h3ulcb", "renesas,r8a7795";
+    rfctrl: rfctrl {
+        compatible = "wg2xx-rfctrl";
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_rfctrl>;
+        status = "okay";
 
-Should this have been
+        test-name = <&gpio4 25 0>;
+        jn {
+            jnProgN = <&gpio4 26 0>;
+        };
+        alt {
+            altGpio0 = <&gpio4 27 0 >;
+            altGpio1 = <&gpio4 28 0 >;
+            altGpio2 = <&gpio4 29 0 >;
+            altGpio3 = <&gpio4 30 0 >;
+        };
+    };
+ 
+Is there a way to search within the subtree ("jn" or "alt"), or to descend
+into it and then use 'of_get_named_gpio_flags()’?
+Thanks.
 
-        H3SK (R-Car Starter Kit Premier, RTP0RC7795SKB00010S)
-        compatible = "renesas,h3sk", "renesas,r8a7795";
-
-instead?
-
-Gr{oetje,eeting}s,
-
-                        Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
