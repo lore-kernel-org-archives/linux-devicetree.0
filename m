@@ -1,57 +1,47 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 0/4] Generic #pinctrl-cells and and pinctrl_parse_index_with_args
-Date: Tue, 25 Oct 2016 09:45:34 -0700
-Message-ID: <20161025164538.453-1-tony@atomide.com>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [v2 2/2] fpga: Add support for Lattice iCE40 FPGAs
+Date: Tue, 25 Oct 2016 09:48:38 -0700
+Message-ID: <CAAtXAHfcfveozw_3kpXz9pA0ZSTeuo9CNs9vRq1Y+BhrNuim7A@mail.gmail.com>
+References: <1477283989-21947-1-git-send-email-joel@airwebreathe.org.uk>
+ <1477283989-21947-2-git-send-email-joel@airwebreathe.org.uk>
+ <alpine.DEB.2.02.1610241615280.14525@linuxheads99> <20161024222805.GA5754@live.com>
+ <331cd8da-f69a-b51a-ddbd-f18ee44cac8a@airwebreathe.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <331cd8da-f69a-b51a-ddbd-f18ee44cac8a@airwebreathe.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jon Hunter <jonathanh@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+To: Joel Holdsworth <joel@airwebreathe.org.uk>
+Cc: atull <atull@opensource.altera.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Hi Joel,
 
-Here are some pinctrl changes to introduce #pinctrl-cells and a generic
-parser pinctrl_parse_index_with_args that the drivers can optionally use.
+On Mon, Oct 24, 2016 at 9:51 PM, Joel Holdsworth
+<joel@airwebreathe.org.uk> wrote:
 
-Regards,
+> I think my set_cs() function is ok-ish. It's copied from spi_set_cs() in
+> drivers/spi/spi.c . This function is a static internal helper, so I
+> copy/pasted the function into the ice40 driver. Given that it's only 4-lines
+> of code, it didn't seem too bad - though I'm not exactly sure why
+> spi_set_cs() isn't a public API. It seems like quite a common-place thing to
+> need to do with certain devices.
+>
+> However, perhaps the function is internal because the authors of the SPI
+> framework foresaw how easy it would be to screw up a shared bus with that
+> function. I had to take care to make sure the SPI bus was locked throughout.
+>
+> Do you agree that it's the right thing to copy the function in? Or do you
+> think it would be better to ask for spi_set_cs to be exposed publicly?
 
-Tony
+I'd poke the SPI maintainers about what their reasoning was to make it
+non-public,
+and how they'd go about doing what you're trying to do.
+I can imagine there might be some SPI controllers where the above
+doesn't work well,
+because the controller automatically handles the CS line and you don't
+get control over it.
 
+Cheers,
 
-Tony Lindgren (4):
-  pinctrl: Introduce generic #pinctrl-cells and
-    pinctrl_parse_index_with_args
-  pinctrl: single: Use generic parser and #pinctrl-cells for
-    pinctrl-single,pins
-  pinctrl: single: Use generic parser and #pinctrl-cells for
-    pinctrl-single,bits
-  ARM: dts: Add #pinctrl-cells for pinctrl-single instances
-
- .../bindings/pinctrl/pinctrl-bindings.txt          |  42 +++++-
- .../devicetree/bindings/pinctrl/pinctrl-single.txt |   3 +
- arch/arm/boot/dts/am33xx.dtsi                      |   2 +
- arch/arm/boot/dts/am3517.dtsi                      |   1 +
- arch/arm/boot/dts/am4372.dtsi                      |   1 +
- arch/arm/boot/dts/da850.dtsi                       |   1 +
- arch/arm/boot/dts/dm814x.dtsi                      |   1 +
- arch/arm/boot/dts/dm816x.dtsi                      |   2 +
- arch/arm/boot/dts/dra7.dtsi                        |   1 +
- arch/arm/boot/dts/hi3620.dtsi                      |   2 +
- arch/arm/boot/dts/keystone-k2g.dtsi                |   1 +
- arch/arm/boot/dts/keystone-k2l.dtsi                |   1 +
- arch/arm/boot/dts/omap2420.dtsi                    |   2 +
- arch/arm/boot/dts/omap2430.dtsi                    |   2 +
- arch/arm/boot/dts/omap3.dtsi                       |   2 +
- arch/arm/boot/dts/omap34xx.dtsi                    |   1 +
- arch/arm/boot/dts/omap36xx.dtsi                    |   1 +
- arch/arm/boot/dts/omap4.dtsi                       |   2 +
- arch/arm/boot/dts/omap5.dtsi                       |   2 +
- arch/arm/boot/dts/pxa3xx.dtsi                      |   1 +
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |   3 +
- drivers/pinctrl/devicetree.c                       | 151 ++++++++++++++++++++
- drivers/pinctrl/devicetree.h                       |  24 ++++
- drivers/pinctrl/pinctrl-single.c                   | 157 +++++++++++++++------
- 24 files changed, 363 insertions(+), 43 deletions(-)
-
--- 
-2.9.3
+Moritz
