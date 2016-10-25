@@ -1,49 +1,47 @@
-From: Gary Bisson <gary.bisson@boundarydevices.com>
-Subject: Re: [PATCH 3/5] ARM: dts: imx6qdl-sabrelite: add missing USB PHY
- reset control
-Date: Tue, 25 Oct 2016 23:53:40 +0200
-Message-ID: <CAAMH-yu1oC8qaAtVwSxJxKxSmXMzMJkUeu4cUu3OB2yhDV8GBg@mail.gmail.com>
-References: <20161025211955.5345-1-gary.bisson@boundarydevices.com>
- <20161025211955.5345-4-gary.bisson@boundarydevices.com>
- <CAOMZO5Aok5w=Di0hZpr7E6PZr6rJ1Xg-xkWcB+u=7xKCT5uWvA@mail.gmail.com>
+From: Balbir Singh <bsingharora@gmail.com>
+Subject: Re: [PATCH v4 4/5] mm: make processing of movable_node arch-specific
+Date: Wed, 26 Oct 2016 09:34:18 +1100
+Message-ID: <112504e9-561d-e0da-7a40-73996c678b56@gmail.com>
+References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
+ <1475778995-1420-5-git-send-email-arbab@linux.vnet.ibm.com>
+ <235f2d20-cf84-08df-1fb4-08ee258fdc52@gmail.com>
+ <dcfc8ace-e59e-6b4b-0f2f-4eff9f08f3c1@gmail.com>
+ <20161025155507.37kv5akdlgo6m2be@arbab-laptop.austin.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOMZO5Aok5w=Di0hZpr7E6PZr6rJ1Xg-xkWcB+u=7xKCT5uWvA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Peter Chen <peter.chen@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161025155507.37kv5akdlgo6m2be@arbab-laptop.austin.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Reza Arbab <arbab@linux.vnet.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
 
-On Tue, Oct 25, 2016 at 11:28 PM, Fabio Estevam <festevam@gmail.com> wrote:
-> Hi Gary,
+
+On 26/10/16 02:55, Reza Arbab wrote:
+> On Tue, Oct 25, 2016 at 11:15:40PM +1100, Balbir Singh wrote:
+>> After the ack, I realized there were some more checks needed, IOW
+>> questions for you :)
+> 
+> Hey! No takebacks!
+> 
+
+I still believe we need your changes, I was wondering if we've tested
+it against normal memory nodes and checked if any memblock
+allocations end up there. Michael showed me some memblock
+allocations on node 1 of a two node machine with movable_node
+I'll double check at my end. See my question below
+
+
+> The short answer is that neither of these is a concern.
+> 
+> Longer; if you use "movable_node", x86 can identify these nodes at boot. They call memblock_mark_hotplug() while parsing the SRAT. Then, when the zones are initialized, those markings are used to determine ZONE_MOVABLE.
+> 
+> We have no analog of this SRAT information, so our movable nodes can only be created post boot, by hotplugging and explicitly onlining with online_movable.
 >
-> On Tue, Oct 25, 2016 at 7:19 PM, Gary Bisson
-> <gary.bisson@boundarydevices.com> wrote:
->> Declared as a regulator since the driver doesn't have a reset-gpios
->> property for this.
->
-> Peter Chen is working on adding USB reset-gpio property this. Please
-> check his series:
-> https://www.spinics.net/lists/arm-kernel/msg536105.html
 
-Thanks, I wasn't aware of this series. Indeed if this power sequence
-code gets upstream soon I guess we can drop both patches about the USB
-PHY reset.
+Is this true for all of system memory as well or only for nodes
+hotplugged later?
 
-Note that our Nitrogen6_MAX is using the regulator approach, it will
-need to be updated once Peter's series gets merged.
-
-Regards,
-Gary
+Balbir Singh.
