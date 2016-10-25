@@ -1,49 +1,40 @@
-From: "Maciej W. Rozycki" <macro@imgtec.com>
-Subject: Re: [PATCH v2 11/14] MIPS: Malta: Use syscon-reboot driver to
- reboot
-Date: Tue, 25 Oct 2016 11:55:49 +0100
-Message-ID: <alpine.DEB.2.00.1610251003330.31859@tp.orcam.me.uk>
-References: <20160919212132.28893-1-paul.burton@imgtec.com> <20160919212132.28893-12-paul.burton@imgtec.com> <alpine.DEB.2.00.1610220956020.31859@tp.orcam.me.uk> <2861325.0K2k6plxiD@np-p-burton>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH/RFT v2 00/17] Add DT support for ohci-da8xx
+Date: Tue, 25 Oct 2016 16:25:57 +0530
+Message-ID: <39744873-14ec-5eae-640c-10435b9eb492@ti.com>
+References: <20161024164634.4330-1-ahaslam@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2861325.0K2k6plxiD@np-p-burton>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Burton <paul.burton@imgtec.com>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org, Stephan Linz <linz@li-pro.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161024164634.4330-1-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, manjunath.goudar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+Hi Axel,
 
-> >  This has broken reboot support, all I get now is:
-> > 
-> > reboot: Restarting system
-> > Unable to restart system
-> > Reboot failed -- System halted
-> > 
-> > at which point I need to issue a serial BREAK to regain control of the
-> > board and get back to YAMON; fortunately the board is wired for that.
+On Monday 24 October 2016 10:16 PM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
+> From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 > 
-> This was already reported over here:
-> 
-> https://www.linux-mips.org/archives/linux-mips/2016-10/msg00120.html 
-> 
-> These 2 patches fix it:
-> 
-> https://patchwork.linux-mips.org/patch/14395/ 
-> https://patchwork.linux-mips.org/patch/14396/ 
+> The purpose of this patch series is to add DT support and modernize
+> the ohci-da8xx glue driver without breaking the non-DT boot,
+> which is still used in unconverted davinci devices.
 
- Thanks, good to know and sorry to raise a late alarm then.
+>From a mach-davinci perspective, there are some patches which seem to be
+safe to apply and some which depend on corresponding driver changes to
+get in.
 
- As it happens the board I've been fiddling with has been temporarily 
-sitting idle, so I went ahead and verified that these changes have indeed 
-removed the regression in my configuration.  So you've got a confirmation 
-from a real Malta hardware user now too (QEMU may have its own quirks).
+In order to speed up the process of applying this series, can you split
+the mach-davinci updates which are safe to apply into a separate series.
 
-> I've asked Ralf if we can get those, along with a few others, in ASAP - 
-> preferrably for -rc3.
+For DT patches, the bindings should be accepted. For other patches, they
+should not be causing any regressions.
 
- As these are fixes to a functional regression I also recommend merging 
-them ASAP.
-
-  Maciej
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
