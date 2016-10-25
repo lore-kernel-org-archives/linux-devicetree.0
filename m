@@ -1,41 +1,32 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH 01/13] of: Remove comments that state the obvious
-Date: Tue, 25 Oct 2016 14:29:13 -0700
-Message-ID: <1477430953.1998.19.camel@perches.com>
-References: <1477429146-27039-1-git-send-email-frowand.list@gmail.com>
-         <1477429146-27039-2-git-send-email-frowand.list@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] arm64, numa: Fix OOPS with numa=off
+Date: Tue, 25 Oct 2016 14:30:59 -0700
+Message-ID: <1477431061-7258-1-git-send-email-ddaney.cavm@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477429146-27039-2-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Gilbert Netzer <noname-QVTQ4TwcpgDLoDKTGw+V6w@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-10-25 at 13:58 -0700, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
-> 
-> Remove comments that state the obvious, to reduce clutter
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-Some of these removals might be overly aggressive.
+We get an OOPS in the arm64 kernel on NUMA systems when numa=off is
+passed on the command line.
 
-> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-[]
-> @@ -125,7 +114,6 @@ static int __of_adjust_phandle_ref(struct device_node *node,
->  	int offset, propcurlen;
->  	int err = 0;
->  
-> -	/* make a copy */
->  	propval = kmalloc(rprop->length, GFP_KERNEL);
->  	if (!propval) {
->  		pr_err("%s: Could not copy value of '%s'\n",ld
+Fix it by returning NUMA_NO_NODE from of_node_to_nid when numa=off.
 
-This kmalloc/memcpy could use kmemdup instead.
+David Daney (2):
+  of, numa: Add function to disable of_node_to_nid().
+  arm64, numa: Force of_node_to_nid to return NUMA_NO_NODE when
+    numa=off.
 
-It doesn't really need the pr_err either as kmalloc and/or
-kmemdup get a generic OOM message.
+ arch/arm64/mm/numa.c |  5 ++++-
+ drivers/of/of_numa.c | 15 +++++++++++++++
+ include/linux/of.h   |  2 ++
+ 3 files changed, 21 insertions(+), 1 deletion(-)
+
+-- 
+1.8.3.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
