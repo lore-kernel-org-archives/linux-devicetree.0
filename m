@@ -1,518 +1,256 @@
 From: Alan Tull <atull@opensource.altera.com>
-Subject: [PATCH v21 7/9] ARM: socfpga: fpga bridge driver support
-Date: Tue, 25 Oct 2016 09:55:38 -0500
-Message-ID: <20161025145540.3722-8-atull@opensource.altera.com>
+Subject: [PATCH v21 4/9] fpga-mgr: add fpga image information struct
+Date: Tue, 25 Oct 2016 09:55:35 -0500
+Message-ID: <20161025145540.3722-5-atull@opensource.altera.com>
 References: <20161025145540.3722-1-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20161025145540.3722-1-atull@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Moritz Fischer <moritz.fischer@ettus.com>, Joel Holdsworth <joel@airwebreathe.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jon Masters <jcm@redhat.com>, Julia Cartwright <julia@ni.com>, Michal Simek <michal.simek@xilinx.com>, Jonathan Corbet <corbet@lwn.net>, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, Matthew Gerlach <mgerlach@opensource.altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, Alan Tull <atull@opensource.altera.com>Matthew Gerlach <mger>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, delicious.quinoa@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alan Tull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Julia Cartwright <julia@ni.com>, linux-doc@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, devicetree@vger.kernel.org, Jon Masters <jcm@redhat.com>, Joel Holdsworth <joel@airwebreathe.org.uk>, Jonathan Corbet <corbet@lwn.net>, Matthew Gerlach <mgerlach@opensource.altera.com>, Frank Rowand <frowand.list@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Supports Altera SOCFPGA bridges:
- * fpga2sdram
- * fpga2hps
- * hps2fpga
- * lwhps2fpga
+This patch adds a minor change in the FPGA Manager API
+to hold information that is specific to an FPGA image
+file.  This change is expected to bring little, if any,
+pain.  The socfpga and zynq drivers are fixed up in
+this patch.
 
-Allows enabling/disabling the bridges through the FPGA
-Bridge Framework API functions.
+An FPGA image file will have particulars that affect how the
+image is programmed to the FPGA.  One example is that
+current 'flags' currently has one bit which shows whether the
+FPGA image was built for full reconfiguration or partial
+reconfiguration.  Another example is timeout values for
+enabling or disabling the bridges in the FPGA.  As the
+complexity of the FPGA design increases, the bridges in the
+FPGA may take longer times to enable or disable.
 
-The fpga2sdram driver only supports enabling and disabling
-of the ports that been configured early on.  This is due to
-a hardware limitation where the read, write, and command
-ports on the fpga2sdram bridge can only be reconfigured
-while there are no transactions to the sdram, i.e. when
-running out of OCRAM before the kernel boots.
-
-Device tree property 'init-val' configures the driver to
-enable or disable the bridge during probe.  If the property
-does not exist, the driver will leave the bridge in its
-current state.
+This patch adds a new 'struct fpga_image_info', moves the
+current 'u32 flags' to it.  Two other image-specific u32's
+are added for the bridge enable/disable timeouts.  The FPGA
+Manager API functions are changed, replacing the 'u32 flag'
+parameter with a pointer to struct fpga_image_info.
+Subsequent patches fix the existing low level FPGA manager
+drivers.
 
 Signed-off-by: Alan Tull <atull@opensource.altera.com>
-Signed-off-by: Matthew Gerlach <mgerlach@altera.com>
-Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+Acked-by: Moritz Fischer <moritz.fischer@ettus.com>
 ---
-v2:  Use resets instead of directly writing reset registers
-v12: Bump version to align with simple-fpga-bus version
-     Get rid of the sysfs interface
-     fpga2sdram: get configuration stored in handoff register
-v13: Remove unneeded WARN_ON
-     Change property from init-val to bridge-enable
-     Checkpatch cleanup
-     Fix email address
-v14: use module_platform_driver
-     remove unused struct field and some #defines
-     don't really need exclamation points on error msgs
-     *const* struct fpga_bridge_ops
-v15: No change in this patch for v15 of this patch set
-v16: No change in this patch for v16 of this patch set
-v17: No change to this patch for v17 of this patch set
-v18: Eliminate need to specify reset names since only one reset
-v19: Set bridge state before registering driver with framework
-     Include fix for drivers sharing the l3_remap_value reg
-     use devm_clk_get
-     make tristate in Kconfig
-     documentation of handoff registers
-v20: No change for this patch in v20 of patchset
-v21: remove clk_put
-     don't look up l3regs for f2h
+v19: Added in v19 of this patchset
+v20: Squashed patches that change API for socfpga and zynq
+v21: Add Moritz' ack
+     s/Mangager/Manager/
 ---
- drivers/fpga/Kconfig             |   7 ++
- drivers/fpga/Makefile            |   1 +
- drivers/fpga/altera-fpga2sdram.c | 180 +++++++++++++++++++++++++++++++
- drivers/fpga/altera-hps2fpga.c   | 222 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 410 insertions(+)
- create mode 100644 drivers/fpga/altera-fpga2sdram.c
- create mode 100644 drivers/fpga/altera-hps2fpga.c
+ drivers/fpga/fpga-mgr.c       | 17 +++++++++--------
+ drivers/fpga/socfpga.c        |  7 ++++---
+ drivers/fpga/zynq-fpga.c      | 10 ++++++----
+ include/linux/fpga/fpga-mgr.h | 23 +++++++++++++++++++----
+ 4 files changed, 38 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index e0e1257..5605ad6 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -40,6 +40,13 @@ config FPGA_BRIDGE
- 	  Say Y here if you want to support bridges connected between host
- 	  processors and FPGAs or between FPGAs.
+diff --git a/drivers/fpga/fpga-mgr.c b/drivers/fpga/fpga-mgr.c
+index 953dc91..c58b4c4 100644
+--- a/drivers/fpga/fpga-mgr.c
++++ b/drivers/fpga/fpga-mgr.c
+@@ -32,7 +32,7 @@ static struct class *fpga_mgr_class;
+ /**
+  * fpga_mgr_buf_load - load fpga from image in buffer
+  * @mgr:	fpga manager
+- * @flags:	flags setting fpga confuration modes
++ * @info:	fpga image specific information
+  * @buf:	buffer contain fpga image
+  * @count:	byte count of buf
+  *
+@@ -43,8 +43,8 @@ static struct class *fpga_mgr_class;
+  *
+  * Return: 0 on success, negative error code otherwise.
+  */
+-int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags, const char *buf,
+-		      size_t count)
++int fpga_mgr_buf_load(struct fpga_manager *mgr, struct fpga_image_info *info,
++		      const char *buf, size_t count)
+ {
+ 	struct device *dev = &mgr->dev;
+ 	int ret;
+@@ -55,7 +55,7 @@ int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags, const char *buf,
+ 	 * ready to receive an FPGA image.
+ 	 */
+ 	mgr->state = FPGA_MGR_STATE_WRITE_INIT;
+-	ret = mgr->mops->write_init(mgr, flags, buf, count);
++	ret = mgr->mops->write_init(mgr, info, buf, count);
+ 	if (ret) {
+ 		dev_err(dev, "Error preparing FPGA for writing\n");
+ 		mgr->state = FPGA_MGR_STATE_WRITE_INIT_ERR;
+@@ -78,7 +78,7 @@ int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags, const char *buf,
+ 	 * steps to finish and set the FPGA into operating mode.
+ 	 */
+ 	mgr->state = FPGA_MGR_STATE_WRITE_COMPLETE;
+-	ret = mgr->mops->write_complete(mgr, flags);
++	ret = mgr->mops->write_complete(mgr, info);
+ 	if (ret) {
+ 		dev_err(dev, "Error after writing image data to FPGA\n");
+ 		mgr->state = FPGA_MGR_STATE_WRITE_COMPLETE_ERR;
+@@ -93,7 +93,7 @@ EXPORT_SYMBOL_GPL(fpga_mgr_buf_load);
+ /**
+  * fpga_mgr_firmware_load - request firmware and load to fpga
+  * @mgr:	fpga manager
+- * @flags:	flags setting fpga confuration modes
++ * @info:	fpga image specific information
+  * @image_name:	name of image file on the firmware search path
+  *
+  * Request an FPGA image using the firmware class, then write out to the FPGA.
+@@ -103,7 +103,8 @@ EXPORT_SYMBOL_GPL(fpga_mgr_buf_load);
+  *
+  * Return: 0 on success, negative error code otherwise.
+  */
+-int fpga_mgr_firmware_load(struct fpga_manager *mgr, u32 flags,
++int fpga_mgr_firmware_load(struct fpga_manager *mgr,
++			   struct fpga_image_info *info,
+ 			   const char *image_name)
+ {
+ 	struct device *dev = &mgr->dev;
+@@ -121,7 +122,7 @@ int fpga_mgr_firmware_load(struct fpga_manager *mgr, u32 flags,
+ 		return ret;
+ 	}
  
-+config SOCFPGA_FPGA_BRIDGE
-+	tristate "Altera SoCFPGA FPGA Bridges"
-+	depends on ARCH_SOCFPGA && FPGA_BRIDGE
-+	help
-+	  Say Y to enable drivers for FPGA bridges for Altera SOCFPGA
-+	  devices.
-+
- endif # FPGA
+-	ret = fpga_mgr_buf_load(mgr, flags, fw->data, fw->size);
++	ret = fpga_mgr_buf_load(mgr, info, fw->data, fw->size);
  
- endmenu
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index 8d746c3..e658436 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
+ 	release_firmware(fw);
  
- # FPGA Bridge Drivers
- obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
-+obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)	+= altera-hps2fpga.o altera-fpga2sdram.o
+diff --git a/drivers/fpga/socfpga.c b/drivers/fpga/socfpga.c
+index 27d2ff2..b6672e6 100644
+--- a/drivers/fpga/socfpga.c
++++ b/drivers/fpga/socfpga.c
+@@ -407,13 +407,14 @@ static int socfpga_fpga_reset(struct fpga_manager *mgr)
+ /*
+  * Prepare the FPGA to receive the configuration data.
+  */
+-static int socfpga_fpga_ops_configure_init(struct fpga_manager *mgr, u32 flags,
++static int socfpga_fpga_ops_configure_init(struct fpga_manager *mgr,
++					   struct fpga_image_info *info,
+ 					   const char *buf, size_t count)
+ {
+ 	struct socfpga_fpga_priv *priv = mgr->priv;
+ 	int ret;
  
- # High Level Interfaces
- obj-$(CONFIG_FPGA_REGION)		+= fpga-region.o
-diff --git a/drivers/fpga/altera-fpga2sdram.c b/drivers/fpga/altera-fpga2sdram.c
-new file mode 100644
-index 0000000..7ab358e
---- /dev/null
-+++ b/drivers/fpga/altera-fpga2sdram.c
-@@ -0,0 +1,180 @@
-+/*
-+ * FPGA to SDRAM Bridge Driver for Altera SoCFPGA Devices
-+ *
-+ *  Copyright (C) 2013-2016 Altera Corporation, All Rights Reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+-	if (flags & FPGA_MGR_PARTIAL_RECONFIG) {
++	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
+ 		dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
+ 		return -EINVAL;
+ 	}
+@@ -478,7 +479,7 @@ static int socfpga_fpga_ops_configure_write(struct fpga_manager *mgr,
+ }
+ 
+ static int socfpga_fpga_ops_configure_complete(struct fpga_manager *mgr,
+-					       u32 flags)
++					       struct fpga_image_info *info)
+ {
+ 	struct socfpga_fpga_priv *priv = mgr->priv;
+ 	u32 status;
+diff --git a/drivers/fpga/zynq-fpga.c b/drivers/fpga/zynq-fpga.c
+index c2fb412..249682e 100644
+--- a/drivers/fpga/zynq-fpga.c
++++ b/drivers/fpga/zynq-fpga.c
+@@ -175,7 +175,8 @@ static irqreturn_t zynq_fpga_isr(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static int zynq_fpga_ops_write_init(struct fpga_manager *mgr, u32 flags,
++static int zynq_fpga_ops_write_init(struct fpga_manager *mgr,
++				    struct fpga_image_info *info,
+ 				    const char *buf, size_t count)
+ {
+ 	struct zynq_fpga_priv *priv;
+@@ -189,7 +190,7 @@ static int zynq_fpga_ops_write_init(struct fpga_manager *mgr, u32 flags,
+ 		return err;
+ 
+ 	/* don't globally reset PL if we're doing partial reconfig */
+-	if (!(flags & FPGA_MGR_PARTIAL_RECONFIG)) {
++	if (!(info->flags & FPGA_MGR_PARTIAL_RECONFIG)) {
+ 		/* assert AXI interface resets */
+ 		regmap_write(priv->slcr, SLCR_FPGA_RST_CTRL_OFFSET,
+ 			     FPGA_RST_ALL_MASK);
+@@ -343,7 +344,8 @@ static int zynq_fpga_ops_write(struct fpga_manager *mgr,
+ 	return err;
+ }
+ 
+-static int zynq_fpga_ops_write_complete(struct fpga_manager *mgr, u32 flags)
++static int zynq_fpga_ops_write_complete(struct fpga_manager *mgr,
++					struct fpga_image_info *info)
+ {
+ 	struct zynq_fpga_priv *priv = mgr->priv;
+ 	int err;
+@@ -364,7 +366,7 @@ static int zynq_fpga_ops_write_complete(struct fpga_manager *mgr, u32 flags)
+ 		return err;
+ 
+ 	/* for the partial reconfig case we didn't touch the level shifters */
+-	if (!(flags & FPGA_MGR_PARTIAL_RECONFIG)) {
++	if (!(info->flags & FPGA_MGR_PARTIAL_RECONFIG)) {
+ 		/* enable level shifters from PL to PS */
+ 		regmap_write(priv->slcr, SLCR_LVL_SHFTR_EN_OFFSET,
+ 			     LVL_SHFTR_ENABLE_PL_TO_PS);
+diff --git a/include/linux/fpga/fpga-mgr.h b/include/linux/fpga/fpga-mgr.h
+index 0940bf4..040b86d 100644
+--- a/include/linux/fpga/fpga-mgr.h
++++ b/include/linux/fpga/fpga-mgr.h
+@@ -69,6 +69,18 @@ enum fpga_mgr_states {
+ #define FPGA_MGR_PARTIAL_RECONFIG	BIT(0)
+ 
+ /**
++ * struct fpga_image_info - information specific to a FPGA image
++ * @flags: boolean flags as defined above
++ * @enable_timeout_us: maximum time to enable traffic through bridge (uSec)
++ * @disable_timeout_us: maximum time to disable traffic through bridge (uSec)
 + */
-+
-+/*
-+ * This driver manages a bridge between an FPGA and the SDRAM used by the ARM
-+ * host processor system (HPS).
-+ *
-+ * The bridge contains 4 read ports, 4 write ports, and 6 command ports.
-+ * Reconfiguring these ports requires that no SDRAM transactions occur during
-+ * reconfiguration.  The code reconfiguring the ports cannot run out of SDRAM
-+ * nor can the FPGA access the SDRAM during reconfiguration.  This driver does
-+ * not support reconfiguring the ports.  The ports are configured by code
-+ * running out of on chip ram before Linux is started and the configuration
-+ * is passed in a handoff register in the system manager.
-+ *
-+ * This driver supports enabling and disabling of the configured ports, which
-+ * allows for safe reprogramming of the FPGA, assuming that the new FPGA image
-+ * uses the same port configuration.  Bridges must be disabled before
-+ * reprogramming the FPGA and re-enabled after the FPGA has been programmed.
-+ */
-+
-+#include <linux/fpga/fpga-bridge.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/regmap.h>
-+
-+#define ALT_SDR_CTL_FPGAPORTRST_OFST		0x80
-+#define ALT_SDR_CTL_FPGAPORTRST_PORTRSTN_MSK	0x00003fff
-+#define ALT_SDR_CTL_FPGAPORTRST_RD_SHIFT	0
-+#define ALT_SDR_CTL_FPGAPORTRST_WR_SHIFT	4
-+#define ALT_SDR_CTL_FPGAPORTRST_CTRL_SHIFT	8
-+
-+/*
-+ * From the Cyclone V HPS Memory Map document:
-+ *   These registers are used to store handoff information between the
-+ *   preloader and the OS. These 8 registers can be used to store any
-+ *   information. The contents of these registers have no impact on
-+ *   the state of the HPS hardware.
-+ */
-+#define SYSMGR_ISWGRP_HANDOFF3          (0x8C)
-+
-+#define F2S_BRIDGE_NAME "fpga2sdram"
-+
-+struct alt_fpga2sdram_data {
-+	struct device *dev;
-+	struct regmap *sdrctl;
-+	int mask;
++struct fpga_image_info {
++	u32 flags;
++	u32 enable_timeout_us;
++	u32 disable_timeout_us;
 +};
 +
-+static int alt_fpga2sdram_enable_show(struct fpga_bridge *bridge)
-+{
-+	struct alt_fpga2sdram_data *priv = bridge->priv;
-+	int value;
-+
-+	regmap_read(priv->sdrctl, ALT_SDR_CTL_FPGAPORTRST_OFST, &value);
-+
-+	return (value & priv->mask) == priv->mask;
-+}
-+
-+static inline int _alt_fpga2sdram_enable_set(struct alt_fpga2sdram_data *priv,
-+					     bool enable)
-+{
-+	return regmap_update_bits(priv->sdrctl, ALT_SDR_CTL_FPGAPORTRST_OFST,
-+				  priv->mask, enable ? priv->mask : 0);
-+}
-+
-+static int alt_fpga2sdram_enable_set(struct fpga_bridge *bridge, bool enable)
-+{
-+	return _alt_fpga2sdram_enable_set(bridge->priv, enable);
-+}
-+
-+struct prop_map {
-+	char *prop_name;
-+	u32 *prop_value;
-+	u32 prop_max;
-+};
-+
-+static const struct fpga_bridge_ops altera_fpga2sdram_br_ops = {
-+	.enable_set = alt_fpga2sdram_enable_set,
-+	.enable_show = alt_fpga2sdram_enable_show,
-+};
-+
-+static const struct of_device_id altera_fpga_of_match[] = {
-+	{ .compatible = "altr,socfpga-fpga2sdram-bridge" },
-+	{},
-+};
-+
-+static int alt_fpga_bridge_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct alt_fpga2sdram_data *priv;
-+	u32 enable;
-+	struct regmap *sysmgr;
-+	int ret = 0;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+
-+	priv->sdrctl = syscon_regmap_lookup_by_compatible("altr,sdr-ctl");
-+	if (IS_ERR(priv->sdrctl)) {
-+		dev_err(dev, "regmap for altr,sdr-ctl lookup failed.\n");
-+		return PTR_ERR(priv->sdrctl);
-+	}
-+
-+	sysmgr = syscon_regmap_lookup_by_compatible("altr,sys-mgr");
-+	if (IS_ERR(priv->sdrctl)) {
-+		dev_err(dev, "regmap for altr,sys-mgr lookup failed.\n");
-+		return PTR_ERR(sysmgr);
-+	}
-+
-+	/* Get f2s bridge configuration saved in handoff register */
-+	regmap_read(sysmgr, SYSMGR_ISWGRP_HANDOFF3, &priv->mask);
-+
-+	ret = fpga_bridge_register(dev, F2S_BRIDGE_NAME,
-+				   &altera_fpga2sdram_br_ops, priv);
-+	if (ret)
-+		return ret;
-+
-+	dev_info(dev, "driver initialized with handoff %08x\n", priv->mask);
-+
-+	if (!of_property_read_u32(dev->of_node, "bridge-enable", &enable)) {
-+		if (enable > 1) {
-+			dev_warn(dev, "invalid bridge-enable %u > 1\n", enable);
-+		} else {
-+			dev_info(dev, "%s bridge\n",
-+				 (enable ? "enabling" : "disabling"));
-+			ret = _alt_fpga2sdram_enable_set(priv, enable);
-+			if (ret) {
-+				fpga_bridge_unregister(&pdev->dev);
-+				return ret;
-+			}
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static int alt_fpga_bridge_remove(struct platform_device *pdev)
-+{
-+	fpga_bridge_unregister(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+MODULE_DEVICE_TABLE(of, altera_fpga_of_match);
-+
-+static struct platform_driver altera_fpga_driver = {
-+	.probe = alt_fpga_bridge_probe,
-+	.remove = alt_fpga_bridge_remove,
-+	.driver = {
-+		.name	= "altera_fpga2sdram_bridge",
-+		.of_match_table = of_match_ptr(altera_fpga_of_match),
-+	},
-+};
-+
-+module_platform_driver(altera_fpga_driver);
-+
-+MODULE_DESCRIPTION("Altera SoCFPGA FPGA to SDRAM Bridge");
-+MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/fpga/altera-hps2fpga.c b/drivers/fpga/altera-hps2fpga.c
-new file mode 100644
-index 0000000..4b354c7
---- /dev/null
-+++ b/drivers/fpga/altera-hps2fpga.c
-@@ -0,0 +1,222 @@
-+/*
-+ * FPGA to/from HPS Bridge Driver for Altera SoCFPGA Devices
-+ *
-+ *  Copyright (C) 2013-2016 Altera Corporation, All Rights Reserved.
-+ *
-+ * Includes this patch from the mailing list:
-+ *   fpga: altera-hps2fpga: fix HPS2FPGA bridge visibility to L3 masters
-+ *   Signed-off-by: Anatolij Gustschin <agust@denx.de>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+/*
-+ * This driver manages bridges on a Altera SOCFPGA between the ARM host
-+ * processor system (HPS) and the embedded FPGA.
-+ *
-+ * This driver supports enabling and disabling of the configured ports, which
-+ * allows for safe reprogramming of the FPGA, assuming that the new FPGA image
-+ * uses the same port configuration.  Bridges must be disabled before
-+ * reprogramming the FPGA and re-enabled after the FPGA has been programmed.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/fpga/fpga-bridge.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <linux/spinlock.h>
-+
-+#define ALT_L3_REMAP_OFST			0x0
-+#define ALT_L3_REMAP_MPUZERO_MSK		0x00000001
-+#define ALT_L3_REMAP_H2F_MSK			0x00000008
-+#define ALT_L3_REMAP_LWH2F_MSK			0x00000010
-+
-+#define HPS2FPGA_BRIDGE_NAME			"hps2fpga"
-+#define LWHPS2FPGA_BRIDGE_NAME			"lwhps2fpga"
-+#define FPGA2HPS_BRIDGE_NAME			"fpga2hps"
-+
-+struct altera_hps2fpga_data {
-+	const char *name;
-+	struct reset_control *bridge_reset;
-+	struct regmap *l3reg;
-+	unsigned int remap_mask;
-+	struct clk *clk;
-+};
-+
-+static int alt_hps2fpga_enable_show(struct fpga_bridge *bridge)
-+{
-+	struct altera_hps2fpga_data *priv = bridge->priv;
-+
-+	return reset_control_status(priv->bridge_reset);
-+}
-+
-+/* The L3 REMAP register is write only, so keep a cached value. */
-+static unsigned int l3_remap_shadow;
-+static spinlock_t l3_remap_lock;
-+
-+static int _alt_hps2fpga_enable_set(struct altera_hps2fpga_data *priv,
-+				    bool enable)
-+{
-+	unsigned long flags;
-+	int ret;
-+
-+	/* bring bridge out of reset */
-+	if (enable)
-+		ret = reset_control_deassert(priv->bridge_reset);
-+	else
-+		ret = reset_control_assert(priv->bridge_reset);
-+	if (ret)
-+		return ret;
-+
-+	/* Allow bridge to be visible to L3 masters or not */
-+	if (priv->remap_mask) {
-+		spin_lock_irqsave(&l3_remap_lock, flags);
-+		l3_remap_shadow |= ALT_L3_REMAP_MPUZERO_MSK;
-+
-+		if (enable)
-+			l3_remap_shadow |= priv->remap_mask;
-+		else
-+			l3_remap_shadow &= ~priv->remap_mask;
-+
-+		ret = regmap_write(priv->l3reg, ALT_L3_REMAP_OFST,
-+				   l3_remap_shadow);
-+		spin_unlock_irqrestore(&l3_remap_lock, flags);
-+	}
-+
-+	return ret;
-+}
-+
-+static int alt_hps2fpga_enable_set(struct fpga_bridge *bridge, bool enable)
-+{
-+	return _alt_hps2fpga_enable_set(bridge->priv, enable);
-+}
-+
-+static const struct fpga_bridge_ops altera_hps2fpga_br_ops = {
-+	.enable_set = alt_hps2fpga_enable_set,
-+	.enable_show = alt_hps2fpga_enable_show,
-+};
-+
-+static struct altera_hps2fpga_data hps2fpga_data  = {
-+	.name = HPS2FPGA_BRIDGE_NAME,
-+	.remap_mask = ALT_L3_REMAP_H2F_MSK,
-+};
-+
-+static struct altera_hps2fpga_data lwhps2fpga_data  = {
-+	.name = LWHPS2FPGA_BRIDGE_NAME,
-+	.remap_mask = ALT_L3_REMAP_LWH2F_MSK,
-+};
-+
-+static struct altera_hps2fpga_data fpga2hps_data  = {
-+	.name = FPGA2HPS_BRIDGE_NAME,
-+};
-+
-+static const struct of_device_id altera_fpga_of_match[] = {
-+	{ .compatible = "altr,socfpga-hps2fpga-bridge",
-+	  .data = &hps2fpga_data },
-+	{ .compatible = "altr,socfpga-lwhps2fpga-bridge",
-+	  .data = &lwhps2fpga_data },
-+	{ .compatible = "altr,socfpga-fpga2hps-bridge",
-+	  .data = &fpga2hps_data },
-+	{},
-+};
-+
-+static int alt_fpga_bridge_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct altera_hps2fpga_data *priv;
-+	const struct of_device_id *of_id;
-+	u32 enable;
-+	int ret;
-+
-+	of_id = of_match_device(altera_fpga_of_match, dev);
-+	priv = (struct altera_hps2fpga_data *)of_id->data;
-+
-+	priv->bridge_reset = of_reset_control_get_by_index(dev->of_node, 0);
-+	if (IS_ERR(priv->bridge_reset)) {
-+		dev_err(dev, "Could not get %s reset control\n", priv->name);
-+		return PTR_ERR(priv->bridge_reset);
-+	}
-+
-+	if (priv->remap_mask) {
-+		priv->l3reg = syscon_regmap_lookup_by_compatible("altr,l3regs");
-+		if (IS_ERR(priv->l3reg)) {
-+			dev_err(dev, "regmap for altr,l3regs lookup failed\n");
-+			return PTR_ERR(priv->l3reg);
-+		}
-+	}
-+
-+	priv->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(priv->clk)) {
-+		dev_err(dev, "no clock specified\n");
-+		return PTR_ERR(priv->clk);
-+	}
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret) {
-+		dev_err(dev, "could not enable clock\n");
-+		return -EBUSY;
-+	}
-+
-+	spin_lock_init(&l3_remap_lock);
-+
-+	if (!of_property_read_u32(dev->of_node, "bridge-enable", &enable)) {
-+		if (enable > 1) {
-+			dev_warn(dev, "invalid bridge-enable %u > 1\n", enable);
-+		} else {
-+			dev_info(dev, "%s bridge\n",
-+				 (enable ? "enabling" : "disabling"));
-+
-+			ret = _alt_hps2fpga_enable_set(priv, enable);
-+			if (ret) {
-+				fpga_bridge_unregister(&pdev->dev);
-+				return ret;
-+			}
-+		}
-+	}
-+
-+	return fpga_bridge_register(dev, priv->name, &altera_hps2fpga_br_ops,
-+				    priv);
-+}
-+
-+static int alt_fpga_bridge_remove(struct platform_device *pdev)
-+{
-+	struct fpga_bridge *bridge = platform_get_drvdata(pdev);
-+	struct altera_hps2fpga_data *priv = bridge->priv;
-+
-+	fpga_bridge_unregister(&pdev->dev);
-+
-+	clk_disable_unprepare(priv->clk);
-+
-+	return 0;
-+}
-+
-+MODULE_DEVICE_TABLE(of, altera_fpga_of_match);
-+
-+static struct platform_driver alt_fpga_bridge_driver = {
-+	.probe = alt_fpga_bridge_probe,
-+	.remove = alt_fpga_bridge_remove,
-+	.driver = {
-+		.name	= "altera_hps2fpga_bridge",
-+		.of_match_table = of_match_ptr(altera_fpga_of_match),
-+	},
-+};
-+
-+module_platform_driver(alt_fpga_bridge_driver);
-+
-+MODULE_DESCRIPTION("Altera SoCFPGA HPS to FPGA Bridge");
-+MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
-+MODULE_LICENSE("GPL v2");
++/**
+  * struct fpga_manager_ops - ops for low level fpga manager drivers
+  * @state: returns an enum value of the FPGA's state
+  * @write_init: prepare the FPGA to receive confuration data
+@@ -82,10 +94,12 @@ enum fpga_mgr_states {
+  */
+ struct fpga_manager_ops {
+ 	enum fpga_mgr_states (*state)(struct fpga_manager *mgr);
+-	int (*write_init)(struct fpga_manager *mgr, u32 flags,
++	int (*write_init)(struct fpga_manager *mgr,
++			  struct fpga_image_info *info,
+ 			  const char *buf, size_t count);
+ 	int (*write)(struct fpga_manager *mgr, const char *buf, size_t count);
+-	int (*write_complete)(struct fpga_manager *mgr, u32 flags);
++	int (*write_complete)(struct fpga_manager *mgr,
++			      struct fpga_image_info *info);
+ 	void (*fpga_remove)(struct fpga_manager *mgr);
+ };
+ 
+@@ -109,10 +123,11 @@ struct fpga_manager {
+ 
+ #define to_fpga_manager(d) container_of(d, struct fpga_manager, dev)
+ 
+-int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags,
++int fpga_mgr_buf_load(struct fpga_manager *mgr, struct fpga_image_info *info,
+ 		      const char *buf, size_t count);
+ 
+-int fpga_mgr_firmware_load(struct fpga_manager *mgr, u32 flags,
++int fpga_mgr_firmware_load(struct fpga_manager *mgr,
++			   struct fpga_image_info *info,
+ 			   const char *image_name);
+ 
+ struct fpga_manager *of_fpga_mgr_get(struct device_node *node);
 -- 
 2.10.1
