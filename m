@@ -1,44 +1,32 @@
 From: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
-Subject: Re: [v2 2/2] fpga: Add support for Lattice iCE40 FPGAs
-Date: Mon, 24 Oct 2016 23:05:28 -0600
-Message-ID: <c971d8f4-dbb4-8d6e-f8eb-028a0a95e6fb@airwebreathe.org.uk>
-References: <1477283989-21947-1-git-send-email-joel@airwebreathe.org.uk>
- <1477283989-21947-2-git-send-email-joel@airwebreathe.org.uk>
- <alpine.DEB.2.02.1610241615280.14525@linuxheads99>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v3 1/2] of: Add vendor prefix for Lattice Semiconductor
+Date: Mon, 24 Oct 2016 23:05:47 -0600
+Message-ID: <1477371948-12780-1-git-send-email-joel@airwebreathe.org.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1610241615280.14525@linuxheads99>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Hi Joel,
->
-> Thanks for submitting your driver!
->
-> I didn't see any huge problems, just minor things below...
->
-> Alan
->
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 1992aa9..d64a835 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -146,6 +146,7 @@ kosagi	Sutajio Ko-Usagi PTE Ltd.
+ kyo	Kyocera Corporation
+ lacie	LaCie
+ lantiq	Lantiq Semiconductor
++lattice	Lattice Semiconductor
+ lenovo	Lenovo Group Ltd.
+ lg	LG Corporation
+ linux	Linux-specific binding
+-- 
+2.7.4
 
-Hi Alan, Thanks for your feedback. I've implemented all your suggestions 
-and I'll resubmit.
-
-I had a question about the status of the fpga-manager framework. Is 
-there active work going on? I was wondering if there were any patches 
-for specifying a firmware file from device-tree? and/or if there were 
-any patches for loading firmware from userspace - something like this: 
-"cat firmware.bin > /dev/fpga0"?
-
-Only being able to load firmware from kernel C-code is rather a 
-limitation - though I suppose the framework is quite early in development.
-
-Thanks
-Joel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
