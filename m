@@ -1,72 +1,48 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH/RFT v2 02/17] ARM: davinci: da8xx: Add CFGCHIP syscon
- platform declaration.
-Date: Tue, 25 Oct 2016 10:53:12 -0500
-Message-ID: <c3af8517-c452-ae8c-6840-dd8a684e4ab2@lechnology.com>
-References: <20161024164634.4330-1-ahaslam@baylibre.com>
- <20161024164634.4330-3-ahaslam@baylibre.com>
- <7f9efe9d-0912-e10a-3e45-24c5d2b455ab@ti.com>
- <CAKXjFTOVuWRL+yuk6sARa2PAd6j-V4Ej5AmPGz7F7JXKidvJrg@mail.gmail.com>
- <758f206c-d0bd-6f70-da1e-42c88d6dd1f0@ti.com>
+From: Reza Arbab <arbab@linux.vnet.ibm.com>
+Subject: Re: [PATCH v4 4/5] mm: make processing of movable_node arch-specific
+Date: Tue, 25 Oct 2016 10:55:07 -0500
+Message-ID: <20161025155507.37kv5akdlgo6m2be@arbab-laptop.austin.ibm.com>
+References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
+ <1475778995-1420-5-git-send-email-arbab@linux.vnet.ibm.com>
+ <235f2d20-cf84-08df-1fb4-08ee258fdc52@gmail.com>
+ <dcfc8ace-e59e-6b4b-0f2f-4eff9f08f3c1@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <758f206c-d0bd-6f70-da1e-42c88d6dd1f0-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sergei Shtylyov <sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, manjunath.goudar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <dcfc8ace-e59e-6b4b-0f2f-4eff9f08f3c1@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Balbir Singh <bsingharora@gmail.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sekhar,
+On Tue, Oct 25, 2016 at 11:15:40PM +1100, Balbir Singh wrote:
+>After the ack, I realized there were some more checks needed, IOW
+>questions for you :)
 
-On 10/25/2016 05:17 AM, Sekhar Nori wrote:
-> On Tuesday 25 October 2016 03:07 PM, Axel Haslam wrote:
->> Hi Sekar,
->>
->> On Tue, Oct 25, 2016 at 10:10 AM, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> wrote:
->>> On Monday 24 October 2016 10:16 PM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
->>>> From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
->>>>
->>>> The CFGCHIP registers are used by a number of devices, so using a syscon
->>>> device to share them. The first consumer of this will by the phy-da8xx-usb
->>>> driver.
->>>>
->>>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
->>>> [Axel: minor fix: change id to -1]
->>>
->>> Can you please clarify this change? There could be other syscon devices
->>> on the chip for other common registers. Why use the singular device-id?
->>>
->>
->> in the case of non DT boot, the phy driver is looking for "syscon" :
->>
->> d_phy->regmap = syscon_regmap_lookup_by_pdevname("syscon");
->>
->> if we register the syscon driver with id = 0, the actual name of the syscon
->> device will be "syscon.0" and the phy driver will fail to probe, because
->> the strncmp match in the syscon driver (syscon_match_pdevname)
->> will fail.
->>
->> should i change the phy driver instead?
->
-> Yes, please. Forcing only one syscon region for the whole chip will be
-> too restrictive, I am pretty sure.
->
-> Thanks,
-> Sekhar
->
+Hey! No takebacks!
 
-In the previous review, you requested that this be changed to -1 [1].
+The short answer is that neither of these is a concern.
 
-If we change it back to 0, it will also require reverting a patch to the 
-phy driver that has already been merged[2].
+Longer; if you use "movable_node", x86 can identify these nodes at boot. 
+They call memblock_mark_hotplug() while parsing the SRAT. Then, when the 
+zones are initialized, those markings are used to determine ZONE_MOVABLE.
 
-[1]: http://www.gossamer-threads.com/lists/linux/kernel/2435807?page=last
-[2]: http://www.gossamer-threads.com/lists/linux/kernel/2518804
+We have no analog of this SRAT information, so our movable nodes can 
+only be created post boot, by hotplugging and explicitly onlining with 
+online_movable.
 
+>1. Have you checked to see if our memblock allocations spill
+>over to probably hotpluggable nodes?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Since our nodes don't exist at boot, we don't have that short window 
+before the zones are drawn where the node has normal memory, and a 
+kernel allocation might occur within.
+
+>2. Shouldn't we be marking nodes discovered as movable via
+>memblock_mark_hotplug()?
+
+Again, this early boot marking mechanism only applies to movable_node.
+
+-- 
+Reza Arbab
