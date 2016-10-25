@@ -1,36 +1,46 @@
 From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH/RFT v2 07/17] ARM: davinci: da8xx: Enable the usb20 "per"
- clk on phy_clk_enable
-Date: Mon, 24 Oct 2016 21:53:00 -0500
-Message-ID: <c2d31f5a-32c6-5e93-2d3d-d6ef75b697fc@lechnology.com>
-References: <20161024164634.4330-1-ahaslam@baylibre.com>
- <20161024164634.4330-8-ahaslam@baylibre.com>
+Subject: Re: [PATCH 5/5] ARM: dts: Add LEGO MINDSTORTMS EV3 dts
+Date: Mon, 24 Oct 2016 21:56:50 -0500
+Message-ID: <aa18572c-2c9d-ee24-dcd2-8627ab7a9b83@lechnology.com>
+References: <1477075018-20176-1-git-send-email-david@lechnology.com>
+ <1477075018-20176-6-git-send-email-david@lechnology.com>
+ <b0022fad-a96e-86d4-71ba-2b803e5421fe@ti.com>
+ <1593441f-d147-4c91-8aab-8622dd8ced19@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161024164634.4330-8-ahaslam@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ahaslam@baylibre.com, gregkh@linuxfoundation.org, johan@kernel.org, robh+dt@kernel.org, nsekhar@ti.com, stern@rowland.harvard.edu, khilman@baylibre.com, sshtylyov@ru.mvista.com, manjunath.goudar@linaro.org, broonie@kernel.org, abailon@baylibre.com
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1593441f-d147-4c91-8aab-8622dd8ced19@lechnology.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/24/2016 11:46 AM, ahaslam@baylibre.com wrote:
-> From: Axel Haslam <ahaslam@baylibre.com>
+On 10/24/2016 10:50 AM, David Lechner wrote:
+> On 10/24/2016 06:58 AM, Sekhar Nori wrote:
+>> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
+>>> +};
+>>> +
+>>> +&spi1 {
+>>> +    status = "okay";
+>>> +    pinctrl-names = "default";
+>>> +    pinctrl-0 = <&spi1_pins>, <&spi1_cs0_pin>;
+>>> +
+>>> +    /* TODO: LCD Display goes here */
+>>
+>> Add this node when you actually have display working.
 >
-> While probing ochi phy with usb20 phy as a parent clock for usb11_phy,
-> the usb20_phy clock enable would time out. This is because the usb20
-> module clock needs to enabled while trying to lock the usb20_phy PLL.
+> What if we set this up as a spidev node instead? This way the display
+> could be used from userspace without a driver.
 >
-> Call clk enable and get for the usb20 peripheral before trying to
-> enable the phy PLL.
->
-> Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
-> ---
 
-
-This patch can be combined with "ARM: davinci: da8xx: add usb phy 
-clocks" since that patch has not been merged yet.
-
-If you like, I can resubmit my patches from this series along with the 
-changes from this patch.
+To answer my own question, it seems that specifying "spidev" in 
+devicetree is frowned upon since it does not "describe the hardware".
