@@ -1,75 +1,119 @@
-From: Eric Hyeung Dong Jeong <eric.jeong.opensource@diasemi.com>
-Subject: RE: [PATCH V1] mfd: pv88080: Expand driver for GPIO function
- support.
-Date: Tue, 25 Oct 2016 07:11:14 +0000
-Message-ID: <8FA4409277D6E54680546B8811D85410029DFA47E9@NB-EX-MBX01.diasemi.com>
-References: <20161025014148.7DF655FA17@krsrvapps-01.diasemi.com>
- <20161025064040.GE8574@dell>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH] leds: leds-pca963x: workaround group blink scaling issue
+Date: Tue, 25 Oct 2016 09:15:42 +0200
+Message-ID: <381331a9-29f8-f2de-2e07-d0c30a31ae06@samsung.com>
+References: <CGME20161013131722eucas1p10501fce7ca4fa256fce58c5411d2a097@eucas1p1.samsung.com>
+ <1476364572-26849-1-git-send-email-matt@ranostay.consulting>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20161025064040.GE8574@dell>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Eric Hyeung Dong Jeong <eric.jeong.opensource@diasemi.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-GPIO <linux-gpio@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1476364572-26849-1-git-send-email-matt@ranostay.consulting>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Ranostay <mranostay@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Matt Ranostay <matt@ranostay.consulting>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlc2RheSwgT2N0b2JlciAyNSwgMjAxNiAzOjQxIFBNLCBMZWUgSm9uZXMgd3JvdGU6DQoN
-Cj4gT24gVHVlLCAyNSBPY3QgMjAxNiwgRXJpYyBKZW9uZyB3cm90ZToNCj4gDQo+ID4NCj4gPiBG
-cm9tOiBFcmljIEplb25nIDxlcmljLmplb25nLm9wZW5zb3VyY2VAZGlhc2VtaS5jb20+DQo+ID4N
-Cj4gPiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgdGhlIFBWODgwODAgUE1JQy4NCj4gPg0K
-PiA+IFRoaXMgcGF0aGNoIGlzIGRvbmUgYXMgcGFydCBvZiB0aGUgZXhpc3RpbmcgUFY4ODA4MCBy
-ZWd1bGF0b3IgZHJpdmVyDQo+ID4gYnkgZXhwYW5kaW5nIHRoZSBkcml2ZXIgZm9yIEdQSU8gZnVu
-Y3Rpb24gc3VwcG9ydC4NCj4gPg0KPiA+IFRoZSBNRkQgY29yZSBkcml2ZXIgcHJvdmlkZXMgY29t
-bXVuaWNhdGlvbiB0aHJvdWdoIHRoZSBJMkMgaW50ZXJmYWNlLg0KPiA+IGFuZCBjb250YWlucyB0
-aGUgZm9sbG93aW5nIGNvbXBvbmVudHM6DQo+ID4NCj4gPiAgICAgLSBSZWd1bGF0b3JzDQo+ID4g
-ICAgIC0gQ29uZmlndXJhYmxlIEdQSU9zDQo+ID4NCj4gPiBLY29uZmlnIGFuZCBNYWtlZmlsZSBh
-cmUgdXBkYXRlZCB0byByZWZsZWN0IHN1cHBvcnQgZm9yIFBWODgwODAgUE1JQy4NCj4gPg0KPiA+
-IFNpZ25lZC1vZmYtYnk6IEVyaWMgSmVvbmcgPGVyaWMuamVvbmcub3BlbnNvdXJjZUBkaWFzZW1p
-LmNvbT4NCj4gPg0KPiA+IC0tLQ0KPiA+IFRoaXMgcGF0Y2ggYXBwbGllcyBhZ2FpbnN0IGxpbnV4
-LW5leHQgYW5kIG5leHQtMjAxNjEwMjQNCj4gPg0KPiA+IEhpLA0KPiA+DQo+ID4gVGhpcyBjaGFu
-Z2UgaXMgbWFkZSBhcyBhIHNpbmdsZSBwYXRjaC4gQmVjYXVzZSwgdG8gZW5zdXJlIHRoYXQga2Vy
-bmVsDQo+ID4gYnVpbGRzIGFuZCBydW5zIHByb3Blcmx5IGFmdGVyIHRoaXMgcGF0Y2guDQo+ID4N
-Cj4gPiBUaGUgcmVndWxhdG9yIGRldmljZSBkcml2ZXIgZm9yIFBWODgwODAgSUMgaXMgc3VibWl0
-dGVkIHRvIExpbnV4IGtlcm5lbC4NCj4gPiBBbmQgbm93LCBHUElPIGZ1bmN0aW9uIGlzIHJlcXVp
-cmVkLiBJbiBvcmRlciB0byBhZGQgR1BJTyBkcml2ZXIsIE1GRA0KPiA+IGRyaXZlciBpcyBhbHNv
-IHJlcXVpcmVkLg0KPiA+DQo+ID4gQ2hhbmdlcw0KPiA+ICAtIEFkZCBNRkQgZHJpdmVyLg0KPiA+
-ICAtIEFkZCBHUElPIGRyaXZlci4NCj4gPiAgLSBVcGRhdGUgcmVndWxhdG9yIGRyaXZlciB0byBy
-ZWZsZWN0IHRoZSBzdXBwb3J0Lg0KPiA+ICAtIERlbGV0ZSBwdjg4MDgwLXJlZ3VsYXRvci5oIGZp
-bGUuDQo+ID4gIC0gTW92ZSBiaW5kaW5nIGRvY3VtZW50IHRvIG1mZCBkaXJlY3RvcnkuDQo+ID4N
-Cj4gPiBSZWdhcmRzLA0KPiA+IEVyaWMgSmVvbmcsIERpYWxvZyBTZW1pY29uZHVjdG9yIEx0ZC4N
-Cj4gPg0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvcHY4
-ODA4MC50eHQgIHwgICA2MyArKysrKw0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1
-bGF0b3IvcHY4ODA4MC50eHQgICAgICB8ICAgNjIgLS0tLS0NCj4gPiAgZHJpdmVycy9ncGlvL0tj
-b25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDExICsNCj4gPiAgZHJpdmVy
-cy9ncGlvL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsNCj4g
-PiAgZHJpdmVycy9ncGlvL2dwaW8tcHY4ODA4MC5jICAgICAgICAgICAgICAgICAgICAgICAgfCAg
-MTk1ICsrKysrKysrKysrKysrDQo+ID4gIGRyaXZlcnMvbWZkL0tjb25maWcgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHwgICAxMiArDQo+ID4gIGRyaXZlcnMvbWZkL01ha2VmaWxlICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMiArDQo+ID4gIGRyaXZlcnMvbWZkL3B2
-ODgwODAtY29yZS5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDI3MCArKysrKysrKysrKysr
-KysrKysrKw0KPiA+ICBkcml2ZXJzL21mZC9wdjg4MDgwLWkyYy5jICAgICAgICAgICAgICAgICAg
-ICAgICAgICB8ICAgOTkgKysrKysrKw0KPiA+ICBkcml2ZXJzL3JlZ3VsYXRvci9LY29uZmlnICAg
-ICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDUgKy0NCj4gPiAgZHJpdmVycy9yZWd1bGF0b3Iv
-cHY4ODA4MC1yZWd1bGF0b3IuYyAgICAgICAgICAgICAgfCAgMjAyICsrKysrKy0tLS0tLS0tLQ0K
-PiA+ICBkcml2ZXJzL3JlZ3VsYXRvci9wdjg4MDgwLXJlZ3VsYXRvci5oICAgICAgICAgICAgICB8
-ICAxMTggLS0tLS0tLS0tDQo+ID4gIGluY2x1ZGUvbGludXgvbWZkL3B2ODgwODAuaCAgICAgICAg
-ICAgICAgICAgICAgICAgIHwgIDIzNiArKysrKysrKysrKysrKysrKw0KPiA+ICAxMyBmaWxlcyBj
-aGFuZ2VkLCA5NzAgaW5zZXJ0aW9ucygrKSwgMzA2IGRlbGV0aW9ucygtKSAgY3JlYXRlIG1vZGUN
-Cj4gPiAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9wdjg4MDgw
-LnR4dA0KPiA+ICBkZWxldGUgbW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvcmVndWxhdG9yL3B2ODgwODAudHh0DQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBkcml2ZXJzL2dwaW8vZ3Bpby1wdjg4MDgwLmMgIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IGRy
-aXZlcnMvbWZkL3B2ODgwODAtY29yZS5jICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBkcml2ZXJz
-L21mZC9wdjg4MDgwLWkyYy5jICBkZWxldGUgbW9kZSAxMDA2NDQNCj4gPiBkcml2ZXJzL3JlZ3Vs
-YXRvci9wdjg4MDgwLXJlZ3VsYXRvci5oDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRl
-L2xpbnV4L21mZC9wdjg4MDgwLmgNCj4gDQo+IFlvdSdyZSBnb2luZyB0byBuZWVkIHRvIHNwbGl0
-IHRoaXMgcGF0Y2ggdXAgYXMgbXVjaCBhcyBwb3NzaWJsZS4NCj4gDQo+IE5vIG9uZSBpcyBnb2lu
-ZyB0byB3YW50IHRvIHJldmlldyBhIDEyMDAgbGluZSBwYXRjaC4NCj4gDQo+IC0tDQo+IExlZSBK
-b25lcw0KPiBMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkIExpbmFy
-by5vcmcg4pSCIE9wZW4gc291cmNlDQo+IHNvZnR3YXJlIGZvciBBUk0gU29DcyBGb2xsb3cgTGlu
-YXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nDQoNClNvcnJ5IGZvciBpbmNvbnZlbmllbmNl
-Lg0KSSB3aWxsIHNlcGFyYXRlIHRoZSBwYXRjaCBhbmQgc2VuZCBhZ2Fpbi4NCg0KUmVnYXJkcw0K
-RXJpYw0K
+Hi Matt,
+
+Patch applied.
+
+Thanks,
+Jacek Anaszewski
+
+On 10/13/2016 03:16 PM, Matt Ranostay wrote:
+> PCA9632TK part seems to incorrectly blink at ~1.3x of the programmed
+> rate. This patchset add a nxp,period-scale devicetree property to
+> adjust for this misconfiguration.
+>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+> ---
+>  Documentation/devicetree/bindings/leds/pca963x.txt |  3 +++
+>  drivers/leds/leds-pca963x.c                        | 18 +++++++++++++++---
+>  2 files changed, 18 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/leds/pca963x.txt b/Documentation/devicetree/bindings/leds/pca963x.txt
+> index dafbe9931c2b..dfbdb123a9bf 100644
+> --- a/Documentation/devicetree/bindings/leds/pca963x.txt
+> +++ b/Documentation/devicetree/bindings/leds/pca963x.txt
+> @@ -7,6 +7,9 @@ Optional properties:
+>  - nxp,totem-pole : use totem pole (push-pull) instead of open-drain (pca9632 defaults
+>    to open-drain, newer chips to totem pole)
+>  - nxp,hw-blink : use hardware blinking instead of software blinking
+> +- nxp,period-scale : In some configurations, the chip blinks faster than expected.
+> +		     This parameter provides a scaling ratio (fixed point, decimal divided
+> +		     by 1000) to compensate, e.g. 1300=1.3x and 750=0.75x.
+>
+>  Each led is represented as a sub-node of the nxp,pca963x device.
+>
+> diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
+> index 407eba11e187..b6ce1f2ec33e 100644
+> --- a/drivers/leds/leds-pca963x.c
+> +++ b/drivers/leds/leds-pca963x.c
+> @@ -59,6 +59,7 @@ struct pca963x_chipdef {
+>  	u8			grpfreq;
+>  	u8			ledout_base;
+>  	int			n_leds;
+> +	unsigned int		scaling;
+>  };
+>
+>  static struct pca963x_chipdef pca963x_chipdefs[] = {
+> @@ -189,6 +190,14 @@ static int pca963x_led_set(struct led_classdev *led_cdev,
+>  	return pca963x_brightness(pca963x, value);
+>  }
+>
+> +static unsigned int pca963x_period_scale(struct pca963x_led *pca963x,
+> +	unsigned int val)
+> +{
+> +	unsigned int scaling = pca963x->chip->chipdef->scaling;
+> +
+> +	return scaling ? DIV_ROUND_CLOSEST(val * scaling, 1000) : val;
+> +}
+> +
+>  static int pca963x_blink_set(struct led_classdev *led_cdev,
+>  		unsigned long *delay_on, unsigned long *delay_off)
+>  {
+> @@ -207,14 +216,14 @@ static int pca963x_blink_set(struct led_classdev *led_cdev,
+>  		time_off = 500;
+>  	}
+>
+> -	period = time_on + time_off;
+> +	period = pca963x_period_scale(pca963x, time_on + time_off);
+>
+>  	/* If period not supported by hardware, default to someting sane. */
+>  	if ((period < PCA963X_BLINK_PERIOD_MIN) ||
+>  	    (period > PCA963X_BLINK_PERIOD_MAX)) {
+>  		time_on = 500;
+>  		time_off = 500;
+> -		period = time_on + time_off;
+> +		period = pca963x_period_scale(pca963x, 1000);
+>  	}
+>
+>  	/*
+> @@ -222,7 +231,7 @@ static int pca963x_blink_set(struct led_classdev *led_cdev,
+>  	 *	(time_on / period) = (GDC / 256) ->
+>  	 *		GDC = ((time_on * 256) / period)
+>  	 */
+> -	gdc = (time_on * 256) / period;
+> +	gdc = (pca963x_period_scale(pca963x, time_on) * 256) / period;
+>
+>  	/*
+>  	 * From manual: period = ((GFRQ + 1) / 24) in seconds.
+> @@ -294,6 +303,9 @@ pca963x_dt_init(struct i2c_client *client, struct pca963x_chipdef *chip)
+>  	else
+>  		pdata->blink_type = PCA963X_SW_BLINK;
+>
+> +	if (of_property_read_u32(np, "nxp,period-scale", &chip->scaling))
+> +		chip->scaling = 1000;
+> +
+>  	return pdata;
+>  }
+>
+>
+
+
+-- 
+Best regards,
+Jacek Anaszewski
