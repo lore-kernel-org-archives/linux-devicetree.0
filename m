@@ -1,52 +1,31 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V2 1/8] PM / OPP: Reword binding supporting multiple
- regulators per device
-Date: Mon, 24 Oct 2016 15:48:52 -0700
-Message-ID: <20161024224852.GQ26139@codeaurora.org>
-References: <cover.1476952750.git.viresh.kumar@linaro.org>
- <891ef8705e13dff331a3135647f4c18f88402a12.1476952750.git.viresh.kumar@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: Add vendor prefix for Aries Embedded GmbH
+Date: Mon, 24 Oct 2016 19:14:59 -0500
+Message-ID: <CAL_JsqL4NUoonJ+Lw0tbhyKk0xM4ke65BNQ1VNndfUrqLZsgLw@mail.gmail.com>
+References: <20160919213800.9498-1-marex@denx.de> <ae228088-b8bc-7445-f621-52d20850d49e@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <891ef8705e13dff331a3135647f4c18f88402a12.1476952750.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <ae228088-b8bc-7445-f621-52d20850d49e-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, d-gerlach-l0cyMroinI0@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/20, Viresh Kumar wrote:
-> On certain platforms (like TI), DVFS for a single device (CPU) requires
-> configuring multiple power supplies.
-> 
-> The OPP bindings already contains binding and example to explain this
-> case, but it isn't sufficient. For example, there is no way for the code
-> parsing these bindings to know which voltage values belong to which
-> power supply. Also its not possible to know the order in which the
-> supplies need to be configured while switching OPPs.
-> 
-> This patch tries to clarify on those details and does some minor changes
-> as well.
-> 
-> Note that the bindings do not specify the order in which the regulators
-> need to be programmed and the order in which the entries are added for
-> the supplies.
-> 
-> The user of the bindings (like the kernel) shall know these details
-> already and the DT is responsible to supply only the readings for the
-> regulators.
-> 
-> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
+On Mon, Oct 24, 2016 at 6:38 AM, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
+> On 09/19/2016 11:38 PM, Marek Vasut wrote:
+>> Add vendor prefix for Aries Embedded GmbH
+>> http://www.aries-embedded.de/
+>>
+>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> Hi, bump ?
 
-Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Looks fine, but please resend to the DT list so that patchwork picks
+this up and it will be in my queue.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
