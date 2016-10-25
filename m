@@ -1,57 +1,44 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] i2c: rk3x: Give the tuning value 0 during
- rk3x_i2c_v0_calc_timings
-Date: Tue, 25 Oct 2016 11:12:49 +0200
-Message-ID: <20161025091249.GB1597@katana>
-References: <1477125822-30644-1-git-send-email-david.wu@rock-chips.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 4/9] pinctrl: meson: allow gpio to request irq
+Date: Tue, 25 Oct 2016 11:14:35 +0200
+Message-ID: <CACRpkdYUVXny57AC9rKX3VRAyooEk_2XLvqe9jOuT3rOaE75rg@mail.gmail.com>
+References: <1476871709-8359-1-git-send-email-jbrunet@baylibre.com>
+ <1476871709-8359-5-git-send-email-jbrunet@baylibre.com> <CACRpkdaCZPS45t3eTcjJExOu=YT_YkjNkdpg09jQqvLQOJH=Qw@mail.gmail.com>
+ <1477040798.15560.96.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1477125822-30644-1-git-send-email-david.wu@rock-chips.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: David Wu <david.wu@rock-chips.com>
-Cc: heiko@sntech.de, dianders@chromium.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1477040798.15560.96.camel@baylibre.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 21, 2016 at 11:06 AM, Jerome Brunet <jbrunet@baylibre.com> wrote:
 
---7ZAtKRhVyVSsbBD2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>> Isn't this usecase (also as described in the cover letter) a textbook
+>> example of when you should be using hierarchical irqdomain?
+>>
+>> Please check with Marc et al on hierarchical irqdomains.
+>
+> Linus,
+> Do you mean I should create a new hierarchical irqdomains in each of
+> the two pinctrl instances we have in these SoC, these domains being
+> stacked on the one I just added for controller in irqchip ?
+>
+> I did not understand this is what you meant when I asked you the
+> question at ELCE.
 
-On Sat, Oct 22, 2016 at 04:43:42PM +0800, David Wu wrote:
-> We found a bug that i2c transfer sometimes failed on 3066a board with
-> stabel-4.8, the con register would be updated by uninitialized tuning
-> value, it made the i2c transfer failed.
->=20
-> So give the tuning value to be zero during rk3x_i2c_v0_calc_timings.
->=20
-> Signed-off-by: David Wu <david.wu@rock-chips.com>
+Honestly, I do not understand when and where to properly use
+hierarchical irqdomain, even after Marc's talk at ELC-E.
 
-Added stable and applied to for-current, thanks!
+Which is problematic since quite a few GPIO drivers now
+need to use them.
 
+I will review his slides, in the meantime I would say: whatever
+Marc ACKs is fine with me. I trust this guy 100%. So I guess I
+could ask that he ACK the entire chain of patches
+from GIC->specialchip->GPIO.
 
---7ZAtKRhVyVSsbBD2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJYDyIQAAoJEBQN5MwUoCm2lMUP/i82Id2/URoH8Gh4QxcR6rpk
-d/IIEuYFLBjPZfD0iGYxIPH9iabKRTwi+x/c4TgFOA8YU+VybHnzu4ZPQLuIC79l
-5jBc+nkwLgwD69iud+V/7EJF3891C29BPx/UarK+HPouF2CnBUhlKhUtGRxun+AG
-6/m+lOPZ8CvZnxaU08P+qWM0nkVeSLpooU0vM389sd/uHJ/0FmgU4s6LWuC/yqvg
-0wOpXhn4npcT37ApqssKses6MRDCAH1abv8z58zLGDURQZVU50g9D3fOki1pWdQO
-7pw0UdnjE2Ix/4v/9R1MZJdox6cRmRD/x8TCNerUE3ChgecNuX0SDpH6lb8/kxT0
-vJBSw5U+A53Z6vemnU91VfxFg9o/dNE7hRRgP+T0dnL+BRU6iuUaAErdnk97NDzK
-qfpvCEisWeQG0lODuBX16nD1ESgxE+gmPFFyz45ZkNPqmKh2IySNk0mDa4s+wJsD
-8AELlo/uxYNZvMy0fOczOpqE3jRsDxD5CPkgQcUAMrV3xA6anleVdpDZBSrPkcHU
-MDSLw1aQuZHge7eWet8nFsZwYzcRvelFfX3bn6ac3/W5eNdGyaR5NA/nTREpumA9
-fJZsVsNvwEEE4Mobgtv6QjlJj1MPCt6Sdxumb9T5eTPrVdjJCW7jETGr+JwK/y67
-kjA5ov2GIT+tKo3S5Qbh
-=3kD+
------END PGP SIGNATURE-----
-
---7ZAtKRhVyVSsbBD2--
+Yours,
+Linus Walleij
