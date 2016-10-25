@@ -1,52 +1,75 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v3] pinctrl: Add SX150X GPIO Extender Pinctrl Driver
-Date: Tue, 25 Oct 2016 08:57:08 +0200
-Message-ID: <580F0244.7070701@baylibre.com>
-References: <1477040998-2016-1-git-send-email-narmstrong@baylibre.com> <CAHQ1cqESoRdeHyvP=m=8F_VwiaYL+wbjFoNa6KvWBGfijhcRjg@mail.gmail.com> <CACRpkdbwqFRtFN1gx1G7BuFe44mvPyCSeoQ5g9_FR11j_ZO4ug@mail.gmail.com> <CAHQ1cqGLQ=DdhXg1ebkgBbLN8P2P8BEDrGGTx9_r+6=Wy3uUWA@mail.gmail.com> <CACRpkdY7vLU4yVP7M-O4rGt_L5cqL57ApmMQJ4aRGgzh3Nat6Q@mail.gmail.com>
+From: Eric Hyeung Dong Jeong <eric.jeong.opensource@diasemi.com>
+Subject: RE: [PATCH V1] mfd: pv88080: Expand driver for GPIO function
+ support.
+Date: Tue, 25 Oct 2016 07:11:14 +0000
+Message-ID: <8FA4409277D6E54680546B8811D85410029DFA47E9@NB-EX-MBX01.diasemi.com>
+References: <20161025014148.7DF655FA17@krsrvapps-01.diasemi.com>
+ <20161025064040.GE8574@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdY7vLU4yVP7M-O4rGt_L5cqL57ApmMQJ4aRGgzh3Nat6Q@mail.gmail.com>
+In-Reply-To: <20161025064040.GE8574@dell>
+Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Peter Rosin <peda@axentia.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Roland Stigge <stigge@antcom.de>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+To: Lee Jones <lee.jones@linaro.org>, Eric Hyeung Dong Jeong <eric.jeong.opensource@diasemi.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-GPIO <linux-gpio@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-Le 24/10/2016 16:39, Linus Walleij a écrit :
-> On Mon, Oct 24, 2016 at 6:51 AM, Andrey Smirnov
-> <andrew.smirnov@gmail.com> wrote:
-> 
->> It seem strange to me that the driver uses "handle_edge_irq", given
->> how none of the individual interrupts seem to require any ACKing,
->> since it is all handled in sx150x_irq_thread_fn(), line 533. More so,
->> I had trouble finding who/where sets .irq_ack() callback, which AFAIU
->> is mandatory for handle_edge_irq().
-> 
-> Yes that looks strange.
-> 
-> Neil have you tested IRQs with this code?
-
-To be frank, I took the IRQ code from the GPIO driver verbatim, and only tested
-a simple use case on beagle bone black.
-The interrupt code is very complex and sincerely I was not able to understand
-clearly how it worked.
-
-The IRQ_TYPE_EDGE_BOTH did work for me since the BBB irq controller dealt with it.
-
-I will dig in the datasheet and run more uses cases next week, but since the
-code hasn't changed since the GPIO driver, so this is a nice to have !
-
-> 
-> If there is trouble, please follow up with a fix for the edge handler.
-> Maybe it should just be handle_simple_irq().
-> 
-> Yours,
-> Linus Walleij
-> 
-
-Andrey, can we talk over irc somehow ? I'm idling as narmstrong on freenode.
-
-Neil
+T24gVHVlc2RheSwgT2N0b2JlciAyNSwgMjAxNiAzOjQxIFBNLCBMZWUgSm9uZXMgd3JvdGU6DQoN
+Cj4gT24gVHVlLCAyNSBPY3QgMjAxNiwgRXJpYyBKZW9uZyB3cm90ZToNCj4gDQo+ID4NCj4gPiBG
+cm9tOiBFcmljIEplb25nIDxlcmljLmplb25nLm9wZW5zb3VyY2VAZGlhc2VtaS5jb20+DQo+ID4N
+Cj4gPiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgdGhlIFBWODgwODAgUE1JQy4NCj4gPg0K
+PiA+IFRoaXMgcGF0aGNoIGlzIGRvbmUgYXMgcGFydCBvZiB0aGUgZXhpc3RpbmcgUFY4ODA4MCBy
+ZWd1bGF0b3IgZHJpdmVyDQo+ID4gYnkgZXhwYW5kaW5nIHRoZSBkcml2ZXIgZm9yIEdQSU8gZnVu
+Y3Rpb24gc3VwcG9ydC4NCj4gPg0KPiA+IFRoZSBNRkQgY29yZSBkcml2ZXIgcHJvdmlkZXMgY29t
+bXVuaWNhdGlvbiB0aHJvdWdoIHRoZSBJMkMgaW50ZXJmYWNlLg0KPiA+IGFuZCBjb250YWlucyB0
+aGUgZm9sbG93aW5nIGNvbXBvbmVudHM6DQo+ID4NCj4gPiAgICAgLSBSZWd1bGF0b3JzDQo+ID4g
+ICAgIC0gQ29uZmlndXJhYmxlIEdQSU9zDQo+ID4NCj4gPiBLY29uZmlnIGFuZCBNYWtlZmlsZSBh
+cmUgdXBkYXRlZCB0byByZWZsZWN0IHN1cHBvcnQgZm9yIFBWODgwODAgUE1JQy4NCj4gPg0KPiA+
+IFNpZ25lZC1vZmYtYnk6IEVyaWMgSmVvbmcgPGVyaWMuamVvbmcub3BlbnNvdXJjZUBkaWFzZW1p
+LmNvbT4NCj4gPg0KPiA+IC0tLQ0KPiA+IFRoaXMgcGF0Y2ggYXBwbGllcyBhZ2FpbnN0IGxpbnV4
+LW5leHQgYW5kIG5leHQtMjAxNjEwMjQNCj4gPg0KPiA+IEhpLA0KPiA+DQo+ID4gVGhpcyBjaGFu
+Z2UgaXMgbWFkZSBhcyBhIHNpbmdsZSBwYXRjaC4gQmVjYXVzZSwgdG8gZW5zdXJlIHRoYXQga2Vy
+bmVsDQo+ID4gYnVpbGRzIGFuZCBydW5zIHByb3Blcmx5IGFmdGVyIHRoaXMgcGF0Y2guDQo+ID4N
+Cj4gPiBUaGUgcmVndWxhdG9yIGRldmljZSBkcml2ZXIgZm9yIFBWODgwODAgSUMgaXMgc3VibWl0
+dGVkIHRvIExpbnV4IGtlcm5lbC4NCj4gPiBBbmQgbm93LCBHUElPIGZ1bmN0aW9uIGlzIHJlcXVp
+cmVkLiBJbiBvcmRlciB0byBhZGQgR1BJTyBkcml2ZXIsIE1GRA0KPiA+IGRyaXZlciBpcyBhbHNv
+IHJlcXVpcmVkLg0KPiA+DQo+ID4gQ2hhbmdlcw0KPiA+ICAtIEFkZCBNRkQgZHJpdmVyLg0KPiA+
+ICAtIEFkZCBHUElPIGRyaXZlci4NCj4gPiAgLSBVcGRhdGUgcmVndWxhdG9yIGRyaXZlciB0byBy
+ZWZsZWN0IHRoZSBzdXBwb3J0Lg0KPiA+ICAtIERlbGV0ZSBwdjg4MDgwLXJlZ3VsYXRvci5oIGZp
+bGUuDQo+ID4gIC0gTW92ZSBiaW5kaW5nIGRvY3VtZW50IHRvIG1mZCBkaXJlY3RvcnkuDQo+ID4N
+Cj4gPiBSZWdhcmRzLA0KPiA+IEVyaWMgSmVvbmcsIERpYWxvZyBTZW1pY29uZHVjdG9yIEx0ZC4N
+Cj4gPg0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvcHY4
+ODA4MC50eHQgIHwgICA2MyArKysrKw0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1
+bGF0b3IvcHY4ODA4MC50eHQgICAgICB8ICAgNjIgLS0tLS0NCj4gPiAgZHJpdmVycy9ncGlvL0tj
+b25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDExICsNCj4gPiAgZHJpdmVy
+cy9ncGlvL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsNCj4g
+PiAgZHJpdmVycy9ncGlvL2dwaW8tcHY4ODA4MC5jICAgICAgICAgICAgICAgICAgICAgICAgfCAg
+MTk1ICsrKysrKysrKysrKysrDQo+ID4gIGRyaXZlcnMvbWZkL0tjb25maWcgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIHwgICAxMiArDQo+ID4gIGRyaXZlcnMvbWZkL01ha2VmaWxlICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMiArDQo+ID4gIGRyaXZlcnMvbWZkL3B2
+ODgwODAtY29yZS5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDI3MCArKysrKysrKysrKysr
+KysrKysrKw0KPiA+ICBkcml2ZXJzL21mZC9wdjg4MDgwLWkyYy5jICAgICAgICAgICAgICAgICAg
+ICAgICAgICB8ICAgOTkgKysrKysrKw0KPiA+ICBkcml2ZXJzL3JlZ3VsYXRvci9LY29uZmlnICAg
+ICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDUgKy0NCj4gPiAgZHJpdmVycy9yZWd1bGF0b3Iv
+cHY4ODA4MC1yZWd1bGF0b3IuYyAgICAgICAgICAgICAgfCAgMjAyICsrKysrKy0tLS0tLS0tLQ0K
+PiA+ICBkcml2ZXJzL3JlZ3VsYXRvci9wdjg4MDgwLXJlZ3VsYXRvci5oICAgICAgICAgICAgICB8
+ICAxMTggLS0tLS0tLS0tDQo+ID4gIGluY2x1ZGUvbGludXgvbWZkL3B2ODgwODAuaCAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgIDIzNiArKysrKysrKysrKysrKysrKw0KPiA+ICAxMyBmaWxlcyBj
+aGFuZ2VkLCA5NzAgaW5zZXJ0aW9ucygrKSwgMzA2IGRlbGV0aW9ucygtKSAgY3JlYXRlIG1vZGUN
+Cj4gPiAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9wdjg4MDgw
+LnR4dA0KPiA+ICBkZWxldGUgbW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvcmVndWxhdG9yL3B2ODgwODAudHh0DQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBkcml2ZXJzL2dwaW8vZ3Bpby1wdjg4MDgwLmMgIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IGRy
+aXZlcnMvbWZkL3B2ODgwODAtY29yZS5jICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBkcml2ZXJz
+L21mZC9wdjg4MDgwLWkyYy5jICBkZWxldGUgbW9kZSAxMDA2NDQNCj4gPiBkcml2ZXJzL3JlZ3Vs
+YXRvci9wdjg4MDgwLXJlZ3VsYXRvci5oDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRl
+L2xpbnV4L21mZC9wdjg4MDgwLmgNCj4gDQo+IFlvdSdyZSBnb2luZyB0byBuZWVkIHRvIHNwbGl0
+IHRoaXMgcGF0Y2ggdXAgYXMgbXVjaCBhcyBwb3NzaWJsZS4NCj4gDQo+IE5vIG9uZSBpcyBnb2lu
+ZyB0byB3YW50IHRvIHJldmlldyBhIDEyMDAgbGluZSBwYXRjaC4NCj4gDQo+IC0tDQo+IExlZSBK
+b25lcw0KPiBMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkIExpbmFy
+by5vcmcg4pSCIE9wZW4gc291cmNlDQo+IHNvZnR3YXJlIGZvciBBUk0gU29DcyBGb2xsb3cgTGlu
+YXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nDQoNClNvcnJ5IGZvciBpbmNvbnZlbmllbmNl
+Lg0KSSB3aWxsIHNlcGFyYXRlIHRoZSBwYXRjaCBhbmQgc2VuZCBhZ2Fpbi4NCg0KUmVnYXJkcw0K
+RXJpYw0K
