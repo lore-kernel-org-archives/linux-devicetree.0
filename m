@@ -1,104 +1,130 @@
-From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH/RFT v2 12/17] USB: ochi-da8xx: Use a regulator for vbus/overcurrent
-Date: Tue, 25 Oct 2016 10:24:50 +0200
-Message-ID: <CAKXjFTOxQ58rThpPw9t73k-BBZ8YKGvMhWfAG1r+3kC=GJVxWg@mail.gmail.com>
-References: <20161024164634.4330-1-ahaslam@baylibre.com> <20161024164634.4330-13-ahaslam@baylibre.com>
- <672c1f1a-58b7-6947-7fb2-acd38fab8597@lechnology.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 8/8] ARM: dts: sun6i: hummingbird-a31: Enable display
+ output through VGA bridge
+Date: Tue, 25 Oct 2016 16:50:25 +0800
+Message-ID: <CAGb2v64bMqixiw=kA5_DyncSW7+=dC8foNvOpYUmNAM3zfL0mw@mail.gmail.com>
+References: <20161020034344.14154-1-wens@csie.org> <20161020034344.14154-9-wens@csie.org>
+ <bac9a59f-df97-245b-f349-bed57dec6aad@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <672c1f1a-58b7-6947-7fb2-acd38fab8597-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+In-Reply-To: <bac9a59f-df97-245b-f349-bed57dec6aad-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sergei Shtylyov <sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 3:39 AM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
-> On 10/24/2016 11:46 AM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
+On Tue, Oct 25, 2016 at 4:13 PM, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>
+>
+> On 10/20/2016 09:13 AM, Chen-Yu Tsai wrote:
 >>
->> From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> The Hummingbird A31 board has a RGB-to-VGA bridge which converts RGB
+>> output from the LCD interface to VGA signals.
 >>
->> Currently, the da8xx ohci driver uses a set of gpios and callbacks in
->> board files to handle vbus and overcurrent irqs form the power supply.
->> However, this does not play nice when moving to a DT based boot were
->> we wont have board files.
+>> Enable this part of the display pipeline.
+>
+>
+> I couldn't find the enable-gpios binding for the bridge that you
+> introduced in the previous patch. Is that intentional?
+
+Error on my part. Thanks for spotting that.
+
+ChenYu
+
+>
+> Thanks,
+> Archit
+>
+>
 >>
->> Instead of requesting and handling the gpio, use the regulator framework
->> to take care of enabling and disabling vbus power.
->> This has the benefit
->> that we dont need to pass any more platform data to the driver:
->>
->> These will be handled by the regulator framework:
->> set_power   ->  regulator_enable/regulator_disable
->> get_power   ->  regulator_is_enabled
->> get_oci     ->  regulator_get_mode
->> ocic_notify ->  regulator notification
->>
->> We can keep the default potpgt and use the regulator start delay instead:
->> potpgt      -> regulator startup delay time
->>
->> The hawk board does not have a GPIO/OVERCURRENT gpio to control vbus,
->> (they should not have been decleared/reserved) so, just remove those
->> definitions from the hwk board file.
->>
->> Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 >> ---
->
->
->
-> How do you recover after an overcurrent event?
->
-> I have configured a fixed-regulator using device-tree, but similar to the
-> configuration in the board files here. However, when I shorted out the VBUS
-> and caused an overcurrent event, I see nothing in the kernel log saying that
-> there was an overcurrent event and after I remove the short, the regulator
-> is never turned back on.
->
->
-
-You should have the patch to fix gpiolib, and you should declare the
-over current gpio on the regulator as such:
-(if the pin is enabled high you should add oc-active-high);
-
-       vbus_fixed: fixed-regulator-vbus {
-               compatible = "regulator-fixed";
-               gpio = <&gpio 109 0>;
-               oc-gpio = <&gpio 36 0>;
-               regulator-boot-on;
-               enable-active-high;
-               regulator-name = "vbus";
-               regulator-min-microvolt = <5000000>;
-               regulator-max-microvolt = <5000000>;
-       };
-
-
-Question: Do you see that the over current gpio was requested
-in debugfs/gpio? and, do you see the interrupt in /proc/interrupts?
-
-If you unplug and plug in back the usb device it should work again.
-also you can unbind and bind it should also start to work:
-something like:
-
-echo usb1 >/sys/bus/usb/drivers/usb/unbind
-echo usb1 >/sys/bus/usb/drivers/usb/bind
-
-
->
->> @@ -163,7 +198,6 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd,
->> u16 typeReq, u16 wValue,
->>                                   u16 wIndex, char *buf, u16 wLength)
->>  {
->>         struct device *dev              = hcd->self.controller;
->> -       struct da8xx_ohci_root_hub *hub = dev_get_platdata(dev);
->
->
-> nit: unnecessary whitespace change
->
->>         int temp;
+>>  arch/arm/boot/dts/sun6i-a31-hummingbird.dts | 56
+>> +++++++++++++++++++++++++++++
+>>  1 file changed, 56 insertions(+)
 >>
->>         switch (typeReq) {
+>> diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+>> b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+>> index 9a74637f677f..05a49b2147f1 100644
+>> --- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+>> +++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+>> @@ -63,6 +63,49 @@
+>>                 stdout-path = "serial0:115200n8";
+>>         };
+>>
+>> +       bridge {
+>> +               compatible = "dumb-vga-dac";
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +
+>> +               ports {
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +
+>> +                       port@0 {
+>> +                               #address-cells = <1>;
+>> +                               #size-cells = <0>;
+>> +                               reg = <0>;
+>> +
+>> +                               vga_bridge_in: endpoint@0 {
+>> +                                       reg = <0>;
+>> +                                       remote-endpoint =
+>> <&tcon0_out_vga>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       port@1 {
+>> +                               #address-cells = <1>;
+>> +                               #size-cells = <0>;
+>> +                               reg = <1>;
+>> +
+>> +                               vga_bridge_out: endpoint@0 {
+>> +                                       reg = <0>;
+>> +                                       remote-endpoint = <&vga_con_in>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       vga {
+>> +               compatible = "vga-connector";
+>> +
+>> +               port {
+>> +                       vga_con_in: endpoint {
+>> +                               remote-endpoint = <&vga_bridge_out>;
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>>         wifi_pwrseq: wifi_pwrseq {
+>>                 compatible = "mmc-pwrseq-simple";
+>>                 reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 */
+>> @@ -245,6 +288,19 @@
+>>         status = "okay";
+>>  };
+>>
+>> +&tcon0 {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&lcd0_rgb888_pins>;
+>> +       status = "okay";
+>> +};
+>> +
+>> +&tcon0_out {
+>> +       tcon0_out_vga: endpoint@0 {
+>> +               reg = <0>;
+>> +               remote-endpoint = <&vga_bridge_in>;
+>> +       };
+>> +};
+>> +
+>>  &uart0 {
+>>         pinctrl-names = "default";
+>>         pinctrl-0 = <&uart0_pins_a>;
+>>
 >
->
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
