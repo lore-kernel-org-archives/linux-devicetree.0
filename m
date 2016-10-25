@@ -1,64 +1,82 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH/RFT v2 09/17] regulator: fixed: Add over current event
-Date: Tue, 25 Oct 2016 15:33:04 +0100
-Message-ID: <20161025143304.GW17252@sirena.org.uk>
-References: <20161024164634.4330-1-ahaslam@baylibre.com>
- <20161024164634.4330-10-ahaslam@baylibre.com>
- <20161024175320.GO17252@sirena.org.uk>
- <CAKXjFTNZhWTZSXtLZo8EieBtAPn_J-MM+-g8yCRJiV6UBspB9Q@mail.gmail.com>
- <20161024181937.GP17252@sirena.org.uk>
- <CAKXjFTOHcqRFtbXMXSTyUZ3P00eRMz1N3d62Y3NWVZJDGeScZA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="8EXHJdkEfksMlRxO"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKXjFTOHcqRFtbXMXSTyUZ3P00eRMz1N3d62Y3NWVZJDGeScZA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Axel Haslam <ahaslam@baylibre.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, robh+dt@kernel.org, Sekhar Nori <nsekhar@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Kevin Hilman <khilman@baylibre.com>, Sergei Shtylyov <sshtylyov@ru.mvista.com>, David Lechner <david@lechnology.com>, manjunath.goudar@linaro.org, Alexandre Bailon <abailon@baylibre.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/4] usb: musb: core: added helper function for parsing DT
+Date: Tue, 25 Oct 2016 16:39:03 +0200
+Message-ID: <1477406345-27192-3-git-send-email-abailon@baylibre.com>
+References: <1477406345-27192-1-git-send-email-abailon@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477406345-27192-1-git-send-email-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 
---8EXHJdkEfksMlRxO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This adds the function musb_get_mode() to get the DT property "dr_mode"
 
-On Tue, Oct 25, 2016 at 02:55:48PM +0200, Axel Haslam wrote:
+Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Acked-by: Sergei Shtylyov <sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ drivers/usb/musb/musb_core.c | 19 +++++++++++++++++++
+ drivers/usb/musb/musb_core.h |  5 +++++
+ 2 files changed, 24 insertions(+)
 
-> To be able to use regulator to handle the overcurrent pin, i need to be a=
-ble
-> to somehow retrieve the over current pin state from the regulator driver.
+diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
+index 27dadc0..bba07e7 100644
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -100,6 +100,7 @@
+ #include <linux/io.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/usb.h>
++#include <linux/usb/of.h>
+ 
+ #include "musb_core.h"
+ #include "musb_trace.h"
+@@ -130,6 +131,24 @@ static inline struct musb *dev_to_musb(struct device *dev)
+ 	return dev_get_drvdata(dev);
+ }
+ 
++enum musb_mode musb_get_mode(struct device *dev)
++{
++	enum usb_dr_mode mode;
++
++	mode = usb_get_dr_mode(dev);
++	switch (mode) {
++	case USB_DR_MODE_HOST:
++		return MUSB_HOST;
++	case USB_DR_MODE_PERIPHERAL:
++		return MUSB_PERIPHERAL;
++	case USB_DR_MODE_OTG:
++	case USB_DR_MODE_UNKNOWN:
++	default:
++		return MUSB_OTG;
++	}
++}
++EXPORT_SYMBOL_GPL(musb_get_mode);
++
+ /*-------------------------------------------------------------------------*/
+ 
+ #ifndef CONFIG_BLACKFIN
+diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
+index 2cb88a49..a406468 100644
+--- a/drivers/usb/musb/musb_core.h
++++ b/drivers/usb/musb/musb_core.h
+@@ -617,4 +617,9 @@ static inline void musb_platform_post_root_reset_end(struct musb *musb)
+ 		musb->ops->post_root_reset_end(musb);
+ }
+ 
++/* gets the "dr_mode" property from DT and converts it into musb_mode
++ * if the property is not found or not recognized returns MUSB_OTG
++ */
++extern enum musb_mode musb_get_mode(struct device *dev);
++
+ #endif	/* __MUSB_CORE_H__ */
+-- 
+2.7.3
 
-What makes you say that, none of the existing users need this? =20
-
-> As i was trying your suggestion, i remembered why i thought i should use
-> mode instead of status: Status seems to be for internal regulator driver =
-use,
-> there is no regulator_get_status, function and REGULATOR_STATUS_* are def=
-ined
-> in driver.h and not in consumer.h as  REGULATOR_MODE_*
-
-> Would you be ok if i allow consumers to get the status via a new
-> "regulator_get_status" call?
-
-What would they do with this information that they can't do with the
-existing error notification?
-
---8EXHJdkEfksMlRxO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJYD20fAAoJECTWi3JdVIfQslUH/RwiAIL6cJZcpSWFNfYQSifW
-txIthbHCklL6vKPdwWsIkx6GCQ7HcICvpQW7/MHVtB1iCtKXm1TXAjvBVDqhdYJj
-oUZnkxs1UTKnYcnNR4qy1qxRai/zPo8ioJBmX/helfiqWOBdRmnDmcyUs8hVxGNJ
-mBz1qUGmebZJKiKaDjdYCllwkJN65007OONmKbELsadXA+hCN5haUsa+7X/5hOnt
-dA6VVOvhFQGUkeUUS2S0c43dTt0iVDG84cJ2aqtLc1ztCbKzwTTTPv+SVCWBgNzA
-fS7TE1pD4iaNzJvY0ooliRZ5IiC9m1K+ERBLWvsqQmBT9un606USuyvSzniXp8g=
-=+nJb
------END PGP SIGNATURE-----
-
---8EXHJdkEfksMlRxO--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
