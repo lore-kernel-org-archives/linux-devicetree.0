@@ -1,32 +1,36 @@
-From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/6] usb: dwc3: Interrupt moderation
-Date: Tue, 25 Oct 2016 12:42:38 -0700
-Message-ID: <cover.1477424426.git.johnyoun__36125.3569288694$1477424595$gmane$org@synopsys.com>
+From: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
+Subject: [RFC 0/2] mmc: sdhci: Fix sdhci caps register bits with corrections provided by dt
+Date: Tue, 25 Oct 2016 14:58:56 -0500
+Message-ID: <1477425538-3315-1-git-send-email-zach.brown@ni.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zach.brown-acOepvfBmUk@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series implements interrupt moderation and also uses it in
-implementing a workaround for STAR 9000961433.
+For various reasons the sdhci caps register can be incorrect. This patch set
+introduces a general way to correct the bits when they are read to accurately
+reflect the capabilties of the controller/board combo.
 
+The first patch creates sdhci-caps and sdhci-caps-mask dt properties that
+combined represent the correction to the sdhci caps register.
 
-John Youn (6):
-  usb: dwc3: Add a check for the DWC_usb3 core
-  usb: dwc3: Add a function to check properties
-  Documentation: devicetree: dwc3: Add interrupt moderation
-  usb: dwc3: gadget: Write the event count in interrupt
-  usb: dwc3: Implement interrupt moderation
-  usb: dwc3: Workaround for irq mask issue
+The second patch uses the new dt properties to correct the caps from the
+register as they read during __sdhci_read_caps.
 
- Documentation/devicetree/bindings/usb/dwc3.txt |  1 +
- drivers/usb/dwc3/core.c                        | 89 ++++++++++++++++++--------
- drivers/usb/dwc3/core.h                        | 21 ++++++
- drivers/usb/dwc3/gadget.c                      | 20 +++++-
- 4 files changed, 103 insertions(+), 28 deletions(-)
+Zach Brown (2):
+  mmc: sdhci: dt: Add device tree properties sdhci-caps and sdhci-caps-mask
+  mmc: sdhci: Use sdhci-caps-mask and sdhci-caps to change the caps read
+        during __sdhci_read_caps
 
--- 
-2.10.0
+ Documentation/devicetree/bindings/mmc/mmc.txt |  7 +++++++
+ drivers/mmc/host/sdhci.c                      | 24 ++++++++++++++++++++++--
+ 2 files changed, 29 insertions(+), 2 deletions(-)
+
+--
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
