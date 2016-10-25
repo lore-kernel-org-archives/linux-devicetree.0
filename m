@@ -1,84 +1,52 @@
-From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Subject: Re: [PATCH v5 1/7] drm: sunxi: Add a basic DRM driver for Allwinner
- DE2
-Date: Tue, 25 Oct 2016 08:46:45 +0200
-Message-ID: <20161025064645.h3fn3wx6qxiahxjd@phenom.ffwll.local>
-References: <cover.1477142934.git.moinejf@free.fr>
- <8afc5e020c5767face34fe3a9ab300ce9e67ba00.1477142934.git.moinejf@free.fr>
- <20161025064422.4jua6qmpr7zu3ijt@phenom.ffwll.local>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v3] pinctrl: Add SX150X GPIO Extender Pinctrl Driver
+Date: Tue, 25 Oct 2016 08:57:08 +0200
+Message-ID: <580F0244.7070701@baylibre.com>
+References: <1477040998-2016-1-git-send-email-narmstrong@baylibre.com> <CAHQ1cqESoRdeHyvP=m=8F_VwiaYL+wbjFoNa6KvWBGfijhcRjg@mail.gmail.com> <CACRpkdbwqFRtFN1gx1G7BuFe44mvPyCSeoQ5g9_FR11j_ZO4ug@mail.gmail.com> <CAHQ1cqGLQ=DdhXg1ebkgBbLN8P2P8BEDrGGTx9_r+6=Wy3uUWA@mail.gmail.com> <CACRpkdY7vLU4yVP7M-O4rGt_L5cqL57ApmMQJ4aRGgzh3Nat6Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161025064422.4jua6qmpr7zu3ijt-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdY7vLU4yVP7M-O4rGt_L5cqL57ApmMQJ4aRGgzh3Nat6Q@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Peter Rosin <peda@axentia.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Roland Stigge <stigge@antcom.de>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 08:44:22AM +0200, Daniel Vetter wrote:
-> On Fri, Oct 21, 2016 at 09:26:18AM +0200, Jean-Francois Moine wrote:
-> > +static int de2_drm_bind(struct device *dev)
-> > +{
-> > +	struct drm_device *drm;
-> > +	struct priv *priv;
-> > +	int ret;
-> > +
-> > +	drm = drm_dev_alloc(&de2_drm_driver, dev);
+Hi Linus,
 
-Oh and you might want to look into drm_dev_init, allows you to use
-subclassing instead of pointer chasing for your driver-private data.
--Daniel
-
-> > +	if (!drm)
-> > +		return -ENOMEM;
-> > +
-> > +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv) {
-> > +		dev_err(dev, "failed to allocate private area\n");
-> > +		ret = -ENOMEM;
-> > +		goto out1;
-> > +	}
-> > +
-> > +	dev_set_drvdata(dev, drm);
-> > +	drm->dev_private = priv;
-> > +
-> > +	drm_mode_config_init(drm);
-> > +	drm->mode_config.min_width = 32;	/* needed for cursor */
-> > +	drm->mode_config.min_height = 32;
-> > +	drm->mode_config.max_width = 1920;
-> > +	drm->mode_config.max_height = 1080;
-> > +	drm->mode_config.funcs = &de2_mode_config_funcs;
-> > +
-> > +	drm->irq_enabled = true;
-> > +
-> > +	/* initialize the display engine */
-> > +	priv->soc_type = (int) of_match_device(de2_drm_of_match, dev)->data;
-> > +	ret = de2_de_init(priv, dev);
-> > +	if (ret)
-> > +		goto out2;
-> > +
-> > +	/* start the subdevices */
-> > +	ret = component_bind_all(dev, drm);
-> > +	if (ret < 0)
-> > +		goto out2;
-> > +
-> > +	ret = drm_dev_register(drm, 0);
+Le 24/10/2016 16:39, Linus Walleij a écrit :
+> On Mon, Oct 24, 2016 at 6:51 AM, Andrey Smirnov
+> <andrew.smirnov@gmail.com> wrote:
 > 
-> This needs to be the very last step in your driver load sequence.
-> Kerneldoc explains why. Similar, but inverted for unloading:
-> drm_dev_unregister is the very first thing you must call.
-> -Daniel
-> -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+>> It seem strange to me that the driver uses "handle_edge_irq", given
+>> how none of the individual interrupts seem to require any ACKing,
+>> since it is all handled in sx150x_irq_thread_fn(), line 533. More so,
+>> I had trouble finding who/where sets .irq_ack() callback, which AFAIU
+>> is mandatory for handle_edge_irq().
+> 
+> Yes that looks strange.
+> 
+> Neil have you tested IRQs with this code?
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To be frank, I took the IRQ code from the GPIO driver verbatim, and only tested
+a simple use case on beagle bone black.
+The interrupt code is very complex and sincerely I was not able to understand
+clearly how it worked.
+
+The IRQ_TYPE_EDGE_BOTH did work for me since the BBB irq controller dealt with it.
+
+I will dig in the datasheet and run more uses cases next week, but since the
+code hasn't changed since the GPIO driver, so this is a nice to have !
+
+> 
+> If there is trouble, please follow up with a fix for the edge handler.
+> Maybe it should just be handle_simple_irq().
+> 
+> Yours,
+> Linus Walleij
+> 
+
+Andrey, can we talk over irc somehow ? I'm idling as narmstrong on freenode.
+
+Neil
