@@ -1,41 +1,91 @@
-From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Subject: [PATCH resent v3 1/3] dts: omap5: board-common: add phandle to reference Palmas gpadc
-Date: Tue, 25 Oct 2016 19:38:09 +0200
-Message-ID: <43183bf31a486c2f683b335aff7ad947b8fbf117.1477417090.git.hns@goldelico.com>
-References: <cover.1477417090.git.hns@goldelico.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1477417090.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-In-Reply-To: <cover.1477417090.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-References: <cover.1477417090.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 3/4] usb: musb: da8xx: Add DT support for the DA8xx driver
+Date: Tue, 25 Oct 2016 20:38:24 +0300
+Message-ID: <82a39c63-8486-de00-3a0f-8d9d267b6404@cogentembedded.com>
+References: <1477406345-27192-1-git-send-email-abailon@baylibre.com>
+ <1477406345-27192-4-git-send-email-abailon@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1477406345-27192-4-git-send-email-abailon@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexandre Bailon <abailon@baylibre.com>, khilman@baylibre.com, robh+dt@kernel.org, b-liu@ti.com
+Cc: Petr Kulhavy <petr@barix.com>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Will be needed for iio based drivers.
+Hello.
 
-Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
----
- arch/arm/boot/dts/omap5-board-common.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 10/25/2016 05:39 PM, Alexandre Bailon wrote:
 
-diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
-index 7500283..b04adee 100644
---- a/arch/arm/boot/dts/omap5-board-common.dtsi
-+++ b/arch/arm/boot/dts/omap5-board-common.dtsi
-@@ -415,7 +415,7 @@
- 			ti,backup-battery-charge-high-current;
- 		};
- 
--		gpadc {
-+		gpadc: gpadc {
- 			compatible = "ti,palmas-gpadc";
- 			interrupts = <18 0
- 				      16 0
--- 
-2.7.3
+> From: Petr Kulhavy <petr@barix.com>
+>
+> This adds DT support for TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver
+>
+> Signed-off-by: Petr Kulhavy <petr@barix.com>
+> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
+> ---
+>  drivers/usb/musb/da8xx.c | 76 ++++++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 67 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
+> index 210b7e4..d465087 100644
+> --- a/drivers/usb/musb/da8xx.c
+> +++ b/drivers/usb/musb/da8xx.c
+> @@ -6,6 +6,9 @@
+>   * Based on the DaVinci "glue layer" code.
+>   * Copyright (C) 2005-2006 by Texas Instruments
+>   *
+> + * DT support
+> + * Copyright (c) 2016 Petr Kulhavy <petr@barix.com>
+> + *
+>   * This file is part of the Inventra Controller Driver for Linux.
+>   *
+>   * The Inventra Controller Driver for Linux is free software; you
+[...]
+> @@ -499,15 +537,21 @@ static int da8xx_probe(struct platform_device *pdev)
+>  	memset(musb_resources, 0x00, sizeof(*musb_resources) *
+>  			ARRAY_SIZE(musb_resources));
+>
+> -	musb_resources[0].name = pdev->resource[0].name;
+> -	musb_resources[0].start = pdev->resource[0].start;
+> -	musb_resources[0].end = pdev->resource[0].end;
+> -	musb_resources[0].flags = pdev->resource[0].flags;
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "failed to get memory.\n");
+> +		ret = -EINVAL;
+> +		goto err_unregister_usb_phy;
+> +	}
+> +	musb_resources[0] = *res;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    What does this change have to do with the DT conversion?
+
+>
+> -	musb_resources[1].name = pdev->resource[1].name;
+> -	musb_resources[1].start = pdev->resource[1].start;
+> -	musb_resources[1].end = pdev->resource[1].end;
+> -	musb_resources[1].flags = pdev->resource[1].flags;
+> +	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "failed to get irq.\n");
+> +		ret = -EINVAL;
+> +		goto err_unregister_usb_phy;
+> +	}
+> +	musb_resources[1] = *res;
+
+    And this?
+    I'm also concerned that you'd copy the resource linkage fields which the 
+existing code avoids...
+
+[...]
+
+MBR, Sergei
