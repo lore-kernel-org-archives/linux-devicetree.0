@@ -1,61 +1,37 @@
-From: Balbir Singh <bsingharora@gmail.com>
-Subject: Re: [PATCH v4 4/5] mm: make processing of movable_node arch-specific
-Date: Tue, 25 Oct 2016 23:15:40 +1100
-Message-ID: <dcfc8ace-e59e-6b4b-0f2f-4eff9f08f3c1@gmail.com>
-References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
- <1475778995-1420-5-git-send-email-arbab@linux.vnet.ibm.com>
- <235f2d20-cf84-08df-1fb4-08ee258fdc52@gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [v17 2/2] drm/bridge: Add I2C based driver for ps8640 bridge
+Date: Tue, 25 Oct 2016 14:23:01 +0200
+Message-ID: <e00519e2-990c-b9b2-71d4-a4c8d36f5e65@gmail.com>
+References: <1472280263-18177-1-git-send-email-jitao.shi@mediatek.com>
+ <1472280263-18177-2-git-send-email-jitao.shi@mediatek.com>
+ <CAFqH_50_OwsbMWHkT_eukF52BVZYyMbGiamXO=pV4PpJq6BADA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <235f2d20-cf84-08df-1fb4-08ee258fdc52@gmail.com>
-Sender: owner-linux-mm@kvack.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFqH_50_OwsbMWHkT_eukF52BVZYyMbGiamXO=pV4PpJq6BADA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo Serra <eballetbo@gmail.com>, Jitao Shi <jitao.shi@mediatek.com>
+Cc: David Airlie <airlied@linux.ie>, Thierry Reding <treding@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, stonea168@163.com, dri-devel <dri-devel@lists.freedesktop.org>, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa cheng <cawa.cheng@mediatek.com>, bibby.hsieh@mediatek.com, ck.hu@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Yingjoe Chen <yingjoe>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 11/10/16 23:26, Balbir Singh wrote:
-> 
-> 
-> On 07/10/16 05:36, Reza Arbab wrote:
->> Currently, CONFIG_MOVABLE_NODE depends on X86_64. In preparation to
->> enable it for other arches, we need to factor a detail which is unique
->> to x86 out of the generic mm code.
->>
->> Specifically, as documented in kernel-parameters.txt, the use of
->> "movable_node" should remain restricted to x86:
->>
->> movable_node    [KNL,X86] Boot-time switch to enable the effects
->>                 of CONFIG_MOVABLE_NODE=y. See mm/Kconfig for details.
->>
->> This option tells x86 to find movable nodes identified by the ACPI SRAT.
->> On other arches, it would have no benefit, only the undesired side
->> effect of setting bottom-up memblock allocation.
->>
->> Since #ifdef CONFIG_MOVABLE_NODE will no longer be enough to restrict
->> this option to x86, move it to an arch-specific compilation unit
->> instead.
->>
->> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
-> 
-> Acked-by: Balbir Singh <bsingharora@gmail.com>
-> 
+On 10/18/2016 04:37 PM, Enric Balletbo Serra wrote:
+[...]
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/bridge/parade-ps8640.c
+[...]
+>> +
+>> +/* Firmware */
+>> +#define PS_FW_NAME             "ps864x_fw.bin"
+>> +
+>
+> From where I can download this firmware image?
+>
 
-After the ack, I realized there were some more checks needed, IOW
-questions for you :)
+I suppose this FW bits have to be added to linux-firmware repository 
+first, before this patch can be accepted.
 
-1. Have you checked to see if our memblock allocations spill
-over to probably hotpluggable nodes?
-2. Shouldn't we be marking nodes discovered as movable via
-memblock_mark_hotplug()?
-
-Balbir Singh.
-
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+Regards,
+Matthias
