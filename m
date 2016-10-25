@@ -1,54 +1,92 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v9 1/4] soc: mediatek: Refine scpsys to support multiple
- platform
-Date: Tue, 25 Oct 2016 16:04:05 +0200
-Message-ID: <1d5cda95-467a-4f95-1cc9-b8f156271a54@gmail.com>
-References: <1476953798-23263-1-git-send-email-jamesjj.liao@mediatek.com>
- <1476953798-23263-2-git-send-email-jamesjj.liao@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476953798-23263-2-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2 v6] iio: gyro: Add MPU-3050 device tree bindings
+Date: Tue, 25 Oct 2016 16:15:53 +0200
+Message-ID: <1477404954-3942-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi James,
+This adds device tree bindings for the MPU-3050 gyroscope. Since it
+is the first set of bindings for a gyroscope, the folder for it
+is also created.
 
-On 10/20/2016 10:56 AM, James Liao wrote:
-> -static int scpsys_probe(struct platform_device *pdev)
-> +static void init_clks(struct platform_device *pdev, struct clk *clk[CLK_MAX])
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v5->v6:
+- No changes, just reposting.
+ChangeLog v4->v5:
+- No changes, just reposting.
+ChangeLog v3->v4:
+- No changes, just reposting. If we agree on these bindings and since
+  the dependent I2C bindings are merged, this patch should be merge
+  material now I guess.
+ChangeLog v2->v3:
+- Augmented device tree bindings to reflect Peter Rosins now merged
+  I2C gate bindings.
+ChangeLog v1->v2:
+- Not yet convered to use i2c-gate as I'm waiting for that
+  patch set to stabilize.
+---
+ .../bindings/iio/gyroscope/invensense,mpu3050.txt  | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
 
-I prefer struct clk **clk.
-
-> +{
-> +	int i;
-> +
-> +	for (i = CLK_NONE + 1; i < CLK_MAX; i++)
-> +		clk[i] = devm_clk_get(&pdev->dev, clk_names[i]);
-> +}
-> +
-> +static struct scp *init_scp(struct platform_device *pdev,
-> +			const struct scp_domain_data *scp_domain_data, int num)
->  {
->  	struct genpd_onecell_data *pd_data;
->  	struct resource *res;
-> -	int i, j, ret;
-> +	int i, j;
->  	struct scp *scp;
-> -	struct clk *clk[MT8173_CLK_MAX];
-> +	struct clk *clk[CLK_MAX];
-
-should be *[CLK_MAX - 1] but I would prefer to define in the enum:
-CLK_MAX = CLK_VENC_LT,
-
-If you are ok with it, I can fix both of my comments when applying.
-
-Regards,
-Matthias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
+new file mode 100644
+index 000000000000..b0d3b59966bc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
+@@ -0,0 +1,46 @@
++Invensense MPU-3050 Gyroscope device tree bindings
++
++Required properties:
++  - compatible : should be "invensense,mpu3050"
++  - reg : the I2C address of the sensor
++
++Optional properties:
++  - interrupt-parent : should be the phandle for the interrupt controller
++  - interrupts : interrupt mapping for the trigger interrupt from the
++    internal oscillator. The following IRQ modes are supported:
++    IRQ_TYPE_EDGE_RISING, IRQ_TYPE_EDGE_FALLING, IRQ_TYPE_LEVEL_HIGH and
++    IRQ_TYPE_LEVEL_LOW. The driver should detect and configure the hardware
++    for the desired interrupt type.
++  - vdd-supply : supply regulator for the main power voltage.
++  - vlogic-supply : supply regulator for the signal voltage.
++  - mount-matrix : see iio/mount-matrix.txt
++
++Optional subnodes:
++  - The MPU-3050 will pass through and forward the I2C signals from the
++    incoming I2C bus, alternatively drive traffic to a slave device (usually
++    an accelerometer) on its own initiative. Therefore is supports a subnode
++    i2c gate node. For details see: i2c/i2c-gate.txt
++
++Example:
++
++mpu3050@68 {
++	compatible = "invensense,mpu3050";
++	reg = <0x68>;
++	interrupt-parent = <&foo>;
++	interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
++	vdd-supply = <&bar>;
++	vlogic-supply = <&baz>;
++
++	/* External I2C interface */
++	i2c-gate {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		fnord@18 {
++			compatible = "fnord";
++			reg = <0x18>;
++			interrupt-parent = <&foo>;
++			interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
++		};
++	};
++};
+-- 
+2.7.4
