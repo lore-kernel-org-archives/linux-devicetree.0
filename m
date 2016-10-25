@@ -1,36 +1,40 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 3/4] dt-bindings: Update domain-idle-state binding to use correct compatibles
-Date: Tue, 25 Oct 2016 13:49:34 -0700
-Message-ID: <7hh980taqp.fsf@baylibre.com>
-References: <1477409199-52182-1-git-send-email-lina.iyer@linaro.org>
-        <1477409199-52182-4-git-send-email-lina.iyer@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] soc: qcom: Add SoC info driver
+Date: Tue, 25 Oct 2016 22:49:07 +0200
+Message-ID: <3567809.JctLPjIDdk@wuerfel>
+References: <1476972386-28655-1-git-send-email-kimran@codeaurora.org> <2349770.MVMXr64OoI@wuerfel> <550ace3c-f2d3-6f3a-9566-cc1f83432484@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1477409199-52182-4-git-send-email-lina.iyer@linaro.org> (Lina
-        Iyer's message of "Tue, 25 Oct 2016 08:26:38 -0700")
-Sender: linux-pm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: ulf.hansson@linaro.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, brendan.jackman@arm.com, lorenzo.pieralisi@arm.com, sudeep.holla@arm.com, Juri.Lelli@arm.com, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <550ace3c-f2d3-6f3a-9566-cc1f83432484@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Imran Khan <kimran@codeaurora.org>
+Cc: andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Lina Iyer <lina.iyer@linaro.org> writes:
+On Tuesday, October 25, 2016 3:23:34 PM CEST Imran Khan wrote:
+> On 10/21/2016 4:03 PM, Arnd Bergmann wrote:
+> >> +/* socinfo: sysfs functions */
+> > 
+> > This seems overly verbose, having both raw and human-readable
+> > IDs is generally not necessary, pick one of the two. If you
+> > need any fields that we don't already support in soc_device,
+> > let's talk about adding them to the generic structure.
+> > 
+> > 
+> 
+> Okay. I will go for human readable IDs. Can we add 2 more fields
+> in the generic structure.
+> These 2 fields would be:
+> 
+> vendor: A string for vendor name
+> serial_number: A string containing serial number for the platform
 
-> Update domain-idle-state binding to use "domain-idle-state" compatible
-> from Documentation/devicetree/bindings/arm/idle-states.txt.
->
-> Cc: <devicetree@vger.kernel.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
-> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-> ---
->  Documentation/devicetree/bindings/power/power_domain.txt | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
 
-With no current users for this, I don't see the point of adding a
-compatible now.
+serial_number seems straightforward, adding this seems like a good
+idea. I don't understand yet what would go into the vendor field
+though. For this particular driver, is it always "Qualcomm", or
+would it be a third-party that makes a device based on that chip?
 
-IMO, this should wait and be added with the identified user we can
-discuss it then.
-
-Kevin
+	Arnd
