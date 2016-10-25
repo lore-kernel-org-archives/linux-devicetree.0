@@ -1,52 +1,51 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [v2 2/2] fpga: Add support for Lattice iCE40 FPGAs
-Date: Tue, 25 Oct 2016 09:47:49 -0500
-Message-ID: <alpine.DEB.2.02.1610250913530.14525@linuxheads99>
-References: <1477283989-21947-1-git-send-email-joel@airwebreathe.org.uk> <1477283989-21947-2-git-send-email-joel@airwebreathe.org.uk> <alpine.DEB.2.02.1610241615280.14525@linuxheads99> <c971d8f4-dbb4-8d6e-f8eb-028a0a95e6fb@airwebreathe.org.uk>
+From: Alan Tull <atull@opensource.altera.com>
+Subject: [PATCH v21 3/9] add sysfs document for fpga bridge class
+Date: Tue, 25 Oct 2016 09:55:34 -0500
+Message-ID: <20161025145540.3722-4-atull@opensource.altera.com>
+References: <20161025145540.3722-1-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c971d8f4-dbb4-8d6e-f8eb-028a0a95e6fb@airwebreathe.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Holdsworth <joel@airwebreathe.org.uk>
-Cc: ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, moritz.fischer@ettus.com, pawel.moll@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20161025145540.3722-1-atull@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Moritz Fischer <moritz.fischer@ettus.com>, Joel Holdsworth <joel@airwebreathe.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jon Masters <jcm@redhat.com>, Julia Cartwright <julia@ni.com>, Michal Simek <michal.simek@xilinx.com>, Jonathan Corbet <corbet@lwn.net>, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, Matthew Gerlach <mgerlach@opensource.altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, Alan Tull <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 25 Oct 2016, Joel Holdsworth wrote:
+Add documentation for new FPGA bridge class's sysfs interface.
 
-> 
-> > Hi Joel,
-> > 
-> > Thanks for submitting your driver!
-> > 
-> > I didn't see any huge problems, just minor things below...
-> > 
-> > Alan
-> > 
-> 
-> Hi Alan, Thanks for your feedback. I've implemented all your suggestions and
-> I'll resubmit.
-> 
-> I had a question about the status of the fpga-manager framework. Is there
-> active work going on? I was wondering if there were any patches for specifying
-> a firmware file from device-tree?
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+Acked-by: Moritz Fischer <moritz.fischer@ettus.com>
+--
+v15: Document added in v15 of patch set
+v16: No change to this patch in v16 of patch set
+v17: No change to this patch in v17 of patch set
+v18: No change to this patch in v18 of patch set
+v19: No change to this patch in this version of patch set
+v20: Added Moritz' ack
+v21: No change for this patch in v21 of patchset
+---
+ Documentation/ABI/testing/sysfs-class-fpga-bridge | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
 
-Yes!  I have submitted patches for doing exactly that.  About to
-submit v21.  Here's patch 1 of v20:
+diff --git a/Documentation/ABI/testing/sysfs-class-fpga-bridge b/Documentation/ABI/testing/sysfs-class-fpga-bridge
+new file mode 100644
+index 0000000..312ae2c
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-class-fpga-bridge
+@@ -0,0 +1,11 @@
++What:		/sys/class/fpga_bridge/<bridge>/name
++Date:		January 2016
++KernelVersion:	4.5
++Contact:	Alan Tull <atull@opensource.altera.com>
++Description:	Name of low level FPGA bridge driver.
++
++What:		/sys/class/fpga_bridge/<bridge>/state
++Date:		January 2016
++KernelVersion:	4.5
++Contact:	Alan Tull <atull@opensource.altera.com>
++Description:	Show bridge state as "enabled" or "disabled"
+-- 
+2.10.1
 
-https://patchwork.kernel.org/patch/9379859/
-
-> and/or if there were any patches for loading
-> firmware from userspace - something like this: "cat firmware.bin >
-> /dev/fpga0"?
-
-We discussed doing a char driver interface.  That's where all this
-started.  It met with lots of resistance.
-
-> 
-> Only being able to load firmware from kernel C-code is rather a limitation -
-> though I suppose the framework is quite early in development.
-> 
-> Thanks
-> Joel
-> 
