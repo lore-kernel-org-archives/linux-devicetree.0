@@ -1,52 +1,59 @@
-From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH/RFT v2 08/17] ARM: davinci: hawk: add full constraints for
- ohci plat boot
-Date: Tue, 25 Oct 2016 12:31:14 +0200
-Message-ID: <CAKXjFTOFG+o=mpbZ4ixkh8nm+oipx8+nbr0FduCPzJVuXOc0RQ@mail.gmail.com>
-References: <20161024164634.4330-1-ahaslam@baylibre.com> <20161024164634.4330-9-ahaslam@baylibre.com>
- <522eeb9a-6fb1-88eb-5c58-7ee209a50fc3@ti.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 4/9] pinctrl: meson: allow gpio to request irq
+Date: Tue, 25 Oct 2016 11:38:15 +0100
+Message-ID: <ec7c6cc5-cf9a-9c75-4b07-e337064c7d6e@arm.com>
+References: <1476871709-8359-1-git-send-email-jbrunet@baylibre.com>
+ <1476871709-8359-5-git-send-email-jbrunet@baylibre.com>
+ <CACRpkdaCZPS45t3eTcjJExOu=YT_YkjNkdpg09jQqvLQOJH=Qw@mail.gmail.com>
+ <1477040798.15560.96.camel@baylibre.com>
+ <CACRpkdYUVXny57AC9rKX3VRAyooEk_2XLvqe9jOuT3rOaE75rg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <522eeb9a-6fb1-88eb-5c58-7ee209a50fc3-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sergei Shtylyov <sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, manjunath.goudar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYUVXny57AC9rKX3VRAyooEk_2XLvqe9jOuT3rOaE75rg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>
+Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 12:28 PM, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> wrote:
-> On Monday 24 October 2016 10:16 PM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
->> From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+On 25/10/16 10:14, Linus Walleij wrote:
+> On Fri, Oct 21, 2016 at 11:06 AM, Jerome Brunet <jbrunet@baylibre.com> wrote:
+> 
+>>> Isn't this usecase (also as described in the cover letter) a textbook
+>>> example of when you should be using hierarchical irqdomain?
+>>>
+>>> Please check with Marc et al on hierarchical irqdomains.
 >>
->> The phy framework requests an optional "phy" regulator. If it does
->> not find one, it returns -EPROBE_DEFER. In the case of non-DT based boot
->> for the omap138-lcdk board, this would prevent the usb11 phy to probe
->> correctly and ohci would not enumerate.
+>> Linus,
+>> Do you mean I should create a new hierarchical irqdomains in each of
+>> the two pinctrl instances we have in these SoC, these domains being
+>> stacked on the one I just added for controller in irqchip ?
 >>
->> By calling "regulator_has_full_constraints", An error would be returned
->
-> nit: prefer regulator_has_full_constraints()
->
->> instead of DEFER for the "optional" regulator, and the probe of
->> the phy driver can continue normally without a regulator.
->>
->> Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->
-> Looks good to me. Just drop the "hawk: from subject line since you also
-> touch da830 evm. I am not sure what "ohci plat boot" means. How about
-> the following:
->
-> "ARM: davinci: da8xx: fix OHCI PHY probe for non-DT boot"
->
+>> I did not understand this is what you meant when I asked you the
+>> question at ELCE.
+> 
+> Honestly, I do not understand when and where to properly use
+> hierarchical irqdomain, even after Marc's talk at ELC-E.
 
-Will do.
+I probably didn't do that good a job explaining it then. Let's try
+again. You want to use hierarchical domains when you want to describe an
+interrupt whose path traverses multiple controllers without ever being
+multiplexed with other signals. As long as you have this 1:1
+relationship between controllers, you can use them.
 
-Thanks
-Axel.
+> Which is problematic since quite a few GPIO drivers now
+> need to use them.
+> 
+> I will review his slides, in the meantime I would say: whatever
+> Marc ACKs is fine with me. I trust this guy 100%. So I guess I
+> could ask that he ACK the entire chain of patches
+> from GIC->specialchip->GPIO.
 
-> Thanks,
-> Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Man, I don't even trust myself... ;-)
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
