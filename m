@@ -1,33 +1,30 @@
 From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 3/6] Documentation: devicetree: dwc3: Add interrupt moderation
-Date: Tue, 25 Oct 2016 12:42:46 -0700
-Message-ID: <e7a864e5a2af12d5a8d97f2591065f4aa85f86cb.1477424426.git.johnyoun__39484.5989336774$1477424593$gmane$org@synopsys.com>
-References: <cover.1477424426.git.johnyoun@synopsys.com>
+Subject: [PATCH 0/6] usb: dwc3: Interrupt moderation
+Date: Tue, 25 Oct 2016 12:42:38 -0700
+Message-ID: <cover.1477424426.git.johnyoun__36125.3569288694$1477424595$gmane$org@synopsys.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1477424426.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add interrupt moderation interval binding for dwc3.
+This patch series implements interrupt moderation and also uses it in
+implementing a workaround for STAR 9000961433.
 
-Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/dwc3.txt | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index e3e6983..17de9fc 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -53,6 +53,7 @@ Optional properties:
-  - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
- 	register for post-silicon frame length adjustment when the
- 	fladj_30mhz_sdbnd signal is invalid or incorrect.
-+ - snps,imod_interval: the interrupt moderation interval.
- 
-  - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
- 
+John Youn (6):
+  usb: dwc3: Add a check for the DWC_usb3 core
+  usb: dwc3: Add a function to check properties
+  Documentation: devicetree: dwc3: Add interrupt moderation
+  usb: dwc3: gadget: Write the event count in interrupt
+  usb: dwc3: Implement interrupt moderation
+  usb: dwc3: Workaround for irq mask issue
+
+ Documentation/devicetree/bindings/usb/dwc3.txt |  1 +
+ drivers/usb/dwc3/core.c                        | 89 ++++++++++++++++++--------
+ drivers/usb/dwc3/core.h                        | 21 ++++++
+ drivers/usb/dwc3/gadget.c                      | 20 +++++-
+ 4 files changed, 103 insertions(+), 28 deletions(-)
+
 -- 
 2.10.0
 
