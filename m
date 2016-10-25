@@ -1,7 +1,7 @@
 From: Balbir Singh <bsingharora@gmail.com>
 Subject: Re: [PATCH v4 4/5] mm: make processing of movable_node arch-specific
-Date: Wed, 26 Oct 2016 09:34:18 +1100
-Message-ID: <112504e9-561d-e0da-7a40-73996c678b56@gmail.com>
+Date: Wed, 26 Oct 2016 09:59:40 +1100
+Message-ID: <13f4f7fa-77b7-0924-f47c-5e55af8269d0@gmail.com>
 References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
  <1475778995-1420-5-git-send-email-arbab@linux.vnet.ibm.com>
  <235f2d20-cf84-08df-1fb4-08ee258fdc52@gmail.com>
@@ -10,9 +10,9 @@ References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <owner-linux-mm@kvack.org>
 In-Reply-To: <20161025155507.37kv5akdlgo6m2be@arbab-laptop.austin.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: owner-linux-mm@kvack.org
 To: Reza Arbab <arbab@linux.vnet.ibm.com>
 Cc: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
 List-Id: devicetree@vger.kernel.org
@@ -45,3 +45,9 @@ Is this true for all of system memory as well or only for nodes
 hotplugged later?
 
 Balbir Singh.
+
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
