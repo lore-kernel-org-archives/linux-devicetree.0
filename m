@@ -1,49 +1,354 @@
-From: Axel Haslam <ahaslam@baylibre.com>
-Subject: Re: [PATCH/RFT v2 09/17] regulator: fixed: Add over current event
-Date: Tue, 25 Oct 2016 16:57:17 +0200
-Message-ID: <CAKXjFTOz=TGCiKic77JXdJMUoobLY4Ye9QnqajbG4JTh=VGUFg@mail.gmail.com>
-References: <20161024164634.4330-1-ahaslam@baylibre.com> <20161024164634.4330-10-ahaslam@baylibre.com>
- <20161024175320.GO17252@sirena.org.uk> <CAKXjFTNZhWTZSXtLZo8EieBtAPn_J-MM+-g8yCRJiV6UBspB9Q@mail.gmail.com>
- <20161024181937.GP17252@sirena.org.uk> <CAKXjFTOHcqRFtbXMXSTyUZ3P00eRMz1N3d62Y3NWVZJDGeScZA@mail.gmail.com>
- <20161025143304.GW17252@sirena.org.uk>
+From: Alan Tull <atull@opensource.altera.com>
+Subject: [PATCH v21 8/9] fpga: add altera freeze bridge support
+Date: Tue, 25 Oct 2016 09:55:39 -0500
+Message-ID: <20161025145540.3722-9-atull@opensource.altera.com>
+References: <20161025145540.3722-1-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161025143304.GW17252@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, robh+dt@kernel.org, Sekhar Nori <nsekhar@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Kevin Hilman <khilman@baylibre.com>, Sergei Shtylyov <sshtylyov@ru.mvista.com>, David Lechner <david@lechnology.com>, manjunath.goudar@linaro.org, Alexandre Bailon <abailon@baylibre.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161025145540.3722-1-atull@opensource.altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, delicious.quinoa@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alan Tull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Julia Cartwright <julia@ni.com>, linux-doc@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Cyril Chemparathy <cyril.chemparathy@xilinx.com>, devicetree@vger.kernel.org, Jon Masters <jcm@redhat.com>, Joel Holdsworth <joel@airwebreathe.org.uk>, Jonathan Corbet <corbet@lwn.net>, Matthew Gerlach <mgerlach@opensource.altera.com>, Frank Rowand <frowand.list@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 4:33 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Tue, Oct 25, 2016 at 02:55:48PM +0200, Axel Haslam wrote:
->
->> To be able to use regulator to handle the overcurrent pin, i need to be able
->> to somehow retrieve the over current pin state from the regulator driver.
->
-> What makes you say that, none of the existing users need this?
->
->> As i was trying your suggestion, i remembered why i thought i should use
->> mode instead of status: Status seems to be for internal regulator driver use,
->> there is no regulator_get_status, function and REGULATOR_STATUS_* are defined
->> in driver.h and not in consumer.h as  REGULATOR_MODE_*
->
->> Would you be ok if i allow consumers to get the status via a new
->> "regulator_get_status" call?
->
-> What would they do with this information that they can't do with the
-> existing error notification?
+Add a low level driver for Altera Freeze Bridges to the FPGA Bridge
+framework.  A freeze bridge is a bridge that exists in the FPGA
+fabric to isolate one region of the FPGA from the busses while that
+one region is being reprogrammed.
 
-the usb core relies in two flags that need too be set properly, one is the
-over-current indicator RH_PS_POCI , and the other is the over current
-indicator "change" (RH_PS_OCIC).
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+Signed-off-by: Matthew Gerlach <mgerlach@opensource.altera.com>
+---
+v19: added in v19 of patchset as it needs for fpga info struct
+v20: No change for this patch in v20 of patchset
+v21: No change for this patch in v21 of patchset
+---
+ drivers/fpga/Kconfig                |   9 ++
+ drivers/fpga/Makefile               |   1 +
+ drivers/fpga/altera-freeze-bridge.c | 273 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 283 insertions(+)
+ create mode 100644 drivers/fpga/altera-freeze-bridge.c
 
-The idea was to use the notification to set the over current indicator
-"change" flag,
-which will happen for both rising and falling edges. And to use
-get_status or get_mode
-to set the over-current indicator flag which should reflect the actual
-pin status.
-
-
--Axel.
+diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+index 5605ad6..8fe6a84 100644
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -47,6 +47,15 @@ config SOCFPGA_FPGA_BRIDGE
+ 	  Say Y to enable drivers for FPGA bridges for Altera SOCFPGA
+ 	  devices.
+ 
++config ALTERA_FREEZE_BRIDGE
++	tristate "Altera FPGA Freeze Bridge"
++	depends on ARCH_SOCFPGA && FPGA_BRIDGE
++	help
++	  Say Y to enable drivers for Altera FPGA Freeze bridges.  A
++	  freeze bridge is a bridge that exists in the FPGA fabric to
++	  isolate one region of the FPGA from the busses while that
++	  region is being reprogrammed.
++
+ endif # FPGA
+ 
+ endmenu
+diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+index e658436..a6f874d 100644
+--- a/drivers/fpga/Makefile
++++ b/drivers/fpga/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
+ # FPGA Bridge Drivers
+ obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
+ obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)	+= altera-hps2fpga.o altera-fpga2sdram.o
++obj-$(CONFIG_ALTERA_FREEZE_BRIDGE)	+= altera-freeze-bridge.o
+ 
+ # High Level Interfaces
+ obj-$(CONFIG_FPGA_REGION)		+= fpga-region.o
+diff --git a/drivers/fpga/altera-freeze-bridge.c b/drivers/fpga/altera-freeze-bridge.c
+new file mode 100644
+index 0000000..8dcd9fb
+--- /dev/null
++++ b/drivers/fpga/altera-freeze-bridge.c
+@@ -0,0 +1,273 @@
++/*
++ * FPGA Freeze Bridge Controller
++ *
++ *  Copyright (C) 2016 Altera Corporation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/of_device.h>
++#include <linux/module.h>
++#include <linux/fpga/fpga-bridge.h>
++
++#define FREEZE_CSR_STATUS_OFFSET		0
++#define FREEZE_CSR_CTRL_OFFSET			4
++#define FREEZE_CSR_ILLEGAL_REQ_OFFSET		8
++#define FREEZE_CSR_REG_VERSION			12
++
++#define FREEZE_CSR_SUPPORTED_VERSION		2
++
++#define FREEZE_CSR_STATUS_FREEZE_REQ_DONE	BIT(0)
++#define FREEZE_CSR_STATUS_UNFREEZE_REQ_DONE	BIT(1)
++
++#define FREEZE_CSR_CTRL_FREEZE_REQ		BIT(0)
++#define FREEZE_CSR_CTRL_RESET_REQ		BIT(1)
++#define FREEZE_CSR_CTRL_UNFREEZE_REQ		BIT(2)
++
++#define FREEZE_BRIDGE_NAME			"freeze"
++
++struct altera_freeze_br_data {
++	struct device *dev;
++	void __iomem *base_addr;
++	bool enable;
++};
++
++/*
++ * Poll status until status bit is set or we have a timeout.
++ */
++static int altera_freeze_br_req_ack(struct altera_freeze_br_data *priv,
++				    u32 timeout, u32 req_ack)
++{
++	struct device *dev = priv->dev;
++	void __iomem *csr_illegal_req_addr = priv->base_addr +
++					     FREEZE_CSR_ILLEGAL_REQ_OFFSET;
++	u32 status, illegal, ctrl;
++	int ret = -ETIMEDOUT;
++
++	do {
++		illegal = readl(csr_illegal_req_addr);
++		if (illegal) {
++			dev_err(dev, "illegal request detected 0x%x", illegal);
++
++			writel(1, csr_illegal_req_addr);
++
++			illegal = readl(csr_illegal_req_addr);
++			if (illegal)
++				dev_err(dev, "illegal request not cleared 0x%x",
++					illegal);
++
++			ret = -EINVAL;
++			break;
++		}
++
++		status = readl(priv->base_addr + FREEZE_CSR_STATUS_OFFSET);
++		dev_dbg(dev, "%s %x %x\n", __func__, status, req_ack);
++		status &= req_ack;
++		if (status) {
++			ctrl = readl(priv->base_addr + FREEZE_CSR_CTRL_OFFSET);
++			dev_dbg(dev, "%s request %x acknowledged %x %x\n",
++				__func__, req_ack, status, ctrl);
++			ret = 0;
++			break;
++		}
++
++		udelay(1);
++	} while (timeout--);
++
++	if (ret == -ETIMEDOUT)
++		dev_err(dev, "%s timeout waiting for 0x%x\n",
++			__func__, req_ack);
++
++	return ret;
++}
++
++static int altera_freeze_br_do_freeze(struct altera_freeze_br_data *priv,
++				      u32 timeout)
++{
++	struct device *dev = priv->dev;
++	void __iomem *csr_ctrl_addr = priv->base_addr +
++				      FREEZE_CSR_CTRL_OFFSET;
++	u32 status;
++	int ret;
++
++	status = readl(priv->base_addr + FREEZE_CSR_STATUS_OFFSET);
++
++	dev_dbg(dev, "%s %d %d\n", __func__, status, readl(csr_ctrl_addr));
++
++	if (status & FREEZE_CSR_STATUS_FREEZE_REQ_DONE) {
++		dev_dbg(dev, "%s bridge already disabled %d\n",
++			__func__, status);
++		return 0;
++	} else if (!(status & FREEZE_CSR_STATUS_UNFREEZE_REQ_DONE)) {
++		dev_err(dev, "%s bridge not enabled %d\n", __func__, status);
++		return -EINVAL;
++	}
++
++	writel(FREEZE_CSR_CTRL_FREEZE_REQ, csr_ctrl_addr);
++
++	ret = altera_freeze_br_req_ack(priv, timeout,
++				       FREEZE_CSR_STATUS_FREEZE_REQ_DONE);
++
++	if (ret)
++		writel(0, csr_ctrl_addr);
++	else
++		writel(FREEZE_CSR_CTRL_RESET_REQ, csr_ctrl_addr);
++
++	return ret;
++}
++
++static int altera_freeze_br_do_unfreeze(struct altera_freeze_br_data *priv,
++					u32 timeout)
++{
++	struct device *dev = priv->dev;
++	void __iomem *csr_ctrl_addr = priv->base_addr +
++				      FREEZE_CSR_CTRL_OFFSET;
++	u32 status;
++	int ret;
++
++	writel(0, csr_ctrl_addr);
++
++	status = readl(priv->base_addr + FREEZE_CSR_STATUS_OFFSET);
++
++	dev_dbg(dev, "%s %d %d\n", __func__, status, readl(csr_ctrl_addr));
++
++	if (status & FREEZE_CSR_STATUS_UNFREEZE_REQ_DONE) {
++		dev_dbg(dev, "%s bridge already enabled %d\n",
++			__func__, status);
++		return 0;
++	} else if (!(status & FREEZE_CSR_STATUS_FREEZE_REQ_DONE)) {
++		dev_err(dev, "%s bridge not frozen %d\n", __func__, status);
++		return -EINVAL;
++	}
++
++	writel(FREEZE_CSR_CTRL_UNFREEZE_REQ, csr_ctrl_addr);
++
++	ret = altera_freeze_br_req_ack(priv, timeout,
++				       FREEZE_CSR_STATUS_UNFREEZE_REQ_DONE);
++
++	status = readl(priv->base_addr + FREEZE_CSR_STATUS_OFFSET);
++
++	dev_dbg(dev, "%s %d %d\n", __func__, status, readl(csr_ctrl_addr));
++
++	writel(0, csr_ctrl_addr);
++
++	return ret;
++}
++
++/*
++ * enable = 1 : allow traffic through the bridge
++ * enable = 0 : disable traffic through the bridge
++ */
++static int altera_freeze_br_enable_set(struct fpga_bridge *bridge,
++				       bool enable)
++{
++	struct altera_freeze_br_data *priv = bridge->priv;
++	struct fpga_image_info *info = bridge->info;
++	u32 timeout = 0;
++	int ret;
++
++	if (enable) {
++		if (info)
++			timeout = info->enable_timeout_us;
++
++		ret = altera_freeze_br_do_unfreeze(bridge->priv, timeout);
++	} else {
++		if (info)
++			timeout = info->disable_timeout_us;
++
++		ret = altera_freeze_br_do_freeze(bridge->priv, timeout);
++	}
++
++	if (!ret)
++		priv->enable = enable;
++
++	return ret;
++}
++
++static int altera_freeze_br_enable_show(struct fpga_bridge *bridge)
++{
++	struct altera_freeze_br_data *priv = bridge->priv;
++
++	return priv->enable;
++}
++
++static struct fpga_bridge_ops altera_freeze_br_br_ops = {
++	.enable_set = altera_freeze_br_enable_set,
++	.enable_show = altera_freeze_br_enable_show,
++};
++
++static const struct of_device_id altera_freeze_br_of_match[] = {
++	{ .compatible = "altr,freeze-bridge-controller", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, altera_freeze_br_of_match);
++
++static int altera_freeze_br_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = pdev->dev.of_node;
++	struct altera_freeze_br_data *priv;
++	struct resource *res;
++	u32 status, revision;
++
++	if (!np)
++		return -ENODEV;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->dev = dev;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	priv->base_addr = devm_ioremap_resource(dev, res);
++	if (IS_ERR(priv->base_addr))
++		return PTR_ERR(priv->base_addr);
++
++	status = readl(priv->base_addr + FREEZE_CSR_STATUS_OFFSET);
++	if (status & FREEZE_CSR_STATUS_UNFREEZE_REQ_DONE)
++		priv->enable = 1;
++
++	revision = readl(priv->base_addr + FREEZE_CSR_REG_VERSION);
++	if (revision != FREEZE_CSR_SUPPORTED_VERSION)
++		dev_warn(dev,
++			 "%s Freeze Controller unexpected revision %d != %d\n",
++			 __func__, revision, FREEZE_CSR_SUPPORTED_VERSION);
++
++	return fpga_bridge_register(dev, FREEZE_BRIDGE_NAME,
++				    &altera_freeze_br_br_ops, priv);
++}
++
++static int altera_freeze_br_remove(struct platform_device *pdev)
++{
++	fpga_bridge_unregister(&pdev->dev);
++
++	return 0;
++}
++
++static struct platform_driver altera_freeze_br_driver = {
++	.probe = altera_freeze_br_probe,
++	.remove = altera_freeze_br_remove,
++	.driver = {
++		.name	= "altera_freeze_br",
++		.of_match_table = of_match_ptr(altera_freeze_br_of_match),
++	},
++};
++
++module_platform_driver(altera_freeze_br_driver);
++
++MODULE_DESCRIPTION("Altera Freeze Bridge");
++MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
++MODULE_LICENSE("GPL v2");
+-- 
+2.10.1
