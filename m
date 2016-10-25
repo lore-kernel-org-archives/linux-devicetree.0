@@ -1,11 +1,13 @@
 From: Gary Bisson <gary.bisson@boundarydevices.com>
-Subject: [PATCH 0/5] ARM: dts: imx: update Boundary Devices boards support
-Date: Tue, 25 Oct 2016 23:19:50 +0200
-Message-ID: <20161025211955.5345-1-gary.bisson@boundarydevices.com>
+Subject: [PATCH 2/5] ARM: dts: imx6qdl-sabrelite: rename panel nodes
+Date: Tue, 25 Oct 2016 23:19:52 +0200
+Message-ID: <20161025211955.5345-3-gary.bisson@boundarydevices.com>
+References: <20161025211955.5345-1-gary.bisson@boundarydevices.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161025211955.5345-1-gary.bisson@boundarydevices.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,40 +21,35 @@ To: devicetree@vger.kernel.org
 Cc: fabio.estevam@freescale.com, linux@arm.linux.org.uk, Gary Bisson <gary.bisson@boundarydevices.com>, robh+dt@kernel.org, kernel@pengutronix.de, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+So it is in line with other Boundary Device device tree (nit6xlite
+and nitrogen6_max).
 
-This series includes several patches to update the support for our platforms.
+Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
+---
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Here are the main goals of this series:
-1- Adding support for our latest SOM (SOM2)
-2- Fix panel naming consistency across the boards
-  -> This way our U-Boot bootscript[1] can easily set the panel compatible.
-3- Fix USB PHY reset for some boards
-  -> U-Boot used to always set the reset pin whether usb was used or not.
-     Anyway, the kernel should not be dependent on the bootloader.
-
-Let me know if you have any question.
-
-Regards,
-Gary
-
-[1] https://github.com/boundarydevices/u-boot-imx6/blob/boundary-v2016.03/board/boundary/nitrogen6x/6x_bootscript-mainline.txt
-
-Gary Bisson (5):
-  ARM: dts: imx: add Boundary Devices Nitrogen6_SOM2 support
-  ARM: dts: imx6qdl-sabrelite: rename panel nodes
-  ARM: dts: imx6qdl-sabrelite: add missing USB PHY reset control
-  ARM: dts: imx6qdl-nitrogen6x: rename panel nodes
-  ARM: dts: imx6qdl-nitrogen6x: add missing USB PHY reset control
-
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/imx6q-nitrogen6_som2.dts    |  53 ++
- arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi | 770 ++++++++++++++++++++++++++
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi     |  24 +-
- arch/arm/boot/dts/imx6qdl-sabrelite.dtsi      |  24 +-
- 5 files changed, 868 insertions(+), 4 deletions(-)
- create mode 100644 arch/arm/boot/dts/imx6q-nitrogen6_som2.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi
-
+diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+index 81dd6cd..cebea8a 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+@@ -197,7 +197,7 @@
+ 		};
+ 	};
+ 
+-	lcd_panel {
++	panel_lcd {
+ 		compatible = "okaya,rs800480t-7x0gp";
+ 		backlight = <&backlight_lcd>;
+ 
+@@ -208,7 +208,7 @@
+ 		};
+ 	};
+ 
+-	panel {
++	panel_lvds0 {
+ 		compatible = "hannstar,hsd100pxn1";
+ 		backlight = <&backlight_lvds>;
+ 
 -- 
 2.9.3
