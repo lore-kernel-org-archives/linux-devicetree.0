@@ -1,47 +1,106 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH/RFT v2 11/17] USB: OHCI: make ohci-da8xx a separate driver
-Date: Tue, 25 Oct 2016 11:12:23 -0500
-Message-ID: <21019d11-3b01-3e0e-60bc-c4873cf20237@lechnology.com>
-References: <20161024164634.4330-1-ahaslam@baylibre.com>
- <20161024164634.4330-12-ahaslam@baylibre.com>
- <403743d8-dff2-3389-105b-1082b674b0b8@lechnology.com>
- <CAKXjFTPvEXPRyq0HZiF7mcHWFaFoH7MjFqEKnTyuSCUOB=U7Aw@mail.gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2 v6] iio: gyro: Add MPU-3050 device tree bindings
+Date: Tue, 25 Oct 2016 17:13:57 +0100
+Message-ID: <e6e8241e-d9db-a61d-8a9b-530e4ec3f28a@kernel.org>
+References: <1477404954-3942-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKXjFTPvEXPRyq0HZiF7mcHWFaFoH7MjFqEKnTyuSCUOB=U7Aw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1477404954-3942-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sergei Shtylyov <sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, manjunath.goudar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2016 02:39 AM, Axel Haslam wrote:
-> On Tue, Oct 25, 2016 at 2:38 AM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
->> On 10/24/2016 11:46 AM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
->>>
->>> -#ifndef CONFIG_ARCH_DAVINCI_DA8XX
->>> -#error "This file is DA8xx bus glue.  Define CONFIG_ARCH_DAVINCI_DA8XX."
->>> -#endif
->>> +#include "ohci.h"
->>> +
->>> +#define DRIVER_DESC "OHCI DA8XX driver"
->>> +
->>> +static const char hcd_name[] = "ohci-da8xx";
->>
->>
->> why static const char instead of #define? This is only used one time in a
->> pr_info, so it seems kind of pointless anyway.
->
-> Other drivers are using static const for the same variable.
-> i think static const is preferred over #define because #define doet give a type.
-> If you dont mind ill keep it static const.
->
+On 25/10/16 15:15, Linus Walleij wrote:
+> This adds device tree bindings for the MPU-3050 gyroscope. Since it
+> is the first set of bindings for a gyroscope, the folder for it
+> is also created.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to largely ignore this patch ;)
 
-If this string was used in this file more than one place, I would agree 
-with you, but currently it is only used as the argument of a pr_info(). 
-The string "ohci-da8xx" could just be included in the fmt string instead 
-of using "%s".
+Thanks
+
+Jonathan
+> ---
+> ChangeLog v5->v6:
+> - No changes, just reposting.
+> ChangeLog v4->v5:
+> - No changes, just reposting.
+> ChangeLog v3->v4:
+> - No changes, just reposting. If we agree on these bindings and since
+>   the dependent I2C bindings are merged, this patch should be merge
+>   material now I guess.
+> ChangeLog v2->v3:
+> - Augmented device tree bindings to reflect Peter Rosins now merged
+>   I2C gate bindings.
+> ChangeLog v1->v2:
+> - Not yet convered to use i2c-gate as I'm waiting for that
+>   patch set to stabilize.
+> ---
+>  .../bindings/iio/gyroscope/invensense,mpu3050.txt  | 46 ++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
+> new file mode 100644
+> index 000000000000..b0d3b59966bc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
+> @@ -0,0 +1,46 @@
+> +Invensense MPU-3050 Gyroscope device tree bindings
+> +
+> +Required properties:
+> +  - compatible : should be "invensense,mpu3050"
+> +  - reg : the I2C address of the sensor
+> +
+> +Optional properties:
+> +  - interrupt-parent : should be the phandle for the interrupt controller
+> +  - interrupts : interrupt mapping for the trigger interrupt from the
+> +    internal oscillator. The following IRQ modes are supported:
+> +    IRQ_TYPE_EDGE_RISING, IRQ_TYPE_EDGE_FALLING, IRQ_TYPE_LEVEL_HIGH and
+> +    IRQ_TYPE_LEVEL_LOW. The driver should detect and configure the hardware
+> +    for the desired interrupt type.
+> +  - vdd-supply : supply regulator for the main power voltage.
+> +  - vlogic-supply : supply regulator for the signal voltage.
+> +  - mount-matrix : see iio/mount-matrix.txt
+> +
+> +Optional subnodes:
+> +  - The MPU-3050 will pass through and forward the I2C signals from the
+> +    incoming I2C bus, alternatively drive traffic to a slave device (usually
+> +    an accelerometer) on its own initiative. Therefore is supports a subnode
+> +    i2c gate node. For details see: i2c/i2c-gate.txt
+> +
+> +Example:
+> +
+> +mpu3050@68 {
+> +	compatible = "invensense,mpu3050";
+> +	reg = <0x68>;
+> +	interrupt-parent = <&foo>;
+> +	interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
+> +	vdd-supply = <&bar>;
+> +	vlogic-supply = <&baz>;
+> +
+> +	/* External I2C interface */
+> +	i2c-gate {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		fnord@18 {
+> +			compatible = "fnord";
+> +			reg = <0x18>;
+> +			interrupt-parent = <&foo>;
+> +			interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
+> +		};
+> +	};
+> +};
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
