@@ -1,99 +1,47 @@
-From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH/RFT v2 17/17] ARM: dts: da850: add usb device node
-Date: Tue, 25 Oct 2016 10:03:44 +0200
-Message-ID: <CAKXjFTNSX0-bWqdxH3JFmZRV5U_UHu3ma0iaPp0JWK0WNKDQdQ@mail.gmail.com>
-References: <20161024164634.4330-1-ahaslam@baylibre.com> <20161024164634.4330-18-ahaslam@baylibre.com>
- <59ca6a1f-6db9-eed2-8e8a-77657c7febac@lechnology.com>
+From: Jeremy McNicoll <jmcnicol@redhat.com>
+Subject: Re: [RFC V4 PATCH 6/6] arm64: configs: enable configs for
+ msm899(2/4) basic support
+Date: Tue, 25 Oct 2016 01:07:06 -0700
+Message-ID: <20161025080706.GD21964@mini-rhel.redhat.com>
+References: <1477048273-32451-1-git-send-email-jeremymc@redhat.com>
+ <1477048273-32451-7-git-send-email-jeremymc@redhat.com>
+ <20161021182713.GY7509@tuxbot>
+ <ba4e8128-40c1-e2ff-8eda-130cbb62e71e@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <59ca6a1f-6db9-eed2-8e8a-77657c7febac-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sergei Shtylyov <sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <ba4e8128-40c1-e2ff-8eda-130cbb62e71e@redhat.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Jeremy McNicoll <jeremymc@redhat.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, arnd@arndb.de, mark.rutland@arm.com, michael.scott@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 2:48 AM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
-> On 10/24/2016 11:46 AM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
->>
->> From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>
->> This adds the usb (ohci) device node for the da850 soc.
->> Also it enables it for the lcdk board
->>
->> Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/da850-lcdk.dts | 8 ++++++++
->>  arch/arm/boot/dts/da850.dtsi     | 8 ++++++++
->>  2 files changed, 16 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/da850-lcdk.dts
->> b/arch/arm/boot/dts/da850-lcdk.dts
->> index 7b8ab21..fa91339 100644
->> --- a/arch/arm/boot/dts/da850-lcdk.dts
->> +++ b/arch/arm/boot/dts/da850-lcdk.dts
->> @@ -86,6 +86,14 @@
->>         };
->>  };
->>
->> +&usb_phy {
->> +       status = "okay";
->> +};
->> +
->> +&usb {
->> +       status = "okay";
+On Fri, Oct 21, 2016 at 03:32:08PM -0700, Jeremy McNicoll wrote:
+> On 2016-10-21 11:27 AM, Bjorn Andersson wrote:
+> >On Fri 21 Oct 04:11 PDT 2016, Jeremy McNicoll wrote:
+> >
+> >>From: Jeremy McNicoll <jmcnicol@redhat.com>
+> >>
+> >>Given the mimimal hardware support for msm899(2/4) currently.
+> >>A few config options are needed to allow for continued
+> >>development and booting.
+> >>
+> >>The following are needed for continued development and
+> >>booting:
+> >>  -8x74 pinctrl for serial support
+> >
+> >I don't have the datasheet for 899[24], but I don't think this is a good
+> >idea. We need a 899[24] pinctrl driver for this.
+> >
+> 
+> Based on the downstream code, for serial it was sufficient.
+> 
+> There is a 8994 pinctrl driver on its away.
 >
->
-> Don't you need to specify a regulator here using the vbus-supply property?
 
-its is not mandatory, the regulator framework is giving a dummy supply
-on regulator_get if it does not find a regulator on device tree. That is
-what i could understand from: _regulator_get in regulator/core.c
+Here is a link to the 8994 pinctrl needed for 899(2/4).
 
-Also, in the case of platform based boot, if the board init calls
-regulator_has_full_constraints which is anyways needed for the phy to probe
-correctly it will also return a dummy regulator.
+ https://patches.linaro.org/patch/78750/
 
-
->
->> +};
->> +
->>  &serial2 {
->>         pinctrl-names = "default";
->>         pinctrl-0 = <&serial2_rxtx_pins>;
->> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
->> index 33fcdce..ec2cec3 100644
->> --- a/arch/arm/boot/dts/da850.dtsi
->> +++ b/arch/arm/boot/dts/da850.dtsi
->> @@ -381,6 +381,14 @@
->>                         #phy-cells = <1>;
->>                         status = "disabled";
->>                 };
->> +               usb: usb@0225000 {
->
->
-> Don't need the leading 0 on usb@225000
->
-> The alias (usb:) might need to be more specific since there is a second usb
-> device that will be added later for musb. (The comments in the previous
-> review only referred to the "usb" in "usb@", not the alias.)
-
-ok.
-
->
->> +                       compatible = "ti,da830-ohci";
->> +                       reg = <0x225000 0x1000>;
->> +                       interrupts = <59>;
->> +                       phys = <&usb_phy 1>;
->> +                       phy-names = "usb-phy";
->> +                       status = "disabled";
->> +               };
->>                 gpio: gpio@226000 {
->>                         compatible = "ti,dm6441-gpio";
->>                         gpio-controller;
->>
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-jeremy
