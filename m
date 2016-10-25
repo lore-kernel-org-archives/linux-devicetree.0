@@ -1,58 +1,43 @@
-From: Axel Haslam <ahaslam@baylibre.com>
-Subject: Re: [PATCH/RFT v2 09/17] regulator: fixed: Add over current event
-Date: Tue, 25 Oct 2016 17:07:17 +0200
-Message-ID: <CAKXjFTO3mEzdtGYr108TcSo8v8L+a2AhF49RaDaBADZSX4bK3g@mail.gmail.com>
-References: <20161024164634.4330-1-ahaslam@baylibre.com> <20161024164634.4330-10-ahaslam@baylibre.com>
- <20161024175320.GO17252@sirena.org.uk> <CAKXjFTNZhWTZSXtLZo8EieBtAPn_J-MM+-g8yCRJiV6UBspB9Q@mail.gmail.com>
- <20161024181937.GP17252@sirena.org.uk> <CAKXjFTOHcqRFtbXMXSTyUZ3P00eRMz1N3d62Y3NWVZJDGeScZA@mail.gmail.com>
- <20161025143304.GW17252@sirena.org.uk> <CAKXjFTOz=TGCiKic77JXdJMUoobLY4Ye9QnqajbG4JTh=VGUFg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKXjFTOz=TGCiKic77JXdJMUoobLY4Ye9QnqajbG4JTh=VGUFg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, robh+dt@kernel.org, Sekhar Nori <nsekhar@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Kevin Hilman <khilman@baylibre.com>, Sergei Shtylyov <sshtylyov@ru.mvista.com>, David Lechner <david@lechnology.com>, manjunath.goudar@linaro.org, Alexandre Bailon <abailon@baylibre.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: [PATCH 2/4] dt-bindings: add domain-idle-state compatible to arm,idle-state
+Date: Tue, 25 Oct 2016 08:26:37 -0700
+Message-ID: <1477409199-52182-3-git-send-email-lina.iyer@linaro.org>
+References: <1477409199-52182-1-git-send-email-lina.iyer@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1477409199-52182-1-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, brendan.jackman@arm.com, lorenzo.pieralisi@arm.com, sudeep.holla@arm.com, Juri.Lelli@arm.com, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 4:57 PM, Axel Haslam <ahaslam@baylibre.com> wrote:
-> On Tue, Oct 25, 2016 at 4:33 PM, Mark Brown <broonie@kernel.org> wrote:
->> On Tue, Oct 25, 2016 at 02:55:48PM +0200, Axel Haslam wrote:
->>
->>> To be able to use regulator to handle the overcurrent pin, i need to be able
->>> to somehow retrieve the over current pin state from the regulator driver.
->>
->> What makes you say that, none of the existing users need this?
->>
->>> As i was trying your suggestion, i remembered why i thought i should use
->>> mode instead of status: Status seems to be for internal regulator driver use,
->>> there is no regulator_get_status, function and REGULATOR_STATUS_* are defined
->>> in driver.h and not in consumer.h as  REGULATOR_MODE_*
->>
->>> Would you be ok if i allow consumers to get the status via a new
->>> "regulator_get_status" call?
->>
->> What would they do with this information that they can't do with the
->> existing error notification?
->
-> the usb core relies in two flags that need too be set properly, one is the
-> over-current indicator RH_PS_POCI , and the other is the over current
-> indicator "change" (RH_PS_OCIC).
->
-> The idea was to use the notification to set the over current indicator
-> "change" flag,
-> which will happen for both rising and falling edges. And to use
-> get_status or get_mode
-> to set the over-current indicator flag which should reflect the actual
-> pin status.
->
+CPU's idle states are defined by the arm,idle-state compatible flag. PM
+domains that can contains devices and other domains also has similar
+definition for its idle state. Reuse the definition of arm,idle-state
+for PM domains by allowing an addition compatible string
+("domain-idle-state") to denote idle states that are specific to PM
+Domains.
 
-BTW, for the notification, i should have used a new event flag
-something like: OVER_CURRENT_CHANGED and not just OVER_CURRENT
+Cc: <devicetree@vger.kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+---
+ Documentation/devicetree/bindings/arm/idle-states.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-
-Regards
-Axel
-
->
-> -Axel.
+diff --git a/Documentation/devicetree/bindings/arm/idle-states.txt b/Documentation/devicetree/bindings/arm/idle-states.txt
+index b8e41c1..4b0ff59 100644
+--- a/Documentation/devicetree/bindings/arm/idle-states.txt
++++ b/Documentation/devicetree/bindings/arm/idle-states.txt
+@@ -271,6 +271,9 @@ follows:
+ 		Usage: Required
+ 		Value type: <stringlist>
+ 		Definition: Must be "arm,idle-state".
++			    Additionally, nodes that are used to describe a
++			    idle-state of PM domain must also define
++			    "domain-idle-state" as compatible string.
+ 
+ 	- local-timer-stop
+ 		Usage: See definition
+-- 
+2.7.4
