@@ -1,45 +1,34 @@
-From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH] of: fdt: Add a space to the pr_fmt string
-Date: Tue, 25 Oct 2016 15:02:13 -0200
-Message-ID: <1477414933-24050-1-git-send-email-fabio.estevam@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/6] usb: dwc3: Interrupt moderation
+Date: Tue, 25 Oct 2016 12:42:38 -0700
+Message-ID: <cover.1477424426.git.johnyoun@synopsys.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a space to the fdt messages so they can look a bit better:
+This patch series implements interrupt moderation and also uses it in
+implementing a workaround for STAR 9000961433.
 
-OF: fdt: Machine model: Freescale i.MX28 Evaluation Kit
 
-instead of
+John Youn (6):
+  usb: dwc3: Add a check for the DWC_usb3 core
+  usb: dwc3: Add a function to check properties
+  Documentation: devicetree: dwc3: Add interrupt moderation
+  usb: dwc3: gadget: Write the event count in interrupt
+  usb: dwc3: Implement interrupt moderation
+  usb: dwc3: Workaround for irq mask issue
 
-OF: fdt:Machine model: Freescale i.MX28 Evaluation Kit
+ Documentation/devicetree/bindings/usb/dwc3.txt |  1 +
+ drivers/usb/dwc3/core.c                        | 89 ++++++++++++++++++--------
+ drivers/usb/dwc3/core.h                        | 21 ++++++
+ drivers/usb/dwc3/gadget.c                      | 20 +++++-
+ 4 files changed, 103 insertions(+), 28 deletions(-)
 
-Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
----
- drivers/of/fdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index c89d5d2..9f98e43 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -9,7 +9,7 @@
-  * version 2 as published by the Free Software Foundation.
-  */
- 
--#define pr_fmt(fmt)	"OF: fdt:" fmt
-+#define pr_fmt(fmt)	"OF: fdt: " fmt
- 
- #include <linux/crc32.h>
- #include <linux/kernel.h>
 -- 
-2.7.4
+2.10.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
