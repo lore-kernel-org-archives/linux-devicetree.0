@@ -1,90 +1,75 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V1] mfd: pv88080: Expand driver for GPIO function support.
-Date: Tue, 25 Oct 2016 07:40:40 +0100
-Message-ID: <20161025064040.GE8574@dell>
-References: <20161025014148.7DF655FA17@krsrvapps-01.diasemi.com>
+From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Subject: Re: [PATCH v5 1/7] drm: sunxi: Add a basic DRM driver
+ for Allwinner DE2
+Date: Tue, 25 Oct 2016 08:44:22 +0200
+Message-ID: <20161025064422.4jua6qmpr7zu3ijt@phenom.ffwll.local>
+References: <cover.1477142934.git.moinejf@free.fr>
+ <8afc5e020c5767face34fe3a9ab300ce9e67ba00.1477142934.git.moinejf@free.fr>
+Reply-To: daniel-/w4YWyX8dFk@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDYZDG4VSMIRBSP6XPAAKGQE3THRBTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161025014148.7DF655FA17@krsrvapps-01.diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Jeong <eric.jeong.opensource@diasemi.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-GPIO <linux-gpio@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
+In-Reply-To: <8afc5e020c5767face34fe3a9ab300ce9e67ba00.1477142934.git.moinejf-GANU6spQydw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 25 Oct 2016, Eric Jeong wrote:
+On Fri, Oct 21, 2016 at 09:26:18AM +0200, Jean-Francois Moine wrote:
+> +static int de2_drm_bind(struct device *dev)
+> +{
+> +	struct drm_device *drm;
+> +	struct priv *priv;
+> +	int ret;
+> +
+> +	drm = drm_dev_alloc(&de2_drm_driver, dev);
+> +	if (!drm)
+> +		return -ENOMEM;
+> +
+> +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> +	if (!priv) {
+> +		dev_err(dev, "failed to allocate private area\n");
+> +		ret = -ENOMEM;
+> +		goto out1;
+> +	}
+> +
+> +	dev_set_drvdata(dev, drm);
+> +	drm->dev_private = priv;
+> +
+> +	drm_mode_config_init(drm);
+> +	drm->mode_config.min_width = 32;	/* needed for cursor */
+> +	drm->mode_config.min_height = 32;
+> +	drm->mode_config.max_width = 1920;
+> +	drm->mode_config.max_height = 1080;
+> +	drm->mode_config.funcs = &de2_mode_config_funcs;
+> +
+> +	drm->irq_enabled = true;
+> +
+> +	/* initialize the display engine */
+> +	priv->soc_type = (int) of_match_device(de2_drm_of_match, dev)->data;
+> +	ret = de2_de_init(priv, dev);
+> +	if (ret)
+> +		goto out2;
+> +
+> +	/* start the subdevices */
+> +	ret = component_bind_all(dev, drm);
+> +	if (ret < 0)
+> +		goto out2;
+> +
+> +	ret = drm_dev_register(drm, 0);
 
-> 
-> From: Eric Jeong <eric.jeong.opensource@diasemi.com>
-> 
-> This patch adds support for the PV88080 PMIC.
-> 
-> This pathch is done as part of the existing PV88080 regulator driver
-> by expanding the driver for GPIO function support.
-> 
-> The MFD core driver provides communication through the I2C interface.
-> and contains the following components:
-> 
->     - Regulators
->     - Configurable GPIOs
-> 
-> Kconfig and Makefile are updated to reflect support for PV88080 PMIC.
-> 
-> Signed-off-by: Eric Jeong <eric.jeong.opensource@diasemi.com>
-> 
-> ---
-> This patch applies against linux-next and next-20161024
-> 
-> Hi,
-> 
-> This change is made as a single patch. Because, to ensure that
-> kernel builds and runs properly after this patch.
-> 
-> The regulator device driver for PV88080 IC is submitted to Linux kernel.
-> And now, GPIO function is required. In order to add GPIO driver,
-> MFD driver is also required.
-> 
-> Changes
->  - Add MFD driver.
->  - Add GPIO driver.
->  - Update regulator driver to reflect the support.
->  - Delete pv88080-regulator.h file.
->  - Move binding document to mfd directory.
->  
-> Regards,
-> Eric Jeong, Dialog Semiconductor Ltd.
-> 
-> 
->  Documentation/devicetree/bindings/mfd/pv88080.txt  |   63 +++++
->  .../devicetree/bindings/regulator/pv88080.txt      |   62 -----
->  drivers/gpio/Kconfig                               |   11 +
->  drivers/gpio/Makefile                              |    1 +
->  drivers/gpio/gpio-pv88080.c                        |  195 ++++++++++++++
->  drivers/mfd/Kconfig                                |   12 +
->  drivers/mfd/Makefile                               |    2 +
->  drivers/mfd/pv88080-core.c                         |  270 ++++++++++++++++++++
->  drivers/mfd/pv88080-i2c.c                          |   99 +++++++
->  drivers/regulator/Kconfig                          |    5 +-
->  drivers/regulator/pv88080-regulator.c              |  202 ++++++---------
->  drivers/regulator/pv88080-regulator.h              |  118 ---------
->  include/linux/mfd/pv88080.h                        |  236 +++++++++++++++++
->  13 files changed, 970 insertions(+), 306 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/pv88080.txt
->  delete mode 100644 Documentation/devicetree/bindings/regulator/pv88080.txt
->  create mode 100644 drivers/gpio/gpio-pv88080.c
->  create mode 100644 drivers/mfd/pv88080-core.c
->  create mode 100644 drivers/mfd/pv88080-i2c.c
->  delete mode 100644 drivers/regulator/pv88080-regulator.h
->  create mode 100644 include/linux/mfd/pv88080.h
-
-You're going to need to split this patch up as much as possible.
-
-No one is going to want to review a 1200 line patch.
-
+This needs to be the very last step in your driver load sequence.
+Kerneldoc explains why. Similar, but inverted for unloading:
+drm_dev_unregister is the very first thing you must call.
+-Daniel
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
