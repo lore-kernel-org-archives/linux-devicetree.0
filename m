@@ -1,71 +1,105 @@
-From: Jeremy McNicoll <jmcnicol@redhat.com>
-Subject: Re: [RFC V4 PATCH 1/6] arm64: dts: msm8992 SoC and LG Bullhead
- (Nexus 5X) support
-Date: Tue, 25 Oct 2016 01:15:43 -0700
-Message-ID: <20161025081543.GE21964@mini-rhel.redhat.com>
-References: <1477048273-32451-1-git-send-email-jeremymc@redhat.com>
- <1477048273-32451-2-git-send-email-jeremymc@redhat.com>
- <20161021182004.GW7509@tuxbot>
+From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH/RFT v2 12/17] USB: ochi-da8xx: Use a regulator for vbus/overcurrent
+Date: Tue, 25 Oct 2016 10:24:50 +0200
+Message-ID: <CAKXjFTOxQ58rThpPw9t73k-BBZ8YKGvMhWfAG1r+3kC=GJVxWg@mail.gmail.com>
+References: <20161024164634.4330-1-ahaslam@baylibre.com> <20161024164634.4330-13-ahaslam@baylibre.com>
+ <672c1f1a-58b7-6947-7fb2-acd38fab8597@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161021182004.GW7509@tuxbot>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, arnd@arndb.de, mark.rutland@arm.com, michael.scott@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <672c1f1a-58b7-6947-7fb2-acd38fab8597-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sergei Shtylyov <sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 11:20:04AM -0700, Bjorn Andersson wrote:
-> On Fri 21 Oct 04:11 PDT 2016, Jeremy McNicoll wrote:
-> 
-> > From: Jeremy McNicoll <jmcnicol@redhat.com>
-> > 
-> > Initial device tree support for Qualcomm MSM8992 SoC and
-> > LG Bullhead / Google Nexus 5X support.
-> > 
-> 
-> Looks reasonable, just two small nits below.
-> 
+On Tue, Oct 25, 2016 at 3:39 AM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
+> On 10/24/2016 11:46 AM, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org wrote:
+>>
+>> From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>
+>> Currently, the da8xx ohci driver uses a set of gpios and callbacks in
+>> board files to handle vbus and overcurrent irqs form the power supply.
+>> However, this does not play nice when moving to a DT based boot were
+>> we wont have board files.
+>>
+>> Instead of requesting and handling the gpio, use the regulator framework
+>> to take care of enabling and disabling vbus power.
+>> This has the benefit
+>> that we dont need to pass any more platform data to the driver:
+>>
+>> These will be handled by the regulator framework:
+>> set_power   ->  regulator_enable/regulator_disable
+>> get_power   ->  regulator_is_enabled
+>> get_oci     ->  regulator_get_mode
+>> ocic_notify ->  regulator notification
+>>
+>> We can keep the default potpgt and use the regulator start delay instead:
+>> potpgt      -> regulator startup delay time
+>>
+>> The hawk board does not have a GPIO/OVERCURRENT gpio to control vbus,
+>> (they should not have been decleared/reserved) so, just remove those
+>> definitions from the hwk board file.
+>>
+>> Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> ---
+>
+>
+>
+> How do you recover after an overcurrent event?
+>
+> I have configured a fixed-regulator using device-tree, but similar to the
+> configuration in the board files here. However, when I shorted out the VBUS
+> and caused an overcurrent event, I see nothing in the kernel log saying that
+> there was an overcurrent event and after I remove the short, the regulator
+> is never turned back on.
+>
+>
 
-Thanks for the feedback.
+You should have the patch to fix gpiolib, and you should declare the
+over current gpio on the regulator as such:
+(if the pin is enabled high you should add oc-active-high);
 
-> > Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
-> > ---
-> >  arch/arm64/boot/dts/qcom/Makefile                  |   4 +-
-> >  .../boot/dts/qcom/msm8992-bullhead-rev-101.dts     |  42 ++++
-> >  arch/arm64/boot/dts/qcom/msm8992-pins.dtsi         |  38 ++++
-> >  arch/arm64/boot/dts/qcom/msm8992.dtsi              | 214 +++++++++++++++++++++
-> >  4 files changed, 296 insertions(+), 2 deletions(-)
-> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
-> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8992.dtsi
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> > index 5dd05de..abb366e 100644
-> > --- a/arch/arm64/boot/dts/qcom/Makefile
-> > +++ b/arch/arm64/boot/dts/qcom/Makefile
-> > @@ -1,6 +1,6 @@
-> >  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
-> > -dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
-> > -dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
-> > +dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb apq8096-db820c.dtb
-> 
-> Don't change these, just add yours.
-> 
+       vbus_fixed: fixed-regulator-vbus {
+               compatible = "regulator-fixed";
+               gpio = <&gpio 109 0>;
+               oc-gpio = <&gpio 36 0>;
+               regulator-boot-on;
+               enable-active-high;
+               regulator-name = "vbus";
+               regulator-min-microvolt = <5000000>;
+               regulator-max-microvolt = <5000000>;
+       };
 
-Done, one line per entry.
 
-> [..]
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-> [..]
-> > +
-> > +	msmgpio: pinctrl@fd510000 {
-> > +		compatible = "qcom,msm8994-pinctrl", "qcom,msm8974-pinctrl";
-> 
-> This device is not compatible with the msm8974 TLMM, so please drop the
-> second compatible.
+Question: Do you see that the over current gpio was requested
+in debugfs/gpio? and, do you see the interrupt in /proc/interrupts?
 
-Updated to use, https://patches.linaro.org/patch/78750/
+If you unplug and plug in back the usb device it should work again.
+also you can unbind and bind it should also start to work:
+something like:
 
--jeremy
+echo usb1 >/sys/bus/usb/drivers/usb/unbind
+echo usb1 >/sys/bus/usb/drivers/usb/bind
+
+
+>
+>> @@ -163,7 +198,6 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd,
+>> u16 typeReq, u16 wValue,
+>>                                   u16 wIndex, char *buf, u16 wLength)
+>>  {
+>>         struct device *dev              = hcd->self.controller;
+>> -       struct da8xx_ohci_root_hub *hub = dev_get_platdata(dev);
+>
+>
+> nit: unnecessary whitespace change
+>
+>>         int temp;
+>>
+>>         switch (typeReq) {
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
