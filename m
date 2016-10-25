@@ -1,184 +1,503 @@
-From: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2] drm/mediatek: fixed the calc method of data rate per lane
-Date: Tue, 25 Oct 2016 13:40:45 +0800
-Message-ID: <1477374045-2837-1-git-send-email-jitao.shi@mediatek.com>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH v1] ARM: at91/dt: add dts file for sama5d36ek CMP board
+Date: Tue, 25 Oct 2016 14:08:36 +0800
+Message-ID: <1477375716-17264-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, stonea168-9Onoh4P/yGk@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Wenyou Yang <wenyou.yang@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Tune dsi frame rate by pixel clock, dsi add some extra signal (i.e. Tlpx,
-Ths-prepare, Ths-zero, Ths-trail,Ths-exit) when enter and exit LP mode, this
-signal will cause h-time larger than normal and reduce FPS.
-Need to multiply a coefficient to offset the extra signal's effect.
-coefficient = ((htotal*bpp/lane_number)+Tlpx+Ths_prep+Ths_zero+Ths_trail+
-                Ths_exit)/(htotal*bpp/lane_number))
+The difference between sama5d36ek_cmp.dts and sama5d36ek.dts
+is listed as below.
+ 1. The USB host nodes are removed, that is, the USB host is disabled.
+ 2. The gpio_keys node is added to wake up from the sleep.
+ 3. The sama5d3xdm.dtsi isn't included, because the pins for LCD are
+    conflicted with one for gpio_keys.
 
-Signed-off-by: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
-Change since v1:
- - phy_timing2 and phy_timing3 refer clock cycle time.
- - define values of LPX HS_PRPR HS_ZERO HS_TRAIL TA_GO TA_SURE TA_GET DA_HS_EXIT
----
- drivers/gpu/drm/mediatek/mtk_dsi.c |  103 +++++++++++++++++++++++-------------
- 1 file changed, 67 insertions(+), 36 deletions(-)
+As said in errata, "When the USB host ports are used in high speed
+mode (EHCI), it is not possible to suspend the ports if no device is
+attached on each port. This leads to increased power consumption even
+if the system is in a low power mode." That is why the the USB host
+isn't enabled.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 28b2044..ade6f46 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -85,16 +85,16 @@
- #define LD0_WAKEUP_EN			BIT(2)
- 
- #define DSI_PHY_TIMECON0	0x110
--#define LPX				(0xff << 0)
--#define HS_PRPR				(0xff << 8)
--#define HS_ZERO				(0xff << 16)
--#define HS_TRAIL			(0xff << 24)
-+#define LPX				(5 << 0)
-+#define HS_PRPR				(6 << 8)
-+#define HS_ZERO				(10 << 16)
-+#define HS_TRAIL			(8 << 24)
- 
- #define DSI_PHY_TIMECON1	0x114
--#define TA_GO				(0xff << 0)
--#define TA_SURE				(0xff << 8)
--#define TA_GET				(0xff << 16)
--#define DA_HS_EXIT			(0xff << 24)
-+#define TA_GO				(20 << 0)
-+#define TA_SURE				(7 << 8)
-+#define TA_GET				(25 << 16)
-+#define DA_HS_EXIT			(7 << 24)
- 
- #define DSI_PHY_TIMECON2	0x118
- #define CONT_DET			(0xff << 0)
-@@ -158,28 +158,14 @@ static void mtk_dsi_mask(struct mtk_dsi *dsi, u32 offset, u32 mask, u32 data)
- 	writel((temp & ~mask) | (data & mask), dsi->regs + offset);
- }
- 
--static void dsi_phy_timconfig(struct mtk_dsi *dsi)
-+static void dsi_phy_timconfig(struct mtk_dsi *dsi, u32 phy_timing0,
-+			      u32 phy_timing1, u32 phy_timing2,
-+			      u32 phy_timing3)
- {
--	u32 timcon0, timcon1, timcon2, timcon3;
--	unsigned int ui, cycle_time;
--	unsigned int lpx;
--
--	ui = 1000 / dsi->data_rate + 0x01;
--	cycle_time = 8000 / dsi->data_rate + 0x01;
--	lpx = 5;
--
--	timcon0 = (8 << 24) | (0xa << 16) | (0x6 << 8) | lpx;
--	timcon1 = (7 << 24) | (5 * lpx << 16) | ((3 * lpx) / 2) << 8 |
--		  (4 * lpx);
--	timcon2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
--		  (NS_TO_CYCLE(0x150, cycle_time) << 16);
--	timcon3 = (2 * lpx) << 16 | NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8 |
--		   NS_TO_CYCLE(0x40, cycle_time);
--
--	writel(timcon0, dsi->regs + DSI_PHY_TIMECON0);
--	writel(timcon1, dsi->regs + DSI_PHY_TIMECON1);
--	writel(timcon2, dsi->regs + DSI_PHY_TIMECON2);
--	writel(timcon3, dsi->regs + DSI_PHY_TIMECON3);
-+	writel(phy_timing0, dsi->regs + DSI_PHY_TIMECON0);
-+	writel(phy_timing1, dsi->regs + DSI_PHY_TIMECON1);
-+	writel(phy_timing2, dsi->regs + DSI_PHY_TIMECON2);
-+	writel(phy_timing3, dsi->regs + DSI_PHY_TIMECON3);
- }
- 
- static void mtk_dsi_enable(struct mtk_dsi *dsi)
-@@ -202,19 +188,51 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
- {
- 	struct device *dev = dsi->dev;
- 	int ret;
-+	u64 bit_clock, total_bits;
-+	u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
-+	u32 phy_timing0, phy_timing1, phy_timing2, phy_timing3;
-+	u32 ui, cycle_time;
- 
- 	if (++dsi->refcount != 1)
- 		return 0;
- 
-+	switch (dsi->format) {
-+	case MIPI_DSI_FMT_RGB565:
-+		bit_per_pixel = 16;
-+		break;
-+	case MIPI_DSI_FMT_RGB666_PACKED:
-+		bit_per_pixel = 18;
-+		break;
-+	case MIPI_DSI_FMT_RGB666:
-+	case MIPI_DSI_FMT_RGB888:
-+	default:
-+		bit_per_pixel = 24;
-+		break;
-+	}
-+	/**
-+	 * data_rate = (pixel_clock) * bit_per_pixel * mipi_ratio / lane_num;
-+	 * vm.pixelclock is Khz, data_rata unit is Hz, so need to multiply 1000
-+	 * mipi_ratio is (htotal * byte_per_pixel / lane_num + Tlpx + Ths_prep
-+	 *		  + Thstrail + Ths_exit + Ths_zero) /
-+	 *		 (htotal * byte_per_pixel /lane_number)
-+	 */
-+	bit_clock = dsi->vm.pixelclock * 1000 * bit_per_pixel;
-+	htotal = dsi->vm.hactive + dsi->vm.hback_porch + dsi->vm.hfront_porch +
-+		 dsi->vm.hsync_len;
-+	htotal_bits = htotal * bit_per_pixel;
+Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+---
+
+ arch/arm/boot/dts/sama5d36ek_cmp.dts  |  51 ++++++++
+ arch/arm/boot/dts/sama5d3xcm_cmp.dtsi | 166 ++++++++++++++++++++++++
+ arch/arm/boot/dts/sama5d3xmb_cmp.dtsi | 230 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 447 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sama5d36ek_cmp.dts
+ create mode 100644 arch/arm/boot/dts/sama5d3xcm_cmp.dtsi
+ create mode 100644 arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
+
+diff --git a/arch/arm/boot/dts/sama5d36ek_cmp.dts b/arch/arm/boot/dts/sama5d36ek_cmp.dts
+new file mode 100644
+index 0000000..fd6bcd6
+--- /dev/null
++++ b/arch/arm/boot/dts/sama5d36ek_cmp.dts
+@@ -0,0 +1,51 @@
++/*
++ * sama5d36ek_cmp.dts - Device Tree file for SAMA5D36-EK CMP board
++ *
++ *  Copyright (C) 2016 Atmel,
++ *
++ * Licensed under GPLv2 or later.
++ */
++/dts-v1/;
++#include "sama5d36.dtsi"
++#include "sama5d3xmb_cmp.dtsi"
 +
- 	/**
--	 * data_rate = (pixel_clock / 1000) * pixel_dipth * mipi_ratio;
--	 * pixel_clock unit is Khz, data_rata unit is MHz, so need divide 1000.
--	 * mipi_ratio is mipi clk coefficient for balance the pixel clk in mipi.
--	 * we set mipi_ratio is 1.05.
-+	 * overhead = lpx + hs_prepare + hs_zero + hs_trail + hs_exit
- 	 */
--	dsi->data_rate = dsi->vm.pixelclock * 3 * 21 / (1 * 1000 * 10);
-+	overhead_cycles = LPX + (HS_PRPR >> 8) + (HS_ZERO >> 16) +
-+			  (HS_TRAIL >> 24) + (DA_HS_EXIT >> 24);
-+	overhead_bits = overhead_cycles * dsi->lanes * 8;
-+	total_bits = htotal_bits + overhead_bits;
- 
--	ret = clk_set_rate(dsi->hs_clk, dsi->data_rate * 1000000);
-+	dsi->data_rate = DIV_ROUND_UP_ULL(bit_clock * total_bits,
-+					  htotal_bits * dsi->lanes);
++/ {
++	model = "Atmel SAMA5D36-EK";
++	compatible = "atmel,sama5d36ek", "atmel,sama5d3xmb", "atmel,sama5d3xcm", "atmel,sama5d36", "atmel,sama5d3", "atmel,sama5";
 +
-+	ret = clk_set_rate(dsi->hs_clk, dsi->data_rate);
- 	if (ret < 0) {
- 		dev_err(dev, "Failed to set data rate: %d\n", ret);
- 		goto err_refcount;
-@@ -236,7 +254,20 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
- 
- 	mtk_dsi_enable(dsi);
- 	mtk_dsi_reset(dsi);
--	dsi_phy_timconfig(dsi);
++	ahb {
++		apb {
++			spi0: spi@f0004000 {
++				status = "okay";
++			};
 +
-+	ui = 1000 / dsi->data_rate + 0x01;
-+	cycle_time = 8000 / dsi->data_rate + 0x01;
++			ssc0: ssc@f0008000 {
++				status = "okay";
++			};
 +
-+	phy_timing0 = LPX | HS_PRPR | HS_ZERO | HS_TRAIL;
-+	phy_timing1 = TA_GO | TA_SURE | TA_GET | DA_HS_EXIT;
-+	phy_timing2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
-+		      (NS_TO_CYCLE(0x150, cycle_time) << 16);
-+	phy_timing3 = (2 * LPX) << 16 |
-+		      NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8 |
-+		      NS_TO_CYCLE(0x40, cycle_time);
++			can0: can@f000c000 {
++				status = "okay";
++			};
 +
-+	dsi_phy_timconfig(dsi, phy_timing0, phy_timing1, phy_timing2,
-+			  phy_timing3);
- 
- 	return 0;
- 
++			i2c0: i2c@f0014000 {
++				status = "okay";
++			};
++
++			i2c1: i2c@f0018000 {
++				status = "okay";
++			};
++
++			macb0: ethernet@f0028000 {
++				status = "okay";
++			};
++
++			macb1: ethernet@f802c000 {
++				status = "okay";
++			};
++		};
++	};
++
++	sound {
++		status = "okay";
++	};
++};
+diff --git a/arch/arm/boot/dts/sama5d3xcm_cmp.dtsi b/arch/arm/boot/dts/sama5d3xcm_cmp.dtsi
+new file mode 100644
+index 0000000..77638c3
+--- /dev/null
++++ b/arch/arm/boot/dts/sama5d3xcm_cmp.dtsi
+@@ -0,0 +1,166 @@
++/*
++ * sama5d3xcm_cmp.dtsi - Device Tree Include file for SAMA5D36 CMP CPU Module
++ *
++ *  Copyright (C) 2016 Atmel,
++ *
++ * Licensed under GPLv2 or later.
++ */
++
++/ {
++	compatible = "atmel,sama5d3xcm", "atmel,sama5d3", "atmel,sama5";
++
++	chosen {
++		bootargs = "rootfstype=ubifs ubi.mtd=5 root=ubi0:rootfs";
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		reg = <0x20000000 0x20000000>;
++	};
++
++	clocks {
++		slow_xtal {
++			clock-frequency = <32768>;
++		};
++
++		main_xtal {
++			clock-frequency = <12000000>;
++		};
++	};
++
++	ahb {
++		apb {
++			spi0: spi@f0004000 {
++				cs-gpios = <&pioD 13 0>, <0>, <0>, <0>;
++			};
++
++			macb0: ethernet@f0028000 {
++				phy-mode = "rgmii";
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				ethernet-phy@1 {
++					reg = <0x1>;
++					interrupt-parent = <&pioB>;
++					interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
++					txen-skew-ps = <800>;
++					txc-skew-ps = <3000>;
++					rxdv-skew-ps = <400>;
++					rxc-skew-ps = <3000>;
++					rxd0-skew-ps = <400>;
++					rxd1-skew-ps = <400>;
++					rxd2-skew-ps = <400>;
++					rxd3-skew-ps = <400>;
++				};
++
++				ethernet-phy@7 {
++					reg = <0x7>;
++					interrupt-parent = <&pioB>;
++					interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
++					txen-skew-ps = <800>;
++					txc-skew-ps = <3000>;
++					rxdv-skew-ps = <400>;
++					rxc-skew-ps = <3000>;
++					rxd0-skew-ps = <400>;
++					rxd1-skew-ps = <400>;
++					rxd2-skew-ps = <400>;
++					rxd3-skew-ps = <400>;
++				};
++			};
++
++			i2c1: i2c@f0018000 {
++				pmic: act8865@5b {
++					compatible = "active-semi,act8865";
++					reg = <0x5b>;
++					status = "disabled";
++
++					regulators {
++						vcc_1v8_reg: DCDC_REG1 {
++							regulator-name = "VCC_1V8";
++							regulator-min-microvolt = <1800000>;
++							regulator-max-microvolt = <1800000>;
++							regulator-always-on;
++						};
++
++						vcc_1v2_reg: DCDC_REG2 {
++							regulator-name = "VCC_1V2";
++							regulator-min-microvolt = <1100000>;
++							regulator-max-microvolt = <1300000>;
++							regulator-always-on;
++						};
++
++						vcc_3v3_reg: DCDC_REG3 {
++							regulator-name = "VCC_3V3";
++							regulator-min-microvolt = <3300000>;
++							regulator-max-microvolt = <3300000>;
++							regulator-always-on;
++						};
++
++						vddana_reg: LDO_REG1 {
++							regulator-name = "VDDANA";
++							regulator-min-microvolt = <3300000>;
++							regulator-max-microvolt = <3300000>;
++							regulator-always-on;
++						};
++
++						vddfuse_reg: LDO_REG2 {
++							regulator-name = "FUSE_2V5";
++							regulator-min-microvolt = <2500000>;
++							regulator-max-microvolt = <2500000>;
++						};
++					};
++				};
++			};
++		};
++
++		nand0: nand@60000000 {
++			nand-bus-width = <8>;
++			nand-ecc-mode = "hw";
++			atmel,has-pmecc;
++			atmel,pmecc-cap = <4>;
++			atmel,pmecc-sector-size = <512>;
++			nand-on-flash-bbt;
++			status = "okay";
++
++			at91bootstrap@0 {
++				label = "at91bootstrap";
++				reg = <0x0 0x40000>;
++			};
++
++			bootloader@40000 {
++				label = "bootloader";
++				reg = <0x40000 0x80000>;
++			};
++
++			bootloaderenv@c0000 {
++				label = "bootloader env";
++				reg = <0xc0000 0xc0000>;
++			};
++
++			dtb@180000 {
++				label = "device tree";
++				reg = <0x180000 0x80000>;
++			};
++
++			kernel@200000 {
++				label = "kernel";
++				reg = <0x200000 0x600000>;
++			};
++
++			rootfs@800000 {
++				label = "rootfs";
++				reg = <0x800000 0x0f800000>;
++			};
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		d2 {
++			label = "d2";
++			gpios = <&pioE 25 GPIO_ACTIVE_LOW>;	/* PE25, conflicts with A25, RXD2 */
++			linux,default-trigger = "heartbeat";
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi b/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
+new file mode 100644
+index 0000000..3ec78867
+--- /dev/null
++++ b/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
+@@ -0,0 +1,230 @@
++/*
++ * sama5d3xmb_cmp.dts - Device Tree file for SAMA5D3x CMP mother board
++ *
++ *  Copyright (C) 2016 Atmel,
++ *
++ * Licensed under GPLv2 or later.
++ */
++#include "sama5d3xcm_cmp.dtsi"
++
++/ {
++	compatible = "atmel,sama5d3xmb", "atmel,sama5d3xcm", "atmel,sama5d3", "atmel,sama5";
++
++	ahb {
++		apb {
++			mmc0: mmc@f0000000 {
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_mmc0_clk_cmd_dat0 &pinctrl_mmc0_dat1_3 &pinctrl_mmc0_cd>;
++				status = "okay";
++				slot@0 {
++					reg = <0>;
++					bus-width = <4>;
++					cd-gpios = <&pioD 17 GPIO_ACTIVE_HIGH>;
++				};
++			};
++
++			spi0: spi@f0004000 {
++				dmas = <0>, <0>;	/*  Do not use DMA for spi0 */
++
++				m25p80@0 {
++					compatible = "atmel,at25df321a";
++					spi-max-frequency = <50000000>;
++					reg = <0>;
++				};
++			};
++
++			ssc0: ssc@f0008000 {
++				atmel,clk-from-rk-pin;
++			};
++
++			/*
++			 * i2c0 conflicts with ISI:
++			 * disable it to allow the use of ISI
++			 * can not enable audio when i2c0 disabled
++			 */
++			i2c0: i2c@f0014000 {
++				wm8904: wm8904@1a {
++					compatible = "wlf,wm8904";
++					reg = <0x1a>;
++					clocks = <&pck0>;
++					clock-names = "mclk";
++				};
++			};
++
++			i2c1: i2c@f0018000 {
++				ov2640: camera@0x30 {
++					compatible = "ovti,ov2640";
++					reg = <0x30>;
++					pinctrl-names = "default";
++					pinctrl-0 = <&pinctrl_pck1_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
++					resetb-gpios = <&pioE 24 GPIO_ACTIVE_LOW>;
++					pwdn-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
++					/* use pck1 for the master clock of ov2640 */
++					clocks = <&pck1>;
++					clock-names = "xvclk";
++					assigned-clocks = <&pck1>;
++					assigned-clock-rates = <25000000>;
++
++					port {
++						ov2640_0: endpoint {
++							remote-endpoint = <&isi_0>;
++							bus-width = <8>;
++						};
++					};
++				};
++			};
++
++			usart1: serial@f0020000 {
++				dmas = <0>, <0>;	/*  Do not use DMA for usart1 */
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_usart1 &pinctrl_usart1_rts_cts>;
++				status = "okay";
++			};
++
++			isi: isi@f0034000 {
++				port {
++					isi_0: endpoint {
++						remote-endpoint = <&ov2640_0>;
++						bus-width = <8>;
++						vsync-active = <1>;
++						hsync-active = <1>;
++					};
++				};
++			};
++
++			mmc1: mmc@f8000000 {
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_mmc1_clk_cmd_dat0 &pinctrl_mmc1_dat1_3 &pinctrl_mmc1_cd>;
++				status = "okay";
++				slot@0 {
++					reg = <0>;
++					bus-width = <4>;
++					cd-gpios = <&pioD 18 GPIO_ACTIVE_HIGH>;
++				};
++			};
++
++			adc0: adc@f8018000 {
++				pinctrl-names = "default";
++				pinctrl-0 = <
++					&pinctrl_adc0_adtrg
++					&pinctrl_adc0_ad0
++					&pinctrl_adc0_ad1
++					&pinctrl_adc0_ad2
++					&pinctrl_adc0_ad3
++					&pinctrl_adc0_ad4
++					>;
++				status = "okay";
++			};
++
++			macb1: ethernet@f802c000 {
++				phy-mode = "rmii";
++
++				#address-cells = <1>;
++				#size-cells = <0>;
++				phy0: ethernet-phy@1 {
++					/*interrupt-parent = <&pioE>;*/
++					/*interrupts = <30 IRQ_TYPE_EDGE_FALLING>;*/
++					reg = <1>;
++				};
++			};
++
++			pinctrl@fffff200 {
++				board {
++					pinctrl_gpio_keys: gpio_keys {
++						atmel,pins =
++							<AT91_PIOE 27 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
++					};
++
++					pinctrl_mmc0_cd: mmc0_cd {
++						atmel,pins =
++							<AT91_PIOD 17 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>; /* PD17 GPIO with pullup deglitch */
++					};
++
++					pinctrl_mmc1_cd: mmc1_cd {
++						atmel,pins =
++							<AT91_PIOD 18 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>; /* PD18 GPIO with pullup deglitch */
++					};
++
++					pinctrl_pck0_as_audio_mck: pck0_as_audio_mck {
++						atmel,pins =
++							<AT91_PIOD 30 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* PD30 periph B */
++					};
++
++					pinctrl_pck1_as_isi_mck: pck1_as_isi_mck-0 {
++						atmel,pins =
++							<AT91_PIOD 31 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* PD31 periph B ISI_MCK */
++					};
++
++					pinctrl_sensor_reset: sensor_reset-0 {
++						atmel,pins =
++							<AT91_PIOE 24 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;   /* PE24 gpio */
++					};
++
++					pinctrl_sensor_power: sensor_power-0 {
++						atmel,pins =
++							<AT91_PIOE 29 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>; /* PE29 gpio */
++					};
++
++					pinctrl_usba_vbus: usba_vbus {
++						atmel,pins =
++							<AT91_PIOD 29 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>; /* PD29 GPIO with deglitch */
++					};
++				};
++			};
++
++			dbgu: serial@ffffee00 {
++				dmas = <0>, <0>;	/*  Do not use DMA for dbgu */
++				status = "okay";
++			};
++
++			watchdog@fffffe40 {
++				status = "okay";
++			};
++		};
++
++		usb0: gadget@00500000 {
++			atmel,vbus-gpio = <&pioD 29 GPIO_ACTIVE_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_usba_vbus>;
++			status = "okay";
++		};
++	};
++
++	sound {
++		compatible = "atmel,asoc-wm8904";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_pck0_as_audio_mck>;
++
++		atmel,model = "wm8904 @ SAMA5D3EK";
++		atmel,audio-routing =
++			"Headphone Jack", "HPOUTL",
++			"Headphone Jack", "HPOUTR",
++			"IN2L", "Line In Jack",
++			"IN2R", "Line In Jack",
++			"Mic", "MICBIAS",
++			"IN1L", "Mic";
++
++		atmel,ssc-controller = <&ssc0>;
++		atmel,audio-codec = <&wm8904>;
++
++		status = "disabled";
++	};
++
++	/* Conflict with LCD pins */
++	gpio_keys {
++		compatible = "gpio-keys";
++		status = "okay";
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_keys>;
++
++		pb_user1 {
++			label = "pb_user1";
++			gpios = <&pioE 27 GPIO_ACTIVE_HIGH>;
++			linux,code = <0x100>;
++			gpio-key,wakeup;
++		};
++	};
++};
 -- 
-1.7.9.5
+2.7.4
