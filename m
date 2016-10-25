@@ -1,108 +1,75 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2 v6] iio: gyro: Add MPU-3050 device tree bindings
-Date: Tue, 25 Oct 2016 17:13:57 +0100
-Message-ID: <e6e8241e-d9db-a61d-8a9b-530e4ec3f28a@kernel.org>
-References: <1477404954-3942-1-git-send-email-linus.walleij@linaro.org>
+From: Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: [PATCH] ARM: DT: stm32: move dma translation to board files
+Date: Tue, 25 Oct 2016 18:16:35 +0200
+Message-ID: <1477412195-8124-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477404954-3942-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, peter.griffin@linaro.org, lee.jones@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/10/16 15:15, Linus Walleij wrote:
-> This adds device tree bindings for the MPU-3050 gyroscope. Since it
-> is the first set of bindings for a gyroscope, the folder for it
-> is also created.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to largely ignore this patch ;)
+stm32f469-disco and stm32f429-eval boards use SDRAM start address remapping
+(to @0) to boost performances. A DMA translation through "dma-ranges"
+property was needed for other masters than the M4 CPU.
+stm32f429-disco doesn't use remapping so doesn't need this DMA translation.
+This patches moves this DMA translation definition from stm32f429 soc file
+to board files.
 
-Thanks
+Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-Jonathan
-> ---
-> ChangeLog v5->v6:
-> - No changes, just reposting.
-> ChangeLog v4->v5:
-> - No changes, just reposting.
-> ChangeLog v3->v4:
-> - No changes, just reposting. If we agree on these bindings and since
->   the dependent I2C bindings are merged, this patch should be merge
->   material now I guess.
-> ChangeLog v2->v3:
-> - Augmented device tree bindings to reflect Peter Rosins now merged
->   I2C gate bindings.
-> ChangeLog v1->v2:
-> - Not yet convered to use i2c-gate as I'm waiting for that
->   patch set to stabilize.
-> ---
->  .../bindings/iio/gyroscope/invensense,mpu3050.txt  | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
-> new file mode 100644
-> index 000000000000..b0d3b59966bc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
-> @@ -0,0 +1,46 @@
-> +Invensense MPU-3050 Gyroscope device tree bindings
-> +
-> +Required properties:
-> +  - compatible : should be "invensense,mpu3050"
-> +  - reg : the I2C address of the sensor
-> +
-> +Optional properties:
-> +  - interrupt-parent : should be the phandle for the interrupt controller
-> +  - interrupts : interrupt mapping for the trigger interrupt from the
-> +    internal oscillator. The following IRQ modes are supported:
-> +    IRQ_TYPE_EDGE_RISING, IRQ_TYPE_EDGE_FALLING, IRQ_TYPE_LEVEL_HIGH and
-> +    IRQ_TYPE_LEVEL_LOW. The driver should detect and configure the hardware
-> +    for the desired interrupt type.
-> +  - vdd-supply : supply regulator for the main power voltage.
-> +  - vlogic-supply : supply regulator for the signal voltage.
-> +  - mount-matrix : see iio/mount-matrix.txt
-> +
-> +Optional subnodes:
-> +  - The MPU-3050 will pass through and forward the I2C signals from the
-> +    incoming I2C bus, alternatively drive traffic to a slave device (usually
-> +    an accelerometer) on its own initiative. Therefore is supports a subnode
-> +    i2c gate node. For details see: i2c/i2c-gate.txt
-> +
-> +Example:
-> +
-> +mpu3050@68 {
-> +	compatible = "invensense,mpu3050";
-> +	reg = <0x68>;
-> +	interrupt-parent = <&foo>;
-> +	interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
-> +	vdd-supply = <&bar>;
-> +	vlogic-supply = <&baz>;
-> +
-> +	/* External I2C interface */
-> +	i2c-gate {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		fnord@18 {
-> +			compatible = "fnord";
-> +			reg = <0x18>;
-> +			interrupt-parent = <&foo>;
-> +			interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
-> +		};
-> +	};
-> +};
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index 13c7cd2..a763c15 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -82,6 +82,10 @@
+ 		};
+ 	};
+ 
++	soc {
++		dma-ranges = <0xc0000000 0x0 0x10000000>;
++	};
++
+ 	usbotg_hs_phy: usbphy {
+ 		#phy-cells = <0>;
+ 		compatible = "usb-nop-xceiv";
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index 0596d60..3a1cfdd 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -59,8 +59,6 @@
+ 	};
+ 
+ 	soc {
+-		dma-ranges = <0xc0000000 0x0 0x10000000>;
+-
+ 		timer2: timer@40000000 {
+ 			compatible = "st,stm32-timer";
+ 			reg = <0x40000000 0x400>;
+diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+index 9e73656..c2213c0 100644
+--- a/arch/arm/boot/dts/stm32f469-disco.dts
++++ b/arch/arm/boot/dts/stm32f469-disco.dts
+@@ -64,6 +64,10 @@
+ 	aliases {
+ 		serial0 = &usart3;
+ 	};
++
++	soc {
++		dma-ranges = <0xc0000000 0x0 0x10000000>;
++	};
+ };
+ 
+ &clk_hse {
+-- 
+1.9.1
