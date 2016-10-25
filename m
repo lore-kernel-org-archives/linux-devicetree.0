@@ -1,45 +1,222 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [v2 2/2] fpga: Add support for Lattice iCE40 FPGAs
-Date: Tue, 25 Oct 2016 09:34:20 -0700
-Message-ID: <20161025163420.GA24050@live.com>
-References: <1477283989-21947-1-git-send-email-joel@airwebreathe.org.uk>
- <1477283989-21947-2-git-send-email-joel@airwebreathe.org.uk>
- <alpine.DEB.2.02.1610241615280.14525@linuxheads99>
- <c971d8f4-dbb4-8d6e-f8eb-028a0a95e6fb@airwebreathe.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 2/4] pinctrl: single: Use generic parser and #pinctrl-cells for pinctrl-single,pins
+Date: Tue, 25 Oct 2016 09:45:36 -0700
+Message-ID: <20161025164538.453-3-tony@atomide.com>
+References: <20161025164538.453-1-tony@atomide.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c971d8f4-dbb4-8d6e-f8eb-028a0a95e6fb@airwebreathe.org.uk>
+In-Reply-To: <20161025164538.453-1-tony@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Holdsworth <joel@airwebreathe.org.uk>
-Cc: atull <atull@opensource.altera.com>, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 24, 2016 at 11:05:28PM -0600, Joel Holdsworth wrote:
+We can now use generic parser. To support the legacy binding without
+#pinctrl-cells, add pcs_quirk_missing_pinctrl_cells() and warn about
+missing #pinctrl-cells.
 
-> Only being able to load firmware from kernel C-code is rather a limitation -
-> though I suppose the framework is quite early in development.
+Let's also update the documentation for struct pcs_soc_data while at it
+as that seems to be out of date.
 
-I agree this is a limitation. To expand a bit on what Alan said. For the
-last year(?) or so we've been reviewing / reiterating patches to do that
-using device tree overlays.
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/pinctrl/pinctrl-single.c | 107 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 89 insertions(+), 18 deletions(-)
 
-Rob was ok with the last round of bindings so it looks like it is moving
-in the right direction.
-
-The part that's missing in the whole spiel is a way to apply overlays
-from userland (which in turn then trigger the reconfiguration of the
-regions).
-
-Pantelis has a patchset that allows doing this using a configfs
-interface; however the devicetree maintainers weren't too happy with it.
-
-At ELCE Pantelis and me talked to Frank about the patchset and Pantelis
-agreed to resubmit the patchset with small changes.
-
-TL;DR we'll eventually get there but it takes time and many rounds of review :)
-
-Cheers,
-
-Moritz
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -31,10 +31,10 @@
+ #include <linux/platform_data/pinctrl-single.h>
+ 
+ #include "core.h"
++#include "devicetree.h"
+ #include "pinconf.h"
+ 
+ #define DRIVER_NAME			"pinctrl-single"
+-#define PCS_MUX_PINS_NAME		"pinctrl-single,pins"
+ #define PCS_MUX_BITS_NAME		"pinctrl-single,bits"
+ #define PCS_OFF_DISABLED		~0U
+ 
+@@ -162,8 +162,11 @@ struct pcs_soc_data {
+  * @base:	virtual address of the controller
+  * @size:	size of the ioremapped area
+  * @dev:	device entry
++ * @np:		device tree node
+  * @pctl:	pin controller device
+  * @flags:	mask of PCS_FEAT_xxx values
++ * @missing_nr_pinctrl_cells: for legacy binding, may go away
++ * @socdata:	soc specific data
+  * @lock:	spinlock for register access
+  * @mutex:	mutex protecting the lists
+  * @width:	bits per mux register
+@@ -171,7 +174,8 @@ struct pcs_soc_data {
+  * @fshift:	function register shift
+  * @foff:	value to turn mux off
+  * @fmax:	max number of functions in fmask
+- * @bits_per_pin:number of bits per pin
++ * @bits_per_mux: number of bits per mux
++ * @bits_per_pin: number of bits per pin
+  * @pins:	physical pins on the SoC
+  * @pgtree:	pingroup index radix tree
+  * @ftree:	function index radix tree
+@@ -192,11 +196,13 @@ struct pcs_device {
+ 	void __iomem *base;
+ 	unsigned size;
+ 	struct device *dev;
++	struct device_node *np;
+ 	struct pinctrl_dev *pctl;
+ 	unsigned flags;
+ #define PCS_QUIRK_SHARED_IRQ	(1 << 2)
+ #define PCS_FEAT_IRQ		(1 << 1)
+ #define PCS_FEAT_PINCONF	(1 << 0)
++	struct property *missing_nr_pinctrl_cells;
+ 	struct pcs_soc_data socdata;
+ 	raw_spinlock_t lock;
+ 	struct mutex mutex;
+@@ -1121,20 +1127,15 @@ static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+ 						unsigned *num_maps,
+ 						const char **pgnames)
+ {
++	const char *name = "pinctrl-single,pins";
++	const char *pinctrl_cells = "#pinctrl-cells";
+ 	struct pcs_func_vals *vals;
+-	const __be32 *mux;
+-	int size, rows, *pins, index = 0, found = 0, res = -ENOMEM;
++	int rows, *pins, found = 0, res = -ENOMEM, i;
+ 	struct pcs_function *function;
+ 
+-	mux = of_get_property(np, PCS_MUX_PINS_NAME, &size);
+-	if ((!mux) || (size < sizeof(*mux) * 2)) {
+-		dev_err(pcs->dev, "bad data for mux %s\n",
+-			np->name);
+-		return -EINVAL;
+-	}
+-
+-	size /= sizeof(*mux);	/* Number of elements in array */
+-	rows = size / 2;
++	rows = pinctrl_count_index_with_args(np, name, pinctrl_cells);
++	if (rows == -EINVAL)
++		return rows;
+ 
+ 	vals = devm_kzalloc(pcs->dev, sizeof(*vals) * rows, GFP_KERNEL);
+ 	if (!vals)
+@@ -1144,14 +1145,29 @@ static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+ 	if (!pins)
+ 		goto free_vals;
+ 
+-	while (index < size) {
+-		unsigned offset, val;
++	for (i = 0; i < rows; i++) {
++		struct of_phandle_args pinctrl_spec;
++		unsigned int offset;
+ 		int pin;
+ 
+-		offset = be32_to_cpup(mux + index++);
+-		val = be32_to_cpup(mux + index++);
++		res = pinctrl_parse_index_with_args(np, name, pinctrl_cells,
++						    i, &pinctrl_spec);
++		if (res)
++			return res;
++
++		if (pinctrl_spec.args_count < 2) {
++			dev_err(pcs->dev, "invalid args_count for spec: %i\n",
++				pinctrl_spec.args_count);
++			break;
++		}
++
++		/* Index plus one value cell */
++		offset = pinctrl_spec.args[0];
+ 		vals[found].reg = pcs->base + offset;
+-		vals[found].val = val;
++		vals[found].val = pinctrl_spec.args[1];
++
++		dev_dbg(pcs->dev, "%s index: 0x%x value: 0x%x\n",
++			pinctrl_spec.np->name, offset, pinctrl_spec.args[1]);
+ 
+ 		pin = pcs_get_pin_by_offset(pcs, offset);
+ 		if (pin < 0) {
+@@ -1469,6 +1485,8 @@ static void pcs_free_resources(struct pcs_device *pcs)
+ 	pinctrl_unregister(pcs->pctl);
+ 	pcs_free_funcs(pcs);
+ 	pcs_free_pingroups(pcs);
++	if (pcs->missing_nr_pinctrl_cells)
++		of_remove_property(pcs->np, pcs->missing_nr_pinctrl_cells);
+ }
+ 
+ static const struct of_device_id pcs_of_match[];
+@@ -1786,6 +1804,51 @@ static int pinctrl_single_resume(struct platform_device *pdev)
+ }
+ #endif
+ 
++/**
++ * pcs_quirk_missing_pinctrl_cells - handle legacy binding
++ * @pcs: pinctrl driver instance
++ * @np: device tree node
++ * @cells: number of cells
++ *
++ * Handle legacy binding with no #pinctrl-cells. This should be
++ * always two pinctrl-single,bit-per-mux and one for others.
++ * At some point we may want to consider removing this.
++ */
++static int pcs_quirk_missing_pinctrl_cells(struct pcs_device *pcs,
++					   struct device_node *np,
++					   int cells)
++{
++	struct property *p;
++	const char *name = "#pinctrl-cells";
++	int error;
++	u32 val;
++
++	error = of_property_read_u32(np, name, &val);
++	if (!error)
++		return 0;
++
++	dev_warn(pcs->dev, "please update dts to use %s = <%i>\n",
++		 name, cells);
++
++	p = devm_kzalloc(pcs->dev, sizeof(*p), GFP_KERNEL);
++	if (!p)
++		return -ENOMEM;
++
++	p->length = sizeof(__be32);
++	p->value = devm_kzalloc(pcs->dev, sizeof(__be32), GFP_KERNEL);
++	if (!p->value)
++		return -ENOMEM;
++	*(__be32 *)p->value = cpu_to_be32(cells);
++
++	p->name = devm_kstrdup(pcs->dev, name, GFP_KERNEL);
++	if (!p->name)
++		return -ENOMEM;
++
++	pcs->missing_nr_pinctrl_cells = p;
++
++	return of_add_property(np, pcs->missing_nr_pinctrl_cells);
++}
++
+ static int pcs_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+@@ -1806,6 +1869,7 @@ static int pcs_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 	pcs->dev = &pdev->dev;
++	pcs->np = np;
+ 	raw_spin_lock_init(&pcs->lock);
+ 	mutex_init(&pcs->mutex);
+ 	INIT_LIST_HEAD(&pcs->pingroups);
+@@ -1842,6 +1906,13 @@ static int pcs_probe(struct platform_device *pdev)
+ 
+ 	pcs->bits_per_mux = of_property_read_bool(np,
+ 						  "pinctrl-single,bit-per-mux");
++	ret = pcs_quirk_missing_pinctrl_cells(pcs, np,
++					      pcs->bits_per_mux ? 2 : 1);
++	if (ret) {
++		dev_err(&pdev->dev, "unable to patch #pinctrl-cells\n");
++
++		return ret;
++	}
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res) {
+-- 
+2.9.3
