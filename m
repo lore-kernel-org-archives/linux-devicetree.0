@@ -1,50 +1,45 @@
-From: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
+From: Moritz Fischer <moritz.fischer@ettus.com>
 Subject: Re: [v2 2/2] fpga: Add support for Lattice iCE40 FPGAs
-Date: Tue, 25 Oct 2016 10:31:49 -0600
-Message-ID: <0cf56793-f0e4-5584-946e-6bb0fbc6a454@airwebreathe.org.uk>
+Date: Tue, 25 Oct 2016 09:34:20 -0700
+Message-ID: <20161025163420.GA24050@live.com>
 References: <1477283989-21947-1-git-send-email-joel@airwebreathe.org.uk>
  <1477283989-21947-2-git-send-email-joel@airwebreathe.org.uk>
  <alpine.DEB.2.02.1610241615280.14525@linuxheads99>
  <c971d8f4-dbb4-8d6e-f8eb-028a0a95e6fb@airwebreathe.org.uk>
- <alpine.DEB.2.02.1610250913530.14525@linuxheads99>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1610250913530.14525@linuxheads99>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c971d8f4-dbb4-8d6e-f8eb-028a0a95e6fb@airwebreathe.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel Holdsworth <joel@airwebreathe.org.uk>
+Cc: atull <atull@opensource.altera.com>, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 24, 2016 at 11:05:28PM -0600, Joel Holdsworth wrote:
 
-Hi Alan
+> Only being able to load firmware from kernel C-code is rather a limitation -
+> though I suppose the framework is quite early in development.
 
- > Yes!  I have submitted patches for doing exactly that.  About to
- > submit v21.  Here's patch 1 of v20:
- >
- > https://patchwork.kernel.org/patch/9379859/
+I agree this is a limitation. To expand a bit on what Alan said. For the
+last year(?) or so we've been reviewing / reiterating patches to do that
+using device tree overlays.
 
-That's really cool. I hope it gets accepted.
+Rob was ok with the last round of bindings so it looks like it is moving
+in the right direction.
 
+The part that's missing in the whole spiel is a way to apply overlays
+from userland (which in turn then trigger the reconfiguration of the
+regions).
 
+Pantelis has a patchset that allows doing this using a configfs
+interface; however the devicetree maintainers weren't too happy with it.
 
+At ELCE Pantelis and me talked to Frank about the patchset and Pantelis
+agreed to resubmit the patchset with small changes.
 
- >> and/or if there were any patches for loading
- >> firmware from userspace - something like this: "cat firmware.bin >
- >> /dev/fpga0"?
- >
- > We discussed doing a char driver interface.  That's where all this
- > started.  It met with lots of resistance.
- >
+TL;DR we'll eventually get there but it takes time and many rounds of review :)
 
-Yeah I saw some slides about it. Personally I don't care too much about 
-the character device thing. It could be something in sysfs - anything 
-that allows the user to inject firmware firmware from user-space.
+Cheers,
 
-
-Joel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Moritz
