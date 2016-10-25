@@ -1,67 +1,71 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v2 8/8] ARM: dts: sun6i: hummingbird-a31: Enable display
- output through VGA bridge
-Date: Tue, 25 Oct 2016 13:43:33 +0530
-Message-ID: <bac9a59f-df97-245b-f349-bed57dec6aad@codeaurora.org>
-References: <20161020034344.14154-1-wens@csie.org>
- <20161020034344.14154-9-wens@csie.org>
+From: Jeremy McNicoll <jmcnicol@redhat.com>
+Subject: Re: [RFC V4 PATCH 1/6] arm64: dts: msm8992 SoC and LG Bullhead
+ (Nexus 5X) support
+Date: Tue, 25 Oct 2016 01:15:43 -0700
+Message-ID: <20161025081543.GE21964@mini-rhel.redhat.com>
+References: <1477048273-32451-1-git-send-email-jeremymc@redhat.com>
+ <1477048273-32451-2-git-send-email-jeremymc@redhat.com>
+ <20161021182004.GW7509@tuxbot>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20161020034344.14154-9-wens@csie.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161021182004.GW7509@tuxbot>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, arnd@arndb.de, mark.rutland@arm.com, michael.scott@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxMC8yMC8yMDE2IDA5OjEzIEFNLCBDaGVuLVl1IFRzYWkgd3JvdGU6Cj4gVGhlIEh1bW1p
-bmdiaXJkIEEzMSBib2FyZCBoYXMgYSBSR0ItdG8tVkdBIGJyaWRnZSB3aGljaCBjb252ZXJ0cyBS
-R0IKPiBvdXRwdXQgZnJvbSB0aGUgTENEIGludGVyZmFjZSB0byBWR0Egc2lnbmFscy4KPgo+IEVu
-YWJsZSB0aGlzIHBhcnQgb2YgdGhlIGRpc3BsYXkgcGlwZWxpbmUuCgpJIGNvdWxkbid0IGZpbmQg
-dGhlIGVuYWJsZS1ncGlvcyBiaW5kaW5nIGZvciB0aGUgYnJpZGdlIHRoYXQgeW91CmludHJvZHVj
-ZWQgaW4gdGhlIHByZXZpb3VzIHBhdGNoLiBJcyB0aGF0IGludGVudGlvbmFsPwoKVGhhbmtzLApB
-cmNoaXQKCj4KPiBTaWduZWQtb2ZmLWJ5OiBDaGVuLVl1IFRzYWkgPHdlbnNAY3NpZS5vcmc+Cj4g
-LS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjZpLWEzMS1odW1taW5nYmlyZC5kdHMgfCA1NiAr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNTYgaW5zZXJ0
-aW9ucygrKQo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjZpLWEzMS1odW1t
-aW5nYmlyZC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9zdW42aS1hMzEtaHVtbWluZ2JpcmQuZHRz
-Cj4gaW5kZXggOWE3NDYzN2Y2NzdmLi4wNWE0OWIyMTQ3ZjEgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9h
-cm0vYm9vdC9kdHMvc3VuNmktYTMxLWh1bW1pbmdiaXJkLmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL3N1bjZpLWEzMS1odW1taW5nYmlyZC5kdHMKPiBAQCAtNjMsNiArNjMsNDkgQEAKPiAg
-CQlzdGRvdXQtcGF0aCA9ICJzZXJpYWwwOjExNTIwMG44IjsKPiAgCX07Cj4KPiArCWJyaWRnZSB7
-Cj4gKwkJY29tcGF0aWJsZSA9ICJkdW1iLXZnYS1kYWMiOwo+ICsJCSNhZGRyZXNzLWNlbGxzID0g
-PDE+Owo+ICsJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArCQlwb3J0cyB7Cj4gKwkJCSNhZGRy
-ZXNzLWNlbGxzID0gPDE+Owo+ICsJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJCXBvcnRA
-MCB7Cj4gKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJCSNzaXplLWNlbGxzID0gPDA+
-Owo+ICsJCQkJcmVnID0gPDA+Owo+ICsKPiArCQkJCXZnYV9icmlkZ2VfaW46IGVuZHBvaW50QDAg
-ewo+ICsJCQkJCXJlZyA9IDwwPjsKPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnRjb24wX291
-dF92Z2E+Owo+ICsJCQkJfTsKPiArCQkJfTsKPiArCj4gKwkJCXBvcnRAMSB7Cj4gKwkJCQkjYWRk
-cmVzcy1jZWxscyA9IDwxPjsKPiArCQkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQkJcmVnID0g
-PDE+Owo+ICsKPiArCQkJCXZnYV9icmlkZ2Vfb3V0OiBlbmRwb2ludEAwIHsKPiArCQkJCQlyZWcg
-PSA8MD47Cj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2Z2FfY29uX2luPjsKPiArCQkJCX07
-Cj4gKwkJCX07Cj4gKwkJfTsKPiArCX07Cj4gKwo+ICsJdmdhIHsKPiArCQljb21wYXRpYmxlID0g
-InZnYS1jb25uZWN0b3IiOwo+ICsKPiArCQlwb3J0IHsKPiArCQkJdmdhX2Nvbl9pbjogZW5kcG9p
-bnQgewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2Z2FfYnJpZGdlX291dD47Cj4gKwkJCX07
-Cj4gKwkJfTsKPiArCX07Cj4gKwo+ICAJd2lmaV9wd3JzZXE6IHdpZmlfcHdyc2VxIHsKPiAgCQlj
-b21wYXRpYmxlID0gIm1tYy1wd3JzZXEtc2ltcGxlIjsKPiAgCQlyZXNldC1ncGlvcyA9IDwmcGlv
-IDYgMTAgR1BJT19BQ1RJVkVfTE9XPjsgLyogUEcxMCAqLwo+IEBAIC0yNDUsNiArMjg4LDE5IEBA
-Cj4gIAlzdGF0dXMgPSAib2theSI7Cj4gIH07Cj4KPiArJnRjb24wIHsKPiArCXBpbmN0cmwtbmFt
-ZXMgPSAiZGVmYXVsdCI7Cj4gKwlwaW5jdHJsLTAgPSA8JmxjZDBfcmdiODg4X3BpbnM+Owo+ICsJ
-c3RhdHVzID0gIm9rYXkiOwo+ICt9Owo+ICsKPiArJnRjb24wX291dCB7Cj4gKwl0Y29uMF9vdXRf
-dmdhOiBlbmRwb2ludEAwIHsKPiArCQlyZWcgPSA8MD47Cj4gKwkJcmVtb3RlLWVuZHBvaW50ID0g
-PCZ2Z2FfYnJpZGdlX2luPjsKPiArCX07Cj4gK307Cj4gKwo+ICAmdWFydDAgewo+ICAJcGluY3Ry
-bC1uYW1lcyA9ICJkZWZhdWx0IjsKPiAgCXBpbmN0cmwtMCA9IDwmdWFydDBfcGluc19hPjsKPgoK
-LS0gClF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUg
-QXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Fri, Oct 21, 2016 at 11:20:04AM -0700, Bjorn Andersson wrote:
+> On Fri 21 Oct 04:11 PDT 2016, Jeremy McNicoll wrote:
+> 
+> > From: Jeremy McNicoll <jmcnicol@redhat.com>
+> > 
+> > Initial device tree support for Qualcomm MSM8992 SoC and
+> > LG Bullhead / Google Nexus 5X support.
+> > 
+> 
+> Looks reasonable, just two small nits below.
+> 
+
+Thanks for the feedback.
+
+> > Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
+> > ---
+> >  arch/arm64/boot/dts/qcom/Makefile                  |   4 +-
+> >  .../boot/dts/qcom/msm8992-bullhead-rev-101.dts     |  42 ++++
+> >  arch/arm64/boot/dts/qcom/msm8992-pins.dtsi         |  38 ++++
+> >  arch/arm64/boot/dts/qcom/msm8992.dtsi              | 214 +++++++++++++++++++++
+> >  4 files changed, 296 insertions(+), 2 deletions(-)
+> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
+> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8992.dtsi
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> > index 5dd05de..abb366e 100644
+> > --- a/arch/arm64/boot/dts/qcom/Makefile
+> > +++ b/arch/arm64/boot/dts/qcom/Makefile
+> > @@ -1,6 +1,6 @@
+> >  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
+> > -dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+> > -dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+> > +dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb apq8096-db820c.dtb
+> 
+> Don't change these, just add yours.
+> 
+
+Done, one line per entry.
+
+> [..]
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+> [..]
+> > +
+> > +	msmgpio: pinctrl@fd510000 {
+> > +		compatible = "qcom,msm8994-pinctrl", "qcom,msm8974-pinctrl";
+> 
+> This device is not compatible with the msm8974 TLMM, so please drop the
+> second compatible.
+
+Updated to use, https://patches.linaro.org/patch/78750/
+
+-jeremy
