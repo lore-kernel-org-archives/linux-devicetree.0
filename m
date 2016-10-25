@@ -1,61 +1,94 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dts: omap5: baord-common: enable twl6040 headset
- jack detection
-Date: Tue, 25 Oct 2016 10:34:11 -0700
-Message-ID: <20161025173411.36uop63p2wzv3gij@atomide.com>
-References: <cover.1477414105.git.hns@goldelico.com>
- <7771a9fb3b9133fc361c87970444c1a3918891d0.1477414105.git.hns@goldelico.com>
- <105a8b87-69d0-19c7-8337-7d32fd6e997a@ti.com>
- <7F106936-5748-432F-B602-59B890D5396A@goldelico.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH V4 0/5] firmware: Add support for TI System Control
+ Interface (TI-SCI) protocol driver
+Date: Tue, 25 Oct 2016 20:34:48 +0300
+Message-ID: <2694e4b5-20d5-f590-c6a6-55ff4cb8c16b@ti.com>
+References: <20161018230837.6515-1-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7F106936-5748-432F-B602-59B890D5396A-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161018230837.6515-1-nm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Dave Gerlach <d-gerlach@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Andrew Davis <afd@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Russ Dill <Russ.Dill@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [161025 10:20]:
-> 
-> > Am 25.10.2016 um 18:51 schrieb Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>:
-> > 
-> > On 10/25/2016 07:48 PM, H. Nikolaus Schaller wrote:
-> >> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-> >> ---
-> >> arch/arm/boot/dts/omap5-board-common.dtsi | 1 +
-> >> 1 file changed, 1 insertion(+)
-> >> 
-> >> diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
-> >> index b04adee..91456b4 100644
-> >> --- a/arch/arm/boot/dts/omap5-board-common.dtsi
-> >> +++ b/arch/arm/boot/dts/omap5-board-common.dtsi
-> >> @@ -124,6 +124,7 @@
-> >> 		compatible = "ti,abe-twl6040";
-> >> 		ti,model = "omap5-uevm";
-> >> 
-> >> +		ti,jack_detection;
-> > 
-> > ti,jack-detection
-> 
-> Hm. Looks as if we have found another bug:
-> which one is correct?
-> 
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt#n15
-> 
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/sound/soc/omap/omap-abe-twl6040.c#n289
-> 
-> Should I add another patch?
+On 19/10/16 02:08, Nishanth Menon wrote:
+> Version 4 of the series is basically a rebase to v4.9-rc1, no functional
+> changes.
 
-We have parts of omap-abe-twl6040.txt, the driver and omap4-sdp.dts all
-using ti,jack-detection. So omap-abe-twl6040.txt is wrong for the use
-of ti,jack_detection.
+Hi,
 
-Regards,
+Any final comments on this series, or shall I send a pull-req forward? 
+Very minimal changes compared to v3 so should be good to go imo.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Tero
+
+>
+> Texas Instruments' Keystone generation System on Chips (SoC)
+> starting with 66AK2G02[1], now include a dedicated SoC System Control
+> entity called PMMC(Power Management Micro Controller) in line with
+> ARM architecture recommendations. The function of this module is
+> to integrate all system operations in a centralized location.
+> Communication with the SoC System Control entity from various
+> processing units like ARM/DSP occurs over Message Manager hardware
+> block.
+>
+> This series adds the base support for TI System Control Interface
+> (TI-SCI) protocol[2]. The protocol is built on top of Texas
+> Instrument's Message Manager communication mechanism[3].
+>
+> Overall architecture is very similar to SCPI[4] as follows:
+> +-------------+   +---------+     +------^-----+
+> | TI SCI GENPD|   |TISCI Clk|     |TISCI reset |
+> +------+------+   +----+----+     +------+-----+
+>        |               |                 |
+>        |          +----v--------------+  |
+>        +----------> TISCI Protocol(*) <--+
+>                   +----+--------------+
+>                        |
+>                    +---v-----------+
+>                    | MAILBOX  FWK  |
+>                    +---+-----------+
+>                        |
+>                    +---v-----------+
+>                    |  TI MSGMGR    |-> TISCI hardware block
+>                    +---------------+
+> (*) This series.
+>
+>
+> V4 of the series is based off v4.9-rc1 and is also available here:
+> https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.10/tisci-base-v4
+> Quick boot test: http://pastebin.ubuntu.com/23346183/
+>
+> Changes since v3:
+> 	- rebase to v4.9-rc1
+> 	- minor checkpatch fixes
+>
+> V3: https://lkml.org/lkml/2016/9/6/747
+> V2: https://lkml.org/lkml/2016/8/30/273
+> V1: https://lkml.org/lkml/2016/8/19/768
+>
+> Nishanth Menon (5):
+>   Documentation: Add support for TI System Control Interface (TI-SCI)
+>     protocol
+>   firmware: Add basic support for TI System Control Interface (TI-SCI)
+>     protocol
+>   firmware: ti_sci: Add support for Device control
+>   firmware: ti_sci: Add support for Clock control
+>   firmware: ti_sci: Add support for reboot core service
+>
+>  .../devicetree/bindings/arm/keystone/ti,sci.txt    |   81 +
+>  MAINTAINERS                                        |   10 +
+>  drivers/firmware/Kconfig                           |   15 +
+>  drivers/firmware/Makefile                          |    1 +
+>  drivers/firmware/ti_sci.c                          | 1991 ++++++++++++++++++++
+>  drivers/firmware/ti_sci.h                          |  492 +++++
+>  include/linux/soc/ti/ti_sci_protocol.h             |  249 +++
+>  7 files changed, 2839 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+>  create mode 100644 drivers/firmware/ti_sci.c
+>  create mode 100644 drivers/firmware/ti_sci.h
+>  create mode 100644 include/linux/soc/ti/ti_sci_protocol.h
+>
