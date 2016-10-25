@@ -1,50 +1,48 @@
-From: <colin.helliwell-ZqAGQOxBGgIxoycv7ERPSQ@public.gmane.org>
-Subject: Device driver - parsing GPIOs from tree
-Date: Tue, 25 Oct 2016 13:50:45 +0100
-Message-ID: <047d01d22ebe$6803f740$380be5c0$@ln-systems.com>
-Reply-To: <colin.helliwell-ZqAGQOxBGgIxoycv7ERPSQ@public.gmane.org>
+From: Axel Haslam <ahaslam@baylibre.com>
+Subject: Re: [PATCH/RFT v2 09/17] regulator: fixed: Add over current event
+Date: Tue, 25 Oct 2016 14:55:48 +0200
+Message-ID: <CAKXjFTOHcqRFtbXMXSTyUZ3P00eRMz1N3d62Y3NWVZJDGeScZA@mail.gmail.com>
+References: <20161024164634.4330-1-ahaslam@baylibre.com> <20161024164634.4330-10-ahaslam@baylibre.com>
+ <20161024175320.GO17252@sirena.org.uk> <CAKXjFTNZhWTZSXtLZo8EieBtAPn_J-MM+-g8yCRJiV6UBspB9Q@mail.gmail.com>
+ <20161024181937.GP17252@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-References: 
-In-Reply-To: 
-Content-Language: en-gb
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161024181937.GP17252@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, robh+dt@kernel.org, Sekhar Nori <nsekhar@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Kevin Hilman <khilman@baylibre.com>, Sergei Shtylyov <sshtylyov@ru.mvista.com>, David Lechner <david@lechnology.com>, manjunath.goudar@linaro.org, Alexandre Bailon <abailon@baylibre.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-I'm writing my own device driver for some GPIOs on my hardware. I’ve
-successfully created the pins in the Device Tree, and in my driver I’ve been
-able to find the pins in the device tree using 'of_get_named_gpio_flags()'
-when they are at a top level (e.g. ‘test-name’ shown below).
-But for neatness I would prefer to group them hierarchically e.g.
+Hi Mark,
 
-    rfctrl: rfctrl {
-        compatible = "wg2xx-rfctrl";
-        pinctrl-names = "default";
-        pinctrl-0 = <&pinctrl_rfctrl>;
-        status = "okay";
+On Mon, Oct 24, 2016 at 8:19 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Mon, Oct 24, 2016 at 08:11:40PM +0200, Axel Haslam wrote:
+>> On Mon, Oct 24, 2016 at 7:53 PM, Mark Brown <broonie@kernel.org> wrote:
+>
+>> > does it make sense to report this as a mode, we don't report other error
+>> > conditions as modes but instead use REGULATOR_STATUS_ with the
+>> > get_status() operation?
+>
+>> I used mode, because when the regulator toggles the overcurrent
+>> line, it means that it has entered a current limited mode, at least the
+>> regulator im looking at. ill change to STATUS
+>
+> That's not what regulator modes are - please look at the documentation
+> for the defines here.  They're about the quality of regulation.
 
-        test-name = <&gpio4 25 0>;
-        jn {
-            jnProgN = <&gpio4 26 0>;
-        };
-        alt {
-            altGpio0 = <&gpio4 27 0 >;
-            altGpio1 = <&gpio4 28 0 >;
-            altGpio2 = <&gpio4 29 0 >;
-            altGpio3 = <&gpio4 30 0 >;
-        };
-    };
- 
-Is there a way to search within the subtree ("jn" or "alt"), or to descend
-into it and then use 'of_get_named_gpio_flags()’?
-Thanks.
+To be able to use regulator to handle the overcurrent pin, i need to be able
+to somehow retrieve the over current pin state from the regulator driver.
 
+As i was trying your suggestion, i remembered why i thought i should use
+mode instead of status: Status seems to be for internal regulator driver use,
+there is no regulator_get_status, function and REGULATOR_STATUS_* are defined
+in driver.h and not in consumer.h as  REGULATOR_MODE_*
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+it seems that status is only used to print sysfs info.
+
+Would you be ok if i allow consumers to get the status via a new
+"regulator_get_status" call?
+
+Regards
+Axel.
