@@ -1,45 +1,79 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH/RFT v2 07/17] ARM: davinci: da8xx: Enable the usb20 "per"
- clk on phy_clk_enable
-Date: Tue, 25 Oct 2016 15:42:59 +0530
-Message-ID: <833b6b60-4504-dac7-ccbb-bc08c985ad01@ti.com>
-References: <20161024164634.4330-1-ahaslam@baylibre.com>
- <20161024164634.4330-8-ahaslam@baylibre.com>
+From: "Palacios, Hector" <Hector.Palacios-i7dp0qKlBMg@public.gmane.org>
+Subject: Device tree hardware auto-configuration
+Date: Tue, 25 Oct 2016 10:07:42 +0000
+Message-ID: <52F917CEA1B9C64C94833D53889D478C014C6CD7@dor-sms-xch01.digi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161024164634.4330-8-ahaslam@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ahaslam@baylibre.com, gregkh@linuxfoundation.org, johan@kernel.org, robh+dt@kernel.org, stern@rowland.harvard.edu, khilman@baylibre.com, sshtylyov@ru.mvista.com, david@lechnology.com, manjunath.goudar@linaro.org, broonie@kernel.org, abailon@baylibre.com
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 24 October 2016 10:16 PM, ahaslam@baylibre.com wrote:
-> diff --git a/arch/arm/mach-davinci/usb-da8xx.c b/arch/arm/mach-davinci/usb-da8xx.c
-> index 9e41a7f..982e105 100644
-> --- a/arch/arm/mach-davinci/usb-da8xx.c
-> +++ b/arch/arm/mach-davinci/usb-da8xx.c
-> @@ -53,11 +53,19 @@ int __init da8xx_register_usb_refclkin(int rate)
->  
->  static void usb20_phy_clk_enable(struct clk *clk)
->  {
-> +	struct clk *usb20_clk;
->  	u32 val;
->  	u32 timeout = 500000; /* 500 msec */
->  
->  	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
->  
-> +	usb20_clk = clk_get(NULL, "usb20");
+Hello,
 
-We should not be using a NULL device pointer here. Can you pass the musb
-device pointer available in the same file? Also, da850_clks[] in da850.c
-needs to be fixed to add the matching device name.
+Last ELCE 2016 I attended the conference "Device Tree hardware
+auto-configuration" by Hans de Goede. Although the room was not very big, it was fully crowded, sign of the big interest in the embedded sector to find a  convenient solution to manage hardware changes based on self-detection of the platform.
 
-> +	if (IS_ERR(usb20_clk)) {
-> +		pr_err("could not get usb20 clk\n");
-> +		return;
-> +	}
+Hans also started a thread recently going over this [1].
 
-Thanks,
-Sekhar
+Examples of what we try to solve are:
+- The same hardware platform has some hardware differences, for example because there are different revisions of the hardware.
+- A platform has several slightly different models but a 95% of the device tree
+is the same (a different GPIO is used to power a regulator, a different model of touch screen controller is used...) and we want to avoid multiple yet very similar DTs.
+
+There is no agreement on where these things should be solved.
+Neither U-Boot nor the kernel are straightforward options.
+
+I would like to share an idea. It is just a sketch and I do apologize if it
+looks naive, but maybe it can be used as foundation for a better solution.
+In the DT, we have the 'compatible' property to match nodes to drivers.
+In a similar way, I was wondering if we could have a new property 'hardware-compatible' that matches nodes to variants of the hardware.
+
+A simple example:
+- Board model A with an I2C touchscreen controller
+- Board model B with a different I2C touchscreen controller (same address)
+
+&i2c1 {
+	/* Touchscreen for model A */
+	touch_modelA@28 {
+		compatible = "aaa,touch";
+		hardware-compatible = "model" "A"
+		reg = <0x28>;
+	};
+
+	/* Touchscreen for model B */
+	touch_modelB@28 {
+		compatible = "bbb,touch";
+		hardware-compatible = "model" "B"
+		reg = <0x28>;
+	};
+};
+
+Then, it would be a question of fixing up the DT at run-time with the hardware identified properties (not with the touch nodes themselves). Let's say we  identify that we're running on model A, revision 3 (in e-fuses, eeprom, or by heuristics), so we fixup the DT with root-level properties about the hardware variant:
+
+/ {
+	hardware,model = "A";
+	hardware,revision = "3";
+};
+
+The names of the properties (after the 'hardware,' prefix) could be anything.
+The match would need to be made between the remaining property name and its value. The DT fixup might be done by the boot loader or by a misc kernel driver as in Hans' patch. Then the driver's probe would only be called if the hardware-compatible property values are satisfied.
+
+The idea behind is to not heavily fixup the DT with devices, but instead limit the fixup to a reduced set of properties. Or in other words, you can still tell what hardware you are supposed to have by looking at the DT, and the fixup (whether done the boot loader or the kernel) simply fills in the variables that determine it.
+
+As I said, it's just a sketch-idea that I had floating around since ELCE, and that I wanted to share.
+
+Thanks for reading,
+--
+Héctor Palacios
+
+
+  [1] http://www.spinics.net/lists/devicetree/msg145985.html
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
