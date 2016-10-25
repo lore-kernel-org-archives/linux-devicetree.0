@@ -1,92 +1,144 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2 v6] iio: gyro: Add MPU-3050 device tree bindings
-Date: Tue, 25 Oct 2016 16:15:53 +0200
-Message-ID: <1477404954-3942-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 4/9] pinctrl: meson: allow gpio to request irq
+Date: Tue, 25 Oct 2016 16:22:12 +0200
+Message-ID: <1477405332.2482.87.camel@baylibre.com>
+References: <1476871709-8359-1-git-send-email-jbrunet@baylibre.com>
+ <1476871709-8359-5-git-send-email-jbrunet@baylibre.com>
+ <CACRpkdaCZPS45t3eTcjJExOu=YT_YkjNkdpg09jQqvLQOJH=Qw@mail.gmail.com>
+ <1477040798.15560.96.camel@baylibre.com>
+ <CACRpkdYUVXny57AC9rKX3VRAyooEk_2XLvqe9jOuT3rOaE75rg@mail.gmail.com>
+ <ec7c6cc5-cf9a-9c75-4b07-e337064c7d6e@arm.com>
+ <1477400900.2482.51.camel@baylibre.com>
+ <dee26f0b-e175-f8a0-2b73-08e8e324841c@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <dee26f0b-e175-f8a0-2b73-08e8e324841c@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Kevin Hilman <khilman@baylibre.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for the MPU-3050 gyroscope. Since it
-is the first set of bindings for a gyroscope, the folder for it
-is also created.
-
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v5->v6:
-- No changes, just reposting.
-ChangeLog v4->v5:
-- No changes, just reposting.
-ChangeLog v3->v4:
-- No changes, just reposting. If we agree on these bindings and since
-  the dependent I2C bindings are merged, this patch should be merge
-  material now I guess.
-ChangeLog v2->v3:
-- Augmented device tree bindings to reflect Peter Rosins now merged
-  I2C gate bindings.
-ChangeLog v1->v2:
-- Not yet convered to use i2c-gate as I'm waiting for that
-  patch set to stabilize.
----
- .../bindings/iio/gyroscope/invensense,mpu3050.txt  | 46 ++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
-new file mode 100644
-index 000000000000..b0d3b59966bc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
-@@ -0,0 +1,46 @@
-+Invensense MPU-3050 Gyroscope device tree bindings
-+
-+Required properties:
-+  - compatible : should be "invensense,mpu3050"
-+  - reg : the I2C address of the sensor
-+
-+Optional properties:
-+  - interrupt-parent : should be the phandle for the interrupt controller
-+  - interrupts : interrupt mapping for the trigger interrupt from the
-+    internal oscillator. The following IRQ modes are supported:
-+    IRQ_TYPE_EDGE_RISING, IRQ_TYPE_EDGE_FALLING, IRQ_TYPE_LEVEL_HIGH and
-+    IRQ_TYPE_LEVEL_LOW. The driver should detect and configure the hardware
-+    for the desired interrupt type.
-+  - vdd-supply : supply regulator for the main power voltage.
-+  - vlogic-supply : supply regulator for the signal voltage.
-+  - mount-matrix : see iio/mount-matrix.txt
-+
-+Optional subnodes:
-+  - The MPU-3050 will pass through and forward the I2C signals from the
-+    incoming I2C bus, alternatively drive traffic to a slave device (usually
-+    an accelerometer) on its own initiative. Therefore is supports a subnode
-+    i2c gate node. For details see: i2c/i2c-gate.txt
-+
-+Example:
-+
-+mpu3050@68 {
-+	compatible = "invensense,mpu3050";
-+	reg = <0x68>;
-+	interrupt-parent = <&foo>;
-+	interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
-+	vdd-supply = <&bar>;
-+	vlogic-supply = <&baz>;
-+
-+	/* External I2C interface */
-+	i2c-gate {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		fnord@18 {
-+			compatible = "fnord";
-+			reg = <0x18>;
-+			interrupt-parent = <&foo>;
-+			interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
-+		};
-+	};
-+};
--- 
-2.7.4
+T24gVHVlLCAyMDE2LTEwLTI1IGF0IDE0OjM4ICswMTAwLCBNYXJjIFp5bmdpZXIgd3JvdGU6Cj4g
+T24gMjUvMTAvMTYgMTQ6MDgsIEplcm9tZSBCcnVuZXQgd3JvdGU6Cj4gPiAKPiA+IE9uIFR1ZSwg
+MjAxNi0xMC0yNSBhdCAxMTozOCArMDEwMCwgTWFyYyBaeW5naWVyIHdyb3RlOgo+ID4gPiAKPiA+
+ID4gPiAKPiA+ID4gPiAKPiA+ID4gT24gMjUvMTAvMTYgMTA6MTQsIExpbnVzIFdhbGxlaWogd3Jv
+dGU6Cj4gPiA+ID4gCj4gPiA+ID4gCj4gPiA+ID4gT24gRnJpLCBPY3QgMjEsIDIwMTYgYXQgMTE6
+MDYgQU0sIEplcm9tZSBCcnVuZXQgPGpicnVuZXRAYmF5bGliCj4gPiA+ID4gcmUuYwo+ID4gPiA+
+IG9tPiB3cm90ZToKPiA+ID4gPiAKPiA+ID4gPiA+IAo+ID4gPiA+ID4gCj4gPiA+ID4gPiA+IAo+
+ID4gPiA+ID4gPiAKPiA+ID4gPiA+ID4gSXNuJ3QgdGhpcyB1c2VjYXNlIChhbHNvIGFzIGRlc2Ny
+aWJlZCBpbiB0aGUgY292ZXIgbGV0dGVyKQo+ID4gPiA+ID4gPiBhCj4gPiA+ID4gPiA+IHRleHRi
+b29rCj4gPiA+ID4gPiA+IGV4YW1wbGUgb2Ygd2hlbiB5b3Ugc2hvdWxkIGJlIHVzaW5nIGhpZXJh
+cmNoaWNhbCBpcnFkb21haW4/Cj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBQbGVhc2UgY2hlY2sg
+d2l0aCBNYXJjIGV0IGFsIG9uIGhpZXJhcmNoaWNhbCBpcnFkb21haW5zLgo+ID4gPiA+ID4gCj4g
+PiA+ID4gPiBMaW51cywKPiA+ID4gPiA+IERvIHlvdSBtZWFuIEkgc2hvdWxkIGNyZWF0ZSBhIG5l
+dyBoaWVyYXJjaGljYWwgaXJxZG9tYWlucyBpbgo+ID4gPiA+ID4gZWFjaAo+ID4gPiA+ID4gb2YK
+PiA+ID4gPiA+IHRoZSB0d28gcGluY3RybCBpbnN0YW5jZXMgd2UgaGF2ZSBpbiB0aGVzZSBTb0Ms
+IHRoZXNlIGRvbWFpbnMKPiA+ID4gPiA+IGJlaW5nCj4gPiA+ID4gPiBzdGFja2VkIG9uIHRoZSBv
+bmUgSSBqdXN0IGFkZGVkIGZvciBjb250cm9sbGVyIGluIGlycWNoaXAgPwo+ID4gPiA+ID4gCj4g
+PiA+ID4gPiBJIGRpZCBub3QgdW5kZXJzdGFuZCB0aGlzIGlzIHdoYXQgeW91IG1lYW50IHdoZW4g
+SSBhc2tlZCB5b3UKPiA+ID4gPiA+IHRoZQo+ID4gPiA+ID4gcXVlc3Rpb24gYXQgRUxDRS4KPiA+
+ID4gPiAKPiA+ID4gPiBIb25lc3RseSwgSSBkbyBub3QgdW5kZXJzdGFuZCB3aGVuIGFuZCB3aGVy
+ZSB0byBwcm9wZXJseSB1c2UKPiA+ID4gPiBoaWVyYXJjaGljYWwgaXJxZG9tYWluLCBldmVuIGFm
+dGVyIE1hcmMncyB0YWxrIGF0IEVMQy1FLgo+ID4gPiAKPiA+ID4gSSBwcm9iYWJseSBkaWRuJ3Qg
+ZG8gdGhhdCBnb29kIGEgam9iIGV4cGxhaW5pbmcgaXQgdGhlbi4gTGV0J3MKPiA+ID4gdHJ5Cj4g
+PiA+IGFnYWluLiBZb3Ugd2FudCB0byB1c2UgaGllcmFyY2hpY2FsIGRvbWFpbnMgd2hlbiB5b3Ug
+d2FudCB0bwo+ID4gPiBkZXNjcmliZQo+ID4gPiBhbgo+ID4gPiBpbnRlcnJ1cHQgd2hvc2UgcGF0
+aCB0cmF2ZXJzZXMgbXVsdGlwbGUgY29udHJvbGxlcnMgd2l0aG91dCBldmVyCj4gPiA+IGJlaW5n
+Cj4gPiA+IG11bHRpcGxleGVkIHdpdGggb3RoZXIgc2lnbmFscy4gQXMgbG9uZyBhcyB5b3UgaGF2
+ZSB0aGlzIDE6MQo+ID4gPiByZWxhdGlvbnNoaXAgYmV0d2VlbiBjb250cm9sbGVycywgeW91IGNh
+biB1c2UgdGhlbS4KPiA+ID4gCj4gPiAKPiA+IExpbnVzLCBNYXJjLAo+ID4gCj4gPiBUaGUgY2Fs
+Y3VsYXRpb24gaXMgcXVlc3Rpb24gaGVyZSBpcyBtZWFudCB0byBnZXQgdGhlIGFwcHJvcHJpYXRl
+Cj4gPiBod2lycQo+ID4gbnVtYmVyIGZyb20gYSBwYXJ0aWN1bGFyIGdwaW8gKGFuZCBkZWFsIHdp
+dGggdGhlIGdwaW9zIHRoYXQgY2FuJ3QKPiA+IHByb3ZpZGUgYW4gaXJxIGF0IGFsbCkuwqAKPiA+
+IAo+ID4gSWYgSSBsb29rIGF0IG90aGVyIGdwaW8gZHJpdmVycywgbWFueSBhcmUgZG9pbmcgZXhh
+Y3RseSB0aGlzIGtpbmQKPiA+IG9mCj4gPiBjYWxjdWxhdGlvbiBiZWZvcmUgY2FsbGluZyAnaXJx
+X2NyZWF0ZV9tYXBwaW5nJyBpbiB0aGUgdG9faXJxCj4gPiBjYWxsYmFjay4KPiA+IEZvciBleGFt
+cGxlOgo+ID4gLSBwaW5jdHJsL25vbWFkaWsvcGluY3RybC1hYng1MDAuYwo+ID4gLSBwaW5jdHJs
+L3NhbXN1bmcvcGluY3RybC1leHlub3M1NDQwLmMKPiA+IAo+ID4gU29tZSBjYW4gYWZmb3JkIHRv
+IGNyZWF0ZSBhbGwgdGhlIG1hcHBpbmdzIGluIHRoZSBwcm9iZSBhbmQganVzdAo+ID4gY2FsbAo+
+ID4gJ2lycV9maW5kX21hcHBpbmcnIChncGlvL2dwaW9fdGVncmEuYykgYnV0IHRoaXMgd291bGQg
+bm90IHdvcmsKPiA+IGhlcmUuIFdlCj4gPiBoYXZlIG9ubHkgOCB1cHN0cmVhbSBpcnFzIGZvciAx
+MzArIHBpbnMsIHNvIG9ubHkgOCBtYXBwaW5ncwo+ID4gcG9zc2libGUgYXQKPiA+IGEgdGltZS7C
+oAo+ID4gCj4gPiBNeSB1bmRlcnN0YW5kaW5nIGlzIHRoYXQgaXJxZG9tYWluIHByb3ZpZGUgYSB3
+YXkgdG8gbWFwIGh3aXJxIHRvCj4gPiBsaW51eAo+ID4gdmlycSAoYW5kIGJhY2spLCBub3QgbWFw
+IGdwaW8gbnVtYmVyIHRvIGh3aXJxLCByaWdodD8KPiAKPiBCdXQgd2h5IGFyZSB0aG9zZSBudW1i
+ZXIgZGlmZmVyZW50PyBXaHkgZG9uJ3QgeW91IHVzZSB0aGUgc2FtZQo+IG5hbWVzcGFjZT8gSWYg
+Z3BpbyA9PSBod2lycSwgYWxsIHlvdXIgcHJvYmxlbXMgYXJlIGFscmVhZHkgc29sdmVkLiBJZgo+
+IHlvdSBkb24ndCBmaW5kIHRoZSBtYXBwaW5nIGluIHRoZSBpcnFkb21haW4sIHRoZW4gdGhlcmUg
+aXMgbm8gaXJxLAo+IGVuZAo+IG9mIHN0b3J5LiBXaGF0IGFtIEkgbWlzc2luZz8KPiAKClRoZXJl
+IGlzIGEgZmV3IHByb2JsZW1zIHRvIGd1YXJhbnRlZSB0aGF0IGdwaW8gPT0gaHdpcnEuCjEuIFdl
+IGhhdmUgMiBpbnN0YW5jZXMgb2YgcGluY3RybCwgdG8gZ3VhcmFudGVlIHRoYXQgdGhlIGxpbnV4
+IGdwaW8KbnVtYmVyID09IGh3aXJxLCB3ZSB3b3VsZCBoYXZlIHRvIGd1YXJhbnRlZSB0aGUgb3Jk
+ZXIgaW4gd2hpY2ggdGhleSBhcmUKcHJvYmVkLiBBdCBsZWFzdCB0aGlzIG15IHVuZGVyc3RhbmRp
+bmfCoAoyLiBJbnNpZGUgZWFjaCBpbnN0YW5jZSwgd2UgbWF5IGhhdmUgYmFua3MgdGhhdCBjYW4n
+dCBoYXZlIGlycS4gV2UgZXZlbgpoYXZlIGEgYmFuayBvbiBtZXNvbjhiIHdoaWNoIGhhcyBhIG1p
+eGVkIHN0YXRlICh0aGUgbGFzdCBwaW5zIGRvbid0CmhhdmUgaXJxcywgd2hpbGUgdGhlIGZpcnN0
+IG9uZXMgZG8pLiB0aG9zZSBiYW5rcy9waW5zIGFyZSBzdGlsbCB2YWxpZApncGlvcyB3aXRoIGdw
+aW8gbnVtYmVycy4gVGhpcyBpbnRyb2R1Y2UgYSBzaGlmdCBiZXR3ZWVuIHRoZSBncGlvCm51bWJl
+cmluZyBhbmQgdGhlIGh3aXJxLgoKVGhlIHBvaW50IG9mIHRoaXMgY2FsY3VsYXRpb24gaXMgdGFr
+ZSB0aGUgb2Zmc2V0IGdpdmVuIHRvIHRoZSAndG9faXJxJwpjYWxsYmFjaywgcmVtb3ZlIHRoZSBn
+cGlvIGJhbmsgYmFzZSBudW1iZXIgYW5kIGFkZCBpcnEgYmFzZSBudW1iZXIuClRoZXJlIGlzIGEg
+ZmV3IHRyaWNrIGFkZGVkIHRvIGhhbmRsZWQgdGhlIGNhc2UgaW4gMi4KCkluIGFkZGl0aW9uLCB0
+byBjYWxsICdpcnFfZmluZF9tYXBwaW5nJywgd2Ugd291bGQgZmlyc3QgaGF2ZSB0byBjcmVhdGUK
+dGhlIG1hcHBpbmcsIGluIHRoZSBwcm9iZSBJIHN1cHBvc2UuIFRoaXMgd291bGQgY2FsbCB0aGUg
+YWxsb2NhdGUKY2FsbGJhY2sgb2YgdGhlIGRvbWFpbiwgaW4gd2hpY2ggd2UgY2FuIGFsbG9jYXRl
+IG9ubHkgOCBpbnRlcnJ1cHRzLgoKVGhhdCdzIHdoeSBJIGNyZWF0ZSB0aGUgbWFwcGluZyBpbiB0
+aGUgLnRvX2lycSBjYWxsYmFjay4KCj4gPiAKPiA+IAo+ID4gRXZlbiBpZiBJIGltcGxlbWVudCBh
+biBhbm90aGVyIGlycWRvbWFpbiBhdCB0aGUgZ3BpbyBsZXZlbCwgSSB3b3VsZAo+ID4gc3RpbGwg
+aGF2ZSB0byBwZXJmb3JtIHRoaXMga2luZCBvZiBjYWxjdWxhdGlvbiwgb25lIHdheSBvciB0aGUK
+PiA+IG90aGVyLgo+ID4gCj4gPiA+IAo+ID4gPiA+IAo+ID4gPiA+IFdoaWNoIGlzIHByb2JsZW1h
+dGljIHNpbmNlIHF1aXRlIGEgZmV3IEdQSU8gZHJpdmVycyBub3cKPiA+ID4gPiBuZWVkIHRvIHVz
+ZSB0aGVtLgo+ID4gPiA+IAo+ID4gPiA+IEkgd2lsbCByZXZpZXcgaGlzIHNsaWRlcywgaW4gdGhl
+IG1lYW50aW1lIEkgd291bGQgc2F5OiB3aGF0ZXZlcgo+ID4gPiA+IE1hcmMgQUNLcyBpcyBmaW5l
+IHdpdGggbWUuIEkgdHJ1c3QgdGhpcyBndXkgMTAwJS4gU28gSSBndWVzcyBJCj4gPiA+ID4gY291
+bGQgYXNrIHRoYXQgaGUgQUNLIHRoZSBlbnRpcmUgY2hhaW4gb2YgcGF0Y2hlcwo+ID4gPiA+IGZy
+b20gR0lDLT5zcGVjaWFsY2hpcC0+R1BJTy4KPiA+IAo+ID4gQWN0dWFsbHkgdGhpcyBkaXNjdXNz
+aW9uIGdvIG1lIHRoaW5raW5nIGFib3V0IGFub3RoZXIgaXNzdWUgd2UgaGF2ZQo+ID4gd2l0aCB0
+aGlzIGhhcmR3YXJlLgo+ID4gV2UgYXJlIGxvb2tpbmcgZm9yIGEgd2F5IHRvIGltcGxlbWVudCBz
+dXBwb3J0IGZvcgo+ID4gSVJRX1RZUEVfRURHRV9CT1RICj4gPiAobmVlZGVkIGZvciB0aGluZ3Mg
+bGlrZSBncGlvLWtleXMgb3IgbW1jIGNhcmQgZGV0ZWN0KS7CoAo+ID4gVGhlIGNvbnRyb2xsZXIg
+Y2FuIGRvIGVhY2ggZWRnZSBidXQgbm90IGJvdGggYXQgdGhlIHNhbWUgdGltZS4KPiA+IEknbSB0
+aGlua2luZyB0aGF0IGltcGxlbWVudGluZyBhbm90aGVyIGlycWRvbWFpbiBhdCB0aGUgZ3BpbyBs
+ZXZlbAo+ID4gd291bGQgYWxsb3cgdG8gcHJvcGVybHkgY2hlY2sgdGhlIHBhZCBsZXZlbCBpbiB0
+aGUgRU9JIGNhbGxiYWNrCj4gPiB0aGVuCj4gPiBzZXQgdGhlIG5leHQgZXhwZWN0ZWQgZWRnZSB0
+eXBlIGFjY29yZGluZ2x5ICh1c2luZwo+ID4gJ2lycV9jaGlwX3NldF90eXBlX3BhcmVudCcpCj4g
+PiAKPiA+IFdvdWxkIGl0IGJlIGFjY2VwdGFibGUgPwo+IAo+IEkgcmVhbGx5IGRvbid0IHNlZSB3
+aGF0IGFub3RoZXIgaXJxZG9tYWluIGJyaW5ncyB0byB0aGUgdGFibGUuIFRoaXMKPiBpcwo+IG5v
+dCBhIHNlcGFyYXRlIHBpZWNlIG9mIEhXLCBzbyB0aGUgaHdpcnE6aXJxIG1hcHBpbmcgaXMgc3Rp
+bGwgdGhlCj4gc2FtZS4KPiBJIGZhaWwgdG8gc2VlIHdoYXQgdGhlIGJlbmVmaXQgaXMuCgpUaGUg
+c2VwYXJhdGUgcGllY2Ugb2YgaHcgaXMgdGhlIGdwaW8gaXRzZWxmLsKgClRoZSBpcnEtY29udHJv
+bGxlciAoaW4gaXJxY2hpcCkgY2FuJ3QgcmVhZCB0aGUgZ3BpbyBzdGF0ZSBiZWNhdXNlIGl0IGlz
+CnNpbXBseSBhbm90aGVyIGRldmljZS4KClRoZSBkb21haW4gSSdtIHRoaW5raW5nIGFib3V0IHdv
+dWxkbid0IGRvIG11Y2gsIEkgcmVja29uLsKgCkl0IHdvdWxkIGp1c3QgcmVnaXN0ZXIgYW4gaXJx
+Y2hpcCB3aGljaCB3b3VsZCBvbmx5IGltcGxlbWVudCBlb2kuCkZvciBldmVyeXRoaW5nIGVsc2Us
+IGl0IHdvdWxkIHJlbHkgdGhlIHBhcmVudCBjb250cm9sbGVyLgpGcm9tIHlvdXIgZXhwbGFuYXRp
+b24sIEkgdW5kZXJzdG9vZCB0aGlzIGlzIHRoZSBwdXJwb3NlIG9mIGhpZXJhcmNoeQpkb21haW5z
+LCBGb3IgZWFjaCBodyBpbiB0aGUgY2hhaW4gdG8gaGFuZGxlIG9ubHkgd2hhdCBpdCBjYW4sIGFu
+ZCByZWx5Cm9uIGl0cyBwYXJlbnQgZm9yIHRoZSByZXN0LgoKPiAKPiA+IAo+ID4gSXQgbG9va3Mg
+YSBmZXcgb3RoZXIgZHJpdmVycyBkZWFsIHdpdGggSVJRX1RZUEVfRURHRV9CT1RIIGluIGEKPiA+
+IHNpbWlsYXIKPiA+IHdheSAoZ3Bpby9ncGlvLW9tYXAuYywgZ3Bpby9ncGlvLWR3YXBiLmMpCj4g
+Cj4gQmVpbmcgYWxyZWFkeSBkb25lIGRvZXNuJ3QgbWFrZSBpdCByZWxpYWJsZS4gSWYgdGhlIGxp
+bmUgZ29lcyBsb3cKPiBiZXR3ZWVuIGxhdGNoaW5nIHRoZSByaXNpbmcgZWRnZSBhbmQgcmVwcm9n
+cmFtbWluZyB0aGUgdHJpZ2dlciwKPiB5b3UndmUKPiBsb3N0IGF0IGxlYXN0ICp0d28qIGludGVy
+cnVwdHMgKHRoZSBmYWxsaW5nIGVkZ2UgYW5kIHRoZSBmb2xsb3dpbmcKPiByaXNpbmcgZWRnZSku
+CgpJZiBhICd1c3VhbCcgY29udHJvbGxlciBzdXBwb3J0wqBJUlFfVFlQRV9FREdFX0JPVEggYW5k
+IHRoZSBsaW5lIGdvZXMKbG93IGJldHdlZW4gbGF0Y2hpbmfCoHJpc2luZyBlZGdlIGFuZCBoYW5k
+bGluZyB0aGUgaW50ZXJydXB0LCB3b3VsZG4ndAp5b3UgbWlzcyB0aGUgZmFsbGluZyBlZGdlIGFu
+eXdheSA/IFRoZSBzaWduYWwgaXMganVzdCBnb2luZyB0b28gZmFzdAp0aGUgSFcgdG8gaGFuZGxl
+IGV2ZXJ5dGhpbmcuCgpGb3IgdGhlIHNlY29uZCByaXNpbmcgZWRnZSwgSSBkaXNhZ3JlZSwgaXQg
+d291bGQgbm90IGJlIGxvc3QsIHNpbmNlIHdlCndvdWxkIHJlYWQgdGhlIHBhZCBzdGF0ZSwgZ2V0
+IGEgbG93IGxldmVsLCBhbmQgcmVwcm9ncmFtIHRoZSBjb250cm9sbGVyCmZvciBhbm90aGVyIHJp
+c2luZyBlZGdlLgoKPiAKPiBUaGFua3MsCj4gCj4gCU0uCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
