@@ -1,125 +1,161 @@
-From: Jitao Shi <jitao.shi@mediatek.com>
-Subject: Re: [PATCH v2] drm/mediatek: fixed the calc method of data rate per
- lane
-Date: Wed, 26 Oct 2016 17:07:12 +0800
-Message-ID: <1477472832.7427.1.camel@mszsdhlt06>
-References: <1477374045-2837-1-git-send-email-jitao.shi@mediatek.com>
- <1477464081.17405.2.camel@mtksdaap41>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH] ARM: DT: stm32: move dma translation to board files
+Date: Wed, 26 Oct 2016 11:09:36 +0200
+Message-ID: <404315f0-fc9e-93e2-54df-f85e484d9389@st.com>
+References: <CAF3+Tqd2MGmz+8XhLXhaZiEc78QOwHSpVrQA65-p1AcfT+_xgg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1477464081.17405.2.camel@mtksdaap41>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAF3+Tqd2MGmz+8XhLXhaZiEc78QOwHSpVrQA65-p1AcfT+_xgg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, ">" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, ">" <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE2LTEwLTI2IGF0IDE0OjQxICswODAwLCBDSyBIdSB3cm90ZToKPiBIaSwgSml0
-YW86Cj4gCj4gT24gVHVlLCAyMDE2LTEwLTI1IGF0IDEzOjQwICswODAwLCBKaXRhbyBTaGkgd3Jv
-dGU6Cj4gPiBUdW5lIGRzaSBmcmFtZSByYXRlIGJ5IHBpeGVsIGNsb2NrLCBkc2kgYWRkIHNvbWUg
-ZXh0cmEgc2lnbmFsIChpLmUuIFRscHgsCj4gPiBUaHMtcHJlcGFyZSwgVGhzLXplcm8sIFRocy10
-cmFpbCxUaHMtZXhpdCkgd2hlbiBlbnRlciBhbmQgZXhpdCBMUCBtb2RlLCB0aGlzCj4gPiBzaWdu
-YWwgd2lsbCBjYXVzZSBoLXRpbWUgbGFyZ2VyIHRoYW4gbm9ybWFsIGFuZCByZWR1Y2UgRlBTLgo+
-ID4gTmVlZCB0byBtdWx0aXBseSBhIGNvZWZmaWNpZW50IHRvIG9mZnNldCB0aGUgZXh0cmEgc2ln
-bmFsJ3MgZWZmZWN0Lgo+ID4gY29lZmZpY2llbnQgPSAoKGh0b3RhbCpicHAvbGFuZV9udW1iZXIp
-K1RscHgrVGhzX3ByZXArVGhzX3plcm8rVGhzX3RyYWlsKwo+ID4gICAgICAgICAgICAgICAgIFRo
-c19leGl0KS8oaHRvdGFsKmJwcC9sYW5lX251bWJlcikpCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6
-IEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4KPiA+IC0tLQo+ID4gQ2hhbmdlIHNp
-bmNlIHYxOgo+ID4gIC0gcGh5X3RpbWluZzIgYW5kIHBoeV90aW1pbmczIHJlZmVyIGNsb2NrIGN5
-Y2xlIHRpbWUuCj4gPiAgLSBkZWZpbmUgdmFsdWVzIG9mIExQWCBIU19QUlBSIEhTX1pFUk8gSFNf
-VFJBSUwgVEFfR08gVEFfU1VSRSBUQV9HRVQgREFfSFNfRVhJVAo+ID4gLS0tCj4gPiAgZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyB8ICAxMDMgKysrKysrKysrKysrKysrKysrKysr
-KystLS0tLS0tLS0tLS0tCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDY3IGluc2VydGlvbnMoKyksIDM2
-IGRlbGV0aW9ucygtKQo+ID4gCj4gCj4gW3NuaXAuLi5dCj4gCj4gPiAgCj4gPiAtc3RhdGljIHZv
-aWQgZHNpX3BoeV90aW1jb25maWcoc3RydWN0IG10a19kc2kgKmRzaSkKPiA+ICtzdGF0aWMgdm9p
-ZCBkc2lfcGh5X3RpbWNvbmZpZyhzdHJ1Y3QgbXRrX2RzaSAqZHNpLCB1MzIgcGh5X3RpbWluZzAs
-Cj4gPiArCQkJICAgICAgdTMyIHBoeV90aW1pbmcxLCB1MzIgcGh5X3RpbWluZzIsCj4gPiArCQkJ
-ICAgICAgdTMyIHBoeV90aW1pbmczKQo+ID4gIHsKPiA+IC0JdTMyIHRpbWNvbjAsIHRpbWNvbjEs
-IHRpbWNvbjIsIHRpbWNvbjM7Cj4gPiAtCXVuc2lnbmVkIGludCB1aSwgY3ljbGVfdGltZTsKPiA+
-IC0JdW5zaWduZWQgaW50IGxweDsKPiA+IC0KPiA+IC0JdWkgPSAxMDAwIC8gZHNpLT5kYXRhX3Jh
-dGUgKyAweDAxOwo+ID4gLQljeWNsZV90aW1lID0gODAwMCAvIGRzaS0+ZGF0YV9yYXRlICsgMHgw
-MTsKPiA+IC0JbHB4ID0gNTsKPiA+IC0KPiA+IC0JdGltY29uMCA9ICg4IDw8IDI0KSB8ICgweGEg
-PDwgMTYpIHwgKDB4NiA8PCA4KSB8IGxweDsKPiA+IC0JdGltY29uMSA9ICg3IDw8IDI0KSB8ICg1
-ICogbHB4IDw8IDE2KSB8ICgoMyAqIGxweCkgLyAyKSA8PCA4IHwKPiA+IC0JCSAgKDQgKiBscHgp
-Owo+ID4gLQl0aW1jb24yID0gKChOU19UT19DWUNMRSgweDY0LCBjeWNsZV90aW1lKSArIDB4YSkg
-PDwgMjQpIHwKPiA+IC0JCSAgKE5TX1RPX0NZQ0xFKDB4MTUwLCBjeWNsZV90aW1lKSA8PCAxNik7
-Cj4gPiAtCXRpbWNvbjMgPSAoMiAqIGxweCkgPDwgMTYgfCBOU19UT19DWUNMRSg4MCArIDUyICog
-dWksIGN5Y2xlX3RpbWUpIDw8IDggfAo+ID4gLQkJICAgTlNfVE9fQ1lDTEUoMHg0MCwgY3ljbGVf
-dGltZSk7Cj4gPiAtCj4gPiAtCXdyaXRlbCh0aW1jb24wLCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJ
-TUVDT04wKTsKPiA+IC0Jd3JpdGVsKHRpbWNvbjEsIGRzaS0+cmVncyArIERTSV9QSFlfVElNRUNP
-TjEpOwo+ID4gLQl3cml0ZWwodGltY29uMiwgZHNpLT5yZWdzICsgRFNJX1BIWV9USU1FQ09OMik7
-Cj4gPiAtCXdyaXRlbCh0aW1jb24zLCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04zKTsKPiAK
-PiBXaHkgZG8geW91IG1vdmUgdGhlc2UgY2FsY3VsYXRpb24gdG8gbXRrX2RzaV9wb3dlcm9uKCk/
-IFlvdSBjYW4ga2VlcAo+IGNhbGN1bGF0aW9uIGhlcmUgYW5kIGp1c3QgZG8gc29tZSBtb2RpZmlj
-YXRpb24uCj4gCj4gUmVnYXJkcywKPiBDSwoKVGhhbmtzIGZvciB5b3VyIHJldmlldy4gSSdsbCBm
-aXggaXQgaW4gbmV4dCBwYXRjaHNldC4KCkJlc3QgUmVnYXJkcwpqaXRhbwoKPiAKPiA+ICsJd3Jp
-dGVsKHBoeV90aW1pbmcwLCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04wKTsKPiA+ICsJd3Jp
-dGVsKHBoeV90aW1pbmcxLCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04xKTsKPiA+ICsJd3Jp
-dGVsKHBoeV90aW1pbmcyLCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04yKTsKPiA+ICsJd3Jp
-dGVsKHBoeV90aW1pbmczLCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04zKTsKPiA+ICB9Cj4g
-PiAgCj4gPiAgc3RhdGljIHZvaWQgbXRrX2RzaV9lbmFibGUoc3RydWN0IG10a19kc2kgKmRzaSkK
-PiA+IEBAIC0yMDIsMTkgKzE4OCw1MSBAQCBzdGF0aWMgaW50IG10a19kc2lfcG93ZXJvbihzdHJ1
-Y3QgbXRrX2RzaSAqZHNpKQo+ID4gIHsKPiA+ICAJc3RydWN0IGRldmljZSAqZGV2ID0gZHNpLT5k
-ZXY7Cj4gPiAgCWludCByZXQ7Cj4gPiArCXU2NCBiaXRfY2xvY2ssIHRvdGFsX2JpdHM7Cj4gPiAr
-CXUzMiBodG90YWwsIGh0b3RhbF9iaXRzLCBiaXRfcGVyX3BpeGVsLCBvdmVyaGVhZF9jeWNsZXMs
-IG92ZXJoZWFkX2JpdHM7Cj4gPiArCXUzMiBwaHlfdGltaW5nMCwgcGh5X3RpbWluZzEsIHBoeV90
-aW1pbmcyLCBwaHlfdGltaW5nMzsKPiA+ICsJdTMyIHVpLCBjeWNsZV90aW1lOwo+ID4gIAo+ID4g
-IAlpZiAoKytkc2ktPnJlZmNvdW50ICE9IDEpCj4gPiAgCQlyZXR1cm4gMDsKPiA+ICAKPiA+ICsJ
-c3dpdGNoIChkc2ktPmZvcm1hdCkgewo+ID4gKwljYXNlIE1JUElfRFNJX0ZNVF9SR0I1NjU6Cj4g
-PiArCQliaXRfcGVyX3BpeGVsID0gMTY7Cj4gPiArCQlicmVhazsKPiA+ICsJY2FzZSBNSVBJX0RT
-SV9GTVRfUkdCNjY2X1BBQ0tFRDoKPiA+ICsJCWJpdF9wZXJfcGl4ZWwgPSAxODsKPiA+ICsJCWJy
-ZWFrOwo+ID4gKwljYXNlIE1JUElfRFNJX0ZNVF9SR0I2NjY6Cj4gPiArCWNhc2UgTUlQSV9EU0lf
-Rk1UX1JHQjg4ODoKPiA+ICsJZGVmYXVsdDoKPiA+ICsJCWJpdF9wZXJfcGl4ZWwgPSAyNDsKPiA+
-ICsJCWJyZWFrOwo+ID4gKwl9Cj4gPiArCS8qKgo+ID4gKwkgKiBkYXRhX3JhdGUgPSAocGl4ZWxf
-Y2xvY2spICogYml0X3Blcl9waXhlbCAqIG1pcGlfcmF0aW8gLyBsYW5lX251bTsKPiA+ICsJICog
-dm0ucGl4ZWxjbG9jayBpcyBLaHosIGRhdGFfcmF0YSB1bml0IGlzIEh6LCBzbyBuZWVkIHRvIG11
-bHRpcGx5IDEwMDAKPiA+ICsJICogbWlwaV9yYXRpbyBpcyAoaHRvdGFsICogYnl0ZV9wZXJfcGl4
-ZWwgLyBsYW5lX251bSArIFRscHggKyBUaHNfcHJlcAo+ID4gKwkgKgkJICArIFRoc3RyYWlsICsg
-VGhzX2V4aXQgKyBUaHNfemVybykgLwo+ID4gKwkgKgkJIChodG90YWwgKiBieXRlX3Blcl9waXhl
-bCAvbGFuZV9udW1iZXIpCj4gPiArCSAqLwo+ID4gKwliaXRfY2xvY2sgPSBkc2ktPnZtLnBpeGVs
-Y2xvY2sgKiAxMDAwICogYml0X3Blcl9waXhlbDsKPiA+ICsJaHRvdGFsID0gZHNpLT52bS5oYWN0
-aXZlICsgZHNpLT52bS5oYmFja19wb3JjaCArIGRzaS0+dm0uaGZyb250X3BvcmNoICsKPiA+ICsJ
-CSBkc2ktPnZtLmhzeW5jX2xlbjsKPiA+ICsJaHRvdGFsX2JpdHMgPSBodG90YWwgKiBiaXRfcGVy
-X3BpeGVsOwo+ID4gKwo+ID4gIAkvKioKPiA+IC0JICogZGF0YV9yYXRlID0gKHBpeGVsX2Nsb2Nr
-IC8gMTAwMCkgKiBwaXhlbF9kaXB0aCAqIG1pcGlfcmF0aW87Cj4gPiAtCSAqIHBpeGVsX2Nsb2Nr
-IHVuaXQgaXMgS2h6LCBkYXRhX3JhdGEgdW5pdCBpcyBNSHosIHNvIG5lZWQgZGl2aWRlIDEwMDAu
-Cj4gPiAtCSAqIG1pcGlfcmF0aW8gaXMgbWlwaSBjbGsgY29lZmZpY2llbnQgZm9yIGJhbGFuY2Ug
-dGhlIHBpeGVsIGNsayBpbiBtaXBpLgo+ID4gLQkgKiB3ZSBzZXQgbWlwaV9yYXRpbyBpcyAxLjA1
-Lgo+ID4gKwkgKiBvdmVyaGVhZCA9IGxweCArIGhzX3ByZXBhcmUgKyBoc196ZXJvICsgaHNfdHJh
-aWwgKyBoc19leGl0Cj4gPiAgCSAqLwo+ID4gLQlkc2ktPmRhdGFfcmF0ZSA9IGRzaS0+dm0ucGl4
-ZWxjbG9jayAqIDMgKiAyMSAvICgxICogMTAwMCAqIDEwKTsKPiA+ICsJb3ZlcmhlYWRfY3ljbGVz
-ID0gTFBYICsgKEhTX1BSUFIgPj4gOCkgKyAoSFNfWkVSTyA+PiAxNikgKwo+ID4gKwkJCSAgKEhT
-X1RSQUlMID4+IDI0KSArIChEQV9IU19FWElUID4+IDI0KTsKPiA+ICsJb3ZlcmhlYWRfYml0cyA9
-IG92ZXJoZWFkX2N5Y2xlcyAqIGRzaS0+bGFuZXMgKiA4Owo+ID4gKwl0b3RhbF9iaXRzID0gaHRv
-dGFsX2JpdHMgKyBvdmVyaGVhZF9iaXRzOwo+ID4gIAo+ID4gLQlyZXQgPSBjbGtfc2V0X3JhdGUo
-ZHNpLT5oc19jbGssIGRzaS0+ZGF0YV9yYXRlICogMTAwMDAwMCk7Cj4gPiArCWRzaS0+ZGF0YV9y
-YXRlID0gRElWX1JPVU5EX1VQX1VMTChiaXRfY2xvY2sgKiB0b3RhbF9iaXRzLAo+ID4gKwkJCQkJ
-ICBodG90YWxfYml0cyAqIGRzaS0+bGFuZXMpOwo+ID4gKwo+ID4gKwlyZXQgPSBjbGtfc2V0X3Jh
-dGUoZHNpLT5oc19jbGssIGRzaS0+ZGF0YV9yYXRlKTsKPiA+ICAJaWYgKHJldCA8IDApIHsKPiA+
-ICAJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIHNldCBkYXRhIHJhdGU6ICVkXG4iLCByZXQpOwo+
-ID4gIAkJZ290byBlcnJfcmVmY291bnQ7Cj4gPiBAQCAtMjM2LDcgKzI1NCwyMCBAQCBzdGF0aWMg
-aW50IG10a19kc2lfcG93ZXJvbihzdHJ1Y3QgbXRrX2RzaSAqZHNpKQo+ID4gIAo+ID4gIAltdGtf
-ZHNpX2VuYWJsZShkc2kpOwo+ID4gIAltdGtfZHNpX3Jlc2V0KGRzaSk7Cj4gPiAtCWRzaV9waHlf
-dGltY29uZmlnKGRzaSk7Cj4gPiArCj4gPiArCXVpID0gMTAwMCAvIGRzaS0+ZGF0YV9yYXRlICsg
-MHgwMTsKPiA+ICsJY3ljbGVfdGltZSA9IDgwMDAgLyBkc2ktPmRhdGFfcmF0ZSArIDB4MDE7Cj4g
-PiArCj4gPiArCXBoeV90aW1pbmcwID0gTFBYIHwgSFNfUFJQUiB8IEhTX1pFUk8gfCBIU19UUkFJ
-TDsKPiA+ICsJcGh5X3RpbWluZzEgPSBUQV9HTyB8IFRBX1NVUkUgfCBUQV9HRVQgfCBEQV9IU19F
-WElUOwo+ID4gKwlwaHlfdGltaW5nMiA9ICgoTlNfVE9fQ1lDTEUoMHg2NCwgY3ljbGVfdGltZSkg
-KyAweGEpIDw8IDI0KSB8Cj4gPiArCQkgICAgICAoTlNfVE9fQ1lDTEUoMHgxNTAsIGN5Y2xlX3Rp
-bWUpIDw8IDE2KTsKPiA+ICsJcGh5X3RpbWluZzMgPSAoMiAqIExQWCkgPDwgMTYgfAo+ID4gKwkJ
-ICAgICAgTlNfVE9fQ1lDTEUoODAgKyA1MiAqIHVpLCBjeWNsZV90aW1lKSA8PCA4IHwKPiA+ICsJ
-CSAgICAgIE5TX1RPX0NZQ0xFKDB4NDAsIGN5Y2xlX3RpbWUpOwo+ID4gKwo+ID4gKwlkc2lfcGh5
-X3RpbWNvbmZpZyhkc2ksIHBoeV90aW1pbmcwLCBwaHlfdGltaW5nMSwgcGh5X3RpbWluZzIsCj4g
-PiArCQkJICBwaHlfdGltaW5nMyk7Cj4gPiAgCj4gPiAgCXJldHVybiAwOwo+ID4gIAo+IAo+IAoK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Bruno,
+
+On 10/25/2016 11:06 PM, Bruno Herrera wrote:
+> Hi Alexandre,
+>
+>>
+>> stm32f469-disco and stm32f429-eval boards use SDRAM start address remapping
+>> (to @0) to boost performances. A DMA translation through "dma-ranges"
+>> property was needed for other masters than the M4 CPU.
+>> stm32f429-disco doesn't use remapping so doesn't need this DMA translation.
+>> This patches moves this DMA translation definition from stm32f429 soc file
+>> to board files.
+>>
+>> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+>>
+>> diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+>> index 13c7cd2..a763c15 100644
+>> --- a/arch/arm/boot/dts/stm32429i-eval.dts
+>> +++ b/arch/arm/boot/dts/stm32429i-eval.dts
+>> @@ -82,6 +82,10 @@
+>>                 };
+>>         };
+>>
+>> +       soc {
+>> +               dma-ranges = <0xc0000000 0x0 0x10000000>;
+>> +       };
+>> +
+>>         usbotg_hs_phy: usbphy {
+>>                 #phy-cells = <0>;
+>>                 compatible = "usb-nop-xceiv";
+>
+> Shouldn't also the peripheral dma-ranges property move to board specific too?
+> I  had this patch for while but I didn't had the time to submit:
+
+Well spot I forgot it. Actually, discussing with Arnd ysterday on IIRC, 
+empty dma-ranges is not needed. Can you test on your side by removing 
+dma-ranges in usb node please ?
+I will push a v2 by removing empty dma-ranges if tests are ok in your side.
+
+Thanks in advance
+Alex
+
+>
+> Author: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Date:   Sun Oct 16 14:50:00 2016 -0200
+>
+>     ARM: DT: STM32: Use dma-ranges property per board not at dtsi file
+>
+> diff --git a/arch/arm/boot/dts/stm32429i-eval.dts
+> b/arch/arm/boot/dts/stm32429i-eval.dts
+> index 6bfc595..2a22a82 100644
+> --- a/arch/arm/boot/dts/stm32429i-eval.dts
+> +++ b/arch/arm/boot/dts/stm32429i-eval.dts
+> @@ -52,6 +52,10 @@
+>         model = "STMicroelectronics STM32429i-EVAL board";
+>         compatible = "st,stm32429i-eval", "st,stm32f429";
+>
+> +       soc {
+> +               dma-ranges = <0xC0000000 0x0 0x10000000>;
+> +       };
+> +
+>         chosen {
+>                 bootargs = "root=/dev/ram rdinit=/linuxrc";
+>                 stdout-path = "serial0:115200n8";
+> @@ -96,6 +100,7 @@
+>
+>  &ethernet0 {
+>         status = "okay";
+> +       dma-ranges;
+>         pinctrl-0       = <&ethernet0_mii>;
+>         pinctrl-names   = "default";
+>         phy-mode        = "mii-id";
+> @@ -116,6 +121,7 @@
+>  };
+>
+>  &usbotg_hs {
+> +       dma-ranges;
+>         dr_mode = "host";
+>         phys = <&usbotg_hs_phy>;
+>         phy-names = "usb2-phy";
+> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+> index 7d624a2..697a133 100644
+> --- a/arch/arm/boot/dts/stm32f429.dtsi
+> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+> @@ -59,7 +59,6 @@
+>         };
+>
+>         soc {
+> -               dma-ranges = <0xc0000000 0x0 0x10000000>;
+>
+>                 timer2: timer@40000000 {
+>                         compatible = "st,stm32-timer";
+> @@ -472,13 +471,11 @@
+>                         st,syscon = <&syscfg 0x4>;
+>                         snps,pbl = <8>;
+>                         snps,mixed-burst;
+> -                       dma-ranges;
+>                         status = "disabled";
+>                 };
+>
+>                 usbotg_hs: usb@40040000 {
+>                         compatible = "snps,dwc2";
+> -                       dma-ranges;
+>                         reg = <0x40040000 0x40000>;
+>                         interrupts = <77>;
+>                         clocks = <&rcc 0 29>;
+>
+>
+>> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+>> index 0596d60..3a1cfdd 100644
+>> --- a/arch/arm/boot/dts/stm32f429.dtsi
+>> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+>> @@ -59,8 +59,6 @@
+>>         };
+>>
+>>         soc {
+>> -               dma-ranges = <0xc0000000 0x0 0x10000000>;
+>> -
+>>                 timer2: timer@40000000 {
+>>                         compatible = "st,stm32-timer";
+>>                         reg = <0x40000000 0x400>;
+>> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+>> index 9e73656..c2213c0 100644
+>> --- a/arch/arm/boot/dts/stm32f469-disco.dts
+>> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
+>> @@ -64,6 +64,10 @@
+>>         aliases {
+>>                 serial0 = &usart3;
+>>         };
+>> +
+>> +       soc {
+>> +               dma-ranges = <0xc0000000 0x0 0x10000000>;
+>> +       };
+>>  };
+>>
+>>  &clk_hse {
+>> --
+>
+>
+> Br.,
+> Bruno
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
