@@ -1,32 +1,39 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] net: mv643xx_eth: Fetch the phy connection type from DT
-Date: Wed, 26 Oct 2016 11:05:13 -0700
-Message-ID: <de64deed-c2c3-ad20-b141-961c3d655f53@gmail.com>
-References: <20161026174702.GB24717@obsidianresearch.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20161026174702.GB24717@obsidianresearch.com>
-Sender: netdev-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH 1/2] DT: binding: bcm2835-mbox: fix address typo in example
+Date: Wed, 26 Oct 2016 18:13:59 +0000
+Message-ID: <1477505640-26658-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/26/2016 10:47 AM, Jason Gunthorpe wrote:
-> The MAC is capable of RGMII mode and that is probably a more typical
-> connection type than GMII today (eg it is used by Marvell Reference
-> designs for several SOCs). Let DT users specify the standard
-> 
->    phy-connection-type = "rgmii-id";
-> 
-> On a phy node.
-> 
-> Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+The address of the mailbox node in the example has a typo.
+So fix it accordingly.
 
-Took a little while to understand the re-ordering of SET_NETDEV_DEV() to
-come earlier was necessary to access mp->dev->dev.parent.
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Fixes: d4b5c782b9f4 ("dt/bindings: Add binding for the BCM2835 mailbox driver")
+---
+ .../bindings/mailbox/brcm,bcm2835-mbox.txt         |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+index e893615..b48d7d3 100644
+--- a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
++++ b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+@@ -12,7 +12,7 @@ Required properties:
+ 
+ Example:
+ 
+-mailbox: mailbox@7e00b800 {
++mailbox: mailbox@7e00b880 {
+ 	compatible = "brcm,bcm2835-mbox";
+ 	reg = <0x7e00b880 0x40>;
+ 	interrupts = <0 1>;
 -- 
-Florian
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
