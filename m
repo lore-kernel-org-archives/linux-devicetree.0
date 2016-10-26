@@ -1,85 +1,74 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V4 3/3] ARM64 LPC: LPC driver implementation on Hip06
-Date: Wed, 26 Oct 2016 17:27:01 -0500
-Message-ID: <20161026222701.pptd33e5uaokhvce@rob-hp-laptop>
-References: <1476954940-242159-1-git-send-email-yuanzhichang@hisilicon.com>
- <1476954940-242159-4-git-send-email-yuanzhichang@hisilicon.com>
+From: Zach Brown <zach.brown@ni.com>
+Subject: Re: [RFC v2 2/2] mmc: sdhci: Ignore capability register when it
+ comes to speeds and use DT binding instead when sdhci-cap-speed-modes-broken
+ is set.
+Date: Wed, 26 Oct 2016 17:28:12 -0500
+Message-ID: <20161026222811.GA24391@zach-desktop>
+References: <1477085715-30213-1-git-send-email-zach.brown@ni.com>
+ <1477085715-30213-3-git-send-email-zach.brown@ni.com>
+ <d4547457-036a-dbb7-ddb8-b839e04949b7@intel.com>
+ <20161024154820.GA16144@zach-desktop>
+ <d65f018e-b20e-9e87-fc07-eb2fb4b5079e@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1476954940-242159-4-git-send-email-yuanzhichang@hisilicon.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "zhichang.yuan" <yuanzhichang@hisilicon.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, benh@kernel.crashing.org, minyard@acm.org, arnd@arndb.de, catalin.marinas@arm.com, gabriele.paoloni@huawei.com, john.garry@huawei.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, linuxarm@huawei.com, zourongrong@gmail.com, linux-serial@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, liviu.dudau@arm.com, kantyzc@163.com, zhichang.yuan02@gmail.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <d65f018e-b20e-9e87-fc07-eb2fb4b5079e@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 20, 2016 at 05:15:40PM +0800, zhichang.yuan wrote:
-> On Hip06, the accesses to LPC peripherals work in an indirect way. A
-> corresponding LPC driver configure some registers in LPC master at first, then
-> the real accesses on LPC slave devices are finished by the LPC master, which
-> is transparent to LPC driver.
-> This patch implement the relevant driver for Hip06 LPC. Cooperating with
-> indirect-IO, ipmi messages is in service without any changes on ipmi driver.
+On Tue, Oct 25, 2016 at 02:30:25PM +0300, Adrian Hunter wrote:
+> On 24/10/16 18:48, Zach Brown wrote:
+> > On Mon, Oct 24, 2016 at 10:34:46AM +0300, Adrian Hunter wrote:
+> >> On 22/10/16 00:35, Zach Brown wrote:
+> >>> When the sdhci-cap-speed-modes-broken DT property is set, the driver
+> >>> will ignore the bits of the capability registers that correspond to
+> >>> speed modes.
+> >>>
+> >>> Signed-off-by: Zach Brown <zach.brown@ni.com>
+> >>> ---
+> >>>  drivers/mmc/host/sdhci.c | 10 ++++++++++
+> >>>  1 file changed, 10 insertions(+)
+> >>>
+> >>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> >>> index 1e25b01..59c62d3 100644
+> >>> --- a/drivers/mmc/host/sdhci.c
+> >>> +++ b/drivers/mmc/host/sdhci.c
+> >>> @@ -22,6 +22,7 @@
+> >>>  #include <linux/scatterlist.h>
+> >>>  #include <linux/regulator/consumer.h>
+> >>>  #include <linux/pm_runtime.h>
+> >>> +#include <linux/of.h>
+> >>>
+> >>>  #include <linux/leds.h>
+> >>>
+> >>> @@ -3013,10 +3014,19 @@ void __sdhci_read_caps(struct sdhci_host *host, u16 *ver, u32 *caps, u32 *caps1)
+> >>>
+> >>>  	host->caps = caps ? *caps : sdhci_readl(host, SDHCI_CAPABILITIES);
+> >>>
+> >>> +	if (of_property_read_bool(mmc_dev(host->mmc)->of_node,
+> >>> +				  "sdhci-cap-speed-modes-broken"))
+> >>
+> >> It rather begs the question: if you are going to do something sdhci
+> >> specific, why not just read the whole of the caps register from DT?
+> >>
+> > 
+> > Throwing out the whole of the caps register seems like overkill. Also
 > 
-> Signed-off-by: zhichang.yuan <yuanzhichang@hisilicon.com>
-> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-> ---
->  .../arm/hisilicon/hisilicon-low-pin-count.txt      |  31 ++
->  MAINTAINERS                                        |   8 +
->  drivers/bus/Kconfig                                |   8 +
->  drivers/bus/Makefile                               |   1 +
->  drivers/bus/hisi_lpc.c                             | 501 +++++++++++++++++++++
->  5 files changed, 549 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/hisilicon-low-pin-count.txt
->  create mode 100644 drivers/bus/hisi_lpc.c
+> What about 2 values: one for the 64-bit caps register and one for a 64-bit
+> mask of bits to override.  That way you can select which bits to override
+> and what to override them to.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon-low-pin-count.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon-low-pin-count.txt
-> new file mode 100644
-> index 0000000..e681419
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon-low-pin-count.txt
-> @@ -0,0 +1,31 @@
-> +Hisilicon Hip06 low-pin-count device
-> +  Usually LPC controller is part of PCI host bridge, so the legacy ISA ports
-> +  locate on LPC bus can be accessed direclty. But some SoCs have independent
-> +  LPC controller, and access the legacy ports by triggering LPC I/O cycles.
-> +  Hisilicon Hip06 implements this LPC device.
-> +
-> +Required properties:
-> +- compatible: should be "hisilicon,low-pin-count"
 
-This should be an SoC specific compatible string.
+I like this idea. I sent a RFC of it. 
 
-> +- #address-cells: must be 2 which stick to the ISA/EISA binding doc.
-> +- #size-cells: must be 1 which stick to the ISA/EISA binding doc.
-> +- reg: base memory range where the register set for this device is mapped.
-> +
-> +Note:
-> +  The node name before '@' must be "isa" to represent the binding stick to the
-> +  ISA/EISA binding specification.
-> +
-> +Example:
-> +
-> +isa@a01b0000 {
-> +	compatible = "hisilicom,low-pin-count";
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	reg = <0x0 0xa01b0000 0x0 0x1000>;
-> +
-> +	ipmi0: bt@e4 {
-> +		compatible = "ipmi-bt";
-> +		device_type = "ipmi";
-> +		reg = <0x01 0xe4 0x04>;
-> +		status = "disabled";
-> +	};
-> +};
+> > there are some things set by the caps that are not available in the DT.
+> > For example, SDHCI_CAN_64BIT is set by the cap register and is used in
+> > sdhci_setup_host to set host->flags SDHCI_USE_64_BIT_DMA.
+> 
+> Not sure what you mean.
+> 
+
+Your suggestion addresses my concern. So it's not an issue. 
