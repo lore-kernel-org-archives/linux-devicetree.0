@@ -1,29 +1,28 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V6 01/10] Documentation: DT: qcom_hidma: update binding
- for MSI
-Date: Wed, 26 Oct 2016 16:45:12 -0500
-Message-ID: <20161026214512.ofwbxnl2d46n6ef5@rob-hp-laptop>
-References: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
- <1476899512-20431-2-git-send-email-okaya@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] Documentation: DT: MMC: meson-gx: new bindings doc
+Date: Wed, 26 Oct 2016 16:46:16 -0500
+Message-ID: <20161026214615.wjpedk22zatyqrwc@rob-hp-laptop>
+References: <20161019181825.2186-1-khilman@baylibre.com>
+ <20161019181825.2186-2-khilman@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1476899512-20431-2-git-send-email-okaya@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <20161019181825.2186-2-khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2016 at 01:51:43PM -0400, Sinan Kaya wrote:
-> Adding a new binding for qcom,hidma-1.1 to distinguish HW supporting
-> MSI interrupts from the older revision.
-> 
-> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+On Wed, Oct 19, 2016 at 11:18:25AM -0700, Kevin Hilman wrote:
+> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/mmc/amlogic,meson-gx.txt   | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
 
-Please add acks when posting new versions.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
