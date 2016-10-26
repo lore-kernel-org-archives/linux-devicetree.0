@@ -1,60 +1,49 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] tpm_tis: Allow tpm_tis to be bound using DT
-Date: Wed, 26 Oct 2016 17:05:06 +0100
-Message-ID: <20161026160506.GA23322@leverpostej>
-References: <20161025232331.GA20339@obsidianresearch.com>
- <20161026112351.GH19965@leverpostej>
- <20161026160153.GA24898@obsidianresearch.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v6 4/5] ARM: DTS: da850: Add cfgchip syscon node
+Date: Wed, 26 Oct 2016 11:08:36 -0500
+Message-ID: <b9bfc4aa-ef52-53c4-dc7e-c0bc1c5969fb@lechnology.com>
+References: <1477451211-31979-1-git-send-email-david@lechnology.com>
+ <1477451211-31979-5-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161026160153.GA24898-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1477451211-31979-5-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 26, 2016 at 10:01:53AM -0600, Jason Gunthorpe wrote:
-> On Wed, Oct 26, 2016 at 12:25:51PM +0100, Mark Rutland wrote:
-> 
-> > > +Required properties:
-> > > +
-> > > +- compatible: should specify the actual hardware chip followed by the
-> > > +  generic interface name "tcg,tpm_tis-spi";
-> > 
-> > Please use '-' in comaptible strings rather than '_'.
-> 
-> Erk, there is also a typo spi vs mmio.
+On 10/25/2016 10:06 PM, David Lechner wrote:
+> Add a syscon node for the SoC CFGCHIPn registers. This is needed for
+> the new usb phy driver.
+>
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/da850.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+> index f79e1b9..6bbf20d 100644
+> --- a/arch/arm/boot/dts/da850.dtsi
+> +++ b/arch/arm/boot/dts/da850.dtsi
+> @@ -188,6 +188,10 @@
+>  			};
+>
+>  		};
+> +		cfgchip: cfgchip@1417c {
 
-Urgh; missed that too.
+I wonder if there is a more generic name instead of cfgchip@. Is there a 
+preferred generic name for syscon nodes?
 
-> Note that the SPI patches were already Ack'd by DT so there is now
-> precedent:
-> 
-> Documentation/devicetree/bindings/security/tpm/tpm_tis_spi.txt:    "tcg,tpm_tis-spi"
+> +			compatible = "ti,da830-cfgchip", "syscon";
+> +			reg = <0x1417c 0x14>;
+> +		};
+>  		edma0: edma@0 {
+>  			compatible = "ti,edma3-tpcc";
+>  			/* eDMA3 CC0: 0x01c0 0000 - 0x01c0 7fff */
+>
 
-Urgh, that should not have gone in as-is.
-
-> Do you still want to change? 
-
-Regardless of the bad example in the SPI case, this should use a dash.
-
-> Should we change spi too?
-
-That was in v4.8, so it's too late to change it now.
-
-> > Please also describe chip strings, even if those aren't use by the
-> > driver, e.g.
-> 
-> Sure, I can give one or two, but the list will not be exhaustive,
-> there are many different TPM chips that adhere to this standard.
-
-Just the one from the example for now is fine; we can add new ones as we
-add DTs that use them.
-
-Thanks,
-Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
