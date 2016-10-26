@@ -1,104 +1,41 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/6] dt/bindings: adjust bindings for Layerscape SCFG MSI
-Date: Wed, 26 Oct 2016 11:22:05 +0100
-Message-ID: <20161026102152.GB19965@leverpostej>
-References: <1477398945-22774-1-git-send-email-Minghuan.Lian@nxp.com>
- <0416d929-dfef-da09-8d9a-d1db8575afef@arm.com>
- <VI1PR04MB161582C628C5EA4CD08B15C6E8AB0@VI1PR04MB1615.eurprd04.prod.outlook.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v6 5/5] ARM: DTS: da850: Add usb phy node
+Date: Wed, 26 Oct 2016 15:56:27 +0530
+Message-ID: <d55f19f2-beb3-a681-a6e9-c1d2c303173c@ti.com>
+References: <1477451211-31979-1-git-send-email-david@lechnology.com>
+ <1477451211-31979-6-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <VI1PR04MB161582C628C5EA4CD08B15C6E8AB0@VI1PR04MB1615.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "M.H. Lian" <minghuan.lian@nxp.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Scott Wood <scott.wood@nxp.com>, Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1477451211-31979-6-git-send-email-david@lechnology.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Axel Haslam <ahaslam@baylibre.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 26, 2016 at 06:55:22AM +0000, M.H. Lian wrote:
-> Hi Robin,
+On Wednesday 26 October 2016 08:36 AM, David Lechner wrote:
+> Add a node for the new usb phy driver.
+
+changed this to:
+
+    Add a node for usb phy device. This device
+    controls both the USB 1.1 and USB 2.0 PHYs.
+
+mainly because the node is for the device, not the driver.
+
 > 
-> Please see my comments inline.
-> 
-> Thanks,
-> Minghuan
-> 
-> > -----Original Message-----
-> > From: Robin Murphy [mailto:robin.murphy@arm.com]
-> > Sent: Tuesday, October 25, 2016 9:01 PM
-> > To: M.H. Lian <minghuan.lian@nxp.com>; linux-arm-
-> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> > devicetree@vger.kernel.org
-> > Cc: Marc Zyngier <marc.zyngier@arm.com>; Stuart Yoder
-> > <stuart.yoder@nxp.com>; Leo Li <leoyang.li@nxp.com>; Scott Wood
-> > <scott.wood@nxp.com>; Shawn Guo <shawnguo@kernel.org>; Mingkai Hu
-> > <mingkai.hu@nxp.com>
-> > Subject: Re: [PATCH 1/6] dt/bindings: adjust bindings for Layerscape SCFG
-> > MSI
-> > 
-> > On 25/10/16 13:35, Minghuan Lian wrote:
-> > > 1. The different version of a SoC may have different MSI
-> > > implementation. But compatible "fsl,<soc-name>-msi" can not describe
-> > > the SoC version.
-> > 
-> > Can't it?
-> > 
-> > 	compatible = "fsl-ls1043a-rev11-msi";
-> > 
-> > Oh, I guess it can!
-> > 
-> > Joking aside, if there are multiple versions of a piece of hardware which
-> > require *different* treatment by drivers, then it is obviously wrong to use
-> > the same compatible string because *they are not compatible*.
-> > 
-> [Minghuan Lian]  Yes, but Rev1.0 and Rev1.1 SoC will use the same dts files.
-> We cannot create different dts files for each revision of the same kind of SoC.
+> Signed-off-by: David Lechner <david@lechnology.com>
 
-... why?
-
-The DT should describe the hardware; if hardware differs then it should
-have a different DT.
-
-> It means that there are different variants in the different versions
-> of the same SoC that will use the same compatible string.
-
-Why can you not add a string for each variant, in addition to the SoC
-string? We do that elsewhere.
-
-> So I have to use SoC match interface to get the versions.
-> 
-> I'm too radical. I do not want to first check SoC family via
-> compatible string and then check revision via SoC match or SVR.
-
-You can have *both* in the the compatible string list, e.g. at the top
-level:
-
-	compatible = "vendor,soc-rev", "vendor-soc";
-
-For devices which differ, this can be encoded similarly in the device
-compatible string list.
-
-> I selected the "SoC match" like the following to get the related information at only one place. 
-> 
-> static struct soc_device_attribute soc_msi_matches[] = {
-> 	{ .family = "QorIQ LS1021A",
-> 	  .data = &ls1021_msi_cfg },
-> 	{ .family = "QorIQ LS1012A",
-> 	  .data = &ls1021_msi_cfg },
-> 	{ .family = "QorIQ LS1043A", .revision = "1.0",
-> 	  .data = &ls1021_msi_cfg },
-> 	{ .family = "QorIQ LS1043A", .revision = "1.1",
-> 	  .data = &ls1043_rev11_msi_cfg },
-> 	{ .family = "QorIQ LS1046A",
-> 	  .data = &ls1046_msi_cfg },
-> 	{ },
-> };
-> 
-> I will remain the SoC related compatible and try to describe the
-> difference via some kind of the property.
-
-As commented on the driver side, this should be described with DT
-properties on the devices.
+Applied to v4.10/dt
 
 Thanks,
-Mark.
+Sekhar
