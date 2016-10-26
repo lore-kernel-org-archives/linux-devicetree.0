@@ -1,114 +1,143 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2] tpm_tis: Allow tpm_tis to be bound using DT
-Date: Wed, 26 Oct 2016 11:04:37 -0600
-Message-ID: <20161026170437.GB13461@obsidianresearch.com>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [v12, 5/8] soc: fsl: add GUTS driver for QorIQ platforms
+Date: Wed, 26 Oct 2016 12:06:06 -0500
+Message-ID: <1477501566.6812.9.camel@buserror.net>
+References: <1474441040-11946-1-git-send-email-yangbo.lu@nxp.com>
+         <1474441040-11946-6-git-send-email-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1474441040-11946-6-git-send-email-yangbo.lu@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yangbo Lu <yangbo.lu@nxp.com>, linux-mmc@vger.kernel.org, ulf.hansson@linaro.org, Arnd Bergmann <arnd@arndb.de>
+Cc: linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org, netdev@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Qiang Zhao <qiang.zhao@nxp.com>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <ssantosh@kernel.org>, Leo Li <leoyang.li@nxp.com>, Xiaobo Xie <xiaobo.xie@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This provides an open firwmare driver binding for tpm_tis. OF
-is useful on arches where ACPI/PNP is not used.
+On Wed, 2016-09-21 at 14:57 +0800, Yangbo Lu wrote:
+> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
+> new file mode 100644
+> index 0000000..b99764c
+> --- /dev/null
+> +++ b/drivers/soc/fsl/Kconfig
+> @@ -0,0 +1,19 @@
+> +#
+> +# Freescale SOC drivers
+> +#
+> +
+> +source "drivers/soc/fsl/qe/Kconfig"
+> +
+> +config FSL_GUTS
+> +	bool "Freescale QorIQ GUTS driver"
+> +	select SOC_BUS
+> +	help
+> +	  The global utilities block controls power management, I/O device
+> +	  enabling, power-onreset(POR) configuration monitoring, alternate
+> +	  function selection for multiplexed signals,and clock control.
+> +	  This driver is to manage and access global utilities block.
+> +	  Initially only reading SVR and registering soc device are
+> supported.
+> +	  Other guts accesses, such as reading RCW, should eventually be
+> moved
+> +	  into this driver as well.
+> +
+> +	  If you want GUTS driver support, you should say Y here.
 
-The tcg,tpm-tis-mmio register map interface is specified by the TCG.
+This is user-enablable without dependencies, which means it will break some
+randconfigs.  If this is to be enabled via select then remove the text after
+"bool".
 
-Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
----
- .../bindings/security/tpm/tpm_tis_mmio.txt         | 23 ++++++++++++++++++++++
- drivers/char/tpm/Kconfig                           |  2 +-
- drivers/char/tpm/tpm_tis.c                         | 11 +++++++++++
- 3 files changed, 35 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+> +/* SoC die attribute definition for QorIQ platform */
+> +static const struct fsl_soc_die_attr fsl_soc_die[] = {
+> +#ifdef CONFIG_PPC
+> +	/*
+> +	 * Power Architecture-based SoCs T Series
+> +	 */
+> +
+> +	/* Die: T4240, SoC: T4240/T4160/T4080 */
+> +	{ .die		= "T4240",
+> +	  .svr		= 0x82400000,
+> +	  .mask		= 0xfff00000,
+> +	},
+> +	/* Die: T1040, SoC: T1040/T1020/T1042/T1022 */
+> +	{ .die		= "T1040",
+> +	  .svr		= 0x85200000,
+> +	  .mask		= 0xfff00000,
+> +	},
+> +	/* Die: T2080, SoC: T2080/T2081 */
+> +	{ .die		= "T2080",
+> +	  .svr		= 0x85300000,
+> +	  .mask		= 0xfff00000,
+> +	},
+> +	/* Die: T1024, SoC: T1024/T1014/T1023/T1013 */
+> +	{ .die		= "T1024",
+> +	  .svr		= 0x85400000,
+> +	  .mask		= 0xfff00000,
+> +	},
+> +#endif /* CONFIG_PPC */
+> +#if defined(CONFIG_ARCH_MXC) || defined(CONFIG_ARCH_LAYERSCAPE)
 
-v2 (from Mark)
- - Change name to tpm-tis-mmio (and fix c&p spi)
- - Include some valid chip names
+Will this driver ever be probed on MXC?  Why do we need these ifdefs at all?
 
-diff --git a/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
-new file mode 100644
-index 000000000000..f9a853165cd0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
-@@ -0,0 +1,23 @@
-+Trusted Computing Group MMIO Trusted Platform Module
-+
-+The TCG defines multi vendor standard for accessing a TPM chip, this
-+is the standard protocol defined to access the TPM via MMIO. Typically
-+this interface will be implemented over Intel's LPC bus.
-+
-+Refer to the 'TCG PC Client Specific TPM Interface Specification (TIS)' TCG
-+publication for the specification.
-+
-+Required properties:
-+
-+- compatible: should contain a string below for the chip, followed by
-+              "tcg,tpm-tis-mmio". Valid chip strings are:
-+	          * "atmel,at97sc3204"
-+- reg: The location of the MMIO registers, should be at least 0x5000 bytes
-+- interrupt: An optional interrupt indicating command completion.
-+
-+Example:
-+
-+	tpm_tis@90000 {
-+				compatible = "atmel,at97sc3204", "tcg,tpm-tis-mmio";
-+				reg = <0x90000 0x5000>;
-+			};
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index 9faa0b1e7766..277186d3b668 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -32,7 +32,7 @@ config TCG_TIS_CORE
- 
- config TCG_TIS
- 	tristate "TPM Interface Specification 1.2 Interface / TPM 2.0 FIFO Interface"
--	depends on X86
-+	depends on X86 || OF
- 	select TCG_TIS_CORE
- 	---help---
- 	  If you have a TPM security chip that is compliant with the
-diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
-index eaf5730d79eb..0127af130cb1 100644
---- a/drivers/char/tpm/tpm_tis.c
-+++ b/drivers/char/tpm/tpm_tis.c
-@@ -28,6 +28,8 @@
- #include <linux/wait.h>
- #include <linux/acpi.h>
- #include <linux/freezer.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- #include "tpm.h"
- #include "tpm_tis_core.h"
- 
-@@ -354,12 +356,21 @@ static int tpm_tis_plat_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id tis_of_platform_match[] = {
-+	{.compatible = "tcg,tpm-tis-mmio"},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, tis_of_platform_match);
-+#endif
-+
- static struct platform_driver tis_drv = {
- 	.probe = tpm_tis_plat_probe,
- 	.remove = tpm_tis_plat_remove,
- 	.driver = {
- 		.name		= "tpm_tis",
- 		.pm		= &tpm_tis_pm,
-+		.of_match_table = of_match_ptr(tis_of_platform_match),
- 	},
- };
- 
--- 
-2.1.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	/*
+> +	 * ARM-based SoCs LS Series
+> +	 */
+> +
+> +	/* Die: LS1043A, SoC: LS1043A/LS1023A */
+> +	{ .die		= "LS1043A",
+> +	  .svr		= 0x87920000,
+> +	  .mask		= 0xffff0000,
+> +	},
+> +	/* Die: LS2080A, SoC: LS2080A/LS2040A/LS2085A */
+> +	{ .die		= "LS2080A",
+> +	  .svr		= 0x87010000,
+> +	  .mask		= 0xff3f0000,
+> +	},
+> +	/* Die: LS1088A, SoC: LS1088A/LS1048A/LS1084A/LS1044A */
+> +	{ .die		= "LS1088A",
+> +	  .svr		= 0x87030000,
+> +	  .mask		= 0xff3f0000,
+> +	},
+> +	/* Die: LS1012A, SoC: LS1012A */
+> +	{ .die		= "LS1012A",
+> +	  .svr		= 0x87040000,
+> +	  .mask		= 0xffff0000,
+> +	},
+> +	/* Die: LS1046A, SoC: LS1046A/LS1026A */
+> +	{ .die		= "LS1046A",
+> +	  .svr		= 0x87070000,
+> +	  .mask		= 0xffff0000,
+> +	},
+> +	/* Die: LS2088A, SoC: LS2088A/LS2048A/LS2084A/LS2044A */
+> +	{ .die		= "LS2088A",
+> +	  .svr		= 0x87090000,
+> +	  .mask		= 0xff3f0000,
+> +	},
+> +	/* Die: LS1021A, SoC: LS1021A/LS1020A/LS1022A
+> +	 * Note: Put this die at the end in cause of incorrect
+> identification
+> +	 */
+> +	{ .die		= "LS1021A",
+> +	  .svr		= 0x87000000,
+> +	  .mask		= 0xfff00000,
+> +	},
+> +#endif /* CONFIG_ARCH_MXC || CONFIG_ARCH_LAYERSCAPE */
+
+Instead of relying on ordering, add more bits to the mask so that there's no
+overlap.  I think 0xfff70000 would work.
+
+> +out:
+> +	kfree(soc_dev_attr.machine);
+> +	kfree(soc_dev_attr.family);
+> +	kfree(soc_dev_attr.soc_id);
+> +	kfree(soc_dev_attr.revision);
+> +	iounmap(guts->regs);
+> +out_free:
+> +	kfree(guts);
+> +	return ret;
+> +}
+
+Please use devm.
+
+-Scott
