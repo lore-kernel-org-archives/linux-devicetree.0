@@ -1,47 +1,104 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/6] Documentation: devicetree: dwc3: Add interrupt
- moderation
-Date: Wed, 26 Oct 2016 13:21:59 +0300
-Message-ID: <37f3eec3-b026-97ad-8b33-353a3b93f840@cogentembedded.com>
-References: <cover.1477424426.git.johnyoun@synopsys.com>
- <e7a864e5a2af12d5a8d97f2591065f4aa85f86cb.1477424426.git.johnyoun@synopsys.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/6] dt/bindings: adjust bindings for Layerscape SCFG MSI
+Date: Wed, 26 Oct 2016 11:22:05 +0100
+Message-ID: <20161026102152.GB19965@leverpostej>
+References: <1477398945-22774-1-git-send-email-Minghuan.Lian@nxp.com>
+ <0416d929-dfef-da09-8d9a-d1db8575afef@arm.com>
+ <VI1PR04MB161582C628C5EA4CD08B15C6E8AB0@VI1PR04MB1615.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e7a864e5a2af12d5a8d97f2591065f4aa85f86cb.1477424426.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB161582C628C5EA4CD08B15C6E8AB0@VI1PR04MB1615.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "M.H. Lian" <minghuan.lian@nxp.com>
+Cc: Robin Murphy <robin.murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Scott Wood <scott.wood@nxp.com>, Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Wed, Oct 26, 2016 at 06:55:22AM +0000, M.H. Lian wrote:
+> Hi Robin,
+> 
+> Please see my comments inline.
+> 
+> Thanks,
+> Minghuan
+> 
+> > -----Original Message-----
+> > From: Robin Murphy [mailto:robin.murphy@arm.com]
+> > Sent: Tuesday, October 25, 2016 9:01 PM
+> > To: M.H. Lian <minghuan.lian@nxp.com>; linux-arm-
+> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> > devicetree@vger.kernel.org
+> > Cc: Marc Zyngier <marc.zyngier@arm.com>; Stuart Yoder
+> > <stuart.yoder@nxp.com>; Leo Li <leoyang.li@nxp.com>; Scott Wood
+> > <scott.wood@nxp.com>; Shawn Guo <shawnguo@kernel.org>; Mingkai Hu
+> > <mingkai.hu@nxp.com>
+> > Subject: Re: [PATCH 1/6] dt/bindings: adjust bindings for Layerscape SCFG
+> > MSI
+> > 
+> > On 25/10/16 13:35, Minghuan Lian wrote:
+> > > 1. The different version of a SoC may have different MSI
+> > > implementation. But compatible "fsl,<soc-name>-msi" can not describe
+> > > the SoC version.
+> > 
+> > Can't it?
+> > 
+> > 	compatible = "fsl-ls1043a-rev11-msi";
+> > 
+> > Oh, I guess it can!
+> > 
+> > Joking aside, if there are multiple versions of a piece of hardware which
+> > require *different* treatment by drivers, then it is obviously wrong to use
+> > the same compatible string because *they are not compatible*.
+> > 
+> [Minghuan Lian]  Yes, but Rev1.0 and Rev1.1 SoC will use the same dts files.
+> We cannot create different dts files for each revision of the same kind of SoC.
 
-On 10/25/2016 10:42 PM, John Youn wrote:
+... why?
 
-> Add interrupt moderation interval binding for dwc3.
->
-> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/dwc3.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index e3e6983..17de9fc 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -53,6 +53,7 @@ Optional properties:
->   - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
->  	register for post-silicon frame length adjustment when the
->  	fladj_30mhz_sdbnd signal is invalid or incorrect.
-> + - snps,imod_interval: the interrupt moderation interval.
+The DT should describe the hardware; if hardware differs then it should
+have a different DT.
 
-    Hyphens are preferred in the DT node/prop names.
+> It means that there are different variants in the different versions
+> of the same SoC that will use the same compatible string.
 
-[...]
+Why can you not add a string for each variant, in addition to the SoC
+string? We do that elsewhere.
 
-MBR, Sergei
+> So I have to use SoC match interface to get the versions.
+> 
+> I'm too radical. I do not want to first check SoC family via
+> compatible string and then check revision via SoC match or SVR.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You can have *both* in the the compatible string list, e.g. at the top
+level:
+
+	compatible = "vendor,soc-rev", "vendor-soc";
+
+For devices which differ, this can be encoded similarly in the device
+compatible string list.
+
+> I selected the "SoC match" like the following to get the related information at only one place. 
+> 
+> static struct soc_device_attribute soc_msi_matches[] = {
+> 	{ .family = "QorIQ LS1021A",
+> 	  .data = &ls1021_msi_cfg },
+> 	{ .family = "QorIQ LS1012A",
+> 	  .data = &ls1021_msi_cfg },
+> 	{ .family = "QorIQ LS1043A", .revision = "1.0",
+> 	  .data = &ls1021_msi_cfg },
+> 	{ .family = "QorIQ LS1043A", .revision = "1.1",
+> 	  .data = &ls1043_rev11_msi_cfg },
+> 	{ .family = "QorIQ LS1046A",
+> 	  .data = &ls1046_msi_cfg },
+> 	{ },
+> };
+> 
+> I will remain the SoC related compatible and try to describe the
+> difference via some kind of the property.
+
+As commented on the driver side, this should be described with DT
+properties on the devices.
+
+Thanks,
+Mark.
