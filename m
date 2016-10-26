@@ -1,67 +1,146 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 3/4] dt-bindings: Update domain-idle-state binding to use
- correct compatibles
-Date: Wed, 26 Oct 2016 09:57:35 +0100
-Message-ID: <68dc67d1-b443-f7b1-6229-0ac54e403d61@arm.com>
-References: <1477409199-52182-1-git-send-email-lina.iyer@linaro.org>
- <1477409199-52182-4-git-send-email-lina.iyer@linaro.org>
- <7hh980taqp.fsf@baylibre.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH v3] drm/mediatek: fixed the calc method of data rate per lane
+Date: Wed, 26 Oct 2016 16:59:55 +0800
+Message-ID: <1477472395-6451-1-git-send-email-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <7hh980taqp.fsf@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>, Lina Iyer <lina.iyer@linaro.org>
-Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, lorenzo.pieralisi@arm.com, Juri.Lelli@arm.com, linux-pm@vger.kernel.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, rjw@rjwysocki.net, brendan.jackman@arm.com, Sudeep Holla <sudeep.holla@arm.com>, andy.gross@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, ck.hu@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jitao Shi <jitao.shi@mediatek.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@medi
 List-Id: devicetree@vger.kernel.org
 
+Tune dsi frame rate by pixel clock, dsi add some extra signal (i.e. Tlpx,
+Ths-prepare, Ths-zero, Ths-trail,Ths-exit) when enter and exit LP mode, this
+signal will cause h-time larger than normal and reduce FPS.
+Need to multiply a coefficient to offset the extra signal's effect.
+coefficient = ((htotal*bpp/lane_number)+Tlpx+Ths_prep+Ths_zero+Ths_trail+
+                Ths_exit)/(htotal*bpp/lane_number))
 
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+---
+Change since v2:
+ - move phy timing back to dsi_phy_timconfig.
 
-On 25/10/16 21:49, Kevin Hilman wrote:
-> Lina Iyer <lina.iyer@linaro.org> writes:
->
->> Update domain-idle-state binding to use "domain-idle-state" compatible
->> from Documentation/devicetree/bindings/arm/idle-states.txt.
->>
->> Cc: <devicetree@vger.kernel.org>
->> Cc: Rob Herring <robh@kernel.org>
->> Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
->> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/power/power_domain.txt | 9 +++++----
->>  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> With no current users for this, I don't see the point of adding a
-> compatible now.
->
-> IMO, this should wait and be added with the identified user we can
-> discuss it then.
->
+Change since v1:
+ - phy_timing2 and phy_timing3 refer clock cycle time.
+ - define values of LPX HS_PRPR HS_ZERO HS_TRAIL TA_GO TA_SURE TA_GET DA_HS_EXIT
+---
+ drivers/gpu/drm/mediatek/mtk_dsi.c |   74 +++++++++++++++++++++++++-----------
+ 1 file changed, 51 insertions(+), 23 deletions(-)
 
-No, IMO it needs to be used for the proposed SoC idle/genpd solution.
-
-I understand the nodes that are "arm,idle-state" compatible can be used
-for this new SoC hierarchical idle management, but it was never defined
-for that use originally. So this new feature must be advertised by the 
-firmware with the presence of "domain-idle-state".
-
-Yes we might have other ways to detect that but I have already seen that 
-broken on the reference platform, so we need alternate/DT way to specify 
-that.
-
-Not all existing "arm,idle-state" compatible nodes will be capable of
-supporting this new SoC idle feature. It's just better and safer for a
-new feature getting added that relies on DT to have a new compatible.
-
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index 28b2044..8b3b38a 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -85,16 +85,16 @@
+ #define LD0_WAKEUP_EN			BIT(2)
+ 
+ #define DSI_PHY_TIMECON0	0x110
+-#define LPX				(0xff << 0)
+-#define HS_PRPR				(0xff << 8)
+-#define HS_ZERO				(0xff << 16)
+-#define HS_TRAIL			(0xff << 24)
++#define LPX				(5 << 0)
++#define HS_PRPR				(6 << 8)
++#define HS_ZERO				(10 << 16)
++#define HS_TRAIL			(8 << 24)
+ 
+ #define DSI_PHY_TIMECON1	0x114
+-#define TA_GO				(0xff << 0)
+-#define TA_SURE				(0xff << 8)
+-#define TA_GET				(0xff << 16)
+-#define DA_HS_EXIT			(0xff << 24)
++#define TA_GO				(20 << 0)
++#define TA_SURE				(7 << 8)
++#define TA_GET				(25 << 16)
++#define DA_HS_EXIT			(7 << 24)
+ 
+ #define DSI_PHY_TIMECON2	0x118
+ #define CONT_DET			(0xff << 0)
+@@ -161,20 +161,18 @@ static void mtk_dsi_mask(struct mtk_dsi *dsi, u32 offset, u32 mask, u32 data)
+ static void dsi_phy_timconfig(struct mtk_dsi *dsi)
+ {
+ 	u32 timcon0, timcon1, timcon2, timcon3;
+-	unsigned int ui, cycle_time;
+-	unsigned int lpx;
++	u32 ui, cycle_time;
+ 
+ 	ui = 1000 / dsi->data_rate + 0x01;
+ 	cycle_time = 8000 / dsi->data_rate + 0x01;
+-	lpx = 5;
+ 
+-	timcon0 = (8 << 24) | (0xa << 16) | (0x6 << 8) | lpx;
+-	timcon1 = (7 << 24) | (5 * lpx << 16) | ((3 * lpx) / 2) << 8 |
+-		  (4 * lpx);
++	timcon0 = LPX | HS_PRPR | HS_ZERO | HS_TRAIL;
++	timcon1 = 4 * LPX | (3 * LPX / 2) << 8 | 5 * LPX << 16 | DA_HS_EXIT;
+ 	timcon2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
+-		  (NS_TO_CYCLE(0x150, cycle_time) << 16);
+-	timcon3 = (2 * lpx) << 16 | NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8 |
+-		   NS_TO_CYCLE(0x40, cycle_time);
++		      (NS_TO_CYCLE(0x150, cycle_time) << 16);
++	timcon3 = (2 * LPX) << 16 |
++		      NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8 |
++		      NS_TO_CYCLE(0x40, cycle_time);
+ 
+ 	writel(timcon0, dsi->regs + DSI_PHY_TIMECON0);
+ 	writel(timcon1, dsi->regs + DSI_PHY_TIMECON1);
+@@ -202,19 +200,49 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+ {
+ 	struct device *dev = dsi->dev;
+ 	int ret;
++	u64 bit_clock, total_bits;
++	u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
+ 
+ 	if (++dsi->refcount != 1)
+ 		return 0;
+ 
++	switch (dsi->format) {
++	case MIPI_DSI_FMT_RGB565:
++		bit_per_pixel = 16;
++		break;
++	case MIPI_DSI_FMT_RGB666_PACKED:
++		bit_per_pixel = 18;
++		break;
++	case MIPI_DSI_FMT_RGB666:
++	case MIPI_DSI_FMT_RGB888:
++	default:
++		bit_per_pixel = 24;
++		break;
++	}
+ 	/**
+-	 * data_rate = (pixel_clock / 1000) * pixel_dipth * mipi_ratio;
+-	 * pixel_clock unit is Khz, data_rata unit is MHz, so need divide 1000.
+-	 * mipi_ratio is mipi clk coefficient for balance the pixel clk in mipi.
+-	 * we set mipi_ratio is 1.05.
++	 * data_rate = (pixel_clock) * bit_per_pixel * mipi_ratio / lane_num;
++	 * vm.pixelclock is Khz, data_rata unit is Hz, so need to multiply 1000
++	 * mipi_ratio is (htotal * byte_per_pixel / lane_num + Tlpx + Ths_prep
++	 *		  + Thstrail + Ths_exit + Ths_zero) /
++	 *		 (htotal * byte_per_pixel /lane_number)
+ 	 */
+-	dsi->data_rate = dsi->vm.pixelclock * 3 * 21 / (1 * 1000 * 10);
++	bit_clock = dsi->vm.pixelclock * 1000 * bit_per_pixel;
++	htotal = dsi->vm.hactive + dsi->vm.hback_porch + dsi->vm.hfront_porch +
++		 dsi->vm.hsync_len;
++	htotal_bits = htotal * bit_per_pixel;
++
++	/**
++	 * overhead = lpx + hs_prepare + hs_zero + hs_trail + hs_exit
++	 */
++	overhead_cycles = LPX + (HS_PRPR >> 8) + (HS_ZERO >> 16) +
++			  (HS_TRAIL >> 24) + (DA_HS_EXIT >> 24);
++	overhead_bits = overhead_cycles * dsi->lanes * 8;
++	total_bits = htotal_bits + overhead_bits;
++
++	dsi->data_rate = DIV_ROUND_UP_ULL(bit_clock * total_bits,
++					  htotal_bits * dsi->lanes);
+ 
+-	ret = clk_set_rate(dsi->hs_clk, dsi->data_rate * 1000000);
++	ret = clk_set_rate(dsi->hs_clk, dsi->data_rate);
+ 	if (ret < 0) {
+ 		dev_err(dev, "Failed to set data rate: %d\n", ret);
+ 		goto err_refcount;
 -- 
-Regards,
-Sudeep
+1.7.9.5
