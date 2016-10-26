@@ -1,98 +1,40 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/9] pinctrl: meson: allow gpio to request irq
-Date: Wed, 26 Oct 2016 16:44:33 +0200
-Message-ID: <CACRpkdZR8T8W5WMmEJVhPR0sUQyfPzgHpjhDiRsyXvybKDYJWQ@mail.gmail.com>
-References: <1476871709-8359-1-git-send-email-jbrunet@baylibre.com>
- <1476871709-8359-5-git-send-email-jbrunet@baylibre.com> <CACRpkdaCZPS45t3eTcjJExOu=YT_YkjNkdpg09jQqvLQOJH=Qw@mail.gmail.com>
- <1477040798.15560.96.camel@baylibre.com> <CACRpkdYUVXny57AC9rKX3VRAyooEk_2XLvqe9jOuT3rOaE75rg@mail.gmail.com>
- <ec7c6cc5-cf9a-9c75-4b07-e337064c7d6e@arm.com> <1477400900.2482.51.camel@baylibre.com>
- <dee26f0b-e175-f8a0-2b73-08e8e324841c@arm.com> <1477405332.2482.87.camel@baylibre.com>
- <bbc268c8-35c3-206a-46b1-62cebef174b2@arm.com> <CACRpkdba_iaOK61KiQGvJZYuz7-PiBgtN4vxv__tJLsZ8ZVL=w@mail.gmail.com>
- <1477491816.2482.160.camel@baylibre.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] soc: qcom: Add SoC info driver
+Date: Wed, 26 Oct 2016 16:46:12 +0200
+Message-ID: <4173870.AkctyO62lp@wuerfel>
+References: <1476972386-28655-1-git-send-email-kimran@codeaurora.org> <3809309.oOnjdjqnN9@wuerfel> <2ae082c4-27c1-fbdd-cb7a-986716e15d18@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477491816.2482.160.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <2ae082c4-27c1-fbdd-cb7a-986716e15d18@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Imran Khan <kimran@codeaurora.org>
+Cc: andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 26, 2016 at 4:23 PM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> [Me]
->> We usually refer to the local numberspace on the GPIO controller
->> as "offsets", so line offsets 0...31 on a gpiochip with 31 lines.
->>
->> The ngpio in struct gpio_chip is the number of lines on that
->> controller,
->> and should nominally map 1:1 to hwirq sources.
->
-> Indeed it should be the the case, and for meson, it is pretty close.
-> The irqchip controller provide a number of hwirq. Each hwirq maps to
-> one, and only one, pin. But since not every pins are connected to the
-> irqchip controller, the opposite is not true.
->
-> Taking an example with 16 gpios, here is what it could look like with
-> the exception we have on meson :
->
-> gpio offset [ 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 ]
-> hwirq num   [ 0  1  2  3] NC NC[4  5  6  7  8  9  10]NC NC NC
->
-> Like gpio offset are used (internally) in the driver to find
-> appropriate gpio registers and bit, the hwirq has a meaning too.
-> It is the setting you put in the channel multiplexer of the controller
-> to select the proper pin to spy on.
->
-> In the end, these gpio offset and hwirq number are different. I would
-> prefer to have hwirq == gpio and go your way, it would make my life
-> easier, but I don't see how it would work.
->
-> The irqchip controller cares only about the hwirq number. You can
-> actually request an interrupt directly to the controller by asking the
-> proper hwirq number (in DT for example), without involving the gpio
-> driver (tested).
->
-> The relation between the pins and the interrupt number is provided by
-> the manufacturer in the Datasheet [1], in the section GPIO Interrupt.
+On Wednesday, October 26, 2016 7:42:08 PM CEST Imran Khan wrote:
+> On 10/26/2016 7:35 PM, Arnd Bergmann wrote:
+> >> > As we are talking about generic soc_device_attribute fields, I was hoping that
+> >> > having a vendor field would be helpful as along with family it would provide
+> >> > a more thorough information. Also as more than one foundries may be used for 
+> >> > a soc, can we have a field say foundry_id to provide this information.
+> > My first feeling is that this 'vendor' information can should be
+> > derived from the family. It's also not clear what would happen
+> > to this when a company gets bought. E.g. the Oxnas product family
+> > was subsequently owned by Oxford, PLX, Avago and Broadcom, and the
+> > mxs family was Sigmatel, Freescale, now NXP and might soon be
+> > Qualcomm. What would you put in there in this case?
+> 
+> Okay, not having vendor field is fine for me. Could you also suggest
+> something about the foundry_id field.
 
-I think I kind of get it.
+This one seems more well-defined, so it's probably ok to add. What
+would be the use case of reading this? Would you want to read it
+just from user space or also from the kernel?
 
-This reminds me of recent patches to the generic GPIOLIB_IRQCHIP
-where we made it possible to "mask" set of IRQ lines, saying
-"these are in the irqdomain, but you cannot map them".
+Maybe this can be combined with a manufacturing process, which probably
+falls into a similar category, so we could have something like
+"TSMC 28ULP" as a string in there.
 
-See
-commit 79b804cb6af4f128b2c53f0887c02537a7eb5824
-"gpiolib: Make it possible to exclude GPIOs from IRQ domain"
-commit 96b2cca64fa3e1a31b573bb308b2944c802aacf3
-"gpio: stmpe: forbid unused lines to be mapped as IRQs"
-
-So what we do in the generic case is put a linear map over all
-the lines/offsets, then punch holes in that map and say
-"this and this and this can not be mapped as IRQ".
-
-As you can see in _gpiochip_irqchip_add() we pre-map all
-except those with irq_create_mapping().
-
-Does this scheme fit with your usecase? I would guess so,
-just that your domain is hierarchic, not simple/linear.
-
-Maybe the takeaway is that your map does not need to
-be "dense", i.e. every hwirq is in use. It can be sparse.
-It is stored in a radix tree anyways.
-
-> Looking at other gpio drivers, it is not uncommon to have some simple
-> calculation to get from gpio offset to the hwirq number. I don't get
-> what is the specific problem here ?
-
-It's OK to use the offset vs hwirq.
-
-I just misunderstand it as the global GPIO number, that is
-not OK.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
