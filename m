@@ -1,150 +1,97 @@
-From: Rama Krishna Phani A <rphani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH V3 1/2] iio: adc: spmi-vadc: Update changes to support reporting of Raw adc code.
-Date: Wed, 26 Oct 2016 20:11:26 +0530
-Message-ID: <1477492887-1663-2-git-send-email-rphani@codeaurora.org>
-References: <1477492887-1663-1-git-send-email-rphani@codeaurora.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/9] pinctrl: meson: allow gpio to request irq
+Date: Wed, 26 Oct 2016 16:44:33 +0200
+Message-ID: <CACRpkdZR8T8W5WMmEJVhPR0sUQyfPzgHpjhDiRsyXvybKDYJWQ@mail.gmail.com>
+References: <1476871709-8359-1-git-send-email-jbrunet@baylibre.com>
+ <1476871709-8359-5-git-send-email-jbrunet@baylibre.com> <CACRpkdaCZPS45t3eTcjJExOu=YT_YkjNkdpg09jQqvLQOJH=Qw@mail.gmail.com>
+ <1477040798.15560.96.camel@baylibre.com> <CACRpkdYUVXny57AC9rKX3VRAyooEk_2XLvqe9jOuT3rOaE75rg@mail.gmail.com>
+ <ec7c6cc5-cf9a-9c75-4b07-e337064c7d6e@arm.com> <1477400900.2482.51.camel@baylibre.com>
+ <dee26f0b-e175-f8a0-2b73-08e8e324841c@arm.com> <1477405332.2482.87.camel@baylibre.com>
+ <bbc268c8-35c3-206a-46b1-62cebef174b2@arm.com> <CACRpkdba_iaOK61KiQGvJZYuz7-PiBgtN4vxv__tJLsZ8ZVL=w@mail.gmail.com>
+ <1477491816.2482.160.camel@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477492887-1663-1-git-send-email-rphani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <1477491816.2482.160.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, smohanad-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sivaa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, Julia.Lawall-L2FTfq7BK8M@public.gmane.org, Rama Krishna Phani A <rphani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Logic to convert adc code to voltage is generic across all channels.
-Different scaling can be done on the obtained voltage to report in physical
-units. Implement separate function for generic conversion logic.
-Scaling functionality can be changed per channel. Update changes to support
-reporting of Raw adc code.
+On Wed, Oct 26, 2016 at 4:23 PM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> [Me]
+>> We usually refer to the local numberspace on the GPIO controller
+>> as "offsets", so line offsets 0...31 on a gpiochip with 31 lines.
+>>
+>> The ngpio in struct gpio_chip is the number of lines on that
+>> controller,
+>> and should nominally map 1:1 to hwirq sources.
+>
+> Indeed it should be the the case, and for meson, it is pretty close.
+> The irqchip controller provide a number of hwirq. Each hwirq maps to
+> one, and only one, pin. But since not every pins are connected to the
+> irqchip controller, the opposite is not true.
+>
+> Taking an example with 16 gpios, here is what it could look like with
+> the exception we have on meson :
+>
+> gpio offset [ 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 ]
+> hwirq num   [ 0  1  2  3] NC NC[4  5  6  7  8  9  10]NC NC NC
+>
+> Like gpio offset are used (internally) in the driver to find
+> appropriate gpio registers and bit, the hwirq has a meaning too.
+> It is the setting you put in the channel multiplexer of the controller
+> to select the proper pin to spy on.
+>
+> In the end, these gpio offset and hwirq number are different. I would
+> prefer to have hwirq == gpio and go your way, it would make my life
+> easier, but I don't see how it would work.
+>
+> The irqchip controller cares only about the hwirq number. You can
+> actually request an interrupt directly to the controller by asking the
+> proper hwirq number (in DT for example), without involving the gpio
+> driver (tested).
+>
+> The relation between the pins and the interrupt number is provided by
+> the manufacturer in the Datasheet [1], in the section GPIO Interrupt.
 
-Signed-off-by: Rama Krishna Phani A <rphani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- drivers/iio/adc/qcom-spmi-vadc.c | 54 +++++++++++++++++++++-------------------
- 1 file changed, 28 insertions(+), 26 deletions(-)
+I think I kind of get it.
 
-diff --git a/drivers/iio/adc/qcom-spmi-vadc.c b/drivers/iio/adc/qcom-spmi-vadc.c
-index c2babe5..ff4d549 100644
---- a/drivers/iio/adc/qcom-spmi-vadc.c
-+++ b/drivers/iio/adc/qcom-spmi-vadc.c
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2012-2016, The Linux Foundation. All rights reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 and
-@@ -84,7 +84,7 @@
- #define VADC_MAX_ADC_CODE			0xa800
- 
- #define VADC_ABSOLUTE_RANGE_UV			625000
--#define VADC_RATIOMETRIC_RANGE_UV		1800000
-+#define VADC_RATIOMETRIC_RANGE			1800
- 
- #define VADC_DEF_PRESCALING			0 /* 1:1 */
- #define VADC_DEF_DECIMATION			0 /* 512 */
-@@ -418,7 +418,7 @@ static int vadc_measure_ref_points(struct vadc_priv *vadc)
- 	u16 read_1, read_2;
- 	int ret;
- 
--	vadc->graph[VADC_CALIB_RATIOMETRIC].dx = VADC_RATIOMETRIC_RANGE_UV;
-+	vadc->graph[VADC_CALIB_RATIOMETRIC].dx = VADC_RATIOMETRIC_RANGE;
- 	vadc->graph[VADC_CALIB_ABSOLUTE].dx = VADC_ABSOLUTE_RANGE_UV;
- 
- 	prop = vadc_get_channel(vadc, VADC_REF_1250MV);
-@@ -468,21 +468,30 @@ static int vadc_measure_ref_points(struct vadc_priv *vadc)
- 	return ret;
- }
- 
--static s32 vadc_calibrate(struct vadc_priv *vadc,
--			  const struct vadc_channel_prop *prop, u16 adc_code)
-+static void vadc_scale_calib(struct vadc_priv *vadc, u16 adc_code,
-+			     const struct vadc_channel_prop *prop,
-+			     s64 *scale_voltage)
- {
--	const struct vadc_prescale_ratio *prescale;
--	s64 voltage;
-+	*scale_voltage = (adc_code -
-+		vadc->graph[prop->calibration].gnd);
-+	*scale_voltage *= vadc->graph[prop->calibration].dx;
-+	*scale_voltage = div64_s64(*scale_voltage,
-+		vadc->graph[prop->calibration].dy);
-+	if (prop->calibration == VADC_CALIB_ABSOLUTE)
-+		*scale_voltage +=
-+		vadc->graph[prop->calibration].dx;
- 
--	voltage = adc_code - vadc->graph[prop->calibration].gnd;
--	voltage *= vadc->graph[prop->calibration].dx;
--	voltage = div64_s64(voltage, vadc->graph[prop->calibration].dy);
-+	if (*scale_voltage < 0)
-+		*scale_voltage = 0;
-+}
- 
--	if (prop->calibration == VADC_CALIB_ABSOLUTE)
--		voltage += vadc->graph[prop->calibration].dx;
-+static s64 vadc_scale_fn(struct vadc_priv *vadc,
-+			 const struct vadc_channel_prop *prop, u16 adc_code)
-+{
-+	const struct vadc_prescale_ratio *prescale;
-+	s64 voltage = 0;
- 
--	if (voltage < 0)
--		voltage = 0;
-+	vadc_scale_calib(vadc, adc_code, prop, &voltage);
- 
- 	prescale = &vadc_prescale_ratios[prop->prescale];
- 
-@@ -552,11 +561,8 @@ static int vadc_read_raw(struct iio_dev *indio_dev,
- 		if (ret)
- 			break;
- 
--		*val = vadc_calibrate(vadc, prop, adc_code);
-+		*val = vadc_scale_fn(vadc, prop, adc_code);
- 
--		/* 2mV/K, return milli Celsius */
--		*val /= 2;
--		*val -= KELVINMIL_CELSIUSMIL;
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_RAW:
- 		prop = &vadc->chan_props[chan->address];
-@@ -564,12 +570,8 @@ static int vadc_read_raw(struct iio_dev *indio_dev,
- 		if (ret)
- 			break;
- 
--		*val = vadc_calibrate(vadc, prop, adc_code);
-+		*val = (int)adc_code;
- 		return IIO_VAL_INT;
--	case IIO_CHAN_INFO_SCALE:
--		*val = 0;
--		*val2 = 1000;
--		return IIO_VAL_INT_PLUS_MICRO;
- 	default:
- 		ret = -EINVAL;
- 		break;
-@@ -616,8 +618,8 @@ struct vadc_channels {
- 	VADC_CHAN(_dname, IIO_TEMP, BIT(IIO_CHAN_INFO_PROCESSED), _pre)	\
- 
- #define VADC_CHAN_VOLT(_dname, _pre)					\
--	VADC_CHAN(_dname, IIO_VOLTAGE,					\
--		  BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),	\
-+	VADC_CHAN(_dname, IIO_VOLTAGE,				\
-+		  BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_PROCESSED),\
- 		  _pre)							\
- 
- /*
-@@ -850,9 +852,9 @@ static int vadc_get_dt_data(struct vadc_priv *vadc, struct device_node *node)
- 
- 		iio_chan->channel = prop.channel;
- 		iio_chan->datasheet_name = vadc_chan->datasheet_name;
-+		iio_chan->extend_name = child->name;
- 		iio_chan->info_mask_separate = vadc_chan->info_mask;
- 		iio_chan->type = vadc_chan->type;
--		iio_chan->indexed = 1;
- 		iio_chan->address = index++;
- 
- 		iio_chan++;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+This reminds me of recent patches to the generic GPIOLIB_IRQCHIP
+where we made it possible to "mask" set of IRQ lines, saying
+"these are in the irqdomain, but you cannot map them".
 
+See
+commit 79b804cb6af4f128b2c53f0887c02537a7eb5824
+"gpiolib: Make it possible to exclude GPIOs from IRQ domain"
+commit 96b2cca64fa3e1a31b573bb308b2944c802aacf3
+"gpio: stmpe: forbid unused lines to be mapped as IRQs"
+
+So what we do in the generic case is put a linear map over all
+the lines/offsets, then punch holes in that map and say
+"this and this and this can not be mapped as IRQ".
+
+As you can see in _gpiochip_irqchip_add() we pre-map all
+except those with irq_create_mapping().
+
+Does this scheme fit with your usecase? I would guess so,
+just that your domain is hierarchic, not simple/linear.
+
+Maybe the takeaway is that your map does not need to
+be "dense", i.e. every hwirq is in use. It can be sparse.
+It is stored in a radix tree anyways.
+
+> Looking at other gpio drivers, it is not uncommon to have some simple
+> calculation to get from gpio offset to the hwirq number. I don't get
+> what is the specific problem here ?
+
+It's OK to use the offset vs hwirq.
+
+I just misunderstand it as the global GPIO number, that is
+not OK.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
