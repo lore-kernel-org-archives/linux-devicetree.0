@@ -1,48 +1,62 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/5] gpio: davinci: Add a separate compatible for k2g
-Date: Wed, 26 Oct 2016 16:08:51 -0500
-Message-ID: <20161026210851.jt2xoo2ap6zijowg@rob-hp-laptop>
-References: <1476855239-32730-1-git-send-email-j-keerthy@ti.com>
- <1476855239-32730-6-git-send-email-j-keerthy@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] hwmon: (mcp3021) add devicetree bindings
+ documentation
+Date: Wed, 26 Oct 2016 16:12:57 -0500
+Message-ID: <20161026211257.eu3lspzhkeaf56ms@rob-hp-laptop>
+References: <20161019094056.24508-1-clemens.gruber@pqgruber.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1476855239-32730-6-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lokeshvutla-l0cyMroinI0@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org
+In-Reply-To: <20161019094056.24508-1-clemens.gruber@pqgruber.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Clemens Gruber <clemens.gruber@pqgruber.com>
+Cc: linux-hwmon@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2016 at 11:03:59AM +0530, Keerthy wrote:
-> In the case of k2g the clocks are handled differently as when compared
-> with other keystones. Hence adding a separate compatible and match tables
-> accordingly.
+On Wed, Oct 19, 2016 at 11:40:56AM +0200, Clemens Gruber wrote:
+> Documents the devicetree bindings for the Microchip MCP3021/3221.
 > 
-> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
 > ---
->  .../devicetree/bindings/gpio/gpio-davinci.txt      |  2 +-
->  drivers/gpio/gpio-davinci.c                        | 45 ++++++++++++++++++++--
->  2 files changed, 42 insertions(+), 5 deletions(-)
+>  Documentation/devicetree/bindings/hwmon/mcp3021.txt | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/mcp3021.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> index 5079ba7..a76abd2 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> @@ -1,7 +1,7 @@
->  Davinci/Keystone GPIO controller bindings
->  
->  Required Properties:
-> -- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
-> +- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio", "ti,k2g-gpio"
+> diff --git a/Documentation/devicetree/bindings/hwmon/mcp3021.txt b/Documentation/devicetree/bindings/hwmon/mcp3021.txt
+> new file mode 100644
+> index 0000000..e1d1e62
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/mcp3021.txt
+> @@ -0,0 +1,21 @@
+> +mcp3021 properties
+> +
+> +Required properties:
+> +- compatible: Must be one of the following:
+> +	- "microchip,mcp3021" for mcp3021
+> +	- "microchip,mcp3221" for mcp3221
+> +- reg: I2C address
+> +
+> +Optional properties:
+> +
+> +- reference-voltage
+> +	Reference voltage in millivolt (mV)
 
-Is this "one of" or all? Seems line the former in which case please 
-reformat to one per line.
+What I said on the first version.
 
->  
->  - reg: Physical base address of the controller and the size of memory mapped
->         registers.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +Example:
+> +
+> +mcp3021@4d {
+> +	compatible = "microchip,mcp3021";
+> +	reg = <0x4d>;
+> +
+> +	reference-voltage = <4500>; /* 4.5 V */
+> +};
+> -- 
+> 2.10.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
