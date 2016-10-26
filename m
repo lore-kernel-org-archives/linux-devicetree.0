@@ -1,73 +1,46 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 4/9] pinctrl: meson: allow gpio to request irq
-Date: Wed, 26 Oct 2016 08:50:06 -0700
-Message-ID: <7hk2cvrtxt.fsf@baylibre.com>
-References: <1476871709-8359-1-git-send-email-jbrunet@baylibre.com>
-        <1476871709-8359-5-git-send-email-jbrunet@baylibre.com>
-        <CACRpkdaCZPS45t3eTcjJExOu=YT_YkjNkdpg09jQqvLQOJH=Qw@mail.gmail.com>
-        <1477040798.15560.96.camel@baylibre.com>
-        <CACRpkdYUVXny57AC9rKX3VRAyooEk_2XLvqe9jOuT3rOaE75rg@mail.gmail.com>
-        <ec7c6cc5-cf9a-9c75-4b07-e337064c7d6e@arm.com>
-        <1477400900.2482.51.camel@baylibre.com>
-        <dee26f0b-e175-f8a0-2b73-08e8e324841c@arm.com>
-        <1477405332.2482.87.camel@baylibre.com>
-        <bbc268c8-35c3-206a-46b1-62cebef174b2@arm.com>
-        <1477409478.2482.113.camel@baylibre.com>
-        <CACRpkdbGo4BJOdzkgBrE9jT-rKodd4zssCnOtOuGS+OqV-Uc6Q@mail.gmail.com>
-        <1477491766.2482.159.camel@baylibre.com>
-        <CACRpkdYqoU0foW1izcZapbgUm+NO4quz9AZZBmts4841BRcigA@mail.gmail.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH] tpm_tis: Allow tpm_tis to be bound using DT
+Date: Wed, 26 Oct 2016 10:01:53 -0600
+Message-ID: <20161026160153.GA24898@obsidianresearch.com>
+References: <20161025232331.GA20339@obsidianresearch.com>
+ <20161026112351.GH19965@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYqoU0foW1izcZapbgUm+NO4quz9AZZBmts4841BRcigA@mail.gmail.com>
-        (Linus Walleij's message of "Wed, 26 Oct 2016 16:32:29 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Marc Zyngier <marc.zyngier@arm.com>, Carlo Caione <carlo@caione.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161026112351.GH19965@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Wed, Oct 26, 2016 at 12:25:51PM +0100, Mark Rutland wrote:
 
-Linus Walleij <linus.walleij@linaro.org> writes:
+> > +Required properties:
+> > +
+> > +- compatible: should specify the actual hardware chip followed by the
+> > +  generic interface name "tcg,tpm_tis-spi";
+> 
+> Please use '-' in comaptible strings rather than '_'.
 
-> On Wed, Oct 26, 2016 at 4:22 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
->> On Tue, 2016-10-25 at 20:20 +0200, Linus Walleij wrote:
->
->>> However the semantic is such, that it is not necessary to call
->>> to_irq()
->>> before using an IRQ: the irqchip and gpiochip abstractions should be
->>> orthogonal.
->>
->> Linus,
->>
->> They are orthogonal. You can request an irq from the irqchip controller
->> without the gpiochip, like any other irq controller.
->
-> OK good, sorry if I'm stating the obvious.
->
->> irq_create_mapping (and irq_create_fwspec_mapping) internally calls
->> irq_find_mapping. So if the mapping already exist (the irq is already
->> used before calling to_irq), the existing mapping will be returned. The
->> mapping will be actually created only if needed. It seems to be in line
->> with your explanation, no ?
->
-> Yes, but you want to call irq_create_mapping() in slowpath (irq setup)
-> and irq_find_mapping() in fastpath (irq handler). Else the first IRQ
-> may result in unwelcomed surprises.
->
->> There is really a *lot* of gpio drivers which use irq_create_mapping in
->> the to_irq callback, are these all wrong ?
->
-> Yes they are all wrong. They should all be using irq_find_mapping().
+Erk, there is also a typo spi vs mmio.
 
-So, dumb question from someone trying (but having a hard time) to follow
-and understand the rationale...
+Note that the SPI patches were already Ack'd by DT so there is now
+precedent:
 
-If it's wrong enough to completely reject, why are changes still being
-merged that are doing it so wrong?  (e.g. like this one[1], just merged
-for v4.9)
+Documentation/devicetree/bindings/security/tpm/tpm_tis_spi.txt:    "tcg,tpm_tis-spi"
 
-Kevin
+Do you still want to change? Should we change spi too?
 
-[1] 0eb9f683336d pinctrl: Add IRQ support to STM32 gpios
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/pinctrl/stm32/pinctrl-stm32.c?id=0eb9f683336d7eb99a3b75987620417c574ffb57
+> Please also describe chip strings, even if those aren't use by the
+> driver, e.g.
+
+Sure, I can give one or two, but the list will not be exhaustive,
+there are many different TPM chips that adhere to this standard.
+
+Thanks,
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
