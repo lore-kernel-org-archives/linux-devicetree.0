@@ -1,24 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] power_supply: Add OF bindings documentation for
- max14656_charger_detector
-Date: Wed, 26 Oct 2016 16:43:40 -0500
-Message-ID: <20161026214340.rbi5tjhqzqug2g44@rob-hp-laptop>
-References: <1476893089-7233-1-git-send-email-akurz@blala.de>
+Subject: Re: [PATCH V6 01/10] Documentation: DT: qcom_hidma: update binding
+ for MSI
+Date: Wed, 26 Oct 2016 16:45:12 -0500
+Message-ID: <20161026214512.ofwbxnl2d46n6ef5@rob-hp-laptop>
+References: <1476899512-20431-1-git-send-email-okaya@codeaurora.org>
+ <1476899512-20431-2-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1476893089-7233-1-git-send-email-akurz@blala.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Alexander Kurz <akurz@blala.de>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+In-Reply-To: <1476899512-20431-2-git-send-email-okaya@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2016 at 06:04:48PM +0200, Alexander Kurz wrote:
-> Signed-off-by: Alexander Kurz <akurz@blala.de>
+On Wed, Oct 19, 2016 at 01:51:43PM -0400, Sinan Kaya wrote:
+> Adding a new binding for qcom,hidma-1.1 to distinguish HW supporting
+> MSI interrupts from the older revision.
+> 
+> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 > ---
->  .../bindings/power_supply/maxim,max14656.txt       | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power_supply/maxim,max14656.txt
+>  Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Please add acks when posting new versions.
+
+Rob
