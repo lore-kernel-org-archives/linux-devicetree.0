@@ -1,81 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: Add TI SCI PM Domains
-Date: Wed, 26 Oct 2016 17:04:57 -0500
-Message-ID: <20161026220457.kvbd4wgtizdbndf3@rob-hp-laptop>
-References: <20161019203347.17893-1-d-gerlach@ti.com>
- <20161019203347.17893-3-d-gerlach@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 13/15] Documentation: devicetree: dwc2: Add host DMA
+ binding
+Date: Wed, 26 Oct 2016 17:07:18 -0500
+Message-ID: <20161026220718.2vqcpts6mw2vf7jh@rob-hp-laptop>
+References: <cover.1476926069.git.johnyoun@synopsys.com>
+ <1846cc28dd77ab35cd21994bb746f7685422cfb2.1476926070.git.johnyoun@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161019203347.17893-3-d-gerlach@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Santosh Shilimkar <ssantosh@kernel.org>, Keerthy <j-keerthy@ti.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1846cc28dd77ab35cd21994bb746f7685422cfb2.1476926070.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2016 at 03:33:45PM -0500, Dave Gerlach wrote:
-> Add a generic power domain implementation, TI SCI PM Domains, that
-> will hook into the genpd framework and allow the TI SCI protocol to
-> control device power states.
+On Wed, Oct 19, 2016 at 06:22:52PM -0700, John Youn wrote:
+> Add the host-dma property to devicetree. This controls whether to use
+> DMA in host mode.
 > 
-> Also, provide macros representing each device index as understood
-> by TI SCI to be used in the device node power-domain references.
-> These are identifiers for the K2G devices managed by the PMMC.
-> 
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 > ---
->  .../devicetree/bindings/soc/ti/sci-pm-domain.txt   | 54 +++++++++++++
->  MAINTAINERS                                        |  2 +
->  include/dt-bindings/genpd/k2g.h                    | 90 ++++++++++++++++++++++
->  3 files changed, 146 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->  create mode 100644 include/dt-bindings/genpd/k2g.h
+>  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> new file mode 100644
-> index 000000000000..32f38a349656
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> @@ -0,0 +1,54 @@
-> +Texas Instruments TI-SCI Generic Power Domain
-> +---------------------------------------------
-> +
-> +Some TI SoCs contain a system controller (like the PMMC, etc...) that is
-> +responsible for controlling the state of the IPs that are present.
-> +Communication between the host processor running an OS and the system
-> +controller happens through a protocol known as TI-SCI [1]. This pm domain
-> +implementation plugs into the generic pm domain framework and makes use of
-> +the TI SCI protocol power on and off each device when needed.
-> +
-> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-> +
-> +PM Domain Node
-> +==============
-> +The PM domain node represents the global PM domain managed by the PMMC,
-> +which in this case is the single implementation as documented by the generic
-> +PM domain bindings in Documentation/devicetree/bindings/power/power_domain.txt.
-> +
-> +Required Properties:
-> +--------------------
-> +- compatible: should be "ti,sci-pm-domain"
-> +- #power-domain-cells: Must be 0.
-> +- ti,sci: Phandle to the TI SCI device to use for managing the devices.
-> +
-> +Example:
-> +--------------------
-> +k2g_pds: k2g_pds {
-> +        compatible = "ti,sci-pm-domain";
-> +        #power-domain-cells = <0>;
-> +        ti,sci = <&pmmc>;
-> +};
+> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+> index 2c30a54..17f7624 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+> @@ -25,6 +25,7 @@ Optional properties:
+>  Refer to phy/phy-bindings.txt for generic phy consumer properties
+>  - dr_mode: shall be one of "host", "peripheral" and "otg"
+>    Refer to usb/generic.txt
+> +- host-dma: turn on or off host buffer DMA (1 or 0).
 
-Why not just make the PMMC node be the power-domain provider itself? If 
-not that, then make this a child node of it. The same comment applies to 
-all the SCI functions, but I guess I've already acked some of them. 
-
-I really don't like reviewing all these TI SCI bindings one by one. Each 
-one on its own seems fine, but I don't see the full picture.
+Why not boolean? Seems like disabling would be rare, so name the 
+property something like host-dma-disable. Also, it needs a vendor 
+prefix.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
