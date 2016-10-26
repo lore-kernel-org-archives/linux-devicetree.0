@@ -1,161 +1,98 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH] ARM: DT: stm32: move dma translation to board files
-Date: Wed, 26 Oct 2016 11:09:36 +0200
-Message-ID: <404315f0-fc9e-93e2-54df-f85e484d9389@st.com>
-References: <CAF3+Tqd2MGmz+8XhLXhaZiEc78QOwHSpVrQA65-p1AcfT+_xgg@mail.gmail.com>
+From: Nayna Jain <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 1/2] Documentation: tpm: add the IBM
+	Virtual TPM device tree binding documentation
+Date: Wed, 26 Oct 2016 05:21:44 -0400
+Message-ID: <1477473705-12746-1-git-send-email-nayna@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAF3+Tqd2MGmz+8XhLXhaZiEc78QOwHSpVrQA65-p1AcfT+_xgg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, ">" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, ">" <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, honclo-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cclaudio-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bruno,
+Virtual TPM, which is being used on IBM POWER7+ and POWER8 systems running
+POWERVM, is currently supported by tpm device driver but lacks the
+documentation. This patch adds the missing documentation for the existing
+support.
 
-On 10/25/2016 11:06 PM, Bruno Herrera wrote:
-> Hi Alexandre,
->
->>
->> stm32f469-disco and stm32f429-eval boards use SDRAM start address remapping
->> (to @0) to boost performances. A DMA translation through "dma-ranges"
->> property was needed for other masters than the M4 CPU.
->> stm32f429-disco doesn't use remapping so doesn't need this DMA translation.
->> This patches moves this DMA translation definition from stm32f429 soc file
->> to board files.
->>
->> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
->>
->> diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
->> index 13c7cd2..a763c15 100644
->> --- a/arch/arm/boot/dts/stm32429i-eval.dts
->> +++ b/arch/arm/boot/dts/stm32429i-eval.dts
->> @@ -82,6 +82,10 @@
->>                 };
->>         };
->>
->> +       soc {
->> +               dma-ranges = <0xc0000000 0x0 0x10000000>;
->> +       };
->> +
->>         usbotg_hs_phy: usbphy {
->>                 #phy-cells = <0>;
->>                 compatible = "usb-nop-xceiv";
->
-> Shouldn't also the peripheral dma-ranges property move to board specific too?
-> I  had this patch for while but I didn't had the time to submit:
+Suggested-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Nayna Jain <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+---
+Changelog v3:
 
-Well spot I forgot it. Actually, discussing with Arnd ysterday on IIRC, 
-empty dma-ranges is not needed. Can you test on your side by removing 
-dma-ranges in usb node please ?
-I will push a v2 by removing empty dma-ranges if tests are ok in your side.
+- No changes done.
 
-Thanks in advance
-Alex
+Changelog v2:
 
->
-> Author: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Date:   Sun Oct 16 14:50:00 2016 -0200
->
->     ARM: DT: STM32: Use dma-ranges property per board not at dtsi file
->
-> diff --git a/arch/arm/boot/dts/stm32429i-eval.dts
-> b/arch/arm/boot/dts/stm32429i-eval.dts
-> index 6bfc595..2a22a82 100644
-> --- a/arch/arm/boot/dts/stm32429i-eval.dts
-> +++ b/arch/arm/boot/dts/stm32429i-eval.dts
-> @@ -52,6 +52,10 @@
->         model = "STMicroelectronics STM32429i-EVAL board";
->         compatible = "st,stm32429i-eval", "st,stm32f429";
->
-> +       soc {
-> +               dma-ranges = <0xC0000000 0x0 0x10000000>;
-> +       };
-> +
->         chosen {
->                 bootargs = "root=/dev/ram rdinit=/linuxrc";
->                 stdout-path = "serial0:115200n8";
-> @@ -96,6 +100,7 @@
->
->  &ethernet0 {
->         status = "okay";
-> +       dma-ranges;
->         pinctrl-0       = <&ethernet0_mii>;
->         pinctrl-names   = "default";
->         phy-mode        = "mii-id";
-> @@ -116,6 +121,7 @@
->  };
->
->  &usbotg_hs {
-> +       dma-ranges;
->         dr_mode = "host";
->         phys = <&usbotg_hs_phy>;
->         phy-names = "usb2-phy";
-> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-> index 7d624a2..697a133 100644
-> --- a/arch/arm/boot/dts/stm32f429.dtsi
-> +++ b/arch/arm/boot/dts/stm32f429.dtsi
-> @@ -59,7 +59,6 @@
->         };
->
->         soc {
-> -               dma-ranges = <0xc0000000 0x0 0x10000000>;
->
->                 timer2: timer@40000000 {
->                         compatible = "st,stm32-timer";
-> @@ -472,13 +471,11 @@
->                         st,syscon = <&syscfg 0x4>;
->                         snps,pbl = <8>;
->                         snps,mixed-burst;
-> -                       dma-ranges;
->                         status = "disabled";
->                 };
->
->                 usbotg_hs: usb@40040000 {
->                         compatible = "snps,dwc2";
-> -                       dma-ranges;
->                         reg = <0x40040000 0x40000>;
->                         interrupts = <77>;
->                         clocks = <&rcc 0 29>;
->
->
->> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
->> index 0596d60..3a1cfdd 100644
->> --- a/arch/arm/boot/dts/stm32f429.dtsi
->> +++ b/arch/arm/boot/dts/stm32f429.dtsi
->> @@ -59,8 +59,6 @@
->>         };
->>
->>         soc {
->> -               dma-ranges = <0xc0000000 0x0 0x10000000>;
->> -
->>                 timer2: timer@40000000 {
->>                         compatible = "st,stm32-timer";
->>                         reg = <0x40000000 0x400>;
->> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
->> index 9e73656..c2213c0 100644
->> --- a/arch/arm/boot/dts/stm32f469-disco.dts
->> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
->> @@ -64,6 +64,10 @@
->>         aliases {
->>                 serial0 = &usart3;
->>         };
->> +
->> +       soc {
->> +               dma-ranges = <0xc0000000 0x0 0x10000000>;
->> +       };
->>  };
->>
->>  &clk_hse {
->> --
->
->
-> Br.,
-> Bruno
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- New Patch.
+
+ .../devicetree/bindings/security/tpm/ibmvtpm.txt   | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
+
+diff --git a/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt b/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
+new file mode 100644
+index 0000000..d89f999
+--- /dev/null
++++ b/Documentation/devicetree/bindings/security/tpm/ibmvtpm.txt
+@@ -0,0 +1,41 @@
++* Device Tree Bindings for IBM Virtual Trusted Platform Module(vtpm)
++
++Required properties:
++
++- compatible            : property name that conveys the platform architecture
++                          identifiers, as 'IBM,vtpm'
++- device_type           : specifies type of virtual device
++- interrupts            : property specifying the interrupt source number and
++                          sense code associated with this virtual I/O Adapters
++- ibm,my-drc-index      : integer index for the connector between the device
++                          and its parent - present only if Dynamic
++                          Reconfiguration(DR) Connector is enabled
++- ibm,#dma-address-cells: specifies the number of cells that are used to
++                          encode the physical address field of dma-window
++                          properties
++- ibm,#dma-size-cells   : specifies the number of cells that are used to
++                          encode the size field of dma-window properties
++- ibm,my-dma-window     : specifies DMA window associated with this virtual
++                          IOA
++- ibm,loc-code          : specifies the unique and persistent location code
++                          associated with this virtual I/O Adapters
++- linux,sml-base        : 64-bit base address of the reserved memory allocated
++                          for the firmware event log
++- linux,sml-size        : size of the memory allocated for the firmware event log
++
++Example (IBM Virtual Trusted Platform Module)
++---------------------------------------------
++
++                vtpm@30000003 {
++                        ibm,#dma-size-cells = <0x2>;
++                        compatible = "IBM,vtpm";
++                        device_type = "IBM,vtpm";
++                        ibm,my-drc-index = <0x30000003>;
++                        ibm,#dma-address-cells = <0x2>;
++                        linux,sml-base = <0xc60e 0x0>;
++                        interrupts = <0xa0003 0x0>;
++                        ibm,my-dma-window = <0x10000003 0x0 0x0 0x0 0x10000000>;
++                        ibm,loc-code = "U8286.41A.10082DV-V3-C3";
++                        reg = <0x30000003>;
++                        linux,sml-size = <0xbce10200>;
++                };
+-- 
+2.5.0
+
+
+------------------------------------------------------------------------------
+The Command Line: Reinvented for Modern Developers
+Did the resurgence of CLI tooling catch you by surprise?
+Reconnect with the command line and become more productive. 
+Learn the new .NET and ASP.NET CLI. Get your free copy!
+http://sdm.link/telerik
