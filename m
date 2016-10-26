@@ -1,94 +1,69 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3 3/6] dt-bindings: pinctrl: Deprecate sunxi pinctrl
- bindings
-Date: Tue, 25 Oct 2016 15:41:50 +0200
-Message-ID: <20161025134150.dct42swdbwxzgbgb@lukather>
-References: <cover.f893b02a9f816dad8fad3986672b05c4b211e2b1.1476971126.git-series.maxime.ripard@free-electrons.com>
- <6aec73cd3b9d3dbf1085d042ec6c23f385a300de.1476971126.git-series.maxime.ripard@free-electrons.com>
- <CACRpkdb7zs7Nhs3i1o=WUt787vJCuePre3Tj3wLu++qwpO0atQ@mail.gmail.com>
- <20161024194917.g5oezqc4uacsyt24@lukather>
- <CACRpkdYGYPhPZQmgeLA-K-RQKZMLy1qHY6P7LS6SKsFC=d=MHg@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/8] drm/bridge: rgb-to-vga: Support an
+ enable GPIO
+Date: Wed, 26 Oct 2016 17:13:46 -0500
+Message-ID: <20161026221346.tdpmbrwca4jehch2@rob-hp-laptop>
+References: <20161020034344.14154-1-wens@csie.org>
+ <20161020034344.14154-2-wens@csie.org>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="apd5djy6lqcuh5bx"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJIP47K7MERBHGVYTAAKGQEGFOAJ7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYGYPhPZQmgeLA-K-RQKZMLy1qHY6P7LS6SKsFC=d=MHg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <20161020034344.14154-2-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Oct 20, 2016 at 11:43:37AM +0800, Chen-Yu Tsai wrote:
+> Some rgb-to-vga bridges have an enable GPIO, either directly tied to
+> an enable pin on the bridge IC, or indirectly controlling a power
+> switch.
+> 
+> Add support for it.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  .../bindings/display/bridge/dumb-vga-dac.txt       |  2 ++
+>  drivers/gpu/drm/bridge/dumb-vga-dac.c              | 28 ++++++++++++++++++++++
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+> index 003bc246a270..d3484822bf77 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+> @@ -16,6 +16,8 @@ graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+>  - Video port 0 for RGB input
+>  - Video port 1 for VGA output
+>  
+> +Optional properties:
+> +- enable-gpios: GPIO pin to enable or disable the bridge
 
---apd5djy6lqcuh5bx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This should also define the active state.
 
-Hi Linus,
+> +static void dumb_vga_enable(struct drm_bridge *bridge)
+> +{
+> +	struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
+> +
+> +	if (vga->enable_gpio)
+> +		gpiod_set_value_cansleep(vga->enable_gpio, 1);
 
-On Tue, Oct 25, 2016 at 02:07:27PM +0200, Linus Walleij wrote:
-> On Mon, Oct 24, 2016 at 9:49 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
->=20
-> > However, it looks like the first patch from this serie is missing from
-> > your tree, is there a reason for that?
->=20
-> No can you point it out?
+So the driver should allow either active high or low.
 
-Sure:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2016-October/462500.h=
-tml
-
-> > Also, in order to preserve bisectability, could you create an
-> > immutable branch for those sunxi patches so that I can merge the DT
-> > bits?
->=20
-> It's too late because they are already in the devel branch
-> and mixed up with merged of *other* immutable stuff.
-
-Hmmmm, ok.
-
-> However I think it is plain wrong to try to keep any bisectability
-> between the kernel at large and arch/*/boot/dts/*, because
-> the DTS stuff is supposed to at some point be maintained outside
-> of the kernel and for all OSes, they simply shouldn't be sync:ed.
-
-Yes, in the case of a new driver that needs to be introduced, I
-definitely get your point.
-
-However, during a conversion like we're doing here, this is not ideal,
-because it essentially means that you will not have a branch that
-works, at all.
-
-I'll hold off on those patches until 4.11 then.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---apd5djy6lqcuh5bx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYD2EaAAoJEBx+YmzsjxAg3WAP/RWb5dtZ07Ab4xYAnD+NZpPb
-jDGCoEvYjFE0oR+vpY02wtv+ldNN3YKhMCPz4gKKyCqx+7JwVuGkDOKePrguAk4O
-7NLR2knB/Tg1HqI9KrKiiZByPJdNL8A6uwhoZgobGY3OMkAq83EtRL53aB7negmT
-P3Dn5m3rd8LVY1NvLEiSDdTiZ0gM6jRmmO4abgXEioBjLfp0wa87mHx/JIKDyl6I
-RLMRvoUj9dvy5DLCWEFJ6fgrg0sL5NRMdPotWgIZJS0LygSwBAlnsAhdV/37+o+N
-XmHQTIoj+KR/v/5hyMTRbAYUXyi5HWK5JF5hi0jdtSviZ6MpxpJjyz2jUTq9Z4Jw
-y+EBGd6DsA+hK5+HtOMCqP71rofFzl/orumcpqeY9iw66WLNFj0pM1yf0Wq7nf0j
-s+pg4xhxp/FsfhVCSCK16alz/fxWMxfgtT5WcOBHi6Yx40fcGefQtsBxC+6eky5q
-iaA0EQjxIDILA+CIxRBYZQ2jp6JJ1cjpgvWX9B3DdzBWH4YbCIRdz+P1pGQLsB/t
-s3x7XaekPa7AQ30MapPUX5Cc0qyo7L0KPW43P8+joZDBIqH/CSJCr1egiJKNbhmJ
-sqnQjf6k0r5kr4pVwXEzcfuZ08lrHhSjngaEGNfatbXUYyqsDR+/IqZeWuqA4x7z
-aoBniwskIRr2Nb+ePBKd
-=i9KZ
------END PGP SIGNATURE-----
-
---apd5djy6lqcuh5bx--
+> +}
+> +
+> +static void dumb_vga_disable(struct drm_bridge *bridge)
+> +{
+> +	struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
+> +
+> +	if (vga->enable_gpio)
+> +		gpiod_set_value_cansleep(vga->enable_gpio, 0);
+> +}
+> +
