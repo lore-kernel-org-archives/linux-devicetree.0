@@ -1,35 +1,75 @@
-From: Imran Khan <kimran@codeaurora.org>
-Subject: Re: [PATCH] soc: qcom: Add SoC info driver
-Date: Wed, 26 Oct 2016 19:42:08 +0530
-Message-ID: <2ae082c4-27c1-fbdd-cb7a-986716e15d18@codeaurora.org>
-References: <1476972386-28655-1-git-send-email-kimran@codeaurora.org>
- <3567809.JctLPjIDdk@wuerfel>
- <aec67ab3-8e89-fe06-b385-988f8eea5f46@codeaurora.org>
- <3809309.oOnjdjqnN9@wuerfel>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 2/4] pinctrl: single: Use generic parser and
+ #pinctrl-cells for pinctrl-single,pins
+Date: Wed, 26 Oct 2016 07:16:28 -0700
+Message-ID: <20161026141628.x42rbn5o2ekdoluk@atomide.com>
+References: <20161025164538.453-1-tony@atomide.com>
+ <20161025164538.453-3-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <3809309.oOnjdjqnN9@wuerfel>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161025164538.453-3-tony@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/26/2016 7:35 PM, Arnd Bergmann wrote:
->> > As we are talking about generic soc_device_attribute fields, I was hoping that
->> > having a vendor field would be helpful as along with family it would provide
->> > a more thorough information. Also as more than one foundries may be used for 
->> > a soc, can we have a field say foundry_id to provide this information.
-> My first feeling is that this 'vendor' information can should be
-> derived from the family. It's also not clear what would happen
-> to this when a company gets bought. E.g. the Oxnas product family
-> was subsequently owned by Oxford, PLX, Avago and Broadcom, and the
-> mxs family was Sigmatel, Freescale, now NXP and might soon be
-> Qualcomm. What would you put in there in this case?
+* Tony Lindgren <tony@atomide.com> [161025 09:51]:
+> We can now use generic parser. To support the legacy binding without
+> #pinctrl-cells, add pcs_quirk_missing_pinctrl_cells() and warn about
+> missing #pinctrl-cells.
+...
 
-Okay, not having vendor field is fine for me. Could you also suggest
-something about the foundry_id field.
+> +/**
+> + * pcs_quirk_missing_pinctrl_cells - handle legacy binding
+> + * @pcs: pinctrl driver instance
+> + * @np: device tree node
+> + * @cells: number of cells
+> + *
+> + * Handle legacy binding with no #pinctrl-cells. This should be
+> + * always two pinctrl-single,bit-per-mux and one for others.
+> + * At some point we may want to consider removing this.
+> + */
+> +static int pcs_quirk_missing_pinctrl_cells(struct pcs_device *pcs,
+> +					   struct device_node *np,
+> +					   int cells)
+> +{
+> +	struct property *p;
+> +	const char *name = "#pinctrl-cells";
+> +	int error;
+> +	u32 val;
+> +
+> +	error = of_property_read_u32(np, name, &val);
+> +	if (!error)
+> +		return 0;
+> +
+> +	dev_warn(pcs->dev, "please update dts to use %s = <%i>\n",
+> +		 name, cells);
+> +
+> +	p = devm_kzalloc(pcs->dev, sizeof(*p), GFP_KERNEL);
+> +	if (!p)
+> +		return -ENOMEM;
+> +
+> +	p->length = sizeof(__be32);
+> +	p->value = devm_kzalloc(pcs->dev, sizeof(__be32), GFP_KERNEL);
+> +	if (!p->value)
+> +		return -ENOMEM;
+> +	*(__be32 *)p->value = cpu_to_be32(cells);
+> +
+> +	p->name = devm_kstrdup(pcs->dev, name, GFP_KERNEL);
+> +	if (!p->name)
+> +		return -ENOMEM;
+> +
+> +	pcs->missing_nr_pinctrl_cells = p;
+> +
+> +	return of_add_property(np, pcs->missing_nr_pinctrl_cells);
+> +}
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a\nmember of the Code Aurora Forum, hosted by The Linux Foundation
+Looking at some make randconfig results, looks like we don't have
+of_add_property() and of_remove_property() exported. Is there some
+reason not to export them?
+
+Regards,
+
+Tony
