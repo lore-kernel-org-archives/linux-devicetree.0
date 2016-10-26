@@ -1,49 +1,51 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v6 4/5] ARM: DTS: da850: Add cfgchip syscon node
-Date: Wed, 26 Oct 2016 11:08:36 -0500
-Message-ID: <b9bfc4aa-ef52-53c4-dc7e-c0bc1c5969fb@lechnology.com>
-References: <1477451211-31979-1-git-send-email-david@lechnology.com>
- <1477451211-31979-5-git-send-email-david@lechnology.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] tpm_tis: Allow tpm_tis to be bound using DT
+Date: Wed, 26 Oct 2016 17:16:04 +0100
+Message-ID: <20161026161604.GB23322@leverpostej>
+References: <20161025232331.GA20339@obsidianresearch.com>
+ <20161026105527.cd6hcn37vmboshue@intel.com>
+ <20161026160505.GC24898@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477451211-31979-5-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161026160505.GC24898-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2016 10:06 PM, David Lechner wrote:
-> Add a syscon node for the SoC CFGCHIPn registers. This is needed for
-> the new usb phy driver.
->
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> ---
->  arch/arm/boot/dts/da850.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-> index f79e1b9..6bbf20d 100644
-> --- a/arch/arm/boot/dts/da850.dtsi
-> +++ b/arch/arm/boot/dts/da850.dtsi
-> @@ -188,6 +188,10 @@
->  			};
->
->  		};
-> +		cfgchip: cfgchip@1417c {
+On Wed, Oct 26, 2016 at 10:05:05AM -0600, Jason Gunthorpe wrote:
+> On Wed, Oct 26, 2016 at 01:55:27PM +0300, Jarkko Sakkinen wrote:
+> > On Tue, Oct 25, 2016 at 05:23:31PM -0600, Jason Gunthorpe wrote:
+> > > This provides an open firwmare driver binding for tpm_tis. OF
+> > > is useful on arches where ACPI/PNP is not used.
+> > > 
+> > > The tcg,tpm_tis-mmio register map interface is specified by the TCG.
+> > > 
+> > > Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> > >  .../bindings/security/tpm/tpm_tis_mmio.txt         | 22 ++++++++++++++++++++++
+> > 
+> > I'll do a proper review later on but should this change be a separate
+> > commit or not?
+> 
+> I've understood it is OK for tiny source patches, large ones should be
+> split. In either case they both go through your tree together. The DT
+> mailing list just does not want to be spammed...
 
-I wonder if there is a more generic name instead of cfgchip@. Is there a 
-preferred generic name for syscon nodes?
+In general we ask that binding modifications are in a separate patch,
+earlier in the series (see [1]), but in cases where the additions are
+small, we're not too bothered.
 
-> +			compatible = "ti,da830-cfgchip", "syscon";
-> +			reg = <0x1417c 0x14>;
-> +		};
->  		edma0: edma@0 {
->  			compatible = "ti,edma3-tpcc";
->  			/* eDMA3 CC0: 0x01c0 0000 - 0x01c0 7fff */
->
+As for why, it's about making it easier to spot the parts we need to act
+on. We still would like to see the entire series (and ask that we're
+cc'd [1]), as this can be useful context for review, and there are often
+mismatches between the documented binding and code that we may spot.
 
+Thanks,
+Mark.
+
+[1] Documentation/devicetree/bindings/submitting-patches.txt
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
