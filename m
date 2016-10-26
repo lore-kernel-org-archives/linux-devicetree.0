@@ -1,64 +1,64 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCH 3/4] mfd: altr-a10sr: Add Arria10 SR Monitor
-Date: Wed, 26 Oct 2016 10:18:32 -0500
-Message-ID: <f85a537e-716f-cc40-a47a-0f2345526fef@opensource.altera.com>
-References: <1476394329-31696-1-git-send-email-tthayer@opensource.altera.com>
- <1476394329-31696-4-git-send-email-tthayer@opensource.altera.com>
- <20161026125233.GL11267@dell>
-Reply-To: tthayer@opensource.altera.com
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH 2/5] ARM: davinci: Don't append git rev to local version
+Date: Wed, 26 Oct 2016 10:44:49 -0500
+Message-ID: <0fd82064-dd4a-8144-8b9d-88191407a4bc@lechnology.com>
+References: <1477075018-20176-1-git-send-email-david@lechnology.com>
+ <1477075018-20176-3-git-send-email-david@lechnology.com>
+ <20f3efba-4f79-3675-d2ce-09efe90fb692@ti.com>
+ <bf8cac01-910d-5afa-e840-f0d7ee96d22a@lechnology.com>
+ <47ad8be9-54e0-4e0c-3ff5-31662e6ca4de@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161026125233.GL11267@dell>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, inux@armlinux.org.uk, robh+dt@kernel.org, geert@linux-m68k.org, dinguyen@opensource.altera.com, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <47ad8be9-54e0-4e0c-3ff5-31662e6ca4de-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/26/2016 07:52 AM, Lee Jones wrote:
-> On Thu, 13 Oct 2016, tthayer@opensource.altera.com wrote:
->
->> From: Thor Thayer <tthayer@opensource.altera.com>
+On 10/26/2016 05:54 AM, Sekhar Nori wrote:
+> On Monday 24 October 2016 08:45 PM, David Lechner wrote:
+>> On 10/24/2016 06:35 AM, Sekhar Nori wrote:
+>>> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
+>>>> In the davinci default configuration, don't append the git revision to
+>>>> the local kernel version by. This seems like the more desirable default
+>>>> value.
+>>>
+>>> Why? To the contrary I actually quite like the fact that the git commit
+>>> is appended to version string. Makes it easy for me to cross-check that
+>>> I am booting the right image.
+>>>
+>>>>
+>>>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+>>>
+>>> Thanks,
+>>> Sekhar
+>>>
 >>
->> Add the Altera Arria10 DevKit System Resource Monitor functionality
->> to the MFD device.
->>
->> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
->> ---
->>  drivers/mfd/altera-a10sr.c |    4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
->> index 06e1f7f..0942d7d 100644
->> --- a/drivers/mfd/altera-a10sr.c
->> +++ b/drivers/mfd/altera-a10sr.c
->> @@ -33,6 +33,10 @@
->>  		.name = "altr_a10sr_gpio",
->>  		.of_compatible = "altr,a10sr-gpio",
->>  	},
->> +	{
->> +		.name = "altr_a10sr_mon",
->> +		.of_compatible = "altr,a10sr-mon",
+>> Each time you make a commit, you get a new version, which installs
+>> another copy of the kernel modules on the device. This will fill up the
+>> SD card if you are making many commits.
 >
-> "-monitor" would be better in my opinion.
+> Right, but thats easily fixable by removing existing modules before
+> installing new ones.
+>
+>> Also, if someone wants to build the mainline kernel using the default
+>> configuration, it seems odd to have a git revision tacked on to the end
+>> even though you made no revisions.
+>
+> If you checkout a tag and build, then no commit information is added.
+> Which I guess is what most end users will do.
+>
+> I don't see this done in other defconfigs like omap2plus and multi_v7 as
+> well. I would like to keep it similar for davinci.
+>
+> Thanks,
+> Sekhar
 >
 
-OK. I'm flexible and it is clearer. I'll make the changes and resubmit.
-Thanks for reviewing!
-
->> +	},
->>  };
->>
->>  static bool altr_a10sr_reg_readable(struct device *dev, unsigned int reg)
->
+OK, I will drop this patch.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
