@@ -1,54 +1,35 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/6] Documentation: devicetree: dwc3: Add interrupt
- moderation
-Date: Wed, 26 Oct 2016 11:56:33 +0100
-Message-ID: <20161026105632.GG19965@leverpostej>
-References: <cover.1477424426.git.johnyoun@synopsys.com>
- <e7a864e5a2af12d5a8d97f2591065f4aa85f86cb.1477424426.git.johnyoun@synopsys.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/5] ARM: davinci: enable gpio poweroff in default config
+Date: Wed, 26 Oct 2016 16:39:42 +0530
+Message-ID: <832356cd-a95b-eb00-b81b-c730da1e9e3a@ti.com>
+References: <1477075018-20176-1-git-send-email-david@lechnology.com>
+ <1477075018-20176-4-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <e7a864e5a2af12d5a8d97f2591065f4aa85f86cb.1477424426.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477075018-20176-4-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 12:42:46PM -0700, John Youn wrote:
-> Add interrupt moderation interval binding for dwc3.
+On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
+> The gpio-poweroff driver is needed by LEGO MINDSTORMS EV3 (AM1808 based
+> board).
 > 
-> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/dwc3.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index e3e6983..17de9fc 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -53,6 +53,7 @@ Optional properties:
->   - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
->  	register for post-silicon frame length adjustment when the
->  	fladj_30mhz_sdbnd signal is invalid or incorrect.
-> + - snps,imod_interval: the interrupt moderation interval.
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 
-As otherwise commented, s/_/-/
+For defconfig patches, we have been using the davinci_all_defconfig
+prefix (see git log --oneline arch/arm/configs/davinci_all_defconfig).
 
-What is "interrupt moderation"? The cover mentions that this is to be
-used for some kind of workaround, but it's not clear to me what this is,
-and as such, whether it makes sense to describe it in this manner.
+Applied to v4.10/defconfig with subject line changed to:
+
+"ARM: davinci_all_defconfig: enable gpio poweroff driver"
 
 Thanks,
-Mark.
-
->  
->   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
->  
-> -- 
-> 2.10.0
-> 
+Sekhar
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
