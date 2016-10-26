@@ -1,146 +1,88 @@
-From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH V2 08/10] watchdog: da9062/61: watchdog driver
-Date: Wed, 26 Oct 2016 17:56:39 +0100
-Message-ID: <ecd0c36a9e1766e327b54afa6bf986e64890b881.1477501000.git.stwiss.opensource@diasemi.com>
-References: <cover.1477501000.git.stwiss.opensource@diasemi.com>
+From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC PATCH 4/5] w1: add a callback to call slave when a new
+ device is connected
+Date: Wed, 26 Oct 2016 19:30:13 +0200
+Message-ID: <20161026173013.ryziy7hhtvxgtm3n@kwain>
+References: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
+ <20161026145756.21689-5-antoine.tenart@free-electrons.com>
+ <CANLsYkxfnF9-H9mawt3BWTgy5gjf8Qs3O6iSRGiLQ=8vfYACTQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1477501000.git.stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-WATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Cc: DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LINUX-INPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pb4xep5il2qdamck"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CANLsYkxfnF9-H9mawt3BWTgy5gjf8Qs3O6iSRGiLQ=8vfYACTQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 
-The of_device_id match array is added to support "dlg,da9062-watchdog"
-as a valid .compatible string.
+--pb4xep5il2qdamck
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The watchdog_info structure is linked to this device tree compatible
-string in the .data section. Extra code is added into the probe function to
-search-for and assign this match data.
+Hello Mathieu,
 
-This patch now assumes the use of a DA9062 fallback compatible string for
-the DTS to pick up the DA9062 device driver for use with the DA9061
-watchdog hardware.
+On Wed, Oct 26, 2016 at 10:42:28AM -0600, Mathieu Poirier wrote:
+> On 26 October 2016 at 08:57, Antoine Tenart
+> <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >                 }
+> > +               if (fops->callback) {
+> > +                       err =3D fops->callback(sl);
+> > +                       /*
+> > +                        * Do not return an error as the slave driver c=
+orrectly
+> > +                        * probed.
+> > +                        */
+>=20
+> I don't get this part.  What's the point of calling a callback if a
+> failure is not important - maybe I'm just missing something.
+>=20
+> > +                       if (err)
+> > +                               dev_err(&sl->dev,
+> > +                                       "callback call failed. err=3D%d=
+\n", err);
+> > +               }
 
-Copyright header is updated to add DA9061 in its description and the module
-description macro is extended to include DA9061.
+In our case it can be not that important: if we fail to apply an
+overlay, we can still use the w1 interfaces to access the eeprom.
 
-Kconfig is updated to reflect support for DA9061/62.
+Anyway, all those errors weren't taken into account by the w1 framework
+before (see my other patch). Also, the w1 patches are given for the
+example and could be improved. Part of the reason is the w1 framework
+itself :-)
 
-Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Antoine
 
----
-This patch applies against linux-next and v4.8
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-v1 -> v2
- - Patch renamed from [PATCH V1 04/10] to [PATCH V2 08/10] -- these
-   changes were made to fix checkpatch warnings caused by the patch
-   set dependency order
- - Removal of the DA9061 compatible entries for this device driver.
- - Additional explanation in the patch description for the use of a
-   fall-back compatible DTS string
+--pb4xep5il2qdamck
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Guenter,
+-----BEGIN PGP SIGNATURE-----
 
-Alterations have been made in accordance with the previous e-mail thread
-on the use of compatible strings: https://lkml.org/lkml/2016/10/7/641
-This patch now assumes the use of a fallback compatible string in the DTS.
-Of the form: compatible = "dlg,da9061-watchdog", "dlg,da9062-watchdog";
+iQIcBAEBCgAGBQJYEOgiAAoJEFxNi8it27zYepQP/3CvERUMlDtDKlbrIedEV/Mw
+dhetBFyeDDSRBQ8AOA45Ag/Cwq8At3ykeHI9WPeGq0+F0GPsfNvaLSujxFFSQrnr
+3XhuRKdIKK7nKxCpHBoKCqe9uANn6NdTuq/Xpk5uZaMIy8ceWK71bQ8rWXc/ra2h
+yHoCzLYp/6uUnP3sNVx9P+pXxzUtSJyqMb6j4DjwtNGum0yTYeYyTrwtK2GB1tm3
+UE/fzT76jfRFv+vA7Xc5vvVMaNWU/9c1qoxPYSP9FrHhQ3fF19TnWWYwc4KbLg4n
+CdracQWndOQLa0vdUDgmwWhkdY6hzeidEX7ZGZ3kpN57miHiu19K9HPk4U6/8g05
+mdfW22CEml8lU79C/hHSLtkAsxH0f5lRP1I6SlkLXiABkt+7zhohULv3bnAY3Qa3
+/tn7HtKf5QTLoDAJsviYUSKGTcUtlPvJ6pyLy7pnsT6wwiJKhR4b44Hs8fBT4axg
+jUdee/5bZM6AK8HmHicegrRyZ+35UVIf22fm+sPtk4+93Ym6aRjqAGRCiNWL0nM/
+K2EL7NRIwlWJdKYPUT0ydeal6Ukc9nV6EQL3Pekeo3xGOqAggcZrk4V3U81CUNbD
+VGoOu3thn53m+j0BEq4kV3KKY4Ro/IUWOxL0F4TL6L0E5Pj5zm52FkiH9NXYJ1tm
+jg2ghqn/mHmWS5OveB6e
+=VfTI
+-----END PGP SIGNATURE-----
 
-Regards,
-Steve Twiss, Dialog Semiconductor Ltd.
-
-
- drivers/watchdog/Kconfig      |  4 ++--
- drivers/watchdog/da9062_wdt.c | 18 +++++++++++++++---
- 2 files changed, 17 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 1bffe00..d6b4088 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -104,11 +104,11 @@ config DA9063_WATCHDOG
- 	  This driver can be built as a module. The module name is da9063_wdt.
- 
- config DA9062_WATCHDOG
--	tristate "Dialog DA9062 Watchdog"
-+	tristate "Dialog DA9062/61 Watchdog"
- 	depends on MFD_DA9062
- 	select WATCHDOG_CORE
- 	help
--	  Support for the watchdog in the DA9062 PMIC.
-+	  Support for the watchdog in the DA9062 and DA9061 PMICs.
- 
- 	  This driver can be built as a module. The module name is da9062_wdt.
- 
-diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-index 7386111..4b20b7a 100644
---- a/drivers/watchdog/da9062_wdt.c
-+++ b/drivers/watchdog/da9062_wdt.c
-@@ -1,5 +1,5 @@
- /*
-- * da9062_wdt.c - WDT device driver for DA9062
-+ * Watchdog device driver for DA9062 and DA9061 PMICs
-  * Copyright (C) 2015  Dialog Semiconductor Ltd.
-  *
-  * This program is free software; you can redistribute it and/or
-@@ -188,23 +188,34 @@ static const struct watchdog_ops da9062_watchdog_ops = {
- 	.set_timeout = da9062_wdt_set_timeout,
- };
- 
-+static const struct of_device_id da9062_compatible_id_table[] = {
-+	{ .compatible = "dlg,da9062-watchdog", .data = &da9062_watchdog_info },
-+	{ },
-+};
-+
- static int da9062_wdt_probe(struct platform_device *pdev)
- {
- 	int ret;
- 	struct da9062 *chip;
- 	struct da9062_watchdog *wdt;
-+	const struct of_device_id *match;
- 
- 	chip = dev_get_drvdata(pdev->dev.parent);
- 	if (!chip)
- 		return -EINVAL;
- 
-+	match = of_match_node(da9062_compatible_id_table,
-+			      pdev->dev.of_node);
-+	if (!match)
-+		return -ENXIO;
-+
- 	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
- 	if (!wdt)
- 		return -ENOMEM;
- 
- 	wdt->hw = chip;
- 
--	wdt->wdtdev.info = &da9062_watchdog_info;
-+	wdt->wdtdev.info = (const struct watchdog_info *)match->data;
- 	wdt->wdtdev.ops = &da9062_watchdog_ops;
- 	wdt->wdtdev.min_timeout = DA9062_WDT_MIN_TIMEOUT;
- 	wdt->wdtdev.max_timeout = DA9062_WDT_MAX_TIMEOUT;
-@@ -244,11 +255,12 @@ static struct platform_driver da9062_wdt_driver = {
- 	.remove = da9062_wdt_remove,
- 	.driver = {
- 		.name = "da9062-watchdog",
-+		.of_match_table = da9062_compatible_id_table,
- 	},
- };
- module_platform_driver(da9062_wdt_driver);
- 
- MODULE_AUTHOR("S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>");
--MODULE_DESCRIPTION("WDT device driver for Dialog DA9062");
-+MODULE_DESCRIPTION("WDT device driver for Dialog DA9062 and DA9061");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:da9062-watchdog");
--- 
-end-of-patch for PATCH V2
-
+--pb4xep5il2qdamck--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
