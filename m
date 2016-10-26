@@ -1,50 +1,57 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 5/6] arm64: dts: ls1043a: update gic dts node
-Date: Wed, 26 Oct 2016 11:35:31 +0100
-Message-ID: <20161026103516.GE19965@leverpostej>
-References: <1477398945-22774-1-git-send-email-Minghuan.Lian@nxp.com>
- <1477398945-22774-5-git-send-email-Minghuan.Lian@nxp.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v4 4/5] mm: make processing of movable_node arch-specific
+Date: Wed, 26 Oct 2016 21:52:53 +1100
+Message-ID: <87vawfwfei.fsf@concordia.ellerman.id.au>
+References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com> <1475778995-1420-5-git-send-email-arbab@linux.vnet.ibm.com> <235f2d20-cf84-08df-1fb4-08ee258fdc52@gmail.com> <dcfc8ace-e59e-6b4b-0f2f-4eff9f08f3c1@gmail.com> <20161025155507.37kv5akdlgo6m2be@arbab-laptop.austin.ibm.com> <112504e9-561d-e0da-7a40-73996c678b56@gmail.com> <20161026004929.h6v54dhehk4yvmwm@arbab-vm>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1477398945-22774-5-git-send-email-Minghuan.Lian@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Minghuan Lian <Minghuan.Lian@nxp.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Gong Qianyu <Qianyu.Gong@nxp.com>, Scott Wood <scott.wood@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
+Content-Type: text/plain
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <20161026004929.h6v54dhehk4yvmwm@arbab-vm>
+Sender: owner-linux-mm@kvack.org
+To: Reza Arbab <arbab@linux.vnet.ibm.com>, Balbir Singh <bsingharora@gmail.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 08:35:44PM +0800, Minghuan Lian wrote:
-> From: Gong Qianyu <Qianyu.Gong@nxp.com>
-> 
-> In order to support kvm, rev1.1 LS1043a GIC register has been
-> changed to align as 64K. The patch updates GIC node according to
-> the rev1.1 hardware.
-> 
-> Signed-off-by: Gong Qianyu <Qianyu.Gong@nxp.com>
-> Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> index 5295bb9..da1809d 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> @@ -144,10 +144,10 @@
->  		compatible = "arm,gic-400";
->  		#interrupt-cells = <3>;
->  		interrupt-controller;
-> -		reg = <0x0 0x1401000 0 0x1000>, /* GICD */
-> -		      <0x0 0x1402000 0 0x2000>, /* GICC */
-> -		      <0x0 0x1404000 0 0x2000>, /* GICH */
-> -		      <0x0 0x1406000 0 0x2000>; /* GICV */
-> +		reg = <0x0 0x1410000 0 0x10000>, /* GICD */
-> +		      <0x0 0x1420000 0 0x20000>, /* GICC */
-> +		      <0x0 0x1440000 0 0x20000>, /* GICH */
-> +		      <0x0 0x1460000 0 0x20000>; /* GICV */
+Reza Arbab <arbab@linux.vnet.ibm.com> writes:
 
-... this breaks HW prior to rev1.1, then.
+> On Wed, Oct 26, 2016 at 09:34:18AM +1100, Balbir Singh wrote:
+>>I still believe we need your changes, I was wondering if we've tested
+>>it against normal memory nodes and checked if any memblock
+>>allocations end up there. Michael showed me some memblock
+>>allocations on node 1 of a two node machine with movable_node
+>
+> The movable_node option is x86-only. Both of those nodes contain normal 
+> memory, so allocations on both are allowed.
+>
+>>> Longer; if you use "movable_node", x86 can identify these nodes at 
+>>> boot. They call memblock_mark_hotplug() while parsing the SRAT. Then, 
+>>> when the zones are initialized, those markings are used to determine 
+>>> ZONE_MOVABLE.
+>>>
+>>> We have no analog of this SRAT information, so our movable nodes can 
+>>> only be created post boot, by hotplugging and explicitly onlining 
+>>> with online_movable.
+>>
+>>Is this true for all of system memory as well or only for nodes
+>>hotplugged later?
+>
+> As far as I know, power has nothing like the SRAT that tells us, at 
+> boot, which memory is hotpluggable.
 
-Thanks,
-Mark.
+On pseries we have the ibm,dynamic-memory device tree property, which
+can contain ranges of memory that are not yet "assigned to the
+partition" - ie. can be hotplugged later.
+
+So in general that statement is not true.
+
+But I think you're focused on bare-metal, in which case you might be
+right. But that doesn't mean we couldn't have a similar property, if
+skiboot/hostboot knew what the ranges of memory were going to be.
+
+cheers
+
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
