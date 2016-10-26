@@ -1,146 +1,125 @@
 From: Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH v3] drm/mediatek: fixed the calc method of data rate per lane
-Date: Wed, 26 Oct 2016 16:59:55 +0800
-Message-ID: <1477472395-6451-1-git-send-email-jitao.shi@mediatek.com>
+Subject: Re: [PATCH v2] drm/mediatek: fixed the calc method of data rate per
+ lane
+Date: Wed, 26 Oct 2016 17:07:12 +0800
+Message-ID: <1477472832.7427.1.camel@mszsdhlt06>
+References: <1477374045-2837-1-git-send-email-jitao.shi@mediatek.com>
+ <1477464081.17405.2.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, ck.hu@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jitao Shi <jitao.shi@mediatek.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@medi
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1477464081.17405.2.camel@mtksdaap41>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Tune dsi frame rate by pixel clock, dsi add some extra signal (i.e. Tlpx,
-Ths-prepare, Ths-zero, Ths-trail,Ths-exit) when enter and exit LP mode, this
-signal will cause h-time larger than normal and reduce FPS.
-Need to multiply a coefficient to offset the extra signal's effect.
-coefficient = ((htotal*bpp/lane_number)+Tlpx+Ths_prep+Ths_zero+Ths_trail+
-                Ths_exit)/(htotal*bpp/lane_number))
-
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
----
-Change since v2:
- - move phy timing back to dsi_phy_timconfig.
-
-Change since v1:
- - phy_timing2 and phy_timing3 refer clock cycle time.
- - define values of LPX HS_PRPR HS_ZERO HS_TRAIL TA_GO TA_SURE TA_GET DA_HS_EXIT
----
- drivers/gpu/drm/mediatek/mtk_dsi.c |   74 +++++++++++++++++++++++++-----------
- 1 file changed, 51 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 28b2044..8b3b38a 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -85,16 +85,16 @@
- #define LD0_WAKEUP_EN			BIT(2)
- 
- #define DSI_PHY_TIMECON0	0x110
--#define LPX				(0xff << 0)
--#define HS_PRPR				(0xff << 8)
--#define HS_ZERO				(0xff << 16)
--#define HS_TRAIL			(0xff << 24)
-+#define LPX				(5 << 0)
-+#define HS_PRPR				(6 << 8)
-+#define HS_ZERO				(10 << 16)
-+#define HS_TRAIL			(8 << 24)
- 
- #define DSI_PHY_TIMECON1	0x114
--#define TA_GO				(0xff << 0)
--#define TA_SURE				(0xff << 8)
--#define TA_GET				(0xff << 16)
--#define DA_HS_EXIT			(0xff << 24)
-+#define TA_GO				(20 << 0)
-+#define TA_SURE				(7 << 8)
-+#define TA_GET				(25 << 16)
-+#define DA_HS_EXIT			(7 << 24)
- 
- #define DSI_PHY_TIMECON2	0x118
- #define CONT_DET			(0xff << 0)
-@@ -161,20 +161,18 @@ static void mtk_dsi_mask(struct mtk_dsi *dsi, u32 offset, u32 mask, u32 data)
- static void dsi_phy_timconfig(struct mtk_dsi *dsi)
- {
- 	u32 timcon0, timcon1, timcon2, timcon3;
--	unsigned int ui, cycle_time;
--	unsigned int lpx;
-+	u32 ui, cycle_time;
- 
- 	ui = 1000 / dsi->data_rate + 0x01;
- 	cycle_time = 8000 / dsi->data_rate + 0x01;
--	lpx = 5;
- 
--	timcon0 = (8 << 24) | (0xa << 16) | (0x6 << 8) | lpx;
--	timcon1 = (7 << 24) | (5 * lpx << 16) | ((3 * lpx) / 2) << 8 |
--		  (4 * lpx);
-+	timcon0 = LPX | HS_PRPR | HS_ZERO | HS_TRAIL;
-+	timcon1 = 4 * LPX | (3 * LPX / 2) << 8 | 5 * LPX << 16 | DA_HS_EXIT;
- 	timcon2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
--		  (NS_TO_CYCLE(0x150, cycle_time) << 16);
--	timcon3 = (2 * lpx) << 16 | NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8 |
--		   NS_TO_CYCLE(0x40, cycle_time);
-+		      (NS_TO_CYCLE(0x150, cycle_time) << 16);
-+	timcon3 = (2 * LPX) << 16 |
-+		      NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8 |
-+		      NS_TO_CYCLE(0x40, cycle_time);
- 
- 	writel(timcon0, dsi->regs + DSI_PHY_TIMECON0);
- 	writel(timcon1, dsi->regs + DSI_PHY_TIMECON1);
-@@ -202,19 +200,49 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
- {
- 	struct device *dev = dsi->dev;
- 	int ret;
-+	u64 bit_clock, total_bits;
-+	u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
- 
- 	if (++dsi->refcount != 1)
- 		return 0;
- 
-+	switch (dsi->format) {
-+	case MIPI_DSI_FMT_RGB565:
-+		bit_per_pixel = 16;
-+		break;
-+	case MIPI_DSI_FMT_RGB666_PACKED:
-+		bit_per_pixel = 18;
-+		break;
-+	case MIPI_DSI_FMT_RGB666:
-+	case MIPI_DSI_FMT_RGB888:
-+	default:
-+		bit_per_pixel = 24;
-+		break;
-+	}
- 	/**
--	 * data_rate = (pixel_clock / 1000) * pixel_dipth * mipi_ratio;
--	 * pixel_clock unit is Khz, data_rata unit is MHz, so need divide 1000.
--	 * mipi_ratio is mipi clk coefficient for balance the pixel clk in mipi.
--	 * we set mipi_ratio is 1.05.
-+	 * data_rate = (pixel_clock) * bit_per_pixel * mipi_ratio / lane_num;
-+	 * vm.pixelclock is Khz, data_rata unit is Hz, so need to multiply 1000
-+	 * mipi_ratio is (htotal * byte_per_pixel / lane_num + Tlpx + Ths_prep
-+	 *		  + Thstrail + Ths_exit + Ths_zero) /
-+	 *		 (htotal * byte_per_pixel /lane_number)
- 	 */
--	dsi->data_rate = dsi->vm.pixelclock * 3 * 21 / (1 * 1000 * 10);
-+	bit_clock = dsi->vm.pixelclock * 1000 * bit_per_pixel;
-+	htotal = dsi->vm.hactive + dsi->vm.hback_porch + dsi->vm.hfront_porch +
-+		 dsi->vm.hsync_len;
-+	htotal_bits = htotal * bit_per_pixel;
-+
-+	/**
-+	 * overhead = lpx + hs_prepare + hs_zero + hs_trail + hs_exit
-+	 */
-+	overhead_cycles = LPX + (HS_PRPR >> 8) + (HS_ZERO >> 16) +
-+			  (HS_TRAIL >> 24) + (DA_HS_EXIT >> 24);
-+	overhead_bits = overhead_cycles * dsi->lanes * 8;
-+	total_bits = htotal_bits + overhead_bits;
-+
-+	dsi->data_rate = DIV_ROUND_UP_ULL(bit_clock * total_bits,
-+					  htotal_bits * dsi->lanes);
- 
--	ret = clk_set_rate(dsi->hs_clk, dsi->data_rate * 1000000);
-+	ret = clk_set_rate(dsi->hs_clk, dsi->data_rate);
- 	if (ret < 0) {
- 		dev_err(dev, "Failed to set data rate: %d\n", ret);
- 		goto err_refcount;
--- 
-1.7.9.5
+T24gV2VkLCAyMDE2LTEwLTI2IGF0IDE0OjQxICswODAwLCBDSyBIdSB3cm90ZToKPiBIaSwgSml0
+YW86Cj4gCj4gT24gVHVlLCAyMDE2LTEwLTI1IGF0IDEzOjQwICswODAwLCBKaXRhbyBTaGkgd3Jv
+dGU6Cj4gPiBUdW5lIGRzaSBmcmFtZSByYXRlIGJ5IHBpeGVsIGNsb2NrLCBkc2kgYWRkIHNvbWUg
+ZXh0cmEgc2lnbmFsIChpLmUuIFRscHgsCj4gPiBUaHMtcHJlcGFyZSwgVGhzLXplcm8sIFRocy10
+cmFpbCxUaHMtZXhpdCkgd2hlbiBlbnRlciBhbmQgZXhpdCBMUCBtb2RlLCB0aGlzCj4gPiBzaWdu
+YWwgd2lsbCBjYXVzZSBoLXRpbWUgbGFyZ2VyIHRoYW4gbm9ybWFsIGFuZCByZWR1Y2UgRlBTLgo+
+ID4gTmVlZCB0byBtdWx0aXBseSBhIGNvZWZmaWNpZW50IHRvIG9mZnNldCB0aGUgZXh0cmEgc2ln
+bmFsJ3MgZWZmZWN0Lgo+ID4gY29lZmZpY2llbnQgPSAoKGh0b3RhbCpicHAvbGFuZV9udW1iZXIp
+K1RscHgrVGhzX3ByZXArVGhzX3plcm8rVGhzX3RyYWlsKwo+ID4gICAgICAgICAgICAgICAgIFRo
+c19leGl0KS8oaHRvdGFsKmJwcC9sYW5lX251bWJlcikpCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6
+IEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4KPiA+IC0tLQo+ID4gQ2hhbmdlIHNp
+bmNlIHYxOgo+ID4gIC0gcGh5X3RpbWluZzIgYW5kIHBoeV90aW1pbmczIHJlZmVyIGNsb2NrIGN5
+Y2xlIHRpbWUuCj4gPiAgLSBkZWZpbmUgdmFsdWVzIG9mIExQWCBIU19QUlBSIEhTX1pFUk8gSFNf
+VFJBSUwgVEFfR08gVEFfU1VSRSBUQV9HRVQgREFfSFNfRVhJVAo+ID4gLS0tCj4gPiAgZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyB8ICAxMDMgKysrKysrKysrKysrKysrKysrKysr
+KystLS0tLS0tLS0tLS0tCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDY3IGluc2VydGlvbnMoKyksIDM2
+IGRlbGV0aW9ucygtKQo+ID4gCj4gCj4gW3NuaXAuLi5dCj4gCj4gPiAgCj4gPiAtc3RhdGljIHZv
+aWQgZHNpX3BoeV90aW1jb25maWcoc3RydWN0IG10a19kc2kgKmRzaSkKPiA+ICtzdGF0aWMgdm9p
+ZCBkc2lfcGh5X3RpbWNvbmZpZyhzdHJ1Y3QgbXRrX2RzaSAqZHNpLCB1MzIgcGh5X3RpbWluZzAs
+Cj4gPiArCQkJICAgICAgdTMyIHBoeV90aW1pbmcxLCB1MzIgcGh5X3RpbWluZzIsCj4gPiArCQkJ
+ICAgICAgdTMyIHBoeV90aW1pbmczKQo+ID4gIHsKPiA+IC0JdTMyIHRpbWNvbjAsIHRpbWNvbjEs
+IHRpbWNvbjIsIHRpbWNvbjM7Cj4gPiAtCXVuc2lnbmVkIGludCB1aSwgY3ljbGVfdGltZTsKPiA+
+IC0JdW5zaWduZWQgaW50IGxweDsKPiA+IC0KPiA+IC0JdWkgPSAxMDAwIC8gZHNpLT5kYXRhX3Jh
+dGUgKyAweDAxOwo+ID4gLQljeWNsZV90aW1lID0gODAwMCAvIGRzaS0+ZGF0YV9yYXRlICsgMHgw
+MTsKPiA+IC0JbHB4ID0gNTsKPiA+IC0KPiA+IC0JdGltY29uMCA9ICg4IDw8IDI0KSB8ICgweGEg
+PDwgMTYpIHwgKDB4NiA8PCA4KSB8IGxweDsKPiA+IC0JdGltY29uMSA9ICg3IDw8IDI0KSB8ICg1
+ICogbHB4IDw8IDE2KSB8ICgoMyAqIGxweCkgLyAyKSA8PCA4IHwKPiA+IC0JCSAgKDQgKiBscHgp
+Owo+ID4gLQl0aW1jb24yID0gKChOU19UT19DWUNMRSgweDY0LCBjeWNsZV90aW1lKSArIDB4YSkg
+PDwgMjQpIHwKPiA+IC0JCSAgKE5TX1RPX0NZQ0xFKDB4MTUwLCBjeWNsZV90aW1lKSA8PCAxNik7
+Cj4gPiAtCXRpbWNvbjMgPSAoMiAqIGxweCkgPDwgMTYgfCBOU19UT19DWUNMRSg4MCArIDUyICog
+dWksIGN5Y2xlX3RpbWUpIDw8IDggfAo+ID4gLQkJICAgTlNfVE9fQ1lDTEUoMHg0MCwgY3ljbGVf
+dGltZSk7Cj4gPiAtCj4gPiAtCXdyaXRlbCh0aW1jb24wLCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJ
+TUVDT04wKTsKPiA+IC0Jd3JpdGVsKHRpbWNvbjEsIGRzaS0+cmVncyArIERTSV9QSFlfVElNRUNP
+TjEpOwo+ID4gLQl3cml0ZWwodGltY29uMiwgZHNpLT5yZWdzICsgRFNJX1BIWV9USU1FQ09OMik7
+Cj4gPiAtCXdyaXRlbCh0aW1jb24zLCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04zKTsKPiAK
+PiBXaHkgZG8geW91IG1vdmUgdGhlc2UgY2FsY3VsYXRpb24gdG8gbXRrX2RzaV9wb3dlcm9uKCk/
+IFlvdSBjYW4ga2VlcAo+IGNhbGN1bGF0aW9uIGhlcmUgYW5kIGp1c3QgZG8gc29tZSBtb2RpZmlj
+YXRpb24uCj4gCj4gUmVnYXJkcywKPiBDSwoKVGhhbmtzIGZvciB5b3VyIHJldmlldy4gSSdsbCBm
+aXggaXQgaW4gbmV4dCBwYXRjaHNldC4KCkJlc3QgUmVnYXJkcwpqaXRhbwoKPiAKPiA+ICsJd3Jp
+dGVsKHBoeV90aW1pbmcwLCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04wKTsKPiA+ICsJd3Jp
+dGVsKHBoeV90aW1pbmcxLCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04xKTsKPiA+ICsJd3Jp
+dGVsKHBoeV90aW1pbmcyLCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04yKTsKPiA+ICsJd3Jp
+dGVsKHBoeV90aW1pbmczLCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04zKTsKPiA+ICB9Cj4g
+PiAgCj4gPiAgc3RhdGljIHZvaWQgbXRrX2RzaV9lbmFibGUoc3RydWN0IG10a19kc2kgKmRzaSkK
+PiA+IEBAIC0yMDIsMTkgKzE4OCw1MSBAQCBzdGF0aWMgaW50IG10a19kc2lfcG93ZXJvbihzdHJ1
+Y3QgbXRrX2RzaSAqZHNpKQo+ID4gIHsKPiA+ICAJc3RydWN0IGRldmljZSAqZGV2ID0gZHNpLT5k
+ZXY7Cj4gPiAgCWludCByZXQ7Cj4gPiArCXU2NCBiaXRfY2xvY2ssIHRvdGFsX2JpdHM7Cj4gPiAr
+CXUzMiBodG90YWwsIGh0b3RhbF9iaXRzLCBiaXRfcGVyX3BpeGVsLCBvdmVyaGVhZF9jeWNsZXMs
+IG92ZXJoZWFkX2JpdHM7Cj4gPiArCXUzMiBwaHlfdGltaW5nMCwgcGh5X3RpbWluZzEsIHBoeV90
+aW1pbmcyLCBwaHlfdGltaW5nMzsKPiA+ICsJdTMyIHVpLCBjeWNsZV90aW1lOwo+ID4gIAo+ID4g
+IAlpZiAoKytkc2ktPnJlZmNvdW50ICE9IDEpCj4gPiAgCQlyZXR1cm4gMDsKPiA+ICAKPiA+ICsJ
+c3dpdGNoIChkc2ktPmZvcm1hdCkgewo+ID4gKwljYXNlIE1JUElfRFNJX0ZNVF9SR0I1NjU6Cj4g
+PiArCQliaXRfcGVyX3BpeGVsID0gMTY7Cj4gPiArCQlicmVhazsKPiA+ICsJY2FzZSBNSVBJX0RT
+SV9GTVRfUkdCNjY2X1BBQ0tFRDoKPiA+ICsJCWJpdF9wZXJfcGl4ZWwgPSAxODsKPiA+ICsJCWJy
+ZWFrOwo+ID4gKwljYXNlIE1JUElfRFNJX0ZNVF9SR0I2NjY6Cj4gPiArCWNhc2UgTUlQSV9EU0lf
+Rk1UX1JHQjg4ODoKPiA+ICsJZGVmYXVsdDoKPiA+ICsJCWJpdF9wZXJfcGl4ZWwgPSAyNDsKPiA+
+ICsJCWJyZWFrOwo+ID4gKwl9Cj4gPiArCS8qKgo+ID4gKwkgKiBkYXRhX3JhdGUgPSAocGl4ZWxf
+Y2xvY2spICogYml0X3Blcl9waXhlbCAqIG1pcGlfcmF0aW8gLyBsYW5lX251bTsKPiA+ICsJICog
+dm0ucGl4ZWxjbG9jayBpcyBLaHosIGRhdGFfcmF0YSB1bml0IGlzIEh6LCBzbyBuZWVkIHRvIG11
+bHRpcGx5IDEwMDAKPiA+ICsJICogbWlwaV9yYXRpbyBpcyAoaHRvdGFsICogYnl0ZV9wZXJfcGl4
+ZWwgLyBsYW5lX251bSArIFRscHggKyBUaHNfcHJlcAo+ID4gKwkgKgkJICArIFRoc3RyYWlsICsg
+VGhzX2V4aXQgKyBUaHNfemVybykgLwo+ID4gKwkgKgkJIChodG90YWwgKiBieXRlX3Blcl9waXhl
+bCAvbGFuZV9udW1iZXIpCj4gPiArCSAqLwo+ID4gKwliaXRfY2xvY2sgPSBkc2ktPnZtLnBpeGVs
+Y2xvY2sgKiAxMDAwICogYml0X3Blcl9waXhlbDsKPiA+ICsJaHRvdGFsID0gZHNpLT52bS5oYWN0
+aXZlICsgZHNpLT52bS5oYmFja19wb3JjaCArIGRzaS0+dm0uaGZyb250X3BvcmNoICsKPiA+ICsJ
+CSBkc2ktPnZtLmhzeW5jX2xlbjsKPiA+ICsJaHRvdGFsX2JpdHMgPSBodG90YWwgKiBiaXRfcGVy
+X3BpeGVsOwo+ID4gKwo+ID4gIAkvKioKPiA+IC0JICogZGF0YV9yYXRlID0gKHBpeGVsX2Nsb2Nr
+IC8gMTAwMCkgKiBwaXhlbF9kaXB0aCAqIG1pcGlfcmF0aW87Cj4gPiAtCSAqIHBpeGVsX2Nsb2Nr
+IHVuaXQgaXMgS2h6LCBkYXRhX3JhdGEgdW5pdCBpcyBNSHosIHNvIG5lZWQgZGl2aWRlIDEwMDAu
+Cj4gPiAtCSAqIG1pcGlfcmF0aW8gaXMgbWlwaSBjbGsgY29lZmZpY2llbnQgZm9yIGJhbGFuY2Ug
+dGhlIHBpeGVsIGNsayBpbiBtaXBpLgo+ID4gLQkgKiB3ZSBzZXQgbWlwaV9yYXRpbyBpcyAxLjA1
+Lgo+ID4gKwkgKiBvdmVyaGVhZCA9IGxweCArIGhzX3ByZXBhcmUgKyBoc196ZXJvICsgaHNfdHJh
+aWwgKyBoc19leGl0Cj4gPiAgCSAqLwo+ID4gLQlkc2ktPmRhdGFfcmF0ZSA9IGRzaS0+dm0ucGl4
+ZWxjbG9jayAqIDMgKiAyMSAvICgxICogMTAwMCAqIDEwKTsKPiA+ICsJb3ZlcmhlYWRfY3ljbGVz
+ID0gTFBYICsgKEhTX1BSUFIgPj4gOCkgKyAoSFNfWkVSTyA+PiAxNikgKwo+ID4gKwkJCSAgKEhT
+X1RSQUlMID4+IDI0KSArIChEQV9IU19FWElUID4+IDI0KTsKPiA+ICsJb3ZlcmhlYWRfYml0cyA9
+IG92ZXJoZWFkX2N5Y2xlcyAqIGRzaS0+bGFuZXMgKiA4Owo+ID4gKwl0b3RhbF9iaXRzID0gaHRv
+dGFsX2JpdHMgKyBvdmVyaGVhZF9iaXRzOwo+ID4gIAo+ID4gLQlyZXQgPSBjbGtfc2V0X3JhdGUo
+ZHNpLT5oc19jbGssIGRzaS0+ZGF0YV9yYXRlICogMTAwMDAwMCk7Cj4gPiArCWRzaS0+ZGF0YV9y
+YXRlID0gRElWX1JPVU5EX1VQX1VMTChiaXRfY2xvY2sgKiB0b3RhbF9iaXRzLAo+ID4gKwkJCQkJ
+ICBodG90YWxfYml0cyAqIGRzaS0+bGFuZXMpOwo+ID4gKwo+ID4gKwlyZXQgPSBjbGtfc2V0X3Jh
+dGUoZHNpLT5oc19jbGssIGRzaS0+ZGF0YV9yYXRlKTsKPiA+ICAJaWYgKHJldCA8IDApIHsKPiA+
+ICAJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIHNldCBkYXRhIHJhdGU6ICVkXG4iLCByZXQpOwo+
+ID4gIAkJZ290byBlcnJfcmVmY291bnQ7Cj4gPiBAQCAtMjM2LDcgKzI1NCwyMCBAQCBzdGF0aWMg
+aW50IG10a19kc2lfcG93ZXJvbihzdHJ1Y3QgbXRrX2RzaSAqZHNpKQo+ID4gIAo+ID4gIAltdGtf
+ZHNpX2VuYWJsZShkc2kpOwo+ID4gIAltdGtfZHNpX3Jlc2V0KGRzaSk7Cj4gPiAtCWRzaV9waHlf
+dGltY29uZmlnKGRzaSk7Cj4gPiArCj4gPiArCXVpID0gMTAwMCAvIGRzaS0+ZGF0YV9yYXRlICsg
+MHgwMTsKPiA+ICsJY3ljbGVfdGltZSA9IDgwMDAgLyBkc2ktPmRhdGFfcmF0ZSArIDB4MDE7Cj4g
+PiArCj4gPiArCXBoeV90aW1pbmcwID0gTFBYIHwgSFNfUFJQUiB8IEhTX1pFUk8gfCBIU19UUkFJ
+TDsKPiA+ICsJcGh5X3RpbWluZzEgPSBUQV9HTyB8IFRBX1NVUkUgfCBUQV9HRVQgfCBEQV9IU19F
+WElUOwo+ID4gKwlwaHlfdGltaW5nMiA9ICgoTlNfVE9fQ1lDTEUoMHg2NCwgY3ljbGVfdGltZSkg
+KyAweGEpIDw8IDI0KSB8Cj4gPiArCQkgICAgICAoTlNfVE9fQ1lDTEUoMHgxNTAsIGN5Y2xlX3Rp
+bWUpIDw8IDE2KTsKPiA+ICsJcGh5X3RpbWluZzMgPSAoMiAqIExQWCkgPDwgMTYgfAo+ID4gKwkJ
+ICAgICAgTlNfVE9fQ1lDTEUoODAgKyA1MiAqIHVpLCBjeWNsZV90aW1lKSA8PCA4IHwKPiA+ICsJ
+CSAgICAgIE5TX1RPX0NZQ0xFKDB4NDAsIGN5Y2xlX3RpbWUpOwo+ID4gKwo+ID4gKwlkc2lfcGh5
+X3RpbWNvbmZpZyhkc2ksIHBoeV90aW1pbmcwLCBwaHlfdGltaW5nMSwgcGh5X3RpbWluZzIsCj4g
+PiArCQkJICBwaHlfdGltaW5nMyk7Cj4gPiAgCj4gPiAgCXJldHVybiAwOwo+ID4gIAo+IAo+IAoK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
