@@ -1,53 +1,61 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 3/4] mfd: altr-a10sr: Add Arria10 SR Monitor
-Date: Wed, 26 Oct 2016 13:52:33 +0100
-Message-ID: <20161026125233.GL11267@dell>
+Subject: Re: [PATCH 1/4] dt-bindings: mfd: Add Altera Arria10 SR Monitor
+Date: Wed, 26 Oct 2016 13:51:51 +0100
+Message-ID: <20161026125151.GK11267@dell>
 References: <1476394329-31696-1-git-send-email-tthayer@opensource.altera.com>
- <1476394329-31696-4-git-send-email-tthayer@opensource.altera.com>
+ <1476394329-31696-2-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1476394329-31696-4-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1476394329-31696-2-git-send-email-tthayer@opensource.altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: tthayer@opensource.altera.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@opensource.altera.com, inux@armlinux.org.uk, arnd@arndb.de, gregkh@linuxfoundation.org, davem@davemloft.net, geert@linux-m68k.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, inux@armlinux.org.uk, robh+dt@kernel.org, geert@linux-m68k.org, dinguyen@opensource.altera.com, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Oct 2016, tthayer@opensource.altera.com wrote:
-
-> From: Thor Thayer <tthayer@opensource.altera.com>
-> 
-> Add the Altera Arria10 DevKit System Resource Monitor functionality
-> to the MFD device.
-> 
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> ---
->  drivers/mfd/altera-a10sr.c |    4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
-> index 06e1f7f..0942d7d 100644
-> --- a/drivers/mfd/altera-a10sr.c
-> +++ b/drivers/mfd/altera-a10sr.c
-> @@ -33,6 +33,10 @@
->  		.name = "altr_a10sr_gpio",
->  		.of_compatible = "altr,a10sr-gpio",
->  	},
-> +	{
-> +		.name = "altr_a10sr_mon",
-> +		.of_compatible = "altr,a10sr-mon",
-
-"-monitor" would be better in my opinion.
-
-> +	},
->  };
->  
->  static bool altr_a10sr_reg_readable(struct device *dev, unsigned int reg)
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+T24gVGh1LCAxMyBPY3QgMjAxNiwgdHRoYXllckBvcGVuc291cmNlLmFsdGVyYS5jb20gd3JvdGU6
+Cgo+IEZyb206IFRob3IgVGhheWVyIDx0dGhheWVyQG9wZW5zb3VyY2UuYWx0ZXJhLmNvbT4KPiAK
+PiBBZGQgdGhlIEFycmlhMTAgRGV2S2l0IFN5c3RlbSBSZXNvdXJjZSBDaGlwIHJlZ2lzdGVyIGFu
+ZCBzdGF0ZQo+IG1vbml0b3JpbmcgbW9kdWxlIHRvIHRoZSBNRkQuCj4gCj4gU2lnbmVkLW9mZi1i
+eTogVGhvciBUaGF5ZXIgPHR0aGF5ZXJAb3BlbnNvdXJjZS5hbHRlcmEuY29tPgo+IC0tLQo+IE5v
+dGU6IFRoaXMgbmVlZHMgdG8gYmUgYXBwbGllZCB0byB0aGUgYmluZGluZ3MgZG9jdW1lbnQgdGhh
+dAo+IHdhcyBBY2tlZCAmIEFwcGxpZWQgYnV0IGRpZG4ndCByZWFjaCB0aGUgZm9yLW5leHQgYnJh
+bmNoLgo+IFNlZSBodHRwczovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzYyOTM5Ny8KPiAt
+LS0KPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2FsdGVyYS1hMTBzci50eHQg
+ICAgICAgfCAgICA5ICsrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCsp
+Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQv
+YWx0ZXJhLWExMHNyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQv
+YWx0ZXJhLWExMHNyLnR4dAo+IGluZGV4IGVhMTUxZjIuLjA3ODdlYzYgMTAwNjQ0Cj4gLS0tIGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9hbHRlcmEtYTEwc3IudHh0Cj4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9hbHRlcmEtYTEwc3Iu
+dHh0Cj4gQEAgLTE4LDYgKzE4LDcgQEAgVGhlIEExMFNSIGNvbnNpc3RzIG9mIHRoZXNlIHN1Yi1k
+ZXZpY2VzOgo+ICBEZXZpY2UgICAgICAgICAgICAgICAgICAgRGVzY3JpcHRpb24KPiAgLS0tLS0t
+ICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0KPiAgYTEwc3JfZ3BpbyAgICAgICAgICAgICAg
+IEdQSU8gQ29udHJvbGxlcgo+ICthMTBzcl9tb25pdG9yICAgICAgICAgICAgUmVnaXN0ZXIgYW5k
+IFN0YXRlIE1vbml0b3JpbmcKPiAgCj4gIEFycmlhMTAgR1BJTwo+ICBSZXF1aXJlZCBQcm9wZXJ0
+aWVzOgo+IEBAIC0yNyw2ICsyOCwxMCBAQCBSZXF1aXJlZCBQcm9wZXJ0aWVzOgo+ICAgICAgICAg
+ICAgICAgICAgICAgICAgdGhlIHNlY29uZCBjZWxsIGlzIHVzZWQgdG8gc3BlY2lmeSBmbGFncy4K
+PiAgICAgICAgICAgICAgICAgICAgICAgIFNlZSAuLi9ncGlvL2dwaW8udHh0IGZvciBtb3JlIGlu
+Zm9ybWF0aW9uLgo+ICAKPiArQXJyaWExMCBSZWdpc3RlciBhbmQgU3RhdGUgTW9uaXRvcgo+ICtS
+ZXF1aXJlZCBQcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGUgICAgICAgIDogU2hvdWxkIGJlICJh
+bHRyLGExMHNyLW1vbiIKCldoeSBub3QgIi1tb25pdG9yIj8KCj4gIEV4YW1wbGU6Cj4gIAo+ICAg
+ICAgICAgIHJlc291cmNlLW1hbmFnZXJAMCB7Cj4gQEAgLTQzLDQgKzQ4LDggQEAgRXhhbXBsZToK
+PiAgCQkJZ3Bpby1jb250cm9sbGVyOwo+ICAJCQkjZ3Bpby1jZWxscyA9IDwyPjsKPiAgCQl9Owo+
+ICsKPiArCQlhMTBzcl9tb25pdG9yIHsKPiArCQkJY29tcGF0aWJsZSA9ICJhbHRyLGExMHNyLW1v
+biI7Cj4gKwkJfTsKPiAgCX07CgotLSAKTGVlIEpvbmVzCkxpbmFybyBTVE1pY3JvZWxlY3Ryb25p
+Y3MgTGFuZGluZyBUZWFtIExlYWQKTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUg
+Zm9yIEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
