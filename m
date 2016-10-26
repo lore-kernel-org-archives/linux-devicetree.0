@@ -1,354 +1,155 @@
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 2/2] ARM: bus: da8xx-mstpri: new driver
-Date: Wed, 26 Oct 2016 19:35:55 +0200
-Message-ID: <1477503355-2600-3-git-send-email-bgolaszewski@baylibre.com>
+Subject: [PATCH 1/2] ARM: memory: da8xx-ddrctl: new driver
+Date: Wed, 26 Oct 2016 19:35:54 +0200
+Message-ID: <1477503355-2600-2-git-send-email-bgolaszewski@baylibre.com>
 References: <1477503355-2600-1-git-send-email-bgolaszewski@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1477503355-2600-1-git-send-email-bgolaszewski@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
-Cc: LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Create the driver for the da8xx master peripheral priority
-configuration and implement support for writing to the three
-Master Priority registers on da850 SoCs.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- .../devicetree/bindings/bus/ti,da850-mstpri.txt    |  20 ++
- drivers/bus/Kconfig                                |   9 +
- drivers/bus/Makefile                               |   2 +
- drivers/bus/da8xx-mstpri.c                         | 266 +++++++++++++++++++++
- 4 files changed, 297 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
- create mode 100644 drivers/bus/da8xx-mstpri.c
-
-diff --git a/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt b/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
-new file mode 100644
-index 0000000..225af09
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
-@@ -0,0 +1,20 @@
-+* Device tree bindings for Texas Instruments da8xx master peripheral
-+  priority driver
-+
-+DA8XX SoCs feature a set of registers allowing to change the priority of all
-+peripherals classified as masters.
-+
-+Documentation:
-+OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh82c/spruh82c.pdf
-+
-+Required properties:
-+
-+- compatible:		"ti,da850-mstpri", "syscon" - for da850 based boards
-+- reg:			offset and length of the mstpri registers
-+
-+Example for da850-lcdk is shown below.
-+
-+mstpri {
-+	compatible = "ti,da850-mstpri";
-+	reg = <0x14110 0x0c>;
-+};
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 7010dca..ed6a89c 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -166,4 +166,13 @@ config VEXPRESS_CONFIG
- 	help
- 	  Platform configuration infrastructure for the ARM Ltd.
- 	  Versatile Express.
-+
-+config DA8XX_MSTPRI
-+	bool "TI da8xx master peripheral priority driver"
-+	depends on ARCH_DAVINCI_DA8XX
-+	help
-+	  Driver for Texas Instruments da8xx master peripheral priority
-+	  configuration. Allows to adjust the priorities of all master
-+	  peripherals.
-+
- endmenu
-diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
-index c6cfa6b..2adb540 100644
---- a/drivers/bus/Makefile
-+++ b/drivers/bus/Makefile
-@@ -21,3 +21,5 @@ obj-$(CONFIG_SIMPLE_PM_BUS)	+= simple-pm-bus.o
- obj-$(CONFIG_TEGRA_ACONNECT)	+= tegra-aconnect.o
- obj-$(CONFIG_UNIPHIER_SYSTEM_BUS)	+= uniphier-system-bus.o
- obj-$(CONFIG_VEXPRESS_CONFIG)	+= vexpress-config.o
-+
-+obj-$(CONFIG_DA8XX_MSTPRI)	+= da8xx-mstpri.o
-diff --git a/drivers/bus/da8xx-mstpri.c b/drivers/bus/da8xx-mstpri.c
-new file mode 100644
-index 0000000..00c4f83
---- /dev/null
-+++ b/drivers/bus/da8xx-mstpri.c
-@@ -0,0 +1,266 @@
-+/*
-+ * TI da8xx master peripheral priority driver
-+ *
-+ * Copyright (C) 2016 BayLibre SAS
-+ *
-+ * Author:
-+ *   Bartosz Golaszewski <bgolaszewski@baylibre.com.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/io.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_fdt.h>
-+
-+/*
-+ * REVISIT: Linux doesn't have a good framework for the kind of performance
-+ * knobs this driver controls. We can't use device tree properties as it deals
-+ * with hardware configuration rather than description. We also don't want to
-+ * commit to maintaining some random sysfs attributes.
-+ *
-+ * For now we just hardcode the register values for the boards that need
-+ * some changes (as is the case for the LCD controller on da850-lcdk - the
-+ * first board we support here). When linux gets an appropriate framework,
-+ * we'll easily convert the driver to it.
-+ */
-+
-+#define DA8XX_MSTPRI0_OFFSET		0
-+#define DA8XX_MSTPRI1_OFFSET		4
-+#define DA8XX_MSTPRI2_OFFSET		8
-+
-+enum {
-+	DA8XX_MSTPRI_ARM_I = 0,
-+	DA8XX_MSTPRI_ARM_D,
-+	DA8XX_MSTPRI_UPP,
-+	DA8XX_MSTPRI_SATA,
-+	DA8XX_MSTPRI_PRU0,
-+	DA8XX_MSTPRI_PRU1,
-+	DA8XX_MSTPRI_EDMA30TC0,
-+	DA8XX_MSTPRI_EDMA30TC1,
-+	DA8XX_MSTPRI_EDMA31TC0,
-+	DA8XX_MSTPRI_VPIF_DMA_0,
-+	DA8XX_MSTPRI_VPIF_DMA_1,
-+	DA8XX_MSTPRI_EMAC,
-+	DA8XX_MSTPRI_USB0CFG,
-+	DA8XX_MSTPRI_USB0CDMA,
-+	DA8XX_MSTPRI_UHPI,
-+	DA8XX_MSTPRI_USB1,
-+	DA8XX_MSTPRI_LCDC,
-+};
-+
-+struct da8xx_mstpri_descr {
-+	int reg;
-+	int shift;
-+	int mask;
-+};
-+
-+static const struct da8xx_mstpri_descr da8xx_mstpri_priority_list[] = {
-+	[DA8XX_MSTPRI_ARM_I] = {
-+		.reg = DA8XX_MSTPRI0_OFFSET,
-+		.shift = 0,
-+		.mask = 0x0000000f,
-+	},
-+	[DA8XX_MSTPRI_ARM_D] = {
-+		.reg = DA8XX_MSTPRI0_OFFSET,
-+		.shift = 4,
-+		.mask = 0x000000f0,
-+	},
-+	[DA8XX_MSTPRI_UPP] = {
-+		.reg = DA8XX_MSTPRI0_OFFSET,
-+		.shift = 16,
-+		.mask = 0x000f0000,
-+	},
-+	[DA8XX_MSTPRI_SATA] = {
-+		.reg = DA8XX_MSTPRI0_OFFSET,
-+		.shift = 20,
-+		.mask = 0x00f00000,
-+	},
-+	[DA8XX_MSTPRI_PRU0] = {
-+		.reg = DA8XX_MSTPRI1_OFFSET,
-+		.shift = 0,
-+		.mask = 0x0000000f,
-+	},
-+	[DA8XX_MSTPRI_PRU1] = {
-+		.reg = DA8XX_MSTPRI1_OFFSET,
-+		.shift = 4,
-+		.mask = 0x000000f0,
-+	},
-+	[DA8XX_MSTPRI_EDMA30TC0] = {
-+		.reg = DA8XX_MSTPRI1_OFFSET,
-+		.shift = 8,
-+		.mask = 0x00000f00,
-+	},
-+	[DA8XX_MSTPRI_EDMA30TC1] = {
-+		.reg = DA8XX_MSTPRI1_OFFSET,
-+		.shift = 12,
-+		.mask = 0x0000f000,
-+	},
-+	[DA8XX_MSTPRI_EDMA31TC0] = {
-+		.reg = DA8XX_MSTPRI1_OFFSET,
-+		.shift = 16,
-+		.mask = 0x000f0000,
-+	},
-+	[DA8XX_MSTPRI_VPIF_DMA_0] = {
-+		.reg = DA8XX_MSTPRI1_OFFSET,
-+		.shift = 24,
-+		.mask = 0x0f000000,
-+	},
-+	[DA8XX_MSTPRI_VPIF_DMA_1] = {
-+		.reg = DA8XX_MSTPRI1_OFFSET,
-+		.shift = 28,
-+		.mask = 0xf0000000,
-+	},
-+	[DA8XX_MSTPRI_EMAC] = {
-+		.reg = DA8XX_MSTPRI2_OFFSET,
-+		.shift = 0,
-+		.mask = 0x0000000f,
-+	},
-+	[DA8XX_MSTPRI_USB0CFG] = {
-+		.reg = DA8XX_MSTPRI2_OFFSET,
-+		.shift = 8,
-+		.mask = 0x00000f00,
-+	},
-+	[DA8XX_MSTPRI_USB0CDMA] = {
-+		.reg = DA8XX_MSTPRI2_OFFSET,
-+		.shift = 12,
-+		.mask = 0x0000f000,
-+	},
-+	[DA8XX_MSTPRI_UHPI] = {
-+		.reg = DA8XX_MSTPRI2_OFFSET,
-+		.shift = 20,
-+		.mask = 0x00f00000,
-+	},
-+	[DA8XX_MSTPRI_USB1] = {
-+		.reg = DA8XX_MSTPRI2_OFFSET,
-+		.shift = 24,
-+		.mask = 0x0f000000,
-+	},
-+	[DA8XX_MSTPRI_LCDC] = {
-+		.reg = DA8XX_MSTPRI2_OFFSET,
-+		.shift = 28,
-+		.mask = 0xf0000000,
-+	},
-+};
-+
-+struct da8xx_mstpri_priority {
-+	int which;
-+	u32 val;
-+};
-+
-+struct da8xx_mstpri_board_priorities {
-+	const char *board;
-+	const struct da8xx_mstpri_priority *priorities;
-+	size_t numprio;
-+};
-+
-+/*
-+ * Default memory settings of da850 do not meet the throughput/latency
-+ * requirements of tilcdc. This results in the image displayed being
-+ * incorrect and the following warning being displayed by the LCDC
-+ * drm driver:
-+ *
-+ *   tilcdc da8xx_lcdc.0: tilcdc_crtc_irq(0x00000020): FIFO underfow
-+ */
-+static const struct da8xx_mstpri_priority da850_lcdk_priorities[] = {
-+	{
-+		.which = DA8XX_MSTPRI_LCDC,
-+		.val = 0,
-+	},
-+	{
-+		.which = DA8XX_MSTPRI_EDMA30TC1,
-+		.val = 0,
-+	},
-+	{
-+		.which = DA8XX_MSTPRI_EDMA30TC0,
-+		.val = 1,
-+	},
-+};
-+
-+static const struct da8xx_mstpri_board_priorities da8xx_mstpri_board_confs[] = {
-+	{
-+		.board = "ti,da850-lcdk",
-+		.priorities = da850_lcdk_priorities,
-+		.numprio = ARRAY_SIZE(da850_lcdk_priorities),
-+	},
-+};
-+
-+static const struct da8xx_mstpri_board_priorities *
-+da8xx_mstpri_get_board_prio(void)
-+{
-+	const struct da8xx_mstpri_board_priorities *board_prio;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(da8xx_mstpri_board_confs); i++) {
-+		board_prio = &da8xx_mstpri_board_confs[i];
-+
-+		if (of_machine_is_compatible(board_prio->board))
-+			return board_prio;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int da8xx_mstpri_probe(struct platform_device *pdev)
-+{
-+	const struct da8xx_mstpri_board_priorities *prio_list;
-+	const struct da8xx_mstpri_descr *prio_descr;
-+	const struct da8xx_mstpri_priority *prio;
-+	struct device *dev = &pdev->dev;
-+	struct regmap *mstpri;
-+	int i, ret;
-+
-+	mstpri = syscon_regmap_lookup_by_compatible("ti,da850-mstpri");
-+	if (IS_ERR(mstpri)) {
-+		dev_err(dev, "unable to map mstpri registers\n");
-+		return PTR_ERR(mstpri);
-+	}
-+
-+	prio_list = da8xx_mstpri_get_board_prio();
-+	if (!prio_list) {
-+		dev_err(dev, "no master priotities defined for board '%s'\n",
-+			of_flat_dt_get_machine_name());
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < prio_list->numprio; i++) {
-+		prio = &prio_list->priorities[i];
-+		prio_descr = &da8xx_mstpri_priority_list[prio->which];
-+
-+		ret = regmap_update_bits(mstpri, prio_descr->reg,
-+					 prio_descr->mask,
-+					 prio->val << prio_descr->shift);
-+		if (ret) {
-+			dev_warn(dev,
-+				 "error updating bits for register [%d]: %d\n",
-+				 prio_descr->reg, ret);
-+			continue;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id da8xx_mstpri_of_match[] = {
-+	{ .compatible = "ti,da850-mstpri", },
-+	{ },
-+};
-+
-+static struct platform_driver da8xx_mstpri_driver = {
-+	.probe = da8xx_mstpri_probe,
-+	.driver = {
-+		.name = "da8xx-mstpri",
-+		.of_match_table = da8xx_mstpri_of_match,
-+	},
-+};
-+module_platform_driver(da8xx_mstpri_driver);
-+
-+MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
-+MODULE_DESCRIPTION("TI da8xx master peripheral priority driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.9.3
+Q3JlYXRlIGEgbmV3IGRyaXZlciBmb3IgdGhlIGRhOHh4IEREUjIvbUREUiBjb250cm9sbGVyIGFu
+ZCBpbXBsZW1lbnQKc3VwcG9ydCBmb3Igd3JpdGluZyB0byB0aGUgUGVyaXBoZXJhbCBCdXMgQnVy
+c3QgUHJpb3JpdHkgUmVnaXN0ZXIuCgpTaWduZWQtb2ZmLWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tp
+IDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgotLS0KIC4uLi9tZW1vcnktY29udHJvbGxlcnMv
+dGktZGE4eHgtZGRyY3RsLnR4dCAgICAgICAgIHwgIDIwICsrKwogZHJpdmVycy9tZW1vcnkvS2Nv
+bmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDggKwogZHJpdmVycy9tZW1vcnkv
+TWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9tZW1v
+cnkvZGE4eHgtZGRyY3RsLmMgICAgICAgICAgICAgICAgICAgICAgfCAxNzUgKysrKysrKysrKysr
+KysrKysrKysrCiA0IGZpbGVzIGNoYW5nZWQsIDIwNCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lbW9yeS1jb250cm9s
+bGVycy90aS1kYTh4eC1kZHJjdGwudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tZW1v
+cnkvZGE4eHgtZGRyY3RsLmMKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL3RpLWRhOHh4LWRkcmN0bC50eHQgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL3RpLWRhOHh4LWRk
+cmN0bC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uN2UyNzFkZAotLS0g
+L2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnkt
+Y29udHJvbGxlcnMvdGktZGE4eHgtZGRyY3RsLnR4dApAQCAtMCwwICsxLDIwIEBACisqIERldmlj
+ZSB0cmVlIGJpbmRpbmdzIGZvciBUZXhhcyBJbnN0cnVtZW50cyBkYTh4eCBERFIyL21ERFIgbWVt
+b3J5IGNvbnRyb2xsZXIKKworVGhlIEREUjIvbUREUiBtZW1vcnkgY29udHJvbGxlciBwcmVzZW50
+IG9uIFRleGFzIEluc3RydW1lbnRzIGRhOHh4IFNvQ3MgZmVhdHVyZXMKK2Egc2V0IG9mIHJlZ2lz
+dGVycyB3aGljaCBhbGxvdyB0byB0d2VhayB0aGUgY29udHJvbGxlcidzIGJlaGF2aW9yLgorCitE
+b2N1bWVudGF0aW9uOgorT01BUC1MMTM4IChEQTg1MCkgLSBodHRwOi8vd3d3LnRpLmNvbS9saXQv
+dWcvc3BydWg4MmMvc3BydWg4MmMucGRmCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CisKKy0gY29t
+cGF0aWJsZToJCSJ0aSxkYTg1MC1kZHItY29udHJvbGxlciIgLSBmb3IgZGE4NTAgU29DIGJhc2Vk
+IGJvYXJkcworLSByZWc6CQkJYSB0dXBsZSBjb250YWluaW5nIHRoZSBiYXNlIGFkZHJlc3Mgb2Yg
+dGhlIG1lbW9yeQorCQkJY29udHJvbGxlciBhbmQgdGhlIHNpemUgb2YgdGhlIG1lbW9yeSBhcmVh
+IHRvIG1hcAorCitFeGFtcGxlIGZvciBkYTg1MCBzaG93biBiZWxvdy4KKworZGRyY3RsIHsKKwlj
+b21wYXRpYmxlID0gInRpLGRhODUwLWRkci1jb250cm9sbGVyIjsKKwlyZWcgPSA8MHhCMDAwMDAw
+MCAweDEwMD47Cit9OwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZW1vcnkvS2NvbmZpZyBiL2RyaXZl
+cnMvbWVtb3J5L0tjb25maWcKaW5kZXggNGI0YzBjMy4uZWM4MGUzNSAxMDA2NDQKLS0tIGEvZHJp
+dmVycy9tZW1vcnkvS2NvbmZpZworKysgYi9kcml2ZXJzL21lbW9yeS9LY29uZmlnCkBAIC0xMzQs
+NiArMTM0LDE0IEBAIGNvbmZpZyBNVEtfU01JCiAJICBtYWlubHkgaGVscCBlbmFibGUvZGlzYWJs
+ZSBpb21tdSBhbmQgY29udHJvbCB0aGUgcG93ZXIgZG9tYWluIGFuZAogCSAgY2xvY2tzIGZvciBl
+YWNoIGxvY2FsIGFyYml0ZXIuCiAKK2NvbmZpZyBEQThYWF9ERFJDVEwKKwlib29sICJUZXhhcyBJ
+bnN0cnVtZW50cyBkYTh4eCBERFIyL21ERFIgZHJpdmVyIgorCWRlcGVuZHMgb24gQVJDSF9EQVZJ
+TkNJX0RBOFhYCisJaGVscAorCSAgVGhpcyBkcml2ZXIgaXMgZm9yIHRoZSBERFIyL21ERFIgTWVt
+b3J5IENvbnRyb2xsZXIgcHJlc2VudCBvbgorCSAgVGV4YXMgSW5zdHJ1bWVudHMgZGE4eHggU29D
+cy4gSXQncyB1c2VkIHRvIHR3ZWFrIHZhcmlvdXMgbWVtb3J5CisJICBjb250cm9sbGVyIGNvbmZp
+Z3VyYXRpb24gb3B0aW9ucy4KKwogc291cmNlICJkcml2ZXJzL21lbW9yeS9zYW1zdW5nL0tjb25m
+aWciCiBzb3VyY2UgImRyaXZlcnMvbWVtb3J5L3RlZ3JhL0tjb25maWciCiAKZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvbWVtb3J5L01ha2VmaWxlIGIvZHJpdmVycy9tZW1vcnkvTWFrZWZpbGUKaW5kZXgg
+YjIwYWUzOC4uZTg4MDk3ZmIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbWVtb3J5L01ha2VmaWxlCisr
+KyBiL2RyaXZlcnMvbWVtb3J5L01ha2VmaWxlCkBAIC0xNyw2ICsxNyw3IEBAIG9iai0kKENPTkZJ
+R19NVkVCVV9ERVZCVVMpCSs9IG12ZWJ1LWRldmJ1cy5vCiBvYmotJChDT05GSUdfVEVHUkEyMF9N
+QykJKz0gdGVncmEyMC1tYy5vCiBvYmotJChDT05GSUdfSlo0NzgwX05FTUMpCSs9IGp6NDc4MC1u
+ZW1jLm8KIG9iai0kKENPTkZJR19NVEtfU01JKQkJKz0gbXRrLXNtaS5vCitvYmotJChDT05GSUdf
+REE4WFhfRERSQ1RMKQkrPSBkYTh4eC1kZHJjdGwubwogCiBvYmotJChDT05GSUdfU0FNU1VOR19N
+QykJKz0gc2Ftc3VuZy8KIG9iai0kKENPTkZJR19URUdSQV9NQykJCSs9IHRlZ3JhLwpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9tZW1vcnkvZGE4eHgtZGRyY3RsLmMgYi9kcml2ZXJzL21lbW9yeS9kYTh4
+eC1kZHJjdGwuYwpuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi45MDBlMTMxCi0t
+LSAvZGV2L251bGwKKysrIGIvZHJpdmVycy9tZW1vcnkvZGE4eHgtZGRyY3RsLmMKQEAgLTAsMCAr
+MSwxNzUgQEAKKy8qCisgKiBUSSBkYTh4eCBERFIyL21ERFIgY29udHJvbGxlciBkcml2ZXIKKyAq
+CisgKiBDb3B5cmlnaHQgKEMpIDIwMTYgQmF5TGlicmUgU0FTCisgKgorICogQXV0aG9yOgorICog
+ICBCYXJ0b3N6IEdvbGFzemV3c2tpIDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgorICoKKyAq
+IFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBh
+bmQvb3IgbW9kaWZ5CisgKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1
+YmxpYyBMaWNlbnNlIHZlcnNpb24gMiBhcworICogcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3
+YXJlIEZvdW5kYXRpb24uCisgKi8KKworI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgorI2luY2x1
+ZGUgPGxpbnV4L29mLmg+CisjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+CisjaW5jbHVkZSA8
+bGludXgvb2ZfZmR0Lmg+CisjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+CisjaW5j
+bHVkZSA8bGludXgvaW8uaD4KKworLyoKKyAqIFJFVklTSVQ6IExpbnV4IGRvZXNuJ3QgaGF2ZSBh
+IGdvb2QgZnJhbWV3b3JrIGZvciB0aGUga2luZCBvZiBwZXJmb3JtYW5jZQorICoga25vYnMgdGhp
+cyBkcml2ZXIgY29udHJvbHMuIFdlIGNhbid0IHVzZSBkZXZpY2UgdHJlZSBwcm9wZXJ0aWVzIGFz
+IGl0IGRlYWxzCisgKiB3aXRoIGhhcmR3YXJlIGNvbmZpZ3VyYXRpb24gcmF0aGVyIHRoYW4gZGVz
+Y3JpcHRpb24uIFdlIGFsc28gZG9uJ3Qgd2FudCB0bworICogY29tbWl0IHRvIG1haW50YWluaW5n
+IHNvbWUgcmFuZG9tIHN5c2ZzIGF0dHJpYnV0ZXMuCisgKgorICogRm9yIG5vdyB3ZSBqdXN0IGhh
+cmRjb2RlIHRoZSByZWdpc3RlciB2YWx1ZXMgZm9yIHRoZSBib2FyZHMgdGhhdCBuZWVkCisgKiBz
+b21lIGNoYW5nZXMgKGFzIGlzIHRoZSBjYXNlIGZvciB0aGUgTENEIGNvbnRyb2xsZXIgb24gZGE4
+NTAtbGNkayAtIHRoZQorICogZmlyc3QgYm9hcmQgd2Ugc3VwcG9ydCBoZXJlKS4gV2hlbiBsaW51
+eCBnZXRzIGFuIGFwcHJvcHJpYXRlIGZyYW1ld29yaywKKyAqIHdlJ2xsIGVhc2lseSBjb252ZXJ0
+IHRoZSBkcml2ZXIgdG8gaXQuCisgKi8KKworc3RydWN0IGRhOHh4X2RkcmN0bF9jb25maWdfa25v
+YiB7CisJY29uc3QgY2hhciAqbmFtZTsKKwl1MzIgcmVnOworCXUzMiBtYXNrOworCXUzMiBzaGlm
+dDsKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZGE4eHhfZGRyY3RsX2NvbmZpZ19rbm9iIGRh
+OHh4X2RkcmN0bF9rbm9ic1tdID0geworCXsKKwkJLm5hbWUgPSAiZGE4NTAtcGJicHIiLAorCQku
+cmVnID0gMHgyMCwKKwkJLm1hc2sgPSAweGZmZmZmZjAwLAorCQkuc2hpZnQgPSAwLAorCX0sCit9
+OworCitzdHJ1Y3QgZGE4eHhfZGRyY3RsX3NldHRpbmcgeworCWNvbnN0IGNoYXIgKm5hbWU7CisJ
+dTMyIHZhbDsKK307CisKK3N0cnVjdCBkYTh4eF9kZHJjdGxfYm9hcmRfc2V0dGluZ3MgeworCWNv
+bnN0IGNoYXIgKmJvYXJkOworCWNvbnN0IHN0cnVjdCBkYTh4eF9kZHJjdGxfc2V0dGluZyAqc2V0
+dGluZ3M7Cit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0IGRhOHh4X2RkcmN0bF9zZXR0aW5nIGRh
+ODUwX2xjZGtfZGRyY3RsX3NldHRpbmdzW10gPSB7CisJeworCQkubmFtZSA9ICJkYTg1MC1wYmJw
+ciIsCisJCS52YWwgPSAweDIwLAorCX0sCisJeyB9Cit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0
+IGRhOHh4X2RkcmN0bF9ib2FyZF9zZXR0aW5ncyBkYTh4eF9kZHJjdGxfYm9hcmRfY29uZnNbXSA9
+IHsKKwl7CisJCS5ib2FyZCA9ICJ0aSxkYTg1MC1sY2RrIiwKKwkJLnNldHRpbmdzID0gZGE4NTBf
+bGNka19kZHJjdGxfc2V0dGluZ3MsCisJfSwKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZGE4
+eHhfZGRyY3RsX2NvbmZpZ19rbm9iICoKK2RhOHh4X2RkcmN0bF9tYXRjaF9rbm9iKGNvbnN0IHN0
+cnVjdCBkYTh4eF9kZHJjdGxfc2V0dGluZyAqc2V0dGluZykKK3sKKwljb25zdCBzdHJ1Y3QgZGE4
+eHhfZGRyY3RsX2NvbmZpZ19rbm9iICprbm9iOworCWludCBpOworCisJZm9yIChpID0gMDsgaSA8
+IEFSUkFZX1NJWkUoZGE4eHhfZGRyY3RsX2tub2JzKTsgaSsrKSB7CisJCWtub2IgPSAmZGE4eHhf
+ZGRyY3RsX2tub2JzW2ldOworCisJCWlmIChzdHJjbXAoa25vYi0+bmFtZSwgc2V0dGluZy0+bmFt
+ZSkgPT0gMCkKKwkJCXJldHVybiBrbm9iOworCX0KKworCXJldHVybiBOVUxMOworfQorCitzdGF0
+aWMgY29uc3Qgc3RydWN0IGRhOHh4X2RkcmN0bF9zZXR0aW5nICpkYTh4eF9kZHJjdGxfZ2V0X2Jv
+YXJkX3NldHRpbmdzKHZvaWQpCit7CisJY29uc3Qgc3RydWN0IGRhOHh4X2RkcmN0bF9ib2FyZF9z
+ZXR0aW5ncyAqYm9hcmRfc2V0dGluZ3M7CisJaW50IGk7CisKKwlmb3IgKGkgPSAwOyBpIDwgQVJS
+QVlfU0laRShkYTh4eF9kZHJjdGxfYm9hcmRfY29uZnMpOyBpKyspIHsKKwkJYm9hcmRfc2V0dGlu
+Z3MgPSAmZGE4eHhfZGRyY3RsX2JvYXJkX2NvbmZzW2ldOworCisJCWlmIChvZl9tYWNoaW5lX2lz
+X2NvbXBhdGlibGUoYm9hcmRfc2V0dGluZ3MtPmJvYXJkKSkKKwkJCXJldHVybiBib2FyZF9zZXR0
+aW5ncy0+c2V0dGluZ3M7CisJfQorCisJcmV0dXJuIE5VTEw7Cit9CisKK3N0YXRpYyBpbnQgZGE4
+eHhfZGRyY3RsX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCit7CisJY29uc3Qg
+c3RydWN0IGRhOHh4X2RkcmN0bF9jb25maWdfa25vYiAqa25vYjsKKwljb25zdCBzdHJ1Y3QgZGE4
+eHhfZGRyY3RsX3NldHRpbmcgKnNldHRpbmc7CisJc3RydWN0IGRldmljZV9ub2RlICpub2RlOwor
+CXN0cnVjdCByZXNvdXJjZSAqcmVzOworCXZvaWQgX19pb21lbSAqZGRyY3RsOworCXN0cnVjdCBk
+ZXZpY2UgKmRldjsKKwl1MzIgcmVnOworCisJZGV2ID0gJnBkZXYtPmRldjsKKwlub2RlID0gZGV2
+LT5vZl9ub2RlOworCisJc2V0dGluZyA9IGRhOHh4X2RkcmN0bF9nZXRfYm9hcmRfc2V0dGluZ3Mo
+KTsKKwlpZiAoIXNldHRpbmcpIHsKKwkJZGV2X2VycihkZXYsICJubyBzZXR0aW5ncyBmb3IgYm9h
+cmQgJyVzJ1xuIiwKKwkJCW9mX2ZsYXRfZHRfZ2V0X21hY2hpbmVfbmFtZSgpKTsKKwkJcmV0dXJu
+IC1FSU5WQUw7CisJfQorCisJcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVT
+T1VSQ0VfTUVNLCAwKTsKKwlkZHJjdGwgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2LCByZXMp
+OworCWlmIChJU19FUlIoZGRyY3RsKSkgeworCQlkZXZfZXJyKGRldiwgInVuYWJsZSB0byBtYXAg
+bWVtb3J5IGNvbnRyb2xsZXIgcmVnaXN0ZXJzXG4iKTsKKwkJcmV0dXJuIFBUUl9FUlIoZGRyY3Rs
+KTsKKwl9CisKKwlmb3IgKDsgc2V0dGluZy0+bmFtZTsgc2V0dGluZysrKSB7CisJCWtub2IgPSBk
+YTh4eF9kZHJjdGxfbWF0Y2hfa25vYihzZXR0aW5nKTsKKwkJaWYgKCFrbm9iKSB7CisJCQlkZXZf
+d2FybihkZXYsCisJCQkJICJubyBzdWNoIGNvbmZpZyBvcHRpb246ICVzXG4iLCBzZXR0aW5nLT5u
+YW1lKTsKKwkJCWNvbnRpbnVlOworCQl9CisKKwkJaWYgKGtub2ItPnJlZyA+IChyZXMtPmVuZCAt
+IHJlcy0+c3RhcnQgLSBzaXplb2YodTMyKSkpIHsKKwkJCWRldl93YXJuKGRldiwKKwkJCQkgInJl
+Z2lzdGVyIG9mZnNldCBvZiAnJXMnIGV4Y2VlZHMgbWFwcGVkIG1lbW9yeSBzaXplXG4iLAorCQkJ
+CSBrbm9iLT5uYW1lKTsKKwkJCWNvbnRpbnVlOworCQl9CisKKwkJcmVnID0gX19yYXdfcmVhZGwo
+ZGRyY3RsICsga25vYi0+cmVnKTsKKwkJcmVnICY9IGtub2ItPm1hc2s7CisJCXJlZyB8PSBzZXR0
+aW5nLT52YWwgPDwga25vYi0+c2hpZnQ7CisKKwkJZGV2X2RiZyhkZXYsICJ3cml0aW5nIDB4JTA4
+eCB0byAlc1xuIiwgcmVnLCBzZXR0aW5nLT5uYW1lKTsKKworCQlfX3Jhd193cml0ZWwocmVnLCBk
+ZHJjdGwgKyBrbm9iLT5yZWcpOworCX0KKworCXJldHVybiAwOworfQorCitzdGF0aWMgY29uc3Qg
+c3RydWN0IG9mX2RldmljZV9pZCBkYTh4eF9kZHJjdGxfb2ZfbWF0Y2hbXSA9IHsKKwl7IC5jb21w
+YXRpYmxlID0gInRpLGRhODUwLWRkci1jb250cm9sbGVyIiwgfSwKKwl7IH0sCit9OworCitzdGF0
+aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBkYTh4eF9kZHJjdGxfZHJpdmVyID0geworCS5wcm9i
+ZSA9IGRhOHh4X2RkcmN0bF9wcm9iZSwKKwkuZHJpdmVyID0geworCQkubmFtZSA9ICJkYTg1MC1k
+ZHItY29udHJvbGxlciIsCisJCS5vZl9tYXRjaF90YWJsZSA9IGRhOHh4X2RkcmN0bF9vZl9tYXRj
+aCwKKwl9LAorfTsKK21vZHVsZV9wbGF0Zm9ybV9kcml2ZXIoZGE4eHhfZGRyY3RsX2RyaXZlcik7
+CisKK01PRFVMRV9BVVRIT1IoIkJhcnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pld3NraUBiYXls
+aWJyZS5jb20+Iik7CitNT0RVTEVfREVTQ1JJUFRJT04oIlRJIGRhOHh4IEREUjIvbUREUiBjb250
+cm9sbGVyIGRyaXZlciIpOworTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOwotLSAKMi45LjMKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
