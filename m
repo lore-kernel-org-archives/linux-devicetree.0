@@ -1,55 +1,66 @@
-From: Imran Khan <kimran@codeaurora.org>
-Subject: Re: [PATCH] soc: qcom: Add SoC info driver
-Date: Wed, 26 Oct 2016 19:20:42 +0530
-Message-ID: <aec67ab3-8e89-fe06-b385-988f8eea5f46@codeaurora.org>
-References: <1476972386-28655-1-git-send-email-kimran@codeaurora.org>
- <2349770.MVMXr64OoI@wuerfel>
- <550ace3c-f2d3-6f3a-9566-cc1f83432484@codeaurora.org>
- <3567809.JctLPjIDdk@wuerfel>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 7/7] mfd: tps65217: Fix mismatched interrupt number
+Date: Wed, 26 Oct 2016 14:56:31 +0100
+Message-ID: <20161026135631.GC13127@dell>
+References: <20161021140106.21531-1-woogyom.kim@gmail.com>
+ <20161021140106.21531-8-woogyom.kim@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <3567809.JctLPjIDdk@wuerfel>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161021140106.21531-8-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/26/2016 2:19 AM, Arnd Bergmann wrote:
-> On Tuesday, October 25, 2016 3:23:34 PM CEST Imran Khan wrote:
->> On 10/21/2016 4:03 PM, Arnd Bergmann wrote:
->>>> +/* socinfo: sysfs functions */
->>>
->>> This seems overly verbose, having both raw and human-readable
->>> IDs is generally not necessary, pick one of the two. If you
->>> need any fields that we don't already support in soc_device,
->>> let's talk about adding them to the generic structure.
->>>
->>>
->>
->> Okay. I will go for human readable IDs. Can we add 2 more fields
->> in the generic structure.
->> These 2 fields would be:
->>
->> vendor: A string for vendor name
->> serial_number: A string containing serial number for the platform
-> 
-> 
-> serial_number seems straightforward, adding this seems like a good
-> idea. I don't understand yet what would go into the vendor field
-> though. For this particular driver, is it always "Qualcomm", or
-> would it be a third-party that makes a device based on that chip?
-> 
+On Fri, 21 Oct 2016, Milo Kim wrote:
 
-As we are talking about generic soc_device_attribute fields, I was hoping that
-having a vendor field would be helpful as along with family it would provide
-a more thorough information. Also as more than one foundries may be used for 
-a soc, can we have a field say foundry_id to provide this information.
-  
-> 	Arnd
+> Enum value of 'tps65217_irq_type' is not matched with DT parsed hwirq
+> number[*].
 > 
+> The MFD driver gets the IRQ data by referencing hwirq, but the value is
+> different. So, irq_to_tps65217_irq() returns mismatched IRQ data.
+> Eventually, the power button driver enables not PB but USB interrupt
+> when it is probed.
+> 
+> According to the TPS65217 register map[**], USB interrupt is the LSB.
+> This patch synchronizes TPS65217 IRQ index.
+> 
+> [*]  include/dt-bindings/mfd/tps65217.h
+> [**] http://www.ti.com/lit/ds/symlink/tps65217.pdf
+> 
+> Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  include/linux/mfd/tps65217.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/mfd/tps65217.h b/include/linux/mfd/tps65217.h
+> index 4ccda89..75a3a5f 100644
+> --- a/include/linux/mfd/tps65217.h
+> +++ b/include/linux/mfd/tps65217.h
+> @@ -235,9 +235,9 @@ struct tps65217_bl_pdata {
+>  };
+>  
+>  enum tps65217_irq_type {
+> -	TPS65217_IRQ_PB,
+> -	TPS65217_IRQ_AC,
+>  	TPS65217_IRQ_USB,
+> +	TPS65217_IRQ_AC,
+> +	TPS65217_IRQ_PB,
+>  	TPS65217_NUM_IRQ
+>  };
 
+This is why using enum for these types of assignments is sometimes
+dangerous.  It's probably best to be explicit.
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a\nmember of the Code Aurora Forum, hosted by The Linux Foundation
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
