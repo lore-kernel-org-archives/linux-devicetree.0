@@ -1,82 +1,47 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: socfpga: Enable QSPI on the Cyclone5 sockit
-Date: Wed, 26 Oct 2016 09:22:36 +0200
-Message-ID: <20161026072235.ardwmhqbqgq376vu@pengutronix.de>
-References: <1476908324-12313-1-git-send-email-dinguyen@opensource.altera.com>
- <1476908324-12313-3-git-send-email-dinguyen@opensource.altera.com>
- <20161020071913.rlka3or4c7fzjpyv@pengutronix.de>
- <c62baad6-2528-a9df-6b09-3dba66785102@opensource.altera.com>
- <5e0adad1-8ef2-029f-cfcd-4a07c962fda2@opensource.altera.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH resent v3 3/3] ASoC: omap-abe-twl6040: fix typo in
+ bindings documentation
+Date: Wed, 26 Oct 2016 10:59:29 +0300
+Message-ID: <79d574c7-f3ed-5d54-5807-698115d999bd@ti.com>
+References: <cover.1477417090.git.hns@goldelico.com>
+ <f2ade237f55685f4fdb2aaa127995f3ccb986bb3.1477417090.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5e0adad1-8ef2-029f-cfcd-4a07c962fda2-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+In-Reply-To: <f2ade237f55685f4fdb2aaa127995f3ccb986bb3.1477417090.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On 10/25/16 20:38, H. Nikolaus Schaller wrote:
+> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 
-On Tue, Oct 25, 2016 at 10:38:10AM -0500, Graham Moore wrote:
-> On 10/20/2016 09:12 AM, Dinh Nguyen wrote:
-> > 
-> > 
-> > On 10/20/2016 02:19 AM, Steffen Trumtrar wrote:
-> > 
-> > > > +		cdns,tslch-ns = <4>;
-> > > > +
-> > > > +		partition@qspi-boot {
-> > > > +			/* 8MB for raw data. */
-> > > > +			label = "Flash 0 Raw Data";
-> > > > +			reg = <0x0 0x800000>;
-> > > > +		};
-> > > > +
-> > > > +		partition@qspi-rootfs {
-> > > > +			/* 120MB for jffs2 data. */
-> > > > +			label = "Flash 0 jffs2 Filesystem";
-> > > > +			reg = <0x800000 0x7800000>;
-> > > > +		};
-> > > > +	};
-> > > > +};
-> > > > +
-> > > 
-> > > What is the current preferred way of handling the partitions?
-> > > This doesn't fit my Sockit configuration for example. So I would always
-> > > have to patch the devicetree.
-> > 
-> > I'm not 100% sure on this. Graham, do you have any insight?
-> > > 
-> 
-> Well, strictly speaking, these partitions are only for the socdk, the Altera
-> dev kit.  Our sample designs and file systems expect this layout.
+Acked-by: Peter Ujfalusi <perter.ujfalusi-l0cyMroinI0@public.gmane.org>
 
-The thing is, that I don't think these partitions belong in a mainline
-dts at all. But I'm not sure what the current policy is.
-
+> ---
+>  Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Therefore, these partitions are not required for any other dev kits, and can
-> probably be left out.
-> 
-> Or, Steffen, if you have a standard layout you'd like to see, then put that
-> in there.
+> diff --git a/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt b/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt
+> index fd40c85..462b04e8 100644
+> --- a/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt
+> +++ b/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt
+> @@ -12,7 +12,7 @@ Required properties:
+>  
+>  Optional properties:
+>  - ti,dmic: phandle for the OMAP dmic node if the machine have it connected
+> -- ti,jack_detection: Need to be present if the board capable to detect jack
+> +- ti,jack-detection: Need to be present if the board capable to detect jack
+>    insertion, removal.
+>  
+>  Available audio endpoints for the audio-routing table:
 > 
 
-Well in my case, it actually doesn't really matter. All the boards
-I use do not have u-boot as bootloader but barebox. And barebox uses
-devicetree fixups for adding the partition layout that fits the
-particular use case. All other partitions are thrown out.
-I don't know if u-boot does something like this.
-
-Regards,
-Steffen
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Péter
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
