@@ -1,64 +1,73 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH 2/5] ARM: davinci: Don't append git rev to local version
-Date: Wed, 26 Oct 2016 10:44:49 -0500
-Message-ID: <0fd82064-dd4a-8144-8b9d-88191407a4bc@lechnology.com>
-References: <1477075018-20176-1-git-send-email-david@lechnology.com>
- <1477075018-20176-3-git-send-email-david@lechnology.com>
- <20f3efba-4f79-3675-d2ce-09efe90fb692@ti.com>
- <bf8cac01-910d-5afa-e840-f0d7ee96d22a@lechnology.com>
- <47ad8be9-54e0-4e0c-3ff5-31662e6ca4de@ti.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 4/9] pinctrl: meson: allow gpio to request irq
+Date: Wed, 26 Oct 2016 08:50:06 -0700
+Message-ID: <7hk2cvrtxt.fsf@baylibre.com>
+References: <1476871709-8359-1-git-send-email-jbrunet@baylibre.com>
+        <1476871709-8359-5-git-send-email-jbrunet@baylibre.com>
+        <CACRpkdaCZPS45t3eTcjJExOu=YT_YkjNkdpg09jQqvLQOJH=Qw@mail.gmail.com>
+        <1477040798.15560.96.camel@baylibre.com>
+        <CACRpkdYUVXny57AC9rKX3VRAyooEk_2XLvqe9jOuT3rOaE75rg@mail.gmail.com>
+        <ec7c6cc5-cf9a-9c75-4b07-e337064c7d6e@arm.com>
+        <1477400900.2482.51.camel@baylibre.com>
+        <dee26f0b-e175-f8a0-2b73-08e8e324841c@arm.com>
+        <1477405332.2482.87.camel@baylibre.com>
+        <bbc268c8-35c3-206a-46b1-62cebef174b2@arm.com>
+        <1477409478.2482.113.camel@baylibre.com>
+        <CACRpkdbGo4BJOdzkgBrE9jT-rKodd4zssCnOtOuGS+OqV-Uc6Q@mail.gmail.com>
+        <1477491766.2482.159.camel@baylibre.com>
+        <CACRpkdYqoU0foW1izcZapbgUm+NO4quz9AZZBmts4841BRcigA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <47ad8be9-54e0-4e0c-3ff5-31662e6ca4de-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYqoU0foW1izcZapbgUm+NO4quz9AZZBmts4841BRcigA@mail.gmail.com>
+        (Linus Walleij's message of "Wed, 26 Oct 2016 16:32:29 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Marc Zyngier <marc.zyngier@arm.com>, Carlo Caione <carlo@caione.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 10/26/2016 05:54 AM, Sekhar Nori wrote:
-> On Monday 24 October 2016 08:45 PM, David Lechner wrote:
->> On 10/24/2016 06:35 AM, Sekhar Nori wrote:
->>> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
->>>> In the davinci default configuration, don't append the git revision to
->>>> the local kernel version by. This seems like the more desirable default
->>>> value.
->>>
->>> Why? To the contrary I actually quite like the fact that the git commit
->>> is appended to version string. Makes it easy for me to cross-check that
->>> I am booting the right image.
->>>
->>>>
->>>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
->>>
->>> Thanks,
->>> Sekhar
->>>
->>
->> Each time you make a commit, you get a new version, which installs
->> another copy of the kernel modules on the device. This will fill up the
->> SD card if you are making many commits.
->
-> Right, but thats easily fixable by removing existing modules before
-> installing new ones.
->
->> Also, if someone wants to build the mainline kernel using the default
->> configuration, it seems odd to have a git revision tacked on to the end
->> even though you made no revisions.
->
-> If you checkout a tag and build, then no commit information is added.
-> Which I guess is what most end users will do.
->
-> I don't see this done in other defconfigs like omap2plus and multi_v7 as
-> well. I would like to keep it similar for davinci.
->
-> Thanks,
-> Sekhar
->
+Hi Linus,
 
-OK, I will drop this patch.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Linus Walleij <linus.walleij@linaro.org> writes:
+
+> On Wed, Oct 26, 2016 at 4:22 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
+>> On Tue, 2016-10-25 at 20:20 +0200, Linus Walleij wrote:
+>
+>>> However the semantic is such, that it is not necessary to call
+>>> to_irq()
+>>> before using an IRQ: the irqchip and gpiochip abstractions should be
+>>> orthogonal.
+>>
+>> Linus,
+>>
+>> They are orthogonal. You can request an irq from the irqchip controller
+>> without the gpiochip, like any other irq controller.
+>
+> OK good, sorry if I'm stating the obvious.
+>
+>> irq_create_mapping (and irq_create_fwspec_mapping) internally calls
+>> irq_find_mapping. So if the mapping already exist (the irq is already
+>> used before calling to_irq), the existing mapping will be returned. The
+>> mapping will be actually created only if needed. It seems to be in line
+>> with your explanation, no ?
+>
+> Yes, but you want to call irq_create_mapping() in slowpath (irq setup)
+> and irq_find_mapping() in fastpath (irq handler). Else the first IRQ
+> may result in unwelcomed surprises.
+>
+>> There is really a *lot* of gpio drivers which use irq_create_mapping in
+>> the to_irq callback, are these all wrong ?
+>
+> Yes they are all wrong. They should all be using irq_find_mapping().
+
+So, dumb question from someone trying (but having a hard time) to follow
+and understand the rationale...
+
+If it's wrong enough to completely reject, why are changes still being
+merged that are doing it so wrong?  (e.g. like this one[1], just merged
+for v4.9)
+
+Kevin
+
+[1] 0eb9f683336d pinctrl: Add IRQ support to STM32 gpios
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/pinctrl/stm32/pinctrl-stm32.c?id=0eb9f683336d7eb99a3b75987620417c574ffb57
