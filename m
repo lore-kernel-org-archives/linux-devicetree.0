@@ -1,89 +1,28 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] Input: goodix - Support interchanging x and y
- coordinates in hardware
-Date: Wed, 26 Oct 2016 18:18:16 -0500
-Message-ID: <20161026231816.a35orxe3mpsvcx3m@rob-hp-laptop>
-References: <20161020195917.20051-1-fcooper@ti.com>
- <20161020195917.20051-5-fcooper@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: mtd: add DT binding for s3c2410
+ flash controller
+Date: Wed, 26 Oct 2016 18:19:12 -0500
+Message-ID: <20161026231912.z6yez3posjqkqtxu@rob-hp-laptop>
+References: <1476999766-32526-1-git-send-email-sergio.prado@e-labworks.com>
+ <1476999766-32526-3-git-send-email-sergio.prado@e-labworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161020195917.20051-5-fcooper-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org, octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org
+In-Reply-To: <1476999766-32526-3-git-send-email-sergio.prado@e-labworks.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sergio Prado <sergio.prado@e-labworks.com>
+Cc: kgene@kernel.org, krzk@kernel.org, javier@osg.samsung.com, linux@armlinux.org.uk, linux@simtec.co.uk, boris.brezillon@free-electrons.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 20, 2016 at 02:59:17PM -0500, Franklin S Cooper Jr wrote:
-> On systems with a fixed display/touchscreen orientation it is important to
-> pass in the "correct" x and y coordinates based on the orientation.
-> Currently, to support landscape and portrait touchscreen-swapped-x-y
-> simply does the following:
+On Thu, Oct 20, 2016 at 07:42:45PM -0200, Sergio Prado wrote:
+> Adds the device tree bindings description for Samsung S3C2410 and
+> compatible NAND flash controller.
 > 
-> Assuming touchscreen is as follows:
-> X: 1280 Y:800 programmed in touchscreen controller and also interchange
-> bit cleared. Assuming ts mounted in portrait mode.
-> 
-> 1280 (X)
-> ------
-> |    |
-> |    | 800 (Y)
-> |    |
-> |    |
-> ------
-> 
-> 800 (Y)
-> ------
-> |    |
-> |    | 1280 (X)
-> |    |
-> |    |
-> ------
-> 
-> However, the above isn't really what we want especially in distros that
-> assumes a fixed orientation. In this case what we really want is to
-> interchange the x and y coordinates so the Y coordinate can return a max
-> value of 1280 and X can return a max value of 800.
-> 
-> 800 (X)
-> ------
-> |    |
-> |    | 1280 (Y)
-> |    |
-> |    |
-> ------
-> 
-> Since the driver is limited to the value reported by the touchscreen
-> controller this issue can't be fixed purely in the driver. Therefore,
-> add a new DT property that supports interchanging X and Y coordinates
-> internally within the hardware.
-
-I'm not sure I follow why existing properties don't cover this.
-
-> 
-> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
 > ---
->  .../devicetree/bindings/input/touchscreen/goodix.txt        |  2 ++
->  drivers/input/touchscreen/goodix.c                          | 13 +++++++++++++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> index ebc7cb7..b8be2ab 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> @@ -25,6 +25,8 @@ Optional properties:
->   - touchscreen-inverted-y  : Y axis is inverted (boolean)
->   - touchscreen-swapped-x-y : X and Y axis are swapped (boolean)
->                               (swapping is done after inverting the axis)
-> + - touchscreen-inter-x-y   : X and Y maximum values programmed in the device
-> +                             are interchanged internally in hardware. (boolean)
+>  .../devicetree/bindings/mtd/samsung-s3c2410.txt    | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt
 
-Minimally this should be vendor specific and have a vendor prefix I 
-think.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
