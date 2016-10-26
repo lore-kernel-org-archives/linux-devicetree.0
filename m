@@ -1,117 +1,208 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v2] drm/mediatek: fixed the calc method of data rate per
- lane
-Date: Wed, 26 Oct 2016 14:41:21 +0800
-Message-ID: <1477464081.17405.2.camel@mtksdaap41>
-References: <1477374045-2837-1-git-send-email-jitao.shi@mediatek.com>
+From: "M.H. Lian" <minghuan.lian@nxp.com>
+Subject: RE: [PATCH 1/6] dt/bindings: adjust bindings for Layerscape SCFG MSI
+Date: Wed, 26 Oct 2016 06:55:22 +0000
+Message-ID: <VI1PR04MB161582C628C5EA4CD08B15C6E8AB0@VI1PR04MB1615.eurprd04.prod.outlook.com>
+References: <1477398945-22774-1-git-send-email-Minghuan.Lian@nxp.com>
+ <0416d929-dfef-da09-8d9a-d1db8575afef@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1477374045-2837-1-git-send-email-jitao.shi@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <0416d929-dfef-da09-8d9a-d1db8575afef@arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Scott Wood <scott.wood@nxp.com>, Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEppdGFvOgoKT24gVHVlLCAyMDE2LTEwLTI1IGF0IDEzOjQwICswODAwLCBKaXRhbyBTaGkg
-d3JvdGU6Cj4gVHVuZSBkc2kgZnJhbWUgcmF0ZSBieSBwaXhlbCBjbG9jaywgZHNpIGFkZCBzb21l
-IGV4dHJhIHNpZ25hbCAoaS5lLiBUbHB4LAo+IFRocy1wcmVwYXJlLCBUaHMtemVybywgVGhzLXRy
-YWlsLFRocy1leGl0KSB3aGVuIGVudGVyIGFuZCBleGl0IExQIG1vZGUsIHRoaXMKPiBzaWduYWwg
-d2lsbCBjYXVzZSBoLXRpbWUgbGFyZ2VyIHRoYW4gbm9ybWFsIGFuZCByZWR1Y2UgRlBTLgo+IE5l
-ZWQgdG8gbXVsdGlwbHkgYSBjb2VmZmljaWVudCB0byBvZmZzZXQgdGhlIGV4dHJhIHNpZ25hbCdz
-IGVmZmVjdC4KPiBjb2VmZmljaWVudCA9ICgoaHRvdGFsKmJwcC9sYW5lX251bWJlcikrVGxweCtU
-aHNfcHJlcCtUaHNfemVybytUaHNfdHJhaWwrCj4gICAgICAgICAgICAgICAgIFRoc19leGl0KS8o
-aHRvdGFsKmJwcC9sYW5lX251bWJlcikpCj4gCj4gU2lnbmVkLW9mZi1ieTogSml0YW8gU2hpIDxq
-aXRhby5zaGlAbWVkaWF0ZWsuY29tPgo+IC0tLQo+IENoYW5nZSBzaW5jZSB2MToKPiAgLSBwaHlf
-dGltaW5nMiBhbmQgcGh5X3RpbWluZzMgcmVmZXIgY2xvY2sgY3ljbGUgdGltZS4KPiAgLSBkZWZp
-bmUgdmFsdWVzIG9mIExQWCBIU19QUlBSIEhTX1pFUk8gSFNfVFJBSUwgVEFfR08gVEFfU1VSRSBU
-QV9HRVQgREFfSFNfRVhJVAo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rz
-aS5jIHwgIDEwMyArKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0KPiAgMSBmaWxl
-IGNoYW5nZWQsIDY3IGluc2VydGlvbnMoKyksIDM2IGRlbGV0aW9ucygtKQo+IAoKW3NuaXAuLi5d
-Cgo+ICAKPiAtc3RhdGljIHZvaWQgZHNpX3BoeV90aW1jb25maWcoc3RydWN0IG10a19kc2kgKmRz
-aSkKPiArc3RhdGljIHZvaWQgZHNpX3BoeV90aW1jb25maWcoc3RydWN0IG10a19kc2kgKmRzaSwg
-dTMyIHBoeV90aW1pbmcwLAo+ICsJCQkgICAgICB1MzIgcGh5X3RpbWluZzEsIHUzMiBwaHlfdGlt
-aW5nMiwKPiArCQkJICAgICAgdTMyIHBoeV90aW1pbmczKQo+ICB7Cj4gLQl1MzIgdGltY29uMCwg
-dGltY29uMSwgdGltY29uMiwgdGltY29uMzsKPiAtCXVuc2lnbmVkIGludCB1aSwgY3ljbGVfdGlt
-ZTsKPiAtCXVuc2lnbmVkIGludCBscHg7Cj4gLQo+IC0JdWkgPSAxMDAwIC8gZHNpLT5kYXRhX3Jh
-dGUgKyAweDAxOwo+IC0JY3ljbGVfdGltZSA9IDgwMDAgLyBkc2ktPmRhdGFfcmF0ZSArIDB4MDE7
-Cj4gLQlscHggPSA1Owo+IC0KPiAtCXRpbWNvbjAgPSAoOCA8PCAyNCkgfCAoMHhhIDw8IDE2KSB8
-ICgweDYgPDwgOCkgfCBscHg7Cj4gLQl0aW1jb24xID0gKDcgPDwgMjQpIHwgKDUgKiBscHggPDwg
-MTYpIHwgKCgzICogbHB4KSAvIDIpIDw8IDggfAo+IC0JCSAgKDQgKiBscHgpOwo+IC0JdGltY29u
-MiA9ICgoTlNfVE9fQ1lDTEUoMHg2NCwgY3ljbGVfdGltZSkgKyAweGEpIDw8IDI0KSB8Cj4gLQkJ
-ICAoTlNfVE9fQ1lDTEUoMHgxNTAsIGN5Y2xlX3RpbWUpIDw8IDE2KTsKPiAtCXRpbWNvbjMgPSAo
-MiAqIGxweCkgPDwgMTYgfCBOU19UT19DWUNMRSg4MCArIDUyICogdWksIGN5Y2xlX3RpbWUpIDw8
-IDggfAo+IC0JCSAgIE5TX1RPX0NZQ0xFKDB4NDAsIGN5Y2xlX3RpbWUpOwo+IC0KPiAtCXdyaXRl
-bCh0aW1jb24wLCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04wKTsKPiAtCXdyaXRlbCh0aW1j
-b24xLCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04xKTsKPiAtCXdyaXRlbCh0aW1jb24yLCBk
-c2ktPnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04yKTsKPiAtCXdyaXRlbCh0aW1jb24zLCBkc2ktPnJl
-Z3MgKyBEU0lfUEhZX1RJTUVDT04zKTsKCldoeSBkbyB5b3UgbW92ZSB0aGVzZSBjYWxjdWxhdGlv
-biB0byBtdGtfZHNpX3Bvd2Vyb24oKT8gWW91IGNhbiBrZWVwCmNhbGN1bGF0aW9uIGhlcmUgYW5k
-IGp1c3QgZG8gc29tZSBtb2RpZmljYXRpb24uCgpSZWdhcmRzLApDSwoKPiArCXdyaXRlbChwaHlf
-dGltaW5nMCwgZHNpLT5yZWdzICsgRFNJX1BIWV9USU1FQ09OMCk7Cj4gKwl3cml0ZWwocGh5X3Rp
-bWluZzEsIGRzaS0+cmVncyArIERTSV9QSFlfVElNRUNPTjEpOwo+ICsJd3JpdGVsKHBoeV90aW1p
-bmcyLCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04yKTsKPiArCXdyaXRlbChwaHlfdGltaW5n
-MywgZHNpLT5yZWdzICsgRFNJX1BIWV9USU1FQ09OMyk7Cj4gIH0KPiAgCj4gIHN0YXRpYyB2b2lk
-IG10a19kc2lfZW5hYmxlKHN0cnVjdCBtdGtfZHNpICpkc2kpCj4gQEAgLTIwMiwxOSArMTg4LDUx
-IEBAIHN0YXRpYyBpbnQgbXRrX2RzaV9wb3dlcm9uKHN0cnVjdCBtdGtfZHNpICpkc2kpCj4gIHsK
-PiAgCXN0cnVjdCBkZXZpY2UgKmRldiA9IGRzaS0+ZGV2Owo+ICAJaW50IHJldDsKPiArCXU2NCBi
-aXRfY2xvY2ssIHRvdGFsX2JpdHM7Cj4gKwl1MzIgaHRvdGFsLCBodG90YWxfYml0cywgYml0X3Bl
-cl9waXhlbCwgb3ZlcmhlYWRfY3ljbGVzLCBvdmVyaGVhZF9iaXRzOwo+ICsJdTMyIHBoeV90aW1p
-bmcwLCBwaHlfdGltaW5nMSwgcGh5X3RpbWluZzIsIHBoeV90aW1pbmczOwo+ICsJdTMyIHVpLCBj
-eWNsZV90aW1lOwo+ICAKPiAgCWlmICgrK2RzaS0+cmVmY291bnQgIT0gMSkKPiAgCQlyZXR1cm4g
-MDsKPiAgCj4gKwlzd2l0Y2ggKGRzaS0+Zm9ybWF0KSB7Cj4gKwljYXNlIE1JUElfRFNJX0ZNVF9S
-R0I1NjU6Cj4gKwkJYml0X3Blcl9waXhlbCA9IDE2Owo+ICsJCWJyZWFrOwo+ICsJY2FzZSBNSVBJ
-X0RTSV9GTVRfUkdCNjY2X1BBQ0tFRDoKPiArCQliaXRfcGVyX3BpeGVsID0gMTg7Cj4gKwkJYnJl
-YWs7Cj4gKwljYXNlIE1JUElfRFNJX0ZNVF9SR0I2NjY6Cj4gKwljYXNlIE1JUElfRFNJX0ZNVF9S
-R0I4ODg6Cj4gKwlkZWZhdWx0Ogo+ICsJCWJpdF9wZXJfcGl4ZWwgPSAyNDsKPiArCQlicmVhazsK
-PiArCX0KPiArCS8qKgo+ICsJICogZGF0YV9yYXRlID0gKHBpeGVsX2Nsb2NrKSAqIGJpdF9wZXJf
-cGl4ZWwgKiBtaXBpX3JhdGlvIC8gbGFuZV9udW07Cj4gKwkgKiB2bS5waXhlbGNsb2NrIGlzIEto
-eiwgZGF0YV9yYXRhIHVuaXQgaXMgSHosIHNvIG5lZWQgdG8gbXVsdGlwbHkgMTAwMAo+ICsJICog
-bWlwaV9yYXRpbyBpcyAoaHRvdGFsICogYnl0ZV9wZXJfcGl4ZWwgLyBsYW5lX251bSArIFRscHgg
-KyBUaHNfcHJlcAo+ICsJICoJCSAgKyBUaHN0cmFpbCArIFRoc19leGl0ICsgVGhzX3plcm8pIC8K
-PiArCSAqCQkgKGh0b3RhbCAqIGJ5dGVfcGVyX3BpeGVsIC9sYW5lX251bWJlcikKPiArCSAqLwo+
-ICsJYml0X2Nsb2NrID0gZHNpLT52bS5waXhlbGNsb2NrICogMTAwMCAqIGJpdF9wZXJfcGl4ZWw7
-Cj4gKwlodG90YWwgPSBkc2ktPnZtLmhhY3RpdmUgKyBkc2ktPnZtLmhiYWNrX3BvcmNoICsgZHNp
-LT52bS5oZnJvbnRfcG9yY2ggKwo+ICsJCSBkc2ktPnZtLmhzeW5jX2xlbjsKPiArCWh0b3RhbF9i
-aXRzID0gaHRvdGFsICogYml0X3Blcl9waXhlbDsKPiArCj4gIAkvKioKPiAtCSAqIGRhdGFfcmF0
-ZSA9IChwaXhlbF9jbG9jayAvIDEwMDApICogcGl4ZWxfZGlwdGggKiBtaXBpX3JhdGlvOwo+IC0J
-ICogcGl4ZWxfY2xvY2sgdW5pdCBpcyBLaHosIGRhdGFfcmF0YSB1bml0IGlzIE1Ieiwgc28gbmVl
-ZCBkaXZpZGUgMTAwMC4KPiAtCSAqIG1pcGlfcmF0aW8gaXMgbWlwaSBjbGsgY29lZmZpY2llbnQg
-Zm9yIGJhbGFuY2UgdGhlIHBpeGVsIGNsayBpbiBtaXBpLgo+IC0JICogd2Ugc2V0IG1pcGlfcmF0
-aW8gaXMgMS4wNS4KPiArCSAqIG92ZXJoZWFkID0gbHB4ICsgaHNfcHJlcGFyZSArIGhzX3plcm8g
-KyBoc190cmFpbCArIGhzX2V4aXQKPiAgCSAqLwo+IC0JZHNpLT5kYXRhX3JhdGUgPSBkc2ktPnZt
-LnBpeGVsY2xvY2sgKiAzICogMjEgLyAoMSAqIDEwMDAgKiAxMCk7Cj4gKwlvdmVyaGVhZF9jeWNs
-ZXMgPSBMUFggKyAoSFNfUFJQUiA+PiA4KSArIChIU19aRVJPID4+IDE2KSArCj4gKwkJCSAgKEhT
-X1RSQUlMID4+IDI0KSArIChEQV9IU19FWElUID4+IDI0KTsKPiArCW92ZXJoZWFkX2JpdHMgPSBv
-dmVyaGVhZF9jeWNsZXMgKiBkc2ktPmxhbmVzICogODsKPiArCXRvdGFsX2JpdHMgPSBodG90YWxf
-Yml0cyArIG92ZXJoZWFkX2JpdHM7Cj4gIAo+IC0JcmV0ID0gY2xrX3NldF9yYXRlKGRzaS0+aHNf
-Y2xrLCBkc2ktPmRhdGFfcmF0ZSAqIDEwMDAwMDApOwo+ICsJZHNpLT5kYXRhX3JhdGUgPSBESVZf
-Uk9VTkRfVVBfVUxMKGJpdF9jbG9jayAqIHRvdGFsX2JpdHMsCj4gKwkJCQkJICBodG90YWxfYml0
-cyAqIGRzaS0+bGFuZXMpOwo+ICsKPiArCXJldCA9IGNsa19zZXRfcmF0ZShkc2ktPmhzX2Nsaywg
-ZHNpLT5kYXRhX3JhdGUpOwo+ICAJaWYgKHJldCA8IDApIHsKPiAgCQlkZXZfZXJyKGRldiwgIkZh
-aWxlZCB0byBzZXQgZGF0YSByYXRlOiAlZFxuIiwgcmV0KTsKPiAgCQlnb3RvIGVycl9yZWZjb3Vu
-dDsKPiBAQCAtMjM2LDcgKzI1NCwyMCBAQCBzdGF0aWMgaW50IG10a19kc2lfcG93ZXJvbihzdHJ1
-Y3QgbXRrX2RzaSAqZHNpKQo+ICAKPiAgCW10a19kc2lfZW5hYmxlKGRzaSk7Cj4gIAltdGtfZHNp
-X3Jlc2V0KGRzaSk7Cj4gLQlkc2lfcGh5X3RpbWNvbmZpZyhkc2kpOwo+ICsKPiArCXVpID0gMTAw
-MCAvIGRzaS0+ZGF0YV9yYXRlICsgMHgwMTsKPiArCWN5Y2xlX3RpbWUgPSA4MDAwIC8gZHNpLT5k
-YXRhX3JhdGUgKyAweDAxOwo+ICsKPiArCXBoeV90aW1pbmcwID0gTFBYIHwgSFNfUFJQUiB8IEhT
-X1pFUk8gfCBIU19UUkFJTDsKPiArCXBoeV90aW1pbmcxID0gVEFfR08gfCBUQV9TVVJFIHwgVEFf
-R0VUIHwgREFfSFNfRVhJVDsKPiArCXBoeV90aW1pbmcyID0gKChOU19UT19DWUNMRSgweDY0LCBj
-eWNsZV90aW1lKSArIDB4YSkgPDwgMjQpIHwKPiArCQkgICAgICAoTlNfVE9fQ1lDTEUoMHgxNTAs
-IGN5Y2xlX3RpbWUpIDw8IDE2KTsKPiArCXBoeV90aW1pbmczID0gKDIgKiBMUFgpIDw8IDE2IHwK
-PiArCQkgICAgICBOU19UT19DWUNMRSg4MCArIDUyICogdWksIGN5Y2xlX3RpbWUpIDw8IDggfAo+
-ICsJCSAgICAgIE5TX1RPX0NZQ0xFKDB4NDAsIGN5Y2xlX3RpbWUpOwo+ICsKPiArCWRzaV9waHlf
-dGltY29uZmlnKGRzaSwgcGh5X3RpbWluZzAsIHBoeV90aW1pbmcxLCBwaHlfdGltaW5nMiwKPiAr
-CQkJICBwaHlfdGltaW5nMyk7Cj4gIAo+ICAJcmV0dXJuIDA7Cj4gIAoKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Robin,
+
+Please see my comments inline.
+
+Thanks,
+Minghuan
+
+> -----Original Message-----
+> From: Robin Murphy [mailto:robin.murphy@arm.com]
+> Sent: Tuesday, October 25, 2016 9:01 PM
+> To: M.H. Lian <minghuan.lian@nxp.com>; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org
+> Cc: Marc Zyngier <marc.zyngier@arm.com>; Stuart Yoder
+> <stuart.yoder@nxp.com>; Leo Li <leoyang.li@nxp.com>; Scott Wood
+> <scott.wood@nxp.com>; Shawn Guo <shawnguo@kernel.org>; Mingkai Hu
+> <mingkai.hu@nxp.com>
+> Subject: Re: [PATCH 1/6] dt/bindings: adjust bindings for Layerscape SCFG
+> MSI
+> 
+> On 25/10/16 13:35, Minghuan Lian wrote:
+> > 1. The different version of a SoC may have different MSI
+> > implementation. But compatible "fsl,<soc-name>-msi" can not describe
+> > the SoC version.
+> 
+> Can't it?
+> 
+> 	compatible = "fsl-ls1043a-rev11-msi";
+> 
+> Oh, I guess it can!
+> 
+> Joking aside, if there are multiple versions of a piece of hardware which
+> require *different* treatment by drivers, then it is obviously wrong to use
+> the same compatible string because *they are not compatible*.
+> 
+[Minghuan Lian]  Yes, but Rev1.0 and Rev1.1 SoC will use the same dts files.
+We cannot create different dts files for each revision of the same kind of SoC.
+It means that there are different variants in the different versions of the same SoC that will use the same compatible string.
+So I have to use SoC match interface to get the versions.
+
+I'm too radical. I do not want to first check SoC family via compatible string and then check revision via SoC match or SVR.
+I selected the "SoC match" like the following to get the related information at only one place. 
+
+static struct soc_device_attribute soc_msi_matches[] = {
+	{ .family = "QorIQ LS1021A",
+	  .data = &ls1021_msi_cfg },
+	{ .family = "QorIQ LS1012A",
+	  .data = &ls1021_msi_cfg },
+	{ .family = "QorIQ LS1043A", .revision = "1.0",
+	  .data = &ls1021_msi_cfg },
+	{ .family = "QorIQ LS1043A", .revision = "1.1",
+	  .data = &ls1043_rev11_msi_cfg },
+	{ .family = "QorIQ LS1046A",
+	  .data = &ls1046_msi_cfg },
+	{ },
+};
+
+I will remain the SoC related compatible and try to describe the difference via some kind of the property.
+
+> > The MSI driver will use SoC match interface to get SoC type and
+> > version instead of compatible string. So all MSI node can use the
+> > common compatible "fsl,ls-scfg-msi" and the original compatible is
+> > unnecessary.
+> 
+> If there is some common level of functionality that *all* variants support
+> without the driver having to know which one is which, then there might be
+> some sense in having an additional common compatible to represent that
+> level of functionality, e.g.
+> 
+> 	compatible = "fsl-ls1043a-rev11-msi", "fsl,ls-scfg-msi";
+> 
+> But if, say, new variants turn out to have less functionality, rather than more,
+> then there's probably not much point, and we should stick to specific,
+> accurate, compatible strings.
+> 
+> DT is not specific to a kernel version, nor even to Linux. A string which triggers
+> some board-specific magic in a specific version of a Linux driver does not
+> describe the hardware.
+> 
+> Robin.
+> 
+> > 2. Layerscape SoCs may have one or several MSI controllers.
+> > In order to increase MSI interrupt number of a PCIe, the patch moves
+> > all MSI node into the parent node "msi-controller". So a PCIe can
+> > request MSI from all the MSI controllers.
+> >
+> > Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> > ---
+> >  .../interrupt-controller/fsl,ls-scfg-msi.txt       | 57 +++++++++++++++++++--
+> -
+> >  1 file changed, 49 insertions(+), 8 deletions(-)
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-m
+> > si.txt
+> > b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-m
+> > si.txt
+> > index 9e38949..29f95fd 100644
+> > ---
+> > a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-m
+> > si.txt
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-sc
+> > +++ fg-msi.txt
+> > @@ -1,18 +1,28 @@
+> >  * Freescale Layerscape SCFG PCIe MSI controller
+> >
+> > +Layerscape SoCs may have one or multiple MSI controllers.
+> > +Each MSI controller must be showed as a child node.
+> > +
+> >  Required properties:
+> >
+> > -- compatible: should be "fsl,<soc-name>-msi" to identify
+> > -	      Layerscape PCIe MSI controller block such as:
+> > -              "fsl,1s1021a-msi"
+> > -              "fsl,1s1043a-msi"
+> > +- compatible: should be "fsl,ls-scfg-msi"
+> > +- #address-cells: must be 2
+> > +- #size-cells: must be 2
+> > +- ranges: allows valid 1:1 translation between child's address space and
+> > +	  parent's address space
+> >  - msi-controller: indicates that this is a PCIe MSI controller node
+> > +
+> > +Required child node:
+> > +A child node must exist to represent the MSI controller.
+> > +The following are properties specific to those nodes:
+> > +
+> >  - reg: physical base address of the controller and length of memory
+> mapped.
+> >  - interrupts: an interrupt to the parent interrupt controller.
+> >
+> >  Optional properties:
+> >  - interrupt-parent: the phandle to the parent interrupt controller.
+> >
+> > +Notes:
+> >  This interrupt controller hardware is a second level interrupt
+> > controller that  is hooked to a parent interrupt controller: e.g: ARM
+> > GIC for ARM-based  platforms. If interrupt-parent is not provided, the
+> > default parent interrupt @@ -22,9 +32,40 @@ MSI controller node
+> >
+> >  Examples:
+> >
+> > -	msi1: msi-controller@1571000 {
+> > -		compatible = "fsl,1s1043a-msi";
+> > -		reg = <0x0 0x1571000 0x0 0x8>,
+> > +	msi: msi-controller {
+> > +		compatible = "fsl,ls-scfg-msi";
+> > +		#address-cells = <2>;
+> > +		#size-cells = <2>;
+> > +		ranges;
+> >  		msi-controller;
+> > -		interrupts = <0 116 0x4>;
+> > +
+> > +		msi0@1580000 {
+> > +			reg = <0x0 0x1580000 0x0 0x10000>;
+> > +			interrupts = <0 116 0x4>,
+> > +				     <0 111 0x4>,
+> > +				     <0 112 0x4>,
+> > +				     <0 113 0x4>;
+> > +		};
+> > +
+> > +		msi1@1590000 {
+> > +			reg = <0x0 0x1590000 0x0 0x10000>;
+> > +			interrupts = <0 126 0x4>,
+> > +				     <0 121 0x4>,
+> > +				     <0 122 0x4>,
+> > +				     <0 123 0x4>;
+> > +		};
+> > +
+> > +		msi2@15a0000 {
+> > +			reg = <0x0 0x15a0000 0x0 0x10000>;
+> > +			interrupts = <0 160 0x4>,
+> > +				     <0 155 0x4>,
+> > +				     <0 156 0x4>,
+> > +				     <0 157 0x4>;
+> > +		};
+> > +	};
+> > +
+> > +	pcie@3400000 {
+> > +			...
+> > +			msi-parent = <&msi>;
+> > +			...
+> >  	};
+> >
