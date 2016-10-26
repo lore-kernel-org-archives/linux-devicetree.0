@@ -1,63 +1,159 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [RFC PATCH 4/5] w1: add a callback to call slave when a new device is connected
-Date: Wed, 26 Oct 2016 16:57:55 +0200
-Message-ID: <20161026145756.21689-5-antoine.tenart@free-electrons.com>
+From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [RFC PATCH 2/5] of: overlay-mgr: add the CHIP format
+Date: Wed, 26 Oct 2016 16:57:53 +0200
+Message-ID: <20161026145756.21689-3-antoine.tenart@free-electrons.com>
 References: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: maxime.ripard@free-electrons.com, pantelis.antoniou@konsulko.com, mark.rutland@arm.com, sboyd@codeaurora.org
-Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161026145756.21689-1-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the possibility for slave drivers to register a
-callback, to be called whenever a new device matching the slave ID
-is connected.
+Support parsing the header used by capes compatible with Nextthing's
+C.H.I.P.
 
-Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/w1/w1.c        | 10 ++++++++++
- drivers/w1/w1_family.h |  2 ++
- 2 files changed, 12 insertions(+)
+ drivers/of/overlay-manager/Kconfig       | 13 ++++++
+ drivers/of/overlay-manager/Makefile      |  1 +
+ drivers/of/overlay-manager/format-chip.c | 72 ++++++++++++++++++++++++++++++++
+ include/linux/overlay-manager.h          | 13 ++++++
+ 4 files changed, 99 insertions(+)
+ create mode 100644 drivers/of/overlay-manager/format-chip.c
 
-diff --git a/drivers/w1/w1.c b/drivers/w1/w1.c
-index 80d0cc4e6e7f..7010ffd1ea93 100644
---- a/drivers/w1/w1.c
-+++ b/drivers/w1/w1.c
-@@ -659,6 +659,16 @@ static int w1_family_notify(unsigned long action, struct w1_slave *sl)
- 				return err;
- 			}
- 		}
-+		if (fops->callback) {
-+			err = fops->callback(sl);
-+			/*
-+			 * Do not return an error as the slave driver correctly
-+			 * probed.
-+			 */
-+			if (err)
-+				dev_err(&sl->dev,
-+					"callback call failed. err=%d\n", err);
-+		}
+diff --git a/drivers/of/overlay-manager/Kconfig b/drivers/of/overlay-manager/Kconfig
+index eeb76054dcb8..1a36613c0c53 100644
+--- a/drivers/of/overlay-manager/Kconfig
++++ b/drivers/of/overlay-manager/Kconfig
+@@ -4,3 +4,16 @@ config OF_OVERLAY_MGR
+ 	help
+ 	  Enable the overlay manager to handle automatic overlay loading when
+ 	  devices are detected.
++
++if OF_OVERLAY_MGR
++
++menu "Dips header formats"
++
++config OF_OVERLAY_MGR_FORMAT_CHIP
++	bool "Nextthing's C.H.I.P. dip header format"
++	help
++	  Enable Nextthing's C.H.I.P. dip header format support.
++
++endmenu
++
++endif
+diff --git a/drivers/of/overlay-manager/Makefile b/drivers/of/overlay-manager/Makefile
+index 86d2b53950e7..637cc7ba20c2 100644
+--- a/drivers/of/overlay-manager/Makefile
++++ b/drivers/of/overlay-manager/Makefile
+@@ -1 +1,2 @@
+ obj-$(CONFIG_OF_OVERLAY_MGR)			+= overlay-manager.o
++obj-$(CONFIG_OF_OVERLAY_MGR_FORMAT_CHIP)	+= format-chip.o
+diff --git a/drivers/of/overlay-manager/format-chip.c b/drivers/of/overlay-manager/format-chip.c
+new file mode 100644
+index 000000000000..3a3d315dcb5c
+--- /dev/null
++++ b/drivers/of/overlay-manager/format-chip.c
+@@ -0,0 +1,72 @@
++/*
++ * Copyright (C) 2016 - Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/device.h>
++#include <linux/overlay-manager.h>
++#include <linux/slab.h>
++
++#define CAPE_CHIP_MAGIC		0x43484950
++#define CAPE_CHIP_VERSION	1
++#define CAPE_CHIP_CANDIDATES	2
++
++static int cape_chip_parse(struct device *dev, void *data, char ***candidates,
++			   unsigned *n)
++{
++	struct chip_header *header = (struct chip_header *)data;
++	char **tmp;
++	int err;
++
++	if (dip_convert(header->magic) != CAPE_CHIP_MAGIC)
++		return -EINVAL;
++
++	if (dip_convert(header->version) > CAPE_CHIP_VERSION)
++		return -EINVAL;
++
++	tmp = devm_kzalloc(dev, CAPE_CHIP_CANDIDATES * sizeof(char *), GFP_KERNEL);
++	if (!tmp)
++		return -ENOMEM;
++
++	tmp[0] = devm_kasprintf(dev, GFP_KERNEL, "%x-%x-%x",
++				dip_convert(header->vendor_id),
++				dip_convert(header->product_id),
++				dip_convert(header->product_version));
++	if (!tmp[0]) {
++		err = -ENOMEM;
++		goto err_free_list;
++	}
++
++	tmp[1] = devm_kasprintf(dev, GFP_KERNEL, "%x-%x",
++				dip_convert(header->vendor_id),
++				dip_convert(header->product_id));
++	if (!tmp[1]) {
++		err = -ENOMEM;
++		goto err_free_0;
++	}
++
++	*candidates = tmp;
++	*n = CAPE_CHIP_CANDIDATES;
++
++	return 0;
++
++err_free_0:
++	devm_kfree(dev, tmp[0]);
++err_free_list:
++	devm_kfree(dev, tmp);
++	return err;
++}
++
++static struct overlay_mgr_format format_chip = {
++	.name	= "Nextthing C.H.I.P. dip header format",
++	.parse	= &cape_chip_parse,
++};
++
++static int __init cape_chip_init(void)
++{
++	return overlay_mgr_register_format(&format_chip);
++}
++device_initcall(cape_chip_init);
+diff --git a/include/linux/overlay-manager.h b/include/linux/overlay-manager.h
+index 8adcc4f5ddf6..d76c3c9fd863 100644
+--- a/include/linux/overlay-manager.h
++++ b/include/linux/overlay-manager.h
+@@ -35,4 +35,17 @@ int overlay_mgr_apply(struct device *dev, char **candidates, unsigned n);
+                 -1                                              \
+         )
  
- 		break;
- 	case BUS_NOTIFY_DEL_DEVICE:
-diff --git a/drivers/w1/w1_family.h b/drivers/w1/w1_family.h
-index 10a7a0767187..5e165babc6f3 100644
---- a/drivers/w1/w1_family.h
-+++ b/drivers/w1/w1_family.h
-@@ -55,11 +55,13 @@ struct w1_slave;
-  * @add_slave: add_slave
-  * @remove_slave: remove_slave
-  * @groups: sysfs group
-+ * @callback: called when a new device is discovered
-  */
- struct w1_family_ops
- {
- 	int  (* add_slave)(struct w1_slave *);
- 	void (* remove_slave)(struct w1_slave *);
-+	int  (* callback)(struct w1_slave *);
- 	const struct attribute_group **groups;
- };
- 
++/* Nextthing's C.H.I.P. dip header */
++struct chip_header {
++        u32     magic;                  /* rsvd */
++        u8      version;                /* spec version */
++        u32     vendor_id;
++        u16     product_id;
++        u8      product_version;
++        char    vendor_name[32];
++        char    product_name[32];
++        u8      rsvd[36];               /* rsvd for futre spec versions */
++        u8      data[16];               /* user data, per-cape specific */
++} __packed;
++
+ #endif /* __OVERLAY_MGR_H__ */
 -- 
 2.10.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
