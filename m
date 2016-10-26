@@ -1,29 +1,24 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/9] dt-bindings: interrupt-controller: add DT binding
- for meson GPIO interrupt controller
-Date: Wed, 26 Oct 2016 16:42:35 -0500
-Message-ID: <20161026214234.4q6wmecehqh6q32o@rob-hp-laptop>
-References: <1476890480-8884-1-git-send-email-jbrunet@baylibre.com>
- <1476890480-8884-3-git-send-email-jbrunet@baylibre.com>
+Subject: Re: [PATCH 1/2] power_supply: Add OF bindings documentation for
+ max14656_charger_detector
+Date: Wed, 26 Oct 2016 16:43:40 -0500
+Message-ID: <20161026214340.rbi5tjhqzqug2g44@rob-hp-laptop>
+References: <1476893089-7233-1-git-send-email-akurz@blala.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1476890480-8884-3-git-send-email-jbrunet@baylibre.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>
+In-Reply-To: <1476893089-7233-1-git-send-email-akurz@blala.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Alexander Kurz <akurz@blala.de>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2016 at 05:21:13PM +0200, Jerome Brunet wrote:
-> 
-> This commit adds the device tree bindings description for Amlogic's GPIO
-> interrupt controller available on the meson8, meson8b and gxbb SoC families
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+On Wed, Oct 19, 2016 at 06:04:48PM +0200, Alexander Kurz wrote:
+> Signed-off-by: Alexander Kurz <akurz@blala.de>
 > ---
-> Rob, I did not include the Ack you gave for the RFC as bindings have slightly
-> changed. Only the interrupt property has be removed following a discussion I
-> had with Marc
+>  .../bindings/power_supply/maxim,max14656.txt       | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power_supply/maxim,max14656.txt
 
-As Mark R already said, you should keep the interrupts property.
+Acked-by: Rob Herring <robh@kernel.org>
