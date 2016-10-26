@@ -1,71 +1,36 @@
-From: ahaslam@baylibre.com
-Subject: [RFC 3/3] regulator: fixed: dt: Allow an optional over current pin
-Date: Wed, 26 Oct 2016 21:00:54 +0200
-Message-ID: <20161026190054.11968-4-ahaslam@baylibre.com>
-References: <20161026190054.11968-1-ahaslam@baylibre.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [RFC PATCH 1/5] of: introduce the overlay manager
+Date: Wed, 26 Oct 2016 21:02:12 +0200
+Message-ID: <20161026210212.09cd85f4@free-electrons.com>
+References: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
+        <20161026145756.21689-2-antoine.tenart@free-electrons.com>
+        <CANLsYkyszsn2TLYhUjHMt2ZnEUmE9eSc71W2KWBL0fWhh3PPBw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161026190054.11968-1-ahaslam@baylibre.com>
+In-Reply-To: <CANLsYkyszsn2TLYhUjHMt2ZnEUmE9eSc71W2KWBL0fWhh3PPBw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, lgirdwood@gmail.com, khilman@baylibre.com, nsekhar@ti.com, david@lechnology.com
-Cc: linux-kernel@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, devicetree@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, pantelis.antoniou@konsulko.com, Mark Rutland <mark.rutland@arm.com>, sboyd@codeaurora.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Axel Haslam <ahaslam@baylibre.com>
+Hello,
 
-Add support for an optional over current input pin which
-can be used to send an over current event to the regulator
-consumer.
+On Wed, 26 Oct 2016 10:29:59 -0600, Mathieu Poirier wrote:
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
----
- Documentation/devicetree/bindings/regulator/fixed-regulator.txt | 4 ++++
- drivers/regulator/fixed.c                                       | 8 ++++++++
- 2 files changed, 12 insertions(+)
+> > +       overlay = devm_kzalloc(dev, sizeof(*overlay), GFP_KERNEL);  
+> 
+> Function devm_kzalloc() can sleep but you're holding a spinlock - I'm
+> surprised the kernel didn't complain here.  Allocate the memory before
+> holding the lock.  If the overly is already loaded simply free it on
+> the error path.
 
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-index 4fae41d..0c140cb 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-@@ -11,6 +11,8 @@ If this property is missing, the default assumed is Active low.
- - gpio-open-drain: GPIO is open drain type.
-   If this property is missing then default assumption is false.
- -vin-supply: Input supply name.
-+- oc-gpio: Input gpio that signals an over current condition.
-+- oc-active-high: The polarity of the over current pin is high.
- 
- Any property defined as part of the core regulator
- binding, defined in regulator.txt, can also be used.
-@@ -26,9 +28,11 @@ Example:
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
- 		gpio = <&gpio1 16 0>;
-+		oc-gpio = <&gpio1 18 0>;
- 		startup-delay-us = <70000>;
- 		enable-active-high;
- 		regulator-boot-on;
- 		gpio-open-drain;
-+		oc-active-high;
- 		vin-supply = <&parent_reg>;
- 	};
-diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-index 9937139..f02d24c 100644
---- a/drivers/regulator/fixed.c
-+++ b/drivers/regulator/fixed.c
-@@ -86,6 +86,14 @@ struct fixed_voltage_data {
- 	if ((config->gpio < 0) && (config->gpio != -ENOENT))
- 		return ERR_PTR(config->gpio);
- 
-+	config->oc_gpio = of_get_named_gpio(np, "oc-gpio", 0);
-+	if (gpio_is_valid(config->oc_gpio))
-+		config->has_oc_gpio = true;
-+	else if (config->oc_gpio != -ENOENT)
-+		return ERR_PTR(config->oc_gpio);
-+
-+	config->oc_high = of_property_read_bool(np, "oc-active-high");
-+
- 	of_property_read_u32(np, "startup-delay-us", &config->startup_delay);
- 
- 	config->enable_high = of_property_read_bool(np, "enable-active-high");
+Actually, I'm not sure using a spinlock here is appropriate. Using a
+mutex would probably be better.
+
+Thomas
 -- 
-1.9.1
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
