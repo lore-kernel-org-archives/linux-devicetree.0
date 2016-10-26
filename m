@@ -1,36 +1,42 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [RFC PATCH 1/5] of: introduce the overlay manager
-Date: Wed, 26 Oct 2016 21:02:12 +0200
-Message-ID: <20161026210212.09cd85f4@free-electrons.com>
-References: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
-        <20161026145756.21689-2-antoine.tenart@free-electrons.com>
-        <CANLsYkyszsn2TLYhUjHMt2ZnEUmE9eSc71W2KWBL0fWhh3PPBw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: [PATCH 0/5] add NS2 support to bgmac
+Date: Wed, 26 Oct 2016 15:35:56 -0400
+Message-ID: <1477510561-17035-1-git-send-email-jon.mason@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANLsYkyszsn2TLYhUjHMt2ZnEUmE9eSc71W2KWBL0fWhh3PPBw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, pantelis.antoniou@konsulko.com, Mark Rutland <mark.rutland@arm.com>, sboyd@codeaurora.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: rafal@milecki.pl, bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add support for the amac found in the Broadcom Northstar2 SoC to the
+bgmac driver.  This necessitates adding support to connect to an
+externally defined phy (as described in the device tree) in the driver.
+These phy changes are in addition to the changes necessary to get NS2
+working.
 
-On Wed, 26 Oct 2016 10:29:59 -0600, Mathieu Poirier wrote:
+This series (based on the net-next git tree) has been tested on NSP and
+NS2 HW.
 
-> > +       overlay = devm_kzalloc(dev, sizeof(*overlay), GFP_KERNEL);  
-> 
-> Function devm_kzalloc() can sleep but you're holding a spinlock - I'm
-> surprised the kernel didn't complain here.  Allocate the memory before
-> holding the lock.  If the overly is already loaded simply free it on
-> the error path.
+Jon Mason (4):
+  Documentation: devicetree: net: add NS2 bindings to amac
+  net: ethernet: bgmac: device tree phy enablement
+  net: ethernet: bgmac: add NS2 support
+  arm64: dts: NS2: add AMAC ethernet support
 
-Actually, I'm not sure using a spinlock here is appropriate. Using a
-mutex would probably be better.
+Vikas Soni (1):
+  net: phy: broadcom: Add BCM54810 phy entry
 
-Thomas
+ .../devicetree/bindings/net/brcm,amac.txt          |   7 +-
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts           |   5 +
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              |  12 +++
+ drivers/net/ethernet/broadcom/bgmac-bcma.c         |  48 +++++++++
+ drivers/net/ethernet/broadcom/bgmac-platform.c     | 108 ++++++++++++++++++++-
+ drivers/net/ethernet/broadcom/bgmac.c              |  56 +----------
+ drivers/net/ethernet/broadcom/bgmac.h              |   9 ++
+ drivers/net/phy/Kconfig                            |   2 +-
+ drivers/net/phy/broadcom.c                         |  65 +++++++++++++
+ include/linux/brcmphy.h                            |   7 ++
+ 10 files changed, 264 insertions(+), 55 deletions(-)
+
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.7.4
