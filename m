@@ -1,148 +1,90 @@
-From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: Re: [PATCH v3 01/12] dt: arm: shmobile: add H3ULCB board DT bindings
-Date: Wed, 26 Oct 2016 13:27:26 +0300
-Message-ID: <936e63bd-4f01-891f-24da-4c34caf94bcf@cogentembedded.com>
-References: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1472637741-14624-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <CAMuHMdWsxu0bBTFHZYh6+eowXkx=G-Uo06g7TOLE7Ek7vaHHYA@mail.gmail.com>
- <83a48012-888e-3f86-c9a0-8cddb05ee2fe@cogentembedded.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/6] dt/bindings: adjust bindings for Layerscape SCFG MSI
+Date: Wed, 26 Oct 2016 11:31:16 +0100
+Message-ID: <20161026103101.GC19965@leverpostej>
+References: <1477398945-22774-1-git-send-email-Minghuan.Lian@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <83a48012-888e-3f86-c9a0-8cddb05ee2fe@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Yusuke Goda <yusuke.goda.sx@renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1477398945-22774-1-git-send-email-Minghuan.Lian@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Minghuan Lian <Minghuan.Lian@nxp.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Scott Wood <scott.wood@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+On Tue, Oct 25, 2016 at 08:35:40PM +0800, Minghuan Lian wrote:
+> 1. The different version of a SoC may have different MSI
+> implementation. But compatible "fsl,<soc-name>-msi" can not describe
+> the SoC version. 
 
-I've got this message from Renesas:
-"
+Surely, "fsl,<soc-name>-<rev>-msi" can describe this?
 
-Please use H3ULCB/M3ULCB in upstream.
-# I got an agreement among parties.
+If the hardware differs, it needs a new compatible string.
 
-Board name in community: ULCB (= development code name)
-Official name (product/brand name): Starter Kit Pro/Premier
-"
+If there's some configuration value that varies across revisions (e.g.
+number of slots), you can add a proeprty to describe that explciitly.
 
-Renaming  H3ULCB -> H3SK is not desired for Renesas.
+> The MSI driver will use SoC match interface to get
+> SoC type and version instead of compatible string. So all MSI node
+> can use the common compatible "fsl,ls-scfg-msi" and the original
+> compatible is unnecessary.
+> 
+> 2. Layerscape SoCs may have one or several MSI controllers.
+> In order to increase MSI interrupt number of a PCIe, the patch
+> moves all MSI node into the parent node "msi-controller". So a
+> PCIe can request MSI from all the MSI controllers.
 
-What do you think to append the product/brand name only? :
+This is not necessary, and does not represent a real block of hardware.
+So NAK for this approach.
 
--        H3ULCB (RTP0RC7795SKB00010S)
-+       H3ULCB (R-Car Starter Kit Premier, RTP0RC7795SKB00010S)
-          compatible = "renesas,h3ulcb", "renesas,r8a7795";
+The msi-parent property can contain a list of MSI controllers. See the
+examples in
+Documentation/devicetree/bindings/interrupt-controller/msi.txt.
+Likewise, the msi-map property can map to a number of MSI controllers.
 
-Regards,
-Vladimir
+If the core code can only consider one at a time, then that's an issue
+to be addressed in core code, not one to be bodged around in bindings.
 
-On 25.10.2016 18:06, Vladimir Barinov wrote:
-> Hi Geert,
->
-> On 25.10.2016 15:48, Geert Uytterhoeven wrote:
->> Hi Vladimir,
->>
->> On Wed, Aug 31, 2016 at 12:02 PM, Vladimir Barinov
->> <vladimir.barinov@cogentembedded.com> wrote:
->>> Add H3ULCB Device tree bindings Documentation, listing it as a 
->>> supported
->>> board.
->>>
->>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
->>> Acked-by: Rob Herring <robh@kernel.org>
->>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>> ---
->>> Changes in version 2:
->>> - none
->>> Changes in version 3:
->>> - none
->>>
->>>   Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
->>>   1 file changed, 2 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt 
->>> b/Documentation/devicetree/bindings/arm/shmobile.txt
->>> index 5484c31d..2f0b716 100644
->>> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
->>> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
->>> @@ -49,6 +49,8 @@ Boards:
->>>       compatible = "renesas,genmai", "renesas,r7s72100"
->>>     - Gose
->>>       compatible = "renesas,gose", "renesas,r8a7793"
->>> +  - H3ULCB (RTP0RC7795SKB00010S)
->>> +    compatible = "renesas,h3ulcb", "renesas,r8a7795";
->> Should this have been
->>
->>          H3SK (R-Car Starter Kit Premier, RTP0RC7795SKB00010S)
->>          compatible = "renesas,h3sk", "renesas,r8a7795";
->>
->> instead?
-> Actually you are right, since Renesas naming policy changed: 
-> originally the assigned name was H3ULCB and all boards that I have 
-> labled as ULCB.
-> Now the official name is  "R-Car Starter Kit Premier" and "R-Car 
-> Starter Kit Pro" for H3/M3 respectively.
->
-> I've got this message from Renesas:
-> "
->
-> 1. Official name for Gen3 low cost board
->
->  R-Car Starter Kit Premier (We called "H3ULCB")
->  R-Car Starter Kit Pro     (We called "M3ULCB")
->
->  1-1. Please change the "M3ULCB/H3ULCB" to
->       "R-Car Starter Kit Pro/Premier" on elinux.
->  1-2. You DON'T have to change in source code.
->       You can use ULCB in Kernel, u-boot, Yocto recipe.
->  1-3. Please explain relations of "ULCB" and "Starter Kit" on elinux.
->     Ex) R-Car Starter Kit Premier = H3ULCB
-> "
->
->
-> What do think about changing only first line and leave "compatible" as 
-> is, since h3ulcb have been using a while by different customers and 
-> renaming of the board name will confuse? (If we change it to 
-> "renesas,h3sk " then probably we need to rename the dts file 
-> r8a7795-h3ulcb.dts and its content)
->
-> -  - H3ULCB (RTP0RC7795SKB00010S)
-> +  - H3ULCB (R-Car Starter Kit Premier, RTP0RC7795SKB00010S)
->
->
-> And would be the best for M3 Starter Kit?
-> The M3 Starter Kit board labeled as "M3 StarterKit", bit it is the 
-> same board with different SiP.
->
-> Should it look like:
->
->         M3ULCB (R-Car Starter Kit Pro, RTP0RC7796SKB00010S)
->         compatible = "renesas,m3ulcb", "renesas,r8a7796";
->
-> or
->
->         M3SK (R-Car Starter Kit Pro, RTP0RC7796SKB00010S)
->         compatible = "renesas,m3sk", "renesas,r8a7796";
->
->
-> Regards,
-> Vladimir
->>
->> Gr{oetje,eeting}s,
->>
->>                          Geert
->>
->> -- 
->> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- 
->> geert@linux-m68k.org
->>
->> In personal conversations with technical people, I call myself a 
->> hacker. But
->> when I'm talking to journalists I just say "programmer" or something 
->> like that.
->>                                  -- Linus Torvalds
->
->
+> 
+> Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> ---
+>  .../interrupt-controller/fsl,ls-scfg-msi.txt       | 57 +++++++++++++++++++---
+>  1 file changed, 49 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
+> index 9e38949..29f95fd 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
+> @@ -1,18 +1,28 @@
+>  * Freescale Layerscape SCFG PCIe MSI controller
+>  
+> +Layerscape SoCs may have one or multiple MSI controllers.
+> +Each MSI controller must be showed as a child node.
+> +
+>  Required properties:
+>  
+> -- compatible: should be "fsl,<soc-name>-msi" to identify
+> -	      Layerscape PCIe MSI controller block such as:
+> -              "fsl,1s1021a-msi"
+> -              "fsl,1s1043a-msi"
+> +- compatible: should be "fsl,ls-scfg-msi"
+
+This breaks old DTBs, and throws away information which you describe
+above as valuable. So another NAK for that.
+
+> +- #address-cells: must be 2
+> +- #size-cells: must be 2
+> +- ranges: allows valid 1:1 translation between child's address space and
+> +	  parent's address space
+>  - msi-controller: indicates that this is a PCIe MSI controller node
+> +
+> +Required child node:
+> +A child node must exist to represent the MSI controller.
+> +The following are properties specific to those nodes:
+
+Also, as above, the approach of gathering MSI controllers in this manner
+is wrong.
+
+Thanks,
+Mark.
