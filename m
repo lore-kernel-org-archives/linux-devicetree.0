@@ -1,155 +1,103 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 1/2] ARM: memory: da8xx-ddrctl: new driver
-Date: Wed, 26 Oct 2016 19:35:54 +0200
-Message-ID: <1477503355-2600-2-git-send-email-bgolaszewski@baylibre.com>
-References: <1477503355-2600-1-git-send-email-bgolaszewski@baylibre.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: [PATCH] net: mv643xx_eth: Fetch the phy connection type from DT
+Date: Wed, 26 Oct 2016 11:47:02 -0600
+Message-ID: <20161026174702.GB24717@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1477503355-2600-1-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: netdev-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Q3JlYXRlIGEgbmV3IGRyaXZlciBmb3IgdGhlIGRhOHh4IEREUjIvbUREUiBjb250cm9sbGVyIGFu
-ZCBpbXBsZW1lbnQKc3VwcG9ydCBmb3Igd3JpdGluZyB0byB0aGUgUGVyaXBoZXJhbCBCdXMgQnVy
-c3QgUHJpb3JpdHkgUmVnaXN0ZXIuCgpTaWduZWQtb2ZmLWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tp
-IDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgotLS0KIC4uLi9tZW1vcnktY29udHJvbGxlcnMv
-dGktZGE4eHgtZGRyY3RsLnR4dCAgICAgICAgIHwgIDIwICsrKwogZHJpdmVycy9tZW1vcnkvS2Nv
-bmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDggKwogZHJpdmVycy9tZW1vcnkv
-TWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9tZW1v
-cnkvZGE4eHgtZGRyY3RsLmMgICAgICAgICAgICAgICAgICAgICAgfCAxNzUgKysrKysrKysrKysr
-KysrKysrKysrCiA0IGZpbGVzIGNoYW5nZWQsIDIwNCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9k
-ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lbW9yeS1jb250cm9s
-bGVycy90aS1kYTh4eC1kZHJjdGwudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tZW1v
-cnkvZGE4eHgtZGRyY3RsLmMKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL3RpLWRhOHh4LWRkcmN0bC50eHQgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL3RpLWRhOHh4LWRk
-cmN0bC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uN2UyNzFkZAotLS0g
-L2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnkt
-Y29udHJvbGxlcnMvdGktZGE4eHgtZGRyY3RsLnR4dApAQCAtMCwwICsxLDIwIEBACisqIERldmlj
-ZSB0cmVlIGJpbmRpbmdzIGZvciBUZXhhcyBJbnN0cnVtZW50cyBkYTh4eCBERFIyL21ERFIgbWVt
-b3J5IGNvbnRyb2xsZXIKKworVGhlIEREUjIvbUREUiBtZW1vcnkgY29udHJvbGxlciBwcmVzZW50
-IG9uIFRleGFzIEluc3RydW1lbnRzIGRhOHh4IFNvQ3MgZmVhdHVyZXMKK2Egc2V0IG9mIHJlZ2lz
-dGVycyB3aGljaCBhbGxvdyB0byB0d2VhayB0aGUgY29udHJvbGxlcidzIGJlaGF2aW9yLgorCitE
-b2N1bWVudGF0aW9uOgorT01BUC1MMTM4IChEQTg1MCkgLSBodHRwOi8vd3d3LnRpLmNvbS9saXQv
-dWcvc3BydWg4MmMvc3BydWg4MmMucGRmCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CisKKy0gY29t
-cGF0aWJsZToJCSJ0aSxkYTg1MC1kZHItY29udHJvbGxlciIgLSBmb3IgZGE4NTAgU29DIGJhc2Vk
-IGJvYXJkcworLSByZWc6CQkJYSB0dXBsZSBjb250YWluaW5nIHRoZSBiYXNlIGFkZHJlc3Mgb2Yg
-dGhlIG1lbW9yeQorCQkJY29udHJvbGxlciBhbmQgdGhlIHNpemUgb2YgdGhlIG1lbW9yeSBhcmVh
-IHRvIG1hcAorCitFeGFtcGxlIGZvciBkYTg1MCBzaG93biBiZWxvdy4KKworZGRyY3RsIHsKKwlj
-b21wYXRpYmxlID0gInRpLGRhODUwLWRkci1jb250cm9sbGVyIjsKKwlyZWcgPSA8MHhCMDAwMDAw
-MCAweDEwMD47Cit9OwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZW1vcnkvS2NvbmZpZyBiL2RyaXZl
-cnMvbWVtb3J5L0tjb25maWcKaW5kZXggNGI0YzBjMy4uZWM4MGUzNSAxMDA2NDQKLS0tIGEvZHJp
-dmVycy9tZW1vcnkvS2NvbmZpZworKysgYi9kcml2ZXJzL21lbW9yeS9LY29uZmlnCkBAIC0xMzQs
-NiArMTM0LDE0IEBAIGNvbmZpZyBNVEtfU01JCiAJICBtYWlubHkgaGVscCBlbmFibGUvZGlzYWJs
-ZSBpb21tdSBhbmQgY29udHJvbCB0aGUgcG93ZXIgZG9tYWluIGFuZAogCSAgY2xvY2tzIGZvciBl
-YWNoIGxvY2FsIGFyYml0ZXIuCiAKK2NvbmZpZyBEQThYWF9ERFJDVEwKKwlib29sICJUZXhhcyBJ
-bnN0cnVtZW50cyBkYTh4eCBERFIyL21ERFIgZHJpdmVyIgorCWRlcGVuZHMgb24gQVJDSF9EQVZJ
-TkNJX0RBOFhYCisJaGVscAorCSAgVGhpcyBkcml2ZXIgaXMgZm9yIHRoZSBERFIyL21ERFIgTWVt
-b3J5IENvbnRyb2xsZXIgcHJlc2VudCBvbgorCSAgVGV4YXMgSW5zdHJ1bWVudHMgZGE4eHggU29D
-cy4gSXQncyB1c2VkIHRvIHR3ZWFrIHZhcmlvdXMgbWVtb3J5CisJICBjb250cm9sbGVyIGNvbmZp
-Z3VyYXRpb24gb3B0aW9ucy4KKwogc291cmNlICJkcml2ZXJzL21lbW9yeS9zYW1zdW5nL0tjb25m
-aWciCiBzb3VyY2UgImRyaXZlcnMvbWVtb3J5L3RlZ3JhL0tjb25maWciCiAKZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvbWVtb3J5L01ha2VmaWxlIGIvZHJpdmVycy9tZW1vcnkvTWFrZWZpbGUKaW5kZXgg
-YjIwYWUzOC4uZTg4MDk3ZmIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbWVtb3J5L01ha2VmaWxlCisr
-KyBiL2RyaXZlcnMvbWVtb3J5L01ha2VmaWxlCkBAIC0xNyw2ICsxNyw3IEBAIG9iai0kKENPTkZJ
-R19NVkVCVV9ERVZCVVMpCSs9IG12ZWJ1LWRldmJ1cy5vCiBvYmotJChDT05GSUdfVEVHUkEyMF9N
-QykJKz0gdGVncmEyMC1tYy5vCiBvYmotJChDT05GSUdfSlo0NzgwX05FTUMpCSs9IGp6NDc4MC1u
-ZW1jLm8KIG9iai0kKENPTkZJR19NVEtfU01JKQkJKz0gbXRrLXNtaS5vCitvYmotJChDT05GSUdf
-REE4WFhfRERSQ1RMKQkrPSBkYTh4eC1kZHJjdGwubwogCiBvYmotJChDT05GSUdfU0FNU1VOR19N
-QykJKz0gc2Ftc3VuZy8KIG9iai0kKENPTkZJR19URUdSQV9NQykJCSs9IHRlZ3JhLwpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9tZW1vcnkvZGE4eHgtZGRyY3RsLmMgYi9kcml2ZXJzL21lbW9yeS9kYTh4
-eC1kZHJjdGwuYwpuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi45MDBlMTMxCi0t
-LSAvZGV2L251bGwKKysrIGIvZHJpdmVycy9tZW1vcnkvZGE4eHgtZGRyY3RsLmMKQEAgLTAsMCAr
-MSwxNzUgQEAKKy8qCisgKiBUSSBkYTh4eCBERFIyL21ERFIgY29udHJvbGxlciBkcml2ZXIKKyAq
-CisgKiBDb3B5cmlnaHQgKEMpIDIwMTYgQmF5TGlicmUgU0FTCisgKgorICogQXV0aG9yOgorICog
-ICBCYXJ0b3N6IEdvbGFzemV3c2tpIDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgorICoKKyAq
-IFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBh
-bmQvb3IgbW9kaWZ5CisgKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1
-YmxpYyBMaWNlbnNlIHZlcnNpb24gMiBhcworICogcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3
-YXJlIEZvdW5kYXRpb24uCisgKi8KKworI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgorI2luY2x1
-ZGUgPGxpbnV4L29mLmg+CisjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+CisjaW5jbHVkZSA8
-bGludXgvb2ZfZmR0Lmg+CisjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+CisjaW5j
-bHVkZSA8bGludXgvaW8uaD4KKworLyoKKyAqIFJFVklTSVQ6IExpbnV4IGRvZXNuJ3QgaGF2ZSBh
-IGdvb2QgZnJhbWV3b3JrIGZvciB0aGUga2luZCBvZiBwZXJmb3JtYW5jZQorICoga25vYnMgdGhp
-cyBkcml2ZXIgY29udHJvbHMuIFdlIGNhbid0IHVzZSBkZXZpY2UgdHJlZSBwcm9wZXJ0aWVzIGFz
-IGl0IGRlYWxzCisgKiB3aXRoIGhhcmR3YXJlIGNvbmZpZ3VyYXRpb24gcmF0aGVyIHRoYW4gZGVz
-Y3JpcHRpb24uIFdlIGFsc28gZG9uJ3Qgd2FudCB0bworICogY29tbWl0IHRvIG1haW50YWluaW5n
-IHNvbWUgcmFuZG9tIHN5c2ZzIGF0dHJpYnV0ZXMuCisgKgorICogRm9yIG5vdyB3ZSBqdXN0IGhh
-cmRjb2RlIHRoZSByZWdpc3RlciB2YWx1ZXMgZm9yIHRoZSBib2FyZHMgdGhhdCBuZWVkCisgKiBz
-b21lIGNoYW5nZXMgKGFzIGlzIHRoZSBjYXNlIGZvciB0aGUgTENEIGNvbnRyb2xsZXIgb24gZGE4
-NTAtbGNkayAtIHRoZQorICogZmlyc3QgYm9hcmQgd2Ugc3VwcG9ydCBoZXJlKS4gV2hlbiBsaW51
-eCBnZXRzIGFuIGFwcHJvcHJpYXRlIGZyYW1ld29yaywKKyAqIHdlJ2xsIGVhc2lseSBjb252ZXJ0
-IHRoZSBkcml2ZXIgdG8gaXQuCisgKi8KKworc3RydWN0IGRhOHh4X2RkcmN0bF9jb25maWdfa25v
-YiB7CisJY29uc3QgY2hhciAqbmFtZTsKKwl1MzIgcmVnOworCXUzMiBtYXNrOworCXUzMiBzaGlm
-dDsKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZGE4eHhfZGRyY3RsX2NvbmZpZ19rbm9iIGRh
-OHh4X2RkcmN0bF9rbm9ic1tdID0geworCXsKKwkJLm5hbWUgPSAiZGE4NTAtcGJicHIiLAorCQku
-cmVnID0gMHgyMCwKKwkJLm1hc2sgPSAweGZmZmZmZjAwLAorCQkuc2hpZnQgPSAwLAorCX0sCit9
-OworCitzdHJ1Y3QgZGE4eHhfZGRyY3RsX3NldHRpbmcgeworCWNvbnN0IGNoYXIgKm5hbWU7CisJ
-dTMyIHZhbDsKK307CisKK3N0cnVjdCBkYTh4eF9kZHJjdGxfYm9hcmRfc2V0dGluZ3MgeworCWNv
-bnN0IGNoYXIgKmJvYXJkOworCWNvbnN0IHN0cnVjdCBkYTh4eF9kZHJjdGxfc2V0dGluZyAqc2V0
-dGluZ3M7Cit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0IGRhOHh4X2RkcmN0bF9zZXR0aW5nIGRh
-ODUwX2xjZGtfZGRyY3RsX3NldHRpbmdzW10gPSB7CisJeworCQkubmFtZSA9ICJkYTg1MC1wYmJw
-ciIsCisJCS52YWwgPSAweDIwLAorCX0sCisJeyB9Cit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0
-IGRhOHh4X2RkcmN0bF9ib2FyZF9zZXR0aW5ncyBkYTh4eF9kZHJjdGxfYm9hcmRfY29uZnNbXSA9
-IHsKKwl7CisJCS5ib2FyZCA9ICJ0aSxkYTg1MC1sY2RrIiwKKwkJLnNldHRpbmdzID0gZGE4NTBf
-bGNka19kZHJjdGxfc2V0dGluZ3MsCisJfSwKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZGE4
-eHhfZGRyY3RsX2NvbmZpZ19rbm9iICoKK2RhOHh4X2RkcmN0bF9tYXRjaF9rbm9iKGNvbnN0IHN0
-cnVjdCBkYTh4eF9kZHJjdGxfc2V0dGluZyAqc2V0dGluZykKK3sKKwljb25zdCBzdHJ1Y3QgZGE4
-eHhfZGRyY3RsX2NvbmZpZ19rbm9iICprbm9iOworCWludCBpOworCisJZm9yIChpID0gMDsgaSA8
-IEFSUkFZX1NJWkUoZGE4eHhfZGRyY3RsX2tub2JzKTsgaSsrKSB7CisJCWtub2IgPSAmZGE4eHhf
-ZGRyY3RsX2tub2JzW2ldOworCisJCWlmIChzdHJjbXAoa25vYi0+bmFtZSwgc2V0dGluZy0+bmFt
-ZSkgPT0gMCkKKwkJCXJldHVybiBrbm9iOworCX0KKworCXJldHVybiBOVUxMOworfQorCitzdGF0
-aWMgY29uc3Qgc3RydWN0IGRhOHh4X2RkcmN0bF9zZXR0aW5nICpkYTh4eF9kZHJjdGxfZ2V0X2Jv
-YXJkX3NldHRpbmdzKHZvaWQpCit7CisJY29uc3Qgc3RydWN0IGRhOHh4X2RkcmN0bF9ib2FyZF9z
-ZXR0aW5ncyAqYm9hcmRfc2V0dGluZ3M7CisJaW50IGk7CisKKwlmb3IgKGkgPSAwOyBpIDwgQVJS
-QVlfU0laRShkYTh4eF9kZHJjdGxfYm9hcmRfY29uZnMpOyBpKyspIHsKKwkJYm9hcmRfc2V0dGlu
-Z3MgPSAmZGE4eHhfZGRyY3RsX2JvYXJkX2NvbmZzW2ldOworCisJCWlmIChvZl9tYWNoaW5lX2lz
-X2NvbXBhdGlibGUoYm9hcmRfc2V0dGluZ3MtPmJvYXJkKSkKKwkJCXJldHVybiBib2FyZF9zZXR0
-aW5ncy0+c2V0dGluZ3M7CisJfQorCisJcmV0dXJuIE5VTEw7Cit9CisKK3N0YXRpYyBpbnQgZGE4
-eHhfZGRyY3RsX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCit7CisJY29uc3Qg
-c3RydWN0IGRhOHh4X2RkcmN0bF9jb25maWdfa25vYiAqa25vYjsKKwljb25zdCBzdHJ1Y3QgZGE4
-eHhfZGRyY3RsX3NldHRpbmcgKnNldHRpbmc7CisJc3RydWN0IGRldmljZV9ub2RlICpub2RlOwor
-CXN0cnVjdCByZXNvdXJjZSAqcmVzOworCXZvaWQgX19pb21lbSAqZGRyY3RsOworCXN0cnVjdCBk
-ZXZpY2UgKmRldjsKKwl1MzIgcmVnOworCisJZGV2ID0gJnBkZXYtPmRldjsKKwlub2RlID0gZGV2
-LT5vZl9ub2RlOworCisJc2V0dGluZyA9IGRhOHh4X2RkcmN0bF9nZXRfYm9hcmRfc2V0dGluZ3Mo
-KTsKKwlpZiAoIXNldHRpbmcpIHsKKwkJZGV2X2VycihkZXYsICJubyBzZXR0aW5ncyBmb3IgYm9h
-cmQgJyVzJ1xuIiwKKwkJCW9mX2ZsYXRfZHRfZ2V0X21hY2hpbmVfbmFtZSgpKTsKKwkJcmV0dXJu
-IC1FSU5WQUw7CisJfQorCisJcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVT
-T1VSQ0VfTUVNLCAwKTsKKwlkZHJjdGwgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2LCByZXMp
-OworCWlmIChJU19FUlIoZGRyY3RsKSkgeworCQlkZXZfZXJyKGRldiwgInVuYWJsZSB0byBtYXAg
-bWVtb3J5IGNvbnRyb2xsZXIgcmVnaXN0ZXJzXG4iKTsKKwkJcmV0dXJuIFBUUl9FUlIoZGRyY3Rs
-KTsKKwl9CisKKwlmb3IgKDsgc2V0dGluZy0+bmFtZTsgc2V0dGluZysrKSB7CisJCWtub2IgPSBk
-YTh4eF9kZHJjdGxfbWF0Y2hfa25vYihzZXR0aW5nKTsKKwkJaWYgKCFrbm9iKSB7CisJCQlkZXZf
-d2FybihkZXYsCisJCQkJICJubyBzdWNoIGNvbmZpZyBvcHRpb246ICVzXG4iLCBzZXR0aW5nLT5u
-YW1lKTsKKwkJCWNvbnRpbnVlOworCQl9CisKKwkJaWYgKGtub2ItPnJlZyA+IChyZXMtPmVuZCAt
-IHJlcy0+c3RhcnQgLSBzaXplb2YodTMyKSkpIHsKKwkJCWRldl93YXJuKGRldiwKKwkJCQkgInJl
-Z2lzdGVyIG9mZnNldCBvZiAnJXMnIGV4Y2VlZHMgbWFwcGVkIG1lbW9yeSBzaXplXG4iLAorCQkJ
-CSBrbm9iLT5uYW1lKTsKKwkJCWNvbnRpbnVlOworCQl9CisKKwkJcmVnID0gX19yYXdfcmVhZGwo
-ZGRyY3RsICsga25vYi0+cmVnKTsKKwkJcmVnICY9IGtub2ItPm1hc2s7CisJCXJlZyB8PSBzZXR0
-aW5nLT52YWwgPDwga25vYi0+c2hpZnQ7CisKKwkJZGV2X2RiZyhkZXYsICJ3cml0aW5nIDB4JTA4
-eCB0byAlc1xuIiwgcmVnLCBzZXR0aW5nLT5uYW1lKTsKKworCQlfX3Jhd193cml0ZWwocmVnLCBk
-ZHJjdGwgKyBrbm9iLT5yZWcpOworCX0KKworCXJldHVybiAwOworfQorCitzdGF0aWMgY29uc3Qg
-c3RydWN0IG9mX2RldmljZV9pZCBkYTh4eF9kZHJjdGxfb2ZfbWF0Y2hbXSA9IHsKKwl7IC5jb21w
-YXRpYmxlID0gInRpLGRhODUwLWRkci1jb250cm9sbGVyIiwgfSwKKwl7IH0sCit9OworCitzdGF0
-aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBkYTh4eF9kZHJjdGxfZHJpdmVyID0geworCS5wcm9i
-ZSA9IGRhOHh4X2RkcmN0bF9wcm9iZSwKKwkuZHJpdmVyID0geworCQkubmFtZSA9ICJkYTg1MC1k
-ZHItY29udHJvbGxlciIsCisJCS5vZl9tYXRjaF90YWJsZSA9IGRhOHh4X2RkcmN0bF9vZl9tYXRj
-aCwKKwl9LAorfTsKK21vZHVsZV9wbGF0Zm9ybV9kcml2ZXIoZGE4eHhfZGRyY3RsX2RyaXZlcik7
-CisKK01PRFVMRV9BVVRIT1IoIkJhcnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pld3NraUBiYXls
-aWJyZS5jb20+Iik7CitNT0RVTEVfREVTQ1JJUFRJT04oIlRJIGRhOHh4IEREUjIvbUREUiBjb250
-cm9sbGVyIGRyaXZlciIpOworTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOwotLSAKMi45LjMKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+The MAC is capable of RGMII mode and that is probably a more typical
+connection type than GMII today (eg it is used by Marvell Reference
+designs for several SOCs). Let DT users specify the standard
+
+   phy-connection-type = "rgmii-id";
+
+On a phy node.
+
+Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+---
+ .../devicetree/bindings/net/marvell-orion-net.txt  |  1 +
+ drivers/net/ethernet/marvell/mv643xx_eth.c         | 23 ++++++++++++++++++----
+ 2 files changed, 20 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/marvell-orion-net.txt b/Documentation/devicetree/bindings/net/marvell-orion-net.txt
+index bce52b2ec55e..6fd988c84c4f 100644
+--- a/Documentation/devicetree/bindings/net/marvell-orion-net.txt
++++ b/Documentation/devicetree/bindings/net/marvell-orion-net.txt
+@@ -49,6 +49,7 @@ Optional port properties:
+ and
+ 
+  - phy-handle: See ethernet.txt file in the same directory.
++ - phy-mode: See ethernet.txt file in the same directory.
+ 
+ or
+ 
+diff --git a/drivers/net/ethernet/marvell/mv643xx_eth.c b/drivers/net/ethernet/marvell/mv643xx_eth.c
+index 55831188bc32..bf5cc55ba24c 100644
+--- a/drivers/net/ethernet/marvell/mv643xx_eth.c
++++ b/drivers/net/ethernet/marvell/mv643xx_eth.c
+@@ -2968,6 +2968,22 @@ static void set_params(struct mv643xx_eth_private *mp,
+ 	mp->txq_count = pd->tx_queue_count ? : 1;
+ }
+ 
++static int get_phy_mode(struct mv643xx_eth_private *mp)
++{
++	struct device *dev = mp->dev->dev.parent;
++	int iface = -1;
++
++	if (dev->of_node)
++		iface = of_get_phy_mode(dev->of_node);
++
++	/* Historical default if unspecified. We could also read/write
++	 * the interface state in the PSC1
++	 */
++	if (iface < 0)
++		iface = PHY_INTERFACE_MODE_GMII;
++	return iface;
++}
++
+ static struct phy_device *phy_scan(struct mv643xx_eth_private *mp,
+ 				   int phy_addr)
+ {
+@@ -2994,7 +3010,7 @@ static struct phy_device *phy_scan(struct mv643xx_eth_private *mp,
+ 				"orion-mdio-mii", addr);
+ 
+ 		phydev = phy_connect(mp->dev, phy_id, mv643xx_eth_adjust_link,
+-				PHY_INTERFACE_MODE_GMII);
++				     get_phy_mode(mp));
+ 		if (!IS_ERR(phydev)) {
+ 			phy_addr_set(mp, addr);
+ 			break;
+@@ -3090,6 +3106,7 @@ static int mv643xx_eth_probe(struct platform_device *pdev)
+ 	if (!dev)
+ 		return -ENOMEM;
+ 
++	SET_NETDEV_DEV(dev, &pdev->dev);
+ 	mp = netdev_priv(dev);
+ 	platform_set_drvdata(pdev, mp);
+ 
+@@ -3129,7 +3146,7 @@ static int mv643xx_eth_probe(struct platform_device *pdev)
+ 	if (pd->phy_node) {
+ 		mp->phy = of_phy_connect(mp->dev, pd->phy_node,
+ 					 mv643xx_eth_adjust_link, 0,
+-					 PHY_INTERFACE_MODE_GMII);
++					 get_phy_mode(mp));
+ 		if (!mp->phy)
+ 			err = -ENODEV;
+ 		else
+@@ -3187,8 +3204,6 @@ static int mv643xx_eth_probe(struct platform_device *pdev)
+ 	dev->priv_flags |= IFF_UNICAST_FLT;
+ 	dev->gso_max_segs = MV643XX_MAX_TSO_SEGS;
+ 
+-	SET_NETDEV_DEV(dev, &pdev->dev);
+-
+ 	if (mp->shared->win_protect)
+ 		wrl(mp, WINDOW_PROTECT(mp->port_num), mp->shared->win_protect);
+ 
+-- 
+2.1.4
