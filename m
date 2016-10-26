@@ -1,88 +1,61 @@
-From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH 4/5] w1: add a callback to call slave when a new
- device is connected
-Date: Wed, 26 Oct 2016 19:30:13 +0200
-Message-ID: <20161026173013.ryziy7hhtvxgtm3n@kwain>
-References: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
- <20161026145756.21689-5-antoine.tenart@free-electrons.com>
- <CANLsYkxfnF9-H9mawt3BWTgy5gjf8Qs3O6iSRGiLQ=8vfYACTQ@mail.gmail.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 0/2] ARM: da850: new drivers for better LCDC support
+Date: Wed, 26 Oct 2016 19:35:53 +0200
+Message-ID: <1477503355-2600-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pb4xep5il2qdamck"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CANLsYkxfnF9-H9mawt3BWTgy5gjf8Qs3O6iSRGiLQ=8vfYACTQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-
---pb4xep5il2qdamck
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Mathieu,
-
-On Wed, Oct 26, 2016 at 10:42:28AM -0600, Mathieu Poirier wrote:
-> On 26 October 2016 at 08:57, Antoine Tenart
-> <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> >                 }
-> > +               if (fops->callback) {
-> > +                       err =3D fops->callback(sl);
-> > +                       /*
-> > +                        * Do not return an error as the slave driver c=
-orrectly
-> > +                        * probed.
-> > +                        */
->=20
-> I don't get this part.  What's the point of calling a callback if a
-> failure is not important - maybe I'm just missing something.
->=20
-> > +                       if (err)
-> > +                               dev_err(&sl->dev,
-> > +                                       "callback call failed. err=3D%d=
-\n", err);
-> > +               }
-
-In our case it can be not that important: if we fail to apply an
-overlay, we can still use the w1 interfaces to access the eeprom.
-
-Anyway, all those errors weren't taken into account by the w1 framework
-before (see my other patch). Also, the w1 patches are given for the
-example and could be improved. Part of the reason is the w1 framework
-itself :-)
-
-Antoine
-
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---pb4xep5il2qdamck
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCgAGBQJYEOgiAAoJEFxNi8it27zYepQP/3CvERUMlDtDKlbrIedEV/Mw
-dhetBFyeDDSRBQ8AOA45Ag/Cwq8At3ykeHI9WPeGq0+F0GPsfNvaLSujxFFSQrnr
-3XhuRKdIKK7nKxCpHBoKCqe9uANn6NdTuq/Xpk5uZaMIy8ceWK71bQ8rWXc/ra2h
-yHoCzLYp/6uUnP3sNVx9P+pXxzUtSJyqMb6j4DjwtNGum0yTYeYyTrwtK2GB1tm3
-UE/fzT76jfRFv+vA7Xc5vvVMaNWU/9c1qoxPYSP9FrHhQ3fF19TnWWYwc4KbLg4n
-CdracQWndOQLa0vdUDgmwWhkdY6hzeidEX7ZGZ3kpN57miHiu19K9HPk4U6/8g05
-mdfW22CEml8lU79C/hHSLtkAsxH0f5lRP1I6SlkLXiABkt+7zhohULv3bnAY3Qa3
-/tn7HtKf5QTLoDAJsviYUSKGTcUtlPvJ6pyLy7pnsT6wwiJKhR4b44Hs8fBT4axg
-jUdee/5bZM6AK8HmHicegrRyZ+35UVIf22fm+sPtk4+93Ym6aRjqAGRCiNWL0nM/
-K2EL7NRIwlWJdKYPUT0ydeal6Ukc9nV6EQL3Pekeo3xGOqAggcZrk4V3U81CUNbD
-VGoOu3thn53m+j0BEq4kV3KKY4Ro/IUWOxL0F4TL6L0E5Pj5zm52FkiH9NXYJ1tm
-jg2ghqn/mHmWS5OveB6e
-=VfTI
------END PGP SIGNATURE-----
-
---pb4xep5il2qdamck--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBzZXJpZXMgYWRkcyB0d28gbmV3IGRyaXZlcnMgaW4gb3JkZXIgdG8gYmV0dGVyIHN1cHBv
+cnQgdGhlIExDREMKcmV2MSBwcmVzZW50IG9uIHRoZSBkYTg1MCBib2FyZHMuCgpUaGUgZmlyc3Qg
+cGF0Y2ggYWRkcyBhIG5ldyBtZW1vcnkgZHJpdmVyIHdoaWNoIGFsbG93cyB0byB3cml0ZSB0byB0
+aGUKRERSMi9tRERSIG1lbW9yeSBjb250cm9sbGVyIHByZXNlbnQgb24gdGhlIGRhOHh4IFNvQ3Mu
+IFNpbmNlIHRoZQptZW1vcnkgY29udHJvbGxlciByZWdpb24gaXMgbm90IG1hcHBlZCBieSBhbnlv
+bmUgZWxzZSwgSSB3ZW50IHdpdGgKcGxhdGZvcm1fZ2V0X3Jlc291cmNlKCkgYW5kIGlvcmVtYXAo
+KSBhcHByb2FjaC4KClRoZSBzZWNvbmQgcGF0Y2ggYWRkcyBhIG5ldyBidXMgZHJpdmVyIHdoaWNo
+IGFsbG93cyB0byBpbnRlcmFjdCB3aXRoCnRoZSBNU1RQUkkgcmVnaXN0ZXJzIG9mIHRoZSBTWVND
+RkcwIG1vZHVsZS4gVGhlIFNZU0NGRzAgcmVnaXN0ZXJzCmFyZSB1c2VkIGJ5IG1hbnkgZHJpdmVy
+cywgaGVuY2UgdGhlIHN5c2Nvbi9yZWdtYXAgYXBwcm9hY2guCgpBcyBpcyBtZW50aW9uZWQgaW4g
+dGhlIGNvbW1lbnRzOiB3ZSBkb24ndCB3YW50IHRvIGNvbW1pdCB0byBzdXBwb3J0aW5nCnN0YWJs
+ZSBpbnRlcmZhY2VzIChEVCBiaW5kaW5ncyBvciBzeXNmcyBhdHRyaWJ1dGVzKSBzbyB3ZSBoYXJk
+Y29kZSB0aGUKc2V0dGluZ3MgcmVxdWlyZWQgYnkgc29tZSBib2FyZHMgKGZvciBub3cgb25seSBk
+YTg1MC1sY2RrKSB3aXRoIHRoZQpob3BlIHRoYXQgbGludXggZ2V0cyBhbiBhcHByb3ByaWF0ZSBm
+cmFtZXdvcmsgZm9yIHBlcmZvcm1hbmNlIGtub2JzCmluIHRoZSBmdXR1cmUuCgpQb3RlbnRpYWwg
+ZXh0ZW5zaW9ucyBvZiB0aGVzZSBkcml2ZXJzIHNob3VsZCBiZSBzdHJhaWdodGZvcndhcmQgaW4g
+dGhlCmZ1dHVyZS4KClRlc3RlZCBvbiBhIGRhODUwLWxjZGsgd2l0aCBhIGRpc3BsYXkgY29ubmVj
+dGVkIG92ZXIgVkdBIGFuZCBzb21lCmFkZGl0aW9uYWwgd29yayBvbiB0aGUgdGlsY2RjIGRyaXZl
+ci4KCk5PVEUgSSdtIHNlbmRpbmcgdGhpcyBhcyB2MSwgYnV0IGl0J3MgYSBmb2xsb3ctdXAgdG8g
+YSBzZXJpZXMgSSBzZW50CnByZXZpb3VzbHkgYW5kIHRoZSBSRkMgd2l0aCB0aGUgZGRyY3RsIGRy
+aXZlci4gSSBkcm9wcGVkIHRoZSBkdCBwYXRjaApmb3Igbm93LgoKQmFydG9zeiBHb2xhc3pld3Nr
+aSAoMik6CiAgQVJNOiBtZW1vcnk6IGRhOHh4LWRkcmN0bDogbmV3IGRyaXZlcgogIEFSTTogYnVz
+OiBkYTh4eC1tc3Rwcmk6IG5ldyBkcml2ZXIKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9idXMv
+dGksZGE4NTAtbXN0cHJpLnR4dCAgICB8ICAyMCArKwogLi4uL21lbW9yeS1jb250cm9sbGVycy90
+aS1kYTh4eC1kZHJjdGwudHh0ICAgICAgICAgfCAgMjAgKysKIGRyaXZlcnMvYnVzL0tjb25maWcg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA5ICsKIGRyaXZlcnMvYnVzL01ha2Vm
+aWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKIGRyaXZlcnMvYnVzL2Rh
+OHh4LW1zdHByaS5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgMjY2ICsrKysrKysrKysrKysr
+KysrKysrKwogZHJpdmVycy9tZW1vcnkvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgIDggKwogZHJpdmVycy9tZW1vcnkvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfCAgIDEgKwogZHJpdmVycy9tZW1vcnkvZGE4eHgtZGRyY3RsLmMgICAgICAgICAgICAg
+ICAgICAgICAgfCAxNzUgKysrKysrKysrKysrKysKIDggZmlsZXMgY2hhbmdlZCwgNTAxIGluc2Vy
+dGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvYnVzL3RpLGRhODUwLW1zdHByaS50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL3RpLWRhOHh4LWRk
+cmN0bC50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2J1cy9kYTh4eC1tc3RwcmkuYwog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVtb3J5L2RhOHh4LWRkcmN0bC5jCgotLSAKMi45
+LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
