@@ -1,48 +1,47 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH resent v3 3/3] ASoC: omap-abe-twl6040: fix typo in
- bindings documentation
-Date: Wed, 26 Oct 2016 10:59:29 +0300
-Message-ID: <79d574c7-f3ed-5d54-5807-698115d999bd@ti.com>
-References: <cover.1477417090.git.hns@goldelico.com>
- <f2ade237f55685f4fdb2aaa127995f3ccb986bb3.1477417090.git.hns@goldelico.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v6 1/5] ARM: davinci: da8xx: add usb phy clocks
+Date: Wed, 26 Oct 2016 13:29:39 +0530
+Message-ID: <6bcc1ac1-446c-6191-1c63-e37ccfaf9556@ti.com>
+References: <1477451211-31979-1-git-send-email-david@lechnology.com>
+ <1477451211-31979-2-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f2ade237f55685f4fdb2aaa127995f3ccb986bb3.1477417090.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477451211-31979-2-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Axel Haslam <ahaslam@baylibre.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/16 20:38, H. Nikolaus Schaller wrote:
-> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-
-Acked-by: Peter Ujfalusi <perter.ujfalusi-l0cyMroinI0@public.gmane.org>
-
+On Wednesday 26 October 2016 08:36 AM, David Lechner wrote:
+> Up to this point, the USB phy clock configuration was handled manually in
+> the board files and in the usb drivers. This adds proper clocks so that
+> the usb drivers can use clk_get and clk_enable and not have to worry about
+> the details. Also, the related code is removed from the board files and
+> replaced with the new clock registration functions.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
+> Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
 > ---
->  Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt b/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt
-> index fd40c85..462b04e8 100644
-> --- a/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt
-> +++ b/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt
-> @@ -12,7 +12,7 @@ Required properties:
->  
->  Optional properties:
->  - ti,dmic: phandle for the OMAP dmic node if the machine have it connected
-> -- ti,jack_detection: Need to be present if the board capable to detect jack
-> +- ti,jack-detection: Need to be present if the board capable to detect jack
->    insertion, removal.
->  
->  Available audio endpoints for the audio-routing table:
+> I have added "ARM: davinci: da8xx: Enable the usb20 "per" clk on phy_clk_enable"
+> from Axel Haslam to this patch.
 > 
+> In the review of Axel's patch, Sekhar said:
+> 
+>> We should not be using a NULL device pointer here. Can you pass the musb
+>> device pointer available in the same file? Also, da850_clks[] in da850.c
+>> needs to be fixed to add the matching device name.
+> 
+> However, the musb device may not be registered. The usb20_clk can be used to
+> supply a 48MHz clock to USB 1.1 (ohci) without using the musb device. So, I am
+> inclined to leave this as NULL.
 
+But clock look-up has nothing to do with device being registered AFAICT.
+It is used to identify the clock consumer. Passing NULL there means the
+clock is not associated with any device. Which is not correct as we are
+specifically looking at MUSB module clock.
 
--- 
-Péter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sekhar
