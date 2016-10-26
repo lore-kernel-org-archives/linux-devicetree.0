@@ -1,35 +1,32 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: msm8996: Correct slpi region reg definition
-Date: Wed, 26 Oct 2016 10:54:50 -0700
-Message-ID: <1477504490-7818-1-git-send-email-bjorn.andersson@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sarangdhar Joshi <spjoshi@codeaurora.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] net: mv643xx_eth: Fetch the phy connection type from DT
+Date: Wed, 26 Oct 2016 11:05:13 -0700
+Message-ID: <de64deed-c2c3-ad20-b141-961c3d655f53@gmail.com>
+References: <20161026174702.GB24717@obsidianresearch.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20161026174702.GB24717@obsidianresearch.com>
+Sender: netdev-owner@vger.kernel.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-I missed the missing cell in the reg property of the slpi region in my review,
-so let's add it.
+On 10/26/2016 10:47 AM, Jason Gunthorpe wrote:
+> The MAC is capable of RGMII mode and that is probably a more typical
+> connection type than GMII today (eg it is used by Marvell Reference
+> designs for several SOCs). Let DT users specify the standard
+> 
+>    phy-connection-type = "rgmii-id";
+> 
+> On a phy node.
+> 
+> Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
 
-Fixes: 2b7f0de19648 ("arm64: dts: msm8996: Add reserve-memory nodes")
-Cc: Sarangdhar Joshi <spjoshi@codeaurora.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Took a little while to understand the re-ordering of SET_NETDEV_DEV() to
+come earlier was necessary to access mp->dev->dev.parent.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index b97647d29842..215de91e802d 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -42,7 +42,7 @@
- 		};
- 
- 		slpi_region: slpi@90b00000 {
--			reg = <0x0 0x90b00000 0xa00000>;
-+			reg = <0x0 0x90b00000 0x0 0xa00000>;
- 			no-map;
- 		};
- 
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.5.0
+Florian
