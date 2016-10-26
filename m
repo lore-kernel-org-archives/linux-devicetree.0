@@ -1,48 +1,56 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] clk: renesas: cpg-mssr: add R8A7743 support
-Date: Wed, 26 Oct 2016 14:14:25 +0200
-Message-ID: <CAMuHMdV9O97qWskZ=EWz-kSy_rV_U5rfrsRDWRHUB2WiFXAq7w@mail.gmail.com>
-References: <1582226.1VeLLfmmeJ@wasted.cogentembedded.com> <5038285.9DcXKlHSpF@wasted.cogentembedded.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/4] mfd: ti_am335x_tscadc: store physical address
+Date: Wed, 26 Oct 2016 13:17:30 +0100
+Message-ID: <20161026121730.GS8574@dell>
+References: <20160921161134.6951-1-mugunthanvnm@ti.com>
+ <20160921161134.6951-2-mugunthanvnm@ti.com>
+ <20160927194045.GK21388@dell>
+ <f271b805-82c2-a45e-0de9-39edafd34d2e@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5038285.9DcXKlHSpF-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <f271b805-82c2-a45e-0de9-39edafd34d2e@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mugunthan V N <mugunthanvnm@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Vignesh R <vigneshr@ti.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, "Andrew F . Davis" <afd@ti.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, linux-omap@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 10:17 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> --- /dev/null
-> +++ linux/drivers/clk/renesas/r8a7743-cpg-mssr.c
-> @@ -0,0 +1,264 @@
-
-> +static int __init r8a7743_cpg_mssr_init(struct device *dev)
-> +{
-> +       const struct rcar_gen2_cpg_pll_config *cpg_pll_config;
-> +       u32 cpg_mode = rcar_gen2_read_modemr();
-
-It would be good if we could appply "[PATCH v4 00/23] soc: renesas: Add R-Car
-RST driver for obtaining mode pin state" first, and change this driveer to
-use rcar_rst_read_mode_pins() instead.
-
-> +       cpg_pll_config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
-> +
-> +       return rcar_gen2_cpg_init(cpg_pll_config);
-> +}
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCAzMCBTZXAgMjAxNiwgTXVndW50aGFuIFYgTiB3cm90ZToKCj4gT24gV2VkbmVzZGF5
+IDI4IFNlcHRlbWJlciAyMDE2IDAxOjEwIEFNLCBMZWUgSm9uZXMgd3JvdGU6Cj4gPiBPbiBXZWQs
+IDIxIFNlcCAyMDE2LCBNdWd1bnRoYW4gViBOIHdyb3RlOgo+ID4gCj4gPj4gc3RvcmUgdGhlIHBo
+eXNpY2FsIGFkZHJlc3Mgb2YgdGhlIGRldmljZSBpbiBpdHMgcHJpdiB0byB1c2UgaXQKPiA+PiBm
+b3IgRE1BIGFkZHJlc3NpbmcgaW4gdGhlIGNsaWVudCBkcml2ZXJzLgo+ID4+Cj4gPj4gU2lnbmVk
+LW9mZi1ieTogTXVndW50aGFuIFYgTiA8bXVndW50aGFudm5tQHRpLmNvbT4KPiA+PiAtLS0KPiA+
+PiAgZHJpdmVycy9tZmQvdGlfYW0zMzV4X3RzY2FkYy5jICAgICAgIHwgMSArCj4gPj4gIGluY2x1
+ZGUvbGludXgvbWZkL3RpX2FtMzM1eF90c2NhZGMuaCB8IDEgKwo+ID4+ICAyIGZpbGVzIGNoYW5n
+ZWQsIDIgaW5zZXJ0aW9ucygrKQo+ID4+Cj4gPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL3Rp
+X2FtMzM1eF90c2NhZGMuYyBiL2RyaXZlcnMvbWZkL3RpX2FtMzM1eF90c2NhZGMuYwo+ID4+IGlu
+ZGV4IGM4ZjAyN2IuLjBmM2ZhYjQgMTAwNjQ0Cj4gPj4gLS0tIGEvZHJpdmVycy9tZmQvdGlfYW0z
+MzV4X3RzY2FkYy5jCj4gPj4gKysrIGIvZHJpdmVycy9tZmQvdGlfYW0zMzV4X3RzY2FkYy5jCj4g
+Pj4gQEAgLTE4Myw2ICsxODMsNyBAQCBzdGF0aWMJaW50IHRpX3RzY2FkY19wcm9iZShzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4+ICAJCXRzY2FkYy0+aXJxID0gZXJyOwo+ID4+ICAK
+PiA+PiAgCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwg
+MCk7Cj4gPj4gKwl0c2NhZGMtPnRzY2FkY19waHlzX2Jhc2UgPSByZXMtPnN0YXJ0Owo+ID4gCj4g
+PiBUaGlzIGlzIHVudXN1YWwuICBDYW4ndCB5b3UgdXNlIGEgdmlydF90b19waHlzKCkgdmFyaWFu
+dCBpbnN0ZWFkPwo+ID4gCj4gCj4gSSB0cmllZCB1c2luZyB2aXJ0X3RvX3BoeXMoKSwgYnV0IGl0
+cyBub3Qgd29ya2luZyBmb3IgbWUuCj4gQWxzbyBzYXcgbWFueSBkcml2ZXJzIHVzZXMgbGlrZSB0
+aGlzIHRvIGdldCBwaHlzaWNhbCBhZGRyZXNzCj4gKCJnaXQgZ3JlcCAtbiAiIHJlcy0+c3RhcnQ7
+IiBkcml2ZXJzLyoiKS4KClZlcnkgd2VsbDoKCkZvciBteSBvd24gcmVmZXJlbmNlOgogIEFja2Vk
+LWZvci1NRkQtYnk6IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+CgpMZXQgbWUga25v
+dyBob3cgeW91IHdpc2ggdGhpcyBzZXQgdG8gYmUgaGFuZGxlZC4KCi0tIApMZWUgSm9uZXMKTGlu
+YXJvIFNUTWljcm9lbGVjdHJvbmljcyBMYW5kaW5nIFRlYW0gTGVhZApMaW5hcm8ub3JnIOKUgiBP
+cGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9sbG93IExpbmFybzogRmFjZWJvb2sg
+fCBUd2l0dGVyIHwgQmxvZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
