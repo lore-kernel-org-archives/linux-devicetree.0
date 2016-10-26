@@ -1,77 +1,26 @@
-From: Alexandre Bailon <abailon@baylibre.com>
-Subject: [PATCH v2 2/4] usb: musb: core: added helper function for parsing DT
-Date: Wed, 26 Oct 2016 17:03:55 +0200
-Message-ID: <1477494237-22831-3-git-send-email-abailon@baylibre.com>
-References: <1477494237-22831-1-git-send-email-abailon@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477494237-22831-1-git-send-email-abailon@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: khilman@baylibre.com, robh+dt@kernel.org, b-liu@ti.com
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Petr Kulhavy <petr@barix.com>, Alexandre Bailon <abailon@baylibre.com>
+From: Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: [PATCH 5/5] ARM: configs: Add new config fragment to change RAM size
+Date: Wed, 26 Oct 2016 17:11:23 +0200
+Message-ID: <1477494683-29890-6-git-send-email-alexandre.torgue@st.com>
+References: <1477494683-29890-1-git-send-email-alexandre.torgue@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1477494683-29890-1-git-send-email-alexandre.torgue@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, peter.griffin@linaro.org, lee.jones@linaro.org, Jonathan Corbet <corbet@lwn.net>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Petr Kulhavy <petr@barix.com>
+Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-This adds the function musb_get_mode() to get the DT property "dr_mode"
-
-Signed-off-by: Petr Kulhavy <petr@barix.com>
-Acked-by: Sergei Shtylyov <sshtylyov@ru.mvista.com>
-Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
----
- drivers/usb/musb/musb_core.c | 19 +++++++++++++++++++
- drivers/usb/musb/musb_core.h |  5 +++++
- 2 files changed, 24 insertions(+)
-
-diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
-index 27dadc0..bba07e7 100644
---- a/drivers/usb/musb/musb_core.c
-+++ b/drivers/usb/musb/musb_core.c
-@@ -100,6 +100,7 @@
- #include <linux/io.h>
- #include <linux/dma-mapping.h>
- #include <linux/usb.h>
-+#include <linux/usb/of.h>
- 
- #include "musb_core.h"
- #include "musb_trace.h"
-@@ -130,6 +131,24 @@ static inline struct musb *dev_to_musb(struct device *dev)
- 	return dev_get_drvdata(dev);
- }
- 
-+enum musb_mode musb_get_mode(struct device *dev)
-+{
-+	enum usb_dr_mode mode;
-+
-+	mode = usb_get_dr_mode(dev);
-+	switch (mode) {
-+	case USB_DR_MODE_HOST:
-+		return MUSB_HOST;
-+	case USB_DR_MODE_PERIPHERAL:
-+		return MUSB_PERIPHERAL;
-+	case USB_DR_MODE_OTG:
-+	case USB_DR_MODE_UNKNOWN:
-+	default:
-+		return MUSB_OTG;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(musb_get_mode);
-+
- /*-------------------------------------------------------------------------*/
- 
- #ifndef CONFIG_BLACKFIN
-diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
-index 2cb88a49..a406468 100644
---- a/drivers/usb/musb/musb_core.h
-+++ b/drivers/usb/musb/musb_core.h
-@@ -617,4 +617,9 @@ static inline void musb_platform_post_root_reset_end(struct musb *musb)
- 		musb->ops->post_root_reset_end(musb);
- }
- 
-+/* gets the "dr_mode" property from DT and converts it into musb_mode
-+ * if the property is not found or not recognized returns MUSB_OTG
-+ */
-+extern enum musb_mode musb_get_mode(struct device *dev);
-+
- #endif	/* __MUSB_CORE_H__ */
+diff --git a/arch/arm/configs/dram_size_0x2000000.config b/arch/arm/configs/dram_size_0x2000000.config
+new file mode 100644
+index 0000000..e66430d
+--- /dev/null
++++ b/arch/arm/configs/dram_size_0x2000000.config
+@@ -0,0 +1 @@
++CONFIG_DRAM_SIZE=0x002000000
 -- 
-2.7.3
+1.9.1
+
