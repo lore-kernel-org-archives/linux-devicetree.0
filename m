@@ -1,47 +1,48 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] phy: qcom-qmp: new qmp phy driver for qcom-chipsets
-Date: Wed, 26 Oct 2016 16:18:19 -0500
-Message-ID: <20161026211819.kwlx56ic5cmahwjm@rob-hp-laptop>
-References: <1476873827-7191-1-git-send-email-vivek.gautam@codeaurora.org>
- <1476873827-7191-3-git-send-email-vivek.gautam@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/8] drm: bridge: Add LVDS encoder driver
+Date: Wed, 26 Oct 2016 16:32:14 -0500
+Message-ID: <20161026213214.46ev2pa6zacjajyh@rob-hp-laptop>
+References: <1476887143-24831-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1476887143-24831-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1476873827-7191-3-git-send-email-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1476887143-24831-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2016 at 04:13:47PM +0530, Vivek Gautam wrote:
-> Qualcomm SOCs have QMP phy controller that provides support
-> to a number of controller, viz. PCIe, UFS, and USB.
-> Add a new driver, based on generic phy framework, for this
-> phy controller.
-> 
-> USB3-phy changes: Based on phy-msm-ssusb-qmp driver available on
-> msm-4.4 kernel @codeaurora[1].
-> PCIe-phy changes: Based on msm8996-pcie-phy driver posted by
-> Srinivas [2].
-> 
-> [1] https://source.codeaurora.org/quic/la/kernel/msm-4.4/log/?h=caf/3.18/msm-3.18
-> [2] https://patchwork.kernel.org/patch/9318947/
-> 
-> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> ---
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   61 ++
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  drivers/phy/Kconfig                                |    8 +
->  drivers/phy/Makefile                               |    1 +
->  drivers/phy/phy-qcom-qmp.c                         | 1154 ++++++++++++++++++++
->  4 files changed, 1224 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->  create mode 100644 drivers/phy/phy-qcom-qmp.c
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBPY3QgMTksIDIwMTYgYXQgMDU6MjU6MzZQTSArMDMwMCwgTGF1cmVudCBQaW5jaGFy
+dCB3cm90ZToKPiBUaGUgTFZEUyBlbmNvZGVyIGRyaXZlciBpcyBhIERSTSBicmlkZ2UgZHJpdmVy
+IHRoYXQgc3VwcG9ydHMgdGhlCj4gcGFyYWxsZWwgdG8gTFZEUyBlbmNvZGVycyB0aGF0IGRvbid0
+IHJlcXVpcmUgYW55IGNvbmZpZ3VyYXRpb24uIFRoZQo+IGRyaXZlciB0aHVzIGRvZXNuJ3QgaW50
+ZXJhY3Qgd2l0aCB0aGUgZGV2aWNlLCBidXQgY3JlYXRlcyBhbiBMVkRTCj4gY29ubmVjdG9yIGZv
+ciB0aGUgcGFuZWwgYW5kIGV4cG9zZXMgaXRzIHNpemUgYW5kIHRpbWluZyBiYXNlZCBvbgo+IGlu
+Zm9ybWF0aW9uIHJldHJpZXZlZCBmcm9tIERULgo+IAo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZwo+IFNpZ25lZC1vZmYtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hh
+cnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxh
+eS9icmlkZ2UvbHZkcy10cmFuc21pdHRlci50eHQgICB8ICA2NCArKysrKysrCgpJdCdzIHByZWZl
+cnJlZCB0aGF0IGJpbmRpbmdzIGFyZSBzZXBhcmF0ZSBwYXRjaGVzLiBUaGF0IG1ha2VzIHRoZSAK
+ZmlsdGVyZWQgRFQgb25seSByZXBvIGNvbW1pdHMgbW9yZSBzYW5lLgoKQWNrZWQtYnk6IFJvYiBI
+ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cgo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25m
+aWcgICAgICAgICAgICAgICAgICAgICB8ICAgOCArCj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
+TWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL2Jy
+aWRnZS9sdmRzLWVuY29kZXIuYyAgICAgICAgICAgICAgfCAyMDMgKysrKysrKysrKysrKysrKysr
+KysrCj4gIDQgZmlsZXMgY2hhbmdlZCwgMjc2IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9s
+dmRzLXRyYW5zbWl0dGVyLnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
+L2JyaWRnZS9sdmRzLWVuY29kZXIuYwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
