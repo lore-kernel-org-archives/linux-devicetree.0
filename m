@@ -1,63 +1,51 @@
-From: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] gpio: mcp23s08: Add option to configure pullups.
-Date: Wed, 26 Oct 2016 11:59:14 +0200
-Message-ID: <CAFqH_53SSctH9Ms-0Zm5fhEgMtkWq_SP9VChY-QYV-qDLLj_WA@mail.gmail.com>
-References: <1477062035-30825-1-git-send-email-enric.balletbo@collabora.com>
- <CACRpkdY15Hv_ydHyOXRM6G0ewVTHkVa1w3Z89AdvSDR=eyi7sQ@mail.gmail.com> <11644726.TmP4uu3h4l@ws-stein>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 2/5] ARM: davinci: da8xx: Add CFGCHIP syscon platform
+ declaration.
+Date: Wed, 26 Oct 2016 15:28:23 +0530
+Message-ID: <20722288-9567-16d7-c591-5872ef8d8b9e@ti.com>
+References: <1477451211-31979-1-git-send-email-david@lechnology.com>
+ <1477451211-31979-3-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <11644726.TmP4uu3h4l@ws-stein>
+In-Reply-To: <1477451211-31979-3-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Wednesday 26 October 2016 08:36 AM, David Lechner wrote:
+> The CFGCHIP registers are used by a number of devices, so using a syscon
+> device to share them. The first consumer of this will by the phy-da8xx-usb
 
-2016-10-24 8:13 GMT+02:00 Alexander Stein
-<alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>:
-> On Monday 24 October 2016 02:53:31, Linus Walleij wrote:
->> On Fri, Oct 21, 2016 at 5:00 PM, Enric Balletbo i Serra
->>
->> <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
->> > Default is without pullups, but if property is specified in DT and the bit
->> > is set, set a pullup on GPIO-n.
->> >
->> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->>
->> I don't generally like this.
->>
+"will be the .." 
 
-I tried to use the same approach as used in gpio-twl4030.c because is
-what I knew before. Maybe you can point me to a better approach?
+Also, in subject line, "platform device" instead of "platform 
+declaration". Also lose the period at at the end of subject line
 
->> In device tree it is the consumer that specifies how the line is used,
->> not the producer (gpiochip).
->>
->> We currently only specify polarity, open drain and open source
->> for consumers though.
->>
->> And the entire pin control system came into being *exactly* because
->> Grant didn't like me adding these things to the GPIO drivers.
->>
->> So how many other things does the MCP support? Drive strength?
->> Schmitt trigger? Is there a datasheet?
->
-> Some unsupported features (AFAIK):
-> * Input polarity (IPOL register)
-> * open-drain interrupt pin
-> * pullup on pins (proposed patch)
->
-> Datasheet is here: http://ww1.microchip.com/downloads/en/DeviceDoc/21919e.pdf
->
-> Best regards,
-> Alexander
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-gpio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> driver.
+> 
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+
+Applied to v4.10/soc. Here is the final commit text.
+
+---
+ARM: davinci: da8xx: Add CFGCHIP syscon platform device
+
+The CFGCHIP registers are used by a number of devices, so use a syscon
+device to share them. The first consumer of this will by the phy-da8xx-usb
+driver.
+
+Add the syscon device and register it.
+
+Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+[nsekhar-l0cyMroinI0@public.gmane.org: minor commit message fixes]
+Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+---
+
+Thanks,
+Sekhar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
