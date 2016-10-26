@@ -1,165 +1,59 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 0/8] power: add power sequence library
-Date: Wed, 26 Oct 2016 09:27:57 +0800
-Message-ID: <20161026012757.GA11376@b29397-desktop>
-References: <1476413995-20361-1-git-send-email-peter.chen@nxp.com>
- <5097336.earU4jV2qd@vostro.rjw.lan>
- <20161017013058.GA1301@b29397-desktop>
- <5513671.XlE8bb9pVt@vostro.rjw.lan>
+From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm64: arch_timer: Add device tree binding for
+ hisilicon-161x01 erratum
+Date: Wed, 26 Oct 2016 10:59:27 +0800
+Message-ID: <05ebde92-60b5-88aa-0875-a9d2729eff8c@huawei.com>
+References: <962ea92f-870b-e1d0-5bb7-1a6d66c35122@huawei.com>
+ <20161024111608.GG15620@leverpostej>
+ <7e839df8-f8f7-3b16-8321-4ff45b6c5884@huawei.com>
+ <20161024131617.GJ15620@leverpostej>
+ <1dcfb21a-7417-282e-f187-425d2c148672@huawei.com>
+ <20161024133945.GL15620@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5513671.XlE8bb9pVt-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+In-Reply-To: <20161024133945.GL15620@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 18, 2016 at 02:35:38AM +0200, Rafael J. Wysocki wrote:
-> On Monday, October 17, 2016 09:30:59 AM Peter Chen wrote:
-> > On Fri, Oct 14, 2016 at 02:09:31PM +0200, Rafael J. Wysocki wrote:
-> > > On Friday, October 14, 2016 10:59:47 AM Peter Chen wrote:
-> > > > Hi all,
-> > > > 
-> > > > This is a follow-up for my last power sequence framework patch set [1].
-> > > > According to Rob Herring and Ulf Hansson's comments[2]. The kinds of
-> > > > power sequence instances will be added at postcore_initcall, the match
-> > > > criteria is compatible string first, if the compatible string is not
-> > > > matched between dts and library, it will try to use generic power sequence.
-> > > > 	 
-> > > > The host driver just needs to call of_pwrseq_on/of_pwrseq_off
-> > > > if only one power sequence instance is needed, for more power sequences
-> > > > are used, using of_pwrseq_on_list/of_pwrseq_off_list instead (eg, USB hub driver).
-> > > > 
-> > > > In future, if there are special power sequence requirements, the special
-> > > > power sequence library can be created.
-> > > > 
-> > > > This patch set is tested on i.mx6 sabresx evk using a dts change, I use
-> > > > two hot-plug devices to simulate this use case, the related binding
-> > > > change is updated at patch [1/6], The udoo board changes were tested
-> > > > using my last power sequence patch set.[3]
-> > > > 
-> > > > Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
-> > > > need to power on itself before it can be found by ULPI bus.
-> > > > 
-> > > > [1] http://www.spinics.net/lists/linux-usb/msg142755.html
-> > > > [2] http://www.spinics.net/lists/linux-usb/msg143106.html
-> > > > [3] http://www.spinics.net/lists/linux-usb/msg142815.html
-> > > > 
-> > > > Changes for v8:
-> > > > - Allocate one extra pwrseq instance if pwrseq_get has succeed, it can avoid
-> > > >   preallocate instances problem which the number of instance is decided at
-> > > >   compile time, thanks for Heiko Stuebner's suggestion [Patch 2/8]
-> > > > - Delete pwrseq_compatible_sample.c which is the demo purpose to show compatible
-> > > >   match method. [Patch 2/8]
-> > > > - Add Maciej S. Szmigiero's tested-by. [Patch 7/8]
-> > > > 
-> > > > Changes for v7:
-> > > > - Create kinds of power sequence instance at postcore_initcall, and match
-> > > >   the instance with node using compatible string, the beneit of this is
-> > > >   the host driver doesn't need to consider which pwrseq instance needs
-> > > >   to be used, and pwrseq core will match it, however, it eats some memories
-> > > >   if less power sequence instances are used. [Patch 2/8]
-> > > > - Add pwrseq_compatible_sample.c to test match pwrseq using device_id. [Patch 2/8]
-> > > > - Fix the comments Vaibhav Hiremath adds for error path for clock and do not
-> > > >   use device_node for parameters at pwrseq_on. [Patch 2/8]
-> > > > - Simplify the caller to use power sequence, follows Alan's commnets [Patch 4/8]
-> > > > - Tested three pwrseq instances together using both specific compatible string and
-> > > >   generic libraries.
-> > > > 
-> > > > Changes for v6:
-> > > > - Add Matthias Kaehlcke's Reviewed-by and Tested-by. (patch [2/6])
-> > > > - Change chipidea core of_node assignment for coming user. (patch [5/6])
-> > > > - Applies Joshua Clayton's three dts changes for two boards,
-> > > >   the USB device's reg has only #address-cells, but without #size-cells.
-> > > > 
-> > > > Changes for v5:
-> > > > - Delete pwrseq_register/pwrseq_unregister, which is useless currently
-> > > > - Fix the linker error when the pwrseq user is compiled as module
-> > > > 
-> > > > Changes for v4:
-> > > > - Create the patch on next-20160722 
-> > > > - Fix the of_node is not NULL after chipidea driver is unbinded [Patch 5/6]
-> > > > - Using more friendly wait method for reset gpio [Patch 2/6]
-> > > > - Support multiple input clocks [Patch 2/6]
-> > > > - Add Rob Herring's ack for DT changes
-> > > > - Add Joshua Clayton's Tested-by
-> > > > 
-> > > > Changes for v3:
-> > > > - Delete "power-sequence" property at binding-doc, and change related code
-> > > >   at both library and user code.
-> > > > - Change binding-doc example node name with Rob's comments
-> > > > - of_get_named_gpio_flags only gets the gpio, but without setting gpio flags,
-> > > >   add additional code request gpio with proper gpio flags
-> > > > - Add Philipp Zabel's Ack and MAINTAINER's entry
-> > > > 
-> > > > Changes for v2:
-> > > > - Delete "pwrseq" prefix and clock-names for properties at dt binding
-> > > > - Should use structure not but its pointer for kzalloc
-> > > > - Since chipidea core has no of_node, let core's of_node equals glue
-> > > >   layer's at core's probe
-> > > > 
-> > > > Joshua Clayton (2):
-> > > >   ARM: dts: imx6qdl: Enable usb node children with <reg>
-> > > >   ARM: dts: imx6q-evi: Fix onboard hub reset line
-> > > > 
-> > > > Peter Chen (6):
-> > > >   binding-doc: power: pwrseq-generic: add binding doc for generic power
-> > > >     sequence library
-> > > >   power: add power sequence library
-> > > >   binding-doc: usb: usb-device: add optional properties for power
-> > > >     sequence
-> > > >   usb: core: add power sequence handling for USB devices
-> > > >   usb: chipidea: let chipidea core device of_node equal's glue layer
-> > > >     device of_node
-> > > >   ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB property
-> > > > 
-> > > >  .../bindings/power/pwrseq/pwrseq-generic.txt       |  48 ++++++
-> > > >  .../devicetree/bindings/usb/usb-device.txt         |  10 +-
-> > > >  MAINTAINERS                                        |   9 +
-> > > >  arch/arm/boot/dts/imx6q-evi.dts                    |  25 +--
-> > > >  arch/arm/boot/dts/imx6qdl-udoo.dtsi                |  26 ++-
-> > > >  arch/arm/boot/dts/imx6qdl.dtsi                     |   6 +
-> > > >  drivers/power/Kconfig                              |   1 +
-> > > >  drivers/power/Makefile                             |   1 +
-> > > >  drivers/power/pwrseq/Kconfig                       |  19 ++
-> > > >  drivers/power/pwrseq/Makefile                      |   2 +
-> > > >  drivers/power/pwrseq/core.c                        | 191 +++++++++++++++++++++
-> > > >  drivers/power/pwrseq/pwrseq_generic.c              | 183 ++++++++++++++++++++
-> > > >  drivers/usb/chipidea/core.c                        |  27 ++-
-> > > >  drivers/usb/core/hub.c                             |  41 ++++-
-> > > >  drivers/usb/core/hub.h                             |   1 +
-> > > >  include/linux/power/pwrseq.h                       |  72 ++++++++
-> > > >  16 files changed, 621 insertions(+), 41 deletions(-)
-> > > >  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
-> > > >  create mode 100644 drivers/power/pwrseq/Kconfig
-> > > >  create mode 100644 drivers/power/pwrseq/Makefile
-> > > >  create mode 100644 drivers/power/pwrseq/core.c
-> > > >  create mode 100644 drivers/power/pwrseq/pwrseq_generic.c
-> > > >  create mode 100644 include/linux/power/pwrseq.h
-> > > 
-> > > Meta question: Who's the maintainer you are targetting this at?
-> > > 
-> > 
-> > Sebastian Reichel mentioned it is better through your tree.
-> > I could be the maintainer for it, and send "GIT PULL" for you
-> > through my git
-> > (https://git.kernel.org/cgit/linux/kernel/git/peter.chen/usb.git/)
-> > Is it ok for you?
+
+
+On 2016/10/24 21:39, Mark Rutland wrote:
+> On Mon, Oct 24, 2016 at 09:23:10PM +0800, Ding Tianhong wrote:
+>> On 2016/10/24 21:16, Mark Rutland wrote:
+>>> On Mon, Oct 24, 2016 at 08:40:01PM +0800, Ding Tianhong wrote:
+>>>> On 2016/10/24 19:16, Mark Rutland wrote:
+>>>>> Is "161x01" the *exact* erratum number, or is the 'x' a wildcard?
+>>>>
+>>>> The 'x' is a wildcard, it will cover 161001 to 161601 several numbers,
+>>>
+>>> Given you're using a wildcard, I take it that this is a *part* number?
+>>
+>> Yes, I was doubt how to fix this, should I choose a better erratum number?
 > 
-> Let me review the series first. :-)
+> Typically, we expect that each vendor has some central database of their
+> errata, with each having a unique ID.
+> 
+> If Huawei do not have such a database, I do not think that we should
+> invent an erratum number here.
 > 
 
-A nice ping..., thanks.
+Hi Marko<
 
-Just see someone is also waiting this series.
-http://www.spinics.net/lists/devicetree/msg147655.html
+After discussion with our chip developer, we decide the 161601 as the *exact* erratum number for this chip to cover
+all the problem and register this in our company's database, thanks.
 
--- 
+Ding
 
-Best Regards,
-Peter Chen
+> Thanks,
+> Mark.
+> 
+> .
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
