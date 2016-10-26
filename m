@@ -1,58 +1,65 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm64: arch_timer: Add device tree binding for
- hisilicon-161x01 erratum
-Date: Wed, 26 Oct 2016 10:59:27 +0800
-Message-ID: <05ebde92-60b5-88aa-0875-a9d2729eff8c@huawei.com>
-References: <962ea92f-870b-e1d0-5bb7-1a6d66c35122@huawei.com>
- <20161024111608.GG15620@leverpostej>
- <7e839df8-f8f7-3b16-8321-4ff45b6c5884@huawei.com>
- <20161024131617.GJ15620@leverpostej>
- <1dcfb21a-7417-282e-f187-425d2c148672@huawei.com>
- <20161024133945.GL15620@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: [PATCH v6 0/5] da8xx USB PHY platform devices and clocks
+Date: Tue, 25 Oct 2016 22:06:46 -0500
+Message-ID: <1477451211-31979-1-git-send-email-david@lechnology.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161024133945.GL15620@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+It has been almost 6 months since the v5 submission, so here is a recap:
+
+* There were a number of phy and usb dependencies that were submitted
+  separately.
+* The last of the usb dependencies has finally made its way into linux-next
+  today.
+* This series was recently included in "[PATCH/RFT v2 00/17] Add DT support for
+  ohci-da8xx". I am breaking it back out again as a standalone series.
 
 
-On 2016/10/24 21:39, Mark Rutland wrote:
-> On Mon, Oct 24, 2016 at 09:23:10PM +0800, Ding Tianhong wrote:
->> On 2016/10/24 21:16, Mark Rutland wrote:
->>> On Mon, Oct 24, 2016 at 08:40:01PM +0800, Ding Tianhong wrote:
->>>> On 2016/10/24 19:16, Mark Rutland wrote:
->>>>> Is "161x01" the *exact* erratum number, or is the 'x' a wildcard?
->>>>
->>>> The 'x' is a wildcard, it will cover 161001 to 161601 several numbers,
->>>
->>> Given you're using a wildcard, I take it that this is a *part* number?
->>
->> Yes, I was doubt how to fix this, should I choose a better erratum number?
-> 
-> Typically, we expect that each vendor has some central database of their
-> errata, with each having a unique ID.
-> 
-> If Huawei do not have such a database, I do not think that we should
-> invent an erratum number here.
-> 
+v6 changes:
 
-Hi Marko<
+* Combine "ARM: davinci: da8xx: Enable the usb20 "per" clk on phy_clk_enable"
+  from the "[PATCH/RFT v2 00/17] Add DT support for ohci-da8xx" series with
+  the "ARM: davinci: da8xx: add usb phy clocks" patch in this series.
+* Change the syscon and da8xx-usb-phy device ids to -1.
 
-After discussion with our chip developer, we decide the 161601 as the *exact* erratum number for this chip to cover
-all the problem and register this in our company's database, thanks.
+v5 changes: renamed "usbphy" to "usb_phy" or "usb-phy" as appropriate
 
-Ding
+v4 changes: fix strict checkpatch complaint
 
-> Thanks,
-> Mark.
-> 
-> .
-> 
+v3 changes:
+
+* Fixed the davinci device tree declarations to use the preferred DT address
+  convention so that the items I have added can be correct too.
+* Moved that davinci clock init so that we don't have to call ioremap in the
+  clock mux functions.
+* Added a new "syscon" device for the CFGCHIP registers. This is used by the
+  USB PHY driver and will be used in the future in common clock framework
+  drivers.
+* USB clocks are moved to a common file instead of having duplicated code.
+* PHY driver uses syscon for CFGCHIP registers instead of using them directly.
+
+David Lechner (5):
+  ARM: davinci: da8xx: add usb phy clocks
+  ARM: davinci: da8xx: Add CFGCHIP syscon platform declaration.
+  ARM: davinci: da8xx: Add USB PHY platform declaration
+  ARM: DTS: da850: Add cfgchip syscon node
+  ARM: DTS: da850: Add usb phy node
+
+ arch/arm/boot/dts/da850.dtsi                |   9 ++
+ arch/arm/mach-davinci/board-da830-evm.c     |  52 +++---
+ arch/arm/mach-davinci/board-da850-evm.c     |   4 +
+ arch/arm/mach-davinci/board-mityomapl138.c  |   4 +
+ arch/arm/mach-davinci/board-omapl138-hawk.c |  23 ++-
+ arch/arm/mach-davinci/devices-da8xx.c       |  28 ++++
+ arch/arm/mach-davinci/include/mach/da8xx.h  |   6 +
+ arch/arm/mach-davinci/usb-da8xx.c           | 243 +++++++++++++++++++++++++++-
+ 8 files changed, 327 insertions(+), 42 deletions(-)
+
+-- 
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
