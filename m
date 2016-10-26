@@ -1,51 +1,81 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/2] dt: bindings: add
- allwinner,otg-routed property for phy-sun4i-usb
-Date: Tue, 25 Oct 2016 09:18:08 +0200
-Message-ID: <20161025071808.ywsi7tko72wyxhqh@lukather>
-References: <20161025041139.46454-1-icenowy@aosc.xyz>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: Add TI SCI PM Domains
+Date: Wed, 26 Oct 2016 17:04:57 -0500
+Message-ID: <20161026220457.kvbd4wgtizdbndf3@rob-hp-laptop>
+References: <20161019203347.17893-1-d-gerlach@ti.com>
+ <20161019203347.17893-3-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vok5x3p4uc2fffa3"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBJORYTAAKGQETZBSYJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161025041139.46454-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161019203347.17893-3-d-gerlach@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Santosh Shilimkar <ssantosh@kernel.org>, Keerthy <j-keerthy@ti.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---vok5x3p4uc2fffa3
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-Hi,
-
-On Tue, Oct 25, 2016 at 12:11:38PM +0800, Icenowy Zheng wrote:
-> On some newer Allwinner SoCs (H3 or A64), the PHY0 can be either routed to
-> the MUSB controller (which is an OTG controller) or the OHCI/EHCI pair
-> (which is a Host-only controller, but more stable and easy to implement).
+On Wed, Oct 19, 2016 at 03:33:45PM -0500, Dave Gerlach wrote:
+> Add a generic power domain implementation, TI SCI PM Domains, that
+> will hook into the genpd framework and allow the TI SCI protocol to
+> control device power states.
 > 
-> This property marks whether on a certain board which controller should be
-> attached to the PHY.
+> Also, provide macros representing each device index as understood
+> by TI SCI to be used in the device node power-domain references.
+> These are identifiers for the K2G devices managed by the PMMC.
 > 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+> ---
+>  .../devicetree/bindings/soc/ti/sci-pm-domain.txt   | 54 +++++++++++++
+>  MAINTAINERS                                        |  2 +
+>  include/dt-bindings/genpd/k2g.h                    | 90 ++++++++++++++++++++++
+>  3 files changed, 146 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>  create mode 100644 include/dt-bindings/genpd/k2g.h
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+> new file mode 100644
+> index 000000000000..32f38a349656
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+> @@ -0,0 +1,54 @@
+> +Texas Instruments TI-SCI Generic Power Domain
+> +---------------------------------------------
+> +
+> +Some TI SoCs contain a system controller (like the PMMC, etc...) that is
+> +responsible for controlling the state of the IPs that are present.
+> +Communication between the host processor running an OS and the system
+> +controller happens through a protocol known as TI-SCI [1]. This pm domain
+> +implementation plugs into the generic pm domain framework and makes use of
+> +the TI SCI protocol power on and off each device when needed.
+> +
+> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+> +
+> +PM Domain Node
+> +==============
+> +The PM domain node represents the global PM domain managed by the PMMC,
+> +which in this case is the single implementation as documented by the generic
+> +PM domain bindings in Documentation/devicetree/bindings/power/power_domain.txt.
+> +
+> +Required Properties:
+> +--------------------
+> +- compatible: should be "ti,sci-pm-domain"
+> +- #power-domain-cells: Must be 0.
+> +- ti,sci: Phandle to the TI SCI device to use for managing the devices.
+> +
+> +Example:
+> +--------------------
+> +k2g_pds: k2g_pds {
+> +        compatible = "ti,sci-pm-domain";
+> +        #power-domain-cells = <0>;
+> +        ti,sci = <&pmmc>;
+> +};
 
-Didn't Hans reject this already? Why are you resending it?
+Why not just make the PMMC node be the power-domain provider itself? If 
+not that, then make this a child node of it. The same comment applies to 
+all the SCI functions, but I guess I've already acked some of them. 
 
-Thanks,
-Maxime
+I really don't like reviewing all these TI SCI bindings one by one. Each 
+one on its own seems fine, but I don't see the full picture.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---vok5x3p4uc2fffa3--
+Rob
