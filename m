@@ -1,56 +1,166 @@
-From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: Re: [PATCH v4 4/5] mm: make processing of movable_node arch-specific
-Date: Tue, 25 Oct 2016 19:49:29 -0500
-Message-ID: <20161026004929.h6v54dhehk4yvmwm@arbab-vm>
-References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com>
- <1475778995-1420-5-git-send-email-arbab@linux.vnet.ibm.com>
- <235f2d20-cf84-08df-1fb4-08ee258fdc52@gmail.com>
- <dcfc8ace-e59e-6b4b-0f2f-4eff9f08f3c1@gmail.com>
- <20161025155507.37kv5akdlgo6m2be@arbab-laptop.austin.ibm.com>
- <112504e9-561d-e0da-7a40-73996c678b56@gmail.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 0/8] power: add power sequence library
+Date: Wed, 26 Oct 2016 09:27:57 +0800
+Message-ID: <20161026012757.GA11376@b29397-desktop>
+References: <1476413995-20361-1-git-send-email-peter.chen@nxp.com>
+ <5097336.earU4jV2qd@vostro.rjw.lan>
+ <20161017013058.GA1301@b29397-desktop>
+ <5513671.XlE8bb9pVt@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <owner-linux-mm@kvack.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <112504e9-561d-e0da-7a40-73996c678b56@gmail.com>
-Sender: owner-linux-mm@kvack.org
-To: Balbir Singh <bsingharora@gmail.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
+In-Reply-To: <5513671.XlE8bb9pVt-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 26, 2016 at 09:34:18AM +1100, Balbir Singh wrote:
->I still believe we need your changes, I was wondering if we've tested
->it against normal memory nodes and checked if any memblock
->allocations end up there. Michael showed me some memblock
->allocations on node 1 of a two node machine with movable_node
+On Tue, Oct 18, 2016 at 02:35:38AM +0200, Rafael J. Wysocki wrote:
+> On Monday, October 17, 2016 09:30:59 AM Peter Chen wrote:
+> > On Fri, Oct 14, 2016 at 02:09:31PM +0200, Rafael J. Wysocki wrote:
+> > > On Friday, October 14, 2016 10:59:47 AM Peter Chen wrote:
+> > > > Hi all,
+> > > > 
+> > > > This is a follow-up for my last power sequence framework patch set [1].
+> > > > According to Rob Herring and Ulf Hansson's comments[2]. The kinds of
+> > > > power sequence instances will be added at postcore_initcall, the match
+> > > > criteria is compatible string first, if the compatible string is not
+> > > > matched between dts and library, it will try to use generic power sequence.
+> > > > 	 
+> > > > The host driver just needs to call of_pwrseq_on/of_pwrseq_off
+> > > > if only one power sequence instance is needed, for more power sequences
+> > > > are used, using of_pwrseq_on_list/of_pwrseq_off_list instead (eg, USB hub driver).
+> > > > 
+> > > > In future, if there are special power sequence requirements, the special
+> > > > power sequence library can be created.
+> > > > 
+> > > > This patch set is tested on i.mx6 sabresx evk using a dts change, I use
+> > > > two hot-plug devices to simulate this use case, the related binding
+> > > > change is updated at patch [1/6], The udoo board changes were tested
+> > > > using my last power sequence patch set.[3]
+> > > > 
+> > > > Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
+> > > > need to power on itself before it can be found by ULPI bus.
+> > > > 
+> > > > [1] http://www.spinics.net/lists/linux-usb/msg142755.html
+> > > > [2] http://www.spinics.net/lists/linux-usb/msg143106.html
+> > > > [3] http://www.spinics.net/lists/linux-usb/msg142815.html
+> > > > 
+> > > > Changes for v8:
+> > > > - Allocate one extra pwrseq instance if pwrseq_get has succeed, it can avoid
+> > > >   preallocate instances problem which the number of instance is decided at
+> > > >   compile time, thanks for Heiko Stuebner's suggestion [Patch 2/8]
+> > > > - Delete pwrseq_compatible_sample.c which is the demo purpose to show compatible
+> > > >   match method. [Patch 2/8]
+> > > > - Add Maciej S. Szmigiero's tested-by. [Patch 7/8]
+> > > > 
+> > > > Changes for v7:
+> > > > - Create kinds of power sequence instance at postcore_initcall, and match
+> > > >   the instance with node using compatible string, the beneit of this is
+> > > >   the host driver doesn't need to consider which pwrseq instance needs
+> > > >   to be used, and pwrseq core will match it, however, it eats some memories
+> > > >   if less power sequence instances are used. [Patch 2/8]
+> > > > - Add pwrseq_compatible_sample.c to test match pwrseq using device_id. [Patch 2/8]
+> > > > - Fix the comments Vaibhav Hiremath adds for error path for clock and do not
+> > > >   use device_node for parameters at pwrseq_on. [Patch 2/8]
+> > > > - Simplify the caller to use power sequence, follows Alan's commnets [Patch 4/8]
+> > > > - Tested three pwrseq instances together using both specific compatible string and
+> > > >   generic libraries.
+> > > > 
+> > > > Changes for v6:
+> > > > - Add Matthias Kaehlcke's Reviewed-by and Tested-by. (patch [2/6])
+> > > > - Change chipidea core of_node assignment for coming user. (patch [5/6])
+> > > > - Applies Joshua Clayton's three dts changes for two boards,
+> > > >   the USB device's reg has only #address-cells, but without #size-cells.
+> > > > 
+> > > > Changes for v5:
+> > > > - Delete pwrseq_register/pwrseq_unregister, which is useless currently
+> > > > - Fix the linker error when the pwrseq user is compiled as module
+> > > > 
+> > > > Changes for v4:
+> > > > - Create the patch on next-20160722 
+> > > > - Fix the of_node is not NULL after chipidea driver is unbinded [Patch 5/6]
+> > > > - Using more friendly wait method for reset gpio [Patch 2/6]
+> > > > - Support multiple input clocks [Patch 2/6]
+> > > > - Add Rob Herring's ack for DT changes
+> > > > - Add Joshua Clayton's Tested-by
+> > > > 
+> > > > Changes for v3:
+> > > > - Delete "power-sequence" property at binding-doc, and change related code
+> > > >   at both library and user code.
+> > > > - Change binding-doc example node name with Rob's comments
+> > > > - of_get_named_gpio_flags only gets the gpio, but without setting gpio flags,
+> > > >   add additional code request gpio with proper gpio flags
+> > > > - Add Philipp Zabel's Ack and MAINTAINER's entry
+> > > > 
+> > > > Changes for v2:
+> > > > - Delete "pwrseq" prefix and clock-names for properties at dt binding
+> > > > - Should use structure not but its pointer for kzalloc
+> > > > - Since chipidea core has no of_node, let core's of_node equals glue
+> > > >   layer's at core's probe
+> > > > 
+> > > > Joshua Clayton (2):
+> > > >   ARM: dts: imx6qdl: Enable usb node children with <reg>
+> > > >   ARM: dts: imx6q-evi: Fix onboard hub reset line
+> > > > 
+> > > > Peter Chen (6):
+> > > >   binding-doc: power: pwrseq-generic: add binding doc for generic power
+> > > >     sequence library
+> > > >   power: add power sequence library
+> > > >   binding-doc: usb: usb-device: add optional properties for power
+> > > >     sequence
+> > > >   usb: core: add power sequence handling for USB devices
+> > > >   usb: chipidea: let chipidea core device of_node equal's glue layer
+> > > >     device of_node
+> > > >   ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB property
+> > > > 
+> > > >  .../bindings/power/pwrseq/pwrseq-generic.txt       |  48 ++++++
+> > > >  .../devicetree/bindings/usb/usb-device.txt         |  10 +-
+> > > >  MAINTAINERS                                        |   9 +
+> > > >  arch/arm/boot/dts/imx6q-evi.dts                    |  25 +--
+> > > >  arch/arm/boot/dts/imx6qdl-udoo.dtsi                |  26 ++-
+> > > >  arch/arm/boot/dts/imx6qdl.dtsi                     |   6 +
+> > > >  drivers/power/Kconfig                              |   1 +
+> > > >  drivers/power/Makefile                             |   1 +
+> > > >  drivers/power/pwrseq/Kconfig                       |  19 ++
+> > > >  drivers/power/pwrseq/Makefile                      |   2 +
+> > > >  drivers/power/pwrseq/core.c                        | 191 +++++++++++++++++++++
+> > > >  drivers/power/pwrseq/pwrseq_generic.c              | 183 ++++++++++++++++++++
+> > > >  drivers/usb/chipidea/core.c                        |  27 ++-
+> > > >  drivers/usb/core/hub.c                             |  41 ++++-
+> > > >  drivers/usb/core/hub.h                             |   1 +
+> > > >  include/linux/power/pwrseq.h                       |  72 ++++++++
+> > > >  16 files changed, 621 insertions(+), 41 deletions(-)
+> > > >  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+> > > >  create mode 100644 drivers/power/pwrseq/Kconfig
+> > > >  create mode 100644 drivers/power/pwrseq/Makefile
+> > > >  create mode 100644 drivers/power/pwrseq/core.c
+> > > >  create mode 100644 drivers/power/pwrseq/pwrseq_generic.c
+> > > >  create mode 100644 include/linux/power/pwrseq.h
+> > > 
+> > > Meta question: Who's the maintainer you are targetting this at?
+> > > 
+> > 
+> > Sebastian Reichel mentioned it is better through your tree.
+> > I could be the maintainer for it, and send "GIT PULL" for you
+> > through my git
+> > (https://git.kernel.org/cgit/linux/kernel/git/peter.chen/usb.git/)
+> > Is it ok for you?
+> 
+> Let me review the series first. :-)
+> 
 
-The movable_node option is x86-only. Both of those nodes contain normal 
-memory, so allocations on both are allowed.
+A nice ping..., thanks.
 
->> Longer; if you use "movable_node", x86 can identify these nodes at 
->> boot. They call memblock_mark_hotplug() while parsing the SRAT. Then, 
->> when the zones are initialized, those markings are used to determine 
->> ZONE_MOVABLE.
->>
->> We have no analog of this SRAT information, so our movable nodes can 
->> only be created post boot, by hotplugging and explicitly onlining 
->> with online_movable.
->
->Is this true for all of system memory as well or only for nodes
->hotplugged later?
-
-As far as I know, power has nothing like the SRAT that tells us, at 
-boot, which memory is hotpluggable. So there is nothing to wire the 
-movable_node option up to.
-
-Of course, any memory you hotplug afterwards is, by definition, 
-hotpluggable. So we can still create movable nodes that way.
+Just see someone is also waiting this series.
+http://www.spinics.net/lists/devicetree/msg147655.html
 
 -- 
-Reza Arbab
 
+Best Regards,
+Peter Chen
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
