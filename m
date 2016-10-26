@@ -1,86 +1,64 @@
-From: Alexandre TORGUE <alexandre.torgue@st.com>
-Subject: [PATCH 1/5] ARM: mach-stm32: Add a new SOC - STM32F746
-Date: Wed, 26 Oct 2016 17:11:19 +0200
-Message-ID: <1477494683-29890-2-git-send-email-alexandre.torgue@st.com>
-References: <1477494683-29890-1-git-send-email-alexandre.torgue@st.com>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCH 3/4] mfd: altr-a10sr: Add Arria10 SR Monitor
+Date: Wed, 26 Oct 2016 10:18:32 -0500
+Message-ID: <f85a537e-716f-cc40-a47a-0f2345526fef@opensource.altera.com>
+References: <1476394329-31696-1-git-send-email-tthayer@opensource.altera.com>
+ <1476394329-31696-4-git-send-email-tthayer@opensource.altera.com>
+ <20161026125233.GL11267@dell>
+Reply-To: tthayer@opensource.altera.com
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1477494683-29890-1-git-send-email-alexandre.torgue@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, peter.griffin@linaro.org, lee.jones@linaro.org, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161026125233.GL11267@dell>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, inux@armlinux.org.uk, robh+dt@kernel.org, geert@linux-m68k.org, dinguyen@opensource.altera.com, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-diff --git a/Documentation/arm/stm32/overview.txt b/Documentation/arm/stm32/overview.txt
-index 09aed55..a03b035 100644
---- a/Documentation/arm/stm32/overview.txt
-+++ b/Documentation/arm/stm32/overview.txt
-@@ -5,7 +5,8 @@ Introduction
- ------------
- 
-   The STMicroelectronics family of Cortex-M based MCUs are supported by the
--  'STM32' platform of ARM Linux. Currently only the STM32F429 is supported.
-+  'STM32' platform of ARM Linux. Currently only the STM32F429 (Cortex-M4)
-+  and STM32F746 (Cortex-M7) are supported.
- 
- 
- Configuration
-diff --git a/Documentation/arm/stm32/stm32f746-overview.txt b/Documentation/arm/stm32/stm32f746-overview.txt
-new file mode 100644
-index 0000000..cffd2b1
---- /dev/null
-+++ b/Documentation/arm/stm32/stm32f746-overview.txt
-@@ -0,0 +1,34 @@
-+			STM32F746 Overview
-+			==================
-+
-+  Introduction
-+  ------------
-+	The STM32F746 is a Cortex-M7 MCU aimed at various applications.
-+	It features:
-+	- Cortex-M7 core running up to @216MHz
-+	- 1MB internal flash, 320KBytes internal RAM (+4KB of backup SRAM)
-+	- FMC controller to connect SDRAM, NOR and NAND memories
-+	- Dual mode QSPI
-+	- SD/MMC/SDIO support
-+	- Ethernet controller
-+	- USB OTFG FS & HS controllers
-+	- I2C, SPI, CAN busses support
-+	- Several 16 & 32 bits general purpose timers
-+	- Serial Audio interface
-+	- LCD controller
-+	- HDMI-CEC
-+	- SPDIFRX
-+
-+  Resources
-+  ---------
-+	Datasheet and reference manual are publicly available on ST website:
-+	- http://www.st.com/content/st_com/en/products/microcontrollers/stm32-32-bit-arm-cortex-mcus/stm32f7-series/stm32f7x6/stm32f746ng.html
-+
-+  Document Author
-+  ---------------
-+	Alexandre Torgue <alexandre.torgue@st.com>
-+
-+
-+
-+
-+
-diff --git a/arch/arm/mach-stm32/board-dt.c b/arch/arm/mach-stm32/board-dt.c
-index ceee477..c354222 100644
---- a/arch/arm/mach-stm32/board-dt.c
-+++ b/arch/arm/mach-stm32/board-dt.c
-@@ -11,6 +11,7 @@
- static const char *const stm32_compat[] __initconst = {
- 	"st,stm32f429",
- 	"st,stm32f469",
-+	"st,stm32f746",
- 	NULL
- };
- 
--- 
-1.9.1
 
+On 10/26/2016 07:52 AM, Lee Jones wrote:
+> On Thu, 13 Oct 2016, tthayer@opensource.altera.com wrote:
+>
+>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>
+>> Add the Altera Arria10 DevKit System Resource Monitor functionality
+>> to the MFD device.
+>>
+>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+>> ---
+>>  drivers/mfd/altera-a10sr.c |    4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
+>> index 06e1f7f..0942d7d 100644
+>> --- a/drivers/mfd/altera-a10sr.c
+>> +++ b/drivers/mfd/altera-a10sr.c
+>> @@ -33,6 +33,10 @@
+>>  		.name = "altr_a10sr_gpio",
+>>  		.of_compatible = "altr,a10sr-gpio",
+>>  	},
+>> +	{
+>> +		.name = "altr_a10sr_mon",
+>> +		.of_compatible = "altr,a10sr-mon",
+>
+> "-monitor" would be better in my opinion.
+>
+
+OK. I'm flexible and it is clearer. I'll make the changes and resubmit.
+Thanks for reviewing!
+
+>> +	},
+>>  };
+>>
+>>  static bool altr_a10sr_reg_readable(struct device *dev, unsigned int reg)
+>
