@@ -1,208 +1,83 @@
-From: "M.H. Lian" <minghuan.lian@nxp.com>
-Subject: RE: [PATCH 1/6] dt/bindings: adjust bindings for Layerscape SCFG MSI
-Date: Wed, 26 Oct 2016 06:55:22 +0000
-Message-ID: <VI1PR04MB161582C628C5EA4CD08B15C6E8AB0@VI1PR04MB1615.eurprd04.prod.outlook.com>
-References: <1477398945-22774-1-git-send-email-Minghuan.Lian@nxp.com>
- <0416d929-dfef-da09-8d9a-d1db8575afef@arm.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: socfpga: Enable QSPI on the Cyclone5 sockit
+Date: Wed, 26 Oct 2016 09:22:36 +0200
+Message-ID: <20161026072235.ardwmhqbqgq376vu@pengutronix.de>
+References: <1476908324-12313-1-git-send-email-dinguyen@opensource.altera.com>
+ <1476908324-12313-3-git-send-email-dinguyen@opensource.altera.com>
+ <20161020071913.rlka3or4c7fzjpyv@pengutronix.de>
+ <c62baad6-2528-a9df-6b09-3dba66785102@opensource.altera.com>
+ <5e0adad1-8ef2-029f-cfcd-4a07c962fda2@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <0416d929-dfef-da09-8d9a-d1db8575afef@arm.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Scott Wood <scott.wood@nxp.com>, Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5e0adad1-8ef2-029f-cfcd-4a07c962fda2-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin,
+Hi!
 
-Please see my comments inline.
+On Tue, Oct 25, 2016 at 10:38:10AM -0500, Graham Moore wrote:
+> On 10/20/2016 09:12 AM, Dinh Nguyen wrote:
+> > 
+> > 
+> > On 10/20/2016 02:19 AM, Steffen Trumtrar wrote:
+> > 
+> > > > +		cdns,tslch-ns = <4>;
+> > > > +
+> > > > +		partition@qspi-boot {
+> > > > +			/* 8MB for raw data. */
+> > > > +			label = "Flash 0 Raw Data";
+> > > > +			reg = <0x0 0x800000>;
+> > > > +		};
+> > > > +
+> > > > +		partition@qspi-rootfs {
+> > > > +			/* 120MB for jffs2 data. */
+> > > > +			label = "Flash 0 jffs2 Filesystem";
+> > > > +			reg = <0x800000 0x7800000>;
+> > > > +		};
+> > > > +	};
+> > > > +};
+> > > > +
+> > > 
+> > > What is the current preferred way of handling the partitions?
+> > > This doesn't fit my Sockit configuration for example. So I would always
+> > > have to patch the devicetree.
+> > 
+> > I'm not 100% sure on this. Graham, do you have any insight?
+> > > 
+> 
+> Well, strictly speaking, these partitions are only for the socdk, the Altera
+> dev kit.  Our sample designs and file systems expect this layout.
 
-Thanks,
-Minghuan
+The thing is, that I don't think these partitions belong in a mainline
+dts at all. But I'm not sure what the current policy is.
 
-> -----Original Message-----
-> From: Robin Murphy [mailto:robin.murphy@arm.com]
-> Sent: Tuesday, October 25, 2016 9:01 PM
-> To: M.H. Lian <minghuan.lian@nxp.com>; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org
-> Cc: Marc Zyngier <marc.zyngier@arm.com>; Stuart Yoder
-> <stuart.yoder@nxp.com>; Leo Li <leoyang.li@nxp.com>; Scott Wood
-> <scott.wood@nxp.com>; Shawn Guo <shawnguo@kernel.org>; Mingkai Hu
-> <mingkai.hu@nxp.com>
-> Subject: Re: [PATCH 1/6] dt/bindings: adjust bindings for Layerscape SCFG
-> MSI
 > 
-> On 25/10/16 13:35, Minghuan Lian wrote:
-> > 1. The different version of a SoC may have different MSI
-> > implementation. But compatible "fsl,<soc-name>-msi" can not describe
-> > the SoC version.
+> Therefore, these partitions are not required for any other dev kits, and can
+> probably be left out.
 > 
-> Can't it?
+> Or, Steffen, if you have a standard layout you'd like to see, then put that
+> in there.
 > 
-> 	compatible = "fsl-ls1043a-rev11-msi";
-> 
-> Oh, I guess it can!
-> 
-> Joking aside, if there are multiple versions of a piece of hardware which
-> require *different* treatment by drivers, then it is obviously wrong to use
-> the same compatible string because *they are not compatible*.
-> 
-[Minghuan Lian]  Yes, but Rev1.0 and Rev1.1 SoC will use the same dts files.
-We cannot create different dts files for each revision of the same kind of SoC.
-It means that there are different variants in the different versions of the same SoC that will use the same compatible string.
-So I have to use SoC match interface to get the versions.
 
-I'm too radical. I do not want to first check SoC family via compatible string and then check revision via SoC match or SVR.
-I selected the "SoC match" like the following to get the related information at only one place. 
+Well in my case, it actually doesn't really matter. All the boards
+I use do not have u-boot as bootloader but barebox. And barebox uses
+devicetree fixups for adding the partition layout that fits the
+particular use case. All other partitions are thrown out.
+I don't know if u-boot does something like this.
 
-static struct soc_device_attribute soc_msi_matches[] = {
-	{ .family = "QorIQ LS1021A",
-	  .data = &ls1021_msi_cfg },
-	{ .family = "QorIQ LS1012A",
-	  .data = &ls1021_msi_cfg },
-	{ .family = "QorIQ LS1043A", .revision = "1.0",
-	  .data = &ls1021_msi_cfg },
-	{ .family = "QorIQ LS1043A", .revision = "1.1",
-	  .data = &ls1043_rev11_msi_cfg },
-	{ .family = "QorIQ LS1046A",
-	  .data = &ls1046_msi_cfg },
-	{ },
-};
+Regards,
+Steffen
 
-I will remain the SoC related compatible and try to describe the difference via some kind of the property.
-
-> > The MSI driver will use SoC match interface to get SoC type and
-> > version instead of compatible string. So all MSI node can use the
-> > common compatible "fsl,ls-scfg-msi" and the original compatible is
-> > unnecessary.
-> 
-> If there is some common level of functionality that *all* variants support
-> without the driver having to know which one is which, then there might be
-> some sense in having an additional common compatible to represent that
-> level of functionality, e.g.
-> 
-> 	compatible = "fsl-ls1043a-rev11-msi", "fsl,ls-scfg-msi";
-> 
-> But if, say, new variants turn out to have less functionality, rather than more,
-> then there's probably not much point, and we should stick to specific,
-> accurate, compatible strings.
-> 
-> DT is not specific to a kernel version, nor even to Linux. A string which triggers
-> some board-specific magic in a specific version of a Linux driver does not
-> describe the hardware.
-> 
-> Robin.
-> 
-> > 2. Layerscape SoCs may have one or several MSI controllers.
-> > In order to increase MSI interrupt number of a PCIe, the patch moves
-> > all MSI node into the parent node "msi-controller". So a PCIe can
-> > request MSI from all the MSI controllers.
-> >
-> > Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> > ---
-> >  .../interrupt-controller/fsl,ls-scfg-msi.txt       | 57 +++++++++++++++++++--
-> -
-> >  1 file changed, 49 insertions(+), 8 deletions(-)
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-m
-> > si.txt
-> > b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-m
-> > si.txt
-> > index 9e38949..29f95fd 100644
-> > ---
-> > a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-m
-> > si.txt
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-sc
-> > +++ fg-msi.txt
-> > @@ -1,18 +1,28 @@
-> >  * Freescale Layerscape SCFG PCIe MSI controller
-> >
-> > +Layerscape SoCs may have one or multiple MSI controllers.
-> > +Each MSI controller must be showed as a child node.
-> > +
-> >  Required properties:
-> >
-> > -- compatible: should be "fsl,<soc-name>-msi" to identify
-> > -	      Layerscape PCIe MSI controller block such as:
-> > -              "fsl,1s1021a-msi"
-> > -              "fsl,1s1043a-msi"
-> > +- compatible: should be "fsl,ls-scfg-msi"
-> > +- #address-cells: must be 2
-> > +- #size-cells: must be 2
-> > +- ranges: allows valid 1:1 translation between child's address space and
-> > +	  parent's address space
-> >  - msi-controller: indicates that this is a PCIe MSI controller node
-> > +
-> > +Required child node:
-> > +A child node must exist to represent the MSI controller.
-> > +The following are properties specific to those nodes:
-> > +
-> >  - reg: physical base address of the controller and length of memory
-> mapped.
-> >  - interrupts: an interrupt to the parent interrupt controller.
-> >
-> >  Optional properties:
-> >  - interrupt-parent: the phandle to the parent interrupt controller.
-> >
-> > +Notes:
-> >  This interrupt controller hardware is a second level interrupt
-> > controller that  is hooked to a parent interrupt controller: e.g: ARM
-> > GIC for ARM-based  platforms. If interrupt-parent is not provided, the
-> > default parent interrupt @@ -22,9 +32,40 @@ MSI controller node
-> >
-> >  Examples:
-> >
-> > -	msi1: msi-controller@1571000 {
-> > -		compatible = "fsl,1s1043a-msi";
-> > -		reg = <0x0 0x1571000 0x0 0x8>,
-> > +	msi: msi-controller {
-> > +		compatible = "fsl,ls-scfg-msi";
-> > +		#address-cells = <2>;
-> > +		#size-cells = <2>;
-> > +		ranges;
-> >  		msi-controller;
-> > -		interrupts = <0 116 0x4>;
-> > +
-> > +		msi0@1580000 {
-> > +			reg = <0x0 0x1580000 0x0 0x10000>;
-> > +			interrupts = <0 116 0x4>,
-> > +				     <0 111 0x4>,
-> > +				     <0 112 0x4>,
-> > +				     <0 113 0x4>;
-> > +		};
-> > +
-> > +		msi1@1590000 {
-> > +			reg = <0x0 0x1590000 0x0 0x10000>;
-> > +			interrupts = <0 126 0x4>,
-> > +				     <0 121 0x4>,
-> > +				     <0 122 0x4>,
-> > +				     <0 123 0x4>;
-> > +		};
-> > +
-> > +		msi2@15a0000 {
-> > +			reg = <0x0 0x15a0000 0x0 0x10000>;
-> > +			interrupts = <0 160 0x4>,
-> > +				     <0 155 0x4>,
-> > +				     <0 156 0x4>,
-> > +				     <0 157 0x4>;
-> > +		};
-> > +	};
-> > +
-> > +	pcie@3400000 {
-> > +			...
-> > +			msi-parent = <&msi>;
-> > +			...
-> >  	};
-> >
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
