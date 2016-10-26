@@ -1,97 +1,95 @@
 From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [RFC PATCH 5/5] of: overlay-mgr: add a detector for headers stored on a ds2431 eeprom over w1
-Date: Wed, 26 Oct 2016 16:57:56 +0200
-Message-ID: <20161026145756.21689-6-antoine.tenart@free-electrons.com>
-References: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [RFC PATCH 0/5] Add an overlay manager to handle board capes
+Date: Wed, 26 Oct 2016 16:57:51 +0200
+Message-ID: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: maxime.ripard@free-electrons.com, pantelis.antoniou@konsulko.com, mark.rutland@arm.com, sboyd@codeaurora.org
-Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
----
- drivers/of/overlay-manager/Kconfig | 10 ++++++++++
- drivers/w1/slaves/w1_ds2431.c      | 39 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
+Hi all,
 
-diff --git a/drivers/of/overlay-manager/Kconfig b/drivers/of/overlay-manager/Kconfig
-index 1a36613c0c53..ad0a5b8e9e5e 100644
---- a/drivers/of/overlay-manager/Kconfig
-+++ b/drivers/of/overlay-manager/Kconfig
-@@ -16,4 +16,14 @@ config OF_OVERLAY_MGR_FORMAT_CHIP
- 
- endmenu
- 
-+menu "Overlay Manager detectors"
-+
-+config OF_OVERLAY_MGR_DETECTOR_DS2431
-+	bool "Dip header on a DS2431 EEPROM"
-+	depends on W1_SLAVE_DS2431
-+	help
-+	  Enable dip header DS2431 EEPROM support.
-+
-+endmenu
-+
- endif
-diff --git a/drivers/w1/slaves/w1_ds2431.c b/drivers/w1/slaves/w1_ds2431.c
-index 80572cb63ba8..760325f9a2bd 100644
---- a/drivers/w1/slaves/w1_ds2431.c
-+++ b/drivers/w1/slaves/w1_ds2431.c
-@@ -15,6 +15,9 @@
- #include <linux/device.h>
- #include <linux/types.h>
- #include <linux/delay.h>
-+#include <linux/slab.h>
-+
-+#include <linux/overlay-manager.h>
- 
- #include "../w1.h"
- #include "../w1_int.h"
-@@ -280,7 +283,43 @@ static const struct attribute_group *w1_f2d_groups[] = {
- 	NULL,
- };
- 
-+#if IS_ENABLED(CONFIG_OF_OVERLAY_MGR_DETECTOR_DS2431)
-+static int chip_dip_callback(struct w1_slave *sl)
-+{
-+	char **candidates = NULL;
-+	int i, n, err = 0;
-+	u8 *data;
-+
-+	data = kzalloc(OVERLAY_MGR_DIP_MAX_SZ, GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	/* sizeof(struct chip_header) is a mulitple of 8 */
-+	for (i = 0; i < OVERLAY_MGR_DIP_MAX_SZ; i += 8) {
-+		if (w1_f2d_readblock(sl, i, 8, &data[i])) {
-+			err = -EIO;
-+			goto end;
-+		}
-+	}
-+
-+	overlay_mgr_parse(&sl->dev, data, &candidates, &n);
-+	if (!n) {
-+		err = -EINVAL;
-+		goto end;
-+	}
-+
-+	err = overlay_mgr_apply(&sl->dev, candidates, n);
-+
-+end:
-+	kfree(data);
-+	return err;
-+}
-+#endif
-+
- static struct w1_family_ops w1_f2d_fops = {
-+#if IS_ENABLED(CONFIG_OF_OVERLAY_MGR_DETECTOR_DS2431)
-+	.callback	= chip_dip_callback,
-+#endif
- 	.groups		= w1_f2d_groups,
- };
- 
+Many boards now come with dips and compatible capes; among others the
+C.H.I.P, or Beaglebones. All these boards have a kernel implementing an
+out-of-tree "cape manager" which is used to detected capes, retrieve
+their description and apply a corresponding overlay. This series is an
+attempt to start a discussion, with an implementation of such a manager
+which is somehow generic (i.e. formats or cape detectors can be added).
+Other use cases could make use of this manager to dynamically load dt
+overlays based on some input / hw presence.
+
+The proposed design is a library which can be used by detector drivers
+to parse headers and load the corresponding overlay. Helpers are
+provided for this purpose. The whole thing is divided into 3 entities:
+
+- The parser which is project-specific (to allow supporting headers
+  already into the wild). It registers a function parsing an header's
+  data and filling one or more strings which will be used to find
+  matching dtbo on the fs.
+
+- The overlay manager helpers allowing to parse a header to retrieve
+  the previously mentioned strings and to load a compatible overlay.
+
+- The detectors which are used to detect capes and get their description
+  (to be parsed).
+
+An example of parser and detector is given, compatible with what's done
+for the C.H.I.P. As the w1 framework is really bad (and we should
+probably do something about that) the detector code is far from being
+perfect; but that's not related to what we try to achieve here.
+
+The actual implementation has a limitation: the detectors cannot be
+built-in the kernel image as they would likely detect capes at boot time
+but will fail to get their corresponding dt overlays as the fs isn't
+mounted yet. The only case this can work is when dt overlays are
+built-in firmwares. This isn't an issue for the C.H.I.P. use case right
+now. There was a discussion about making an helper to wait for the
+rootfs to be mount but the answer was "this is the driver's problem".
+
+I'd like to get comments, specifically from people using custom cape
+managers, to see if this could fill their needs (with I guess some
+modifications).
+
+Thanks!
+
+Antoine
+
+Antoine Tenart (5):
+  of: introduce the overlay manager
+  of: overlay-mgr: add the CHIP format
+  w1: report errors returned by w1_family_notify
+  w1: add a callback to call slave when a new device is connected
+  of: overlay-mgr: add a detector for headers stored on a ds2431 eeprom
+    over w1
+
+ drivers/of/Kconfig                           |   2 +
+ drivers/of/Makefile                          |   1 +
+ drivers/of/overlay-manager/Kconfig           |  29 ++++
+ drivers/of/overlay-manager/Makefile          |   2 +
+ drivers/of/overlay-manager/format-chip.c     |  72 ++++++++++
+ drivers/of/overlay-manager/overlay-manager.c | 199 +++++++++++++++++++++++++++
+ drivers/w1/slaves/w1_ds2431.c                |  39 ++++++
+ drivers/w1/w1.c                              |  14 +-
+ drivers/w1/w1_family.h                       |   2 +
+ include/linux/overlay-manager.h              |  51 +++++++
+ 10 files changed, 410 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/of/overlay-manager/Kconfig
+ create mode 100644 drivers/of/overlay-manager/Makefile
+ create mode 100644 drivers/of/overlay-manager/format-chip.c
+ create mode 100644 drivers/of/overlay-manager/overlay-manager.c
+ create mode 100644 include/linux/overlay-manager.h
+
 -- 
 2.10.1
