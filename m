@@ -1,67 +1,46 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/2] dt: bindings: add
- allwinner,otg-routed property for phy-sun4i-usb
-Date: Wed, 26 Oct 2016 10:28:43 +0200
-Message-ID: <55fe59fc-6e93-d519-2d7c-264c48820fc4@redhat.com>
-References: <20161025041139.46454-1-icenowy@aosc.xyz>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: sti: stih410-clocks: Add PROC_STFE as a critical
+ clock
+Date: Wed, 26 Oct 2016 09:51:41 +0100
+Message-ID: <20161026085141.GJ8574@dell>
+References: <1476804957-24000-1-git-send-email-peter.griffin@linaro.org>
+ <20161024085304.GE14477@dell>
+ <20161024134416.GB10440@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20161025074257.GF8574@dell>
+ <20161025093926.GA3206@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20161025100141.GH8574@dell>
+ <20161025134940.GA3993@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBSGSYHAAKGQEKE7XBVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161025041139.46454-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-ymACFijhrKM@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161025134940.GA3993@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+> > > If the clock is enabled when Linux boots, the Linux clock framework *needs*
+> > > to assume the hardware may have been used in previous boot stages, and it should
+> > > not attempt to disable the clock.
+> > 
+> > None of the boot loaders we use do this.
+> 
+> But the Linux kernel isn't just used by us. It is not uncommon for STB
+> bootloaders to get information from the frontend as part of the boot process. 
 
-On 25-10-16 06:11, Icenowy Zheng wrote:
-> On some newer Allwinner SoCs (H3 or A64), the PHY0 can be either routed to
-> the MUSB controller (which is an OTG controller) or the OHCI/EHCI pair
-> (which is a Host-only controller, but more stable and easy to implement).
->
-> This property marks whether on a certain board which controller should be
-> attached to the PHY.
->
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Okay, this is the clincher.  Since we need to support non-standard
+bootloaders, it's difficult to guarantee that the clock will be
+disabled at boot.  For this reason, I believe that we can call this a
+critical clock.
 
-Icenowy, I appreciate your work on this, but we really need full otg
-support with dynamic switching rather then hardwiring the routing, so
-this cannot go in as is.
-
-NACK.
-
-Regards,
-
-Hans
-
-
-> ---
->  Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-> index 287150d..a63c766 100644
-> --- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-> @@ -36,6 +36,12 @@ Optional properties:
->  - usb1_vbus-supply : regulator phandle for controller usb1 vbus
->  - usb2_vbus-supply : regulator phandle for controller usb2 vbus
->
-> +Optional properties for H3 or A64 SoCs:
-> +- allwinner,otg-routed : USB0 (OTG) PHY is routed to OHCI/EHCI pair rather than
-> +			 MUSB. (boolean, if this property is set, the OHCI/EHCI
-> +			 controllers at PHY0 should be enabled and the MUSB
-> +			 controller must *NOT* be enabled)
-> +
->  Example:
->  	usbphy: phy@0x01c13400 {
->  		#phy-cells = <1>;
->
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
