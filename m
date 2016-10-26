@@ -1,61 +1,354 @@
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 0/2] ARM: da850: new drivers for better LCDC support
-Date: Wed, 26 Oct 2016 19:35:53 +0200
-Message-ID: <1477503355-2600-1-git-send-email-bgolaszewski@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Subject: [PATCH 2/2] ARM: bus: da8xx-mstpri: new driver
+Date: Wed, 26 Oct 2016 19:35:55 +0200
+Message-ID: <1477503355-2600-3-git-send-email-bgolaszewski@baylibre.com>
+References: <1477503355-2600-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477503355-2600-1-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBzZXJpZXMgYWRkcyB0d28gbmV3IGRyaXZlcnMgaW4gb3JkZXIgdG8gYmV0dGVyIHN1cHBv
-cnQgdGhlIExDREMKcmV2MSBwcmVzZW50IG9uIHRoZSBkYTg1MCBib2FyZHMuCgpUaGUgZmlyc3Qg
-cGF0Y2ggYWRkcyBhIG5ldyBtZW1vcnkgZHJpdmVyIHdoaWNoIGFsbG93cyB0byB3cml0ZSB0byB0
-aGUKRERSMi9tRERSIG1lbW9yeSBjb250cm9sbGVyIHByZXNlbnQgb24gdGhlIGRhOHh4IFNvQ3Mu
-IFNpbmNlIHRoZQptZW1vcnkgY29udHJvbGxlciByZWdpb24gaXMgbm90IG1hcHBlZCBieSBhbnlv
-bmUgZWxzZSwgSSB3ZW50IHdpdGgKcGxhdGZvcm1fZ2V0X3Jlc291cmNlKCkgYW5kIGlvcmVtYXAo
-KSBhcHByb2FjaC4KClRoZSBzZWNvbmQgcGF0Y2ggYWRkcyBhIG5ldyBidXMgZHJpdmVyIHdoaWNo
-IGFsbG93cyB0byBpbnRlcmFjdCB3aXRoCnRoZSBNU1RQUkkgcmVnaXN0ZXJzIG9mIHRoZSBTWVND
-RkcwIG1vZHVsZS4gVGhlIFNZU0NGRzAgcmVnaXN0ZXJzCmFyZSB1c2VkIGJ5IG1hbnkgZHJpdmVy
-cywgaGVuY2UgdGhlIHN5c2Nvbi9yZWdtYXAgYXBwcm9hY2guCgpBcyBpcyBtZW50aW9uZWQgaW4g
-dGhlIGNvbW1lbnRzOiB3ZSBkb24ndCB3YW50IHRvIGNvbW1pdCB0byBzdXBwb3J0aW5nCnN0YWJs
-ZSBpbnRlcmZhY2VzIChEVCBiaW5kaW5ncyBvciBzeXNmcyBhdHRyaWJ1dGVzKSBzbyB3ZSBoYXJk
-Y29kZSB0aGUKc2V0dGluZ3MgcmVxdWlyZWQgYnkgc29tZSBib2FyZHMgKGZvciBub3cgb25seSBk
-YTg1MC1sY2RrKSB3aXRoIHRoZQpob3BlIHRoYXQgbGludXggZ2V0cyBhbiBhcHByb3ByaWF0ZSBm
-cmFtZXdvcmsgZm9yIHBlcmZvcm1hbmNlIGtub2JzCmluIHRoZSBmdXR1cmUuCgpQb3RlbnRpYWwg
-ZXh0ZW5zaW9ucyBvZiB0aGVzZSBkcml2ZXJzIHNob3VsZCBiZSBzdHJhaWdodGZvcndhcmQgaW4g
-dGhlCmZ1dHVyZS4KClRlc3RlZCBvbiBhIGRhODUwLWxjZGsgd2l0aCBhIGRpc3BsYXkgY29ubmVj
-dGVkIG92ZXIgVkdBIGFuZCBzb21lCmFkZGl0aW9uYWwgd29yayBvbiB0aGUgdGlsY2RjIGRyaXZl
-ci4KCk5PVEUgSSdtIHNlbmRpbmcgdGhpcyBhcyB2MSwgYnV0IGl0J3MgYSBmb2xsb3ctdXAgdG8g
-YSBzZXJpZXMgSSBzZW50CnByZXZpb3VzbHkgYW5kIHRoZSBSRkMgd2l0aCB0aGUgZGRyY3RsIGRy
-aXZlci4gSSBkcm9wcGVkIHRoZSBkdCBwYXRjaApmb3Igbm93LgoKQmFydG9zeiBHb2xhc3pld3Nr
-aSAoMik6CiAgQVJNOiBtZW1vcnk6IGRhOHh4LWRkcmN0bDogbmV3IGRyaXZlcgogIEFSTTogYnVz
-OiBkYTh4eC1tc3Rwcmk6IG5ldyBkcml2ZXIKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9idXMv
-dGksZGE4NTAtbXN0cHJpLnR4dCAgICB8ICAyMCArKwogLi4uL21lbW9yeS1jb250cm9sbGVycy90
-aS1kYTh4eC1kZHJjdGwudHh0ICAgICAgICAgfCAgMjAgKysKIGRyaXZlcnMvYnVzL0tjb25maWcg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA5ICsKIGRyaXZlcnMvYnVzL01ha2Vm
-aWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKIGRyaXZlcnMvYnVzL2Rh
-OHh4LW1zdHByaS5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgMjY2ICsrKysrKysrKysrKysr
-KysrKysrKwogZHJpdmVycy9tZW1vcnkvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgfCAgIDggKwogZHJpdmVycy9tZW1vcnkvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCAgIDEgKwogZHJpdmVycy9tZW1vcnkvZGE4eHgtZGRyY3RsLmMgICAgICAgICAgICAg
-ICAgICAgICAgfCAxNzUgKysrKysrKysrKysrKysKIDggZmlsZXMgY2hhbmdlZCwgNTAxIGluc2Vy
-dGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvYnVzL3RpLGRhODUwLW1zdHByaS50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL3RpLWRhOHh4LWRk
-cmN0bC50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2J1cy9kYTh4eC1tc3RwcmkuYwog
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVtb3J5L2RhOHh4LWRkcmN0bC5jCgotLSAKMi45
-LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Create the driver for the da8xx master peripheral priority
+configuration and implement support for writing to the three
+Master Priority registers on da850 SoCs.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ .../devicetree/bindings/bus/ti,da850-mstpri.txt    |  20 ++
+ drivers/bus/Kconfig                                |   9 +
+ drivers/bus/Makefile                               |   2 +
+ drivers/bus/da8xx-mstpri.c                         | 266 +++++++++++++++++++++
+ 4 files changed, 297 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
+ create mode 100644 drivers/bus/da8xx-mstpri.c
+
+diff --git a/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt b/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
+new file mode 100644
+index 0000000..225af09
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
+@@ -0,0 +1,20 @@
++* Device tree bindings for Texas Instruments da8xx master peripheral
++  priority driver
++
++DA8XX SoCs feature a set of registers allowing to change the priority of all
++peripherals classified as masters.
++
++Documentation:
++OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh82c/spruh82c.pdf
++
++Required properties:
++
++- compatible:		"ti,da850-mstpri", "syscon" - for da850 based boards
++- reg:			offset and length of the mstpri registers
++
++Example for da850-lcdk is shown below.
++
++mstpri {
++	compatible = "ti,da850-mstpri";
++	reg = <0x14110 0x0c>;
++};
+diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+index 7010dca..ed6a89c 100644
+--- a/drivers/bus/Kconfig
++++ b/drivers/bus/Kconfig
+@@ -166,4 +166,13 @@ config VEXPRESS_CONFIG
+ 	help
+ 	  Platform configuration infrastructure for the ARM Ltd.
+ 	  Versatile Express.
++
++config DA8XX_MSTPRI
++	bool "TI da8xx master peripheral priority driver"
++	depends on ARCH_DAVINCI_DA8XX
++	help
++	  Driver for Texas Instruments da8xx master peripheral priority
++	  configuration. Allows to adjust the priorities of all master
++	  peripherals.
++
+ endmenu
+diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
+index c6cfa6b..2adb540 100644
+--- a/drivers/bus/Makefile
++++ b/drivers/bus/Makefile
+@@ -21,3 +21,5 @@ obj-$(CONFIG_SIMPLE_PM_BUS)	+= simple-pm-bus.o
+ obj-$(CONFIG_TEGRA_ACONNECT)	+= tegra-aconnect.o
+ obj-$(CONFIG_UNIPHIER_SYSTEM_BUS)	+= uniphier-system-bus.o
+ obj-$(CONFIG_VEXPRESS_CONFIG)	+= vexpress-config.o
++
++obj-$(CONFIG_DA8XX_MSTPRI)	+= da8xx-mstpri.o
+diff --git a/drivers/bus/da8xx-mstpri.c b/drivers/bus/da8xx-mstpri.c
+new file mode 100644
+index 0000000..00c4f83
+--- /dev/null
++++ b/drivers/bus/da8xx-mstpri.c
+@@ -0,0 +1,266 @@
++/*
++ * TI da8xx master peripheral priority driver
++ *
++ * Copyright (C) 2016 BayLibre SAS
++ *
++ * Author:
++ *   Bartosz Golaszewski <bgolaszewski@baylibre.com.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/io.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of_fdt.h>
++
++/*
++ * REVISIT: Linux doesn't have a good framework for the kind of performance
++ * knobs this driver controls. We can't use device tree properties as it deals
++ * with hardware configuration rather than description. We also don't want to
++ * commit to maintaining some random sysfs attributes.
++ *
++ * For now we just hardcode the register values for the boards that need
++ * some changes (as is the case for the LCD controller on da850-lcdk - the
++ * first board we support here). When linux gets an appropriate framework,
++ * we'll easily convert the driver to it.
++ */
++
++#define DA8XX_MSTPRI0_OFFSET		0
++#define DA8XX_MSTPRI1_OFFSET		4
++#define DA8XX_MSTPRI2_OFFSET		8
++
++enum {
++	DA8XX_MSTPRI_ARM_I = 0,
++	DA8XX_MSTPRI_ARM_D,
++	DA8XX_MSTPRI_UPP,
++	DA8XX_MSTPRI_SATA,
++	DA8XX_MSTPRI_PRU0,
++	DA8XX_MSTPRI_PRU1,
++	DA8XX_MSTPRI_EDMA30TC0,
++	DA8XX_MSTPRI_EDMA30TC1,
++	DA8XX_MSTPRI_EDMA31TC0,
++	DA8XX_MSTPRI_VPIF_DMA_0,
++	DA8XX_MSTPRI_VPIF_DMA_1,
++	DA8XX_MSTPRI_EMAC,
++	DA8XX_MSTPRI_USB0CFG,
++	DA8XX_MSTPRI_USB0CDMA,
++	DA8XX_MSTPRI_UHPI,
++	DA8XX_MSTPRI_USB1,
++	DA8XX_MSTPRI_LCDC,
++};
++
++struct da8xx_mstpri_descr {
++	int reg;
++	int shift;
++	int mask;
++};
++
++static const struct da8xx_mstpri_descr da8xx_mstpri_priority_list[] = {
++	[DA8XX_MSTPRI_ARM_I] = {
++		.reg = DA8XX_MSTPRI0_OFFSET,
++		.shift = 0,
++		.mask = 0x0000000f,
++	},
++	[DA8XX_MSTPRI_ARM_D] = {
++		.reg = DA8XX_MSTPRI0_OFFSET,
++		.shift = 4,
++		.mask = 0x000000f0,
++	},
++	[DA8XX_MSTPRI_UPP] = {
++		.reg = DA8XX_MSTPRI0_OFFSET,
++		.shift = 16,
++		.mask = 0x000f0000,
++	},
++	[DA8XX_MSTPRI_SATA] = {
++		.reg = DA8XX_MSTPRI0_OFFSET,
++		.shift = 20,
++		.mask = 0x00f00000,
++	},
++	[DA8XX_MSTPRI_PRU0] = {
++		.reg = DA8XX_MSTPRI1_OFFSET,
++		.shift = 0,
++		.mask = 0x0000000f,
++	},
++	[DA8XX_MSTPRI_PRU1] = {
++		.reg = DA8XX_MSTPRI1_OFFSET,
++		.shift = 4,
++		.mask = 0x000000f0,
++	},
++	[DA8XX_MSTPRI_EDMA30TC0] = {
++		.reg = DA8XX_MSTPRI1_OFFSET,
++		.shift = 8,
++		.mask = 0x00000f00,
++	},
++	[DA8XX_MSTPRI_EDMA30TC1] = {
++		.reg = DA8XX_MSTPRI1_OFFSET,
++		.shift = 12,
++		.mask = 0x0000f000,
++	},
++	[DA8XX_MSTPRI_EDMA31TC0] = {
++		.reg = DA8XX_MSTPRI1_OFFSET,
++		.shift = 16,
++		.mask = 0x000f0000,
++	},
++	[DA8XX_MSTPRI_VPIF_DMA_0] = {
++		.reg = DA8XX_MSTPRI1_OFFSET,
++		.shift = 24,
++		.mask = 0x0f000000,
++	},
++	[DA8XX_MSTPRI_VPIF_DMA_1] = {
++		.reg = DA8XX_MSTPRI1_OFFSET,
++		.shift = 28,
++		.mask = 0xf0000000,
++	},
++	[DA8XX_MSTPRI_EMAC] = {
++		.reg = DA8XX_MSTPRI2_OFFSET,
++		.shift = 0,
++		.mask = 0x0000000f,
++	},
++	[DA8XX_MSTPRI_USB0CFG] = {
++		.reg = DA8XX_MSTPRI2_OFFSET,
++		.shift = 8,
++		.mask = 0x00000f00,
++	},
++	[DA8XX_MSTPRI_USB0CDMA] = {
++		.reg = DA8XX_MSTPRI2_OFFSET,
++		.shift = 12,
++		.mask = 0x0000f000,
++	},
++	[DA8XX_MSTPRI_UHPI] = {
++		.reg = DA8XX_MSTPRI2_OFFSET,
++		.shift = 20,
++		.mask = 0x00f00000,
++	},
++	[DA8XX_MSTPRI_USB1] = {
++		.reg = DA8XX_MSTPRI2_OFFSET,
++		.shift = 24,
++		.mask = 0x0f000000,
++	},
++	[DA8XX_MSTPRI_LCDC] = {
++		.reg = DA8XX_MSTPRI2_OFFSET,
++		.shift = 28,
++		.mask = 0xf0000000,
++	},
++};
++
++struct da8xx_mstpri_priority {
++	int which;
++	u32 val;
++};
++
++struct da8xx_mstpri_board_priorities {
++	const char *board;
++	const struct da8xx_mstpri_priority *priorities;
++	size_t numprio;
++};
++
++/*
++ * Default memory settings of da850 do not meet the throughput/latency
++ * requirements of tilcdc. This results in the image displayed being
++ * incorrect and the following warning being displayed by the LCDC
++ * drm driver:
++ *
++ *   tilcdc da8xx_lcdc.0: tilcdc_crtc_irq(0x00000020): FIFO underfow
++ */
++static const struct da8xx_mstpri_priority da850_lcdk_priorities[] = {
++	{
++		.which = DA8XX_MSTPRI_LCDC,
++		.val = 0,
++	},
++	{
++		.which = DA8XX_MSTPRI_EDMA30TC1,
++		.val = 0,
++	},
++	{
++		.which = DA8XX_MSTPRI_EDMA30TC0,
++		.val = 1,
++	},
++};
++
++static const struct da8xx_mstpri_board_priorities da8xx_mstpri_board_confs[] = {
++	{
++		.board = "ti,da850-lcdk",
++		.priorities = da850_lcdk_priorities,
++		.numprio = ARRAY_SIZE(da850_lcdk_priorities),
++	},
++};
++
++static const struct da8xx_mstpri_board_priorities *
++da8xx_mstpri_get_board_prio(void)
++{
++	const struct da8xx_mstpri_board_priorities *board_prio;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(da8xx_mstpri_board_confs); i++) {
++		board_prio = &da8xx_mstpri_board_confs[i];
++
++		if (of_machine_is_compatible(board_prio->board))
++			return board_prio;
++	}
++
++	return NULL;
++}
++
++static int da8xx_mstpri_probe(struct platform_device *pdev)
++{
++	const struct da8xx_mstpri_board_priorities *prio_list;
++	const struct da8xx_mstpri_descr *prio_descr;
++	const struct da8xx_mstpri_priority *prio;
++	struct device *dev = &pdev->dev;
++	struct regmap *mstpri;
++	int i, ret;
++
++	mstpri = syscon_regmap_lookup_by_compatible("ti,da850-mstpri");
++	if (IS_ERR(mstpri)) {
++		dev_err(dev, "unable to map mstpri registers\n");
++		return PTR_ERR(mstpri);
++	}
++
++	prio_list = da8xx_mstpri_get_board_prio();
++	if (!prio_list) {
++		dev_err(dev, "no master priotities defined for board '%s'\n",
++			of_flat_dt_get_machine_name());
++		return -EINVAL;
++	}
++
++	for (i = 0; i < prio_list->numprio; i++) {
++		prio = &prio_list->priorities[i];
++		prio_descr = &da8xx_mstpri_priority_list[prio->which];
++
++		ret = regmap_update_bits(mstpri, prio_descr->reg,
++					 prio_descr->mask,
++					 prio->val << prio_descr->shift);
++		if (ret) {
++			dev_warn(dev,
++				 "error updating bits for register [%d]: %d\n",
++				 prio_descr->reg, ret);
++			continue;
++		}
++	}
++
++	return 0;
++}
++
++static const struct of_device_id da8xx_mstpri_of_match[] = {
++	{ .compatible = "ti,da850-mstpri", },
++	{ },
++};
++
++static struct platform_driver da8xx_mstpri_driver = {
++	.probe = da8xx_mstpri_probe,
++	.driver = {
++		.name = "da8xx-mstpri",
++		.of_match_table = da8xx_mstpri_of_match,
++	},
++};
++module_platform_driver(da8xx_mstpri_driver);
++
++MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
++MODULE_DESCRIPTION("TI da8xx master peripheral priority driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.9.3
