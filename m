@@ -1,53 +1,48 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v6] mwifiex: parse device tree node for PCIe
-Date: Wed, 26 Oct 2016 14:08:06 -0700
-Message-ID: <20161026210805.GA14423@localhost>
-References: <1477070156-109965-1-git-send-email-rajatja@google.com>
- <1477084869-15612-1-git-send-email-rajatja@google.com>
- <20161026201735.GA10192@localhost>
- <20161026204648.GD3989@dtor-ws>
- <CACK8Z6H1ACBo7nDxaXR3Vn9cPdyRqxxzdgYz7vNmojiSvjbW5A@mail.gmail.com>
- <20161026205634.GA13170@localhost>
- <20161026210648.GE3989@dtor-ws>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/5] gpio: davinci: Add a separate compatible for k2g
+Date: Wed, 26 Oct 2016 16:08:51 -0500
+Message-ID: <20161026210851.jt2xoo2ap6zijowg@rob-hp-laptop>
+References: <1476855239-32730-1-git-send-email-j-keerthy@ti.com>
+ <1476855239-32730-6-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161026210648.GE3989@dtor-ws>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rajat Jain <rajatxjain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1476855239-32730-6-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lokeshvutla-l0cyMroinI0@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 26, 2016 at 02:06:48PM -0700, Dmitry Torokhov wrote:
-> On Wed, Oct 26, 2016 at 01:56:34PM -0700, Brian Norris wrote:
-> > On Wed, Oct 26, 2016 at 01:51:48PM -0700, Rajat Jain wrote:
-> > >    On Wed, Oct 26, 2016 at 1:46 PM, Dmitry Torokhov
-> > >    <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > >      On Wed, Oct 26, 2016 at 01:17:36PM -0700, Brian Norris wrote:
-> > >      Sorry, I just saw this... Why do we need devicetree data for
-> > >      discoverable bus (PCI)? How does the driver work on systems that do not
-> > >      use DT? Why do we need them to behave differently?
-> > > 
-> > >    There are a couple of out-of-band GPIO pins from Marvell chip that can
-> > >    serve as wake-up pins (wake up the CPU when asserted). The Marvell chip
-> > >    has to be told which GPIO pin is to be used as the wake-up pin. The pin to
-> > >    be used is system / platform dependent. (On some systems it could be
-> > >    GPIO13, on others it could be GPIO14 etc depending on how the marvell chip
-> > >    is wired up to the CPU).
+On Wed, Oct 19, 2016 at 11:03:59AM +0530, Keerthy wrote:
+> In the case of k2g the clocks are handled differently as when compared
+> with other keystones. Hence adding a separate compatible and match tables
+> accordingly.
 > 
-> So wakeup pin is not wired to PCIe WAKE?
-
-Not in our case.
-
-> > There's also calibration data. See "marvell,caldata*" and
-> > "marvell,wakeup-pin" properties. Currently only for SDIO, in
-> > Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt, but
-> > we're adding support for PCIe.
+> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/gpio/gpio-davinci.txt      |  2 +-
+>  drivers/gpio/gpio-davinci.c                        | 45 ++++++++++++++++++++--
+>  2 files changed, 42 insertions(+), 5 deletions(-)
 > 
-> How would it all work if I moved the PCIe module from one device to
-> another?
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> index 5079ba7..a76abd2 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> @@ -1,7 +1,7 @@
+>  Davinci/Keystone GPIO controller bindings
+>  
+>  Required Properties:
+> -- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
+> +- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio", "ti,k2g-gpio"
 
-These boards are soldered down, at least in the case I care about.
+Is this "one of" or all? Seems line the former in which case please 
+reformat to one per line.
 
-Brian
+>  
+>  - reg: Physical base address of the controller and the size of memory mapped
+>         registers.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
