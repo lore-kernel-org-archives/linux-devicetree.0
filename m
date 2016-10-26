@@ -1,123 +1,64 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v3] drm/mediatek: fixed the calc method of data rate per
- lane
-Date: Wed, 26 Oct 2016 17:37:50 +0800
-Message-ID: <1477474670.5215.5.camel@mtksdaap41>
-References: <1477472395-6451-1-git-send-email-jitao.shi@mediatek.com>
+From: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] gpio: mcp23s08: Add option to configure pullups.
+Date: Wed, 26 Oct 2016 11:59:14 +0200
+Message-ID: <CAFqH_53SSctH9Ms-0Zm5fhEgMtkWq_SP9VChY-QYV-qDLLj_WA@mail.gmail.com>
+References: <1477062035-30825-1-git-send-email-enric.balletbo@collabora.com>
+ <CACRpkdY15Hv_ydHyOXRM6G0ewVTHkVa1w3Z89AdvSDR=eyi7sQ@mail.gmail.com> <11644726.TmP4uu3h4l@ws-stein>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1477472395-6451-1-git-send-email-jitao.shi@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <11644726.TmP4uu3h4l@ws-stein>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEppdGFvOgoKT24gV2VkLCAyMDE2LTEwLTI2IGF0IDE2OjU5ICswODAwLCBKaXRhbyBTaGkg
-d3JvdGU6Cj4gVHVuZSBkc2kgZnJhbWUgcmF0ZSBieSBwaXhlbCBjbG9jaywgZHNpIGFkZCBzb21l
-IGV4dHJhIHNpZ25hbCAoaS5lLiBUbHB4LAo+IFRocy1wcmVwYXJlLCBUaHMtemVybywgVGhzLXRy
-YWlsLFRocy1leGl0KSB3aGVuIGVudGVyIGFuZCBleGl0IExQIG1vZGUsIHRoaXMKPiBzaWduYWwg
-d2lsbCBjYXVzZSBoLXRpbWUgbGFyZ2VyIHRoYW4gbm9ybWFsIGFuZCByZWR1Y2UgRlBTLgo+IE5l
-ZWQgdG8gbXVsdGlwbHkgYSBjb2VmZmljaWVudCB0byBvZmZzZXQgdGhlIGV4dHJhIHNpZ25hbCdz
-IGVmZmVjdC4KPiBjb2VmZmljaWVudCA9ICgoaHRvdGFsKmJwcC9sYW5lX251bWJlcikrVGxweCtU
-aHNfcHJlcCtUaHNfemVybytUaHNfdHJhaWwrCj4gICAgICAgICAgICAgICAgIFRoc19leGl0KS8o
-aHRvdGFsKmJwcC9sYW5lX251bWJlcikpCj4gCgpPbmUgY2hlY2stcGF0Y2ggd2FybmluZyBpbiBj
-b21taXQgbWVzc2FnZToKCldBUk5JTkc6Q09NTUlUX0xPR19MT05HX0xJTkU6IFBvc3NpYmxlIHVu
-d3JhcHBlZCBjb21taXQgZGVzY3JpcHRpb24KKHByZWZlciBhIG1heGltdW0gNzUgY2hhcnMgcGVy
-IGxpbmUpCiM3OgogICAgVHVuZSBkc2kgZnJhbWUgcmF0ZSBieSBwaXhlbCBjbG9jaywgZHNpIGFk
-ZCBzb21lIGV4dHJhIHNpZ25hbCAoaS5lLgpUbHB4LAoKPiBTaWduZWQtb2ZmLWJ5OiBKaXRhbyBT
-aGkgPGppdGFvLnNoaUBtZWRpYXRlay5jb20+Cj4gLS0tCj4gQ2hhbmdlIHNpbmNlIHYyOgo+ICAt
-IG1vdmUgcGh5IHRpbWluZyBiYWNrIHRvIGRzaV9waHlfdGltY29uZmlnLgo+IAo+IENoYW5nZSBz
-aW5jZSB2MToKPiAgLSBwaHlfdGltaW5nMiBhbmQgcGh5X3RpbWluZzMgcmVmZXIgY2xvY2sgY3lj
-bGUgdGltZS4KPiAgLSBkZWZpbmUgdmFsdWVzIG9mIExQWCBIU19QUlBSIEhTX1pFUk8gSFNfVFJB
-SUwgVEFfR08gVEFfU1VSRSBUQV9HRVQgREFfSFNfRVhJVAo+IC0tLQo+ICBkcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RzaS5jIHwgICA3NCArKysrKysrKysrKysrKysrKysrKysrKysrLS0t
-LS0tLS0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDUxIGluc2VydGlvbnMoKyksIDIzIGRlbGV0aW9u
-cygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5j
-IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYwo+IGluZGV4IDI4YjIwNDQuLjhi
-M2IzOGEgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYwo+
-ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMKPiBAQCAtODUsMTYgKzg1
-LDE2IEBACj4gICNkZWZpbmUgTEQwX1dBS0VVUF9FTgkJCUJJVCgyKQo+ICAKPiAgI2RlZmluZSBE
-U0lfUEhZX1RJTUVDT04wCTB4MTEwCj4gLSNkZWZpbmUgTFBYCQkJCSgweGZmIDw8IDApCj4gLSNk
-ZWZpbmUgSFNfUFJQUgkJCQkoMHhmZiA8PCA4KQo+IC0jZGVmaW5lIEhTX1pFUk8JCQkJKDB4ZmYg
-PDwgMTYpCj4gLSNkZWZpbmUgSFNfVFJBSUwJCQkoMHhmZiA8PCAyNCkKPiArI2RlZmluZSBMUFgJ
-CQkJKDUgPDwgMCkKPiArI2RlZmluZSBIU19QUlBSCQkJCSg2IDw8IDgpCj4gKyNkZWZpbmUgSFNf
-WkVSTwkJCQkoMTAgPDwgMTYpCj4gKyNkZWZpbmUgSFNfVFJBSUwJCQkoOCA8PCAyNCkKPiAgCj4g
-ICNkZWZpbmUgRFNJX1BIWV9USU1FQ09OMQkweDExNAo+IC0jZGVmaW5lIFRBX0dPCQkJCSgweGZm
-IDw8IDApCj4gLSNkZWZpbmUgVEFfU1VSRQkJCQkoMHhmZiA8PCA4KQo+IC0jZGVmaW5lIFRBX0dF
-VAkJCQkoMHhmZiA8PCAxNikKPiAtI2RlZmluZSBEQV9IU19FWElUCQkJKDB4ZmYgPDwgMjQpCj4g
-KyNkZWZpbmUgVEFfR08JCQkJKDIwIDw8IDApCj4gKyNkZWZpbmUgVEFfU1VSRQkJCQkoNyA8PCA4
-KQo+ICsjZGVmaW5lIFRBX0dFVAkJCQkoMjUgPDwgMTYpCj4gKyNkZWZpbmUgREFfSFNfRVhJVAkJ
-CSg3IDw8IDI0KQo+ICAKPiAgI2RlZmluZSBEU0lfUEhZX1RJTUVDT04yCTB4MTE4Cj4gICNkZWZp
-bmUgQ09OVF9ERVQJCQkoMHhmZiA8PCAwKQo+IEBAIC0xNjEsMjAgKzE2MSwxOCBAQCBzdGF0aWMg
-dm9pZCBtdGtfZHNpX21hc2soc3RydWN0IG10a19kc2kgKmRzaSwgdTMyIG9mZnNldCwgdTMyIG1h
-c2ssIHUzMiBkYXRhKQo+ICBzdGF0aWMgdm9pZCBkc2lfcGh5X3RpbWNvbmZpZyhzdHJ1Y3QgbXRr
-X2RzaSAqZHNpKQo+ICB7Cj4gIAl1MzIgdGltY29uMCwgdGltY29uMSwgdGltY29uMiwgdGltY29u
-MzsKPiAtCXVuc2lnbmVkIGludCB1aSwgY3ljbGVfdGltZTsKPiAtCXVuc2lnbmVkIGludCBscHg7
-Cj4gKwl1MzIgdWksIGN5Y2xlX3RpbWU7Cj4gIAo+ICAJdWkgPSAxMDAwIC8gZHNpLT5kYXRhX3Jh
-dGUgKyAweDAxOwo+ICAJY3ljbGVfdGltZSA9IDgwMDAgLyBkc2ktPmRhdGFfcmF0ZSArIDB4MDE7
-Cj4gLQlscHggPSA1Owo+ICAKPiAtCXRpbWNvbjAgPSAoOCA8PCAyNCkgfCAoMHhhIDw8IDE2KSB8
-ICgweDYgPDwgOCkgfCBscHg7Cj4gLQl0aW1jb24xID0gKDcgPDwgMjQpIHwgKDUgKiBscHggPDwg
-MTYpIHwgKCgzICogbHB4KSAvIDIpIDw8IDggfAo+IC0JCSAgKDQgKiBscHgpOwo+ICsJdGltY29u
-MCA9IExQWCB8IEhTX1BSUFIgfCBIU19aRVJPIHwgSFNfVFJBSUw7Cj4gKwl0aW1jb24xID0gNCAq
-IExQWCB8ICgzICogTFBYIC8gMikgPDwgOCB8IDUgKiBMUFggPDwgMTYgfCBEQV9IU19FWElUOwo+
-ICAJdGltY29uMiA9ICgoTlNfVE9fQ1lDTEUoMHg2NCwgY3ljbGVfdGltZSkgKyAweGEpIDw8IDI0
-KSB8Cj4gLQkJICAoTlNfVE9fQ1lDTEUoMHgxNTAsIGN5Y2xlX3RpbWUpIDw8IDE2KTsKPiAtCXRp
-bWNvbjMgPSAoMiAqIGxweCkgPDwgMTYgfCBOU19UT19DWUNMRSg4MCArIDUyICogdWksIGN5Y2xl
-X3RpbWUpIDw8IDggfAo+IC0JCSAgIE5TX1RPX0NZQ0xFKDB4NDAsIGN5Y2xlX3RpbWUpOwo+ICsJ
-CSAgICAgIChOU19UT19DWUNMRSgweDE1MCwgY3ljbGVfdGltZSkgPDwgMTYpOwoKSSB0aGluayB0
-aGlzIGxpbmUgbWF5IGFsaWduIHRvICcoJyBpbiB0aGUgcmlnaHQgb2YgJz0nLgoKPiArCXRpbWNv
-bjMgPSAoMiAqIExQWCkgPDwgMTYgfAo+ICsJCSAgICAgIE5TX1RPX0NZQ0xFKDgwICsgNTIgKiB1
-aSwgY3ljbGVfdGltZSkgPDwgOCB8Cj4gKwkJICAgICAgTlNfVE9fQ1lDTEUoMHg0MCwgY3ljbGVf
-dGltZSk7CgpJIHRoaW5rIHRoZXNlIHR3byBsaW5lcyBtYXkgYWxpZ24gdG8gJygnIGluIHRoZSBy
-aWdodCBvZiAnPScuCgpSZWdhcmRzLApDSwogICAgIEkuIAo+ICAKPiAgCXdyaXRlbCh0aW1jb24w
-LCBkc2ktPnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04wKTsKPiAgCXdyaXRlbCh0aW1jb24xLCBkc2kt
-PnJlZ3MgKyBEU0lfUEhZX1RJTUVDT04xKTsKPiBAQCAtMjAyLDE5ICsyMDAsNDkgQEAgc3RhdGlj
-IGludCBtdGtfZHNpX3Bvd2Vyb24oc3RydWN0IG10a19kc2kgKmRzaSkKPiAgewo+ICAJc3RydWN0
-IGRldmljZSAqZGV2ID0gZHNpLT5kZXY7Cj4gIAlpbnQgcmV0Owo+ICsJdTY0IGJpdF9jbG9jaywg
-dG90YWxfYml0czsKPiArCXUzMiBodG90YWwsIGh0b3RhbF9iaXRzLCBiaXRfcGVyX3BpeGVsLCBv
-dmVyaGVhZF9jeWNsZXMsIG92ZXJoZWFkX2JpdHM7Cj4gIAo+ICAJaWYgKCsrZHNpLT5yZWZjb3Vu
-dCAhPSAxKQo+ICAJCXJldHVybiAwOwo+ICAKPiArCXN3aXRjaCAoZHNpLT5mb3JtYXQpIHsKPiAr
-CWNhc2UgTUlQSV9EU0lfRk1UX1JHQjU2NToKPiArCQliaXRfcGVyX3BpeGVsID0gMTY7Cj4gKwkJ
-YnJlYWs7Cj4gKwljYXNlIE1JUElfRFNJX0ZNVF9SR0I2NjZfUEFDS0VEOgo+ICsJCWJpdF9wZXJf
-cGl4ZWwgPSAxODsKPiArCQlicmVhazsKPiArCWNhc2UgTUlQSV9EU0lfRk1UX1JHQjY2NjoKPiAr
-CWNhc2UgTUlQSV9EU0lfRk1UX1JHQjg4ODoKPiArCWRlZmF1bHQ6Cj4gKwkJYml0X3Blcl9waXhl
-bCA9IDI0Owo+ICsJCWJyZWFrOwo+ICsJfQo+ICAJLyoqCj4gLQkgKiBkYXRhX3JhdGUgPSAocGl4
-ZWxfY2xvY2sgLyAxMDAwKSAqIHBpeGVsX2RpcHRoICogbWlwaV9yYXRpbzsKPiAtCSAqIHBpeGVs
-X2Nsb2NrIHVuaXQgaXMgS2h6LCBkYXRhX3JhdGEgdW5pdCBpcyBNSHosIHNvIG5lZWQgZGl2aWRl
-IDEwMDAuCj4gLQkgKiBtaXBpX3JhdGlvIGlzIG1pcGkgY2xrIGNvZWZmaWNpZW50IGZvciBiYWxh
-bmNlIHRoZSBwaXhlbCBjbGsgaW4gbWlwaS4KPiAtCSAqIHdlIHNldCBtaXBpX3JhdGlvIGlzIDEu
-MDUuCj4gKwkgKiBkYXRhX3JhdGUgPSAocGl4ZWxfY2xvY2spICogYml0X3Blcl9waXhlbCAqIG1p
-cGlfcmF0aW8gLyBsYW5lX251bTsKPiArCSAqIHZtLnBpeGVsY2xvY2sgaXMgS2h6LCBkYXRhX3Jh
-dGEgdW5pdCBpcyBIeiwgc28gbmVlZCB0byBtdWx0aXBseSAxMDAwCj4gKwkgKiBtaXBpX3JhdGlv
-IGlzIChodG90YWwgKiBieXRlX3Blcl9waXhlbCAvIGxhbmVfbnVtICsgVGxweCArIFRoc19wcmVw
-Cj4gKwkgKgkJICArIFRoc3RyYWlsICsgVGhzX2V4aXQgKyBUaHNfemVybykgLwo+ICsJICoJCSAo
-aHRvdGFsICogYnl0ZV9wZXJfcGl4ZWwgL2xhbmVfbnVtYmVyKQo+ICAJICovCj4gLQlkc2ktPmRh
-dGFfcmF0ZSA9IGRzaS0+dm0ucGl4ZWxjbG9jayAqIDMgKiAyMSAvICgxICogMTAwMCAqIDEwKTsK
-PiArCWJpdF9jbG9jayA9IGRzaS0+dm0ucGl4ZWxjbG9jayAqIDEwMDAgKiBiaXRfcGVyX3BpeGVs
-Owo+ICsJaHRvdGFsID0gZHNpLT52bS5oYWN0aXZlICsgZHNpLT52bS5oYmFja19wb3JjaCArIGRz
-aS0+dm0uaGZyb250X3BvcmNoICsKPiArCQkgZHNpLT52bS5oc3luY19sZW47Cj4gKwlodG90YWxf
-Yml0cyA9IGh0b3RhbCAqIGJpdF9wZXJfcGl4ZWw7Cj4gKwo+ICsJLyoqCj4gKwkgKiBvdmVyaGVh
-ZCA9IGxweCArIGhzX3ByZXBhcmUgKyBoc196ZXJvICsgaHNfdHJhaWwgKyBoc19leGl0Cj4gKwkg
-Ki8KPiArCW92ZXJoZWFkX2N5Y2xlcyA9IExQWCArIChIU19QUlBSID4+IDgpICsgKEhTX1pFUk8g
-Pj4gMTYpICsKPiArCQkJICAoSFNfVFJBSUwgPj4gMjQpICsgKERBX0hTX0VYSVQgPj4gMjQpOwo+
-ICsJb3ZlcmhlYWRfYml0cyA9IG92ZXJoZWFkX2N5Y2xlcyAqIGRzaS0+bGFuZXMgKiA4Owo+ICsJ
-dG90YWxfYml0cyA9IGh0b3RhbF9iaXRzICsgb3ZlcmhlYWRfYml0czsKPiArCj4gKwlkc2ktPmRh
-dGFfcmF0ZSA9IERJVl9ST1VORF9VUF9VTEwoYml0X2Nsb2NrICogdG90YWxfYml0cywKPiArCQkJ
-CQkgIGh0b3RhbF9iaXRzICogZHNpLT5sYW5lcyk7Cj4gIAo+IC0JcmV0ID0gY2xrX3NldF9yYXRl
-KGRzaS0+aHNfY2xrLCBkc2ktPmRhdGFfcmF0ZSAqIDEwMDAwMDApOwo+ICsJcmV0ID0gY2xrX3Nl
-dF9yYXRlKGRzaS0+aHNfY2xrLCBkc2ktPmRhdGFfcmF0ZSk7Cj4gIAlpZiAocmV0IDwgMCkgewo+
-ICAJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIHNldCBkYXRhIHJhdGU6ICVkXG4iLCByZXQpOwo+
-ICAJCWdvdG8gZXJyX3JlZmNvdW50OwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+Hi Linus,
+
+2016-10-24 8:13 GMT+02:00 Alexander Stein
+<alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>:
+> On Monday 24 October 2016 02:53:31, Linus Walleij wrote:
+>> On Fri, Oct 21, 2016 at 5:00 PM, Enric Balletbo i Serra
+>>
+>> <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+>> > Default is without pullups, but if property is specified in DT and the bit
+>> > is set, set a pullup on GPIO-n.
+>> >
+>> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>>
+>> I don't generally like this.
+>>
+
+I tried to use the same approach as used in gpio-twl4030.c because is
+what I knew before. Maybe you can point me to a better approach?
+
+>> In device tree it is the consumer that specifies how the line is used,
+>> not the producer (gpiochip).
+>>
+>> We currently only specify polarity, open drain and open source
+>> for consumers though.
+>>
+>> And the entire pin control system came into being *exactly* because
+>> Grant didn't like me adding these things to the GPIO drivers.
+>>
+>> So how many other things does the MCP support? Drive strength?
+>> Schmitt trigger? Is there a datasheet?
+>
+> Some unsupported features (AFAIK):
+> * Input polarity (IPOL register)
+> * open-drain interrupt pin
+> * pullup on pins (proposed patch)
+>
+> Datasheet is here: http://ww1.microchip.com/downloads/en/DeviceDoc/21919e.pdf
+>
+> Best regards,
+> Alexander
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-gpio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
