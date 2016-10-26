@@ -1,358 +1,735 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 3/3] reset: Add the TI SCI reset driver
-Date: Wed, 26 Oct 2016 14:39:38 -0500
-Message-ID: <20161026193938.25093-4-afd@ti.com>
-References: <20161026193938.25093-1-afd@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 1/2] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom
+ chips
+Date: Thu, 27 Oct 2016 01:26:24 +0530
+Message-ID: <12a93817-0d3c-b35c-2e02-91f8ed2ee2a6@ti.com>
+References: <1476873827-7191-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1476873827-7191-2-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161026193938.25093-1-afd-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1476873827-7191-2-git-send-email-vivek.gautam@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some TI Keystone family of SoCs contain a system controller (like the
-Power Management Micro Controller (PMMC) on K2G SoCs) that manage the
-low-level device control (like clocks, resets etc) for the various
-hardware modules present on the SoC. These device control operations
-are provided to the host processor OS through a communication protocol
-called the TI System Control Interface (TI SCI) protocol.
+Hi,
 
-This patch adds a reset driver that communicates to the system
-controller over the TI SCI protocol for performing reset management
-of various devices present on the SoC. Various reset functionalities
-are achieved by the means of different TI SCI device operations
-provided by the TI SCI framework.
+On Wednesday 19 October 2016 04:13 PM, Vivek Gautam wrote:
+> PHY transceiver driver for QUSB2 phy controller that provides
+> HighSpeed functionality for DWC3 controller present on
+> Qualcomm chipsets.
+> 
+> This driver is based on phy-msm-qusb driver available in
+> msm-4.4 kernel @codeaurora[1]
+> 
+> [1] https://source.codeaurora.org/quic/la/kernel/msm-4.4/log/?h=caf/3.18/msm-3.18
 
-Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-[s-anna-l0cyMroinI0@public.gmane.org: documentation changes, revised commit message]
-Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
----
- MAINTAINERS                  |   1 +
- drivers/reset/Kconfig        |   9 ++
- drivers/reset/Makefile       |   1 +
- drivers/reset/reset-ti-sci.c | 262 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 273 insertions(+)
- create mode 100644 drivers/reset/reset-ti-sci.c
+I'd prefer only LKML links in commit msg. This can be part of the comment
+section below ---.
+> 
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  37 ++
+>  drivers/phy/Kconfig                                |  10 +
+>  drivers/phy/Makefile                               |   1 +
+>  drivers/phy/phy-qcom-qusb2.c                       | 577 +++++++++++++++++++++
+>  4 files changed, 625 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+>  create mode 100644 drivers/phy/phy-qcom-qusb2.c
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+> new file mode 100644
+> index 0000000..97c9ce7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+> @@ -0,0 +1,37 @@
+> +Qualcomm QUSB2 phy controller
+> +=============================
+> +
+> +QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
+> +
+> +Required properties:
+> + - compatible: compatible list, contains "qcom,msm8996-qusb2-phy".
+> + - reg: offset and length of the PHY register set.
+> + - #phy-cells: must be 0.
+> +
+> + - clocks: a list of phandles and clock-specifier pairs,
+> +	   one for each entry in clock-names.
+> + - clock-names: must be "cfg_ahb" for phy config clock,
+> +			"ref_clk" for 19.2 MHz ref clk,
+> +			"ref_clk_src" reference clock source.
+> +			"iface" for phy interface clock (Optional).
+> +
+> + - vdd-phy-supply: Phandle to a regulator supply to PHY core block.
+> + - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
+> + - vdda-phy-dpdm: Phandle to 3.1V regulator supply to Dp/Dm port signals.
+> +
+> + - resets: a list of phandles and reset controller specifier pairs,
+> +	   one for each entry in reset-names.
+> + - reset-names: must be "phy" for reset of phy block.
+> +
+> +Optional properties:
+> + - nvmem-cells: a list of phandles to nvmem cells that contain fused
+> +		tuning parameters for qusb2 phy, one for each entry
+> +		in nvmem-cell-names.
+> + - nvmem-cell-names: must be "tune2_hstx_trim_efuse" for cell containing
+> +		     HS Tx trim value.
+> + - qcom,hstx-trim-bit-offset: bit offset within nvmem cell for
+> +			      HS Tx trim value.
+> + - qcom,hstx-trim-bit-len: bit length of HS Tx trim value within nvmem cell.
+> +
+> + - qcom,tcsr-syscon: Phandle to TCSR syscon register region.
+> + - qcom,phy-clk-scheme: Offset to TCSR_PHY_CLK_SCHEME_SEL register.
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index fe00f91..5547984 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -446,6 +446,16 @@ config PHY_STIH41X_USB
+>  	  Enable this to support the USB transceiver that is part of
+>  	  STMicroelectronics STiH41x SoC series.
+>  
+> +config PHY_QCOM_QUSB2
+> +	tristate "Qualcomm QUSB2 PHY Driver"
+> +	depends on OF && (ARCH_QCOM || COMPILE_TEST)
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable this to support the HighSpeed QUSB2 PHY transceiver for USB
+> +	  controllers on Qualcomm chips. This driver supports the high-speed
+> +	  PHY which is usually paired with either the ChipIdea or Synopsys DWC3
+> +	  USB IPs on MSM SOCs.
+> +
+>  config PHY_QCOM_UFS
+>  	tristate "Qualcomm UFS PHY driver"
+>  	depends on OF && ARCH_QCOM
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index a534cf5..848489d 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -51,6 +51,7 @@ obj-$(CONFIG_PHY_ST_SPEAR1340_MIPHY)	+= phy-spear1340-miphy.o
+>  obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
+>  obj-$(CONFIG_PHY_STIH407_USB)		+= phy-stih407-usb.o
+>  obj-$(CONFIG_PHY_STIH41X_USB)		+= phy-stih41x-usb.o
+> +obj-$(CONFIG_PHY_QCOM_QUSB2) 	+= phy-qcom-qusb2.o
+>  obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs.o
+>  obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-20nm.o
+>  obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-14nm.o
+> diff --git a/drivers/phy/phy-qcom-qusb2.c b/drivers/phy/phy-qcom-qusb2.c
+> new file mode 100644
+> index 0000000..058f661
+> --- /dev/null
+> +++ b/drivers/phy/phy-qcom-qusb2.c
+> @@ -0,0 +1,577 @@
+> +/*
+> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/nvmem-consumer.h>
+> +#include <linux/of.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +#include <linux/slab.h>
+> +
+> +#define QUSB2PHY_PLL_TEST		0x04
+> +#define CLK_REF_SEL			BIT(7)
+> +
+> +#define QUSB2PHY_PLL_TUNE		0x08
+> +#define QUSB2PHY_PLL_USER_CTL1		0x0c
+> +#define QUSB2PHY_PLL_USER_CTL2		0x10
+> +#define QUSB2PHY_PLL_AUTOPGM_CTL1	0x1c
+> +#define QUSB2PHY_PLL_PWR_CTRL		0x18
+> +
+> +#define QUSB2PHY_PLL_STATUS		0x38
+> +#define PLL_LOCKED			BIT(5)
+> +
+> +#define QUSB2PHY_PORT_TUNE1             0x80
+> +
+> +#define QUSB2PHY_PORT_TUNE2             0x84
+> +/* TUNE2's high nibble value read from efuse */
+> +#define TUNE2_HIGH_NIBBLE_VAL(val, pos, mask)	((val >> pos) & mask)
+> +
+> +#define QUSB2PHY_PORT_TUNE3             0x88
+> +#define QUSB2PHY_PORT_TUNE4             0x8C
+> +#define QUSB2PHY_PORT_TUNE5		0x90tx
+> +#define QUSB2PHY_PORT_TEST2		0x9c
+> +
+> +#define QUSB2PHY_PORT_POWERDOWN		0xB4
+> +#define CLAMP_N_EN			BIT(5)
+> +#define FREEZIO_N			BIT(1)
+> +#define POWER_DOWN			BIT(0)
+> +
+> +#define QUSB2PHY_REFCLK_ENABLE		BIT(0)
+> +
+> +#define PHY_CLK_SCHEME_SEL		BIT(0)
+> +
+> +struct qusb2_phy_init_tbl {
+> +	unsigned int reg_offset;
+> +	unsigned int cfg_val;
+> +};
+> +#define QCOM_QUSB2_PHY_INIT_CFG(reg, val) \
+> +	{				\
+> +		.reg_offset = reg,	\
+> +		.cfg_val = val,		\
+> +	}
+> +
+> +static struct qusb2_phy_init_tbl msm8996_phy_init_tbl[] = {
+> +	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE1, 0xF8),
+> +	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE2, 0xB3),
+> +	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE3, 0x83),
+> +	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE4, 0xC0),
+> +	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_TUNE, 0x30),
+> +	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_USER_CTL1, 0x79),
+> +	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_USER_CTL2, 0x21),
+> +	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TEST2, 0x14),
+> +	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_AUTOPGM_CTL1, 0x9F),
+> +	QCOM_QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_PWR_CTRL, 0x00),
+> +};
+we should generalize this so that it could be used for any phys. All these
+tuning parameters can come from dt.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index accf991..b93d91a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11901,6 +11901,7 @@ F:	include/dt-bindings/clock/k2g.h
- F:	drivers/clk/keystone/sci-clk.c
- F:	Documentation/devicetree/bindings/reset/ti,sci-reset.txt
- F:	include/dt-bindings/reset/k2g.h
-+F:	drivers/reset/reset-ti-sci.c
- 
- THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
- M:	Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 06d9fa2..4c21c9d 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -66,6 +66,15 @@ config RESET_SUNXI
- 	help
- 	  This enables the reset driver for Allwinner SoCs.
- 
-+config RESET_TI_SCI
-+	tristate "TI System Control Interface (TI-SCI) reset driver"
-+	depends on RESET_CONTROLLER
-+	depends on TI_SCI_PROTOCOL
-+	help
-+	  This enables the reset driver support over TI System Control Interface
-+	  available on some new TI's SoCs. If you wish to use reset resources
-+	  managed by the TI System Controller, say Y here. Otherwise, say N.
-+
- config TI_SYSCON_RESET
- 	tristate "TI SYSCON Reset Driver"
- 	depends on HAS_IOMEM
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index bbe7026..36321f2 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
- obj-$(CONFIG_RESET_SOCFPGA) += reset-socfpga.o
- obj-$(CONFIG_RESET_STM32) += reset-stm32.o
- obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
-+obj-$(CONFIG_RESET_TI_SCI) += reset-ti-sci.o
- obj-$(CONFIG_TI_SYSCON_RESET) += reset-ti-syscon.o
- obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
- obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
-diff --git a/drivers/reset/reset-ti-sci.c b/drivers/reset/reset-ti-sci.c
-new file mode 100644
-index 0000000..42ccf12
---- /dev/null
-+++ b/drivers/reset/reset-ti-sci.c
-@@ -0,0 +1,262 @@
-+/*
-+ * Texas Instrument's System Control Interface (TI-SCI) reset driver
-+ *
-+ * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
-+ *	Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/idr.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+#include <linux/soc/ti/ti_sci_protocol.h>
-+
-+/**
-+ * struct ti_sci_reset_control - reset control structure
-+ * @dev_id: SoC-specific device identifier
-+ * @reset_mask: reset mask to use for toggling reset
-+ */
-+struct ti_sci_reset_control {
-+	u32 dev_id;
-+	u32 reset_mask;
-+};
-+
-+/**
-+ * struct ti_sci_reset_data - reset controller information structure
-+ * @rcdev: reset controller entity
-+ * @dev: reset controller device pointer
-+ * @sci: TI SCI handle used for communication with system controller
-+ * @idr: idr structure for mapping ids to reset control structures
-+ */
-+struct ti_sci_reset_data {
-+	struct reset_controller_dev rcdev;
-+	struct device *dev;
-+	const struct ti_sci_handle *sci;
-+	struct idr idr;
-+};
-+
-+#define to_ti_sci_reset_data(p)	\
-+	container_of((p), struct ti_sci_reset_data, rcdev)
-+
-+/**
-+ * ti_sci_reset_set() - program a device's reset
-+ * @rcdev: reset controller entity
-+ * @id: ID of the reset to toggle
-+ * @assert: boolean flag to indicate assert or deassert
-+ *
-+ * This is a common internal function used to assert or deassert a device's
-+ * reset using the TI SCI protocol. The device's reset is asserted if the
-+ * @assert argument is true, or deasserted if @assert argument is false.
-+ * The mechanism itself is a read-modify-write procedure, the current device
-+ * reset register is read using a TI SCI device operation, the new value is
-+ * set or un-set using the reset's mask, and the new reset value written by
-+ * using another TI SCI device operation.
-+ *
-+ * Return: 0 for successful request, else a corresponding error value
-+ */
-+static int ti_sci_reset_set(struct reset_controller_dev *rcdev,
-+			    unsigned long id, bool assert)
-+{
-+	struct ti_sci_reset_data *data = to_ti_sci_reset_data(rcdev);
-+	const struct ti_sci_handle *sci = data->sci;
-+	const struct ti_sci_dev_ops *dev_ops = &sci->ops.dev_ops;
-+	struct ti_sci_reset_control *control;
-+	u32 reset_state;
-+	int ret;
-+
-+	control = idr_find(&data->idr, id);
-+	if (!control)
-+		return -EINVAL;
-+
-+	ret = dev_ops->get_device_resets(sci, control->dev_id,
-+					 &reset_state);
-+	if (ret)
-+		return ret;
-+
-+	if (assert)
-+		reset_state |= control->reset_mask;
-+	else
-+		reset_state &= ~control->reset_mask;
-+
-+	return dev_ops->set_device_resets(sci, control->dev_id,
-+					  reset_state);
-+}
-+
-+/**
-+ * ti_sci_reset_assert() - assert device reset
-+ * @rcdev: reset controller entity
-+ * @id: ID of the reset to be asserted
-+ *
-+ * This function implements the reset driver op to assert a device's reset
-+ * using the TI SCI protocol. This invokes the function ti_sci_reset_set()
-+ * with the corresponding parameters as passed in, but with the @assert
-+ * argument set to true for asserting the reset.
-+ *
-+ * Return: 0 for successful request, else a corresponding error value
-+ */
-+static int ti_sci_reset_assert(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	return ti_sci_reset_set(rcdev, id, true);
-+}
-+
-+/**
-+ * ti_sci_reset_deassert() - deassert device reset
-+ * @rcdev: reset controller entity
-+ * @id: ID of the reset to be deasserted
-+ *
-+ * This function implements the reset driver op to deassert a device's reset
-+ * using the TI SCI protocol. This invokes the function ti_sci_reset_set()
-+ * with the corresponding parameters as passed in, but with the @assert
-+ * argument set to false for deasserting the reset.
-+ *
-+ * Return: 0 for successful request, else a corresponding error value
-+ */
-+static int ti_sci_reset_deassert(struct reset_controller_dev *rcdev,
-+				 unsigned long id)
-+{
-+	return ti_sci_reset_set(rcdev, id, false);
-+}
-+
-+/**
-+ * ti_sci_reset_status() - check device reset status
-+ * @rcdev: reset controller entity
-+ * @id: ID of reset to be checked
-+ *
-+ * This function implements the reset driver op to return the status of a
-+ * device's reset using the TI SCI protocol. The reset register value is read
-+ * by invoking the TI SCI device opertation .get_device_resets(), and the
-+ * status of the specific reset is extracted and returned using this reset's
-+ * reset mask.
-+ *
-+ * Return: 0 if reset is deasserted, or a non-zero value if reset is asserted
-+ */
-+static int ti_sci_reset_status(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	struct ti_sci_reset_data *data = to_ti_sci_reset_data(rcdev);
-+	const struct ti_sci_handle *sci = data->sci;
-+	const struct ti_sci_dev_ops *dev_ops = &sci->ops.dev_ops;
-+	struct ti_sci_reset_control *control;
-+	u32 reset_state;
-+	int ret;
-+
-+	control = idr_find(&data->idr, id);
-+	if (!control)
-+		return -EINVAL;
-+
-+	ret = dev_ops->get_device_resets(sci, control->dev_id,
-+					 &reset_state);
-+	if (ret)
-+		return ret;
-+
-+	return reset_state & control->reset_mask;
-+}
-+
-+static struct reset_control_ops ti_sci_reset_ops = {
-+	.assert		= ti_sci_reset_assert,
-+	.deassert	= ti_sci_reset_deassert,
-+	.status		= ti_sci_reset_status,
-+};
-+
-+/**
-+ * ti_sci_reset_of_xlate() - translate a set of OF arguments to a reset ID
-+ * @rcdev: reset controller entity
-+ * @reset_spec: OF reset argument specifier
-+ *
-+ * This function performs the translation of the reset argument specifier
-+ * values defined in a reset consumer device node. The function allocates a
-+ * reset control structure for that device reset, and will be used by the
-+ * driver for performing any reset functions on that reset. An idr structure
-+ * is allocated and used to map to the reset control structure. This idr
-+ * is used by the driver to do reset lookups.
-+ *
-+ * Return: 0 for successful request, else a corresponding error value
-+ */
-+static int ti_sci_reset_of_xlate(struct reset_controller_dev *rcdev,
-+				 const struct of_phandle_args *reset_spec)
-+{
-+	struct ti_sci_reset_data *data = to_ti_sci_reset_data(rcdev);
-+	struct ti_sci_reset_control *control;
-+
-+	if (WARN_ON(reset_spec->args_count != rcdev->of_reset_n_cells))
-+		return -EINVAL;
-+
-+	control = devm_kzalloc(data->dev, sizeof(*control), GFP_KERNEL);
-+	if (!control)
-+		return -ENOMEM;
-+
-+	control->dev_id = reset_spec->args[0];
-+	control->reset_mask = reset_spec->args[1];
-+
-+	return idr_alloc(&data->idr, control, 0, 0, GFP_KERNEL);
-+}
-+
-+static const struct of_device_id ti_sci_reset_of_match[] = {
-+	{ .compatible = "ti,sci-reset", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, ti_sci_reset_of_match);
-+
-+static int ti_sci_reset_probe(struct platform_device *pdev)
-+{
-+	struct ti_sci_reset_data *data;
-+
-+	if (!pdev->dev.of_node)
-+		return -ENODEV;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->sci = devm_ti_sci_get_handle(&pdev->dev);
-+	if (IS_ERR(data->sci))
-+		return PTR_ERR(data->sci);
-+
-+	data->rcdev.ops = &ti_sci_reset_ops;
-+	data->rcdev.owner = THIS_MODULE;
-+	data->rcdev.of_node = pdev->dev.of_node;
-+	data->rcdev.of_reset_n_cells = 2;
-+	data->rcdev.of_xlate = ti_sci_reset_of_xlate;
-+	data->dev = &pdev->dev;
-+	idr_init(&data->idr);
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	return reset_controller_register(&data->rcdev);
-+}
-+
-+static int ti_sci_reset_remove(struct platform_device *pdev)
-+{
-+	struct ti_sci_reset_data *data = platform_get_drvdata(pdev);
-+
-+	reset_controller_unregister(&data->rcdev);
-+
-+	idr_destroy(&data->idr);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver ti_sci_reset_driver = {
-+	.probe = ti_sci_reset_probe,
-+	.remove = ti_sci_reset_remove,
-+	.driver = {
-+		.name = "ti-sci-reset",
-+		.of_match_table = ti_sci_reset_of_match,
-+	},
-+};
-+module_platform_driver(ti_sci_reset_driver);
-+
-+MODULE_AUTHOR("Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>");
-+MODULE_DESCRIPTION("TI System Control Interface (TI SCI) Reset driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.10.1
+phy,tx-swing = <reg_offset> <swing value>;
+phy,rx-swing = <reg_offset> <swing value>;
+phy,tx-compensation = <reg_offset> <swing value>;
+phy,rx-compensation = <reg_offset> <swing value>;
+..
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We have to identify all the calibration parameters and add a dt property for
+each parameter. The phy-core can just use these properties to calibrate or tune
+the PHY.
+
+> +
+> +struct qusb2_phy_init_cfg {
+> +	struct qusb2_phy_init_tbl *phy_init_tbl;
+> +	int phy_init_tbl_sz;
+> +};
+> +
+> +const struct qusb2_phy_init_cfg msm8996_phy_init_cfg = {
+> +	.phy_init_tbl = msm8996_phy_init_tbl,
+> +	.phy_init_tbl_sz = ARRAY_SIZE(msm8996_phy_init_tbl),
+> +};
+> +
+> +/**
+> + * struct qusb2_phy: Structure holding qusb2 phy attributes.
+> + *
+> + * @phy: pointer to generic phy.
+> + * @base: pointer to iomapped memory space for qubs2 phy.
+> + *
+> + * @cfg_ahb_clk: pointer to AHB2PHY interface clock.
+> + * @ref_clk: pointer to reference clock.
+> + * @ref_clk_src: pointer to source to reference clock.
+> + * @iface_src: pointer to phy interface clock.
+> + * @clk_enabled: check if clocks are enabled.
+
+Why is this needed? IMO this should not be used. clk framework can handle this
+better since it maintains a reference count for clk_enable/clk_disable.
+> + *
+> + * @phy_reset: Pointer to phy reset control
+> + *
+> + * @vdda_phy: vdd supply to the phy core block.
+> + * @vdda_pll: 1.8V vdd supply to ref_clk block.
+> + * @vdda_phy_dpdm: 3.1V vdd supply to Dp/Dm port signals.
+> + * @pwr_enabled: check if the regulators are enabled.
+
+same here.
+> + * @tcsr: pointer to TCSR syscon register map.
+> + * @clk_scheme_offset: offset to PHY_CLK_SCHEME register in TCSR map.
+> + * @cfg: phy initialization config data
+> + */
+> +struct qusb2_phy {
+> +	struct phy *phy;
+> +	void __iomem *base;
+> +
+> +	struct clk *cfg_ahb_clk;
+> +	struct clk *ref_clk;
+> +	struct clk *ref_clk_src;
+> +	struct clk *iface_clk;
+> +	bool clk_enabled;
+> +
+> +	struct reset_control *phy_reset;
+> +
+> +	struct regulator *vdd_phy;
+> +	struct regulator *vdda_pll;
+> +	struct regulator *vdda_phy_dpdm;
+> +	bool pwr_enabled;
+> +
+> +	struct regmap *tcsr;
+> +	unsigned int clk_scheme_offset;
+> +
+> +	const struct qusb2_phy_init_cfg *cfg;
+> +};
+> +
+> +static inline void qusb2_set_bits(void __iomem *reg, u32 mask)
+
+mask is misleading. just use val.
+> +{
+> +	u32 val;
+> +
+> +	val = readl_relaxed(reg);
+> +	val |= mask;
+> +	writel_relaxed(val, reg);
+> +
+> +	/* Ensure above write is completed */
+> +	mb();
+> +}
+> +
+> +static inline void qusb2_clr_bits(void __iomem *reg, u32 mask)
+> +{
+> +	u32 val;
+> +
+> +	val = readl_relaxed(reg);
+> +	val &= ~mask;
+> +	writel_relaxed(val, reg);
+> +
+> +	/* Ensure above write is completed */
+> +	mb();
+> +}
+> +
+> +static void qcom_qusb2_phy_configure(void __iomem *base,
+> +				struct qusb2_phy_init_tbl init_tbl[],
+> +				int init_tbl_sz)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < init_tbl_sz; i++) {
+> +		writel_relaxed(init_tbl[i].cfg_val,
+> +				base + init_tbl[i].reg_offset);
+> +	}
+> +
+> +	/* flush buffered writes */
+> +	mb();
+> +}
+> +
+> +static void qusb2_phy_enable_clocks(struct qusb2_phy *qphy, bool on)
+> +{
+> +	dev_dbg(&qphy->phy->dev, "%s(): clocks_enabled:%d on:%d\n",
+> +			__func__, qphy->clk_enabled, on);
+
+unnecessary debug print IMO, given that there is another debug print before the
+function returns.
+> +
+> +	if (!qphy->clk_enabled && on) {
+> +		clk_prepare_enable(qphy->cfg_ahb_clk);
+> +		if (qphy->iface_clk)
+> +			clk_prepare_enable(qphy->iface_clk);
+> +		clk_prepare_enable(qphy->ref_clk_src);
+> +		qphy->clk_enabled = true;
+> +	}
+> +
+> +	if (qphy->clk_enabled && !on) {
+> +		clk_disable_unprepare(qphy->ref_clk_src);
+> +		if (qphy->iface_clk)
+> +			clk_disable_unprepare(qphy->iface_clk);
+> +		clk_disable_unprepare(qphy->cfg_ahb_clk);
+> +		qphy->clk_enabled = false;
+> +	}
+> +
+> +	dev_dbg(&qphy->phy->dev, "%s(): clocks_enabled:%d\n", __func__,
+> +						qphy->clk_enabled);
+
+even this should be dev_vdbg.
+> +}
+> +
+> +static int qusb2_phy_enable_power(struct qusb2_phy *qphy, bool on)
+> +{
+> +	int ret = 0;
+> +	struct device *dev = &qphy->phy->dev;
+> +
+> +	dev_dbg(dev, "%s(): turn %s regulators. power_enabled:%d\n",
+> +			__func__, on ? "on" : "off", qphy->pwr_enabled);
+> +
+> +	if (qphy->pwr_enabled == on)
+> +		return 0;
+> +
+> +	if (!on)
+> +		goto disable_vdda_phy_dpdm;
+> +
+> +	ret = regulator_enable(qphy->vdd_phy);
+> +	if (ret) {
+> +		dev_err(dev, "Unable to enable vdd-phy:%d\n", ret);
+> +		goto err_vdd_phy;
+> +	}
+> +
+> +	ret = regulator_enable(qphy->vdda_pll);
+> +	if (ret) {
+> +		dev_err(dev, "Unable to enable vdda-pll:%d\n", ret);
+> +		goto disable_vdd_phy;
+> +	}
+> +
+> +	ret = regulator_enable(qphy->vdda_phy_dpdm);
+> +	if (ret) {
+> +		dev_err(dev, "Unable to enable vdda-phy-dpdm:%d\n", ret);
+> +		goto disable_vdda_pll;
+> +	}
+> +
+> +	qphy->pwr_enabled = true;
+> +	dev_dbg(dev, "%s() regulators are turned on.\n", __func__);
+> +
+> +	return ret;
+> +
+> +disable_vdda_phy_dpdm:
+> +	regulator_disable(qphy->vdda_phy_dpdm);
+> +disable_vdda_pll:
+> +	regulator_disable(qphy->vdda_pll);
+> +disable_vdd_phy:
+> +	regulator_disable(qphy->vdd_phy);
+> +err_vdd_phy:
+> +	qphy->pwr_enabled = false;
+> +	dev_dbg(dev, "%s() regulators are turned off.\n", __func__);
+> +	return ret;
+> +}
+> +
+> +/*
+> + * Fetches HS Tx tuning value from e-fuse and sets QUSB2PHY_PORT_TUNE2
+> + * register.
+> + * For any error case, skip setting the value and use the default value.
+> + */
+> +static int qusb2_phy_set_tune2_param(struct qusb2_phy *qphy)
+> +{
+> +	struct device *dev = &qphy->phy->dev;
+> +	struct nvmem_cell *cell;
+> +	unsigned int bit_mask;
+> +	u32 tune2_val;
+> +	int bit_offset = 0;
+> +	int bit_len = 0;
+> +	ssize_t len;
+> +	u32 *val;
+> +	int ret;
+> +
+> +	/*
+> +	 * Read EFUSE register having TUNE2 parameter's high nibble.
+> +	 * If efuse register shows value as 0x0, or if we fail to find
+> +	 * a valid efuse register settings, then use default value
+> +	 * as 0xB for high nibble that we have already set while
+> +	 * configuring phy.
+> +	 */
+> +	cell = devm_nvmem_cell_get(dev, "tune2_hstx_trim_efuse");
+> +	if (IS_ERR(cell)) {
+> +		if (PTR_ERR(cell) == -EPROBE_DEFER)
+> +			return PTR_ERR(cell);
+> +		goto skip;
+> +	}
+> +
+> +	val = (u32 *)nvmem_cell_read(cell, &len);
+> +	if (!IS_ERR(val)) {
+> +		ret = of_property_read_u32(dev->of_node,
+> +						"qcom,hstx-trim-bit-offset",
+> +						&bit_offset);
+> +		if (ret) {
+> +			dev_dbg(dev, "hstx-trim bit offset is invalid.\n");
+> +			goto skip;
+> +		}
+> +
+> +		ret = of_property_read_u32(dev->of_node,
+> +						"qcom,hstx-trim-bit-len",
+> +						&bit_len);
+> +		if (ret) {
+> +			dev_dbg(dev, "hstx-trim bit length is invalid.\n");
+> +			goto skip;
+> +		}
+> +
+> +		bit_mask = (1 << bit_len) - 1;
+> +		dev_dbg(dev,
+> +			"%s(): efuse value:%x, bit_mask:%x, bit_offset: %d\n",
+> +			__func__, val[0], bit_mask, bit_offset);
+> +		tune2_val = TUNE2_HIGH_NIBBLE_VAL(val[0], bit_offset, bit_mask);
+> +		if (!tune2_val) {
+> +			dev_dbg(dev, "hstx-trim bit length is invalid.\n");
+> +			goto skip;
+> +		}
+> +
+> +		/* Fused TUNE2 value is the higher nibble only */
+> +		tune2_val = tune2_val << 0x4;
+> +		qusb2_set_bits(qphy->base + QUSB2PHY_PORT_TUNE2, tune2_val);
+> +	} else {
+> +		dev_dbg(dev, "failed reading hs-tx trim value: %d\n", ret);
+> +	}
+> +
+> +skip:
+> +	return 0;
+> +}
+> +
+> +static int qusb2_phy_init(struct phy *phy)
+> +{
+> +	struct qusb2_phy *qphy = phy_get_drvdata(phy);
+> +	unsigned int reset_val;
+> +	unsigned int clk_scheme;
+> +	bool is_se_clk = false;
+> +	int ret;
+> +
+> +	dev_info(&phy->dev, "Initializing QUSB2 phy\n");
+
+dev_vdbg here..
+> +
+> +	ret = qusb2_phy_enable_power(qphy, true);
+> +	if (ret)
+> +		return ret;
+
+shouldn't this be done in power_on?
+> +
+> +	qusb2_phy_enable_clocks(qphy, true);
+> +
+> +	/* Perform phy reset */
+> +	ret = reset_control_assert(qphy->phy_reset);
+> +	if (ret) {
+> +		dev_err(&phy->dev, "Failed to assert phy_reset\n");
+> +		return ret;
+> +	}
+> +	usleep_range(100, 150);
+
+add a comment for the above delay.
+> +	ret = reset_control_deassert(qphy->phy_reset);
+> +	if (ret) {
+> +		dev_err(&phy->dev, "Failed to de-assert phy_reset\n");
+> +		return ret;
+> +	}
+> +
+> +	/* Disable the PHY */
+> +	qusb2_set_bits(qphy->base + QUSB2PHY_PORT_POWERDOWN,
+> +			CLAMP_N_EN | FREEZIO_N | POWER_DOWN);
+> +
+> +	/* save reset value to override based on clk scheme */
+> +	reset_val = readl_relaxed(qphy->base + QUSB2PHY_PLL_TEST);
+> +
+> +	qcom_qusb2_phy_configure(qphy->base, qphy->cfg->phy_init_tbl,
+> +				qphy->cfg->phy_init_tbl_sz);
+> +
+> +	/* Check for efuse value for tuning the PHY */
+> +	ret = qusb2_phy_set_tune2_param(qphy);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Enable the PHY */
+> +	qusb2_clr_bits(qphy->base + QUSB2PHY_PORT_POWERDOWN, POWER_DOWN);
+> +
+> +	/* Require to get phy pll lock successfully */
+> +	usleep_range(150, 160);
+> +
+> +	/*
+> +	 * Use differential clk by default; later we read TCSR_PHY_CLK_SCHEME
+> +	 * register to check if Single-ended clock scheme is selected. If yes,
+> +	 * then disable differential ref_clk and use single-ended clock.
+> +	 */
+> +
+> +	if (qphy->tcsr) {
+> +		ret = regmap_read(qphy->tcsr, qphy->clk_scheme_offset,
+> +							&clk_scheme);
+> +		/* is SE-clk available ? */
+> +		if (clk_scheme & PHY_CLK_SCHEME_SEL) {
+> +			dev_dbg(&phy->dev, "%s: select single-ended clk src\n",
+> +								__func__);
+> +			is_se_clk = true;
+> +		}
+> +	}
+> +
+> +	if (is_se_clk) {
+> +		reset_val |= CLK_REF_SEL;
+> +		clk_disable_unprepare(qphy->ref_clk);
+> +	} else {
+> +		reset_val &= ~CLK_REF_SEL;
+> +		clk_prepare_enable(qphy->ref_clk);
+> +	}
+> +
+> +	writel_relaxed(reset_val, qphy->base + QUSB2PHY_PLL_TEST);
+> +
+> +	/* Make sure that above write is completed to get PLL source clock */
+> +	wmb();
+> +
+> +	/* Required to get PHY PLL lock successfully */
+> +	usleep_range(100, 110);
+> +
+> +	if (!(readb_relaxed(qphy->base + QUSB2PHY_PLL_STATUS) &
+> +					PLL_LOCKED)) {
+> +		dev_err(&phy->dev, "QUSB PHY PLL LOCK fails:%x\n",
+> +			readb_relaxed(qphy->base + QUSB2PHY_PLL_STATUS));
+> +		return -EBUSY;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int qusb2_phy_exit(struct phy *phy)
+> +{
+> +	struct qusb2_phy *qphy = phy_get_drvdata(phy);
+> +
+> +	/* Disable the PHY */
+> +	qusb2_set_bits(qphy->base + QUSB2PHY_PORT_POWERDOWN,
+> +			CLAMP_N_EN | FREEZIO_N | POWER_DOWN);
+> +
+> +	qusb2_phy_enable_clocks(qphy, false);
+> +	qusb2_phy_enable_power(qphy, false);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct phy_ops qusb2_phy_gen_ops = {
+> +	.init		= qusb2_phy_init,
+> +	.exit		= qusb2_phy_exit,
+
+you can add callbacks for power_on and power_off and add then enable clocks and
+power here?
+
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static const struct of_device_id qusb2_phy_of_match_table[] = {
+> +	{
+> +		.compatible	= "qcom,msm8996-qusb2-phy",
+> +		.data		= &msm8996_phy_init_cfg,
+> +	},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, qusb2_phy_of_match_table);
+> +
+> +static int qusb2_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct qusb2_phy *qphy;
+> +	struct phy_provider *phy_provider;
+> +	struct phy *generic_phy;
+> +	const struct of_device_id *match;
+> +	struct resource *res;
+> +	int ret = 0;
+> +
+> +	qphy = devm_kzalloc(dev, sizeof(*qphy), GFP_KERNEL);
+> +	if (!qphy)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -ENODEV;
+
+the above check is not required. ioremap will take care.
+> +	qphy->base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(qphy->base))
+> +		return PTR_ERR(qphy->base);
+> +
+> +	qphy->cfg_ahb_clk = devm_clk_get(dev, "cfg_ahb_clk");
+> +	if (IS_ERR(qphy->cfg_ahb_clk)) {
+> +		ret = PTR_ERR(qphy->cfg_ahb_clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get cfg_ahb_clk\n");
+> +		return ret;
+> +	}
+> +
+> +	qphy->ref_clk_src = devm_clk_get(dev, "ref_clk_src");
+> +	if (IS_ERR(qphy->ref_clk_src)) {
+> +		qphy->ref_clk_src = NULL;
+> +		ret = PTR_ERR(qphy->ref_clk_src);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_dbg(dev, "clk get failed for ref_clk_src\n");
+
+don't we have to return on PROBE_DEFER?
+> +	}
+> +
+> +	qphy->ref_clk = devm_clk_get(dev, "ref_clk");
+> +	if (IS_ERR(qphy->ref_clk)) {
+> +		qphy->ref_clk = NULL;
+> +		ret = PTR_ERR(qphy->ref_clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_dbg(dev, "clk get failed for ref_clk\n");
+
+same here.
+> +	} else {
+> +		clk_set_rate(qphy->ref_clk, 19200000);
+> +	}
+> +
+> +	qphy->iface_clk = devm_clk_get(dev, "iface_clk");
+> +	if (IS_ERR(qphy->iface_clk)) {
+> +		qphy->iface_clk = NULL;
+> +		ret = PTR_ERR(qphy->iface_clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_dbg(dev, "clk get failed for iface_clk\n");
+
+here..
+> +	}
+> +
+> +	qphy->phy_reset = devm_reset_control_get(&pdev->dev, "phy");
+> +	if (IS_ERR(qphy->phy_reset)) {
+> +		dev_err(dev, "failed to get phy core reset\n");
+> +		return PTR_ERR(qphy->phy_reset);
+> +	}
+> +
+> +	qphy->vdd_phy = devm_regulator_get(dev, "vdd-phy");
+> +	if (IS_ERR(qphy->vdd_phy)) {
+> +		dev_err(dev, "unable to get vdd-phy supply\n");
+> +		return PTR_ERR(qphy->vdd_phy);
+> +	}
+> +
+> +	qphy->vdda_pll = devm_regulator_get(dev, "vdda-pll");
+> +	if (IS_ERR(qphy->vdda_pll)) {
+> +		dev_err(dev, "unable to get vdda-pll supply\n");
+> +		return PTR_ERR(qphy->vdda_pll);
+> +	}
+> +
+> +	qphy->vdda_phy_dpdm = devm_regulator_get(dev, "vdda-phy-dpdm");
+> +	if (IS_ERR(qphy->vdda_phy_dpdm)) {
+> +		dev_err(dev, "unable to get vdda-phy-dpdm supply\n");
+> +		return PTR_ERR(qphy->vdda_phy_dpdm);
+> +	}
+> +
+> +	/* Get the specific init parameters of QMP phy */
+> +	match = of_match_node(qusb2_phy_of_match_table, dev->of_node);
+> +	qphy->cfg = match->data;
+> +
+> +	qphy->tcsr = syscon_regmap_lookup_by_phandle(dev->of_node,
+> +							"qcom,tcsr-syscon");
+> +	if (!IS_ERR(qphy->tcsr)) {
+> +		ret = of_property_read_u32(dev->of_node, "qcom,phy-clk-scheme",
+> +						&qphy->clk_scheme_offset);
+> +		if (ret) {
+> +			dev_err(dev, "phy-clk-scheme reg offset is invalid\n");
+> +			qphy->tcsr = NULL;
+> +			return ret;
+> +		}
+> +	} else {
+> +		dev_dbg(dev, "Failed to lookup TCSR regmap\n");
+> +		qphy->tcsr = NULL;
+> +	}
+> +
+> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +	if (IS_ERR(phy_provider)) {
+> +		ret = PTR_ERR(phy_provider);
+> +		dev_err(dev, "%s: failed to register phy %d\n", __func__, ret);
+> +		return ret;
+> +	}
+> +
+> +	generic_phy = devm_phy_create(dev, NULL, &qusb2_phy_gen_ops);
+> +	if (IS_ERR(generic_phy)) {
+> +		ret = PTR_ERR(generic_phy);
+> +		dev_err(dev, "%s: failed to create phy %d\n", __func__, ret);
+> +		generic_phy = NULL;
+> +		return ret;
+> +	}
+
+phy should be created before registering the PHY.
+> +	qphy->phy = generic_phy;
+> +
+> +	dev_set_drvdata(dev, qphy);
+> +	phy_set_drvdata(generic_phy, qphy);
+
+this should be done before phy_provider_register.
+
+Thanks
+Kishon
