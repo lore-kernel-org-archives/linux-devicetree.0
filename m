@@ -1,74 +1,118 @@
-From: Zach Brown <zach.brown@ni.com>
-Subject: Re: [RFC v2 2/2] mmc: sdhci: Ignore capability register when it
- comes to speeds and use DT binding instead when sdhci-cap-speed-modes-broken
- is set.
-Date: Wed, 26 Oct 2016 17:28:12 -0500
-Message-ID: <20161026222811.GA24391@zach-desktop>
-References: <1477085715-30213-1-git-send-email-zach.brown@ni.com>
- <1477085715-30213-3-git-send-email-zach.brown@ni.com>
- <d4547457-036a-dbb7-ddb8-b839e04949b7@intel.com>
- <20161024154820.GA16144@zach-desktop>
- <d65f018e-b20e-9e87-fc07-eb2fb4b5079e@intel.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH V2 07/10] Input: da9061: onkey driver
+Date: Wed, 26 Oct 2016 15:50:05 -0700
+Message-ID: <20161026225005.GA27930@dtor-ws>
+References: <cover.1477501000.git.stwiss.opensource@diasemi.com>
+ <29f73d4d4718cc5848c0414ea60f865ef39bd2cf.1477501000.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d65f018e-b20e-9e87-fc07-eb2fb4b5079e@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <29f73d4d4718cc5848c0414ea60f865ef39bd2cf.1477501000.git.stwiss.opensource@diasemi.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Steve Twiss <stwiss.opensource@diasemi.com>
+Cc: LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, DEVICETREE <devicetree@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 02:30:25PM +0300, Adrian Hunter wrote:
-> On 24/10/16 18:48, Zach Brown wrote:
-> > On Mon, Oct 24, 2016 at 10:34:46AM +0300, Adrian Hunter wrote:
-> >> On 22/10/16 00:35, Zach Brown wrote:
-> >>> When the sdhci-cap-speed-modes-broken DT property is set, the driver
-> >>> will ignore the bits of the capability registers that correspond to
-> >>> speed modes.
-> >>>
-> >>> Signed-off-by: Zach Brown <zach.brown@ni.com>
-> >>> ---
-> >>>  drivers/mmc/host/sdhci.c | 10 ++++++++++
-> >>>  1 file changed, 10 insertions(+)
-> >>>
-> >>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> >>> index 1e25b01..59c62d3 100644
-> >>> --- a/drivers/mmc/host/sdhci.c
-> >>> +++ b/drivers/mmc/host/sdhci.c
-> >>> @@ -22,6 +22,7 @@
-> >>>  #include <linux/scatterlist.h>
-> >>>  #include <linux/regulator/consumer.h>
-> >>>  #include <linux/pm_runtime.h>
-> >>> +#include <linux/of.h>
-> >>>
-> >>>  #include <linux/leds.h>
-> >>>
-> >>> @@ -3013,10 +3014,19 @@ void __sdhci_read_caps(struct sdhci_host *host, u16 *ver, u32 *caps, u32 *caps1)
-> >>>
-> >>>  	host->caps = caps ? *caps : sdhci_readl(host, SDHCI_CAPABILITIES);
-> >>>
-> >>> +	if (of_property_read_bool(mmc_dev(host->mmc)->of_node,
-> >>> +				  "sdhci-cap-speed-modes-broken"))
-> >>
-> >> It rather begs the question: if you are going to do something sdhci
-> >> specific, why not just read the whole of the caps register from DT?
-> >>
-> > 
-> > Throwing out the whole of the caps register seems like overkill. Also
+On Wed, Oct 26, 2016 at 05:56:39PM +0100, Steve Twiss wrote:
+> From: Steve Twiss <stwiss.opensource@diasemi.com>
 > 
-> What about 2 values: one for the 64-bit caps register and one for a 64-bit
-> mask of bits to override.  That way you can select which bits to override
-> and what to override them to.
+> Copyright header is updated to add DA9061 in its description and the module
+> description macro is extended to include DA9061.
+> 
+> Minor change to the code, alters dev_dbg() statements to report a generic
+> "PMIC" instead of DA9063. This device driver is compatible with DA9061,
+> DA9062 and DA9063.
+> 
+> Kconfig is updated to reflect support for DA9061/62/63.
+> 
+> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+
+Applied, thank you.
+
+> 
+> ---
+> This patch applies against linux-next and v4.8
+> 
+> v1 -> v2
+>  - Patch renamed from [PATCH V1 03/10] to [PATCH V2 07/10] -- these
+>    changes were made to fix checkpatch warnings caused by the patch
+>    set dependency order
+>  - Revert changes for DA9061 specific compatible changes.
+> 
+> Dmitry,
+> 
+> Alterations made in accordance with previous e-mail thread on the use of
+> compatible strings: https://lkml.org/lkml/2016/10/7/641
+> Now assuming the use of a fallback compatible string in the DT.
+> compatible = "dlg,da9061-onkey", "dlg,da9062-onkey";
+> 
+> Regards,
+> Steve Twiss, Dialog Semiconductor Ltd.
+> 
+> 
+>  drivers/input/misc/Kconfig        | 7 ++++---
+>  drivers/input/misc/da9063_onkey.c | 8 ++++----
+>  2 files changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index efb0ca8..57cc9c2 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -613,11 +613,12 @@ config INPUT_DA9055_ONKEY
+>  	  will be called da9055_onkey.
+>  
+>  config INPUT_DA9063_ONKEY
+> -	tristate "Dialog DA9062/63 OnKey"
+> +	tristate "Dialog DA9063/62/61 OnKey"
+>  	depends on MFD_DA9063 || MFD_DA9062
+>  	help
+> -	  Support the ONKEY of Dialog DA9063 and DA9062 Power Management ICs
+> -	  as an input device capable of reporting the power button status.
+> +	  Support the ONKEY of Dialog DA9063, DA9062 and DA9061 Power
+> +	  Management ICs as an input device capable of reporting the
+> +	  power button status.
+>  
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called da9063_onkey.
+> diff --git a/drivers/input/misc/da9063_onkey.c b/drivers/input/misc/da9063_onkey.c
+> index bb863e0..dff6fe5 100644
+> --- a/drivers/input/misc/da9063_onkey.c
+> +++ b/drivers/input/misc/da9063_onkey.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * OnKey device driver for DA9063 and DA9062 PMICs
+> + * OnKey device driver for DA9063, DA9062 and DA9061 PMICs
+>   * Copyright (C) 2015  Dialog Semiconductor Ltd.
+>   *
+>   * This program is free software; you can redistribute it and/or
+> @@ -149,13 +149,13 @@ static void da9063_poll_on(struct work_struct *work)
+>  			 * and then send shutdown command
+>  			 */
+>  			dev_dbg(&onkey->input->dev,
+> -				"Sending SHUTDOWN to DA9063 ...\n");
+> +				"Sending SHUTDOWN to PMIC ...\n");
+>  			error = regmap_write(onkey->regmap,
+>  					     config->onkey_shutdown,
+>  					     config->onkey_shutdown_mask);
+>  			if (error)
+>  				dev_err(&onkey->input->dev,
+> -					"Cannot SHUTDOWN DA9063: %d\n",
+> +					"Cannot SHUTDOWN PMIC: %d\n",
+>  					error);
+>  		}
+>  	}
+> @@ -300,6 +300,6 @@ static struct platform_driver da9063_onkey_driver = {
+>  module_platform_driver(da9063_onkey_driver);
+>  
+>  MODULE_AUTHOR("S Twiss <stwiss.opensource@diasemi.com>");
+> -MODULE_DESCRIPTION("Onkey device driver for Dialog DA9063 and DA9062");
+> +MODULE_DESCRIPTION("Onkey device driver for Dialog DA9063, DA9062 and DA9061");
+>  MODULE_LICENSE("GPL");
+>  MODULE_ALIAS("platform:" DA9063_DRVNAME_ONKEY);
+> -- 
+> end-of-patch for PATCH V2
 > 
 
-I like this idea. I sent a RFC of it. 
-
-> > there are some things set by the caps that are not available in the DT.
-> > For example, SDHCI_CAN_64BIT is set by the cap register and is used in
-> > sdhci_setup_host to set host->flags SDHCI_USE_64_BIT_DMA.
-> 
-> Not sure what you mean.
-> 
-
-Your suggestion addresses my concern. So it's not an issue. 
+-- 
+Dmitry
