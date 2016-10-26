@@ -1,52 +1,69 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 0/7] Add R8A7743/SK-RZG1M board support
-Date: Wed, 26 Oct 2016 15:27:14 +0200
-Message-ID: <CAMuHMdWQegsEf_C=UGXpQiEAX0YQqy335teuvCZxBY6C=7QozA@mail.gmail.com>
-References: <2719479.geOc9vqcRS@wasted.cogentembedded.com> <CAMuHMdUNgnYc1O7DATNH1r9SQ72eqtxwFvqcen08Tq+Er3LuvQ@mail.gmail.com>
- <1a85f851-29ec-1c14-8905-8b0645f5bb1c@cogentembedded.com>
+From: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] of, numa: Add function to disable of_node_to_nid().
+Date: Wed, 26 Oct 2016 15:43:01 +0200
+Message-ID: <20161026134301.GV25086@rric.localdomain>
+References: <1477431061-7258-1-git-send-email-ddaney.cavm@gmail.com>
+ <1477431061-7258-2-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1a85f851-29ec-1c14-8905-8b0645f5bb1c@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1477431061-7258-2-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Gilbert Netzer <noname-QVTQ4TwcpgDLoDKTGw+V6w@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 26, 2016 at 3:23 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 10/26/2016 03:08 PM, Geert Uytterhoeven wrote:
->>>    Here's the set of 8 patches against Simon Horman's 'renesas.git'
->>> repo's
->>> 'renesas-devel-20161021-v4.9-rc1' tag. I'm adding the device tree support
->>> for
->>> the R8A7743-based SK-RZG1M board. The SoC is close to R8A7791 and the
->>> board
->>> seems identical to the R8A7791/Porter board. The device tree patches
->>> depend on
->>> the R8A7743 CPG/MSSR driver series just posted in order to compile and
->>> work.
->>
->>
->> They depend only on "[PATCH v3 1/2] ARM: shmobile: r8a7743: add CPG clock
->> index macros" of that series, right?
->>
->> "[PATCH v3 2/2] clk: renesas: cpg-mssr: add R8A7743 support" is not
->> needed,
->
->    How would "clocks" props _work_ without this patch?
+On 25.10.16 14:31:00, David Daney wrote:
+> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> 
+> On arm64 NUMA kernels we can pass "numa=off" on the command line to
+> disable NUMA.  A side effect of this is that kmalloc_node() calls to
+> non-zero nodes will crash the system with an OOPS:
+> 
+> [    0.000000] [<fffffc00081bba84>] __alloc_pages_nodemask+0xa4/0xe68
+> [    0.000000] [<fffffc00082163a8>] new_slab+0xd0/0x57c
+> [    0.000000] [<fffffc000821879c>] ___slab_alloc+0x2e4/0x514
+> [    0.000000] [<fffffc000823882c>] __slab_alloc+0x48/0x58
+> [    0.000000] [<fffffc00082195a0>] __kmalloc_node+0xd0/0x2e0
+> [    0.000000] [<fffffc00081119b8>] __irq_domain_add+0x7c/0x164
+> [    0.000000] [<fffffc0008b75d30>] its_probe+0x784/0x81c
+> [    0.000000] [<fffffc0008b75e10>] its_init+0x48/0x1b0
+> .
+> .
+> .
+> 
+> This is caused by code like this in kernel/irq/irqdomain.c
+> 
+>     domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) * size),
+>                   GFP_KERNEL, of_node_to_nid(of_node));
+> 
+> When NUMA is disabled, the concept of a node is really undefined, so
+> of_node_to_nid() should unconditionally return NUMA_NO_NODE.
+> 
+> Add __of_force_no_numa() to allow of_node_to_nid() to be forced to
+> return NUMA_NO_NODE.
+> 
+> The follow on patch will call this new function from the arm64 numa
+> code.
 
-Sorry, I was focusing too much on "compile"...
+Didn't that work before? numa=off just maps all mem to node 0. If mem
+allocation is requested for another node it should just fall back to a
+node with mem (node 0 then). I suspect there is something wrong with
+the page initialization, see:
 
-Got my coke, switching brain to overdrive mode...
+ http://www.spinics.net/lists/arm-kernel/msg535191.html
+ https://bugzilla.redhat.com/show_bug.cgi?id=1387793
 
-Gr{oetje,eeting}s,
+What is the complete oops?
 
-                        Geert
+So I think k*alloc_node() must be able to handle requests to
+non-existing nodes. Otherwise your fix is incomplete, assume a failed
+of_numa_init() causing a dummy init but still some devices reporting a
+node.
 
+-Robert
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
