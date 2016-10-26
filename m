@@ -1,55 +1,133 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 2/5] ARM: davinci: Don't append git rev to local version
-Date: Wed, 26 Oct 2016 16:24:17 +0530
-Message-ID: <47ad8be9-54e0-4e0c-3ff5-31662e6ca4de@ti.com>
-References: <1477075018-20176-1-git-send-email-david@lechnology.com>
- <1477075018-20176-3-git-send-email-david@lechnology.com>
- <20f3efba-4f79-3675-d2ce-09efe90fb692@ti.com>
- <bf8cac01-910d-5afa-e840-f0d7ee96d22a@lechnology.com>
+From: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH] tpm_tis: Allow tpm_tis to be bound using
+	DT
+Date: Wed, 26 Oct 2016 13:55:27 +0300
+Message-ID: <20161026105527.cd6hcn37vmboshue@intel.com>
+References: <20161025232331.GA20339@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bf8cac01-910d-5afa-e840-f0d7ee96d22a@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161025232331.GA20339-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 24 October 2016 08:45 PM, David Lechner wrote:
-> On 10/24/2016 06:35 AM, Sekhar Nori wrote:
->> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
->>> In the davinci default configuration, don't append the git revision to
->>> the local kernel version by. This seems like the more desirable default
->>> value.
->>
->> Why? To the contrary I actually quite like the fact that the git commit
->> is appended to version string. Makes it easy for me to cross-check that
->> I am booting the right image.
->>
->>>
->>> Signed-off-by: David Lechner <david@lechnology.com>
->>
->> Thanks,
->> Sekhar
->>
+On Tue, Oct 25, 2016 at 05:23:31PM -0600, Jason Gunthorpe wrote:
+> This provides an open firwmare driver binding for tpm_tis. OF
+> is useful on arches where ACPI/PNP is not used.
 > 
-> Each time you make a commit, you get a new version, which installs
-> another copy of the kernel modules on the device. This will fill up the
-> SD card if you are making many commits.
+> The tcg,tpm_tis-mmio register map interface is specified by the TCG.
+> 
+> Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> ---
+>  .../bindings/security/tpm/tpm_tis_mmio.txt         | 22 ++++++++++++++++++++++
 
-Right, but thats easily fixable by removing existing modules before
-installing new ones.
+I'll do a proper review later on but should this change be a separate
+commit or not?
 
-> Also, if someone wants to build the mainline kernel using the default
-> configuration, it seems odd to have a git revision tacked on to the end
-> even though you made no revisions.
+/Jarkko
 
-If you checkout a tag and build, then no commit information is added.
-Which I guess is what most end users will do.
+>  drivers/char/tpm/Kconfig                           |  2 +-
+>  drivers/char/tpm/tpm_tis.c                         | 11 +++++++++++
+>  3 files changed, 34 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+> 
+> A bunch of work was done previously on how the tis driver probes and
+> binds, so DT enablement is now trivial.
+> 
+> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+> new file mode 100644
+> index 000000000000..67661f6a27cd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+> @@ -0,0 +1,22 @@
+> +Trusted Computing Group MMIO Trusted Platform Module
+> +
+> +The TCG defines multi vendor standard for accessing a TPM chip, this
+> +is the standard protocol defined to access the TPM via MMIO. Typically
+> +this interface will be implemented over Intel's LPC bus.
+> +
+> +Refer to the 'TCG PC Client Specific TPM Interface Specification (TIS)' TCG
+> +publication for the specification.
+> +
+> +Required properties:
+> +
+> +- compatible: should specify the actual hardware chip followed by the
+> +  generic interface name "tcg,tpm_tis-spi";
+> +- reg: The location of the MMIO registers, should be at least 0x5000 bytes
+> +- interrupt: An optional interrupt indicating command completion.
+> +
+> +Example:
+> +
+> +	tpm_tis@90000 {
+> +				compatible = "atmel,at97sc3204", "tcg,tpm_tis-mmio";
+> +				reg = <0x90000 0x5000>;
+> +			};
+> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> index 9faa0b1e7766..277186d3b668 100644
+> --- a/drivers/char/tpm/Kconfig
+> +++ b/drivers/char/tpm/Kconfig
+> @@ -32,7 +32,7 @@ config TCG_TIS_CORE
+>  
+>  config TCG_TIS
+>  	tristate "TPM Interface Specification 1.2 Interface / TPM 2.0 FIFO Interface"
+> -	depends on X86
+> +	depends on X86 || OF
+>  	select TCG_TIS_CORE
+>  	---help---
+>  	  If you have a TPM security chip that is compliant with the
+> diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
+> index eaf5730d79eb..5a63fafaca69 100644
+> --- a/drivers/char/tpm/tpm_tis.c
+> +++ b/drivers/char/tpm/tpm_tis.c
+> @@ -28,6 +28,8 @@
+>  #include <linux/wait.h>
+>  #include <linux/acpi.h>
+>  #include <linux/freezer.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include "tpm.h"
+>  #include "tpm_tis_core.h"
+>  
+> @@ -354,12 +356,21 @@ static int tpm_tis_plat_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id tis_of_platform_match[] = {
+> +	{.compatible = "tcg,tpm_tis-mmio"},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, tis_of_platform_match);
+> +#endif
+> +
+>  static struct platform_driver tis_drv = {
+>  	.probe = tpm_tis_plat_probe,
+>  	.remove = tpm_tis_plat_remove,
+>  	.driver = {
+>  		.name		= "tpm_tis",
+>  		.pm		= &tpm_tis_pm,
+> +		.of_match_table = of_match_ptr(tis_of_platform_match),
+>  	},
+>  };
+>  
+> -- 
+> 2.1.4
+> 
 
-I don't see this done in other defconfigs like omap2plus and multi_v7 as
-well. I would like to keep it similar for davinci.
-
-Thanks,
-Sekhar
+------------------------------------------------------------------------------
+The Command Line: Reinvented for Modern Developers
+Did the resurgence of CLI tooling catch you by surprise?
+Reconnect with the command line and become more productive. 
+Learn the new .NET and ASP.NET CLI. Get your free copy!
+http://sdm.link/telerik
