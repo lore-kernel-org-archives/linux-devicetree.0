@@ -1,57 +1,55 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v4 4/5] mm: make processing of movable_node arch-specific
-Date: Wed, 26 Oct 2016 21:52:53 +1100
-Message-ID: <87vawfwfei.fsf@concordia.ellerman.id.au>
-References: <1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com> <1475778995-1420-5-git-send-email-arbab@linux.vnet.ibm.com> <235f2d20-cf84-08df-1fb4-08ee258fdc52@gmail.com> <dcfc8ace-e59e-6b4b-0f2f-4eff9f08f3c1@gmail.com> <20161025155507.37kv5akdlgo6m2be@arbab-laptop.austin.ibm.com> <112504e9-561d-e0da-7a40-73996c678b56@gmail.com> <20161026004929.h6v54dhehk4yvmwm@arbab-vm>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 2/5] ARM: davinci: Don't append git rev to local version
+Date: Wed, 26 Oct 2016 16:24:17 +0530
+Message-ID: <47ad8be9-54e0-4e0c-3ff5-31662e6ca4de@ti.com>
+References: <1477075018-20176-1-git-send-email-david@lechnology.com>
+ <1477075018-20176-3-git-send-email-david@lechnology.com>
+ <20f3efba-4f79-3675-d2ce-09efe90fb692@ti.com>
+ <bf8cac01-910d-5afa-e840-f0d7ee96d22a@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <20161026004929.h6v54dhehk4yvmwm@arbab-vm>
-Sender: owner-linux-mm@kvack.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>, Balbir Singh <bsingharora@gmail.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <bf8cac01-910d-5afa-e840-f0d7ee96d22a@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Reza Arbab <arbab@linux.vnet.ibm.com> writes:
-
-> On Wed, Oct 26, 2016 at 09:34:18AM +1100, Balbir Singh wrote:
->>I still believe we need your changes, I was wondering if we've tested
->>it against normal memory nodes and checked if any memblock
->>allocations end up there. Michael showed me some memblock
->>allocations on node 1 of a two node machine with movable_node
->
-> The movable_node option is x86-only. Both of those nodes contain normal 
-> memory, so allocations on both are allowed.
->
->>> Longer; if you use "movable_node", x86 can identify these nodes at 
->>> boot. They call memblock_mark_hotplug() while parsing the SRAT. Then, 
->>> when the zones are initialized, those markings are used to determine 
->>> ZONE_MOVABLE.
->>>
->>> We have no analog of this SRAT information, so our movable nodes can 
->>> only be created post boot, by hotplugging and explicitly onlining 
->>> with online_movable.
+On Monday 24 October 2016 08:45 PM, David Lechner wrote:
+> On 10/24/2016 06:35 AM, Sekhar Nori wrote:
+>> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
+>>> In the davinci default configuration, don't append the git revision to
+>>> the local kernel version by. This seems like the more desirable default
+>>> value.
 >>
->>Is this true for all of system memory as well or only for nodes
->>hotplugged later?
->
-> As far as I know, power has nothing like the SRAT that tells us, at 
-> boot, which memory is hotpluggable.
+>> Why? To the contrary I actually quite like the fact that the git commit
+>> is appended to version string. Makes it easy for me to cross-check that
+>> I am booting the right image.
+>>
+>>>
+>>> Signed-off-by: David Lechner <david@lechnology.com>
+>>
+>> Thanks,
+>> Sekhar
+>>
+> 
+> Each time you make a commit, you get a new version, which installs
+> another copy of the kernel modules on the device. This will fill up the
+> SD card if you are making many commits.
 
-On pseries we have the ibm,dynamic-memory device tree property, which
-can contain ranges of memory that are not yet "assigned to the
-partition" - ie. can be hotplugged later.
+Right, but thats easily fixable by removing existing modules before
+installing new ones.
 
-So in general that statement is not true.
+> Also, if someone wants to build the mainline kernel using the default
+> configuration, it seems odd to have a git revision tacked on to the end
+> even though you made no revisions.
 
-But I think you're focused on bare-metal, in which case you might be
-right. But that doesn't mean we couldn't have a similar property, if
-skiboot/hostboot knew what the ranges of memory were going to be.
+If you checkout a tag and build, then no commit information is added.
+Which I guess is what most end users will do.
 
-cheers
+I don't see this done in other defconfigs like omap2plus and multi_v7 as
+well. I would like to keep it similar for davinci.
 
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+Thanks,
+Sekhar
