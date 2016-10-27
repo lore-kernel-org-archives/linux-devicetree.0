@@ -1,57 +1,39 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 13/15] Documentation: devicetree: dwc2: Add host DMA
- binding
-Date: Thu, 27 Oct 2016 14:33:03 -0700
-Message-ID: <118c9ef9-f110-5329-4520-9e07bc0e0ad4@synopsys.com>
-References: <cover.1476926069.git.johnyoun@synopsys.com>
- <1846cc28dd77ab35cd21994bb746f7685422cfb2.1476926070.git.johnyoun@synopsys.com>
- <20161026220718.2vqcpts6mw2vf7jh@rob-hp-laptop>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v5 0/7] Add R8A7743/SK-RZG1M board support
+Date: Fri, 28 Oct 2016 00:33:26 +0300
+Message-ID: <1580369.yToZzJza1l@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161026220718.2vqcpts6mw2vf7jh@rob-hp-laptop>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: linux@arm.linux.org.uk, magnus.damm@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/26/2016 3:07 PM, Rob Herring wrote:
-> On Wed, Oct 19, 2016 at 06:22:52PM -0700, John Youn wrote:
->> Add the host-dma property to devicetree. This controls whether to use
->> DMA in host mode.
->>
->> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
->> index 2c30a54..17f7624 100644
->> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
->> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
->> @@ -25,6 +25,7 @@ Optional properties:
->>  Refer to phy/phy-bindings.txt for generic phy consumer properties
->>  - dr_mode: shall be one of "host", "peripheral" and "otg"
->>    Refer to usb/generic.txt
->> +- host-dma: turn on or off host buffer DMA (1 or 0).
-> 
-> Why not boolean? Seems like disabling would be rare, so name the 
-> property something like host-dma-disable.
+Hello.
 
-Ok.
+   Here's the set of 7 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20161024-v4.9-rc2' tag. I'm adding the device tree support for
+the R8A7743-based SK-RZG1M board. The SoC is close to R8A7791 and the board
+seems identical to the R8A7791/Porter board. The device tree patches depend on
+the R8A7743 CPG/MSSR driver series just re-posted in order to compile and work.
+Already merged patches from this series won't be re-posted.
 
-> Also, it needs a vendor 
-> prefix.
-> 
+[1/7] ARM: dts: r8a7743: initial SoC device tree
+[2/7] ARM: dts: r8a7743: add SYS-DMAC support
+[3/7] ARM: dts: r8a7743: add [H]SCIF{A|B} support
+[4/7] ARM: dts: r8a7743: add Ether support
+[5/7] ARM: dts: r8a7743: add IRQC support
+[6/7] ARM: dts: sk-rzg1m: initial device tree
+[7/7] ARM: dts: sk-rzg1m: add Ether support
 
-The dwc2 driver doesn't have vendor prefixes on existing DT
-bindings. Is this required? If so I guess we'd have to deprecate the
-old ones and add new ones with the vendor prefix?
-
-Regards,
-John
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+WBR, Sergei
