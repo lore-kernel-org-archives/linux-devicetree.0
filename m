@@ -1,274 +1,49 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 5/5] ARM: dts: Add LEGO MINDSTORTMS EV3 dts
-Date: Thu, 27 Oct 2016 15:35:41 +0530
-Message-ID: <f1bc488d-2d81-0b31-340f-4299cde4065b@ti.com>
-References: <1477075018-20176-1-git-send-email-david@lechnology.com>
- <1477075018-20176-6-git-send-email-david@lechnology.com>
- <b0022fad-a96e-86d4-71ba-2b803e5421fe@ti.com>
- <1593441f-d147-4c91-8aab-8622dd8ced19@lechnology.com>
+From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] iommu/ipmmu-vmsa: Add r8a7796 DT binding
+Date: Thu, 27 Oct 2016 19:45:10 +0900
+Message-ID: <20161027104510.27104.53523.sendpatchset@little-apple>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1593441f-d147-4c91-8aab-8622dd8ced19@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 24 October 2016 09:20 PM, David Lechner wrote:
-> On 10/24/2016 06:58 AM, Sekhar Nori wrote:
->> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
->>> This adds a device tree definition file for LEGO MINDSTORMS EV3.
->>
->> Thanks for the patch!
->>
->>>
->>> What is working:
->>>
->>> * Pin muxing
->>> * MicroSD card reader
->>> * UART on input port 1
->>>
->>> What is partially working:
->>>
->>> * Buttons - working after GPIO fix
->>> * LEDs - working after GPIO fix
->>> * Poweroff/reset - working after GPIO fix
->>
->> Is the GPIO fix something that will go in v4.9-rc cycle ?
-> 
-> Not sure. This is still being discussed.
-> 
-> http://www.gossamer-threads.com/lists/linux/kernel/2550178
-> 
->>
->>> * Flash memory - driver loads but can't read the block devices - this is
->>>   probably due to the fact that we are not able to configure the SPI to
->>>   use DMA via device tree
->>
->> Hmm, I would not have expected PIO mode to be so inefficient that you
->> are unable to even read the block device.
-> 
-> I am getting a -EIO error. I haven't been able to trace down exactly
-> what is causing it yet though.
+From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
 
-Okay. Seems unrelated to DMA though. Will check the status of SPI on my
-DA850 EVM once I get the chance.
+Update the IPMMU DT binding documentation to include the r8a7796 compat
+string for R-Car M3-W.
 
-> 
->>
-> ...
->>> +/ {
->>> +    compatible = "lego,ev3", "ti,da850";
->>> +    model = "LEGO MINDSTORMS EV3";
->>> +
->>> +    soc@1c00000 {
->>> +        /*
->>> +         * (ab)using pinctrl-single to disable all internal pullups/
->>> +         * pulldowns on I/O.
->>> +         */
->>> +        pinmux@22c00c {
->>> +            compatible = "pinctrl-single";
->>> +            reg = <0x22c00c 0x4>;
->>> +            #address-cells = <1>;
->>> +            #size-cells = <0>;
->>> +            pinctrl-single,bit-per-mux;
->>> +            pinctrl-single,register-width = <32>;
->>> +            pinctrl-single,function-mask = <0xf>;
->>> +            /*
->>> +             * There is a bug in pinctrl-single that prevents us
->>> +             * from setting function-mask to 1, so doing things
->>> +             * in groups of 4. Doesn't really matter since we are
->>> +             * disabling all at once anyway.
->>> +             */
->>> +
->>> +            pinctrl-names = "default";
->>> +            pinctrl-0 = <&pupu_disable>;
->>> +
->>> +            pupu_disable: pinmux_all_pins {
->>> +                pinctrl-single,bits = <
->>> +                    0x0 0x00000000 0xffffffff
->>> +                >;
->>> +            };
->>
->> Sigh. This is quite an abuse :)
->>
->> I know we don't have a good way to configure this in kernel today. And I
->> am surprised we never had to care about disabling pullups so far. Can
->> you clarify why you need it? I assume there is some contention you want
->> to avoid, but on which interface?
-> 
-> The EV3 was designed with external pullup/pulldown everywhere. I know
-> for certain that it breaks one of the buttons if you do not disable the
-> internal ones. I imagine that it would have subtle effects elsewhere if
-> they are not disabled.
-> 
-> I have not gone through each pullup/pulldown bank individually, but it
-> would not surprise me at all if there was at least one thing on most of
-> them that would be adversely affected.
-> 
->>
->> I dont think this can be done this way using pinctrl-single. A small
->> driver to handle pullup/down control for da850 may have to be added to
->> drivers/pinctrl. It will be better to check with Linus Walleij on his
->> thoughts using a new thread ccing the pinctrl subsystem list as well.
-> 
-> I will be glad to try to make a driver, but when I ran into this problem
-> I could not find much information on how to handle banks of
-> pullup/pulldown. Most of what I saw was for ones that can be
-> individually controlled. If anyone knows something like this already
-> that I could look at, it would be helpful to me.
+Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+---
 
-pinctrl-single supports a different compatible "pinconf-single" which
-supports the pinconf interface that can be used to set pullup and
-pulldown bias.
+ Changes since V1:
+ - Added Acked-by from Laurent - thanks!
 
-Unfortunately, in case of AM18x, there are two registers to touch:
-PUPD_ENA and PUPD_SEL. So I believe the pinctrl-single driver cannot be
-used.
+ Now broken out, however earlier V1 posted as part of:
+ [PATCH 0/3] iommu/ipmmu-vmsa: Initial r8a7796 support
 
-There are pinconf operations pin_config_group_{set|get}(). Based on
-documentation these are meant to act on a group of pins. There are quite
-a few drivers implementing this interface. Perhaps they can be used as
-an example.
+ Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
-Also, this needs to be done in a way that can be used by other boards
-too, so please move the common properties to da850.dtsi. Only the board
-specific pullup/down configuration should be in this file.
-
-> 
-> 
->> [...]
->>
->>> +    in1_pins: pinmux_in1_pins {
->>> +        pinctrl-single,bits = <
->>> +            /* GP0[15] */
->>> +            0x0 0x00000008 0x0000000f
->>> +            /* GP0[2] */
->>> +            0x4 0x00800000 0x00f00000
->>> +            /* GP2[2] */
->>> +            0x18 0x00800000 0x00f00000
->>> +            /* GP8[10], GP8[11] */
->>> +            0x48 0x88000000 0xff000000
->>> +        >;
->>> +    };
->>
->> I see that this is not really used. Can you add these when you actually
->> use them. Looks like that applies to some other definitions like this
->> below.
-> 
-> It will be possible to uses these gpios via sysfs (until a proper driver
-> for input and output ports is merged). So how about I attach these to
-> the gpio node for now?
-
-pins are usually attached to the node that consumes the GPIO pins, not
-to the gpio node itself.
-
-If the pins are not connected to anything and can be used via gpio
-sysfs, then "pinctrl hog" or "board level pinmux" is to be used.
-Something like below:
-
-+&pmx_core {
-+       pinctrl-names = "default";
-+       pinctrl-0 = <&in1_pins>;
-+
-+       in1_pins: pinmux_in1_pins {
-+               pinctrl-single,bits = <
-+                       0x0 0x00000008 0x0000000f
-+			...
-+               >;
-+       };
-+};
-
-That said, device tree is supposed to describe hardware and not change
-depend on current driver support. So I would wait for the driver to get
-merged before merging the pins that are used by it. It looks like you
-wont be able to use the support in a meaningful way till then anyway.
-
-> 
->>
->>> +&ehrpwm1 {
->>> +    status = "disabled";
->>
->> Hmm, disabled? Can you add this node when you actually use it?
-> 
-> Not sure why I have this disabled. Like the gpios, the pwms can be used
-> via sysfs, so I would like to leave them.
-
-Okay, then please keep the node enabled.
-
-> 
->>
->>> +    pinctrl-names = "default";
->>> +    /* MBPWM, MAPWM */
->>> +    pinctrl-0 = <&ehrpwm1a_pins>, <&ehrpwm1b_pins>;
->>> +};
->>> +
->>> +&ecap1 {
->>> +    status = "disabled";
->>
->> same here and other places below.
->>
->>> +    pinctrl-names = "default";
->>> +    /* MDPWM */
->>> +    pinctrl-0 = <&ecap1_pins>;
->>> +};
->>> +
->>> +&spi0 {
->>> +    status = "okay";
->>> +    pinctrl-names = "default";
->>> +    pinctrl-0 = <&spi0_pins>, <&spi0_cs0_pin>, <&spi0_cs3_pin>;
->>> +    dmas = <&edma0 14 0>, <&edma0 15 0>;
->>> +    dma-names = "rx", "tx";
->>> +
->>> +    spi-flash@0 {
->>> +        #address-cells = <1>;
->>> +        #size-cells = <1>;
->>> +        compatible = "n25q128a13", "jedec,spi-nor";
->>> +        reg = <0>;
->>> +        spi-max-frequency = <50000000>;
->>> +        ti,spi-wdelay = <8>;
->>> +
->>> +        partition@0 {
->>> +            label = "U-Boot";
->>> +            reg = <0 0x40000>;
->>
->> Thats 256KB for U-Boot and MLO (I assume in concatenated AIS image). Is
->> that sufficient for future too? Moving partitions later is tough ask
->> because that means users will lose data when they upgrade the kernel
->> because of partitions moving around. Just a suggestion to keep future
->> U-Boot bloat in mind and not use a "just fits" number.
-> 
-> The MLO is on an EEPROM in the EV3, so the U-Boot partition is just
-> U-boot. The SoC boots from I2C, which then runs whatever is as 0x0 on
-> the flash memory.
-
-okay.
-
-> This partition table matches the partition scheme used on the official
-> LEGO firmware that ships with the devices. Most people running their own
-> kernel will probably be loading it from a microSD card, leaving the
-> official firmware intact and therefore will always have this partition
-> table.
-> 
-> My thinking is that if someone does want to use a different partitioning
-> scheme, they can build their own U-Boot and configure it to modify the
-> device tree with a new partition table.
-> 
-> The way the LEGO firmware flashing utility works, it wipes out the
-> entire flash memory each time you flash the firmware. So, data loss is
-> not a concern - you will loose your data anyway.
-
-Alright, thanks for the detailed explanation.
-
-Thanks,
-Sekhar
+--- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
++++ work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	2016-06-06 11:27:37.560607110 +0900
+@@ -16,6 +16,7 @@ Required Properties:
+     - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
+     - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
+     - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
++    - "renesas,ipmmu-r8a7796" for the R8A7796 (R-Car M3-W) IPMMU.
+     - "renesas,ipmmu-vmsa" for generic R-Car Gen2 VMSA-compatible IPMMU.
+ 
+   - reg: Base address and size of the IPMMU registers.
