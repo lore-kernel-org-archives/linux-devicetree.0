@@ -1,206 +1,53 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 1/8] drm/bridge: rgb-to-vga: Support an
- enable GPIO
-Date: Thu, 27 Oct 2016 14:52:42 +0800
-Message-ID: <CAGb2v64U-vOW4K2sBk0ipM4JCgmKyZq5R+9STkU9-rTOFqV1eQ@mail.gmail.com>
-References: <20161020034344.14154-1-wens@csie.org> <20161020034344.14154-2-wens@csie.org>
- <0b5fbe8e-e51b-c874-e1a3-0b88dc65e361@codeaurora.org> <CAGb2v64=c5PFx+qJkfPeKYFQYLYoYfWgjg49O4Es5qVjuyf5gg@mail.gmail.com>
- <87ca071d-c396-25b3-aff4-c838c9003f94@codeaurora.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v4 0/7] Add R8A7743/SK-RZG1M board support
+Date: Thu, 27 Oct 2016 09:06:15 +0200
+Message-ID: <20161027070615.GA7706@verge.net.au>
+References: <2719479.geOc9vqcRS@wasted.cogentembedded.com>
+ <CAMuHMdUNgnYc1O7DATNH1r9SQ72eqtxwFvqcen08Tq+Er3LuvQ@mail.gmail.com>
+ <1a85f851-29ec-1c14-8905-8b0645f5bb1c@cogentembedded.com>
+ <CAMuHMdWQegsEf_C=UGXpQiEAX0YQqy335teuvCZxBY6C=7QozA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBVGIY3AAKGQEJRQ3HUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <87ca071d-c396-25b3-aff4-c838c9003f94-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWQegsEf_C=UGXpQiEAX0YQqy335teuvCZxBY6C=7QozA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 27, 2016 at 2:40 PM, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->
->
-> On 10/25/2016 02:29 PM, Chen-Yu Tsai wrote:
->>
->> On Tue, Oct 25, 2016 at 4:09 PM, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> wrote:
->>>
->>> Hi,
->>>
->>> On 10/20/2016 09:13 AM, Chen-Yu Tsai wrote:
->>>>
->>>>
->>>> Some rgb-to-vga bridges have an enable GPIO, either directly tied to
->>>> an enable pin on the bridge IC, or indirectly controlling a power
->>>> switch.
->>>>
->>>> Add support for it.
->>>
->>>
->>>
->>> Does the bridge on your platform have an active/passive DAC, or is it a
->>> smarter encoder chip that is capable of doing more? If so, it might be
->>> good to have a separate DT compatible string to it, like what's done
->>> in the patch titled:
->>>
->>> drm: bridge: vga-dac: Add adi,adv7123 compatible string
->>>
->>> so that we can switch to a different driver later if needed.
->>
->>
->> The chip is GM7123. It is not configurable. It just takes the LCD RGB/SYNC
->> signals and converts them to analog. The only things you can change are
->> putting it into sleep mode and tweaking the output drive strength by
->
->
-> Is sleep mode the thing that's controlled by this gpio?
+On Wed, Oct 26, 2016 at 03:27:14PM +0200, Geert Uytterhoeven wrote:
+> On Wed, Oct 26, 2016 at 3:23 PM, Sergei Shtylyov
+> <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> > On 10/26/2016 03:08 PM, Geert Uytterhoeven wrote:
+> >>>    Here's the set of 8 patches against Simon Horman's 'renesas.git'
+> >>> repo's
+> >>> 'renesas-devel-20161021-v4.9-rc1' tag. I'm adding the device tree support
+> >>> for
+> >>> the R8A7743-based SK-RZG1M board. The SoC is close to R8A7791 and the
+> >>> board
+> >>> seems identical to the R8A7791/Porter board. The device tree patches
+> >>> depend on
+> >>> the R8A7743 CPG/MSSR driver series just posted in order to compile and
+> >>> work.
+> >>
+> >>
+> >> They depend only on "[PATCH v3 1/2] ARM: shmobile: r8a7743: add CPG clock
+> >> index macros" of that series, right?
+> >>
+> >> "[PATCH v3 2/2] clk: renesas: cpg-mssr: add R8A7743 support" is not
+> >> needed,
+> >
+> >    How would "clocks" props _work_ without this patch?
+> 
+> Sorry, I was focusing too much on "compile"...
+> 
+> Got my coke, switching brain to overdrive mode...
 
-Not on this particular board. The gpio controls the external LDO that
-supplies 3.3V to VDD.
-
->
->> changing the external reference resistor. The latter would be a hardware
->> design decision. I would say this qualifies as "dumb".
->
->
-> Yeah, I agree. I'd want feedback from Laurent too, since he had comments
-> on the usage of the original dumb-vga-dac driver.
->
->>
->> I revisited the board schematics, and the enable GPIO actually toggles
->> an external LDO regulator. So this might be better modeled as a regulator
->> supply?
->
->
-> If you model it as a regulator, how would you toggle the GPIO on your
-> platform?
->
-> Looking at the chip pin out, there is a 3.3V VDD supply needed for the
-> chip, so it would be good to have an optional 'power' regulator supply
-> anyway.
-
-Yes, that it what I plan to do. I'll drop the enable-gpios property,
-and add a power-supply property for the regulator.
-
-Regards
-ChenYu
-
->
-> Archit
->
->
->>
->>
->> Thanks
->> ChenYu
->>
->>>
->>> Thanks,
->>> Archit
->>>
->>>
->>>>
->>>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->>>> ---
->>>>  .../bindings/display/bridge/dumb-vga-dac.txt       |  2 ++
->>>>  drivers/gpu/drm/bridge/dumb-vga-dac.c              | 28
->>>> ++++++++++++++++++++++
->>>>  2 files changed, 30 insertions(+)
->>>>
->>>> diff --git
->>>> a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
->>>> b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
->>>> index 003bc246a270..d3484822bf77 100644
->>>> --- a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
->>>> +++ b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
->>>> @@ -16,6 +16,8 @@ graph bindings specified in
->>>> Documentation/devicetree/bindings/graph.txt.
->>>>  - Video port 0 for RGB input
->>>>  - Video port 1 for VGA output
->>>>
->>>> +Optional properties:
->>>> +- enable-gpios: GPIO pin to enable or disable the bridge
->>>>
->>>>  Example
->>>>  -------
->>>> diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c
->>>> b/drivers/gpu/drm/bridge/dumb-vga-dac.c
->>>> index afec232185a7..b487e5e9b56d 100644
->>>> --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
->>>> +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
->>>> @@ -10,6 +10,7 @@
->>>>   * the License, or (at your option) any later version.
->>>>   */
->>>>
->>>> +#include <linux/gpio/consumer.h>
->>>>  #include <linux/module.h>
->>>>  #include <linux/of_graph.h>
->>>>
->>>> @@ -23,6 +24,7 @@ struct dumb_vga {
->>>>         struct drm_connector    connector;
->>>>
->>>>         struct i2c_adapter      *ddc;
->>>> +       struct gpio_desc        *enable_gpio;
->>>>  };
->>>>
->>>>  static inline struct dumb_vga *
->>>> @@ -124,8 +126,26 @@ static int dumb_vga_attach(struct drm_bridge
->>>> *bridge)
->>>>         return 0;
->>>>  }
->>>>
->>>> +static void dumb_vga_enable(struct drm_bridge *bridge)
->>>> +{
->>>> +       struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
->>>> +
->>>> +       if (vga->enable_gpio)
->>>> +               gpiod_set_value_cansleep(vga->enable_gpio, 1);
->>>> +}
->>>> +
->>>> +static void dumb_vga_disable(struct drm_bridge *bridge)
->>>> +{
->>>> +       struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
->>>> +
->>>> +       if (vga->enable_gpio)
->>>> +               gpiod_set_value_cansleep(vga->enable_gpio, 0);
->>>> +}
->>>> +
->>>>  static const struct drm_bridge_funcs dumb_vga_bridge_funcs = {
->>>>         .attach         = dumb_vga_attach,
->>>> +       .enable         = dumb_vga_enable,
->>>> +       .disable        = dumb_vga_disable,
->>>>  };
->>>>
->>>>  static struct i2c_adapter *dumb_vga_retrieve_ddc(struct device *dev)
->>>> @@ -169,6 +189,14 @@ static int dumb_vga_probe(struct platform_device
->>>> *pdev)
->>>>                 return -ENOMEM;
->>>>         platform_set_drvdata(pdev, vga);
->>>>
->>>> +       vga->enable_gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
->>>> +                                                  GPIOD_OUT_LOW);
->>>> +       if (IS_ERR(vga->enable_gpio)) {
->>>> +               ret = PTR_ERR(vga->enable_gpio);
->>>> +               dev_err(&pdev->dev, "failed to request GPIO: %d\n",
->>>> ret);
->>>> +               return ret;
->>>> +       }
->>>> +
->>>>         vga->ddc = dumb_vga_retrieve_ddc(&pdev->dev);
->>>>         if (IS_ERR(vga->ddc)) {
->>>>                 if (PTR_ERR(vga->ddc) == -ENODEV) {
->>>>
->>>
->>> --
->>> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
->>> a Linux Foundation Collaborative Project
->
->
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+As we are talking about adding support for a new SoC I would be happy
+to queue up code in my tree that compiles under the assumption that
+in v4.10 the bits to make it run will appear in other branches.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
