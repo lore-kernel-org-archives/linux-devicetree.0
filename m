@@ -1,40 +1,96 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v7, 0/8] Add MediaTek USB3 DRD Driver
-Date: Thu, 27 Oct 2016 17:05:55 +0200
-Message-ID: <20161027150555.GA13414@kroah.com>
-References: <1476844107-31087-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [alsa-devel] [linux-sunxi] [PATCH v5 4/7] ASoC: sunxi: Add
+ sun8i I2S driver
+Date: Thu, 27 Oct 2016 17:13:25 +0200
+Message-ID: <20161027171325.d68baa5ff51da4921ff8b94d@free.fr>
+References: <cover.1477142934.git.moinejf@free.fr>
+        <bee315efb909c1ee8b5fe7d3aeb9a33d713cb562.1477142934.git.moinejf@free.fr>
+        <CAGb2v67gDd650TJk_-oHOehnzdH2qor=36HXdPt339Ji=ToAMg@mail.gmail.com>
+        <20161023094503.fbb22dd0701e3f2785828609@free.fr>
+        <20161024123449.npo4grdlbrj4tcsj@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1476844107-31087-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oliver Neukum <oneukum-IBi9RG/b67k@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161024123449.npo4grdlbrj4tcsj@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2016 at 10:28:19AM +0800, Chunfeng Yun wrote:
-> These patches introduce the MediaTek USB3 dual-role controller
-> driver.
+On Mon, 24 Oct 2016 14:34:49 +0200
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+
+> Hi,
 > 
-> The driver can be configured as Dual-Role Device (DRD),
-> Peripheral Only and Host Only (xHCI) modes. It works well
-> with Mass Storage, RNDIS and g_zero on FS/HS and SS. And it is
-> tested on MT8173 platform which only contains USB2.0 device IP,
-> and on MT6290 platform which contains USB3.0 device IP.
+> On Sun, Oct 23, 2016 at 09:45:03AM +0200, Jean-Francois Moine wrote:
+> > On Sun, 23 Oct 2016 09:33:16 +0800
+> > Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> > 
+> > > > Note: This driver is closed to the sun4i-i2s except that:
+> > > > - it handles the H3
+> > > 
+> > > If it's close to sun4i-i2s, you should probably rework that one to support
+> > > the newer SoCs.
+> > > 
+> > > > - it creates the sound card (with sun4i-i2s, the sound card is created
+> > > >   by the CODECs)
+> > > 
+> > > I think this is wrong. I2S is only the DAI. You typically have a separate
+> > > platform driver for the whole card, or just use simple-card.
+> > 
+> > An other device is not needed. The layout is simple:
+> > 	I2S_controller (CPU DAI) <-> HDMI_CODEC (CODEC DAI)
+> > The HDMI CODEC is supported by the HDMI video driver (only one device),
+> > so, it cannot be the card device.
+> > ASoC does not use the CPU DAI device (I2S_controller), so, it is
+> > natural to use it to handle the card.
 > 
-> Change in v7:
-> 1. split dual-role driver into four patchs
-> 2. remove QMU done tasklet
-> 3. add a bool in xhci_hcd_mtk to signal absence of IPPC
+> Still, duplicating the driver is not the solution. I agree with
+> Chen-Yu that we want to leverage the driver that is already there.
 
-Given a lack of objection from anyone, I've now merged these to my tree
-to get them a spin in the 0-day build-bot.
+Hi Maxime and Chen-Yu,
 
-thanks,
+After looking at the sun4i-i2s, I found 2 solutions for re-using its
+code in the DE2 HDMI context:
 
-greg k-h
+1) either to split the sun4i-i2s driver into common I/O functions and
+   slave CPU DAI,
+
+2) or to move the sun4i-i2s into a master CPU DAI.
+
+(
+ some explanation about 'master' and 'slave': the master is the
+ component the device of which is also the sound card.
+ As the sound card uses the 'drvdata' of the device, this drvdata pointer
+ cannot be used by the master.
+ In the actual implementations:
+  - sun4i-i2s
+	master:	card dev = codec dev, drvdata -> card
+	slave:	i2s dev (CPU DAI), drvdata -> i2s data
+  - sun8i-i2s
+	master:	card dev = i2s dev (CPU DAI), drvdata -> card
+	slave:	codec dev (hdmi), drvdata -> codec data (audio/video)
+)
+
+In the case 1, there is no functional change, just a source split.
+The sun8i-i2s will then use the common I/O functions.
+
+In the case 2, the CODECs using the sun4i-i2s would have to move to
+slave CODEC DAI, i.e. the card is created by the sun4i-i2s code.
+In the 4.9, there is only one codec (sun4i-codec), so, the change
+is just to move the card creation and the use of drvdata in both
+codes.
+
+In either cases, I could not check if this changes raise some
+regression on the sun4i SoCs side. Then, I'd be glad to know:
+- which solution suits you?
+- are you ready to do and test the needed changes at the sun4i side?
+
+-- 
+Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
