@@ -1,48 +1,176 @@
-From: Lukasz Majewski <l.majewski@majess.pl>
-Subject: [PATCH v2 09/10] pwm: imx: doc: Update imx-pwm.txt documentation entry
-Date: Thu, 27 Oct 2016 08:33:19 +0200
-Message-ID: <1477549999-5125-1-git-send-email-l.majewski@majess.pl>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 1/8] drm/bridge: rgb-to-vga: Support an enable GPIO
+Date: Thu, 27 Oct 2016 12:10:42 +0530
+Message-ID: <87ca071d-c396-25b3-aff4-c838c9003f94@codeaurora.org>
+References: <20161020034344.14154-1-wens@csie.org>
+ <20161020034344.14154-2-wens@csie.org>
+ <0b5fbe8e-e51b-c874-e1a3-0b88dc65e361@codeaurora.org>
+ <CAGb2v64=c5PFx+qJkfPeKYFQYLYoYfWgjg49O4Es5qVjuyf5gg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v64=c5PFx+qJkfPeKYFQYLYoYfWgjg49O4Es5qVjuyf5gg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Stefan Agner <stefan@agner.ch>, Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, Fabio Estevam <festevam@gmail.com>, Lothar Wassmann <LW@karo-electronics.de>, Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>, kernel@pengutronix.de, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>
+To: Chen-Yu Tsai <wens@csie.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The imx-pwm.txt documentation update as a preparation for polarity
-support.
 
-Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Signed-off-by: Lukasz Majewski <l.majewski@majess.pl>
----
-Changes for v2:
-- New patch
----
- Documentation/devicetree/bindings/pwm/imx-pwm.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-index e00c2e9..c61bdf8 100644
---- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-+++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-@@ -6,8 +6,8 @@ Required properties:
-   - "fsl,imx1-pwm" for PWM compatible with the one integrated on i.MX1
-   - "fsl,imx27-pwm" for PWM compatible with the one integrated on i.MX27
- - reg: physical base address and length of the controller's registers
--- #pwm-cells: should be 2. See pwm.txt in this directory for a description of
--  the cells format.
-+- #pwm-cells: 2 for i.MX1 and 3 for i.MX27 and newer SoCs. See pwm.txt
-+  in this directory for a description of the cells format.
- - clocks : Clock specifiers for both ipg and per clocks.
- - clock-names : Clock names should include both "ipg" and "per"
- See the clock consumer binding,
-@@ -17,7 +17,7 @@ See the clock consumer binding,
- Example:
- 
- pwm1: pwm@53fb4000 {
--	#pwm-cells = <2>;
-+	#pwm-cells = <3>;
- 	compatible = "fsl,imx53-pwm", "fsl,imx27-pwm";
- 	reg = <0x53fb4000 0x4000>;
- 	clocks = <&clks IMX5_CLK_PWM1_IPG_GATE>,
+On 10/25/2016 02:29 PM, Chen-Yu Tsai wrote:
+> On Tue, Oct 25, 2016 at 4:09 PM, Archit Taneja <architt@codeaurora.org> wrote:
+>> Hi,
+>>
+>> On 10/20/2016 09:13 AM, Chen-Yu Tsai wrote:
+>>>
+>>> Some rgb-to-vga bridges have an enable GPIO, either directly tied to
+>>> an enable pin on the bridge IC, or indirectly controlling a power
+>>> switch.
+>>>
+>>> Add support for it.
+>>
+>>
+>> Does the bridge on your platform have an active/passive DAC, or is it a
+>> smarter encoder chip that is capable of doing more? If so, it might be
+>> good to have a separate DT compatible string to it, like what's done
+>> in the patch titled:
+>>
+>> drm: bridge: vga-dac: Add adi,adv7123 compatible string
+>>
+>> so that we can switch to a different driver later if needed.
+>
+> The chip is GM7123. It is not configurable. It just takes the LCD RGB/SYNC
+> signals and converts them to analog. The only things you can change are
+> putting it into sleep mode and tweaking the output drive strength by
+
+Is sleep mode the thing that's controlled by this gpio?
+
+
+> changing the external reference resistor. The latter would be a hardware
+> design decision. I would say this qualifies as "dumb".
+
+Yeah, I agree. I'd want feedback from Laurent too, since he had comments
+on the usage of the original dumb-vga-dac driver.
+
+>
+> I revisited the board schematics, and the enable GPIO actually toggles
+> an external LDO regulator. So this might be better modeled as a regulator
+> supply?
+
+If you model it as a regulator, how would you toggle the GPIO on your
+platform?
+
+Looking at the chip pin out, there is a 3.3V VDD supply needed for the
+chip, so it would be good to have an optional 'power' regulator supply
+anyway.
+
+Archit
+
+>
+>
+> Thanks
+> ChenYu
+>
+>>
+>> Thanks,
+>> Archit
+>>
+>>
+>>>
+>>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>>> ---
+>>>  .../bindings/display/bridge/dumb-vga-dac.txt       |  2 ++
+>>>  drivers/gpu/drm/bridge/dumb-vga-dac.c              | 28
+>>> ++++++++++++++++++++++
+>>>  2 files changed, 30 insertions(+)
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+>>> b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+>>> index 003bc246a270..d3484822bf77 100644
+>>> --- a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+>>> +++ b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+>>> @@ -16,6 +16,8 @@ graph bindings specified in
+>>> Documentation/devicetree/bindings/graph.txt.
+>>>  - Video port 0 for RGB input
+>>>  - Video port 1 for VGA output
+>>>
+>>> +Optional properties:
+>>> +- enable-gpios: GPIO pin to enable or disable the bridge
+>>>
+>>>  Example
+>>>  -------
+>>> diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c
+>>> b/drivers/gpu/drm/bridge/dumb-vga-dac.c
+>>> index afec232185a7..b487e5e9b56d 100644
+>>> --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
+>>> +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
+>>> @@ -10,6 +10,7 @@
+>>>   * the License, or (at your option) any later version.
+>>>   */
+>>>
+>>> +#include <linux/gpio/consumer.h>
+>>>  #include <linux/module.h>
+>>>  #include <linux/of_graph.h>
+>>>
+>>> @@ -23,6 +24,7 @@ struct dumb_vga {
+>>>         struct drm_connector    connector;
+>>>
+>>>         struct i2c_adapter      *ddc;
+>>> +       struct gpio_desc        *enable_gpio;
+>>>  };
+>>>
+>>>  static inline struct dumb_vga *
+>>> @@ -124,8 +126,26 @@ static int dumb_vga_attach(struct drm_bridge *bridge)
+>>>         return 0;
+>>>  }
+>>>
+>>> +static void dumb_vga_enable(struct drm_bridge *bridge)
+>>> +{
+>>> +       struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
+>>> +
+>>> +       if (vga->enable_gpio)
+>>> +               gpiod_set_value_cansleep(vga->enable_gpio, 1);
+>>> +}
+>>> +
+>>> +static void dumb_vga_disable(struct drm_bridge *bridge)
+>>> +{
+>>> +       struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
+>>> +
+>>> +       if (vga->enable_gpio)
+>>> +               gpiod_set_value_cansleep(vga->enable_gpio, 0);
+>>> +}
+>>> +
+>>>  static const struct drm_bridge_funcs dumb_vga_bridge_funcs = {
+>>>         .attach         = dumb_vga_attach,
+>>> +       .enable         = dumb_vga_enable,
+>>> +       .disable        = dumb_vga_disable,
+>>>  };
+>>>
+>>>  static struct i2c_adapter *dumb_vga_retrieve_ddc(struct device *dev)
+>>> @@ -169,6 +189,14 @@ static int dumb_vga_probe(struct platform_device
+>>> *pdev)
+>>>                 return -ENOMEM;
+>>>         platform_set_drvdata(pdev, vga);
+>>>
+>>> +       vga->enable_gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
+>>> +                                                  GPIOD_OUT_LOW);
+>>> +       if (IS_ERR(vga->enable_gpio)) {
+>>> +               ret = PTR_ERR(vga->enable_gpio);
+>>> +               dev_err(&pdev->dev, "failed to request GPIO: %d\n", ret);
+>>> +               return ret;
+>>> +       }
+>>> +
+>>>         vga->ddc = dumb_vga_retrieve_ddc(&pdev->dev);
+>>>         if (IS_ERR(vga->ddc)) {
+>>>                 if (PTR_ERR(vga->ddc) == -ENODEV) {
+>>>
+>>
+>> --
+>> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+
 -- 
-2.1.4
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
