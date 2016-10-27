@@ -1,86 +1,34 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: hi6220: add resets property into dwmmc
- nodes
-Date: Thu, 27 Oct 2016 15:56:59 +0200
-Message-ID: <CAKfTPtB0FtGbm4C5z+LJizrsHikKt_BGFti5XY+LN3w7zO1Vjw@mail.gmail.com>
-References: <1472094041-5357-1-git-send-email-guodong.xu@linaro.org>
- <1472094041-5357-2-git-send-email-guodong.xu@linaro.org>
+From: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 1/4] Input: goodix - Restructure cfg checksum function
+Date: Thu, 27 Oct 2016 12:32:50 +0200
+Message-ID: <1477564370.2458.8.camel@hadess.net>
+References: <20161020195917.20051-1-fcooper@ti.com>
+         <20161020195917.20051-2-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1472094041-5357-2-git-send-email-guodong.xu@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guodong Xu <guodong.xu@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, rob.herring@linaro.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, xinliang.liu@linaro.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, xuwei5@hisilicon.com, jh80.chung@samsung.com, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Fathi Boudra <fathi.boudra@linaro.org>, LAK <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161020195917.20051-2-fcooper-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 2016-10-20 at 14:59 -0500, Franklin S Cooper Jr wrote:
+> Split generation of checksum into is own function. Currently it is used
 
-My hikey board failed to detect and mount sdcard with v4.9-rc1 and i
-have bisected the issue to this patch. Once reverted, the sdcard is
-detected again.
+"its own".
 
-Regards,
-Vincent
+> only to determine if the checksum for the user provided configuration file
+> is valid or not. However, support to dynamically alter the configuration
+> file will be supported and needs a way to calculate the updated file's
+> checksum. Therefore, by splitting calculating checksum into its own
+> function the code can be reused.
+> 
 
-On 25 August 2016 at 05:00, Guodong Xu <guodong.xu@linaro.org> wrote:
-> Add resets property into dwmmc_0, dwmmc_1 and dwmmc_2 for hi6220
->
-> Code and documentation to this property were confirmed by maintainers.
-> See:
-> [1] https://patchwork.kernel.org/patch/9276607/
-> [2] https://patchwork.kernel.org/patch/8487151/
-> [3] https://lkml.org/lkml/2016/8/12/91
->
-> cc: Jaehoon Chung <jh80.chung@samsung.com>
-> cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> index d0b887a..63608e9 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> @@ -771,6 +771,7 @@
->                         interrupts = <0x0 0x48 0x4>;
->                         clocks = <&sys_ctrl 2>, <&sys_ctrl 1>;
->                         clock-names = "ciu", "biu";
-> +                       resets = <&sys_ctrl PERIPH_RSTDIS0_MMC0>;
->                         bus-width = <0x8>;
->                         vmmc-supply = <&ldo19>;
->                         pinctrl-names = "default";
-> @@ -790,6 +791,7 @@
->                         #size-cells = <0x0>;
->                         clocks = <&sys_ctrl 4>, <&sys_ctrl 3>;
->                         clock-names = "ciu", "biu";
-> +                       resets = <&sys_ctrl PERIPH_RSTDIS0_MMC1>;
->                         vqmmc-supply = <&ldo7>;
->                         vmmc-supply = <&ldo10>;
->                         bus-width = <0x4>;
-> @@ -807,6 +809,7 @@
->                         interrupts = <0x0 0x4a 0x4>;
->                         clocks = <&sys_ctrl HI6220_MMC2_CIUCLK>, <&sys_ctrl HI6220_MMC2_CLK>;
->                         clock-names = "ciu", "biu";
-> +                       resets = <&sys_ctrl PERIPH_RSTDIS0_MMC2>;
->                         bus-width = <0x4>;
->                         broken-cd;
->                         pinctrl-names = "default", "idle";
-> --
-> 1.9.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+After the fixup above:
+
+Reviewed-by: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
