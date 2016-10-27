@@ -1,58 +1,34 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v6 5/5] ARM: DTS: da850: Add usb phy node
-Date: Thu, 27 Oct 2016 10:55:42 -0500
-Message-ID: <7a57b179-bbe7-1412-84d4-8406981665ab@lechnology.com>
-References: <1477451211-31979-1-git-send-email-david@lechnology.com>
- <1477451211-31979-6-git-send-email-david@lechnology.com>
- <d55f19f2-beb3-a681-a6e9-c1d2c303173c@ti.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH V4 0/5] firmware: Add support for TI System Control Interface (TI-SCI) protocol driver
+Date: Thu, 27 Oct 2016 09:01:24 -0700
+Message-ID: <m260odhjcb.fsf@baylibre.com>
+References: <20161018230837.6515-1-nm@ti.com>
+        <2694e4b5-20d5-f590-c6a6-55ff4cb8c16b@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d55f19f2-beb3-a681-a6e9-c1d2c303173c@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Axel Haslam <ahaslam@baylibre.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2694e4b5-20d5-f590-c6a6-55ff4cb8c16b-l0cyMroinI0@public.gmane.org> (Tero Kristo's
+        message of "Tue, 25 Oct 2016 20:34:48 +0300")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Andrew Davis <afd-l0cyMroinI0@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/26/2016 05:26 AM, Sekhar Nori wrote:
-> On Wednesday 26 October 2016 08:36 AM, David Lechner wrote:
->> Add a node for the new usb phy driver.
->
-> changed this to:
->
->     Add a node for usb phy device. This device
->     controls both the USB 1.1 and USB 2.0 PHYs.
->
-> mainly because the node is for the device, not the driver.
->
->>
->> Signed-off-by: David Lechner <david@lechnology.com>
->
-> Applied to v4.10/dt
->
-> Thanks,
-> Sekhar
->
+Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> writes:
 
-I found a better way to represent this device as a child of the syscon 
-node. How should we handle the change? Should I submit a new patch that 
-applies on top of this one or will you drop this patch and I should send 
-a new one to take it's place?
+> On 19/10/16 02:08, Nishanth Menon wrote:
+>> Version 4 of the series is basically a rebase to v4.9-rc1, no functional
+>> changes.
+>
+> Any final comments on this series, or shall I send a pull-req forward?
+> Very minimal changes compared to v3 so should be good to go imo.
 
-Assuming that you agree that this is better:
+Not a comment on the series, but a question on TI-SCI.
 
-	cfgchip: cfgchip@1417c {
-		compatible = "ti,da830-cfgchip", "syscon", "simple-mfd";
-		reg = <0x1417c 0x14>;
+Will the uC firmware be open like it was on AM335x?
 
-		usb_phy: usb-phy {
-			compatible = "ti,da830-usb-phy";
-			#phy-cells = <1>;
-			status = "disabled";
-		};
-	};
-
-Since the phy consists entirely as registers in the syscon device, we 
-should make it a child of the syscon device instead of a child of the 
-soc node.
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
