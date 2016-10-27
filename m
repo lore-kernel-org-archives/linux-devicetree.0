@@ -1,116 +1,87 @@
-From: Pierre-Hugues Husson <phh-8tEavu1zA38@public.gmane.org>
-Subject: Re: Add Allwinner Q8 tablets hardware manager
-Date: Thu, 27 Oct 2016 19:31:52 +0200
-Message-ID: <CAJ-oXjRJrs77yE-skpZ-V4e=rdhRyfNve9bibf1VOaZYy2=tRA@mail.gmail.com>
-References: <20161014075337.10452-1-hdegoede@redhat.com> <20161024173900.GP15620@leverpostej>
- <4cfbedb2-0249-e881-3577-dda0b0d4cabe@redhat.com> <CAJ-oXjQbOkrkNToEXYmPUZOgYBGbxQREZ4NL4bMcZmG=KP2vQQ@mail.gmail.com>
- <99dde1e0-26f0-cc7b-36bf-1181c47296f9@redhat.com> <CAJ-oXjTfRDvSKs9zZBxt1V2MR5C+XnsqfZBRTWwRrJXx-_7r=Q@mail.gmail.com>
- <4cfdd415-1965-7be9-b204-86a9931683a6@redhat.com>
+From: "Phani A, Rama Krishna" <rphani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V3 2/2] iio: adc: spmi-vadc: Changes to support different
+ scaling
+Date: Thu, 27 Oct 2016 23:07:04 +0530
+Message-ID: <be7d758f-1698-1b6d-e6a1-a2910a914737@codeaurora.org>
+References: <1477492887-1663-1-git-send-email-rphani@codeaurora.org>
+ <1477492887-1663-3-git-send-email-rphani@codeaurora.org>
+ <8418e7f1-55d9-2dfa-1dc7-5960f9da0305@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4cfdd415-1965-7be9-b204-86a9931683a6-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8418e7f1-55d9-2dfa-1dc7-5960f9da0305-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, smohanad-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sivaa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, Julia.Lawall-L2FTfq7BK8M@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2016-10-27 16:53 GMT+02:00 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
-> Hi,
->
-> No, the firmware-name (and matching resolution as different firmwares
-> report different axis-ranges for the same digitizer) is selected
-> primarily by the touchscreen_variant which sets: touchscreen_fw_name,
-> touchscreen_width and touchscreen_height.
->
-> The touchscreen_variant module option defaults to -1 which means "auto",
-> when it is auto it gets set based on the touchscreen / accelerometer
-> combination (which more or less uniquely identifies boards sofar),
-> likewise all the other touchscreen module options default to -1,
-> but can be overridden from the commandline.
->
-> The intention is for things to just work, the commandline options are
-> there as a fallback.
-Ok, so I was really off. Sorry.
-Now I think I understand the full complexity of the problem.
+Hi Stan,
 
-> We could just have:
+On 27-Oct-16 4:48 PM, Stanimir Varbanov wrote:
+> Hi Rama,
 >
->         i2c-probe-stop-at-first-match-0 = <&touchscreen1>, <&touchscreen2>,
-> <&touchscreen3>;
->         i2c-probe-stop-at-first-match-1 = <&accelerometer1>,
-> <&accelerometer2>;
+> On 10/26/2016 05:41 PM, Rama Krishna Phani A wrote:
+>> Polling can also be used for End of conversion completion. Implement logic
+>> to choose either polling or interrupt for End of conversion completion.
+>> Scaling can be done on the voltage to report adc code in physical units.
+>> Add changes to support different scale functions to convert adc code to
+>> physical units.
+>>
+>> Signed-off-by: Rama Krishna Phani A <rphani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  14 ++
+>>  drivers/iio/adc/qcom-spmi-vadc.c                   | 263 +++++++++++++++++----
+>>  2 files changed, 236 insertions(+), 41 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+>> index 0fb4613..39e31c0e 100644
+>> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+>> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+>> @@ -37,6 +37,12 @@ VADC node:
+>>      Value type: <prop-encoded-array>
+>>      Definition: End of conversion interrupt.
+>>
+>> +- qcom,vadc-poll-eoc:
+>> +    Usage: optional
+>> +    Value type: <bool>
+>> +    Definition: Use polling instead of interrupts for End of Conversion
+>> +		completion.
 >
-> And have the i2c bus code look for an i2c-probe-stop-at-first-match-[i++]
-> property
-> until it is not found. Having a child-node with its own compatible for this
-> feels wrong, as it uses a hierarchy where there really is none.
-Ok, looks much better indeed.
-I had one case where accelerometers could be on either i2c1 or i2c5.
-Do you think this could be handled as well, or this makes things much
-more complicated to fit in the i2c driver?
+> Why you need to add such a flag in DT?
+>
+> The DT should describe hardware details not how the driver will choose
+> pooling vs interrupt.
+>
+> On which use-case you would prefer pooling?
+>
 
-> So this would require us to be able to filter (to use your example)
-> on if another i2c device is found and on which address it is found,
-> that does not even take the rda559x check into account and is
-> going to cause interesting ordering issues, how do we know when
-> we can actually do the filtering if some of the variables we are
-> filtering on are set by other auto-detected paths. Which auto-detect /
-> i2c-probe-stop-at-first-match list do we execute first ? Worse
-> actually for accelerometer orientation I will likely need to
-> set the mount-matrix based on the detected touchscreen ...
->
-> The rda559x here is a sdio wifi chip, which is also connected to the
-> i2c, and currently is detected through i2c to be able to separately
-> identify 2 q8 boards which share the same touchscreen + accelerometer
-> combination and who knows what other checks I or other people can
-> come up with to differentiate board variants which do not have
-> a simple eeprom to uniquely id them.
->
-> So as said before, no this cannot be all done in dt without
-> adding a turing complete language to dt, and that is just to
-> select which touchscreen_variant to use.
-Ok, now that I understand the scope of your needs.
-I agree with you, this needs a (close to) turing complete language.
-I'm still not really happy about doing it in a driver, but I agree the
-full scope you need is scarce enough.
-Assuming this is done in a driver, there would need to be some
-plumbing between i2c-probe-stop-at-first-match, device's probe
-function and your driver, so that your driver only does the various
-if/cases and DT changes, but there is no actual device communication
-done in that driver.
+Few PMIC's support interrupt functionality for ADC where as few PMIC's 
+dont support. Based on the functionality that is supported in hardware 
+we choose whether to go for polling or for interrupt.
 
-> Then there also the probem of the combinatorial explosion having
-> not only 2 firmware files but also invert-x and invert-y flags causes:
-> We have 2 revisions with each 2 different firmware-files (more actually
-> but I've reduced the set since some firmwares are compatible) with each
-> both the x- and / or y axis as normal or inverted, for a total of:
-> 2 (revision) * 2 (firmware-files) * 2 (x-inverted or not) * 2 (y...) = 16
-> touchscreen variants, which means dt nodes for touchscreen1 to touchscreen16
-> and that is just the silead gsl1680, some of these tablets also have
-> elan or zeitec touchscreen controllers.
+>> +
+>>  Channel node properties:
+>>
+>>  - reg:
+>> @@ -92,6 +98,14 @@ Channel node properties:
+>>              Valid values are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
+>>              If property is not found, 1 sample will be used.
+>>
+>> +- qcom,scale-function:
+>> +    Usage: optional
+>> +    Value type: <u32>
+>> +    Definition: Scaling function used to convert raw ADC code to
+>> +	units specific to a given channel. Scaled units can be
+>> +	microvolts, millidegC.Valid values are: 0, 1, 2, 3, 4.
+>> +	If property is not found, 0 scaling will be used.
 >
-> Now imagine what happens if a new board comes out which needs a 3th firmware
-> file... I hope you can understand this is not a route I want to go.
-Right, I agree with you.
-> Another problem is that if a user encounters the need for a new firmware
-> variant he can now not easily try this (where as before we had
-> module options to separately override firmware-name, the size, etc.
+> This shouldn't be in DT binding. Just select the scale function for each
+> channel in the driver based on compatible property.
 >
-> As written in my previous mail, this is all rather gsl1680 specific,
-> and esp. being able to override the firmware-name, the size, etc.
-> through module options is going to be useful (to ask endusers to test
-> stuff without recompiling) on x86 too. So we will likely want to add
-> most of the necessary stuff to the silead driver anyways.
+>
+Ok ., Will remove this binding from DT, implement logic in driver and 
+will post next patch.
 
-That's not currently the case, but can't we assume it will become easy
-for users to install a DT overlay?
-This would drop all your needs of module parameters, and would
-actually be more modulable than your current scheme.
-It is a more longer term thought, and could instead apply to further
-boards having the same sort of troubles as you, rather than for this
-first driver.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Ramakrishna
