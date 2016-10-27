@@ -1,121 +1,153 @@
-From: Pierre-Hugues Husson <phh-8tEavu1zA38@public.gmane.org>
-Subject: Re: Add Allwinner Q8 tablets hardware manager
-Date: Thu, 27 Oct 2016 21:04:15 +0200
-Message-ID: <CAJ-oXjS_=k4qE25t2b9eNnuqvVHf-1g7CZr81pPJx==aftF4xw@mail.gmail.com>
-References: <20161014075337.10452-1-hdegoede@redhat.com> <20161024173900.GP15620@leverpostej>
- <4cfbedb2-0249-e881-3577-dda0b0d4cabe@redhat.com> <9B288597-7812-459D-A5C7-B61107751DA6@konsulko.com>
- <CAJ-oXjT=eVwEk7t5WoZAhjMhiZZkq0NN5tFLidSnUNO97D62zQ@mail.gmail.com> <D75CB7DE-4165-4D2F-B40B-D2B6875C0172@konsulko.com>
+From: Gordan Markus <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] input: keyboard: Add devicetree support for lm8333
+Date: Thu, 27 Oct 2016 21:17:34 +0200
+Message-ID: <1477595854-9059-1-git-send-email-gordan.markus@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <D75CB7DE-4165-4D2F-B40B-D2B6875C0172-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Gordan=20Marku=C5=A1?= <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2016-10-27 19:11 GMT+02:00 Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/HQFizaE/u3fw@public.gmane.org=
-m>:
->
-> Hi Pierre,
->
-> > On Oct 27, 2016, at 19:59 , Pierre-Hugues Husson <phh-8tEavu1zA38@public.gmane.org> wrote:
-> >
-> > 2016-10-27 17:52 GMT+02:00 Pantelis Antoniou <pantelis.antoniou@konsulk=
-o.com>:
-> >> Yes there is no EEPROM but you might be able to map probing results to
-> >> a fake =E2=80=98model=E2=80=99 number.
-> >>
-> >> Let me expand a bit:
-> >>
-> >> Assume that you have a number of probing steps, for example A, B, C ea=
-ch
-> >> returning true or false, and C being executed only when B is =E2=80=98=
-true=E2=80=99 you
-> >> could do this to generate a bit field that identifies it.
-> >>
-> >> For example let=E2=80=99s assume that model FOO=E2=80=99s probing step=
-s are
-> >>
-> >> A false, B true, C false -> 010
-> >>
-> >> Model=E2=80=99s BAR
-> >>
-> >> A true, B false, C don=E2=80=99t care -> 10x
-> >>
-> >> Mapping these to models could be
-> >>
-> >> Model FOO, (010 & 111) =3D=3D 010 (all three probing steps must match)
-> >>
-> >> Model BAR, (10x & 110) =3D 100 (the first two probing steps must match=
-)
-> >
-> > This method looks too complex on multiple grounds.
-> > Assuming your method, I'm not too sure how this would actually be
-> > described in a DTS.
-> > Such probing steps should include reading/matching IDs in an EEPROM/on
-> > an ADC, but it should also include the result of a driver's probe.
-> > Also, drivers should have a way to report an ID/OTP instead of just a
-> > boolean.
-> >
->
-> Err, I don=E2=80=99t think you got the point.
->
-> The probing steps are done by a board specific probe driver.
-> This driver performs the probing steps (which is exactly what Hans=E2=80=
-=99s
-> method now does) but instead of applying changes to the device tree
-> programmatically generates a model string.
->
-> This model string can be used by a general purpose overlay manager to app=
-ly
-> the overlay(s) for the specific board. The plural part is important - rea=
-d
-> below.
+This adds LM8333 devicetree parsing for the keypad part.
+Optional properties to specify the keypad driver active
+time and debounce time.
 
-Ok, I agree I didn't get the point, and I'm not sure I do now.
-If I understand correctly, the difference between your method and
-Hans', is that instead of manipulating directly OF properties based on
-heuristics, there will be a heuristic to determine model revision, and
-THEN apply overlays based on determined model revision.
+Signed-off-by: Gordan Markuš <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/input/ti,lm8333.txt        | 45 ++++++++++++++++++
+ drivers/input/keyboard/lm8333.c                    | 54 ++++++++++++++++++++++
+ 2 files changed, 99 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/ti,lm8333.txt
 
-If this is the correct interpretation, this means that for boards with
-two possible accelerometers, a new driver is required, while something
-as simple as i2c-probe-stop-at-first-match wouldn't require a new
-driver.
+diff --git a/Documentation/devicetree/bindings/input/ti,lm8333.txt b/Documentation/devicetree/bindings/input/ti,lm8333.txt
+new file mode 100644
+index 0000000..4100d48
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/ti,lm8333.txt
+@@ -0,0 +1,45 @@
++LM8333 Keypad
++
++Required properties:
++- compatible: Compatible property value should be "ti,lm8333".
++
++- reg: Physical base address of the peripheral and length of memory mapped
++  region.
++
++- interrupts: The interrupt number for the peripheral.
++
++- linux,keymap: The keymap to use
++	(see Documentation/devicetree/bindings/input/matrix-keymap.txt)
++
++Optional properties:
++- ti,active-time: Specify the time during which the keypad is scanned after
++	the last key is released, before entering Halt mode.
++	The active time must be longer than the debounce time.
++	Default 500 ms.
++
++- ti,debounce-time: Specify the keypad debounce time.
++	This can be used for reliable scanning of keyboards with noisy contacts.
++	Default 10 ms.
++
++Example:
++input {
++	compatible = "ti,lm8333";
++	reg = <0x51>;
++	interrupts = <5>;
++
++	ti,active-time = <750>;
++	ti,debounce-time = <20>;
++
++	linux,keymap = <
++			0x0001001e
++			0x00020030
++			0x0003002e
++			0x00040020
++			0x00050012
++			0x00060021
++			0x00070022
++			0x00080023
++			0x01010017
++			0x01020024
++			0x01030025>;
++};
+diff --git a/drivers/input/keyboard/lm8333.c b/drivers/input/keyboard/lm8333.c
+index c717e8f..adb7d64 100644
+--- a/drivers/input/keyboard/lm8333.c
++++ b/drivers/input/keyboard/lm8333.c
+@@ -128,6 +128,51 @@ static irqreturn_t lm8333_irq_thread(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
++static struct lm8333_platform_data *lm8333_parse_dt(struct i2c_client *client)
++{
++	struct device_node *np = client->dev.of_node;
++	struct lm8333_platform_data *pdata;
++	struct matrix_keymap_data *matrix_data;
++	u32 *keymap;
++	u32 prop;
++	int len;
++
++	pdata = devm_kzalloc(&client->dev, sizeof(pdata),
++				GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++
++	if (!of_property_read_u32(np, "ti,active-time", &prop))
++		pdata->active_time = prop;
++
++	if (!of_property_read_u32(np, "ti,debounce-time", &prop))
++		pdata->debounce_time = prop;
++	else
++		pdata->debounce_time = 10;
++
++	if (!of_get_property(np, "linux,keymap", &prop))
++		len = prop / sizeof(u32);
++	else {
++		dev_err(&client->dev, "no keymap data defined\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	keymap = devm_kzalloc(&client->dev, sizeof(len) * len, GFP_KERNEL);
++	matrix_data = devm_kzalloc(&client->dev, sizeof(matrix_data),
++					GFP_KERNEL);
++	if (!matrix_data || !keymap)
++		return ERR_PTR(-ENOMEM);
++
++	if (!of_property_read_u32_array(np, "linux,keymap", keymap, len)) {
++		matrix_data->keymap_size = len;
++		matrix_data->keymap = keymap;
++
++		pdata->matrix_data = matrix_data;
++	}
++
++	return pdata;
++}
++
+ static int lm8333_probe(struct i2c_client *client,
+ 				  const struct i2c_device_id *id)
+ {
+@@ -137,6 +182,15 @@ static int lm8333_probe(struct i2c_client *client,
+ 	struct input_dev *input;
+ 	int err, active_time;
+ 
++	if (!pdata && client->dev.of_node) {
++		pdata = lm8333_parse_dt(client);
++		if (IS_ERR(pdata)) {
++			dev_err(&client->dev,
++				"could not parse configuration\n");
++			return IS_ERR(pdata);
++		}
++	}
++
+ 	if (!pdata)
+ 		return -EINVAL;
+ 
+-- 
+1.9.1
 
-> > As you mentioned, it is a way to distinguish models, not just a set of
-> > parameters.
-> > Does this mean that this DT would lead to loading various DT based on
-> > the matching model, which would look like a FIT?
-> > Also there is a modularity problem there. If I have phones with either
-> > screen A or screen B, and with either accelerometer A or accelerometer
-> > B, I would have to implement all four combinations.
-> >
->
-> The model lookup need not result in a simple overlay to apply.
->
-> So for your case it would be:
->
-> model corp,0 -> overlay screen A + overlay accel A
-> model corp,1 -> overlay screen A + overlay accel B
-> model corp,2 -> overlay screen B + overlay accel A
-> model corp,3 -> overlay screen B + overlay accel B
->
-> You don=E2=80=99t need the combinatorial number of overlays.
-
-My worry initially was that all 4 "model corp" are needed, while with
-using a simple approach like i2c-probe-stop-at-first-match, this
-wouldn't be needed.
-But now that I'm thinking of it again, for such a case to happen, this
-would require to have OEMs picking random components for tablets of
-one production batch. This wouldn't make any sense.
-So I agree a model-based method should cover sufficient cases to be worthwh=
-ile.
-I think it covers every device I've met.
-
-Regards,
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
