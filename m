@@ -1,74 +1,63 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v4] media: et8ek8: add device tree binding documentation
-Date: Tue, 1 Nov 2016 00:47:39 +0200
-Message-ID: <20161031224739.GA3217@valkosipuli.retiisi.org.uk>
-References: <20161023191706.GA25754@amd>
- <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: devicetree@vger.kernel.org
+Return-Path: <j-keerthy@ti.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 2/4] mfd: palmas: Reset the POWERHOLD mux during power off
+Date: Thu, 27 Oct 2016 14:40:12 +0530
+Message-ID: <1477559414-12520-3-git-send-email-j-keerthy@ti.com>
+In-Reply-To: <1477559414-12520-1-git-send-email-j-keerthy@ti.com>
+References: <1477559414-12520-1-git-send-email-j-keerthy@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: tony@atomide.com, lee.jones@linaro.org, robh+dt@kernel.org
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, nm@ti.com, j-keerthy@ti.com, t-kristo@ti.com
+List-ID: <devicetree@vger.kernel.org>
 
-Hi Rob and Pavel,
+POWERHOLD signal has higher priority  over the DEV_ON bit.
+So power off will not happen if the POWERHOLD is held high.
+Hence reset the MUX to GPIO_7 mode to release the POWERHOLD
+and the DEV_ON bit to take effect to power off the PMIC.
 
-On Sun, Oct 30, 2016 at 03:41:34PM -0500, Rob Herring wrote:
-> On Sun, Oct 23, 2016 at 09:17:06PM +0200, Pavel Machek wrote:
-> > 
-> > Add device tree binding documentation for toshiba et8ek8 sensor.
-> > 
-> > Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> > 
-> > ---
-> > 
-> > diff from v3: explain what clock-frequency means
-> > 
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
-> > new file mode 100644
-> > index 0000000..54863cf
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
-> > @@ -0,0 +1,51 @@
-> > +Toshiba et8ek8 5MP sensor
-> > +
-> > +Toshiba et8ek8 5MP sensor is an image sensor found in Nokia N900 device
-> > +
-> > +More detailed documentation can be found in
-> > +Documentation/devicetree/bindings/media/video-interfaces.txt .
-> > +
-> > +
-> > +Mandatory properties
-> > +--------------------
-> > +
-> > +- compatible: "toshiba,et8ek8"
-> > +- reg: I2C address (0x3e, or an alternative address)
-> > +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
-> > +- clocks: External clock to the sensor
-> > +- clock-frequency: Frequency of the external clock to the sensor. Camera
-> > +  driver will set this frequency on the external clock.
-> 
-> This is fine if the frequency is fixed (e.g. an oscillator), but you 
-> should use the clock binding if clocks are programable.
+PMIC Power off happens in dire situations like thermal shutdown
+so irrespective of the POWERHOLD setting go ahead and turn off
+the powerhold.  Currently poweroff is broken on boards that have
+powerhold enabled. This fixes poweroff on those boards.
 
-We've discussed the matter here (v3):
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+---
+ drivers/mfd/palmas.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-<URL:http://www.spinics.net/lists/linux-media/msg101210.html>
-
-<URL:http://www.spinics.net/lists/linux-media/msg101233.html>
-
-Pavel, could you add to the desciption e.g.:
-
-"The clock frequency is a pre-determined frequency known to be suitable to
-the board."
-
+diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
+index 8f8bacb..8fbc5e0 100644
+--- a/drivers/mfd/palmas.c
++++ b/drivers/mfd/palmas.c
+@@ -430,10 +430,28 @@ static void palmas_power_off(void)
+ {
+ 	unsigned int addr;
+ 	int ret, slave;
++	struct device_node *node;
++	bool override_powerhold;
+ 
+ 	if (!palmas_dev)
+ 		return;
+ 
++	node = palmas_dev->dev->of_node;
++	override_powerhold = of_property_read_bool(node,
++					"ti,palmas-override-powerhold");
++
++	if (override_powerhold) {
++		addr = PALMAS_BASE_TO_REG(PALMAS_PU_PD_OD_BASE,
++					  PALMAS_PRIMARY_SECONDARY_PAD2);
++		slave = PALMAS_BASE_TO_SLAVE(PALMAS_PU_PD_OD_BASE);
++
++		ret = regmap_update_bits(palmas_dev->regmap[slave], addr,
++					 PALMAS_PRIMARY_SECONDARY_PAD2_GPIO_7_MASK, 0);
++		if (ret)
++			pr_err("%s: Unable to write PALMAS_PRIMARY_SECONDARY_PAD2 %d\n",
++			       __func__, ret);
++	}
++
+ 	slave = PALMAS_BASE_TO_SLAVE(PALMAS_PMU_CONTROL_BASE);
+ 	addr = PALMAS_BASE_TO_REG(PALMAS_PMU_CONTROL_BASE, PALMAS_DEV_CTRL);
+ 
 -- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+1.9.1
