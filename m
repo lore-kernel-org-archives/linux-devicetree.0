@@ -1,49 +1,46 @@
-Return-Path: <hns@goldelico.com>
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v6 7/8] drivers:input:ads7846(+tsc2046): fix spi module table
-Date: Thu, 27 Oct 2016 10:44:20 +0200
-Message-Id: <54f282e1adebeeb133687b6c430ecbb6f2fe6d5b.1477557860.git.hns@goldelico.com>
-In-Reply-To: <cover.1477557860.git.hns@goldelico.com>
-References: <cover.1477557860.git.hns@goldelico.com>
-In-Reply-To: <cover.1477557860.git.hns@goldelico.com>
-References: <cover.1477557860.git.hns@goldelico.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?UTF-8?q?Mika=20Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, Sebastian Reichel <sre@kernel.org>, "Andrew F. Davis" <afd@ti.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Sangwon Jee <jeesw@melfas.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, linux-iio@vger.kernel.org, kernel@pyra-handheld.com
+Return-Path: <j-keerthy@ti.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 1/4] Documentation: pinctrl: palmas: Add ti,palmas-powerhold-override property definition
+Date: Thu, 27 Oct 2016 14:40:11 +0530
+Message-ID: <1477559414-12520-2-git-send-email-j-keerthy@ti.com>
+In-Reply-To: <1477559414-12520-1-git-send-email-j-keerthy@ti.com>
+References: <1477559414-12520-1-git-send-email-j-keerthy@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: tony@atomide.com, lee.jones@linaro.org, robh+dt@kernel.org
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, nm@ti.com, j-keerthy@ti.com, t-kristo@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-Fix module table so that the driver is loaded if compiled
-as module and requested by DT.
+GPIO7 is configured in POWERHOLD mode which has higher priority
+over DEV_ON bit and keeps the PMIC supplies on even after the DEV_ON
+bit is turned off. This property enables driver to over ride the
+POWERHOLD value to GPIO7 so as to turn off the PMIC in power off
+scenarios.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- drivers/input/touchscreen/ads7846.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
-index 400e421..50c85d2 100644
---- a/drivers/input/touchscreen/ads7846.c
-+++ b/drivers/input/touchscreen/ads7846.c
-@@ -1532,6 +1532,16 @@ static int ads7846_remove(struct spi_device *spi)
- 	return 0;
- }
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
+index caf297b..c28d4eb8 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
+@@ -35,6 +35,15 @@ Optional properties:
+ - ti,palmas-enable-dvfs2: Enable DVFS2. Configure pins for DVFS2 mode.
+ 	Selection primary or secondary function associated to GPADC_START
+ 	and SYSEN2 pin/pad for DVFS2 interface
++- ti,palmas-override-powerhold: This is applicable for PMICs for which
++	GPIO7 is configured in POWERHOLD mode which has higher priority
++	over DEV_ON bit and keeps the PMIC supplies on even after the DEV_ON
++	bit is turned off. This property enables driver to over ride the
++	POWERHOLD value to GPIO7 so as to turn off the PMIC in power off
++	scenarios. So for GPIO7 if ti,palmas-override-powerhold is set
++	then the GPIO_7 field should never be muxed to anything else.
++	It should be set to POWERHOLD by default and only in case of
++	power off scenarios the driver will over ride the mux value.
  
-+static const struct spi_device_id ads7846_idtable[] = {
-+	{ "tsc2046", 0 },
-+	{ "ads7843", 0 },
-+	{ "ads7845", 0 },
-+	{ "ads7846", 0 },
-+	{ "ads7873", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(spi, ads7846_idtable);
-+
- static struct spi_driver ads7846_driver = {
- 	.driver = {
- 		.name	= "ads7846",
-@@ -1546,4 +1556,3 @@ module_spi_driver(ads7846_driver);
- 
- MODULE_DESCRIPTION("ADS7846 TouchScreen Driver");
- MODULE_LICENSE("GPL");
--MODULE_ALIAS("spi:ads7846");
+ This binding uses the following generic properties as defined in
+ pinctrl-bindings.txt:
 -- 
-2.7.3
+1.9.1
