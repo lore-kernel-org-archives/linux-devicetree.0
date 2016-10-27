@@ -1,139 +1,202 @@
-Return-Path: <michael.scott@linaro.org>
-MIME-Version: 1.0
-In-Reply-To: <CACRpkda9fcUjtEuezEa-DdU_Q_OcE-kArRpY7RGp+aTFWWf=rA@mail.gmail.com>
-References: <20161026233228.15219-1-michael.scott@linaro.org> <CACRpkda9fcUjtEuezEa-DdU_Q_OcE-kArRpY7RGp+aTFWWf=rA@mail.gmail.com>
-From: Michael Scott <michael.scott@linaro.org>
-Date: Sat, 29 Oct 2016 09:26:28 -0700
-Message-ID: <CAEz3QY0aXuhmcHKTpRZzKvEB1cbpMe4W9McE-2bGsbFvMHAa6g@mail.gmail.com>
-Subject: Re: [PATCH V2] pinctrl: qcom: Add msm8994 pinctrl driver
-Content-Type: multipart/alternative; boundary=001a11c16510e78fce0540036f3d
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, David Brown <david.brown@linaro.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Joonwoo Park <joonwoop@codeaurora.org>, Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
+Return-Path: <hns@goldelico.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v6 6/8] drivers:input:ads7846(+tsc2046): add new common binding names, pre-calibration and flipping
+Date: Thu, 27 Oct 2016 10:44:19 +0200
+Message-Id: <8b04ed29eb6a9ed154380941beb3a12a73a276d0.1477557860.git.hns@goldelico.com>
+In-Reply-To: <cover.1477557860.git.hns@goldelico.com>
+References: <cover.1477557860.git.hns@goldelico.com>
+In-Reply-To: <cover.1477557860.git.hns@goldelico.com>
+References: <cover.1477557860.git.hns@goldelico.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?UTF-8?q?Mika=20Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, Sebastian Reichel <sre@kernel.org>, "Andrew F. Davis" <afd@ti.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Sangwon Jee <jeesw@melfas.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, linux-iio@vger.kernel.org, kernel@pyra-handheld.com
 List-ID: <devicetree@vger.kernel.org>
 
---001a11c16510e78fce0540036f3d
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+commit b98abe52fa8e ("Input: add common DT binding for touchscreens")
+introduced common DT bindings for touchscreens [1] and a helper function to
+parse the DT.
 
-On Oct 29, 2016 1:27 AM, "Linus Walleij" <linus.walleij@linaro.org> wrote:
->
-> On Thu, Oct 27, 2016 at 1:32 AM, Michael Scott <michael.scott@linaro.org>
-wrote:
->
-> > Initial pinctrl driver for QCOM msm8994 platforms.
-> >
-> > In order to continue the initial board support for QCOM msm8994/msm8992
-> > presented in patches from Jeremy McNicoll <jeremymc@redhat.com>, let's
-put
-> > a proper pinctrl driver in place.
-> >
-> > Currently, the DT for these platforms uses the msm8x74 pinctrl driver
-to enable
-> > basic UART.  Beyond the first few pins the rest are different enough to
-justify
-> > it's own driver.
-> >
-> > Note: This driver is also be used by QCOM's msm8992 platform as it's
-TLM block
-> > is the same.
-> >
-> > - Initial formatting and style was taken from the msm8x74 pinctrl
-driver added
-> >   by Bj=C3=B6rn Andersson <bjorn.andersson@linaro.org>
-> > - Data was then adjusted per QCOM MSM8994 documentation for Top Level
-Multiplexing
-> > - Bindings documentation was based on qcom,msm8996-pinctrl.txt by
-> >   Joonwoo Park <joonwoop@codeaurora.org> and then modified for msm8994
-content
-> >
-> > Signed-off-by: Michael Scott <michael.scott@linaro.org>
-> > ---
-> >
-> > V1 -> V2: fixed missing FUNCTION(nav_pps) and removed 3 odd newlines
-between blsp_i2c4_groups and cci_timer0_groups
->
-> Looks fine to me, just like the other Qcom drivers.
->
-> I just want Bj=C3=B6rn Andersson's ACK before merging, Bj=C3=B6rn?
+commit ed7c9870c9bc ("Input: of_touchscreen - add support for inverted / swapped axes")
+added another helper for parsing axis inversion and swapping
+and applying them to x and y coordinates.
 
-FYI: I asked Stephen if he could find someone else with tech docs to do a
-data review.  This may or may not happen depending on the internal interest
-level and/or current work load.  It will probably take a week or so to get
-sorted out.
+Both helpers have been integrated to accommodate any orientation of the
+touch panel in relation to the LCD.
 
-Worst case is no extra set of eyes on the data, and as issues are found we
-can fix them in follow up patches.  The driver works for the current
-msm8994 patches submitted by Jeremy.
+A new feature is to introduce scaling the min/max ADC values to the screen
+size.
 
-Michael Scott
+This makes it possible to pre-calibrate the touch so that is (almost)
+exactly matches the LCD pixel coordinates it is glued onto. This allows to
+well enough operate the touch before a user space calibration step can
+improve the precision.
 
->
-> Yours,
-> Linus Walleij
+[1]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
 
---001a11c16510e78fce0540036f3d
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ .../devicetree/bindings/input/ads7846.txt          |  9 +++-
+ drivers/input/touchscreen/ads7846.c                | 60 ++++++++++++++++++----
+ 2 files changed, 57 insertions(+), 12 deletions(-)
 
-<p dir=3D"ltr"></p>
-<p dir=3D"ltr">On Oct 29, 2016 1:27 AM, &quot;Linus Walleij&quot; &lt;<a hr=
-ef=3D"mailto:linus.walleij@linaro.org">linus.walleij@linaro.org</a>&gt; wro=
-te:<br>
-&gt;<br>
-&gt; On Thu, Oct 27, 2016 at 1:32 AM, Michael Scott &lt;<a href=3D"mailto:m=
-ichael.scott@linaro.org">michael.scott@linaro.org</a>&gt; wrote:<br>
-&gt;<br>
-&gt; &gt; Initial pinctrl driver for QCOM msm8994 platforms.<br>
-&gt; &gt;<br>
-&gt; &gt; In order to continue the initial board support for QCOM msm8994/m=
-sm8992<br>
-&gt; &gt; presented in patches from Jeremy McNicoll &lt;<a href=3D"mailto:j=
-eremymc@redhat.com">jeremymc@redhat.com</a>&gt;, let&#39;s put<br>
-&gt; &gt; a proper pinctrl driver in place.<br>
-&gt; &gt;<br>
-&gt; &gt; Currently, the DT for these platforms uses the msm8x74 pinctrl dr=
-iver to enable<br>
-&gt; &gt; basic UART.=C2=A0 Beyond the first few pins the rest are differen=
-t enough to justify<br>
-&gt; &gt; it&#39;s own driver.<br>
-&gt; &gt;<br>
-&gt; &gt; Note: This driver is also be used by QCOM&#39;s msm8992 platform =
-as it&#39;s TLM block<br>
-&gt; &gt; is the same.<br>
-&gt; &gt;<br>
-&gt; &gt; - Initial formatting and style was taken from the msm8x74 pinctrl=
- driver added<br>
-&gt; &gt;=C2=A0 =C2=A0by Bj=C3=B6rn Andersson &lt;<a href=3D"mailto:bjorn.a=
-ndersson@linaro.org">bjorn.andersson@linaro.org</a>&gt;<br>
-&gt; &gt; - Data was then adjusted per QCOM MSM8994 documentation for Top L=
-evel Multiplexing<br>
-&gt; &gt; - Bindings documentation was based on qcom,msm8996-pinctrl.txt by=
-<br>
-&gt; &gt;=C2=A0 =C2=A0Joonwoo Park &lt;<a href=3D"mailto:joonwoop@codeauror=
-a.org">joonwoop@codeaurora.org</a>&gt; and then modified for msm8994 conten=
-t<br>
-&gt; &gt;<br>
-&gt; &gt; Signed-off-by: Michael Scott &lt;<a href=3D"mailto:michael.scott@=
-linaro.org">michael.scott@linaro.org</a>&gt;<br>
-&gt; &gt; ---<br>
-&gt; &gt;<br>
-&gt; &gt; V1 -&gt; V2: fixed missing FUNCTION(nav_pps) and removed 3 odd ne=
-wlines between blsp_i2c4_groups and cci_timer0_groups<br>
-&gt;<br>
-&gt; Looks fine to me, just like the other Qcom drivers.<br>
-&gt;<br>
-&gt; I just want Bj=C3=B6rn Andersson&#39;s ACK before merging, Bj=C3=B6rn?=
-</p>
-<p dir=3D"ltr">FYI: I asked Stephen if he could find someone else with tech=
- docs to do a data review.=C2=A0 This may or may not happen depending on th=
-e internal interest level and/or current work load.=C2=A0 It will probably =
-take a week or so to get sorted out.</p>
-<p dir=3D"ltr">Worst case is no extra set of eyes on the data, and as issue=
-s are found we can fix them in follow up patches.=C2=A0 The driver works fo=
-r the current msm8994 patches submitted by Jeremy.</p>
-<p dir=3D"ltr">Michael Scott</p>
-<p dir=3D"ltr">&gt;<br>
-&gt; Yours,<br>
-&gt; Linus Walleij<br></p>
-
---001a11c16510e78fce0540036f3d--
+diff --git a/Documentation/devicetree/bindings/input/ads7846.txt b/Documentation/devicetree/bindings/input/ads7846.txt
+index 9fc47b0..29f91ed 100644
+--- a/Documentation/devicetree/bindings/input/ads7846.txt
++++ b/Documentation/devicetree/bindings/input/ads7846.txt
+@@ -26,6 +26,12 @@ Additional required properties:
+ 
+ Optional properties:
+ 
++You can optionally specify any of the touchscreen parameters described in
++
++	Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
++
++This allows to scale, invert or swap coordinates and define the fuzz factors.
++
+ 	ti,vref-delay-usecs		vref supply delay in usecs, 0 for
+ 					external vref (u16).
+ 	ti,vref-mv			The VREF voltage, in millivolts (u16).
+@@ -33,7 +39,7 @@ Optional properties:
+ 					(ADS7846).
+ 	ti,keep-vref-on			set to keep vref on for differential
+ 					measurements as well
+-	ti,swap-xy			swap x and y axis
++	ti,swap-xy			deprecated name for touchscreen-swapped-x-y
+ 	ti,settle-delay-usec		Settling time of the analog signals;
+ 					a function of Vcc and the capacitance
+ 					on the X/Y drivers.  If set to non-zero,
+@@ -82,6 +88,7 @@ Example for a TSC2046 chip connected to an McSPI controller of an OMAP SoC::
+ 			pendown-gpio = <&gpio1 8 0>;
+ 			vcc-supply = <&reg_vcc3>;
+ 
++			touchscreen-swapped-x-y;
+ 			ti,x-min = /bits/ 16 <0>;
+ 			ti,x-max = /bits/ 16 <8000>;
+ 			ti,y-min = /bits/ 16 <0>;
+diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
+index 1ce3ecb..400e421 100644
+--- a/drivers/input/touchscreen/ads7846.c
++++ b/drivers/input/touchscreen/ads7846.c
+@@ -34,6 +34,7 @@
+ #include <linux/spi/ads7846.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/module.h>
++#include <linux/input/touchscreen.h>
+ #include <asm/irq.h>
+ 
+ /*
+@@ -109,8 +110,13 @@ struct ads7846 {
+ 	u16			vref_delay_usecs;
+ 	u16			x_plate_ohms;
+ 	u16			pressure_max;
++	u16			x_min;
++	u16			x_max;
++	u16			y_min;
++	u16			y_max;
++
++	struct touchscreen_properties prop;
+ 
+-	bool			swap_xy;
+ 	bool			use_internal;
+ 
+ 	struct ads7846_packet	*packet;
+@@ -825,22 +831,36 @@ static void ads7846_report_state(struct ads7846 *ts)
+ 	 */
+ 	if (Rt) {
+ 		struct input_dev *input = ts->input;
++		int sx, sy;
++
++		dev_dbg(&ts->spi->dev,
++			"Raw point(%4d,%4d), pressure (%4u)\n",
++				x, y, Rt);
++
++		/* scale ADC values to desired output range */
++		sx = (ts->prop.max_x * (x - ts->x_min))
++			/ (ts->x_max - ts->x_min);
++		sy = (ts->prop.max_y * (y - ts->y_min))
++			/ (ts->y_max - ts->y_min);
+ 
+-		if (ts->swap_xy)
+-			swap(x, y);
++		dev_dbg(&ts->spi->dev,
++			"Scaled point(%4d,%4d), pressure (%4u)\n",
++				sx, sy, Rt);
+ 
++		/* report event */
+ 		if (!ts->pendown) {
+ 			input_report_key(input, BTN_TOUCH, 1);
+ 			ts->pendown = true;
+ 			dev_vdbg(&ts->spi->dev, "DOWN\n");
+ 		}
+ 
+-		input_report_abs(input, ABS_X, x);
+-		input_report_abs(input, ABS_Y, y);
++		touchscreen_report_pos(ts->input, &ts->prop,
++				       (unsigned int) sx, (unsigned int) sy,
++				       false);
+ 		input_report_abs(input, ABS_PRESSURE, ts->pressure_max - Rt);
+ 
+ 		input_sync(input);
+-		dev_vdbg(&ts->spi->dev, "%4d/%4d/%4d\n", x, y, Rt);
++		dev_vdbg(&ts->spi->dev, "%4d/%4d/%4d\n", sx, sy, Rt);
+ 	}
+ }
+ 
+@@ -1212,6 +1232,8 @@ static const struct ads7846_platform_data *ads7846_probe_dt(struct device *dev)
+ 	pdata->keep_vref_on = of_property_read_bool(node, "ti,keep-vref-on");
+ 
+ 	pdata->swap_xy = of_property_read_bool(node, "ti,swap-xy");
++	if (pdata->swap_xy)
++		dev_notice(dev, "please update device tree to use touchscreen-swapped-x-y");
+ 
+ 	of_property_read_u16(node, "ti,settle-delay-usec",
+ 			     &pdata->settle_delay_usecs);
+@@ -1315,7 +1337,6 @@ static int ads7846_probe(struct spi_device *spi)
+ 	ts->pressure_max = pdata->pressure_max ? : ~0;
+ 
+ 	ts->vref_mv = pdata->vref_mv;
+-	ts->swap_xy = pdata->swap_xy;
+ 
+ 	if (pdata->filter != NULL) {
+ 		if (pdata->filter_init != NULL) {
+@@ -1355,18 +1376,35 @@ static int ads7846_probe(struct spi_device *spi)
+ 	input_dev->dev.parent = &spi->dev;
+ 
+ 	input_dev->evbit[0] = BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS);
++	input_dev->absbit[0] = BIT_MASK(ABS_X) | BIT_MASK(ABS_Y) |
++				BIT_MASK(ABS_PRESSURE);
+ 	input_dev->keybit[BIT_WORD(BTN_TOUCH)] = BIT_MASK(BTN_TOUCH);
++
++	ts->x_min = pdata->x_min ? : 0;
++	ts->x_max = pdata->x_max ? : MAX_12BIT;
++	ts->y_min = pdata->y_min ? : 0;
++	ts->y_max = pdata->y_max ? : MAX_12BIT;
++
+ 	input_set_abs_params(input_dev, ABS_X,
+-			pdata->x_min ? : 0,
+-			pdata->x_max ? : MAX_12BIT,
++			ts->x_min,
++			ts->x_max,
+ 			0, 0);
+ 	input_set_abs_params(input_dev, ABS_Y,
+-			pdata->y_min ? : 0,
+-			pdata->y_max ? : MAX_12BIT,
++			ts->y_min,
++			ts->y_max,
+ 			0, 0);
+ 	input_set_abs_params(input_dev, ABS_PRESSURE,
+ 			pdata->pressure_min, pdata->pressure_max, 0, 0);
+ 
++	if (spi->dev.of_node) {
++		input_abs_set_min(input_dev, ABS_X, 0);
++		input_abs_set_min(input_dev, ABS_Y, 0);
++
++		touchscreen_parse_properties(ts->input, false, &ts->prop);
++	}
++
++	ts->prop.swap_x_y |= pdata->swap_xy;
++
+ 	ads7846_setup_spi_msg(ts, pdata);
+ 
+ 	ts->reg = regulator_get(&spi->dev, "vcc");
+-- 
+2.7.3
