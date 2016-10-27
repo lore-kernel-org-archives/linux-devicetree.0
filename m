@@ -1,47 +1,45 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 02/12] ASoC: dapm: Implement stereo mixer
- control support
-Date: Thu, 27 Oct 2016 09:20:14 +0800
-Message-ID: <CAGb2v673TH0dw15wL6W6-i7tqu245epu22MxpEkjQuNHTBhnJw@mail.gmail.com>
-References: <20161003110804.28235-1-wens@csie.org> <20161003110804.28235-3-wens@csie.org>
- <20161026165753.GC25322@sirena.org.uk>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: dts: Add LEGO MINDSTORTMS EV3 dts
+Date: Wed, 26 Oct 2016 20:30:27 -0500
+Message-ID: <38a3a10c-a269-6a9f-305c-7d38ec9b839b@lechnology.com>
+References: <1477075018-20176-1-git-send-email-david@lechnology.com>
+ <1477075018-20176-6-git-send-email-david@lechnology.com>
+ <b0022fad-a96e-86d4-71ba-2b803e5421fe@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB2FMYXAAKGQE2HMGFAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161026165753.GC25322-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b0022fad-a96e-86d4-71ba-2b803e5421fe-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 27, 2016 at 12:57 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Oct 03, 2016 at 07:07:54PM +0800, Chen-Yu Tsai wrote:
+On 10/24/2016 06:58 AM, Sekhar Nori wrote:
+> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
+>> This adds a device tree definition file for LEGO MINDSTORMS EV3.
 >
->> While DAPM is mono or single channel, its controls can be shared between
->> widgets, such as sharing one stereo mixer control between the left and
->> right channel widgets.
+> Thanks for the patch!
 >
->> This patch introduces support for such shared mixer controls.
+>>
+>> What is working:
+>>
+>> * Pin muxing
+>> * MicroSD card reader
+>> * UART on input port 1
+>>
+>> What is partially working:
+>>
+>> * Buttons - working after GPIO fix
+>> * LEDs - working after GPIO fix
+>> * Poweroff/reset - working after GPIO fix
 >
-> Based on this changelog I'm really not sure what the intended semantic
-> of this change is which makes it difficult to review.  What are you
-> expecting these controls to look like and how are you expecting them to
-> work?
+> Is the GPIO fix something that will go in v4.9-rc cycle ?
 >
->> -static void dapm_set_mixer_path_status(struct snd_soc_dapm_path *p, int i)
->> +static void dapm_set_mixer_path_status(struct snd_soc_dapm_path *p, int i,
->> +                                    int nth_path)
->
-> It looks like the goal is to attach more than one path to a single
-> control somehow?
 
-Correct. I'll try to expand the commit log and add an example diagram.
+FYI, the fix is in linux-gpio/fixes now.
 
-ChenYu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
