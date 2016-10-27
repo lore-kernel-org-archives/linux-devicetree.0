@@ -1,87 +1,179 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH] i2c: rk3x: Give the tuning value 0 during
- rk3x_i2c_v0_calc_timings
-Date: Thu, 27 Oct 2016 15:11:21 +0200
-Message-ID: <20161027131121.GB1559@tetsubishi>
-References: <1477125822-30644-1-git-send-email-david.wu@rock-chips.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: Add TI SCI PM Domains
+Date: Thu, 27 Oct 2016 08:15:53 -0500
+Message-ID: <5811FE09.8000006@ti.com>
+References: <20161019203347.17893-1-d-gerlach@ti.com>
+ <20161019203347.17893-3-d-gerlach@ti.com> <7heg39pmgb.fsf@baylibre.com>
+ <7f4754bb-7ded-6ce3-9558-a45b0d2b3888@ti.com> <7h1sz51y3p.fsf@baylibre.com>
+ <CAL_JsqJvm8+L0-pFQRQGYhvSzvqubWsBp8Q5kU-BPSiDmMau0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5881455956383642301=="
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1477125822-30644-1-git-send-email-david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqJvm8+L0-pFQRQGYhvSzvqubWsBp8Q5kU-BPSiDmMau0A@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, Jon Hunter <jonathanh@nvidia.com>
+Cc: Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Keerthy <j-keerthy@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
++Jon
+On 10/26/2016 04:59 PM, Rob Herring wrote:
+> On Mon, Oct 24, 2016 at 12:00 PM, Kevin Hilman <khilman@baylibre.com> wrote:
+>> Dave Gerlach <d-gerlach@ti.com> writes:
+>>
+>>> Hi,
+>>> On 10/21/2016 01:48 PM, Kevin Hilman wrote:
+>>>> Dave Gerlach <d-gerlach@ti.com> writes:
+>>>>
+>>>>> Add a generic power domain implementation, TI SCI PM Domains, that
+>>>>> will hook into the genpd framework and allow the TI SCI protocol to
+>>>>> control device power states.
+>>>>>
+>>>>> Also, provide macros representing each device index as understood
+>>>>> by TI SCI to be used in the device node power-domain references.
+>>>>> These are identifiers for the K2G devices managed by the PMMC.
+>>>>>
+>>>>> Signed-off-by: Nishanth Menon <nm@ti.com>
+>>>>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+>>>>> ---
+>>>>>  .../devicetree/bindings/soc/ti/sci-pm-domain.txt   | 54 +++++++++++++
+>>>>>  MAINTAINERS                                        |  2 +
+>>>>>  include/dt-bindings/genpd/k2g.h                    | 90 ++++++++++++++++++++++
+>>>>>  3 files changed, 146 insertions(+)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>>>>>  create mode 100644 include/dt-bindings/genpd/k2g.h
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>>>>> new file mode 100644
+>>>>> index 000000000000..32f38a349656
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>>>>> @@ -0,0 +1,54 @@
+>>>>> +Texas Instruments TI-SCI Generic Power Domain
+>>>>> +---------------------------------------------
+>>>>> +
+>>>>> +Some TI SoCs contain a system controller (like the PMMC, etc...) that is
+>>>>> +responsible for controlling the state of the IPs that are present.
+>>>>> +Communication between the host processor running an OS and the system
+>>>>> +controller happens through a protocol known as TI-SCI [1]. This pm domain
+>>>>> +implementation plugs into the generic pm domain framework and makes use of
+>>>>> +the TI SCI protocol power on and off each device when needed.
+>>>>> +
+>>>>> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+>>>>> +
+>>>>> +PM Domain Node
+>>>>> +==============
+>>>>> +The PM domain node represents the global PM domain managed by the PMMC,
+>>>>> +which in this case is the single implementation as documented by the generic
+>>>>> +PM domain bindings in Documentation/devicetree/bindings/power/power_domain.txt.
+>>>>> +
+>>>>> +Required Properties:
+>>>>> +--------------------
+>>>>> +- compatible: should be "ti,sci-pm-domain"
+>>>>> +- #power-domain-cells: Must be 0.
+>>>>> +- ti,sci: Phandle to the TI SCI device to use for managing the devices.
+>>>>>
+>>>>> +Example:
+>>>>> +--------------------
+>>>>> +k2g_pds: k2g_pds {
+>>>>
+>>>> should use generic name like "power-contoller", e.g. k2g_pds: power-controller
+>>>
+>>> Ok, that makes more sense.
+>>>
+>>>>
+>>>>> +        compatible = "ti,sci-pm-domain";
+>>>>> +        #power-domain-cells = <0>;
+>>>>> +        ti,sci = <&pmmc>;
+>>>>> +};
+>>>>> +
+>>>>> +PM Domain Consumers
+>>>>> +===================
+>>>>> +Hardware blocks that require SCI control over their state must provide
+>>>>> +a reference to the sci-pm-domain they are part of and a unique device
+>>>>> +specific ID that identifies the device.
+>>>>> +
+>>>>> +Required Properties:
+>>>>> +--------------------
+>>>>> +- power-domains: phandle pointing to the corresponding PM domain node.
+>>>>> +- ti,sci-id: index representing the device id to be passed oevr SCI to
+>>>>> +        be used for device control.
+>>>>
+>>>> This ID doesn't look right.
+>>>>
+>>>> Why not use #power-domain-cells = <1> and pass the index in the DT? ...
+> 
+> Exactly. ti,sci-id is a NAK for me.
 
---===============5881455956383642301==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
-Content-Disposition: inline
+I was told not to use the onecell during v1 discussion. I agree this would be
+ideal but I cannot due to what the bindings represent, the phandle parameter is
+an index into a list of genpds, whereas we need an actual ID number we can use
+and I do not have the ability to get that from the phandle.
 
+@Ulf/Jon, is there any hope of bringing back custom xlate functions for genpd
+providers? I don't have a good background on why it was even removed. I can
+maintain a single genpd for all devices but I need a way to parse this ID,
+whether it's from a separate property or a phandle. It is locked now to indexing
+into a list of genpds but I need additional per device information for devices
+bound to a genpd and I need either a custom parameter or the ability to parse
+the phandle myself.
 
---oLBj+sq0vYjzfsbl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+>>>>
+>>>>> +See dt-bindings/genpd/k2g.h for the list of valid identifiers for k2g.
+>>>>> +
+>>>>> +Example:
+>>>>> +--------------------
+>>>>> +uart0: serial@02530c00 {
+>>>>> +   compatible = "ns16550a";
+>>>>> +   ...
+>>>>> +   power-domains = <&k2g_pds>;
+>>>>> +   ti,sci-id = <K2G_DEV_UART0>;
+>>>>
+>>>> ... like this:
+>>>>
+>>>>      power-domains = <&k2g_pds K2G_DEV_UART0>;
+>>>
+>>> That's how I did it in version one actually. I was able to define my
+>>> own xlate function to parse the phandle and get that index, but Ulf
+>>> pointed me to this series by Jon Hunter [1] that simplified genpd
+>>> providers and dropped the concept of adding your own xlate. This locks
+>>> the onecell approach to using a fixed static array of genpds that get
+>>> indexed into (without passing the index to the provider, just the
+>>> genpd that's looked up), which doesn't fit our usecase, as we don't
+>>> want a 1 to 1 genpd to device mapping based on the comments provided
+>>> in v1. Now we just use the genpd device attach/detach hooks to parse
+>>> the sci-id and then use it in the genpd device start/stop hooks.
+> 
+> I have no idea what any of this means. All sounds like driver
+> architecture, not anything to do with bindings.
 
-On Sat, Oct 22, 2016 at 04:43:42PM +0800, David Wu wrote:
-> We found a bug that i2c transfer sometimes failed on 3066a board with
-> stabel-4.8, the con register would be updated by uninitialized tuning
-> value, it made the i2c transfer failed.
->=20
-> So give the tuning value to be zero during rk3x_i2c_v0_calc_timings.
->=20
-> Signed-off-by: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+This was a response to Kevin, not part of binding description.
 
-What I missed to say in my review:
+> 
+>>
+>> Ah, right.  I remember now.  This approach allows you to use a single
+>> genpd as discussed earlier.
+>>
+>> Makes sense now, suggestion retracted.
+> 
+> IIRC, the bindings in Jon's case had a node for each domain and didn't
+> need any additional property.
 
-Please use a subject line that describes WHY the change is needed not so
-much WHAT is done. Like: "fix missing initialization causing boot
-problems"
+Yes but we only have one domain and index into it, not into a list of domains,
+so the additional property is solving a different problem.
 
+Regards,
+Dave
 
---oLBj+sq0vYjzfsbl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJYEfz5AAoJEBQN5MwUoCm2K1YP/jsZyYSzW44vvUAOF4LzjrlO
-HNEKroLkxHQGCxHO3NqM4hqT9v0bTDQ07D6YjrgdzNBvg1/GohD+17ggjjAaRhOa
-zHIDz4Gfclmi25y4CfD5IzMGhOXwrEQLiKxBQFBuLPMHhx5xeLY676B+WqnO+W3v
-QFkiSJXvpqB6yKBMcQuNUxSNiUkcgUMr9UI+1vd1EQbtHyLzsc6WKzabRPPQgkTX
-yULWqzJ5iy8tNxkufu2UZCZWhTC68f/fDCo2f11qW8Xwnb16ZFb7AlqzKQXINAvt
-txuMFi0n/Lkqk+SaAZ/wbjtdWHprIGUenM1nOXf8y0lg60xbtEYMLg6lmLs0V1Eg
-RRE/oz6eHDmhw67dwYnVhccBawfJygE1mRxB1t2neSAMUXIhK/unVqmcXp6bXRgD
-hdsRUw0NBu98/1FvXMtorYECCLl/8CYqJ9oHM6NbIjeQf4MVfIMf8f+bz4X6o5UG
-ztZuNIkT88WuIuzkt09QxIa9BdhSXl4srBnb1eIHcteJwVfbmwBfzMo/Y+jzsK3X
-A38i7J40IMMzbL3kd8NiS07jD/5M6cTXJRhc1jpT18rBEWuTVo/9Z/0GY7cU//cP
-hjeBDbGxCCGgoIYfoc44IFL4OUsdkj1/G817VSnSoaZtwIEMuTT0APyr8xHaAf5P
-JPuOOgtdOKeVKvFVZOzv
-=extK
------END PGP SIGNATURE-----
-
---oLBj+sq0vYjzfsbl--
-
-
---===============5881455956383642301==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Linux-rockchip mailing list
-Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
---===============5881455956383642301==--
+> 
+> Rob
+> 
