@@ -1,71 +1,75 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/6] dt/bindings: adjust bindings for Layerscape SCFG MSI
-Date: Thu, 27 Oct 2016 15:18:54 +0100
-Message-ID: <20161027141826.GC30535@leverpostej>
-References: <1477398945-22774-1-git-send-email-Minghuan.Lian@nxp.com>
- <20161026103101.GC19965@leverpostej>
- <DB4PR04MB07813D4DA5D5567229394A7D8FAB0@DB4PR04MB0781.eurprd04.prod.outlook.com>
+From: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v12 5/5] Input: goodix - add support for gt9157
+Date: Thu, 27 Oct 2016 15:44:43 +0200
+Message-ID: <1477575883.2458.24.camel@hadess.net>
+References: <1473530257-7495-1-git-send-email-irina.tirdea@intel.com>
+         <1473530257-7495-6-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <DB4PR04MB07813D4DA5D5567229394A7D8FAB0@DB4PR04MB0781.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leo Li <leoyang.li@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "M.H. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Scott Wood <scott.wood@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473530257-7495-6-git-send-email-irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Octavian Purdila <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 26, 2016 at 10:09:07PM +0000, Leo Li wrote:
+On Sat, 2016-09-10 at 20:57 +0300, Irina Tirdea wrote:
+> Goodix touchscreen GT9157 has the same basic functionality
+> as GT911 touchscreen. This is based on Goodix datasheets
+> for GT911 and GT9157 and on Goodix driver gt9xx.c for
+> Android (publicly available in Android kernel trees for
+> various devices).
 > 
-> > -----Original Message-----
-> > From: Mark Rutland [mailto:mark.rutland@arm.com]
-> > Sent: Wednesday, October 26, 2016 5:31 AM
-> > To: M.H. Lian <minghuan.lian@nxp.com>
-> > Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> > devicetree@vger.kernel.org; Marc Zyngier <marc.zyngier@arm.com>; Stuart
-> > Yoder <stuart.yoder@nxp.com>; Leo Li <leoyang.li@nxp.com>; Scott Wood
-> > <scott.wood@nxp.com>; Shawn Guo <shawnguo@kernel.org>; Mingkai Hu
-> > <mingkai.hu@nxp.com>
-> > Subject: Re: [PATCH 1/6] dt/bindings: adjust bindings for Layerscape SCFG MSI
-> > 
-> > On Tue, Oct 25, 2016 at 08:35:40PM +0800, Minghuan Lian wrote:
+> Signed-off-by: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 
-> > > -- compatible: should be "fsl,<soc-name>-msi" to identify
-> > > -	      Layerscape PCIe MSI controller block such as:
-> > > -              "fsl,1s1021a-msi"
-> > > -              "fsl,1s1043a-msi"
-> > > +- compatible: should be "fsl,ls-scfg-msi"
-> > 
-> > This breaks old DTBs, and throws away information which you describe above as
-> > valuable. So another NAK for that.
+Looks obviously correct.
+
+Reviewed-by: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
+
+> ---
+>  Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
+>  drivers/input/touchscreen/goodix.c                             | 2
+> ++
+>  2 files changed, 3 insertions(+)
 > 
-> I agree with you that we should maintain the backward compatibility.
-> But on the other hand, I just found that there is a silly typo in the
-> original binding that "ls" is wrongly spelled as "1s" and they look
-> too close to be noticed in previous patch reviews.  :(
-
-Sure, that's annoying, but we're stuck with it.
-
-> The driver and all the DTSes used the binding with the typo which
-> covered up the problem.  So even if we want to keep the
-> "fsl,<soc-name>-msi" binding, we probably want to fix the typo, right?
-> And that breaks the backward compatibility too.
-
-Regardless of what we do, we should *not* break compatibility. The old
-strings must remain.
-
-However, we can *add* correctly-spelt variants, and mark the existing
-strings as deprecated (in both the binding and driver). The in-kernel
-dts can be updated to use the correctly-spelt strings.
-
-Thanks,
-Mark.
+> diff --git
+> a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> index ef5f42d..421b7d5 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> @@ -5,6 +5,7 @@ Required properties:
+>   - compatible		: Should be "goodix,gt911"
+>  				 or "goodix,gt9110"
+>  				 or "goodix,gt912"
+> +				 or "goodix,gt9157"
+>  				 or "goodix,gt927"
+>  				 or "goodix,gt9271"
+>  				 or "goodix,gt928"
+> diff --git a/drivers/input/touchscreen/goodix.c
+> b/drivers/input/touchscreen/goodix.c
+> index 6fba804..bd4dd4b 100644
+> --- a/drivers/input/touchscreen/goodix.c
+> +++ b/drivers/input/touchscreen/goodix.c
+> @@ -192,6 +192,7 @@ static int goodix_get_cfg_len(u16 id)
+>  	case 911:
+>  	case 9271:
+>  	case 9110:
+> +	case 9157:
+>  	case 927:
+>  	case 928:
+>  		return GOODIX_CONFIG_911_LENGTH;
+> @@ -1168,6 +1169,7 @@ static const struct of_device_id
+> goodix_of_match[] = {
+>  	{ .compatible = "goodix,gt911" },
+>  	{ .compatible = "goodix,gt9110" },
+>  	{ .compatible = "goodix,gt912" },
+> +	{ .compatible = "goodix,gt9157" },
+>  	{ .compatible = "goodix,gt927" },
+>  	{ .compatible = "goodix,gt9271" },
+>  	{ .compatible = "goodix,gt928" },
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
