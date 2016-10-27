@@ -1,53 +1,66 @@
-From: Jagan Teki <jagan@openedev.com>
-Subject: Re: [PATCH v8 0/3] ARM: dts: imx6q: Add Engicam i.CoreM6 dts
-Date: Thu, 27 Oct 2016 14:17:19 +0530
-Message-ID: <CAD6G_RRHcyyJ-ibB1yazrOaDGndPLmJWXqXgC=r=2W7Ya0fmrw@mail.gmail.com>
-References: <1477037153-20484-1-git-send-email-jteki@openedev.com>
+From: Meng Yi <meng.yi@nxp.com>
+Subject: RE: [PATCH v5] drm/fsl-dcu: Implement gamma_lut atomic crtc properties
+Date: Thu, 27 Oct 2016 02:49:56 +0000
+Message-ID: <DB6PR0401MB26311824F8D78FEF1A0BAD94ECAA0@DB6PR0401MB2631.eurprd04.prod.outlook.com>
+References: <1475051069-24452-1-git-send-email-meng.yi@nxp.com>
+ <f539ebe1fe2086d67e74e5b7e8ce2e6a@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1477037153-20484-1-git-send-email-jteki@openedev.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <f539ebe1fe2086d67e74e5b7e8ce2e6a@agner.ch>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stefan Agner <stefan@agner.ch>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
-
-On Fri, Oct 21, 2016 at 1:35 PM, Jagan Teki <jteki@openedev.com> wrote:
-> From: Jagan Teki <jagan@amarulasolutions.com>
->
-> This is series add dts support for Engicam I.Core M6 qdl modules. just
-> rebased on top of linux-next.
->
-> Jagan Teki (3):
->   ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual initial support
->   ARM: dts: imx6q: Add Engicam i.CoreM6 DualLite/Solo initial support
->   ARM: dts: imx6qdl-icore: Add FEC support
->
->  arch/arm/boot/dts/Makefile           |   2 +
->  arch/arm/boot/dts/imx6dl-icore.dts   |  59 ++++++++
->  arch/arm/boot/dts/imx6q-icore.dts    |  59 ++++++++
->  arch/arm/boot/dts/imx6qdl-icore.dtsi | 265 +++++++++++++++++++++++++++++++++++
->  4 files changed, 385 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6dl-icore.dts
->  create mode 100644 arch/arm/boot/dts/imx6q-icore.dts
->  create mode 100644 arch/arm/boot/dts/imx6qdl-icore.dtsi
-
-Please let me know if you have any inputs on this?
-
-thanks!
--- 
-Jagan Teki
-Free Software Engineer | www.openedev.com
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
+PiBTdWJqZWN0OiBSZTogW1BBVENIIHY1XSBkcm0vZnNsLWRjdTogSW1wbGVtZW50IGdhbW1hX2x1
+dCBhdG9taWMgY3J0Ywo+IHByb3BlcnRpZXMKPiAKPiBPbiAyMDE2LTA5LTI4IDAxOjI0LCBNZW5n
+IFlpIHdyb3RlOgo+ID4gR2FtbWEgY29ycmVjdGlvbiBpcyBvcHRpb25hbCBhbmQgY2FuIGJlIHVz
+ZWQgdG8gYWRqdXN0IHRoZSBjb2xvcgo+ID4gb3V0cHV0IHZhbHVlcyB0byBtYXRjaCB0aGUgZ2Ft
+dXQgb2YgYSBwYXJ0aWN1bGFyIFRGVCBMQ0QgcGFuZWwKPiA+Cj4gPiBTcGxpdCB0aGUgRENVIHJl
+Z3MgaW50byAicmVncyIsICJwYWxldHRlIiwgImdhbW1hIiBhbmQgImN1cnNvciIuCj4gPiBDcmVh
+dGUgYSBzZWNvbmQgcmVnbWFwIGZvciBnYW1tYSBtZW1vcnkgc3BhY2UgdXNpbmcgbGl0dGxlIGVu
+ZGlhbi4KPiA+IFRoZSByZWdpc3RlcnMgYWZ0ZXIgdGhlIGZpcnN0IGFkZHJlc3Mgc3BhY2UgYXJl
+IG5vdCBhY2Nlc3NlZCB5ZXQsCj4gPiBoZW5jZSBuZXcgZGV2aWNlIHRyZWVzIHdvdWxkIGV2ZW4g
+d29yayB3aXRoIG9sZCBrZXJuZWxzLiBKdXN0IG5ldwo+ID4ga2VybmVsIG5lZWQgdGhlIG5ldyBm
+b3JtYXQgc28gd2UgY2FuIGFjY2VzcyB0aGUgc2VwYXJhdGUgZ2FtbWEgcmVnCj4gPiBzcGFjZS4K
+PiA+Cj4gPiBTdWdnZXN0ZWQtYnk6IFN0ZWZhbiBBZ25lciA8c3RlZmFuQGFnbmVyLmNoPgo+ID4g
+U2lnbmVkLW9mZi1ieTogTWVuZyBZaSA8bWVuZy55aUBueHAuY29tPgo+ID4gLS0tCj4gPiBDaGFu
+Z2VzIHNpbmNlIFYxOgo+ID4gLWNyZWF0ZWQgYSBzZWNvbmQgcmVnbWFwIGZvciBnYW1tYQo+ID4g
+LXVwZGF0ZWQgdGhlIERDVSBEVCBiaW5kaW5nCj4gPiAtcmVtb3ZlZCBLY29uZmlnIGZvciBnYW1t
+YSBhbmQgZW5hYmxlIGdhbW1hIHdoZW4gdmFsaWQgZGF0YSBmaWxsZWQuCj4gPiAtZXh0ZW5kZWQg
+YW5kIHNpbXBsaWZpZWQgY29tbWVudCBsaW5lcy4KPiA+IC0tLQo+ID4gIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGRjdS50eHQgICAgICAgIHwgMTIgKysrKysrKy0KPiA+ICBk
+cml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9jcnRjLmMgICAgICAgICB8IDMzCj4g
+KysrKysrKysrKysrKysrKysrKysKPiA+ICBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1
+X2RybV9kcnYuYyAgICAgICAgICB8IDM1Cj4gKysrKysrKysrKysrKysrKysrKysrLQo+ID4gIGRy
+aXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5oICAgICAgICAgIHwgIDcgKysr
+KysKPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDg1IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
+Cj4gPgo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L2ZzbCxkY3UudHh0Cj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2ZzbCxkY3UudHh0Cj4gPiBpbmRleCA2M2VjMmE2Li44MTQwYjVkIDEwMDY0NAo+
+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGRj
+dS50eHQKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2ZzbCxkY3UudHh0Cj4gPiBAQCAtNiw2ICs2LDEyIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4g
+PiAgCSogImZzbCx2ZjYxMC1kY3UiLgo+ID4KPiA+ICAtIHJlZzoJCQlBZGRyZXNzIGFuZCBsZW5n
+dGggb2YgdGhlIHJlZ2lzdGVyIHNldCBmb3IgZGN1Lgo+ID4gKwkJCU11c3QgY29udGFpbiBmb3Vy
+IGFkZHJlc3MvbGVuZ3RoIHR1cGxlczoKPiA+ICsJCQkxLiBSZWdpc3RlciBhZGRyZXNzIHNwYWNl
+Cj4gPiArCQkJMi4gUGFsZXR0ZS9UaWxlIGFkZHJlc3Mgc3BhY2UKPiA+ICsJCQkzLiBHYW1tYSBh
+ZGRyZXNzIHNwYWNlCj4gPiArCQkJNC4gQ3Vyc29yIGFkZHJlc3Mgc3BhY2UKPiA+ICstIHJlZy1u
+YW1lczoJCVNob3VsZCBiZSAicmVncyIsICJwYWxldHRlIiwgImdhbW1hIiBhbmQKPiAiY3Vyc29y
+Igo+IAo+IExvb2tzIGdvb2QgdG8gbWUsIGRldmljZSB0cmVlIGZvbGtzPwo+IAo+IC0tCj4gU3Rl
+ZmFuCj4gCgpUZXN0ZWQtYnk6IE1lbmcgWWkgPG1lbmcueWlAbnhwLmNvbT4KCk9uIExTMTAyMUEt
+VFdSIGJvYXJkLgoKTWVuZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
