@@ -1,120 +1,415 @@
-From: "Y.B. Lu" <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [v12, 5/8] soc: fsl: add GUTS driver for QorIQ platforms
-Date: Thu, 27 Oct 2016 04:34:06 +0000
-Message-ID: <DB6PR0401MB25362658D117DF4D7B92FD48F8AA0@DB6PR0401MB2536.eurprd04.prod.outlook.com>
-References: <1474441040-11946-1-git-send-email-yangbo.lu@nxp.com>
-	<1474441040-11946-6-git-send-email-yangbo.lu@nxp.com>
-	<1477501566.6812.9.camel@buserror.net>
+From: Michael Scott <michael.scott@linaro.org>
+Subject: Re: [PATCH 5/6] arm64: dts: msm8994 SoC and Huawei Angler (Nexus 6P)
+ support
+Date: Wed, 26 Oct 2016 22:33:24 -0700
+Message-ID: <7baff11c-90b0-e1bd-a4fd-05def9444648@linaro.org>
+References: <1477394221-30963-1-git-send-email-jeremymc@redhat.com>
+ <1477394221-30963-6-git-send-email-jeremymc@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1477501566.6812.9.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>, "X.B. Xie" <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "M.H. Lian" <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>"linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <l>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1477394221-30963-6-git-send-email-jeremymc@redhat.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh@kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, arnd@arndb.de, bjorn.andersson@linaro.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2NvdHQsDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTY290
-dCBXb29kIFttYWlsdG86b3NzQGJ1c2Vycm9yLm5ldF0NCj4gU2VudDogVGh1cnNkYXksIE9jdG9i
-ZXIgMjcsIDIwMTYgMTowNiBBTQ0KPiBUbzogWS5CLiBMdTsgbGludXgtbW1jQHZnZXIua2VybmVs
-Lm9yZzsgdWxmLmhhbnNzb25AbGluYXJvLm9yZzsgQXJuZA0KPiBCZXJnbWFubg0KPiBDYzogbGlu
-dXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBs
-aW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC0NCj4gY2xrQHZnZXIua2VybmVsLm9yZzsgbGludXgtaTJjQHZn
-ZXIua2VybmVsLm9yZzsgaW9tbXVAbGlzdHMubGludXgtDQo+IGZvdW5kYXRpb24ub3JnOyBuZXRk
-ZXZAdmdlci5rZXJuZWwub3JnOyBNYXJrIFJ1dGxhbmQ7IFJvYiBIZXJyaW5nOw0KPiBSdXNzZWxs
-IEtpbmc7IEpvY2hlbiBGcmllZHJpY2g7IEpvZXJnIFJvZWRlbDsgQ2xhdWRpdSBNYW5vaWw7IEJo
-dXBlc2gNCj4gU2hhcm1hOyBRaWFuZyBaaGFvOyBLdW1hciBHYWxhOyBTYW50b3NoIFNoaWxpbWth
-cjsgTGVvIExpOyBYLkIuIFhpZTsgTS5ILg0KPiBMaWFuDQo+IFN1YmplY3Q6IFJlOiBbdjEyLCA1
-LzhdIHNvYzogZnNsOiBhZGQgR1VUUyBkcml2ZXIgZm9yIFFvcklRIHBsYXRmb3Jtcw0KPiANCj4g
-T24gV2VkLCAyMDE2LTA5LTIxIGF0IDE0OjU3ICswODAwLCBZYW5nYm8gTHUgd3JvdGU6DQo+ID4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL2ZzbC9LY29uZmlnIGIvZHJpdmVycy9zb2MvZnNsL0tj
-b25maWcgbmV3DQo+ID4gZmlsZSBtb2RlIDEwMDY0NCBpbmRleCAwMDAwMDAwLi5iOTk3NjRjDQo+
-ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2RyaXZlcnMvc29jL2ZzbC9LY29uZmlnDQo+ID4g
-QEAgLTAsMCArMSwxOSBAQA0KPiA+ICsjDQo+ID4gKyMgRnJlZXNjYWxlIFNPQyBkcml2ZXJzDQo+
-ID4gKyMNCj4gPiArDQo+ID4gK3NvdXJjZSAiZHJpdmVycy9zb2MvZnNsL3FlL0tjb25maWciDQo+
-ID4gKw0KPiA+ICtjb25maWcgRlNMX0dVVFMNCj4gPiArCWJvb2wgIkZyZWVzY2FsZSBRb3JJUSBH
-VVRTIGRyaXZlciINCj4gPiArCXNlbGVjdCBTT0NfQlVTDQo+ID4gKwloZWxwDQo+ID4gKwnCoMKg
-VGhlIGdsb2JhbCB1dGlsaXRpZXMgYmxvY2sgY29udHJvbHMgcG93ZXIgbWFuYWdlbWVudCwgSS9P
-IGRldmljZQ0KPiA+ICsJwqDCoGVuYWJsaW5nLCBwb3dlci1vbnJlc2V0KFBPUikgY29uZmlndXJh
-dGlvbiBtb25pdG9yaW5nLCBhbHRlcm5hdGUNCj4gPiArCcKgwqBmdW5jdGlvbiBzZWxlY3Rpb24g
-Zm9yIG11bHRpcGxleGVkIHNpZ25hbHMsYW5kIGNsb2NrIGNvbnRyb2wuDQo+ID4gKwnCoMKgVGhp
-cyBkcml2ZXIgaXMgdG8gbWFuYWdlIGFuZCBhY2Nlc3MgZ2xvYmFsIHV0aWxpdGllcyBibG9jay4N
-Cj4gPiArCcKgwqBJbml0aWFsbHkgb25seSByZWFkaW5nIFNWUiBhbmQgcmVnaXN0ZXJpbmcgc29j
-IGRldmljZSBhcmUNCj4gPiBzdXBwb3J0ZWQuDQo+ID4gKwnCoMKgT3RoZXIgZ3V0cyBhY2Nlc3Nl
-cywgc3VjaCBhcyByZWFkaW5nIFJDVywgc2hvdWxkIGV2ZW50dWFsbHkgYmUNCj4gPiBtb3ZlZA0K
-PiA+ICsJwqDCoGludG8gdGhpcyBkcml2ZXIgYXMgd2VsbC4NCj4gPiArDQo+ID4gKwnCoMKgSWYg
-eW91IHdhbnQgR1VUUyBkcml2ZXIgc3VwcG9ydCwgeW91IHNob3VsZCBzYXkgWSBoZXJlLg0KPiAN
-Cj4gVGhpcyBpcyB1c2VyLWVuYWJsYWJsZSB3aXRob3V0IGRlcGVuZGVuY2llcywgd2hpY2ggbWVh
-bnMgaXQgd2lsbCBicmVhaw0KPiBzb21lIHJhbmRjb25maWdzLiDCoElmIHRoaXMgaXMgdG8gYmUg
-ZW5hYmxlZCB2aWEgc2VsZWN0IHRoZW4gcmVtb3ZlIHRoZQ0KPiB0ZXh0IGFmdGVyICJib29sIi4N
-Cg0KW0x1IFlhbmdiby1CNDcwOTNdIFdpbGwgZW5hYmxlIGl0IHZpYSBzZWxlY3QgYW5kIHJlbW92
-ZSB0ZXh0IGFmdGVyICdib29sJy4NCiANCj4gDQo+ID4gKy8qIFNvQyBkaWUgYXR0cmlidXRlIGRl
-ZmluaXRpb24gZm9yIFFvcklRIHBsYXRmb3JtICovIHN0YXRpYyBjb25zdA0KPiA+ICtzdHJ1Y3Qg
-ZnNsX3NvY19kaWVfYXR0ciBmc2xfc29jX2RpZVtdID0geyAjaWZkZWYgQ09ORklHX1BQQw0KPiA+
-ICsJLyoNCj4gPiArCcKgKiBQb3dlciBBcmNoaXRlY3R1cmUtYmFzZWQgU29DcyBUIFNlcmllcw0K
-PiA+ICsJwqAqLw0KPiA+ICsNCj4gPiArCS8qIERpZTogVDQyNDAsIFNvQzogVDQyNDAvVDQxNjAv
-VDQwODAgKi8NCj4gPiArCXsgLmRpZQkJPSAiVDQyNDAiLA0KPiA+ICsJwqDCoC5zdnIJCT0gMHg4
-MjQwMDAwMCwNCj4gPiArCcKgwqAubWFzawkJPSAweGZmZjAwMDAwLA0KPiA+ICsJfSwNCj4gPiAr
-CS8qIERpZTogVDEwNDAsIFNvQzogVDEwNDAvVDEwMjAvVDEwNDIvVDEwMjIgKi8NCj4gPiArCXsg
-LmRpZQkJPSAiVDEwNDAiLA0KPiA+ICsJwqDCoC5zdnIJCT0gMHg4NTIwMDAwMCwNCj4gPiArCcKg
-wqAubWFzawkJPSAweGZmZjAwMDAwLA0KPiA+ICsJfSwNCj4gPiArCS8qIERpZTogVDIwODAsIFNv
-QzogVDIwODAvVDIwODEgKi8NCj4gPiArCXsgLmRpZQkJPSAiVDIwODAiLA0KPiA+ICsJwqDCoC5z
-dnIJCT0gMHg4NTMwMDAwMCwNCj4gPiArCcKgwqAubWFzawkJPSAweGZmZjAwMDAwLA0KPiA+ICsJ
-fSwNCj4gPiArCS8qIERpZTogVDEwMjQsIFNvQzogVDEwMjQvVDEwMTQvVDEwMjMvVDEwMTMgKi8N
-Cj4gPiArCXsgLmRpZQkJPSAiVDEwMjQiLA0KPiA+ICsJwqDCoC5zdnIJCT0gMHg4NTQwMDAwMCwN
-Cj4gPiArCcKgwqAubWFzawkJPSAweGZmZjAwMDAwLA0KPiA+ICsJfSwNCj4gPiArI2VuZGlmIC8q
-IENPTkZJR19QUEMgKi8NCj4gPiArI2lmIGRlZmluZWQoQ09ORklHX0FSQ0hfTVhDKSB8fCBkZWZp
-bmVkKENPTkZJR19BUkNIX0xBWUVSU0NBUEUpDQo+IA0KPiBXaWxsIHRoaXMgZHJpdmVyIGV2ZXIg
-YmUgcHJvYmVkIG9uIE1YQz8gwqBXaHkgZG8gd2UgbmVlZCB0aGVzZSBpZmRlZnMgYXQNCj4gYWxs
-Pw0KDQpbTHUgWWFuZ2JvLUI0NzA5M10gV2lsbCByZW1vdmUgdGhlbS4gSW4gdGhlIHByZXZpb3Vz
-IHZlcnNpb24sIHdlIHVzZSB0b28gbWFueSBtZW1iZXJzIGZvciBzb2MgZGVmaW5pdGlvbiwgc28g
-SSBhZGQgI2lmZGVmIGZvciBBUkNILiANCkNPTkZJR19BUkNIX01YQyB3YXMgZm9yIGxzMTAyMWEu
-DQoNCj4gDQo+IA0KPiA+ICsJLyoNCj4gPiArCcKgKiBBUk0tYmFzZWQgU29DcyBMUyBTZXJpZXMN
-Cj4gPiArCcKgKi8NCj4gPiArDQo+ID4gKwkvKiBEaWU6IExTMTA0M0EsIFNvQzogTFMxMDQzQS9M
-UzEwMjNBICovDQo+ID4gKwl7IC5kaWUJCT0gIkxTMTA0M0EiLA0KPiA+ICsJwqDCoC5zdnIJCT0g
-MHg4NzkyMDAwMCwNCj4gPiArCcKgwqAubWFzawkJPSAweGZmZmYwMDAwLA0KPiA+ICsJfSwNCj4g
-PiArCS8qIERpZTogTFMyMDgwQSwgU29DOiBMUzIwODBBL0xTMjA0MEEvTFMyMDg1QSAqLw0KPiA+
-ICsJeyAuZGllCQk9ICJMUzIwODBBIiwNCj4gPiArCcKgwqAuc3ZyCQk9IDB4ODcwMTAwMDAsDQo+
-ID4gKwnCoMKgLm1hc2sJCT0gMHhmZjNmMDAwMCwNCj4gPiArCX0sDQo+ID4gKwkvKiBEaWU6IExT
-MTA4OEEsIFNvQzogTFMxMDg4QS9MUzEwNDhBL0xTMTA4NEEvTFMxMDQ0QSAqLw0KPiA+ICsJeyAu
-ZGllCQk9ICJMUzEwODhBIiwNCj4gPiArCcKgwqAuc3ZyCQk9IDB4ODcwMzAwMDAsDQo+ID4gKwnC
-oMKgLm1hc2sJCT0gMHhmZjNmMDAwMCwNCj4gPiArCX0sDQo+ID4gKwkvKiBEaWU6IExTMTAxMkEs
-IFNvQzogTFMxMDEyQSAqLw0KPiA+ICsJeyAuZGllCQk9ICJMUzEwMTJBIiwNCj4gPiArCcKgwqAu
-c3ZyCQk9IDB4ODcwNDAwMDAsDQo+ID4gKwnCoMKgLm1hc2sJCT0gMHhmZmZmMDAwMCwNCj4gPiAr
-CX0sDQo+ID4gKwkvKiBEaWU6IExTMTA0NkEsIFNvQzogTFMxMDQ2QS9MUzEwMjZBICovDQo+ID4g
-Kwl7IC5kaWUJCT0gIkxTMTA0NkEiLA0KPiA+ICsJwqDCoC5zdnIJCT0gMHg4NzA3MDAwMCwNCj4g
-PiArCcKgwqAubWFzawkJPSAweGZmZmYwMDAwLA0KPiA+ICsJfSwNCj4gPiArCS8qIERpZTogTFMy
-MDg4QSwgU29DOiBMUzIwODhBL0xTMjA0OEEvTFMyMDg0QS9MUzIwNDRBICovDQo+ID4gKwl7IC5k
-aWUJCT0gIkxTMjA4OEEiLA0KPiA+ICsJwqDCoC5zdnIJCT0gMHg4NzA5MDAwMCwNCj4gPiArCcKg
-wqAubWFzawkJPSAweGZmM2YwMDAwLA0KPiA+ICsJfSwNCj4gPiArCS8qIERpZTogTFMxMDIxQSwg
-U29DOiBMUzEwMjFBL0xTMTAyMEEvTFMxMDIyQQ0KPiA+ICsJwqAqIE5vdGU6IFB1dCB0aGlzIGRp
-ZSBhdCB0aGUgZW5kIGluIGNhdXNlIG9mIGluY29ycmVjdA0KPiA+IGlkZW50aWZpY2F0aW9uDQo+
-ID4gKwnCoCovDQo+ID4gKwl7IC5kaWUJCT0gIkxTMTAyMUEiLA0KPiA+ICsJwqDCoC5zdnIJCT0g
-MHg4NzAwMDAwMCwNCj4gPiArCcKgwqAubWFzawkJPSAweGZmZjAwMDAwLA0KPiA+ICsJfSwNCj4g
-PiArI2VuZGlmIC8qIENPTkZJR19BUkNIX01YQyB8fCBDT05GSUdfQVJDSF9MQVlFUlNDQVBFICov
-DQo+IA0KPiBJbnN0ZWFkIG9mIHJlbHlpbmcgb24gb3JkZXJpbmcsIGFkZCBtb3JlIGJpdHMgdG8g
-dGhlIG1hc2sgc28gdGhhdCB0aGVyZSdzDQo+IG5vIG92ZXJsYXAuIMKgSSB0aGluayAweGZmZjcw
-MDAwIHdvdWxkIHdvcmsuDQoNCltMdSBZYW5nYm8tQjQ3MDkzXSBPaywgV2lsbCBkbyB0aGF0LiBU
-aGVuIHdlIGFkZCAzIGJpdHMgb2YgJ1ZhcmlvdXMgUGVyc29uYWxpdGllcycgZmllbGQgZm9yIGxz
-MTAyMWEgZGllIGlkZW50aWZpY2F0aW9uLg0KDQo+IA0KPiA+ICtvdXQ6DQo+ID4gKwlrZnJlZShz
-b2NfZGV2X2F0dHIubWFjaGluZSk7DQo+ID4gKwlrZnJlZShzb2NfZGV2X2F0dHIuZmFtaWx5KTsN
-Cj4gPiArCWtmcmVlKHNvY19kZXZfYXR0ci5zb2NfaWQpOw0KPiA+ICsJa2ZyZWUoc29jX2Rldl9h
-dHRyLnJldmlzaW9uKTsNCj4gPiArCWlvdW5tYXAoZ3V0cy0+cmVncyk7DQo+ID4gK291dF9mcmVl
-Og0KPiA+ICsJa2ZyZWUoZ3V0cyk7DQo+ID4gKwlyZXR1cm4gcmV0Ow0KPiA+ICt9DQo+IA0KPiBQ
-bGVhc2UgdXNlIGRldm0uDQoNCltMdSBZYW5nYm8tQjQ3MDkzXSBTb3JyeSBmb3IgZm9yZ2V0dGlu
-ZyB0aGlzLiBXaWxsIGRvIHRoYXQgYW5kIHNlbmQgb3V0IHRoZSBuZXcgdmVyc2lvbiBzb29uLg0K
-VGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLg0KDQo+IA0KPiAtU2NvdHQNCg0KX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KaW9tbXUgbWFpbGluZyBsaXN0Cmlv
-bW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24ub3JnCmh0dHBzOi8vbGlzdHMubGludXhmb3VuZGF0
-aW9uLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2lvbW11
+
+
+On 10/25/2016 04:17 AM, Jeremy McNicoll wrote:
+> From: Bastian Köcher <mail@kchr.de>
+>
+> Initial device tree support for Qualcomm MSM8994 SoC and
+> Huawei Angler / Google Nexus 6P support.
+>
+> The device tree is based on the Google 3.10 kernel tree.
+>
+> The device can be booted into the initrd with only one CPU running.
+>
+> Signed-off-by: Bastian Köcher <mail@kchr.de>
+> [jeremymc@redhat.com: removed Kconfig, defconfig, move from Huawei to qcom dir]
+> Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
+
+I tested this on my Nexus 6P so feel free to add my:
+
+Tested-by: Michael Scott <michael.scott@linaro.org>
+
+- Mike
+
+> ---
+>   arch/arm64/boot/dts/qcom/Makefile                  |   1 +
+>   .../arm64/boot/dts/qcom/msm8994-angler-rev-101.dts |  40 ++++
+>   arch/arm64/boot/dts/qcom/msm8994-pins.dtsi         |  38 ++++
+>   arch/arm64/boot/dts/qcom/msm8994-v2.0.dtsi         |  32 +++
+>   arch/arm64/boot/dts/qcom/msm8994.dtsi              | 218 +++++++++++++++++++++
+>   5 files changed, 329 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+>   create mode 100644 arch/arm64/boot/dts/qcom/msm8994-pins.dtsi
+>   create mode 100644 arch/arm64/boot/dts/qcom/msm8994-v2.0.dtsi
+>   create mode 100644 arch/arm64/boot/dts/qcom/msm8994.dtsi
+>
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 439e40e..cc0f02d 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+>   
+>   always		:= $(dtb-y)
+> diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> new file mode 100644
+> index 0000000..2fc68c4
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> @@ -0,0 +1,40 @@
+> +/* Copyright (c) 2015, Huawei Inc. All rights reserved.
+> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "msm8994-v2.0.dtsi"
+> +
+> +/ {
+> +	model = "HUAWEI MSM8994 ANGLER rev-1.01";
+> +	compatible = "qcom,msm8994";
+> +	/* required for bootloader to select correct board */
+> +	qcom,board-id = <8026 0>;
+> +
+> +	aliases {
+> +		serial0 = &blsp1_uart2;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	soc {
+> +		serial@f991e000 {
+> +			status = "okay";
+> +			pinctrl-names = "default", "sleep";
+> +			pinctrl-0 = <&blsp1_uart2_default>;
+> +			pinctrl-1 = <&blsp1_uart2_sleep>;
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/msm8994-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8994-pins.dtsi
+> new file mode 100644
+> index 0000000..0e4eea0
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/msm8994-pins.dtsi
+> @@ -0,0 +1,38 @@
+> +/*
+> + * Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +&msmgpio {
+> +	blsp1_uart2_default: blsp1_uart2_default {
+> +		pinmux {
+> +			function = "blsp_uart2";
+> +			pins = "gpio4", "gpio5";
+> +		};
+> +		pinconf {
+> +			pins = "gpio4", "gpio5";
+> +			drive-strength = <16>;
+> +			bias-disable;
+> +		};
+> +	};
+> +
+> +	blsp1_uart2_sleep: blsp1_uart2_sleep {
+> +		pinmux {
+> +			function = "gpio";
+> +			pins = "gpio4", "gpio5";
+> +		};
+> +		pinconf {
+> +			pins = "gpio4", "gpio5";
+> +			drive-strength = <2>;
+> +			bias-pull-down;
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/msm8994-v2.0.dtsi b/arch/arm64/boot/dts/qcom/msm8994-v2.0.dtsi
+> new file mode 100644
+> index 0000000..639781a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/msm8994-v2.0.dtsi
+> @@ -0,0 +1,32 @@
+> +/* Copyright (c) 2014-2016, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +/*
+> + * As a general rule, only version-specific property overrides should be placed
+> + * inside this file. Device definitions should be placed inside the msm8994.dtsi
+> + * file.
+> + */
+> +
+> +#include "msm8994.dtsi"
+> +
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. MSM 8994v2.0";
+> +	compatible = "qcom,msm8994";
+> +	/* msm-id is required by bootloader for proper dt blob selection */
+> +	qcom,msm-id = <207 0x20000>;
+> +
+> +};
+> +
+> +/* Clock driver overrides */
+> +&clock_gcc {
+> +	compatible = "qcom,gcc-8994v2";
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> new file mode 100644
+> index 0000000..7efc159
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> @@ -0,0 +1,218 @@
+> +/* Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/qcom,gcc-msm8994.h>
+> +
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. MSM 8994";
+> +	compatible = "qcom,msm8994";
+> +	// msm-id and pmic-id are required by bootloader for
+> +	// proper selection of dt blob
+> +	qcom,msm-id = <207 0x0>;
+> +	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
+> +	interrupt-parent = <&intc>;
+> +
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	chosen { };
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		cpu-map {
+> +			cluster0 {
+> +				core0 {
+> +					cpu = <&CPU0>;
+> +				};
+> +			};
+> +		};
+> +
+> +		CPU0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			reg = <0x0>;
+> +			next-level-cache = <&L2_0>;
+> +			L2_0: l2-cache {
+> +			      compatible = "cache";
+> +			      cache-level = <2>;
+> +			};
+> +		};
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <1 2 0xff08>,
+> +			     <1 3 0xff08>,
+> +			     <1 4 0xff08>,
+> +			     <1 1 0xff08>;
+> +	};
+> +
+> +	soc: soc {
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0 0xffffffff>;
+> +		compatible = "simple-bus";
+> +
+> +		intc: interrupt-controller@f9000000 {
+> +			compatible = "qcom,msm-qgic2";
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			reg = <0xf9000000 0x1000>,
+> +				  <0xf9002000 0x1000>;
+> +		};
+> +
+> +		timer@f9020000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			compatible = "arm,armv7-timer-mem";
+> +			reg = <0xf9020000 0x1000>;
+> +
+> +			frame@f9021000 {
+> +				frame-number = <0>;
+> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0xf9021000 0x1000>,
+> +				      <0xf9022000 0x1000>;
+> +			};
+> +
+> +			frame@f9023000 {
+> +				frame-number = <1>;
+> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0xf9023000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@f9024000 {
+> +				frame-number = <2>;
+> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0xf9024000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@f9025000 {
+> +				frame-number = <3>;
+> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0xf9025000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@f9026000 {
+> +				frame-number = <4>;
+> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0xf9026000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@f9027000 {
+> +				frame-number = <5>;
+> +				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0xf9027000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@f9028000 {
+> +				frame-number = <6>;
+> +				interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0xf9028000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		restart@fc4ab000 {
+> +			compatible = "qcom,pshold";
+> +			reg = <0xfc4ab000 0x4>;
+> +		};
+> +
+> +		msmgpio: pinctrl@fd510000 {
+> +			compatible = "qcom,msm8994-pinctrl";
+> +			reg = <0xfd510000 0x4000>;
+> +			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +
+> +		blsp1_uart2: serial@f991e000 {
+> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+> +			reg = <0xf991e000 0x1000>;
+> +			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
+> +			status = "disabled";
+> +			clock-names = "core", "iface";
+> +			clocks = <&clock_gcc GCC_BLSP1_UART2_APPS_CLK>,
+> +				 <&clock_gcc GCC_BLSP1_AHB_CLK>;
+> +		};
+> +
+> +		tcsr_mutex_regs: syscon@fd484000 {
+> +			compatible = "syscon";
+> +			reg = <0xfd484000 0x2000>;
+> +		};
+> +
+> +		tcsr_mutex: hwlock {
+> +			compatible = "qcom,tcsr-mutex";
+> +			syscon = <&tcsr_mutex_regs 0 0x80>;
+> +			#hwlock-cells = <1>;
+> +		};
+> +
+> +		qcom,smem@6a00000 {
+> +			compatible = "qcom,smem";
+> +			memory-region = <&smem_mem>;
+> +			hwlocks = <&tcsr_mutex 3>;
+> +		};
+> +
+> +		clock_gcc: qcom,gcc@fc400000 {
+> +			compatible = "qcom,gcc-8994";
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +			#power-domain-cells = <1>;
+> +			reg = <0xfc400000 0x2000>;
+> +		};
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		// We expect the bootloader to fill in the reg
+> +		reg = <0 0 0 0>;
+> +	};
+> +
+> +	clocks {
+> +		xo_board: xo_board {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <19200000>;
+> +		};
+> +
+> +		sleep_clk: sleep_clk {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <32768>;
+> +		};
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		smem_mem: smem_region@0x6a00000 {
+> +			reg = <0x0 0x6a00000 0x0 0x200000>;
+> +			no-map;
+> +		};
+> +	};
+> +};
+> +
+> +
+> +#include "msm8994-pins.dtsi"
