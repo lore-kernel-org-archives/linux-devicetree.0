@@ -1,38 +1,48 @@
-From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 0/3] ARM: dts: am33xx: Add clock info to rtc nodes
-Date: Thu, 27 Oct 2016 11:18:05 +0530
-Message-ID: <1477547288-5041-1-git-send-email-j-keerthy@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+From: Lukasz Majewski <l.majewski@majess.pl>
+Subject: [PATCH v2 09/10] pwm: imx: doc: Update imx-pwm.txt documentation entry
+Date: Thu, 27 Oct 2016 08:33:19 +0200
+Message-ID: <1477549999-5125-1-git-send-email-l.majewski@majess.pl>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Stefan Agner <stefan@agner.ch>, Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, Fabio Estevam <festevam@gmail.com>, Lothar Wassmann <LW@karo-electronics.de>, Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>, kernel@pengutronix.de, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>
 List-Id: devicetree@vger.kernel.org
 
-The series adds the clock info to rtc node.
+The imx-pwm.txt documentation update as a preparation for polarity
+support.
 
-Boot tested and checked for rtc ticking on am335x-boneblack, am335x-bone
-am437x-gp-evm.
+Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+Signed-off-by: Lukasz Majewski <l.majewski@majess.pl>
+---
+Changes for v2:
+- New patch
+---
+ Documentation/devicetree/bindings/pwm/imx-pwm.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Keerthy (3):
-  ARM: dts: AM335X-bone-common: Add the internal and external clock
-    nodes for rtc
-  ARM: dts: AM335X-evm: Add the internal and external clock nodes for
-    rtc
-  ARM: dts: AM335X-evmsk: Add the internal and external clock nodes for
-    rtc
-
- arch/arm/boot/dts/am335x-bone-common.dtsi | 5 +++++
- arch/arm/boot/dts/am335x-evm.dts          | 5 +++++
- arch/arm/boot/dts/am335x-evmsk.dts        | 5 +++++
- arch/arm/boot/dts/am33xx.dtsi             | 2 ++
- 4 files changed, 17 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+index e00c2e9..c61bdf8 100644
+--- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
++++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+@@ -6,8 +6,8 @@ Required properties:
+   - "fsl,imx1-pwm" for PWM compatible with the one integrated on i.MX1
+   - "fsl,imx27-pwm" for PWM compatible with the one integrated on i.MX27
+ - reg: physical base address and length of the controller's registers
+-- #pwm-cells: should be 2. See pwm.txt in this directory for a description of
+-  the cells format.
++- #pwm-cells: 2 for i.MX1 and 3 for i.MX27 and newer SoCs. See pwm.txt
++  in this directory for a description of the cells format.
+ - clocks : Clock specifiers for both ipg and per clocks.
+ - clock-names : Clock names should include both "ipg" and "per"
+ See the clock consumer binding,
+@@ -17,7 +17,7 @@ See the clock consumer binding,
+ Example:
+ 
+ pwm1: pwm@53fb4000 {
+-	#pwm-cells = <2>;
++	#pwm-cells = <3>;
+ 	compatible = "fsl,imx53-pwm", "fsl,imx27-pwm";
+ 	reg = <0x53fb4000 0x4000>;
+ 	clocks = <&clks IMX5_CLK_PWM1_IPG_GATE>,
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
