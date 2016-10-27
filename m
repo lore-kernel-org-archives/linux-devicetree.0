@@ -1,87 +1,104 @@
-From: "Phani A, Rama Krishna" <rphani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V3 2/2] iio: adc: spmi-vadc: Changes to support different
- scaling
-Date: Thu, 27 Oct 2016 23:07:04 +0530
-Message-ID: <be7d758f-1698-1b6d-e6a1-a2910a914737@codeaurora.org>
-References: <1477492887-1663-1-git-send-email-rphani@codeaurora.org>
- <1477492887-1663-3-git-send-email-rphani@codeaurora.org>
- <8418e7f1-55d9-2dfa-1dc7-5960f9da0305@linaro.org>
+From: Bastien Nocera <hadess@hadess.net>
+Subject: Re: [PATCH 2/4] Input: goodix - Allow tweaking of configuration
+ file dynamically
+Date: Thu, 27 Oct 2016 19:41:23 +0200
+Message-ID: <1477590083.18960.0.camel@hadess.net>
+References: <20161020195917.20051-1-fcooper@ti.com>
+         <20161020195917.20051-3-fcooper@ti.com>
+         <1477564424.2458.9.camel@hadess.net>
+         <f3a9de30-eba6-0738-ed91-f4834f142a2c@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8418e7f1-55d9-2dfa-1dc7-5960f9da0305-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, smohanad-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sivaa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, Julia.Lawall-L2FTfq7BK8M@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f3a9de30-eba6-0738-ed91-f4834f142a2c@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>, dmitry.torokhov@gmail.com, robh+dt@kernel.org, octavian.purdila@intel.com, irina.tirdea@intel.com, merker@debian.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Stan,
+On Thu, 2016-10-27 at 11:58 -0500, Franklin S Cooper Jr wrote:
+> 
+> On 10/27/2016 05:33 AM, Bastien Nocera wrote:
+> > On Thu, 2016-10-20 at 14:59 -0500, Franklin S Cooper Jr wrote:
+> > > Some goodix touchscreen controllers don't have the correct
+> > > configuration
+> > > firmware for the display panel it is attached to. Therefore,
+> > > settings
+> > > such
+> > > as touchscreen x and y size may need to be passed in via DT and
+> > > have
+> > > the
+> > > panel reprogrammed for the updated touchscreen resolution.
+> > > 
+> > > This patchset adds support for reading the current configuration
+> > > firmware
+> > > on the panel and allowing it to be modified and rewritten back to
+> > > the
+> > > device.
+> > > 
+> > > Currently this function is unused but later patches will make use
+> > > of
+> > > it.
+> > > 
+> > > Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> > > ---
+> > >  drivers/input/touchscreen/goodix.c | 28
+> > > ++++++++++++++++++++++++++++
+> > >  1 file changed, 28 insertions(+)
+> > > 
+> > > diff --git a/drivers/input/touchscreen/goodix.c
+> > > b/drivers/input/touchscreen/goodix.c
+> > > index a43c8ca..01e12f8 100644
+> > > --- a/drivers/input/touchscreen/goodix.c
+> > > +++ b/drivers/input/touchscreen/goodix.c
+> > > @@ -478,6 +478,34 @@ static int goodix_get_gpio_config(struct
+> > > goodix_ts_data *ts)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +static void goodix_tweak_config(struct goodix_ts_data *ts)
+> > > +{
+> > > +	u8 config[GOODIX_CONFIG_MAX_LENGTH];
+> > > +	int error;
+> > > +	int raw_cfg_len;
+> > > +	u8 check_sum = 0;
+> > > +
+> > > +	raw_cfg_len = ts->cfg_len - 2;
+> > > +
+> > > +	error = goodix_i2c_read(ts->client,
+> > > GOODIX_REG_CONFIG_DATA,
+> > > +				config, ts->cfg_len);
+> > > +	if (error) {
+> > > +		dev_warn(&ts->client->dev,
+> > > +			 "Error reading config (%d), avoid
+> > > tweaking
+> > > config\n",
+> > > +			 error);
+> > > +		return;
+> > > +	}
+> > 
+> > Please add a placeholder comment here, to go along with the commit
+> > message explanation.
+> 
+> You just want a comment here stating that changes to the firmware
+> should
+> be made here?
 
-On 27-Oct-16 4:48 PM, Stanimir Varbanov wrote:
-> Hi Rama,
->
-> On 10/26/2016 05:41 PM, Rama Krishna Phani A wrote:
->> Polling can also be used for End of conversion completion. Implement logic
->> to choose either polling or interrupt for End of conversion completion.
->> Scaling can be done on the voltage to report adc code in physical units.
->> Add changes to support different scale functions to convert adc code to
->> physical units.
->>
->> Signed-off-by: Rama Krishna Phani A <rphani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  14 ++
->>  drivers/iio/adc/qcom-spmi-vadc.c                   | 263 +++++++++++++++++----
->>  2 files changed, 236 insertions(+), 41 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->> index 0fb4613..39e31c0e 100644
->> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->> @@ -37,6 +37,12 @@ VADC node:
->>      Value type: <prop-encoded-array>
->>      Definition: End of conversion interrupt.
->>
->> +- qcom,vadc-poll-eoc:
->> +    Usage: optional
->> +    Value type: <bool>
->> +    Definition: Use polling instead of interrupts for End of Conversion
->> +		completion.
->
-> Why you need to add such a flag in DT?
->
-> The DT should describe hardware details not how the driver will choose
-> pooling vs interrupt.
->
-> On which use-case you would prefer pooling?
->
+Yes, at least for this intermediary patch. You can remove in in
+subsequent patches when it's clearer that this is where things go.
 
-Few PMIC's support interrupt functionality for ADC where as few PMIC's 
-dont support. Based on the functionality that is supported in hardware 
-we choose whether to go for polling or for interrupt.
-
->> +
->>  Channel node properties:
->>
->>  - reg:
->> @@ -92,6 +98,14 @@ Channel node properties:
->>              Valid values are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
->>              If property is not found, 1 sample will be used.
->>
->> +- qcom,scale-function:
->> +    Usage: optional
->> +    Value type: <u32>
->> +    Definition: Scaling function used to convert raw ADC code to
->> +	units specific to a given channel. Scaled units can be
->> +	microvolts, millidegC.Valid values are: 0, 1, 2, 3, 4.
->> +	If property is not found, 0 scaling will be used.
->
-> This shouldn't be in DT binding. Just select the scale function for each
-> channel in the driver based on compatible property.
->
->
-Ok ., Will remove this binding from DT, implement logic in driver and 
-will post next patch.
-
-Thanks,
-Ramakrishna
+> > > +	check_sum = goodix_calculate_checksum(ts->cfg_len,
+> > > config);
+> > > +
+> > > +	config[raw_cfg_len] = check_sum;
+> > > +	config[raw_cfg_len + 1] = 1;
+> > > +
+> > > +	error = goodix_send_cfg(ts, ts->cfg_len, config);
+> > > +	if (error)
+> > > +		dev_warn(&ts->client->dev,
+> > > +			 "Error writing config (%d)\n", error);
+> > > +}
+> > >  /**
+> > >   * goodix_read_config - Read the embedded configuration of the
+> > > panel
+> > >   *
