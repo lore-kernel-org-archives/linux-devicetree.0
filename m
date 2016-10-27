@@ -1,70 +1,156 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 2/5] drivers: gpio: Add support for multiple IPs
-Date: Thu, 27 Oct 2016 10:53:37 +0300
-Message-ID: <98447580-cbc4-152e-f2cb-7c4756545479@ti.com>
-References: <1476855239-32730-1-git-send-email-j-keerthy@ti.com>
- <1476855239-32730-3-git-send-email-j-keerthy@ti.com>
- <CACRpkdbsgM-yiWpiA5G35jQR8v3FO=Me+4rhe6TzE0qsWOJ8Ew@mail.gmail.com>
- <c5c95d86-2c89-3819-725c-ee0b86c37ec0@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 0/5] Add an overlay manager to handle board capes
+Date: Thu, 27 Oct 2016 12:30:09 -0500
+Message-ID: <CAL_JsqKTMjj0x6Zq3t5GsWvAC1qN10r333v9uGXkJq_DjioRmA@mail.gmail.com>
+References: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
+ <CAL_JsqL9yWBj0yYE54XGi87YPGugGAACzr=CuW6dk5kk3EuyCA@mail.gmail.com> <4ca9db09-e52c-11ec-133b-8f193b9b7174@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <c5c95d86-2c89-3819-725c-ee0b86c37ec0@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Lokesh Vutla <lokeshvutla@ti.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4ca9db09-e52c-11ec-133b-8f193b9b7174-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Shmidt <dimitrysh-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Keerthy,
+On Thu, Oct 27, 2016 at 10:13 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi,
+>
+> On 27-10-16 15:41, Rob Herring wrote:
+>>
+>> Please Cc the maintainers of drivers/of/.
+>>
+>> + Frank R, Hans, Dmitry S
+>>
+>> On Wed, Oct 26, 2016 at 9:57 AM, Antoine Tenart
+>> <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>>>
+>>> Hi all,
+>>>
+>>> Many boards now come with dips and compatible capes; among others the
+>>> C.H.I.P, or Beaglebones. All these boards have a kernel implementing an
+>>> out-of-tree "cape manager" which is used to detected capes, retrieve
+>>> their description and apply a corresponding overlay. This series is an
+>>> attempt to start a discussion, with an implementation of such a manager
+>>> which is somehow generic (i.e. formats or cape detectors can be added).
+>>> Other use cases could make use of this manager to dynamically load dt
+>>> overlays based on some input / hw presence.
+>>
+>>
+>> I'd like to see an input source be the kernel command line and/or a DT
+>> chosen property. Another overlay manager was proposed not to long
+>> ago[1] as well. There's also the Allwinner tablet use case from Hans
+>> where i2c devices are probed and detected. That's not using overlays
+>> currently, but maybe could.
+>
+>
+> Actually I'm currently thinking in a different direction, which I
+> think will be good for the boards where some ICs are frequently
+> replaced by 2nd (and 3th and 4th) sources, rather then that we're
+> dealing with an extension connector with capes / daughter boards.
+>
+> Although there is some overlap I'm starting to think that we need to
+> treat these 2 cases differently. Let me quickly copy and paste
+> the basic idea I've for the 2nd source touchscreen / accelerometer
+> chip case:
+>
+> """
+> The kernel actually already has a detect() method in struct i2c_driver,
+> we could use that (we would need to implement it in drivers which do not
+> have it yet). Note on second thought it seems it may be better to use
+> probe() for this, see below.
+>
+> Then we could have something like this in dt:
+>
+> &i2c0 {
+>     touchscreen1: gsl1680@40 {
+>         reg = <0x40>;
+>         compatible = "silead,gsl1680";
+>         enable-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+>         status = "disabled";
+>     };
+>
+>     touchscreen2: ektf2127@15 {
+>         reg = <0x15>;
 
-On 27/10/16 06:42, Keerthy wrote:
-> 
-> 
-> On Sunday 23 October 2016 04:02 PM, Linus Walleij wrote:
->> On Wed, Oct 19, 2016 at 7:33 AM, Keerthy <j-keerthy@ti.com> wrote:
->>
->>> From: Lokesh Vutla <lokeshvutla@ti.com>
->>>
->>> Update GPIO driver to support Multiple GPIO IPs.
->>>
->>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->>> Signed-off-by: Keerthy <j-keerthy@ti.com>
->>
->> This commit message is not at all describing what the patch is doing.
->>
->> What it does is bumping the GPIO pin offset in the Linux global
->> GPIO number space with 32 for each new controller.
->>
->>> +       static int bank_base;
->>>
->>>         pdata = davinci_gpio_get_pdata(pdev);
->>>         if (!pdata) {
->>> @@ -226,7 +227,8 @@ static int davinci_gpio_probe(struct platform_device *pdev)
->>>                 chips[i].chip.direction_output = davinci_direction_out;
->>>                 chips[i].chip.set = davinci_gpio_set;
->>>
->>> -               chips[i].chip.base = base;
->>> +               chips[i].chip.base = bank_base;
->>> +               bank_base += 32;
->>
->> Why can you not rewrite the driver to pass -1 as base and
->> get a dynamic allocation of GPIO numbers instead? Then
->> you won't have this hairy problem.
-> 
-> Ok i will try that.
-> 
-> In case of k2g. There are 2 big GPIO modules GPIO0 and GPIO1.
-> GPIO0 comprises of 144 GPIOs
-> and GPIO1 has about 68 GPIOs. Wanted feedback from you on how this is being modeled.
-> 
-> I am creating a controller for every 32 GPIOs under the big module each containing a gpio_chip. Each 32 GPIOs chip has 2 banks of 16 GPIOs each.
-> Each 16 GPIO bank has an interrupt.
-> 
-> Is this modeling fine or do you think creating one chip with 144 pins and another with 68 pins is a better way?
+Do you ever have different devices with the same address? That would
+be somewhat problematic as really these should be
+"touchscreen@<addr>".
 
-If GPIO0 has 144 GPIOs, why don't we model it as a gpiochip with 144 GPIOs?
-What is the benefit of partitioning it into gpiochips of 32 GPIOs each?
+>         compatible = "elan,ektf2127";
+>         enable-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+>         status = "disabled";
+>     };
+>
+>     i2c-probe-stop-at-first-match-0 = <&touchscreen1>, <&touchscreen2>;
+>     i2c-probe-stop-at-first-match-1 = <&accelerometer1>, <&accelerometer2>;
+> }
+>
+> Which would make the i2c subsys call detect (*) on each device, until
+> a device is found. Likewise we could have a "i2c-probe-all" property
+> which also walks a list of phandles but does not stop on the first
+> match.
+>
+> ...
+>
+> *) Yes this sounds Linux specific, but it really is just "execute
+> to-be-probed
+> device compatible specific detection method"
+> """
 
-cheers,
--roger
+Yeah, not a fan of these properties at first glance. Why can't you
+just fail probe on the non-existent devices?
+
+
+> This does not 100% solve all q8 issues (see the "Add Allwinner Q8 tablets
+> hardware manager" thread), but does solve quite a bit of the use-case
+> and this matches what many vendor os-images (typically android) are
+> actually doing for these kind of boards.
+
+BTW, I've been meaning to ask you if you are looking at the Android
+side of things as well?
+
+> As for the bits this does not solve, those are mostly board specific details
+> which cannot be probed at all, and on x86 are typically solved in the device
+> driver by doing a dmi check to identify the board and then apply a board
+> specific workaround in the driver.
+>
+> I've come to believe that we should similarly delegate dealing this to
+> device
+> drivers in the devicetree case. Note that dt should still of course fully
+> describe the hardware for normal hardware, the driver would just need to
+> care
+> about weird board quirks in certain exceptions.
+
+Which is fine IMO, though I do think we should look at those cases
+carefully to ensure they stay the exception.
+
+> A more interesting problem here is that dt does not have something like
+> DMI, there is the machine compatible, but that typically does not contain
+> board revision info (where as DMI often does). I believe that this is
+> actually something which should be fixed at the bootloader level
+> have it prepend a new machine compatible which contains revision info.
+>
+> Hmm, if we make the bootloader prepend a new machine compatible which
+> contains
+> revision info, we could then trigger quirks on this and in some cases avoid
+> the need for dealing with board quirks in the driver ...
+
+That would work. Board and chip versions both need better handling in
+kernel IMO.
+
+QCom has a whole scheme around version numbering in compatible
+strings. (Unfortunately, bootloaders only support their previous way
+of doing things.)
+
+> Note this is all very specific to dealing with board (revision) variants,
+> for add-ons having the bootloader add info to the machine compatible does
+> not seem the right solution.
+
+Agreed.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
