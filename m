@@ -1,72 +1,194 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v6 5/8] DT:omap3+tsc2007: use new common touchscreen bindings
-Date: Thu, 27 Oct 2016 10:44:18 +0200
-Message-ID: <72927a5b3d5b9f33dfd57a68ef1de9cb0a536407.1477557860.git.hns@goldelico.com>
-References: <cover.1477557860.git.hns@goldelico.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <cover.1477557860.git.hns@goldelico.com>
-In-Reply-To: <cover.1477557860.git.hns@goldelico.com>
-References: <cover.1477557860.git.hns@goldelico.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?UTF-8?q?Mika=20Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, Sebastian Reichel <sre@kernel.org>, "Andrew F. Davis" <afd@ti.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Sangwon Jee <jeesw@melfas.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, linux-iio@vger.kernel.org, kernel@pyra-handheld.com
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v2 2/4] arm64: arch_timer: Introduce a generic erratum
+ handing mechanism for fsl-a008585
+Date: Thu, 27 Oct 2016 11:29:55 +0100
+Message-ID: <4f0383f4-da41-c2ae-a740-b5dba4a95db1@arm.com>
+References: <1477553651-13428-1-git-send-email-dingtianhong@huawei.com>
+ <1477553651-13428-2-git-send-email-dingtianhong@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1477553651-13428-2-git-send-email-dingtianhong@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ding Tianhong <dingtianhong@huawei.com>, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, oss@buserror.net, devicetree@vger.kernel.org, shawnguo@kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-While we fix the GTA04 we add proper pinmux for the
-penirq gpio.
+On 27/10/16 08:34, Ding Tianhong wrote:
+> The workaround for hisilicon,161601 will check the return value of the system counter
+> by different way, in order to distinguish with the fsl-a008585 workaround, introduce
+> a new generic erratum handing mechanism for fsl-a008585 and rename some functions. 
+> 
+> v2: Introducing a new generic erratum handling mechanism for fsl erratum a008585.
+> 
+> Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
+> ---
+>  arch/arm64/include/asm/arch_timer.h  | 20 +++++++++-----
+>  drivers/clocksource/arm_arch_timer.c | 51 +++++++++++++++++++++---------------
+>  2 files changed, 43 insertions(+), 28 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
+> index eaa5bbe..118719d8 100644
+> --- a/arch/arm64/include/asm/arch_timer.h
+> +++ b/arch/arm64/include/asm/arch_timer.h
+> @@ -31,15 +31,21 @@
+>  
+>  #if IS_ENABLED(CONFIG_FSL_ERRATUM_A008585)
+>  extern struct static_key_false arch_timer_read_ool_enabled;
+> -#define needs_fsl_a008585_workaround() \
+> +#define needs_timer_erratum_workaround() \
+>  	static_branch_unlikely(&arch_timer_read_ool_enabled)
 
-Tested on: GTA04A4 and Pyra-Handheld
+This is too generic a name. Please make it more specific.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/arm/boot/dts/omap3-gta04.dtsi | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+>  #else
+> -#define needs_fsl_a008585_workaround()  false
+> +#define needs_timer_erratum_workaround()  false
+>  #endif
+>  
+> -u32 __fsl_a008585_read_cntp_tval_el0(void);
+> -u32 __fsl_a008585_read_cntv_tval_el0(void);
+> -u64 __fsl_a008585_read_cntvct_el0(void);
+> +
+> +struct arch_timer_erratum_workaround {
+> +	int erratum;
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index b3a8b1f..64d6ee3 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -273,6 +273,13 @@
- 			OMAP3_CORE1_IOPAD(0x2134, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio112 */
- 		>;
- 	};
-+
-+	penirq_pins: pinmux_penirq_pins {
-+		pinctrl-single,pins = <
-+			/* here we could enable to wakeup the cpu from suspend by a pen touch */
-+			OMAP3_CORE1_IOPAD(0x2194, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio160 */
-+		>;
-+	};
- };
- 
- &omap3_pmx_core2 {
-@@ -410,10 +417,24 @@
- 	tsc2007@48 {
- 		compatible = "ti,tsc2007";
- 		reg = <0x48>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&penirq_pins>;
- 		interrupt-parent = <&gpio6>;
- 		interrupts = <0 IRQ_TYPE_EDGE_FALLING>; /* GPIO_160 */
--		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;
--		ti,x-plate-ohms = <600>;
-+		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;	/* GPIO_160 */
-+		touchscreen-size-x = <480>;
-+		touchscreen-size-y = <640>;
-+		touchscreen-max-pressure = <1000>;
-+		touchscreen-fuzz-x = <3>;
-+		touchscreen-fuzz-y = <8>;
-+		touchscreen-fuzz-pressure = <10>;
-+		touchscreen-inverted-y;
-+		ti,min-x = <0x100>;
-+		ti,max-x = <0xf00>;
-+		ti,min-y = <0x100>;
-+		ti,max-y = <0xf00>;
-+		ti,max-rt = <4096>;
-+		ti,x-plate-ohms = <550>;
- 	};
- 
- 	/* RFID EEPROM */
+What is the use of this field?
+
+> +	u32 (*read_cntp_tval_el0)(void);
+> +	u32 (*read_cntv_tval_el0)(void);
+> +	u64 (*read_cntvct_el0)(void);
+> +};
+> +
+> +extern struct arch_timer_erratum_workaround *erratum_workaround;
+
+This is a very generic name for something that has a global visibility.
+Please choose a more specific variable name.
+
+>  
+>  /*
+>   * The number of retries is an arbitrary value well beyond the highest number
+> @@ -62,8 +68,8 @@ u64 __fsl_a008585_read_cntvct_el0(void);
+>  #define arch_timer_reg_read_stable(reg) 		\
+>  ({							\
+>  	u64 _val;					\
+> -	if (needs_fsl_a008585_workaround())		\
+> -		_val = __fsl_a008585_read_##reg();	\
+> +	if (needs_timer_erratum_workaround())		\
+> +		_val = erratum_workaround->read_##reg();	\
+
+As mentioned in my initial review, you've now broken modular access to
+any of the registers. Please fix it.
+
+>  	else						\
+>  		_val = read_sysreg(reg);		\
+>  	_val;						\
+> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+> index 73c487d..e4f7fa1 100644
+> --- a/drivers/clocksource/arm_arch_timer.c
+> +++ b/drivers/clocksource/arm_arch_timer.c
+> @@ -95,10 +95,32 @@ early_param("clocksource.arm_arch_timer.evtstrm", early_evtstrm_cfg);
+>   */
+>  
+>  #ifdef CONFIG_FSL_ERRATUM_A008585
+> +struct arch_timer_erratum_workaround *erratum_workaround = NULL;
+> +
+>  DEFINE_STATIC_KEY_FALSE(arch_timer_read_ool_enabled);
+>  EXPORT_SYMBOL_GPL(arch_timer_read_ool_enabled);
+>  
+> -static int fsl_a008585_enable = -1;
+> +
+> +static u32 fsl_a008585_read_cntp_tval_el0(void)
+> +{
+> +	return __fsl_a008585_read_reg(cntp_tval_el0);
+> +}
+> +
+> +static  u32 fsl_a008585_read_cntv_tval_el0(void)
+> +{
+> +	return __fsl_a008585_read_reg(cntv_tval_el0);
+> +}
+> +
+> +static u64 fsl_a008585_read_cntvct_el0(void)
+> +{
+> +	return __fsl_a008585_read_reg(cntvct_el0);
+> +}
+
+So now that you've indirected all calls through a set of pointers, why
+do you keep the __fsl_a008585_read_reg() macro inside the include file?
+I don't think it has any purpose in being globally visible now.
+
+> +
+> +static struct arch_timer_erratum_workaround arch_timer_fsl_a008585 = {
+
+And here's the proof that the erratum field is useless.
+
+> +	.read_cntp_tval_el0 = fsl_a008585_read_cntp_tval_el0,
+> +	.read_cntv_tval_el0 = fsl_a008585_read_cntv_tval_el0,
+> +	.read_cntvct_el0 = fsl_a008585_read_cntvct_el0,
+> +};
+>  
+>  static int __init early_fsl_a008585_cfg(char *buf)
+>  {
+> @@ -109,26 +131,12 @@ static int __init early_fsl_a008585_cfg(char *buf)
+>  	if (ret)
+>  		return ret;
+>  
+> -	fsl_a008585_enable = val;
+> +	if (val)
+> +		erratum_workaround = &arch_timer_fsl_a008585;
+> +
+>  	return 0;
+>  }
+>  early_param("clocksource.arm_arch_timer.fsl-a008585", early_fsl_a008585_cfg);
+> -
+> -u32 __fsl_a008585_read_cntp_tval_el0(void)
+> -{
+> -	return __fsl_a008585_read_reg(cntp_tval_el0);
+> -}
+> -
+> -u32 __fsl_a008585_read_cntv_tval_el0(void)
+> -{
+> -	return __fsl_a008585_read_reg(cntv_tval_el0);
+> -}
+> -
+> -u64 __fsl_a008585_read_cntvct_el0(void)
+> -{
+> -	return __fsl_a008585_read_reg(cntvct_el0);
+> -}
+> -EXPORT_SYMBOL(__fsl_a008585_read_cntvct_el0);
+>  #endif /* CONFIG_FSL_ERRATUM_A008585 */
+>  
+>  static __always_inline
+> @@ -891,9 +899,10 @@ static int __init arch_timer_of_init(struct device_node *np)
+>  	arch_timer_c3stop = !of_property_read_bool(np, "always-on");
+>  
+>  #ifdef CONFIG_FSL_ERRATUM_A008585
+> -	if (fsl_a008585_enable < 0)
+> -		fsl_a008585_enable = of_property_read_bool(np, "fsl,erratum-a008585");
+> -	if (fsl_a008585_enable) {
+> +	if (!erratum_workaround && of_property_read_bool(np, "fsl,erratum-a008585"))
+> +		erratum_workaround = &arch_timer_fsl_a008585;
+
+It used to be possible to disable the erratum workaround on the command
+line, and you've just removed that feature. Please restore it.
+
+> +
+> +	if (erratum_workaround) {
+>  		static_branch_enable(&arch_timer_read_ool_enabled);
+>  		pr_info("Enabling workaround for FSL erratum A-008585\n");
+>  	}
+> 
+
+Thanks,
+
+	M.
 -- 
-2.7.3
-
+Jazz is not dead. It just smells funny...
