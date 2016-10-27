@@ -1,301 +1,37 @@
-Return-Path: <hvaibhav.linux@gmail.com>
-Subject: Re: [PATCH v8 4/8] usb: core: add power sequence handling for USB
- devices
-References: <1476413995-20361-1-git-send-email-peter.chen@nxp.com>
- <1476413995-20361-5-git-send-email-peter.chen@nxp.com>
-From: "hvaibhav.linux" <hvaibhav.linux@gmail.com>
-Message-ID: <223fe910-831f-82b5-2938-be4b75ad0860@gmail.com>
-Date: Fri, 28 Oct 2016 14:11:51 +0530
+Return-Path: <j-keerthy@ti.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 3/4] arm: dts: am57xx-beagle-x15-common: Add overide powerhold property
+Date: Thu, 27 Oct 2016 14:40:13 +0530
+Message-ID: <1477559414-12520-4-git-send-email-j-keerthy@ti.com>
+In-Reply-To: <1477559414-12520-1-git-send-email-j-keerthy@ti.com>
+References: <1477559414-12520-1-git-send-email-j-keerthy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <1476413995-20361-5-git-send-email-peter.chen@nxp.com>
-Content-Type: multipart/alternative;
- boundary="------------324EAC32E8D1F619867A8A3D"
-To: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, dbaryshkov@gmail.com
-Cc: heiko@sntech.de, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org, stillcompiling@gmail.com, linux-kernel@vger.kernel.org, mka@chromium.org
+Content-Type: text/plain
+To: tony@atomide.com, lee.jones@linaro.org, robh+dt@kernel.org
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, nm@ti.com, j-keerthy@ti.com, t-kristo@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multi-part message in MIME format.
---------------324EAC32E8D1F619867A8A3D
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+The PMICs have POWERHOLD set by default which prevents PMIC shutdown
+even on DEV_CTRL On bit set to 0 as the Powerhold has higher priority.
+So to enable pmic power off this property lets one over ride the default
+value and enable pmic power off.
 
-
-
-On Friday 14 October 2016 08:29 AM, Peter Chen wrote:
-> Some hard-wired USB devices need to do power sequence to let the
-> device work normally, the typical power sequence like: enable USB
-> PHY clock, toggle reset pin, etc. But current Linux USB driver
-> lacks of such code to do it, it may cause some hard-wired USB devices
-> works abnormal or can't be recognized by controller at all.
->
-> In this patch, it calls power sequence library APIs to finish
-> the power sequence events. It will do power on sequence at hub's
-> probe for all devices under this hub (includes root hub).
-> At hub_disconnect, it will do power off sequence which is at powered
-> on list.
->
-> Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> Tested-by Joshua Clayton <stillcompiling@gmail.com>
-> ---
->   drivers/usb/core/hub.c | 41 ++++++++++++++++++++++++++++++++++++++---
->   drivers/usb/core/hub.h |  1 +
->   2 files changed, 39 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> index cbb1467..acbbf0a 100644
-> --- a/drivers/usb/core/hub.c
-> +++ b/drivers/usb/core/hub.c
-> @@ -26,6 +26,7 @@
->   #include <linux/mutex.h>
->   #include <linux/random.h>
->   #include <linux/pm_qos.h>
-> +#include <linux/power/pwrseq.h>
->   
->   #include <asm/uaccess.h>
->   #include <asm/byteorder.h>
-> @@ -1695,6 +1696,7 @@ static void hub_disconnect(struct usb_interface *intf)
->   	hub->error = 0;
->   	hub_quiesce(hub, HUB_DISCONNECT);
->   
-> +	of_pwrseq_off_list(&hub->pwrseq_on_list);
->   	mutex_lock(&usb_port_peer_mutex);
->   
->   	/* Avoid races with recursively_mark_NOTATTACHED() */
-> @@ -1722,12 +1724,41 @@ static void hub_disconnect(struct usb_interface *intf)
->   	kref_put(&hub->kref, hub_release);
->   }
->   
-> +#ifdef CONFIG_OF
-> +static int hub_of_pwrseq_on(struct usb_hub *hub)
-> +{
-> +	struct device *parent;
-> +	struct usb_device *hdev = hub->hdev;
-> +	struct device_node *np;
-> +	int ret;
-> +
-> +	if (hdev->parent)
-> +		parent = &hdev->dev;
-> +	else
-> +		parent = bus_to_hcd(hdev->bus)->self.controller;
-> +
-> +	for_each_child_of_node(parent->of_node, np) {
-> +		ret = of_pwrseq_on_list(np, &hub->pwrseq_on_list);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +#else
-> +static int hub_of_pwrseq_on(struct usb_hub *hub)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
->   static int hub_probe(struct usb_interface *intf, const struct usb_device_id *id)
->   {
->   	struct usb_host_interface *desc;
->   	struct usb_endpoint_descriptor *endpoint;
->   	struct usb_device *hdev;
->   	struct usb_hub *hub;
-> +	int ret = -ENODEV;
->   
->   	desc = intf->cur_altsetting;
->   	hdev = interface_to_usbdev(intf);
-> @@ -1832,6 +1863,7 @@ descriptor_error:
->   	INIT_DELAYED_WORK(&hub->leds, led_work);
->   	INIT_DELAYED_WORK(&hub->init_work, NULL);
->   	INIT_WORK(&hub->events, hub_event);
-> +	INIT_LIST_HEAD(&hub->pwrseq_on_list);
->   	usb_get_intf(intf);
->   	usb_get_dev(hdev);
->   
-> @@ -1845,11 +1877,14 @@ descriptor_error:
->   	if (id->driver_info & HUB_QUIRK_CHECK_PORT_AUTOSUSPEND)
->   		hub->quirk_check_port_auto_suspend = 1;
->   
-> -	if (hub_configure(hub, endpoint) >= 0)
-> -		return 0;
-> +	if (hub_configure(hub, endpoint) >= 0) {
-> +		ret = hub_of_pwrseq_on(hub);
-> +		if (!ret)
-> +			return 0;
-> +	}
->   
->   	hub_disconnect(intf);
-> -	return -ENODEV;
-> +	return ret;
->   }
->   
->   static int
-> diff --git a/drivers/usb/core/hub.h b/drivers/usb/core/hub.h
-> index 34c1a7e..cd86f91 100644
-> --- a/drivers/usb/core/hub.h
-> +++ b/drivers/usb/core/hub.h
-> @@ -78,6 +78,7 @@ struct usb_hub {
->   	struct delayed_work	init_work;
->   	struct work_struct      events;
->   	struct usb_port		**ports;
-> +	struct list_head	pwrseq_on_list; /* powered pwrseq node list */
->   };
->   
->   /**
-
-Reviewed-by: Vaibhav Hiremath <hvaibhav.linux@gmail.com>
-
-Thanks,
-Vaibhav
-
---------------324EAC32E8D1F619867A8A3D
-Content-Type: text/html; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-
-<html>
-  <head>
-    <meta content="text/html; charset=windows-1252"
-      http-equiv="Content-Type">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    <br>
-    <br>
-    <div class="moz-cite-prefix">On Friday 14 October 2016 08:29 AM,
-      Peter Chen wrote:<br>
-    </div>
-    <blockquote
-      cite="mid:1476413995-20361-5-git-send-email-peter.chen@nxp.com"
-      type="cite">
-      <pre wrap="">Some hard-wired USB devices need to do power sequence to let the
-device work normally, the typical power sequence like: enable USB
-PHY clock, toggle reset pin, etc. But current Linux USB driver
-lacks of such code to do it, it may cause some hard-wired USB devices
-works abnormal or can't be recognized by controller at all.
-
-In this patch, it calls power sequence library APIs to finish
-the power sequence events. It will do power on sequence at hub's
-probe for all devices under this hub (includes root hub).
-At hub_disconnect, it will do power off sequence which is at powered
-on list.
-
-Signed-off-by: Peter Chen <a class="moz-txt-link-rfc2396E" href="mailto:peter.chen@nxp.com">&lt;peter.chen@nxp.com&gt;</a>
-Tested-by Joshua Clayton <a class="moz-txt-link-rfc2396E" href="mailto:stillcompiling@gmail.com">&lt;stillcompiling@gmail.com&gt;</a>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- drivers/usb/core/hub.c | 41 ++++++++++++++++++++++++++++++++++++++---
- drivers/usb/core/hub.h |  1 +
- 2 files changed, 39 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index cbb1467..acbbf0a 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -26,6 +26,7 @@
- #include &lt;linux/mutex.h&gt;
- #include &lt;linux/random.h&gt;
- #include &lt;linux/pm_qos.h&gt;
-+#include &lt;linux/power/pwrseq.h&gt;
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+index 6de163c..1b5e776 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+@@ -216,6 +216,7 @@
+ 		interrupt-controller;
  
- #include &lt;asm/uaccess.h&gt;
- #include &lt;asm/byteorder.h&gt;
-@@ -1695,6 +1696,7 @@ static void hub_disconnect(struct usb_interface *intf)
- 	hub-&gt;error = 0;
- 	hub_quiesce(hub, HUB_DISCONNECT);
+ 		ti,system-power-controller;
++		ti,palmas-override-powerhold;
  
-+	of_pwrseq_off_list(&amp;hub-&gt;pwrseq_on_list);
- 	mutex_lock(&amp;usb_port_peer_mutex);
- 
- 	/* Avoid races with recursively_mark_NOTATTACHED() */
-@@ -1722,12 +1724,41 @@ static void hub_disconnect(struct usb_interface *intf)
- 	kref_put(&amp;hub-&gt;kref, hub_release);
- }
- 
-+#ifdef CONFIG_OF
-+static int hub_of_pwrseq_on(struct usb_hub *hub)
-+{
-+	struct device *parent;
-+	struct usb_device *hdev = hub-&gt;hdev;
-+	struct device_node *np;
-+	int ret;
-+
-+	if (hdev-&gt;parent)
-+		parent = &amp;hdev-&gt;dev;
-+	else
-+		parent = bus_to_hcd(hdev-&gt;bus)-&gt;self.controller;
-+
-+	for_each_child_of_node(parent-&gt;of_node, np) {
-+		ret = of_pwrseq_on_list(np, &amp;hub-&gt;pwrseq_on_list);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+#else
-+static int hub_of_pwrseq_on(struct usb_hub *hub)
-+{
-+	return 0;
-+}
-+#endif
-+
- static int hub_probe(struct usb_interface *intf, const struct usb_device_id *id)
- {
- 	struct usb_host_interface *desc;
- 	struct usb_endpoint_descriptor *endpoint;
- 	struct usb_device *hdev;
- 	struct usb_hub *hub;
-+	int ret = -ENODEV;
- 
- 	desc = intf-&gt;cur_altsetting;
- 	hdev = interface_to_usbdev(intf);
-@@ -1832,6 +1863,7 @@ descriptor_error:
- 	INIT_DELAYED_WORK(&amp;hub-&gt;leds, led_work);
- 	INIT_DELAYED_WORK(&amp;hub-&gt;init_work, NULL);
- 	INIT_WORK(&amp;hub-&gt;events, hub_event);
-+	INIT_LIST_HEAD(&amp;hub-&gt;pwrseq_on_list);
- 	usb_get_intf(intf);
- 	usb_get_dev(hdev);
- 
-@@ -1845,11 +1877,14 @@ descriptor_error:
- 	if (id-&gt;driver_info &amp; HUB_QUIRK_CHECK_PORT_AUTOSUSPEND)
- 		hub-&gt;quirk_check_port_auto_suspend = 1;
- 
--	if (hub_configure(hub, endpoint) &gt;= 0)
--		return 0;
-+	if (hub_configure(hub, endpoint) &gt;= 0) {
-+		ret = hub_of_pwrseq_on(hub);
-+		if (!ret)
-+			return 0;
-+	}
- 
- 	hub_disconnect(intf);
--	return -ENODEV;
-+	return ret;
- }
- 
- static int
-diff --git a/drivers/usb/core/hub.h b/drivers/usb/core/hub.h
-index 34c1a7e..cd86f91 100644
---- a/drivers/usb/core/hub.h
-+++ b/drivers/usb/core/hub.h
-@@ -78,6 +78,7 @@ struct usb_hub {
- 	struct delayed_work	init_work;
- 	struct work_struct      events;
- 	struct usb_port		**ports;
-+	struct list_head	pwrseq_on_list; /* powered pwrseq node list */
- };
- 
- /**
-</pre>
-    </blockquote>
-    <br>
-    Reviewed-by: Vaibhav Hiremath <a class="moz-txt-link-rfc2396E"
-      href="mailto:hvaibhav.linux@gmail.com">&lt;hvaibhav.linux@gmail.com&gt;</a>
-    <br>
-    <br>
-    Thanks,
-    <br>
-    Vaibhav
-    <br>
-  </body>
-</html>
-
---------------324EAC32E8D1F619867A8A3D--
+ 		tps659038_pmic {
+ 			compatible = "ti,tps659038-pmic";
+-- 
+1.9.1
