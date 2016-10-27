@@ -1,106 +1,51 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 2/3] drm: zte: add initial vou drm driver
-Date: Thu, 27 Oct 2016 23:32:54 +0800
-Message-ID: <20161027153128.GS30578@tiger>
-References: <20161020122958.GC10198@joana>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH 4/5] ARM: davinci: enable LEDs default-on trigger in
+ default config
+Date: Thu, 27 Oct 2016 10:49:57 -0500
+Message-ID: <be478f0a-bd10-7241-7e9d-20dfc1beaa30@lechnology.com>
+References: <1477075018-20176-1-git-send-email-david@lechnology.com>
+ <1477075018-20176-5-git-send-email-david@lechnology.com>
+ <669b14c2-7f62-35bc-c8a3-6dde05a99fb1@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20161020122958.GC10198@joana>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Gustavo Padovan <gustavo@padovan.org>, Shawn Guo <shawn.guo@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, Baoyou Xie <xie.baoyou@zte.com.cn>, Emil Velikov <emil.l.velikov@gmail.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Jun Nie <jun.nie@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <669b14c2-7f62-35bc-c8a3-6dde05a99fb1-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR3VzdGF2bywKClRoYW5rcyBmb3IgbG9va2luZyBhdCB0aGUgcGF0Y2guCgo+IDIwMTYtMTAt
-MjAgU2hhd24gR3VvIDxzaGF3bi5ndW9AbGluYXJvLm9yZz46Cj4gCj4gPiBJdCBhZGRzIHRoZSBp
-bml0aWFsIFpURSBWT1UgZGlzcGxheSBjb250cm9sbGVyIERSTSBkcml2ZXIuICBUaGVyZSBhcmUK
-PiA+IHN0aWxsIHNvbWUgZmVhdHVyZXMgdG8gYmUgYWRkZWQsIGxpa2Ugb3ZlcmxheSBwbGFuZSwg
-c2NhbGluZywgYW5kIG1vcmUKPiA+IG91dHB1dCBkZXZpY2VzIHN1cHBvcnQuICBCdXQgaXQncyBh
-bHJlYWR5IHVzZWZ1bCB3aXRoIGR1YWwgQ1JUQ3MgYW5kCj4gPiBIRE1JIG1vbml0b3Igd29ya2lu
-Zy4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBTaGF3biBHdW8gPHNoYXduLmd1b0BsaW5hcm8ub3Jn
-PgoKPHNuaXA+Cgo+ID4gK3N0YXRpYyB2b2lkIHp4X2hkbWlfY29ubmVjdG9yX2Rlc3Ryb3koc3Ry
-dWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiA+ICt7Cj4gPiArICAgICBkcm1fY29ubmVj
-dG9yX3VucmVnaXN0ZXIoY29ubmVjdG9yKTsKPiAKPiBkcm1fY29ubmVjdG9yX3VucmVnaXN0ZXIo
-KSBpcyBub3QgbmVlZGVkIGFueW1vcmUuIERSTSBjb3JlIHdpbGwgY2FsbCBpdAo+IGZvciB5b3Uu
-Cj4gCj4gPiArICAgICBkcm1fY29ubmVjdG9yX2NsZWFudXAoY29ubmVjdG9yKTsKPiA+ICt9Cj4g
-PiArCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fY29ubmVjdG9yX2Z1bmNzIHp4X2hkbWlf
-Y29ubmVjdG9yX2Z1bmNzID0gewo+ID4gKyAgICAgLmRwbXMgPSBkcm1fYXRvbWljX2hlbHBlcl9j
-b25uZWN0b3JfZHBtcywKPiA+ICsgICAgIC5maWxsX21vZGVzID0gZHJtX2hlbHBlcl9wcm9iZV9z
-aW5nbGVfY29ubmVjdG9yX21vZGVzLAo+ID4gKyAgICAgLmRldGVjdCA9IHp4X2hkbWlfY29ubmVj
-dG9yX2RldGVjdCwKPiA+ICsgICAgIC5kZXN0cm95ID0genhfaGRtaV9jb25uZWN0b3JfZGVzdHJv
-eSwKPiAKPiBUaGVuIGhlcmUgeW91IGNhbiB1c2UgZHJtX2Nvbm5lY3Rvcl9jbGVhbnVwKCkgZGly
-ZWN0bHkuCgpPa2F5LCB3aWxsIGRvLgoKPiA+ICsgICAgIC5yZXNldCA9IGRybV9hdG9taWNfaGVs
-cGVyX2Nvbm5lY3Rvcl9yZXNldCwKPiA+ICsgICAgIC5hdG9taWNfZHVwbGljYXRlX3N0YXRlID0g
-ZHJtX2F0b21pY19oZWxwZXJfY29ubmVjdG9yX2R1cGxpY2F0ZV9zdGF0ZSwKPiA+ICsgICAgIC5h
-dG9taWNfZGVzdHJveV9zdGF0ZSA9IGRybV9hdG9taWNfaGVscGVyX2Nvbm5lY3Rvcl9kZXN0cm95
-X3N0YXRlLAo+ID4gK307Cgo8c25pcD4KCj4gPiArc3RhdGljIHZvaWQgenhfY3J0Y19hdG9taWNf
-YmVnaW4oc3RydWN0IGRybV9jcnRjICpjcnRjLAo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAqc3RhdGUpCj4gPiArewo+ID4gKyAgICAgc3Ry
-dWN0IGRybV9wZW5kaW5nX3ZibGFua19ldmVudCAqZXZlbnQgPSBjcnRjLT5zdGF0ZS0+ZXZlbnQ7
-Cj4gPiArCj4gPiArICAgICBpZiAoIWV2ZW50KQo+ID4gKyAgICAgICAgICAgICByZXR1cm47Cj4g
-PiArCj4gPiArICAgICBjcnRjLT5zdGF0ZS0+ZXZlbnQgPSBOVUxMOwo+ID4gKwo+ID4gKyAgICAg
-c3Bpbl9sb2NrX2lycSgmY3J0Yy0+ZGV2LT5ldmVudF9sb2NrKTsKPiA+ICsgICAgIGlmIChkcm1f
-Y3J0Y192YmxhbmtfZ2V0KGNydGMpID09IDApCj4gPiArICAgICAgICAgICAgIGRybV9jcnRjX2Fy
-bV92YmxhbmtfZXZlbnQoY3J0YywgZXZlbnQpOwo+ID4gKyAgICAgZWxzZQo+ID4gKyAgICAgICAg
-ICAgICBkcm1fY3J0Y19zZW5kX3ZibGFua19ldmVudChjcnRjLCBldmVudCk7Cj4gPiArICAgICBz
-cGluX3VubG9ja19pcnEoJmNydGMtPmRldi0+ZXZlbnRfbG9jayk7Cj4gCj4gSSB0aGluayB5b3Ug
-bWF5IHdhbnQgdG8gc2VuZCB0aGUgdmJsYW5rIGV2ZW50IHRvIHVzZXJzcGFjZSBhZnRlciB5b3UK
-PiBjb21taXQgeW91ciBwbGFuZXMsIGFuZCBub3QgYmVmb3JlLgoKSSBndWVzcyB5b3UgYXJlIHN1
-Z2dlc3RpbmcgdGhhdCB0aGUgY29kZSBzaG91bGQgYmUgaW1wbGVtZW50ZWQgaW4KLmF0b21pY19m
-bHVzaCBob29rIGluc3RlYWQsIHJpZ2h0PwoKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIGNvbnN0
-IHN0cnVjdCBkcm1fY3J0Y19oZWxwZXJfZnVuY3MgenhfY3J0Y19oZWxwZXJfZnVuY3MgPSB7Cj4g
-PiArICAgICAuZW5hYmxlID0genhfY3J0Y19lbmFibGUsCj4gPiArICAgICAuZGlzYWJsZSA9IHp4
-X2NydGNfZGlzYWJsZSwKPiA+ICsgICAgIC5hdG9taWNfYmVnaW4gPSB6eF9jcnRjX2F0b21pY19i
-ZWdpbiwKPiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2NydGNfZnVu
-Y3MgenhfY3J0Y19mdW5jcyA9IHsKPiA+ICsgICAgIC5kZXN0cm95ID0gZHJtX2NydGNfY2xlYW51
-cCwKPiA+ICsgICAgIC5zZXRfY29uZmlnID0gZHJtX2F0b21pY19oZWxwZXJfc2V0X2NvbmZpZywK
-PiA+ICsgICAgIC5wYWdlX2ZsaXAgPSBkcm1fYXRvbWljX2hlbHBlcl9wYWdlX2ZsaXAsCj4gPiAr
-ICAgICAucmVzZXQgPSBkcm1fYXRvbWljX2hlbHBlcl9jcnRjX3Jlc2V0LAo+ID4gKyAgICAgLmF0
-b21pY19kdXBsaWNhdGVfc3RhdGUgPSBkcm1fYXRvbWljX2hlbHBlcl9jcnRjX2R1cGxpY2F0ZV9z
-dGF0ZSwKPiA+ICsgICAgIC5hdG9taWNfZGVzdHJveV9zdGF0ZSA9IGRybV9hdG9taWNfaGVscGVy
-X2NydGNfZGVzdHJveV9zdGF0ZSwKPiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBpbnQgenhfY3J0
-Y19pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpkcm0sIHN0cnVjdCB6eF92b3VfaHcgKnZvdSwKPiA+
-ICsgICAgICAgICAgICAgICAgICAgICBlbnVtIHZvdV9jaG5fdHlwZSBjaG5fdHlwZSkKPiA+ICt7
-Cj4gPiArICAgICBzdHJ1Y3QgZGV2aWNlICpkZXYgPSB2b3UtPmRldjsKPiA+ICsgICAgIHN0cnVj
-dCB6eF9sYXllcl9kYXRhIGRhdGE7Cj4gPiArICAgICBzdHJ1Y3QgenhfY3J0YyAqemNydGM7Cj4g
-PiArICAgICBpbnQgcmV0Owo+ID4gKwo+ID4gKyAgICAgemNydGMgPSBkZXZtX2t6YWxsb2MoZGV2
-LCBzaXplb2YoKnpjcnRjKSwgR0ZQX0tFUk5FTCk7Cj4gPiArICAgICBpZiAoIXpjcnRjKQo+ID4g
-KyAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsKPiA+ICsKPiA+ICsgICAgIHpjcnRjLT52b3Ug
-PSB2b3U7Cj4gPiArICAgICB6Y3J0Yy0+Y2huX3R5cGUgPSBjaG5fdHlwZTsKPiA+ICsKPiA+ICsg
-ICAgIGlmIChjaG5fdHlwZSA9PSBWT1VfQ0hOX01BSU4pIHsKPiA+ICsgICAgICAgICAgICAgZGF0
-YS5sYXllciA9IHZvdS0+b3NkICsgTUFJTl9HTF9PRkZTRVQ7Cj4gPiArICAgICAgICAgICAgIGRh
-dGEuY3NjID0gdm91LT5vc2QgKyBNQUlOX0NTQ19PRkZTRVQ7Cj4gPiArICAgICAgICAgICAgIGRh
-dGEuaGJzYyA9IHZvdS0+b3NkICsgTUFJTl9IQlNDX09GRlNFVDsKPiA+ICsgICAgICAgICAgICAg
-ZGF0YS5yc3ogPSB2b3UtPm90ZnBwdSArIE1BSU5fUlNaX09GRlNFVDsKPiA+ICsgICAgICAgICAg
-ICAgemNydGMtPmNobnJlZyA9IHZvdS0+b3NkICsgT1NEX01BSU5fQ0hOOwo+ID4gKyAgICAgICAg
-ICAgICB6Y3J0Yy0+cmVncyA9ICZtYWluX2NydGNfcmVnczsKPiA+ICsgICAgICAgICAgICAgemNy
-dGMtPmJpdHMgPSAmbWFpbl9jcnRjX2JpdHM7Cj4gPiArICAgICB9IGVsc2Ugewo+ID4gKyAgICAg
-ICAgICAgICBkYXRhLmxheWVyID0gdm91LT5vc2QgKyBBVVhfR0xfT0ZGU0VUOwo+ID4gKyAgICAg
-ICAgICAgICBkYXRhLmNzYyA9IHZvdS0+b3NkICsgQVVYX0NTQ19PRkZTRVQ7Cj4gPiArICAgICAg
-ICAgICAgIGRhdGEuaGJzYyA9IHZvdS0+b3NkICsgQVVYX0hCU0NfT0ZGU0VUOwo+ID4gKyAgICAg
-ICAgICAgICBkYXRhLnJzeiA9IHZvdS0+b3RmcHB1ICsgQVVYX1JTWl9PRkZTRVQ7Cj4gPiArICAg
-ICAgICAgICAgIHpjcnRjLT5jaG5yZWcgPSB2b3UtPm9zZCArIE9TRF9BVVhfQ0hOOwo+ID4gKyAg
-ICAgICAgICAgICB6Y3J0Yy0+cmVncyA9ICZhdXhfY3J0Y19yZWdzOwo+ID4gKyAgICAgICAgICAg
-ICB6Y3J0Yy0+Yml0cyA9ICZhdXhfY3J0Y19iaXRzOwo+ID4gKyAgICAgfQo+ID4gKwo+ID4gKyAg
-ICAgemNydGMtPnBpeGNsayA9IGRldm1fY2xrX2dldChkZXYsIChjaG5fdHlwZSA9PSBWT1VfQ0hO
-X01BSU4pID8KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAibWFp
-bl93Y2xrIiA6ICJhdXhfd2NsayIpOwo+ID4gKyAgICAgaWYgKElTX0VSUih6Y3J0Yy0+cGl4Y2xr
-KSkgewo+ID4gKyAgICAgICAgICAgICByZXQgPSBQVFJfRVJSKHpjcnRjLT5waXhjbGspOwo+ID4g
-KyAgICAgICAgICAgICBkZXZfZXJyKGRldiwgImZhaWxlZCB0byBnZXQgcGl4IGNsazogJWRcbiIs
-IHJldCk7Cj4gCj4gRFJNX0VSUk9SKCkgLSBoZXJlIGFuZCBpbiBvdGhlciBwbGFjZXMgaW4geW91
-ciBwYXRjaAoKSSB3aWxsIGZvbGxvdyBTZWFuJ3Mgc3VnZ2VzdGlvbiB0byB1c2UgRFJNX0RFVl8q
-IGZvciB0aGVzZSBtZXNzYWdlcy4KClNoYXduCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+On 10/27/2016 06:29 AM, Sekhar Nori wrote:
+> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
+>> The LEDs default-on trigger is nice to have. For example, it can be used
+>> to configure a LED as a power indicator.
+>>
+>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+>> ---
+>>  arch/arm/configs/davinci_all_defconfig | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
+>> index 9d7f0bc..e380743 100644
+>> --- a/arch/arm/configs/davinci_all_defconfig
+>> +++ b/arch/arm/configs/davinci_all_defconfig
+>> @@ -181,6 +181,7 @@ CONFIG_LEDS_GPIO=m
+>>  CONFIG_LEDS_TRIGGERS=y
+>>  CONFIG_LEDS_TRIGGER_TIMER=m
+>>  CONFIG_LEDS_TRIGGER_HEARTBEAT=m
+>> +CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
+>
+> Can this be module like rest of the triggers? It will come on later, but
+> not sure if you care about the difference that much. Having it a module
+> will be better for those boards that don't need it.
+>
+> Thanks,
+> Sekhar
+>
+
+Yes, module is OK here.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
