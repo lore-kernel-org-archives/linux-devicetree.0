@@ -1,92 +1,70 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: Re: [RFC PATCH 5/5] of: overlay-mgr: add a detector for headers
- stored on a ds2431 eeprom over w1
-Date: Thu, 27 Oct 2016 15:55:36 +0200
-Message-ID: <20161027135536.tk4y7b36aqjleyfd@kwain>
-References: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
- <20161026145756.21689-6-antoine.tenart@free-electrons.com>
- <e839e92f-127b-efc3-b10f-37477d1c5d9a@suse.com>
+From: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 5/7] [media] ir-lirc-codec: don't wait any transmitting
+ time for tx only devices
+Date: Thu, 27 Oct 2016 16:44:01 +0900
+Message-ID: <20161027074401.wxg5icc6hcpwnfsf@gangnam.samsung>
+References: <20160901171629.15422-1-andi.shyti@samsung.com>
+ <20160901171629.15422-6-andi.shyti@samsung.com>
+ <CGME20160902084206epcas1p26e535506ec1c418ede9ba230d40f0656@epcas1p2.samsung.com>
+ <20160902084158.GA25342@gofer.mess.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7543786898131409248=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e839e92f-127b-efc3-b10f-37477d1c5d9a@suse.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <mbrugger@suse.com>
-Cc: mark.rutland@arm.com, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, Antoine Tenart <antoine.tenart@free-electrons.com>, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, maxime.ripard@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-disposition: inline
+In-reply-to: <20160902084158.GA25342-3XSxi2G4b3iXFJAUJl40Xg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>, David =?iso-8859-15?Q?H=E4rdeman?= <david-0WFrdVpeebksCylrc8G9yg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sean,
 
---===============7543786898131409248==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="crb3gkvyn7n3u62r"
-Content-Disposition: inline
+it's been a while :)
 
+I was going through your review fixing what needs to be fixed,
+but...
 
---crb3gkvyn7n3u62r
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > @@ -153,7 +153,7 @@ static ssize_t ir_lirc_transmit_ir(struct file *file, const char __user *buf,
+> >  	}
+> >  
+> >  	ret = dev->tx_ir(dev, txbuf, count);
+> > -	if (ret < 0)
+> > +	if (ret < 0 || dev->driver_type == RC_DRIVER_IR_RAW_TX)
+> 
+> Just because a driver only does transmit doesn't mean its transmit ABI
+> should change.
+> 
+> Now this bit of code is pretty horrible. It ensures that the call to write()
+> takes at least as long as the length of the transmit IR by sleeping. That's
+> not much of a guarantee that the IR has been sent.
+> 
+> Note that in the case of ir-spi, since your spi transfer is sync no sleep
+> should be introduced here.
+> 
+> The gap calculation in lirc checks that if the call to write() took _longer_
+> than expected wait before sending the next IR code (when either multiple
+> IR codes or repeats are specified). Introducing the sleep in the kernel
+> here does not help at all, lirc already ensures that it waits as long as
+> the IR is long (see schedule_repeat_timer in lirc).
+> 
+> This change was introduced in 3.10, commit f8e00d5. 
 
-Hello Matthias,
+... I'm not sure what can be done here. I get your point and I
+understand that this indeed is a kind of fake sync point and by
+doing this I 
 
-On Thu, Oct 27, 2016 at 11:19:14AM +0200, Matthias Brugger wrote:
-> On 10/26/2016 04:57 PM, Antoine Tenart wrote:
-> > Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
-> > ---
->=20
-> Please provide a commit message.
+How about creating two different functions:
 
-Sure. There are other modifications I'd like to do in the series if it
-happens to be an use case for people. This patch is given as an example
-of how we could implement this.
+- ir_lirc_transmit_ir where we actually do what the function
+  already does
+- ir_lirc_transmit_no_sync where the function we don't wait
+  because the the sync is done on a different level (for example
+  in the SPI case).
 
-Antoine
+SPI does approximately the same thing.
 
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---crb3gkvyn7n3u62r
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCgAGBQJYEgdYAAoJEFxNi8it27zYuvUQAJFwKekwVTfub59UusQ/8xyh
-FBwuM4jxUabcQC4x2C4yuqz7ZPdB9jcD/nV2pucnJuXW3lMqEgSZfTrsfD9CGjSN
-gQQsAEYNY9XFUmW5mKrpT17SC6N71Uk8uXmLR+4PpFbf7I9US0ZZ1ruuVvUgSUMn
-I9fSjF4I6GKIsuR4xT1Z2Q7Oh4ALR0PK5dM+4+Cig9SXpZC32RGJ+HANJum8B66k
-y31qiRB36vkgl/5igADWjSD/e57vc7pPG0Tn909WtF71GTuNZ1qT6OmY6wjmhCGz
-9Gtk7zpP947a3+jqZ/pObWjCJziHOzvakeRKWD4GYnUjM+wl2Wp2bQW0a025zeLd
-JDoaQ+cys3R+KDzfi+rJZJ4HnOnvlEvxFIIManyPJwgHiUF32U7Rn7lgXT7sLEyZ
-h/+b1kcdJekhkRVgWWOkTMDfkJWCvJOxuG0oKDJYCfnphNnkieGzB2uYJY+eMlXw
-A2rZjw5XDNB+Krseyl4TPaDWKU3MsHdni/TyteX5ggXsOfPm6pYQZD58BoRsHQPI
-cPQOwCg2azqhmxuRjaCC+iRp8ShIPG8s3uDOglKKjx0Sqw683sN4dFGsLcPGqTfu
-/xx09timwfawfqRbcWcPQagwoTII00RzQiB1bV6hqb/gI7xI2s2+ijv8YyWE+Op2
-DxXbFuH1onX7uJCeb3XD
-=O8Ml
------END PGP SIGNATURE-----
-
---crb3gkvyn7n3u62r--
-
-
---===============7543786898131409248==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7543786898131409248==--
+Andi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
