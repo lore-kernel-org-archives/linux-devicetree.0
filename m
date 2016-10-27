@@ -1,65 +1,48 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: RE: [PATCH V2 08/10] watchdog: da9062/61: watchdog driver
-Date: Thu, 27 Oct 2016 13:10:24 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CCE6655@SW-EX-MBX02.diasemi.com>
-References: <cover.1477501000.git.stwiss.opensource@diasemi.com>
- <ecd0c36a9e1766e327b54afa6bf986e64890b881.1477501000.git.stwiss.opensource@diasemi.com>
- <20161026185926.GA16142@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+From: Mirza Krak <mirza.krak@gmail.com>
+Subject: [PATCH V3 2/6] clk: tegra: add TEGRA30_CLK_NOR to init table
+Date: Thu, 27 Oct 2016 16:01:08 +0200
+Message-ID: <1477576872-2665-3-git-send-email-mirza.krak@gmail.com>
+References: <1477576872-2665-1-git-send-email-mirza.krak@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161026185926.GA16142@roeck-us.net>
-Content-Language: en-US
+In-Reply-To: <1477576872-2665-1-git-send-email-mirza.krak@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, LINUX-INPUT <linux-input@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+To: swarren@wwwdotorg.org, thierry.reding@gmail.com, jonathanh@nvidia.com
+Cc: gnurou@gmail.com, linux@armlinux.org.uk, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Mirza Krak <mirza.krak@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 26 October 2016 19:59 Guenter Roeck wrote:
+From: Mirza Krak <mirza.krak@gmail.com>
 
-> On Wed, Oct 26, 2016 at 05:56:39PM +0100, Steve Twiss wrote:
-> > From: Steve Twiss <stwiss.opensource@diasemi.com>
-> >
-> > +static const struct of_device_id da9062_compatible_id_table[] = {
-> > +	{ .compatible = "dlg,da9062-watchdog", .data = &da9062_watchdog_info },
-> > +	{ },
-> > +};
-> > +
-> >  static int da9062_wdt_probe(struct platform_device *pdev)
-> >  {
-> >  	int ret;
-> >  	struct da9062 *chip;
-> >  	struct da9062_watchdog *wdt;
-> > +	const struct of_device_id *match;
-> >
-> >  	chip = dev_get_drvdata(pdev->dev.parent);
-> >  	if (!chip)
-> >  		return -EINVAL;
-> >
-> > +	match = of_match_node(da9062_compatible_id_table,
-> > +			      pdev->dev.of_node);
-> > +	if (!match)
-> > +		return -ENXIO;
-> > +
-> >  	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-> >  	if (!wdt)
-> >  		return -ENOMEM;
-> >
-> >  	wdt->hw = chip;
-> >
-> > -	wdt->wdtdev.info = &da9062_watchdog_info;
-> > +	wdt->wdtdev.info = (const struct watchdog_info *)match->data;
-> 
-> I don't see why you would need match->data or of_match_node above.
+Add TEGRA30_CLK_NOR to init table and set default rate to 127 MHz which
+is max rate.
 
-Hi Guenter,
+The maximum rate value of 127 MHz is pulled from the downstream L4T
+kernel.
 
-True. I do not need to do any matching on the table any more if the assumption is
-to use a fall-back compatible string for DA9061 devices (to use the da9062 device
-driver).
+Signed-off-by: Mirza Krak <mirza.krak@gmail.com>
+Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Tested-on: Colibri T20/T30 on EvalBoard V3.x and GMI-Memory Board
+---
 
-I can erase most of that content. Including the .data = &da9062_watchdog_info.
+Changes in v2:
+- no changes
 
-Regards,
-Steve
+Changes in v3:
+- Added comment in commit message where I got the maximum rates from.
+
+ drivers/clk/tegra/clk-tegra30.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+index 8e2db5e..67f1677 100644
+--- a/drivers/clk/tegra/clk-tegra30.c
++++ b/drivers/clk/tegra/clk-tegra30.c
+@@ -1252,6 +1252,7 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA30_CLK_SDMMC1, TEGRA30_CLK_PLL_P, 48000000, 0 },
+ 	{ TEGRA30_CLK_SDMMC2, TEGRA30_CLK_PLL_P, 48000000, 0 },
+ 	{ TEGRA30_CLK_SDMMC3, TEGRA30_CLK_PLL_P, 48000000, 0 },
++	{ TEGRA30_CLK_NOR, TEGRA30_CLK_PLL_P, 127000000, 0 },
+ 	{ TEGRA30_CLK_PLL_M, TEGRA30_CLK_CLK_MAX, 0, 1 },
+ 	{ TEGRA30_CLK_PCLK, TEGRA30_CLK_CLK_MAX, 0, 1 },
+ 	{ TEGRA30_CLK_CSITE, TEGRA30_CLK_CLK_MAX, 0, 1 },
+--
+2.1.4
