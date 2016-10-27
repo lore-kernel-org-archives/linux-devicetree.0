@@ -1,55 +1,71 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] arm64: dts: r8a7795: salvator-x: add bias setting for usb1_pins
-Date: Thu, 27 Oct 2016 19:29:27 +0900
-Message-ID: <1477564167-22422-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/6] dt/bindings: adjust bindings for Layerscape SCFG MSI
+Date: Thu, 27 Oct 2016 15:18:54 +0100
+Message-ID: <20161027141826.GC30535@leverpostej>
+References: <1477398945-22774-1-git-send-email-Minghuan.Lian@nxp.com>
+ <20161026103101.GC19965@leverpostej>
+ <DB4PR04MB07813D4DA5D5567229394A7D8FAB0@DB4PR04MB0781.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <DB4PR04MB07813D4DA5D5567229394A7D8FAB0@DB4PR04MB0781.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leo Li <leoyang.li@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "M.H. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Scott Wood <scott.wood@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Since this board doesn't mount pull-up/down registers for
-USB1_{OVC,PWEN} pins, we should enable bias setting to pull these
-pins up/down.
+On Wed, Oct 26, 2016 at 10:09:07PM +0000, Leo Li wrote:
+> 
+> > -----Original Message-----
+> > From: Mark Rutland [mailto:mark.rutland@arm.com]
+> > Sent: Wednesday, October 26, 2016 5:31 AM
+> > To: M.H. Lian <minghuan.lian@nxp.com>
+> > Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> > devicetree@vger.kernel.org; Marc Zyngier <marc.zyngier@arm.com>; Stuart
+> > Yoder <stuart.yoder@nxp.com>; Leo Li <leoyang.li@nxp.com>; Scott Wood
+> > <scott.wood@nxp.com>; Shawn Guo <shawnguo@kernel.org>; Mingkai Hu
+> > <mingkai.hu@nxp.com>
+> > Subject: Re: [PATCH 1/6] dt/bindings: adjust bindings for Layerscape SCFG MSI
+> > 
+> > On Tue, Oct 25, 2016 at 08:35:40PM +0800, Minghuan Lian wrote:
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+> > > -- compatible: should be "fsl,<soc-name>-msi" to identify
+> > > -	      Layerscape PCIe MSI controller block such as:
+> > > -              "fsl,1s1021a-msi"
+> > > -              "fsl,1s1043a-msi"
+> > > +- compatible: should be "fsl,ls-scfg-msi"
+> > 
+> > This breaks old DTBs, and throws away information which you describe above as
+> > valuable. So another NAK for that.
+> 
+> I agree with you that we should maintain the backward compatibility.
+> But on the other hand, I just found that there is a silly typo in the
+> original binding that "ls" is wrongly spelled as "1s" and they look
+> too close to be noticed in previous patch reviews.  :(
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-index da3e996b..bcaf400 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-@@ -309,8 +309,20 @@
- 	};
- 
- 	usb1_pins: usb1 {
--		groups = "usb1";
--		function = "usb1";
-+		mux {
-+			groups = "usb1";
-+			function = "usb1";
-+		};
-+
-+		ovc {
-+			pins = "GP_6_27";
-+			bias-pull-up;
-+		};
-+
-+		pwen {
-+			pins = "GP_6_26";
-+			bias-pull-down;
-+		};
- 	};
- 
- 	usb2_pins: usb2 {
--- 
-1.9.1
+Sure, that's annoying, but we're stuck with it.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The driver and all the DTSes used the binding with the typo which
+> covered up the problem.  So even if we want to keep the
+> "fsl,<soc-name>-msi" binding, we probably want to fix the typo, right?
+> And that breaks the backward compatibility too.
+
+Regardless of what we do, we should *not* break compatibility. The old
+strings must remain.
+
+However, we can *add* correctly-spelt variants, and mark the existing
+strings as deprecated (in both the binding and driver). The in-kernel
+dts can be updated to use the correctly-spelt strings.
+
+Thanks,
+Mark.
