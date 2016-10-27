@@ -1,48 +1,70 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v5 2/7] ASoC: sunxi: Add a simple HDMI CODEC
-Date: Thu, 27 Oct 2016 19:16:34 +0200
-Message-ID: <20161027191634.f2fa6478cd07d84a60274339@free.fr>
-References: <cover.1477142934.git.moinejf@free.fr>
-	<5cb540f20f64d28bd7dee82a0e14ee5209631979.1477142934.git.moinejf@free.fr>
-	<CAGb2v67cE8v3=XtTzDBst2D2U6wM8pffQYK9nEok+j4xnPT39A@mail.gmail.com>
-Reply-To: moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 2/5] drivers: gpio: Add support for multiple IPs
+Date: Thu, 27 Oct 2016 10:53:37 +0300
+Message-ID: <98447580-cbc4-152e-f2cb-7c4756545479@ti.com>
+References: <1476855239-32730-1-git-send-email-j-keerthy@ti.com>
+ <1476855239-32730-3-git-send-email-j-keerthy@ti.com>
+ <CACRpkdbsgM-yiWpiA5G35jQR8v3FO=Me+4rhe6TzE0qsWOJ8Ew@mail.gmail.com>
+ <c5c95d86-2c89-3819-725c-ee0b86c37ec0@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCV6DL6LYMNBB5XMZDAAKGQEGSVNYNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v67cE8v3=XtTzDBst2D2U6wM8pffQYK9nEok+j4xnPT39A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <c5c95d86-2c89-3819-725c-ee0b86c37ec0@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Lokesh Vutla <lokeshvutla@ti.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 28 Oct 2016 00:54:34 +0800
-Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+Keerthy,
 
-> There's already a driver for basically the same thing:
->=20
->     sound/soc/codec/hdmi-codec.c
->=20
-> You use it by registering a sub-device from your hdmi driver, with the
-> proper platform_data and callbacks. Grep for HDMI_CODEC_DRV_NAME for
-> platforms already using it.
+On 27/10/16 06:42, Keerthy wrote:
+> 
+> 
+> On Sunday 23 October 2016 04:02 PM, Linus Walleij wrote:
+>> On Wed, Oct 19, 2016 at 7:33 AM, Keerthy <j-keerthy@ti.com> wrote:
+>>
+>>> From: Lokesh Vutla <lokeshvutla@ti.com>
+>>>
+>>> Update GPIO driver to support Multiple GPIO IPs.
+>>>
+>>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>>
+>> This commit message is not at all describing what the patch is doing.
+>>
+>> What it does is bumping the GPIO pin offset in the Linux global
+>> GPIO number space with 32 for each new controller.
+>>
+>>> +       static int bank_base;
+>>>
+>>>         pdata = davinci_gpio_get_pdata(pdev);
+>>>         if (!pdata) {
+>>> @@ -226,7 +227,8 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+>>>                 chips[i].chip.direction_output = davinci_direction_out;
+>>>                 chips[i].chip.set = davinci_gpio_set;
+>>>
+>>> -               chips[i].chip.base = base;
+>>> +               chips[i].chip.base = bank_base;
+>>> +               bank_base += 32;
+>>
+>> Why can you not rewrite the driver to pass -1 as base and
+>> get a dynamic allocation of GPIO numbers instead? Then
+>> you won't have this hairy problem.
+> 
+> Ok i will try that.
+> 
+> In case of k2g. There are 2 big GPIO modules GPIO0 and GPIO1.
+> GPIO0 comprises of 144 GPIOs
+> and GPIO1 has about 68 GPIOs. Wanted feedback from you on how this is being modeled.
+> 
+> I am creating a controller for every 32 GPIOs under the big module each containing a gpio_chip. Each 32 GPIOs chip has 2 banks of 16 GPIOs each.
+> Each 16 GPIO bank has an interrupt.
+> 
+> Is this modeling fine or do you think creating one chip with 144 pins and another with 68 pins is a better way?
 
-I know that for a long time, and I will not use it on any account: it is
-a gasworks!
+If GPIO0 has 144 GPIOs, why don't we model it as a gpiochip with 144 GPIOs?
+What is the benefit of partitioning it into gpiochips of 32 GPIOs each?
 
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+cheers,
+-roger
