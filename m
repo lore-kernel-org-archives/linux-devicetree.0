@@ -1,13 +1,16 @@
-From: Alexandre Bailon <abailon@baylibre.com>
-Subject: [PATCH v3 2/4] usb: musb: core: added helper function for parsing DT
-Date: Thu, 27 Oct 2016 11:34:05 +0200
-Message-ID: <1477560847-8929-3-git-send-email-abailon@baylibre.com>
-References: <1477560847-8929-1-git-send-email-abailon@baylibre.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 5/5] ARM: dts: Add LEGO MINDSTORTMS EV3 dts
+Date: Thu, 27 Oct 2016 15:35:41 +0530
+Message-ID: <f1bc488d-2d81-0b31-340f-4299cde4065b@ti.com>
+References: <1477075018-20176-1-git-send-email-david@lechnology.com>
+ <1477075018-20176-6-git-send-email-david@lechnology.com>
+ <b0022fad-a96e-86d4-71ba-2b803e5421fe@ti.com>
+ <1593441f-d147-4c91-8aab-8622dd8ced19@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1477560847-8929-1-git-send-email-abailon@baylibre.com>
+In-Reply-To: <1593441f-d147-4c91-8aab-8622dd8ced19@lechnology.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,73 +20,255 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: khilman@baylibre.com, robh+dt@kernel.org, b-liu@ti.com
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Petr Kulhavy <petr@barix.com>, Alexandre Bailon <abailon@baylibre.com>, linux-arm-kernel@lists.infradead.org
+To: David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Petr Kulhavy <petr@barix.com>
+On Monday 24 October 2016 09:20 PM, David Lechner wrote:
+> On 10/24/2016 06:58 AM, Sekhar Nori wrote:
+>> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
+>>> This adds a device tree definition file for LEGO MINDSTORMS EV3.
+>>
+>> Thanks for the patch!
+>>
+>>>
+>>> What is working:
+>>>
+>>> * Pin muxing
+>>> * MicroSD card reader
+>>> * UART on input port 1
+>>>
+>>> What is partially working:
+>>>
+>>> * Buttons - working after GPIO fix
+>>> * LEDs - working after GPIO fix
+>>> * Poweroff/reset - working after GPIO fix
+>>
+>> Is the GPIO fix something that will go in v4.9-rc cycle ?
+> 
+> Not sure. This is still being discussed.
+> 
+> http://www.gossamer-threads.com/lists/linux/kernel/2550178
+> 
+>>
+>>> * Flash memory - driver loads but can't read the block devices - this is
+>>>   probably due to the fact that we are not able to configure the SPI to
+>>>   use DMA via device tree
+>>
+>> Hmm, I would not have expected PIO mode to be so inefficient that you
+>> are unable to even read the block device.
+> 
+> I am getting a -EIO error. I haven't been able to trace down exactly
+> what is causing it yet though.
 
-This adds the function musb_get_mode() to get the DT property "dr_mode"
+Okay. Seems unrelated to DMA though. Will check the status of SPI on my
+DA850 EVM once I get the chance.
 
-Signed-off-by: Petr Kulhavy <petr@barix.com>
-Acked-by: Sergei Shtylyov <sshtylyov@ru.mvista.com>
-Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
-Tested-by: David Lechner <david@lechnology.com>
----
- drivers/usb/musb/musb_core.c | 19 +++++++++++++++++++
- drivers/usb/musb/musb_core.h |  5 +++++
- 2 files changed, 24 insertions(+)
+> 
+>>
+> ...
+>>> +/ {
+>>> +    compatible = "lego,ev3", "ti,da850";
+>>> +    model = "LEGO MINDSTORMS EV3";
+>>> +
+>>> +    soc@1c00000 {
+>>> +        /*
+>>> +         * (ab)using pinctrl-single to disable all internal pullups/
+>>> +         * pulldowns on I/O.
+>>> +         */
+>>> +        pinmux@22c00c {
+>>> +            compatible = "pinctrl-single";
+>>> +            reg = <0x22c00c 0x4>;
+>>> +            #address-cells = <1>;
+>>> +            #size-cells = <0>;
+>>> +            pinctrl-single,bit-per-mux;
+>>> +            pinctrl-single,register-width = <32>;
+>>> +            pinctrl-single,function-mask = <0xf>;
+>>> +            /*
+>>> +             * There is a bug in pinctrl-single that prevents us
+>>> +             * from setting function-mask to 1, so doing things
+>>> +             * in groups of 4. Doesn't really matter since we are
+>>> +             * disabling all at once anyway.
+>>> +             */
+>>> +
+>>> +            pinctrl-names = "default";
+>>> +            pinctrl-0 = <&pupu_disable>;
+>>> +
+>>> +            pupu_disable: pinmux_all_pins {
+>>> +                pinctrl-single,bits = <
+>>> +                    0x0 0x00000000 0xffffffff
+>>> +                >;
+>>> +            };
+>>
+>> Sigh. This is quite an abuse :)
+>>
+>> I know we don't have a good way to configure this in kernel today. And I
+>> am surprised we never had to care about disabling pullups so far. Can
+>> you clarify why you need it? I assume there is some contention you want
+>> to avoid, but on which interface?
+> 
+> The EV3 was designed with external pullup/pulldown everywhere. I know
+> for certain that it breaks one of the buttons if you do not disable the
+> internal ones. I imagine that it would have subtle effects elsewhere if
+> they are not disabled.
+> 
+> I have not gone through each pullup/pulldown bank individually, but it
+> would not surprise me at all if there was at least one thing on most of
+> them that would be adversely affected.
+> 
+>>
+>> I dont think this can be done this way using pinctrl-single. A small
+>> driver to handle pullup/down control for da850 may have to be added to
+>> drivers/pinctrl. It will be better to check with Linus Walleij on his
+>> thoughts using a new thread ccing the pinctrl subsystem list as well.
+> 
+> I will be glad to try to make a driver, but when I ran into this problem
+> I could not find much information on how to handle banks of
+> pullup/pulldown. Most of what I saw was for ones that can be
+> individually controlled. If anyone knows something like this already
+> that I could look at, it would be helpful to me.
 
-diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
-index 27dadc0..bba07e7 100644
---- a/drivers/usb/musb/musb_core.c
-+++ b/drivers/usb/musb/musb_core.c
-@@ -100,6 +100,7 @@
- #include <linux/io.h>
- #include <linux/dma-mapping.h>
- #include <linux/usb.h>
-+#include <linux/usb/of.h>
- 
- #include "musb_core.h"
- #include "musb_trace.h"
-@@ -130,6 +131,24 @@ static inline struct musb *dev_to_musb(struct device *dev)
- 	return dev_get_drvdata(dev);
- }
- 
-+enum musb_mode musb_get_mode(struct device *dev)
-+{
-+	enum usb_dr_mode mode;
+pinctrl-single supports a different compatible "pinconf-single" which
+supports the pinconf interface that can be used to set pullup and
+pulldown bias.
+
+Unfortunately, in case of AM18x, there are two registers to touch:
+PUPD_ENA and PUPD_SEL. So I believe the pinctrl-single driver cannot be
+used.
+
+There are pinconf operations pin_config_group_{set|get}(). Based on
+documentation these are meant to act on a group of pins. There are quite
+a few drivers implementing this interface. Perhaps they can be used as
+an example.
+
+Also, this needs to be done in a way that can be used by other boards
+too, so please move the common properties to da850.dtsi. Only the board
+specific pullup/down configuration should be in this file.
+
+> 
+> 
+>> [...]
+>>
+>>> +    in1_pins: pinmux_in1_pins {
+>>> +        pinctrl-single,bits = <
+>>> +            /* GP0[15] */
+>>> +            0x0 0x00000008 0x0000000f
+>>> +            /* GP0[2] */
+>>> +            0x4 0x00800000 0x00f00000
+>>> +            /* GP2[2] */
+>>> +            0x18 0x00800000 0x00f00000
+>>> +            /* GP8[10], GP8[11] */
+>>> +            0x48 0x88000000 0xff000000
+>>> +        >;
+>>> +    };
+>>
+>> I see that this is not really used. Can you add these when you actually
+>> use them. Looks like that applies to some other definitions like this
+>> below.
+> 
+> It will be possible to uses these gpios via sysfs (until a proper driver
+> for input and output ports is merged). So how about I attach these to
+> the gpio node for now?
+
+pins are usually attached to the node that consumes the GPIO pins, not
+to the gpio node itself.
+
+If the pins are not connected to anything and can be used via gpio
+sysfs, then "pinctrl hog" or "board level pinmux" is to be used.
+Something like below:
+
++&pmx_core {
++       pinctrl-names = "default";
++       pinctrl-0 = <&in1_pins>;
 +
-+	mode = usb_get_dr_mode(dev);
-+	switch (mode) {
-+	case USB_DR_MODE_HOST:
-+		return MUSB_HOST;
-+	case USB_DR_MODE_PERIPHERAL:
-+		return MUSB_PERIPHERAL;
-+	case USB_DR_MODE_OTG:
-+	case USB_DR_MODE_UNKNOWN:
-+	default:
-+		return MUSB_OTG;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(musb_get_mode);
-+
- /*-------------------------------------------------------------------------*/
- 
- #ifndef CONFIG_BLACKFIN
-diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
-index 2cb88a49..a406468 100644
---- a/drivers/usb/musb/musb_core.h
-+++ b/drivers/usb/musb/musb_core.h
-@@ -617,4 +617,9 @@ static inline void musb_platform_post_root_reset_end(struct musb *musb)
- 		musb->ops->post_root_reset_end(musb);
- }
- 
-+/* gets the "dr_mode" property from DT and converts it into musb_mode
-+ * if the property is not found or not recognized returns MUSB_OTG
-+ */
-+extern enum musb_mode musb_get_mode(struct device *dev);
-+
- #endif	/* __MUSB_CORE_H__ */
--- 
-2.7.3
++       in1_pins: pinmux_in1_pins {
++               pinctrl-single,bits = <
++                       0x0 0x00000008 0x0000000f
++			...
++               >;
++       };
++};
+
+That said, device tree is supposed to describe hardware and not change
+depend on current driver support. So I would wait for the driver to get
+merged before merging the pins that are used by it. It looks like you
+wont be able to use the support in a meaningful way till then anyway.
+
+> 
+>>
+>>> +&ehrpwm1 {
+>>> +    status = "disabled";
+>>
+>> Hmm, disabled? Can you add this node when you actually use it?
+> 
+> Not sure why I have this disabled. Like the gpios, the pwms can be used
+> via sysfs, so I would like to leave them.
+
+Okay, then please keep the node enabled.
+
+> 
+>>
+>>> +    pinctrl-names = "default";
+>>> +    /* MBPWM, MAPWM */
+>>> +    pinctrl-0 = <&ehrpwm1a_pins>, <&ehrpwm1b_pins>;
+>>> +};
+>>> +
+>>> +&ecap1 {
+>>> +    status = "disabled";
+>>
+>> same here and other places below.
+>>
+>>> +    pinctrl-names = "default";
+>>> +    /* MDPWM */
+>>> +    pinctrl-0 = <&ecap1_pins>;
+>>> +};
+>>> +
+>>> +&spi0 {
+>>> +    status = "okay";
+>>> +    pinctrl-names = "default";
+>>> +    pinctrl-0 = <&spi0_pins>, <&spi0_cs0_pin>, <&spi0_cs3_pin>;
+>>> +    dmas = <&edma0 14 0>, <&edma0 15 0>;
+>>> +    dma-names = "rx", "tx";
+>>> +
+>>> +    spi-flash@0 {
+>>> +        #address-cells = <1>;
+>>> +        #size-cells = <1>;
+>>> +        compatible = "n25q128a13", "jedec,spi-nor";
+>>> +        reg = <0>;
+>>> +        spi-max-frequency = <50000000>;
+>>> +        ti,spi-wdelay = <8>;
+>>> +
+>>> +        partition@0 {
+>>> +            label = "U-Boot";
+>>> +            reg = <0 0x40000>;
+>>
+>> Thats 256KB for U-Boot and MLO (I assume in concatenated AIS image). Is
+>> that sufficient for future too? Moving partitions later is tough ask
+>> because that means users will lose data when they upgrade the kernel
+>> because of partitions moving around. Just a suggestion to keep future
+>> U-Boot bloat in mind and not use a "just fits" number.
+> 
+> The MLO is on an EEPROM in the EV3, so the U-Boot partition is just
+> U-boot. The SoC boots from I2C, which then runs whatever is as 0x0 on
+> the flash memory.
+
+okay.
+
+> This partition table matches the partition scheme used on the official
+> LEGO firmware that ships with the devices. Most people running their own
+> kernel will probably be loading it from a microSD card, leaving the
+> official firmware intact and therefore will always have this partition
+> table.
+> 
+> My thinking is that if someone does want to use a different partitioning
+> scheme, they can build their own U-Boot and configure it to modify the
+> device tree with a new partition table.
+> 
+> The way the LEGO firmware flashing utility works, it wipes out the
+> entire flash memory each time you flash the firmware. So, data loss is
+> not a concern - you will loose your data anyway.
+
+Alright, thanks for the detailed explanation.
+
+Thanks,
+Sekhar
