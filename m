@@ -1,15 +1,16 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2 2/4] arm64: arch_timer: Introduce a generic erratum
- handing mechanism for fsl-a008585
-Date: Thu, 27 Oct 2016 11:29:55 +0100
-Message-ID: <4f0383f4-da41-c2ae-a740-b5dba4a95db1@arm.com>
-References: <1477553651-13428-1-git-send-email-dingtianhong@huawei.com>
- <1477553651-13428-2-git-send-email-dingtianhong@huawei.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 2/5] Documentation: devicetree: net: add NS2 bindings to
+ amac
+Date: Thu, 27 Oct 2016 11:17:57 +0200
+Message-ID: <20161027091757.GC12841@lunn.ch>
+References: <1477510561-17035-1-git-send-email-jon.mason@broadcom.com>
+ <1477510561-17035-3-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1477553651-13428-2-git-send-email-dingtianhong@huawei.com>
+Content-Disposition: inline
+In-Reply-To: <1477510561-17035-3-git-send-email-jon.mason@broadcom.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,176 +20,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ding Tianhong <dingtianhong@huawei.com>, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, oss@buserror.net, devicetree@vger.kernel.org, shawnguo@kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com
+To: Jon Mason <jon.mason@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, rafal@milecki.pl, David Miller <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/10/16 08:34, Ding Tianhong wrote:
-> The workaround for hisilicon,161601 will check the return value of the system counter
-> by different way, in order to distinguish with the fsl-a008585 workaround, introduce
-> a new generic erratum handing mechanism for fsl-a008585 and rename some functions. 
-> 
-> v2: Introducing a new generic erratum handling mechanism for fsl erratum a008585.
-> 
-> Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
+On Wed, Oct 26, 2016 at 03:35:58PM -0400, Jon Mason wrote:
+> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
 > ---
->  arch/arm64/include/asm/arch_timer.h  | 20 +++++++++-----
->  drivers/clocksource/arm_arch_timer.c | 51 +++++++++++++++++++++---------------
->  2 files changed, 43 insertions(+), 28 deletions(-)
+>  Documentation/devicetree/bindings/net/brcm,amac.txt | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
-> index eaa5bbe..118719d8 100644
-> --- a/arch/arm64/include/asm/arch_timer.h
-> +++ b/arch/arm64/include/asm/arch_timer.h
-> @@ -31,15 +31,21 @@
+> diff --git a/Documentation/devicetree/bindings/net/brcm,amac.txt b/Documentation/devicetree/bindings/net/brcm,amac.txt
+> index ba5ecc1..f92caee 100644
+> --- a/Documentation/devicetree/bindings/net/brcm,amac.txt
+> +++ b/Documentation/devicetree/bindings/net/brcm,amac.txt
+> @@ -2,15 +2,18 @@ Broadcom AMAC Ethernet Controller Device Tree Bindings
+>  -------------------------------------------------------------
 >  
->  #if IS_ENABLED(CONFIG_FSL_ERRATUM_A008585)
->  extern struct static_key_false arch_timer_read_ool_enabled;
-> -#define needs_fsl_a008585_workaround() \
-> +#define needs_timer_erratum_workaround() \
->  	static_branch_unlikely(&arch_timer_read_ool_enabled)
-
-This is too generic a name. Please make it more specific.
-
->  #else
-> -#define needs_fsl_a008585_workaround()  false
-> +#define needs_timer_erratum_workaround()  false
->  #endif
+>  Required properties:
+> - - compatible:	"brcm,amac" or "brcm,nsp-amac"
+> + - compatible:	"brcm,amac", "brcm,nsp-amac", or "brcm,ns2-amac"
+>   - reg:		Address and length of the GMAC registers,
+>  		Address and length of the GMAC IDM registers
+> +		Address and length of the NIC Port Manager registers (optional)
+>   - reg-names:	Names of the registers.  Must have both "amac_base" and
+> -		"idm_base"
+> +		"idm_base". "nicpm_base" is optional (required for NS2)
+>   - interrupts:	Interrupt number
 >  
-> -u32 __fsl_a008585_read_cntp_tval_el0(void);
-> -u32 __fsl_a008585_read_cntv_tval_el0(void);
-> -u64 __fsl_a008585_read_cntvct_el0(void);
-> +
-> +struct arch_timer_erratum_workaround {
-> +	int erratum;
+>  Optional properties:
+>  - mac-address:	See ethernet.txt file in the same directory
+> +- brcm,enet-phy-lane-swap:
+> +		boolean; Swap the PHY lanes (needed on some SKUs of NS2)
 
-What is the use of this field?
+Maybe i'm missing something here, but the patch to the PHY swapped the
+lanes. This seems to be a PHY property, not a MAC property. And it
+swapped them unconditionally....
 
-> +	u32 (*read_cntp_tval_el0)(void);
-> +	u32 (*read_cntv_tval_el0)(void);
-> +	u64 (*read_cntvct_el0)(void);
-> +};
-> +
-> +extern struct arch_timer_erratum_workaround *erratum_workaround;
-
-This is a very generic name for something that has a global visibility.
-Please choose a more specific variable name.
-
->  
->  /*
->   * The number of retries is an arbitrary value well beyond the highest number
-> @@ -62,8 +68,8 @@ u64 __fsl_a008585_read_cntvct_el0(void);
->  #define arch_timer_reg_read_stable(reg) 		\
->  ({							\
->  	u64 _val;					\
-> -	if (needs_fsl_a008585_workaround())		\
-> -		_val = __fsl_a008585_read_##reg();	\
-> +	if (needs_timer_erratum_workaround())		\
-> +		_val = erratum_workaround->read_##reg();	\
-
-As mentioned in my initial review, you've now broken modular access to
-any of the registers. Please fix it.
-
->  	else						\
->  		_val = read_sysreg(reg);		\
->  	_val;						\
-> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-> index 73c487d..e4f7fa1 100644
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -95,10 +95,32 @@ early_param("clocksource.arm_arch_timer.evtstrm", early_evtstrm_cfg);
->   */
->  
->  #ifdef CONFIG_FSL_ERRATUM_A008585
-> +struct arch_timer_erratum_workaround *erratum_workaround = NULL;
-> +
->  DEFINE_STATIC_KEY_FALSE(arch_timer_read_ool_enabled);
->  EXPORT_SYMBOL_GPL(arch_timer_read_ool_enabled);
->  
-> -static int fsl_a008585_enable = -1;
-> +
-> +static u32 fsl_a008585_read_cntp_tval_el0(void)
-> +{
-> +	return __fsl_a008585_read_reg(cntp_tval_el0);
-> +}
-> +
-> +static  u32 fsl_a008585_read_cntv_tval_el0(void)
-> +{
-> +	return __fsl_a008585_read_reg(cntv_tval_el0);
-> +}
-> +
-> +static u64 fsl_a008585_read_cntvct_el0(void)
-> +{
-> +	return __fsl_a008585_read_reg(cntvct_el0);
-> +}
-
-So now that you've indirected all calls through a set of pointers, why
-do you keep the __fsl_a008585_read_reg() macro inside the include file?
-I don't think it has any purpose in being globally visible now.
-
-> +
-> +static struct arch_timer_erratum_workaround arch_timer_fsl_a008585 = {
-
-And here's the proof that the erratum field is useless.
-
-> +	.read_cntp_tval_el0 = fsl_a008585_read_cntp_tval_el0,
-> +	.read_cntv_tval_el0 = fsl_a008585_read_cntv_tval_el0,
-> +	.read_cntvct_el0 = fsl_a008585_read_cntvct_el0,
-> +};
->  
->  static int __init early_fsl_a008585_cfg(char *buf)
->  {
-> @@ -109,26 +131,12 @@ static int __init early_fsl_a008585_cfg(char *buf)
->  	if (ret)
->  		return ret;
->  
-> -	fsl_a008585_enable = val;
-> +	if (val)
-> +		erratum_workaround = &arch_timer_fsl_a008585;
-> +
->  	return 0;
->  }
->  early_param("clocksource.arm_arch_timer.fsl-a008585", early_fsl_a008585_cfg);
-> -
-> -u32 __fsl_a008585_read_cntp_tval_el0(void)
-> -{
-> -	return __fsl_a008585_read_reg(cntp_tval_el0);
-> -}
-> -
-> -u32 __fsl_a008585_read_cntv_tval_el0(void)
-> -{
-> -	return __fsl_a008585_read_reg(cntv_tval_el0);
-> -}
-> -
-> -u64 __fsl_a008585_read_cntvct_el0(void)
-> -{
-> -	return __fsl_a008585_read_reg(cntvct_el0);
-> -}
-> -EXPORT_SYMBOL(__fsl_a008585_read_cntvct_el0);
->  #endif /* CONFIG_FSL_ERRATUM_A008585 */
->  
->  static __always_inline
-> @@ -891,9 +899,10 @@ static int __init arch_timer_of_init(struct device_node *np)
->  	arch_timer_c3stop = !of_property_read_bool(np, "always-on");
->  
->  #ifdef CONFIG_FSL_ERRATUM_A008585
-> -	if (fsl_a008585_enable < 0)
-> -		fsl_a008585_enable = of_property_read_bool(np, "fsl,erratum-a008585");
-> -	if (fsl_a008585_enable) {
-> +	if (!erratum_workaround && of_property_read_bool(np, "fsl,erratum-a008585"))
-> +		erratum_workaround = &arch_timer_fsl_a008585;
-
-It used to be possible to disable the erratum workaround on the command
-line, and you've just removed that feature. Please restore it.
-
-> +
-> +	if (erratum_workaround) {
->  		static_branch_enable(&arch_timer_read_ool_enabled);
->  		pr_info("Enabling workaround for FSL erratum A-008585\n");
->  	}
-> 
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+	Andrew
