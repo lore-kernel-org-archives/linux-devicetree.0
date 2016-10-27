@@ -1,86 +1,34 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: Re: [PATCH 4/4] Input: goodix - Support interchanging x and y
- coordinates in hardware
-Date: Thu, 27 Oct 2016 12:42:06 -0500
-Message-ID: <317acd32-f363-3b2b-9e30-106d5b335342@ti.com>
-References: <20161020195917.20051-1-fcooper@ti.com>
- <20161020195917.20051-5-fcooper@ti.com>
- <20161026231816.a35orxe3mpsvcx3m@rob-hp-laptop>
- <1477564471.2458.11.camel@hadess.net>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH V4 0/5] firmware: Add support for TI System Control
+ Interface (TI-SCI) protocol driver
+Date: Thu, 27 Oct 2016 20:46:30 +0300
+Message-ID: <f51516ba-9539-78ca-1d40-585ece047ea0@ti.com>
+References: <20161018230837.6515-1-nm@ti.com>
+ <2694e4b5-20d5-f590-c6a6-55ff4cb8c16b@ti.com> <m260odhjcb.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477564471.2458.11.camel@hadess.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bastien Nocera <hadess@hadess.net>, Rob Herring <robh@kernel.org>
-Cc: dmitry.torokhov@gmail.com, octavian.purdila@intel.com, irina.tirdea@intel.com, merker@debian.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, nm@ti.com
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <m260odhjcb.fsf@baylibre.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Dave Gerlach <d-gerlach@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Andrew Davis <afd@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Russ Dill <Russ.Dill@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 27/10/16 19:01, Kevin Hilman wrote:
+> Tero Kristo <t-kristo@ti.com> writes:
+>
+>> On 19/10/16 02:08, Nishanth Menon wrote:
+>>> Version 4 of the series is basically a rebase to v4.9-rc1, no functional
+>>> changes.
+>>
+>> Any final comments on this series, or shall I send a pull-req forward?
+>> Very minimal changes compared to v3 so should be good to go imo.
+>
+> Not a comment on the series, but a question on TI-SCI.
+>
+> Will the uC firmware be open like it was on AM335x?
 
+Currently it seems like it will be closed. :(
 
-On 10/27/2016 05:34 AM, Bastien Nocera wrote:
-> On Wed, 2016-10-26 at 18:18 -0500, Rob Herring wrote:
->> On Thu, Oct 20, 2016 at 02:59:17PM -0500, Franklin S Cooper Jr wrote:
->>>
-> <snip>
->> I'm not sure I follow why existing properties don't cover this.
-> 
-> Me neither. I certainly don't understand why the driver can't mangle
-> the data from the touchscreen all it wants. It's not like user-space is
-> talking to the touchscreen directly.
-> 
-Sorry the above could of been clearer.
-
-Lets ignore talking about X and Y axis for a little bit since that
-really depends on the default touchscreen config values and the way it
-is mounted on the touchscreen. Now lets say when your interacting with
-the touchscreen the touchscreen controller outputs a max value of 1280
-when moving your finger horizontally and 800 when moving your finger
-vertically.
-
-<-1280->
-------
-|    |  ^
-|    |  |
-|    | 800
-|    |  |
-------  V
-
-So no matter what your horizontal range is 0-1280 and your vertical
-range is 0-800. Now based on the above diagram you can see that usually
-you want the longer side to have a higher resolution. So you may want a
-vertical range of 0-1280 and a horizontal range from 0-800 instead.
-
-So lets add labels to the original diagram and assume that the x and y
-axis from the driver/user-space perspective is as follows.
-<-1280-> (X)
-------
-|    |  ^
-|    |  |
-|    | 800  (Y)
-|    |  |
-------  V
-
-The only thing the driver (software) has the ability to do is change the
-"orientation".
-
-<-1280-> (Y)
-------
-|    |  ^
-|    |  |
-|    | 800  (X)
-|    |  |
-------  V
-
-However, this doesn't change the resolution ie range of values in the
-horizontal and vertical direction the touch screen controller will
-report. Only the hardware can determine the resolution it will use. The
-interchange bit I set essentially swaps the range that the controller is
-currently programmed to use which in my first diagram the horizontal
-range was 0-1280 and my vertical range is 0-800. So by setting this
-interchange bit in hardware the horizontal range will now be 0-800 while
-the vertical range will be 0-1280 which is what we want.
-
-Does this clarify things? I messed up the second diagram in my commit
-message which is probably what caused the confusion.
+-Tero
