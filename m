@@ -1,98 +1,76 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 0/5] Add an overlay manager to handle board capes
-Date: Thu, 27 Oct 2016 08:41:56 -0500
-Message-ID: <CAL_JsqL9yWBj0yYE54XGi87YPGugGAACzr=CuW6dk5kk3EuyCA@mail.gmail.com>
-References: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
+From: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 2/2] iio: adc: spmi-vadc: Changes to support different
+ scaling
+Date: Thu, 27 Oct 2016 14:18:42 +0300
+Message-ID: <8418e7f1-55d9-2dfa-1dc7-5960f9da0305@linaro.org>
+References: <1477492887-1663-1-git-send-email-rphani@codeaurora.org>
+ <1477492887-1663-3-git-send-email-rphani@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Antoine Tenart <antoine.tenart@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Dmitry Shmidt <dimitrysh@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Frank Rowand <frowand.list@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477492887-1663-3-git-send-email-rphani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rama Krishna Phani A <rphani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, smohanad-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sivaa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, Julia.Lawall-L2FTfq7BK8M@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Please Cc the maintainers of drivers/of/.
+Hi Rama,
 
-+ Frank R, Hans, Dmitry S
+On 10/26/2016 05:41 PM, Rama Krishna Phani A wrote:
+> Polling can also be used for End of conversion completion. Implement logic
+> to choose either polling or interrupt for End of conversion completion.
+> Scaling can be done on the voltage to report adc code in physical units.
+> Add changes to support different scale functions to convert adc code to
+> physical units.
+> 
+> Signed-off-by: Rama Krishna Phani A <rphani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  14 ++
+>  drivers/iio/adc/qcom-spmi-vadc.c                   | 263 +++++++++++++++++----
+>  2 files changed, 236 insertions(+), 41 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+> index 0fb4613..39e31c0e 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+> @@ -37,6 +37,12 @@ VADC node:
+>      Value type: <prop-encoded-array>
+>      Definition: End of conversion interrupt.
+>  
+> +- qcom,vadc-poll-eoc:
+> +    Usage: optional
+> +    Value type: <bool>
+> +    Definition: Use polling instead of interrupts for End of Conversion
+> +		completion.
 
-On Wed, Oct 26, 2016 at 9:57 AM, Antoine Tenart
-<antoine.tenart@free-electrons.com> wrote:
-> Hi all,
->
-> Many boards now come with dips and compatible capes; among others the
-> C.H.I.P, or Beaglebones. All these boards have a kernel implementing an
-> out-of-tree "cape manager" which is used to detected capes, retrieve
-> their description and apply a corresponding overlay. This series is an
-> attempt to start a discussion, with an implementation of such a manager
-> which is somehow generic (i.e. formats or cape detectors can be added).
-> Other use cases could make use of this manager to dynamically load dt
-> overlays based on some input / hw presence.
+Why you need to add such a flag in DT?
 
-I'd like to see an input source be the kernel command line and/or a DT
-chosen property. Another overlay manager was proposed not to long
-ago[1] as well. There's also the Allwinner tablet use case from Hans
-where i2c devices are probed and detected. That's not using overlays
-currently, but maybe could.
+The DT should describe hardware details not how the driver will choose
+pooling vs interrupt.
 
-Another thing to consider is different sources of overlays. Besides in
-the filesystem, overlays could be built into the kernel (already
-supported), embedded in the dtb (as the other overlay mgr did) or we
-could extend FDT format to append them.
+On which use-case you would prefer pooling?
 
-> The proposed design is a library which can be used by detector drivers
-> to parse headers and load the corresponding overlay. Helpers are
-> provided for this purpose. The whole thing is divided into 3 entities:
->
-> - The parser which is project-specific (to allow supporting headers
->   already into the wild). It registers a function parsing an header's
->   data and filling one or more strings which will be used to find
->   matching dtbo on the fs.
->
-> - The overlay manager helpers allowing to parse a header to retrieve
->   the previously mentioned strings and to load a compatible overlay.
->
-> - The detectors which are used to detect capes and get their description
->   (to be parsed).
+> +
+>  Channel node properties:
+>  
+>  - reg:
+> @@ -92,6 +98,14 @@ Channel node properties:
+>              Valid values are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
+>              If property is not found, 1 sample will be used.
+>  
+> +- qcom,scale-function:
+> +    Usage: optional
+> +    Value type: <u32>
+> +    Definition: Scaling function used to convert raw ADC code to
+> +	units specific to a given channel. Scaled units can be
+> +	microvolts, millidegC.Valid values are: 0, 1, 2, 3, 4.
+> +	If property is not found, 0 scaling will be used.
 
-What about things like power has to be turned on first to detect
-boards and read their ID? I think this needs to be tied into the
-driver model. Though, don't go sticking cape mgr nodes into DT. Maybe
-a driver gets bound to a connector node, but we've got to sort out
-connector bindings first.
+This shouldn't be in DT binding. Just select the scale function for each
+channel in the driver based on compatible property.
 
-> An example of parser and detector is given, compatible with what's done
-> for the C.H.I.P. As the w1 framework is really bad (and we should
-> probably do something about that) the detector code is far from being
-> perfect; but that's not related to what we try to achieve here.
->
-> The actual implementation has a limitation: the detectors cannot be
-> built-in the kernel image as they would likely detect capes at boot time
-> but will fail to get their corresponding dt overlays as the fs isn't
-> mounted yet. The only case this can work is when dt overlays are
-> built-in firmwares. This isn't an issue for the C.H.I.P. use case right
-> now. There was a discussion about making an helper to wait for the
-> rootfs to be mount but the answer was "this is the driver's problem".
 
-I thought there are firmware loading calls that will wait. I think
-this all needs to work asynchronously both for firmware loading and
-because w1 is really slow.
-
-> I'd like to get comments, specifically from people using custom cape
-> managers, to see if this could fill their needs (with I guess some
-> modifications).
-
-Having 2 would certainly give a better sense this is generic.
-
-Rob
-
-[1] https://patchwork.ozlabs.org/patch/667805/
+-- 
+regards,
+Stan
