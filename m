@@ -1,145 +1,64 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 1/3] Documentation: dt: reset: Add TI SCI reset binding
-Date: Thu, 27 Oct 2016 14:24:41 -0500
-Message-ID: <b5acc586-c1ef-bc84-e238-4be0dbe9884f@ti.com>
-References: <20161026193938.25093-1-afd@ti.com>
- <20161026193938.25093-2-afd@ti.com>
- <7a7907f6-e3bf-471b-cb56-1ff0d39802fb@ti.com>
+From: <tthayer@opensource.altera.com>
+Subject: [PATCHv2 1/4] dt-bindings: mfd: Add Altera Arria10 SR Monitor
+Date: Thu, 27 Oct 2016 15:00:23 -0500
+Message-ID: <1477598426-28125-2-git-send-email-tthayer@opensource.altera.com>
+References: <1477598426-28125-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7a7907f6-e3bf-471b-cb56-1ff0d39802fb@ti.com>
+In-Reply-To: <1477598426-28125-1-git-send-email-tthayer@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@opensource.altera.com, linux@armlinux.org.uk, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc: davem@davemloft.net, geert@linux-m68k.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thor Thayer <tthayer@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/27/2016 12:07 PM, Suman Anna wrote:
-> Hi Andrew,
-> 
-> On 10/26/2016 02:39 PM, Andrew F. Davis wrote:
->> Add TI SCI reset controller binding. This describes the DT binding
->> details for a reset controller node providing reset management services
->> to hardware blocks (reset consumers) using the Texas Instrument's System
->> Control Interface (TI SCI) protocol to communicate to a system controller
->> block present on the SoC.
->>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> [s-anna@ti.com: revise the binding format]
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> Signed-off-by: Nishanth Menon <nm@ti.com>
->> ---
->>  .../devicetree/bindings/reset/ti,sci-reset.txt     | 68 ++++++++++++++++++++++
->>  MAINTAINERS                                        |  1 +
->>  2 files changed, 69 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/reset/ti,sci-reset.txt
->>
->> diff --git a/Documentation/devicetree/bindings/reset/ti,sci-reset.txt b/Documentation/devicetree/bindings/reset/ti,sci-reset.txt
->> new file mode 100644
->> index 0000000..189e284
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/reset/ti,sci-reset.txt
->> @@ -0,0 +1,68 @@
->> +Texas Instruments System Control Interface (TI-SCI) Reset Controller
->> +=====================================================================
->> +
->> +Some TI SoCs contain a system controller (like the Power Management Micro
->> +Controller (PMMC) on Keystone K2G SoC) that are responsible for controlling
->> +the state of the various hardware modules present on the SoC. Communication
->> +between the host processor running an OS and the system controller happens
->> +through a protocol called TI System Control Interface (TI-SCI protocol).
->> +For TI SCI details, please refer to the document,
->> +Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->> +
->> +TI-SCI Reset Controller Node
->> +============================
->> +This reset controller node uses the TI SCI protocol to perform the reset
->> +management of various hardware modules present on the SoC.
->> +
->> +Required properties:
->> +--------------------
->> + - compatible	: Should be "ti,sci-reset"
->> + - ti,sci	: phandle to the TI SCI device to use for managing resets
-> 
-> This does not look correct. Looks like you may have posted an older
-> series. We should not be needing the ti,sci property anymore and this
-> node should be a child node of the pmmc. Look at Tero's ti-sci clock series.
-> 
->> + - #reset-cells	: Should be 2. Please see the reset consumer node below for
->> +		  usage details.
->> +
->> +TI-SCI Reset Consumer Nodes
->> +===========================
->> +Each of the reset consumer nodes should have the following properties,
->> +in addition to their own properties.
->> +
->> +Required properties:
->> +--------------------
->> + - resets	: A phandle and reset specifier pair, one pair for each reset
->> +		  signal that affects the device, or that the device manages.
->> +		  The phandle should point to the TI-SCI reset controller node,
->> +		  and the reset specifier should have 2 cell-values. The first
->> +		  cell should contain the device ID, the values of which are
->> +		  specified in the <dt-bindings/genpd/<soc>.h> include file.
->> +		  The second cell should contain the reset mask value used by
->> +		  system controller, the values of which are specified in the
->> +		  include file <dt-bindings/reset/<soc>.h>, where <soc> is the
->> +		  name of the SoC involved, for example 'k2g'.
->> +
->> +Please also refer to Documentation/devicetree/bindings/reset/reset.txt for
->> +common reset controller usage by consumers.
->> +
->> +
->> +Example:
->> +--------
->> +The following example demonstrates both a TI-SCI reset controller node and a
->> +consumer (a DSP device) on the K2G SoC.
->> +
->> +#include <dt-bindings/genpd/k2g.h>
->> +#include <dt-bindings/reset/k2g.h>
->> +
->> +/ {
->> +	soc {
->> +		k2g_reset: k2g_reset {
->> +			compatible = "ti,sci-reset";
->> +			ti,sci = <&pmmc>;
->> +			#reset-cells = <2>;
->> +		};
-> 
-> This example is also wrong. Please update it to represent this node as a
-> child node of the pmmc.
-> 
+From: Thor Thayer <tthayer@opensource.altera.com>
 
-Ah, yes, you are right, this change was handled transparently in code by
-ti_sci_get_handle() so the documentation change was overlooked, will fix
-for v2.
+Add the Arria10 DevKit System Resource Chip register and state
+monitoring module to the MFD.
 
-Thanks,
-Andrew
+Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+---
+Note: This needs to be applied to the bindings document that
+was Acked & Applied but didn't reach the for-next branch.
+See https://patchwork.ozlabs.org/patch/629397/
+---
+v2  Change compatible string -mon to -monitor for clarity
+---
+ Documentation/devicetree/bindings/mfd/altera-a10sr.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> regards
-> Suman
-> 
->> +
->> +		dsp0: dsp0 {
->> +			...
->> +			resets = <&k2g_reset K2G_DEV_CGEM0 K2G_DEV_CGEM0_DSP0_RESET>;
->> +			...
->> +		};
->> +	};
->> +};
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 6e93976..d8068df 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -11899,6 +11899,7 @@ F:	drivers/soc/ti/ti_sci_pm_domains.c
->>  F:	Documentation/devicetree/bindings/clock/ti,sci-clk.txt
->>  F:	include/dt-bindings/clock/k2g.h
->>  F:	drivers/clk/keystone/sci-clk.c
->> +F:	Documentation/devicetree/bindings/reset/ti,sci-reset.txt
->>  
->>  THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
->>  M:	Hans Verkuil <hverkuil@xs4all.nl>
->>
-> 
+diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+index ea151f2..c47be28 100644
+--- a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
++++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+@@ -18,6 +18,7 @@ The A10SR consists of these sub-devices:
+ Device                   Description
+ ------                   ----------
+ a10sr_gpio               GPIO Controller
++a10sr_monitor            Register and State Monitoring
+ 
+ Arria10 GPIO
+ Required Properties:
+@@ -27,6 +28,10 @@ Required Properties:
+                       the second cell is used to specify flags.
+                       See ../gpio/gpio.txt for more information.
+ 
++Arria10 Register and State Monitor
++Required Properties:
++- compatible        : Should be "altr,a10sr-monitor"
++
+ Example:
+ 
+         resource-manager@0 {
+@@ -43,4 +48,8 @@ Example:
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 		};
++
++		a10sr_monitor {
++			compatible = "altr,a10sr-monitor";
++		};
+ 	};
+-- 
+1.9.1
