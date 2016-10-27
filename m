@@ -1,58 +1,92 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] soc: qcom: Add SoC info driver
-Date: Thu, 27 Oct 2016 15:41:51 +0200
-Message-ID: <9172138.R1PTFlLtP9@wuerfel>
-References: <1476972386-28655-1-git-send-email-kimran@codeaurora.org> <4173870.AkctyO62lp@wuerfel> <fd34e299-a3c2-e981-a92e-b61638a98e5f@codeaurora.org>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: Re: [RFC PATCH 5/5] of: overlay-mgr: add a detector for headers
+ stored on a ds2431 eeprom over w1
+Date: Thu, 27 Oct 2016 15:55:36 +0200
+Message-ID: <20161027135536.tk4y7b36aqjleyfd@kwain>
+References: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
+ <20161026145756.21689-6-antoine.tenart@free-electrons.com>
+ <e839e92f-127b-efc3-b10f-37477d1c5d9a@suse.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fd34e299-a3c2-e981-a92e-b61638a98e5f@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Imran Khan <kimran@codeaurora.org>
-Cc: andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============7543786898131409248=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <e839e92f-127b-efc3-b10f-37477d1c5d9a@suse.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <mbrugger@suse.com>
+Cc: mark.rutland@arm.com, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, Antoine Tenart <antoine.tenart@free-electrons.com>, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, maxime.ripard@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, October 27, 2016 6:40:27 PM CEST Imran Khan wrote:
-> On 10/26/2016 8:16 PM, Arnd Bergmann wrote:
-> > On Wednesday, October 26, 2016 7:42:08 PM CEST Imran Khan wrote:
-> >> On 10/26/2016 7:35 PM, Arnd Bergmann wrote:
-> >>>>> As we are talking about generic soc_device_attribute fields, I was hoping that
-> >>>>> having a vendor field would be helpful as along with family it would provide
-> >>>>> a more thorough information. Also as more than one foundries may be used for 
-> >>>>> a soc, can we have a field say foundry_id to provide this information.
-> >>> My first feeling is that this 'vendor' information can should be
-> >>> derived from the family. It's also not clear what would happen
-> >>> to this when a company gets bought. E.g. the Oxnas product family
-> >>> was subsequently owned by Oxford, PLX, Avago and Broadcom, and the
-> >>> mxs family was Sigmatel, Freescale, now NXP and might soon be
-> >>> Qualcomm. What would you put in there in this case?
-> >>
-> >> Okay, not having vendor field is fine for me. Could you also suggest
-> >> something about the foundry_id field.
-> > 
-> > This one seems more well-defined, so it's probably ok to add. What
-> > would be the use case of reading this? Would you want to read it
-> > just from user space or also from the kernel?
-> > 
-> 
-> As of now the use case I can think of, only involve reading this from user
-> space. For example for the same soc, coming from different foundries with
-> different manufacturing process, we may have a situation where some inconsistent
-> h/w behavior is being observed only on parts received from a certain foundry
-> and in those cases this information may help in segregation of problematic socs
-> and may also be used in testing these socs under a different set of settings like
-> voltage, frequency etc.
->
-> > Maybe this can be combined with a manufacturing process, which probably
-> > falls into a similar category, so we could have something like
-> > "TSMC 28ULP" as a string in there.
-> >
-> 
-> Yes. Having a manufacturing process as part of foundry-id can provide a more
-> thorough information.
 
-Ok, sounds good. Let's do it like this. We can always add support for
-in-kernel matching of this string if needed later.
+--===============7543786898131409248==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="crb3gkvyn7n3u62r"
+Content-Disposition: inline
 
-	Arnd
+
+--crb3gkvyn7n3u62r
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello Matthias,
+
+On Thu, Oct 27, 2016 at 11:19:14AM +0200, Matthias Brugger wrote:
+> On 10/26/2016 04:57 PM, Antoine Tenart wrote:
+> > Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+> > ---
+>=20
+> Please provide a commit message.
+
+Sure. There are other modifications I'd like to do in the series if it
+happens to be an use case for people. This patch is given as an example
+of how we could implement this.
+
+Antoine
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--crb3gkvyn7n3u62r
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCgAGBQJYEgdYAAoJEFxNi8it27zYuvUQAJFwKekwVTfub59UusQ/8xyh
+FBwuM4jxUabcQC4x2C4yuqz7ZPdB9jcD/nV2pucnJuXW3lMqEgSZfTrsfD9CGjSN
+gQQsAEYNY9XFUmW5mKrpT17SC6N71Uk8uXmLR+4PpFbf7I9US0ZZ1ruuVvUgSUMn
+I9fSjF4I6GKIsuR4xT1Z2Q7Oh4ALR0PK5dM+4+Cig9SXpZC32RGJ+HANJum8B66k
+y31qiRB36vkgl/5igADWjSD/e57vc7pPG0Tn909WtF71GTuNZ1qT6OmY6wjmhCGz
+9Gtk7zpP947a3+jqZ/pObWjCJziHOzvakeRKWD4GYnUjM+wl2Wp2bQW0a025zeLd
+JDoaQ+cys3R+KDzfi+rJZJ4HnOnvlEvxFIIManyPJwgHiUF32U7Rn7lgXT7sLEyZ
+h/+b1kcdJekhkRVgWWOkTMDfkJWCvJOxuG0oKDJYCfnphNnkieGzB2uYJY+eMlXw
+A2rZjw5XDNB+Krseyl4TPaDWKU3MsHdni/TyteX5ggXsOfPm6pYQZD58BoRsHQPI
+cPQOwCg2azqhmxuRjaCC+iRp8ShIPG8s3uDOglKKjx0Sqw683sN4dFGsLcPGqTfu
+/xx09timwfawfqRbcWcPQagwoTII00RzQiB1bV6hqb/gI7xI2s2+ijv8YyWE+Op2
+DxXbFuH1onX7uJCeb3XD
+=O8Ml
+-----END PGP SIGNATURE-----
+
+--crb3gkvyn7n3u62r--
+
+
+--===============7543786898131409248==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7543786898131409248==--
