@@ -1,96 +1,363 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 Subject: Re: [RFC PATCH 1/5] of: introduce the overlay manager
-Date: Thu, 27 Oct 2016 16:54:25 +0200
-Message-ID: <20161027145425.x6idpcrq6nbhmihv@kwain>
-References: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
- <20161026145756.21689-2-antoine.tenart@free-electrons.com>
- <CANLsYkyszsn2TLYhUjHMt2ZnEUmE9eSc71W2KWBL0fWhh3PPBw@mail.gmail.com>
- <20161027140342.kidk4gqxwbtphrbs@kwain>
- <CANLsYkxF4_fZwaBe+_0twMhND3TfpnmkXA_1q=AN_j9=cQ5ukw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3478746711418185243=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CANLsYkxF4_fZwaBe+_0twMhND3TfpnmkXA_1q=AN_j9=cQ5ukw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, pantelis.antoniou@konsulko.com, Antoine Tenart <antoine.tenart@free-electrons.com>, sboyd@codeaurora.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Date: Thu, 27 Oct 2016 17:56:31 +0300
+Message-ID: <69E431C1-FB92-4E1C-A1BB-58AA7D89F97B@konsulko.com>
+References: <20161026145756.21689-1-antoine.tenart@free-electrons.com> <20161026145756.21689-2-antoine.tenart@free-electrons.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161026145756.21689-2-antoine.tenart@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Antoine Tenart <antoine.tenart@free-electrons.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, sboyd@codeaurora.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Antoine,
 
---===============3478746711418185243==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6d7u2vamgma2rn2j"
-Content-Disposition: inline
-
-
---6d7u2vamgma2rn2j
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Oct 27, 2016 at 08:49:29AM -0600, Mathieu Poirier wrote:
+> On Oct 26, 2016, at 17:57 , Antoine Tenart =
+<antoine.tenart@free-electrons.com> wrote:
 >=20
-> I agree - something like this should have attracted more reviews.  I
-> suggest providing a better explanation, i.e what you are doing and why
-> in more details.  I reviewed your set and I'm still not sure of
-> exactly what it does, hence not being able to comment on the validity
-> of the approach.
+> The overlay manager is an in-kernel library helping to handle dt =
+overlay
+> loading when using capes.
 >=20
-> I'm pretty sure there is value in what you are suggesting, it's a
-> matter of getting people to understand the approach and motivation.
 
-That's what I tried to do in the cover-letter. What do you think is
-missing that I should add in it?
+All in all a nice idea. Comments inline.
 
-Thanks,
+> Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+> ---
+> drivers/of/Kconfig                           |   2 +
+> drivers/of/Makefile                          |   1 +
+> drivers/of/overlay-manager/Kconfig           |   6 +
+> drivers/of/overlay-manager/Makefile          |   1 +
+> drivers/of/overlay-manager/overlay-manager.c | 199 =
++++++++++++++++++++++++++++
+> include/linux/overlay-manager.h              |  38 +++++
+> 6 files changed, 247 insertions(+)
+> create mode 100644 drivers/of/overlay-manager/Kconfig
+> create mode 100644 drivers/of/overlay-manager/Makefile
+> create mode 100644 drivers/of/overlay-manager/overlay-manager.c
+> create mode 100644 include/linux/overlay-manager.h
+>=20
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index bc07ad30c9bf..e57aeaf0bf4f 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -116,4 +116,6 @@ config OF_OVERLAY
+> config OF_NUMA
+> 	bool
+>=20
+> +source "drivers/of/overlay-manager/Kconfig"
+> +
+> endif # OF
+> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+> index d7efd9d458aa..d738fd41271f 100644
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -16,3 +16,4 @@ obj-$(CONFIG_OF_OVERLAY) +=3D overlay.o
+> obj-$(CONFIG_OF_NUMA) +=3D of_numa.o
+>=20
+> obj-$(CONFIG_OF_UNITTEST) +=3D unittest-data/
+> +obj-y +=3D overlay-manager/
+> diff --git a/drivers/of/overlay-manager/Kconfig =
+b/drivers/of/overlay-manager/Kconfig
+> new file mode 100644
+> index 000000000000..eeb76054dcb8
+> --- /dev/null
+> +++ b/drivers/of/overlay-manager/Kconfig
+> @@ -0,0 +1,6 @@
+> +config OF_OVERLAY_MGR
+> +	bool "Device Tree Overlay Manager"
+> +	depends on OF_OVERLAY
+> +	help
+> +	  Enable the overlay manager to handle automatic overlay loading =
+when
+> +	  devices are detected.
+> diff --git a/drivers/of/overlay-manager/Makefile =
+b/drivers/of/overlay-manager/Makefile
+> new file mode 100644
+> index 000000000000..86d2b53950e7
+> --- /dev/null
+> +++ b/drivers/of/overlay-manager/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_OF_OVERLAY_MGR)			+=3D overlay-manager.o
+> diff --git a/drivers/of/overlay-manager/overlay-manager.c =
+b/drivers/of/overlay-manager/overlay-manager.c
+> new file mode 100644
+> index 000000000000..a725d7e24d38
+> --- /dev/null
+> +++ b/drivers/of/overlay-manager/overlay-manager.c
+> @@ -0,0 +1,199 @@
+> +/*
+> + * Copyright (C) 2016 - Antoine Tenart =
+<antoine.tenart@free-electrons.com>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/firmware.h>
+> +#include <linux/list.h>
+> +#include <linux/of.h>
+> +#include <linux/of_fdt.h>
+> +#include <linux/overlay-manager.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +
+> +struct overlay_mgr_overlay {
+> +	struct list_head list;
+> +	char *name;
+> +};
+> +
+> +LIST_HEAD(overlay_mgr_overlays);
+> +LIST_HEAD(overlay_mgr_formats);
+> +DEFINE_SPINLOCK(overlay_mgr_lock);
+> +DEFINE_SPINLOCK(overlay_mgr_format_lock);
+> +
+> +/*
+> + * overlay_mgr_register_format()
+> + *
+> + * Adds a new format candidate to the list of supported formats. The =
+registered
+> + * formats are used to parse the headers stored on the dips.
+> + */
+> +int overlay_mgr_register_format(struct overlay_mgr_format *candidate)
+> +{
+> +	struct overlay_mgr_format *format;
+> +	int err =3D 0;
+> +
+> +	spin_lock(&overlay_mgr_format_lock);
+> +
+> +	/* Check if the format is already registered */
+> +	list_for_each_entry(format, &overlay_mgr_formats, list) {
+> +		if (!strcpy(format->name, candidate->name)) {
+> +			err =3D -EEXIST;
+> +			goto err;
+> +		}
+> +	}
+> +
+> +	list_add_tail(&candidate->list, &overlay_mgr_formats);
+> +
+> +err:
+> +	spin_unlock(&overlay_mgr_format_lock);
+> +	return err;
+> +}
+> +EXPORT_SYMBOL_GPL(overlay_mgr_register_format);
+> +
+> +/*
+> + * overlay_mgr_parse()
+> + *
+> + * Parse raw data with registered format parsers. Fills the candidate =
+string if
+> + * one parser understood the raw data format.
+> + */
+> +int overlay_mgr_parse(struct device *dev, void *data, char =
+***candidates,
+> +		      unsigned *n)
+> +{
+> +	struct list_head *pos, *tmp;
+> +	struct overlay_mgr_format *format;
+> +
+> +	list_for_each_safe(pos, tmp, &overlay_mgr_formats) {
+> +		format =3D list_entry(pos, struct overlay_mgr_format, =
+list);
+> +
+> +		format->parse(dev, data, candidates, n);
+> +		if (n > 0)
+> +			return 0;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +EXPORT_SYMBOL_GPL(overlay_mgr_parse);
+> +
+> +static int overlay_mgr_check_overlay(struct device_node *node)
+> +{
+> +	struct property *p;
+> +	const char *str =3D NULL;
+> +
+> +	p =3D of_find_property(node, "compatible", NULL);
+> +	if (!p)
+> +		return -EINVAL;
+> +
+> +	do {
+> +		str =3D of_prop_next_string(p, str);
+> +		if (of_machine_is_compatible(str))
+> +			return 0;
+> +	} while (str);
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +/*
+> + * _overlay_mgr_insert()
+> + *
+> + * Try to request and apply an overlay given a candidate name.
+> + */
+> +static int _overlay_mgr_apply(struct device *dev, char *candidate)
+> +{
+> +	struct overlay_mgr_overlay *overlay;
+> +	struct device_node *node;
+> +	const struct firmware *firmware;
+> +	char *firmware_name;
+> +	int err =3D 0;
+> +
+> +	spin_lock(&overlay_mgr_lock);
+> +
+> +	list_for_each_entry(overlay, &overlay_mgr_overlays, list) {
+> +		if (!strcmp(overlay->name, candidate)) {
+> +			dev_err(dev, "overlay already loaded\n");
+> +			err =3D -EEXIST;
+> +			goto err_lock;
+> +		}
+> +	}
+> +
+> +	overlay =3D devm_kzalloc(dev, sizeof(*overlay), GFP_KERNEL);
+> +	if (!overlay) {
+> +		err =3D -ENOMEM;
+> +		goto err_lock;
+> +	}
+> +
+> +	overlay->name =3D candidate;
+> +
+> +	firmware_name =3D kasprintf(GFP_KERNEL, "overlay-%s.dtbo", =
+candidate);
+> +	if (!firmware_name) {
+> +		err =3D -ENOMEM;
+> +		goto err_free;
+> +	}
+> +
+> +	dev_info(dev, "requesting firmware '%s'\n", firmware_name);
+> +
+> +	err =3D request_firmware_direct(&firmware, firmware_name, dev);
+> +	if (err) {
+> +		dev_info(dev, "failed to request firmware '%s'\n",
+> +			 firmware_name);
+> +		goto err_free;
+> +	}
+> +
+> +	of_fdt_unflatten_tree((unsigned long *)firmware->data, NULL, =
+&node);
+> +	if (!node) {
+> +		dev_err(dev, "failed to unflatted tree\n");
+> +		err =3D -EINVAL;
+> +		goto err_fw;
+> +	}
+> +
+> +	of_node_set_flag(node, OF_DETACHED);
+> +
+> +	err =3D of_resolve_phandles(node);
+> +	if (err) {
+> +		dev_err(dev, "failed to resolve phandles: %d\n", err);
+> +		goto err_fw;
+> +	}
+> +
+> +	err =3D overlay_mgr_check_overlay(node);
+> +	if (err) {
+> +		dev_err(dev, "overlay checks failed: %d\n", err);
+> +		goto err_fw;
+> +	}
+> +
+> +	err =3D of_overlay_create(node);
+> +	if (err < 0) {
+> +		dev_err(dev, "failed to create overlay: %d\n", err);
+> +		goto err_fw;
+> +	}
+> +
+> +	list_add_tail(&overlay->list, &overlay_mgr_overlays);
+> +
+> +	dev_info(dev, "loaded firmware '%s'\n", firmware_name);
+> +
+> +	spin_unlock(&overlay_mgr_lock);
+> +	return 0;
+> +
+> +err_fw:
+> +	release_firmware(firmware);
+> +err_free:
+> +	devm_kfree(dev, overlay);
+> +err_lock:
+> +	spin_unlock(&overlay_mgr_lock);
+> +	return err;
+> +}
+> +
+> +int overlay_mgr_apply(struct device *dev, char **candidates, unsigned =
+n)
+> +{
+> +	int i, ret;
+> +
+> +	for (i=3D0; i < n; i++) {
+> +		ret =3D _overlay_mgr_apply(dev, candidates[i]);
+> +		if (!ret)
+> +			return 0;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +EXPORT_SYMBOL_GPL(overlay_mgr_apply);
+> diff --git a/include/linux/overlay-manager.h =
+b/include/linux/overlay-manager.h
+> new file mode 100644
+> index 000000000000..8adcc4f5ddf6
+> --- /dev/null
+> +++ b/include/linux/overlay-manager.h
+> @@ -0,0 +1,38 @@
+> +/*
+> + * Copyright (C) 2016 - Antoine Tenart =
+<antoine.tenart@free-electrons.com>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#ifndef __OVERLAY_MGR_H__
+> +#define __OVERLAY_MGR_H__
+> +
+> +#include <linux/device.h>
+> +#include <linux/list.h>
+> +#include <linux/sizes.h>
+> +
+> +#define OVERLAY_MGR_DIP_MAX_SZ		SZ_128
+> +
 
-Antoine
 
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---6d7u2vamgma2rn2j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCgAGBQJYEhUhAAoJEFxNi8it27zYjqwQAIJm4r3ogx0fylLlqA61jIlO
-zgwY472yvC4VWjtGZIUAymhFmHSZnX2LvmL/o3zbYvI13AkxZRESy4kiYcWdfRGN
-Is/9rjKyB2LC6DvIzmdQ186JcyEbXcHoALZpNzpDrrBF+ZCvMpdW1Fri0FVtkWnM
-NFTBsZQJNW3OsOOITuLJSry+Boyr8ZMUpHDxTD9AsIYK4kEu5GC3bI0/eNCTjOnT
-mkLKUA+R21Szl7a2ERs7+yRSXIBf/wRYxTLc0c/3eJ7usfWdg3wD3JCD5JpSSKYA
-tTAf9xEA38iBqubaVDHVa22O4lf++U6nPw+TTVsn97WuQk+kYHC1UtLyuFqSgENc
-+ATffg4KBets+mkq2/H/wxARBRsuNyQ4jJaByA5mwanCyEfKYFbOXN3+te8T/kch
-+BMQeQF996VPkYQFcdzcirVh9J3LDeH4jZRg3bWlEbGavHuLuvH5z8zKiSDdKyV/
-NjmVssl4L+7o0c1JmwmRasBHP1oPyToOF/vFG/tN/JjqBOgFEWtcbSoBgna8ILpN
-7BlRxWbNnI7xNA/x9LiS448x+JVGZHwAOm+4MKvzSMqnsl8cNoJGWx0E1IFmCuM/
-sb0O2Bf1gmkVidZPR5Yvr59e9AtyRzMgq5JgM0vtqz3t5lQa74N1RdBjbgmmi8i2
-8F7CoY+nudRC3LNQfn1b
-=g0bj
------END PGP SIGNATURE-----
-
---6d7u2vamgma2rn2j--
+This should not be here; if it=E2=80=99s general kernel plumbing no =
+mention to
+specific boards/archs are relevant.
 
 
---===============3478746711418185243==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> +struct overlay_mgr_format {
+> +	struct list_head list;
+> +	char *name;
+> +	int (*parse)(struct device *dev, void *data, char ***candidates,
+> +		     unsigned *n);
+> +};
+> +
+> +int overlay_mgr_register_format(struct overlay_mgr_format =
+*candidate);
+> +int overlay_mgr_parse(struct device *dev, void *data, char =
+***candidates,
+> +		      unsigned *n);
+> +int overlay_mgr_apply(struct device *dev, char **candidates, unsigned =
+n);
+> +
+> +#define dip_convert(field)                                      \
+> +        (                                                       \
+> +                (sizeof(field) =3D=3D 1) ? field :                  \
+> +                (sizeof(field) =3D=3D 2) ? be16_to_cpu(field) :     \
+> +                (sizeof(field) =3D=3D 4) ? be32_to_cpu(field) :     \
+> +                -1                                              \
+> +        )
+> +
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Same as above.
 
---===============3478746711418185243==--
+> +#endif /* __OVERLAY_MGR_H__ */
+> --=20
+> 2.10.1
+
+Regards
+
+=E2=80=94 Pantelis
