@@ -1,40 +1,112 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC PATCH 02/13] of: Remove excessive printks to reduce clutter
-Date: Thu, 27 Oct 2016 07:21:47 -0500
-Message-ID: <CAL_Jsq+TWZw+VcbYZp_xmFR-yitY8bn+gqe1Q2N42UFZAYsZKg@mail.gmail.com>
-References: <1477429146-27039-1-git-send-email-frowand.list@gmail.com> <1477429146-27039-3-git-send-email-frowand.list@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] PCI: hisi: add PCIe driver support for HiSilicon STB
+ SoCs
+Date: Thu, 27 Oct 2016 09:52:39 -0500
+Message-ID: <20161027145239.yso327bl6iiazusb@rob-hp-laptop>
+References: <1477014336-12385-1-git-send-email-juruqiang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477429146-27039-3-git-send-email-frowand.list@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1477014336-12385-1-git-send-email-juruqiang@huawei.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Ruqiang Ju <juruqiang@huawei.com>
+Cc: bhelgaas@google.com, mark.rutland@arm.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bin.chen@linaro.org, elder@linaro.org, hermit.wangheming@hisilicon.com, yanhaifeng@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 3:58 PM,  <frowand.list@gmail.com> wrote:
-> From: Frank Rowand <frank.rowand@am.sony.com>
-
-Maybe some should be debug?
-
-> Signed-off-by: Frank Rowand <frank.rowand@am.sony.com>
+On Fri, Oct 21, 2016 at 09:45:36AM +0800, Ruqiang Ju wrote:
+> Add PCIe controller drvier for HiSilicon STB SoCs,
+> the controller is based on the DesignWare's PCIe core.
+> 
+> Signed-off-by: Ruqiang Ju <juruqiang@huawei.com>
 > ---
->  drivers/of/resolver.c | 28 ----------------------------
->  1 file changed, 28 deletions(-)
->
-> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-> index 4ff0220d7aa2..93a7ca0bf98c 100644
-> --- a/drivers/of/resolver.c
-> +++ b/drivers/of/resolver.c
-> @@ -116,8 +116,6 @@ static int __of_adjust_phandle_ref(struct device_node *node,
->
->         propval = kmalloc(rprop->length, GFP_KERNEL);
->         if (!propval) {
-> -               pr_err("%s: Could not copy value of '%s'\n",
-> -                               __func__, rprop->name);
->                 return -ENOMEM;
->         }
+>  .../bindings/pci/hisilicon-histb-pcie.txt          |  66 +++
+>  drivers/pci/host/Kconfig                           |   8 +
+>  drivers/pci/host/Makefile                          |   1 +
+>  drivers/pci/host/pcie-histb.c                      | 448 +++++++++++++++++++++
+>  4 files changed, 523 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+>  create mode 100644 drivers/pci/host/pcie-histb.c
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+> new file mode 100644
+> index 0000000..952f1db
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+> @@ -0,0 +1,66 @@
+> +HiSilicon STB PCIe host bridge DT description
+> +
+> +HiSilicon PCIe host controller is based on Designware PCI core.
+> +It shares common functions with PCIe Designware core driver and inherits
+> +common properties defined in
+> +Documentation/devicetree/bindings/pci/designware-pci.txt.
+> +
+> +Additional properties are described here:
+> +
+> +Required properties
+> +- compatible: Should be one of the following strings
+> +		 "hisilicon,histb-pcie",
 
-I would remove the brackets in this patch rather than separately.
+This should either be a fallback compatible or be dropped.
 
->         memcpy(propval, rprop->value, rprop->length);
+> +		 "hisilicon,hi3798cv200-pcie"
+> +- reg: Should contain sysctl, rc_dbi, config registers location and length.
+> +- reg-names: Must include the following entries:
+> +  "sysctrl": system control registers of PCIe controller;
+> +  "rc_dbi": configuration space of PCIe controller;
+> +  "config": configuration transaction space of PCIe controller.
+> +- interrupts: MSI interrupt.
+> +- interrupt-names: Must include "msi" entries.
+> +- clocks: List of phandle and clock specifier pairs as listed
+> +		in clock-names property.
+> +- clock-name: Must include the following entries:
+> +  "aux_clk": auxiliary gate clock;
+> +  "pipe_clk": pipe gate clock;
+> +  "sys_clk": sys gate clock;
+> +  "bus_clk": bus gate clock.
+> +- resets: List of phandle and reset specifier pairs as listed
+> +			in reset-names property
+> +- reset-names: Must include the following entries:
+> +  "soft_reset": soft reset;
+> +  "sys_reset": sys reset;
+> +  "bus_rest": bus reset.
+> +
+> +Optional properties:
+> +- power-gpios: pcie device power control gpio if needed;
+> +- power-gpios-active-high: must include this propty
+> +		if active level is high.
+
+This should be dropped. The power-gpios property should indicate the 
+active state.
+
+> +- status: Either "ok" or "disabled".
+
+No need to explicitly document this.
+
+> +
+> +Example:
+> +	pcie@f9860000 {
+> +		compatible = "hisilicon,histb-pcie", "snps,dw-pcie";
+> +		reg = <0xf9860000 0x1000>,
+> +			<0xf0000000 0x2000>,
+> +			<0xf2000000 0x01000000>;
+> +		reg-names = "sysctrl", "rc_dbi", "config";
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		device_type = "pci";
+> +		num-lanes = <1>;
+> +		ranges=<0x81000000 0 0 0xf4000000 0 0x00010000
+> +			0x82000000 0 0xf3000000 0xf3000000 0 0x01000000>;
+> +		interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "msi";
+> +		#interrupt-cells = <1>;
+> +		interrupt-map-mask = <0 0 0 7>;
+> +		interrupt-map = <0x0 0 0 1 &gic 0 131 4>;
+> +		clocks = <&crg PCIE_AUX_CLK>,
+> +			 <&crg PCIE_PIPE_CLK>,
+> +			 <&crg PCIE_SYS_CLK>,
+> +			 <&crg PCIE_BUS_CLK>;
+> +		clock-names = "aux_clk", "pipe_clk", "sys_clk", "bus_clk";
+> +		resets = <&crg 0x18c 6>, <&crg 0x18c 5>, <&crg 0x18c 4>;
+> +		reset-names = "soft_reset", "sys_reset", "bus_reset";
+> +	};
