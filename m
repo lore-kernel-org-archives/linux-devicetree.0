@@ -1,31 +1,51 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 0/2] Renesas R8A7745 CPG/MSSR clock support
-Date: Fri, 28 Oct 2016 00:01:12 +0300
-Message-ID: <92ed8fd0-33c5-f5af-15ce-311cf61e5f83@cogentembedded.com>
-References: <13079532.zQoaX56ouR@wasted.cogentembedded.com>
+From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/6] Documentation: devicetree: dwc3: Add interrupt
+ moderation
+Date: Thu, 27 Oct 2016 14:06:12 -0700
+Message-ID: <a5b95df2-31c8-be55-013c-2ea4a3e7bf44@synopsys.com>
+References: <cover.1477424426.git.johnyoun@synopsys.com>
+ <e7a864e5a2af12d5a8d97f2591065f4aa85f86cb.1477424426.git.johnyoun@synopsys.com>
+ <37f3eec3-b026-97ad-8b33-353a3b93f840@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <13079532.zQoaX56ouR@wasted.cogentembedded.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: mturquette@baylibre.com, linux-clk@vger.kernel.org, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, horms+renesas@verge.net.au
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <37f3eec3-b026-97ad-8b33-353a3b93f840-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/27/2016 11:41 PM, Sergei Shtylyov wrote:
+On 10/26/2016 3:22 AM, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 10/25/2016 10:42 PM, John Youn wrote:
+> 
+>> Add interrupt moderation interval binding for dwc3.
+>>
+>> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/usb/dwc3.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+>> index e3e6983..17de9fc 100644
+>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>> @@ -53,6 +53,7 @@ Optional properties:
+>>   - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
+>>  	register for post-silicon frame length adjustment when the
+>>  	fladj_30mhz_sdbnd signal is invalid or incorrect.
+>> + - snps,imod_interval: the interrupt moderation interval.
+> 
+>     Hyphens are preferred in the DT node/prop names.
+> 
 
->    Here's the set of 2 patches against the 'clk-next' branch of CLK group's
-> 'linux.git' repo plus the R8A7743 CPG/MSSR patches just re-posted. They also
-> depend on the common R-Car Gen2 support patch. As the DT patches in the
-> R8A7745/SK-RZG1E board support series depend on the patch #1 of this series,
-> it might make sense to merge this patch to the 'renesas.git' repo as well...
->
-> [1/2] ARM: shmobile: r8a7745: add CPG clock index macros
-> [2/2] clk: renesas: cpg-mssr: add R8A7745 support
+Thanks will fix.
 
-    Forgot to mention that the patch #2 depends on Geert's RST driver in order 
-to build.
+John
 
-MBR, Sergei
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
