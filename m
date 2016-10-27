@@ -1,75 +1,57 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 2/5] Documentation: devicetree: net: add NS2 bindings to
- amac
-Date: Thu, 27 Oct 2016 14:25:08 -0700
-Message-ID: <1a3e3dad-fd99-f58c-2742-f90d02d1392c@gmail.com>
-References: <1477510561-17035-1-git-send-email-jon.mason@broadcom.com>
- <1477510561-17035-3-git-send-email-jon.mason@broadcom.com>
- <20161027091757.GC12841@lunn.ch> <20161027212106.GA25693@broadcom.com>
+From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 13/15] Documentation: devicetree: dwc2: Add host DMA
+ binding
+Date: Thu, 27 Oct 2016 14:33:03 -0700
+Message-ID: <118c9ef9-f110-5329-4520-9e07bc0e0ad4@synopsys.com>
+References: <cover.1476926069.git.johnyoun@synopsys.com>
+ <1846cc28dd77ab35cd21994bb746f7685422cfb2.1476926070.git.johnyoun@synopsys.com>
+ <20161026220718.2vqcpts6mw2vf7jh@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20161027212106.GA25693@broadcom.com>
-Sender: netdev-owner@vger.kernel.org
-To: Jon Mason <jon.mason@broadcom.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, rafal@milecki.pl, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161026220718.2vqcpts6mw2vf7jh@rob-hp-laptop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/27/2016 02:21 PM, Jon Mason wrote:
-> On Thu, Oct 27, 2016 at 11:17:57AM +0200, Andrew Lunn wrote:
->> On Wed, Oct 26, 2016 at 03:35:58PM -0400, Jon Mason wrote:
->>> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
->>> ---
->>>  Documentation/devicetree/bindings/net/brcm,amac.txt | 7 +++++--
->>>  1 file changed, 5 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/brcm,amac.txt b/Documentation/devicetree/bindings/net/brcm,amac.txt
->>> index ba5ecc1..f92caee 100644
->>> --- a/Documentation/devicetree/bindings/net/brcm,amac.txt
->>> +++ b/Documentation/devicetree/bindings/net/brcm,amac.txt
->>> @@ -2,15 +2,18 @@ Broadcom AMAC Ethernet Controller Device Tree Bindings
->>>  -------------------------------------------------------------
->>>  
->>>  Required properties:
->>> - - compatible:	"brcm,amac" or "brcm,nsp-amac"
->>> + - compatible:	"brcm,amac", "brcm,nsp-amac", or "brcm,ns2-amac"
->>>   - reg:		Address and length of the GMAC registers,
->>>  		Address and length of the GMAC IDM registers
->>> +		Address and length of the NIC Port Manager registers (optional)
->>>   - reg-names:	Names of the registers.  Must have both "amac_base" and
->>> -		"idm_base"
->>> +		"idm_base". "nicpm_base" is optional (required for NS2)
->>>   - interrupts:	Interrupt number
->>>  
->>>  Optional properties:
->>>  - mac-address:	See ethernet.txt file in the same directory
->>> +- brcm,enet-phy-lane-swap:
->>> +		boolean; Swap the PHY lanes (needed on some SKUs of NS2)
+On 10/26/2016 3:07 PM, Rob Herring wrote:
+> On Wed, Oct 19, 2016 at 06:22:52PM -0700, John Youn wrote:
+>> Add the host-dma property to devicetree. This controls whether to use
+>> DMA in host mode.
 >>
->> Maybe i'm missing something here, but the patch to the PHY swapped the
->> lanes. This seems to be a PHY property, not a MAC property. And it
->> swapped them unconditionally....
+>> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+>> index 2c30a54..17f7624 100644
+>> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+>> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+>> @@ -25,6 +25,7 @@ Optional properties:
+>>  Refer to phy/phy-bindings.txt for generic phy consumer properties
+>>  - dr_mode: shall be one of "host", "peripheral" and "otg"
+>>    Refer to usb/generic.txt
+>> +- host-dma: turn on or off host buffer DMA (1 or 0).
 > 
-> It swapped them based on (from patch 1/5)
->        if (BRCM_PHY_MODEL(phydev) == PHY_ID_BCM54810 &&
->            phydev->dev_flags & PHY_BRCM_EXP_LANE_SWAP)
+> Why not boolean? Seems like disabling would be rare, so name the 
+> property something like host-dma-disable.
+
+Ok.
+
+> Also, it needs a vendor 
+> prefix.
 > 
-> That flag is being set in the driver based on whether the lanes need
-> to be swapped (which depends on the SKU of NS2).  The only SKU of NS2
-> we have upstream right now has it swapped, but one that should be
-> pushed out in the next few weeks will not have this flag present.
-> There is no way to detect it, and having a separate compat string
-> seemed overkill.
 
-Andrew has a point thought that this is a property that is associated
-with the PHY, and not with the Ethernet MAC per se, as such, you can put
-it in the Ethernet PHY node, and look up the proper from
-drivers/net/phy/broadcom.c, and come up with a Broadcom Ethernet PHY
-binding document (sorry).
+The dwc2 driver doesn't have vendor prefixes on existing DT
+bindings. Is this required? If so I guess we'd have to deprecate the
+old ones and add new ones with the vendor prefix?
 
-There is no need to have a specific compatible string allocated, using
-the (mostly) generic Ethernet PHY binding, plus this property documented
-would be good enough.
--- 
-Florian
+Regards,
+John
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
