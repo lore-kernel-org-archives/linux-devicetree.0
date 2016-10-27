@@ -1,49 +1,133 @@
-From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] iommu/ipmmu-vmsa: Add r8a7796 DT binding
-Date: Thu, 27 Oct 2016 19:45:10 +0900
-Message-ID: <20161027104510.27104.53523.sendpatchset@little-apple>
+From: Alexandre Bailon <abailon@baylibre.com>
+Subject: [PATCH v3 3/4] usb: musb: da8xx: Add DT support for the DA8xx driver
+Date: Thu, 27 Oct 2016 11:34:06 +0200
+Message-ID: <1477560847-8929-4-git-send-email-abailon@baylibre.com>
+References: <1477560847-8929-1-git-send-email-abailon@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1477560847-8929-1-git-send-email-abailon@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: khilman@baylibre.com, robh+dt@kernel.org, b-liu@ti.com
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Petr Kulhavy <petr@barix.com>, Alexandre Bailon <abailon@baylibre.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+From: Petr Kulhavy <petr@barix.com>
 
-Update the IPMMU DT binding documentation to include the r8a7796 compat
-string for R-Car M3-W.
+This adds DT support for TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver
 
-Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
-Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Signed-off-by: Petr Kulhavy <petr@barix.com>
+Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
+Tested-by: David Lechner <david@lechnology.com>
 ---
+ drivers/usb/musb/da8xx.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
- Changes since V1:
- - Added Acked-by from Laurent - thanks!
-
- Now broken out, however earlier V1 posted as part of:
- [PATCH 0/3] iommu/ipmmu-vmsa: Initial r8a7796 support
-
- Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |    1 +
- 1 file changed, 1 insertion(+)
-
---- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-+++ work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	2016-06-06 11:27:37.560607110 +0900
-@@ -16,6 +16,7 @@ Required Properties:
-     - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
-     - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
-     - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
-+    - "renesas,ipmmu-r8a7796" for the R8A7796 (R-Car M3-W) IPMMU.
-     - "renesas,ipmmu-vmsa" for generic R-Car Gen2 VMSA-compatible IPMMU.
+diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
+index 210b7e4..51ae3b6 100644
+--- a/drivers/usb/musb/da8xx.c
++++ b/drivers/usb/musb/da8xx.c
+@@ -6,6 +6,9 @@
+  * Based on the DaVinci "glue layer" code.
+  * Copyright (C) 2005-2006 by Texas Instruments
+  *
++ * DT support
++ * Copyright (c) 2016 Petr Kulhavy <petr@barix.com>
++ *
+  * This file is part of the Inventra Controller Driver for Linux.
+  *
+  * The Inventra Controller Driver for Linux is free software; you
+@@ -433,6 +436,21 @@ static int da8xx_musb_exit(struct musb *musb)
+ 	return 0;
+ }
  
-   - reg: Base address and size of the IPMMU registers.
++static inline u8 get_vbus_power(struct device *dev)
++{
++	struct regulator *vbus_supply;
++	int current_uA;
++
++	vbus_supply = regulator_get_optional(dev, "vbus");
++	if (IS_ERR(vbus_supply))
++		return 255;
++	current_uA = regulator_get_current_limit(vbus_supply);
++	regulator_put(vbus_supply);
++	if (current_uA <= 0 || current_uA > 510000)
++		return 255;
++	return current_uA / 1000 / 2;
++}
++
+ static const struct musb_platform_ops da8xx_ops = {
+ 	.quirks		= MUSB_DMA_CPPI | MUSB_INDEXED_EP,
+ 	.init		= da8xx_musb_init,
+@@ -458,6 +476,12 @@ static const struct platform_device_info da8xx_dev_info = {
+ 	.dma_mask	= DMA_BIT_MASK(32),
+ };
+ 
++static const struct musb_hdrc_config da8xx_config = {
++	.ram_bits = 10,
++	.num_eps = 5,
++	.multipoint = 1,
++};
++
+ static int da8xx_probe(struct platform_device *pdev)
+ {
+ 	struct resource musb_resources[2];
+@@ -465,6 +489,7 @@ static int da8xx_probe(struct platform_device *pdev)
+ 	struct da8xx_glue		*glue;
+ 	struct platform_device_info	pinfo;
+ 	struct clk			*clk;
++	struct device_node		*np = pdev->dev.of_node;
+ 	int				ret;
+ 
+ 	glue = devm_kzalloc(&pdev->dev, sizeof(*glue), GFP_KERNEL);
+@@ -486,6 +511,16 @@ static int da8xx_probe(struct platform_device *pdev)
+ 	glue->dev			= &pdev->dev;
+ 	glue->clk			= clk;
+ 
++	if (IS_ENABLED(CONFIG_OF) && np) {
++		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++		if (!pdata)
++			return -ENOMEM;
++
++		pdata->config	= &da8xx_config;
++		pdata->mode	= musb_get_mode(&pdev->dev);
++		pdata->power	= get_vbus_power(&pdev->dev);
++	}
++
+ 	pdata->platform_ops		= &da8xx_ops;
+ 
+ 	glue->usb_phy = usb_phy_generic_register();
+@@ -536,11 +571,22 @@ static int da8xx_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id da8xx_id_table[] = {
++	{
++		.compatible = "ti,da830-musb",
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, da8xx_id_table);
++#endif
++
+ static struct platform_driver da8xx_driver = {
+ 	.probe		= da8xx_probe,
+ 	.remove		= da8xx_remove,
+ 	.driver		= {
+ 		.name	= "musb-da8xx",
++		.of_match_table = of_match_ptr(da8xx_id_table),
+ 	},
+ };
+ 
+-- 
+2.7.3
