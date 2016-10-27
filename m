@@ -1,62 +1,53 @@
-From: Imran Khan <kimran@codeaurora.org>
-Subject: Re: [PATCH] soc: qcom: Add SoC info driver
-Date: Thu, 27 Oct 2016 18:40:27 +0530
-Message-ID: <fd34e299-a3c2-e981-a92e-b61638a98e5f@codeaurora.org>
-References: <1476972386-28655-1-git-send-email-kimran@codeaurora.org>
- <3809309.oOnjdjqnN9@wuerfel>
- <2ae082c4-27c1-fbdd-cb7a-986716e15d18@codeaurora.org>
- <4173870.AkctyO62lp@wuerfel>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH v2] clk: hisilicon: add CRG driver for Hi3798CV200
+ SoC
+Date: Thu, 27 Oct 2016 08:48:33 -0500
+Message-ID: <20161027134833.vdtd5t5hx33o3ahb@rob-hp-laptop>
+References: <1477013830-11481-1-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4173870.AkctyO62lp@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1477013830-11481-1-git-send-email-xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bin.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hermit.wangheming-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/26/2016 8:16 PM, Arnd Bergmann wrote:
-> On Wednesday, October 26, 2016 7:42:08 PM CEST Imran Khan wrote:
->> On 10/26/2016 7:35 PM, Arnd Bergmann wrote:
->>>>> As we are talking about generic soc_device_attribute fields, I was hoping that
->>>>> having a vendor field would be helpful as along with family it would provide
->>>>> a more thorough information. Also as more than one foundries may be used for 
->>>>> a soc, can we have a field say foundry_id to provide this information.
->>> My first feeling is that this 'vendor' information can should be
->>> derived from the family. It's also not clear what would happen
->>> to this when a company gets bought. E.g. the Oxnas product family
->>> was subsequently owned by Oxford, PLX, Avago and Broadcom, and the
->>> mxs family was Sigmatel, Freescale, now NXP and might soon be
->>> Qualcomm. What would you put in there in this case?
->>
->> Okay, not having vendor field is fine for me. Could you also suggest
->> something about the foundry_id field.
+On Fri, Oct 21, 2016 at 09:37:10AM +0800, Jiancheng Xue wrote:
+> Add CRG driver for Hi3798CV200 SoC. CRG(Clock and Reset
+> Generator) module generates clock and reset signals used
+> by other module blocks on SoC.
 > 
-> This one seems more well-defined, so it's probably ok to add. What
-> would be the use case of reading this? Would you want to read it
-> just from user space or also from the kernel?
+> Signed-off-by: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> ---
+> change log
+> v2:
+> - Fixed compiling error when compiled as a module.
+> - Fixed issues pointed by Stephen Boyd.
+> - Added prefix HISTB for clock index macro definitions.
+
+What Stephen asked for is send this and the Hi3516CV300 series as one 
+series since there is a dependency.
+
 > 
+>  .../clock/{hi3519-crg.txt => hisi-crg.txt}         |  11 +-
 
-As of now the use case I can think of, only involve reading this from user
-space. For example for the same soc, coming from different foundries with
-different manufacturing process, we may have a situation where some inconsistent
-h/w behavior is being observed only on parts received from a certain foundry
-and in those cases this information may help in segregation of problematic socs
-and may also be used in testing these socs under a different set of settings like
-voltage, frequency etc.
+In any case, for the binding:
 
-> Maybe this can be combined with a manufacturing process, which probably
-> falls into a similar category, so we could have something like
-> "TSMC 28ULP" as a string in there.
->
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Yes. Having a manufacturing process as part of foundry-id can provide a more
-thorough information.
- 
-> 	Arnd
-> 
-
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a\nmember of the Code Aurora Forum, hosted by The Linux Foundation
+>  drivers/clk/hisilicon/Kconfig                      |   8 +
+>  drivers/clk/hisilicon/Makefile                     |   1 +
+>  drivers/clk/hisilicon/crg-hi3798cv200.c            | 305 +++++++++++++++++++++
+>  drivers/clk/hisilicon/crg.h                        |  34 +++
+>  include/dt-bindings/clock/histb-clock.h            |  64 +++++
+>  6 files changed, 419 insertions(+), 4 deletions(-)
+>  rename Documentation/devicetree/bindings/clock/{hi3519-crg.txt => hisi-crg.txt} (82%)
+>  create mode 100644 drivers/clk/hisilicon/crg-hi3798cv200.c
+>  create mode 100644 drivers/clk/hisilicon/crg.h
+>  create mode 100644 include/dt-bindings/clock/histb-clock.h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
