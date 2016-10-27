@@ -1,76 +1,74 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 02/12] ASoC: dapm: Implement stereo mixer
- control support
-Date: Thu, 27 Oct 2016 22:02:39 +0800
-Message-ID: <CAGb2v66gyJuakf_5mQJvuQ8VY3rRZtgkk2e=mCJqFT0pFBX=YA@mail.gmail.com>
-References: <20161003110804.28235-1-wens@csie.org> <20161003110804.28235-3-wens@csie.org>
- <20161026175052.GE25322@sirena.org.uk>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Mirza Krak <mirza.krak@gmail.com>
+Subject: [PATCH V3 5/6] ARM: tegra: Add Tegra20 GMI support
+Date: Thu, 27 Oct 2016 16:01:11 +0200
+Message-ID: <1477576872-2665-6-git-send-email-mirza.krak@gmail.com>
+References: <1477576872-2665-1-git-send-email-mirza.krak@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBHESZDAAKGQECPV65MI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161026175052.GE25322-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1477576872-2665-1-git-send-email-mirza.krak@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: swarren@wwwdotorg.org, thierry.reding@gmail.com, jonathanh@nvidia.com
+Cc: mark.rutland@arm.com, gnurou@gmail.com, pgaikwad@nvidia.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, pdeschrijver@nvidia.com, Mirza Krak <mirza.krak@gmail.com>, sboyd@codeaurora.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-tegra@vger.kernel.org, mturquette@baylibre.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 27, 2016 at 1:50 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Oct 03, 2016 at 07:07:54PM +0800, Chen-Yu Tsai wrote:
->
->>       /* find dapm widget path assoc with kcontrol */
->>       dapm_kcontrol_for_each_path(path, kcontrol) {
->> +             /*
->> +              * If status for the second channel was given ( >= 0 ),
->> +              * consider the second and later paths as the second
->> +              * channel.
->> +              */
->> +             if (found && rconnect >= 0)
->> +                     soc_dapm_connect_path(path, rconnect, "mixer update");
->> +             else
->> +                     soc_dapm_connect_path(path, connect, "mixer update");
->>               found = 1;
->> -             soc_dapm_connect_path(path, connect, "mixer update");
->
-> This really only works for two channels with the current inteface - the
-> comment makes it sound like it'll work for more but we can only pass in
-> two (and there's only support for specifying two everywhere).
+From: Mirza Krak <mirza.krak@gmail.com>
 
-I could rework it to pass a list of connected status' and the number
-of elements instead, but it wouldn't work well for situations where
-the number of channels on the kcontrol != the number of paths. I'm not
-sure if that's even a valid setup, but it does work with the current
-core code.
+Add a device node for the GMI controller found on Tegra20.
 
-On the other hand, are there kcontrols that are multi-channel
-(> 2 channels)?
+Signed-off-by: Mirza Krak <mirza.krak@gmail.com>
+Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Tested-on: Colibri T20/T30 on EvalBoard V3.x and GMI-Memory Board
+---
 
-I'm inclined to just fixup the comment to make it clear that the
-implementation supports stereo, i.e. 2 channels, only.
+Changes in v2:
+- added address-cells, size-cells and ranges properties
 
->
->> -     change = dapm_kcontrol_set_value(kcontrol, val);
->> +     /* This assumes field width < (bits in unsigned int / 2) */
->> +     change = dapm_kcontrol_set_value(kcontrol, val | (rval << width));
->
-> That seems like a bit of an assumption in cases where we've got a single
-> control for both power and volume?  They're very rare though, I'm not
-> even sure any exist.  It'd be good to have a check in the code just in
-> case it does come up, it'll likely be a nightmare to debug if someone
-> does run into it.
+Changes in v3:
+- fixed range address which is not the same as Tegra30.
 
-Agreed. I'll put a check and warning before it.
+ arch/arm/boot/dts/tegra20.dtsi | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
->
-> Otherwise I think this makes sense.
+diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+index 2207c08..b22cddb 100644
+--- a/arch/arm/boot/dts/tegra20.dtsi
++++ b/arch/arm/boot/dts/tegra20.dtsi
+@@ -1,4 +1,4 @@
+-#include <dt-bindings/clock/tegra20-car.h>
++include <dt-bindings/clock/tegra20-car.h>
+ #include <dt-bindings/gpio/tegra-gpio.h>
+ #include <dt-bindings/pinctrl/pinctrl-tegra.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+@@ -376,6 +376,20 @@
+ 		status = "disabled";
+ 	};
 
-Thanks for the review!
-
-Regards
-ChenYu
++
++	gmi@70009000 {
++		compatible = "nvidia,tegra20-gmi";
++		reg = <0x70009000 0x1000>;
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges = <0 0 0xd0000000 0xfffffff>;
++		clocks = <&tegra_car TEGRA20_CLK_NOR>;
++		clock-names = "gmi";
++		resets = < &tegra_car 42>;
++		reset-names = "gmi";
++		status = "disabled";
++	};
++
+ 	pwm: pwm@7000a000 {
+ 		compatible = "nvidia,tegra20-pwm";
+ 		reg = <0x7000a000 0x100>;
+--
+2.1.4
