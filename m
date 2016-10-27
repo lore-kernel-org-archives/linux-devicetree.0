@@ -1,183 +1,80 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH 0/5] Add an overlay manager to handle board capes
-Date: Thu, 27 Oct 2016 17:13:36 +0200
-Message-ID: <4ca9db09-e52c-11ec-133b-8f193b9b7174@redhat.com>
-References: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
- <CAL_JsqL9yWBj0yYE54XGi87YPGugGAACzr=CuW6dk5kk3EuyCA@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of/platform: dynamic: Use of_platform_bus_create() to
+ create devices
+Date: Thu, 27 Oct 2016 08:00:42 -0500
+Message-ID: <CAL_JsqJZ__mUwRT14BmNQKaa_mAPsJm0iWP8sb6Oqs+_-Gu5hw@mail.gmail.com>
+References: <b317f693-98b5-ba1e-1184-83735a68db9b@nokia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqL9yWBj0yYE54XGi87YPGugGAACzr=CuW6dk5kk3EuyCA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <b317f693-98b5-ba1e-1184-83735a68db9b-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Shmidt <dimitrysh-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+To: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Oct 20, 2016 at 6:02 AM, Alexander Sverdlin
+<alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org> wrote:
+> of_platform_notify() requires parents to have OF_POPULATED_BUS to be set
+> (which is correct way to verify healthy platform bus), but uses
+> of_platform_device_create() to create devices, which never sets the above
+> flag. Therefore it's not possible to add platform buses via overlays.
 
-On 27-10-16 15:41, Rob Herring wrote:
-> Please Cc the maintainers of drivers/of/.
+Can you create a unit test case that has the problem.
+
+> Use of_platform_bus_create(), which is used in non-overlay case to populate
+> both buses and devices.
 >
-> + Frank R, Hans, Dmitry S
+> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >
-> On Wed, Oct 26, 2016 at 9:57 AM, Antoine Tenart
-> <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> Hi all,
->>
->> Many boards now come with dips and compatible capes; among others the
->> C.H.I.P, or Beaglebones. All these boards have a kernel implementing an
->> out-of-tree "cape manager" which is used to detected capes, retrieve
->> their description and apply a corresponding overlay. This series is an
->> attempt to start a discussion, with an implementation of such a manager
->> which is somehow generic (i.e. formats or cape detectors can be added).
->> Other use cases could make use of this manager to dynamically load dt
->> overlays based on some input / hw presence.
+> ---
+>  drivers/of/platform.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 >
-> I'd like to see an input source be the kernel command line and/or a DT
-> chosen property. Another overlay manager was proposed not to long
-> ago[1] as well. There's also the Allwinner tablet use case from Hans
-> where i2c devices are probed and detected. That's not using overlays
-> currently, but maybe could.
-
-Actually I'm currently thinking in a different direction, which I
-think will be good for the boards where some ICs are frequently
-replaced by 2nd (and 3th and 4th) sources, rather then that we're
-dealing with an extension connector with capes / daughter boards.
-
-Although there is some overlap I'm starting to think that we need to
-treat these 2 cases differently. Let me quickly copy and paste
-the basic idea I've for the 2nd source touchscreen / accelerometer
-chip case:
-
-"""
-The kernel actually already has a detect() method in struct i2c_driver,
-we could use that (we would need to implement it in drivers which do not
-have it yet). Note on second thought it seems it may be better to use
-probe() for this, see below.
-
-Then we could have something like this in dt:
-
-&i2c0 {
-     touchscreen1: gsl1680@40 {
-         reg = <0x40>;
-         compatible = "silead,gsl1680";
-         enable-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-         status = "disabled";
-     };
-
-     touchscreen2: ektf2127@15 {
-         reg = <0x15>;
-         compatible = "elan,ektf2127";
-         enable-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-         status = "disabled";
-     };
-
-     i2c-probe-stop-at-first-match-0 = <&touchscreen1>, <&touchscreen2>;
-     i2c-probe-stop-at-first-match-1 = <&accelerometer1>, <&accelerometer2>;
-}
-
-Which would make the i2c subsys call detect (*) on each device, until
-a device is found. Likewise we could have a "i2c-probe-all" property
-which also walks a list of phandles but does not stop on the first
-match.
-
-...
-
-*) Yes this sounds Linux specific, but it really is just "execute to-be-probed
-device compatible specific detection method"
-"""
-
-This does not 100% solve all q8 issues (see the "Add Allwinner Q8 tablets
-hardware manager" thread), but does solve quite a bit of the use-case
-and this matches what many vendor os-images (typically android) are
-actually doing for these kind of boards.
-
-As for the bits this does not solve, those are mostly board specific details
-which cannot be probed at all, and on x86 are typically solved in the device
-driver by doing a dmi check to identify the board and then apply a board
-specific workaround in the driver.
-
-I've come to believe that we should similarly delegate dealing this to device
-drivers in the devicetree case. Note that dt should still of course fully
-describe the hardware for normal hardware, the driver would just need to care
-about weird board quirks in certain exceptions.
-
-A more interesting problem here is that dt does not have something like
-DMI, there is the machine compatible, but that typically does not contain
-board revision info (where as DMI often does). I believe that this is
-actually something which should be fixed at the bootloader level
-have it prepend a new machine compatible which contains revision info.
-
-Hmm, if we make the bootloader prepend a new machine compatible which contains
-revision info, we could then trigger quirks on this and in some cases avoid
-the need for dealing with board quirks in the driver ...
-
-Note this is all very specific to dealing with board (revision) variants,
-for add-ons having the bootloader add info to the machine compatible does
-not seem the right solution.
-
-Regards,
-
-Hans
-
-
-
-
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index af98343..d2d6e74 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -521,6 +521,7 @@ static int of_platform_notify(struct notifier_block *nb,
+>         struct of_reconfig_data *rd = arg;
+>         struct platform_device *pdev_parent, *pdev;
+>         bool children_left;
+> +       int ret;
 >
-> Another thing to consider is different sources of overlays. Besides in
-> the filesystem, overlays could be built into the kernel (already
-> supported), embedded in the dtb (as the other overlay mgr did) or we
-> could extend FDT format to append them.
+>         switch (of_reconfig_get_state_change(action, rd)) {
+>         case OF_RECONFIG_CHANGE_ADD:
+> @@ -534,15 +535,15 @@ static int of_platform_notify(struct notifier_block *nb,
 >
->> The proposed design is a library which can be used by detector drivers
->> to parse headers and load the corresponding overlay. Helpers are
->> provided for this purpose. The whole thing is divided into 3 entities:
->>
->> - The parser which is project-specific (to allow supporting headers
->>   already into the wild). It registers a function parsing an header's
->>   data and filling one or more strings which will be used to find
->>   matching dtbo on the fs.
->>
->> - The overlay manager helpers allowing to parse a header to retrieve
->>   the previously mentioned strings and to load a compatible overlay.
->>
->> - The detectors which are used to detect capes and get their description
->>   (to be parsed).
+>                 /* pdev_parent may be NULL when no bus platform device */
+>                 pdev_parent = of_find_device_by_node(rd->dn->parent);
+> -               pdev = of_platform_device_create(rd->dn, NULL,
+> -                               pdev_parent ? &pdev_parent->dev : NULL);
+> +               ret = of_platform_bus_create(rd->dn, of_default_bus_match_table,
+> +                                            NULL, pdev_parent ?
+> +                                            &pdev_parent->dev : NULL, true);
+
+I think this should be of_platform_default_populate() instead.
+
+>                 of_dev_put(pdev_parent);
 >
-> What about things like power has to be turned on first to detect
-> boards and read their ID? I think this needs to be tied into the
-> driver model. Though, don't go sticking cape mgr nodes into DT. Maybe
-> a driver gets bound to a connector node, but we've got to sort out
-> connector bindings first.
+> -               if (pdev == NULL) {
+> +               if (ret) {
+>                         pr_err("%s: failed to create for '%s'\n",
+>                                         __func__, rd->dn->full_name);
+> -                       /* of_platform_device_create tosses the error code */
+> -                       return notifier_from_errno(-EINVAL);
+> +                       return notifier_from_errno(ret);
+>                 }
+>                 break;
 >
->> An example of parser and detector is given, compatible with what's done
->> for the C.H.I.P. As the w1 framework is really bad (and we should
->> probably do something about that) the detector code is far from being
->> perfect; but that's not related to what we try to achieve here.
->>
->> The actual implementation has a limitation: the detectors cannot be
->> built-in the kernel image as they would likely detect capes at boot time
->> but will fail to get their corresponding dt overlays as the fs isn't
->> mounted yet. The only case this can work is when dt overlays are
->> built-in firmwares. This isn't an issue for the C.H.I.P. use case right
->> now. There was a discussion about making an helper to wait for the
->> rootfs to be mount but the answer was "this is the driver's problem".
->
-> I thought there are firmware loading calls that will wait. I think
-> this all needs to work asynchronously both for firmware loading and
-> because w1 is really slow.
->
->> I'd like to get comments, specifically from people using custom cape
->> managers, to see if this could fill their needs (with I guess some
->> modifications).
->
-> Having 2 would certainly give a better sense this is generic.
->
-> Rob
->
-> [1] https://patchwork.ozlabs.org/patch/667805/
->
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
