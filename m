@@ -1,103 +1,40 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [RFC PATCH 1/5] of: introduce the overlay manager
-Date: Thu, 27 Oct 2016 08:49:29 -0600
-Message-ID: <CANLsYkxF4_fZwaBe+_0twMhND3TfpnmkXA_1q=AN_j9=cQ5ukw@mail.gmail.com>
-References: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
- <20161026145756.21689-2-antoine.tenart@free-electrons.com>
- <CANLsYkyszsn2TLYhUjHMt2ZnEUmE9eSc71W2KWBL0fWhh3PPBw@mail.gmail.com>
- <20161027140342.kidk4gqxwbtphrbs@kwain>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC PATCH 02/13] of: Remove excessive printks to reduce clutter
+Date: Thu, 27 Oct 2016 07:21:47 -0500
+Message-ID: <CAL_Jsq+TWZw+VcbYZp_xmFR-yitY8bn+gqe1Q2N42UFZAYsZKg@mail.gmail.com>
+References: <1477429146-27039-1-git-send-email-frowand.list@gmail.com> <1477429146-27039-3-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161027140342.kidk4gqxwbtphrbs@kwain>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Antoine Tenart <antoine.tenart@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, pantelis.antoniou@konsulko.com, sboyd@codeaurora.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477429146-27039-3-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjcgT2N0b2JlciAyMDE2IGF0IDA4OjAzLCBBbnRvaW5lIFRlbmFydAo8YW50b2luZS50ZW5h
-cnRAZnJlZS1lbGVjdHJvbnMuY29tPiB3cm90ZToKPiBIZWxsbyBNYXRoaWV1LAo+Cj4gT24gV2Vk
-LCBPY3QgMjYsIDIwMTYgYXQgMTA6Mjk6NTlBTSAtMDYwMCwgTWF0aGlldSBQb2lyaWVyIHdyb3Rl
-Ogo+Pgo+PiBQbGVhc2UgZmluZCBteSBjb21tZW50cyBiZWxvdy4KPgo+IFRoYW5rcyBmb3IgdGhl
-IGNvbW1lbnRzLiBJIGV4cGVjdGVkIG1vcmUgZGlzdGFudCByZXZpZXdzLCBvbiB0aGUgb3ZlcmFs
-bAo+IGFyY2hpdGVjdHVyZSB0byBrbm93IGlmIHRoaXMgY291bGQgZml0IHRoZSBuZWVkcyBvZiBv
-dGhlcnMuIEJ1dCBhbnl3YXkKPiB5b3VyIGNvbW1lbnRzIGFyZSBoZWxwZnVsIGlmIHdlIGV2ZXIg
-ZGVjaWRlIHRvIGdvIHdpdGggYW4gb3ZlcmxheQo+IG1hbmFnZXIgbGlrZSB0aGlzIG9uZS4KCkkg
-YWdyZWUgLSBzb21ldGhpbmcgbGlrZSB0aGlzIHNob3VsZCBoYXZlIGF0dHJhY3RlZCBtb3JlIHJl
-dmlld3MuICBJCnN1Z2dlc3QgcHJvdmlkaW5nIGEgYmV0dGVyIGV4cGxhbmF0aW9uLCBpLmUgd2hh
-dCB5b3UgYXJlIGRvaW5nIGFuZCB3aHkKaW4gbW9yZSBkZXRhaWxzLiAgSSByZXZpZXdlZCB5b3Vy
-IHNldCBhbmQgSSdtIHN0aWxsIG5vdCBzdXJlIG9mCmV4YWN0bHkgd2hhdCBpdCBkb2VzLCBoZW5j
-ZSBub3QgYmVpbmcgYWJsZSB0byBjb21tZW50IG9uIHRoZSB2YWxpZGl0eQpvZiB0aGUgYXBwcm9h
-Y2guCgpJJ20gcHJldHR5IHN1cmUgdGhlcmUgaXMgdmFsdWUgaW4gd2hhdCB5b3UgYXJlIHN1Z2dl
-c3RpbmcsIGl0J3MgYQptYXR0ZXIgb2YgZ2V0dGluZyBwZW9wbGUgdG8gdW5kZXJzdGFuZCB0aGUg
-YXBwcm9hY2ggYW5kIG1vdGl2YXRpb24uCgo+Cj4+IE9uIDI2IE9jdG9iZXIgMjAxNiBhdCAwODo1
-NywgQW50b2luZSBUZW5hcnQKPj4gPGFudG9pbmUudGVuYXJ0QGZyZWUtZWxlY3Ryb25zLmNvbT4g
-d3JvdGU6Cj4+ID4gKwo+PiA+ICsvKgo+PiA+ICsgKiBvdmVybGF5X21ncl9yZWdpc3Rlcl9mb3Jt
-YXQoKQo+PiA+ICsgKgo+PiA+ICsgKiBBZGRzIGEgbmV3IGZvcm1hdCBjYW5kaWRhdGUgdG8gdGhl
-IGxpc3Qgb2Ygc3VwcG9ydGVkIGZvcm1hdHMuIFRoZSByZWdpc3RlcmVkCj4+ID4gKyAqIGZvcm1h
-dHMgYXJlIHVzZWQgdG8gcGFyc2UgdGhlIGhlYWRlcnMgc3RvcmVkIG9uIHRoZSBkaXBzLgo+PiA+
-ICsgKi8KPj4gPiAraW50IG92ZXJsYXlfbWdyX3JlZ2lzdGVyX2Zvcm1hdChzdHJ1Y3Qgb3Zlcmxh
-eV9tZ3JfZm9ybWF0ICpjYW5kaWRhdGUpCj4+ID4gK3sKPj4gPiArICAgICAgIHN0cnVjdCBvdmVy
-bGF5X21ncl9mb3JtYXQgKmZvcm1hdDsKPj4gPiArICAgICAgIGludCBlcnIgPSAwOwo+PiA+ICsK
-Pj4gPiArICAgICAgIHNwaW5fbG9jaygmb3ZlcmxheV9tZ3JfZm9ybWF0X2xvY2spOwo+PiA+ICsK
-Pj4gPiArICAgICAgIC8qIENoZWNrIGlmIHRoZSBmb3JtYXQgaXMgYWxyZWFkeSByZWdpc3RlcmVk
-ICovCj4+ID4gKyAgICAgICBsaXN0X2Zvcl9lYWNoX2VudHJ5KGZvcm1hdCwgJm92ZXJsYXlfbWdy
-X2Zvcm1hdHMsIGxpc3QpIHsKPj4gPiArICAgICAgICAgICAgICAgaWYgKCFzdHJjcHkoZm9ybWF0
-LT5uYW1lLCBjYW5kaWRhdGUtPm5hbWUpKSB7Cj4+Cj4+IFRoaXMgZnVuY3Rpb24gaXMgcHVibGlj
-IHRvIHRoZSByZXN0IG9mIHRoZSBrZXJuZWwgLSBsaW1pdGluZyB0aGUKPj4gbGVuZ2h0IG9mIC0+
-bmFtZSBhbmQgdXNpbmcgc3RybmNweSgpIGlzIHByb2JhYmx5IGEgZ29vZCBpZGVhLgo+Cj4gSSB0
-b3RhbGx5IGFncmVlLiBUaGlzIHdhcyBpbiBmYWN0IHNvbWV0aGluZyBJIHdhbnRlZCB0byBkby4K
-Pgo+PiA+ICsKPj4gPiArLyoKPj4gPiArICogb3ZlcmxheV9tZ3JfcGFyc2UoKQo+PiA+ICsgKgo+
-PiA+ICsgKiBQYXJzZSByYXcgZGF0YSB3aXRoIHJlZ2lzdGVyZWQgZm9ybWF0IHBhcnNlcnMuIEZp
-bGxzIHRoZSBjYW5kaWRhdGUgc3RyaW5nIGlmCj4+ID4gKyAqIG9uZSBwYXJzZXIgdW5kZXJzdG9v
-ZCB0aGUgcmF3IGRhdGEgZm9ybWF0Lgo+PiA+ICsgKi8KPj4gPiAraW50IG92ZXJsYXlfbWdyX3Bh
-cnNlKHN0cnVjdCBkZXZpY2UgKmRldiwgdm9pZCAqZGF0YSwgY2hhciAqKipjYW5kaWRhdGVzLAo+
-Pgo+PiBJJ20gcHJldHR5IHN1cmUgdGhlcmUgaXMgYW5vdGhlciB3YXkgdG8gcHJvY2VlZCB0aGFu
-IHVzaW5nIDMgbGV2ZWxzIG9mCj4+IHJlZmVyZW5jZXMuICBJdCBtYWtlcyB0aGUgY29kZSBoYXJk
-IHRvIHJlYWQgYW5kIGEgcHJpbWUgY2FuZGlkYXRlIGZvcgo+PiBlcnJvcnMuCj4KPiBTdXJlLiBJ
-IGd1ZXNzIHdlIGNvdWxkIGFsbG9jYXRlIGFuIGFycmF5IG9mIGZpeGVkLWxlbmd0aCBzdHJpbmdz
-IHdoaWNoCj4gd291bGQgYmUgbGVzcyBmbGV4aWJsZSBidXQgSSBkb24ndCB0aGluayB3ZSBuZWVk
-IHNvbWV0aGluZyB0aGF0IGZsZXhpYmxlCj4gaGVyZS4KPgo+Pgo+PiA+ICsKPj4gPiArICAgICAg
-ICAgICAgICAgZm9ybWF0LT5wYXJzZShkZXYsIGRhdGEsIGNhbmRpZGF0ZXMsIG4pOwo+Pgo+PiAt
-PnBhcnNlKCkgcmV0dXJucyBhbiBlcnJvciBjb2RlLiAgSXQgaXMgcHJvYmFibHkgYSBnb29kIGlk
-ZWEgdG8gY2hlY2sKPj4gaXQuICBJZiBpdCBpc24ndCBuZWVkZWQgdGhlbiBhIGNvbW1lbnQgZXhw
-bGFpbmluZyB3aHkgaXQgaXMgdGhlIGNhc2UKPj4gd291bGQgYmUgYXBwcmVjaWF0ZWQuCj4KPiBT
-byB0aGUgcG9pbnQgb2YgdGhlIHBhcnNlIGZ1bmN0aW9uIGlzIHRvIGRldGVybWluZSBpZiB0aGUg
-ZGF0YSByZWFkIGZyb20KPiBhIHNvdXJjZSBpcyBhIGNvbXBhdGlibGUgaGVhZGVyIG9mIGEgZ2l2
-ZW4gZm9ybWF0LiBSZXR1cm5pbmcgYW4gZXJyb3IKPiBkb2Vzbid0IG1lYW4gdGhlIGhlYWRlciB3
-b24ndCBiZSByZWNvZ25pemVkIGJ5IGFub3RoZXIgb25lLgo+Cj4gV2UgY291bGQgbWF5YmUgaGFu
-ZGxlIHRoaXMgYmV0dGVyLCBieSByZXR1cm5pbmcgYW4gZXJyb3IgaWlmIGRpZmZlcmVudAo+IHRo
-YXQgLUVJTlZBTC4gT3Igd2UgY291bGQgaGF2ZSBvbmUgZnVuY3Rpb24gdG8gY2hlY2sgdGhlIGNv
-bXBhdGliaWxpdHkKPiBhbmQgb25lIHRvIHBhcnNlIGl0LCBpZiBjb21wYXRpYmxlLgo+Cj4+ID4g
-K3N0YXRpYyBpbnQgX292ZXJsYXlfbWdyX2FwcGx5KHN0cnVjdCBkZXZpY2UgKmRldiwgY2hhciAq
-Y2FuZGlkYXRlKQo+PiA+ICt7Cj4+ID4gKyAgICAgICBzdHJ1Y3Qgb3ZlcmxheV9tZ3Jfb3Zlcmxh
-eSAqb3ZlcmxheTsKPj4gPiArICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZTsKPj4gPiAr
-ICAgICAgIGNvbnN0IHN0cnVjdCBmaXJtd2FyZSAqZmlybXdhcmU7Cj4+ID4gKyAgICAgICBjaGFy
-ICpmaXJtd2FyZV9uYW1lOwo+PiA+ICsgICAgICAgaW50IGVyciA9IDA7Cj4+ID4gKwo+PiA+ICsg
-ICAgICAgc3Bpbl9sb2NrKCZvdmVybGF5X21ncl9sb2NrKTsKPj4gPiArCj4+ID4gKyAgICAgICBs
-aXN0X2Zvcl9lYWNoX2VudHJ5KG92ZXJsYXksICZvdmVybGF5X21ncl9vdmVybGF5cywgbGlzdCkg
-ewo+PiA+ICsgICAgICAgICAgICAgICBpZiAoIXN0cmNtcChvdmVybGF5LT5uYW1lLCBjYW5kaWRh
-dGUpKSB7Cj4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJvdmVybGF5
-IGFscmVhZHkgbG9hZGVkXG4iKTsKPj4gPiArICAgICAgICAgICAgICAgICAgICAgICBlcnIgPSAt
-RUVYSVNUOwo+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGdvdG8gZXJyX2xvY2s7Cj4+ID4g
-KyAgICAgICAgICAgICAgIH0KPj4gPiArICAgICAgIH0KPj4gPiArCj4+ID4gKyAgICAgICBvdmVy
-bGF5ID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpvdmVybGF5KSwgR0ZQX0tFUk5FTCk7Cj4+
-Cj4+IEZ1bmN0aW9uIGRldm1fa3phbGxvYygpIGNhbiBzbGVlcCBidXQgeW91J3JlIGhvbGRpbmcg
-YSBzcGlubG9jayAtIEknbQo+PiBzdXJwcmlzZWQgdGhlIGtlcm5lbCBkaWRuJ3QgY29tcGxhaW4g
-aGVyZS4gIEFsbG9jYXRlIHRoZSBtZW1vcnkgYmVmb3JlCj4+IGhvbGRpbmcgdGhlIGxvY2suICBJ
-ZiB0aGUgb3Zlcmx5IGlzIGFscmVhZHkgbG9hZGVkIHNpbXBseSBmcmVlIGl0IG9uCj4+IHRoZSBl
-cnJvciBwYXRoLgo+Cj4gUmlnaHQuCj4KPiBUaGFua3MsCj4KPiBBbnRvaW5lCj4KPiAtLQo+IEFu
-dG9pbmUgVMOpbmFydCwgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVs
-IGVuZ2luZWVyaW5nCj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
-IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Tue, Oct 25, 2016 at 3:58 PM,  <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@am.sony.com>
+
+Maybe some should be debug?
+
+> Signed-off-by: Frank Rowand <frank.rowand@am.sony.com>
+> ---
+>  drivers/of/resolver.c | 28 ----------------------------
+>  1 file changed, 28 deletions(-)
+>
+> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+> index 4ff0220d7aa2..93a7ca0bf98c 100644
+> --- a/drivers/of/resolver.c
+> +++ b/drivers/of/resolver.c
+> @@ -116,8 +116,6 @@ static int __of_adjust_phandle_ref(struct device_node *node,
+>
+>         propval = kmalloc(rprop->length, GFP_KERNEL);
+>         if (!propval) {
+> -               pr_err("%s: Could not copy value of '%s'\n",
+> -                               __func__, rprop->name);
+>                 return -ENOMEM;
+>         }
+
+I would remove the brackets in this patch rather than separately.
+
+>         memcpy(propval, rprop->value, rprop->length);
