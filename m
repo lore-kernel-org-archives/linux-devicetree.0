@@ -1,167 +1,96 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] PCI: rockchip: Add three new resets as required
- properties
-Date: Thu, 27 Oct 2016 09:54:27 -0500
-Message-ID: <20161027145427.xxdtq7i37wgphowj@rob-hp-laptop>
-References: <1477017836-19317-1-git-send-email-shawn.lin@rock-chips.com>
- <1477017836-19317-2-git-send-email-shawn.lin@rock-chips.com>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: Re: [RFC PATCH 1/5] of: introduce the overlay manager
+Date: Thu, 27 Oct 2016 16:54:25 +0200
+Message-ID: <20161027145425.x6idpcrq6nbhmihv@kwain>
+References: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
+ <20161026145756.21689-2-antoine.tenart@free-electrons.com>
+ <CANLsYkyszsn2TLYhUjHMt2ZnEUmE9eSc71W2KWBL0fWhh3PPBw@mail.gmail.com>
+ <20161027140342.kidk4gqxwbtphrbs@kwain>
+ <CANLsYkxF4_fZwaBe+_0twMhND3TfpnmkXA_1q=AN_j9=cQ5ukw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1477017836-19317-2-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============3478746711418185243=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CANLsYkxF4_fZwaBe+_0twMhND3TfpnmkXA_1q=AN_j9=cQ5ukw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, pantelis.antoniou@konsulko.com, Antoine Tenart <antoine.tenart@free-electrons.com>, sboyd@codeaurora.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 10:43:55AM +0800, Shawn Lin wrote:
-> pm_rst, aclk_rst, pclk_rst was controlled by rom code so the
-> software wasn't needed to control it again in theory. But it
-> didn't work properly, so we do need to do it again and add a
-> enough delay between the assert of pm_rst and the deassert of
-> pm_rst. The Soc intergrated with this controller, rk3399 is still
-> under MP test internally, so the backward compatibility won't be
-> a big deal.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> ---
-> 
->  .../devicetree/bindings/pci/rockchip-pcie.txt      | 11 ++--
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--===============3478746711418185243==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6d7u2vamgma2rn2j"
+Content-Disposition: inline
 
->  drivers/pci/host/pcie-rockchip.c                   | 62 ++++++++++++++++++++++
->  2 files changed, 70 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> index ba67b39..71aeda1 100644
-> --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> @@ -26,13 +26,16 @@ Required properties:
->  	- "sys"
->  	- "legacy"
->  	- "client"
-> -- resets: Must contain five entries for each entry in reset-names.
-> +- resets: Must contain seven entries for each entry in reset-names.
->  	   See ../reset/reset.txt for details.
->  - reset-names: Must include the following names
->  	- "core"
->  	- "mgmt"
->  	- "mgmt-sticky"
->  	- "pipe"
-> +	- "pm"
-> +	- "aclk"
-> +	- "pclk"
->  - pinctrl-names : The pin control state names
->  - pinctrl-0: The "default" pinctrl state
->  - #interrupt-cells: specifies the number of cells needed to encode an
-> @@ -86,8 +89,10 @@ pcie0: pcie@f8000000 {
->  	reg = <0x0 0xf8000000 0x0 0x2000000>, <0x0 0xfd000000 0x0 0x1000000>;
->  	reg-names = "axi-base", "apb-base";
->  	resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
-> -		 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>;
-> -	reset-names = "core", "mgmt", "mgmt-sticky", "pipe";
-> +		 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE> ,
-> +		 <&cru SRST_PCIE_PM>, <&cru SRST_P_PCIE>, <&cru SRST_A_PCIE>;
-> +	reset-names = "core", "mgmt", "mgmt-sticky", "pipe",
-> +		      "pm", "pclk", "aclk";
->  	phys = <&pcie_phy>;
->  	phy-names = "pcie-phy";
->  	pinctrl-names = "default";
-> diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
-> index e0b22da..e04f69b 100644
-> --- a/drivers/pci/host/pcie-rockchip.c
-> +++ b/drivers/pci/host/pcie-rockchip.c
-> @@ -190,6 +190,9 @@ struct rockchip_pcie {
->  	struct	reset_control *mgmt_rst;
->  	struct	reset_control *mgmt_sticky_rst;
->  	struct	reset_control *pipe_rst;
-> +	struct	reset_control *pm_rst;
-> +	struct	reset_control *aclk_rst;
-> +	struct	reset_control *pclk_rst;
->  	struct	clk *aclk_pcie;
->  	struct	clk *aclk_perf_pcie;
->  	struct	clk *hclk_pcie;
-> @@ -408,6 +411,44 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
->  
->  	gpiod_set_value(rockchip->ep_gpio, 0);
->  
-> +	err = reset_control_assert(rockchip->aclk_rst);
-> +	if (err) {
-> +		dev_err(dev, "assert aclk_rst err %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	err = reset_control_assert(rockchip->pclk_rst);
-> +	if (err) {
-> +		dev_err(dev, "assert pclk_rst err %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	err = reset_control_assert(rockchip->pm_rst);
-> +	if (err) {
-> +		dev_err(dev, "assert pm_rst err %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	udelay(10);
-> +
-> +	err = reset_control_deassert(rockchip->pm_rst);
-> +	if (err) {
-> +		dev_err(dev, "deassert pm_rst err %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	err = reset_control_deassert(rockchip->aclk_rst);
-> +	if (err) {
-> +		dev_err(dev, "deassert mgmt_sticky_rst err %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	err = reset_control_deassert(rockchip->pclk_rst);
-> +	if (err) {
-> +		dev_err(dev, "deassert mgmt_sticky_rst err %d\n", err);
-> +		return err;
-> +	}
-> +
->  	err = phy_init(rockchip->phy);
->  	if (err < 0) {
->  		dev_err(dev, "fail to init phy, err %d\n", err);
-> @@ -781,6 +822,27 @@ static int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
->  		return PTR_ERR(rockchip->pipe_rst);
->  	}
->  
-> +	rockchip->pm_rst = devm_reset_control_get(dev, "pm");
-> +	if (IS_ERR(rockchip->pm_rst)) {
-> +		if (PTR_ERR(rockchip->pm_rst) != -EPROBE_DEFER)
-> +			dev_err(dev, "missing pm reset property in node\n");
-> +		return PTR_ERR(rockchip->pm_rst);
-> +	}
-> +
-> +	rockchip->pclk_rst = devm_reset_control_get(dev, "pclk");
-> +	if (IS_ERR(rockchip->pclk_rst)) {
-> +		if (PTR_ERR(rockchip->pclk_rst) != -EPROBE_DEFER)
-> +			dev_err(dev, "missing pclk reset property in node\n");
-> +		return PTR_ERR(rockchip->pclk_rst);
-> +	}
-> +
-> +	rockchip->aclk_rst = devm_reset_control_get(dev, "aclk");
-> +	if (IS_ERR(rockchip->aclk_rst)) {
-> +		if (PTR_ERR(rockchip->aclk_rst) != -EPROBE_DEFER)
-> +			dev_err(dev, "missing aclk reset property in node\n");
-> +		return PTR_ERR(rockchip->aclk_rst);
-> +	}
-> +
->  	rockchip->ep_gpio = devm_gpiod_get(dev, "ep", GPIOD_OUT_HIGH);
->  	if (IS_ERR(rockchip->ep_gpio)) {
->  		dev_err(dev, "missing ep-gpios property in node\n");
-> -- 
-> 2.3.7
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--6d7u2vamgma2rn2j
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Oct 27, 2016 at 08:49:29AM -0600, Mathieu Poirier wrote:
+>=20
+> I agree - something like this should have attracted more reviews.  I
+> suggest providing a better explanation, i.e what you are doing and why
+> in more details.  I reviewed your set and I'm still not sure of
+> exactly what it does, hence not being able to comment on the validity
+> of the approach.
+>=20
+> I'm pretty sure there is value in what you are suggesting, it's a
+> matter of getting people to understand the approach and motivation.
+
+That's what I tried to do in the cover-letter. What do you think is
+missing that I should add in it?
+
+Thanks,
+
+Antoine
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--6d7u2vamgma2rn2j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCgAGBQJYEhUhAAoJEFxNi8it27zYjqwQAIJm4r3ogx0fylLlqA61jIlO
+zgwY472yvC4VWjtGZIUAymhFmHSZnX2LvmL/o3zbYvI13AkxZRESy4kiYcWdfRGN
+Is/9rjKyB2LC6DvIzmdQ186JcyEbXcHoALZpNzpDrrBF+ZCvMpdW1Fri0FVtkWnM
+NFTBsZQJNW3OsOOITuLJSry+Boyr8ZMUpHDxTD9AsIYK4kEu5GC3bI0/eNCTjOnT
+mkLKUA+R21Szl7a2ERs7+yRSXIBf/wRYxTLc0c/3eJ7usfWdg3wD3JCD5JpSSKYA
+tTAf9xEA38iBqubaVDHVa22O4lf++U6nPw+TTVsn97WuQk+kYHC1UtLyuFqSgENc
++ATffg4KBets+mkq2/H/wxARBRsuNyQ4jJaByA5mwanCyEfKYFbOXN3+te8T/kch
++BMQeQF996VPkYQFcdzcirVh9J3LDeH4jZRg3bWlEbGavHuLuvH5z8zKiSDdKyV/
+NjmVssl4L+7o0c1JmwmRasBHP1oPyToOF/vFG/tN/JjqBOgFEWtcbSoBgna8ILpN
+7BlRxWbNnI7xNA/x9LiS448x+JVGZHwAOm+4MKvzSMqnsl8cNoJGWx0E1IFmCuM/
+sb0O2Bf1gmkVidZPR5Yvr59e9AtyRzMgq5JgM0vtqz3t5lQa74N1RdBjbgmmi8i2
+8F7CoY+nudRC3LNQfn1b
+=g0bj
+-----END PGP SIGNATURE-----
+
+--6d7u2vamgma2rn2j--
+
+
+--===============3478746711418185243==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3478746711418185243==--
