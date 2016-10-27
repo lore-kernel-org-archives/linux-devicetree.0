@@ -1,57 +1,37 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC PATCH 06/13] of: Remove prefix "__of_" and prefix "__" from
- local function names
-Date: Thu, 27 Oct 2016 15:20:35 -0500
-Message-ID: <CAL_Jsq+xdWHE2Di3neAxpB8FwM3Xi44E_q5hT_5Lhiqepj1=mw@mail.gmail.com>
-References: <1477429146-27039-1-git-send-email-frowand.list@gmail.com>
- <1477429146-27039-7-git-send-email-frowand.list@gmail.com>
- <CAL_JsqL9KWw7Mkz8nwZWDot+3OPBC2AesYuvu3dEofiB7BGeGQ@mail.gmail.com>
- <58122CC0.3090700@gmail.com> <CAL_JsqJdBAeAUfODEzvpNELmLj9ib1CKwQVsEVGsFYAnBuj_Kw@mail.gmail.com>
- <5812469C.3010403@gmail.com>
+From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: hi6220: add resets property into dwmmc nodes
+Date: Thu, 27 Oct 2016 13:23:09 -0700
+Message-ID: <CALAqxLXfb48h8hMQmAaJ+YjA5=pekkQ8Dg8ReL6VTTfmuFRPDw@mail.gmail.com>
+References: <1472094041-5357-1-git-send-email-guodong.xu@linaro.org>
+ <1472094041-5357-2-git-send-email-guodong.xu@linaro.org> <CAKfTPtB0FtGbm4C5z+LJizrsHikKt_BGFti5XY+LN3w7zO1Vjw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5812469C.3010403@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKfTPtB0FtGbm4C5z+LJizrsHikKt_BGFti5XY+LN3w7zO1Vjw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Fathi Boudra <fathi.boudra-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 27, 2016 at 1:25 PM, Frank Rowand <frowand.list@gmail.com> wrote:
-> On 10/27/16 09:58, Rob Herring wrote:
->> On Thu, Oct 27, 2016 at 11:35 AM, Frank Rowand <frowand.list@gmail.com> wrote:
->>> On 10/27/16 05:47, Rob Herring wrote:
->>>> On Tue, Oct 25, 2016 at 3:58 PM,  <frowand.list@gmail.com> wrote:
->>>>> From: Frank Rowand <frank.rowand@am.sony.com>
->>>>
->>>> I prefer to leave the prefixes and this is getting into pointless churn.
->>>>
->>>>>
->>>>> Signed-off-by: Frank Rowand <frank.rowand@am.sony.com>
->>>>> ---
->>>>>  drivers/of/resolver.c | 10 +++++-----
->>>>>  1 file changed, 5 insertions(+), 5 deletions(-)
->>>>
->>>
->>> If I was just submitting this as a single patch, I would agree.
->>>
->>> But since I am making so many other changes, I think it makes
->>> sense to do this as part of this series.  It is broken apart
->>> as a separate patch to be easy to review and not pollute any
->>> of the other patches in the series.
->>>
->>> The prefixes add no value for a local function, but they do
->>> add noise when reading code.
->>
->> The value is when reading the calling function, you know the function
->> is a DT related function. You don't know it's a static function
+On Thu, Oct 27, 2016 at 6:56 AM, Vincent Guittot
+<vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 >
-> It is more than that.  A common convention in drivers/of/ is that
-> function blah() acquires a lock, calls function __blah(), and
-> releases the lock.  Any function other than blah() that wants
-> to call __blah() must also hold the proper lock.  The functions
-> whose name this patch changes do not fit this pattern.
+> My hikey board failed to detect and mount sdcard with v4.9-rc1 and i
+> have bisected the issue to this patch. Once reverted, the sdcard is
+> detected again.
 
-Okay, fair enough.
+Hrm.. I've not seen this w/ my v4.9-rc2 based tree, and I don't have
+any mmc patches there.
 
-Rob
+Can you send me your .config and point me to any other patches you're
+running with? Also do you have any details about the card in case its
+card specific?
+
+Guodong: Is there any bootloader dependency on that change?
+
+thanks
+-john
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
