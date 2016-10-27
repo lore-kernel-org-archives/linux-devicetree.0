@@ -1,53 +1,111 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v2] clk: hisilicon: add CRG driver for Hi3798CV200
- SoC
-Date: Thu, 27 Oct 2016 08:48:33 -0500
-Message-ID: <20161027134833.vdtd5t5hx33o3ahb@rob-hp-laptop>
-References: <1477013830-11481-1-git-send-email-xuejiancheng@hisilicon.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC PATCH 01/13] of: Remove comments that state the obvious
+Date: Thu, 27 Oct 2016 07:18:01 -0500
+Message-ID: <CAL_JsqL1aPq3rJLngvpQav-4-AKBd+u=+GX5NNpP9Kbc4zehpw@mail.gmail.com>
+References: <1477429146-27039-1-git-send-email-frowand.list@gmail.com> <1477429146-27039-2-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1477013830-11481-1-git-send-email-xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bin.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hermit.wangheming-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477429146-27039-2-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 09:37:10AM +0800, Jiancheng Xue wrote:
-> Add CRG driver for Hi3798CV200 SoC. CRG(Clock and Reset
-> Generator) module generates clock and reset signals used
-> by other module blocks on SoC.
-> 
-> Signed-off-by: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+On Tue, Oct 25, 2016 at 3:58 PM,  <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@am.sony.com>
+>
+> Remove comments that state the obvious, to reduce clutter
+
+I'm probably not the best reviewer, have you ever seen a comment in my code. :)
+
+>
+> Signed-off-by: Frank Rowand <frank.rowand@am.sony.com>
 > ---
-> change log
-> v2:
-> - Fixed compiling error when compiled as a module.
-> - Fixed issues pointed by Stephen Boyd.
-> - Added prefix HISTB for clock index macro definitions.
+>  drivers/of/resolver.c | 31 ++-----------------------------
+>  1 file changed, 2 insertions(+), 29 deletions(-)
+>
+> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+> index 46325d6394cf..4ff0220d7aa2 100644
+> --- a/drivers/of/resolver.c
+> +++ b/drivers/of/resolver.c
 
-What Stephen asked for is send this and the Hi3516CV300 series as one 
-series since there is a dependency.
+> @@ -75,8 +73,6 @@ static phandle of_get_tree_max_phandle(void)
+>
+>  /*
+>   * Adjust a subtree's phandle values by a given delta.
+> - * Makes sure not to just adjust the device node's phandle value,
+> - * but modify the phandle properties values as well.
 
-> 
->  .../clock/{hi3519-crg.txt => hisi-crg.txt}         |  11 +-
+What's missing here is the why? Why do we adjust phandle values?
 
-In any case, for the binding:
+>   */
+>  static void __of_adjust_tree_phandles(struct device_node *node,
+>                 int phandle_delta)
+> @@ -85,32 +81,25 @@ static void __of_adjust_tree_phandles(struct device_node *node,
+>         struct property *prop;
+>         phandle phandle;
+>
+> -       /* first adjust the node's phandle direct value */
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Seems somewhat useful.
 
->  drivers/clk/hisilicon/Kconfig                      |   8 +
->  drivers/clk/hisilicon/Makefile                     |   1 +
->  drivers/clk/hisilicon/crg-hi3798cv200.c            | 305 +++++++++++++++++++++
->  drivers/clk/hisilicon/crg.h                        |  34 +++
->  include/dt-bindings/clock/histb-clock.h            |  64 +++++
->  6 files changed, 419 insertions(+), 4 deletions(-)
->  rename Documentation/devicetree/bindings/clock/{hi3519-crg.txt => hisi-crg.txt} (82%)
->  create mode 100644 drivers/clk/hisilicon/crg-hi3798cv200.c
->  create mode 100644 drivers/clk/hisilicon/crg.h
->  create mode 100644 include/dt-bindings/clock/histb-clock.h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>         if (node->phandle != 0 && node->phandle != OF_PHANDLE_ILLEGAL)
+>                 node->phandle += phandle_delta;
+>
+> -       /* now adjust phandle & linux,phandle values */
+
+Seems somewhat useful.
+
+>         for_each_property_of_node(node, prop) {
+>
+> -               /* only look for these two */
+>                 if (of_prop_cmp(prop->name, "phandle") != 0 &&
+>                     of_prop_cmp(prop->name, "linux,phandle") != 0)
+>                         continue;
+>
+> -               /* must be big enough */
+>                 if (prop->length < 4)
+>                         continue;
+>
+> -               /* read phandle value */
+>                 phandle = be32_to_cpup(prop->value);
+> -               if (phandle == OF_PHANDLE_ILLEGAL)      /* unresolved */
+> +               if (phandle == OF_PHANDLE_ILLEGAL)
+>                         continue;
+>
+> -               /* adjust */
+>                 *(uint32_t *)prop->value = cpu_to_be32(node->phandle);
+>         }
+>
+> -       /* now do the children recursively */
+>         for_each_child_of_node(node, child)
+>                 __of_adjust_tree_phandles(child, phandle_delta);
+>  }
+
+> @@ -254,7 +239,6 @@ static int __of_adjust_tree_phandle_references(struct device_node *node,
+>
+>                 for (i = 0; i < count; i++) {
+>                         off = be32_to_cpu(((__be32 *)rprop->value)[i]);
+> -                       /* make sure the offset doesn't overstep (even wrap) */
+
+Seems somewhat useful.
+
+>                         if (off >= sprop->length ||
+>                                         (off + 4) > sprop->length) {
+>                                 pr_err("%s: Illegal property '%s' @%s\n",
+
+> @@ -349,10 +328,8 @@ int of_resolve_phandles(struct device_node *resolve)
+>         resolve_sym = NULL;
+>         resolve_fix = NULL;
+>
+> -       /* this may fail (if no fixups are required) */
+
+Seem somewhat useful.
+
+>         root_sym = of_find_node_by_path("/__symbols__");
+>
+> -       /* locate the symbols & fixups nodes on resolve */
+>         for_each_child_of_node(resolve, child) {
+>
+>                 if (!resolve_sym &&
