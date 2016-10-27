@@ -1,87 +1,62 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/4] pinctrl: Introduce generic #pinctrl-cells and pinctrl_parse_index_with_args
-Date: Thu, 27 Oct 2016 09:56:26 +0200
-Message-ID: <CACRpkdYWB4aa2XvW-yT39cKqy3XChSwCiFRy1mVWhbhse63=3A@mail.gmail.com>
-References: <20161025164538.453-1-tony@atomide.com> <20161025164538.453-2-tony@atomide.com>
+From: Imran Khan <kimran@codeaurora.org>
+Subject: Re: [PATCH] soc: qcom: Add SoC info driver
+Date: Thu, 27 Oct 2016 18:40:27 +0530
+Message-ID: <fd34e299-a3c2-e981-a92e-b61638a98e5f@codeaurora.org>
+References: <1476972386-28655-1-git-send-email-kimran@codeaurora.org>
+ <3809309.oOnjdjqnN9@wuerfel>
+ <2ae082c4-27c1-fbdd-cb7a-986716e15d18@codeaurora.org>
+ <4173870.AkctyO62lp@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161025164538.453-2-tony@atomide.com>
+In-Reply-To: <4173870.AkctyO62lp@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Jon Hunter <jonathanh@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 6:45 PM, Tony Lindgren <tony@atomide.com> wrote:
+On 10/26/2016 8:16 PM, Arnd Bergmann wrote:
+> On Wednesday, October 26, 2016 7:42:08 PM CEST Imran Khan wrote:
+>> On 10/26/2016 7:35 PM, Arnd Bergmann wrote:
+>>>>> As we are talking about generic soc_device_attribute fields, I was hoping that
+>>>>> having a vendor field would be helpful as along with family it would provide
+>>>>> a more thorough information. Also as more than one foundries may be used for 
+>>>>> a soc, can we have a field say foundry_id to provide this information.
+>>> My first feeling is that this 'vendor' information can should be
+>>> derived from the family. It's also not clear what would happen
+>>> to this when a company gets bought. E.g. the Oxnas product family
+>>> was subsequently owned by Oxford, PLX, Avago and Broadcom, and the
+>>> mxs family was Sigmatel, Freescale, now NXP and might soon be
+>>> Qualcomm. What would you put in there in this case?
+>>
+>> Okay, not having vendor field is fine for me. Could you also suggest
+>> something about the foundry_id field.
+> 
+> This one seems more well-defined, so it's probably ok to add. What
+> would be the use case of reading this? Would you want to read it
+> just from user space or also from the kernel?
+> 
 
-I need some DT person to take a look at this binding and ACK it.
+As of now the use case I can think of, only involve reading this from user
+space. For example for the same soc, coming from different foundries with
+different manufacturing process, we may have a situation where some inconsistent
+h/w behavior is being observed only on parts received from a certain foundry
+and in those cases this information may help in segregation of problematic socs
+and may also be used in testing these socs under a different set of settings like
+voltage, frequency etc.
 
-> +For pin controller hardware with a large number of identical registers naming
-> +each bit both can be unmaintainable. Further there can be a large number of similar
-> +pinctrl hardware using the same registers for different purposes depending on the
-> +packaging. For cases like this, the pinctrl driver may use pinctrl-pin-array helper
-> +binding using a hardware based index and a number of configuration values:
+> Maybe this can be combined with a manufacturing process, which probably
+> falls into a similar category, so we could have something like
+> "TSMC 28ULP" as a string in there.
+>
 
-Maybe we can reword it a bit so that it is clear that this is an
-either-or approach
-for the pin controller, either they use the pins/groups/functions scheme
-or they use this scheme.
+Yes. Having a manufacturing process as part of foundry-id can provide a more
+thorough information.
+ 
+> 	Arnd
+> 
 
-> +pincontroller {
-> +       ... /* Standard DT properties for the device itself elided */
-> +       #pinctrl-cells = <2>;
-> +
-> +       state_0_node_a {
-> +               pinctrl-pin-array = <
-> +                       0 A_DELAY_PS(0) G_DELAY_PS(120)
-> +                       4 A_DELAY_PS(0) G_DELAY_PS(360)
-> +                       ...
-> +               >;
-> +       };
-> +       ...
-> +};
 
-Looks all right to me. Sad to add to the binding mess, but on the other
-hand, in the overall picture this nicely consolidates and structure
-pinctrl-single.
-
-> +The index for pinctrl-pin-array must relate to the hardware for the pinctrl
-> +registers, and must not be a virtual index of pin instances. The reason for
-> +this is to avoid mapping of the index in the dts files and the pin controller
-> +driver as it can change.
-
-OK
-
-> And we want to avoid another case of interrupt
-> +numbering with pinctrl numbering.
-
-Maybe this file is not a good place for making technical arguments,
-more describing what we agreed on, so cut that sentence IMO.
-
-> +/*
-> + * For pinctrl binding, typically #pinctrl-cells is for the pin controller
-> + * device, so either parent or grandparent. See pinctrl-bindings.txt.
-> + */
-> +static int pinctrl_find_cells_size(const struct device_node *np,
-> +                                  const char *cells_name)
-> +{
-> +       int cells_size, error;
-> +
-> +       error = of_property_read_u32(np->parent, cells_name, &cells_size);
-> +       if (error) {
-> +               error = of_property_read_u32(np->parent->parent,
-> +                                            cells_name, &cells_size);
-> +               if (error)
-> +                       return -ENOENT;
-> +       }
-> +
-> +       return cells_size;
-> +}
-
-Can't we just hardcode this to "#pinctrl-cells" and skip the cells_name
-parameter? We can parametrize it the day we need it instead.
-
-The rest of the helpers look nice and clean.
-
-Yours,
-Linus Walleij
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a\nmember of the Code Aurora Forum, hosted by The Linux Foundation
