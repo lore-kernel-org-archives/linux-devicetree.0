@@ -1,64 +1,92 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 13/13] of: Remove unused variable overlay_symbols
-Date: Thu, 27 Oct 2016 09:57:56 -0700
-Message-ID: <58123214.1090405@gmail.com>
-References: <1477429146-27039-1-git-send-email-frowand.list@gmail.com>
- <1477429146-27039-14-git-send-email-frowand.list@gmail.com>
- <27823D48-C6B1-486C-8460-9B3C33DDC62F@antoniou-consulting.com>
- <58122AF9.3040709@gmail.com> <58123122.8020908@gmail.com>
+From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/4] Input: goodix - Allow tweaking of configuration file
+ dynamically
+Date: Thu, 27 Oct 2016 11:58:59 -0500
+Message-ID: <f3a9de30-eba6-0738-ed91-f4834f142a2c@ti.com>
+References: <20161020195917.20051-1-fcooper@ti.com>
+ <20161020195917.20051-3-fcooper@ti.com> <1477564424.2458.9.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58123122.8020908-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1477564424.2458.9.camel-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/27/16 09:53, Frank Rowand wrote:
-> On 10/27/16 09:27, Frank Rowand wrote:
->> On 10/27/16 07:41, Pantelis Antoniou wrote:
->>> Hi Frank,
->>>
->>>
->>>> On Oct 25, 2016, at 23:59 , frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->>>>
->>>> From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
->>>>
->>>> This unused variable is a reminder that symbols in overlays are
->>>> not available to subsequent overlays.  If such a feature is
->>>> desired then there are several ways it could be implemented.
->>>>
->>>
->>> Please don’t apply that. There’s a patch that actually imports
->>> the symbol table from overlays that subsequent operations
->>> work.
->>>
->>> Please see:
->>>
->>> https://patchwork.kernel.org/patch/9104701/
+
+
+On 10/27/2016 05:33 AM, Bastien Nocera wrote:
+> On Thu, 2016-10-20 at 14:59 -0500, Franklin S Cooper Jr wrote:
+>> Some goodix touchscreen controllers don't have the correct
+>> configuration
+>> firmware for the display panel it is attached to. Therefore, settings
+>> such
+>> as touchscreen x and y size may need to be passed in via DT and have
+>> the
+>> panel reprogrammed for the updated touchscreen resolution.
 >>
->> Thanks for the pointer!  When the import symbols patch is applied
->> then the comment in my patch header becomes incorrect.  I will
->> change the patch comment to act is if the import symbols patch
->> is in place.
+>> This patchset adds support for reading the current configuration
+>> firmware
+>> on the panel and allowing it to be modified and rewritten back to the
+>> device.
 >>
->> But the node pointer that my patch removes is still not used
->> for anything, even if the import symbols patch is applied.
+>> Currently this function is unused but later patches will make use of
+>> it.
 >>
->> Am I missing something?
+>> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  drivers/input/touchscreen/goodix.c | 28 ++++++++++++++++++++++++++++
+>>  1 file changed, 28 insertions(+)
+>>
+>> diff --git a/drivers/input/touchscreen/goodix.c
+>> b/drivers/input/touchscreen/goodix.c
+>> index a43c8ca..01e12f8 100644
+>> --- a/drivers/input/touchscreen/goodix.c
+>> +++ b/drivers/input/touchscreen/goodix.c
+>> @@ -478,6 +478,34 @@ static int goodix_get_gpio_config(struct
+>> goodix_ts_data *ts)
+>>  	return 0;
+>>  }
+>>  
+>> +static void goodix_tweak_config(struct goodix_ts_data *ts)
+>> +{
+>> +	u8 config[GOODIX_CONFIG_MAX_LENGTH];
+>> +	int error;
+>> +	int raw_cfg_len;
+>> +	u8 check_sum = 0;
+>> +
+>> +	raw_cfg_len = ts->cfg_len - 2;
+>> +
+>> +	error = goodix_i2c_read(ts->client, GOODIX_REG_CONFIG_DATA,
+>> +				config, ts->cfg_len);
+>> +	if (error) {
+>> +		dev_warn(&ts->client->dev,
+>> +			 "Error reading config (%d), avoid tweaking
+>> config\n",
+>> +			 error);
+>> +		return;
+>> +	}
 > 
-> I was missing a later patch in the symbol import patch set that
-> updated resolver.c to use the imported symbols.  I'll go look
-> at that.
+> Please add a placeholder comment here, to go along with the commit
+> message explanation.
 
-Crap.  I misread the file name in the patch that I thought was
-updating resolver.c.  It was actually overlay.c.  So I am back
-to my question of:
-
-   Am I missing something?
-
+You just want a comment here stating that changes to the firmware should
+be made here?
+> 
+>> +	check_sum = goodix_calculate_checksum(ts->cfg_len, config);
+>> +
+>> +	config[raw_cfg_len] = check_sum;
+>> +	config[raw_cfg_len + 1] = 1;
+>> +
+>> +	error = goodix_send_cfg(ts, ts->cfg_len, config);
+>> +	if (error)
+>> +		dev_warn(&ts->client->dev,
+>> +			 "Error writing config (%d)\n", error);
+>> +}
+>>  /**
+>>   * goodix_read_config - Read the embedded configuration of the panel
+>>   *
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
