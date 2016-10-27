@@ -1,103 +1,71 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] pinctrl: Introduce generic #pinctrl-cells and
- pinctrl_parse_index_with_args
-Date: Thu, 27 Oct 2016 07:11:20 -0700
-Message-ID: <20161027141120.jqvul6q7iz5fjsmb@atomide.com>
-References: <20161025164538.453-1-tony@atomide.com>
- <20161025164538.453-2-tony@atomide.com>
- <CACRpkdYWB4aa2XvW-yT39cKqy3XChSwCiFRy1mVWhbhse63=3A@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 3/4] regulator: pv88080: Update Regulator driver for
+ MFD support
+Date: Thu, 27 Oct 2016 12:03:37 +0100
+Message-ID: <20161027110337.GJ25322@sirena.org.uk>
+References: <cover.1477530195.git.eric.jeong@diasemi.com>
+ <711afefe3e65c166111473024bf9b54f3d4cc8b6.1477530195.git.eric.jeong@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="GvznHscUikHnwW2p"
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYWB4aa2XvW-yT39cKqy3XChSwCiFRy1mVWhbhse63=3A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <711afefe3e65c166111473024bf9b54f3d4cc8b6.1477530195.git.eric.jeong@diasemi.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Eric Jeong <eric.jeong.opensource@diasemi.com>
+Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-GPIO <linux-gpio@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-* Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [161027 00:57]:
-> On Tue, Oct 25, 2016 at 6:45 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> 
-> I need some DT person to take a look at this binding and ACK it.
-> 
-> > +For pin controller hardware with a large number of identical registers naming
-> > +each bit both can be unmaintainable. Further there can be a large number of similar
-> > +pinctrl hardware using the same registers for different purposes depending on the
-> > +packaging. For cases like this, the pinctrl driver may use pinctrl-pin-array helper
-> > +binding using a hardware based index and a number of configuration values:
-> 
-> Maybe we can reword it a bit so that it is clear that this is an
-> either-or approach
-> for the pin controller, either they use the pins/groups/functions scheme
-> or they use this scheme.
 
-Sure, this is just an optional helper.
+--GvznHscUikHnwW2p
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > +pincontroller {
-> > +       ... /* Standard DT properties for the device itself elided */
-> > +       #pinctrl-cells = <2>;
-> > +
-> > +       state_0_node_a {
-> > +               pinctrl-pin-array = <
-> > +                       0 A_DELAY_PS(0) G_DELAY_PS(120)
-> > +                       4 A_DELAY_PS(0) G_DELAY_PS(360)
-> > +                       ...
-> > +               >;
-> > +       };
-> > +       ...
-> > +};
-> 
-> Looks all right to me. Sad to add to the binding mess, but on the other
-> hand, in the overall picture this nicely consolidates and structure
-> pinctrl-single.
-> 
-> > +The index for pinctrl-pin-array must relate to the hardware for the pinctrl
-> > +registers, and must not be a virtual index of pin instances. The reason for
-> > +this is to avoid mapping of the index in the dts files and the pin controller
-> > +driver as it can change.
-> 
-> OK
-> 
-> > And we want to avoid another case of interrupt
-> > +numbering with pinctrl numbering.
-> 
-> Maybe this file is not a good place for making technical arguments,
-> more describing what we agreed on, so cut that sentence IMO.
+On Thu, Oct 27, 2016 at 10:03:14AM +0900, Eric Jeong wrote:
 
-Sure :)
+>  config REGULATOR_PV88080
+> -	tristate "Powerventure Semiconductor PV88080 regulator"
+> -	depends on I2C
+> -	select REGMAP_I2C
+> +	bool "Powerventure Semiconductor PV88080 regulator"
+> +	depends on MFD_PV88080
 
-> > +/*
-> > + * For pinctrl binding, typically #pinctrl-cells is for the pin controller
-> > + * device, so either parent or grandparent. See pinctrl-bindings.txt.
-> > + */
-> > +static int pinctrl_find_cells_size(const struct device_node *np,
-> > +                                  const char *cells_name)
-> > +{
-> > +       int cells_size, error;
-> > +
-> > +       error = of_property_read_u32(np->parent, cells_name, &cells_size);
-> > +       if (error) {
-> > +               error = of_property_read_u32(np->parent->parent,
-> > +                                            cells_name, &cells_size);
-> > +               if (error)
-> > +                       return -ENOENT;
-> > +       }
-> > +
-> > +       return cells_size;
-> > +}
-> 
-> Can't we just hardcode this to "#pinctrl-cells" and skip the cells_name
-> parameter? We can parametrize it the day we need it instead.
+Forcing the driver to be built in looks like a regression, why would we
+want to do that?
 
-Sure we can do that.
+> +	irq = platform_get_irq_byname(pdev, "regulator-irq");
+> +	if (irq < 0) {
+> +		dev_err(&pdev->dev, "Failed to get IRQ.\n");
+> +		return irq;
+>  	}
 
-> The rest of the helpers look nice and clean.
+What's the _byname() adding here given that the name is so generic?  It
+feels like if the name ever becomes important then this particular name
+is going to be a problem.
 
-OK cool thanks,
+> -module_i2c_driver(pv88080_regulator_driver);
+> +static int __init pv88080_regulator_init(void)
+> +{
+> +	return platform_driver_register(&pv88080_regulator_driver);
+> +}
+> +subsys_initcall(pv88080_regulator_init);
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Why are you converting this to subsys_initcall()?  This looks like
+another regression.
+
+--GvznHscUikHnwW2p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJYEd8IAAoJECTWi3JdVIfQGFwH/0jfun16dBlNGmSdpd984XFb
+utH1FhCk/e3yCTiOBtDP+W3zyKEByEKaDWejsuhmKIpwpBPL8QfOgMqdzpExghey
+CURflgekA44Ml9SzxMwZA5c7WYuM0kfeN7eBP2J61dYJjPgrstXx8bUiZBBRqRIq
+G3At81wj0aQMuXYC64Y1QqQvU+zjdzim37Vanl04Z2kKLl046xubPePmxgoejiy1
+V4z6J3SLAYSq4JnXv58fLfHwmiNwOjESyfib2FfrpmrXds/4x44jGG3oqu7rzS3J
+AYNnuH6KC6rJYuUW0m7XY6leCAWyBJXZy4YJQM+aFUt+qGcCzVF0GL8znxI81Ec=
+=o0id
+-----END PGP SIGNATURE-----
+
+--GvznHscUikHnwW2p--
