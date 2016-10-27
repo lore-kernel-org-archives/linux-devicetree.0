@@ -1,16 +1,15 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 5/5] ARM: dts: Add LEGO MINDSTORTMS EV3 dts
-Date: Thu, 27 Oct 2016 16:48:44 +0530
-Message-ID: <d17f4ea6-7925-e926-2310-edf5887edee7@ti.com>
-References: <1477075018-20176-1-git-send-email-david@lechnology.com>
- <1477075018-20176-6-git-send-email-david@lechnology.com>
- <b0022fad-a96e-86d4-71ba-2b803e5421fe@ti.com>
- <38a3a10c-a269-6a9f-305c-7d38ec9b839b@lechnology.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [RFC PATCH 5/5] of: overlay-mgr: add a detector for headers
+ stored on a ds2431 eeprom over w1
+Date: Thu, 27 Oct 2016 11:18:59 +0200
+Message-ID: <dc7221ad-245b-7b72-581f-b5b67d6db86c@gmail.com>
+References: <20161026145756.21689-1-antoine.tenart@free-electrons.com>
+ <20161026145756.21689-6-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <38a3a10c-a269-6a9f-305c-7d38ec9b839b@lechnology.com>
+In-Reply-To: <20161026145756.21689-6-antoine.tenart@free-electrons.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,39 +19,97 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Antoine Tenart <antoine.tenart@free-electrons.com>, maxime.ripard@free-electrons.com, pantelis.antoniou@konsulko.com, mark.rutland@arm.com, sboyd@codeaurora.org
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 27 October 2016 07:00 AM, David Lechner wrote:
-> On 10/24/2016 06:58 AM, Sekhar Nori wrote:
->> On Saturday 22 October 2016 12:06 AM, David Lechner wrote:
->>> This adds a device tree definition file for LEGO MINDSTORMS EV3.
->>
->> Thanks for the patch!
->>
->>>
->>> What is working:
->>>
->>> * Pin muxing
->>> * MicroSD card reader
->>> * UART on input port 1
->>>
->>> What is partially working:
->>>
->>> * Buttons - working after GPIO fix
->>> * LEDs - working after GPIO fix
->>> * Poweroff/reset - working after GPIO fix
->>
->> Is the GPIO fix something that will go in v4.9-rc cycle ?
->>
-> 
-> FYI, the fix is in linux-gpio/fixes now.
 
-Thanks, I added the patch to my 'acked' branch which has stuff useful
-for testing on davinci but not going through my tree. It gets merged
-into my master branch so that branch can be used for all mach-davinci
-development.
 
-Thanks,
-Sekhar
+On 10/26/2016 04:57 PM, Antoine Tenart wrote:
+> Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+> ---
+
+Please provide a commit message.
+
+>  drivers/of/overlay-manager/Kconfig | 10 ++++++++++
+>  drivers/w1/slaves/w1_ds2431.c      | 39 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 49 insertions(+)
+>
+> diff --git a/drivers/of/overlay-manager/Kconfig b/drivers/of/overlay-manager/Kconfig
+> index 1a36613c0c53..ad0a5b8e9e5e 100644
+> --- a/drivers/of/overlay-manager/Kconfig
+> +++ b/drivers/of/overlay-manager/Kconfig
+> @@ -16,4 +16,14 @@ config OF_OVERLAY_MGR_FORMAT_CHIP
+>
+>  endmenu
+>
+> +menu "Overlay Manager detectors"
+> +
+> +config OF_OVERLAY_MGR_DETECTOR_DS2431
+> +	bool "Dip header on a DS2431 EEPROM"
+> +	depends on W1_SLAVE_DS2431
+> +	help
+> +	  Enable dip header DS2431 EEPROM support.
+> +
+> +endmenu
+> +
+>  endif
+> diff --git a/drivers/w1/slaves/w1_ds2431.c b/drivers/w1/slaves/w1_ds2431.c
+> index 80572cb63ba8..760325f9a2bd 100644
+> --- a/drivers/w1/slaves/w1_ds2431.c
+> +++ b/drivers/w1/slaves/w1_ds2431.c
+> @@ -15,6 +15,9 @@
+>  #include <linux/device.h>
+>  #include <linux/types.h>
+>  #include <linux/delay.h>
+> +#include <linux/slab.h>
+> +
+> +#include <linux/overlay-manager.h>
+>
+>  #include "../w1.h"
+>  #include "../w1_int.h"
+> @@ -280,7 +283,43 @@ static const struct attribute_group *w1_f2d_groups[] = {
+>  	NULL,
+>  };
+>
+> +#if IS_ENABLED(CONFIG_OF_OVERLAY_MGR_DETECTOR_DS2431)
+> +static int chip_dip_callback(struct w1_slave *sl)
+> +{
+> +	char **candidates = NULL;
+> +	int i, n, err = 0;
+> +	u8 *data;
+> +
+> +	data = kzalloc(OVERLAY_MGR_DIP_MAX_SZ, GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	/* sizeof(struct chip_header) is a mulitple of 8 */
+> +	for (i = 0; i < OVERLAY_MGR_DIP_MAX_SZ; i += 8) {
+> +		if (w1_f2d_readblock(sl, i, 8, &data[i])) {
+> +			err = -EIO;
+> +			goto end;
+> +		}
+> +	}
+> +
+> +	overlay_mgr_parse(&sl->dev, data, &candidates, &n);
+> +	if (!n) {
+> +		err = -EINVAL;
+> +		goto end;
+> +	}
+> +
+> +	err = overlay_mgr_apply(&sl->dev, candidates, n);
+> +
+> +end:
+> +	kfree(data);
+> +	return err;
+> +}
+> +#endif
+> +
+>  static struct w1_family_ops w1_f2d_fops = {
+> +#if IS_ENABLED(CONFIG_OF_OVERLAY_MGR_DETECTOR_DS2431)
+> +	.callback	= chip_dip_callback,
+> +#endif
+>  	.groups		= w1_f2d_groups,
+>  };
+>
+>
