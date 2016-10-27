@@ -1,30 +1,57 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 0/2] Renesas R8A7743 CPG/MSSR clock support
-Date: Thu, 27 Oct 2016 23:20:35 +0300
-Message-ID: <1590929.i2qFnIhqnT@wasted.cogentembedded.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC PATCH 06/13] of: Remove prefix "__of_" and prefix "__" from
+ local function names
+Date: Thu, 27 Oct 2016 15:20:35 -0500
+Message-ID: <CAL_Jsq+xdWHE2Di3neAxpB8FwM3Xi44E_q5hT_5Lhiqepj1=mw@mail.gmail.com>
+References: <1477429146-27039-1-git-send-email-frowand.list@gmail.com>
+ <1477429146-27039-7-git-send-email-frowand.list@gmail.com>
+ <CAL_JsqL9KWw7Mkz8nwZWDot+3OPBC2AesYuvu3dEofiB7BGeGQ@mail.gmail.com>
+ <58122CC0.3090700@gmail.com> <CAL_JsqJdBAeAUfODEzvpNELmLj9ib1CKwQVsEVGsFYAnBuj_Kw@mail.gmail.com>
+ <5812469C.3010403@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5812469C.3010403@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Thu, Oct 27, 2016 at 1:25 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> On 10/27/16 09:58, Rob Herring wrote:
+>> On Thu, Oct 27, 2016 at 11:35 AM, Frank Rowand <frowand.list@gmail.com> wrote:
+>>> On 10/27/16 05:47, Rob Herring wrote:
+>>>> On Tue, Oct 25, 2016 at 3:58 PM,  <frowand.list@gmail.com> wrote:
+>>>>> From: Frank Rowand <frank.rowand@am.sony.com>
+>>>>
+>>>> I prefer to leave the prefixes and this is getting into pointless churn.
+>>>>
+>>>>>
+>>>>> Signed-off-by: Frank Rowand <frank.rowand@am.sony.com>
+>>>>> ---
+>>>>>  drivers/of/resolver.c | 10 +++++-----
+>>>>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>>>>
+>>>
+>>> If I was just submitting this as a single patch, I would agree.
+>>>
+>>> But since I am making so many other changes, I think it makes
+>>> sense to do this as part of this series.  It is broken apart
+>>> as a separate patch to be easy to review and not pollute any
+>>> of the other patches in the series.
+>>>
+>>> The prefixes add no value for a local function, but they do
+>>> add noise when reading code.
+>>
+>> The value is when reading the calling function, you know the function
+>> is a DT related function. You don't know it's a static function
+>
+> It is more than that.  A common convention in drivers/of/ is that
+> function blah() acquires a lock, calls function __blah(), and
+> releases the lock.  Any function other than blah() that wants
+> to call __blah() must also hold the proper lock.  The functions
+> whose name this patch changes do not fit this pattern.
 
-   Here's the set of 2 patches against the 'clk-next' branch of CLK group's
-'linux.git' repo. I've splitted them from the R-Car gen2 common support patch.
-As the DT patches in the R8A7743/SK-RZG1M board support series depend on the
-patch #1 of this series, it might make sense to merge this patch to the
-'renesas.git' repo as well...
+Okay, fair enough.
 
-[1/2] ARM: shmobile: r8a7743: add CPG clock index macros
-[2/2] clk: renesas: cpg-mssr: add R8A7743 support
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
