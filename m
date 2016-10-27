@@ -1,263 +1,120 @@
-From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv2 2/4] misc: Add Altera Arria10 System Resource Control
-Date: Thu, 27 Oct 2016 15:00:24 -0500
-Message-ID: <1477598426-28125-3-git-send-email-tthayer@opensource.altera.com>
-References: <1477598426-28125-1-git-send-email-tthayer@opensource.altera.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v5 4/7] ASoC: sunxi: Add sun8i
+ I2S driver
+Date: Thu, 27 Oct 2016 22:01:49 +0200
+Message-ID: <20161027200149.jxc4ey4u4qbylrln@lukather>
+References: <cover.1477142934.git.moinejf@free.fr>
+ <bee315efb909c1ee8b5fe7d3aeb9a33d713cb562.1477142934.git.moinejf@free.fr>
+ <CAGb2v67gDd650TJk_-oHOehnzdH2qor=36HXdPt339Ji=ToAMg@mail.gmail.com>
+ <20161023094503.fbb22dd0701e3f2785828609@free.fr>
+ <20161024123449.npo4grdlbrj4tcsj@lukather>
+ <20161027171325.d68baa5ff51da4921ff8b94d@free.fr>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477598426-28125-1-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="obat3uet3dysvzgr"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLV2ZHAAKGQEGQ2RMVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20161027171325.d68baa5ff51da4921ff8b94d-GANU6spQydw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-This patch adds the Altera Arria10 control & monitoring
-functions to the Arria10 System Resource chip.
+--obat3uet3dysvzgr
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
-v2  Change compatible string and filename from -mon to -monitor
-    Change CONFIG from module to builtin.
-    Make wm_rst register writeable.
----
- MAINTAINERS                         |   1 +
- drivers/misc/Kconfig                |   7 ++
- drivers/misc/Makefile               |   1 +
- drivers/misc/altera-a10sr-monitor.c | 176 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 185 insertions(+)
- create mode 100644 drivers/misc/altera-a10sr-monitor.c
+On Thu, Oct 27, 2016 at 05:13:25PM +0200, Jean-Francois Moine wrote:
+> On Mon, 24 Oct 2016 14:34:49 +0200
+> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> 
+> > Hi,
+> > 
+> > On Sun, Oct 23, 2016 at 09:45:03AM +0200, Jean-Francois Moine wrote:
+> > > On Sun, 23 Oct 2016 09:33:16 +0800
+> > > Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> > > 
+> > > > > Note: This driver is closed to the sun4i-i2s except that:
+> > > > > - it handles the H3
+> > > > 
+> > > > If it's close to sun4i-i2s, you should probably rework that one to support
+> > > > the newer SoCs.
+> > > > 
+> > > > > - it creates the sound card (with sun4i-i2s, the sound card is created
+> > > > >   by the CODECs)
+> > > > 
+> > > > I think this is wrong. I2S is only the DAI. You typically have a separate
+> > > > platform driver for the whole card, or just use simple-card.
+> > > 
+> > > An other device is not needed. The layout is simple:
+> > > 	I2S_controller (CPU DAI) <-> HDMI_CODEC (CODEC DAI)
+> > > The HDMI CODEC is supported by the HDMI video driver (only one device),
+> > > so, it cannot be the card device.
+> > > ASoC does not use the CPU DAI device (I2S_controller), so, it is
+> > > natural to use it to handle the card.
+> > 
+> > Still, duplicating the driver is not the solution. I agree with
+> > Chen-Yu that we want to leverage the driver that is already there.
+> 
+> Hi Maxime and Chen-Yu,
+> 
+> After looking at the sun4i-i2s, I found 2 solutions for re-using its
+> code in the DE2 HDMI context:
+> 
+> 1) either to split the sun4i-i2s driver into common I/O functions and
+>    slave CPU DAI,
+> 
+> 2) or to move the sun4i-i2s into a master CPU DAI.
+> 
+> (
+>  some explanation about 'master' and 'slave': the master is the
+>  component the device of which is also the sound card.
+>  As the sound card uses the 'drvdata' of the device, this drvdata pointer
+>  cannot be used by the master.
+>  In the actual implementations:
+>   - sun4i-i2s
+> 	master:	card dev = codec dev, drvdata -> card
+> 	slave:	i2s dev (CPU DAI), drvdata -> i2s data
+>   - sun8i-i2s
+> 	master:	card dev = i2s dev (CPU DAI), drvdata -> card
+> 	slave:	codec dev (hdmi), drvdata -> codec data (audio/video)
+> )
+> 
+> In the case 1, there is no functional change, just a source split.
+> The sun8i-i2s will then use the common I/O functions.
+> 
+> In the case 2, the CODECs using the sun4i-i2s would have to move to
+> slave CODEC DAI, i.e. the card is created by the sun4i-i2s code.
+> In the 4.9, there is only one codec (sun4i-codec), so, the change
+> is just to move the card creation and the use of drvdata in both
+> codes.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 813ea85..1c5b0be 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -631,6 +631,7 @@ M:	Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
- S:	Maintained
- F:	drivers/gpio/gpio-altera-a10sr.c
- F:	drivers/mfd/altera-a10sr.c
-+F: 	drivers/misc/altera-a10sr-monitor.c
- F:	include/linux/mfd/altera-a10sr.h
- 
- ALTERA TRIPLE SPEED ETHERNET DRIVER
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 64971ba..f42d459 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -766,6 +766,13 @@ config PANEL_BOOT_MESSAGE
- 	  An empty message will only clear the display at driver init time. Any other
- 	  printf()-formatted message is valid with newline and escape codes.
- 
-+config ALTERA_A10SR_MONITOR
-+	bool "Altera Arria10 System Resource Monitor"
-+	depends on MFD_ALTERA_A10SR
-+	help
-+	  This enables the System Resource monitor driver for the Altera
-+	  Arria10 DevKit.
-+
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
- source "drivers/misc/cb710/Kconfig"
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index 3198336..9f6e77a 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -43,6 +43,7 @@ obj-y				+= ti-st/
- obj-y				+= lis3lv02d/
- obj-$(CONFIG_USB_SWITCH_FSA9480) += fsa9480.o
- obj-$(CONFIG_ALTERA_STAPL)	+=altera-stapl/
-+obj-$(CONFIG_ALTERA_A10SR_MONITOR)	+= altera-a10sr-monitor.o
- obj-$(CONFIG_INTEL_MEI)		+= mei/
- obj-$(CONFIG_VMWARE_VMCI)	+= vmw_vmci/
- obj-$(CONFIG_LATTICE_ECP3_CONFIG)	+= lattice-ecp3-config.o
-diff --git a/drivers/misc/altera-a10sr-monitor.c b/drivers/misc/altera-a10sr-monitor.c
-new file mode 100644
-index 0000000..838ec2c
---- /dev/null
-+++ b/drivers/misc/altera-a10sr-monitor.c
-@@ -0,0 +1,176 @@
-+/*
-+ * Altera Arria10 DevKit System Resource Chip Monitor Driver
-+ *
-+ * Author: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-+ *
-+ * Copyright Intel Corporation (C) 2014-2016. All Rights Reserved
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ * Monitor driver for the Altera Arria10 MAX5 System Resource Chip
-+ * Adapted from ics932s401.c
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/mfd/altera-a10sr.h>
-+#include <linux/init.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+struct altr_a10sr_regs {
-+	struct regmap		*regmap;
-+	struct attribute_group	attr_grp;
-+};
-+
-+static ssize_t a10sr_show(struct device *dev,
-+			  struct device_attribute *devattr, char *buf);
-+static ssize_t a10sr_store(struct device *dev,
-+			   struct device_attribute *devattr, const char *buf,
-+			   size_t count);
-+
-+/* Define FS entries */
-+static DEVICE_ATTR(max5_version, 0444, a10sr_show, NULL);
-+static DEVICE_ATTR(max5_led, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_button, 0444, a10sr_show, NULL);
-+static DEVICE_ATTR(max5_button_irq, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_pg1, 0444, a10sr_show, NULL);
-+static DEVICE_ATTR(max5_pg2, 0444, a10sr_show, NULL);
-+static DEVICE_ATTR(max5_pg3, 0444, a10sr_show, NULL);
-+static DEVICE_ATTR(max5_fmcab, 0444, a10sr_show, NULL);
-+static DEVICE_ATTR(max5_hps_resets, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_per_resets, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_sfpa, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_sfpb, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_i2c_master, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_wm_rst, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_wm_rst_key, 0644, a10sr_show, a10sr_store);
-+static DEVICE_ATTR(max5_pmbus, 0644, a10sr_show, a10sr_store);
-+
-+static struct attribute *altr_a10sr_attr[] = {
-+	&dev_attr_max5_version.attr,
-+	&dev_attr_max5_led.attr,
-+	&dev_attr_max5_button.attr,
-+	&dev_attr_max5_button_irq.attr,
-+	&dev_attr_max5_pg1.attr,
-+	&dev_attr_max5_pg2.attr,
-+	&dev_attr_max5_pg3.attr,
-+	&dev_attr_max5_fmcab.attr,
-+	&dev_attr_max5_hps_resets.attr,
-+	&dev_attr_max5_per_resets.attr,
-+	&dev_attr_max5_sfpa.attr,
-+	&dev_attr_max5_sfpb.attr,
-+	&dev_attr_max5_i2c_master.attr,
-+	&dev_attr_max5_wm_rst.attr,
-+	&dev_attr_max5_wm_rst_key.attr,
-+	&dev_attr_max5_pmbus.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group a10sr_attr_group = {
-+	.attrs = altr_a10sr_attr,
-+};
-+
-+static ssize_t a10sr_show(struct device *dev, struct device_attribute *devattr,
-+			  char *buf)
-+{
-+	int i, ret;
-+	unsigned int val;
-+	struct altr_a10sr_regs *a10sr_regs = dev_get_drvdata(dev);
-+
-+	for (i = 0; i < ARRAY_SIZE(altr_a10sr_attr); i++) {
-+		if (devattr == (struct device_attribute *)altr_a10sr_attr[i])
-+			break;
-+	}
-+
-+	if (i >= ARRAY_SIZE(altr_a10sr_attr))
-+		return -EINVAL;
-+
-+	/* Shift because LS bit set by regmap for Read */
-+	i <<= 1;
-+	ret = regmap_read(a10sr_regs->regmap, i, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sprintf(buf, "0x%X\n", val);
-+}
-+
-+static ssize_t a10sr_store(struct device *dev,
-+			   struct device_attribute *devattr, const char *buf,
-+			   size_t count)
-+{
-+	struct altr_a10sr_regs *a10sr_regs = dev_get_drvdata(dev);
-+	unsigned long val;
-+	int i, ret;
-+
-+	ret = kstrtol(buf, 0, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	for (i = 0; i < ARRAY_SIZE(altr_a10sr_attr); i++) {
-+		if (devattr == (struct device_attribute *)altr_a10sr_attr[i])
-+			break;
-+	}
-+	if (i >= ARRAY_SIZE(altr_a10sr_attr))
-+		return -EINVAL;
-+
-+	/* Shift because LS bit cleared by regmap for Write */
-+	i <<= 1;
-+	ret = regmap_write(a10sr_regs->regmap, i, val);
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static int altr_a10sr_regs_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct altr_a10sr_regs *a10regs;
-+	struct altr_a10sr *a10sr = dev_get_drvdata(pdev->dev.parent);
-+
-+	a10regs = devm_kzalloc(&pdev->dev, sizeof(*a10regs), GFP_KERNEL);
-+	if (!a10regs)
-+		return -ENOMEM;
-+
-+	a10regs->regmap = a10sr->regmap;
-+	a10regs->attr_grp = a10sr_attr_group;
-+
-+	platform_set_drvdata(pdev, a10regs);
-+
-+	return sysfs_create_group(&pdev->dev.kobj, &a10sr_attr_group);
-+}
-+
-+static int altr_a10sr_regs_remove(struct platform_device *pdev)
-+{
-+	struct altr_a10sr_regs *a10regs = platform_get_drvdata(pdev);
-+
-+	sysfs_remove_group(&pdev->dev.kobj, &a10regs->attr_grp);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id altr_a10sr_regs_of_match[] = {
-+	{ .compatible = "altr,a10sr-monitor" },
-+	{ },
-+};
-+
-+static struct platform_driver altr_a10sr_regs_driver = {
-+	.probe = altr_a10sr_regs_probe,
-+	.remove = altr_a10sr_regs_remove,
-+	.driver = {
-+		.name = "altr_a10sr_monitor",
-+		.of_match_table = altr_a10sr_regs_of_match,
-+	},
-+};
-+
-+builtin_platform_driver(altr_a10sr_regs_driver);
+I think you're mistaken. sun4i-codec has nothing to do with the I2S
+driver. It's a driver for the (poorly named) Allwinner's Audio Codec
+which features it's own DAI and Codec directly into the SoC.
+
+The DAI being different from the I2S one.
+
+However, we want to use any codec driver with the i2s driver,
+including those in sound/soc/codecs, and we already have drivers for
+them.
+
+So I'm not sure either solution is a good one. Why not just make the
+HDMI part a codec itself, and use the i2s driver as the CPU DAI, like
+any other codec?
+
+Maxime
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--obat3uet3dysvzgr--
