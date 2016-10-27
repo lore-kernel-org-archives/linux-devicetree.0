@@ -1,374 +1,154 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC PATCH 1/5] of: introduce the overlay manager
-Date: Thu, 27 Oct 2016 18:07:09 +0300
-Message-ID: <2BF95C0B-2BAA-4BDD-AA60-D08613A9893A@konsulko.com>
-References: <20161026145756.21689-1-antoine.tenart@free-electrons.com> <20161026145756.21689-2-antoine.tenart@free-electrons.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161026145756.21689-2-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/2] PCI: hisi: add PCIe driver support for HiSilicon STB SoCs
+Date: Thu, 27 Oct 2016 17:06:40 +0200
+Message-ID: <3432492.SEq6J3hYME@wuerfel>
+References: <1477014336-12385-1-git-send-email-juruqiang@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477014336-12385-1-git-send-email-juruqiang@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ruqiang Ju <juruqiang@huawei.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bin.chen@linaro.org, elder@linaro.org, hermit.wangheming@hisilicon.com, yanhaifeng@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Antoine,
-
-> On Oct 26, 2016, at 17:57 , Antoine Tenart =
-<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->=20
-> The overlay manager is an in-kernel library helping to handle dt =
-overlay
-> loading when using capes.
->=20
-
-Code related comments
-
-> Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Friday, October 21, 2016 9:45:36 AM CEST Ruqiang Ju wrote:
+> Add PCIe controller drvier for HiSilicon STB SoCs,
+> the controller is based on the DesignWare's PCIe core.
+> 
+> Signed-off-by: Ruqiang Ju <juruqiang@huawei.com>
 > ---
-> drivers/of/Kconfig                           |   2 +
-> drivers/of/Makefile                          |   1 +
-> drivers/of/overlay-manager/Kconfig           |   6 +
-> drivers/of/overlay-manager/Makefile          |   1 +
-> drivers/of/overlay-manager/overlay-manager.c | 199 =
-+++++++++++++++++++++++++++
-> include/linux/overlay-manager.h              |  38 +++++
-> 6 files changed, 247 insertions(+)
-> create mode 100644 drivers/of/overlay-manager/Kconfig
-> create mode 100644 drivers/of/overlay-manager/Makefile
-> create mode 100644 drivers/of/overlay-manager/overlay-manager.c
-> create mode 100644 include/linux/overlay-manager.h
->=20
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index bc07ad30c9bf..e57aeaf0bf4f 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -116,4 +116,6 @@ config OF_OVERLAY
-> config OF_NUMA
-> 	bool
->=20
-> +source "drivers/of/overlay-manager/Kconfig"
-> +
-> endif # OF
-> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> index d7efd9d458aa..d738fd41271f 100644
-> --- a/drivers/of/Makefile
-> +++ b/drivers/of/Makefile
-> @@ -16,3 +16,4 @@ obj-$(CONFIG_OF_OVERLAY) +=3D overlay.o
-> obj-$(CONFIG_OF_NUMA) +=3D of_numa.o
->=20
-> obj-$(CONFIG_OF_UNITTEST) +=3D unittest-data/
-> +obj-y +=3D overlay-manager/
-> diff --git a/drivers/of/overlay-manager/Kconfig =
-b/drivers/of/overlay-manager/Kconfig
+>  .../bindings/pci/hisilicon-histb-pcie.txt          |  66 +++
+>  drivers/pci/host/Kconfig                           |   8 +
+>  drivers/pci/host/Makefile                          |   1 +
+>  drivers/pci/host/pcie-histb.c                      | 448 +++++++++++++++++++++
+>  4 files changed, 523 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+>  create mode 100644 drivers/pci/host/pcie-histb.c
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
 > new file mode 100644
-> index 000000000000..eeb76054dcb8
+> index 0000000..952f1db
 > --- /dev/null
-> +++ b/drivers/of/overlay-manager/Kconfig
-> @@ -0,0 +1,6 @@
-> +config OF_OVERLAY_MGR
-> +	bool "Device Tree Overlay Manager"
-> +	depends on OF_OVERLAY
-> +	help
-> +	  Enable the overlay manager to handle automatic overlay loading =
-when
-> +	  devices are detected.
-> diff --git a/drivers/of/overlay-manager/Makefile =
-b/drivers/of/overlay-manager/Makefile
-> new file mode 100644
-> index 000000000000..86d2b53950e7
-> --- /dev/null
-> +++ b/drivers/of/overlay-manager/Makefile
-> @@ -0,0 +1 @@
-> +obj-$(CONFIG_OF_OVERLAY_MGR)			+=3D overlay-manager.o
-> diff --git a/drivers/of/overlay-manager/overlay-manager.c =
-b/drivers/of/overlay-manager/overlay-manager.c
-> new file mode 100644
-> index 000000000000..a725d7e24d38
-> --- /dev/null
-> +++ b/drivers/of/overlay-manager/overlay-manager.c
-> @@ -0,0 +1,199 @@
-> +/*
-> + * Copyright (C) 2016 - Antoine Tenart =
-<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2. This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
+> +++ b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+> @@ -0,0 +1,66 @@
+> +HiSilicon STB PCIe host bridge DT description
 > +
-> +#include <linux/firmware.h>
-> +#include <linux/list.h>
-> +#include <linux/of.h>
-> +#include <linux/of_fdt.h>
-> +#include <linux/overlay-manager.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
+> +HiSilicon PCIe host controller is based on Designware PCI core.
+> +It shares common functions with PCIe Designware core driver and inherits
+> +common properties defined in
+> +Documentation/devicetree/bindings/pci/designware-pci.txt.
 > +
-> +struct overlay_mgr_overlay {
-> +	struct list_head list;
-> +	char *name;
-> +};
+> +Additional properties are described here:
 > +
-> +LIST_HEAD(overlay_mgr_overlays);
-> +LIST_HEAD(overlay_mgr_formats);
-> +DEFINE_SPINLOCK(overlay_mgr_lock);
-> +DEFINE_SPINLOCK(overlay_mgr_format_lock);
-> +
+> +Required properties
+> +- compatible: Should be one of the following strings
+> +		 "hisilicon,histb-pcie",
+> +		 "hisilicon,hi3798cv200-pcie"
+> +- reg: Should contain sysctl, rc_dbi, config registers location and length.
+> +- reg-names: Must include the following entries:
+> +  "sysctrl": system control registers of PCIe controller;
 
-Is there a reason for using spinlocks here? OF uses a mutex for
-locking since we don=E2=80=99t expect OF manipulation occurring in a
-non schedulable context.
+> +  "rc_dbi": configuration space of PCIe controller;
 
-> +/*
-> + * overlay_mgr_register_format()
-> + *
-> + * Adds a new format candidate to the list of supported formats. The =
-registered
-> + * formats are used to parse the headers stored on the dips.
-> + */
-> +int overlay_mgr_register_format(struct overlay_mgr_format *candidate)
-> +{
-> +	struct overlay_mgr_format *format;
-> +	int err =3D 0;
+Please use "-" instead of "_" in identifiers.
+
+> +  "config": configuration transaction space of PCIe controller.
+> +- interrupts: MSI interrupt.
+> +- interrupt-names: Must include "msi" entries.
+
+Shouldn't this be handled using the msi-map property?
+
+> +- clocks: List of phandle and clock specifier pairs as listed
+> +		in clock-names property.
+> +- clock-name: Must include the following entries:
+> +  "aux_clk": auxiliary gate clock;
+> +  "pipe_clk": pipe gate clock;
+> +  "sys_clk": sys gate clock;
+> +  "bus_clk": bus gate clock.
+
+drop the redundant _clk postfix.
+
+> +- resets: List of phandle and reset specifier pairs as listed
+> +			in reset-names property
+> +- reset-names: Must include the following entries:
+> +  "soft_reset": soft reset;
+> +  "sys_reset": sys reset;
+> +  "bus_rest": bus reset.
+
+drop the _rest and _reset postfix.
+
+> +Optional properties:
+> +- power-gpios: pcie device power control gpio if needed;
+> +- power-gpios-active-high: must include this propty
+> +		if active level is high.
+> +- status: Either "ok" or "disabled".
 > +
-> +	spin_lock(&overlay_mgr_format_lock);
-> +
-> +	/* Check if the format is already registered */
-> +	list_for_each_entry(format, &overlay_mgr_formats, list) {
-> +		if (!strcpy(format->name, candidate->name)) {
-> +			err =3D -EEXIST;
-> +			goto err;
+> +Example:
+> +	pcie@f9860000 {
+> +		compatible = "hisilicon,histb-pcie", "snps,dw-pcie";
+> +		reg = <0xf9860000 0x1000>,
+> +			<0xf0000000 0x2000>,
+> +			<0xf2000000 0x01000000>;
+> +		reg-names = "sysctrl", "rc_dbi", "config";
+
+Could it be that the "sysctrl" is not actually part of the PCIe
+block but instead part of the system controller block?
+
+Please use a syscon reference instead for those.
+
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		device_type = "pci";
+> +		num-lanes = <1>;
+> +		ranges=<0x81000000 0 0 0xf4000000 0 0x00010000
+> +			0x82000000 0 0xf3000000 0xf3000000 0 0x01000000>;
+
+That is very short for the memory window. Is there no
+prefetchable 64-bit window in the hardware?
+
+> +	/* check if the link is up or not */
+> +	while (!dw_pcie_link_up(pp)) {
+> +		mdelay(10);
+> +		count++;
+> +		if (count == 50) {
+> +			dev_err(pp->dev, "PCIe Link Fail\n");
+> +			return -EINVAL;
 > +		}
 > +	}
 > +
-> +	list_add_tail(&candidate->list, &overlay_mgr_formats);
-> +
-> +err:
-> +	spin_unlock(&overlay_mgr_format_lock);
-> +	return err;
-> +}
-> +EXPORT_SYMBOL_GPL(overlay_mgr_register_format);
-> +
-> +/*
-> + * overlay_mgr_parse()
-> + *
-> + * Parse raw data with registered format parsers. Fills the candidate =
-string if
-> + * one parser understood the raw data format.
-> + */
-> +int overlay_mgr_parse(struct device *dev, void *data, char =
-***candidates,
-> +		      unsigned *n)
-> +{
 
-The two argument format is not very readable. Perhaps use a structure =
-instead?
+That is a very long delay here. Please don't do that.
 
-> +	struct list_head *pos, *tmp;
-> +	struct overlay_mgr_format *format;
+> +	dev_info(pp->dev, "Link up\n");
 > +
-> +	list_for_each_safe(pos, tmp, &overlay_mgr_formats) {
-> +		format =3D list_entry(pos, struct overlay_mgr_format, =
-list);
-> +
-> +		format->parse(dev, data, candidates, n);
-> +		if (n > 0)
-> +			return 0;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +EXPORT_SYMBOL_GPL(overlay_mgr_parse);
-> +
-> +static int overlay_mgr_check_overlay(struct device_node *node)
-> +{
-> +	struct property *p;
-> +	const char *str =3D NULL;
-> +
-> +	p =3D of_find_property(node, "compatible", NULL);
-> +	if (!p)
-> +		return -EINVAL;
-> +
-> +	do {
-> +		str =3D of_prop_next_string(p, str);
-> +		if (of_machine_is_compatible(str))
-> +			return 0;
-
-I think this is very similar to the way of_match_node works.
-Find a way to use that instead?
-
-> +	} while (str);
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +/*
-> + * _overlay_mgr_insert()
-> + *
-> + * Try to request and apply an overlay given a candidate name.
-> + */
-> +static int _overlay_mgr_apply(struct device *dev, char *candidate)
-> +{
-> +	struct overlay_mgr_overlay *overlay;
-> +	struct device_node *node;
-> +	const struct firmware *firmware;
-> +	char *firmware_name;
-> +	int err =3D 0;
-> +
-> +	spin_lock(&overlay_mgr_lock);
-> +
-> +	list_for_each_entry(overlay, &overlay_mgr_overlays, list) {
-> +		if (!strcmp(overlay->name, candidate)) {
-> +			dev_err(dev, "overlay already loaded\n");
-> +			err =3D -EEXIST;
-> +			goto err_lock;
-> +		}
-> +	}
-> +
-> +	overlay =3D devm_kzalloc(dev, sizeof(*overlay), GFP_KERNEL);
-> +	if (!overlay) {
-> +		err =3D -ENOMEM;
-> +		goto err_lock;
-> +	}
-> +
-
-spinlock and possibly sleeping?
-
-> +	overlay->name =3D candidate;
-> +
-> +	firmware_name =3D kasprintf(GFP_KERNEL, "overlay-%s.dtbo", =
-candidate);
-> +	if (!firmware_name) {
-> +		err =3D -ENOMEM;
-> +		goto err_free;
-> +	}
-> +
-> +	dev_info(dev, "requesting firmware '%s'\n", firmware_name);
-> +
-> +	err =3D request_firmware_direct(&firmware, firmware_name, dev);
-> +	if (err) {
-> +		dev_info(dev, "failed to request firmware '%s'\n",
-> +			 firmware_name);
-> +		goto err_free;
-> +	}
-> +
-
-Same here.
-
-> +	of_fdt_unflatten_tree((unsigned long *)firmware->data, NULL, =
-&node);
-> +	if (!node) {
-> +		dev_err(dev, "failed to unflatted tree\n");
-> +		err =3D -EINVAL;
-> +		goto err_fw;
-> +	}
-> +
-> +	of_node_set_flag(node, OF_DETACHED);
-> +
-> +	err =3D of_resolve_phandles(node);
-> +	if (err) {
-> +		dev_err(dev, "failed to resolve phandles: %d\n", err);
-> +		goto err_fw;
-> +	}
-> +
-> +	err =3D overlay_mgr_check_overlay(node);
-> +	if (err) {
-> +		dev_err(dev, "overlay checks failed: %d\n", err);
-> +		goto err_fw;
-> +	}
-> +
-> +	err =3D of_overlay_create(node);
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to create overlay: %d\n", err);
-> +		goto err_fw;
-> +	}
-> +
-> +	list_add_tail(&overlay->list, &overlay_mgr_overlays);
-> +
-> +	dev_info(dev, "loaded firmware '%s'\n", firmware_name);
-> +
-> +	spin_unlock(&overlay_mgr_lock);
 > +	return 0;
-> +
-> +err_fw:
-> +	release_firmware(firmware);
-> +err_free:
-> +	devm_kfree(dev, overlay);
-> +err_lock:
-> +	spin_unlock(&overlay_mgr_lock);
-> +	return err;
 > +}
 > +
-> +int overlay_mgr_apply(struct device *dev, char **candidates, unsigned =
-n)
+> +static void histb_pcie_host_init(struct pcie_port *pp)
 > +{
-> +	int i, ret;
+> +	histb_pcie_establish_link(pp);
 > +
-> +	for (i=3D0; i < n; i++) {
-> +		ret =3D _overlay_mgr_apply(dev, candidates[i]);
-> +		if (!ret)
-> +			return 0;
-> +	}
-> +
-> +	return -EINVAL;
+> +	if (IS_ENABLED(CONFIG_PCI_MSI))
+> +		dw_pcie_msi_init(pp);
 > +}
-> +EXPORT_SYMBOL_GPL(overlay_mgr_apply);
-> diff --git a/include/linux/overlay-manager.h =
-b/include/linux/overlay-manager.h
-> new file mode 100644
-> index 000000000000..8adcc4f5ddf6
-> --- /dev/null
-> +++ b/include/linux/overlay-manager.h
-> @@ -0,0 +1,38 @@
-> +/*
-> + * Copyright (C) 2016 - Antoine Tenart =
-<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2. This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#ifndef __OVERLAY_MGR_H__
-> +#define __OVERLAY_MGR_H__
-> +
-> +#include <linux/device.h>
-> +#include <linux/list.h>
-> +#include <linux/sizes.h>
-> +
-> +#define OVERLAY_MGR_DIP_MAX_SZ		SZ_128
-> +
-> +struct overlay_mgr_format {
-> +	struct list_head list;
-> +	char *name;
-> +	int (*parse)(struct device *dev, void *data, char ***candidates,
-> +		     unsigned *n);
-> +};
-> +
-> +int overlay_mgr_register_format(struct overlay_mgr_format =
-*candidate);
-> +int overlay_mgr_parse(struct device *dev, void *data, char =
-***candidates,
-> +		      unsigned *n);
-> +int overlay_mgr_apply(struct device *dev, char **candidates, unsigned =
-n);
-> +
-> +#define dip_convert(field)                                      \
-> +        (                                                       \
-> +                (sizeof(field) =3D=3D 1) ? field :                  \
-> +                (sizeof(field) =3D=3D 2) ? be16_to_cpu(field) :     \
-> +                (sizeof(field) =3D=3D 4) ? be32_to_cpu(field) :     \
-> +                -1                                              \
-> +        )
-> +
-> +#endif /* __OVERLAY_MGR_H__ */
-> --=20
-> 2.10.1
->=20
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Just make it depen on PCI_MSI_IRQ_DOMAIN and drop the IS_ENABLED
+check.
+
+> +#ifdef CONFIG_PCI_MSI
+> +static irqreturn_t histb_pcie_msi_irq_handler(int irq, void *arg)
+> +{
+> +	struct pcie_port *pp = arg;
+> +
+> +	return dw_handle_msi_irq(pp);
+> +}
+> +#endif
+
+This seems misplaced here. How do the other dw-pcie drivers handle
+it? If there is a chance that this driver gets reused on a future
+product that has a GICv3, please write the driver so it can already
+use that.
+
+	Arnd
