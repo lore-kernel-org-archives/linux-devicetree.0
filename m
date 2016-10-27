@@ -1,95 +1,68 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Add Allwinner Q8 tablets hardware manager
-Date: Thu, 27 Oct 2016 23:15:40 +0200
-Message-ID: <1a3f21dc-bd72-6749-6890-802be4bab038@redhat.com>
-References: <20161014075337.10452-1-hdegoede@redhat.com>
- <20161024173900.GP15620@leverpostej>
- <4cfbedb2-0249-e881-3577-dda0b0d4cabe@redhat.com>
- <CAJ-oXjQbOkrkNToEXYmPUZOgYBGbxQREZ4NL4bMcZmG=KP2vQQ@mail.gmail.com>
- <99dde1e0-26f0-cc7b-36bf-1181c47296f9@redhat.com>
- <CAJ-oXjTfRDvSKs9zZBxt1V2MR5C+XnsqfZBRTWwRrJXx-_7r=Q@mail.gmail.com>
- <4cfdd415-1965-7be9-b204-86a9931683a6@redhat.com>
- <CAJ-oXjRJrs77yE-skpZ-V4e=rdhRyfNve9bibf1VOaZYy2=tRA@mail.gmail.com>
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: Re: [PATCH 2/5] Documentation: devicetree: net: add NS2 bindings to
+ amac
+Date: Thu, 27 Oct 2016 17:21:07 -0400
+Message-ID: <20161027212106.GA25693@broadcom.com>
+References: <1477510561-17035-1-git-send-email-jon.mason@broadcom.com>
+ <1477510561-17035-3-git-send-email-jon.mason@broadcom.com>
+ <20161027091757.GC12841@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJ-oXjRJrs77yE-skpZ-V4e=rdhRyfNve9bibf1VOaZYy2=tRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pierre-Hugues Husson <phh-8tEavu1zA38@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161027091757.GC12841@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, rafal@milecki.pl, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Oct 27, 2016 at 11:17:57AM +0200, Andrew Lunn wrote:
+> On Wed, Oct 26, 2016 at 03:35:58PM -0400, Jon Mason wrote:
+> > Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+> > ---
+> >  Documentation/devicetree/bindings/net/brcm,amac.txt | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/brcm,amac.txt b/Documentation/devicetree/bindings/net/brcm,amac.txt
+> > index ba5ecc1..f92caee 100644
+> > --- a/Documentation/devicetree/bindings/net/brcm,amac.txt
+> > +++ b/Documentation/devicetree/bindings/net/brcm,amac.txt
+> > @@ -2,15 +2,18 @@ Broadcom AMAC Ethernet Controller Device Tree Bindings
+> >  -------------------------------------------------------------
+> >  
+> >  Required properties:
+> > - - compatible:	"brcm,amac" or "brcm,nsp-amac"
+> > + - compatible:	"brcm,amac", "brcm,nsp-amac", or "brcm,ns2-amac"
+> >   - reg:		Address and length of the GMAC registers,
+> >  		Address and length of the GMAC IDM registers
+> > +		Address and length of the NIC Port Manager registers (optional)
+> >   - reg-names:	Names of the registers.  Must have both "amac_base" and
+> > -		"idm_base"
+> > +		"idm_base". "nicpm_base" is optional (required for NS2)
+> >   - interrupts:	Interrupt number
+> >  
+> >  Optional properties:
+> >  - mac-address:	See ethernet.txt file in the same directory
+> > +- brcm,enet-phy-lane-swap:
+> > +		boolean; Swap the PHY lanes (needed on some SKUs of NS2)
+> 
+> Maybe i'm missing something here, but the patch to the PHY swapped the
+> lanes. This seems to be a PHY property, not a MAC property. And it
+> swapped them unconditionally....
 
-On 27-10-16 19:31, Pierre-Hugues Husson wrote:
-> 2016-10-27 16:53 GMT+02:00 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
+It swapped them based on (from patch 1/5)
+       if (BRCM_PHY_MODEL(phydev) == PHY_ID_BCM54810 &&
+           phydev->dev_flags & PHY_BRCM_EXP_LANE_SWAP)
 
-<snip>
+That flag is being set in the driver based on whether the lanes need
+to be swapped (which depends on the SKU of NS2).  The only SKU of NS2
+we have upstream right now has it swapped, but one that should be
+pushed out in the next few weeks will not have this flag present.
+There is no way to detect it, and having a separate compat string
+seemed overkill.
 
->> We could just have:
->>
->>         i2c-probe-stop-at-first-match-0 = <&touchscreen1>, <&touchscreen2>,
->> <&touchscreen3>;
->>         i2c-probe-stop-at-first-match-1 = <&accelerometer1>,
->> <&accelerometer2>;
->>
->> And have the i2c bus code look for an i2c-probe-stop-at-first-match-[i++]
->> property
->> until it is not found. Having a child-node with its own compatible for this
->> feels wrong, as it uses a hierarchy where there really is none.
-> Ok, looks much better indeed.
-> I had one case where accelerometers could be on either i2c1 or i2c5.
-> Do you think this could be handled as well, or this makes things much
-> more complicated to fit in the i2c driver?
+Thanks,
+Jon
 
-Handling that is easy, just add a i2c-probe-stop-at-first-match to
-both busses (with separate child nodes to be probed under each bus),
-the on one bus the probe-code will just read the end of the list
-and stop, I believe we should not treat that as an error anyways
-(even if there is only 1 bus).
-
->
->> So this would require us to be able to filter (to use your example)
->> on if another i2c device is found and on which address it is found,
->> that does not even take the rda559x check into account and is
->> going to cause interesting ordering issues, how do we know when
->> we can actually do the filtering if some of the variables we are
->> filtering on are set by other auto-detected paths. Which auto-detect /
->> i2c-probe-stop-at-first-match list do we execute first ? Worse
->> actually for accelerometer orientation I will likely need to
->> set the mount-matrix based on the detected touchscreen ...
->>
->> The rda559x here is a sdio wifi chip, which is also connected to the
->> i2c, and currently is detected through i2c to be able to separately
->> identify 2 q8 boards which share the same touchscreen + accelerometer
->> combination and who knows what other checks I or other people can
->> come up with to differentiate board variants which do not have
->> a simple eeprom to uniquely id them.
->>
->> So as said before, no this cannot be all done in dt without
->> adding a turing complete language to dt, and that is just to
->> select which touchscreen_variant to use.
-> Ok, now that I understand the scope of your needs.
-> I agree with you, this needs a (close to) turing complete language.
-> I'm still not really happy about doing it in a driver, but I agree the
-> full scope you need is scarce enough.
-> Assuming this is done in a driver, there would need to be some
-> plumbing between i2c-probe-stop-at-first-match, device's probe
-> function and your driver, so that your driver only does the various
-> if/cases and DT changes, but there is no actual device communication
-> done in that driver.
-
-Ah, no I meant dealing with this in the actual device driver,
-not in some special intermediate driver, just like the actual x86
-device drivers (sometimes) apply quirks based on board DMI strings.
-
-<snip>
-
-Regards,
-
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 	Andrew
