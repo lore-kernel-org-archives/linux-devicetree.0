@@ -1,489 +1,58 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: Add Allwinner Q8 tablets hardware manager
-Date: Thu, 27 Oct 2016 18:52:33 +0300
-Message-ID: <9B288597-7812-459D-A5C7-B61107751DA6@konsulko.com>
-References: <20161014075337.10452-1-hdegoede@redhat.com> <20161024173900.GP15620@leverpostej> <4cfbedb2-0249-e881-3577-dda0b0d4cabe@redhat.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4cfbedb2-0249-e881-3577-dda0b0d4cabe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v6 5/5] ARM: DTS: da850: Add usb phy node
+Date: Thu, 27 Oct 2016 10:55:42 -0500
+Message-ID: <7a57b179-bbe7-1412-84d4-8406981665ab@lechnology.com>
+References: <1477451211-31979-1-git-send-email-david@lechnology.com>
+ <1477451211-31979-6-git-send-email-david@lechnology.com>
+ <d55f19f2-beb3-a681-a6e9-c1d2c303173c@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d55f19f2-beb3-a681-a6e9-c1d2c303173c@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Axel Haslam <ahaslam@baylibre.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On 10/26/2016 05:26 AM, Sekhar Nori wrote:
+> On Wednesday 26 October 2016 08:36 AM, David Lechner wrote:
+>> Add a node for the new usb phy driver.
+>
+> changed this to:
+>
+>     Add a node for usb phy device. This device
+>     controls both the USB 1.1 and USB 2.0 PHYs.
+>
+> mainly because the node is for the device, not the driver.
+>
+>>
+>> Signed-off-by: David Lechner <david@lechnology.com>
+>
+> Applied to v4.10/dt
+>
+> Thanks,
+> Sekhar
+>
 
-> On Oct 26, 2016, at 14:46 , Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->=20
-> Hi,
->=20
-> On 24-10-16 19:39, Mark Rutland wrote:
->> On Fri, Oct 14, 2016 at 09:53:31AM +0200, Hans de Goede wrote:
->>> Hi Rob, Mark, et al.,
->>=20
->> Hi Hans,
->>=20
->> Apologies for the delay in replying to this.
->=20
-> No worries, I believe that 1 week is actually a pretty good
-> turn around time, esp. directly after a conference.
->=20
+I found a better way to represent this device as a child of the syscon 
+node. How should we handle the change? Should I submit a new patch that 
+applies on top of this one or will you drop this patch and I should send 
+a new one to take it's place?
 
-Conferences are a deadline killer. Just got around taking a look.
+Assuming that you agree that this is better:
 
->> I'd like to be clear that I do understand that there is a problem =
-that
->> needs to be addressed here. However, I do not believe that the =
-*current*
->> in-kernel approach is correct. More on that below.
->=20
-> Ok.
->=20
->>> Mark, I know that we discussed this at ELCE and you clearly =
-indicated
->>> that according to you this does not belong in the kernel. I was a =
-bit
->>> surprised by this part of the discussion.
->>>=20
->>> I had posted a RFC earlier and Rob had indicated that given that the =
-q8
->>> tablets are a special case, as my code uses actual probing rather =
-then some
->>> pre-arranged id mechanism with say an eeprom, that doing this in a
->>> non-generic manner would be ok for my special case.
->>=20
->> To some extent, Rob and I may have differing views here; I'm not
->> entirely sure what Rob's view is, and I cannot talk on his behalf. I
->> certainly must apologise for having not commented on said RFC, =
-however.
->>=20
->>> So on to why I believe that the kernel is the best place to do this, =
-at least
->>> for my special use-case:
->>>=20
->>> 1. Configurability
->>>=20
->>> Since the q8 tablets do not have any id mechanism I'm probing i2c =
-busses to
->>> generate i2c client dt nodes with the right address and compatible.
->>> Some info in these nodes (e.g. touchscreen firmware-name) is not =
-probable at
->>> all and gets set by heuristics. This heuristics may get things =
-wrong.
->>> So my current implementation offers kernel cmdline options to =
-override this.
->>=20
->> As I mentioned at ELCE, one major concern I have with this approach =
-is
->> this probing, which in part relies on a collection of heuristics.
->=20
-> This is quite use-case specific, anyways, the probing is a 2 step =
-process:
->=20
-> 1) Identify which hardware there is in the tablet, this is pretty
-> reliable, we only detect a fix set of known possible touchscreens
-> and accelerometers, at known addresses and almost all have an id
-> register to check.
->=20
-> 2) Determine *defaults* for various none probable settings, like =
-guessing
-> which firmware to load into the touchscreen controllers, as there are
-> at least 2 ways the gsl1680 is wired up on these tablets and this
-> requires 2 different firmware files. This uses heuristics, to, as =
-said,
-> determine the defaults all of the non-probable bits are overidable
-> through config options (currently kernel module options). Getting =
-these
-> wrong is not dangerous to the hardware, but will work in a =
-non-functional
-> or misbehaving (wrong coordinates) touchscreen.
->=20
-> Note with the models I've access to so far the heuristics score 100%
-> but I'm not sure how representative the 16 models I've access to are
-> (they are all different and have been bought over a span of multiple
-> years).
+	cfgchip: cfgchip@1417c {
+		compatible = "ti,da830-cfgchip", "syscon", "simple-mfd";
+		reg = <0x1417c 0x14>;
 
->=20
->> I'm worried that this is very fragile, and sets us up for having to
->> maintain a much larger collection of heuristics and/or a database of
->> particular boards in future. This is fragile, defeats much of the =
-gain
->> from DT.
->=20
-> I understand your worries, as said I'm confident the actual probing
-> is safe and getting the heuristics wrong will result in misbehavior,
-> but not in any hardware damage or such.
->=20
->> Worse, this could be completely incompatible with some arbitrary =
-board
->> that comes by in future,
->=20
-> I assume you mean an arbitrary q8 tablet here, as the probe code does
-> bind by board/machine compatible, so for a really arbitrary board
-> this code will never activate.
->=20
->> because the kernel assumed something that was
->> not true, which it would not have done if things were explicitly
->> described to the kernel.
->=20
-> I understand your worry, but moving the probing code to say u-boot
-> will not change any of this, the kernel will get the explicit
-> description created by the u-boot probe code, but it would be
-> just as wrong.
->=20
-> So maybe we need to answer 2 questions in a row:
->=20
-> 1) Do we want such probe code at all ?
->=20
-> My answer to this is yes, these (cheap) tablets are interesting to
-> e.g. the maker community and I would like them to run mainline
-> (and run mainline well), but given the way there are put together
-> this require some code to dynamically adapt to the batch of the
-> month somewhere
->=20
-> 2) Where do we put this code ?
->=20
-> If we agree on 1 (I assume we do) then this becomes the real
-> question, at which point your worries about the kernel assuming
-> something which is not true because the probe code got it wrong
-> may become true regardless where the code lives.
->=20
-> So wrt this worries is all I can do is ask you to trust me to
-> not mess things up, just like we all trust driver authors, etc.
-> all the time to not mess things up.
->=20
->> As I mentioned at ELCE, I'm not opposed to the concept of the kernel
->> applying overlays or fixups based on a well-defined set of criteria;
->> having some of that embedded in the DT itself would be remarkably
->> helpful.  However, I am very much not keen on loosely defined =
-criteria as
->> with here, as it couples the DT and kernel, and creates problems =
-longer
->> term, as described above.
->=20
-> Right, so again I think we need to split the discussion in 2 steps:
->=20
-> 1) How do we apply the fixups, currently I'm using free-form changes
-> done from C-code. I can envision moving to something like the quirk
-> mechanism suggested by Pantelis in the past. Note this is not a =
-perfect
-> fit for my rather corner-case use-case, but I can understand that in
-> general you want the variants to be described in dt, and activated
-> in some way, rather then have c-code make free-form changes to the dt
->=20
+		usb_phy: usb-phy {
+			compatible = "ti,da830-usb-phy";
+			#phy-cells = <1>;
+			status = "disabled";
+		};
+	};
 
-We=92ve had this discussion before, so I guess here it goes again.
-
-I think the biggest objection is the programmatic way of applying
-every quirk by =91hand=92.
-
-If there was a way to keep the probing mechanism but just spit out
-a =91model=92 number we could reasonably map it to an overlay to apply
-with a generic overlay manager.
-
-=46rom an internal s/w standpoint having an expansion board or soldered
-parts makes no difference.=20
-
-
-> 2) How do we select which fixups to apply. Again I can understand
-> you wanting some well defined mechanism for this, but again my
-> use-case is special and simply does not allow for this as there
-> is no id-eeprom to read or some such.
->=20
-
-Yes there is no EEPROM but you might be able to map probing results to
-a fake =91model=92 number.
-
-Let me expand a bit:
-
-Assume that you have a number of probing steps, for example A, B, C each
-returning true or false, and C being executed only when B is =91true=92 =
-you
-could do this to generate a bit field that identifies it.
-
-For example let=92s assume that model FOO=92s probing steps are
-
-A false, B true, C false -> 010
-
-Model=92s BAR
-
-A true, B false, C don=92t care -> 10x
-
-Mapping these to models could be
-
-Model FOO, (010 & 111) =3D=3D 010 (all three probing steps must match)
-
-Model BAR, (10x & 110) =3D 100 (the first two probing steps must match)
-
->>> Although having to specify kernel cmdline options is not the plug =
-and play
->>> experience I want to give end-users most distros do have =
-documentation on
->>> how to do this and doing this is relatively easy for end-users. =
-Moving this
->>> to the bootloader means moving to some bootloader specific config =
-mechanism
->>> which is going to be quite hard (and possibly dangerous) for users =
-to use.
->>=20
->> I have to ask, why is it more dangerous?
->=20
-> Because for normal end users meddling with the bootloader / with =
-u-boot's
-> environment is like flashing a PC BIOS. Most (non technical) end users =
-will
-> want to install u-boot once (or not at all) and then just have it =
-work.
->=20
-
-Users do *not* want to deal with the bootloader. They don=92t even want =
-to
-know that it=92s there. As far they're concerned if you need to drop in
-the bootloader to do something -> broken.
-=20
->> Perhaps more difficult, but that can be solved,
->=20
-> More difficult means not doable for many users.
->=20
-
-+1
-
->> if the manual
->> corrections are simply a set of options to be passed to the kernel, I
->> don't see why the bootloader cannot pick this up.
->>=20
->>> 2. Upgradability
->>>=20
->>> Most users treat the bootloader like they treat an x86 machine =
-BIOS/EFI,
->>> they will never upgrade it unless they really have to. This means =
-that it
->>> will be very difficult to get users to actual benefit from bug-fixes =
-/
->>> improvements done to the probing code. Where as the kernel on boards =
-running
->>> e.g. Debian or Fedora gets regular updates together with the rest of =
-the
->>> system.
->>=20
->> Given that DTBs are supposed to remain supported, users should find
->> themselves with a system that continues to work, but may not have all
->> the bells and whistles it could, much like elsewhere.
->>=20
->> While it's true that we have issues in this area, I don't think =
-that's
->> an argument for putting things into the kernel for this specific set =
-of
->> boards.
->=20
-> It is an argument to put much of the dynamic (dt) hardware support in
-> the kernel in general.
->=20
->>> 3. Infrastructure
->>>=20
->>> The kernel simply has better infrastructure for doing these kind of =
-things.
->>=20
->> At least on the DT front, a lot of work has gone into improving the
->> infrastructure, e.g. the work that Free Electrons have done [1]. I
->> appreciate that the infrastructure for things like poking SPI may not =
-be
->> as advanced.
->>=20
->> Which bits of infrastructure do you find lacking today?
->=20
-> Nothing really specific (I've not yet tried porting the probe code
-> to u-boot), but I just find working within the kernel easier in =
-general,
-> since there really just is a lot more infrastructure. Note I'm the
-> upstream u-boot maintainer for the allwinner SoC support, so this
-> is not due to me being unfamiliar with u-boot.
->=20
->>> Yes we could improve the bootloader, but the kernel is also =
-improving
->>> and likely at a faster rate. Besides that the purpose of the
->>> bootloader is mostly to be simple and small, load the kernel and get
->>> out of the way, not to be a general purpose os kernel. So it will
->>> simply always have less infrastructure and that is a good thing,
->>> otherwise we will be writing another general purpose os which is a
->>> waste of effort.
->>=20
->> I think this conflates a number of details. Yes, we'd like firmware =
-and
->> bootloaders to be small, and yes, their infrastructure and feature
->> support will be smaller than a general purpose OS.
->>=20
->> That doesn't imply that they cannot have features necessary to =
-boostrap
->> an OS.
->>=20
->> It's also not strictly necessary that the firmware or bootloader have
->> the capability to do all this probing, as that could be contained in
->> another part (e.g. a U-Boot application which is run once to detect =
-the
->> board details, logging this into a file).
->>=20
->> It's also possible to ship an intermediary stage (e.g. like the
->> impedance matcher) which can be upgradeable independently of the =
-kernel.
->=20
-> Yes there are other solutions, but they all involve a lot more
-> moving pieces (and thus will break) then a single isolated .c file
-> in the kernel, which is all this series adds.
->=20
-> Esp the intermediate solution just adds a ton of complexity with 0
-> gain.
-
-Simple is the way to go. Putting things in the kernel is the simplest
-solution for the users, for the distro maintainers and the board support
-people.
->=20
->>> 4. This is not a new board file
->>>=20
->>> Mark, at ELCE I got the feeling that your biggest worry / objection =
-is
->>> that this will bring back board files, but that is not the case, if =
-you
->>> look at the actual code it is nothing like a board-file at all. =
-Where a
->>> board file was instantiating device after device after device from =
-c-code,
->>> with maybe a few if-s in there to deal with board revisions. This =
-code is
->>> all about figuring out which accelerometer and touchscreen there =
-are,
->>> to then add nodes to the dt for this 2 devices, almost all the code =
-is
->>> probing, the actual dt modifying code is tiny and no direct device
->>> instantiation is done at all.
->>=20
->> Sorry, but I must disagree. This code:
->>=20
->> (a) identifies a set of boards based on a top-level compatible =
-string.
->>    i.e. it's sole purpose is to handle those boards.
->>=20
->> (b) assumes non-general properties of those boards (e.g. that poking
->>    certain SPI endpoints is safe).
->>=20
->> (c) applies arbitrary properties to the DT, applying in-built =
-knowledge
->>    of those boards (in addition to deep structural knowledge of the
->>    DTB in question).
->>=20
->> To me, given the implicit knowledge, that qualifies as a "board =
-file".
->>=20
->> As I mentioned at ELCE, if this had no knowledge of the boards in
->> question, I would be less concerned. e.g. if there was a well-defined
->> identification mechanism, describe in the DT, with fixups also =
-defined
->> in the DT.
->=20
-> And as I tried to explain before, for this specific use-case =
-describing
-> all this board specific knowledge in a generic manner in dt is simply
-> impossible, unless we add a turing complete language to dt aka aml.
->=20
-> I've a feeling that you're mixing this, rather special, use-case with
-> the more generic use-case of daughter-boards for various =
-small-board-computers
-> I agree that for the SBC use-case it makes sense to try and come up =
-with
-> a shared core / dt bindings for much of this. Note that even this =
-boards
-> will still need a board (or board-family) specific method for getting
-> the actual id from a daughter-board, but this board specific code =
-could
-> then pass the id to some more general hw-manager core which starts =
-applying
-> dt changes based on the id. But this assumes there is a single id to
-> uniquely identify the extensions, which in my case there simply is =
-not.
->=20
-
-^ read above.
-
->>> 5. This is an exception, not the rule
->>>=20
->>> Yes this is introducing board (family of boards) specific c-code =
-into the
->>> kernel, so in a way it is reminiscent of board files. But sometimes =
-this is
->>> necessary, just look at all the vendor / platform specific code in =
-the kernel
->>> in drivers/platform/x86, or all the places where DMI strings are =
-used to
->>> uniquely identify a x86 board and adjust behavior.
->>>=20
->>> But this really is the exception, not the rule. I've =
-written/upstreamed a
->>> number of drivers for q8 tablets hardware and if you look at e.g. =
-the
->>> silead touchscreen driver then in linux-next this is already used =
-for 5
->>> ARM dts files where no board specific C-code is involved at all.
->>>=20
->>> So this again is very different from the board file era, where =
-C-code
->>> had to be used to fill device specific platform-data structs, here =
-all
->>> necessary info is contained in the dt-binding and there are many =
-users
->>> who do not need any board specific C-code in the kernel at all.
->>>=20
->>> So dt is working as it should and is avoiding board specific C-code =
-for
->>> the majority of the cases. But sometimes hardware is not as we =
-ideally
->>> would like it to be; and for those *exceptions* we are sometimes =
-going
->>> to need C-code in the kernel, just like there is "board" specific =
-C-code
->>> in the x86 code.
->>=20
->> Your talk convinced me that we're both going to see more variation
->> within this family of boards, and that we'll see more families of =
-boards
->> following a similar patter. Given that, I think that we need a more
->> general solution, as I commented on the RFC.
->>=20
->> That doesn't necessarily mean that this can't happen in the kernel, =
-but
->> it certainly needs to be more strictly defined, e.g. with match =
-criteria
->> and fixups explicit in the DTB.
->=20
-> The only answer I've to: "with match criteria and fixups explicit in =
-the DTB"
-> is: ok, give my a turing complete language inside DTB then, anything =
-else
-> will not suffice. So either we are doomed to reinvent ACPI; or we must
-> accept some board(family) specific C-code in the kernel.
->=20
-
-Please don=92t let DT stagnate. We don=92t have to repeat mistakes and =
-we don=92t
-have to remain true to the spirit of what DT was supposed to be more =
-than
-a decade ago.
-
-The problems we deal now are different, the industry is different and =
-the
-users are different.
-
-We have to evolve along with them.
-
-> Regards,
->=20
-> Hans
-
-Regards
-
-=97 Pantelis=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Since the phy consists entirely as registers in the syscon device, we 
+should make it a child of the syscon device instead of a child of the 
+soc node.
