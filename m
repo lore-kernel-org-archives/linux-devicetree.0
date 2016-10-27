@@ -1,92 +1,74 @@
-From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/4] Input: goodix - Allow tweaking of configuration file
- dynamically
-Date: Thu, 27 Oct 2016 11:58:59 -0500
-Message-ID: <f3a9de30-eba6-0738-ed91-f4834f142a2c@ti.com>
-References: <20161020195917.20051-1-fcooper@ti.com>
- <20161020195917.20051-3-fcooper@ti.com> <1477564424.2458.9.camel@hadess.net>
+From: Pierre-Hugues Husson <phh-8tEavu1zA38@public.gmane.org>
+Subject: Re: Add Allwinner Q8 tablets hardware manager
+Date: Thu, 27 Oct 2016 18:59:00 +0200
+Message-ID: <CAJ-oXjT=eVwEk7t5WoZAhjMhiZZkq0NN5tFLidSnUNO97D62zQ@mail.gmail.com>
+References: <20161014075337.10452-1-hdegoede@redhat.com> <20161024173900.GP15620@leverpostej>
+ <4cfbedb2-0249-e881-3577-dda0b0d4cabe@redhat.com> <9B288597-7812-459D-A5C7-B61107751DA6@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477564424.2458.9.camel-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
+In-Reply-To: <9B288597-7812-459D-A5C7-B61107751DA6-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+2016-10-27 17:52 GMT+02:00 Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/HQFizaE/u3fw@public.gmane.org=
+m>:
+> Yes there is no EEPROM but you might be able to map probing results to
+> a fake =E2=80=98model=E2=80=99 number.
+>
+> Let me expand a bit:
+>
+> Assume that you have a number of probing steps, for example A, B, C each
+> returning true or false, and C being executed only when B is =E2=80=98tru=
+e=E2=80=99 you
+> could do this to generate a bit field that identifies it.
+>
+> For example let=E2=80=99s assume that model FOO=E2=80=99s probing steps a=
+re
+>
+> A false, B true, C false -> 010
+>
+> Model=E2=80=99s BAR
+>
+> A true, B false, C don=E2=80=99t care -> 10x
+>
+> Mapping these to models could be
+>
+> Model FOO, (010 & 111) =3D=3D 010 (all three probing steps must match)
+>
+> Model BAR, (10x & 110) =3D 100 (the first two probing steps must match)
 
+This method looks too complex on multiple grounds.
+Assuming your method, I'm not too sure how this would actually be
+described in a DTS.
+Such probing steps should include reading/matching IDs in an EEPROM/on
+an ADC, but it should also include the result of a driver's probe.
+Also, drivers should have a way to report an ID/OTP instead of just a
+boolean.
 
-On 10/27/2016 05:33 AM, Bastien Nocera wrote:
-> On Thu, 2016-10-20 at 14:59 -0500, Franklin S Cooper Jr wrote:
->> Some goodix touchscreen controllers don't have the correct
->> configuration
->> firmware for the display panel it is attached to. Therefore, settings
->> such
->> as touchscreen x and y size may need to be passed in via DT and have
->> the
->> panel reprogrammed for the updated touchscreen resolution.
->>
->> This patchset adds support for reading the current configuration
->> firmware
->> on the panel and allowing it to be modified and rewritten back to the
->> device.
->>
->> Currently this function is unused but later patches will make use of
->> it.
->>
->> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
->> ---
->>  drivers/input/touchscreen/goodix.c | 28 ++++++++++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>
->> diff --git a/drivers/input/touchscreen/goodix.c
->> b/drivers/input/touchscreen/goodix.c
->> index a43c8ca..01e12f8 100644
->> --- a/drivers/input/touchscreen/goodix.c
->> +++ b/drivers/input/touchscreen/goodix.c
->> @@ -478,6 +478,34 @@ static int goodix_get_gpio_config(struct
->> goodix_ts_data *ts)
->>  	return 0;
->>  }
->>  
->> +static void goodix_tweak_config(struct goodix_ts_data *ts)
->> +{
->> +	u8 config[GOODIX_CONFIG_MAX_LENGTH];
->> +	int error;
->> +	int raw_cfg_len;
->> +	u8 check_sum = 0;
->> +
->> +	raw_cfg_len = ts->cfg_len - 2;
->> +
->> +	error = goodix_i2c_read(ts->client, GOODIX_REG_CONFIG_DATA,
->> +				config, ts->cfg_len);
->> +	if (error) {
->> +		dev_warn(&ts->client->dev,
->> +			 "Error reading config (%d), avoid tweaking
->> config\n",
->> +			 error);
->> +		return;
->> +	}
-> 
-> Please add a placeholder comment here, to go along with the commit
-> message explanation.
+As you mentioned, it is a way to distinguish models, not just a set of
+parameters.
+Does this mean that this DT would lead to loading various DT based on
+the matching model, which would look like a FIT?
+Also there is a modularity problem there. If I have phones with either
+screen A or screen B, and with either accelerometer A or accelerometer
+B, I would have to implement all four combinations.
 
-You just want a comment here stating that changes to the firmware should
-be made here?
-> 
->> +	check_sum = goodix_calculate_checksum(ts->cfg_len, config);
->> +
->> +	config[raw_cfg_len] = check_sum;
->> +	config[raw_cfg_len + 1] = 1;
->> +
->> +	error = goodix_send_cfg(ts, ts->cfg_len, config);
->> +	if (error)
->> +		dev_warn(&ts->client->dev,
->> +			 "Error writing config (%d)\n", error);
->> +}
->>  /**
->>   * goodix_read_config - Read the embedded configuration of the panel
->>   *
+I'm starting to agree with Hans, and to be able to implement
+everything he needs, would require a turing complete device-tree,
+which can include and apply device-tree overlays.
+This doesn't mean it can't be done, nor that it shouldn't be done, but
+that's a lot of work.
+
+Hans' i2c-probe-stop-at-first-match does make sense for most usecases,
+but I have two problems with it:
+1. It is I2C specific (as I've mentioned earlier, I have the same
+needs with DSI panels)
+2. This looks like a temporary solution if a turing-complete solution
+is to be implemented.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
