@@ -1,60 +1,57 @@
-From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 0/4] Altera Cyclone Passive Serial SPI FPGA Manager
-Date: Fri, 28 Oct 2016 09:56:37 -0700
-Message-ID: <cover.1477669744.git.stillcompiling@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Joshua Clayton <stillcompiling@gmail.com>
+Subject: [PATCH v2 4/5] ARM: dts: imx6q-evi: support cyclonespi
+Date: Fri, 28 Oct 2016 09:56:41 -0700
+Message-ID: <36eb925f0c63c931bd406d1719e76e42b7d9432a.1477669745.git.stillcompiling@gmail.com>
+References: <cover.1477669744.git.stillcompiling@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1477669744.git.stillcompiling@gmail.com>
+In-Reply-To: <cover.1477669744.git.stillcompiling@gmail.com>
+References: <cover.1477669744.git.stillcompiling@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Tull <atull@opensource.altera.com>, Moritz Fischer <moritz.fischer@ettus.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Joshua Clayton <stillcompiling@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds an FPGA manager for Altera cyclone FPGAs
-that can program them using an spi port and a couple of gpios, using
-Alteras passive serial protocol.
+Add support for Altera cyclone V FPGA connected to an spi port
 
-Changes from v1:
-- Changed the name from cyclone-spi-fpga-mgr to cyclone-ps-spi-fpga-mgr
-  This name change was requested by Alan Tull, to be specific about which
-  programming method is being employed on the fpga.
-- Changed the name of the reset-gpio to config-gpio to closer match the
-  way the pins are described in the Altera manual
-- Moved MODULE_LICENCE, _AUTHOR, and _DESCRIPTION to the bottom
+Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
+---
+ arch/arm/boot/dts/imx6q-evi.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-- Added a bitrev8x4() function to the bitrev headers and implemented ARM
- const, runtime, and ARM specific faster versions (This may end up
- needing to be a standalone patch)
-
-- Moved the bitswapping into cyclonespi_write(), as requested.
-  This falls short of my desired generic lsb first spi support, but is a step
-  in that direction.
-
-- Fixed whitespace problems introduced during refactoring
-
-- Replaced magic number for initial delay with a descriptive macro
-- Poll the fpga to see when it is ready rather than a fixed 1 ms sleep
-
-Joshua Clayton (5):
-  lib: add bitrev8x4()
-  doc: dt: add cyclone-spi binding document
-  fpga manager: Add cyclone-ps-spi driver for Altera FPGAs
-  ARM: dts: imx6q-evi: support cyclonespi
-  fpga manager: cyclone-ps-spi: make delay variable
-
- .../bindings/fpga/cyclone-ps-spi-fpga-mgr.txt      |  23 +++
- arch/arm/boot/dts/imx6q-evi.dts                    |  16 ++
- arch/arm/include/asm/bitrev.h                      |   5 +
- drivers/fpga/Kconfig                               |   7 +
- drivers/fpga/Makefile                              |   1 +
- drivers/fpga/cyclone-ps-spi.c                      | 175 +++++++++++++++++++++
- include/linux/bitrev.h                             |  26 +++
- 7 files changed, 253 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
- create mode 100644 drivers/fpga/cyclone-ps-spi.c
-
+diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
+index 6de21ff..bd0b85c 100644
+--- a/arch/arm/boot/dts/imx6q-evi.dts
++++ b/arch/arm/boot/dts/imx6q-evi.dts
+@@ -95,6 +95,15 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1 &pinctrl_ecspi1cs>;
+ 	status = "okay";
++
++	fpga_spi: cyclonespi@0 {
++		compatible = "altr,cyclone-ps-spi-fpga-mgr";
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++		pinctrl-0 = <&pinctrl_fpgaspi>;
++		config-gpio = <&gpio4 9 GPIO_ACTIVE_HIGH>;
++		status-gpio = <&gpio4 11 GPIO_ACTIVE_HIGH>;
++	};
+ };
+ 
+ &ecspi3 {
+@@ -325,6 +334,13 @@
+ 		>;
+ 	};
+ 
++	pinctrl_fpgaspi: fpgaspigrp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_ROW1__GPIO4_IO09 0x1b0b0
++			MX6QDL_PAD_KEY_ROW2__GPIO4_IO11 0x1b0b0
++		>;
++	};
++
+ 	pinctrl_gpminand: gpminandgrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_NANDF_CLE__NAND_CLE 0xb0b1
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
