@@ -1,108 +1,47 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/6] Documentation: devicetree: dwc3: Add interrupt
- moderation
-Date: Fri, 28 Oct 2016 11:38:44 +0100
-Message-ID: <20161028103843.GE5806@leverpostej>
-References: <cover.1477424426.git.johnyoun@synopsys.com>
- <e7a864e5a2af12d5a8d97f2591065f4aa85f86cb.1477424426.git.johnyoun@synopsys.com>
- <20161026105632.GG19965@leverpostej>
- <36413315-16eb-d690-b559-ab5ae103c5f9@synopsys.com>
- <20161028102350.GD5806@leverpostej>
- <87mvhosr4g.fsf@linux.intel.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [v15, 6/7] base: soc: introduce soc_device_match() interface
+Date: Fri, 28 Oct 2016 12:47:54 +0200
+Message-ID: <2572890.e6aV4hmMEL@wuerfel>
+References: <1477637418-38938-1-git-send-email-yangbo.lu@nxp.com>
+	<1477637418-38938-7-git-send-email-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87mvhosr4g.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1477637418-38938-7-git-send-email-yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 28, 2016 at 01:30:07PM +0300, Felipe Balbi wrote:
-> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
-> > On Thu, Oct 27, 2016 at 02:08:25PM -0700, John Youn wrote:
-> >> On 10/26/2016 3:57 AM, Mark Rutland wrote:
-> >> > On Tue, Oct 25, 2016 at 12:42:46PM -0700, John Youn wrote:
-> >> >> Add interrupt moderation interval binding for dwc3.
-> >
-> >> >> + - snps,imod_interval: the interrupt moderation interval.
-
-> >> This series implements the feature and enables it as a workaround for
-> >> a particular version of the controller.
-> >
-> > ... as a workaround for *what*? Is there a bug in that IP version, or an
+On Friday, October 28, 2016 2:50:17 PM CEST Yangbo Lu wrote:
+> +
+> +static int soc_device_match_one(struct device *dev, void *arg)
+> +{
+> +       struct soc_device *soc_dev = container_of(dev, struct soc_device, dev);
+> +       const struct soc_device_attribute *match = arg;
+> +
+> +       if (match->machine &&
+> +           !glob_match(match->machine, soc_dev->attr->machine))
+> +               return 0;
+> +
+> +       if (match->family &&
+> +           !glob_match(match->family, soc_dev->attr->family))
+> +               return 0;
+> +
 > 
-> you didn't receive the entire series, I guess. Here's last patch in the
-> series:
 
-No, I did not. Thanks for forwarding this.
+Geert found a bug in my code, and submitted a fix at
+https://patchwork.kernel.org/patch/9361395/
 
->  This is a workaround for STAR 9000961433 which affects only version
->  3.00a of the DWC_usb3 core. This prevents the controller interrupt from
->  being masked while handling events. Enabling interrupt moderation allows
->  us to work around this issue because once the GEVNTCOUNT.count is
->  written the IRQ is immediately deasserted and won't be asserted again
->  until GEVNTCOUNT.EHB is cleared.
-> 
->  Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->  ---
->   drivers/usb/dwc3/core.c | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
-> 
->  diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
->  index 6733838..7fa0832 100644
->  --- a/drivers/usb/dwc3/core.c
->  +++ b/drivers/usb/dwc3/core.c
->  @@ -1050,6 +1050,18 @@ static void dwc3_check_params(struct dwc3 *dwc)
-> 		 dwc->imod_interval = 0;
-> 	 }
-> 
->  +	/*
->  +	 * Workaround for STAR 9000961433 which affects only version
->  +	 * 3.00a of the DWC_usb3 core. This prevents the controller
->  +	 * interrupt from being masked while handling events. IMOD
->  +	 * allows us to work around this issue. Enable it for the
->  +	 * affected version.
->  +	 */
->  +	if (!dwc->imod_interval &&
->  +	    (dwc->revision == DWC3_REVISION_300A)) {
->  +		dwc->imod_interval = 1;
->  +	}
->  +
-> 	 /* Check the maximum_speed parameter */
-> 	 switch (dwc->maximum_speed) {
-> 	 case USB_SPEED_LOW:
-> 
-> > integration issue? Does the problem vary per-board?
-> >
-> > Generally, if there's a problem that needs to be worked around, we
-> > describe the problem in the DT (perhaps implicitly in the compatible
-> > string), and then the kernel chooses the workaround.
-> 
-> Regardless of the silicon erratum, interrupt moderation is a *feature*
-> of the IP, common to all instances since revision v3.00a (IIRC). John is
-> just using interrupt moderation in the context of implementing this
-> workaround. But the actual feature is valid also without the erratum.
+I think you should include that one in your series.
 
-Sure, I understand this.
-
-> Another thing to remember is that different applications (i.e. boards)
-> might want to moderate the interrupt for different periods. That's,
-> again, not related to the erratum at all.
-
-... again, the question is *why*?
-
-If this varies per use-case, then it would be better to handle this
-dynamically -- people can run wildly different use-cases on the same
-hardware.
-
-I'm not sure that it makes sense for this to be in the DT, though I may
-have misunderstood.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
