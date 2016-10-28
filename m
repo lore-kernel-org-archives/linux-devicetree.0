@@ -1,50 +1,34 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: exynos: Use macro for PWM signal polarity
- in Exynos4 boards
-Date: Fri, 28 Oct 2016 10:49:14 -0300
-Message-ID: <31a8217c-969e-63a4-167c-9027ab1d8581@osg.samsung.com>
-References: <1477590438-18095-1-git-send-email-javier@osg.samsung.com>
- <20161028134138.GB5646@kozik-lap>
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: specifying order of /dev/mmcblk devices via device-tree?
+Date: Fri, 28 Oct 2016 08:23:04 -0700
+Message-ID: <CAJ+vNU1g8nQedd06LeaD10YWUQ_UmdRToUMFKaTNT1aNY56b0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161028134138.GB5646@kozik-lap>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+Greetings,
 
-On 10/28/2016 10:41 AM, Krzysztof Kozlowski wrote:
-> On Thu, Oct 27, 2016 at 02:47:17PM -0300, Javier Martinez Canillas wrote:
->> Using the PWM_POLARITY_INVERTED macro instead of the hardcoded number
->> 0 makes the DTS easier to read.
-> 
-> 
-> Eeee.... PWM_POLARITY_INVERTED = 1 << 0 = 1.
-> 
-> And you are replacing 0 with 1. Hm? This is not described at all in
-> commit message...
-> 
-> Best regards,
-> Krzysztof
-> 
+I have an IMX6 board that has the following:
+sdhc1: mmc0: sdio radio
+sdhc2: mmc1: /dev/mmcblk1: microSD connector
+sdhc3: mmc2: /dev/mmcblk2: on-board eMMC
 
-Damn! I don't know how I misread the DTS macro as 0, and didn't find issues
-when testing the patches on an Exynos5800 Peach Pi.
+I would like to have sdhc3 registered as /dev/mmcblk0 and sdhc2
+registered as /dev/mmcblk1 so that permanent storage is the first
+mmcblk device as I think this is more intuitive however currently
+these get instanced in the order they appear in the imx6qdl.dtsi
+device-tree configuration and are not able to be mapped the way I want
+them in my dts file.
 
-I should had run scripts/dtc/dtx_diff to notice that the DTB changed, I'm
-so sorry about that...
+Is there a way, or if not is there a desire for a way, to specify the
+order of /dev/mmcblk devices via device-tree?
 
-Please discard the patches.
+Regards,
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Tim
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
