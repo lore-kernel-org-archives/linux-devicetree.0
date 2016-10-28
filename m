@@ -1,41 +1,27 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [v15, 0/7] Fix eSDHC host version register bug
-Date: Fri, 28 Oct 2016 12:53:56 +0200
-Message-ID: <3386858.dvuMhvkN3m@wuerfel>
-References: <1477637418-38938-1-git-send-email-yangbo.lu@nxp.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: imx6ul-14x14-evk: add USB dual-role support
+Date: Fri, 28 Oct 2016 09:34:16 -0200
+Message-ID: <CAOMZO5Ddw7xg1hrDRtHnP3_fLE+bFcxMeQ=AByejE5HE=RH6wA@mail.gmail.com>
+References: <1470128903-942-1-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1477637418-38938-1-git-send-email-yangbo.lu@nxp.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Yangbo Lu <yangbo.lu@nxp.com>, linux-mmc@vger.kernel.org, ulf.hansson@linaro.org, Scott Wood <oss@buserror.net>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org, Qiang Zhao <qiang.zhao@nxp.com>, Russell King <linux@arm.linux.org.uk>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Joerg Roedel <joro@8bytes.org>, Jochen Friedrich <jochen@scram.de>, Claudiu Manoil <claudiu.manoil@freescale.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Leo Li <leoyang.li@nxp.com>, iommu@lists.linux-found
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470128903-942-1-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, October 28, 2016 2:50:11 PM CEST Yangbo Lu wrote:
-> This patchset is used to fix a host version register bug in the T4240-R1.0-R2.0
-> eSDHC controller. To match the SoC version and revision, 10 previous version
-> patchsets had tried many methods but all of them were rejected by reviewers.
-> Such as
->         - dts compatible method
->         - syscon method
->         - ifdef PPC method
->         - GUTS driver getting SVR method
-> Anrd suggested a soc_device_match method in v10, and this is the only available
-> method left now. This v11 patchset introduces the soc_device_match interface in
-> soc driver.
-> 
-> The first five patches of Yangbo are to add the GUTS driver. This is used to
-> register a soc device which contain soc version and revision information.
-> The other two patches introduce the soc_device_match method in soc driver
-> and apply it on esdhc driver to fix this bug.
-> 
+On Tue, Aug 2, 2016 at 6:08 AM, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org> wrote:
+> With commit 851ce932242d ("usb: chipidea: otg: don't wait vbus
+> drops below BSV when starts host"), the driver can support
+> enabling vbus output without software control, so this board
+> (control vbus output through ID pin) can support dual-role now.
+>
+> Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
 
-Looks good overall. With patch 3 dropped (or an explanation why it's still
-needed), everything
-
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-
-	Arnd
-
+Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
