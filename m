@@ -1,70 +1,57 @@
-From: Joshua Clayton <stillcompiling@gmail.com>
-Subject: Re: [PATCH v2 3/5] fpga manager: Add cyclone-ps-spi driver for Altera
- FPGAs
-Date: Fri, 28 Oct 2016 14:05:36 -0700
-Message-ID: <7f36c345-b4f9-60b2-5f88-99fa7ec31119@gmail.com>
-References: <201610290422.JEtRRTFh%fengguang.wu@intel.com>
+From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: hi6220: add resets property into dwmmc nodes
+Date: Fri, 28 Oct 2016 14:12:56 -0700
+Message-ID: <CALAqxLX9_y8CpagsUeorOE4gpR6_i-_G+EZfXNpBxare3VnJCg@mail.gmail.com>
+References: <CALAqxLXfb48h8hMQmAaJ+YjA5=pekkQ8Dg8ReL6VTTfmuFRPDw@mail.gmail.com>
+ <CAKfTPtAXdkKcfpHmUmQNwuJxO0PORcCf49noST_CCkZPigPwgw@mail.gmail.com>
+ <CGME20161028072654epcas4p13cbf983b3e22dd96039ed33a4ac792d5@epcas4p1.samsung.com>
+ <20161028072640.GB17266@leoy-linaro> <d7993c1a-5e50-9a33-0900-5c1a79884d3c@samsung.com>
+ <20161028073830.GC17266@leoy-linaro> <24930ad4-313f-a4f0-c89a-770238863816@samsung.com>
+ <95e22336-0465-f1e1-71b8-548d0e6ee8b7@samsung.com> <20161028101919.GA25564@leoy-linaro>
+ <f5dfafbb-39df-4edb-03b8-57c0e34c912f@samsung.com> <20161028123422.GA22734@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201610290422.JEtRRTFh%fengguang.wu@intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: kbuild test robot <lkp@intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, devicetree@vger.kernel.org, Alan Tull <atull@opensource.altera.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161028123422.GA22734@leoy-linaro>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fathi Boudra <fathi.boudra-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dang it!
+On Fri, Oct 28, 2016 at 5:34 AM, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Oct 28, 2016 at 08:52:49PM +0900, Jaehoon Chung wrote:
+>
+> [...]
+>
+>> >> Could you check the below thing..
+>> >>
+>> >>         /* find reset controller when exist */
+>> >> -       pdata->rstc = devm_reset_control_get_optional(dev, NULL);
+>> >> +       pdata->rstc = devm_reset_control_get_optional(dev, "dwmci-reset");
+>> >>         if (IS_ERR(pdata->rstc)) {
+>> >>                 if (PTR_ERR(pdata->rstc) == -EPROBE_DEFER)
+>> >>                         return ERR_PTR(-EPROBE_DEFER);
+>> >
+>> > Confirmed with this fixing, the kernel can bootup successfully.
+>> >
+>> > Thanks for this.
+>>
+>> Thanks for checking this..If this approach is not bad, i will send the patch.
+>> Or if there are other good approaches, let me know, plz.
+>
+> I'd like Guodong and John to confirm for Hikey specific. I have no
+> knowledge for this so cannot answer.
 
-This was flagged last time around and I forgot to fix it.
+No objection from me. I hadn't run into the issue, as I'm not booting
+off the sd card.
 
-On 10/28/2016 01:41 PM, kbuild test robot wrote:
-> Hi Joshua,
->
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v4.9-rc2 next-20161028]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> [Suggest to use git(>=2.9.0) format-patch --base=<commit> (or --base=auto for convenience) to record what (public, well-known) commit your patch series was built on]
-> [Check https://git-scm.com/docs/git-format-patch for more information]
->
-> url:    https://github.com/0day-ci/linux/commits/Joshua-Clayton/lib-add-bitrev8x4/20161029-012535
-> config: openrisc-allmodconfig (attached as .config)
-> compiler: or32-linux-gcc (GCC) 4.5.1-or32-1.0rc1
-> reproduce:Dang it!
->         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=openrisc 
->
-> All errors (new ones prefixed by >>):
->
->    drivers/fpga/cyclone-ps-spi.c: In function 'cyclonespi_write':
->    drivers/fpga/cyclone-ps-spi.c:89:19: error: 'SZ_4K' undeclared (first use in this function)
->    drivers/fpga/cyclone-ps-spi.c:89:19: note: each undeclared identifier is reported only once for each function it appears in
->>> drivers/fpga/cyclone-ps-spi.c:89:19: error: type defaults to 'int' in declaration of '__UNIQUE_ID_min2_15'
-> vim +89 drivers/fpga/cyclone-ps-spi.c
->
->     83		struct cyclonespi_conf *conf = (struct cyclonespi_conf *)mgr->priv;
->     84		const char *fw_data = buf;
->     85		const char *fw_data_end = fw_data + count;
->     86	
->     87		while (fw_data < fw_data_end) {
->     88			int ret;
->   > 89			size_t stride = min(fw_data_end - fw_data, SZ_4K);
->     90	
->     91			rev_buf((void *)fw_data, stride);
->     92			ret = spi_write(conf->spi, fw_data, stride);
->
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-Thanks, kbuild test robot.
-Will fix this time.
+The patch from Jaehoon doesn't seem to cause trouble in my testing so
+far, so I think its worth generating a patch and sending it in for
+4.9-rc
+
+thanks
+-john
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
