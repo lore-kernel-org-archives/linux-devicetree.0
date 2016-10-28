@@ -1,64 +1,103 @@
-From: Joshua Clayton <stillcompiling@gmail.com>
-Subject: [PATCH v2 2/5] doc: dt: add cyclone-spi binding document
-Date: Fri, 28 Oct 2016 09:56:39 -0700
-Message-ID: <2de74f6d2f2689b8ef090a9017db2ffb3bd319cb.1477669745.git.stillcompiling@gmail.com>
-References: <cover.1477669744.git.stillcompiling@gmail.com>
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] of, numa: Add function to disable of_node_to_nid().
+Date: Fri, 28 Oct 2016 10:02:37 -0700
+Message-ID: <581384AD.1000309@gmail.com>
+References: <1477431061-7258-1-git-send-email-ddaney.cavm@gmail.com> <1477431061-7258-2-git-send-email-ddaney.cavm@gmail.com> <20161028101905.GA6343@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1477669744.git.stillcompiling@gmail.com>
-In-Reply-To: <cover.1477669744.git.stillcompiling@gmail.com>
-References: <cover.1477669744.git.stillcompiling@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alan Tull <atull@opensource.altera.com>, Moritz Fischer <moritz.fischer@ettus.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Joshua Clayton <stillcompiling@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161028101905.GA6343-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Gilbert Netzer <noname-QVTQ4TwcpgDLoDKTGw+V6w@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Describe a cyclonei-ps-spi devicetree entry, required features
+On 10/28/2016 03:19 AM, Will Deacon wrote:
+> On Tue, Oct 25, 2016 at 02:31:00PM -0700, David Daney wrote:
+>> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>>
+>> On arm64 NUMA kernels we can pass "numa=off" on the command line to
+>> disable NUMA.  A side effect of this is that kmalloc_node() calls to
+>> non-zero nodes will crash the system with an OOPS:
+>>
+>> [    0.000000] [<fffffc00081bba84>] __alloc_pages_nodemask+0xa4/0xe68
+>> [    0.000000] [<fffffc00082163a8>] new_slab+0xd0/0x57c
+>> [    0.000000] [<fffffc000821879c>] ___slab_alloc+0x2e4/0x514
+>> [    0.000000] [<fffffc000823882c>] __slab_alloc+0x48/0x58
+>> [    0.000000] [<fffffc00082195a0>] __kmalloc_node+0xd0/0x2e0
+>> [    0.000000] [<fffffc00081119b8>] __irq_domain_add+0x7c/0x164
+>> [    0.000000] [<fffffc0008b75d30>] its_probe+0x784/0x81c
+>> [    0.000000] [<fffffc0008b75e10>] its_init+0x48/0x1b0
+>> .
+>> .
+>> .
+>>
+>> This is caused by code like this in kernel/irq/irqdomain.c
+>>
+>>      domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) * size),
+>>                    GFP_KERNEL, of_node_to_nid(of_node));
+>>
+>> When NUMA is disabled, the concept of a node is really undefined, so
+>> of_node_to_nid() should unconditionally return NUMA_NO_NODE.
+>>
+>> Add __of_force_no_numa() to allow of_node_to_nid() to be forced to
+>> return NUMA_NO_NODE.
+>>
+>> The follow on patch will call this new function from the arm64 numa
+>> code.
+>>
+>> Reported-by: Gilbert Netzer <noname-QVTQ4TwcpgDLoDKTGw+V6w@public.gmane.org>
+>> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   drivers/of/of_numa.c | 15 +++++++++++++++
+>>   include/linux/of.h   |  2 ++
+>>   2 files changed, 17 insertions(+)
+>>
+>> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+>> index f63d4b0d..2212299 100644
+>> --- a/drivers/of/of_numa.c
+>> +++ b/drivers/of/of_numa.c
+>> @@ -150,12 +150,27 @@ static int __init of_numa_parse_distance_map(void)
+>>   	return ret;
+>>   }
+>>
+>> +static bool of_force_no_numa;
+>> +
+>> +void __of_force_no_numa(void)
+>> +{
+>> +	of_force_no_numa = true;
+>> +}
+>> +
+>>   int of_node_to_nid(struct device_node *device)
+>>   {
+>>   	struct device_node *np;
+>>   	u32 nid;
+>>   	int r = -ENODATA;
+>>
+>> +	/*
+>> +	 * If NUMA forced off, nodes are meaningless.  Return
+>> +	 * NUMA_NO_NODE so that any node specific memory allocations
+>> +	 * can succeed from the default pool.
+>> +	 */
+>> +	if (of_force_no_numa)
+>> +		return NUMA_NO_NODE;
+>
+> Why don't you just check if the nid you get back from the device is set in
+> numa_nodes_parsed and return NUMA_NO_NODE if not?
 
-Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
----
- .../bindings/fpga/cyclone-ps-spi-fpga-mgr.txt      | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
+numa_nodes_parsed is __initdata.  Perhaps node_possible_map would be better.
 
-diff --git a/Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
-new file mode 100644
-index 0000000..c942281
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
-@@ -0,0 +1,23 @@
-+Altera Cyclone Passive Serial SPI FPGA Manager
-+
-+Altera Cyclone FPGAs support a method of loading the bitstream over what is
-+referred to as "passive serial".
-+The passive serial link is not technically spi, and might require extra
-+circuits in order to play nicely with other spi slaves on the same bus.
-+
-+See https://www.altera.com/literature/hb/cyc/cyc_c51013.pdf
-+
-+Required properties:
-+- compatible  : should contain "altr,cyclone-ps-spi-fpga-mgr"
-+- reg         : spi slave id of the fpga
-+- config-gpio : config pin (referred to as nCONFIG in the cyclone manual)
-+- status-gpio : status pin (referred to as nSTATUS in the cyclone manual)
-+
-+Example:
-+	fpga_spi: evi-fpga-spi@0 {
-+		compatible = "altr,cyclone-ps-spi-fpga-mgr";
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+		config-gpio = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-+		status-gpio = <&gpio4 11 GPIO_ACTIVE_HIGH>;
-+	};
--- 
-2.7.4
+I will try that.
+
+David.
+
+
+>
+> Will
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
