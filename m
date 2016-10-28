@@ -1,114 +1,84 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/2] dt: bindings: add
- allwinner,otg-routed property for phy-sun4i-usb
-Date: Fri, 28 Oct 2016 20:13:06 +0200
-Message-ID: <32a206ab-b082-3438-1395-99a2e3cc58c4@redhat.com>
-References: <20161025041139.46454-1-icenowy@aosc.xyz>
- <55fe59fc-6e93-d519-2d7c-264c48820fc4@redhat.com>
- <4534561477471963@web8g.yandex.ru>
- <86c3fad4-e0c1-9aaf-76c5-b9428110464f@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2] spi: spi-fsl-dspi: Add DMA support for Vybrid
+Date: Fri, 28 Oct 2016 19:16:25 +0100
+Message-ID: <20161028181625.wjasnupsnzma2uum@sirena.org.uk>
+References: <8ccf4f2f4e6739410d9e242f9d0e3f3bcc76d0e2.1475498805.git.maitysanchayan@gmail.com>
+ <607397542d083f13dc98909958672eeb0d326c79.1475578195.git.maitysanchayan@gmail.com>
+ <20161017062308.GA3478@Sanchayan-Arch.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBPNKZ3AAKGQESHKPDVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <86c3fad4-e0c1-9aaf-76c5-b9428110464f-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============2631801816148328873=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161017062308.GA3478@Sanchayan-Arch.localdomain>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: maitysanchayan@gmail.com
+Cc: devicetree@vger.kernel.org, bhuvanchandra.dv@toradex.com, linux-kernel@vger.kernel.org, stefan@agner.ch, linux-spi@vger.kernel.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-HI,
 
-On 26-10-16 12:14, Hans de Goede wrote:
-> Hi,
->
-> On 26-10-16 10:52, Icenowy Zheng wrote:
->>
->>
->> 26.10.2016, 16:28, "Hans de Goede" <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
->>> Hi,
->>>
->>> On 25-10-16 06:11, Icenowy Zheng wrote:
->>>>  On some newer Allwinner SoCs (H3 or A64), the PHY0 can be either routed to
->>>>  the MUSB controller (which is an OTG controller) or the OHCI/EHCI pair
->>>>  (which is a Host-only controller, but more stable and easy to implement).
->>>>
->>>>  This property marks whether on a certain board which controller should be
->>>>  attached to the PHY.
->>>>
->>>>  Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->>>
->>> Icenowy, I appreciate your work on this, but we really need full otg
->>> support with dynamic switching rather then hardwiring the routing, so
->>> this cannot go in as is.
->>
->> Now I have both PHY0 controllers' drivers.
->>
->> In the tree of https://github.com/Icenowy/linux/tree/ice-a64-v6.1 , I have already
->> enabled MUSB controller.
->>
->> And this patchset is for those prefer a stable USB host implement to dual-role
->> implementation. MUSB is a good UDC, but not a good host controller. My USB
->> sound card cannot work on MUSB on A33. Even connecting a R8's MUSB (Serial
->> Gadget) to an A33's MUSB cannot work.
->
-> The idea is for dual-role setups to used the MUSB in gadget mode and the EHCI/OHCI
-> pair when in host mode. So for otg setups you would runtime change the mux
-> from one controller to the other based on the id pin value.
->
-> Take a look at drivers/phy/phy-sun4i-usb.c, around line 512:
->
->     if (id_det != data->id_det) {
->         ...
->     }
->
-> This deals with id_det changes (including the initial id_det "change"
-> for hardwired host-only ports). This currently assumes that the musb
-> will be used for host mode too, we will want to change this to
-> something like this:
->
->     if (id_det != data->id_det) {
->         if (data->cfg->separate_phy0_host_controller) {
->             if (id_det) {
->                 /* Change to gadget mode (id_det == 1), switch phy mux to musb */
->                 actual code to switch phy mux to musb...
->             } else {
->                 /* Change to host mode (id_det == 0), switch phy mux to ehci/ohci */
->                 actual code to switch phy mux to ehci/ohci...
->             }
->         }
->         /* old code */
->     }
->
-> Note this will then still rely on the musb code to actually turn
-> the regulator on, so you do need to have the musb driver build and
-> loaded. This can be fixed but lets start with the above.
->
-> If you combine this with dr_mode = "host"; in the dts, then
-> sun4i_usb_phy0_get_id_det() will return 0 so on its first run
-> sun4i_usb_phy0_id_vbus_det_scan() will throw the mux to the ehci/ohci
-> and everything should work as you want without needing the custom
-> "allwinner,otg-routed" property, and we should be more or less
-> ready to support full otg on other boards.
+--===============2631801816148328873==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="cwh4geffhp4uzlbr"
+Content-Disposition: inline
 
-I've just found further proof that the musb on the H3 at least
-only is intended for gadget mode and that we must dynamically
-switch for host-mode. If you look at:
 
-drivers/usb/sunxi_usb/include/sunxi_udc.h
+--cwh4geffhp4uzlbr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In the h3 sdk then you will see that for the H3 a different fifo
-endpoint table is used, as the total fifo space is only 4k where
-as previous SoCs had 8k. This means that we need to have 2
-different ep tables in drivers/usb/musb/sunxi.c and select by
-compatible.
+On Mon, Oct 17, 2016 at 11:53:08AM +0530, maitysanchayan@gmail.com wrote:
+> Hello,
+>=20
+> Ping?
 
-Regards,
+Please don't send content free pings and please allow a reasonable time
+for review.  People get busy, go on holiday, attend conferences and so=20
+on so unless there is some reason for urgency (like critical bug fixes)
+please allow at least a couple of weeks for review.  If there have been
+review comments then people may be waiting for those to be addressed.
+Sending content free pings just adds to the mail volume (if they are
+seen at all) and if something has gone wrong you'll have to resend the
+patches anyway.
 
-Hans
+Please don't top post, reply in line with needed context.  This allows
+readers to readily follow the flow of conversation and understand what
+you are talking about and also helps ensure that everything in the
+discussion is being addressed.
+
+--cwh4geffhp4uzlbr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAABCAAGBQJYE5X5AAoJECTWi3JdVIfQGiEH/1X7lQuvvV/dZtbjD/y1h0fT
+MCo19HSeapVydOSZJM5KRvDPglThuycEAsxJ92gPKx3LNnPpecv+1qM1mR5x39Y/
+q+PHtUJY4brLCb9iKyAhR8WSU1RGsNV4FNKNuHqVY5p8ChuL3EAgXHqbZEvGOx2b
+f0s+BcsXGy81L0CirrKeZGwPZdr3XvNwuD8tyjbE/G2WiUUILeGhD3xlGsmT7kML
+BzFFfjkMUiJUbqHmr1Ddp0rIZ2Y1TsJveeF2ybIPU6Al13xadO9y0RfkrLl7Rc2m
+3bbwTYYlS9qxa7wDjWGT5dhdAD1aUflywo+RbYaKEM5Bb5fpImPMCDs0JtRBNE4=
+=VH06
+-----END PGP SIGNATURE-----
+
+--cwh4geffhp4uzlbr--
+
+
+--===============2631801816148328873==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2631801816148328873==--
