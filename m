@@ -1,148 +1,301 @@
-Return-Path: <rajatja@google.com>
+Return-Path: <hvaibhav.linux@gmail.com>
+Subject: Re: [PATCH v8 4/8] usb: core: add power sequence handling for USB
+ devices
+References: <1476413995-20361-1-git-send-email-peter.chen@nxp.com>
+ <1476413995-20361-5-git-send-email-peter.chen@nxp.com>
+From: "hvaibhav.linux" <hvaibhav.linux@gmail.com>
+Message-ID: <223fe910-831f-82b5-2938-be4b75ad0860@gmail.com>
+Date: Fri, 28 Oct 2016 14:11:51 +0530
 MIME-Version: 1.0
-In-Reply-To: <20161026204648.GD3989@dtor-ws>
-References: <1477070156-109965-1-git-send-email-rajatja@google.com>
- <1477084869-15612-1-git-send-email-rajatja@google.com> <20161026201735.GA10192@localhost>
- <20161026204648.GD3989@dtor-ws>
-From: Rajat Jain <rajatja@google.com>
-Date: Wed, 26 Oct 2016 13:51:48 -0700
-Message-ID: <CACK8Z6H1ACBo7nDxaXR3Vn9cPdyRqxxzdgYz7vNmojiSvjbW5A@mail.gmail.com>
-Subject: Re: [PATCH v6] mwifiex: parse device tree node for PCIe
-Content-Type: multipart/alternative; boundary=94eb2c0889fea2ff9a053fcacd1c
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Brian Norris <briannorris@chromium.org>, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, Xinming Hu <huxm@marvell.com>, Amitkumar Karwar <akarwar@marvell.com>, Brian Norris <briannorris@google.com>, Kalle Valo <kvalo@codeaurora.org>, Rob Herring <robh@kernel.org>, Rajat Jain <rajatxjain@gmail.com>
+In-Reply-To: <1476413995-20361-5-git-send-email-peter.chen@nxp.com>
+Content-Type: multipart/alternative;
+ boundary="------------324EAC32E8D1F619867A8A3D"
+To: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, dbaryshkov@gmail.com
+Cc: heiko@sntech.de, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org, stillcompiling@gmail.com, linux-kernel@vger.kernel.org, mka@chromium.org
 List-ID: <devicetree@vger.kernel.org>
 
---94eb2c0889fea2ff9a053fcacd1c
-Content-Type: text/plain; charset=UTF-8
+This is a multi-part message in MIME format.
+--------------324EAC32E8D1F619867A8A3D
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 26, 2016 at 1:46 PM, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-wrote:
 
-> On Wed, Oct 26, 2016 at 01:17:36PM -0700, Brian Norris wrote:
-> > Hi Rajat,
-> >
-> > On Fri, Oct 21, 2016 at 02:21:09PM -0700, Rajat Jain wrote:
-> > > From: Xinming Hu <huxm@marvell.com>
-> > >
-> > > This patch derives device tree node from pcie bus layer framework, and
-> > > fixes a minor memory leak in mwifiex_pcie_probe() (in failure path).
-> > > Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
-> > > marvell-8xxx.txt) to accommodate PCIe changes.
-> > >
-> > > Signed-off-by: Xinming Hu <huxm@marvell.com>
-> > > Signed-off-by: Amitkumar Karwar <akarwar@marvell.com>
-> > > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > > Reviewed-by: Brian Norris <briannorris@chromium.org>
-> > > ---
-> > > v2: Included vendor and product IDs in compatible strings for PCIe
-> > > chipsets(Rob Herring)
-> > > v3: Patch is created using -M option so that it will only include diff
-> of
-> > > original and renamed files(Rob Herring)
-> > > Resend v3: Resending the patch because I missed to include device tree
-> mailing
-> > > while sending v3.
-> > > v4: Fix error handling, also move-on even if no device tree node is
-> present.
-> > > v5: Update commit log to include memory leak, return -EINVAL instead
-> of -1.
-> >
-> > I've been working on reworking some bugfixes for this driver, and I
-> > noticed we have some problems w.r.t. memory leaks, and the "memory leak"
-> > fix is not actually a fix. See below.
+
+On Friday 14 October 2016 08:29 AM, Peter Chen wrote:
+> Some hard-wired USB devices need to do power sequence to let the
+> device work normally, the typical power sequence like: enable USB
+> PHY clock, toggle reset pin, etc. But current Linux USB driver
+> lacks of such code to do it, it may cause some hard-wired USB devices
+> works abnormal or can't be recognized by controller at all.
 >
-> Sorry, I just saw this... Why do we need devicetree data for
-> discoverable bus (PCI)? How does the driver work on systems that do not
-> use DT? Why do we need them to behave differently?
+> In this patch, it calls power sequence library APIs to finish
+> the power sequence events. It will do power on sequence at hub's
+> probe for all devices under this hub (includes root hub).
+> At hub_disconnect, it will do power off sequence which is at powered
+> on list.
 >
-
-There are a couple of out-of-band GPIO pins from Marvell chip that can
-serve as wake-up pins (wake up the CPU when asserted). The Marvell chip has
-to be told which GPIO pin is to be used as the wake-up pin. The pin to be
-used is system / platform dependent. (On some systems it could be GPIO13,
-on others it could be GPIO14 etc depending on how the marvell chip is wired
-up to the CPU).
-
-
-
+> Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> Tested-by Joshua Clayton <stillcompiling@gmail.com>
+> ---
+>   drivers/usb/core/hub.c | 41 ++++++++++++++++++++++++++++++++++++++---
+>   drivers/usb/core/hub.h |  1 +
+>   2 files changed, 39 insertions(+), 3 deletions(-)
 >
-> Thanks.
->
-> --
-> Dmitry
->
+> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> index cbb1467..acbbf0a 100644
+> --- a/drivers/usb/core/hub.c
+> +++ b/drivers/usb/core/hub.c
+> @@ -26,6 +26,7 @@
+>   #include <linux/mutex.h>
+>   #include <linux/random.h>
+>   #include <linux/pm_qos.h>
+> +#include <linux/power/pwrseq.h>
+>   
+>   #include <asm/uaccess.h>
+>   #include <asm/byteorder.h>
+> @@ -1695,6 +1696,7 @@ static void hub_disconnect(struct usb_interface *intf)
+>   	hub->error = 0;
+>   	hub_quiesce(hub, HUB_DISCONNECT);
+>   
+> +	of_pwrseq_off_list(&hub->pwrseq_on_list);
+>   	mutex_lock(&usb_port_peer_mutex);
+>   
+>   	/* Avoid races with recursively_mark_NOTATTACHED() */
+> @@ -1722,12 +1724,41 @@ static void hub_disconnect(struct usb_interface *intf)
+>   	kref_put(&hub->kref, hub_release);
+>   }
+>   
+> +#ifdef CONFIG_OF
+> +static int hub_of_pwrseq_on(struct usb_hub *hub)
+> +{
+> +	struct device *parent;
+> +	struct usb_device *hdev = hub->hdev;
+> +	struct device_node *np;
+> +	int ret;
+> +
+> +	if (hdev->parent)
+> +		parent = &hdev->dev;
+> +	else
+> +		parent = bus_to_hcd(hdev->bus)->self.controller;
+> +
+> +	for_each_child_of_node(parent->of_node, np) {
+> +		ret = of_pwrseq_on_list(np, &hub->pwrseq_on_list);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +#else
+> +static int hub_of_pwrseq_on(struct usb_hub *hub)
+> +{
+> +	return 0;
+> +}
+> +#endif
+> +
+>   static int hub_probe(struct usb_interface *intf, const struct usb_device_id *id)
+>   {
+>   	struct usb_host_interface *desc;
+>   	struct usb_endpoint_descriptor *endpoint;
+>   	struct usb_device *hdev;
+>   	struct usb_hub *hub;
+> +	int ret = -ENODEV;
+>   
+>   	desc = intf->cur_altsetting;
+>   	hdev = interface_to_usbdev(intf);
+> @@ -1832,6 +1863,7 @@ descriptor_error:
+>   	INIT_DELAYED_WORK(&hub->leds, led_work);
+>   	INIT_DELAYED_WORK(&hub->init_work, NULL);
+>   	INIT_WORK(&hub->events, hub_event);
+> +	INIT_LIST_HEAD(&hub->pwrseq_on_list);
+>   	usb_get_intf(intf);
+>   	usb_get_dev(hdev);
+>   
+> @@ -1845,11 +1877,14 @@ descriptor_error:
+>   	if (id->driver_info & HUB_QUIRK_CHECK_PORT_AUTOSUSPEND)
+>   		hub->quirk_check_port_auto_suspend = 1;
+>   
+> -	if (hub_configure(hub, endpoint) >= 0)
+> -		return 0;
+> +	if (hub_configure(hub, endpoint) >= 0) {
+> +		ret = hub_of_pwrseq_on(hub);
+> +		if (!ret)
+> +			return 0;
+> +	}
+>   
+>   	hub_disconnect(intf);
+> -	return -ENODEV;
+> +	return ret;
+>   }
+>   
+>   static int
+> diff --git a/drivers/usb/core/hub.h b/drivers/usb/core/hub.h
+> index 34c1a7e..cd86f91 100644
+> --- a/drivers/usb/core/hub.h
+> +++ b/drivers/usb/core/hub.h
+> @@ -78,6 +78,7 @@ struct usb_hub {
+>   	struct delayed_work	init_work;
+>   	struct work_struct      events;
+>   	struct usb_port		**ports;
+> +	struct list_head	pwrseq_on_list; /* powered pwrseq node list */
+>   };
+>   
+>   /**
 
---94eb2c0889fea2ff9a053fcacd1c
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Vaibhav Hiremath <hvaibhav.linux@gmail.com>
 
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On Wed, Oct 26, 2016 at 1:46 PM, Dmitry Torokhov <span dir=3D"ltr">&lt;=
-<a href=3D"mailto:dmitry.torokhov@gmail.com" target=3D"_blank">dmitry.torok=
-hov@gmail.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" st=
-yle=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span=
- class=3D"">On Wed, Oct 26, 2016 at 01:17:36PM -0700, Brian Norris wrote:<b=
-r>
-&gt; Hi Rajat,<br>
-&gt;<br>
-&gt; On Fri, Oct 21, 2016 at 02:21:09PM -0700, Rajat Jain wrote:<br>
-&gt; &gt; From: Xinming Hu &lt;<a href=3D"mailto:huxm@marvell.com">huxm@mar=
-vell.com</a>&gt;<br>
-&gt; &gt;<br>
-&gt; &gt; This patch derives device tree node from pcie bus layer framework=
-, and<br>
-&gt; &gt; fixes a minor memory leak in mwifiex_pcie_probe() (in failure pat=
-h).<br>
-&gt; &gt; Device tree bindings file has been renamed(marvell-sd8xxx.txt -&g=
-t;<br>
-&gt; &gt; marvell-8xxx.txt) to accommodate PCIe changes.<br>
-&gt; &gt;<br>
-&gt; &gt; Signed-off-by: Xinming Hu &lt;<a href=3D"mailto:huxm@marvell.com"=
->huxm@marvell.com</a>&gt;<br>
-&gt; &gt; Signed-off-by: Amitkumar Karwar &lt;<a href=3D"mailto:akarwar@mar=
-vell.com">akarwar@marvell.com</a>&gt;<br>
-&gt; &gt; Signed-off-by: Rajat Jain &lt;<a href=3D"mailto:rajatja@google.co=
-m">rajatja@google.com</a>&gt;<br>
-&gt; &gt; Reviewed-by: Brian Norris &lt;<a href=3D"mailto:briannorris@chrom=
-ium.org">briannorris@chromium.org</a>&gt;<br>
-&gt; &gt; ---<br>
-&gt; &gt; v2: Included vendor and product IDs in compatible strings for PCI=
-e<br>
-&gt; &gt; chipsets(Rob Herring)<br>
-&gt; &gt; v3: Patch is created using -M option so that it will only include=
- diff of<br>
-&gt; &gt; original and renamed files(Rob Herring)<br>
-&gt; &gt; Resend v3: Resending the patch because I missed to include device=
- tree mailing<br>
-&gt; &gt; while sending v3.<br>
-&gt; &gt; v4: Fix error handling, also move-on even if no device tree node =
-is present.<br>
-&gt; &gt; v5: Update commit log to include memory leak, return -EINVAL inst=
-ead of -1.<br>
-&gt;<br>
-&gt; I&#39;ve been working on reworking some bugfixes for this driver, and =
-I<br>
-&gt; noticed we have some problems w.r.t. memory leaks, and the &quot;memor=
-y leak&quot;<br>
-&gt; fix is not actually a fix. See below.<br>
-<br>
-</span>Sorry, I just saw this... Why do we need devicetree data for<br>
-discoverable bus (PCI)? How does the driver work on systems that do not<br>
-use DT? Why do we need them to behave differently?<br></blockquote><div><br=
-></div><div>There are a couple of out-of-band GPIO pins from Marvell chip t=
-hat can serve as wake-up pins (wake up the CPU when asserted). The Marvell =
-chip has to be told which GPIO pin is to be used as the wake-up pin. The pi=
-n to be used is system / platform dependent. (On some systems it could be G=
-PIO13, on others it could be GPIO14 etc depending on how the marvell chip i=
-s wired up to the CPU).</div><div><br></div><div>=C2=A0</div><blockquote cl=
-ass=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;p=
-adding-left:1ex">
-<br>
-Thanks.<br>
-<span class=3D"HOEnZb"><font color=3D"#888888"><br>
---<br>
-Dmitry<br>
-</font></span></blockquote></div><br></div></div>
+Thanks,
+Vaibhav
 
---94eb2c0889fea2ff9a053fcacd1c--
+--------------324EAC32E8D1F619867A8A3D
+Content-Type: text/html; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252"
+      http-equiv="Content-Type">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <br>
+    <br>
+    <div class="moz-cite-prefix">On Friday 14 October 2016 08:29 AM,
+      Peter Chen wrote:<br>
+    </div>
+    <blockquote
+      cite="mid:1476413995-20361-5-git-send-email-peter.chen@nxp.com"
+      type="cite">
+      <pre wrap="">Some hard-wired USB devices need to do power sequence to let the
+device work normally, the typical power sequence like: enable USB
+PHY clock, toggle reset pin, etc. But current Linux USB driver
+lacks of such code to do it, it may cause some hard-wired USB devices
+works abnormal or can't be recognized by controller at all.
+
+In this patch, it calls power sequence library APIs to finish
+the power sequence events. It will do power on sequence at hub's
+probe for all devices under this hub (includes root hub).
+At hub_disconnect, it will do power off sequence which is at powered
+on list.
+
+Signed-off-by: Peter Chen <a class="moz-txt-link-rfc2396E" href="mailto:peter.chen@nxp.com">&lt;peter.chen@nxp.com&gt;</a>
+Tested-by Joshua Clayton <a class="moz-txt-link-rfc2396E" href="mailto:stillcompiling@gmail.com">&lt;stillcompiling@gmail.com&gt;</a>
+---
+ drivers/usb/core/hub.c | 41 ++++++++++++++++++++++++++++++++++++++---
+ drivers/usb/core/hub.h |  1 +
+ 2 files changed, 39 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index cbb1467..acbbf0a 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -26,6 +26,7 @@
+ #include &lt;linux/mutex.h&gt;
+ #include &lt;linux/random.h&gt;
+ #include &lt;linux/pm_qos.h&gt;
++#include &lt;linux/power/pwrseq.h&gt;
+ 
+ #include &lt;asm/uaccess.h&gt;
+ #include &lt;asm/byteorder.h&gt;
+@@ -1695,6 +1696,7 @@ static void hub_disconnect(struct usb_interface *intf)
+ 	hub-&gt;error = 0;
+ 	hub_quiesce(hub, HUB_DISCONNECT);
+ 
++	of_pwrseq_off_list(&amp;hub-&gt;pwrseq_on_list);
+ 	mutex_lock(&amp;usb_port_peer_mutex);
+ 
+ 	/* Avoid races with recursively_mark_NOTATTACHED() */
+@@ -1722,12 +1724,41 @@ static void hub_disconnect(struct usb_interface *intf)
+ 	kref_put(&amp;hub-&gt;kref, hub_release);
+ }
+ 
++#ifdef CONFIG_OF
++static int hub_of_pwrseq_on(struct usb_hub *hub)
++{
++	struct device *parent;
++	struct usb_device *hdev = hub-&gt;hdev;
++	struct device_node *np;
++	int ret;
++
++	if (hdev-&gt;parent)
++		parent = &amp;hdev-&gt;dev;
++	else
++		parent = bus_to_hcd(hdev-&gt;bus)-&gt;self.controller;
++
++	for_each_child_of_node(parent-&gt;of_node, np) {
++		ret = of_pwrseq_on_list(np, &amp;hub-&gt;pwrseq_on_list);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++#else
++static int hub_of_pwrseq_on(struct usb_hub *hub)
++{
++	return 0;
++}
++#endif
++
+ static int hub_probe(struct usb_interface *intf, const struct usb_device_id *id)
+ {
+ 	struct usb_host_interface *desc;
+ 	struct usb_endpoint_descriptor *endpoint;
+ 	struct usb_device *hdev;
+ 	struct usb_hub *hub;
++	int ret = -ENODEV;
+ 
+ 	desc = intf-&gt;cur_altsetting;
+ 	hdev = interface_to_usbdev(intf);
+@@ -1832,6 +1863,7 @@ descriptor_error:
+ 	INIT_DELAYED_WORK(&amp;hub-&gt;leds, led_work);
+ 	INIT_DELAYED_WORK(&amp;hub-&gt;init_work, NULL);
+ 	INIT_WORK(&amp;hub-&gt;events, hub_event);
++	INIT_LIST_HEAD(&amp;hub-&gt;pwrseq_on_list);
+ 	usb_get_intf(intf);
+ 	usb_get_dev(hdev);
+ 
+@@ -1845,11 +1877,14 @@ descriptor_error:
+ 	if (id-&gt;driver_info &amp; HUB_QUIRK_CHECK_PORT_AUTOSUSPEND)
+ 		hub-&gt;quirk_check_port_auto_suspend = 1;
+ 
+-	if (hub_configure(hub, endpoint) &gt;= 0)
+-		return 0;
++	if (hub_configure(hub, endpoint) &gt;= 0) {
++		ret = hub_of_pwrseq_on(hub);
++		if (!ret)
++			return 0;
++	}
+ 
+ 	hub_disconnect(intf);
+-	return -ENODEV;
++	return ret;
+ }
+ 
+ static int
+diff --git a/drivers/usb/core/hub.h b/drivers/usb/core/hub.h
+index 34c1a7e..cd86f91 100644
+--- a/drivers/usb/core/hub.h
++++ b/drivers/usb/core/hub.h
+@@ -78,6 +78,7 @@ struct usb_hub {
+ 	struct delayed_work	init_work;
+ 	struct work_struct      events;
+ 	struct usb_port		**ports;
++	struct list_head	pwrseq_on_list; /* powered pwrseq node list */
+ };
+ 
+ /**
+</pre>
+    </blockquote>
+    <br>
+    Reviewed-by: Vaibhav Hiremath <a class="moz-txt-link-rfc2396E"
+      href="mailto:hvaibhav.linux@gmail.com">&lt;hvaibhav.linux@gmail.com&gt;</a>
+    <br>
+    <br>
+    Thanks,
+    <br>
+    Vaibhav
+    <br>
+  </body>
+</html>
+
+--------------324EAC32E8D1F619867A8A3D--
