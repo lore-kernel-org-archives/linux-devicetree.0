@@ -1,11 +1,14 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH 00/10] staging: iio: tsl2583: staging cleanups
-Date: Fri, 28 Oct 2016 06:00:11 -0400
-Message-ID: <1477648821-3786-1-git-send-email-masneyb@onstation.org>
+Subject: [PATCH 02/10] staging: iio: tsl2583: check for error code from
+ i2c_smbus_read_byte()
+Date: Fri, 28 Oct 2016 06:00:13 -0400
+Message-ID: <1477648821-3786-3-git-send-email-masneyb@onstation.org>
+References: <1477648821-3786-1-git-send-email-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1477648821-3786-1-git-send-email-masneyb@onstation.org>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -19,86 +22,61 @@ To: jic23@kernel.org, linux-iio@vger.kernel.org
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, Mark.Rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-This patch set begins cleaning up some of the major items that is
-keeping the tsl2583 driver out of mainline. Highlights include device
-tree support, converts the driver over to use the iio_chan_spec,
-improved error handling, and fixes for some concurrency issues. There
-is more work required to get this driver out of staging that I will
-send later as a separate patch set.
+taos_i2c_read() and taos_als_calibrate() does not check to see if the
+value returned by i2c_smbus_read_byte() was an error code. This patch
+adds the appropriate error handling.
 
-Driver was tested using a TSL2581 hooked up to a Raspberry Pi 2.
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+ drivers/staging/iio/light/tsl2583.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-The sysfs attributes were previously prefixed with illuminance0_ however
-they are now prefixed with in_illuminance_. None of the IIO light
-drivers in mainline have their sysfs attributes prefixed with
-illuminance0_, however 8 of the IIO light drivers in mainline use the
-in_illuminance_ prefix so I assume that this is the naming convention
-that should be used for this driver as well.
-
-sysfs attribute names before this patch set:
-
-raspberrypi:/sys/bus/iio/devices/iio:device0$ ls -l
-total 0
--r--r--r-- 1 root root 4096 Oct 27 20:27 dev
--rw-r--r-- 1 root root 4096 Oct 27 20:27 illuminance0_calibbias
---w------- 1 root root 4096 Oct 27 20:27 illuminance0_calibrate
--rw-r--r-- 1 root root 4096 Oct 27 20:27 illuminance0_calibscale
--r--r--r-- 1 root root 4096 Oct 27 20:27 illuminance0_calibscale_available
--r--r--r-- 1 root root 4096 Oct 27 20:27 illuminance0_input
--rw-r--r-- 1 root root 4096 Oct 27 20:27 illuminance0_input_target
--rw-r--r-- 1 root root 4096 Oct 27 20:27 illuminance0_integration_time
--r--r--r-- 1 root root 4096 Oct 27 20:27 illuminance0_integration_time_available
--rw-r--r-- 1 root root 4096 Oct 27 20:27 illuminance0_lux_table
--r--r--r-- 1 root root 4096 Oct 27 20:27 name
-lrwxrwxrwx 1 root root    0 Oct 27 20:27 of_node ->
- ../../../../../../../firmware/devicetree/base/soc/i2c@7e804000/tsl2581@29/
-drwxr-xr-x 2 root root    0 Oct 27 20:27 power/
--rw-r--r-- 1 root root 4096 Oct 27 20:27 power_state
-lrwxrwxrwx 1 root root    0 Oct 27 20:27 subsystem -> ../../../../../../../bus/iio/
--rw-r--r-- 1 root root 4096 Oct 27 20:27 uevent
-
-sysfs attribute names after this patch set:
-
-raspberrypi:/sys/bus/iio/devices/iio:device0$ ls -l
-total 0
--r--r--r-- 1 root root 4096 Oct 27 22:29 dev
--rw-r--r-- 1 root root 4096 Oct 27 22:29 in_illuminance_both_raw
--rw-r--r-- 1 root root 4096 Oct 27 22:29 in_illuminance_calibbias
---w------- 1 root root 4096 Oct 27 22:29 in_illuminance_calibrate
--rw-r--r-- 1 root root 4096 Oct 27 22:29 in_illuminance_calibscale
--r--r--r-- 1 root root 4096 Oct 27 22:29 in_illuminance_calibscale_available
--rw-r--r-- 1 root root 4096 Oct 27 22:29 in_illuminance_input
--rw-r--r-- 1 root root 4096 Oct 27 22:29 in_illuminance_input_target
--rw-r--r-- 1 root root 4096 Oct 27 22:29 in_illuminance_integration_time
--r--r--r-- 1 root root 4096 Oct 27 22:29 in_illuminance_integration_time_available
--rw-r--r-- 1 root root 4096 Oct 27 22:29 in_illuminance_ir_raw
--rw-r--r-- 1 root root 4096 Oct 27 22:29 in_illuminance_lux_table
--r--r--r-- 1 root root 4096 Oct 27 22:29 name
-lrwxrwxrwx 1 root root    0 Oct 27 22:29 of_node ->
- ../../../../../../../firmware/devicetree/base/soc/i2c@7e804000/tsl2581@29/
-drwxr-xr-x 2 root root    0 Oct 27 22:29 power/
-lrwxrwxrwx 1 root root    0 Oct 27 22:29 subsystem ->
- ../../../../../../../bus/iio/
--rw-r--r-- 1 root root 4096 Oct 27 22:23 uevent
-
-Brian Masney (10):
-  staging: iio: tsl2583: add of_match table for device tree support
-  staging: iio: tsl2583: check for error code from i2c_smbus_read_byte()
-  staging: iio: tsl2583: return proper error code instead of -1
-  staging: iio: tsl2583: remove redundant power_state sysfs attribute
-  staging: iio: tsl2583: check return values from taos_chip_{on,off}
-  staging: iio: tsl2583: convert to use iio_chan_spec and
-    {read,write}_raw
-  staging: iio: tsl2583: convert illuminance0_calibscale sysfs attr to
-    use iio_chan_spec
-  staging: iio: tsl2583: use IIO_*_ATTR* macros to create sysfs entries
-  staging: iio: tsl2583: add error code to sysfs store functions
-  staging: iio: tsl2583: add locking to sysfs attributes
-
- .../devicetree/bindings/iio/light/tsl2583.txt      |  26 ++
- drivers/staging/iio/light/tsl2583.c                | 509 +++++++++++----------
- 2 files changed, 288 insertions(+), 247 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2583.txt
-
+diff --git a/drivers/staging/iio/light/tsl2583.c b/drivers/staging/iio/light/tsl2583.c
+index fd4b6ef..35c1696 100644
+--- a/drivers/staging/iio/light/tsl2583.c
++++ b/drivers/staging/iio/light/tsl2583.c
+@@ -171,7 +171,14 @@ taos_i2c_read(struct i2c_client *client, u8 reg, u8 *val, unsigned int len)
+ 			return ret;
+ 		}
+ 		/* read the data */
+-		*val = i2c_smbus_read_byte(client);
++		ret = i2c_smbus_read_byte(client);
++		if (ret < 0) {
++			dev_err(&client->dev,
++				"%s failed to read byte after writing to register %x\n",
++				__func__, reg);
++			return ret;
++		}
++		*val = ret;
+ 		val++;
+ 		reg++;
+ 	}
+@@ -355,6 +362,13 @@ static int taos_als_calibrate(struct iio_dev *indio_dev)
+ 	}
+ 
+ 	reg_val = i2c_smbus_read_byte(chip->client);
++	if (reg_val < 0) {
++		dev_err(&chip->client->dev,
++			"%s failed to read after writing to the CNTRL register\n",
++			__func__);
++		return ret;
++	}
++
+ 	if ((reg_val & (TSL258X_CNTL_ADC_ENBL | TSL258X_CNTL_PWR_ON))
+ 			!= (TSL258X_CNTL_ADC_ENBL | TSL258X_CNTL_PWR_ON)) {
+ 		dev_err(&chip->client->dev,
+@@ -371,6 +385,12 @@ static int taos_als_calibrate(struct iio_dev *indio_dev)
+ 		return ret;
+ 	}
+ 	reg_val = i2c_smbus_read_byte(chip->client);
++	if (reg_val < 0) {
++		dev_err(&chip->client->dev,
++			"%s failed to read after writing to the STATUS register\n",
++			__func__);
++		return ret;
++	}
+ 
+ 	if ((reg_val & TSL258X_STA_ADC_VALID) != TSL258X_STA_ADC_VALID) {
+ 		dev_err(&chip->client->dev,
 -- 
 2.7.4
