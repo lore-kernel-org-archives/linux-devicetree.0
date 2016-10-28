@@ -1,81 +1,58 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] arm64: arch_timer: Work around Erratum
- Hisilicon-161601
-Date: Fri, 28 Oct 2016 17:00:00 +0100
-Message-ID: <20161028160000.GB1076@arm.com>
-References: <1477553651-13428-1-git-send-email-dingtianhong@huawei.com>
- <1477553651-13428-3-git-send-email-dingtianhong@huawei.com>
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: Re: specifying order of /dev/mmcblk devices via device-tree?
+Date: Fri, 28 Oct 2016 09:45:00 -0700
+Message-ID: <CAJ+vNU26tx-1bLKNpzYJ0UCeFJ-SczZOca1dYdt5mCGDxAuKTQ@mail.gmail.com>
+References: <CAJ+vNU1g8nQedd06LeaD10YWUQ_UmdRToUMFKaTNT1aNY56b0g@mail.gmail.com>
+ <20161028153755.GL5806@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1477553651-13428-3-git-send-email-dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20161028153755.GL5806@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ding,
+On Fri, Oct 28, 2016 at 8:37 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Fri, Oct 28, 2016 at 08:23:04AM -0700, Tim Harvey wrote:
+>> Greetings,
+>>
+>> I have an IMX6 board that has the following:
+>> sdhc1: mmc0: sdio radio
+>> sdhc2: mmc1: /dev/mmcblk1: microSD connector
+>> sdhc3: mmc2: /dev/mmcblk2: on-board eMMC
+>>
+>> I would like to have sdhc3 registered as /dev/mmcblk0 and sdhc2
+>> registered as /dev/mmcblk1 so that permanent storage is the first
+>> mmcblk device as I think this is more intuitive however currently
+>> these get instanced in the order they appear in the imx6qdl.dtsi
+>> device-tree configuration and are not able to be mapped the way I want
+>> them in my dts file.
+>>
+>> Is there a way, or if not is there a desire for a way, to specify the
+>> order of /dev/mmcblk devices via device-tree?
+>
+> As with many other devices, there is no standard way of controlling the
+> Linux enumeration (and given the ID space is shared with other dynamic
+> devices it's not something that could generally work).
+>
+> These should be refererd to by UUID if possible.
+>
+> If not, we could cosider adding a by-dt-path or something like that.
+>
+> Thanks,
+> Mark.
 
-On Thu, Oct 27, 2016 at 03:34:10PM +0800, Ding Tianhong wrote:
-> Erratum Hisilicon-161601 says that the ARM generic timer counter "has the
-> potential to contain an erroneous value when the timer value changes".
-> Accesses to TVAL (both read and write) are also affected due to the implicit counter
-> read.  Accesses to CVAL are not affected.
-> 
-> The workaround is to reread the system count registers until the value of the second
-> read is larger than the first one by less than 32, the system counter can be guaranteed
-> not to return wrong value twice by back-to-back read and the error value is always larger
-> than the correct one by 32. Writes to TVAL are replaced with an equivalent write to CVAL.
-> 
-> The workaround is enabled if the hisilicon,erratum-161601 property is found in
-> the timer node in the device tree.  This can be overridden with the
-> clocksource.arm_arch_timer.hisilicon-161601 boot parameter, which allows KVM
-> users to enable the workaround until a mechanism is implemented to
-> automatically communicate this information.
-> 
-> Fix some description for fsl erratum a008585.
-> 
-> v2: Significant rework based on feedback, including seperate the fsl erratum a008585
->     to another patch, update the erratum name and remove unwanted code.
-> 
-> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
+Mark / Javier/ Fabio,
 
-[...]
+Thanks - this is very useful.
 
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 8a753fd..4aafb6a 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -312,8 +312,20 @@ config FSL_ERRATUM_A008585
->  	help
->  	  This option enables a workaround for Freescale/NXP Erratum
->  	  A-008585 ("ARM generic timer may contain an erroneous
-> -	  value").  The workaround will only be active if the
-> +	  value").  The workaround will be active if the
->  	  fsl,erratum-a008585 property is found in the timer node.
-> +	  This can be overridden with the clocksource.arm_arch_timer.fsl-a008585
-> +	  boot parameter.
-> +
-> +config HISILICON_ERRATUM_161601
-> +	bool "Workaround for Hisilicon Erratum 161601"
-> +	default y
-> +	depends on ARM_ARCH_TIMER && ARM64
-> +	help
-> +	  This option enables a workaround for Hisilicon Erratum
-> +	  161601. The workaround will be active if the hisilicon,erratum-161601
-> +	  property is found in the timer node. This can be overridden with
-> +	  the clocksource.arm_arch_timer.hisilicon-161601 boot parameter.
+Yes, I agree that using UUID's is the way to go and now I see how that
+can be easily accessed via uboot 'part' command.
 
-I'm really not keen on having a kernel commandline parameter for this.
-It's not something we've done for other, similar errata (e.g. CNTFRQ
-reporting the wrong value) and I think it's a slippery slope to having
-more of these workarounds controlled at boot-time. If you have a board
-that is affected by this, it's always going to need the workaround. Why
-would you turn it off?
+Regards,
 
-Will
+Tim
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
