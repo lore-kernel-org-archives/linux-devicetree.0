@@ -1,103 +1,78 @@
-From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] of, numa: Add function to disable of_node_to_nid().
-Date: Fri, 28 Oct 2016 10:02:37 -0700
-Message-ID: <581384AD.1000309@gmail.com>
-References: <1477431061-7258-1-git-send-email-ddaney.cavm@gmail.com> <1477431061-7258-2-git-send-email-ddaney.cavm@gmail.com> <20161028101905.GA6343@arm.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v6 4/5] ARM: DTS: da850: Add cfgchip syscon node
+Date: Fri, 28 Oct 2016 10:08:59 -0700
+Message-ID: <m2fungcses.fsf@baylibre.com>
+References: <1477451211-31979-1-git-send-email-david@lechnology.com>
+        <1477451211-31979-5-git-send-email-david@lechnology.com>
+        <b9bfc4aa-ef52-53c4-dc7e-c0bc1c5969fb@lechnology.com>
+        <09eb61b9-d66e-838e-2411-d787fda65096@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161028101905.GA6343-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Gilbert Netzer <noname-QVTQ4TwcpgDLoDKTGw+V6w@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <09eb61b9-d66e-838e-2411-d787fda65096@ti.com> (Sekhar Nori's
+        message of "Fri, 28 Oct 2016 13:51:03 +0530")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Axel Haslam <ahaslam@baylibre.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/28/2016 03:19 AM, Will Deacon wrote:
-> On Tue, Oct 25, 2016 at 02:31:00PM -0700, David Daney wrote:
->> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>
->> On arm64 NUMA kernels we can pass "numa=off" on the command line to
->> disable NUMA.  A side effect of this is that kmalloc_node() calls to
->> non-zero nodes will crash the system with an OOPS:
->>
->> [    0.000000] [<fffffc00081bba84>] __alloc_pages_nodemask+0xa4/0xe68
->> [    0.000000] [<fffffc00082163a8>] new_slab+0xd0/0x57c
->> [    0.000000] [<fffffc000821879c>] ___slab_alloc+0x2e4/0x514
->> [    0.000000] [<fffffc000823882c>] __slab_alloc+0x48/0x58
->> [    0.000000] [<fffffc00082195a0>] __kmalloc_node+0xd0/0x2e0
->> [    0.000000] [<fffffc00081119b8>] __irq_domain_add+0x7c/0x164
->> [    0.000000] [<fffffc0008b75d30>] its_probe+0x784/0x81c
->> [    0.000000] [<fffffc0008b75e10>] its_init+0x48/0x1b0
->> .
->> .
->> .
->>
->> This is caused by code like this in kernel/irq/irqdomain.c
->>
->>      domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) * size),
->>                    GFP_KERNEL, of_node_to_nid(of_node));
->>
->> When NUMA is disabled, the concept of a node is really undefined, so
->> of_node_to_nid() should unconditionally return NUMA_NO_NODE.
->>
->> Add __of_force_no_numa() to allow of_node_to_nid() to be forced to
->> return NUMA_NO_NODE.
->>
->> The follow on patch will call this new function from the arm64 numa
->> code.
->>
->> Reported-by: Gilbert Netzer <noname-QVTQ4TwcpgDLoDKTGw+V6w@public.gmane.org>
->> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> ---
->>   drivers/of/of_numa.c | 15 +++++++++++++++
->>   include/linux/of.h   |  2 ++
->>   2 files changed, 17 insertions(+)
->>
->> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
->> index f63d4b0d..2212299 100644
->> --- a/drivers/of/of_numa.c
->> +++ b/drivers/of/of_numa.c
->> @@ -150,12 +150,27 @@ static int __init of_numa_parse_distance_map(void)
->>   	return ret;
->>   }
->>
->> +static bool of_force_no_numa;
->> +
->> +void __of_force_no_numa(void)
->> +{
->> +	of_force_no_numa = true;
->> +}
->> +
->>   int of_node_to_nid(struct device_node *device)
->>   {
->>   	struct device_node *np;
->>   	u32 nid;
->>   	int r = -ENODATA;
->>
->> +	/*
->> +	 * If NUMA forced off, nodes are meaningless.  Return
->> +	 * NUMA_NO_NODE so that any node specific memory allocations
->> +	 * can succeed from the default pool.
->> +	 */
->> +	if (of_force_no_numa)
->> +		return NUMA_NO_NODE;
+Sekhar Nori <nsekhar@ti.com> writes:
+
+> On Wednesday 26 October 2016 09:38 PM, David Lechner wrote:
+>> On 10/25/2016 10:06 PM, David Lechner wrote:
+>>> Add a syscon node for the SoC CFGCHIPn registers. This is needed for
+>>> the new usb phy driver.
+>>>
+>>> Signed-off-by: David Lechner <david@lechnology.com>
+>>> ---
+>>>  arch/arm/boot/dts/da850.dtsi | 4 ++++
+>>>  1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+>>> index f79e1b9..6bbf20d 100644
+>>> --- a/arch/arm/boot/dts/da850.dtsi
+>>> +++ b/arch/arm/boot/dts/da850.dtsi
+>>> @@ -188,6 +188,10 @@
+>>>              };
+>>>
+>>>          };
+>>> +        cfgchip: cfgchip@1417c {
+>> 
+>> I wonder if there is a more generic name instead of cfgchip@. Is there a
+>> preferred generic name for syscon nodes?
 >
-> Why don't you just check if the nid you get back from the device is set in
-> numa_nodes_parsed and return NUMA_NO_NODE if not?
-
-numa_nodes_parsed is __initdata.  Perhaps node_possible_map would be better.
-
-I will try that.
-
-David.
-
-
+> I did not find anything in ePAPR, but chip-controller might be more
+> appropriate.
 >
-> Will
+>> 
+>>> +            compatible = "ti,da830-cfgchip", "syscon";
 >
+> Looks like we need "simple-mfd" too in the compatible list?
+>
+> I think we can also fold patch 5/5 into this patch and add the cfgchip
+> along with USB phy child node included.
+>
+> If you respin the patch, I can drop 4/5 and 5/5 that I have queued and
+> included the updated patch instead.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sekhar, what's your opinion of having this syscon just for CFGCHIP* vs 
+a single syscon for the whole SYSCFG0 region.
+
+The drivers/bus driver from Bartosz is also using SYSCFG0 registers, and
+proposing a sysconf ro this region, but it will need to exclude the
+CFGCHIPn registers if we also have this syscon.
+
+I tend to think we should just have one for the whole SYSCFG0 which
+this series could use.
+
+Unfortunately, the PHY driver is already merged and it references the
+syscon by compatible.  The PHY driver should probably be fixed to find
+its syscon by phandle, and then maybe we could move to a single syscon
+for SYSCFG0?
+
+Let us know your preference, I don't have a very strong feeling either
+way, but since we're already part way down the path of the CFGCHIP
+syscon, we should keep it and later migrate it to one for all of
+SYSCFG0.
+
+Kevin
