@@ -1,30 +1,30 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH resent v3 2/3] dts: omap5: board-common: enable twl6040
- headset jack detection
-Date: Fri, 28 Oct 2016 06:11:00 -0700
-Message-ID: <20161028131059.jbcmlmakfmovq2jj@atomide.com>
-References: <cover.1477417090.git.hns@goldelico.com>
- <b918b86fd1d1f7e6fb2c15bb507b84d5cf1f0d3e.1477417090.git.hns@goldelico.com>
- <06084abe-015a-ed84-2ce3-779be5744773@ti.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v2 3/3] reset: Add the TI SCI reset driver
+Date: Fri, 28 Oct 2016 08:20:26 -0500
+Message-ID: <CAGo_u6qvaYg=jzYsB9EgJdiHQs70yebSDrb1pSucN3GiYPJJRA@mail.gmail.com>
+References: <20161027214941.24641-1-afd@ti.com> <20161027214941.24641-4-afd@ti.com>
+ <1477647364.3010.28.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <06084abe-015a-ed84-2ce3-779be5744773@ti.com>
+In-Reply-To: <1477647364.3010.28.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, letux-kernel@openphoenux.org, linux-kernel@vger.kernel.org, ldewangan@nvidia.com, kernel@pyra-handheld.com, marek@goldelico.com, linux-omap@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: "Andrew F. Davis" <afd@ti.com>, Mark Rutland <mark.rutland@arm.com>, dt list <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [161026 01:03]:
-> On 10/25/16 20:38, H. Nikolaus Schaller wrote:
-> > Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> 
-> I'm not sure if this is valid for igep0500 as I have not seen the schematics.
-> It might be safer to enable the jack detection only for omap5-uevm?
+On Fri, Oct 28, 2016 at 4:36 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> Hi Andrew,
+>
+> is there (going to be) as stable branch I can base these on, or should I
+> just wait until the prerequisite patches appear in arm-soc/for-next?
+>
 
-FYI it's pretty much the same design and audio worked fine on igepv5
-the last time I tested it. I guess a good reason to drill a new hole
-to my pi-top case for the audio jack :)
 
-Tony
+TISCI is still to be merged.
+http://marc.info/?l=linux-arm-kernel&m=147756439730680&w=2 pull
+request for 4.10 was send out recently.
+
+---
+Regards,
+Nishanth Menon
