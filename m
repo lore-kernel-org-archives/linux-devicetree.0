@@ -1,89 +1,60 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH 1/2] of, numa: Add function to disable of_node_to_nid().
-Date: Fri, 28 Oct 2016 11:19:05 +0100
-Message-ID: <20161028101905.GA6343@arm.com>
-References: <1477431061-7258-1-git-send-email-ddaney.cavm@gmail.com>
- <1477431061-7258-2-git-send-email-ddaney.cavm@gmail.com>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: hi6220: add resets property into
+ dwmmc nodes
+Date: Fri, 28 Oct 2016 18:19:19 +0800
+Message-ID: <20161028101919.GA25564@leoy-linaro>
+References: <1472094041-5357-2-git-send-email-guodong.xu@linaro.org>
+ <CAKfTPtB0FtGbm4C5z+LJizrsHikKt_BGFti5XY+LN3w7zO1Vjw@mail.gmail.com>
+ <CALAqxLXfb48h8hMQmAaJ+YjA5=pekkQ8Dg8ReL6VTTfmuFRPDw@mail.gmail.com>
+ <CAKfTPtAXdkKcfpHmUmQNwuJxO0PORcCf49noST_CCkZPigPwgw@mail.gmail.com>
+ <CGME20161028072654epcas4p13cbf983b3e22dd96039ed33a4ac792d5@epcas4p1.samsung.com>
+ <20161028072640.GB17266@leoy-linaro>
+ <d7993c1a-5e50-9a33-0900-5c1a79884d3c@samsung.com>
+ <20161028073830.GC17266@leoy-linaro>
+ <24930ad4-313f-a4f0-c89a-770238863816@samsung.com>
+ <95e22336-0465-f1e1-71b8-548d0e6ee8b7@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1477431061-7258-2-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Robert Richter <rric@kernel.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Gilbert Netzer <noname@pdc.kth.se>, David Daney <david.daney@cavium.com>
+In-Reply-To: <95e22336-0465-f1e1-71b8-548d0e6ee8b7-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fathi Boudra <fathi.boudra-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 02:31:00PM -0700, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
-> 
-> On arm64 NUMA kernels we can pass "numa=off" on the command line to
-> disable NUMA.  A side effect of this is that kmalloc_node() calls to
-> non-zero nodes will crash the system with an OOPS:
-> 
-> [    0.000000] [<fffffc00081bba84>] __alloc_pages_nodemask+0xa4/0xe68
-> [    0.000000] [<fffffc00082163a8>] new_slab+0xd0/0x57c
-> [    0.000000] [<fffffc000821879c>] ___slab_alloc+0x2e4/0x514
-> [    0.000000] [<fffffc000823882c>] __slab_alloc+0x48/0x58
-> [    0.000000] [<fffffc00082195a0>] __kmalloc_node+0xd0/0x2e0
-> [    0.000000] [<fffffc00081119b8>] __irq_domain_add+0x7c/0x164
-> [    0.000000] [<fffffc0008b75d30>] its_probe+0x784/0x81c
-> [    0.000000] [<fffffc0008b75e10>] its_init+0x48/0x1b0
-> .
-> .
-> .
-> 
-> This is caused by code like this in kernel/irq/irqdomain.c
-> 
->     domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) * size),
->                   GFP_KERNEL, of_node_to_nid(of_node));
-> 
-> When NUMA is disabled, the concept of a node is really undefined, so
-> of_node_to_nid() should unconditionally return NUMA_NO_NODE.
-> 
-> Add __of_force_no_numa() to allow of_node_to_nid() to be forced to
-> return NUMA_NO_NODE.
-> 
-> The follow on patch will call this new function from the arm64 numa
-> code.
-> 
-> Reported-by: Gilbert Netzer <noname@pdc.kth.se>
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> ---
->  drivers/of/of_numa.c | 15 +++++++++++++++
->  include/linux/of.h   |  2 ++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-> index f63d4b0d..2212299 100644
-> --- a/drivers/of/of_numa.c
-> +++ b/drivers/of/of_numa.c
-> @@ -150,12 +150,27 @@ static int __init of_numa_parse_distance_map(void)
->  	return ret;
->  }
->  
-> +static bool of_force_no_numa;
-> +
-> +void __of_force_no_numa(void)
-> +{
-> +	of_force_no_numa = true;
-> +}
-> +
->  int of_node_to_nid(struct device_node *device)
->  {
->  	struct device_node *np;
->  	u32 nid;
->  	int r = -ENODATA;
->  
-> +	/*
-> +	 * If NUMA forced off, nodes are meaningless.  Return
-> +	 * NUMA_NO_NODE so that any node specific memory allocations
-> +	 * can succeed from the default pool.
-> +	 */
-> +	if (of_force_no_numa)
-> +		return NUMA_NO_NODE;
+On Fri, Oct 28, 2016 at 06:54:58PM +0900, Jaehoon Chung wrote:
 
-Why don't you just check if the nid you get back from the device is set in
-numa_nodes_parsed and return NUMA_NO_NODE if not?
+[...]
 
-Will
+> >>> Could you share the log? Is there any log about failure?
+> >>
+> >> Sure, please see below log:
+> > 
+> > It's related with -EPROBE_DEFER..I'm not sure but if CONFIG_RESET_CONTROLLER is enabled, it's searching for reset controller.
+> > Maybe hi6220 has handled the reset controller(?)...
+> > 
+> > I'm checking devm_reset_control_xxx...It's possible to occur the other boards which enabled RESET_CONTROLLER..
+> 
+> Could you check the below thing..
+> 
+>         /* find reset controller when exist */
+> -       pdata->rstc = devm_reset_control_get_optional(dev, NULL);
+> +       pdata->rstc = devm_reset_control_get_optional(dev, "dwmci-reset");
+>         if (IS_ERR(pdata->rstc)) {
+>                 if (PTR_ERR(pdata->rstc) == -EPROBE_DEFER)
+>                         return ERR_PTR(-EPROBE_DEFER);
+
+Confirmed with this fixing, the kernel can bootup successfully.
+
+Thanks for this.
+
+> To prevent the wrong controlling, how about adding "#reset-names" for dwmmc controller?
+> 
+> 
+> Best Regards,
+> Jaehoon Chung
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
