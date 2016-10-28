@@ -1,220 +1,272 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "ASoC: simple-scu-card: code sync: follow to simple family style" to the asoc tree
-Date: Fri, 28 Oct 2016 19:49:12 +0100
-Message-ID: <E1c0CDI-0005yQ-US@finisterre>
-References: <87r37f4c6v.wl%kuninori.morimoto.gx@renesas.com>
+From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] lib: add bitrev8x4()
+Date: Sat, 29 Oct 2016 02:50:50 +0800
+Message-ID: <201610290238.7mbLvCQP%fengguang.wu@intel.com>
+References: <bc92eb1507448731163ae67fc888668d327f9168.1477669745.git.stillcompiling@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="PNTmBPCT7hxwcZjr"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87r37f4c6v.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <bc92eb1507448731163ae67fc888668d327f9168.1477669745.git.stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Laurent <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guennadi <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
 
-   ASoC: simple-scu-card: code sync: follow to simple family style
+--PNTmBPCT7hxwcZjr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-has been applied to the asoc tree at
+Hi Joshua,
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+[auto build test WARNING on linus/master]
+[also build test WARNING on v4.9-rc2 next-20161028]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+[Suggest to use git(>=2.9.0) format-patch --base=<commit> (or --base=auto for convenience) to record what (public, well-known) commit your patch series was built on]
+[Check https://git-scm.com/docs/git-format-patch for more information]
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+url:    https://github.com/0day-ci/linux/commits/Joshua-Clayton/lib-add-bitrev8x4/20161029-012535
+config: arm-s5pv210_defconfig (attached as .config)
+compiler: arm-linux-gnueabi-gcc (Debian 6.1.1-9) 6.1.1 20160705
+reproduce:
+        wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        make.cross ARCH=arm 
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+All warnings (new ones prefixed by >>):
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+   In file included from include/linux/bitrev.h:7:0,
+                    from include/linux/crc32.h:9,
+                    from lib/crc32.c:29:
+   arch/arm/include/asm/bitrev.h: In function '__arch_bitrev8x4':
+>> arch/arm/include/asm/bitrev.h:23:1: warning: no return statement in function returning non-void [-Wreturn-type]
+    }
+    ^
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+vim +23 arch/arm/include/asm/bitrev.h
 
-Thanks,
-Mark
+     7		return x;
+     8	}
+     9	
+    10	static __always_inline __attribute_const__ u16 __arch_bitrev16(u16 x)
+    11	{
+    12		return __arch_bitrev32((u32)x) >> 16;
+    13	}
+    14	
+    15	static __always_inline __attribute_const__ u8 __arch_bitrev8(u8 x)
+    16	{
+    17		return __arch_bitrev32((u32)x) >> 24;
+    18	}
+    19	
+    20	static __always_inline __attribute_const__ u32 __arch_bitrev8x4(u32 x)
+    21	{
+    22		__asm__ ("rbit %0, %1; rev %0, %0" : "=r" (x) : "r" (x));
+  > 23	}
+    24	
+    25	#endif
 
->From 15a190ffec3b3f5e632faaa01b92f4cef32d63a3 Mon Sep 17 00:00:00 2001
-From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Date: Fri, 28 Oct 2016 03:37:26 +0000
-Subject: [PATCH] ASoC: simple-scu-card: code sync: follow to simple family
- style
-
-simple sound card family are using very similar style, but because of its
-historical reason, there are small differences. For example pointer style,
-function name, caller postion etc...
-This patch synchronized simple card style to other simple card family
-
-Current simple-scu-card function naming is different from other simple card
-family. And related to it, the necessary operation position is also
-different. This patch synchronize these to other simple card family.
-
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- sound/soc/generic/simple-scu-card.c | 99 ++++++++++++++++---------------------
- 1 file changed, 43 insertions(+), 56 deletions(-)
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-diff --git a/sound/soc/generic/simple-scu-card.c b/sound/soc/generic/simple-scu-card.c
-index b9973a56bcb0..b8d8437ef3dd 100644
---- a/sound/soc/generic/simple-scu-card.c
-+++ b/sound/soc/generic/simple-scu-card.c
-@@ -101,7 +101,7 @@ static int asoc_simple_card_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
- 	return 0;
- }
- 
--static int asoc_simple_card_parse_links(struct device_node *np,
-+static int asoc_simple_card_dai_link_of(struct device_node *np,
- 					struct asoc_simple_card_priv *priv,
- 					unsigned int daifmt,
- 					int idx, bool is_fe)
-@@ -195,22 +195,35 @@ static int asoc_simple_card_parse_links(struct device_node *np,
- 	return 0;
- }
- 
--static int asoc_simple_card_dai_link_of(struct device_node *node,
--				 struct asoc_simple_card_priv *priv)
-+static int asoc_simple_card_parse_of(struct device_node *node,
-+				     struct asoc_simple_card_priv *priv)
-+
- {
- 	struct device *dev = simple_priv_to_dev(priv);
- 	struct device_node *np;
- 	unsigned int daifmt = 0;
--	int ret, i;
- 	bool is_fe;
-+	int ret, i;
-+
-+	if (!node)
-+		return -EINVAL;
-+
-+	ret = snd_soc_of_parse_audio_routing(&priv->snd_card, PREFIX "routing");
-+	if (ret < 0)
-+		return ret;
-+
-+	/* sampling rate convert */
-+	of_property_read_u32(node, PREFIX "convert-rate", &priv->convert_rate);
-+
-+	/* channels transfer */
-+	of_property_read_u32(node, PREFIX "convert-channels", &priv->convert_channels);
- 
- 	/* find 1st codec */
- 	np = of_get_child_by_name(node, PREFIX "codec");
- 	if (!np)
- 		return -ENODEV;
- 
--	ret = asoc_simple_card_parse_daifmt(dev, node, np,
--					    PREFIX, &daifmt);
-+	ret = asoc_simple_card_parse_daifmt(dev, node, np, PREFIX, &daifmt);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -220,58 +233,12 @@ static int asoc_simple_card_dai_link_of(struct device_node *node,
- 		if (strcmp(np->name, PREFIX "cpu") == 0)
- 			is_fe = true;
- 
--		ret = asoc_simple_card_parse_links(np, priv, daifmt, i, is_fe);
-+		ret = asoc_simple_card_dai_link_of(np, priv, daifmt, i, is_fe);
- 		if (ret < 0)
- 			return ret;
- 		i++;
- 	}
- 
--	return 0;
--}
--
--static int asoc_simple_card_parse_of(struct device_node *node,
--			      struct asoc_simple_card_priv *priv,
--			      struct device *dev)
--{
--	struct asoc_simple_dai *props;
--	struct snd_soc_dai_link *links;
--	int ret;
--	int num;
--
--	if (!node)
--		return -EINVAL;
--
--	num = of_get_child_count(node);
--	props = devm_kzalloc(dev, sizeof(*props) * num, GFP_KERNEL);
--	links = devm_kzalloc(dev, sizeof(*links) * num, GFP_KERNEL);
--	if (!props || !links)
--		return -ENOMEM;
--
--	priv->dai_props	= props;
--	priv->dai_link	= links;
--
--	/* Init snd_soc_card */
--	priv->snd_card.owner			= THIS_MODULE;
--	priv->snd_card.dev			= dev;
--	priv->snd_card.dai_link			= priv->dai_link;
--	priv->snd_card.num_links		= num;
--	priv->snd_card.codec_conf		= &priv->codec_conf;
--	priv->snd_card.num_configs		= 1;
--
--	ret = snd_soc_of_parse_audio_routing(&priv->snd_card, PREFIX "routing");
--	if (ret < 0)
--		return ret;
--
--	/* sampling rate convert */
--	of_property_read_u32(node, PREFIX "convert-rate", &priv->convert_rate);
--
--	/* channels transfer */
--	of_property_read_u32(node, PREFIX "convert-channels", &priv->convert_channels);
--
--	ret = asoc_simple_card_dai_link_of(node, priv);
--	if (ret < 0)
--		return ret;
--
- 	ret = asoc_simple_card_parse_card_name(&priv->snd_card, PREFIX);
- 	if (ret < 0)
- 		return ret;
-@@ -287,16 +254,36 @@ static int asoc_simple_card_parse_of(struct device_node *node,
- static int asoc_simple_card_probe(struct platform_device *pdev)
- {
- 	struct asoc_simple_card_priv *priv;
--	struct device_node *np = pdev->dev.of_node;
-+	struct snd_soc_dai_link *links;
-+	struct asoc_simple_dai *props;
- 	struct device *dev = &pdev->dev;
--	int ret;
-+	struct device_node *np = pdev->dev.of_node;
-+	int num, ret;
- 
- 	/* Allocate the private data */
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
- 
--	ret = asoc_simple_card_parse_of(np, priv, dev);
-+	num = of_get_child_count(np);
-+
-+	props = devm_kzalloc(dev, sizeof(*props) * num, GFP_KERNEL);
-+	links = devm_kzalloc(dev, sizeof(*links) * num, GFP_KERNEL);
-+	if (!props || !links)
-+		return -ENOMEM;
-+
-+	priv->dai_props				= props;
-+	priv->dai_link				= links;
-+
-+	/* Init snd_soc_card */
-+	priv->snd_card.owner			= THIS_MODULE;
-+	priv->snd_card.dev			= dev;
-+	priv->snd_card.dai_link			= priv->dai_link;
-+	priv->snd_card.num_links		= num;
-+	priv->snd_card.codec_conf		= &priv->codec_conf;
-+	priv->snd_card.num_configs		= 1;
-+
-+	ret = asoc_simple_card_parse_of(np, priv);
- 	if (ret < 0) {
- 		if (ret != -EPROBE_DEFER)
- 			dev_err(dev, "parse error %d\n", ret);
--- 
-2.10.1
+--PNTmBPCT7hxwcZjr
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
+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
+
+--PNTmBPCT7hxwcZjr--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
