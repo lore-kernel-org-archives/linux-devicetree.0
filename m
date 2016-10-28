@@ -1,38 +1,89 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 0/3] ARM: dts: sun9i: Enable SDIO-based WiFi
-Date: Fri, 28 Oct 2016 18:11:51 +0800
-Message-ID: <20161028101154.7350-1-wens@csie.org>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 1/2] of, numa: Add function to disable of_node_to_nid().
+Date: Fri, 28 Oct 2016 11:19:05 +0100
+Message-ID: <20161028101905.GA6343@arm.com>
+References: <1477431061-7258-1-git-send-email-ddaney.cavm@gmail.com>
+ <1477431061-7258-2-git-send-email-ddaney.cavm@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1477431061-7258-2-git-send-email-ddaney.cavm@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Robert Richter <rric@kernel.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Gilbert Netzer <noname@pdc.kth.se>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+On Tue, Oct 25, 2016 at 02:31:00PM -0700, David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
+> 
+> On arm64 NUMA kernels we can pass "numa=off" on the command line to
+> disable NUMA.  A side effect of this is that kmalloc_node() calls to
+> non-zero nodes will crash the system with an OOPS:
+> 
+> [    0.000000] [<fffffc00081bba84>] __alloc_pages_nodemask+0xa4/0xe68
+> [    0.000000] [<fffffc00082163a8>] new_slab+0xd0/0x57c
+> [    0.000000] [<fffffc000821879c>] ___slab_alloc+0x2e4/0x514
+> [    0.000000] [<fffffc000823882c>] __slab_alloc+0x48/0x58
+> [    0.000000] [<fffffc00082195a0>] __kmalloc_node+0xd0/0x2e0
+> [    0.000000] [<fffffc00081119b8>] __irq_domain_add+0x7c/0x164
+> [    0.000000] [<fffffc0008b75d30>] its_probe+0x784/0x81c
+> [    0.000000] [<fffffc0008b75e10>] its_init+0x48/0x1b0
+> .
+> .
+> .
+> 
+> This is caused by code like this in kernel/irq/irqdomain.c
+> 
+>     domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) * size),
+>                   GFP_KERNEL, of_node_to_nid(of_node));
+> 
+> When NUMA is disabled, the concept of a node is really undefined, so
+> of_node_to_nid() should unconditionally return NUMA_NO_NODE.
+> 
+> Add __of_force_no_numa() to allow of_node_to_nid() to be forced to
+> return NUMA_NO_NODE.
+> 
+> The follow on patch will call this new function from the arm64 numa
+> code.
+> 
+> Reported-by: Gilbert Netzer <noname@pdc.kth.se>
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> ---
+>  drivers/of/of_numa.c | 15 +++++++++++++++
+>  include/linux/of.h   |  2 ++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+> index f63d4b0d..2212299 100644
+> --- a/drivers/of/of_numa.c
+> +++ b/drivers/of/of_numa.c
+> @@ -150,12 +150,27 @@ static int __init of_numa_parse_distance_map(void)
+>  	return ret;
+>  }
+>  
+> +static bool of_force_no_numa;
+> +
+> +void __of_force_no_numa(void)
+> +{
+> +	of_force_no_numa = true;
+> +}
+> +
+>  int of_node_to_nid(struct device_node *device)
+>  {
+>  	struct device_node *np;
+>  	u32 nid;
+>  	int r = -ENODATA;
+>  
+> +	/*
+> +	 * If NUMA forced off, nodes are meaningless.  Return
+> +	 * NUMA_NO_NODE so that any node specific memory allocations
+> +	 * can succeed from the default pool.
+> +	 */
+> +	if (of_force_no_numa)
+> +		return NUMA_NO_NODE;
 
-Now that we have support for both PMICs, we can turn on the
-regulators needed for the onboard WiFi chips.
+Why don't you just check if the nid you get back from the device is set in
+numa_nodes_parsed and return NUMA_NO_NODE if not?
 
-This is a fairly simple series. The WiFi chips themselves are
-supported by the brcmfmac driver, but the user needs to get an
-nvram.txt file and put it in their firmware directory, in
-addition to the firmware file in linux-firmware. Otherwise we
-just need to enable the mmc controller and supply the vmmc and
-vqmmc regulators.
-
-
-Regards
-ChenYu
-
-Chen-Yu Tsai (3):
-  ARM: dts: sun9i: Add mmc1 pinmux setting
-  ARM: dts: sun9i: a80-optimus: Enable AP6330 WiFi
-  ARM: dts: sun9i: cubieboard4: Enable AP6330 WiFi
-
- arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 32 +++++++++++++++++++++++++++++
- arch/arm/boot/dts/sun9i-a80-optimus.dts     | 30 +++++++++++++++++++++++++++
- arch/arm/boot/dts/sun9i-a80.dtsi            |  8 ++++++++
- 3 files changed, 70 insertions(+)
-
--- 
-2.9.3
+Will
