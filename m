@@ -1,132 +1,93 @@
-From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/6] Documentation: devicetree: dwc3: Add interrupt moderation
-Date: Fri, 28 Oct 2016 13:30:07 +0300
-Message-ID: <87mvhosr4g.fsf@linux.intel.com>
-References: <cover.1477424426.git.johnyoun@synopsys.com> <e7a864e5a2af12d5a8d97f2591065f4aa85f86cb.1477424426.git.johnyoun@synopsys.com> <20161026105632.GG19965@leverpostej> <36413315-16eb-d690-b559-ab5ae103c5f9@synopsys.com> <20161028102350.GD5806@leverpostej>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v7, 0/8] Add MediaTek USB3 DRD Driver
+Date: Fri, 28 Oct 2016 12:37:39 +0200
+Message-ID: <28f6db69-88ca-4715-1e46-6d5e5efb949c@gmail.com>
+References: <1476844107-31087-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161028102350.GD5806@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: "linux-usb@vger.kernel.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1476844107-31087-1-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>
+Cc: Oliver Neukum <oneukum@suse.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Alan Cooper <alcooperx@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Chunfeng,
 
-
-Hi,
-
-Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
-> On Thu, Oct 27, 2016 at 02:08:25PM -0700, John Youn wrote:
->> On 10/26/2016 3:57 AM, Mark Rutland wrote:
->> > On Tue, Oct 25, 2016 at 12:42:46PM -0700, John Youn wrote:
->> >> Add interrupt moderation interval binding for dwc3.
+On 10/19/2016 04:28 AM, Chunfeng Yun wrote:
+> These patches introduce the MediaTek USB3 dual-role controller
+> driver.
 >
->> >> + - snps,imod_interval: the interrupt moderation interval.
+> The driver can be configured as Dual-Role Device (DRD),
+> Peripheral Only and Host Only (xHCI) modes. It works well
+> with Mass Storage, RNDIS and g_zero on FS/HS and SS. And it is
+> tested on MT8173 platform which only contains USB2.0 device IP,
+> and on MT6290 platform which contains USB3.0 device IP.
 >
->> > What is "interrupt moderation"? The cover mentions that this is to be
->> > used for some kind of workaround, but it's not clear to me what this i=
-s,
->> > and as such, whether it makes sense to describe it in this manner.
->> >=20
->>=20
->> Interrupt moderation throttles the interrupt rate to be no faster than
->> a specified interval. It's an optional feature of the controller.
+> Change in v7:
+> 1. split dual-role driver into four patchs
+> 2. remove QMU done tasklet
+> 3. add a bool in xhci_hcd_mtk to signal absence of IPPC
 >
-> Ok.
+> Change in v6:
+> 1. handle endianness of GPD and SETUP data
+> 2. remove dummy error log and return suitable error number
+> 3. cancel delay work when deregiseter driver
 >
->> This series implements the feature and enables it as a workaround for
->> a particular version of the controller.
+> Change in v5:
+> 1. modify some comments
+> 2. rename some unsuitable variables
+> 3. add reg-names property for host node
+> 4. add USB_MTU3_DEBUG to control debug messages
 >
-> ... as a workaround for *what*? Is there a bug in that IP version, or an
-
-you didn't receive the entire series, I guess. Here's last patch in the
-series:
-
- This is a workaround for STAR 9000961433 which affects only version
- 3.00a of the DWC_usb3 core. This prevents the controller interrupt from
- being masked while handling events. Enabling interrupt moderation allows
- us to work around this issue because once the GEVNTCOUNT.count is
- written the IRQ is immediately deasserted and won't be asserted again
- until GEVNTCOUNT.EHB is cleared.
-
- Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
- ---
-  drivers/usb/dwc3/core.c | 12 ++++++++++++
-  1 file changed, 12 insertions(+)
-
- diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
- index 6733838..7fa0832 100644
- --- a/drivers/usb/dwc3/core.c
- +++ b/drivers/usb/dwc3/core.c
- @@ -1050,6 +1050,18 @@ static void dwc3_check_params(struct dwc3 *dwc)
-		 dwc->imod_interval =3D 0;
-	 }
-
- +	/*
- +	 * Workaround for STAR 9000961433 which affects only version
- +	 * 3.00a of the DWC_usb3 core. This prevents the controller
- +	 * interrupt from being masked while handling events. IMOD
- +	 * allows us to work around this issue. Enable it for the
- +	 * affected version.
- +	 */
- +	if (!dwc->imod_interval &&
- +	    (dwc->revision =3D=3D DWC3_REVISION_300A)) {
- +		dwc->imod_interval =3D 1;
- +	}
- +
-	 /* Check the maximum_speed parameter */
-	 switch (dwc->maximum_speed) {
-	 case USB_SPEED_LOW:
-
-> integration issue? Does the problem vary per-board?
+> Change in v4:
+> 1. fix build errors on non-mediatek platforms
+> 2. provide manual dual-role switch via debugfs instead of sysfs
 >
-> Generally, if there's a problem that needs to be worked around, we
-> describe the problem in the DT (perhaps implicitly in the compatible
-> string), and then the kernel chooses the workaround.
+> Change in v3:
+> 1. fix some typo error
+> 2. rename mtu3.txt to mt8173-mtu3.txt
+>
+> Change in v2:
+> 1. modify binding docs according to suggestions
+> 2. modify some comments and remove some dummy blank lines
+> 3. fix memory leakage
+>
+>
+> Chunfeng Yun (8):
+>   dt-bindings: mt8173-xhci: support host side of dual-role mode
+>   dt-bindings: mt8173-mtu3: add devicetree bindings
+>   usb: xhci-mtk: make IPPC register optional
+>   usb: Add MediaTek USB3 DRD driver
+>   usb: mtu3: Super-Speed Peripheral mode support
+>   usb: mtu3: host only mode support
+>   usb: mtu3: dual-role mode support
+>   arm64: dts: mediatek: add USB3 DRD driver
+>
 
-Regardless of the silicon erratum, interrupt moderation is a *feature*
-of the IP, common to all instances since revision v3.00a (IIRC). John is
-just using interrupt moderation in the context of implementing this
-workaround. But the actual feature is valid also without the erratum.
+I tried the driver with my mt8173-evb, but wasn't able to get USB 
+working (no usb stick detected when adding to the usb port).
 
-Another thing to remember is that different applications (i.e. boards)
-might want to moderate the interrupt for different periods. That's,
-again, not related to the erratum at all.
+# dmesg |grep mtu
+[    0.428420] mtu3 11271000.usb: failed to get vusb33
+[    0.510570] mtu3 11271000.usb: failed to get vbus
+[    0.592103] mtu3 11271000.usb: failed to get vbus
 
-We cannot use compatible to figure this one out. dwc3 does as much
-runtime discovery as possible, but we cannot discover what is the
-desired interrupt moderation interval for $this setup. It needs to be
-passed in on a board-by-board basis.
 
-=2D-=20
-balbi
+Relevant config options:
+CONFIG_USB_MTU3=y
+CONFIG_USB_MTU3_HOST=y
+CONFIG_USB_MTU3_DEBUG=y
+CONFIG_PHY_MT65XX_USB3=y
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Looks like an error in the device tree. I can see that the mt6397 
+regulater get's initialized *after* the mtu3 driver:
+[    0.505166] mt6397-regulator mt6397-regulator: Chip ID = 0x4097
 
-iQIcBAEBCAAGBQJYEyivAAoJEMy+uJnhGpkGo5EP/2LN7FvyKSRZPxO4NJ3N7E2F
-2jRWdr9mgIBxjRRn21vuHMyKBHSwO7bcZ7eLKMfBtO32Q0bYexQgdvnZxIzWZGgX
-MMWWhgi0WpcreDOdqClehrbTIenWM3Pq+jmTx7cQIFbUwRb8tOT0q22oCVOcX41T
-M1/jX+7fx/Y5q48WtiXXf7US2OLIG8UOyweda4gPkcfAyG9cknxmGXr/d7q1lvSq
-/6c8M4IRmsHGnnNSQg7qqWhPY5j0EZ/4p3d+tcDoFAHoNF3jOQLUUXgUc74wS3PN
-9gW5qBjUOiw9rUSYO+z4Czl7tN7jVUSCR2cbpzYE+PKbyfhfRtmQlp1FwIhv8JhQ
-+AWG0amoIFPs99gbbVYnGLlGfpVg3+Rqfw3/q5iPigKw2T1Q5B+g2HCHZNfpnRBu
-TBlt68DHqSjtQRE4B0S7SYFzA0uBvdC7RVGOqpdNOKpDdEAxNzYJXkafKGiO4I3Z
-ceHzAwTKBC/3X063U4wssIi1CH4yGMYoj561SpsqYEXMsAgtUusVfaGzVgkRcNZB
-2uyBkgBChc8Rq4bB87EY3NKs6YIicPncQ4gNo1AdDwfjd90F4Y28QYv/4nJwDAPp
-C6btxDQP8dk3UtexUtEeL34iRLZmxqJEmhawzhvJIkDGRpifgVIuekqaWClnhg+j
-croCbZn9rAHIFfCMVxlD
-=1xVI
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Not sure if this is related.
+Any idea whats going wrong here?
+
+Cheers,
+Matthias
