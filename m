@@ -1,70 +1,145 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: hi6220: add resets property into dwmmc
- nodes
-Date: Fri, 28 Oct 2016 20:52:49 +0900
-Message-ID: <f5dfafbb-39df-4edb-03b8-57c0e34c912f@samsung.com>
-References: <1472094041-5357-2-git-send-email-guodong.xu@linaro.org>
- <CAKfTPtB0FtGbm4C5z+LJizrsHikKt_BGFti5XY+LN3w7zO1Vjw@mail.gmail.com>
- <CALAqxLXfb48h8hMQmAaJ+YjA5=pekkQ8Dg8ReL6VTTfmuFRPDw@mail.gmail.com>
- <CAKfTPtAXdkKcfpHmUmQNwuJxO0PORcCf49noST_CCkZPigPwgw@mail.gmail.com>
- <CGME20161028072654epcas4p13cbf983b3e22dd96039ed33a4ac792d5@epcas4p1.samsung.com>
- <20161028072640.GB17266@leoy-linaro>
- <d7993c1a-5e50-9a33-0900-5c1a79884d3c@samsung.com>
- <20161028073830.GC17266@leoy-linaro>
- <24930ad4-313f-a4f0-c89a-770238863816@samsung.com>
- <95e22336-0465-f1e1-71b8-548d0e6ee8b7@samsung.com>
- <20161028101919.GA25564@leoy-linaro>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V2 4/4] gpio: pv88080: Add GPIO function support
+Date: Fri, 28 Oct 2016 14:10:47 +0200
+Message-ID: <CACRpkdYW_LnT9zLQp=r8xE1o=_hfwGEhOu_w2bp+hRZNN29WLA@mail.gmail.com>
+References: <cover.1477530195.git.eric.jeong@diasemi.com> <0ef1d730ec55eaaf736fb1606ea73d7af27c1021.1477530195.git.eric.jeong@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20161028101919.GA25564@leoy-linaro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>, John Stultz <john.stultz@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <rob.herring@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xinliang Liu <xinliang.liu@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Fathi Boudra <fathi.boudra@linaro.org>, LAK <linux-arm-kernel@lists.infradead.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <0ef1d730ec55eaaf736fb1606ea73d7af27c1021.1477530195.git.eric.jeong@diasemi.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Eric Jeong <eric.jeong.opensource@diasemi.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, LINUX-GPIO <linux-gpio@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, DEVICETREE <devicetree@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Oct 27, 2016 at 3:03 AM, Eric Jeong
+<eric.jeong.opensource@diasemi.com> wrote:
 
-On 10/28/2016 07:19 PM, Leo Yan wrote:
-> On Fri, Oct 28, 2016 at 06:54:58PM +0900, Jaehoon Chung wrote:
-> 
-> [...]
-> 
->>>>> Could you share the log? Is there any log about failure?
->>>>
->>>> Sure, please see below log:
->>>
->>> It's related with -EPROBE_DEFER..I'm not sure but if CONFIG_RESET_CONTROLLER is enabled, it's searching for reset controller.
->>> Maybe hi6220 has handled the reset controller(?)...
->>>
->>> I'm checking devm_reset_control_xxx...It's possible to occur the other boards which enabled RESET_CONTROLLER..
->>
->> Could you check the below thing..
->>
->>         /* find reset controller when exist */
->> -       pdata->rstc = devm_reset_control_get_optional(dev, NULL);
->> +       pdata->rstc = devm_reset_control_get_optional(dev, "dwmci-reset");
->>         if (IS_ERR(pdata->rstc)) {
->>                 if (PTR_ERR(pdata->rstc) == -EPROBE_DEFER)
->>                         return ERR_PTR(-EPROBE_DEFER);
-> 
-> Confirmed with this fixing, the kernel can bootup successfully.
-> 
-> Thanks for this.
+> From: Eric Jeong <eric.jeong.opensource@diasemi.com>
+>
+> This patch adds support for PV88080 PMIC GPIOs.
+> PV88080 has two configurable GPIOs.
+>
+> Kconfig and Makefile are updated to reflect support
+> for PV88080 PMIC GPIO.
+>
+> Signed-off-by: Eric Jeong <eric.jeong.opensource@diasemi.com>
+(...)
 
-Thanks for checking this..If this approach is not bad, i will send the patch.
-Or if there are other good approaches, let me know, plz.
+> +static int pv88080_gpio_direction_input(struct gpio_chip *gc,
+> +                               unsigned int offset)
+> +{
+> +       struct pv88080_gpio *priv = gpiochip_get_data(gc);
+> +       struct pv88080 *chip = priv->chip;
+> +       int ret;
+> +
+> +       /* Set the initial value */
+> +       ret = regmap_update_bits(chip->regmap, priv->gpio_base_reg + offset,
+> +                                       PV88080_GPIO_OUTPUT_MASK, 0);
+> +       if (ret)
+> +               return ret;
 
-Best Regards,
-Jaehoon Chung
+So you set the initial value when we change the pin to *input*...
 
-> 
->> To prevent the wrong controlling, how about adding "#reset-names" for dwmmc controller?
->>
->>
->> Best Regards,
->> Jaehoon Chung
-> 
-> 
-> 
+> +
+> +       return regmap_update_bits(chip->regmap, priv->gpio_base_reg + offset,
+> +                               PV88080_GPIO_DIRECTION_MASK, 0);
+> +}
+> +
+> +static int pv88080_gpio_direction_output(struct gpio_chip *gc,
+> +                               unsigned int offset, int value)
+> +{
+> +       struct pv88080_gpio *priv = gpiochip_get_data(gc);
+> +       struct pv88080 *chip = priv->chip;
+> +       int ret;
+> +
+> +       ret = regmap_update_bits(chip->regmap, priv->gpio_base_reg + offset,
+> +                       PV88080_GPIO_DIRECTION_MASK,
+> +                       PV88080_GPIO_DIRECTION_MASK);
+
+But do nothing when we change the pin to *output*?
+
+It seems like you switched the two function implementations or
+something?
+
+> +static int pv88080_gpio_get(struct gpio_chip *gc, unsigned int offset)
+> +{
+> +       struct pv88080_gpio *priv = gpiochip_get_data(gc);
+> +       struct pv88080 *chip = priv->chip;
+> +       unsigned int reg = 0, direction;
+> +       int ret;
+> +
+> +       ret = regmap_read(chip->regmap, priv->gpio_base_reg + offset, &reg);
+> +       if (ret)
+> +               return ret;
+> +
+> +       direction = (reg & PV88080_GPIO_DIRECTION_MASK);
+> +       if (direction == PV88080_PORT_DIRECTION_OUTPUT) {
+> +               if (reg & PV88080_GPIO_OUTPUT_EN)
+> +                       return 1;
+> +               ret = 0;
+> +       } else {
+> +               ret = regmap_read(chip->regmap, priv->input_reg, &reg);
+> +               if (ret < 0)
+> +                       return ret;
+> +               ret = (reg & (PV88080_GPIO_INPUT_MASK << offset)) >> offset;
+
+Isn't this what you want to do?
+
+#include <linux/bitops.h>
+
+ret = !!(reg & BIT(offset));
+
+The mask is 0x01. No point in making things more complicated than they are.
+
+
+> +static void pv88080_gpio_set(struct gpio_chip *gc, unsigned int offset,
+> +                               int value)
+> +{
+> +       struct pv88080_gpio *priv = gpiochip_get_data(gc);
+> +       struct pv88080 *chip = priv->chip;
+> +
+> +       if (value)
+> +               regmap_update_bits(chip->regmap, priv->gpio_base_reg + offset,
+> +                               PV88080_GPIO_OUTPUT_MASK,
+> +                               PV88080_GPIO_OUTPUT_EN);
+> +       else
+> +               regmap_update_bits(chip->regmap, priv->gpio_base_reg + offset,
+> +                               PV88080_GPIO_OUTPUT_MASK,
+> +                               PV88080_GPIO_OUTPUT_DIS);
+> +}
+
+Looks good, output is more complicated.
+
+> +static const struct gpio_chip template_gpio = {
+> +       .label = "pv88080-gpio",
+> +       .owner = THIS_MODULE,
+> +       .get_direction = pv88080_gpio_get_direction,
+> +       .direction_input = pv88080_gpio_direction_input,
+> +       .direction_output = pv88080_gpio_direction_output,
+> +       .get = pv88080_gpio_get,
+> +       .set = pv88080_gpio_set,
+> +       .base = -1,
+> +       .ngpio = DEFAULT_PIN_NUMBER,
+> +};
+
+Why even have a #define for DEFAULT_PIN_NUMBER?
+Just hardcode it here.
+
+> +       priv->chip = chip;
+> +       priv->gpio_chip = template_gpio;
+> +       priv->gpio_chip.parent = chip->dev;
+
+I slightly prefer that you fill in the priv->gpio_chip with code (one
+assignment per line) rather than
+assigning a template like here, but it's your pick.
+
+> +       if (pdata && pdata->gpio_base)
+> +               priv->gpio_chip.base = pdata->gpio_base;
+
+Give me any good reason to support this. Please just drop
+this platform data. Use -1 like in the template and get
+dynamic assignment of GPIO numbers.
+
+Yours,
+Linus Walleij
