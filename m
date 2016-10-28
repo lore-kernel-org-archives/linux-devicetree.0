@@ -1,44 +1,49 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v3 1/3] PM / OPP: Expose _of_get_opp_desc_node as
- dev_pm_opp API
-Date: Fri, 28 Oct 2016 09:35:07 +0530
-Message-ID: <20161028040507.GJ10423@vireshk-i7>
-References: <20161027214131.1725-1-d-gerlach@ti.com>
- <20161027214131.1725-2-d-gerlach@ti.com>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [v13, 5/8] soc: fsl: add GUTS driver for QorIQ platforms
+Date: Thu, 27 Oct 2016 23:45:56 -0500
+Message-ID: <1477629956.6812.15.camel@buserror.net>
+References: <1477625554-46700-1-git-send-email-yangbo.lu@nxp.com>
+         <1477625554-46700-6-git-send-email-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161027214131.1725-2-d-gerlach@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1477625554-46700-6-git-send-email-yangbo.lu@nxp.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Yangbo Lu <yangbo.lu@nxp.com>, linux-mmc@vger.kernel.org, ulf.hansson@linaro.org, Arnd Bergmann <arnd@arndb.de>
+Cc: linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org, netdev@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Qiang Zhao <qiang.zhao@nxp.com>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <ssantosh@kernel.org>, Leo Li <leoyang.li@nxp.com>, Xiaobo Xie <xiaobo.xie@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 27-10-16, 16:41, Dave Gerlach wrote:
-> Move _of_get_opp_desc_node into include/linux/pm_opp.h and rename it
-> dev_pm_opp_of_get_opp_desc_node to allow other drivers, such as platform
-> OPP and cpufreq drivers, to make use of it.
-> 
-> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-> ---
->  drivers/base/power/opp/of.c  | 8 ++++----
->  drivers/base/power/opp/opp.h | 1 -
->  include/linux/pm_opp.h       | 6 ++++++
->  3 files changed, 10 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/base/power/opp/of.c b/drivers/base/power/opp/of.c
-> index 5552211e6fcd..215f5a538c78 100644
-> --- a/drivers/base/power/opp/of.c
-> +++ b/drivers/base/power/opp/of.c
-> @@ -198,7 +198,7 @@ void dev_pm_opp_of_remove_table(struct device *dev)
->  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
->  
->  /* Returns opp descriptor node for a device, caller must do of_node_put() */
-> -struct device_node *_of_get_opp_desc_node(struct device *dev)
-> +struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev)
+On Fri, 2016-10-28 at 11:32 +0800, Yangbo Lu wrote:
+> +	guts->regs = of_iomap(np, 0);
+> +	if (!guts->regs)
+> +		return -ENOMEM;
+> +
+> +	/* Register soc device */
+> +	machine = of_flat_dt_get_machine_name();
+> +	if (machine)
+> +		soc_dev_attr.machine = devm_kstrdup(dev, machine,
+> GFP_KERNEL);
+> +
+> +	svr = fsl_guts_get_svr();
+> +	soc_die = fsl_soc_die_match(svr, fsl_soc_die);
+> +	if (soc_die) {
+> +		soc_dev_attr.family = devm_kasprintf(dev, GFP_KERNEL,
+> +						     "QorIQ %s", soc_die-
+> >die);
+> +	} else {
+> +		soc_dev_attr.family = devm_kasprintf(dev, GFP_KERNEL,
+> "QorIQ");
+> +	}
+> +	soc_dev_attr.soc_id = devm_kasprintf(dev, GFP_KERNEL,
+> +					     "svr:0x%08x", svr);
+> +	soc_dev_attr.revision = devm_kasprintf(dev, GFP_KERNEL, "%d.%d",
+> +					       SVR_MAJ(svr), SVR_MIN(svr));
+> +
+> +	soc_dev = soc_device_register(&soc_dev_attr);
+> +	if (IS_ERR(soc_dev))
+> +		return PTR_ERR(soc_dev);
 
-Export as well ?
+ioremap leaks on this error path.  Use devm_ioremap_resource().
 
--- 
-viresh
+-Scott
