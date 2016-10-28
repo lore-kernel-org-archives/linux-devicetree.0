@@ -1,8 +1,8 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH 02/10] staging: iio: tsl2583: check for error code from
- i2c_smbus_read_byte()
-Date: Fri, 28 Oct 2016 06:00:13 -0400
-Message-ID: <1477648821-3786-3-git-send-email-masneyb@onstation.org>
+Subject: [PATCH 04/10] staging: iio: tsl2583: remove redundant power_state
+ sysfs attribute
+Date: Fri, 28 Oct 2016 06:00:15 -0400
+Message-ID: <1477648821-3786-5-git-send-email-masneyb@onstation.org>
 References: <1477648821-3786-1-git-send-email-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,61 +22,72 @@ To: jic23@kernel.org, linux-iio@vger.kernel.org
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, Mark.Rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-taos_i2c_read() and taos_als_calibrate() does not check to see if the
-value returned by i2c_smbus_read_byte() was an error code. This patch
-adds the appropriate error handling.
+IIO devices have a /sys/bus/iio/devices/iio:deviceX/power/ directory
+that allows viewing and controling various power parameters. The tsl2583
+driver also has an additional custom sysfs attribute named power_state
+that is not needed. This patch removes the redundant power_state sysfs
+attribute.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
- drivers/staging/iio/light/tsl2583.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ drivers/staging/iio/light/tsl2583.c | 31 -------------------------------
+ 1 file changed, 31 deletions(-)
 
 diff --git a/drivers/staging/iio/light/tsl2583.c b/drivers/staging/iio/light/tsl2583.c
-index fd4b6ef..35c1696 100644
+index 47fd373..f8ccb4d 100644
 --- a/drivers/staging/iio/light/tsl2583.c
 +++ b/drivers/staging/iio/light/tsl2583.c
-@@ -171,7 +171,14 @@ taos_i2c_read(struct i2c_client *client, u8 reg, u8 *val, unsigned int len)
- 			return ret;
- 		}
- 		/* read the data */
--		*val = i2c_smbus_read_byte(client);
-+		ret = i2c_smbus_read_byte(client);
-+		if (ret < 0) {
-+			dev_err(&client->dev,
-+				"%s failed to read byte after writing to register %x\n",
-+				__func__, reg);
-+			return ret;
-+		}
-+		*val = ret;
- 		val++;
- 		reg++;
- 	}
-@@ -355,6 +362,13 @@ static int taos_als_calibrate(struct iio_dev *indio_dev)
- 	}
+@@ -511,33 +511,6 @@ static int taos_chip_off(struct iio_dev *indio_dev)
  
- 	reg_val = i2c_smbus_read_byte(chip->client);
-+	if (reg_val < 0) {
-+		dev_err(&chip->client->dev,
-+			"%s failed to read after writing to the CNTRL register\n",
-+			__func__);
-+		return ret;
-+	}
-+
- 	if ((reg_val & (TSL258X_CNTL_ADC_ENBL | TSL258X_CNTL_PWR_ON))
- 			!= (TSL258X_CNTL_ADC_ENBL | TSL258X_CNTL_PWR_ON)) {
- 		dev_err(&chip->client->dev,
-@@ -371,6 +385,12 @@ static int taos_als_calibrate(struct iio_dev *indio_dev)
- 		return ret;
- 	}
- 	reg_val = i2c_smbus_read_byte(chip->client);
-+	if (reg_val < 0) {
-+		dev_err(&chip->client->dev,
-+			"%s failed to read after writing to the STATUS register\n",
-+			__func__);
-+		return ret;
-+	}
+ /* Sysfs Interface Functions */
  
- 	if ((reg_val & TSL258X_STA_ADC_VALID) != TSL258X_STA_ADC_VALID) {
- 		dev_err(&chip->client->dev,
+-static ssize_t taos_power_state_show(struct device *dev,
+-				     struct device_attribute *attr, char *buf)
+-{
+-	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+-	struct tsl2583_chip *chip = iio_priv(indio_dev);
+-
+-	return sprintf(buf, "%d\n", chip->taos_chip_status);
+-}
+-
+-static ssize_t taos_power_state_store(struct device *dev,
+-				      struct device_attribute *attr,
+-				      const char *buf, size_t len)
+-{
+-	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+-	int value;
+-
+-	if (kstrtoint(buf, 0, &value))
+-		return -EINVAL;
+-
+-	if (!value)
+-		taos_chip_off(indio_dev);
+-	else
+-		taos_chip_on(indio_dev);
+-
+-	return len;
+-}
+-
+ static ssize_t taos_gain_show(struct device *dev,
+ 			      struct device_attribute *attr, char *buf)
+ {
+@@ -785,9 +758,6 @@ static ssize_t taos_luxtable_store(struct device *dev,
+ 	return len;
+ }
+ 
+-static DEVICE_ATTR(power_state, S_IRUGO | S_IWUSR,
+-		taos_power_state_show, taos_power_state_store);
+-
+ static DEVICE_ATTR(illuminance0_calibscale, S_IRUGO | S_IWUSR,
+ 		taos_gain_show, taos_gain_store);
+ static DEVICE_ATTR(illuminance0_calibscale_available, S_IRUGO,
+@@ -810,7 +780,6 @@ static DEVICE_ATTR(illuminance0_lux_table, S_IRUGO | S_IWUSR,
+ 		taos_luxtable_show, taos_luxtable_store);
+ 
+ static struct attribute *sysfs_attrs_ctrl[] = {
+-	&dev_attr_power_state.attr,
+ 	&dev_attr_illuminance0_calibscale.attr,			/* Gain  */
+ 	&dev_attr_illuminance0_calibscale_available.attr,
+ 	&dev_attr_illuminance0_integration_time.attr,	/* I time*/
 -- 
 2.7.4
