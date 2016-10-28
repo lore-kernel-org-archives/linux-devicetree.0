@@ -1,152 +1,70 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: [PATCH v2 5/6] net: ethernet: bgmac: add NS2 support
-Date: Fri, 28 Oct 2016 16:56:58 -0400
-Message-ID: <1477688219-3871-6-git-send-email-jon.mason@broadcom.com>
-References: <1477688219-3871-1-git-send-email-jon.mason@broadcom.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1477688219-3871-1-git-send-email-jon.mason@broadcom.com>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: rafal@milecki.pl, bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Joshua Clayton <stillcompiling@gmail.com>
+Subject: Re: [PATCH v2 3/5] fpga manager: Add cyclone-ps-spi driver for Altera
+ FPGAs
+Date: Fri, 28 Oct 2016 14:05:36 -0700
+Message-ID: <7f36c345-b4f9-60b2-5f88-99fa7ec31119@gmail.com>
+References: <201610290422.JEtRRTFh%fengguang.wu@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201610290422.JEtRRTFh%fengguang.wu@intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: kbuild test robot <lkp@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, devicetree@vger.kernel.org, Alan Tull <atull@opensource.altera.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the variant of amac hardware present in the Broadcom
-Northstar2 based SoCs.  Northstar2 requires an additional register to be
-configured with the port speed/duplexity (NICPM).  This can be added to
-the link callback to hide it from the instances that do not use this.
-Also, clearing of the pending interrupts on init is required due to
-observed issues on some platforms.
+Dang it!
 
-Signed-off-by: Jon Mason <jon.mason@broadcom.com>
----
- drivers/net/ethernet/broadcom/bgmac-platform.c | 56 +++++++++++++++++++++++++-
- drivers/net/ethernet/broadcom/bgmac.c          |  3 ++
- drivers/net/ethernet/broadcom/bgmac.h          |  1 +
- 3 files changed, 58 insertions(+), 2 deletions(-)
+This was flagged last time around and I forgot to fix it.
 
-diff --git a/drivers/net/ethernet/broadcom/bgmac-platform.c b/drivers/net/ethernet/broadcom/bgmac-platform.c
-index aed5dc5..f6d48c7 100644
---- a/drivers/net/ethernet/broadcom/bgmac-platform.c
-+++ b/drivers/net/ethernet/broadcom/bgmac-platform.c
-@@ -14,12 +14,21 @@
- #define pr_fmt(fmt)		KBUILD_MODNAME ": " fmt
- 
- #include <linux/bcma/bcma.h>
-+#include <linux/brcmphy.h>
- #include <linux/etherdevice.h>
- #include <linux/of_address.h>
- #include <linux/of_mdio.h>
- #include <linux/of_net.h>
- #include "bgmac.h"
- 
-+#define NICPM_IOMUX_CTRL		0x00000008
-+
-+#define NICPM_IOMUX_CTRL_INIT_VAL	0x3196e000
-+#define NICPM_IOMUX_CTRL_SPD_SHIFT	10
-+#define NICPM_IOMUX_CTRL_SPD_10M	0
-+#define NICPM_IOMUX_CTRL_SPD_100M	1
-+#define NICPM_IOMUX_CTRL_SPD_1000M	2
-+
- static u32 platform_bgmac_read(struct bgmac *bgmac, u16 offset)
- {
- 	return readl(bgmac->plat.base + offset);
-@@ -87,12 +96,46 @@ static void platform_bgmac_cmn_maskset32(struct bgmac *bgmac, u16 offset,
- 	WARN_ON(1);
- }
- 
-+static void bgmac_nicpm_speed_set(struct net_device *net_dev)
-+{
-+	struct bgmac *bgmac = netdev_priv(net_dev);
-+	u32 val;
-+
-+	if (!bgmac->plat.nicpm_base)
-+		return;
-+
-+	val = NICPM_IOMUX_CTRL_INIT_VAL;
-+	switch (bgmac->net_dev->phydev->speed) {
-+	default:
-+		pr_err("Unsupported speed.  Defaulting to 1000Mb\n");
-+	case SPEED_1000:
-+		val |= NICPM_IOMUX_CTRL_SPD_1000M << NICPM_IOMUX_CTRL_SPD_SHIFT;
-+		break;
-+	case SPEED_100:
-+		val |= NICPM_IOMUX_CTRL_SPD_100M << NICPM_IOMUX_CTRL_SPD_SHIFT;
-+		break;
-+	case SPEED_10:
-+		val |= NICPM_IOMUX_CTRL_SPD_10M << NICPM_IOMUX_CTRL_SPD_SHIFT;
-+		break;
-+	}
-+
-+	writel(val, bgmac->plat.nicpm_base + NICPM_IOMUX_CTRL);
-+
-+	bgmac_adjust_link(bgmac->net_dev);
-+}
-+
- static int platform_phy_connect(struct bgmac *bgmac)
- {
- 	struct phy_device *phy_dev;
- 
--	phy_dev = of_phy_get_and_connect(bgmac->net_dev, bgmac->dev->of_node,
--					 bgmac_adjust_link);
-+	if (bgmac->plat.nicpm_base)
-+		phy_dev = of_phy_get_and_connect(bgmac->net_dev,
-+						 bgmac->dev->of_node,
-+						 bgmac_nicpm_speed_set);
-+	else
-+		phy_dev = of_phy_get_and_connect(bgmac->net_dev,
-+						 bgmac->dev->of_node,
-+						 bgmac_adjust_link);
- 	if (!phy_dev) {
- 		dev_err(bgmac->dev, "Phy connect failed\n");
- 		return -ENODEV;
-@@ -182,6 +225,14 @@ static int bgmac_probe(struct platform_device *pdev)
- 	if (IS_ERR(bgmac->plat.idm_base))
- 		return PTR_ERR(bgmac->plat.idm_base);
- 
-+	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "nicpm_base");
-+	if (regs) {
-+		bgmac->plat.nicpm_base = devm_ioremap_resource(&pdev->dev,
-+							       regs);
-+		if (IS_ERR(bgmac->plat.nicpm_base))
-+			return PTR_ERR(bgmac->plat.nicpm_base);
-+	}
-+
- 	bgmac->read = platform_bgmac_read;
- 	bgmac->write = platform_bgmac_write;
- 	bgmac->idm_read = platform_bgmac_idm_read;
-@@ -213,6 +264,7 @@ static int bgmac_remove(struct platform_device *pdev)
- static const struct of_device_id bgmac_of_enet_match[] = {
- 	{.compatible = "brcm,amac",},
- 	{.compatible = "brcm,nsp-amac",},
-+	{.compatible = "brcm,ns2-amac",},
- 	{},
- };
- 
-diff --git a/drivers/net/ethernet/broadcom/bgmac.c b/drivers/net/ethernet/broadcom/bgmac.c
-index 4584958..a805cc8 100644
---- a/drivers/net/ethernet/broadcom/bgmac.c
-+++ b/drivers/net/ethernet/broadcom/bgmac.c
-@@ -1082,6 +1082,9 @@ static void bgmac_enable(struct bgmac *bgmac)
- /* http://bcm-v4.sipsolutions.net/mac-gbit/gmac/chipinit */
- static void bgmac_chip_init(struct bgmac *bgmac)
- {
-+	/* Clear any erroneously pending interrupts */
-+	bgmac_write(bgmac, BGMAC_INT_STATUS, ~0);
-+
- 	/* 1 interrupt per received frame */
- 	bgmac_write(bgmac, BGMAC_INT_RECV_LAZY, 1 << BGMAC_IRL_FC_SHIFT);
- 
-diff --git a/drivers/net/ethernet/broadcom/bgmac.h b/drivers/net/ethernet/broadcom/bgmac.h
-index ea52ac3..b1820ea 100644
---- a/drivers/net/ethernet/broadcom/bgmac.h
-+++ b/drivers/net/ethernet/broadcom/bgmac.h
-@@ -463,6 +463,7 @@ struct bgmac {
- 		struct {
- 			void *base;
- 			void *idm_base;
-+			void *nicpm_base;
- 		} plat;
- 		struct {
- 			struct bcma_device *core;
--- 
-2.7.4
+On 10/28/2016 01:41 PM, kbuild test robot wrote:
+> Hi Joshua,
+>
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v4.9-rc2 next-20161028]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> [Suggest to use git(>=2.9.0) format-patch --base=<commit> (or --base=auto for convenience) to record what (public, well-known) commit your patch series was built on]
+> [Check https://git-scm.com/docs/git-format-patch for more information]
+>
+> url:    https://github.com/0day-ci/linux/commits/Joshua-Clayton/lib-add-bitrev8x4/20161029-012535
+> config: openrisc-allmodconfig (attached as .config)
+> compiler: or32-linux-gcc (GCC) 4.5.1-or32-1.0rc1
+> reproduce:Dang it!
+>         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=openrisc 
+>
+> All errors (new ones prefixed by >>):
+>
+>    drivers/fpga/cyclone-ps-spi.c: In function 'cyclonespi_write':
+>    drivers/fpga/cyclone-ps-spi.c:89:19: error: 'SZ_4K' undeclared (first use in this function)
+>    drivers/fpga/cyclone-ps-spi.c:89:19: note: each undeclared identifier is reported only once for each function it appears in
+>>> drivers/fpga/cyclone-ps-spi.c:89:19: error: type defaults to 'int' in declaration of '__UNIQUE_ID_min2_15'
+> vim +89 drivers/fpga/cyclone-ps-spi.c
+>
+>     83		struct cyclonespi_conf *conf = (struct cyclonespi_conf *)mgr->priv;
+>     84		const char *fw_data = buf;
+>     85		const char *fw_data_end = fw_data + count;
+>     86	
+>     87		while (fw_data < fw_data_end) {
+>     88			int ret;
+>   > 89			size_t stride = min(fw_data_end - fw_data, SZ_4K);
+>     90	
+>     91			rev_buf((void *)fw_data, stride);
+>     92			ret = spi_write(conf->spi, fw_data, stride);
+>
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Thanks, kbuild test robot.
+Will fix this time.
